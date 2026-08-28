@@ -27,7 +27,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         case success
     }
 
-    private let session: CheckoutController.Session
+    private var session: CheckoutController.Session
     private let merchantLabel: String
     private let apiClient: STPAPIClient
     private let returnURL: String
@@ -35,6 +35,8 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
     private let confirmationHandler: CheckoutController.ApplePayConfirmationParameters.ConfirmationHandler
     private let fallbackBillingDetails: StripeAPI.BillingDetails?
     let authorizationController: PKPaymentAuthorizationController
+
+    private weak var checkoutWalletUpdater: CheckoutSessionWalletUpdater?
 
     // Internal state
     private var continuation: CheckedContinuation<CheckoutController.InternalConfirmResult, Never>?
@@ -44,11 +46,13 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
     var didCancelOrTimeoutWhilePending = false
     /// Whether or not we fully completed the flow - if didFinish is `true`, that means `_end()` was called and this class is unusable.
     private var didFinish = false
+    private var paymentMethodUpdateTask: Task<Void, Never>?
 
     init(
         checkoutSession: CheckoutController.Session,
         applePayConfirmationParameters: CheckoutController.ApplePayConfirmationParameters,
-        authorizationController: PKPaymentAuthorizationController
+        authorizationController: PKPaymentAuthorizationController,
+        checkoutWalletUpdater: CheckoutSessionWalletUpdater,
     ) {
         self.session = checkoutSession
         self.merchantLabel = applePayConfirmationParameters.merchantDisplayName
@@ -61,6 +65,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
             applePayConfirmationParameters: applePayConfirmationParameters
         )
         self.authorizationController = authorizationController
+        self.checkoutWalletUpdater = checkoutWalletUpdater
         super.init()
     }
 
@@ -156,6 +161,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         switch paymentState {
         case .notStarted:
             Task {
+                await paymentMethodUpdateTask?.value
                 await controller.dismiss()
                 self.resume(with: .canceled())
                 self._end()
@@ -188,8 +194,22 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         didSelectPaymentMethod paymentMethod: PKPaymentMethod,
         handler: @escaping (PKPaymentRequestPaymentMethodUpdate) -> Void
     ) {
-        // TODO: Update billing tax region when the user switches cards.
-        handler(PKPaymentRequestPaymentMethodUpdate(paymentSummaryItems: summaryItems()))
+        guard session.collectsTaxFromBillingAddress,
+              let postalAddress = paymentMethod.billingAddress?.postalAddresses.first?.value,
+              let address = STPApplePayContext.makeCheckoutAddress(from: postalAddress),
+              let checkoutWalletUpdater else {
+            handler(PKPaymentRequestPaymentMethodUpdate(paymentSummaryItems: summaryItems()))
+            return
+        }
+        paymentMethodUpdateTask = Task { @MainActor in
+            if let updatedSession = try? await checkoutWalletUpdater.updateBillingTaxRegionWithoutEnqueueing(
+                address: address,
+                canUpdateWhileSheetPresented: true
+            ) {
+                self.session = updatedSession
+            }
+            handler(PKPaymentRequestPaymentMethodUpdate(paymentSummaryItems: summaryItems()))
+        }
     }
 
     func paymentAuthorizationController(
@@ -235,7 +255,8 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
 
     static func create(
         checkoutSession: CheckoutController.Session,
-        applePayConfirmationParameters: CheckoutController.ApplePayConfirmationParameters
+        applePayConfirmationParameters: CheckoutController.ApplePayConfirmationParameters,
+        checkoutWalletUpdater: CheckoutSessionWalletUpdater
     ) throws -> CheckoutApplePayContext {
         guard PKPaymentAuthorizationController.canMakePayments() else {
             let error = CheckoutError.unknown(debugDescription: "Apple Pay isn't set up on this device (e.g. no cards in wallet).")
@@ -262,7 +283,8 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         return CheckoutApplePayContext(
             checkoutSession: checkoutSession,
             applePayConfirmationParameters: applePayConfirmationParameters,
-            authorizationController: authorizationController
+            authorizationController: authorizationController,
+            checkoutWalletUpdater: checkoutWalletUpdater
         )
     }
 
@@ -404,6 +426,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
 
     private func _end() {
         authorizationController.delegate = nil
+        paymentMethodUpdateTask = nil
         didFinish = true
     }
 

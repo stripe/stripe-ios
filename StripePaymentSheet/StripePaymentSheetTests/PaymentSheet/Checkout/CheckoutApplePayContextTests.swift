@@ -534,6 +534,39 @@ final class CheckoutApplePayContextTests: XCTestCase {
         XCTAssertEqual(result.paymentSheetResult, .canceled)
     }
 
+    func testDidFinish_notStarted_waitsForBillingTaxUpdateBeforeCanceling() async {
+        // Given an active Apple Pay presentation with a billing tax update that is suspended
+        let updatedSession = CheckoutTestHelpers.makeOpenSession().makePublicSession()
+        let updater = SuspendingCheckoutSessionWalletUpdater(sessionToReturn: updatedSession)
+        let (context, mockController) = makeContext(
+            collectsTaxFromBillingAddress: true,
+            checkoutWalletUpdater: updater
+        )
+        var didReturnResult = false
+        let resultTask = Task {
+            let result = await context.presentApplePay()
+            didReturnResult = true
+            return result
+        }
+        await Task.yield()
+
+        let paymentMethod = MockPKPaymentMethod(billingAddress: makeBillingContact())
+        context.paymentAuthorizationController(mockController, didSelectPaymentMethod: paymentMethod) { _ in }
+        while !updater.isWaiting {
+            await Task.yield()
+        }
+
+        // When Apple Pay finishes before the update completes
+        context.paymentAuthorizationControllerDidFinish(mockController)
+        await Task.yield()
+
+        // Then presentApplePay remains pending until the updater is released
+        XCTAssertFalse(didReturnResult)
+        updater.resume()
+        let result = await resultTask.value
+        XCTAssertEqual(result.paymentSheetResult, .canceled)
+    }
+
     func testDidFinish_pending_setsDeferFlag() {
         // Given a context in the .pending state (payment is in-flight)
         let (context, mockController) = makeContext()
@@ -588,13 +621,19 @@ final class CheckoutApplePayContextTests: XCTestCase {
     private func makeContext(
         sessionId: String = "cs_test_123",
         apiClient: STPAPIClient? = nil,
-        presentationWindow: UIWindow? = nil
+        presentationWindow: UIWindow? = nil,
+        collectsTaxFromBillingAddress: Bool = false,
+        checkoutWalletUpdater: CheckoutSessionWalletUpdater? = nil
     ) -> (CheckoutApplePayContext, MockPKPaymentAuthorizationController) {
         let resolvedAPIClient = apiClient ?? APIStubbedTestCase.stubbedAPIClient()
         let response = CheckoutTestHelpers.makeSession([
             "session_id": sessionId,
             "currency": "usd",
             "total_summary": ["subtotal": 1000, "total": 1000, "due": 1000],
+            "tax_context": [
+                "automatic_tax_enabled": collectsTaxFromBillingAddress,
+                "automatic_tax_address_source": "session.billing",
+            ],
         ])
         let session = response.makePublicSession()
         let applePayConfirmationParameters = CheckoutController.ApplePayConfirmationParameters.makeMock(
@@ -606,7 +645,8 @@ final class CheckoutApplePayContextTests: XCTestCase {
         let context = CheckoutApplePayContext(
             checkoutSession: session,
             applePayConfirmationParameters: applePayConfirmationParameters,
-            authorizationController: mockController
+            authorizationController: mockController,
+            checkoutWalletUpdater: checkoutWalletUpdater ?? MockCheckoutSessionWalletUpdater()
         )
         return (context, mockController)
     }
@@ -639,6 +679,17 @@ final class CheckoutApplePayContextTests: XCTestCase {
         return contact
     }
 
+    private func makeBillingContact() -> CNContact {
+        let contact = CNMutableContact()
+        let address = CNMutablePostalAddress()
+        address.isoCountryCode = "US"
+        address.city = "San Francisco"
+        address.state = "CA"
+        address.postalCode = "94105"
+        contact.postalAddresses = [CNLabeledValue(label: CNLabelHome, value: address)]
+        return contact
+    }
+
     private func makeConfirmResponseJSON() -> [String: Any] {
         let paymentIntentJSON: [String: Any] = [
             "id": "pi_test_123",
@@ -668,4 +719,43 @@ final class CheckoutApplePayContextTests: XCTestCase {
         return json
     }
 
+}
+
+private final class MockPKPaymentMethod: PKPaymentMethod {
+    private let mockBillingAddress: CNContact?
+
+    init(billingAddress: CNContact?) {
+        self.mockBillingAddress = billingAddress
+        super.init()
+    }
+
+    override var billingAddress: CNContact? { mockBillingAddress }
+}
+
+@MainActor
+private final class SuspendingCheckoutSessionWalletUpdater: CheckoutSessionWalletUpdater {
+    private let sessionToReturn: CheckoutController.Session
+    private var continuation: CheckedContinuation<CheckoutController.Session, Error>?
+
+    var isWaiting: Bool {
+        return continuation != nil
+    }
+
+    init(sessionToReturn: CheckoutController.Session) {
+        self.sessionToReturn = sessionToReturn
+    }
+
+    func updateBillingTaxRegionWithoutEnqueueing(
+        address: CheckoutController.Address,
+        canUpdateWhileSheetPresented: Bool
+    ) async throws -> CheckoutController.Session {
+        return try await withCheckedThrowingContinuation { continuation in
+            self.continuation = continuation
+        }
+    }
+
+    func resume() {
+        continuation?.resume(returning: sessionToReturn)
+        continuation = nil
+    }
 }
