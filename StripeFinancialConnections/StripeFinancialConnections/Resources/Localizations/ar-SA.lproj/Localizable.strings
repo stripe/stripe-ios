@@ -1,0 +1,175 @@
+"%@ is currently unavailable" = "%@ غير متاح حاليًا";
+
+"%@ is undergoing maintenance" = "%@ يخضع للصيانة";
+
+"Account number is required." = "رقم الحساب مطلوب.";
+
+"Almost there" = "أوشكنا أن ننتهي";
+
+"Can't find your bank?" = "ألا يمكنك العثور على البنك الذي تتعامل معه؟";
+
+"Checking and savings accounts are supported." = "يتم دعم الحسابات الجارية وحسابات التوفير.";
+
+"Choose a different bank" = "اختر بنكًا مختلفًا";
+
+"Click “Resend code” and try again, or %@." = "انقر على \"إعادة إرسال الرمز\" وحاول مرة أخرى، أو %@.";
+
+"Confirm account number" = "تأكيد رقم الحساب";
+
+"Confirm the account number." = "قم بتأكيد رقم الحساب.";
+
+"Connect account" = "ربط الحساب";
+
+"Connect accounts" = "ربط الحسابات";
+
+"Connect another account" = "ربط حساب آخر";
+
+"Continue linking your account" = "متابعة ربط حسابك";
+
+"Continue with %@" = "متابعة باستخدام %@";
+
+"Email address" = "عنوان البريد الإلكتروني";
+
+"Enter bank details" = "إدخال التفاصيل البنكية";
+
+"Enter bank details manually" = "إدخال تفاصيل البنك يدويًا";
+
+"Enter the code sent to %@" = "أدخل الرمز المُرسَل إلى %@";
+
+"Exit without connecting?" = "هل تريد الخروج بدون اتصال؟";
+
+"Hmm, that code didn’t work. Double check it and try again." = "عذرًا، لم ينجح هذا الرمز. تحقّق منه وحاول مرة أخرى.";
+
+"Invalid bank account number: must be at most %d digits long, containing only numbers." = "رقم حساب بنكي غير صالح: يجب ألا يتجاوز طوله %li رقمًا، وأن يحتوي على أرقام فقط.";
+
+"Invalid routing number." = "رقم التوجيه غير صالح.";
+
+"It looks like the verification code you provided is not valid anymore." = "يبدو أن رمز التحقق الذي قدمته لم يعد صالحًا.";
+
+"Learn more" = "اعرف المزيد";
+
+"Maintenance is scheduled to end at %@." = "من المقرر أن تنتهي الصيانة في %@.";
+
+"Maintenance is scheduled to end on %@ at %@." = "من المقرر أن تنتهي الصيانة يوم %1$@ الساعة %2$@.";
+
+"Manually enter details" = "إدخال التفاصيل يدويًا";
+
+"No payment accounts available" = "لا تتوفر حسابات دفع";
+
+"No results" = "لا توجد نتائج";
+
+"Not now" = "ليس الآن";
+
+"Only checking accounts are supported." = "الحسابات الجارية فقط هي المدعومة.";
+
+"Please enter %d digits for your routing number." = "يُرجى إدخال %li أرقام لرقم التوجيه الخاص بك.";
+
+"Please enter your bank details manually or select another bank." = "يُرجى إدخال التفاصيل المصرفية الخاصة بك يدويًا أو تحديد بنك آخر.";
+
+"Please select another bank or try again later." = "يُرجى تحديد بنك آخر أو المحاولة مرة أخرى لاحقًا.";
+
+"Please select another bank or try again." = "يُرجى تحديد بنك آخر أو المحاولة مرة أخرى.";
+
+"Please select another bank." = "يُرجى تحديد بنك آخر.";
+
+"Please try selecting another bank account." = "يُرجى محاولة اختيار حساب بنكي آخر.";
+
+"Please try selecting another bank." = "يُرجى محاولة اختيار بنك آخر.";
+
+"Retrieving accounts..." = "جارٍ استرداد الحسابات...";
+
+"Routing number" = "رقم التوجيه";
+
+"Routing number is required." = "رقم التوجيه مطلوب.";
+
+"Search for more banks" = "البحث عن المزيد من البنوك";
+
+"Select account" = "تحديد الحساب";
+
+"Select accounts" = "تحديد الحسابات";
+
+"Select another bank" = "تحديد بنك آخر";
+
+"Select bank" = "حدد البنك";
+
+"Something went wrong" = "حدث خطأ ما";
+
+"Submit" = "إرسال";
+
+"Success" = "النجاح";
+
+"The account you selected isn't available for payments" = "الحساب الذي حددته غير متاح للمدفوعات";
+
+"The accounts you selected aren't available for payments" = "الحسابات التي حددتها غير متاحة للمدفوعات";
+
+"There was a problem accessing your %@ account" = "حدثت مشكلة في الوصول إلى حساب %@ الخاص بك";
+
+"Try again, or %@." = "حاول مرة أخرى، أو %@.";
+
+"Try searching another bank" = "حاول البحث في بنك آخر";
+
+"Try searching another bank or %@" = "حاول البحث في بنك آخر أو %@";
+
+"Use information you previously saved with your %@ account." = "استخدم المعلومات التي حفظتها مسبقًا في حسابك على %@.";
+
+"Use test account" = "استخدام حساب تجريبي";
+
+"Use test code" = "استخدام رمز تجريبي";
+
+"We found %d %@ accounts but you can only link US checking accounts to %@." = "عثرنا على %1$li %2$@ من الحسابات، لكن يمكنك فقط ربط الحسابات الجارية الأمريكية بـ %3$@.";
+
+"We found %d %@ accounts but you can only link US checking accounts." = "عثرنا على %1$li %2$@ من الحسابات، لكن يمكنك فقط ربط الحسابات الجارية الأمريكية.";
+
+"We found %d %@ accounts but you can only link checking or savings accounts to %@." = "عثرنا على %1$li %2$@ من الحسابات، لكن يمكنك فقط ربط حسابات جارية أو حسابات توفير بـ %3$@.";
+
+"We found %d %@ accounts but you can only link checking or savings accounts." = "عثرنا على %1$li %2$@ من الحسابات، لكن يمكنك فقط ربط حسابات جارية أو حسابات توفير.";
+
+"We found 1 %@ account but you can only link US checking accounts to %@." = "عثرنا على حساب واحد (1) من النوع %1$@، لكن يمكنك فقط ربط الحسابات الجارية في الولايات المتحدة بـ %2$@.";
+
+"We found 1 %@ account but you can only link US checking accounts." = "عثرنا على حساب واحد (1) من النوع %@، لكن يمكنك ربط الحسابات الجارية في الولايات المتحدة فقط.";
+
+"We found 1 %@ account but you can only link checking or savings accounts to %@." = "عثرنا على حساب واحد (1) من النوع %1$@، لكن يمكنك فقط ربط الحسابات الجارية أو حسابات التوفير بـ %2$@.";
+
+"We found 1 %@ account but you can only link checking or savings accounts." = "عثرنا على حساب واحد (1) من النوع %@، لكن يمكنك فقط ربط الحسابات الجارية أو حسابات التوفير.";
+
+"Yes, exit" = "نعم، المغادرة";
+
+"You can expect micro-deposits to account ••••%@ in 1-2 days and an email with further instructions." = "يمكنك توقع تلقي إيداعات مصغرة في الحساب ••••%@ في غضون 1 إلى 2 من الأيام ورسالة بريد إلكتروني تتضمن مزيدًا من التعليمات.";
+
+"You haven't finished linking your account. Press continue to finish the process." = "لم تُكمل ربط حسابك. اضغط على \"متابعة\" لإكمال العملية.";
+
+"You haven't finished linking your bank account and all progress will be lost." = "لم تُكمل ربط حسابك البنكي وستفقد كل التقدّم.";
+
+"You're in test mode." = "أنت في وضع الاختبار.";
+
+"Your account can’t be connected at this time. Please enter your bank details manually or try again later." = "لا يمكن ربط حسابك في الوقت الحالي. يُرجى إدخال بيانات بنكك يدويًا أو المحاولة مرة أخرى لاحقًا.";
+
+"Your account can’t be connected at this time. Please try again later." = "لا يمكن ربط حسابك في الوقت الحالي. يُرجى المحاولة مرة أخرى لاحقًا.";
+
+"Your account number couldn’t be accessed at this time" = "تعذّر الوصول إلى رقم حسابك في الوقت الحالي";
+
+"Your account numbers don't match." = "رقم حسابك غير متطابق.";
+
+"Your account was connected, but couldn't be saved to %@." = "تم ربط حسابك، لكن تعذّر حفظه في %@.";
+
+"Your account was connected, but couldn't be saved to Link." = "تم ربط حسابك، لكن تعذّر حفظه في Link.";
+
+"Your account was connected." = "تم ربط حسابك.";
+
+"Your accounts were connected, but couldn't be saved to %@." = "تم ربط حساباتك، لكن تعذّر حفظها في %@.";
+
+"Your accounts were connected, but couldn't be saved to Link." = "تم ربط حساباتك، لكن تعذّر حفظها في Link.";
+
+"Your accounts were connected." = "تم ربط حساباتك.";
+
+"Your bank information will be verified via micro-deposits to your account, typically within 1-2 business days. Only checking accounts are supported." = "سيتم التحقق من معلوماتك البنكية عبر إيداعات مصغرة في حسابك، في غضون يوم إلى يومي عمل عادةً. ويتم دعم الحسابات الجارية فقط.";
+
+"Your bank information will be verified with micro-deposits to your account. This typically takes 1-2 business days." = "سيتم التحقق من معلوماتك البنكية عبر إيداعات مصغرة في حسابك. يستغرق هذا في المعتاد يومًا إلى يومي عمل.";
+
+"Your email address is invalid." = "عنوان بريدك الإلكتروني غير صالح.";
+
+"Your mobile phone number is incomplete." = "رقم هاتفك الجوال غير مكتمل.";
+
+"contact us" = "تواصل معنا";
+
+"manually enter details" = "إدخال التفاصيل يدويًا";

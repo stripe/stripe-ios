@@ -1,0 +1,45 @@
+"An error occurred. Please try again." = "حدث خطأ ما. يُرجى المحاولة مرة أخرى.";
+
+"Card brand was not updated. Please try again." = "لم يتم تحديث العلامة التجارية للبطاقة. يُرجى المحاولة مرة أخرى.";
+
+"Close" = "إغلاق";
+
+"Confirm it's you" = "يُرجى تأكيد هويتك";
+
+"Default payment method was not updated. Please try again." = "لم يتم تحديث طريقة الدفع الافتراضية. يُرجى المحاولة مرة أخرى.";
+
+"Enter the code sent to %@." = "أدخل الرمز المُرسَل إلى %@.";
+
+"Failed to connect" = "فشل الاتصال";
+
+"Resend code" = "إعادة إرسال الرمز";
+
+"Scan Card" = "امسح البطاقة ضوئيًا";
+
+"Scan card" = "امسح البطاقة ضوئيًا";
+
+"The IBAN you entered is invalid." = "رقم IBAN الذي أدخلته غير صالح.";
+
+"There was an error processing your card -- try again in a few seconds" = "حدث خطأ ما في أثناء معالجة بطاقتك -- حاول مرة أخرى بعد بضع ثوانٍ";
+
+"There was an unexpected error -- try again in a few seconds" = "حدث خطأ غير متوقع -- حاول مرة أخرى بعد بضع ثوانٍ";
+
+"Try again" = "حاول مرة أخرى";
+
+"We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>" = "نستخدم Stripe للتحقق من تفاصيل بطاقتك. قد تستخدم Stripe بياناتك وتخزنها وفقًا لسياسة الخصوصية الخاصة بها. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>تعرّف على المزيد</u></a>";
+
+"Your card has expired" = "انتهت صلاحية بطاقتك";
+
+"Your card was declined" = "تم رفض بطاقتك";
+
+"Your card's expiration month is invalid" = "شهر انتهاء صلاحية بطاقتك غير صالح";
+
+"Your card's expiration year is invalid" = "سنة انتهاء صلاحية بطاقتك غير صالحة";
+
+"Your card's number is invalid" = "رقم بطاقتك غير صالح";
+
+"Your card's security code is invalid" = "رمز أمان بطاقتك غير صالح";
+
+"Your name is invalid." = "اسمك غير صالح.";
+
+"Your payment method was declined." = "تم رفض طريقة الدفع الخاصة بك.";

@@ -1,0 +1,351 @@
+"%1$@ ×%2$d" = "%1$@ ×%2$li";
+
+"%@ will no longer be saved to your wallet." = "لن يتم حفظ %@ في محفظتك بعد الآن.";
+
+"+ Add" = "+ إضافة";
+
+"1 %1$@ = %2$@ %3$@ (includes %4$@%% conversion fee)." = "1 %1$@ = %2$@ %3$@ (تتضمن رسوم تحويل بنسبة %4$@%%).";
+
+"1 %@ = %@ %@" = "1 %1$@ = %2$@ %3$@";
+
+"Accept" = "قبول";
+
+"Add US bank account" = "إضافة حساب بنكي أمريكي";
+
+"Add a card" = "إضافة بطاقة";
+
+"Add a payment method" = "إضافة طريقة دفع";
+
+"Add bank account" = "إضافة حساب بنكي";
+
+"Add card" = "إضافة بطاقة";
+
+"Add new card" = "إضافة بطاقة جديدة";
+
+"Add new payment method" = "إضافة طريقة دفع جديدة";
+
+"Add your payment information" = "أضف معلومات الدفع الخاصة بك";
+
+"Approve payment" = "الموافقة على الدفع";
+
+"Back" = "عودة";
+
+"Bank" = "بنك";
+
+"Bank account" = "الحساب البنكي";
+
+"Bank account details cannot be changed." = "لا يمكن تغيير تفاصيل الحساب البنكي.";
+
+"Buy Now, Pay Later with  <img/>" = "اشترِ الآن، وادفع لاحقًا مع <img/>";
+
+"Buy Now, Pay Later with Afterpay" = "اشترِ الآن، وادفع لاحقًا مع Afterpay";
+
+"Buy Now, Pay Later with Cash App Afterpay" = "اشترِ الآن، وادفع لاحقًا مع Cash App Afterpay";
+
+"Buy Now, Pay Later with Clearpay" = "اشترِ الآن، وادفع لاحقًا مع Clearpay";
+
+"Buy now or pay later with Klarna" = "اشترِ الآن، وادفع لاحقًا مع Klarna";
+
+"By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "بتأكيد الدفع باستخدام PayPal، أنت تسمح لـ %@ بخصم المدفوعات المستقبلية من حساب PayPal الخاص بك وفقًا لشروطهم.";
+
+"By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "بالمتابعة إلى Amazon Pay، أنت تسمح لـ %@ بخصم المدفوعات المستقبلية من حساب Amazon Pay الخاص بك وفقًا لشروطهم.";
+
+"By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms and Klarna's terms. You can change this at any time in your Klarna app or by reaching out to %@." = "بالمتابعة إلى Klarna، أنت تسمح لـ %1$@ بخصم المدفوعات المستقبلية من حساب Klarna الخاص بك وفقًا لشروطهم وشروط Klarna. ويمكنك تغيير هذا في أي وقت من خلال تطبيق Klarna أو عن طريق التواصل مع %2$@.";
+
+"By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "بالمتابعة إلى PayPal، أنت تسمح لـ %@ بخصم المدفوعات المستقبلية من حساب PayPal الخاص بك وفقًا لشروطهم.";
+
+"By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "بالمتابعة إلى Revolut Pay، أنت تسمح لـ %@ بتحصيل رسوم من حسابك على Revolut Pay للمدفوعات المستقبلية وفقًا لشروطهم.";
+
+"By continuing you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "بالمتابعة، أنت توافق على <terms>الشروط</terms> و<privacy>سياسة الخصوصية</privacy>.";
+
+"By continuing, you agree to save your information for future purchases with %1$@ and <link>%2$@</link> according to %2$@ <terms>terms</terms> and <privacy>privacy</privacy>." = "بالمتابعة، أنت توافق على حفظ معلوماتك لعمليات الشراء المستقبلية مع %1$@ و<link>%2$@</link> وفقًا <terms>لشروط</terms> و<privacy>خصوصية</privacy> %2$@.";
+
+"By continuing, you agree to save your information for future purchases with %@." = "بالمتابعة، أنت توافق على حفظ معلوماتك لعمليات الشراء المستقبلية مع %@.";
+
+"By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "بالمتابعة، أنت تفوض %@ بخصم الرصيد تلقائيًا من حساب Satispay الخاص بك بشكل متكرر وفقًا لخطة الشراء أو الاشتراك الخاصة بك.";
+
+"By continuing, you authorize %@ to automatically debit your Twint Balance on a recurring basis in accordance with your purchase or subscription plan." = "بالمتابعة، أنت تفوض %@ بخصم الرصيد تلقائيًا من حساب Twint الخاص بك بشكل متكرر وفقًا لخطة الشراء أو الاشتراك الخاصة بك.";
+
+"By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "بالمتابعة، أنت تفوض %1$@ بخصم قيمة هذه الدفعة والمدفوعات المستقبلية من حساب Cash App الخاص بك وفقًا لشروط %2$@، إلى أن يتم إلغاء هذا التفويض. ويمكنك تغيير هذا في أي وقت في إعدادات Cash App الخاصة بك.";
+
+"By joining %@, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "بانضمامك إلى %@، أنت توافق على <terms>الشروط</terms> و<privacy>سياسة الخصوصية</privacy>.";
+
+"By providing phone number and email, you agree to create a %1$@ account subject to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "بتقديم رقم الهاتف والبريد الإلكتروني، أنت توافق على إنشاء حساب %1$@ يخضع <terms>لشروط</terms> و<privacy>سياسة خصوصية</privacy> %1$@.";
+
+"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "بتقديم تفاصيل حسابك البنكي وتأكيد الدفع، أنت توافق على طلب الخصم المباشر هذا وعلى <terms>اتفاقية خدمة طلب الخصم المباشر</terms>، وتُفوّض شركة Stripe Payments Australia Pty Ltd ACN 160 180 343 التي تحمل رقم تعريف مستخدم الخصم المباشر 507156 (\"Stripe\") بخصم مبالغ من حسابك من خلال نظام المقاصة الإلكتروني المجمع (BECS) نيابةً عن %@ (\"التاجر\") مقابل أي مبالغ يتم إبلاغك بها بشكل منفصل من قبل التاجر. أنت تُقر بأنك إما صاحب الحساب أو مُوقّع بالتفويض على الحساب المُدرج أعلاه.";
+
+"By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "بتقديم معلومات بطاقتك، أنت تسمح لـ %@ بتحصيل رسوم من بطاقتك للمدفوعات المستقبلية وفقًا لشروطهم.";
+
+"By providing your email, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "بتقديم بريدك الإلكتروني، أنت توافق على إنشاء حساب %1$@ وحفظ معلومات الدفع الخاصة بك في %1$@، وفقًا <terms>لشروط</terms> و<privacy>سياسة خصوصية</privacy> %1$@.";
+
+"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "بتقديم معلومات الدفع الخاصة بك وتأكيد هذه الدفعة، أنت تفوض (أ) %@ وStripe، مزود خدمة الدفع لدينا، بإرسال تعليمات إلى البنك الذي تتعامل معه لخصم المبلغ من حسابك و(ب) البنك الذي تتعامل معه لخصم المبلغ من حسابك وفقًا لتلك التعليمات. كجزء من حقوقك، يحق لك استرداد الأموال من مصرفك بموجب شروط وأحكام اتفاقيتك مع مصرفك. تجب المطالبة باسترداد الأموال في غضون 8 أسابيع تبدأ من التاريخ الذي تم فيه الخصم من حسابك. يتم شرح حقوقك في بيان يمكنك الحصول عليه من مصرفك. أنت توافق على تلقي إشعارات بالخصومات المستقبلية قبل يومين من حدوثها.";
+
+"By providing your phone number, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "بتقديم رقم هاتفك، أنت توافق على إنشاء حساب %1$@ وحفظ معلومات الدفع الخاصة بك في %1$@، وفقًا <terms>لشروط</terms> و<privacy>سياسة خصوصية</privacy> %1$@.";
+
+"By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "بحفظ حسابك البنكي لدى %@، أنت توافق على تفويض المدفوعات بموجب <terms>هذه الشروط</terms>.";
+
+"By saving your payment information, you allow %@ to charge you for future payments in accordance with their terms." = "بحفظ معلومات الدفع الخاصة بك، أنت تسمح لـ %@ بتحصيل رسوم منك للمدفوعات المستقبلية وفقًا لشروطهم.";
+
+"By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "بإرسال طلبك إلى %1$@ و%2$@، أنت توافق على حفظ معلوماتك مع %3$@ للمشتريات المستقبلية، وتوافق على تفويض المدفوعات بموجب <terms>هذه الشروط</terms>.";
+
+"By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "بإرسال طلبك إلى %@، أنت توافق على تفويض المدفوعات بموجب <terms>هذه الشروط</terms>.";
+
+"CPF/CPNJ" = "CPF/CPNJ";
+
+"Cancel and pay another way" = "إلغاء والدفع بطريقة أخرى";
+
+"Card details cannot be changed." = "لا يمكن تغيير تفاصيل البطاقة.";
+
+"Card number. Supported cards include %@" = "رقم البطاقة. البطاقات المدعومة تشمل %@";
+
+"Change" = "تغيير";
+
+"Choose a card brand" = "اختر علامة تجارية للبطاقة";
+
+"Choose a payment method" = "اختر طريقة دفع";
+
+"Close card scanner" = "إغلاق ماسح البطاقة";
+
+"Code sent" = "تم إرسال الرمز";
+
+"Confirm" = "تأكيد";
+
+"Confirm payment details" = "تأكيد بيانات الدفع";
+
+"Confirm the Bizum payment in your mobile banking application within %@ to complete the purchase." = "أكّد دفعة Bizum في تطبيق الخدمات المصرفية عبر الهاتف المحمول خلال %@ لإكمال عملية الشراء.";
+
+"Confirm the payment in your MB WAY app within %@ to complete the purchase." = "أكّد الدفع في تطبيق MB WAY خلال %@ لإكمال الشراء.";
+
+"Confirm the payment in your bank or payment app within %@ to complete the purchase." = "أكّد الدفع في تطبيق البنك أو تطبيق الدفع خلال %@ لإكمال الشراء.";
+
+"Confirm the payment in your bank's app within %@ to complete the purchase." = "أكّد الدفع في تطبيق البنك خلال %@ لإكمال الشراء.";
+
+"Confirm your CVC" = "أكّد رمز CVC";
+
+"Confirm your information" = "أكّد معلوماتك";
+
+"Contact information" = "معلومات الاتصال";
+
+"Continue another way" = "المتابعة بطريقة أخرى";
+
+"Create an account with %@ for faster checkout across the web" = "قم بإنشاء حساب باستخدام %@ لإتمام الدفع بشكلٍ أسرع عبر الويب";
+
+"Debit or credit card" = "بطاقة خصم أو بطاقة ائتمان";
+
+"Declarations" = "الإقرارات";
+
+"Default" = "افتراضي";
+
+"Default payment method" = "طريقة الدفع الافتراضية";
+
+"Did you mean %@? %@." = "هل كنت تقصد %1$@؟ ‏%2$@.";
+
+"Discard Changes" = "تجاهل التغييرات";
+
+"Discard changes?" = "هل تريد تجاهل التغييرات؟";
+
+"Discount" = "خصم";
+
+"EPS Bank" = "بنك EPS";
+
+"Edit address" = "تحرير العنوان";
+
+"Enter address manually" = "إدخال العنوان يدويًا";
+
+"Exchange rate and fees of your bank may apply." = "قد يُطبّق سعر الصرف والرسوم الخاصة بالبنك الذي تتعامل معه.";
+
+"FPX Bank" = "بنك FPX";
+
+"Fast, secure checkout" = "دفع آمن وسريع";
+
+"Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "استرد %@ عند الدفع لأول مرة باستخدام حسابك البنكي. <terms>اطّلع على الشروط</terms>";
+
+"Get %@ back when you pay with your bank. <terms>See terms</terms>" = "استرد %@ عند الدفع باستخدام حسابك البنكي. <terms>اطّلع على الشروط</terms>";
+
+"Hide details" = "إخفاء التفاصيل";
+
+"I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "أدرك أن Stripe ستحصّل مدفوعات الخصم المباشر نيابةً عن %@ وأؤكد أنني صاحب الحساب والشخص الوحيد المطلوب منه تفويض عمليات الخصم من هذا الحساب.";
+
+"IBAN" = "رقم IBAN";
+
+"Keep Editing" = "الاستمرار في التعديل";
+
+"Last 4 digits of SSN" = "آخر 4 أرقام من رقم الضمان الاجتماعي (SSN)";
+
+"Manage SEPA debit" = "إدارة الخصم المباشر لمنطقة المدفوعات الأوروبية الموحدة (SEPA)";
+
+"Manage US bank account" = "إدارة الحساب البنكي الأمريكي";
+
+"Manage bank account" = "إدارة الحساب البنكي";
+
+"Manage card" = "إدارة البطاقة";
+
+"Manage cards" = "إدارة البطاقات";
+
+"Manage payment method" = "إدارة طريقة الدفع";
+
+"Manage payment methods" = "إدارة طرق الدفع";
+
+"Manage your payment methods" = "إدارة طرق الدفع الخاصة بك";
+
+"Name on card" = "الاسم الموجود على البطاقة";
+
+"New card" = "بطاقة جديدة";
+
+"New payment method" = "طريقة دفع جديدة";
+
+"No %@ promo" = "لا يوجد عرض ترويجي %@";
+
+"Not you?" = "لست أنت؟";
+
+"Only card brand can be changed." = "يمكن تغيير العلامة التجارية للبطاقة فقط.";
+
+"Open to see more information." = "افتح لعرض المزيد من المعلومات.";
+
+"Or" = "أو";
+
+"Or pay using" = "أو ادفع باستخدام";
+
+"Or pay with a card" = "أو ادفع ببطاقة";
+
+"Or use" = "أو استخدم";
+
+"Or use a card" = "أو استخدم بطاقة";
+
+"Pay %@" = "دفع %@";
+
+"Pay another way" = "الدفع بطريقة أخرى";
+
+"Pay faster at %@ and thousands of businesses." = "ادفع بشكل أسرع في %@ وآلاف الأنشطة التجارية.";
+
+"Pay faster everywhere %@ is accepted." = "ادفع بشكل أسرع في كل مكان يُقبل فيه %@.";
+
+"Pay faster everywhere Link is accepted." = "ادفع بشكل أسرع في كل مكان يُقبل فيه Link.";
+
+"Pay over time with %@" = "الدفع بمرور الوقت باستخدام %@";
+
+"Pay over time with Affirm" = "الدفع بمرور الوقت باستخدام Affirm";
+
+"Pay with %@" = "الدفع باستخدام %@";
+
+"Pay with Link" = "الدفع باستخدام Link";
+
+"Pay with your bank account in just a few steps." = "ادفع باستخدام حسابك البنكي في بضع خطوات فقط.";
+
+"Payment" = "الدفع";
+
+"Payment failed" = "فشلت عملية الدفع";
+
+"Payment method details cannot be changed." = "لا يمكن تغيير تفاصيل طريقة الدفع.";
+
+"Payment methods" = "طرق الدفع";
+
+"Please choose a valid payment method." = "يُرجى اختيار طريقة دفع صالحة.";
+
+"Please go back and select another payment method" = "يُرجى الرجوع وتحديد طريقة دفع أخرى";
+
+"Point the camera at your card." = "وجّه الكاميرا نحو بطاقتك.";
+
+"Processing..." = "جارٍ المعالجة...";
+
+"Przelewy24 Bank" = "بنك Przelewy24";
+
+"Remove %@" = "إزالة %@";
+
+"Remove bank?" = "هل تريد إزالة البنك؟";
+
+"Remove card?" = "هل تريد إزالة البطاقة؟";
+
+"Remove linked account" = "إزالة الحساب المربوط";
+
+"Remove payment method" = "إزالة طريقة الدفع";
+
+"Remove payment method?" = "هل تريد إزالة طريقة الدفع؟";
+
+"SEPA debit details cannot be changed." = "لا يمكن تغيير تفاصيل خصم SEPA.";
+
+"Save" = "حفظ";
+
+"Save a new payment method" = "حفظ طريقة دفع جديدة";
+
+"Save address" = "حفظ العنوان";
+
+"Save for future payments" = "حفظ للمدفوعات المستقبلية";
+
+"Save my info for faster checkout with %@" = "حفظ معلوماتي لإتمام الدفع بشكلٍ أسرع باستخدام %@";
+
+"Save payment details to %@ for future purchases" = "حفظ تفاصيل الدفع في %@ لعمليات الشراء المستقبلية";
+
+"Save this account for future %@ payments" = "حفظ هذا الحساب لمدفوعات %@ المستقبلية";
+
+"Save your bank account in just a few steps." = "احفظ حسابك البنكي في بضع خطوات بسيطة.";
+
+"Save your info for secure 1-click checkout with %@" = "احفظ معلوماتك لإتمام الدفع الآمن بنقرة واحدة باستخدام %@";
+
+"Saved" = "تم الحفظ";
+
+"Select card" = "حدد البطاقة";
+
+"Select payment method" = "حدد طريقة الدفع";
+
+"Select your payment method" = "حدد طريقة الدفع الخاصة بك";
+
+"Set as default" = "تعيين كطريقة افتراضية";
+
+"Set as default payment method" = "تعيين كطريقة دفع افتراضية";
+
+"Set up" = "إعداد";
+
+"Shipping to %@ is not supported." = "الشحن إلى %@ غير مدعوم.";
+
+"Show details" = "عرض التفاصيل";
+
+"Show menu" = "عرض القائمة";
+
+"Sign in or sign up" = "تسجيل الدخول أو تسجيل حساب";
+
+"Sign out of %@" = "تسجيل الخروج من %@";
+
+"Simple, secure one-click payments" = "مدفوعات بسيطة وآمنة بنقرة واحدة";
+
+"Something went wrong when linking your account.\nPlease try again later." = "حدث خطأ ما عند ربط حسابك.\nيُرجى المحاولة مرة أخرى لاحقًا.";
+
+"Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "ستقوم Stripe بإيداع $0.01 في حسابك خلال يوم إلى يومي عمل. ثم ستتلقى رسالة بريد إلكتروني تحتوي على إرشادات لإنهاء حفظ حسابك البنكي لدى %@.";
+
+"Subtotal" = "المجموع الفرعي";
+
+"Tap to close" = "انقر للإغلاق";
+
+"Tap to expand" = "انقر للتوسيع";
+
+"Tax" = "الضريبة";
+
+"The IBAN you entered is incomplete." = "رقم IBAN الذي أدخلته غير مكتمل.";
+
+"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "رقم IBAN الذي أدخلته غير صالح، \"%@\" ليس رمز دولة مدعومًا.";
+
+"The provided verification code has expired." = "انتهت صلاحية رمز التحقق المقدم.";
+
+"The provided verification code is incorrect." = "رمز التحقق المقدم غير صحيح.";
+
+"This is your default" = "هذا هو خيارك الافتراضي";
+
+"This payment method will be removed but will remain available for %@ subscriptions." = "تتم إزالة طريقة الدفع هذه ولكنها ستظل متاحة لاشتراكات %@.";
+
+"Too many attempts. Please try again in a few minutes." = "عدد كبير جدًا من المحاولات. يُرجى المحاولة مرة أخرى بعد بضع دقائق.";
+
+"Unavailable for this purchase" = "غير متوفر لعملية الشراء هذه";
+
+"Update card" = "تحديث البطاقة";
+
+"Update payment method" = "تحديث طريقة الدفع";
+
+"Use billing address for shipping" = "استخدام عنوان الفوترة للشحن";
+
+"View more" = "عرض المزيد";
+
+"Yes, update" = "نعم، تحديث";
+
+"Your IBAN should start with a two-letter country code." = "يجب أن يبدأ رقم IBAN الخاص بك برمز دولة مكوّن من حرفين.";
+
+"Your address changes won't be saved." = "لن يتم حفظ تغييرات عنوانك.";

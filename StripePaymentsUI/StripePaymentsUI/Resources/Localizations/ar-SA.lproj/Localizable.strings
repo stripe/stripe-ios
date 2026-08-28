@@ -1,0 +1,85 @@
+"%1$@ Card" = "بطاقة %1$@";
+
+"%1$@ Credit" = "ائتمان %1$@";
+
+"%1$@ Debit" = "خصم مباشر %1$@";
+
+"%1$@ Prepaid" = "مسبقة الدفع %1$@";
+
+"%1$@ account ending in %2$@" = "حساب %1$@ المنتهي بـ %2$@";
+
+"%1$@ ending in %2$@" = "%1$@ المنتهي بـ %2$@";
+
+"%1$@ is not accepted" = "%1$@ غير مقبولة";
+
+"Address line 2 (optional)" = "سطر العنوان 2 (اختياري)";
+
+"Apple Pay" = "Apple Pay";
+
+"BSB" = "BSB";
+
+"Bank Account" = "الحساب البنكي";
+
+"Billing address" = "عنوان إرسال الفواتير";
+
+"CVC" = "CVC";
+
+"Card information" = "معلومات البطاقة";
+
+"Card number" = "رقم البطاقة";
+
+"Confirm your %@" = "تأكيد %@";
+
+"Invalid data." = "بيانات غير صالحة.";
+
+"MM / YY" = "شهر/سنة";
+
+"MM/YY" = "شهر/سنة";
+
+"Only credit and prepaid cards are accepted" = "تُقبل البطاقات الائتمانية والمدفوعة مسبقًا فقط";
+
+"Only credit cards are accepted" = "تُقبل البطاقات الائتمانية فقط";
+
+"Only debit and credit cards are accepted" = "تُقبل بطاقات الخصم والبطاقات الائتمانية فقط";
+
+"Only debit and prepaid cards are accepted" = "تُقبل بطاقات الخصم والبطاقات المدفوعة مسبقًا فقط";
+
+"Only debit cards are accepted" = "تُقبل بطاقات الخصم فقط";
+
+"Only prepaid cards are accepted" = "تُقبل البطاقات المدفوعة مسبقًا فقط";
+
+"Postal Code" = "الرمز البريدي";
+
+"Shipping Address" = "عنوان الشحن";
+
+"State / Province / Region" = "الولاية / المقاطعة / المنطقة";
+
+"The BSB you entered is invalid." = "رمز BSB الذي أدخلته غير صالح.";
+
+"The selected brand is not allowed" = "العلامة التجارية المحددة غير مسموح بها";
+
+"To scan your card, allow camera access in Settings." = "لمسح بطاقتك ضوئيًا، اسمح بالوصول إلى الكاميرا في الإعدادات.";
+
+"Your card has expired." = "انتهت صلاحية بطاقتك.";
+
+"Your card number is incomplete." = "رقم بطاقتك غير مكتمل.";
+
+"Your card number is invalid." = "رقم بطاقتك غير صالح.";
+
+"Your card's expiration date is incomplete." = "تاريخ انتهاء صلاحية بطاقتك غير مكتمل.";
+
+"Your card's expiration date is invalid." = "تاريخ انتهاء صلاحية بطاقتك غير صالح.";
+
+"Your card's expiration month is invalid." = "شهر انتهاء صلاحية بطاقتك غير صالح.";
+
+"Your card's expiration year is invalid." = "سنة انتهاء صلاحية بطاقتك غير صالحة.";
+
+"Your card's security code is incomplete." = "رمز أمان بطاقتك غير مكتمل.";
+
+"Your card's security code is invalid." = "رمز أمان بطاقتك غير صالح.";
+
+"card number" = "رقم البطاقة";
+
+"example@example.com" = "example@example.com";
+
+"expiration date" = "تاريخ انتهاء الصلاحية";

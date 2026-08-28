@@ -1,0 +1,147 @@
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
+"%@ (optional)" = "%@ (اختياري)";
+
+"(not accepted)" = "(محاولة غير مقبولة)";
+
+"Account number" = "رقم الحساب";
+
+"Address" = "العنوان";
+
+"Address line 1" = "سطر العنوان 1";
+
+"Address line 2" = "سطر العنوان 2";
+
+"Area" = "المنطقة";
+
+"BLIK code" = "رمز BLIK";
+
+"BSB number" = "رقم BSB";
+
+"Bank account •••• %@" = "حساب بنكي •••• %@";
+
+"Billing address is same as shipping" = "عنوان الفوترة هو نفس عنوان الشحن";
+
+"Cancel" = "إلغاء";
+
+"Card brand" = "العلامة التجارية للبطاقة";
+
+"City" = "المدينة";
+
+"Code field" = "حقل الرمز";
+
+"Company" = "الشركة";
+
+"Continue" = "متابعة";
+
+"Country" = "البلد";
+
+"Country or region" = "البلد أو المنطقة";
+
+"County" = "المقاطعة";
+
+"Date of Birth" = "تاريخ الميلاد";
+
+"Department" = "القسم";
+
+"District" = "المنطقة";
+
+"Do Si" = "Do Si";
+
+"Do you want to close this form?" = "هل تريد إغلاق هذا النموذج؟";
+
+"Done" = "تم";
+
+"Double tap to edit" = "انقر نقرًا مزدوجًا للتعديل";
+
+"Edit" = "تحرير";
+
+"Eircode" = "الرمز البريدي الأيرلندي";
+
+"Email" = "البريد الإلكتروني";
+
+"Emirate" = "الإمارة";
+
+"Error" = "خطأ";
+
+"First" = "الاسم الأول";
+
+"Full name" = "الاسم الكامل";
+
+"Incomplete phone number" = "رقم الهاتف غير مكتمل";
+
+"Island" = "الجزيرة";
+
+"Last" = "الأخير";
+
+"Name" = "الاسم";
+
+"Name on account" = "الاسم المسجل في الحساب";
+
+"OK" = "حسنًا";
+
+"Oblast" = "Oblast";
+
+"Other" = "أخرى";
+
+"Parish" = "أبرشية";
+
+"Phone number" = "رقم الهاتف";
+
+"Postal code" = "الرمز البريدي";
+
+"Prefecture" = "المقاطعة";
+
+"Province" = "المقاطعة";
+
+"Remove" = "إزالة";
+
+"Remove bank account?" = "هل تريد إزالة الحساب البنكي؟";
+
+"Remove card" = "إزالة البطاقة";
+
+"Search" = "بحث";
+
+"Select card brand (optional)" = "حدد العلامة التجارية للبطاقة (اختياري)";
+
+"Selection is empty." = "الخانة المُحددة فارغة.";
+
+"Sort code" = "رمز الفرز";
+
+"State" = "الولاية";
+
+"Suburb" = "الضاحية";
+
+"Suburb or city" = "الضاحية أو المدينة";
+
+"The BSB you entered is incomplete." = "رمز BSB الذي أدخلته غير مكتمل.";
+
+"The ID number you entered is incomplete." = "رقم الهوية الذي أدخلته غير مكتمل.";
+
+"The account number you entered is incomplete." = "رقم الحساب الذي أدخلته غير مكتمل.";
+
+"The sort code you entered is invalid." = "رمز الفرز الذي أدخلته غير صالح.";
+
+"Town or city" = "المدينة أو البلدة";
+
+"Unable to parse phone number" = "تعذّر تحليل رقم الهاتف";
+
+"Use rotor to access links" = "استخدام الدوّار للوصول إلى الروابط";
+
+"Your BLIK code is incomplete." = "رمز BLIK غير مكتمل.";
+
+"Your BLIK code is invalid." = "رمز BLIK غير صالح.";
+
+"Your ZIP code is incomplete." = "الرمز البريدي غير مكتمل.";
+
+"Your ZIP code is invalid." = "الرمز البريدي غير صالح.";
+
+"Your email is invalid." = "بريدك الإلكتروني غير صالح.";
+
+"Your payment information will not be saved." = "لن يتم حفظ معلومات الدفع الخاصة بك.";
+
+"Your postal code is incomplete." = "الرمز البريدي غير مكتمل.";
+
+"Your postal code is invalid." = "الرمز البريدي غير صالح.";
+
+"ZIP" = "الرمز البريدي";

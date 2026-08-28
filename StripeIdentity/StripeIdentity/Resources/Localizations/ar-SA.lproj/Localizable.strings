@@ -1,0 +1,207 @@
+"A few photos will be taken automatically on the next step to verify it's you" = "سيتم التقاط بعض الصور تلقائيًا في الخطوة التالية للتحقق من صحة هويتك";
+
+"Accepted forms of ID include" = "تتضمن أشكال الهوية المقبولة";
+
+"Alternatively, you may manually upload a photo of your identity document." = "أو بدلاً من ذلك، يمكنك تحميل صورة لمستند هويتك يدويًا.";
+
+"App Settings" = "إعدادات التطبيق";
+
+"Auto" = "تلقائي";
+
+"Back %@ photo successfully uploaded" = "تم بنجاح تحميل صورة الوجه الخلفي لـ %@";
+
+"Back identity document photo successfully uploaded" = "تم بنجاح تحميل صورة الوجه الخلفي لوثيقة الهوية";
+
+"Back of %@" = "الوجه الخلفي لـ %@";
+
+"Back of ID not detected" = "لم يتم اكتشاف الوجه الخلفي لبطاقة الهوية";
+
+"Back of driver's license or government-issued photo ID" = "الوجه الخلفي لرخصة القيادة أو بطاقة هوية تحمل صورة صادرة عن جهة حكومية";
+
+"Back of identity document" = "الوجه الخلفي لوثيقة الهوية";
+
+"Camera permission" = "إذن الكاميرا";
+
+"Camera unavailable" = "الكاميرا غير متوفرة";
+
+"Capturing…" = "جارٍ الالتقاط…";
+
+"Center ID in view" = "ضع البطاقة في منتصف الشاشة";
+
+"Choose File" = "اختر ملفًا";
+
+"Consent" = "الموافقة";
+
+"Could not capture image" = "تعذر التقاط الصورة";
+
+"Date of birth does not look valid" = "تاريخ الميلاد لا يبدو صالحًا";
+
+"Details not visible" = "التفاصيل غير مرئية";
+
+"Flip your %@ over to the other side" = "اقلب %@ على الجانب الآخر";
+
+"Flip your driver's license or government-issued photo ID over to the other side" = "اقلب رخصة القيادة أو بطاقة الهوية التي تحمل صورة والصادرة عن جهة حكومية على الجانب الآخر";
+
+"Flip your identity card over to the other side" = "اقلب بطاقة هويتك على الجانب الآخر";
+
+"Front %@ photo successfully uploaded" = "تم تحميل صورة الوجه الأمامي من %@ بنجاح";
+
+"Front identity document photo successfully uploaded" = "تم تحميل صورة الوجه الأمامي من وثيقة الهوية بنجاح";
+
+"Front of %@" = "الوجه الأمامي من %@";
+
+"Front of ID not detected" = "لم يتم اكتشاف صورة الوجه الأمامي من بطاقة الهوية";
+
+"Front of driver's license or government-issued photo ID" = "صورة الوجه الأمامي من رخصة القيادة أو بطاقة الهوية التي تحمل صورة شخصية والصادرة عن جهة حكومية";
+
+"Front of driver's license or passport" = "صورة الوجه الأمامي من رخصة القيادة أو جواز السفر";
+
+"Front of driver's license, passport, or government-issued photo ID" = "صورة الوجه الأمامي من رخصة القيادة أو جواز السفر أو بطاقة الهوية التي تحمل صورة شخصية والصادرة عن جهة حكومية";
+
+"Front of identity document" = "صورة الوجه الأمامي من مستند الهوية";
+
+"Front of passport or government-issued photo ID" = "صورة الوجه الأمامي من جواز السفر أو بطاقة الهوية التي تحمل صورة شخصية والصادرة عن جهة حكومية";
+
+"Get ready to scan your photo ID" = "استعد لمسح بطاقة هويتك التي تحمل صورة ضوئيًا";
+
+"Get ready to take a selfie" = "استعد لالتقاط صورة شخصية";
+
+"Go Back" = "عودة";
+
+"Hold still, scanning" = "ابقَ ثابتًا، جارٍ المسح الضوئي";
+
+"I'm ready" = "أنا مستعد";
+
+"ID Number" = "رقم الهوية";
+
+"Image is blurry. Hold your phone steady and try again." = "الصورة غير واضحة. ثبّت هاتفك وحاول مرة أخرى.";
+
+"Image taken" = "تم التقاط الصورة";
+
+"Individual CPF" = "رقم CPF للفرد";
+
+"Invalid document" = "مستند غير صالح";
+
+"Keep ID level" = "حافظ على استواء بطاقة الهوية";
+
+"Last 4 of Social Security number" = "آخر 4 أرقام من رقم الضمان الاجتماعي";
+
+"Loading" = "جارٍ التحميل";
+
+"Make sure you're in a well lit space." = "تأكد من وجودك في مكان جيد الإضاءة.";
+
+"Manual" = "يدوي";
+
+"Move closer" = "اقترب أكثر";
+
+"Move farther" = "ابتعد أكثر";
+
+"Move to a darker area" = "انتقل إلى منطقة مظلمة";
+
+"Move to a well-lit area" = "انتقل إلى منطقة جيدة الإضاءة";
+
+"NRIC or FIN" = "بطاقة الهوية الوطنية (NRIC) أو رقم تعريف الأجانب (FIN)";
+
+"No document detected" = "لم يتم اكتشاف أي مستند";
+
+"Personal ID number" = "رقم البطاقة الشخصية";
+
+"Personal Information" = "المعلومات الشخصية";
+
+"Phone Number" = "رقم الهاتف";
+
+"Phone Verification" = "التحقق من الهاتف";
+
+"Photo Library" = "مكتبة الصور";
+
+"Please upload images of the front and back of your %@" = "يُرجى تحميل صورتين للوجهين الأمامي والخلفي من %@";
+
+"Please upload images of the front and back of your identity document" = "يُرجى تحميل صورتين للوجهين الأمامي والخلفي من وثيقة هويتك";
+
+"Position your %@ in the center of the frame" = "ضع %@ في وسط الإطار";
+
+"Position your driver's license or government-issued photo ID in the center of the frame" = "ضع رخصة القيادة الخاصة بك أو بطاقة الهوية التي تحمل صورة والصادرة عن جهة حكومية في وسط الإطار";
+
+"Position your driver's license or passport in the center of the frame" = "ضع رخصة القيادة أو جواز السفر في وسط الإطار";
+
+"Position your driver's license, passport, or government-issued photo ID in the center of the frame" = "ضع رخصة القيادة الخاصة بك أو جواز السفر أو بطاقة الهوية التي تحمل صورة والصادرة عن جهة حكومية في وسط الإطار";
+
+"Position your face in the center of the frame." = "ضع وجهك في وسط الإطار.";
+
+"Position your identity document in the center of the frame" = "ضع وثيقة هويتك في وسط الإطار";
+
+"Position your passport or government-issued photo ID in the center of the frame" = "ضع جواز سفرك أو بطاقة هويتك الحكومية التي تحمل صورتك في وسط الإطار";
+
+"Retake Photos" = "إعادة التقاط الصور";
+
+"Scan" = "المسح الضوئي";
+
+"Scanned" = "تم المسح الضوئي";
+
+"Select" = "تحديد";
+
+"Select a location to upload the back of your identity document from" = "اختر موقعًا لتحميل الجزء الخلفي من مستند هويتك منه";
+
+"Select a location to upload the front of your identity document from" = "حدد موقعًا لتحميل الوجه الأمامي لمستند هويتك منه";
+
+"Select back %@ photo" = "حدد صورة الوجه الخلفي لـ %@";
+
+"Select back identity document photo" = "حدد صورة الوجه الخلفي لمستند الهوية";
+
+"Select front %@ photo" = "حدد صورة الوجه الأمامي لـ %@";
+
+"Select front identity document photo" = "حدد صورة الوجه الأمامي لمستند الهوية";
+
+"Selfie" = "صورة سيلفي";
+
+"Selfie captures" = "التقاط صور سيلفي";
+
+"Selfie captures are complete" = "اكتملت التقاطات صور السيلفي";
+
+"Take Photo" = "التقاط صورة";
+
+"The images of your identity document have not been saved. Do you want to leave?" = "لم يتم حفظ صور مستند هويتك. هل تريد المغادرة؟";
+
+"There was an error accessing the camera." = "حدث خطأ في الوصول إلى الكاميرا.";
+
+"Try Again" = "حاول مرة أخرى";
+
+"Try reduce glare and make ID visible" = "حاول تقليل التوهج واجعل الهوية مرئية";
+
+"Unable to establish a connection." = "تعذّر إنشاء اتصال.";
+
+"Unsaved changes" = "تغييرات غير محفوظة";
+
+"Upload" = "تحميل";
+
+"Upload a Photo" = "تحميل صورة";
+
+"Upload your %@" = "حمّل %@";
+
+"Upload your photo ID" = "حمّل بطاقة هويتك التي تحتوي على صورة";
+
+"Uploading back %@ photo" = "جارٍ تحميل صورة الوجه الخلفي من %@";
+
+"Uploading back identity document photo" = "جارٍ تحميل صورة الوجه الخلفي من مستند الهوية";
+
+"Uploading front %@ photo" = "جارٍ تحميل صورة الوجه الأمامي من %@";
+
+"Uploading front identity document photo" = "جارٍ تحميل صورة الوجه الأمامي من مستند الهوية";
+
+"Verify your identity" = "تحقق من هويتك";
+
+"We could not capture a high-quality image." = "تعذّر علينا التقاط صورة عالية الجودة.";
+
+"We need permission to use your camera. Please allow camera access in app settings." = "نحتاج إلى إذن لاستخدام الكاميرا. يُرجى السماح بالوصول إلى الكاميرا في إعدادات التطبيق.";
+
+"Welcome" = "مرحبًا بك";
+
+"You can either try again or upload an image from your device." = "يمكنك إما المحاولة مرة أخرى أو تحميل صورة من جهازك.";
+
+"Your selfie images have not been saved. Do you want to leave?" = "لم يتم حفظ صور السيلفي الخاصة بك. هل تريد المغادرة؟";
+
+"driver's license" = "رخصة القيادة";
+
+"government-issued photo ID" = "بطاقة هوية تحمل صورة شخصية صادرة عن جهة حكومية";
+
+"passport" = "جواز سفر";

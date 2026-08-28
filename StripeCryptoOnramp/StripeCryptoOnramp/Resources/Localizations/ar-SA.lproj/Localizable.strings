@@ -1,0 +1,15 @@
+"Debit cards are most likely to be accepted." = "يُرجح قبول بطاقات الخصم.";
+
+"This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "تعذّر التحقق من هذا التطبيق بسبب خطأ في التصديق. يُرجى المحاولة مرة أخرى لاحقًا أو الاتصال بالمطور إذا استمرت المشكلة.";
+
+"This app couldn't be verified. Contact the app developer for help." = "تعذّر التحقق من هذا التطبيق. اتصل بمطوّر التطبيق للحصول على المساعدة.";
+
+"This wallet couldn't be found. Please choose or add a wallet and try again." = "تعذّر العثور على هذه المحفظة. يُرجى اختيار محفظة أو إضافتها والمحاولة مرة أخرى.";
+
+"This wallet network isn't supported. Please choose a different network." = "شبكة المحفظة هذه غير مدعومة. يُرجى اختيار شبكة مختلفة.";
+
+"This wallet verification request expired. Please try again." = "انتهت صلاحية طلب التحقق من المحفظة هذا. يُرجى المحاولة مرة أخرى.";
+
+"This wallet verification request is invalid. Please try again." = "طلب التحقق من المحفظة هذا غير صالح. يُرجى المحاولة مرة أخرى.";
+
+"We couldn't verify ownership of this wallet. Please try again." = "لم نتمكن من التحقق من ملكية هذه المحفظة. يُرجى المحاولة مرة أخرى.";
