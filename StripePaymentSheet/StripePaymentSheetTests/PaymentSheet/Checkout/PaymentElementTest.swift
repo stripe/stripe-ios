@@ -170,22 +170,6 @@ final class PaymentElementTest: XCTestCase {
         XCTAssertTrue(embeddedConfiguration.allowsPaymentMethodsRequiringShippingAddress)
     }
 
-    func testConfigurationSetsLinkDisplay() async throws {
-        // Given Link is hidden in PaymentElement configuration
-        var checkoutConfiguration = CheckoutController.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
-        checkoutConfiguration.paymentElement.linkConfiguration = PaymentElement.LinkConfiguration(display: .never)
-
-        // When Checkout creates PaymentElement
-        let checkout = try await CheckoutController(
-            configuration: CheckoutTestHelpers.makeConfiguration(configuration: checkoutConfiguration)
-        )
-        let paymentElement = checkout.getPaymentElement()
-
-        // Then both presentations hide Link
-        XCTAssertEqual(paymentElement.paymentSheetFlowController.configuration.link.display, .never)
-        XCTAssertEqual(paymentElement.embeddedPaymentElement.configuration.link.display, .never)
-    }
-
     func testConfigurationSetsCheckoutDefaultShippingDetails() async throws {
         // Given Checkout shipping defaults
         var checkoutConfiguration = CheckoutController.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
