@@ -104,6 +104,8 @@ import Foundation
     case bizum
     /// A Naver Pay payment method
     case naverPay
+    /// A PAYCO payment method
+    case payco
     /// An unknown type.
     case unknown
 
@@ -206,6 +208,8 @@ import Foundation
             return "Bizum"
         case .naverPay:
             return "Naver Pay"
+        case .payco:
+            return "PAYCO"
         case .cardPresent,
             .unknown:
             return STPLocalizedString("Unknown", "Default missing source type label")
@@ -311,6 +315,8 @@ import Foundation
             return "bizum"
         case .naverPay:
             return "naver_pay"
+        case .payco:
+            return "payco"
         }
     }
 

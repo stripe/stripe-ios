@@ -104,6 +104,8 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
     @objc private(set) public var payByBank: STPPaymentMethodPayByBank?
     /// If this is a Naver Pay PaymentMethod (i.e. `self.type == STPPaymentMethodTypeNaverPay`), this contains additional details.
     @objc private(set) public var naverPay: STPPaymentMethodNaverPay?
+    /// If this is a PAYCO PaymentMethod (i.e. `self.type == STPPaymentMethodTypePayco`), this contains additional details.
+    @objc private(set) public var payco: STPPaymentMethodPayco?
 
     /// This field indicates whether this payment method can be shown again to its customer in a checkout flow
     @objc private(set) public var allowRedisplay: STPPaymentMethodAllowRedisplay
@@ -180,6 +182,7 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
             "wero = \(String(describing: wero))",
             "payByBank = \(String(describing: payByBank))",
             "naverPay = \(String(describing: naverPay))",
+            "payco = \(String(describing: payco))",
             "liveMode = \(liveMode ? "YES" : "NO")",
             "allowRedisplay = \(allResponseFields["allow_redisplay"] as? String ?? "")",
             "type = \(allResponseFields["type"] as? String ?? "")",
@@ -386,6 +389,9 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
         )
         paymentMethod.naverPay = STPPaymentMethodNaverPay.decodedObject(
             fromAPIResponse: dict.stp_dictionary(forKey: "naver_pay")
+        )
+        paymentMethod.payco = STPPaymentMethodPayco.decodedObject(
+            fromAPIResponse: dict.stp_dictionary(forKey: "payco")
         )
         return paymentMethod
     }
