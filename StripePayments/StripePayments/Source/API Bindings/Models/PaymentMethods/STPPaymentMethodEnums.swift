@@ -102,6 +102,8 @@ import Foundation
     case mbWay
     /// A Bizum payment method
     case bizum
+    /// A Korean cards payment method
+    case krCard
     /// An unknown type.
     case unknown
 
@@ -202,6 +204,8 @@ import Foundation
             return "MB WAY"
         case .bizum:
             return "Bizum"
+        case .krCard:
+            return "Korean cards"
         case .cardPresent,
             .unknown:
             return STPLocalizedString("Unknown", "Default missing source type label")
@@ -305,6 +309,8 @@ import Foundation
             return "mb_way"
         case .bizum:
             return "bizum"
+        case .krCard:
+            return "kr_card"
         }
     }
 
