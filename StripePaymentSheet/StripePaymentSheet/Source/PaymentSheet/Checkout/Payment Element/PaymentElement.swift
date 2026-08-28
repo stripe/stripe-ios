@@ -198,9 +198,9 @@ extension PaymentElement {
             assertionFailure("Clearing the payment option after presenting PaymentElement is not implemented. File a feature request if you need this.")
             return
         }
-        try await checkout?.resetBillingTaxRegionIfNecessary()
-        embeddedPaymentElement.clearPaymentOption()
-        checkout?.setPaymentOption(nil)
+        try await checkout?.updatePaymentOption(to: nil) { [embeddedPaymentElement] in
+            embeddedPaymentElement.clearPaymentOption()
+        }
     }
 }
 

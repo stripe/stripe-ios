@@ -217,9 +217,7 @@ public final class CheckoutController: ObservableObject {
     /// this also updates the Checkout Session to reset tax calculation to its country.
     /// - Throws: ``CheckoutError`` if the Checkout Session update fails.
     public func clearPaymentOption() async throws {
-        try await enqueueSessionUpdate {
-            try await self.paymentElement.clearPaymentOption()
-        }
+        try await paymentElement.clearPaymentOption()
     }
 
     // MARK: - Addresses

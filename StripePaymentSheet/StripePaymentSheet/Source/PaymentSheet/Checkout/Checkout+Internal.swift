@@ -71,22 +71,56 @@ extension CheckoutController {
 
     // MARK: - Payment Option
 
+    /// Updates only the published payment option state.
+    /// Use `updatePaymentOption(to:updateElement:)` when the change and its Checkout Session
+    /// side effects must succeed atomically.
     func setPaymentOption(_ paymentOption: Session.PaymentOptionDisplayData?) {
         dangerouslySetSessionDirectly(
             session.makeCopyOverriding(paymentOption: .newValue(paymentOption))
         )
     }
 
-    /// Resets billing-based automatic tax to the selected payment option's country.
+    /// Updates the Checkout Session and Payment Element with a new payment option.
     ///
-    /// - Warning: Only call this from an operation already serialized by
-    ///   `enqueueSessionUpdate(_:)`.
-    func resetBillingTaxRegionIfNecessary() async throws {
-        guard session.shouldSendTaxRegion(for: "billing"),
-              let country = session.paymentOption?.billingDetails?.address.country?.nonEmpty else {
-            return
+    /// For billing-based automatic tax, this updates the tax region from the new option's
+    /// billing address. Clearing an option retains only its previous billing country because
+    /// the Checkout Session update endpoint does not support removing the tax region.
+    /// `updateElement` runs only after any required Checkout Session update succeeds.
+    func updatePaymentOption(
+        to paymentOption: Session.PaymentOptionDisplayData?,
+        updateElement: @MainActor @escaping () -> Void
+    ) async throws {
+        try await enqueueSessionUpdate {
+            if let billingTaxRegion = self.billingTaxRegion(for: paymentOption) {
+                try await self.applySessionUpdate(.setTaxRegion(billingTaxRegion))
+            }
+            updateElement()
+            self.setPaymentOption(paymentOption)
         }
-        try await applySessionUpdate(.setTaxRegion(Address(country: country)))
+    }
+
+    private func billingTaxRegion(
+        for paymentOption: Session.PaymentOptionDisplayData?
+    ) -> Address? {
+        guard session.shouldSendTaxRegion(for: "billing") else {
+            return nil
+        }
+        if let billingAddress = paymentOption?.billingDetails?.address,
+           let country = billingAddress.country?.nonEmpty {
+            return Address(
+                country: country,
+                line1: billingAddress.line1?.nonEmpty,
+                line2: billingAddress.line2?.nonEmpty,
+                city: billingAddress.city?.nonEmpty,
+                state: billingAddress.state?.nonEmpty,
+                postalCode: billingAddress.postalCode?.nonEmpty
+            )
+        }
+        guard paymentOption == nil,
+              let country = session.paymentOption?.billingDetails?.address.country?.nonEmpty else {
+            return nil
+        }
+        return Address(country: country)
     }
 
     // MARK: - Session Updates
