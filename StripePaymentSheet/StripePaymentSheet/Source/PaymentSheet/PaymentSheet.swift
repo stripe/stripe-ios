@@ -318,7 +318,7 @@ public class PaymentSheet {
             return checkout
         }()
         persistedSelectionSnapshotBeforePresentation = .init(
-            customerID: configuration.customer?.id,
+            customerID: (loadResult.paymentElementConfiguration ?? configuration).customerProvider.customerID,
             availableSavedPaymentMethods: loadResult.savedPaymentMethods
         )
         switch loadResult.paymentMethodOrientation {

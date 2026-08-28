@@ -26,6 +26,9 @@ public final class EmbeddedPaymentElement {
     /// This contains the `configuration` you passed in to `create`.
     /// - Note: `internal(set)` because checkout session updates may apply address overrides to the configuration.
     public internal(set) var configuration: Configuration
+    var paymentElementConfiguration: PaymentElementConfiguration {
+        return loadResult.paymentElementConfiguration ?? configuration
+    }
 
     /// See `EmbeddedPaymentElementDelegate`.
     public weak var delegate: EmbeddedPaymentElementDelegate?
@@ -114,7 +117,10 @@ public final class EmbeddedPaymentElement {
         var config = configuration
         checkout.session.applyAddressOverrides(to: &config)
 
-        try validateRowSelectionConfiguration(configuration: config)
+        try validateRowSelectionConfiguration(
+            configuration: config,
+            customerProvider: CustomerProvider(checkoutSession: checkout.session)
+        )
 
         AnalyticsHelper.shared.generateSessionID()
         STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: EmbeddedPaymentElement.self)
@@ -253,6 +259,7 @@ public final class EmbeddedPaymentElement {
                 selection: isPreviousPaymentOptionStillDisplayed ? previousSelectedRowType : nil,
                 previousPaymentOption: previousPaymentOption,
                 configuration: self.configuration,
+                paymentElementConfiguration: loadResult.paymentElementConfiguration ?? self.configuration,
                 intent: loadResult.intent,
                 elementsSession: loadResult.elementsSession,
                 savedPaymentMethods: loadResult.savedPaymentMethods,
@@ -440,7 +447,10 @@ public final class EmbeddedPaymentElement {
         }
     }
     internal private(set) lazy var savedPaymentMethodManager: SavedPaymentMethodManager = {
-        SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession, intent: intent)
+        SavedPaymentMethodManager(
+            configuration: loadResult.paymentElementConfiguration ?? configuration,
+            elementsSession: elementsSession
+        )
     }()
 
     internal private(set) lazy var paymentHandler: STPPaymentHandler = STPPaymentHandler(apiClient: configuration.apiClient)

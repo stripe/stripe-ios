@@ -141,7 +141,7 @@ class EmbeddedFormViewController: UIViewController {
             elementsSession: elementsSession,
             previousCustomerInput: previousCustomerInput,
             formCache: formCache,
-            configuration: configuration,
+            configuration: paymentElementConfiguration,
             paymentMethodOrientation: .vertical,
             headerView: headerView,
             analyticsHelper: analyticsHelper,
@@ -154,10 +154,12 @@ class EmbeddedFormViewController: UIViewController {
     private lazy var mandateView = SimpleMandateTextView(theme: configuration.appearance.asElementsTheme)
     private lazy var errorLabel = ElementsUI.makeErrorLabel(theme: configuration.appearance.asElementsTheme)
     private let stackView: UIStackView = UIStackView()
+    private let paymentElementConfiguration: PaymentElementConfiguration
 
     weak var delegate: EmbeddedFormViewControllerDelegate?
 
     init(configuration: EmbeddedPaymentElement.Configuration,
+         paymentElementConfiguration: PaymentElementConfiguration? = nil,
          intent: Intent,
          elementsSession: STPElementsSession,
          shouldUseNewCardNewCardHeader: Bool,
@@ -173,6 +175,7 @@ class EmbeddedFormViewController: UIViewController {
         self.elementsSession = elementsSession
         self.shouldUseNewCardNewCardHeader = shouldUseNewCardNewCardHeader
         self.configuration = configuration
+        self.paymentElementConfiguration = paymentElementConfiguration ?? configuration
         self.paymentOptionToRestoreOnCancellation = previousPaymentOption
         self.analyticsHelper = analyticsHelper
         self.paymentMethodMessagingPromotionsHelper = paymentMethodMessagingPromotionsHelper

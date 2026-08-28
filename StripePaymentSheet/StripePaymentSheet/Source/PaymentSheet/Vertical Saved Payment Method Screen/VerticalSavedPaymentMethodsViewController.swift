@@ -130,7 +130,10 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     }
 
     private lazy var savedPaymentMethodManager: SavedPaymentMethodManager = {
-        SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession, intent: intent)
+        SavedPaymentMethodManager(
+            configuration: configuration,
+            elementsSession: elementsSession
+        )
     }()
 
     // MARK: Internal properties
@@ -197,9 +200,9 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         self.checkout = checkout
         self.elementsSession = elementsSession
         self.defaultPaymentMethod = defaultPaymentMethod
-        self.paymentMethodRemove = intent.allowsPaymentMethodRemoval(elementsSession: elementsSession)
+        self.paymentMethodRemove = configuration.customerProvider.allowsPaymentMethodRemoval(elementsSession: elementsSession)
         self.paymentMethodRemoveLast = elementsSession.paymentMethodRemoveLast(configuration: configuration)
-        self.paymentMethodUpdate = intent.allowsPaymentMethodUpdate(elementsSession: elementsSession)
+        self.paymentMethodUpdate = configuration.customerProvider.allowsPaymentMethodUpdate(elementsSession: elementsSession)
         self.paymentMethodSetAsDefault = elementsSession.paymentMethodSetAsDefaultForPaymentSheet
         self.isCBCEligible = elementsSession.isCardBrandChoiceEligible
         self.analyticsHelper = analyticsHelper
@@ -447,7 +450,7 @@ extension VerticalSavedPaymentMethodsViewController: SavedPaymentMethodRowButton
         }
         CustomerPaymentOption.setDefaultPaymentMethod(
             .stripeId(paymentMethod.stripeId),
-            forCustomer: configuration.customer?.id
+            forCustomer: configuration.customerProvider.customerID
         )
     }
 

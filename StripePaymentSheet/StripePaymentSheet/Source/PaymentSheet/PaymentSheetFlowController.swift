@@ -265,6 +265,9 @@ extension PaymentSheet {
         // MARK: - Private properties
         var intent: Intent { viewController.loadResult.intent }
         var elementsSession: STPElementsSession { viewController.loadResult.elementsSession }
+        var paymentElementConfiguration: PaymentElementConfiguration {
+            return viewController.loadResult.paymentElementConfiguration ?? configuration
+        }
         lazy var paymentHandler: STPPaymentHandler = { STPPaymentHandler(apiClient: configuration.apiClient) }()
         var viewController: FlowControllerViewControllerProtocol
 
@@ -537,7 +540,7 @@ extension PaymentSheet {
             // Capture the accepted selection before presenting payment options.
             selectionSnapshotBeforePresentation = FlowControllerSelectionSnapshot(
                 viewController: viewController,
-                customerID: configuration.customer?.id
+                customerID: paymentElementConfiguration.customerProvider.customerID
             )
 
             // Overwrite completion closure to retain self until called
@@ -758,7 +761,10 @@ extension PaymentSheet {
                         )
                         if case .completed = result, case .link = paymentOption {
                             // Remember Link as default payment method for users who just created an account.
-                            CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: self.configuration.customer?.id)
+                            CustomerPaymentOption.setDefaultPaymentMethod(
+                                .link,
+                                forCustomer: self.paymentElementConfiguration.customerProvider.customerID
+                            )
                         }
 
                         completion(result)
@@ -911,7 +917,8 @@ extension PaymentSheet {
                 savedPaymentMethods: savedPaymentMethods,
                 paymentMethodTypes: viewController.loadResult.paymentMethodTypes,
                 paymentMethodMessagingPromotionsHelper: viewController.loadResult.paymentMethodMessagingPromotionsHelper,
-                paymentMethodOrientation: viewController.loadResult.paymentMethodOrientation
+                paymentMethodOrientation: viewController.loadResult.paymentMethodOrientation,
+                paymentElementConfiguration: viewController.loadResult.paymentElementConfiguration
             )
         }
 
