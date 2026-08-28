@@ -74,7 +74,7 @@ class STPPaymentIntentConfirmParamsTest: XCTestCase {
         // card type should have no default mandateData
         XCTAssertNil(params.mandateData)
 
-        for type in ["sepa_debit", "au_becs_debit", "bacs_debit", "kr_card"] {
+        for type in ["sepa_debit", "au_becs_debit", "bacs_debit", "kr_card", "naver_pay"] {
             params.mandateData = nil
             params.paymentMethodParams!.rawTypeString = type
             // Mandate-required type should have mandateData
