@@ -62,7 +62,11 @@ extension EmbeddedPaymentElement {
 
         /// Configuration related to the Stripe Customer
         /// If set, the customer can select a previously saved payment method within PaymentSheet
-        public var customer: CustomerConfiguration?
+        public var customer: CustomerConfiguration? {
+            didSet {
+                customerProvider = CustomerProvider(customer: customer)
+            }
+        }
 
         /// Your customer-facing business name.
         /// The default value is the name of your app, using CFBundleDisplayName or CFBundleName
@@ -176,7 +180,7 @@ extension EmbeddedPaymentElement {
         /// Controls whether to filter out wallet payment methods from the saved payment method list.
         @_spi(DashboardOnly) public var disableWalletPaymentMethodFiltering: Bool = false
 
-        var customerProviderOverride: CustomerProvider?
+        var customerProvider = CustomerProvider(customer: nil)
 
         internal var linkPaymentMethodsOnly: Bool = false
 

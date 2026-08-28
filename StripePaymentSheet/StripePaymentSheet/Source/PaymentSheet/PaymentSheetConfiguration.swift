@@ -128,7 +128,11 @@ extension PaymentSheet {
 
         /// Configuration related to the Stripe Customer
         /// If set, the customer can select a previously saved payment method within PaymentSheet
-        public var customer: CustomerConfiguration?
+        public var customer: CustomerConfiguration? {
+            didSet {
+                customerProvider = CustomerProvider(customer: customer)
+            }
+        }
 
         /// Your customer-facing business name.
         /// The default value is the name of your app, using CFBundleDisplayName or CFBundleName
@@ -200,7 +204,7 @@ extension PaymentSheet {
         public var paymentMethodOrder: [String]?
 
         // MARK: Internal
-        var customerProviderOverride: CustomerProvider?
+        var customerProvider = CustomerProvider(customer: nil)
 
         // PaymentSheet components are only being used for Link.
         internal var linkPaymentMethodsOnly: Bool = false
