@@ -77,6 +77,18 @@ extension CheckoutController {
         )
     }
 
+    /// Resets billing-based automatic tax to the selected payment option's country.
+    ///
+    /// - Warning: Only call this from an operation already serialized by
+    ///   `enqueueSessionUpdate(_:)`.
+    func resetBillingTaxRegionIfNecessary() async throws {
+        guard session.shouldSendTaxRegion(for: "billing"),
+              let country = session.paymentOption?.billingDetails?.address.country?.nonEmpty else {
+            return
+        }
+        try await applySessionUpdate(.setTaxRegion(Address(country: country)))
+    }
+
     // MARK: - Session Updates
 
     /// Waits for all in-flight session updates (mutations, etc.) to complete.

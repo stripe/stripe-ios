@@ -193,11 +193,12 @@ extension PaymentElement {
         checkout.setPaymentOption(paymentOption)
     }
 
-    func clearPaymentOption() {
+    func clearPaymentOption() async throws {
         guard !paymentSheetFlowController.didPresentAndContinue else {
             assertionFailure("Clearing the payment option after presenting PaymentElement is not implemented. File a feature request if you need this.")
             return
         }
+        try await checkout?.resetBillingTaxRegionIfNecessary()
         embeddedPaymentElement.clearPaymentOption()
         checkout?.setPaymentOption(nil)
     }

@@ -134,7 +134,7 @@ final class CheckoutUnitTests: XCTestCase {
         XCTAssertEqual(checkout.session.paymentOption?.label, "•••• 4242")
 
         // When the Checkout payment option is cleared
-        checkout.clearPaymentOption()
+        try await checkout.clearPaymentOption()
 
         // Then the Checkout session payment option is cleared
         XCTAssertNil(checkout.session.paymentOption)
@@ -942,7 +942,7 @@ final class CheckoutUnitTests: XCTestCase {
         XCTAssertEqual(checkout.session.paymentOption?.label, "•••• 4242")
         XCTAssertEqual(checkout.session.paymentOption?.paymentMethodType, "card")
 
-        checkout.clearPaymentOption()
+        try await checkout.clearPaymentOption()
 
         XCTAssertNil(checkout.session.paymentOption)
     }

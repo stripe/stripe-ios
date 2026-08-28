@@ -268,6 +268,49 @@ final class PaymentElementTest: XCTestCase {
         XCTAssertEqual(checkout.session.paymentOption?.billingDetails?.address.country, "US")
     }
 
+    func testClearPaymentOptionResetsBillingTaxRegionToCountry() async throws {
+        // Given a selected saved card supplies the billing address for automatic tax
+        let (configuration, requestRecorder) = try stubAutomaticTaxSavedCardCheckout()
+        let checkout = try await CheckoutController(configuration: configuration)
+        XCTAssertNotNil(checkout.session.paymentOption)
+
+        // When the payment option is cleared
+        try await checkout.clearPaymentOption()
+
+        // Then Checkout recalculates tax with only the previous country and clears the selection
+        let requests = requestRecorder.requests
+        XCTAssertEqual(requests.map(\.kind), [.initSession, .updateSession, .updateSession])
+        let updateRequest = try XCTUnwrap(requests.last)
+        XCTAssertEqual(updateRequest.params["tax_region[country]"], "US")
+        XCTAssertNil(updateRequest.params["tax_region[line1]"])
+        XCTAssertNil(updateRequest.params["tax_region[line2]"])
+        XCTAssertNil(updateRequest.params["tax_region[city]"])
+        XCTAssertNil(updateRequest.params["tax_region[state]"])
+        XCTAssertNil(updateRequest.params["tax_region[postal_code]"])
+        XCTAssertNil(checkout.session.paymentOption)
+    }
+
+    func testClearPaymentOptionPreservesSelectionWhenTaxUpdateFails() async throws {
+        // Given a selected saved card supplies the billing address for automatic tax
+        // and the next Checkout Session update will fail
+        let (configuration, _) = try stubAutomaticTaxSavedCardCheckout(clearUpdateStatusCode: 500)
+        let checkout = try await CheckoutController(configuration: configuration)
+        let selectedPaymentOption = try XCTUnwrap(checkout.session.paymentOption)
+
+        // When the payment option is cleared
+        do {
+            try await checkout.clearPaymentOption()
+            XCTFail("Expected clearing the payment option to throw")
+        } catch {
+            guard case .apiError = error as? CheckoutError else {
+                return XCTFail("Expected .apiError, got \(error)")
+            }
+        }
+
+        // Then the selection remains available for the merchant to recover
+        XCTAssertEqual(checkout.session.paymentOption, selectedPaymentOption)
+    }
+
     func testCheckoutSessionUpdatePreservesFlowControllerPaymentOption() async throws {
         // Given a Checkout PaymentElement with PayNow available in the real FlowController sheet UI...
         var configuration = CheckoutController.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
@@ -417,7 +460,9 @@ final class PaymentElementTest: XCTestCase {
     }
 
     /// `CheckoutSession.json` already has automatic tax sourced from billing and a saved card with a full billing address.
-    private func stubAutomaticTaxSavedCardCheckout() throws -> (
+    private func stubAutomaticTaxSavedCardCheckout(
+        clearUpdateStatusCode: Int32 = 200
+    ) throws -> (
         configuration: CheckoutController.Configuration,
         requestRecorder: CheckoutSessionRequestRecorder
     ) {
@@ -428,7 +473,12 @@ final class PaymentElementTest: XCTestCase {
         CheckoutTestHelpers.stubCheckoutSessionRequests(
             sessionId: session.sessionId,
             requestRecorder: requestRecorder,
-            sessionJSON: { sessionJSON }
+            sessionJSON: { sessionJSON },
+            updateStatusCode: { updateRequestNumber in
+                // Checkout syncs the initially selected card during setup. Only apply the
+                // configured status code to the update made while clearing it.
+                return updateRequestNumber == 1 ? 200 : clearUpdateStatusCode
+            }
         )
         return (configuration, requestRecorder)
     }
