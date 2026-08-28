@@ -276,7 +276,8 @@ extension PaymentSheet {
                     case .cardPresent, .blik, .weChatPay, .grabPay, .FPX, .przelewy24, .EPS,
                         .netBanking, .OXXO, .afterpayClearpay, .link, .affirm, .paynow, .zip, .alma,
                         .mobilePay, .vipps, .unknown, .konbini, .promptPay, .swish, .multibanco,
-                        .sunbit, .billie, .crypto, .payPay, .wero, .payByBank, .mbWay, .bizum:
+                        .sunbit, .billie, .crypto, .payPay, .wero, .payByBank, .mbWay, .bizum,
+                        .naverPay:
                         return [.unsupportedForSetup]
                     @unknown default:
                         return [.unsupportedForSetup]
@@ -301,7 +302,7 @@ extension PaymentSheet {
                         return [.userSupportsDelayedPaymentMethods]
                     case .bacsDebit:
                         return [.returnURL, .userSupportsDelayedPaymentMethods]
-                    case .link, .unknown:
+                    case .link, .naverPay, .unknown:
                         return [.unsupported]
                     @unknown default:
                         return [.unsupported]
@@ -549,7 +550,7 @@ extension STPPaymentMethodParams {
             } else {
                 return "FPX"
             }
-        case .paynow, .zip, .amazonPay, .alma, .mobilePay, .vipps, .konbini, .promptPay, .swish, .sunbit, .billie, .satispay, .crypto, .iDEAL, .SEPADebit, .bacsDebit, .AUBECSDebit, .przelewy24, .EPS, .bancontact, .netBanking, .OXXO, .grabPay, .payPal, .afterpayClearpay, .blik, .weChatPay, .boleto, .link, .klarna, .affirm, .USBankAccount, .cashApp, .revolutPay, .twint, .multibanco, .alipay, .cardPresent, .payPay, .wero, .payByBank, .mbWay, .bizum:
+        case .paynow, .zip, .amazonPay, .alma, .mobilePay, .vipps, .konbini, .promptPay, .swish, .sunbit, .billie, .satispay, .crypto, .iDEAL, .SEPADebit, .bacsDebit, .AUBECSDebit, .przelewy24, .EPS, .bancontact, .netBanking, .OXXO, .grabPay, .payPal, .afterpayClearpay, .blik, .weChatPay, .boleto, .link, .klarna, .affirm, .USBankAccount, .cashApp, .revolutPay, .twint, .multibanco, .alipay, .cardPresent, .payPay, .wero, .payByBank, .mbWay, .bizum, .naverPay:
             // Use the label already defined in STPPaymentMethodType; the params object for these types don't contain additional information that affect the display label (like cards do)
             return type.displayName
         case .unknown:
