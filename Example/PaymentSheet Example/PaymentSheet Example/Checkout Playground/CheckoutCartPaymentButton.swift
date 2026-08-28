@@ -121,3 +121,26 @@ struct CheckoutCartBuyButton: View {
         .disabled(checkout.isUpdating)
     }
 }
+
+private struct CheckoutEmbeddedScreen: View {
+    @Environment(\.dismiss) private var dismiss
+    let paymentElement: PaymentElement
+
+    var body: some View {
+        NavigationView {
+            ScrollView {
+                paymentElement.view
+                    .padding()
+            }
+            .navigationTitle("Payment Method")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Done") {
+                        dismiss()
+                    }
+                }
+            }
+        }
+    }
+}

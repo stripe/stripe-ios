@@ -582,6 +582,13 @@ final class CheckoutCartViewController: UIViewController {
             paymentOptionStackView.addArrangedSubview(imageView)
             rowView.accessibilityLabel = paymentOption.label
         } else {
+            let imageView = UIImageView(image: UIImage(systemName: "plus.circle.fill"))
+            imageView.tintColor = .systemBlue
+            imageView.contentMode = .scaleAspectFit
+            imageView.translatesAutoresizingMaskIntoConstraints = false
+            imageView.widthAnchor.constraint(equalToConstant: 24).isActive = true
+            imageView.heightAnchor.constraint(equalToConstant: 24).isActive = true
+            paymentOptionStackView.addArrangedSubview(imageView)
             rowView.accessibilityLabel = "Select payment method"
         }
 
