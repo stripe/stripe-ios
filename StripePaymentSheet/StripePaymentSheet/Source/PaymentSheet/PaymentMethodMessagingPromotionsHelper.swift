@@ -138,14 +138,18 @@ class PaymentMethodMessagingPromotionsHelper {
                 let response = try await PaymentMethodMessagingElement.get(configuration: pmmeConfig)
                 promotions = response.paymentSheetPromotionContents(apiClient: configuration.apiClient)
             } catch {
-                logUnexpectedPMMEError(
-                    error: error,
-                    apiClient: configuration.apiClient,
-                    analyticsClient: STPAnalyticsClient.sharedClient,
-                    additionalNonPIIParams: [
-                        "failure_reason": "promotion_prefetch_request_failed",
-                    ]
-                )
+                // PMM availability is narrower than PaymentSheet availability, so the country from
+                // Elements Session can legitimately be unsupported by the PMM endpoint.
+                if !error.isUnsupportedCountryError {
+                    logUnexpectedPMMEError(
+                        error: error,
+                        apiClient: configuration.apiClient,
+                        analyticsClient: STPAnalyticsClient.sharedClient,
+                        additionalNonPIIParams: [
+                            "failure_reason": "promotion_prefetch_request_failed",
+                        ]
+                    )
+                }
                 promotions = [:]
             }
         }
@@ -166,6 +170,21 @@ class PaymentMethodMessagingPromotionsHelper {
     func logDisplayedAnalytic(displayedSuccessfully: Bool) {
         let duration = fetchStartDate.map { Date().timeIntervalSince($0) } ?? 0
         analyticsHelper.logPaymentMethodMessagingDisplayed(duration: duration, displayedSuccessfully: displayedSuccessfully)
+    }
+}
+
+private extension Error {
+    /// Matches the expected error returned when PaymentSheet supports the country but PMM does not.
+    /// Keep this narrow so other invalid requests continue to use the unexpected-error path.
+    var isUnsupportedCountryError: Bool {
+        guard let stripeError = self as? StripeError,
+              case let .apiError(apiError) = stripeError else {
+            return false
+        }
+        return apiError.httpStatusCode == 400
+            && apiError.type == .invalidRequestError
+            && apiError.param == "country"
+            && apiError.message?.hasPrefix("unsupported_country:") == true
     }
 }
 

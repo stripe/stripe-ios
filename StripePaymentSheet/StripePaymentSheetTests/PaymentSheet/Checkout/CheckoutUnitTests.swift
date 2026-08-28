@@ -245,6 +245,63 @@ final class CheckoutUnitTests: XCTestCase {
         XCTAssertEqual(recorder.loading, [true, false])
     }
 
+    func testUpdateShippingAddress_noTax_clearsLocallyAndEmitsUpdates() async throws {
+        // Given a Checkout with a locally stored shipping address
+        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration())
+        try await checkout.updateShippingAddress(
+            name: "John Smith",
+            address: .init(country: "US", line1: "456 Oak Ave", city: "LA", state: "CA", postalCode: "90001")
+        )
+        let recorder = CheckoutEmissionRecorder(checkout)
+
+        // When the shipping address is cleared
+        try await checkout.updateShippingAddress(address: nil)
+
+        // Then Checkout clears its local shipping address
+        XCTAssertNil(checkout.session.shippingAddress)
+        XCTAssertEqual(recorder.sessions.count, 2)
+        XCTAssertEqual(recorder.loading, [true, false])
+    }
+
+    func testUpdateShippingAddress_clearReducesTaxRegionToPreviousCountry() async throws {
+        // Given a Checkout that computes automatic tax from a stored shipping address
+        let (checkout, _, requestRecorder) = try await makeCheckoutWithShippingTax()
+
+        // When the shipping address is cleared
+        try await checkout.updateShippingAddress(address: nil)
+
+        // Then Checkout clears local state and removes all tax region fields except country
+        XCTAssertNil(checkout.session.shippingAddress)
+        XCTAssertEqual(requestRecorder.requests.map(\.kind), [.initSession, .updateSession])
+        let updateParameters = try XCTUnwrap(requestRecorder.requests.last?.params)
+        XCTAssertEqual(updateParameters["tax_region[country]"], "US")
+        XCTAssertNil(updateParameters["tax_region[line1]"])
+        XCTAssertNil(updateParameters["tax_region[line2]"])
+        XCTAssertNil(updateParameters["tax_region[city]"])
+        XCTAssertNil(updateParameters["tax_region[state]"])
+        XCTAssertNil(updateParameters["tax_region[postal_code]"])
+    }
+
+    func testUpdateShippingAddress_clearFailurePreservesPreviousAddress() async throws {
+        // Given a Checkout whose automatic tax update will fail
+        let (checkout, previousAddress, _) = try await makeCheckoutWithShippingTax(
+            updateStatusCode: { _ in 500 }
+        )
+
+        // When the shipping address is cleared
+        do {
+            try await checkout.updateShippingAddress(address: nil)
+            XCTFail("Expected CheckoutError.apiError")
+        } catch CheckoutError.apiError {
+            // Expected
+        } catch {
+            XCTFail("Unexpected error: \(error)")
+        }
+
+        // Then Checkout keeps the previous local address
+        XCTAssertEqual(checkout.session.shippingAddress, previousAddress)
+    }
+
     func testShippingAddressElementSaveUpdatesCheckoutSession() async throws {
         // Given a ShippingAddressElement connected to its Checkout
         let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration())
@@ -742,14 +799,13 @@ final class CheckoutUnitTests: XCTestCase {
                       unitAmount: "$10.00"
                       unitAmountDecimal: "$10.00"
                       adjustableQuantity: nil
+                      subtotal: "$10.00"
+                      taxExclusive: "$0.00"
+                      taxInclusive: "$0.00"
+                      taxAmountCount: nil
+                      total: "$10.00"
                     }
                   ]
-                  subtotal: "$10.00"
-                  discount: "$0.00"
-                  taxExclusive: "$0.00"
-                  taxInclusive: "$0.00"
-                  taxAmountCount: nil
-                  total: "$10.00"
                 }
               ]
               taxStatus: nil
@@ -1072,6 +1128,47 @@ final class CheckoutUnitTests: XCTestCase {
         XCTAssertNil(params["payment_method_to_update[billing_details][address][line1]"])
         XCTAssertNil(params["payment_method_to_update[billing_details][address][city]"])
         XCTAssertEqual(params.count, 3)
+    }
+
+    private func makeCheckoutWithShippingTax(
+        updateStatusCode: @escaping (_ requestNumber: Int) -> Int32 = { _ in 200 }
+    ) async throws -> (
+        CheckoutController,
+        CheckoutController.Session.ShippingAddress,
+        CheckoutSessionRequestRecorder
+    ) {
+        var json = CheckoutTestHelpers.openSessionJSON
+        json["tax_context"] = [
+            "automatic_tax_enabled": true,
+            "automatic_tax_address_source": "session.shipping",
+        ]
+        let requestRecorder = CheckoutSessionRequestRecorder()
+        CheckoutTestHelpers.stubCheckoutSessionRequests(
+            sessionId: "cs_test_123",
+            requestRecorder: requestRecorder,
+            sessionJSON: { json },
+            updateStatusCode: updateStatusCode
+        )
+        var configuration = CheckoutController.Configuration(
+            clientSecret: "cs_test_123_secret_abc",
+            returnURL: "stripe-ios-test://checkout-return"
+        )
+        configuration.apiClient = STPAPIClient(publishableKey: "pk_test_123")
+        let checkout = try await CheckoutController(configuration: configuration)
+        let shippingAddress = CheckoutController.Session.ShippingAddress(
+            name: "John Smith",
+            address: .init(
+                country: "US",
+                line1: "456 Oak Ave",
+                city: "Los Angeles",
+                state: "CA",
+                postalCode: "90001"
+            )
+        )
+        checkout.dangerouslySetSessionDirectly(
+            checkout.session.makeCopyOverriding(shippingAddress: .newValue(shippingAddress))
+        )
+        return (checkout, shippingAddress, requestRecorder)
     }
 
     private func setOneTimePriceAmounts(

@@ -171,6 +171,7 @@ final class PaymentElementTest: XCTestCase {
         XCTAssertTrue(embeddedConfiguration.allowsDelayedPaymentMethods)
         XCTAssertTrue(embeddedConfiguration.allowsPaymentMethodsRequiringShippingAddress)
     }
+
     func testConfigurationSetsCheckoutDefaultShippingDetails() async throws {
         // Given Checkout shipping defaults
         var checkoutConfiguration = CheckoutController.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")

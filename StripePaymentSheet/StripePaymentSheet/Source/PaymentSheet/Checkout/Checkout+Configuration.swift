@@ -64,9 +64,6 @@ extension CheckoutController {
         /// ``CheckoutController.getShippingAddressElement()``.
         public var shippingAddressElement: ShippingAddressElement.Configuration = .init()
 
-        /// Link configuration.
-        public var linkConfiguration: LinkConfiguration?
-
         /// The color styling to use for Checkout UI.
         public var userInterfaceStyle: UserInterfaceStyle = .automatic
 

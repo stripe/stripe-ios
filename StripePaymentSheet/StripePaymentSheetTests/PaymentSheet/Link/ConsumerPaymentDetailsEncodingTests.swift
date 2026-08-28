@@ -30,7 +30,7 @@ class ConsumerPaymentDetailsEncodingTests: XCTestCase {
 
     // MARK: - Display metadata decoding
 
-    func test_decodingUnknownTypeWithDisplayMetadata() throws {
+    func test_decodingGenericTypeWithDisplayMetadata() throws {
         let json: [String: Any] = [
             "id": "csmrpd_test_123",
             "type": "CRYPTO",
@@ -49,10 +49,10 @@ class ConsumerPaymentDetailsEncodingTests: XCTestCase {
 
         let details = try decoder.decode(ConsumerPaymentDetails.self, from: data)
 
-        if case .unparsable(let rawValue) = details.details {
+        if case .generic(let rawValue) = details.details {
             XCTAssertEqual(rawValue, "CRYPTO")
         } else {
-            XCTFail("Expected .unparsable case")
+            XCTFail("Expected .generic case")
         }
 
         XCTAssertNotNil(details.display)
@@ -61,7 +61,7 @@ class ConsumerPaymentDetailsEncodingTests: XCTestCase {
         XCTAssertEqual(details.display?.icon?.main, URL(string: "https://cdn.stripe.com/crypto.png"))
     }
 
-    func test_decodingUnknownTypeWithoutDisplayMetadata() throws {
+    func test_decodingGenericTypeWithoutDisplayMetadata() throws {
         let json: [String: Any] = [
             "id": "csmrpd_test_456",
             "type": "UNKNOWN_TYPE",
@@ -73,10 +73,10 @@ class ConsumerPaymentDetailsEncodingTests: XCTestCase {
 
         let details = try decoder.decode(ConsumerPaymentDetails.self, from: data)
 
-        if case .unparsable(let rawValue) = details.details {
+        if case .generic(let rawValue) = details.details {
             XCTAssertEqual(rawValue, "UNKNOWN_TYPE")
         } else {
-            XCTFail("Expected .unparsable case")
+            XCTFail("Expected .generic case")
         }
 
         XCTAssertNil(details.display)
@@ -138,7 +138,7 @@ class ConsumerPaymentDetailsEncodingTests: XCTestCase {
         XCTAssertNil(details.display?.icon)
     }
 
-    func test_unknownTypeWithBillingCountryInAllowedCountriesIsSupported() throws {
+    func test_genericTypeWithBillingCountryInAllowedCountriesIsSupported() throws {
         let (_, elementsSession) = try PayWithLinkTestHelpers.makePaymentIntentAndElementsSession(linkFundingSources: ["CRYPTO"])
         let linkAccount = LinkStubs.account()
         var configuration = PaymentSheet.Configuration()
@@ -146,7 +146,7 @@ class ConsumerPaymentDetailsEncodingTests: XCTestCase {
 
         let details = ConsumerPaymentDetails(
             stripeID: "csmrpd_test_country_match",
-            details: .unparsable(rawValue: "CRYPTO"),
+            details: .generic(rawValue: "CRYPTO"),
             billingAddress: BillingAddress(countryCode: "US"),
             billingEmailAddress: nil,
             nickname: nil,
@@ -165,7 +165,7 @@ class ConsumerPaymentDetailsEncodingTests: XCTestCase {
         )
     }
 
-    func test_unknownTypeWithoutBillingCountryIsNotSupportedWhenAllowedCountriesAreFiltered() throws {
+    func test_genericTypeWithoutBillingCountryIsNotSupportedWhenAllowedCountriesAreFiltered() throws {
         let (_, elementsSession) = try PayWithLinkTestHelpers.makePaymentIntentAndElementsSession(linkFundingSources: ["CRYPTO"])
         let linkAccount = LinkStubs.account()
         var configuration = PaymentSheet.Configuration()
@@ -173,7 +173,7 @@ class ConsumerPaymentDetailsEncodingTests: XCTestCase {
 
         let details = ConsumerPaymentDetails(
             stripeID: "csmrpd_test_missing_country",
-            details: .unparsable(rawValue: "CRYPTO"),
+            details: .generic(rawValue: "CRYPTO"),
             billingAddress: nil,
             billingEmailAddress: nil,
             nickname: nil,
