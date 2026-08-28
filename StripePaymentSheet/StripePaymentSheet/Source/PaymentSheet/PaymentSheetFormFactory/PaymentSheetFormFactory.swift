@@ -303,9 +303,11 @@ class PaymentSheetFormFactory {
                 return makePrzelewy24()
             case .AUBECSDebit:
                 return makeAUBECSDebit()
+            case .ACSSDebit:
+                return makeACSSDebit()
             case .FPX:
                 return makeFPX()
-            case .ACSSDebit, .netBanking, .weChatPay, .link, .cardPresent, .unknown:
+            case .netBanking, .weChatPay, .link, .cardPresent, .unknown:
                 return makeUnexpectedEmptyForm(for: paymentMethod)
             @unknown default:
                 return makeUnexpectedEmptyForm(for: paymentMethod)

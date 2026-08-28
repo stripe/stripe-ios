@@ -443,6 +443,49 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertEqual(updatedParams?.paymentMethodParams.type, .AUBECSDebit)
     }
 
+    func testMakeACSSDebitFormUpdatesParamsAndRestoresInput() {
+        let configuration = PaymentSheet.Configuration()
+        let intent = Intent._testPaymentIntent(paymentMethodTypes: [.ACSSDebit], currency: "cad")
+        let factory = PaymentSheetFormFactory(
+            intent: intent,
+            elementsSession: ._testValue(intent: intent),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.ACSSDebit)
+        )
+        let form = factory.make()
+        form.getTextFieldElement("Full name").setText("Jenny Rosen")
+        form.getTextFieldElement("Email").setText("jrosen@example.com")
+        form.getTextFieldElement("Institution number").setText("000")
+        form.getTextFieldElement("Transit number").setText("11000")
+        form.getTextFieldElement("Account number").setText("000123456789")
+        form.getTextFieldElement("Confirm account number").setText("000123456789")
+
+        let updatedParams = form.updateParams(params: .init(type: .stripe(.ACSSDebit)))
+
+        XCTAssertEqual(updatedParams?.paymentMethodParams.type, .ACSSDebit)
+        XCTAssertEqual(updatedParams?.paymentMethodParams.billingDetails?.name, "Jenny Rosen")
+        XCTAssertEqual(updatedParams?.paymentMethodParams.billingDetails?.email, "jrosen@example.com")
+        XCTAssertEqual(updatedParams?.paymentMethodParams.acssDebit?.institutionNumber, "000")
+        XCTAssertEqual(updatedParams?.paymentMethodParams.acssDebit?.transitNumber, "11000")
+        XCTAssertEqual(updatedParams?.paymentMethodParams.acssDebit?.accountNumber, "000123456789")
+
+        let restoredForm = PaymentSheetFormFactory(
+            intent: intent,
+            elementsSession: ._testValue(intent: intent),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.ACSSDebit),
+            previousCustomerInput: updatedParams
+        ).make()
+
+        XCTAssertEqual(restoredForm.getTextFieldElement("Full name").text, "Jenny Rosen")
+        XCTAssertEqual(restoredForm.getTextFieldElement("Email").text, "jrosen@example.com")
+        XCTAssertEqual(restoredForm.getTextFieldElement("Institution number").text, "000")
+        XCTAssertEqual(restoredForm.getTextFieldElement("Transit number").text, "11000")
+        XCTAssertEqual(restoredForm.getTextFieldElement("Account number").text, "000123456789")
+        XCTAssertEqual(restoredForm.getTextFieldElement("Confirm account number").text, "000123456789")
+        XCTAssertNotNil(restoredForm.updateParams(params: .init(type: .stripe(.ACSSDebit))))
+    }
+
     func testMakeFormElement_Country() {
         let configuration = PaymentSheet.Configuration()
         let factory = PaymentSheetFormFactory(

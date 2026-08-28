@@ -233,6 +233,32 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
 
     // MARK: - SEPA family
 
+    func testCanAddACSSDebitWhenDelayedPaymentMethodsAreAllowed() {
+        let intent = Intent._testPaymentIntent(paymentMethodTypes: [.ACSSDebit], currency: "cad")
+        let elementsSession = STPElementsSession._testValue(intent: intent)
+        var configuration = PaymentSheet.Configuration()
+
+        XCTAssertEqual(
+            PaymentSheet.PaymentMethodType.supportsAdding(
+                paymentMethod: .ACSSDebit,
+                configuration: configuration,
+                intent: intent,
+                elementsSession: elementsSession
+            ),
+            .missingRequirements([.userSupportsDelayedPaymentMethods])
+        )
+
+        configuration.allowsDelayedPaymentMethods = true
+        XCTAssertEqual(
+            PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(
+                from: intent,
+                elementsSession: elementsSession,
+                configuration: configuration
+            ),
+            [.stripe(.ACSSDebit)]
+        )
+    }
+
     let sepaFamily: [STPPaymentMethodType] = [.SEPADebit, .iDEAL, .bancontact]
 
     func testCanAddSEPAFamily() {

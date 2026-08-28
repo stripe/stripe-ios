@@ -458,6 +458,29 @@ enum ExpectedFormHierarchy {
         }
     }
 
+    // MARK: - ACSS Debit
+
+    enum ACSSDebit {
+        static var all: FormHierarchyNode {
+            FormHierarchyNode(type: "FormElement", children: [
+                FormHierarchyNode(type: "SectionElement", children: [
+                    FormHierarchyNode(type: "TextFieldElement", properties: ["label": "Full name"])
+                ]),
+                FormHierarchyNode(type: "SectionElement", children: [
+                    FormHierarchyNode(type: "TextFieldElement", properties: ["label": "Email"])
+                ]),
+                FormHierarchyNode(type: "SectionElement", properties: ["title": "Bank account"], children: [
+                    FormHierarchyNode(type: "MultiElementRow", children: [
+                        FormHierarchyNode(type: "TextFieldElement", properties: ["label": "Institution number"]),
+                        FormHierarchyNode(type: "TextFieldElement", properties: ["label": "Transit number"]),
+                    ]),
+                    FormHierarchyNode(type: "TextFieldElement", properties: ["label": "Account number"]),
+                    FormHierarchyNode(type: "TextFieldElement", properties: ["label": "Confirm account number"]),
+                ]),
+            ])
+        }
+    }
+
     // MARK: - SEPA Debit
 
     enum SEPADebit {

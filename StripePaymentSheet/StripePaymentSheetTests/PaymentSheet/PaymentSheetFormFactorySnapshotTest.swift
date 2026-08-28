@@ -359,6 +359,16 @@ final class PaymentSheetFormFactorySnapshotTest: STPSnapshotTestCase {
         STPSnapshotVerifyView(view)
     }
 
+    func testLpm_ACSSDebit() {
+        let configuration = PaymentSheet.Configuration()
+        let factory = factory(for: .ACSSDebit, configuration: configuration)
+        let formElement = factory.make()
+        let view = formElement.view
+        view.autosizeHeight(width: 375)
+        STPSnapshotVerifyView(view)
+        XCTAssertFalse(formElement.validationState.isValid)
+    }
+
     func testEPM_subtitle() {
         let configuration = PaymentSheet.Configuration()
         let factory = factory(for: .card, configuration: configuration)

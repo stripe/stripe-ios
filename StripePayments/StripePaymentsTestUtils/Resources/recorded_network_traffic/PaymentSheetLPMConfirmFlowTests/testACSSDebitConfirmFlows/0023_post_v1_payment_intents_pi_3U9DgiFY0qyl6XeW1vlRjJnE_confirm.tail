@@ -1,0 +1,113 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3U9DgiFY0qyl6XeW1vlRjJnE\/confirm$
+200
+application/json
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=8I7nbOn8h9MrJn6rsUxi8pT70WHSUvl6zixFffvBq3z16j8g_PBYwZY4NZD02kUqg4m-X5OlgX64fptz; report-to csp
+Server: nginx
+Cache-Control: no-cache, no-store
+reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=8I7nbOn8h9MrJn6rsUxi8pT70WHSUvl6zixFffvBq3z16j8g_PBYwZY4NZD02kUqg4m-X5OlgX64fptz&t=1"
+stripe-notice: You are using an outdated API version (2020-08-27). We recommend upgrading to the latest API version, 2026-08-26.dahlia. See https://docs.stripe.com/upgrades
+x-wc: 3c3
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=8I7nbOn8h9MrJn6rsUxi8pT70WHSUvl6zixFffvBq3z16j8g_PBYwZY4NZD02kUqg4m-X5OlgX64fptz&t=1"}],"include_subdomains":true}
+request-id: req_ZOXpCkxm6POFUk
+x-stripe-routing-context-priority-tier: api-testmode
+Content-Length: 2183
+Vary: Origin
+Date: Fri, 28 Aug 2026 00:30:33 GMT
+original-request: req_ZOXpCkxm6POFUk
+stripe-version: 2020-08-27
+idempotency-key: 2c3dedae-9fcc-4495-8fa9-fba29e6d9600
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+X-Stripe-Mock-Request: client_attribution_metadata\[client_session_id]=.*&client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_intent_creation_flow]=deferred&client_attribution_metadata\[payment_method_selection_flow]=automatic&client_secret=pi_3U9DgiFY0qyl6XeW1vlRjJnE_secret_kwLgnTHXYajKSl7cdCH6jqa80&expand\[0]=payment_method&mandate_data\[customer_acceptance]\[online]\[infer_from_client]=true&mandate_data\[customer_acceptance]\[type]=online&payment_method=pm_1U9DghFY0qyl6XeWy0lgVwad&return_url=https%3A\/\/foo\.com&setup_future_usage=off_session&use_stripe_sdk=true
+
+{
+  "payment_method_configuration_details" : null,
+  "canceled_at" : null,
+  "source" : null,
+  "amount" : 5050,
+  "capture_method" : "automatic",
+  "livemode" : false,
+  "shipping" : null,
+  "payment_method_options" : {
+    "acss_debit" : {
+      "verification_method" : "automatic"
+    }
+  },
+  "object" : "payment_intent",
+  "currency" : "cad",
+  "last_payment_error" : null,
+  "amount_subtotal" : 5050,
+  "automatic_payment_methods" : null,
+  "cancellation_reason" : null,
+  "next_action" : {
+    "type" : "verify_with_microdeposits",
+    "verify_with_microdeposits" : {
+      "microdeposit_type" : null,
+      "arrival_date" : 1788148800,
+      "hosted_verification_url" : "https:\/\/payments.stripe.com\/microdeposit\/pacs_test_YWNjdF8xRzZtMXBGWTBxeWw2WGVXLHBhX25vbmNlX1Y5V2tHaDZ5Q3pQQ21zTVB1SGtyTDdrUUhUSm8yRFI0000xI2bH3tk"
+    }
+  },
+  "status" : "requires_action",
+  "payment_method" : {
+    "object" : "payment_method",
+    "id" : "pm_1U9DghFY0qyl6XeWy0lgVwad",
+    "billing_details" : {
+      "email" : "jrosen@example.com",
+      "phone" : null,
+      "tax_id" : null,
+      "name" : "Jenny Rosen",
+      "address" : {
+        "state" : null,
+        "country" : null,
+        "line2" : null,
+        "city" : null,
+        "line1" : null,
+        "postal_code" : null
+      }
+    },
+    "acss_debit" : {
+      "bank_name" : "STRIPE TEST BANK",
+      "institution_number" : "000",
+      "last4" : "6789",
+      "transit_number" : "11000",
+      "fingerprint" : "HQd5zmkrhR4E9eJ1"
+    },
+    "livemode" : false,
+    "created" : 1787877031,
+    "allow_redisplay" : "unspecified",
+    "type" : "acss_debit",
+    "customer" : null,
+    "customer_account" : null
+  },
+  "client_secret" : "pi_3U9DgiFY0qyl6XeW1vlRjJnE_secret_kwLgnTHXYajKSl7cdCH6jqa80",
+  "total_details" : {
+    "amount_discount" : 0,
+    "amount_tip" : null,
+    "amount_tax" : 0
+  },
+  "id" : "pi_3U9DgiFY0qyl6XeW1vlRjJnE",
+  "allowed_payment_method_types" : null,
+  "confirmation_method" : "automatic",
+  "amount_details" : {
+    "tip" : {
+
+    }
+  },
+  "excluded_payment_method_types" : null,
+  "processing" : null,
+  "receipt_email" : null,
+  "payment_method_types" : [
+    "acss_debit"
+  ],
+  "setup_future_usage" : "off_session",
+  "created" : 1787877032,
+  "description" : null
+}

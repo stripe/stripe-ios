@@ -178,6 +178,22 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
         }
     }
 
+    func testACSSDebitConfirmFlows() async throws {
+        try await _testConfirm(
+            intentKinds: [.paymentIntent, .paymentIntentWithSetupFutureUsage, .paymentIntentWithPMOSetupFutureUsage, .setupIntent],
+            currency: "CAD",
+            paymentMethodType: .ACSSDebit,
+            expectedHierarchy: ExpectedFormHierarchy.ACSSDebit.all
+        ) { form in
+            form.getTextFieldElement("Full name").setText("Jenny Rosen")
+            form.getTextFieldElement("Email").setText("jrosen@example.com")
+            form.getTextFieldElement("Institution number").setText("000")
+            form.getTextFieldElement("Transit number").setText("11000")
+            form.getTextFieldElement("Account number").setText("000123456789")
+            form.getTextFieldElement("Confirm account number").setText("000123456789")
+        }
+    }
+
     func testBancontactConfirmFlows() async throws {
         try await _testConfirm(intentKinds: [.paymentIntent], currency: "EUR", paymentMethodType: .bancontact,
                                expectedHierarchy: ExpectedFormHierarchy.Bancontact.paymentIntent) { form in
@@ -1158,7 +1174,30 @@ extension PaymentSheetLPMConfirmFlowTests {
         customer: String? = nil,
         apiClient: STPAPIClient
     ) async throws -> [TestIntent] {
-        let paramsForServerSideConfirmation: [String: Any] = [ // We require merchants to set some extra parameters themselves for server-side confirmation
+        func addingRequiredPaymentMethodOptions(
+            to parameters: [String: Any] = [:],
+            includeCurrency: Bool = false
+        ) -> [String: Any] {
+            guard paymentMethod == .ACSSDebit else {
+                return parameters
+            }
+
+            var parameters = parameters
+            var paymentMethodOptions = parameters["payment_method_options"] as? [String: Any] ?? [:]
+            var acssDebitOptions = paymentMethodOptions["acss_debit"] as? [String: Any] ?? [:]
+            acssDebitOptions["mandate_options"] = [
+                "payment_schedule": "sporadic",
+                "transaction_type": "personal",
+            ]
+            if includeCurrency {
+                acssDebitOptions["currency"] = currency.lowercased()
+            }
+            paymentMethodOptions["acss_debit"] = acssDebitOptions
+            parameters["payment_method_options"] = paymentMethodOptions
+            return parameters
+        }
+
+        let paramsForServerSideConfirmation = addingRequiredPaymentMethodOptions(to: [ // We require merchants to set some extra parameters themselves for server-side confirmation
             "return_url": "foo://bar",
             "mandate_data": [
                 "customer_acceptance": [
@@ -1169,7 +1208,7 @@ extension PaymentSheetLPMConfirmFlowTests {
                     ],
                 ] as [String: Any],
             ],
-        ]
+        ])
         func makeDeferredIntent(_ intentConfig: PaymentSheet.IntentConfiguration) -> Intent {
             return .deferredIntent(intentConfig: intentConfig)
         }
@@ -1190,7 +1229,8 @@ extension PaymentSheetLPMConfirmFlowTests {
                     currency: currency,
                     amount: amount,
                     merchantCountry: merchantCountry.rawValue,
-                    customerID: customer
+                    customerID: customer,
+                    otherParams: addingRequiredPaymentMethodOptions()
                 )
                 return try await apiClient.retrievePaymentIntent(clientSecret: clientSecret)
             }()
@@ -1201,7 +1241,8 @@ extension PaymentSheetLPMConfirmFlowTests {
                     currency: currency,
                     amount: amount,
                     merchantCountry: merchantCountry.rawValue,
-                    customerID: customer
+                    customerID: customer,
+                    otherParams: addingRequiredPaymentMethodOptions()
                 )
             }
 
@@ -1258,7 +1299,8 @@ extension PaymentSheetLPMConfirmFlowTests {
                     currency: currency,
                     amount: amount,
                     merchantCountry: merchantCountry.rawValue,
-                    customerID: customer
+                    customerID: customer,
+                    otherParams: addingRequiredPaymentMethodOptions()
                 )
             })
 
@@ -1270,7 +1312,7 @@ extension PaymentSheetLPMConfirmFlowTests {
                     merchantCountry: merchantCountry.rawValue,
                     customerID: customer,
                     confirm: true,
-                    otherParams: ["confirmation_token": confirmationToken.stripeId]
+                    otherParams: addingRequiredPaymentMethodOptions(to: ["confirmation_token": confirmationToken.stripeId])
                 )
             })
 
@@ -1291,7 +1333,7 @@ extension PaymentSheetLPMConfirmFlowTests {
                     amount: amount,
                     merchantCountry: merchantCountry.rawValue,
                     customerID: customer,
-                    otherParams: ["setup_future_usage": "off_session"]
+                    otherParams: addingRequiredPaymentMethodOptions(to: ["setup_future_usage": "off_session"])
                 )
                 return try await apiClient.retrievePaymentIntent(clientSecret: clientSecret)
             }()
@@ -1302,7 +1344,7 @@ extension PaymentSheetLPMConfirmFlowTests {
                     amount: amount,
                     merchantCountry: merchantCountry.rawValue,
                     customerID: customer,
-                    otherParams: ["setup_future_usage": "off_session"]
+                    otherParams: addingRequiredPaymentMethodOptions(to: ["setup_future_usage": "off_session"])
                 )
             }
             let deferredSSC = PaymentSheet.IntentConfiguration(mode: .payment(amount: amount ?? 1099, currency: currency, setupFutureUsage: .offSession)) { paymentMethod, _ in
@@ -1327,7 +1369,8 @@ extension PaymentSheetLPMConfirmFlowTests {
                     currency: currency,
                     amount: amount,
                     merchantCountry: merchantCountry.rawValue,
-                    customerID: customer
+                    customerID: customer,
+                    otherParams: addingRequiredPaymentMethodOptions()
                 )
             })
 
@@ -1339,9 +1382,9 @@ extension PaymentSheetLPMConfirmFlowTests {
                     merchantCountry: merchantCountry.rawValue,
                     customerID: customer,
                     confirm: true,
-                    otherParams: [
+                    otherParams: addingRequiredPaymentMethodOptions(to: [
                         "confirmation_token": confirmationToken.stripeId
-                    ]
+                    ])
                 )
             })
 
@@ -1392,13 +1435,13 @@ extension PaymentSheetLPMConfirmFlowTests {
                     amount: amount,
                     merchantCountry: merchantCountry.rawValue,
                     customerID: customer,
-                    otherParams: [
+                    otherParams: addingRequiredPaymentMethodOptions(to: [
                         "payment_method_options": [
                             paymentMethod.identifier: [
                                 "setup_future_usage": "off_session"
                             ],
                         ],
-                    ]
+                    ])
                 )
                 return try await apiClient.retrievePaymentIntent(clientSecret: clientSecret)
             }()
@@ -1416,7 +1459,8 @@ extension PaymentSheetLPMConfirmFlowTests {
                     currency: currency,
                     amount: amount,
                     merchantCountry: merchantCountry.rawValue,
-                    customerID: customer
+                    customerID: customer,
+                    otherParams: addingRequiredPaymentMethodOptions()
                 )
             }
 
@@ -1443,7 +1487,8 @@ extension PaymentSheetLPMConfirmFlowTests {
                         currency: currency,
                         amount: amount,
                         merchantCountry: merchantCountry.rawValue,
-                        customerID: customer
+                        customerID: customer,
+                        otherParams: addingRequiredPaymentMethodOptions()
                     )
                 }
             )
@@ -1459,7 +1504,7 @@ extension PaymentSheetLPMConfirmFlowTests {
                         merchantCountry: merchantCountry.rawValue,
                         customerID: customer,
                         confirm: true,
-                        otherParams: ["confirmation_token": confirmationToken.stripeId]
+                        otherParams: addingRequiredPaymentMethodOptions(to: ["confirmation_token": confirmationToken.stripeId])
                     )
                 }
             )
@@ -1472,9 +1517,15 @@ extension PaymentSheetLPMConfirmFlowTests {
                 intents += [
                     TestIntent("Deferred PaymentIntent w/ PMO setup_future_usage - client side confirmation", makeDeferredIntent(deferredCSC)),
                     TestIntent("Deferred PaymentIntent w/ PMO setup_future_usage - server side confirmation", makeDeferredIntent(deferredSSC)),
-                    TestIntent("Deferred PaymentIntent w/ PMO setup_future_usage - client side confirmation with confirmation token", makeDeferredIntent(deferredCSCWithConfirmationToken)),
-                    TestIntent("Deferred PaymentIntent w/ PMO setup_future_usage - server side confirmation with confirmation token", makeDeferredIntent(deferredSSCWithConfirmationToken)),
                 ]
+                // Confirmation Tokens do not currently accept ACSS Debit setup_future_usage in
+                // client_context.payment_method_options.
+                if paymentMethod != .ACSSDebit {
+                    intents += [
+                        TestIntent("Deferred PaymentIntent w/ PMO setup_future_usage - client side confirmation with confirmation token", makeDeferredIntent(deferredCSCWithConfirmationToken)),
+                        TestIntent("Deferred PaymentIntent w/ PMO setup_future_usage - server side confirmation with confirmation token", makeDeferredIntent(deferredSSCWithConfirmationToken)),
+                    ]
+                }
             }
             // TODO(porter): Checkout rejects `payment_intent_data`/`payment_method_options`
             // setup_future_usage in modeless sessions. Re-enable once unified mode supports
@@ -1502,7 +1553,7 @@ extension PaymentSheetLPMConfirmFlowTests {
             let setupCurrency = paymentMethod == .alipay ? currency : nil
             let setupIntentParameters: [String: Any] = paymentMethod == .alipay
                 ? ["payment_method_options": ["alipay": ["currency": currency]]]
-                : [:]
+                : addingRequiredPaymentMethodOptions(includeCurrency: true)
             let setupIntent: STPSetupIntent? = try await {
                 guard shouldTest(.intentFirst) else {
                     return nil
@@ -1514,7 +1565,10 @@ extension PaymentSheetLPMConfirmFlowTests {
                 return try await STPTestingAPIClient.shared.fetchSetupIntent(types: paymentMethodTypes, merchantCountry: merchantCountry.rawValue, customerID: customer, otherParams: setupIntentParameters)
             }
             let deferredSSC = PaymentSheet.IntentConfiguration(mode: .setup(currency: setupCurrency, setupFutureUsage: .offSession)) { paymentMethod, _ in
-                let otherParams = setupIntentParameters.merging(paramsForServerSideConfirmation) { _, b in b }
+                let otherParams = addingRequiredPaymentMethodOptions(
+                    to: setupIntentParameters.merging(paramsForServerSideConfirmation) { _, b in b },
+                    includeCurrency: true
+                )
                 return try await STPTestingAPIClient.shared.fetchSetupIntent(types: paymentMethodTypes, merchantCountry: merchantCountry.rawValue, paymentMethodID: paymentMethod.stripeId, customerID: customer, confirm: true, otherParams: otherParams)
             }
             // Confirmation token variations

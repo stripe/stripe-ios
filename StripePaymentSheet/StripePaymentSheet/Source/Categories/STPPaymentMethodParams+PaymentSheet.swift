@@ -28,6 +28,15 @@ extension STPPaymentMethodParams {
         return auBECSDebit
     }
 
+    var nonnil_acssDebit: STPPaymentMethodACSSDebitParams {
+        guard let acssDebit else {
+            let acssDebit = STPPaymentMethodACSSDebitParams()
+            self.acssDebit = acssDebit
+            return acssDebit
+        }
+        return acssDebit
+    }
+
     var nonnil_bacsDebit: STPPaymentMethodBacsDebitParams {
         guard let bacsDebit = bacsDebit else {
             let bacsDebit = STPPaymentMethodBacsDebitParams()

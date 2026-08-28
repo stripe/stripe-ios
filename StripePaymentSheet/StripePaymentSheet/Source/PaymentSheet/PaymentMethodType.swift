@@ -269,15 +269,14 @@ extension PaymentSheet {
                     case .iDEAL, .bancontact:
                         // n.b. While iDEAL and bancontact are themselves not delayed, they turn into SEPA upon save, which IS delayed.
                         return [.returnURL, .userSupportsDelayedPaymentMethods]
-                    case .SEPADebit, .AUBECSDebit:
+                    case .SEPADebit, .AUBECSDebit, .ACSSDebit:
                         return [.userSupportsDelayedPaymentMethods]
                     case .bacsDebit:
                         return [.returnURL, .userSupportsDelayedPaymentMethods]
                     case .cardPresent, .blik, .weChatPay, .grabPay, .FPX, .przelewy24, .EPS,
                         .netBanking, .OXXO, .afterpayClearpay, .link, .affirm, .paynow, .zip, .alma,
                         .mobilePay, .vipps, .unknown, .konbini, .promptPay, .swish, .multibanco,
-                        .sunbit, .billie, .crypto, .payPay, .wero, .payByBank, .mbWay, .bizum,
-                        .ACSSDebit:
+                        .sunbit, .billie, .crypto, .payPay, .wero, .payByBank, .mbWay, .bizum:
                         return [.unsupportedForSetup]
                     @unknown default:
                         return [.unsupportedForSetup]
@@ -298,11 +297,11 @@ extension PaymentSheet {
                             .userSupportsDelayedPaymentMethods, .financialConnectionsSDK,
                             .validUSBankVerificationMethod,
                         ]
-                    case .OXXO, .boleto, .AUBECSDebit, .SEPADebit, .konbini, .multibanco:
+                    case .OXXO, .boleto, .ACSSDebit, .AUBECSDebit, .SEPADebit, .konbini, .multibanco:
                         return [.userSupportsDelayedPaymentMethods]
                     case .bacsDebit:
                         return [.returnURL, .userSupportsDelayedPaymentMethods]
-                    case .ACSSDebit, .link, .unknown:
+                    case .link, .unknown:
                         return [.unsupported]
                     @unknown default:
                         return [.unsupported]

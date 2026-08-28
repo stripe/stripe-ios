@@ -209,7 +209,7 @@ extension STPPaymentMethodType {
     /// light/dark agnostic icons
     var iconRequiresTinting: Bool {
         switch self {
-        case .card, .AUBECSDebit, .USBankAccount, .konbini, .boleto, .bacsDebit, .payByBank:
+        case .card, .ACSSDebit, .AUBECSDebit, .USBankAccount, .konbini, .boleto, .bacsDebit, .payByBank:
             return true
         default:
             return false
@@ -244,8 +244,8 @@ extension STPPaymentMethodType {
                 return .pm_type_affirm
             case .payPal:
                 return .pm_type_paypal
-            case .AUBECSDebit:
-                // we reuse the bank icon for AU BECS Debit
+            case .ACSSDebit, .AUBECSDebit:
+                // Reuse the bank icon for bank debits.
                 return .pm_type_us_bank
             case .USBankAccount:
                 switch iconStyle {
