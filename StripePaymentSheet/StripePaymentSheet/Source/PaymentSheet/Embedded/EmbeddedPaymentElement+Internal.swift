@@ -64,7 +64,10 @@ extension EmbeddedPaymentElement {
             configuration: configuration,
             elementsSession: loadResult.elementsSession,
             intent: loadResult.intent,
-            analyticsHelper: analyticsHelper
+            analyticsHelper: analyticsHelper,
+            shouldShowForm: {
+                EmbeddedPaymentElement.shouldShowForm($0, configuration: configuration)
+            }
         )
         return EmbeddedPaymentMethodsView(
             initialSelectedRowType: initialSelection,
