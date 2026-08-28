@@ -33,6 +33,9 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
         // When the customer selects a card in Payment Element
         app.buttons["Select payment method"].scrollToAndTap(in: app)
         if !app.textFields["Card number"].waitForExistence(timeout: 2) {
+            app.buttons["Add new payment method"].forceTapWhenHittableInTestCase(self)
+        }
+        if !app.textFields["Card number"].waitForExistence(timeout: 2) {
             app.buttons["Card"].forceTapWhenHittableInTestCase(self)
         }
         try fillCardData(app)

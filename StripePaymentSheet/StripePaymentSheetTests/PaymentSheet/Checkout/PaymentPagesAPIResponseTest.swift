@@ -59,14 +59,6 @@ class PaymentPagesAPIResponseTest: XCTestCase {
     func testDecodedObjectFromAPIResponseDoesNotRequireUnusedFields() throws {
         var json = CheckoutTestHelpers.makeSessionJSON()
         json.removeValue(forKey: "payment_method_types")
-        var checkoutItems = json["checkout_items"] as! [[String: Any]]
-        var oneTimePrice = checkoutItems[0]["one_time_price"] as! [String: Any]
-        var items = oneTimePrice["items"] as! [[String: Any]]
-        items[0].removeValue(forKey: "subtotal")
-        items[0].removeValue(forKey: "total")
-        oneTimePrice["items"] = items
-        checkoutItems[0]["one_time_price"] = oneTimePrice
-        json["checkout_items"] = checkoutItems
 
         XCTAssertNoThrow(try PaymentPagesAPIResponse.decode(fromAPIResponse: json))
     }
@@ -152,6 +144,15 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         var json = STPTestUtils.jsonNamed("CheckoutSession")!
         // Invalid elements_session - missing payment_method_preference
         json["elements_session"] = ["garbage": true]
+
+        XCTAssertThrowsError(try PaymentPagesAPIResponse.decode(fromAPIResponse: json))
+    }
+
+    func testDecodedObjectFromAPIResponseRequiresMerchantCountry() {
+        var json = STPTestUtils.jsonNamed("CheckoutSession")!
+        var elementsSession = json["elements_session"] as! [String: Any]
+        elementsSession.removeValue(forKey: "merchant_country")
+        json["elements_session"] = elementsSession
 
         XCTAssertThrowsError(try PaymentPagesAPIResponse.decode(fromAPIResponse: json))
     }
@@ -353,6 +354,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
             "payment_method_types": ["card"],
             "elements_session": [
                 "session_id": "es_test",
+                "merchant_country": "US",
                 "payment_method_preference": ["ordered_payment_method_types": ["card"]],
             ],
         ]
@@ -688,9 +690,10 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertEqual(oneTimePrice.items[0].images, ["https://example.com/shirt.png"])
         XCTAssertEqual(oneTimePrice.items[0].quantity, 2)
         XCTAssertEqual(oneTimePrice.items[0].unitAmount.minorUnitsAmount, 1000)
-        XCTAssertEqual(oneTimePrice.amountDetails.subtotal.minorUnitsAmount, 2000)
-        XCTAssertEqual(oneTimePrice.amountDetails.total.minorUnitsAmount, 2148)
-        XCTAssertEqual(oneTimePrice.amountDetails.taxExclusive.minorUnitsAmount, 148)
+        XCTAssertEqual(oneTimePrice.items[0].amountDetails.subtotal.minorUnitsAmount, 2000)
+        XCTAssertEqual(oneTimePrice.items[0].amountDetails.total.minorUnitsAmount, 2148)
+        XCTAssertEqual(oneTimePrice.items[0].amountDetails.taxExclusive.minorUnitsAmount, 148)
+        XCTAssertNil(oneTimePrice.items[0].amountDetails.taxAmounts)
 
         XCTAssertEqual(session.taxAmounts?.count, 1)
         XCTAssertEqual(session.taxAmounts?[0].minorUnitsAmount, 148)
@@ -705,7 +708,58 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertEqual(session.totals.total.minorUnitsAmount, 2148)
     }
 
-    func testTotalsSumOneTimePrices() {
+    func testOneTimePriceMapsAmountDetailsPerItem() throws {
+        let json = modifyingOneTimePrice { oneTimePrice in
+            var firstItem = (oneTimePrice["items"] as! [[String: Any]])[0]
+            firstItem["inner_item_key"] = "first_item"
+            firstItem["subtotal"] = 1000
+            firstItem["total"] = 1100
+            firstItem["tax_inclusive"] = 0
+            firstItem["tax_exclusive"] = 100
+            firstItem["tax_amounts"] = [[
+                "amount": 100,
+                "inclusive": false,
+                "tax_rate": ["display_name": "Sales Tax", "percentage": 10.0],
+            ], ]
+
+            var secondItem = firstItem
+            secondItem["inner_item_key"] = "second_item"
+            secondItem["subtotal"] = 2000
+            secondItem["total"] = 2000
+            secondItem["tax_inclusive"] = 50
+            secondItem["tax_exclusive"] = 0
+            secondItem["tax_amounts"] = [[
+                "amount": 50,
+                "inclusive": true,
+                "tax_rate": ["display_name": "VAT", "percentage": 2.5],
+            ], ]
+
+            oneTimePrice["items"] = [firstItem, secondItem]
+            oneTimePrice["subtotal"] = 3000
+            oneTimePrice["total"] = 3100
+        }
+
+        let session = try PaymentPagesAPIResponse.decode(fromAPIResponse: json).makePublicSession()
+        guard case .oneTimePrice(let oneTimePrice) = session.orderSummaryItems.first else {
+            return XCTFail("Expected one-time price order summary item")
+        }
+
+        let firstAmountDetails = oneTimePrice.items[0].amountDetails
+        XCTAssertEqual(firstAmountDetails.subtotal.minorUnitsAmount, 1000)
+        XCTAssertEqual(firstAmountDetails.total.minorUnitsAmount, 1100)
+        XCTAssertEqual(firstAmountDetails.taxExclusive.minorUnitsAmount, 100)
+        XCTAssertEqual(firstAmountDetails.taxInclusive.minorUnitsAmount, 0)
+        XCTAssertEqual(firstAmountDetails.taxAmounts?.first?.displayName, "Sales Tax")
+
+        let secondAmountDetails = oneTimePrice.items[1].amountDetails
+        XCTAssertEqual(secondAmountDetails.subtotal.minorUnitsAmount, 2000)
+        XCTAssertEqual(secondAmountDetails.total.minorUnitsAmount, 2000)
+        XCTAssertEqual(secondAmountDetails.taxExclusive.minorUnitsAmount, 0)
+        XCTAssertEqual(secondAmountDetails.taxInclusive.minorUnitsAmount, 50)
+        XCTAssertEqual(secondAmountDetails.taxAmounts?.first?.displayName, "VAT")
+    }
+
+    func testTotalsSumOneTimePriceItems() {
         let session = CheckoutTestHelpers.makeSession([
             "checkout_items": [
                 makeOneTimePriceCheckoutItem(
@@ -790,13 +844,11 @@ class PaymentPagesAPIResponseTest: XCTestCase {
             )
         }
 
-        for field in ["items", "subtotal", "total"] {
-            let json = modifyingOneTimePrice { $0.removeValue(forKey: field) }
-            XCTAssertThrowsError(
-                try PaymentPagesAPIResponse.decode(fromAPIResponse: json),
-                "Expected missing one_time_price field \(field) to fail decoding"
-            )
-        }
+        let json = modifyingOneTimePrice { $0.removeValue(forKey: "items") }
+        XCTAssertThrowsError(
+            try PaymentPagesAPIResponse.decode(fromAPIResponse: json),
+            "Expected missing one_time_price items to fail decoding"
+        )
     }
 
     func testUnifiedModeSessionRejectsMissingRequiredNestedItemFields() {
@@ -804,6 +856,8 @@ class PaymentPagesAPIResponseTest: XCTestCase {
             "inner_item_key",
             "price",
             "quantity",
+            "subtotal",
+            "total",
             "tax_amounts",
             "tax_inclusive",
             "tax_exclusive",
@@ -1249,6 +1303,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         let session = CheckoutTestHelpers.makeSession([
             "elements_session": [
                 "session_id": "es_123",
+                "merchant_country": "US",
                 "payment_method_preference": ["ordered_payment_method_types": ["card"]],
             ],
             "tax_context": [
@@ -1261,6 +1316,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         let sessionWithoutTax = CheckoutTestHelpers.makeSession([
             "elements_session": [
                 "session_id": "es_123",
+                "merchant_country": "US",
                 "payment_method_preference": ["ordered_payment_method_types": ["card"]],
             ],
         ]).withCustomer().makePublicSession()

@@ -61,12 +61,6 @@ extension CheckoutController {
         /// ``CheckoutController.getShippingAddressElement()``.
         public var shippingAddressElement: ShippingAddressElement.Configuration = .init()
 
-        /// Apple Pay configuration.
-        public var applePayConfiguration: ApplePayConfiguration?
-
-        /// Link configuration.
-        public var linkConfiguration: LinkConfiguration?
-
         /// The color styling to use for Checkout UI.
         public var userInterfaceStyle: UserInterfaceStyle = .automatic
 

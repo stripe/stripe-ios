@@ -87,6 +87,7 @@ extension CheckoutController {
         let billingAddressCollection: BillingAddressCollection
         let automaticTaxEnabled: Bool
         let automaticTaxAddressSource: String?
+        let merchantCountryCode: String
         let elementsSession: STPElementsSession
 
         enum BillingAddressCollection: String {
@@ -111,7 +112,7 @@ extension CheckoutController.Session {
         /// A group of one-time Prices.
         case oneTimePrice(OneTimePrice)
 
-        /// A group of one-time Prices and their aggregated amounts.
+        /// A group of one-time Prices.
         public struct OneTimePrice: Identifiable, Sendable, Hashable {
             /// The stable identity of this group within its Checkout Session.
             public var id: String { key }
@@ -124,9 +125,6 @@ extension CheckoutController.Session {
 
             /// The one-time Prices included in this group.
             public let items: [Item]
-
-            /// Amounts aggregated across all one-time Prices in this group.
-            public let amountDetails: AmountDetails
 
             /// A one-time Price included in the group.
             public struct Item: Identifiable, Sendable, Hashable {
@@ -156,27 +154,27 @@ extension CheckoutController.Session {
 
                 /// The allowed quantity range when the customer can adjust the quantity.
                 public let adjustableQuantity: AdjustableQuantity?
-            }
 
-            /// Amounts aggregated across all one-time Prices in the group.
-            public struct AmountDetails: Sendable, Hashable {
-                /// The total amount for the group.
-                public let total: Amount
+                /// The computed amounts for this Price.
+                public let amountDetails: AmountDetails
 
-                /// The subtotal amount for the group before discounts and exclusive tax.
-                public let subtotal: Amount
+                /// The computed amounts for a one-time Price.
+                public struct AmountDetails: Sendable, Hashable {
+                    /// The total amount for the Price.
+                    public let total: Amount
 
-                /// The tax amounts applied to the group, or `nil` when no tax was applied.
-                public let taxAmounts: [TaxAmount]?
+                    /// The subtotal amount for the Price before exclusive tax.
+                    public let subtotal: Amount
 
-                /// The discount applied to the group.
-                public let discount: Amount
+                    /// The tax amounts applied to the Price, or `nil` when no tax was applied.
+                    public let taxAmounts: [TaxAmount]?
 
-                /// The tax amount included in the prices.
-                public let taxInclusive: Amount
+                    /// The tax amount included in the Price.
+                    public let taxInclusive: Amount
 
-                /// The tax amount added to the prices.
-                public let taxExclusive: Amount
+                    /// The tax amount added to the Price.
+                    public let taxExclusive: Amount
+                }
             }
         }
     }

@@ -290,14 +290,14 @@ extension PaymentPagesAPIResponse {
 
     struct OneTimePrice: Decodable {
         let items: [OneTimePriceItem]
-        let subtotal: Int
-        let total: Int
     }
 
     struct OneTimePriceItem: Decodable {
         let innerItemKey: String
         let price: Price
         let quantity: Int
+        let subtotal: Int
+        let total: Int
         let unitAmount: Int?
         let unitAmountDecimal: Double?
         let unitLabel: String?
@@ -310,6 +310,8 @@ extension PaymentPagesAPIResponse {
             case innerItemKey
             case price
             case quantity
+            case subtotal
+            case total
             case unitAmount
             case unitAmountDecimal
             case unitLabel
@@ -327,6 +329,8 @@ extension PaymentPagesAPIResponse {
             guard quantity >= 0 else {
                 throw decoder.dataCorrupted("quantity must not be negative")
             }
+            subtotal = try container.decode(Int.self, forKey: .subtotal)
+            total = try container.decode(Int.self, forKey: .total)
             unitAmount = try container.decodeIfPresent(Int.self, forKey: .unitAmount)
 
             if let rawUnitAmountDecimal = try container.decodeIfPresent(
@@ -515,6 +519,7 @@ extension PaymentPagesAPIResponse {
 
     struct ElementsSession: Decodable {
         let businessName: String?
+        let merchantCountryCode: String
         let value: STPElementsSession
 
         private enum CodingKeys: String, CodingKey {
@@ -524,7 +529,13 @@ extension PaymentPagesAPIResponse {
         init(from decoder: Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
             businessName = try container.decodeIfPresent(String.self, forKey: .businessName)
-            value = try LegacyDecoded<STPElementsSession>(from: decoder).value
+            let value = try LegacyDecoded<STPElementsSession>(from: decoder).value
+            // TODO: Make merchant_country non-optional in CheckoutClient when Checkout migrates to it.
+            guard let merchantCountryCode = value.merchantCountryCode else {
+                throw decoder.dataCorrupted("Missing required elements_session.merchant_country")
+            }
+            self.merchantCountryCode = merchantCountryCode
+            self.value = value
         }
     }
 }
