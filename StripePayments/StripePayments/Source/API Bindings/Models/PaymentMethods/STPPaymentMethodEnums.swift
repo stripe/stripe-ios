@@ -110,6 +110,8 @@ import Foundation
     case naverPay
     /// A PAYCO payment method
     case payco
+    /// A SeQura payment method
+    case sequra
     /// An unknown type.
     case unknown
 
@@ -218,6 +220,8 @@ import Foundation
             return "Naver Pay"
         case .payco:
             return "PAYCO"
+        case .sequra:
+            return "SeQura"
         case .cardPresent,
             .unknown:
             return STPLocalizedString("Unknown", "Default missing source type label")
@@ -329,6 +333,8 @@ import Foundation
             return "naver_pay"
         case .payco:
             return "payco"
+        case .sequra:
+            return "sequra"
         }
     }
 

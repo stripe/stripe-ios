@@ -123,6 +123,8 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
     @objc public var naverPay: STPPaymentMethodNaverPayParams?
     /// If this is a PAYCO PaymentMethod, this contains additional details.
     @objc public var payco: STPPaymentMethodPaycoParams?
+    /// If this is a SeQura PaymentMethod, this contains additional details.
+    @objc public var sequra: STPPaymentMethodSequraParams?
 
     /// Radar options that may contain HCaptcha token
     @objc @_spi(STP) public var radarOptions: STPRadarOptions?
@@ -866,6 +868,24 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
         self.metadata = metadata
     }
 
+    /// Creates params for a SeQura PaymentMethod.
+    /// - Parameters:
+    ///   - sequra:         An object containing additional SeQura details.
+    ///   - billingDetails: Billing information associated with the PaymentMethod.
+    ///   - metadata:       Additional information to attach to the PaymentMethod.
+    @objc
+    public convenience init(
+        sequra: STPPaymentMethodSequraParams,
+        billingDetails: STPPaymentMethodBillingDetails?,
+        metadata: [String: String]?
+    ) {
+        self.init()
+        self.type = .sequra
+        self.sequra = sequra
+        self.billingDetails = billingDetails
+        self.metadata = metadata
+    }
+
     // MARK: - STPFormEncodable
     @objc
     public class func rootObjectName() -> String? {
@@ -916,6 +936,7 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
             NSStringFromSelector(#selector(getter: krCard)): "kr_card",
             NSStringFromSelector(#selector(getter: naverPay)): "naver_pay",
             NSStringFromSelector(#selector(getter: payco)): "payco",
+            NSStringFromSelector(#selector(getter: sequra)): "sequra",
             NSStringFromSelector(#selector(getter: link)): "link",
             NSStringFromSelector(#selector(getter: radarOptions)): "radar_options",
             NSStringFromSelector(#selector(getter: metadata)): "metadata",
@@ -1391,6 +1412,8 @@ extension STPPaymentMethodParams {
             naverPay = STPPaymentMethodNaverPayParams()
         case .payco:
             payco = STPPaymentMethodPaycoParams()
+        case .sequra:
+            sequra = STPPaymentMethodSequraParams()
         case .cardPresent, .paynow, .zip, .konbini, .promptPay, .mbWay, .bizum:
             // These payment methods don't have any params
             break

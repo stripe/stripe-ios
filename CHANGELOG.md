@@ -5,6 +5,7 @@ PATCH
 
 ### Payments
 * [Added] Added API bindings for ACSS Debit.
+* [Added] Added API bindings for SeQura.
 * [Added] Added API bindings for Korean cards.
 * [Added] Added API bindings for Naver Pay.
 * [Added] Added API bindings for PAYCO.
