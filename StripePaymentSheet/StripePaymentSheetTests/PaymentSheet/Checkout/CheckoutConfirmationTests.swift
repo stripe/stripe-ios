@@ -24,7 +24,7 @@ final class CheckoutConfirmationTests: APIStubbedTestCase {
         stubConfirmation()
 
         // When the coordinator confirms the selected payment method
-        let result = await checkout.confirm(try makePaymentMethodFlow(for: checkout))
+        let result = await checkout.confirm(makePaymentMethodFlow(for: checkout))
 
         // Then it maps the result and commits the returned Checkout Session
         guard case .completed(let paymentStatus) = result else {
@@ -41,7 +41,7 @@ final class CheckoutConfirmationTests: APIStubbedTestCase {
         stubConfirmation(responseJSON: makeConfirmedSessionJSON(paymentIntentStatus: "canceled"))
 
         // When confirmation is canceled
-        let result = await checkout.confirm(try makePaymentMethodFlow(for: checkout))
+        let result = await checkout.confirm(makePaymentMethodFlow(for: checkout))
 
         // Then the coordinator still commits the returned Checkout Session
         guard case .canceled = result else {
@@ -57,7 +57,7 @@ final class CheckoutConfirmationTests: APIStubbedTestCase {
         stubConfirmation(responseJSON: makeConfirmedSessionJSON(paymentIntentStatus: "requires_payment_method"))
 
         // When confirmation fails
-        let result = await checkout.confirm(try makePaymentMethodFlow(for: checkout))
+        let result = await checkout.confirm(makePaymentMethodFlow(for: checkout))
 
         // Then the coordinator still commits the returned Checkout Session
         guard case .failed = result else {
@@ -71,7 +71,7 @@ final class CheckoutConfirmationTests: APIStubbedTestCase {
         // Given a confirmation that remains in progress long enough to start another
         let checkout = try await makeCheckout()
         stubConfirmation(responseTime: 0.5)
-        let firstFlow = try makePaymentMethodFlow(for: checkout)
+        let firstFlow = makePaymentMethodFlow(for: checkout)
         let firstConfirmation = Task { @MainActor in
             await checkout.confirm(firstFlow)
         }
@@ -81,7 +81,7 @@ final class CheckoutConfirmationTests: APIStubbedTestCase {
         }
 
         // When another confirmation starts
-        let duplicateResult = await checkout.confirm(try makePaymentMethodFlow(for: checkout))
+        let duplicateResult = await checkout.confirm(makePaymentMethodFlow(for: checkout))
 
         // Then the duplicate fails without disturbing the first confirmation
         guard case .failed(let error) = duplicateResult else {
@@ -96,7 +96,7 @@ final class CheckoutConfirmationTests: APIStubbedTestCase {
         // Given an in-progress confirmation
         let checkout = try await makeCheckout()
         stubConfirmation(responseTime: 0.5)
-        let flow = try makePaymentMethodFlow(for: checkout)
+        let flow = makePaymentMethodFlow(for: checkout)
         let confirmation = Task { @MainActor in
             await checkout.confirm(flow)
         }
@@ -137,7 +137,7 @@ final class CheckoutConfirmationTests: APIStubbedTestCase {
         }
 
         // When confirmation is attempted
-        let result = await checkout.confirm(try makePaymentMethodFlow(for: checkout))
+        let result = await checkout.confirm(makePaymentMethodFlow(for: checkout))
 
         // Then it fails validation before making an API request
         guard case .failed(let error) = result else {
@@ -567,8 +567,8 @@ final class CheckoutConfirmationTests: APIStubbedTestCase {
 
     private func makePaymentMethodFlow(
         for checkout: CheckoutController
-    ) throws -> CheckoutController.CheckoutConfirmationFlow {
-        try makePaymentMethodFlow(
+    ) -> CheckoutController.CheckoutConfirmationFlow {
+        makePaymentMethodFlow(
             for: checkout,
             option: .saved(STPPaymentMethod._testCard(), nil)
         )
@@ -577,7 +577,7 @@ final class CheckoutConfirmationTests: APIStubbedTestCase {
     private func makePaymentMethodFlow(
         for checkout: CheckoutController,
         option: CheckoutController.PaymentMethodConfirmationParameters.Option
-    ) throws -> CheckoutController.CheckoutConfirmationFlow {
+    ) -> CheckoutController.CheckoutConfirmationFlow {
         let configuration = checkout.getPaymentElement().embeddedPaymentElement.configuration
         let parameters = CheckoutController.PaymentMethodConfirmationParameters(
             option: option,
@@ -610,7 +610,7 @@ final class CheckoutConfirmationTests: APIStubbedTestCase {
         )
 
         let result = await checkout.confirm(
-            try makePaymentMethodFlow(for: checkout, option: .new(confirmParams))
+            makePaymentMethodFlow(for: checkout, option: .new(confirmParams))
         )
 
         assertSucceeded(result, file: file, line: line)

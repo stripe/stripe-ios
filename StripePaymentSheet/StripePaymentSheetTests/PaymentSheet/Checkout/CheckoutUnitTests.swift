@@ -70,7 +70,7 @@ final class CheckoutUnitTests: XCTestCase {
 
     func testPaymentElementIsNotCreatedWhenNotConfigured() async throws {
         // Given a Checkout configuration without Payment Element configuration
-        let configuration = CheckoutTestHelpers.makeConfiguration(includePaymentElement: false)
+        let configuration = CheckoutTestHelpers.makeConfiguration(paymentElementConfiguration: nil)
 
         // When Checkout loads the session
         let checkout = try await CheckoutController(configuration: configuration)

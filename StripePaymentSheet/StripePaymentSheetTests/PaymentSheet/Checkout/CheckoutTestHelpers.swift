@@ -159,20 +159,20 @@ enum CheckoutTestHelpers {
     /// - Parameters:
     ///   - apiResponse: The Checkout Session response returned by the stubbed `/init` request.
     ///   - configuration: An optional base configuration for test-specific settings.
-    ///   - includePaymentElement: Whether to configure Payment Element when the base configuration omits it.
+    ///   - paymentElementConfiguration: The Payment Element configuration to use when the base configuration omits it.
     ///   - stubAllOutgoingRequests: Whether to stub every outgoing API request made by the client, or only the initialization request.
     @MainActor
     static func makeConfiguration(
         apiResponse: PaymentPagesAPIResponse = makeOpenSession(),
         configuration: CheckoutController.Configuration? = nil,
-        includePaymentElement: Bool = true,
+        paymentElementConfiguration: PaymentElement.Configuration? = .init(),
         stubAllOutgoingRequests: Bool = true
     ) -> CheckoutController.Configuration {
         // Use the production Checkout initializer with a test-controlled API client.
         let clientSecret = configuration?.clientSecret ?? "\(apiResponse.sessionId)_secret_abc"
         var resolvedConfiguration = configuration ?? CheckoutController.Configuration(clientSecret: clientSecret, returnURL: "stripe-ios-test://checkout-return")
-        if includePaymentElement && resolvedConfiguration.paymentElement == nil {
-            resolvedConfiguration.paymentElement = .init()
+        if resolvedConfiguration.paymentElement == nil {
+            resolvedConfiguration.paymentElement = paymentElementConfiguration
         }
         resolvedConfiguration.apiClient = makeStubbedAPIClient(
             apiResponse: apiResponse,
