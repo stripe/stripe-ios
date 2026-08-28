@@ -49,7 +49,7 @@ import Foundation
     /// The action type is Boleto payment. We provide `STPPaymentHandler` to display the Boleto voucher.
     case boletoDisplayDetails
 
-    /// Contains details describing the microdeposits verification flow for US Bank Account payments
+    /// Contains details describing the microdeposit verification flow for US bank account and ACSS Debit payments.
     case verifyWithMicrodeposits
 
     /// Contains instructions for authenticating a payment by redirecting your customer to Cash App.
