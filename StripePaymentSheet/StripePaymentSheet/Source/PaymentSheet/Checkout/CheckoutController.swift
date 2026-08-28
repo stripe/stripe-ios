@@ -326,7 +326,7 @@ public final class CheckoutController: ObservableObject {
     /// Pricing is available for this Checkout instance.
     public func getCurrencySelectorElement() -> CurrencySelectorElement? {
         if configuration.currencySelectorElement == nil {
-            stpAssertionFailure("Set Configuration.currencySelectorElement before calling getCurrencySelectorElement().")
+            assert("Set Configuration.currencySelectorElement before calling getCurrencySelectorElement().")
         }
         return currencySelectorElement
     }
