@@ -12,7 +12,6 @@ import UIKit
 class FCLiteSecureAuthFlowViewController: UIViewController {
     private let manifest: LinkAccountSessionManifest
     private let elementsSessionContext: ElementsSessionContext?
-    private let hostedAuthConsumerContext: HostedAuthUrlBuilder.ConsumerContext?
     private let completion: ((FCLiteWebFlowResult) -> Void)
 
     /// Stored to maintain a strong reference and prevent deallocation.
@@ -23,20 +22,17 @@ class FCLiteSecureAuthFlowViewController: UIViewController {
             baseHostedAuthUrl: manifest.hostedAuthURL,
             isInstantDebits: manifest.isInstantDebits,
             hasExistingAccountholderToken: manifest.hasAccountholderToken,
-            elementsSessionContext: elementsSessionContext,
-            consumerContext: hostedAuthConsumerContext
+            elementsSessionContext: elementsSessionContext
         )
     }
 
     init(
         manifest: LinkAccountSessionManifest,
         elementsSessionContext: ElementsSessionContext?,
-        hostedAuthConsumerContext: HostedAuthUrlBuilder.ConsumerContext?,
         completion: @escaping ((FCLiteWebFlowResult) -> Void)
     ) {
         self.manifest = manifest
         self.elementsSessionContext = elementsSessionContext
-        self.hostedAuthConsumerContext = hostedAuthConsumerContext
         self.completion = completion
         super.init(nibName: nil, bundle: nil)
     }

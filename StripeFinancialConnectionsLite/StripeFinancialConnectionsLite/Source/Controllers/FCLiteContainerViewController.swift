@@ -13,7 +13,6 @@ class FCLiteContainerViewController: UIViewController {
     private let returnUrl: URL?
     private let apiClient: FCLiteAPIClient
     private let completion: ((FinancialConnectionsSDKResult) -> Void)
-    private let hostedAuthConsumerContext: HostedAuthUrlBuilder.ConsumerContext?
     private let hasRequestedDataPermissions: Bool
 
     private let spinner = UIActivityIndicatorView(style: .large)
@@ -50,7 +49,6 @@ class FCLiteContainerViewController: UIViewController {
         returnUrl: URL?,
         apiClient: FCLiteAPIClient,
         elementsSessionContext: ElementsSessionContext?,
-        hostedAuthConsumerContext: HostedAuthUrlBuilder.ConsumerContext?,
         hasRequestedDataPermissions: Bool,
         completion: @escaping ((FinancialConnectionsSDKResult) -> Void)
     ) {
@@ -58,7 +56,6 @@ class FCLiteContainerViewController: UIViewController {
         self.returnUrl = returnUrl
         self.apiClient = apiClient
         self.elementsSessionContext = elementsSessionContext
-        self.hostedAuthConsumerContext = hostedAuthConsumerContext
         self.hasRequestedDataPermissions = hasRequestedDataPermissions
         self.completion = completion
         super.init(nibName: nil, bundle: nil)
@@ -187,7 +184,6 @@ class FCLiteContainerViewController: UIViewController {
             authFlowVC = FCLiteSecureAuthFlowViewController(
                 manifest: manifest,
                 elementsSessionContext: elementsSessionContext,
-                hostedAuthConsumerContext: hostedAuthConsumerContext,
                 completion: { [weak self] result in
                     guard let self else { return }
                     DispatchQueue.main.async {
@@ -202,7 +198,6 @@ class FCLiteContainerViewController: UIViewController {
             authFlowVC = FCLiteAuthFlowViewController(
                 manifest: manifest,
                 elementsSessionContext: elementsSessionContext,
-                hostedAuthConsumerContext: hostedAuthConsumerContext,
                 returnUrl: returnUrl,
                 onLoad: {
                     DispatchQueue.main.async {
