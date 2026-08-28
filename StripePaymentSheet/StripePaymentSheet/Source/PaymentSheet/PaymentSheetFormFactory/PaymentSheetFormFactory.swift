@@ -305,7 +305,7 @@ class PaymentSheetFormFactory {
                 return makeAUBECSDebit()
             case .FPX:
                 return makeFPX()
-            case .netBanking, .weChatPay, .link, .cardPresent, .unknown:
+            case .kakaoPay, .netBanking, .weChatPay, .link, .cardPresent, .unknown:
                 return makeUnexpectedEmptyForm(for: paymentMethod)
             @unknown default:
                 return makeUnexpectedEmptyForm(for: paymentMethod)
