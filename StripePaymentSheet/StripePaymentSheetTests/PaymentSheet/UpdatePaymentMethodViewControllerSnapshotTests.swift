@@ -228,7 +228,8 @@ final class UpdatePaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase 
             isCBCEligible: isCBCEligible,
             canSetAsDefaultPM: canSetAsDefaultPM,
             isDefault: isDefault,
-            cardBrandFilter: cardBrandFilter
+            cardBrandFilter: cardBrandFilter,
+            rightToLeft: rightToLeft
         )
     }
 
@@ -241,7 +242,8 @@ final class UpdatePaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase 
                                                  isCBCEligible: Bool = false,
                                                  canSetAsDefaultPM: Bool = false,
                                                  isDefault: Bool = false,
-                                                 cardBrandFilter: CardBrandFilter = .default) {
+                                                 cardBrandFilter: CardBrandFilter = .default,
+                                                 rightToLeft: Bool = false) {
         let billingDetailsCollectionConfiguration = PaymentSheet.BillingDetailsCollectionConfiguration(name: .never,
                                                                                                        phone: .never,
                                                                                                        email: .never,
