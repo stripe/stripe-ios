@@ -1,0 +1,6 @@
+POST
+https:\/\/stp-mobile-ci-test-backend-e1b3\.stripedemos\.com\/create_payment_intent$
+200
+text/html
+
+{"intent":"pi_3U9Uq2EVcdXl2br81xdhB50i","secret":"pi_3U9Uq2EVcdXl2br81xdhB50i_secret_ntRqxUdH63gZ320vO2fr5dE5x","status":"requires_action","publishable_key":"pk_test_51Pl38tEVcdXl2br8qh83dTzu5zzfoBk4vVLOpPZk1k13nS8qZ6H8gy2QmWgebaEtocCCnS5MyQ3FVfLhveILGQzr00NqKH4Gf5"}
