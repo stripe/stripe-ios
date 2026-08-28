@@ -198,8 +198,21 @@ extension PaymentElement {
             assertionFailure("Clearing the payment option after presenting PaymentElement is not implemented. File a feature request if you need this.")
             return
         }
-        try await checkout?.updatePaymentOption(to: nil) { [embeddedPaymentElement] in
-            embeddedPaymentElement.clearPaymentOption()
+        guard let checkout else {
+            stpAssertionFailure("PaymentElement unexpectedly lost its CheckoutController.")
+            return
+        }
+        try await checkout.enqueueSessionUpdate {
+            if checkout.session.collectsTaxFromBillingAddress,
+               let country = checkout.session.paymentOption?.billingDetails?.address.country?.nonEmpty {
+                // The update endpoint requires a country, so clear the rest of the tax region
+                // while retaining the selected payment option's country.
+                try await checkout.applySessionUpdate(
+                    .setTaxRegion(CheckoutController.Address(country: country))
+                )
+            }
+            self.embeddedPaymentElement.clearPaymentOption()
+            checkout.setPaymentOption(nil)
         }
     }
 }
