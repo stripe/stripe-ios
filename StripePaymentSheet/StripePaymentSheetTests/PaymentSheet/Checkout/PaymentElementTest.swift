@@ -9,7 +9,7 @@ import OHHTTPStubs
 @testable @_spi(STP) import StripeCore
 @testable @_spi(STP) import StripeCoreTestUtils
 @testable @_spi(STP) import StripePayments
-@testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(AppearanceAPIAdditionsPreview) @_spi(STP) import StripePaymentSheet
 @testable @_spi(STP) import StripePaymentsTestUtils
 @testable @_spi(STP) import StripeUICore
 import XCTest
@@ -295,7 +295,9 @@ final class PaymentElementTest: XCTestCase {
         // and the next Checkout Session update will fail
         let (configuration, _) = try stubAutomaticTaxSavedCardCheckout(clearUpdateStatusCode: 500)
         let checkout = try await CheckoutController(configuration: configuration)
+        let embeddedPaymentElement = checkout.getPaymentElement().embeddedPaymentElement
         let selectedPaymentOption = try XCTUnwrap(checkout.session.paymentOption)
+        let selectedEmbeddedPaymentOption = try XCTUnwrap(embeddedPaymentElement.paymentOption)
 
         // When the payment option is cleared
         do {
@@ -309,6 +311,48 @@ final class PaymentElementTest: XCTestCase {
 
         // Then the selection remains available for the merchant to recover
         XCTAssertEqual(checkout.session.paymentOption, selectedPaymentOption)
+        XCTAssertEqual(embeddedPaymentElement.paymentOption, selectedEmbeddedPaymentOption)
+    }
+
+    func testUpdatePaymentOptionUsesReplacementBillingAddressForTaxRegion() async throws {
+        // Given a selected saved card supplies the billing address for automatic tax
+        let (configuration, requestRecorder) = try stubAutomaticTaxSavedCardCheckout()
+        let checkout = try await CheckoutController(configuration: configuration)
+        let embeddedPaymentElement = checkout.getPaymentElement().embeddedPaymentElement
+        let confirmParams = IntentConfirmParams(type: .stripe(.card))
+        let billingDetails = STPPaymentMethodBillingDetails()
+        billingDetails.address = STPPaymentMethodAddress()
+        billingDetails.address?.country = "CA"
+        billingDetails.address?.line1 = "320 Front Street West"
+        billingDetails.address?.city = "Toronto"
+        billingDetails.address?.state = "ON"
+        billingDetails.address?.postalCode = "M5V 3B6"
+        confirmParams.paymentMethodParams.billingDetails = billingDetails
+        let replacementOption = PaymentOption.new(confirmParams: confirmParams)
+        let embeddedDisplayData = EmbeddedPaymentElement.PaymentOptionDisplayData(
+            paymentOption: replacementOption,
+            mandateText: nil,
+            currency: checkout.session.currency,
+            iconStyle: .filled
+        )
+        let checkoutDisplayData = CheckoutController.Session.PaymentOptionDisplayData(embeddedDisplayData)
+
+        // When Payment Element replaces the payment option
+        try await checkout.updatePaymentOption(to: checkoutDisplayData) {
+            embeddedPaymentElement._test_paymentOption = replacementOption
+        }
+
+        // Then Checkout recalculates tax from the replacement and commits it to both sources of state
+        let requests = requestRecorder.requests
+        XCTAssertEqual(requests.map(\.kind), [.initSession, .updateSession, .updateSession])
+        let updateRequest = try XCTUnwrap(requests.last)
+        XCTAssertEqual(updateRequest.params["tax_region[country]"], "CA")
+        XCTAssertEqual(updateRequest.params["tax_region[line1]"], "320 Front Street West")
+        XCTAssertEqual(updateRequest.params["tax_region[city]"], "Toronto")
+        XCTAssertEqual(updateRequest.params["tax_region[state]"], "ON")
+        XCTAssertEqual(updateRequest.params["tax_region[postal_code]"], "M5V 3B6")
+        XCTAssertEqual(checkout.session.paymentOption, checkoutDisplayData)
+        XCTAssertEqual(embeddedPaymentElement.paymentOption, embeddedDisplayData)
     }
 
     func testCheckoutSessionUpdatePreservesFlowControllerPaymentOption() async throws {
