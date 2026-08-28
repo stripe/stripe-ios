@@ -284,20 +284,20 @@ public final class CheckoutController: ObservableObject {
     /// Runs an async function that calls your server to update the Checkout Session,
     /// then automatically refreshes ``session`` with the latest session data.
     ///
-    /// A 20-second timeout is enforced. If `updateFunction` doesn't complete
+    /// A 20-second timeout is enforced. If `update` doesn't complete
     /// within 20 seconds, this method throws ``CheckoutError.timedOut``.
     ///
-    /// - Parameter updateFunction: An async throwing function that makes a request
+    /// - Parameter update: An async throwing function that makes a request
     ///   to your server to update the Checkout Session.
     /// - Throws: ``CheckoutError`` if the function times out, the session is not
     ///   open, or the refresh fails.
     public func runServerUpdate(
-        _ updateFunction: @escaping () async throws -> Void
+        _ update: @escaping () async throws -> Void
     ) async throws {
         try await enqueueSessionUpdate {
             try self.requireSheetNotPresented()
             let result = await withTimeout(Self.serverUpdateTimeout) {
-                try await updateFunction()
+                try await update()
             }
             if case .failure(let error) = result {
                 if error is TimeoutError {
