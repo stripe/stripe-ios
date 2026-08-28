@@ -20,6 +20,25 @@ final class PaymentSheetLoader {
         let paymentMethodTypes: [PaymentSheet.PaymentMethodType]
         let paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper?
         let paymentMethodOrientation: PaymentSheet.PaymentMethodLayout.ResolvedLayout
+        let paymentElementConfiguration: PaymentElementConfiguration?
+
+        init(
+            intent: Intent,
+            elementsSession: STPElementsSession,
+            savedPaymentMethods: [STPPaymentMethod],
+            paymentMethodTypes: [PaymentSheet.PaymentMethodType],
+            paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper?,
+            paymentMethodOrientation: PaymentSheet.PaymentMethodLayout.ResolvedLayout,
+            paymentElementConfiguration: PaymentElementConfiguration? = nil
+        ) {
+            self.intent = intent
+            self.elementsSession = elementsSession
+            self.savedPaymentMethods = savedPaymentMethods
+            self.paymentMethodTypes = paymentMethodTypes
+            self.paymentMethodMessagingPromotionsHelper = paymentMethodMessagingPromotionsHelper
+            self.paymentMethodOrientation = paymentMethodOrientation
+            self.paymentElementConfiguration = paymentElementConfiguration
+        }
     }
 
     enum IntegrationShape {
@@ -65,6 +84,8 @@ final class PaymentSheetLoader {
         integrationShape: IntegrationShape,
         isUpdate: Bool = false
     ) async throws -> (LoadResult, ConfirmationChallenge) {
+        let configuration = mode.paymentElementConfiguration(basedOn: configuration)
+        analyticsHelper.configuration = configuration
         let loadTimings: LoadTimings = .init(loadingStartDate: Date())
         loadTimings.logStart("logLoadStarted")
         analyticsHelper.logLoadStarted(isUpdate: isUpdate)
@@ -167,7 +188,7 @@ final class PaymentSheetLoader {
             loadTimings.logStart("makeViewModels")
             let (defaultSelectedIndex, paymentOptionsViewModels) = SavedPaymentOptionsViewController.makeViewModels(
                 savedPaymentMethods: filteredSavedPaymentMethods,
-                customerID: configuration.customer?.id,
+                customerID: configuration.customerProvider.customerID,
                 showApplePay: integrationShape.canDefaultToLinkOrApplePay ? isApplePayEnabled : false,
                 showLink: integrationShape.canDefaultToLinkOrApplePay ? PaymentSheet.shouldShowLinkButton(elementsSession: elementsSession, configuration: configuration) : false,
                 elementsSession: elementsSession,
@@ -189,7 +210,8 @@ final class PaymentSheetLoader {
                 savedPaymentMethods: filteredSavedPaymentMethods,
                 paymentMethodTypes: paymentMethodTypes,
                 paymentMethodMessagingPromotionsHelper: paymentMethodMessagingPromotionsHelper,
-                paymentMethodOrientation: paymentMethodOrientation
+                paymentMethodOrientation: paymentMethodOrientation,
+                paymentElementConfiguration: configuration
             )
             let confirmationChallenge = ConfirmationChallenge(
                 elementsSession: elementsSession,
@@ -245,10 +267,9 @@ final class PaymentSheetLoader {
         let intent: Intent
         let elementsSession: STPElementsSession
         let clientDefaultPaymentMethod: String? = {
-            guard let customer = configuration.customer else {
-                return nil
-            }
-            return defaultStripePaymentMethodId(forCustomerID: customer.id)
+            return defaultStripePaymentMethodId(
+                forCustomerID: configuration.customerProvider.customerID
+            )
         }()
 
         switch mode {
@@ -358,24 +379,15 @@ final class PaymentSheetLoader {
         loadTimings.logStart("filterPaymentMethods")
         defer { loadTimings.logEnd("filterPaymentMethods") }
         // Retrieve the payment methods from ElementsSession or by making direct API calls
-        var savedPaymentMethods: [STPPaymentMethod]
-        if let elementsSessionPaymentMethods = elementsSession.customer?.paymentMethods {
-            // A. SPMs are on ElementSessions object when using CustomerSession.
-            savedPaymentMethods = elementsSessionPaymentMethods
-        } else if case let .checkout(session) = intent,
-                  let customerPaymentMethods = session.customer?.paymentMethods {
-            // B. SPMs are on CheckoutSession object
-            savedPaymentMethods = customerPaymentMethods
-        } else if let prefetchedSPMs {
-            // C. SPMs are pre-fetched prior to this point when using Ephemeral Keys.
-            // Filter them manually now that we have the v1/e/s response. This step should ~mimick the filtering in v1/elements/sessions.
-            savedPaymentMethods = prefetchedSPMs
-        } else {
+        guard var savedPaymentMethods = configuration.customerProvider.savedPaymentMethods(
+            elementsSession: elementsSession,
+            prefetchedPaymentMethods: prefetchedSPMs
+        ) else {
             return []
         }
 
         // Move default PM to front
-        if let customerID = configuration.customer?.id {
+        if let customerID = configuration.customerProvider.customerID {
             let defaultPaymentMethodOption = CustomerPaymentOption.selectedPaymentMethod(for: customerID, elementsSession: elementsSession, surface: .paymentSheet)
             if let defaultPMIndex = savedPaymentMethods.firstIndex(where: {
                 $0.stripeId == defaultPaymentMethodOption?.value
@@ -436,10 +448,7 @@ final class PaymentSheetLoader {
         configuration: PaymentElementConfiguration,
         loadTimings: LoadTimings
     ) async throws -> [STPPaymentMethod]? {
-        guard
-            let customerID = configuration.customer?.id,
-            case .legacyCustomerEphemeralKey(let ephemeralKey) = configuration.customer?.customerAccessProvider
-        else {
+        guard let credentials = configuration.customerProvider.legacyEphemeralKeyCredentials else {
             return nil
         }
         loadTimings.logStart("fetchSavedPaymentMethods")
@@ -447,8 +456,8 @@ final class PaymentSheetLoader {
             loadTimings.logEnd("fetchSavedPaymentMethods")
         }
         var paymentMethods = try await configuration.apiClient.listPaymentMethods(
-            customerID: customerID,
-            ephemeralKeySecret: ephemeralKey
+            customerID: credentials.customerID,
+            ephemeralKeySecret: credentials.ephemeralKeySecret
         )
         // Remove unsupported types
         // We don't support Link payment methods with customer ephemeral keys
