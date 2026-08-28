@@ -80,11 +80,11 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             overrides["customer_managed_saved_payment_methods_offer_save"] = offerSave
         }
         let session = CheckoutTestHelpers.makeSession(overrides).makePublicSession()
+        var configuration = configuration
+        configuration.customerProvider = CustomerProvider(checkoutSession: session)
         return (
             .checkout(session),
-            .paymentElement(
-                CheckoutSessionsConfiguration(base: configuration, session: session)
-            )
+            .paymentElement(configuration)
         )
     }
 
