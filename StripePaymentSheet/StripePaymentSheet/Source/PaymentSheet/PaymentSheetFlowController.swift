@@ -265,9 +265,6 @@ extension PaymentSheet {
         // MARK: - Private properties
         var intent: Intent { viewController.loadResult.intent }
         var elementsSession: STPElementsSession { viewController.loadResult.elementsSession }
-        var paymentElementConfiguration: PaymentElementConfiguration {
-            return viewController.loadResult.paymentElementConfiguration ?? configuration
-        }
         lazy var paymentHandler: STPPaymentHandler = { STPPaymentHandler(apiClient: configuration.apiClient) }()
         var viewController: FlowControllerViewControllerProtocol
 
@@ -354,6 +351,8 @@ extension PaymentSheet {
             confirmationChallenge: ConfirmationChallenge? = nil,
             analyticsHelper: PaymentSheetAnalyticsHelper
         ) {
+            var configuration = configuration
+            configuration.customerProvider = loadResult.customerProvider
             self.configuration = configuration
             self.analyticsHelper = analyticsHelper
             self.analyticsHelper.logInitialized()
@@ -540,7 +539,7 @@ extension PaymentSheet {
             // Capture the accepted selection before presenting payment options.
             selectionSnapshotBeforePresentation = FlowControllerSelectionSnapshot(
                 viewController: viewController,
-                customerID: paymentElementConfiguration.customerProvider.customerID
+                customerID: configuration.customerProvider.customerID
             )
 
             // Overwrite completion closure to retain self until called
@@ -763,7 +762,7 @@ extension PaymentSheet {
                             // Remember Link as default payment method for users who just created an account.
                             CustomerPaymentOption.setDefaultPaymentMethod(
                                 .link,
-                                forCustomer: self.paymentElementConfiguration.customerProvider.customerID
+                                forCustomer: self.configuration.customerProvider.customerID
                             )
                         }
 
@@ -863,6 +862,7 @@ extension PaymentSheet {
                 switch result {
                 case .success(let (loadResult, confirmationChallenge)):
                     // 2. Re-initialize PaymentSheetFlowControllerViewController to update the UI to match the newly loaded data e.g. payment method types may have changed.
+                    self.configuration.customerProvider = loadResult.customerProvider
 
                     self.viewController = Self.makeViewController(
                         configuration: self.configuration,
@@ -918,7 +918,7 @@ extension PaymentSheet {
                 paymentMethodTypes: viewController.loadResult.paymentMethodTypes,
                 paymentMethodMessagingPromotionsHelper: viewController.loadResult.paymentMethodMessagingPromotionsHelper,
                 paymentMethodOrientation: viewController.loadResult.paymentMethodOrientation,
-                paymentElementConfiguration: viewController.loadResult.paymentElementConfiguration
+                customerProvider: viewController.loadResult.customerProvider
             )
         }
 

@@ -146,7 +146,7 @@ typealias ExpressType = PaymentSheet.WalletButtonsVisibility.ExpressType
                     // Remember Apple Pay as default payment method for returning users
                     CustomerPaymentOption.setDefaultPaymentMethod(
                         .applePay,
-                        forCustomer: flowController.paymentElementConfiguration.customerProvider.customerID
+                        forCustomer: flowController.configuration.customerProvider.customerID
                     )
                 }
                 confirmHandler(result)

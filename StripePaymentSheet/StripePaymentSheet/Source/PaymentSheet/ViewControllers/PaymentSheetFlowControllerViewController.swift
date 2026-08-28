@@ -108,7 +108,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
 
     private lazy var savedPaymentMethodManager: SavedPaymentMethodManager = {
         return SavedPaymentMethodManager(
-            configuration: loadResult.paymentElementConfiguration ?? configuration,
+            configuration: configuration,
             elementsSession: elementsSession
         )
     }()
@@ -190,14 +190,13 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         initialState: FlowControllerViewControllerInitialState = .preservingFormInput(from: nil)
     ) {
         let previousConfirmParams = initialState.previousCustomerInputForHorizontalController
-        let paymentElementConfiguration = loadResult.paymentElementConfiguration ?? configuration
 
         self.loadResult = loadResult
         self.intent = loadResult.intent
         self.elementsSession = loadResult.elementsSession
         self.checkoutBillingAddressUpdater = checkoutBillingAddressUpdater
-        self.isApplePayEnabled = PaymentSheet.isApplePayEnabled(elementsSession: elementsSession, configuration: paymentElementConfiguration)
-        self.isLinkEnabled = PaymentSheet.shouldShowLinkButton(elementsSession: elementsSession, configuration: paymentElementConfiguration)
+        self.isApplePayEnabled = PaymentSheet.isApplePayEnabled(elementsSession: elementsSession, configuration: configuration)
+        self.isLinkEnabled = PaymentSheet.shouldShowLinkButton(elementsSession: elementsSession, configuration: configuration)
         self.couldShowLinkInHeader = isLinkEnabled && !isApplePayEnabled
         self.configuration = configuration
         self.analyticsHelper = analyticsHelper
@@ -216,7 +215,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         self.savedPaymentOptionsViewController = SavedPaymentOptionsViewController(
             savedPaymentMethods: loadResult.savedPaymentMethods,
             configuration: .init(
-                customerID: paymentElementConfiguration.customerProvider.customerID,
+                customerID: configuration.customerProvider.customerID,
                 showApplePay: isApplePayEnabled,
                 showLink: isLinkEnabled,
                 linkBrand: configuration.resolvedLinkBrand(elementsSession: elementsSession, linkAccount: LinkAccountContext.shared.account),
@@ -225,9 +224,9 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
                 isCVCRecollectionEnabled: false,
                 isTestMode: configuration.apiClient.isTestmode,
                 allowsRemovalOfLastSavedPaymentMethod: elementsSession.paymentMethodRemoveLast(configuration: configuration),
-                allowsRemovalOfPaymentMethods: paymentElementConfiguration.customerProvider.allowsPaymentMethodRemoval(elementsSession: elementsSession),
+                allowsRemovalOfPaymentMethods: configuration.customerProvider.allowsPaymentMethodRemoval(elementsSession: elementsSession),
                 allowsSetAsDefaultPM: elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
-                allowsUpdatePaymentMethod: paymentElementConfiguration.customerProvider.allowsPaymentMethodUpdate(elementsSession: elementsSession)
+                allowsUpdatePaymentMethod: configuration.customerProvider.allowsPaymentMethodUpdate(elementsSession: elementsSession)
             ),
             paymentSheetConfiguration: configuration,
             intent: intent,
@@ -242,7 +241,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         self.addPaymentMethodViewController = AddPaymentMethodViewController(
             intent: intent,
             elementsSession: elementsSession,
-            configuration: paymentElementConfiguration,
+            configuration: configuration,
             paymentMethodOrientation: loadResult.paymentMethodOrientation,
             previousCustomerInput: previousConfirmParams, // Restore the customer's previous new payment method input
             paymentMethodTypes: loadResult.paymentMethodTypes,
@@ -280,7 +279,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         self.addPaymentMethodViewController.delegate = self
         if initialState.paymentOption == nil,
            shouldUseLinkOnlyWalletHeader,
-           Self.customerDefaultIsLink(configuration: paymentElementConfiguration, elementsSession: elementsSession) {
+           Self.customerDefaultIsLink(configuration: configuration, elementsSession: elementsSession) {
             mode = .addingNew
             isHackyLinkButtonSelected = true
         }
@@ -352,7 +351,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
     private func presentLink() {
         presentNativeLink(
             selectedPaymentDetailsID: selectedPaymentOption?.currentLinkPaymentMethod,
-            configuration: loadResult.paymentElementConfiguration ?? configuration,
+            configuration: configuration,
             intent: intent,
             elementsSession: elementsSession,
             analyticsHelper: analyticsHelper
