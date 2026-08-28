@@ -65,7 +65,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
 
     private lazy var savedPaymentMethodManager: SavedPaymentMethodManager = {
         return SavedPaymentMethodManager(
-            configuration: loadResult.paymentElementConfiguration ?? configuration,
+            configuration: configuration,
             elementsSession: elementsSession
         )
     }()
@@ -153,20 +153,19 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
     ) {
         // Only call loadResult.intent.cvcRecollectionEnabled once per load
         let isCVCRecollectionEnabled = loadResult.intent.cvcRecollectionEnabled
-        let paymentElementConfiguration = loadResult.paymentElementConfiguration ?? configuration
 
         self.loadResult = loadResult
         self.intent = loadResult.intent
         self.elementsSession = loadResult.elementsSession
         self.configuration = configuration
-        self.isApplePayEnabled = PaymentSheet.isApplePayEnabled(elementsSession: elementsSession, configuration: paymentElementConfiguration)
-        self.isLinkEnabled = PaymentSheet.shouldShowLinkButton(elementsSession: elementsSession, configuration: paymentElementConfiguration)
+        self.isApplePayEnabled = PaymentSheet.isApplePayEnabled(elementsSession: elementsSession, configuration: configuration)
+        self.isLinkEnabled = PaymentSheet.shouldShowLinkButton(elementsSession: elementsSession, configuration: configuration)
         self.isCVCRecollectionEnabled = isCVCRecollectionEnabled
         self.delegate = delegate
         self.savedPaymentOptionsViewController = SavedPaymentOptionsViewController(
             savedPaymentMethods: loadResult.savedPaymentMethods,
             configuration: .init(
-                customerID: paymentElementConfiguration.customerProvider.customerID,
+                customerID: configuration.customerProvider.customerID,
                 showApplePay: false,
                 showLink: false,
                 linkBrand: configuration.resolvedLinkBrand(elementsSession: elementsSession, linkAccount: LinkAccountContext.shared.account),
@@ -175,9 +174,9 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
                 isCVCRecollectionEnabled: isCVCRecollectionEnabled,
                 isTestMode: configuration.apiClient.isTestmode,
                 allowsRemovalOfLastSavedPaymentMethod: elementsSession.paymentMethodRemoveLast(configuration: configuration),
-                allowsRemovalOfPaymentMethods: paymentElementConfiguration.customerProvider.allowsPaymentMethodRemoval(elementsSession: elementsSession),
+                allowsRemovalOfPaymentMethods: configuration.customerProvider.allowsPaymentMethodRemoval(elementsSession: elementsSession),
                 allowsSetAsDefaultPM: elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
-                allowsUpdatePaymentMethod: paymentElementConfiguration.customerProvider.allowsPaymentMethodUpdate(elementsSession: elementsSession)
+                allowsUpdatePaymentMethod: configuration.customerProvider.allowsPaymentMethodUpdate(elementsSession: elementsSession)
             ),
             paymentSheetConfiguration: configuration,
             intent: intent,
@@ -205,7 +204,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
         self.addPaymentMethodViewController = AddPaymentMethodViewController(
             intent: loadResult.intent,
             elementsSession: loadResult.elementsSession,
-            configuration: paymentElementConfiguration,
+            configuration: configuration,
             paymentMethodOrientation: loadResult.paymentMethodOrientation,
             previousCustomerInput: previousConfirmParams,
             paymentMethodTypes: loadResult.paymentMethodTypes,

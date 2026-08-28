@@ -26,6 +26,12 @@ final class SavedPaymentMethodManagerTests: XCTestCase {
         return configuration
     }
 
+    func configuration(checkoutSession: CheckoutController.Session) -> PaymentSheet.Configuration {
+        var configuration = configuration
+        configuration.customerProvider = CustomerProvider(checkoutSession: checkoutSession)
+        return configuration
+    }
+
     // MARK: Update tests
     func testUpdatePaymentMethod_legacy() async throws {
         let paymentMethod = STPPaymentMethod.stubbedPaymentMethod()
@@ -106,10 +112,7 @@ final class SavedPaymentMethodManagerTests: XCTestCase {
 
         let checkoutSession = makeCheckoutSession(id: checkoutSessionId)
         let sut = SavedPaymentMethodManager(
-            configuration: CheckoutSessionsConfiguration(
-                base: configuration,
-                session: checkoutSession.makePublicSession()
-            ),
+            configuration: configuration(checkoutSession: checkoutSession.makePublicSession()),
             elementsSession: ._testValue(paymentMethodTypes: ["card"])
         )
 
@@ -143,10 +146,7 @@ final class SavedPaymentMethodManagerTests: XCTestCase {
 
         let checkoutSession = makeCheckoutSession(id: checkoutSessionId)
         let sut = SavedPaymentMethodManager(
-            configuration: CheckoutSessionsConfiguration(
-                base: configuration,
-                session: checkoutSession.makePublicSession()
-            ),
+            configuration: configuration(checkoutSession: checkoutSession.makePublicSession()),
             elementsSession: ._testValue(paymentMethodTypes: ["card"])
         )
 
@@ -169,10 +169,7 @@ final class SavedPaymentMethodManagerTests: XCTestCase {
     func testUpdatePaymentMethod_checkoutSession_missingBillingAndExpiry_throws() async {
         let checkoutSession = makeCheckoutSession(id: "cs_test_checkout_session")
         let sut = SavedPaymentMethodManager(
-            configuration: CheckoutSessionsConfiguration(
-                base: configuration,
-                session: checkoutSession.makePublicSession()
-            ),
+            configuration: configuration(checkoutSession: checkoutSession.makePublicSession()),
             elementsSession: ._testValue(paymentMethodTypes: ["card"])
         )
 
@@ -235,10 +232,7 @@ final class SavedPaymentMethodManagerTests: XCTestCase {
         let checkoutSession = makeCheckoutSession(id: checkoutSessionId)
 
         let sut = SavedPaymentMethodManager(
-            configuration: CheckoutSessionsConfiguration(
-                base: configuration,
-                session: checkoutSession.makePublicSession()
-            ),
+            configuration: configuration(checkoutSession: checkoutSession.makePublicSession()),
             elementsSession: ._testValue(paymentMethodTypes: ["card"])
         )
         sut.detach(paymentMethod: paymentMethod)

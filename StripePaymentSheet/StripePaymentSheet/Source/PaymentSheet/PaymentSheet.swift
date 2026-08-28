@@ -149,6 +149,7 @@ public class PaymentSheet {
             ) { result in
                 switch result {
                 case .success(let (loadResult, confirmationChallenge)):
+                    self.configuration.customerProvider = loadResult.customerProvider
                     self.confirmationChallenge = confirmationChallenge
                     let presentPaymentSheet: () -> Void = {
                         let paymentSheetVC = self.makePaymentSheetVC(
@@ -318,7 +319,7 @@ public class PaymentSheet {
             return checkout
         }()
         persistedSelectionSnapshotBeforePresentation = .init(
-            customerID: (loadResult.paymentElementConfiguration ?? configuration).customerProvider.customerID,
+            customerID: configuration.customerProvider.customerID,
             availableSavedPaymentMethods: loadResult.savedPaymentMethods
         )
         switch loadResult.paymentMethodOrientation {

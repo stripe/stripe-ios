@@ -23,7 +23,7 @@ protocol PaymentElementConfiguration: PaymentMethodRequirementProvider {
     var primaryButtonColor: UIColor? { get set }
     var primaryButtonLabel: String? { get set }
     var style: PaymentSheet.UserInterfaceStyle { get set }
-    var customerProvider: CustomerProvider { get }
+    var customerProvider: CustomerProvider { get set }
     var merchantDisplayName: String { get set }
     var returnURL: String? { get set }
     var defaultBillingDetails: PaymentSheet.BillingDetails { get set }
@@ -45,15 +45,10 @@ protocol PaymentElementConfiguration: PaymentMethodRequirementProvider {
     var linkPaymentMethodsOnly: Bool { get set }
     var opensCardScannerAutomatically: Bool { get set }
     var termsDisplay: [STPPaymentMethodType: PaymentSheet.TermsDisplay] { get }
-    var embeddedConfiguration: EmbeddedPaymentElement.Configuration? { get }
     func resolveLayout(elementsSession: STPElementsSession, paymentMethodTypes: [PaymentSheet.PaymentMethodType]) -> PaymentSheet.PaymentMethodLayout.ResolvedLayout
 }
 
 extension PaymentElementConfiguration {
-    var embeddedConfiguration: EmbeddedPaymentElement.Configuration? {
-        return nil
-    }
-
     func resolvedLinkBrand(elementsSession: STPElementsSession, linkAccount: PaymentSheetLinkAccount?) -> LinkBrand {
         if let brand = link.brand {
             return brand
@@ -113,17 +108,15 @@ extension PaymentElementConfiguration {
 
 extension PaymentSheet.Configuration: PaymentElementConfiguration {
     var customerProvider: CustomerProvider {
-        return CustomerProvider(customer: customer)
+        get { customerProviderOverride ?? CustomerProvider(customer: customer) }
+        set { customerProviderOverride = newValue }
     }
 }
 
 extension EmbeddedPaymentElement.Configuration: PaymentElementConfiguration {
     var customerProvider: CustomerProvider {
-        return CustomerProvider(customer: customer)
-    }
-
-    var embeddedConfiguration: EmbeddedPaymentElement.Configuration? {
-        return self
+        get { customerProviderOverride ?? CustomerProvider(customer: customer) }
+        set { customerProviderOverride = newValue }
     }
 
     func resolveLayout(elementsSession: STPElementsSession, paymentMethodTypes: [PaymentSheet.PaymentMethodType]) -> PaymentSheet.PaymentMethodLayout.ResolvedLayout {

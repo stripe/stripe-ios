@@ -131,20 +131,17 @@ final class CustomerProviderTests: XCTestCase {
         XCTAssertEqual(provider.source, .checkoutSession)
     }
 
-    func testCheckoutSessionsConfigurationForwardsBaseAndOverridesCustomer() {
-        var base = PaymentSheet.Configuration()
-        base.merchantDisplayName = "Example merchant"
+    func testConfigurationCustomerProviderCanBeOverriddenWithoutErasingConcreteType() {
+        var configuration: PaymentElementConfiguration = EmbeddedPaymentElement.Configuration()
+        configuration.merchantDisplayName = "Example merchant"
         let session = CheckoutTestHelpers.makeSession()
             .withCustomer(id: "cus_checkout")
             .makePublicSession()
-
-        let configuration = CheckoutSessionsConfiguration(
-            base: base,
-            session: session
-        )
+        configuration.customerProvider = CustomerProvider(checkoutSession: session)
 
         XCTAssertEqual(configuration.merchantDisplayName, "Example merchant")
         XCTAssertEqual(configuration.customerProvider.customerID, "cus_checkout")
+        XCTAssertTrue(configuration is EmbeddedPaymentElement.Configuration)
         XCTAssertEqual(
             configuration.analyticPayload["customer"] as? Bool,
             true
@@ -155,23 +152,17 @@ final class CustomerProviderTests: XCTestCase {
         )
     }
 
-    func testCheckoutSessionsConfigurationUsesItsSessionSnapshot() {
-        let base = PaymentSheet.Configuration()
+    func testConfigurationCustomerProviderOverrideUsesItsSessionSnapshot() {
         let firstSession = CheckoutTestHelpers.makeSession()
             .withCustomer(id: "cus_first")
             .makePublicSession()
         let secondSession = CheckoutTestHelpers.makeSession()
             .withCustomer(id: "cus_second")
             .makePublicSession()
-
-        let firstConfiguration = CheckoutSessionsConfiguration(
-            base: base,
-            session: firstSession
-        )
-        let secondConfiguration = CheckoutSessionsConfiguration(
-            base: base,
-            session: secondSession
-        )
+        var firstConfiguration = PaymentSheet.Configuration()
+        firstConfiguration.customerProvider = CustomerProvider(checkoutSession: firstSession)
+        var secondConfiguration = PaymentSheet.Configuration()
+        secondConfiguration.customerProvider = CustomerProvider(checkoutSession: secondSession)
 
         XCTAssertEqual(firstConfiguration.customerProvider.customerID, "cus_first")
         XCTAssertEqual(secondConfiguration.customerProvider.customerID, "cus_second")
@@ -182,10 +173,8 @@ final class CustomerProviderTests: XCTestCase {
         let session = CheckoutTestHelpers.makeSession()
             .withCustomer(id: customerID)
             .makePublicSession()
-        let configuration = CheckoutSessionsConfiguration(
-            base: PaymentSheet.Configuration(),
-            session: session
-        )
+        var configuration = PaymentSheet.Configuration()
+        configuration.customerProvider = CustomerProvider(checkoutSession: session)
         CustomerPaymentOption.setDefaultPaymentMethod(
             .stripeId("pm_default"),
             forCustomer: customerID

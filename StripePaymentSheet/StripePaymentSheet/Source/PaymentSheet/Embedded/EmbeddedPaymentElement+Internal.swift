@@ -32,16 +32,15 @@ extension EmbeddedPaymentElement {
         // - Only payment method details (including checkbox state) and billing details are restored
         // - Only restored if the previous input resulted in a completed form i.e. partial or invalid input is still discarded
 
-        let paymentElementConfiguration = loadResult.paymentElementConfiguration ?? configuration
-        let shouldShowApplePay = PaymentSheet.isApplePayEnabled(elementsSession: loadResult.elementsSession, configuration: paymentElementConfiguration)
-        let shouldShowLink = PaymentSheet.shouldShowLinkButton(elementsSession: loadResult.elementsSession, configuration: paymentElementConfiguration)
+        let shouldShowApplePay = PaymentSheet.isApplePayEnabled(elementsSession: loadResult.elementsSession, configuration: configuration)
+        let shouldShowLink = PaymentSheet.shouldShowLinkButton(elementsSession: loadResult.elementsSession, configuration: configuration)
         let savedPaymentMethodAccessoryType = RowButton.RightAccessoryButton.getAccessoryButtonType(
             savedPaymentMethodsCount: loadResult.savedPaymentMethods.count,
             isFirstCardCoBranded: loadResult.savedPaymentMethods.first?.isCoBrandedCard ?? false,
             isCBCEligible: loadResult.elementsSession.isCardBrandChoiceEligible,
             allowsRemovalOfLastSavedPaymentMethod: loadResult.elementsSession.paymentMethodRemoveLast(configuration: configuration),
-            allowsPaymentMethodRemoval: paymentElementConfiguration.customerProvider.allowsPaymentMethodRemoval(elementsSession: loadResult.elementsSession),
-            allowsPaymentMethodUpdate: paymentElementConfiguration.customerProvider.allowsPaymentMethodUpdate(elementsSession: loadResult.elementsSession),
+            allowsPaymentMethodRemoval: configuration.customerProvider.allowsPaymentMethodRemoval(elementsSession: loadResult.elementsSession),
+            allowsPaymentMethodUpdate: configuration.customerProvider.allowsPaymentMethodUpdate(elementsSession: loadResult.elementsSession),
             omitChevron: configuration.appearance.embeddedPaymentElement.row.style.omitChevronInAccessoryButton
         )
         let initialSelection: RowButtonType? = {
@@ -51,7 +50,7 @@ extension EmbeddedPaymentElement {
             }
 
             // If there's no previous customer input, default to the customer's default or the first saved payment method, if any
-            let customerDefault = CustomerPaymentOption.selectedPaymentMethod(for: paymentElementConfiguration.customerProvider.customerID, elementsSession: loadResult.elementsSession, surface: .paymentSheet)
+            let customerDefault = CustomerPaymentOption.selectedPaymentMethod(for: configuration.customerProvider.customerID, elementsSession: loadResult.elementsSession, surface: .paymentSheet)
             switch customerDefault {
             case .applePay:
                 return .applePay
@@ -62,7 +61,7 @@ extension EmbeddedPaymentElement {
             }
         }()
         let mandateProvider = VerticalListMandateProvider(
-            configuration: paymentElementConfiguration,
+            configuration: configuration,
             elementsSession: loadResult.elementsSession,
             intent: loadResult.intent,
             analyticsHelper: analyticsHelper
@@ -107,7 +106,6 @@ extension EmbeddedPaymentElement {
         selection: RowButtonType?,
         previousPaymentOption: PaymentOption?,
         configuration: Configuration,
-        paymentElementConfiguration: PaymentElementConfiguration,
         intent: Intent,
         elementsSession: STPElementsSession,
         savedPaymentMethods: [STPPaymentMethod],
@@ -123,7 +121,6 @@ extension EmbeddedPaymentElement {
 
         let formViewController = EmbeddedFormViewController(
             configuration: configuration,
-            paymentElementConfiguration: paymentElementConfiguration,
             intent: intent,
             elementsSession: elementsSession,
             shouldUseNewCardNewCardHeader: savedPaymentMethods.first?.type == .card,
@@ -174,7 +171,6 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
             // Carry the accepted option into the next form so cancel can restore the previous row.
             previousPaymentOption: selectedFormViewController?.paymentOptionToRestoreOnCancellation,
             configuration: configuration,
-            paymentElementConfiguration: paymentElementConfiguration,
             intent: intent,
             elementsSession: elementsSession,
             savedPaymentMethods: savedPaymentMethods,
@@ -303,7 +299,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         }
         CustomerPaymentOption.setDefaultPaymentMethod(
             paymentOption,
-            forCustomer: paymentElementConfiguration.customerProvider.customerID
+            forCustomer: configuration.customerProvider.customerID
         )
     }
 
@@ -316,8 +312,8 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
                                                                                billingDetailsCollectionConfiguration: configuration.billingDetailsCollectionConfiguration,
                                                                                hostedSurface: .paymentSheet,
                                                                                cardBrandFilter: configuration.cardBrandFilter,
-                                                                               canRemove: elementsSession.paymentMethodRemoveLast(configuration: configuration) && paymentElementConfiguration.customerProvider.allowsPaymentMethodRemoval(elementsSession: elementsSession),
-                                                                               canUpdate: paymentElementConfiguration.customerProvider.allowsPaymentMethodUpdate(elementsSession: elementsSession),
+                                                                               canRemove: elementsSession.paymentMethodRemoveLast(configuration: configuration) && configuration.customerProvider.allowsPaymentMethodRemoval(elementsSession: elementsSession),
+                                                                               canUpdate: configuration.customerProvider.allowsPaymentMethodUpdate(elementsSession: elementsSession),
                                                                                isCBCEligible: paymentMethod.isCoBrandedCard && elementsSession.isCardBrandChoiceEligible,
                                                                                allowsSetAsDefaultPM: elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
                                                                                isDefault: paymentMethod == defaultPaymentMethod)
@@ -335,7 +331,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         }
 
         let verticalSavedPaymentMethodsViewController = VerticalSavedPaymentMethodsViewController(
-            configuration: paymentElementConfiguration,
+            configuration: configuration,
             intent: intent,
             checkout: checkout,
             selectedPaymentMethod: selectedSavedPaymentMethod,
@@ -355,7 +351,6 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
             selection: rowButtonType,
             previousPaymentOption: nil, // This is just to check if there's a form, so this data isn't necessary
             configuration: configuration,
-            paymentElementConfiguration: paymentElementConfiguration,
             intent: intent,
             elementsSession: elementsSession,
             savedPaymentMethods: savedPaymentMethods,
@@ -464,8 +459,8 @@ extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {
             isFirstCardCoBranded: savedPaymentMethods.first?.isCoBrandedCard ?? false,
             isCBCEligible: elementsSession.isCardBrandChoiceEligible,
             allowsRemovalOfLastSavedPaymentMethod: elementsSession.paymentMethodRemoveLast(configuration: configuration),
-            allowsPaymentMethodRemoval: paymentElementConfiguration.customerProvider.allowsPaymentMethodRemoval(elementsSession: elementsSession),
-            allowsPaymentMethodUpdate: paymentElementConfiguration.customerProvider.allowsPaymentMethodUpdate(elementsSession: elementsSession),
+            allowsPaymentMethodRemoval: configuration.customerProvider.allowsPaymentMethodRemoval(elementsSession: elementsSession),
+            allowsPaymentMethodUpdate: configuration.customerProvider.allowsPaymentMethodUpdate(elementsSession: elementsSession),
             omitChevron: configuration.appearance.embeddedPaymentElement.row.style.omitChevronInAccessoryButton
         )
     }
@@ -570,7 +565,6 @@ extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
             selection: selection,
             previousPaymentOption: paymentOption,
             configuration: configuration,
-            paymentElementConfiguration: paymentElementConfiguration,
             intent: intent,
             elementsSession: elementsSession,
             savedPaymentMethods: savedPaymentMethods,
@@ -704,7 +698,7 @@ extension EmbeddedPaymentElement {
 
         let confirmBlock: () async -> (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) = {
             await PaymentSheet.confirm(
-                configuration: self.paymentElementConfiguration,
+                configuration: self.configuration,
                 authenticationContext: authContext,
                 intent: self.intent,
                 elementsSession: self.elementsSession,
