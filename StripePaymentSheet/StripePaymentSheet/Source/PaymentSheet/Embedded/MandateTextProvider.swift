@@ -73,7 +73,7 @@ class VerticalListMandateProvider: MandateTextProvider {
                 analyticsHelper: analyticsHelper
             ).make()
 
-            if let embeddedPaymentElementConfiguration = configuration as? EmbeddedPaymentElement.Configuration {
+            if let embeddedPaymentElementConfiguration = configuration.embeddedConfiguration {
                 // Embedded has special logic to determine whether it will show the form or not. If it shows the form, return nil.
                 if EmbeddedPaymentElement.shouldShowForm(form, configuration: embeddedPaymentElementConfiguration) {
                     return nil
