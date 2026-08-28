@@ -1,0 +1,90 @@
+GET
+https:\/\/api\.stripe\.com\/v1\/setup_intents\/seti_1U9DgzFY0qyl6XeWcAtDkFfw\?client_secret=seti_1U9DgzFY0qyl6XeWcAtDkFfw_secret_V9WkMU6rzLKZXLEMnWjhuZL3aLkFU6x&expand%5B0%5D=payment_method$
+200
+application/json
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=KemGcFXwfsO5SLFNiPMWj-dMZSPun9jqydN85E6TJQE9dKzBABnUdG80SGpc3WcMvlUKGxqxw2K8a7mR; report-to csp
+Server: nginx
+Cache-Control: no-cache, no-store
+reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=KemGcFXwfsO5SLFNiPMWj-dMZSPun9jqydN85E6TJQE9dKzBABnUdG80SGpc3WcMvlUKGxqxw2K8a7mR&t=1"
+stripe-notice: You are using an outdated API version (2020-08-27). We recommend upgrading to the latest API version, 2026-08-26.dahlia. See https://docs.stripe.com/upgrades
+x-wc: 3c3
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+x-stripe-routing-context-priority-tier: api-testmode
+x-stripe-priority-routing-enabled: true
+report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=KemGcFXwfsO5SLFNiPMWj-dMZSPun9jqydN85E6TJQE9dKzBABnUdG80SGpc3WcMvlUKGxqxw2K8a7mR&t=1"}],"include_subdomains":true}
+request-id: req_QFvx2cuo4IJnZH
+Content-Length: 1836
+Vary: Origin
+Date: Fri, 28 Aug 2026 00:30:50 GMT
+stripe-version: 2020-08-27
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+
+{
+  "id" : "seti_1U9DgzFY0qyl6XeWcAtDkFfw",
+  "description" : null,
+  "excluded_payment_method_types" : null,
+  "next_action" : {
+    "type" : "verify_with_microdeposits",
+    "verify_with_microdeposits" : {
+      "microdeposit_type" : null,
+      "arrival_date" : 1788148800,
+      "hosted_verification_url" : "https:\/\/payments.stripe.com\/microdeposit\/sacs_test_YWNjdF8xRzZtMXBGWTBxeWw2WGVXLHNhX25vbmNlX1Y5V2tpc1R6VUdlRVNNc1NtUXVyWmdxdXYxZXhucmg0000PWpG1Zwz"
+    }
+  },
+  "livemode" : false,
+  "payment_method" : {
+    "object" : "payment_method",
+    "id" : "pm_1U9DgzFY0qyl6XeWmklyJD6L",
+    "billing_details" : {
+      "email" : "jrosen@example.com",
+      "phone" : null,
+      "tax_id" : null,
+      "name" : "Jenny Rosen",
+      "address" : {
+        "state" : null,
+        "country" : null,
+        "line2" : null,
+        "city" : null,
+        "line1" : null,
+        "postal_code" : null
+      }
+    },
+    "acss_debit" : {
+      "bank_name" : "STRIPE TEST BANK",
+      "institution_number" : "000",
+      "last4" : "6789",
+      "transit_number" : "11000",
+      "fingerprint" : "HQd5zmkrhR4E9eJ1"
+    },
+    "livemode" : false,
+    "created" : 1787877049,
+    "allow_redisplay" : "unspecified",
+    "shared_payment_granted_token" : null,
+    "customer" : null,
+    "type" : "acss_debit",
+    "customer_account" : null
+  },
+  "payment_method_configuration_details" : null,
+  "status" : "requires_action",
+  "usage" : "off_session",
+  "allowed_payment_method_types" : null,
+  "payment_method_types" : [
+    "acss_debit"
+  ],
+  "object" : "setup_intent",
+  "last_setup_error" : null,
+  "created" : 1787877049,
+  "client_secret" : "seti_1U9DgzFY0qyl6XeWcAtDkFfw_secret_V9WkMU6rzLKZXLEMnWjhuZL3aLkFU6x",
+  "automatic_payment_methods" : null,
+  "cancellation_reason" : null,
+  "payment_method_options" : {
+    "acss_debit" : {
+      "verification_method" : "automatic"
+    }
+  }
+}

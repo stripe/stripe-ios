@@ -24,6 +24,7 @@ extension PaymentSheet {
         .iDEAL, .bancontact, .SEPADebit, .EPS, .przelewy24,
         .USBankAccount,
         .AUBECSDebit,
+        .ACSSDebit,
         .cashApp,
         .blik,
         .grabPay,

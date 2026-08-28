@@ -88,6 +88,89 @@ extension PaymentSheetFormFactory {
         )
     }
 
+    func makeACSSDebit() -> PaymentMethodElement {
+        let name = configuration.billingDetailsCollectionConfiguration.name != .never ? makeName() : nil
+        let address = makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
+            as? PaymentMethodElementWrapper<AddressSectionElement>
+        let email = configuration.billingDetailsCollectionConfiguration.email != .never ? makeEmail() : nil
+        let phone = configuration.billingDetailsCollectionConfiguration.phone == .always ? makePhone() : nil
+        connectBillingDetailsFields(addressElement: address, phoneElement: phone)
+
+        let acssDebitParams = previousCustomerInput?.paymentMethodParams.acssDebit
+        let institutionNumber = PaymentMethodElementWrapper(
+            TextFieldElement.ACSSDebit.NumberConfiguration(
+                label: STPLocalizedString("Institution number", "Label for an ACSS Debit institution number"),
+                defaultValue: acssDebitParams?.institutionNumber,
+                validLengths: 3...3,
+                incompleteErrorDescription: STPLocalizedString(
+                    "Please enter 3 digits for your institution number.",
+                    "Error shown when an ACSS Debit institution number is incomplete"
+                )
+            ),
+            theme: theme
+        ) { field, params in
+            params.paymentMethodParams.nonnil_acssDebit.institutionNumber = field.text
+            return params
+        }
+        let transitNumber = PaymentMethodElementWrapper(
+            TextFieldElement.ACSSDebit.NumberConfiguration(
+                label: STPLocalizedString("Transit number", "Label for an ACSS Debit transit number"),
+                defaultValue: acssDebitParams?.transitNumber,
+                validLengths: 5...5,
+                incompleteErrorDescription: STPLocalizedString(
+                    "Please enter 5 digits for your transit number.",
+                    "Error shown when an ACSS Debit transit number is incomplete"
+                )
+            ),
+            theme: theme
+        ) { field, params in
+            params.paymentMethodParams.nonnil_acssDebit.transitNumber = field.text
+            return params
+        }
+        let accountNumber = PaymentMethodElementWrapper(
+            TextFieldElement.ACSSDebit.NumberConfiguration(
+                label: String.Localized.accountNumber,
+                defaultValue: acssDebitParams?.accountNumber,
+                validLengths: 7...12,
+                incompleteErrorDescription: STPLocalizedString(
+                    "Account number is required.",
+                    "Error shown when an ACSS Debit account number is incomplete"
+                )
+            ),
+            theme: theme
+        ) { field, params in
+            params.paymentMethodParams.nonnil_acssDebit.accountNumber = field.text
+            return params
+        }
+        let confirmAccountNumber = PaymentMethodElementWrapper(
+            TextFieldElement.ACSSDebit.ConfirmAccountNumberConfiguration(
+                defaultValue: acssDebitParams?.accountNumber,
+                accountNumber: { accountNumber.element.text }
+            ),
+            theme: theme
+        ) { _, params in
+            return params
+        }
+        let bankAccountSection = SectionElement(
+            title: String.Localized.bank_account_sentence_case,
+            elements: [
+                SectionElement.MultiElementRow([institutionNumber, transitNumber], theme: theme),
+                accountNumber,
+                confirmAccountNumber,
+            ],
+            theme: theme
+        )
+        // Match the Web Payment Element's field order.
+        let elements: [Element?] = [name, address, email, phone, bankAccountSection]
+
+        return makeDefaultsApplierWrapper(
+            for: FormElement(
+                autoSectioningElements: elements.compactMap { $0 },
+                theme: theme
+            )
+        )
+    }
+
     func makeFPX() -> PaymentMethodElement {
         let bank = makeBankDropdown(
             label: STPLocalizedString("FPX Bank", "Select a bank dropdown for FPX"),
