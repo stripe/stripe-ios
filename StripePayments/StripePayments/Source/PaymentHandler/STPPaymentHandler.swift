@@ -772,6 +772,8 @@ public class STPPaymentHandler: NSObject {
                 if let setupIntent = setupIntent,
                    error == nil,
                    setupIntent.status == .succeeded
+                    || (setupIntent.status == .requiresAction
+                        && setupIntent.nextAction?.type == .verifyWithMicrodeposits)
                 {
                     completion(.succeeded, setupIntent, nil)
                 } else {
@@ -822,6 +824,7 @@ public class STPPaymentHandler: NSObject {
         // Asynchronous payment methods whose intent.status is 'processing' after handling the next action
         case .SEPADebit,
             .bacsDebit,  // Bacs Debit takes 2-3 business days
+            .ACSSDebit,
             .AUBECSDebit,
             .USBankAccount,
             .card: // When orchestration is enabled, cards move to a `processing` state after successful authorization.

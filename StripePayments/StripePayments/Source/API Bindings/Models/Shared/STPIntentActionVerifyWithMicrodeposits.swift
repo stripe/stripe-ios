@@ -36,7 +36,7 @@ import UIKit
     }
 }
 
-/// Contains details describing microdeposits verification flow for US Bank Accounts.
+/// Contains details describing a bank account microdeposit verification flow.
 public class STPIntentActionVerifyWithMicrodeposits: NSObject {
 
     /// The timestamp when the microdeposits are expected to land
@@ -71,8 +71,7 @@ extension STPIntentActionVerifyWithMicrodeposits: STPAPIResponseDecodable {
     public static func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
         guard let response = response,
             let arrivalDate = response.stp_date(forKey: "arrival_date"),
-            let hostedVerificationURL = response.stp_url(forKey: "hosted_verification_url"),
-            let microdepositTypeString = response.stp_string(forKey: "microdeposit_type")
+            let hostedVerificationURL = response.stp_url(forKey: "hosted_verification_url")
         else {
             return nil
         }
@@ -80,7 +79,9 @@ extension STPIntentActionVerifyWithMicrodeposits: STPAPIResponseDecodable {
         return STPIntentActionVerifyWithMicrodeposits(
             arrivalDate: arrivalDate,
             hostedVerificationURL: hostedVerificationURL,
-            microdepositType: STPMicrodepositType(string: microdepositTypeString),
+            microdepositType: STPMicrodepositType(
+                string: response.stp_string(forKey: "microdeposit_type") ?? ""
+            ),
             allResponseFields: response
         ) as? Self
     }
