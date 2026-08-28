@@ -238,23 +238,15 @@ public final class CheckoutController: ObservableObject {
         try await performUpdate(.setTaxRegion(address), canUpdateWhileSheetPresented: canUpdateWhileSheetPresented)
     }
 
-    /// Sets the shipping address for this checkout.
-    ///
-    /// The address is stored locally and merged into PaymentSheet configuration
-    /// when presenting payment UI. If automatic tax is enabled and the tax
-    /// address source is "shipping", the address is also sent to the server to
-    /// compute updated tax amounts.
-    ///
-    /// - Parameters:
-    ///   - name: The customer's full name.
-    ///   - address: The shipping address to set. To reset tax computation
-    ///     to a country-only region, pass a ``CheckoutController.Address`` with just the country.
-    /// - Throws: ``CheckoutError`` if the session is not open, or if
-    ///   the server request fails.
+    /// Use this method to update the Customer's shipping address.
     public func updateShippingAddress(
         name: String? = nil,
-        address: Address
+        address: Address?
     ) async throws {
+        guard let address else {
+            try await clearShippingAddress()
+            return
+        }
         if let allowedCountries = session.allowedShippingCountries,
            !allowedCountries.contains(address.country.uppercased()) {
             throw CheckoutError.invalidShippingCountry(countryCode: address.country)
@@ -268,6 +260,23 @@ public final class CheckoutController: ObservableObject {
             )
         } else {
             try await performUpdate(shippingAddress: .newValue(shippingAddress))
+        }
+    }
+
+    private func clearShippingAddress() async throws {
+        guard let shippingAddress = session.shippingAddress else { return }
+        if session.shouldSendTaxRegion(for: "shipping") {
+            // The Checkout Session update endpoint requires tax_region[country] and does not
+            // support clearing tax_region, so keep the previous country.
+            // TODO(porter) When migrating to the CheckoutClient API, stop sending country only and send nil
+            let countryOnlyAddress = Address(country: shippingAddress.address.country)
+            try await performUpdate(
+                .setTaxRegion(countryOnlyAddress),
+                shippingAddress: .newValue(nil)
+            )
+        } else {
+            // No server update is needed when shipping isn't the tax address source.
+            try await performUpdate(shippingAddress: .newValue(nil))
         }
     }
 
