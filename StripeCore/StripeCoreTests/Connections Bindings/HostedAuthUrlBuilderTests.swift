@@ -274,10 +274,11 @@ class HostedAuthUrlBuilderTests: XCTestCase {
         )
 
         let components = URLComponents(url: result, resolvingAgainstBaseURL: false)
+        let fragment = components?.percentEncodedFragment
         XCTAssertNil(components?.query)
-        XCTAssertTrue(components?.fragment?.contains("consumerSessionClientSecret=consumer_session_secret") == true)
-        XCTAssertTrue(components?.fragment?.contains("consumerPublishableKey=pk_consumer") == true)
-        XCTAssertTrue(components?.fragment?.contains("consumerEmailAddress=user%40example.com") == true)
+        XCTAssertTrue(fragment?.contains("consumerSessionClientSecret=consumer_session_secret") == true)
+        XCTAssertTrue(fragment?.contains("consumerPublishableKey=pk_consumer") == true)
+        XCTAssertTrue(fragment?.contains("consumerEmailAddress=user%40example.com") == true)
     }
 
     // MARK: - URL Edge Cases
