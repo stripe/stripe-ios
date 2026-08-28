@@ -64,10 +64,11 @@ class PaymentSheetFormFactoryTest: XCTestCase {
 
         XCTAssertNil(headerView)
     }
-    private func makeCheckoutSessionIntent(
+    private func makeCheckoutSessionContext(
         offerSave: [String: Any]? = nil,
-        hasCustomer: Bool = true
-    ) -> Intent {
+        hasCustomer: Bool = true,
+        configuration: PaymentSheet.Configuration = .init()
+    ) -> (intent: Intent, configuration: PaymentSheetFormFactoryConfig) {
         var overrides: [String: Any] = [
             "status": "open",
             "currency": "usd",
@@ -78,8 +79,13 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         if let offerSave {
             overrides["customer_managed_saved_payment_methods_offer_save"] = offerSave
         }
-        let session = CheckoutTestHelpers.makeSession(overrides)
-        return .checkout(session.makePublicSession())
+        let session = CheckoutTestHelpers.makeSession(overrides).makePublicSession()
+        return (
+            .checkout(session),
+            .paymentElement(
+                CheckoutSessionsConfiguration(base: configuration, session: session)
+            )
+        )
     }
 
     func testUpdatesParams() {
@@ -1092,14 +1098,14 @@ class PaymentSheetFormFactoryTest: XCTestCase {
     }
 
     func testShowsCheckbox_CheckoutSessionOfferSaveNotAccepted() {
-        let configuration = PaymentSheet.Configuration()
+        let context = makeCheckoutSessionContext(offerSave: [
+            "enabled": true,
+            "status": "not_accepted",
+        ])
         let factory = PaymentSheetFormFactory(
-            intent: makeCheckoutSessionIntent(offerSave: [
-                "enabled": true,
-                "status": "not_accepted",
-            ]),
+            intent: context.intent,
             elementsSession: ._testValue(paymentMethodTypes: ["card"]),
-            configuration: .paymentElement(configuration),
+            configuration: context.configuration,
             paymentMethod: .stripe(.card)
         )
 
@@ -1113,13 +1119,17 @@ class PaymentSheetFormFactoryTest: XCTestCase {
     func testCheckoutSessionOfferSaveDoesNotOverrideOptOutDefaultSelection() {
         var configuration = PaymentSheet.Configuration()
         configuration.savePaymentMethodOptInBehavior = .requiresOptOut
-        let factory = PaymentSheetFormFactory(
-            intent: makeCheckoutSessionIntent(offerSave: [
+        let context = makeCheckoutSessionContext(
+            offerSave: [
                 "enabled": true,
                 "status": "not_accepted",
-            ]),
+            ],
+            configuration: configuration
+        )
+        let factory = PaymentSheetFormFactory(
+            intent: context.intent,
             elementsSession: ._testValue(paymentMethodTypes: ["card"]),
-            configuration: .paymentElement(configuration),
+            configuration: context.configuration,
             paymentMethod: .stripe(.card)
         )
 
@@ -1130,14 +1140,14 @@ class PaymentSheetFormFactoryTest: XCTestCase {
     }
 
     func testHidesCheckbox_CheckoutSessionOfferSaveDisabled() {
-        let configuration = PaymentSheet.Configuration()
+        let context = makeCheckoutSessionContext(offerSave: [
+            "enabled": false,
+            "status": "accepted",
+        ])
         let factory = PaymentSheetFormFactory(
-            intent: makeCheckoutSessionIntent(offerSave: [
-                "enabled": false,
-                "status": "accepted",
-            ]),
+            intent: context.intent,
             elementsSession: ._testValue(paymentMethodTypes: ["card"]),
-            configuration: .paymentElement(configuration),
+            configuration: context.configuration,
             paymentMethod: .stripe(.card)
         )
 
@@ -1145,14 +1155,17 @@ class PaymentSheetFormFactoryTest: XCTestCase {
     }
 
     func testHidesCheckbox_CheckoutSessionOfferSaveEnabledWithoutCustomer() {
-        let configuration = PaymentSheet.Configuration()
-        let factory = PaymentSheetFormFactory(
-            intent: makeCheckoutSessionIntent(offerSave: [
+        let context = makeCheckoutSessionContext(
+            offerSave: [
                 "enabled": true,
                 "status": "accepted",
-            ], hasCustomer: false),
+            ],
+            hasCustomer: false
+        )
+        let factory = PaymentSheetFormFactory(
+            intent: context.intent,
             elementsSession: ._testValue(paymentMethodTypes: ["card"]),
-            configuration: .paymentElement(configuration),
+            configuration: context.configuration,
             paymentMethod: .stripe(.card)
         )
 
@@ -1162,15 +1175,15 @@ class PaymentSheetFormFactoryTest: XCTestCase {
     func testCheckoutSessionOfferSaveDefaultDoesNotOverridePreviousCustomerInput() {
         let previousCustomerInput = IntentConfirmParams(type: .stripe(.card))
         previousCustomerInput.saveForFutureUseCheckboxState = .selected
-        let configuration = PaymentSheet.Configuration()
+        let context = makeCheckoutSessionContext(offerSave: [
+            "enabled": true,
+            "status": "not_accepted",
+        ])
 
         let factory = PaymentSheetFormFactory(
-            intent: makeCheckoutSessionIntent(offerSave: [
-                "enabled": true,
-                "status": "not_accepted",
-            ]),
+            intent: context.intent,
             elementsSession: ._testValue(paymentMethodTypes: ["card"]),
-            configuration: .paymentElement(configuration),
+            configuration: context.configuration,
             paymentMethod: .stripe(.card),
             previousCustomerInput: previousCustomerInput
         )

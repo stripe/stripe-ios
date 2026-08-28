@@ -15,11 +15,6 @@ struct CheckoutSessionsConfiguration: PaymentElementConfiguration {
     private var base: PaymentElementConfiguration
     let customerProvider: CustomerProvider
 
-    var customer: PaymentSheet.CustomerConfiguration? {
-        get { base.customer }
-        set { base.customer = newValue }
-    }
-
     init(base: PaymentElementConfiguration, session: CheckoutController.Session) {
         self.base = base
         self.customerProvider = CustomerProvider(checkoutSession: session)
