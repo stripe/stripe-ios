@@ -53,6 +53,8 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
     @objc public var bacsDebit: STPPaymentMethodBacsDebitParams?
     /// If this is an AU BECS Debit PaymentMethod, this contains details about the bank to debit.
     @objc public var auBECSDebit: STPPaymentMethodAUBECSDebitParams?
+    /// If this is an ACSS Debit PaymentMethod, this contains details about the bank account to debit.
+    @objc public var acssDebit: STPPaymentMethodACSSDebitParams?
     /// If this is a PayPal PaymentMethod, this contains additional details. :nodoc:
     @objc public var payPal: STPPaymentMethodPayPalParams?
     /// If this is a Przelewy24 PaymentMethod, this contains additional details.
@@ -232,6 +234,24 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
         self.init()
         self.type = .AUBECSDebit
         self.auBECSDebit = auBECSDebit
+        self.billingDetails = billingDetails
+        self.metadata = metadata
+    }
+
+    /// Creates params for an ACSS Debit PaymentMethod.
+    /// - Parameters:
+    ///   - acssDebit:      An object containing the ACSS bank debit details.
+    ///   - billingDetails: An object containing the user's billing details. `name` and `email` are required.
+    ///   - metadata:       Additional information to attach to the PaymentMethod.
+    @objc
+    public convenience init(
+        acssDebit: STPPaymentMethodACSSDebitParams,
+        billingDetails: STPPaymentMethodBillingDetails,
+        metadata: [String: String]?
+    ) {
+        self.init()
+        self.type = .ACSSDebit
+        self.acssDebit = acssDebit
         self.billingDetails = billingDetails
         self.metadata = metadata
     }
@@ -805,6 +825,7 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
             NSStringFromSelector(#selector(getter: sepaDebit)): "sepa_debit",
             NSStringFromSelector(#selector(getter: bacsDebit)): "bacs_debit",
             NSStringFromSelector(#selector(getter: auBECSDebit)): "au_becs_debit",
+            NSStringFromSelector(#selector(getter: acssDebit)): "acss_debit",
             NSStringFromSelector(#selector(getter: grabPay)): "grabpay",
             NSStringFromSelector(#selector(getter: przelewy24)): "p24",
             NSStringFromSelector(#selector(getter: bancontact)): "bancontact",
@@ -947,6 +968,24 @@ extension STPPaymentMethodParams {
     ) -> STPPaymentMethodParams {
         return STPPaymentMethodParams(
             aubecsDebit: auBECSDebit,
+            billingDetails: billingDetails,
+            metadata: metadata
+        )
+    }
+
+    /// Creates params for an ACSS Debit PaymentMethod.
+    /// - Parameters:
+    ///   - acssDebit:      An object containing the ACSS bank debit details.
+    ///   - billingDetails: An object containing the user's billing details. `name` and `email` are required.
+    ///   - metadata:       Additional information to attach to the PaymentMethod.
+    @objc(paramsWithACSSDebit:billingDetails:metadata:)
+    public class func paramsWith(
+        acssDebit: STPPaymentMethodACSSDebitParams,
+        billingDetails: STPPaymentMethodBillingDetails,
+        metadata: [String: String]?
+    ) -> STPPaymentMethodParams {
+        return STPPaymentMethodParams(
+            acssDebit: acssDebit,
             billingDetails: billingDetails,
             metadata: metadata
         )
@@ -1219,6 +1258,8 @@ extension STPPaymentMethodParams {
             sepaDebit = STPPaymentMethodSEPADebitParams()
         case .AUBECSDebit:
             auBECSDebit = STPPaymentMethodAUBECSDebitParams()
+        case .ACSSDebit:
+            acssDebit = STPPaymentMethodACSSDebitParams()
         case .bacsDebit:
             bacsDebit = STPPaymentMethodBacsDebitParams()
         case .przelewy24:
