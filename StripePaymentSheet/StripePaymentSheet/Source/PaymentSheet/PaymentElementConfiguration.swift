@@ -106,19 +106,9 @@ extension PaymentElementConfiguration {
     }
 }
 
-extension PaymentSheet.Configuration: PaymentElementConfiguration {
-    var customerProvider: CustomerProvider {
-        get { customerProviderOverride ?? CustomerProvider(customer: customer) }
-        set { customerProviderOverride = newValue }
-    }
-}
+extension PaymentSheet.Configuration: PaymentElementConfiguration {}
 
 extension EmbeddedPaymentElement.Configuration: PaymentElementConfiguration {
-    var customerProvider: CustomerProvider {
-        get { customerProviderOverride ?? CustomerProvider(customer: customer) }
-        set { customerProviderOverride = newValue }
-    }
-
     func resolveLayout(elementsSession: STPElementsSession, paymentMethodTypes: [PaymentSheet.PaymentMethodType]) -> PaymentSheet.PaymentMethodLayout.ResolvedLayout {
         .vertical
     }
