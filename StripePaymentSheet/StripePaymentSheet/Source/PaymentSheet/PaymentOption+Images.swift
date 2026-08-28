@@ -312,6 +312,8 @@ extension STPPaymentMethodType {
                 return .pm_type_promptpay
             case .satispay:
                 return .pm_type_satispay
+            case .sequra:
+                return .pm_type_sequra
             case .wero:
                 return .pm_type_wero
             case .sunbit:
