@@ -597,9 +597,15 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
         sessionProvider { [weak self] sessionResult in
             switch sessionResult {
             case .success(let session):
+                let permissions = self?.context.linkConfiguration?.financialConnectionsPermissions
+                // The LAS response includes the default `payment_method` permission even when the merchant did not
+                // request data permissions. Use the normalized request to determine the session's authentication mode.
+                let requestedPermissions = (permissions?.isEmpty ?? true) ? nil : permissions
                 session.createLinkAccountSession(
                     linkMode: self?.context.elementsSession.linkSettings?.linkMode,
-                    intentToken: self?.context.intent.stripeId ?? self?.context.elementsSession.sessionID
+                    intentToken: self?.context.intent.stripeId ?? self?.context.elementsSession.sessionID,
+                    permissions: requestedPermissions,
+                    merchantToken: requestedPermissions == nil ? nil : self?.context.elementsSession.accountID
                 ) { [session, weak self] linkAccountSessionResult in
                     switch linkAccountSessionResult {
                     case .success(let linkAccountSession):
@@ -607,6 +613,7 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
                             with: linkAccountSession,
                             linkAccount: linkAccount,
                             consumerSession: session,
+                            hasRequestedDataPermissions: requestedPermissions != nil,
                             completion: completion
                         )
                     case .failure(let error):
@@ -623,6 +630,7 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
         with linkAccountSession: LinkAccountSession,
         linkAccount: PaymentSheetLinkAccount,
         consumerSession: ConsumerSession,
+        hasRequestedDataPermissions: Bool,
         completion: @escaping (PaymentSheetResult) -> Void
     ) {
         guard let financialConnectionsAPI = FinancialConnectionsSDKAvailability.financialConnections() else {
@@ -669,6 +677,7 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
             clientSecret: linkAccountSession.clientSecret,
             returnURL: context.configuration.returnURL,
             existingConsumer: consumer,
+            hasRequestedDataPermissions: hasRequestedDataPermissions,
             style: {
                 switch context.linkAppearance?.style {
                 case .alwaysLight: return .alwaysLight
@@ -694,11 +703,29 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
                 switch result {
                 case .completed(let financialConnectionsResult):
                     switch financialConnectionsResult {
+                    case .paymentDetails:
+                        completion(.completed)
                     case .linkedAccount(let id):
+                        guard !hasRequestedDataPermissions else {
+                            completion(.failed(error: PaymentSheetError.unknown(
+                                debugDescription: "Permissioned Link Account Session completed without generated payment details."
+                            )))
+                            return
+                        }
                         createPaymentDetails(linkedAccountId: id)
                     case .financialConnections(let linkedBank):
-                        createPaymentDetails(linkedAccountId: linkedBank.accountId)
+                        if hasRequestedDataPermissions {
+                            completion(.completed)
+                        } else {
+                            createPaymentDetails(linkedAccountId: linkedBank.accountId)
+                        }
                     case .instantDebits(let linkedBank):
+                        guard !hasRequestedDataPermissions else {
+                            completion(.failed(error: PaymentSheetError.unknown(
+                                debugDescription: "Permissioned Link Account Session completed without generated payment details."
+                            )))
+                            return
+                        }
                         guard let linkedAccountId = linkedBank.linkAccountId else { fallthrough }
                         createPaymentDetails(linkedAccountId: linkedAccountId)
                     @unknown default:

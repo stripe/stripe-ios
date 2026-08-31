@@ -21,6 +21,7 @@ public class FinancialConnectionsSDKImplementation: FinancialConnectionsSDKInter
         clientSecret: String,
         returnURL: String?,
         existingConsumer: FinancialConnectionsConsumer?,
+        hasRequestedDataPermissions: Bool,
         style: FinancialConnectionsStyle,
         elementsSessionContext: ElementsSessionContext?,
         linkBrand: LinkBrand?,
@@ -43,6 +44,7 @@ public class FinancialConnectionsSDKImplementation: FinancialConnectionsSDKInter
         )
         financialConnectionsSheet.apiClient = apiClient
         financialConnectionsSheet.existingConsumer = existingConsumer
+        financialConnectionsSheet.hasRequestedDataPermissions = hasRequestedDataPermissions
         financialConnectionsSheet.elementsSessionContext = elementsSessionContext
         financialConnectionsSheet.onEvent = onEvent
 
@@ -79,6 +81,8 @@ public class FinancialConnectionsSDKImplementation: FinancialConnectionsSDKInter
                         completion(.completed(.instantDebits(instantDebitsLinkedBank)))
                     case .linkedAccount(let id):
                         completion(.completed(.linkedAccount(id: id)))
+                    case .paymentDetails(let id):
+                        completion(.completed(.paymentDetails(id: id)))
                     }
                 case .canceled:
                     completion(.cancelled)
