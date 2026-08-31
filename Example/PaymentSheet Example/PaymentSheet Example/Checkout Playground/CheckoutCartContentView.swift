@@ -35,6 +35,7 @@ struct CheckoutCartContentView: View {
                 orderSummarySection
             }
             .padding(.top, 20)
+            .disabled(checkout.isUpdating)
         }
         .sheet(isPresented: $showsTaxDetails) {
             CheckoutTaxDetailsView(taxAmounts: checkout.session.taxAmounts ?? [])

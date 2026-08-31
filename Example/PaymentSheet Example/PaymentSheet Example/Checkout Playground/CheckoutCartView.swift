@@ -45,33 +45,13 @@ struct CheckoutCartView: View {
                         errorMessage: errorMessage
                     )
                     .safeAreaInset(edge: .bottom, spacing: 0) {
-                        VStack(spacing: 0) {
-                            if showExpressCheckoutElement,
-                               let ece = checkout.getExpressCheckoutElement() {
-                                ece.view
-                                    .padding(.horizontal)
-                                    .padding(.top, 16)
-                            }
-                            switch integrationType {
-                            case .flowController:
-                                CheckoutCartPaymentButton(checkout: checkout) { result in
-                                    confirmResult = result
-                                }
-                                    .clipped()
-                            case .embedded:
-                                CheckoutCartEmbeddedPaymentView(checkout: checkout) { result in
-                                    confirmResult = result
-                                }
-                                    .clipped()
-                            case .eceOnly:
-                                EmptyView()
-                            }
+                        CheckoutCartPaymentBar(
+                            checkout: checkout,
+                            showExpressCheckoutElement: showExpressCheckoutElement,
+                            integrationType: integrationType
+                        ) { result in
+                            confirmResult = result
                         }
-                        .background(
-                            Color(UIColor.systemBackground)
-                                .shadow(color: Color.black.opacity(0.1), radius: 10, x: 0, y: -5)
-                                .ignoresSafeArea()
-                        )
                     }
                 } else if isLoading {
                     ProgressView("Loading Cart...")
@@ -129,7 +109,6 @@ struct CheckoutCartView: View {
                 message: { Text(confirmResultAlertMessage) }
             )
         }
-        .disabled(checkout?.isUpdating == true)
     }
 
     private var confirmResultAlertTitle: String {
@@ -201,5 +180,40 @@ struct CheckoutCartView: View {
             errorMessage = error.localizedDescription
         }
         isLoading = false
+    }
+}
+
+private struct CheckoutCartPaymentBar: View {
+
+    @ObservedObject var checkout: CheckoutController
+    let showExpressCheckoutElement: Bool
+    let integrationType: CheckoutPlayground.IntegrationType
+    let onConfirm: (CheckoutController.ConfirmResult) -> Void
+
+    var body: some View {
+        VStack(spacing: 0) {
+            if showExpressCheckoutElement,
+               let expressCheckoutElement = checkout.getExpressCheckoutElement() {
+                expressCheckoutElement.view
+                    .padding(.horizontal)
+                    .padding(.top, 16)
+            }
+            switch integrationType {
+            case .flowController:
+                CheckoutCartPaymentButton(checkout: checkout, onConfirm: onConfirm)
+                    .clipped()
+            case .embedded:
+                CheckoutCartEmbeddedPaymentView(checkout: checkout, onConfirm: onConfirm)
+                    .clipped()
+            case .eceOnly:
+                EmptyView()
+            }
+        }
+        .disabled(checkout.isUpdating)
+        .background(
+            Color(UIColor.systemBackground)
+                .shadow(color: Color.black.opacity(0.1), radius: 10, x: 0, y: -5)
+                .ignoresSafeArea()
+        )
     }
 }
