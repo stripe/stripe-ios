@@ -1,23 +1,23 @@
 GET
-https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3U9Uq2EVcdXl2br81xdhB50i\?client_secret=pi_3U9Uq2EVcdXl2br81xdhB50i_secret_ntRqxUdH63gZ320vO2fr5dE5x&expand%5B0%5D=payment_method$
+https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3UAZ4gERR7vmXYYf039ayhZc\?client_secret=pi_3UAZ4gERR7vmXYYf039ayhZc_secret_C9u4BcSL3fV0ZCnyCqTZiUzEd&expand%5B0%5D=payment_method$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=c2Y2cG0DT3wlkCGtUiHJVmZr4Fv_e2ObxN8SgoeLy9TX57qN_ajox0dojbpIHw0DVsMyIY0PG-gzWj-U; report-to csp
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=BmcevTE3Zq2GrcoupNHF5Sm9KkZj7MmgLF9t3MoEq9jOIZlQZv-u1D059fafDQQeme0Oy0FjvFJOWeRW; report-to csp
 Server: nginx
 Cache-Control: no-cache, no-store
-reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=c2Y2cG0DT3wlkCGtUiHJVmZr4Fv_e2ObxN8SgoeLy9TX57qN_ajox0dojbpIHw0DVsMyIY0PG-gzWj-U&t=1"
+reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=BmcevTE3Zq2GrcoupNHF5Sm9KkZj7MmgLF9t3MoEq9jOIZlQZv-u1D059fafDQQeme0Oy0FjvFJOWeRW&t=1"
 stripe-notice: You are using an outdated API version (2020-08-27). We recommend upgrading to the latest API version, 2026-08-26.dahlia. See https://docs.stripe.com/upgrades
 x-wc: 3c3
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Access-Control-Allow-Origin: *
 x-stripe-routing-context-priority-tier: api-testmode
 x-stripe-priority-routing-enabled: true
-report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=c2Y2cG0DT3wlkCGtUiHJVmZr4Fv_e2ObxN8SgoeLy9TX57qN_ajox0dojbpIHw0DVsMyIY0PG-gzWj-U&t=1"}],"include_subdomains":true}
-request-id: req_kUXWksOK9HWgDX
+report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=BmcevTE3Zq2GrcoupNHF5Sm9KkZj7MmgLF9t3MoEq9jOIZlQZv-u1D059fafDQQeme0Oy0FjvFJOWeRW&t=1"}],"include_subdomains":true}
+request-id: req_j7oDpfa6lQOkRe
 Content-Length: 1622
 Vary: Origin
-Date: Fri, 28 Aug 2026 18:49:19 GMT
+Date: Mon, 31 Aug 2026 17:32:51 GMT
 stripe-version: 2020-08-27
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
@@ -42,7 +42,7 @@ Content-Type: application/json
     "type" : "redirect_to_url",
     "redirect_to_url" : {
       "return_url" : "foo:\/\/bar",
-      "url" : "https:\/\/pm-redirects.stripe.com\/authorize\/acct_1Pl38tEVcdXl2br8\/pa_nonce_V9oSvKI45lMT8ua3xa0zGTVMCwSaBg9"
+      "url" : "https:\/\/pm-redirects.stripe.com\/authorize\/acct_1UAYPpERR7vmXYYf\/pa_nonce_VAuuNABkala210yz5mp0Oav1jApgfDB"
     }
   },
   "payment_method" : {
@@ -50,7 +50,7 @@ Content-Type: application/json
     "sequra" : {
 
     },
-    "id" : "pm_1U9Uq2EVcdXl2br8INkttOXy",
+    "id" : "pm_1UAZ4gERR7vmXYYfzuyKTD27",
     "billing_details" : {
       "email" : null,
       "phone" : null,
@@ -66,14 +66,14 @@ Content-Type: application/json
       }
     },
     "livemode" : false,
-    "created" : 1787942958,
+    "created" : 1788197570,
     "allow_redisplay" : "unspecified",
     "type" : "sequra",
     "customer" : null,
     "customer_account" : null
   },
-  "client_secret" : "pi_3U9Uq2EVcdXl2br81xdhB50i_secret_ntRqxUdH63gZ320vO2fr5dE5x",
-  "id" : "pi_3U9Uq2EVcdXl2br81xdhB50i",
+  "client_secret" : "pi_3UAZ4gERR7vmXYYf039ayhZc_secret_C9u4BcSL3fV0ZCnyCqTZiUzEd",
+  "id" : "pi_3UAZ4gERR7vmXYYf039ayhZc",
   "allowed_payment_method_types" : null,
   "confirmation_method" : "automatic",
   "amount_details" : {
@@ -88,6 +88,6 @@ Content-Type: application/json
     "sequra"
   ],
   "setup_future_usage" : null,
-  "created" : 1787942958,
+  "created" : 1788197570,
   "description" : null
 }
