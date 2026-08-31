@@ -21,24 +21,6 @@ final class PaymentSheetLoader {
         let paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper?
         let paymentMethodOrientation: PaymentSheet.PaymentMethodLayout.ResolvedLayout
         let customerProvider: CustomerProvider
-
-        init(
-            intent: Intent,
-            elementsSession: STPElementsSession,
-            savedPaymentMethods: [STPPaymentMethod],
-            paymentMethodTypes: [PaymentSheet.PaymentMethodType],
-            paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper?,
-            paymentMethodOrientation: PaymentSheet.PaymentMethodLayout.ResolvedLayout,
-            customerProvider: CustomerProvider = CustomerProvider(customer: nil)
-        ) {
-            self.intent = intent
-            self.elementsSession = elementsSession
-            self.savedPaymentMethods = savedPaymentMethods
-            self.paymentMethodTypes = paymentMethodTypes
-            self.paymentMethodMessagingPromotionsHelper = paymentMethodMessagingPromotionsHelper
-            self.paymentMethodOrientation = paymentMethodOrientation
-            self.customerProvider = customerProvider
-        }
     }
 
     enum IntegrationShape {

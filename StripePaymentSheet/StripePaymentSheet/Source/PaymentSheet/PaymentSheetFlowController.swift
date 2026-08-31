@@ -911,7 +911,8 @@ extension PaymentSheet {
                 savedPaymentMethods: savedPaymentMethods,
                 paymentMethodTypes: viewController.loadResult.paymentMethodTypes,
                 paymentMethodMessagingPromotionsHelper: viewController.loadResult.paymentMethodMessagingPromotionsHelper,
-                paymentMethodOrientation: viewController.loadResult.paymentMethodOrientation
+                paymentMethodOrientation: viewController.loadResult.paymentMethodOrientation,
+                customerProvider: viewController.loadResult.customerProvider
             )
         }
 
