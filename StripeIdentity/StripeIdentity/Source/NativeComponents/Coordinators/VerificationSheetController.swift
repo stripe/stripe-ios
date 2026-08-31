@@ -28,6 +28,11 @@ enum OtpSubmissionResult {
     case transitioned
 }
 
+enum VerificationSheetControllerSaveError: Error, Equatable {
+    case missingUploadTask
+    case transitionedToInputError
+}
+
 protocol VerificationSheetControllerProtocol: AnyObject {
     var apiClient: IdentityAPIClient { get }
     var flowController: VerificationSheetFlowControllerProtocol { get }
@@ -48,27 +53,27 @@ protocol VerificationSheetControllerProtocol: AnyObject {
     @MainActor func saveDocumentFrontAndDecideBack(
         from fromScreen: IdentityAnalyticsClient.ScreenName,
         documentUploader: DocumentUploaderProtocol
-    ) async -> Bool
+    ) async throws -> Bool
 
     @MainActor func saveDocumentBackAndTransition(
         from fromScreen: IdentityAnalyticsClient.ScreenName,
         documentUploader: DocumentUploaderProtocol
-    ) async
+    ) async throws
 
     @MainActor func forceDocumentFrontAndDecideBack(
         from fromScreen: IdentityAnalyticsClient.ScreenName,
-    ) async -> Bool
+    ) async throws -> Bool
 
     @MainActor func forceDocumentBackAndTransition(
         from fromScreen: IdentityAnalyticsClient.ScreenName
-    ) async
+    ) async throws
 
     @MainActor func saveSelfieFileDataAndTransition(
         from fromScreen: IdentityAnalyticsClient.ScreenName,
         selfieUploader: SelfieUploaderProtocol,
         capturedImages: FaceCaptureData,
         trainingConsent: Bool
-    ) async
+    ) async throws
 
     /// Submit OTP with VerificationPageData API and transition if OTP is valid or the request fails.
     @MainActor func saveOtpAndMaybeTransition(
@@ -302,12 +307,11 @@ final class VerificationSheetController: @MainActor VerificationSheetControllerP
     /// Save update VerificationPage with document front, checks if back is needed
     /// If back is needed, returns `true`.
     /// Otherwise, submits the verification session, transitions, and returns `false`.
-    /// returns `isBackRequired: Bool`
     func saveDocumentFrontAndDecideBack(
         from fromScreen: IdentityAnalyticsClient.ScreenName,
         documentUploader: DocumentUploaderProtocol
-    ) async -> Bool {
-        await saveDocumentFront(
+    ) async throws -> Bool {
+        try await saveDocumentFront(
             from: fromScreen,
             forceConfirm: false,
             documentUploader: documentUploader
@@ -318,18 +322,20 @@ final class VerificationSheetController: @MainActor VerificationSheetControllerP
     func saveDocumentBackAndTransition(
         from fromScreen: IdentityAnalyticsClient.ScreenName,
         documentUploader: DocumentUploaderProtocol
-    ) async {
-        await saveDocumentBack(
+    ) async throws {
+        try await saveDocumentBack(
             from: fromScreen,
             forceConfirm: false,
             documentUploader: documentUploader
         )
     }
 
-    /// returns `isBackRequired: Bool`
+    /// Force-confirms the document front and checks whether the back is needed.
+    /// - Returns: `true` if the saved response requires the document back. Returns `false`
+    ///   if the front completes without a back, or if a missing uploader transitions the flow to an error.
     func forceDocumentFrontAndDecideBack(
         from fromScreen: IdentityAnalyticsClient.ScreenName
-    ) async -> Bool {
+    ) async throws -> Bool {
         guard let documentUploader = self.flowController.documentUploader
         else {
             await flowController.transitionToErrorScreen(
@@ -339,7 +345,7 @@ final class VerificationSheetController: @MainActor VerificationSheetControllerP
             return false
         }
 
-        return await saveDocumentFront(
+        return try await saveDocumentFront(
             from: fromScreen,
             forceConfirm: true,
             documentUploader: documentUploader
@@ -348,7 +354,7 @@ final class VerificationSheetController: @MainActor VerificationSheetControllerP
 
     func forceDocumentBackAndTransition(
         from fromScreen: IdentityAnalyticsClient.ScreenName
-    ) async {
+    ) async throws {
 
         guard let documentUploader = self.flowController.documentUploader
         else {
@@ -359,19 +365,20 @@ final class VerificationSheetController: @MainActor VerificationSheetControllerP
             return
         }
 
-        await saveDocumentBack(from: fromScreen, forceConfirm: true, documentUploader: documentUploader)
+        try await saveDocumentBack(from: fromScreen, forceConfirm: true, documentUploader: documentUploader)
     }
 
-    /// returns `isBackRequired: Bool`
+    /// Saves the document front and checks whether the back is needed.
+    /// - Returns: `true` if the saved response requires the document back. Otherwise, submits or
+    ///   transitions the flow and returns `false`.
     private func saveDocumentFront(
         from fromScreen: IdentityAnalyticsClient.ScreenName,
         forceConfirm: Bool,
         documentUploader: DocumentUploaderProtocol,
-    ) async -> Bool {
+    ) async throws -> Bool {
         guard let frontUploadResult = await documentUploader.frontUploadResult()
         else {
-            // TODO: throw an error for missing data instead?
-            return false
+            throw VerificationSheetControllerSaveError.missingUploadTask
         }
 
         var optionalCollectedData: StripeAPI.VerificationPageCollectedData?
@@ -394,16 +401,14 @@ final class VerificationSheetController: @MainActor VerificationSheetControllerP
             result = .failure(error)
         }
 
-        guard let successData = await handleVerificationPageDataResult(
+        let successData = try await handleVerificationPageDataResult(
             collectedData: optionalCollectedData,
             updateDataResult: result
-        ) else {
-            return false
-        }
+        )
 
         guard successData.requirements.errors.isEmpty else {
             await transitionWithVerificationPageDataResult(result)
-            return false
+            throw VerificationSheetControllerSaveError.transitionedToInputError
         }
 
         if successData.requirements.missing.contains(.idDocumentBack) {
@@ -419,14 +424,14 @@ final class VerificationSheetController: @MainActor VerificationSheetControllerP
         from fromScreen: IdentityAnalyticsClient.ScreenName,
         forceConfirm: Bool,
         documentUploader: DocumentUploaderProtocol
-    ) async {
+    ) async throws {
+        analyticsClient.startTrackingTimeToScreen(from: fromScreen, sheetController: self)
+
         guard let backUploadResult = await documentUploader.backUploadResult()
         else {
-            // TODO: throw an error for missing data instead?
-            return
+            analyticsClient.cancelTrackingTimeToScreen()
+            throw VerificationSheetControllerSaveError.missingUploadTask
         }
-
-        analyticsClient.startTrackingTimeToScreen(from: fromScreen, sheetController: self)
 
         var optionalCollectedData: StripeAPI.VerificationPageCollectedData?
         let result: Result<StripeAPI.VerificationPageData, Error>
@@ -488,7 +493,11 @@ final class VerificationSheetController: @MainActor VerificationSheetControllerP
             result = .failure(error)
         }
 
-        return await handleVerificationPageDataResult(updateDataResult: result)
+        do {
+            return try await handleVerificationPageDataResult(updateDataResult: result)
+        } catch {
+            return nil
+        }
     }
 
     func sendCannotVerifyPhoneOtpAndTransition() async {
@@ -591,14 +600,14 @@ final class VerificationSheetController: @MainActor VerificationSheetControllerP
         selfieUploader: SelfieUploaderProtocol,
         capturedImages: FaceCaptureData,
         trainingConsent: Bool
-    ) async {
+    ) async throws {
+        analyticsClient.startTrackingTimeToScreen(from: fromScreen, sheetController: self)
+
         guard let uploadResult = await selfieUploader.uploadResult()
         else {
-            // TODO: throw an error for missing data instead?
-            return
+            analyticsClient.cancelTrackingTimeToScreen()
+            throw VerificationSheetControllerSaveError.missingUploadTask
         }
-
-        analyticsClient.startTrackingTimeToScreen(from: fromScreen, sheetController: self)
         let shouldSubmit3DFaceCaptureData: Bool
         if case .success(let verificationPage)? = verificationPageResponse {
             shouldSubmit3DFaceCaptureData = verificationPage.shouldSubmit3DFaceCaptureData
@@ -657,10 +666,13 @@ final class VerificationSheetController: @MainActor VerificationSheetControllerP
             updateDataResult = .failure(error)
         }
 
-        guard let successPageData = await handleVerificationPageDataResult(
-            collectedData: phoneOtpData,
-            updateDataResult: updateDataResult
-        ) else {
+        let successPageData: StripeAPI.VerificationPageData
+        do {
+            successPageData = try await handleVerificationPageDataResult(
+                collectedData: phoneOtpData,
+                updateDataResult: updateDataResult
+            )
+        } catch {
             return .transitioned
         }
 
@@ -686,11 +698,14 @@ final class VerificationSheetController: @MainActor VerificationSheetControllerP
     private func handleVerificationPageDataResult(
         collectedData: StripeAPI.VerificationPageCollectedData? = nil,
         updateDataResult: Result<StripeAPI.VerificationPageData, Error>
-    ) async -> StripeAPI.VerificationPageData? {
-        guard case .success(let resultData) = updateDataResult
-        else {
+    ) async throws -> StripeAPI.VerificationPageData {
+        let resultData: StripeAPI.VerificationPageData
+        switch updateDataResult {
+        case .success(let data):
+            resultData = data
+        case .failure(let error):
             await transitionWithVerificationPageDataResult(updateDataResult)
-            return nil
+            throw error
         }
 
         // update collectedData if there are no errors.
@@ -710,10 +725,12 @@ final class VerificationSheetController: @MainActor VerificationSheetControllerP
         collectedData: StripeAPI.VerificationPageCollectedData?,
         updateDataResult: Result<StripeAPI.VerificationPageData, Error>
     ) async {
-        guard await handleVerificationPageDataResult(
-            collectedData: collectedData,
-            updateDataResult: updateDataResult
-        ) != nil else {
+        do {
+            _ = try await handleVerificationPageDataResult(
+                collectedData: collectedData,
+                updateDataResult: updateDataResult
+            )
+        } catch {
             return
         }
 
