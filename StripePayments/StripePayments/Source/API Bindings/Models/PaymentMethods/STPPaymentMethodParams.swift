@@ -117,6 +117,8 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
     @objc public var wero: STPPaymentMethodWeroParams?
     /// If this is a Pay by Bank PaymentMethod, this contains additional details.
     @objc public var payByBank: STPPaymentMethodPayByBankParams?
+    /// If this is a Kakao Pay PaymentMethod, this contains additional details.
+    @objc public var kakaoPay: STPPaymentMethodKakaoPayParams?
     /// If this is a Korean cards PaymentMethod, this contains additional details.
     @objc public var krCard: STPPaymentMethodKrCardParams?
     /// If this is a Naver Pay PaymentMethod, this contains additional details.
@@ -814,6 +816,24 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
         self.metadata = metadata
     }
 
+    /// Creates params for a Kakao Pay PaymentMethod.
+    /// - Parameters:
+    ///   - kakaoPay:      An object containing additional Kakao Pay details.
+    ///   - billingDetails: Billing information associated with the PaymentMethod.
+    ///   - metadata:       Additional information to attach to the PaymentMethod.
+    @objc
+    public convenience init(
+        kakaoPay: STPPaymentMethodKakaoPayParams,
+        billingDetails: STPPaymentMethodBillingDetails?,
+        metadata: [String: String]?
+    ) {
+        self.init()
+        self.type = .kakaoPay
+        self.kakaoPay = kakaoPay
+        self.billingDetails = billingDetails
+        self.metadata = metadata
+    }
+
     /// Creates params for a Korean cards PaymentMethod.
     /// - Parameters:
     ///   - krCard:          An object containing additional Korean cards details.
@@ -933,6 +953,7 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
             NSStringFromSelector(#selector(getter: twint)): "twint",
             NSStringFromSelector(#selector(getter: wero)): "wero",
             NSStringFromSelector(#selector(getter: payByBank)): "pay_by_bank",
+            NSStringFromSelector(#selector(getter: kakaoPay)): "kakao_pay",
             NSStringFromSelector(#selector(getter: krCard)): "kr_card",
             NSStringFromSelector(#selector(getter: naverPay)): "naver_pay",
             NSStringFromSelector(#selector(getter: payco)): "payco",
@@ -1406,6 +1427,8 @@ extension STPPaymentMethodParams {
             wero = STPPaymentMethodWeroParams()
         case .payByBank:
             payByBank = STPPaymentMethodPayByBankParams()
+        case .kakaoPay:
+            kakaoPay = STPPaymentMethodKakaoPayParams()
         case .krCard:
             krCard = STPPaymentMethodKrCardParams()
         case .naverPay:

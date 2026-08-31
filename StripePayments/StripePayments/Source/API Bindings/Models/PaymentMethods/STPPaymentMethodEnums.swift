@@ -104,6 +104,8 @@ import Foundation
     case bizum
     /// An ACSS Debit payment method.
     @objc(STPPaymentMethodTypeACSSDebit) case ACSSDebit
+    /// A Kakao Pay payment method
+    case kakaoPay
     /// A Korean cards payment method
     case krCard
     /// A Naver Pay payment method
@@ -214,6 +216,8 @@ import Foundation
             return "MB WAY"
         case .bizum:
             return "Bizum"
+        case .kakaoPay:
+            return "Kakao Pay"
         case .krCard:
             return "Korean cards"
         case .naverPay:
@@ -327,6 +331,8 @@ import Foundation
             return "mb_way"
         case .bizum:
             return "bizum"
+        case .kakaoPay:
+            return "kakao_pay"
         case .krCard:
             return "kr_card"
         case .naverPay:

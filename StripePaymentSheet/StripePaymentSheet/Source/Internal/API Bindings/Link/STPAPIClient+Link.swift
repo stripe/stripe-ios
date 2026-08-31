@@ -380,6 +380,8 @@ extension STPAPIClient {
         for consumerSessionClientSecret: String,
         linkMode: LinkMode? = nil,
         intentToken: String? = nil,
+        permissions: [String]? = nil,
+        merchantToken: String? = nil,
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<LinkAccountSession, Error>) -> Void
     ) {
@@ -393,6 +395,10 @@ extension STPAPIClient {
         ]
         parameters["link_mode"] = linkMode?.rawValue
         parameters["intent_token"] = intentToken
+        parameters["permissions"] = permissions
+        if permissions?.isEmpty == false {
+            parameters["merchant_token"] = merchantToken
+        }
 
         APIRequest<LinkAccountSession>.post(
             with: self,

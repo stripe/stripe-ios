@@ -104,6 +104,8 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
     @objc private(set) public var wero: STPPaymentMethodWero?
     /// If this is a Pay by Bank PaymentMethod (i.e. `self.type == STPPaymentMethodTypePayByBank`), this contains additional details.
     @objc private(set) public var payByBank: STPPaymentMethodPayByBank?
+    /// If this is a Kakao Pay PaymentMethod (i.e. `self.type == STPPaymentMethodTypeKakaoPay`), this contains additional details.
+    @objc private(set) public var kakaoPay: STPPaymentMethodKakaoPay?
     /// If this is a Korean cards PaymentMethod (i.e. `self.type == STPPaymentMethodTypeKrCard`), this contains additional details.
     @objc private(set) public var krCard: STPPaymentMethodKrCard?
     /// If this is a Naver Pay PaymentMethod (i.e. `self.type == STPPaymentMethodTypeNaverPay`), this contains additional details.
@@ -188,6 +190,7 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
             "twint = \(String(describing: twint))",
             "wero = \(String(describing: wero))",
             "payByBank = \(String(describing: payByBank))",
+            "kakaoPay = \(String(describing: kakaoPay))",
             "krCard = \(String(describing: krCard))",
             "naverPay = \(String(describing: naverPay))",
             "payco = \(String(describing: payco))",
@@ -398,6 +401,9 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
         )
         paymentMethod.payByBank = STPPaymentMethodPayByBank.decodedObject(
             fromAPIResponse: dict.stp_dictionary(forKey: "pay_by_bank")
+        )
+        paymentMethod.kakaoPay = STPPaymentMethodKakaoPay.decodedObject(
+            fromAPIResponse: dict.stp_dictionary(forKey: "kakao_pay")
         )
         paymentMethod.krCard = STPPaymentMethodKrCard.decodedObject(
             fromAPIResponse: dict.stp_dictionary(forKey: "kr_card")

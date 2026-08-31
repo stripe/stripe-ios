@@ -179,7 +179,9 @@ extension FinancialConnectionsWebFlowViewController {
                 self.loadingView.showLoading(false)
                 switch result {
                 case .success(.success(let returnUrl)):
-                    if manifest.isProductInstantDebits {
+                    if apiClient.hasRequestedDataPermissions {
+                        self.fetchSession()
+                    } else if manifest.isProductInstantDebits {
                         do {
                             if let paymentMethod = try returnUrl.extractLinkBankPaymentMethod() {
                                 let instantDebitsLinkedBank = createInstantDebitsLinkedBank(
