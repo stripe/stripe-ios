@@ -45,8 +45,11 @@ extension CheckoutController {
         /// Default customer details used to pre-populate Checkout integrations.
         public var defaults: Defaults = Defaults()
 
-        /// Configuration for PaymentElement.
-        public var paymentElement: PaymentElement.Configuration = .init()
+        /// Configuration for Payment Element.
+        ///
+        /// Set this property to use Payment Element with this CheckoutController.
+        /// The default value is `nil`.
+        public var paymentElement: PaymentElement.Configuration?
 
         /// Configuration for ExpressCheckoutElement.
         public var expressCheckoutElement: ExpressCheckoutElement.Configuration = .init()
@@ -60,12 +63,6 @@ extension CheckoutController {
         /// Configuration for the shipping address form returned by
         /// ``CheckoutController.getShippingAddressElement()``.
         public var shippingAddressElement: ShippingAddressElement.Configuration = .init()
-
-        /// Apple Pay configuration.
-        public var applePayConfiguration: ApplePayConfiguration?
-
-        /// Link configuration.
-        public var linkConfiguration: LinkConfiguration?
 
         /// The color styling to use for Checkout UI.
         public var userInterfaceStyle: UserInterfaceStyle = .automatic

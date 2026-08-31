@@ -40,37 +40,13 @@ struct CheckoutCartView: View {
                 if let checkout {
                     CheckoutCartContentView(
                         checkout: checkout,
+                        showsCurrencySelectorElement: adaptivePricing,
                         showsShippingAddressSection: shippingAddressCollection || checkout.session.shippingAddress != nil,
-                        errorMessage: errorMessage
-                    )
-                    .safeAreaInset(edge: .bottom, spacing: 0) {
-                        VStack(spacing: 0) {
-                            if showExpressCheckoutElement,
-                               let ece = checkout.getExpressCheckoutElement() {
-                                ece.view
-                                    .padding(.horizontal)
-                                    .padding(.top, 16)
-                            }
-                            switch integrationType {
-                            case .flowController:
-                                CheckoutCartPaymentButton(checkout: checkout) { result in
-                                    confirmResult = result
-                                }
-                                    .clipped()
-                            case .embedded:
-                                CheckoutCartEmbeddedPaymentView(checkout: checkout) { result in
-                                    confirmResult = result
-                                }
-                                    .clipped()
-                            case .eceOnly:
-                                EmptyView()
-                            }
-                        }
-                        .background(
-                            Color(UIColor.systemBackground)
-                                .shadow(color: Color.black.opacity(0.1), radius: 10, x: 0, y: -5)
-                                .ignoresSafeArea()
-                        )
+                        errorMessage: errorMessage,
+                        showExpressCheckoutElement: showExpressCheckoutElement,
+                        integrationType: integrationType
+                    ) { result in
+                        confirmResult = result
                     }
                 } else if isLoading {
                     ProgressView("Loading Cart...")
@@ -133,7 +109,7 @@ struct CheckoutCartView: View {
 
     private var confirmResultAlertTitle: String {
         switch confirmResult {
-        case .succeeded: return "Success"
+        case .completed: return "Success"
         case .canceled: return "Canceled"
         case .failed: return "Unable to complete checkout"
         case nil: return ""
@@ -142,7 +118,7 @@ struct CheckoutCartView: View {
 
     private var confirmResultAlertMessage: String {
         switch confirmResult {
-        case .succeeded(let paymentStatus): return "Payment status: \(paymentStatus)"
+        case .completed(let paymentStatus): return "Payment status: \(paymentStatus)"
         case .canceled: return "The payment was canceled."
         case .failed(let error):
             return "Localized: \(error.localizedDescription)\n\nDebug: \(String(reflecting: error))"
@@ -152,7 +128,7 @@ struct CheckoutCartView: View {
 
     private func acknowledgeConfirmResult() {
         let confirmationSucceeded: Bool
-        if case .succeeded = confirmResult {
+        if case .completed = confirmResult {
             confirmationSucceeded = true
         } else {
             confirmationSucceeded = false
@@ -171,10 +147,14 @@ struct CheckoutCartView: View {
             config.apiClient = diagnostics.makeAPIClient(
                 paymentPagesRequestDelay: delayPaymentPagesRequests ? 1 : 0
             )
+            if integrationType != .eceOnly {
+                var paymentElementConfiguration = PaymentElement.Configuration()
+                paymentElementConfiguration.applePayConfiguration = PaymentElement.ApplePayConfiguration(
+                    merchantId: "merchant.com.stripe.paymentsheet.example"
+                )
+                config.paymentElement = paymentElementConfiguration
+            }
             config.defaults.shippingDetails = defaultShippingAddress?.checkoutShippingDetails
-            config.applePayConfiguration = CheckoutController.ApplePayConfiguration(
-                merchantId: "merchant.com.stripe.paymentsheet.example"
-            )
             if adaptivePricing {
                 var currencySelectorConfiguration = CurrencySelectorElement.Configuration()
                 currencySelectorConfiguration.appearance = currencySelectorAppearance

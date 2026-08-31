@@ -27,8 +27,8 @@ final class CheckoutConfirmationTests: APIStubbedTestCase {
         let result = await checkout.confirm(makePaymentMethodFlow(for: checkout))
 
         // Then it maps the result and commits the returned Checkout Session
-        guard case .succeeded(let paymentStatus) = result else {
-            XCTFail("Expected confirmation to succeed, got \(result)")
+        guard case .completed(let paymentStatus) = result else {
+            XCTFail("Expected confirmation to complete, got \(result)")
             return
         }
         XCTAssertEqual(paymentStatus, .paid)
@@ -71,8 +71,9 @@ final class CheckoutConfirmationTests: APIStubbedTestCase {
         // Given a confirmation that remains in progress long enough to start another
         let checkout = try await makeCheckout()
         stubConfirmation(responseTime: 0.5)
+        let firstFlow = makePaymentMethodFlow(for: checkout)
         let firstConfirmation = Task { @MainActor in
-            await checkout.confirm(makePaymentMethodFlow(for: checkout))
+            await checkout.confirm(firstFlow)
         }
 
         try await waitUntil {
@@ -95,8 +96,9 @@ final class CheckoutConfirmationTests: APIStubbedTestCase {
         // Given an in-progress confirmation
         let checkout = try await makeCheckout()
         stubConfirmation(responseTime: 0.5)
+        let flow = makePaymentMethodFlow(for: checkout)
         let confirmation = Task { @MainActor in
-            await checkout.confirm(makePaymentMethodFlow(for: checkout))
+            await checkout.confirm(flow)
         }
 
         try await waitUntil {
@@ -857,8 +859,8 @@ final class CheckoutConfirmationTests: APIStubbedTestCase {
         file: StaticString = #filePath,
         line: UInt = #line
     ) {
-        guard case .succeeded(let paymentStatus) = result else {
-            XCTFail("Expected confirmation to succeed, got \(result)", file: file, line: line)
+        guard case .completed(let paymentStatus) = result else {
+            XCTFail("Expected confirmation to complete, got \(result)", file: file, line: line)
             return
         }
         XCTAssertEqual(paymentStatus, .paid, file: file, line: line)

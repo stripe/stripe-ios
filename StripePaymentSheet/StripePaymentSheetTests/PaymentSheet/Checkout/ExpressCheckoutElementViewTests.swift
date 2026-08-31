@@ -77,6 +77,19 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
         XCTAssertFalse(buttons.contains(.link))
     }
 
+    func testLinkButtonHiddenWhenDisabledForAutomaticTaxBilling() {
+        // Given Link is disabled because the Checkout Session uses automatic tax billing
+        let session = makeSessionWithWalletTypes(["link"]).makePublicSession()
+        session.elementsSession.disableLinkForAutomaticTaxBilling = true
+        let configuration = ExpressCheckoutElement.Configuration()
+
+        // When
+        let buttons = ExpressCheckoutElementUtilities.resolveButtons(for: session, configuration: configuration)
+
+        // Then
+        XCTAssertFalse(buttons.contains(.link))
+    }
+
     func testApplePayButtonHiddenWhenDisabledOnSession() {
         // Given a session where Apple Pay is disabled server-side, but the merchant has configured applePayConfiguration
         let session = makeSessionWithWalletTypes(["apple_pay"], applePayPreference: "disabled").makePublicSession()
@@ -108,6 +121,7 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
     ) -> PaymentPagesAPIResponse {
         var elementsSession: [String: Any] = [
             "session_id": "es_test",
+            "merchant_country": "US",
             "payment_method_preference": ["ordered_payment_method_types": ["card"]],
             "ordered_payment_method_types_and_wallets": walletTypes,
         ]

@@ -12,7 +12,7 @@ import XCTest
 class IntegrationTesterUICardTests: IntegrationTesterUITests {
 
     func testStandardCustomCard3DS2() throws {
-        testOOBAuthentication(cardNumber: "4000000000003220")
+        testAuthentication(cardNumber: "4000000000003220", confirmationBehavior: .threeDS2)
     }
 
     let alwaysOobCard = "4000582600000094"

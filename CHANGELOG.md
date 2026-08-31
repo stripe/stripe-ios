@@ -1,7 +1,16 @@
 The next release's version bump will so far be:
-PATCH
+MINOR
 
 ## X.Y.Z - changes pending release
+### CryptoOnramp (Alpha)
+* [Added] Added Canada SIN, Colombia NIT, and Philippines TIN values to `IdType`, and added `idType` to the `KycInfo` initializer.
+
+### Payments
+* [Added] Added API bindings for Kakao Pay.
+* [Added] Added API bindings for SeQura.
+* [Added] Added API bindings for Korean cards.
+* [Added] Added API bindings for Naver Pay.
+* [Added] Added API bindings for PAYCO.
 
 ## 26.8.0 2026-08-24
 ### Payments
