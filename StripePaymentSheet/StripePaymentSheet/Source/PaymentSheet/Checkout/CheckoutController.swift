@@ -197,10 +197,10 @@ public final class CheckoutController: ObservableObject {
     // MARK: - Promotion Codes
 
     /// Applies a promotion code to the session.
-    /// - Parameter code: The promotion code to apply.
+    /// - Parameter promotionCode: The promotion code to apply.
     /// - Throws: ``CheckoutError`` if applying the promotion code fails.
-    public func applyPromotionCode(_ code: String) async throws {
-        try await performUpdate(.setPromotionCode(code))
+    public func applyPromotionCode(_ promotionCode: String) async throws {
+        try await performUpdate(.setPromotionCode(promotionCode))
     }
 
     /// Removes the currently applied promotion code.
