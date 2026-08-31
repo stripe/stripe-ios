@@ -257,30 +257,6 @@ class HostedAuthUrlBuilderTests: XCTestCase {
         XCTAssertFalse(result.absoluteString.contains("linkMobilePhoneCountry="))
     }
 
-    func testPermissionedConsumerContextIsAddedToFragment() {
-        let baseUrl = URL(string: "https://auth.stripe.com/link-accounts#apiKey=pk_merchant")!
-        let consumerContext = HostedAuthUrlBuilder.ConsumerContext(
-            clientSecret: "consumer_session_secret",
-            publishableKey: "pk_consumer",
-            emailAddress: "user@example.com"
-        )
-
-        let result = HostedAuthUrlBuilder.build(
-            baseHostedAuthUrl: baseUrl,
-            isInstantDebits: true,
-            hasExistingAccountholderToken: true,
-            elementsSessionContext: nil,
-            consumerContext: consumerContext
-        )
-
-        let components = URLComponents(url: result, resolvingAgainstBaseURL: false)
-        let fragment = components?.percentEncodedFragment
-        XCTAssertNil(components?.query)
-        XCTAssertTrue(fragment?.contains("consumerSessionClientSecret=consumer_session_secret") == true)
-        XCTAssertTrue(fragment?.contains("consumerPublishableKey=pk_consumer") == true)
-        XCTAssertTrue(fragment?.contains("consumerEmailAddress=user%40example.com") == true)
-    }
-
     // MARK: - URL Edge Cases
 
     func testBaseUrlWithTrailingAmpersand() {

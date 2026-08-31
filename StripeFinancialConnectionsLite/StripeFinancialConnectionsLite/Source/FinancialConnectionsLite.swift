@@ -61,22 +61,11 @@ import UIKit
             apiClient.consumerPublishableKey = existingConsumer?.publishableKey
         }
 
-        let hostedAuthConsumerContext = existingConsumer.flatMap { consumer in
-            consumer.publishableKey.map { publishableKey in
-                HostedAuthUrlBuilder.ConsumerContext(
-                    clientSecret: consumer.clientSecret,
-                    publishableKey: publishableKey,
-                    emailAddress: consumer.emailAddress
-                )
-            }
-        }
-
         let containerVC = FCLiteContainerViewController(
             clientSecret: clientSecret,
             returnUrl: returnUrl,
             apiClient: apiClient,
             elementsSessionContext: elementsSessionContext,
-            hostedAuthConsumerContext: hasRequestedDataPermissions ? hostedAuthConsumerContext : nil,
             hasRequestedDataPermissions: hasRequestedDataPermissions,
             completion: { [weak self] result in
                 guard let self else { return }
