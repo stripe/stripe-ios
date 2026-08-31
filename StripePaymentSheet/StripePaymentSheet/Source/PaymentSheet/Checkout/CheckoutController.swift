@@ -212,10 +212,6 @@ public final class CheckoutController: ObservableObject {
     // MARK: - Payment Option
 
     /// Clears the currently selected payment option.
-    ///
-    /// If the selected payment option supplied the billing address for automatic tax,
-    /// this also recalculates tax using only that billing address's country.
-    /// - Throws: ``CheckoutError`` if the Checkout Session update fails.
     public func clearPaymentOption() async throws {
         try await paymentElement.clearPaymentOption()
     }
