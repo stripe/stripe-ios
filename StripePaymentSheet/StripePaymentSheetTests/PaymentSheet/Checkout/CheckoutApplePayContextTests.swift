@@ -666,7 +666,8 @@ final class CheckoutApplePayContextTests: XCTestCase {
         let context = CheckoutApplePayContext(
             checkoutSession: session,
             applePayConfirmationParameters: parameters,
-            authorizationController: controller
+            authorizationController: controller,
+            checkoutWalletUpdater: MockCheckoutSessionWalletUpdater()
         )
         return (context, controller)
     }
