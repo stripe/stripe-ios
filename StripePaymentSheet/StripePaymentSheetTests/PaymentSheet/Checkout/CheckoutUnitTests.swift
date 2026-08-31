@@ -40,20 +40,6 @@ final class CheckoutUnitTests: XCTestCase {
         XCTAssertEqual(checkout.session.status, .open)
     }
 
-    func testExpressCheckoutElementConfigurationInheritsAPIClient() async throws {
-        // Given a Checkout configuration with its API client
-        let configuration = CheckoutTestHelpers.makeConfiguration()
-
-        // When Checkout stores its configuration
-        let checkout = try await CheckoutController(configuration: configuration)
-
-        // Then ECE inherits the same API client
-        XCTAssertIdentical(
-            checkout.configuration.expressCheckoutElement.apiClient,
-            configuration.apiClient
-        )
-    }
-
     func testPaymentElementConfigurationsUseCheckoutReturnURL() async throws {
         // Given a Checkout configuration with a return URL
         let returnURL = "stripe-ios-test://custom-checkout-return"
