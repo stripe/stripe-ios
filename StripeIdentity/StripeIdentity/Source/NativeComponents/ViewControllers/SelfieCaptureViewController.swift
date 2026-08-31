@@ -559,12 +559,25 @@ private extension SelfieCaptureViewController {
             expectedClassification: .empty,
             capturedData: faceCaptureData
         )
-        Task {
-            await sheetController?.saveSelfieFileDataAndTransition(
-                from: analyticsScreenName,
-                selfieUploader: selfieUploader,
-                capturedImages: faceCaptureData,
-                trainingConsent: consentSelection
+        let screenName = analyticsScreenName
+        let sheetController = sheetController
+        let selfieUploader = selfieUploader
+        let trainingConsent = consentSelection
+        Task { @MainActor [weak self] in
+            guard let sheetController else { return }
+            do {
+                try await sheetController.saveSelfieFileDataAndTransition(
+                    from: screenName,
+                    selfieUploader: selfieUploader,
+                    capturedImages: faceCaptureData,
+                    trainingConsent: trainingConsent
+                )
+            } catch {
+                return
+            }
+            self?.imageScanningSession.setStateScanned(
+                expectedClassification: .empty,
+                capturedData: faceCaptureData
             )
         }
     }

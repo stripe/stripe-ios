@@ -609,6 +609,12 @@ final class IdentityAnalyticsClient {
         timeToScreenFromScreen = fromScreen
     }
 
+    /// Clears an in-progress measurement when the action ends without navigating.
+    func cancelTrackingTimeToScreen() {
+        timeToScreenStartTime = nil
+        timeToScreenFromScreen = nil
+    }
+
     /// Logs the time it takes for a screen to appear after the user takes an
     /// action to proceed to the next screen in the flow.
     /// If `startTrackingTimeToScreen` was not called before calling this method,
