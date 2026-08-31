@@ -21,6 +21,43 @@ import XCTest
 @testable@_spi(STP) import StripePaymentsUI
 
 class STPPaymentHandlerStubbedTests: STPNetworkStubbingTestCase {
+    func testHandleNextActionSucceedsForSetupIntentAwaitingMicrodeposits() {
+        // Given
+        let setupIntent = STPSetupIntent.decodedObject(fromAPIResponse: [
+            "id": "seti_123",
+            "client_secret": "seti_123_secret_123",
+            "status": "requires_action",
+            "livemode": false,
+            "created": 1_725_000_000,
+            "payment_method_types": ["acss_debit"],
+            "next_action": [
+                "type": "verify_with_microdeposits",
+                "verify_with_microdeposits": [
+                    "arrival_date": 1_725_000_000,
+                    "hosted_verification_url": "https://payments.stripe.com/microdeposit/test",
+                ],
+            ],
+        ])!
+        let paymentHandler = STPPaymentHandler(apiClient: STPAPIClient())
+        let completion = expectation(description: "SetupIntent completed")
+
+        // When
+        paymentHandler.handleNextAction(for: setupIntent, with: self, returnURL: nil) { status, returnedSetupIntent, error in
+            // Then
+            XCTAssertEqual(status, .succeeded)
+            XCTAssertEqual(returnedSetupIntent?.status, .requiresAction)
+            XCTAssertEqual(returnedSetupIntent?.nextAction?.type, .verifyWithMicrodeposits)
+            XCTAssertNil(error)
+            completion.fulfill()
+        }
+
+        wait(for: [completion], timeout: 1)
+    }
+
+    func testACSSDebitProcessingCompletesPaymentFlow() {
+        XCTAssertTrue(STPPaymentHandler._isProcessingIntentSuccess(for: .ACSSDebit))
+    }
+
     func testPaymentIntentCardErrorUsesServerMessage() {
         // Given a PaymentIntent that failed after authentication with a specific decline message
         let paymentIntent = STPPaymentIntent.decodedObject(fromAPIResponse: [
