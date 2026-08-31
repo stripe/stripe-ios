@@ -868,6 +868,7 @@ public class STPPaymentHandler: NSObject {
             .payByBank,
             .mbWay,
             .bizum,
+            .kakaoPay,
             .krCard,
             .naverPay,
             .payco,
