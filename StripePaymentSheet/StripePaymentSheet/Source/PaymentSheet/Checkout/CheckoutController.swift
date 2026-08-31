@@ -213,7 +213,7 @@ public final class CheckoutController: ObservableObject {
 
     /// Clears the currently selected payment option.
     public func clearPaymentOption() async throws {
-        try await paymentElement.clearPaymentOption()
+        try await paymentElement?.clearPaymentOption()
     }
 
     // MARK: - Addresses
