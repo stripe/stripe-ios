@@ -604,6 +604,7 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
         frontImage: UIImage
     ) {
         guard let sheetController else { return }
+        guard !isDecidingBack else { return }
         isDecidingBack = true
         let screenName = analyticsScreenName
         let documentUploader = documentUploader
@@ -618,6 +619,11 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
             } catch VerificationSheetControllerSaveError.transitionedToInputError {
                 return
             } catch {
+                self?.isDecidingBack = false
+                self?.imageScanningSession.setStateScanned(
+                    expectedClassification: .front,
+                    capturedData: frontImage
+                )
                 return
             }
             guard let self else { return }
@@ -650,6 +656,10 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
                     documentUploader: documentUploader
                 )
             } catch {
+                self?.imageScanningSession.setStateScanned(
+                    expectedClassification: .back,
+                    capturedData: backImage
+                )
                 return
             }
             self?.imageScanningSession.setStateScanned(

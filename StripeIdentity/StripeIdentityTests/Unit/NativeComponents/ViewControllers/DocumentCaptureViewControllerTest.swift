@@ -441,6 +441,27 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
     }
 
     @MainActor
+    func testSaveDataFrontFailureRestoresScannedState() async {
+        let mockFrontImage = UIImage()
+        let vc = makeViewController(state: .scanned(.front, mockFrontImage))
+        mockSheetController.saveDocumentFrontAndDecideBackError = mockError
+        let restoredStateExp = expect(
+            vc,
+            toUpdateTo: .scanned(.front, mockFrontImage),
+            description: "Restored document front state"
+        )
+
+        vc.saveOrFlipDocument(scannedImage: mockFrontImage, documentSide: .front)
+
+        await fulfillment(of: [restoredStateExp], timeout: 1)
+        verify(
+            vc,
+            expectedState: .scanned(.front, mockFrontImage),
+            expectedButtonState: .enabled
+        )
+    }
+
+    @MainActor
     func testSaveDataBackAndTransition() async throws {
         let backFileData = (VerificationPageDataUpdateMock.default.collectedData?.idDocumentBack)!
 
@@ -469,6 +490,26 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         }
 
         // Verify state
+        verify(
+            vc,
+            expectedState: .scanned(.back, mockBackImage),
+            expectedButtonState: .enabled
+        )
+    }
+
+    @MainActor
+    func testSaveDataBackFailureRestoresScannedState() async {
+        let mockBackImage = UIImage()
+        let vc = makeViewController(state: .scanned(.back, mockBackImage))
+        let restoredStateExp = expect(
+            vc,
+            toUpdateTo: .scanned(.back, mockBackImage),
+            description: "Restored document back state"
+        )
+
+        vc.saveOrFlipDocument(scannedImage: mockBackImage, documentSide: .back)
+
+        await fulfillment(of: [restoredStateExp], timeout: 1)
         verify(
             vc,
             expectedState: .scanned(.back, mockBackImage),
