@@ -28,7 +28,7 @@ extension PaymentElement {
     /// Configuration for Apple Pay.
     public struct ApplePayConfiguration: CheckoutApplePayConfiguration {
         /// The Apple Pay merchant identifier.
-        public let merchantId: String
+        public var merchantId: String
 
         /// The type of Apple Pay button to display. Defaults to `.plain` when `nil`.
         public var buttonType: PKPaymentButtonType?
