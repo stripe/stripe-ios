@@ -579,10 +579,15 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
     func didTapContinueButton() {
         Task {
             isSubmitting = true
-            await sheetController?.saveDocumentBackAndTransition(
-                from: analyticsScreenName,
-                documentUploader: documentUploader
-            )
+            guard let sheetController else { return }
+            do {
+                try await sheetController.saveDocumentBackAndTransition(
+                    from: analyticsScreenName,
+                    documentUploader: documentUploader
+                )
+            } catch {
+                return
+            }
             isSubmitting = false
             continueButtonEnabled = false
         }
@@ -725,12 +730,18 @@ extension DocumentFileUploadViewController: UIDocumentPickerDelegate {
 extension DocumentFileUploadViewController: DocumentUploaderDelegate {
     func documentUploaderDidUploadFront(_ documentUploader: DocumentUploaderProtocol) {
         guard let sheetController else { return }
-        Task { @MainActor in
-            _ = await sheetController.saveDocumentFrontAndDecideBack(
-                from: analyticsScreenName,
-                documentUploader: documentUploader
-            )
-            updateUI()
+        let screenName = analyticsScreenName
+        Task { @MainActor [weak self] in
+            do {
+                let isBackRequired = try await sheetController.saveDocumentFrontAndDecideBack(
+                    from: screenName,
+                    documentUploader: documentUploader
+                )
+                guard isBackRequired else { return }
+                self?.updateUI()
+            } catch {
+                return
+            }
         }
     }
 
