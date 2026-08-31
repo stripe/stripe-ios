@@ -39,17 +39,16 @@ final class ExpressCheckoutElementViewModel: ObservableObject {
     init(
         sessionSource: CheckoutSessionSource,
         configuration: ExpressCheckoutElement.Configuration,
-        apiClient: STPAPIClient,
         uiView: ExpressCheckoutElementUIView
     ) {
         self.uiView = uiView
-        self.isAvailable = !ExpressCheckoutElementUtilities.resolveButtons(for: sessionSource.initialSession, configuration: configuration, apiClient: apiClient).isEmpty
+        self.isAvailable = !ExpressCheckoutElementUtilities.resolveButtons(for: sessionSource.initialSession, configuration: configuration).isEmpty
         sessionCancellable = sessionSource.sessionPublisher
             .dropFirst()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] session in
                 self?.uiView.update(with: session)
-                self?.isAvailable = !ExpressCheckoutElementUtilities.resolveButtons(for: session, configuration: configuration, apiClient: apiClient).isEmpty
+                self?.isAvailable = !ExpressCheckoutElementUtilities.resolveButtons(for: session, configuration: configuration).isEmpty
             }
     }
 }

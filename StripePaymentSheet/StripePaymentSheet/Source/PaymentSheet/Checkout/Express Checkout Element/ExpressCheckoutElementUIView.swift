@@ -19,16 +19,14 @@ public final class ExpressCheckoutElementUIView: UIView {
     // MARK: - Private Properties
 
     private let configuration: ExpressCheckoutElement.Configuration
-    private let apiClient: STPAPIClient
     private let stackView = UIStackView()
     private var linkBrand: LinkBrand
     private weak var delegate: ExpressCheckoutElementDelegate?
 
     // MARK: - Init
 
-    init(session: CheckoutController.Session, configuration: ExpressCheckoutElement.Configuration, apiClient: STPAPIClient, delegate: ExpressCheckoutElementDelegate) {
+    init(session: CheckoutController.Session, configuration: ExpressCheckoutElement.Configuration, delegate: ExpressCheckoutElementDelegate) {
         self.configuration = configuration
-        self.apiClient = apiClient
         self.delegate = delegate
         self.linkBrand = session.elementsSession.linkBrand ?? .link
         super.init(frame: .zero)
@@ -46,7 +44,7 @@ public final class ExpressCheckoutElementUIView: UIView {
             stackView.bottomAnchor.constraint(equalTo: bottomAnchor),
         ])
 
-        let buttons = ExpressCheckoutElementUtilities.resolveButtons(for: session, configuration: configuration, apiClient: apiClient)
+        let buttons = ExpressCheckoutElementUtilities.resolveButtons(for: session, configuration: configuration)
         buttons.forEach { stackView.addArrangedSubview(makeButton(for: $0)) }
     }
 
@@ -60,7 +58,7 @@ public final class ExpressCheckoutElementUIView: UIView {
     func update(with session: CheckoutController.Session) {
         linkBrand = session.elementsSession.linkBrand ?? .link
         stackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
-        let buttons = ExpressCheckoutElementUtilities.resolveButtons(for: session, configuration: configuration, apiClient: apiClient)
+        let buttons = ExpressCheckoutElementUtilities.resolveButtons(for: session, configuration: configuration)
         buttons.forEach { stackView.addArrangedSubview(makeButton(for: $0)) }
         invalidateIntrinsicContentSize()
     }

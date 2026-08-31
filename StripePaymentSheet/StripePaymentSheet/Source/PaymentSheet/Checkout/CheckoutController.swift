@@ -146,10 +146,11 @@ public final class CheckoutController: ObservableObject {
             let sessionSource = CheckoutSessionSource(initialSession: session, sessionPublisher: $session)
 
             // 3. ECE
+            var expressCheckoutElementConfiguration = configuration.expressCheckoutElement
+            expressCheckoutElementConfiguration.apiClient = configuration.apiClient
             self.expressCheckoutElement = ExpressCheckoutElement(
                 sessionSource: sessionSource,
-                configuration: configuration.expressCheckoutElement,
-                apiClient: configuration.apiClient,
+                configuration: expressCheckoutElementConfiguration,
                 delegate: self
             )
 
