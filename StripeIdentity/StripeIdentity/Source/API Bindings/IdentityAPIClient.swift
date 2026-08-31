@@ -54,6 +54,7 @@ final class IdentityAPIClientImpl: IdentityAPIClient {
 
     let apiClient: STPAPIClient
     let verificationSessionId: String
+    private let imageEncodingQueue = DispatchQueue(label: "com.stripe.identity.image-encoding")
 
     /// The VerificationPages API version used to make all API requests.
     ///
@@ -113,13 +114,18 @@ final class IdentityAPIClientImpl: IdentityAPIClient {
         purpose: String,
         fileName: String
     ) async throws -> STPAPIClient.FileAndUploadMetrics {
-        return try await apiClient.uploadImageAndGetMetrics(
-            image,
-            compressionQuality: compressionQuality,
-            purpose: purpose,
-            fileName: fileName,
-            ownedBy: verificationSessionId
-        )
+        try await withCheckedThrowingContinuation { continuation in
+            imageEncodingQueue.async { [apiClient, verificationSessionId] in
+                apiClient.uploadImageAndGetMetrics(
+                    image,
+                    compressionQuality: compressionQuality,
+                    purpose: purpose,
+                    fileName: fileName,
+                    ownedBy: verificationSessionId,
+                    completion: continuation.resume(with:)
+                )
+            }
+        }
     }
 
     func verifyTestVerificationSession(simulateDelay: Bool) async throws -> StripeAPI.VerificationPageData {
