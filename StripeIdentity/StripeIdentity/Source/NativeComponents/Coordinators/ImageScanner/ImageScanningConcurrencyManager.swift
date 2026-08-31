@@ -165,17 +165,20 @@ final class ImageScanningConcurrencyManager: ImageScanningConcurrencyManagerProt
         performanceMetricsTracker.trackScanStarted(at: scanStartTime)
 
         semaphore.wait()
+        let result = Result {
+            try scanner.scanImage(
+                pixelBuffer: pixelBuffer,
+                sampleBuffer: sampleBuffer,
+                cameraProperties: cameraProperties
+            )
+        }
         concurrentQueue.async {
             defer { self.semaphore.signal() }
 
-            do {
-                let scannerOutput = try scanner.scanImage(
-                    pixelBuffer: pixelBuffer,
-                    sampleBuffer: sampleBuffer,
-                    cameraProperties: cameraProperties
-                )
+            switch result {
+            case .success(let scannerOutput):
                 wrappedCompletion(scannerOutput)
-            } catch {
+            case .failure(let error):
                 self.analyticsClient.logGenericError(
                     error: error,
                     additionalMetadata: [
@@ -187,9 +190,7 @@ final class ImageScanningConcurrencyManager: ImageScanningConcurrencyManagerProt
                 )
             }
 
-            // Track when the scan ended
-            let scanEndTime = Date()
-            self.performanceMetricsTracker.trackScanEnded(at: scanEndTime)
+            self.performanceMetricsTracker.trackScanEnded(at: Date())
         }
     }
 
