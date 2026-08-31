@@ -229,10 +229,14 @@ final class CheckoutCartViewController: UIViewController {
                 clientSecret: clientSecret,
                 returnURL: "payments-example://stripe-redirect"
             )
+            if integrationType != .eceOnly {
+                var paymentElementConfiguration = PaymentElement.Configuration()
+                paymentElementConfiguration.applePayConfiguration = PaymentElement.ApplePayConfiguration(
+                    merchantId: "merchant.com.stripe.paymentsheet.example"
+                )
+                configuration.paymentElement = paymentElementConfiguration
+            }
             configuration.defaults.shippingDetails = defaultShippingAddress?.checkoutShippingDetails
-            configuration.applePayConfiguration = CheckoutController.ApplePayConfiguration(
-                merchantId: "merchant.com.stripe.paymentsheet.example"
-            )
             configuration.expressCheckoutElement.applePayConfiguration = ExpressCheckoutElement.ApplePayConfiguration(
                 merchantId: "merchant.com.stripe.paymentsheet.example",
                 display: applePayDisplay
@@ -875,7 +879,7 @@ final class CheckoutCartViewController: UIViewController {
             let message: String
             let dismissOnAcknowledgment: Bool
             switch result {
-            case .succeeded(let paymentStatus):
+            case .completed(let paymentStatus):
                 title = "Success"
                 message = "Payment status: \(paymentStatus)"
                 dismissOnAcknowledgment = true

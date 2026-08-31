@@ -94,9 +94,9 @@ class IntegrationTesterUITests: XCTestCase {
             XCTAssertTrue(completeAuth.waitForExistence(timeout: 60.0))
             completeAuth.forceTapElement()
         case .threeDS2:
-            let completeAuth = app.scrollViews.otherElements.staticTexts["Complete Authentication"]
+            let completeAuth = app.buttons["COMPLETE"]
             XCTAssertTrue(completeAuth.waitForExistence(timeout: 60.0))
-            completeAuth.tap()
+            completeAuth.forceTapElement()
         }
 
         let statusView = app.staticTexts["Payment status view"]

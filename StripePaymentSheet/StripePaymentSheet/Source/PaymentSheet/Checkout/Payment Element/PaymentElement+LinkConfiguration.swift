@@ -1,5 +1,5 @@
 //
-//  Checkout+LinkConfiguration.swift
+//  PaymentElement+LinkConfiguration.swift
 //  StripePaymentSheet
 //
 //  Created by Joyce Qin on 7/22/26.
@@ -7,7 +7,7 @@
 
 @_spi(STP)
 @_spi(ReactNativeSDK)
-extension CheckoutController {
+extension PaymentElement {
     /// Configuration for Link.
     public struct LinkConfiguration {
         /// Controls whether Link is displayed.

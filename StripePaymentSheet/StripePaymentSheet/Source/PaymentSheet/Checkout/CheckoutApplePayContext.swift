@@ -46,6 +46,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
     /// Whether or not we fully completed the flow - if didFinish is `true`, that means `_end()` was called and this class is unusable.
     private var didFinish = false
     private var shippingContactUpdateTask: Task<Void, Never>?
+    private var paymentMethodUpdateTask: Task<Void, Never>?
 
     init(
         checkoutSession: CheckoutController.Session,
@@ -161,6 +162,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         case .notStarted:
             Task {
                 await shippingContactUpdateTask?.value
+                await paymentMethodUpdateTask?.value
                 await controller.dismiss()
                 self.resume(with: .canceled())
                 self._end()
@@ -193,8 +195,22 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         didSelectPaymentMethod paymentMethod: PKPaymentMethod,
         handler: @escaping (PKPaymentRequestPaymentMethodUpdate) -> Void
     ) {
-        // TODO: Update billing tax region when the user switches cards.
-        handler(PKPaymentRequestPaymentMethodUpdate(paymentSummaryItems: summaryItems()))
+        guard session.collectsTaxFromBillingAddress,
+              let postalAddress = paymentMethod.billingAddress?.postalAddresses.first?.value,
+              let address = STPApplePayContext.makeCheckoutAddress(from: postalAddress),
+              let checkoutWalletUpdater else {
+            handler(PKPaymentRequestPaymentMethodUpdate(paymentSummaryItems: summaryItems()))
+            return
+        }
+        paymentMethodUpdateTask = Task { @MainActor in
+            if let updatedSession = try? await checkoutWalletUpdater.updateBillingTaxRegionWithoutEnqueueing(
+                address: address,
+                canUpdateWhileSheetPresented: true
+            ) {
+                self.session = updatedSession
+            }
+            handler(PKPaymentRequestPaymentMethodUpdate(paymentSummaryItems: summaryItems()))
+        }
     }
 
     func paymentAuthorizationController(
@@ -322,13 +338,13 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         applePayConfirmationParameters: CheckoutController.ApplePayConfirmationParameters
     ) -> PKPaymentRequest {
         let applePayConfig = applePayConfirmationParameters.applePayConfiguration
-        assert(!applePayConfig.merchantId.isBlank, "You must set `merchantId` on `CheckoutController.ApplePayConfiguration`.")
-        let countryCode = checkoutSession.elementsSession.merchantCountryCode ?? "US"
         let paymentRequest = StripeAPI.paymentRequest(
             withMerchantIdentifier: applePayConfig.merchantId,
-            country: countryCode,
+            country: checkoutSession.merchantCountryCode,
             currency: checkoutSession.currency ?? "USD"
         )
+
+        assert(!paymentRequest.merchantIdentifier.isEmpty, "You must set `merchantId` on `ApplePayConfiguration`.")
 
         let merchantLabel = applePayConfirmationParameters.merchantDisplayName
         paymentRequest.paymentSummaryItems = CheckoutApplePayContext.makeSummaryItems(for: checkoutSession, label: merchantLabel)
@@ -427,6 +443,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
     private func _end() {
         authorizationController.delegate = nil
         shippingContactUpdateTask = nil
+        paymentMethodUpdateTask = nil
         didFinish = true
     }
 
