@@ -63,26 +63,6 @@ struct CustomerProvider {
         backing = .checkoutSession(checkoutSession)
     }
 
-    init(
-        customerAccessProvider: PaymentSheet.CustomerAccessProvider?,
-        customerID: String? = nil
-    ) {
-        switch customerAccessProvider {
-        case .legacyCustomerEphemeralKey(let ephemeralKeySecret):
-            backing = .legacyEphemeralKey(
-                customerID: customerID,
-                ephemeralKeySecret: ephemeralKeySecret
-            )
-        case .customerSession(let clientSecret):
-            backing = .customerSession(
-                customerID: customerID,
-                clientSecret: clientSecret
-            )
-        case nil:
-            backing = .none
-        }
-    }
-
     var source: Source {
         switch backing {
         case .none:

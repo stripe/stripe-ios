@@ -18,28 +18,6 @@ extension STPAPIClient {
         epmConfiguration: PaymentSheet.ExternalPaymentMethodConfiguration?,
         cpmConfiguration: PaymentSheet.CustomPaymentMethodConfiguration?,
         clientDefaultPaymentMethod: String?,
-        customerAccessProvider: PaymentSheet.CustomerAccessProvider?,
-        linkDisallowFundingSourceCreation: Set<String>,
-        userOverrideCountry: String? = nil
-    ) -> [String: Any] {
-        return makeElementsSessionsParams(
-            mode: mode,
-            epmConfiguration: epmConfiguration,
-            cpmConfiguration: cpmConfiguration,
-            clientDefaultPaymentMethod: clientDefaultPaymentMethod,
-            customerProvider: CustomerProvider(
-                customerAccessProvider: customerAccessProvider
-            ),
-            linkDisallowFundingSourceCreation: linkDisallowFundingSourceCreation,
-            userOverrideCountry: userOverrideCountry
-        )
-    }
-
-    func makeElementsSessionsParams(
-        mode: PaymentSheet.InitializationMode,
-        epmConfiguration: PaymentSheet.ExternalPaymentMethodConfiguration?,
-        cpmConfiguration: PaymentSheet.CustomPaymentMethodConfiguration?,
-        clientDefaultPaymentMethod: String?,
         customerProvider: CustomerProvider,
         linkDisallowFundingSourceCreation: Set<String>,
         userOverrideCountry: String? = nil
