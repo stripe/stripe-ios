@@ -868,8 +868,10 @@ public class STPPaymentHandler: NSObject {
             .payByBank,
             .mbWay,
             .bizum,
+            .krCard,
             .naverPay,
-            .payco:
+            .payco,
+            .sequra:
             return false
 
         case .unknown:

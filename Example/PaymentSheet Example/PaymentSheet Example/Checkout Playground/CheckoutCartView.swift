@@ -172,10 +172,14 @@ struct CheckoutCartView: View {
             config.apiClient = diagnostics.makeAPIClient(
                 paymentPagesRequestDelay: delayPaymentPagesRequests ? 1 : 0
             )
+            if integrationType != .eceOnly {
+                var paymentElementConfiguration = PaymentElement.Configuration()
+                paymentElementConfiguration.applePayConfiguration = PaymentElement.ApplePayConfiguration(
+                    merchantId: "merchant.com.stripe.paymentsheet.example"
+                )
+                config.paymentElement = paymentElementConfiguration
+            }
             config.defaults.shippingDetails = defaultShippingAddress?.checkoutShippingDetails
-            config.paymentElement.applePayConfiguration = PaymentElement.ApplePayConfiguration(
-                merchantId: "merchant.com.stripe.paymentsheet.example"
-            )
             if adaptivePricing {
                 var currencySelectorConfiguration = CurrencySelectorElement.Configuration()
                 currencySelectorConfiguration.appearance = currencySelectorAppearance
