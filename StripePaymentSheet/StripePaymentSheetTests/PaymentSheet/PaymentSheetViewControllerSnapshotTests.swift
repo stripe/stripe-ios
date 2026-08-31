@@ -20,7 +20,8 @@ final class PaymentSheetViewControllerSnapshotTests: STPSnapshotTestCase {
             savedPaymentMethods: savedPaymentMethods,
             paymentMethodTypes: [.stripe(.card)],
             paymentMethodMessagingPromotionsHelper: ._testValue(),
-            paymentMethodOrientation: .horizontal
+            paymentMethodOrientation: .horizontal,
+            customerProvider: CustomerProvider(customer: nil)
         )
     }
 
