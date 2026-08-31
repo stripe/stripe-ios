@@ -71,7 +71,14 @@ extension CheckoutController {
 
     // MARK: - Payment Option
 
-    func setPaymentOption(_ paymentOption: Session.PaymentOptionDisplayData?) {
+    func setPaymentOption(_ paymentOption: Session.PaymentOptionDisplayData?) async throws {
+        if paymentOption == nil {
+            try await updateBillingTaxRegionIfNecessary(address: nil)
+        }
+        publishPaymentOption(paymentOption)
+    }
+
+    func publishPaymentOption(_ paymentOption: Session.PaymentOptionDisplayData?) {
         dangerouslySetSessionDirectly(
             session.makeCopyOverriding(paymentOption: .newValue(paymentOption))
         )

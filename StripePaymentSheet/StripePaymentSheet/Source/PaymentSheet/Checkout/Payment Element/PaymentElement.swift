@@ -114,7 +114,7 @@ public final class PaymentElement {
                     return
                 }
                 paymentOptionSourceOfTruthIsFlowController = true
-                self.checkout?.setPaymentOption(paymentOption.map(CheckoutController.Session.PaymentOptionDisplayData.init))
+                self.checkout?.publishPaymentOption(paymentOption.map(CheckoutController.Session.PaymentOptionDisplayData.init))
             }
             .store(in: &cancellables)
         // We don't know whether to use FC or Embedded's payment option at this point, so we'll use Embedded since it has more info (includes mandate text).
@@ -128,7 +128,7 @@ public final class PaymentElement {
             paymentSheetFlowController.paymentOption?.label == embeddedPaymentElement.paymentOption?.label || flowControllerDefaultsToApplePay,
             "Payment Element assumes that the FlowController's payment option is the same as the Embedded's on first load!"
         )
-        checkout.setPaymentOption(
+        checkout.publishPaymentOption(
             embeddedPaymentElement.paymentOption.map(CheckoutController.Session.PaymentOptionDisplayData.init)
         )
         paymentOptionSourceOfTruthIsFlowController = false // We used embedded's payment option
@@ -190,7 +190,7 @@ extension PaymentElement {
                 embeddedPaymentElement.paymentOption.map(CheckoutController.Session.PaymentOptionDisplayData.init)
             }
         }()
-        checkout.setPaymentOption(paymentOption)
+        checkout.publishPaymentOption(paymentOption)
     }
 
     func clearPaymentOption() async throws {
@@ -202,18 +202,8 @@ extension PaymentElement {
             stpAssertionFailure("PaymentElement unexpectedly lost its CheckoutController.")
             return
         }
-        try await checkout.enqueueSessionUpdate {
-            if checkout.session.collectsTaxFromBillingAddress,
-               let country = checkout.session.paymentOption?.billingDetails?.address.country?.nonEmpty {
-                // The update endpoint requires a country, so clear the rest of the tax region
-                // while retaining the selected payment option's country.
-                try await checkout.applySessionUpdate(
-                    .setTaxRegion(CheckoutController.Address(country: country))
-                )
-            }
-            self.embeddedPaymentElement.clearPaymentOption()
-            checkout.setPaymentOption(nil)
-        }
+        try await checkout.setPaymentOption(nil)
+        embeddedPaymentElement.clearPaymentOption()
     }
 }
 
@@ -234,7 +224,7 @@ extension PaymentElement: EmbeddedPaymentElementDelegate {
             return
         }
         paymentOptionSourceOfTruthIsFlowController = false
-        checkout?.setPaymentOption(embeddedPaymentElement.paymentOption.map(CheckoutController.Session.PaymentOptionDisplayData.init))
+        checkout?.publishPaymentOption(embeddedPaymentElement.paymentOption.map(CheckoutController.Session.PaymentOptionDisplayData.init))
     }
 }
 
