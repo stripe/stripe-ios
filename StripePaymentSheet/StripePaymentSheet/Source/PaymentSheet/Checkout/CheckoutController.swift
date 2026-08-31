@@ -342,6 +342,10 @@ public final class CheckoutController: ObservableObject {
     /// Returns Currency Selector Element when it was configured and Adaptive
     /// Pricing is available for this Checkout instance.
     public func getCurrencySelectorElement() -> CurrencySelectorElement? {
+        assert(
+            configuration.currencySelectorElement != nil,
+            "Set Configuration.currencySelectorElement before calling getCurrencySelectorElement()."
+        )
         return currencySelectorElement
     }
 
