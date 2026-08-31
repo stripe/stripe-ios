@@ -114,7 +114,7 @@ public final class PaymentElement {
                     return
                 }
                 paymentOptionSourceOfTruthIsFlowController = true
-                self.checkout?.publishPaymentOption(paymentOption.map(CheckoutController.Session.PaymentOptionDisplayData.init))
+                self.checkout?.dangerouslySetPaymentOptionDirectly(paymentOption.map(CheckoutController.Session.PaymentOptionDisplayData.init))
             }
             .store(in: &cancellables)
         // We don't know whether to use FC or Embedded's payment option at this point, so we'll use Embedded since it has more info (includes mandate text).
@@ -128,7 +128,7 @@ public final class PaymentElement {
             paymentSheetFlowController.paymentOption?.label == embeddedPaymentElement.paymentOption?.label || flowControllerDefaultsToApplePay,
             "Payment Element assumes that the FlowController's payment option is the same as the Embedded's on first load!"
         )
-        checkout.publishPaymentOption(
+        checkout.dangerouslySetPaymentOptionDirectly(
             embeddedPaymentElement.paymentOption.map(CheckoutController.Session.PaymentOptionDisplayData.init)
         )
         paymentOptionSourceOfTruthIsFlowController = false // We used embedded's payment option
@@ -190,7 +190,7 @@ extension PaymentElement {
                 embeddedPaymentElement.paymentOption.map(CheckoutController.Session.PaymentOptionDisplayData.init)
             }
         }()
-        checkout.publishPaymentOption(paymentOption)
+        checkout.dangerouslySetPaymentOptionDirectly(paymentOption)
     }
 
     func clearPaymentOption() async throws {
@@ -202,7 +202,8 @@ extension PaymentElement {
             stpAssertionFailure("PaymentElement unexpectedly lost its CheckoutController.")
             return
         }
-        try await checkout.setPaymentOption(nil)
+        try await checkout.updateBillingTaxRegionIfNecessary(address: nil)
+        checkout.dangerouslySetPaymentOptionDirectly(nil)
         embeddedPaymentElement.clearPaymentOption()
     }
 }
@@ -224,7 +225,7 @@ extension PaymentElement: EmbeddedPaymentElementDelegate {
             return
         }
         paymentOptionSourceOfTruthIsFlowController = false
-        checkout?.publishPaymentOption(embeddedPaymentElement.paymentOption.map(CheckoutController.Session.PaymentOptionDisplayData.init))
+        checkout?.dangerouslySetPaymentOptionDirectly(embeddedPaymentElement.paymentOption.map(CheckoutController.Session.PaymentOptionDisplayData.init))
     }
 }
 
