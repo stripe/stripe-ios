@@ -1,3 +1,10 @@
+//
+//  STPAPIClient+Concurrency.swift
+//  StripeIdentity
+//
+//  Copyright © 2026 Stripe, Inc. All rights reserved.
+//
+
 import Foundation
 @_spi(InternalOnlyAPI) import StripeCore
 import UIKit
