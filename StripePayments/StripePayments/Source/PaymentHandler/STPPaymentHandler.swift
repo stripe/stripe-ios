@@ -871,7 +871,8 @@ public class STPPaymentHandler: NSObject {
             .kakaoPay,
             .krCard,
             .naverPay,
-            .payco:
+            .payco,
+            .sequra:
             return false
 
         case .unknown:
