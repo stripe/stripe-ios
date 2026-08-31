@@ -338,6 +338,8 @@ extension ConsumerSession {
         with apiClient: STPAPIClient = STPAPIClient.shared,
         linkMode: LinkMode? = nil,
         intentToken: String? = nil,
+        permissions: [String]? = nil,
+        merchantToken: String? = nil,
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<LinkAccountSession, Error>) -> Void
     ) {
@@ -345,6 +347,8 @@ extension ConsumerSession {
             for: clientSecret,
             linkMode: linkMode,
             intentToken: intentToken,
+            permissions: permissions,
+            merchantToken: merchantToken,
             requestSurface: requestSurface,
             completion: completion)
     }
