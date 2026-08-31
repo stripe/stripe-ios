@@ -18,6 +18,7 @@ final class ImageScannerMock<Output>: ImageScanner {
     var mlModelMetricsTrackers: [MLDetectorMetricsTrackerProtocol] = []
 
     var scanResult: Result<Output, Error>
+    var scanHandler: (() -> Void)?
 
     private(set) var didReset = false
 
@@ -32,7 +33,8 @@ final class ImageScannerMock<Output>: ImageScanner {
         sampleBuffer: CMSampleBuffer,
         cameraProperties: StripeCameraCore.CameraSession.DeviceProperties?
     ) throws -> Output {
-        try scanResult.get()
+        scanHandler?()
+        return try scanResult.get()
     }
 
     func reset() {
