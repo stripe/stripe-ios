@@ -223,8 +223,10 @@ final class DocumentFileUploadViewControllerTest: XCTestCase {
         await fulfillment(of: [frontSaveExp], timeout: 1)
         // click continue button to upload back
         vc.didTapContinueButton()
+        XCTAssertEqual(vc.buttonState, .loading)
         // Verify data saved and transitioned to next screen
         await fulfillment(of: [backSaveExp], timeout: 1)
+        XCTAssertEqual(mockSheetController.saveDocumentBackAndTransitionCallCount, 1)
 
         guard case .success(let front) = self.mockSheetController.frontUploadedDocumentsResult else {
             return XCTFail("Expected success result")
@@ -234,6 +236,22 @@ final class DocumentFileUploadViewControllerTest: XCTestCase {
         }
         XCTAssertEqual(front, frontFileData)
         XCTAssertEqual(back, backFileData)
+    }
+
+    @MainActor
+    func testContinueButtonFailureAllowsRetry() async {
+        let vc = makeViewController()
+        let saveExp = expectation(description: "Back save attempted")
+        mockSheetController.saveDocumentBackAndTransitionCallback = {
+            saveExp.fulfill()
+        }
+        vc.documentUploaderDidUploadBack(mockDocumentUploader)
+
+        vc.didTapContinueButton()
+        await fulfillment(of: [saveExp], timeout: 1)
+        await Task.yield()
+
+        XCTAssertEqual(vc.buttonState, .enabled)
     }
 
     func testWarningAlertViewModelInitiallyNil() {

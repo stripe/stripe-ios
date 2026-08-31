@@ -81,10 +81,37 @@ final class ErrorViewControllerTest: XCTestCase {
 
         // mock click button tap
         vc.buttonViewModels[0].didTap()
-        await fulfillment(of: [forceConfirmStarted], timeout: 1)
         XCTAssertEqual(vc.buttonViewModels[0].state, .loading)
         XCTAssertEqual(vc.buttonViewModels[1].state, .disabled)
+        await fulfillment(of: [forceConfirmStarted], timeout: 1)
 
         finishForceConfirm.fulfill()
+    }
+
+    func testFailedContinueAllowsRetry() async {
+        let forceConfirmExp = expectation(description: "Force confirm attempted")
+        mockSheetController.forceDocumentFrontAndDecideBackHandler = {
+            forceConfirmExp.fulfill()
+            throw NSError(domain: "mock_error", code: 100)
+        }
+        let vc = ErrorViewController(
+            sheetController: mockSheetController,
+            error: .inputError(
+                .init(
+                    backButtonText: "back",
+                    body: "body",
+                    continueButtonText: "continue",
+                    requirement: .idDocumentFront,
+                    title: "title"
+                )
+            )
+        )
+
+        vc.buttonViewModels[0].didTap()
+        await fulfillment(of: [forceConfirmExp], timeout: 1)
+        await Task.yield()
+
+        XCTAssertEqual(vc.buttonViewModels[0].state, .enabled)
+        XCTAssertEqual(vc.buttonViewModels[1].state, .enabled)
     }
 }

@@ -150,14 +150,16 @@ extension ErrorViewController {
     @MainActor
     fileprivate func didTapContinueButton(requirementToForceCofirm: StripeAPI.VerificationPageFieldType) {
         guard let sheetController else { return }
+        guard !isSaving else { return }
+        isSaving = true
 
-        Task {
-            self.isSaving = true
+        Task { @MainActor in
             if requirementToForceCofirm == .idDocumentFront {
                 let isBackRequired: Bool
                 do {
                     isBackRequired = try await sheetController.forceDocumentFrontAndDecideBack(from: .error)
                 } catch {
+                    self.isSaving = false
                     return
                 }
                 self.isSaving = false
@@ -173,6 +175,7 @@ extension ErrorViewController {
                 do {
                     try await sheetController.forceDocumentBackAndTransition(from: .error)
                 } catch {
+                    self.isSaving = false
                     return
                 }
                 self.isSaving = false

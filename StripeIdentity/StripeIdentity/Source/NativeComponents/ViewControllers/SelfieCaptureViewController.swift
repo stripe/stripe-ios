@@ -573,6 +573,10 @@ private extension SelfieCaptureViewController {
                     trainingConsent: trainingConsent
                 )
             } catch {
+                self?.imageScanningSession.setStateScanned(
+                    expectedClassification: .empty,
+                    capturedData: faceCaptureData
+                )
                 return
             }
             self?.imageScanningSession.setStateScanned(

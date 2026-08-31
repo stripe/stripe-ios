@@ -59,8 +59,11 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
     private(set) var didCheckSubmitAndTransition = false
     private(set) var didSaveDocumentFrontAndDecideBack = false
     private(set) var didSaveDocumentBackAndTransition = false
+    private(set) var saveDocumentBackAndTransitionCallCount = 0
     var saveDocumentFrontAndDecideBackCallback: (() -> Void)?
+    var saveDocumentFrontAndDecideBackError: Error?
     var saveDocumentBackAndTransitionCallback: (() -> Void)?
+    var saveSelfieFileDataAndTransitionCallback: (() -> Void)?
     var forceDocumentFrontAndDecideBackHandler: (() async throws -> Bool)?
     var forceDocumentBackAndTransitionHandler: (() async throws -> Void)?
 
@@ -125,6 +128,9 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
         let result = await documentUploader.frontUploadResult()
         self.frontUploadedDocumentsResult = result
         saveDocumentFrontAndDecideBackCallback?()
+        if let saveDocumentFrontAndDecideBackError {
+            throw saveDocumentFrontAndDecideBackError
+        }
         if self.needBack {
             return true
         } else {
@@ -137,6 +143,7 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
         documentUploader: DocumentUploaderProtocol
     ) async throws {
         didSaveDocumentBackAndTransition = true
+        saveDocumentBackAndTransitionCallCount += 1
         let result = await documentUploader.backUploadResult()
         backUploadedDocumentsResult = result
         saveDocumentBackAndTransitionCallback?()
@@ -169,6 +176,7 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
     ) async throws {
         let result = await selfieUploader.uploadResult()
         self.uploadedSelfieResult = result
+        saveSelfieFileDataAndTransitionCallback?()
         guard result != nil else {
             throw VerificationSheetControllerMockError.missingUploadResult
         }

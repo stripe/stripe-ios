@@ -577,19 +577,24 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
 
     @MainActor
     func didTapContinueButton() {
-        Task {
-            isSubmitting = true
+        guard !isSubmitting else { return }
+        isSubmitting = true
+        let screenName = analyticsScreenName
+        let sheetController = sheetController
+        let documentUploader = documentUploader
+        Task { @MainActor [weak self] in
             guard let sheetController else { return }
             do {
                 try await sheetController.saveDocumentBackAndTransition(
-                    from: analyticsScreenName,
+                    from: screenName,
                     documentUploader: documentUploader
                 )
             } catch {
+                self?.isSubmitting = false
                 return
             }
-            isSubmitting = false
-            continueButtonEnabled = false
+            self?.isSubmitting = false
+            self?.continueButtonEnabled = false
         }
     }
 
