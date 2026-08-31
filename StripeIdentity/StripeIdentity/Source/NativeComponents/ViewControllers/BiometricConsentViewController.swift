@@ -210,16 +210,19 @@ extension BiometricConsentViewController {
     }
 
     fileprivate func didTapButton(consentValue: Bool) {
+        guard !isSaving else { return }
         consentSelection = consentValue
-        Task {
-            isSaving = true
+        isSaving = true
+        let screenName = analyticsScreenName
+        let sheetController = sheetController
+        Task { @MainActor [weak self] in
             await sheetController?.saveAndTransition(
-                from: analyticsScreenName,
+                from: screenName,
                 collectedData: .init(
                     biometricConsent: consentValue
                 )
             )
-            isSaving = false
+            self?.isSaving = false
         }
     }
 }

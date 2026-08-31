@@ -72,11 +72,13 @@ final class IndividualViewController: IdentityFlowViewController {
                 state: isSaving ? .loading : (individualElement.hasValidInput ? .enabled : .disabled),
                 didTapButton: { [weak self] in
                     guard let self else { return }
-                    Task {
-                        self.isSaving = true
-                        let collectedData = self.individualElement.collectedData
-                        await self.sheetController?.saveAndTransition(from: .individual, collectedData: collectedData)
-                        self.isSaving = false
+                    guard !self.isSaving else { return }
+                    self.isSaving = true
+                    let collectedData = self.individualElement.collectedData
+                    let sheetController = self.sheetController
+                    Task { @MainActor [weak self] in
+                        await sheetController?.saveAndTransition(from: .individual, collectedData: collectedData)
+                        self?.isSaving = false
                     }
                 }
             )
