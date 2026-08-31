@@ -154,7 +154,12 @@ extension ErrorViewController {
         Task {
             self.isSaving = true
             if requirementToForceCofirm == .idDocumentFront {
-                let isBackRequired = await sheetController.forceDocumentFrontAndDecideBack(from: .error)
+                let isBackRequired: Bool
+                do {
+                    isBackRequired = try await sheetController.forceDocumentFrontAndDecideBack(from: .error)
+                } catch {
+                    return
+                }
                 self.isSaving = false
                 if isBackRequired {
                     // popTo either Upload or Capture screen without resetting to continue from back
@@ -165,7 +170,11 @@ extension ErrorViewController {
                 }
                 // otherwise already checkSubmitAndTransition
             } else if requirementToForceCofirm == .idDocumentBack {
-                await self.sheetController?.forceDocumentBackAndTransition(from: .error)
+                do {
+                    try await sheetController.forceDocumentBackAndTransition(from: .error)
+                } catch {
+                    return
+                }
                 self.isSaving = false
             }
             // no other values possible, only idDocumentFront and idDocumentBack supports forceConfirm

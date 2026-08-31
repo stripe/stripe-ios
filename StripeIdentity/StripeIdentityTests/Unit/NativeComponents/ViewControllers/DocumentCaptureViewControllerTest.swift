@@ -418,6 +418,29 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
     }
 
     @MainActor
+    func testSaveDataFrontInputErrorPreservesDecisionState() async {
+        let mockFrontImage = UIImage()
+        let vc = makeViewController(state: .scanned(.front, mockFrontImage))
+        mockSheetController.saveDocumentFrontAndDecideBackError =
+            VerificationSheetControllerSaveError.transitionedToInputError
+        let saveExp = expectation(description: "Document front save completed")
+        mockSheetController.saveDocumentFrontAndDecideBackCallback = {
+            saveExp.fulfill()
+        }
+
+        vc.saveOrFlipDocument(scannedImage: mockFrontImage, documentSide: .front)
+        await fulfillment(of: [saveExp], timeout: 1)
+        await Task.yield()
+
+        XCTAssertTrue(vc.isDecidingBack)
+        verify(
+            vc,
+            expectedState: .saving(.front, mockFrontImage),
+            expectedButtonState: .loading
+        )
+    }
+
+    @MainActor
     func testSaveDataBackAndTransition() async throws {
         let backFileData = (VerificationPageDataUpdateMock.default.collectedData?.idDocumentBack)!
 

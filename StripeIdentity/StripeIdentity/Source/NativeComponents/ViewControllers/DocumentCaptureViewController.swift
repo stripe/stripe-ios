@@ -605,20 +605,30 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
     ) {
         guard let sheetController else { return }
         isDecidingBack = true
+        let screenName = analyticsScreenName
+        let documentUploader = documentUploader
 
-        Task {
-            let isBackRequired = await sheetController.saveDocumentFrontAndDecideBack(
-                from: analyticsScreenName,
-                documentUploader: documentUploader
-            )
-            isDecidingBack = false
+        Task { @MainActor [weak self] in
+            let isBackRequired: Bool
+            do {
+                isBackRequired = try await sheetController.saveDocumentFrontAndDecideBack(
+                    from: screenName,
+                    documentUploader: documentUploader
+                )
+            } catch VerificationSheetControllerSaveError.transitionedToInputError {
+                return
+            } catch {
+                return
+            }
+            guard let self else { return }
+            self.isDecidingBack = false
             if isBackRequired {
-                imageScanningSession.startScanning(
+                self.imageScanningSession.startScanning(
                     expectedClassification: DocumentSide.back
                 )
-                updateUI()
+                self.updateUI()
             } else {
-                imageScanningSession.setStateScanned(
+                self.imageScanningSession.setStateScanned(
                     expectedClassification: .front,
                     capturedData: frontImage
                 )
@@ -629,12 +639,20 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
     private func saveBackAndTransitionToNextScreen(
         backImage: UIImage
     ) {
-        Task {
-            await sheetController?.saveDocumentBackAndTransition(
-                from: analyticsScreenName,
-                documentUploader: documentUploader
-            )
-            imageScanningSession.setStateScanned(
+        let screenName = analyticsScreenName
+        let sheetController = sheetController
+        let documentUploader = documentUploader
+        Task { @MainActor [weak self] in
+            guard let sheetController else { return }
+            do {
+                try await sheetController.saveDocumentBackAndTransition(
+                    from: screenName,
+                    documentUploader: documentUploader
+                )
+            } catch {
+                return
+            }
+            self?.imageScanningSession.setStateScanned(
                 expectedClassification: .back,
                 capturedData: backImage
             )
