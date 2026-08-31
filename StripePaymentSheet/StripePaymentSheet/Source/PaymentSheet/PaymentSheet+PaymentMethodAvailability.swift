@@ -44,6 +44,7 @@ extension PaymentSheet {
         .payByBank,
         .mbWay,
         .bizum,
+        .payco,
         .sequra,
     ]
 

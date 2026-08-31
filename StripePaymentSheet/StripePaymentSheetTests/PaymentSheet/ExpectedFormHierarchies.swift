@@ -55,6 +55,12 @@ enum ExpectedFormHierarchy {
         static var paymentIntent: FormHierarchyNode { emptyForm }
     }
 
+    // MARK: - PAYCO
+
+    enum Payco {
+        static var paymentIntent: FormHierarchyNode { emptyForm }
+    }
+
     // MARK: - Swish
 
     enum Swish {
