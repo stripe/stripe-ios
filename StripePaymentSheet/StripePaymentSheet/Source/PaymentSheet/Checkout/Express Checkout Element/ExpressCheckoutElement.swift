@@ -5,7 +5,6 @@
 //  Created by Joyce Qin on 7/22/26.
 //
 
-@_spi(STP) import StripeCore
 import UIKit
 
 /// Handles Checkout mutations requested by an ExpressCheckoutElement.

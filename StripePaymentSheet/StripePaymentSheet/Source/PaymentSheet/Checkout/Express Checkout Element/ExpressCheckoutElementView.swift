@@ -6,7 +6,6 @@
 //
 
 import Combine
-@_spi(STP) import StripeCore
 import SwiftUI
 
 /// A SwiftUI view that displays wallet payment buttons (Apple Pay, Link).

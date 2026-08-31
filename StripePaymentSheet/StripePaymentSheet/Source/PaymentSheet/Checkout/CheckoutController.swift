@@ -96,6 +96,7 @@ public final class CheckoutController: ObservableObject {
     /// - Parameter configuration: Configuration options for the checkout.
     /// - Throws: ``CheckoutError`` if the client secret is invalid or the session cannot be loaded.
     public init(configuration: Configuration) async throws {
+        var configuration = configuration
         let clientSecret = configuration.clientSecret
         guard !clientSecret.isEmpty else {
             throw CheckoutError.invalidClientSecret
@@ -146,11 +147,10 @@ public final class CheckoutController: ObservableObject {
             let sessionSource = CheckoutSessionSource(initialSession: session, sessionPublisher: $session)
 
             // 3. ECE
-            var expressCheckoutElementConfiguration = configuration.expressCheckoutElement
-            expressCheckoutElementConfiguration.apiClient = configuration.apiClient
+            configuration.expressCheckoutElement.apiClient = configuration.apiClient
             self.expressCheckoutElement = ExpressCheckoutElement(
                 sessionSource: sessionSource,
-                configuration: expressCheckoutElementConfiguration,
+                configuration: configuration.expressCheckoutElement,
                 delegate: self
             )
 
