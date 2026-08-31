@@ -35,6 +35,7 @@ final class IdentityImageUploader {
     let apiClient: IdentityAPIClient
     let analyticsClient: IdentityAnalyticsClient
     let sheetController: VerificationSheetControllerProtocol
+    let imageProcessingQueue = DispatchQueue(label: "com.stripe.identity.image-processing")
 
     init(
         configuration: Configuration,
@@ -115,11 +116,11 @@ final class IdentityImageUploader {
     ) async throws -> StripeFile {
         do {
             // Crop image if there's a region of interest
-            var imageToResize = image
-            if let regionOfInterest = regionOfInterest {
-                imageToResize = try image.cropping(
+            let imageToResize = try await processImage {
+                guard let regionOfInterest else { return image }
+                return try image.cropping(
                     toNormalizedRegion: regionOfInterest,
-                    withPadding: configuration.highResImageCropPadding,
+                    withPadding: self.configuration.highResImageCropPadding,
                     computationMethod: cropPaddingComputationMethod
                 )
             }
@@ -162,7 +163,9 @@ final class IdentityImageUploader {
         newSize: CGSize
     ) async throws -> StripeFile {
         do {
-            let resizedImage = try image.scaledDown(toMaxPixelDimension: newSize)
+            let resizedImage = try await processImage {
+                try image.scaledDown(toMaxPixelDimension: newSize)
+            }
 
             return try await uploadJPEG(
                 image: resizedImage,
@@ -203,6 +206,14 @@ final class IdentityImageUploader {
         } catch {
             await self.logUploadError(error, stage: .imageUpload, fileName: fileName)
             throw error
+        }
+    }
+
+    private func processImage<T>(_ operation: @escaping () throws -> T) async throws -> T {
+        try await withCheckedThrowingContinuation { continuation in
+            imageProcessingQueue.async {
+                continuation.resume(with: Result(catching: operation))
+            }
         }
     }
 }
