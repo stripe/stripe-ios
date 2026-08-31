@@ -14,6 +14,7 @@ import UIKit
 class FCLiteAuthFlowViewController: UIViewController {
     private let manifest: LinkAccountSessionManifest
     private let elementsSessionContext: ElementsSessionContext?
+    private let hostedAuthConsumerContext: HostedAuthUrlBuilder.ConsumerContext?
     private let returnUrl: URL?
     private let onLoad: () -> Void
     private let completion: ((FCLiteWebFlowResult) -> Void)
@@ -26,13 +27,15 @@ class FCLiteAuthFlowViewController: UIViewController {
             baseHostedAuthUrl: manifest.hostedAuthURL,
             isInstantDebits: manifest.isInstantDebits,
             hasExistingAccountholderToken: manifest.hasAccountholderToken,
-            elementsSessionContext: elementsSessionContext
+            elementsSessionContext: elementsSessionContext,
+            consumerContext: hostedAuthConsumerContext
         )
     }
 
     init(
         manifest: LinkAccountSessionManifest,
         elementsSessionContext: ElementsSessionContext?,
+        hostedAuthConsumerContext: HostedAuthUrlBuilder.ConsumerContext?,
         returnUrl: URL?,
         onLoad: @escaping () -> Void,
         completion: @escaping ((FCLiteWebFlowResult) -> Void)
@@ -40,6 +43,7 @@ class FCLiteAuthFlowViewController: UIViewController {
         self.onLoad = onLoad
         self.manifest = manifest
         self.elementsSessionContext = elementsSessionContext
+        self.hostedAuthConsumerContext = hostedAuthConsumerContext
         self.returnUrl = returnUrl
         self.completion = completion
         super.init(nibName: nil, bundle: nil)

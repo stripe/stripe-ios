@@ -237,23 +237,15 @@ public final class CheckoutController: ObservableObject {
         try await performUpdate(.setTaxRegion(address), canUpdateWhileSheetPresented: canUpdateWhileSheetPresented)
     }
 
-    /// Sets the shipping address for this checkout.
-    ///
-    /// The address is stored locally and merged into PaymentSheet configuration
-    /// when presenting payment UI. If automatic tax is enabled and the tax
-    /// address source is "shipping", the address is also sent to the server to
-    /// compute updated tax amounts.
-    ///
-    /// - Parameters:
-    ///   - name: The customer's full name.
-    ///   - address: The shipping address to set. To reset tax computation
-    ///     to a country-only region, pass a ``CheckoutController.Address`` with just the country.
-    /// - Throws: ``CheckoutError`` if the session is not open, or if
-    ///   the server request fails.
+    /// Use this method to update the Customer's shipping address.
     public func updateShippingAddress(
         name: String? = nil,
-        address: Address
+        address: Address?
     ) async throws {
+        guard let address else {
+            try await clearShippingAddress()
+            return
+        }
         if let allowedCountries = session.allowedShippingCountries,
            !allowedCountries.contains(address.country) {
             throw CheckoutError.invalidShippingCountry(countryCode: address.country)
@@ -270,25 +262,42 @@ public final class CheckoutController: ObservableObject {
         }
     }
 
+    private func clearShippingAddress() async throws {
+        guard let shippingAddress = session.shippingAddress else { return }
+        if session.shouldSendTaxRegion(for: "shipping") {
+            // The Checkout Session update endpoint requires tax_region[country] and does not
+            // support clearing tax_region, so keep the previous country.
+            // TODO(porter) When migrating to the CheckoutClient API, stop sending country only and send nil
+            let countryOnlyAddress = Address(country: shippingAddress.address.country)
+            try await performUpdate(
+                .setTaxRegion(countryOnlyAddress),
+                shippingAddress: .newValue(nil)
+            )
+        } else {
+            // No server update is needed when shipping isn't the tax address source.
+            try await performUpdate(shippingAddress: .newValue(nil))
+        }
+    }
+
     // MARK: - Server Updates
 
     /// Runs an async function that calls your server to update the Checkout Session,
     /// then automatically refreshes ``session`` with the latest session data.
     ///
-    /// A 20-second timeout is enforced. If `updateFunction` doesn't complete
+    /// A 20-second timeout is enforced. If `update` doesn't complete
     /// within 20 seconds, this method throws ``CheckoutError.timedOut``.
     ///
-    /// - Parameter updateFunction: An async throwing function that makes a request
+    /// - Parameter update: An async throwing function that makes a request
     ///   to your server to update the Checkout Session.
     /// - Throws: ``CheckoutError`` if the function times out, the session is not
     ///   open, or the refresh fails.
     public func runServerUpdate(
-        _ updateFunction: @escaping () async throws -> Void
+        _ update: @escaping () async throws -> Void
     ) async throws {
         try await enqueueSessionUpdate {
             try self.requireSheetNotPresented()
             let result = await withTimeout(Self.serverUpdateTimeout) {
-                try await updateFunction()
+                try await update()
             }
             if case .failure(let error) = result {
                 if error is TimeoutError {
@@ -337,7 +346,7 @@ public final class CheckoutController: ObservableObject {
 
     /// Use this method to confirm the Checkout Session.
     /// - Parameter presentingViewController: The view controller used to present any view controllers required e.g. to authenticate the customer. If you're using SwiftUI, you may pass nil and it will use the topmost UIViewController from the key window (not compatible with multi-scene apps).
-    /// - Returns: A `ConfirmResult` enum - either succeeded, canceled, or failed.
+    /// - Returns: A `ConfirmResult` enum - either completed, canceled, or failed.
     public func confirm(from presentingViewController: UIViewController? = nil) async -> ConfirmResult {
         guard let presentingViewController = presentingViewController ?? UIWindow.visibleViewController else {
             let errorMessage = "CheckoutController.confirm(from:) could not find a presenting view controller."
@@ -357,9 +366,9 @@ public final class CheckoutController: ObservableObject {
     /// The result of an attempt to confirm a Checkout Session.
     /// This is a convenience abstraction over the underlying Checkout Session's status and paymentStatus properties.
     public enum ConfirmResult {
-        /// The Checkout Session succeeded.
+        /// The Checkout Session completed.
         /// - Parameter paymentStatus: The payment status of the Checkout Session, one of `paid`, `unpaid`, or `no_payment_required`.
-        case succeeded(paymentStatus: Session.Status.PaymentStatus)
+        case completed(paymentStatus: Session.Status.PaymentStatus)
         /// The customer canceled the confirmation attempt.
         case canceled
         /// Confirmation failed with an error.

@@ -86,6 +86,7 @@ enum CheckoutTestHelpers {
 
     static let minimalElementsSessionJSON: [String: Any] = [
         "session_id": "es_test",
+        "merchant_country": "US",
         "payment_method_preference": ["ordered_payment_method_types": ["card"]],
     ]
 
@@ -380,12 +381,42 @@ class MockPKPaymentAuthorizationController: PKPaymentAuthorizationController {
     }
 }
 
+@MainActor
+class MockCheckoutSessionWalletUpdater: CheckoutSessionWalletUpdater {
+    private(set) var updateCallCount = 0
+    private(set) var lastAddress: CheckoutController.Address?
+    private(set) var lastCanUpdateWhileSheetPresented: Bool?
+    private let sessionToReturn: CheckoutController.Session?
+    private let errorToThrow: Error?
+
+    init(sessionToReturn: CheckoutController.Session? = nil, errorToThrow: Error? = nil) {
+        self.sessionToReturn = sessionToReturn
+        self.errorToThrow = errorToThrow
+    }
+
+    func updateBillingTaxRegionWithoutEnqueueing(
+        address: CheckoutController.Address,
+        canUpdateWhileSheetPresented: Bool
+    ) async throws -> CheckoutController.Session {
+        updateCallCount += 1
+        lastAddress = address
+        lastCanUpdateWhileSheetPresented = canUpdateWhileSheetPresented
+        if let errorToThrow {
+            throw errorToThrow
+        }
+        guard let sessionToReturn else {
+            throw CheckoutError.unknown(debugDescription: "MockCheckoutSessionWalletUpdater has no session configured")
+        }
+        return sessionToReturn
+    }
+}
+
 extension CheckoutController.ApplePayConfirmationParameters {
     static func makeMock(
         apiClient: STPAPIClient,
         returnURL: String = "stripe-ios-test://checkout-return",
         merchantDisplayName: String = "Test Merchant",
-        applePayConfiguration: CheckoutController.ApplePayConfiguration = CheckoutController.ApplePayConfiguration(merchantId: "merchant.com.test"),
+        applePayConfiguration: PaymentElement.ApplePayConfiguration = PaymentElement.ApplePayConfiguration(merchantId: "merchant.com.test"),
         billingDetailsCollectionConfiguration: PaymentSheet.BillingDetailsCollectionConfiguration,
         defaultBillingDetails: CheckoutController.Configuration.Defaults.BillingDetails? = nil,
         presentationWindow: UIWindow? = nil,
