@@ -146,6 +146,25 @@ final class SelfieCaptureViewControllerTest: XCTestCase {
             ).buttonViewModels.isEmpty
         )
     }
+
+    func testSaveFailureRestoresScannedState() async {
+        let faceCaptureData = makeFaceCaptureData()
+        let vc = makeViewController(initialState: .scanned(.empty, faceCaptureData))
+        let saveExp = expectation(description: "Selfie save attempted")
+        mockSheetController.saveSelfieFileDataAndTransitionCallback = {
+            saveExp.fulfill()
+        }
+
+        vc.buttonViewModels[0].didTap()
+        await fulfillment(of: [saveExp], timeout: 1)
+        await Task.yield()
+
+        guard case .scanned = vc.imageScanningSession.state else {
+            return XCTFail("Expected scanned state")
+        }
+        XCTAssertEqual(vc.buttonViewModels.count, 1)
+        XCTAssertEqual(vc.buttonViewModels[0].state, .enabled)
+    }
 }
 
 private extension SelfieCaptureViewControllerTest {
