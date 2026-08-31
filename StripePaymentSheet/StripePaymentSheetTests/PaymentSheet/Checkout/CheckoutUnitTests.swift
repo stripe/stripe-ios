@@ -227,7 +227,7 @@ final class CheckoutUnitTests: XCTestCase {
         let recorder = CheckoutEmissionRecorder(checkout)
 
         // When the shipping address is cleared
-        try await checkout.updateShippingAddress(address: nil)
+        try await checkout.updateShippingAddress(name: nil, address: nil)
 
         // Then Checkout clears its local shipping address
         XCTAssertNil(checkout.session.shippingAddress)
@@ -240,7 +240,7 @@ final class CheckoutUnitTests: XCTestCase {
         let (checkout, _, requestRecorder) = try await makeCheckoutWithShippingTax()
 
         // When the shipping address is cleared
-        try await checkout.updateShippingAddress(address: nil)
+        try await checkout.updateShippingAddress(name: nil, address: nil)
 
         // Then Checkout clears local state and removes all tax region fields except country
         XCTAssertNil(checkout.session.shippingAddress)
@@ -262,7 +262,7 @@ final class CheckoutUnitTests: XCTestCase {
 
         // When the shipping address is cleared
         do {
-            try await checkout.updateShippingAddress(address: nil)
+            try await checkout.updateShippingAddress(name: nil, address: nil)
             XCTFail("Expected CheckoutError.apiError")
         } catch CheckoutError.apiError {
             // Expected
@@ -376,6 +376,7 @@ final class CheckoutUnitTests: XCTestCase {
 
         do {
             try await checkout.updateShippingAddress(
+                name: nil,
                 address: .init(country: "DE")
             )
             XCTFail("Expected invalidShippingCountry error")
@@ -394,6 +395,7 @@ final class CheckoutUnitTests: XCTestCase {
         let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: session))
 
         try await checkout.updateShippingAddress(
+            name: nil,
             address: .init(country: "CA", line1: "80 Spadina Ave", city: "Toronto", state: "ON", postalCode: "M5V 2J4")
         )
 

@@ -239,7 +239,7 @@ public final class CheckoutController: ObservableObject {
 
     /// Use this method to update the Customer's shipping address.
     public func updateShippingAddress(
-        name: String? = nil,
+        name: String?,
         address: Address?
     ) async throws {
         guard let address else {
