@@ -265,4 +265,32 @@ final class IdentityImageUploaderTest: XCTestCase {
         XCTAssertEqual(imageFromData?.scale, 1)
         XCTAssertEqual(imageFromData?.size, imageSize)
     }
+
+    func testImagePreprocessingUsesSerialQueue() async throws {
+        let uploadRequestExpectations = mockAPIClient.makeUploadRequestExpectations(count: 2)
+        uploader.imageProcessingQueue.suspend()
+        let uploadTask = Task {
+            try await uploader.uploadLowAndHighResImages(
+                mockImage,
+                highResRegionOfInterest: DocumentUploaderTest.mockRegionOfInterest,
+                cropPaddingComputationMethod: .maxImageWidthOrHeight,
+                lowResFileName: "low-res",
+                highResFileName: "high-res"
+            )
+        }
+        let queueCheck = expectation(description: "Preprocessing queue remained suspended")
+        DispatchQueue.global().asyncAfter(deadline: .now() + 0.1) {
+            queueCheck.fulfill()
+        }
+
+        await fulfillment(of: [queueCheck], timeout: 1)
+        XCTAssertEqual(mockAPIClient.imageUpload.requestHistory.count, 0)
+
+        uploader.imageProcessingQueue.resume()
+        await fulfillment(of: uploadRequestExpectations, timeout: 1)
+        mockAPIClient.imageUpload.respondToRequests(
+            with: .success((file: mockStripeFile, metrics: mockUploadMetrics))
+        )
+        _ = try await uploadTask.value
+    }
 }
