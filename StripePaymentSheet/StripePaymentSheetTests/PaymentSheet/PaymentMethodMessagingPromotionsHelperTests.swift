@@ -348,4 +348,37 @@ final class PaymentMethodMessagingPromotionsHelperTests: APIStubbedTestCase {
         XCTAssertEqual(event["displayed_successfully"] as? Bool, false)
         XCTAssertEqual(event["duration"] as? Double, 0)
     }
+
+    func testLogDisplayedAnalytic_controlGroup_doesNotLog() throws {
+        // Given a helper assigned to the control group
+        let analyticsClient = STPTestingAnalyticsClient()
+        let experimentsData = ExperimentsData(
+            arbId: "arb_123",
+            experimentAssignments: [PaymentMethodMessagingPromotionsExperiment.experimentName: .control],
+            allResponseFields: [:]
+        )
+        let elementsSession = STPElementsSession._testValue(experimentsData: experimentsData)
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD")) { _, _ in return "" }
+        let intent = Intent.deferredIntent(intentConfig: intentConfig)
+        let configuration = stubbedConfiguration()
+        let analyticsHelper = PaymentSheetAnalyticsHelper(
+            integrationShape: .complete,
+            configuration: configuration,
+            analyticsClient: analyticsClient
+        )
+        let helper = try XCTUnwrap(PaymentMethodMessagingPromotionsHelper(
+            elementsSession: elementsSession,
+            intent: intent,
+            configuration: configuration,
+            paymentMethodTypes: [.stripe(.affirm)],
+            analyticsHelper: analyticsHelper
+        ))
+
+        // When a control UI call site reports that it used fallback content
+        helper.logDisplayedAnalytic(displayedSuccessfully: false)
+
+        // Then no PMM display attempt is logged
+        let displayedEvents = analyticsClient._testLogHistory.filter { $0["event"] as? String == "payment_method_messaging_displayed" }
+        XCTAssertEqual(displayedEvents.count, 0)
+    }
 }
