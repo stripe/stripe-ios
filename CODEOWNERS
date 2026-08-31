@@ -1,10 +1,78 @@
-# By default, allow reviews from all reviewers
+# Use the SDK-wide reviewer groups only for files without a more specific owner below.
 * @stripe/ios-sdk-reviewers @stripe/ios-sdk-non-core-reviewers
 
-# For payments, automatically request reviews from @ios-payments-reviewers, allow reviews from other reviewers
-*/StripePaymentSheet @stripe/ios-payments-reviewers @stripe/ios-sdk-reviewers @stripe/ios-sdk-non-core-reviewers
-*/StripePayments @stripe/ios-payments-reviewers @stripe/ios-sdk-reviewers @stripe/ios-sdk-non-core-reviewers
-*/StripePaymentsUI @stripe/ios-payments-reviewers @stripe/ios-sdk-reviewers @stripe/ios-sdk-non-core-reviewers
-*/StripeApplePay @stripe/ios-payments-reviewers @stripe/ios-sdk-reviewers @stripe/ios-sdk-non-core-reviewers
-*/Stripe3DS2 @stripe/ios-payments-reviewers @stripe/ios-sdk-reviewers @stripe/ios-sdk-non-core-reviewers
-*/StripeConnect @stripe/ios-connect-reviewers @stripe/ios-sdk-reviewers @stripe/ios-sdk-non-core-reviewers
+# Core infrastructure
+/.claude/ @stripe/ios-payments-reviewers
+/.clang-format @stripe/ios-payments-reviewers
+/.cocoapods.yml @stripe/ios-payments-reviewers
+/.gitattributes @stripe/ios-payments-reviewers
+/.gitignore @stripe/ios-payments-reviewers
+/.github/workflows/ @stripe/ios-payments-reviewers
+/.jazzy.yaml @stripe/ios-payments-reviewers
+/.jazzy/ @stripe/ios-payments-reviewers
+/.nexus.yaml @stripe/ios-payments-reviewers
+/.package.resolved @stripe/ios-payments-reviewers
+/.periphery.yml @stripe/ios-payments-reviewers
+/.swift-format @stripe/ios-payments-reviewers
+/.swiftlint-sha256 @stripe/ios-payments-reviewers
+/.swiftlint-version @stripe/ios-payments-reviewers
+/.swiftlint.yml @stripe/ios-payments-reviewers
+/.tuist-version @stripe/ios-payments-reviewers
+/BuildConfigurations/ @stripe/ios-payments-reviewers
+/FauxPasConfig/ @stripe/ios-payments-reviewers
+/ci_scripts/ @stripe/ios-payments-reviewers
+/fastlane/ @stripe/ios-payments-reviewers
+/CODEOWNERS @stripe/ios-payments-reviewers
+/Gemfile @stripe/ios-payments-reviewers
+/Gemfile.lock @stripe/ios-payments-reviewers
+/OriginalAssets/ @stripe/ios-payments-reviewers
+/Package.swift @stripe/ios-payments-reviewers
+/*.podspec @stripe/ios-payments-reviewers
+/Stripe.xcworkspace/ @stripe/ios-payments-reviewers
+/VERSION @stripe/ios-payments-reviewers
+/bitrise.yml @stripe/ios-payments-reviewers
+/missing_translations.txt @stripe/ios-payments-reviewers
+/modules.yaml @stripe/ios-payments-reviewers
+
+# Payments SDK
+/Stripe/ @stripe/ios-payments-reviewers
+/Stripe3DS2/ @stripe/ios-payments-reviewers
+/StripeApplePay/ @stripe/ios-payments-reviewers
+/StripeCameraCore/ @stripe/ios-payments-reviewers
+/StripeCardScan/ @stripe/ios-payments-reviewers
+/StripeCore/ @stripe/ios-payments-reviewers
+/StripeIssuing/ @stripe/ios-payments-reviewers
+/StripePaymentSheet/ @stripe/ios-payments-reviewers @stripe/ios-link-reviewers
+/StripePayments/ @stripe/ios-payments-reviewers
+/StripePaymentsUI/ @stripe/ios-payments-reviewers
+/StripeUICore/ @stripe/ios-payments-reviewers
+/stripe3ds2-support/ @stripe/ios-payments-reviewers
+/Example/AppClipExample/ @stripe/ios-payments-reviewers
+/Example/CardImageVerification*/ @stripe/ios-payments-reviewers
+/Example/Non-Card*/ @stripe/ios-payments-reviewers
+/Example/PaymentSheet*/ @stripe/ios-payments-reviewers @stripe/ios-link-reviewers
+/Example/UI*/ @stripe/ios-payments-reviewers
+/Testers/ @stripe/ios-payments-reviewers
+/Tests/ @stripe/ios-payments-reviewers
+/Tests/ReferenceImages_64/StripePaymentSheetTests.*/ @stripe/ios-payments-reviewers @stripe/ios-link-reviewers
+
+# Link and Financial Connections SDK
+/StripeFinancialConnections/ @stripe/ios-link-reviewers
+/StripeFinancialConnectionsLite/ @stripe/ios-link-reviewers
+/Example/FinancialConnections*/ @stripe/ios-link-reviewers
+/readme-images/FinancialConnections* @stripe/ios-link-reviewers
+
+# Crypto Onramp SDK
+/StripeCryptoOnramp/ @stripe/android-crypto-onramp-reviewers
+/Example/CryptoOnramp*/ @stripe/android-crypto-onramp-reviewers
+
+# Identity SDK
+/StripeIdentity/ @stripe/ios-identity-reviewers
+/Example/IdentityVerification*/ @stripe/ios-identity-reviewers
+/Tests/ReferenceImages_64/StripeIdentityTests.*/ @stripe/ios-identity-reviewers
+/readme-images/Identity* @stripe/ios-identity-reviewers
+
+# Connect SDK
+/StripeConnect/ @stripe/ios-connect-reviewers
+/Example/StripeConnectExample/ @stripe/ios-connect-reviewers
+/readme-images/Connect* @stripe/ios-connect-reviewers
