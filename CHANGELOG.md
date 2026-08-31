@@ -6,6 +6,12 @@ MINOR
 ### CryptoOnramp (Alpha)
 * [Added] Added `CryptoOnrampCoordinator.presentTermsAndConditionsIfNeeded(from:)` to present and record acceptance of the current terms and conditions when required.
 
+### Payments
+* [Added] Added API bindings for SeQura.
+* [Added] Added API bindings for Korean cards.
+* [Added] Added API bindings for Naver Pay.
+* [Added] Added API bindings for PAYCO.
+
 ## 26.8.0 2026-08-24
 ### Payments
 * [Added] Added support for the following FPX banks: Agrobank, Bank of China, and MBSB Bank.

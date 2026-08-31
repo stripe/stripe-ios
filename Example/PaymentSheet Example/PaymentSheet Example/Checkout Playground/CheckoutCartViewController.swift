@@ -871,7 +871,7 @@ final class CheckoutCartViewController: UIViewController {
             let message: String
             let dismissOnAcknowledgment: Bool
             switch result {
-            case .succeeded(let paymentStatus):
+            case .completed(let paymentStatus):
                 title = "Success"
                 message = "Payment status: \(paymentStatus)"
                 dismissOnAcknowledgment = true

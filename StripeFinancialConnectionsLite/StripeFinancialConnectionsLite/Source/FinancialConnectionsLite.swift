@@ -23,6 +23,9 @@ import UIKit
     /// A existing consumer, if avaialble.
     @_spi(STP) public var existingConsumer: FinancialConnectionsConsumer?
 
+    /// Whether the Link Account Session requests merchant data permissions.
+    @_spi(STP) public var hasRequestedDataPermissions: Bool = false
+
     private var navigationController: UINavigationController?
     private var wrapperViewController: FCLiteModalPresentationWrapper?
     private var completionHandler: ((FinancialConnectionsSDKResult) -> Void)?
@@ -54,13 +57,27 @@ import UIKit
         self.completionHandler = completion
 
         var apiClient: FCLiteAPIClient = FCLiteAPIClient(backingAPIClient: .shared)
-        apiClient.consumerPublishableKey = existingConsumer?.publishableKey
+        if !hasRequestedDataPermissions {
+            apiClient.consumerPublishableKey = existingConsumer?.publishableKey
+        }
+
+        let hostedAuthConsumerContext = existingConsumer.flatMap { consumer in
+            consumer.publishableKey.map { publishableKey in
+                HostedAuthUrlBuilder.ConsumerContext(
+                    clientSecret: consumer.clientSecret,
+                    publishableKey: publishableKey,
+                    emailAddress: consumer.emailAddress
+                )
+            }
+        }
 
         let containerVC = FCLiteContainerViewController(
             clientSecret: clientSecret,
             returnUrl: returnUrl,
             apiClient: apiClient,
             elementsSessionContext: elementsSessionContext,
+            hostedAuthConsumerContext: hasRequestedDataPermissions ? hostedAuthConsumerContext : nil,
+            hasRequestedDataPermissions: hasRequestedDataPermissions,
             completion: { [weak self] result in
                 guard let self else { return }
                 self.handleFlowCompletion(result: result)
