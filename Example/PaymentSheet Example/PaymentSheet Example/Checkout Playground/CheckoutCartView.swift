@@ -104,7 +104,6 @@ struct CheckoutCartView: View {
                 message: { Text(confirmResultAlertMessage) }
             )
         }
-        .disabled(checkout?.isUpdating == true)
     }
 
     private var confirmResultAlertTitle: String {
