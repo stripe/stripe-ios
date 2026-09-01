@@ -19,7 +19,8 @@ enum ExpressCheckoutElementUtilities {
                     buttons.append(.applePay)
                 }
             case .link:
-                if configuration.linkConfiguration.display != .never {
+                if configuration.linkConfiguration.display != .never,
+                   !session.elementsSession.disableLinkForAutomaticTaxBilling {
                     buttons.append(.link)
                 }
             }
