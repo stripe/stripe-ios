@@ -29,6 +29,7 @@ final class NetworkedIdentityCoordinator {
     }
 
     private let apiClient: NetworkedIdentityAPIClient
+    private let documentRequirements: NetworkedIdentityDocumentRequirements
     private let credentialStore: NetworkedIdentityCredentialStore
     private let currentTime: () -> TimeInterval
     private var activeSMSVerificationSessionID: String?
@@ -46,11 +47,13 @@ final class NetworkedIdentityCoordinator {
 
     init(
         apiClient: NetworkedIdentityAPIClient,
+        documentRequirements: NetworkedIdentityDocumentRequirements,
         verificationSessionClientSecrets: [String]? = nil,
         credentialStore: NetworkedIdentityCredentialStore? = nil,
         currentTime: @escaping () -> TimeInterval = { Date().timeIntervalSince1970 }
     ) {
         self.apiClient = apiClient
+        self.documentRequirements = documentRequirements
         self.currentTime = currentTime
         self.credentialStore = credentialStore
             ?? NetworkedIdentityCredentialStore(
@@ -113,6 +116,9 @@ final class NetworkedIdentityCoordinator {
 
             switch result {
             case .success(let response):
+                self.credentialStore.retainAuthSessionClientSecret(
+                    response.authSessionClientSecret
+                )
                 self.redactedFormattedPhoneNumber =
                     response.consumerSession.redactedFormattedPhoneNumber
                 self.credentialStore.updateConsumerSessionClientSecret(
@@ -161,6 +167,7 @@ final class NetworkedIdentityCoordinator {
             return
         }
 
+        // #TODO - Networked Identity: Clear networking_data through the dedicated mobile API once its contract is available.
         let logout = credentialStore.readConsumerCredentials { credentials, verificationSessionClientSecrets in
             apiClient.logOut(
                 consumerSessionClientSecret: credentials.sessionClientSecret,
@@ -209,7 +216,10 @@ private extension NetworkedIdentityCoordinator {
                         using: apiClient,
                         consumerSessionClientSecret: response.consumerSession.clientSecret,
                         consumerPublishableKey: response.publishableKey,
-                        verificationSessionClientSecrets: verificationSessionClientSecrets
+                        verificationSessionClientSecrets: NetworkedIdentityCredentialStore.appending(
+                            response.authSessionClientSecret,
+                            to: verificationSessionClientSecrets
+                        )
                     )
                 }
                 return
@@ -220,7 +230,10 @@ private extension NetworkedIdentityCoordinator {
                     self.bestEffortLogOut(
                         consumerSessionClientSecret: response.consumerSession.clientSecret,
                         consumerPublishableKey: response.publishableKey,
-                        verificationSessionClientSecrets: verificationSessionClientSecrets
+                        verificationSessionClientSecrets: NetworkedIdentityCredentialStore.appending(
+                            response.authSessionClientSecret,
+                            to: verificationSessionClientSecrets
+                        )
                     )
                 }
                 return
@@ -228,6 +241,9 @@ private extension NetworkedIdentityCoordinator {
 
             switch result {
             case .success(.found(let response)):
+                self.credentialStore.retainAuthSessionClientSecret(
+                    response.authSessionClientSecret
+                )
                 self.redactedFormattedPhoneNumber =
                     response.consumerSession.redactedFormattedPhoneNumber
                 self.credentialStore.storeConsumerCredentials(
@@ -293,6 +309,9 @@ private extension NetworkedIdentityCoordinator {
 
             switch result {
             case .success(let response):
+                self.credentialStore.retainAuthSessionClientSecret(
+                    response.authSessionClientSecret
+                )
                 self.redactedFormattedPhoneNumber =
                     response.consumerSession.redactedFormattedPhoneNumber
                 self.credentialStore.updateConsumerSessionClientSecret(
@@ -351,8 +370,7 @@ private extension NetworkedIdentityCoordinator {
             case .success(let response):
                 let now = self.currentTime()
                 let reusableDocuments = response.data.filter { document in
-                    document.documentType != .unparsable
-                        && document.expirationDate.map { TimeInterval($0) > now } != false
+                    self.documentRequirements.allows(document, at: now)
                 }
                 if reusableDocuments.isEmpty {
                     self.fallBackToFullCapture(reason: .noReusableDocuments)
@@ -385,6 +403,7 @@ private extension NetworkedIdentityCoordinator {
     }
 
     func fallBackToFullCapture(reason: NetworkedIdentityFallbackReason) {
+        // #TODO - Networked Identity: Clear networking_data through the dedicated mobile API once its contract is available.
         let logout = credentialStore.readConsumerCredentials { credentials, verificationSessionClientSecrets in
             apiClient.logOut(
                 consumerSessionClientSecret: credentials.sessionClientSecret,
@@ -459,7 +478,10 @@ private extension NetworkedIdentityCoordinator {
             using: apiClient,
             consumerSessionClientSecret: response.consumerSession.clientSecret,
             consumerPublishableKey: consumerPublishableKey,
-            verificationSessionClientSecrets: verificationSessionClientSecrets
+            verificationSessionClientSecrets: NetworkedIdentityCredentialStore.appending(
+                response.authSessionClientSecret,
+                to: verificationSessionClientSecrets
+            )
         )
     }
 
@@ -489,7 +511,10 @@ private extension NetworkedIdentityCoordinator {
             using: apiClient,
             consumerSessionClientSecret: response.consumerSession.clientSecret,
             consumerPublishableKey: consumerPublishableKey,
-            verificationSessionClientSecrets: verificationSessionClientSecrets
+            verificationSessionClientSecrets: NetworkedIdentityCredentialStore.appending(
+                response.authSessionClientSecret,
+                to: verificationSessionClientSecrets
+            )
         )
     }
 

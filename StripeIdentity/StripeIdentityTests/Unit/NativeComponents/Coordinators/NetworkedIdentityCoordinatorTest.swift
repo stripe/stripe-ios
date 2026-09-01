@@ -24,6 +24,10 @@ final class NetworkedIdentityCoordinatorTest: XCTestCase {
         )
         coordinator = NetworkedIdentityCoordinator(
             apiClient: apiClient,
+            documentRequirements: .init(
+                allowedDocumentTypes: [.passport, .drivingLicense, .idCard],
+                requiresLiveCapture: false
+            ),
             credentialStore: credentialStore,
             currentTime: { 1_800_000_000 }
         )
@@ -162,6 +166,85 @@ final class NetworkedIdentityCoordinatorTest: XCTestCase {
         XCTAssertNil(coordinator.redactedFormattedPhoneNumber)
     }
 
+    func testRetainsAuthSessionClientSecretsAcrossRequestsAndLogout() {
+        // Given lookup returns a new auth-session secret
+        coordinator.start(emailAddress: "consumer@example.com")
+        waitForTransition(to: .otpStartPending) {
+            apiClient.lookup.respondToNext(
+                with: .success(
+                    .found(
+                        .init(
+                            consumerSession: consumerSession(
+                                clientSecret: "cs_lookup",
+                                verificationSessionID: "cvs_old",
+                                verificationState: .verified
+                            ),
+                            publishableKey: "pk_consumer_lookup",
+                            accountID: "acct_123",
+                            authSessionClientSecret: "auth_lookup",
+                            emailOTPRequiresAdditionalInfo: nil,
+                            emailOTPVerifyPhoneDespiteSMSOTP: nil,
+                            experiments: []
+                        )
+                    )
+                )
+            )
+        }
+        XCTAssertEqual(
+            apiClient.startVerification.requestHistory.first?.request.verificationSessionClientSecrets,
+            ["vs_client_secret", "auth_lookup"]
+        )
+
+        // When start and confirm each return another auth-session secret
+        waitForTransition(to: .awaitingOTP) {
+            apiClient.startVerification.respondToNext(
+                with: .success(
+                    consumerSessionResponse(
+                        clientSecret: "cs_started",
+                        verificationSessionID: "cvs_fresh",
+                        authSessionClientSecret: "auth_start"
+                    )
+                )
+            )
+        }
+        coordinator.submitOTP("123456")
+        XCTAssertEqual(
+            apiClient.confirmVerification.requestHistory.first?.request.verificationSessionClientSecrets,
+            ["vs_client_secret", "auth_lookup", "auth_start"]
+        )
+        waitForTransition(to: .documentsPending) {
+            apiClient.confirmVerification.respondToNext(
+                with: .success(
+                    consumerSessionResponse(
+                        clientSecret: "cs_confirmed",
+                        verificationState: .verified,
+                        authSessionClientSecret: "auth_confirm"
+                    )
+                )
+            )
+        }
+
+        // Then logout receives every secret retained during this flow
+        coordinator.cancel()
+        XCTAssertEqual(
+            apiClient.logOut.requestHistory.last?.verificationSessionClientSecrets,
+            ["vs_client_secret", "auth_lookup", "auth_start", "auth_confirm"]
+        )
+    }
+
+    func testAuthSessionClientSecretRetentionIgnoresEmptyAndDuplicateValues() {
+        credentialStore.retainAuthSessionClientSecret(nil)
+        credentialStore.retainAuthSessionClientSecret("")
+        credentialStore.retainAuthSessionClientSecret("vs_client_secret")
+        credentialStore.retainAuthSessionClientSecret("auth_new")
+        credentialStore.retainAuthSessionClientSecret("auth_new")
+
+        XCTAssertEqual(
+            credentialStore.readVerificationSessionClientSecrets { $0 },
+            ["vs_client_secret", "auth_new"]
+        )
+    }
+
     func testExpiredOTPRequestsFreshSessionAndRejectsOldVerification() {
         // Given the coordinator is awaiting a fresh SMS code
         beginExistingConsumerFlow()
@@ -212,6 +295,7 @@ final class NetworkedIdentityCoordinatorTest: XCTestCase {
     func testSessionExpiredRequiresExplicitReauthentication() {
         // Given the coordinator is awaiting a fresh SMS code
         beginExistingConsumerFlow()
+        credentialStore.retainAuthSessionClientSecret("auth_before_reauthentication")
 
         // When confirmation reports that the consumer session expired
         coordinator.submitOTP("111111")
@@ -229,6 +313,10 @@ final class NetworkedIdentityCoordinatorTest: XCTestCase {
         coordinator.start(emailAddress: "consumer@example.com")
         XCTAssertEqual(coordinator.state, .lookupPending)
         XCTAssertEqual(apiClient.lookup.requestHistory.count, 2)
+        XCTAssertEqual(
+            apiClient.lookup.requestHistory.last?.verificationSessionClientSecrets,
+            ["vs_client_secret", "auth_before_reauthentication"]
+        )
     }
 
     func testMaximumOTPAttemptsFallsBackToFullCapture() {
@@ -444,6 +532,66 @@ final class NetworkedIdentityCoordinatorTest: XCTestCase {
         XCTAssertTrue(coordinator.availableDocuments.isEmpty)
     }
 
+    func testFiltersDocumentsUsingVerificationSessionRequirements() {
+        // Given this VerificationSession only accepts live-captured passports
+        coordinator = NetworkedIdentityCoordinator(
+            apiClient: apiClient,
+            documentRequirements: .init(
+                allowedDocumentTypes: [.passport],
+                requiresLiveCapture: true
+            ),
+            credentialStore: credentialStore,
+            currentTime: { 1_800_000_000 }
+        )
+        coordinator.delegate = delegate
+        beginExistingConsumerFlow()
+        coordinator.submitOTP("123456")
+        waitForTransition(to: .documentsPending) {
+            apiClient.confirmVerification.respondToNext(
+                with: .success(
+                    consumerSessionResponse(
+                        clientSecret: "cs_confirmed",
+                        verificationState: .verified
+                    )
+                )
+            )
+        }
+        let reusablePassport = identityDocument(
+            id: "id_doc_reusable",
+            documentType: .passport,
+            liveCaptured: true
+        )
+
+        // When Link returns documents that do and do not meet those requirements
+        waitForTransition(to: .selectDocument) {
+            apiClient.documentList.respondToNext(
+                with: .success(
+                    .init(data: [
+                        identityDocument(
+                            id: "id_doc_wrong_type",
+                            documentType: .drivingLicense,
+                            liveCaptured: true
+                        ),
+                        identityDocument(
+                            id: "id_doc_not_live",
+                            documentType: .passport,
+                            liveCaptured: false
+                        ),
+                        identityDocument(
+                            id: "id_doc_expired",
+                            documentType: .passport,
+                            expirationDate: 1_700_000_000,
+                            liveCaptured: true
+                        ),
+                        reusablePassport,
+                    ]))
+            )
+        }
+
+        // Then only the matching reusable document reaches selection
+        XCTAssertEqual(coordinator.availableDocuments, [reusablePassport])
+    }
+
     func testDuplicateOTPSubmissionWhilePendingIsIgnored() {
         // Given the coordinator is awaiting a fresh SMS code
         beginExistingConsumerFlow()
@@ -499,7 +647,7 @@ final class NetworkedIdentityCoordinatorTest: XCTestCase {
                         ),
                         publishableKey: "pk_consumer_lookup",
                         accountID: "acct_123",
-                        authSessionClientSecret: nil,
+                        authSessionClientSecret: "auth_lookup_after_manual_fallback",
                         emailOTPRequiresAdditionalInfo: nil,
                         emailOTPVerifyPhoneDespiteSMSOTP: nil,
                         experiments: []
@@ -516,6 +664,10 @@ final class NetworkedIdentityCoordinatorTest: XCTestCase {
         XCTAssertEqual(
             apiClient.logOut.requestHistory.first?.consumerSessionClientSecret,
             "cs_lookup_after_manual_fallback"
+        )
+        XCTAssertEqual(
+            apiClient.logOut.requestHistory.first?.verificationSessionClientSecrets,
+            ["vs_client_secret", "auth_lookup_after_manual_fallback"]
         )
     }
 
@@ -543,7 +695,7 @@ final class NetworkedIdentityCoordinatorTest: XCTestCase {
                         ),
                         publishableKey: "pk_consumer_lookup",
                         accountID: "acct_123",
-                        authSessionClientSecret: nil,
+                        authSessionClientSecret: "auth_lookup_after_release",
                         emailOTPRequiresAdditionalInfo: nil,
                         emailOTPVerifyPhoneDespiteSMSOTP: nil,
                         experiments: []
@@ -557,6 +709,10 @@ final class NetworkedIdentityCoordinatorTest: XCTestCase {
         XCTAssertEqual(
             apiClient.logOut.requestHistory.first?.consumerSessionClientSecret,
             "cs_lookup_after_release"
+        )
+        XCTAssertEqual(
+            apiClient.logOut.requestHistory.first?.verificationSessionClientSecrets,
+            ["vs_client_secret", "auth_lookup_after_release"]
         )
     }
 
@@ -581,7 +737,8 @@ final class NetworkedIdentityCoordinatorTest: XCTestCase {
             with: .success(
                 consumerSessionResponse(
                     clientSecret: "cs_start_after_release",
-                    verificationSessionID: "cvs_fresh"
+                    verificationSessionID: "cvs_fresh",
+                    authSessionClientSecret: "auth_start_after_release"
                 )
             )
         )
@@ -592,6 +749,10 @@ final class NetworkedIdentityCoordinatorTest: XCTestCase {
         XCTAssertEqual(
             apiClient.logOut.requestHistory.last?.consumerSessionClientSecret,
             "cs_start_after_release"
+        )
+        XCTAssertEqual(
+            apiClient.logOut.requestHistory.last?.verificationSessionClientSecrets,
+            ["vs_client_secret", "auth_start_after_release"]
         )
     }
 
@@ -617,7 +778,8 @@ final class NetworkedIdentityCoordinatorTest: XCTestCase {
             with: .success(
                 consumerSessionResponse(
                     clientSecret: "cs_confirm_after_release",
-                    verificationState: .verified
+                    verificationState: .verified,
+                    authSessionClientSecret: "auth_confirm_after_release"
                 )
             )
         )
@@ -628,6 +790,10 @@ final class NetworkedIdentityCoordinatorTest: XCTestCase {
         XCTAssertEqual(
             apiClient.logOut.requestHistory.last?.consumerSessionClientSecret,
             "cs_confirm_after_release"
+        )
+        XCTAssertEqual(
+            apiClient.logOut.requestHistory.last?.verificationSessionClientSecrets,
+            ["vs_client_secret", "auth_confirm_after_release"]
         )
     }
 
@@ -920,7 +1086,8 @@ private extension NetworkedIdentityCoordinatorTest {
     func consumerSessionResponse(
         clientSecret: String,
         verificationSessionID: String? = "cvs_fresh",
-        verificationState: NetworkedIdentityVerificationSessionState = .started
+        verificationState: NetworkedIdentityVerificationSessionState = .started,
+        authSessionClientSecret: String? = nil
     ) -> NetworkedIdentityConsumerSessionResponse {
         .init(
             consumerSession: consumerSession(
@@ -928,20 +1095,21 @@ private extension NetworkedIdentityCoordinatorTest {
                 verificationSessionID: verificationSessionID,
                 verificationState: verificationState
             ),
-            authSessionClientSecret: nil
+            authSessionClientSecret: authSessionClientSecret
         )
     }
 
     func consumerSessionResponse(
         clientSecret: String,
-        verificationSessions: [NetworkedIdentityVerificationSession]
+        verificationSessions: [NetworkedIdentityVerificationSession],
+        authSessionClientSecret: String? = nil
     ) -> NetworkedIdentityConsumerSessionResponse {
         .init(
             consumerSession: consumerSession(
                 clientSecret: clientSecret,
                 verificationSessions: verificationSessions
             ),
-            authSessionClientSecret: nil
+            authSessionClientSecret: authSessionClientSecret
         )
     }
 
@@ -962,7 +1130,8 @@ private extension NetworkedIdentityCoordinatorTest {
         id: String,
         documentType: NetworkedIdentityDocumentType = .drivingLicense,
         country: String = "US",
-        expirationDate: Int = 1_900_000_000
+        expirationDate: Int = 1_900_000_000,
+        liveCaptured: Bool? = true
     ) -> NetworkedIdentityDocument {
         .init(
             id: id,
@@ -972,7 +1141,7 @@ private extension NetworkedIdentityCoordinatorTest {
             region: "CA",
             redactedDocumentNumber: "***1234",
             expirationDate: expirationDate,
-            liveCaptured: true
+            liveCaptured: liveCaptured
         )
     }
 

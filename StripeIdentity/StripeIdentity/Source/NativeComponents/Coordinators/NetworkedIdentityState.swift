@@ -47,6 +47,8 @@ final class NetworkedIdentityCredentialStore {
     private var consumerCredentials: ConsumerCredentials?
     private var verificationSessionClientSecrets: [String]?
 
+    // #TODO - Networked Identity: Persist auth-session secrets through shared Link storage once its ownership, replacement, and expiry rules are defined.
+
     init(verificationSessionClientSecrets: [String]? = nil) {
         self.verificationSessionClientSecrets = verificationSessionClientSecrets
     }
@@ -77,6 +79,27 @@ final class NetworkedIdentityCredentialStore {
             publishableKey: consumerCredentials.publishableKey,
             sessionClientSecret: sessionClientSecret
         )
+    }
+
+    func retainAuthSessionClientSecret(_ authSessionClientSecret: String?) {
+        verificationSessionClientSecrets = Self.appending(
+            authSessionClientSecret,
+            to: verificationSessionClientSecrets
+        )
+    }
+
+    static func appending(
+        _ authSessionClientSecret: String?,
+        to verificationSessionClientSecrets: [String]?
+    ) -> [String]? {
+        guard let authSessionClientSecret, !authSessionClientSecret.isEmpty else {
+            return verificationSessionClientSecrets
+        }
+        var updatedSecrets = verificationSessionClientSecrets ?? []
+        if !updatedSecrets.contains(authSessionClientSecret) {
+            updatedSecrets.append(authSessionClientSecret)
+        }
+        return updatedSecrets
     }
 
     func readConsumerCredentials<T>(

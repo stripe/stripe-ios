@@ -479,6 +479,8 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
             )
         }
 
+        // #TODO - Networked Identity: On initial bootstrap only, route from networkingData once the response also defines the merchant email and publishable key and the clone/save/clear APIs are available.
+
         switch missingRequirements.nextDestination(collectedData: sheetController.collectedData) {
         case .consentDestination:
             return completion(

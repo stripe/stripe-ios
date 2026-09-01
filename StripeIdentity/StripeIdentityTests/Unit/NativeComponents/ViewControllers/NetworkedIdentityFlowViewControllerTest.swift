@@ -25,6 +25,10 @@ final class NetworkedIdentityFlowViewControllerTest: XCTestCase {
         apiClient = NetworkedIdentityAPIClientTestMock()
         coordinator = NetworkedIdentityCoordinator(
             apiClient: apiClient,
+            documentRequirements: .init(
+                allowedDocumentTypes: [.passport, .drivingLicense, .idCard],
+                requiresLiveCapture: false
+            ),
             verificationSessionClientSecrets: ["vs_client_secret"]
         )
         viewController = NetworkedIdentityFlowViewController(
