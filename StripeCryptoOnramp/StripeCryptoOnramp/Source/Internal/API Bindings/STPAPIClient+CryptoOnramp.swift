@@ -351,27 +351,19 @@ extension STPAPIClient {
     }
 
     /// Retrieves platform settings for the crypto onramp service.
-    /// - Parameters:
-    ///   - cryptoCustomerId: The ID for the crypto customer.
-    ///   - linkAccountInfo: Information associated with the link account including the client secret.
+    /// - Parameter cryptoCustomerId: The ID for the crypto customer.
     /// - Returns: Platform settings including the publishable key.
-    /// Throws if a client secret doesn’t exist or if an API error occurs.
+    /// Throws if an API error occurs.
     func getPlatformSettings(
-        cryptoCustomerId: String,
-        linkAccountInfo: PaymentSheetLinkAccountInfoProtocol
+        cryptoCustomerId: String
     ) async throws -> PlatformSettingsResponse {
-        guard let consumerSessionClientSecret = linkAccountInfo.consumerSessionClientSecret else {
-            throw CryptoOnrampAPIError.missingConsumerSessionClientSecret
-        }
-
         let endpoint = "crypto/internal/platform_settings"
 
         let parameters: [String: Any] = [
             "crypto_customer_id": cryptoCustomerId,
             "ui_mode": "headless",
         ]
-
-        return try await get(resource: endpoint, parameters: parameters, consumerSessionClientSecret: consumerSessionClientSecret)
+        return try await get(resource: endpoint, parameters: parameters)
     }
 
     private func validateSessionState(using linkAccountInfo: PaymentSheetLinkAccountInfoProtocol) throws {

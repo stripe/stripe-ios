@@ -906,11 +906,7 @@ private extension CryptoOnrampCoordinator {
         }
 
         // Fetch platform settings and create API client
-        let platformSettings = try await apiClient.getPlatformSettings(
-            cryptoCustomerId: cryptoCustomerId,
-            linkAccountInfo: linkAccountInfo
-        )
-
+        let platformSettings = try await apiClient.getPlatformSettings(cryptoCustomerId: cryptoCustomerId)
         let newPlatformApiClient = STPAPIClient(publishableKey: platformSettings.publishableKey)
         platformApiClient = newPlatformApiClient
         return newPlatformApiClient
