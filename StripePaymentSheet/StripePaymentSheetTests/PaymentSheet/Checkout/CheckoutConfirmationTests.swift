@@ -520,7 +520,7 @@ final class CheckoutConfirmationTests: APIStubbedTestCase {
         window.rootViewController = presentingViewController
 
         // When ECE constructs its Link confirmation flow
-        let flow = checkout.makeExpressCheckoutConfirmationFlow(.link, presentationWindow: window)
+        let flow = try checkout.makeExpressCheckoutConfirmationFlow(.link, presentationWindow: window)
 
         // Then Link receives the ECE and Checkout configuration
         guard case .link(let parameters) = flow else {
@@ -553,10 +553,12 @@ final class CheckoutConfirmationTests: APIStubbedTestCase {
         let checkout = try await makeCheckout()
 
         // When ECE cannot resolve a view controller from its presentation window
-        let flow = checkout.makeExpressCheckoutConfirmationFlow(.link, presentationWindow: nil)
-
-        // Then it does not construct a Link confirmation flow
-        XCTAssertNil(flow)
+        // Then constructing the Link confirmation flow throws
+        XCTAssertThrowsError(
+            try checkout.makeExpressCheckoutConfirmationFlow(.link, presentationWindow: nil)
+        ) { error in
+            XCTAssertTrue(error.nonGenericDescription.contains("Could not find a presenting view controller"))
+        }
     }
 
     func testLinkPaymentDetailsCreatesPaymentMethodAndConfirmsCheckoutSession() async throws {

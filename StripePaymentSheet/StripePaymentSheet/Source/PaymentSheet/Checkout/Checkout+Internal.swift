@@ -16,25 +16,26 @@ extension CheckoutController: ExpressCheckoutElementDelegate {
         _ paymentMethod: ExpressCheckoutElement.PaymentMethod,
         presentationWindow: UIWindow?
     ) async -> ConfirmResult {
-        guard let flow = makeExpressCheckoutConfirmationFlow(
-            paymentMethod,
-            presentationWindow: presentationWindow
-        ) else {
-            let error = CheckoutError.unknown(debugDescription: "CheckoutController.expressCheckoutElementShouldConfirm() could not build a confirmation flow for \(paymentMethod).")
+        do {
+            let flow = try makeExpressCheckoutConfirmationFlow(
+                paymentMethod,
+                presentationWindow: presentationWindow
+            )
+            return await confirm(flow)
+        } catch {
             STPAnalyticsClient.sharedClient.log(analytic: ErrorAnalytic(event: .unexpectedCheckoutElementsError, error: error))
             return .failed(error)
         }
-        return await confirm(flow)
     }
 
     func makeExpressCheckoutConfirmationFlow(
         _ paymentMethod: ExpressCheckoutElement.PaymentMethod,
         presentationWindow: UIWindow?
-    ) -> CheckoutConfirmationFlow? {
+    ) throws -> CheckoutConfirmationFlow {
         switch paymentMethod {
         case .applePay:
             guard let applePayConfiguration = configuration.expressCheckoutElement.applePayConfiguration else {
-                return nil
+                throw CheckoutError.unknown(debugDescription: "Could not build a confirmation flow for \(paymentMethod). Express Checkout Element Apple Pay configuration unexpectedly nil.")
             }
             // TODO: Should next actions use an authentication context tied to `presentationWindow`
             // instead of `WindowAuthenticationContext` to avoid presenting in the wrong scene?
@@ -58,7 +59,7 @@ extension CheckoutController: ExpressCheckoutElementDelegate {
             ))
         case .link:
             guard let presentingViewController = presentationWindow?.findTopMostPresentedViewController() else {
-                return nil
+                throw CheckoutError.unknown(debugDescription: "Could not build a confirmation flow for \(paymentMethod). Could not find a presenting view controller.")
             }
             var paymentElementConfiguration = PaymentSheet.Configuration()
             paymentElementConfiguration.apiClient = apiClient
