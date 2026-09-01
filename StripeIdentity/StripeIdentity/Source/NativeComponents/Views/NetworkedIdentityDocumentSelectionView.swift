@@ -111,6 +111,10 @@ final class NetworkedIdentityDocumentSelectionView: UIView {
                 }
             )
         )
+        if let selectedDocumentID,
+           let selectedIndex = documents.firstIndex(where: { $0.id == selectedDocumentID }) {
+            listView.focusAccessibility(onItemIndex: selectedIndex)
+        }
     }
 
     func configureLoading(bodyText: String) {

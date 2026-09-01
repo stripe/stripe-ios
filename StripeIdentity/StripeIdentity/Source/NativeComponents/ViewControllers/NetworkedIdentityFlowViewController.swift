@@ -128,6 +128,9 @@ final class NetworkedIdentityFlowViewController: UIViewController {
     }
 
     deinit {
+        Task { @MainActor [coordinator] in
+            coordinator.abandon()
+        }
         NotificationCenter.default.removeObserver(self)
     }
 
@@ -171,6 +174,16 @@ final class NetworkedIdentityFlowViewController: UIViewController {
             navigationController?.interactivePopGestureRecognizer?.isEnabled =
                 previousInteractivePopGestureEnabled
             self.previousInteractivePopGestureEnabled = nil
+        }
+    }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+
+        if isBeingDismissed
+            || isMovingFromParent
+            || navigationController?.isBeingDismissed == true {
+            coordinator.abandon()
         }
     }
 

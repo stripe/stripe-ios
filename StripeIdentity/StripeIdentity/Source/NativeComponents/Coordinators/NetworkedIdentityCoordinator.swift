@@ -163,6 +163,22 @@ final class NetworkedIdentityCoordinator {
     }
 
     func cancel() {
+        endAsCancelled(notifyDelegate: true)
+    }
+
+    /// Cleans up an unfinished flow without notifying UI delegates when its owner is released.
+    func abandon() {
+        guard !flowHasEnded else {
+            return
+        }
+        endAsCancelled(notifyDelegate: false)
+    }
+}
+
+// MARK: - Private
+
+private extension NetworkedIdentityCoordinator {
+    func endAsCancelled(notifyDelegate: Bool) {
         guard state != .cancelled else {
             return
         }
@@ -185,16 +201,16 @@ final class NetworkedIdentityCoordinator {
         fallbackReason = nil
         availableDocuments = []
         selectedDocument = nil
-        transition(to: .cancelled)
+        if notifyDelegate {
+            transition(to: .cancelled)
+        } else {
+            state = .cancelled
+        }
 
         // Logout is best effort. Local credentials have already been cleared.
         logout?.observe { _ in }
     }
-}
 
-// MARK: - Private
-
-private extension NetworkedIdentityCoordinator {
     func beginLookup() {
         guard let emailAddress else {
             fallBackToFullCapture(reason: .unavailable)

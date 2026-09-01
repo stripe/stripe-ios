@@ -319,6 +319,23 @@ final class NetworkedIdentityCoordinatorTest: XCTestCase {
         )
     }
 
+    func testSessionExpiredWhileStartingVerificationRequiresReauthentication() {
+        // Given lookup found an existing consumer and SMS verification is starting
+        beginExistingConsumerLookup()
+
+        // When starting verification reports that the consumer session expired
+        waitForTransition(to: .reauthenticationRequired) {
+            apiClient.startVerification.respondToNext(
+                with: .failure(consumerError(code: "consumer_session_expired"))
+            )
+        }
+
+        // Then credentials are cleared and the user must explicitly sign in again
+        XCTAssertEqual(coordinator.lastOTPError, .sessionExpired)
+        XCTAssertFalse(credentialStore.hasConsumerCredentials)
+        XCTAssertEqual(apiClient.lookup.requestHistory.count, 1)
+    }
+
     func testMaximumOTPAttemptsFallsBackToFullCapture() {
         // Given the coordinator is awaiting a fresh SMS code
         beginExistingConsumerFlow()
@@ -624,6 +641,33 @@ final class NetworkedIdentityCoordinatorTest: XCTestCase {
             apiClient.logOut.requestHistory.first?.consumerSessionClientSecret,
             "cs_started"
         )
+    }
+
+    func testAbandonmentSilentlyCleansUpAuthenticatedSession() {
+        // Given the flow is waiting for an OTP with an authenticated consumer session
+        beginExistingConsumerFlow()
+        delegate.onTransition = { state in
+            XCTFail("Abandonment unexpectedly emitted the \(state) transition")
+        }
+
+        // When the flow owner disappears without using a completion action
+        coordinator.abandon()
+
+        // Then Link is logged out and credentials are cleared without notifying the host
+        XCTAssertEqual(
+            apiClient.logOut.requestHistory,
+            [
+                .init(
+                    consumerSessionClientSecret: "cs_started",
+                    verificationSessionClientSecrets: ["vs_client_secret"],
+                    consumerPublishableKey: "pk_consumer_lookup"
+                ),
+            ]
+        )
+        XCTAssertEqual(coordinator.state, .cancelled)
+        XCTAssertTrue(credentialStore.isEmpty)
+        XCTAssertEqual(delegate.fullCaptureFallbackCount, 0)
+        delegate.onTransition = nil
     }
 
     func testManualCaptureLogsOutSecretReturnedByPendingLookup() {
