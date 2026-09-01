@@ -40,6 +40,28 @@ class HeaderView: UIView {
         let backgroundColor: UIColor
         let headerType: HeaderType
         let titleText: String?
+        let titleFont: UIFont?
+        let titleTextColor: UIColor?
+        let titleTextAlignment: NSTextAlignment
+        let topInset: CGFloat?
+
+        init(
+            backgroundColor: UIColor,
+            headerType: HeaderType,
+            titleText: String?,
+            titleFont: UIFont? = nil,
+            titleTextColor: UIColor? = nil,
+            titleTextAlignment: NSTextAlignment = .center,
+            topInset: CGFloat? = nil
+        ) {
+            self.backgroundColor = backgroundColor
+            self.headerType = headerType
+            self.titleText = titleText
+            self.titleFont = titleFont
+            self.titleTextColor = titleTextColor
+            self.titleTextAlignment = titleTextAlignment
+            self.topInset = topInset
+        }
     }
 
     private let iconView = HeaderIconView()
@@ -97,7 +119,9 @@ extension HeaderView {
         if let titleText = viewModel.titleText {
             titleLabel.isHidden = false
             titleLabel.text = titleText
-            titleLabel.textAlignment = .center
+            titleLabel.font = viewModel.titleFont ?? IdentityUI.titleFont
+            titleLabel.textColor = viewModel.titleTextColor ?? IdentityUI.textColor
+            titleLabel.textAlignment = viewModel.titleTextAlignment
         } else {
             titleLabel.isHidden = true
         }
@@ -115,7 +139,7 @@ extension HeaderView {
             iconView.isHidden = true
         }
 
-        topAnchorConstraint.constant = 16
+        topAnchorConstraint.constant = viewModel.topInset ?? 16
     }
 
     // Call on init to set stack view in view

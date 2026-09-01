@@ -57,17 +57,20 @@ class IdentityFlowView: UIView {
             let text: String
             let state: State
             let isPrimary: Bool
+            let configuration: StripeUICore.Button.Configuration?
             let didTap: () -> Void
 
             init(
                 text: String,
                 state: State = .enabled,
                 isPrimary: Bool = true,
+                configuration: StripeUICore.Button.Configuration? = nil,
                 didTap: @escaping () -> Void
             ) {
                 self.text = text
                 self.state = state
                 self.isPrimary = isPrimary
+                self.configuration = configuration
                 self.didTap = didTap
             }
         }
@@ -445,9 +448,8 @@ extension StripeUICore.Button {
 
     fileprivate func configure(with viewModel: IdentityFlowView.ViewModel.Button) {
         self.title = viewModel.text
-        self.configuration = IdentityFlowView.Style.buttonConfiguration(
-            isPrimary: viewModel.isPrimary
-        )
+        self.configuration = viewModel.configuration
+            ?? IdentityFlowView.Style.buttonConfiguration(isPrimary: viewModel.isPrimary)
         self.isEnabled = viewModel.state == .enabled
         self.isLoading = viewModel.state == .loading
     }

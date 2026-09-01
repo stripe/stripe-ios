@@ -31,7 +31,9 @@ final class NetworkedIdentityDocumentSelectionView: UIView {
     private let bodyLabel: UILabel = {
         let label = UILabel()
         label.adjustsFontForContentSizeCategory = true
-        label.font = IdentityUI.instructionsFont
+        label.font = NetworkedIdentityUI.bodyFont
+        label.textColor = .secondaryLabel
+        label.textAlignment = .center
         label.numberOfLines = 0
         return label
     }()
@@ -52,7 +54,7 @@ final class NetworkedIdentityDocumentSelectionView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
 
-        listView.tintColor = IdentityUI.stripeBlurple
+        listView.tintColor = .label
         loadingContainer.addSubview(loadingIndicator)
         loadingIndicator.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([

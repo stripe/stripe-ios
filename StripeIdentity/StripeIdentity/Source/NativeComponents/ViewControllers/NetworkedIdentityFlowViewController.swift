@@ -90,7 +90,7 @@ final class NetworkedIdentityFlowViewController: UIViewController {
 
     init(
         coordinator: NetworkedIdentityCoordinator,
-        content: Content
+        content: Content = .networkedIdentity
     ) {
         self.coordinator = coordinator
         self.content = content
@@ -101,12 +101,26 @@ final class NetworkedIdentityFlowViewController: UIViewController {
         emailView.delegate = self
         documentSelectionView.delegate = self
         navigationItem.hidesBackButton = true
+
+        // #TODO - Networked Identity: Replace this local canonical Link asset only if the final
+        // mobile handoff supplies a Networked Identity-specific brand lockup.
+        let logoView = UIImageView(image: Image.linkLogo.makeImage())
+        logoView.contentMode = .scaleAspectFit
+        logoView.isAccessibilityElement = true
+        logoView.accessibilityLabel = "Link"
+        logoView.accessibilityTraits = .header
+        logoView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            logoView.widthAnchor.constraint(equalToConstant: 72),
+            logoView.heightAnchor.constraint(equalToConstant: 24),
+        ])
+        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: logoView)
         navigationItem.rightBarButtonItem = UIBarButtonItem(
-            title: content.cancelButtonText,
-            style: .plain,
+            barButtonSystemItem: .close,
             target: self,
             action: #selector(didTapCancel)
         )
+        navigationItem.rightBarButtonItem?.accessibilityLabel = content.cancelButtonText
     }
 
     required init?(coder: NSCoder) {
@@ -122,6 +136,7 @@ final class NetworkedIdentityFlowViewController: UIViewController {
 
         view = flowView
         view.backgroundColor = .systemBackground
+        flowView.tintColor = .label
         observeKeyboardNotifications()
         render(coordinator.state)
     }
@@ -165,6 +180,69 @@ final class NetworkedIdentityFlowViewController: UIViewController {
 
     func cancel() {
         coordinator.cancel()
+    }
+}
+
+extension NetworkedIdentityFlowViewController.Content {
+    /// The current Figma reference content for the native Link reuse flow.
+    ///
+    /// #TODO - Networked Identity: Localize the Networked Identity-specific strings and replace
+    /// provisional copy when the final mobile content is approved.
+    static var networkedIdentity: Self {
+        let documentLabel: NetworkedIdentityDocumentSelectionView.LabelProvider = { document in
+            let type: String
+            switch document.documentType {
+            case .drivingLicense:
+                type = "Driver's license"
+            case .passport:
+                type = "Passport"
+            case .idCard:
+                type = "Identity card"
+            case .unparsable:
+                type = "Identity document"
+            }
+            guard let documentNumber = document.redactedDocumentNumber,
+                  !documentNumber.isEmpty else {
+                return type
+            }
+            return "\(type) \(documentNumber)"
+        }
+
+        return .init(
+            email: .init(
+                title: "Continue with Link",
+                body: "To save this ID, sign in or create an account.",
+                reauthenticationTitle: "Continue with Link",
+                reauthenticationBody: "Sign in again to continue.",
+                continueButtonText: "Continue"
+            ),
+            otp: .init(
+                title: String.Localized.confirm_its_you,
+                sendingBody: {
+                    String(format: String.Localized.enter_code_sent_to, $0)
+                },
+                body: {
+                    String(format: String.Localized.enter_code_sent_to, $0)
+                },
+                invalidCodeMessage: STPLocalizedString(
+                    "The provided verification code is incorrect.",
+                    "Error message shown when the user enters an incorrect verification code."
+                )
+            ),
+            documents: .init(
+                title: "Choose a saved ID",
+                body: "Select an ID to continue.",
+                loadingTitle: "Finding your saved IDs",
+                loadingBody: "This should only take a moment.",
+                label: documentLabel,
+                accessibilityLabel: { document, isSelected in
+                    let label = documentLabel(document)
+                    return isSelected ? "\(label), selected" : label
+                }
+            ),
+            manualCaptureButtonText: "Manually verify identity",
+            cancelButtonText: String.Localized.close
+        )
     }
 }
 
@@ -218,6 +296,7 @@ private extension NetworkedIdentityFlowViewController {
                         state: isLoading
                             ? .loading
                             : (emailView.hasValidEmailAddress ? .enabled : .disabled),
+                        configuration: .networkedIdentityPrimary(),
                         didTap: { [weak self] in
                             self?.submitEmail()
                         }
@@ -252,7 +331,8 @@ private extension NetworkedIdentityFlowViewController {
             let phoneOtpView = PhoneOtpView(
                 otpLength: 6,
                 body: body,
-                errorString: content.otp.invalidCodeMessage
+                errorString: content.otp.invalidCodeMessage,
+                style: .networkedIdentity
             )
             phoneOtpView.delegate = self
             self.phoneOtpView = phoneOtpView
@@ -279,6 +359,8 @@ private extension NetworkedIdentityFlowViewController {
                 buttons: [manualCaptureButton()]
             )
         )
+        // #TODO - Networked Identity: Add resend and alternate-channel controls when their
+        // API contracts are available. The Figma actions must not be rendered as dead controls.
         announceScreenChangeIfNeeded(
             state == .otpStartPending ? .otpSending : .otp,
             focusView: phoneOtpView
@@ -299,7 +381,10 @@ private extension NetworkedIdentityFlowViewController {
         )
         configureFlow(
             with: .init(
-                headerViewModel: plainHeader(title: content.documents.title),
+                headerViewModel: plainHeader(
+                    title: content.documents.title,
+                    topInset: NetworkedIdentityUI.compactHeaderTopInset
+                ),
                 contentView: documentSelectionView,
                 buttons: [manualCaptureButton()]
             )
@@ -310,6 +395,8 @@ private extension NetworkedIdentityFlowViewController {
         )
 
         // #TODO - Networked Identity: Present reuse consent and continue into clone once those contracts are defined.
+        // #TODO - Networked Identity: Replace the provisional list treatment when a final
+        // multi-document mobile frame is approved.
     }
 
     func renderDocumentLoading() {
@@ -328,12 +415,18 @@ private extension NetworkedIdentityFlowViewController {
         )
     }
 
-    func plainHeader(title: String) -> HeaderView.ViewModel {
-        // #TODO - Networked Identity: Add approved Link co-branding when its StripeIdentity asset contract is defined.
+    func plainHeader(
+        title: String,
+        topInset: CGFloat = NetworkedIdentityUI.centeredHeaderTopInset
+    ) -> HeaderView.ViewModel {
         .init(
             backgroundColor: .systemBackground,
             headerType: .plain,
-            titleText: title
+            titleText: title,
+            titleFont: NetworkedIdentityUI.titleFont,
+            titleTextColor: .label,
+            titleTextAlignment: .center,
+            topInset: topInset
         )
     }
 
@@ -341,6 +434,7 @@ private extension NetworkedIdentityFlowViewController {
         .init(
             text: content.manualCaptureButtonText,
             isPrimary: false,
+            configuration: .networkedIdentitySecondary(),
             didTap: { [weak self] in
                 self?.chooseManualCapture()
             }

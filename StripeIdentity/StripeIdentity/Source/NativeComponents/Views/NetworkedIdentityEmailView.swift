@@ -32,7 +32,9 @@ final class NetworkedIdentityEmailView: UIView {
     private let bodyLabel: UILabel = {
         let label = UILabel()
         label.adjustsFontForContentSizeCategory = true
-        label.font = IdentityUI.instructionsFont
+        label.font = NetworkedIdentityUI.bodyFont
+        label.textColor = .secondaryLabel
+        label.textAlignment = .center
         label.numberOfLines = 0
         return label
     }()
@@ -47,13 +49,14 @@ final class NetworkedIdentityEmailView: UIView {
     }()
 
     init(bodyText: String) {
+        let appearance = NetworkedIdentityUI.elementsAppearance
         emailElement = TextFieldElement.makeEmail(
             defaultValue: nil,
-            theme: IdentityUI.identityElementsUITheme
+            theme: appearance
         )
         emailSection = SectionElement(
             emailElement,
-            theme: IdentityUI.identityElementsUITheme
+            theme: appearance
         )
         super.init(frame: .zero)
 

@@ -15,6 +15,11 @@ protocol PhoneOtpViewDelegate: AnyObject {
 
 class PhoneOtpView: UIView {
 
+    enum Style {
+        case identity
+        case networkedIdentity
+    }
+
     enum ViewModel: Equatable {
         case InputtingOTP // When user is inputting OTP
         case SubmittingOTP(String) // When OTP is being submitted through Post VerificationPageData
@@ -66,18 +71,43 @@ class PhoneOtpView: UIView {
     init(
         otpLength: Int,
         body: String,
-        errorString: String
+        errorString: String,
+        style: Style = .identity
     ) {
+        let otpConfiguration: OneTimeCodeTextField.Configuration
+        let otpTheme: ElementsAppearance
+        switch style {
+        case .identity:
+            otpConfiguration = .init(numberOfDigits: otpLength)
+            otpTheme = IdentityUI.identityElementsUITheme
+        case .networkedIdentity:
+            otpConfiguration = .init(
+                numberOfDigits: otpLength,
+                itemSpacing: 6,
+                enableDigitGrouping: false,
+                font: .systemFont(ofSize: 24, weight: .bold),
+                itemCornerRadius: 12,
+                itemHeight: 56,
+                itemFocusRingThickness: 1.5,
+                itemFocusBackgroundColor: .systemBackground
+            )
+            otpTheme = NetworkedIdentityUI.elementsAppearance
+        }
         otpTextField = OneTimeCodeTextField(
-            configuration: OneTimeCodeTextField.Configuration(
-                numberOfDigits: otpLength
-            ),
-            theme: IdentityUI.identityElementsUITheme
+            configuration: otpConfiguration,
+            theme: otpTheme
         )
         otpBodyLabel.text = body
         otpErrorLabel.text = errorString
 
         super.init(frame: .zero)
+        if case .networkedIdentity = style {
+            otpBodyLabel.font = NetworkedIdentityUI.bodyFont
+            otpBodyLabel.textColor = .secondaryLabel
+            otpBodyLabel.textAlignment = .center
+            otpErrorLabel.textAlignment = .center
+            otpTextField.tintColor = .label
+        }
         otpTextField.addTarget(self, action: #selector(otpTextFieldDidChange), for: .valueChanged)
 
         let warningIconView = UIImageView()
@@ -90,6 +120,9 @@ class PhoneOtpView: UIView {
         stackView.addArrangedSubview(otpTextField)
         stackView.addArrangedSubview(otpErrorField)
         stackView.addArrangedSubview(submittingIndicator)
+        if case .networkedIdentity = style {
+            stackView.setCustomSpacing(32, after: otpBodyLabel)
+        }
 
         NSLayoutConstraint.activate([
             warningIconView.widthAnchor.constraint(equalToConstant: 16),

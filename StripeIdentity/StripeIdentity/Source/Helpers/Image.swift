@@ -35,4 +35,5 @@ import Foundation
     case iconCameraClassic = "icon_camera_classic"
     case iconDisputeProtection = "icon_dispute_protection"
     case iconPhone = "icon_phone"
+    case linkLogo = "link_logo"
 }
