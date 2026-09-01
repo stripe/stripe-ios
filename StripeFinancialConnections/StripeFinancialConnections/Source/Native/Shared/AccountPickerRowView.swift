@@ -43,7 +43,7 @@ final class AccountPickerRowView: UIView {
         return selectionView
     }()
     private lazy var labelView: AccountPickerRowLabelView = {
-        return AccountPickerRowLabelView()
+        return AccountPickerRowLabelView(appearance: appearance)
     }()
 
     init(
