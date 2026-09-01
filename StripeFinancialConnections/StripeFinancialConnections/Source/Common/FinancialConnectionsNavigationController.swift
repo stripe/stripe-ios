@@ -127,6 +127,11 @@ extension FinancialConnectionsNavigationController: UINavigationBarDelegate {
 extension FinancialConnectionsNavigationController {
 
     func configureAppearanceForNative(appearance: FinancialConnectionsAppearance = .stripe) {
+        // UIKit can expose the navigation controller's view above the navigation bar
+        // during push transitions when presented as a sheet on physical devices.
+        // Keep it opaque so the presentation controller's dimming view does not show through.
+        view.backgroundColor = FinancialConnectionsAppearance.Colors.background
+
         let backButtonImage = Image
             .back_arrow
             .makeImage(template: false)

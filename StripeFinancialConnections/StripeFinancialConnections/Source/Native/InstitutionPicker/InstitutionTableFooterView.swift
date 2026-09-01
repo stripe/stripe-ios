@@ -64,18 +64,9 @@ final class InstitutionTableFooterView: UIView {
             layer.cornerRadius = 12
             layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
             layer.masksToBounds = true
-            addAndPinSubview(
-                contentView,
-                insets: NSDirectionalEdgeInsets(
-                    top: 0,
-                    leading: 0,
-                    bottom: 16,
-                    trailing: 0
-                )
-            )
-        } else {
-            addAndPinSubview(contentView)
         }
+
+        addAndPinSubview(contentView)
 
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapView))
         tapGestureRecognizer.delegate = self

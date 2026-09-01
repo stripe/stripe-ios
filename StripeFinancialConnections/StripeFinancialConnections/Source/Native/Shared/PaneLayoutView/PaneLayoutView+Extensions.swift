@@ -50,6 +50,7 @@ extension PaneLayoutView {
             let bodyView = createBodyView(
                 accessibleText: accessibleSubtitle,
                 contentView: contentView,
+                isSheet: isSheet,
                 appearance: appearance
             )
             verticalStackView.addArrangedSubview(bodyView)
@@ -90,18 +91,22 @@ extension PaneLayoutView {
         appearance: FinancialConnectionsAppearance? = nil
     ) -> UIView {
         let isLink = appearance?.colors == .link
+        let resolvedAlignment: UIStackView.Alignment = {
+            guard isLink else { return alignment }
+            return isSheet ? .leading : .center
+        }()
 
         let headerStackView = HitTestStackView()
         headerStackView.axis = .vertical
         headerStackView.spacing = 16
-        headerStackView.alignment = alignment
+        headerStackView.alignment = resolvedAlignment
         if let iconView = iconView {
             headerStackView.addArrangedSubview(iconView)
         }
 
         if let title = accessibleTitle {
             let textAlignment: NSTextAlignment? = {
-                switch alignment {
+                switch resolvedAlignment {
                 case .leading: return .left
                 case .center: return .center
                 case .trailing: return .right
@@ -165,6 +170,7 @@ extension PaneLayoutView {
     static func createBodyView(
         accessibleText: AccessibleText?,
         contentView: UIView?,
+        isSheet: Bool = false,
         appearance: FinancialConnectionsAppearance? = nil
     ) -> UIView {
         let isLink = appearance?.colors == .link
@@ -189,7 +195,8 @@ extension PaneLayoutView {
                 font: .body(.medium),
                 boldFont: .body(.mediumEmphasized),
                 linkFont: .body(.mediumEmphasized),
-                textColor: appearance?.colors.textTertiary ?? FinancialConnectionsAppearance.Colors.textDefault
+                textColor: appearance?.colors.textTertiary ?? FinancialConnectionsAppearance.Colors.textDefault,
+                alignment: isLink && !isSheet ? .center : nil
             )
             textLabel.setText(text.text)
             textLabel.accessibilityLabel = text.accessibilityText
@@ -207,11 +214,13 @@ extension PaneLayoutView {
     static func createBodyView(
         text: String?,
         contentView: UIView?,
+        isSheet: Bool = false,
         appearance: FinancialConnectionsAppearance? = nil
     ) -> UIView {
         createBodyView(
             accessibleText: text.map { AccessibleText($0) },
             contentView: contentView,
+            isSheet: isSheet,
             appearance: appearance
         )
     }
