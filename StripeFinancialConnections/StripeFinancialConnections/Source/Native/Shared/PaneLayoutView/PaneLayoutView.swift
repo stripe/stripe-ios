@@ -100,17 +100,6 @@ final class PaneLayoutView {
         return containerView
     }
 
-    /// Vertically centers the scroll view's content within its visible frame when the
-    /// content is shorter than the frame (e.g. the OTP pane), falling back to normal
-    /// top-aligned scrolling once content grows to fill or exceed the frame height.
-    /// Opt-in: callers must invoke this from `viewDidLayoutSubviews` since `PaneLayoutView`
-    /// isn't itself part of the view hierarchy's layout pass.
-    func centerContentVerticallyIfNeeded() {
-        let availableHeight = scrollView.bounds.height
-        let contentHeight = scrollView.contentSize.height
-        scrollView.contentInset.top = max(0, (availableHeight - contentHeight) / 2)
-    }
-
     private func setupKeyboardObservers() {
         NotificationCenter.default.addObserver(
             self,

@@ -13,35 +13,22 @@ final class LinkAccountPickerLoadingView: ShimmeringView {
 
     init(appearance: FinancialConnectionsAppearance = .stripe) {
         super.init(frame: .zero)
-        if appearance.colors == .link {
-            let row = UIView()
-            row.translatesAutoresizingMaskIntoConstraints = false
+        let verticalStackView = UIStackView()
+        verticalStackView.axis = .vertical
+        verticalStackView.spacing = 16
+        for _ in 0..<3 {
+            let linkAccountRowView = UIView()
+            linkAccountRowView.backgroundColor = appearance.colors == .link
+                ? appearance.colors.iconBackground
+                : FinancialConnectionsAppearance.Colors.backgroundSecondary
+            linkAccountRowView.layer.cornerRadius = 12
+            linkAccountRowView.translatesAutoresizingMaskIntoConstraints = false
             NSLayoutConstraint.activate([
-                row.heightAnchor.constraint(equalToConstant: 88)
+                linkAccountRowView.heightAnchor.constraint(equalToConstant: 88)
             ])
-
-            let container = UIView()
-            container.backgroundColor = appearance.colors.iconBackground
-            container.layer.cornerRadius = 12
-            container.layer.masksToBounds = true
-            container.addAndPinSubview(row)
-            addAndPinSubview(container)
-        } else {
-            let verticalStackView = UIStackView()
-            verticalStackView.axis = .vertical
-            verticalStackView.spacing = 16
-            for _ in 0..<3 {
-                let linkAccountRowView = UIView()
-                linkAccountRowView.backgroundColor = FinancialConnectionsAppearance.Colors.backgroundSecondary
-                linkAccountRowView.layer.cornerRadius = 12
-                linkAccountRowView.translatesAutoresizingMaskIntoConstraints = false
-                NSLayoutConstraint.activate([
-                    linkAccountRowView.heightAnchor.constraint(equalToConstant: 88)
-                ])
-                verticalStackView.addArrangedSubview(linkAccountRowView)
-            }
-            addAndPinSubview(verticalStackView)
+            verticalStackView.addArrangedSubview(linkAccountRowView)
         }
+        addAndPinSubview(verticalStackView)
     }
 
     required init?(coder: NSCoder) {
