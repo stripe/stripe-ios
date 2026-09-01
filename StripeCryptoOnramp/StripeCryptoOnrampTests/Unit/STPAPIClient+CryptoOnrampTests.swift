@@ -1286,10 +1286,6 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
             XCTAssertEqual(request.url?.path, Constant.getPlatformSettingsAPIPath)
             XCTAssertEqual(request.httpMethod, "GET")
             XCTAssertEqual(request.value(forHTTPHeaderField: "Stripe-Version"), Constant.cryptoOnrampAPIVersion)
-            XCTAssertEqual(
-                request.value(forHTTPHeaderField: Constant.consumerAuthTokenHeader),
-                Constant.requestSecret
-            )
 
             guard let queryParametersString = request.url?.query else {
                 XCTFail("Expected query parameters but found none.")
@@ -1310,10 +1306,7 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         let apiClient = stubbedAPIClient()
 
         do {
-            let response = try await apiClient.getPlatformSettings(
-                cryptoCustomerId: Constant.validCustomerId,
-                linkAccountInfo: Constant.validLinkAccountInfo
-            )
+            let response = try await apiClient.getPlatformSettings(cryptoCustomerId: Constant.validCustomerId)
             XCTAssertEqual(response.publishableKey, Constant.validPublishableKey)
         } catch {
             XCTFail("Expected a success response but got an error: \(error).")
@@ -1331,27 +1324,11 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         let apiClient = stubbedAPIClient()
 
         do {
-            _ = try await apiClient.getPlatformSettings(
-                cryptoCustomerId: Constant.validCustomerId,
-                linkAccountInfo: Constant.validLinkAccountInfo
-            )
+            _ = try await apiClient.getPlatformSettings(cryptoCustomerId: Constant.validCustomerId)
             XCTFail("Expected failure but got success.")
         } catch {
             XCTAssertEqual((error as NSError).domain, Constant.errorDomain)
         }
-    }
-
-    func testGetPlatformSettingsThrowsWithoutConsumerSessionClientSecret() async {
-        let apiClient = stubbedAPIClient()
-
-        var noSecretLinkAccountInfo = Constant.validLinkAccountInfo
-        noSecretLinkAccountInfo.consumerSessionClientSecret = nil
-        await XCTAssertThrowsErrorAsync(
-            _ = try await apiClient.getPlatformSettings(
-                cryptoCustomerId: Constant.validCustomerId,
-                linkAccountInfo: noSecretLinkAccountInfo
-            )
-        )
     }
 }
 
