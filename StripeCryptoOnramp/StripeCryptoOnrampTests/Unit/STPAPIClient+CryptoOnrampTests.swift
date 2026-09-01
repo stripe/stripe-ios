@@ -19,6 +19,7 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
     private enum Constant {
         // Common
         static let requestSecret = "cscs_12345"
+        static let consumerAuthTokenHeader = "Stripe-Consumer-Auth-Token"
         static let errorDomain = "STPAPIClientCryptoOnrampTests.Error"
         static let validCustomerId = "crc_12345"
         static let cryptoOnrampAPIVersion = "2026-03-25.preview"
@@ -446,15 +447,11 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         stub { request in
             XCTAssertEqual(request.url?.path, Constant.retrieveMissingIdentifiersAPIPath)
             XCTAssertEqual(request.httpMethod, "GET")
-
-            guard let queryParametersString = request.url?.query else {
-                XCTFail("Expected query parameters but found none.")
-                return false
-            }
-
-            let parameters = queryParametersString.removingPercentEncoding?.parsedHTTPParametersDictionary ?? [:]
-            XCTAssertEqual(parameters.count, 1)
-            XCTAssertEqual(parameters["credentials[consumer_session_client_secret]"], Constant.requestSecret)
+            XCTAssertEqual(
+                request.value(forHTTPHeaderField: Constant.consumerAuthTokenHeader),
+                Constant.requestSecret
+            )
+            XCTAssertTrue(request.url?.query?.isEmpty ?? true)
 
             return true
         } response: { _ in
@@ -577,15 +574,11 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         stub { request in
             XCTAssertEqual(request.url?.path, Constant.userAttestationAPIPath)
             XCTAssertEqual(request.httpMethod, "GET")
-
-            guard let queryParametersString = request.url?.query else {
-                XCTFail("Expected query parameters but found none.")
-                return false
-            }
-
-            let parameters = queryParametersString.removingPercentEncoding?.parsedHTTPParametersDictionary ?? [:]
-            XCTAssertEqual(parameters.count, 1)
-            XCTAssertEqual(parameters["credentials[consumer_session_client_secret]"], Constant.requestSecret)
+            XCTAssertEqual(
+                request.value(forHTTPHeaderField: Constant.consumerAuthTokenHeader),
+                Constant.requestSecret
+            )
+            XCTAssertTrue(request.url?.query?.isEmpty ?? true)
 
             return true
         } response: { _ in
@@ -1291,6 +1284,10 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
             XCTAssertEqual(request.url?.path, Constant.getPlatformSettingsAPIPath)
             XCTAssertEqual(request.httpMethod, "GET")
             XCTAssertEqual(request.value(forHTTPHeaderField: "Stripe-Version"), Constant.cryptoOnrampAPIVersion)
+            XCTAssertEqual(
+                request.value(forHTTPHeaderField: Constant.consumerAuthTokenHeader),
+                Constant.requestSecret
+            )
 
             guard let queryParametersString = request.url?.query else {
                 XCTFail("Expected query parameters but found none.")
@@ -1311,7 +1308,10 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         let apiClient = stubbedAPIClient()
 
         do {
-            let response = try await apiClient.getPlatformSettings(cryptoCustomerId: Constant.validCustomerId)
+            let response = try await apiClient.getPlatformSettings(
+                cryptoCustomerId: Constant.validCustomerId,
+                linkAccountInfo: Constant.validLinkAccountInfo
+            )
             XCTAssertEqual(response.publishableKey, Constant.validPublishableKey)
         } catch {
             XCTFail("Expected a success response but got an error: \(error).")
@@ -1329,11 +1329,27 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         let apiClient = stubbedAPIClient()
 
         do {
-            _ = try await apiClient.getPlatformSettings(cryptoCustomerId: Constant.validCustomerId)
+            _ = try await apiClient.getPlatformSettings(
+                cryptoCustomerId: Constant.validCustomerId,
+                linkAccountInfo: Constant.validLinkAccountInfo
+            )
             XCTFail("Expected failure but got success.")
         } catch {
             XCTAssertEqual((error as NSError).domain, Constant.errorDomain)
         }
+    }
+
+    func testGetPlatformSettingsThrowsWithoutConsumerSessionClientSecret() async {
+        let apiClient = stubbedAPIClient()
+
+        var noSecretLinkAccountInfo = Constant.validLinkAccountInfo
+        noSecretLinkAccountInfo.consumerSessionClientSecret = nil
+        await XCTAssertThrowsErrorAsync(
+            _ = try await apiClient.getPlatformSettings(
+                cryptoCustomerId: Constant.validCustomerId,
+                linkAccountInfo: noSecretLinkAccountInfo
+            )
+        )
     }
 }
 
