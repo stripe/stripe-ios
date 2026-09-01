@@ -16,9 +16,6 @@ struct ConfirmPartnerTermsRequest: Encodable {
     /// The partner whose declaration the customer accepted.
     let partner: CryptoOnrampPartner
 
-    /// The version of the declaration accepted by the customer.
-    let version: String
-
     /// The unique identifier of the declaration accepted by the customer.
     let declarationId: String
 
@@ -27,7 +24,6 @@ struct ConfirmPartnerTermsRequest: Encodable {
     private enum CodingKeys: String, CodingKey {
         case credentials
         case partner
-        case version
         case declarationId = "declaration_id"
     }
 }

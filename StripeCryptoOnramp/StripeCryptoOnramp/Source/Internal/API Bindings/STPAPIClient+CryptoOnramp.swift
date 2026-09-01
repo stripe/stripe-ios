@@ -223,13 +223,12 @@ extension STPAPIClient {
     /// Confirms the current Link user accepted a partner declaration.
     /// - Parameters:
     ///   - partner: The partner whose declaration the customer accepted.
-    ///   - version: The version of the declaration accepted by the customer.
     ///   - declarationId: The unique identifier of the declaration accepted by the customer.
     ///   - linkAccountInfo: Information associated with the Link account including the client secret and whether the account has been verified.
     /// - Returns: An empty response.
     /// Throws if the `linkAccountSessionState` is not verified, a client secret doesn’t exist, or if an API error occurs.
     @discardableResult
-    func confirmPartnerTerms(partner: CryptoOnrampPartner, version: String, declarationId: String, linkAccountInfo: PaymentSheetLinkAccountInfoProtocol) async throws -> EmptyResponse {
+    func confirmPartnerTerms(partner: CryptoOnrampPartner, declarationId: String, linkAccountInfo: PaymentSheetLinkAccountInfoProtocol) async throws -> EmptyResponse {
         guard let consumerSessionClientSecret = linkAccountInfo.consumerSessionClientSecret else {
             throw CryptoOnrampAPIError.missingConsumerSessionClientSecret
         }
@@ -240,7 +239,6 @@ extension STPAPIClient {
         let requestObject = ConfirmPartnerTermsRequest(
             credentials: Credentials(consumerSessionClientSecret: consumerSessionClientSecret),
             partner: partner,
-            version: version,
             declarationId: declarationId
         )
         return try await post(resource: endpoint, object: requestObject)

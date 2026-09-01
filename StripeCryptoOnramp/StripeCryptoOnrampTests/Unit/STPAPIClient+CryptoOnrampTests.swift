@@ -792,10 +792,9 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
 
             let parameters = String(data: httpBody, encoding: .utf8)?.parsedHTTPParametersDictionary ?? [:]
 
-            XCTAssertEqual(parameters.count, 4)
+            XCTAssertEqual(parameters.count, 3)
             XCTAssertEqual(parameters["credentials[consumer_session_client_secret]"], Constant.requestSecret)
             XCTAssertEqual(parameters["partner"], "swapped")
-            XCTAssertEqual(parameters["version"], "2026-08-27")
             XCTAssertEqual(parameters["declaration_id"], "declaration_123")
 
             return true
@@ -806,7 +805,6 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         let apiClient = stubbedAPIClient()
         _ = try await apiClient.confirmPartnerTerms(
             partner: .swapped,
-            version: "2026-08-27",
             declarationId: "declaration_123",
             linkAccountInfo: Constant.validLinkAccountInfo
         )
@@ -820,7 +818,6 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         await XCTAssertThrowsErrorAsync(
             _ = try await apiClient.confirmPartnerTerms(
                 partner: .swapped,
-                version: "2026-08-27",
                 declarationId: "declaration_123",
                 linkAccountInfo: noSecretLinkAccountInfo
             )
@@ -831,7 +828,6 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         await XCTAssertThrowsErrorAsync(
             _ = try await apiClient.confirmPartnerTerms(
                 partner: .swapped,
-                version: "2026-08-27",
                 declarationId: "declaration_123",
                 linkAccountInfo: unverifiedLinkAccountInfo
             )

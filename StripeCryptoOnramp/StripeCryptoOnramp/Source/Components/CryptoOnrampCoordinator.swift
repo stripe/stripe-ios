@@ -964,11 +964,10 @@ private extension CryptoOnrampCoordinator {
         switch terms {
         case .notRequired:
             return .notRequired
-        case let .required(_, version, declarationId, html):
+        case let .required(_, _, declarationId, html):
             let onAccept: () async throws -> Void = { [apiClient] in
                 _ = try await apiClient.confirmPartnerTerms(
                     partner: partner,
-                    version: version,
                     declarationId: declarationId,
                     linkAccountInfo: linkAccountInfo
                 )
