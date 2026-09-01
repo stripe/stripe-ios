@@ -12,12 +12,30 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
         app.launch()
 
         app.buttons["Reset"].waitForExistenceAndTap()
+        app.buttons["No Override"].scrollToAndTap(in: app)
+        app.buttons["Germany (DE)"].waitForExistenceAndTap()
         app.buttons["Create Checkout Session"].waitForExistenceAndTap()
 
         XCTAssertTrue(app.navigationBars["Your Cart"].waitForExistence(timeout: 15))
         XCTAssertTrue(app.staticTexts["Enter shipping address to calculate"].waitForExistence(timeout: 10))
 
+        // When the customer selects the integration currency in Currency Selector Element
+        let usdCurrencyOption = app.buttons["currency_option_usd"]
+        usdCurrencyOption.waitForExistenceAndTap()
+
+        // Then the merchant surface reflects the new Session
+        XCTAssertTrue(app.staticTexts["$120.00"].waitForExistence(timeout: 10))
+        expectation(
+            for: NSPredicate(format: "hittable == true"),
+            evaluatedWith: usdCurrencyOption,
+            handler: nil
+        )
+        waitForExpectations(timeout: 10)
+
         // When the customer saves an address in Shipping Address Element
+        let scrollStart = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
+        let scrollEnd = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.25))
+        scrollStart.press(forDuration: 0.1, thenDragTo: scrollEnd)
         app.buttons["Add shipping address"].scrollToAndTap(in: app)
         fillShippingAddress()
 
