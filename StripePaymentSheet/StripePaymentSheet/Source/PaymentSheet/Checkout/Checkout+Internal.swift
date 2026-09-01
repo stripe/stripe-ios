@@ -61,6 +61,7 @@ extension CheckoutController: ExpressCheckoutElementDelegate {
             guard let presentingViewController = presentationWindow?.findTopMostPresentedViewController() else {
                 throw CheckoutError.unknown(debugDescription: "Could not build a confirmation flow for \(paymentMethod). Could not find a presenting view controller.")
             }
+            // TODO: maybe add Link-specific configuration
             var paymentElementConfiguration = PaymentSheet.Configuration()
             paymentElementConfiguration.apiClient = apiClient
             paymentElementConfiguration.returnURL = configuration.returnURL
@@ -77,6 +78,7 @@ extension CheckoutController: ExpressCheckoutElementDelegate {
             case .never:
                 paymentElementConfiguration.link.display = .never
             }
+            // TODO: maybe separate out a LinkAnalyticsHelper
             let analyticsHelper = PaymentSheetAnalyticsHelper(
                 integrationShape: .complete, // Wallet Link analytics don't log integrationShape, so it's not worth adding an .expressCheckout case.
                 configuration: paymentElementConfiguration
