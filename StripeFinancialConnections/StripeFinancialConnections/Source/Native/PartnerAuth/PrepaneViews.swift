@@ -61,6 +61,7 @@ final class PrepaneViews {
                 prepaneBodyModel: prepaneModel.body,
                 didSelectURL: didSelectURL
             ),
+            isSheet: (panePresentationStyle == .sheet),
             appearance: appearance
         )
 

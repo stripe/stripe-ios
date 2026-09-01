@@ -51,7 +51,7 @@ class InstitutionPickerViewController: UIViewController {
     private lazy var headerView: UIView = {
         let verticalStackView = UIStackView(
             arrangedSubviews: [
-                CreateHeaderTitleLabel(),
+                CreateHeaderTitleLabel(appearance: dataSource.manifest.appearance),
             ]
         )
         verticalStackView.axis = .vertical
@@ -587,11 +587,14 @@ extension InstitutionPickerViewController: InstitutionTableViewDelegate {
 
 // MARK: - Helpers
 
-private func CreateHeaderTitleLabel() -> UIView {
+private func CreateHeaderTitleLabel(appearance: FinancialConnectionsAppearance) -> UIView {
     let headerTitleLabel = AttributedLabel(
         font: .heading(.extraLarge),
         textColor: FinancialConnectionsAppearance.Colors.textDefault
     )
+    if appearance.colors == .link {
+        headerTitleLabel.textAlignment = .center
+    }
     headerTitleLabel.setText(
         STPLocalizedString(
             "Select bank",
