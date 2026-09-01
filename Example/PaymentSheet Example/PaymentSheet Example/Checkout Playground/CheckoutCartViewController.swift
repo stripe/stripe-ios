@@ -165,6 +165,7 @@ final class CheckoutCartViewController: UIViewController {
         view.addSubview(statusContainerView)
 
         loadingOverlayView.backgroundColor = UIColor.black.withAlphaComponent(0.1)
+        loadingOverlayView.isUserInteractionEnabled = false
         loadingOverlayView.translatesAutoresizingMaskIntoConstraints = false
         loadingActivityIndicator.translatesAutoresizingMaskIntoConstraints = false
         loadingOverlayView.addSubview(loadingActivityIndicator)
@@ -260,20 +261,21 @@ final class CheckoutCartViewController: UIViewController {
     private func observeCheckout(_ checkout: CheckoutController) {
         checkout.$session
             .dropFirst()
-            .sink { [weak self] _ in
-                self?.renderCheckout()
+            .sink { [weak self] session in
+                self?.renderCheckout(session: session)
             }
             .store(in: &cancellables)
 
         checkout.$isUpdating
-            .sink { [weak self] _ in
-                self?.updateLoadingOverlay()
+            .sink { [weak self] isUpdating in
+                self?.updateLoadingState(isCheckoutUpdating: isUpdating)
             }
             .store(in: &cancellables)
     }
 
-    private func renderCheckout() {
+    private func renderCheckout(session: CheckoutController.Session? = nil) {
         guard let checkout else { return }
+        let session = session ?? checkout.session
 
         removeAllArrangedSubviews(from: contentStackView)
 
@@ -286,7 +288,7 @@ final class CheckoutCartViewController: UIViewController {
             contentStackView.addArrangedSubview(currencySelectorElement.uiView)
         }
 
-        contentStackView.addArrangedSubview(makeLineItemsSection(checkout: checkout))
+        contentStackView.addArrangedSubview(makeLineItemsSection(session: session))
 
         if showExpressCheckoutElement, let expressCheckoutElement = checkout.getExpressCheckoutElement() {
             contentStackView.addArrangedSubview(
@@ -294,33 +296,33 @@ final class CheckoutCartViewController: UIViewController {
             )
         }
 
-        if shippingAddressCollection || checkout.session.shippingAddress != nil {
-            contentStackView.addArrangedSubview(makeShippingAddressSection(checkout: checkout))
+        if shippingAddressCollection || session.shippingAddress != nil {
+            contentStackView.addArrangedSubview(makeShippingAddressSection(session: session))
         }
 
         if integrationType != .eceOnly {
             contentStackView.addArrangedSubview(
                 makeSection(
                     title: "Payment Method",
-                    content: makeCard(containing: makePaymentMethodRow(checkout: checkout))
+                    content: makeCard(containing: makePaymentMethodRow(session: session))
                 )
             )
         }
 
-        contentStackView.addArrangedSubview(makeOrderSummarySection(session: checkout.session))
+        contentStackView.addArrangedSubview(makeOrderSummarySection(session: session))
 
         if integrationType != .eceOnly {
-            contentStackView.addArrangedSubview(makeCheckoutButton(checkout: checkout))
+            contentStackView.addArrangedSubview(makeCheckoutButton(checkout: checkout, session: session))
         }
 
-        updateLoadingOverlay()
+        updateLoadingState()
     }
 
-    private func makeLineItemsSection(checkout: CheckoutController) -> UIView {
+    private func makeLineItemsSection(session: CheckoutController.Session) -> UIView {
         let itemsStackView = UIStackView()
         itemsStackView.axis = .vertical
 
-        let items = checkout.session.orderSummaryItems.flatMap { orderSummaryItem in
+        let items = session.orderSummaryItems.flatMap { orderSummaryItem in
             switch orderSummaryItem {
             case .oneTimePrice(let oneTimePrice):
                 return oneTimePrice.items
@@ -387,9 +389,9 @@ final class CheckoutCartViewController: UIViewController {
         return makePaddedView(containing: rowStackView)
     }
 
-    private func makeShippingAddressSection(checkout: CheckoutController) -> UIView {
+    private func makeShippingAddressSection(session: CheckoutController.Session) -> UIView {
         let cardContent: UIView
-        if let shippingAddress = checkout.session.shippingAddress {
+        if let shippingAddress = session.shippingAddress {
             let iconView = UIImageView(image: UIImage(systemName: "mappin.circle.fill"))
             iconView.tintColor = .systemBlue
             iconView.contentMode = .scaleAspectFit
@@ -570,7 +572,7 @@ final class CheckoutCartViewController: UIViewController {
         return stackView
     }
 
-    private func makePaymentMethodRow(checkout: CheckoutController) -> UIView {
+    private func makePaymentMethodRow(session: CheckoutController.Session) -> UIView {
         let rowView = UIButton(type: .custom)
         rowView.addTarget(self, action: #selector(paymentMethodButtonTapped), for: .touchUpInside)
 
@@ -578,7 +580,7 @@ final class CheckoutCartViewController: UIViewController {
         paymentOptionStackView.alignment = .center
         paymentOptionStackView.spacing = 8
 
-        if let paymentOption = checkout.session.paymentOption {
+        if let paymentOption = session.paymentOption {
             let imageView = UIImageView(image: paymentOption.image)
             imageView.contentMode = .scaleAspectFit
             imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -598,7 +600,7 @@ final class CheckoutCartViewController: UIViewController {
         }
 
         let label = UILabel()
-        label.text = checkout.session.paymentOption?.label ?? "Select payment method"
+        label.text = session.paymentOption?.label ?? "Select payment method"
         label.font = .preferredFont(forTextStyle: .body)
         paymentOptionStackView.addArrangedSubview(label)
 
@@ -621,7 +623,10 @@ final class CheckoutCartViewController: UIViewController {
         return rowView
     }
 
-    private func makeCheckoutButton(checkout: CheckoutController) -> UIView {
+    private func makeCheckoutButton(
+        checkout: CheckoutController,
+        session: CheckoutController.Session
+    ) -> UIView {
         let button = UIButton(type: .system)
         button.backgroundColor = .systemBlue
         button.layer.cornerRadius = 14
@@ -630,12 +635,12 @@ final class CheckoutCartViewController: UIViewController {
         button.alpha = button.isEnabled ? 1 : 0.5
 
         let titleLabel = UILabel()
-        titleLabel.text = "Buy · \(checkout.session.totals.total.amount)"
+        titleLabel.text = "Buy · \(session.totals.total.amount)"
         titleLabel.textColor = .white
         titleLabel.font = .preferredFont(forTextStyle: .headline)
         titleLabel.textAlignment = .center
 
-        let formattedAmount = checkout.session.totals.total.amount
+        let formattedAmount = session.totals.total.amount
         button.accessibilityLabel = "Buy, \(formattedAmount)"
 
         let stackView = UIStackView(arrangedSubviews: [titleLabel])
@@ -660,7 +665,7 @@ final class CheckoutCartViewController: UIViewController {
         checkoutButton = button
         checkoutButtonContentView = stackView
         checkoutButtonActivityIndicator = activityIndicator
-        updateCheckoutButtonLoadingState()
+        updateCheckoutButtonLoadingState(isUpdating: checkout.isUpdating)
         return button
     }
 
@@ -767,17 +772,17 @@ final class CheckoutCartViewController: UIViewController {
         retryButton.isHidden = false
     }
 
-    private func updateLoadingOverlay() {
-        let isCheckoutUpdating = checkout?.isUpdating == true
+    private func updateLoadingState(isCheckoutUpdating: Bool? = nil) {
+        let isCheckoutUpdating = isCheckoutUpdating ?? checkout?.isUpdating == true
         let isLoading = isCheckoutUpdating || isUpdatingShippingAddress
-        loadingOverlayView.isHidden = !isLoading
-        loadingOverlayView.backgroundColor = isUpdatingShippingAddress ? UIColor.black.withAlphaComponent(0.1) : .clear
+        contentStackView.isUserInteractionEnabled = !isLoading
+        loadingOverlayView.isHidden = !isUpdatingShippingAddress
         isUpdatingShippingAddress ? loadingActivityIndicator.startAnimating() : loadingActivityIndicator.stopAnimating()
-        updateCheckoutButtonLoadingState()
+        updateCheckoutButtonLoadingState(isUpdating: isCheckoutUpdating)
     }
 
-    private func updateCheckoutButtonLoadingState() {
-        let isUpdating = checkout?.isUpdating == true
+    private func updateCheckoutButtonLoadingState(isUpdating: Bool? = nil) {
+        let isUpdating = isUpdating ?? checkout?.isUpdating == true
         checkoutButton?.isEnabled = !isUpdating
         checkoutButtonContentView?.isHidden = isUpdating
         isUpdating ? checkoutButtonActivityIndicator?.startAnimating() : checkoutButtonActivityIndicator?.stopAnimating()
@@ -914,7 +919,7 @@ extension CheckoutCartViewController: AddressViewControllerDelegate {
         Task {
             isUpdatingShippingAddress = true
             errorMessage = nil
-            updateLoadingOverlay()
+            updateLoadingState()
             do {
                 try await checkout.updateShippingAddress(
                     name: address.name,
