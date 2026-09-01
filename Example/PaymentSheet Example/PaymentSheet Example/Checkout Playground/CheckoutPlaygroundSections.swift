@@ -259,11 +259,6 @@ struct CheckoutPlaygroundExpressCheckoutElementSection: View {
                     displayText: { $0.displayName }
                 )
                 if expressCheckoutElementOption == .show {
-                    CheckoutPlayground.ToggleRow(
-                        title: "Requires Shipping Address",
-                        isOn: $eceShippingAddressRequired,
-                        tooltip: "Sets `ExpressCheckoutElement.Configuration.shippingAddressRequired`. When on, wallets like Apple Pay require the customer to provide a shipping address."
-                    )
                     CheckoutPlayground.PickerRow(
                         title: "Apple Pay Display",
                         icon: "apple.logo",
@@ -278,7 +273,11 @@ struct CheckoutPlaygroundExpressCheckoutElementSection: View {
                         tooltip: "Sets `ExpressCheckoutElement.Configuration.linkConfiguration.display`.",
                         displayText: { $0.rawValue.capitalized }
                     )
-
+                    CheckoutPlayground.ToggleRow(
+                        title: "Requires Shipping Address",
+                        isOn: $eceShippingAddressRequired,
+                        tooltip: "Sets `ExpressCheckoutElement.Configuration.shippingAddressRequired`. When on, wallets like Apple Pay require the customer to provide a shipping address."
+                    )
                     Button(action: onCustomizeBillingDetailsCollection) {
                         HStack {
                             Image(systemName: "person.text.rectangle.fill")

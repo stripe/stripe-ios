@@ -19,8 +19,7 @@ enum ExpressCheckoutElementUtilities {
 
     static func resolveButtons(
         for session: CheckoutController.Session,
-        configuration: ExpressCheckoutElement.Configuration,
-        apiClient: STPAPIClient = .shared
+        configuration: ExpressCheckoutElement.Configuration
     ) -> [ExpressCheckoutElement.PaymentMethod] {
         var buttons: [ExpressCheckoutElement.PaymentMethod] = []
         for button in session.availableExpressButtonTypes {
@@ -32,7 +31,7 @@ enum ExpressCheckoutElementUtilities {
                     buttons.append(.applePay)
                 }
             case .link:
-                if linkDisabledReasons(for: session, configuration: configuration, apiClient: apiClient).isEmpty {
+                if linkDisabledReasons(for: session, configuration: configuration).isEmpty {
                     buttons.append(.link)
                 }
             }
@@ -42,8 +41,7 @@ enum ExpressCheckoutElementUtilities {
 
     static func linkDisabledReasons(
         for session: CheckoutController.Session,
-        configuration: ExpressCheckoutElement.Configuration,
-        apiClient: STPAPIClient = .shared
+        configuration: ExpressCheckoutElement.Configuration
     ) -> [LinkDisabledReason] {
         var reasons: [LinkDisabledReason] = []
 
@@ -61,7 +59,7 @@ enum ExpressCheckoutElementUtilities {
         || configuration.billingDetailsCollectionConfiguration.address == .full
         let nativeLinkAvailable = deviceCanUseNativeLink(
             useAttestationEndpoints: session.elementsSession.linkSettings?.useAttestationEndpoints,
-            apiClient: apiClient
+            apiClient: configuration.apiClient
         )
         if requiresBillingDetails && !nativeLinkAvailable {
             reasons.append(.billingDetailsCollection)

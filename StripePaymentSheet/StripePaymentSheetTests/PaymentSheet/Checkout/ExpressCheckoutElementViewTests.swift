@@ -102,13 +102,13 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
         // Given a session that only supports web Link and ECE requires a full billing address
         let session = makeSessionWithWalletTypes(["link"], linkUseAttestation: false).makePublicSession()
         var configuration = ExpressCheckoutElement.Configuration()
+        configuration.apiClient = STPAPIClient(publishableKey: "pk_test_123")
         configuration.billingDetailsCollectionConfiguration.address = .full
 
         // When
         let buttons = ExpressCheckoutElementUtilities.resolveButtons(
             for: session,
-            configuration: configuration,
-            apiClient: STPAPIClient(publishableKey: "pk_test_123")
+            configuration: configuration
         )
 
         // Then Link is hidden because web Link cannot collect the required billing address
@@ -116,8 +116,7 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
         XCTAssertTrue(
             ExpressCheckoutElementUtilities.linkDisabledReasons(
                 for: session,
-                configuration: configuration,
-                apiClient: STPAPIClient(publishableKey: "pk_test_123")
+                configuration: configuration
             ).contains(.billingDetailsCollection)
         )
     }
@@ -126,13 +125,13 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
         // Given a session that supports native Link and ECE requires a full billing address
         let session = makeSessionWithWalletTypes(["link"], linkUseAttestation: true).makePublicSession()
         var configuration = ExpressCheckoutElement.Configuration()
+        configuration.apiClient = STPAPIClient(publishableKey: "pk_test_123")
         configuration.billingDetailsCollectionConfiguration.address = .full
 
         // When
         let buttons = ExpressCheckoutElementUtilities.resolveButtons(
             for: session,
-            configuration: configuration,
-            apiClient: STPAPIClient(publishableKey: "pk_test_123")
+            configuration: configuration
         )
 
         // Then native Link can collect the required billing address

@@ -96,6 +96,7 @@ public final class CheckoutController: ObservableObject {
     /// - Parameter configuration: Configuration options for the checkout.
     /// - Throws: ``CheckoutError`` if the client secret is invalid or the session cannot be loaded.
     public init(configuration: Configuration) async throws {
+        var configuration = configuration
         let clientSecret = configuration.clientSecret
         guard !clientSecret.isEmpty else {
             throw CheckoutError.invalidClientSecret
@@ -146,10 +147,10 @@ public final class CheckoutController: ObservableObject {
             let sessionSource = CheckoutSessionSource(initialSession: session, sessionPublisher: $session)
 
             // 3. ECE
+            configuration.expressCheckoutElement.apiClient = configuration.apiClient
             self.expressCheckoutElement = ExpressCheckoutElement(
                 sessionSource: sessionSource,
                 configuration: configuration.expressCheckoutElement,
-                apiClient: configuration.apiClient,
                 delegate: self
             )
 
@@ -342,6 +343,10 @@ public final class CheckoutController: ObservableObject {
     /// Returns Currency Selector Element when it was configured and Adaptive
     /// Pricing is available for this Checkout instance.
     public func getCurrencySelectorElement() -> CurrencySelectorElement? {
+        assert(
+            configuration.currencySelectorElement != nil,
+            "Set Configuration.currencySelectorElement before calling getCurrencySelectorElement()."
+        )
         return currencySelectorElement
     }
 
