@@ -178,12 +178,11 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         XCTAssertNil(item.unitLabel)
         XCTAssertEqual(item.quantity, 1)
         XCTAssertNil(item.adjustableQuantity)
-        XCTAssertEqual(oneTimePrice.amountDetails.subtotal.minorUnitsAmount, 2000)
-        XCTAssertEqual(oneTimePrice.amountDetails.total.minorUnitsAmount, 2000)
-        XCTAssertNil(oneTimePrice.amountDetails.taxAmounts)
-        XCTAssertEqual(oneTimePrice.amountDetails.discount.minorUnitsAmount, 0)
-        XCTAssertEqual(oneTimePrice.amountDetails.taxInclusive.minorUnitsAmount, 0)
-        XCTAssertEqual(oneTimePrice.amountDetails.taxExclusive.minorUnitsAmount, 0)
+        XCTAssertEqual(item.amountDetails.subtotal.minorUnitsAmount, 2000)
+        XCTAssertEqual(item.amountDetails.total.minorUnitsAmount, 2000)
+        XCTAssertNil(item.amountDetails.taxAmounts)
+        XCTAssertEqual(item.amountDetails.taxInclusive.minorUnitsAmount, 0)
+        XCTAssertEqual(item.amountDetails.taxExclusive.minorUnitsAmount, 0)
     }
 
     func testUpdateShippingAddress() async throws {

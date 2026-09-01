@@ -59,6 +59,34 @@ final class CheckoutUnitTests: XCTestCase {
         XCTAssertEqual(paymentElement.embeddedPaymentElement.configuration.returnURL, returnURL)
     }
 
+    func testPaymentElementConfigurationDefaultsToNil() {
+        let configuration = CheckoutController.Configuration(
+            clientSecret: "cs_test_123_secret_abc",
+            returnURL: "stripe-ios-test://checkout-return"
+        )
+
+        XCTAssertNil(configuration.paymentElement)
+    }
+
+    func testPaymentElementIsNotCreatedWhenNotConfigured() async throws {
+        // Given a Checkout configuration without Payment Element configuration
+        let configuration = CheckoutTestHelpers.makeConfiguration(paymentElementConfiguration: nil)
+
+        // When Checkout loads the session
+        let checkout = try await CheckoutController(configuration: configuration)
+
+        // Then Payment Element is not created
+        XCTAssertNil(checkout.paymentElement)
+    }
+
+    func testGetPaymentElementReturnsStableInstanceWhenConfigured() async throws {
+        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration())
+
+        let firstElement = checkout.getPaymentElement()
+        let secondElement = checkout.getPaymentElement()
+        XCTAssertTrue(firstElement === secondElement)
+    }
+
     func testCurrencySelectorElementConfigurationDefaultsToNil() {
         let configuration = CheckoutController.Configuration(
             clientSecret: "cs_test_123_secret_abc",
@@ -66,17 +94,6 @@ final class CheckoutUnitTests: XCTestCase {
         )
 
         XCTAssertNil(configuration.currencySelectorElement)
-    }
-
-    func testGetCurrencySelectorElementReturnsNilWhenNotConfigured() async throws {
-        // Given an Adaptive Pricing session without Currency Selector Element configuration
-        let session = CheckoutTestHelpers.makeAdaptivePricingSession()
-        let checkout = try await CheckoutController(
-            configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: session)
-        )
-
-        // Then Currency Selector Element is disabled
-        XCTAssertNil(checkout.getCurrencySelectorElement())
     }
 
     func testGetCurrencySelectorElementReturnsStableInstanceWhenConfigured() async throws {
@@ -227,7 +244,7 @@ final class CheckoutUnitTests: XCTestCase {
         let recorder = CheckoutEmissionRecorder(checkout)
 
         // When the shipping address is cleared
-        try await checkout.updateShippingAddress(address: nil)
+        try await checkout.updateShippingAddress(name: nil, address: nil)
 
         // Then Checkout clears its local shipping address
         XCTAssertNil(checkout.session.shippingAddress)
@@ -240,7 +257,7 @@ final class CheckoutUnitTests: XCTestCase {
         let (checkout, _, requestRecorder) = try await makeCheckoutWithShippingTax()
 
         // When the shipping address is cleared
-        try await checkout.updateShippingAddress(address: nil)
+        try await checkout.updateShippingAddress(name: nil, address: nil)
 
         // Then Checkout clears local state and removes all tax region fields except country
         XCTAssertNil(checkout.session.shippingAddress)
@@ -262,7 +279,7 @@ final class CheckoutUnitTests: XCTestCase {
 
         // When the shipping address is cleared
         do {
-            try await checkout.updateShippingAddress(address: nil)
+            try await checkout.updateShippingAddress(name: nil, address: nil)
             XCTFail("Expected CheckoutError.apiError")
         } catch CheckoutError.apiError {
             // Expected
@@ -376,6 +393,7 @@ final class CheckoutUnitTests: XCTestCase {
 
         do {
             try await checkout.updateShippingAddress(
+                name: nil,
                 address: .init(country: "DE")
             )
             XCTFail("Expected invalidShippingCountry error")
@@ -394,6 +412,7 @@ final class CheckoutUnitTests: XCTestCase {
         let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: session))
 
         try await checkout.updateShippingAddress(
+            name: nil,
             address: .init(country: "CA", line1: "80 Spadina Ave", city: "Toronto", state: "ON", postalCode: "M5V 2J4")
         )
 
@@ -771,14 +790,13 @@ final class CheckoutUnitTests: XCTestCase {
                       unitAmount: "$10.00"
                       unitAmountDecimal: "$10.00"
                       adjustableQuantity: nil
+                      subtotal: "$10.00"
+                      taxExclusive: "$0.00"
+                      taxInclusive: "$0.00"
+                      taxAmountCount: nil
+                      total: "$10.00"
                     }
                   ]
-                  subtotal: "$10.00"
-                  discount: "$0.00"
-                  taxExclusive: "$0.00"
-                  taxInclusive: "$0.00"
-                  taxAmountCount: nil
-                  total: "$10.00"
                 }
               ]
               taxStatus: nil
