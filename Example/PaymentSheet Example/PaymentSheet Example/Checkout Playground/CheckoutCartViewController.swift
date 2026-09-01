@@ -72,7 +72,6 @@ final class CheckoutCartViewController: UIViewController {
     private let rootStackView = UIStackView()
     private let scrollView = UIScrollView()
     private let contentStackView = UIStackView()
-    private let paymentBarStackView = UIStackView()
 
     private let statusContainerView = UIView()
     private let statusStackView = UIStackView()
@@ -148,18 +147,6 @@ final class CheckoutCartViewController: UIViewController {
         contentStackView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.addSubview(contentStackView)
         rootStackView.addArrangedSubview(scrollView)
-
-        paymentBarStackView.axis = .vertical
-        paymentBarStackView.spacing = 12
-        paymentBarStackView.isLayoutMarginsRelativeArrangement = true
-        paymentBarStackView.directionalLayoutMargins = .init(top: 16, leading: 16, bottom: 16, trailing: 16)
-        paymentBarStackView.backgroundColor = .systemBackground
-        paymentBarStackView.layer.shadowColor = UIColor.black.cgColor
-        paymentBarStackView.layer.shadowOpacity = 0.1
-        paymentBarStackView.layer.shadowRadius = 10
-        paymentBarStackView.layer.shadowOffset = CGSize(width: 0, height: -5)
-        paymentBarStackView.isHidden = true
-        rootStackView.addArrangedSubview(paymentBarStackView)
 
         statusStackView.axis = .vertical
         statusStackView.alignment = .center
@@ -303,35 +290,32 @@ final class CheckoutCartViewController: UIViewController {
 
         contentStackView.addArrangedSubview(makeLineItemsSection(session: session))
 
+        if showExpressCheckoutElement, let expressCheckoutElement = checkout.getExpressCheckoutElement() {
+            contentStackView.addArrangedSubview(
+                makeSection(title: "Express Checkout", content: expressCheckoutElement.uiView)
+            )
+        }
+
         if shippingAddressCollection || session.shippingAddress != nil {
             contentStackView.addArrangedSubview(makeShippingAddressSection(session: session))
         }
 
+        if integrationType != .eceOnly {
+            contentStackView.addArrangedSubview(
+                makeSection(
+                    title: "Payment Method",
+                    content: makeCard(containing: makePaymentMethodRow(session: session))
+                )
+            )
+        }
+
         contentStackView.addArrangedSubview(makeOrderSummarySection(session: session))
 
-        renderPaymentBar(checkout: checkout, session: session)
+        if integrationType != .eceOnly {
+            contentStackView.addArrangedSubview(makeCheckoutButton(checkout: checkout, session: session))
+        }
+
         updateLoadingState()
-    }
-
-    private func renderPaymentBar(
-        checkout: CheckoutController,
-        session: CheckoutController.Session
-    ) {
-        removeAllArrangedSubviews(from: paymentBarStackView)
-
-        if showExpressCheckoutElement, let expressCheckoutElement = checkout.getExpressCheckoutElement() {
-            paymentBarStackView.addArrangedSubview(expressCheckoutElement.uiView)
-        }
-
-        switch integrationType {
-        case .flowController, .embedded:
-            paymentBarStackView.addArrangedSubview(makePaymentMethodRow(session: session))
-            paymentBarStackView.addArrangedSubview(makeCheckoutButton(checkout: checkout, session: session))
-        case .eceOnly:
-            break
-        }
-
-        paymentBarStackView.isHidden = paymentBarStackView.arrangedSubviews.isEmpty
     }
 
     private func makeLineItemsSection(session: CheckoutController.Session) -> UIView {
@@ -590,9 +574,6 @@ final class CheckoutCartViewController: UIViewController {
 
     private func makePaymentMethodRow(session: CheckoutController.Session) -> UIView {
         let rowView = UIButton(type: .custom)
-        rowView.layer.borderColor = UIColor.separator.cgColor
-        rowView.layer.borderWidth = 1
-        rowView.layer.cornerRadius = 10
         rowView.addTarget(self, action: #selector(paymentMethodButtonTapped), for: .touchUpInside)
 
         let paymentOptionStackView = UIStackView()
@@ -608,12 +589,19 @@ final class CheckoutCartViewController: UIViewController {
             paymentOptionStackView.addArrangedSubview(imageView)
             rowView.accessibilityLabel = paymentOption.label
         } else {
+            let imageView = UIImageView(image: UIImage(systemName: "plus.circle.fill"))
+            imageView.tintColor = .systemBlue
+            imageView.contentMode = .scaleAspectFit
+            imageView.translatesAutoresizingMaskIntoConstraints = false
+            imageView.widthAnchor.constraint(equalToConstant: 24).isActive = true
+            imageView.heightAnchor.constraint(equalToConstant: 24).isActive = true
+            paymentOptionStackView.addArrangedSubview(imageView)
             rowView.accessibilityLabel = "Select payment method"
         }
 
         let label = UILabel()
         label.text = session.paymentOption?.label ?? "Select payment method"
-        label.font = .preferredFont(forTextStyle: .subheadline)
+        label.font = .preferredFont(forTextStyle: .body)
         paymentOptionStackView.addArrangedSubview(label)
 
         let chevronView = UIImageView(image: UIImage(systemName: "chevron.right"))
@@ -647,21 +635,15 @@ final class CheckoutCartViewController: UIViewController {
         button.alpha = button.isEnabled ? 1 : 0.5
 
         let titleLabel = UILabel()
-        titleLabel.text = "Checkout"
+        titleLabel.text = "Buy · \(session.totals.total.amount)"
         titleLabel.textColor = .white
         titleLabel.font = .preferredFont(forTextStyle: .headline)
-
-        let amountLabel = UILabel()
-        amountLabel.textColor = .white
-        amountLabel.font = .preferredFont(forTextStyle: .headline)
-        amountLabel.setContentHuggingPriority(.required, for: .horizontal)
+        titleLabel.textAlignment = .center
 
         let formattedAmount = session.totals.total.amount
-        amountLabel.text = formattedAmount
-        button.accessibilityLabel = "Checkout, \(formattedAmount)"
+        button.accessibilityLabel = "Buy, \(formattedAmount)"
 
-        let stackView = UIStackView(arrangedSubviews: [titleLabel, amountLabel])
-        stackView.distribution = .equalSpacing
+        let stackView = UIStackView(arrangedSubviews: [titleLabel])
         stackView.isUserInteractionEnabled = false
         stackView.translatesAutoresizingMaskIntoConstraints = false
         button.addSubview(stackView)
@@ -776,7 +758,6 @@ final class CheckoutCartViewController: UIViewController {
 
     private func showLoadingStatus() {
         scrollView.isHidden = true
-        paymentBarStackView.isHidden = true
         statusContainerView.isHidden = false
         statusLabel.text = "Loading Cart..."
         retryButton.isHidden = true
@@ -785,7 +766,6 @@ final class CheckoutCartViewController: UIViewController {
 
     private func showFailureStatus() {
         scrollView.isHidden = true
-        paymentBarStackView.isHidden = true
         statusContainerView.isHidden = false
         statusActivityIndicator.stopAnimating()
         statusLabel.text = "Failed to load cart."
@@ -796,7 +776,6 @@ final class CheckoutCartViewController: UIViewController {
         let isCheckoutUpdating = isCheckoutUpdating ?? checkout?.isUpdating == true
         let isLoading = isCheckoutUpdating || isUpdatingShippingAddress
         contentStackView.isUserInteractionEnabled = !isLoading
-        paymentBarStackView.isUserInteractionEnabled = !isLoading
         loadingOverlayView.isHidden = !isUpdatingShippingAddress
         isUpdatingShippingAddress ? loadingActivityIndicator.startAnimating() : loadingActivityIndicator.stopAnimating()
         updateCheckoutButtonLoadingState(isUpdating: isCheckoutUpdating)
