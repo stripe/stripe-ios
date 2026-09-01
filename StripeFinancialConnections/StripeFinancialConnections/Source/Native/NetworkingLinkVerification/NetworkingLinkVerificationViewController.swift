@@ -36,8 +36,6 @@ final class NetworkingLinkVerificationViewController: UIViewController {
         otpView.delegate = self
         return otpView
     }()
-    private var paneLayoutView: PaneLayoutView?
-
     init(dataSource: NetworkingLinkVerificationDataSource) {
         self.dataSource = dataSource
         super.init(nibName: nil, bundle: nil)
@@ -51,13 +49,6 @@ final class NetworkingLinkVerificationViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = FinancialConnectionsAppearance.Colors.background
         otpView.startVerification()
-    }
-
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        if dataSource.manifest.appearance.colors == .link {
-            paneLayoutView?.centerContentVerticallyIfNeeded()
-        }
     }
 
     private func showContent(redactedPhoneNumber: String) {
@@ -75,7 +66,6 @@ final class NetworkingLinkVerificationViewController: UIViewController {
             footerView: nil
         )
         paneLayoutView.addTo(view: view)
-        self.paneLayoutView = paneLayoutView
     }
 
     private func showLoadingView(_ show: Bool) {

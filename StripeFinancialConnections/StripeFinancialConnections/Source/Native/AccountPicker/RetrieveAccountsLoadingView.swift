@@ -30,27 +30,17 @@ final class RetrieveAccountsLoadingView: UIView {
                 ),
                 subtitle: nil,
                 contentView: {
-                    if appearance.colors == .link {
-                        let row = ShimmeringAccountPickerRow(grouped: true)
-                        let container = UIView()
-                        container.backgroundColor = appearance.colors.iconBackground
-                        container.layer.cornerRadius = 12
-                        container.layer.masksToBounds = true
-                        container.addAndPinSubview(row)
-                        return container
-                    } else {
-                        let verticalStackView = UIStackView(
-                            arrangedSubviews: [
-                                ShimmeringAccountPickerRow(),
-                                ShimmeringAccountPickerRow(),
-                                ShimmeringAccountPickerRow(),
-                                ShimmeringAccountPickerRow(),
-                            ]
-                        )
-                        verticalStackView.axis = .vertical
-                        verticalStackView.spacing = 16
-                        return verticalStackView
+                    let isLinkTheme = appearance.colors == .link
+                    let rowBackgroundColor = isLinkTheme
+                        ? appearance.colors.iconBackground
+                        : FinancialConnectionsAppearance.Colors.backgroundSecondary
+                    let rows = (0..<(isLinkTheme ? 3 : 4)).map { _ in
+                        ShimmeringAccountPickerRow(backgroundColor: rowBackgroundColor)
                     }
+                    let verticalStackView = UIStackView(arrangedSubviews: rows)
+                    verticalStackView.axis = .vertical
+                    verticalStackView.spacing = 16
+                    return verticalStackView
                 }(),
                 appearance: appearance
             ),
@@ -66,13 +56,11 @@ final class RetrieveAccountsLoadingView: UIView {
 
 private class ShimmeringAccountPickerRow: ShimmeringView {
 
-    init(grouped: Bool = false) {
+    init(backgroundColor: UIColor) {
         super.init(frame: .zero)
         clipsToBounds = true
-        if !grouped {
-            layer.cornerRadius = 12
-            backgroundColor = FinancialConnectionsAppearance.Colors.backgroundSecondary
-        }
+        layer.cornerRadius = 12
+        self.backgroundColor = backgroundColor
 
         translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([

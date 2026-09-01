@@ -277,7 +277,7 @@ final class InstitutionTableView: UIView {
     func showLoadingView(_ show: Bool) {
         if show {
             if loadingView?.superview == nil {
-                let loadingView = InstitutionTableLoadingView()
+                let loadingView = InstitutionTableLoadingView(appearance: appearance)
                 addAndPinSubviewToSafeArea(loadingView)
                 self.loadingView = loadingView
             }
