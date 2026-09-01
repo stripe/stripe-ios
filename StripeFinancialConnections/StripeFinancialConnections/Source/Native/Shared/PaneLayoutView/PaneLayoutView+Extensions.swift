@@ -328,7 +328,7 @@ extension PaneLayoutView {
             )
             secondaryButton.translatesAutoresizingMaskIntoConstraints = false
             if useHorizontalLayout {
-                secondaryButton.layer.borderWidth = 0.5
+                secondaryButton.layer.borderWidth = 1 / stp_screenNativeScale
                 secondaryButton.layer.borderColor = appearance.colors.border.cgColor
                 secondaryButton.layer.cornerRadius = appearance.buttonHeight / 2
                 secondaryButton.clipsToBounds = true

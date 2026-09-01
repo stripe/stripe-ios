@@ -40,6 +40,9 @@ extension StripeUICore.Button {
 
     static func secondary(appearance: FinancialConnectionsAppearance) -> StripeUICore.Button {
         let button = Button(configuration: .financialConnectionsSecondary(appearance: appearance))
+        if appearance.colors == .link {
+            LinkSecondaryButtonPressHandler.attach(to: button)
+        }
         ButtonFeedbackGeneratorHandler.attach(toButton: button)
         return button
     }
@@ -110,6 +113,58 @@ private final class ButtonFeedbackGeneratorHandler: NSObject {
             buttonFeedbackGeneratorHandler,
             action: #selector(didTouchUpInside),
             for: .touchUpInside
+        )
+    }
+}
+
+private final class LinkSecondaryButtonPressHandler: NSObject {
+    private enum Constants {
+        static let pressedScale: CGFloat = 0.97
+        static let pressDuration: TimeInterval = 0.1
+        static let releaseDuration: TimeInterval = 0.2
+    }
+
+    private weak var button: UIControl?
+
+    private init(button: UIControl) {
+        self.button = button
+    }
+
+    @objc private func didPress() {
+        animate(
+            to: CGAffineTransform(scaleX: Constants.pressedScale, y: Constants.pressedScale),
+            duration: Constants.pressDuration
+        )
+    }
+
+    @objc private func didRelease() {
+        animate(to: .identity, duration: Constants.releaseDuration)
+    }
+
+    private func animate(to transform: CGAffineTransform, duration: TimeInterval) {
+        UIView.animate(
+            withDuration: UIAccessibility.isReduceMotionEnabled ? 0 : duration,
+            delay: 0,
+            options: [.allowUserInteraction, .beginFromCurrentState, .curveEaseOut]
+        ) { [weak button] in
+            button?.transform = transform
+        }
+    }
+
+    private static var associatedObjectKey: UInt8 = 0
+    static func attach(to button: UIControl) {
+        let handler = LinkSecondaryButtonPressHandler(button: button)
+        objc_setAssociatedObject(
+            button,
+            &associatedObjectKey,
+            handler,
+            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+        )
+        button.addTarget(handler, action: #selector(didPress), for: [.touchDown, .touchDragEnter])
+        button.addTarget(
+            handler,
+            action: #selector(didRelease),
+            for: [.touchUpInside, .touchUpOutside, .touchCancel, .touchDragExit]
         )
     }
 }
