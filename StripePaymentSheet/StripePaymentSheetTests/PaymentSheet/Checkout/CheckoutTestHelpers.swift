@@ -391,28 +391,61 @@ class MockCheckoutSessionWalletUpdater: CheckoutSessionWalletUpdater {
     private(set) var updateCallCount = 0
     private(set) var lastAddress: CheckoutController.Address?
     private(set) var lastCanUpdateWhileSheetPresented: Bool?
+    private(set) var receivedAddresses: [CheckoutController.Address] = []
+    private(set) var receivedSources: [String] = []
     private let sessionToReturn: CheckoutController.Session?
     private let errorToThrow: Error?
+    private let suspendsFirstUpdate: Bool
+    private var continuation: CheckedContinuation<CheckoutController.Session, Error>?
+    private var didSuspend = false
 
-    init(sessionToReturn: CheckoutController.Session? = nil, errorToThrow: Error? = nil) {
-        self.sessionToReturn = sessionToReturn
-        self.errorToThrow = errorToThrow
+    var isWaiting: Bool {
+        continuation != nil
     }
 
-    func updateBillingTaxRegionWithoutEnqueueing(
+    init(
+        sessionToReturn: CheckoutController.Session? = nil,
+        errorToThrow: Error? = nil,
+        suspendsFirstUpdate: Bool = false
+    ) {
+        self.sessionToReturn = sessionToReturn
+        self.errorToThrow = errorToThrow
+        self.suspendsFirstUpdate = suspendsFirstUpdate
+    }
+
+    func updateTaxRegionWithoutEnqueueing(
         address: CheckoutController.Address,
+        source: String,
         canUpdateWhileSheetPresented: Bool
     ) async throws -> CheckoutController.Session {
         updateCallCount += 1
         lastAddress = address
         lastCanUpdateWhileSheetPresented = canUpdateWhileSheetPresented
+        receivedAddresses.append(address)
+        receivedSources.append(source)
         if let errorToThrow {
             throw errorToThrow
         }
         guard let sessionToReturn else {
             throw CheckoutError.unknown(debugDescription: "MockCheckoutSessionWalletUpdater has no session configured")
         }
+        if suspendsFirstUpdate && !didSuspend {
+            didSuspend = true
+            return try await withCheckedThrowingContinuation { continuation in
+                self.continuation = continuation
+            }
+        }
         return sessionToReturn
+    }
+
+    func resume() {
+        guard let sessionToReturn else {
+            continuation?.resume(throwing: CheckoutError.unknown(debugDescription: "MockCheckoutSessionWalletUpdater has no session configured"))
+            continuation = nil
+            return
+        }
+        continuation?.resume(returning: sessionToReturn)
+        continuation = nil
     }
 }
 

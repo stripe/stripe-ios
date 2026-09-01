@@ -270,7 +270,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
             ],
             "checkout_items": CheckoutTestHelpers.makeOneTimePriceCheckoutItems(unitAmount: 1200),
         ]).makePublicSession()
-        let updater = RecordingCheckoutSessionWalletUpdater(sessionToReturn: updatedSession)
+        let updater = MockCheckoutSessionWalletUpdater(sessionToReturn: updatedSession)
         let (context, controller) = makeShippingContext(
             allowedCountries: ["US"],
             automaticTaxAddressSource: "session.shipping",
@@ -297,7 +297,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
     func testDidSelectShippingContactDoesNotUpdateBillingSourcedTaxRegion() async {
         // Given a Checkout Session whose automatic tax source is billing
         let session = CheckoutTestHelpers.makeSession().makePublicSession()
-        let updater = RecordingCheckoutSessionWalletUpdater(sessionToReturn: session)
+        let updater = MockCheckoutSessionWalletUpdater(sessionToReturn: session)
         let (context, controller) = makeShippingContext(
             allowedCountries: ["US"],
             automaticTaxAddressSource: "session.billing",
@@ -321,7 +321,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
     func testCancelWaitsForShippingTaxUpdate() async {
         // Given an in-flight shipping tax update
         let returnedSession = CheckoutTestHelpers.makeSession().makePublicSession()
-        let updater = RecordingCheckoutSessionWalletUpdater(
+        let updater = MockCheckoutSessionWalletUpdater(
             sessionToReturn: returnedSession,
             suspendsFirstUpdate: true
         )
@@ -635,7 +635,10 @@ final class CheckoutApplePayContextTests: XCTestCase {
     func testDidFinish_notStarted_waitsForBillingTaxUpdateBeforeCanceling() async {
         // Given an active Apple Pay presentation with a billing tax update that is suspended
         let updatedSession = CheckoutTestHelpers.makeOpenSession().makePublicSession()
-        let updater = SuspendingCheckoutSessionWalletUpdater(sessionToReturn: updatedSession)
+        let updater = MockCheckoutSessionWalletUpdater(
+            sessionToReturn: updatedSession,
+            suspendsFirstUpdate: true
+        )
         let (context, mockController) = makeContext(
             collectsTaxFromBillingAddress: true,
             checkoutWalletUpdater: updater
@@ -774,7 +777,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
             checkoutSession: session,
             applePayConfirmationParameters: parameters,
             authorizationController: controller,
-            checkoutWalletUpdater: checkoutWalletUpdater ?? RecordingCheckoutSessionWalletUpdater(sessionToReturn: session)
+            checkoutWalletUpdater: checkoutWalletUpdater ?? MockCheckoutSessionWalletUpdater(sessionToReturn: session)
         )
         return (context, controller)
     }
@@ -830,44 +833,6 @@ final class CheckoutApplePayContextTests: XCTestCase {
 
 }
 
-@MainActor
-private final class RecordingCheckoutSessionWalletUpdater: CheckoutSessionWalletUpdater {
-    private let sessionToReturn: CheckoutController.Session
-    private let suspendsFirstUpdate: Bool
-    private var continuation: CheckedContinuation<CheckoutController.Session, Error>?
-    private var didSuspend = false
-    private(set) var receivedAddresses: [CheckoutController.Address] = []
-    private(set) var receivedSources: [String] = []
-
-    var isWaiting: Bool {
-        continuation != nil
-    }
-
-    init(
-        sessionToReturn: CheckoutController.Session,
-        suspendsFirstUpdate: Bool = false
-    ) {
-        self.sessionToReturn = sessionToReturn
-        self.suspendsFirstUpdate = suspendsFirstUpdate
-    }
-
-    func updateTaxRegionWithoutEnqueueing(
-        address: CheckoutController.Address,
-        source: String,
-        canUpdateWhileSheetPresented: Bool
-    ) async throws -> CheckoutController.Session {
-        receivedAddresses.append(address)
-        receivedSources.append(source)
-        if suspendsFirstUpdate && !didSuspend {
-            didSuspend = true
-            return try await withCheckedThrowingContinuation { continuation in
-                self.continuation = continuation
-            }
-        }
-        return sessionToReturn
-    }
-}
-
 private final class MockPKPaymentMethod: PKPaymentMethod {
     private let mockBillingAddress: CNContact?
 
@@ -877,32 +842,4 @@ private final class MockPKPaymentMethod: PKPaymentMethod {
     }
 
     override var billingAddress: CNContact? { mockBillingAddress }
-}
-
-@MainActor
-private final class SuspendingCheckoutSessionWalletUpdater: CheckoutSessionWalletUpdater {
-    private let sessionToReturn: CheckoutController.Session
-    private var continuation: CheckedContinuation<CheckoutController.Session, Error>?
-
-    var isWaiting: Bool {
-        return continuation != nil
-    }
-
-    init(sessionToReturn: CheckoutController.Session) {
-        self.sessionToReturn = sessionToReturn
-    }
-
-    func updateBillingTaxRegionWithoutEnqueueing(
-        address: CheckoutController.Address,
-        canUpdateWhileSheetPresented: Bool
-    ) async throws -> CheckoutController.Session {
-        return try await withCheckedThrowingContinuation { continuation in
-            self.continuation = continuation
-        }
-    }
-
-    func resume() {
-        continuation?.resume(returning: sessionToReturn)
-        continuation = nil
-    }
 }
