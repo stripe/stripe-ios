@@ -159,6 +159,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case GB
         case AU
         case FR
+        case ES
         case IN
         case SG
         case MY
