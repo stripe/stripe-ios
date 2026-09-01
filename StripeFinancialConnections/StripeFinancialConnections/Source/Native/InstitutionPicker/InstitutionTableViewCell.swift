@@ -11,7 +11,9 @@ import UIKit
 
 final class InstitutionTableViewCell: UITableViewCell {
     private lazy var institutionIconView: InstitutionIconView = {
-        return InstitutionIconView(appearance: appearance, size: CGSize(width: 44, height: 44))
+        let isLinkTheme = appearance?.colors == .link
+        let size: CGFloat = isLinkTheme ? 44 : 54
+        return InstitutionIconView(appearance: appearance, size: CGSize(width: size, height: size))
     }()
 
     private var institutionCellView: InstitutionCellView?

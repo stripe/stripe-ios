@@ -48,12 +48,13 @@ private class ShimmeringInstitutionRowView: ShimmeringView {
         super.init(frame: .zero)
         backgroundColor = .clear
 
-        let placeholderColor = appearance.colors == .link
+        let isLinkTheme = appearance.colors == .link
+        let placeholderColor = isLinkTheme
             ? FinancialConnectionsAppearance.Colors.iconBackgroundOnCard
             : FinancialConnectionsAppearance.Colors.backgroundSecondary
         let horizontalStackView = UIStackView(
             arrangedSubviews: [
-                CreateRowIconView(backgroundColor: placeholderColor),
+                CreateRowIconView(backgroundColor: placeholderColor, isLinkTheme: isLinkTheme),
                 CreateRowMultipleLabelView(backgroundColor: placeholderColor),
             ]
         )
@@ -61,7 +62,7 @@ private class ShimmeringInstitutionRowView: ShimmeringView {
         horizontalStackView.alignment = .center
         horizontalStackView.spacing = 12
         horizontalStackView.isLayoutMarginsRelativeArrangement = true
-        let horizontalMargin: CGFloat = appearance.colors == .link ? 16 : 24
+        let horizontalMargin: CGFloat = isLinkTheme ? 16 : 24
         horizontalStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
             top: 8,
             leading: horizontalMargin,
@@ -76,14 +77,15 @@ private class ShimmeringInstitutionRowView: ShimmeringView {
     }
 }
 
-private func CreateRowIconView(backgroundColor: UIColor) -> UIView {
+private func CreateRowIconView(backgroundColor: UIColor, isLinkTheme: Bool) -> UIView {
     let iconView = UIView()
     iconView.backgroundColor = backgroundColor
     iconView.layer.cornerRadius = 12
     iconView.translatesAutoresizingMaskIntoConstraints = false
+    let size: CGFloat = isLinkTheme ? 44 : 54
     NSLayoutConstraint.activate([
-        iconView.heightAnchor.constraint(equalToConstant: 44),
-        iconView.widthAnchor.constraint(equalToConstant: 44),
+        iconView.heightAnchor.constraint(equalToConstant: size),
+        iconView.widthAnchor.constraint(equalToConstant: size),
     ])
     return iconView
 }
