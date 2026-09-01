@@ -77,13 +77,15 @@ final class LinkAccountPickerViewController: UIViewController {
                                 "The title of a screen that allows users to select which bank accounts they want to use to pay for something."
                             )
                         }
-                    }()
+                    }(),
+                    appearance: dataSource.manifest.appearance
                 ),
                 // `createBodyView` adds extra padding
                 // around the loading view
                 PaneLayoutView.createBodyView(
                     text: nil,
-                    contentView: LinkAccountPickerLoadingView(appearance: dataSource.manifest.appearance)
+                    contentView: LinkAccountPickerLoadingView(appearance: dataSource.manifest.appearance),
+                    appearance: dataSource.manifest.appearance
                 ),
             ]
         )
@@ -191,13 +193,15 @@ final class LinkAccountPickerViewController: UIViewController {
         contentStackView.addArrangedSubview(
             PaneLayoutView.createHeaderView(
                 iconView: nil,
-                title: networkingAccountPicker.title
+                title: networkingAccountPicker.title,
+                appearance: dataSource.manifest.appearance
             )
         )
         contentStackView.addArrangedSubview(
             PaneLayoutView.createBodyView(
                 text: nil,
-                contentView: bodyView
+                contentView: bodyView,
+                appearance: dataSource.manifest.appearance
             )
         )
 

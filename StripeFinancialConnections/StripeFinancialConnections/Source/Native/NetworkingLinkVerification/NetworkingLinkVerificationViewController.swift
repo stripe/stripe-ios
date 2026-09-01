@@ -36,6 +36,7 @@ final class NetworkingLinkVerificationViewController: UIViewController {
         otpView.delegate = self
         return otpView
     }()
+    private var paneLayoutView: PaneLayoutView?
 
     init(dataSource: NetworkingLinkVerificationDataSource) {
         self.dataSource = dataSource
@@ -52,6 +53,13 @@ final class NetworkingLinkVerificationViewController: UIViewController {
         otpView.startVerification()
     }
 
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        if dataSource.manifest.appearance.colors == .link {
+            paneLayoutView?.centerContentVerticallyIfNeeded()
+        }
+    }
+
     private func showContent(redactedPhoneNumber: String) {
         let paneLayoutView = PaneLayoutView(
             contentView: PaneLayoutView.createContentView(
@@ -61,11 +69,13 @@ final class NetworkingLinkVerificationViewController: UIViewController {
                     "Enter the code sent to %@",
                     "The subtitle/description of a screen where users are informed that they have received a One-Type-Password (OTP) to their phone. '%@' gets replaced by a redacted phone number."
                 ), AuthFlowHelpers.formatRedactedPhoneNumber(redactedPhoneNumber)),
-                contentView: otpView
+                contentView: otpView,
+                appearance: dataSource.manifest.appearance
             ),
             footerView: nil
         )
         paneLayoutView.addTo(view: view)
+        self.paneLayoutView = paneLayoutView
     }
 
     private func showLoadingView(_ show: Bool) {

@@ -120,7 +120,8 @@ final class NetworkingLinkLoginWarmupViewController: SheetViewController {
                     // `email` should always be non-null, and since the email is only used as a visual, it's not worth to throw an error if it is null
                     email: dataSource.email ?? "you"
                 ),
-                isSheet: true
+                isSheet: true,
+                appearance: appearance
             ),
             footerView: warmupFooterView.footerView
         )

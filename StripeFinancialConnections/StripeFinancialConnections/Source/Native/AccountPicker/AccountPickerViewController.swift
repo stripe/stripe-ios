@@ -338,7 +338,8 @@ final class AccountPickerViewController: UIViewController {
                     }
                 }(),
                 subtitle: nil,
-                contentView: accountPickerSelectionView
+                contentView: accountPickerSelectionView,
+                appearance: dataSource.manifest.appearance
             ),
             footerView: footerView
         )

@@ -40,7 +40,8 @@ final class ContinueStateViews {
                 "You haven't finished linking your account. Press continue to finish the process.",
                 "Title for a label explaining that the linking process hasn't finished yet."
             ),
-            contentView: nil
+            contentView: nil,
+            appearance: appearance
         )
         let footerViewTuple = PaneLayoutView.createFooterView(
             primaryButtonConfiguration: PaneLayoutView.ButtonConfiguration(

@@ -196,10 +196,12 @@ class InstitutionPickerViewController: UIViewController {
         }
 
         showLoadingView(true)
+        institutionTableView.setHighlightFrozen(true, forInstitution: institution)
         institutionTableView.showOverlayView(
             true,
             exceptForInstitution: institution
         )
+        setPaneContentFaded(true)
 
         // If consent is already acquired, create an auth session.
         // Otherwise, select the institution and update the manifest.
@@ -232,9 +234,9 @@ class InstitutionPickerViewController: UIViewController {
                     if authSession.isOauthNonOptional {
                         // oauth presents a sheet where we do not hide
                         // the overlay until the sheet is dismissed
-                        self.observePartnerAuthDismissToHideOverlay()
+                        self.observePartnerAuthDismissToHideOverlay(institution: institution)
                     } else {
-                        self.hideOverlayView()
+                        self.hideOverlayView(forInstitution: institution)
                     }
                 case .failure(let error):
                     self.delegate?.institutionPickerViewController(
@@ -260,7 +262,7 @@ class InstitutionPickerViewController: UIViewController {
                         didFinishSelecting: institution,
                         payload: selectInstitutionPayload
                     )
-                    self.hideOverlayView()
+                    self.hideOverlayView(forInstitution: institution)
                 case .failure(let error):
                     self.delegate?.institutionPickerViewController(
                         self,
@@ -276,7 +278,7 @@ class InstitutionPickerViewController: UIViewController {
     }
 
     private var partnerAuthDismissObserver: Any?
-    private func observePartnerAuthDismissToHideOverlay() {
+    private func observePartnerAuthDismissToHideOverlay(institution: FinancialConnectionsInstitution) {
         partnerAuthDismissObserver = NotificationCenter.default.addObserver(
             forName: .sheetViewControllerWillDismiss,
             object: nil,
@@ -286,13 +288,30 @@ class InstitutionPickerViewController: UIViewController {
             guard notification.object is PartnerAuthViewController else {
                 return
             }
-            self.hideOverlayView()
+            self.hideOverlayView(forInstitution: institution)
             self.partnerAuthDismissObserver = nil
         }
     }
 
-    private func hideOverlayView() {
+    private func hideOverlayView(forInstitution institution: FinancialConnectionsInstitution) {
         institutionTableView.showOverlayView(false)
+        institutionTableView.setHighlightFrozen(false, forInstitution: institution)
+        setPaneContentFaded(false)
+    }
+
+    /// Fades the pane's header/search bar to match the dimmed (non-tapped) rows,
+    /// so the entire pane's content fades together while the tapped row stays "frozen".
+    private func setPaneContentFaded(_ faded: Bool) {
+        UIView.animate(
+            withDuration: 0.3,
+            delay: 0,
+            usingSpringWithDamping: 1,
+            initialSpringVelocity: 0.3,
+            animations: {
+                self.headerView.alpha = faded ? 0.4 : 1
+                self.searchBarContainerView.alpha = faded ? 0.4 : 1
+            }
+        )
     }
 
     private func scrollToTopOfSearchBar() {

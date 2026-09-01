@@ -123,7 +123,8 @@ final class ErrorViewController: UIViewController {
                             }()
                             return beginningOfSubtitle + " " + endOfSubtitle
                         }(),
-                        contentView: nil
+                        contentView: nil,
+                        appearance: dataSource.manifest.appearance
                     ),
                     footerView: PaneLayoutView.createFooterView(
                         primaryButtonConfiguration: primaryButtonConfiguration,
@@ -167,7 +168,8 @@ final class ErrorViewController: UIViewController {
                                 )
                             }
                         }(),
-                        contentView: nil
+                        contentView: nil,
+                        appearance: dataSource.manifest.appearance
                     ),
                     footerView: PaneLayoutView.createFooterView(
                         primaryButtonConfiguration: primaryButtonConfiguration,

@@ -31,7 +31,7 @@ final class AccountPickerRowView: UIView {
         )
     }()
     private lazy var institutionIconView: InstitutionIconView = {
-        return InstitutionIconView()
+        return InstitutionIconView(appearance: appearance)
     }()
     private lazy var checkboxView: CheckboxView = {
         let selectionView = CheckboxView(appearance: appearance)

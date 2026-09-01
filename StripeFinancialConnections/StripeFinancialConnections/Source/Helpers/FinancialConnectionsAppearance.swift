@@ -6,6 +6,7 @@
 //
 
 @_spi(STP) import StripeCore
+@_spi(STP) import StripeUICore
 import UIKit
 
 struct FinancialConnectionsAppearance: Equatable {
@@ -36,6 +37,14 @@ struct FinancialConnectionsAppearance: Equatable {
         static let linkBrand50: UIColor = .linkBrand50
         static let linkBrand900: UIColor = .linkBrand900
         static let iconBackgroundOnCard: UIColor = .dynamic(light: .linkNeutral200, dark: .linkNeutral700)
+        static let borderOnCard: UIColor = .dynamic(
+            light: UIColor(white: 0, alpha: 0.12),
+            dark: UIColor(white: 1, alpha: 0.12)
+        )
+        static let dividerOnCard: UIColor = .dynamic(
+            light: UIColor(white: 0, alpha: 0.08),
+            dark: UIColor(white: 1, alpha: 0.08)
+        )
 
         // These colors change based on the manifest's theme.
         let primary: UIColor
@@ -48,11 +57,16 @@ struct FinancialConnectionsAppearance: Equatable {
         let border: UIColor
         let successIconBackground: UIColor
         let successIconForeground: UIColor
+        // Text/Primary and Icon/Secondary per the Link design system; Stripe theme keeps its existing static colors.
+        let textPrimary: UIColor
+        let textTertiary: UIColor
+        let iconSecondary: UIColor
     }
 
     let colors: Colors
     let logo: Image
     let logoTintColor: UIColor
+    let logoImage: UIImage
 
     init(
         theme: FinancialConnectionsSessionManifest.Theme?,
@@ -71,12 +85,15 @@ struct FinancialConnectionsAppearance: Equatable {
         case .stripe:
             self.logo = .stripe_logo
             self.logoTintColor = Self.stripeLogoTintColor(for: theme)
+            self.logoImage = Image.stripe_logo.makeImage(template: true)
         case .link:
             self.logo = .link_logo
             self.logoTintColor = Self.linkLogoTintColor(for: theme)
+            self.logoImage = Self.linkLogoImage()
         case .onelink:
             self.logo = .onelink_logo
             self.logoTintColor = Self.linkLogoTintColor(for: theme)
+            self.logoImage = Image.onelink_logo.makeImage(template: true)
         }
     }
 
@@ -114,6 +131,24 @@ struct FinancialConnectionsAppearance: Equatable {
             return .stripeLogo
         }
     }
+
+    // The Link logo's color variant (green icon + dark wordmark) is a fixed-color
+    // bitmap, so it only looks correct against a light background. In dark mode we
+    // fall back to the existing monochrome wordmark, tinted white to stay legible.
+    private static func linkLogoImage() -> UIImage {
+        let colorImage = Image.link_logo_color.makeImage(template: false)
+        let monoImage = Image.link_logo.makeImage(template: true).withTintColor(.white, renderingMode: .alwaysOriginal)
+        let isDarkMode: Bool
+        switch PresentationManager.shared.configuration.style {
+        case .alwaysLight:
+            isDarkMode = false
+        case .alwaysDark:
+            isDarkMode = true
+        case .automatic:
+            isDarkMode = UIScreen.main.traitCollection.userInterfaceStyle == .dark
+        }
+        return isDarkMode ? monoImage : colorImage
+    }
 }
 
 extension FinancialConnectionsAppearance {
@@ -133,7 +168,10 @@ extension FinancialConnectionsAppearance.Colors {
         spinner: .brand500,
         border: .brand600,
         successIconBackground: .brand500,
-        successIconForeground: .neutral0
+        successIconForeground: .neutral0,
+        textPrimary: FinancialConnectionsAppearance.Colors.textDefault,
+        textTertiary: FinancialConnectionsAppearance.Colors.textSubdued,
+        iconSecondary: FinancialConnectionsAppearance.Colors.icon
     )
 
     static let link: FinancialConnectionsAppearance.Colors = .init(
@@ -146,7 +184,10 @@ extension FinancialConnectionsAppearance.Colors {
         spinner: .dynamic(light: .linkNeutral900, dark: .linkNeutral0),
         border: .dynamic(light: .linkNeutral900, dark: .linkNeutral0),
         successIconBackground: .linkGreen200,
-        successIconForeground: .linkNeutral900
+        successIconForeground: .linkNeutral900,
+        textPrimary: .dynamic(light: .linkNeutral900, dark: .linkNeutral0),
+        textTertiary: .dynamic(light: .linkNeutral600, dark: .linkNeutral200),
+        iconSecondary: .dynamic(light: .linkNeutral700, dark: .linkNeutral200)
     )
 }
 
@@ -254,6 +295,10 @@ private extension UIColor {
 
     static var linkNeutral200: UIColor {
         return UIColor(red: 229 / 255.0, green: 229 / 255.0, blue: 229 / 255.0, alpha: 1)  // #E5E5E5
+    }
+
+    static var linkNeutral600: UIColor {
+        return UIColor(red: 112 / 255.0, green: 112 / 255.0, blue: 112 / 255.0, alpha: 1)  // #707070
     }
 
     static var linkNeutral700: UIColor {

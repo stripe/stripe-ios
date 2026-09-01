@@ -41,7 +41,7 @@ class NetworkingLinkSignupFooterView: HitTestView {
             font: .label(.small),
             boldFont: .label(.smallEmphasized),
             linkFont: .label(.small),
-            textColor: FinancialConnectionsAppearance.Colors.textDefault,
+            textColor: appearance.colors.textTertiary,
             alignment: .center
         )
         termsAndPrivacyPolicyLabel.setText(

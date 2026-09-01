@@ -51,7 +51,8 @@ final class RetrieveAccountsLoadingView: UIView {
                         verticalStackView.spacing = 16
                         return verticalStackView
                     }
-                }()
+                }(),
+                appearance: appearance
             ),
             footerView: nil
         )

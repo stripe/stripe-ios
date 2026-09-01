@@ -18,11 +18,12 @@ final class InstitutionCellView: UIView {
         horizontalStackView.spacing = 12
         horizontalStackView.alignment = .center
         horizontalStackView.isLayoutMarginsRelativeArrangement = true
+        let horizontalMargin: CGFloat = appearance.colors == .link ? 16 : 24
         horizontalStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
             top: 8,
-            leading: 24,
+            leading: horizontalMargin,
             bottom: 8,
-            trailing: 24
+            trailing: horizontalMargin
         )
         return horizontalStackView
     }()

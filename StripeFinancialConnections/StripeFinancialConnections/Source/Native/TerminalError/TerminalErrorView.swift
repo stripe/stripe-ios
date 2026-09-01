@@ -39,7 +39,8 @@ func TerminalErrorView(
                     )
                 }
             }(),
-            contentView: nil
+            contentView: nil,
+            appearance: appearance
         ),
         footerView: PaneLayoutView.createFooterView(
             primaryButtonConfiguration: {
