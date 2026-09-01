@@ -111,10 +111,19 @@ protocol CryptoOnrampCoordinatorProtocol {
     /// Requires an authenticated Link user.
     ///
     /// - Parameter viewController: The view controller from which to present the terms and conditions.
-    /// - Returns: A `TermsAndConditionsResult` indicating whether the user accepted, canceled, or had already accepted the current terms.
+    /// - Returns: A `PartnerTermsResult` indicating whether the user accepted, canceled, or no presentation was required.
     /// Throws if an authenticated Link user is not available or an API error occurs.
     @MainActor
-    func presentTermsAndConditionsIfNeeded(from viewController: UIViewController) async throws -> TermsAndConditionsResult
+    func presentTermsAndConditionsIfNeeded(from viewController: UIViewController) async throws -> PartnerTermsResult
+
+    /// Presents the current terms of service when acceptance is required.
+    /// Requires an authenticated Link user.
+    ///
+    /// - Parameter viewController: The view controller from which to present the terms of service.
+    /// - Returns: A `PartnerTermsResult` indicating whether the user accepted, canceled, or no presentation was required.
+    /// Throws if an authenticated Link user is not available or an API error occurs.
+    @MainActor
+    func presentTermsOfServiceIfNeeded(from viewController: UIViewController) async throws -> PartnerTermsResult
 
     /// Initiates the KYC verification flow, which displays the user’s currently collected KYC information with the ability to confirm or update the displayed address.
     ///
@@ -491,38 +500,38 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
     }
 
     @MainActor
-    public func presentTermsAndConditionsIfNeeded(from viewController: UIViewController) async throws -> TermsAndConditionsResult {
+    public func presentTermsAndConditionsIfNeeded(from viewController: UIViewController) async throws -> PartnerTermsResult {
         analyticsClient.log(.termsAndConditionsStarted)
         do {
-            let linkAccountInfo = try await self.linkAccountInfo
-            let terms = try await apiClient.retrievePartnerTerms(linkAccountInfo: linkAccountInfo)
-
-            switch terms {
-            case .notRequired:
-                return .notRequired
-            case let .required(_, version, html):
-                let result = try await linkController.presentTermsAndConditions(
-                    html: html,
-                    appearance: appearance,
-                    from: viewController,
-                    onAccept: { [apiClient] in
-                        try await apiClient.confirmPartnerTerms(
-                            version: version,
-                            linkAccountInfo: linkAccountInfo
-                        )
-                    }
-                )
-
-                switch result {
-                case .accepted:
-                    analyticsClient.log(.termsAndConditionsCompleted)
-                    return .accepted
-                case .canceled:
-                    return .canceled
-                }
+            let result = try await presentPartnerTermsIfNeeded(
+                partner: .swapped,
+                declarationType: .termsAndConditions,
+                from: viewController
+            )
+            if result == .accepted {
+                analyticsClient.log(.termsAndConditionsCompleted)
             }
+            return result
         } catch {
             try logAndThrow(error, during: .presentTermsAndConditionsIfNeeded)
+        }
+    }
+
+    @MainActor
+    public func presentTermsOfServiceIfNeeded(from viewController: UIViewController) async throws -> PartnerTermsResult {
+        analyticsClient.log(.termsOfServiceStarted)
+        do {
+            let result = try await presentPartnerTermsIfNeeded(
+                partner: .swapped,
+                declarationType: .termsOfService,
+                from: viewController
+            )
+            if result == .accepted {
+                analyticsClient.log(.termsOfServiceCompleted)
+            }
+            return result
+        } catch {
+            try logAndThrow(error, during: .presentTermsOfServiceIfNeeded)
         }
     }
 
@@ -934,6 +943,63 @@ private extension CryptoOnrampCoordinator {
                     continuation.resume(throwing: error ?? CheckoutError.paymentFailed)
                 @unknown default:
                     continuation.resume(throwing: CheckoutError.unexpectedError)
+                }
+            }
+        }
+    }
+
+    @MainActor
+    private func presentPartnerTermsIfNeeded(
+        partner: CryptoOnrampPartner,
+        declarationType: PartnerDeclarationType,
+        from viewController: UIViewController
+    ) async throws -> PartnerTermsResult {
+        let linkAccountInfo = try await self.linkAccountInfo
+        let terms = try await apiClient.retrievePartnerTerms(
+            partner: partner,
+            declarationType: declarationType,
+            linkAccountInfo: linkAccountInfo
+        )
+
+        switch terms {
+        case .notRequired:
+            return .notRequired
+        case let .required(_, version, declarationId, html):
+            let onAccept: () async throws -> Void = { [apiClient] in
+                _ = try await apiClient.confirmPartnerTerms(
+                    partner: partner,
+                    version: version,
+                    declarationId: declarationId,
+                    linkAccountInfo: linkAccountInfo
+                )
+            }
+
+            switch declarationType {
+            case .termsAndConditions:
+                let result = try await linkController.presentTermsAndConditions(
+                    html: html,
+                    appearance: appearance,
+                    from: viewController,
+                    onAccept: onAccept
+                )
+                switch result {
+                case .accepted:
+                    return .accepted
+                case .canceled:
+                    return .canceled
+                }
+            case .termsOfService:
+                let result = try await linkController.presentTermsOfService(
+                    html: html,
+                    appearance: appearance,
+                    from: viewController,
+                    onAccept: onAccept
+                )
+                switch result {
+                case .accepted:
+                    return .accepted
+                case .canceled:
+                    return .canceled
                 }
             }
         }

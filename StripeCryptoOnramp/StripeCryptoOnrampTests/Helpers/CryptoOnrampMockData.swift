@@ -70,7 +70,8 @@ enum RetrievePartnerTermsResponseMock: String, MockData {
 
     typealias ResponseType = PartnerTerms
 
-    case retrievePartnerTermsResponse_Required_200 = "RetrievePartnerTermsResponse_Required_200"
+    case retrievePartnerTermsResponse_TermsAndConditionsRequired_200 = "RetrievePartnerTermsResponse_TermsAndConditionsRequired_200"
+    case retrievePartnerTermsResponse_TOSRequired_200 = "RetrievePartnerTermsResponse_TOSRequired_200"
     case retrievePartnerTermsResponse_NotRequired_200 = "RetrievePartnerTermsResponse_NotRequired_200"
 }
 

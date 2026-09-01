@@ -73,10 +73,10 @@ import UIKit
         case canceled
     }
 
-    @frozen @_spi(STP) public enum TermsAndConditionsResult {
-        /// The user accepted the terms and conditions.
+    @frozen @_spi(STP) public enum PartnerTermsResult {
+        /// The user accepted the partner terms.
         case accepted
-        /// The user dismissed the terms and conditions without accepting.
+        /// The user dismissed the partner terms without accepting.
         case canceled
     }
 
@@ -902,17 +902,51 @@ import UIKit
     ///   - appearance: Appearance configuration for the terms and conditions UI.
     ///   - viewController: The view controller from which to present the terms and conditions.
     ///   - onAccept: An async closure called when the user accepts. This is called *before* dismissal, allowing the caller to complete any async operations before the sheet is dismissed.
-    /// - Returns: A `TermsAndConditionsResult` indicating whether the user accepted or canceled.
+    /// - Returns: A `PartnerTermsResult` indicating whether the user accepted or canceled.
     /// Throws any error thrown by the `onAccept` handler.
     @_spi(STP) public func presentTermsAndConditions(
         html: String,
         appearance: LinkAppearance,
         from viewController: UIViewController,
         onAccept: @escaping (() async throws -> Void)
-    ) async throws -> TermsAndConditionsResult {
-        // TODO: Confirm the final terms and conditions title and button copy.
+    ) async throws -> PartnerTermsResult {
         let result = try await presentHTMLConfirmation(
             heading: String.Localized.terms_and_conditions,
+            html: html,
+            confirmationButtonTitle: String.Localized.accept,
+            appearance: appearance,
+            from: viewController,
+            onConfirm: onAccept
+        )
+
+        switch result {
+        case .confirmed:
+            return .accepted
+        case .canceled:
+            return .canceled
+        }
+    }
+
+    /// Presents terms of service to the user.
+    ///
+    /// This method presents a bottom sheet displaying the provided terms of service HTML for user review.
+    /// The user can accept the terms of service or cancel.
+    ///
+    /// - Parameters:
+    ///   - html: The terms of service HTML to display to the user.
+    ///   - appearance: Appearance configuration for the terms of service UI.
+    ///   - viewController: The view controller from which to present the terms of service.
+    ///   - onAccept: An async closure called when the user accepts. This is called *before* dismissal, allowing the caller to complete any async operations before the sheet is dismissed.
+    /// - Returns: A `PartnerTermsResult` indicating whether the user accepted or canceled.
+    /// Throws any error thrown by the `onAccept` handler.
+    @_spi(STP) public func presentTermsOfService(
+        html: String,
+        appearance: LinkAppearance,
+        from viewController: UIViewController,
+        onAccept: @escaping (() async throws -> Void)
+    ) async throws -> PartnerTermsResult {
+        let result = try await presentHTMLConfirmation(
+            heading: String.Localized.terms_of_service,
             html: html,
             confirmationButtonTitle: String.Localized.accept,
             appearance: appearance,

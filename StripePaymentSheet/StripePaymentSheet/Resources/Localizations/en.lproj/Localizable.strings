@@ -497,6 +497,9 @@ is not supported by the merchant */
 /* Title label for a screen showing terms and conditions */
 "Terms and Conditions" = "Terms and Conditions";
 
+/* Title label for a screen showing terms of service */
+"Terms of Service" = "Terms of Service";
+
 /* An error message. */
 "The IBAN you entered is incomplete." = "The IBAN you entered is incomplete.";
 

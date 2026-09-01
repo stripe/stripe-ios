@@ -747,6 +747,10 @@ extension String.Localized {
         STPLocalizedString("Terms and Conditions", "Title label for a screen showing terms and conditions")
     }
 
+    static var terms_of_service: String {
+        STPLocalizedString("Terms of Service", "Title label for a screen showing terms of service")
+    }
+
     static var accept: String {
         STPLocalizedString("Accept", "Label for a button that confirms the user accepts an attestation")
     }

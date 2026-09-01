@@ -13,6 +13,21 @@ struct ConfirmPartnerTermsRequest: Encodable {
     /// Contains credentials required to make the request.
     let credentials: Credentials
 
-    /// The version of the terms and conditions accepted by the customer.
+    /// The partner whose declaration the customer accepted.
+    let partner: CryptoOnrampPartner
+
+    /// The version of the declaration accepted by the customer.
     let version: String
+
+    /// The unique identifier of the declaration accepted by the customer.
+    let declarationId: String
+
+    // MARK: - Encodable
+
+    private enum CodingKeys: String, CodingKey {
+        case credentials
+        case partner
+        case version
+        case declarationId = "declaration_id"
+    }
 }
