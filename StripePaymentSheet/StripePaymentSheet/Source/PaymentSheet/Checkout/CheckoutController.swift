@@ -52,7 +52,7 @@ public final class CheckoutController: ObservableObject {
     private var currencySelectorElement: CurrencySelectorElement?
 
     /// The ShippingAddressElement for this CheckoutController instance.
-    private let shippingAddressElement: ShippingAddressElement
+    private let shippingAddressElement: ShippingAddressElement?
 
     let clientSecret: String
     let apiClient: STPAPIClient
@@ -119,13 +119,14 @@ public final class CheckoutController: ObservableObject {
 
             // Element initialization is intentionally sequential:
 
-            // 1. Initialize SAE so that its form can normalize the raw default shipping address before it is applied to the session
+            // 1. Initialize SAE, when configured, so that its form can normalize the raw default
+            // shipping address before it is applied to the session.
             let (shippingAddressElement, normalizedDefaultShippingAddress) = await Self.makeShippingAddressElement(
                 configuration: configuration,
                 session: loadedSession
             )
             self.shippingAddressElement = shippingAddressElement
-            self.shippingAddressElement.delegate = self
+            self.shippingAddressElement?.delegate = self
 
             try await applyDefaults(shippingAddress: normalizedDefaultShippingAddress)
 
@@ -168,7 +169,7 @@ public final class CheckoutController: ObservableObject {
     private static func makeShippingAddressElement(
         configuration: Configuration,
         session: Session
-    ) async -> (ShippingAddressElement, Session.ShippingAddress?) {
+    ) async -> (ShippingAddressElement?, Session.ShippingAddress?) {
         let defaultShippingAddress: Session.ShippingAddress?
         if let shippingDetails = configuration.defaults.shippingDetails,
            let address = shippingDetails.address {
@@ -180,9 +181,13 @@ public final class CheckoutController: ObservableObject {
             defaultShippingAddress = nil
         }
 
+        guard let shippingAddressElementConfiguration = configuration.shippingAddressElement else {
+            return (nil, defaultShippingAddress)
+        }
+
         // Initialize the SAE with the raw default so its form can normalize the address.
         let shippingAddressElement = ShippingAddressElement(
-            configuration: configuration.shippingAddressElement,
+            configuration: shippingAddressElementConfiguration,
             initialShippingAddress: defaultShippingAddress ?? session.shippingAddress,
             allowedCountries: session.allowedShippingCountries,
             checkoutSessionId: session.id,
@@ -350,7 +355,11 @@ public final class CheckoutController: ObservableObject {
 
     /// Returns the ShippingAddressElement for this CheckoutController instance.
     public func getShippingAddressElement() -> ShippingAddressElement {
-        return shippingAddressElement
+        assert(
+            configuration.shippingAddressElement != nil,
+            "Set Configuration.shippingAddressElement before initializing the CheckoutController to use ShippingAddressElement."
+        )
+        return shippingAddressElement!
     }
 
     // MARK: - Confirm

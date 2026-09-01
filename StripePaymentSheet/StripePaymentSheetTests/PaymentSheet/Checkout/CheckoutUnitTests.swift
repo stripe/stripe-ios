@@ -293,7 +293,9 @@ final class CheckoutUnitTests: XCTestCase {
 
     func testShippingAddressElementSaveUpdatesCheckoutSession() async throws {
         // Given a ShippingAddressElement connected to its Checkout
-        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration())
+        var configuration = CheckoutTestHelpers.makeConfiguration()
+        configuration.shippingAddressElement = .init()
+        let checkout = try await CheckoutController(configuration: configuration)
         let shippingAddressElement = checkout.getShippingAddressElement()
 
         // When the element saves a collected address
@@ -334,6 +336,7 @@ final class CheckoutUnitTests: XCTestCase {
             clientSecret: "cs_test_123_secret_abc",
             returnURL: "stripe-ios-test://checkout-return"
         )
+        configuration.shippingAddressElement = .init()
         var shippingDetails = CheckoutController.Configuration.Defaults.ShippingDetails()
         shippingDetails.name = "Jane Doe"
         shippingDetails.address = .init(

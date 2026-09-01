@@ -41,7 +41,7 @@ struct CheckoutCartView: View {
                     CheckoutCartContentView(
                         checkout: checkout,
                         showsCurrencySelectorElement: adaptivePricing,
-                        showsShippingAddressSection: shippingAddressCollection || checkout.session.shippingAddress != nil,
+                        showsShippingAddressSection: shippingAddressCollection,
                         errorMessage: errorMessage,
                         showExpressCheckoutElement: showExpressCheckoutElement,
                         integrationType: integrationType
@@ -154,6 +154,12 @@ struct CheckoutCartView: View {
                 config.paymentElement = paymentElementConfiguration
             }
             config.defaults.shippingDetails = defaultShippingAddress?.checkoutShippingDetails
+            if shippingAddressCollection {
+                var shippingAddressElementConfiguration = ShippingAddressElement.Configuration()
+                shippingAddressElementConfiguration.title = "Shipping Address"
+                shippingAddressElementConfiguration.buttonTitle = "Save Address"
+                config.shippingAddressElement = shippingAddressElementConfiguration
+            }
             if adaptivePricing {
                 var currencySelectorConfiguration = CurrencySelectorElement.Configuration()
                 currencySelectorConfiguration.appearance = currencySelectorAppearance
@@ -168,8 +174,6 @@ struct CheckoutCartView: View {
                 confirmResult = result
             }
             config.expressCheckoutElement.billingDetailsCollectionConfiguration = eceBillingDetailsCollectionConfiguration
-            config.shippingAddressElement.title = "Shipping Address"
-            config.shippingAddressElement.buttonTitle = "Save Address"
             checkout = try await CheckoutController(configuration: config)
         } catch {
             errorMessage = error.localizedDescription

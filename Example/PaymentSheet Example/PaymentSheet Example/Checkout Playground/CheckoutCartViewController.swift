@@ -220,6 +220,9 @@ final class CheckoutCartViewController: UIViewController {
                 configuration.paymentElement = paymentElementConfiguration
             }
             configuration.defaults.shippingDetails = defaultShippingAddress?.checkoutShippingDetails
+            if shippingAddressCollection {
+                configuration.shippingAddressElement = .init()
+            }
             var expressCheckoutElementConfig = ExpressCheckoutElement.Configuration()
             expressCheckoutElementConfig.billingDetailsCollectionConfiguration = eceBillingDetailsCollectionConfiguration
             configuration.expressCheckoutElement = expressCheckoutElementConfig
@@ -296,7 +299,7 @@ final class CheckoutCartViewController: UIViewController {
             )
         }
 
-        if shippingAddressCollection || session.shippingAddress != nil {
+        if shippingAddressCollection {
             contentStackView.addArrangedSubview(makeShippingAddressSection(session: session))
         }
 
