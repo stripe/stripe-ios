@@ -97,6 +97,7 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
         case JP = "jp"
         case BR = "br"
         case FR = "fr"
+        case ES = "es"
         case TH = "th"
         case DE = "de"
         case IT = "it"
@@ -123,6 +124,8 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                 return STPTestingBRPublishableKey
             case .FR:
                 return STPTestingFRPublishableKey
+            case .ES:
+                return STPTestingESPublishableKey
             case .TH:
                 return STPTestingTHPublishableKey
             case .DE:
@@ -637,6 +640,23 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                                paymentMethodType: .revolutPay,
                                merchantCountry: .GB,
                                expectedHierarchy: ExpectedFormHierarchy.RevolutPay.settingUp) { _ in }
+    }
+
+    func testSequraConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "EUR",
+                               amount: 60000,
+                               paymentMethodType: .sequra,
+                               merchantCountry: .ES,
+                               expectedHierarchy: ExpectedFormHierarchy.Sequra.paymentIntent) { _ in }
+    }
+
+    func testPaycoConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "KRW",
+                               paymentMethodType: .payco,
+                               merchantCountry: .US,
+                               expectedHierarchy: ExpectedFormHierarchy.Payco.paymentIntent) { _ in }
     }
 
     func testPayPalConfirmFlows() async throws {

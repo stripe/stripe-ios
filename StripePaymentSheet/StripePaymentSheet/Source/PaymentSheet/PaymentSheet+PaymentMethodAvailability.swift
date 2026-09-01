@@ -44,6 +44,8 @@ extension PaymentSheet {
         .payByBank,
         .mbWay,
         .bizum,
+        .payco,
+        .sequra,
     ]
 
     /// A list of `STPPaymentMethodType` that can be saved in PaymentSheet

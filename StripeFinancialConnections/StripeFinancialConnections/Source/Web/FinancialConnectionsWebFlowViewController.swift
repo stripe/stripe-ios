@@ -72,19 +72,6 @@ final class FinancialConnectionsWebFlowViewController: UIViewController {
     private let elementsSessionContext: ElementsSessionContext?
     private let prefillDetailsOverride: WebPrefillDetails?
 
-    private var hostedAuthConsumerContext: HostedAuthUrlBuilder.ConsumerContext? {
-        guard apiClient.hasRequestedDataPermissions,
-              let consumerSession = apiClient.consumerSession,
-              let consumerPublishableKey = apiClient.consumerPublishableKey else {
-            return nil
-        }
-        return HostedAuthUrlBuilder.ConsumerContext(
-            clientSecret: consumerSession.clientSecret,
-            publishableKey: consumerPublishableKey,
-            emailAddress: consumerSession.emailAddress
-        )
-    }
-
     // MARK: - UI
 
     private lazy var closeItem: UIBarButtonItem = {
@@ -183,8 +170,7 @@ extension FinancialConnectionsWebFlowViewController {
             hasExistingAccountholderToken: manifest.accountholderToken != nil,
             elementsSessionContext: elementsSessionContext,
             prefillDetailsOverride: prefillDetailsOverride,
-            additionalQueryParameters: additionalQueryParameters,
-            consumerContext: hostedAuthConsumerContext
+            additionalQueryParameters: additionalQueryParameters
         )
         authSessionManager?
             .start(hostedAuthUrl: updatedHostedAuthUrl)
