@@ -145,18 +145,17 @@ extension CheckoutController.Session: CustomDebugStringConvertible {
                         "          unitAmount: \(item.unitAmount.debugValue)",
                         "          unitAmountDecimal: \(item.unitAmountDecimal?.debugValue ?? "nil")",
                         "          adjustableQuantity: \(item.adjustableQuantity.debugValue)",
+                        "          subtotal: \(item.amountDetails.subtotal.debugValue)",
+                        "          taxExclusive: \(item.amountDetails.taxExclusive.debugValue)",
+                        "          taxInclusive: \(item.amountDetails.taxInclusive.debugValue)",
+                        "          taxAmountCount: \(item.amountDetails.taxAmounts.map { String($0.count) } ?? "nil")",
+                        "          total: \(item.amountDetails.total.debugValue)",
                         "        }",
                     ])
                 }
 
                 lines.append(contentsOf: [
                     "      ]",
-                    "      subtotal: \(group.amountDetails.subtotal.debugValue)",
-                    "      discount: \(group.amountDetails.discount.debugValue)",
-                    "      taxExclusive: \(group.amountDetails.taxExclusive.debugValue)",
-                    "      taxInclusive: \(group.amountDetails.taxInclusive.debugValue)",
-                    "      taxAmountCount: \(group.amountDetails.taxAmounts.map { String($0.count) } ?? "nil")",
-                    "      total: \(group.amountDetails.total.debugValue)",
                     "    }",
                 ])
             }

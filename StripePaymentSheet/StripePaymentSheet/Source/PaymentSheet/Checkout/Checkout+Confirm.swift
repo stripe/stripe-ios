@@ -124,7 +124,10 @@ extension CheckoutController {
         // Normalize Payment Element state here, then build the corresponding confirmation flow.
         switch paymentOption {
         case .applePay:
-            guard let applePayConfiguration = self.configuration.paymentElement.applePayConfiguration else { return nil }
+            guard let paymentElementConfiguration = self.configuration.paymentElement,
+                  let applePayConfiguration = paymentElementConfiguration.applePayConfiguration else {
+                return nil
+            }
             return .applePay(.init(
                 applePayConfiguration: applePayConfiguration,
                 apiClient: apiClient,
@@ -209,7 +212,7 @@ extension CheckoutController {
                 let result: InternalConfirmResult
                 switch flow {
                 case .applePay(let parameters):
-                    result = await Self.confirmApplePay(checkoutSession: self.session, parameters: parameters)
+                    result = await Self.confirmApplePay(checkoutSession: self.session, parameters: parameters, checkoutWalletUpdater: self)
                 case .link(let parameters):
                     result = await Self.confirmLink(checkoutSession: self.session, parameters: parameters)
                 case .paymentMethod(let paymentMethodParameters, let integrationShape):
