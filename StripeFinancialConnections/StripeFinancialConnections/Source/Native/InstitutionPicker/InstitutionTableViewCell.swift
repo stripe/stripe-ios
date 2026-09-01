@@ -17,6 +17,8 @@ final class InstitutionTableViewCell: UITableViewCell {
     private var institutionCellView: InstitutionCellView?
     private var appearance: FinancialConnectionsAppearance?
     private var isHighlightFrozen = false
+    private var roundsTopCorners = false
+    private var roundsBottomCorners = false
 
     private lazy var overlayView: UIView = {
         let overlayView = UIView()
@@ -59,20 +61,52 @@ final class InstitutionTableViewCell: UITableViewCell {
         adjustBackgroundColor(isHighlighted: frozen)
     }
 
+    func setRoundedCorners(top: Bool, bottom: Bool) {
+        roundsTopCorners = top
+        roundsBottomCorners = bottom
+        adjustBackgroundColor(isHighlighted: isHighlighted || isHighlightFrozen)
+    }
+
     private func adjustBackgroundColor(isHighlighted: Bool) {
-        let restingColor: UIColor = appearance?.colors == .link
-            ? .clear
+        let isLinkAppearance = appearance?.colors == .link
+        let restingColor: UIColor = isLinkAppearance
+            ? appearance?.colors.iconBackground ?? FinancialConnectionsAppearance.Colors.background
             : FinancialConnectionsAppearance.Colors.background
         contentView.backgroundColor = isHighlighted
             ? FinancialConnectionsAppearance.Colors.backgroundHighlighted
             : restingColor
-        backgroundColor = contentView.backgroundColor
+        backgroundColor = isLinkAppearance ? .clear : contentView.backgroundColor
+        if isLinkAppearance {
+            separatorInset = roundsBottomCorners
+                ? UIEdgeInsets(top: 0, left: .greatestFiniteMagnitude, bottom: 0, right: 0)
+                : UIEdgeInsets(top: 0, left: 72, bottom: 0, right: 0)
+        } else {
+            separatorInset = .zero
+        }
+        updateCornerMask(for: contentView, isLinkAppearance: isLinkAppearance)
 
         // fix a bug where the background color of a
         // rotated, selected cell was wrong
         let selectedBackgroundView = UIView()
         selectedBackgroundView.backgroundColor = contentView.backgroundColor
+        updateCornerMask(for: selectedBackgroundView, isLinkAppearance: isLinkAppearance)
         self.selectedBackgroundView = selectedBackgroundView
+    }
+
+    private func updateCornerMask(for view: UIView, isLinkAppearance: Bool) {
+        var maskedCorners: CACornerMask = []
+        if roundsTopCorners {
+            maskedCorners.insert(.layerMinXMinYCorner)
+            maskedCorners.insert(.layerMaxXMinYCorner)
+        }
+        if roundsBottomCorners {
+            maskedCorners.insert(.layerMinXMaxYCorner)
+            maskedCorners.insert(.layerMaxXMaxYCorner)
+        }
+        let roundsCorners = isLinkAppearance && !maskedCorners.isEmpty
+        view.layer.cornerRadius = roundsCorners ? 12 : 0
+        view.layer.maskedCorners = maskedCorners
+        view.layer.masksToBounds = roundsCorners
     }
 
     func showLoadingView(_ show: Bool) {
@@ -99,8 +133,14 @@ final class InstitutionTableViewCell: UITableViewCell {
 
 extension InstitutionTableViewCell {
 
-    func customize(with institution: FinancialConnectionsInstitution, appearance: FinancialConnectionsAppearance) {
+    func customize(
+        with institution: FinancialConnectionsInstitution,
+        appearance: FinancialConnectionsAppearance,
+        roundsTopCorners: Bool = false
+    ) {
         self.appearance = appearance
+        self.roundsTopCorners = roundsTopCorners
+        roundsBottomCorners = false
         adjustBackgroundColor(isHighlighted: false)
 
         let institutionCellView = InstitutionCellView(appearance: appearance)

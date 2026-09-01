@@ -43,6 +43,7 @@ final class InstitutionTableFooterView: UIView {
             subtitle: subtitle
         )
 
+        let contentView: UIView
         if appearance.colors == .link && showsDividerAboveContent {
             // `institutionCellView` sits in a `tableFooterView`, which the table view
             // does not draw its row separator above, so add one to match the rows above.
@@ -53,9 +54,27 @@ final class InstitutionTableFooterView: UIView {
                 ]
             )
             verticalStackView.axis = .vertical
-            addAndPinSubview(verticalStackView)
+            contentView = verticalStackView
         } else {
-            addAndPinSubview(institutionCellView)
+            contentView = institutionCellView
+        }
+
+        if appearance.colors == .link {
+            backgroundColor = appearance.colors.iconBackground
+            layer.cornerRadius = 12
+            layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
+            layer.masksToBounds = true
+            addAndPinSubview(
+                contentView,
+                insets: NSDirectionalEdgeInsets(
+                    top: 0,
+                    leading: 0,
+                    bottom: 16,
+                    trailing: 0
+                )
+            )
+        } else {
+            addAndPinSubview(contentView)
         }
 
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapView))
