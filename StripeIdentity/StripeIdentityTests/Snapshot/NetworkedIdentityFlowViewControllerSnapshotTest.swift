@@ -31,7 +31,7 @@ final class NetworkedIdentityFlowViewControllerSnapshotTest: STPSnapshotTestCase
         viewController.loadViewIfNeeded()
         return viewController
     }()
-    private lazy var navigationController = UINavigationController(
+    private lazy var navigationController = IdentityFlowNavigationController(
         rootViewController: viewController
     )
     private lazy var window: UIWindow = {

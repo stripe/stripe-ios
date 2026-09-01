@@ -272,7 +272,7 @@ private extension NetworkedIdentityCoordinator {
                 NetworkedIdentityStartVerificationRequest(
                     consumerSessionClientSecret: credentials.sessionClientSecret,
                     type: .sms,
-                    locale: nil,
+                    locale: Locale.current.toLanguageTag(),
                     accountPhoneNumber: nil,
                     verificationSessionClientSecrets: verificationSessionClientSecrets
                 ),

@@ -1021,7 +1021,7 @@ private extension NetworkedIdentityCoordinatorTest {
                 request: .init(
                     consumerSessionClientSecret: "cs_lookup",
                     type: .sms,
-                    locale: nil,
+                    locale: Locale.current.toLanguageTag(),
                     accountPhoneNumber: nil,
                     verificationSessionClientSecrets: ["vs_client_secret"]
                 ),

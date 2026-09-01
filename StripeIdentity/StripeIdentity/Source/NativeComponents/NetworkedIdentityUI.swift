@@ -74,13 +74,28 @@ extension Button.Configuration {
     }
 
     static func networkedIdentitySecondary() -> Self {
+        var configuration: Self = .secondary()
+        configuration.font = NetworkedIdentityUI.bodyEmphasizedFont
+        configuration.cornerRadius = 12
+        configuration.foregroundColor = .label
+        configuration.backgroundColor = .secondarySystemBackground
+        configuration.insets = .init(
+            top: 12,
+            leading: 16,
+            bottom: 12,
+            trailing: 16
+        )
+        return configuration
+    }
+
+    static func networkedIdentityPlain() -> Self {
         var configuration: Self = .plain()
         configuration.font = NetworkedIdentityUI.bodyEmphasizedFont
         configuration.foregroundColor = .label
         configuration.insets = .init(
-            top: 6,
+            top: 12,
             leading: 16,
-            bottom: 6,
+            bottom: 12,
             trailing: 16
         )
         return configuration

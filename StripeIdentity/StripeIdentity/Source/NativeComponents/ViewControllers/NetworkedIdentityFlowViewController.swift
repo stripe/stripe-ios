@@ -184,10 +184,10 @@ final class NetworkedIdentityFlowViewController: UIViewController {
 }
 
 extension NetworkedIdentityFlowViewController.Content {
-    /// The current Figma reference content for the native Link reuse flow.
+    /// Provisional content from the current standardized Link login reference.
     ///
-    /// #TODO - Networked Identity: Localize the Networked Identity-specific strings and replace
-    /// provisional copy when the final mobile content is approved.
+    /// #TODO - Networked Identity: Split the save and reuse copy, localize the Networked
+    /// Identity-specific strings, and replace provisional content when the final mobile copy is approved.
     static var networkedIdentity: Self {
         let documentLabel: NetworkedIdentityDocumentSelectionView.LabelProvider = { document in
             let type: String
@@ -211,7 +211,7 @@ extension NetworkedIdentityFlowViewController.Content {
         return .init(
             email: .init(
                 title: "Continue with Link",
-                body: "To save this ID, sign in or create an account.",
+                body: "Sign in to use a saved ID.",
                 reauthenticationTitle: "Continue with Link",
                 reauthenticationBody: "Sign in again to continue.",
                 continueButtonText: "Continue"
@@ -356,7 +356,9 @@ private extension NetworkedIdentityFlowViewController {
             with: .init(
                 headerViewModel: plainHeader(title: content.otp.title),
                 contentView: phoneOtpView,
-                buttons: [manualCaptureButton()]
+                buttons: [
+                    manualCaptureButton(configuration: .networkedIdentityPlain()),
+                ]
             )
         )
         // #TODO - Networked Identity: Add resend and alternate-channel controls when their
@@ -430,11 +432,13 @@ private extension NetworkedIdentityFlowViewController {
         )
     }
 
-    func manualCaptureButton() -> IdentityFlowView.ViewModel.Button {
+    func manualCaptureButton(
+        configuration: Button.Configuration = .networkedIdentitySecondary()
+    ) -> IdentityFlowView.ViewModel.Button {
         .init(
             text: content.manualCaptureButtonText,
             isPrimary: false,
-            configuration: .networkedIdentitySecondary(),
+            configuration: configuration,
             didTap: { [weak self] in
                 self?.chooseManualCapture()
             }
