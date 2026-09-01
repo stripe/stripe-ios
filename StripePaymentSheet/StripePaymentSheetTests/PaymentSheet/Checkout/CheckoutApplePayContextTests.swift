@@ -782,10 +782,10 @@ final class CheckoutApplePayContextTests: XCTestCase {
         return (context, controller)
     }
 
-    private func makeShippingContact(country: String, postalCode: String = "") -> PKContact {
+    private func makeShippingContact(country: String, postalCode: String? = nil) -> PKContact {
         let address = CNMutablePostalAddress()
         address.isoCountryCode = country
-        address.postalCode = postalCode
+        address.postalCode = postalCode ?? ""
         let contact = PKContact()
         contact.postalAddress = address
         return contact

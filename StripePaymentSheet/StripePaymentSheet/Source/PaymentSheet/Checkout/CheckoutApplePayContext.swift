@@ -35,6 +35,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
     private let confirmationHandler: CheckoutController.ApplePayConfirmationParameters.ConfirmationHandler
     private let fallbackBillingDetails: StripeAPI.BillingDetails?
     let authorizationController: PKPaymentAuthorizationController
+
     private weak var checkoutWalletUpdater: CheckoutSessionWalletUpdater?
 
     // Internal state
@@ -52,7 +53,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         checkoutSession: CheckoutController.Session,
         applePayConfirmationParameters: CheckoutController.ApplePayConfirmationParameters,
         authorizationController: PKPaymentAuthorizationController,
-        checkoutWalletUpdater: CheckoutSessionWalletUpdater? = nil
+        checkoutWalletUpdater: CheckoutSessionWalletUpdater
     ) {
         self.session = checkoutSession
         self.merchantLabel = applePayConfirmationParameters.merchantDisplayName
