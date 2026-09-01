@@ -40,37 +40,13 @@ struct CheckoutCartView: View {
                 if let checkout {
                     CheckoutCartContentView(
                         checkout: checkout,
+                        showsCurrencySelectorElement: adaptivePricing,
                         showsShippingAddressSection: shippingAddressCollection || checkout.session.shippingAddress != nil,
-                        errorMessage: errorMessage
-                    )
-                    .safeAreaInset(edge: .bottom, spacing: 0) {
-                        VStack(spacing: 0) {
-                            if showExpressCheckoutElement,
-                               let ece = checkout.getExpressCheckoutElement() {
-                                ece.view
-                                    .padding(.horizontal)
-                                    .padding(.top, 16)
-                            }
-                            switch integrationType {
-                            case .flowController:
-                                CheckoutCartPaymentButton(checkout: checkout) { result in
-                                    confirmResult = result
-                                }
-                                    .clipped()
-                            case .embedded:
-                                CheckoutCartEmbeddedPaymentView(checkout: checkout) { result in
-                                    confirmResult = result
-                                }
-                                    .clipped()
-                            case .eceOnly:
-                                EmptyView()
-                            }
-                        }
-                        .background(
-                            Color(UIColor.systemBackground)
-                                .shadow(color: Color.black.opacity(0.1), radius: 10, x: 0, y: -5)
-                                .ignoresSafeArea()
-                        )
+                        errorMessage: errorMessage,
+                        showExpressCheckoutElement: showExpressCheckoutElement,
+                        integrationType: integrationType
+                    ) { result in
+                        confirmResult = result
                     }
                 } else if isLoading {
                     ProgressView("Loading Cart...")
@@ -171,10 +147,14 @@ struct CheckoutCartView: View {
             config.apiClient = diagnostics.makeAPIClient(
                 paymentPagesRequestDelay: delayPaymentPagesRequests ? 1 : 0
             )
+            if integrationType != .eceOnly {
+                var paymentElementConfiguration = PaymentElement.Configuration()
+                paymentElementConfiguration.applePayConfiguration = PaymentElement.ApplePayConfiguration(
+                    merchantId: "merchant.com.stripe.paymentsheet.example"
+                )
+                config.paymentElement = paymentElementConfiguration
+            }
             config.defaults.shippingDetails = defaultShippingAddress?.checkoutShippingDetails
-            config.paymentElement.applePayConfiguration = PaymentElement.ApplePayConfiguration(
-                merchantId: "merchant.com.stripe.paymentsheet.example"
-            )
             if adaptivePricing {
                 var currencySelectorConfiguration = CurrencySelectorElement.Configuration()
                 currencySelectorConfiguration.appearance = currencySelectorAppearance
