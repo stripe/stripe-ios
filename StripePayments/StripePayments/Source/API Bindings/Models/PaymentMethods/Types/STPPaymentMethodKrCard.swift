@@ -9,7 +9,7 @@
 import Foundation
 
 /// A Korean cards Payment Method.
-/// - seealso: https://docs.stripe.com/payments/korean-card/accept-a-payment
+/// - seealso: https://docs.stripe.com/payments/kr-card/accept-a-payment?payment-ui=direct-api
 public class STPPaymentMethodKrCard: NSObject, STPAPIResponseDecodable {
     /// The local credit or debit card brand.
     @objc public private(set) var brand: STPPaymentMethodKrCardBrand = .unknown

@@ -159,16 +159,21 @@ enum CheckoutTestHelpers {
     /// - Parameters:
     ///   - apiResponse: The Checkout Session response returned by the stubbed `/init` request.
     ///   - configuration: An optional base configuration for test-specific settings.
+    ///   - paymentElementConfiguration: The Payment Element configuration to use when the base configuration omits it.
     ///   - stubAllOutgoingRequests: Whether to stub every outgoing API request made by the client, or only the initialization request.
     @MainActor
     static func makeConfiguration(
         apiResponse: PaymentPagesAPIResponse = makeOpenSession(),
         configuration: CheckoutController.Configuration? = nil,
+        paymentElementConfiguration: PaymentElement.Configuration? = .init(),
         stubAllOutgoingRequests: Bool = true
     ) -> CheckoutController.Configuration {
         // Use the production Checkout initializer with a test-controlled API client.
         let clientSecret = configuration?.clientSecret ?? "\(apiResponse.sessionId)_secret_abc"
         var resolvedConfiguration = configuration ?? CheckoutController.Configuration(clientSecret: clientSecret, returnURL: "stripe-ios-test://checkout-return")
+        if resolvedConfiguration.paymentElement == nil {
+            resolvedConfiguration.paymentElement = paymentElementConfiguration
+        }
         resolvedConfiguration.apiClient = makeStubbedAPIClient(
             apiResponse: apiResponse,
             clientSecret: clientSecret,
@@ -378,6 +383,36 @@ class MockPKPaymentAuthorizationController: PKPaymentAuthorizationController {
 
     override func dismiss(completion: (() -> Void)? = nil) {
         completion?()
+    }
+}
+
+@MainActor
+class MockCheckoutSessionWalletUpdater: CheckoutSessionWalletUpdater {
+    private(set) var updateCallCount = 0
+    private(set) var lastAddress: CheckoutController.Address?
+    private(set) var lastCanUpdateWhileSheetPresented: Bool?
+    private let sessionToReturn: CheckoutController.Session?
+    private let errorToThrow: Error?
+
+    init(sessionToReturn: CheckoutController.Session? = nil, errorToThrow: Error? = nil) {
+        self.sessionToReturn = sessionToReturn
+        self.errorToThrow = errorToThrow
+    }
+
+    func updateBillingTaxRegionWithoutEnqueueing(
+        address: CheckoutController.Address,
+        canUpdateWhileSheetPresented: Bool
+    ) async throws -> CheckoutController.Session {
+        updateCallCount += 1
+        lastAddress = address
+        lastCanUpdateWhileSheetPresented = canUpdateWhileSheetPresented
+        if let errorToThrow {
+            throw errorToThrow
+        }
+        guard let sessionToReturn else {
+            throw CheckoutError.unknown(debugDescription: "MockCheckoutSessionWalletUpdater has no session configured")
+        }
+        return sessionToReturn
     }
 }
 
