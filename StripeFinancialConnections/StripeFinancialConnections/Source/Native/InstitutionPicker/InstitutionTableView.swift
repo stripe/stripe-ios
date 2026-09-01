@@ -53,6 +53,8 @@ final class InstitutionTableView: UIView {
     private var institutions: [FinancialConnectionsInstitution] = []
     private var shouldLogScroll = true
     private var cardBackgroundView: UIView?
+    private var cardTopCornerPatchLayer: CAShapeLayer?
+    private let cardCornerRadius: CGFloat = 12
 
     private lazy var manualEntryTableFooterView: InstitutionTableFooterView = {
         let manualEntryTableFooterView = InstitutionTableFooterView(
@@ -89,6 +91,7 @@ final class InstitutionTableView: UIView {
                 subtitle: nil,
                 image: .search,
                 appearance: appearance,
+                showsDividerAboveContent: true,
                 didSelect: { [weak self] in
                     guard let self = self else { return }
                     FeedbackGeneratorAdapter.buttonTapped()
@@ -166,11 +169,20 @@ final class InstitutionTableView: UIView {
         if appearance.colors == .link {
             let cardBg = UIView()
             cardBg.backgroundColor = appearance.colors.iconBackground
-            cardBg.layer.cornerRadius = 12
+            cardBg.layer.cornerRadius = cardCornerRadius
             cardBg.layer.masksToBounds = true
             // Insert behind tableView so cells render on top
             insertSubview(cardBg, belowSubview: tableView)
             cardBackgroundView = cardBg
+
+            // Cells scrolling behind the sticky search bar header can peek out just below
+            // it, painting their square corners over where the card's rounded top corners
+            // should show. This layer sits above the table view and re-patches just the two
+            // corner notches with the page background color so the rounding stays visible.
+            let cornerPatchLayer = CAShapeLayer()
+            layer.addSublayer(cornerPatchLayer)
+            cardTopCornerPatchLayer = cornerPatchLayer
+            updateCardTopCornerPatchLayerColor()
         }
         // calling `load` activates the `UITableView` data source
         // by appening a section, which in turn will display
@@ -181,6 +193,14 @@ final class InstitutionTableView: UIView {
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    // CGColor's need to be manually updated when the system theme changes.
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        guard traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) else { return }
+
+        updateCardTopCornerPatchLayerColor()
     }
 
     override func layoutSubviews() {
@@ -244,18 +264,22 @@ final class InstitutionTableView: UIView {
         let numberOfRows = tableView.numberOfRows(inSection: 0)
         guard numberOfRows > 0 else {
             cardBackgroundView.isHidden = true
+            cardTopCornerPatchLayer?.isHidden = true
             return
         }
         cardBackgroundView.isHidden = false
-        // Compute card top: first cell visual position, clamped to section header bottom
-        // so the card never slides under the sticky search bar.
+        cardTopCornerPatchLayer?.isHidden = false
+        // Compute card top: first cell visual position, clamped to the search bar's actual
+        // current bottom edge (its own height alone isn't enough — at rest, the non-sticky
+        // `tableHeaderView` above it also pushes it down) so the card never slides underneath
+        // the search bar, whether it's stuck to the top or still in its natural position.
         // Card extends 16pt beyond the first/last row so the card background
         // provides uniform padding around the rows, matching the 16pt inset used
         // for each row's own leading/trailing content margin.
         let cardPadding: CGFloat = 16
         let firstCellRect = tableView.rectForRow(at: IndexPath(row: 0, section: 0))
-        let sectionHeaderHeight = searchBarContainerView?.bounds.height ?? 0
-        let cardTop = max(sectionHeaderHeight, firstCellRect.minY - tableView.contentOffset.y - cardPadding)
+        let searchBarContainerBottom = searchBarContainerView.map { $0.convert($0.bounds, to: self).maxY } ?? 0
+        let cardTop = max(searchBarContainerBottom, firstCellRect.minY - tableView.contentOffset.y - cardPadding)
         // Compute card bottom: footer bottom (or last cell bottom) in wrapper coordinates.
         // Content space → wrapper space: subtract contentOffset.y (tableView is pinned to wrapper).
         let contentBottom: CGFloat
@@ -272,6 +296,55 @@ final class InstitutionTableView: UIView {
             width: bounds.width,
             height: cardBottom - cardTop
         )
+        updateCardTopCornerPatchLayer(cardFrame: cardBackgroundView.frame)
+    }
+
+    private func updateCardTopCornerPatchLayerColor() {
+        cardTopCornerPatchLayer?.fillColor = FinancialConnectionsAppearance.Colors.background.cgColor
+    }
+
+    private func updateCardTopCornerPatchLayer(cardFrame: CGRect) {
+        guard let cardTopCornerPatchLayer = cardTopCornerPatchLayer else { return }
+        let radius = cardCornerRadius
+        let patchFrame = CGRect(
+            x: cardFrame.minX,
+            y: cardFrame.minY,
+            width: cardFrame.width,
+            height: radius
+        )
+        cardTopCornerPatchLayer.frame = patchFrame
+
+        // Each notch is the corner square minus the quarter-circle the card's own rounded
+        // corner traces — exactly the sliver a peeking (square-cornered) row would otherwise
+        // paint over. Both notches are fully contained within the strip's own bounds, so
+        // (unlike an XOR-with-an-oversized-rect approach) no extra clipping is needed.
+        let path = UIBezierPath()
+
+        // Top-left notch.
+        path.move(to: CGPoint(x: 0, y: 0))
+        path.addLine(to: CGPoint(x: radius, y: 0))
+        path.addArc(
+            withCenter: CGPoint(x: radius, y: radius),
+            radius: radius,
+            startAngle: -.pi / 2,
+            endAngle: .pi,
+            clockwise: false
+        )
+        path.close()
+
+        // Top-right notch.
+        path.move(to: CGPoint(x: patchFrame.width, y: 0))
+        path.addLine(to: CGPoint(x: patchFrame.width - radius, y: 0))
+        path.addArc(
+            withCenter: CGPoint(x: patchFrame.width - radius, y: radius),
+            radius: radius,
+            startAngle: -.pi / 2,
+            endAngle: 0,
+            clockwise: true
+        )
+        path.close()
+
+        cardTopCornerPatchLayer.path = path.cgPath
     }
 
     func load(
