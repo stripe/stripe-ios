@@ -138,8 +138,8 @@ final class InstitutionTableView: UIView {
                 right: -Constants.Layout.defaultHorizontalMargin
             )
             tableView.separatorStyle = .singleLine
-            tableView.separatorColor = FinancialConnectionsAppearance.Colors.borderNeutral
-            tableView.separatorInset = UIEdgeInsets(top: 0, left: 92, bottom: 0, right: 0)
+            tableView.separatorColor = FinancialConnectionsAppearance.Colors.dividerOnCard
+            tableView.separatorInset = UIEdgeInsets(top: 0, left: 72, bottom: 0, right: 0)
         } else {
             tableView.backgroundColor = FinancialConnectionsAppearance.Colors.background
             tableView.separatorInset = .zero
@@ -249,9 +249,13 @@ final class InstitutionTableView: UIView {
         cardBackgroundView.isHidden = false
         // Compute card top: first cell visual position, clamped to section header bottom
         // so the card never slides under the sticky search bar.
+        // Card extends 16pt beyond the first/last row so the card background
+        // provides uniform padding around the rows, matching the 16pt inset used
+        // for each row's own leading/trailing content margin.
+        let cardPadding: CGFloat = 16
         let firstCellRect = tableView.rectForRow(at: IndexPath(row: 0, section: 0))
         let sectionHeaderHeight = searchBarContainerView?.bounds.height ?? 0
-        let cardTop = max(sectionHeaderHeight, firstCellRect.minY - tableView.contentOffset.y)
+        let cardTop = max(sectionHeaderHeight, firstCellRect.minY - tableView.contentOffset.y - cardPadding)
         // Compute card bottom: footer bottom (or last cell bottom) in wrapper coordinates.
         // Content space → wrapper space: subtract contentOffset.y (tableView is pinned to wrapper).
         let contentBottom: CGFloat
@@ -261,7 +265,7 @@ final class InstitutionTableView: UIView {
             let lastRow = IndexPath(row: numberOfRows - 1, section: 0)
             contentBottom = tableView.rectForRow(at: lastRow).maxY - tableView.contentOffset.y
         }
-        let cardBottom = max(cardTop, min(bounds.height, contentBottom))
+        let cardBottom = max(cardTop, min(bounds.height, contentBottom + cardPadding))
         cardBackgroundView.frame = CGRect(
             x: 0,
             y: cardTop,
@@ -379,6 +383,22 @@ final class InstitutionTableView: UIView {
             return
         }
         loadingCell.showLoadingView(show)
+    }
+
+    /// Freezes/unfreezes the highlighted (pressed) background of the row for `institution`.
+    func setHighlightFrozen(
+        _ frozen: Bool,
+        forInstitution institution: FinancialConnectionsInstitution
+    ) {
+        guard
+            let index = institutions.firstIndex(where: { $0.id == institution.id }),
+            let cell = tableView.cellForRow(
+                at: IndexPath(row: index, section: 0)
+            ) as? InstitutionTableViewCell
+        else {
+            return
+        }
+        cell.setHighlightFrozen(frozen)
     }
 
     /// Grays out all visible rows except the one with `institution`.

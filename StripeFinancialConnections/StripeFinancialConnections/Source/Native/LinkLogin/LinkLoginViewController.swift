@@ -100,7 +100,8 @@ final class LinkLoginViewController: UIViewController {
             iconView: nil,
             title: linkLoginPane.title,
             subtitle: linkLoginPane.body,
-            contentView: formView
+            contentView: formView,
+            appearance: dataSource.manifest.appearance
         )
         let footerView = PaneLayoutView.createFooterView(
             primaryButtonConfiguration: PaneLayoutView.ButtonConfiguration(

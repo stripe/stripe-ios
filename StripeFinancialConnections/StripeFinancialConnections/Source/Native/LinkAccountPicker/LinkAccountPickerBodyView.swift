@@ -102,7 +102,7 @@ final class LinkAccountPickerBodyView: UIView {
 
             let groupContainer = UIView()
             groupContainer.backgroundColor = appearance.colors.iconBackground
-            groupContainer.layer.cornerRadius = 12
+            groupContainer.layer.cornerRadius = 16
             groupContainer.layer.masksToBounds = true
             groupContainer.addAndPinSubview(accountRowsStack)
             outerStackView.addArrangedSubview(groupContainer)
@@ -119,13 +119,19 @@ final class LinkAccountPickerBodyView: UIView {
     }
 
     private func makeSeparator() -> UIView {
+        // Inset to align with the row's text start (leading margin + icon + spacing),
+        // so the divider extends from the text rather than running full-bleed.
+        let wrapper = UIStackView()
+        wrapper.isLayoutMarginsRelativeArrangement = true
+        wrapper.directionalLayoutMargins = NSDirectionalEdgeInsets(top: 0, leading: 84, bottom: 0, trailing: 0)
         let separator = UIView()
         separator.backgroundColor = FinancialConnectionsAppearance.Colors.borderNeutral
         separator.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             separator.heightAnchor.constraint(equalToConstant: 1.0 / UIScreen.main.nativeScale),
         ])
-        return separator
+        wrapper.addArrangedSubview(separator)
+        return wrapper
     }
 
     func selectAccounts(_ selectedAccounts: [FinancialConnectionsAccountTuple]) {

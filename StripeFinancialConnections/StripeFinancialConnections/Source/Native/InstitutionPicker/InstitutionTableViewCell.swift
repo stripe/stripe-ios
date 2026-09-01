@@ -11,11 +11,12 @@ import UIKit
 
 final class InstitutionTableViewCell: UITableViewCell {
     private lazy var institutionIconView: InstitutionIconView = {
-        return InstitutionIconView()
+        return InstitutionIconView(appearance: appearance, size: CGSize(width: 44, height: 44))
     }()
 
     private var institutionCellView: InstitutionCellView?
     private var appearance: FinancialConnectionsAppearance?
+    private var isHighlightFrozen = false
 
     private lazy var overlayView: UIView = {
         let overlayView = UIView()
@@ -34,8 +35,28 @@ final class InstitutionTableViewCell: UITableViewCell {
     }
 
     override func setHighlighted(_ highlighted: Bool, animated: Bool) {
+        // While frozen, ignore UIKit's automatic un-highlight on touch-up so the
+        // tapped row doesn't flicker back to its resting color while it loads.
+        guard !isHighlightFrozen else { return }
         super.setHighlighted(highlighted, animated: animated)
         adjustBackgroundColor(isHighlighted: highlighted)
+    }
+
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        isHighlightFrozen = false
+        // Clear any overlay left mid-animation by a previous row (e.g. from tapping an
+        // institution and navigating back), otherwise a reused cell can dequeue already
+        // dimmed/hidden behind the overlay.
+        overlayView.layer.removeAllAnimations()
+        overlayView.alpha = 0
+    }
+
+    /// Freezes the cell's highlighted (pressed) background so it doesn't revert on touch-up,
+    /// keeping it visually "selected" while its loading state is shown.
+    func setHighlightFrozen(_ frozen: Bool) {
+        isHighlightFrozen = frozen
+        adjustBackgroundColor(isHighlighted: frozen)
     }
 
     private func adjustBackgroundColor(isHighlighted: Bool) {

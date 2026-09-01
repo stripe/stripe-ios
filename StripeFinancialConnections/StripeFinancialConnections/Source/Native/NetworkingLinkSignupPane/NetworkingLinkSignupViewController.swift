@@ -156,13 +156,15 @@ final class NetworkingLinkSignupViewController: UIViewController {
                 contentView: NetworkingLinkSignupBodyView(
                     bulletPoints: networkingLinkSignup.body.bullets,
                     formView: formView,
+                    appearance: dataSource.manifest.appearance,
                     didSelectURL: { [weak self] url in
                         self?.didSelectURLInTextFromBackend(
                             url,
                             legalDetailsNotice: networkingLinkSignup.legalDetailsNotice
                         )
                     }
-                )
+                ),
+                appearance: dataSource.manifest.appearance
             ),
             footerView: footerView
         )

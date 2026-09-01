@@ -10,33 +10,43 @@ import Foundation
 import UIKit
 
 final class InstitutionIconView: UIView {
-    private static let size: CGSize = .init(width: 56, height: 56)
+    private static let defaultSize: CGSize = .init(width: 56, height: 56)
+
+    private let size: CGSize
+    private let isLink: Bool
 
     private lazy var institutionImageView: UIImageView = {
         let iconImageView = UIImageView()
         return iconImageView
     }()
 
-    init() {
+    init(appearance: FinancialConnectionsAppearance? = nil, size: CGSize = InstitutionIconView.defaultSize) {
+        self.size = size
+        self.isLink = appearance?.colors == .link
         super.init(frame: .zero)
         let cornerRadius: CGFloat = 12
         translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            widthAnchor.constraint(equalToConstant: Self.size.width),
-            heightAnchor.constraint(equalToConstant: Self.size.height),
+            widthAnchor.constraint(equalToConstant: size.width),
+            heightAnchor.constraint(equalToConstant: size.height),
         ])
 
         addAndPinSubview(institutionImageView)
         institutionImageView.layer.cornerRadius = cornerRadius
         institutionImageView.clipsToBounds = true
 
-        layer.shadowColor = FinancialConnectionsAppearance.Colors.shadow.cgColor
-        layer.shadowOpacity = 0.3
-        layer.shadowRadius = 1
-        layer.shadowOffset = CGSize(
-            width: 0,
-            height: 1
-        )
+        if isLink {
+            institutionImageView.layer.borderWidth = 0.5
+            institutionImageView.layer.borderColor = FinancialConnectionsAppearance.Colors.borderOnCard.cgColor
+        } else {
+            layer.shadowColor = FinancialConnectionsAppearance.Colors.shadow.cgColor
+            layer.shadowOpacity = 0.3
+            layer.shadowRadius = 1
+            layer.shadowOffset = CGSize(
+                width: 0,
+                height: 1
+            )
+        }
     }
 
     required init?(coder: NSCoder) {
@@ -44,11 +54,21 @@ final class InstitutionIconView: UIView {
     }
 
     func setImageUrl(_ imageUrl: String?) {
-        let bankIconPlaceholder = CreateBankIconPlaceholder(size: Self.size)
+        let bankIconPlaceholder = CreateBankIconPlaceholder(size: size)
         institutionImageView.setImage(
             with: imageUrl,
             placeholder: bankIconPlaceholder
         )
+    }
+
+    // CGColor's need to be manually updated when the system theme changes.
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        guard traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) else { return }
+
+        if isLink {
+            institutionImageView.layer.borderColor = FinancialConnectionsAppearance.Colors.borderOnCard.cgColor
+        }
     }
 }
 

@@ -42,6 +42,7 @@ final class AccountPickerFooterView: UIView {
         if let dataAccessNotice {
             verticalStackView.addArrangedSubview(CreateDataAccessLabel(
                 dataAccessNotice: dataAccessNotice,
+                appearance: appearance,
                 didSelectLearnMore: didSelectMerchantDataAccessLearnMore
             ))
         }
@@ -102,13 +103,14 @@ final class AccountPickerFooterView: UIView {
 
 private func CreateDataAccessLabel(
     dataAccessNotice: String,
+    appearance: FinancialConnectionsAppearance,
     didSelectLearnMore: @escaping (URL) -> Void
 ) -> HitTestView {
     let label = AttributedTextView(
         font: .label(.small),
         boldFont: .label(.smallEmphasized),
         linkFont: .label(.small),
-        textColor: FinancialConnectionsAppearance.Colors.textDefault,
+        textColor: appearance.colors.textTertiary,
         alignment: .center
     )
     label.setText(

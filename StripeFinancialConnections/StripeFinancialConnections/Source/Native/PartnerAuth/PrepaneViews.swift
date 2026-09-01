@@ -52,14 +52,16 @@ final class PrepaneViews {
                 }
             }(),
             title: prepaneModel.title,
-            isSheet: (panePresentationStyle == .sheet)
+            isSheet: (panePresentationStyle == .sheet),
+            appearance: appearance
         )
         self.bodyView = PaneLayoutView.createBodyView(
             text: prepaneModel.subtitle,
             contentView: CreateContentView(
                 prepaneBodyModel: prepaneModel.body,
                 didSelectURL: didSelectURL
-            )
+            ),
+            appearance: appearance
         )
 
         contentStackView.addArrangedSubview(headerView)

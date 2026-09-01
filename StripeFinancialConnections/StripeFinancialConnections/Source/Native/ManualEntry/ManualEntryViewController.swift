@@ -94,7 +94,8 @@ final class ManualEntryViewController: UIViewController {
                         }
                     }
                 }(),
-                contentView: manualEntryFormView
+                contentView: manualEntryFormView,
+                appearance: dataSource.manifest.appearance
             ),
             footerView: footerView.footerView,
             keepFooterAboveKeyboard: true

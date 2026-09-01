@@ -80,7 +80,7 @@ private func CreateIconView(imageUrl: String, appearance: FinancialConnectionsAp
 
 private func CreateTitleLabelView(title: String) -> UIView {
     let titleLabel = AttributedLabel(
-        font: .label(.largeEmphasized),
+        font: .label(.large),
         textColor: FinancialConnectionsAppearance.Colors.textDefault
     )
     titleLabel.text = title

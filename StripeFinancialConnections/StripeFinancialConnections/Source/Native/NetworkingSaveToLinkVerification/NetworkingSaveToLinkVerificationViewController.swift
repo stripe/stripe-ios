@@ -35,6 +35,7 @@ final class NetworkingSaveToLinkVerificationViewController: UIViewController {
         otpView.delegate = self
         return otpView
     }()
+    private var paneLayoutView: PaneLayoutView?
 
     init(dataSource: NetworkingSaveToLinkVerificationDataSource) {
         self.dataSource = dataSource
@@ -52,6 +53,13 @@ final class NetworkingSaveToLinkVerificationViewController: UIViewController {
         otpView.startVerification()
     }
 
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        if dataSource.manifest.appearance.colors == .link {
+            paneLayoutView?.centerContentVerticallyIfNeeded()
+        }
+    }
+
     private func showContent(redactedPhoneNumber: String) {
         // if we automatically moved to this pane due to
         // prefilled email, we shot the "not now" button
@@ -61,7 +69,8 @@ final class NetworkingSaveToLinkVerificationViewController: UIViewController {
                 iconView: nil,
                 title: String.Localized.confirm_its_you,
                 subtitle: String(format: String.Localized.enter_code_sent_to, AuthFlowHelpers.formatRedactedPhoneNumber(redactedPhoneNumber)),
-                contentView: otpView
+                contentView: otpView,
+                appearance: dataSource.manifest.appearance
             ),
             footerView: PaneLayoutView.createFooterView(
                 primaryButtonConfiguration: nil,
@@ -83,6 +92,7 @@ final class NetworkingSaveToLinkVerificationViewController: UIViewController {
             ).footerView
         )
         paneLayoutView.addTo(view: view)
+        self.paneLayoutView = paneLayoutView
     }
 
     private func showLoadingView(_ show: Bool) {

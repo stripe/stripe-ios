@@ -6,7 +6,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 final class RetrieveAccountsLoadingView: UIView {
@@ -51,7 +51,8 @@ final class RetrieveAccountsLoadingView: UIView {
                         verticalStackView.spacing = 16
                         return verticalStackView
                     }
-                }()
+                }(),
+                appearance: appearance
             ),
             footerView: nil
         )
