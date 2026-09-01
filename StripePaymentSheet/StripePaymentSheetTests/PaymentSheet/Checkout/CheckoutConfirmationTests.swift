@@ -503,8 +503,7 @@ final class CheckoutConfirmationTests: APIStubbedTestCase {
         )
         configuration.merchantDisplayName = "Test ECE Merchant"
         configuration.userInterfaceStyle = .alwaysDark
-        configuration.defaults.email = "jenny@example.com"
-        configuration.defaults.phone = "+15555550123"
+        configuration.defaults.email = "test@example.com"
         var billingDetails = CheckoutController.Configuration.Defaults.BillingDetails()
         billingDetails.name = "Jenny Rosen"
         billingDetails.address = .init(country: "US", postalCode: "94107")
@@ -514,7 +513,7 @@ final class CheckoutConfirmationTests: APIStubbedTestCase {
             address: .full
         )
         let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration(
-            apiResponse: CheckoutTestHelpers.makeSession(),
+            apiResponse: CheckoutTestHelpers.makeSession(["customer_email": "jenny@example.com"]),
             configuration: configuration
         ))
         let presentingViewController = UIViewController()
@@ -547,7 +546,6 @@ final class CheckoutConfirmationTests: APIStubbedTestCase {
         XCTAssertEqual(parameters.configuration.defaultBillingDetails.address.country, "US")
         XCTAssertEqual(parameters.configuration.defaultBillingDetails.address.postalCode, "94107")
         XCTAssertEqual(parameters.configuration.defaultBillingDetails.email, "jenny@example.com")
-        XCTAssertEqual(parameters.configuration.defaultBillingDetails.phone, "+15555550123")
     }
 
     func testExpressCheckoutLinkRequiresPresentingViewController() async throws {

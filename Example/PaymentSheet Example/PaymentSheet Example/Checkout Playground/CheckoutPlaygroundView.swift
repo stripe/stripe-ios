@@ -142,6 +142,12 @@ struct CheckoutPlaygroundView: View {
                     }
                 )
             }
+            .onAppear {
+                viewModel.activateLinkModeOverride()
+            }
+            .onDisappear {
+                viewModel.deactivateLinkModeOverride()
+            }
         }
     }
 

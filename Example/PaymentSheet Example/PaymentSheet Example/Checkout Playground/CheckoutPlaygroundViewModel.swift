@@ -41,7 +41,9 @@ extension CheckoutPlayground {
         }
         @Published var linkMode: LinkMode {
             didSet {
-                PaymentSheet.LinkFeatureFlags.nativeLinkEnabledOverride = linkMode == .native
+                if isLinkModeOverrideActive {
+                    PaymentSheet.LinkFeatureFlags.nativeLinkEnabledOverride = linkMode == .native
+                }
             }
         }
         @Published var currency: Currency
@@ -68,6 +70,7 @@ extension CheckoutPlayground {
         @Published var navigateToCheckout = false
 
         private var settingsSaveSubscription: AnyCancellable?
+        private var isLinkModeOverrideActive = false
 
         init() {
             let settings = Self.settingsFromDefaults() ?? Settings()
@@ -92,8 +95,6 @@ extension CheckoutPlayground {
             checkoutEndpointOption = settings.checkoutEndpointOption
             checkoutEndpoint = settings.checkoutEndpoint
             delayPaymentPagesRequests = settings.delayPaymentPagesRequests
-            PaymentSheet.LinkFeatureFlags.nativeLinkEnabledOverride = linkMode == .native
-
             settingsSaveSubscription = objectWillChange.sink { [weak self] _ in
                 guard let self else {
                     return
@@ -104,6 +105,16 @@ extension CheckoutPlayground {
                     self.serializeSettingsToNSUserDefaults()
                 }
             }
+        }
+
+        func activateLinkModeOverride() {
+            isLinkModeOverrideActive = true
+            PaymentSheet.LinkFeatureFlags.nativeLinkEnabledOverride = linkMode == .native
+        }
+
+        func deactivateLinkModeOverride() {
+            isLinkModeOverrideActive = false
+            PaymentSheet.LinkFeatureFlags.nativeLinkEnabledOverride = nil
         }
 
         var isButtonDisabled: Bool {
