@@ -140,7 +140,8 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
             imageUploader: IdentityImageUploader(
                 configuration: .init(from: staticContent.documentCapture),
                 sheetController: sheetController
-            )
+            ),
+            isTestMode: !staticContent.livemode
         )
         self.documentUploader = documentUploader
         return documentUploader
@@ -735,7 +736,8 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
                     imageUploader: IdentityImageUploader(
                         configuration: .init(from: selfiePageConfig),
                         sheetController: sheetController
-                    )
+                    ),
+                    isTestMode: !staticContent.livemode
                 ),
                 anyFaceScanner: anyFaceScanner
             )
