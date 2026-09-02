@@ -22,7 +22,6 @@ protocol CheckoutSessionWalletUpdater: AnyObject {
     ///   pending operations. Calling the enqueuing variant there would deadlock.
     func updateTaxRegionWithoutEnqueueing(
         address: CheckoutController.Address,
-        source: String,
         canUpdateWhileSheetPresented: Bool
     ) async throws -> CheckoutController.Session
 }
@@ -30,12 +29,8 @@ protocol CheckoutSessionWalletUpdater: AnyObject {
 extension CheckoutController: CheckoutSessionWalletUpdater {
     func updateTaxRegionWithoutEnqueueing(
         address: Address,
-        source: String,
         canUpdateWhileSheetPresented: Bool
     ) async throws -> Session {
-        guard session.shouldSendTaxRegion(for: source) else {
-            return session
-        }
         try await applySessionUpdate(.setTaxRegion(address), canUpdateWhileSheetPresented: canUpdateWhileSheetPresented)
         return session
     }

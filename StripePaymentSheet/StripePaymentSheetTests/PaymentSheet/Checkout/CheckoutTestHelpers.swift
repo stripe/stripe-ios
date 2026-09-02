@@ -391,13 +391,10 @@ class MockCheckoutSessionWalletUpdater: CheckoutSessionWalletUpdater {
     private(set) var updateCallCount = 0
     private(set) var lastAddress: CheckoutController.Address?
     private(set) var lastCanUpdateWhileSheetPresented: Bool?
-    private(set) var receivedAddresses: [CheckoutController.Address] = []
-    private(set) var receivedSources: [String] = []
     private let sessionToReturn: CheckoutController.Session?
     private let errorToThrow: Error?
-    private let suspendsFirstUpdate: Bool
+    private let suspendsUpdates: Bool
     private var continuation: CheckedContinuation<CheckoutController.Session, Error>?
-    private var didSuspend = false
 
     var isWaiting: Bool {
         continuation != nil
@@ -406,31 +403,27 @@ class MockCheckoutSessionWalletUpdater: CheckoutSessionWalletUpdater {
     init(
         sessionToReturn: CheckoutController.Session? = nil,
         errorToThrow: Error? = nil,
-        suspendsFirstUpdate: Bool = false
+        suspendsUpdates: Bool = false
     ) {
         self.sessionToReturn = sessionToReturn
         self.errorToThrow = errorToThrow
-        self.suspendsFirstUpdate = suspendsFirstUpdate
+        self.suspendsUpdates = suspendsUpdates
     }
 
     func updateTaxRegionWithoutEnqueueing(
         address: CheckoutController.Address,
-        source: String,
         canUpdateWhileSheetPresented: Bool
     ) async throws -> CheckoutController.Session {
         updateCallCount += 1
         lastAddress = address
         lastCanUpdateWhileSheetPresented = canUpdateWhileSheetPresented
-        receivedAddresses.append(address)
-        receivedSources.append(source)
         if let errorToThrow {
             throw errorToThrow
         }
         guard let sessionToReturn else {
             throw CheckoutError.unknown(debugDescription: "MockCheckoutSessionWalletUpdater has no session configured")
         }
-        if suspendsFirstUpdate && !didSuspend {
-            didSuspend = true
+        if suspendsUpdates {
             return try await withCheckedThrowingContinuation { continuation in
                 self.continuation = continuation
             }

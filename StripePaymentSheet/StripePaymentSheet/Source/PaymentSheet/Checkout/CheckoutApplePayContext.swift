@@ -206,7 +206,6 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         paymentMethodUpdateTask = Task { @MainActor in
             if let updatedSession = try? await checkoutWalletUpdater.updateTaxRegionWithoutEnqueueing(
                 address: address,
-                source: "billing",
                 canUpdateWhileSheetPresented: true
             ) {
                 self.session = updatedSession
@@ -242,7 +241,6 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         shippingContactUpdateTask = Task { @MainActor in
             if let updatedSession = try? await checkoutWalletUpdater.updateTaxRegionWithoutEnqueueing(
                 address: address,
-                source: "shipping",
                 canUpdateWhileSheetPresented: true
             ) {
                 self.session = updatedSession
