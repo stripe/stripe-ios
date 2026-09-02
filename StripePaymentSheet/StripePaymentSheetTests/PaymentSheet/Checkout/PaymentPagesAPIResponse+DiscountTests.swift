@@ -20,11 +20,12 @@ final class PaymentPagesAPIResponseDiscountTests: XCTestCase {
         let dict: [String: Any] = [
             "currency": "usd",
             "recurring_details": [
+                "total_tax_amounts": [],
                 "total_discount_amounts": [
                     [
                         "amount": 500,
                         "coupon": [
-                            "id": "coupon_abc",
+                            "code": "coupon_abc",
                             "name": "25% Off",
                             "percent_off": 25.0,
                         ] as [String: Any],
@@ -53,11 +54,12 @@ final class PaymentPagesAPIResponseDiscountTests: XCTestCase {
         let dict: [String: Any] = [
             "currency": "usd",
             "recurring_details": [
+                "total_tax_amounts": [],
                 "total_discount_amounts": [
                     [
                         "amount": 1000,
                         "coupon": [
-                            "id": "coupon_def",
+                            "code": "coupon_def",
                             "name": "$10 Off",
                             "amount_off": 1000,
                         ] as [String: Any],
@@ -82,11 +84,12 @@ final class PaymentPagesAPIResponseDiscountTests: XCTestCase {
     func testZeroAmountDiscountIsFiltered() {
         let dict: [String: Any] = [
             "recurring_details": [
+                "total_tax_amounts": [],
                 "total_discount_amounts": [
                     [
                         "amount": 0,
                         "coupon": [
-                            "id": "coupon_zero",
+                            "code": "coupon_zero",
                             "name": "No-op",
                         ],
                     ] as [String: Any],
@@ -103,6 +106,7 @@ final class PaymentPagesAPIResponseDiscountTests: XCTestCase {
     func testEmptyDiscountAmountsArray() {
         let dict: [String: Any] = [
             "recurring_details": [
+                "total_tax_amounts": [],
                 "total_discount_amounts": [] as [[AnyHashable: Any]],
             ],
         ]
@@ -128,11 +132,12 @@ final class PaymentPagesAPIResponseDiscountTests: XCTestCase {
         let dict: [String: Any] = [
             "currency": "usd",
             "recurring_details": [
+                "total_tax_amounts": [],
                 "total_discount_amounts": [
                     [
                         "amount": 500,
                         "coupon": [
-                            "id": "coupon_first",
+                            "code": "coupon_first",
                             "name": "First",
                             "percent_off": 10.5,
                         ] as [String: Any],
@@ -143,7 +148,7 @@ final class PaymentPagesAPIResponseDiscountTests: XCTestCase {
                     [
                         "amount": 200,
                         "coupon": [
-                            "id": "coupon_second",
+                            "code": "coupon_second",
                             "name": "Second",
                             "amount_off": 200,
                         ] as [String: Any],
@@ -174,18 +179,19 @@ final class PaymentPagesAPIResponseDiscountTests: XCTestCase {
         let dict: [String: Any] = [
             "currency": "usd",
             "recurring_details": [
+                "total_tax_amounts": [],
                 "total_discount_amounts": [
                     [
                         "amount": 0,
                         "coupon": [
-                            "id": "coupon_zero",
+                            "code": "coupon_zero",
                             "name": "Zero",
                         ] as [String: Any],
                     ] as [String: Any],
                     [
                         "amount": 300,
                         "coupon": [
-                            "id": "coupon_valid",
+                            "code": "coupon_valid",
                             "name": "Valid",
                         ] as [String: Any],
                     ] as [String: Any],
@@ -199,36 +205,61 @@ final class PaymentPagesAPIResponseDiscountTests: XCTestCase {
         XCTAssertEqual(discounts[0].minorUnitsAmount, 300)
     }
 
-    // MARK: - Missing coupon key (fallback display name)
+    // MARK: - Missing required discount fields
 
-    func testDiscountWithNoCoupon() {
-        let dict: [String: Any] = [
+    func testDiscountRejectsMissingAmountOrCoupon() {
+        let validDiscount: [String: Any] = [
+            "amount": 100,
+            "coupon": ["code": "coupon_test"],
+        ]
+
+        for field in ["amount", "coupon"] {
+            var invalidDiscount = validDiscount
+            invalidDiscount.removeValue(forKey: field)
+            let json = CheckoutTestHelpers.makeSessionJSON([
+                "currency": "usd",
+                "recurring_details": [
+                    "total_tax_amounts": [],
+                    "total_discount_amounts": [invalidDiscount],
+                ],
+            ])
+
+            XCTAssertThrowsError(
+                try PaymentPagesAPIResponse.decode(fromAPIResponse: json),
+                "Expected missing \(field) to fail decoding"
+            )
+        }
+    }
+
+    func testDiscountRejectsCouponWithoutCode() {
+        let json = CheckoutTestHelpers.makeSessionJSON([
             "currency": "usd",
             "recurring_details": [
+                "total_tax_amounts": [],
                 "total_discount_amounts": [
                     [
                         "amount": 100,
+                        "coupon": ["name": "Welcome"],
                     ] as [String: Any],
                 ],
             ],
-        ]
+        ])
 
-        let discounts = PaymentPagesAPIResponse.makeDiscounts(from: dict)
-        XCTAssertEqual(discounts.count, 1)
-        XCTAssertEqual(discounts[0].displayName, "Discount")
+        XCTAssertThrowsError(try PaymentPagesAPIResponse.decode(fromAPIResponse: json))
     }
 
-    // MARK: - Coupon without name uses ID then default
+    // MARK: - Coupon without name uses code
 
-    func testCouponWithoutNameFallsBackToId() {
+    func testCouponWithoutNameFallsBackToCode() {
         let dict: [String: Any] = [
             "currency": "usd",
             "recurring_details": [
+                "total_tax_amounts": [],
                 "total_discount_amounts": [
                     [
                         "amount": 250,
                         "coupon": [
-                            "id": "coupon_no_id",
+                            "code": "coupon_no_name",
                             "percent_off": 5.0,
                         ] as [String: Any],
                     ] as [String: Any],
@@ -238,7 +269,25 @@ final class PaymentPagesAPIResponseDiscountTests: XCTestCase {
 
         let discounts = PaymentPagesAPIResponse.makeDiscounts(from: dict)
         XCTAssertEqual(discounts.count, 1)
-        XCTAssertEqual(discounts[0].displayName, "coupon_no_id")
+        XCTAssertEqual(discounts[0].displayName, "coupon_no_name")
         XCTAssertEqual(discounts[0].percentOff, 5)
+    }
+
+    func testRecurringDetailsRejectsMissingRequiredAmountArrays() {
+        for field in ["total_discount_amounts", "total_tax_amounts"] {
+            var recurringDetails: [String: Any] = [
+                "total_discount_amounts": [],
+                "total_tax_amounts": [],
+            ]
+            recurringDetails.removeValue(forKey: field)
+            let json = CheckoutTestHelpers.makeSessionJSON([
+                "recurring_details": recurringDetails,
+            ])
+
+            XCTAssertThrowsError(
+                try PaymentPagesAPIResponse.decode(fromAPIResponse: json),
+                "Expected missing \(field) to fail decoding"
+            )
+        }
     }
 }

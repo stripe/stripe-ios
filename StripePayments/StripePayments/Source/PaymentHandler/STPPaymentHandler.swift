@@ -867,7 +867,12 @@ public class STPPaymentHandler: NSObject {
             .wero,
             .payByBank,
             .mbWay,
-            .bizum:
+            .bizum,
+            .kakaoPay,
+            .krCard,
+            .naverPay,
+            .payco,
+            .sequra:
             return false
 
         case .unknown:
@@ -2389,8 +2394,8 @@ public class STPPaymentHandler: NSObject {
                 ?? "There was an error confirming the Intent. Inspect the `paymentIntent.lastPaymentError` or `setupIntent.lastSetupError` property."
 
             userInfo[NSLocalizedDescriptionKey] =
-                apiErrorCode.flatMap({ NSError.Utils.localizedMessage(fromAPIErrorCode: $0) })
-                ?? userInfo[NSLocalizedDescriptionKey]
+                userInfo[NSLocalizedDescriptionKey]
+                ?? apiErrorCode.flatMap({ NSError.Utils.localizedMessage(fromAPIErrorCode: $0) })
                 ?? NSError.stp_unexpectedErrorMessage()
 
         // Client secret format error

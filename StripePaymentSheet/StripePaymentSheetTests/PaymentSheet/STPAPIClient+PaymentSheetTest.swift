@@ -96,6 +96,54 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
         XCTAssertEqual(deferredIntent["setup_future_usage"] as? String, "off_session")
     }
 
+    func testElementsSessionParameters_DeferredSetup_WithFCPermissions() throws {
+        var intentConfig = PaymentSheet.IntentConfiguration(mode: .setup(currency: "USD",
+                                                                          setupFutureUsage: .offSession),
+                                                            paymentMethodTypes: ["link"],
+                                                            confirmHandler: { _, _ in return "" })
+        intentConfig.financialConnectionsPermissions = ["payment_method", "balances", "ownership", "transactions"]
+
+        AnalyticsHelper.shared.generateSessionID()
+
+        let parameters = STPAPIClient(publishableKey: "pk_test").makeElementsSessionsParams(
+            mode: .deferredIntent(intentConfig),
+            epmConfiguration: nil,
+            cpmConfiguration: nil,
+            clientDefaultPaymentMethod: nil,
+            customerAccessProvider: nil,
+            linkDisallowFundingSourceCreation: []
+        )
+
+        let deferredIntent = try XCTUnwrap(parameters["deferred_intent"] as? [String: Any])
+        XCTAssertEqual(deferredIntent["mode"] as? String, "setup")
+        let paymentMethodOptions = try XCTUnwrap(deferredIntent["payment_method_options"] as? [String: Any])
+        let linkOptions = try XCTUnwrap(paymentMethodOptions["link"] as? [String: Any])
+        let financialConnections = try XCTUnwrap(linkOptions["financial_connections"] as? [String: Any])
+        XCTAssertEqual(financialConnections["permissions"] as? [String], ["payment_method", "balances", "ownership", "transactions"])
+    }
+
+    func testElementsSessionParameters_DeferredSetup_NilFCPermissions() throws {
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .setup(currency: "USD",
+                                                                          setupFutureUsage: .offSession),
+                                                            paymentMethodTypes: ["link"],
+                                                            confirmHandler: { _, _ in return "" })
+        // financialConnectionsPermissions is nil by default
+
+        AnalyticsHelper.shared.generateSessionID()
+
+        let parameters = STPAPIClient(publishableKey: "pk_test").makeElementsSessionsParams(
+            mode: .deferredIntent(intentConfig),
+            epmConfiguration: nil,
+            cpmConfiguration: nil,
+            clientDefaultPaymentMethod: nil,
+            customerAccessProvider: nil,
+            linkDisallowFundingSourceCreation: []
+        )
+
+        let deferredIntent = try XCTUnwrap(parameters["deferred_intent"] as? [String: Any])
+        XCTAssertNil(deferredIntent["payment_method_options"])
+    }
+
     func testMakeDeferredElementsSessionsParamsForCustomerSheet() throws {
         let parameters = STPAPIClient(publishableKey: "pk_test").makeDeferredElementsSessionsParamsForCustomerSheet(
             paymentMethodTypes: ["card"],

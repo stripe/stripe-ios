@@ -520,6 +520,35 @@ struct LinkPMDisplayDetails {
         }
     }
 
+    @discardableResult
+    func recordConnectionsConsentAcquired(localizedConsentText: String) async throws -> EmptyResponse {
+        try await withCheckedThrowingContinuation { continuation in
+            retryingOnAuthError(completion: { (result: Result<EmptyResponse, Error>) in
+                switch result {
+                case .success(let response):
+                    continuation.resume(returning: response)
+                case .failure(let error):
+                    continuation.resume(throwing: error)
+                }
+            }) { [apiClient] completionRetryingOnAuthErrors in
+                guard let session = self.currentSession else {
+                    stpAssertionFailure()
+                    completionRetryingOnAuthErrors(.failure(
+                        PaymentSheetError.unknown(debugDescription: "Recording Link consent without a valid session")
+                    ))
+                    return
+                }
+
+                session.recordConnectionsConsentAcquired(
+                    with: apiClient,
+                    localizedConsentText: localizedConsentText,
+                    requestSurface: self.requestSurface,
+                    completion: completionRetryingOnAuthErrors
+                )
+            }
+        }
+    }
+
     func refresh(
         completion: @escaping (Result<ConsumerSession, Error>) -> Void
     ) {
@@ -599,13 +628,15 @@ private extension PaymentSheetLinkAccount {
                 completion(result)
             case .failure(let error as NSError):
                 if error.isLinkAuthError && shouldRetry && self?.createdFromAuthIntentID != true {
-                    self?.refreshSession { refreshSessionResult in
-                        switch refreshSessionResult {
-                        case .success(let refreshedSession):
-                            self?.currentSession = refreshedSession
-                            apiCall(completion)
-                        case .failure:
-                            completion(result)
+                    DispatchQueue.main.async { [weak self] in
+                        self?.refreshSession { refreshSessionResult in
+                            switch refreshSessionResult {
+                            case .success(let refreshedSession):
+                                self?.currentSession = refreshedSession
+                                apiCall(completion)
+                            case .failure:
+                                completion(result)
+                            }
                         }
                     }
                 } else {
@@ -615,6 +646,7 @@ private extension PaymentSheetLinkAccount {
         }
     }
 
+    @MainActor
     func refreshSession(
         completion: @escaping (Result<ConsumerSession, Error>) -> Void
     ) {
@@ -752,6 +784,7 @@ struct UpdatePaymentDetailsParams {
     var metadata: PaymentMethodMetadata?
 }
 
+@MainActor
 protocol PaymentSheetLinkAccountDelegate {
     func refreshLinkSession(completion: @escaping (Result<ConsumerSession, Error>) -> Void)
 }

@@ -87,6 +87,15 @@ extension STPAPIClient {
                     deferredIntent["mode"] = "setup"
                     deferredIntent["currency"] = currency
                     deferredIntent["setup_future_usage"] = setupFutureUsage.rawValue
+                    if let fcPermissions = intentConfig.financialConnectionsPermissions, !fcPermissions.isEmpty {
+                        deferredIntent["payment_method_options"] = [
+                            "link": [
+                                "financial_connections": [
+                                    "permissions": fcPermissions,
+                                ],
+                            ],
+                        ]
+                    }
                 }
                 return deferredIntent
             }()

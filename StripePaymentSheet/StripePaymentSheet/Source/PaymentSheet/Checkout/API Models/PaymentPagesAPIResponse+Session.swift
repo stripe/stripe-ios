@@ -19,12 +19,11 @@ extension PaymentPagesAPIResponse {
         // TODO: Have Payment Pages return session-level tax amounts directly. `recurring_details`
         // is an odd source for one-time-price modeless Checkout, and clients shouldn't need to
         // derive this aggregate from recurring-specific response models.
-        let publicTaxAmounts = recurringDetails?.totalTaxAmounts?.map {
+        let publicTaxAmounts = recurringDetails?.totalTaxAmounts.map {
             Self.makeSessionTaxAmount(from: $0, currency: currency, locale: .autoupdatingCurrent)
         }
         let publicOrderSummaryItems = Self.makeOrderSummaryItems(
             from: checkoutItems,
-            defaultCurrency: currency,
             locale: .autoupdatingCurrent
         )
         let publicTotals = Self.makeTotals(from: checkoutItems, currency: currency)
@@ -73,6 +72,7 @@ extension PaymentPagesAPIResponse {
             billingAddressCollection: billingAddressCollection.flatMap(CheckoutController.Session.BillingAddressCollection.init(rawValue:)) ?? .automatic,
             automaticTaxEnabled: automaticTaxEnabled,
             automaticTaxAddressSource: automaticTaxAddressSource,
+            merchantCountryCode: elementsSession.merchantCountryCode,
             elementsSession: elementsSessionValue
         )
     }
@@ -120,7 +120,6 @@ extension PaymentPagesAPIResponse {
 
     private static func makeOrderSummaryItems(
         from checkoutItems: [CheckoutItem],
-        defaultCurrency: String,
         locale: Locale
     ) -> [CheckoutController.Session.OrderSummaryItem] {
         checkoutItems.map { item in
@@ -133,19 +132,27 @@ extension PaymentPagesAPIResponse {
                     let unitAmount = item.unitAmount ?? price.unitAmount ?? 0
                     let adjustableQuantity: CheckoutController.Session.AdjustableQuantity?
                     if let rawAdjustableQuantity = item.adjustableQuantity,
-                       rawAdjustableQuantity.enabled {
-                        // TODO: Payment Pages currently models these bounds as optional, although enabled
-                        // adjustable quantity is normally populated with server defaults of 0 and 99.
-                        // Once the response contract requires both bounds when enabled, reject missing
-                        // values during decoding and remove these client-side fallbacks.
+                       rawAdjustableQuantity.enabled,
+                       let maximum = rawAdjustableQuantity.maximum,
+                       let minimum = rawAdjustableQuantity.minimum {
                         adjustableQuantity = CheckoutController.Session.AdjustableQuantity(
                             enabled: true,
-                            maximum: rawAdjustableQuantity.maximum ?? 99,
-                            minimum: rawAdjustableQuantity.minimum ?? 0
+                            maximum: maximum,
+                            minimum: minimum
                         )
                     } else {
                         adjustableQuantity = nil
                     }
+                    let taxAmounts = item.taxAmounts.map {
+                        makeSessionTaxAmount(from: $0, currency: currency, locale: locale)
+                    }
+                    let amountDetails = CheckoutController.Session.OrderSummaryItem.OneTimePrice.Item.AmountDetails(
+                        total: makeAmount(Double(item.total), currency: currency, locale: locale),
+                        subtotal: makeAmount(Double(item.subtotal), currency: currency, locale: locale),
+                        taxAmounts: taxAmounts.isEmpty ? nil : taxAmounts,
+                        taxInclusive: makeAmount(Double(item.taxInclusive), currency: currency, locale: locale),
+                        taxExclusive: makeAmount(Double(item.taxExclusive), currency: currency, locale: locale)
+                    )
                     return CheckoutController.Session.OrderSummaryItem.OneTimePrice.Item(
                         key: item.innerItemKey,
                         displayName: product.name,
@@ -165,41 +172,16 @@ extension PaymentPagesAPIResponse {
                         },
                         unitLabel: item.unitLabel,
                         quantity: item.quantity,
-                        adjustableQuantity: adjustableQuantity
+                        adjustableQuantity: adjustableQuantity,
+                        amountDetails: amountDetails
                     )
                 }
 
-            let taxAmounts = oneTimePrice.items.flatMap(\.taxAmounts).map {
-                makeSessionTaxAmount(from: $0, currency: defaultCurrency, locale: locale)
-            }
-            let taxInclusive = oneTimePrice.items.reduce(0) { $0 + $1.taxInclusive }
-            let taxExclusive = oneTimePrice.items.reduce(0) { $0 + $1.taxExclusive }
-            let amountDetails = CheckoutController.Session.OrderSummaryItem.OneTimePrice.AmountDetails(
-                total: makeAmount(Double(oneTimePrice.total), currency: defaultCurrency, locale: locale),
-                subtotal: makeAmount(
-                    Double(oneTimePrice.subtotal),
-                    currency: defaultCurrency,
-                    locale: locale
-                ),
-                taxAmounts: taxAmounts.isEmpty ? nil : taxAmounts,
-                discount: makeAmount(0, currency: defaultCurrency, locale: locale),
-                taxInclusive: makeAmount(
-                    Double(taxInclusive),
-                    currency: defaultCurrency,
-                    locale: locale
-                ),
-                taxExclusive: makeAmount(
-                    Double(taxExclusive),
-                    currency: defaultCurrency,
-                    locale: locale
-                )
-            )
             return .oneTimePrice(
                 CheckoutController.Session.OrderSummaryItem.OneTimePrice(
                     key: item.key,
                     description: nil,
-                    items: publicItems,
-                    amountDetails: amountDetails
+                    items: publicItems
                 )
             )
         }
@@ -227,17 +209,16 @@ extension PaymentPagesAPIResponse {
         currency: String
     ) -> [CheckoutController.Session.DiscountAmount] {
         discountAmounts.compactMap { discount in
-            guard let amount = discount.amount, amount > 0 else { return nil }
-            let publicAmount = makeAmount(amount, currency: currency)
+            guard discount.amount > 0 else { return nil }
+            let publicAmount = makeAmount(discount.amount, currency: currency)
             return CheckoutController.Session.DiscountAmount(
                 amount: publicAmount.amount,
                 minorUnitsAmount: publicAmount.minorUnitsAmount,
                 displayName: discount.displayName
-                    ?? discount.coupon?.name
-                    ?? discount.coupon?.id
-                    ?? String.Localized.discount,
+                    ?? discount.coupon.name
+                    ?? discount.coupon.code,
                 promotionCode: discount.promotionCode?.code,
-                percentOff: discount.coupon?.percentOff
+                percentOff: discount.coupon.percentOff
             )
         }
     }
@@ -251,11 +232,12 @@ extension PaymentPagesAPIResponse {
         var taxInclusive = 0
         var total = 0
         for checkoutItem in checkoutItems {
-            let oneTimePrice = checkoutItem.oneTimePrice
-            subtotal += oneTimePrice.subtotal
-            taxExclusive += oneTimePrice.items.reduce(0) { $0 + $1.taxExclusive }
-            taxInclusive += oneTimePrice.items.reduce(0) { $0 + $1.taxInclusive }
-            total += oneTimePrice.total
+            for item in checkoutItem.oneTimePrice.items {
+                subtotal += item.subtotal
+                taxExclusive += item.taxExclusive
+                taxInclusive += item.taxInclusive
+                total += item.total
+            }
         }
         return CheckoutController.Session.Totals(
             subtotal: makeAmount(subtotal, currency: currency),
@@ -271,17 +253,17 @@ extension PaymentPagesAPIResponse {
         taxMeta: TaxMeta?,
         taxContext: TaxContext?
     ) -> CheckoutController.Session.Tax? {
-        // TODO: Decode computation_type as an enum. Longer term, the backend should return
-        // the public tax status directly instead of requiring each client to derive it.
-        // Until then, match EwCS by treating every non-automatic computation type as ready.
-        guard let computationType = taxMeta?.computationType else { return nil }
-        guard computationType == "automatic" else {
+        // TODO: The backend should return the public tax status directly instead of requiring
+        // each client to derive it. Until then, match EwCS by treating every non-automatic
+        // computation type as ready.
+        guard let taxMeta else { return nil }
+        guard taxMeta.computationType == .automatic else {
             return CheckoutController.Session.Tax(status: .ready)
         }
-        switch taxMeta?.status {
-        case "complete":
+        switch taxMeta.status?.value {
+        case .complete:
             return CheckoutController.Session.Tax(status: .ready)
-        case "requires_location_inputs":
+        case .requiresLocationInputs:
             switch taxContext?.automaticTaxAddressSource {
             case "session.shipping":
                 return CheckoutController.Session.Tax(status: .requiresShippingAddress)
@@ -290,7 +272,7 @@ extension PaymentPagesAPIResponse {
             default:
                 return nil
             }
-        default:
+        case .failed, nil:
             return nil
         }
     }
@@ -305,8 +287,8 @@ extension PaymentPagesAPIResponse {
     ) -> STPCheckoutSessionSavedPaymentMethodsOfferSave? {
         guard let value else { return nil }
         return STPCheckoutSessionSavedPaymentMethodsOfferSave(
-            enabled: value.enabled ?? false,
-            status: value.status == "accepted" ? .accepted : .notAccepted
+            enabled: value.enabled,
+            status: value.status == .accepted ? .accepted : .notAccepted
         )
     }
 

@@ -13,6 +13,28 @@ struct LinkControllerDemoConfiguration {
     var paymentMethodTypesMode: PaymentMethodTypesMode = .automatic
     var intentMode: IntentMode = .sdkManaged
     var useCustomAppearance: Bool = false
+    var requestedFCPermissions: Set<FCPermission> = []
+
+    enum FCPermission: String, CaseIterable {
+        case paymentMethod = "payment_method"
+        case balances = "balances"
+        case ownership = "ownership"
+        case transactions = "transactions"
+
+        var displayName: String {
+            switch self {
+            case .paymentMethod: return "payment_method"
+            case .balances: return "balances"
+            case .ownership: return "ownership"
+            case .transactions: return "transactions"
+            }
+        }
+    }
+
+    var financialConnectionsPermissions: [String]? {
+        guard !requestedFCPermissions.isEmpty else { return nil }
+        return requestedFCPermissions.map(\.rawValue).sorted()
+    }
 
     var appearance: LinkAppearance? {
         guard useCustomAppearance else { return nil }

@@ -12,6 +12,7 @@
 @testable @_spi(AppearanceAPIAdditionsPreview) @_spi(STP) import StripeUICore
 import XCTest
 
+@MainActor
 class PaymentSheetFlowControllerTests: XCTestCase {
 
     func makePaymentDetailsStub(nickname: String? = nil) -> ConsumerPaymentDetails {

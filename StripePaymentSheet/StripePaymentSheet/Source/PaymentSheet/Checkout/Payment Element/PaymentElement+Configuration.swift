@@ -16,6 +16,12 @@ extension PaymentElement {
         /// Initializes a Configuration with default values.
         public init() {}
 
+        /// Configuration for Apple Pay.
+        public var applePayConfiguration: ApplePayConfiguration?
+
+        /// Configuration for Link.
+        public var linkConfiguration: LinkConfiguration?
+
         /// PaymentSheet offers users an option to save some payment methods for later use.
         /// Default value is `.automatic`.
         public var savePaymentMethodOptInBehavior: SavePaymentMethodOptInBehavior = .automatic {
@@ -128,50 +134,74 @@ extension PaymentElement {
 
         func makeEmbeddedConfiguration(
             apiClient: STPAPIClient,
+            returnURL: String,
             defaults: CheckoutController.Configuration.Defaults,
-            linkConfiguration: CheckoutController.LinkConfiguration?,
             merchantDisplayName: String,
+            merchantCountryCode: String,
             userInterfaceStyle: CheckoutController.UserInterfaceStyle
         ) -> EmbeddedPaymentElement.Configuration {
             var configuration = embeddedConfiguration
             configuration.allowsDelayedPaymentMethods = true
             configuration.allowsPaymentMethodsRequiringShippingAddress = true
             configuration.apiClient = apiClient
+            configuration.returnURL = returnURL
             configuration.apply(linkConfiguration: linkConfiguration)
+            configuration.applePay = applePayConfiguration?.paymentSheetConfiguration(
+                merchantCountryCode: merchantCountryCode
+            )
             configuration.merchantDisplayName = merchantDisplayName
             configuration.style = userInterfaceStyle
             configuration.billingDetailsCollectionConfiguration = billingDetailsCollectionConfiguration.paymentSheetConfiguration()
             if let billingDetails = defaults.billingDetails {
                 configuration.defaultBillingDetails.set(billingDetails)
             }
+            configuration.defaultBillingDetails.email = defaults.email
+            configuration.defaultBillingDetails.phone = defaults.phone
             return configuration
         }
 
         func makePaymentSheetConfiguration(
             apiClient: STPAPIClient,
+            returnURL: String,
             defaults: CheckoutController.Configuration.Defaults,
-            linkConfiguration: CheckoutController.LinkConfiguration?,
             merchantDisplayName: String,
+            merchantCountryCode: String,
             userInterfaceStyle: CheckoutController.UserInterfaceStyle
         ) -> PaymentSheet.Configuration {
             var configuration = paymentSheetConfiguration
             configuration.allowsDelayedPaymentMethods = true
             configuration.allowsPaymentMethodsRequiringShippingAddress = true
             configuration.apiClient = apiClient
+            configuration.returnURL = returnURL
             configuration.apply(linkConfiguration: linkConfiguration)
+            configuration.applePay = applePayConfiguration?.paymentSheetConfiguration(
+                merchantCountryCode: merchantCountryCode
+            )
             configuration.merchantDisplayName = merchantDisplayName
             configuration.style = userInterfaceStyle
             configuration.billingDetailsCollectionConfiguration = billingDetailsCollectionConfiguration.paymentSheetConfiguration()
             if let billingDetails = defaults.billingDetails {
                 configuration.defaultBillingDetails.set(billingDetails)
             }
+            configuration.defaultBillingDetails.email = defaults.email
+            configuration.defaultBillingDetails.phone = defaults.phone
             return configuration
         }
     }
 }
 
+private extension PaymentElement.ApplePayConfiguration {
+    func paymentSheetConfiguration(merchantCountryCode: String) -> PaymentSheet.ApplePayConfiguration {
+        return PaymentSheet.ApplePayConfiguration(
+            merchantId: merchantId,
+            merchantCountryCode: merchantCountryCode,
+            buttonType: buttonType ?? .plain
+        )
+    }
+}
+
 private extension PaymentSheet.Configuration {
-    mutating func apply(linkConfiguration: CheckoutController.LinkConfiguration?) {
+    mutating func apply(linkConfiguration: PaymentElement.LinkConfiguration?) {
         switch linkConfiguration?.display {
         case .none, .automatic:
             link.display = .automatic
@@ -184,7 +214,7 @@ private extension PaymentSheet.Configuration {
 }
 
 private extension EmbeddedPaymentElement.Configuration {
-    mutating func apply(linkConfiguration: CheckoutController.LinkConfiguration?) {
+    mutating func apply(linkConfiguration: PaymentElement.LinkConfiguration?) {
         switch linkConfiguration?.display {
         case .none, .automatic:
             link.display = .automatic
@@ -206,14 +236,6 @@ extension PaymentElement {
 
     /// Configuration for how billing details are collected during checkout.
     public struct BillingDetailsCollectionConfiguration: Equatable {
-        /// Billing details fields collection options.
-        public enum CollectionMode: String, CaseIterable {
-            /// The field will be collected depending on the Payment Method's requirements.
-            case automatic
-            /// The field will always be collected, even if it isn't required for the Payment Method.
-            case always
-        }
-
         /// Billing address collection options.
         public enum AddressCollectionMode: String, CaseIterable {
             /// Only the fields required by the Payment Method will be collected, this may be none.
@@ -222,24 +244,9 @@ extension PaymentElement {
             case full
         }
 
-        /// How to collect the name field.
-        /// Defaults to `automatic`.
-        public var name: CollectionMode = .automatic
-
-        /// How to collect the email field.
-        /// Defaults to `automatic`.
-        /// - Note: Intentionally non-public, unclear what the merchant use case for this is given they need to provide an email up-front.
-        let email: CollectionMode = .automatic
-
         /// How to collect the billing address.
         /// Defaults to `automatic`.
         public var address: AddressCollectionMode = .automatic
-
-        /// Whether the values included in `Configuration.defaultBillingDetails` should be attached to the payment
-        /// method, this includes fields that aren't displayed in the form.
-        ///
-        /// If `false` (the default), those values will only be used to prefill the corresponding fields in the form.
-        public var attachDefaultsToPaymentMethod = false
 
         /// A set of two-letter country codes representing countries the customers can select.
         /// If the set is empty (the default), we display all countries.
@@ -250,17 +257,13 @@ extension PaymentElement {
                 allowedCountries = Set(allowedCountries.map { $0.uppercased() })
             }
         }
-
     }
 }
 
 private extension PaymentElement.BillingDetailsCollectionConfiguration {
     func paymentSheetConfiguration() -> PaymentSheet.BillingDetailsCollectionConfiguration {
         var configuration = PaymentSheet.BillingDetailsCollectionConfiguration()
-        configuration.name = .init(rawValue: name.rawValue)!
-        configuration.email = .init(rawValue: email.rawValue)!
         configuration.address = address.paymentSheetAddressCollectionMode
-        configuration.attachDefaultsToPaymentMethod = attachDefaultsToPaymentMethod
         configuration.allowedCountries = allowedCountries
         return configuration
     }
@@ -288,7 +291,7 @@ private extension PaymentElement.Configuration {
     }
 }
 
-private extension PaymentSheet.BillingDetails {
+extension PaymentSheet.BillingDetails {
     mutating func set(_ billingDetails: CheckoutController.Configuration.Defaults.BillingDetails) {
         name = billingDetails.name
         if let billingAddress = billingDetails.address {

@@ -15,6 +15,7 @@ import XCTest
 import StripePaymentsTestUtils
 @testable@_spi(STP) import StripePaymentsUI
 
+@MainActor
 class PayWithLinkViewController_WalletViewModelTests: XCTestCase {
 
     func test_shouldRecollectCardCVC() throws {
@@ -109,6 +110,41 @@ class PayWithLinkViewController_WalletViewModelTests: XCTestCase {
         // Bank account
         sut.selectedPaymentMethodIndex = LinkStubs.PaymentMethodIndices.bankAccount
         XCTAssertEqual(sut.mandate?.string, "By continuing, you agree to authorize payments pursuant to these terms.")
+    }
+
+    func test_bankAccountDataConsent_shownForBankAccountWithConsentText() throws {
+        let consentText = "carlosmuvi-us can access account and ownership details, balances, and transactions. [Learn more](https://support.stripe.com/user/questions/what-data-does-stripe-access-from-my-linked-financial-account)"
+        let sut = try makeSUT(isSettingUp: false, linkPaymentMethodBankAccountDataConsent: consentText)
+
+        sut.selectedPaymentMethodIndex = LinkStubs.PaymentMethodIndices.bankAccount
+        XCTAssertEqual(
+            sut.bankAccountDataConsent?.string,
+            "carlosmuvi-us can access account and ownership details, balances, and transactions. Learn more"
+        )
+        XCTAssertTrue(sut.shouldShowBankAccountDataConsent)
+
+        let linkRange = (sut.bankAccountDataConsent!.string as NSString).range(of: "Learn more")
+        XCTAssertEqual(
+            sut.bankAccountDataConsent?.attribute(.link, at: linkRange.location, effectiveRange: nil) as? URL,
+            URL(string: "https://support.stripe.com/user/questions/what-data-does-stripe-access-from-my-linked-financial-account")
+        )
+    }
+
+    func test_bankAccountDataConsent_notShownWhenConsentTextMissing() throws {
+        let sut = try makeSUT(isSettingUp: false)
+
+        sut.selectedPaymentMethodIndex = LinkStubs.PaymentMethodIndices.bankAccount
+        XCTAssertNil(sut.bankAccountDataConsent)
+        XCTAssertFalse(sut.shouldShowBankAccountDataConsent)
+    }
+
+    func test_bankAccountDataConsent_notShownForCard() throws {
+        let consentText = "carlosmuvi-us can access account and ownership details, balances, and transactions. [Learn more](https://support.stripe.com/user/questions/what-data-does-stripe-access-from-my-linked-financial-account)"
+        let sut = try makeSUT(isSettingUp: false, linkPaymentMethodBankAccountDataConsent: consentText)
+
+        sut.selectedPaymentMethodIndex = LinkStubs.PaymentMethodIndices.card
+        XCTAssertNil(sut.bankAccountDataConsent)
+        XCTAssertFalse(sut.shouldShowBankAccountDataConsent)
     }
 
     func test_confirmButtonStatus_shouldHandleNoSelection() throws {
@@ -427,7 +463,8 @@ extension PayWithLinkViewController_WalletViewModelTests {
         linkPassthroughModeEnabled: Bool? = nil,
         isSettingUp: Bool = false,
         linkPMOSFU: Bool? = nil,
-        canContinueWithoutLink: Bool = true
+        canContinueWithoutLink: Bool = true,
+        linkPaymentMethodBankAccountDataConsent: String? = nil
     ) throws -> PayWithLinkViewController.WalletViewModel {
         // Enable card funding filtering when allowedCardFundingTypes is not .all
         let cardFundingFilteringEnabled = allowedCardFundingTypes != .all
@@ -441,7 +478,8 @@ extension PayWithLinkViewController_WalletViewModelTests {
             linkFundingSources: linkFundingSources,
             linkPassthroughModeEnabled: linkPassthroughModeEnabled,
             linkPMOSFU: linkPMOSFU,
-            cardFundingFilteringEnabled: cardFundingFilteringEnabled
+            cardFundingFilteringEnabled: cardFundingFilteringEnabled,
+            linkPaymentMethodBankAccountDataConsent: linkPaymentMethodBankAccountDataConsent
         )
 
         var paymentSheetConfiguration = PaymentSheet.Configuration()

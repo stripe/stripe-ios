@@ -17,6 +17,7 @@ import UIKit
  This class creates a FormElement for a given payment method type and binds the FormElement's field values to an
  `IntentConfirmParams`.
  */
+@MainActor
 class PaymentSheetFormFactory {
     enum Error: Swift.Error {
         case unexpectedPaymentMethodType
@@ -279,7 +280,7 @@ class PaymentSheetFormFactory {
             case .SEPADebit:
                 return makeSepaDebit()
             case .grabPay, .paynow, .payPay, .mobilePay, .vipps, .zip, .crypto,
-                 .billie, .sunbit, .alma, .payByBank:
+                 .billie, .sunbit, .alma, .payByBank, .payco, .sequra:
                 return makeContactInformationAndBillingAddressForm()
             case .alipay:
                 return makeContactInformationAndBillingAddressForm(
@@ -304,7 +305,7 @@ class PaymentSheetFormFactory {
                 return makeAUBECSDebit()
             case .FPX:
                 return makeFPX()
-            case .netBanking, .weChatPay, .link, .cardPresent, .unknown:
+            case .kakaoPay, .netBanking, .weChatPay, .link, .cardPresent, .krCard, .naverPay, .unknown:
                 return makeUnexpectedEmptyForm(for: paymentMethod)
             @unknown default:
                 return makeUnexpectedEmptyForm(for: paymentMethod)
@@ -616,7 +617,7 @@ extension PaymentSheetFormFactory {
         }
     }
 
-    static func makeBankMandateText(
+    nonisolated static func makeBankMandateText(
         isSettingUp: Bool,
         merchantName: String,
         sellerName: String?,

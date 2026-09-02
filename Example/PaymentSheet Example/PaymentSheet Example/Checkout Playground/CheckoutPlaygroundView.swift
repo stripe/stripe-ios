@@ -9,6 +9,7 @@ import SwiftUI
 struct CheckoutPlaygroundView: View {
     @StateObject private var viewModel = CheckoutPlayground.ViewModel()
     @State private var showCurrencySelectorAppearance = false
+    @State private var showBillingDetailsCollection = false
 
     var body: some View {
         Group {
@@ -32,8 +33,8 @@ struct CheckoutPlaygroundView: View {
                             customerType: $viewModel.customerType,
                             checkoutEndpointOption: $viewModel.checkoutEndpointOption,
                             checkoutEndpoint: $viewModel.checkoutEndpoint,
-                            expressCheckoutElementOption: $viewModel.expressCheckoutElementOption,
-                            delayPaymentPagesRequests: $viewModel.delayPaymentPagesRequests
+                            delayPaymentPagesRequests: $viewModel.delayPaymentPagesRequests,
+                            onReset: viewModel.reset
                         )
 
                         CheckoutPlaygroundLineItemsSection(
@@ -50,7 +51,17 @@ struct CheckoutPlaygroundView: View {
                             automaticTax: $viewModel.automaticTax,
                             checkoutSessionPaymentMethodSave: $viewModel.checkoutSessionPaymentMethodSave,
                             checkoutSessionPaymentMethodRemove: $viewModel.checkoutSessionPaymentMethodRemove,
-                            automaticPaymentMethods: $viewModel.automaticPaymentMethods
+                            automaticPaymentMethods: $viewModel.automaticPaymentMethods,
+                            linkMode: $viewModel.linkMode
+                        )
+
+                        CheckoutPlaygroundExpressCheckoutElementSection(
+                            expressCheckoutElementOption: $viewModel.expressCheckoutElement.option,
+                            applePayDisplay: $viewModel.expressCheckoutElement.applePayDisplay,
+                            linkDisplay: $viewModel.expressCheckoutElement.linkDisplay,
+                            onCustomizeBillingDetailsCollection: {
+                                showBillingDetailsCollection = true
+                            }
                         )
 
                         currencySelectorAppearanceSection
@@ -89,7 +100,10 @@ struct CheckoutPlaygroundView: View {
                             defaultShippingAddress: viewModel.defaultShippingAddress,
                             adaptivePricing: true,
                             integrationType: viewModel.integrationType,
-                            showExpressCheckoutElement: viewModel.expressCheckoutElementOption == .show,
+                            showExpressCheckoutElement: viewModel.expressCheckoutElement.option == .show,
+                            applePayDisplay: viewModel.expressCheckoutElement.applePayDisplay,
+                            linkDisplay: viewModel.expressCheckoutElement.linkDisplay,
+                            eceBillingDetailsCollectionConfiguration: viewModel.expressCheckoutElement.billingDetailsCollectionConfiguration,
                             currencySelectorAppearance: viewModel.currencySelectorAppearance,
                             delayPaymentPagesRequests: viewModel.delayPaymentPagesRequests
                         )
@@ -100,7 +114,10 @@ struct CheckoutPlaygroundView: View {
                             defaultShippingAddress: viewModel.defaultShippingAddress,
                             adaptivePricing: true,
                             integrationType: viewModel.integrationType,
-                            showExpressCheckoutElement: viewModel.expressCheckoutElementOption == .show,
+                            showExpressCheckoutElement: viewModel.expressCheckoutElement.option == .show,
+                            applePayDisplay: viewModel.expressCheckoutElement.applePayDisplay,
+                            linkDisplay: viewModel.expressCheckoutElement.linkDisplay,
+                            eceBillingDetailsCollectionConfiguration: viewModel.expressCheckoutElement.billingDetailsCollectionConfiguration,
                             currencySelectorAppearance: viewModel.currencySelectorAppearance,
                             delayPaymentPagesRequests: viewModel.delayPaymentPagesRequests
                         )
@@ -115,6 +132,21 @@ struct CheckoutPlaygroundView: View {
                         showCurrencySelectorAppearance = false
                     }
                 )
+            }
+            .sheet(isPresented: $showBillingDetailsCollection) {
+                ExpressCheckoutElementBillingDetailsCollectionPlaygroundView(
+                    configuration: viewModel.expressCheckoutElement.billingDetailsCollectionConfiguration,
+                    doneAction: { updatedConfiguration in
+                        viewModel.expressCheckoutElement.billingDetailsCollectionConfiguration = updatedConfiguration
+                        showBillingDetailsCollection = false
+                    }
+                )
+            }
+            .onAppear {
+                viewModel.activateLinkModeOverride()
+            }
+            .onDisappear {
+                viewModel.deactivateLinkModeOverride()
             }
         }
     }

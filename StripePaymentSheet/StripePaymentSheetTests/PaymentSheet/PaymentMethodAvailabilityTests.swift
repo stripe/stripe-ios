@@ -340,7 +340,8 @@ extension LinkSettings {
         brand: LinkBrand = .link,
         disableSignup: Bool = false,
         flags: [String: Bool]? = nil,
-        linkSupportedPaymentMethodsOnboardingEnabled: [String] = ["CARD"]
+        linkSupportedPaymentMethodsOnboardingEnabled: [String] = ["CARD"],
+        linkPaymentMethodBankAccountDataConsent: String? = nil
     ) -> LinkSettings {
         return .init(
             brand: brand,
@@ -359,6 +360,7 @@ extension LinkSettings {
             linkShowPreferDebitCardHint: nil,
             attestationStateSyncEnabled: nil,
             linkSupportedPaymentMethodsOnboardingEnabled: linkSupportedPaymentMethodsOnboardingEnabled,
+            linkPaymentMethodBankAccountDataConsent: linkPaymentMethodBankAccountDataConsent,
             allResponseFields: [:]
         )
     }

@@ -7,6 +7,7 @@
 
 @_spi(STP) import StripePayments
 
+@MainActor
 class SavedPaymentMethodFormFactory {
     func makePaymentMethodForm(configuration: UpdatePaymentMethodViewController.Configuration) -> PaymentMethodElement {
         switch configuration.paymentMethod.type {

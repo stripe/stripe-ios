@@ -10,6 +10,7 @@
 @testable@_spi(STP) import StripeUICore
 import XCTest
 
+@MainActor
 class CardSectionElementTest: XCTestCase {
 
     // CBC test card that returns [.cartesBancaires, .visa]

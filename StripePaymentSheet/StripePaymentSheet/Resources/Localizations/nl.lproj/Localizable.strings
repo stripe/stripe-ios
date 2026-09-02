@@ -86,6 +86,8 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Als je je bankrekening voor %@ opslaat, ga je ermee akkoord betalingen in overeenstemming met <terms>deze voorwaarden</terms> te autoriseren.";
 
+"By saving your payment information, you allow %@ to charge you for future payments in accordance with their terms." = "Door je betaalgegevens op te slaan, geef je %@ toestemming om toekomstige betalingen bij jou in rekening te brengen in overeenstemming met hun voorwaarden.";
+
 "By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "Door je bestelling bij %1$@ en %2$@ te plaatsen, ga je ermee akkoord dat je gegevens bij %3$@ opgeslagen worden voor toekomstige aankopen en autoriseer je betalingen in overeenstemming met <terms>deze voorwaarden</terms>.";
 
 "By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Door je bestelling te plaatsen bij %@, autoriseer je betalingen in overeenstemming met <terms>deze voorwaarden</terms>.";

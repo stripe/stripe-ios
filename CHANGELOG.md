@@ -2,11 +2,30 @@ The next release's version bump will so far be:
 MINOR
 
 ## X.Y.Z - changes pending release
+### CryptoOnramp (Alpha)
+* [Added] Added Canada SIN, Colombia NIT, and Philippines TIN values to `IdType`, and added `idType` to the `KycInfo` initializer.
+
+## 26.9.0 2026-08-31
+### Payments
+* [Added] Added API bindings for Kakao Pay, SeQura, Korean cards, Naver Pay, and PAYCO.
+
+### PaymentSheet
+* [Added] Added support for PAYCO.
+
+### PaymentSheet
+* [Added] Added support for SeQura.
+
+## 26.8.0 2026-08-24
 ### Payments
 * [Added] Added support for the following FPX banks: Agrobank, Bank of China, and MBSB Bank.
+* [Fixed] Fixed an issue where card decline error messages became generic after 3DS authentication.
+
+### PaymentSheet
+* [Added] Added `financialConnectionsPermissions` to `LinkConfiguration`, allowing `LinkControllerPreview` users to request Financial Connections data permissions (private preview).
 
 ## 26.7.0 2026-08-17
 ### PaymentSheet
+* [Fixed] Fixed FlowController not presenting the Link sheet when tapping Link in the horizontal payment method layout.
 * [Added] StripePaymentSheet now depends on `StripeFinancialConnectionsLite` to support lightweight bank payment flows. If you use StripePaymentSheet with Carthage or by manually embedding the .xcframeworks, [you must also embed StripeFinancialConnectionsLite.xcframework](https://github.com/stripe/stripe-ios/blob/master/MIGRATING.md#migrating-from-versions--2670) in your app. No action is required for CocoaPods or Swift Package Manager users.
 * [Added] Added private preview support for setting up Alipay payment methods for future off-session use with PaymentIntents and SetupIntents.
 * [Changed] Address autocomplete results sourced from internal service.

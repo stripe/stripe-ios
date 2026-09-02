@@ -21,6 +21,96 @@ import XCTest
 @testable@_spi(STP) import StripePaymentsUI
 
 class STPPaymentHandlerStubbedTests: STPNetworkStubbingTestCase {
+    func testPaymentIntentCardErrorUsesServerMessage() {
+        // Given a PaymentIntent that failed after authentication with a specific decline message
+        let paymentIntent = STPPaymentIntent.decodedObject(fromAPIResponse: [
+            "id": "pi_123",
+            "client_secret": "pi_123_secret_123",
+            "amount": 2345,
+            "currency": "usd",
+            "status": "requires_payment_method",
+            "livemode": false,
+            "created": 1_652_736_692.0,
+            "payment_method_types": ["card"],
+            "last_payment_error": [
+                "code": "card_declined",
+                "decline_code": "insufficient_funds",
+                "message": "Your card has insufficient funds.",
+                "type": "card_error",
+            ],
+        ])!
+        let apiClient = STPAPIClientPollingMock()
+        let paymentHandler = STPPaymentHandler(apiClient: apiClient)
+        let completion = expectation(description: "PaymentIntent completed")
+        let action = STPPaymentHandlerPaymentIntentActionParams(
+            apiClient: apiClient,
+            authenticationContext: self,
+            threeDSCustomizationSettings: STPThreeDSCustomizationSettings(),
+            paymentIntent: paymentIntent,
+            returnURL: nil
+        ) { status, _, error in
+            // Then the specific server message is returned instead of the generic error-code message
+            XCTAssertEqual(status, .failed)
+            XCTAssertEqual(error?.localizedDescription, "Your card has insufficient funds.")
+            completion.fulfill()
+        }
+
+        // When the post-authentication PaymentIntent status is handled
+        XCTAssertFalse(paymentHandler._handlePaymentIntentStatus(forAction: action))
+        wait(for: [completion], timeout: 1)
+    }
+
+    func testSetupIntentCardErrorUsesServerMessage() {
+        // Given a SetupIntent that failed after authentication with a specific card error message
+        let setupIntent = STPSetupIntent.decodedObject(fromAPIResponse: [
+            "id": "seti_123",
+            "client_secret": "seti_123_secret_123",
+            "status": "requires_payment_method",
+            "livemode": false,
+            "created": 1_652_736_692.0,
+            "payment_method_types": ["card"],
+            "last_setup_error": [
+                "code": "card_declined",
+                "decline_code": "insufficient_funds",
+                "message": "Your card has insufficient funds.",
+                "type": "card_error",
+            ],
+        ])!
+        let apiClient = STPAPIClientPollingMock()
+        let paymentHandler = STPPaymentHandler(apiClient: apiClient)
+        let completion = expectation(description: "SetupIntent completed")
+        let action = STPPaymentHandlerSetupIntentActionParams(
+            apiClient: apiClient,
+            authenticationContext: self,
+            threeDSCustomizationSettings: STPThreeDSCustomizationSettings(),
+            setupIntent: setupIntent,
+            returnURL: nil
+        ) { status, _, error in
+            // Then the specific server message is returned instead of the generic error-code message
+            XCTAssertEqual(status, .failed)
+            XCTAssertEqual(error?.localizedDescription, "Your card has insufficient funds.")
+            completion.fulfill()
+        }
+
+        // When the post-authentication SetupIntent status is handled
+        XCTAssertFalse(paymentHandler._handleSetupIntentStatus(forAction: action))
+        wait(for: [completion], timeout: 1)
+    }
+
+    func testPaymentErrorFallsBackToLocalizedAPIErrorMessage() {
+        // Given a payment error without a server message
+        let paymentHandler = STPPaymentHandler(apiClient: STPAPIClientPollingMock())
+
+        // When the error is created from a known API error code
+        let error = paymentHandler._error(
+            for: .paymentErrorCode,
+            apiErrorCode: "card_declined"
+        )
+
+        // Then the localized API error message is used as a fallback
+        XCTAssertEqual(error.localizedDescription, NSError.stp_cardErrorDeclinedUserMessage())
+    }
+
     func testPollingBehaviorWithFinalCall() {
         let mockAPIClient = STPAPIClientPollingMock()
         let paymentHandler = STPPaymentHandler(apiClient: mockAPIClient)

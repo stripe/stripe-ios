@@ -86,6 +86,12 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
         }
     }
 
+    struct CompletedCheckoutSessionPoller: CheckoutSessionPolling {
+        func poll(checkoutSessionId: String) async -> CheckoutSessionPoller.Outcome {
+            return .completed
+        }
+    }
+
     enum MerchantCountry: String {
         case US = "us"
         case SG = "sg"
@@ -97,6 +103,7 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
         case JP = "jp"
         case BR = "br"
         case FR = "fr"
+        case ES = "es"
         case TH = "th"
         case DE = "de"
         case IT = "it"
@@ -123,6 +130,8 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                 return STPTestingBRPublishableKey
             case .FR:
                 return STPTestingFRPublishableKey
+            case .ES:
+                return STPTestingESPublishableKey
             case .TH:
                 return STPTestingTHPublishableKey
             case .DE:
@@ -639,6 +648,23 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                                expectedHierarchy: ExpectedFormHierarchy.RevolutPay.settingUp) { _ in }
     }
 
+    func testSequraConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "EUR",
+                               amount: 60000,
+                               paymentMethodType: .sequra,
+                               merchantCountry: .ES,
+                               expectedHierarchy: ExpectedFormHierarchy.Sequra.paymentIntent) { _ in }
+    }
+
+    func testPaycoConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "KRW",
+                               paymentMethodType: .payco,
+                               merchantCountry: .US,
+                               expectedHierarchy: ExpectedFormHierarchy.Payco.paymentIntent) { _ in }
+    }
+
     func testPayPalConfirmFlows() async throws {
         try await _testConfirm(intentKinds: [.paymentIntent],
                                currency: "EUR",
@@ -955,10 +981,6 @@ extension PaymentSheetLPMConfirmFlowTests {
 
 // MARK: - Helper methods
 extension PaymentSheetLPMConfirmFlowTests {
-    /// Payment methods that Checkout supports in modeless mode. Last verified against
-    /// `/create_checkout_session_unified` on July 31, 2026.
-    static let paymentMethodsSupportedByModeless: Set<STPPaymentMethodType> = [.card]
-
     enum IntentKind: CaseIterable, Hashable {
         case paymentIntent
         case paymentIntentWithSetupFutureUsage
@@ -1211,7 +1233,8 @@ extension PaymentSheetLPMConfirmFlowTests {
             if shouldTest(.deferredIntent) {
                 intents.append(TestIntent("Deferred PaymentIntent - client side confirmation", makeDeferredIntent(deferredCSC)))
             }
-            if shouldTest(.checkoutSession), Self.paymentMethodsSupportedByModeless.contains(paymentMethod) {
+            // TODO: Re-enable once unified-mode Checkout forwards `blik_code` to PaymentIntent confirmation.
+            if shouldTest(.checkoutSession), paymentMethod != .blik {
                 let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession(
                     types: paymentMethodTypes,
                     currency: currency,
@@ -1221,6 +1244,7 @@ extension PaymentSheetLPMConfirmFlowTests {
                     returnURL: "https://foo.com"
                 )
                 let csApiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
+                csApiClient.betas = apiClient.betas
                 let checkoutSession = try await csApiClient.initCheckoutSession(
                     checkoutSessionId: checkoutSessionResponse.id,
                     adaptivePricingAllowed: true
@@ -1747,19 +1771,97 @@ extension PaymentSheetLPMConfirmFlowTests {
         }
 
         Task { @MainActor in
-            let confirmationContext = CheckoutController.ConfirmationContext(
-                paymentOption: paymentOption,
-                configuration: configuration,
-                integrationShape: .complete,
-                confirmationChallenge: nil,
-                analyticsHelper: analyticsHelper
-            )
-            let result = await CheckoutController.confirm(
-                checkoutSession: checkoutSession,
-                confirmationContext: confirmationContext,
-                authenticationContext: self,
-                paymentHandler: paymentHandler
-            )
+            let result: CheckoutController.InternalConfirmResult
+            switch paymentOption {
+            case .new(let confirmParams):
+                let parameters = CheckoutController.PaymentMethodConfirmationParameters(
+                    option: .new(confirmParams),
+                    configuration: configuration,
+                    confirmationChallenge: nil,
+                    authenticationContext: self,
+                    paymentHandler: paymentHandler
+                )
+                let preconfirmResult = await CheckoutController.handlePaymentMethodPreconfirmActions(
+                    checkoutSession: checkoutSession,
+                    parameters: parameters,
+                    preconfirmIntegrationShape: .complete
+                )
+                switch preconfirmResult {
+                case .succeeded(let intentConfirmParams):
+                    do {
+                        let confirmRequestParameters = try await CheckoutController.makeConfirmationRequestParameters(
+                            for: parameters,
+                            checkoutSession: checkoutSession,
+                            preconfirmedIntentParams: intentConfirmParams
+                        )
+                        result = await CheckoutController.confirmCheckoutSession(
+                            with: confirmRequestParameters,
+                            apiClient: configuration.apiClient,
+                            authenticationContext: self,
+                            paymentHandler: paymentHandler,
+                            poller: CompletedCheckoutSessionPoller()
+                        )
+                    } catch {
+                        result = .failed(error)
+                    }
+                case .canceled:
+                    result = .canceled()
+                case .failed(let error):
+                    result = .failed(error)
+                }
+            case .saved(let paymentMethod, let confirmParams):
+                let parameters = CheckoutController.PaymentMethodConfirmationParameters(
+                    option: .saved(paymentMethod, confirmParams),
+                    configuration: configuration,
+                    confirmationChallenge: nil,
+                    authenticationContext: self,
+                    paymentHandler: paymentHandler
+                )
+                let preconfirmResult = await CheckoutController.handlePaymentMethodPreconfirmActions(
+                    checkoutSession: checkoutSession,
+                    parameters: parameters,
+                    preconfirmIntegrationShape: .complete
+                )
+                switch preconfirmResult {
+                case .succeeded(let intentConfirmParams):
+                    do {
+                        let confirmRequestParameters = try await CheckoutController.makeConfirmationRequestParameters(
+                            for: parameters,
+                            checkoutSession: checkoutSession,
+                            preconfirmedIntentParams: intentConfirmParams
+                        )
+                        result = await CheckoutController.confirmCheckoutSession(
+                            with: confirmRequestParameters,
+                            apiClient: configuration.apiClient,
+                            authenticationContext: self,
+                            paymentHandler: paymentHandler,
+                            poller: CompletedCheckoutSessionPoller()
+                        )
+                    } catch {
+                        result = .failed(error)
+                    }
+                case .canceled:
+                    result = .canceled()
+                case .failed(let error):
+                    result = .failed(error)
+                }
+            case .link(let confirmOption):
+                let parameters = CheckoutController.LinkConfirmationParameters(
+                    confirmOption: confirmOption,
+                    configuration: configuration,
+                    confirmationChallenge: nil,
+                    analyticsHelper: analyticsHelper,
+                    authenticationContext: self,
+                    paymentHandler: paymentHandler
+                )
+                result = await CheckoutController.confirmLink(
+                    checkoutSession: checkoutSession,
+                    parameters: parameters
+                )
+            case .applePay, .external:
+                completion(.failed(error: PaymentSheetError.confirmingWithInvalidPaymentOption), nil)
+                return
+            }
             completion(result.paymentSheetResult, nil)
         }
     }

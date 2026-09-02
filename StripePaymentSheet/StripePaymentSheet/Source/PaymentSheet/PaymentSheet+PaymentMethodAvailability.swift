@@ -44,6 +44,8 @@ extension PaymentSheet {
         .payByBank,
         .mbWay,
         .bizum,
+        .payco,
+        .sequra,
     ]
 
     /// A list of `STPPaymentMethodType` that can be saved in PaymentSheet
@@ -174,6 +176,7 @@ private extension STPElementsSession {
 // MARK: - PaymentMethodRequirementProvider
 
 /// Defines an instance type who provides a set of `PaymentMethodTypeRequirement` it satisfies
+@MainActor
 protocol PaymentMethodRequirementProvider {
 
     /// The set of payment requirements provided by this instance
@@ -181,6 +184,7 @@ protocol PaymentMethodRequirementProvider {
 }
 
 extension Intent: PaymentMethodRequirementProvider {
+    @MainActor
     var fulfilledRequirements: [PaymentMethodTypeRequirement] {
         switch self {
         case let .paymentIntent(paymentIntent):
@@ -335,7 +339,7 @@ extension PaymentSheet {
             }
         }
 
-        static func ==(lhs: PaymentMethodAvailabilityStatus, rhs: PaymentMethodAvailabilityStatus) -> Bool {
+        static func == (lhs: PaymentMethodAvailabilityStatus, rhs: PaymentMethodAvailabilityStatus) -> Bool {
             switch (lhs, rhs) {
             case (.notSupported, .notSupported),
                  (.supported, .supported),

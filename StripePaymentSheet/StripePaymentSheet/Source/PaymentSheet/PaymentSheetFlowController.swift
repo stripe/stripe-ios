@@ -432,10 +432,8 @@ extension PaymentSheet {
         /// - Parameter checkout: A fully loaded Checkout instance whose ``CheckoutController.session`` is non-nil.
         /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, Customer details, etc.
         /// - Parameter completion: This is called with either a valid PaymentSheet.FlowController instance or an error if loading failed.
-        @_spi(STP)
-        @_spi(ReactNativeSDK)
         @MainActor
-        public static func create(
+        static func create(
             checkout: CheckoutController,
             configuration: PaymentSheet.Configuration,
             completion: @escaping (Result<PaymentSheet.FlowController, Error>) -> Void
@@ -454,7 +452,7 @@ extension PaymentSheet {
                 ) { result in
                     if case .success(let flowController) = result {
                         flowController.checkout = checkout
-                        flowController.viewController.checkout = checkout
+                        flowController.viewController.checkoutBillingAddressUpdater = checkout
                     }
                     completion(result)
                 }
@@ -865,7 +863,7 @@ extension PaymentSheet {
                         loadResult: loadResult,
                         analyticsHelper: analyticsHelper,
                         walletButtonsViewState: walletButtonsViewState,
-                        checkout: self.checkout,
+                        checkoutBillingAddressUpdater: self.checkout,
                         initialState: .preservingFormInput(from: self.internalPaymentOption)
                     )
                     self.viewController.flowControllerDelegate = self
@@ -989,7 +987,7 @@ extension PaymentSheet {
             loadResult: PaymentSheetLoader.LoadResult,
             analyticsHelper: PaymentSheetAnalyticsHelper,
             walletButtonsViewState: PaymentSheet.WalletButtonsViewState,
-            checkout: CheckoutController? = nil,
+            checkoutBillingAddressUpdater: CheckoutSessionBillingAddressUpdater? = nil,
             initialState: FlowControllerViewControllerInitialState = .preservingFormInput(from: nil)
         ) -> FlowControllerViewControllerProtocol {
             let controller: FlowControllerViewControllerProtocol
@@ -999,7 +997,7 @@ extension PaymentSheet {
                     configuration: configuration,
                     loadResult: loadResult,
                     analyticsHelper: analyticsHelper,
-                    checkout: checkout,
+                    checkoutBillingAddressUpdater: checkoutBillingAddressUpdater,
                     initialState: initialState
                 )
             case .vertical:
@@ -1009,7 +1007,7 @@ extension PaymentSheet {
                     isFlowController: true,
                     analyticsHelper: analyticsHelper,
                     walletButtonsViewState: walletButtonsViewState,
-                    checkout: checkout,
+                    checkoutBillingAddressUpdater: checkoutBillingAddressUpdater,
                     previousPaymentOption: initialState.paymentOption
                 )
             }
@@ -1150,7 +1148,7 @@ internal protocol FlowControllerViewControllerProtocol: BottomSheetContentViewCo
     /// Note that, unlike selectedPaymentOption, this is non-nil even if the PM form is invalid.
     var selectedPaymentMethodType: PaymentSheet.PaymentMethodType? { get }
     var flowControllerDelegate: FlowControllerViewControllerDelegate? { get set }
-    var checkout: CheckoutController? { get set }
+    var checkoutBillingAddressUpdater: CheckoutSessionBillingAddressUpdater? { get set }
     func clearSelection()
 }
 

@@ -11,6 +11,7 @@ import StripeCoreTestUtils
 @_spi(STP) import StripeUICore
 import XCTest
 
+@MainActor
 final class PaymentSheetVerticalViewControllerSnapshotTest: STPSnapshotTestCase {
     override func setUp() {
         super.setUp()

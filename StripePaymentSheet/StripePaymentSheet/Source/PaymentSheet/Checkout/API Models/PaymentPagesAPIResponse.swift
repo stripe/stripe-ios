@@ -28,6 +28,8 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
     let livemode: Bool
     let status: CheckoutController.Session.Status
     let paymentStatus: CheckoutController.Session.Status.PaymentStatus
+    let submissionAttempt: SubmissionAttempt?
+    let routeToOrchestrationInterface: Bool?
     let customerEmail: String?
     let url: String?
     let savedPaymentMethodsOfferSave: SavedPaymentMethodsOfferSave?
@@ -84,6 +86,8 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
         case mode
         case status
         case paymentStatus
+        case submissionAttempt
+        case routeToOrchestrationInterface
         case customerEmail
         case url
         case savedPaymentMethodsOfferSave = "customer_managed_saved_payment_methods_offer_save"
@@ -155,6 +159,14 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
         }
         self.status = status
 
+        submissionAttempt = try container.decodeIfPresent(
+            SubmissionAttempt.self,
+            forKey: .submissionAttempt
+        )
+        routeToOrchestrationInterface = try container.decodeIfPresent(
+            Bool.self,
+            forKey: .routeToOrchestrationInterface
+        )
         customerEmail = try container.decodeIfPresent(String.self, forKey: .customerEmail)
         url = try container.decodeIfPresent(String.self, forKey: .url)
         savedPaymentMethodsOfferSave = try container.decodeIfPresent(
@@ -191,6 +203,17 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
 }
 
 extension PaymentPagesAPIResponse {
+    struct SubmissionAttempt: Decodable {
+        enum State: String, Decodable {
+            case processing
+            case requiresApproval = "requires_approval"
+            case complete
+            case failed
+        }
+
+        let state: State
+    }
+
     /// Adapts a dictionary-backed API model to `Decodable` while it is migrated.
     struct LegacyDecoded<Value: STPAPIResponseDecodable>: Decodable {
         let value: Value
@@ -267,14 +290,14 @@ extension PaymentPagesAPIResponse {
 
     struct OneTimePrice: Decodable {
         let items: [OneTimePriceItem]
-        let subtotal: Int
-        let total: Int
     }
 
     struct OneTimePriceItem: Decodable {
         let innerItemKey: String
         let price: Price
         let quantity: Int
+        let subtotal: Int
+        let total: Int
         let unitAmount: Int?
         let unitAmountDecimal: Double?
         let unitLabel: String?
@@ -287,6 +310,8 @@ extension PaymentPagesAPIResponse {
             case innerItemKey
             case price
             case quantity
+            case subtotal
+            case total
             case unitAmount
             case unitAmountDecimal
             case unitLabel
@@ -304,6 +329,8 @@ extension PaymentPagesAPIResponse {
             guard quantity >= 0 else {
                 throw decoder.dataCorrupted("quantity must not be negative")
             }
+            subtotal = try container.decode(Int.self, forKey: .subtotal)
+            total = try container.decode(Int.self, forKey: .total)
             unitAmount = try container.decodeIfPresent(Int.self, forKey: .unitAmount)
 
             if let rawUnitAmountDecimal = try container.decodeIfPresent(
@@ -365,19 +392,19 @@ extension PaymentPagesAPIResponse {
     }
 
     struct RecurringDetails: Decodable {
-        let totalDiscountAmounts: [DiscountAmount]?
-        let totalTaxAmounts: [TaxAmount]?
+        let totalDiscountAmounts: [DiscountAmount]
+        let totalTaxAmounts: [TaxAmount]
     }
 
     struct DiscountAmount: Decodable {
-        let amount: Int?
+        let amount: Int
         let displayName: String?
-        let coupon: Coupon?
+        let coupon: Coupon
         let promotionCode: PromotionCode?
     }
 
     struct Coupon: Decodable {
-        let id: String?
+        let code: String
         let name: String?
         let percentOff: Double?
     }
@@ -418,10 +445,28 @@ extension PaymentPagesAPIResponse {
         let enabled: Bool
         let maximum: Int?
         let minimum: Int?
+
+        init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            enabled = try container.decode(Bool.self, forKey: .enabled)
+            if enabled {
+                maximum = try container.decode(Int.self, forKey: .maximum)
+                minimum = try container.decode(Int.self, forKey: .minimum)
+            } else {
+                maximum = try container.decodeIfPresent(Int.self, forKey: .maximum)
+                minimum = try container.decodeIfPresent(Int.self, forKey: .minimum)
+            }
+        }
+
+        private enum CodingKeys: String, CodingKey {
+            case enabled
+            case maximum
+            case minimum
+        }
     }
 
     struct ShippingAddressCollection: Decodable {
-        let allowedCountries: [String]?
+        let allowedCountries: [String]
     }
 
     struct AdaptivePricingInfo: Decodable {
@@ -439,22 +484,42 @@ extension PaymentPagesAPIResponse {
     }
 
     struct TaxContext: Decodable {
-        let automaticTaxEnabled: Bool?
+        let automaticTaxEnabled: Bool
         let automaticTaxAddressSource: String?
     }
 
     struct TaxMeta: Decodable {
-        let computationType: String?
-        let status: String?
+        enum ComputationType: String, SafeParsedEnumCodable {
+            case off = "Off"
+            case automatic
+            case extensionDefined = "extension_defined"
+            case manual
+            case userDefined = "user_defined"
+        }
+
+        enum Status: String, SafeParsedEnumCodable {
+            case complete
+            case failed
+            case requiresLocationInputs = "requires_location_inputs"
+        }
+
+        let computationType: ParsedEnum<ComputationType>
+        let status: ParsedEnum<Status>?
     }
 
     struct SavedPaymentMethodsOfferSave: Decodable {
-        let enabled: Bool?
-        let status: String?
+        enum Status: String, SafeParsedEnumCodable {
+            case accepted
+            case notAccepted = "not_accepted"
+        }
+
+        let enabled: Bool
+        let status: ParsedEnum<Status>
     }
 
     struct ElementsSession: Decodable {
         let businessName: String?
+        let merchantCountryCode: String
         let value: STPElementsSession
 
         private enum CodingKeys: String, CodingKey {
@@ -464,7 +529,13 @@ extension PaymentPagesAPIResponse {
         init(from decoder: Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
             businessName = try container.decodeIfPresent(String.self, forKey: .businessName)
-            value = try LegacyDecoded<STPElementsSession>(from: decoder).value
+            let value = try LegacyDecoded<STPElementsSession>(from: decoder).value
+            // TODO: Make merchant_country non-optional in CheckoutClient when Checkout migrates to it.
+            guard let merchantCountryCode = value.merchantCountryCode else {
+                throw decoder.dataCorrupted("Missing required elements_session.merchant_country")
+            }
+            self.merchantCountryCode = merchantCountryCode
+            self.value = value
         }
     }
 }

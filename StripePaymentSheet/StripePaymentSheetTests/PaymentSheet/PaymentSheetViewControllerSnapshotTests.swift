@@ -11,6 +11,7 @@ import StripeCoreTestUtils
 
 import XCTest
 
+@MainActor
 final class PaymentSheetViewControllerSnapshotTests: STPSnapshotTestCase {
     func makeTestLoadResult(savedPaymentMethods: [STPPaymentMethod]) -> PaymentSheetLoader.LoadResult {
         return .init(

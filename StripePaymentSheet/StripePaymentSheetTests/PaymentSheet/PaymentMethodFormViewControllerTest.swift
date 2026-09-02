@@ -11,6 +11,7 @@ import StripeCoreTestUtils
 @_spi(STP) @testable import StripeUICore
 import XCTest
 
+@MainActor
 final class PaymentMethodFormViewControllerTest: XCTestCase {
     var didUpdateDelegateMethodCalled: Bool = false
     override func setUp() {

@@ -12,6 +12,12 @@ import XCTest
 
 @MainActor
 final class Checkout_AdaptivePricingTests: STPNetworkStubbingTestCase {
+    override func tearDown() {
+        // Loading the Checkout Session populates Link with the test customer's email, which can leak into other tests.
+        LinkAccountContext.shared.account = nil
+        super.tearDown()
+    }
+
     func testAdaptivePricingUsesIntegrationAndPresentmentCurrencies() async throws {
         // Given a Checkout Session created in USD and localized to EUR
         let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession(
@@ -22,7 +28,7 @@ final class Checkout_AdaptivePricingTests: STPNetworkStubbingTestCase {
             clientSecret: checkoutSessionResponse.clientSecret,
             returnURL: "stripe-ios-test://checkout-return"
         )
-        configuration.adaptivePricing.allowed = true
+        configuration.currencySelectorElement = .init()
         configuration.apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
 
         // When Checkout loads the session

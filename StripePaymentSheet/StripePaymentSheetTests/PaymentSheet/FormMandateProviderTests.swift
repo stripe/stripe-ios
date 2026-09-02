@@ -11,6 +11,7 @@ import Foundation
 @testable @_spi(STP) import StripeUICore
 import XCTest
 
+@MainActor
 class FormMandateProviderTests: XCTestCase {
 
     override func setUp() async throws {

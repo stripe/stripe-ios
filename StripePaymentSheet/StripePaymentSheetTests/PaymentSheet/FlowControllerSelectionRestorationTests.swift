@@ -162,6 +162,34 @@ final class FlowControllerSelectionRestorationTests: XCTestCase {
         XCTAssertEqual(restoredConfirmParams?.instantDebitsLinkedBank?.last4, "6789")
     }
 
+    func testHorizontalRebuildPreservesCardSelectionOverLinkCustomerDefault() {
+        // Given Link is the customer's default, but the customer completed the card form
+        let customerID = "cus_fc_card_over_link_default"
+        defer { CustomerPaymentOption.setDefaultPaymentMethod(nil, forCustomer: customerID) }
+        CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: customerID)
+
+        var configuration = PaymentSheet.Configuration._testValue_MostPermissive(isApplePayEnabled: false)
+        configuration.customer = .init(id: customerID, ephemeralKeySecret: "ek_test")
+        configuration.defaultBillingDetails.address.country = "US"
+        configuration.defaultBillingDetails.address.postalCode = "12345"
+        let confirmParams = IntentConfirmParams(
+            params: ._testCardValue(),
+            type: .stripe(.card)
+        )
+        confirmParams.setDefaultBillingDetailsIfNecessary(for: configuration)
+
+        // When an ordinary session update rebuilds the horizontal controller
+        let viewController = PaymentSheetFlowControllerViewController(
+            configuration: configuration,
+            loadResult: makeLoadResult(orientation: .horizontal),
+            analyticsHelper: ._testValue(),
+            initialState: .preservingFormInput(from: .new(confirmParams: confirmParams))
+        )
+
+        // Then the customer's card selection wins over the default Link selection
+        XCTAssertEqual(viewController.selectedPaymentOption?.paymentMethodType, .stripe(.card))
+    }
+
     private func makeFlowController(
         savedPaymentMethods: [STPPaymentMethod],
         orientation: PaymentSheet.PaymentMethodLayout.ResolvedLayout = .vertical

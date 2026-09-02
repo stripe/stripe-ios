@@ -2457,6 +2457,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
                 "customer": ["id": "cus_123"],
                 "elements_session": [
                     "session_id": "es_test",
+                    "merchant_country": "US",
                     "payment_method_preference": ["ordered_payment_method_types": ["paypal"]],
                 ],
             ])

@@ -111,7 +111,7 @@ extension EmbeddedPaymentElement {
         savedPaymentMethods: [STPPaymentMethod],
         analyticsHelper: PaymentSheetAnalyticsHelper,
         paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper?,
-        checkout: CheckoutController?,
+        checkoutBillingAddressUpdater: CheckoutSessionBillingAddressUpdater?,
         formCache: PaymentMethodFormCache,
         delegate: EmbeddedFormViewControllerDelegate
     ) -> EmbeddedFormViewController? {
@@ -128,7 +128,7 @@ extension EmbeddedPaymentElement {
             previousPaymentOption: previousPaymentOption,
             analyticsHelper: analyticsHelper,
             paymentMethodMessagingPromotionsHelper: paymentMethodMessagingPromotionsHelper,
-            checkout: checkout,
+            checkoutBillingAddressUpdater: checkoutBillingAddressUpdater,
             formCache: formCache,
             delegate: delegate
         )
@@ -176,7 +176,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
             savedPaymentMethods: savedPaymentMethods,
             analyticsHelper: analyticsHelper,
             paymentMethodMessagingPromotionsHelper: loadResult.paymentMethodMessagingPromotionsHelper,
-            checkout: checkout,
+            checkoutBillingAddressUpdater: checkout,
             formCache: formCache,
             delegate: self
         )
@@ -356,7 +356,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
             savedPaymentMethods: savedPaymentMethods,
             analyticsHelper: analyticsHelper,
             paymentMethodMessagingPromotionsHelper: nil, // This is just to check if there's a form, so this data isn't necessary
-            checkout: checkout,
+            checkoutBillingAddressUpdater: checkout,
             formCache: .init(),  // Use a fresh form cache to ensure forms aren't re-added to a different view controller's hierarchy
             delegate: self
         ) != nil
@@ -570,7 +570,7 @@ extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
             savedPaymentMethods: savedPaymentMethods,
             analyticsHelper: analyticsHelper,
             paymentMethodMessagingPromotionsHelper: loadResult.paymentMethodMessagingPromotionsHelper,
-            checkout: checkout,
+            checkoutBillingAddressUpdater: checkout,
             formCache: formCache,
             delegate: self
         )

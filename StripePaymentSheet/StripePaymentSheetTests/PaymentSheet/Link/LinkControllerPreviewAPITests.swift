@@ -16,6 +16,7 @@ final class LinkControllerPreviewAPITests: XCTestCase {
         _ = LinkConfiguration(supportedPaymentMethodTypes: [.card], merchantDisplayName: "Example Merchant")
         _ = LinkConfiguration(supportedPaymentMethodTypes: [.card], billingDetailsCollectionConfiguration: .init())
         _ = LinkConfiguration(billingDetailsCollectionConfiguration: .init()).billingDetailsCollectionConfiguration
+        _ = LinkConfiguration(financialConnectionsPermissions: ["payment_method", "balances"]).financialConnectionsPermissions
 
         let result: LinkController.PaymentMethodResult = .canceled
         _ = result

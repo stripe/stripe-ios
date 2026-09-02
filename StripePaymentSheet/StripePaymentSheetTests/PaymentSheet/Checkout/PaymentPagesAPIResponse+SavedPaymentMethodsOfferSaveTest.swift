@@ -36,7 +36,7 @@ class STPCheckoutSessionSavedPaymentMethodsOfferSaveTest: XCTestCase {
         XCTAssertEqual(session.savedPaymentMethodsOfferSave!.status, .notAccepted)
     }
 
-    func testDecodedObjectWithUnrecognizedStatusDefaultsToNotAccepted() {
+    func testDecodedObjectTreatsUnrecognizedStatusAsNotAccepted() {
         let session = CheckoutTestHelpers.makeSession([
             "customer_managed_saved_payment_methods_offer_save": [
                 "enabled": true,
@@ -47,6 +47,24 @@ class STPCheckoutSessionSavedPaymentMethodsOfferSaveTest: XCTestCase {
         XCTAssertNotNil(session.savedPaymentMethodsOfferSave)
         XCTAssertTrue(session.savedPaymentMethodsOfferSave!.enabled)
         XCTAssertEqual(session.savedPaymentMethodsOfferSave!.status, .notAccepted)
+    }
+
+    func testDecodedObjectRejectsMissingRequiredSaveOfferFields() {
+        for field in ["enabled", "status"] {
+            var offerSave: [String: Any] = [
+                "enabled": true,
+                "status": "not_accepted",
+            ]
+            offerSave.removeValue(forKey: field)
+            let json = CheckoutTestHelpers.makeSessionJSON([
+                "customer_managed_saved_payment_methods_offer_save": offerSave,
+            ])
+
+            XCTAssertThrowsError(
+                try PaymentPagesAPIResponse.decode(fromAPIResponse: json),
+                "Expected missing \(field) to fail decoding"
+            )
+        }
     }
 
     func testDecodedObjectWithoutSaveOffer() {

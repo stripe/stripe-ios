@@ -60,6 +60,7 @@ public final class PaymentElement {
 
     let paymentSheetFlowController: PaymentSheet.FlowController
     let embeddedPaymentElement: EmbeddedPaymentElement
+    private let configuration: Configuration
     weak var checkout: CheckoutController?
     private var cancellables = Set<AnyCancellable>()
     var paymentOptionSourceOfTruthIsFlowController = false
@@ -67,16 +68,20 @@ public final class PaymentElement {
 
     // MARK: - Internal methods
 
-    init(checkout: CheckoutController) async throws {
+    init(
+        checkout: CheckoutController,
+        configuration: Configuration
+    ) async throws {
         // Note: PaymentElement is just nice user-facing packaging around the existing Embedded and FC classes
-        let configuration = checkout.configuration.paymentElement
+        self.configuration = configuration
 
         // Create FlowController
         let paymentSheetConfiguration = configuration.makePaymentSheetConfiguration(
             apiClient: checkout.apiClient,
+            returnURL: checkout.configuration.returnURL,
             defaults: checkout.configuration.defaults,
-            linkConfiguration: checkout.configuration.linkConfiguration,
             merchantDisplayName: checkout.effectiveMerchantDisplayName,
+            merchantCountryCode: checkout.session.merchantCountryCode,
             userInterfaceStyle: checkout.configuration.userInterfaceStyle
         )
         self.paymentSheetFlowController = try await PaymentSheet.FlowController.create(
@@ -86,14 +91,18 @@ public final class PaymentElement {
         // Create Embedded
         let embeddedConfiguration = configuration.makeEmbeddedConfiguration(
             apiClient: checkout.apiClient,
+            returnURL: checkout.configuration.returnURL,
             defaults: checkout.configuration.defaults,
-            linkConfiguration: checkout.configuration.linkConfiguration,
             merchantDisplayName: checkout.effectiveMerchantDisplayName,
+            merchantCountryCode: checkout.session.merchantCountryCode,
             userInterfaceStyle: checkout.configuration.userInterfaceStyle
         )
         self.embeddedPaymentElement = try await EmbeddedPaymentElement.create(
             checkout: checkout,
-            configuration: embeddedConfiguration
+            configuration: embeddedConfiguration,
+            // FlowController and Embedded naturally have different default payment options (e.g. Apple Pay and Link).
+            // Keep them in sync by seeding Embedded's initial payment option with FlowController's.
+            initialPaymentOption: paymentSheetFlowController.internalPaymentOption
         )
         self.embeddedPaymentElement.notifiesDelegateOnInitialHeight = true
         let uiView = PaymentElementUIView(contentView: embeddedPaymentElement.view)
@@ -113,7 +122,16 @@ public final class PaymentElement {
             }
             .store(in: &cancellables)
         // We don't know whether to use FC or Embedded's payment option at this point, so we'll use Embedded since it has more info (includes mandate text).
-        stpAssert(paymentSheetFlowController.paymentOption?.label == embeddedPaymentElement.paymentOption?.label, "Payment Element assumes that the FlowController's payment option is the same as the Embedded's on first load!")
+        // FlowController defaults to Apple Pay when it is available, while Embedded starts unselected.
+        let flowControllerDefaultsToApplePay = if case .applePay? = paymentSheetFlowController.internalPaymentOption {
+            embeddedPaymentElement._paymentOption == nil
+        } else {
+            false
+        }
+        stpAssert(
+            paymentSheetFlowController.paymentOption?.label == embeddedPaymentElement.paymentOption?.label || flowControllerDefaultsToApplePay,
+            "Payment Element assumes that the FlowController's payment option is the same as the Embedded's on first load!"
+        )
         checkout.setPaymentOption(
             embeddedPaymentElement.paymentOption.map(CheckoutController.Session.PaymentOptionDisplayData.init)
         )
@@ -138,19 +156,20 @@ extension PaymentElement {
         }
 
         // TODO: This should not be async or throws; we should not make any network requests or re-fetch things, just update the v1/e/s response.
-        let configuration = checkout.configuration.paymentElement
         paymentSheetFlowController.configuration = configuration.makePaymentSheetConfiguration(
             apiClient: checkout.apiClient,
+            returnURL: checkout.configuration.returnURL,
             defaults: checkout.configuration.defaults,
-            linkConfiguration: checkout.configuration.linkConfiguration,
             merchantDisplayName: checkout.effectiveMerchantDisplayName,
+            merchantCountryCode: checkout.session.merchantCountryCode,
             userInterfaceStyle: checkout.configuration.userInterfaceStyle
         )
         embeddedPaymentElement.configuration = configuration.makeEmbeddedConfiguration(
             apiClient: checkout.apiClient,
+            returnURL: checkout.configuration.returnURL,
             defaults: checkout.configuration.defaults,
-            linkConfiguration: checkout.configuration.linkConfiguration,
             merchantDisplayName: checkout.effectiveMerchantDisplayName,
+            merchantCountryCode: checkout.session.merchantCountryCode,
             userInterfaceStyle: checkout.configuration.userInterfaceStyle
         )
 
