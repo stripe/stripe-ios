@@ -666,7 +666,18 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
             funding.selectedIndex = 1
         }
     }
-
+    func testKoreanCardsConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "KRW",
+                               paymentMethodType: .krCard,
+                               merchantCountry: .US,
+                               expectedHierarchy: ExpectedFormHierarchy.KoreanCards.paymentIntent) { _ in }
+        try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .paymentIntentWithPMOSetupFutureUsage, .setupIntent],
+                               currency: "KRW",
+                               paymentMethodType: .krCard,
+                               merchantCountry: .US,
+                               expectedHierarchy: ExpectedFormHierarchy.KoreanCards.settingUp) { _ in }
+    }
     func testSequraConfirmFlows() async throws {
         try await _testConfirm(intentKinds: [.paymentIntent],
                                currency: "EUR",
