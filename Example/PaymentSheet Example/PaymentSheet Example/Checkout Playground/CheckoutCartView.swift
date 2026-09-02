@@ -24,11 +24,7 @@ struct CheckoutCartView: View {
     let defaultShippingAddress: CheckoutPlayground.DefaultShippingAddress?
     let adaptivePricing: Bool
     let integrationType: CheckoutPlayground.IntegrationType
-    var showExpressCheckoutElement: Bool = false
-    var applePayDisplay: ExpressCheckoutElement.ApplePayConfiguration.Display = .automatic
-    var linkDisplay: ExpressCheckoutElement.LinkConfiguration.Display = .automatic
-    var eceShippingAddressRequired: Bool = false
-    var eceBillingDetailsCollectionConfiguration = ExpressCheckoutElement.BillingDetailsCollectionConfiguration()
+    let expressCheckoutElementSettings: CheckoutPlayground.ExpressCheckoutElementSettings
     var currencySelectorAppearance = CurrencySelectorElement.Appearance()
     var delayPaymentPagesRequests = false
 
@@ -44,7 +40,7 @@ struct CheckoutCartView: View {
                         showsCurrencySelectorElement: adaptivePricing,
                         showsShippingAddressSection: shippingAddressCollection || checkout.session.shippingAddress != nil,
                         errorMessage: errorMessage,
-                        showExpressCheckoutElement: showExpressCheckoutElement,
+                        showExpressCheckoutElement: expressCheckoutElementSettings.isEnabled,
                         integrationType: integrationType
                     ) { result in
                         confirmResult = result
@@ -105,7 +101,6 @@ struct CheckoutCartView: View {
                 message: { Text(confirmResultAlertMessage) }
             )
         }
-        .disabled(checkout?.isUpdating == true)
     }
 
     private var confirmResultAlertTitle: String {
@@ -163,11 +158,13 @@ struct CheckoutCartView: View {
             }
             config.expressCheckoutElement.applePayConfiguration = ExpressCheckoutElement.ApplePayConfiguration(
                 merchantId: "merchant.com.stripe.paymentsheet.example",
-                display: applePayDisplay
+                display: expressCheckoutElementSettings.applePayDisplay
             )
-            config.expressCheckoutElement.linkConfiguration = ExpressCheckoutElement.LinkConfiguration(display: linkDisplay)
-            config.expressCheckoutElement.shippingAddressRequired = eceShippingAddressRequired
-            config.expressCheckoutElement.billingDetailsCollectionConfiguration = eceBillingDetailsCollectionConfiguration
+            config.expressCheckoutElement.linkConfiguration = ExpressCheckoutElement.LinkConfiguration(
+                display: expressCheckoutElementSettings.linkDisplay
+            )
+            config.expressCheckoutElement.shippingAddressRequired = expressCheckoutElementSettings.shippingAddressRequired
+            config.expressCheckoutElement.billingDetailsCollectionConfiguration = expressCheckoutElementSettings.billingDetailsCollectionConfiguration
             config.expressCheckoutElement.confirmHandler = { result in
                 confirmResult = result
             }

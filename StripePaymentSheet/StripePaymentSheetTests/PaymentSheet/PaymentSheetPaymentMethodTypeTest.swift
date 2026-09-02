@@ -188,6 +188,53 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         XCTAssertEqual(result, .missingRequirements([.returnURL]))
     }
 
+    // MARK: - SeQura
+
+    func testSequraRequiresReturnURLAndDoesNotSupportSetup() {
+        // Given
+        let paymentIntent = Intent._testPaymentIntent(paymentMethodTypes: [.sequra])
+        let setupIntents: [Intent] = [
+            ._testPaymentIntent(paymentMethodTypes: [.sequra], setupFutureUsage: .offSession),
+            ._testPaymentIntent(
+                paymentMethodTypes: [.sequra],
+                paymentMethodOptionsSetupFutureUsage: [.sequra: "off_session"]
+            ),
+            ._testSetupIntent(paymentMethodTypes: [.sequra]),
+        ]
+
+        // When
+        let paymentWithoutReturnURL = PaymentSheet.PaymentMethodType.supportsAdding(
+            paymentMethod: .sequra,
+            configuration: makeConfiguration(),
+            intent: paymentIntent,
+            elementsSession: ._testValue(intent: paymentIntent),
+            supportedPaymentMethods: [.sequra]
+        )
+        let paymentWithReturnURL = PaymentSheet.PaymentMethodType.supportsAdding(
+            paymentMethod: .sequra,
+            configuration: makeConfiguration(hasReturnURL: true),
+            intent: paymentIntent,
+            elementsSession: ._testValue(intent: paymentIntent),
+            supportedPaymentMethods: [.sequra]
+        )
+
+        // Then
+        XCTAssertEqual(paymentWithoutReturnURL, .missingRequirements([.returnURL]))
+        XCTAssertEqual(paymentWithReturnURL, .supported)
+        for intent in setupIntents {
+            XCTAssertEqual(
+                PaymentSheet.PaymentMethodType.supportsAdding(
+                    paymentMethod: .sequra,
+                    configuration: makeConfiguration(hasReturnURL: true),
+                    intent: intent,
+                    elementsSession: ._testValue(intent: intent),
+                    supportedPaymentMethods: [.sequra]
+                ),
+                .missingRequirements([.unsupportedForSetup])
+            )
+        }
+    }
+
     // MARK: - PAYCO
 
     func testPaycoRequiresReturnURLAndDoesNotSupportSetup() {
@@ -217,6 +264,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
             elementsSession: ._testValue(intent: paymentIntent),
             supportedPaymentMethods: [.payco]
         )
+
         // Then
         XCTAssertEqual(paymentWithoutReturnURL, .missingRequirements([.returnURL]))
         XCTAssertEqual(paymentWithReturnURL, .supported)

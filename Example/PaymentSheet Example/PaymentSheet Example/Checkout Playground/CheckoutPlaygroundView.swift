@@ -51,14 +51,15 @@ struct CheckoutPlaygroundView: View {
                             automaticTax: $viewModel.automaticTax,
                             checkoutSessionPaymentMethodSave: $viewModel.checkoutSessionPaymentMethodSave,
                             checkoutSessionPaymentMethodRemove: $viewModel.checkoutSessionPaymentMethodRemove,
-                            automaticPaymentMethods: $viewModel.automaticPaymentMethods
+                            automaticPaymentMethods: $viewModel.automaticPaymentMethods,
+                            linkMode: $viewModel.linkMode
                         )
 
                         CheckoutPlaygroundExpressCheckoutElementSection(
-                            expressCheckoutElementOption: $viewModel.expressCheckoutElement.option,
+                            showExpressCheckoutElement: $viewModel.expressCheckoutElement.isEnabled,
                             applePayDisplay: $viewModel.expressCheckoutElement.applePayDisplay,
                             linkDisplay: $viewModel.expressCheckoutElement.linkDisplay,
-                            eceShippingAddressRequired: $viewModel.expressCheckoutElement.shippingAddressRequired,
+                            shippingAddressRequired: $viewModel.expressCheckoutElement.shippingAddressRequired,
                             onCustomizeBillingDetailsCollection: {
                                 showBillingDetailsCollection = true
                             }
@@ -100,11 +101,7 @@ struct CheckoutPlaygroundView: View {
                             defaultShippingAddress: viewModel.defaultShippingAddress,
                             adaptivePricing: true,
                             integrationType: viewModel.integrationType,
-                            showExpressCheckoutElement: viewModel.expressCheckoutElement.option == .show,
-                            applePayDisplay: viewModel.expressCheckoutElement.applePayDisplay,
-                            linkDisplay: viewModel.expressCheckoutElement.linkDisplay,
-                            eceShippingAddressRequired: viewModel.expressCheckoutElement.shippingAddressRequired,
-                            eceBillingDetailsCollectionConfiguration: viewModel.expressCheckoutElement.billingDetailsCollectionConfiguration,
+                            expressCheckoutElementSettings: viewModel.expressCheckoutElement,
                             currencySelectorAppearance: viewModel.currencySelectorAppearance,
                             delayPaymentPagesRequests: viewModel.delayPaymentPagesRequests
                         )
@@ -115,11 +112,7 @@ struct CheckoutPlaygroundView: View {
                             defaultShippingAddress: viewModel.defaultShippingAddress,
                             adaptivePricing: true,
                             integrationType: viewModel.integrationType,
-                            showExpressCheckoutElement: viewModel.expressCheckoutElement.option == .show,
-                            applePayDisplay: viewModel.expressCheckoutElement.applePayDisplay,
-                            linkDisplay: viewModel.expressCheckoutElement.linkDisplay,
-                            eceShippingAddressRequired: viewModel.expressCheckoutElement.shippingAddressRequired,
-                            eceBillingDetailsCollectionConfiguration: viewModel.expressCheckoutElement.billingDetailsCollectionConfiguration,
+                            expressCheckoutElementSettings: viewModel.expressCheckoutElement,
                             currencySelectorAppearance: viewModel.currencySelectorAppearance,
                             delayPaymentPagesRequests: viewModel.delayPaymentPagesRequests
                         )
@@ -143,6 +136,12 @@ struct CheckoutPlaygroundView: View {
                         showBillingDetailsCollection = false
                     }
                 )
+            }
+            .onAppear {
+                viewModel.activateLinkModeOverride()
+            }
+            .onDisappear {
+                viewModel.deactivateLinkModeOverride()
             }
         }
     }
