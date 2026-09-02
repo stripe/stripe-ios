@@ -292,6 +292,8 @@ extension STPPaymentMethodType {
                 return .pm_type_grabpay
             case .konbini:
                 return .pm_type_konbini
+            case .kakaoPay:
+                return .pm_type_kakaopay
             case .mobilePay:
                 return .pm_type_mobilepay
             case .vipps:

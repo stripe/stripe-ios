@@ -1336,7 +1336,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
 
     func testEmailRequiredPaymentMethodForms() {
         // Given automatic billing detail collection
-        for paymentMethodType in [STPPaymentMethodType.promptPay, .multibanco] {
+        for paymentMethodType in [STPPaymentMethodType.promptPay, .multibanco, .kakaoPay] {
             // When building a payment method that requires email
             let form = PaymentSheetFormFactory(
                 intent: ._testPaymentIntent(paymentMethodTypes: [paymentMethodType]),
@@ -2439,6 +2439,43 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertNil(paymentForm.getMandateElement())
         let expectedMandate = String(
             format: String.Localized.alipay_mandate_text,
+            configuration.merchantDisplayName
+        )
+        XCTAssertEqual(futureUsagePaymentForm.getMandateElement()?.mandateTextView.textView.text, expectedMandate)
+        XCTAssertEqual(setupForm.getMandateElement()?.mandateTextView.textView.text, expectedMandate)
+    }
+
+    func testKakaoPayDisplaysMandateWhenSettingUp() {
+        // Given
+        let configuration = PaymentSheet.Configuration._testValue_MostPermissive()
+
+        func makeKakaoPayForm(intent: Intent) -> PaymentMethodElement {
+            PaymentSheetFormFactory(
+                intent: intent,
+                elementsSession: ._testValue(paymentMethodTypes: ["kakao_pay"]),
+                configuration: .paymentElement(configuration),
+                paymentMethod: .stripe(.kakaoPay)
+            ).make()
+        }
+
+        // When
+        let paymentForm = makeKakaoPayForm(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.kakaoPay])
+        )
+        let futureUsagePaymentForm = makeKakaoPayForm(
+            intent: ._testPaymentIntent(
+                paymentMethodTypes: [.kakaoPay],
+                setupFutureUsage: .offSession
+            )
+        )
+        let setupForm = makeKakaoPayForm(
+            intent: ._testSetupIntent(paymentMethodTypes: [.kakaoPay])
+        )
+
+        // Then
+        XCTAssertNil(paymentForm.getMandateElement())
+        let expectedMandate = String(
+            format: String.Localized.korean_payment_method_mandate_text,
             configuration.merchantDisplayName
         )
         XCTAssertEqual(futureUsagePaymentForm.getMandateElement()?.mandateTextView.textView.text, expectedMandate)
