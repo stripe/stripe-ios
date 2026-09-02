@@ -25,6 +25,7 @@ final class ConsumerSession: Decodable {
     let currentAuthenticationLevel: AuthenticationLevel?
     let minimumAuthenticationLevel: AuthenticationLevel?
     var linkBrand: LinkBrand?
+    var linkSessionKey: String?
 
     private enum CodingKeys: String, CodingKey {
         case clientSecret
@@ -38,6 +39,7 @@ final class ConsumerSession: Decodable {
         case currentAuthenticationLevel
         case minimumAuthenticationLevel
         case linkBrand = "link_brand"
+        case linkSessionKey = "link_session_key"
     }
 
     init(from decoder: Decoder) throws {
@@ -53,6 +55,7 @@ final class ConsumerSession: Decodable {
         self.currentAuthenticationLevel = try container.decodeIfPresent(AuthenticationLevel.self, forKey: .currentAuthenticationLevel)
         self.minimumAuthenticationLevel = try container.decodeIfPresent(AuthenticationLevel.self, forKey: .minimumAuthenticationLevel)
         self.linkBrand = try container.decodeIfPresent(LinkBrand.self, forKey: .linkBrand)
+        self.linkSessionKey = try container.decode(String.self, forKey: .linkSessionKey)
     }
 
 }
