@@ -180,8 +180,7 @@ extension FinancialConnectionsNavigationController {
         let logoView: UIImageView? = {
             guard !shouldHideLogo else { return nil }
 
-            let logoImage = UIImageView(image: appearance.logoImage)
-            logoImage.tintColor = appearance.logoTintColor
+            let logoImage = FinancialConnectionsLogoImageView(appearance: appearance)
             logoImage.contentMode = .scaleAspectFit
             logoImage.sizeToFit()
 
@@ -219,5 +218,35 @@ extension FinancialConnectionsNavigationController {
         navigationItem?.titleView = stackView
         navigationItem?.backButtonTitle = ""
         navigationItem?.rightBarButtonItem = closeItem
+    }
+}
+
+private final class FinancialConnectionsLogoImageView: UIImageView {
+    private let appearance: FinancialConnectionsAppearance
+
+    init(appearance: FinancialConnectionsAppearance) {
+        self.appearance = appearance
+        super.init(frame: .zero)
+        tintColor = appearance.logoTintColor
+        updateImage()
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    override func didMoveToWindow() {
+        super.didMoveToWindow()
+        updateImage()
+    }
+
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        guard traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) else { return }
+        updateImage()
+    }
+
+    private func updateImage() {
+        image = appearance.logoImage(for: traitCollection.userInterfaceStyle)
     }
 }
