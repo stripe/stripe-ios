@@ -151,22 +151,25 @@ struct CheckoutCartView: View {
                 config.paymentElement = paymentElementConfiguration
             }
             config.defaults.shippingDetails = defaultShippingAddress?.checkoutShippingDetails
+            if expressCheckoutElementSettings.isEnabled {
+                var expressCheckoutElementConfiguration = ExpressCheckoutElement.Configuration()
+                expressCheckoutElementConfiguration.applePayConfiguration = ExpressCheckoutElement.ApplePayConfiguration(
+                    merchantId: "merchant.com.stripe.paymentsheet.example",
+                    display: expressCheckoutElementSettings.applePayDisplay
+                )
+                expressCheckoutElementConfiguration.linkConfiguration = ExpressCheckoutElement.LinkConfiguration(
+                    display: expressCheckoutElementSettings.linkDisplay
+                )
+                expressCheckoutElementConfiguration.shippingAddressRequired = expressCheckoutElementSettings.shippingAddressRequired
+                expressCheckoutElementConfiguration.billingDetailsCollectionConfiguration = expressCheckoutElementSettings.billingDetailsCollectionConfiguration
+                expressCheckoutElementConfiguration.confirmHandler = { result in
+                    confirmResult = result
+                }
+            }
             if adaptivePricing {
                 var currencySelectorConfiguration = CurrencySelectorElement.Configuration()
                 currencySelectorConfiguration.appearance = currencySelectorAppearance
                 config.currencySelectorElement = currencySelectorConfiguration
-            }
-            config.expressCheckoutElement.applePayConfiguration = ExpressCheckoutElement.ApplePayConfiguration(
-                merchantId: "merchant.com.stripe.paymentsheet.example",
-                display: expressCheckoutElementSettings.applePayDisplay
-            )
-            config.expressCheckoutElement.linkConfiguration = ExpressCheckoutElement.LinkConfiguration(
-                display: expressCheckoutElementSettings.linkDisplay
-            )
-            config.expressCheckoutElement.shippingAddressRequired = expressCheckoutElementSettings.shippingAddressRequired
-            config.expressCheckoutElement.billingDetailsCollectionConfiguration = expressCheckoutElementSettings.billingDetailsCollectionConfiguration
-            config.expressCheckoutElement.confirmHandler = { result in
-                confirmResult = result
             }
             config.shippingAddressElement.title = "Shipping Address"
             config.shippingAddressElement.buttonTitle = "Save Address"

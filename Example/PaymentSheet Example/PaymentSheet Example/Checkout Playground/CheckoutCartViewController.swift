@@ -205,17 +205,21 @@ final class CheckoutCartViewController: UIViewController {
                 configuration.paymentElement = paymentElementConfiguration
             }
             configuration.defaults.shippingDetails = defaultShippingAddress?.checkoutShippingDetails
-            configuration.expressCheckoutElement.applePayConfiguration = ExpressCheckoutElement.ApplePayConfiguration(
-                merchantId: "merchant.com.stripe.paymentsheet.example",
-                display: expressCheckoutElementSettings.applePayDisplay
-            )
-            configuration.expressCheckoutElement.linkConfiguration = ExpressCheckoutElement.LinkConfiguration(
-                display: expressCheckoutElementSettings.linkDisplay
-            )
-            configuration.expressCheckoutElement.shippingAddressRequired = expressCheckoutElementSettings.shippingAddressRequired
-            configuration.expressCheckoutElement.billingDetailsCollectionConfiguration = expressCheckoutElementSettings.billingDetailsCollectionConfiguration
-            configuration.expressCheckoutElement.confirmHandler = { [weak self] result in
-                self?.handleConfirmResult(result)
+            if expressCheckoutElementSettings.isEnabled {
+                var expressCheckoutElementConfiguration = ExpressCheckoutElement.Configuration()
+                expressCheckoutElementConfiguration.applePayConfiguration = ExpressCheckoutElement.ApplePayConfiguration(
+                    merchantId: "merchant.com.stripe.paymentsheet.example",
+                    display: expressCheckoutElementSettings.applePayDisplay
+                )
+                expressCheckoutElementConfiguration.linkConfiguration = ExpressCheckoutElement.LinkConfiguration(
+                    display: expressCheckoutElementSettings.linkDisplay
+                )
+                expressCheckoutElementConfiguration.shippingAddressRequired = expressCheckoutElementSettings.shippingAddressRequired
+                expressCheckoutElementConfiguration.billingDetailsCollectionConfiguration = expressCheckoutElementSettings.billingDetailsCollectionConfiguration
+                expressCheckoutElementConfiguration.confirmHandler = { [weak self] result in
+                    self?.handleConfirmResult(result)
+                }
+                configuration.expressCheckoutElement = expressCheckoutElementConfiguration
             }
             if adaptivePricing {
                 var currencySelectorConfiguration = CurrencySelectorElement.Configuration()
