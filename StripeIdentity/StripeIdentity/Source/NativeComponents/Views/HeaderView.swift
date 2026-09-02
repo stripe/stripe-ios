@@ -18,6 +18,7 @@ class HeaderView: UIView {
         static let leadingTrailingConstraint: CGFloat = 32
 
         static let stackViewSpacing: CGFloat = 24
+        static let titleSubtitleSpacing: CGFloat = 12
 
         static func topConstraint(headerType: ViewModel.HeaderType) -> CGFloat {
             switch headerType {
@@ -40,6 +41,19 @@ class HeaderView: UIView {
         let backgroundColor: UIColor
         let headerType: HeaderType
         let titleText: String?
+        let subtitleText: String?
+
+        init(
+            backgroundColor: UIColor,
+            headerType: HeaderType,
+            titleText: String?,
+            subtitleText: String? = nil
+        ) {
+            self.backgroundColor = backgroundColor
+            self.headerType = headerType
+            self.titleText = titleText
+            self.subtitleText = subtitleText
+        }
     }
 
     private let iconView = HeaderIconView()
@@ -59,6 +73,16 @@ class HeaderView: UIView {
         label.accessibilityTraits = [.header]
         label.adjustsFontForContentSizeCategory = true
         label.font = IdentityUI.titleFont
+        return label
+    }()
+
+    private let subtitleLabel: UILabel = {
+        let label = UILabel()
+        label.numberOfLines = 0
+        label.textAlignment = .center
+        label.adjustsFontForContentSizeCategory = true
+        label.font = IdentityUI.instructionsFont
+        label.textColor = IdentityUI.textColor
         return label
     }()
 
@@ -101,6 +125,13 @@ extension HeaderView {
         } else {
             titleLabel.isHidden = true
         }
+
+        if let subtitleText = viewModel.subtitleText {
+            subtitleLabel.isHidden = false
+            subtitleLabel.text = subtitleText
+        } else {
+            subtitleLabel.isHidden = true
+        }
     }
 
     // Reconfigure subviews and reset constraint constants
@@ -122,6 +153,8 @@ extension HeaderView {
     fileprivate func installStackView() {
         stackView.addArrangedSubview(iconView)
         stackView.addArrangedSubview(titleLabel)
+        stackView.addArrangedSubview(subtitleLabel)
+        stackView.setCustomSpacing(Styling.titleSubtitleSpacing, after: titleLabel)
         stackView.translatesAutoresizingMaskIntoConstraints = false
 
         addSubview(stackView)

@@ -19,6 +19,7 @@
       ],
       "privacy_policy": "<a href='https://stripe.com/privacy'>Stripe Privacy Policy</a> • <a href='https://aywang.me'>Andrew's Audio Privacy Policy</a>",
       "scroll_to_continue_button_text": "Scroll to continue",
+      "subtitle": "Complete a one-time identity check to enable withdrawals.",
       "time_estimate": null,
       "title": "Continue Document Verification"
     },
