@@ -10,9 +10,10 @@ import SwiftUI
 
 extension CheckoutPlayground {
     struct ExpressCheckoutElementSettings {
-        var option: ExpressCheckoutElementOption = .show
+        var isEnabled = true
         var applePayDisplay: ExpressCheckoutElement.ApplePayConfiguration.Display = .automatic
         var linkDisplay: ExpressCheckoutElement.LinkConfiguration.Display = .automatic
+        var shippingAddressRequired: Bool = false
         var billingDetailsCollectionConfiguration = ExpressCheckoutElement.BillingDetailsCollectionConfiguration()
     }
 
@@ -27,14 +28,14 @@ extension CheckoutPlayground {
         @Published var uiFramework: UIFramework
         @Published var integrationType: IntegrationType {
             didSet {
-                if integrationType == .eceOnly && expressCheckoutElement.option == .hide {
-                    expressCheckoutElement.option = .show
+                if integrationType == .eceOnly && !expressCheckoutElement.isEnabled {
+                    expressCheckoutElement.isEnabled = true
                 }
             }
         }
         @Published var expressCheckoutElement = ExpressCheckoutElementSettings() {
             didSet {
-                if expressCheckoutElement.option == .hide && integrationType == .eceOnly {
+                if !expressCheckoutElement.isEnabled && integrationType == .eceOnly {
                     integrationType = .flowController
                 }
             }
@@ -76,7 +77,7 @@ extension CheckoutPlayground {
             let settings = Self.settingsFromDefaults() ?? Settings()
             uiFramework = settings.uiFramework
             integrationType = settings.integrationType
-            expressCheckoutElement = ExpressCheckoutElementSettings(option: settings.expressCheckoutElementOption)
+            expressCheckoutElement = ExpressCheckoutElementSettings(isEnabled: settings.showExpressCheckoutElement)
             linkMode = settings.linkMode
             currency = settings.currency
             customerType = settings.customerType
@@ -209,7 +210,7 @@ extension CheckoutPlayground {
             Settings(
                 uiFramework: uiFramework,
                 integrationType: integrationType,
-                expressCheckoutElementOption: expressCheckoutElement.option,
+                showExpressCheckoutElement: expressCheckoutElement.isEnabled,
                 linkMode: linkMode,
                 currency: currency,
                 customerType: customerType,
@@ -234,7 +235,7 @@ extension CheckoutPlayground {
         private func apply(_ settings: Settings) {
             uiFramework = settings.uiFramework
             integrationType = settings.integrationType
-            expressCheckoutElement.option = settings.expressCheckoutElementOption
+            expressCheckoutElement.isEnabled = settings.showExpressCheckoutElement
             linkMode = settings.linkMode
             currency = settings.currency
             customerType = settings.customerType
