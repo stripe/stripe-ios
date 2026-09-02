@@ -96,6 +96,22 @@ class HeaderViewSnapshotTest: STPSnapshotTestCase {
         )
     }
 
+    func testBannerHeaderWithSubtitle() {
+        let viewModel = IconViewModel(
+            iconType: .brand,
+            iconImage: iconImage,
+            iconImageContentMode: .scaleAspectFill
+        )
+        verifyView(
+            with: .init(
+                backgroundColor: bannerHeaderBackgroundColor,
+                headerType: .banner(iconViewModel: viewModel),
+                titleText: shortTitleText,
+                subtitleText: "Complete a one-time identity check to enable withdrawals."
+            )
+        )
+    }
+
     func testHeaderReconfigure() {
         let headerView = HeaderView()
         let viewModel = IconViewModel(
@@ -107,7 +123,8 @@ class HeaderViewSnapshotTest: STPSnapshotTestCase {
         let firstConfigurationVersion: HeaderView.ViewModel = .init(
             backgroundColor: .red,
             headerType: .plain,
-            titleText: "First Configured Header Title"
+            titleText: "First Configured Header Title",
+            subtitleText: "First Configured Header Subtitle"
         )
         let secondConfigurationVersion: HeaderView.ViewModel = .init(
             backgroundColor: .blue,

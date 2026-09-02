@@ -117,7 +117,8 @@ final class BiometricConsentViewController: IdentityFlowViewController {
                         )
                     }
                 }(),
-                titleText: consentContent.title
+                titleText: consentContent.title,
+                subtitleText: consentContent.subtitle
             ),
             contentViewModel: .init(
                 view: contentStackView,
