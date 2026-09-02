@@ -8,6 +8,7 @@
 import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
+@_spi(STP) import StripeUICore
 import UIKit
 
 extension CheckoutController: ExpressCheckoutElementDelegate {
@@ -15,17 +16,31 @@ extension CheckoutController: ExpressCheckoutElementDelegate {
         _ paymentMethod: ExpressCheckoutElement.PaymentMethod,
         presentationWindow: UIWindow?
     ) async -> ConfirmResult {
-        let flow: CheckoutConfirmationFlow?
+        do {
+            let flow = try makeExpressCheckoutConfirmationFlow(
+                paymentMethod,
+                presentationWindow: presentationWindow
+            )
+            return await confirm(flow)
+        } catch {
+            STPAnalyticsClient.sharedClient.log(analytic: ErrorAnalytic(event: .unexpectedCheckoutElementsError, error: error))
+            return .failed(error)
+        }
+    }
+
+    func makeExpressCheckoutConfirmationFlow(
+        _ paymentMethod: ExpressCheckoutElement.PaymentMethod,
+        presentationWindow: UIWindow?
+    ) throws -> CheckoutConfirmationFlow {
         switch paymentMethod {
         case .applePay:
             guard let applePayConfiguration = configuration.expressCheckoutElement.applePayConfiguration else {
-                flow = nil
-                break
+                throw CheckoutError.unknown(debugDescription: "Could not build a confirmation flow for \(paymentMethod). Express Checkout Element Apple Pay configuration unexpectedly nil.")
             }
             // TODO: Should next actions use an authentication context tied to `presentationWindow`
             // instead of `WindowAuthenticationContext` to avoid presenting in the wrong scene?
             let authenticationContext = WindowAuthenticationContext()
-            flow = .applePay(.init(
+            return .applePay(.init(
                 applePayConfiguration: applePayConfiguration,
                 apiClient: apiClient,
                 returnURL: configuration.returnURL,
@@ -43,15 +58,45 @@ extension CheckoutController: ExpressCheckoutElementDelegate {
                 }
             ))
         case .link:
-            // ECE Link needs its own configuration and analytics lifecycle before it can build this flow.
-            flow = nil
+            guard let presentingViewController = presentationWindow?.findTopMostPresentedViewController() else {
+                throw CheckoutError.unknown(debugDescription: "Could not build a confirmation flow for \(paymentMethod). Could not find a presenting view controller.")
+            }
+            // TODO: maybe add Link-specific configuration
+            var paymentElementConfiguration = PaymentSheet.Configuration()
+            paymentElementConfiguration.apiClient = apiClient
+            paymentElementConfiguration.returnURL = configuration.returnURL
+            paymentElementConfiguration.merchantDisplayName = effectiveMerchantDisplayName
+            paymentElementConfiguration.style = configuration.userInterfaceStyle
+            paymentElementConfiguration.billingDetailsCollectionConfiguration = configuration.expressCheckoutElement.billingDetailsCollectionConfiguration.paymentSheetConfiguration()
+            if let billingDetails = configuration.defaults.billingDetails {
+                paymentElementConfiguration.defaultBillingDetails.set(billingDetails)
+            }
+            paymentElementConfiguration.defaultBillingDetails.email = session.email
+            switch configuration.expressCheckoutElement.linkConfiguration.display {
+            case .automatic:
+                paymentElementConfiguration.link.display = .automatic
+            case .never:
+                paymentElementConfiguration.link.display = .never
+            }
+            // TODO: maybe separate out a LinkAnalyticsHelper
+            let analyticsHelper = PaymentSheetAnalyticsHelper(
+                integrationShape: .complete, // Wallet Link analytics don't log integrationShape, so it's not worth adding an .expressCheckout case.
+                configuration: paymentElementConfiguration
+            )
+            let authenticationContext = AuthenticationContext(
+                presentingViewController: presentingViewController,
+                appearance: paymentElementConfiguration.appearance
+            )
+            return .link(.init(
+                confirmOption: .wallet(brand: session.elementsSession.linkBrand ?? .link),
+                configuration: paymentElementConfiguration,
+                confirmationChallenge: ConfirmationChallenge(
+                    elementsSession: session.elementsSession,
+                    stripeAttest: apiClient.stripeAttest),
+                analyticsHelper: analyticsHelper,
+                authenticationContext: authenticationContext,
+                paymentHandler: paymentHandler))
         }
-        guard let flow else {
-            let error = CheckoutError.unknown(debugDescription: "CheckoutController.expressCheckoutElementShouldConfirm() could not build a confirmation flow for \(paymentMethod).")
-            STPAnalyticsClient.sharedClient.log(analytic: ErrorAnalytic(event: .unexpectedCheckoutElementsError, error: error))
-            return .failed(error)
-        }
-        return await confirm(flow)
     }
 }
 
