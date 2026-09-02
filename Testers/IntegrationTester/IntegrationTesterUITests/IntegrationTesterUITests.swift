@@ -62,6 +62,7 @@ class IntegrationTesterUITests: XCTestCase {
         numberField.typeText(number)
         let expField = app.textFields["expiration date"]
         _ = expField.waitForExistence(timeout: 10)
+        expField.tap()
         expField.typeText("1228")
         let cvcField = app.textFields["CVC"]
         if STPCardValidator.brand(forNumber: number) == .amex {
@@ -79,7 +80,7 @@ class IntegrationTesterUITests: XCTestCase {
         let tablesQuery = app.collectionViews
 
         let cardExampleElement = tablesQuery.cells.buttons["Card"]
-        cardExampleElement.tap()
+        cardExampleElement.forceTapWhenHittableInTestCase(self)
         try! fillCardData(app, number: cardNumber)
 
         let buyButton = app.buttons["Buy"]
