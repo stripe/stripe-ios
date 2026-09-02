@@ -55,7 +55,7 @@ final class ConsumerSession: Decodable {
         self.currentAuthenticationLevel = try container.decodeIfPresent(AuthenticationLevel.self, forKey: .currentAuthenticationLevel)
         self.minimumAuthenticationLevel = try container.decodeIfPresent(AuthenticationLevel.self, forKey: .minimumAuthenticationLevel)
         self.linkBrand = try container.decodeIfPresent(LinkBrand.self, forKey: .linkBrand)
-        self.linkSessionKey = try container.decode(String.self, forKey: .linkSessionKey)
+        self.linkSessionKey = try container.decodeIfPresent(String.self, forKey: .linkSessionKey)
     }
 
 }
