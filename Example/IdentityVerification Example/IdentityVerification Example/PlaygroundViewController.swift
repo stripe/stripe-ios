@@ -5,7 +5,7 @@
 //  Created by Mel Ludowise on 3/3/21.
 //
 
-@_spi(STP) import StripeIdentity
+import StripeIdentity
 @_spi(STP) import StripeUICore
 import UIKit
 
@@ -45,7 +45,6 @@ class PlaygroundViewController: UIViewController {
     @IBOutlet weak var phoneOtpContainerView: UIStackView!
 
     @IBOutlet weak var fallbackToDocumentSwitch: UISwitch!
-    private let hideWelcomeBrandingHeaderSwitch = UISwitch()
     private let phoneElement: PhoneNumberElement
 
     private let phoneView: UIView
@@ -141,7 +140,6 @@ class PlaygroundViewController: UIViewController {
         verifyButton.addTarget(self, action: #selector(didTapVerifyButton), for: .touchUpInside)
         // TODO(ccen) enable phoneOtpContainerView when backend adds support to PII
         phoneOtpContainerView.isHidden = true
-        addBiometricConfigurationSection()
         didChangeNewOrReuse(self)
     }
 
@@ -361,19 +359,12 @@ class PlaygroundViewController: UIViewController {
             assertionFailure("Did not receive a valid ephemeral key secret.")
             return
         }
-        var configuration = IdentityVerificationSheet.Configuration(
-            brandLogo: UIImage(named: "BrandLogo")!
-        )
-        if hideWelcomeBrandingHeaderSwitch.isOn {
-            configuration.biometricConsent = .init(
-                hideBrandingHeader: true
-            )
-        }
-
         self.verificationSheet = IdentityVerificationSheet(
             verificationSessionId: verificationSessionId,
             ephemeralKeySecret: ephemeralKeySecret,
-            configuration: configuration
+            configuration: IdentityVerificationSheet.Configuration(
+                brandLogo: UIImage(named: "BrandLogo")!
+            )
         )
     }
 
@@ -428,45 +419,6 @@ class PlaygroundViewController: UIViewController {
             IdentityVerificationSheet.simulatorSelfieCameraImages = [selfieImage]
         }
         #endif
-    }
-
-    private func addBiometricConfigurationSection() {
-        let sectionLabel = UILabel()
-        sectionLabel.text = "Biometric configuration:"
-        sectionLabel.adjustsFontForContentSizeCategory = true
-
-        let toggleLabel = UILabel()
-        toggleLabel.text = "Hide welcome branding header"
-        toggleLabel.adjustsFontForContentSizeCategory = true
-
-        hideWelcomeBrandingHeaderSwitch.isOn = false
-        hideWelcomeBrandingHeaderSwitch.setContentHuggingPriority(.required, for: .horizontal)
-
-        let toggleStackView = UIStackView(arrangedSubviews: [
-            toggleLabel,
-            hideWelcomeBrandingHeaderSwitch,
-        ])
-        toggleStackView.axis = .horizontal
-        toggleStackView.alignment = .center
-        toggleStackView.spacing = 8
-
-        let toggleContainerView = UIView()
-        toggleStackView.translatesAutoresizingMaskIntoConstraints = false
-        toggleContainerView.addSubview(toggleStackView)
-        NSLayoutConstraint.activate([
-            toggleStackView.topAnchor.constraint(equalTo: toggleContainerView.topAnchor),
-            toggleStackView.leadingAnchor.constraint(equalTo: toggleContainerView.leadingAnchor, constant: 16),
-            toggleStackView.trailingAnchor.constraint(equalTo: toggleContainerView.trailingAnchor),
-            toggleStackView.bottomAnchor.constraint(equalTo: toggleContainerView.bottomAnchor),
-        ])
-
-        let sectionStackView = UIStackView(arrangedSubviews: [
-            sectionLabel,
-            toggleContainerView,
-        ])
-        sectionStackView.axis = .vertical
-        sectionStackView.spacing = 8
-        nativeComponentsOptionsContainerView.addArrangedSubview(sectionStackView)
     }
 
     @IBAction func didChangeVerificationType(_ sender: Any) {
