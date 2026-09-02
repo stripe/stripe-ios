@@ -165,6 +165,7 @@ struct CheckoutCartView: View {
                 expressCheckoutElementConfiguration.confirmHandler = { result in
                     confirmResult = result
                 }
+                config.expressCheckoutElement = expressCheckoutElementConfiguration
             }
             if adaptivePricing {
                 var currencySelectorConfiguration = CurrencySelectorElement.Configuration()
