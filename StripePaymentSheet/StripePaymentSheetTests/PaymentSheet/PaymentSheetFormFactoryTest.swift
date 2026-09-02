@@ -2445,6 +2445,43 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertEqual(setupForm.getMandateElement()?.mandateTextView.textView.text, expectedMandate)
     }
 
+    func testKoreanCardsDisplaysMandateWhenSettingUp() {
+        // Given
+        let configuration = PaymentSheet.Configuration._testValue_MostPermissive()
+
+        func makeKoreanCardsForm(intent: Intent) -> PaymentMethodElement {
+            PaymentSheetFormFactory(
+                intent: intent,
+                elementsSession: ._testValue(paymentMethodTypes: ["kr_card"]),
+                configuration: .paymentElement(configuration),
+                paymentMethod: .stripe(.krCard)
+            ).make()
+        }
+
+        // When
+        let paymentForm = makeKoreanCardsForm(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.krCard])
+        )
+        let futureUsagePaymentForm = makeKoreanCardsForm(
+            intent: ._testPaymentIntent(
+                paymentMethodTypes: [.krCard],
+                setupFutureUsage: .offSession
+            )
+        )
+        let setupForm = makeKoreanCardsForm(
+            intent: ._testSetupIntent(paymentMethodTypes: [.krCard])
+        )
+
+        // Then
+        XCTAssertNil(paymentForm.getMandateElement())
+        let expectedMandate = String(
+            format: String.Localized.korean_payment_method_mandate_text,
+            configuration.merchantDisplayName
+        )
+        XCTAssertEqual(futureUsagePaymentForm.getMandateElement()?.mandateTextView.textView.text, expectedMandate)
+        XCTAssertEqual(setupForm.getMandateElement()?.mandateTextView.textView.text, expectedMandate)
+    }
+
     func testCheckoutSessionSetupFutureUsage_appliesMandateBehavior() {
         func makeCheckoutSessionPayPalForm(
             setupFutureUsage: String? = nil,
