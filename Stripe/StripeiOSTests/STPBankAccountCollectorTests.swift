@@ -124,6 +124,56 @@ final class STPBankAccountCollectorTests: APIStubbedTestCase {
         XCTAssertEqual(intent.status, .succeeded)
     }
 
+    func testCollectBankAccountForPaymentWithPreCollectedConsentSucceeds() {
+        let paymentIntentID = "pi_123"
+        let clientSecret = "\(paymentIntentID)_secret_abc"
+
+        // Set up stubs for network interactions
+        stubCreateLinkAccountSession(paymentIntentID: paymentIntentID)
+        stubAttachLinkAccountSession(paymentIntentID: paymentIntentID)
+
+        let collector = STPBankAccountCollector(apiClient: stubbedAPIClient())
+        let expectation = expectation(description: "completion")
+
+        collector.collectBankAccountForPayment(
+            clientSecret: clientSecret,
+            returnURL: nil,
+            params: makeParams(),
+            preCollectedConsent: FinancialConnectionsPreCollectedConsent(consent: "fccons_123"),
+            from: UIViewController(),
+            onEvent: nil
+        ) { intent, error in
+            XCTAssertNil(error)
+            XCTAssertEqual(intent?.stripeId, paymentIntentID)
+            XCTAssertEqual(intent?.status, .succeeded)
+            XCTAssertEqual(StubbedConnectionsSDKInterface.lastReceivedPreCollectedConsent?.consent, "fccons_123")
+            expectation.fulfill()
+        }
+
+        waitForExpectations(timeout: 2.0)
+    }
+
+    func testCollectBankAccountForPaymentWithPreCollectedConsentSucceedsAsync() async throws {
+        let paymentIntentID = "pi_123"
+        let clientSecret = "\(paymentIntentID)_secret_abc"
+
+        // Set up stubs for network interactions
+        stubCreateLinkAccountSession(paymentIntentID: paymentIntentID)
+        stubAttachLinkAccountSession(paymentIntentID: paymentIntentID)
+
+        let collector = STPBankAccountCollector(apiClient: stubbedAPIClient())
+
+        let intent = try await collector.collectBankAccountForPayment(
+            clientSecret: clientSecret,
+            params: makeParams(),
+            preCollectedConsent: FinancialConnectionsPreCollectedConsent(consent: "fccons_123"),
+            from: UIViewController()
+        )
+        XCTAssertEqual(intent.stripeId, paymentIntentID)
+        XCTAssertEqual(intent.status, .succeeded)
+        XCTAssertEqual(StubbedConnectionsSDKInterface.lastReceivedPreCollectedConsent?.consent, "fccons_123")
+    }
+
     func testCollectBankAccountForPaymentWithReturnURLSucceeds() {
         let paymentIntentID = "pi_456"
         let clientSecret = "\(paymentIntentID)_secret_xyz"
@@ -185,6 +235,53 @@ final class STPBankAccountCollectorTests: APIStubbedTestCase {
         )
         XCTAssertEqual(intent.stripeID, setupIntentID)
         XCTAssertEqual(intent.status, .succeeded)
+    }
+
+    func testCollectBankAccountForSetupWithPreCollectedConsentSucceeds() {
+        let setupIntentID = "seti_456"
+        let clientSecret = "\(setupIntentID)_secret_xyz"
+        stubCreateLinkAccountSessionForSetupIntent(setupIntentID: setupIntentID)
+        stubAttachLinkAccountSessionToSetupIntent(setupIntentID: setupIntentID)
+
+        let collector = STPBankAccountCollector(apiClient: stubbedAPIClient())
+        let exp = expectation(description: "completion")
+
+        collector.collectBankAccountForSetup(
+            clientSecret: clientSecret,
+            returnURL: nil,
+            params: makeParams(),
+            preCollectedConsent: FinancialConnectionsPreCollectedConsent(consent: "fccons_123"),
+            from: UIViewController(),
+            onEvent: nil
+        ) { intent, error in
+            XCTAssertNil(error)
+            XCTAssertEqual(intent?.stripeID, setupIntentID)
+            XCTAssertEqual(intent?.status, .succeeded)
+            XCTAssertEqual(StubbedConnectionsSDKInterface.lastReceivedPreCollectedConsent?.consent, "fccons_123")
+            exp.fulfill()
+        }
+        waitForExpectations(timeout: 2.0)
+    }
+
+    func testCollectBankAccountForSetupWithPreCollectedConsentSucceedsAsync() async throws {
+        let setupIntentID = "seti_456"
+        let clientSecret = "\(setupIntentID)_secret_xyz"
+
+        // Set up stubs for network interactions
+        stubCreateLinkAccountSessionForSetupIntent(setupIntentID: setupIntentID)
+        stubAttachLinkAccountSessionToSetupIntent(setupIntentID: setupIntentID)
+
+        let collector = STPBankAccountCollector(apiClient: stubbedAPIClient())
+
+        let intent = try await collector.collectBankAccountForSetup(
+            clientSecret: clientSecret,
+            params: makeParams(),
+            preCollectedConsent: FinancialConnectionsPreCollectedConsent(consent: "fccons_123"),
+            from: UIViewController()
+        )
+        XCTAssertEqual(intent.stripeID, setupIntentID)
+        XCTAssertEqual(intent.status, .succeeded)
+        XCTAssertEqual(StubbedConnectionsSDKInterface.lastReceivedPreCollectedConsent?.consent, "fccons_123")
     }
 
     func testCollectBankAccountForDeferredIntentSucceeds() {

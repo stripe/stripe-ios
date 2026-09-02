@@ -54,6 +54,7 @@ class FinancialConnectionsSheetTests: XCTestCase {
             returnURL: nil,
             configuration: .init(),
             elementsSessionContext: nil,
+            preCollectedConsent: nil,
             publishableKey: "test",
             stripeAccount: nil
         )
@@ -97,6 +98,7 @@ class FinancialConnectionsSheetTests: XCTestCase {
             returnURL: nil,
             configuration: .init(),
             elementsSessionContext: nil,
+            preCollectedConsent: nil,
             publishableKey: "test",
             stripeAccount: nil
         )
@@ -112,6 +114,51 @@ class FinancialConnectionsSheetTests: XCTestCase {
         }
 
         await fulfillment(of: [expectation], timeout: 1.0)
+    }
+
+    func testPresentWithPreCollectedConsentSetsPropertyBeforePresenting() {
+        let sheet = FinancialConnectionsSheet(
+            financialConnectionsSessionClientSecret: mockClientSecret,
+            returnURL: nil,
+            configuration: .init(),
+            analyticsClient: mockAnalyticsClient
+        )
+        XCTAssertNil(sheet.preCollectedConsent)
+
+        let expectation = expectation(description: "presentation completed")
+        sheet.present(
+            from: mockViewController,
+            preCollectedConsent: FinancialConnectionsPreCollectedConsent(consent: "fccons_123")
+        ) { (result: FinancialConnectionsSheet.Result) in
+            guard case .canceled = result else {
+                XCTFail("Unexpected result: \(result)")
+                return
+            }
+            expectation.fulfill()
+        }
+
+        XCTAssertEqual(sheet.preCollectedConsent?.consent, "fccons_123")
+
+        // Mock that financialConnections is completed
+        let host = HostController(
+            apiClient: mockApiClient,
+            analyticsClientV1: mockAnalyticsClient,
+            clientSecret: "test",
+            returnURL: nil,
+            configuration: .init(),
+            elementsSessionContext: nil,
+            preCollectedConsent: nil,
+            publishableKey: "test",
+            stripeAccount: nil
+        )
+        sheet.hostController(
+            host,
+            viewController: mockViewController,
+            didFinish: .canceled,
+            linkAccountSessionId: "fcsess_123"
+        )
+
+        wait(for: [expectation], timeout: 5.0)
     }
 
     func testAnalytics() {
@@ -142,6 +189,7 @@ class FinancialConnectionsSheetTests: XCTestCase {
             returnURL: nil,
             configuration: .init(),
             elementsSessionContext: nil,
+            preCollectedConsent: nil,
             publishableKey: "test",
             stripeAccount: nil
         )
