@@ -302,7 +302,7 @@ extension PaymentSheet {
                         return [.userSupportsDelayedPaymentMethods]
                     case .bacsDebit:
                         return [.returnURL, .userSupportsDelayedPaymentMethods]
-                    case .kakaoPay, .link, .krCard, .naverPay, .unknown:
+                    case .kakaoPay, .link, .naverPay, .unknown:
                         return [.unsupported]
                     @unknown default:
                         return [.unsupported]
