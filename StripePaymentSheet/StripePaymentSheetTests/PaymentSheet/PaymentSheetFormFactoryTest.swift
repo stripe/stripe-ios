@@ -1798,6 +1798,101 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertNil(instantDebitsSection.addressElement)
     }
 
+    func testMakeInstantDebits_ineligibleIncentiveDisclaimer() throws {
+        // Given an Instant Debits form with an incentive
+        let incentiveFlag = "FINANCIAL_CONNECTIONS_INSTANT_DEBITS_INCENTIVES"
+        UserDefaults.standard.setValue(true, forKey: incentiveFlag)
+        defer { UserDefaults.standard.removeObject(forKey: incentiveFlag) }
+
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
+            elementsSession: ._testValue(
+                paymentMethodTypes: ["card"],
+                hasLinkConsumerIncentive: true
+            ),
+            configuration: .paymentElement(PaymentSheet.Configuration()),
+            paymentMethod: .instantDebits
+        )
+        let instantDebitsSection = try XCTUnwrap(
+            factory.makeInstantDebits() as? InstantDebitsPaymentMethodElement
+        )
+        let paymentMethod = STPPaymentMethod._testUSBankAccount()
+        let linkedBank = InstantDebitsLinkedBank(
+            paymentMethod: LinkBankPaymentMethod(id: paymentMethod.stripeId),
+            bankName: "Stripe Bank",
+            last4: "6789",
+            linkMode: .linkPaymentMethod,
+            incentiveEligible: false,
+            linkAccountSessionId: "fcsess_123"
+        )
+
+        // When an ineligible bank is linked
+        instantDebitsSection.setLinkedBank(linkedBank)
+
+        // Then the form shows the ineligible explanation with a terms link
+        let disclaimer = try XCTUnwrap(instantDebitsSection.promoDisclaimerLabel?.attributedText)
+        XCTAssertEqual(
+            disclaimer.string,
+            "This bank account is ineligible for promotions. View terms"
+        )
+        let termsRange = (disclaimer.string as NSString).range(of: "View terms")
+        XCTAssertNotNil(disclaimer.attribute(.link, at: termsRange.location, effectiveRange: nil))
+    }
+
+    func testMakeInstantDebits_eligibleIncentiveDisclaimerCopy() throws {
+        // Given incentives are enabled
+        let incentiveFlag = "FINANCIAL_CONNECTIONS_INSTANT_DEBITS_INCENTIVES"
+        UserDefaults.standard.setValue(true, forKey: incentiveFlag)
+        defer { UserDefaults.standard.removeObject(forKey: incentiveFlag) }
+        let elementsSession = STPElementsSession._testValue(
+            paymentMethodTypes: ["card"],
+            hasLinkConsumerIncentive: true
+        )
+
+        // When creating payment and setup forms
+        let paymentFactory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
+            elementsSession: elementsSession,
+            configuration: .paymentElement(PaymentSheet.Configuration()),
+            paymentMethod: .instantDebits
+        )
+        let setupFactory = PaymentSheetFormFactory(
+            intent: ._testSetupIntent(paymentMethodTypes: [.card]),
+            elementsSession: elementsSession,
+            configuration: .paymentElement(PaymentSheet.Configuration()),
+            paymentMethod: .instantDebits
+        )
+        let paymentElement = try XCTUnwrap(
+            paymentFactory.makeInstantDebits() as? InstantDebitsPaymentMethodElement
+        )
+        let setupElement = try XCTUnwrap(
+            setupFactory.makeInstantDebits() as? InstantDebitsPaymentMethodElement
+        )
+
+        let paymentMethod = STPPaymentMethod._testUSBankAccount()
+        paymentElement.setLinkedBank(
+            InstantDebitsLinkedBank(
+                paymentMethod: LinkBankPaymentMethod(id: paymentMethod.stripeId),
+                bankName: "Stripe Bank",
+                last4: "6789",
+                linkMode: .linkPaymentMethod,
+                incentiveEligible: true,
+                linkAccountSessionId: "fcsess_123"
+            )
+        )
+
+        // Then each disclaimer matches the corresponding Web copy
+        XCTAssertNil(paymentElement.displayableIncentive)
+        XCTAssertEqual(
+            paymentElement.promoDisclaimerLabel?.attributedText.string,
+            "$5 back when you pay by bank. View terms"
+        )
+        XCTAssertEqual(
+            setupElement.promoDisclaimerLabel?.attributedText.string,
+            "$5 back on a qualifying purchase when you pay by bank. View terms"
+        )
+    }
+
     func testMakeInstantDebits_configuration_alwaysOrFull() {
         var configuration = PaymentSheet.Configuration()
         configuration.billingDetailsCollectionConfiguration.name = .always

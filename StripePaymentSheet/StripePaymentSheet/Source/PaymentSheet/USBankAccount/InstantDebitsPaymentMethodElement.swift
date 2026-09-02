@@ -24,6 +24,7 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
     let phoneElement: PhoneNumberElement?
     let addressElement: AddressSectionElement?
     private let promoDisclaimerElement: StaticElement?
+    let promoDisclaimerLabel: UITextView?
 
     private var linkedBankElements: [Element] {
         return [linkedBankInfoSectionElement]
@@ -38,6 +39,7 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
     private let theme: ElementsAppearance
     var presentingViewControllerDelegate: PresentingViewControllerDelegate?
     private let incentive: PaymentMethodIncentive?
+    private let isPaymentIntent: Bool
     private let isSettingUp: Bool
     private let sellerName: String?
     private let linkBrand: LinkBrand
@@ -170,10 +172,9 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
     }
 
     var displayableIncentive: PaymentMethodIncentive? {
-        // We can show the incentive if we haven't linked a bank yet, meaning
-        // that we have no indication that the session is ineligible.
-        let canShowIncentive = linkedBank?.incentiveEligible ?? true
-        return canShowIncentive ? incentive : nil
+        // Once a bank is linked, the disclaimer communicates incentive eligibility.
+        // Avoid showing the same incentive in a badge at the same time.
+        linkedBank == nil ? incentive : nil
     }
 
     var showIncentiveInHeader: Bool {
@@ -200,7 +201,7 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
 
         self.configuration = configuration
         self.linkBrand = linkBrand
-        self.linkedBankInfoView = BankAccountInfoView(frame: .zero, appearance: appearance, incentive: incentive)
+        self.linkedBankInfoView = BankAccountInfoView(frame: .zero, appearance: appearance)
         self.linkedBankInfoSectionElement = SectionElement(
             title: String.Localized.bank_account_sentence_case,
             elements: [StaticElement(view: linkedBankInfoView)],
@@ -215,14 +216,16 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
         self.linkedBank = nil
         self.linkedBankInfoSectionElement.view.isHidden = true
         self.incentive = incentive
+        self.isPaymentIntent = isPaymentIntent
         self.theme = theme
-        self.promoDisclaimerElement = incentive.flatMap {
+        self.promoDisclaimerLabel = incentive.map {
             let label = ElementsUI.makeNoticeTextField(theme: theme)
             label.attributedText = $0.promoDisclaimerText(with: theme, isPaymentIntent: isPaymentIntent, brand: linkBrand)
             label.textContainerInset = .zero
             label.textContainer.lineFragmentPadding = 0
-            return StaticElement(view: label)
+            return label
         }
+        self.promoDisclaimerElement = promoDisclaimerLabel.map { StaticElement(view: $0) }
         self.isSettingUp = isSettingUp
         self.sellerName = sellerName
 
@@ -253,7 +256,6 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
         if let linkedBank, let last4ofBankAccount = linkedBank.last4, let bankName = linkedBank.bankName {
             linkedBankInfoView.setBankName(text: bankName)
             linkedBankInfoView.setLastFourOfBank(text: "••••\(last4ofBankAccount)")
-            linkedBankInfoView.setIncentiveEligible(linkedBank.incentiveEligible)
         }
 
         formElement.toggleElements(
@@ -262,12 +264,12 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
             animated: true
         )
 
-        if let promoDisclaimerElement {
-            let hideDisclaimer = incentive == nil || linkedBank?.incentiveEligible == false
-            formElement.toggleElements(
-                [promoDisclaimerElement],
-                hidden: hideDisclaimer,
-                animated: true
+        if let promoDisclaimerLabel, let incentive {
+            promoDisclaimerLabel.attributedText = incentive.promoDisclaimerText(
+                with: theme,
+                isPaymentIntent: isPaymentIntent,
+                brand: linkBrand,
+                isEligible: linkedBank?.incentiveEligible ?? true
             )
         }
     }
@@ -368,27 +370,32 @@ private extension PaymentMethodIncentive {
     func promoDisclaimerText(
         with appearance: ElementsAppearance,
         isPaymentIntent: Bool,
-        brand: LinkBrand
+        brand: LinkBrand,
+        isEligible: Bool = true
     ) -> NSAttributedString {
-        let baseString = if isPaymentIntent {
+        let string: String = if !isEligible {
             STPLocalizedString(
-                "Get %@ back when you pay with your bank. <terms>See terms</terms>",
-                "Disclaimer for when a promotion is available for paying with a bank account. e.g. 'Get $5 back when […]'"
+                "This bank account is ineligible for promotions. <terms>View terms</terms>",
+                "Disclaimer for when a bank account is not eligible for a promotion."
+            )
+        } else if isPaymentIntent {
+            STPLocalizedString(
+                "%@ back when you pay by bank. <terms>View terms</terms>",
+                "Disclaimer for when a promotion is available for paying with a bank account. e.g. '$5 back when […]'"
             )
         } else {
             STPLocalizedString(
-                "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>",
-                "Disclaimer for when a promotion is available for setting up a bank account. e.g. 'Get $5 back when […]'"
+                "%@ back on a qualifying purchase when you pay by bank. <terms>View terms</terms>",
+                "Disclaimer for when a promotion is available for setting up a bank account. e.g. '$5 back on […]'"
             )
         }
-
-        let string = String(format: baseString, displayText)
+        let formattedText = isEligible ? String(format: string, displayText) : string
 
         let links = [
             "terms": brand.promotionTermsURL,
         ]
 
-        let formattedString = STPStringUtils.applyLinksToString(template: string, links: links)
+        let formattedString = STPStringUtils.applyLinksToString(template: formattedText, links: links)
 
         let style = NSMutableParagraphStyle()
         style.alignment = .natural

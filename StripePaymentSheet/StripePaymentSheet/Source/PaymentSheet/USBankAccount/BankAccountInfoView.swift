@@ -21,7 +21,6 @@ class BankAccountInfoView: UIView {
     }
 
     private let appearance: PaymentSheet.Appearance
-    private let incentive: PaymentMethodIncentive?
 
     private var theme: ElementsAppearance {
         appearance.asElementsTheme
@@ -42,9 +41,6 @@ class BankAccountInfoView: UIView {
         stackView.spacing = Constants.spacing
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.addArrangedSubview(accountInfoStackView)
-        if let promoBadgeView {
-            stackView.addArrangedSubview(promoBadgeView)
-        }
         return stackView
     }()
     lazy var bankNameLabel: UILabel = {
@@ -72,13 +68,6 @@ class BankAccountInfoView: UIView {
         return imageView
     }()
 
-    private lazy var promoBadgeView: PromoBadgeView? = {
-        guard let incentive else {
-            return nil
-        }
-        return PromoBadgeView(appearance: appearance, tinyMode: false, text: incentive.displayText)
-    }()
-
     lazy var xIcon: UIImageView = {
         let xIcon = UIImageView(image: Image.icon_x_standalone.makeImage(template: true))
         xIcon.tintColor = .systemGray2
@@ -103,11 +92,9 @@ class BankAccountInfoView: UIView {
 
     init(
         frame: CGRect,
-        appearance: PaymentSheet.Appearance = .default,
-        incentive: PaymentMethodIncentive? = nil
+        appearance: PaymentSheet.Appearance = .default
     ) {
         self.appearance = appearance
-        self.incentive = incentive
         super.init(frame: frame)
         addViewComponents()
         addTouchCallbackForX()
@@ -168,15 +155,10 @@ class BankAccountInfoView: UIView {
         self.bankAccountNumberLabel.text = text
     }
 
-    func setIncentiveEligible(_ eligible: Bool) {
-        promoBadgeView?.setEligible(eligible)
-    }
-
     func updateUI() {
         bankNameLabel.textColor = theme.colors.textFieldText.disabled(!isUserInteractionEnabled)
         bankAccountNumberLabel.textColor = theme.colors.textFieldText.disabled(!isUserInteractionEnabled)
         bankIconImageView.alpha = isUserInteractionEnabled ? 1.0 : 0.5
-        promoBadgeView?.alpha = isUserInteractionEnabled ? 1.0 : 0.5
         xIcon.alpha = isUserInteractionEnabled ? 1.0 : 0.5
     }
 }

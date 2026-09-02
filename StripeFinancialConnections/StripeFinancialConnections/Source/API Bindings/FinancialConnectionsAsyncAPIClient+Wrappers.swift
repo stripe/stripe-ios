@@ -391,6 +391,8 @@ extension FinancialConnectionsAsyncAPIClient: FinancialConnectionsAPI {
         amount: Int?,
         currency: String?,
         incentiveEligibilitySession: ElementsSessionContext.IntentID?,
+        linkConsumerIncentive: LinkConsumerIncentive?,
+        onBehalfOf: String?,
         useMobileEndpoints: Bool,
         pane: FinancialConnectionsSessionManifest.NextPane
     ) -> Future<LinkSignUpResponse> {
@@ -402,6 +404,8 @@ extension FinancialConnectionsAsyncAPIClient: FinancialConnectionsAPI {
                 amount: amount,
                 currency: currency,
                 incentiveEligibilitySession: incentiveEligibilitySession,
+                linkConsumerIncentive: linkConsumerIncentive,
+                onBehalfOf: onBehalfOf,
                 useMobileEndpoints: useMobileEndpoints,
                 pane: pane
             )
@@ -481,13 +485,17 @@ extension FinancialConnectionsAsyncAPIClient: FinancialConnectionsAPI {
     func updateAvailableIncentives(
         consumerSessionClientSecret: String,
         sessionID: String,
-        paymentDetailsID: String
+        paymentDetailsID: String,
+        intentID: String?,
+        onBehalfOf: String?
     ) -> Future<AvailableIncentives> {
         wrapAsyncToFuture {
             try await self.updateAvailableIncentives(
                 consumerSessionClientSecret: consumerSessionClientSecret,
                 sessionID: sessionID,
-                paymentDetailsID: paymentDetailsID
+                paymentDetailsID: paymentDetailsID,
+                intentID: intentID,
+                onBehalfOf: onBehalfOf
             )
         }
     }

@@ -99,6 +99,74 @@ class HostedAuthUrlBuilderTests: XCTestCase {
         XCTAssertTrue(result.absoluteString.contains("incentiveEligibilitySession=pi_123456789"))
     }
 
+    func testInstantDebitsIncludesCompleteConsumerIncentiveForHostedFlow() throws {
+        // Given a variable incentive that the hosted flow can validate and forward to Link signup
+        let incentive = try XCTUnwrap(LinkConsumerIncentive.decodedObject(fromAPIResponse: [
+            "incentive_campaign": "instant_debits_subscription",
+            "incentive_params": [
+                "amount_flat": 2_000,
+                "amount_percent": 10.5,
+                "currency": "usd",
+                "minimum_payment_amount": 2_000,
+                "payment_method": "link_instant_debits",
+            ],
+            "incentive_params_signature": "signed_params_123",
+            "valid_for_session": true,
+        ]))
+        let context = ElementsSessionContext(
+            intentId: .checkout("cs_123"),
+            eligibleForIncentive: true,
+            linkConsumerIncentive: incentive
+        )
+
+        // When building the hosted auth URL
+        let result = HostedAuthUrlBuilder.build(
+            baseHostedAuthUrl: baseUrl,
+            isInstantDebits: true,
+            hasExistingAccountholderToken: false,
+            elementsSessionContext: context
+        )
+
+        // Then the complete offer is available to linkedAccounts
+        let url = result.absoluteString
+        XCTAssertTrue(url.contains("linkConsumerIncentive%5Bincentive_campaign%5D=instant_debits_subscription"))
+        XCTAssertTrue(url.contains("linkConsumerIncentive%5Bincentive_params%5D%5Bamount_flat%5D=2000"))
+        XCTAssertTrue(url.contains("linkConsumerIncentive%5Bincentive_params%5D%5Bamount_percent%5D=10.5"))
+        XCTAssertTrue(url.contains("linkConsumerIncentive%5Bincentive_params%5D%5Bcurrency%5D=usd"))
+        XCTAssertTrue(url.contains("linkConsumerIncentive%5Bincentive_params%5D%5Bminimum_payment_amount%5D=2000"))
+        XCTAssertTrue(url.contains("linkConsumerIncentive%5Bincentive_params%5D%5Bpayment_method%5D=link_instant_debits"))
+        XCTAssertTrue(url.contains("linkConsumerIncentive%5Bincentive_params_signature%5D=signed_params_123"))
+        XCTAssertTrue(url.contains("linkConsumerIncentive%5Bvalid_for_session%5D=true"))
+    }
+
+    func testInstantDebitsOmitsPartialConsumerIncentiveFromHostedFlow() throws {
+        // Given an offer without the campaign and currency required by linkedAccounts
+        let incentive = try XCTUnwrap(LinkConsumerIncentive.decodedObject(fromAPIResponse: [
+            "incentive_params": [
+                "amount_flat": 500,
+                "payment_method": "link_instant_debits",
+            ],
+            "incentive_params_signature": "signed_params_123",
+        ]))
+        let context = ElementsSessionContext(
+            intentId: .payment("pi_123"),
+            eligibleForIncentive: true,
+            linkConsumerIncentive: incentive
+        )
+
+        // When building the hosted auth URL
+        let result = HostedAuthUrlBuilder.build(
+            baseHostedAuthUrl: baseUrl,
+            isInstantDebits: true,
+            hasExistingAccountholderToken: false,
+            elementsSessionContext: context
+        )
+
+        // Then the legacy eligibility parameters remain, but no invalid partial offer is sent
+        XCTAssertTrue(result.absoluteString.contains("instantDebitsIncentive=true"))
+        XCTAssertFalse(result.absoluteString.contains("linkConsumerIncentive"))
+    }
+
     func testInstantDebitsWithLinkMode() {
         let context = ElementsSessionContext(linkMode: .linkPaymentMethod)
 
