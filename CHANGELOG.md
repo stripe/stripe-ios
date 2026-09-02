@@ -5,6 +5,9 @@ MINOR
 ### CryptoOnramp (Alpha)
 * [Added] Added Canada SIN, Colombia NIT, and Philippines TIN values to `IdType`, and added `idType` to the `KycInfo` initializer.
 
+### PaymentSheet
+* [Added] Added support for Naver Pay.
+
 ## 26.9.0 2026-08-31
 ### Payments
 * [Added] Added API bindings for Kakao Pay, SeQura, Korean cards, Naver Pay, and PAYCO.
@@ -14,12 +17,6 @@ MINOR
 
 ### PaymentSheet
 * [Added] Added support for SeQura.
-
-### Payments
-* [Added] Added API bindings for Naver Pay.
-
-### PaymentSheet
-* [Added] Added support for Naver Pay.
 
 ## 26.8.0 2026-08-24
 ### Payments
