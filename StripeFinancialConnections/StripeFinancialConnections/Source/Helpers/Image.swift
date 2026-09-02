@@ -24,7 +24,10 @@ enum Image: String, ImageMaker {
     case info
     case link_logo
     case link_logo_color
+    case link_logo_color_dark
     case onelink_logo
+    case onelink_logo_color
+    case onelink_logo_color_dark
     case panel_arrow_right
     case person
     case search

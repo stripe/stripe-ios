@@ -65,8 +65,8 @@ struct FinancialConnectionsAppearance: Equatable {
 
     let colors: Colors
     let logo: Image
+    let darkModeLogo: Image?
     let logoTintColor: UIColor
-    let logoImage: UIImage
 
     init(
         theme: FinancialConnectionsSessionManifest.Theme?,
@@ -84,16 +84,16 @@ struct FinancialConnectionsAppearance: Equatable {
         switch resolvedBrand {
         case .stripe:
             self.logo = .stripe_logo
+            self.darkModeLogo = nil
             self.logoTintColor = Self.stripeLogoTintColor(for: theme)
-            self.logoImage = Image.stripe_logo.makeImage(template: true)
         case .link:
-            self.logo = .link_logo
+            self.logo = .link_logo_color
+            self.darkModeLogo = .link_logo_color_dark
             self.logoTintColor = Self.linkLogoTintColor(for: theme)
-            self.logoImage = Self.linkLogoImage()
         case .onelink:
-            self.logo = .onelink_logo
+            self.logo = .onelink_logo_color
+            self.darkModeLogo = .onelink_logo_color_dark
             self.logoTintColor = Self.linkLogoTintColor(for: theme)
-            self.logoImage = Image.onelink_logo.makeImage(template: true)
         }
     }
 
@@ -132,22 +132,9 @@ struct FinancialConnectionsAppearance: Equatable {
         }
     }
 
-    // The Link logo's color variant (green icon + dark wordmark) is a fixed-color
-    // bitmap, so it only looks correct against a light background. In dark mode we
-    // fall back to the existing monochrome wordmark, tinted white to stay legible.
-    private static func linkLogoImage() -> UIImage {
-        let colorImage = Image.link_logo_color.makeImage(template: false)
-        let monoImage = Image.link_logo.makeImage(template: true).withTintColor(.white, renderingMode: .alwaysOriginal)
-        let isDarkMode: Bool
-        switch PresentationManager.shared.configuration.style {
-        case .alwaysLight:
-            isDarkMode = false
-        case .alwaysDark:
-            isDarkMode = true
-        case .automatic:
-            isDarkMode = UIScreen.main.traitCollection.userInterfaceStyle == .dark
-        }
-        return isDarkMode ? monoImage : colorImage
+    func logoImage(for userInterfaceStyle: UIUserInterfaceStyle) -> UIImage {
+        let resolvedLogo = userInterfaceStyle == .dark ? darkModeLogo ?? logo : logo
+        return resolvedLogo.makeImage(template: darkModeLogo == nil)
     }
 }
 
