@@ -362,11 +362,11 @@ extension PaymentSheet {
 
     /// Payment method types that require mandate data for PaymentIntents when `setup_future_usage` is set
     static var requiresMandateDataForPaymentIntent: Set<STPPaymentMethodType> {
-        [.alipay, .payPal, .cashApp, .revolutPay, .amazonPay, .klarna, .satispay, .twint]
+        [.alipay, .payPal, .cashApp, .revolutPay, .amazonPay, .klarna, .satispay, .twint, .kakaoPay]
     }
 
     /// Payment method types that require mandate data for SetupIntents
     static var requiresMandateDataForSetupIntent: Set<STPPaymentMethodType> {
-        [.alipay, .payPal, .revolutPay, .satispay, .twint]
+        [.alipay, .payPal, .revolutPay, .satispay, .twint, .kakaoPay]
     }
 }
