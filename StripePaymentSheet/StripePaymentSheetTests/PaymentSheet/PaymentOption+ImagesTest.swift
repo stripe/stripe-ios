@@ -9,6 +9,27 @@ import XCTest
 
 final class PaymentOptionImagesTest: XCTestCase {
 
+    // MARK: - UIImage rounding
+
+    func testRounded_zeroSizeImageReturnsOriginalImage() {
+        let image = UIImage()
+
+        XCTAssertTrue(image.rounded(radius: 3) === image)
+    }
+
+    func testRoundedWithBorder_zeroSizeImageReturnsOriginalImage() {
+        let image = UIImage()
+
+        XCTAssertTrue(image.roundedWithBorder(radius: 3) === image)
+    }
+
+    func testRounded_nonZeroSizeImagePreservesDimensions() {
+        let image = UIGraphicsImageRenderer(size: CGSize(width: 10, height: 10)).image { _ in }
+
+        XCTAssertEqual(image.rounded(radius: 3).size, image.size)
+        XCTAssertEqual(image.roundedWithBorder(radius: 3).size, image.size)
+    }
+
     // MARK: - STPPaymentMethod.cardArtURL
 
     func testCardArtURL_nilWhenNoCardArt() {
