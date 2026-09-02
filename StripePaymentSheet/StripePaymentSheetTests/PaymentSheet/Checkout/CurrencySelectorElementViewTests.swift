@@ -30,6 +30,33 @@ final class CurrencySelectorElementViewTests: XCTestCase {
         XCTAssertGreaterThan(fittingHeight(of: hostingController), 1)
     }
 
+    func testUpdatesSwiftUILayoutWhenDetailsChangeHeight() async throws {
+        // Given a currency selector in a SwiftUI view hierarchy
+        let session = CheckoutTestHelpers.makeAdaptivePricingSession()
+        let checkout = try await CheckoutController(
+            configuration: CheckoutTestHelpers.makeCurrencySelectorConfiguration(apiResponse: session)
+        )
+        let element = try XCTUnwrap(checkout.getCurrencySelectorElement())
+        let hostingController = UIHostingController(rootView: element.view)
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 320, height: 200))
+        window.rootViewController = hostingController
+        window.makeKeyAndVisible()
+        layout(hostingController, in: window)
+        let collapsedHeight = fittingHeight(of: hostingController)
+
+        // When the customer expands the details
+        currencySelector(in: element.uiView)?.expandableDetailView.toggleExpansion()
+        let viewUpdate = expectation(description: "SwiftUI updates the representable")
+        DispatchQueue.main.async {
+            viewUpdate.fulfill()
+        }
+        await fulfillment(of: [viewUpdate], timeout: 1)
+        layout(hostingController, in: window)
+
+        // Then SwiftUI uses the currency selector's updated intrinsic height
+        XCTAssertGreaterThan(fittingHeight(of: hostingController), collapsedHeight)
+    }
+
     private func layout(_ viewController: UIViewController, in window: UIWindow) {
         window.setNeedsLayout()
         window.layoutIfNeeded()
@@ -41,4 +68,9 @@ final class CurrencySelectorElementViewTests: XCTestCase {
         hostingController.sizeThatFits(in: CGSize(width: 320, height: 200)).height
     }
 
+    private func currencySelector(in view: CurrencySelectorElementUIView) -> TwoOptionSelectorView? {
+        return view.subviews
+            .compactMap { ($0 as? UIStackView)?.arrangedSubviews.compactMap { $0 as? TwoOptionSelectorView }.first }
+            .first
+    }
 }

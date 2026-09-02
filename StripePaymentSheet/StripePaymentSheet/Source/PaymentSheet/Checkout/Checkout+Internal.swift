@@ -101,7 +101,7 @@ extension CheckoutController: ExpressCheckoutElementDelegate {
     }
 }
 
-extension CheckoutController: CurrencySelectorElementDelegate {}
+extension CheckoutController: CurrencySelectorElementCheckoutDelegate {}
 extension CheckoutController: ShippingAddressElementDelegate {}
 
 extension CheckoutController {

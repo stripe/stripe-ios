@@ -9,7 +9,7 @@
 
 /// Handles Checkout mutations requested by a CurrencySelectorElement.
 @MainActor
-protocol CurrencySelectorElementDelegate: AnyObject {
+protocol CurrencySelectorElementCheckoutDelegate: AnyObject {
     /// Selects the currency identified by its three-letter ISO currency code.
     func selectCurrency(_ currency: String) async throws
 }
@@ -24,10 +24,16 @@ protocol CurrencySelectorElementDelegate: AnyObject {
 public final class CurrencySelectorElement {
     // MARK: - Public Properties
 
+    /// See ``CurrencySelectorElementDelegate``.
+    public weak var delegate: CurrencySelectorElementDelegate?
+
     /// A SwiftUI view that displays the currency selector.
     public let view: CurrencySelectorElementView
 
-    /// A UIKit view that displays the currency selector.
+    /// A self-sizing UIKit view that displays the currency selector.
+    ///
+    /// Do not constrain the view to a fixed height. Use ``CurrencySelectorElementDelegate``
+    /// to coordinate changes to the view's height with its surrounding layout.
     public let uiView: CurrencySelectorElementUIView
 
     // MARK: - Internal Methods
@@ -35,7 +41,7 @@ public final class CurrencySelectorElement {
     init?(
         sessionSource: CheckoutSessionSource,
         configuration: Configuration,
-        delegate: CurrencySelectorElementDelegate
+        delegate: CurrencySelectorElementCheckoutDelegate
     ) async {
         guard let uiView = await CurrencySelectorElementUIView(
             session: sessionSource.initialSession,
@@ -51,6 +57,10 @@ public final class CurrencySelectorElement {
 
         self.uiView = uiView
         self.view = CurrencySelectorElementView(viewModel: viewModel)
+        self.uiView.needsUpdateSuperviewHeight = { [weak self] in
+            guard let self else { return }
+            self.delegate?.currencySelectorElementDidUpdateHeight(currencySelectorElement: self)
+        }
         STPAnalyticsClient.sharedClient.log(
             analytic: PaymentSheetAnalytic(
                 event: .adaptivePricingCurrencySelectorInit,
@@ -58,4 +68,12 @@ public final class CurrencySelectorElement {
             )
         )
     }
+}
+
+@MainActor
+@_spi(STP)
+@_spi(ReactNativeSDK)
+public protocol CurrencySelectorElementDelegate: AnyObject {
+    /// Called inside an animation block when the CurrencySelectorElement view is updating its height. Your implementation should call `setNeedsLayout()` and `layoutIfNeeded` on the scroll view that contains the CurrencySelectorElement view. This enables a smooth animation of the height change.
+    func currencySelectorElementDidUpdateHeight(currencySelectorElement: CurrencySelectorElement)
 }
