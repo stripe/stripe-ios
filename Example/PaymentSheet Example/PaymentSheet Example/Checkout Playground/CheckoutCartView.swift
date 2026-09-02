@@ -24,11 +24,7 @@ struct CheckoutCartView: View {
     let defaultShippingAddress: CheckoutPlayground.DefaultShippingAddress?
     let adaptivePricing: Bool
     let integrationType: CheckoutPlayground.IntegrationType
-    var showExpressCheckoutElement: Bool = false
-    var applePayDisplay: ExpressCheckoutElement.ApplePayConfiguration.Display = .automatic
-    var linkDisplay: ExpressCheckoutElement.LinkConfiguration.Display = .automatic
-    var eceShippingAddressRequired: Bool = false
-    var eceBillingDetailsCollectionConfiguration = ExpressCheckoutElement.BillingDetailsCollectionConfiguration()
+    let expressCheckoutElementSettings: CheckoutPlayground.ExpressCheckoutElementSettings
     var currencySelectorAppearance = CurrencySelectorElement.Appearance()
     var delayPaymentPagesRequests = false
 
@@ -44,7 +40,7 @@ struct CheckoutCartView: View {
                         showsCurrencySelectorElement: adaptivePricing,
                         showsShippingAddressSection: shippingAddressCollection || checkout.session.shippingAddress != nil,
                         errorMessage: errorMessage,
-                        showExpressCheckoutElement: showExpressCheckoutElement,
+                        showExpressCheckoutElement: expressCheckoutElementSettings.isEnabled,
                         integrationType: integrationType
                     ) { result in
                         confirmResult = result
@@ -105,7 +101,6 @@ struct CheckoutCartView: View {
                 message: { Text(confirmResultAlertMessage) }
             )
         }
-        .disabled(checkout?.isUpdating == true)
     }
 
     private var confirmResultAlertTitle: String {
@@ -156,20 +151,26 @@ struct CheckoutCartView: View {
                 config.paymentElement = paymentElementConfiguration
             }
             config.defaults.shippingDetails = defaultShippingAddress?.checkoutShippingDetails
+            if expressCheckoutElementSettings.isEnabled {
+                var expressCheckoutElementConfiguration = ExpressCheckoutElement.Configuration()
+                expressCheckoutElementConfiguration.applePayConfiguration = ExpressCheckoutElement.ApplePayConfiguration(
+                    merchantId: "merchant.com.stripe.paymentsheet.example",
+                    display: expressCheckoutElementSettings.applePayDisplay
+                )
+                expressCheckoutElementConfiguration.linkConfiguration = ExpressCheckoutElement.LinkConfiguration(
+                    display: expressCheckoutElementSettings.linkDisplay
+                )
+                expressCheckoutElementConfiguration.shippingAddressRequired = expressCheckoutElementSettings.shippingAddressRequired
+                expressCheckoutElementConfiguration.billingDetailsCollectionConfiguration = expressCheckoutElementSettings.billingDetailsCollectionConfiguration
+                expressCheckoutElementConfiguration.confirmHandler = { result in
+                    confirmResult = result
+                }
+                config.expressCheckoutElement = expressCheckoutElementConfiguration
+            }
             if adaptivePricing {
                 var currencySelectorConfiguration = CurrencySelectorElement.Configuration()
                 currencySelectorConfiguration.appearance = currencySelectorAppearance
                 config.currencySelectorElement = currencySelectorConfiguration
-            }
-            config.expressCheckoutElement.applePayConfiguration = ExpressCheckoutElement.ApplePayConfiguration(
-                merchantId: "merchant.com.stripe.paymentsheet.example",
-                display: applePayDisplay
-            )
-            config.expressCheckoutElement.linkConfiguration = ExpressCheckoutElement.LinkConfiguration(display: linkDisplay)
-            config.expressCheckoutElement.shippingAddressRequired = eceShippingAddressRequired
-            config.expressCheckoutElement.billingDetailsCollectionConfiguration = eceBillingDetailsCollectionConfiguration
-            config.expressCheckoutElement.confirmHandler = { result in
-                confirmResult = result
             }
             config.shippingAddressElement.title = "Shipping Address"
             config.shippingAddressElement.buttonTitle = "Save Address"
