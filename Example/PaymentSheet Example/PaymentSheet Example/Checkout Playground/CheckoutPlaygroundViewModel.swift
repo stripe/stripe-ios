@@ -39,6 +39,13 @@ extension CheckoutPlayground {
                 }
             }
         }
+        @Published var linkMode: LinkMode {
+            didSet {
+                if isLinkModeOverrideActive {
+                    PaymentSheet.LinkFeatureFlags.nativeLinkEnabledOverride = linkMode == .native
+                }
+            }
+        }
         @Published var currency: Currency
         @Published var customerType: CustomerType
         @Published var lineItems: [LineItemConfig]
@@ -63,12 +70,14 @@ extension CheckoutPlayground {
         @Published var navigateToCheckout = false
 
         private var settingsSaveSubscription: AnyCancellable?
+        private var isLinkModeOverrideActive = false
 
         init() {
             let settings = Self.settingsFromDefaults() ?? Settings()
             uiFramework = settings.uiFramework
             integrationType = settings.integrationType
             expressCheckoutElement = ExpressCheckoutElementSettings(option: settings.expressCheckoutElementOption)
+            linkMode = settings.linkMode
             currency = settings.currency
             customerType = settings.customerType
             lineItems = settings.lineItems
@@ -86,7 +95,6 @@ extension CheckoutPlayground {
             checkoutEndpointOption = settings.checkoutEndpointOption
             checkoutEndpoint = settings.checkoutEndpoint
             delayPaymentPagesRequests = settings.delayPaymentPagesRequests
-
             settingsSaveSubscription = objectWillChange.sink { [weak self] _ in
                 guard let self else {
                     return
@@ -97,6 +105,16 @@ extension CheckoutPlayground {
                     self.serializeSettingsToNSUserDefaults()
                 }
             }
+        }
+
+        func activateLinkModeOverride() {
+            isLinkModeOverrideActive = true
+            PaymentSheet.LinkFeatureFlags.nativeLinkEnabledOverride = linkMode == .native
+        }
+
+        func deactivateLinkModeOverride() {
+            isLinkModeOverrideActive = false
+            PaymentSheet.LinkFeatureFlags.nativeLinkEnabledOverride = nil
         }
 
         var isButtonDisabled: Bool {
@@ -192,6 +210,7 @@ extension CheckoutPlayground {
                 uiFramework: uiFramework,
                 integrationType: integrationType,
                 expressCheckoutElementOption: expressCheckoutElement.option,
+                linkMode: linkMode,
                 currency: currency,
                 customerType: customerType,
                 lineItems: lineItems,
@@ -216,6 +235,7 @@ extension CheckoutPlayground {
             uiFramework = settings.uiFramework
             integrationType = settings.integrationType
             expressCheckoutElement.option = settings.expressCheckoutElementOption
+            linkMode = settings.linkMode
             currency = settings.currency
             customerType = settings.customerType
             lineItems = settings.lineItems
