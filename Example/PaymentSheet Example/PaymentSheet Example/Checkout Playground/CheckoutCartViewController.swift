@@ -20,10 +20,7 @@ struct CheckoutCartUIKitView: UIViewControllerRepresentable {
     let defaultShippingAddress: CheckoutPlayground.DefaultShippingAddress?
     let adaptivePricing: Bool
     let integrationType: CheckoutPlayground.IntegrationType
-    let showExpressCheckoutElement: Bool
-    let applePayDisplay: ExpressCheckoutElement.ApplePayConfiguration.Display
-    let linkDisplay: ExpressCheckoutElement.LinkConfiguration.Display
-    var eceBillingDetailsCollectionConfiguration: ExpressCheckoutElement.BillingDetailsCollectionConfiguration
+    let expressCheckoutElementSettings: CheckoutPlayground.ExpressCheckoutElementSettings
     let currencySelectorAppearance: CurrencySelectorElement.Appearance
     let delayPaymentPagesRequests: Bool
 
@@ -34,10 +31,7 @@ struct CheckoutCartUIKitView: UIViewControllerRepresentable {
             defaultShippingAddress: defaultShippingAddress,
             adaptivePricing: adaptivePricing,
             integrationType: integrationType,
-            showExpressCheckoutElement: showExpressCheckoutElement,
-            applePayDisplay: applePayDisplay,
-            linkDisplay: linkDisplay,
-            eceBillingDetailsCollectionConfiguration: eceBillingDetailsCollectionConfiguration,
+            expressCheckoutElementSettings: expressCheckoutElementSettings,
             currencySelectorAppearance: currencySelectorAppearance,
             delayPaymentPagesRequests: delayPaymentPagesRequests,
             closeAction: { dismiss() }
@@ -56,10 +50,7 @@ final class CheckoutCartViewController: UIViewController {
     private let defaultShippingAddress: CheckoutPlayground.DefaultShippingAddress?
     private let adaptivePricing: Bool
     private let integrationType: CheckoutPlayground.IntegrationType
-    private let showExpressCheckoutElement: Bool
-    private let applePayDisplay: ExpressCheckoutElement.ApplePayConfiguration.Display
-    private let linkDisplay: ExpressCheckoutElement.LinkConfiguration.Display
-    private let eceBillingDetailsCollectionConfiguration: ExpressCheckoutElement.BillingDetailsCollectionConfiguration
+    private let expressCheckoutElementSettings: CheckoutPlayground.ExpressCheckoutElementSettings
     private let currencySelectorAppearance: CurrencySelectorElement.Appearance
     private let delayPaymentPagesRequests: Bool
     private let closeAction: () -> Void
@@ -92,10 +83,7 @@ final class CheckoutCartViewController: UIViewController {
         defaultShippingAddress: CheckoutPlayground.DefaultShippingAddress?,
         adaptivePricing: Bool,
         integrationType: CheckoutPlayground.IntegrationType,
-        showExpressCheckoutElement: Bool,
-        applePayDisplay: ExpressCheckoutElement.ApplePayConfiguration.Display,
-        linkDisplay: ExpressCheckoutElement.LinkConfiguration.Display,
-        eceBillingDetailsCollectionConfiguration: ExpressCheckoutElement.BillingDetailsCollectionConfiguration,
+        expressCheckoutElementSettings: CheckoutPlayground.ExpressCheckoutElementSettings,
         currencySelectorAppearance: CurrencySelectorElement.Appearance,
         delayPaymentPagesRequests: Bool,
         closeAction: @escaping () -> Void
@@ -105,10 +93,7 @@ final class CheckoutCartViewController: UIViewController {
         self.defaultShippingAddress = defaultShippingAddress
         self.adaptivePricing = adaptivePricing
         self.integrationType = integrationType
-        self.showExpressCheckoutElement = showExpressCheckoutElement
-        self.applePayDisplay = applePayDisplay
-        self.linkDisplay = linkDisplay
-        self.eceBillingDetailsCollectionConfiguration = eceBillingDetailsCollectionConfiguration
+        self.expressCheckoutElementSettings = expressCheckoutElementSettings
         self.currencySelectorAppearance = currencySelectorAppearance
         self.delayPaymentPagesRequests = delayPaymentPagesRequests
         self.closeAction = closeAction
@@ -223,19 +208,27 @@ final class CheckoutCartViewController: UIViewController {
             if shippingAddressCollection {
                 configuration.shippingAddressElement = .init()
             }
-            var expressCheckoutElementConfig = ExpressCheckoutElement.Configuration()
-            expressCheckoutElementConfig.billingDetailsCollectionConfiguration = eceBillingDetailsCollectionConfiguration
-            configuration.expressCheckoutElement = expressCheckoutElementConfig
+            if expressCheckoutElementSettings.isEnabled {
+                var expressCheckoutElementConfiguration = ExpressCheckoutElement.Configuration()
+                expressCheckoutElementConfiguration.applePayConfiguration = ExpressCheckoutElement.ApplePayConfiguration(
+                    merchantId: "merchant.com.stripe.paymentsheet.example",
+                    display: expressCheckoutElementSettings.applePayDisplay
+                )
+                expressCheckoutElementConfiguration.linkConfiguration = ExpressCheckoutElement.LinkConfiguration(
+                    display: expressCheckoutElementSettings.linkDisplay
+                )
+                expressCheckoutElementConfiguration.shippingAddressRequired = expressCheckoutElementSettings.shippingAddressRequired
+                expressCheckoutElementConfiguration.billingDetailsCollectionConfiguration = expressCheckoutElementSettings.billingDetailsCollectionConfiguration
+                expressCheckoutElementConfiguration.confirmHandler = { [weak self] result in
+                    self?.handleConfirmResult(result)
+                }
+                configuration.expressCheckoutElement = expressCheckoutElementConfiguration
+            }
             if adaptivePricing {
                 var currencySelectorConfiguration = CurrencySelectorElement.Configuration()
                 currencySelectorConfiguration.appearance = currencySelectorAppearance
                 configuration.currencySelectorElement = currencySelectorConfiguration
             }
-            configuration.expressCheckoutElement.applePayConfiguration = ExpressCheckoutElement.ApplePayConfiguration(
-                merchantId: "merchant.com.stripe.paymentsheet.example",
-                display: applePayDisplay
-            )
-            configuration.expressCheckoutElement.linkConfiguration = ExpressCheckoutElement.LinkConfiguration(display: linkDisplay)
             configuration.apiClient = diagnostics.makeAPIClient(
                 paymentPagesRequestDelay: delayPaymentPagesRequests ? 1 : 0
             )
@@ -293,7 +286,7 @@ final class CheckoutCartViewController: UIViewController {
 
         contentStackView.addArrangedSubview(makeLineItemsSection(session: session))
 
-        if showExpressCheckoutElement, let expressCheckoutElement = checkout.getExpressCheckoutElement() {
+        if expressCheckoutElementSettings.isEnabled, let expressCheckoutElement = checkout.getExpressCheckoutElement() {
             contentStackView.addArrangedSubview(
                 makeSection(title: "Express Checkout", content: expressCheckoutElement.uiView)
             )
@@ -863,35 +856,39 @@ final class CheckoutCartViewController: UIViewController {
         guard let checkout else { return }
         Task { @MainActor in
             let result = await checkout.confirm(from: self)
-            let title: String
-            let message: String
-            let dismissOnAcknowledgment: Bool
-            switch result {
-            case .completed(let paymentStatus):
-                title = "Success"
-                message = "Payment status: \(paymentStatus)"
-                dismissOnAcknowledgment = true
-            case .canceled:
-                title = "Canceled"
-                message = "The payment was canceled."
-                dismissOnAcknowledgment = false
-            case .failed(let error):
-                title = "Unable to complete checkout"
-                message = "Localized: \(error.localizedDescription)\n\nDebug: \(String(reflecting: error))"
-                dismissOnAcknowledgment = false
-            }
-            let alertController = UIAlertController(
-                title: title,
-                message: message,
-                preferredStyle: .alert
-            )
-            alertController.addAction(UIAlertAction(title: "OK", style: .default) { [weak self] _ in
-                if dismissOnAcknowledgment {
-                    self?.closeAction()
-                }
-            })
-            present(alertController, animated: true)
+            handleConfirmResult(result)
         }
+    }
+
+    private func handleConfirmResult(_ result: CheckoutController.ConfirmResult) {
+        let title: String
+        let message: String
+        let dismissOnAcknowledgment: Bool
+        switch result {
+        case .completed(let paymentStatus):
+            title = "Success"
+            message = "Payment status: \(paymentStatus)"
+            dismissOnAcknowledgment = true
+        case .canceled:
+            title = "Canceled"
+            message = "The payment was canceled."
+            dismissOnAcknowledgment = false
+        case .failed(let error):
+            title = "Unable to complete checkout"
+            message = "Localized: \(error.localizedDescription)\n\nDebug: \(String(reflecting: error))"
+            dismissOnAcknowledgment = false
+        }
+        let alertController = UIAlertController(
+            title: title,
+            message: message,
+            preferredStyle: .alert
+        )
+        alertController.addAction(UIAlertAction(title: "OK", style: .default) { [weak self] _ in
+            if dismissOnAcknowledgment {
+                self?.closeAction()
+            }
+        })
+        present(alertController, animated: true)
     }
 
     @objc private func taxDetailsButtonTapped() {

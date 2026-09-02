@@ -249,22 +249,21 @@ struct CheckoutPlaygroundFeaturesSection: View {
 }
 
 struct CheckoutPlaygroundExpressCheckoutElementSection: View {
-    @Binding var expressCheckoutElementOption: CheckoutPlayground.ExpressCheckoutElementOption
+    @Binding var showExpressCheckoutElement: Bool
     @Binding var applePayDisplay: ExpressCheckoutElement.ApplePayConfiguration.Display
     @Binding var linkDisplay: ExpressCheckoutElement.LinkConfiguration.Display
+    @Binding var shippingAddressRequired: Bool
     var onCustomizeBillingDetailsCollection: () -> Void
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             CheckoutPlayground.SectionHeader(title: "ExpressCheckoutElement", icon: "bolt.fill")
             VStack(spacing: 1) {
-                CheckoutPlayground.PickerRow(
-                    title: "Show / Hide",
-                    icon: "eye.fill",
-                    selection: $expressCheckoutElementOption,
-                    displayText: { $0.displayName }
+                CheckoutPlayground.ToggleRow(
+                    title: "Show Express Checkout Element",
+                    isOn: $showExpressCheckoutElement
                 )
-                if expressCheckoutElementOption == .show {
+                if showExpressCheckoutElement {
                     CheckoutPlayground.PickerRow(
                         title: "Apple Pay Display",
                         icon: "apple.logo",
@@ -278,6 +277,11 @@ struct CheckoutPlaygroundExpressCheckoutElementSection: View {
                         selection: $linkDisplay,
                         tooltip: "Sets `ExpressCheckoutElement.Configuration.linkConfiguration.display`.",
                         displayText: { $0.rawValue.capitalized }
+                    )
+                    CheckoutPlayground.ToggleRow(
+                        title: "Requires Shipping Address",
+                        isOn: $shippingAddressRequired,
+                        tooltip: "Sets `ExpressCheckoutElement.Configuration.shippingAddressRequired`. When on, wallets like Apple Pay require the customer to provide a shipping address."
                     )
                     Button(action: onCustomizeBillingDetailsCollection) {
                         HStack {
