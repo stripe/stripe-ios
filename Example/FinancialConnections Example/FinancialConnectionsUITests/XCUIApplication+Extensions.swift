@@ -183,7 +183,7 @@ extension XCUIApplication {
         swipeUp(velocity: .verySlow)
     }
 
-    func fc_dismissKeyboard() {
+    func stp_dismissKeyboard() {
         // Try the toolbar Done button first (iOS 18 and earlier)
         let doneButtonByLabel = toolbars.buttons["Done"]
         if doneButtonByLabel.waitForExistence(timeout: 1) {
