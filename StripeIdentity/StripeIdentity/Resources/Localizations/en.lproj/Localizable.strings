@@ -140,9 +140,6 @@
 /* Label for the ID field to collect last 4 of social security number for US ID */
 "Last 4 of Social Security number" = "Last 4 of Social Security number";
 
-/* Status while screen is loading */
-"Loading" = "Loading";
-
 /* Body for selfie warmup page */
 "Make sure you're in a well lit space." = "Make sure you're in a well lit space.";
 

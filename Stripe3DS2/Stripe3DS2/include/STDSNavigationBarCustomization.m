@@ -6,7 +6,7 @@
 //  Copyright © 2019 Stripe. All rights reserved.
 //
 
-#import "STDSLocalizedString.h"
+@import StripeCore;
 #import "STDSNavigationBarCustomization.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -21,8 +21,8 @@ NS_ASSUME_NONNULL_BEGIN
     self = [super init];
     if (self) {
         _barTintColor = nil;
-        _headerText = STDSLocalizedString(@"Secure checkout", @"The title for the challenge response step of an authenticated checkout.");
-        _buttonText = STDSLocalizedString(@"Cancel", "The text for the button that cancels the current challenge process.");
+        _headerText = STPThreeDS2Localization.secureCheckout;
+        _buttonText = STPThreeDS2Localization.cancel;
         _translucent = YES;
     }
     return self;
