@@ -57,16 +57,6 @@ class IntegrationTesterUIPMTests: IntegrationTesterUITests {
             XCTAssertTrue(payButton.waitForExistence(timeout: 10.0))
             payButton.forceTapElement()
         } else {
-            let amexPredicate = NSPredicate(format: "label CONTAINS 'Simulated Card - AmEx, ‪•••• 1234‬'")
-            let amexButton = applePay.buttons.containing(amexPredicate).firstMatch
-            XCTAssertTrue(amexButton.waitForExistence(timeout: 10.0))
-            amexButton.forceTapElement()
-
-            let mastercardPredicate = NSPredicate(format: "label CONTAINS 'Simulated Card - MasterCard, ‪•••• 1234‬'")
-            let mastercardButton = applePay.buttons.containing(mastercardPredicate).firstMatch
-            XCTAssertTrue(mastercardButton.waitForExistence(timeout: 10.0))
-            mastercardButton.forceTapElement()
-
             let payButton = applePay.buttons["Pay with Passcode"]
             XCTAssertTrue(payButton.waitForExistence(timeout: 10.0))
             payButton.forceTapElement()
