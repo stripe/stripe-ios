@@ -103,20 +103,9 @@ final class BiometricConsentViewController: IdentityFlowViewController {
             headerViewModel: .init(
                 backgroundColor: .systemBackground,
                 headerType: {
-                    if let configuration {
-                        guard !configuration.hideBrandingHeader else {
-                            return .plain
-                        }
-                        return .banner(
-                            iconViewModel: .init(
-                                iconType: showsStripeLogo ? .brand : .plain,
-                                iconImage: brandLogo,
-                                iconImageContentMode: .scaleToFill,
-                                useLargeIcon: true
-                            )
-                        )
-                    } else if sheetController?.flowController.visitedIndividualWelcomePage == true {
-                        // If visited individual page, this is a fallback. Don't show icons
+                    if configuration?.hideBrandingHeader == true
+                        || sheetController?.flowController.visitedIndividualWelcomePage == true
+                    {
                         return .plain
                     } else {
                         // Otherwise this is the first screen, show icons
