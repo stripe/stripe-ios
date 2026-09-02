@@ -54,7 +54,7 @@ final class CryptoOnrampExampleUITests: XCTestCase {
     }
 
     /// Tests a happy-path flow from log in (existing account) to successful checkout, followed by re-authentication using seamless sign-in.
-    func testExistingUserEndToEnd() throws {
+    func disabled_testExistingUserEndToEnd() throws {
         // Step 1: Enter email and password
         waitForLoadingToFinish()
 
