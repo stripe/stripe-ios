@@ -46,14 +46,14 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		A1B2C3D4E5F6000CA1B2C3D4 /* StripeFinancialConnectionsLiteTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StripeFinancialConnectionsLiteTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A1B2C3D4E5F60002A1B2C3D4 /* StripeFinancialConnectionsLite.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeFinancialConnectionsLite.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A1B2C3D4E5F60004A1B2C3D4 /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A1B2C3D4E5F60006A1B2C3D4 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/iPhoneOS.platform/Developer/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		A1B2C3D4E5F6000CA1B2C3D4 /* StripeFinancialConnectionsLiteTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StripeFinancialConnectionsLiteTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A1B2C3D4E5F6000DA1B2C3D4 /* Project-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Project-Debug.xcconfig"; sourceTree = "<group>"; };
 		A1B2C3D4E5F6000EA1B2C3D4 /* StripeiOS Tests-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeiOS Tests-Debug.xcconfig"; sourceTree = "<group>"; };
 		A1B2C3D4E5F6000FA1B2C3D4 /* StripeiOS-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeiOS-Debug.xcconfig"; sourceTree = "<group>"; };
 		A1B2C3D4E5F60010A1B2C3D4 /* StripeiOS-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeiOS-Release.xcconfig"; sourceTree = "<group>"; };
-		A1B2C3D4E5F60004A1B2C3D4 /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		A1B2C3D4E5F60006A1B2C3D4 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/iPhoneOS.platform/Developer/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		A1B2C3D4E5F60011A1B2C3D4 /* StripeiOS Tests-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeiOS Tests-Release.xcconfig"; sourceTree = "<group>"; };
 		A1B2C3D4E5F60012A1B2C3D4 /* Project-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Project-Release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -135,16 +135,6 @@
 			);
 			sourceTree = "<group>";
 		};
-		A1B2C3D4E5F6001EA1B2C3D4 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				A1B2C3D4E5F60002A1B2C3D4 /* StripeFinancialConnectionsLite.framework */,
-				A1B2C3D4E5F6000CA1B2C3D4 /* StripeFinancialConnectionsLiteTests.xctest */,
-				A1B2C3D4E5F60004A1B2C3D4 /* StripeCore.framework */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		A1B2C3D4E5F6001DA1B2C3D4 /* Project */ = {
 			isa = PBXGroup;
 			children = (
@@ -153,6 +143,16 @@
 				A1B2C3D4E5F60017A1B2C3D4 /* StripeFinancialConnectionsLiteTests */,
 			);
 			name = Project;
+			sourceTree = "<group>";
+		};
+		A1B2C3D4E5F6001EA1B2C3D4 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A1B2C3D4E5F60002A1B2C3D4 /* StripeFinancialConnectionsLite.framework */,
+				A1B2C3D4E5F6000CA1B2C3D4 /* StripeFinancialConnectionsLiteTests.xctest */,
+				A1B2C3D4E5F60004A1B2C3D4 /* StripeCore.framework */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -239,14 +239,14 @@
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		A1B2C3D4E5F60025A1B2C3D4 /* Resources */ = {
+		A1B2C3D4E5F60022A1B2C3D4 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		A1B2C3D4E5F60022A1B2C3D4 /* Resources */ = {
+		A1B2C3D4E5F60025A1B2C3D4 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -357,11 +357,11 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		A1B2C3D4E5F60027A1B2C3D4 /* Build configuration list for PBXProject "StripeFinancialConnectionsLite" */ = {
+		A1B2C3D4E5F60020A1B2C3D4 /* Build configuration list for PBXNativeTarget "StripeFinancialConnectionsLite" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				A1B2C3D4E5F6002CA1B2C3D4 /* Debug */,
-				A1B2C3D4E5F6002BA1B2C3D4 /* Release */,
+				A1B2C3D4E5F6002AA1B2C3D4 /* Debug */,
+				A1B2C3D4E5F60029A1B2C3D4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -375,11 +375,11 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		A1B2C3D4E5F60020A1B2C3D4 /* Build configuration list for PBXNativeTarget "StripeFinancialConnectionsLite" */ = {
+		A1B2C3D4E5F60027A1B2C3D4 /* Build configuration list for PBXProject "StripeFinancialConnectionsLite" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				A1B2C3D4E5F6002AA1B2C3D4 /* Debug */,
-				A1B2C3D4E5F60029A1B2C3D4 /* Release */,
+				A1B2C3D4E5F6002CA1B2C3D4 /* Debug */,
+				A1B2C3D4E5F6002BA1B2C3D4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

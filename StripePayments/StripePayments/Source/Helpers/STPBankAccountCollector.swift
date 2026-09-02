@@ -201,6 +201,92 @@ public class STPBankAccountCollector: NSObject {
     ///   - clientSecret:      Client secret of the payment intent
     ///   - returnURL:         A URL that redirects back to your app to be used to return after completing authentication in another app (such as bank app or Safari).
     ///   - params:            Parameters for this call
+    ///   - preCollectedConsent: Evidence that the customer already accepted Financial Connections consent text collected by your own UI. When provided, Financial Connections may skip its own consent pane.
+    ///   - viewController:    Presenting view controller that will present the modal
+    ///   - onEvent:           The `onEvent` closure is triggered upon the occurrence of specific events during the process of a user connecting their financial accounts.
+    ///   - completion:        Completion block to be called on completion of the operation.
+    ///                        Upon success, the `STPPaymentIntent` instance will have an
+    ///                        expanded `paymentMethod` containing detailed payment method information
+    public func collectBankAccountForPayment(
+        clientSecret: String,
+        returnURL: String?,
+        params: STPCollectBankAccountParams,
+        preCollectedConsent: FinancialConnectionsPreCollectedConsent?,
+        from viewController: UIViewController,
+        onEvent: ((FinancialConnectionsEvent) -> Void)?,
+        completion: @escaping STPCollectBankAccountForPaymentCompletionBlock
+    ) {
+        let paymentIntentID = STPPaymentIntent.id(fromClientSecret: clientSecret)
+        logCollectBankAccountStarted(type: .payment, intentID: paymentIntentID)
+        // Overwrite completion to send an analytic before calling the caller-supplied completion
+        let completion: (FinancialConnectionsSDKResult?, STPPaymentIntent?, NSError?) -> Void = { result, paymentIntent, error in
+            self.logCollectBankAccountFinished(type: .payment, intentID: paymentIntent?.stripeId, linkAccountSessionID: nil, financialConnectionsSDKResult: result, error: error)
+            completion(paymentIntent, error)
+        }
+        guard let paymentIntentID else {
+            completion(nil, nil, error(for: .invalidClientSecret))
+            return
+        }
+        let financialConnectionsCompletion:
+            (FinancialConnectionsSDKResult?, LinkAccountSession?, NSError?) -> Void = {
+                result,
+                linkAccountSession,
+                error in
+                if let error {
+                    completion(result, nil, error)
+                    return
+                }
+                guard let result else {
+                    completion(result, nil, self.error(for: .unexpectedError, loggingSafeErrorMessage: "collectBankAccountForPayment() completed without a result"))
+                    return
+                }
+                guard let linkAccountSession else {
+                    completion(result, nil, self.error(for: .unexpectedError, loggingSafeErrorMessage: "collectBankAccountForPayment() completed without a link account session"))
+                    return
+                }
+
+                switch result {
+                case .completed:
+                    self.attachLinkAccountSessionToPaymentIntent(
+                        paymentIntentID: paymentIntentID,
+                        clientSecret: clientSecret,
+                        linkAccountSession: linkAccountSession
+                    ) { paymentIntent, error in
+                        completion(result, paymentIntent, error)
+                    }
+                case .cancelled:
+                    self.apiClient.retrievePaymentIntent(withClientSecret: clientSecret) {
+                        intent,
+                        error in
+                        if let intent {
+                            completion(result, intent, nil)
+                        } else if let error {
+                            completion(result, nil, error as NSError)
+                        } else {
+                            completion(result, nil, self.error(for: .unexpectedError, loggingSafeErrorMessage: "Canceled and retrieved PI without an error or intent"))
+                        }
+                    }
+                case .failed(let error):
+                    completion(result, nil, error as NSError)
+                }
+            }
+        _collectBankAccountForPayment(
+            clientSecret: clientSecret,
+            returnURL: returnURL,
+            preCollectedConsent: preCollectedConsent,
+            onEvent: onEvent,
+            params: params,
+            from: viewController,
+            financialConnectionsCompletion: financialConnectionsCompletion
+        )
+    }
+
+    /// Presents a modal from the viewController to collect bank account
+    /// and if completed successfully, link your bank account to a PaymentIntent
+    /// - Parameters:
+    ///   - clientSecret:      Client secret of the payment intent
+    ///   - returnURL:         A URL that redirects back to your app to be used to return after completing authentication in another app (such as bank app or Safari).
+    ///   - params:            Parameters for this call
     ///   - viewController:    Presenting view controller that will present the modal
     ///   - onEvent:           The `onEvent` closure is triggered upon the occurrence of specific events during the process of a user connecting their financial accounts.
     /// - Returns: An `STPPaymentIntent` instance with an expanded `paymentMethod` containing detailed payment method information
@@ -216,6 +302,42 @@ public class STPBankAccountCollector: NSObject {
                 clientSecret: clientSecret,
                 returnURL: returnURL,
                 params: params,
+                from: viewController,
+                onEvent: onEvent
+            ) { result, error in
+                guard let result else {
+                    continuation.resume(throwing: error ?? NSError.stp_genericErrorOccurredError())
+                    return
+                }
+                continuation.resume(returning: result)
+            }
+        }
+    }
+
+    /// Presents a modal from the viewController to collect bank account
+    /// and if completed successfully, link your bank account to a PaymentIntent
+    /// - Parameters:
+    ///   - clientSecret:      Client secret of the payment intent
+    ///   - returnURL:         A URL that redirects back to your app to be used to return after completing authentication in another app (such as bank app or Safari).
+    ///   - params:            Parameters for this call
+    ///   - preCollectedConsent: Evidence that the customer already accepted Financial Connections consent text collected by your own UI. When provided, Financial Connections may skip its own consent pane.
+    ///   - viewController:    Presenting view controller that will present the modal
+    ///   - onEvent:           The `onEvent` closure is triggered upon the occurrence of specific events during the process of a user connecting their financial accounts.
+    /// - Returns: An `STPPaymentIntent` instance with an expanded `paymentMethod` containing detailed payment method information
+    public func collectBankAccountForPayment(
+        clientSecret: String,
+        returnURL: String? = nil,
+        params: STPCollectBankAccountParams,
+        preCollectedConsent: FinancialConnectionsPreCollectedConsent?,
+        from viewController: UIViewController,
+        onEvent: ((FinancialConnectionsEvent) -> Void)? = nil
+    ) async throws -> STPPaymentIntent {
+        return try await withCheckedThrowingContinuation { continuation in
+            collectBankAccountForPayment(
+                clientSecret: clientSecret,
+                returnURL: returnURL,
+                params: params,
+                preCollectedConsent: preCollectedConsent,
                 from: viewController,
                 onEvent: onEvent
             ) { result, error in
@@ -265,6 +387,7 @@ public class STPBankAccountCollector: NSObject {
         returnURL: String?,
         additionalParameters: [String: Any] = [:],
         elementsSessionContext: ElementsSessionContext? = nil,
+        preCollectedConsent: FinancialConnectionsPreCollectedConsent? = nil,
         onEvent: ((FinancialConnectionsEvent) -> Void)?,
         params: STPCollectBankAccountParams,
         from viewController: UIViewController,
@@ -306,6 +429,7 @@ public class STPBankAccountCollector: NSObject {
                 hasRequestedDataPermissions: false,
                 style: self.style.asFinancialConnectionsConfigurationStyle,
                 elementsSessionContext: elementsSessionContext,
+                preCollectedConsent: preCollectedConsent,
                 linkBrand: nil,
                 onEvent: onEvent,
                 from: viewController
@@ -498,6 +622,92 @@ public class STPBankAccountCollector: NSObject {
     ///   - clientSecret:      Client secret of the setup intent
     ///   - returnURL:         A URL that redirects back to your app to be used to return after completing authentication in another app (such as bank app or Safari).
     ///   - params:            Parameters for this call
+    ///   - preCollectedConsent: Evidence that the customer already accepted Financial Connections consent text collected by your own UI. When provided, Financial Connections may skip its own consent pane.
+    ///   - viewController:    Presenting view controller that will present the modal
+    ///   - onEvent:           The `onEvent` closure is triggered upon the occurrence of specific events during the process of a user connecting their financial accounts.
+    ///   - completion:        Completion block to be called on completion of the operation.
+    ///                        Upon success, the `STPSetupIntent` instance will have an
+    ///                        expanded `paymentMethod` containing detailed payment method information
+    public func collectBankAccountForSetup(
+        clientSecret: String,
+        returnURL: String?,
+        params: STPCollectBankAccountParams,
+        preCollectedConsent: FinancialConnectionsPreCollectedConsent?,
+        from viewController: UIViewController,
+        onEvent: ((FinancialConnectionsEvent) -> Void)?,
+        completion: @escaping STPCollectBankAccountForSetupCompletionBlock
+    ) {
+        let setupIntentID = STPSetupIntent.id(fromClientSecret: clientSecret)
+        logCollectBankAccountStarted(type: .setup, intentID: setupIntentID)
+        // Overwrite completion to send an analytic before calling the caller-supplied completion
+        let completion: (FinancialConnectionsSDKResult?, STPSetupIntent?, NSError?) -> Void = { result, setupIntent, error in
+            self.logCollectBankAccountFinished(type: .setup, intentID: setupIntent?.stripeID, linkAccountSessionID: nil, financialConnectionsSDKResult: result, error: error)
+            completion(setupIntent, error)
+        }
+        guard let setupIntentID else {
+            completion(nil, nil, error(for: .invalidClientSecret))
+            return
+        }
+        let financialConnectionsCompletion:
+            (FinancialConnectionsSDKResult?, LinkAccountSession?, NSError?) -> Void = {
+                result,
+                linkAccountSession,
+                error in
+                if let error {
+                    completion(result, nil, error as NSError)
+                    return
+                }
+                guard let result else {
+                    completion(result, nil, self.error(for: .unexpectedError, loggingSafeErrorMessage: "collectBankAccountForSetup() completed without a result"))
+                    return
+                }
+                guard let linkAccountSession else {
+                    completion(result, nil, self.error(for: .unexpectedError, loggingSafeErrorMessage: "collectBankAccountForSetup() completed without a link account session"))
+                    return
+                }
+                switch result {
+                case .completed:
+                    self.attachLinkAccountSessionToSetupIntent(
+                        setupIntentID: setupIntentID,
+                        clientSecret: clientSecret,
+                        linkAccountSession: linkAccountSession
+                    ) { setupIntent, error in
+                        completion(result, setupIntent, error)
+                    }
+                case .cancelled:
+                    self.apiClient.retrieveSetupIntent(withClientSecret: clientSecret) {
+                        intent,
+                        error in
+                        if let intent = intent {
+                            completion(result, intent, nil)
+                        } else if let error {
+                            completion(result, nil, error as NSError)
+                        } else {
+                            completion(result, nil, self.error(for: .unexpectedError, loggingSafeErrorMessage: "Canceled and retrieved SI without an error or intent"))
+                        }
+                    }
+                case .failed(let error):
+                    completion(result, nil, error as NSError)
+                }
+            }
+        _collectBankAccountForSetup(
+            clientSecret: clientSecret,
+            returnURL: returnURL,
+            elementsSessionContext: nil,
+            preCollectedConsent: preCollectedConsent,
+            onEvent: onEvent,
+            params: params,
+            from: viewController,
+            financialConnectionsCompletion: financialConnectionsCompletion
+        )
+    }
+
+    /// Presents a modal from the viewController to collect bank account
+    /// and if completed successfully, link your bank account to a SetupIntent
+    /// - Parameters:
+    ///   - clientSecret:      Client secret of the setup intent
+    ///   - returnURL:         A URL that redirects back to your app to be used to return after completing authentication in another app (such as bank app or Safari).
+    ///   - params:            Parameters for this call
     ///   - viewController:    Presenting view controller that will present the modal
     ///   - onEvent:           The `onEvent` closure is triggered upon the occurrence of specific events during the process of a user connecting their financial accounts.
     /// - Returns: An `STPSetupIntent` instance with an expanded `paymentMethod` containing detailed payment method information
@@ -513,6 +723,42 @@ public class STPBankAccountCollector: NSObject {
                 clientSecret: clientSecret,
                 returnURL: returnURL,
                 params: params,
+                from: viewController,
+                onEvent: onEvent
+            ) { result, error in
+                guard let result else {
+                    continuation.resume(throwing: error ?? NSError.stp_genericErrorOccurredError())
+                    return
+                }
+                continuation.resume(returning: result)
+            }
+        }
+    }
+
+    /// Presents a modal from the viewController to collect bank account
+    /// and if completed successfully, link your bank account to a SetupIntent
+    /// - Parameters:
+    ///   - clientSecret:      Client secret of the setup intent
+    ///   - returnURL:         A URL that redirects back to your app to be used to return after completing authentication in another app (such as bank app or Safari).
+    ///   - params:            Parameters for this call
+    ///   - preCollectedConsent: Evidence that the customer already accepted Financial Connections consent text collected by your own UI. When provided, Financial Connections may skip its own consent pane.
+    ///   - viewController:    Presenting view controller that will present the modal
+    ///   - onEvent:           The `onEvent` closure is triggered upon the occurrence of specific events during the process of a user connecting their financial accounts.
+    /// - Returns: An `STPSetupIntent` instance with an expanded `paymentMethod` containing detailed payment method information
+    public func collectBankAccountForSetup(
+        clientSecret: String,
+        returnURL: String? = nil,
+        params: STPCollectBankAccountParams,
+        preCollectedConsent: FinancialConnectionsPreCollectedConsent?,
+        from viewController: UIViewController,
+        onEvent: ((FinancialConnectionsEvent) -> Void)? = nil
+    ) async throws -> STPSetupIntent {
+        return try await withCheckedThrowingContinuation { continuation in
+            collectBankAccountForSetup(
+                clientSecret: clientSecret,
+                returnURL: returnURL,
+                params: params,
+                preCollectedConsent: preCollectedConsent,
                 from: viewController,
                 onEvent: onEvent
             ) { result, error in
@@ -561,6 +807,7 @@ public class STPBankAccountCollector: NSObject {
         returnURL: String?,
         additionalParameters: [String: Any] = [:],
         elementsSessionContext: ElementsSessionContext?,
+        preCollectedConsent: FinancialConnectionsPreCollectedConsent? = nil,
         onEvent: ((FinancialConnectionsEvent) -> Void)?,
         params: STPCollectBankAccountParams,
         from viewController: UIViewController,
@@ -601,6 +848,7 @@ public class STPBankAccountCollector: NSObject {
                 hasRequestedDataPermissions: false,
                 style: self.style.asFinancialConnectionsConfigurationStyle,
                 elementsSessionContext: elementsSessionContext,
+                preCollectedConsent: preCollectedConsent,
                 linkBrand: nil,
                 onEvent: onEvent,
                 from: viewController
@@ -699,6 +947,7 @@ public class STPBankAccountCollector: NSObject {
                 hasRequestedDataPermissions: false,
                 style: self.style.asFinancialConnectionsConfigurationStyle,
                 elementsSessionContext: elementsSessionContext,
+                preCollectedConsent: nil,
                 linkBrand: nil,
                 onEvent: onEvent,
                 from: viewController
