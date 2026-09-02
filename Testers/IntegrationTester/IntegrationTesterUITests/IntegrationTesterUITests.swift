@@ -121,8 +121,8 @@ class IntegrationTesterUITests: XCTestCase {
 
         let oobChallengeScreenPredicate = NSPredicate(format: "label ==[c] 'OTP'")
         let challengeText = app.staticTexts.matching(oobChallengeScreenPredicate).element
-        XCTAssertTrue(challengeText.waitForExistence(timeout: 10))
-        challengeText.forceTapElement()
+        XCTAssertTrue(challengeText.waitForExistence(timeout: 60))
+        challengeText.forceTapWhenHittableInTestCase(self)
 
         let submitButton = app.buttons["Submit"]
         XCTAssertTrue(submitButton.waitForExistence(timeout: 10.0))
