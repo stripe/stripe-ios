@@ -7,10 +7,10 @@
 
 import Foundation
 
-/// A partner-specific KYC requirement returned for a CryptoCustomer.
-struct AdditionalKYCRequirement: Codable, Equatable {
+/// A partner-specific KYC requirement returned for an authenticated customer.
+struct AdditionalKYCRequirement: Decodable, Equatable {
 
-    /// Localized text describing the information the customer must provide.
+    /// A value describing the information the customer must provide (e.g. `proof_of_address`, `source_of_funds`).
     let description: String
 
     /// The liquidity provider that requested the information.
@@ -39,7 +39,7 @@ struct AdditionalKYCRequirement: Codable, Equatable {
 
     /// Creates an additional KYC requirement.
     /// - Parameters:
-    ///   - description: Localized text describing the information the customer must provide.
+    ///   - description: A value describing the information the customer must provide (e.g. `proof_of_address`, `source_of_funds`).
     ///   - requestedBy: The liquidity provider that requested the information.
     ///   - awaitingActionFrom: The party currently responsible for acting on the requirement.
     ///   - submissionType: The kind of information the customer must submit.
@@ -76,14 +76,4 @@ struct AdditionalKYCRequirement: Codable, Equatable {
         case questionnaire
     }
 
-    init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        description = try container.decode(String.self, forKey: .description)
-        requestedBy = try container.decode(String.self, forKey: .requestedBy)
-        awaitingActionFrom = try container.decode(AdditionalKYCActionParty.self, forKey: .awaitingActionFrom)
-        submissionType = try container.decode(AdditionalKYCSubmissionType.self, forKey: .submissionType)
-        errors = try container.decodeIfPresent([AdditionalKYCRequirementError].self, forKey: .errors) ?? []
-        document = try container.decodeIfPresent(AdditionalKYCDocumentRequirement.self, forKey: .document)
-        questionnaire = try container.decodeIfPresent(AdditionalKYCQuestionnaire.self, forKey: .questionnaire)
-    }
 }

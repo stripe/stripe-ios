@@ -19,7 +19,7 @@ private class ClassForBundle {}
 enum FulfillAdditionalKYCRequirementResponseMock: String, MockData {
     var bundle: Bundle { return Bundle(for: ClassForBundle.self) }
 
-    typealias ResponseType = AdditionalKYCFulfillmentResponse
+    typealias ResponseType = FulfillAdditionalKYCRequirementResponse
 
     case fulfillAdditionalKYCRequirementResponse_200 = "FulfillAdditionalKYCRequirementResponse_200"
 }
@@ -27,7 +27,7 @@ enum FulfillAdditionalKYCRequirementResponseMock: String, MockData {
 enum RetrieveCryptoCustomerResponseMock: String, MockData {
     var bundle: Bundle { return Bundle(for: ClassForBundle.self) }
 
-    typealias ResponseType = CustomerResponse
+    typealias ResponseType = RetrieveCryptoCustomerResponse
 
     case userActionDocument = "RetrieveCryptoCustomerResponse_UserActionDocument_200"
     case partnerReviewDocument = "RetrieveCryptoCustomerResponse_PartnerReviewDocument_200"

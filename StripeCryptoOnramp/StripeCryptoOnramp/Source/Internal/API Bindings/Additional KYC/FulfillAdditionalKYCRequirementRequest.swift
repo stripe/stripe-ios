@@ -16,11 +16,11 @@ struct FulfillAdditionalKYCRequirementRequest: Encodable {
     /// The liquidity provider that requested the additional KYC information.
     let liquidityProvider: String
 
-    /// The requirement's submission type, such as `document` or `questionnaire`.
-    let submissionType: String
+    /// The requirement's submission type.
+    let submissionType: AdditionalKYCSubmissionType
 
     /// Documents uploaded to fulfill the requirement, grouped by document type and subtype.
-    let documents: [AdditionalKYCFulfillmentDocument]?
+    let documents: [FulfillAdditionalKYCRequirementRequestDocument]?
 
     /// Answers collected for the requirement's questionnaire.
     let questionnaire: AdditionalKYCFulfillmentQuestionnaire?

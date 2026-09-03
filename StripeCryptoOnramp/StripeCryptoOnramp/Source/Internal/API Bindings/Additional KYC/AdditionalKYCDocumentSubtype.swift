@@ -8,7 +8,7 @@
 import Foundation
 
 /// A document subtype that can satisfy an additional KYC document requirement.
-struct AdditionalKYCDocumentSubtype: Codable, Equatable {
+struct AdditionalKYCDocumentSubtype: Decodable, Equatable {
 
     /// The API identifier submitted for the document subtype.
     let id: String

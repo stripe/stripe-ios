@@ -8,7 +8,7 @@
 import Foundation
 
 /// A question displayed as part of an additional KYC questionnaire.
-struct AdditionalKYCQuestion: Codable, Equatable {
+struct AdditionalKYCQuestion: Decodable, Equatable {
 
     /// The API identifier used when submitting the answer.
     let id: String
@@ -22,7 +22,7 @@ struct AdditionalKYCQuestion: Codable, Equatable {
     /// Whether the customer must answer the question before submitting.
     let required: Bool
 
-    // MARK: - Codable
+    // MARK: - Decodable
 
     private enum CodingKeys: String, CodingKey {
         case id

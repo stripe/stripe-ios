@@ -7,8 +7,8 @@
 
 import Foundation
 
-/// A collection of partner-specific KYC requirements returned for a CryptoCustomer.
-struct AdditionalKYCRequirements: Codable, Equatable {
+/// A collection of partner-specific KYC requirements returned for an authenticated customer.
+struct AdditionalKYCRequirements: Decodable, Equatable {
 
     /// The individual requirements associated with the customer.
     let entries: [AdditionalKYCRequirement]

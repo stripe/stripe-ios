@@ -8,7 +8,7 @@
 import Foundation
 
 /// Information that must be collected in addition to the primary KYC submission.
-struct AdditionalKYCAdditionalRequirements: Codable, Equatable {
+struct AdditionalKYCAdditionalRequirements: Decodable, Equatable {
 
     /// A questionnaire that must be completed with the primary submission.
     let questionnaire: AdditionalKYCQuestionnaire?

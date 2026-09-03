@@ -8,7 +8,7 @@
 import Foundation
 
 /// The API-provided configuration for collecting documents for an additional KYC requirement.
-struct AdditionalKYCDocumentRequirement: Codable, Equatable {
+struct AdditionalKYCDocumentRequirement: Decodable, Equatable {
 
     /// The document subtypes that the customer may provide.
     let acceptedSubtypes: [AdditionalKYCDocumentSubtype]
@@ -56,12 +56,4 @@ struct AdditionalKYCDocumentRequirement: Codable, Equatable {
         case additionalRequirements = "additional_requirements"
     }
 
-    init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        acceptedSubtypes = try container.decodeIfPresent([AdditionalKYCDocumentSubtype].self, forKey: .acceptedSubtypes) ?? []
-        acceptedFormats = try container.decodeIfPresent([String].self, forKey: .acceptedFormats) ?? []
-        minDocuments = try container.decodeIfPresent(Int.self, forKey: .minDocuments) ?? 1
-        instructions = try container.decodeIfPresent([String].self, forKey: .instructions) ?? []
-        additionalRequirements = try container.decodeIfPresent(AdditionalKYCAdditionalRequirements.self, forKey: .additionalRequirements)
-    }
 }
