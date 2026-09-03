@@ -10,8 +10,25 @@ import Foundation
 /// The API-provided configuration for collecting documents for an additional KYC requirement.
 struct AdditionalKYCDocumentRequirement: Decodable, Equatable {
 
+    /// A document subtype that can satisfy an additional KYC document requirement.
+    struct DocumentSubtype: Decodable, Equatable {
+
+        /// The API identifier submitted for the document subtype.
+        let id: String
+
+        /// The localized name displayed for the document subtype.
+        let label: String
+    }
+
+    /// Information that must be collected in addition to the primary KYC submission.
+    struct AdditionalRequirements: Decodable, Equatable {
+
+        /// A questionnaire that must be completed with the primary submission.
+        let questionnaire: AdditionalKYCQuestionnaire?
+    }
+
     /// The document subtypes that the customer may provide.
-    let acceptedSubtypes: [AdditionalKYCDocumentSubtype]
+    let acceptedSubtypes: [DocumentSubtype]
 
     /// The file extensions accepted for uploaded documents.
     let acceptedFormats: [String]
@@ -23,7 +40,7 @@ struct AdditionalKYCDocumentRequirement: Decodable, Equatable {
     let instructions: [String]
 
     /// Additional information that must be collected with the documents.
-    let additionalRequirements: AdditionalKYCAdditionalRequirements?
+    let additionalRequirements: AdditionalRequirements?
 
     /// Creates a document requirement configuration.
     /// - Parameters:
@@ -33,11 +50,11 @@ struct AdditionalKYCDocumentRequirement: Decodable, Equatable {
     ///   - instructions: Localized instructions to display while collecting documents.
     ///   - additionalRequirements: Additional information that must be collected with the documents.
     init(
-        acceptedSubtypes: [AdditionalKYCDocumentSubtype],
+        acceptedSubtypes: [DocumentSubtype],
         acceptedFormats: [String],
         minDocuments: Int,
         instructions: [String],
-        additionalRequirements: AdditionalKYCAdditionalRequirements? = nil
+        additionalRequirements: AdditionalRequirements? = nil
     ) {
         self.acceptedSubtypes = acceptedSubtypes
         self.acceptedFormats = acceptedFormats
@@ -55,5 +72,4 @@ struct AdditionalKYCDocumentRequirement: Decodable, Equatable {
         case instructions
         case additionalRequirements = "additional_requirements"
     }
-
 }
