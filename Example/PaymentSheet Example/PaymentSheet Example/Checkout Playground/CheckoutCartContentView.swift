@@ -216,14 +216,13 @@ struct CheckoutCartContentView: View {
 
     @ViewBuilder
     private var expressCheckoutSection: some View {
-        if showExpressCheckoutElement,
-           let expressCheckoutElement = checkout.getExpressCheckoutElement() {
+        if showExpressCheckoutElement {
             VStack(alignment: .leading, spacing: 16) {
                 Text("Express Checkout")
                     .font(.title2).bold()
                     .padding(.horizontal)
 
-                expressCheckoutElement.view
+                checkout.getExpressCheckoutElement().view
                     .padding(.horizontal)
             }
         }

@@ -51,8 +51,11 @@ extension CheckoutController {
         /// The default value is `nil`.
         public var paymentElement: PaymentElement.Configuration?
 
-        /// Configuration for ExpressCheckoutElement.
-        public var expressCheckoutElement: ExpressCheckoutElement.Configuration = .init()
+        /// Configuration for Express Checkout Element.
+        ///
+        /// Set this property to use Express Checkout Element with this CheckoutController.
+        /// The default value is `nil`.
+        public var expressCheckoutElement: ExpressCheckoutElement.Configuration?
 
         /// Configuration for Currency Selector Element.
         ///
