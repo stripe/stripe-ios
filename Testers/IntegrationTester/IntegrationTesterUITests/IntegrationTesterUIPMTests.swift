@@ -151,8 +151,12 @@ class IntegrationTesterUIPMTests: IntegrationTesterUITests {
         rowForPaymentMethod.scrollToAndTap(in: app)
 
         let buyButton = app.buttons["Buy"]
-        XCTAssertTrue(buyButton.waitForExistence(timeout: 10.0))
-        buyButton.forceTapElement()
+        // A tap during list deceleration can highlight the row without navigating.
+        if !buyButton.waitForExistence(timeout: 10.0), rowForPaymentMethod.exists {
+            rowForPaymentMethod.forceTapElement()
+        }
+        XCTAssertTrue(buyButton.waitForExistence(timeout: 60.0))
+        buyButton.forceTapWhenHittableInTestCase(self)
 
         // Klarna uses ASWebAuthenticationSession, tap continue to allow the web view to open.
         // Confirming the PaymentIntent requires a network round-trip to fetch the redirect URL
@@ -160,7 +164,7 @@ class IntegrationTesterUIPMTests: IntegrationTesterUITests {
         // ahead before the "Continue" button appears.
         let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
         XCTAssertTrue(
-            springboard.buttons["Continue"].waitForExistenceAndTap(timeout: 30),
+            springboard.buttons["Continue"].waitForExistenceAndTap(timeout: 60),
             "ASWebAuthenticationSession consent (\"Continue\") button never appeared"
         )
 
