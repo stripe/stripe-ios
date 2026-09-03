@@ -31,7 +31,8 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
             redactedPhoneNumber: nil,
             isRegistered: true,
             sessionState: .verified,
-            consumerSessionClientSecret: requestSecret
+            consumerSessionClientSecret: requestSecret,
+            linkSessionKey: nil
         )
 
         // /v1/crypto/internal/kyc_data_collection
@@ -173,6 +174,7 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         let isRegistered: Bool
         var sessionState: StripePaymentSheet.PaymentSheetLinkAccount.SessionState
         var consumerSessionClientSecret: String?
+        let linkSessionKey: String?
     }
 
     private let jsonEncoder: JSONEncoder = {
