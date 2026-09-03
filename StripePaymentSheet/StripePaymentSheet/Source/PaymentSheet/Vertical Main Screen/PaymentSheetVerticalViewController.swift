@@ -114,7 +114,10 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     var defaultPaymentMethod: STPPaymentMethod?
 
     private lazy var savedPaymentMethodManager: SavedPaymentMethodManager = {
-        SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession, intent: intent)
+        SavedPaymentMethodManager(
+            configuration: configuration,
+            elementsSession: elementsSession
+        )
     }()
 
     // MARK: - UI properties
@@ -202,7 +205,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 
     private var customerDefaultIsLink: Bool {
         CustomerPaymentOption.selectedPaymentMethod(
-            for: configuration.customer?.id,
+            for: configuration.customerProvider.customerID,
             elementsSession: elementsSession,
             surface: .paymentSheet
         ) == .link
@@ -417,7 +420,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             }
         }
 
-        let customerDefault = CustomerPaymentOption.selectedPaymentMethod(for: configuration.customer?.id, elementsSession: elementsSession, surface: .paymentSheet)
+        let customerDefault = CustomerPaymentOption.selectedPaymentMethod(for: configuration.customerProvider.customerID, elementsSession: elementsSession, surface: .paymentSheet)
 
         if let customerDefault, willDisplay(customerDefault: customerDefault) {
             switch customerDefault {
@@ -435,7 +438,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         // If WalletButtonsView is in use, only default to Apple Pay if it's the saved PM.
         if shouldShowApplePayInList {
             if configuration.willUseWalletButtonsView {
-                if CustomerPaymentOption.localDefaultPaymentMethod(for: configuration.customer?.id) == .applePay {
+                if CustomerPaymentOption.localDefaultPaymentMethod(for: configuration.customerProvider.customerID) == .applePay {
                     return .applePay
                 }
             } else {
@@ -466,7 +469,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         // If Apple Pay or Link is selected, but wallet buttons should be shown externally, then unselect any default option. The only exception is if Apple Pay was previously saved as the user's default PM -- in that case, it *is* a valid initialSelection.
         if (configuration.willUseWalletButtonsView || walletButtonsShownExternally) && previousPaymentOption == nil &&
             (
-                (initialSelection == .applePay && configuration.walletButtonsVisibility.paymentElement[.applePay] != .always && !(CustomerPaymentOption.localDefaultPaymentMethod(for: configuration.customer?.id) == .applePay)) ||
+                (initialSelection == .applePay && configuration.walletButtonsVisibility.paymentElement[.applePay] != .always && !(CustomerPaymentOption.localDefaultPaymentMethod(for: configuration.customerProvider.customerID) == .applePay)) ||
                 initialSelection == .link && configuration.walletButtonsVisibility.paymentElement[.link] != .always) {
             initialSelection = nil
         }
@@ -475,8 +478,8 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             isFirstCardCoBranded: savedPaymentMethods.first?.isCoBrandedCard ?? false,
             isCBCEligible: loadResult.elementsSession.isCardBrandChoiceEligible,
             allowsRemovalOfLastSavedPaymentMethod: loadResult.elementsSession.paymentMethodRemoveLast(configuration: configuration),
-            allowsPaymentMethodRemoval: loadResult.intent.allowsPaymentMethodRemoval(elementsSession: loadResult.elementsSession),
-            allowsPaymentMethodUpdate: loadResult.intent.allowsPaymentMethodUpdate(elementsSession: loadResult.elementsSession)
+            allowsPaymentMethodRemoval: configuration.customerProvider.allowsPaymentMethodRemoval(elementsSession: loadResult.elementsSession),
+            allowsPaymentMethodUpdate: configuration.customerProvider.allowsPaymentMethodUpdate(elementsSession: loadResult.elementsSession)
         )
         return VerticalPaymentMethodListViewController(
             initialSelection: initialSelection,
@@ -848,8 +851,8 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                                                                                billingDetailsCollectionConfiguration: configuration.billingDetailsCollectionConfiguration,
                                                                                hostedSurface: .paymentSheet,
                                                                                cardBrandFilter: configuration.cardBrandFilter,
-                                                                               canRemove: elementsSession.paymentMethodRemoveLast(configuration: configuration) && intent.allowsPaymentMethodRemoval(elementsSession: elementsSession),
-                                                                               canUpdate: intent.allowsPaymentMethodUpdate(elementsSession: elementsSession),
+                                                                               canRemove: elementsSession.paymentMethodRemoveLast(configuration: configuration) && configuration.customerProvider.allowsPaymentMethodRemoval(elementsSession: elementsSession),
+                                                                               canUpdate: configuration.customerProvider.allowsPaymentMethodUpdate(elementsSession: elementsSession),
                                                                                isCBCEligible: paymentMethod.isCoBrandedCard && elementsSession.isCardBrandChoiceEligible,
                                                                                allowsSetAsDefaultPM: elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
                                                                                isDefault: paymentMethod == defaultPaymentMethod)
@@ -950,11 +953,11 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
 #endif
         switch selection {
         case .applePay:
-            CustomerPaymentOption.setDefaultPaymentMethod(.applePay, forCustomer: configuration.customer?.id)
+            CustomerPaymentOption.setDefaultPaymentMethod(.applePay, forCustomer: configuration.customerProvider.customerID)
         case .link:
-            CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: configuration.customer?.id)
+            CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: configuration.customerProvider.customerID)
         case .saved(let paymentMethod):
-            CustomerPaymentOption.setDefaultPaymentMethod(.stripeId(paymentMethod.stripeId), forCustomer: configuration.customer?.id)
+            CustomerPaymentOption.setDefaultPaymentMethod(.stripeId(paymentMethod.stripeId), forCustomer: configuration.customerProvider.customerID)
         case let .new(paymentMethodType: paymentMethodType):
             let pmFormVC = makeFormVC(paymentMethodType: paymentMethodType)
             if pmFormVC.form.collectsUserInput || paymentMethodType.isBankPayment {

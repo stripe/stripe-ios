@@ -107,7 +107,10 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
     }
 
     private lazy var savedPaymentMethodManager: SavedPaymentMethodManager = {
-        return SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession, intent: intent)
+        return SavedPaymentMethodManager(
+            configuration: configuration,
+            elementsSession: elementsSession
+        )
     }()
 
     // MARK: - Views
@@ -212,7 +215,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         self.savedPaymentOptionsViewController = SavedPaymentOptionsViewController(
             savedPaymentMethods: loadResult.savedPaymentMethods,
             configuration: .init(
-                customerID: configuration.customer?.id,
+                customerID: configuration.customerProvider.customerID,
                 showApplePay: isApplePayEnabled,
                 showLink: isLinkEnabled,
                 linkBrand: configuration.resolvedLinkBrand(elementsSession: elementsSession, linkAccount: LinkAccountContext.shared.account),
@@ -221,9 +224,9 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
                 isCVCRecollectionEnabled: false,
                 isTestMode: configuration.apiClient.isTestmode,
                 allowsRemovalOfLastSavedPaymentMethod: elementsSession.paymentMethodRemoveLast(configuration: configuration),
-                allowsRemovalOfPaymentMethods: intent.allowsPaymentMethodRemoval(elementsSession: elementsSession),
+                allowsRemovalOfPaymentMethods: configuration.customerProvider.allowsPaymentMethodRemoval(elementsSession: elementsSession),
                 allowsSetAsDefaultPM: elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
-                allowsUpdatePaymentMethod: intent.allowsPaymentMethodUpdate(elementsSession: elementsSession)
+                allowsUpdatePaymentMethod: configuration.customerProvider.allowsPaymentMethodUpdate(elementsSession: elementsSession)
             ),
             paymentSheetConfiguration: configuration,
             intent: intent,
@@ -283,11 +286,11 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
     }
 
     private static func customerDefaultIsLink(
-        configuration: PaymentSheet.Configuration,
+        configuration: PaymentElementConfiguration,
         elementsSession: STPElementsSession
     ) -> Bool {
         return CustomerPaymentOption.selectedPaymentMethod(
-            for: configuration.customer?.id,
+            for: configuration.customerProvider.customerID,
             elementsSession: elementsSession,
             surface: .paymentSheet
         ) == .link

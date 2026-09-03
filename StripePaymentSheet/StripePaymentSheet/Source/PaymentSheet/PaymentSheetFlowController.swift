@@ -351,6 +351,8 @@ extension PaymentSheet {
             confirmationChallenge: ConfirmationChallenge? = nil,
             analyticsHelper: PaymentSheetAnalyticsHelper
         ) {
+            var configuration = configuration
+            configuration.customerProvider = loadResult.customerProvider
             self.configuration = configuration
             self.analyticsHelper = analyticsHelper
             self.analyticsHelper.logInitialized()
@@ -537,7 +539,7 @@ extension PaymentSheet {
             // Capture the accepted selection before presenting payment options.
             selectionSnapshotBeforePresentation = FlowControllerSelectionSnapshot(
                 viewController: viewController,
-                customerID: configuration.customer?.id
+                customerID: configuration.customerProvider.customerID
             )
 
             // Overwrite completion closure to retain self until called
@@ -758,7 +760,10 @@ extension PaymentSheet {
                         )
                         if case .completed = result, case .link = paymentOption {
                             // Remember Link as default payment method for users who just created an account.
-                            CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: self.configuration.customer?.id)
+                            CustomerPaymentOption.setDefaultPaymentMethod(
+                                .link,
+                                forCustomer: self.configuration.customerProvider.customerID
+                            )
                         }
 
                         completion(result)
@@ -857,6 +862,7 @@ extension PaymentSheet {
                 switch result {
                 case .success(let (loadResult, confirmationChallenge)):
                     // 2. Re-initialize PaymentSheetFlowControllerViewController to update the UI to match the newly loaded data e.g. payment method types may have changed.
+                    self.configuration.customerProvider = loadResult.customerProvider
 
                     self.viewController = Self.makeViewController(
                         configuration: self.configuration,

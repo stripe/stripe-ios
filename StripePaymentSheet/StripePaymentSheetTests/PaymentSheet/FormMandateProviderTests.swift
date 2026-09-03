@@ -29,7 +29,15 @@ class FormMandateProviderTests: XCTestCase {
             confirmHandler: { _, _ in return "" }
         )
         let intent = Intent.deferredIntent(intentConfig: intentConfig)
-        let formMandateProvider = VerticalListMandateProvider(configuration: embeddedConfiguration, elementsSession: elementsSession, intent: intent, analyticsHelper: ._testValue())
+        let formMandateProvider = VerticalListMandateProvider(
+            configuration: embeddedConfiguration,
+            elementsSession: elementsSession,
+            intent: intent,
+            analyticsHelper: ._testValue(),
+            shouldShowForm: {
+                EmbeddedPaymentElement.shouldShowForm($0, configuration: embeddedConfiguration)
+            }
+        )
 
         let result = formMandateProvider.mandate(for: .stripe(.card), savedPaymentMethod: nil, bottomNoticeAttributedString: nil)
         XCTAssertNil(result)
