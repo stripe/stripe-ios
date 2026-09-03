@@ -33,7 +33,6 @@ struct CheckoutCartPaymentMethodSection: View {
                             .font(.subheadline.weight(.medium))
                     }
                     .disabled(checkout.isUpdating)
-                    .accessibilityLabel("Clear payment method selection")
                 }
             }
             .padding(.horizontal)
@@ -61,7 +60,7 @@ struct CheckoutCartPaymentMethodSection: View {
                 CheckoutEmbeddedScreen(paymentElement: checkout.getPaymentElement())
             }
             .alert(
-                "Unable to clear payment method",
+                "Unable to clear payment option",
                 isPresented: Binding(
                     get: { clearPaymentOptionErrorMessage != nil },
                     set: { if !$0 { clearPaymentOptionErrorMessage = nil } }

@@ -625,7 +625,6 @@ final class CheckoutCartViewController: UIViewController {
         button.setTitleColor(.systemRed, for: .normal)
         button.titleLabel?.font = .preferredFont(forTextStyle: .subheadline)
         button.addTarget(self, action: #selector(clearPaymentOptionButtonTapped), for: .touchUpInside)
-        button.accessibilityLabel = "Clear payment method selection"
         return button
     }
 
@@ -878,8 +877,8 @@ final class CheckoutCartViewController: UIViewController {
                 try await checkout.clearPaymentOption()
             } catch {
                 errorMessage = error.localizedDescription
+                renderCheckout()
             }
-            renderCheckout()
         }
     }
 
