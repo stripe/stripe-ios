@@ -297,7 +297,8 @@ final class CheckoutCartViewController: UIViewController {
             contentStackView.addArrangedSubview(
                 makeSection(
                     title: "Payment Method",
-                    content: makeCard(containing: makePaymentMethodRow(session: session))
+                    content: makeCard(containing: makePaymentMethodRow(session: session)),
+                    accessory: session.paymentOption == nil ? nil : makeClearPaymentOptionButton()
                 )
             )
         }
@@ -616,6 +617,18 @@ final class CheckoutCartViewController: UIViewController {
         return rowView
     }
 
+    private func makeClearPaymentOptionButton() -> UIButton {
+        let button = UIButton(type: .system)
+        button.setImage(UIImage(systemName: "xmark.circle"), for: .normal)
+        button.setTitle(" Clear", for: .normal)
+        button.setTitleColor(.systemRed, for: .normal)
+        button.tintColor = .systemRed
+        button.titleLabel?.font = .preferredFont(forTextStyle: .subheadline)
+        button.addTarget(self, action: #selector(clearPaymentOptionButtonTapped), for: .touchUpInside)
+        button.accessibilityLabel = "Clear payment method selection"
+        return button
+    }
+
     private func makeCheckoutButton(
         checkout: CheckoutController,
         session: CheckoutController.Session
@@ -662,13 +675,20 @@ final class CheckoutCartViewController: UIViewController {
         return button
     }
 
-    private func makeSection(title: String, content: UIView) -> UIView {
+    private func makeSection(title: String, content: UIView, accessory: UIView? = nil) -> UIView {
         let titleLabel = UILabel()
         titleLabel.text = title
         titleLabel.font = .preferredFont(forTextStyle: .title2)
         titleLabel.adjustsFontForContentSizeCategory = true
 
-        let stackView = UIStackView(arrangedSubviews: [titleLabel, content])
+        let headerStackView = UIStackView(arrangedSubviews: [titleLabel])
+        headerStackView.alignment = .center
+        if let accessory {
+            accessory.setContentHuggingPriority(.required, for: .horizontal)
+            headerStackView.addArrangedSubview(accessory)
+        }
+
+        let stackView = UIStackView(arrangedSubviews: [headerStackView, content])
         stackView.axis = .vertical
         stackView.spacing = 16
         return stackView
@@ -846,6 +866,20 @@ final class CheckoutCartViewController: UIViewController {
             present(UINavigationController(rootViewController: viewController), animated: true)
         case .eceOnly:
             break
+        }
+    }
+
+    @objc private func clearPaymentOptionButtonTapped() {
+        guard let checkout else { return }
+
+        Task {
+            errorMessage = nil
+            do {
+                try await checkout.clearPaymentOption()
+            } catch {
+                errorMessage = error.localizedDescription
+            }
+            renderCheckout()
         }
     }
 
