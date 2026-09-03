@@ -12,19 +12,37 @@ import UIKit
 extension StripeUICore.Button {
     static func primary(appearance: FinancialConnectionsAppearance) -> StripeUICore.Button {
         let button = Button(configuration: .financialConnectionsPrimary(appearance: appearance))
-        button.layer.shadowColor = FinancialConnectionsAppearance.Colors.shadow.cgColor
-        button.layer.shadowRadius = 5 / UIScreen.main.nativeScale
-        button.layer.shadowOpacity = 0.25
-        button.layer.shadowOffset = CGSize(
-            width: 0,
-            height: 2 / UIScreen.main.nativeScale
-        )
+        if appearance.colors == .link {
+            button.layer.shadowColor = UIColor(red: 48 / 255, green: 49 / 255, blue: 61 / 255, alpha: 1).cgColor
+            button.layer.shadowRadius = 2.5
+            button.layer.shadowOpacity = 0.12
+            button.layer.shadowOffset = CGSize(width: 0, height: 2)
+            // Figma: linear-gradient(180deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0) 100%)
+            // overlaid on the primary button color (#171717).
+            let gradientOverlay = LinkPrimaryButtonGradientView(cornerRadius: appearance.buttonHeight / 2)
+            gradientOverlay.translatesAutoresizingMaskIntoConstraints = false
+            button.insertSubview(gradientOverlay, at: 0)
+            NSLayoutConstraint.activate([
+                gradientOverlay.topAnchor.constraint(equalTo: button.topAnchor),
+                gradientOverlay.leadingAnchor.constraint(equalTo: button.leadingAnchor),
+                gradientOverlay.trailingAnchor.constraint(equalTo: button.trailingAnchor),
+                gradientOverlay.bottomAnchor.constraint(equalTo: button.bottomAnchor),
+            ])
+        } else {
+            button.layer.shadowColor = FinancialConnectionsAppearance.Colors.shadow.cgColor
+            button.layer.shadowRadius = 5 / UIScreen.main.nativeScale
+            button.layer.shadowOpacity = 0.25
+            button.layer.shadowOffset = CGSize(width: 0, height: 2 / UIScreen.main.nativeScale)
+        }
         ButtonFeedbackGeneratorHandler.attach(toButton: button)
         return button
     }
 
-    static func secondary() -> StripeUICore.Button {
-        let button = Button(configuration: .financialConnectionsSecondary)
+    static func secondary(appearance: FinancialConnectionsAppearance) -> StripeUICore.Button {
+        let button = Button(configuration: .financialConnectionsSecondary(appearance: appearance))
+        if appearance.colors == .link {
+            LinkSecondaryButtonPressHandler.attach(to: button)
+        }
         ButtonFeedbackGeneratorHandler.attach(toButton: button)
         return button
     }
@@ -35,7 +53,7 @@ extension StripeUICore.Button.Configuration {
     fileprivate static func financialConnectionsPrimary(appearance: FinancialConnectionsAppearance) -> StripeUICore.Button.Configuration {
         var primaryButtonConfiguration = Button.Configuration.primary()
         primaryButtonConfiguration.font = FinancialConnectionsFont.label(.largeEmphasized).uiFont
-        primaryButtonConfiguration.cornerRadius = 12.0
+        primaryButtonConfiguration.cornerRadius = appearance.colors == .link ? appearance.buttonHeight / 2 : 12
         // default
         primaryButtonConfiguration.backgroundColor = appearance.colors.primary
         primaryButtonConfiguration.foregroundColor = appearance.colors.primaryAccent
@@ -48,18 +66,24 @@ extension StripeUICore.Button.Configuration {
         return primaryButtonConfiguration
     }
 
-    fileprivate static var financialConnectionsSecondary: StripeUICore.Button.Configuration {
+    fileprivate static func financialConnectionsSecondary(appearance: FinancialConnectionsAppearance) -> StripeUICore.Button.Configuration {
         var secondaryButtonConfiguration = Button.Configuration.secondary()
         secondaryButtonConfiguration.font = FinancialConnectionsFont.label(.largeEmphasized).uiFont
         secondaryButtonConfiguration.cornerRadius = 12.0
         // default
         secondaryButtonConfiguration.foregroundColor = FinancialConnectionsAppearance.Colors.textDefault
-        secondaryButtonConfiguration.backgroundColor = FinancialConnectionsAppearance.Colors.backgroundSecondary
+        if appearance.colors == .link {
+            secondaryButtonConfiguration.backgroundColor = .clear
+            secondaryButtonConfiguration.disabledBackgroundColor = .clear
+            secondaryButtonConfiguration.colorTransforms.highlightedBackground = nil
+        } else {
+            secondaryButtonConfiguration.backgroundColor = FinancialConnectionsAppearance.Colors.backgroundSecondary
+            secondaryButtonConfiguration.disabledBackgroundColor = FinancialConnectionsAppearance.Colors.backgroundSecondary
+            secondaryButtonConfiguration.colorTransforms.highlightedBackground = .darken(amount: 0.04)
+        }
         // disabled
         secondaryButtonConfiguration.disabledForegroundColor = FinancialConnectionsAppearance.Colors.textDefault.withAlphaComponent(0.4)
-        secondaryButtonConfiguration.disabledBackgroundColor = FinancialConnectionsAppearance.Colors.backgroundSecondary
         // pressed
-        secondaryButtonConfiguration.colorTransforms.highlightedBackground = .darken(amount: 0.04)  // this tries to simulate `neutral100`
         secondaryButtonConfiguration.colorTransforms.highlightedForeground = nil
         return secondaryButtonConfiguration
     }
@@ -93,6 +117,80 @@ private final class ButtonFeedbackGeneratorHandler: NSObject {
     }
 }
 
+private final class LinkSecondaryButtonPressHandler: NSObject {
+    private enum Constants {
+        static let pressedScale: CGFloat = 0.97
+        static let pressDuration: TimeInterval = 0.1
+        static let releaseDuration: TimeInterval = 0.2
+    }
+
+    private weak var button: UIControl?
+
+    private init(button: UIControl) {
+        self.button = button
+    }
+
+    @objc private func didPress() {
+        animate(
+            to: CGAffineTransform(scaleX: Constants.pressedScale, y: Constants.pressedScale),
+            duration: Constants.pressDuration
+        )
+    }
+
+    @objc private func didRelease() {
+        animate(to: .identity, duration: Constants.releaseDuration)
+    }
+
+    private func animate(to transform: CGAffineTransform, duration: TimeInterval) {
+        UIView.animate(
+            withDuration: UIAccessibility.isReduceMotionEnabled ? 0 : duration,
+            delay: 0,
+            options: [.allowUserInteraction, .beginFromCurrentState, .curveEaseOut]
+        ) { [weak button] in
+            button?.transform = transform
+        }
+    }
+
+    private static var associatedObjectKey: UInt8 = 0
+    static func attach(to button: UIControl) {
+        let handler = LinkSecondaryButtonPressHandler(button: button)
+        objc_setAssociatedObject(
+            button,
+            &associatedObjectKey,
+            handler,
+            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+        )
+        button.addTarget(handler, action: #selector(didPress), for: [.touchDown, .touchDragEnter])
+        button.addTarget(
+            handler,
+            action: #selector(didRelease),
+            for: [.touchUpInside, .touchUpOutside, .touchCancel, .touchDragExit]
+        )
+    }
+}
+
+// Renders the Figma gradient sheen (rgba(255,255,255,0.08)→0) over the Link primary button.
+// Inserted as subview at index 0 so it sits above the button background but below the title.
+private final class LinkPrimaryButtonGradientView: UIView {
+    override class var layerClass: AnyClass { CAGradientLayer.self }  // swiftlint:disable:this static_over_final_class
+
+    init(cornerRadius: CGFloat) {
+        super.init(frame: .zero)
+        guard let gradientLayer = layer as? CAGradientLayer else { return }
+        gradientLayer.colors = [
+            UIColor(white: 1, alpha: 0.08).cgColor,
+            UIColor(white: 1, alpha: 0).cgColor,
+        ]
+        gradientLayer.startPoint = CGPoint(x: 0.5, y: 0)
+        gradientLayer.endPoint = CGPoint(x: 0.5, y: 1)
+        layer.cornerRadius = cornerRadius
+        layer.masksToBounds = true
+        isUserInteractionEnabled = false
+    }
+
+    required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
+}
+
 #if DEBUG
 
 import SwiftUI
@@ -113,11 +211,12 @@ private struct PrimaryButtonViewRepresentable: UIViewRepresentable {
 }
 
 private struct SecondaryButtonViewRepresentable: UIViewRepresentable {
+    let appearance: FinancialConnectionsAppearance
     let enabled: Bool
 
     func makeUIView(context: Context) -> StripeUICore.Button {
-        let button = StripeUICore.Button.secondary()
-        button.title = "secondary | \(enabled ? "enabled" : "disabled")"
+        let button = StripeUICore.Button.secondary(appearance: appearance)
+        button.title = "secondary | \(appearance == .stripe ? "stripe" : "link") | \(enabled ? "enabled" : "disabled")"
         return button
     }
 
@@ -141,11 +240,17 @@ struct ButtonViewRepresentable_Previews: PreviewProvider {
             PrimaryButtonViewRepresentable(appearance: .link, enabled: false)
                 .frame(height: 64)
                 .padding()
-            SecondaryButtonViewRepresentable(enabled: true)
+            SecondaryButtonViewRepresentable(appearance: .stripe, enabled: true)
                 .frame(height: 64)
                 .padding()
-            SecondaryButtonViewRepresentable(enabled: false)
+            SecondaryButtonViewRepresentable(appearance: .stripe, enabled: false)
                 .frame(height: 64)
+                .padding()
+            SecondaryButtonViewRepresentable(appearance: .link, enabled: true)
+                .frame(height: 44)
+                .padding()
+            SecondaryButtonViewRepresentable(appearance: .link, enabled: false)
+                .frame(height: 44)
                 .padding()
         }
     }

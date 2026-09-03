@@ -127,17 +127,23 @@ extension FinancialConnectionsNavigationController: UINavigationBarDelegate {
 extension FinancialConnectionsNavigationController {
 
     func configureAppearanceForNative() {
+        // UIKit can expose the navigation controller's view above the navigation bar
+        // during push transitions when presented as a sheet on physical devices.
+        // Keep it opaque so the presentation controller's dimming view does not show through.
+        view.backgroundColor = FinancialConnectionsAppearance.Colors.background
+
         let backButtonImage = Image
             .back_arrow
             .makeImage(template: false)
             .applyFinancialConnectionsBackButtonEdgeInsets()
-        let appearance = UINavigationBarAppearance()
-        appearance.setBackIndicatorImage(backButtonImage, transitionMaskImage: backButtonImage)
-        appearance.backgroundColor = FinancialConnectionsAppearance.Colors.background
-        appearance.shadowColor = .clear  // remove border
-        navigationBar.standardAppearance = appearance
-        navigationBar.scrollEdgeAppearance = appearance
-        navigationBar.compactAppearance = appearance
+
+        let navBarAppearance = UINavigationBarAppearance()
+        navBarAppearance.setBackIndicatorImage(backButtonImage, transitionMaskImage: backButtonImage)
+        navBarAppearance.backgroundColor = FinancialConnectionsAppearance.Colors.background
+        navBarAppearance.shadowColor = .clear  // remove border
+        navigationBar.standardAppearance = navBarAppearance
+        navigationBar.scrollEdgeAppearance = navBarAppearance
+        navigationBar.compactAppearance = navBarAppearance
 
         // change the back button color
         navigationBar.tintColor = FinancialConnectionsAppearance.Colors.icon
@@ -174,8 +180,7 @@ extension FinancialConnectionsNavigationController {
         let logoView: UIImageView? = {
             guard !shouldHideLogo else { return nil }
 
-            let logoImage = UIImageView(image: appearance.logo.makeImage(template: true))
-            logoImage.tintColor = appearance.logoTintColor
+            let logoImage = FinancialConnectionsLogoImageView(appearance: appearance)
             logoImage.contentMode = .scaleAspectFit
             logoImage.sizeToFit()
 
@@ -213,5 +218,35 @@ extension FinancialConnectionsNavigationController {
         navigationItem?.titleView = stackView
         navigationItem?.backButtonTitle = ""
         navigationItem?.rightBarButtonItem = closeItem
+    }
+}
+
+private final class FinancialConnectionsLogoImageView: UIImageView {
+    private let appearance: FinancialConnectionsAppearance
+
+    init(appearance: FinancialConnectionsAppearance) {
+        self.appearance = appearance
+        super.init(frame: .zero)
+        tintColor = appearance.logoTintColor
+        updateImage()
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    override func didMoveToWindow() {
+        super.didMoveToWindow()
+        updateImage()
+    }
+
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        guard traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) else { return }
+        updateImage()
+    }
+
+    private func updateImage() {
+        image = appearance.logoImage(for: traitCollection.userInterfaceStyle)
     }
 }

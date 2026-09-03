@@ -11,14 +11,16 @@ import UIKit
 
 final class LinkAccountPickerLoadingView: ShimmeringView {
 
-    init() {
+    init(appearance: FinancialConnectionsAppearance = .stripe) {
         super.init(frame: .zero)
         let verticalStackView = UIStackView()
         verticalStackView.axis = .vertical
         verticalStackView.spacing = 16
         for _ in 0..<3 {
             let linkAccountRowView = UIView()
-            linkAccountRowView.backgroundColor = FinancialConnectionsAppearance.Colors.backgroundSecondary
+            linkAccountRowView.backgroundColor = appearance.colors == .link
+                ? appearance.colors.iconBackground
+                : FinancialConnectionsAppearance.Colors.backgroundSecondary
             linkAccountRowView.layer.cornerRadius = 12
             linkAccountRowView.translatesAutoresizingMaskIntoConstraints = false
             NSLayoutConstraint.activate([

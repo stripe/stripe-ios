@@ -6,6 +6,7 @@
 //
 
 @_spi(STP) import StripeCore
+@_spi(STP) import StripeUICore
 import UIKit
 
 struct FinancialConnectionsAppearance: Equatable {
@@ -32,6 +33,18 @@ struct FinancialConnectionsAppearance: Equatable {
         static let warningLight: UIColor = .dynamic(light: .attention50, dark: .attention100Dark)
         static let warning: UIColor = .attention300
         static let shadow: UIColor = .black
+        static let linkGreen200: UIColor = .linkGreen200
+        static let linkBrand50: UIColor = .linkBrand50
+        static let linkBrand900: UIColor = .linkBrand900
+        static let iconBackgroundOnCard: UIColor = .dynamic(light: .linkNeutral200, dark: .linkNeutral700)
+        static let borderOnCard: UIColor = .dynamic(
+            light: UIColor(white: 0, alpha: 0.12),
+            dark: UIColor(white: 1, alpha: 0.12)
+        )
+        static let dividerOnCard: UIColor = .dynamic(
+            light: UIColor(white: 0, alpha: 0.08),
+            dark: UIColor(white: 1, alpha: 0.08)
+        )
 
         // These colors change based on the manifest's theme.
         let primary: UIColor
@@ -42,10 +55,17 @@ struct FinancialConnectionsAppearance: Equatable {
         let iconBackground: UIColor
         let spinner: UIColor
         let border: UIColor
+        let successIconBackground: UIColor
+        let successIconForeground: UIColor
+        // Text/Primary and Icon/Secondary per the Link design system; Stripe theme keeps its existing static colors.
+        let textPrimary: UIColor
+        let textTertiary: UIColor
+        let iconSecondary: UIColor
     }
 
     let colors: Colors
     let logo: Image
+    let darkModeLogo: Image?
     let logoTintColor: UIColor
 
     init(
@@ -64,12 +84,15 @@ struct FinancialConnectionsAppearance: Equatable {
         switch resolvedBrand {
         case .stripe:
             self.logo = .stripe_logo
+            self.darkModeLogo = nil
             self.logoTintColor = Self.stripeLogoTintColor(for: theme)
         case .link:
-            self.logo = .link_logo
+            self.logo = .link_logo_color
+            self.darkModeLogo = .link_logo_color_dark
             self.logoTintColor = Self.linkLogoTintColor(for: theme)
         case .onelink:
-            self.logo = .onelink_logo
+            self.logo = .onelink_logo_color
+            self.darkModeLogo = .onelink_logo_color_dark
             self.logoTintColor = Self.linkLogoTintColor(for: theme)
         }
     }
@@ -108,6 +131,21 @@ struct FinancialConnectionsAppearance: Equatable {
             return .stripeLogo
         }
     }
+
+    func logoImage(for userInterfaceStyle: UIUserInterfaceStyle) -> UIImage {
+        let resolvedLogo = userInterfaceStyle == .dark ? darkModeLogo ?? logo : logo
+        if darkModeLogo == nil {
+            return resolvedLogo.makeImage(template: true)
+        } else {
+            return resolvedLogo.makeImage().withRenderingMode(.alwaysOriginal)
+        }
+    }
+}
+
+extension FinancialConnectionsAppearance {
+    var buttonHeight: CGFloat {
+        colors == .link ? 52 : 56
+    }
 }
 
 extension FinancialConnectionsAppearance.Colors {
@@ -119,25 +157,35 @@ extension FinancialConnectionsAppearance.Colors {
         iconTint: .brand500,
         iconBackground: .dynamic(light: .brand25, dark: .brand25Dark),
         spinner: .brand500,
-        border: .brand600
+        border: .brand600,
+        successIconBackground: .brand500,
+        successIconForeground: .neutral0,
+        textPrimary: FinancialConnectionsAppearance.Colors.textDefault,
+        textTertiary: FinancialConnectionsAppearance.Colors.textSubdued,
+        iconSecondary: FinancialConnectionsAppearance.Colors.icon
     )
 
     static let link: FinancialConnectionsAppearance.Colors = .init(
-        primary: .linkGreen200,
-        primaryAccent: .linkGreen900,
-        textAction: .dynamic(light: .linkGreen500, dark: .linkGreen200),
-        textFieldFocused: .linkGreen200,
-        iconTint: .linkGreen500,
-        iconBackground: .dynamic(light: .linkGreen50, dark: .linkGreen50Dark),
-        spinner: .linkGreen200,
-        border: .linkGreen200
+        primary: .dynamic(light: .linkNeutral900, dark: .linkNeutral0),
+        primaryAccent: .dynamic(light: .linkNeutral0, dark: .linkNeutral900),
+        textAction: .dynamic(light: .linkBrand600, dark: .linkGreen200),
+        textFieldFocused: .dynamic(light: .linkNeutral900, dark: .linkNeutral0),
+        iconTint: .dynamic(light: .linkNeutral900, dark: .linkNeutral0),
+        iconBackground: .dynamic(light: .linkNeutral100, dark: .linkNeutral800),
+        spinner: .dynamic(light: .linkNeutral900, dark: .linkNeutral0),
+        border: .dynamic(light: .linkNeutral900, dark: .linkNeutral0),
+        successIconBackground: .linkGreen200,
+        successIconForeground: .linkNeutral900,
+        textPrimary: .dynamic(light: .linkNeutral900, dark: .linkNeutral0),
+        textTertiary: .dynamic(light: .linkNeutral600, dark: .linkNeutral200),
+        iconSecondary: .dynamic(light: .linkNeutral700, dark: .linkNeutral200)
     )
 }
 
 // MARK: - Raw colors
 private extension UIColor {
     static let stripeLogo: UIColor = .dynamic(light: .brand600, dark: .neutral0)
-    static let linkLogo: UIColor = .dynamic(light: .linkGreen900, dark: .neutral0)
+    static let linkLogo: UIColor = .dynamic(light: .linkNeutral900, dark: .neutral0)
 
     // MARK: Neutral
     static var neutral0: UIColor {
@@ -228,23 +276,47 @@ private extension UIColor {
     }
 
     // MARK: Link
-    static var linkGreen50: UIColor {
-        return UIColor(red: 230 / 255.0, green: 255 / 255.0, blue: 237 / 255.0, alpha: 1)  // #e6ffed
+    static var linkNeutral0: UIColor {
+        return UIColor(red: 255 / 255.0, green: 255 / 255.0, blue: 255 / 255.0, alpha: 1)  // #FFFFFF
     }
 
-    static var linkGreen50Dark: UIColor {
-        return UIColor(red: 22 / 255.0, green: 33 / 255.0, blue: 31 / 255.0, alpha: 1)  // #16211f
+    static var linkNeutral100: UIColor {
+        return UIColor(red: 245 / 255.0, green: 245 / 255.0, blue: 245 / 255.0, alpha: 1)  // #F5F5F5
+    }
+
+    static var linkNeutral200: UIColor {
+        return UIColor(red: 229 / 255.0, green: 229 / 255.0, blue: 229 / 255.0, alpha: 1)  // #E5E5E5
+    }
+
+    static var linkNeutral600: UIColor {
+        return UIColor(red: 112 / 255.0, green: 112 / 255.0, blue: 112 / 255.0, alpha: 1)  // #707070
+    }
+
+    static var linkNeutral700: UIColor {
+        return UIColor(red: 64 / 255.0, green: 64 / 255.0, blue: 64 / 255.0, alpha: 1)  // #404040
+    }
+
+    static var linkNeutral800: UIColor {
+        return UIColor(red: 38 / 255.0, green: 38 / 255.0, blue: 38 / 255.0, alpha: 1)  // #262626
+    }
+
+    static var linkNeutral900: UIColor {
+        return UIColor(red: 23 / 255.0, green: 23 / 255.0, blue: 23 / 255.0, alpha: 1)  // #171717
     }
 
     static var linkGreen200: UIColor {
         return UIColor(red: 0 / 255.0, green: 214 / 255.0, blue: 111 / 255.0, alpha: 1)  // #00D66F
     }
 
-    static var linkGreen500: UIColor {
-        return UIColor(red: 0 / 255.0, green: 133 / 255.0, blue: 69 / 255.0, alpha: 1)  // #008545
+    static var linkBrand600: UIColor {
+        return UIColor(red: 0 / 255.0, green: 102 / 255.0, blue: 53 / 255.0, alpha: 1)  // #006635
     }
 
-    static var linkGreen900: UIColor {
+    static var linkBrand50: UIColor {
+        return UIColor(red: 230 / 255.0, green: 255 / 255.0, blue: 237 / 255.0, alpha: 1)  // #E6FFED
+    }
+
+    static var linkBrand900: UIColor {
         return UIColor(red: 1 / 255.0, green: 30 / 255.0, blue: 15 / 255.0, alpha: 1)  // #011E0F
     }
 

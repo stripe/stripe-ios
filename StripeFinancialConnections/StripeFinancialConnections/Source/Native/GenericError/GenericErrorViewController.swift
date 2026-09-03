@@ -52,7 +52,8 @@ final class GenericErrorViewController: UIViewController {
             // built as part of the content view below
             subtitle: nil,
             headerAlignment: .center,
-            contentView: CreateContentView(genericErrorPane: genericErrorPane)
+            contentView: CreateContentView(genericErrorPane: genericErrorPane),
+            appearance: dataSource.appearance
         )
         let footerView = PaneLayoutView.createFooterView(
             primaryButtonConfiguration: PaneLayoutView.ButtonConfiguration(

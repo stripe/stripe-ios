@@ -52,6 +52,7 @@ final class InstitutionTableView: UIView {
     }
     private var institutions: [FinancialConnectionsInstitution] = []
     private var shouldLogScroll = true
+    private var hasCardFooter = false
 
     private lazy var manualEntryTableFooterView: InstitutionTableFooterView = {
         let manualEntryTableFooterView = InstitutionTableFooterView(
@@ -88,6 +89,7 @@ final class InstitutionTableView: UIView {
                 subtitle: nil,
                 image: .search,
                 appearance: appearance,
+                showsDividerAboveContent: true,
                 didSelect: { [weak self] in
                     guard let self = self else { return }
                     FeedbackGeneratorAdapter.buttonTapped()
@@ -111,7 +113,7 @@ final class InstitutionTableView: UIView {
         self.appearance = appearance
         let cellIdentifier = "\(InstitutionTableViewCell.self)"
         tableView = UITableView(frame: frame)
-        dataSource = UITableViewDiffableDataSource(tableView: tableView) { tableView, _, institution in
+        dataSource = UITableViewDiffableDataSource(tableView: tableView) { tableView, indexPath, institution in
             guard
                 let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier)
                     as? InstitutionTableViewCell
@@ -120,21 +122,42 @@ final class InstitutionTableView: UIView {
                     "Unable to dequeue cell \(InstitutionTableViewCell.self) with cell identifier \(cellIdentifier)"
                 )
             }
-            cell.customize(with: institution, appearance: appearance)
+            cell.customize(
+                with: institution,
+                appearance: appearance,
+                roundsTopCorners: indexPath.row == 0
+            )
             return cell
         }
         dataSource.defaultRowAnimation = .fade
         super.init(frame: frame)
-        tableView.backgroundColor = FinancialConnectionsAppearance.Colors.background
-        tableView.separatorInset = .zero
-        tableView.separatorStyle = .none
+        if appearance.colors == .link {
+            tableView.backgroundColor = .clear
+            // Cells and the footer own the card rounding. Leaving the table view unclipped lets
+            // the scroll indicator escape the card inset and render at the screen edge.
+            tableView.verticalScrollIndicatorInsets = UIEdgeInsets(
+                top: 0,
+                left: 0,
+                bottom: 0,
+                right: -Constants.Layout.defaultHorizontalMargin
+            )
+            tableView.separatorStyle = .singleLine
+            tableView.separatorColor = FinancialConnectionsAppearance.Colors.dividerOnCard
+            tableView.separatorInset = UIEdgeInsets(top: 0, left: 72, bottom: 0, right: 0)
+        } else {
+            tableView.backgroundColor = FinancialConnectionsAppearance.Colors.background
+            tableView.separatorInset = .zero
+            tableView.separatorStyle = .none
+        }
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 72
+        let hairline = 1.0 / UIScreen.main.nativeScale
         tableView.contentInset = UIEdgeInsets(
-            // add extra inset at the top/bottom to show the cell-selected-state separators
-            top: 1.0 / UIScreen.main.nativeScale,
+            // Link theme: no top inset — a hairline gap lets cell content peek above the sticky
+            // search bar header when scrolled. Stripe theme keeps the hairline to show separators.
+            top: appearance.colors == .link ? 0 : hairline,
             left: 0,
-            bottom: 1.0 / UIScreen.main.nativeScale,
+            bottom: hairline,
             right: 0
         )
         tableView.keyboardDismissMode = .onDrag
@@ -222,9 +245,7 @@ final class InstitutionTableView: UIView {
         snapshot.appendSections([Section.main])
         snapshot.appendItems(institutions, toSection: Section.main)
         dataSource.apply(snapshot, animatingDifferences: false, completion: nil)
-
-        // clear state (some of this is defensive programming)
-        showError(false, isUserSearching: isUserSearching)
+        setNeedsLayout()
 
         if isUserSearching {
             if institutions.isEmpty {
@@ -256,7 +277,7 @@ final class InstitutionTableView: UIView {
     func showLoadingView(_ show: Bool) {
         if show {
             if loadingView?.superview == nil {
-                let loadingView = InstitutionTableLoadingView()
+                let loadingView = InstitutionTableLoadingView(appearance: appearance)
                 addAndPinSubviewToSafeArea(loadingView)
                 self.loadingView = loadingView
             }
@@ -296,11 +317,31 @@ final class InstitutionTableView: UIView {
 
     // the footer is always shown, except for when there is an error searching
     private func showTableFooterView(_ show: Bool, view: UIView?) {
-        if show, let view = view {
-            tableView.setTableFooterViewWithCompressedFrameSize(view)
+        let footerView = show ? view : nil
+        hasCardFooter = appearance.colors == .link && footerView != nil && !institutions.isEmpty
+        if let footerView {
+            tableView.setTableFooterViewWithCompressedFrameSize(footerView)
         } else {
             tableView.tableFooterView = nil
         }
+        updateVisibleCellCorners()
+        setNeedsLayout()
+    }
+
+    private func updateVisibleCellCorners() {
+        tableView.indexPathsForVisibleRows?.forEach { indexPath in
+            guard let cell = tableView.cellForRow(at: indexPath) as? InstitutionTableViewCell else {
+                return
+            }
+            updateCorners(for: cell, at: indexPath)
+        }
+    }
+
+    private func updateCorners(for cell: InstitutionTableViewCell, at indexPath: IndexPath) {
+        cell.setRoundedCorners(
+            top: indexPath.row == 0,
+            bottom: indexPath.row == institutions.count - 1 && !hasCardFooter
+        )
     }
 
     func showLoadingView(
@@ -316,6 +357,22 @@ final class InstitutionTableView: UIView {
             return
         }
         loadingCell.showLoadingView(show)
+    }
+
+    /// Freezes/unfreezes the highlighted (pressed) background of the row for `institution`.
+    func setHighlightFrozen(
+        _ frozen: Bool,
+        forInstitution institution: FinancialConnectionsInstitution
+    ) {
+        guard
+            let index = institutions.firstIndex(where: { $0.id == institution.id }),
+            let cell = tableView.cellForRow(
+                at: IndexPath(row: index, section: 0)
+            ) as? InstitutionTableViewCell
+        else {
+            return
+        }
+        cell.setHighlightFrozen(frozen)
     }
 
     /// Grays out all visible rows except the one with `institution`.
@@ -358,6 +415,11 @@ extension InstitutionTableView: UITableViewDelegate {
         if let institution = dataSource.itemIdentifier(for: indexPath) {
             delegate?.institutionTableView(self, didSelectInstitution: institution)
         }
+    }
+
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        guard let cell = cell as? InstitutionTableViewCell else { return }
+        updateCorners(for: cell, at: indexPath)
     }
 
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {

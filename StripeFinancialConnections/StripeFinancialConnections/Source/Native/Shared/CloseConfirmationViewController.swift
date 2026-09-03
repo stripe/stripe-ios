@@ -44,7 +44,8 @@ final class CloseConfirmationViewController: SheetViewController {
                     "The subtitle/description of a sheet that appears when the user attempts to exit the bank linking screen."
                 ),
                 contentView: nil,
-                isSheet: true
+                isSheet: true,
+                appearance: appearance
             ),
             footerView: PaneLayoutView.createFooterView(
                 primaryButtonConfiguration: PaneLayoutView.ButtonConfiguration(
@@ -74,7 +75,8 @@ final class CloseConfirmationViewController: SheetViewController {
                         )
                     }
                 ),
-                appearance: appearance
+                appearance: appearance,
+                preferHorizontalButtonsForLink: true
             ).footerView
         )
     }

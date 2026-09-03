@@ -35,7 +35,6 @@ final class NetworkingSaveToLinkVerificationViewController: UIViewController {
         otpView.delegate = self
         return otpView
     }()
-
     init(dataSource: NetworkingSaveToLinkVerificationDataSource) {
         self.dataSource = dataSource
         super.init(nibName: nil, bundle: nil)
@@ -61,7 +60,8 @@ final class NetworkingSaveToLinkVerificationViewController: UIViewController {
                 iconView: nil,
                 title: String.Localized.confirm_its_you,
                 subtitle: String(format: String.Localized.enter_code_sent_to, AuthFlowHelpers.formatRedactedPhoneNumber(redactedPhoneNumber)),
-                contentView: otpView
+                contentView: otpView,
+                appearance: dataSource.manifest.appearance
             ),
             footerView: PaneLayoutView.createFooterView(
                 primaryButtonConfiguration: nil,

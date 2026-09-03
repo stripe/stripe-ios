@@ -22,7 +22,7 @@ class ConsentFooterView: HitTestView {
         agreeButton.addTarget(self, action: #selector(didSelectAgreeButton), for: .touchUpInside)
         agreeButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            agreeButton.heightAnchor.constraint(equalToConstant: 56)
+            agreeButton.heightAnchor.constraint(equalToConstant: appearance.buttonHeight)
         ])
         agreeButton.accessibilityIdentifier = "consent_agree_button"
         return agreeButton
@@ -46,7 +46,7 @@ class ConsentFooterView: HitTestView {
             font: .label(.small),
             boldFont: .label(.smallEmphasized),
             linkFont: .label(.small),
-            textColor: FinancialConnectionsAppearance.Colors.textDefault,
+            textColor: appearance.colors.textTertiary,
             alignment: .center
         )
         termsAndPrivacyPolicyLabel.setText(
@@ -75,7 +75,7 @@ class ConsentFooterView: HitTestView {
                 font: .label(.small),
                 boldFont: .label(.smallEmphasized),
                 linkFont: .label(.small),
-                textColor: FinancialConnectionsAppearance.Colors.textDefault,
+                textColor: appearance.colors.textTertiary,
                 alignment: .center
             )
             manuallyVerifyLabel.setText(

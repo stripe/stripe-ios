@@ -28,10 +28,10 @@ final class RoundedIconView: UIView {
         image: ImageType,
         style: Style,
         appearance: FinancialConnectionsAppearance,
+        diameter: CGFloat = 56,
         imageFlipsForRightToLeftLayoutDirection: Bool = false
     ) {
         super.init(frame: .zero)
-        let diameter: CGFloat = 56
         let cornerRadius: CGFloat
         switch style {
         case .rounded:

@@ -11,6 +11,8 @@ import UIKit
 
 final class AccountPickerRowLabelView: UIView {
 
+    private let appearance: FinancialConnectionsAppearance
+
     private lazy var verticalLabelStackView: UIStackView = {
         let labelStackView = UIStackView()
         labelStackView.axis = .vertical
@@ -46,7 +48,9 @@ final class AccountPickerRowLabelView: UIView {
             bottom: 2,
             trailing: 6
         )
-        paddingView.backgroundColor = FinancialConnectionsAppearance.Colors.backgroundSecondary
+        paddingView.backgroundColor = appearance.colors == .link
+            ? FinancialConnectionsAppearance.Colors.borderNeutral
+            : FinancialConnectionsAppearance.Colors.backgroundSecondary
         paddingView.layer.cornerRadius = 4
         return paddingView
     }()
@@ -58,7 +62,8 @@ final class AccountPickerRowLabelView: UIView {
         return trailingTitleLabel
     }()
 
-    init() {
+    init(appearance: FinancialConnectionsAppearance) {
+        self.appearance = appearance
         super.init(frame: .zero)
         verticalLabelStackView.addArrangedSubview(titleLabel)
         addAndPinSubview(verticalLabelStackView)

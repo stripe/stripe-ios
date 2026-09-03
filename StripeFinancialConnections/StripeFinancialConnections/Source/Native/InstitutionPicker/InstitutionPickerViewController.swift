@@ -51,16 +51,17 @@ class InstitutionPickerViewController: UIViewController {
     private lazy var headerView: UIView = {
         let verticalStackView = UIStackView(
             arrangedSubviews: [
-                CreateHeaderTitleLabel(),
+                CreateHeaderTitleLabel(appearance: dataSource.manifest.appearance),
             ]
         )
         verticalStackView.axis = .vertical
         verticalStackView.isLayoutMarginsRelativeArrangement = true
+        let isLinkTheme = dataSource.manifest.appearance.colors == .link
         verticalStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
             top: 16,
-            leading: Constants.Layout.defaultHorizontalMargin,
+            leading: isLinkTheme ? 0 : Constants.Layout.defaultHorizontalMargin,
             bottom: Self.headerAndSearchBarSpacing,
-            trailing: Constants.Layout.defaultHorizontalMargin
+            trailing: isLinkTheme ? 0 : Constants.Layout.defaultHorizontalMargin
         )
         verticalStackView.backgroundColor = FinancialConnectionsAppearance.Colors.background
         return verticalStackView
@@ -73,28 +74,31 @@ class InstitutionPickerViewController: UIViewController {
         )
         verticalStackView.axis = .vertical
         verticalStackView.isLayoutMarginsRelativeArrangement = true
+        let isLinkTheme = dataSource.manifest.appearance.colors == .link
         verticalStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
             top: 0, // the `headerView` has bottom padding
-            leading: Constants.Layout.defaultHorizontalMargin,
+            leading: isLinkTheme ? 0 : Constants.Layout.defaultHorizontalMargin,
             bottom: 16,
-            trailing: Constants.Layout.defaultHorizontalMargin
+            trailing: isLinkTheme ? 0 : Constants.Layout.defaultHorizontalMargin
         )
         verticalStackView.backgroundColor = FinancialConnectionsAppearance.Colors.background
         // the "shadow" fixes an issue where the "search bar sticky header"
         // has a visible 1 pixel gap. the shadow is not actually a shadow,
         // but rather a "top border"
-        verticalStackView.layer.shadowOpacity = 1.0
-        verticalStackView.layer.shadowColor = verticalStackView.backgroundColor?.cgColor
-        verticalStackView.layer.shadowRadius = 0
-        verticalStackView.layer.shadowOffset = CGSize(
-            width: 0,
-            // the `height` is greater than 1 px because this also fixes
-            // an issue where the sticky header animates to final position
-            // (this is default iOS/UITableView behavior), and the animation
-            // is slow, which can cause the institution cells to temporarily
-            // appear IF the user scrolls up very quickly
-            height: -Self.headerAndSearchBarSpacing
-        )
+        if !isLinkTheme {
+            verticalStackView.layer.shadowOpacity = 1.0
+            verticalStackView.layer.shadowColor = verticalStackView.backgroundColor?.cgColor
+            verticalStackView.layer.shadowRadius = 0
+            verticalStackView.layer.shadowOffset = CGSize(
+                width: 0,
+                // the `height` is greater than 1 px because this also fixes
+                // an issue where the sticky header animates to final position
+                // (this is default iOS/UITableView behavior), and the animation
+                // is slow, which can cause the institution cells to temporarily
+                // appear IF the user scrolls up very quickly
+                height: -Self.headerAndSearchBarSpacing
+            )
+        }
         self.shadowLayer = verticalStackView.layer
         return verticalStackView
     }()
@@ -148,7 +152,19 @@ class InstitutionPickerViewController: UIViewController {
     private func setupView() {
         view.backgroundColor = FinancialConnectionsAppearance.Colors.background
 
-        view.addAndPinSubview(institutionTableView)
+        if dataSource.manifest.appearance.colors == .link {
+            view.addAndPinSubview(
+                institutionTableView,
+                insets: NSDirectionalEdgeInsets(
+                    top: 0,
+                    leading: Constants.Layout.defaultHorizontalMargin,
+                    bottom: 0,
+                    trailing: Constants.Layout.defaultHorizontalMargin
+                )
+            )
+        } else {
+            view.addAndPinSubview(institutionTableView)
+        }
         institutionTableView.setTableHeaderView(headerView)
         if !dataSource.manifest.institutionSearchDisabled {
             institutionTableView.searchBarContainerView = searchBarContainerView
@@ -180,10 +196,12 @@ class InstitutionPickerViewController: UIViewController {
         }
 
         showLoadingView(true)
+        institutionTableView.setHighlightFrozen(true, forInstitution: institution)
         institutionTableView.showOverlayView(
             true,
             exceptForInstitution: institution
         )
+        setPaneContentFaded(true)
 
         // If consent is already acquired, create an auth session.
         // Otherwise, select the institution and update the manifest.
@@ -216,9 +234,9 @@ class InstitutionPickerViewController: UIViewController {
                     if authSession.isOauthNonOptional {
                         // oauth presents a sheet where we do not hide
                         // the overlay until the sheet is dismissed
-                        self.observePartnerAuthDismissToHideOverlay()
+                        self.observePartnerAuthDismissToHideOverlay(institution: institution)
                     } else {
-                        self.hideOverlayView()
+                        self.hideOverlayView(forInstitution: institution)
                     }
                 case .failure(let error):
                     self.delegate?.institutionPickerViewController(
@@ -244,7 +262,7 @@ class InstitutionPickerViewController: UIViewController {
                         didFinishSelecting: institution,
                         payload: selectInstitutionPayload
                     )
-                    self.hideOverlayView()
+                    self.hideOverlayView(forInstitution: institution)
                 case .failure(let error):
                     self.delegate?.institutionPickerViewController(
                         self,
@@ -260,7 +278,7 @@ class InstitutionPickerViewController: UIViewController {
     }
 
     private var partnerAuthDismissObserver: Any?
-    private func observePartnerAuthDismissToHideOverlay() {
+    private func observePartnerAuthDismissToHideOverlay(institution: FinancialConnectionsInstitution) {
         partnerAuthDismissObserver = NotificationCenter.default.addObserver(
             forName: .sheetViewControllerWillDismiss,
             object: nil,
@@ -270,13 +288,30 @@ class InstitutionPickerViewController: UIViewController {
             guard notification.object is PartnerAuthViewController else {
                 return
             }
-            self.hideOverlayView()
+            self.hideOverlayView(forInstitution: institution)
             self.partnerAuthDismissObserver = nil
         }
     }
 
-    private func hideOverlayView() {
+    private func hideOverlayView(forInstitution institution: FinancialConnectionsInstitution) {
         institutionTableView.showOverlayView(false)
+        institutionTableView.setHighlightFrozen(false, forInstitution: institution)
+        setPaneContentFaded(false)
+    }
+
+    /// Fades the pane's header/search bar to match the dimmed (non-tapped) rows,
+    /// so the entire pane's content fades together while the tapped row stays "frozen".
+    private func setPaneContentFaded(_ faded: Bool) {
+        UIView.animate(
+            withDuration: 0.3,
+            delay: 0,
+            usingSpringWithDamping: 1,
+            initialSpringVelocity: 0.3,
+            animations: {
+                self.headerView.alpha = faded ? 0.4 : 1
+                self.searchBarContainerView.alpha = faded ? 0.4 : 1
+            }
+        )
     }
 
     private func scrollToTopOfSearchBar() {
@@ -552,11 +587,14 @@ extension InstitutionPickerViewController: InstitutionTableViewDelegate {
 
 // MARK: - Helpers
 
-private func CreateHeaderTitleLabel() -> UIView {
+private func CreateHeaderTitleLabel(appearance: FinancialConnectionsAppearance) -> UIView {
     let headerTitleLabel = AttributedLabel(
         font: .heading(.extraLarge),
         textColor: FinancialConnectionsAppearance.Colors.textDefault
     )
+    if appearance.colors == .link {
+        headerTitleLabel.textAlignment = .center
+    }
     headerTitleLabel.setText(
         STPLocalizedString(
             "Select bank",

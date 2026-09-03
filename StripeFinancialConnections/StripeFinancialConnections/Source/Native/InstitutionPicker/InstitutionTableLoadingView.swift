@@ -11,16 +11,21 @@ import UIKit
 
 final class InstitutionTableLoadingView: UIView {
 
-    init() {
+    init(appearance: FinancialConnectionsAppearance = .stripe) {
         super.init(frame: UIScreen.main.bounds)
         backgroundColor = FinancialConnectionsAppearance.Colors.background
         let verticalStackView = UIStackView(
             arrangedSubviews: (0..<10).map({ _ in
-                ShimmeringInstitutionRowView()
+                ShimmeringInstitutionRowView(appearance: appearance)
             })
         )
         verticalStackView.axis = .vertical
         verticalStackView.spacing = 0 // the rows have spacing through padding
+        if appearance.colors == .link {
+            verticalStackView.backgroundColor = appearance.colors.iconBackground
+            verticalStackView.layer.cornerRadius = 12
+            verticalStackView.layer.masksToBounds = true
+        }
         addSubview(verticalStackView)
         verticalStackView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -39,25 +44,30 @@ final class InstitutionTableLoadingView: UIView {
 
 private class ShimmeringInstitutionRowView: ShimmeringView {
 
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    init(appearance: FinancialConnectionsAppearance) {
+        super.init(frame: .zero)
         backgroundColor = .clear
 
+        let isLinkTheme = appearance.colors == .link
+        let placeholderColor = isLinkTheme
+            ? FinancialConnectionsAppearance.Colors.iconBackgroundOnCard
+            : FinancialConnectionsAppearance.Colors.backgroundSecondary
         let horizontalStackView = UIStackView(
             arrangedSubviews: [
-                CreateRowIconView(),
-                CreateRowMultipleLabelView(),
+                CreateRowIconView(backgroundColor: placeholderColor, isLinkTheme: isLinkTheme),
+                CreateRowMultipleLabelView(backgroundColor: placeholderColor),
             ]
         )
         horizontalStackView.axis = .horizontal
         horizontalStackView.alignment = .center
         horizontalStackView.spacing = 12
         horizontalStackView.isLayoutMarginsRelativeArrangement = true
+        let horizontalMargin: CGFloat = isLinkTheme ? 16 : 24
         horizontalStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
             top: 8,
-            leading: 24,
+            leading: horizontalMargin,
             bottom: 8,
-            trailing: 24
+            trailing: horizontalMargin
         )
         addAndPinSubview(horizontalStackView)
     }
@@ -67,23 +77,24 @@ private class ShimmeringInstitutionRowView: ShimmeringView {
     }
 }
 
-private func CreateRowIconView() -> UIView {
+private func CreateRowIconView(backgroundColor: UIColor, isLinkTheme: Bool) -> UIView {
     let iconView = UIView()
-    iconView.backgroundColor = FinancialConnectionsAppearance.Colors.backgroundSecondary
+    iconView.backgroundColor = backgroundColor
     iconView.layer.cornerRadius = 12
     iconView.translatesAutoresizingMaskIntoConstraints = false
+    let size: CGFloat = isLinkTheme ? 44 : 54
     NSLayoutConstraint.activate([
-        iconView.heightAnchor.constraint(equalToConstant: 56),
-        iconView.widthAnchor.constraint(equalToConstant: 56),
+        iconView.heightAnchor.constraint(equalToConstant: size),
+        iconView.widthAnchor.constraint(equalToConstant: size),
     ])
     return iconView
 }
 
-private func CreateRowMultipleLabelView() -> UIView {
+private func CreateRowMultipleLabelView(backgroundColor: UIColor) -> UIView {
     let verticalStackView = UIStackView(
         arrangedSubviews: [
-            CreateLabelView(width: 180),
-            CreateLabelView(width: 130),
+            CreateLabelView(width: 180, backgroundColor: backgroundColor),
+            CreateLabelView(width: 130, backgroundColor: backgroundColor),
         ]
     )
     verticalStackView.axis = .vertical
@@ -92,9 +103,9 @@ private func CreateRowMultipleLabelView() -> UIView {
     return verticalStackView
 }
 
-private func CreateLabelView(width: CGFloat) -> UIView {
+private func CreateLabelView(width: CGFloat, backgroundColor: UIColor) -> UIView {
     let labelView = UIView()
-    labelView.backgroundColor = FinancialConnectionsAppearance.Colors.backgroundSecondary
+    labelView.backgroundColor = backgroundColor
     labelView.layer.cornerRadius = 8
     labelView.translatesAutoresizingMaskIntoConstraints = false
     NSLayoutConstraint.activate([

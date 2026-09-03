@@ -29,21 +29,21 @@ struct FinancialConnectionsFont {
         /// 28 size / 36 line height / 700 weight
         case extraLarge
     }
-    static func heading(_ token: HeadingToken) -> FinancialConnectionsFont {
+    static func heading(_ token: HeadingToken, weight: UIFont.Weight = .bold) -> FinancialConnectionsFont {
         let font: UIFont
         let lineHeight: CGFloat
         let appleTextStyle: UIFont.TextStyle
         switch token {
         case .medium:
-            font = UIFont.systemFont(ofSize: 20, weight: .bold)
+            font = UIFont.systemFont(ofSize: 20, weight: weight)
             lineHeight = 28
             appleTextStyle = .title3
         case .large:
-            font = UIFont.systemFont(ofSize: 24, weight: .bold)
+            font = UIFont.systemFont(ofSize: 24, weight: weight)
             lineHeight = 32
             appleTextStyle = .title2
         case .extraLarge:
-            font = UIFont.systemFont(ofSize: 28, weight: .bold)
+            font = UIFont.systemFont(ofSize: 28, weight: weight)
             lineHeight = 36
             appleTextStyle = .title1
         }

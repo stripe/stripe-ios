@@ -6,11 +6,12 @@
 //
 
 import Foundation
+@_spi(STP) import StripeUICore
 import UIKit
 
 final class RetrieveAccountsLoadingView: UIView {
 
-    init(institutionIconUrl: String?) {
+    init(institutionIconUrl: String?, appearance: FinancialConnectionsAppearance = .stripe) {
         super.init(frame: .zero)
         let paneLayoutView = PaneLayoutView(
             contentView: PaneLayoutView.createContentView(
@@ -29,18 +30,19 @@ final class RetrieveAccountsLoadingView: UIView {
                 ),
                 subtitle: nil,
                 contentView: {
-                    let verticalStackView = UIStackView(
-                        arrangedSubviews: [
-                            ShimmeringAccountPickerRow(),
-                            ShimmeringAccountPickerRow(),
-                            ShimmeringAccountPickerRow(),
-                            ShimmeringAccountPickerRow(),
-                        ]
-                    )
+                    let isLinkTheme = appearance.colors == .link
+                    let rowBackgroundColor = isLinkTheme
+                        ? appearance.colors.iconBackground
+                        : FinancialConnectionsAppearance.Colors.backgroundSecondary
+                    let rows = (0..<(isLinkTheme ? 3 : 4)).map { _ in
+                        ShimmeringAccountPickerRow(backgroundColor: rowBackgroundColor)
+                    }
+                    let verticalStackView = UIStackView(arrangedSubviews: rows)
                     verticalStackView.axis = .vertical
                     verticalStackView.spacing = 16
                     return verticalStackView
-                }()
+                }(),
+                appearance: appearance
             ),
             footerView: nil
         )
@@ -54,11 +56,11 @@ final class RetrieveAccountsLoadingView: UIView {
 
 private class ShimmeringAccountPickerRow: ShimmeringView {
 
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    init(backgroundColor: UIColor) {
+        super.init(frame: .zero)
         clipsToBounds = true
         layer.cornerRadius = 12
-        backgroundColor = FinancialConnectionsAppearance.Colors.backgroundSecondary
+        self.backgroundColor = backgroundColor
 
         translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([

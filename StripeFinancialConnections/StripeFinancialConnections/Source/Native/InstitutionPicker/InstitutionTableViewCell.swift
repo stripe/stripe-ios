@@ -11,10 +11,16 @@ import UIKit
 
 final class InstitutionTableViewCell: UITableViewCell {
     private lazy var institutionIconView: InstitutionIconView = {
-        return InstitutionIconView()
+        let isLinkTheme = appearance?.colors == .link
+        let size: CGFloat = isLinkTheme ? 44 : 54
+        return InstitutionIconView(appearance: appearance, size: CGSize(width: size, height: size))
     }()
 
     private var institutionCellView: InstitutionCellView?
+    private var appearance: FinancialConnectionsAppearance?
+    private var isHighlightFrozen = false
+    private var roundsTopCorners = false
+    private var roundsBottomCorners = false
 
     private lazy var overlayView: UIView = {
         let overlayView = UIView()
@@ -33,19 +39,76 @@ final class InstitutionTableViewCell: UITableViewCell {
     }
 
     override func setHighlighted(_ highlighted: Bool, animated: Bool) {
+        // While frozen, ignore UIKit's automatic un-highlight on touch-up so the
+        // tapped row doesn't flicker back to its resting color while it loads.
+        guard !isHighlightFrozen else { return }
         super.setHighlighted(highlighted, animated: animated)
         adjustBackgroundColor(isHighlighted: highlighted)
     }
 
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        isHighlightFrozen = false
+        // Clear any overlay left mid-animation by a previous row (e.g. from tapping an
+        // institution and navigating back), otherwise a reused cell can dequeue already
+        // dimmed/hidden behind the overlay.
+        overlayView.layer.removeAllAnimations()
+        overlayView.alpha = 0
+    }
+
+    /// Freezes the cell's highlighted (pressed) background so it doesn't revert on touch-up,
+    /// keeping it visually "selected" while its loading state is shown.
+    func setHighlightFrozen(_ frozen: Bool) {
+        isHighlightFrozen = frozen
+        adjustBackgroundColor(isHighlighted: frozen)
+    }
+
+    func setRoundedCorners(top: Bool, bottom: Bool) {
+        roundsTopCorners = top
+        roundsBottomCorners = bottom
+        adjustBackgroundColor(isHighlighted: isHighlighted || isHighlightFrozen)
+    }
+
     private func adjustBackgroundColor(isHighlighted: Bool) {
-        contentView.backgroundColor = isHighlighted ? FinancialConnectionsAppearance.Colors.backgroundHighlighted : FinancialConnectionsAppearance.Colors.background
-        backgroundColor = contentView.backgroundColor
+        let isLinkAppearance = appearance?.colors == .link
+        let restingColor: UIColor = isLinkAppearance
+            ? appearance?.colors.iconBackground ?? FinancialConnectionsAppearance.Colors.background
+            : FinancialConnectionsAppearance.Colors.background
+        contentView.backgroundColor = isHighlighted
+            ? FinancialConnectionsAppearance.Colors.backgroundHighlighted
+            : restingColor
+        backgroundColor = isLinkAppearance ? .clear : contentView.backgroundColor
+        if isLinkAppearance {
+            separatorInset = roundsBottomCorners
+                ? UIEdgeInsets(top: 0, left: .greatestFiniteMagnitude, bottom: 0, right: 0)
+                : UIEdgeInsets(top: 0, left: 72, bottom: 0, right: 0)
+        } else {
+            separatorInset = .zero
+        }
+        updateCornerMask(for: contentView, isLinkAppearance: isLinkAppearance)
 
         // fix a bug where the background color of a
         // rotated, selected cell was wrong
         let selectedBackgroundView = UIView()
         selectedBackgroundView.backgroundColor = contentView.backgroundColor
+        updateCornerMask(for: selectedBackgroundView, isLinkAppearance: isLinkAppearance)
         self.selectedBackgroundView = selectedBackgroundView
+    }
+
+    private func updateCornerMask(for view: UIView, isLinkAppearance: Bool) {
+        var maskedCorners: CACornerMask = []
+        if roundsTopCorners {
+            maskedCorners.insert(.layerMinXMinYCorner)
+            maskedCorners.insert(.layerMaxXMinYCorner)
+        }
+        if roundsBottomCorners {
+            maskedCorners.insert(.layerMinXMaxYCorner)
+            maskedCorners.insert(.layerMaxXMaxYCorner)
+        }
+        let roundsCorners = isLinkAppearance && !maskedCorners.isEmpty
+        view.layer.cornerRadius = roundsCorners ? 12 : 0
+        view.layer.maskedCorners = maskedCorners
+        view.layer.masksToBounds = roundsCorners
     }
 
     func showLoadingView(_ show: Bool) {
@@ -72,7 +135,16 @@ final class InstitutionTableViewCell: UITableViewCell {
 
 extension InstitutionTableViewCell {
 
-    func customize(with institution: FinancialConnectionsInstitution, appearance: FinancialConnectionsAppearance) {
+    func customize(
+        with institution: FinancialConnectionsInstitution,
+        appearance: FinancialConnectionsAppearance,
+        roundsTopCorners: Bool = false
+    ) {
+        self.appearance = appearance
+        self.roundsTopCorners = roundsTopCorners
+        roundsBottomCorners = false
+        adjustBackgroundColor(isHighlighted: false)
+
         let institutionCellView = InstitutionCellView(appearance: appearance)
         institutionIconView.setImageUrl(institution.icon?.default)
 

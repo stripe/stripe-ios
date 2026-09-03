@@ -56,7 +56,9 @@ final class NetworkingOTPView: UIView {
             configuration: OneTimeCodeTextField.Configuration(
                 itemSpacing: 8,
                 enableDigitGrouping: false,
-                font: UIFont.systemFont(ofSize: 28, weight: .regular),
+                font: dataSource.appearance.colors == .link
+                    ? UIFont.systemFont(ofSize: 24, weight: .semibold)
+                    : UIFont.systemFont(ofSize: 28, weight: .regular),
                 itemCornerRadius: 12,
                 itemHeight: 58
             ),
@@ -71,7 +73,11 @@ final class NetworkingOTPView: UIView {
         theme.colors = {
             var colors = ElementsAppearance.Color()
             colors.border = FinancialConnectionsAppearance.Colors.borderNeutral
-            colors.componentBackground = FinancialConnectionsAppearance.Colors.background
+            // Link DS 3.0: the code puncher has a grey background in every state
+            // (default, filled, error), matching Figma's Surface/Secondary token.
+            colors.componentBackground = dataSource.appearance.colors == .link
+                ? dataSource.appearance.colors.iconBackground
+                : FinancialConnectionsAppearance.Colors.background
             colors.textFieldText = FinancialConnectionsAppearance.Colors.textDefault
             colors.danger = FinancialConnectionsAppearance.Colors.textCritical
             return colors
