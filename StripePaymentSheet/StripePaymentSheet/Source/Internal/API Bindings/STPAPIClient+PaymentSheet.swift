@@ -18,7 +18,7 @@ extension STPAPIClient {
         epmConfiguration: PaymentSheet.ExternalPaymentMethodConfiguration?,
         cpmConfiguration: PaymentSheet.CustomPaymentMethodConfiguration?,
         clientDefaultPaymentMethod: String?,
-        customerAccessProvider: PaymentSheet.CustomerAccessProvider?,
+        customerProvider: CustomerProvider,
         linkDisallowFundingSourceCreation: Set<String>,
         userOverrideCountry: String? = nil
     ) -> [String: Any] {
@@ -41,11 +41,7 @@ extension STPAPIClient {
         if let appId = Bundle.main.bundleIdentifier {
             parameters["mobile_app_id"] = appId
         }
-        if case .customerSession(let clientSecret) = customerAccessProvider {
-            parameters["customer_session_client_secret"] = clientSecret
-        } else if case .legacyCustomerEphemeralKey(let ephemeralKey) = customerAccessProvider {
-            parameters["legacy_customer_ephemeral_key"] = ephemeralKey
-        }
+        customerProvider.addElementsSessionParams(to: &parameters)
         if let clientDefaultPaymentMethod {
             parameters["client_default_payment_method"] = clientDefaultPaymentMethod
         }
@@ -126,7 +122,7 @@ extension STPAPIClient {
                 epmConfiguration: configuration.externalPaymentMethodConfiguration,
                 cpmConfiguration: configuration.customPaymentMethodConfiguration,
                 clientDefaultPaymentMethod: clientDefaultPaymentMethod,
-                customerAccessProvider: configuration.customer?.customerAccessProvider,
+                customerProvider: configuration.customerProvider,
                 linkDisallowFundingSourceCreation: configuration.link.disallowFundingSourceCreation,
                 userOverrideCountry: configuration.userOverrideCountry
             )
@@ -155,7 +151,7 @@ extension STPAPIClient {
                 epmConfiguration: configuration.externalPaymentMethodConfiguration,
                 cpmConfiguration: configuration.customPaymentMethodConfiguration,
                 clientDefaultPaymentMethod: clientDefaultPaymentMethod,
-                customerAccessProvider: configuration.customer?.customerAccessProvider,
+                customerProvider: configuration.customerProvider,
                 linkDisallowFundingSourceCreation: configuration.link.disallowFundingSourceCreation,
                 userOverrideCountry: configuration.userOverrideCountry
             )
@@ -181,7 +177,7 @@ extension STPAPIClient {
             epmConfiguration: configuration.externalPaymentMethodConfiguration,
             cpmConfiguration: configuration.customPaymentMethodConfiguration,
             clientDefaultPaymentMethod: clientDefaultPaymentMethod,
-            customerAccessProvider: configuration.customer?.customerAccessProvider,
+            customerProvider: configuration.customerProvider,
             linkDisallowFundingSourceCreation: configuration.link.disallowFundingSourceCreation,
             userOverrideCountry: configuration.userOverrideCountry
         )
@@ -195,7 +191,7 @@ extension STPAPIClient {
     }
 
     func verifyCustomerSessionForPaymentSheet(configuration: PaymentElementConfiguration, elementsSession: STPElementsSession) throws {
-        if case .customerSession = configuration.customer?.customerAccessProvider {
+        if configuration.customerProvider.usesCustomerSession {
             // User passed in a customerSessionClient secret
             if let customer = elementsSession.customer {
                 // If claimed, customer will be not nil.

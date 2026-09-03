@@ -107,8 +107,11 @@ extension PaymentSheetLoader {
         } else if let prefetchedEmailAndSource {
             // 2. We fetched the Customer object before calling this method to get its email when using EKs
             lookupEmail = prefetchedEmailAndSource
+        } else if let email = configuration.customerProvider.email {
+            // 3. Checkout Session returns the customer email in its session response.
+            lookupEmail = (email, EmailSource.customerObject)
         } else if let email = elementsSession.customer?.email {
-            // 3. The v1/e/s response returns the email when using CustomerSession
+            // 4. The v1/e/s response returns the email when using CustomerSession
             lookupEmail = (email, EmailSource.customerObject)
         } else {
             return nil
@@ -179,8 +182,7 @@ extension PaymentSheetLoader {
     ) async throws -> (email: String, source: EmailSource)? {
         guard
             configuration.defaultBillingDetails.email == nil, // If email was already provided, don't make a network request to retrieve it.
-            let customerID = configuration.customer?.id,
-            case .legacyCustomerEphemeralKey(let ephemeralKey) = configuration.customer?.customerAccessProvider
+            let credentials = configuration.customerProvider.legacyEphemeralKeyCredentials
         else {
             return nil
         }
@@ -188,7 +190,10 @@ extension PaymentSheetLoader {
         defer {
             loadTimings.logEnd("retrieveCustomer")
         }
-        let customer = try await configuration.apiClient.retrieveCustomer(customerID, using: ephemeralKey)
+        let customer = try await configuration.apiClient.retrieveCustomer(
+            credentials.customerID,
+            using: credentials.ephemeralKeySecret
+        )
         if let email = customer.email {
             return (email, EmailSource.customerObject)
         }

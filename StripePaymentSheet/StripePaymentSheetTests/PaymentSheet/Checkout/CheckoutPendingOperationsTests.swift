@@ -150,7 +150,8 @@ final class CheckoutPendingOperationsTests: XCTestCase {
             savedPaymentMethods: [],
             paymentMethodTypes: [.stripe(.card)],
             paymentMethodMessagingPromotionsHelper: ._testValue(),
-            paymentMethodOrientation: .vertical
+            paymentMethodOrientation: .vertical,
+            customerProvider: CustomerProvider(customer: nil)
         )
         let configuration = EmbeddedPaymentElement.Configuration._testValue_MostPermissive(isApplePayEnabled: false)
         let sut = EmbeddedPaymentElement(
@@ -197,16 +198,17 @@ final class CheckoutPendingOperationsTests: XCTestCase {
         let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card])
         let elementsSession = STPElementsSession._testCardValue()
         let savedPaymentMethod = STPPaymentMethod._testCard()
+        var configuration = PaymentSheet.Configuration()
+        configuration.customer = .init(id: "cus_test", ephemeralKeySecret: "ek_test")
         let loadResult = PaymentSheetLoader.LoadResult(
             intent: intent,
             elementsSession: elementsSession,
             savedPaymentMethods: [savedPaymentMethod],
             paymentMethodTypes: [.stripe(.card)],
             paymentMethodMessagingPromotionsHelper: ._testValue(),
-            paymentMethodOrientation: .vertical
+            paymentMethodOrientation: .vertical,
+            customerProvider: configuration.customerProvider
         )
-        var configuration = PaymentSheet.Configuration()
-        configuration.customer = .init(id: "cus_test", ephemeralKeySecret: "ek_test")
         let fc = PaymentSheet.FlowController(
             configuration: configuration,
             loadResult: loadResult,

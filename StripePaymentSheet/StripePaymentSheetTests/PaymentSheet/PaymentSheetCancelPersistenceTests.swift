@@ -43,7 +43,8 @@ final class PaymentSheetCancelPersistenceTests: XCTestCase {
     }
 
     private func makeLoadResult(
-        savedPaymentMethods: [STPPaymentMethod]
+        savedPaymentMethods: [STPPaymentMethod],
+        customerProvider: CustomerProvider
     ) -> PaymentSheetLoader.LoadResult {
         return PaymentSheetLoader.LoadResult(
             intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
@@ -51,7 +52,8 @@ final class PaymentSheetCancelPersistenceTests: XCTestCase {
             savedPaymentMethods: savedPaymentMethods,
             paymentMethodTypes: [.stripe(.card)],
             paymentMethodMessagingPromotionsHelper: ._testValue(),
-            paymentMethodOrientation: .vertical
+            paymentMethodOrientation: .vertical,
+            customerProvider: customerProvider
         )
     }
 
@@ -67,7 +69,10 @@ final class PaymentSheetCancelPersistenceTests: XCTestCase {
             paymentIntentClientSecret: "pi_123_secret_456",
             configuration: configuration
         )
-        let loadResult = makeLoadResult(savedPaymentMethods: [cardA, cardB])
+        let loadResult = makeLoadResult(
+            savedPaymentMethods: [cardA, cardB],
+            customerProvider: configuration.customerProvider
+        )
         _ = sheet.makePaymentSheetVC(
             loadResult: loadResult,
             previousPaymentOption: nil

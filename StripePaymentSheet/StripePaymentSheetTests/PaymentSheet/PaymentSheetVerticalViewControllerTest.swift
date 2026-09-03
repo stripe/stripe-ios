@@ -67,7 +67,8 @@ final class PaymentSheetVerticalViewControllerTest: XCTestCase {
             savedPaymentMethods: [._testCard()],
             paymentMethodTypes: [.stripe(.card)],
             paymentMethodMessagingPromotionsHelper: promotionsHelper,
-            paymentMethodOrientation: .vertical
+            paymentMethodOrientation: .vertical,
+            customerProvider: CustomerProvider(customer: nil)
         )
         XCTAssertTrue(makeViewController(loadResult: savedPMsLoadResult).children.first is VerticalPaymentMethodListViewController)
 
@@ -87,7 +88,8 @@ final class PaymentSheetVerticalViewControllerTest: XCTestCase {
             savedPaymentMethods: [],
             paymentMethodTypes: [.stripe(.card)],
             paymentMethodMessagingPromotionsHelper: ._testValue(),
-            paymentMethodOrientation: .vertical
+            paymentMethodOrientation: .vertical,
+            customerProvider: CustomerProvider(customer: nil)
         )
         XCTAssertTrue(makeViewController(loadResult: formDirectlyResult).children.first is PaymentMethodFormViewController)
 
@@ -98,7 +100,8 @@ final class PaymentSheetVerticalViewControllerTest: XCTestCase {
             savedPaymentMethods: [._testCard()],
             paymentMethodTypes: [.stripe(.card)],
             paymentMethodMessagingPromotionsHelper: ._testValue(),
-            paymentMethodOrientation: .vertical
+            paymentMethodOrientation: .vertical,
+            customerProvider: CustomerProvider(customer: nil)
         )
         XCTAssertTrue(makeViewController(loadResult: onlyOnePM).children.first is VerticalPaymentMethodListViewController)
 
@@ -109,7 +112,8 @@ final class PaymentSheetVerticalViewControllerTest: XCTestCase {
             savedPaymentMethods: [._testCard()],
             paymentMethodTypes: [.stripe(.card)],
             paymentMethodMessagingPromotionsHelper: ._testValue(),
-            paymentMethodOrientation: .vertical
+            paymentMethodOrientation: .vertical,
+            customerProvider: CustomerProvider(customer: nil)
         )
         XCTAssertTrue(makeViewController(loadResult: multiplePMs).children.first is VerticalPaymentMethodListViewController)
 
@@ -120,7 +124,8 @@ final class PaymentSheetVerticalViewControllerTest: XCTestCase {
             savedPaymentMethods: [._testCard()],
             paymentMethodTypes: [.stripe(.card)],
             paymentMethodMessagingPromotionsHelper: ._testValue(),
-            paymentMethodOrientation: .vertical
+            paymentMethodOrientation: .vertical,
+            customerProvider: CustomerProvider(customer: nil)
         )
         XCTAssertTrue(makeViewController(loadResult: onePMAndLink).children.first is VerticalPaymentMethodListViewController)
 
@@ -131,7 +136,8 @@ final class PaymentSheetVerticalViewControllerTest: XCTestCase {
             savedPaymentMethods: [._testCard()],
             paymentMethodTypes: [.stripe(.card)],
             paymentMethodMessagingPromotionsHelper: ._testValue(),
-            paymentMethodOrientation: .vertical
+            paymentMethodOrientation: .vertical,
+            customerProvider: CustomerProvider(customer: nil)
         )
         XCTAssertTrue(makeViewController(loadResult: onePMAndApplePay).children.first is VerticalPaymentMethodListViewController)
     }
@@ -150,7 +156,8 @@ final class PaymentSheetVerticalViewControllerTest: XCTestCase {
                 savedPaymentMethods: hasSavedPM ? [savedPM] : [],
                 paymentMethodTypes: [.stripe(.card)],
                 paymentMethodMessagingPromotionsHelper: ._testValue(),
-                paymentMethodOrientation: .vertical
+                paymentMethodOrientation: .vertical,
+                customerProvider: configuration.customerProvider
             )
             return PaymentSheetVerticalViewController(
                 configuration: configuration,
@@ -231,7 +238,8 @@ final class PaymentSheetVerticalViewControllerTest: XCTestCase {
                 savedPaymentMethods: hasSavedPM ? [savedPM] : [],
                 paymentMethodTypes: [.stripe(.card)],
                 paymentMethodMessagingPromotionsHelper: ._testValue(),
-                paymentMethodOrientation: .vertical
+                paymentMethodOrientation: .vertical,
+                customerProvider: configuration.customerProvider
             )
             return PaymentSheetVerticalViewController(
                 configuration: configuration,
