@@ -88,8 +88,20 @@ extension PaymentSheet {
 
     /// Canonical source of truth for whether the Link button/row should be rendered in the payment element UI.
     /// Link may remain functionally enabled (see `isLinkEnabled`) even when its button is hidden, e.g. to support automatic Link verification without a visible entry point.
+    /// When `.walletButtonHidden` is configured, the button is still shown if the load-time lookup found an existing Link user.
     static func shouldShowLinkButton(elementsSession: STPElementsSession, configuration: PaymentElementConfiguration) -> Bool {
-        return isLinkEnabled(elementsSession: elementsSession, configuration: configuration) && configuration.link.shouldShowButton
+        guard isLinkEnabled(elementsSession: elementsSession, configuration: configuration) else {
+            return false
+        }
+
+        switch configuration.link.display {
+        case .automatic:
+            return true
+        case .walletButtonHidden:
+            return LinkAccountContext.shared.account?.isRegistered == true
+        case .never:
+            return false
+        }
     }
 
     /// Canonical source of truth for reasons why Link is disabled

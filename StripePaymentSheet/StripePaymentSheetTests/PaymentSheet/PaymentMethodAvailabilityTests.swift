@@ -12,6 +12,11 @@
 import XCTest
 
 final class PaymentMethodAvailabilityTests: XCTestCase {
+    override func tearDown() {
+        LinkAccountContext.shared.account = nil
+        super.tearDown()
+    }
+
     func testResolvedLinkBrand_usesElementsSessionBrand() {
         let elementsSession = STPElementsSession._testValue(
             linkSettings: ._testValue(brand: .onelink)
@@ -216,21 +221,50 @@ final class PaymentMethodAvailabilityTests: XCTestCase {
         )
         var configuration = PaymentSheet.Configuration()
         configuration.link = .init(display: .never)
+        LinkAccountContext.shared.account = ._testValue(email: "john@doe.com", isRegistered: true)
         let shouldShowLinkButton = PaymentSheet.shouldShowLinkButton(elementsSession: elementsSession, configuration: configuration)
 
-        XCTAssertFalse(shouldShowLinkButton, "Link button should not be shown when display is set to .never")
+        XCTAssertFalse(shouldShowLinkButton, "Link button should not be shown when display is set to .never, even for an existing Link user")
     }
 
-    func testShouldShowLinkButton_linkDisplayWalletButtonHidden_buttonNotShown() {
+    func testShouldShowLinkButton_linkDisplayWalletButtonHidden_newUser_buttonNotShown() {
         let elementsSession = STPElementsSession._testValue(
             paymentMethodTypes: ["card"],
             isLinkPassthroughModeEnabled: true
         )
         var configuration = PaymentSheet.Configuration()
         configuration.link = .init(display: .walletButtonHidden)
+        LinkAccountContext.shared.account = ._testValue(email: "john@doe.com", isRegistered: false)
 
         XCTAssertTrue(PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration), "Link should remain enabled when display is set to .walletButtonHidden")
-        XCTAssertFalse(PaymentSheet.shouldShowLinkButton(elementsSession: elementsSession, configuration: configuration), "Link button should not be shown when display is set to .walletButtonHidden, even though Link remains enabled")
+        XCTAssertFalse(PaymentSheet.shouldShowLinkButton(elementsSession: elementsSession, configuration: configuration), "Link button should not be shown when display is set to .walletButtonHidden and no existing Link user was found")
+    }
+
+    func testShouldShowLinkButton_linkDisplayWalletButtonHidden_noUser_buttonNotShown() {
+        let elementsSession = STPElementsSession._testValue(
+            paymentMethodTypes: ["card"],
+            isLinkPassthroughModeEnabled: true
+        )
+        var configuration = PaymentSheet.Configuration()
+        configuration.link = .init(display: .walletButtonHidden)
+        LinkAccountContext.shared.account = nil
+
+        XCTAssertTrue(PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration), "Link should remain enabled when display is set to .walletButtonHidden")
+        XCTAssertFalse(PaymentSheet.shouldShowLinkButton(elementsSession: elementsSession, configuration: configuration), "Link button should not be shown when display is set to .walletButtonHidden and no Link user was found")
+    }
+
+    func testShouldShowLinkButton_linkDisplayWalletButtonHidden_existingUser_buttonShown() {
+        let elementsSession = STPElementsSession._testValue(
+            paymentMethodTypes: ["card"],
+            isLinkPassthroughModeEnabled: true
+        )
+        var configuration = PaymentSheet.Configuration()
+        configuration.link = .init(display: .walletButtonHidden)
+        LinkAccountContext.shared.account = makeLinkAccountRequiringVerification()
+
+        XCTAssertTrue(PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration), "Link should remain enabled when display is set to .walletButtonHidden")
+        XCTAssertEqual(LinkAccountContext.shared.account?.sessionState, .requiresVerification)
+        XCTAssertTrue(PaymentSheet.shouldShowLinkButton(elementsSession: elementsSession, configuration: configuration), "Link button should be shown when display is set to .walletButtonHidden and an existing Link user was found")
     }
 
     func testIsLinkEnabled_automaticTaxBilling_linkDisabled() {
