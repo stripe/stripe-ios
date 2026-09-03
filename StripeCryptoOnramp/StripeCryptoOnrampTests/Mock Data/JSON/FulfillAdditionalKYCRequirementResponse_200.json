@@ -1,5 +1,24 @@
 {
   "id": "submission_123",
-  "object": "crypto_onramp_kyc_submission",
-  "status": "pending_verification"
+  "object": "crypto.kyc_submission",
+  "liquidity_provider": "swapped",
+  "submission_type": "document",
+  "status": "pending_verification",
+  "documents": [
+    {
+      "document_type": "source_of_funds",
+      "document_subtype": "payslip",
+      "file_ids": ["file_123"],
+      "status": "pending_verification"
+    }
+  ],
+  "questionnaire": {
+    "answers": [
+      {
+        "question_id": "purchase_purpose",
+        "value": "Long-term investment"
+      }
+    ]
+  },
+  "created": 1723264800
 }

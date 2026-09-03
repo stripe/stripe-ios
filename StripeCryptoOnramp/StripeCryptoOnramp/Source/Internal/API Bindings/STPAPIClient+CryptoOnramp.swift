@@ -49,20 +49,21 @@ extension STPAPIClient {
         return try await post(resource: endpoint, object: requestObject)
     }
 
-    /// Retrieves a crypto customer and its outstanding additional KYC requirements.
-    /// - Parameters:
-    ///   - id: The crypto customer ID.
-    ///   - consumerSessionClientSecret: The authenticated Link consumer session client secret.
-    /// - Returns: The crypto customer, including any additional KYC requirements.
-    func retrieveCryptoCustomer(id: String, consumerSessionClientSecret: String) async throws -> CustomerResponse {
-        // TODO: The design names this existing endpoint but its API review is
-        // still open. Confirm the final path and whether Link credentials belong in the query.
-        // Integration-test that URLSession's default `Accept-Language` behavior reaches this API
-        // before relying on it for server-provided requirement copy.
-        let endpoint = "crypto/customers/\(id)"
-        let request = RetrieveCryptoCustomerRequest(
-            credentials: Credentials(consumerSessionClientSecret: consumerSessionClientSecret)
-        )
+    /// Retrieves the authenticated customer's outstanding additional KYC requirements.
+    /// - Parameter linkAccountInfo: Information associated with the Link account, including its client secret and verification state.
+    /// - Returns: The customer's additional KYC requirements.
+    /// Throws if the Link account is not verified, its client secret is unavailable, or an API error occurs.
+    func retrieveCryptoCustomer(linkAccountInfo: PaymentSheetLinkAccountInfoProtocol) async throws -> RetrieveCryptoCustomerResponse {
+        guard let consumerSessionClientSecret = linkAccountInfo.consumerSessionClientSecret else {
+            throw CryptoOnrampAPIError.missingConsumerSessionClientSecret
+        }
+
+        try validateSessionState(using: linkAccountInfo)
+
+        // TODO: Integration-test that URLSession's default `Accept-Language` behavior reaches
+        // this API before relying on it for server-provided requirement copy.
+        let endpoint = "crypto/internal/customer"
+        let request = EmptyRequestWithCredentials(consumerSessionClientSecret: consumerSessionClientSecret)
         return try await get(
             resource: endpoint,
             parameters: try request.encodeJSONDictionary()
@@ -72,8 +73,7 @@ extension STPAPIClient {
     /// Submits documents and questionnaire answers for one additional KYC requirement.
     /// - Parameter request: The requirement fulfillment payload.
     /// - Returns: The newly created additional KYC submission.
-    func fulfillAdditionalKYCRequirement(_ request: FulfillAdditionalKYCRequirementRequest) async throws -> AdditionalKYCFulfillmentResponse {
-        // TODO: The endpoint name is still under API review. Revisit when we know the final endpoint
+    func fulfillAdditionalKYCRequirement(_ request: FulfillAdditionalKYCRequirementRequest) async throws -> FulfillAdditionalKYCRequirementResponse {
         let endpoint = "crypto/internal/fulfill_additional_kyc_requirement"
         return try await post(resource: endpoint, object: request)
     }

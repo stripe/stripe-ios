@@ -8,7 +8,7 @@
 import Foundation
 
 /// A questionnaire used to collect information for an additional KYC requirement.
-struct AdditionalKYCQuestionnaire: Codable, Equatable {
+struct AdditionalKYCQuestionnaire: Decodable, Equatable {
 
     /// The questions to present to the customer.
     let questions: [AdditionalKYCQuestion]

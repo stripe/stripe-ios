@@ -8,23 +8,13 @@
 import Foundation
 
 /// The kind of answer accepted by an additional KYC question.
-enum AdditionalKYCAnswerType: Equatable, Codable {
+enum AdditionalKYCAnswerType: Decodable, Equatable {
 
     /// A free-form text answer.
     case freeText
 
     /// An answer type value that this SDK version does not recognize.
     case unknown(String)
-
-    /// The raw API value for the answer type.
-    var rawValue: String {
-        switch self {
-        case .freeText:
-            return "free_text"
-        case .unknown(let value):
-            return value
-        }
-    }
 
     // MARK: - Decodable
 
@@ -35,12 +25,5 @@ enum AdditionalKYCAnswerType: Equatable, Codable {
         case let value:
             self = .unknown(value)
         }
-    }
-
-    // MARK: - Encodable
-
-    func encode(to encoder: Encoder) throws {
-        var container = encoder.singleValueContainer()
-        try container.encode(rawValue)
     }
 }
