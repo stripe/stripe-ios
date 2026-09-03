@@ -44,6 +44,9 @@ extension PaymentSheet {
         .payByBank,
         .mbWay,
         .bizum,
+        .krCard,
+        .payco,
+        .sequra,
     ]
 
     /// A list of `STPPaymentMethodType` that can be saved in PaymentSheet
@@ -174,6 +177,7 @@ private extension STPElementsSession {
 // MARK: - PaymentMethodRequirementProvider
 
 /// Defines an instance type who provides a set of `PaymentMethodTypeRequirement` it satisfies
+@MainActor
 protocol PaymentMethodRequirementProvider {
 
     /// The set of payment requirements provided by this instance
@@ -181,6 +185,7 @@ protocol PaymentMethodRequirementProvider {
 }
 
 extension Intent: PaymentMethodRequirementProvider {
+    @MainActor
     var fulfilledRequirements: [PaymentMethodTypeRequirement] {
         switch self {
         case let .paymentIntent(paymentIntent):
@@ -335,7 +340,7 @@ extension PaymentSheet {
             }
         }
 
-        static func ==(lhs: PaymentMethodAvailabilityStatus, rhs: PaymentMethodAvailabilityStatus) -> Bool {
+        static func == (lhs: PaymentMethodAvailabilityStatus, rhs: PaymentMethodAvailabilityStatus) -> Bool {
             switch (lhs, rhs) {
             case (.notSupported, .notSupported),
                  (.supported, .supported),
@@ -357,11 +362,11 @@ extension PaymentSheet {
 
     /// Payment method types that require mandate data for PaymentIntents when `setup_future_usage` is set
     static var requiresMandateDataForPaymentIntent: Set<STPPaymentMethodType> {
-        [.alipay, .payPal, .cashApp, .revolutPay, .amazonPay, .klarna, .satispay, .twint]
+        [.alipay, .payPal, .cashApp, .revolutPay, .amazonPay, .klarna, .satispay, .twint, .krCard]
     }
 
     /// Payment method types that require mandate data for SetupIntents
     static var requiresMandateDataForSetupIntent: Set<STPPaymentMethodType> {
-        [.alipay, .payPal, .revolutPay, .satispay, .twint]
+        [.alipay, .payPal, .revolutPay, .satispay, .twint, .krCard]
     }
 }

@@ -8,6 +8,7 @@
 import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
+@_spi(STP) import StripeUICore
 import UIKit
 
 extension CheckoutController: ExpressCheckoutElementDelegate {
@@ -15,30 +16,88 @@ extension CheckoutController: ExpressCheckoutElementDelegate {
         _ paymentMethod: ExpressCheckoutElement.PaymentMethod,
         presentationWindow: UIWindow?
     ) async -> ConfirmResult {
-        let flow: CheckoutConfirmationFlow?
+        do {
+            let flow = try makeExpressCheckoutConfirmationFlow(
+                paymentMethod,
+                presentationWindow: presentationWindow
+            )
+            return await confirm(flow)
+        } catch {
+            STPAnalyticsClient.sharedClient.log(analytic: ErrorAnalytic(event: .unexpectedCheckoutElementsError, error: error))
+            return .failed(error)
+        }
+    }
+
+    func makeExpressCheckoutConfirmationFlow(
+        _ paymentMethod: ExpressCheckoutElement.PaymentMethod,
+        presentationWindow: UIWindow?
+    ) throws -> CheckoutConfirmationFlow {
         switch paymentMethod {
         case .applePay:
             guard let applePayConfiguration = configuration.expressCheckoutElement.applePayConfiguration else {
-                flow = nil
-                break
+                throw CheckoutError.unknown(debugDescription: "Could not build a confirmation flow for \(paymentMethod). Express Checkout Element Apple Pay configuration unexpectedly nil.")
             }
-            flow = .applePay(.init(
+            // TODO: Should next actions use an authentication context tied to `presentationWindow`
+            // instead of `WindowAuthenticationContext` to avoid presenting in the wrong scene?
+            let authenticationContext = WindowAuthenticationContext()
+            return .applePay(.init(
                 applePayConfiguration: applePayConfiguration,
                 apiClient: apiClient,
                 returnURL: configuration.returnURL,
                 merchantDisplayName: effectiveMerchantDisplayName,
-                presentationWindow: presentationWindow
+                shippingAddressRequired: configuration.expressCheckoutElement.shippingAddressRequired,
+                billingDetailsCollectionConfiguration: configuration.expressCheckoutElement.billingDetailsCollectionConfiguration.paymentSheetConfiguration(),
+                defaultBillingDetails: configuration.defaults.billingDetails,
+                presentationWindow: presentationWindow,
+                confirmationHandler: { [apiClient, paymentHandler] requestParameters in
+                    await Self.confirmCheckoutSession(
+                        with: requestParameters,
+                        apiClient: apiClient,
+                        authenticationContext: authenticationContext,
+                        paymentHandler: paymentHandler
+                    )
+                }
             ))
         case .link:
-            // ECE Link needs its own configuration and analytics lifecycle before it can build this flow.
-            flow = nil
+            guard let presentingViewController = presentationWindow?.findTopMostPresentedViewController() else {
+                throw CheckoutError.unknown(debugDescription: "Could not build a confirmation flow for \(paymentMethod). Could not find a presenting view controller.")
+            }
+            // TODO: maybe add Link-specific configuration
+            var paymentElementConfiguration = PaymentSheet.Configuration()
+            paymentElementConfiguration.apiClient = apiClient
+            paymentElementConfiguration.returnURL = configuration.returnURL
+            paymentElementConfiguration.merchantDisplayName = effectiveMerchantDisplayName
+            paymentElementConfiguration.style = configuration.userInterfaceStyle
+            paymentElementConfiguration.billingDetailsCollectionConfiguration = configuration.expressCheckoutElement.billingDetailsCollectionConfiguration.paymentSheetConfiguration()
+            if let billingDetails = configuration.defaults.billingDetails {
+                paymentElementConfiguration.defaultBillingDetails.set(billingDetails)
+            }
+            paymentElementConfiguration.defaultBillingDetails.email = session.email
+            switch configuration.expressCheckoutElement.linkConfiguration.display {
+            case .automatic:
+                paymentElementConfiguration.link.display = .automatic
+            case .never:
+                paymentElementConfiguration.link.display = .never
+            }
+            // TODO: maybe separate out a LinkAnalyticsHelper
+            let analyticsHelper = PaymentSheetAnalyticsHelper(
+                integrationShape: .complete, // Wallet Link analytics don't log integrationShape, so it's not worth adding an .expressCheckout case.
+                configuration: paymentElementConfiguration
+            )
+            let authenticationContext = AuthenticationContext(
+                presentingViewController: presentingViewController,
+                appearance: paymentElementConfiguration.appearance
+            )
+            return .link(.init(
+                confirmOption: .wallet(brand: session.elementsSession.linkBrand ?? .link),
+                configuration: paymentElementConfiguration,
+                confirmationChallenge: ConfirmationChallenge(
+                    elementsSession: session.elementsSession,
+                    stripeAttest: apiClient.stripeAttest),
+                analyticsHelper: analyticsHelper,
+                authenticationContext: authenticationContext,
+                paymentHandler: paymentHandler))
         }
-        guard let flow else {
-            let error = CheckoutError.unknown(debugDescription: "CheckoutController.expressCheckoutElementShouldConfirm() could not build a confirmation flow for \(paymentMethod).")
-            STPAnalyticsClient.sharedClient.log(analytic: ErrorAnalytic(event: .unexpectedCheckoutElementsError, error: error))
-            return .failed(error)
-        }
-        return await confirm(flow)
     }
 }
 
@@ -58,7 +117,7 @@ extension CheckoutController {
 
     // MARK: - Payment Option
 
-    func setPaymentOption(_ paymentOption: Session.PaymentOptionDisplayData?) {
+    func dangerouslySetPaymentOptionDirectly(_ paymentOption: Session.PaymentOptionDisplayData?) {
         dangerouslySetSessionDirectly(
             session.makeCopyOverriding(paymentOption: .newValue(paymentOption))
         )
@@ -163,31 +222,50 @@ extension CheckoutController {
         canUpdateWhileSheetPresented: Bool = false
     ) async throws {
         try await enqueueSessionUpdate {
-            if !canUpdateWhileSheetPresented {
-                try self.requireSheetNotPresented()
-            }
-            do {
-                let updatedSessionAPIResponse: PaymentPagesAPIResponse?
-                if let update {
-                    let sessionId = CheckoutController.extractSessionId(from: self.clientSecret)
-                    updatedSessionAPIResponse = try await self.apiClient.updateCheckoutSession(
-                        checkoutSessionId: sessionId,
-                        parameters: update.parameters
-                    )
-                } else {
-                    updatedSessionAPIResponse = nil
-                }
+            try await self.applySessionUpdate(
+                update,
+                shippingAddress: shippingAddress,
+                canUpdateWhileSheetPresented: canUpdateWhileSheetPresented
+            )
+        }
+    }
 
-                // Errors from here should still get wrapped in API errors since the only way
-                //  local session application throws is if the API returned a session state that
-                //  the UI can't handle.
-                try await self.commitSession(
-                    updatedSessionAPIResponse,
-                    shippingAddress: shippingAddress
+    /// Performs the API mutation (if any) and commits the resulting session, exactly like
+    /// `performUpdate`, but without enqueuing behind `pendingOperations`.
+    ///
+    /// - Warning: Only call this from a context that's already serialized behind
+    ///   `pendingOperations` (e.g. from within an in-flight `enqueueSessionUpdate` body). Calling
+    ///   `enqueueSessionUpdate`/`performUpdate` again from such a context would deadlock, since the
+    ///   nested operation's predecessor would be the still-running outer operation itself.
+    func applySessionUpdate(
+        _ update: SessionUpdate? = nil,
+        shippingAddress: SessionFieldUpdate<Session.ShippingAddress> = .keepOldValue,
+        canUpdateWhileSheetPresented: Bool = false
+    ) async throws {
+        if !canUpdateWhileSheetPresented {
+            try requireSheetNotPresented()
+        }
+        do {
+            let updatedSessionAPIResponse: PaymentPagesAPIResponse?
+            if let update {
+                let sessionId = CheckoutController.extractSessionId(from: clientSecret)
+                updatedSessionAPIResponse = try await apiClient.updateCheckoutSession(
+                    checkoutSessionId: sessionId,
+                    parameters: update.parameters
                 )
-            } catch {
-                throw CheckoutError.apiError(message: error.nonGenericDescription)
+            } else {
+                updatedSessionAPIResponse = nil
             }
+
+            // Errors from here should still get wrapped in API errors since the only way
+            //  local session application throws is if the API returned a session state that
+            //  the UI can't handle.
+            try await commitSession(
+                updatedSessionAPIResponse,
+                shippingAddress: shippingAddress
+            )
+        } catch {
+            throw CheckoutError.apiError(message: error.nonGenericDescription)
         }
     }
 

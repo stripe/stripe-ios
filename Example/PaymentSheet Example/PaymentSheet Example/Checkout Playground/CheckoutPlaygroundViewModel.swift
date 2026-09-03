@@ -9,6 +9,14 @@ import Combine
 import SwiftUI
 
 extension CheckoutPlayground {
+    struct ExpressCheckoutElementSettings {
+        var isEnabled = true
+        var applePayDisplay: ExpressCheckoutElement.ApplePayConfiguration.Display = .automatic
+        var linkDisplay: ExpressCheckoutElement.LinkConfiguration.Display = .automatic
+        var shippingAddressRequired: Bool = false
+        var billingDetailsCollectionConfiguration = ExpressCheckoutElement.BillingDetailsCollectionConfiguration()
+    }
+
     @MainActor
     final class ViewModel: ObservableObject {
 
@@ -20,20 +28,25 @@ extension CheckoutPlayground {
         @Published var uiFramework: UIFramework
         @Published var integrationType: IntegrationType {
             didSet {
-                if integrationType == .eceOnly && expressCheckoutElementOption == .hide {
-                    expressCheckoutElementOption = .show
+                if integrationType == .eceOnly && !expressCheckoutElement.isEnabled {
+                    expressCheckoutElement.isEnabled = true
                 }
             }
         }
-        @Published var expressCheckoutElementOption: ExpressCheckoutElementOption {
+        @Published var expressCheckoutElement = ExpressCheckoutElementSettings() {
             didSet {
-                if expressCheckoutElementOption == .hide && integrationType == .eceOnly {
+                if !expressCheckoutElement.isEnabled && integrationType == .eceOnly {
                     integrationType = .flowController
                 }
             }
         }
-        @Published var applePayDisplay: ExpressCheckoutElement.ApplePayConfiguration.Display = .automatic
-        @Published var linkDisplay: ExpressCheckoutElement.LinkConfiguration.Display = .automatic
+        @Published var linkMode: LinkMode {
+            didSet {
+                if isLinkModeOverrideActive {
+                    PaymentSheet.LinkFeatureFlags.nativeLinkEnabledOverride = linkMode == .native
+                }
+            }
+        }
         @Published var currency: Currency
         @Published var customerType: CustomerType
         @Published var lineItems: [LineItemConfig]
@@ -58,12 +71,14 @@ extension CheckoutPlayground {
         @Published var navigateToCheckout = false
 
         private var settingsSaveSubscription: AnyCancellable?
+        private var isLinkModeOverrideActive = false
 
         init() {
             let settings = Self.settingsFromDefaults() ?? Settings()
             uiFramework = settings.uiFramework
             integrationType = settings.integrationType
-            expressCheckoutElementOption = settings.expressCheckoutElementOption
+            expressCheckoutElement = ExpressCheckoutElementSettings(isEnabled: settings.showExpressCheckoutElement)
+            linkMode = settings.linkMode
             currency = settings.currency
             customerType = settings.customerType
             lineItems = settings.lineItems
@@ -81,7 +96,6 @@ extension CheckoutPlayground {
             checkoutEndpointOption = settings.checkoutEndpointOption
             checkoutEndpoint = settings.checkoutEndpoint
             delayPaymentPagesRequests = settings.delayPaymentPagesRequests
-
             settingsSaveSubscription = objectWillChange.sink { [weak self] _ in
                 guard let self else {
                     return
@@ -92,6 +106,16 @@ extension CheckoutPlayground {
                     self.serializeSettingsToNSUserDefaults()
                 }
             }
+        }
+
+        func activateLinkModeOverride() {
+            isLinkModeOverrideActive = true
+            PaymentSheet.LinkFeatureFlags.nativeLinkEnabledOverride = linkMode == .native
+        }
+
+        func deactivateLinkModeOverride() {
+            isLinkModeOverrideActive = false
+            PaymentSheet.LinkFeatureFlags.nativeLinkEnabledOverride = nil
         }
 
         var isButtonDisabled: Bool {
@@ -186,7 +210,8 @@ extension CheckoutPlayground {
             Settings(
                 uiFramework: uiFramework,
                 integrationType: integrationType,
-                expressCheckoutElementOption: expressCheckoutElementOption,
+                showExpressCheckoutElement: expressCheckoutElement.isEnabled,
+                linkMode: linkMode,
                 currency: currency,
                 customerType: customerType,
                 lineItems: lineItems,
@@ -210,7 +235,8 @@ extension CheckoutPlayground {
         private func apply(_ settings: Settings) {
             uiFramework = settings.uiFramework
             integrationType = settings.integrationType
-            expressCheckoutElementOption = settings.expressCheckoutElementOption
+            expressCheckoutElement.isEnabled = settings.showExpressCheckoutElement
+            linkMode = settings.linkMode
             currency = settings.currency
             customerType = settings.customerType
             lineItems = settings.lineItems

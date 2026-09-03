@@ -651,6 +651,21 @@ enum RowButtonType: Equatable {
     case applePay
     case link
 
+    init(paymentOption: PaymentOption) {
+        switch paymentOption {
+        case .applePay:
+            self = .applePay
+        case .saved(let paymentMethod, _):
+            self = .saved(paymentMethod: paymentMethod)
+        case .new(let confirmParams):
+            self = .new(paymentMethodType: confirmParams.paymentMethodType)
+        case .link:
+            self = .link
+        case .external(let paymentMethod, _):
+            self = .new(paymentMethodType: .external(paymentMethod))
+        }
+    }
+
     static func == (lhs: RowButtonType, rhs: RowButtonType) -> Bool {
         switch (lhs, rhs) {
         case (.link, .link):

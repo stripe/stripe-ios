@@ -105,11 +105,10 @@ public final class EmbeddedPaymentElement {
     /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, customer details, etc.
     /// - Returns: A valid EmbeddedPaymentElement instance
     /// - Throws: An error if loading failed.
-    @_spi(STP)
-    @_spi(ReactNativeSDK)
-    public static func create(
+    static func create(
         checkout: CheckoutController,
-        configuration: Configuration
+        configuration: Configuration,
+        initialPaymentOption: PaymentOption? = nil
     ) async throws -> EmbeddedPaymentElement {
         try await checkout.awaitPendingOperations()
         var config = configuration
@@ -131,7 +130,8 @@ public final class EmbeddedPaymentElement {
             configuration: config,
             loadResult: loadResult,
             confirmationChallenge: confirmationChallenge,
-            analyticsHelper: analyticsHelper
+            analyticsHelper: analyticsHelper,
+            initialSelection: initialPaymentOption.map(RowButtonType.init)
         )
         embeddedPaymentElement.clearPaymentOptionIfNeeded()
         embeddedPaymentElement.checkout = checkout
@@ -375,6 +375,7 @@ public final class EmbeddedPaymentElement {
         configuration: configuration,
         loadResult: loadResult,
         analyticsHelper: analyticsHelper,
+        previousSelection: initialSelection,
         delegate: self
        )
     }()
@@ -385,6 +386,7 @@ public final class EmbeddedPaymentElement {
     internal var defaultPaymentMethod: STPPaymentMethod?
     internal private(set) var latestUpdateTask: Task<UpdateResult, Never>?
     internal private(set) var analyticsHelper: PaymentSheetAnalyticsHelper
+    private let initialSelection: RowButtonType?
     internal private(set) var formCache: PaymentMethodFormCache = .init()
     /// The form view controller for the currently selected payment method.
     internal var selectedFormViewController: EmbeddedFormViewController?
@@ -458,13 +460,15 @@ public final class EmbeddedPaymentElement {
         configuration: Configuration,
         loadResult: PaymentSheetLoader.LoadResult,
         confirmationChallenge: ConfirmationChallenge? = nil,
-        analyticsHelper: PaymentSheetAnalyticsHelper
+        analyticsHelper: PaymentSheetAnalyticsHelper,
+        initialSelection: RowButtonType? = nil
     ) {
         self.configuration = configuration
         self.loadResult = loadResult
         self.savedPaymentMethods = loadResult.savedPaymentMethods
         self.defaultPaymentMethod = loadResult.elementsSession.customer?.getDefaultPaymentMethod()
         self.analyticsHelper = analyticsHelper
+        self.initialSelection = initialSelection
         self.confirmationChallenge = confirmationChallenge
 
         analyticsHelper.logInitialized()

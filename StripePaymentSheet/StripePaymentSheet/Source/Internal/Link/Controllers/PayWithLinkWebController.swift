@@ -13,6 +13,7 @@ import AuthenticationServices
 @_spi(STP) import StripePayments
 @_spi(STP) import StripeUICore
 
+@MainActor
 protocol PayWithLinkWebControllerDelegate: AnyObject {
 
     func payWithLinkWebControllerDidComplete(
@@ -32,6 +33,7 @@ protocol PayWithLinkWebControllerDelegate: AnyObject {
 /// For internal SDK use only
 
 @objc(STP_Internal_PayWithLinkWebController)
+@MainActor
 final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationContextProviding, STPAuthenticationContext {
     func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
         return bestWindowForPresentation

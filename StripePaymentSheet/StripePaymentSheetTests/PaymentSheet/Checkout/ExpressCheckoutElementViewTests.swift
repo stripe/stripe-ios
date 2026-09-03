@@ -75,6 +75,124 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
 
         let buttons = ExpressCheckoutElementUtilities.resolveButtons(for: session, configuration: configuration)
         XCTAssertFalse(buttons.contains(.link))
+        XCTAssertTrue(
+            ExpressCheckoutElementUtilities.linkDisabledReasons(for: session, configuration: configuration)
+                .contains(.linkConfiguration)
+        )
+    }
+
+    func testLinkButtonHiddenWhenShippingAddressIsRequired() {
+        // Given a session with Link and ECE configured to require a shipping address
+        let session = makeSessionWithWalletTypes(["link"]).makePublicSession()
+        var configuration = ExpressCheckoutElement.Configuration()
+        configuration.shippingAddressRequired = true
+
+        // When
+        let buttons = ExpressCheckoutElementUtilities.resolveButtons(for: session, configuration: configuration)
+
+        // Then Link is hidden because it cannot collect the required shipping address
+        XCTAssertFalse(buttons.contains(.link))
+        XCTAssertTrue(
+            ExpressCheckoutElementUtilities.linkDisabledReasons(for: session, configuration: configuration)
+                .contains(.shippingAddressCollection)
+        )
+    }
+
+    func testLinkButtonHiddenWhenFullBillingAddressIsRequiredAndNativeLinkIsUnavailable() {
+        // Given a session that only supports web Link and ECE requires a full billing address
+        let session = makeSessionWithWalletTypes(["link"], linkUseAttestation: false).makePublicSession()
+        var configuration = ExpressCheckoutElement.Configuration()
+        configuration.apiClient = STPAPIClient(publishableKey: "pk_test_123")
+        configuration.billingDetailsCollectionConfiguration.address = .full
+
+        // When
+        let buttons = ExpressCheckoutElementUtilities.resolveButtons(
+            for: session,
+            configuration: configuration
+        )
+
+        // Then Link is hidden because web Link cannot collect the required billing address
+        XCTAssertFalse(buttons.contains(.link))
+        XCTAssertTrue(
+            ExpressCheckoutElementUtilities.linkDisabledReasons(
+                for: session,
+                configuration: configuration
+            ).contains(.billingDetailsCollection)
+        )
+    }
+
+    func testLinkButtonShownWhenFullBillingAddressIsRequiredAndNativeLinkIsAvailable() {
+        // Given a session that supports native Link and ECE requires a full billing address
+        let session = makeSessionWithWalletTypes(["link"], linkUseAttestation: true).makePublicSession()
+        var configuration = ExpressCheckoutElement.Configuration()
+        configuration.apiClient = STPAPIClient(publishableKey: "pk_test_123")
+        configuration.billingDetailsCollectionConfiguration.address = .full
+
+        // When
+        let buttons = ExpressCheckoutElementUtilities.resolveButtons(
+            for: session,
+            configuration: configuration
+        )
+
+        // Then native Link can collect the required billing address
+        XCTAssertTrue(buttons.contains(.link))
+    }
+
+    func testLinkButtonHiddenWhenAutomaticTaxUsesBillingAddress() {
+        // Given a session that calculates automatic tax from the billing address
+        let session = makeSessionWithWalletTypes(
+            ["link"],
+            automaticTaxAddressSource: "session.billing"
+        ).makePublicSession()
+        let configuration = ExpressCheckoutElement.Configuration()
+
+        // When
+        let reasons = ExpressCheckoutElementUtilities.linkDisabledReasons(
+            for: session,
+            configuration: configuration
+        )
+
+        // Then Link is hidden because it cannot update billing-based automatic tax
+        XCTAssertTrue(reasons.contains(.automaticTaxAddress))
+        XCTAssertFalse(
+            ExpressCheckoutElementUtilities.resolveButtons(for: session, configuration: configuration)
+                .contains(.link)
+        )
+    }
+
+    func testLinkButtonShownWhenAutomaticTaxUsesShippingAddress() {
+        // Given a session whose shipping address is collected outside ECE and used for automatic tax
+        let session = makeSessionWithWalletTypes(
+            ["link"],
+            automaticTaxAddressSource: "session.shipping"
+        ).makePublicSession()
+        let configuration = ExpressCheckoutElement.Configuration()
+
+        // When
+        let reasons = ExpressCheckoutElementUtilities.linkDisabledReasons(
+            for: session,
+            configuration: configuration
+        )
+
+        // Then shipping-sourced automatic tax alone does not hide Link
+        XCTAssertFalse(reasons.contains(.automaticTaxAddress))
+        XCTAssertTrue(
+            ExpressCheckoutElementUtilities.resolveButtons(for: session, configuration: configuration)
+                .contains(.link)
+        )
+    }
+
+    func testLinkButtonHiddenWhenDisabledForAutomaticTaxBilling() {
+        // Given Link is disabled because the Checkout Session uses automatic tax billing
+        let session = makeSessionWithWalletTypes(["link"]).makePublicSession()
+        session.elementsSession.disableLinkForAutomaticTaxBilling = true
+        let configuration = ExpressCheckoutElement.Configuration()
+
+        // When
+        let buttons = ExpressCheckoutElementUtilities.resolveButtons(for: session, configuration: configuration)
+
+        // Then
+        XCTAssertFalse(buttons.contains(.link))
     }
 
     func testApplePayButtonHiddenWhenDisabledOnSession() {
@@ -104,16 +222,32 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
 
     private func makeSessionWithWalletTypes(
         _ walletTypes: [String],
-        applePayPreference: String? = nil
+        applePayPreference: String? = nil,
+        linkUseAttestation: Bool? = nil,
+        automaticTaxAddressSource: String? = nil
     ) -> PaymentPagesAPIResponse {
         var elementsSession: [String: Any] = [
             "session_id": "es_test",
+            "merchant_country": "US",
             "payment_method_preference": ["ordered_payment_method_types": ["card"]],
             "ordered_payment_method_types_and_wallets": walletTypes,
         ]
         if let applePayPreference {
             elementsSession["apple_pay_preference"] = applePayPreference
         }
-        return CheckoutTestHelpers.makeSession(["elements_session": elementsSession])
+        if let linkUseAttestation {
+            elementsSession["link_settings"] = [
+                "link_funding_sources": ["CARD"],
+                "link_mobile_use_attestation_endpoints": linkUseAttestation,
+            ]
+        }
+        var session: [String: Any] = ["elements_session": elementsSession]
+        if let automaticTaxAddressSource {
+            session["tax_context"] = [
+                "automatic_tax_enabled": true,
+                "automatic_tax_address_source": automaticTaxAddressSource,
+            ]
+        }
+        return CheckoutTestHelpers.makeSession(session)
     }
 }

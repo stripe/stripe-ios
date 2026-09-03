@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import PassKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 
