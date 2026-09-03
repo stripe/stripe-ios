@@ -170,7 +170,9 @@ extension FinancialConnectionsWebFlowViewController {
             hasExistingAccountholderToken: manifest.accountholderToken != nil,
             elementsSessionContext: elementsSessionContext,
             prefillDetailsOverride: prefillDetailsOverride,
-            additionalQueryParameters: additionalQueryParameters
+            additionalQueryParameters: additionalQueryParameters,
+            // Only passs the consumer's email when requesting data permissions.
+            consumerEmailAddress: apiClient.hasRequestedDataPermissions ? apiClient.consumerSession?.emailAddress : nil
         )
         authSessionManager?
             .start(hostedAuthUrl: updatedHostedAuthUrl)

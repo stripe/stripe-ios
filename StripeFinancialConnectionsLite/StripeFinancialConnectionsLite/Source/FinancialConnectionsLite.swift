@@ -66,6 +66,7 @@ import UIKit
             returnUrl: returnUrl,
             apiClient: apiClient,
             elementsSessionContext: elementsSessionContext,
+            consumerEmailAddress: hasRequestedDataPermissions ? existingConsumer?.emailAddress : nil,
             hasRequestedDataPermissions: hasRequestedDataPermissions,
             completion: { [weak self] result in
                 guard let self else { return }
