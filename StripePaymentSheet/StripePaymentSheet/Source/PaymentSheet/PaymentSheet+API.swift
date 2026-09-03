@@ -450,7 +450,7 @@ extension PaymentSheet {
                         let paymentOptions = paymentIntentParams.paymentMethodOptions ?? STPConfirmPaymentMethodOptions()
                         let paymentMethodType = paymentMethodParams.type
                         let currentSetupFutureUsage = paymentIntent.paymentMethodOptions?.setupFutureUsage(for: paymentMethodType)
-                        paymentOptions.setSetupFutureUsageIfNecessary(saveForFutureUseCheckboxState == .selected, currentSetupFutureUsage: currentSetupFutureUsage, paymentMethodType: paymentMethodType, customer: configuration.customer)
+                        paymentOptions.setSetupFutureUsageIfNecessary(saveForFutureUseCheckboxState == .selected, currentSetupFutureUsage: currentSetupFutureUsage, paymentMethodType: paymentMethodType, customerProvider: configuration.customerProvider)
                         paymentIntentParams.paymentMethodOptions = paymentOptions
                         paymentIntentParams.shipping = makeShippingParams(for: paymentIntent, configuration: configuration)
                         paymentIntentParams.clientAttributionMetadata = paymentMethodParams.clientAttributionMetadata
@@ -531,7 +531,7 @@ extension PaymentSheet {
                         let paymentOptions = paymentIntentParams.paymentMethodOptions ?? STPConfirmPaymentMethodOptions()
                         let paymentMethodType = paymentMethod.type
                         let currentSetupFutureUsage = paymentIntent.paymentMethodOptions?.setupFutureUsage(for: paymentMethodType)
-                        paymentOptions.setSetupFutureUsageIfNecessary(saveForFutureUseCheckboxState == .selected, currentSetupFutureUsage: currentSetupFutureUsage, paymentMethodType: paymentMethodType, customer: configuration.customer)
+                        paymentOptions.setSetupFutureUsageIfNecessary(saveForFutureUseCheckboxState == .selected, currentSetupFutureUsage: currentSetupFutureUsage, paymentMethodType: paymentMethodType, customerProvider: configuration.customerProvider)
                         paymentIntentParams.paymentMethodOptions = paymentOptions
                         paymentIntentParams.radarOptions = radarOptions
                         paymentIntentParams.mandateData = mandateData
@@ -833,7 +833,7 @@ extension PaymentSheet {
         guard
             // Did we successfully save this payment method?
             actionStatus == .succeeded,
-            let customer = configuration.customer?.id,
+            let customer = configuration.customerProvider.customerID,
             let paymentMethod = intent.paymentMethod,
             intent.isSetupFutureUsageSet(paymentMethodType: paymentMethod.type),
             // Can it appear in the list of saved PMs?
@@ -927,7 +927,7 @@ extension PaymentSheet {
 
         let paymentOptions = params.paymentMethodOptions ?? STPConfirmPaymentMethodOptions()
         let currentSetupFutureUsage = paymentIntent.paymentMethodOptions?.setupFutureUsage(for: paymentMethodType)
-        paymentOptions.setSetupFutureUsageIfNecessary(shouldSaveForIntent, currentSetupFutureUsage: currentSetupFutureUsage, paymentMethodType: paymentMethodType, customer: configuration.customer)
+        paymentOptions.setSetupFutureUsageIfNecessary(shouldSaveForIntent, currentSetupFutureUsage: currentSetupFutureUsage, paymentMethodType: paymentMethodType, customerProvider: configuration.customerProvider)
 
         // Set moto (mail order and telephone orders) for Dashboard b/c merchants key in cards on behalf of customers
         if configuration.apiClient.publishableKeyIsUserKey {
