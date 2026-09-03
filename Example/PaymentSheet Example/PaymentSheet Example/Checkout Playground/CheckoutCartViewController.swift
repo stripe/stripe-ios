@@ -298,7 +298,9 @@ final class CheckoutCartViewController: UIViewController {
                 makeSection(
                     title: "Payment Method",
                     content: makeCard(containing: makePaymentMethodRow(session: session)),
-                    accessory: session.paymentOption == nil ? nil : makeClearPaymentOptionButton()
+                    accessory: integrationType == .embedded && session.paymentOption != nil
+                        ? makeClearPaymentOptionButton()
+                        : nil
                 )
             )
         }
@@ -619,10 +621,8 @@ final class CheckoutCartViewController: UIViewController {
 
     private func makeClearPaymentOptionButton() -> UIButton {
         let button = UIButton(type: .system)
-        button.setImage(UIImage(systemName: "xmark.circle"), for: .normal)
-        button.setTitle(" Clear", for: .normal)
+        button.setTitle("Clear payment option", for: .normal)
         button.setTitleColor(.systemRed, for: .normal)
-        button.tintColor = .systemRed
         button.titleLabel?.font = .preferredFont(forTextStyle: .subheadline)
         button.addTarget(self, action: #selector(clearPaymentOptionButtonTapped), for: .touchUpInside)
         button.accessibilityLabel = "Clear payment method selection"
