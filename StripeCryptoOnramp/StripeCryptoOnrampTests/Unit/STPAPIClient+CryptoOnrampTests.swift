@@ -295,7 +295,7 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
             liquidityProvider: "swapped",
             submissionType: .document,
             documents: [
-                FulfillAdditionalKYCRequirementRequestDocument(
+                FulfillAdditionalKYCRequirementRequest.Document(
                     documentType: "source_of_funds",
                     documentSubtype: "payslip",
                     fileIds: ["file_123"]
@@ -303,7 +303,7 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
             ],
             questionnaire: AdditionalKYCFulfillmentQuestionnaire(
                 answers: [
-                    AdditionalKYCQuestionnaireAnswer(
+                    AdditionalKYCFulfillmentQuestionnaire.Answer(
                         questionId: "purchase_purpose",
                         value: "Long-term investment"
                     ),
