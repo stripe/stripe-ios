@@ -209,7 +209,7 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         }
     }
 
-    func testRetrieveCryptoCustomerUsesInternalEndpointAndCredentials() async throws {
+    func testRetrieveCryptoCustomerSuccess() async throws {
         let mockResponseData = try RetrieveCryptoCustomerResponseMock.sourceOfFundsWithQuestionnaire.data()
         stub { request in
             request.url?.path == "/v1/crypto/internal/customer"
