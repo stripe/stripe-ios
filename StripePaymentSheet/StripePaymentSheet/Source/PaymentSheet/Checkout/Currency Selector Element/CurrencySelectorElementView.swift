@@ -20,10 +20,7 @@ public struct CurrencySelectorElementView: View {
     }
 
     public var body: some View {
-        CurrencySelectorElementUIViewRepresentable(
-            viewModel: viewModel,
-            contentHeightRevision: viewModel.contentHeightRevision
-        )
+        CurrencySelectorElementUIViewRepresentable(viewModel: viewModel)
             .fixedSize(horizontal: false, vertical: true)
     }
 }
@@ -32,7 +29,6 @@ public struct CurrencySelectorElementView: View {
 @MainActor
 final class CurrencySelectorElementViewModel: ObservableObject {
     let uiView: CurrencySelectorElementUIView
-    @Published private(set) var contentHeightRevision = 0
 
     private var sessionCancellable: AnyCancellable?
 
@@ -42,7 +38,7 @@ final class CurrencySelectorElementViewModel: ObservableObject {
     ) {
         self.uiView = uiView
         uiView.didUpdateContentHeight = { [weak self] in
-            self?.contentHeightRevision += 1
+            self?.objectWillChange.send()
         }
         sessionCancellable = sessionSource.sessionPublisher
             .dropFirst()
@@ -55,8 +51,6 @@ final class CurrencySelectorElementViewModel: ObservableObject {
 
 private struct CurrencySelectorElementUIViewRepresentable: UIViewRepresentable {
     let viewModel: CurrencySelectorElementViewModel
-    /// Causes SwiftUI to update this representable when the UIKit view's height changes.
-    let contentHeightRevision: Int
 
     func makeUIView(context: Context) -> CurrencySelectorElementUIView {
         viewModel.uiView.setEnabled(context.environment.isEnabled)
