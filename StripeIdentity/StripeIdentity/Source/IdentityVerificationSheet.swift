@@ -25,12 +25,32 @@ final public class IdentityVerificationSheet {
 
     /// Configuration for an IdentityVerificationSheet
     public struct Configuration {
+        /// Configuration for the biometric consent screen's header.
+        @_spi(STP) public struct BiometricConsentConfiguration {
+            /// Whether to hide the branding header above the consent title.
+            public var hideBrandingHeader: Bool
+
+            /// Initializes a biometric consent header configuration.
+            /// - Parameters:
+            ///   - hideBrandingHeader: Whether to hide the branding header above the consent title.
+            public init(
+                hideBrandingHeader: Bool
+            ) {
+                self.hideBrandingHeader = hideBrandingHeader
+            }
+        }
+
         /// An image of your customer-facing business logo.
         ///
         /// - Note: The recommended image size is 32 x 32 points. The image will be
         /// displayed in both light and dark modes, if the app supports it. Use a
         /// dynamic UIImage to support different images in light vs dark mode.
         public var brandLogo: UIImage
+
+        /// Configuration for the biometric consent screen's header.
+        ///
+        /// When `nil`, the biometric consent screen uses the default header.
+        @_spi(STP) public var biometricConsent: BiometricConsentConfiguration?
 
         /// Initializes a Configuration.
         /// - Parameters:
@@ -41,6 +61,7 @@ final public class IdentityVerificationSheet {
             brandLogo: UIImage
         ) {
             self.brandLogo = brandLogo
+            self.biometricConsent = nil
         }
     }
 
@@ -91,7 +112,7 @@ final public class IdentityVerificationSheet {
                     ephemeralKeySecret: ephemeralKeySecret
                 ),
                 flowController: VerificationSheetFlowController(
-                    brandLogo: configuration.brandLogo
+                    configuration: configuration
                 ),
                 mlModelLoader: IdentityMLModelLoader(),
                 analyticsClient: IdentityAnalyticsClient(
