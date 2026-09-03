@@ -58,7 +58,7 @@ final class NetworkingLinkLoginWarmupViewController: SheetViewController {
         let appearance = dataSource.manifest.appearance
         let isLink = appearance.colors == .link
         let primaryButtonTitle: PaneLayoutView.AccessibleText = isLink
-            ? .init(STPLocalizedString("Continue", "A button title that continues a flow."))
+            ? .init(String.Localized.continue)
             : continueText
         let secondaryButtonTitle: String
         if isLink || dataSource.manifest.isProductInstantDebits {
@@ -104,9 +104,6 @@ final class NetworkingLinkLoginWarmupViewController: SheetViewController {
         super.viewDidLoad()
         let appearance = dataSource.manifest.appearance
         let isLink = appearance.colors == .link
-        let title: PaneLayoutView.AccessibleText = isLink
-            ? .init(STPLocalizedString("Welcome back", "Title for a returning user on the Link login warmup screen."))
-            : continueText
         setup(
             withContentView: PaneLayoutView.createContentView(
                 iconView: isLink ? nil : RoundedIconView(
@@ -114,7 +111,7 @@ final class NetworkingLinkLoginWarmupViewController: SheetViewController {
                     style: .circle,
                     appearance: appearance
                 ),
-                accessibleTitle: title,
+                accessibleTitle: continueText,
                 accessibleSubtitle: savedInfoSubtitle,
                 contentView: NetworkingLinkLoginWarmupBodyView(
                     // `email` should always be non-null, and since the email is only used as a visual, it's not worth to throw an error if it is null

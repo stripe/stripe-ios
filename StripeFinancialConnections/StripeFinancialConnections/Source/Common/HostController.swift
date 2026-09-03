@@ -266,7 +266,7 @@ private extension HostController {
     }
 
     func continueWithNativeFlow(_ synchronizePayload: FinancialConnectionsSynchronize) {
-        navigationController.configureAppearanceForNative(appearance: synchronizePayload.manifest.appearance)
+        navigationController.configureAppearanceForNative()
 
         let dataManager = NativeFlowAPIDataManager(
             manifest: synchronizePayload.manifest,
