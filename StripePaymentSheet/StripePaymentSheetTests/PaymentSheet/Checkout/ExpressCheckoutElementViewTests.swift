@@ -98,8 +98,6 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
         )
     }
 
-
-
     func testLinkButtonHiddenWhenAutomaticTaxUsesBillingAddress() {
         // Given a session that calculates automatic tax from the billing address
         let session = makeSessionWithWalletTypes(

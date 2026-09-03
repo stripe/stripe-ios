@@ -262,7 +262,6 @@ final class CheckoutApplePayContextTests: XCTestCase {
 
     // MARK: - makePaymentRequest billing/shipping contact fields
 
-
     func testMakePaymentRequest_billingTaxRequiresPostalAddress() {
         // Given automatic tax uses the billing address
         let session = CheckoutTestHelpers.makeSession([
@@ -284,7 +283,6 @@ final class CheckoutApplePayContextTests: XCTestCase {
         // Then Apple Pay collects the postal address needed to calculate tax
         XCTAssertTrue(paymentRequest.requiredBillingContactFields.contains(.postalAddress))
     }
-
 
     func testMakePaymentRequest_prefillsCompleteDefaultBillingAddress() {
         // Given default billing details with a street address
@@ -314,7 +312,6 @@ final class CheckoutApplePayContextTests: XCTestCase {
         XCTAssertEqual(paymentRequest.billingContact?.postalAddress?.postalCode, "94103")
         XCTAssertEqual(paymentRequest.billingContact?.name?.givenName, "Jane")
     }
-
 
     // MARK: - presentationWindow
 
