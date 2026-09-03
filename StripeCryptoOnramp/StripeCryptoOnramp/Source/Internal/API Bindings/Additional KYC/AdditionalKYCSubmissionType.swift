@@ -8,7 +8,7 @@
 import Foundation
 
 /// The kind of information used to fulfill an additional KYC requirement.
-enum AdditionalKYCSubmissionType: Equatable, Codable {
+enum AdditionalKYCSubmissionType: Codable, Equatable {
 
     /// One or more uploaded documents.
     case document
@@ -18,18 +18,6 @@ enum AdditionalKYCSubmissionType: Equatable, Codable {
 
     /// A submission type value that this SDK version does not recognize.
     case unknown(String)
-
-    /// The raw API value for the submission type.
-    var rawValue: String {
-        switch self {
-        case .document:
-            return "document"
-        case .questionnaire:
-            return "questionnaire"
-        case .unknown(let value):
-            return value
-        }
-    }
 
     // MARK: - Decodable
 
@@ -48,6 +36,14 @@ enum AdditionalKYCSubmissionType: Equatable, Codable {
 
     func encode(to encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
-        try container.encode(rawValue)
+
+        switch self {
+        case .document:
+            try container.encode("document")
+        case .questionnaire:
+            try container.encode("questionnaire")
+        case .unknown(let value):
+            try container.encode(value)
+        }
     }
 }

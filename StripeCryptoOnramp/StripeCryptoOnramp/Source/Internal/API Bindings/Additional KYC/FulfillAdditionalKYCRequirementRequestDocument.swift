@@ -1,14 +1,14 @@
 //
-//  AdditionalKYCFulfillmentDocument.swift
+//  FulfillAdditionalKYCRequirementRequestDocument.swift
 //  StripeCryptoOnramp
 //
-//  Created by Michael Liberatore on 8/20/26.
+//  Created by Michael Liberatore on 9/3/26.
 //
 
 import Foundation
 
-/// References to uploaded files submitted for an additional KYC document requirement.
-struct AdditionalKYCFulfillmentDocument: Codable, Equatable {
+/// References to uploaded files included in a request to fulfill an additional KYC document requirement.
+struct FulfillAdditionalKYCRequirementRequestDocument: Encodable, Equatable {
 
     /// The general kind of document being submitted.
     let documentType: String
@@ -19,7 +19,7 @@ struct AdditionalKYCFulfillmentDocument: Codable, Equatable {
     /// The identifiers returned after uploading the document files.
     let fileIds: [String]
 
-    // MARK: - Codable
+    // MARK: - Encodable
 
     private enum CodingKeys: String, CodingKey {
         case documentType = "document_type"
