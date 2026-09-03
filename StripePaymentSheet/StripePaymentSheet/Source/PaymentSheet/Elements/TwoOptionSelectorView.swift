@@ -57,6 +57,7 @@ final class TwoOptionSelectorView: UIView {
     // MARK: - Properties
 
     weak var delegate: TwoOptionSelectorViewDelegate?
+    var needsUpdateSuperviewHeight: () -> Void = {}
 
     private let appearance: TwoOptionSelectorViewAppearance
 
@@ -162,6 +163,9 @@ final class TwoOptionSelectorView: UIView {
         heightConstraint.isActive = true
 
         mainStackView.addArrangedSubview(expandableDetailView)
+        expandableDetailView.needsUpdateSuperviewHeight = { [weak self] in
+            self?.needsUpdateSuperviewHeight()
+        }
 
         NSLayoutConstraint.activate([
             mainStackView.topAnchor.constraint(equalTo: topAnchor),

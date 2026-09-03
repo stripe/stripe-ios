@@ -22,7 +22,10 @@ public final class CurrencySelectorElementUIView: UIView {
         selectorView?.setEnabled(enabled)
     }
 
-    private weak var delegate: CurrencySelectorElementDelegate?
+    var needsUpdateSuperviewHeight: () -> Void = {}
+    var didUpdateContentHeight: () -> Void = {}
+
+    private weak var currencySelectionDelegate: CurrencySelectorElementCheckoutDelegate?
     private let appearance: CurrencySelectorElement.Appearance
     private let checkoutSessionId: String
     private let flagImageManager = AdaptivePricingFlagImageManager()
@@ -40,13 +43,13 @@ public final class CurrencySelectorElementUIView: UIView {
 
     init?(
         session: CheckoutController.Session,
-        delegate: CurrencySelectorElementDelegate,
+        delegate: CurrencySelectorElementCheckoutDelegate,
         appearance: CurrencySelectorElement.Appearance
     ) async {
         guard let (_, exchangeRateMeta, rawCurrency) = CurrencySelectorUtilities.adaptivePricingData(from: session) else {
             return nil
         }
-        self.delegate = delegate
+        self.currencySelectionDelegate = delegate
         self.appearance = appearance
         self.checkoutSessionId = session.id
         super.init(frame: .zero)
@@ -150,8 +153,11 @@ public final class CurrencySelectorElementUIView: UIView {
         containerStackView.insertArrangedSubview(newSelector, at: 0)
 
         selectorView = newSelector
+        newSelector.needsUpdateSuperviewHeight = { [weak self] in
+            self?.contentHeightDidChange()
+        }
         newSelector.setEnabled(isUserInteractionEnabled)
-        invalidateIntrinsicContentSize()
+        invalidateContentSize()
     }
 
     private func updateCaption(
@@ -164,19 +170,30 @@ public final class CurrencySelectorElementUIView: UIView {
         )
         let detailText = CurrencySelectorUtilities.detailText(exchangeRateMeta: exchangeRateMeta)
         selectorView?.updateCaption(caption, detailText: detailText)
+        invalidateContentSize()
     }
 
     func showError(_ message: String) {
         errorLabel.text = message
         errorLabel.setHiddenIfNecessary(false)
-        invalidateIntrinsicContentSize()
+        invalidateContentSize()
     }
 
     func clearError() {
         guard errorLabel.text != nil else { return }
         errorLabel.text = nil
         errorLabel.setHiddenIfNecessary(true)
+        invalidateContentSize()
+    }
+
+    private func contentHeightDidChange() {
+        invalidateContentSize()
+        needsUpdateSuperviewHeight()
+    }
+
+    private func invalidateContentSize() {
         invalidateIntrinsicContentSize()
+        didUpdateContentHeight()
     }
 }
 
@@ -187,9 +204,9 @@ extension CurrencySelectorElementUIView: TwoOptionSelectorViewDelegate {
         selectorView?.setEnabled(false)
 
         Task { [weak self] in
-            guard let self, let delegate else { return }
+            guard let self, let currencySelectionDelegate else { return }
             do {
-                try await delegate.selectCurrency(id)
+                try await currencySelectionDelegate.selectCurrency(id)
                 STPAnalyticsClient.sharedClient.log(
                     analytic: PaymentSheetAnalytic(
                         event: .adaptivePricingCurrencyToggled,
