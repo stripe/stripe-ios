@@ -10,6 +10,47 @@ import Foundation
 /// A partner-specific KYC requirement returned for an authenticated customer.
 struct AdditionalKYCRequirement: Decodable, Equatable {
 
+    /// A party that may be responsible for the next action on an additional KYC requirement.
+    enum ActionParty: Decodable, Equatable {
+
+        /// The customer must provide additional information.
+        case user
+
+        /// The liquidity partner must review or process the submitted information.
+        case partner
+
+        /// Stripe must review or process the submitted information.
+        case stripe
+
+        /// An action party value that this SDK version does not recognize.
+        case unknown(String)
+
+        // MARK: - Decodable
+
+        init(from decoder: Decoder) throws {
+            switch try decoder.singleValueContainer().decode(String.self) {
+            case "user":
+                self = .user
+            case "partner":
+                self = .partner
+            case "stripe":
+                self = .stripe
+            case let value:
+                self = .unknown(value)
+            }
+        }
+    }
+
+    /// An error from a previous attempt to fulfill an additional KYC requirement.
+    struct RequirementError: Decodable, Equatable {
+
+        /// A machine-readable value identifying the error.
+        let code: String
+
+        /// A localized explanation of the error.
+        let message: String
+    }
+
     /// A value describing the information the customer must provide (e.g. `proof_of_address`, `source_of_funds`).
     let description: String
 
@@ -17,13 +58,13 @@ struct AdditionalKYCRequirement: Decodable, Equatable {
     let requestedBy: String
 
     /// The party currently responsible for acting on the requirement.
-    let awaitingActionFrom: AdditionalKYCActionParty
+    let awaitingActionFrom: ActionParty
 
     /// The kind of information the customer must submit.
     let submissionType: AdditionalKYCSubmissionType
 
     /// Errors from previous attempts to fulfill the requirement.
-    let errors: [AdditionalKYCRequirementError]
+    let errors: [RequirementError]
 
     /// Document-specific collection details, when documents are required.
     let document: AdditionalKYCDocumentRequirement?
@@ -49,9 +90,9 @@ struct AdditionalKYCRequirement: Decodable, Equatable {
     init(
         description: String,
         requestedBy: String,
-        awaitingActionFrom: AdditionalKYCActionParty,
+        awaitingActionFrom: ActionParty,
         submissionType: AdditionalKYCSubmissionType,
-        errors: [AdditionalKYCRequirementError] = [],
+        errors: [RequirementError] = [],
         document: AdditionalKYCDocumentRequirement? = nil,
         questionnaire: AdditionalKYCQuestionnaire? = nil
     ) {
@@ -75,5 +116,4 @@ struct AdditionalKYCRequirement: Decodable, Equatable {
         case document
         case questionnaire
     }
-
 }
