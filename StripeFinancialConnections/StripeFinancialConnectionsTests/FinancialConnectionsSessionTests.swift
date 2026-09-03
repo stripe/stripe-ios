@@ -102,7 +102,8 @@ final class FinancialConnectionsSessionTests: XCTestCase {
         let manifest = makeManifest(theme: .linkLight)
 
         XCTAssertNil(manifest.linkBrand)
-        XCTAssertEqual(manifest.appearance.logo, .link_logo)
+        XCTAssertEqual(manifest.appearance.logo, .link_logo_color)
+        XCTAssertEqual(manifest.appearance.darkModeLogo, .link_logo_color_dark)
         XCTAssertTrue(manifest.appearance.colors.primary.isEqual(FinancialConnectionsAppearance.Colors.link.primary))
     }
 
