@@ -29,10 +29,7 @@ enum RetrieveCryptoCustomerResponseMock: String, MockData {
 
     typealias ResponseType = RetrieveCryptoCustomerResponse
 
-    case userActionDocument = "RetrieveCryptoCustomerResponse_UserActionDocument_200"
-    case partnerReviewDocument = "RetrieveCryptoCustomerResponse_PartnerReviewDocument_200"
     case sourceOfFundsWithQuestionnaire = "RetrieveCryptoCustomerResponse_SourceOfFundsWithQuestionnaire_200"
-    case stripeReviewDocument = "RetrieveCryptoCustomerResponse_StripeReviewDocument_200"
     case unknownSubmissionType = "RetrieveCryptoCustomerResponse_UnknownSubmissionType_200"
 }
 
