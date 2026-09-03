@@ -24,6 +24,7 @@ protocol PaymentElementConfiguration: PaymentMethodRequirementProvider {
     var primaryButtonLabel: String? { get set }
     var style: PaymentSheet.UserInterfaceStyle { get set }
     var customer: PaymentSheet.CustomerConfiguration? { get set }
+    var customerProvider: CustomerProvider { get set }
     var merchantDisplayName: String { get set }
     var returnURL: String? { get set }
     var defaultBillingDetails: PaymentSheet.BillingDetails { get set }
@@ -107,6 +108,7 @@ extension PaymentElementConfiguration {
 }
 
 extension PaymentSheet.Configuration: PaymentElementConfiguration {}
+
 extension EmbeddedPaymentElement.Configuration: PaymentElementConfiguration {
     func resolveLayout(elementsSession: STPElementsSession, paymentMethodTypes: [PaymentSheet.PaymentMethodType]) -> PaymentSheet.PaymentMethodLayout.ResolvedLayout {
         .vertical
