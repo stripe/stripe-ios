@@ -449,7 +449,6 @@ class MockCheckoutSessionWalletUpdater: CheckoutSessionWalletUpdater {
         continuation?.resume(returning: sessionToReturn)
         continuation = nil
     }
-
 }
 
 extension CheckoutController.ApplePayConfirmationParameters {

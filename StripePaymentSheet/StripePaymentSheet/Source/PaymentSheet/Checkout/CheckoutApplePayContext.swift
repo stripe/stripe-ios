@@ -222,11 +222,8 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         didSelectShippingContact contact: PKContact,
         handler: @escaping (PKPaymentRequestShippingContactUpdate) -> Void
     ) {
-        guard let allowedCountries = session.allowedShippingCountries else {
-            handler(PKPaymentRequestShippingContactUpdate(paymentSummaryItems: summaryItems()))
-            return
-        }
-        if let country = contact.postalAddress?.isoCountryCode,
+        if let allowedCountries = session.allowedShippingCountries,
+           let country = contact.postalAddress?.isoCountryCode,
            !allowedCountries.contains(country.uppercased()) {
             let error = CheckoutError.invalidShippingCountry(countryCode: country)
             handler(PKPaymentRequestShippingContactUpdate(
