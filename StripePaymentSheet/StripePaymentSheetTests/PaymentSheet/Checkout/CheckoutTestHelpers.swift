@@ -450,15 +450,6 @@ class MockCheckoutSessionWalletUpdater: CheckoutSessionWalletUpdater {
         continuation = nil
     }
 
-    func resume() {
-        guard let sessionToReturn else {
-            continuation?.resume(throwing: CheckoutError.unknown(debugDescription: "MockCheckoutSessionWalletUpdater has no session configured"))
-            continuation = nil
-            return
-        }
-        continuation?.resume(returning: sessionToReturn)
-        continuation = nil
-    }
 }
 
 extension CheckoutController.ApplePayConfirmationParameters {
