@@ -42,27 +42,6 @@ struct AdditionalKYCDocumentRequirement: Decodable, Equatable {
     /// Additional information that must be collected with the documents.
     let additionalRequirements: AdditionalRequirements?
 
-    /// Creates a document requirement configuration.
-    /// - Parameters:
-    ///   - acceptedSubtypes: The document subtypes that the customer may provide.
-    ///   - acceptedFormats: The file extensions accepted for uploaded documents.
-    ///   - minDocuments: The minimum number of documents the customer must provide.
-    ///   - instructions: Localized instructions to display while collecting documents.
-    ///   - additionalRequirements: Additional information that must be collected with the documents.
-    init(
-        acceptedSubtypes: [DocumentSubtype],
-        acceptedFormats: [String],
-        minDocuments: Int,
-        instructions: [String],
-        additionalRequirements: AdditionalRequirements? = nil
-    ) {
-        self.acceptedSubtypes = acceptedSubtypes
-        self.acceptedFormats = acceptedFormats
-        self.minDocuments = minDocuments
-        self.instructions = instructions
-        self.additionalRequirements = additionalRequirements
-    }
-
     // MARK: - Decodable
 
     private enum CodingKeys: String, CodingKey {
