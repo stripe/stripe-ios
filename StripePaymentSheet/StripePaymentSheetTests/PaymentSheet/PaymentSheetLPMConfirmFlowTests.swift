@@ -873,7 +873,6 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                     elementsSession: elementsSession,
                     configuration: configuration,
                     clientAttributionMetadata: clientAttributionMetadata,
-                    checkout: testIntent.checkout,
                     completion: { result, _ in
                     switch result {
                     case .failed(error: let error):
