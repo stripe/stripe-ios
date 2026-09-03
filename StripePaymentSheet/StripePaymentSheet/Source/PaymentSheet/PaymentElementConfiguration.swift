@@ -56,6 +56,16 @@ extension PaymentElementConfiguration {
         return linkAccount?.linkBrand ?? elementsSession.linkBrand ?? .link
     }
 
+    var financialConnectionsLinkBrandOverride: LinkBrand? {
+        // Only Onelink should be treated as an explicit client override for Financial Connections.
+        // Link should behave like no override so backend and authenticated consumer updates can still win.
+        return link.brand == .onelink ? .onelink : nil
+    }
+
+    func financialConnectionsLinkBrandOverride(linkAccount: PaymentSheetLinkAccount?) -> LinkBrand? {
+        return financialConnectionsLinkBrandOverride ?? (linkAccount?.linkBrand == .onelink ? .onelink : nil)
+    }
+
     /// Returns `true` if the merchant requires the collection of _any_ billing detail fields - name, phone, email, address.
     func requiresBillingDetailCollection() -> Bool {
         return billingDetailsCollectionConfiguration.name == .always

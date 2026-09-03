@@ -625,6 +625,10 @@ extension PaymentMethodFormViewController {
             break
         }
 
+        let linkBrand = configuration.financialConnectionsLinkBrandOverride(
+            linkAccount: LinkAccountContext.shared.account
+        )
+
         switch intent {
         case .paymentIntent(let paymentIntent):
             client.collectBankAccountForPayment(
@@ -632,6 +636,7 @@ extension PaymentMethodFormViewController {
                 returnURL: configuration.returnURL,
                 additionalParameters: additionalParameters,
                 elementsSessionContext: elementsSessionContext,
+                linkBrand: linkBrand,
                 onEvent: nil,
                 params: params,
                 from: viewController,
@@ -643,6 +648,7 @@ extension PaymentMethodFormViewController {
                 returnURL: configuration.returnURL,
                 additionalParameters: additionalParameters,
                 elementsSessionContext: elementsSessionContext,
+                linkBrand: linkBrand,
                 onEvent: nil,
                 params: params,
                 from: viewController,
@@ -668,6 +674,7 @@ extension PaymentMethodFormViewController {
                 onBehalfOf: intentConfig.onBehalfOf,
                 additionalParameters: additionalParameters,
                 elementsSessionContext: elementsSessionContext,
+                linkBrand: linkBrand,
                 from: viewController,
                 intentType: .deferred,
                 financialConnectionsCompletion: financialConnectionsCompletion
@@ -682,6 +689,7 @@ extension PaymentMethodFormViewController {
                 onBehalfOf: nil,
                 additionalParameters: additionalParameters,
                 elementsSessionContext: elementsSessionContext,
+                linkBrand: linkBrand,
                 from: viewController,
                 intentType: .checkoutSession,
                 financialConnectionsCompletion: financialConnectionsCompletion
