@@ -96,6 +96,7 @@ public final class CheckoutController: ObservableObject {
     /// - Parameter configuration: Configuration options for the checkout.
     /// - Throws: ``CheckoutError`` if the client secret is invalid or the session cannot be loaded.
     public init(configuration: Configuration) async throws {
+        var configuration = configuration
         let clientSecret = configuration.clientSecret
         guard !clientSecret.isEmpty else {
             throw CheckoutError.invalidClientSecret
@@ -146,6 +147,7 @@ public final class CheckoutController: ObservableObject {
             let sessionSource = CheckoutSessionSource(initialSession: session, sessionPublisher: $session)
 
             // 3. ECE
+            configuration.expressCheckoutElement.apiClient = configuration.apiClient
             self.expressCheckoutElement = ExpressCheckoutElement(
                 sessionSource: sessionSource,
                 configuration: configuration.expressCheckoutElement,
@@ -217,8 +219,8 @@ public final class CheckoutController: ObservableObject {
     // MARK: - Payment Option
 
     /// Clears the currently selected payment option.
-    public func clearPaymentOption() {
-        paymentElement?.clearPaymentOption()
+    public func clearPaymentOption() async throws {
+        try await paymentElement?.clearPaymentOption()
     }
 
     // MARK: - Addresses
@@ -228,18 +230,31 @@ public final class CheckoutController: ObservableObject {
     /// If automatic tax is enabled and the tax address source is "billing",
     /// the address is sent to the server to compute updated tax amounts.
     ///
-    /// - Parameter address: The billing address to use for tax calculation. To reset tax computation
-    ///   to a country-only region, pass a ``CheckoutController.Address`` with just the country.
+    /// - Parameter address: The billing address to use for tax calculation. Pass `nil` when
+    ///   removing the selected payment option's billing address.
     /// - Throws: ``CheckoutError`` if the session is not open, or if
     ///   the server request fails.
     func updateBillingTaxRegionIfNecessary(
-        address: Address,
+        address: Address?,
         canUpdateWhileSheetPresented: Bool = false
     ) async throws {
-        guard session.shouldSendTaxRegion(for: "billing") else {
-            return
+        guard session.shouldSendTaxRegion(for: "billing") else { return }
+        let taxRegion: Address
+        if let address {
+            taxRegion = address
+        } else {
+            guard let country = session.paymentOption?.billingDetails?.address.country?.nonEmpty else {
+                return
+            }
+            // The Checkout Session update endpoint requires tax_region[country] and does not
+            // support clearing tax_region, so keep the previous country.
+            // TODO(porter) When migrating to the CheckoutClient API, stop sending country only and send nil
+            taxRegion = Address(country: country)
         }
-        try await performUpdate(.setTaxRegion(address), canUpdateWhileSheetPresented: canUpdateWhileSheetPresented)
+        try await performUpdate(
+            .setTaxRegion(taxRegion),
+            canUpdateWhileSheetPresented: canUpdateWhileSheetPresented
+        )
     }
 
     /// Use this method to update the Customer's shipping address.
@@ -252,7 +267,7 @@ public final class CheckoutController: ObservableObject {
             return
         }
         if let allowedCountries = session.allowedShippingCountries,
-           !allowedCountries.contains(address.country) {
+           !allowedCountries.contains(address.country.uppercased()) {
             throw CheckoutError.invalidShippingCountry(countryCode: address.country)
         }
         let shippingAddress = Session.ShippingAddress(name: name, address: address)

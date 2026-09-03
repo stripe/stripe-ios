@@ -46,13 +46,14 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
     var didCancelOrTimeoutWhilePending = false
     /// Whether or not we fully completed the flow - if didFinish is `true`, that means `_end()` was called and this class is unusable.
     private var didFinish = false
+    private var shippingContactUpdateTask: Task<Void, Never>?
     private var paymentMethodUpdateTask: Task<Void, Never>?
 
     init(
         checkoutSession: CheckoutController.Session,
         applePayConfirmationParameters: CheckoutController.ApplePayConfirmationParameters,
         authorizationController: PKPaymentAuthorizationController,
-        checkoutWalletUpdater: CheckoutSessionWalletUpdater,
+        checkoutWalletUpdater: CheckoutSessionWalletUpdater
     ) {
         self.session = checkoutSession
         self.merchantLabel = applePayConfirmationParameters.merchantDisplayName
@@ -136,7 +137,8 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
                     expectedPaymentMethodType: paymentMethod.type?.rawValue ?? STPPaymentMethodType.card.identifier,
                     savePaymentMethod: savePaymentMethod,
                     returnURL: self.returnURL,
-                    shipping: self.makeShippingDetailsParams(from: payment),
+                    shipping: self.makeShippingDetailsParams(from: payment)
+                        ?? checkoutSession.shippingAddress?.shippingDetailsParams,
                     clientAttributionMetadata: clientAttributionMetadata
                 )
                 let result = await self.confirmationHandler(requestParameters)
@@ -160,6 +162,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         switch paymentState {
         case .notStarted:
             Task {
+                await shippingContactUpdateTask?.value
                 await paymentMethodUpdateTask?.value
                 await controller.dismiss()
                 self.resume(with: .canceled())
@@ -201,7 +204,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
             return
         }
         paymentMethodUpdateTask = Task { @MainActor in
-            if let updatedSession = try? await checkoutWalletUpdater.updateBillingTaxRegionWithoutEnqueueing(
+            if let updatedSession = try? await checkoutWalletUpdater.updateTaxRegionWithoutEnqueueing(
                 address: address,
                 canUpdateWhileSheetPresented: true
             ) {
@@ -216,8 +219,34 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         didSelectShippingContact contact: PKContact,
         handler: @escaping (PKPaymentRequestShippingContactUpdate) -> Void
     ) {
-        // TODO: Collect shipping address, update shipping/billing tax region, validate against allowedShippingCountries.
-        handler(PKPaymentRequestShippingContactUpdate(paymentSummaryItems: summaryItems()))
+        if let allowedCountries = session.allowedShippingCountries,
+           let country = contact.postalAddress?.isoCountryCode,
+           !allowedCountries.contains(country.uppercased()) {
+            let error = CheckoutError.invalidShippingCountry(countryCode: country)
+            handler(PKPaymentRequestShippingContactUpdate(
+                errors: [error],
+                paymentSummaryItems: summaryItems(),
+                shippingMethods: []
+            ))
+            return
+        }
+
+        guard session.shouldSendTaxRegion(for: "shipping"),
+              let postalAddress = contact.postalAddress,
+              let address = STPApplePayContext.makeCheckoutAddress(from: postalAddress),
+              let checkoutWalletUpdater else {
+            handler(PKPaymentRequestShippingContactUpdate(paymentSummaryItems: summaryItems()))
+            return
+        }
+        shippingContactUpdateTask = Task { @MainActor in
+            if let updatedSession = try? await checkoutWalletUpdater.updateTaxRegionWithoutEnqueueing(
+                address: address,
+                canUpdateWhileSheetPresented: true
+            ) {
+                self.session = updatedSession
+            }
+            handler(PKPaymentRequestShippingContactUpdate(paymentSummaryItems: summaryItems()))
+        }
     }
 
     func paymentAuthorizationController(
@@ -257,13 +286,6 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
             checkoutSession: checkoutSession,
             applePayConfirmationParameters: applePayConfirmationParameters
         )
-
-        assert(!paymentRequest.merchantIdentifier.isEmpty, "You must set `merchantId` on `PaymentElement.ApplePayConfiguration`.")
-
-        let merchantLabel = applePayConfirmationParameters.merchantDisplayName
-        paymentRequest.paymentSummaryItems = CheckoutApplePayContext.makeSummaryItems(for: checkoutSession, label: merchantLabel)
-
-        // TODO: Set requiredShippingContactFields when shipping address collection is implemented.
 
         // PKPaymentAuthorizationController.init is non-nullable even for invalid requests.
         // Use PKPaymentAuthorizationViewController.init as a proxy — it IS nullable and
@@ -322,6 +344,8 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
             currency: checkoutSession.currency ?? "USD"
         )
 
+        assert(!paymentRequest.merchantIdentifier.isEmpty, "You must set `merchantId` on `ApplePayConfiguration`.")
+
         let merchantLabel = applePayConfirmationParameters.merchantDisplayName
         paymentRequest.paymentSummaryItems = CheckoutApplePayContext.makeSummaryItems(for: checkoutSession, label: merchantLabel)
 
@@ -331,7 +355,14 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
             paymentRequest.requiredBillingContactFields.insert(.postalAddress)
         }
         paymentRequest.requiredShippingContactFields = billingDetailsCollectionConfiguration.applePayRequiredShippingContactFields
-        // TODO: Add postalAddress to requiredShippingContactFields when shipping address collection is implemented.
+
+        if applePayConfirmationParameters.shippingAddressRequired {
+            paymentRequest.requiredShippingContactFields.insert(.postalAddress)
+            paymentRequest.requiredShippingContactFields.insert(.name)
+            if let shippingAddress = checkoutSession.shippingAddress {
+                paymentRequest.shippingContact = makeShippingContact(from: shippingAddress)
+            }
+        }
 
         if let defaults = applePayConfirmationParameters.defaultBillingDetails,
            defaults.address?.line1 != nil {
@@ -339,6 +370,23 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         }
 
         return paymentRequest
+    }
+
+    static func makeShippingContact(from shippingAddress: CheckoutController.Session.ShippingAddress) -> PKContact {
+        let contact = PKContact()
+        if let name = shippingAddress.name {
+            contact.name = PersonNameComponentsFormatter().personNameComponents(from: name)
+        }
+
+        let address = shippingAddress.address
+        let postalAddress = CNMutablePostalAddress()
+        postalAddress.isoCountryCode = address.country
+        postalAddress.street = [address.line1, address.line2].compactMap { $0 }.joined(separator: "\n")
+        postalAddress.city = address.city ?? ""
+        postalAddress.state = address.state ?? ""
+        postalAddress.postalCode = address.postalCode ?? ""
+        contact.postalAddress = postalAddress
+        return contact
     }
 
     static func makeFallbackBillingDetails(
@@ -394,6 +442,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
 
     private func _end() {
         authorizationController.delegate = nil
+        shippingContactUpdateTask = nil
         paymentMethodUpdateTask = nil
         didFinish = true
     }

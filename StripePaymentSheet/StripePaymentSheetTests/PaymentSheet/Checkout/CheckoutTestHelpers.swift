@@ -393,13 +393,24 @@ class MockCheckoutSessionWalletUpdater: CheckoutSessionWalletUpdater {
     private(set) var lastCanUpdateWhileSheetPresented: Bool?
     private let sessionToReturn: CheckoutController.Session?
     private let errorToThrow: Error?
+    private let suspendsUpdates: Bool
+    private var continuation: CheckedContinuation<CheckoutController.Session, Error>?
 
-    init(sessionToReturn: CheckoutController.Session? = nil, errorToThrow: Error? = nil) {
-        self.sessionToReturn = sessionToReturn
-        self.errorToThrow = errorToThrow
+    var isWaiting: Bool {
+        continuation != nil
     }
 
-    func updateBillingTaxRegionWithoutEnqueueing(
+    init(
+        sessionToReturn: CheckoutController.Session? = nil,
+        errorToThrow: Error? = nil,
+        suspendsUpdates: Bool = false
+    ) {
+        self.sessionToReturn = sessionToReturn
+        self.errorToThrow = errorToThrow
+        self.suspendsUpdates = suspendsUpdates
+    }
+
+    func updateTaxRegionWithoutEnqueueing(
         address: CheckoutController.Address,
         canUpdateWhileSheetPresented: Bool
     ) async throws -> CheckoutController.Session {
@@ -412,7 +423,22 @@ class MockCheckoutSessionWalletUpdater: CheckoutSessionWalletUpdater {
         guard let sessionToReturn else {
             throw CheckoutError.unknown(debugDescription: "MockCheckoutSessionWalletUpdater has no session configured")
         }
+        if suspendsUpdates {
+            return try await withCheckedThrowingContinuation { continuation in
+                self.continuation = continuation
+            }
+        }
         return sessionToReturn
+    }
+
+    func resume() {
+        guard let sessionToReturn else {
+            continuation?.resume(throwing: CheckoutError.unknown(debugDescription: "MockCheckoutSessionWalletUpdater has no session configured"))
+            continuation = nil
+            return
+        }
+        continuation?.resume(returning: sessionToReturn)
+        continuation = nil
     }
 }
 
@@ -421,8 +447,9 @@ extension CheckoutController.ApplePayConfirmationParameters {
         apiClient: STPAPIClient,
         returnURL: String = "stripe-ios-test://checkout-return",
         merchantDisplayName: String = "Test Merchant",
-        applePayConfiguration: PaymentElement.ApplePayConfiguration = PaymentElement.ApplePayConfiguration(merchantId: "merchant.com.test"),
-        billingDetailsCollectionConfiguration: PaymentSheet.BillingDetailsCollectionConfiguration,
+        applePayConfiguration: CheckoutApplePayConfiguration = PaymentElement.ApplePayConfiguration(merchantId: "merchant.com.test"),
+        shippingAddressRequired: Bool = false,
+        billingDetailsCollectionConfiguration: PaymentSheet.BillingDetailsCollectionConfiguration = .init(),
         defaultBillingDetails: CheckoutController.Configuration.Defaults.BillingDetails? = nil,
         presentationWindow: UIWindow? = nil,
         confirmationHandler: @escaping CheckoutController.ApplePayConfirmationParameters.ConfirmationHandler = { _ in
@@ -434,6 +461,7 @@ extension CheckoutController.ApplePayConfirmationParameters {
             apiClient: apiClient,
             returnURL: returnURL,
             merchantDisplayName: merchantDisplayName,
+            shippingAddressRequired: shippingAddressRequired,
             billingDetailsCollectionConfiguration: billingDetailsCollectionConfiguration,
             defaultBillingDetails: defaultBillingDetails,
             presentationWindow: presentationWindow,

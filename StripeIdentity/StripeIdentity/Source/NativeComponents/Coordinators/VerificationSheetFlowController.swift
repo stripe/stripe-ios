@@ -86,6 +86,7 @@ final class VerificationSheetFlowController: NSObject {
 
     let brandLogo: UIImage
     let brandColor: UIColor?
+    let biometricConsentConfiguration: IdentityVerificationSheet.Configuration.BiometricConsentConfiguration?
 
     weak var delegate: VerificationSheetFlowControllerDelegate?
 
@@ -96,11 +97,11 @@ final class VerificationSheetFlowController: NSObject {
     private(set) var documentUploader: DocumentUploaderProtocol?
 
     init(
-        brandLogo: UIImage,
-        brandColor: UIColor? = nil
+        configuration: IdentityVerificationSheet.Configuration
     ) {
-        self.brandLogo = brandLogo
-        self.brandColor = brandColor
+        self.brandLogo = configuration.brandLogo
+        self.brandColor = configuration.brandColor
+        self.biometricConsentConfiguration = configuration.biometricConsent
     }
 
     private(set) lazy var navigationController: UINavigationController = {
@@ -656,6 +657,7 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
                 brandLogo: brandLogo,
                 showsStripeLogo: !staticContent.isStripe,
                 consentContent: staticContent.biometricConsent,
+                configuration: biometricConsentConfiguration,
                 sheetController: sheetController
             )
         } catch {

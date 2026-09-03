@@ -45,6 +45,7 @@ extension CheckoutController: ExpressCheckoutElementDelegate {
                 apiClient: apiClient,
                 returnURL: configuration.returnURL,
                 merchantDisplayName: effectiveMerchantDisplayName,
+                shippingAddressRequired: configuration.expressCheckoutElement.shippingAddressRequired,
                 billingDetailsCollectionConfiguration: configuration.expressCheckoutElement.billingDetailsCollectionConfiguration.paymentSheetConfiguration(),
                 defaultBillingDetails: configuration.defaults.billingDetails,
                 presentationWindow: presentationWindow,
@@ -116,7 +117,7 @@ extension CheckoutController {
 
     // MARK: - Payment Option
 
-    func setPaymentOption(_ paymentOption: Session.PaymentOptionDisplayData?) {
+    func dangerouslySetPaymentOptionDirectly(_ paymentOption: Session.PaymentOptionDisplayData?) {
         dangerouslySetSessionDirectly(
             session.makeCopyOverriding(paymentOption: .newValue(paymentOption))
         )

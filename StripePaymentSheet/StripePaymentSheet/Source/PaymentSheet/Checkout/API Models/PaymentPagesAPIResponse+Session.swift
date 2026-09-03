@@ -65,7 +65,7 @@ extension PaymentPagesAPIResponse {
             savedPaymentMethodsOfferSave: Self.makeSavedPaymentMethodsOfferSave(from: savedPaymentMethodsOfferSave),
             setupFutureUsage: setupFutureUsage,
             setupFutureUsageForPaymentMethodType: setupFutureUsageForPaymentMethodType ?? [:],
-            allowedShippingCountries: shippingAddressCollection?.allowedCountries,
+            allowedShippingCountries: shippingAddressCollection?.allowedCountries.map { $0.uppercased() },
             localizedPricesMetas: localizedPricesMetas,
             exchangeRateMeta: exchangeRateMeta,
             adaptivePricingActive: adaptivePricingInfo != nil,

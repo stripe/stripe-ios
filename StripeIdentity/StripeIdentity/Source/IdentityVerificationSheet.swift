@@ -24,6 +24,21 @@ final public class IdentityVerificationSheet {
 
     /// Configuration for an IdentityVerificationSheet
     public struct Configuration {
+        /// Configuration for the biometric consent screen's header.
+        @_spi(STP) public struct BiometricConsentConfiguration {
+            /// Whether to hide the branding header above the consent title.
+            public var hideBrandingHeader: Bool
+
+            /// Initializes a biometric consent header configuration.
+            /// - Parameters:
+            ///   - hideBrandingHeader: Whether to hide the branding header above the consent title.
+            public init(
+                hideBrandingHeader: Bool
+            ) {
+                self.hideBrandingHeader = hideBrandingHeader
+            }
+        }
+
         /// An image of your customer-facing business logo.
         ///
         /// - Note: The recommended image size is 32 x 32 points. The image will be
@@ -32,6 +47,11 @@ final public class IdentityVerificationSheet {
         public var brandLogo: UIImage
         /// Optional background color for the native flow's primary action buttons.
         public var brandColor: UIColor?
+
+        /// Configuration for the biometric consent screen's header.
+        ///
+        /// When `nil`, the biometric consent screen uses the default header.
+        @_spi(STP) public var biometricConsent: BiometricConsentConfiguration?
 
         /// Initializes a Configuration.
         /// - Parameters:
@@ -54,6 +74,7 @@ final public class IdentityVerificationSheet {
         ) {
             self.brandLogo = brandLogo
             self.brandColor = brandColor
+            self.biometricConsent = nil
         }
     }
 
@@ -104,8 +125,7 @@ final public class IdentityVerificationSheet {
                     ephemeralKeySecret: ephemeralKeySecret
                 ),
                 flowController: VerificationSheetFlowController(
-                    brandLogo: configuration.brandLogo,
-                    brandColor: configuration.brandColor
+                    configuration: configuration
                 ),
                 mlModelLoader: IdentityMLModelLoader(),
                 analyticsClient: IdentityAnalyticsClient(

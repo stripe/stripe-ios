@@ -118,7 +118,7 @@ public final class PaymentElement {
                     return
                 }
                 paymentOptionSourceOfTruthIsFlowController = true
-                self.checkout?.setPaymentOption(paymentOption.map(CheckoutController.Session.PaymentOptionDisplayData.init))
+                self.checkout?.dangerouslySetPaymentOptionDirectly(paymentOption.map(CheckoutController.Session.PaymentOptionDisplayData.init))
             }
             .store(in: &cancellables)
         // We don't know whether to use FC or Embedded's payment option at this point, so we'll use Embedded since it has more info (includes mandate text).
@@ -132,7 +132,7 @@ public final class PaymentElement {
             paymentSheetFlowController.paymentOption?.label == embeddedPaymentElement.paymentOption?.label || flowControllerDefaultsToApplePay,
             "Payment Element assumes that the FlowController's payment option is the same as the Embedded's on first load!"
         )
-        checkout.setPaymentOption(
+        checkout.dangerouslySetPaymentOptionDirectly(
             embeddedPaymentElement.paymentOption.map(CheckoutController.Session.PaymentOptionDisplayData.init)
         )
         paymentOptionSourceOfTruthIsFlowController = false // We used embedded's payment option
@@ -193,16 +193,21 @@ extension PaymentElement {
                 embeddedPaymentElement.paymentOption.map(CheckoutController.Session.PaymentOptionDisplayData.init)
             }
         }()
-        checkout.setPaymentOption(paymentOption)
+        checkout.dangerouslySetPaymentOptionDirectly(paymentOption)
     }
 
-    func clearPaymentOption() {
+    func clearPaymentOption() async throws {
         guard !paymentSheetFlowController.didPresentAndContinue else {
             assertionFailure("Clearing the payment option after presenting PaymentElement is not implemented. File a feature request if you need this.")
             return
         }
+        guard let checkout else {
+            stpAssertionFailure("PaymentElement unexpectedly lost its CheckoutController.")
+            return
+        }
+        try await checkout.updateBillingTaxRegionIfNecessary(address: nil)
+        checkout.dangerouslySetPaymentOptionDirectly(nil)
         embeddedPaymentElement.clearPaymentOption()
-        checkout?.setPaymentOption(nil)
     }
 }
 
@@ -223,7 +228,7 @@ extension PaymentElement: EmbeddedPaymentElementDelegate {
             return
         }
         paymentOptionSourceOfTruthIsFlowController = false
-        checkout?.setPaymentOption(embeddedPaymentElement.paymentOption.map(CheckoutController.Session.PaymentOptionDisplayData.init))
+        checkout?.dangerouslySetPaymentOptionDirectly(embeddedPaymentElement.paymentOption.map(CheckoutController.Session.PaymentOptionDisplayData.init))
     }
 }
 
