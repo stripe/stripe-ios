@@ -134,7 +134,11 @@ struct FinancialConnectionsAppearance: Equatable {
 
     func logoImage(for userInterfaceStyle: UIUserInterfaceStyle) -> UIImage {
         let resolvedLogo = userInterfaceStyle == .dark ? darkModeLogo ?? logo : logo
-        return resolvedLogo.makeImage(template: darkModeLogo == nil)
+        if darkModeLogo == nil {
+            return resolvedLogo.makeImage(template: true)
+        } else {
+            return resolvedLogo.makeImage().withRenderingMode(.alwaysOriginal)
+        }
     }
 }
 
