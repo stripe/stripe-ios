@@ -464,7 +464,6 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
         return context
     }
 
-
     func testCreatePaymentRequestDoesNotPopulateBillingContact() {
         let intent = Intent._testValue()
         let sut = STPApplePayContext.createPaymentRequest(intent: intent, configuration: configuration, applePay: applePayConfiguration)
