@@ -51,6 +51,7 @@ final class CheckoutCurrencySelectorElementSnapshotTests: STPSnapshotTestCase {
         return try XCTUnwrap(checkout.getCurrencySelectorElement()).view
             .disabled(disabled)
             .frame(width: 320)
+            .ignoresSafeArea()
     }
 
     private func verify(
@@ -59,38 +60,13 @@ final class CheckoutCurrencySelectorElementSnapshotTests: STPSnapshotTestCase {
         file: StaticString = #filePath,
         line: UInt = #line
     ) {
-        let verticalPadding: CGFloat = 8
         let vc = UIHostingController(rootView: swiftUIView)
-        vc.view.layoutMargins = .zero
-        vc.view.preservesSuperviewLayoutMargins = false
         let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 320, height: 200))
         window.overrideUserInterfaceStyle = darkMode ? .dark : .light
         window.rootViewController = vc
-        window.isHidden = false
-        vc.view.setNeedsLayout()
-        vc.view.layoutIfNeeded()
+        window.makeKeyAndVisible()
+        vc.view.frame = CGRect(origin: .zero, size: CGSize(width: 320, height: 57))
 
-        guard let renderedView = vc.view.subviews.first else {
-            XCTFail("SwiftUI content did not render", file: file, line: line)
-            return
-        }
-
-        let snapshotVC = UIViewController()
-        snapshotVC.view.frame = CGRect(
-            x: 0,
-            y: 0,
-            width: renderedView.bounds.width,
-            height: renderedView.bounds.height + verticalPadding * 2
-        )
-        snapshotVC.view.backgroundColor = .systemBackground
-        renderedView.removeFromSuperview()
-        renderedView.translatesAutoresizingMaskIntoConstraints = true
-        snapshotVC.view.addSubview(renderedView)
-        renderedView.frame.origin = CGPoint(x: 0, y: verticalPadding)
-        window.frame = snapshotVC.view.bounds
-        window.rootViewController = snapshotVC
-        snapshotVC.view.layoutIfNeeded()
-
-        STPSnapshotVerifyView(snapshotVC.view, file: file, line: line)
+        STPSnapshotVerifyView(vc.view, file: file, line: line)
     }
 }
