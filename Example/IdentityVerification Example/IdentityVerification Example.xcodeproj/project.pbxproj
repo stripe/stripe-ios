@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		1875377FB12B8BF4E0A40B71 /* StripeUICore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E1DB5452B1EEA2BF10AA0F2 /* StripeUICore.framework */; };
 		2DAC0A5AC68834182A3C3157 /* StripeCameraCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1AAE76BD5531A138F256081C /* StripeCameraCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		3A005B282FD9F6FC008A146D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A005B272FD9F6FC008A146D /* CoreGraphics.framework */; };
+		3A005BF82FD9F9B4008A146D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A005BF72FD9F9B4008A146D /* UIKit.framework */; };
 		3B3D5D66063849357D88E0B4 /* StripeIdentity.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5F4E23C4986F186D1A7A0A88 /* StripeIdentity.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		539540ADABFFDFC63A14398C /* StripeCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B6CF999673493048BC71A7DE /* StripeCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		63730E8D0F3F49EF116E11AE /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B6CF999673493048BC71A7DE /* StripeCore.framework */; };
@@ -37,6 +39,8 @@
 /* Begin PBXFileReference section */
 		0A6FAFA0AC6A0297B26BE775 /* Project-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Project-Release.xcconfig"; sourceTree = "<group>"; };
 		1AAE76BD5531A138F256081C /* StripeCameraCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeCameraCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3A005B272FD9F6FC008A146D /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		3A005BF72FD9F9B4008A146D /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		5F4E23C4986F186D1A7A0A88 /* StripeIdentity.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeIdentity.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7E1DB5452B1EEA2BF10AA0F2 /* StripeUICore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeUICore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		ADBBBF53B498F35A47113604 /* IdentityVerification-Example-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "IdentityVerification-Example-Release.xcconfig"; sourceTree = "<group>"; };
@@ -68,7 +72,9 @@
 				FB0DCB24D8B0434C232A7A93 /* StripeCameraCore.framework in Frameworks */,
 				63730E8D0F3F49EF116E11AE /* StripeCore.framework in Frameworks */,
 				F40A0A5D85C7D664264EC323 /* StripeIdentity.framework in Frameworks */,
+				3A005B282FD9F6FC008A146D /* CoreGraphics.framework in Frameworks */,
 				1875377FB12B8BF4E0A40B71 /* StripeUICore.framework in Frameworks */,
+				3A005BF82FD9F9B4008A146D /* UIKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,6 +84,8 @@
 		18C80FCB205DB85724EA25A7 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				3A005BF72FD9F9B4008A146D /* UIKit.framework */,
+				3A005B272FD9F6FC008A146D /* CoreGraphics.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -305,8 +313,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* End XCRemoteSwiftPackageReference section */
 	};
 	rootObject = 4D2B674F033CFBC8B744669E /* Project object */;
 }

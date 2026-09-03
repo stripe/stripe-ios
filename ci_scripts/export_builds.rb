@@ -135,6 +135,21 @@ unless embedded_frameworks.empty?
   die 'One or more xcframeworks contain an embedded Frameworks folder. This indicates a dependency was incorrectly embedded.'
 end
 
+release_documents = {
+  File.join(root_dir, 'LICENSE') => File.join(build_dir, 'LICENSE'),
+  File.join(root_dir, 'NOTICE') => File.join(build_dir, 'NOTICE'),
+  File.join(root_dir, 'LocalPackages', 'MediaPipeSPM', 'LICENSE-MediaPipe') => File.join(build_dir, 'LICENSE-MediaPipe'),
+}
+
+info 'Adding license and notice files to the release archive...'
+release_documents.each do |source, destination|
+  die "Missing release document: #{source}" unless File.file?(source)
+
+  FileUtils.cp(source, destination)
+end
+
 Dir.chdir(build_dir) do
-  `zip -r Stripe.xcframework.zip *.xcframework`
+  archive_contents = Dir.glob('*.xcframework').sort + release_documents.values.map { |path| File.basename(path) }
+  die 'No xcframeworks found to archive.' if archive_contents.none? { |path| path.end_with?('.xcframework') }
+  die 'Failed to create Stripe.xcframework.zip' unless system('zip', '-r', 'Stripe.xcframework.zip', *archive_contents)
 end
