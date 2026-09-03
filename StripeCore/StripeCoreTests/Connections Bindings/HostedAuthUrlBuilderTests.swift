@@ -115,6 +115,7 @@ class HostedAuthUrlBuilderTests: XCTestCase {
     // MARK: - Billing Details Tests
 
     func testInstantDebitsWithCompleteBillingDetails() {
+        let baseUrl = URL(string: "https://auth.stripe.com/link-accounts#apiKey=pk_merchant")!
         let address = ElementsSessionContext.BillingDetails.Address(
             city: "San Francisco",
             country: "US",
@@ -137,11 +138,13 @@ class HostedAuthUrlBuilderTests: XCTestCase {
             baseHostedAuthUrl: baseUrl,
             isInstantDebits: true,
             hasExistingAccountholderToken: false,
-            elementsSessionContext: context
+            elementsSessionContext: context,
+            consumerEmailAddress: "abc+123@test.com"
         )
 
         XCTAssertTrue(result.absoluteString.contains("billingDetails%5Bname%5D=John%20Doe"))
         XCTAssertTrue(result.absoluteString.contains("billingDetails%5Bemail%5D=john%40example.com"))
+        XCTAssertTrue(result.absoluteString.contains("consumerEmailAddress=abc%2B123%40test.com"))
         XCTAssertTrue(result.absoluteString.contains("billingDetails%5Bphone%5D=1234567890"))
         XCTAssertTrue(result.absoluteString.contains("billingDetails%5Baddress%5D%5Bcity%5D=San%20Francisco"))
         XCTAssertTrue(result.absoluteString.contains("billingDetails%5Baddress%5D%5Bcountry%5D=US"))
@@ -152,6 +155,7 @@ class HostedAuthUrlBuilderTests: XCTestCase {
     }
 
     func testInstantDebitsWithPartialBillingDetails() {
+        let baseUrl = URL(string: "https://auth.stripe.com/link-accounts#apiKey=pk_merchant")!
         let address = ElementsSessionContext.BillingDetails.Address(
             city: nil,
             country: nil,
@@ -174,11 +178,13 @@ class HostedAuthUrlBuilderTests: XCTestCase {
             baseHostedAuthUrl: baseUrl,
             isInstantDebits: true,
             hasExistingAccountholderToken: false,
-            elementsSessionContext: context
+            elementsSessionContext: context,
+            consumerEmailAddress: "abc+123@test.com"
         )
 
         XCTAssertTrue(result.absoluteString.contains("billingDetails%5Bname%5D=John%20Doe"))
         XCTAssertTrue(result.absoluteString.contains("billingDetails%5Baddress%5D%5Bpostal_code%5D=94107"))
+        XCTAssertTrue(result.absoluteString.contains("consumerEmailAddress=abc%2B123%40test.com"))
         XCTAssertFalse(result.absoluteString.contains("billingDetails%5Bemail%5D="))
         XCTAssertFalse(result.absoluteString.contains("billingDetails%5Baddress%5D%5Bcity%5D="))
     }
@@ -257,6 +263,26 @@ class HostedAuthUrlBuilderTests: XCTestCase {
         XCTAssertFalse(result.absoluteString.contains("linkMobilePhoneCountry="))
     }
 
+    func testConsumerEmailAddressIsAddedToFragmentAndPercentEncoded() {
+        let baseUrl = URL(string: "https://auth.stripe.com/link-accounts#apiKey=pk_merchant")!
+
+        let result = HostedAuthUrlBuilder.build(
+            baseHostedAuthUrl: baseUrl,
+            isInstantDebits: true,
+            hasExistingAccountholderToken: true,
+            elementsSessionContext: nil,
+            consumerEmailAddress: "abc+123@test.com"
+        )
+
+        let components = URLComponents(url: result, resolvingAgainstBaseURL: false)
+        XCTAssertNil(components?.query)
+        XCTAssertTrue(
+            components?.percentEncodedFragment?.contains(
+                "consumerEmailAddress=abc%2B123%40test.com"
+            ) == true
+        )
+    }
+
     // MARK: - URL Edge Cases
 
     func testBaseUrlWithTrailingAmpersand() {
@@ -289,7 +315,7 @@ class HostedAuthUrlBuilderTests: XCTestCase {
         )
 
         // Check that special characters are properly URL encoded
-        XCTAssertTrue(result.absoluteString.contains("email=user+test%40example.com"))
+        XCTAssertTrue(result.absoluteString.contains("email=user%2Btest%40example.com"))
         XCTAssertTrue(result.absoluteString.contains("linkMobilePhone=555%20123%204567"))
     }
 }

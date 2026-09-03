@@ -15,7 +15,8 @@ import Foundation
         hasExistingAccountholderToken: Bool,
         elementsSessionContext: ElementsSessionContext?,
         prefillDetailsOverride: PrefillData? = nil,
-        additionalQueryParameters: String? = nil
+        additionalQueryParameters: String? = nil,
+        consumerEmailAddress: String? = nil
     ) -> URL {
         var parameters: [String] = []
 
@@ -89,11 +90,19 @@ import Foundation
             parameters.append("allow_redisplay=\(allowRedisplay)")
         }
 
+        if let consumerEmailAddress, !consumerEmailAddress.isEmpty {
+            parameters.append("consumerEmailAddress=\(consumerEmailAddress)")
+        }
+
         // Join all values with an &, and URL encode.
         // We encode these parameters since they will be appended to the auth flow URL.
+        // Escape "+" because form-style query decoders interpret an unescaped plus as a space.
+        // Escape brackets up front to prevent URL from double-encoding other values when it encounters them.
+        var allowedCharacters = CharacterSet.urlHostAllowed
+        allowedCharacters.remove(charactersIn: "+[]")
         let joinedParameters = parameters
             .joined(separator: "&")
-            .addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
+            .addingPercentEncoding(withAllowedCharacters: allowedCharacters)
         guard let joinedParameters else {
             return baseHostedAuthUrl
         }
