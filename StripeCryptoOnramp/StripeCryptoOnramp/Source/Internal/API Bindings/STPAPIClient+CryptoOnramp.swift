@@ -60,8 +60,6 @@ extension STPAPIClient {
 
         try validateSessionState(using: linkAccountInfo)
 
-        // TODO: Integration-test that URLSession's default `Accept-Language` behavior reaches
-        // this API before relying on it for server-provided requirement copy.
         let endpoint = "crypto/internal/customer"
         let request = EmptyRequestWithCredentials(consumerSessionClientSecret: consumerSessionClientSecret)
         return try await get(
