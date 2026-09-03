@@ -78,33 +78,6 @@ struct AdditionalKYCRequirement: Decodable, Equatable {
         questionnaire ?? document?.additionalRequirements?.questionnaire
     }
 
-    /// Creates an additional KYC requirement.
-    /// - Parameters:
-    ///   - description: A value describing the information the customer must provide (e.g. `proof_of_address`, `source_of_funds`).
-    ///   - requestedBy: The liquidity provider that requested the information.
-    ///   - awaitingActionFrom: The party currently responsible for acting on the requirement.
-    ///   - submissionType: The kind of information the customer must submit.
-    ///   - errors: Errors from previous attempts to fulfill the requirement.
-    ///   - document: Document-specific collection details, when documents are required.
-    ///   - questionnaire: Questionnaire-specific collection details, when answers are required.
-    init(
-        description: String,
-        requestedBy: String,
-        awaitingActionFrom: ActionParty,
-        submissionType: AdditionalKYCSubmissionType,
-        errors: [RequirementError] = [],
-        document: AdditionalKYCDocumentRequirement? = nil,
-        questionnaire: AdditionalKYCQuestionnaire? = nil
-    ) {
-        self.description = description
-        self.requestedBy = requestedBy
-        self.awaitingActionFrom = awaitingActionFrom
-        self.submissionType = submissionType
-        self.errors = errors
-        self.document = document
-        self.questionnaire = questionnaire
-    }
-
     // MARK: - Decodable
 
     private enum CodingKeys: String, CodingKey {
