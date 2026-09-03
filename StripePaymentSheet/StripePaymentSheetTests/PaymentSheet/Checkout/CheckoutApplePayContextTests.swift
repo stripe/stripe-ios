@@ -311,44 +311,54 @@ final class CheckoutApplePayContextTests: XCTestCase {
         XCTAssertEqual(updater.updateCallCount, 0)
     }
 
-    func testCancelWaitsForShippingTaxUpdate() async {
-        // Given an in-flight shipping tax update
-        let returnedSession = CheckoutTestHelpers.makeSession().makePublicSession()
-        let updater = MockCheckoutSessionWalletUpdater(
-            sessionToReturn: returnedSession,
-            suspendsUpdates: true
-        )
-        let (context, controller) = makeShippingContext(
-            allowedCountries: ["US"],
-            automaticTaxAddressSource: "session.shipping",
-            checkoutWalletUpdater: updater
-        )
-        var didReturnResult = false
-        let resultTask = Task {
-            let result = await context.presentApplePay()
-            didReturnResult = true
-            return result
-        }
-        await Task.yield()
-        context.paymentAuthorizationController(
-            controller,
-            didSelectShippingContact: makeShippingContact(country: "US", postalCode: "94107")
-        ) { _ in }
-        while !updater.isWaiting {
+    func testCancelWaitsForShippingTaxUpdateAndRestoresTaxRegion() async {
+        let existingTaxRegion = CheckoutController.Address(country: "US", postalCode: "10001")
+        let defaultTaxRegion = CheckoutController.Address(country: "US")
+
+        for (initialTaxRegion, expectedTaxRegion) in [
+            (existingTaxRegion, existingTaxRegion),
+            (nil, defaultTaxRegion),
+        ] {
+            // Given an in-flight shipping tax update
+            let returnedSession = CheckoutTestHelpers.makeSession().makePublicSession()
+            let updater = MockCheckoutSessionWalletUpdater(
+                sessionToReturn: returnedSession,
+                currentTaxRegion: initialTaxRegion,
+                suspendsFirstUpdate: true
+            )
+            let (context, controller) = makeShippingContext(
+                allowedCountries: ["US"],
+                automaticTaxAddressSource: "session.shipping",
+                checkoutWalletUpdater: updater
+            )
+            var didReturnResult = false
+            let resultTask = Task {
+                let result = await context.presentApplePay()
+                didReturnResult = true
+                return result
+            }
             await Task.yield()
+            context.paymentAuthorizationController(
+                controller,
+                didSelectShippingContact: makeShippingContact(country: "US", postalCode: "94107")
+            ) { _ in }
+            while !updater.isWaiting {
+                await Task.yield()
+            }
+
+            // When Apple Pay is canceled before its tax update completes
+            context.paymentAuthorizationControllerDidFinish(controller)
+            await Task.yield()
+
+            // Then cancellation waits for the update and restores the previous or default region
+            XCTAssertFalse(didReturnResult)
+            updater.resume()
+            let result = await resultTask.value
+            XCTAssertEqual(result.paymentSheetResult, .canceled)
+            XCTAssertEqual(updater.updateCallCount, 2)
+            XCTAssertEqual(updater.lastAddress, expectedTaxRegion)
+            XCTAssertEqual(updater.currentTaxRegion, expectedTaxRegion)
         }
-
-        // When Apple Pay is canceled before its tax update completes
-        context.paymentAuthorizationControllerDidFinish(controller)
-        await Task.yield()
-
-        // Then cancellation waits for the update before completing
-        XCTAssertFalse(didReturnResult)
-        updater.resume()
-        let result = await resultTask.value
-        XCTAssertEqual(result.paymentSheetResult, .canceled)
-        XCTAssertEqual(updater.updateCallCount, 1)
-        XCTAssertEqual(updater.lastAddress?.country, "US")
     }
 
     // MARK: - makePaymentRequest billing/shipping contact fields
@@ -630,7 +640,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
         let updatedSession = CheckoutTestHelpers.makeOpenSession().makePublicSession()
         let updater = MockCheckoutSessionWalletUpdater(
             sessionToReturn: updatedSession,
-            suspendsUpdates: true
+            suspendsFirstUpdate: true
         )
         let (context, mockController) = makeContext(
             collectsTaxFromBillingAddress: true,

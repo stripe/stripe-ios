@@ -34,6 +34,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
     private let presentationWindow: UIWindow?
     private let confirmationHandler: CheckoutController.ApplePayConfirmationParameters.ConfirmationHandler
     private let fallbackBillingDetails: StripeAPI.BillingDetails?
+    private let initialTaxRegion: CheckoutController.Address?
     let authorizationController: PKPaymentAuthorizationController
 
     private weak var checkoutWalletUpdater: CheckoutSessionWalletUpdater?
@@ -65,6 +66,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
             checkoutSession: checkoutSession,
             applePayConfirmationParameters: applePayConfirmationParameters
         )
+        self.initialTaxRegion = checkoutWalletUpdater.currentTaxRegion
         self.authorizationController = authorizationController
         self.checkoutWalletUpdater = checkoutWalletUpdater
         super.init()
@@ -164,6 +166,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
             Task {
                 await shippingContactUpdateTask?.value
                 await paymentMethodUpdateTask?.value
+                await restoreInitialTaxRegionIfNecessary()
                 await controller.dismiss()
                 self.resume(with: .canceled())
                 self._end()
@@ -219,8 +222,11 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         didSelectShippingContact contact: PKContact,
         handler: @escaping (PKPaymentRequestShippingContactUpdate) -> Void
     ) {
-        if let allowedCountries = session.allowedShippingCountries,
-           let country = contact.postalAddress?.isoCountryCode,
+        guard let allowedCountries = session.allowedShippingCountries else {
+            handler(PKPaymentRequestShippingContactUpdate(paymentSummaryItems: summaryItems()))
+            return
+        }
+        if let country = contact.postalAddress?.isoCountryCode,
            !allowedCountries.contains(country.uppercased()) {
             let error = CheckoutError.invalidShippingCountry(countryCode: country)
             handler(PKPaymentRequestShippingContactUpdate(
@@ -445,6 +451,18 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         shippingContactUpdateTask = nil
         paymentMethodUpdateTask = nil
         didFinish = true
+    }
+
+    private func restoreInitialTaxRegionIfNecessary() async {
+        guard let checkoutWalletUpdater,
+              checkoutWalletUpdater.currentTaxRegion != initialTaxRegion else {
+            return
+        }
+        let taxRegionToRestore = initialTaxRegion ?? .init(country: session.merchantCountryCode)
+        _ = try? await checkoutWalletUpdater.updateTaxRegionWithoutEnqueueing(
+            address: taxRegionToRestore,
+            canUpdateWhileSheetPresented: true
+        )
     }
 
     private func resume(with result: CheckoutController.InternalConfirmResult) {
