@@ -58,7 +58,8 @@ final class NetworkingLinkSignupDataSourceImplementation: NetworkingLinkSignupDa
         return apiClient.synchronize(
             clientSecret: clientSecret,
             returnURL: returnURL,
-            initialSynchronize: false
+            initialSynchronize: false,
+            preCollectedConsent: nil
         )
         .chained { synchronize in
             if let networkingLinkSignup = synchronize.text?.networkingLinkSignupPane {

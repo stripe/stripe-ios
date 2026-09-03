@@ -39,7 +39,8 @@ class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPI {
     func synchronize(
         clientSecret: String,
         returnURL: String?,
-        initialSynchronize: Bool
+        initialSynchronize: Bool,
+        preCollectedConsent: FinancialConnectionsPreCollectedConsent?
     ) -> Future<FinancialConnectionsSynchronize> {
         return Promise<FinancialConnectionsSynchronize>()
     }

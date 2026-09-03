@@ -45,13 +45,15 @@ extension FinancialConnectionsAsyncAPIClient: FinancialConnectionsAPI {
     func synchronize(
         clientSecret: String,
         returnURL: String?,
-        initialSynchronize: Bool
+        initialSynchronize: Bool,
+        preCollectedConsent: FinancialConnectionsPreCollectedConsent?
     ) -> Future<FinancialConnectionsSynchronize> {
         wrapAsyncToFuture {
             try await self.synchronize(
                 clientSecret: clientSecret,
                 returnURL: returnURL,
-                initialSynchronize: initialSynchronize
+                initialSynchronize: initialSynchronize,
+                preCollectedConsent: preCollectedConsent
             )
         }
     }

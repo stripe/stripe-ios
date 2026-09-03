@@ -54,6 +54,7 @@ final class HostViewController: UIViewController {
     private let clientSecret: String
     private let apiClient: any FinancialConnectionsAPI
     private let returnURL: String?
+    private let preCollectedConsent: FinancialConnectionsPreCollectedConsent?
 
     private var lastError: Error?
 
@@ -64,12 +65,14 @@ final class HostViewController: UIViewController {
         clientSecret: String,
         returnURL: String?,
         apiClient: any FinancialConnectionsAPI,
+        preCollectedConsent: FinancialConnectionsPreCollectedConsent?,
         delegate: HostViewControllerDelegate?
     ) {
         self.analyticsClientV1 = analyticsClientV1
         self.clientSecret = clientSecret
         self.returnURL = returnURL
         self.apiClient = apiClient
+        self.preCollectedConsent = preCollectedConsent
         self.delegate = delegate
         super.init(nibName: nil, bundle: nil)
     }
@@ -115,7 +118,8 @@ extension HostViewController {
             .synchronize(
                 clientSecret: clientSecret,
                 returnURL: returnURL,
-                initialSynchronize: true
+                initialSynchronize: true,
+                preCollectedConsent: preCollectedConsent
             )
             .observe { [weak self] result in
                 guard let self = self else { return }
