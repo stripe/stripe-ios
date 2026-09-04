@@ -19,6 +19,9 @@ MINOR
 ### PaymentSheet
 * [Added] Added support for SeQura.
 
+### General
+* [Added] Added support for Arabic (Saudi Arabia).
+
 ## 26.8.0 2026-08-24
 ### Payments
 * [Added] Added support for the following FPX banks: Agrobank, Bank of China, and MBSB Bank.
