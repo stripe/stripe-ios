@@ -514,7 +514,7 @@ final class CheckoutConfirmationTests: APIStubbedTestCase {
             address: .full
         )
         configuration.expressCheckoutElement = expressCheckoutElementConfiguration
-        
+
         let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration(
             apiResponse: CheckoutTestHelpers.makeSession(["customer_email": "jenny@example.com"]),
             configuration: configuration

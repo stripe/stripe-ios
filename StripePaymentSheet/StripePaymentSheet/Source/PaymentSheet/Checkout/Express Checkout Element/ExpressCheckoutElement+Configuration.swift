@@ -41,7 +41,7 @@ extension ExpressCheckoutElement {
             /// The field will always be collected, even if it isn't required for the Payment Method.
             case always
         }
-        
+
         /// Billing address collection options.
         public enum AddressCollectionMode: String, CaseIterable {
             /// Only the fields required by the Payment Method will be collected, this may be none.
@@ -49,15 +49,15 @@ extension ExpressCheckoutElement {
             /// Collect the full billing address, regardless of the Payment Method requirements.
             case full
         }
-        
+
         /// How to collect the name field.
         /// Defaults to `automatic`.
         public var name: CollectionMode = .automatic
-        
+
         /// How to collect the billing address.
         /// Defaults to `automatic`.
         public var address: AddressCollectionMode = .automatic
-        
+
         public init(
             name: CollectionMode = .automatic,
             address: AddressCollectionMode = .automatic
