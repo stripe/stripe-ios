@@ -124,3 +124,15 @@ extension ExpressCheckoutElement {
     /// A closure called after a wallet payment confirmation completes.
     public typealias ConfirmHandler = (_ result: CheckoutController.ConfirmResult) -> Void
 }
+
+extension ExpressCheckoutElement.BillingDetailsCollectionConfiguration {
+    func paymentSheetConfiguration() -> PaymentSheet.BillingDetailsCollectionConfiguration {
+        var configuration = PaymentSheet.BillingDetailsCollectionConfiguration()
+        configuration.name = .init(rawValue: name.rawValue)!
+        configuration.address = address == .full ? .full : .automatic
+        configuration.email = .never
+        configuration.phone = .never
+        configuration.attachDefaultsToPaymentMethod = false
+        return configuration
+    }
+}
