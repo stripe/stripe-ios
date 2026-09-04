@@ -11,6 +11,16 @@ import XCTest
 
 @MainActor
 final class ShippingAddressElementConfigurationTests: XCTestCase {
+
+    func testConfigurationDefaultsToNil() {
+        let configuration = CheckoutController.Configuration(
+            clientSecret: "cs_test_123_secret_abc",
+            returnURL: "stripe-ios-test://checkout-return"
+        )
+
+        XCTAssertNil(configuration.shippingAddressElement)
+    }
+
     func testCheckoutInitializesShippingAddressElement() async throws {
         // Given
         var sessionJSON = CheckoutTestHelpers.openSessionJSON
@@ -24,9 +34,11 @@ final class ShippingAddressElementConfigurationTests: XCTestCase {
             clientSecret: "cs_test_123_secret_abc",
             returnURL: "stripe-ios-test://checkout-return"
         )
-        configuration.shippingAddressElement.title = "Delivery address"
-        configuration.shippingAddressElement.buttonTitle = "Save delivery address"
-        configuration.shippingAddressElement.appearance.colors.primary = .purple
+        var shippingAddressElementConfiguration = ShippingAddressElement.Configuration()
+        shippingAddressElementConfiguration.title = "Delivery address"
+        shippingAddressElementConfiguration.buttonTitle = "Save delivery address"
+        shippingAddressElementConfiguration.appearance.colors.primary = .purple
+        configuration.shippingAddressElement = shippingAddressElementConfiguration
         var shippingDetails = CheckoutController.Configuration.Defaults.ShippingDetails()
         shippingDetails.name = "Jenny Rosen"
         shippingDetails.address = .init(
