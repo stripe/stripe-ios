@@ -29,6 +29,7 @@ StripeCryptoOnramp helps you build a headless crypto onramp flow in your iOS app
 - Support seamless sign-in for returning users with `authenticateUserWithToken(_:)`
 
 **KYC and identity verification**:
+- Present required partner terms of service with `presentTermsOfServiceIfNeeded(from:)` after Link authentication and before submitting initial KYC information
 - Submit KYC information with `attachKYCInfo(info:)` and confirm it with `verifyKYCInfo(updatedAddress:from:)`
 - Present identification document verification using `verifyIdentity(from:)`
 
@@ -38,6 +39,7 @@ StripeCryptoOnramp helps you build a headless crypto onramp flow in your iOS app
 - Create crypto payment tokens with `createCryptoPaymentToken()`
 
 **Checkout handling**: 
+- Present required partner terms and conditions with `presentTermsAndConditionsIfNeeded(from:)` before checkout
 - Complete purchases for an onramp session with `performCheckout(onrampSessionId:authenticationContext:onrampSessionClientSecretProvider:)`.
 
 **Theming**:
