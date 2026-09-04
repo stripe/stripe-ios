@@ -119,6 +119,7 @@ struct CheckoutCartBuyButton: View {
         }
         .padding(.horizontal)
         .disabled(checkout.isUpdating)
+        .accessibilityIdentifier("checkout_buy_button")
     }
 }
 
