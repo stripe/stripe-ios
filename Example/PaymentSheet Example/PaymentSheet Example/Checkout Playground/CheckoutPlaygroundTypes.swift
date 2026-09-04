@@ -70,15 +70,16 @@ enum CheckoutPlayground {
         var endpoint: String? {
             switch self {
             case .hosted:
-                return "https://stp-mobile-playground-backend-v7.stripedemos.com/checkout_session"
+                return "https://stp-mobile-playground-backend-v7.stripedemos.com"
             case .localhost:
-                return "http://127.0.0.1:8081/checkout_session"
+                return "http://127.0.0.1:8081"
             case .manual:
                 return nil
             }
         }
 
         static func from(endpoint: String) -> Self {
+            let endpoint = normalizedBaseURL(from: endpoint)
             if endpoint == Self.hosted.endpoint {
                 return .hosted
             }
@@ -86,6 +87,18 @@ enum CheckoutPlayground {
                 return .localhost
             }
             return .manual
+        }
+
+        static func normalizedBaseURL(from endpoint: String) -> String {
+            var endpoint = endpoint
+            while endpoint.hasSuffix("/") {
+                endpoint.removeLast()
+            }
+            for legacyPath in ["/checkout_session", "/create_checkout_session"] where endpoint.hasSuffix(legacyPath) {
+                endpoint.removeLast(legacyPath.count)
+                break
+            }
+            return endpoint
         }
     }
 
