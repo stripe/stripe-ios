@@ -166,7 +166,7 @@ enum CheckoutTestHelpers {
         apiResponse: PaymentPagesAPIResponse = makeOpenSession(),
         configuration: CheckoutController.Configuration? = nil,
         paymentElementConfiguration: PaymentElement.Configuration? = .init(),
-        expressCheckoutElementConfiguration: ExpressCheckoutElement.Configuration? = .init {_ in},
+        expressCheckoutElementConfiguration: ExpressCheckoutElement.Configuration? = .init { _ in },
         stubAllOutgoingRequests: Bool = true
     ) -> CheckoutController.Configuration {
         // Use the production Checkout initializer with a test-controlled API client.
