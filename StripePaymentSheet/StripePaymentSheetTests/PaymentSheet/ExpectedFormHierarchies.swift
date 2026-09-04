@@ -32,6 +32,25 @@ enum ExpectedFormHierarchy {
         static var paymentIntent: FormHierarchyNode { emptyForm }
     }
 
+    // MARK: - Naver Pay
+
+    enum NaverPay {
+        static var paymentIntent: FormHierarchyNode {
+            FormHierarchyNode(type: "FormElement", children: [
+                FormHierarchyNode(type: "SectionElement", children: [
+                    FormHierarchyNode(type: "DropdownFieldElement", properties: ["itemCount": "2", "label": "Select how you want to pay:"])
+                ]),
+            ])
+        }
+        static var settingUp: FormHierarchyNode {
+            FormHierarchyNode(type: "FormElement", children: [
+                FormHierarchyNode(type: "SectionElement", children: [
+                    FormHierarchyNode(type: "DropdownFieldElement", properties: ["itemCount": "2", "label": "Select how you want to pay:"])
+                ]),
+                FormHierarchyNode(type: "SimpleMandateElement", properties: ["text": "By confirming your payment with NICEPAY, you allow..."]),
+            ])
+        }
+    }
     // MARK: - Korean cards
 
     enum KoreanCards {
@@ -42,7 +61,6 @@ enum ExpectedFormHierarchy {
             ])
         }
     }
-
     // MARK: - Alipay
 
     enum Alipay {

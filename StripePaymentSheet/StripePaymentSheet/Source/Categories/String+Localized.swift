@@ -352,6 +352,17 @@ extension String.Localized {
         )
     }
 
+    static var naver_pay_funding_label: String {
+        STPLocalizedString("Select how you want to pay:", "Label for the Naver Pay funding source selector")
+    }
+
+    static var naver_pay_card: String {
+        STPLocalizedString("Naver Pay Card", "Naver Pay card funding source")
+    }
+
+    static var naver_pay_money_point: String {
+        STPLocalizedString("Naver Pay Money/Point", "Naver Pay money or points funding source")
+    }
     static var blik_confirm_payment: String {
         STPLocalizedString("Confirm the payment in your bank's app within %@ to complete the purchase.",
                            "Text for alert message when user needs to confirm payment in their banking app")

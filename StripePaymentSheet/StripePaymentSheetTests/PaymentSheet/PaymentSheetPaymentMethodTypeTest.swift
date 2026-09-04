@@ -188,6 +188,38 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         XCTAssertEqual(result, .missingRequirements([.returnURL]))
     }
 
+    // MARK: - Naver Pay
+
+    func testNaverPayRequiresReturnURLForPaymentAndSetup() {
+        // Given
+        let intents: [Intent] = [
+            ._testPaymentIntent(paymentMethodTypes: [.naverPay]),
+            ._testPaymentIntent(paymentMethodTypes: [.naverPay], setupFutureUsage: .offSession),
+            ._testSetupIntent(paymentMethodTypes: [.naverPay]),
+        ]
+
+        for intent in intents {
+            // When
+            let withoutReturnURL = PaymentSheet.PaymentMethodType.supportsAdding(
+                paymentMethod: .naverPay,
+                configuration: makeConfiguration(),
+                intent: intent,
+                elementsSession: ._testValue(intent: intent),
+                supportedPaymentMethods: [.naverPay]
+            )
+            let withReturnURL = PaymentSheet.PaymentMethodType.supportsAdding(
+                paymentMethod: .naverPay,
+                configuration: makeConfiguration(hasReturnURL: true),
+                intent: intent,
+                elementsSession: ._testValue(intent: intent),
+                supportedPaymentMethods: [.naverPay]
+            )
+
+            // Then
+            XCTAssertEqual(withoutReturnURL, .missingRequirements([.returnURL]))
+            XCTAssertEqual(withReturnURL, .supported)
+        }
+    }
     // MARK: - Korean cards
 
     func testKoreanCardsRequiresReturnURLForPaymentAndSetup() {
@@ -220,7 +252,6 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
             XCTAssertEqual(withReturnURL, .supported)
         }
     }
-
     // MARK: - SeQura
 
     func testSequraRequiresReturnURLAndDoesNotSupportSetup() {
