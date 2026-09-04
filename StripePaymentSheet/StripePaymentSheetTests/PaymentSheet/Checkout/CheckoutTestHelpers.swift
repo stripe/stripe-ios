@@ -166,6 +166,7 @@ enum CheckoutTestHelpers {
         apiResponse: PaymentPagesAPIResponse = makeOpenSession(),
         configuration: CheckoutController.Configuration? = nil,
         paymentElementConfiguration: PaymentElement.Configuration? = .init(),
+        expressCheckoutElementConfiguration: ExpressCheckoutElement.Configuration? = .init {_ in},
         stubAllOutgoingRequests: Bool = true
     ) -> CheckoutController.Configuration {
         // Use the production Checkout initializer with a test-controlled API client.
@@ -173,6 +174,9 @@ enum CheckoutTestHelpers {
         var resolvedConfiguration = configuration ?? CheckoutController.Configuration(clientSecret: clientSecret, returnURL: "stripe-ios-test://checkout-return")
         if resolvedConfiguration.paymentElement == nil {
             resolvedConfiguration.paymentElement = paymentElementConfiguration
+        }
+        if resolvedConfiguration.expressCheckoutElement == nil {
+            resolvedConfiguration.expressCheckoutElement = expressCheckoutElementConfiguration
         }
         resolvedConfiguration.apiClient = makeStubbedAPIClient(
             apiResponse: apiResponse,
