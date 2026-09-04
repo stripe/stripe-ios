@@ -6,6 +6,7 @@ MINOR
 * [Added] Added Canada SIN, Colombia NIT, and Philippines TIN values to `IdType`, and added `idType` to the `KycInfo` initializer.
 
 ### PaymentSheet
+* [Added] Added support for Naver Pay.
 * [Added] Added support for Korean cards.
 
 ## 26.9.0 2026-08-31
