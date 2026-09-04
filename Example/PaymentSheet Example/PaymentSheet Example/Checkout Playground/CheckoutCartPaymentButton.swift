@@ -13,14 +13,29 @@ struct CheckoutCartPaymentMethodSection: View {
     let integrationType: CheckoutPlayground.IntegrationType
 
     @State private var showEmbeddedScreen = false
+    @State private var clearPaymentOptionErrorMessage: String?
 
     private var session: CheckoutController.Session { checkout.session }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
-            Text("Payment Method")
-                .font(.title2).bold()
-                .padding(.horizontal)
+            HStack {
+                Text("Payment Method")
+                    .font(.title2).bold()
+
+                Spacer()
+
+                if integrationType == .embedded, session.paymentOption != nil {
+                    Button(role: .destructive) {
+                        clearPaymentOption()
+                    } label: {
+                        Text("Clear payment option")
+                            .font(.subheadline.weight(.medium))
+                    }
+                    .disabled(checkout.isUpdating)
+                }
+            }
+            .padding(.horizontal)
 
             Button {
                 presentPaymentElement()
@@ -44,6 +59,21 @@ struct CheckoutCartPaymentMethodSection: View {
             .sheet(isPresented: $showEmbeddedScreen) {
                 CheckoutEmbeddedScreen(paymentElement: checkout.getPaymentElement())
             }
+            .alert(
+                "Unable to clear payment option",
+                isPresented: Binding(
+                    get: { clearPaymentOptionErrorMessage != nil },
+                    set: { if !$0 { clearPaymentOptionErrorMessage = nil } }
+                ),
+                actions: {
+                    Button("OK", role: .cancel) {
+                        clearPaymentOptionErrorMessage = nil
+                    }
+                },
+                message: {
+                    Text(clearPaymentOptionErrorMessage ?? "")
+                }
+            )
         }
     }
 
@@ -83,6 +113,16 @@ struct CheckoutCartPaymentMethodSection: View {
             showEmbeddedScreen = true
         case .eceOnly:
             break
+        }
+    }
+
+    private func clearPaymentOption() {
+        Task { @MainActor in
+            do {
+                try await checkout.clearPaymentOption()
+            } catch {
+                clearPaymentOptionErrorMessage = error.localizedDescription
+            }
         }
     }
 }
