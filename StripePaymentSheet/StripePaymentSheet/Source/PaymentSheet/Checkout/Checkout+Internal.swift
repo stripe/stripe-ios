@@ -46,7 +46,6 @@ extension CheckoutController: ExpressCheckoutElementDelegate {
                 returnURL: configuration.returnURL,
                 merchantDisplayName: effectiveMerchantDisplayName,
                 shippingAddressRequired: configuration.expressCheckoutElement.shippingAddressRequired,
-                billingDetailsCollectionConfiguration: configuration.expressCheckoutElement.billingDetailsCollectionConfiguration.paymentSheetConfiguration(),
                 defaultBillingDetails: configuration.defaults.billingDetails,
                 presentationWindow: presentationWindow,
                 confirmationHandler: { [apiClient, paymentHandler] requestParameters in
@@ -68,7 +67,6 @@ extension CheckoutController: ExpressCheckoutElementDelegate {
             paymentElementConfiguration.returnURL = configuration.returnURL
             paymentElementConfiguration.merchantDisplayName = effectiveMerchantDisplayName
             paymentElementConfiguration.style = configuration.userInterfaceStyle
-            paymentElementConfiguration.billingDetailsCollectionConfiguration = configuration.expressCheckoutElement.billingDetailsCollectionConfiguration.paymentSheetConfiguration()
             if let billingDetails = configuration.defaults.billingDetails {
                 paymentElementConfiguration.defaultBillingDetails.set(billingDetails)
             }
