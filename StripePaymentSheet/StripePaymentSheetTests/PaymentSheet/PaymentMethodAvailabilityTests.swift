@@ -38,6 +38,57 @@ final class PaymentMethodAvailabilityTests: XCTestCase {
         XCTAssertEqual(configuration.resolvedLinkBrand(elementsSession: elementsSession, linkAccount: nil), .link)
     }
 
+    func testFinancialConnectionsLinkBrandOverride_onlyOverridesOnelink() {
+        var configuration = PaymentSheet.Configuration()
+
+        XCTAssertNil(configuration.financialConnectionsLinkBrandOverride)
+
+        configuration.link = .init(brand: .link)
+        XCTAssertNil(configuration.financialConnectionsLinkBrandOverride)
+
+        configuration.link = .init(brand: .onelink)
+        XCTAssertEqual(configuration.financialConnectionsLinkBrandOverride, .onelink)
+    }
+
+    func testFinancialConnectionsLinkBrandOverride_usesAuthenticatedConsumerBrand() {
+        // Given an authenticated Onelink consumer
+        let session = ConsumerSession.make(
+            clientSecret: "consumer_session_secret",
+            emailAddress: "test@example.com",
+            redactedFormattedPhoneNumber: "(***) *** **55",
+            unredactedPhoneNumber: nil,
+            phoneNumberCountry: "US",
+            verificationSessions: [.init(type: .sms, state: .verified)],
+            supportedPaymentDetailsTypes: [],
+            mobileFallbackWebviewParams: nil,
+            currentAuthenticationLevel: .twoFactorAuth,
+            minimumAuthenticationLevel: .oneFactorAuth,
+            linkBrand: .onelink
+        )
+        let linkAccount = PaymentSheetLinkAccount(
+            email: "test@example.com",
+            session: session,
+            publishableKey: nil,
+            displayablePaymentDetails: nil,
+            useMobileEndpoints: false,
+            canSyncAttestationState: false
+        )
+        let configuration = PaymentSheet.Configuration()
+
+        // Then the brand is forwarded to Financial Connections without consumer credentials
+        XCTAssertEqual(
+            configuration.financialConnectionsLinkBrandOverride(linkAccount: linkAccount),
+            .onelink
+        )
+    }
+
+    func testFinancialConnectionsLinkBrandOverride_doesNotOverrideLink() {
+        let configuration = PaymentSheet.Configuration()
+
+        // Then the backend Financial Connections brand remains authoritative
+        XCTAssertNil(configuration.financialConnectionsLinkBrandOverride(linkAccount: nil))
+    }
+
     func testResolvedLinkBrand_withSignedOutLinkAccount_fallsBackToElementsSessionBrand() {
         let elementsSession = STPElementsSession._testValue(
             linkSettings: ._testValue(brand: .link)
