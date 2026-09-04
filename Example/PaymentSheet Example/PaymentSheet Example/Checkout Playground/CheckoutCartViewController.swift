@@ -206,7 +206,9 @@ final class CheckoutCartViewController: UIViewController {
             }
             configuration.defaults.shippingDetails = defaultShippingAddress?.checkoutShippingDetails
             if expressCheckoutElementSettings.isEnabled {
-                var expressCheckoutElementConfiguration = ExpressCheckoutElement.Configuration()
+                var expressCheckoutElementConfiguration = ExpressCheckoutElement.Configuration { [weak self] result in
+                    self?.handleConfirmResult(result)
+                }
                 expressCheckoutElementConfiguration.applePayConfiguration = ExpressCheckoutElement.ApplePayConfiguration(
                     merchantId: "merchant.com.stripe.paymentsheet.example",
                     display: expressCheckoutElementSettings.applePayDisplay
@@ -216,9 +218,6 @@ final class CheckoutCartViewController: UIViewController {
                 )
                 expressCheckoutElementConfiguration.shippingAddressRequired = expressCheckoutElementSettings.shippingAddressRequired
                 expressCheckoutElementConfiguration.billingDetailsCollectionConfiguration = expressCheckoutElementSettings.billingDetailsCollectionConfiguration
-                expressCheckoutElementConfiguration.confirmHandler = { [weak self] result in
-                    self?.handleConfirmResult(result)
-                }
                 configuration.expressCheckoutElement = expressCheckoutElementConfiguration
             }
             if adaptivePricing {
@@ -283,9 +282,9 @@ final class CheckoutCartViewController: UIViewController {
 
         contentStackView.addArrangedSubview(makeLineItemsSection(session: session))
 
-        if expressCheckoutElementSettings.isEnabled, let expressCheckoutElement = checkout.getExpressCheckoutElement() {
+        if expressCheckoutElementSettings.isEnabled {
             contentStackView.addArrangedSubview(
-                makeSection(title: "Express Checkout", content: expressCheckoutElement.uiView)
+                makeSection(title: "Express Checkout", content: checkout.getExpressCheckoutElement().uiView)
             )
         }
 

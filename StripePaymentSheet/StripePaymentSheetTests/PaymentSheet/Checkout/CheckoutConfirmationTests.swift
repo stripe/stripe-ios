@@ -508,10 +508,13 @@ final class CheckoutConfirmationTests: APIStubbedTestCase {
         billingDetails.name = "Jenny Rosen"
         billingDetails.address = .init(country: "US", postalCode: "94107")
         configuration.defaults.billingDetails = billingDetails
-        configuration.expressCheckoutElement.billingDetailsCollectionConfiguration = .init(
+        var expressCheckoutElementConfiguration = ExpressCheckoutElement.Configuration(confirmHandler: { _ in })
+        expressCheckoutElementConfiguration.billingDetailsCollectionConfiguration = .init(
             name: .always,
             address: .full
         )
+        configuration.expressCheckoutElement = expressCheckoutElementConfiguration
+
         let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration(
             apiResponse: CheckoutTestHelpers.makeSession(["customer_email": "jenny@example.com"]),
             configuration: configuration
