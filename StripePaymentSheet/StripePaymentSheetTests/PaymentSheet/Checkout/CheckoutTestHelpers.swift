@@ -388,13 +388,15 @@ class MockPKPaymentAuthorizationController: PKPaymentAuthorizationController {
 
 @MainActor
 class MockCheckoutSessionWalletUpdater: CheckoutSessionWalletUpdater {
+    private(set) var currentTaxRegion: CheckoutController.Address?
     private(set) var updateCallCount = 0
     private(set) var lastAddress: CheckoutController.Address?
     private(set) var lastCanUpdateWhileSheetPresented: Bool?
     private let sessionToReturn: CheckoutController.Session?
     private let errorToThrow: Error?
-    private let suspendsUpdates: Bool
+    private let suspendsFirstUpdate: Bool
     private var continuation: CheckedContinuation<CheckoutController.Session, Error>?
+    private var didSuspend = false
 
     var isWaiting: Bool {
         continuation != nil
@@ -403,11 +405,13 @@ class MockCheckoutSessionWalletUpdater: CheckoutSessionWalletUpdater {
     init(
         sessionToReturn: CheckoutController.Session? = nil,
         errorToThrow: Error? = nil,
-        suspendsUpdates: Bool = false
+        currentTaxRegion: CheckoutController.Address? = nil,
+        suspendsFirstUpdate: Bool = false
     ) {
         self.sessionToReturn = sessionToReturn
         self.errorToThrow = errorToThrow
-        self.suspendsUpdates = suspendsUpdates
+        self.currentTaxRegion = currentTaxRegion
+        self.suspendsFirstUpdate = suspendsFirstUpdate
     }
 
     func updateTaxRegionWithoutEnqueueing(
@@ -423,12 +427,17 @@ class MockCheckoutSessionWalletUpdater: CheckoutSessionWalletUpdater {
         guard let sessionToReturn else {
             throw CheckoutError.unknown(debugDescription: "MockCheckoutSessionWalletUpdater has no session configured")
         }
-        if suspendsUpdates {
-            return try await withCheckedThrowingContinuation { continuation in
+        let session: CheckoutController.Session
+        if suspendsFirstUpdate && !didSuspend {
+            didSuspend = true
+            session = try await withCheckedThrowingContinuation { continuation in
                 self.continuation = continuation
             }
+        } else {
+            session = sessionToReturn
         }
-        return sessionToReturn
+        currentTaxRegion = address
+        return session
     }
 
     func resume() {
