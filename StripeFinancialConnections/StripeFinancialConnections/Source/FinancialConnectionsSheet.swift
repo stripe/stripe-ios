@@ -74,10 +74,13 @@ final public class FinancialConnectionsSheet {
 
         public var style: UserInterfaceStyle
         @_spi(STP) public var linkBrand: LinkBrand?
+        /// Overrides the sheet's background color. Defaults to Financial Connections' adaptive background color.
+        @_spi(STP) public var backgroundColor: UIColor?
 
         public init(style: UserInterfaceStyle = .automatic) {
             self.style = style
             self.linkBrand = nil
+            self.backgroundColor = nil
         }
     }
 

@@ -33,6 +33,37 @@ class PresentationManagerTests: XCTestCase {
         XCTAssertEqual(toViewController.traitCollection.userInterfaceStyle, .dark)
     }
 
+    func testCustomBackgroundColorIsApplied() {
+        // Given
+        let customBackgroundColor = UIColor.systemRed
+        var configuration = FinancialConnectionsSheet.Configuration()
+        configuration.backgroundColor = customBackgroundColor
+
+        // When
+        PresentationManager.shared.configuration = configuration
+
+        // Then
+        XCTAssertEqual(FinancialConnectionsAppearance.Colors.background, customBackgroundColor)
+    }
+
+    func testDefaultBackgroundColorIsPreserved() {
+        // Given
+        let configuration = FinancialConnectionsSheet.Configuration()
+
+        // When
+        PresentationManager.shared.configuration = configuration
+
+        // Then
+        XCTAssertEqual(
+            FinancialConnectionsAppearance.Colors.background.resolvedColor(with: .init(userInterfaceStyle: .light)),
+            UIColor(red: 1, green: 1, blue: 1, alpha: 1)
+        )
+        XCTAssertEqual(
+            FinancialConnectionsAppearance.Colors.background.resolvedColor(with: .init(userInterfaceStyle: .dark)),
+            UIColor(red: 20 / 255, green: 23 / 255, blue: 29 / 255, alpha: 1)
+        )
+    }
+
     func testOnelinkBrandUsesSameTintAsLinkForLightTheme() {
         let onelinkAppearance = FinancialConnectionsAppearance(theme: .light, linkBrand: .onelink)
         let linkAppearance = FinancialConnectionsAppearance(theme: .light, linkBrand: .link)
