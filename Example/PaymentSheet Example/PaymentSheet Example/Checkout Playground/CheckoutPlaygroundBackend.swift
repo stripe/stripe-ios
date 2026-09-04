@@ -7,7 +7,7 @@
 
 extension CheckoutPlayground {
     struct SessionFactory {
-        private static let checkoutAPISettings = "2025-03-31.preview"
+        private static let checkoutAPISettings = "2026-08-26.preview"
 
         let backend: PlaygroundBackend
         let apiClient: STPAPIClient
@@ -63,7 +63,7 @@ extension CheckoutPlayground {
                 ],
             ] as [String: Any]
             var sessionParams: [String: Any] = [
-                "ui_mode": "custom",
+                "ui_mode": "elements",
                 "currency": currency.rawValue,
                 "items": [
                     oneTimePrice,
