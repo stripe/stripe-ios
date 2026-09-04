@@ -61,11 +61,10 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         self.returnURL = applePayConfirmationParameters.returnURL
         self.presentationWindow = applePayConfirmationParameters.presentationWindow
         self.confirmationHandler = applePayConfirmationParameters.confirmationHandler
-        self.fallbackBillingDetails = checkoutSession.email.map { email in
-            var details = StripeAPI.BillingDetails()
-            details.email = email
-            return details
-        }
+        self.fallbackBillingDetails = Self.makeFallbackBillingDetails(
+            checkoutSession: checkoutSession,
+            applePayConfirmationParameters: applePayConfirmationParameters
+        )
         self.authorizationController = authorizationController
         self.checkoutWalletUpdater = checkoutWalletUpdater
         super.init()
@@ -350,9 +349,13 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         let merchantLabel = applePayConfirmationParameters.merchantDisplayName
         paymentRequest.paymentSummaryItems = CheckoutApplePayContext.makeSummaryItems(for: checkoutSession, label: merchantLabel)
 
+        let billingDetailsCollectionConfiguration = applePayConfirmationParameters.billingDetailsCollectionConfiguration
+        paymentRequest.requiredBillingContactFields = billingDetailsCollectionConfiguration.applePayRequiredBillingContactFields
         if checkoutSession.collectsTaxFromBillingAddress {
             paymentRequest.requiredBillingContactFields.insert(.postalAddress)
         }
+        paymentRequest.requiredShippingContactFields = billingDetailsCollectionConfiguration.applePayRequiredShippingContactFields
+
         if applePayConfirmationParameters.shippingAddressRequired {
             paymentRequest.requiredShippingContactFields.insert(.postalAddress)
             paymentRequest.requiredShippingContactFields.insert(.name)
@@ -384,6 +387,38 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         postalAddress.postalCode = address.postalCode ?? ""
         contact.postalAddress = postalAddress
         return contact
+    }
+
+    static func makeFallbackBillingDetails(
+        checkoutSession: CheckoutController.Session,
+        applePayConfirmationParameters: CheckoutController.ApplePayConfirmationParameters
+    ) -> StripeAPI.BillingDetails? {
+        var details = StripeAPI.BillingDetails()
+        var hasDetails = false
+        if let email = checkoutSession.email {
+            details.email = email
+            hasDetails = true
+        }
+        guard applePayConfirmationParameters.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod,
+              let defaults = applePayConfirmationParameters.defaultBillingDetails else {
+            return hasDetails ? details : nil
+        }
+        if let name = defaults.name {
+            details.name = name
+            hasDetails = true
+        }
+        if let address = defaults.address {
+            details.address = .init(
+                city: address.city,
+                country: address.country,
+                line1: address.line1,
+                line2: address.line2,
+                postalCode: address.postalCode,
+                state: address.state
+            )
+            hasDetails = true
+        }
+        return hasDetails ? details : nil
     }
 
     static func makeBillingContact(

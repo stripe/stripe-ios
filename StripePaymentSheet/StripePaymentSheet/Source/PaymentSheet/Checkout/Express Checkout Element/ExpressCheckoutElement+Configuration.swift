@@ -13,18 +13,57 @@ import PassKit
 extension ExpressCheckoutElement {
     /// Configuration options for ``ExpressCheckoutElement``.
     public struct Configuration {
+        var apiClient: STPAPIClient = .shared
+
+        /// Whether to require collecting a shipping address. Default: `false`.
+        public var shippingAddressRequired: Bool = false
+        /// Configuration for collecting billing details.
+        public var billingDetailsCollectionConfiguration: BillingDetailsCollectionConfiguration = .init()
         /// Sets the configuration for Apple Pay.
         public var applePayConfiguration: ApplePayConfiguration?
         /// Sets the configuration for Link.
         public var linkConfiguration: LinkConfiguration = .init()
-        /// Whether to require collecting a shipping address. Default: `false`.
-        public var shippingAddressRequired: Bool = false
         /// Called after a wallet payment confirmation completes.
         public var confirmHandler: ConfirmHandler
 
         /// Creates a configuration with default values.
         public init(confirmHandler: @escaping ConfirmHandler) {
             self.confirmHandler = confirmHandler
+        }
+    }
+
+    /// Configuration for how billing details are collected during checkout.
+    public struct BillingDetailsCollectionConfiguration: Equatable {
+        /// Billing details fields collection options.
+        public enum CollectionMode: String, CaseIterable {
+            /// The field will be collected depending on the Payment Method's requirements.
+            case automatic
+            /// The field will always be collected, even if it isn't required for the Payment Method.
+            case always
+        }
+        
+        /// Billing address collection options.
+        public enum AddressCollectionMode: String, CaseIterable {
+            /// Only the fields required by the Payment Method will be collected, this may be none.
+            case automatic
+            /// Collect the full billing address, regardless of the Payment Method requirements.
+            case full
+        }
+        
+        /// How to collect the name field.
+        /// Defaults to `automatic`.
+        public var name: CollectionMode = .automatic
+        
+        /// How to collect the billing address.
+        /// Defaults to `automatic`.
+        public var address: AddressCollectionMode = .automatic
+        
+        public init(
+            name: CollectionMode = .automatic,
+            address: AddressCollectionMode = .automatic
+        ) {
+            self.name = name
+            self.address = address
         }
     }
 

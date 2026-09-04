@@ -9,6 +9,7 @@ import SwiftUI
 struct CheckoutPlaygroundView: View {
     @StateObject private var viewModel = CheckoutPlayground.ViewModel()
     @State private var showCurrencySelectorAppearance = false
+    @State private var showBillingDetailsCollection = false
 
     var body: some View {
         Group {
@@ -58,7 +59,10 @@ struct CheckoutPlaygroundView: View {
                             showExpressCheckoutElement: $viewModel.expressCheckoutElement.isEnabled,
                             applePayDisplay: $viewModel.expressCheckoutElement.applePayDisplay,
                             linkDisplay: $viewModel.expressCheckoutElement.linkDisplay,
-                            shippingAddressRequired: $viewModel.expressCheckoutElement.shippingAddressRequired
+                            shippingAddressRequired: $viewModel.expressCheckoutElement.shippingAddressRequired,
+                            onCustomizeBillingDetailsCollection: {
+                                showBillingDetailsCollection = true
+                            }
                         )
 
                         currencySelectorAppearanceSection
@@ -121,6 +125,15 @@ struct CheckoutPlaygroundView: View {
                     doneAction: { updatedAppearance in
                         viewModel.currencySelectorAppearance = updatedAppearance
                         showCurrencySelectorAppearance = false
+                    }
+                )
+            }
+            .sheet(isPresented: $showBillingDetailsCollection) {
+                ExpressCheckoutElementBillingDetailsCollectionPlaygroundView(
+                    configuration: viewModel.expressCheckoutElement.billingDetailsCollectionConfiguration,
+                    doneAction: { updatedConfiguration in
+                        viewModel.expressCheckoutElement.billingDetailsCollectionConfiguration = updatedConfiguration
+                        showBillingDetailsCollection = false
                     }
                 )
             }

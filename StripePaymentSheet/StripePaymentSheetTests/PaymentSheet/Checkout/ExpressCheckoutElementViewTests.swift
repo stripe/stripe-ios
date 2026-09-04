@@ -12,48 +12,48 @@ import XCTest
 
 @MainActor
 final class ExpressCheckoutElementViewTests: XCTestCase {
-
+    
     // MARK: - resolveButtons tests
-
+    
     func testNoButtonsWhenSessionHasNoWalletTypes() {
         // Given a session with no wallet types in the elements session
         let session = CheckoutTestHelpers.makeOpenSession().makePublicSession()
         let configuration = ExpressCheckoutElement.Configuration(confirmHandler: { _ in })
-
+        
         XCTAssertEqual(
             ExpressCheckoutElementUtilities.resolveButtons(for: session, configuration: configuration),
             []
         )
     }
-
+    
     func testNoApplePayButtonWithoutApplePayConfiguration() {
         // Given a session that includes apple_pay, but no applePayConfiguration
         let session = makeSessionWithWalletTypes(["apple_pay"]).makePublicSession()
         let configuration = ExpressCheckoutElement.Configuration(confirmHandler: { _ in })
-
+        
         let buttons = ExpressCheckoutElementUtilities.resolveButtons(for: session, configuration: configuration)
         XCTAssertFalse(buttons.contains(.applePay))
     }
-
+    
     func testApplePayButtonWithApplePayConfiguration() {
         // Given a session with apple_pay and an applePayConfiguration
         let session = makeSessionWithWalletTypes(["apple_pay"]).makePublicSession()
         var configuration = ExpressCheckoutElement.Configuration(confirmHandler: { _ in })
         configuration.applePayConfiguration = ExpressCheckoutElement.ApplePayConfiguration(merchantId: "merchant.com.example")
-
+        
         let buttons = ExpressCheckoutElementUtilities.resolveButtons(for: session, configuration: configuration)
         XCTAssertEqual(buttons.contains(.applePay), StripeAPI.deviceSupportsApplePay())
     }
-
+    
     func testLinkButtonShownByDefault() {
         // Given a session with link and no linkConfiguration override
         let session = makeSessionWithWalletTypes(["link"]).makePublicSession()
         let configuration = ExpressCheckoutElement.Configuration(confirmHandler: { _ in })
-
+        
         let buttons = ExpressCheckoutElementUtilities.resolveButtons(for: session, configuration: configuration)
         XCTAssertTrue(buttons.contains(.link))
     }
-
+    
     func testApplePayButtonHiddenWhenDisplayIsNever() {
         // Given a session with apple_pay and an applePayConfiguration with display set to .never
         let session = makeSessionWithWalletTypes(["apple_pay"]).makePublicSession()
@@ -62,17 +62,17 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
             merchantId: "merchant.com.example",
             display: .never
         )
-
+        
         let buttons = ExpressCheckoutElementUtilities.resolveButtons(for: session, configuration: configuration)
         XCTAssertFalse(buttons.contains(.applePay))
     }
-
+    
     func testLinkButtonHiddenWhenDisplayIsNever() {
         // Given a session with link and a linkConfiguration with display set to .never
         let session = makeSessionWithWalletTypes(["link"]).makePublicSession()
         var configuration = ExpressCheckoutElement.Configuration(confirmHandler: { _ in })
         configuration.linkConfiguration = ExpressCheckoutElement.LinkConfiguration(display: .never)
-
+        
         let buttons = ExpressCheckoutElementUtilities.resolveButtons(for: session, configuration: configuration)
         XCTAssertFalse(buttons.contains(.link))
         XCTAssertTrue(
@@ -80,22 +80,62 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
                 .contains(.linkConfiguration)
         )
     }
-
+    
     func testLinkButtonHiddenWhenShippingAddressIsRequired() {
         // Given a session with Link and ECE configured to require a shipping address
         let session = makeSessionWithWalletTypes(["link"]).makePublicSession()
         var configuration = ExpressCheckoutElement.Configuration(confirmHandler: { _ in })
         configuration.shippingAddressRequired = true
-
+        
         // When
         let buttons = ExpressCheckoutElementUtilities.resolveButtons(for: session, configuration: configuration)
-
+        
         // Then Link is hidden because it cannot collect the required shipping address
         XCTAssertFalse(buttons.contains(.link))
         XCTAssertTrue(
             ExpressCheckoutElementUtilities.linkDisabledReasons(for: session, configuration: configuration)
                 .contains(.shippingAddressCollection)
         )
+    }
+    
+    func testLinkButtonHiddenWhenFullBillingAddressIsRequiredAndNativeLinkIsUnavailable() {
+        // Given a session that only supports web Link and ECE requires a full billing address
+        let session = makeSessionWithWalletTypes(["link"], linkUseAttestation: false).makePublicSession()
+        var configuration = ExpressCheckoutElement.Configuration(confirmHandler: { _ in })
+        configuration.apiClient = STPAPIClient(publishableKey: "pk_test_123")
+        configuration.billingDetailsCollectionConfiguration.address = .full
+        
+        // When
+        let buttons = ExpressCheckoutElementUtilities.resolveButtons(
+            for: session,
+            configuration: configuration
+        )
+        
+        // Then Link is hidden because web Link cannot collect the required billing address
+        XCTAssertFalse(buttons.contains(.link))
+        XCTAssertTrue(
+            ExpressCheckoutElementUtilities.linkDisabledReasons(
+                for: session,
+                configuration: configuration
+            ).contains(.billingDetailsCollection)
+        )
+    }
+    
+    func testLinkButtonShownWhenFullBillingAddressIsRequiredAndNativeLinkIsAvailable() {
+        // Given a session that supports native Link and ECE requires a full billing address
+        let session = makeSessionWithWalletTypes(["link"], linkUseAttestation: true).makePublicSession()
+        var configuration = ExpressCheckoutElement.Configuration(confirmHandler: { _ in })
+        configuration.apiClient = STPAPIClient(publishableKey: "pk_test_123")
+        configuration.billingDetailsCollectionConfiguration.address = .full
+        
+        // When
+        let buttons = ExpressCheckoutElementUtilities.resolveButtons(
+            for: session,
+            configuration: configuration
+        )
+        
+        // Then native Link can collect the required billing address
+        XCTAssertTrue(buttons.contains(.link))
     }
 
     func testLinkButtonHiddenWhenAutomaticTaxUsesBillingAddress() {

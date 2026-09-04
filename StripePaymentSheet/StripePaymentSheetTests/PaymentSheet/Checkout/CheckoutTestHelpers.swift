@@ -453,6 +453,7 @@ extension CheckoutController.ApplePayConfirmationParameters {
         merchantDisplayName: String = "Test Merchant",
         applePayConfiguration: CheckoutApplePayConfiguration = PaymentElement.ApplePayConfiguration(merchantId: "merchant.com.test"),
         shippingAddressRequired: Bool = false,
+        billingDetailsCollectionConfiguration: PaymentSheet.BillingDetailsCollectionConfiguration = .init(),
         defaultBillingDetails: CheckoutController.Configuration.Defaults.BillingDetails? = nil,
         presentationWindow: UIWindow? = nil,
         confirmationHandler: @escaping CheckoutController.ApplePayConfirmationParameters.ConfirmationHandler = { _ in
@@ -465,6 +466,7 @@ extension CheckoutController.ApplePayConfirmationParameters {
             returnURL: returnURL,
             merchantDisplayName: merchantDisplayName,
             shippingAddressRequired: shippingAddressRequired,
+            billingDetailsCollectionConfiguration: billingDetailsCollectionConfiguration,
             defaultBillingDetails: defaultBillingDetails,
             presentationWindow: presentationWindow,
             confirmationHandler: confirmationHandler
