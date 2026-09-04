@@ -7,7 +7,7 @@
 //
 
 #import "NSError+Stripe3DS2.h"
-#import "STDSLocalizedString.h"
+@import StripeCore;
 
 #import "STDSStripe3DS2Error.h"
 
@@ -28,7 +28,7 @@
 + (instancetype)_stds_timedOutError {
     return [NSError errorWithDomain:STDSStripe3DS2ErrorDomain
                                code:STDSErrorCodeTimeout
-                           userInfo:@{NSLocalizedDescriptionKey : STDSLocalizedString(@"Timeout", @"Error description for when a network request times out. English value is as required by UL certification.")}];
+                           userInfo:@{NSLocalizedDescriptionKey : STPThreeDS2Localization.timeout}];
 }
 
 + (instancetype)_stds_jweError {

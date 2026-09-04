@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		1469551DB874336B68F6C39D /* Stripe3DS2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE4030C50383B488C97F4B56 /* Stripe3DS2.framework */; };
+		31FDD52B2F50A73500927B42 /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31FDD52A2F50A73500927B42 /* StripeCore.framework */; };
 		3C6D16D8E7B5BC865D956A0B /* iOSSnapshotTestCase in Frameworks */ = {isa = PBXBuildFile; productRef = 0118969F6608A92583CC6C98 /* iOSSnapshotTestCase */; };
 		4D73C2FBAC9B96ECB45BDC94 /* Stripe3DS2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE4030C50383B488C97F4B56 /* Stripe3DS2.framework */; };
 		4D79F0CFC54E8B923E9238CF /* Stripe3DS2.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CE4030C50383B488C97F4B56 /* Stripe3DS2.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -95,6 +96,7 @@
 		02D762271DBCC1AE80E0F9D4 /* Stripe3DS2DemoUI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Stripe3DS2DemoUI.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		08D577934984712C20C5E903 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/iPhoneOS.platform/Developer/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		0E3C05BE55CF3086738AA182 /* Stripe3DS2DemoUITests-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Stripe3DS2DemoUITests-Debug.xcconfig"; sourceTree = "<group>"; };
+		31FDD52A2F50A73500927B42 /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3A8CD68A006F970DDC54469A /* Project-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Project-Debug.xcconfig"; sourceTree = "<group>"; };
 		4DB91F58CF23E72636C69C41 /* Project-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Project-Release.xcconfig"; sourceTree = "<group>"; };
 		4EB746D4E46ABD2452A154AE /* Stripe3DS2Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Stripe3DS2Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -214,6 +216,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				31FDD52B2F50A73500927B42 /* StripeCore.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -250,6 +253,7 @@
 			isa = PBXGroup;
 			children = (
 				08D577934984712C20C5E903 /* XCTest.framework */,
+				31FDD52A2F50A73500927B42 /* StripeCore.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -397,46 +401,7 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				Base,
-				"bg-BG",
-				"ca-ES",
-				"cs-CZ",
-				da,
-				de,
-				"el-GR",
 				en,
-				"en-GB",
-				es,
-				"es-419",
-				"et-EE",
-				fi,
-				fil,
-				fr,
-				"fr-CA",
-				hr,
-				hu,
-				id,
-				it,
-				ja,
-				ko,
-				"lt-LT",
-				"lv-LV",
-				"ms-MY",
-				mt,
-				nb,
-				nl,
-				"pl-PL",
-				"pt-BR",
-				"pt-PT",
-				"ro-RO",
-				ru,
-				"sk-SK",
-				"sl-SI",
-				sv,
-				tr,
-				vi,
-				"zh-HK",
-				"zh-Hans",
-				"zh-Hant",
 			);
 			mainGroup = 18B6E1F5666C797A11E2BE03;
 			packageReferences = (

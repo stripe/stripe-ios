@@ -55,7 +55,6 @@ platform :ios do
 
   lane :threeds2_tests do
     Dir.chdir('..') do
-      sh('./stripe3ds2-support/ci_scripts/check_for_new_localized_strings.sh')
       sh('./stripe3ds2-support/ci_scripts/run_tests.sh')
       sh('./stripe3ds2-support/ci_scripts/run_builds.sh')
       sh('./stripe3ds2-support/ci_scripts/run_analyzer.sh')

@@ -10,7 +10,7 @@ rm -f "${log_file}"
 echo "Running static analyzer..."
 xcodebuild clean analyze \
   -quiet \
-  -project "Stripe3DS2/Stripe3DS2.xcodeproj" \
+  -workspace "Stripe.xcworkspace" \
   -scheme "Stripe3DS2" \
   -configuration "Debug" \
   -sdk "iphonesimulator" \
@@ -36,4 +36,3 @@ if [[ "$?" != 1 ]]; then
 fi
 
 echo "All good!"
-
