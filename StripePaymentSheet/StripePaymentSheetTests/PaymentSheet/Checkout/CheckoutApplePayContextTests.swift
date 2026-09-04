@@ -260,6 +260,97 @@ final class CheckoutApplePayContextTests: XCTestCase {
         XCTAssertEqual(error?.code, expectedError.code)
     }
 
+    func testDidSelectShippingContactUpdatesShippingTaxRegion() async {
+        // Given a Checkout Session that calculates automatic tax from shipping
+        let updatedSession = CheckoutTestHelpers.makeSession([
+            "shipping_address_collection": ["allowed_countries": ["US"]],
+            "tax_context": [
+                "automatic_tax_enabled": true,
+                "automatic_tax_address_source": "session.shipping",
+            ],
+            "checkout_items": CheckoutTestHelpers.makeOneTimePriceCheckoutItems(unitAmount: 1200),
+        ]).makePublicSession()
+        let updater = MockCheckoutSessionWalletUpdater(sessionToReturn: updatedSession)
+        let (context, controller) = makeShippingContext(
+            allowedCountries: ["US"],
+            automaticTaxAddressSource: "session.shipping",
+            checkoutWalletUpdater: updater
+        )
+        let contact = makeShippingContact(country: "US", postalCode: "94107")
+
+        // When Apple Pay selects the shipping contact
+        let update = await withCheckedContinuation { continuation in
+            context.paymentAuthorizationController(controller, didSelectShippingContact: contact) {
+                continuation.resume(returning: $0)
+            }
+        }
+
+        // Then Checkout updates the shipping tax region before refreshing Apple Pay totals
+        XCTAssertEqual(updater.updateCallCount, 1)
+        XCTAssertEqual(updater.lastAddress?.country, "US")
+        XCTAssertEqual(updater.lastAddress?.postalCode, "94107")
+        XCTAssertEqual(update.paymentSummaryItems.last?.amount, NSDecimalNumber(string: "12"))
+    }
+
+    func testDidSelectShippingContactDoesNotUpdateBillingSourcedTaxRegion() {
+        // Given a Checkout Session whose automatic tax source is billing
+        let updater = MockCheckoutSessionWalletUpdater()
+        let (context, controller) = makeShippingContext(
+            allowedCountries: ["US"],
+            automaticTaxAddressSource: "session.billing",
+            checkoutWalletUpdater: updater
+        )
+
+        // When Apple Pay selects a shipping contact
+        context.paymentAuthorizationController(
+            controller,
+            didSelectShippingContact: makeShippingContact(country: "US", postalCode: "94107")
+        ) { _ in }
+
+        // Then Checkout does not use it as the tax region
+        XCTAssertEqual(updater.updateCallCount, 0)
+    }
+
+    func testCancelWaitsForShippingTaxUpdate() async {
+        // Given an in-flight shipping tax update
+        let returnedSession = CheckoutTestHelpers.makeSession().makePublicSession()
+        let updater = MockCheckoutSessionWalletUpdater(
+            sessionToReturn: returnedSession,
+            suspendsUpdates: true
+        )
+        let (context, controller) = makeShippingContext(
+            allowedCountries: ["US"],
+            automaticTaxAddressSource: "session.shipping",
+            checkoutWalletUpdater: updater
+        )
+        var didReturnResult = false
+        let resultTask = Task {
+            let result = await context.presentApplePay()
+            didReturnResult = true
+            return result
+        }
+        await Task.yield()
+        context.paymentAuthorizationController(
+            controller,
+            didSelectShippingContact: makeShippingContact(country: "US", postalCode: "94107")
+        ) { _ in }
+        while !updater.isWaiting {
+            await Task.yield()
+        }
+
+        // When Apple Pay is canceled before its tax update completes
+        context.paymentAuthorizationControllerDidFinish(controller)
+        await Task.yield()
+
+        // Then cancellation waits for the update before completing
+        XCTAssertFalse(didReturnResult)
+        updater.resume()
+        let result = await resultTask.value
+        XCTAssertEqual(result.paymentSheetResult, .canceled)
+        XCTAssertEqual(updater.updateCallCount, 1)
+        XCTAssertEqual(updater.lastAddress?.country, "US")
+    }
+
     // MARK: - makePaymentRequest billing/shipping contact fields
 
     func testMakePaymentRequest_billingTaxRequiresPostalAddress() {
@@ -346,7 +437,10 @@ final class CheckoutApplePayContextTests: XCTestCase {
     func testDidFinish_notStarted_waitsForBillingTaxUpdateBeforeCanceling() async {
         // Given an active Apple Pay presentation with a billing tax update that is suspended
         let updatedSession = CheckoutTestHelpers.makeOpenSession().makePublicSession()
-        let updater = SuspendingCheckoutSessionWalletUpdater(sessionToReturn: updatedSession)
+        let updater = MockCheckoutSessionWalletUpdater(
+            sessionToReturn: updatedSession,
+            suspendsUpdates: true
+        )
         let (context, mockController) = makeContext(
             collectsTaxFromBillingAddress: true,
             checkoutWalletUpdater: updater
@@ -460,12 +554,21 @@ final class CheckoutApplePayContextTests: XCTestCase {
     }
 
     private func makeShippingContext(
-        allowedCountries: [String]
+        allowedCountries: [String],
+        automaticTaxAddressSource: String? = nil,
+        checkoutWalletUpdater: CheckoutSessionWalletUpdater? = nil
     ) -> (CheckoutApplePayContext, MockPKPaymentAuthorizationController) {
         let apiClient = APIStubbedTestCase.stubbedAPIClient()
-        let session = CheckoutTestHelpers.makeSession([
+        var overrides: [String: Any] = [
             "shipping_address_collection": ["allowed_countries": allowedCountries],
-        ]).makePublicSession()
+        ]
+        if let automaticTaxAddressSource {
+            overrides["tax_context"] = [
+                "automatic_tax_enabled": true,
+                "automatic_tax_address_source": automaticTaxAddressSource,
+            ]
+        }
+        let session = CheckoutTestHelpers.makeSession(overrides).makePublicSession()
         let parameters = CheckoutController.ApplePayConfirmationParameters.makeMock(
             apiClient: apiClient
         )
@@ -474,14 +577,15 @@ final class CheckoutApplePayContextTests: XCTestCase {
             checkoutSession: session,
             applePayConfirmationParameters: parameters,
             authorizationController: controller,
-            checkoutWalletUpdater: MockCheckoutSessionWalletUpdater()
+            checkoutWalletUpdater: checkoutWalletUpdater ?? MockCheckoutSessionWalletUpdater(sessionToReturn: session)
         )
         return (context, controller)
     }
 
-    private func makeShippingContact(country: String) -> PKContact {
+    private func makeShippingContact(country: String, postalCode: String? = nil) -> PKContact {
         let address = CNMutablePostalAddress()
         address.isoCountryCode = country
+        address.postalCode = postalCode ?? ""
         let contact = PKContact()
         contact.postalAddress = address
         return contact
@@ -538,32 +642,4 @@ private final class MockPKPaymentMethod: PKPaymentMethod {
     }
 
     override var billingAddress: CNContact? { mockBillingAddress }
-}
-
-@MainActor
-private final class SuspendingCheckoutSessionWalletUpdater: CheckoutSessionWalletUpdater {
-    private let sessionToReturn: CheckoutController.Session
-    private var continuation: CheckedContinuation<CheckoutController.Session, Error>?
-
-    var isWaiting: Bool {
-        return continuation != nil
-    }
-
-    init(sessionToReturn: CheckoutController.Session) {
-        self.sessionToReturn = sessionToReturn
-    }
-
-    func updateBillingTaxRegionWithoutEnqueueing(
-        address: CheckoutController.Address,
-        canUpdateWhileSheetPresented: Bool
-    ) async throws -> CheckoutController.Session {
-        return try await withCheckedThrowingContinuation { continuation in
-            self.continuation = continuation
-        }
-    }
-
-    func resume() {
-        continuation?.resume(returning: sessionToReturn)
-        continuation = nil
-    }
 }
