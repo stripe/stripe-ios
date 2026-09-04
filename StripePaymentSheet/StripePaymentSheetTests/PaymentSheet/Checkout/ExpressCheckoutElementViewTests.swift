@@ -98,46 +98,6 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
         )
     }
 
-    func testLinkButtonHiddenWhenFullBillingAddressIsRequiredAndNativeLinkIsUnavailable() {
-        // Given a session that only supports web Link and ECE requires a full billing address
-        let session = makeSessionWithWalletTypes(["link"], linkUseAttestation: false).makePublicSession()
-        var configuration = ExpressCheckoutElement.Configuration()
-        configuration.apiClient = STPAPIClient(publishableKey: "pk_test_123")
-        configuration.billingDetailsCollectionConfiguration.address = .full
-
-        // When
-        let buttons = ExpressCheckoutElementUtilities.resolveButtons(
-            for: session,
-            configuration: configuration
-        )
-
-        // Then Link is hidden because web Link cannot collect the required billing address
-        XCTAssertFalse(buttons.contains(.link))
-        XCTAssertTrue(
-            ExpressCheckoutElementUtilities.linkDisabledReasons(
-                for: session,
-                configuration: configuration
-            ).contains(.billingDetailsCollection)
-        )
-    }
-
-    func testLinkButtonShownWhenFullBillingAddressIsRequiredAndNativeLinkIsAvailable() {
-        // Given a session that supports native Link and ECE requires a full billing address
-        let session = makeSessionWithWalletTypes(["link"], linkUseAttestation: true).makePublicSession()
-        var configuration = ExpressCheckoutElement.Configuration()
-        configuration.apiClient = STPAPIClient(publishableKey: "pk_test_123")
-        configuration.billingDetailsCollectionConfiguration.address = .full
-
-        // When
-        let buttons = ExpressCheckoutElementUtilities.resolveButtons(
-            for: session,
-            configuration: configuration
-        )
-
-        // Then native Link can collect the required billing address
-        XCTAssertTrue(buttons.contains(.link))
-    }
-
     func testLinkButtonHiddenWhenAutomaticTaxUsesBillingAddress() {
         // Given a session that calculates automatic tax from the billing address
         let session = makeSessionWithWalletTypes(

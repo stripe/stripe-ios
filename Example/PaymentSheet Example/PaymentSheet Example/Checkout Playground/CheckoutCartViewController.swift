@@ -215,7 +215,6 @@ final class CheckoutCartViewController: UIViewController {
                     display: expressCheckoutElementSettings.linkDisplay
                 )
                 expressCheckoutElementConfiguration.shippingAddressRequired = expressCheckoutElementSettings.shippingAddressRequired
-                expressCheckoutElementConfiguration.billingDetailsCollectionConfiguration = expressCheckoutElementSettings.billingDetailsCollectionConfiguration
                 expressCheckoutElementConfiguration.confirmHandler = { [weak self] result in
                     self?.handleConfirmResult(result)
                 }

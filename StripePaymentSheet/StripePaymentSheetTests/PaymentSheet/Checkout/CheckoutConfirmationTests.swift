@@ -508,10 +508,6 @@ final class CheckoutConfirmationTests: APIStubbedTestCase {
         billingDetails.name = "Jenny Rosen"
         billingDetails.address = .init(country: "US", postalCode: "94107")
         configuration.defaults.billingDetails = billingDetails
-        configuration.expressCheckoutElement.billingDetailsCollectionConfiguration = .init(
-            name: .always,
-            address: .full
-        )
         let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration(
             apiResponse: CheckoutTestHelpers.makeSession(["customer_email": "jenny@example.com"]),
             configuration: configuration
@@ -537,11 +533,6 @@ final class CheckoutConfirmationTests: APIStubbedTestCase {
         XCTAssertEqual(parameters.configuration.returnURL, "stripe-ios-test://custom-return")
         XCTAssertEqual(parameters.configuration.merchantDisplayName, "Test ECE Merchant")
         XCTAssertEqual(parameters.configuration.style, .alwaysDark)
-        XCTAssertEqual(parameters.configuration.billingDetailsCollectionConfiguration.name, .always)
-        XCTAssertEqual(parameters.configuration.billingDetailsCollectionConfiguration.address, .full)
-        XCTAssertEqual(parameters.configuration.billingDetailsCollectionConfiguration.email, .never)
-        XCTAssertEqual(parameters.configuration.billingDetailsCollectionConfiguration.phone, .never)
-        XCTAssertFalse(parameters.configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod)
         XCTAssertEqual(parameters.configuration.defaultBillingDetails.name, "Jenny Rosen")
         XCTAssertEqual(parameters.configuration.defaultBillingDetails.address.country, "US")
         XCTAssertEqual(parameters.configuration.defaultBillingDetails.address.postalCode, "94107")
