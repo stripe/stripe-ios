@@ -67,9 +67,8 @@ extension CheckoutController.Session {
         return automaticTaxEnabled && automaticTaxAddressSource == addressType
     }
 
-    /// Returns the expected amount for payment-style sessions and `nil` for setup-style sessions.
-    func expectedAmount() -> Int? {
-        guard !noPaymentRequired else { return nil }
+    /// Returns the expected amount for this payment-style Session.
+    func expectedAmount() -> Int {
         return Int(totals.total.minorUnitsAmount)
     }
 
