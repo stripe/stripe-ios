@@ -138,7 +138,7 @@ end
 release_documents = {
   File.join(root_dir, 'LICENSE') => File.join(build_dir, 'LICENSE'),
   File.join(root_dir, 'NOTICE') => File.join(build_dir, 'NOTICE'),
-  File.join(root_dir, 'LocalPackages', 'MediaPipeSPM', 'LICENSE-MediaPipe') => File.join(build_dir, 'LICENSE-MediaPipe'),
+  File.join(root_dir, 'LICENSE-MediaPipe') => File.join(build_dir, 'LICENSE-MediaPipe'),
 }
 
 info 'Adding license and notice files to the release archive...'

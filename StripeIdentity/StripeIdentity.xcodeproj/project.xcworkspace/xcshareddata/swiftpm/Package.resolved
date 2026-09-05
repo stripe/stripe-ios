@@ -1,4 +1,5 @@
 {
+  "originHash" : "d185c55720cf90c8de36d0fa4188c1d21841bbfda65796d2921935662afcc348",
   "pins" : [
     {
       "identity" : "ios-snapshot-test-case",
@@ -14,10 +15,19 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/davidme-stripe/OHHTTPStubs",
       "state" : {
-        "branch" : "master",
-        "revision" : "94cf8e1d9e38b0edd580ddc699dda23a7bf66515"
+        "branch" : "stripe-mock",
+        "revision" : "5e90dfd42873ab8de026735d0725ad618b8ca7dd"
+      }
+    },
+    {
+      "identity" : "stripe-mediapipe",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/fedefrappi/stripe-mediapipe",
+      "state" : {
+        "revision" : "aa64e84fccebde0d5f650f2df48f1b04e0cf6d01",
+        "version" : "1.0.0"
       }
     }
   ],
-  "version" : 2
+  "version" : 3
 }

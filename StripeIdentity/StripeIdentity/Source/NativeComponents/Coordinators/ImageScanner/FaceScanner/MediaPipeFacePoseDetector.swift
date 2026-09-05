@@ -12,6 +12,10 @@ import Foundation
 @_spi(STP) import StripeCameraCore
 import UIKit
 
+#if !canImport(MediaPipeSPMRuntime) && !canImport(MediaPipeTasksVision)
+#error("StripeIdentity requires the 'Identity' package trait. In Xcode: select the project, open Package Dependencies, and check 'Identity' in the Traits menu for stripe-ios-spm. In a Package.swift, add traits: [.defaults, \"Identity\"] to the stripe-ios-spm dependency.")
+#endif
+
 #if canImport(MediaPipeSPMRuntime)
 internal import MediaPipeSPMRuntime
 #elseif canImport(MediaPipeTasksVision)
