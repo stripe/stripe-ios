@@ -1,5 +1,0 @@
-framework module MediaPipeCommonGraphLibraries {
-  umbrella header "MediaPipeCommonGraphLibraries.h"
-  export *
-  module * { export * }
-}

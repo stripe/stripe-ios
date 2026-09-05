@@ -1,4 +1,13 @@
 ## Migration Guides
+### Migrating from versions < 27.0.0
+* If you install with Swift Package Manager and you use `StripeIdentity` or `StripeCryptoOnramp`, enable the `Identity` package trait.
+  * **Xcode**: select your project, open **Package Dependencies**, and check `Identity` in the **Traits** menu for `stripe-ios-spm`.
+  * **Package.swift**: add `traits: [.defaults, "Identity"]` to the `stripe-ios-spm` dependency.
+  * If you use either module without the trait, the build stops with a message that repeats these steps.
+* Apps that do not use `StripeIdentity` or `StripeCryptoOnramp` need no change.
+* CocoaPods users need no change.
+* The minimum Xcode version is now 16.3.
+
 ### Migrating from versions < 26.7.0
 * StripePaymentSheet now depends on `StripeFinancialConnectionsLite`. If you manually link StripePaymentSheet or use Carthage, you must also embed `StripeFinancialConnectionsLite.xcframework` in your app. No action is required for CocoaPods or Swift Package Manager users.
 
