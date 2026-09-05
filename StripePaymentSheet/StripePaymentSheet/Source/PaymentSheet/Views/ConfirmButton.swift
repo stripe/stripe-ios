@@ -53,7 +53,7 @@ class ConfirmButton: UIControl {
                     stpAssertionFailure("Checkout session is missing currency")
                     return .setup
                 }
-                return .pay(amount: session.expectedAmount(), currency: currency, withLock: withLock)
+                return .pay(amount: session.amount, currency: currency, withLock: withLock)
             }
         }
     }

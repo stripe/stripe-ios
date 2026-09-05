@@ -526,7 +526,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         ]).makePublicSession()
 
         XCTAssertFalse(session.noPaymentRequired)
-        XCTAssertEqual(session.expectedAmount(), 2345)
+        XCTAssertEqual(session.amount, 2345)
     }
 
     func testModelessNoPaymentRequiredSessionUsesZeroTotal() {
@@ -537,7 +537,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         ]).makePublicSession()
 
         XCTAssertTrue(session.noPaymentRequired)
-        XCTAssertEqual(session.expectedAmount(), 0)
+        XCTAssertEqual(session.amount, 0)
     }
 
     func testDecodedObjectParsesTopLevelSetupFutureUsage() {

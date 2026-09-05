@@ -80,7 +80,7 @@ extension CheckoutSessionConfirmationRequestParameters {
         self.init(
             sessionId: checkoutSession.id,
             paymentMethodId: paymentMethod.stripeId,
-            expectedAmount: checkoutSession.expectedAmount(),
+            expectedAmount: checkoutSession.amount,
             expectedPaymentMethodType: paymentMethod.type.identifier,
             savePaymentMethod: checkoutSession.noPaymentRequired ? nil : savePaymentMethod,
             returnURL: configuration.returnURL,

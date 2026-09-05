@@ -123,7 +123,7 @@ enum Intent {
                 return nil
             }
         case .checkout(let session):
-            return session.expectedAmount()
+            return session.amount
         }
     }
 

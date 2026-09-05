@@ -51,6 +51,10 @@ extension CheckoutController.Session {
         return paymentStatus == .noPaymentRequired
     }
 
+    var amount: Int {
+        return Int(totals.total.minorUnitsAmount)
+    }
+
     /// The currency associated with the session's amounts.
     var activePresentmentCurrency: String? {
         return presentmentDetails?.presentmentCurrency ?? currency
@@ -65,11 +69,6 @@ extension CheckoutController.Session {
     /// - Parameter addressType: Either `"billing"` or `"shipping"`.
     func shouldSendTaxRegion(for addressType: String) -> Bool {
         return automaticTaxEnabled && automaticTaxAddressSource == addressType
-    }
-
-    /// Returns the expected amount for this payment-style Session.
-    func expectedAmount() -> Int {
-        return Int(totals.total.minorUnitsAmount)
     }
 
     func merchantWillSavePaymentMethod(_ paymentMethodType: STPPaymentMethodType) -> Bool {
