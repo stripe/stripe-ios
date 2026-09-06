@@ -216,6 +216,79 @@ final class CheckoutUnitTests: XCTestCase {
         }
     }
 
+    // MARK: - Promotion Code Tests
+
+    func testApplyPromotionCodeSendsCodeAndCommitsReturnedSession() async throws {
+        // Given an open Checkout Session whose update response contains a promotion code
+        let initialSessionJSON = CheckoutTestHelpers.openSessionJSON
+        let updatedSessionJSON = sessionJSONWithPromotionCode("SAVE25")
+        let (checkout, requestRecorder) = try await makeCheckoutForPromotionCodeUpdate(
+            initialSessionJSON: initialSessionJSON,
+            updatedSessionJSON: updatedSessionJSON
+        )
+        let emissionRecorder = CheckoutEmissionRecorder(checkout)
+
+        // When the merchant applies the promotion code
+        try await checkout.applyPromotionCode("SAVE25")
+
+        // Then Checkout sends the code and publishes the server-backed Session while loading
+        XCTAssertEqual(requestRecorder.requests.map(\.kind), [.initSession, .updateSession])
+        XCTAssertEqual(requestRecorder.requests.last?.params["promotion_code"], "SAVE25")
+        XCTAssertEqual(checkout.session.discountAmounts.first?.promotionCode, "SAVE25")
+        XCTAssertEqual(checkout.session.totals.total.minorUnitsAmount, 750)
+        XCTAssertEqual(emissionRecorder.loading, [true, false])
+    }
+
+    func testRemovePromotionCodeSendsEmptyCodeAndCommitsReturnedSession() async throws {
+        // Given a Checkout Session with an applied promotion code
+        let initialSessionJSON = sessionJSONWithPromotionCode("SAVE25")
+        let updatedSessionJSON = CheckoutTestHelpers.openSessionJSON
+        let (checkout, requestRecorder) = try await makeCheckoutForPromotionCodeUpdate(
+            initialSessionJSON: initialSessionJSON,
+            updatedSessionJSON: updatedSessionJSON
+        )
+        XCTAssertEqual(checkout.session.discountAmounts.first?.promotionCode, "SAVE25")
+
+        // When the merchant removes the promotion code
+        try await checkout.removePromotionCode()
+
+        // Then Checkout clears the code on the server and publishes the returned Session
+        XCTAssertEqual(requestRecorder.requests.map(\.kind), [.initSession, .updateSession])
+        XCTAssertEqual(requestRecorder.requests.last?.params["promotion_code"], "")
+        XCTAssertTrue(checkout.session.discountAmounts.isEmpty)
+        XCTAssertEqual(checkout.session.totals.total.minorUnitsAmount, 1000)
+    }
+
+    func testApplyPromotionCodeFailurePreservesSessionAndEndsLoading() async throws {
+        // Given an open Checkout Session whose update request will fail
+        var initialSessionJSON = CheckoutTestHelpers.openSessionJSON
+        initialSessionJSON["customer_email"] = "customer@example.com"
+        let (checkout, requestRecorder) = try await makeCheckoutForPromotionCodeUpdate(
+            initialSessionJSON: initialSessionJSON,
+            updatedSessionJSON: sessionJSONWithPromotionCode("SAVE25"),
+            updateStatusCode: 500
+        )
+        let emissionRecorder = CheckoutEmissionRecorder(checkout)
+
+        // When the merchant applies the promotion code
+        do {
+            try await checkout.applyPromotionCode("SAVE25")
+            XCTFail("Expected CheckoutError.apiError")
+        } catch CheckoutError.apiError {
+            // Expected
+        } catch {
+            XCTFail("Unexpected error: \(error)")
+        }
+
+        // Then Checkout keeps the previous Session and exits its loading state
+        XCTAssertEqual(requestRecorder.requests.last?.params["promotion_code"], "SAVE25")
+        XCTAssertEqual(checkout.session.email, "customer@example.com")
+        XCTAssertTrue(checkout.session.discountAmounts.isEmpty)
+        XCTAssertEqual(checkout.session.totals.total.minorUnitsAmount, 1000)
+        XCTAssertTrue(emissionRecorder.sessions.isEmpty)
+        XCTAssertEqual(emissionRecorder.loading, [true, false])
+    }
+
 // MARK: - Address Override Tests
 
     func testUpdateShippingAddress_noTax_setsLocallyAndEmitsUpdates() async throws {
@@ -1160,6 +1233,55 @@ final class CheckoutUnitTests: XCTestCase {
             checkout.session.makeCopyOverriding(shippingAddress: .newValue(shippingAddress))
         )
         return (checkout, shippingAddress, requestRecorder)
+    }
+
+    private func makeCheckoutForPromotionCodeUpdate(
+        initialSessionJSON: [AnyHashable: Any],
+        updatedSessionJSON: [AnyHashable: Any],
+        updateStatusCode: Int32 = 200
+    ) async throws -> (CheckoutController, CheckoutSessionRequestRecorder) {
+        let requestRecorder = CheckoutSessionRequestRecorder()
+        CheckoutTestHelpers.stubCheckoutSessionRequests(
+            sessionId: "cs_test_123",
+            requestRecorder: requestRecorder,
+            sessionJSON: {
+                requestRecorder.requests.last?.kind == .updateSession
+                    ? updatedSessionJSON
+                    : initialSessionJSON
+            },
+            updateStatusCode: { _ in updateStatusCode }
+        )
+        var configuration = CheckoutController.Configuration(
+            clientSecret: "cs_test_123_secret_abc",
+            returnURL: "stripe-ios-test://checkout-return"
+        )
+        configuration.apiClient = STPAPIClient(publishableKey: "pk_test_123")
+        return (try await CheckoutController(configuration: configuration), requestRecorder)
+    }
+
+    private func sessionJSONWithPromotionCode(_ promotionCode: String) -> [AnyHashable: Any] {
+        var json = CheckoutTestHelpers.openSessionJSON
+        json["recurring_details"] = [
+            "total_discount_amounts": [
+                [
+                    "amount": 250,
+                    "coupon": [
+                        "code": "coupon_save25",
+                        "name": "25% off",
+                        "percent_off": 25.0,
+                    ],
+                    "promotion_code": ["code": promotionCode],
+                ],
+            ],
+            "total_tax_amounts": [],
+        ]
+        setOneTimePriceAmounts(
+            in: &json,
+            subtotal: 1000,
+            taxExclusive: 0,
+            total: 750
+        )
+        return json
     }
 
     private func setOneTimePriceAmounts(
