@@ -64,7 +64,6 @@ extension CheckoutPlayground {
                 .pickerStyle(.menu)
                 .labelsHidden()
                 .accentColor(.secondary)
-                .accessibilityIdentifier("checkout_playground_picker_\(title)")
             }
             .padding(.vertical, 12)
             .padding(.horizontal, 16)
@@ -90,7 +89,6 @@ extension CheckoutPlayground {
                 Spacer()
                 Toggle(title, isOn: $isOn)
                     .labelsHidden()
-                    .accessibilityIdentifier("checkout_playground_toggle_\(title)")
             }
             .padding(.vertical, 8)
             .padding(.horizontal, 16)

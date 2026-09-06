@@ -91,7 +91,6 @@ public final class ExpressCheckoutElementUIView: UIView {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.heightAnchor.constraint(equalToConstant: 44).isActive = true
         button.addTarget(self, action: #selector(handleApplePayTapped), for: .touchUpInside)
-        button.accessibilityIdentifier = "express_checkout_apple_pay"
         return button
     }
 
@@ -102,7 +101,6 @@ public final class ExpressCheckoutElementUIView: UIView {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.heightAnchor.constraint(equalToConstant: 44).isActive = true
         button.addTarget(self, action: #selector(handleLinkTapped), for: .touchUpInside)
-        button.accessibilityIdentifier = "express_checkout_link"
         return button
     }
 

@@ -18,8 +18,11 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
 
         XCTAssertTrue(app.navigationBars["Your Cart"].waitForExistence(timeout: 15))
         XCTAssertTrue(app.staticTexts["Enter shipping address to calculate"].waitForExistence(timeout: 10))
-        XCTAssertTrue(app.buttons["express_checkout_apple_pay"].waitForExistence(timeout: 10))
-        XCTAssertTrue(app.buttons["express_checkout_link"].exists)
+        let applePayButton = app.buttons.matching(
+            NSPredicate(format: "label BEGINSWITH %@", "Buy with Apple")
+        ).firstMatch
+        XCTAssertTrue(applePayButton.waitForExistence(timeout: 10))
+        XCTAssertTrue(app.buttons["Pay with Link"].exists)
         XCTAssertTrue(app.buttons["Select payment method"].exists)
 
         // When the customer selects the integration currency in Currency Selector Element
@@ -66,7 +69,7 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
         // Then the merchant surface reflects the selected payment method after Checkout updates.
         XCTAssertTrue(app.staticTexts["•••• 4242"].waitForExistence(timeout: 10))
         let buyButton = app.buttons.matching(
-            NSPredicate(format: "label BEGINSWITH %@", "Buy")
+            NSPredicate(format: "label BEGINSWITH %@", "Buy ·")
         ).firstMatch
         buyButton.scrollToAndTap(in: app)
 
@@ -79,26 +82,31 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
         app.launch()
 
         app.buttons["Reset"].waitForExistenceAndTap()
-        XCTAssertTrue(app.buttons["checkout_playground_picker_PaymentElement"].waitForExistenceAndTap())
+        let paymentElementPicker = app.buttons.matching(
+            NSPredicate(format: "label BEGINSWITH %@", "PaymentElement")
+        ).firstMatch
+        XCTAssertTrue(paymentElementPicker.waitForExistenceAndTap())
         XCTAssertTrue(app.buttons["ece only"].waitForExistenceAndTap())
 
         // ECE Apple Pay does not yet request a shipping postal address. Enabling shipping-sourced
         // automatic tax causes confirmation to fail with `customer_tax_location_invalid` until
         // CheckoutApplePayContext implements shipping contact collection.
-        let collectShippingAddress = app.switches["checkout_playground_toggle_Collect Shipping Address"]
+        let collectShippingAddress = app.switches["Collect Shipping Address"]
         XCTAssertTrue(collectShippingAddress.waitForExistence(timeout: 4))
         collectShippingAddress.scrollToAndTap(in: app)
-        let automaticTax = app.switches["checkout_playground_toggle_Automatic Tax"]
+        let automaticTax = app.switches["Automatic Tax"]
         XCTAssertTrue(automaticTax.waitForExistence(timeout: 4))
         automaticTax.scrollToAndTap(in: app)
         app.buttons["Create Checkout Session"].waitForExistenceAndTap()
 
         XCTAssertTrue(app.navigationBars["Your Cart"].waitForExistence(timeout: 15))
-        let applePayButton = app.buttons["express_checkout_apple_pay"]
+        let applePayButton = app.buttons.matching(
+            NSPredicate(format: "label BEGINSWITH %@", "Buy with Apple")
+        ).firstMatch
         XCTAssertTrue(applePayButton.waitForExistence(timeout: 10))
         XCTAssertFalse(app.buttons["Select payment method"].exists)
         let buyButton = app.buttons.matching(
-            NSPredicate(format: "label BEGINSWITH %@", "Buy")
+            NSPredicate(format: "label BEGINSWITH %@", "Buy ·")
         ).firstMatch
         XCTAssertFalse(buyButton.exists)
 
