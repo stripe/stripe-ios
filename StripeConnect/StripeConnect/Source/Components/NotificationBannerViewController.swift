@@ -152,6 +152,22 @@ public class NotificationBannerViewController: UIViewController {
         delegate?.notificationBanner(self, didChangeInitialLoadState: state)
     }
 
+    private func reloadBanner() {
+        settleWorkItem?.cancel()
+        didReceiveInitialNotifications = false
+        didMeasureContentAfterInitialNotifications = false
+        pendingContentHeight = 0
+        webVC.view.alpha = 0
+
+        if initialLoadState != .loading {
+            initialLoadState = .loading
+            delegate?.notificationBanner(self, didChangeInitialLoadState: .loading)
+        }
+
+        publishContentHeight(0)
+        webVC.reload()
+    }
+
     private func presentNotificationBannerTask(_ task: OpenNotificationBannerTaskMessageHandler.Payload) {
         guard notificationBannerTaskController == nil else { return }
 
@@ -169,7 +185,7 @@ public class NotificationBannerViewController: UIViewController {
             didDismiss: { [weak self] in
                 guard let self else { return }
                 self.notificationBannerTaskController = nil
-                self.webVC.sendMessage(RefreshNotificationBannerSender.sender())
+                self.reloadBanner()
             }
         )
 
