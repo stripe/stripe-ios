@@ -73,12 +73,13 @@ struct LinkInlineVerificationView: View {
                         .cornerRadius(Constants.separatorWidth / 2)
 
                     HStack(spacing: Constants.paymentMehtodIconAndNumberSpacing) {
-                        SwiftUI.Image(uiImage: paymentMethodPreview.icon)
-                            .resizable()
-                            .scaledToFit()
-                            .frame(height: Constants.logoHeight)
+                        LinkAsyncIconView(
+                            staticIcon: paymentMethodPreview.icon,
+                            iconUrl: paymentMethodPreview.iconUrl,
+                            height: Constants.logoHeight
+                        )
 
-                        Text(paymentMethodPreview.last4)
+                        Text(paymentMethodPreview.displayText)
                             .font(Font(font))
                             .foregroundColor(Color(uiColor: .label))
                     }

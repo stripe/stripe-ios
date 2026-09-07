@@ -63,7 +63,7 @@ struct PaymentView: View {
                 switch displayData.paymentMethodType {
                 case .bankAccount:
                     true
-                case .card, .applePay:
+                case .card, .applePay, .generic:
                     false
                 @unknown default:
                     false

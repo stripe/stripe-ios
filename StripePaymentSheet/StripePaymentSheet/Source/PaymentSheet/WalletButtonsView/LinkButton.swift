@@ -89,12 +89,13 @@ struct LinkButton: View {
 
                     if let paymentMethodPreview = viewModel.paymentMethodPreview {
                         HStack(spacing: scaledPaymentMethodPreviewSpacing) {
-                            SwiftUI.Image(uiImage: paymentMethodPreview.icon)
-                                .resizable()
-                                .scaledToFit()
-                                .frame(height: scaledContentHeight)
+                            LinkAsyncIconView(
+                                staticIcon: paymentMethodPreview.icon,
+                                iconUrl: paymentMethodPreview.iconUrl,
+                                height: scaledContentHeight
+                            )
 
-                            Text(paymentMethodPreview.last4)
+                            Text(paymentMethodPreview.displayText)
                                 .font(Font(scaledFont))
                         }
                     } else {

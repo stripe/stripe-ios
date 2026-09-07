@@ -43,6 +43,22 @@ class LinkInlineVerificationViewSnapshotTests: STPSnapshotTestCase {
     }
 
     @available(iOS 16.0, *)
+    func testLinkInlineVerificationView_WithGenericPaymentMethodPreview() {
+        verify(
+            displayablePaymentDetails: ConsumerSession.DisplayablePaymentDetails(
+                defaultCardBrand: nil,
+                defaultPaymentType: .unparsable,
+                last4: nil,
+                display: .init(
+                    label: "Pix",
+                    sublabel: "000••••••••",
+                    icon: nil
+                )
+            )
+        )
+    }
+
+    @available(iOS 16.0, *)
     func testLinkInlineVerificationView_StartVerificationError() {
         verify(startVerificationError: makeStartVerificationRateLimitError())
     }
