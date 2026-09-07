@@ -555,6 +555,7 @@ extension AddressViewController {
             defaultFieldsToCollect: .all,
             countriesSupportingAutocomplete: configuration.autocompleteCountries,
             additionalFields: .init(from: configuration.additionalFields),
+            separatorStyle: configuration.separatorStyle,
             theme: configuration.appearance.asElementsTheme,
             presentAutoComplete: { [weak self] in
                 self?.presentAutocomplete()
