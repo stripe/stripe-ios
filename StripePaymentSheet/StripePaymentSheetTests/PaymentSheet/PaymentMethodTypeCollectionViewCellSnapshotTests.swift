@@ -50,6 +50,16 @@ class PaymentMethodTypeCollectionViewCellSnapshotTests: STPSnapshotTestCase {
         verify(cell, height: height)
     }
 
+    func test_promoBadgeCopy() {
+        let badge = PromoBadgeView(
+            appearance: .default,
+            tinyMode: true,
+            text: "$5"
+        )
+
+        XCTAssertEqual(badge.displayText, "$5 back")
+    }
+
     func test_withPromoBadge_customAppearance() {
         var appearance = PaymentSheet.Appearance()
         appearance.cornerRadius = 2

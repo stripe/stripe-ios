@@ -94,6 +94,8 @@ final class LinkLoginDataSourceImplementation: LinkLoginDataSource {
             amount: elementsSessionContext?.amount,
             currency: elementsSessionContext?.currency,
             incentiveEligibilitySession: elementsSessionContext?.incentiveEligibilitySession,
+            linkConsumerIncentive: elementsSessionContext?.linkConsumerIncentive,
+            onBehalfOf: elementsSessionContext?.onBehalfOf,
             useMobileEndpoints: manifest.verified,
             pane: .linkLogin
         )

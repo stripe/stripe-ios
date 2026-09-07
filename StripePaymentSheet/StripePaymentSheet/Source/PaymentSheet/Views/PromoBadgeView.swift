@@ -17,7 +17,10 @@ class PromoBadgeView: UIView {
     private var appearance: PaymentSheet.Appearance
     private var cornerRadius: CGFloat?
     private var text: String?
-    private var eligible: Bool
+
+    var displayText: String? {
+        label.text
+    }
 
     override var intrinsicContentSize: CGSize {
         CGSize(
@@ -34,7 +37,6 @@ class PromoBadgeView: UIView {
     ) {
         self.appearance = appearance
         self.cornerRadius = cornerRadius
-        self.eligible = true
         self.text = text
         super.init(frame: .zero)
 
@@ -65,33 +67,19 @@ class PromoBadgeView: UIView {
         updateText(text)
     }
 
-    func setEligible(_ eligible: Bool) {
-        self.eligible = eligible
-        updateText(text)
-    }
-
     private func updateText(_ text: String?) {
         guard let text else {
             return
         }
 
-        label.text = formatPromoText(text, eligible: eligible)
+        label.text = formatPromoText(text)
         updateAppearance()
         invalidateIntrinsicContentSize()
     }
 
     private func updateAppearance() {
-        let backgroundColor = if eligible {
-            appearance.primaryButton.successBackgroundColor
-        } else {
-            appearance.colors.componentBorder
-        }
-
-        let foregroundColor = if eligible {
-            appearance.primaryButton.successTextColor ?? appearance.primaryButton.textColor ?? backgroundColor.contrastingColor
-        } else {
-            appearance.colors.componentText
-        }
+        let backgroundColor = appearance.primaryButton.successBackgroundColor
+        let foregroundColor = appearance.primaryButton.successTextColor ?? appearance.primaryButton.textColor ?? backgroundColor.contrastingColor
 
         // In embedded mode with checkmarks, the `appearance` corner radius might not be what the
         // merchant has specified. We use the original corner radius instead.
@@ -142,18 +130,10 @@ class PromoBadgeView: UIView {
         ])
     }
 
-    private func formatPromoText(_ text: String, eligible: Bool) -> String {
-        guard eligible else {
-            let baseString = STPLocalizedString(
-                "No %@ promo",
-                "Label for when the user is not eligible for a promo."
-            )
-            return String(format: baseString, text)
-        }
-
-        // We have limited screen real estate, so we only show the "Get" prefix in English
+    private func formatPromoText(_ text: String) -> String {
+        // We have limited screen real estate, so we only show the "back" suffix in English
         let isEnglish = Locale.current.isEnglishLanguage
-        return isEnglish ? "Get \(text)" : text
+        return isEnglish ? "\(text) back" : text
     }
 }
 

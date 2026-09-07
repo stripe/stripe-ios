@@ -818,9 +818,44 @@ extension FinancialConnectionsAsyncAPIClient {
         amount: Int?,
         currency: String?,
         incentiveEligibilitySession: ElementsSessionContext.IntentID?,
+        linkConsumerIncentive: LinkConsumerIncentive?,
+        onBehalfOf: String?,
         useMobileEndpoints: Bool,
         pane: FinancialConnectionsSessionManifest.NextPane
     ) async throws -> LinkSignUpResponse {
+        let parameters = linkAccountSignUpParameters(
+            emailAddress: emailAddress,
+            phoneNumber: phoneNumber,
+            country: country,
+            amount: amount,
+            currency: currency,
+            incentiveEligibilitySession: incentiveEligibilitySession,
+            linkConsumerIncentive: linkConsumerIncentive,
+            onBehalfOf: onBehalfOf
+        )
+
+        if useMobileEndpoints {
+            let updatedParameters = await assertAndApplyAttestationParameters(
+                to: parameters,
+                api: .linkSignUp,
+                pane: pane
+            )
+            return try await post(endpoint: .mobileLinkAccountSignup, parameters: updatedParameters)
+        } else {
+            return try await post(endpoint: .linkAccountsSignUp, parameters: parameters)
+        }
+    }
+
+    func linkAccountSignUpParameters(
+        emailAddress: String,
+        phoneNumber: String,
+        country: String,
+        amount: Int?,
+        currency: String?,
+        incentiveEligibilitySession: ElementsSessionContext.IntentID?,
+        linkConsumerIncentive: LinkConsumerIncentive?,
+        onBehalfOf: String?
+    ) -> [String: Any] {
         var parameters: [String: Any] = [
             "request_surface": requestSurface,
             "email_address": emailAddress
@@ -833,37 +868,46 @@ extension FinancialConnectionsAsyncAPIClient {
             "consent_action": "entered_phone_number_clicked_save_to_link",
         ]
 
-        if let amount, let currency {
-            parameters["amount"] = amount
-            parameters["currency"] = currency
-        }
+        parameters["amount"] = amount
+        parameters["currency"] = currency
+        parameters["on_behalf_of"] = onBehalfOf
 
         if let incentiveEligibilitySession {
+            var financialIncentive: [String: Any]
             switch incentiveEligibilitySession {
             case .payment(let paymentIntentId):
-                parameters["financial_incentive"] = [
+                financialIncentive = [
                     "payment_intent": paymentIntentId,
                 ]
             case .setup(let setupIntentId):
-                parameters["financial_incentive"] = [
+                financialIncentive = [
                     "setup_intent": setupIntentId,
                 ]
             case .deferred(let elementsSessionId):
-                parameters["financial_incentive"] = [
+                financialIncentive = [
                     "elements_session_id": elementsSessionId,
                 ]
+            case .checkout(let checkoutSessionId):
+                financialIncentive = [
+                    "checkout_session_id": checkoutSessionId,
+                ]
             }
+
+            if
+                let amountFlat = linkConsumerIncentive?.incentiveParams.amountFlat,
+                let signature = linkConsumerIncentive?.incentiveParamsSignature,
+                !signature.isEmpty
+            {
+                financialIncentive["incentive_params"] = [
+                    "amount_flat": amountFlat,
+                    "signature": signature,
+                ]
+            }
+
+            parameters["financial_incentive"] = financialIncentive
         }
-        if useMobileEndpoints {
-            let updatedParameters = await assertAndApplyAttestationParameters(
-                to: parameters,
-                api: .linkSignUp,
-                pane: pane
-            )
-            return try await post(endpoint: .mobileLinkAccountSignup, parameters: updatedParameters)
-        } else {
-            return try await post(endpoint: .linkAccountsSignUp, parameters: parameters)
-        }
+
+        return parameters
     }
 
     func attachLinkConsumerToLinkAccountSession(
@@ -990,9 +1034,11 @@ extension FinancialConnectionsAsyncAPIClient {
     func updateAvailableIncentives(
         consumerSessionClientSecret: String,
         sessionID: String,
-        paymentDetailsID: String
+        paymentDetailsID: String,
+        intentID: String?,
+        onBehalfOf: String?
     ) async throws -> AvailableIncentives {
-        let parameters: [String: Any] = [
+        var parameters: [String: Any] = [
             "request_surface": requestSurface,
             "credentials": [
                 "consumer_session_client_secret": consumerSessionClientSecret
@@ -1000,6 +1046,8 @@ extension FinancialConnectionsAsyncAPIClient {
             "session_id": sessionID,
             "payment_details_id": paymentDetailsID,
         ]
+        parameters["intent_id"] = intentID
+        parameters["on_behalf_of"] = onBehalfOf
         return try await post(endpoint: .availableIncentives, parameters: parameters)
     }
 }
