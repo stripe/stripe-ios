@@ -34,6 +34,12 @@ final class STPPaymentMethodCardArtImageTest: APIStubbedTestCase {
 
     func testCardArtImage_returnsNilWhenImageNotCached() {
         let pm = STPPaymentMethod._testCardWithCardArt()
+        // Guard against a cached response for this URL leaking in from another test (e.g. a
+        // late-resolving background download) so the cache-miss precondition holds deterministically.
+        if let cardArtURL = pm.cardArtCDNURL() {
+            urlSessionConfig.urlCache?.removeCachedResponse(for: URLRequest(url: cardArtURL))
+        }
+        downloadManager.resetCache()
         XCTAssertNil(pm.cachedCardArtImage(downloadManager: downloadManager))
     }
 
