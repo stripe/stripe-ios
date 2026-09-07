@@ -18,7 +18,7 @@ import StripeCoreTestUtils
 class STPPostalCodeInputTextFieldSnapshotTests: STPSnapshotTestCase {
 
     func testEmpty() {
-        let field = STPPostalCodeInputTextField(postalCodeRequirement: .standard)
+        let field = STPPostalCodeInputTextField()
         field.sizeToFit()
         field.frame.size.width = 200
 
@@ -26,7 +26,7 @@ class STPPostalCodeInputTextFieldSnapshotTests: STPSnapshotTestCase {
     }
 
     func testIncomplete() {
-        let field = STPPostalCodeInputTextField(postalCodeRequirement: .standard)
+        let field = STPPostalCodeInputTextField()
         field.sizeToFit()
         field.frame.size.width = 200
         field.countryCode = "US"
@@ -37,7 +37,7 @@ class STPPostalCodeInputTextFieldSnapshotTests: STPSnapshotTestCase {
     }
 
     func testValidUS() {
-        let field = STPPostalCodeInputTextField(postalCodeRequirement: .standard)
+        let field = STPPostalCodeInputTextField()
         field.sizeToFit()
         field.frame.size.width = 200
         field.countryCode = "US"
@@ -48,7 +48,7 @@ class STPPostalCodeInputTextFieldSnapshotTests: STPSnapshotTestCase {
     }
 
     func testValidUK() {
-        let field = STPPostalCodeInputTextField(postalCodeRequirement: .standard)
+        let field = STPPostalCodeInputTextField()
         field.sizeToFit()
         field.frame.size.width = 200
         field.countryCode = "UK"
@@ -59,7 +59,7 @@ class STPPostalCodeInputTextFieldSnapshotTests: STPSnapshotTestCase {
     }
 
     func testInvalid() {
-        let field = STPPostalCodeInputTextField(postalCodeRequirement: .standard)
+        let field = STPPostalCodeInputTextField()
         field.sizeToFit()
         field.frame.size.width = 200
         field.countryCode = "US"
