@@ -253,6 +253,9 @@ extension CheckoutController {
                     checkoutSessionId: sessionId,
                     parameters: update.parameters
                 )
+                if case .setTaxRegion(let address) = update {
+                    currentTaxRegion = address
+                }
             } else {
                 updatedSessionAPIResponse = nil
             }
@@ -264,9 +267,6 @@ extension CheckoutController {
                 updatedSessionAPIResponse,
                 shippingAddress: shippingAddress
             )
-            if case .setTaxRegion(let address)? = update {
-                currentTaxRegion = address
-            }
         } catch {
             throw CheckoutError.apiError(message: error.nonGenericDescription)
         }
