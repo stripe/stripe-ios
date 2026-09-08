@@ -291,7 +291,7 @@ extension PaymentSheet {
                     case .alipay, .EPS, .FPX, .grabPay, .netBanking, .payPal, .przelewy24, .klarna,
                             .bancontact, .iDEAL, .cashApp, .affirm, .zip, .revolutPay, .amazonPay, .alma,
                             .mobilePay, .vipps, .swish, .twint, .sunbit, .billie, .satispay, .crypto, .afterpayClearpay, .payPay,
-                            .wero, .payByBank, .krCard, .naverPay, .payco, .sequra:
+                            .wero, .payByBank, .krCard, .naverPay, .payco, .sequra, .scalapay:
                         return [.returnURL]
                     case .USBankAccount:
                         return [
@@ -302,7 +302,7 @@ extension PaymentSheet {
                         return [.userSupportsDelayedPaymentMethods]
                     case .bacsDebit:
                         return [.returnURL, .userSupportsDelayedPaymentMethods]
-                    case .kakaoPay, .scalapay, .link, .unknown:
+                    case .kakaoPay, .link, .unknown:
                         return [.unsupported]
                     @unknown default:
                         return [.unsupported]

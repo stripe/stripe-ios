@@ -318,6 +318,8 @@ extension STPPaymentMethodType {
                 return .pm_type_promptpay
             case .satispay:
                 return .pm_type_satispay
+            case .scalapay:
+                return .pm_type_scalapay
             case .sequra:
                 return .pm_type_sequra
             case .wero:

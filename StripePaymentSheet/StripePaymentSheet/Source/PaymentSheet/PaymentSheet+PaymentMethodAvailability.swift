@@ -48,6 +48,7 @@ extension PaymentSheet {
         .krCard,
         .payco,
         .sequra,
+        .scalapay,
     ]
 
     /// A list of `STPPaymentMethodType` that can be saved in PaymentSheet
