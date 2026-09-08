@@ -234,6 +234,7 @@ public class STPBankAccountCollector: NSObject {
         returnURL: String?,
         additionalParameters: [String: Any] = [:],
         elementsSessionContext: ElementsSessionContext?,
+        linkBrand: LinkBrand? = nil,
         onEvent: ((FinancialConnectionsEvent) -> Void)?,
         params: STPCollectBankAccountParams,
         from viewController: UIViewController,
@@ -253,6 +254,7 @@ public class STPBankAccountCollector: NSObject {
             returnURL: returnURL,
             additionalParameters: additionalParameters,
             elementsSessionContext: elementsSessionContext,
+            linkBrand: linkBrand,
             onEvent: onEvent,
             params: params,
             from: viewController,
@@ -265,6 +267,7 @@ public class STPBankAccountCollector: NSObject {
         returnURL: String?,
         additionalParameters: [String: Any] = [:],
         elementsSessionContext: ElementsSessionContext? = nil,
+        linkBrand: LinkBrand? = nil,
         onEvent: ((FinancialConnectionsEvent) -> Void)?,
         params: STPCollectBankAccountParams,
         from viewController: UIViewController,
@@ -306,7 +309,7 @@ public class STPBankAccountCollector: NSObject {
                 hasRequestedDataPermissions: false,
                 style: self.style.asFinancialConnectionsConfigurationStyle,
                 elementsSessionContext: elementsSessionContext,
-                linkBrand: nil,
+                linkBrand: linkBrand,
                 onEvent: onEvent,
                 from: viewController
             ) { result in
@@ -530,6 +533,7 @@ public class STPBankAccountCollector: NSObject {
         returnURL: String?,
         additionalParameters: [String: Any] = [:],
         elementsSessionContext: ElementsSessionContext? = nil,
+        linkBrand: LinkBrand? = nil,
         onEvent: ((FinancialConnectionsEvent) -> Void)?,
         params: STPCollectBankAccountParams,
         from viewController: UIViewController,
@@ -549,6 +553,7 @@ public class STPBankAccountCollector: NSObject {
             returnURL: returnURL,
             additionalParameters: additionalParameters,
             elementsSessionContext: elementsSessionContext,
+            linkBrand: linkBrand,
             onEvent: onEvent,
             params: params,
             from: viewController,
@@ -561,6 +566,7 @@ public class STPBankAccountCollector: NSObject {
         returnURL: String?,
         additionalParameters: [String: Any] = [:],
         elementsSessionContext: ElementsSessionContext?,
+        linkBrand: LinkBrand? = nil,
         onEvent: ((FinancialConnectionsEvent) -> Void)?,
         params: STPCollectBankAccountParams,
         from viewController: UIViewController,
@@ -601,7 +607,7 @@ public class STPBankAccountCollector: NSObject {
                 hasRequestedDataPermissions: false,
                 style: self.style.asFinancialConnectionsConfigurationStyle,
                 elementsSessionContext: elementsSessionContext,
-                linkBrand: nil,
+                linkBrand: linkBrand,
                 onEvent: onEvent,
                 from: viewController
             ) { result in
@@ -654,6 +660,7 @@ public class STPBankAccountCollector: NSObject {
         onBehalfOf: String?,
         additionalParameters: [String: Any] = [:],
         elementsSessionContext: ElementsSessionContext?,
+        linkBrand: LinkBrand? = nil,
         from viewController: UIViewController,
         intentType: IntentType,
         financialConnectionsCompletion: @escaping (
@@ -699,7 +706,7 @@ public class STPBankAccountCollector: NSObject {
                 hasRequestedDataPermissions: false,
                 style: self.style.asFinancialConnectionsConfigurationStyle,
                 elementsSessionContext: elementsSessionContext,
-                linkBrand: nil,
+                linkBrand: linkBrand,
                 onEvent: onEvent,
                 from: viewController
             ) { result in
