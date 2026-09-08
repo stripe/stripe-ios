@@ -84,6 +84,7 @@ public final class CheckoutController: ObservableObject {
 
     /// Initializes a CheckoutController instance
     public init(configuration: Configuration) async throws {
+        var configuration = configuration
         let clientSecret = configuration.clientSecret
         guard !clientSecret.isEmpty else {
             throw CheckoutError.invalidClientSecret
@@ -134,6 +135,7 @@ public final class CheckoutController: ObservableObject {
             let sessionSource = CheckoutSessionSource(initialSession: session, sessionPublisher: $session)
 
             // 3. ECE
+            configuration.expressCheckoutElement?.apiClient = configuration.apiClient
             if let expressCheckoutElementConfiguration = configuration.expressCheckoutElement {
                 self.expressCheckoutElement = ExpressCheckoutElement(
                     sessionSource: sessionSource,
