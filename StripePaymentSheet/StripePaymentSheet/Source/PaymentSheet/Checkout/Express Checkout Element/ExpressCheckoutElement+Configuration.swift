@@ -6,14 +6,20 @@
 //
 
 import PassKit
+@_spi(STP) import StripeCore
 
 @_spi(STP)
 @_spi(ReactNativeSDK)
 extension ExpressCheckoutElement {
     /// Configuration options for ``ExpressCheckoutElement``.
     public struct Configuration {
+        var apiClient: STPAPIClient = .shared
+
         /// A closure called after a wallet payment confirmation completes.
         public typealias ConfirmHandler = (_ result: CheckoutController.ConfirmResult) -> Void
+
+        /// Whether to require collecting a shipping address. Default: `false`.
+        public var shippingAddressRequired: Bool = false
 
         /// Configuration for collecting billing details.
         public var billingDetailsCollectionConfiguration: BillingDetailsCollectionConfiguration = .init()

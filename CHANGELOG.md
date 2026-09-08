@@ -7,6 +7,8 @@ MINOR
 
 ### PaymentSheet
 * [Added] Added support for Kakao Pay.
+* [Added] Added support for Naver Pay.
+* [Added] Added support for Korean cards.
 
 ## 26.9.0 2026-08-31
 ### Payments
@@ -17,6 +19,9 @@ MINOR
 
 ### PaymentSheet
 * [Added] Added support for SeQura.
+
+### General
+* [Added] Added support for Arabic (Saudi Arabia).
 
 ## 26.8.0 2026-08-24
 ### Payments

@@ -294,6 +294,8 @@ extension STPPaymentMethodType {
                 return .pm_type_konbini
             case .kakaoPay:
                 return .pm_type_kakaopay
+            case .krCard:
+                return .pm_type_kr_card
             case .mobilePay:
                 return .pm_type_mobilepay
             case .vipps:
@@ -302,6 +304,8 @@ extension STPPaymentMethodType {
                 return .pm_type_mbway
             case .multibanco:
                 return .pm_type_multibanco
+            case .naverPay:
+                return .pm_type_naverpay
             case .OXXO:
                 return .pm_type_oxxo
             case .payByBank:

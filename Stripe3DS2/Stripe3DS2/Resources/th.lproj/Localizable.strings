@@ -1,0 +1,45 @@
+/* The text for warning when a debugger is currently attached to the process. */
+"A debugger is attached to the App." = "ตัวแก้ไขข้อบกพร่องเชื่อมต่อกับแอปแล้ว";
+
+/* The text for warning when an emulator is being used to run the application. */
+"An emulator is being used to run the App." = "มีการใช้โปรแกรมจำลองเพื่อเรียกใช้แอปอยู่";
+
+/* The text for the button that cancels the current challenge process. */
+"Cancel" = "ยกเลิก";
+
+/* Accessibility label for expandandable text control to indicate text is hidden. */
+"Collapsed" = "ยุบแล้ว";
+
+/* Accessibility label for expandandable text control to indicate that the UI has been expanded and additional text is available. */
+"Expanded" = "ขยายแล้ว";
+
+/* Spoken by VoiceOver when the challenge is loading. */
+"Loading" = "กำลังโหลด";
+
+/* The no answer to a yes or no question. */
+"No" = "ไม่";
+
+/* The title for the challenge response step of an authenticated checkout. */
+"Secure checkout" = "การชำระเงินที่ปลอดภัย";
+
+/* Indicates that a button is selected. */
+"Selected" = "เลือกแล้ว";
+
+/* The text for warning when a device is jailbroken */
+"The device is jailbroken." = "อุปกรณ์ถูกเจลเบรค";
+
+/* The text for warning when the integrity of the SDK has been tampered with */
+"The integrity of the SDK has been tampered." = "ความสมบูรณ์ของ SDK ถูกดัดแปลงแล้ว";
+
+/* The text for warning when the SDK is running on an unsupported OS or OS version. */
+"The OS or the OS Version is not supported." = "ระบบไม่รองรับระบบปฏิบัติการหรือเวอร์ชันของระบบปฏิบัติการ";
+
+/* Error description for when a network request times out. English value is as required by UL certification. */
+"Timeout" = "หมดเวลา";
+
+/* Indicates that a button is not selected. */
+"Unselected" = "ไม่ได้เลือก";
+
+/* The yes answer to a yes or no question. */
+"Yes" = "ใช่";
+
