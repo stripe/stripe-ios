@@ -73,7 +73,7 @@ struct CheckoutPlaygroundConfigurationSection: View {
                         .frame(width: 24)
                         .foregroundColor(.blue)
 
-                    TextField("Checkout Endpoint", text: $checkoutEndpoint)
+                    TextField("Backend URL", text: $checkoutEndpoint)
                         .font(.subheadline)
                         .textInputAutocapitalization(.never)
                         .autocorrectionDisabled()
@@ -191,7 +191,7 @@ struct CheckoutPlaygroundFeaturesSection: View {
                 CheckoutPlayground.ToggleRow(
                     title: "Collect Shipping Address",
                     isOn: $shippingAddressCollection,
-                    tooltip: "Sets `shipping_address_collection` to allow specific countries (US, CA, GB, AU). Necessary for physical goods."
+                    tooltip: "Sets `shipping_address_collection` to allow specific countries (US, CA, GB, AU) and configures Shipping Address Element. Necessary for physical goods."
                 )
                 CheckoutPlayground.PickerRow(
                     title: "Default Shipping Address",

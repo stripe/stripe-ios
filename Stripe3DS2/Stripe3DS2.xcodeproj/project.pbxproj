@@ -396,6 +396,7 @@
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				"ar-SA",
 				Base,
 				"bg-BG",
 				"ca-ES",
@@ -432,6 +433,7 @@
 				"sk-SK",
 				"sl-SI",
 				sv,
+				th,
 				tr,
 				vi,
 				"zh-HK",

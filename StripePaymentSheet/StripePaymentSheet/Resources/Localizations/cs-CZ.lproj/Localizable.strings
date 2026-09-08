@@ -46,6 +46,8 @@
 
 "Buy now or pay later with Klarna" = "Koupit nyní nebo zaplatit pomocí Klarna";
 
+"By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "Potvrzením platby přes službu NICEPAY povolujete %@ strhávat prostřednictvím tohoto způsobu platby budoucí platby v souladu s jejími podmínkami.";
+
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Potvrzením platby prostřednictvím služby PayPal povolujete, aby společnost %@ účtovala z vašeho účtu PayPal budoucí platby v souladu s jejich podmínkami.";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Pokračováním v Amazon Pay povolujete společnosti %@, aby v souladu se svými podmínkami účtovala na váš účet Revolut Pay budoucí platby.";
@@ -192,6 +194,10 @@
 
 "Name on card" = "Jméno na kartě";
 
+"Naver Pay Card" = "Karta Naver Pay";
+
+"Naver Pay Money/Point" = "Naver Pay Money/Point";
+
 "New card" = "Nová karta";
 
 "New payment method" = "Nová platební metoda";
@@ -287,6 +293,8 @@
 "Saved" = "Uloženo";
 
 "Select card" = "Vybrat kartu";
+
+"Select how you want to pay:" = "Vyberte, jak chcete platit:";
 
 "Select payment method" = "Vybrat způsob platby";
 
