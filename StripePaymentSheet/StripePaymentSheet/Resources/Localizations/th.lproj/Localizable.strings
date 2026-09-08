@@ -46,6 +46,8 @@
 
 "Buy now or pay later with Klarna" = "ซื้อตอนนี้หรือจ่ายทีหลังด้วย Klarna";
 
+"By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "การยืนยันการการชำระเงินด้วย NICEPAY หมายความว่าคุณอนุญาตให้ %@ เรียกเก็บเงินจากวิธีนี้สำหรับการชำระเงินในอนาคตตามเงื่อนไขของผู้ค้ารายดังกล่าว";
+
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "การยืนยันการการชำระเงินด้วย PayPal หมายความว่าคุณอนุญาตให้ %@ เรียกเก็บเงินจากบัญชี PayPal ของคุณสำหรับการชำระเงินในอนาคตตามเงื่อนไขของผู้ค้ารายดังกล่าว";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "การดำเนินการต่อที่ Amazon Pay หมายความว่าคุณอนุญาตให้ %@ เรียกเก็บเงินจากบัญชี Amazon Pay ของคุณสำหรับการชำระเงินในอนาคตตามเงื่อนไขของผู้ค้ารายดังกล่าว";
@@ -192,6 +194,10 @@
 
 "Name on card" = "ชื่อบนบัตร";
 
+"Naver Pay Card" = "Naver Pay Card";
+
+"Naver Pay Money/Point" = "เงิน/คะแนนใน Naver Pay";
+
 "New card" = "บัตรใหม่";
 
 "New payment method" = "วิธีการชำระเงินใหม่";
@@ -287,6 +293,8 @@
 "Saved" = "บันทึกแล้ว";
 
 "Select card" = "เลือกบัตร";
+
+"Select how you want to pay:" = "เลือกวิธีการชำระเงินที่ต้องการ";
 
 "Select payment method" = "เลือกวิธีการชำระเงิน";
 

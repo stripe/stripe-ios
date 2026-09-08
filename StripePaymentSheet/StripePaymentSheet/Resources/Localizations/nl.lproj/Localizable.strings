@@ -46,6 +46,8 @@
 
 "Buy now or pay later with Klarna" = "Koop nu of betaal later met Klarna";
 
+"By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "Door je betaling met NICEPAY te bevestigen, stem je in dat %@ toekomstige betalingen in rekening kan brengen bij deze betaalmethode volgens hun voorwaarden.";
+
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Als je je betaling met PayPal bevestigt, geef je %@ toestemming om toekomstige betalingen af te schrijven van je PayPal-rekening in overeenstemming met hun voorwaarden.";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Als je doorgaat naar Amazon Pay, geef je %@ toestemming om toekomstige betalingen in rekening te brengen op je Amazon Pay-account in overeenstemming met hun voorwaarden.";
@@ -192,6 +194,10 @@
 
 "Name on card" = "Naam op betaalkaart";
 
+"Naver Pay Card" = "Naver Pay Card";
+
+"Naver Pay Money/Point" = "Naver Pay Money/Point";
+
 "New card" = "Nieuwe betaalkaart";
 
 "New payment method" = "Nieuwe betaalmethode";
@@ -287,6 +293,8 @@
 "Saved" = "Opgeslagen";
 
 "Select card" = "Betaalkaart selecteren";
+
+"Select how you want to pay:" = "Selecteer hoe je wilt betalen:";
 
 "Select payment method" = "Betaalmethode selecteren";
 

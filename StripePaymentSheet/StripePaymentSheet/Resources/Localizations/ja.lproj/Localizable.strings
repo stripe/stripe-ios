@@ -46,6 +46,8 @@
 
 "Buy now or pay later with Klarna" = "Klarna で後払い";
 
+"By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "NICEPAY による支払いを確定すると、%@ が規約に従って今後の支払いをこの決済手段に請求することを許可することになります。";
+
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "PayPal による支払いを確定すると、%@ が規約に従って今後の支払いをお客様の PayPal アカウントに請求することを許可することになります。";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Amazon Pay への処理を続行すると、%@ が規約に従って今後の支払いをお客様の Amazon Pay アカウントに請求することを許可することになります。";
@@ -192,6 +194,10 @@
 
 "Name on card" = "カード名義人";
 
+"Naver Pay Card" = "Naver Pay カード";
+
+"Naver Pay Money/Point" = "Naver Pay マネー / ポイント";
+
 "New card" = "新しいカード";
 
 "New payment method" = "新しい決済手段";
@@ -287,6 +293,8 @@
 "Saved" = "保存済み";
 
 "Select card" = "カードを選択する";
+
+"Select how you want to pay:" = "支払い方法を選択してください:";
 
 "Select payment method" = "決済手段を選択する";
 
