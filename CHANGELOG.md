@@ -11,6 +11,7 @@ PATCH
 * [Added] Added Canada SIN, Colombia NIT, and Philippines TIN values to `IdType`, and added `idType` to the `KycInfo` initializer.
 
 ### PaymentSheet
+* [Added] Added support for Kakao Pay.
 * [Added] Added support for Naver Pay.
 * [Added] Added support for Korean cards.
 * [Added] Added support for PAYCO.
