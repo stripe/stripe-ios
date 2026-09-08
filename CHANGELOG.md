@@ -5,6 +5,9 @@ MINOR
 ### General
 * [Added] Added support for Arabic (Saudi Arabia).
 
+### Payments
+* [Added] Added API bindings for Scalapay.
+
 ### CryptoOnramp (Alpha)
 * [Added] Added Canada SIN, Colombia NIT, and Philippines TIN values to `IdType`, and added `idType` to the `KycInfo` initializer.
 
