@@ -19,6 +19,7 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
     enum Route: Hashable {
         case registration(email: String, oAuthScopes: [OAuthScopes])
         case kycInfo(collectionMode: KYCInfoView.CollectionMode, initialResidence: KYCResidence)
+        case termsOfService
         case complianceIdentifiers(requirements: ComplianceIdentifierRequirements)
         case userAttestation
         case identity
@@ -39,6 +40,8 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
     private var isKycVerified = false
     private var isIdDocumentVerified = false
     private var kycResidence: KYCResidence = .unitedStates
+    private var hasKYCRegion = false
+    private var hasHandledTermsOfService = false
     private var hasSubmittedIdentifiers = false
     private var hasAcceptedUserAttestation = false
     private var identifierRequirements: ComplianceIdentifierRequirements?
@@ -107,6 +110,8 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
     ) {
         kycLevel = collectedKYCLevel
         self.kycResidence = kycResidence
+        hasKYCRegion = true
+        hasHandledTermsOfService = false
         hasSubmittedIdentifiers = false
         hasAcceptedUserAttestation = false
         identifierRequirements = nil
@@ -120,6 +125,12 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
         } else {
             advanceToNextStep()
         }
+    }
+
+    /// Advances after the partner terms of service have been accepted or determined not to be required.
+    func advanceAfterTermsOfService() {
+        hasHandledTermsOfService = true
+        advanceToNextStep()
     }
 
     /// Advances after submitting required compliance identifiers.
@@ -175,7 +186,13 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
             kycLevel = info.kycLevel
             isKycVerified = info.isKycVerified
             isIdDocumentVerified = info.isIdDocumentVerified
-            kycResidence = info.kycResidence ?? .unitedStates
+            if let kycResidence = info.kycResidence {
+                self.kycResidence = kycResidence
+                hasKYCRegion = true
+            } else {
+                kycResidence = .unitedStates
+                hasKYCRegion = false
+            }
             if !kycResidence.supportsLevel0KYC {
                 kycInfoCollectionMode = .original
             }
@@ -241,6 +258,8 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
 
         if shouldShowKYCInfo {
             path.append(.kycInfo(collectionMode: kycInfoCollectionMode, initialResidence: kycResidence))
+        } else if hasKYCRegion && !hasHandledTermsOfService {
+            path.append(.termsOfService)
         } else if
             isEUCustomer,
             !hasSubmittedIdentifiers,
@@ -274,6 +293,8 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
         isKycVerified = false
         isIdDocumentVerified = false
         kycResidence = .unitedStates
+        hasKYCRegion = false
+        hasHandledTermsOfService = false
         hasSubmittedIdentifiers = false
         hasAcceptedUserAttestation = false
         identifierRequirements = nil
@@ -293,7 +314,7 @@ extension CryptoOnrampFlowCoordinator.Route {
         switch self {
         case .registration, .payment, .paymentSummary:
             true
-        case .wallets, .kycInfo, .complianceIdentifiers, .userAttestation, .identity, .checkoutSuccess:
+        case .wallets, .kycInfo, .termsOfService, .complianceIdentifiers, .userAttestation, .identity, .checkoutSuccess:
             false
         }
     }
@@ -301,7 +322,7 @@ extension CryptoOnrampFlowCoordinator.Route {
     /// Whether to display the toolbar item for authenticated user actions, such as logging out.
     var showsAuthenticatedUserToolbarItem: Bool {
         switch self {
-        case .wallets, .kycInfo, .complianceIdentifiers, .userAttestation, .identity, .payment, .paymentSummary, .checkoutSuccess:
+        case .wallets, .kycInfo, .termsOfService, .complianceIdentifiers, .userAttestation, .identity, .payment, .paymentSummary, .checkoutSuccess:
             true
         case .registration:
             false
