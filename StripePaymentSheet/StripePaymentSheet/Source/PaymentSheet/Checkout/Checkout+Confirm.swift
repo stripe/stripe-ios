@@ -432,7 +432,7 @@ extension CheckoutController {
         }
 
         // 2. Handle any next action required by the Intent.
-        let clientCompletedIntent: PaymentOrSetupIntent
+        let clientCompletedIntent: PaymentOrSetupIntent?
         if let paymentIntent = response.paymentIntent {
             let result: (STPPaymentHandlerActionStatus, STPPaymentIntent?, Error?) = await withCheckedContinuation { continuation in
                 paymentHandler.handleNextAction(
@@ -486,8 +486,7 @@ extension CheckoutController {
                 return .failed(error, sessionResponse: response)
             }
         } else {
-            let error = CheckoutError.unknown(debugDescription: "Checkout Session confirm response contained neither a PaymentIntent nor a SetupIntent.")
-            return .failed(error, sessionResponse: response)
+            clientCompletedIntent = nil
         }
 
         // 3. Poll if the Checkout Session is still in progress.
@@ -543,6 +542,8 @@ extension CheckoutController {
             // PaymentHandler already verified that the Intent is client-complete. Only update
             // Session fields we can derive from the newer Intent; otherwise preserve `/confirm`.
             switch clientCompletedIntent {
+            case nil:
+                break
             case .paymentIntent(let paymentIntent):
                 responseFields["payment_intent"] = paymentIntent.allResponseFields
                 switch paymentIntent.status {
