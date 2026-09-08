@@ -53,18 +53,17 @@ extension STPAPIClient {
     /// - Parameter linkAccountInfo: Information associated with the Link account, including its client secret and verification state.
     /// - Returns: The customer's additional KYC requirements.
     /// Throws if the Link account is not verified, its client secret is unavailable, or an API error occurs.
-    func retrieveCryptoCustomer(linkAccountInfo: PaymentSheetLinkAccountInfoProtocol) async throws -> RetrieveCryptoCustomerResponse {
+    func retrieveKYCRequirements(linkAccountInfo: PaymentSheetLinkAccountInfoProtocol) async throws -> RetrieveKYCRequirementsResponse {
         guard let consumerSessionClientSecret = linkAccountInfo.consumerSessionClientSecret else {
             throw CryptoOnrampAPIError.missingConsumerSessionClientSecret
         }
 
         try validateSessionState(using: linkAccountInfo)
 
-        let endpoint = "crypto/internal/customer"
-        let request = EmptyRequestWithCredentials(consumerSessionClientSecret: consumerSessionClientSecret)
+        let endpoint = "crypto/internal/kyc_requirements"
         return try await get(
             resource: endpoint,
-            parameters: try request.encodeJSONDictionary()
+            consumerSessionClientSecret: consumerSessionClientSecret
         )
     }
 

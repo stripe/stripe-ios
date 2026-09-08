@@ -47,7 +47,7 @@ struct AdditionalKYCRequirement: Decodable, Equatable {
         /// A machine-readable value identifying the error.
         let code: String
 
-        /// A localized explanation of the error.
+        /// A developer-facing explanation of the error that must not be displayed directly to the customer.
         let message: String
     }
 
@@ -60,23 +60,12 @@ struct AdditionalKYCRequirement: Decodable, Equatable {
     /// The party currently responsible for acting on the requirement.
     let awaitingActionFrom: ActionParty
 
-    /// The kind of information the customer must submit.
-    let submissionType: AdditionalKYCSubmissionType
-
     /// Errors from previous attempts to fulfill the requirement.
     let errors: [RequirementError]
 
-    /// Document-specific collection details, when documents are required.
+    /// Document-specific collection details when customer action is required.
+    /// This is omitted while Stripe or the liquidity partner is responsible for the next action.
     let document: AdditionalKYCDocumentRequirement?
-
-    /// Questionnaire-specific collection details, when answers are required.
-    let questionnaire: AdditionalKYCQuestionnaire?
-
-    /// The questionnaire associated directly with the requirement or nested under its document details.
-    var effectiveQuestionnaire: AdditionalKYCQuestionnaire? {
-        // TODO: Confirm whether questionnaire-only requirements return a top-level questionnaire and whether both locations can be populated.
-        questionnaire ?? document?.additionalRequirements?.questionnaire
-    }
 
     // MARK: - Decodable
 
@@ -84,9 +73,7 @@ struct AdditionalKYCRequirement: Decodable, Equatable {
         case description
         case requestedBy = "requested_by"
         case awaitingActionFrom = "awaiting_action_from"
-        case submissionType = "submission_type"
         case errors
         case document
-        case questionnaire
     }
 }

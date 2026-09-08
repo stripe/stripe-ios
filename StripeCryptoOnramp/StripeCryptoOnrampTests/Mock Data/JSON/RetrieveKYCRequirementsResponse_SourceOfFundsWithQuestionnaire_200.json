@@ -5,13 +5,7 @@
         "description": "source_of_funds",
         "requested_by": "swapped",
         "awaiting_action_from": "user",
-        "submission_type": "document",
-        "errors": [
-          {
-            "code": "document_expired",
-            "message": "Upload a newer document"
-          }
-        ],
+        "errors": [],
         "document": {
           "accepted_subtypes": [
             {
@@ -21,7 +15,7 @@
           ],
           "accepted_formats": ["pdf", "jpeg", "png"],
           "min_documents": 1,
-          "instructions": ["Include your name"],
+          "instructions": ["Documents must have your full name and address on it"],
           "additional_requirements": {
             "questionnaire": {
               "questions": [

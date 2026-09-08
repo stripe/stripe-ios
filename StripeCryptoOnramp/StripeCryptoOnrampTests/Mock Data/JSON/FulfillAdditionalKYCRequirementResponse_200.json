@@ -2,7 +2,6 @@
   "id": "submission_123",
   "object": "crypto.kyc_submission",
   "liquidity_provider": "swapped",
-  "submission_type": "document",
   "status": "pending_verification",
   "documents": [
     {
