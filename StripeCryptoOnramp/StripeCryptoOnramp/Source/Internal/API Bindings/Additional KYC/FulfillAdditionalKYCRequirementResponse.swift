@@ -44,9 +44,6 @@ struct FulfillAdditionalKYCRequirementResponse: Decodable, Equatable {
     /// The liquidity provider that requested the submitted information.
     let liquidityProvider: String
 
-    /// The kind of information included in the submission.
-    let submissionType: AdditionalKYCSubmissionType
-
     /// The documents included in the submission.
     let documents: [Document]?
 
@@ -65,7 +62,6 @@ struct FulfillAdditionalKYCRequirementResponse: Decodable, Equatable {
         case id
         case object
         case liquidityProvider = "liquidity_provider"
-        case submissionType = "submission_type"
         case documents
         case questionnaire
         case status

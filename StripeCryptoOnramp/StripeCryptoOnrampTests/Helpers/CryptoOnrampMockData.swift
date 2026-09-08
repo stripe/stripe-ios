@@ -24,13 +24,14 @@ enum FulfillAdditionalKYCRequirementResponseMock: String, MockData {
     case fulfillAdditionalKYCRequirementResponse_200 = "FulfillAdditionalKYCRequirementResponse_200"
 }
 
-enum RetrieveCryptoCustomerResponseMock: String, MockData {
+enum RetrieveKYCRequirementsResponseMock: String, MockData {
     var bundle: Bundle { return Bundle(for: ClassForBundle.self) }
 
-    typealias ResponseType = RetrieveCryptoCustomerResponse
+    typealias ResponseType = RetrieveKYCRequirementsResponse
 
-    case sourceOfFundsWithQuestionnaire = "RetrieveCryptoCustomerResponse_SourceOfFundsWithQuestionnaire_200"
-    case unknownSubmissionType = "RetrieveCryptoCustomerResponse_UnknownSubmissionType_200"
+    case sourceOfFundsWithQuestionnaire = "RetrieveKYCRequirementsResponse_SourceOfFundsWithQuestionnaire_200"
+    case partnerReview = "RetrieveKYCRequirementsResponse_PartnerReview_200"
+    case unknownActionParty = "RetrieveKYCRequirementsResponse_UnknownActionParty_200"
 }
 
 enum RetrieveKYCInfoResponseMock: String, MockData {

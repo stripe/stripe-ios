@@ -2,10 +2,9 @@
   "requirements": {
     "entries": [
       {
-        "description": "attestation",
+        "description": "proof_of_address",
         "requested_by": "future_partner",
-        "awaiting_action_from": "user",
-        "submission_type": "attestation",
+        "awaiting_action_from": "future_party",
         "errors": []
       }
     ]

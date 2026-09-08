@@ -37,9 +37,6 @@ struct FulfillAdditionalKYCRequirementRequest: Encodable {
     /// The liquidity provider that requested the additional KYC information.
     let liquidityProvider: String
 
-    /// The requirement's submission type.
-    let submissionType: AdditionalKYCSubmissionType
-
     /// Documents uploaded to fulfill the requirement, grouped by document type and subtype.
     let documents: [Document]?
 
@@ -51,7 +48,6 @@ struct FulfillAdditionalKYCRequirementRequest: Encodable {
     private enum CodingKeys: String, CodingKey {
         case credentials
         case liquidityProvider = "liquidity_provider"
-        case submissionType = "submission_type"
         case documents
         case questionnaire
     }

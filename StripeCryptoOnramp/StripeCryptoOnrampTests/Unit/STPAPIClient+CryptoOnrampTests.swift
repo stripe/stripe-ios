@@ -212,58 +212,70 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         }
     }
 
-    func testRetrieveCryptoCustomerSuccess() async throws {
-        let mockResponseData = try RetrieveCryptoCustomerResponseMock.sourceOfFundsWithQuestionnaire.data()
+    func testRetrieveKYCRequirementsSuccess() async throws {
+        let mockResponseData = try RetrieveKYCRequirementsResponseMock.sourceOfFundsWithQuestionnaire.data()
         stub { request in
-            request.url?.path == "/v1/crypto/internal/customer"
+            request.url?.path == "/v1/crypto/internal/kyc_requirements"
         } response: { request in
-            let queryItems = URLComponents(url: request.url!, resolvingAgainstBaseURL: false)?.queryItems ?? []
+            XCTAssertEqual(request.httpMethod, "GET")
             XCTAssertEqual(
-                queryItems.first(where: { $0.name == "credentials[consumer_session_client_secret]" })?.value,
-                "cscs_123"
+                request.value(forHTTPHeaderField: "Stripe-Consumer-Auth-Token"),
+                Constant.requestSecret
             )
+            XCTAssertTrue(request.url?.query?.isEmpty ?? true)
             return HTTPStubsResponse(data: mockResponseData, statusCode: 200, headers: nil)
         }
 
         let apiClient = stubbedAPIClient()
-        var linkAccountInfo = Constant.validLinkAccountInfo
-        linkAccountInfo.consumerSessionClientSecret = "cscs_123"
-        let customer = try await apiClient.retrieveCryptoCustomer(linkAccountInfo: linkAccountInfo)
-        let requirement = try XCTUnwrap(customer.requirements.entries.first)
+        let response = try await apiClient.retrieveKYCRequirements(linkAccountInfo: Constant.validLinkAccountInfo)
+        let requirement = try XCTUnwrap(response.requirements.entries.first)
         XCTAssertEqual(requirement.description, "source_of_funds")
         XCTAssertEqual(requirement.requestedBy, "swapped")
         XCTAssertEqual(requirement.awaitingActionFrom, .user)
-        XCTAssertEqual(requirement.submissionType, .document)
         XCTAssertEqual(requirement.document?.acceptedFormats, ["pdf", "jpeg", "png"])
         XCTAssertEqual(requirement.document?.acceptedSubtypes.first?.label, "Payslip")
-        XCTAssertEqual(requirement.document?.instructions, ["Include your name"])
-        XCTAssertEqual(requirement.effectiveQuestionnaire?.questions.first?.answerType, .freeText)
-        XCTAssertEqual(requirement.errors.first?.message, "Upload a newer document")
+        XCTAssertEqual(requirement.document?.instructions, ["Documents must have your full name and address on it"])
+        XCTAssertEqual(requirement.document?.additionalRequirements?.questionnaire?.questions.first?.answerType, .freeText)
+        XCTAssertEqual(requirement.errors, [])
     }
 
-    func testRetrieveCryptoCustomerThrowsWithInvalidArguments() async {
+    func testRetrieveKYCRequirementsThrowsWithInvalidArguments() async {
         let apiClient = stubbedAPIClient()
 
         var noSecretLinkAccountInfo = Constant.validLinkAccountInfo
         noSecretLinkAccountInfo.consumerSessionClientSecret = nil
-        await XCTAssertThrowsErrorAsync(_ = try await apiClient.retrieveCryptoCustomer(linkAccountInfo: noSecretLinkAccountInfo))
+        await XCTAssertThrowsErrorAsync(_ = try await apiClient.retrieveKYCRequirements(linkAccountInfo: noSecretLinkAccountInfo))
 
         var unverifiedLinkAccountInfo = Constant.validLinkAccountInfo
         unverifiedLinkAccountInfo.sessionState = .requiresVerification
-        await XCTAssertThrowsErrorAsync(_ = try await apiClient.retrieveCryptoCustomer(linkAccountInfo: unverifiedLinkAccountInfo))
+        await XCTAssertThrowsErrorAsync(_ = try await apiClient.retrieveKYCRequirements(linkAccountInfo: unverifiedLinkAccountInfo))
     }
 
-    func testRetrieveCryptoCustomerPreservesUnknownSubmissionType() async throws {
-        let mockResponseData = try RetrieveCryptoCustomerResponseMock.unknownSubmissionType.data()
+    func testRetrieveKYCRequirementsDecodesPartnerReview() async throws {
+        let mockResponseData = try RetrieveKYCRequirementsResponseMock.partnerReview.data()
         stub { request in
-            request.url?.path == "/v1/crypto/internal/customer"
+            request.url?.path == "/v1/crypto/internal/kyc_requirements"
         } response: { _ in
             HTTPStubsResponse(data: mockResponseData, statusCode: 200, headers: nil)
         }
 
         let apiClient = stubbedAPIClient()
-        let customer = try await apiClient.retrieveCryptoCustomer(linkAccountInfo: Constant.validLinkAccountInfo)
-        XCTAssertEqual(customer.requirements.entries.first?.submissionType, .unknown("attestation"))
+        let response = try await apiClient.retrieveKYCRequirements(linkAccountInfo: Constant.validLinkAccountInfo)
+        XCTAssertEqual(response.requirements.entries.first?.awaitingActionFrom, .partner)
+        XCTAssertNil(response.requirements.entries.first?.document)
+    }
+
+    func testRetrieveKYCRequirementsPreservesUnknownActionParty() async throws {
+        let mockResponseData = try RetrieveKYCRequirementsResponseMock.unknownActionParty.data()
+        stub { request in
+            request.url?.path == "/v1/crypto/internal/kyc_requirements"
+        } response: { _ in
+            HTTPStubsResponse(data: mockResponseData, statusCode: 200, headers: nil)
+        }
+
+        let apiClient = stubbedAPIClient()
+        let response = try await apiClient.retrieveKYCRequirements(linkAccountInfo: Constant.validLinkAccountInfo)
+        XCTAssertEqual(response.requirements.entries.first?.awaitingActionFrom, .unknown("future_party"))
     }
 
     func testFulfillAdditionalKYCRequirementEncodesPayload() async throws {
@@ -277,9 +289,9 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
             func value(for name: String) -> String? {
                 queryItems.first(where: { $0.name == name })?.value
             }
+            XCTAssertEqual(queryItems.count, 7)
             XCTAssertEqual(value(for: "credentials[consumer_session_client_secret]"), "cscs_123")
             XCTAssertEqual(value(for: "liquidity_provider"), "swapped")
-            XCTAssertEqual(value(for: "submission_type"), "document")
             XCTAssertEqual(value(for: "documents[0][document_type]"), "source_of_funds")
             XCTAssertEqual(value(for: "documents[0][document_subtype]"), "payslip")
             XCTAssertEqual(value(for: "documents[0][file_ids][0]"), "file_123")
@@ -296,7 +308,6 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         let request = FulfillAdditionalKYCRequirementRequest(
             credentials: Credentials(consumerSessionClientSecret: "cscs_123"),
             liquidityProvider: "swapped",
-            submissionType: .document,
             documents: [
                 FulfillAdditionalKYCRequirementRequest.Document(
                     documentType: "source_of_funds",
