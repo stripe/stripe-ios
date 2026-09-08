@@ -46,6 +46,8 @@
 
 "Buy now or pay later with Klarna" = "지금 구매하거나 Klarna로 나중에 결제";
 
+"By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "NICEPAY로 결제를 확인하면 %@에서 해당 약관에 따라 향후 결제에 대해 이 결제 방식으로 대금 청구하는 것을 허용하시는 것입니다.";
+
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "PayPal 결제를 확인하면 %@에서 해당 회사의 약관에 따라 향후 결제에 대해 PayPal 계정에 대금을 청구할 수 있습니다.";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Amazon Pay를 계속 사용하면 %@에서 해당 회사의 약관에 따라 향후 Amazon Pay 계정에 결제 대금을 청구할 수 있습니다.";
@@ -192,6 +194,10 @@
 
 "Name on card" = "카드 명의자";
 
+"Naver Pay Card" = "네이버페이 카드";
+
+"Naver Pay Money/Point" = "네이버페이 머니/포인트";
+
 "New card" = "새 카드";
 
 "New payment method" = "새 결제 방식";
@@ -287,6 +293,8 @@
 "Saved" = "저장함";
 
 "Select card" = "카드 선택";
+
+"Select how you want to pay:" = "원하는 결제 방식 선택:";
 
 "Select payment method" = "결제 방식 선택";
 

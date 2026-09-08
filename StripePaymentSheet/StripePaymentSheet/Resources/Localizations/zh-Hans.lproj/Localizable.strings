@@ -46,6 +46,8 @@
 
 "Buy now or pay later with Klarna" = "用 Klarna 先买后付";
 
+"By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "确认使用 NICEPAY 付款，即表示您允许 %@ 根据其条款，使用此支付方式为未来交易扣款。";
+
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "确认您的 PayPal 付款即表示您允许 %@ 按照他们的条款从您的 PayPal 扣取未来款项。";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "继续前往 Amazon Pay 即表示您允许 %@ 按照他们的条款从您的 Amazon Pay 账户扣取未来款项。";
@@ -192,6 +194,10 @@
 
 "Name on card" = "持卡人姓名";
 
+"Naver Pay Card" = "Naver Pay Card";
+
+"Naver Pay Money/Point" = "Naver Pay Money/Point";
+
 "New card" = "添加新卡";
 
 "New payment method" = "新支付方式";
@@ -287,6 +293,8 @@
 "Saved" = "已保存";
 
 "Select card" = "选择卡";
+
+"Select how you want to pay:" = "选择您想使用的支付方式：";
 
 "Select payment method" = "选择支付方式";
 

@@ -46,6 +46,8 @@
 
 "Buy now or pay later with Klarna" = "Ixtri issa jew ħallas iktar tard bi Klarna";
 
+"By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "Billi tikkonferma l-pagament tiegħek ma' NICEPAY, int qed tħalli lil %@ tiġbor il-ħlas minn dan il-metodu ta' pagament għal pagamenti futuri skont ir-regoli tagħhom.";
+
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Meta tikkonferma l-pagament b'PayPal tkun qed tħalli lil %@ tiġbor il-flus mill-kont ta' PayPal tiegħek għall-pagamenti tal-ġejjieni skont ir-regoli tagħha.";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Meta tkompli għal fuq Amazon Pay, tkun qed tagħti permess lil %@ biex fil-ġejjieni tiġbor il-pagamenti mill-kont Amazon Pay tiegħek skont ir-regoli tagħha.";
@@ -192,6 +194,10 @@
 
 "Name on card" = "L-isem fuq il-karta";
 
+"Naver Pay Card" = "Kard ta’ Naver Pay";
+
+"Naver Pay Money/Point" = "Naver Pay Money/Point";
+
 "New card" = "Karta ġdida";
 
 "New payment method" = "Metodu tal-pagament ġdid";
@@ -287,6 +293,8 @@
 "Saved" = "Merfugħ";
 
 "Select card" = "Agħżel karta";
+
+"Select how you want to pay:" = "Agħżel kif trid tħallas:";
 
 "Select payment method" = "Agħżel metodu tal-pagament";
 
