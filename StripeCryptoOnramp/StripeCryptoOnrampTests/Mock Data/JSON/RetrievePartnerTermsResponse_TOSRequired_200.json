@@ -1,7 +1,9 @@
 {
   "required": true,
   "partner": "swapped",
-  "version": "2026-09-01",
-  "declaration_id": "declaration_456",
-  "text": "<p>Partner terms of service</p>"
+  "declaration": {
+    "id": "declaration_456",
+    "type": "terms_of_service",
+    "text": "<p>Partner terms of service</p>"
+  }
 }

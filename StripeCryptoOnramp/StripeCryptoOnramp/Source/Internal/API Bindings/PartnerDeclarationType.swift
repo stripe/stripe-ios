@@ -8,11 +8,11 @@
 import Foundation
 
 /// A type of partner declaration that can require customer acceptance.
-enum PartnerDeclarationType: String, Encodable {
+enum PartnerDeclarationType: String, Codable {
 
-    /// The partner's terms and conditions.
-    case termsAndConditions = "terms"
+    /// The partner's transaction terms.
+    case transactionTerms = "transaction_terms"
 
     /// The partner's terms of service.
-    case termsOfService = "tos"
+    case termsOfService = "terms_of_service"
 }

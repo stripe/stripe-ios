@@ -19,6 +19,7 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
     private enum Constant {
         // Common
         static let requestSecret = "cscs_12345"
+        static let consumerAuthTokenHeader = "Stripe-Consumer-Auth-Token"
         static let errorDomain = "STPAPIClientCryptoOnrampTests.Error"
         static let validCustomerId = "crc_12345"
         static let cryptoOnrampAPIVersion = "2026-03-25.preview"
@@ -108,9 +109,6 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
 
         // /v1/crypto/internal/partner_terms
         static let partnerTermsAPIPath = "/v1/crypto/internal/partner_terms"
-
-        // /v1/crypto/internal/confirm_partner_terms
-        static let confirmPartnerTermsAPIPath = "/v1/crypto/internal/confirm_partner_terms"
 
         // /v1/crypto/internal/refresh_consumer_person
         static let refreshKYCInfoAPIPath = "/v1/crypto/internal/refresh_consumer_person"
@@ -454,15 +452,11 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         stub { request in
             XCTAssertEqual(request.url?.path, Constant.retrieveMissingIdentifiersAPIPath)
             XCTAssertEqual(request.httpMethod, "GET")
-
-            guard let queryParametersString = request.url?.query else {
-                XCTFail("Expected query parameters but found none.")
-                return false
-            }
-
-            let parameters = queryParametersString.removingPercentEncoding?.parsedHTTPParametersDictionary ?? [:]
-            XCTAssertEqual(parameters.count, 1)
-            XCTAssertEqual(parameters["credentials[consumer_session_client_secret]"], Constant.requestSecret)
+            XCTAssertEqual(
+                request.value(forHTTPHeaderField: Constant.consumerAuthTokenHeader),
+                Constant.requestSecret
+            )
+            XCTAssertTrue(request.url?.query?.isEmpty ?? true)
 
             return true
         } response: { _ in
@@ -585,15 +579,11 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         stub { request in
             XCTAssertEqual(request.url?.path, Constant.userAttestationAPIPath)
             XCTAssertEqual(request.httpMethod, "GET")
-
-            guard let queryParametersString = request.url?.query else {
-                XCTFail("Expected query parameters but found none.")
-                return false
-            }
-
-            let parameters = queryParametersString.removingPercentEncoding?.parsedHTTPParametersDictionary ?? [:]
-            XCTAssertEqual(parameters.count, 1)
-            XCTAssertEqual(parameters["credentials[consumer_session_client_secret]"], Constant.requestSecret)
+            XCTAssertEqual(
+                request.value(forHTTPHeaderField: Constant.consumerAuthTokenHeader),
+                Constant.requestSecret
+            )
+            XCTAssertTrue(request.url?.query?.isEmpty ?? true)
 
             return true
         } response: { _ in
@@ -670,10 +660,9 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
             }
 
             let parameters = queryParametersString.removingPercentEncoding?.parsedHTTPParametersDictionary ?? [:]
-            XCTAssertEqual(parameters.count, 3)
-            XCTAssertEqual(parameters["credentials[consumer_session_client_secret]"], Constant.requestSecret)
-            XCTAssertEqual(parameters["partner"], "swapped")
-            XCTAssertEqual(parameters["declaration_type"], "terms")
+            XCTAssertEqual(parameters.count, 1)
+            XCTAssertEqual(parameters["declaration_type"], "transaction_terms")
+            XCTAssertEqual(request.value(forHTTPHeaderField: Constant.consumerAuthTokenHeader), Constant.requestSecret)
 
             return true
         } response: { _ in
@@ -682,8 +671,7 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
 
         let apiClient = stubbedAPIClient()
         let response = try await apiClient.retrievePartnerTerms(
-            partner: .swapped,
-            declarationType: .termsAndConditions,
+            declarationType: .transactionTerms,
             linkAccountInfo: Constant.validLinkAccountInfo
         )
 
@@ -691,9 +679,11 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
             response,
             .required(
                 partner: "swapped",
-                version: "2026-08-27",
-                declarationId: "declaration_123",
-                html: "<p>Partner terms and conditions</p>"
+                declaration: .init(
+                    id: "declaration_123",
+                    type: .transactionTerms,
+                    html: "<p>Partner terms and conditions</p>"
+                )
             )
         )
     }
@@ -710,9 +700,9 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
             }
 
             let parameters = queryParametersString.removingPercentEncoding?.parsedHTTPParametersDictionary ?? [:]
-            XCTAssertEqual(parameters["credentials[consumer_session_client_secret]"], Constant.requestSecret)
-            XCTAssertEqual(parameters["partner"], "swapped")
-            XCTAssertEqual(parameters["declaration_type"], "tos")
+            XCTAssertEqual(parameters.count, 1)
+            XCTAssertEqual(parameters["declaration_type"], "terms_of_service")
+            XCTAssertEqual(request.value(forHTTPHeaderField: Constant.consumerAuthTokenHeader), Constant.requestSecret)
 
             return true
         } response: { _ in
@@ -721,7 +711,6 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
 
         let apiClient = stubbedAPIClient()
         let response = try await apiClient.retrievePartnerTerms(
-            partner: .swapped,
             declarationType: .termsOfService,
             linkAccountInfo: Constant.validLinkAccountInfo
         )
@@ -730,9 +719,11 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
             response,
             .required(
                 partner: "swapped",
-                version: "2026-09-01",
-                declarationId: "declaration_456",
-                html: "<p>Partner terms of service</p>"
+                declaration: .init(
+                    id: "declaration_456",
+                    type: .termsOfService,
+                    html: "<p>Partner terms of service</p>"
+                )
             )
         )
     }
@@ -748,8 +739,7 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
 
         let apiClient = stubbedAPIClient()
         let response = try await apiClient.retrievePartnerTerms(
-            partner: .swapped,
-            declarationType: .termsAndConditions,
+            declarationType: .transactionTerms,
             linkAccountInfo: Constant.validLinkAccountInfo
         )
 
@@ -763,8 +753,7 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         noSecretLinkAccountInfo.consumerSessionClientSecret = nil
         await XCTAssertThrowsErrorAsync(
             _ = try await apiClient.retrievePartnerTerms(
-                partner: .swapped,
-                declarationType: .termsAndConditions,
+                declarationType: .transactionTerms,
                 linkAccountInfo: noSecretLinkAccountInfo
             )
         )
@@ -773,8 +762,7 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         unverifiedLinkAccountInfo.sessionState = .requiresVerification
         await XCTAssertThrowsErrorAsync(
             _ = try await apiClient.retrievePartnerTerms(
-                partner: .swapped,
-                declarationType: .termsAndConditions,
+                declarationType: .transactionTerms,
                 linkAccountInfo: unverifiedLinkAccountInfo
             )
         )
@@ -784,7 +772,7 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         let mockResponseData = try ConfirmPartnerTermsResponseMock.confirmPartnerTermsResponse_200.data()
 
         stub { request in
-            XCTAssertEqual(request.url?.path, Constant.confirmPartnerTermsAPIPath)
+            XCTAssertEqual(request.url?.path, Constant.partnerTermsAPIPath)
             XCTAssertEqual(request.httpMethod, "POST")
 
             guard let httpBody = request.ohhttpStubs_httpBody else {
@@ -794,9 +782,8 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
 
             let parameters = String(data: httpBody, encoding: .utf8)?.parsedHTTPParametersDictionary ?? [:]
 
-            XCTAssertEqual(parameters.count, 3)
+            XCTAssertEqual(parameters.count, 2)
             XCTAssertEqual(parameters["credentials[consumer_session_client_secret]"], Constant.requestSecret)
-            XCTAssertEqual(parameters["partner"], "swapped")
             XCTAssertEqual(parameters["declaration_id"], "declaration_123")
 
             return true
@@ -806,7 +793,6 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
 
         let apiClient = stubbedAPIClient()
         _ = try await apiClient.confirmPartnerTerms(
-            partner: .swapped,
             declarationId: "declaration_123",
             linkAccountInfo: Constant.validLinkAccountInfo
         )
@@ -819,7 +805,6 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         noSecretLinkAccountInfo.consumerSessionClientSecret = nil
         await XCTAssertThrowsErrorAsync(
             _ = try await apiClient.confirmPartnerTerms(
-                partner: .swapped,
                 declarationId: "declaration_123",
                 linkAccountInfo: noSecretLinkAccountInfo
             )
@@ -829,7 +814,6 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         unverifiedLinkAccountInfo.sessionState = .requiresVerification
         await XCTAssertThrowsErrorAsync(
             _ = try await apiClient.confirmPartnerTerms(
-                partner: .swapped,
                 declarationId: "declaration_123",
                 linkAccountInfo: unverifiedLinkAccountInfo
             )

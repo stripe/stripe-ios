@@ -7,14 +7,11 @@
 
 import Foundation
 
-/// Encodable model passed to the `/v1/crypto/internal/confirm_partner_terms` endpoint.
+/// Encodable model passed when recording acceptance with the `/v1/crypto/internal/partner_terms` endpoint.
 struct ConfirmPartnerTermsRequest: Encodable {
 
     /// Contains credentials required to make the request.
     let credentials: Credentials
-
-    /// The partner whose declaration the customer accepted.
-    let partner: CryptoOnrampPartner
 
     /// The unique identifier of the declaration accepted by the customer.
     let declarationId: String
@@ -23,7 +20,6 @@ struct ConfirmPartnerTermsRequest: Encodable {
 
     private enum CodingKeys: String, CodingKey {
         case credentials
-        case partner
         case declarationId = "declaration_id"
     }
 }

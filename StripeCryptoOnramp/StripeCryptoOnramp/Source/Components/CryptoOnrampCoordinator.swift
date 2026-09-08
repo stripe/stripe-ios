@@ -504,8 +504,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
         analyticsClient.log(.termsAndConditionsStarted)
         do {
             let result = try await presentPartnerTermsIfNeeded(
-                partner: .swapped,
-                declarationType: .termsAndConditions,
+                declarationType: .transactionTerms,
                 from: viewController
             )
             if result == .accepted {
@@ -522,7 +521,6 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
         analyticsClient.log(.termsOfServiceStarted)
         do {
             let result = try await presentPartnerTermsIfNeeded(
-                partner: .swapped,
                 declarationType: .termsOfService,
                 from: viewController
             )
@@ -950,13 +948,11 @@ private extension CryptoOnrampCoordinator {
 
     @MainActor
     private func presentPartnerTermsIfNeeded(
-        partner: CryptoOnrampPartner,
         declarationType: PartnerDeclarationType,
         from viewController: UIViewController
     ) async throws -> PartnerTermsResult {
         let linkAccountInfo = try await self.linkAccountInfo
         let terms = try await apiClient.retrievePartnerTerms(
-            partner: partner,
             declarationType: declarationType,
             linkAccountInfo: linkAccountInfo
         )
@@ -964,19 +960,18 @@ private extension CryptoOnrampCoordinator {
         switch terms {
         case .notRequired:
             return .notRequired
-        case let .required(_, _, declarationId, html):
+        case let .required(_, declaration):
             let onAccept: () async throws -> Void = { [apiClient] in
                 _ = try await apiClient.confirmPartnerTerms(
-                    partner: partner,
-                    declarationId: declarationId,
+                    declarationId: declaration.id,
                     linkAccountInfo: linkAccountInfo
                 )
             }
 
             switch declarationType {
-            case .termsAndConditions:
+            case .transactionTerms:
                 let result = try await linkController.presentTermsAndConditions(
-                    html: html,
+                    html: declaration.html,
                     appearance: appearance,
                     from: viewController,
                     onAccept: onAccept
@@ -989,7 +984,7 @@ private extension CryptoOnrampCoordinator {
                 }
             case .termsOfService:
                 let result = try await linkController.presentTermsOfService(
-                    html: html,
+                    html: declaration.html,
                     appearance: appearance,
                     from: viewController,
                     onAccept: onAccept

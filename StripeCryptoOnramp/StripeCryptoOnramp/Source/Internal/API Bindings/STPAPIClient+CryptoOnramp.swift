@@ -127,7 +127,7 @@ extension STPAPIClient {
         let endpoint = "crypto/internal/identifier_requirements"
         return try await get(
             resource: endpoint,
-            parameters: try credentialsParameters(consumerSessionClientSecret: consumerSessionClientSecret)
+            consumerSessionClientSecret: consumerSessionClientSecret
         )
     }
 
@@ -172,7 +172,7 @@ extension STPAPIClient {
         let endpoint = "crypto/internal/crs_carf_declaration"
         return try await get(
             resource: endpoint,
-            parameters: try credentialsParameters(consumerSessionClientSecret: consumerSessionClientSecret)
+            consumerSessionClientSecret: consumerSessionClientSecret
         )
     }
 
@@ -196,12 +196,11 @@ extension STPAPIClient {
 
     /// Retrieves the current partner declaration state for the current Link user.
     /// - Parameters:
-    ///   - partner: The partner whose declaration state should be retrieved.
     ///   - declarationType: The type of declaration to retrieve.
     ///   - linkAccountInfo: Information associated with the Link account including the client secret and whether the account has been verified.
     /// - Returns: The current partner declaration state.
     /// Throws if the `linkAccountSessionState` is not verified, a client secret doesn’t exist, or if an API error occurs.
-    func retrievePartnerTerms(partner: CryptoOnrampPartner, declarationType: PartnerDeclarationType, linkAccountInfo: PaymentSheetLinkAccountInfoProtocol) async throws -> PartnerTerms {
+    func retrievePartnerTerms(declarationType: PartnerDeclarationType, linkAccountInfo: PaymentSheetLinkAccountInfoProtocol) async throws -> PartnerTerms {
         guard let consumerSessionClientSecret = linkAccountInfo.consumerSessionClientSecret else {
             throw CryptoOnrampAPIError.missingConsumerSessionClientSecret
         }
@@ -209,36 +208,31 @@ extension STPAPIClient {
         try validateSessionState(using: linkAccountInfo)
 
         let endpoint = "crypto/internal/partner_terms"
-        let request = RetrievePartnerTermsRequest(
-            credentials: Credentials(consumerSessionClientSecret: consumerSessionClientSecret),
-            partner: partner,
-            declarationType: declarationType
-        )
+        let request = RetrievePartnerTermsRequest(declarationType: declarationType)
         return try await get(
             resource: endpoint,
-            parameters: try request.encodeJSONDictionary()
+            parameters: try request.encodeJSONDictionary(),
+            consumerSessionClientSecret: consumerSessionClientSecret
         )
     }
 
     /// Confirms the current Link user accepted a partner declaration.
     /// - Parameters:
-    ///   - partner: The partner whose declaration the customer accepted.
     ///   - declarationId: The unique identifier of the declaration accepted by the customer.
     ///   - linkAccountInfo: Information associated with the Link account including the client secret and whether the account has been verified.
     /// - Returns: An empty response.
     /// Throws if the `linkAccountSessionState` is not verified, a client secret doesn’t exist, or if an API error occurs.
     @discardableResult
-    func confirmPartnerTerms(partner: CryptoOnrampPartner, declarationId: String, linkAccountInfo: PaymentSheetLinkAccountInfoProtocol) async throws -> EmptyResponse {
+    func confirmPartnerTerms(declarationId: String, linkAccountInfo: PaymentSheetLinkAccountInfoProtocol) async throws -> EmptyResponse {
         guard let consumerSessionClientSecret = linkAccountInfo.consumerSessionClientSecret else {
             throw CryptoOnrampAPIError.missingConsumerSessionClientSecret
         }
 
         try validateSessionState(using: linkAccountInfo)
 
-        let endpoint = "crypto/internal/confirm_partner_terms"
+        let endpoint = "crypto/internal/partner_terms"
         let requestObject = ConfirmPartnerTermsRequest(
             credentials: Credentials(consumerSessionClientSecret: consumerSessionClientSecret),
-            partner: partner,
             declarationId: declarationId
         )
         return try await post(resource: endpoint, object: requestObject)
@@ -421,12 +415,6 @@ extension STPAPIClient {
             throw CryptoOnrampAPIError.linkAccountNotVerified
         }
     }
-
-    private func credentialsParameters(consumerSessionClientSecret: String) throws -> [String: Any] {
-        return try EmptyRequestWithCredentials(
-            consumerSessionClientSecret: consumerSessionClientSecret
-        ).encodeJSONDictionary()
-    }
 }
 
 private extension STPAPIClient {
@@ -469,9 +457,45 @@ private extension STPAPIClient {
             }
         }
     }
+
+    func get<T: Decodable>(
+        resource: String,
+        parameters: [String: Any] = [:],
+        consumerSessionClientSecret: String
+    ) async throws -> T {
+        let url = apiURL.appendingPathComponent(resource)
+        var request = configuredRequest(
+            for: url,
+            apiVersionOverride: CryptoOnrampAPI.stripeAPIVersion,
+            additionalHeaders: [
+                CryptoOnrampAPI.consumerAuthTokenHeader: consumerSessionClientSecret,
+            ]
+        )
+        request.stp_addParameters(toURL: parameters)
+        request.httpMethod = "GET"
+
+        return try await withCheckedThrowingContinuation { continuation in
+            urlSession.stp_performDataTask(
+                with: request,
+                completionHandler: { data, response, error in
+                    DispatchQueue.main.async {
+                        let result: Result<T, Error> = STPAPIClient.decodeResponse(
+                            data: data,
+                            error: error,
+                            response: response,
+                            request: request
+                        )
+                        continuation.resume(with: result)
+                    }
+                }
+            )
+        }
+    }
 }
 
 private enum CryptoOnrampAPI {
+    static let consumerAuthTokenHeader = "Stripe-Consumer-Auth-Token"
+
     // Use a preview API version for networks and parameters behind preview API features.
     // Bump this when new onramp features require a newer API version.
     static let stripeAPIVersion = "2026-03-25.preview"

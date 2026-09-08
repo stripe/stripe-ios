@@ -10,13 +10,32 @@ import Foundation
 /// The partner declaration state returned by `/v1/crypto/internal/partner_terms`.
 enum PartnerTerms: Decodable, Equatable {
 
+    /// A partner declaration that requires customer acceptance.
+    struct Declaration: Decodable, Equatable {
+
+        /// The declaration's unique identifier.
+        let id: String
+
+        /// The type of declaration requiring acceptance.
+        let type: PartnerDeclarationType
+
+        /// The localized declaration HTML to display.
+        let html: String
+
+        // MARK: - Decodable
+
+        private enum CodingKeys: String, CodingKey {
+            case id
+            case type
+            case html = "text"
+        }
+    }
+
     /// The customer must accept the declaration before continuing.
     /// - Parameters:
     ///   - partner: The partner whose declaration requires acceptance.
-    ///   - version: The version of the declaration requiring acceptance.
-    ///   - declarationId: The unique identifier of the declaration requiring acceptance.
-    ///   - html: The localized declaration HTML to display.
-    case required(partner: String, version: String, declarationId: String, html: String)
+    ///   - declaration: The declaration to present and record acceptance for.
+    case required(partner: String, declaration: Declaration)
 
     /// The customer has already accepted the current declaration or isn't required to accept it.
     case notRequired
@@ -26,9 +45,7 @@ enum PartnerTerms: Decodable, Equatable {
     private enum CodingKeys: String, CodingKey {
         case required
         case partner
-        case version
-        case declarationId = "declaration_id"
-        case html = "text"
+        case declaration
     }
 
     init(from decoder: Decoder) throws {
@@ -37,9 +54,7 @@ enum PartnerTerms: Decodable, Equatable {
         if try container.decode(Bool.self, forKey: .required) {
             self = try .required(
                 partner: container.decode(String.self, forKey: .partner),
-                version: container.decode(String.self, forKey: .version),
-                declarationId: container.decode(String.self, forKey: .declarationId),
-                html: container.decode(String.self, forKey: .html)
+                declaration: container.decode(Declaration.self, forKey: .declaration)
             )
         } else {
             self = .notRequired
