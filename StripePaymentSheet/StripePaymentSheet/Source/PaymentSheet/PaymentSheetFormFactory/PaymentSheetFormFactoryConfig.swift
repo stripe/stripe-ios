@@ -16,7 +16,7 @@ enum PaymentSheetFormFactoryConfig {
     var hasCustomer: Bool {
         switch self {
         case .paymentElement(let config, _):
-            return config.customer != nil
+            return config.customerProvider.hasCustomer
         case .customerSheet:
             return true
         }
@@ -76,6 +76,18 @@ enum PaymentSheetFormFactoryConfig {
             return config.preferredNetworks
         case .customerSheet(let config):
             return config.preferredNetworks
+        }
+    }
+
+    func savedPaymentMethods(elementsSession: STPElementsSession) -> [STPPaymentMethod] {
+        switch self {
+        case .paymentElement(let config, _):
+            return config.customerProvider.savedPaymentMethods(
+                elementsSession: elementsSession,
+                prefetchedPaymentMethods: nil
+            ) ?? []
+        case .customerSheet:
+            return elementsSession.customer?.paymentMethods ?? []
         }
     }
 
