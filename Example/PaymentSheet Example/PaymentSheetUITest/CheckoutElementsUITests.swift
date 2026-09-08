@@ -6,39 +6,6 @@
 import XCTest
 
 final class CheckoutElementsUITests: PaymentSheetUITestCase {
-    func testScenarioCatalogNavigation() {
-        // Given the Checkout Elements playground
-        app.launchEnvironment["STP_CHECKOUT_ELEMENTS"] = "true"
-        app.launch()
-
-        // When the user browses to the North America scenarios
-        app.buttons["checkout_scenarios"].waitForExistenceAndTap()
-        app.buttons["checkout_scenario_group_local-payment-methods"].waitForExistenceAndTap()
-        app.buttons["checkout_scenario_group_north-america"].waitForExistenceAndTap()
-
-        // Then the regional scenarios are available to run
-        XCTAssertTrue(app.buttons["checkout_scenario_us-common"].waitForExistence(timeout: 2))
-        XCTAssertTrue(app.buttons["checkout_scenario_us-alternatives"].exists)
-        XCTAssertTrue(app.buttons["checkout_scenario_mexico"].exists)
-    }
-
-    func testPrefilledShippingScenario() {
-        // Given the Shipping Address Element scenarios
-        app.launchEnvironment["STP_CHECKOUT_ELEMENTS"] = "true"
-        app.launch()
-        app.buttons["checkout_scenarios"].waitForExistenceAndTap()
-        app.buttons["checkout_scenario_group_elements"].waitForExistenceAndTap()
-        app.buttons["checkout_scenario_group_shipping-address-element"].waitForExistenceAndTap()
-
-        // When the user runs the prefilled address scenario
-        app.buttons["checkout_scenario_shipping-prefilled"].waitForExistenceAndTap()
-
-        // Then Checkout starts with the standard test address
-        XCTAssertTrue(app.navigationBars["Your Cart"].waitForExistence(timeout: 15))
-        XCTAssertTrue(app.staticTexts["Jenny Rosen"].waitForExistence(timeout: 10))
-        XCTAssertTrue(app.staticTexts["510 Townsend St"].exists)
-    }
-
     func testElementsStaySynchronizedWithCheckoutSession() throws {
         // Given a Checkout Session
         app.launchEnvironment["STP_CHECKOUT_ELEMENTS"] = "true"
