@@ -123,7 +123,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         }
         func customDisplayName(currency: Currency) -> String {
             switch currency {
-            case .jpy:
+            case .jpy, .krw:
                 return displayName.replacingOccurrences(of: ".", with: "")
             default:
                 return displayName
@@ -145,6 +145,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case myr
         case mxn
         case jpy
+        case krw
         case cny
         case brl
         case thb
@@ -159,6 +160,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case GB
         case AU
         case FR
+        case ES
         case IN
         case SG
         case MY

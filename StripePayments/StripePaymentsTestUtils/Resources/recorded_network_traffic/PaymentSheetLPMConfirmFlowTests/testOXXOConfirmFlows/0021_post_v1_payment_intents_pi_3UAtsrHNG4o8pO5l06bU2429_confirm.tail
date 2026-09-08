@@ -1,0 +1,98 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3UAtsrHNG4o8pO5l06bU2429\/confirm$
+200
+application/json
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=PvB5GEzb8TReSz98r0UoKUZxgm6EXQaexyRiF8JpRBByevJmZrO4angrZY1L6MLyuCe4T-Vb-U7hD77E; report-to csp
+Server: nginx
+Cache-Control: no-cache, no-store
+reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=PvB5GEzb8TReSz98r0UoKUZxgm6EXQaexyRiF8JpRBByevJmZrO4angrZY1L6MLyuCe4T-Vb-U7hD77E&t=1"
+stripe-notice: You are using an outdated API version (2020-08-27). We recommend upgrading to the latest API version, 2026-08-26.dahlia. See https://docs.stripe.com/upgrades
+x-wc: 3c3
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=PvB5GEzb8TReSz98r0UoKUZxgm6EXQaexyRiF8JpRBByevJmZrO4angrZY1L6MLyuCe4T-Vb-U7hD77E&t=1"}],"include_subdomains":true}
+request-id: req_g6sDiC2O5FY2Pm
+x-stripe-routing-context-priority-tier: api-testmode
+Content-Length: 1735
+Vary: Origin
+Date: Tue, 01 Sep 2026 15:46:03 GMT
+original-request: req_g6sDiC2O5FY2Pm
+stripe-version: 2020-08-27
+idempotency-key: 1139a4c0-fc76-4fdf-af80-67f94339fb22
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+X-Stripe-Mock-Request: client_attribution_metadata\[client_session_id]=.*&client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_intent_creation_flow]=deferred&client_attribution_metadata\[payment_method_selection_flow]=merchant_specified&client_secret=pi_3UAtsrHNG4o8pO5l06bU2429_secret_7BjnlzBlgkNeogKg71bkdcBsn&confirmation_token=ctoken_1UAtsqHNG4o8pO5lAj6WpKNV&expand\[0]=payment_method&return_url=https%3A\/\/foo\.com&use_stripe_sdk=true
+
+{
+  "payment_method_configuration_details" : null,
+  "canceled_at" : null,
+  "source" : null,
+  "amount" : 5050,
+  "capture_method" : "automatic",
+  "livemode" : false,
+  "shipping" : null,
+  "status" : "requires_action",
+  "object" : "payment_intent",
+  "currency" : "mxn",
+  "last_payment_error" : null,
+  "automatic_payment_methods" : null,
+  "cancellation_reason" : null,
+  "next_action" : {
+    "type" : "oxxo_display_details",
+    "oxxo_display_details" : {
+      "number" : "12345678901234657890123456789012",
+      "hosted_voucher_url" : "https:\/\/payments.stripe.com\/oxxo\/voucher\/test_YWNjdF8xR3ZBWTVITkc0bzhwTzVsLF9WQkdQaVZsMUwzc0taT05IbzFTdVJ3T2k3aU5mQ3k00100JQUUF8Qe",
+      "expires_after" : 1788760799
+    }
+  },
+  "payment_method" : {
+    "object" : "payment_method",
+    "oxxo" : {
+
+    },
+    "id" : "pm_1UAtsqHNG4o8pO5ls0bz9tML",
+    "billing_details" : {
+      "email" : "foo@bar.com",
+      "phone" : null,
+      "tax_id" : null,
+      "name" : "Jane Doe",
+      "address" : {
+        "state" : null,
+        "country" : null,
+        "line2" : null,
+        "city" : null,
+        "line1" : null,
+        "postal_code" : null
+      }
+    },
+    "livemode" : false,
+    "created" : 1788277560,
+    "allow_redisplay" : "unspecified",
+    "type" : "oxxo",
+    "customer" : null,
+    "customer_account" : null
+  },
+  "client_secret" : "pi_3UAtsrHNG4o8pO5l06bU2429_secret_7BjnlzBlgkNeogKg71bkdcBsn",
+  "id" : "pi_3UAtsrHNG4o8pO5l06bU2429",
+  "allowed_payment_method_types" : null,
+  "confirmation_method" : "automatic",
+  "amount_details" : {
+    "tip" : {
+
+    }
+  },
+  "excluded_payment_method_types" : null,
+  "processing" : null,
+  "receipt_email" : null,
+  "payment_method_types" : [
+    "oxxo"
+  ],
+  "setup_future_usage" : null,
+  "created" : 1788277561,
+  "description" : null
+}

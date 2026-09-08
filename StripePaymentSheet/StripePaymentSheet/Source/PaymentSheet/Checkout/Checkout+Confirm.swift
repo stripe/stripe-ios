@@ -28,6 +28,7 @@ extension CheckoutController {
         let apiClient: STPAPIClient
         let returnURL: String
         let merchantDisplayName: String
+        let shippingAddressRequired: Bool
         let billingDetailsCollectionConfiguration: PaymentSheet.BillingDetailsCollectionConfiguration
         let defaultBillingDetails: Configuration.Defaults.BillingDetails?
         let presentationWindow: UIWindow?
@@ -133,6 +134,7 @@ extension CheckoutController {
                 apiClient: apiClient,
                 returnURL: self.configuration.returnURL,
                 merchantDisplayName: effectiveMerchantDisplayName,
+                shippingAddressRequired: false,
                 billingDetailsCollectionConfiguration: configuration.billingDetailsCollectionConfiguration,
                 defaultBillingDetails: self.configuration.defaults.billingDetails,
                 presentationWindow: presentingViewController.view.window,
@@ -212,7 +214,7 @@ extension CheckoutController {
                 let result: InternalConfirmResult
                 switch flow {
                 case .applePay(let parameters):
-                    result = await Self.confirmApplePay(checkoutSession: self.session, parameters: parameters, checkoutWalletUpdater: self)
+                    result = await self.confirmApplePay(checkoutSession: self.session, parameters: parameters)
                 case .link(let parameters):
                     result = await Self.confirmLink(checkoutSession: self.session, parameters: parameters)
                 case .paymentMethod(let paymentMethodParameters, let integrationShape):

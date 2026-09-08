@@ -3,34 +3,34 @@ https:\/\/api\.stripe\.com\/v1\/payment_methods$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=Z2WjiqofQgBPqM_M_M_YpkeIXQPSTjV47Djzm6Ol0OLQQghX_DNTJ9_l8QnkUapBvvwgBz_VisplPCl_; report-to csp
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=BemyiG-_aKhkSexzStem8xjbrJrLGw_QSubU_qdjXQkUsYnA2BEWQ3IpqoXy9AauBPzd54gQDpeSc950; report-to csp
 Server: nginx
 Cache-Control: no-cache, no-store
-reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=Z2WjiqofQgBPqM_M_M_YpkeIXQPSTjV47Djzm6Ol0OLQQghX_DNTJ9_l8QnkUapBvvwgBz_VisplPCl_&t=1"
-stripe-notice: You are using an outdated API version (2020-08-27). We recommend upgrading to the latest API version, 2026-06-24.dahlia. See https://docs.stripe.com/upgrades
+reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=BemyiG-_aKhkSexzStem8xjbrJrLGw_QSubU_qdjXQkUsYnA2BEWQ3IpqoXy9AauBPzd54gQDpeSc950&t=1"
+stripe-notice: You are using an outdated API version (2020-08-27). We recommend upgrading to the latest API version, 2026-08-26.dahlia. See https://docs.stripe.com/upgrades
 x-wc: 3c3
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
-report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=Z2WjiqofQgBPqM_M_M_YpkeIXQPSTjV47Djzm6Ol0OLQQghX_DNTJ9_l8QnkUapBvvwgBz_VisplPCl_&t=1"}],"include_subdomains":true}
-request-id: req_UzgL3RNNuZYfUK
+report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=BemyiG-_aKhkSexzStem8xjbrJrLGw_QSubU_qdjXQkUsYnA2BEWQ3IpqoXy9AauBPzd54gQDpeSc950&t=1"}],"include_subdomains":true}
+request-id: req_gJLZhXvWJQV0us
 x-stripe-routing-context-priority-tier: api-testmode
 Content-Length: 592
 Vary: Origin
-Date: Wed, 01 Jul 2026 12:11:06 GMT
-original-request: req_UzgL3RNNuZYfUK
+Date: Tue, 01 Sep 2026 15:40:52 GMT
+original-request: req_gJLZhXvWJQV0us
 stripe-version: 2020-08-27
-idempotency-key: 959bfb3c-e943-4ee8-9868-b094c2b6e7a6
+idempotency-key: 0b8026cd-9208-46a1-936f-e8af41542f3b
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
-X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[email]=test%40example\.com&billing_details%5Bname%5D=John%20Doe&client_attribution_metadata\[checkout_session_id]=cs_test_a1UlJPvM6RrekVeuXohXZELRavb9MLZfN3gCSB5a13llQrW1ybpYVij5oy&client_attribution_metadata\[client_session_id]=.*&client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_method_selection_flow]=automatic&eps%5Bbank%5D=arzte_und_apotheker_bank&guid=.*&muid=.*&payment_user_agent=.*&sid=.*&type=eps
+X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[email]=test%40example\.com&billing_details%5Bname%5D=John%20Doe&client_attribution_metadata\[checkout_session_id]=cs_test_a1nxyqjyI6g0Mzz1l3qhu7FnmW3BrARuJTaalWsEdLzYywbbjmUW48TVch&client_attribution_metadata\[client_session_id]=.*&client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_method_selection_flow]=automatic&eps%5Bbank%5D=arzte_und_apotheker_bank&guid=.*&muid=.*&payment_user_agent=.*&sid=.*&type=eps
 
 {
   "object" : "payment_method",
-  "id" : "pm_1ToMysFY0qyl6XeWUAUBjmsT",
+  "id" : "pm_1UAtnsFY0qyl6XeWCQPcRWKt",
   "billing_details" : {
     "email" : "test@example.com",
     "phone" : null,
@@ -49,7 +49,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[email]=test%
     "bank" : "arzte_und_apotheker_bank"
   },
   "livemode" : false,
-  "created" : 1782907866,
+  "created" : 1788277252,
   "allow_redisplay" : "unspecified",
   "shared_payment_granted_token" : null,
   "customer" : null,
