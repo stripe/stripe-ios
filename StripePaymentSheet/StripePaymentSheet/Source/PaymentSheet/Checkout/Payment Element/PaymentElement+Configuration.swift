@@ -90,7 +90,7 @@ extension PaymentElement {
         }
 
         /// The layout of payment methods in the sheet. Defaults to `.automatic`.
-        /// - Note: Only used if you call `PaymentElement.present(from:)`.
+        /// - Note: Only used if you call `presentPaymentElement`.
         public var paymentMethodLayout: PaymentMethodLayout = .automatic {
             didSet {
                 paymentSheetConfiguration.paymentMethodLayout = paymentMethodLayout
@@ -98,7 +98,7 @@ extension PaymentElement {
         }
 
         /// Controls whether the PaymentElement displays mandate text at the bottom for payment methods that require it. If set to `false`, your integration must display `PaymentOptionDisplayData.mandateText` to the customer near your “Buy” button to comply with regulations.
-        /// - Note: This doesn't affect mandates displayed in the sheet and is ignored if you call `PaymentElement.present(from:)`.
+        /// - Note: This doesn't affect mandates displayed in the sheet and is ignored if you call `presentPaymentElement`.
         public var displaysMandateText: Bool = false {
             didSet {
                 embeddedConfiguration.embeddedViewDisplaysMandateText = displaysMandateText
@@ -106,7 +106,7 @@ extension PaymentElement {
         }
 
         /// Determines the behavior when a row is selected.
-        /// - Note: Ignored if you call `PaymentElement.present(from:)`.
+        /// - Note: Ignored if you call `presentPaymentElement`
         public var rowSelectionBehavior: RowSelectionBehavior = .default {
             didSet {
                 embeddedConfiguration.rowSelectionBehavior = embeddedRowSelectionBehavior

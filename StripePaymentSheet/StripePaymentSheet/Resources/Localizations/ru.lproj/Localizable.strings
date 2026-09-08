@@ -46,6 +46,8 @@
 
 "Buy now or pay later with Klarna" = "Купите сейчас или оплатите позже через систему Klarna";
 
+"By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "Подтверждая платеж через NICEPAY, вы тем самым разрешаете %@ списывать средства с этого способа оплаты для будущих платежей согласно условиям компании.";
+
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Подтверждая платеж через PayPal, вы тем самым разрешаете компании %@ списывать с вашего счета PayPal суммы будущих платежей согласно условиям.";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Перейдя к Amazon Pay, вы тем самым разрешаете компании %@ списывать с вашего счета в Amazon Pay суммы будущих платежей согласно условиям компании.";
@@ -192,6 +194,10 @@
 
 "Name on card" = "Имя и фамилия, указанные на карте";
 
+"Naver Pay Card" = "Карта Naver Pay";
+
+"Naver Pay Money/Point" = "Средства/баллы Naver Pay";
+
 "New card" = "Новая карта";
 
 "New payment method" = "Новый способ оплаты";
@@ -287,6 +293,8 @@
 "Saved" = "Сохранено";
 
 "Select card" = "Выберите карту";
+
+"Select how you want to pay:" = "Выберите способ оплаты:";
 
 "Select payment method" = "Выберите способ оплаты";
 

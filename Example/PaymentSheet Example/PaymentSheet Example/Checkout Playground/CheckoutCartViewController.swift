@@ -205,6 +205,9 @@ final class CheckoutCartViewController: UIViewController {
                 configuration.paymentElement = paymentElementConfiguration
             }
             configuration.defaults.shippingDetails = defaultShippingAddress?.checkoutShippingDetails
+            if shippingAddressCollection {
+                configuration.shippingAddressElement = .init()
+            }
             if expressCheckoutElementSettings.isEnabled {
                 var expressCheckoutElementConfiguration = ExpressCheckoutElement.Configuration()
                 expressCheckoutElementConfiguration.applePayConfiguration = ExpressCheckoutElement.ApplePayConfiguration(
@@ -289,7 +292,7 @@ final class CheckoutCartViewController: UIViewController {
             )
         }
 
-        if shippingAddressCollection || session.shippingAddress != nil {
+        if shippingAddressCollection {
             contentStackView.addArrangedSubview(makeShippingAddressSection(session: session))
         }
 
@@ -297,7 +300,10 @@ final class CheckoutCartViewController: UIViewController {
             contentStackView.addArrangedSubview(
                 makeSection(
                     title: "Payment Method",
-                    content: makeCard(containing: makePaymentMethodRow(session: session))
+                    content: makeCard(containing: makePaymentMethodRow(session: session)),
+                    accessory: integrationType == .embedded && session.paymentOption != nil
+                        ? makeClearPaymentOptionButton()
+                        : nil
                 )
             )
         }
@@ -361,6 +367,7 @@ final class CheckoutCartViewController: UIViewController {
         unitAmountLabel.text = "\((item.unitAmountDecimal ?? item.unitAmount).amount) × \(item.quantity)"
         unitAmountLabel.font = .preferredFont(forTextStyle: .subheadline)
         unitAmountLabel.textColor = .secondaryLabel
+        unitAmountLabel.accessibilityIdentifier = "checkout_line_item_amount"
 
         let detailsStackView = UIStackView(arrangedSubviews: [nameLabel, unitAmountLabel])
         detailsStackView.axis = .vertical
@@ -449,7 +456,8 @@ final class CheckoutCartViewController: UIViewController {
         summaryStackView.addArrangedSubview(
             makeSummaryRow(
                 title: "Subtotal",
-                amount: totals.subtotal.amount
+                amount: totals.subtotal.amount,
+                amountAccessibilityIdentifier: "checkout_subtotal_amount"
             )
         )
 
@@ -458,7 +466,8 @@ final class CheckoutCartViewController: UIViewController {
                 makeSummaryRow(
                     title: "Discount",
                     amount: "-" + totals.discount.amount,
-                    color: .systemGreen
+                    color: .systemGreen,
+                    amountAccessibilityIdentifier: "checkout_discount_amount"
                 )
             )
         }
@@ -470,7 +479,8 @@ final class CheckoutCartViewController: UIViewController {
                 makeSummaryRow(
                     title: "Tax",
                     amount: totals.taxExclusive.amount,
-                    showsTaxDetailsButton: hasTaxDetails
+                    showsTaxDetailsButton: hasTaxDetails,
+                    amountAccessibilityIdentifier: "checkout_tax_amount"
                 )
             )
         }
@@ -480,7 +490,8 @@ final class CheckoutCartViewController: UIViewController {
             makeSummaryRow(
                 title: "Total",
                 amount: totals.total.amount,
-                emphasizesText: true
+                emphasizesText: true,
+                amountAccessibilityIdentifier: "checkout_total_amount"
             )
         )
 
@@ -517,6 +528,7 @@ final class CheckoutCartViewController: UIViewController {
         stackView.spacing = 2
         stackView.isAccessibilityElement = true
         stackView.accessibilityLabel = "Tax. \(message)"
+        stackView.accessibilityIdentifier = "checkout_tax_prompt"
         return stackView
     }
 
@@ -536,7 +548,8 @@ final class CheckoutCartViewController: UIViewController {
         amount: String,
         color: UIColor = .secondaryLabel,
         emphasizesText: Bool = false,
-        showsTaxDetailsButton: Bool = false
+        showsTaxDetailsButton: Bool = false,
+        amountAccessibilityIdentifier: String? = nil
     ) -> UIView {
         let titleLabel = UILabel()
         titleLabel.text = title
@@ -548,6 +561,7 @@ final class CheckoutCartViewController: UIViewController {
         amountLabel.textColor = emphasizesText ? .label : (color == .systemGreen ? color : .label)
         amountLabel.font = .preferredFont(forTextStyle: emphasizesText ? .headline : .body)
         amountLabel.setContentHuggingPriority(.required, for: .horizontal)
+        amountLabel.accessibilityIdentifier = amountAccessibilityIdentifier
 
         let titleStackView = UIStackView(arrangedSubviews: [titleLabel])
         titleStackView.alignment = .center
@@ -616,6 +630,15 @@ final class CheckoutCartViewController: UIViewController {
         return rowView
     }
 
+    private func makeClearPaymentOptionButton() -> UIButton {
+        let button = UIButton(type: .system)
+        button.setTitle("Clear payment option", for: .normal)
+        button.setTitleColor(.systemRed, for: .normal)
+        button.titleLabel?.font = .preferredFont(forTextStyle: .subheadline)
+        button.addTarget(self, action: #selector(clearPaymentOptionButtonTapped), for: .touchUpInside)
+        return button
+    }
+
     private func makeCheckoutButton(
         checkout: CheckoutController,
         session: CheckoutController.Session
@@ -635,6 +658,7 @@ final class CheckoutCartViewController: UIViewController {
 
         let formattedAmount = session.totals.total.amount
         button.accessibilityLabel = "Buy, \(formattedAmount)"
+        button.accessibilityIdentifier = "checkout_buy_button"
 
         let stackView = UIStackView(arrangedSubviews: [titleLabel])
         stackView.isUserInteractionEnabled = false
@@ -662,13 +686,20 @@ final class CheckoutCartViewController: UIViewController {
         return button
     }
 
-    private func makeSection(title: String, content: UIView) -> UIView {
+    private func makeSection(title: String, content: UIView, accessory: UIView? = nil) -> UIView {
         let titleLabel = UILabel()
         titleLabel.text = title
         titleLabel.font = .preferredFont(forTextStyle: .title2)
         titleLabel.adjustsFontForContentSizeCategory = true
 
-        let stackView = UIStackView(arrangedSubviews: [titleLabel, content])
+        let headerStackView = UIStackView(arrangedSubviews: [titleLabel])
+        headerStackView.alignment = .center
+        if let accessory {
+            accessory.setContentHuggingPriority(.required, for: .horizontal)
+            headerStackView.addArrangedSubview(accessory)
+        }
+
+        let stackView = UIStackView(arrangedSubviews: [headerStackView, content])
         stackView.axis = .vertical
         stackView.spacing = 16
         return stackView
@@ -846,6 +877,20 @@ final class CheckoutCartViewController: UIViewController {
             present(UINavigationController(rootViewController: viewController), animated: true)
         case .eceOnly:
             break
+        }
+    }
+
+    @objc private func clearPaymentOptionButtonTapped() {
+        guard let checkout else { return }
+
+        Task {
+            errorMessage = nil
+            do {
+                try await checkout.clearPaymentOption()
+            } catch {
+                errorMessage = error.localizedDescription
+                renderCheckout()
+            }
         }
     }
 

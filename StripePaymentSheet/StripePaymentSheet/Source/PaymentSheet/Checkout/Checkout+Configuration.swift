@@ -13,19 +13,7 @@ import Foundation
 extension CheckoutController {
     public typealias UserInterfaceStyle = PaymentSheet.UserInterfaceStyle
 
-    /// Configuration options for a ``Checkout`` instance.
-    ///
-    /// Supply a configuration when creating a ``Checkout`` to customize behavior:
-    ///
-    /// ```swift
-    /// var config = CheckoutController.Configuration(
-    ///     clientSecret: "cs_xxx_secret_yyy",
-    ///     returnURL: "my-app://stripe-redirect"
-    /// )
-    /// config.currencySelectorElement = .init()
-    ///
-    /// let checkout = try await CheckoutController(configuration: config)
-    /// ```
+    /// Configuration for initializing a CheckoutController.
     public struct Configuration {
         /// The client secret for your Checkout Session.
         public var clientSecret: String
@@ -60,16 +48,18 @@ extension CheckoutController {
         /// Pricing is available. The default value is `nil`.
         public var currencySelectorElement: CurrencySelectorElement.Configuration?
 
-        /// Configuration for the shipping address form returned by
-        /// ``CheckoutController.getShippingAddressElement()``.
-        public var shippingAddressElement: ShippingAddressElement.Configuration = .init()
+        /// Configuration for Shipping Address Element.
+        ///
+        /// Set this property to use Shipping Address Element with this CheckoutController.
+        /// The default value is `nil`.
+        public var shippingAddressElement: ShippingAddressElement.Configuration?
 
         /// The color styling to use for Checkout UI.
         public var userInterfaceStyle: UserInterfaceStyle = .automatic
 
-        /// Creates a configuration.
-        /// - Parameter clientSecret: The client secret for your Checkout Session.
-        /// - Parameter returnURL: A custom URL scheme that redirects back to your app after authenticating a payment method, e.g. `my-app://stripe-redirect`. Register this URL scheme in your app and forward incoming URLs to `StripeAPI.handleURLCallback(with:)`.
+        /// Initializes a `CheckoutController.Configuration` with default values.
+        /// - Parameter clientSecret: The CheckoutSession client secret.
+        /// - Parameter returnURL: A URL that redirects back to your app after authenticating a payment method.
         public init(clientSecret: String, returnURL: String) {
             self.clientSecret = clientSecret
             self.returnURL = returnURL
