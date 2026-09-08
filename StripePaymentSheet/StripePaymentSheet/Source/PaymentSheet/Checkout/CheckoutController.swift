@@ -329,7 +329,7 @@ public final class CheckoutController: ObservableObject {
     /// Returns the ExpressCheckoutElement for this CheckoutController instance.
     public func getExpressCheckoutElement() -> ExpressCheckoutElement {
         assert(configuration.expressCheckoutElement != nil, "Set Configuration.expressCheckoutElement before calling getExpressCheckoutElement().")
-        stpAssert(paymentElement != nil, "ExpressCheckoutElement should be initialized when Configuration.expressCheckoutElement is set.")
+        stpAssert(expressCheckoutElement != nil, "ExpressCheckoutElement should be initialized when Configuration.expressCheckoutElement is set.")
         return expressCheckoutElement!
     }
 
