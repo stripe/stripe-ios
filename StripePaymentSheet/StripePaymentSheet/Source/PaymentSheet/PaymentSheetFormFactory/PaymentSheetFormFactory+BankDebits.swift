@@ -17,10 +17,10 @@ extension PaymentSheetFormFactory {
             ? makeName(apiPath: "billing_details[name]") : nil
         let email = configuration.billingDetailsCollectionConfiguration.email == .always ? makeEmail() : nil
         let phone = configuration.billingDetailsCollectionConfiguration.phone == .always ? makePhone() : nil
-        let bank = makeBankDropdown(
+        let bank = makeDropdown(
             label: STPLocalizedString("EPS Bank", "Label title for EPS Bank"),
             apiPath: "eps[bank]",
-            banks: BankDropdown.eps
+            options: BankDropdown.eps
         )
         let address = makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
             as? PaymentMethodElementWrapper<AddressSectionElement>
@@ -41,10 +41,10 @@ extension PaymentSheetFormFactory {
         let email = configuration.billingDetailsCollectionConfiguration.email != .never
             ? makeEmail(apiPath: "billing_details[email]") : nil
         let phone = configuration.billingDetailsCollectionConfiguration.phone == .always ? makePhone() : nil
-        let bank = makeBankDropdown(
+        let bank = makeDropdown(
             label: STPLocalizedString("Przelewy24 Bank", "Label title for Przelewy24 Bank"),
             apiPath: "p24[bank]",
-            banks: BankDropdown.przelewy24
+            options: BankDropdown.przelewy24
         )
         let address = makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
             as? PaymentMethodElementWrapper<AddressSectionElement>
@@ -89,10 +89,10 @@ extension PaymentSheetFormFactory {
     }
 
     func makeFPX() -> PaymentMethodElement {
-        let bank = makeBankDropdown(
+        let bank = makeDropdown(
             label: STPLocalizedString("FPX Bank", "Select a bank dropdown for FPX"),
             apiPath: "fpx[bank]",
-            banks: BankDropdown.fpx
+            options: BankDropdown.fpx
         )
         let address = makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
             as? PaymentMethodElementWrapper<AddressSectionElement>
@@ -110,33 +110,6 @@ extension PaymentSheetFormFactory {
         )
     }
 
-    private func makeBankDropdown(
-        label: String,
-        apiPath: String,
-        banks: [(name: String, value: String)]
-    ) -> PaymentMethodElementWrapper<DropdownFieldElement> {
-        let items = banks.map {
-            DropdownFieldElement.DropdownItem(
-                pickerDisplayName: $0.name,
-                labelDisplayName: $0.name,
-                accessibilityValue: $0.name,
-                rawData: $0.value
-            )
-        }
-        let defaultIndex = items.firstIndex {
-            $0.rawData == getPreviousCustomerInput(for: apiPath)
-        } ?? 0
-        let dropdown = DropdownFieldElement(
-            items: items,
-            defaultIndex: defaultIndex,
-            label: label,
-            theme: theme
-        )
-        return PaymentMethodElementWrapper(dropdown) { dropdown, params in
-            params.paymentMethodParams.additionalAPIParameters[apiPath] = dropdown.selectedItem.rawData
-            return params
-        }
-    }
 }
 
 private enum BankDropdown {

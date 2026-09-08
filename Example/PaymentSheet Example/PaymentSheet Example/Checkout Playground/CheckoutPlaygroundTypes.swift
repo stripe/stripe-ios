@@ -26,6 +26,14 @@ extension ExpressCheckoutElement.BillingDetailsCollectionConfiguration.AddressCo
 }
 
 enum CheckoutPlayground {
+    enum LinkMode: String, CaseIterable, Identifiable, Codable {
+        case native
+        case web
+
+        var id: String { rawValue }
+        var displayName: String { rawValue.capitalized }
+    }
+
     enum UIFramework: String, CaseIterable, Identifiable, Codable {
 
         case swiftUI
@@ -223,20 +231,6 @@ enum CheckoutPlayground {
         }
     }
 
-    enum ExpressCheckoutElementOption: String, CaseIterable, Identifiable, Codable {
-        case show
-        case hide
-
-        var id: String { rawValue }
-
-        var displayName: String {
-            switch self {
-            case .show: return "show"
-            case .hide: return "hide"
-            }
-        }
-    }
-
     struct LineItemConfig: Identifiable, Codable {
 
         let id: UUID
@@ -266,7 +260,8 @@ enum CheckoutPlayground {
 
         var uiFramework: UIFramework = .swiftUI
         var integrationType: IntegrationType = .flowController
-        var expressCheckoutElementOption: ExpressCheckoutElementOption = .show
+        var showExpressCheckoutElement = true
+        var linkMode: LinkMode = .native
         var currency: Currency = .usd
         var customerType: CustomerType = .guest
         var lineItems: [LineItemConfig] = LineItemConfig.defaults

@@ -25,12 +25,15 @@ public protocol CheckoutApplePayConfiguration {
 @_spi(STP)
 @_spi(ReactNativeSDK)
 extension PaymentElement {
-    /// Configuration for Apple Pay.
+    /// Configuration related to Apple Pay
     public struct ApplePayConfiguration: CheckoutApplePayConfiguration {
-        /// The Apple Pay merchant identifier.
+        /// The Apple Merchant Identifier to use during Apple Pay transactions.
+        /// To obtain one, see https://stripe.com/docs/apple-pay#native
         public var merchantId: String
 
-        /// The type of Apple Pay button to display. Defaults to `.plain` when `nil`.
+        /// Defines the label that will be displayed in the Apple Pay button.
+        /// See <https://developer.apple.com/design/human-interface-guidelines/technologies/apple-pay/buttons-and-marks/>
+        /// for all available options.
         public var buttonType: PKPaymentButtonType?
 
         /// Creates an Apple Pay configuration.

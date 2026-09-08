@@ -1,0 +1,81 @@
+GET
+https:\/\/api\.stripe\.com\/v1\/setup_intents\/seti_1UBKSdFY0qyl6XeWjTEl5sCH\?client_secret=seti_1UBKSdFY0qyl6XeWjTEl5sCH_secret_VBhsPZLeLTnpELuTkuL6ixoaKGQkrPY&expand%5B0%5D=payment_method$
+200
+application/json
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=JEA3EbWjhlgf_T2DRj3jvR0RXlRx34axw6LqpBtidL_f6qdqq3jJyvCIZkiKsKoKDNx7F9ZQwaB21Mjl; report-to csp
+Server: nginx
+Cache-Control: no-cache, no-store
+reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=JEA3EbWjhlgf_T2DRj3jvR0RXlRx34axw6LqpBtidL_f6qdqq3jJyvCIZkiKsKoKDNx7F9ZQwaB21Mjl&t=1"
+stripe-notice: You are using an outdated API version (2020-08-27). We recommend upgrading to the latest API version, 2026-08-26.dahlia. See https://docs.stripe.com/upgrades
+x-wc: 3c3
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+x-stripe-routing-context-priority-tier: api-testmode
+x-stripe-priority-routing-enabled: true
+report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=JEA3EbWjhlgf_T2DRj3jvR0RXlRx34axw6LqpBtidL_f6qdqq3jJyvCIZkiKsKoKDNx7F9ZQwaB21Mjl&t=1"}],"include_subdomains":true}
+request-id: req_EFPHdhe7ca8FmL
+Content-Length: 1455
+Vary: Origin
+Date: Wed, 02 Sep 2026 20:08:44 GMT
+stripe-version: 2020-08-27
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+
+{
+  "id" : "seti_1UBKSdFY0qyl6XeWjTEl5sCH",
+  "description" : null,
+  "excluded_payment_method_types" : null,
+  "next_action" : {
+    "type" : "redirect_to_url",
+    "redirect_to_url" : {
+      "return_url" : "foo:\/\/bar",
+      "url" : "https:\/\/pm-redirects.stripe.com\/authorize\/acct_1G6m1pFY0qyl6XeW\/sa_nonce_VBhsZkd0bl3wAJKWfZLzpeA29PMdCuZ"
+    }
+  },
+  "livemode" : false,
+  "payment_method" : {
+    "object" : "payment_method",
+    "type" : "kr_card",
+    "id" : "pm_1UBKSdFY0qyl6XeW0lL7j7M4",
+    "billing_details" : {
+      "email" : null,
+      "phone" : null,
+      "tax_id" : null,
+      "name" : null,
+      "address" : {
+        "state" : null,
+        "country" : null,
+        "line2" : null,
+        "city" : null,
+        "line1" : null,
+        "postal_code" : null
+      }
+    },
+    "livemode" : false,
+    "created" : 1788379723,
+    "allow_redisplay" : "unspecified",
+    "kr_card" : {
+      "brand" : null,
+      "last4" : null
+    },
+    "customer" : null,
+    "shared_payment_granted_token" : null,
+    "customer_account" : null
+  },
+  "payment_method_configuration_details" : null,
+  "usage" : "off_session",
+  "allowed_payment_method_types" : null,
+  "payment_method_types" : [
+    "kr_card"
+  ],
+  "object" : "setup_intent",
+  "last_setup_error" : null,
+  "created" : 1788379723,
+  "client_secret" : "seti_1UBKSdFY0qyl6XeWjTEl5sCH_secret_VBhsPZLeLTnpELuTkuL6ixoaKGQkrPY",
+  "automatic_payment_methods" : null,
+  "cancellation_reason" : null,
+  "status" : "requires_action"
+}
