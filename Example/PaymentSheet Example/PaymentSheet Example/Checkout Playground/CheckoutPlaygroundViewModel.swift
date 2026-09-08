@@ -20,9 +20,14 @@ extension CheckoutPlayground {
     @MainActor
     final class ViewModel: ObservableObject {
 
-        // Unified mode currently supports card and Link.
         static let availablePaymentMethods = [
-            "card", "link",
+            "card", "link", "us_bank_account", "cashapp", "klarna", "affirm",
+            "afterpay_clearpay", "amazon_pay", "crypto", "sunbit", "oxxo", "ideal",
+            "bancontact", "sepa_debit", "eps", "alma", "mobilepay", "billie", "wero",
+            "satispay", "sequra", "blik", "p24", "swish", "bacs_debit", "paypal",
+            "revolut_pay", "twint", "multibanco", "au_becs_debit", "grabpay", "paynow",
+            "fpx", "promptpay", "konbini", "paypay", "kr_card", "naver_pay", "payco",
+            "alipay", "boleto",
         ]
 
         @Published var uiFramework: UIFramework
@@ -40,6 +45,8 @@ extension CheckoutPlayground {
                 }
             }
         }
+        @Published var showsWalletsInPaymentElement: Bool
+        @Published var showsCurrencySelectorElement: Bool
         @Published var linkMode: LinkMode {
             didSet {
                 if isLinkModeOverrideActive {
@@ -48,6 +55,7 @@ extension CheckoutPlayground {
             }
         }
         @Published var currency: Currency
+        @Published var merchantCountry: MerchantCountry
         @Published var customerType: CustomerType
         @Published var lineItems: [LineItemConfig]
         @Published var shippingAddressCollection: Bool
@@ -78,7 +86,10 @@ extension CheckoutPlayground {
             uiFramework = settings.uiFramework
             integrationType = settings.integrationType
             expressCheckoutElement = ExpressCheckoutElementSettings(isEnabled: settings.showExpressCheckoutElement)
+            showsWalletsInPaymentElement = settings.showsWalletsInPaymentElement
+            showsCurrencySelectorElement = settings.showsCurrencySelectorElement
             linkMode = settings.linkMode
+            merchantCountry = settings.merchantCountry
             currency = settings.currency
             customerType = settings.customerType
             lineItems = settings.lineItems
@@ -134,6 +145,9 @@ extension CheckoutPlayground {
         }
 
         func createSession() async {
+            guard !isCreating else {
+                return
+            }
             serializeSettingsToNSUserDefaults()
             isCreating = true
             errorMessage = nil
@@ -180,9 +194,14 @@ extension CheckoutPlayground {
             apply(Settings())
         }
 
+        func apply(_ scenario: Scenario) {
+            apply(scenario.configuration.settings)
+            expressCheckoutElement = scenario.configuration.expressCheckoutElement
+        }
+
         private func buildRequestBody() -> [String: Any] {
             var body: [String: Any] = [
-                "merchant_country_code": "us_tax",
+                "merchant_country_code": merchantCountry.rawValue,
                 "mode": "unified",
                 "use_one_time_price": true,
                 "currency": currency.rawValue,
@@ -199,6 +218,7 @@ extension CheckoutPlayground {
                 body["payment_method_types"] = Array(paymentMethodTypes)
             }
             if adaptivePricingCountry != .none {
+                body["adaptive_pricing"] = true
                 let countryCode = adaptivePricingCountry.rawValue.uppercased()
                 body["customer_email"] = "test+location_\(countryCode)@example.com"
             }
@@ -211,7 +231,10 @@ extension CheckoutPlayground {
                 uiFramework: uiFramework,
                 integrationType: integrationType,
                 showExpressCheckoutElement: expressCheckoutElement.isEnabled,
+                showsWalletsInPaymentElement: showsWalletsInPaymentElement,
+                showsCurrencySelectorElement: showsCurrencySelectorElement,
                 linkMode: linkMode,
+                merchantCountry: merchantCountry,
                 currency: currency,
                 customerType: customerType,
                 lineItems: lineItems,
@@ -236,7 +259,10 @@ extension CheckoutPlayground {
             uiFramework = settings.uiFramework
             integrationType = settings.integrationType
             expressCheckoutElement.isEnabled = settings.showExpressCheckoutElement
+            showsWalletsInPaymentElement = settings.showsWalletsInPaymentElement
+            showsCurrencySelectorElement = settings.showsCurrencySelectorElement
             linkMode = settings.linkMode
+            merchantCountry = settings.merchantCountry
             currency = settings.currency
             customerType = settings.customerType
             lineItems = settings.lineItems
@@ -271,7 +297,14 @@ extension CheckoutPlayground {
             }
 
             do {
-                return try JSONDecoder().decode(Settings.self, from: data)
+                guard var values = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
+                    throw CocoaError(.coderReadCorrupt)
+                }
+                values["showsWalletsInPaymentElement"] = values["showsWalletsInPaymentElement"] ?? true
+                values["showsCurrencySelectorElement"] = values["showsCurrencySelectorElement"] ?? true
+                values["merchantCountry"] = values["merchantCountry"] ?? MerchantCountry.usTax.rawValue
+                let migratedData = try JSONSerialization.data(withJSONObject: values)
+                return try JSONDecoder().decode(Settings.self, from: migratedData)
             } catch {
                 print("Unable to deserialize Checkout playground settings: \(error)")
                 UserDefaults.standard.removeObject(forKey: Settings.nsUserDefaultsKey)

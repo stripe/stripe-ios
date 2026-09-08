@@ -10,6 +10,7 @@ import SwiftUI
 struct CheckoutPlaygroundConfigurationSection: View {
     @Binding var uiFramework: CheckoutPlayground.UIFramework
     @Binding var integrationType: CheckoutPlayground.IntegrationType
+    @Binding var merchantCountry: CheckoutPlayground.MerchantCountry
     @Binding var currency: CheckoutPlayground.Currency
     @Binding var customerType: CheckoutPlayground.CustomerType
     @Binding var checkoutEndpointOption: CheckoutPlayground.EndpointOption
@@ -38,6 +39,12 @@ struct CheckoutPlaygroundConfigurationSection: View {
                     icon: "square.stack.3d.up.fill",
                     selection: $integrationType,
                     tooltip: "Choose the PaymentElement presentation.\n\n• sheet: Presents PaymentElement as a payment method selector.\n• view: Displays PaymentElement in the checkout flow.\n• none: Hides PaymentElement.",
+                    displayText: { $0.displayName }
+                )
+                CheckoutPlayground.PickerRow(
+                    title: "Merchant",
+                    icon: "building.2.fill",
+                    selection: $merchantCountry,
                     displayText: { $0.displayName }
                 )
                 CheckoutPlayground.PickerRow(
@@ -178,6 +185,7 @@ struct CheckoutPlaygroundFeaturesSection: View {
     @Binding var checkoutSessionPaymentMethodSave: Bool
     @Binding var checkoutSessionPaymentMethodRemove: Bool
     @Binding var automaticPaymentMethods: Bool
+    @Binding var showsWalletsInPaymentElement: Bool
     @Binding var linkMode: CheckoutPlayground.LinkMode
 
     private var shouldShowAutomaticTax: Bool {
@@ -217,6 +225,11 @@ struct CheckoutPlaygroundFeaturesSection: View {
                     title: "Automatic Payment Methods",
                     isOn: $automaticPaymentMethods,
                     tooltip: "Sends `automatic_payment_methods: true` instead of an explicit `payment_method_types` array. Stripe selects the best payment methods for the session."
+                )
+                CheckoutPlayground.ToggleRow(
+                    title: "Wallets in PaymentElement",
+                    isOn: $showsWalletsInPaymentElement,
+                    tooltip: "Controls whether Apple Pay and Link can appear in PaymentElement. Turn this off when ExpressCheckoutElement owns wallet presentation."
                 )
                 CheckoutPlayground.PickerRow(
                     title: "Link Mode",

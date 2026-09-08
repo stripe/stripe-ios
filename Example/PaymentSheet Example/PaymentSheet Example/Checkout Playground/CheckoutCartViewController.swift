@@ -20,6 +20,7 @@ struct CheckoutCartUIKitView: UIViewControllerRepresentable {
     let defaultShippingAddress: CheckoutPlayground.DefaultShippingAddress?
     let adaptivePricing: Bool
     let integrationType: CheckoutPlayground.IntegrationType
+    let showsWalletsInPaymentElement: Bool
     let expressCheckoutElementSettings: CheckoutPlayground.ExpressCheckoutElementSettings
     let currencySelectorAppearance: CurrencySelectorElement.Appearance
     let delayPaymentPagesRequests: Bool
@@ -31,6 +32,7 @@ struct CheckoutCartUIKitView: UIViewControllerRepresentable {
             defaultShippingAddress: defaultShippingAddress,
             adaptivePricing: adaptivePricing,
             integrationType: integrationType,
+            showsWalletsInPaymentElement: showsWalletsInPaymentElement,
             expressCheckoutElementSettings: expressCheckoutElementSettings,
             currencySelectorAppearance: currencySelectorAppearance,
             delayPaymentPagesRequests: delayPaymentPagesRequests,
@@ -50,6 +52,7 @@ final class CheckoutCartViewController: UIViewController {
     private let defaultShippingAddress: CheckoutPlayground.DefaultShippingAddress?
     private let adaptivePricing: Bool
     private let integrationType: CheckoutPlayground.IntegrationType
+    private let showsWalletsInPaymentElement: Bool
     private let expressCheckoutElementSettings: CheckoutPlayground.ExpressCheckoutElementSettings
     private let currencySelectorAppearance: CurrencySelectorElement.Appearance
     private let delayPaymentPagesRequests: Bool
@@ -83,6 +86,7 @@ final class CheckoutCartViewController: UIViewController {
         defaultShippingAddress: CheckoutPlayground.DefaultShippingAddress?,
         adaptivePricing: Bool,
         integrationType: CheckoutPlayground.IntegrationType,
+        showsWalletsInPaymentElement: Bool,
         expressCheckoutElementSettings: CheckoutPlayground.ExpressCheckoutElementSettings,
         currencySelectorAppearance: CurrencySelectorElement.Appearance,
         delayPaymentPagesRequests: Bool,
@@ -93,6 +97,7 @@ final class CheckoutCartViewController: UIViewController {
         self.defaultShippingAddress = defaultShippingAddress
         self.adaptivePricing = adaptivePricing
         self.integrationType = integrationType
+        self.showsWalletsInPaymentElement = showsWalletsInPaymentElement
         self.expressCheckoutElementSettings = expressCheckoutElementSettings
         self.currencySelectorAppearance = currencySelectorAppearance
         self.delayPaymentPagesRequests = delayPaymentPagesRequests
@@ -199,9 +204,13 @@ final class CheckoutCartViewController: UIViewController {
             )
             if integrationType != .eceOnly {
                 var paymentElementConfiguration = PaymentElement.Configuration()
-                paymentElementConfiguration.applePayConfiguration = PaymentElement.ApplePayConfiguration(
-                    merchantId: "merchant.com.stripe.paymentsheet.example"
-                )
+                if showsWalletsInPaymentElement {
+                    paymentElementConfiguration.applePayConfiguration = PaymentElement.ApplePayConfiguration(
+                        merchantId: "merchant.com.stripe.paymentsheet.example"
+                    )
+                } else {
+                    paymentElementConfiguration.linkConfiguration = PaymentElement.LinkConfiguration(display: .never)
+                }
                 configuration.paymentElement = paymentElementConfiguration
             }
             configuration.defaults.shippingDetails = defaultShippingAddress?.checkoutShippingDetails

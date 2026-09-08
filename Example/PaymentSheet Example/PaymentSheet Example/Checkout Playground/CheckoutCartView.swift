@@ -24,6 +24,7 @@ struct CheckoutCartView: View {
     let defaultShippingAddress: CheckoutPlayground.DefaultShippingAddress?
     let adaptivePricing: Bool
     let integrationType: CheckoutPlayground.IntegrationType
+    let showsWalletsInPaymentElement: Bool
     let expressCheckoutElementSettings: CheckoutPlayground.ExpressCheckoutElementSettings
     var currencySelectorAppearance = CurrencySelectorElement.Appearance()
     var delayPaymentPagesRequests = false
@@ -145,9 +146,13 @@ struct CheckoutCartView: View {
             )
             if integrationType != .eceOnly {
                 var paymentElementConfiguration = PaymentElement.Configuration()
-                paymentElementConfiguration.applePayConfiguration = PaymentElement.ApplePayConfiguration(
-                    merchantId: "merchant.com.stripe.paymentsheet.example"
-                )
+                if showsWalletsInPaymentElement {
+                    paymentElementConfiguration.applePayConfiguration = PaymentElement.ApplePayConfiguration(
+                        merchantId: "merchant.com.stripe.paymentsheet.example"
+                    )
+                } else {
+                    paymentElementConfiguration.linkConfiguration = PaymentElement.LinkConfiguration(display: .never)
+                }
                 config.paymentElement = paymentElementConfiguration
             }
             config.defaults.shippingDetails = defaultShippingAddress?.checkoutShippingDetails

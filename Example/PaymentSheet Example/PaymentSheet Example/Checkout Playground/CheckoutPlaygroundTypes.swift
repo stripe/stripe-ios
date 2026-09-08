@@ -96,12 +96,21 @@ enum CheckoutPlayground {
         case cad
         case aud
         case jpy
+        case mxn
+        case pln
+        case sek
+        case chf
+        case sgd
+        case myr
+        case thb
+        case krw
+        case brl
 
         var id: String { rawValue }
 
         var symbol: String {
             switch self {
-            case .usd, .cad, .aud:
+            case .usd, .cad, .aud, .sgd:
                 return "$"
             case .eur:
                 return "€"
@@ -109,11 +118,67 @@ enum CheckoutPlayground {
                 return "£"
             case .jpy:
                 return "¥"
+            case .mxn:
+                return "MX$"
+            case .pln:
+                return "zł"
+            case .sek:
+                return "kr"
+            case .chf:
+                return "CHF "
+            case .myr:
+                return "RM "
+            case .thb:
+                return "฿"
+            case .krw:
+                return "₩"
+            case .brl:
+                return "R$"
             }
         }
 
         var isZeroDecimal: Bool {
-            return self == .jpy
+            return self == .jpy || self == .krw
+        }
+    }
+
+    enum MerchantCountry: String, CaseIterable, Identifiable, Codable {
+        case us = "US"
+        case usTax = "us_tax"
+        case mexico = "MX"
+        case france = "FR"
+        case germany = "DE"
+        case italy = "IT"
+        case spain = "ES"
+        case unitedKingdom = "GB"
+        case australia = "AU"
+        case singapore = "SG"
+        case malaysia = "MY"
+        case thailand = "TH"
+        case japan = "JP"
+        case china = "CN"
+        case brazil = "BR"
+
+        var id: String { rawValue }
+
+        var displayName: String {
+            switch self {
+            case .us: return "United States"
+            case .usTax: return "United States (Tax)"
+            case .mexico: return "Mexico"
+            case .france: return "France"
+            case .germany: return "Germany"
+            case .italy: return "Italy"
+            case .spain: return "Spain"
+            case .unitedKingdom: return "United Kingdom"
+            case .australia: return "Australia"
+            case .singapore: return "Singapore"
+            case .malaysia: return "Malaysia"
+            case .thailand: return "Thailand"
+            case .japan: return "Japan"
+            case .china: return "China"
+            case .brazil: return "Brazil"
+            }
         }
     }
 
@@ -261,7 +326,10 @@ enum CheckoutPlayground {
         var uiFramework: UIFramework = .swiftUI
         var integrationType: IntegrationType = .flowController
         var showExpressCheckoutElement = true
+        var showsWalletsInPaymentElement = true
+        var showsCurrencySelectorElement = true
         var linkMode: LinkMode = .native
+        var merchantCountry: MerchantCountry = .usTax
         var currency: Currency = .usd
         var customerType: CustomerType = .guest
         var lineItems: [LineItemConfig] = LineItemConfig.defaults
