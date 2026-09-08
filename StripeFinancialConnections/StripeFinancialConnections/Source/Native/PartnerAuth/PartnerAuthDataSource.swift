@@ -108,7 +108,8 @@ final class PartnerAuthDataSourceImplementation: PartnerAuthDataSource {
             .synchronize(
                 clientSecret: clientSecret,
                 returnURL: nil,
-                initialSynchronize: false
+                initialSynchronize: false,
+                preCollectedConsent: nil
             )
             .observe { [weak self] result in
                 guard let self = self else { return }

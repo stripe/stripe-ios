@@ -18,6 +18,7 @@ import UIKit
         hasRequestedDataPermissions: Bool,
         style: FinancialConnectionsStyle,
         elementsSessionContext: ElementsSessionContext?,
+        preCollectedConsent: FinancialConnectionsPreCollectedConsent?,
         linkBrand: LinkBrand?,
         onEvent: ((FinancialConnectionsEvent) -> Void)?,
         from presentingViewController: UIViewController,

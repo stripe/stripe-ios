@@ -79,7 +79,8 @@ extension FCLiteAPIClient {
         clientSecret: String,
         returnUrl: URL?,
         canUseNativeLink: Bool,
-        secureWebviewFeatureFlagEnabled: Bool
+        secureWebviewFeatureFlagEnabled: Bool,
+        preCollectedConsent: FinancialConnectionsPreCollectedConsent? = nil
     ) async throws -> SynchronizePayload {
         var mobileParameters: [String: Any] = [
             "fullscreen": true,
@@ -91,10 +92,15 @@ extension FCLiteAPIClient {
             mobileParameters["use_secure_webview_if_necessary"] = true
         }
 
-        let parameters: [String: Any] = [
+        var parameters: [String: Any] = [
             "client_secret": clientSecret,
             "mobile": mobileParameters,
         ]
+
+        if let preCollectedConsent {
+            parameters["pre_collected_consent"] = ["consent": preCollectedConsent.consent]
+        }
+
         return try await post(endpoint: .synchronize, parameters: parameters)
     }
 

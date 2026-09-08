@@ -407,6 +407,60 @@ class FinancialConnectionsAsyncAPIClientTests: XCTestCase {
         XCTAssertEqual(pollRequestQuery?.contains("clientSecret="), false)
     }
 
+    func testSynchronizeIncludesPreCollectedConsentWhenProvided() async {
+        var capturedRequest: URLRequest?
+        let configuration = URLSessionConfiguration.ephemeral
+        configuration.protocolClasses = [MockURLProtocol.self]
+        let stpAPIClient = STPAPIClient(publishableKey: "pk_test_123")
+        stpAPIClient.urlSession = URLSession(configuration: configuration)
+        let apiClient = FinancialConnectionsAsyncAPIClient(apiClient: stpAPIClient)
+
+        MockURLProtocol.requestHandler = { request in
+            capturedRequest = request
+            throw TestError.sampleError
+        }
+        defer {
+            MockURLProtocol.requestHandler = nil
+        }
+
+        _ = try? await apiClient.synchronize(
+            clientSecret: "las_client_secret_123",
+            returnURL: nil,
+            initialSynchronize: true,
+            preCollectedConsent: FinancialConnectionsPreCollectedConsent(consent: "fccons_123")
+        )
+
+        let body = capturedRequest?.httpBodyOrBodyStream.flatMap { String(data: $0, encoding: .utf8) }
+        XCTAssertEqual(body?.contains("pre_collected_consent[consent]=fccons_123"), true)
+    }
+
+    func testSynchronizeOmitsPreCollectedConsentWhenNil() async {
+        var capturedRequest: URLRequest?
+        let configuration = URLSessionConfiguration.ephemeral
+        configuration.protocolClasses = [MockURLProtocol.self]
+        let stpAPIClient = STPAPIClient(publishableKey: "pk_test_123")
+        stpAPIClient.urlSession = URLSession(configuration: configuration)
+        let apiClient = FinancialConnectionsAsyncAPIClient(apiClient: stpAPIClient)
+
+        MockURLProtocol.requestHandler = { request in
+            capturedRequest = request
+            throw TestError.sampleError
+        }
+        defer {
+            MockURLProtocol.requestHandler = nil
+        }
+
+        _ = try? await apiClient.synchronize(
+            clientSecret: "las_client_secret_123",
+            returnURL: nil,
+            initialSynchronize: true,
+            preCollectedConsent: nil
+        )
+
+        let body = capturedRequest?.httpBodyOrBodyStream.flatMap { String(data: $0, encoding: .utf8) }
+        XCTAssertEqual(body?.contains("pre_collected_consent"), false)
+    }
+
     private func makePartnerAccount(linkedAccountId: String) throws -> FinancialConnectionsPartnerAccount {
         let jsonObject: [String: Any] = [
             "id": "fca_123",

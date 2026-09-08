@@ -99,6 +99,7 @@ class HostController {
     private let returnURL: String?
     private let configuration: FinancialConnectionsSheet.Configuration
     private let elementsSessionContext: ElementsSessionContext?
+    private let preCollectedConsent: FinancialConnectionsPreCollectedConsent?
     private let analyticsClient: FinancialConnectionsAnalyticsClient
     private let analyticsClientV1: STPAnalyticsClientProtocol
 
@@ -109,6 +110,7 @@ class HostController {
         clientSecret: clientSecret,
         returnURL: returnURL,
         apiClient: apiClient,
+        preCollectedConsent: preCollectedConsent,
         delegate: self
     )
     lazy var navigationController: FinancialConnectionsNavigationController = {
@@ -128,6 +130,7 @@ class HostController {
         returnURL: String?,
         configuration: FinancialConnectionsSheet.Configuration,
         elementsSessionContext: ElementsSessionContext?,
+        preCollectedConsent: FinancialConnectionsPreCollectedConsent?,
         publishableKey: String?,
         stripeAccount: String?
     ) {
@@ -137,6 +140,7 @@ class HostController {
         self.returnURL = returnURL
         self.configuration = configuration
         self.elementsSessionContext = elementsSessionContext
+        self.preCollectedConsent = preCollectedConsent
         self.analyticsClient = FinancialConnectionsAnalyticsClient()
         analyticsClient.setAdditionalParameters(
             publishableKey: publishableKey,
