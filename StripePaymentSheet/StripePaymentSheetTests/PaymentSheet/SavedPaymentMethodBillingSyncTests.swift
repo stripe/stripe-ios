@@ -121,7 +121,8 @@ private extension SavedPaymentMethodBillingSyncTests {
             savedPaymentMethods: paymentMethods,
             paymentMethodTypes: [.stripe(.card)],
             paymentMethodMessagingPromotionsHelper: ._testValue(),
-            paymentMethodOrientation: .horizontal
+            paymentMethodOrientation: .horizontal,
+            customerProvider: CustomerProvider(checkoutSession: checkout.session)
         )
         return PaymentSheetFlowControllerViewController(
             configuration: PaymentSheet.Configuration(),

@@ -12,7 +12,7 @@ import Foundation
 final class PaymentSheetAnalyticsHelper {
     let analyticsClient: STPAnalyticsClient
     let integrationShape: IntegrationShape
-    let configuration: PaymentElementConfiguration
+    var configuration: PaymentElementConfiguration
 
     /// Logs analytics to `r.stripe.com`.
     let analyticsClientV2: AnalyticsClientV2Protocol
@@ -72,7 +72,7 @@ final class PaymentSheetAnalyticsHelper {
         let event: STPAnalyticEvent = {
             switch integrationShape {
             case .flowController:
-                switch (configuration.customer != nil, configuration.applePay != nil) {
+                switch (configuration.customerProvider.hasCustomer, configuration.applePay != nil) {
                 case (false, false):
                     return .mcInitCustomDefault
                 case (true, false):
@@ -83,7 +83,7 @@ final class PaymentSheetAnalyticsHelper {
                     return .mcInitCustomCustomerApplePay
                 }
             case .complete, .linkController:
-                switch (configuration.customer != nil, configuration.applePay != nil) {
+                switch (configuration.customerProvider.hasCustomer, configuration.applePay != nil) {
                 case (false, false):
                     return .mcInitCompleteDefault
                 case (true, false):
@@ -173,7 +173,7 @@ final class PaymentSheetAnalyticsHelper {
             params["link_mode"] = linkMode.rawValue
         }
         params["link_display"] = configuration.link.display.rawValue
-        if elementsSession.customer?.customerSession != nil {
+        if configuration.customerProvider.usesCustomerSession {
             let setAsDefaultEnabled = elementsSession.paymentMethodSetAsDefaultForPaymentSheet
             params["set_as_default_enabled"] = setAsDefaultEnabled
             if setAsDefaultEnabled {
@@ -583,8 +583,8 @@ extension PaymentElementConfiguration {
         payload["allows_delayed_payment_methods"] = allowsDelayedPaymentMethods
         payload["apple_pay_config"] = applePay != nil
         payload["style"] = style.rawValue
-        payload["customer"] = customer != nil
-        payload["customer_access_provider"] = customer?.customerAccessProvider.analyticValue
+        payload["customer"] = customerProvider.hasCustomer
+        payload["customer_access_provider"] = customerProvider.analyticValue
         payload["return_url"] = returnURL != nil
         payload["default_billing_details"] = defaultBillingDetails != PaymentSheet.BillingDetails()
         payload["save_payment_method_opt_in_behavior"] = savePaymentMethodOptInBehavior.description
