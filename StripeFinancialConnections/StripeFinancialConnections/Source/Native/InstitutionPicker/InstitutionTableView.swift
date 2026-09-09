@@ -364,15 +364,20 @@ final class InstitutionTableView: UIView {
         _ frozen: Bool,
         forInstitution institution: FinancialConnectionsInstitution
     ) {
-        guard
-            let index = institutions.firstIndex(where: { $0.id == institution.id }),
-            let cell = tableView.cellForRow(
-                at: IndexPath(row: index, section: 0)
-            ) as? InstitutionTableViewCell
-        else {
+        guard let index = institutions.firstIndex(where: { $0.id == institution.id }) else {
+            return
+        }
+        let indexPath = IndexPath(row: index, section: 0)
+        guard let cell = tableView.cellForRow(at: indexPath) as? InstitutionTableViewCell else {
             return
         }
         cell.setHighlightFrozen(frozen)
+        if !frozen {
+            // A selected UITableViewCell suppresses its neighboring separators. Clear the
+            // selection when the loading state ends so the Link card's dividers return after
+            // dismissing the OAuth prepane.
+            tableView.deselectRow(at: indexPath, animated: false)
+        }
     }
 
     /// Grays out all visible rows except the one with `institution`.
