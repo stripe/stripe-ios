@@ -60,7 +60,8 @@ final class NetworkingOTPView: UIView {
                     ? UIFont.systemFont(ofSize: 24, weight: .semibold)
                     : UIFont.systemFont(ofSize: 28, weight: .regular),
                 itemCornerRadius: 12,
-                itemHeight: 58
+                itemHeight: 58,
+                itemMaxWidth: dataSource.appearance.colors == .link ? 48 : nil
             ),
             theme: theme
         )
