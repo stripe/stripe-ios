@@ -22,6 +22,13 @@ final class InstitutionTableViewCell: UITableViewCell {
     private var roundsTopCorners = false
     private var roundsBottomCorners = false
 
+    private lazy var dividerView: UIView = {
+        let dividerView = UIView()
+        dividerView.backgroundColor = FinancialConnectionsAppearance.Colors.dividerOnCard
+        dividerView.translatesAutoresizingMaskIntoConstraints = false
+        return dividerView
+    }()
+
     private lazy var overlayView: UIView = {
         let overlayView = UIView()
         overlayView.backgroundColor = FinancialConnectionsAppearance.Colors.background.withAlphaComponent(0.8)
@@ -62,8 +69,7 @@ final class InstitutionTableViewCell: UITableViewCell {
         isHighlightFrozen = frozen
         // Keep UITableViewCell's internal highlight state in sync. While the highlight is
         // frozen, setHighlighted(false:) is intentionally ignored, so UIKit otherwise still
-        // considers the cell highlighted after we restore its resting appearance. UIKit hides
-        // separators next to highlighted cells.
+        // considers the cell highlighted after we restore its resting appearance.
         super.setHighlighted(frozen, animated: false)
         adjustBackgroundColor(isHighlighted: frozen)
     }
@@ -83,13 +89,7 @@ final class InstitutionTableViewCell: UITableViewCell {
             ? FinancialConnectionsAppearance.Colors.backgroundHighlighted
             : restingColor
         backgroundColor = isLinkAppearance ? .clear : contentView.backgroundColor
-        if isLinkAppearance {
-            separatorInset = roundsBottomCorners
-                ? UIEdgeInsets(top: 0, left: .greatestFiniteMagnitude, bottom: 0, right: 0)
-                : UIEdgeInsets(top: 0, left: 72, bottom: 0, right: 0)
-        } else {
-            separatorInset = .zero
-        }
+        dividerView.isHidden = !isLinkAppearance || roundsBottomCorners || isHighlighted
         updateCornerMask(for: contentView, isLinkAppearance: isLinkAppearance)
 
         // fix a bug where the background color of a
@@ -162,6 +162,16 @@ extension InstitutionTableViewCell {
         // Ensure the cell view isn't added to superview more than once.
         self.institutionCellView?.removeFromSuperview()
         contentView.addAndPinSubview(institutionCellView)
+        if dividerView.superview == nil {
+            contentView.addSubview(dividerView)
+            NSLayoutConstraint.activate([
+                dividerView.heightAnchor.constraint(equalToConstant: FinancialConnectionsAppearance.linkDividerThickness),
+                dividerView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 72),
+                dividerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+                dividerView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            ])
+        }
+        contentView.bringSubviewToFront(dividerView)
 
         self.institutionCellView = institutionCellView
     }

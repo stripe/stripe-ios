@@ -155,7 +155,7 @@ private func CreateLinkThemeSeparatorView() -> UIView {
     separatorView.translatesAutoresizingMaskIntoConstraints = false
     container.addSubview(separatorView)
     NSLayoutConstraint.activate([
-        separatorView.heightAnchor.constraint(equalToConstant: 1.0 / UIScreen.main.nativeScale),
+        separatorView.heightAnchor.constraint(equalToConstant: FinancialConnectionsAppearance.linkDividerThickness),
         separatorView.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: 16),
         separatorView.trailingAnchor.constraint(equalTo: container.trailingAnchor),
         separatorView.topAnchor.constraint(equalTo: container.topAnchor),

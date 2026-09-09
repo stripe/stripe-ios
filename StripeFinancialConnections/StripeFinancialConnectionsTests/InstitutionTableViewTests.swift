@@ -32,7 +32,7 @@ final class InstitutionTableViewTests: XCTestCase {
         // When the pressed state is unfrozen after dismissing the OAuth prepane
         institutionTableView.setHighlightFrozen(false, forInstitution: institution)
 
-        // Then UIKit no longer suppresses the row's neighboring separators
+        // Then the cell's selection and pressed state are both cleared
         XCTAssertNil(institutionTableView.tableView.indexPathForSelectedRow)
         let cell = institutionTableView.tableView.cellForRow(at: indexPath)
         XCTAssertFalse(cell?.isHighlighted == true)
