@@ -1,15 +1,19 @@
 The next release's version bump will so far be:
-MINOR
+PATCH
 
 ## X.Y.Z - changes pending release
+
+## 26.10.0 2026-09-08
 ### General
 * [Added] Added support for Arabic (Saudi Arabia).
+* [Added] Added support for Welsh.
 
 ### CryptoOnramp (Alpha)
 * [Added] Added Canada SIN, Colombia NIT, and Philippines TIN values to `IdType`, and added `idType` to the `KycInfo` initializer.
 * [Added] Added `CryptoOnrampCoordinator.presentTermsAndConditionsIfNeeded(from:)` and `presentTermsOfServiceIfNeeded(from:)` to present and record acceptance of current partner terms when required. Both methods return `PartnerTermsResult`.
 
 ### PaymentSheet
+* [Added] Added support for Kakao Pay.
 * [Added] Added support for Naver Pay.
 * [Added] Added support for Korean cards.
 * [Added] Added support for PAYCO.

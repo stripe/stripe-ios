@@ -46,6 +46,8 @@
 
 "Buy now or pay later with Klarna" = "Şimdi satın alın veya daha sonra Klarna ile ödeyin";
 
+"By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "Ödemenizi NICEPAY ile onayladığınızda, %@’in kendi koşullarına uygun olarak gelecekteki ödemeler için bu ödeme yönteminden ücret almasına izin vermiş olursunuz.";
+
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "PayPal'la ödemeyi onayladığınızda, %@ şirketine gelecekteki ödemeler için kendi koşullarına uygun olarak PayPal hesabınızı ücretlendirme izni vermiş olursunuz.";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Amazon Pay'a devam ederek, %@ şirketine gelecekteki ödemeler için kendi koşullarına uygun olarak Amazon Pay hesabınızı ücretlendirme izni vermiş olursunuz.";
@@ -192,6 +194,10 @@
 
 "Name on card" = "Karttaki isim";
 
+"Naver Pay Card" = "Naver Pay Kartı";
+
+"Naver Pay Money/Point" = "Naver Pay Money/Point";
+
 "New card" = "Yeni kart";
 
 "New payment method" = "Yeni ödeme yöntemi";
@@ -287,6 +293,8 @@
 "Saved" = "Kaydedildi";
 
 "Select card" = "Kart seçin";
+
+"Select how you want to pay:" = "Nasıl ödeme yapmak istediğinizi seçin:";
 
 "Select payment method" = "Ödeme yöntemini seçin";
 
