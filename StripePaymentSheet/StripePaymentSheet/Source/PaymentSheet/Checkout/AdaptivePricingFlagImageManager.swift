@@ -118,7 +118,7 @@ final class AdaptivePricingFlagImageManager {
     private func downloadFlagImage(countryCode: String) async -> FlagResult {
         let url = makeFlagImageURL(countryCode: countryCode)
         do {
-            let image = try await downloadManager.downloadImage(url: url)
+            let image = try await downloadManager.image(for: url)
             return .success(image)
         } catch {
             return .failure(url)
