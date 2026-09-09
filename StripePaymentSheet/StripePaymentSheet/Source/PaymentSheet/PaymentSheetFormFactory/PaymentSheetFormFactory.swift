@@ -293,6 +293,12 @@ class PaymentSheetFormFactory {
                     emailRequired: true,
                     emailAPIPath: "billing_details[email]"
                 )
+            case .kakaoPay:
+                return makeContactInformationAndBillingAddressForm(
+                    emailRequired: true,
+                    emailAPIPath: "billing_details[email]",
+                    additionalElements: makeSetupMandateElements(for: paymentMethod)
+                )
             case .mbWay, .bizum:
                 return makeContactInformationAndBillingAddressForm(phoneRequired: true)
             case .cashApp, .payPal, .revolutPay, .amazonPay, .satispay, .twint, .krCard:
@@ -345,6 +351,8 @@ class PaymentSheetFormFactory {
         case .naverPay:
             return [makeKoreanPaymentMethodMandate()]
         case .krCard:
+            return [makeKoreanPaymentMethodMandate()]
+        case .kakaoPay:
             return [makeKoreanPaymentMethodMandate()]
         default:
             return []

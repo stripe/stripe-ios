@@ -94,7 +94,7 @@ extension CheckoutPlayground {
             paymentMethodTypes = settings.paymentMethodTypes
             currencySelectorAppearance = settings.currencySelectorAppearance
             checkoutEndpointOption = settings.checkoutEndpointOption
-            checkoutEndpoint = settings.checkoutEndpoint
+            checkoutEndpoint = EndpointOption.normalizedBaseURL(from: settings.checkoutEndpoint)
             delayPaymentPagesRequests = settings.delayPaymentPagesRequests
             settingsSaveSubscription = objectWillChange.sink { [weak self] _ in
                 guard let self else {
@@ -142,30 +142,27 @@ extension CheckoutPlayground {
             }
 
             do {
-                guard let backendURL = URL(string: checkoutEndpoint) else {
+                guard let backendURL = URL(string: EndpointOption.normalizedBaseURL(from: checkoutEndpoint)) else {
                     throw NSError(domain: "CheckoutPlayground", code: 0, userInfo: [
-                        NSLocalizedDescriptionKey: "Invalid endpoint URL: \(checkoutEndpoint)",
+                        NSLocalizedDescriptionKey: "Invalid backend URL: \(checkoutEndpoint)",
                     ])
                 }
-                let body = buildRequestBody()
-                var request = URLRequest(url: backendURL)
-                request.httpMethod = "POST"
-                request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-                request.httpBody = try JSONSerialization.data(withJSONObject: body)
-
-                let (data, response) = try await URLSession.shared.data(for: request)
-                let httpResponse = response as? HTTPURLResponse
-                let responseString = String(data: data, encoding: .utf8) ?? "(not utf8)"
-                print("[CheckoutPlayground] HTTP status: \(httpResponse?.statusCode ?? -1)")
-                print("[CheckoutPlayground] Response body: \(responseString)")
-
-                guard let json = try JSONSerialization.jsonObject(with: data) as? [String: Any],
-                      let publishableKey = json["publishableKey"] as? String,
-                      let clientSecret = json["checkoutSessionClientSecret"] as? String else {
-                    throw NSError(domain: "CheckoutPlayground", code: 0, userInfo: [
-                        NSLocalizedDescriptionKey: "Invalid backend response: \(responseString)",
-                    ])
-                }
+                let backend = PlaygroundBackend(baseURL: backendURL)
+                let publishableKey = try await backend.fetchPublishableKey()
+                let apiClient = STPAPIClient(publishableKey: publishableKey)
+                let clientSecret = try await SessionFactory(backend: backend, apiClient: apiClient).create(
+                    currency: currency,
+                    customerType: customerType,
+                    lineItems: lineItems,
+                    shippingAddressCollection: shippingAddressCollection,
+                    billingAddressCollection: billingAddressCollection,
+                    automaticTax: automaticTax,
+                    paymentMethodSave: checkoutSessionPaymentMethodSave,
+                    paymentMethodRemove: checkoutSessionPaymentMethodRemove,
+                    adaptivePricingCountry: adaptivePricingCountry,
+                    automaticPaymentMethods: automaticPaymentMethods,
+                    paymentMethodTypes: paymentMethodTypes
+                )
 
                 // Example app behavior: the local backend response controls the Stripe publishable key.
                 STPAPIClient.shared.publishableKey = publishableKey
@@ -178,32 +175,6 @@ extension CheckoutPlayground {
 
         func reset() {
             apply(Settings())
-        }
-
-        private func buildRequestBody() -> [String: Any] {
-            var body: [String: Any] = [
-                "merchant_country_code": "us_tax",
-                "mode": "unified",
-                "use_one_time_price": true,
-                "currency": currency.rawValue,
-                "customer": customerType.rawValue,
-                "shipping_address_collection": shippingAddressCollection,
-                "billing_address_collection": billingAddressCollection == .required,
-                "automatic_tax": automaticTax,
-                "checkout_session_payment_method_save": checkoutSessionPaymentMethodSave ? "enabled" : "disabled",
-                "checkout_session_payment_method_remove": checkoutSessionPaymentMethodRemove ? "enabled" : "disabled",
-            ]
-            if automaticPaymentMethods {
-                body["automatic_payment_methods"] = true
-            } else {
-                body["payment_method_types"] = Array(paymentMethodTypes)
-            }
-            if adaptivePricingCountry != .none {
-                let countryCode = adaptivePricingCountry.rawValue.uppercased()
-                body["customer_email"] = "test+location_\(countryCode)@example.com"
-            }
-
-            return body
         }
 
         private var settings: Settings {
