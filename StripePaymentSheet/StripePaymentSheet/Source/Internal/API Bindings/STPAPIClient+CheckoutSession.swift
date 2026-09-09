@@ -43,6 +43,10 @@ struct CheckoutSessionConfirmationRequestParameters {
     /// The optional hCaptcha challenge response token.
     let passiveCaptchaToken: String?
 
+    /// The optional top-level `customer_data` sent with confirmation.
+    /// TODO: Replace this dictionary with a typed struct.
+    let customerData: [String: Any]?
+
     init(
         sessionId: String,
         paymentMethodId: String?,
@@ -53,7 +57,8 @@ struct CheckoutSessionConfirmationRequestParameters {
         shipping: STPPaymentIntentShippingDetailsParams? = nil,
         paymentMethodOptions: STPConfirmPaymentMethodOptions? = nil,
         clientAttributionMetadata: STPClientAttributionMetadata? = nil,
-        passiveCaptchaToken: String? = nil
+        passiveCaptchaToken: String? = nil,
+        customerData: [String: Any]? = nil
     ) {
         self.sessionId = sessionId
         self.paymentMethodId = paymentMethodId
@@ -65,6 +70,7 @@ struct CheckoutSessionConfirmationRequestParameters {
         self.paymentMethodOptions = paymentMethodOptions
         self.clientAttributionMetadata = clientAttributionMetadata
         self.passiveCaptchaToken = passiveCaptchaToken
+        self.customerData = customerData
     }
 }
 
@@ -297,6 +303,10 @@ extension STPAPIClient {
 
         if let passiveCaptchaToken = requestParameters.passiveCaptchaToken {
             parameters["passive_captcha_token"] = passiveCaptchaToken
+        }
+
+        if let customerData = requestParameters.customerData {
+            parameters["customer_data"] = customerData
         }
 
         return try await post(
