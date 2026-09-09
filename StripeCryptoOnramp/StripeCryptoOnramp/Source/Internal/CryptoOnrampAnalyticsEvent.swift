@@ -18,6 +18,8 @@ enum CryptoOnrampOperation: String {
     case retrieveMissingIdentifiers = "retrieve_missing_identifiers"
     case submitIdentifiers = "submit_identifiers"
     case presentUserAttestation = "present_user_attestation"
+    case presentTermsAndConditionsIfNeeded = "present_terms_and_conditions_if_needed"
+    case presentTermsOfServiceIfNeeded = "present_terms_of_service_if_needed"
     case verifyKycInfo = "verify_kyc_info"
     case verifyIdentity = "verify_identity"
     case registerWalletAddress = "register_wallet_address"
@@ -45,6 +47,10 @@ enum CryptoOnrampAnalyticsEvent {
     case identifiersSubmitted(completed: Bool)
     case userAttestationStarted
     case userAttestationCompleted
+    case termsAndConditionsStarted
+    case termsAndConditionsCompleted
+    case termsOfServiceStarted
+    case termsOfServiceCompleted
     case kycInfoVerificationStarted
     case kycInfoVerificationCompleted
     case walletRegistered(network: String)
@@ -89,6 +95,14 @@ enum CryptoOnrampAnalyticsEvent {
             return "onramp.user_attestation_started"
         case .userAttestationCompleted:
             return "onramp.user_attestation_completed"
+        case .termsAndConditionsStarted:
+            return "onramp.terms_and_conditions_started"
+        case .termsAndConditionsCompleted:
+            return "onramp.terms_and_conditions_completed"
+        case .termsOfServiceStarted:
+            return "onramp.terms_of_service_started"
+        case .termsOfServiceCompleted:
+            return "onramp.terms_of_service_completed"
         case .kycInfoVerificationStarted:
             return "onramp.kyc_info_verification_started"
         case .kycInfoVerificationCompleted:
@@ -129,6 +143,10 @@ enum CryptoOnrampAnalyticsEvent {
              .identityVerificationCompleted,
              .kycInfoSubmitted,
              .userAttestationCompleted,
+             .termsAndConditionsStarted,
+             .termsAndConditionsCompleted,
+             .termsOfServiceStarted,
+             .termsOfServiceCompleted,
              .identifierRequirementsRetrieved,
              .userAttestationStarted,
              .kycInfoVerificationStarted,

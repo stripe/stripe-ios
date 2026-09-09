@@ -194,6 +194,50 @@ extension STPAPIClient {
         return try await post(resource: endpoint, object: requestObject)
     }
 
+    /// Retrieves the current partner declaration state for the current Link user.
+    /// - Parameters:
+    ///   - declarationType: The type of declaration to retrieve.
+    ///   - linkAccountInfo: Information associated with the Link account including the client secret and whether the account has been verified.
+    /// - Returns: The current partner declaration state.
+    /// Throws if the `linkAccountSessionState` is not verified, a client secret doesn’t exist, or if an API error occurs.
+    func retrievePartnerTerms(declarationType: PartnerDeclarationType, linkAccountInfo: PaymentSheetLinkAccountInfoProtocol) async throws -> PartnerTerms {
+        guard let consumerSessionClientSecret = linkAccountInfo.consumerSessionClientSecret else {
+            throw CryptoOnrampAPIError.missingConsumerSessionClientSecret
+        }
+
+        try validateSessionState(using: linkAccountInfo)
+
+        let endpoint = "crypto/internal/partner_terms"
+        let request = RetrievePartnerTermsRequest(declarationType: declarationType)
+        return try await get(
+            resource: endpoint,
+            parameters: try request.encodeJSONDictionary(),
+            consumerSessionClientSecret: consumerSessionClientSecret
+        )
+    }
+
+    /// Confirms the current Link user accepted a partner declaration.
+    /// - Parameters:
+    ///   - declarationId: The unique identifier of the declaration accepted by the customer.
+    ///   - linkAccountInfo: Information associated with the Link account including the client secret and whether the account has been verified.
+    /// - Returns: An empty response.
+    /// Throws if the `linkAccountSessionState` is not verified, a client secret doesn’t exist, or if an API error occurs.
+    @discardableResult
+    func confirmPartnerTerms(declarationId: String, linkAccountInfo: PaymentSheetLinkAccountInfoProtocol) async throws -> EmptyResponse {
+        guard let consumerSessionClientSecret = linkAccountInfo.consumerSessionClientSecret else {
+            throw CryptoOnrampAPIError.missingConsumerSessionClientSecret
+        }
+
+        try validateSessionState(using: linkAccountInfo)
+
+        let endpoint = "crypto/internal/partner_terms"
+        let requestObject = ConfirmPartnerTermsRequest(
+            credentials: Credentials(consumerSessionClientSecret: consumerSessionClientSecret),
+            declarationId: declarationId
+        )
+        return try await post(resource: endpoint, object: requestObject)
+    }
+
     /// Begins an identity verification session, providing the necessary data used to initialize the Identity SDK.
     /// - Parameter linkAccountInfo: Information associated with the link account including the client secret and whether the account has been verified.
     /// - Returns: API response that includes information used to initialize the Identity SDK.

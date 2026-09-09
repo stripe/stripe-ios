@@ -140,6 +140,10 @@ struct CryptoOnrampExampleView: View {
                                     coordinator: coordinator
                                 )
                             }
+                        case .termsOfService:
+                            TermsOfServicePresentingView(coordinator: coordinator) {
+                                flowCoordinator.advanceAfterTermsOfService()
+                            }
                         case let .complianceIdentifiers(requirements):
                             ComplianceIdentifiersEntryView(
                                 coordinator: coordinator,
