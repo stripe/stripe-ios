@@ -46,6 +46,8 @@
 
 "Buy now or pay later with Klarna" = "Ostke nüüd või makske hiljem Klarnaga";
 
+"By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "NICEPAY kaudu makse kinnitamisega lubate ettevõttel %@ debiteerida edaspidi makseid sellelt makseviisilt vastavalt nende tingimustele.";
+
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "PayPaliga makset kinnitades lubate %@-l võtta teie PayPali kontolt tulevaste maksete eest tasu vastavalt nende tingimustele.";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Amazon Payga jätkates lubate %@ teie Amazon Pay kontot tulevaste maksete tegemiseks vastavalt nende tingimustele.";
@@ -192,6 +194,10 @@
 
 "Name on card" = "Nimi kaardil";
 
+"Naver Pay Card" = "Naver Pay Card";
+
+"Naver Pay Money/Point" = "Naver Pay Money/Point";
+
 "New card" = "Uus kaart";
 
 "New payment method" = "Uus makseviis";
@@ -287,6 +293,8 @@
 "Saved" = "Salvestatud";
 
 "Select card" = "Vali kaart";
+
+"Select how you want to pay:" = "Valige, kuidas soovite maksta:";
 
 "Select payment method" = "Vali makseviis";
 

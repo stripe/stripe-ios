@@ -46,6 +46,8 @@
 
 "Buy now or pay later with Klarna" = "Beli sekarang atau bayar kemudian dengan Klarna";
 
+"By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "Dengan mengesahkan pembayaran anda dengan NICEPAY, anda membenarkan %@ untuk mengecaj kaedah pembayaran ini bagi pembayaran akan datang mengikut terma mereka.";
+
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Dengan mengesahkan pembayaran anda dengan PayPal, anda membenarkan %@ mengecaj akaun PayPal anda bagi pembayaran masa hadapan menurut terma mereka.";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Dengan meneruskan langkah ke Amazon Pay, anda membenarkan %@ mengecaj akaun Amazon Pay anda bagi pembayaran masa hadapan menurut terma mereka.";
@@ -192,6 +194,10 @@
 
 "Name on card" = "Nama pada kad";
 
+"Naver Pay Card" = "Kad Naver Pay";
+
+"Naver Pay Money/Point" = "Naver Pay Money/Point";
+
 "New card" = "Kad baharu";
 
 "New payment method" = "Kaedah pembayaran baharu";
@@ -287,6 +293,8 @@
 "Saved" = "Disimpan";
 
 "Select card" = "Pilih kad";
+
+"Select how you want to pay:" = "Pilih cara anda ingin membayar:";
 
 "Select payment method" = "Pilih kaedah pembayaran";
 

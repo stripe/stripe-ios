@@ -262,7 +262,7 @@ extension PaymentSheet {
                     switch paymentMethod {
                     case .card:
                         return []
-                    case .alipay, .payPal, .cashApp, .revolutPay, .amazonPay, .klarna, .satispay, .twint, .naverPay, .krCard:
+                    case .alipay, .payPal, .cashApp, .revolutPay, .amazonPay, .klarna, .satispay, .twint, .kakaoPay, .naverPay, .krCard:
                         return [.returnURL]
                     case .USBankAccount, .boleto:
                         return [.userSupportsDelayedPaymentMethods]
@@ -277,7 +277,7 @@ extension PaymentSheet {
                         .netBanking, .OXXO, .afterpayClearpay, .link, .affirm, .paynow, .zip, .alma,
                         .mobilePay, .vipps, .unknown, .konbini, .promptPay, .swish, .multibanco,
                         .sunbit, .billie, .crypto, .payPay, .wero, .payByBank, .mbWay, .bizum,
-                        .kakaoPay, .payco, .sequra, .scalapay:
+                        .payco, .sequra, .scalapay:
                         return [.unsupportedForSetup]
                     @unknown default:
                         return [.unsupportedForSetup]
@@ -291,7 +291,7 @@ extension PaymentSheet {
                     case .alipay, .EPS, .FPX, .grabPay, .netBanking, .payPal, .przelewy24, .klarna,
                             .bancontact, .iDEAL, .cashApp, .affirm, .zip, .revolutPay, .amazonPay, .alma,
                             .mobilePay, .vipps, .swish, .twint, .sunbit, .billie, .satispay, .crypto, .afterpayClearpay, .payPay,
-                            .wero, .payByBank, .krCard, .naverPay, .payco, .sequra, .scalapay:
+                            .wero, .payByBank, .kakaoPay, .krCard, .naverPay, .payco, .sequra, .scalapay:
                         return [.returnURL]
                     case .USBankAccount:
                         return [
@@ -302,7 +302,7 @@ extension PaymentSheet {
                         return [.userSupportsDelayedPaymentMethods]
                     case .bacsDebit:
                         return [.returnURL, .userSupportsDelayedPaymentMethods]
-                    case .kakaoPay, .link, .unknown:
+                    case .link, .unknown:
                         return [.unsupported]
                     @unknown default:
                         return [.unsupported]
