@@ -63,6 +63,9 @@
 /* The title of a sheet that appears when the user attempts to exit the bank linking screen. */
 "Exit without connecting?" = "Exit without connecting?";
 
+/* A button title. Pressing it exits the bank account connection flow. */
+"Exit" = "Exit";
+
 /* Error message when one-time-passcode (OTP) is invalid. */
 "Hmm, that code didn’t work. Double check it and try again." = "Hmm, that code didn’t work. Double check it and try again.";
 
@@ -234,6 +237,12 @@
 /* The subtitle/description of a screen that shows an error. The error is generic: something wrong happened and we are not sure what. */
 "Your account can’t be connected at this time. Please try again later." = "Your account can’t be connected at this time. Please try again later.";
 
+/* The subtitle/description of a sheet that appears when the user attempts to exit the bank linking screen. */
+"Your bank account won’t be connected and all progress will be lost." = "Your bank account won’t be connected and all progress will be lost.";
+
+/* The subtitle/description of a sheet that appears when the user attempts to exit the bank linking screen. '%@' is replaced by the business name. */
+"Your bank account won’t be connected to %@ and all progress will be lost." = "Your bank account won’t be connected to %@ and all progress will be lost.";
+
 /* The title of a screen that shows an error. The error appears after we failed to access users bank account. */
 "Your account number couldn’t be accessed at this time" = "Your account number couldn’t be accessed at this time";
 
@@ -269,4 +278,3 @@
 
 /* An error message that instructs the user to keep typing their phone number in a user-input field. */
 "Your mobile phone number is incomplete." = "Your mobile phone number is incomplete.";
-

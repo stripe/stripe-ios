@@ -114,6 +114,7 @@ class NativeFlowController {
         if showConfirmationAlert {
             let closeConfirmationViewController = CloseConfirmationViewController(
                 appearance: dataManager.manifest.appearance,
+                businessName: dataManager.manifest.businessName,
                 didSelectClose: {
                     finishClosingAuthFlow()
                 }
