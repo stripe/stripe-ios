@@ -80,6 +80,9 @@ extension CheckoutController {
 
         let paymentStatus: Status.PaymentStatus
         let paymentMethodOptions: STPPaymentMethodOptions?
+        /// The immutable email provided when creating the Checkout Session, either through
+        /// `customer_email` or the Checkout Session's Customer's email.
+        let serverEmail: String?
         var localState: LocalState
         let customer: PaymentPagesAPIResponse.Customer?
         let savedPaymentMethodsOfferSave: STPCheckoutSessionSavedPaymentMethodsOfferSave?
@@ -157,6 +160,7 @@ extension CheckoutController.Session {
         if automaticTaxEnabled && automaticTaxAddressSource == "billing" {
             elementsSessionValue.disableLinkForAutomaticTaxBilling = true
         }
+        let serverEmail = apiResponse.customerEmail ?? apiResponse.customer?.email
 
         self.init(
             id: apiResponse.sessionId,
@@ -164,7 +168,7 @@ extension CheckoutController.Session {
             currency: apiResponse.adaptivePricingInfo?.integrationCurrency ?? apiResponse.currency,
             presentmentDetails: presentmentDetails,
             discountAmounts: publicDiscountAmounts,
-            email: apiResponse.customerEmail ?? apiResponse.customer?.email,
+            email: serverEmail,
             orderSummaryItems: publicOrderSummaryItems,
             livemode: apiResponse.livemode,
             minorUnitsAmountDivisor: PaymentPagesAPIResponse.makeMinorUnitsAmountDivisor(
@@ -176,6 +180,7 @@ extension CheckoutController.Session {
             totals: publicTotals,
             paymentStatus: apiResponse.paymentStatus,
             paymentMethodOptions: apiResponse.paymentMethodOptions,
+            serverEmail: serverEmail,
             localState: localState,
             customer: apiResponse.customer,
             savedPaymentMethodsOfferSave: PaymentPagesAPIResponse.makeSavedPaymentMethodsOfferSave(
