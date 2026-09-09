@@ -72,7 +72,9 @@ final class NetworkingOTPView: UIView {
         var theme: ElementsAppearance = .default
         theme.colors = {
             var colors = ElementsAppearance.Color()
-            colors.border = FinancialConnectionsAppearance.Colors.borderNeutral
+            colors.border = dataSource.appearance.colors == .link
+                ? .clear
+                : FinancialConnectionsAppearance.Colors.borderNeutral
             // Link DS 3.0: the code puncher has a grey background in every state
             // (default, filled, error), matching Figma's Surface/Secondary token.
             colors.componentBackground = dataSource.appearance.colors == .link
