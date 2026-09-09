@@ -15,13 +15,13 @@ struct CheckoutSessionConfirmationRequestParameters {
     let sessionId: String
 
     /// The ID of the PaymentMethod to use for confirmation. The PaymentMethod must have a billing email.
-    let paymentMethodId: String
+    let paymentMethodId: String?
 
     /// The expected amount for validation. `nil` for setup-style Sessions.
     let expectedAmount: Int?
 
     /// The expected PaymentMethod type (e.g., `card`).
-    let expectedPaymentMethodType: String
+    let expectedPaymentMethodType: String?
 
     /// The optional top-level `save_payment_method` value that controls whether confirmation
     /// attaches the PaymentMethod to the Checkout Session's customer.
@@ -45,9 +45,9 @@ struct CheckoutSessionConfirmationRequestParameters {
 
     init(
         sessionId: String,
-        paymentMethodId: String,
+        paymentMethodId: String?,
         expectedAmount: Int?,
-        expectedPaymentMethodType: String,
+        expectedPaymentMethodType: String?,
         savePaymentMethod: Bool? = nil,
         returnURL: String? = nil,
         shipping: STPPaymentIntentShippingDetailsParams? = nil,
@@ -253,8 +253,6 @@ extension STPAPIClient {
         with requestParameters: CheckoutSessionConfirmationRequestParameters
     ) async throws -> PaymentPagesAPIResponse {
         var parameters: [String: Any] = [
-            "payment_method": requestParameters.paymentMethodId,
-            "expected_payment_method_type": requestParameters.expectedPaymentMethodType,
             "elements_session_client": ["is_aggregation_expected": true],
             "expand": [
                 "payment_intent",
@@ -263,6 +261,14 @@ extension STPAPIClient {
                 "setup_intent.payment_method",
             ],
         ]
+
+        if let paymentMethodId = requestParameters.paymentMethodId {
+            parameters["payment_method"] = paymentMethodId
+        }
+
+        if let expectedPaymentMethodType = requestParameters.expectedPaymentMethodType {
+            parameters["expected_payment_method_type"] = expectedPaymentMethodType
+        }
 
         if let expectedAmount = requestParameters.expectedAmount {
             parameters["expected_amount"] = expectedAmount
