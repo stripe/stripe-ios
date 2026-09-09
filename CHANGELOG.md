@@ -6,6 +6,9 @@ PATCH
 ### General
 * [Added] Added support for Welsh.
 
+### Payments
+* [Added] Added API bindings for Scalapay.
+
 ## 26.10.0 2026-09-08
 ### General
 * [Added] Added support for Arabic (Saudi Arabia).
