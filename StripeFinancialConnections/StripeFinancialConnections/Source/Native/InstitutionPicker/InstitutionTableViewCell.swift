@@ -60,6 +60,11 @@ final class InstitutionTableViewCell: UITableViewCell {
     /// keeping it visually "selected" while its loading state is shown.
     func setHighlightFrozen(_ frozen: Bool) {
         isHighlightFrozen = frozen
+        // Keep UITableViewCell's internal highlight state in sync. While the highlight is
+        // frozen, setHighlighted(false:) is intentionally ignored, so UIKit otherwise still
+        // considers the cell highlighted after we restore its resting appearance. UIKit hides
+        // separators next to highlighted cells.
+        super.setHighlighted(frozen, animated: false)
         adjustBackgroundColor(isHighlighted: frozen)
     }
 
