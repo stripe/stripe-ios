@@ -43,8 +43,9 @@ struct CheckoutSessionConfirmationRequestParameters {
     /// The optional hCaptcha challenge response token.
     let passiveCaptchaToken: String?
 
-    /// The optional top-level `customer_data` sent with confirmation.
-    /// TODO: Replace this dictionary with a typed struct.
+    /// Legacy customer information required today when confirming without a PaymentMethod.
+    /// TODO: Remove this once the server can construct no-PaymentMethod `CustomerInfo` entirely
+    /// from fixed and independently collected information.
     let customerData: [String: Any]?
 
     init(
