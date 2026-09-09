@@ -129,10 +129,10 @@ final class AccountPickerSelectionListView: UIView {
 
     private func makeSeparator() -> UIView {
         let separator = UIView()
-        separator.backgroundColor = FinancialConnectionsAppearance.Colors.borderNeutral
+        separator.backgroundColor = FinancialConnectionsAppearance.Colors.dividerOnCard
         separator.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            separator.heightAnchor.constraint(equalToConstant: 1.0 / UIScreen.main.nativeScale),
+            separator.heightAnchor.constraint(equalToConstant: FinancialConnectionsAppearance.linkDividerThickness),
         ])
         return separator
     }

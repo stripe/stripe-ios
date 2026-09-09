@@ -12,6 +12,7 @@ import UIKit
 struct FinancialConnectionsAppearance: Equatable {
     static let stripe: Self = .init(theme: .light)
     static let link: Self = .init(theme: .linkLight)
+    static let linkDividerThickness: CGFloat = 3.0 / UIScreen.main.nativeScale
 
     private enum ResolvedBrand: Equatable {
         case stripe

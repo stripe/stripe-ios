@@ -125,10 +125,10 @@ final class LinkAccountPickerBodyView: UIView {
         wrapper.isLayoutMarginsRelativeArrangement = true
         wrapper.directionalLayoutMargins = NSDirectionalEdgeInsets(top: 0, leading: 84, bottom: 0, trailing: 0)
         let separator = UIView()
-        separator.backgroundColor = FinancialConnectionsAppearance.Colors.borderNeutral
+        separator.backgroundColor = FinancialConnectionsAppearance.Colors.dividerOnCard
         separator.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            separator.heightAnchor.constraint(equalToConstant: 1.0 / UIScreen.main.nativeScale),
+            separator.heightAnchor.constraint(equalToConstant: FinancialConnectionsAppearance.linkDividerThickness),
         ])
         wrapper.addArrangedSubview(separator)
         return wrapper

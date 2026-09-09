@@ -18,9 +18,6 @@ final class InstitutionTableFooterView: UIView {
         subtitle: String?,
         image: Image,
         appearance: FinancialConnectionsAppearance,
-        // Only the "Search for more banks" footer sits directly below the institution
-        // list, so it's the only one that needs a divider above it matching the rows.
-        showsDividerAboveContent: Bool = false,
         didSelect: @escaping () -> Void
     ) {
         self.didSelect = didSelect
@@ -43,22 +40,6 @@ final class InstitutionTableFooterView: UIView {
             subtitle: subtitle
         )
 
-        let contentView: UIView
-        if appearance.colors == .link && showsDividerAboveContent {
-            // `institutionCellView` sits in a `tableFooterView`, which the table view
-            // does not draw its row separator above, so add one to match the rows above.
-            let verticalStackView = UIStackView(
-                arrangedSubviews: [
-                    CreateDividerView(),
-                    institutionCellView,
-                ]
-            )
-            verticalStackView.axis = .vertical
-            contentView = verticalStackView
-        } else {
-            contentView = institutionCellView
-        }
-
         if appearance.colors == .link {
             backgroundColor = appearance.colors.iconBackground
             layer.cornerRadius = 12
@@ -66,7 +47,7 @@ final class InstitutionTableFooterView: UIView {
             layer.masksToBounds = true
         }
 
-        addAndPinSubview(contentView)
+        addAndPinSubview(institutionCellView)
 
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapView))
         tapGestureRecognizer.delegate = self
@@ -82,26 +63,6 @@ final class InstitutionTableFooterView: UIView {
     @objc private func didTapView() {
         didSelect()
     }
-}
-
-private func CreateDividerView() -> UIView {
-    let dividerView = UIView()
-    dividerView.backgroundColor = FinancialConnectionsAppearance.Colors.dividerOnCard
-    dividerView.translatesAutoresizingMaskIntoConstraints = false
-
-    let containerView = UIView()
-    containerView.addSubview(dividerView)
-    let hairline = 3.0 / UIScreen.main.nativeScale
-    NSLayoutConstraint.activate([
-        dividerView.heightAnchor.constraint(equalToConstant: hairline),
-        dividerView.topAnchor.constraint(equalTo: containerView.topAnchor),
-        dividerView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
-        // matches the `InstitutionTableView` row separator inset, so the line
-        // starts below where the row titles start (past the icon)
-        dividerView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 72),
-        dividerView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
-    ])
-    return containerView
 }
 
 // MARK: - UITapGestureRecognizer

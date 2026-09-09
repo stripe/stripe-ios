@@ -89,7 +89,6 @@ final class InstitutionTableView: UIView {
                 subtitle: nil,
                 image: .search,
                 appearance: appearance,
-                showsDividerAboveContent: true,
                 didSelect: { [weak self] in
                     guard let self = self else { return }
                     FeedbackGeneratorAdapter.buttonTapped()
@@ -141,9 +140,7 @@ final class InstitutionTableView: UIView {
                 bottom: 0,
                 right: -Constants.Layout.defaultHorizontalMargin
             )
-            tableView.separatorStyle = .singleLine
-            tableView.separatorColor = FinancialConnectionsAppearance.Colors.dividerOnCard
-            tableView.separatorInset = UIEdgeInsets(top: 0, left: 72, bottom: 0, right: 0)
+            tableView.separatorStyle = .none
         } else {
             tableView.backgroundColor = FinancialConnectionsAppearance.Colors.background
             tableView.separatorInset = .zero
@@ -373,9 +370,8 @@ final class InstitutionTableView: UIView {
         }
         cell.setHighlightFrozen(frozen)
         if !frozen {
-            // A selected UITableViewCell suppresses its neighboring separators. Clear the
-            // selection when the loading state ends so the Link card's dividers return after
-            // dismissing the OAuth prepane.
+            // Clear UIKit's internal selection state when the loading state ends so it does
+            // not linger after dismissing the OAuth prepane.
             tableView.deselectRow(at: indexPath, animated: false)
         }
     }
