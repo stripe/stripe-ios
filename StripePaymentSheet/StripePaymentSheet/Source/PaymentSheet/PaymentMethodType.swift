@@ -277,7 +277,7 @@ extension PaymentSheet {
                         .netBanking, .OXXO, .afterpayClearpay, .link, .affirm, .paynow, .zip, .alma,
                         .mobilePay, .vipps, .unknown, .konbini, .promptPay, .swish, .multibanco,
                         .sunbit, .billie, .crypto, .payPay, .wero, .payByBank, .mbWay, .bizum,
-                        .kakaoPay, .payco, .sequra, .scalapay:
+                        .payco, .sequra, .scalapay:
                         return [.unsupportedForSetup]
                     @unknown default:
                         return [.unsupportedForSetup]
@@ -302,7 +302,7 @@ extension PaymentSheet {
                         return [.userSupportsDelayedPaymentMethods]
                     case .bacsDebit:
                         return [.returnURL, .userSupportsDelayedPaymentMethods]
-                    case .kakaoPay, .scalapay, .link, .unknown:
+                    case .scalapay, .link, .unknown:
                         return [.unsupported]
                     @unknown default:
                         return [.unsupported]
