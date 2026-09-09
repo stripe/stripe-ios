@@ -46,6 +46,8 @@
 
 "Buy now or pay later with Klarna" = "Køb nu eller betal senere med Klarna";
 
+"By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "Ved at bekræfte din betaling med NICEPAY tillader du, at %@ debiterer denne betalingsmetode for fremtidige betalinger i overensstemmelse med deres vilkår.";
+
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Ved at bekræfte din betaling med PayPal, tillader du %@ at debitere din PayPal-konto for fremtidige betalinger i overensstemmelse med deres vilkår.";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Ved at fortsætte til Amazon Pay, tillader du %@ at debitere din Revolut Pay-konto for fremtidige betalinger i overensstemmelse med deres vilkår.";
@@ -85,6 +87,8 @@
 "By providing your phone number, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Ved at angive dit telefonnummer accepterer du at oprette en %1$@-konto og gemme dine betalingsoplysninger på %1$@ i henhold til <terms>vilkårene</terms> og <privacy>privatlivspolitikken</privacy> for %1$@.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Ved at gemme din bankkonto for %@ accepterer du at godkende betalinger i henhold til <terms>disse vilkår</terms>.";
+
+"By saving your payment information, you allow %@ to charge you for future payments in accordance with their terms." = "Ved at gemme dine betalingsoplysninger giver du %@ tilladelse til at debitere dig for fremtidige betalinger i overensstemmelse med deres vilkår.";
 
 "By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "Ved at indsende din ordre til %1$@ og %2$@ accepterer du, at dine oplysninger gemmes hos %3$@ til senere køb, og accepterer, at betalinger godkendes i henhold til <terms>disse vilkår</terms>.";
 
@@ -190,6 +194,10 @@
 
 "Name on card" = "Kortholderens navn";
 
+"Naver Pay Card" = "Naver Pay-kort";
+
+"Naver Pay Money/Point" = "Naver Pay Money/Point";
+
 "New card" = "Nyt kort";
 
 "New payment method" = "Ny betalingsmetode";
@@ -285,6 +293,8 @@
 "Saved" = "Gemt";
 
 "Select card" = "Vælg kort";
+
+"Select how you want to pay:" = "Vælg, hvordan du vil betale:";
 
 "Select payment method" = "Vælg betalingsmetode";
 

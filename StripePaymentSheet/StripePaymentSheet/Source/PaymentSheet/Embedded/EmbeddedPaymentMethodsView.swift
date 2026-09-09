@@ -215,8 +215,8 @@ class EmbeddedPaymentMethodsView: UIView {
             if let initialSelectedRowChangeButtonState {
                 selectedRowChangeButtonState = initialSelectedRowChangeButtonState
                 if initialSelectedRowChangeButtonState.shouldShowChangeButton {
-                    rowButtonMatchingInitialSelection.addChangeButton()
-                    rowButtonMatchingInitialSelection.setSublabel(text: initialSelectedRowChangeButtonState.sublabel)
+                    rowButtonMatchingInitialSelection.addChangeButton(animated: false)
+                    rowButtonMatchingInitialSelection.setSublabel(text: initialSelectedRowChangeButtonState.sublabel, animated: false)
                 }
             }
             self.selectedRowButton = rowButtonMatchingInitialSelection
@@ -600,16 +600,20 @@ extension Array where Element == STPPaymentMethod {
 }
 
 extension RowButton {
-    func addChangeButton() {
+    func addChangeButton(animated: Bool = true) {
         // Hack: We assume the accessory view is "Change >"
         self.accessoryView?.isHidden = false
+        makeSameHeightAsOtherRowButtonsIfNecessary()
+        guard animated else {
+            self.accessoryView?.alpha = 1
+            return
+        }
         self.setNeedsLayout()
         self.layoutIfNeeded()
         self.accessoryView?.alpha = 0
         UIView.animate(withDuration: 0.2) {
             self.accessoryView?.alpha = 1
         }
-        makeSameHeightAsOtherRowButtonsIfNecessary()
     }
 
     func removeChangeButton(shouldClearSublabel: Bool) {

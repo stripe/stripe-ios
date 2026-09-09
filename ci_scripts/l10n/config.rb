@@ -7,9 +7,11 @@ DEVELOPMENT_LANGUAGE = 'en'
 
 # Languages that we localize to.
 LANGUAGES = %w[
+  ar-SA
   bg-BG
   ca-ES
   cs-CZ
+  cy-GB
   da
   de
   el-GR

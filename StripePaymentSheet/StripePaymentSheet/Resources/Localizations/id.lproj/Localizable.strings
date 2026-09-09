@@ -46,6 +46,8 @@
 
 "Buy now or pay later with Klarna" = "Beli sekarang atau bayar nanti dengan Klarna";
 
+"By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "Dengan mengonfirmasi pembayaran Anda dengan NICEPAY, Anda mengizinkan %@ untuk men-charge metode pembayaran ini untuk pembayaran di masa mendatang sesuai dengan ketentuan mereka.";
+
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Dengan mengonfirmasi pembayaran menggunakan PayPal, berarti Anda mengizinkan %@ mengenakan charge untuk pembayaran mendatang pada akun PayPal Anda sesuai dengan ketentuan mereka.";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Dengan melanjutkan ke Amazon Pay, berarti Anda mengizinkan %@ mengenakan charge untuk pembayaran mendatang pada akun Amazon Pay Anda sesuai dengan ketentuan mereka.";
@@ -85,6 +87,8 @@
 "By providing your phone number, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Dengan memberikan nomor telepon, berarti Anda setuju untuk membuat akun %1$@ dan menyimpan info pembayaran Anda ke %1$@, sesuai dengan <terms>Ketentuan</terms> dan <privacy>Kebijakan Privasi </privacy> %1$@.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Dengan menyimpan rekening bank Anda untuk %@, Anda berarti setuju untuk mengotorisasi pembayaran sesuai dengan <terms>ketentuan-ketentuan berikut</terms>.";
+
+"By saving your payment information, you allow %@ to charge you for future payments in accordance with their terms." = "Dengan menyimpan informasi pembayaran Anda, Anda mengizinkan %@ untuk men-charge Anda atas pembayaran mendatang sesuai dengan ketentuannya.";
 
 "By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "Dengan mengirimkan pesanan ke %1$@ dan %2$@, Anda setuju untuk menyimpan informasi Anda dengan %3$@ untuk pembelian di masa mendatang, dan setuju untuk mengotorisasi pembayaran sesuai dengan <terms>ketentuan ini</terms>.";
 
@@ -190,6 +194,10 @@
 
 "Name on card" = "Nama pada kartu";
 
+"Naver Pay Card" = "Naver Pay Card";
+
+"Naver Pay Money/Point" = "Naver Pay Money/Point";
+
 "New card" = "Kartu baru";
 
 "New payment method" = "Metode pembayaran baru";
@@ -285,6 +293,8 @@
 "Saved" = "Disimpan";
 
 "Select card" = "Pilih kartu";
+
+"Select how you want to pay:" = "Pilih cara Anda ingin membayar:";
 
 "Select payment method" = "Pilih metode pembayaran";
 

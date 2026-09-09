@@ -29,7 +29,7 @@ struct PaymentSheetTestPlayground: View {
     func clientSettings(searchText: Binding<String>) -> some View {
         SearchableSettingView(
             setting: uiStyleBinding,
-            disabledSettings: playgroundController.settings.integrationType == .checkoutSession ? [.paymentSheet] : [],
+            disabledSettings: [],
             searchText: searchText
         )
         if playgroundController.settings.uiStyle != .embedded {
@@ -213,24 +213,6 @@ struct PaymentSheetTestPlayground: View {
                                             playgroundController.customerSessionSettingsTapped()
                                         } label: {
                                             Text("CSSettings")
-                                                .font(.callout.smallCaps())
-                                        }.buttonStyle(.bordered)
-                                    }
-                                }
-                            }
-                        }
-
-                        if playgroundController.settings.integrationType == .checkoutSession {
-                            SearchableView(searchableName: "Checkout Session", searchText: $searchText) {
-                                VStack {
-                                    HStack {
-                                        Text("Checkout Session")
-                                            .font(.subheadline)
-                                        Spacer()
-                                        Button {
-                                            playgroundController.checkoutSessionSettingsTapped()
-                                        } label: {
-                                            Text("CS Settings")
                                                 .font(.callout.smallCaps())
                                         }.buttonStyle(.bordered)
                                     }
@@ -450,10 +432,6 @@ struct PaymentSheetTestPlayground: View {
             if newIntegrationType == .normal && playgroundController.settings.uiStyle == .embedded {
                 playgroundController.settings.uiStyle = .paymentSheet
             }
-            // PaymentSheet does not support checkout session; switch to flow controller
-            if newIntegrationType == .checkoutSession && playgroundController.settings.uiStyle == .paymentSheet {
-                playgroundController.settings.uiStyle = .flowController
-            }
             playgroundController.settings.integrationType = newIntegrationType
         }
     }
@@ -508,7 +486,6 @@ struct PaymentSheetButtons: View {
     @State private var embeddedIsPresented: Bool = false
     @State private var psFCOptionsIsPresented: Bool = false
     @State private var psFCIsConfirming: Bool = false
-    @State private var showingCart: Bool = false
 
     func reloadPlaygroundController() {
         playgroundController.load(reinitializeControllers: true)
@@ -519,19 +496,6 @@ struct PaymentSheetButtons: View {
     @ViewBuilder
     var embeddedSettingsView: some View {
         EmbeddedSettingsView()
-    }
-
-    @ViewBuilder
-    var cartButton: some View {
-        if playgroundController.checkout != nil {
-            Button {
-                showingCart = true
-            } label: {
-                Label("Cart", systemImage: "cart.fill")
-                    .font(.callout.smallCaps())
-            }
-            .buttonStyle(.bordered)
-        }
     }
 
     var titleAndReloadView: some View {
@@ -572,7 +536,6 @@ struct PaymentSheetButtons: View {
                             }
                             .paymentSheet(isPresented: $psIsPresented, paymentSheet: ps, onCompletion: playgroundController.onPSCompletion)
                             Spacer()
-                            cartButton
                             Button {
                                 playgroundController.didTapShippingAddressButton()
                             } label: {
@@ -603,7 +566,6 @@ struct PaymentSheetButtons: View {
                             }
                             .disabled(playgroundController.paymentSheetFlowController == nil)
                             .padding()
-                            cartButton
                             Button {
                                 playgroundController.didTapShippingAddressButton()
                             } label: {
@@ -645,7 +607,6 @@ struct PaymentSheetButtons: View {
                                 Text("Present embedded payment element")
                             }
                             Spacer()
-                            cartButton
                             Button {
                                 playgroundController.didTapShippingAddressButton()
                             } label: {
@@ -663,11 +624,6 @@ struct PaymentSheetButtons: View {
                         ExamplePaymentStatusView(result: result)
                     }
                 }
-            }
-        }
-        .sheet(isPresented: $showingCart) {
-            if let checkout = playgroundController.checkout {
-                CheckoutCartSheet(checkout: checkout)
             }
         }
     }

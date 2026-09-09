@@ -70,10 +70,8 @@ extension PaymentSheet.FlowController {
     /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, Customer details, etc.
     /// - Returns: A valid PaymentSheet.FlowController instance.
     /// - Throws: An error if loading failed.
-    @_spi(STP)
-    @_spi(ReactNativeSDK)
     @MainActor
-    public static func create(
+    static func create(
         checkout: CheckoutController,
         configuration: PaymentSheet.Configuration
     ) async throws -> PaymentSheet.FlowController {

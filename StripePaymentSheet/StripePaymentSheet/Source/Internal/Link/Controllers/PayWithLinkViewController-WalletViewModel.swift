@@ -12,12 +12,14 @@ import Foundation
 @_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
 
+@MainActor
 protocol PayWithLinkWalletViewModelDelegate: AnyObject {
     func viewModelDidChange(_ viewModel: PayWithLinkViewController.WalletViewModel)
 }
 
 extension PayWithLinkViewController {
 
+    @MainActor
     final class WalletViewModel {
         let context: Context
         let linkAccount: PaymentSheetLinkAccount
@@ -100,6 +102,23 @@ extension PayWithLinkViewController {
             mandate != nil
         }
 
+        /// The data-sharing consent message to show when a linked bank account is selected.
+        var bankAccountDataConsent: NSAttributedString? {
+            guard case .bankAccount = selectedPaymentMethod?.details,
+                  let consentText = context.elementsSession.linkPaymentMethodBankAccountDataConsent,
+                  !consentText.isEmpty
+            else {
+                return nil
+            }
+
+            return STPStringUtils.attributedStringFromMarkdownLinks(in: consentText)
+        }
+
+        /// Whether or not the view should show the data-sharing consent message.
+        var shouldShowBankAccountDataConsent: Bool {
+            bankAccountDataConsent != nil
+        }
+
         /// Client attribution metadata for analytics
         var clientAttributionMetadata: STPClientAttributionMetadata? {
             STPClientAttributionMetadata.makeClientAttributionMetadataIfNecessary(analyticsHelper: context.analyticsHelper, intent: context.intent, elementsSession: context.elementsSession)
@@ -162,7 +181,7 @@ extension PayWithLinkViewController {
             switch selectedPaymentMethod?.details {
             case .card(let card):
                 return card.hasExpired
-            case .bankAccount, .unparsable, .none:
+            case .bankAccount, .generic, .none:
                 // Only cards have expiry date.
                 return false
             }

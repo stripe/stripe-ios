@@ -11,20 +11,19 @@ import Foundation
 @_spi(STP) import StripePayments
 
 extension CheckoutController {
-    static func confirmApplePay(
+    func confirmApplePay(
         checkoutSession: Session,
-        applePayConfirmationContext: ApplePayConfirmationContext,
-        sessionUpdater: ExpressCheckoutSessionUpdater
+        parameters: ApplePayConfirmationParameters
     ) async -> InternalConfirmResult {
         do {
             let context = try CheckoutApplePayContext.create(
                 checkoutSession: checkoutSession,
-                applePayConfirmationContext: applePayConfirmationContext,
-                sessionUpdater: sessionUpdater
+                applePayConfirmationParameters: parameters,
+                checkoutWalletUpdater: self
             )
             return await context.presentApplePay()
         } catch {
-            return .init(paymentSheetResult: .failed(error: error))
+            return .failed(error)
         }
     }
 }

@@ -46,6 +46,8 @@
 
 "Buy now or pay later with Klarna" = "Buy now or pay later with Klarna";
 
+"By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms.";
+
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms.";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms.";
@@ -85,6 +87,8 @@
 "By providing your phone number, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "By providing your phone number, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>.";
+
+"By saving your payment information, you allow %@ to charge you for future payments in accordance with their terms." = "By saving your payment information, you allow %@ to charge you for future payments in accordance with their terms.";
 
 "By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "By submitting your order to %1$@ and %2$@, you agree to save your information with %3$@ for future purchases and agree to authorise payments pursuant to <terms>these terms</terms>.";
 
@@ -190,6 +194,10 @@
 
 "Name on card" = "Name on card";
 
+"Naver Pay Card" = "Naver Pay Card";
+
+"Naver Pay Money/Point" = "Naver Pay Money/Point";
+
 "New card" = "New card";
 
 "New payment method" = "New payment method";
@@ -285,6 +293,8 @@
 "Saved" = "Saved";
 
 "Select card" = "Select card";
+
+"Select how you want to pay:" = "Select how you want to pay:";
 
 "Select payment method" = "Select payment method";
 

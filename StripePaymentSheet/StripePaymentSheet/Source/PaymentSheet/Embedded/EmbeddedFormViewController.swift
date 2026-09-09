@@ -89,7 +89,7 @@ class EmbeddedFormViewController: UIViewController {
     private let formCache: PaymentMethodFormCache
     private let analyticsHelper: PaymentSheetAnalyticsHelper
     private let paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper?
-    private weak var checkout: CheckoutController?
+    private weak var checkoutBillingAddressUpdater: CheckoutSessionBillingAddressUpdater?
     private var error: Swift.Error?
     private var isPaymentInFlight: Bool = false
     /// The payment option to restore if the customer cancels this form.
@@ -165,7 +165,7 @@ class EmbeddedFormViewController: UIViewController {
          previousPaymentOption: PaymentOption? = nil,
          analyticsHelper: PaymentSheetAnalyticsHelper,
          paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper? = nil,
-         checkout: CheckoutController? = nil,
+         checkoutBillingAddressUpdater: CheckoutSessionBillingAddressUpdater? = nil,
          formCache: PaymentMethodFormCache = .init(),
          delegate: EmbeddedFormViewControllerDelegate
     ) {
@@ -176,7 +176,7 @@ class EmbeddedFormViewController: UIViewController {
         self.paymentOptionToRestoreOnCancellation = previousPaymentOption
         self.analyticsHelper = analyticsHelper
         self.paymentMethodMessagingPromotionsHelper = paymentMethodMessagingPromotionsHelper
-        self.checkout = checkout
+        self.checkoutBillingAddressUpdater = checkoutBillingAddressUpdater
         self.paymentMethodType = paymentMethodType
         self.formCache = formCache
         self.delegate = delegate
@@ -391,7 +391,7 @@ class EmbeddedFormViewController: UIViewController {
     /// Syncs billing address to the checkout session, then tells the delegate to continue.
     /// If the sync fails, stays on the sheet and shows the error instead.
     private func syncCheckoutBillingThenContinue() {
-        guard let checkout,
+        guard let checkoutBillingAddressUpdater,
               let paymentOption = selectedPaymentOption else {
             delegate?.embeddedFormViewControllerDidContinue(self)
             return
@@ -407,7 +407,7 @@ class EmbeddedFormViewController: UIViewController {
         Task { @MainActor [weak self] in
             guard let self else { return }
             do {
-                try await checkout.syncBillingAddress(from: paymentOption.checkoutBillingDetails)
+                try await checkoutBillingAddressUpdater.syncBillingAddress(from: paymentOption.checkoutBillingDetails)
             } catch {
                 self.error = error
             }

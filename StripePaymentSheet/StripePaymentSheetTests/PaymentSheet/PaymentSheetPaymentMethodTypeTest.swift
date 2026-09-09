@@ -14,6 +14,7 @@ import XCTest
 @testable@_spi(STP) import StripePaymentsTestUtils
 @testable@_spi(STP) import StripePaymentsUI
 
+@MainActor
 class PaymentSheetPaymentMethodTypeTest: APIStubbedTestCase {
 
     func makeConfiguration(
@@ -181,6 +182,198 @@ class PaymentSheetPaymentMethodTypeTest: APIStubbedTestCase {
 
         // Then
         XCTAssertEqual(result, .missingRequirements([.returnURL]))
+    }
+
+    // MARK: - Kakao Pay
+
+    func testKakaoPayRequiresReturnURLForPaymentAndSetup() {
+        // Given
+        let intents: [Intent] = [
+            ._testPaymentIntent(paymentMethodTypes: [.kakaoPay]),
+            ._testPaymentIntent(paymentMethodTypes: [.kakaoPay], setupFutureUsage: .offSession),
+            ._testSetupIntent(paymentMethodTypes: [.kakaoPay]),
+        ]
+
+        for intent in intents {
+            // When
+            let withoutReturnURL = PaymentSheet.PaymentMethodType.supportsAdding(
+                paymentMethod: .kakaoPay,
+                configuration: makeConfiguration(),
+                intent: intent,
+                elementsSession: ._testValue(intent: intent),
+                supportedPaymentMethods: [.kakaoPay]
+            )
+            let withReturnURL = PaymentSheet.PaymentMethodType.supportsAdding(
+                paymentMethod: .kakaoPay,
+                configuration: makeConfiguration(hasReturnURL: true),
+                intent: intent,
+                elementsSession: ._testValue(intent: intent),
+                supportedPaymentMethods: [.kakaoPay]
+            )
+
+            // Then
+            XCTAssertEqual(withoutReturnURL, .missingRequirements([.returnURL]))
+            XCTAssertEqual(withReturnURL, .supported)
+        }
+    }
+
+    // MARK: - Naver Pay
+
+    func testNaverPayRequiresReturnURLForPaymentAndSetup() {
+        // Given
+        let intents: [Intent] = [
+            ._testPaymentIntent(paymentMethodTypes: [.naverPay]),
+            ._testPaymentIntent(paymentMethodTypes: [.naverPay], setupFutureUsage: .offSession),
+            ._testSetupIntent(paymentMethodTypes: [.naverPay]),
+        ]
+
+        for intent in intents {
+            // When
+            let withoutReturnURL = PaymentSheet.PaymentMethodType.supportsAdding(
+                paymentMethod: .naverPay,
+                configuration: makeConfiguration(),
+                intent: intent,
+                elementsSession: ._testValue(intent: intent),
+                supportedPaymentMethods: [.naverPay]
+            )
+            let withReturnURL = PaymentSheet.PaymentMethodType.supportsAdding(
+                paymentMethod: .naverPay,
+                configuration: makeConfiguration(hasReturnURL: true),
+                intent: intent,
+                elementsSession: ._testValue(intent: intent),
+                supportedPaymentMethods: [.naverPay]
+            )
+
+            // Then
+            XCTAssertEqual(withoutReturnURL, .missingRequirements([.returnURL]))
+            XCTAssertEqual(withReturnURL, .supported)
+        }
+    }
+
+    // MARK: - Korean cards
+
+    func testKoreanCardsRequiresReturnURLForPaymentAndSetup() {
+        // Given
+        let intents: [Intent] = [
+            ._testPaymentIntent(paymentMethodTypes: [.krCard]),
+            ._testPaymentIntent(paymentMethodTypes: [.krCard], setupFutureUsage: .offSession),
+            ._testSetupIntent(paymentMethodTypes: [.krCard]),
+        ]
+
+        for intent in intents {
+            // When
+            let withoutReturnURL = PaymentSheet.PaymentMethodType.supportsAdding(
+                paymentMethod: .krCard,
+                configuration: makeConfiguration(),
+                intent: intent,
+                elementsSession: ._testValue(intent: intent),
+                supportedPaymentMethods: [.krCard]
+            )
+            let withReturnURL = PaymentSheet.PaymentMethodType.supportsAdding(
+                paymentMethod: .krCard,
+                configuration: makeConfiguration(hasReturnURL: true),
+                intent: intent,
+                elementsSession: ._testValue(intent: intent),
+                supportedPaymentMethods: [.krCard]
+            )
+
+            // Then
+            XCTAssertEqual(withoutReturnURL, .missingRequirements([.returnURL]))
+            XCTAssertEqual(withReturnURL, .supported)
+        }
+    }
+    // MARK: - SeQura
+
+    func testSequraRequiresReturnURLAndDoesNotSupportSetup() {
+        // Given
+        let paymentIntent = Intent._testPaymentIntent(paymentMethodTypes: [.sequra])
+        let setupIntents: [Intent] = [
+            ._testPaymentIntent(paymentMethodTypes: [.sequra], setupFutureUsage: .offSession),
+            ._testPaymentIntent(
+                paymentMethodTypes: [.sequra],
+                paymentMethodOptionsSetupFutureUsage: [.sequra: "off_session"]
+            ),
+            ._testSetupIntent(paymentMethodTypes: [.sequra]),
+        ]
+
+        // When
+        let paymentWithoutReturnURL = PaymentSheet.PaymentMethodType.supportsAdding(
+            paymentMethod: .sequra,
+            configuration: makeConfiguration(),
+            intent: paymentIntent,
+            elementsSession: ._testValue(intent: paymentIntent),
+            supportedPaymentMethods: [.sequra]
+        )
+        let paymentWithReturnURL = PaymentSheet.PaymentMethodType.supportsAdding(
+            paymentMethod: .sequra,
+            configuration: makeConfiguration(hasReturnURL: true),
+            intent: paymentIntent,
+            elementsSession: ._testValue(intent: paymentIntent),
+            supportedPaymentMethods: [.sequra]
+        )
+
+        // Then
+        XCTAssertEqual(paymentWithoutReturnURL, .missingRequirements([.returnURL]))
+        XCTAssertEqual(paymentWithReturnURL, .supported)
+        for intent in setupIntents {
+            XCTAssertEqual(
+                PaymentSheet.PaymentMethodType.supportsAdding(
+                    paymentMethod: .sequra,
+                    configuration: makeConfiguration(hasReturnURL: true),
+                    intent: intent,
+                    elementsSession: ._testValue(intent: intent),
+                    supportedPaymentMethods: [.sequra]
+                ),
+                .missingRequirements([.unsupportedForSetup])
+            )
+        }
+    }
+
+    // MARK: - PAYCO
+
+    func testPaycoRequiresReturnURLAndDoesNotSupportSetup() {
+        // Given
+        let paymentIntent = Intent._testPaymentIntent(paymentMethodTypes: [.payco])
+        let setupIntents: [Intent] = [
+            ._testPaymentIntent(paymentMethodTypes: [.payco], setupFutureUsage: .offSession),
+            ._testPaymentIntent(
+                paymentMethodTypes: [.payco],
+                paymentMethodOptionsSetupFutureUsage: [.payco: "off_session"]
+            ),
+            ._testSetupIntent(paymentMethodTypes: [.payco]),
+        ]
+
+        // When
+        let paymentWithoutReturnURL = PaymentSheet.PaymentMethodType.supportsAdding(
+            paymentMethod: .payco,
+            configuration: makeConfiguration(),
+            intent: paymentIntent,
+            elementsSession: ._testValue(intent: paymentIntent),
+            supportedPaymentMethods: [.payco]
+        )
+        let paymentWithReturnURL = PaymentSheet.PaymentMethodType.supportsAdding(
+            paymentMethod: .payco,
+            configuration: makeConfiguration(hasReturnURL: true),
+            intent: paymentIntent,
+            elementsSession: ._testValue(intent: paymentIntent),
+            supportedPaymentMethods: [.payco]
+        )
+
+        // Then
+        XCTAssertEqual(paymentWithoutReturnURL, .missingRequirements([.returnURL]))
+        XCTAssertEqual(paymentWithReturnURL, .supported)
+        for intent in setupIntents {
+            XCTAssertEqual(
+                PaymentSheet.PaymentMethodType.supportsAdding(
+                    paymentMethod: .payco,
+                    configuration: makeConfiguration(hasReturnURL: true),
+                    intent: intent,
+                    elementsSession: ._testValue(intent: intent),
+                    supportedPaymentMethods: [.payco]
+                ),
+                .missingRequirements([.unsupportedForSetup])
+            )
+        }
     }
 
     /// Returns true, iDEAL in `supportedPaymentMethods` and URL and delayed payment method support requirements for setting up are met

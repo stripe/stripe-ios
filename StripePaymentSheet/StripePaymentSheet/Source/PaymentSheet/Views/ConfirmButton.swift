@@ -33,6 +33,7 @@ class ConfirmButton: UIControl {
         case custom(title: String)
         case customWithLock(title: String)
 
+        @MainActor
         static func makeDefaultType(intent: Intent, withLock: Bool = true) -> Self {
             switch intent {
             case .paymentIntent(let paymentIntent):

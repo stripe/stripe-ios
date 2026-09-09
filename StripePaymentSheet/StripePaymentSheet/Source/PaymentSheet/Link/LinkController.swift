@@ -192,7 +192,7 @@ import UIKit
         case .bankAccount(let bankAccount):
             let iconCode = PaymentSheetImageLibrary.bankIconCode(for: bankAccount.name)
             return PaymentSheetImageLibrary.bankIcon(for: iconCode, iconStyle: .filled)
-        case .unparsable:
+        case .generic:
             return Self.linkIcon
         }
     }
@@ -220,7 +220,7 @@ import UIKit
         }
 
         let type: PaymentMethodPreview.PaymentMethodType = switch selectedPaymentDetails.details {
-        case .card, .unparsable:
+        case .card, .generic:
             .card
         case .bankAccount:
             .bankAccount
@@ -1075,7 +1075,7 @@ import UIKit
         analyticsHelper: PaymentSheetAnalyticsHelper
     ) async throws -> PaymentSheetLoader.LoadResult {
         // Stub path: no real intent, PM creation and confirmation handled externally.
-        let intentConfiguration = PaymentSheet.IntentConfiguration(
+        var intentConfiguration = PaymentSheet.IntentConfiguration(
             mode: .setup(
                 currency: nil,
                 setupFutureUsage: .offSession
@@ -1086,6 +1086,7 @@ import UIKit
                 return PaymentSheet.IntentConfiguration.COMPLETE_WITHOUT_CONFIRMING_INTENT
             }
         )
+        intentConfiguration.financialConnectionsPermissions = linkConfiguration?.financialConnectionsPermissions
         let mode: PaymentSheet.InitializationMode = .deferredIntent(intentConfiguration)
 
         let (result, _) = try await PaymentSheetLoader.load(

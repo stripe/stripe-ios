@@ -4,6 +4,7 @@
 //
 //  Created by Nick Porter on 2/24/26.
 
+@_spi(STP) import StripePaymentSheet
 import SwiftUI
 
 struct CheckoutPlaygroundConfigurationSection: View {
@@ -13,12 +14,18 @@ struct CheckoutPlaygroundConfigurationSection: View {
     @Binding var customerType: CheckoutPlayground.CustomerType
     @Binding var checkoutEndpointOption: CheckoutPlayground.EndpointOption
     @Binding var checkoutEndpoint: String
-    @Binding var expressCheckoutElementOption: CheckoutPlayground.ExpressCheckoutElementOption
     @Binding var delayPaymentPagesRequests: Bool
+    let onReset: () -> Void
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            CheckoutPlayground.SectionHeader(title: "Configuration", icon: "gearshape.fill")
+            HStack {
+                CheckoutPlayground.SectionHeader(title: "Configuration", icon: "gearshape.fill")
+                Spacer()
+                Button("Reset", action: onReset)
+                    .font(.callout.smallCaps())
+                    .buttonStyle(.bordered)
+            }
             VStack(spacing: 1) {
                 CheckoutPlayground.PickerRow(
                     title: "UI Framework",
@@ -31,12 +38,6 @@ struct CheckoutPlaygroundConfigurationSection: View {
                     icon: "square.stack.3d.up.fill",
                     selection: $integrationType,
                     tooltip: "Choose the PaymentElement presentation.\n\n• sheet: Presents PaymentElement as a payment method selector.\n• view: Displays PaymentElement in the checkout flow.\n• none: Hides PaymentElement.",
-                    displayText: { $0.displayName }
-                )
-                CheckoutPlayground.PickerRow(
-                    title: "ExpressCheckoutElement",
-                    icon: "bolt.fill",
-                    selection: $expressCheckoutElementOption,
                     displayText: { $0.displayName }
                 )
                 CheckoutPlayground.PickerRow(
@@ -72,7 +73,7 @@ struct CheckoutPlaygroundConfigurationSection: View {
                         .frame(width: 24)
                         .foregroundColor(.blue)
 
-                    TextField("Checkout Endpoint", text: $checkoutEndpoint)
+                    TextField("Backend URL", text: $checkoutEndpoint)
                         .font(.subheadline)
                         .textInputAutocapitalization(.never)
                         .autocorrectionDisabled()
@@ -177,6 +178,7 @@ struct CheckoutPlaygroundFeaturesSection: View {
     @Binding var checkoutSessionPaymentMethodSave: Bool
     @Binding var checkoutSessionPaymentMethodRemove: Bool
     @Binding var automaticPaymentMethods: Bool
+    @Binding var linkMode: CheckoutPlayground.LinkMode
 
     private var shouldShowAutomaticTax: Bool {
         return customerType != .new
@@ -189,7 +191,7 @@ struct CheckoutPlaygroundFeaturesSection: View {
                 CheckoutPlayground.ToggleRow(
                     title: "Collect Shipping Address",
                     isOn: $shippingAddressCollection,
-                    tooltip: "Sets `shipping_address_collection` to allow specific countries (US, CA, GB, AU). Necessary for physical goods."
+                    tooltip: "Sets `shipping_address_collection` to allow specific countries (US, CA, GB, AU) and configures Shipping Address Element. Necessary for physical goods."
                 )
                 CheckoutPlayground.PickerRow(
                     title: "Default Shipping Address",
@@ -216,6 +218,12 @@ struct CheckoutPlaygroundFeaturesSection: View {
                     isOn: $automaticPaymentMethods,
                     tooltip: "Sends `automatic_payment_methods: true` instead of an explicit `payment_method_types` array. Stripe selects the best payment methods for the session."
                 )
+                CheckoutPlayground.PickerRow(
+                    title: "Link Mode",
+                    selection: $linkMode,
+                    tooltip: "Forces Link to use its native or web flow.",
+                    displayText: { $0.displayName }
+                )
                 if shouldShowAutomaticTax {
                     CheckoutPlayground.ToggleRow(
                         title: "Automatic Tax",
@@ -233,6 +241,68 @@ struct CheckoutPlaygroundFeaturesSection: View {
                     isOn: $checkoutSessionPaymentMethodRemove,
                     tooltip: "Sets `saved_payment_method_options.payment_method_remove` to `enabled`. When on, Checkout can allow customers to remove saved payment methods."
                 )
+            }
+            .background(Color(uiColor: .secondarySystemGroupedBackground))
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+        }
+    }
+}
+
+struct CheckoutPlaygroundExpressCheckoutElementSection: View {
+    @Binding var showExpressCheckoutElement: Bool
+    @Binding var applePayDisplay: ExpressCheckoutElement.ApplePayConfiguration.Display
+    @Binding var linkDisplay: ExpressCheckoutElement.LinkConfiguration.Display
+    @Binding var shippingAddressRequired: Bool
+    var onCustomizeBillingDetailsCollection: () -> Void
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            CheckoutPlayground.SectionHeader(title: "ExpressCheckoutElement", icon: "bolt.fill")
+            VStack(spacing: 1) {
+                CheckoutPlayground.ToggleRow(
+                    title: "Show Express Checkout Element",
+                    isOn: $showExpressCheckoutElement
+                )
+                if showExpressCheckoutElement {
+                    CheckoutPlayground.PickerRow(
+                        title: "Apple Pay Display",
+                        icon: "apple.logo",
+                        selection: $applePayDisplay,
+                        tooltip: "Sets `ExpressCheckoutElement.Configuration.applePayConfiguration.display`.",
+                        displayText: { $0.rawValue.capitalized }
+                    )
+                    CheckoutPlayground.PickerRow(
+                        title: "Link Display",
+                        icon: "link",
+                        selection: $linkDisplay,
+                        tooltip: "Sets `ExpressCheckoutElement.Configuration.linkConfiguration.display`.",
+                        displayText: { $0.rawValue.capitalized }
+                    )
+                    CheckoutPlayground.ToggleRow(
+                        title: "Requires Shipping Address",
+                        isOn: $shippingAddressRequired,
+                        tooltip: "Sets `ExpressCheckoutElement.Configuration.shippingAddressRequired`. When on, wallets like Apple Pay require the customer to provide a shipping address."
+                    )
+                    Button(action: onCustomizeBillingDetailsCollection) {
+                        HStack {
+                            Image(systemName: "person.text.rectangle.fill")
+                                .font(.system(size: 16))
+                                .frame(width: 24)
+                                .foregroundColor(.blue)
+                            Text("Billing Details Collection")
+                                .font(.subheadline)
+                                .foregroundColor(.primary)
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                        .padding(.vertical, 12)
+                        .padding(.horizontal, 16)
+                        .background(Color(uiColor: .secondarySystemGroupedBackground))
+                    }
+                    .buttonStyle(PlainButtonStyle())
+                }
             }
             .background(Color(uiColor: .secondarySystemGroupedBackground))
             .clipShape(RoundedRectangle(cornerRadius: 12))

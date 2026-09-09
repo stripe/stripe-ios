@@ -32,6 +32,56 @@ enum ExpectedFormHierarchy {
         static var paymentIntent: FormHierarchyNode { emptyForm }
     }
 
+    // MARK: - Kakao Pay
+
+    enum KakaoPay {
+        static var paymentIntent: FormHierarchyNode {
+            FormHierarchyNode(type: "FormElement", children: [
+                FormHierarchyNode(type: "SectionElement", children: [
+                    FormHierarchyNode(type: "TextFieldElement", properties: ["label": "Email"])
+                ]),
+            ])
+        }
+        static var settingUp: FormHierarchyNode {
+            FormHierarchyNode(type: "FormElement", children: [
+                FormHierarchyNode(type: "SectionElement", children: [
+                    FormHierarchyNode(type: "TextFieldElement", properties: ["label": "Email"])
+                ]),
+                FormHierarchyNode(type: "SimpleMandateElement", properties: ["text": "By confirming your payment with NICEPAY, you allow..."]),
+            ])
+        }
+    }
+
+    // MARK: - Naver Pay
+
+    enum NaverPay {
+        static var paymentIntent: FormHierarchyNode {
+            FormHierarchyNode(type: "FormElement", children: [
+                FormHierarchyNode(type: "SectionElement", children: [
+                    FormHierarchyNode(type: "DropdownFieldElement", properties: ["itemCount": "2", "label": "Select how you want to pay:"])
+                ]),
+            ])
+        }
+        static var settingUp: FormHierarchyNode {
+            FormHierarchyNode(type: "FormElement", children: [
+                FormHierarchyNode(type: "SectionElement", children: [
+                    FormHierarchyNode(type: "DropdownFieldElement", properties: ["itemCount": "2", "label": "Select how you want to pay:"])
+                ]),
+                FormHierarchyNode(type: "SimpleMandateElement", properties: ["text": "By confirming your payment with NICEPAY, you allow..."]),
+            ])
+        }
+    }
+
+    // MARK: - Korean cards
+
+    enum KoreanCards {
+        static var paymentIntent: FormHierarchyNode { emptyForm }
+        static var settingUp: FormHierarchyNode {
+            FormHierarchyNode(type: "FormElement", children: [
+                FormHierarchyNode(type: "SimpleMandateElement", properties: ["text": "By confirming your payment with NICEPAY, you allow..."])
+            ])
+        }
+    }
     // MARK: - Alipay
 
     enum Alipay {
@@ -46,6 +96,18 @@ enum ExpectedFormHierarchy {
     // MARK: - PayNow
 
     enum PayNow {
+        static var paymentIntent: FormHierarchyNode { emptyForm }
+    }
+
+    // MARK: - SeQura
+
+    enum Sequra {
+        static var paymentIntent: FormHierarchyNode { emptyForm }
+    }
+
+    // MARK: - PAYCO
+
+    enum Payco {
         static var paymentIntent: FormHierarchyNode { emptyForm }
     }
 

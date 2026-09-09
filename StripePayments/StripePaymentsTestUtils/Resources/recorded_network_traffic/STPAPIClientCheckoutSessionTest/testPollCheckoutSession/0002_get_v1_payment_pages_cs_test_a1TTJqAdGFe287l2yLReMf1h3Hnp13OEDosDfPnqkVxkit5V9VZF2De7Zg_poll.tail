@@ -1,0 +1,41 @@
+GET
+https:\/\/api\.stripe\.com\/v1\/payment_pages\/cs_test_a1TTJqAdGFe287l2yLReMf1h3Hnp13OEDosDfPnqkVxkit5V9VZF2De7Zg\/poll\?$
+200
+application/json
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=M_AelTk7J4HWvSlxj6AnGYMt79euMaKfkaQRt5PlI1LsMsiDul87EIQlVK1fg1AbGxFvfsKcrVUUaWzm; report-to csp
+Server: nginx
+Cache-Control: no-cache, no-store
+reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=M_AelTk7J4HWvSlxj6AnGYMt79euMaKfkaQRt5PlI1LsMsiDul87EIQlVK1fg1AbGxFvfsKcrVUUaWzm&t=1"
+stripe-notice: You are using an outdated API version (2020-08-27). We recommend upgrading to the latest API version, 2026-07-29.dahlia. See https://docs.stripe.com/upgrades
+x-wc: 3c3
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+x-stripe-routing-context-priority-tier: api-testmode
+x-stripe-priority-routing-enabled: true
+report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=M_AelTk7J4HWvSlxj6AnGYMt79euMaKfkaQRt5PlI1LsMsiDul87EIQlVK1fg1AbGxFvfsKcrVUUaWzm&t=1"}],"include_subdomains":true}
+request-id: req_rec00kR7TTLWYd
+Content-Length: 399
+Vary: Origin
+Date: Sat, 22 Aug 2026 18:15:42 GMT
+stripe-version: 2020-08-27
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+
+{
+  "id" : "ppage_1U7JSDFY0qyl6XeWmYWVESAJ",
+  "state" : "active",
+  "invoice_receipt_url" : null,
+  "livemode" : false,
+  "invoice_url" : null,
+  "return_url" : null,
+  "locale" : null,
+  "mode" : "modeless",
+  "success_url" : null,
+  "payment_object_status" : null,
+  "session_id" : "cs_test_a1TTJqAdGFe287l2yLReMf1h3Hnp13OEDosDfPnqkVxkit5V9VZF2De7Zg",
+  "is_sandbox_merchant" : false,
+  "ui_mode" : "custom"
+}

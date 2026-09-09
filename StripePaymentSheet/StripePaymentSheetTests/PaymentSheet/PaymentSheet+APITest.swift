@@ -1358,7 +1358,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         }
     }
 
-    func testConfirmPaymentMethodType_projectsUnifiedSaveCheckboxState() {
+    func testConfirmPaymentMethodTypeProjectsSaveCheckboxStateForIntent() {
         let paymentMethodParams = STPPaymentMethodParams(card: STPFixtures.paymentMethodCardParams(), billingDetails: nil, metadata: nil)
         let paymentOptions = STPConfirmPaymentMethodOptions()
 
@@ -1368,7 +1368,6 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
             saveForFutureUseCheckboxState: .hidden
         )
         XCTAssertFalse(hidden.shouldSaveForIntent)
-        XCTAssertNil(hidden.savePaymentMethodForCheckoutSession)
 
         let deselected = PaymentSheet.ConfirmPaymentMethodType.new(
             params: paymentMethodParams,
@@ -1376,7 +1375,6 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
             saveForFutureUseCheckboxState: .deselected
         )
         XCTAssertFalse(deselected.shouldSaveForIntent)
-        XCTAssertEqual(deselected.savePaymentMethodForCheckoutSession, false)
 
         let selected = PaymentSheet.ConfirmPaymentMethodType.new(
             params: paymentMethodParams,
@@ -1384,7 +1382,6 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
             saveForFutureUseCheckboxState: .selected
         )
         XCTAssertTrue(selected.shouldSaveForIntent)
-        XCTAssertEqual(selected.savePaymentMethodForCheckoutSession, true)
     }
 
     func testMakeIntentParams_paypal_sets_mandate() {
@@ -1512,6 +1509,140 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         XCTAssertNotNil(setupIntentParams.mandateData)
     }
 
+    func testMakeIntentParams_kakaoPay_setsMandate() {
+        // Given
+        let paymentMethodParams = STPPaymentMethodParams(type: .kakaoPay)
+        let confirmType = PaymentSheet.ConfirmPaymentMethodType.new(
+            params: paymentMethodParams,
+            paymentOptions: STPConfirmPaymentMethodOptions(),
+            saveForFutureUseCheckboxState: .hidden
+        )
+        let configuration = PaymentSheet.Configuration._testValue_MostPermissive()
+
+        // When
+        let regularPaymentIntentParams = PaymentSheet.makePaymentIntentParams(
+            confirmPaymentMethodType: confirmType,
+            paymentIntent: STPFixtures.makePaymentIntent(),
+            configuration: configuration
+        )
+        let futureUsagePaymentIntentParams = PaymentSheet.makePaymentIntentParams(
+            confirmPaymentMethodType: confirmType,
+            paymentIntent: STPFixtures.makePaymentIntent(setupFutureUsage: .offSession),
+            configuration: configuration
+        )
+        let paymentMethodOptionsFutureUsagePaymentIntentParams = PaymentSheet.makePaymentIntentParams(
+            confirmPaymentMethodType: confirmType,
+            paymentIntent: STPFixtures.makePaymentIntent(
+                paymentMethodOptions: STPPaymentMethodOptions(
+                    usBankAccount: nil,
+                    card: nil,
+                    allResponseFields: ["kakao_pay": ["setup_future_usage": "off_session"]]
+                )
+            ),
+            configuration: configuration
+        )
+        let setupIntentParams = PaymentSheet.makeSetupIntentParams(
+            confirmPaymentMethodType: confirmType,
+            setupIntent: STPFixtures.makeSetupIntent(paymentMethodTypes: [.kakaoPay]),
+            configuration: configuration
+        )
+
+        // Then
+        XCTAssertNil(regularPaymentIntentParams.mandateData)
+        XCTAssertNotNil(futureUsagePaymentIntentParams.mandateData)
+        XCTAssertNotNil(paymentMethodOptionsFutureUsagePaymentIntentParams.mandateData)
+        XCTAssertNotNil(setupIntentParams.mandateData)
+    }
+
+    func testMakeIntentParams_naverPay_setsMandate() {
+        // Given
+        let paymentMethodParams = STPPaymentMethodParams(type: .naverPay)
+        let confirmType = PaymentSheet.ConfirmPaymentMethodType.new(
+            params: paymentMethodParams,
+            paymentOptions: STPConfirmPaymentMethodOptions(),
+            saveForFutureUseCheckboxState: .hidden
+        )
+        let configuration = PaymentSheet.Configuration._testValue_MostPermissive()
+
+        // When
+        let regularPaymentIntentParams = PaymentSheet.makePaymentIntentParams(
+            confirmPaymentMethodType: confirmType,
+            paymentIntent: STPFixtures.makePaymentIntent(),
+            configuration: configuration
+        )
+        let futureUsagePaymentIntentParams = PaymentSheet.makePaymentIntentParams(
+            confirmPaymentMethodType: confirmType,
+            paymentIntent: STPFixtures.makePaymentIntent(setupFutureUsage: .offSession),
+            configuration: configuration
+        )
+        let paymentMethodOptionsFutureUsagePaymentIntentParams = PaymentSheet.makePaymentIntentParams(
+            confirmPaymentMethodType: confirmType,
+            paymentIntent: STPFixtures.makePaymentIntent(
+                paymentMethodOptions: STPPaymentMethodOptions(
+                    usBankAccount: nil,
+                    card: nil,
+                    allResponseFields: ["naver_pay": ["setup_future_usage": "off_session"]]
+                )
+            ),
+            configuration: configuration
+        )
+        let setupIntentParams = PaymentSheet.makeSetupIntentParams(
+            confirmPaymentMethodType: confirmType,
+            setupIntent: STPFixtures.makeSetupIntent(paymentMethodTypes: [.naverPay]),
+            configuration: configuration
+        )
+
+        // Then
+        XCTAssertNil(regularPaymentIntentParams.mandateData)
+        XCTAssertNotNil(futureUsagePaymentIntentParams.mandateData)
+        XCTAssertNotNil(paymentMethodOptionsFutureUsagePaymentIntentParams.mandateData)
+        XCTAssertNotNil(setupIntentParams.mandateData)
+    }
+
+    func testMakeIntentParams_krCard_setsMandate() {
+        // Given
+        let paymentMethodParams = STPPaymentMethodParams(type: .krCard)
+        let confirmType = PaymentSheet.ConfirmPaymentMethodType.new(
+            params: paymentMethodParams,
+            paymentOptions: STPConfirmPaymentMethodOptions(),
+            saveForFutureUseCheckboxState: .hidden
+        )
+        let configuration = PaymentSheet.Configuration._testValue_MostPermissive()
+
+        // When
+        let regularPaymentIntentParams = PaymentSheet.makePaymentIntentParams(
+            confirmPaymentMethodType: confirmType,
+            paymentIntent: STPFixtures.makePaymentIntent(),
+            configuration: configuration
+        )
+        let futureUsagePaymentIntentParams = PaymentSheet.makePaymentIntentParams(
+            confirmPaymentMethodType: confirmType,
+            paymentIntent: STPFixtures.makePaymentIntent(setupFutureUsage: .offSession),
+            configuration: configuration
+        )
+        let paymentMethodOptionsFutureUsagePaymentIntentParams = PaymentSheet.makePaymentIntentParams(
+            confirmPaymentMethodType: confirmType,
+            paymentIntent: STPFixtures.makePaymentIntent(
+                paymentMethodOptions: STPPaymentMethodOptions(
+                    usBankAccount: nil,
+                    card: nil,
+                    allResponseFields: ["kr_card": ["setup_future_usage": "off_session"]]
+                )
+            ),
+            configuration: configuration
+        )
+        let setupIntentParams = PaymentSheet.makeSetupIntentParams(
+            confirmPaymentMethodType: confirmType,
+            setupIntent: STPFixtures.makeSetupIntent(paymentMethodTypes: [.krCard]),
+            configuration: configuration
+        )
+
+        // Then
+        XCTAssertNil(regularPaymentIntentParams.mandateData)
+        XCTAssertNotNil(futureUsagePaymentIntentParams.mandateData)
+        XCTAssertNotNil(paymentMethodOptionsFutureUsagePaymentIntentParams.mandateData)
+        XCTAssertNotNil(setupIntentParams.mandateData)
+    }
     func testMakeDeferredPaymentUserAgent() {
         let intentConfig_with_nil_payment_method_types = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1099, currency: "USD"), confirmHandler: { _, _  in return "" })
         XCTAssertEqual(

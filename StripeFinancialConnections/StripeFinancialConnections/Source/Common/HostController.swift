@@ -19,6 +19,7 @@ import UIKit
         case financialConnections(StripeAPI.FinancialConnectionsSession)
         case instantDebits(InstantDebitsLinkedBank)
         case linkedAccount(id: String)
+        case paymentDetails(id: String)
     }
 
     var linkAccountSessionId: String? {
@@ -30,6 +31,8 @@ import UIKit
             return linkedBank.linkAccountSessionId
         case .linkedAccount(let id):
             return id
+        case .paymentDetails:
+            return nil
         }
     }
 }

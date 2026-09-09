@@ -458,7 +458,6 @@ workflows:
         inputs:
         - scheme: AllStripeFrameworks
         - destination: generic/platform=iOS Simulator
-        - xcodebuild_options: ARCHS=arm64
     - deploy-to-bitrise-io@2: {}
     - save-spm-cache@1: {}
     before_run:
@@ -730,6 +729,7 @@ workflows:
         is_always_run: true
         title: Set Bundler to use local vendor directory
     - git-clone@8.2:
+        is_always_run: true
         inputs:
         - clone_depth: "1"
     - restore-cache@2.4:

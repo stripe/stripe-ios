@@ -46,6 +46,8 @@
 
 "Buy now or pay later with Klarna" = "Köp nu eller betala senare med Klarna";
 
+"By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "Genom att bekräfta betalningen med NICEPAY tillåter du %@ att debitera den här betalningsmetoden vid framtida betalningar i enlighet med deras villkor.";
+
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Genom att bekräfta betalningen med PayPal tillåter du att %@ debiterar ditt PayPal-konto för framtida betalningar i enlighet med deras villkor.";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Genom att fortsätta till Amazon Pay tillåter du att %@ debiterar ditt Amazon Pay-konto för framtida betalningar i enlighet med deras villkor.";
@@ -85,6 +87,8 @@
 "By providing your phone number, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Genom att ange ditt telefonnummer samtycker du till att skapa ett konto för %1$@ och spara din betalningsinformation till %1$@, enligt <terms>villkoren</terms> och <privacy>integritetspolicyn</privacy> för %1$@.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Genom att spara ditt bankkonto för %@ samtycker du till att godkänna betalningar i enlighet med <terms>dessa villkor</terms>.";
+
+"By saving your payment information, you allow %@ to charge you for future payments in accordance with their terms." = "Genom att spara din betalningsinformation ger du %@ tillåtelse att debitera dig för framtida betalningar enligt deras villkor.";
 
 "By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "Genom att skicka din beställning till %1$@ och %2$@ samtycker du till att spara din information hos %3$@ för framtida köp och godkänner auktorisering av betalningar i enlighet med <terms>dessa villkor</terms>.";
 
@@ -190,6 +194,10 @@
 
 "Name on card" = "Namn på kortet";
 
+"Naver Pay Card" = "Naver Pay-kort";
+
+"Naver Pay Money/Point" = "Naver Pay-pengar/poäng";
+
 "New card" = "Nytt kort";
 
 "New payment method" = "Ny betalningsmetod";
@@ -285,6 +293,8 @@
 "Saved" = "Sparad";
 
 "Select card" = "Välj kort";
+
+"Select how you want to pay:" = "Välj hur du vill betala:";
 
 "Select payment method" = "Välj betalningsmetod";
 

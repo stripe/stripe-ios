@@ -14,7 +14,13 @@ import OHHTTPStubsSwift
 import StripeCoreTestUtils
 import XCTest
 
+@MainActor
 class LinkURLGeneratorTests: XCTestCase {
+    override func setUp() {
+        super.setUp()
+        LinkAccountContext.shared.account = nil
+    }
+
     let testParams = LinkURLParams(paymentObject: .link_payment_method,
                                    publishableKey: "pk_test_123",
                                    stripeAccount: "acct_1234",

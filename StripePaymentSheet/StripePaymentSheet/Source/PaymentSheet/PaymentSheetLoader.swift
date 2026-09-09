@@ -145,10 +145,8 @@ final class PaymentSheetLoader {
             // Initialize telemetry. Don't wait for this to finish to return.
             STPTelemetryClient.shared.sendTelemetryData()
 
-            // Filter out saved payment methods that the PI/SI or PaymentSheet doesn't support
-            let prefetchedSavedPaymentMethods = try await prefetchedSavedPaymentMethodsTask.value
-            let filteredSavedPaymentMethods = filterSavedPaymentMethods(intent: intent, elementsSession: elementsSession, configuration: configuration, prefetchedSPMs: prefetchedSavedPaymentMethods, loadTimings: loadTimings)
-
+            // fetchData() launches an unstructured task and returns immediately. Starting it before the
+            // await below lets the PMM request run while this MainActor loader is suspended for saved methods.
             let paymentMethodMessagingPromotionsHelper = PaymentMethodMessagingPromotionsHelper(
                 elementsSession: elementsSession,
                 intent: intent,
@@ -157,6 +155,10 @@ final class PaymentSheetLoader {
                 analyticsHelper: analyticsHelper
             )
             paymentMethodMessagingPromotionsHelper?.fetchData()
+
+            // Filter out saved payment methods that the PI/SI or PaymentSheet doesn't support
+            let prefetchedSavedPaymentMethods = try await prefetchedSavedPaymentMethodsTask.value
+            let filteredSavedPaymentMethods = filterSavedPaymentMethods(intent: intent, elementsSession: elementsSession, configuration: configuration, prefetchedSPMs: prefetchedSavedPaymentMethods, loadTimings: loadTimings)
 
             let paymentMethodOrientation = configuration.resolveLayout(
                 elementsSession: elementsSession,

@@ -270,12 +270,17 @@ private let APIBaseURL = "https://api.stripe.com/v1"
 // MARK: Modern bindings
 extension STPAPIClient {
     /// Make a GET request using the passed parameters.
+    /// - Parameters:
+    ///   - timeout: Optional timeout for each request attempt. The total request duration can be longer when retries are enabled.
+    ///   - retriesEnabled: Whether to retry HTTP 429 responses using the standard retry policy.
     @_spi(STP) public func get<T: Decodable>(
         resource: String,
         parameters: [String: Any],
         ephemeralKeySecret: String? = nil,
         consumerPublishableKey: String? = nil,
         apiVersionOverride: String? = nil,
+        timeout: TimeInterval? = nil,
+        retriesEnabled: Bool = true,
         completion: @escaping (
             Result<T, Error>
         ) -> Void
@@ -287,6 +292,8 @@ extension STPAPIClient {
             consumerPublishableKey: consumerPublishableKey,
             apiVersionOverride: apiVersionOverride,
             resource: resource,
+            timeout: timeout,
+            retryCount: retriesEnabled ? StripeAPI.maxRetries : 0,
             completion: completion
         )
     }
@@ -422,6 +429,8 @@ extension STPAPIClient {
         consumerPublishableKey: String?,
         apiVersionOverride: String?,
         resource: String,
+        timeout: TimeInterval? = nil,
+        retryCount: Int = StripeAPI.maxRetries,
         completion: @escaping (Result<T, Error>) -> Void
     ) {
         let url = apiURL.appendingPathComponent(resource)
@@ -432,6 +441,8 @@ extension STPAPIClient {
             consumerPublishableKey: consumerPublishableKey,
             apiVersionOverride: apiVersionOverride,
             url: url,
+            timeout: timeout,
+            retryCount: retryCount,
             completion: completion
         )
     }
@@ -443,9 +454,14 @@ extension STPAPIClient {
         consumerPublishableKey: String?,
         apiVersionOverride: String?,
         url: URL,
+        timeout: TimeInterval? = nil,
+        retryCount: Int = StripeAPI.maxRetries,
         completion: @escaping (Result<T, Error>) -> Void
     ) {
         var request = configuredRequest(for: url, apiVersionOverride: apiVersionOverride)
+        if let timeout {
+            request.timeoutInterval = timeout
+        }
         switch method {
         case .get:
             request.stp_addParameters(toURL: parameters)
@@ -478,7 +494,11 @@ extension STPAPIClient {
             request.setValue(nil, forHTTPHeaderField: "Stripe-Account")
         }
 
-        self.sendRequest(request: request, completion: completion)
+        self.sendRequest(
+            request: request,
+            retryCount: retryCount,
+            completion: completion
+        )
     }
 
     /// Make a POST request using the passed Encodable object.
@@ -559,6 +579,7 @@ extension STPAPIClient {
 
     func sendRequest<T: Decodable>(
         request: URLRequest,
+        retryCount: Int = StripeAPI.maxRetries,
         completion: @escaping (Result<T, Error>) -> Void
     ) {
         urlSession.stp_performDataTask(
@@ -569,7 +590,8 @@ extension STPAPIClient {
                         STPAPIClient.decodeResponse(data: data, error: error, response: response, request: request)
                     )
                 }
-            }
+            },
+            retryCount: retryCount
         )
     }
 

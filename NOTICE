@@ -5,23 +5,6 @@ This repository incorporates material as listed below or described in the code.
 
 ---------------------------------------------------------
 
-MediaPipe
-
-This repository redistributes MediaPipe Tasks Vision 0.10.21 framework
-artifacts and the MediaPipe Face Landmarker model.
-
-MediaPipe source files retain their upstream copyright notices. The artifact
-packaging changes made by this repository are documented in
-LocalPackages/MediaPipeSPM/README.md.
-
-MediaPipe is licensed under the Apache License, Version 2.0. The complete
-license text and upstream attribution notice are provided as
-LICENSE-MediaPipe in binary distributions and as
-LocalPackages/MediaPipeSPM/LICENSE-MediaPipe in source distributions.
-
-
----------------------------------------------------------
-
 HCaptcha-ios-sdk
 
 Copyright © 2020 Intuition Machines, Inc. <support@hcaptcha.com>

@@ -4,54 +4,119 @@
 //
 //  Created by Nick Porter on 2/24/26.
 
+import Combine
 @_spi(STP) import StripePaymentSheet
 import SwiftUI
 
 extension CheckoutPlayground {
+    struct ExpressCheckoutElementSettings {
+        var isEnabled = true
+        var applePayDisplay: ExpressCheckoutElement.ApplePayConfiguration.Display = .automatic
+        var linkDisplay: ExpressCheckoutElement.LinkConfiguration.Display = .automatic
+        var shippingAddressRequired: Bool = false
+        var billingDetailsCollectionConfiguration = ExpressCheckoutElement.BillingDetailsCollectionConfiguration()
+    }
+
     @MainActor
     final class ViewModel: ObservableObject {
+
         // Unified mode currently supports card and Link.
         static let availablePaymentMethods = [
             "card", "link",
         ]
 
-        @Published var uiFramework: UIFramework = .swiftUI
-        @Published var integrationType: IntegrationType = .flowController {
+        @Published var uiFramework: UIFramework
+        @Published var integrationType: IntegrationType {
             didSet {
-                if integrationType == .eceOnly && expressCheckoutElementOption == .hide {
-                    expressCheckoutElementOption = .show
+                if integrationType == .eceOnly && !expressCheckoutElement.isEnabled {
+                    expressCheckoutElement.isEnabled = true
                 }
             }
         }
-        @Published var expressCheckoutElementOption: ExpressCheckoutElementOption = .show {
+        @Published var expressCheckoutElement = ExpressCheckoutElementSettings() {
             didSet {
-                if expressCheckoutElementOption == .hide && integrationType == .eceOnly {
+                if !expressCheckoutElement.isEnabled && integrationType == .eceOnly {
                     integrationType = .flowController
                 }
             }
         }
-        @Published var currency: Currency = .usd
-        @Published var customerType: CustomerType = .guest
-        @Published var lineItems: [LineItemConfig] = LineItemConfig.defaults
-        @Published var shippingAddressCollection = true
-        @Published var defaultShippingAddressOption: DefaultShippingAddressOption = .none
-        @Published var customDefaultShippingAddress = DefaultShippingAddress.usTestAddress
-        @Published var billingAddressCollection: BillingAddressCollection = .automatic
-        @Published var automaticTax = true
-        @Published var checkoutSessionPaymentMethodSave = true
-        @Published var checkoutSessionPaymentMethodRemove = true
-        @Published var adaptivePricingCountry: AdaptivePricingCountry = .none
-        @Published var automaticPaymentMethods = false
-        @Published var paymentMethodTypes: Set<String> = ["card"]
-        @Published var currencySelectorAppearance = CurrencySelectorElement.Appearance()
-        @Published var checkoutEndpointOption: EndpointOption = .hosted
-        @Published var checkoutEndpoint = EndpointOption.hosted.endpoint ?? ""
-        @Published var delayPaymentPagesRequests = false
+        @Published var linkMode: LinkMode {
+            didSet {
+                if isLinkModeOverrideActive {
+                    PaymentSheet.LinkFeatureFlags.nativeLinkEnabledOverride = linkMode == .native
+                }
+            }
+        }
+        @Published var currency: Currency
+        @Published var customerType: CustomerType
+        @Published var lineItems: [LineItemConfig]
+        @Published var shippingAddressCollection: Bool
+        @Published var defaultShippingAddressOption: DefaultShippingAddressOption
+        @Published var customDefaultShippingAddress: DefaultShippingAddress
+        @Published var billingAddressCollection: BillingAddressCollection
+        @Published var automaticTax: Bool
+        @Published var checkoutSessionPaymentMethodSave: Bool
+        @Published var checkoutSessionPaymentMethodRemove: Bool
+        @Published var adaptivePricingCountry: AdaptivePricingCountry
+        @Published var automaticPaymentMethods: Bool
+        @Published var paymentMethodTypes: Set<String>
+        @Published var currencySelectorAppearance: CurrencySelectorElement.Appearance
+        @Published var checkoutEndpointOption: EndpointOption
+        @Published var checkoutEndpoint: String
+        @Published var delayPaymentPagesRequests: Bool
 
         @Published var isCreating = false
         @Published var errorMessage: String?
         @Published var clientSecret: String?
         @Published var navigateToCheckout = false
+
+        private var settingsSaveSubscription: AnyCancellable?
+        private var isLinkModeOverrideActive = false
+
+        init() {
+            let settings = Self.settingsFromDefaults() ?? Settings()
+            uiFramework = settings.uiFramework
+            integrationType = settings.integrationType
+            expressCheckoutElement = ExpressCheckoutElementSettings(isEnabled: settings.showExpressCheckoutElement)
+            linkMode = settings.linkMode
+            currency = settings.currency
+            customerType = settings.customerType
+            lineItems = settings.lineItems
+            shippingAddressCollection = settings.shippingAddressCollection
+            defaultShippingAddressOption = settings.defaultShippingAddressOption
+            customDefaultShippingAddress = settings.customDefaultShippingAddress
+            billingAddressCollection = settings.billingAddressCollection
+            automaticTax = settings.automaticTax
+            checkoutSessionPaymentMethodSave = settings.checkoutSessionPaymentMethodSave
+            checkoutSessionPaymentMethodRemove = settings.checkoutSessionPaymentMethodRemove
+            adaptivePricingCountry = settings.adaptivePricingCountry
+            automaticPaymentMethods = settings.automaticPaymentMethods
+            paymentMethodTypes = settings.paymentMethodTypes
+            currencySelectorAppearance = settings.currencySelectorAppearance
+            checkoutEndpointOption = settings.checkoutEndpointOption
+            checkoutEndpoint = EndpointOption.normalizedBaseURL(from: settings.checkoutEndpoint)
+            delayPaymentPagesRequests = settings.delayPaymentPagesRequests
+            settingsSaveSubscription = objectWillChange.sink { [weak self] _ in
+                guard let self else {
+                    return
+                }
+
+                // @Published sends objectWillChange before updating the property.
+                DispatchQueue.main.async {
+                    self.serializeSettingsToNSUserDefaults()
+                }
+            }
+        }
+
+        func activateLinkModeOverride() {
+            isLinkModeOverrideActive = true
+            PaymentSheet.LinkFeatureFlags.nativeLinkEnabledOverride = linkMode == .native
+        }
+
+        func deactivateLinkModeOverride() {
+            isLinkModeOverrideActive = false
+            PaymentSheet.LinkFeatureFlags.nativeLinkEnabledOverride = nil
+        }
 
         var isButtonDisabled: Bool {
             isCreating || (!automaticPaymentMethods && paymentMethodTypes.isEmpty) || lineItems.isEmpty
@@ -69,6 +134,7 @@ extension CheckoutPlayground {
         }
 
         func createSession() async {
+            serializeSettingsToNSUserDefaults()
             isCreating = true
             errorMessage = nil
             defer {
@@ -76,30 +142,27 @@ extension CheckoutPlayground {
             }
 
             do {
-                guard let backendURL = URL(string: checkoutEndpoint) else {
+                guard let backendURL = URL(string: EndpointOption.normalizedBaseURL(from: checkoutEndpoint)) else {
                     throw NSError(domain: "CheckoutPlayground", code: 0, userInfo: [
-                        NSLocalizedDescriptionKey: "Invalid endpoint URL: \(checkoutEndpoint)",
+                        NSLocalizedDescriptionKey: "Invalid backend URL: \(checkoutEndpoint)",
                     ])
                 }
-                let body = buildRequestBody()
-                var request = URLRequest(url: backendURL)
-                request.httpMethod = "POST"
-                request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-                request.httpBody = try JSONSerialization.data(withJSONObject: body)
-
-                let (data, response) = try await URLSession.shared.data(for: request)
-                let httpResponse = response as? HTTPURLResponse
-                let responseString = String(data: data, encoding: .utf8) ?? "(not utf8)"
-                print("[CheckoutPlayground] HTTP status: \(httpResponse?.statusCode ?? -1)")
-                print("[CheckoutPlayground] Response body: \(responseString)")
-
-                guard let json = try JSONSerialization.jsonObject(with: data) as? [String: Any],
-                      let publishableKey = json["publishableKey"] as? String,
-                      let clientSecret = json["checkoutSessionClientSecret"] as? String else {
-                    throw NSError(domain: "CheckoutPlayground", code: 0, userInfo: [
-                        NSLocalizedDescriptionKey: "Invalid backend response: \(responseString)",
-                    ])
-                }
+                let backend = PlaygroundBackend(baseURL: backendURL)
+                let publishableKey = try await backend.fetchPublishableKey()
+                let apiClient = STPAPIClient(publishableKey: publishableKey)
+                let clientSecret = try await SessionFactory(backend: backend, apiClient: apiClient).create(
+                    currency: currency,
+                    customerType: customerType,
+                    lineItems: lineItems,
+                    shippingAddressCollection: shippingAddressCollection,
+                    billingAddressCollection: billingAddressCollection,
+                    automaticTax: automaticTax,
+                    paymentMethodSave: checkoutSessionPaymentMethodSave,
+                    paymentMethodRemove: checkoutSessionPaymentMethodRemove,
+                    adaptivePricingCountry: adaptivePricingCountry,
+                    automaticPaymentMethods: automaticPaymentMethods,
+                    paymentMethodTypes: paymentMethodTypes
+                )
 
                 // Example app behavior: the local backend response controls the Stripe publishable key.
                 STPAPIClient.shared.publishableKey = publishableKey
@@ -110,30 +173,81 @@ extension CheckoutPlayground {
             }
         }
 
-        private func buildRequestBody() -> [String: Any] {
-            var body: [String: Any] = [
-                "merchant_country_code": "us_tax",
-                "mode": "unified",
-                "use_one_time_price": true,
-                "currency": currency.rawValue,
-                "customer": customerType.rawValue,
-                "shipping_address_collection": shippingAddressCollection,
-                "billing_address_collection": billingAddressCollection == .required,
-                "automatic_tax": automaticTax,
-                "checkout_session_payment_method_save": checkoutSessionPaymentMethodSave ? "enabled" : "disabled",
-                "checkout_session_payment_method_remove": checkoutSessionPaymentMethodRemove ? "enabled" : "disabled",
-            ]
-            if automaticPaymentMethods {
-                body["automatic_payment_methods"] = true
-            } else {
-                body["payment_method_types"] = Array(paymentMethodTypes)
+        func reset() {
+            apply(Settings())
+        }
+
+        private var settings: Settings {
+            Settings(
+                uiFramework: uiFramework,
+                integrationType: integrationType,
+                showExpressCheckoutElement: expressCheckoutElement.isEnabled,
+                linkMode: linkMode,
+                currency: currency,
+                customerType: customerType,
+                lineItems: lineItems,
+                shippingAddressCollection: shippingAddressCollection,
+                defaultShippingAddressOption: defaultShippingAddressOption,
+                customDefaultShippingAddress: customDefaultShippingAddress,
+                billingAddressCollection: billingAddressCollection,
+                automaticTax: automaticTax,
+                checkoutSessionPaymentMethodSave: checkoutSessionPaymentMethodSave,
+                checkoutSessionPaymentMethodRemove: checkoutSessionPaymentMethodRemove,
+                adaptivePricingCountry: adaptivePricingCountry,
+                automaticPaymentMethods: automaticPaymentMethods,
+                paymentMethodTypes: paymentMethodTypes,
+                currencySelectorAppearance: currencySelectorAppearance,
+                checkoutEndpointOption: checkoutEndpointOption,
+                checkoutEndpoint: checkoutEndpoint,
+                delayPaymentPagesRequests: delayPaymentPagesRequests
+            )
+        }
+
+        private func apply(_ settings: Settings) {
+            uiFramework = settings.uiFramework
+            integrationType = settings.integrationType
+            expressCheckoutElement.isEnabled = settings.showExpressCheckoutElement
+            linkMode = settings.linkMode
+            currency = settings.currency
+            customerType = settings.customerType
+            lineItems = settings.lineItems
+            shippingAddressCollection = settings.shippingAddressCollection
+            defaultShippingAddressOption = settings.defaultShippingAddressOption
+            customDefaultShippingAddress = settings.customDefaultShippingAddress
+            billingAddressCollection = settings.billingAddressCollection
+            automaticTax = settings.automaticTax
+            checkoutSessionPaymentMethodSave = settings.checkoutSessionPaymentMethodSave
+            checkoutSessionPaymentMethodRemove = settings.checkoutSessionPaymentMethodRemove
+            adaptivePricingCountry = settings.adaptivePricingCountry
+            automaticPaymentMethods = settings.automaticPaymentMethods
+            paymentMethodTypes = settings.paymentMethodTypes
+            currencySelectorAppearance = settings.currencySelectorAppearance
+            checkoutEndpointOption = settings.checkoutEndpointOption
+            checkoutEndpoint = settings.checkoutEndpoint
+            delayPaymentPagesRequests = settings.delayPaymentPagesRequests
+        }
+
+        private func serializeSettingsToNSUserDefaults() {
+            do {
+                let data = try JSONEncoder().encode(settings)
+                UserDefaults.standard.set(data, forKey: Settings.nsUserDefaultsKey)
+            } catch {
+                print("Unable to serialize Checkout playground settings: \(error)")
             }
-            if adaptivePricingCountry != .none {
-                let countryCode = adaptivePricingCountry.rawValue.uppercased()
-                body["customer_email"] = "test+location_\(countryCode)@example.com"
+        }
+
+        private static func settingsFromDefaults() -> Settings? {
+            guard let data = UserDefaults.standard.data(forKey: Settings.nsUserDefaultsKey) else {
+                return nil
             }
 
-            return body
+            do {
+                return try JSONDecoder().decode(Settings.self, from: data)
+            } catch {
+                print("Unable to deserialize Checkout playground settings: \(error)")
+                UserDefaults.standard.removeObject(forKey: Settings.nsUserDefaultsKey)
+                return nil
+            }
         }
     }
 }

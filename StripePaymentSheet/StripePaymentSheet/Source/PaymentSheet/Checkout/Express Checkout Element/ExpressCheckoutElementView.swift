@@ -37,7 +37,7 @@ final class ExpressCheckoutElementViewModel: ObservableObject {
 
     init(
         sessionSource: CheckoutSessionSource,
-        configuration: CheckoutController.Configuration,
+        configuration: ExpressCheckoutElement.Configuration,
         uiView: ExpressCheckoutElementUIView
     ) {
         self.uiView = uiView

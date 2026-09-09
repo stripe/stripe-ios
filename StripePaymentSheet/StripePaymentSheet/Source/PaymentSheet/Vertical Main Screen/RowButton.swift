@@ -306,6 +306,9 @@ class RowButton: UIView, EventHandler {
     // MARK: Helper
 
     func makeSameHeightAsOtherRowButtonsIfNecessary() {
+        heightConstraint?.isActive = false
+        heightConstraint = nil
+
         // To make all RowButtons the same height, set our height to the tallest
         // standard variant (a RowButton with text and a plain sublabel).
 
@@ -314,13 +317,11 @@ class RowButton: UIView, EventHandler {
         //   2. The sublabel variant requires unlimited height
         if (isFlatWithCheckmarkOrChevronStyle && isDisplayingAccessoryView)
             || sublabel.needsUnlimitedHeight {
-            heightConstraint?.isActive = false
             return
         }
 
         // Don't constrain if we *are* the tallest variant; otherwise we'll infinite loop!
         guard !sublabel.hasText else {
-            heightConstraint?.isActive = false
             return
         }
         heightConstraint = heightAnchor.constraint(equalToConstant: Self.calculateTallestHeight(appearance: appearance, isEmbedded: isEmbedded))
@@ -650,6 +651,21 @@ enum RowButtonType: Equatable {
     case saved(paymentMethod: STPPaymentMethod)
     case applePay
     case link
+
+    init(paymentOption: PaymentOption) {
+        switch paymentOption {
+        case .applePay:
+            self = .applePay
+        case .saved(let paymentMethod, _):
+            self = .saved(paymentMethod: paymentMethod)
+        case .new(let confirmParams):
+            self = .new(paymentMethodType: confirmParams.paymentMethodType)
+        case .link:
+            self = .link
+        case .external(let paymentMethod, _):
+            self = .new(paymentMethodType: .external(paymentMethod))
+        }
+    }
 
     static func == (lhs: RowButtonType, rhs: RowButtonType) -> Bool {
         switch (lhs, rhs) {

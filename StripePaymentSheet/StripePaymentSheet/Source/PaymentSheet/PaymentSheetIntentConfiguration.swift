@@ -259,6 +259,8 @@ public extension PaymentSheet {
 
         // MARK: - Internal
 
+        @_spi(STP) public var financialConnectionsPermissions: [String]?
+
         @discardableResult
         func validate() -> Error? {
             let errorMessage: String

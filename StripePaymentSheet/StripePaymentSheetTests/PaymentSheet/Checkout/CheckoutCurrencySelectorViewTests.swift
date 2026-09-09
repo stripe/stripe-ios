@@ -37,7 +37,9 @@ final class CheckoutCurrencySelectorViewTests: XCTestCase {
 
     func testLabelsUpdateWhenSessionAmountChanges() async throws {
         var configuration = CheckoutController.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
-        configuration.currencySelectorElement.appearance.labelContent = .amount
+        var currencySelectorConfiguration = CurrencySelectorElement.Configuration()
+        currencySelectorConfiguration.appearance.labelContent = .amount
+        configuration.currencySelectorElement = currencySelectorConfiguration
         let session = makeSession(integrationAmount: 1200, localAmount: 1000)
         let checkout = try await CheckoutController(
             configuration: CheckoutTestHelpers.makeCurrencySelectorConfiguration(

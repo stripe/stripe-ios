@@ -25,6 +25,7 @@ final class ConsumerSession: Decodable {
     let currentAuthenticationLevel: AuthenticationLevel?
     let minimumAuthenticationLevel: AuthenticationLevel?
     var linkBrand: LinkBrand?
+    var linkSessionKey: String?
 
     private enum CodingKeys: String, CodingKey {
         case clientSecret
@@ -38,6 +39,7 @@ final class ConsumerSession: Decodable {
         case currentAuthenticationLevel
         case minimumAuthenticationLevel
         case linkBrand = "link_brand"
+        case linkSessionKey = "link_session_key"
     }
 
     init(from decoder: Decoder) throws {
@@ -53,6 +55,7 @@ final class ConsumerSession: Decodable {
         self.currentAuthenticationLevel = try container.decodeIfPresent(AuthenticationLevel.self, forKey: .currentAuthenticationLevel)
         self.minimumAuthenticationLevel = try container.decodeIfPresent(AuthenticationLevel.self, forKey: .minimumAuthenticationLevel)
         self.linkBrand = try container.decodeIfPresent(LinkBrand.self, forKey: .linkBrand)
+        self.linkSessionKey = try container.decodeIfPresent(String.self, forKey: .linkSessionKey)
     }
 
 }
@@ -338,6 +341,8 @@ extension ConsumerSession {
         with apiClient: STPAPIClient = STPAPIClient.shared,
         linkMode: LinkMode? = nil,
         intentToken: String? = nil,
+        permissions: [String]? = nil,
+        merchantToken: String? = nil,
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<LinkAccountSession, Error>) -> Void
     ) {
@@ -345,6 +350,8 @@ extension ConsumerSession {
             for: clientSecret,
             linkMode: linkMode,
             intentToken: intentToken,
+            permissions: permissions,
+            merchantToken: merchantToken,
             requestSurface: requestSurface,
             completion: completion)
     }
@@ -423,6 +430,20 @@ extension ConsumerSession {
             clientAttributionMetadata: clientAttributionMetadata,
             requestSurface: requestSurface,
             completion: completion)
+    }
+
+    func recordConnectionsConsentAcquired(
+        with apiClient: STPAPIClient = STPAPIClient.shared,
+        localizedConsentText: String,
+        requestSurface: LinkRequestSurface = .default,
+        completion: @escaping (Result<EmptyResponse, Error>) -> Void
+    ) {
+        apiClient.recordConnectionsConsentAcquired(
+            for: clientSecret,
+            localizedConsentText: localizedConsentText,
+            requestSurface: requestSurface,
+            completion: completion
+        )
     }
 
     func logout(

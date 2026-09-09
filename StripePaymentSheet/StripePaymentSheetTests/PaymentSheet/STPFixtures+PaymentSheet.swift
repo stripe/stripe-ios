@@ -73,6 +73,7 @@ extension STPElementsSession {
         countryCode: String? = nil,
         merchantCountryCode: String? = nil,
         merchantLogoUrl: URL? = nil,
+        accountID: String? = nil,
         linkSettings: LinkSettings? = nil,
         experimentsData: ExperimentsData? = nil,
         flags: [String: Bool] = [:],
@@ -93,6 +94,7 @@ extension STPElementsSession {
             countryCode: countryCode,
             merchantCountryCode: merchantCountryCode,
             merchantLogoUrl: merchantLogoUrl,
+            accountID: accountID,
             linkSettings: linkSettings,
             experimentsData: experimentsData,
             flags: flags,
@@ -212,6 +214,7 @@ extension STPElementsSession {
         return elementsSession
     }
 
+    @MainActor
     static func _testValue(
         intent: Intent,
         isLinkPassthroughModeEnabled: Bool? = nil,
@@ -322,10 +325,9 @@ extension Intent {
             json["customer_email"] = email
         }
         if automaticTaxEnabled != nil || automaticTaxAddressSource != nil {
-            var taxContext: [String: Any] = [:]
-            if let automaticTaxEnabled {
-                taxContext["automatic_tax_enabled"] = automaticTaxEnabled
-            }
+            var taxContext: [String: Any] = [
+                "automatic_tax_enabled": automaticTaxEnabled ?? false,
+            ]
             if let automaticTaxAddressSource {
                 taxContext["automatic_tax_address_source"] = automaticTaxAddressSource
             }
@@ -376,7 +378,10 @@ extension Intent {
                 ],
             ],
         ]
-        var recurringDetails: [String: Any] = [:]
+        var recurringDetails: [String: Any] = [
+            "total_discount_amounts": [],
+            "total_tax_amounts": [],
+        ]
         if taxAmount != 0 {
             recurringDetails["total_tax_amounts"] = [[
                 "amount": taxAmount,
@@ -393,11 +398,11 @@ extension Intent {
             recurringDetails["total_discount_amounts"] = [[
                 "amount": discountAmount,
                 "coupon": [
-                    "id": "coupon_test",
+                    "code": "coupon_test",
                 ],
             ], ]
         }
-        if !recurringDetails.isEmpty {
+        if taxAmount != 0 || discountAmount != 0 {
             json["recurring_details"] = recurringDetails
         }
         let checkoutSession = try! PaymentPagesAPIResponse.decode(fromAPIResponse: json)
@@ -460,6 +465,7 @@ extension PaymentSheet.Appearance {
 }
 
 extension PaymentSheetLoader.LoadResult {
+    @MainActor
     static func _testValue(paymentMethodTypes: [String], savedPaymentMethods: [STPPaymentMethod]) -> Self {
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD")) { _, _ in return "" }
         let elementsSession = STPElementsSession._testValue(
@@ -487,6 +493,7 @@ extension PaymentSheetLoader.LoadResult {
 }
 
 extension PaymentMethodMessagingPromotionsHelper {
+    @MainActor
     static func _testValue() -> PaymentMethodMessagingPromotionsHelper? {
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD")) { _, _ in return "" }
         let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"])

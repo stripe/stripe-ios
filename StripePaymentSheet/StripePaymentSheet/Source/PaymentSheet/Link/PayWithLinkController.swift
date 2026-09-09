@@ -12,6 +12,7 @@
 import UIKit
 
 /// Standalone Link controller
+@MainActor
 final class PayWithLinkController {
 
     typealias CompletionBlock = ((PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void)

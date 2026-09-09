@@ -406,9 +406,13 @@ final class CryptoOnrampExampleUITests: XCTestCase {
         XCTAssertTrue(kycLabel.waitForExistence(timeout: .networkTimeout), "KYC screen should appear")
         waitForLoadingToFinish()
 
-        let euResidenceButton = app.segmentedControls.buttons["EU"].firstMatch
-        XCTAssertTrue(euResidenceButton.waitForExistence(timeout: .animationTimeout), "EU residence option should exist")
-        euResidenceButton.tap()
+        let residencePicker = app.buttons["kyc_residence_picker"].firstMatch
+        XCTAssertTrue(residencePicker.waitForExistence(timeout: .animationTimeout), "Residence picker should exist")
+        residencePicker.tap()
+
+        let europeanUnionOption = app.buttons["European Union"].firstMatch
+        XCTAssertTrue(europeanUnionOption.waitForExistence(timeout: .animationTimeout), "European Union residence option should exist")
+        europeanUnionOption.tap()
 
         enterText("Crypto", inTextField: "Enter your first name", advancingToNextField: true)
         enterText("Tester", inTextField: "Enter your last name", advancingToNextField: true)

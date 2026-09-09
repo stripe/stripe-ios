@@ -46,6 +46,8 @@
 
 "Buy now or pay later with Klarna" = "用 Klarna 先买后付";
 
+"By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "确认使用 NICEPAY 付款，即表示您允许 %@ 根据其条款，使用此支付方式为未来交易扣款。";
+
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "确认您的 PayPal 付款即表示您允许 %@ 按照他们的条款从您的 PayPal 扣取未来款项。";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "继续前往 Amazon Pay 即表示您允许 %@ 按照他们的条款从您的 Amazon Pay 账户扣取未来款项。";
@@ -85,6 +87,8 @@
 "By providing your phone number, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "提供您的电话号码，即表示您同意根据 %1$@ 的<terms>条款</terms>和<privacy>隐私政策</privacy>，创建一个 %1$@ 账户，并将支付信息保存至 %1$@。";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "保存您的 %@ 银行账户即表示您同意按照<terms>这些条款</terms>授权付款。";
+
+"By saving your payment information, you allow %@ to charge you for future payments in accordance with their terms." = "保存您的支付信息，即表示您允许 %@ 按照其条款向您收取后续款项。";
 
 "By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "通过向 %1$@ 和 %2$@ 提交订单，您同意将您的信息保存在 %3$@ 用于将来购买使用，并同意根据<terms>这些条款</terms>授权支付。";
 
@@ -190,6 +194,10 @@
 
 "Name on card" = "持卡人姓名";
 
+"Naver Pay Card" = "Naver Pay Card";
+
+"Naver Pay Money/Point" = "Naver Pay Money/Point";
+
 "New card" = "添加新卡";
 
 "New payment method" = "新支付方式";
@@ -285,6 +293,8 @@
 "Saved" = "已保存";
 
 "Select card" = "选择卡";
+
+"Select how you want to pay:" = "选择您想使用的支付方式：";
 
 "Select payment method" = "选择支付方式";
 

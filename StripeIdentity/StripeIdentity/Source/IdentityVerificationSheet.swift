@@ -12,6 +12,7 @@ import UIKit
 /// A drop-in class that presents a sheet for a user to verify their identity.
 /// This class is in beta; see https://stripe.com/docs/identity for access
 final public class IdentityVerificationSheet {
+
     /// The result of an attempt to finish an identity verification flow
     @frozen public enum VerificationFlowResult {
         /// User completed the verification flow
@@ -24,36 +25,43 @@ final public class IdentityVerificationSheet {
 
     /// Configuration for an IdentityVerificationSheet
     public struct Configuration {
+        /// Configuration for the biometric consent screen's header.
+        @_spi(STP) public struct BiometricConsentConfiguration {
+            /// Whether to hide the branding header above the consent title.
+            public var hideBrandingHeader: Bool
+
+            /// Initializes a biometric consent header configuration.
+            /// - Parameters:
+            ///   - hideBrandingHeader: Whether to hide the branding header above the consent title.
+            public init(
+                hideBrandingHeader: Bool
+            ) {
+                self.hideBrandingHeader = hideBrandingHeader
+            }
+        }
+
         /// An image of your customer-facing business logo.
         ///
         /// - Note: The recommended image size is 32 x 32 points. The image will be
         /// displayed in both light and dark modes, if the app supports it. Use a
         /// dynamic UIImage to support different images in light vs dark mode.
         public var brandLogo: UIImage
-        /// Optional background color for the native flow's primary action buttons.
-        public var brandColor: UIColor?
+
+        /// Configuration for the biometric consent screen's header.
+        ///
+        /// When `nil`, the biometric consent screen uses the default header.
+        @_spi(STP) public var biometricConsent: BiometricConsentConfiguration?
 
         /// Initializes a Configuration.
         /// - Parameters:
         ///   - brandLogo: An image of your customer-facing business logo.
         ///     The recommended image size is 32 x 32 points. The image will be
         ///     displayed in both light and dark modes, if the app supports it.
-        public init(brandLogo: UIImage) {
-            self.init(brandLogo: brandLogo, brandColor: nil)
-        }
-
-        /// Initializes a Configuration with a primary action button color.
-        /// - Parameters:
-        ///   - brandLogo: An image of your customer-facing business logo.
-        ///     The recommended image size is 32 x 32 points. The image will be
-        ///     displayed in both light and dark modes, if the app supports it.
-        ///   - brandColor: Optional background color for the native flow's primary action buttons.
         public init(
-            brandLogo: UIImage,
-            brandColor: UIColor?
+            brandLogo: UIImage
         ) {
             self.brandLogo = brandLogo
-            self.brandColor = brandColor
+            self.biometricConsent = nil
         }
     }
 
@@ -104,8 +112,7 @@ final public class IdentityVerificationSheet {
                     ephemeralKeySecret: ephemeralKeySecret
                 ),
                 flowController: VerificationSheetFlowController(
-                    brandLogo: configuration.brandLogo,
-                    brandColor: configuration.brandColor
+                    configuration: configuration
                 ),
                 mlModelLoader: IdentityMLModelLoader(),
                 analyticsClient: IdentityAnalyticsClient(

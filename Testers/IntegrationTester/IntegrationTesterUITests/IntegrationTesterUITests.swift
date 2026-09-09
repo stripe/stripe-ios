@@ -62,6 +62,7 @@ class IntegrationTesterUITests: XCTestCase {
         numberField.typeText(number)
         let expField = app.textFields["expiration date"]
         _ = expField.waitForExistence(timeout: 10)
+        expField.tap()
         expField.typeText("1228")
         let cvcField = app.textFields["CVC"]
         if STPCardValidator.brand(forNumber: number) == .amex {
@@ -79,7 +80,7 @@ class IntegrationTesterUITests: XCTestCase {
         let tablesQuery = app.collectionViews
 
         let cardExampleElement = tablesQuery.cells.buttons["Card"]
-        cardExampleElement.tap()
+        cardExampleElement.forceTapWhenHittableInTestCase(self)
         try! fillCardData(app, number: cardNumber)
 
         let buyButton = app.buttons["Buy"]
@@ -94,9 +95,9 @@ class IntegrationTesterUITests: XCTestCase {
             XCTAssertTrue(completeAuth.waitForExistence(timeout: 60.0))
             completeAuth.forceTapElement()
         case .threeDS2:
-            let completeAuth = app.scrollViews.otherElements.staticTexts["Complete Authentication"]
+            let completeAuth = app.buttons["COMPLETE"]
             XCTAssertTrue(completeAuth.waitForExistence(timeout: 60.0))
-            completeAuth.tap()
+            completeAuth.forceTapElement()
         }
 
         let statusView = app.staticTexts["Payment status view"]
@@ -120,8 +121,8 @@ class IntegrationTesterUITests: XCTestCase {
 
         let oobChallengeScreenPredicate = NSPredicate(format: "label ==[c] 'OTP'")
         let challengeText = app.staticTexts.matching(oobChallengeScreenPredicate).element
-        XCTAssertTrue(challengeText.waitForExistence(timeout: 10))
-        challengeText.forceTapElement()
+        XCTAssertTrue(challengeText.waitForExistence(timeout: 60))
+        challengeText.forceTapWhenHittableInTestCase(self)
 
         let submitButton = app.buttons["Submit"]
         XCTAssertTrue(submitButton.waitForExistence(timeout: 10.0))

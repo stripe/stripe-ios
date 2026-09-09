@@ -46,6 +46,8 @@
 
 "Buy now or pay later with Klarna" = "Paiement fractionné avec Klarna";
 
+"By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "En confirmant votre paiement avec NICEPAY, vous autorisez %@ à débiter ce mode de paiement pour des paiements futurs conformément à ses conditions.";
+
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "En confirmant votre paiement avec PayPal, vous autorisez %@ à débiter votre compte PayPal pour les paiements à venir, conformément à ses conditions.";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "En poursuivant sur Amazon Pay, vous autorisez %@ à débiter votre compte Amazon Pay pour les paiements à venir, conformément à ses conditions.";
@@ -85,6 +87,8 @@
 "By providing your phone number, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "En fournissant votre numéro de téléphone, vous acceptez de créer un compte %1$@ et d’enregistrer vos informations de paiement à %1$@, selon les <terms>Conditions</terms> et la <privacy>Politique de confidentialité</privacy> de %1$@.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "En enregistrant votre compte bancaire pour %@, vous autorisez les paiements conformément à <terms>ces conditions</terms>.";
+
+"By saving your payment information, you allow %@ to charge you for future payments in accordance with their terms." = "En enregistrant vos informations de paiement, vous autorisez %@ à vous prélever le montant des paiements à venir conformément à ses conditions.";
 
 "By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "En envoyant votre commande à %1$@ et %2$@, vous acceptez de sauvegarder vos informations auprès de %3$@ pour des achats futurs, et vous autorisez les paiements en vertu des <terms>présentes conditions</terms>.";
 
@@ -190,6 +194,10 @@
 
 "Name on card" = "Nom du titulaire de la carte";
 
+"Naver Pay Card" = "Carte Naver Pay";
+
+"Naver Pay Money/Point" = "Naver Pay Money/Point";
+
 "New card" = "Nouvelle carte";
 
 "New payment method" = "Nouveau moyen de paiement";
@@ -285,6 +293,8 @@
 "Saved" = "Enregistré";
 
 "Select card" = "Choisir une carte";
+
+"Select how you want to pay:" = "Choisissez la façon dont vous souhaitez payer :";
 
 "Select payment method" = "Choisir un moyen de paiement";
 

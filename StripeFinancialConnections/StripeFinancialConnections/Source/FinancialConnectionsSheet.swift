@@ -127,6 +127,9 @@ final public class FinancialConnectionsSheet {
     /// An existing consumer, if available.
     @_spi(STP) public var existingConsumer: StripeCore.FinancialConnectionsConsumer?
 
+    /// Whether the Link Account Session requests merchant data permissions.
+    @_spi(STP) public var hasRequestedDataPermissions: Bool = false
+
     /// Analytics client to use for logging analytics
     @_spi(STP) public let analyticsClient: STPAnalyticsClientProtocol
 
@@ -250,6 +253,19 @@ final public class FinancialConnectionsSheet {
                                     .unknown(debugDescription: "\(errorDescription)\n\n\(sessionInfo)")
                             )
                         )
+                    case .paymentDetails(let id):
+                        let errorDescription = "Payment Details flow is not currently supported via this interface."
+                        let sessionInfo =
+                            """
+                            paymentDetailsId=\(id)
+                            """
+
+                        completion(
+                            .failed(
+                                error: FinancialConnectionsSheetError
+                                    .unknown(debugDescription: "\(errorDescription)\n\n\(sessionInfo)")
+                            )
+                        )
                     }
                 case .canceled:
                     completion(.canceled)
@@ -317,6 +333,7 @@ final public class FinancialConnectionsSheet {
         }
 
         var financialConnectionsApiClient: any FinancialConnectionsAPI = FinancialConnectionsAsyncAPIClient(apiClient: apiClient)
+        financialConnectionsApiClient.hasRequestedDataPermissions = hasRequestedDataPermissions
 
         if let existingConsumer {
             let verificationSessions = existingConsumer.verificationSessions.map { verificationSession in

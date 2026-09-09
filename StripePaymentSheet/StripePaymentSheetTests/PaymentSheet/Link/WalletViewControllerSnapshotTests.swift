@@ -13,6 +13,7 @@ import XCTest
 
 @testable@_spi(STP) import StripePaymentSheet
 
+@MainActor
 // @iOS26
 final class WalletViewControllerSnapshotTests: STPSnapshotTestCase {
 
@@ -61,6 +62,15 @@ final class WalletViewControllerSnapshotTests: STPSnapshotTestCase {
         verify(sut.view)
     }
 
+    func testWithBankAccountDataConsent() {
+        let sut = makeSUT(
+            initiallySelectedPaymentDetailsID: "3",
+            setupFutureUsage: true,
+            linkPaymentMethodBankAccountDataConsent: "carlosmuvi-us can access account and ownership details, balances, and transactions. [Learn more](https://support.stripe.com/user/questions/what-data-does-stripe-access-from-my-linked-financial-account)"
+        )
+        verify(sut.view)
+    }
+
     func verify(
         _ view: UIView,
         identifier: String? = nil,
@@ -83,7 +93,8 @@ extension WalletViewControllerSnapshotTests {
         linkPassthroughModeEnabled: Bool = false,
         disallowedBrands: [PaymentSheet.CardBrandAcceptance.BrandCategory] = [],
         paymentMethods: [ConsumerPaymentDetails] = LinkStubs.paymentMethods(),
-        setupFutureUsage: Bool? = nil
+        setupFutureUsage: Bool? = nil,
+        linkPaymentMethodBankAccountDataConsent: String? = nil
     ) -> PayWithLinkViewController.WalletViewController {
         var configuration = PaymentSheet.Configuration()
 
@@ -94,7 +105,8 @@ extension WalletViewControllerSnapshotTests {
         let (intent, elementsSession) = try! PayWithLinkTestHelpers.makePaymentIntentAndElementsSession(
             linkFundingSources: linkFundingSources,
             linkPassthroughModeEnabled: linkPassthroughModeEnabled,
-            linkPMOSFU: setupFutureUsage
+            linkPMOSFU: setupFutureUsage,
+            linkPaymentMethodBankAccountDataConsent: linkPaymentMethodBankAccountDataConsent
         )
         let session = LinkStubs.consumerSession()
 

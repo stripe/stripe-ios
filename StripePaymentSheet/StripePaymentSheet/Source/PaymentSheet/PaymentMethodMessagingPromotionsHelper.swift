@@ -9,6 +9,7 @@ import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 
+@MainActor
 class PaymentMethodMessagingPromotionsHelper {
 
     static let supportedPaymentMethods: [PaymentSheet.PaymentMethodType] = [
@@ -137,14 +138,18 @@ class PaymentMethodMessagingPromotionsHelper {
                 let response = try await PaymentMethodMessagingElement.get(configuration: pmmeConfig)
                 promotions = response.paymentSheetPromotionContents(apiClient: configuration.apiClient)
             } catch {
-                logUnexpectedPMMEError(
-                    error: error,
-                    apiClient: configuration.apiClient,
-                    analyticsClient: STPAnalyticsClient.sharedClient,
-                    additionalNonPIIParams: [
-                        "failure_reason": "promotion_prefetch_request_failed",
-                    ]
-                )
+                // PMM availability is narrower than PaymentSheet availability, so the country from
+                // Elements Session can legitimately be unsupported by the PMM endpoint.
+                if !error.isUnsupportedCountryError {
+                    logUnexpectedPMMEError(
+                        error: error,
+                        apiClient: configuration.apiClient,
+                        analyticsClient: STPAnalyticsClient.sharedClient,
+                        additionalNonPIIParams: [
+                            "failure_reason": "promotion_prefetch_request_failed",
+                        ]
+                    )
+                }
                 promotions = [:]
             }
         }
@@ -163,8 +168,28 @@ class PaymentMethodMessagingPromotionsHelper {
     ///   We could theoretically derive this from whether or not we have promotions data, but for safety/redundancy we require it to be explicitly passed.
     /// The duration reported is the time between when the fetch was initiated and when this display attempt occurs.
     func logDisplayedAnalytic(displayedSuccessfully: Bool) {
+        // A helper also exists in control so those call sites can render their existing fallback UI.
+        // Only treatment represents an attempt to display PMM content.
+        guard experiment.group == .treatment else {
+            return
+        }
         let duration = fetchStartDate.map { Date().timeIntervalSince($0) } ?? 0
         analyticsHelper.logPaymentMethodMessagingDisplayed(duration: duration, displayedSuccessfully: displayedSuccessfully)
+    }
+}
+
+private extension Error {
+    /// Matches the expected error returned when PaymentSheet supports the country but PMM does not.
+    /// Keep this narrow so other invalid requests continue to use the unexpected-error path.
+    var isUnsupportedCountryError: Bool {
+        guard let stripeError = self as? StripeError,
+              case let .apiError(apiError) = stripeError else {
+            return false
+        }
+        return apiError.httpStatusCode == 400
+            && apiError.type == .invalidRequestError
+            && apiError.param == "country"
+            && apiError.message?.hasPrefix("unsupported_country:") == true
     }
 }
 

@@ -11,16 +11,6 @@ import Foundation
 @_spi(STP) import StripeCameraCore
 
 struct FaceScannerOutput: Equatable {
-    enum ValidationIssue: Equatable {
-        case faceCount
-        case adjustingFocus
-        case motionBlur
-        case offCenter
-        case nearEdge
-        case tooFar
-        case tooClose
-    }
-
     private enum BestFrame {
         static let faceScoreWeight: Float = 0.25
         static let centeringWeight: Float = 0.25
@@ -29,32 +19,10 @@ struct FaceScannerOutput: Equatable {
         static let targetCoverage: CGFloat = 0.16
         static let maxCoverageDelta: CGFloat = 0.16
     }
-
     let faceDetectorOutput: FaceDetectorOutput
     let cameraProperties: CameraSession.DeviceProperties?
     let motionBlurResult: MotionBlurDetector.Output?
-    let facePose: FacePose?
-    let faceLandmarkResult: String?
-    let validationIssue: ValidationIssue?
     let isValid: Bool
-
-    init(
-        faceDetectorOutput: FaceDetectorOutput,
-        cameraProperties: CameraSession.DeviceProperties?,
-        motionBlurResult: MotionBlurDetector.Output?,
-        facePose: FacePose? = nil,
-        faceLandmarkResult: String? = nil,
-        validationIssue: ValidationIssue? = nil,
-        isValid: Bool
-    ) {
-        self.faceDetectorOutput = faceDetectorOutput
-        self.cameraProperties = cameraProperties
-        self.motionBlurResult = motionBlurResult
-        self.facePose = facePose
-        self.faceLandmarkResult = faceLandmarkResult
-        self.validationIssue = validationIssue
-        self.isValid = isValid
-    }
 
     var faceScore: Float {
         return faceDetectorOutput.predictions.first?.score ?? 0
@@ -112,79 +80,54 @@ extension FaceScannerOutput {
         faceDetectorOutput: FaceDetectorOutput,
         cameraProperties: CameraSession.DeviceProperties?,
         configuration: FaceScanner.Configuration,
-        motionBlurResult: MotionBlurDetector.Output? = nil,
-        facePose: FacePose? = nil,
-        faceLandmarkResult: String? = nil
+        motionBlurResult: MotionBlurDetector.Output? = nil
     ) {
-        let validationIssue = FaceScannerOutput.validationIssue(
-            faceDetectorOutput: faceDetectorOutput,
-            cameraProperties: cameraProperties,
-            motionBlurResult: motionBlurResult,
-            configuration: configuration
-        )
+        var isValid = false
+        if let rect = faceDetectorOutput.predictions.first?.rect {
+            isValid =
+                cameraProperties?.isAdjustingFocus != true
+                && faceDetectorOutput.predictions.count == 1
+                && motionBlurResult?.hasMotionBlur != true
+                && FaceScannerOutput.isFaceCentered(
+                    rect: rect,
+                    maxCenteredThreshold: configuration.maxCenteredThreshold
+                )
+                && FaceScannerOutput.isFaceAwayFromEdges(
+                    rect: rect,
+                    minEdgeThreshold: configuration.minEdgeThreshold
+                )
+                && FaceScannerOutput.isFaceWithinCoverageThresholds(
+                    rect: rect,
+                    min: configuration.minCoverageThreshold,
+                    max: configuration.maxCoverageThreshold
+                )
+        }
 
         self.init(
             faceDetectorOutput: faceDetectorOutput,
             cameraProperties: cameraProperties,
             motionBlurResult: motionBlurResult,
-            facePose: facePose,
-            faceLandmarkResult: faceLandmarkResult,
-            validationIssue: validationIssue,
-            isValid: validationIssue == nil
+            isValid: isValid
         )
     }
 
-    private static func validationIssue(
-        faceDetectorOutput: FaceDetectorOutput,
-        cameraProperties: CameraSession.DeviceProperties?,
-        motionBlurResult: MotionBlurDetector.Output?,
-        configuration: FaceScanner.Configuration
-    ) -> ValidationIssue? {
-        guard faceDetectorOutput.predictions.count == 1,
-            let rect = faceDetectorOutput.predictions.first?.rect
-        else {
-            return .faceCount
-        }
-        guard cameraProperties?.isAdjustingFocus != true else {
-            return .adjustingFocus
-        }
-        guard motionBlurResult?.hasMotionBlur != true else {
-            return .motionBlur
-        }
-        guard FaceScannerOutput.isFaceCentered(
-            rect: rect,
-            maxCenteredThreshold: configuration.maxCenteredThreshold
-        ) else {
-            return .offCenter
-        }
-        guard FaceScannerOutput.isFaceAwayFromEdges(
-            rect: rect,
-            minEdgeThreshold: configuration.minEdgeThreshold
-        ) else {
-            return .nearEdge
-        }
-
-        let coverage = rect.width * rect.height
-        if coverage <= configuration.minCoverageThreshold {
-            return .tooFar
-        }
-        if coverage >= configuration.maxCoverageThreshold {
-            return .tooClose
-        }
-        return nil
-    }
-
-    /// Whether the face's bounding box is centered in the frame within the maximum thresholds.
+    /// Is the face’s bounding box is centered in the frame within max thresholds
     static func isFaceCentered(rect: CGRect, maxCenteredThreshold: CGPoint) -> Bool {
         return abs(1 - (rect.maxY + rect.minY)) < maxCenteredThreshold.y
             && abs(1 - (rect.maxX + rect.minX)) < maxCenteredThreshold.x
     }
 
-    /// Whether the face's bounding box is away from the image edges by the minimum threshold.
+    /// Is the face’s bounding box is away from the edges of the image by a minimum threshold
     static func isFaceAwayFromEdges(rect: CGRect, minEdgeThreshold: CGFloat) -> Bool {
         return rect.minY > minEdgeThreshold
             && rect.maxY < (1 - minEdgeThreshold)
             && rect.minX > minEdgeThreshold
             && rect.maxX < (1 - minEdgeThreshold)
+    }
+
+    /// Is the face’s bounding box area (coverage) is between a min & max threshold
+    static func isFaceWithinCoverageThresholds(rect: CGRect, min: CGFloat, max: CGFloat) -> Bool {
+        let coverage = rect.width * rect.height
+        return coverage > min && coverage < max
     }
 }

@@ -30,6 +30,8 @@
 
 "Buy now or pay later with Klarna" = "用 Klarna 先買後付";
 
+"By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "透過 NICEPAY 確認您的支付，即表示您允許 %@ 根據其條款使用此支付方式為未來支付扣款。";
+
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "確認您的 PayPal 付款，即表示您允許 %@ 按照他們的條款從您的 PayPal 扣取未來款項。";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "繼續使用 Amazon Pay，即表示您允許 %@ 按照他們的條款從您的 Amazon Pay 帳戶扣取未來款項。";
@@ -59,6 +61,8 @@
 "By providing your phone number, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "提供您的電話號碼即表示您同意按照 %1$@ <terms>條款</terms>和<privacy>隱私政策</privacy>建立 %1$@ 帳戶，並將您的支付資訊儲存至 %1$@。";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "儲存您的 %@ 銀行帳戶即表示您同意按照<terms>這些條款</terms>授權付款。";
+
+"By saving your payment information, you allow %@ to charge you for future payments in accordance with their terms." = "儲存您的支付資訊，即表示您允許 %@ 按照其條款向您收款未來的支付。";
 
 "CPF/CPNJ" = "CPF/CPNJ";
 
@@ -141,6 +145,10 @@
 "Manage your payment methods" = "管理您的支付方式";
 
 "Name on card" = "持卡人姓名";
+
+"Naver Pay Card" = "Naver Pay 銀行卡";
+
+"Naver Pay Money/Point" = "Naver Pay Money/Point";
 
 "New card" = "添加新卡";
 
@@ -225,6 +233,8 @@
 "Saved" = "已儲存";
 
 "Select card" = "選擇金融卡";
+
+"Select how you want to pay:" = "選取您的支付方式：";
 
 "Select payment method" = "選擇支付方式";
 

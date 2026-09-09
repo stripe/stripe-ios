@@ -9,21 +9,29 @@
 @_spi(STP) import StripePayments
 
 extension CheckoutController {
+    // 😵😵😵 `LinkConfirmOption` represents both the beginning and the result of a Link wallet flow:
+    //
+    // | Option                | Link UI       | Meaning |
+    // |-----------------------|---------------|---------|
+    // | `.wallet`             | Native or web | Link is selected, but payment details have not been resolved. Open Link UI. |
+    // | `.withPaymentDetails` | Native        | Native Link returned consumer payment details that still need conversion or sharing. |
+    // | `.withPaymentMethod`  | Web           | Web Link returned a Stripe PaymentMethod. |
+    // | `.signUp`             | Neither       | The customer entered a payment method in Payment Element and opted into Link inline. |
+    //
+    // Therefore, `.wallet` can begin a flow that later returns `.withPaymentDetails` or
+    // `.withPaymentMethod`. A previously completed native selection can also enter confirmation
+    // directly as `.withPaymentDetails`.
     static func confirmLink(
         checkoutSession: Session,
-        confirmationContext: ConfirmationContext,
-        authenticationContext: STPAuthenticationContext,
-        clientAttributionMetadata: STPClientAttributionMetadata,
-        paymentHandler: STPPaymentHandler
+        parameters: LinkConfirmationParameters
     ) async -> InternalConfirmResult {
-        guard case .link(let confirmOption) = confirmationContext.paymentOption else {
-            stpAssertionFailure("confirmLink called with a non-Link payment option.")
-            return .init(paymentSheetResult: .failed(error: PaymentSheetError.confirmingWithInvalidPaymentOption))
-        }
-
         let elementsSession = checkoutSession.elementsSession
-        let configuration = confirmationContext.configuration
-        let confirmationChallenge = confirmationContext.confirmationChallenge
+        let configuration = parameters.configuration
+        let confirmationChallenge = parameters.confirmationChallenge
+        let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadata(
+            intent: .checkout(checkoutSession),
+            elementsSession: elementsSession
+        )
         let isSettingUp: (STPPaymentMethodType) -> Bool = { paymentMethodType in
             checkoutSession.merchantWillSavePaymentMethod(paymentMethodType)
         }
@@ -37,7 +45,24 @@ extension CheckoutController {
             let completion: (InternalConfirmResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void = { result, _ in
                 continuation.resume(returning: result)
             }
+            // TODO: Have the Link confirmation callback return InternalConfirmResult for Checkout so the
+            // confirmed session doesn't need to be passed through this side channel.
             var linkCompletionResult: InternalConfirmResult?
+
+            func resultWithoutSessionResponse(_ result: PaymentSheetResult) -> InternalConfirmResult {
+                switch result {
+                case .completed:
+                    let error = CheckoutError.unknown(
+                        debugDescription: "Link completed Checkout confirmation without returning the confirmed session."
+                    )
+                    stpAssertionFailure(error.nonGenericDescription)
+                    return .failed(error)
+                case .canceled:
+                    return .canceled()
+                case .failed(let error):
+                    return .failed(error)
+                }
+            }
 
             // Called when Link produces raw payment method params, including signup fallback/direct confirm paths.
             func confirmWithPaymentMethodParams(
@@ -46,24 +71,25 @@ extension CheckoutController {
                 saveForFutureUseCheckboxState: IntentConfirmParams.SaveForFutureUseCheckboxState
             ) {
                 Task { @MainActor in
-                    paymentMethodParams.radarOptions = await confirmationChallenge?.makeRadarOptions(for: paymentMethodParams.type)
-                    paymentMethodParams.clientAttributionMetadata = clientAttributionMetadata
-                    let result = await Self.handleCheckoutSessionConfirmation(
-                        checkoutSession: checkoutSession,
-                        confirmType: .new(
-                            params: paymentMethodParams,
-                            paymentOptions: STPConfirmPaymentMethodOptions(),
-                            saveForFutureUseCheckboxState: saveForFutureUseCheckboxState
-                        ),
+                    let confirmParams = IntentConfirmParams(
+                        params: paymentMethodParams,
+                        type: .stripe(paymentMethodParams.type)
+                    )
+                    confirmParams.saveForFutureUseCheckboxState = saveForFutureUseCheckboxState
+                    let paymentMethodParameters = PaymentMethodConfirmationParameters(
+                        option: .new(confirmParams),
                         configuration: configuration,
-                        authenticationContext: authenticationContext,
-                        paymentHandler: paymentHandler,
-                        elementsSession: elementsSession
+                        confirmationChallenge: confirmationChallenge,
+                        authenticationContext: parameters.authenticationContext,
+                        paymentHandler: parameters.paymentHandler
+                    )
+                    let result = await Self.confirmLinkPaymentMethod(
+                        checkoutSession: checkoutSession,
+                        parameters: paymentMethodParameters
                     )
                     if PaymentSheet.shouldLogOutOfLink(result: result.paymentSheetResult, elementsSession: elementsSession) {
                         linkAccount?.logout()
                     }
-                    await confirmationChallenge?.complete()
                     completion(result, nil)
                 }
             }
@@ -73,22 +99,19 @@ extension CheckoutController {
                 paymentMethod: STPPaymentMethod,
                 linkAccount: PaymentSheetLinkAccount?,
                 saveForFutureUseCheckboxState: IntentConfirmParams.SaveForFutureUseCheckboxState,
-                linkClientAttributionMetadata: STPClientAttributionMetadata?
+                linkClientAttributionMetadata _: STPClientAttributionMetadata?
             ) {
                 Task { @MainActor in
-                    let radarOptions = await confirmationChallenge?.makeRadarOptions(for: paymentMethod.type)
-                    let result = await Self.handleCheckoutSessionConfirmation(
-                        checkoutSession: checkoutSession,
-                        confirmType: .saved(
-                            paymentMethod,
-                            paymentOptions: nil,
-                            clientAttributionMetadata: linkClientAttributionMetadata,
-                            radarOptions: radarOptions
-                        ),
+                    let paymentMethodParameters = PaymentMethodConfirmationParameters(
+                        option: .saved(paymentMethod, nil),
                         configuration: configuration,
-                        authenticationContext: authenticationContext,
-                        paymentHandler: paymentHandler,
-                        elementsSession: elementsSession
+                        confirmationChallenge: confirmationChallenge,
+                        authenticationContext: parameters.authenticationContext,
+                        paymentHandler: parameters.paymentHandler
+                    )
+                    let result = await Self.confirmLinkPaymentMethod(
+                        checkoutSession: checkoutSession,
+                        parameters: paymentMethodParameters
                     )
                     if PaymentSheet.shouldLogOutOfLink(result: result.paymentSheetResult, elementsSession: elementsSession) {
                         linkAccount?.logout()
@@ -98,7 +121,10 @@ extension CheckoutController {
                 }
             }
 
-            // Called when Link UI returns a payment option that Checkout should confirm recursively.
+            // Link wallet UI calls this with its result:
+            // - native Link returns `.link(.withPaymentDetails)`
+            // - web Link returns `.link(.withPaymentMethod)`.
+            // Route the result back through Checkout confirmation.
             func confirmHandler(
                 linkAuthenticationContext: STPAuthenticationContext,
                 intent: Intent,
@@ -107,19 +133,22 @@ extension CheckoutController {
                 linkCompletion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
             ) {
                 Task { @MainActor in
-                    let linkConfirmationContext = CheckoutController.ConfirmationContext(
-                        paymentOption: linkPaymentOption,
-                        configuration: configuration,
-                        integrationShape: confirmationContext.integrationShape,
-                        confirmationChallenge: confirmationChallenge,
-                        analyticsHelper: confirmationContext.analyticsHelper
-                    )
-                    let result = await Self.confirmPaymentOption(
+                    guard case .link(let confirmOption) = linkPaymentOption else {
+                        let error = PaymentSheetError.confirmingWithInvalidPaymentOption
+                        stpAssertionFailure("Link returned an unsupported Checkout confirmation option.")
+                        linkCompletion(.failed(error: error), nil)
+                        return
+                    }
+                    let result = await Self.confirmLink(
                         checkoutSession: checkoutSession,
-                        confirmationContext: linkConfirmationContext,
-                        authenticationContext: linkAuthenticationContext,
-                        intentConfirmParamsForDeferredIntent: nil,
-                        paymentHandler: paymentHandler
+                        parameters: LinkConfirmationParameters(
+                            confirmOption: confirmOption,
+                            configuration: configuration,
+                            confirmationChallenge: confirmationChallenge,
+                            analyticsHelper: parameters.analyticsHelper,
+                            authenticationContext: linkAuthenticationContext,
+                            paymentHandler: parameters.paymentHandler
+                        )
                     )
                     linkCompletionResult = result
                     linkCompletion(result.paymentSheetResult, nil)
@@ -127,12 +156,13 @@ extension CheckoutController {
             }
 
             PaymentSheet.confirmLinkPaymentOption(
-                confirmOption: confirmOption,
+                confirmOption: parameters.confirmOption,
                 configuration: configuration,
-                authenticationContext: authenticationContext,
+                authenticationContext: parameters.authenticationContext,
                 intent: .checkout(checkoutSession),
                 elementsSession: elementsSession,
-                analyticsHelper: confirmationContext.analyticsHelper,
+                // Link controllers still require PaymentSheet analytics; keep that coupling on this typed path.
+                analyticsHelper: parameters.analyticsHelper,
                 confirmationChallenge: confirmationChallenge,
                 clientAttributionMetadata: clientAttributionMetadata,
                 isSettingUp: isSettingUp,
@@ -141,16 +171,39 @@ extension CheckoutController {
                 confirmWithPaymentMethod: confirmWithPaymentMethod(paymentMethod:linkAccount:saveForFutureUseCheckboxState:linkClientAttributionMetadata:),
                 confirmHandler: confirmHandler(linkAuthenticationContext:intent:elementsSession:linkPaymentOption:linkCompletion:),
                 paymentHandlerCompletion: { status, error in
-                    completion(.init(paymentSheetResult: PaymentSheet.makePaymentSheetResult(for: status, error: error)), nil)
+                    completion(resultWithoutSessionResponse(PaymentSheet.makePaymentSheetResult(for: status, error: error)), nil)
                 },
                 completion: { result, confirmationType in
                     if let internalResult = linkCompletionResult {
                         completion(internalResult, confirmationType)
                     } else {
-                        completion(.init(paymentSheetResult: result), confirmationType)
+                        completion(resultWithoutSessionResponse(result), confirmationType)
                     }
                 }
             )
+        }
+    }
+
+    /// Confirms a payment method produced by Link using the shared Checkout Session flow.
+    @MainActor
+    private static func confirmLinkPaymentMethod(
+        checkoutSession: Session,
+        parameters: PaymentMethodConfirmationParameters
+    ) async -> InternalConfirmResult {
+        do {
+            let requestParameters = try await makeConfirmationRequestParameters(
+                for: parameters,
+                checkoutSession: checkoutSession,
+                preconfirmedIntentParams: nil
+            )
+            return await confirmCheckoutSession(
+                with: requestParameters,
+                apiClient: parameters.configuration.apiClient,
+                authenticationContext: parameters.authenticationContext,
+                paymentHandler: parameters.paymentHandler
+            )
+        } catch {
+            return .failed(error)
         }
     }
 
