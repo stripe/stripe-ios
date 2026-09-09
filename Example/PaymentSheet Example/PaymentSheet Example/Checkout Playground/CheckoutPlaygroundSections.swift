@@ -97,15 +97,25 @@ struct CheckoutPlaygroundConfigurationSection: View {
 }
 
 struct CheckoutPlaygroundLineItemsSection: View {
-    let lineItems: [CheckoutPlayground.LineItemConfig]
+    @Binding var cartScenario: CheckoutPlayground.CartScenario
     let currency: CheckoutPlayground.Currency
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            CheckoutPlayground.SectionHeader(title: "Line Items", icon: "cart.fill")
+            HStack {
+                CheckoutPlayground.SectionHeader(title: "Line Items", icon: "cart.fill")
+                Spacer()
+                Picker("Cart Scenario", selection: $cartScenario) {
+                    ForEach(CheckoutPlayground.CartScenario.allCases) { scenario in
+                        Text(scenario.displayName).tag(scenario)
+                    }
+                }
+                .pickerStyle(.menu)
+                .labelsHidden()
+            }
 
             VStack(spacing: 12) {
-                ForEach(lineItems) { item in
+                ForEach(cartScenario.lineItems) { item in
                     CheckoutPlaygroundLineItemCard(
                         item: item,
                         currency: currency

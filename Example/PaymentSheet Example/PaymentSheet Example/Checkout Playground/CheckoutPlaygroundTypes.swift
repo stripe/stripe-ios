@@ -267,6 +267,35 @@ enum CheckoutPlayground {
             LineItemConfig(name: "Classic T-Shirt", unitAmount: 3500, quantity: 2),
             LineItemConfig(name: "Zip-Up Hoodie", unitAmount: 5000, quantity: 1),
         ]
+
+        static let zeroAmount = [
+            LineItemConfig(name: "Free T-Shirt", unitAmount: 0, quantity: 1),
+        ]
+    }
+
+    enum CartScenario: String, CaseIterable, Codable, Identifiable {
+        case standard
+        case zeroAmount = "zero_amount"
+
+        var id: String { rawValue }
+
+        var displayName: String {
+            switch self {
+            case .standard:
+                return "Standard cart"
+            case .zeroAmount:
+                return "$0 cart"
+            }
+        }
+
+        var lineItems: [LineItemConfig] {
+            switch self {
+            case .standard:
+                return LineItemConfig.defaults
+            case .zeroAmount:
+                return LineItemConfig.zeroAmount
+            }
+        }
     }
 
     struct Settings: Codable {
@@ -277,7 +306,7 @@ enum CheckoutPlayground {
         var linkMode: LinkMode = .native
         var currency: Currency = .usd
         var customerType: CustomerType = .guest
-        var lineItems: [LineItemConfig] = LineItemConfig.defaults
+        var cartScenario: CartScenario = .standard
         var shippingAddressCollection = true
         var defaultShippingAddressOption: DefaultShippingAddressOption = .none
         var customDefaultShippingAddress = DefaultShippingAddress.usTestAddress
