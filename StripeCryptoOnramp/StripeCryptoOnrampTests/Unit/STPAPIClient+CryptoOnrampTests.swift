@@ -680,7 +680,7 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
             .required(
                 partner: "swapped",
                 declaration: .init(
-                    id: "declaration_123",
+                    id: "copt_decl_123",
                     type: .transactionTerms,
                     html: "<p>Partner terms and conditions</p>"
                 )
@@ -720,7 +720,7 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
             .required(
                 partner: "swapped",
                 declaration: .init(
-                    id: "declaration_456",
+                    id: "copt_decl_456",
                     type: .termsOfService,
                     html: "<p>Partner terms of service</p>"
                 )
@@ -784,7 +784,7 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
 
             XCTAssertEqual(parameters.count, 2)
             XCTAssertEqual(parameters["credentials[consumer_session_client_secret]"], Constant.requestSecret)
-            XCTAssertEqual(parameters["declaration_id"], "declaration_123")
+            XCTAssertEqual(parameters["declaration_id"], "copt_decl_123")
 
             return true
         } response: { _ in
@@ -793,7 +793,7 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
 
         let apiClient = stubbedAPIClient()
         _ = try await apiClient.confirmPartnerTerms(
-            declarationId: "declaration_123",
+            declarationId: "copt_decl_123",
             linkAccountInfo: Constant.validLinkAccountInfo
         )
     }
@@ -805,7 +805,7 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         noSecretLinkAccountInfo.consumerSessionClientSecret = nil
         await XCTAssertThrowsErrorAsync(
             _ = try await apiClient.confirmPartnerTerms(
-                declarationId: "declaration_123",
+                declarationId: "copt_decl_123",
                 linkAccountInfo: noSecretLinkAccountInfo
             )
         )
@@ -814,7 +814,7 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         unverifiedLinkAccountInfo.sessionState = .requiresVerification
         await XCTAssertThrowsErrorAsync(
             _ = try await apiClient.confirmPartnerTerms(
-                declarationId: "declaration_123",
+                declarationId: "copt_decl_123",
                 linkAccountInfo: unverifiedLinkAccountInfo
             )
         )

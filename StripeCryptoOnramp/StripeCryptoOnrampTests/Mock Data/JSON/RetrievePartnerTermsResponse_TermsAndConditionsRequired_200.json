@@ -2,7 +2,7 @@
   "required": true,
   "partner": "swapped",
   "declaration": {
-    "id": "declaration_123",
+    "id": "copt_decl_123",
     "type": "transaction_terms",
     "text": "<p>Partner terms and conditions</p>"
   }
