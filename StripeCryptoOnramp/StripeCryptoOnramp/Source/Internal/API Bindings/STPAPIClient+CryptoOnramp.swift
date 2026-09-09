@@ -475,7 +475,7 @@ private extension STPAPIClient {
     }
 }
 
-enum CryptoOnrampAPI {
+private enum CryptoOnrampAPI {
     static let consumerAuthTokenHeader = "Stripe-Consumer-Auth-Token"
 
     // Use a preview API version for networks and parameters behind preview API features.
