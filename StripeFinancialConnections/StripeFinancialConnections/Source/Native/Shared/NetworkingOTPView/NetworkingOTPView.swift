@@ -167,10 +167,6 @@ final class NetworkingOTPView: UIView {
                 switch result {
                 case .success(let consumerSessionResponse):
                     self.delegate?.networkingOTPView(self, didStartVerification: consumerSessionResponse.consumerSession)
-
-                    // call this AFTER the delegate to ensure that the delegate-handler
-                    // adds the OTP view to the view-hierarchy
-                    self.otpTextField.becomeFirstResponder()
                 case .failure(let error):
                     self.delegate?.networkingOTPView(self, didFailToStartVerification: error)
                 }
