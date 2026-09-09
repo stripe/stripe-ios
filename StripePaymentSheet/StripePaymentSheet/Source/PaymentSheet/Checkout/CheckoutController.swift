@@ -139,12 +139,14 @@ public final class CheckoutController: ObservableObject {
             let sessionSource = CheckoutSessionSource(initialSession: session, sessionPublisher: $session)
 
             // 3. ECE
-            configuration.expressCheckoutElement.apiClient = configuration.apiClient
-            self.expressCheckoutElement = ExpressCheckoutElement(
-                sessionSource: sessionSource,
-                configuration: configuration.expressCheckoutElement,
-                delegate: self
-            )
+            configuration.expressCheckoutElement?.apiClient = configuration.apiClient
+            if let expressCheckoutElementConfiguration = configuration.expressCheckoutElement {
+                self.expressCheckoutElement = ExpressCheckoutElement(
+                    sessionSource: sessionSource,
+                    configuration: expressCheckoutElementConfiguration,
+                    delegate: self
+                )
+            }
 
             // 4. CSE
             if let currencySelectorConfiguration = configuration.currencySelectorElement {
@@ -335,8 +337,10 @@ public final class CheckoutController: ObservableObject {
     }
 
     /// Returns the ExpressCheckoutElement for this CheckoutController instance.
-    public func getExpressCheckoutElement() -> ExpressCheckoutElement? {
-        return expressCheckoutElement
+    public func getExpressCheckoutElement() -> ExpressCheckoutElement {
+        assert(configuration.expressCheckoutElement != nil, "Set Configuration.expressCheckoutElement before calling getExpressCheckoutElement().")
+        stpAssert(expressCheckoutElement != nil, "ExpressCheckoutElement should be initialized when Configuration.expressCheckoutElement is set.")
+        return expressCheckoutElement!
     }
 
     /// Returns Currency Selector Element when it was configured and Adaptive
