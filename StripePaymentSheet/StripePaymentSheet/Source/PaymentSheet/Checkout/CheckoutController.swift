@@ -74,6 +74,9 @@ public final class CheckoutController: ObservableObject {
     /// Guards confirmation across Payment Element and Express Checkout entry points.
     var confirmationInProgress = false
 
+    /// The last tax region successfully sent by this CheckoutController.
+    var currentTaxRegion: Address?
+
     /// Default timeout used by ``awaitPendingOperations(timeout:)``.
     nonisolated static let defaultPendingOperationsTimeout: TimeInterval = 30
 
