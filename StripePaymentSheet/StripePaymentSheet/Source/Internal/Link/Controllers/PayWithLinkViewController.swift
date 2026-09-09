@@ -694,9 +694,7 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
                 },
                 clientAttributionMetadata: clientAttributionMetadata
             ),
-            // Only `.onelink` should be treated as an explicit client override for FC.
-            // A `.link` selection should behave like no override so backend brand updates can still win.
-            linkBrand: context.configuration.link.brand == .onelink ? .onelink : nil,
+            linkBrand: context.configuration.financialConnectionsLinkBrandOverride,
             onEvent: nil,
             from: self,
             completion: { result in
