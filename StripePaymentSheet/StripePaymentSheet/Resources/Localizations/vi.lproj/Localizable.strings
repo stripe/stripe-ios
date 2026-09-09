@@ -46,6 +46,8 @@
 
 "Buy now or pay later with Klarna" = "Mua ngay hoặc thanh toán sau bằng Klarna";
 
+"By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "Bằng việc xác nhận thanh toán của bạn với NICEPAY, bạn cho phép %@ tính phí phương thức thanh toán này cho các khoản thanh toán trong tương lai theo các điều khoản của họ.";
+
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Bằng cách xác nhận khoản thanh toán của quý vị với PayPal, quý vị cho phép %@ tính phí tài khoản PayPal của quý vị cho các khoản thanh toán trong tương lai theo các điều khoản của họ.";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Bằng cách tiếp tục với Amazon Pay, bạn cho phép %@ tính phí tài khoản Amazon Pay của bạn cho các khoản thanh toán trong tương lai theo các điều khoản của họ.";
@@ -192,6 +194,10 @@
 
 "Name on card" = "Tên trên thẻ";
 
+"Naver Pay Card" = "Thẻ Naver Pay";
+
+"Naver Pay Money/Point" = "Số tiền/điểm Naver Pay";
+
 "New card" = "Thẻ mới";
 
 "New payment method" = "Phương thức thanh toán mới";
@@ -287,6 +293,8 @@
 "Saved" = "Đã lưu";
 
 "Select card" = "Chọn thẻ";
+
+"Select how you want to pay:" = "Chọn cách bạn muốn thanh toán:";
 
 "Select payment method" = "Chọn phương thức thanh toán";
 
