@@ -139,7 +139,7 @@ final class AccountPickerViewController: UIViewController {
         super.viewDidLoad()
         // account picker ALWAYS hides the back button
         navigationItem.hidesBackButton = true
-        view.backgroundColor = FinancialConnectionsAppearance.Colors.background
+        view.backgroundColor = FinancialConnectionsAppearance.Colors.surfacePrimary
         pollAuthSessionAccounts()
     }
 

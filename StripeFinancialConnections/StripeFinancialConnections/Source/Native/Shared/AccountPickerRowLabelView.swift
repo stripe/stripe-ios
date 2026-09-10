@@ -49,8 +49,8 @@ final class AccountPickerRowLabelView: UIView {
             trailing: 6
         )
         paddingView.backgroundColor = appearance.colors == .link
-            ? FinancialConnectionsAppearance.Colors.borderNeutral
-            : FinancialConnectionsAppearance.Colors.backgroundSecondary
+            ? FinancialConnectionsAppearance.Colors.surfaceTertiary
+            : FinancialConnectionsAppearance.Colors.surfaceSecondary
         paddingView.layer.cornerRadius = 4
         return paddingView
     }()

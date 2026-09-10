@@ -131,7 +131,7 @@ private func CreateLinkThemeMultiLinkView(
     }
 
     let cardView = UIView()
-    cardView.backgroundColor = appearance.colors.iconBackground
+    cardView.backgroundColor = FinancialConnectionsAppearance.Colors.surfaceSecondary
     cardView.layer.cornerRadius = 16
     cardView.layer.masksToBounds = true
     cardView.addAndPinSubview(verticalStackView)

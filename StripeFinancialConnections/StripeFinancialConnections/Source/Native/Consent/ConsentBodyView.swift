@@ -18,7 +18,7 @@ class ConsentBodyView: UIView {
         didSelectURL: @escaping (URL) -> Void
     ) {
         super.init(frame: .zero)
-        backgroundColor = FinancialConnectionsAppearance.Colors.background
+        backgroundColor = FinancialConnectionsAppearance.Colors.surfacePrimary
 
         let verticalStackView = HitTestStackView()
         verticalStackView.axis = .vertical

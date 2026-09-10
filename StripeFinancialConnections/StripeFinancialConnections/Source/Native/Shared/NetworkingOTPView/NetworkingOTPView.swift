@@ -80,7 +80,7 @@ final class NetworkingOTPView: UIView {
             // (default, filled, error), matching Figma's Surface/Secondary token.
             colors.componentBackground = dataSource.appearance.colors == .link
                 ? dataSource.appearance.colors.iconBackground
-                : FinancialConnectionsAppearance.Colors.background
+                : FinancialConnectionsAppearance.Colors.surfacePrimary
             colors.textFieldText = FinancialConnectionsAppearance.Colors.textDefault
             colors.danger = FinancialConnectionsAppearance.Colors.textCritical
             return colors

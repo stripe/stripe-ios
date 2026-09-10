@@ -31,7 +31,7 @@ final class InstitutionTableViewCell: UITableViewCell {
 
     private lazy var overlayView: UIView = {
         let overlayView = UIView()
-        overlayView.backgroundColor = FinancialConnectionsAppearance.Colors.background.withAlphaComponent(0.8)
+        overlayView.backgroundColor = FinancialConnectionsAppearance.Colors.surfacePrimary.withAlphaComponent(0.8)
         overlayView.alpha = 0
         return overlayView
     }()
@@ -83,10 +83,10 @@ final class InstitutionTableViewCell: UITableViewCell {
     private func adjustBackgroundColor(isHighlighted: Bool) {
         let isLinkAppearance = appearance?.colors == .link
         let restingColor: UIColor = isLinkAppearance
-            ? appearance?.colors.iconBackground ?? FinancialConnectionsAppearance.Colors.background
-            : FinancialConnectionsAppearance.Colors.background
+            ? FinancialConnectionsAppearance.Colors.surfaceSecondary
+            : FinancialConnectionsAppearance.Colors.surfacePrimary
         contentView.backgroundColor = isHighlighted
-            ? FinancialConnectionsAppearance.Colors.backgroundHighlighted
+            ? FinancialConnectionsAppearance.Colors.surfaceTertiary
             : restingColor
         backgroundColor = isLinkAppearance ? .clear : contentView.backgroundColor
         dividerView.isHidden = !isLinkAppearance || roundsBottomCorners || isHighlighted

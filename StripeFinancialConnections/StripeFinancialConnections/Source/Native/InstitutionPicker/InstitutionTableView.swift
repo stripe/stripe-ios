@@ -142,7 +142,7 @@ final class InstitutionTableView: UIView {
             )
             tableView.separatorStyle = .none
         } else {
-            tableView.backgroundColor = FinancialConnectionsAppearance.Colors.background
+            tableView.backgroundColor = FinancialConnectionsAppearance.Colors.surfacePrimary
             tableView.separatorInset = .zero
             tableView.separatorStyle = .none
         }

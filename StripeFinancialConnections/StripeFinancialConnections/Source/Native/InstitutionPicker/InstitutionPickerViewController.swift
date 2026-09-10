@@ -63,7 +63,7 @@ class InstitutionPickerViewController: UIViewController {
             bottom: Self.headerAndSearchBarSpacing,
             trailing: isLinkTheme ? 0 : Constants.Layout.defaultHorizontalMargin
         )
-        verticalStackView.backgroundColor = FinancialConnectionsAppearance.Colors.background
+        verticalStackView.backgroundColor = FinancialConnectionsAppearance.Colors.surfacePrimary
         return verticalStackView
     }()
     private lazy var searchBarContainerView: UIView = {
@@ -81,7 +81,7 @@ class InstitutionPickerViewController: UIViewController {
             bottom: 16,
             trailing: isLinkTheme ? 0 : Constants.Layout.defaultHorizontalMargin
         )
-        verticalStackView.backgroundColor = FinancialConnectionsAppearance.Colors.background
+        verticalStackView.backgroundColor = FinancialConnectionsAppearance.Colors.surfacePrimary
         // the "shadow" fixes an issue where the "search bar sticky header"
         // has a visible 1 pixel gap. the shadow is not actually a shadow,
         // but rather a "top border"
@@ -150,7 +150,7 @@ class InstitutionPickerViewController: UIViewController {
     }
 
     private func setupView() {
-        view.backgroundColor = FinancialConnectionsAppearance.Colors.background
+        view.backgroundColor = FinancialConnectionsAppearance.Colors.surfacePrimary
 
         if dataSource.manifest.appearance.colors == .link {
             view.addAndPinSubview(
@@ -332,7 +332,7 @@ class InstitutionPickerViewController: UIViewController {
         super.traitCollectionDidChange(previousTraitCollection)
         guard traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) else { return }
 
-        shadowLayer?.shadowColor = FinancialConnectionsAppearance.Colors.background.cgColor
+        shadowLayer?.shadowColor = FinancialConnectionsAppearance.Colors.surfacePrimary.cgColor
     }
 }
 
