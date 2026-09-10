@@ -46,12 +46,11 @@ actor ConfirmationChallenge {
 
     func fetchTokensWithTimeout() async -> ChallengeTokens {
         let startTime = Date()
-        let isReady = await passiveCaptchaChallenge?.isTokenReady ?? false
-        let getPassiveCaptchaToken: () async throws -> String? = {
+        let getPassiveCaptchaToken: () async throws -> PassiveCaptchaChallenge.ConsumedToken? = {
             guard let passiveCaptchaChallenge = self.passiveCaptchaChallenge else {
                 return nil
             }
-            return try await passiveCaptchaChallenge.fetchToken()
+            return try await passiveCaptchaChallenge.consumeToken()
         }
 
         let getAttestationAssertion: () async throws -> StripeAttest.Assertion? = {
@@ -64,8 +63,8 @@ actor ConfirmationChallenge {
         let (hcaptchaTokenResult, assertionResult) = await withTimeout(timeout, getPassiveCaptchaToken, getAttestationAssertion)
         if let passiveCaptchaChallenge {
             switch hcaptchaTokenResult {
-            case .success:
-                STPAnalyticsClient.sharedClient.logPassiveCaptchaAttach(siteKey: passiveCaptchaChallenge.passiveCaptchaData.siteKey, isReady: isReady, duration: Date().timeIntervalSince(startTime))
+            case .success(let consumedToken):
+                STPAnalyticsClient.sharedClient.logPassiveCaptchaAttach(siteKey: passiveCaptchaChallenge.passiveCaptchaData.siteKey, isReady: consumedToken?.wasReady ?? false, duration: Date().timeIntervalSince(startTime))
             case .failure(let error):
                 if error is TimeoutError {
                     STPAnalyticsClient.sharedClient.logPassiveCaptchaError(error: error, siteKey: passiveCaptchaChallenge.passiveCaptchaData.siteKey, duration: Date().timeIntervalSince(startTime))
@@ -75,7 +74,7 @@ actor ConfirmationChallenge {
         if case .failure(let error) = assertionResult, error is TimeoutError {
             STPAnalyticsClient.sharedClient.logAttestationConfirmationError(error: error, duration: Date().timeIntervalSince(startTime))
         }
-        let hcaptchaToken: String? = try? hcaptchaTokenResult.get()
+        let hcaptchaToken: String? = try? hcaptchaTokenResult.get()?.value
         let assertion: StripeAttest.Assertion? = try? assertionResult.get()
         return (hcaptchaToken: hcaptchaToken, assertion: assertion)
     }

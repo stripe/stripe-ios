@@ -51,11 +51,17 @@ struct PassiveCaptchaData: Equatable, Hashable {
 }
 
 actor PassiveCaptchaChallenge {
+    struct ConsumedToken {
+        let value: String
+        let wasReady: Bool
+    }
+
     let passiveCaptchaData: PassiveCaptchaData
     private let hcaptchaFactory: HCaptchaFactory
     private var tokenTask: Task<String, Error>?
+    private var shouldStartInitialPreload = true
     var isTokenReady: Bool { // used for the attach analytic to indicate whether it's blocking checkout
-        return hasFetchedToken && !hasSessionExpired
+        return tokenTask != nil && hasFetchedToken && !hasSessionExpired
     }
     private var hasFetchedToken: Bool = false
     private var sessionExpirationDate: Date?
@@ -74,7 +80,7 @@ actor PassiveCaptchaChallenge {
         // Use [weak self] so this task does not prevent the actor from being deallocated.
         // When the actor is deallocated, deinit cancels tokenTask.
         Task { [weak self] in
-            _ = try? await self?.fetchToken()
+            await self?.preloadToken()
         }
     }
 
@@ -84,20 +90,52 @@ actor PassiveCaptchaChallenge {
         tokenTask?.cancel()
     }
 
-    public func fetchToken() async throws -> String {
+    func consumeToken() async throws -> ConsumedToken {
+        // Prevent the initialization task from starting a preload after an
+        // immediate consumer has already claimed its own token task.
+        shouldStartInitialPreload = false
+
         if hasSessionExpired {
             resetSession()
         }
 
-        if let tokenTask {
-            return try await withTaskCancellationHandler {
-                try await tokenTask.value
-            } onCancel: {
-                tokenTask.cancel()
-            }
-        }
+        let wasReady = isTokenReady
+        let tokenTask = tokenTask ?? Self.makeTokenTask(
+            passiveCaptchaData: passiveCaptchaData,
+            hcaptchaFactory: hcaptchaFactory,
+            owner: self
+        )
 
-        let tokenTask = Task<String, Error> { [siteKey = passiveCaptchaData.siteKey, rqdata = passiveCaptchaData.rqdata, hcaptchaFactory, weak self] () -> String in
+        // Tokens can only be used once. Remove this task from the cache before
+        // awaiting it so concurrent consumers cannot receive the same token.
+        resetSession()
+        defer { resetSession() }
+
+        let token = try await withTaskCancellationHandler {
+            try await tokenTask.value
+        } onCancel: {
+            tokenTask.cancel()
+        }
+        return ConsumedToken(value: token, wasReady: wasReady)
+    }
+
+    private func preloadToken() {
+        guard shouldStartInitialPreload else { return }
+        shouldStartInitialPreload = false
+
+        tokenTask = Self.makeTokenTask(
+            passiveCaptchaData: passiveCaptchaData,
+            hcaptchaFactory: hcaptchaFactory,
+            owner: self
+        )
+    }
+
+    private static func makeTokenTask(
+        passiveCaptchaData: PassiveCaptchaData,
+        hcaptchaFactory: HCaptchaFactory,
+        owner: PassiveCaptchaChallenge
+    ) -> Task<String, Error> {
+        Task<String, Error> { [siteKey = passiveCaptchaData.siteKey, rqdata = passiveCaptchaData.rqdata, hcaptchaFactory, weak owner] () -> String in
             STPAnalyticsClient.sharedClient.logPassiveCaptchaInit(siteKey: siteKey)
             let startTime = Date()
             do {
@@ -112,7 +150,7 @@ actor PassiveCaptchaChallenge {
                             Task { @MainActor in // MainActor to prevent continuation from different threads
                                 do {
                                     let token = try result.dematerialize()
-                                    await self?.setSessionExpirationDate()
+                                    await owner?.setSessionExpirationDate()
                                     nillableContinuation?.resume(returning: token)
                                     nillableContinuation = nil
                                 } catch {
@@ -130,7 +168,7 @@ actor PassiveCaptchaChallenge {
                 // Check cancellation after continuation
                 try Task.checkCancellation()
                 // Mark as complete
-                await self?.setValidationComplete()
+                await owner?.setValidationComplete()
                 let duration = Date().timeIntervalSince(startTime)
                 STPAnalyticsClient.sharedClient.logPassiveCaptchaSuccess(siteKey: siteKey, duration: duration)
                 return result
@@ -140,12 +178,6 @@ actor PassiveCaptchaChallenge {
                 STPAnalyticsClient.sharedClient.logPassiveCaptchaError(error: error, siteKey: siteKey, duration: duration)
                 throw error
             }
-        }
-        self.tokenTask = tokenTask
-        return try await withTaskCancellationHandler {
-            try await tokenTask.value
-        } onCancel: {
-            tokenTask.cancel()
         }
     }
 
