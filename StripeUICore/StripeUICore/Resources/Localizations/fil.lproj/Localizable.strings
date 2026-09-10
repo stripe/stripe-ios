@@ -92,6 +92,8 @@
 
 "Prefecture" = "Prefecture";
 
+"Processing..." = "Pinoproseso...";
+
 "Province" = "Probinsiya";
 
 "Remove" = "Alisin";
@@ -106,9 +108,13 @@
 
 "Selection is empty." = "Walang laman ang seleksyon.";
 
+"Something went wrong" = "May nangyaring mali";
+
 "Sort code" = "Sort code";
 
 "State" = "State";
+
+"Submit" = "Isumite";
 
 "Suburb" = "Suburb";
 

@@ -92,6 +92,8 @@
 
 "Prefecture" = "Prefektūra";
 
+"Processing..." = "Apdorojama...";
+
 "Province" = "Provincija";
 
 "Remove" = "Pašalinti";
@@ -106,9 +108,13 @@
 
 "Selection is empty." = "Nieko nepasirinkta.";
 
+"Something went wrong" = "Kažkas nepavyko";
+
 "Sort code" = "Identifikacinis kodas";
 
 "State" = "Valstija";
+
+"Submit" = "Pateikti";
 
 "Suburb" = "Priemiestis";
 

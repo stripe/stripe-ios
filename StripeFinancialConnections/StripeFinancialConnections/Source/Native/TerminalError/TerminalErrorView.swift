@@ -7,6 +7,7 @@
 
 import Foundation
 @_spi(STP) import StripeCore
+@_spi(STP) import StripeUICore
 import UIKit
 
 func TerminalErrorView(
@@ -22,10 +23,7 @@ func TerminalErrorView(
                 style: .circle,
                 appearance: appearance
             ),
-            title: STPLocalizedString(
-                "Something went wrong",
-                "Title of a screen that shows an error. The error screen appears after user has selected a bank. The error is a generic one: something wrong happened and we are not sure what."
-            ),
+            title: String.Localized.something_went_wrong,
             subtitle: {
                 if allowManualEntry {
                     return STPLocalizedString(

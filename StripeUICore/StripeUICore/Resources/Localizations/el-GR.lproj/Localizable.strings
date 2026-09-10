@@ -92,6 +92,8 @@
 
 "Prefecture" = "Νομός";
 
+"Processing..." = "Επεξεργασία…";
+
 "Province" = "Επαρχία";
 
 "Remove" = "Αφαίρεση";
@@ -106,9 +108,13 @@
 
 "Selection is empty." = "Η επιλογή είναι κενή.";
 
+"Something went wrong" = "Παρουσιάστηκε κάποιο πρόβλημα";
+
 "Sort code" = "Κωδικός sort";
 
 "State" = "Πολιτεία";
+
+"Submit" = "Υποβολή";
 
 "Suburb" = "Προάστιο";
 
