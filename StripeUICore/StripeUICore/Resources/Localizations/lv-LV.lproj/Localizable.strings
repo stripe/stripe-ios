@@ -92,6 +92,8 @@
 
 "Prefecture" = "Prefektūra";
 
+"Processing..." = "Apstrādā…";
+
 "Province" = "Province";
 
 "Remove" = "Noņemt";
@@ -106,9 +108,13 @@
 
 "Selection is empty." = "Atlase ir tukša.";
 
+"Something went wrong" = "Radusies kļūda";
+
 "Sort code" = "Bankas filiāles kods";
 
 "State" = "Novads/štats";
+
+"Submit" = "Iesniegt";
 
 "Suburb" = "Priekšpilsēta";
 

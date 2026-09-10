@@ -386,9 +386,6 @@ e.g, 'Pay faster at Example, Inc. and thousands of businesses.' */
 /* Accessibility instructions for card scanning. */
 "Point the camera at your card." = "Point the camera at your card.";
 
-/* Label of a button that, when tapped, initiates payment, becomes disabled, and displays this text */
-"Processing..." = "Processing...";
-
 /* Label title for Przelewy24 Bank */
 "Przelewy24 Bank" = "Przelewy24 Bank";
 

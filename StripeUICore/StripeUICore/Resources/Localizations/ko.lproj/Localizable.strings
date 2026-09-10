@@ -92,6 +92,8 @@
 
 "Prefecture" = "도/현";
 
+"Processing..." = "처리 중...";
+
 "Province" = "도";
 
 "Remove" = "제거";
@@ -106,9 +108,13 @@
 
 "Selection is empty." = "선택 항목이 비어 있습니다.";
 
+"Something went wrong" = "문제 발생";
+
 "Sort code" = "코드 정렬";
 
 "State" = "주";
+
+"Submit" = "제출";
 
 "Suburb" = "교외";
 

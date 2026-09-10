@@ -92,6 +92,8 @@
 
 "Prefecture" = "Prefektuur";
 
+"Processing..." = "Töötlemine ...";
+
 "Province" = "Maakond";
 
 "Remove" = "Eemalda";
@@ -106,9 +108,13 @@
 
 "Selection is empty." = "Valik on tühi.";
 
+"Something went wrong" = "Midagi läks valesti";
+
 "Sort code" = "Sorteerimiskood";
 
 "State" = "Osariik";
+
+"Submit" = "Esita";
 
 "Suburb" = "Eeslinn";
 
