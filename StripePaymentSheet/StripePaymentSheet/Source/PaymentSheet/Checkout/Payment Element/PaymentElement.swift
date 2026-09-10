@@ -182,6 +182,13 @@ extension PaymentElement {
             throw error
         }
 
+        // Embedded can restore its default payment option during a rebuild. If FlowController
+        // is authoritative and has no selection, keep Embedded cleared too.
+        if paymentOptionSourceOfTruthIsFlowController,
+           paymentSheetFlowController.paymentOption == nil {
+            embeddedPaymentElement.clearPaymentOption()
+        }
+
         // Update payment option
         // Problem: Since (unfortunately) we have two sources of truth for payment option (FC and Embedded), we need to know which one to pick. We can't just let them both update payment option - then the last one to update will win, even when it wasn't actually used by the customer.
         // Hacky solution: We determine which one to pick based on which one last reported a payment option update.
@@ -197,18 +204,24 @@ extension PaymentElement {
     }
 
     func clearPaymentOption() async throws {
-        guard !paymentSheetFlowController.didPresentAndContinue else {
-            assertionFailure("Clearing the payment option after presenting PaymentElement is not implemented. File a feature request if you need this.")
-            return
-        }
         guard let checkout else {
             stpAssertionFailure("PaymentElement unexpectedly lost its CheckoutController.")
             return
         }
         try await checkout.updateBillingTaxRegionIfNecessary(address: nil)
-        checkout.dangerouslySetPaymentOptionDirectly(nil)
-        paymentSheetFlowController.clearPaymentOption()
-        embeddedPaymentElement.clearPaymentOption()
+
+        await checkout.enqueueSessionUpdate {
+            // Clear both UI implementations before publishing Checkout's state. FlowController
+            // preserves the cleared state across rebuilds until the customer continues with an option.
+            self.isSuppressingPaymentOptionUpdates = true
+            defer {
+                self.isSuppressingPaymentOptionUpdates = false
+            }
+            self.paymentSheetFlowController.clearPaymentOption()
+            self.embeddedPaymentElement.clearPaymentOption()
+            self.paymentOptionSourceOfTruthIsFlowController = true
+            checkout.dangerouslySetPaymentOptionDirectly(nil)
+        }
     }
 }
 

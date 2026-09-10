@@ -120,6 +120,27 @@ class PaymentSheetFlowControllerTests: XCTestCase {
         XCTAssertNil(sut.internalPaymentOption)
     }
 
+    @MainActor
+    func testClearPaymentOptionAllowsNextSelection() {
+        // Given a horizontal FlowController whose default payment option was cleared
+        let customerID = "cus_test_horizontal_select_after_clear"
+        defer {
+            CustomerPaymentOption.setDefaultPaymentMethod(nil, forCustomer: customerID)
+        }
+        CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: customerID)
+        let sut = makeHorizontalFlowController(customerID: customerID)
+        sut.clearPaymentOption()
+
+        // When the customer accepts a new payment option
+        sut.viewController.linkConfirmOption = .wallet(brand: .link)
+        sut.flowControllerViewControllerShouldClose(sut.viewController, didCancel: false)
+        sut.updatePaymentOption()
+
+        // Then the new payment option is exposed
+        XCTAssertEqual(sut.paymentOption?.paymentMethodType, "link")
+        XCTAssertNotNil(sut.internalPaymentOption)
+    }
+
     // MARK: - PaymentOptionDisplayData Labels Tests
 
     func testPaymentOptionDisplayData_CardLabels() {
