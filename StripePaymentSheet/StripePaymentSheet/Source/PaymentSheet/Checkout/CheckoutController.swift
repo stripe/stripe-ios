@@ -404,6 +404,18 @@ extension CheckoutController {
     func applyDefaults(shippingAddress: Session.ShippingAddress?) async throws {
         let defaults = configuration.defaults
 
+        if let email = defaults.email {
+            if session.serverEmail != nil {
+                assertionFailure(
+                    "CheckoutController.Configuration.Defaults.email cannot be set when the Checkout Session was created with customer_email or a Customer with an email."
+                )
+            } else {
+                try await commitSession { localState in
+                    localState.email = email
+                }
+            }
+        }
+
         if let billingDetails = defaults.billingDetails,
            let address = billingDetails.address {
             try await updateBillingTaxRegionIfNecessary(address: address)
