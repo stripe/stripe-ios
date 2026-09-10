@@ -92,6 +92,8 @@
 
 "Prefecture" = "Prefectura";
 
+"Processing..." = "Procesando...";
+
 "Province" = "Provincia";
 
 "Remove" = "Eliminar";
@@ -106,9 +108,13 @@
 
 "Selection is empty." = "La selección está vacía.";
 
+"Something went wrong" = "Se produjo un error";
+
 "Sort code" = "Código Sort";
 
 "State" = "Estado";
+
+"Submit" = "Enviar";
 
 "Suburb" = "Suburbio";
 

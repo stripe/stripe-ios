@@ -92,6 +92,8 @@
 
 "Prefecture" = "轄區";
 
+"Processing..." = "處理中...";
+
 "Province" = "省";
 
 "Remove" = "移除";
@@ -106,9 +108,13 @@
 
 "Selection is empty." = "選擇為空。";
 
+"Something went wrong" = "出錯了";
+
 "Sort code" = "分類代碼";
 
 "State" = "州";
+
+"Submit" = "提交";
 
 "Suburb" = "郊區";
 

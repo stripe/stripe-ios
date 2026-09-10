@@ -92,6 +92,8 @@
 
 "Prefecture" = "Tỉnh";
 
+"Processing..." = "Đang xử lý...";
+
 "Province" = "Tỉnh";
 
 "Remove" = "Xóa";
@@ -106,9 +108,13 @@
 
 "Selection is empty." = "Lựa chọn đang để trống.";
 
+"Something went wrong" = "Đã xảy ra sự cố";
+
 "Sort code" = "Mã sắp xếp";
 
 "State" = "Tiểu bang";
+
+"Submit" = "Gửi";
 
 "Suburb" = "Ngoại ô";
 

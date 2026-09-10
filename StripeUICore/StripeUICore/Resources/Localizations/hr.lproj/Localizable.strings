@@ -92,6 +92,8 @@
 
 "Prefecture" = "Prefektura";
 
+"Processing..." = "Obrađuje se...";
+
 "Province" = "Provincija";
 
 "Remove" = "Ukloni";
@@ -106,9 +108,13 @@
 
 "Selection is empty." = "Odabir je prazan.";
 
+"Something went wrong" = "Došlo je do pogreške";
+
 "Sort code" = "Bankovni kod za razvrstavanje (UK)";
 
 "State" = "Država";
+
+"Submit" = "Podnesi";
 
 "Suburb" = "Predgrađe";
 

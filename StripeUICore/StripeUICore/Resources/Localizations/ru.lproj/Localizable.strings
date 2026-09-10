@@ -92,6 +92,8 @@
 
 "Prefecture" = "Префектура";
 
+"Processing..." = "Идет обработка...";
+
 "Province" = "Провинция";
 
 "Remove" = "Удалить";
@@ -106,9 +108,13 @@
 
 "Selection is empty." = "Ничего не выбрано.";
 
+"Something went wrong" = "Возникла неизвестная ошибка";
+
 "Sort code" = "Код банка";
 
 "State" = "Штат";
+
+"Submit" = "Отправить";
 
 "Suburb" = "Пригород";
 
