@@ -279,6 +279,8 @@ extension STPTestingAPIClient {
         )
     }
 
+    // This helper is used by tests, which Periphery excludes from its scan.
+    // periphery:ignore
     /// Keeps LPM confirmation tests on the CI backend while they are migrated separately.
     func createLegacyCheckoutSession(
         types: [String] = ["card"],
