@@ -303,7 +303,7 @@ final class PaymentElementTest: XCTestCase {
     }
 
     func testClearPaymentOptionAfterFlowControllerContinues() async throws {
-        // Given the customer has continued from FlowController with a selected saved card
+        // Given the customer selected a saved card in FlowController
         let (configuration, _) = try stubAutomaticTaxSavedCardCheckout()
         let checkout = try await CheckoutController(configuration: configuration)
         let paymentElement = checkout.getPaymentElement()
@@ -312,7 +312,7 @@ final class PaymentElementTest: XCTestCase {
         flowController.flowControllerViewControllerShouldClose(flowController.viewController, didCancel: false)
         XCTAssertTrue(flowController.didPresentAndContinue)
 
-        // Record whether Checkout publishes its cleared state before its elements are cleared
+        // Track whether Checkout clears before both payment elements
         var publishedClearBeforeComponentsWereCleared = false
         var didPublishClearedPaymentOption = false
         let paymentOptionObserver = checkout.$session.dropFirst().sink { session in
@@ -325,7 +325,7 @@ final class PaymentElementTest: XCTestCase {
         // When the payment option is cleared
         try await checkout.clearPaymentOption()
 
-        // Then Checkout publishes the cleared state after both elements are cleared
+        // Then Checkout clears after both payment elements
         XCTAssertNil(checkout.session.paymentOption)
         XCTAssertNil(embeddedPaymentElement.paymentOption)
         XCTAssertNil(flowController.paymentOption)
@@ -336,7 +336,7 @@ final class PaymentElementTest: XCTestCase {
     }
 
     func testClearPaymentOptionStaysClearedAfterPaymentElementUpdate() async throws {
-        // Given a selected saved card is cleared from Checkout and both payment elements
+        // Given Checkout was cleared after starting with a saved card
         let (configuration, _) = try stubAutomaticTaxSavedCardCheckout()
         let checkout = try await CheckoutController(configuration: configuration)
         let paymentElement = checkout.getPaymentElement()
@@ -344,10 +344,10 @@ final class PaymentElementTest: XCTestCase {
         let flowController = paymentElement.paymentSheetFlowController
         try await checkout.clearPaymentOption()
 
-        // When Payment Element refreshes
+        // When Payment Element reloads
         try await paymentElement.update(checkout: checkout)
 
-        // Then the previous default is not restored
+        // Then everything stays cleared
         XCTAssertNil(checkout.session.paymentOption)
         XCTAssertNil(embeddedPaymentElement.paymentOption)
         XCTAssertNil(flowController.paymentOption)

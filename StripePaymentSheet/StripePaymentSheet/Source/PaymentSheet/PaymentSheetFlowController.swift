@@ -1059,12 +1059,12 @@ extension PaymentSheet.FlowController {
         return isPresented
     }
 
-    /// Clears the selected payment option until the customer continues with one in the payment options UI.
+    /// Clears the current payment option. It stays cleared until the customer continues with a new one.
     @MainActor
     func clearPaymentOption() {
         hasClearedPaymentOption = true
         viewController.clearSelection()
-        updatePaymentOption()
+        paymentOption = nil
     }
 }
 

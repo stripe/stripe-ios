@@ -103,7 +103,7 @@ class PaymentSheetFlowControllerTests: XCTestCase {
 
     @MainActor
     func testClearPaymentOptionClearsHorizontalDefault() {
-        // Given a horizontal FlowController with Link selected as the default payment option
+        // Given Link is the default in a horizontal FlowController
         let customerID = "cus_test_horizontal_clear_default"
         defer {
             CustomerPaymentOption.setDefaultPaymentMethod(nil, forCustomer: customerID)
@@ -112,17 +112,17 @@ class PaymentSheetFlowControllerTests: XCTestCase {
         let sut = makeHorizontalFlowController(customerID: customerID)
         XCTAssertNotNil(sut.paymentOption)
 
-        // When the payment option is cleared
+        // When we clear the payment option
         sut.clearPaymentOption()
 
-        // Then the FlowController no longer exposes a payment option
+        // Then no payment option is available
         XCTAssertNil(sut.paymentOption)
         XCTAssertNil(sut.internalPaymentOption)
     }
 
     @MainActor
     func testClearPaymentOptionAllowsNextSelection() {
-        // Given a horizontal FlowController whose default payment option was cleared
+        // Given Link was cleared from a horizontal FlowController
         let customerID = "cus_test_horizontal_select_after_clear"
         defer {
             CustomerPaymentOption.setDefaultPaymentMethod(nil, forCustomer: customerID)
@@ -131,12 +131,12 @@ class PaymentSheetFlowControllerTests: XCTestCase {
         let sut = makeHorizontalFlowController(customerID: customerID)
         sut.clearPaymentOption()
 
-        // When the customer accepts a new payment option
+        // When the customer chooses Link again
         sut.viewController.linkConfirmOption = .wallet(brand: .link)
         sut.flowControllerViewControllerShouldClose(sut.viewController, didCancel: false)
         sut.updatePaymentOption()
 
-        // Then the new payment option is exposed
+        // Then Link becomes the current payment option
         XCTAssertEqual(sut.paymentOption?.paymentMethodType, "link")
         XCTAssertNotNil(sut.internalPaymentOption)
     }

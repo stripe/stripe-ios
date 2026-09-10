@@ -182,8 +182,8 @@ extension PaymentElement {
             throw error
         }
 
-        // Embedded can restore its default payment option during a rebuild. If FlowController
-        // is authoritative and has no selection, keep Embedded cleared too.
+        // Embedded picks its default again when rebuilt. If FlowController was last used and
+        // is empty, clear Embedded to keep them in sync.
         if paymentOptionSourceOfTruthIsFlowController,
            paymentSheetFlowController.paymentOption == nil {
             embeddedPaymentElement.clearPaymentOption()
@@ -211,8 +211,8 @@ extension PaymentElement {
         try await checkout.updateBillingTaxRegionIfNecessary(address: nil)
 
         await checkout.enqueueSessionUpdate {
-            // Clear both UI implementations before publishing Checkout's state. FlowController
-            // preserves the cleared state across rebuilds until the customer continues with an option.
+            // Clear both views before updating Checkout so observers never see mismatched state.
+            // FlowController remembers the clear across rebuilds, so make it the source of truth.
             self.isSuppressingPaymentOptionUpdates = true
             defer {
                 self.isSuppressingPaymentOptionUpdates = false
