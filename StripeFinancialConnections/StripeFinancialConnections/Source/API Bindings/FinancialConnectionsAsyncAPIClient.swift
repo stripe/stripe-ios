@@ -242,6 +242,10 @@ extension FinancialConnectionsAsyncAPIClient {
             "locale": Locale.current.toLanguageTag(),
         ]
 
+        if hasRequestedDataPermissions {
+            parameters["consumer_session_client_secret"] = consumerSession?.clientSecret
+        }
+
         var mobileParameters: [String: Any] = [
             "fullscreen": true,
             "hide_close_button": true,
