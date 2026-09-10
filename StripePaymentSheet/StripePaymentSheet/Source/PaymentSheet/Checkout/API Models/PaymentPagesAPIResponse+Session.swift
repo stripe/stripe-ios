@@ -8,75 +8,6 @@
 import Foundation
 @_spi(STP) import StripePayments
 
-extension PaymentPagesAPIResponse {
-    /// Builds a public, read-only ``CheckoutController.Session`` snapshot from this API response object.
-    func makePublicSession() -> CheckoutController.Session {
-        let elementsSessionValue = elementsSession.value
-        let publicDiscountAmounts = Self.makeDiscountAmounts(
-            from: recurringDetails?.totalDiscountAmounts ?? [],
-            currency: currency
-        )
-        // TODO: Have Payment Pages return session-level tax amounts directly. `recurring_details`
-        // is an odd source for one-time-price modeless Checkout, and clients shouldn't need to
-        // derive this aggregate from recurring-specific response models.
-        let publicTaxAmounts = recurringDetails?.totalTaxAmounts.map {
-            Self.makeSessionTaxAmount(from: $0, currency: currency, locale: .autoupdatingCurrent)
-        }
-        let publicOrderSummaryItems = Self.makeOrderSummaryItems(
-            from: checkoutItems,
-            locale: .autoupdatingCurrent
-        )
-        let publicTotals = Self.makeTotals(from: checkoutItems, currency: currency)
-        let publicTax = Self.makeTax(taxMeta: taxMeta, taxContext: taxContext)
-        let localizedPricesMetas = Self.makeLocalizedPricesMetas(from: adaptivePricingInfo)
-        let exchangeRateMeta = Self.makeExchangeRateMeta(from: adaptivePricingInfo)
-        // TODO: Read explicit integration and presentment currency fields from the mobile
-        // translation layer once available instead of deriving them from the PP response shape.
-        let presentmentDetails = adaptivePricingInfo.map {
-            CheckoutController.Session.PresentmentDetails(presentmentCurrency: $0.activePresentmentCurrency)
-        }
-        let automaticTaxEnabled = taxContext?.automaticTaxEnabled ?? false
-        let automaticTaxAddressSource = Self.makeAutomaticTaxAddressSource(
-            from: taxContext?.automaticTaxAddressSource
-        )
-        if automaticTaxEnabled && automaticTaxAddressSource == "billing" {
-            elementsSessionValue.disableLinkForAutomaticTaxBilling = true
-        }
-
-        return CheckoutController.Session(
-            id: sessionId,
-            businessName: elementsSession.businessName,
-            currency: adaptivePricingInfo?.integrationCurrency ?? currency,
-            presentmentDetails: presentmentDetails,
-            discountAmounts: publicDiscountAmounts,
-            email: customerEmail ?? customer?.email,
-            orderSummaryItems: publicOrderSummaryItems,
-            livemode: livemode,
-            minorUnitsAmountDivisor: Self.makeMinorUnitsAmountDivisor(currency: currency),
-            status: status,
-            tax: publicTax,
-            taxAmounts: publicTaxAmounts,
-            totals: publicTotals,
-            paymentStatus: paymentStatus,
-            paymentMethodOptions: paymentMethodOptions,
-            localState: .init(shippingAddress: nil, paymentOption: nil),
-            customer: customer,
-            savedPaymentMethodsOfferSave: Self.makeSavedPaymentMethodsOfferSave(from: savedPaymentMethodsOfferSave),
-            setupFutureUsage: setupFutureUsage,
-            setupFutureUsageForPaymentMethodType: setupFutureUsageForPaymentMethodType ?? [:],
-            allowedShippingCountries: shippingAddressCollection?.allowedCountries.map { $0.uppercased() },
-            localizedPricesMetas: localizedPricesMetas,
-            exchangeRateMeta: exchangeRateMeta,
-            adaptivePricingActive: adaptivePricingInfo != nil,
-            billingAddressCollection: billingAddressCollection.flatMap(CheckoutController.Session.BillingAddressCollection.init(rawValue:)) ?? .automatic,
-            automaticTaxEnabled: automaticTaxEnabled,
-            automaticTaxAddressSource: automaticTaxAddressSource,
-            merchantCountryCode: elementsSession.merchantCountryCode,
-            elementsSession: elementsSessionValue
-        )
-    }
-}
-
 // MARK: - Public model conversion
 
 extension PaymentPagesAPIResponse {
@@ -112,12 +43,12 @@ extension PaymentPagesAPIResponse {
         )
     }
 
-    private static func makeMinorUnitsAmountDivisor(currency: String) -> Int {
+    static func makeMinorUnitsAmountDivisor(currency: String) -> Int {
         let oneMinorUnitInMajor = NSDecimalNumber.stp_decimalNumber(withAmount: 1, currency: currency)
         return Int(truncating: NSDecimalNumber(value: 1).dividing(by: oneMinorUnitInMajor))
     }
 
-    private static func makeOrderSummaryItems(
+    static func makeOrderSummaryItems(
         from checkoutItems: [CheckoutItem],
         locale: Locale
     ) -> [CheckoutController.Session.OrderSummaryItem] {
@@ -186,7 +117,7 @@ extension PaymentPagesAPIResponse {
         }
     }
 
-    private static func makeSessionTaxAmount(
+    static func makeSessionTaxAmount(
         from taxAmount: TaxAmount,
         currency: String,
         locale: Locale
@@ -203,7 +134,7 @@ extension PaymentPagesAPIResponse {
         )
     }
 
-    private static func makeDiscountAmounts(
+    static func makeDiscountAmounts(
         from discountAmounts: [DiscountAmount],
         currency: String
     ) -> [CheckoutController.Session.DiscountAmount] {
@@ -222,7 +153,7 @@ extension PaymentPagesAPIResponse {
         }
     }
 
-    private static func makeTotals(
+    static func makeTotals(
         from checkoutItems: [CheckoutItem],
         currency: String
     ) -> CheckoutController.Session.Totals {
@@ -248,7 +179,7 @@ extension PaymentPagesAPIResponse {
         )
     }
 
-    private static func makeTax(
+    static func makeTax(
         taxMeta: TaxMeta?,
         taxContext: TaxContext?
     ) -> CheckoutController.Session.Tax? {
@@ -276,12 +207,12 @@ extension PaymentPagesAPIResponse {
         }
     }
 
-    private static func makeAutomaticTaxAddressSource(from value: String?) -> String? {
+    static func makeAutomaticTaxAddressSource(from value: String?) -> String? {
         guard let value else { return nil }
         return value.hasPrefix("session.") ? String(value.dropFirst("session.".count)) : value
     }
 
-    private static func makeSavedPaymentMethodsOfferSave(
+    static func makeSavedPaymentMethodsOfferSave(
         from value: SavedPaymentMethodsOfferSave?
     ) -> STPCheckoutSessionSavedPaymentMethodsOfferSave? {
         guard let value else { return nil }
@@ -291,7 +222,7 @@ extension PaymentPagesAPIResponse {
         )
     }
 
-    private static func makeLocalizedPricesMetas(
+    static func makeLocalizedPricesMetas(
         from adaptivePricingInfo: AdaptivePricingInfo?
     ) -> [STPCheckoutSessionLocalizedPriceMeta] {
         guard let adaptivePricingInfo else {
@@ -319,7 +250,7 @@ extension PaymentPagesAPIResponse {
         return metas
     }
 
-    private static func makeExchangeRateMeta(
+    static func makeExchangeRateMeta(
         from adaptivePricingInfo: AdaptivePricingInfo?
     ) -> CheckoutController.Session.ExchangeRateMeta? {
         guard let adaptivePricingInfo,

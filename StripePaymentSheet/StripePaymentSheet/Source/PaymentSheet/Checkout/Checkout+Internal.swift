@@ -211,24 +211,24 @@ extension CheckoutController {
 
     /// Enqueues a serialized session update.
     ///
-    /// - If `update` is non-nil, the side effect (if any) is applied first, then the
-    ///   API mutation is performed and the session is updated from the response.
-    /// - If `update` is nil, the side effect is applied locally without making a network request.
+    /// - If `update` is non-nil, the API mutation is performed, then the session is updated from
+    ///   the response and the local state mutation is applied.
+    /// - If `update` is nil, the local state mutation is applied without making a network request.
     ///
     /// - Parameters:
     ///   - update: The API mutation to perform, or nil for a local-only update.
-    ///   - shippingAddress: A local shipping-address change to apply after the API call (or on its own).
     ///   - canUpdateWhileSheetPresented: Bypasses the sheet-presented guard (e.g. billing sync on dismiss).
+    ///   - mutateLocalState: A local state change to apply after the API call (or on its own).
     func performUpdate(
         _ update: SessionUpdate? = nil,
-        shippingAddress: SessionFieldUpdate<Session.ShippingAddress> = .keepOldValue,
-        canUpdateWhileSheetPresented: Bool = false
+        canUpdateWhileSheetPresented: Bool = false,
+        mutateLocalState: @escaping LocalStateMutation = { _ in }
     ) async throws {
         try await enqueueSessionUpdate {
             try await self.applySessionUpdate(
                 update,
-                shippingAddress: shippingAddress,
-                canUpdateWhileSheetPresented: canUpdateWhileSheetPresented
+                canUpdateWhileSheetPresented: canUpdateWhileSheetPresented,
+                mutateLocalState: mutateLocalState
             )
         }
     }
@@ -242,8 +242,8 @@ extension CheckoutController {
     ///   nested operation's predecessor would be the still-running outer operation itself.
     func applySessionUpdate(
         _ update: SessionUpdate? = nil,
-        shippingAddress: SessionFieldUpdate<Session.ShippingAddress> = .keepOldValue,
-        canUpdateWhileSheetPresented: Bool = false
+        canUpdateWhileSheetPresented: Bool = false,
+        mutateLocalState: LocalStateMutation = { _ in }
     ) async throws {
         if !canUpdateWhileSheetPresented {
             try requireSheetNotPresented()
@@ -266,10 +266,7 @@ extension CheckoutController {
             // Errors from here should still get wrapped in API errors since the only way
             //  local session application throws is if the API returned a session state that
             //  the UI can't handle.
-            try await commitSession(
-                updatedSessionAPIResponse,
-                shippingAddress: shippingAddress
-            )
+            try await commitSession(updatedSessionAPIResponse, mutateLocalState: mutateLocalState)
         } catch {
             throw CheckoutError.apiError(message: error.nonGenericDescription)
         }

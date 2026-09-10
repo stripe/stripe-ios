@@ -96,16 +96,6 @@ extension CheckoutController.Session {
     }
 }
 
-enum SessionFieldUpdate<Value> {
-    case keepOldValue
-    case newValue(Value?)
-
-    func resolved(currentValue: Value?) -> Value? {
-        switch self {
-        case .keepOldValue:
-            return currentValue
-        case .newValue(let newValue):
-            return newValue
-        }
-    }
+extension CheckoutController {
+    typealias LocalStateMutation = @MainActor @Sendable (inout Session.LocalState) -> Void
 }
