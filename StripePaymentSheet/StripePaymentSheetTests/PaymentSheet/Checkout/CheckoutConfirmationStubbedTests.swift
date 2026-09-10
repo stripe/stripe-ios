@@ -1,5 +1,5 @@
 //
-//  CheckoutConfirmationTests.swift
+//  CheckoutConfirmationStubbedTests.swift
 //  StripePaymentSheetTests
 //
 
@@ -14,7 +14,7 @@ import UIKit
 import XCTest
 
 @MainActor
-final class CheckoutConfirmationTests: APIStubbedTestCase {
+final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
 
     // MARK: - Coordinator
 
@@ -952,7 +952,7 @@ final class CheckoutConfirmationTests: APIStubbedTestCase {
     }
 }
 
-extension CheckoutConfirmationTests: STPAuthenticationContext {
+extension CheckoutConfirmationStubbedTests: STPAuthenticationContext {
     func authenticationPresentingViewController() -> UIViewController {
         UIViewController()
     }
