@@ -15,25 +15,21 @@ extension ExpressCheckoutElement {
     public struct Configuration {
         var apiClient: STPAPIClient = .shared
 
-        /// A closure called after a wallet payment confirmation completes.
-        public typealias ConfirmHandler = (_ result: CheckoutController.ConfirmResult) -> Void
-
         /// Whether to require collecting a shipping address. Default: `false`.
         public var shippingAddressRequired: Bool = false
-
         /// Configuration for collecting billing details.
         public var billingDetailsCollectionConfiguration: BillingDetailsCollectionConfiguration = .init()
-
-        /// Called after a wallet payment confirmation completes.
-        public var confirmHandler: ConfirmHandler = { _ in }
-
         /// Sets the configuration for Apple Pay.
         public var applePayConfiguration: ApplePayConfiguration?
         /// Sets the configuration for Link.
         public var linkConfiguration: LinkConfiguration = .init()
+        /// Called after a wallet payment confirmation completes.
+        public var confirmHandler: ConfirmHandler
 
         /// Creates a configuration with default values.
-        public init() {}
+        public init(confirmHandler: @escaping ConfirmHandler) {
+            self.confirmHandler = confirmHandler
+        }
     }
 
     /// Configuration for how billing details are collected during checkout.
@@ -124,6 +120,9 @@ extension ExpressCheckoutElement {
             self.display = display
         }
     }
+
+    /// A closure called after a wallet payment confirmation completes.
+    public typealias ConfirmHandler = (_ result: CheckoutController.ConfirmResult) -> Void
 }
 
 extension ExpressCheckoutElement.BillingDetailsCollectionConfiguration {

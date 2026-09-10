@@ -3,9 +3,13 @@ PATCH
 
 ## X.Y.Z - changes pending release
 
+### Payments
+* [Added] Added API bindings for Scalapay.
+
 ## 26.10.0 2026-09-08
 ### General
 * [Added] Added support for Arabic (Saudi Arabia).
+* [Added] Added support for Welsh.
 
 ### CryptoOnramp (Alpha)
 * [Added] Added Canada SIN, Colombia NIT, and Philippines TIN values to `IdType`, and added `idType` to the `KycInfo` initializer.

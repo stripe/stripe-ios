@@ -158,7 +158,9 @@ struct CheckoutCartView: View {
                 config.shippingAddressElement = shippingAddressElementConfiguration
             }
             if expressCheckoutElementSettings.isEnabled {
-                var expressCheckoutElementConfiguration = ExpressCheckoutElement.Configuration()
+                var expressCheckoutElementConfiguration = ExpressCheckoutElement.Configuration { result in
+                    confirmResult = result
+                }
                 expressCheckoutElementConfiguration.applePayConfiguration = ExpressCheckoutElement.ApplePayConfiguration(
                     merchantId: "merchant.com.stripe.paymentsheet.example",
                     display: expressCheckoutElementSettings.applePayDisplay
@@ -168,9 +170,6 @@ struct CheckoutCartView: View {
                 )
                 expressCheckoutElementConfiguration.shippingAddressRequired = expressCheckoutElementSettings.shippingAddressRequired
                 expressCheckoutElementConfiguration.billingDetailsCollectionConfiguration = expressCheckoutElementSettings.billingDetailsCollectionConfiguration
-                expressCheckoutElementConfiguration.confirmHandler = { result in
-                    confirmResult = result
-                }
                 config.expressCheckoutElement = expressCheckoutElementConfiguration
             }
             if adaptivePricing {
