@@ -179,9 +179,8 @@ final class CheckoutApplePayContextTests: XCTestCase {
                 postalCode: "94103"
             )
         )
-        let session = CheckoutTestHelpers.makeSession().makePublicSession().makeCopyOverriding(
-            shippingAddress: .newValue(shippingAddress)
-        )
+        var session = CheckoutTestHelpers.makeSession().makePublicSession()
+        session.localState.shippingAddress = shippingAddress
         let parameters = CheckoutController.ApplePayConfirmationParameters.makeMock(
             apiClient: APIStubbedTestCase.stubbedAPIClient(),
             shippingAddressRequired: true

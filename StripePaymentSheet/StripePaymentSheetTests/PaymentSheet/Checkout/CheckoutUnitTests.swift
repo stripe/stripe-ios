@@ -516,9 +516,9 @@ final class CheckoutUnitTests: XCTestCase {
                 postalCode: "94105"
             )
         )
-        checkout.dangerouslySetSessionDirectly(
-            checkout.session.makeCopyOverriding(shippingAddress: .newValue(previousAddress))
-        )
+        var sessionWithPreviousAddress = checkout.session
+        sessionWithPreviousAddress.localState.shippingAddress = previousAddress
+        checkout.dangerouslySetSessionDirectly(sessionWithPreviousAddress)
 
         // ...and the server tax update fails
         stub(condition: { request in
@@ -781,42 +781,36 @@ final class CheckoutUnitTests: XCTestCase {
             "total_discount_amounts": [discountAmount],
             "total_tax_amounts": [],
         ]
-        let session = try! PaymentPagesAPIResponse.decode(fromAPIResponse: sessionJSON)
+        var session = try! PaymentPagesAPIResponse.decode(fromAPIResponse: sessionJSON)
             .makePublicSession()
-            .makeCopyOverriding(
-                shippingAddress: .newValue(
-                    .init(
-                        name: "Jenny Rosen",
-                        address: .init(
-                            country: "US",
-                            line1: "510 Townsend Street",
-                            city: "San Francisco",
-                            state: "CA",
-                            postalCode: "94103"
-                        )
-                    )
-                ),
-                paymentOption: .newValue(
-                    .init(
-                        image: UIImage(),
-                        label: "Visa ending in 4242",
-                        billingDetails: .init(
-                            address: .init(
-                                city: "San Francisco",
-                                country: "US",
-                                line1: "510 Townsend Street",
-                                postalCode: "94103",
-                                state: "CA"
-                            ),
-                            email: "jenny@example.com",
-                            name: "Jenny Rosen",
-                            phone: "+14155550123"
-                        ),
-                        paymentMethodType: "card",
-                        mandateText: NSAttributedString(string: "Mandate text")
-                    )
-                )
+        session.localState.shippingAddress = .init(
+            name: "Jenny Rosen",
+            address: .init(
+                country: "US",
+                line1: "510 Townsend Street",
+                city: "San Francisco",
+                state: "CA",
+                postalCode: "94103"
             )
+        )
+        session.localState.paymentOption = .init(
+            image: UIImage(),
+            label: "Visa ending in 4242",
+            billingDetails: .init(
+                address: .init(
+                    city: "San Francisco",
+                    country: "US",
+                    line1: "510 Townsend Street",
+                    postalCode: "94103",
+                    state: "CA"
+                ),
+                email: "jenny@example.com",
+                name: "Jenny Rosen",
+                phone: "+14155550123"
+            ),
+            paymentMethodType: "card",
+            mandateText: NSAttributedString(string: "Mandate text")
+        )
 
         // When generating its debug description
         let description = session.debugDescription
@@ -994,9 +988,9 @@ final class CheckoutUnitTests: XCTestCase {
             name: "Jane Doe",
             address: .init(country: "US")
         )
-        checkout.dangerouslySetSessionDirectly(
-            checkout.session.makeCopyOverriding(shippingAddress: .newValue(shippingUpdate))
-        )
+        var sessionWithShippingAddress = checkout.session
+        sessionWithShippingAddress.localState.shippingAddress = shippingUpdate
+        checkout.dangerouslySetSessionDirectly(sessionWithShippingAddress)
 
         // Simulate a confirm response
         var updatedJSON = CheckoutTestHelpers.openSessionJSON
@@ -1232,9 +1226,9 @@ final class CheckoutUnitTests: XCTestCase {
                 postalCode: "90001"
             )
         )
-        checkout.dangerouslySetSessionDirectly(
-            checkout.session.makeCopyOverriding(shippingAddress: .newValue(shippingAddress))
-        )
+        var sessionWithShippingAddress = checkout.session
+        sessionWithShippingAddress.localState.shippingAddress = shippingAddress
+        checkout.dangerouslySetSessionDirectly(sessionWithShippingAddress)
         return (checkout, shippingAddress, requestRecorder)
     }
 

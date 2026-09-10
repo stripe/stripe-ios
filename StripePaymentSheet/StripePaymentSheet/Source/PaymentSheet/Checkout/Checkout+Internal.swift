@@ -121,9 +121,9 @@ extension CheckoutController {
     // MARK: - Payment Option
 
     func dangerouslySetPaymentOptionDirectly(_ paymentOption: Session.PaymentOptionDisplayData?) {
-        dangerouslySetSessionDirectly(
-            session.makeCopyOverriding(paymentOption: .newValue(paymentOption))
-        )
+        var updatedSession = session
+        updatedSession.localState.paymentOption = paymentOption
+        dangerouslySetSessionDirectly(updatedSession)
     }
 
     // MARK: - Session Updates

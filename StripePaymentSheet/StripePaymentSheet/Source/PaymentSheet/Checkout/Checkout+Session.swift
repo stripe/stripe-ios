@@ -50,10 +50,14 @@ extension CheckoutController {
         public let minorUnitsAmountDivisor: Int?
 
         /// The currently selected payment option.
-        public let paymentOption: PaymentOptionDisplayData?
+        public var paymentOption: PaymentOptionDisplayData? {
+            return localState.paymentOption
+        }
 
         /// Shipping address of the customer.
-        public let shippingAddress: ShippingAddress?
+        public var shippingAddress: ShippingAddress? {
+            return localState.shippingAddress
+        }
 
         /// Status of the Checkout Session.
         public let status: Status
@@ -76,6 +80,7 @@ extension CheckoutController {
 
         let paymentStatus: Status.PaymentStatus
         let paymentMethodOptions: STPPaymentMethodOptions?
+        var localState: LocalState
         let customer: PaymentPagesAPIResponse.Customer?
         let savedPaymentMethodsOfferSave: STPCheckoutSessionSavedPaymentMethodsOfferSave?
         let setupFutureUsage: String?
@@ -93,6 +98,11 @@ extension CheckoutController {
         enum BillingAddressCollection: String {
             case automatic = "auto"
             case required
+        }
+
+        struct LocalState {
+            var shippingAddress: ShippingAddress?
+            var paymentOption: PaymentOptionDisplayData?
         }
     }
 }

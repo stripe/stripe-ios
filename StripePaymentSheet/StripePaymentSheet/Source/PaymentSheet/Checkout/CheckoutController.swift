@@ -433,15 +433,13 @@ extension CheckoutController {
         shippingAddress: SessionFieldUpdate<Session.ShippingAddress> = .keepOldValue,
         paymentOption: SessionFieldUpdate<Session.PaymentOptionDisplayData> = .keepOldValue
     ) async throws {
-        let newSession = apiResponse?.makePublicSession() ?? session
-        session = newSession.makeCopyOverriding(
-            shippingAddress: .newValue(
-                shippingAddress.resolved(currentValue: session.shippingAddress)
-            ),
-            paymentOption: .newValue(
-                paymentOption.resolved(currentValue: session.paymentOption)
-            )
-        )
+        var localState = session.localState
+        localState.shippingAddress = shippingAddress.resolved(currentValue: localState.shippingAddress)
+        localState.paymentOption = paymentOption.resolved(currentValue: localState.paymentOption)
+
+        var newSession = apiResponse?.makePublicSession() ?? session
+        newSession.localState = localState
+        session = newSession
 
         // === Update Payment Element and all other asynchronously updated elements ==
         try await paymentElement?.update(checkout: self)
