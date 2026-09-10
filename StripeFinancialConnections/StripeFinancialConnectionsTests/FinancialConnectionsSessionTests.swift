@@ -107,6 +107,20 @@ final class FinancialConnectionsSessionTests: XCTestCase {
         XCTAssertTrue(manifest.appearance.colors.primary.isEqual(FinancialConnectionsAppearance.Colors.link.primary))
     }
 
+    func testSurfaceColors() {
+        // Given
+        let lightTraits = UITraitCollection(userInterfaceStyle: .light)
+        let darkTraits = UITraitCollection(userInterfaceStyle: .dark)
+
+        // Then
+        XCTAssertEqual(FinancialConnectionsAppearance.Colors.surfacePrimary.resolvedColor(with: lightTraits), UIColor(red: 1, green: 1, blue: 1, alpha: 1))
+        XCTAssertEqual(FinancialConnectionsAppearance.Colors.surfacePrimary.resolvedColor(with: darkTraits), UIColor(red: 23 / 255, green: 23 / 255, blue: 23 / 255, alpha: 1))
+        XCTAssertEqual(FinancialConnectionsAppearance.Colors.surfaceSecondary.resolvedColor(with: lightTraits), UIColor(red: 245 / 255, green: 245 / 255, blue: 245 / 255, alpha: 1))
+        XCTAssertEqual(FinancialConnectionsAppearance.Colors.surfaceSecondary.resolvedColor(with: darkTraits), UIColor(red: 38 / 255, green: 38 / 255, blue: 38 / 255, alpha: 1))
+        XCTAssertEqual(FinancialConnectionsAppearance.Colors.surfaceTertiary.resolvedColor(with: lightTraits), UIColor(red: 229 / 255, green: 229 / 255, blue: 229 / 255, alpha: 1))
+        XCTAssertEqual(FinancialConnectionsAppearance.Colors.surfaceTertiary.resolvedColor(with: darkTraits), UIColor(red: 64 / 255, green: 64 / 255, blue: 64 / 255, alpha: 1))
+    }
+
     private func makeSynchronize(brandValue: String?) throws -> FinancialConnectionsSynchronize {
         var payload = try JSONSerialization.jsonObject(with: FinancialConnectionsSynchronizeMock.synchronize.data()) as? [String: Any]
         var manifest = payload?["manifest"] as? [String: Any]

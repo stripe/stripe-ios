@@ -46,7 +46,7 @@ final class RoundedTextField: UIView {
                 textFieldContainerView
             ]
         )
-        containerStackView.backgroundColor = FinancialConnectionsAppearance.Colors.background
+        containerStackView.backgroundColor = FinancialConnectionsAppearance.Colors.surfacePrimary
         containerStackView.axis = .horizontal
         containerStackView.spacing = 12
         containerStackView.isLayoutMarginsRelativeArrangement = true
@@ -197,7 +197,7 @@ final class RoundedTextField: UIView {
             containerHorizontalStackView.layer.borderColor = appearance.colors.textFieldFocused.cgColor
             containerHorizontalStackView.layer.borderWidth = 2.0
             if appearance.colors == .link {
-                containerHorizontalStackView.backgroundColor = FinancialConnectionsAppearance.Colors.background
+                containerHorizontalStackView.backgroundColor = FinancialConnectionsAppearance.Colors.surfacePrimary
             }
         } else {
             if appearance.colors == .link {
@@ -738,7 +738,7 @@ struct RoundedTextField_Previews: PreviewProvider {
             Spacer()
         }
         .padding()
-        .background(Color(FinancialConnectionsAppearance.Colors.background))
+        .background(Color(FinancialConnectionsAppearance.Colors.surfacePrimary))
 
         // Use separate devices to showcase highlighted state
         RoundedTextFieldUIViewRepresentable(

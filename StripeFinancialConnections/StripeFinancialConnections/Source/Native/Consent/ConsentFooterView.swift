@@ -40,7 +40,7 @@ class ConsentFooterView: HitTestView {
         self.appearance = appearance
         self.didSelectAgree = didSelectAgree
         super.init(frame: .zero)
-        backgroundColor = FinancialConnectionsAppearance.Colors.background
+        backgroundColor = FinancialConnectionsAppearance.Colors.surfacePrimary
 
         let termsAndPrivacyPolicyLabel = AttributedTextView(
             font: .label(.small),

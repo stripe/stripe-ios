@@ -73,7 +73,7 @@ final class InstitutionIconView: UIView {
 }
 
 private func CreateBankIconPlaceholder(size: CGSize) -> UIImage {
-    let backgroundColor: UIColor = FinancialConnectionsAppearance.Colors.backgroundSecondary
+    let backgroundColor: UIColor = FinancialConnectionsAppearance.Colors.surfaceSecondary
     let iconColor: UIColor = FinancialConnectionsAppearance.Colors.icon
     let iconSize: CGSize = CGSize(width: 24, height: 24)
     let icon: UIImage = Image.bank.makeImage(template: true)

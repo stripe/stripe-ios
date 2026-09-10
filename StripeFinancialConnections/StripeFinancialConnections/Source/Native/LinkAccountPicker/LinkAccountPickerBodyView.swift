@@ -101,7 +101,7 @@ final class LinkAccountPickerBodyView: UIView {
             accountRowsStack.addArrangedSubview(newAccountRowView)
 
             let groupContainer = UIView()
-            groupContainer.backgroundColor = appearance.colors.iconBackground
+            groupContainer.backgroundColor = FinancialConnectionsAppearance.Colors.surfaceSecondary
             groupContainer.layer.cornerRadius = 16
             groupContainer.layer.masksToBounds = true
             groupContainer.addAndPinSubview(accountRowsStack)

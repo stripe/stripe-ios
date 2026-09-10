@@ -226,7 +226,7 @@ private class PrepanePreviewView: UIView {
             footerView: prepaneViews.footerView
         )
         paneLayoutView.addTo(view: self)
-        backgroundColor = FinancialConnectionsAppearance.Colors.background
+        backgroundColor = FinancialConnectionsAppearance.Colors.surfacePrimary
     }
 
     required init?(coder: NSCoder) {

@@ -13,7 +13,7 @@ final class InstitutionTableLoadingView: UIView {
 
     init(appearance: FinancialConnectionsAppearance = .stripe) {
         super.init(frame: UIScreen.main.bounds)
-        backgroundColor = FinancialConnectionsAppearance.Colors.background
+        backgroundColor = FinancialConnectionsAppearance.Colors.surfacePrimary
         let verticalStackView = UIStackView(
             arrangedSubviews: (0..<10).map({ _ in
                 ShimmeringInstitutionRowView(appearance: appearance)
@@ -22,7 +22,7 @@ final class InstitutionTableLoadingView: UIView {
         verticalStackView.axis = .vertical
         verticalStackView.spacing = 0 // the rows have spacing through padding
         if appearance.colors == .link {
-            verticalStackView.backgroundColor = appearance.colors.iconBackground
+            verticalStackView.backgroundColor = FinancialConnectionsAppearance.Colors.surfaceSecondary
             verticalStackView.layer.cornerRadius = 12
             verticalStackView.layer.masksToBounds = true
         }
@@ -51,7 +51,7 @@ private class ShimmeringInstitutionRowView: ShimmeringView {
         let isLinkTheme = appearance.colors == .link
         let placeholderColor = isLinkTheme
             ? FinancialConnectionsAppearance.Colors.iconBackgroundOnCard
-            : FinancialConnectionsAppearance.Colors.backgroundSecondary
+            : FinancialConnectionsAppearance.Colors.surfaceSecondary
         let horizontalStackView = UIStackView(
             arrangedSubviews: [
                 CreateRowIconView(backgroundColor: placeholderColor, isLinkTheme: isLinkTheme),

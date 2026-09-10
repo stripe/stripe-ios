@@ -45,7 +45,7 @@ final class AccountPickerSelectionListView: UIView {
         if appearance.colors == .link {
             verticalStackView.spacing = 0
             let groupContainer = UIView()
-            groupContainer.backgroundColor = appearance.colors.iconBackground
+            groupContainer.backgroundColor = FinancialConnectionsAppearance.Colors.surfaceSecondary
             groupContainer.layer.cornerRadius = 12
             groupContainer.layer.masksToBounds = true
             groupContainer.addAndPinSubview(verticalStackView)

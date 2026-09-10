@@ -113,7 +113,7 @@ final class LinkAccountPickerViewController: UIViewController {
         super.viewDidLoad()
         // link account picker ALWAYS hides the back button
         navigationItem.hidesBackButton = true
-        view.backgroundColor = FinancialConnectionsAppearance.Colors.background
+        view.backgroundColor = FinancialConnectionsAppearance.Colors.surfacePrimary
 
         let paneLayoutView =  PaneLayoutView(
             contentView: contentStackView,

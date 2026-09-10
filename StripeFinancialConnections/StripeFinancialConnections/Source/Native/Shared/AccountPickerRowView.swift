@@ -57,7 +57,7 @@ final class AccountPickerRowView: UIView {
         super.init(frame: .zero)
 
         // necessary so the shadow does not appear under text
-        backgroundColor = FinancialConnectionsAppearance.Colors.background
+        backgroundColor = FinancialConnectionsAppearance.Colors.surfacePrimary
 
         if isFaded {
             horizontalStackView.alpha = 0.25
@@ -133,7 +133,7 @@ final class AccountPickerRowView: UIView {
             layer.shadowOpacity = 0
         } else {
             layer.cornerRadius = 12
-            backgroundColor = FinancialConnectionsAppearance.Colors.background
+            backgroundColor = FinancialConnectionsAppearance.Colors.surfacePrimary
             if isSelected {
                 layer.borderColor = appearance.colors.border.cgColor
                 layer.borderWidth = 2

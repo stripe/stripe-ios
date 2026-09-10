@@ -22,9 +22,9 @@ struct FinancialConnectionsAppearance: Equatable {
 
     struct Colors: Equatable {
         // Some colors are static, and don't depend on the manifest's theme.
-        static let background: UIColor = .dynamic(light: .neutral0, dark: .neutral0Dark)
-        static let backgroundSecondary: UIColor = .dynamic(light: .neutral25, dark: .neutral25Dark)
-        static let backgroundHighlighted: UIColor = .dynamic(light: .neutral50, dark: .neutral50Dark)
+        static let surfacePrimary: UIColor = .dynamic(light: .linkNeutral0, dark: .linkNeutral900)
+        static let surfaceSecondary: UIColor = .dynamic(light: .linkNeutral100, dark: .linkNeutral800)
+        static let surfaceTertiary: UIColor = .dynamic(light: .linkNeutral200, dark: .linkNeutral700)
         static let textDefault: UIColor = .dynamic(light: .neutral800, dark: .neutral25)
         static let textSubdued: UIColor = .dynamic(light: .neutral600, dark: .neutral800Dark)
         static let textCritical: UIColor = .feedbackCritical600

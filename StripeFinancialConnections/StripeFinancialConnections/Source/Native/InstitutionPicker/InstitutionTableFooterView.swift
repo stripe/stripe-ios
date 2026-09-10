@@ -41,7 +41,7 @@ final class InstitutionTableFooterView: UIView {
         )
 
         if appearance.colors == .link {
-            backgroundColor = appearance.colors.iconBackground
+            backgroundColor = FinancialConnectionsAppearance.Colors.surfaceSecondary
             layer.cornerRadius = 12
             layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
             layer.masksToBounds = true

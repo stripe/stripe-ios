@@ -158,7 +158,7 @@ final class InstitutionSearchBar: UIView {
     private func highlightBorder(_ shouldHighlightBorder: Bool) {
         if appearance.colors == .link {
             if shouldHighlightBorder {
-                backgroundColor = FinancialConnectionsAppearance.Colors.background
+                backgroundColor = FinancialConnectionsAppearance.Colors.surfacePrimary
                 layer.borderColor = appearance.colors.textFieldFocused.cgColor
                 layer.borderWidth = 2
             } else {

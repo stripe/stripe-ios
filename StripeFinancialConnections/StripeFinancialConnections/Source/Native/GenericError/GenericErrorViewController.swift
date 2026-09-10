@@ -33,7 +33,7 @@ final class GenericErrorViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = FinancialConnectionsAppearance.Colors.background
+        view.backgroundColor = FinancialConnectionsAppearance.Colors.surfacePrimary
         // this pane replaces the one the error came from, so there's nothing to go back to.
         // the user moves forward through the primary CTA instead.
         navigationItem.hidesBackButton = true
