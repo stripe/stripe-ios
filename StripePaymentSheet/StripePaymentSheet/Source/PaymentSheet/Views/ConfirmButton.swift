@@ -328,10 +328,7 @@ class ConfirmButton: UIControl {
                     return title
                 }
             case .processing:
-                return showProcessingLabel ? STPLocalizedString(
-                    "Processing...",
-                    "Label of a button that, when tapped, initiates payment, becomes disabled, and displays this text"
-                ) : nil
+                return showProcessingLabel ? String.Localized.processing : nil
             case .succeeded:
                 return nil
             }
