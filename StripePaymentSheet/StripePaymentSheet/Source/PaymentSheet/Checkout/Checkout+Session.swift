@@ -36,7 +36,9 @@ extension CheckoutController {
         public let discountAmounts: [DiscountAmount]
 
         /// The customer's email address.
-        public let email: String?
+        public var email: String? {
+            return serverEmail ?? localState.email
+        }
 
         /// The items included in the order summary.
         public let orderSummaryItems: [OrderSummaryItem]
@@ -104,10 +106,11 @@ extension CheckoutController {
         }
 
         struct LocalState {
+            var email: String?
             var shippingAddress: ShippingAddress?
             var paymentOption: PaymentOptionDisplayData?
 
-            static let empty = Self(shippingAddress: nil, paymentOption: nil)
+            static let empty = Self(email: nil, shippingAddress: nil, paymentOption: nil)
         }
     }
 }
@@ -168,7 +171,6 @@ extension CheckoutController.Session {
             currency: apiResponse.adaptivePricingInfo?.integrationCurrency ?? apiResponse.currency,
             presentmentDetails: presentmentDetails,
             discountAmounts: publicDiscountAmounts,
-            email: serverEmail,
             orderSummaryItems: publicOrderSummaryItems,
             livemode: apiResponse.livemode,
             minorUnitsAmountDivisor: PaymentPagesAPIResponse.makeMinorUnitsAmountDivisor(
