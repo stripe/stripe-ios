@@ -276,9 +276,12 @@ final class PaymentElementTest: XCTestCase {
         // Given a selected saved card supplies the billing address for automatic tax
         let (configuration, requestRecorder) = try stubAutomaticTaxSavedCardCheckout()
         let checkout = try await CheckoutController(configuration: configuration)
-        let embeddedPaymentElement = checkout.getPaymentElement().embeddedPaymentElement
+        let paymentElement = checkout.getPaymentElement()
+        let embeddedPaymentElement = paymentElement.embeddedPaymentElement
+        let flowController = paymentElement.paymentSheetFlowController
         XCTAssertNotNil(checkout.session.paymentOption)
         XCTAssertNotNil(embeddedPaymentElement.paymentOption)
+        XCTAssertNotNil(flowController.paymentOption)
 
         // When the payment option is cleared
         try await checkout.clearPaymentOption()
@@ -295,6 +298,8 @@ final class PaymentElementTest: XCTestCase {
         XCTAssertNil(updateRequest.params["tax_region[postal_code]"])
         XCTAssertNil(checkout.session.paymentOption)
         XCTAssertNil(embeddedPaymentElement.paymentOption)
+        XCTAssertNil(flowController.paymentOption)
+        XCTAssertNil(flowController.internalPaymentOption)
     }
 
     func testClearPaymentOptionPreservesSelectionWhenTaxUpdateFails() async throws {
@@ -302,9 +307,12 @@ final class PaymentElementTest: XCTestCase {
         // and the next Checkout Session update will fail
         let (configuration, _) = try stubAutomaticTaxSavedCardCheckout(clearUpdateStatusCode: 500)
         let checkout = try await CheckoutController(configuration: configuration)
-        let embeddedPaymentElement = checkout.getPaymentElement().embeddedPaymentElement
+        let paymentElement = checkout.getPaymentElement()
+        let embeddedPaymentElement = paymentElement.embeddedPaymentElement
+        let flowController = paymentElement.paymentSheetFlowController
         let selectedPaymentOption = try XCTUnwrap(checkout.session.paymentOption)
         let selectedEmbeddedPaymentOption = try XCTUnwrap(embeddedPaymentElement.paymentOption)
+        let selectedFlowControllerPaymentOption = try XCTUnwrap(flowController.paymentOption)
 
         // When the payment option is cleared
         do {
@@ -319,6 +327,8 @@ final class PaymentElementTest: XCTestCase {
         // Then the selection remains available for the merchant to recover
         XCTAssertEqual(checkout.session.paymentOption, selectedPaymentOption)
         XCTAssertEqual(embeddedPaymentElement.paymentOption, selectedEmbeddedPaymentOption)
+        XCTAssertEqual(flowController.paymentOption?.label, selectedFlowControllerPaymentOption.label)
+        XCTAssertNotNil(flowController.internalPaymentOption)
     }
 
     func testCheckoutSessionUpdatePreservesFlowControllerPaymentOption() async throws {

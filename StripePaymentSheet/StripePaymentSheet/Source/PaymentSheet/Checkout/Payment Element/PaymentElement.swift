@@ -207,6 +207,7 @@ extension PaymentElement {
         }
         try await checkout.updateBillingTaxRegionIfNecessary(address: nil)
         checkout.dangerouslySetPaymentOptionDirectly(nil)
+        paymentSheetFlowController.clearPaymentOption()
         embeddedPaymentElement.clearPaymentOption()
     }
 }
