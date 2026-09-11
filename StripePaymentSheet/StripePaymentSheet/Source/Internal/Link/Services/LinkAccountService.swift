@@ -134,18 +134,25 @@ final class LinkAccountService: LinkAccountServiceProtocol {
                 STPAnalyticsClient.sharedClient.logLinkAccountLookupComplete(lookupResult: lookupResponse.responseType)
                 switch lookupResponse.responseType {
                 case .found(let session):
-                    completion(.success(
-                        self.configureAuth(PaymentSheetLinkAccount(
-                            email: email ?? session.consumerSession.emailAddress,
-                            session: session.consumerSession,
-                            publishableKey: session.publishableKey,
-                            displayablePaymentDetails: session.displayablePaymentDetails,
-                            apiClient: apiClient,
-                            useMobileEndpoints: self.useMobileEndpoints,
-                            canSyncAttestationState: self.canSyncAttestationState,
-                            requestSurface: requestSurface
-                        ), settings: session.settings, lookupEmail: email, emailSource: emailSource)
-                    ))
+                    completion(
+                        .success(
+                            self.configureAuth(
+                                PaymentSheetLinkAccount(
+                                    email: email ?? session.consumerSession.emailAddress,
+                                    session: session.consumerSession,
+                                    publishableKey: session.publishableKey,
+                                    displayablePaymentDetails: session.displayablePaymentDetails,
+                                    apiClient: apiClient,
+                                    useMobileEndpoints: self.useMobileEndpoints,
+                                    canSyncAttestationState: self.canSyncAttestationState,
+                                    requestSurface: requestSurface
+                                ),
+                                settings: session.settings,
+                                lookupEmail: email,
+                                emailSource: emailSource
+                            )
+                        )
+                    )
                 case .notFound(_, let suggestedEmail):
                     if let email = email {
                         let linkAccount = PaymentSheetLinkAccount(
@@ -307,9 +314,14 @@ final class LinkAccountService: LinkAccountServiceProtocol {
                     doNotLogConsumerFunnelEvent: true,
                     requestSurface: requestSurface
                 ) { result in
-                    completion(result.flatMap { response in
-                        guard case .found(let session) = response.responseType else {
-                            return .failure(PaymentSheetError.unknown(debugDescription: "No Link account found during authentication recovery"))
+                    completion(
+                        result.flatMap { response in
+                            guard case .found(let session) = response.responseType else {
+                                return .failure(
+                                    PaymentSheetError.unknown(
+                                        debugDescription: "No Link account found during authentication recovery"
+                                    )
+                                )
                         }
                         return .success(ConsumerSession.AuthResponse(consumerSession: session.consumerSession, settings: session.settings))
                     })

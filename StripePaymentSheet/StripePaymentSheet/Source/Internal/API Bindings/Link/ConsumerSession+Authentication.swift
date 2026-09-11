@@ -40,7 +40,12 @@ extension ConsumerSession {
         let settings: LookupSettings?
         let linkBrand: LinkBrand?
 
-        init(consumerSession: ConsumerSession, verificationSessionId: String? = nil, settings: LookupSettings? = nil, linkBrand: LinkBrand? = nil) {
+        init(
+            consumerSession: ConsumerSession,
+            verificationSessionId: String? = nil,
+            settings: LookupSettings? = nil,
+            linkBrand: LinkBrand? = nil
+        ) {
             self.consumerSession = consumerSession
             self.verificationSessionId = verificationSessionId
             self.settings = settings

@@ -1,4 +1,10 @@
-// Copyright © 2026 Stripe, Inc. All rights reserved.
+//
+//  LinkVerificationController.swift
+//  StripePaymentSheet
+//
+//  Created by Ramon Torres on 7/23/22.
+//  Copyright © 2022 Stripe, Inc. All rights reserved.
+//
 
 @_spi(STP) import StripeCore
 import UIKit

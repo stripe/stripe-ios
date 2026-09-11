@@ -324,7 +324,7 @@ final class LinkAuthFlowViewSnapshotTests: STPSnapshotTestCase {
 
     private func findHeader(in view: UIView) -> LinkVerificationView.Header? {
         if let header = view as? LinkVerificationView.Header { return header }
-        return view.subviews.lazy.compactMap { findHeader(in: $0) }.first
+        return view.subviews.lazy.compactMap { self.findHeader(in: $0) }.first
     }
 
     private func startAndWait(_ flow: LinkAuthFlowViewController) {

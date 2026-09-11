@@ -16,6 +16,7 @@ final class LinkUtils {
     enum ConsumerErrorCode: String {
         case consumerVerificationCodeInvalid = "consumer_verification_code_invalid"
         case consumerVerificationExpired = "consumer_verification_expired"
+        case consumerVerificationNotFound = "consumer_verification_not_found"
         case consumerVerificationMaxAttemptsExceeded = "consumer_verification_max_attempts_exceeded"
         case phoneNumberMissing = "phone_number_missing"
         case phoneNumberMismatch = "phone_number_mismatch"
@@ -31,7 +32,7 @@ final class LinkUtils {
                     "The provided verification code is incorrect.",
                     "Error message shown when the user enters an incorrect verification code."
                 )
-            case .consumerVerificationExpired:
+            case .consumerVerificationExpired, .consumerVerificationNotFound:
                 return STPLocalizedString(
                     "The provided verification code has expired.",
                     "Error message shown when the user enters an expired verification code."

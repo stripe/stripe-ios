@@ -1,4 +1,10 @@
-// Copyright © 2026 Stripe, Inc. All rights reserved.
+//
+//  LinkVerificationViewController.swift
+//  StripePaymentSheet
+//
+//  Created by Cameron Sabol on 3/24/21.
+//  Copyright © 2021 Stripe, Inc. All rights reserved.
+//
 
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
@@ -62,7 +68,10 @@ final class LinkVerificationViewController: UIViewController {
         verificationView.setCodeEntryEnabled(coordinator.canSubmitCode)
         let hasAlternatives = coordinator.actions.count > 1
         let isLoading = coordinator.isLoadingOTP
-        let title = hasAlternatives ? STPLocalizedString("More options", "Button opening Link authentication actions.") : resendTitle
+        let title = hasAlternatives ? STPLocalizedString(
+            "More options",
+            "Button opening Link authentication actions."
+        ) : resendTitle
         verificationView.configureActions(title: title, enabled: hasAlternatives ? !isLoading : coordinator.canResend, loading: isLoading)
         menuButton.isHidden = true
         verificationView.actionsButton.isAccessibilityElement = true
@@ -89,11 +98,20 @@ final class LinkVerificationViewController: UIViewController {
     private var resendTitle: String {
         let seconds = coordinator.resendSecondsRemaining
         guard seconds > 0 else { return String.Localized.resend_code }
-        return String(format: STPLocalizedString("Resend code in %d seconds", "Link OTP resend cooldown, in seconds."), seconds)
+        return String(
+            format: STPLocalizedString(
+                "Resend code in %d seconds",
+                "Link OTP resend cooldown, in seconds."
+            ),
+            seconds
+        )
     }
 
     private var emailActionTitle: String {
-        STPLocalizedString("Send code to email", "Link authentication action to receive an email verification code.")
+        STPLocalizedString(
+            "Email code",
+            "Link authentication action to receive an email verification code."
+        )
     }
 }
 
@@ -108,10 +126,24 @@ extension LinkVerificationViewController: LinkVerificationViewDelegate {
         }
         // iOS 13 doesn't support opening a UIButton menu on its primary action.
         let menu = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        let resend = UIAlertAction(title: resendTitle, style: .default) { [weak self] _ in self?.coordinator.resend() }
+
+        let resend = UIAlertAction(
+            title: resendTitle,
+            style: .default
+        ) { [weak self] _ in
+            self?.coordinator.resend()
+        }
         resend.isEnabled = coordinator.canResend
         menu.addAction(resend)
-        menu.addAction(UIAlertAction(title: emailActionTitle, style: .default) { [weak self] _ in self?.coordinator.sendToEmail() })
+
+        menu.addAction(
+            UIAlertAction(
+                title: emailActionTitle,
+                style: .default
+            ) { [weak self] _ in
+                self?.coordinator.sendToEmail()
+            }
+        )
         menu.addAction(UIAlertAction(title: String.Localized.cancel, style: .cancel))
         menu.popoverPresentationController?.sourceView = view.actionsButton
         menu.popoverPresentationController?.sourceRect = view.actionsButton.bounds

@@ -15,7 +15,11 @@ final class LinkAuthFlowViewController: UIViewController {
     private let account: PaymentSheetLinkAccount
     private let appearance: LinkAppearance?
     private let otpController: LinkVerificationViewController
-    private lazy var phoneController = LinkPhoneMatchViewController(account: account, coordinator: coordinator, appearance: appearance)
+    private lazy var phoneController = LinkPhoneMatchViewController(
+        account: account,
+        coordinator: coordinator,
+        appearance: appearance
+    )
     private let header: LinkVerificationView.Header
     private let contentStack = UIStackView()
     private let childContainer = UIView()
@@ -39,7 +43,11 @@ final class LinkAuthFlowViewController: UIViewController {
         self.account = linkAccount
         self.appearance = appearance
         let consentGranted: Bool? = if case .inline = consentViewModel { true } else { nil }
-        coordinator = LinkAuthFlowCoordinator(account: linkAccount, capabilities: capabilities, consentGranted: consentGranted)
+        coordinator = LinkAuthFlowCoordinator(
+            account: linkAccount,
+            capabilities: capabilities,
+            consentGranted: consentGranted
+        )
         header = LinkVerificationView.Header(brand: brand)
         otpController = LinkVerificationViewController(
             mode: mode,
@@ -149,12 +157,21 @@ final class LinkAuthFlowViewController: UIViewController {
     }
 
     func fittingHeight(width: CGFloat) -> CGFloat {
-        let contentHeight = activeController?.view.systemLayoutSizeFitting(CGSize(width: width, height: UIView.layoutFittingCompressedSize.height), withHorizontalFittingPriority: .required, verticalFittingPriority: .fittingSizeLevel).height ?? 0
+        let contentHeight = activeController?.view.systemLayoutSizeFitting(
+            CGSize(width: width, height: UIView.layoutFittingCompressedSize.height),
+            withHorizontalFittingPriority: .required,
+            verticalFittingPriority: .fittingSizeLevel
+        ).height ?? 0
         return contentHeight + (mode.requiresModalPresentation ? 20 + header.intrinsicContentSize.height : 0)
     }
 
-    @objc func close() { coordinator.cancel() }
-    @objc func back() { coordinator.goBack() }
+    @objc func close() {
+        coordinator.cancel()
+    }
+
+    @objc func back() {
+        coordinator.goBack()
+    }
 
     private func render() {
         guard isViewLoaded else { return }
@@ -209,9 +226,12 @@ final class LinkAuthFlowViewController: UIViewController {
 
     private func focusCurrentScreen() {
         switch coordinator.screen {
-        case .otp: otpController.focusCode()
-        case .phoneMatch: phoneController.focusPhone()
-        case .loading, .blocked, .webHandoff: view.endEditing(true)
+        case .otp:
+            otpController.focusCode()
+        case .phoneMatch:
+            phoneController.focusPhone()
+        case .loading, .blocked, .webHandoff:
+            view.endEditing(true)
         }
     }
 
@@ -231,7 +251,11 @@ final class LinkAuthFlowViewController: UIViewController {
 extension LinkAuthFlowViewController {
     final class TransitioningDelegate: NSObject, UIViewControllerTransitioningDelegate {
         static let shared = TransitioningDelegate()
-        func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
+        func presentationController(
+            forPresented presented: UIViewController,
+            presenting: UIViewController?,
+            source: UIViewController
+        ) -> UIPresentationController? {
             PresentationController(presentedViewController: presented, presenting: presenting)
         }
     }

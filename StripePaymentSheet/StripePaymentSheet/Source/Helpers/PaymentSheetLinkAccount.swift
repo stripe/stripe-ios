@@ -663,14 +663,20 @@ extension PaymentSheetLinkAccount: LinkAuthAccount {
         recoverCredentials: Bool,
         completion: @escaping (Result<ConsumerSession.AuthResponse, Error>) -> Void
     ) {
-        if recoverCredentials, let authSessionLookup {
-            authSessionLookup(completion)
-        } else if let currentSession {
-            currentSession.refreshSession(with: apiClient, requestSurface: requestSurface) { result in
-                completion(result.map { ConsumerSession.AuthResponse(consumerSession: $0) })
+        if recoverCredentials {
+            guard let authSessionLookup else {
+                completion(.failure(NSError.stp_genericConnectionError()))
+                return
             }
-        } else {
+            authSessionLookup(completion)
+            return
+        }
+        guard let currentSession else {
             completion(.failure(NSError.stp_genericConnectionError()))
+            return
+        }
+        currentSession.refreshSession(with: apiClient, requestSurface: requestSurface) { result in
+            completion(result.map { ConsumerSession.AuthResponse(consumerSession: $0) })
         }
     }
 }

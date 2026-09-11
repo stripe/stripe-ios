@@ -273,18 +273,23 @@ final class LinkAuthFlowCoordinatorTests: XCTestCase {
         XCTAssertTrue(flow.canResend)
     }
 
-    func testExpiredCodeRestartsOnceAndDoesNotLoopOnStartFailure() async {
-        let account = AuthAccountStub()
-        let flow = makeFlow(account)
-        flow.start()
-        await settle()
-        account.confirmResult = .failure(authError("consumer_verification_expired"))
-        account.nextStartResult = .failure(authError("rate_limit_exceeded"))
-        flow.confirm(code: "000000")
-        await settle()
-        XCTAssertEqual(account.starts.count, 2)
-        XCTAssertFalse(flow.canSubmitCode)
-        XCTAssertNotNil(flow.errorMessage)
+    func testExpiredOrMissingVerificationRestartsOnceAndDoesNotLoopOnStartFailure() async {
+        for errorCode in [
+            LinkUtils.ConsumerErrorCode.consumerVerificationExpired,
+            .consumerVerificationNotFound,
+        ] {
+            let account = AuthAccountStub()
+            let flow = makeFlow(account)
+            flow.start()
+            await settle()
+            account.confirmResult = .failure(authError(errorCode.rawValue))
+            account.nextStartResult = .failure(authError("rate_limit_exceeded"))
+            flow.confirm(code: "000000")
+            await settle()
+            XCTAssertEqual(account.starts.count, 2)
+            XCTAssertFalse(flow.canSubmitCode)
+            XCTAssertNotNil(flow.errorMessage)
+        }
     }
 
     func testCredentialsRefreshOnceThenReplayOriginalRequest() async {

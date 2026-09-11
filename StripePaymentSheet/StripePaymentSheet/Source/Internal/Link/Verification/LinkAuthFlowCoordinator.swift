@@ -11,9 +11,22 @@ protocol LinkAuthAccount: AnyObject {
     var visitedFallbackURLs: [URL] { get set }
 
     func applyAuthResponse(_ response: ConsumerSession.AuthResponse)
-    func startAuthVerification(type: SupportedVerificationType, phoneNumber: String?, isResending: Bool, completion: @escaping (Result<ConsumerSession.AuthResponse, Error>) -> Void)
-    func confirmAuthVerification(type: SupportedVerificationType, code: String, consentGranted: Bool?, completion: @escaping (Result<ConsumerSession.AuthResponse, Error>) -> Void)
-    func refreshAuthSession(recoverCredentials: Bool, completion: @escaping (Result<ConsumerSession.AuthResponse, Error>) -> Void)
+    func startAuthVerification(
+        type: SupportedVerificationType,
+        phoneNumber: String?,
+        isResending: Bool,
+        completion: @escaping (Result<ConsumerSession.AuthResponse, Error>) -> Void
+    )
+    func confirmAuthVerification(
+        type: SupportedVerificationType,
+        code: String,
+        consentGranted: Bool?,
+        completion: @escaping (Result<ConsumerSession.AuthResponse, Error>) -> Void
+    )
+    func refreshAuthSession(
+        recoverCredentials: Bool,
+        completion: @escaping (Result<ConsumerSession.AuthResponse, Error>) -> Void
+    )
 }
 
 enum LinkVerificationResult {
@@ -89,15 +102,30 @@ final class LinkAuthFlowCoordinator {
         self.now = now
     }
 
-    var showsBackButton: Bool { step == 1 && !history.isEmpty }
-    var canGoBack: Bool { showsBackButton && !isLoading }
-    var canSubmitCode: Bool { screen == .otp && challenge?.isStarted == true && !isLoading && !finished }
+    var showsBackButton: Bool {
+        step == 1 && !history.isEmpty
+    }
+
+    var canGoBack: Bool {
+        showsBackButton && !isLoading
+    }
+
+    var canSubmitCode: Bool {
+        screen == .otp && challenge?.isStarted == true && !isLoading && !finished
+    }
+
     var resendSecondsRemaining: Int {
         max(0, Int(ceil((challenge?.resendDeadline ?? .distantPast).timeIntervalSince(now()))))
     }
-    var canResend: Bool { didStart && screen == .otp && !isLoading && !finished && resendSecondsRemaining == 0 }
+
+    var canResend: Bool {
+        didStart && screen == .otp && !isLoading && !finished && resendSecondsRemaining == 0
+    }
+
     /// Keep the initial OTP action in its loading state while presentation defers the first request.
-    var isLoadingOTP: Bool { screen == .otp && !finished && (!didStart || isLoading) }
+    var isLoadingOTP: Bool {
+        screen == .otp && !finished && (!didStart || isLoading)
+    }
 
     var actions: [Action] {
         guard screen == .otp else { return [] }
@@ -112,7 +140,8 @@ final class LinkAuthFlowCoordinator {
         if challenge?.type == .email {
             return account.currentSession?.emailAddress ?? ""
         }
-        return account.currentSession?.redactedFormattedPhoneNumber.replacingOccurrences(of: "*", with: "•") ?? ""
+        let phoneNumber = account.currentSession?.redactedFormattedPhoneNumber
+        return phoneNumber?.replacingOccurrences(of: "*", with: "•") ?? ""
     }
 
     /// Selects the initial UI from the current lookup without sending requests or opening web auth.
@@ -144,7 +173,8 @@ final class LinkAuthFlowCoordinator {
     }
 
     func sendToEmail() {
-        guard didStart, !isLoading, !finished, actions.contains(.email), let factor = factor(for: .email) else { return }
+        guard didStart, !isLoading, !finished, actions
+            .contains(.email), let factor = factor(for: .email) else { return }
         history.append(Route(screen: screen, challenge: challenge))
         select(factor)
     }
@@ -163,8 +193,14 @@ final class LinkAuthFlowCoordinator {
 
     func confirm(code: String) {
         guard canSubmitCode, let challenge else { return }
-        request({ completion in
-            self.account.confirmAuthVerification(type: challenge.type, code: code, consentGranted: self.consentGranted, completion: completion)
+        request(
+            { completion in
+                self.account.confirmAuthVerification(
+                    type: challenge.type,
+                    code: code,
+                    consentGranted: self.consentGranted,
+                    completion: completion
+                )
         }) { result in
             switch result {
             case .success:
@@ -177,13 +213,14 @@ final class LinkAuthFlowCoordinator {
                 STPAnalyticsClient.sharedClient.logLink2FAFailure()
                 self.resetInput()
                 self.errorMessage = LinkUtils.getLocalizedErrorMessage(from: error)
-                switch error._stp_error_code {
-                case "consumer_verification_expired", "consumer_verification_not_found":
+                let errorCode = error._stp_error_code.flatMap(LinkUtils.ConsumerErrorCode.init(rawValue:))
+                switch errorCode {
+                case .consumerVerificationExpired, .consumerVerificationNotFound:
                     self.challenge?.isStarted = false
                     self.previousChallenges[challenge.type]?.isStarted = false
                     self.sendCode(isResending: false)
                     return
-                case "consumer_verification_max_attempts_exceeded":
+                case .consumerVerificationMaxAttemptsExceeded:
                     self.challenge?.isStarted = false
                     self.previousChallenges[challenge.type]?.isStarted = false
                 default:
@@ -199,8 +236,12 @@ final class LinkAuthFlowCoordinator {
         switch result {
         case .completed:
             completedWebHandoff = true
-            request({ completion in
-                self.account.refreshAuthSession(recoverCredentials: false, completion: completion)
+            request(
+                { completion in
+                    self.account.refreshAuthSession(
+                        recoverCredentials: false,
+                        completion: completion
+                    )
             }) { result in
                 switch result {
                 case .success: self.advance()
@@ -219,7 +260,12 @@ final class LinkAuthFlowCoordinator {
         }
         // Legacy endpoints predate the factor list and only support SMS.
         if !account.useMobileEndpoints, type == .sms {
-            return .init(type: .sms, providesFurtherVerification: true, temporarilyDisabled: false, id: nil)
+            return .init(
+                type: .sms,
+                providesFurtherVerification: true,
+                temporarilyDisabled: false,
+                id: nil
+            )
         }
         return nil
     }
@@ -286,8 +332,14 @@ final class LinkAuthFlowCoordinator {
         guard let challenge, !isLoading, !finished else { return }
         let previousScreen = screen
         errorMessage = nil
-        request({ completion in
-            self.account.startAuthVerification(type: challenge.type, phoneNumber: challenge.phoneNumber, isResending: isResending, completion: completion)
+        request(
+            { completion in
+                self.account.startAuthVerification(
+                    type: challenge.type,
+                    phoneNumber: challenge.phoneNumber,
+                    isResending: isResending,
+                    completion: completion
+                )
         }) { result in
             switch result {
             case .success(let response):
@@ -383,7 +435,12 @@ final class LinkAuthFlowCoordinator {
         isLoading = true
         onUpdate?()
         let requestGeneration = generation
-        execute(operation, generation: requestGeneration, originalError: nil, completion: completion)
+        execute(
+            operation,
+            generation: requestGeneration,
+            originalError: nil,
+            completion: completion
+        )
     }
 
     private func execute(
@@ -402,7 +459,12 @@ final class LinkAuthFlowCoordinator {
                             switch refreshResult {
                             case .success(let response):
                                 self.account.applyAuthResponse(response)
-                                self.execute(operation, generation: requestGeneration, originalError: error, completion: completion)
+                                self.execute(
+                                    operation,
+                                    generation: requestGeneration,
+                                    originalError: error,
+                                    completion: completion
+                                )
                             case .failure:
                                 self.finish(.failed(error))
                             }

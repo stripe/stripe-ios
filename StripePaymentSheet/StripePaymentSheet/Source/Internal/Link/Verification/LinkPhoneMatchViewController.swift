@@ -14,13 +14,28 @@ final class LinkPhoneMatchViewController: UIViewController, ElementDelegate {
 
     init(account: PaymentSheetLinkAccount, coordinator: LinkAuthFlowCoordinator, appearance: LinkAppearance?) {
         self.coordinator = coordinator
-        phoneNumberElement = PhoneNumberElement(defaultCountryCode: account.currentSession?.phoneNumberCountry ?? account.authCountryCode ?? "US", theme: LinkUI.appearance.asElementsTheme)
-        phoneSection = SectionElement(elements: [phoneNumberElement], theme: LinkUI.appearance.asElementsTheme)
+        phoneNumberElement = PhoneNumberElement(
+            defaultCountryCode: account.currentSession?.phoneNumberCountry ?? account.authCountryCode ?? "US",
+            theme: LinkUI.appearance.asElementsTheme
+        )
+        phoneSection = SectionElement(
+            elements: [phoneNumberElement],
+            theme: LinkUI.appearance.asElementsTheme
+        )
         let lastTwo = String((account.currentSession?.redactedPhoneNumber ?? "").suffix(2))
         if lastTwo.count == 2, lastTwo.allSatisfy(\.isNumber) {
-            hint = String(format: STPLocalizedString("Enter the phone number ending in %@ on your Link account to receive a code by email.", "Phone-match instruction before Link email OTP. Placeholder is the last two phone digits."), lastTwo)
+            hint = String(
+                format: STPLocalizedString(
+                    "Before we can send a code to your email, we need to verify additional information about you. Please enter your phone number ending in ••%@.",
+                    "Phone-match instruction before Link email OTP. Placeholder is the last two phone digits."
+                ),
+                lastTwo
+            )
         } else {
-            hint = STPLocalizedString("Enter the phone number on your Link account to receive a code by email.", "Phone-match instruction before Link email OTP.")
+            hint = STPLocalizedString(
+                "Before we can send a code to your email, we need to verify additional information about you. Please enter your phone number.",
+                "Phone-match instruction before Link email OTP."
+            )
         }
         super.init(nibName: nil, bundle: nil)
         phoneNumberElement.delegate = self
@@ -35,7 +50,9 @@ final class LinkPhoneMatchViewController: UIViewController, ElementDelegate {
             submitButton.configuration.cornerRadius = cornerRadius
         }
         submitButton.adjustsFontForContentSizeCategory = true
-        if LinkUI.useLiquidGlass { submitButton.ios26_applyCapsuleCornerConfiguration() }
+        if LinkUI.useLiquidGlass {
+            submitButton.ios26_applyCapsuleCornerConfiguration()
+        }
     }
 
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
@@ -44,7 +61,13 @@ final class LinkPhoneMatchViewController: UIViewController, ElementDelegate {
         super.viewDidLoad()
         view.backgroundColor = .clear
         view.directionalLayoutMargins = .insets(amount: LinkVerificationView.Constants.edgeMargin)
-        let title = label(STPLocalizedString("Verify your phone number", "Heading for the Link phone-match screen."), style: .title)
+        let title = label(
+            STPLocalizedString(
+                "Verify your phone number",
+                "Heading for the Link phone-match screen."
+            ),
+            style: .title
+        )
         let description = label(hint, style: .body)
         description.textColor = .linkTextSecondary
         errorLabel.font = LinkUI.font(forTextStyle: .detail)
@@ -52,7 +75,15 @@ final class LinkPhoneMatchViewController: UIViewController, ElementDelegate {
         errorLabel.numberOfLines = 0
         errorLabel.adjustsFontForContentSizeCategory = true
         submitButton.addTarget(self, action: #selector(submit), for: .touchUpInside)
-        let stack = UIStackView(arrangedSubviews: [title, description, phoneSection.view, errorLabel, submitButton])
+        let stack = UIStackView(
+            arrangedSubviews: [
+                title,
+                description,
+                phoneSection.view,
+                errorLabel,
+                submitButton,
+            ]
+        )
         stack.axis = .vertical
         stack.spacing = LinkUI.contentSpacing
         stack.translatesAutoresizingMaskIntoConstraints = false

@@ -1,4 +1,10 @@
-// Copyright © 2026 Stripe, Inc. All rights reserved.
+//
+//  PayWithLinkViewController-VerifyAccountViewController.swift
+//  StripePaymentSheet
+//
+//  Created by Ramon Torres on 1/10/22.
+//  Copyright © 2022 Stripe, Inc. All rights reserved.
+//
 
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
@@ -10,11 +16,20 @@ extension PayWithLinkViewController {
         private var dismissedFromSheet = false
 
         private lazy var authController: LinkAuthFlowViewController = {
-            let controller = LinkAuthFlowViewController(mode: .embedded, linkAccount: linkAccount, brand: context.linkBrand, appearance: context.linkAppearance)
+            let controller = LinkAuthFlowViewController(
+                mode: .embedded,
+                linkAccount: linkAccount,
+                brand: context.linkBrand,
+                appearance: context.linkAppearance
+            )
             controller.onFinish = { [weak self] result in self?.handleVerificationResult(result) }
             controller.onNavigationUpdate = { [weak self] in
                 guard let self else { return }
-                self.navigationBar.setStyle(self.authController.coordinator.showsBackButton ? .back(showAdditionalButton: false) : .close(showAdditionalButton: false))
+                self.navigationBar.setStyle(
+                    self.authController.coordinator.showsBackButton
+                    ? .back(showAdditionalButton: false)
+                    : .close(showAdditionalButton: false)
+                )
             }
             return controller
         }()
@@ -64,8 +79,19 @@ extension PayWithLinkViewController {
             case .switchAccount:
                 coordinator?.logout(cancel: false)
             case .failed(let error):
-                let alert = UIAlertController(title: String.Localized.error, message: error.nonGenericDescription, preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: String.Localized.ok, style: .default) { [weak self] _ in self?.coordinator?.logout(cancel: false) })
+                let alert = UIAlertController(
+                    title: String.Localized.error,
+                    message: error.nonGenericDescription,
+                    preferredStyle: .alert
+                )
+                alert.addAction(
+                    UIAlertAction(
+                        title: String.Localized.ok,
+                        style: .default
+                    ) { [weak self] _ in
+                        self?.coordinator?.logout(cancel: false)
+                    }
+                )
                 present(alert, animated: true)
             }
         }
