@@ -29,6 +29,7 @@ protocol VerificationSheetFlowControllerProtocol: AnyObject {
 
     var documentUploader: DocumentUploaderProtocol? { get }
     var visitedIndividualWelcomePage: Bool { get }
+    var primaryButtonStyle: IdentityVerificationSheet.Configuration.PrimaryButtonStyle { get }
 
     func transitionToNextScreen(
         skipTestMode: Bool,
@@ -83,6 +84,7 @@ protocol VerificationSheetFlowControllerProtocol: AnyObject {
 final class VerificationSheetFlowController: NSObject {
 
     let brandLogo: UIImage
+    let primaryButtonStyle: IdentityVerificationSheet.Configuration.PrimaryButtonStyle
     let biometricConsentConfiguration: IdentityVerificationSheet.Configuration.BiometricConsentConfiguration?
 
     weak var delegate: VerificationSheetFlowControllerDelegate?
@@ -97,6 +99,7 @@ final class VerificationSheetFlowController: NSObject {
         configuration: IdentityVerificationSheet.Configuration
     ) {
         self.brandLogo = configuration.brandLogo
+        self.primaryButtonStyle = configuration.primaryButtonStyle
         self.biometricConsentConfiguration = configuration.biometricConsent
     }
 

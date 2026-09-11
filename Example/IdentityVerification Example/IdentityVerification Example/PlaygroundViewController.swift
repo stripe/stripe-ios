@@ -5,7 +5,7 @@
 //  Created by Mel Ludowise on 3/3/21.
 //
 
-import StripeIdentity
+@_spi(STP) import StripeIdentity
 @_spi(STP) import StripeUICore
 import UIKit
 
@@ -45,6 +45,7 @@ class PlaygroundViewController: UIViewController {
     @IBOutlet weak var phoneOtpContainerView: UIStackView!
 
     @IBOutlet weak var fallbackToDocumentSwitch: UISwitch!
+    private let monochromePrimaryButtonsSwitch = UISwitch()
     private let phoneElement: PhoneNumberElement
 
     private let phoneView: UIView
@@ -130,6 +131,18 @@ class PlaygroundViewController: UIViewController {
         super.viewDidLoad()
 
         nativeOrWebSelector.isEnabled = true
+
+        let monochromeButtonLabel = UILabel()
+        monochromeButtonLabel.text = "Monochrome primary buttons"
+        monochromeButtonLabel.font = .preferredFont(forTextStyle: .body)
+        monochromeButtonLabel.adjustsFontForContentSizeCategory = true
+        monochromeButtonLabel.numberOfLines = 0
+        monochromePrimaryButtonsSwitch.accessibilityLabel = monochromeButtonLabel.text
+        monochromePrimaryButtonsSwitch.accessibilityHint = "Uses black primary buttons in light mode and white primary buttons in dark mode throughout verification, with opposite text colors."
+        let monochromeButtonRow = UIStackView(arrangedSubviews: [monochromeButtonLabel, monochromePrimaryButtonsSwitch])
+        monochromeButtonRow.alignment = .center
+        monochromeButtonRow.spacing = 8
+        nativeComponentsOptionsContainerView.addArrangedSubview(monochromeButtonRow)
 
         mockDocumentCameraForSimulator()
 
@@ -359,12 +372,19 @@ class PlaygroundViewController: UIViewController {
             assertionFailure("Did not receive a valid ephemeral key secret.")
             return
         }
+        var configuration = IdentityVerificationSheet.Configuration(
+            brandLogo: UIImage(named: "BrandLogo")!
+        )
+        if monochromePrimaryButtonsSwitch.isOn {
+            configuration.primaryButtonStyle = .custom(
+                backgroundColor: .dynamic(light: .black, dark: .white),
+                textColor: .dynamic(light: .white, dark: .black)
+            )
+        }
         self.verificationSheet = IdentityVerificationSheet(
             verificationSessionId: verificationSessionId,
             ephemeralKeySecret: ephemeralKeySecret,
-            configuration: IdentityVerificationSheet.Configuration(
-                brandLogo: UIImage(named: "BrandLogo")!
-            )
+            configuration: configuration
         )
     }
 
