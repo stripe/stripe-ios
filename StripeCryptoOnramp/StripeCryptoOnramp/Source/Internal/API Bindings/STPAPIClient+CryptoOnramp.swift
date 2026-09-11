@@ -127,7 +127,7 @@ extension STPAPIClient {
         let endpoint = "crypto/internal/identifier_requirements"
         return try await get(
             resource: endpoint,
-            parameters: try credentialsParameters(consumerSessionClientSecret: consumerSessionClientSecret)
+            consumerSessionClientSecret: consumerSessionClientSecret
         )
     }
 
@@ -172,7 +172,7 @@ extension STPAPIClient {
         let endpoint = "crypto/internal/crs_carf_declaration"
         return try await get(
             resource: endpoint,
-            parameters: try credentialsParameters(consumerSessionClientSecret: consumerSessionClientSecret)
+            consumerSessionClientSecret: consumerSessionClientSecret
         )
     }
 
@@ -371,12 +371,6 @@ extension STPAPIClient {
             throw CryptoOnrampAPIError.linkAccountNotVerified
         }
     }
-
-    private func credentialsParameters(consumerSessionClientSecret: String) throws -> [String: Any] {
-        return try EmptyRequestWithCredentials(
-            consumerSessionClientSecret: consumerSessionClientSecret
-        ).encodeJSONDictionary()
-    }
 }
 
 private extension STPAPIClient {
@@ -419,9 +413,45 @@ private extension STPAPIClient {
             }
         }
     }
+
+    func get<T: Decodable>(
+        resource: String,
+        parameters: [String: Any] = [:],
+        consumerSessionClientSecret: String
+    ) async throws -> T {
+        let url = apiURL.appendingPathComponent(resource)
+        var request = configuredRequest(
+            for: url,
+            apiVersionOverride: CryptoOnrampAPI.stripeAPIVersion,
+            additionalHeaders: [
+                CryptoOnrampAPI.consumerAuthTokenHeader: consumerSessionClientSecret,
+            ]
+        )
+        request.stp_addParameters(toURL: parameters)
+        request.httpMethod = "GET"
+
+        return try await withCheckedThrowingContinuation { continuation in
+            urlSession.stp_performDataTask(
+                with: request,
+                completionHandler: { data, response, error in
+                    DispatchQueue.main.async {
+                        let result: Result<T, Error> = STPAPIClient.decodeResponse(
+                            data: data,
+                            error: error,
+                            response: response,
+                            request: request
+                        )
+                        continuation.resume(with: result)
+                    }
+                }
+            )
+        }
+    }
 }
 
 private enum CryptoOnrampAPI {
+    static let consumerAuthTokenHeader = "Stripe-Consumer-Auth-Token"
+
     // Use a preview API version for networks and parameters behind preview API features.
     // Bump this when new onramp features require a newer API version.
     static let stripeAPIVersion = "2026-03-25.preview"
