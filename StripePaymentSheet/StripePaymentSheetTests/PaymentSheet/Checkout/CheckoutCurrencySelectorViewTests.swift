@@ -62,6 +62,97 @@ final class CheckoutCurrencySelectorViewTests: XCTestCase {
         XCTAssertTrue(selectorView!.rightItem.displayText.string.contains("24"))
     }
 
+    // MARK: - Height update tests
+
+    func testNotifiesDelegateInsideAnimationWhenDetailsChangeHeight() async throws {
+        // Given a currency selector in a merchant-owned container
+        let session = makeSession()
+        let checkout = try await CheckoutController(
+            configuration: CheckoutTestHelpers.makeCurrencySelectorConfiguration(apiResponse: session)
+        )
+        let element = try XCTUnwrap(checkout.getCurrencySelectorElement())
+        let view = element.uiView
+        let containerView = UIView(frame: CGRect(x: 0, y: 0, width: 320, height: 500))
+        view.translatesAutoresizingMaskIntoConstraints = false
+        containerView.addSubview(view)
+        NSLayoutConstraint.activate([
+            view.topAnchor.constraint(equalTo: containerView.topAnchor),
+            view.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+            view.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
+        ])
+        containerView.layoutIfNeeded()
+        let collapsedHeight = view.frame.height
+        let delegate = CurrencySelectorElementDelegateMock {
+            containerView.setNeedsLayout()
+            containerView.layoutIfNeeded()
+        }
+        element.delegate = delegate
+
+        // When the customer expands the details
+        currencySelector(in: view)?.expandableDetailView.toggleExpansion()
+
+        // Then the merchant can animate its surrounding layout from the delegate callback
+        XCTAssertEqual(delegate.heightUpdateCallCount, 1)
+        XCTAssertGreaterThan(delegate.inheritedAnimationDuration, 0)
+        XCTAssertGreaterThan(view.frame.height, collapsedHeight)
+    }
+
+    func testCollapsingDetailsRestoresHeightAndSurroundingLayout() async throws {
+        // Given a currency selector with content below it in a merchant-owned stack
+        let checkout = try await CheckoutController(
+            configuration: CheckoutTestHelpers.makeCurrencySelectorConfiguration(apiResponse: makeSession())
+        )
+        let element = try XCTUnwrap(checkout.getCurrencySelectorElement())
+        let footer = UIView()
+        footer.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        let stackView = UIStackView(arrangedSubviews: [element.uiView, footer])
+        stackView.axis = .vertical
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        let containerView = UIView(frame: CGRect(x: 0, y: 0, width: 320, height: 500))
+        containerView.addSubview(stackView)
+        NSLayoutConstraint.activate([
+            stackView.topAnchor.constraint(equalTo: containerView.topAnchor),
+            stackView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+            stackView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
+        ])
+        let delegate = CurrencySelectorElementDelegateMock {
+            containerView.setNeedsLayout()
+            containerView.layoutIfNeeded()
+        }
+        element.delegate = delegate
+        containerView.layoutIfNeeded()
+        let collapsedHeight = element.uiView.frame.height
+        let initialFooterY = footer.frame.minY
+        let selector = try XCTUnwrap(currencySelector(in: element.uiView))
+
+        // When the customer expands the details
+        let expansionCompleted = expectation(description: "Expansion completes before collapsing")
+        CATransaction.begin()
+        CATransaction.setCompletionBlock {
+            expansionCompleted.fulfill()
+        }
+        UIView.performWithoutAnimation {
+            selector.expandableDetailView.toggleExpansion()
+        }
+        CATransaction.commit()
+        await fulfillment(of: [expansionCompleted], timeout: 1)
+
+        // Then the selector grows and moves the content below it
+        XCTAssertGreaterThan(element.uiView.frame.height, collapsedHeight)
+        XCTAssertGreaterThan(footer.frame.minY, initialFooterY)
+        XCTAssertEqual(footer.frame.minY, element.uiView.frame.maxY, accuracy: 0.5)
+
+        // When the customer collapses the details
+        UIView.performWithoutAnimation {
+            selector.expandableDetailView.toggleExpansion()
+        }
+
+        // Then both views return to their original positions and sizes
+        XCTAssertEqual(delegate.heightUpdateCallCount, 2)
+        XCTAssertEqual(element.uiView.frame.height, collapsedHeight, accuracy: 0.5)
+        XCTAssertEqual(footer.frame.minY, initialFooterY, accuracy: 0.5)
+    }
+
     // MARK: - Region code / flag tests
 
     func testRegionCodeForCommonCurrencies() {
@@ -127,5 +218,29 @@ final class CheckoutCurrencySelectorViewTests: XCTestCase {
             integrationAmount: integrationAmount,
             localAmount: localAmount
         )
+    }
+
+    private func currencySelector(in view: CurrencySelectorElementUIView) -> TwoOptionSelectorView? {
+        return view.subviews
+            .compactMap { ($0 as? UIStackView)?.arrangedSubviews.compactMap { $0 as? TwoOptionSelectorView }.first }
+            .first
+    }
+}
+
+@MainActor
+private final class CurrencySelectorElementDelegateMock: CurrencySelectorElementDelegate {
+    private let updateLayout: () -> Void
+
+    private(set) var heightUpdateCallCount = 0
+    private(set) var inheritedAnimationDuration: TimeInterval = 0
+
+    init(updateLayout: @escaping () -> Void) {
+        self.updateLayout = updateLayout
+    }
+
+    func currencySelectorElementDidUpdateHeight(currencySelectorElement: CurrencySelectorElement) {
+        heightUpdateCallCount += 1
+        inheritedAnimationDuration = UIView.inheritedAnimationDuration
+        updateLayout()
     }
 }

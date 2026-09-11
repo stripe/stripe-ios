@@ -68,7 +68,7 @@ final class TwoOptionSelectorView: UIView {
     private let trackView = UIView()
     private let buttonsStackView = UIStackView()
     private let selectionIndicatorView = UIView()
-    private(set) lazy var expandableDetailView = ExpandableDetailView(appearance: appearance)
+    let expandableDetailView: ExpandableDetailView
     private var leftButton = UIButton(type: .custom)
     private var rightButton = UIButton(type: .custom)
 
@@ -85,12 +85,17 @@ final class TwoOptionSelectorView: UIView {
         rightItem: TwoOptionSelectorItem,
         selectedItemId: String,
         caption: String? = nil,
-        appearance: TwoOptionSelectorViewAppearance
+        appearance: TwoOptionSelectorViewAppearance,
+        needsUpdateSuperviewHeight: @escaping () -> Void
     ) {
         self.appearance = appearance
         self.leftItem = leftItem
         self.rightItem = rightItem
         self.selectedItemId = selectedItemId
+        self.expandableDetailView = ExpandableDetailView(
+            appearance: appearance,
+            needsUpdateSuperviewHeight: needsUpdateSuperviewHeight
+        )
 
         super.init(frame: .zero)
         setupViews()
