@@ -14,8 +14,11 @@ import XCTest
 @MainActor
 final class CheckoutConfirmationFunctionalTests: STPNetworkStubbingTestCase {
     func testConfirmZeroAmountWithoutPaymentMethodCompletesWithoutIntent() async throws {
-        // Given a $0 Checkout Session with no selected payment method
-        let checkout = try await makeZeroAmountCheckout()
+        // Given a $0 Checkout Session with a server email and no selected payment method
+        let checkout = try await makeZeroAmountCheckout(
+            serverEmail: "test@example.com",
+            localDefaultEmail: nil
+        )
         XCTAssertNil(checkout.session.paymentOption)
 
         // When the coordinator confirms the Checkout Session
@@ -27,8 +30,11 @@ final class CheckoutConfirmationFunctionalTests: STPNetworkStubbingTestCase {
     }
 
     func testConfirmZeroAmountWithCardCompletesWithSetupIntent() async throws {
-        // Given a $0 Checkout Session with a selected card
-        let checkout = try await makeZeroAmountCheckout()
+        // Given a $0 Checkout Session with a local email and a selected card
+        let checkout = try await makeZeroAmountCheckout(
+            serverEmail: nil,
+            localDefaultEmail: "test@example.com"
+        )
         let paymentElement = checkout.getPaymentElement()
         let confirmParams = IntentConfirmParams(type: .stripe(.card))
         confirmParams.paymentMethodParams.card = STPPaymentMethodCardParams()
@@ -53,18 +59,21 @@ final class CheckoutConfirmationFunctionalTests: STPNetworkStubbingTestCase {
         XCTAssertEqual(checkout.session.status, .complete(.noPaymentRequired))
     }
 
-    private func makeZeroAmountCheckout() async throws -> CheckoutController {
+    private func makeZeroAmountCheckout(
+        serverEmail: String?,
+        localDefaultEmail: String?
+    ) async throws -> CheckoutController {
         let sessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession(
             amount: 0,
             returnURL: "stripe-ios-test://checkout-return",
-            customerEmail: "test@example.com"
+            customerEmail: serverEmail
         )
         var configuration = CheckoutController.Configuration(
             clientSecret: sessionResponse.clientSecret,
             returnURL: "stripe-ios-test://checkout-return"
         )
         configuration.apiClient = STPAPIClient(publishableKey: sessionResponse.publishableKey)
-        configuration.defaults.email = "test@example.com"
+        configuration.defaults.email = localDefaultEmail
         configuration.paymentElement = .init()
         return try await CheckoutController(configuration: configuration)
     }
