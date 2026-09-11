@@ -26,11 +26,12 @@ struct CheckoutCartPaymentMethodSection: View {
                 Spacer()
 
                 if integrationType == .embedded, session.paymentOption != nil {
-                    Button(role: .destructive) {
+                    Button {
                         clearPaymentOption()
                     } label: {
                         Text("Clear payment option")
                             .font(.subheadline.weight(.medium))
+                            .foregroundColor(.secondary)
                     }
                     .disabled(checkout.isUpdating)
                 }

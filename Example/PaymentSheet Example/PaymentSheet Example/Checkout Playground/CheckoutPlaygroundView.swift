@@ -38,7 +38,7 @@ struct CheckoutPlaygroundView: View {
                         )
 
                         CheckoutPlaygroundLineItemsSection(
-                            lineItems: viewModel.lineItems,
+                            cartScenario: $viewModel.cartScenario,
                             currency: viewModel.currency
                         )
 
