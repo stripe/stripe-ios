@@ -27,6 +27,7 @@ enum LinkVerificationResult {
 @MainActor
 final class LinkAuthFlowCoordinator {
     enum Screen: Equatable {
+        case loading
         case otp
         case phoneMatch
         case blocked
@@ -64,7 +65,7 @@ final class LinkAuthFlowCoordinator {
     private var refreshedFallbackURL = false
     private var completedWebHandoff = false
 
-    private(set) var screen: Screen = .otp
+    private(set) var screen: Screen = .loading
     private(set) var challenge: Challenge?
     private(set) var step = 1
     private(set) var isLoading = false
@@ -94,7 +95,9 @@ final class LinkAuthFlowCoordinator {
     var resendSecondsRemaining: Int {
         max(0, Int(ceil((challenge?.resendDeadline ?? .distantPast).timeIntervalSince(now()))))
     }
-    var canResend: Bool { screen == .otp && !isLoading && !finished && resendSecondsRemaining == 0 }
+    var canResend: Bool { didStart && screen == .otp && !isLoading && !finished && resendSecondsRemaining == 0 }
+    /// Keep the initial OTP action in its loading state while presentation defers the first request.
+    var isLoadingOTP: Bool { screen == .otp && !finished && (!didStart || isLoading) }
 
     var actions: [Action] {
         guard screen == .otp else { return [] }
@@ -110,6 +113,12 @@ final class LinkAuthFlowCoordinator {
             return account.currentSession?.emailAddress ?? ""
         }
         return account.currentSession?.redactedFormattedPhoneNumber.replacingOccurrences(of: "*", with: "•") ?? ""
+    }
+
+    /// Selects the initial UI from the current lookup without sending requests or opening web auth.
+    func prepare() {
+        guard !didStart, !finished else { return }
+        advance()
     }
 
     func start() {
@@ -135,13 +144,13 @@ final class LinkAuthFlowCoordinator {
     }
 
     func sendToEmail() {
-        guard !isLoading, !finished, actions.contains(.email), let factor = factor(for: .email) else { return }
+        guard didStart, !isLoading, !finished, actions.contains(.email), let factor = factor(for: .email) else { return }
         history.append(Route(screen: screen, challenge: challenge))
         select(factor)
     }
 
     func submitPhoneNumber(_ phoneNumber: String) {
-        guard screen == .phoneMatch, !isLoading, !finished else { return }
+        guard didStart, screen == .phoneMatch, !isLoading, !finished else { return }
         challenge?.phoneNumber = phoneNumber
         sendCode(isResending: false)
     }
@@ -218,11 +227,21 @@ final class LinkAuthFlowCoordinator {
     private func advance(previous: SupportedVerificationType? = nil) {
         guard !finished else { return }
         if account.sessionState == .verified {
+            guard didStart else {
+                screen = .loading
+                onUpdate?()
+                return
+            }
             STPAnalyticsClient.sharedClient.logLink2FAComplete()
             finish(.completed)
             return
         }
         if account.currentSession?.mobileFallbackWebviewParams?.webviewRequirementType == .required {
+            guard didStart else {
+                screen = .webHandoff
+                onUpdate?()
+                return
+            }
             handoffToWeb()
             return
         }
@@ -255,7 +274,11 @@ final class LinkAuthFlowCoordinator {
             onUpdate?()
         } else {
             screen = .otp
-            sendCode(isResending: false)
+            if didStart {
+                sendCode(isResending: false)
+            } else {
+                onUpdate?()
+            }
         }
     }
 
@@ -356,7 +379,7 @@ final class LinkAuthFlowCoordinator {
     private typealias Request = (@escaping (Result<ConsumerSession.AuthResponse, Error>) -> Void) -> Void
 
     private func request(_ operation: @escaping Request, completion: @escaping (Result<ConsumerSession.AuthResponse, Error>) -> Void) {
-        guard !finished, !isLoading else { return }
+        guard didStart, !finished, !isLoading else { return }
         isLoading = true
         onUpdate?()
         let requestGeneration = generation

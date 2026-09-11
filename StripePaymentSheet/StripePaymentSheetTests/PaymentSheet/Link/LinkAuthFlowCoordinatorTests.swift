@@ -12,11 +12,29 @@ final class LinkAuthFlowCoordinatorTests: XCTestCase {
         var completions = 0
         flow.onFinish = { if case .completed = $0 { completions += 1 } }
 
+        // Given screen preparation must not start verification or allow an early resend.
+        flow.prepare()
+        flow.prepare()
+        XCTAssertEqual(flow.screen, .otp)
+        XCTAssertEqual(flow.challenge?.type, .sms)
+        XCTAssertTrue(flow.isLoadingOTP)
+        XCTAssertFalse(flow.canResend)
+        XCTAssertFalse(flow.canSubmitCode)
+        flow.resend()
+        flow.sendToEmail()
+        XCTAssertTrue(account.starts.isEmpty)
+
+        // When presentation starts authentication, exactly one SMS challenge is sent.
         flow.start()
         flow.start()
+        XCTAssertTrue(flow.isLoadingOTP)
         await settle()
         XCTAssertEqual(account.starts.map(\.type), [.sms])
+        XCTAssertFalse(flow.isLoadingOTP)
         XCTAssertEqual(completions, 0)
+        let challengeID = flow.challenge?.verificationSessionID
+        flow.prepare()
+        XCTAssertEqual(flow.challenge?.verificationSessionID, challengeID)
 
         account.confirmResult = .success(.init(consumerSession: authSession(current: .oneFactorAuth)))
         flow.confirm(code: "123456")
@@ -73,6 +91,48 @@ final class LinkAuthFlowCoordinatorTests: XCTestCase {
         await settle()
         XCTAssertEqual(account.starts.map(\.type), [.email])
         XCTAssertTrue(flow.canSubmitCode)
+    }
+
+    func testPreparingEmailPhoneMatchWaitsForPhoneSubmission() async {
+        // Given email is the only native factor and phone matching is required.
+        let account = AuthAccountStub(session: authSession(factors: [email()]))
+        account.authLookupSettings = .init(emailOtpRequiresAdditionalInfo: true)
+        let flow = makeFlow(account)
+
+        // When preparing and then starting the flow.
+        flow.prepare()
+        XCTAssertEqual(flow.screen, .phoneMatch)
+        XCTAssertEqual(flow.challenge?.type, .email)
+        XCTAssertTrue(account.starts.isEmpty)
+        flow.start()
+        XCTAssertEqual(flow.screen, .phoneMatch)
+        XCTAssertTrue(account.starts.isEmpty)
+
+        // Then only phone submission requests the email OTP.
+        flow.submitPhoneNumber("+14155550123")
+        await settle()
+        XCTAssertEqual(account.starts.map(\.type), [.email])
+        XCTAssertEqual(account.starts.first?.phone, "+14155550123")
+        XCTAssertEqual(flow.screen, .otp)
+    }
+
+    func testPreparingVerifiedSessionDefersCompletionUntilStart() {
+        // Given a session already satisfies the required authentication level.
+        let account = AuthAccountStub(session: authSession(current: .oneFactorAuth))
+        let flow = makeFlow(account)
+        var completions = 0
+        flow.onFinish = { if case .completed = $0 { completions += 1 } }
+
+        // When preparing before the modal is presented.
+        flow.prepare()
+
+        // Then completion waits until presentation, without showing an OTP screen or sending a code.
+        XCTAssertEqual(flow.screen, .loading)
+        XCTAssertEqual(completions, 0)
+        XCTAssertTrue(account.starts.isEmpty)
+        flow.start()
+        XCTAssertEqual(completions, 1)
+        XCTAssertTrue(account.starts.isEmpty)
     }
 
     func testPhoneMatchDefersEmailStartAndReusesPhoneForResend() async {
@@ -277,6 +337,11 @@ final class LinkAuthFlowCoordinatorTests: XCTestCase {
         var completed = false
         flow.onWebHandoff = { urls.append($0) }
         flow.onFinish = { if case .completed = $0 { completed = true } }
+        flow.prepare()
+        XCTAssertEqual(flow.screen, .webHandoff)
+        XCTAssertTrue(urls.isEmpty)
+        XCTAssertTrue(account.visitedFallbackURLs.isEmpty)
+        XCTAssertTrue(account.refreshes.isEmpty)
         flow.start()
         XCTAssertEqual(urls, [url])
         XCTAssertEqual(account.visitedFallbackURLs, [url])
@@ -298,6 +363,9 @@ final class LinkAuthFlowCoordinatorTests: XCTestCase {
         let flow = makeFlow(account)
         var openedURL: URL?
         flow.onWebHandoff = { openedURL = $0 }
+        flow.prepare()
+        XCTAssertNil(openedURL)
+        XCTAssertTrue(account.refreshes.isEmpty)
         flow.start()
         await settle()
         XCTAssertEqual(openedURL, newURL)

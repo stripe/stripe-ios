@@ -19,6 +19,7 @@ extension LinkVerificationView {
         }
 
         private let brand: LinkBrand
+        private let buttonSize = LinkUI.navigationBarButtonSize
 
         private lazy var logoView: UIImageView = {
             let logoView = UIImageView(image: brand.paymentSheetLogoImage)
@@ -37,11 +38,10 @@ extension LinkVerificationView {
         }()
 
         let backButton: UIButton = {
-            let button = UIButton(type: .system)
-            button.setImage(UIImage(systemName: "chevron.left")?.imageFlippedForRightToLeftLayoutDirection(), for: .normal)
-            button.accessibilityLabel = String.Localized.back
-            button.accessibilityIdentifier = "LinkVerificationBackButton"
-            button.tintColor = .linkTextPrimary
+            let button = LinkSheetNavigationBar.createBackButton(
+                accessibilityIdentifier: "LinkVerificationBackButton",
+                appearance: LinkUI.appearance
+            )
             button.isHidden = true
             return button
         }()
@@ -54,7 +54,7 @@ extension LinkVerificationView {
         }
 
         override var intrinsicContentSize: CGSize {
-            return CGSize(width: 72, height: 32)
+            return CGSize(width: 72, height: buttonSize)
         }
 
         init(brand: LinkBrand = .link) {
@@ -64,7 +64,6 @@ extension LinkVerificationView {
             addSubview(logoView)
             addSubview(closeButton)
             addSubview(backButton)
-            backButton.translatesAutoresizingMaskIntoConstraints = false
 
             NSLayoutConstraint.activate([
                 // Logo
@@ -76,10 +75,11 @@ extension LinkVerificationView {
                 closeButton.topAnchor.constraint(equalTo: topAnchor),
                 closeButton.trailingAnchor.constraint(equalTo: trailingAnchor),
                 closeButton.bottomAnchor.constraint(equalTo: bottomAnchor),
+                closeButton.widthAnchor.constraint(equalTo: closeButton.heightAnchor),
                 backButton.leadingAnchor.constraint(equalTo: leadingAnchor),
-                backButton.centerYAnchor.constraint(equalTo: centerYAnchor),
-                backButton.widthAnchor.constraint(equalToConstant: 44),
-                backButton.heightAnchor.constraint(equalToConstant: 44),
+                backButton.topAnchor.constraint(equalTo: topAnchor),
+                backButton.bottomAnchor.constraint(equalTo: bottomAnchor),
+                backButton.widthAnchor.constraint(equalTo: backButton.heightAnchor),
             ])
 
             tintColor = .linkSurfacePrimary

@@ -22,6 +22,10 @@ extension LinkAuthFlowViewController {
         /// A bottom inset necessary for the presented view to avoid the software keyboard.
         private var bottomInset: CGFloat = 0
 
+        /// UIKit owns the view's animated frame once dismissal begins.
+        private var isDismissing = false
+        private var frameAtDismissal: CGRect?
+
         ///  An area where it is safe to present the modal on.
         ///
         ///  The container view safe area minus `padding` on each edge.
@@ -42,6 +46,9 @@ extension LinkAuthFlowViewController {
         }()
 
         override var frameOfPresentedViewInContainerView: CGRect {
+            if isDismissing, let frameAtDismissal {
+                return frameAtDismissal
+            }
             guard let containerView else {
                 return .zero
             }
@@ -50,7 +57,7 @@ extension LinkAuthFlowViewController {
         }
 
         func updatePresentedViewFrame() {
-            guard containerView != nil else { return }
+            guard !isDismissing, containerView != nil else { return }
             let frame = frameOfPresentedViewInContainerView
             if presentedView?.frame != frame {
                 presentedView?.frame = frame
@@ -85,10 +92,12 @@ extension LinkAuthFlowViewController {
             }
 
             dimmingView.frame = containerView.bounds
-            presentedView?.frame = frameOfPresentedViewInContainerView
+            updatePresentedViewFrame()
         }
 
         override func presentationTransitionWillBegin() {
+            isDismissing = false
+            frameAtDismissal = nil
             super.presentationTransitionWillBegin()
 
             guard let containerView,
@@ -106,38 +115,46 @@ extension LinkAuthFlowViewController {
         }
 
         override func dismissalTransitionWillBegin() {
+            frameAtDismissal = presentedView?.frame
+            isDismissing = true
             super.dismissalTransitionWillBegin()
             guard let transitionCoordinator = presentedViewController.transitionCoordinator else {
+                dimmingView.alpha = 0
                 return
             }
 
             transitionCoordinator.animate(
                 alongsideTransition: { _ in
                     self.dimmingView.alpha = 0.0
-                },
-                completion: { _ in
-                    self.dimmingView.removeFromSuperview()
                 }
             )
+        }
+
+        override func dismissalTransitionDidEnd(_ completed: Bool) {
+            super.dismissalTransitionDidEnd(completed)
+            if completed {
+                dimmingView.removeFromSuperview()
+            } else {
+                isDismissing = false
+                frameAtDismissal = nil
+                dimmingView.alpha = 1
+                updatePresentedViewFrame()
+            }
         }
 
         override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
             super.viewWillTransition(to: size, with: coordinator)
 
-            coordinator.animate { context in
-                self.presentedView?.frame = self.calculateModalFrame(
-                    forContainerSize: context.containerView.bounds.size
-                )
+            coordinator.animate { _ in
+                self.updatePresentedViewFrame()
             }
         }
 
         override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
             super.willTransition(to: newCollection, with: coordinator)
 
-            coordinator.animate { context in
-                self.presentedView?.frame = self.calculateModalFrame(
-                    forContainerSize: context.containerView.bounds.size
-                )
+            coordinator.animate { _ in
+                self.updatePresentedViewFrame()
             }
         }
 
@@ -182,14 +199,14 @@ extension LinkAuthFlowViewController.PresentationController {
 
         UIView.animateAlongsideKeyboard(notification) {
             self.bottomInset = intersection.height
-            self.presentedView?.frame = self.frameOfPresentedViewInContainerView
+            self.updatePresentedViewFrame()
         }
     }
 
     @objc func keyboardWillHide(_ notification: Notification) {
         UIView.animateAlongsideKeyboard(notification) {
             self.bottomInset = 0
-            self.presentedView?.frame = self.frameOfPresentedViewInContainerView
+            self.updatePresentedViewFrame()
         }
     }
 

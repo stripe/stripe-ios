@@ -61,13 +61,14 @@ final class LinkVerificationViewController: UIViewController {
         verificationView.errorMessage = coordinator.errorMessage
         verificationView.setCodeEntryEnabled(coordinator.canSubmitCode)
         let hasAlternatives = coordinator.actions.count > 1
+        let isLoading = coordinator.isLoadingOTP
         let title = hasAlternatives ? STPLocalizedString("More options", "Button opening Link authentication actions.") : resendTitle
-        verificationView.configureActions(title: title, enabled: hasAlternatives ? !coordinator.isLoading : coordinator.canResend, loading: coordinator.isLoading)
+        verificationView.configureActions(title: title, enabled: hasAlternatives ? !isLoading : coordinator.canResend, loading: isLoading)
         menuButton.isHidden = true
         verificationView.actionsButton.isAccessibilityElement = true
-        if #available(iOS 14.0, *), hasAlternatives {
+        if #available(iOS 14.0, *), hasAlternatives, !isLoading {
             menuButton.isHidden = false
-            menuButton.isEnabled = !coordinator.isLoading
+            menuButton.isEnabled = true
             menuButton.accessibilityLabel = title
             verificationView.actionsButton.isAccessibilityElement = false
             menuButton.showsMenuAsPrimaryAction = true

@@ -93,7 +93,7 @@ final class LinkAuthFlowViewController: UIViewController {
                 header.bottomAnchor.constraint(equalTo: headerContainer.bottomAnchor),
                 header.leadingAnchor.constraint(equalTo: headerContainer.leadingAnchor, constant: 20),
                 header.trailingAnchor.constraint(equalTo: headerContainer.trailingAnchor, constant: -20),
-                header.heightAnchor.constraint(equalToConstant: 32),
+                header.heightAnchor.constraint(equalToConstant: header.intrinsicContentSize.height),
             ])
             contentStack.addArrangedSubview(headerContainer)
         } else {
@@ -128,6 +128,7 @@ final class LinkAuthFlowViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        coordinator.prepare()
         render()
     }
 
@@ -149,7 +150,7 @@ final class LinkAuthFlowViewController: UIViewController {
 
     func fittingHeight(width: CGFloat) -> CGFloat {
         let contentHeight = activeController?.view.systemLayoutSizeFitting(CGSize(width: width, height: UIView.layoutFittingCompressedSize.height), withHorizontalFittingPriority: .required, verticalFittingPriority: .fittingSizeLevel).height ?? 0
-        return contentHeight + (mode.requiresModalPresentation ? 52 : 0)
+        return contentHeight + (mode.requiresModalPresentation ? 20 + header.intrinsicContentSize.height : 0)
     }
 
     @objc func close() { coordinator.cancel() }
@@ -167,7 +168,7 @@ final class LinkAuthFlowViewController: UIViewController {
         case .phoneMatch:
             phoneController.render()
             next = phoneController
-        case .blocked, .webHandoff:
+        case .loading, .blocked, .webHandoff:
             statusLabel.text = coordinator.errorMessage ?? STPLocalizedString("Verifying your account…", "Link authentication in progress.")
             next = statusController
         }
@@ -189,7 +190,10 @@ final class LinkAuthFlowViewController: UIViewController {
             next.didMove(toParent: self)
             activeController = next
         }
-        if let presentation = presentationController as? PresentationController {
+        // Initial rendering can precede presentation. Let UIKit size the modal before forcing layout.
+        if let presentation = presentationController as? PresentationController,
+           let containerView = presentation.containerView,
+           containerView.bounds.width > 0 {
             UIView.animate(withDuration: UIAccessibility.isReduceMotionEnabled ? 0 : 0.2) {
                 presentation.updatePresentedViewFrame()
                 self.view.layoutIfNeeded()
@@ -207,7 +211,7 @@ final class LinkAuthFlowViewController: UIViewController {
         switch coordinator.screen {
         case .otp: otpController.focusCode()
         case .phoneMatch: phoneController.focusPhone()
-        case .blocked, .webHandoff: view.endEditing(true)
+        case .loading, .blocked, .webHandoff: view.endEditing(true)
         }
     }
 
