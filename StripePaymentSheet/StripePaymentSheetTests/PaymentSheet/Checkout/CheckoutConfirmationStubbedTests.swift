@@ -503,7 +503,6 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         )
         configuration.merchantDisplayName = "Test ECE Merchant"
         configuration.userInterfaceStyle = .alwaysDark
-        configuration.defaults.email = "test@example.com"
         var billingDetails = CheckoutController.Configuration.Defaults.BillingDetails()
         billingDetails.name = "Jenny Rosen"
         billingDetails.address = .init(country: "US", postalCode: "94107")
