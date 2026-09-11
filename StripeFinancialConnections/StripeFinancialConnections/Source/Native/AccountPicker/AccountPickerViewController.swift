@@ -139,13 +139,14 @@ final class AccountPickerViewController: UIViewController {
         super.viewDidLoad()
         // account picker ALWAYS hides the back button
         navigationItem.hidesBackButton = true
-        view.backgroundColor = FinancialConnectionsAppearance.Colors.background
+        view.backgroundColor = FinancialConnectionsAppearance.Colors.surfacePrimary
         pollAuthSessionAccounts()
     }
 
     private func pollAuthSessionAccounts() {
         let retreivingAccountsLoadingView = RetrieveAccountsLoadingView(
-            institutionIconUrl: dataSource.institution.icon?.default
+            institutionIconUrl: dataSource.institution.icon?.default,
+            appearance: dataSource.manifest.appearance
         )
         view.addAndPinSubviewToSafeArea(retreivingAccountsLoadingView)
 
@@ -337,7 +338,8 @@ final class AccountPickerViewController: UIViewController {
                     }
                 }(),
                 subtitle: nil,
-                contentView: accountPickerSelectionView
+                contentView: accountPickerSelectionView,
+                appearance: dataSource.manifest.appearance
             ),
             footerView: footerView
         )

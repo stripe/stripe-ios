@@ -52,14 +52,17 @@ final class PrepaneViews {
                 }
             }(),
             title: prepaneModel.title,
-            isSheet: (panePresentationStyle == .sheet)
+            isSheet: (panePresentationStyle == .sheet),
+            appearance: appearance
         )
         self.bodyView = PaneLayoutView.createBodyView(
             text: prepaneModel.subtitle,
             contentView: CreateContentView(
                 prepaneBodyModel: prepaneModel.body,
                 didSelectURL: didSelectURL
-            )
+            ),
+            isSheet: (panePresentationStyle == .sheet),
+            appearance: appearance
         )
 
         contentStackView.addArrangedSubview(headerView)
@@ -91,7 +94,8 @@ final class PrepaneViews {
                     )
                 }
             }(),
-            appearance: appearance
+            appearance: appearance,
+            preferHorizontalButtonsForLink: panePresentationStyle == .sheet
         )
         self.footerView = footerViewTuple.footerView
         self.primaryButton = footerViewTuple.primaryButton
@@ -222,7 +226,7 @@ private class PrepanePreviewView: UIView {
             footerView: prepaneViews.footerView
         )
         paneLayoutView.addTo(view: self)
-        backgroundColor = FinancialConnectionsAppearance.Colors.background
+        backgroundColor = FinancialConnectionsAppearance.Colors.surfacePrimary
     }
 
     required init?(coder: NSCoder) {

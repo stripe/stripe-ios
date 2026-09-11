@@ -15,6 +15,7 @@ final class NetworkingLinkSignupBodyView: UIView {
     init(
         bulletPoints: [FinancialConnectionsBulletPoint],
         formView: UIView,
+        appearance: FinancialConnectionsAppearance,
         didSelectURL: @escaping (URL) -> Void
     ) {
         super.init(frame: .zero)
@@ -22,6 +23,7 @@ final class NetworkingLinkSignupBodyView: UIView {
             arrangedSubviews: [
                 CreateMultipleBulletPointView(
                     bulletPoints: bulletPoints,
+                    appearance: appearance,
                     didSelectURL: didSelectURL
                 ),
                 formView,
@@ -39,6 +41,7 @@ final class NetworkingLinkSignupBodyView: UIView {
 
 private func CreateMultipleBulletPointView(
     bulletPoints: [FinancialConnectionsBulletPoint],
+    appearance: FinancialConnectionsAppearance,
     didSelectURL: @escaping (URL) -> Void
 ) -> UIView {
     let verticalStackView = HitTestStackView()
@@ -49,6 +52,7 @@ private func CreateMultipleBulletPointView(
             title: bulletPoint.title,
             content: bulletPoint.content,
             iconUrl: bulletPoint.icon?.default,
+            appearance: appearance,
             action: didSelectURL
         )
         verticalStackView.addArrangedSubview(bulletPointView)
@@ -60,11 +64,14 @@ private func CreateBulletPointView(
     title: String?,
     content: String?,
     iconUrl: String?,
+    appearance: FinancialConnectionsAppearance,
     action: @escaping (URL) -> Void
 ) -> UIView {
     let imageView = UIImageView()
     imageView.contentMode = .scaleAspectFit
-    imageView.tintColor = FinancialConnectionsAppearance.Colors.icon
+    imageView.tintColor = appearance.colors == .link
+        ? appearance.colors.iconSecondary
+        : FinancialConnectionsAppearance.Colors.icon
     imageView.setImage(with: iconUrl, useAlwaysTemplateRenderingMode: true)
     imageView.translatesAutoresizingMaskIntoConstraints = false
     let imageDiameter: CGFloat = 20
@@ -130,6 +137,7 @@ private struct NetworkingLinkSignupBodyViewUIViewRepresentable: UIViewRepresenta
                 ),
             ],
             formView: UIView(),
+            appearance: .stripe,
             didSelectURL: { _ in }
         )
     }

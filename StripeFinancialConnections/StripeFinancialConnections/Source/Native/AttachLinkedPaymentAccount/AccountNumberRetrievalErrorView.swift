@@ -45,7 +45,8 @@ final class AccountNumberRetrievalErrorView: UIView {
                         )
                     }
                 }(),
-                contentView: nil
+                contentView: nil,
+                appearance: appearance
             ),
             footerView: PaneLayoutView.createFooterView(
                 primaryButtonConfiguration: PaneLayoutView.ButtonConfiguration(

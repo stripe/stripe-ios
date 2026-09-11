@@ -48,7 +48,7 @@ final class SuccessViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = FinancialConnectionsAppearance.Colors.background
+        view.backgroundColor = FinancialConnectionsAppearance.Colors.surfacePrimary
         navigationItem.hidesBackButton = true
 
         let contentView = UIView()
@@ -186,7 +186,7 @@ private func CreateBodyView(
 
 private func CreateIconView(appearance: FinancialConnectionsAppearance) -> UIView {
     let iconContainerView = UIView()
-    iconContainerView.backgroundColor = appearance.colors.primary
+    iconContainerView.backgroundColor = appearance.colors.successIconBackground
     let iconRadius: CGFloat = 56
     iconContainerView.layer.cornerRadius = iconRadius/2
     iconContainerView.translatesAutoresizingMaskIntoConstraints = false
@@ -196,7 +196,7 @@ private func CreateIconView(appearance: FinancialConnectionsAppearance) -> UIVie
     ])
 
     let iconImageView = UIImageView()
-    iconImageView.image = Image.check.makeImage().withTintColor(appearance.colors.primaryAccent)
+    iconImageView.image = Image.check.makeImage().withTintColor(appearance.colors.successIconForeground)
     iconContainerView.addSubview(iconImageView)
     iconImageView.translatesAutoresizingMaskIntoConstraints = false
     NSLayoutConstraint.activate([

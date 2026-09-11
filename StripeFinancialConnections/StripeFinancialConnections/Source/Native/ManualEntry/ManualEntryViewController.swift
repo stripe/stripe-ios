@@ -47,7 +47,7 @@ final class ManualEntryViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = FinancialConnectionsAppearance.Colors.background
+        view.backgroundColor = FinancialConnectionsAppearance.Colors.surfacePrimary
 
         let footerView = PaneLayoutView.createFooterView(
             primaryButtonConfiguration: PaneLayoutView.ButtonConfiguration(
@@ -97,7 +97,8 @@ final class ManualEntryViewController: UIViewController {
                         }
                     }
                 }(),
-                contentView: manualEntryFormView
+                contentView: manualEntryFormView,
+                appearance: dataSource.manifest.appearance
             ),
             footerView: footerView.footerView,
             keepFooterAboveKeyboard: true

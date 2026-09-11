@@ -84,7 +84,7 @@ final class HostViewController: UIViewController {
         super.viewDidLoad()
 
         view.addSubview(loadingView)
-        view.backgroundColor = FinancialConnectionsAppearance.Colors.background
+        view.backgroundColor = FinancialConnectionsAppearance.Colors.surfacePrimary
         navigationItem.rightBarButtonItem = closeItem
         loadingView.tryAgainButton.addTarget(self, action: #selector(didTapTryAgainButton), for: .touchUpInside)
         getManifest()

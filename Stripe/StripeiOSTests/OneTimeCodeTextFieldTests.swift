@@ -300,6 +300,53 @@ class OneTimeCodeTextFieldTests: XCTestCase {
         XCTAssertEqual(frame.height, 19.04, accuracy: 0.2)
     }
 
+    func test_itemMaxWidth() throws {
+        // Given a wide field with a maximum digit width
+        let sut = OneTimeCodeTextField(
+            configuration: OneTimeCodeTextField.Configuration(
+                itemSpacing: 8,
+                enableDigitGrouping: false,
+                itemMaxWidth: 48
+            ),
+            theme: .default
+        )
+        sut.frame = CGRect(x: 0, y: 0, width: 400, height: 60)
+
+        // When the field lays out its digits
+        sut.layoutIfNeeded()
+
+        // Then the digits are capped at the configured width and centered
+        let stackView = try XCTUnwrap(sut.subviews.first as? UIStackView)
+        XCTAssertEqual(stackView.frame.width, 328, accuracy: 0.2)
+        XCTAssertEqual(stackView.frame.midX, sut.bounds.midX, accuracy: 0.2)
+        for digitView in stackView.arrangedSubviews {
+            XCTAssertEqual(digitView.frame.width, 48, accuracy: 0.2)
+        }
+    }
+
+    func test_itemMaxWidthAllowsDigitsToShrink() throws {
+        // Given a field narrower than the maximum width of its digits
+        let sut = OneTimeCodeTextField(
+            configuration: OneTimeCodeTextField.Configuration(
+                itemSpacing: 8,
+                enableDigitGrouping: false,
+                itemMaxWidth: 48
+            ),
+            theme: .default
+        )
+        sut.frame = CGRect(x: 0, y: 0, width: 300, height: 60)
+
+        // When the field lays out its digits
+        sut.layoutIfNeeded()
+
+        // Then the row fills the available width without overflowing
+        let stackView = try XCTUnwrap(sut.subviews.first as? UIStackView)
+        XCTAssertEqual(stackView.frame.width, sut.bounds.width, accuracy: 0.2)
+        for digitView in stackView.arrangedSubviews {
+            XCTAssertLessThanOrEqual(digitView.frame.width, 48)
+        }
+    }
+
 }
 
 // MARK: - Factory methods
