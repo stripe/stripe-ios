@@ -1,5 +1,5 @@
 //
-//  LinkVerificationViewController-PresentationController.swift
+//  LinkAuthFlowViewController-PresentationController.swift
 //  StripePaymentSheet
 //
 //  Created by Ramon Torres on 11/7/21.
@@ -9,7 +9,7 @@
 @_spi(STP) import StripeUICore
 import UIKit
 
-extension LinkVerificationViewController {
+extension LinkAuthFlowViewController {
 
     /// For internal SDK use only
     @objc(STP_Internal_LinkPresentationController)
@@ -17,16 +17,18 @@ extension LinkVerificationViewController {
         struct Constants {
             static let padding: CGFloat = 16
             static let maxWidth: CGFloat = 400
-            static let maxHeight: CGFloat = 410
-            static let targetHeight: CGFloat = 332
         }
 
         /// A bottom inset necessary for the presented view to avoid the software keyboard.
         private var bottomInset: CGFloat = 0
 
+        /// UIKit owns the view's animated frame once dismissal begins.
+        private var isDismissing = false
+        private var frameAtDismissal: CGRect?
+
         ///  An area where it is safe to present the modal on.
         ///
-        ///  This is always equals to the container view safe area minus `padding` on eat edge.
+        ///  The container view safe area minus `padding` on each edge.
         private var safeFrame: CGRect {
             guard let containerView else {
                 return .zero
@@ -43,15 +45,10 @@ extension LinkVerificationViewController {
             return view
         }()
 
-        private var contentView: UIView? {
-            if let scrollView = presentedView as? UIScrollView {
-                return scrollView.subviews.first
-            }
-
-            return presentedView
-        }
-
         override var frameOfPresentedViewInContainerView: CGRect {
+            if isDismissing, let frameAtDismissal {
+                return frameAtDismissal
+            }
             guard let containerView else {
                 return .zero
             }
@@ -60,33 +57,28 @@ extension LinkVerificationViewController {
         }
 
         func updatePresentedViewFrame() {
-            presentedView?.frame = frameOfPresentedViewInContainerView
+            guard !isDismissing, containerView != nil else { return }
+            let frame = frameOfPresentedViewInContainerView
+            if presentedView?.frame != frame {
+                presentedView?.frame = frame
+            }
         }
 
         private func calculateModalFrame(forContainerSize containerSize: CGSize) -> CGRect {
-            guard let contentView = contentView else {
+            guard let controller = presentedViewController as? LinkAuthFlowViewController else {
                 return .zero
             }
 
-            let targetSize = CGSize(
-                width: min(Constants.maxWidth, safeFrame.width),
-                height: Constants.targetHeight
-            )
-
-            let fittingSize = contentView.systemLayoutSizeFitting(
-                targetSize,
-                withHorizontalFittingPriority: .required,
-                verticalFittingPriority: .defaultLow
-            )
-
+            let width = min(Constants.maxWidth, safeFrame.width)
+            let availableHeight = max(0, safeFrame.height - bottomInset)
             let actualSize = CGSize(
-                width: fittingSize.width,
-                height: min(fittingSize.height, Constants.maxHeight)
+                width: width,
+                height: min(controller.fittingHeight(width: width), availableHeight)
             )
 
             return CGRect(
                 x: (containerSize.width - actualSize.width) / 2,
-                y: max((containerSize.height - actualSize.height - bottomInset) / 2, Constants.padding),
+                y: safeFrame.minY + (availableHeight - actualSize.height) / 2,
                 width: actualSize.width,
                 height: actualSize.height
             ).integral
@@ -100,10 +92,12 @@ extension LinkVerificationViewController {
             }
 
             dimmingView.frame = containerView.bounds
-            presentedView?.frame = frameOfPresentedViewInContainerView
+            updatePresentedViewFrame()
         }
 
         override func presentationTransitionWillBegin() {
+            isDismissing = false
+            frameAtDismissal = nil
             super.presentationTransitionWillBegin()
 
             guard let containerView,
@@ -121,38 +115,46 @@ extension LinkVerificationViewController {
         }
 
         override func dismissalTransitionWillBegin() {
+            frameAtDismissal = presentedView?.frame
+            isDismissing = true
             super.dismissalTransitionWillBegin()
             guard let transitionCoordinator = presentedViewController.transitionCoordinator else {
+                dimmingView.alpha = 0
                 return
             }
 
             transitionCoordinator.animate(
                 alongsideTransition: { _ in
                     self.dimmingView.alpha = 0.0
-                },
-                completion: { _ in
-                    self.dimmingView.removeFromSuperview()
                 }
             )
+        }
+
+        override func dismissalTransitionDidEnd(_ completed: Bool) {
+            super.dismissalTransitionDidEnd(completed)
+            if completed {
+                dimmingView.removeFromSuperview()
+            } else {
+                isDismissing = false
+                frameAtDismissal = nil
+                dimmingView.alpha = 1
+                updatePresentedViewFrame()
+            }
         }
 
         override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
             super.viewWillTransition(to: size, with: coordinator)
 
-            coordinator.animate { context in
-                self.presentedView?.frame = self.calculateModalFrame(
-                    forContainerSize: context.containerView.bounds.size
-                )
+            coordinator.animate { _ in
+                self.updatePresentedViewFrame()
             }
         }
 
         override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
             super.willTransition(to: newCollection, with: coordinator)
 
-            coordinator.animate { context in
-                self.presentedView?.frame = self.calculateModalFrame(
-                    forContainerSize: context.containerView.bounds.size
-                )
+            coordinator.animate { _ in
+                self.updatePresentedViewFrame()
             }
         }
 
@@ -182,7 +184,7 @@ extension LinkVerificationViewController {
 
 // MARK: - Keyboard handling
 
-extension LinkVerificationViewController.PresentationController {
+extension LinkAuthFlowViewController.PresentationController {
 
     @objc func keyboardFrameChanged(_ notification: Notification) {
         let userInfo = notification.userInfo
@@ -197,14 +199,14 @@ extension LinkVerificationViewController.PresentationController {
 
         UIView.animateAlongsideKeyboard(notification) {
             self.bottomInset = intersection.height
-            self.presentedView?.frame = self.frameOfPresentedViewInContainerView
+            self.updatePresentedViewFrame()
         }
     }
 
     @objc func keyboardWillHide(_ notification: Notification) {
         UIView.animateAlongsideKeyboard(notification) {
             self.bottomInset = 0
-            self.presentedView?.frame = self.frameOfPresentedViewInContainerView
+            self.updatePresentedViewFrame()
         }
     }
 
