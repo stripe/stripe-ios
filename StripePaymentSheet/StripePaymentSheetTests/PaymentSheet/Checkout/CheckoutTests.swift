@@ -161,7 +161,7 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         XCTAssertEqual(session.id, checkoutSessionResponse.id)
         XCTAssertEqual(session.status, .open)
         XCTAssertEqual(session.totals.total.minorUnitsAmount, 2000)
-        XCTAssertEqual(session.expectedAmount(), 2000)
+        XCTAssertEqual(session.amount, 2000)
         XCTAssertEqual(session.orderSummaryItems.count, 1)
         guard case .oneTimePrice(let oneTimePrice) = session.orderSummaryItems.first else {
             return XCTFail("Expected one-time price order summary item")

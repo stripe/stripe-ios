@@ -526,17 +526,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         ]).makePublicSession()
 
         XCTAssertFalse(session.noPaymentRequired)
-        XCTAssertEqual(session.expectedAmount(), 2345)
-    }
-
-    func testModelessNoPaymentRequiredSessionHasNoExpectedAmount() {
-        let session = CheckoutTestHelpers.makeSession([
-            "mode": "modeless",
-            "payment_status": "no_payment_required",
-        ]).makePublicSession()
-
-        XCTAssertTrue(session.noPaymentRequired)
-        XCTAssertNil(session.expectedAmount())
+        XCTAssertEqual(session.amount, 2345)
     }
 
     func testDecodedObjectParsesTopLevelSetupFutureUsage() {
