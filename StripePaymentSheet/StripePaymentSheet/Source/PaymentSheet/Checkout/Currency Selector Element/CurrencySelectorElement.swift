@@ -43,10 +43,16 @@ public final class CurrencySelectorElement {
         configuration: Configuration,
         delegate: CurrencySelectorElementCheckoutDelegate
     ) async {
+        // Assign the callback's weak reference after the views finish initializing.
+        weak var element: CurrencySelectorElement?
         guard let uiView = await CurrencySelectorElementUIView(
             session: sessionSource.initialSession,
             delegate: delegate,
-            appearance: configuration.appearance
+            appearance: configuration.appearance,
+            needsUpdateSuperviewHeight: {
+                guard let element else { return }
+                element.delegate?.currencySelectorElementDidUpdateHeight(currencySelectorElement: element)
+            }
         ) else {
             return nil
         }
@@ -57,10 +63,7 @@ public final class CurrencySelectorElement {
 
         self.uiView = uiView
         self.view = CurrencySelectorElementView(viewModel: viewModel)
-        self.uiView.needsUpdateSuperviewHeight = { [weak self] in
-            guard let self else { return }
-            self.delegate?.currencySelectorElementDidUpdateHeight(currencySelectorElement: self)
-        }
+        element = self
         STPAnalyticsClient.sharedClient.log(
             analytic: PaymentSheetAnalytic(
                 event: .adaptivePricingCurrencySelectorInit,

@@ -15,7 +15,7 @@ import UIKit
 /// `update(caption:detail:)` and toggle expansion via `toggleExpansion()`.
 final class ExpandableDetailView: UIView {
 
-    var needsUpdateSuperviewHeight: () -> Void = {}
+    private let needsUpdateSuperviewHeight: () -> Void
 
     private let appearance: TwoOptionSelectorViewAppearance
     private let captionLabel = TappableAttributedLabel()
@@ -34,8 +34,12 @@ final class ExpandableDetailView: UIView {
     private var isAnimating = false
     private var detailHeightConstraint: NSLayoutConstraint?
 
-    init(appearance: TwoOptionSelectorViewAppearance) {
+    init(
+        appearance: TwoOptionSelectorViewAppearance,
+        needsUpdateSuperviewHeight: @escaping () -> Void
+    ) {
         self.appearance = appearance
+        self.needsUpdateSuperviewHeight = needsUpdateSuperviewHeight
         super.init(frame: .zero)
         setupViews()
     }

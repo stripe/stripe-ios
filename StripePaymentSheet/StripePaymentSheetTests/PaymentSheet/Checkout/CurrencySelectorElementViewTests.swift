@@ -45,16 +45,33 @@ final class CurrencySelectorElementViewTests: XCTestCase {
         let collapsedHeight = fittingHeight(of: hostingController)
 
         // When the customer expands the details
-        currencySelector(in: element.uiView)?.expandableDetailView.toggleExpansion()
+        let selector = try XCTUnwrap(currencySelector(in: element.uiView))
+        UIView.performWithoutAnimation {
+            selector.expandableDetailView.toggleExpansion()
+        }
+        await waitForViewUpdate()
+        layout(hostingController, in: window)
+
+        // Then SwiftUI uses the currency selector's updated intrinsic height
+        XCTAssertGreaterThan(fittingHeight(of: hostingController), collapsedHeight)
+
+        // When the customer collapses the details
+        UIView.performWithoutAnimation {
+            selector.expandableDetailView.toggleExpansion()
+        }
+        await waitForViewUpdate()
+        layout(hostingController, in: window)
+
+        // Then SwiftUI restores the original height
+        XCTAssertEqual(fittingHeight(of: hostingController), collapsedHeight, accuracy: 0.5)
+    }
+
+    private func waitForViewUpdate() async {
         let viewUpdate = expectation(description: "SwiftUI updates the representable")
         DispatchQueue.main.async {
             viewUpdate.fulfill()
         }
         await fulfillment(of: [viewUpdate], timeout: 1)
-        layout(hostingController, in: window)
-
-        // Then SwiftUI uses the currency selector's updated intrinsic height
-        XCTAssertGreaterThan(fittingHeight(of: hostingController), collapsedHeight)
     }
 
     private func layout(_ viewController: UIViewController, in window: UIWindow) {

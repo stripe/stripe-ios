@@ -22,7 +22,7 @@ public final class CurrencySelectorElementUIView: UIView {
         selectorView?.setEnabled(enabled)
     }
 
-    var needsUpdateSuperviewHeight: () -> Void = {}
+    private let needsUpdateSuperviewHeight: () -> Void
     var didUpdateContentHeight: () -> Void = {}
 
     private weak var currencySelectionDelegate: CurrencySelectorElementCheckoutDelegate?
@@ -44,7 +44,8 @@ public final class CurrencySelectorElementUIView: UIView {
     init?(
         session: CheckoutController.Session,
         delegate: CurrencySelectorElementCheckoutDelegate,
-        appearance: CurrencySelectorElement.Appearance
+        appearance: CurrencySelectorElement.Appearance,
+        needsUpdateSuperviewHeight: @escaping () -> Void
     ) async {
         guard let (_, exchangeRateMeta, rawCurrency) = CurrencySelectorUtilities.adaptivePricingData(from: session) else {
             return nil
@@ -52,6 +53,7 @@ public final class CurrencySelectorElementUIView: UIView {
         self.currencySelectionDelegate = delegate
         self.appearance = appearance
         self.checkoutSessionId = session.id
+        self.needsUpdateSuperviewHeight = needsUpdateSuperviewHeight
         super.init(frame: .zero)
 
         await flagImageManager.prefetchFlagImages(for: session)
@@ -146,16 +148,16 @@ public final class CurrencySelectorElementUIView: UIView {
             leftItem: left,
             rightItem: right,
             selectedItemId: currency.apiValue,
-            appearance: appearance
+            appearance: appearance,
+            needsUpdateSuperviewHeight: { [weak self] in
+                self?.contentHeightDidChange()
+            }
         )
         newSelector.delegate = self
         newSelector.translatesAutoresizingMaskIntoConstraints = false
         containerStackView.insertArrangedSubview(newSelector, at: 0)
 
         selectorView = newSelector
-        newSelector.needsUpdateSuperviewHeight = { [weak self] in
-            self?.contentHeightDidChange()
-        }
         newSelector.setEnabled(isUserInteractionEnabled)
         invalidateContentSize()
     }
