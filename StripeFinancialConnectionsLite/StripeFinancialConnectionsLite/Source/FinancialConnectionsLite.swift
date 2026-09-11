@@ -57,6 +57,8 @@ import UIKit
         self.completionHandler = completion
 
         var apiClient: FCLiteAPIClient = FCLiteAPIClient(backingAPIClient: .shared)
+        apiClient.consumerSessionClientSecret = existingConsumer?.clientSecret
+        apiClient.hasRequestedDataPermissions = hasRequestedDataPermissions
         if !hasRequestedDataPermissions {
             apiClient.consumerPublishableKey = existingConsumer?.publishableKey
         }

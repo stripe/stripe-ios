@@ -24,6 +24,8 @@ struct FCLiteAPIClient {
     }
 
     var consumerPublishableKey: String?
+    var consumerSessionClientSecret: String?
+    var hasRequestedDataPermissions: Bool = false
 
     let backingAPIClient: STPAPIClient
 
@@ -91,10 +93,13 @@ extension FCLiteAPIClient {
             mobileParameters["use_secure_webview_if_necessary"] = true
         }
 
-        let parameters: [String: Any] = [
+        var parameters: [String: Any] = [
             "client_secret": clientSecret,
             "mobile": mobileParameters,
         ]
+        if hasRequestedDataPermissions {
+            parameters["consumer_session_client_secret"] = consumerSessionClientSecret
+        }
         return try await post(endpoint: .synchronize, parameters: parameters)
     }
 
