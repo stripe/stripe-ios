@@ -22,6 +22,7 @@ MINOR
 ### PaymentSheet
 * [Added] Added support for Scalapay.
 * [Added] Added support for Card program name for saved payment methods when using CustomerSessions
+* [Fixed] PaymentSheet now keeps the Apple Pay EMV merchant capability aligned with China UnionPay in the final supported network list.
 
 ## 26.10.0 2026-09-08
 ### General
