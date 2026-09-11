@@ -49,6 +49,32 @@ extension STPAPIClient {
         return try await post(resource: endpoint, object: requestObject)
     }
 
+    /// Retrieves the authenticated customer's outstanding additional KYC requirements.
+    /// - Parameter linkAccountInfo: Information associated with the Link account, including its client secret and verification state.
+    /// - Returns: The customer's additional KYC requirements.
+    /// Throws if the Link account is not verified, its client secret is unavailable, or an API error occurs.
+    func retrieveKYCRequirements(linkAccountInfo: PaymentSheetLinkAccountInfoProtocol) async throws -> RetrieveKYCRequirementsResponse {
+        guard let consumerSessionClientSecret = linkAccountInfo.consumerSessionClientSecret else {
+            throw CryptoOnrampAPIError.missingConsumerSessionClientSecret
+        }
+
+        try validateSessionState(using: linkAccountInfo)
+
+        let endpoint = "crypto/internal/kyc_requirements"
+        return try await get(
+            resource: endpoint,
+            consumerSessionClientSecret: consumerSessionClientSecret
+        )
+    }
+
+    /// Submits documents and questionnaire answers for one additional KYC requirement.
+    /// - Parameter request: The requirement fulfillment payload.
+    /// - Returns: The newly created additional KYC submission.
+    func fulfillAdditionalKYCRequirement(_ request: FulfillAdditionalKYCRequirementRequest) async throws -> FulfillAdditionalKYCRequirementResponse {
+        let endpoint = "crypto/internal/fulfill_additional_kyc_requirement"
+        return try await post(resource: endpoint, object: request)
+    }
+
     /// Attaches the specific KYC info to the current Link user on the backend.
     /// - Parameters:
     ///   - info: The collected customer information.

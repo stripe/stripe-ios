@@ -1,0 +1,12 @@
+{
+  "requirements": {
+    "entries": [
+      {
+        "description": "source_of_funds",
+        "requested_by": "swapped",
+        "awaiting_action_from": "partner",
+        "errors": []
+      }
+    ]
+  }
+}

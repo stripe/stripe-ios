@@ -5,6 +5,7 @@
 //  Created by Michael Liberatore on 7/17/25.
 //
 
+import Foundation
 import StripeCore
 import StripeCoreTestUtils
 @testable @_spi(CryptoOnrampAlpha) import StripeCryptoOnramp
@@ -209,6 +210,126 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         } catch {
             XCTFail("Expected a success response but got an error: \(error).")
         }
+    }
+
+    func testRetrieveKYCRequirementsSuccess() async throws {
+        let mockResponseData = try RetrieveKYCRequirementsResponseMock.sourceOfFundsWithQuestionnaire.data()
+        stub { request in
+            request.url?.path == "/v1/crypto/internal/kyc_requirements"
+        } response: { request in
+            XCTAssertEqual(request.httpMethod, "GET")
+            XCTAssertEqual(
+                request.value(forHTTPHeaderField: "Stripe-Consumer-Auth-Token"),
+                Constant.requestSecret
+            )
+            XCTAssertTrue(request.url?.query?.isEmpty ?? true)
+            return HTTPStubsResponse(data: mockResponseData, statusCode: 200, headers: nil)
+        }
+
+        let apiClient = stubbedAPIClient()
+        let response = try await apiClient.retrieveKYCRequirements(linkAccountInfo: Constant.validLinkAccountInfo)
+        let requirement = try XCTUnwrap(response.requirements.entries.first)
+        XCTAssertEqual(requirement.description, "source_of_funds")
+        XCTAssertEqual(requirement.requestedBy, "swapped")
+        XCTAssertEqual(requirement.awaitingActionFrom, .user)
+        XCTAssertEqual(requirement.document?.acceptedFormats, ["pdf", "jpeg", "png"])
+        XCTAssertEqual(requirement.document?.acceptedSubtypes.first?.label, "Payslip")
+        XCTAssertEqual(requirement.document?.instructions, ["Documents must have your full name and address on it"])
+        XCTAssertEqual(requirement.document?.additionalRequirements?.questionnaire?.questions.first?.answerType, .freeText)
+        XCTAssertEqual(requirement.errors, [])
+    }
+
+    func testRetrieveKYCRequirementsThrowsWithInvalidArguments() async {
+        let apiClient = stubbedAPIClient()
+
+        var noSecretLinkAccountInfo = Constant.validLinkAccountInfo
+        noSecretLinkAccountInfo.consumerSessionClientSecret = nil
+        await XCTAssertThrowsErrorAsync(_ = try await apiClient.retrieveKYCRequirements(linkAccountInfo: noSecretLinkAccountInfo))
+
+        var unverifiedLinkAccountInfo = Constant.validLinkAccountInfo
+        unverifiedLinkAccountInfo.sessionState = .requiresVerification
+        await XCTAssertThrowsErrorAsync(_ = try await apiClient.retrieveKYCRequirements(linkAccountInfo: unverifiedLinkAccountInfo))
+    }
+
+    func testRetrieveKYCRequirementsDecodesPartnerReview() async throws {
+        let mockResponseData = try RetrieveKYCRequirementsResponseMock.partnerReview.data()
+        stub { request in
+            request.url?.path == "/v1/crypto/internal/kyc_requirements"
+        } response: { _ in
+            HTTPStubsResponse(data: mockResponseData, statusCode: 200, headers: nil)
+        }
+
+        let apiClient = stubbedAPIClient()
+        let response = try await apiClient.retrieveKYCRequirements(linkAccountInfo: Constant.validLinkAccountInfo)
+        XCTAssertEqual(response.requirements.entries.first?.awaitingActionFrom, .partner)
+        XCTAssertNil(response.requirements.entries.first?.document)
+    }
+
+    func testRetrieveKYCRequirementsPreservesUnknownActionParty() async throws {
+        let mockResponseData = try RetrieveKYCRequirementsResponseMock.unknownActionParty.data()
+        stub { request in
+            request.url?.path == "/v1/crypto/internal/kyc_requirements"
+        } response: { _ in
+            HTTPStubsResponse(data: mockResponseData, statusCode: 200, headers: nil)
+        }
+
+        let apiClient = stubbedAPIClient()
+        let response = try await apiClient.retrieveKYCRequirements(linkAccountInfo: Constant.validLinkAccountInfo)
+        XCTAssertEqual(response.requirements.entries.first?.awaitingActionFrom, .unknown("future_party"))
+    }
+
+    func testFulfillAdditionalKYCRequirementEncodesPayload() async throws {
+        let mockResponseData = try FulfillAdditionalKYCRequirementResponseMock.fulfillAdditionalKYCRequirementResponse_200.data()
+        stub { request in
+            request.url?.path == "/v1/crypto/internal/fulfill_additional_kyc_requirement"
+        } response: { request in
+            let body = request.ohhttpStubs_httpBody ?? Data()
+            let bodyString = String(bytes: body, encoding: .utf8) ?? ""
+            let queryItems = URLComponents(string: "?\(bodyString)")?.queryItems ?? []
+            func value(for name: String) -> String? {
+                queryItems.first(where: { $0.name == name })?.value
+            }
+            XCTAssertEqual(queryItems.count, 7)
+            XCTAssertEqual(value(for: "credentials[consumer_session_client_secret]"), "cscs_123")
+            XCTAssertEqual(value(for: "liquidity_provider"), "swapped")
+            XCTAssertEqual(value(for: "documents[0][document_type]"), "source_of_funds")
+            XCTAssertEqual(value(for: "documents[0][document_subtype]"), "payslip")
+            XCTAssertEqual(value(for: "documents[0][file_ids][0]"), "file_123")
+            XCTAssertNil(value(for: "documents[0][status]"))
+            XCTAssertEqual(value(for: "questionnaire[answers][0][question_id]"), "purchase_purpose")
+            XCTAssertEqual(
+                value(for: "questionnaire[answers][0][value]")?.removingPercentEncoding,
+                "Long-term investment"
+            )
+            return HTTPStubsResponse(data: mockResponseData, statusCode: 200, headers: nil)
+        }
+
+        let apiClient = stubbedAPIClient()
+        let request = FulfillAdditionalKYCRequirementRequest(
+            credentials: Credentials(consumerSessionClientSecret: "cscs_123"),
+            liquidityProvider: "swapped",
+            documents: [
+                FulfillAdditionalKYCRequirementRequest.Document(
+                    documentType: "source_of_funds",
+                    documentSubtype: "payslip",
+                    fileIds: ["file_123"]
+                ),
+            ],
+            questionnaire: AdditionalKYCFulfillmentQuestionnaire(
+                answers: [
+                    AdditionalKYCFulfillmentQuestionnaire.Answer(
+                        questionId: "purchase_purpose",
+                        value: "Long-term investment"
+                    ),
+                ]
+            )
+        )
+
+        let response = try await apiClient.fulfillAdditionalKYCRequirement(request)
+        XCTAssertEqual(response.id, "submission_123")
+        XCTAssertEqual(response.status, "pending_verification")
+        XCTAssertEqual(response.documents?.first?.status, "pending_verification")
+        XCTAssertEqual(response.created, Date(timeIntervalSince1970: 1_723_264_800))
     }
 
     func testcreateCryptoCustomerFailure() async {
