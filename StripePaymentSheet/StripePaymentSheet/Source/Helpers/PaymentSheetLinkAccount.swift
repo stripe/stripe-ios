@@ -147,6 +147,10 @@ struct LinkPMDisplayDetails {
     var visitedFallbackURLs: [URL] = []
 
     private(set) var currentSession: ConsumerSession?
+    var authLookupSettings: ConsumerSession.LookupSettings?
+    var authLookupEmail: String?
+    var authCountryCode: String?
+    var authSessionLookup: ((@escaping (Result<ConsumerSession.AuthResponse, Error>) -> Void) -> Void)?
     let displayablePaymentDetails: ConsumerSession.DisplayablePaymentDetails?
 
     init(
@@ -161,6 +165,7 @@ struct LinkPMDisplayDetails {
         createdFromAuthIntentID: Bool = false
     ) {
         self.email = email
+        self.authLookupEmail = email
         self.currentSession = session
         self.publishableKey = publishableKey
         self.displayablePaymentDetails = displayablePaymentDetails
@@ -599,6 +604,74 @@ struct LinkPMDisplayDetails {
 
         currentSession = existingAccount.currentSession
         publishableKey = publishableKey ?? existingAccount.publishableKey
+    }
+}
+
+extension PaymentSheetLinkAccount: LinkAuthAccount {
+    func applyAuthResponse(_ response: ConsumerSession.AuthResponse) {
+        currentSession = response.consumerSession
+        if let settings = response.settings {
+            authLookupSettings = settings
+        }
+        if let brand = response.linkBrand {
+            currentSession?.linkBrand = brand
+        }
+    }
+
+    func startAuthVerification(
+        type: SupportedVerificationType,
+        phoneNumber: String?,
+        isResending: Bool,
+        completion: @escaping (Result<ConsumerSession.AuthResponse, Error>) -> Void
+    ) {
+        guard let currentSession else {
+            completion(.failure(NSError.stp_genericConnectionError()))
+            return
+        }
+        apiClient.startLinkVerification(
+            for: currentSession.clientSecret,
+            type: type,
+            emailAddress: authLookupEmail,
+            accountPhoneNumber: phoneNumber,
+            isResending: isResending,
+            requestSurface: requestSurface,
+            completion: completion
+        )
+    }
+
+    func confirmAuthVerification(
+        type: SupportedVerificationType,
+        code: String,
+        consentGranted: Bool?,
+        completion: @escaping (Result<ConsumerSession.AuthResponse, Error>) -> Void
+    ) {
+        guard let currentSession else {
+            completion(.failure(NSError.stp_genericConnectionError()))
+            return
+        }
+        apiClient.confirmLinkVerification(
+            for: currentSession.clientSecret,
+            type: type,
+            code: code,
+            consentGranted: consentGranted,
+            requestSurface: requestSurface,
+            completion: completion
+        )
+    }
+
+    func refreshAuthSession(
+        recoverCredentials: Bool,
+        completion: @escaping (Result<ConsumerSession.AuthResponse, Error>) -> Void
+    ) {
+        if recoverCredentials, let authSessionLookup {
+            authSessionLookup(completion)
+        } else if let currentSession {
+            currentSession.refreshSession(with: apiClient, requestSurface: requestSurface) { result in
+                completion(result.map { ConsumerSession.AuthResponse(consumerSession: $0) })
+            }
+        } else {
+            completion(.failure(NSError.stp_genericConnectionError()))
+        }
     }
 }
 

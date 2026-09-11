@@ -36,6 +36,23 @@ extension LinkVerificationView {
             )
         }()
 
+        let backButton: UIButton = {
+            let button = UIButton(type: .system)
+            button.setImage(UIImage(systemName: "chevron.left")?.imageFlippedForRightToLeftLayoutDirection(), for: .normal)
+            button.accessibilityLabel = String.Localized.back
+            button.accessibilityIdentifier = "LinkVerificationBackButton"
+            button.tintColor = .linkTextPrimary
+            button.isHidden = true
+            return button
+        }()
+
+        var showsBackButton = false {
+            didSet {
+                backButton.isHidden = !showsBackButton
+                logoView.isHidden = showsBackButton
+            }
+        }
+
         override var intrinsicContentSize: CGSize {
             return CGSize(width: 72, height: 32)
         }
@@ -46,6 +63,8 @@ extension LinkVerificationView {
 
             addSubview(logoView)
             addSubview(closeButton)
+            addSubview(backButton)
+            backButton.translatesAutoresizingMaskIntoConstraints = false
 
             NSLayoutConstraint.activate([
                 // Logo
@@ -57,6 +76,10 @@ extension LinkVerificationView {
                 closeButton.topAnchor.constraint(equalTo: topAnchor),
                 closeButton.trailingAnchor.constraint(equalTo: trailingAnchor),
                 closeButton.bottomAnchor.constraint(equalTo: bottomAnchor),
+                backButton.leadingAnchor.constraint(equalTo: leadingAnchor),
+                backButton.centerYAnchor.constraint(equalTo: centerYAnchor),
+                backButton.widthAnchor.constraint(equalToConstant: 44),
+                backButton.heightAnchor.constraint(equalToConstant: 44),
             ])
 
             tintColor = .linkSurfacePrimary

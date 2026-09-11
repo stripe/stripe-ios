@@ -17,9 +17,15 @@ final class LinkUtils {
         case consumerVerificationCodeInvalid = "consumer_verification_code_invalid"
         case consumerVerificationExpired = "consumer_verification_expired"
         case consumerVerificationMaxAttemptsExceeded = "consumer_verification_max_attempts_exceeded"
+        case phoneNumberMissing = "phone_number_missing"
+        case phoneNumberMismatch = "phone_number_mismatch"
 
         var localizedDescription: String {
             switch self {
+            case .phoneNumberMissing:
+                return STPLocalizedString("Enter the phone number on your Link account.", "Error when Link email verification requires a phone number.")
+            case .phoneNumberMismatch:
+                return STPLocalizedString("This phone number doesn't match your Link account. Please try again.", "Error when the phone number entered before Link email verification does not match the account.")
             case .consumerVerificationCodeInvalid:
                 return STPLocalizedString(
                     "The provided verification code is incorrect.",
