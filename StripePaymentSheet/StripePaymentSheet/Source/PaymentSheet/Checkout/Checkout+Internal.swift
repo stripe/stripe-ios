@@ -196,19 +196,6 @@ extension CheckoutController {
         return try await typedOperation.value
     }
 
-    /// Non-throwing variant of ``enqueueSessionUpdate(_:)-throws``.
-    ///
-    /// Use this when the enqueued work cannot fail. The operation is still
-    /// serialized behind any in-flight ops in the same FIFO order.
-    func enqueueSessionUpdate<T>(
-        _ body: @MainActor @escaping () async -> T
-    ) async -> T {
-        // Cast body to `throws` so that we call the underlying throwing version
-        // instead of recursing. The try! is safe because body cannot throw.
-        // swiftlint:disable:next force_try
-        return try! await enqueueSessionUpdate(body as (() async throws -> T))
-    }
-
     /// Enqueues a serialized session update.
     ///
     /// - If `update` is non-nil, the side effect (if any) is applied first, then the
