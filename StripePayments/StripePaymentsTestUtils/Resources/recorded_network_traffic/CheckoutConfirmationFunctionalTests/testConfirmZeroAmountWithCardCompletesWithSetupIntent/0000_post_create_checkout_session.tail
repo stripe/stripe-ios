@@ -5,17 +5,17 @@ application/json
 Server: Google Frontend
 Content-Type: application/json; charset=utf-8
 x-powered-by: Express
-x-cloud-trace-context: 21446c296fc922a03568019331bd3236
+x-cloud-trace-context: d09ca0af50eda7b12414fb877afc63aa
 Via: 1.1 google
-Date: Thu, 10 Sep 2026 21:42:59 GMT
-Content-Length: 2657
+Date: Fri, 11 Sep 2026 16:52:53 GMT
+Content-Length: 2578
 Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
-Etag: W/"a61-mbPe95+w701o4DJq4Uubo1kkA6E"
+Etag: W/"a12-4GtBYk4eDY2RRGLgUeb09zr/kOo"
 
 {
   "billing_address_collection" : null,
-  "id" : "cs_test_a1pjnyx5U6qg6gFyeRBzAFsUz76cO2x8oqKcSaZ76G6sG2KOQrZmxamEGG",
-  "client_secret" : "cs_test_a1pjnyx5U6qg6gFyeRBzAFsUz76cO2x8oqKcSaZ76G6sG2KOQrZmxamEGG_secret_fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdwbEhqYWAnPydoamdsaWBaYGlgaGBrcXYneCUl",
+  "id" : "cs_test_a1piOYsVgdTcN8Ad5VG61saIPd9GwJDPsX9pgSUt0F4H3d72nDw7mC5JaC",
+  "client_secret" : "cs_test_a1piOYsVgdTcN8Ad5VG61saIPd9GwJDPsX9pgSUt0F4H3d72nDw7mC5JaC_secret_fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdwbEhqYWAnPydoamdsaWBaYGlgaGBrcXYneCUl",
   "discounts" : [
 
   ],
@@ -32,7 +32,7 @@ Etag: W/"a61-mbPe95+w701o4DJq4Uubo1kkA6E"
   "payment_method_configuration_details" : null,
   "payment_method_options" : null,
   "ui_mode" : "mobile_elements",
-  "created" : 1789076579,
+  "created" : 1789145573,
   "client_reference_id" : null,
   "allowed_payment_method_types" : [
     "card"
@@ -41,13 +41,13 @@ Etag: W/"a61-mbPe95+w701o4DJq4Uubo1kkA6E"
   "allow_promotion_codes" : null,
   "items" : [
     {
-      "key" : "checkout_item_VEjCz143",
+      "key" : "checkout_item_VF1kpbU3",
       "one_time_price" : {
         "items" : [
           {
             "quantity" : 1,
             "adjustable_quantity" : null,
-            "price" : "price_1UEFkFLu5o3P18Zp31SKdRVJ",
+            "price" : "price_1UEXh3Lu5o3P18ZpqacI3ORt",
             "tax_rates" : null
           }
         ]
@@ -127,11 +127,7 @@ Etag: W/"a61-mbPe95+w701o4DJq4Uubo1kkA6E"
   "custom_fields" : [
 
   ],
-  "collected_information" : {
-    "shipping_details" : null,
-    "individual_name" : null,
-    "business_name" : null
-  },
+  "collected_information" : null,
   "integration_identifier" : null,
   "invoice_creation" : {
     "enabled" : false,
@@ -157,6 +153,6 @@ Etag: W/"a61-mbPe95+w701o4DJq4Uubo1kkA6E"
     "amount_tax" : 0
   },
   "livemode" : false,
-  "customer_email" : "test@example.com",
-  "expires_at" : 1789162979
+  "customer_email" : null,
+  "expires_at" : 1789231973
 }

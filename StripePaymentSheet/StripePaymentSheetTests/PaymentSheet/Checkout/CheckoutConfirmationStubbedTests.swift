@@ -716,6 +716,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         let confirm = stubConfirmationExpecting(
             sessionId: checkout.session.id,
             savePaymentMethod: expectedSavePaymentMethod,
+            expectedCollectedInformationEmail: checkoutEmail,
             file: file,
             line: line
         )
@@ -859,6 +860,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
     private func stubConfirmationExpecting(
         sessionId: String,
         savePaymentMethod: Bool?,
+        expectedCollectedInformationEmail: String? = nil,
         responseJSON: [AnyHashable: Any]? = nil,
         file: StaticString = #filePath,
         line: UInt = #line
@@ -881,6 +883,15 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
                 file: file,
                 line: line
             )
+            if let expectedCollectedInformationEmail {
+                XCTAssertEqual(
+                    params["collected_information[email]"],
+                    expectedCollectedInformationEmail,
+                    file: file,
+                    line: line
+                )
+                XCTAssertNil(params["customer_data[email]"], file: file, line: line)
+            }
             expectation.fulfill()
             return HTTPStubsResponse(
                 jsonObject: responseJSON ?? Self.confirmedSessionJSON,
