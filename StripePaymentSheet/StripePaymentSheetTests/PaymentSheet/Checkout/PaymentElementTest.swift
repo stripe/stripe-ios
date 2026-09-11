@@ -5,6 +5,7 @@
 //  Created by Yuki Tokuhiro on 7/15/26.
 //
 
+import Combine
 import OHHTTPStubs
 @testable @_spi(STP) import StripeCore
 @testable @_spi(STP) import StripeCoreTestUtils
@@ -276,9 +277,12 @@ final class PaymentElementTest: XCTestCase {
         // Given a selected saved card supplies the billing address for automatic tax
         let (configuration, requestRecorder) = try stubAutomaticTaxSavedCardCheckout()
         let checkout = try await CheckoutController(configuration: configuration)
-        let embeddedPaymentElement = checkout.getPaymentElement().embeddedPaymentElement
+        let paymentElement = checkout.getPaymentElement()
+        let embeddedPaymentElement = paymentElement.embeddedPaymentElement
+        let flowController = paymentElement.paymentSheetFlowController
         XCTAssertNotNil(checkout.session.paymentOption)
         XCTAssertNotNil(embeddedPaymentElement.paymentOption)
+        XCTAssertNotNil(flowController.paymentOption)
 
         // When the payment option is cleared
         try await checkout.clearPaymentOption()
@@ -295,6 +299,58 @@ final class PaymentElementTest: XCTestCase {
         XCTAssertNil(updateRequest.params["tax_region[postal_code]"])
         XCTAssertNil(checkout.session.paymentOption)
         XCTAssertNil(embeddedPaymentElement.paymentOption)
+        XCTAssertNil(flowController.paymentOption)
+    }
+
+    func testClearPaymentOptionAfterFlowControllerContinues() async throws {
+        // Given the customer selected a saved card in FlowController
+        let (configuration, _) = try stubAutomaticTaxSavedCardCheckout()
+        let checkout = try await CheckoutController(configuration: configuration)
+        let paymentElement = checkout.getPaymentElement()
+        let embeddedPaymentElement = paymentElement.embeddedPaymentElement
+        let flowController = paymentElement.paymentSheetFlowController
+        flowController.flowControllerViewControllerShouldClose(flowController.viewController, didCancel: false)
+        XCTAssertTrue(flowController.didPresentAndContinue)
+
+        // Track whether Checkout clears before both payment elements
+        var publishedClearBeforeComponentsWereCleared = false
+        var didPublishClearedPaymentOption = false
+        let paymentOptionObserver = checkout.$session.dropFirst().sink { session in
+            guard session.paymentOption == nil else { return }
+            didPublishClearedPaymentOption = true
+            publishedClearBeforeComponentsWereCleared =
+                embeddedPaymentElement.paymentOption != nil || flowController.paymentOption != nil
+        }
+
+        // When the payment option is cleared
+        try await checkout.clearPaymentOption()
+
+        // Then Checkout clears after both payment elements
+        XCTAssertNil(checkout.session.paymentOption)
+        XCTAssertNil(embeddedPaymentElement.paymentOption)
+        XCTAssertNil(flowController.paymentOption)
+        XCTAssertNil(flowController.internalPaymentOption)
+        XCTAssertTrue(didPublishClearedPaymentOption)
+        XCTAssertFalse(publishedClearBeforeComponentsWereCleared)
+        paymentOptionObserver.cancel()
+    }
+
+    func testClearPaymentOptionStaysClearedAfterPaymentElementUpdate() async throws {
+        // Given Checkout was cleared after starting with a saved card
+        let (configuration, _) = try stubAutomaticTaxSavedCardCheckout()
+        let checkout = try await CheckoutController(configuration: configuration)
+        let paymentElement = checkout.getPaymentElement()
+        let embeddedPaymentElement = paymentElement.embeddedPaymentElement
+        let flowController = paymentElement.paymentSheetFlowController
+        try await checkout.clearPaymentOption()
+
+        // When Payment Element reloads
+        try await paymentElement.update(checkout: checkout)
+
+        // Then everything stays cleared
+        XCTAssertNil(checkout.session.paymentOption)
+        XCTAssertNil(embeddedPaymentElement.paymentOption)
+        XCTAssertNil(flowController.paymentOption)
     }
 
     func testClearPaymentOptionPreservesSelectionWhenTaxUpdateFails() async throws {
@@ -302,9 +358,12 @@ final class PaymentElementTest: XCTestCase {
         // and the next Checkout Session update will fail
         let (configuration, _) = try stubAutomaticTaxSavedCardCheckout(clearUpdateStatusCode: 500)
         let checkout = try await CheckoutController(configuration: configuration)
-        let embeddedPaymentElement = checkout.getPaymentElement().embeddedPaymentElement
+        let paymentElement = checkout.getPaymentElement()
+        let embeddedPaymentElement = paymentElement.embeddedPaymentElement
+        let flowController = paymentElement.paymentSheetFlowController
         let selectedPaymentOption = try XCTUnwrap(checkout.session.paymentOption)
         let selectedEmbeddedPaymentOption = try XCTUnwrap(embeddedPaymentElement.paymentOption)
+        let selectedFlowControllerPaymentOption = try XCTUnwrap(flowController.paymentOption)
 
         // When the payment option is cleared
         do {
@@ -319,6 +378,8 @@ final class PaymentElementTest: XCTestCase {
         // Then the selection remains available for the merchant to recover
         XCTAssertEqual(checkout.session.paymentOption, selectedPaymentOption)
         XCTAssertEqual(embeddedPaymentElement.paymentOption, selectedEmbeddedPaymentOption)
+        XCTAssertEqual(flowController.paymentOption?.label, selectedFlowControllerPaymentOption.label)
+        XCTAssertNotNil(flowController.internalPaymentOption)
     }
 
     func testCheckoutSessionUpdatePreservesFlowControllerPaymentOption() async throws {
