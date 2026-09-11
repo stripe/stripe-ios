@@ -155,7 +155,6 @@ extension PaymentElement {
             if let billingDetails = defaults.billingDetails {
                 configuration.defaultBillingDetails.set(billingDetails)
             }
-            configuration.defaultBillingDetails.email = defaults.email
             configuration.defaultBillingDetails.phone = defaults.phone
             return configuration
         }
@@ -183,7 +182,6 @@ extension PaymentElement {
             if let billingDetails = defaults.billingDetails {
                 configuration.defaultBillingDetails.set(billingDetails)
             }
-            configuration.defaultBillingDetails.email = defaults.email
             configuration.defaultBillingDetails.phone = defaults.phone
             return configuration
         }

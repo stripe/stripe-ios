@@ -75,7 +75,6 @@ extension CheckoutController: ExpressCheckoutElementDelegate {
             if let billingDetails = configuration.defaults.billingDetails {
                 paymentElementConfiguration.defaultBillingDetails.set(billingDetails)
             }
-            paymentElementConfiguration.defaultBillingDetails.email = session.email
             switch expressCheckoutElementConfiguration.linkConfiguration.display {
             case .automatic:
                 paymentElementConfiguration.link.display = .automatic

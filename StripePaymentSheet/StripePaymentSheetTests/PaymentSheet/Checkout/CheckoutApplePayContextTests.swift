@@ -559,7 +559,6 @@ final class CheckoutApplePayContextTests: XCTestCase {
 
     func testMakeFallbackBillingDetails_attachesDefaultsOnlyWhenConfigured() {
         // Given default billing details and attachment enabled
-        let session = CheckoutTestHelpers.makeSession([:]).makePublicSession()
         var defaults = CheckoutController.Configuration.Defaults.BillingDetails()
         defaults.name = "Jane Doe"
         defaults.address = .init(country: "US", line1: "510 Townsend St")
@@ -573,7 +572,6 @@ final class CheckoutApplePayContextTests: XCTestCase {
 
         // When
         let fallback = CheckoutApplePayContext.makeFallbackBillingDetails(
-            checkoutSession: session,
             applePayConfirmationParameters: parameters
         )
 
@@ -585,7 +583,6 @@ final class CheckoutApplePayContextTests: XCTestCase {
 
     func testMakeFallbackBillingDetails_doesNotAttachDefaultsByDefault() {
         // Given default billing details with attachment disabled
-        let session = CheckoutTestHelpers.makeSession([:]).makePublicSession()
         var defaults = CheckoutController.Configuration.Defaults.BillingDetails()
         defaults.name = "Jane Doe"
         let parameters = CheckoutController.ApplePayConfirmationParameters.makeMock(
@@ -596,7 +593,6 @@ final class CheckoutApplePayContextTests: XCTestCase {
 
         // When
         let fallback = CheckoutApplePayContext.makeFallbackBillingDetails(
-            checkoutSession: session,
             applePayConfirmationParameters: parameters
         )
 
