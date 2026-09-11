@@ -176,12 +176,12 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
 
     // MARK: - Merchant Capabilities Tests
 
-    func testNormalizeMerchantCapabilities_addsEMVForChinaUnionPay() {
+    func testNormalizeEMVCapabilityForChinaUnionPay_addsEMVForChinaUnionPay() {
         let paymentRequest = PKPaymentRequest()
         paymentRequest.supportedNetworks = [.visa, .chinaUnionPay]
         paymentRequest.merchantCapabilities = [.capability3DS, .capabilityCredit, .capabilityDebit]
 
-        STPApplePayContext.normalizeMerchantCapabilities(for: paymentRequest)
+        STPApplePayContext.normalizeEMVCapabilityForChinaUnionPay(for: paymentRequest)
 
         XCTAssertEqual(
             paymentRequest.merchantCapabilities,
@@ -189,12 +189,12 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
         )
     }
 
-    func testNormalizeMerchantCapabilities_removesEMVWithoutChinaUnionPay() {
+    func testNormalizeEMVCapabilityForChinaUnionPay_removesEMVWithoutChinaUnionPay() {
         let paymentRequest = PKPaymentRequest()
         paymentRequest.supportedNetworks = [.visa]
         paymentRequest.merchantCapabilities = [.capability3DS, .capabilityEMV, .capabilityCredit, .capabilityDebit]
 
-        STPApplePayContext.normalizeMerchantCapabilities(for: paymentRequest)
+        STPApplePayContext.normalizeEMVCapabilityForChinaUnionPay(for: paymentRequest)
 
         XCTAssertEqual(
             paymentRequest.merchantCapabilities,
