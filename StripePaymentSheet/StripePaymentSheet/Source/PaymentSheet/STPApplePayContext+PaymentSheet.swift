@@ -213,7 +213,8 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
             returnURL: context.returnUrl,
             shipping: shipping,
             paymentMethodOptions: nil,
-            clientAttributionMetadata: clientAttributionMetadata
+            clientAttributionMetadata: clientAttributionMetadata,
+            collectedInformation: .init(email: checkoutSession.localState.email)
         )
         let response = try await context.apiClient.confirmCheckoutSession(with: requestParameters)
 

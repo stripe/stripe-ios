@@ -244,7 +244,8 @@ extension CheckoutController {
                             intent: .checkout(self.session),
                             elementsSession: self.session.elementsSession
                         ),
-                        // TODO: Remove this once no-PM confirmation can use the Checkout Session's fixed email without `customer_data`.
+                        // Due to legacy reasons, in the no-PM case /confirm requires customerData be sent with at least email
+                        // TODO: Remove this once no-PM confirmation can use the Checkout Session's server email without `customer_data`.
                         customerData: self.session.email.map { ["email": $0] }
                     )
                     result = await Self.confirmCheckoutSession(

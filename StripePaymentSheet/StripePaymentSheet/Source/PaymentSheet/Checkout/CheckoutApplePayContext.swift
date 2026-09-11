@@ -141,7 +141,8 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
                     returnURL: self.returnURL,
                     shipping: self.makeShippingDetailsParams(from: payment)
                         ?? checkoutSession.shippingAddress?.shippingDetailsParams,
-                    clientAttributionMetadata: clientAttributionMetadata
+                    clientAttributionMetadata: clientAttributionMetadata,
+                    collectedInformation: .init(email: checkoutSession.localState.email)
                 )
                 let result = await self.confirmationHandler(requestParameters)
                 switch result {
