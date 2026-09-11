@@ -68,6 +68,26 @@ extension String.Localized {
         )
     }
 
+    static var uploadProofOfAddress: String {
+        STPLocalizedString("Upload your proof of address", "Heading introducing proof of address collection")
+    }
+
+    static var tellUsAboutYourSourceOfFunds: String {
+        STPLocalizedString("Tell us about your source of funds", "Heading introducing source of funds collection")
+    }
+
+    static var submittedForReview: String {
+        STPLocalizedString("Submitted for review", "Heading confirming documents were submitted for review")
+    }
+
+    static var tryAgainLater: String {
+        STPLocalizedString("Please try again later.", "Instruction after an unavailable operation")
+    }
+
+    static var contactSupport: String {
+        STPLocalizedString("Contact support", "Button asking the owner to open its support destination")
+    }
+
     static func redactedCardDetails(using card: StripeAPI.PaymentMethod.Card) -> String? {
         let brand = stpCardBrand(from: card.brand)
         let brandString = STPCard.string(from: brand)

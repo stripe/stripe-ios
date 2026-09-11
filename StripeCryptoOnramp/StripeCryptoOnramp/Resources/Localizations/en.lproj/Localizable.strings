@@ -1,5 +1,17 @@
+/* Button asking the owner to open its support destination */
+"Contact support" = "Contact support";
+
 /* Label shown in the Link UI indicating that debit cards are more likely to be accepted */
 "Debit cards are most likely to be accepted." = "Debit cards are most likely to be accepted.";
+
+/* Instruction after an unavailable operation */
+"Please try again later." = "Please try again later.";
+
+/* Heading confirming documents were submitted for review */
+"Submitted for review" = "Submitted for review";
+
+/* Heading introducing source of funds collection */
+"Tell us about your source of funds" = "Tell us about your source of funds";
 
 /* Error message shown when app attestation fails */
 "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists.";
@@ -18,6 +30,9 @@
 
 /* Error message shown when the wallet ownership challenge is invalid */
 "This wallet verification request is invalid. Please try again." = "This wallet verification request is invalid. Please try again.";
+
+/* Heading introducing proof of address collection */
+"Upload your proof of address" = "Upload your proof of address";
 
 /* Error message shown when the submitted wallet ownership signature is invalid */
 "We couldn't verify ownership of this wallet. Please try again." = "We couldn't verify ownership of this wallet. Please try again.";
