@@ -92,10 +92,6 @@
 
 "Select bank" = "은행 선택";
 
-"Something went wrong" = "문제 발생";
-
-"Submit" = "제출";
-
 "Success" = "성공";
 
 "The account you selected isn't available for payments" = "귀하가 선택한 계좌는 결제를 위해 사용할 수 없습니다.";

@@ -92,6 +92,8 @@
 
 "Prefecture" = "Prefettura";
 
+"Processing..." = "Qed jiġi pproċessat...";
+
 "Province" = "Provinċja";
 
 "Remove" = "Neħħi";
@@ -106,9 +108,13 @@
 
 "Selection is empty." = "L-għażla hija vojta.";
 
+"Something went wrong" = "Xi ħaġa marret ħażin";
+
 "Sort code" = "Il-kodiċi Sort";
 
 "State" = "Stat";
+
+"Submit" = "Ibgħat";
 
 "Suburb" = "Subborg";
 

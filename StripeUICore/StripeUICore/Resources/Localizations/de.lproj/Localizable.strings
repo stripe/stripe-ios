@@ -92,6 +92,8 @@
 
 "Prefecture" = "Präfektur";
 
+"Processing..." = "Wird verarbeitet …";
+
 "Province" = "Provinz / Kanton";
 
 "Remove" = "Entfernen";
@@ -106,9 +108,13 @@
 
 "Selection is empty." = "Die Auswahl ist leer.";
 
+"Something went wrong" = "Es ist ein Fehler aufgetreten";
+
 "Sort code" = "Bankleitzahl";
 
 "State" = "Bundesland";
+
+"Submit" = "Absenden";
 
 "Suburb" = "Vorort";
 
