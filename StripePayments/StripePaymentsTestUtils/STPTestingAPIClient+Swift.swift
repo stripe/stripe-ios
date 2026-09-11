@@ -211,14 +211,11 @@ extension STPTestingAPIClient {
         automaticTax: Bool = false,
         customerEmailLocation: String? = nil,
         returnURL: String? = nil,
-        useOneTimePrice: Bool = true,
-        additionalParameters: [String: Any] = [:]
+        allowPromotionCodes: Bool = false,
+        allowedShippingCountries: [String]? = nil,
+        customerEmail: String? = nil
     ) async throws -> CreateCheckoutSessionResponse {
-        guard useOneTimePrice else {
-            throw TestingBackendError(message: "Mobile Elements Checkout Sessions require a one-time price item.")
-        }
-
-        let merchant = playgroundMerchant(for: merchantCountry)
+        let playgroundMerchant = playgroundMerchant(for: merchantCountry)
         var sessionParameters: [String: Any] = [
             "ui_mode": "mobile_elements",
             "currency": currency,
@@ -251,25 +248,35 @@ extension STPTestingAPIClient {
         if automaticTax {
             sessionParameters["automatic_tax"] = ["enabled": true]
         }
+        if allowPromotionCodes {
+            sessionParameters["allow_promotion_codes"] = true
+        }
+        if let allowedShippingCountries {
+            sessionParameters["shipping_address_collection"] = [
+                "allowed_countries": allowedShippingCountries,
+            ]
+        }
+        if let customerEmail {
+            sessionParameters["customer_email"] = customerEmail
+        }
         if let customerEmailLocation {
             sessionParameters["customer_email"] = "test+location_\(customerEmailLocation)@example.com"
         }
         if let customerID {
             sessionParameters["customer"] = customerID
         }
-        sessionParameters.merge(additionalParameters) { _, override in override }
 
         let checkoutSession: PlaygroundCheckoutSessionResponse = try await makePlaygroundRequest(
             endpoint: "create_checkout_session",
             method: "POST",
             params: [
-                "merchant": merchant,
+                "merchant": playgroundMerchant,
                 "stripe_version": Self.checkoutMobileElementsAPISettings,
                 "request_params": sessionParameters,
             ]
         )
         let publishableKeyResponse: PlaygroundPublishableKeyResponse = try await makePlaygroundRequest(
-            endpoint: "publishable_key?merchant=\(merchant)",
+            endpoint: "publishable_key?merchant=\(playgroundMerchant)",
             method: "GET"
         )
         return CreateCheckoutSessionResponse(
@@ -364,8 +371,8 @@ extension STPTestingAPIClient {
     }
 
     private func playgroundMerchant(for merchantCountry: String?) -> String {
-        let merchant = merchantCountry ?? "us"
-        return merchant.count == 2 ? merchant.uppercased() : merchant
+        let playgroundMerchant = merchantCountry ?? "us"
+        return playgroundMerchant.count == 2 ? playgroundMerchant.uppercased() : playgroundMerchant
     }
 
     private func makePlaygroundRequest<ResponseType: Decodable>(
