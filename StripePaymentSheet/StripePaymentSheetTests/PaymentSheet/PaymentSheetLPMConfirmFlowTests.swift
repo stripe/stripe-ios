@@ -1282,7 +1282,7 @@ extension PaymentSheetLPMConfirmFlowTests {
             }
             // TODO: Re-enable once unified-mode Checkout forwards `blik_code` to PaymentIntent confirmation.
             if shouldTest(.checkoutSession), paymentMethod != .blik {
-                let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession(
+                let checkoutSessionResponse = try await STPTestingAPIClient.shared.createLegacyCheckoutSession(
                     types: paymentMethodTypes,
                     currency: currency,
                     amount: amount,

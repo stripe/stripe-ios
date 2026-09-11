@@ -10,6 +10,8 @@ import Foundation
 
 extension STPTestingAPIClient {
     static let STPTestingBackendURL = "https://stp-mobile-ci-test-backend-e1b3.stripedemos.com/"
+    static let STPTestingPlaygroundBackendURL = "https://stp-mobile-playground-backend-v7.stripedemos.com/"
+    static let checkoutMobileElementsAPISettings = "2026-08-26.preview"
     public static var shared: STPTestingAPIClient {
         return .shared()
     }
@@ -198,8 +200,96 @@ extension STPTestingAPIClient {
 
     // This helper is used by tests, which Periphery excludes from its scan.
     // periphery:ignore
-    /// Creates a unified (modeless) Checkout Session backed by `checkout_items`.
+    /// Creates a Mobile Elements Checkout Session using the playground's raw API proxy.
     func createCheckoutSession(
+        types: [String] = ["card"],
+        currency: String = "usd",
+        amount: Int? = nil,
+        merchantCountry: String? = "us",
+        customerID: String? = nil,
+        collectBillingAddress: Bool = false,
+        automaticTax: Bool = false,
+        customerEmailLocation: String? = nil,
+        returnURL: String? = nil,
+        allowPromotionCodes: Bool = false,
+        allowedShippingCountries: [String]? = nil,
+        customerEmail: String? = nil
+    ) async throws -> CreateCheckoutSessionResponse {
+        let playgroundMerchant = playgroundMerchant(for: merchantCountry)
+        var sessionParameters: [String: Any] = [
+            "ui_mode": "mobile_elements",
+            "currency": currency,
+            "payment_method_types": types,
+            "items": [
+                [
+                    "type": "one_time_price",
+                    "one_time_price": [
+                        "items": [
+                            [
+                                "price_data": [
+                                    "currency": currency,
+                                    "unit_amount": amount ?? 2000,
+                                    "product_data": [
+                                        "name": "Test",
+                                        "tax_code": "txcd_99999999",
+                                    ],
+                                    "tax_behavior": "exclusive",
+                                ],
+                                "quantity": 1,
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ]
+        if collectBillingAddress {
+            sessionParameters["billing_address_collection"] = "required"
+        }
+        if automaticTax {
+            sessionParameters["automatic_tax"] = ["enabled": true]
+        }
+        if allowPromotionCodes {
+            sessionParameters["allow_promotion_codes"] = true
+        }
+        if let allowedShippingCountries {
+            sessionParameters["shipping_address_collection"] = [
+                "allowed_countries": allowedShippingCountries,
+            ]
+        }
+        if let customerEmail {
+            sessionParameters["customer_email"] = customerEmail
+        }
+        if let customerEmailLocation {
+            sessionParameters["customer_email"] = "test+location_\(customerEmailLocation)@example.com"
+        }
+        if let customerID {
+            sessionParameters["customer"] = customerID
+        }
+
+        let checkoutSession: PlaygroundCheckoutSessionResponse = try await makePlaygroundRequest(
+            endpoint: "create_checkout_session",
+            method: "POST",
+            params: [
+                "merchant": playgroundMerchant,
+                "stripe_version": Self.checkoutMobileElementsAPISettings,
+                "request_params": sessionParameters,
+            ]
+        )
+        let publishableKeyResponse: PlaygroundPublishableKeyResponse = try await makePlaygroundRequest(
+            endpoint: "publishable_key?merchant=\(playgroundMerchant)",
+            method: "GET"
+        )
+        return CreateCheckoutSessionResponse(
+            id: checkoutSession.id,
+            clientSecret: checkoutSession.clientSecret,
+            publishableKey: publishableKeyResponse.publishableKey
+        )
+    }
+
+    // This helper is used by tests, which Periphery excludes from its scan.
+    // periphery:ignore
+    /// Keeps LPM confirmation tests on the CI backend while they are migrated separately.
+    func createLegacyCheckoutSession(
         types: [String] = ["card"],
         currency: String = "usd",
         amount: Int? = nil,
@@ -231,9 +321,6 @@ extension STPTestingAPIClient {
             "amount": amount,
             "customer": customerID,
             "return_url": returnURL,
-            // TODO: Delete this temporary opt-in after August 15, 2026. Older clients
-            // relying on `checkout_items[].one_time_price_item` should be gone by then,
-            // so the test backend can always return `checkout_items[].one_time_price`.
             "use_one_time_price": useOneTimePrice ? true : nil,
             "additional_parameters": mergedParameters.isEmpty ? nil : mergedParameters,
         ]
@@ -262,5 +349,57 @@ extension STPTestingAPIClient {
             print("Error decoding to \(ResponseType.self). Raw data: \(rawDataString ?? "nil")")
             throw error
         }
+    }
+
+    private struct PlaygroundCheckoutSessionResponse: Decodable {
+        let id: String
+        let clientSecret: String
+    }
+
+    private struct PlaygroundPublishableKeyResponse: Decodable {
+        let publishableKey: String
+    }
+
+    private struct PlaygroundErrorResponse: Decodable {
+        let error: String
+        let requestID: String?
+    }
+
+    private struct TestingBackendError: LocalizedError {
+        let message: String
+        var errorDescription: String? { message }
+    }
+
+    private func playgroundMerchant(for merchantCountry: String?) -> String {
+        let playgroundMerchant = merchantCountry ?? "us"
+        return playgroundMerchant.count == 2 ? playgroundMerchant.uppercased() : playgroundMerchant
+    }
+
+    private func makePlaygroundRequest<ResponseType: Decodable>(
+        endpoint: String,
+        method: String,
+        params: [String: Any]? = nil
+    ) async throws -> ResponseType {
+        let session = URLSession(configuration: sessionConfig)
+        let url = URL(string: Self.STPTestingPlaygroundBackendURL + endpoint)!
+        var request = URLRequest(url: url)
+        request.httpMethod = method
+        if let params {
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            request.httpBody = try JSONSerialization.data(withJSONObject: params)
+        }
+
+        let (data, response) = try await session.data(for: request)
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        guard let httpResponse = response as? HTTPURLResponse,
+              (200..<300).contains(httpResponse.statusCode) else {
+            let backendError = try? decoder.decode(PlaygroundErrorResponse.self, from: data)
+            let requestID = backendError?.requestID.map { " (request_id: \($0))" } ?? ""
+            throw TestingBackendError(
+                message: (backendError?.error ?? "Playground backend request failed") + requestID
+            )
+        }
+        return try decoder.decode(ResponseType.self, from: data)
     }
 }

@@ -1,0 +1,326 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/consumers\/sessions\/lookup$
+200
+application/json
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=NMrYrMyRXZa-vILXc68yyWDkcZBaN9AMGoBPLGjRPbH5R3-svc6h9w4IjzlRalHJqJbVujO2vKkc8CmP; report-to csp
+Server: nginx
+Cache-Control: no-cache, no-store
+reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=NMrYrMyRXZa-vILXc68yyWDkcZBaN9AMGoBPLGjRPbH5R3-svc6h9w4IjzlRalHJqJbVujO2vKkc8CmP&t=1"
+stripe-notice: You are using an outdated API version (2020-08-27). We recommend upgrading to the latest API version, 2026-08-26.dahlia. See https://docs.stripe.com/upgrades
+x-wc: 3c3
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=NMrYrMyRXZa-vILXc68yyWDkcZBaN9AMGoBPLGjRPbH5R3-svc6h9w4IjzlRalHJqJbVujO2vKkc8CmP&t=1"}],"include_subdomains":true}
+request-id: req_eZr8BuLTvDQDQQ
+x-stripe-routing-context-priority-tier: api-testmode
+Content-Length: 11480
+Vary: Origin
+Date: Thu, 10 Sep 2026 18:09:42 GMT
+original-request: req_eZr8BuLTvDQDQQ
+stripe-version: 2020-08-27
+idempotency-key: c660b738-2b8b-42ed-89e8-38d92aaf027e
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+X-Stripe-Mock-Request: email_address=test%40example\.com&email_source=customer_email&request_surface=ios_payment_element&session_id=elements_session_1eEsyfXdeZb
+
+{
+  "link_modal_settings" : {
+    "disable_external_team_app_crypto" : false,
+    "disable_external_team_app_balance" : false,
+    "disable_external_team_app_upi" : false,
+    "disable_external_team_app_pix" : false,
+    "disable_external_team_app_banking" : false,
+    "disable_external_team_app_sepa_bank_account" : false,
+    "disable_external_team_app_klarna" : false
+  },
+  "redacted_payment_details" : [
+
+  ],
+  "error_message" : null,
+  "suggested_email" : null,
+  "link_brand" : "link",
+  "displayable_payment_details" : {
+    "default_card_brand" : null,
+    "requires_recollection" : null,
+    "default_payment_type" : "BANK_ACCOUNT",
+    "last_4" : null,
+    "number_of_saved_payment_details" : 2
+  },
+  "experiments" : [
+    {
+      "response_id" : "",
+      "experiment_name" : "guacamole_resend_otp_v2",
+      "event_id" : "6fce6db5-aeaa-463f-895d-ede8223fd5d8",
+      "variant" : "control"
+    },
+    {
+      "response_id" : "",
+      "experiment_name" : "guacamole_ulm_in_takeover",
+      "event_id" : "6fce6db5-aeaa-463f-895d-ede8223fd5d8",
+      "variant" : "control"
+    },
+    {
+      "response_id" : "",
+      "experiment_name" : "lae_resend_otp",
+      "event_id" : "6fce6db5-aeaa-463f-895d-ede8223fd5d8",
+      "variant" : "control"
+    },
+    {
+      "response_id" : "",
+      "experiment_name" : "guacamole_returning_green_pay_button",
+      "event_id" : "6fce6db5-aeaa-463f-895d-ede8223fd5d8",
+      "variant" : "control"
+    },
+    {
+      "response_id" : "",
+      "experiment_name" : "wanderlust_benchmarking",
+      "event_id" : "6fce6db5-aeaa-463f-895d-ede8223fd5d8",
+      "variant" : "control"
+    },
+    {
+      "response_id" : "",
+      "experiment_name" : "link_lae_inline_resend_otp",
+      "event_id" : "6fce6db5-aeaa-463f-895d-ede8223fd5d8",
+      "variant" : "control"
+    },
+    {
+      "response_id" : "",
+      "experiment_name" : "link_lae_inline_resend_otp_aa",
+      "event_id" : "6fce6db5-aeaa-463f-895d-ede8223fd5d8",
+      "variant" : "control"
+    },
+    {
+      "response_id" : "",
+      "experiment_name" : "link_pe_ulm_resend_sms_otp",
+      "event_id" : "6fce6db5-aeaa-463f-895d-ede8223fd5d8",
+      "variant" : "control"
+    },
+    {
+      "response_id" : "",
+      "experiment_name" : "link_pe_ulm_resend_sms_otp_aa",
+      "event_id" : "6fce6db5-aeaa-463f-895d-ede8223fd5d8",
+      "variant" : "control"
+    },
+    {
+      "response_id" : "",
+      "experiment_name" : "link_pe_logged_in_add_card_button",
+      "event_id" : "6fce6db5-aeaa-463f-895d-ede8223fd5d8",
+      "variant" : "control"
+    },
+    {
+      "response_id" : "",
+      "experiment_name" : "link_pe_logged_in_add_card_button_aa",
+      "event_id" : "6fce6db5-aeaa-463f-895d-ede8223fd5d8",
+      "variant" : "control"
+    },
+    {
+      "response_id" : "",
+      "experiment_name" : "link_legacy_pe_accelerated_partial_cookie",
+      "event_id" : "6fce6db5-aeaa-463f-895d-ede8223fd5d8",
+      "variant" : "control"
+    },
+    {
+      "response_id" : "",
+      "experiment_name" : "link_legacy_pe_accelerated_partial_cookie_aa",
+      "event_id" : "6fce6db5-aeaa-463f-895d-ede8223fd5d8",
+      "variant" : "control"
+    },
+    {
+      "response_id" : "",
+      "experiment_name" : "link_pe_lpm_pay_another_way",
+      "event_id" : "6fce6db5-aeaa-463f-895d-ede8223fd5d8",
+      "variant" : "control"
+    },
+    {
+      "response_id" : "",
+      "experiment_name" : "link_pe_lpm_pay_another_way_aa",
+      "event_id" : "6fce6db5-aeaa-463f-895d-ede8223fd5d8",
+      "variant" : "control"
+    },
+    {
+      "response_id" : "",
+      "experiment_name" : "link_legacy_cookie_pay_another_way",
+      "event_id" : "6fce6db5-aeaa-463f-895d-ede8223fd5d8",
+      "variant" : "control"
+    },
+    {
+      "response_id" : "",
+      "experiment_name" : "link_legacy_cookie_pay_another_way_aa",
+      "event_id" : "6fce6db5-aeaa-463f-895d-ede8223fd5d8",
+      "variant" : "control"
+    },
+    {
+      "response_id" : "",
+      "experiment_name" : "link_improved_pm_preference",
+      "event_id" : "6fce6db5-aeaa-463f-895d-ede8223fd5d8",
+      "variant" : "control"
+    },
+    {
+      "response_id" : "",
+      "experiment_name" : "link_improved_pm_preference_aa",
+      "event_id" : "6fce6db5-aeaa-463f-895d-ede8223fd5d8",
+      "variant" : "control"
+    },
+    {
+      "response_id" : "",
+      "experiment_name" : "link_dl_pe_green_secure_click_btn",
+      "event_id" : "6fce6db5-aeaa-463f-895d-ede8223fd5d8",
+      "variant" : "control"
+    },
+    {
+      "response_id" : "",
+      "experiment_name" : "link_verification_manual_sms",
+      "event_id" : "6fce6db5-aeaa-463f-895d-ede8223fd5d8",
+      "variant" : "control"
+    },
+    {
+      "response_id" : "",
+      "experiment_name" : "link_verification_manual_sms_aa",
+      "event_id" : "6fce6db5-aeaa-463f-895d-ede8223fd5d8",
+      "variant" : "control"
+    },
+    {
+      "response_id" : "",
+      "experiment_name" : "link_verification_manual_sms_v2",
+      "event_id" : "6fce6db5-aeaa-463f-895d-ede8223fd5d8",
+      "variant" : "control"
+    },
+    {
+      "response_id" : "",
+      "experiment_name" : "link_verification_manual_sms_v2_aa",
+      "event_id" : "6fce6db5-aeaa-463f-895d-ede8223fd5d8",
+      "variant" : "control"
+    }
+  ],
+  "link_auth_intent" : null,
+  "settings" : {
+    "global_backup_pm_enabled" : false,
+    "found_using_partial_cookie" : false,
+    "is_opted_out_of_sms" : false,
+    "eligible_for_ce_modal_with_postal_requirement" : false,
+    "has_previous_merchant_relationship" : false,
+    "has_passkey" : false,
+    "purchase_protections_holdback" : null,
+    "trusted_merchant" : false,
+    "eligible_for_ce_modal" : false,
+    "email_otp_verify_phone_despite_sms_otp" : true,
+    "link_app_redirect_token" : null,
+    "is_trusted_session" : false,
+    "use_embedded_klarna" : true,
+    "email_otp_requires_additional_info" : true,
+    "full_name_collection_required" : false
+  },
+  "exists" : true,
+  "consent_ui" : null,
+  "onboarded_to_balance" : null,
+  "shipping_addresses" : [
+
+  ],
+  "publishable_key" : "pk_test_51KwTlcH6zk5p8hmQePnyQoQwCoNkkU69MygmRYWBdqhH89enbVv4Q4ff8dPJwJQpQ8TcZ0NMjaoWwviWzujdP9zg00yHOieGJh",
+  "available_partner_accounts" : [
+
+  ],
+  "auth_session_client_secret" : null,
+  "account_id" : "acct_1KwTlcH6zk5p8hmQ",
+  "avatar" : null,
+  "sms_outage_message" : null,
+  "consumer_session" : {
+    "link_session_key" : "lsk_aEN2LK7Ja5bDbUf9Un52g7znb9Dg8P5snaXfdGga0i0B54OMgyO6cg9UU7xbdP35Ajbt09960y1dYR3kv9Vs6tefl49QK2ED3Ipb0Lbko9ol5da7vrdplg5o8iL0rC9vHamsbJp1f27kc0Oq8Xhbj113y2nhdfC3zF44h9Nn9tb6yWdvt1wrcBpfyVg08fDT5UT7yGdd9epWcKv3mtfR56G54vw2fj7Yc4t23yJ2u59nx6JL1angiGfB22ns7c17ra94T7hJf1QaiV7dN8u62j7a5L9Ne8YpgYKg20esi2c32P37dU5j45pT2qu71M0L8ayZc8kcwd5dTb3Z548gdV9W04mQ2Ev1qT87dd3v56r54jfJq17b0Ou24TdUJ67rgbE0J0cU41PHae7boz4yu8Cx3603eJ",
+    "mobile_fallback_webview_params" : {
+      "webview_requirement_type" : "notrequired",
+      "webview_open_url" : null
+    },
+    "current_authentication_level" : "NOT_AUTHENTICATED",
+    "downscoped_link_session_key" : null,
+    "email_address" : "test@example.com",
+    "phone_number_country" : null,
+    "support_payment_details_types" : [
+      "CARD",
+      "BANK_ACCOUNT",
+      "KLARNA",
+      "PIX",
+      "CRYPTO",
+      "UPI"
+    ],
+    "verification_sessions" : [
+
+    ],
+    "available_verification_factors" : [
+      {
+        "id" : "casvf_TclSdZ7h1yvwS_5Ix7nnBLnQ8xbRWVncMiU5PxUcx2HbKqLeVJUANZQlpi_56L1nMeUDrf0b1ZwdPg6Asru0dXT4jYVvfWTeasrAANP-BS9oOd1OHyxnsPEv_-JEqM7olUrd3NYs_rCzhJzZao4Kx-SOFizoBvvRaaiT3OWZcndWPk6ctZZnErSxvtfneC5tN9VVKiXRsb5XxpUzooU5LZlo",
+        "identifier_last_verified_at" : null,
+        "provides_further_verification" : true,
+        "temporarily_disabled" : false,
+        "auto_prompt_login" : true,
+        "type" : "SMS"
+      },
+      {
+        "id" : "casvf_DJT2ZRnkx8qt7k9z2F_JGrVkeocFhLvkp7CIsa7oftxy7ISsuyAQ2B1N9FoCn0bu-z6PuIHOy6NrgkA5uU7soYV3BQT_tnvGNAjY2btc0y2b_BIZBVpKZOgY1wc7MZCj_PHa4NGf3IqnOnmGWm8thEGqesuN5_i5UiDWIsWnpYN6Y1X8cusrBd7-gSaOtI86EOfplFh0ja6c1tJas_nZhLxM",
+        "identifier_last_verified_at" : null,
+        "provides_further_verification" : true,
+        "temporarily_disabled" : false,
+        "auto_prompt_login" : true,
+        "type" : "EMAIL"
+      },
+      {
+        "id" : "casvf_kadvA7XPE_S1jnjkzhy_KDHFyuMwip_ccOVcmDeXkERm6xjX-WA9HzzlRVvsNrfa6wop6PtQKfU4cclYb8U4A195zYxuf6kWaFDd0Eq-sKhlhotE434J1mH1mNkbBJnosP6K9FmQ7lXp8abXMeAJlwbxCSAr2-50SNuNW494hHB5zybQ5drlO-54OFhzuChMhlncpl-9S35-d44fuosDoJib",
+        "identifier_last_verified_at" : null,
+        "provides_further_verification" : true,
+        "temporarily_disabled" : false,
+        "auto_prompt_login" : true,
+        "type" : "PHONE_MATCH"
+      },
+      {
+        "id" : "casvf_H3AQPhL9f04NvPBRDGor6Qn4NzCgNw-2HQRzEtpWNOyKabteSDqOli5Ot4EzxwcyNwoqF705ILKbjq9CIJv8wmgB9CL9X-zCa3h_osrmEFKhD9_-7PnVnnoObszjxjrY0y9u7nw4rc5rmsJHTNfjF-cPqNn0yqVh7j72k44ChrA0sPvafpcd-FCq2Pa-cVYFVLElhHRbnKYs3KVwOtcZz-UH",
+        "identifier_last_verified_at" : null,
+        "provides_further_verification" : true,
+        "temporarily_disabled" : false,
+        "auto_prompt_login" : true,
+        "type" : "PHONE_BY_LINK"
+      },
+      {
+        "id" : "casvf_DhyF9ObdTkydpbph9icGIhLzrz6UMstkCxnP7WRUXP4P5NbCsS5gVnCffH22a7QZ1Skv5qz5OpEhyy76mnO31ul5Su6p2RuDNz5f26w47hHi5dIwrw_4D_sQsL5UiF7RvoeuRa9MEQJ09M5lytILPt1Jf5FCWT33jNnik75G0so3_nm8Zxy7DoKpoY7FE45chBuEbmlb3nelxs4RSPKD2dnO",
+        "identifier_last_verified_at" : null,
+        "provides_further_verification" : true,
+        "temporarily_disabled" : false,
+        "auto_prompt_login" : true,
+        "type" : "EMAIL_BY_LINK"
+      },
+      {
+        "id" : "casvf_J3z86FrijQAdcQmSiMD0yG_YwXxy99GhYyAEIs2knU6_HR8jBPl4k4OJNJhDb0BFGd2Izzly_3DIBiunltoPPDn6aEgZJTe9HmJnGE_p1NhEG2_fMxNtWXuF9oXmupvsGR6I-g3OBDEhi8JH8NvGkfX52nnBQMUm7uhd_7Fo3JpRcgMASlMszHsjIhyb2luX4Pr3zVPVqSmBan49aSts3Y1e",
+        "identifier_last_verified_at" : null,
+        "provides_further_verification" : true,
+        "temporarily_disabled" : false,
+        "auto_prompt_login" : true,
+        "type" : "SNA"
+      },
+      {
+        "id" : "casvf_7SXDoazglBukZc6V2JgK_52a0yXknCaJcpap-fVKiQY8eH2FaupTipUAsO_Rtdei7ye45k4Hi_qASPaRr2OY9J2b6cKrL6nDAUpqrmqyjXCIW0C-gATGWtYuUpXUqt1PPnAjuKrrtBFsTUHvhHREUSm18bsqbN-_jTYQ6ilSntOCePhK9mP1wP_YW1lxqrSJzO6J5RArej7twi4wWnHSt_Vq",
+        "identifier_last_verified_at" : null,
+        "provides_further_verification" : true,
+        "temporarily_disabled" : false,
+        "auto_prompt_login" : true,
+        "type" : "LINK_AUTH_TOKEN"
+      },
+      {
+        "id" : "casvf_VmwL2LLjOv-HjjI98rN0b8LyOO0Cv64p5YwQcnqv6zBF1CNxxfdHZcLryuJL9ctYpkSmPho6RgvPUah1mG9UGDcZLx8eXzt0ZlViKyBvduUbE6hoacxGHMYtagr3xcSAVBYFeLuESMYC0OtAru_vwtSLH1RubKQez6op14o3uCCBiZ7cX74x6Z1r86iEVTmWOH26VgsoL9gqB7J_BJxIzJrr",
+        "identifier_last_verified_at" : null,
+        "provides_further_verification" : true,
+        "temporarily_disabled" : false,
+        "auto_prompt_login" : true,
+        "type" : "ID_VERIFICATION"
+      }
+    ],
+    "redacted_phone_number" : "+1********12",
+    "client_secret" : "pscs_AVsCY5Ue9MZbYbfoTUbPhh1Y_l_f_ArWIqWrQqFO0hqzg7LKDFbg4DFC-NrfCJgdJgu_nBjwpfhA_jMXPJ4Hbutdq_CjroJW8nsoDWBa9tnCS9QJ2B9ZsLNRQv8gYOvlFrvHXbdXAL5QYkXef4jkouEP3wVNZzUWx_Niq_mCJYSmBJOYX0Svlvg-SIqq55pankfN7deUzRWOCvCUYBKn34IfKGp0nqLOFR0tOOznU4F1nB8HzsSwvEdhU6v9wZhTZHK4bvgP3beZ2_iw9KZtUFnuSXakMqWwhTi2BK21GgmHj8nD-LKAkVtI-EXFaod-qEfrJbQcPhT0YgWQxbTT_mS7AvDWvRbPd79nKGwO56hsVpk4E-hlefo1t-EK_-cKQCIAlQXsnqzyRnDdhfzferqB5Pv2C3_jZsdlU0LJeCUBEWYIteuaQ5f6CpCIgaGfYmwk980fl-eQRyFDL7n2c--r4E43NiAbIRgpyg",
+    "minimum_authentication_level" : "1FA",
+    "unredacted_phone_number" : null,
+    "redacted_formatted_phone_number" : "(***) *** **12",
+    "downscoped_client_secret" : null
+  }
+}
