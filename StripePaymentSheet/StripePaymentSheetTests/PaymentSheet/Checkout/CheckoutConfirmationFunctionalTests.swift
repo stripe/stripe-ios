@@ -57,7 +57,7 @@ final class CheckoutConfirmationFunctionalTests: STPNetworkStubbingTestCase {
         let sessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession(
             amount: 0,
             returnURL: "stripe-ios-test://checkout-return",
-            additionalParameters: ["customer_email": "test@example.com"]
+            customerEmail: "test@example.com"
         )
         var configuration = CheckoutController.Configuration(
             clientSecret: sessionResponse.clientSecret,
