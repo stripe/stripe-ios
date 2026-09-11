@@ -33,7 +33,6 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
     private let returnURL: String
     private let presentationWindow: UIWindow?
     private let confirmationHandler: CheckoutController.ApplePayConfirmationParameters.ConfirmationHandler
-    private let fallbackBillingDetails: StripeAPI.BillingDetails?
     private let initialTaxRegion: CheckoutController.Address?
     let authorizationController: PKPaymentAuthorizationController
 
@@ -62,11 +61,6 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         self.returnURL = applePayConfirmationParameters.returnURL
         self.presentationWindow = applePayConfirmationParameters.presentationWindow
         self.confirmationHandler = applePayConfirmationParameters.confirmationHandler
-        self.fallbackBillingDetails = checkoutSession.email.map { email in
-            var details = StripeAPI.BillingDetails()
-            details.email = email
-            return details
-        }
         self.initialTaxRegion = checkoutWalletUpdater.currentTaxRegion
         self.authorizationController = authorizationController
         self.checkoutWalletUpdater = checkoutWalletUpdater
@@ -119,7 +113,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
                     StripeAPI.PaymentMethod.create(
                         apiClient: self.apiClient,
                         payment: payment,
-                        fallbackBillingDetails: self.fallbackBillingDetails,
+                        fallbackBillingDetails: nil,
                         clientAttributionMetadata: clientAttributionMetadata
                     ) { result in
                         continuation.resume(with: result)
