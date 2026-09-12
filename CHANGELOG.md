@@ -1,5 +1,5 @@
 The next release's version bump will so far be:
-PATCH
+MINOR
 
 ## X.Y.Z - changes pending release
 
@@ -8,6 +8,9 @@ PATCH
 
 ### Payments
 * [Added] Added API bindings for Scalapay.
+
+### PaymentSheet
+* [Added] Added support for Scalapay.
 
 ## 26.10.0 2026-09-08
 ### General
