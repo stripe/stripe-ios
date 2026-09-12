@@ -1,0 +1,53 @@
+POST
+https:\/\/stp-mobile-playground-backend-v7\.stripedemos\.com\/attach_payment_method$
+200
+application/json
+Server: Google Frontend
+Content-Type: application/json; charset=utf-8
+x-powered-by: Express
+x-cloud-trace-context: ab773ddbf1a855e7c1a44c0c562fb4fd
+Via: 1.1 google
+Date: Fri, 11 Sep 2026 21:53:04 GMT
+Content-Length: 674
+Alt-Svc: h3=":443"; ma=2592000
+Etag: W/"2a2-jmPGE5wTMwj3Nhoxsm9LnedVPSI"
+
+{
+  "id" : "pm_1UEcNYLu5o3P18ZpDJh4L7St",
+  "billing_details" : {
+    "email" : "email@email.com",
+    "phone" : "555-555-5555",
+    "tax_id" : null,
+    "name" : "Isaac Asimov",
+    "address" : {
+      "state" : null,
+      "country" : "GB",
+      "line2" : null,
+      "city" : "London",
+      "line1" : "Stripe, 7th Floor The Bower Warehouse",
+      "postal_code" : "EC1V 9NR"
+    }
+  },
+  "customer" : "cus_VF6adq3NYXTcSE",
+  "livemode" : false,
+  "metadata" : {
+
+  },
+  "shared_payment_granted_token" : null,
+  "customer_account" : null,
+  "type" : "sepa_debit",
+  "object" : "payment_method",
+  "allow_redisplay" : "unspecified",
+  "created" : 1789163584,
+  "sepa_debit" : {
+    "fingerprint" : "OYJ8S2SeZIPKreak",
+    "country" : "AT",
+    "last4" : "3201",
+    "bank_code" : "19043",
+    "generated_from" : {
+      "setup_attempt" : null,
+      "charge" : null
+    },
+    "branch_code" : ""
+  }
+}
