@@ -1,0 +1,17 @@
+GET
+https:\/\/stp-mobile-playground-backend-v7\.stripedemos\.com\/publishable_key\?merchant=BR$
+200
+application/json
+Server: Google Frontend
+Content-Type: application/json; charset=utf-8
+x-powered-by: Express
+x-cloud-trace-context: d9b07d8381151cc1076cd24d628a92e0
+Via: 1.1 google
+Date: Fri, 11 Sep 2026 22:01:07 GMT
+Content-Length: 129
+Alt-Svc: h3=":443"; ma=2592000
+Etag: W/"81-QN0NFbthdntAb0Tiafhg6V5ExsQ"
+
+{
+  "publishable_key" : "pk_test_51NnifYAAYNo78uxtG7V4j08xPQl026Zv62elrbCuWDncoMZ66WBOctuXHSn9McbzQmzPsfaroEImZljghMrkofVF00LW2AVgXj"
+}
