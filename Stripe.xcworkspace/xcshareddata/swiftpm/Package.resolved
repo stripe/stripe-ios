@@ -1,5 +1,5 @@
 {
-  "originHash" : "f339a8d952a20344b85a0781b196fd203fc2aaab2a3a5713c0ae34036898f499",
+  "originHash" : "140aba654b07b122a0bcf2ccfa88442e4bf6a5e6bae50a82bdbde2198397d35d",
   "pins" : [
     {
       "identity" : "ios-snapshot-test-case",
@@ -25,6 +25,15 @@
       "state" : {
         "branch" : "stripe-mock",
         "revision" : "5e90dfd42873ab8de026735d0725ad618b8ca7dd"
+      }
+    },
+    {
+      "identity" : "stripe-mediapipe",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/fedefrappi/stripe-mediapipe",
+      "state" : {
+        "revision" : "aa64e84fccebde0d5f650f2df48f1b04e0cf6d01",
+        "version" : "1.0.0"
       }
     },
     {
