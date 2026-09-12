@@ -801,6 +801,7 @@ final class CheckoutUnitTests: XCTestCase {
                     city: "San Francisco",
                     country: "US",
                     line1: "510 Townsend Street",
+                    line2: nil,
                     postalCode: "94103",
                     state: "CA"
                 ),

@@ -328,7 +328,7 @@ extension CheckoutController.Session {
         /// A user facing string representing the payment method; e.g. "Apple Pay" or "····4242" for a card
         public let label: String
         /// The billing details associated with the customer's desired payment method
-        public let billingDetails: PaymentSheet.BillingDetails?
+        public let billingDetails: BillingDetails?
         /// A string representation of the customer's desired payment method
         /// - If this is a Stripe payment method, see https://stripe.com/docs/api/payment_methods/object#payment_method_object-type for possible values.
         /// - If this is an external payment method, see https://stripe.com/docs/payments/external-payment-methods?platform=ios#available-external-payment-methods for possible values.
@@ -336,5 +336,41 @@ extension CheckoutController.Session {
         public let paymentMethodType: String
         /// If you set `configuration.embeddedViewDisplaysMandateText = false`, this text must be displayed in a `UITextView` (so that URLs in the text are handled) to the customer near your “Buy” button to comply with regulations.
         public let mandateText: NSAttributedString?
+
+        /// The billing details collected for a payment method.
+        public struct BillingDetails: Equatable {
+            /// The customer's billing address.
+            public let address: Address?
+
+            /// The customer's email address.
+            public let email: String?
+
+            /// The customer's full name.
+            public let name: String?
+
+            /// The customer's phone number.
+            public let phone: String?
+
+            /// A billing address.
+            public struct Address: Equatable {
+                /// City, district, suburb, town, or village.
+                public let city: String?
+
+                /// Two-letter country code (ISO 3166-1 alpha-2).
+                public let country: String?
+
+                /// Address line 1 (e.g., street, PO Box, or company name).
+                public let line1: String?
+
+                /// Address line 2 (e.g., apartment, suite, unit, or building).
+                public let line2: String?
+
+                /// ZIP or postal code.
+                public let postalCode: String?
+
+                /// State, county, province, or region.
+                public let state: String?
+            }
+        }
     }
 }
