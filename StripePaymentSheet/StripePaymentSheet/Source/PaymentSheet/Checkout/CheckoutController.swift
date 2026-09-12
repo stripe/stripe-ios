@@ -218,6 +218,21 @@ public final class CheckoutController: ObservableObject {
         try await paymentElement?.clearPaymentOption()
     }
 
+    // MARK: - Email
+
+    /// Use this method to update the Customer's email address.
+    /// - Important: You cannot use this method if the Checkout Session was created with
+    ///   `customer_email` or a Customer with an email. Those emails are immutable.
+    public func updateEmail(_ email: String?) async throws {
+        try await enqueueSessionUpdate {
+            guard self.canSetLocalEmail() else { return }
+            guard self.session.localState.email != email else { return }
+            try await self.applySessionUpdate { localState in
+                localState.email = email
+            }
+        }
+    }
+
     // MARK: - Addresses
 
     /// Updates the billing tax region for this checkout, if billing is the session's tax address source.
@@ -404,6 +419,13 @@ extension CheckoutController {
     func applyDefaults(shippingAddress: Session.ShippingAddress?) async throws {
         let defaults = configuration.defaults
 
+        if let email = defaults.email,
+           canSetLocalEmail() {
+            try await commitSession { localState in
+                localState.email = email
+            }
+        }
+
         if let billingDetails = defaults.billingDetails,
            let address = billingDetails.address {
             try await updateBillingTaxRegionIfNecessary(address: address)
@@ -450,5 +472,15 @@ extension CheckoutController {
     /// - Warning: See `commitSession` for what this method *doesn't* do. That includes updating Checkout elements.
     func dangerouslySetSessionDirectly(_ session: Session) {
         self.session = session
+    }
+
+    private func canSetLocalEmail() -> Bool {
+        guard session.serverEmail == nil else {
+            assertionFailure(
+                "Email cannot be set locally when the Checkout Session was created with customer_email or a Customer with an email."
+            )
+            return false
+        }
+        return true
     }
 }

@@ -709,10 +709,10 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
 
     // MARK: - Checkout session billing details
 
-    func testCreate_CheckoutSessionForwardsEmailToBillingDetails() {
+    func testCreate_CheckoutSessionDoesNotForwardEmailToBillingDetails() {
         let intent = Intent._testCheckoutSession(amount: 2345, currency: "USD", email: "guest@example.com")
         let applePayContext = makeApplePayContext(for: intent)
-        XCTAssertEqual(applePayContext.fallbackBillingDetails?.email, "guest@example.com")
+        XCTAssertNil(applePayContext.fallbackBillingDetails?.email)
     }
 
     func testCreate_DeferredIntentAttachesDefaultBillingDetailsToApplePayFallback() {

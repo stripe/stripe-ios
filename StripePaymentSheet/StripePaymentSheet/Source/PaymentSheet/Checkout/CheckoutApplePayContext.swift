@@ -63,7 +63,6 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         self.presentationWindow = applePayConfirmationParameters.presentationWindow
         self.confirmationHandler = applePayConfirmationParameters.confirmationHandler
         self.fallbackBillingDetails = Self.makeFallbackBillingDetails(
-            checkoutSession: checkoutSession,
             applePayConfirmationParameters: applePayConfirmationParameters
         )
         self.initialTaxRegion = checkoutWalletUpdater.currentTaxRegion
@@ -141,7 +140,8 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
                     returnURL: self.returnURL,
                     shipping: self.makeShippingDetailsParams(from: payment)
                         ?? checkoutSession.shippingAddress?.shippingDetailsParams,
-                    clientAttributionMetadata: clientAttributionMetadata
+                    clientAttributionMetadata: clientAttributionMetadata,
+                    collectedInformation: .init(email: checkoutSession.localState.email)
                 )
                 let result = await self.confirmationHandler(requestParameters)
                 switch result {
@@ -393,19 +393,14 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
     }
 
     static func makeFallbackBillingDetails(
-        checkoutSession: CheckoutController.Session,
         applePayConfirmationParameters: CheckoutController.ApplePayConfirmationParameters
     ) -> StripeAPI.BillingDetails? {
-        var details = StripeAPI.BillingDetails()
-        var hasDetails = false
-        if let email = checkoutSession.email {
-            details.email = email
-            hasDetails = true
-        }
         guard applePayConfirmationParameters.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod,
               let defaults = applePayConfirmationParameters.defaultBillingDetails else {
-            return hasDetails ? details : nil
+            return nil
         }
+        var details = StripeAPI.BillingDetails()
+        var hasDetails = false
         if let name = defaults.name {
             details.name = name
             hasDetails = true

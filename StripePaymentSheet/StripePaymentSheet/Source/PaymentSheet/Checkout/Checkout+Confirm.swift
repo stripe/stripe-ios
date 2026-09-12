@@ -244,7 +244,8 @@ extension CheckoutController {
                             intent: .checkout(self.session),
                             elementsSession: self.session.elementsSession
                         ),
-                        // TODO: Remove this once no-PM confirmation can use the Checkout Session's fixed email without `customer_data`.
+                        // Due to legacy reasons, in the no-PM case /confirm requires customerData be sent with at least email
+                        // TODO: Remove this once no-PM confirmation can use the Checkout Session's server email without `customer_data`.
                         customerData: self.session.email.map { ["email": $0] }
                     )
                     result = await Self.confirmCheckoutSession(
@@ -388,11 +389,6 @@ extension CheckoutController {
             confirmParams.paymentMethodParams.radarOptions = await confirmationChallenge?.makeRadarOptions(for: confirmParams.paymentMethodParams.type)
             // TODO: Why set client attribution metadata here and also in /confirm request?
             confirmParams.paymentMethodParams.clientAttributionMetadata = clientAttributionMetadata
-            // Ensure email is set on the payment method — fall back to the Checkout Session's customer email.
-            if confirmParams.paymentMethodParams.billingDetails?.email == nil,
-               let customerEmail = checkoutSession.email {
-                confirmParams.paymentMethodParams.nonnil_billingDetails.email = customerEmail
-            }
             // TODO: Stop creating a PaymentMethod and send payment_method_data directly to /confirm.
             let paymentMethod = try await configuration.apiClient.createPaymentMethod(
                 with: confirmParams.paymentMethodParams

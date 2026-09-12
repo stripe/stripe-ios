@@ -493,6 +493,37 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         )
     }
 
+    func testNewPaymentMethodDoesNotReceiveCheckoutEmail() async throws {
+        // Given a local Checkout email and a new PaymentMethod without a form-collected email
+        // When confirming the new PaymentMethod
+        // Then PaymentMethod creation omits billing_details[email]
+        try await assertNewPaymentMethodConfirmation(
+            session: CheckoutTestHelpers.makeSession().withCustomer(),
+            paymentMethodType: .stripe(.card),
+            checkboxState: .hidden,
+            expectedAllowRedisplay: "unspecified",
+            expectedSavePaymentMethod: nil,
+            checkoutEmail: "checkout@example.com",
+            expectedBillingEmail: .omitted
+        )
+    }
+
+    func testNewPaymentMethodPreservesFormCollectedEmail() async throws {
+        // Given different Checkout and form-collected PaymentMethod emails
+        // When confirming the new PaymentMethod
+        // Then PaymentMethod creation preserves the form-collected email
+        try await assertNewPaymentMethodConfirmation(
+            session: CheckoutTestHelpers.makeSession().withCustomer(),
+            paymentMethodType: .stripe(.card),
+            checkboxState: .hidden,
+            expectedAllowRedisplay: "unspecified",
+            expectedSavePaymentMethod: nil,
+            checkoutEmail: "checkout@example.com",
+            paymentMethodEmail: "payment-method@example.com",
+            expectedBillingEmail: .value("payment-method@example.com")
+        )
+    }
+
     // MARK: - Link
 
     func testExpressCheckoutLinkBuildsWalletConfirmationFlow() async throws {
@@ -503,7 +534,6 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         )
         configuration.merchantDisplayName = "Test ECE Merchant"
         configuration.userInterfaceStyle = .alwaysDark
-        configuration.defaults.email = "test@example.com"
         var billingDetails = CheckoutController.Configuration.Defaults.BillingDetails()
         billingDetails.name = "Jenny Rosen"
         billingDetails.address = .init(country: "US", postalCode: "94107")
@@ -548,7 +578,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         XCTAssertEqual(parameters.configuration.defaultBillingDetails.name, "Jenny Rosen")
         XCTAssertEqual(parameters.configuration.defaultBillingDetails.address.country, "US")
         XCTAssertEqual(parameters.configuration.defaultBillingDetails.address.postalCode, "94107")
-        XCTAssertEqual(parameters.configuration.defaultBillingDetails.email, "jenny@example.com")
+        XCTAssertNil(parameters.configuration.defaultBillingDetails.email)
     }
 
     func testExpressCheckoutLinkRequiresPresentingViewController() async throws {
@@ -664,16 +694,29 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         checkboxState: IntentConfirmParams.SaveForFutureUseCheckboxState,
         expectedAllowRedisplay: String,
         expectedSavePaymentMethod: Bool?,
+        checkoutEmail: String? = nil,
+        paymentMethodEmail: String? = nil,
+        expectedBillingEmail: BillingEmailExpectation? = nil,
         file: StaticString = #filePath,
         line: UInt = #line
     ) async throws {
         let checkout = try await makeCheckout(apiResponse: session)
+        if let checkoutEmail {
+            try await checkout.updateEmail(checkoutEmail)
+        }
         let confirmParams = makeConfirmParams(type: paymentMethodType)
+        confirmParams.paymentMethodParams.nonnil_billingDetails.email = paymentMethodEmail
         confirmParams.saveForFutureUseCheckboxState = checkboxState
-        let createPaymentMethod = stubCreatePaymentMethod(expectedAllowRedisplay: expectedAllowRedisplay, file: file, line: line)
+        let createPaymentMethod = stubCreatePaymentMethod(
+            expectedAllowRedisplay: expectedAllowRedisplay,
+            expectedBillingEmail: expectedBillingEmail,
+            file: file,
+            line: line
+        )
         let confirm = stubConfirmationExpecting(
             sessionId: checkout.session.id,
             savePaymentMethod: expectedSavePaymentMethod,
+            expectedCollectedInformationEmail: checkoutEmail,
             file: file,
             line: line
         )
@@ -817,6 +860,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
     private func stubConfirmationExpecting(
         sessionId: String,
         savePaymentMethod: Bool?,
+        expectedCollectedInformationEmail: String? = nil,
         responseJSON: [AnyHashable: Any]? = nil,
         file: StaticString = #filePath,
         line: UInt = #line
@@ -839,6 +883,15 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
                 file: file,
                 line: line
             )
+            if let expectedCollectedInformationEmail {
+                XCTAssertEqual(
+                    params["collected_information[email]"],
+                    expectedCollectedInformationEmail,
+                    file: file,
+                    line: line
+                )
+                XCTAssertNil(params["customer_data[email]"], file: file, line: line)
+            }
             expectation.fulfill()
             return HTTPStubsResponse(
                 jsonObject: responseJSON ?? Self.confirmedSessionJSON,
@@ -871,6 +924,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
 
     private func stubCreatePaymentMethod(
         expectedAllowRedisplay: String? = nil,
+        expectedBillingEmail: BillingEmailExpectation? = nil,
         file: StaticString = #filePath,
         line: UInt = #line
     ) -> XCTestExpectation {
@@ -878,13 +932,23 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         stub { request in
             request.url?.path.hasSuffix("/payment_methods") == true
         } response: { request in
-            if let expectedAllowRedisplay {
+            if expectedAllowRedisplay != nil || expectedBillingEmail != nil {
                 let params = RequestBodyTestHelpers.formEncodedBodyParams(
                     from: request,
                     omittingEmptyValues: true,
                     line: line
                 )
-                XCTAssertEqual(params["allow_redisplay"], expectedAllowRedisplay, file: file, line: line)
+                if let expectedAllowRedisplay {
+                    XCTAssertEqual(params["allow_redisplay"], expectedAllowRedisplay, file: file, line: line)
+                }
+                switch expectedBillingEmail {
+                case .omitted:
+                    XCTAssertNil(params["billing_details[email]"], file: file, line: line)
+                case .value(let email):
+                    XCTAssertEqual(params["billing_details[email]"], email, file: file, line: line)
+                case nil:
+                    break
+                }
             }
             expectation.fulfill()
             return HTTPStubsResponse(
@@ -894,6 +958,11 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
             )
         }
         return expectation
+    }
+
+    private enum BillingEmailExpectation {
+        case omitted
+        case value(String)
     }
 
     private func stubLinkLogout(

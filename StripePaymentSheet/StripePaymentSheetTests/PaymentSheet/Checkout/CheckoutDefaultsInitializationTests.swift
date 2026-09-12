@@ -16,6 +16,24 @@ final class CheckoutDefaultsInitializationTests: XCTestCase {
         super.tearDown()
     }
 
+    func testInitStoresDefaultEmailLocally() async throws {
+        // Given an email in Checkout defaults
+        stubCheckoutSessionRequests()
+        var configuration = CheckoutController.Configuration(
+            clientSecret: clientSecret,
+            returnURL: "stripe-ios-test://checkout-return"
+        )
+        configuration.apiClient = STPAPIClient(publishableKey: "pk_test_123")
+        configuration.defaults.email = "local@example.com"
+
+        // When initializing CheckoutController
+        let checkout = try await CheckoutController(configuration: configuration)
+
+        // Then the default becomes the Session email
+        XCTAssertEqual(checkout.session.localState.email, "local@example.com")
+        XCTAssertEqual(checkout.session.email, "local@example.com")
+    }
+
     func testInitAppliesBillingDefaultThroughBillingTaxUpdateWhenNeeded() async throws {
         stubCheckoutSessionRequests()
 

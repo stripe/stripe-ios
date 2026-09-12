@@ -256,6 +256,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertEqual(session.businessName, "CI Stuff")
         XCTAssertEqual(session.elementsSession.sessionID, "elements_session_test123")
         XCTAssertEqual(session.email, "test@example.com")
+        XCTAssertEqual(session.serverEmail, "test@example.com")
         XCTAssertEqual(apiResponse.url, "https://checkout.stripe.com/c/pay/cs_test_a1b2c3d4e5f6g7h8i9j0")
 
         // Verify saved payment methods offer save
