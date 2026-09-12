@@ -106,7 +106,7 @@ public final class CheckoutController: ObservableObject {
                 checkoutSessionId: sessionId,
                 adaptivePricingAllowed: configuration.currencySelectorElement != nil
             )
-            let loadedSession = apiResponse.makePublicSession()
+            let loadedSession = Session(apiResponse: apiResponse, localState: .empty)
             self.session = loadedSession
 
             // Element initialization is intentionally sequential:
@@ -268,12 +268,13 @@ public final class CheckoutController: ObservableObject {
         let shippingAddress = Session.ShippingAddress(name: name, address: address)
         guard session.shippingAddress != shippingAddress else { return }
         if session.shouldSendTaxRegion(for: "shipping") {
-            try await performUpdate(
-                .setTaxRegion(address),
-                shippingAddress: .newValue(shippingAddress)
-            )
+            try await performUpdate(.setTaxRegion(address)) {
+                $0.shippingAddress = shippingAddress
+            }
         } else {
-            try await performUpdate(shippingAddress: .newValue(shippingAddress))
+            try await performUpdate {
+                $0.shippingAddress = shippingAddress
+            }
         }
     }
 
@@ -284,13 +285,14 @@ public final class CheckoutController: ObservableObject {
             // support clearing tax_region, so keep the previous country.
             // TODO(porter) When migrating to the CheckoutClient API, stop sending country only and send nil
             let countryOnlyAddress = Address(country: shippingAddress.address.country)
-            try await performUpdate(
-                .setTaxRegion(countryOnlyAddress),
-                shippingAddress: .newValue(nil)
-            )
+            try await performUpdate(.setTaxRegion(countryOnlyAddress)) {
+                $0.shippingAddress = nil
+            }
         } else {
             // No server update is needed when shipping isn't the tax address source.
-            try await performUpdate(shippingAddress: .newValue(nil))
+            try await performUpdate {
+                $0.shippingAddress = nil
+            }
         }
     }
 
@@ -430,18 +432,16 @@ extension CheckoutController {
     /// Existing local state is preserved unless explicitly replaced.
     func commitSession(
         _ apiResponse: PaymentPagesAPIResponse? = nil,
-        shippingAddress: SessionFieldUpdate<Session.ShippingAddress> = .keepOldValue,
-        paymentOption: SessionFieldUpdate<Session.PaymentOptionDisplayData> = .keepOldValue
+        mutateLocalState: LocalStateMutation = { _ in }
     ) async throws {
-        let newSession = apiResponse?.makePublicSession() ?? session
-        session = newSession.makeCopyOverriding(
-            shippingAddress: .newValue(
-                shippingAddress.resolved(currentValue: session.shippingAddress)
-            ),
-            paymentOption: .newValue(
-                paymentOption.resolved(currentValue: session.paymentOption)
-            )
-        )
+        var localState = session.localState
+        mutateLocalState(&localState)
+
+        if let apiResponse {
+            session = Session(apiResponse: apiResponse, localState: localState)
+        } else {
+            session.localState = localState
+        }
 
         // === Update Payment Element and all other asynchronously updated elements ==
         try await paymentElement?.update(checkout: self)
