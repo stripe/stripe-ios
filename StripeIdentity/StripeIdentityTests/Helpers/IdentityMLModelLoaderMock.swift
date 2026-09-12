@@ -38,9 +38,7 @@ final class IdentityMLModelLoaderMock: IdentityMLModelLoaderProtocol {
         didStartLoadingDocumentModels = true
     }
 
-    func startLoadingFaceModels(
-        from selfiePageConfig: StripeAPI.VerificationPageStaticContentSelfiePage
-    ) {
+    func startLoadingFaceModels(from verificationPage: StripeAPI.VerificationPage) {
         didStartLoadingFaceModels = true
     }
 }

@@ -57,6 +57,11 @@ let package = Package(
             targets: ["StripeCryptoOnramp"]
         )
     ],
+    dependencies: [
+        .package(
+            path: "LocalPackages/MediaPipeSPM"
+        )
+    ],
     targets: [
         .target(
             name: "Stripe",
@@ -102,11 +107,18 @@ let package = Package(
         ),
         .target(
             name: "StripeIdentity",
-            dependencies: ["StripeCore", "StripeUICore", "StripeCameraCore"],
+            dependencies: [
+                "StripeCore",
+                "StripeUICore",
+                "StripeCameraCore",
+                .product(name: "MediaPipeSPM", package: "MediaPipeSPM"),
+            ],
             path: "StripeIdentity/StripeIdentity",
             exclude: ["Info.plist"],
             resources: [
-                .process("Resources/Images")
+                .process("Resources/Audio"),
+                .process("Resources/Images"),
+                .copy("Resources/face_landmarker.task")
             ]
         ),
         .target(

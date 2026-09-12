@@ -78,7 +78,7 @@ severity = NO_SEVERITY
 
 GetFrameworks.framework_names('./modules.yaml').each do |framework_name|
   public_interface_dir = "#{framework_name}.framework/Modules/#{framework_name}.swiftmodule"
-  simulator_slice = 'ios-arm64_x86_64-simulator'
+  simulator_slice = 'ios-arm64-simulator'
 
   master_public_interface_path = "#{framework_name}-master.xcframework/#{simulator_slice}/#{public_interface_dir}/arm64-apple-ios-simulator.swiftinterface"
   branch_public_interface_path = "#{framework_name}-new.xcframework/#{simulator_slice}/#{public_interface_dir}/arm64-apple-ios-simulator.swiftinterface"
