@@ -217,6 +217,24 @@ extension STPTestingAPIClient {
 
     // This helper is used by tests, which Periphery excludes from its scan.
     // periphery:ignore
+    func attachCheckoutPaymentMethod(
+        _ paymentMethodID: String,
+        to customerID: String,
+        merchantCountry: String? = "us"
+    ) async throws {
+        let _: PlaygroundPaymentMethodResponse = try await makePlaygroundRequest(
+            endpoint: "attach_payment_method",
+            method: "POST",
+            params: [
+                "merchant": playgroundMerchant(for: merchantCountry),
+                "payment_method_id": paymentMethodID,
+                "request_params": ["customer": customerID],
+            ]
+        )
+    }
+
+    // This helper is used by tests, which Periphery excludes from its scan.
+    // periphery:ignore
     /// Creates a Mobile Elements Checkout Session using the playground's raw API proxy.
     func createCheckoutSession(
         types: [String] = ["card"],
@@ -288,7 +306,10 @@ extension STPTestingAPIClient {
             method: "POST",
             params: [
                 "merchant": playgroundMerchant,
-                "stripe_version": Self.checkoutMobileElementsAPISettings,
+                // Checkout retains the creation API version for the underlying PaymentIntent.
+                "stripe_version": types.contains("vipps")
+                    ? "\(Self.checkoutMobileElementsAPISettings); vipps_preview=v1"
+                    : Self.checkoutMobileElementsAPISettings,
                 "request_params": sessionParameters,
             ]
         )
@@ -305,7 +326,7 @@ extension STPTestingAPIClient {
 
     // This helper is used by tests, which Periphery excludes from its scan.
     // periphery:ignore
-    /// Keeps LPM confirmation tests on the CI backend while they are migrated separately.
+    /// Creates legacy Checkout Sessions on the CI backend for tests that have not migrated yet.
     func createLegacyCheckoutSession(
         types: [String] = ["card"],
         currency: String = "usd",
@@ -383,6 +404,12 @@ extension STPTestingAPIClient {
         let publishableKey: String
     }
 
+    // This response is used by a test helper, which Periphery excludes from its scan.
+    // periphery:ignore
+    private struct PlaygroundPaymentMethodResponse: Decodable {
+        let id: String
+    }
+
     private struct PlaygroundErrorResponse: Decodable {
         let error: String
         let requestID: String?
@@ -395,6 +422,10 @@ extension STPTestingAPIClient {
 
     private func playgroundMerchant(for merchantCountry: String?) -> String {
         let playgroundMerchant = merchantCountry ?? "us"
+        // The CI backend uses "mex" for Mexico, but the playground has its own mapping and expects "MX".
+        if playgroundMerchant.lowercased() == "mex" {
+            return "MX"
+        }
         return playgroundMerchant.count == 2 ? playgroundMerchant.uppercased() : playgroundMerchant
     }
 
