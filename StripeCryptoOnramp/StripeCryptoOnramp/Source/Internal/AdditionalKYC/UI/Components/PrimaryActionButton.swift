@@ -20,14 +20,12 @@ struct PrimaryActionButton: View {
     /// The closure to invoke when the button is activated.
     let action: () -> Void
 
-    @ScaledMetric(relativeTo: .body) private var fontSize: CGFloat = 16
-
     // MARK: - View
 
     var body: some View {
         Button(action: action) {
             Text(title)
-                .font(.system(size: fontSize, weight: .medium))
+                .typography(.bodyLargeEmphasized)
                 .multilineTextAlignment(.center)
                 .fixedSize(horizontal: false, vertical: true)
                 .padding(.horizontal, 16)
