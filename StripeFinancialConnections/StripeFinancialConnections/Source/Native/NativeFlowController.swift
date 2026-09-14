@@ -393,6 +393,36 @@ extension NativeFlowController {
                             status: "custom_manual_entry"
                         )
                         finishAuthSession(.failed(error: FinancialConnectionsCustomManualEntryRequiredError()))
+                    } else if dataManager.apiClient.hasRequestedDataPermissions {
+                        guard let paymentDetailsID = dataManager.paymentAccountResource?
+                            .generatedPaymentDetailIds?.first else {
+                            let error = FinancialConnectionsSheetError.unknown(
+                                debugDescription: "Permissioned Link Account Session completed without generated payment details."
+                            )
+                            self.logCompleteEvent(
+                                type: eventType,
+                                status: "failed",
+                                error: error
+                            )
+                            finishAuthSession(.failed(error: error))
+                            return
+                        }
+
+                        self.delegate?.nativeFlowController(
+                            self,
+                            didReceiveEvent: FinancialConnectionsEvent(
+                                name: .success,
+                                metadata: FinancialConnectionsEvent.Metadata(
+                                    manualEntry: session.paymentAccount?.isManualEntry ?? false
+                                )
+                            )
+                        )
+                        self.logCompleteEvent(
+                            type: eventType,
+                            status: "completed",
+                            numberOfLinkedAccounts: session.accounts.data.count
+                        )
+                        finishAuthSession(.completed(.paymentDetails(id: paymentDetailsID)))
                     } else {
                         if !session.accounts.data.isEmpty || session.paymentAccount != nil
                             || session.bankAccountToken != nil
@@ -1213,6 +1243,7 @@ extension NativeFlowController: AttachLinkedPaymentAccountViewControllerDelegate
         didFinishWithPaymentAccountResource paymentAccountResource: FinancialConnectionsPaymentAccountResource,
         saveToLinkWithStripeSucceeded: Bool?
     ) {
+        dataManager.paymentAccountResource = paymentAccountResource
         if saveToLinkWithStripeSucceeded != nil {
             dataManager.saveToLinkWithStripeSucceeded = saveToLinkWithStripeSucceeded
         }

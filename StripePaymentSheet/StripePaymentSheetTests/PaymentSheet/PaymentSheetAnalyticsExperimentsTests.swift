@@ -88,6 +88,7 @@ final class PaymentSheetAnalyticsExperimentsTests: XCTestCase {
             linkShowPreferDebitCardHint: nil,
             attestationStateSyncEnabled: nil,
             linkSupportedPaymentMethodsOnboardingEnabled: ["CARD"],
+            linkPaymentMethodBankAccountDataConsent: nil,
             allResponseFields: [:]
         )
         let experimentsData = ExperimentsData(
@@ -161,6 +162,7 @@ final class PaymentSheetAnalyticsExperimentsTests: XCTestCase {
             linkShowPreferDebitCardHint: nil,
             attestationStateSyncEnabled: nil,
             linkSupportedPaymentMethodsOnboardingEnabled: ["CARD"],
+            linkPaymentMethodBankAccountDataConsent: nil,
             allResponseFields: [:]
         )
         let experimentsData = ExperimentsData(

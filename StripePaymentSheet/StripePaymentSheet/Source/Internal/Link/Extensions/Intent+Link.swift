@@ -58,4 +58,8 @@ extension STPElementsSession {
     var shouldShowPreferDebitCardHint: Bool {
         linkSettings?.linkShowPreferDebitCardHint ?? false
     }
+
+    var linkPaymentMethodBankAccountDataConsent: String? {
+        linkSettings?.linkPaymentMethodBankAccountDataConsent
+    }
 }

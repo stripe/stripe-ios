@@ -4,6 +4,7 @@
 //
 //  Created by Nick Porter on 2/24/26.
 
+@_spi(STP) import StripePaymentSheet
 import SwiftUI
 
 struct CheckoutPlaygroundConfigurationSection: View {
@@ -14,10 +15,17 @@ struct CheckoutPlaygroundConfigurationSection: View {
     @Binding var checkoutEndpointOption: CheckoutPlayground.EndpointOption
     @Binding var checkoutEndpoint: String
     @Binding var delayPaymentPagesRequests: Bool
+    let onReset: () -> Void
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            CheckoutPlayground.SectionHeader(title: "Configuration", icon: "gearshape.fill")
+            HStack {
+                CheckoutPlayground.SectionHeader(title: "Configuration", icon: "gearshape.fill")
+                Spacer()
+                Button("Reset", action: onReset)
+                    .font(.callout.smallCaps())
+                    .buttonStyle(.bordered)
+            }
             VStack(spacing: 1) {
                 CheckoutPlayground.PickerRow(
                     title: "UI Framework",
@@ -65,7 +73,7 @@ struct CheckoutPlaygroundConfigurationSection: View {
                         .frame(width: 24)
                         .foregroundColor(.blue)
 
-                    TextField("Checkout Endpoint", text: $checkoutEndpoint)
+                    TextField("Backend URL", text: $checkoutEndpoint)
                         .font(.subheadline)
                         .textInputAutocapitalization(.never)
                         .autocorrectionDisabled()
@@ -89,15 +97,25 @@ struct CheckoutPlaygroundConfigurationSection: View {
 }
 
 struct CheckoutPlaygroundLineItemsSection: View {
-    let lineItems: [CheckoutPlayground.LineItemConfig]
+    @Binding var cartScenario: CheckoutPlayground.CartScenario
     let currency: CheckoutPlayground.Currency
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            CheckoutPlayground.SectionHeader(title: "Line Items", icon: "cart.fill")
+            HStack {
+                CheckoutPlayground.SectionHeader(title: "Line Items", icon: "cart.fill")
+                Spacer()
+                Picker("Cart Scenario", selection: $cartScenario) {
+                    ForEach(CheckoutPlayground.CartScenario.allCases) { scenario in
+                        Text(scenario.displayName).tag(scenario)
+                    }
+                }
+                .pickerStyle(.menu)
+                .labelsHidden()
+            }
 
             VStack(spacing: 12) {
-                ForEach(lineItems) { item in
+                ForEach(cartScenario.lineItems) { item in
                     CheckoutPlaygroundLineItemCard(
                         item: item,
                         currency: currency
@@ -170,6 +188,7 @@ struct CheckoutPlaygroundFeaturesSection: View {
     @Binding var checkoutSessionPaymentMethodSave: Bool
     @Binding var checkoutSessionPaymentMethodRemove: Bool
     @Binding var automaticPaymentMethods: Bool
+    @Binding var linkMode: CheckoutPlayground.LinkMode
 
     private var shouldShowAutomaticTax: Bool {
         return customerType != .new
@@ -182,7 +201,7 @@ struct CheckoutPlaygroundFeaturesSection: View {
                 CheckoutPlayground.ToggleRow(
                     title: "Collect Shipping Address",
                     isOn: $shippingAddressCollection,
-                    tooltip: "Sets `shipping_address_collection` to allow specific countries (US, CA, GB, AU). Necessary for physical goods."
+                    tooltip: "Sets `shipping_address_collection` to allow specific countries (US, CA, GB, AU) and configures Shipping Address Element. Necessary for physical goods."
                 )
                 CheckoutPlayground.PickerRow(
                     title: "Default Shipping Address",
@@ -209,6 +228,12 @@ struct CheckoutPlaygroundFeaturesSection: View {
                     isOn: $automaticPaymentMethods,
                     tooltip: "Sends `automatic_payment_methods: true` instead of an explicit `payment_method_types` array. Stripe selects the best payment methods for the session."
                 )
+                CheckoutPlayground.PickerRow(
+                    title: "Link Mode",
+                    selection: $linkMode,
+                    tooltip: "Forces Link to use its native or web flow.",
+                    displayText: { $0.displayName }
+                )
                 if shouldShowAutomaticTax {
                     CheckoutPlayground.ToggleRow(
                         title: "Automatic Tax",
@@ -234,43 +259,83 @@ struct CheckoutPlaygroundFeaturesSection: View {
 }
 
 struct CheckoutPlaygroundExpressCheckoutElementSection: View {
-    @Binding var expressCheckoutElementOption: CheckoutPlayground.ExpressCheckoutElementOption
-    @Binding var expressCheckoutElementButtonTheme: CheckoutPlayground.ExpressCheckoutElementButtonTheme
-    @Binding var expressCheckoutElementMaxColumns: CheckoutPlayground.ExpressCheckoutElementButtonLayoutLimit
-    @Binding var expressCheckoutElementMaxRows: CheckoutPlayground.ExpressCheckoutElementButtonLayoutLimit
+    @Binding var showExpressCheckoutElement: Bool
+    @Binding var applePayDisplay: ExpressCheckoutElement.ApplePayConfiguration.Display
+    @Binding var linkDisplay: ExpressCheckoutElement.LinkConfiguration.Display
+    @Binding var shippingAddressRequired: Bool
+    @Binding var buttonTheme: ExpressCheckoutElement.Appearance.ButtonTheme
+    @Binding var maxColumns: CheckoutPlayground.ExpressCheckoutElementButtonLayoutLimit
+    @Binding var maxRows: CheckoutPlayground.ExpressCheckoutElementButtonLayoutLimit
+    var onCustomizeBillingDetailsCollection: () -> Void
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             CheckoutPlayground.SectionHeader(title: "ExpressCheckoutElement", icon: "bolt.fill")
             VStack(spacing: 1) {
-                CheckoutPlayground.PickerRow(
-                    title: "Show / Hide",
-                    icon: "eye.fill",
-                    selection: $expressCheckoutElementOption,
-                    displayText: { $0.displayName }
+                CheckoutPlayground.ToggleRow(
+                    title: "Show Express Checkout Element",
+                    isOn: $showExpressCheckoutElement
                 )
-                if expressCheckoutElementOption == .show {
+                if showExpressCheckoutElement {
+                    CheckoutPlayground.PickerRow(
+                        title: "Apple Pay Display",
+                        icon: "apple.logo",
+                        selection: $applePayDisplay,
+                        tooltip: "Sets `ExpressCheckoutElement.Configuration.applePayConfiguration.display`.",
+                        displayText: { $0.rawValue.capitalized }
+                    )
+                    CheckoutPlayground.PickerRow(
+                        title: "Link Display",
+                        icon: "link",
+                        selection: $linkDisplay,
+                        tooltip: "Sets `ExpressCheckoutElement.Configuration.linkConfiguration.display`.",
+                        displayText: { $0.rawValue.capitalized }
+                    )
+                    CheckoutPlayground.ToggleRow(
+                        title: "Requires Shipping Address",
+                        isOn: $shippingAddressRequired,
+                        tooltip: "Sets `ExpressCheckoutElement.Configuration.shippingAddressRequired`. When on, wallets like Apple Pay require the customer to provide a shipping address."
+                    )
                     CheckoutPlayground.PickerRow(
                         title: "Button Theme",
                         icon: "paintpalette.fill",
-                        selection: $expressCheckoutElementButtonTheme,
+                        selection: $buttonTheme,
                         tooltip: "Sets `ExpressCheckoutElement.Configuration.Appearance.buttonTheme`. Only affects the Apple Pay button; the Link button always uses Link's brand color.",
                         displayText: { $0.displayName }
                     )
                     CheckoutPlayground.PickerRow(
                         title: "Max Columns",
                         icon: "square.grid.2x2",
-                        selection: $expressCheckoutElementMaxColumns,
+                        selection: $maxColumns,
                         tooltip: "Sets `ExpressCheckoutElement.Configuration.Appearance.buttonLayout.maxColumns`.",
                         displayText: { $0.displayName }
                     )
                     CheckoutPlayground.PickerRow(
                         title: "Max Rows",
                         icon: "rectangle.grid.1x2",
-                        selection: $expressCheckoutElementMaxRows,
+                        selection: $maxRows,
                         tooltip: "Sets `ExpressCheckoutElement.Configuration.Appearance.buttonLayout.maxRows`.",
                         displayText: { $0.displayName }
                     )
+                    Button(action: onCustomizeBillingDetailsCollection) {
+                        HStack {
+                            Image(systemName: "person.text.rectangle.fill")
+                                .font(.system(size: 16))
+                                .frame(width: 24)
+                                .foregroundColor(.blue)
+                            Text("Billing Details Collection")
+                                .font(.subheadline)
+                                .foregroundColor(.primary)
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                        .padding(.vertical, 12)
+                        .padding(.horizontal, 16)
+                        .background(Color(uiColor: .secondarySystemGroupedBackground))
+                    }
+                    .buttonStyle(PlainButtonStyle())
                 }
             }
             .background(Color(uiColor: .secondarySystemGroupedBackground))

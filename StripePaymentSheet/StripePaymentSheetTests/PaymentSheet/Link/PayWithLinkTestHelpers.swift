@@ -16,7 +16,8 @@ enum PayWithLinkTestHelpers {
         linkFundingSources: [String] = ["CARD"],
         linkPassthroughModeEnabled: Bool? = nil,
         linkPMOSFU: Bool? = nil,
-        cardFundingFilteringEnabled: Bool = false
+        cardFundingFilteringEnabled: Bool = false,
+        linkPaymentMethodBankAccountDataConsent: String? = nil
     ) throws -> (Intent, STPElementsSession) {
         // Link settings don't live in the PaymentIntent object itself, but in the /elements/sessions API response
         // So we construct a minimal response (see STPPaymentIntentTest.testDecodedObjectFromAPIResponseMapping) to parse them
@@ -34,6 +35,12 @@ enum PayWithLinkTestHelpers {
 
         if let linkPassthroughModeEnabled {
             linkSettingsJson["link_passthrough_mode_enabled"] = linkPassthroughModeEnabled
+        }
+
+        if let linkPaymentMethodBankAccountDataConsent {
+            linkSettingsJson["link_payment_session_context"] = [
+                "link_payment_method_bank_account_data_consent": linkPaymentMethodBankAccountDataConsent,
+            ]
         }
 
         var response = [
@@ -57,7 +64,8 @@ enum PayWithLinkTestHelpers {
     static func makeSetupIntentAndElementsSession(
         linkFundingSources: [String] = ["CARD"],
         linkPassthroughModeEnabled: Bool? = nil,
-        cardFundingFilteringEnabled: Bool = false
+        cardFundingFilteringEnabled: Bool = false,
+        linkPaymentMethodBankAccountDataConsent: String? = nil
     ) throws -> (Intent, STPElementsSession) {
         // Link settings don't live in the PaymentIntent object itself, but in the /elements/sessions API response
         // So we construct a minimal response (see STPPaymentIntentTest.testDecodedObjectFromAPIResponseMapping) to parse them
@@ -72,6 +80,12 @@ enum PayWithLinkTestHelpers {
 
         if let linkPassthroughModeEnabled {
             linkSettingsJson["link_passthrough_mode_enabled"] = linkPassthroughModeEnabled
+        }
+
+        if let linkPaymentMethodBankAccountDataConsent {
+            linkSettingsJson["link_payment_session_context"] = [
+                "link_payment_method_bank_account_data_consent": linkPaymentMethodBankAccountDataConsent,
+            ]
         }
 
         var response = [

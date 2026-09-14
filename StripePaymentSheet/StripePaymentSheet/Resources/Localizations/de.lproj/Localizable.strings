@@ -46,6 +46,8 @@
 
 "Buy now or pay later with Klarna" = "Jetzt kaufen oder später bezahlen mit Klarna";
 
+"By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "Indem Sie Ihre Zahlung mit NICEPAY bestätigen, erlauben Sie %@, künftige Zahlungen gemäß deren Konditionen von dieser Zahlungsmethode abzubuchen.";
+
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Indem Sie Ihre Zahlung bei PayPal bestätigen, erklären Sie sich damit einverstanden, dass %@ Ihr PayPal-Konto zur Durchführung zukünftiger Zahlungen gemäß der Nutzungsbedingungen belastet.";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Indem Sie zur Amazon-Pay-Website wechseln, erklären Sie sich damit einverstanden, dass %@ Ihr Amazon-Pay-Konto zur Durchführung zukünftiger Zahlungen gemäß den Nutzungsbedingungen belastet.";
@@ -85,6 +87,8 @@
 "By providing your phone number, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Indem Sie Ihre Telefonnummer angeben, erklären Sie sich damit einverstanden, ein %1$@-Konto zu erstellen und Ihre Zahlungsdaten gemäß den <terms>Allgemeinen Geschäftsbedingungen</terms> und der <privacy>Datenschutzerklärung</privacy> von %1$@ bei %1$@ zu speichern.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Indem Sie Ihr Bankkonto für %@ speichern, akzeptieren Sie die Autorisierung von Zahlungen gemäß <terms>diesen Bedingungen</terms>.";
+
+"By saving your payment information, you allow %@ to charge you for future payments in accordance with their terms." = "Mit dem Speichern Ihrer Zahlungsinformationen erklären Sie sich damit einverstanden, dass %@ Ihnen zukünftige Zahlungen gemäß den AGB belastet.";
 
 "By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "Indem Sie Ihre Bestellung an %1$@ und %2$@ übermitteln, erklären Sie sich damit einverstanden, Ihre Daten bei %3$@ für künftige Käufe zu speichern und die Zahlungen gemäß <terms>diesen Konditionen</terms> zu autorisieren.";
 
@@ -190,6 +194,10 @@
 
 "Name on card" = "Name auf Karte";
 
+"Naver Pay Card" = "Naver Pay Card";
+
+"Naver Pay Money/Point" = "Naver Pay Money/Point";
+
 "New card" = "Neue Karte";
 
 "New payment method" = "Neue Zahlungsmethode";
@@ -285,6 +293,8 @@
 "Saved" = "Gespeichert";
 
 "Select card" = "Karte auswählen";
+
+"Select how you want to pay:" = "Wählen Sie aus, wie Sie zahlen möchten:";
 
 "Select payment method" = "Zahlungsmethode auswählen";
 

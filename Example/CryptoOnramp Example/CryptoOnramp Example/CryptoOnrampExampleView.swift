@@ -128,14 +128,15 @@ struct CryptoOnrampExampleView: View {
                             ) {
                                 flowCoordinator.advanceAfterRegistration(coordinator: coordinator)
                             }
-                        case let .kycInfo(collectionMode):
+                        case let .kycInfo(collectionMode, initialResidence):
                             KYCInfoView(
                                 coordinator: coordinator,
-                                collectionMode: collectionMode
-                            ) { collectedKYCLevel, isEUCustomer in
+                                collectionMode: collectionMode,
+                                initialResidence: initialResidence
+                            ) { collectedKYCLevel, kycResidence in
                                 flowCoordinator.advanceAfterKyc(
                                     collectedKYCLevel: collectedKYCLevel,
-                                    isEUCustomer: isEUCustomer,
+                                    kycResidence: kycResidence,
                                     coordinator: coordinator
                                 )
                             }
@@ -160,11 +161,11 @@ struct CryptoOnrampExampleView: View {
                             ) { wallet in
                                 flowCoordinator.advanceAfterWalletSelection(wallet)
                             }
-                        case let .payment(wallet, isEUCustomer):
+                        case let .payment(wallet, kycResidence):
                             PaymentView(
                                 coordinator: coordinator,
                                 wallet: wallet,
-                                isEUCustomer: isEUCustomer
+                                kycResidence: kycResidence
                             ) { response, selectedPaymentMethodDescription, settlementSpeed in
                                 flowCoordinator.advanceAfterPayment(
                                     createOnrampSessionResponse: response,

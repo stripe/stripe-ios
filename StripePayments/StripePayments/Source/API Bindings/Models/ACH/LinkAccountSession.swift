@@ -14,6 +14,7 @@ import UIKit
     @_spi(STP) public let stripeID: String
     @_spi(STP) public let livemode: Bool
     @_spi(STP) public let clientSecret: String
+    @_spi(STP) public let permissions: [String]
 
     @_spi(STP) public let allResponseFields: [AnyHashable: Any]
 
@@ -21,11 +22,13 @@ import UIKit
         stripeID: String,
         livemode: Bool,
         clientSecret: String,
+        permissions: [String] = [],
         allResponseFields: [AnyHashable: Any]
     ) {
         self.stripeID = stripeID
         self.livemode = livemode
         self.clientSecret = clientSecret
+        self.permissions = permissions
         self.allResponseFields = allResponseFields
         super.init()
     }
@@ -45,6 +48,7 @@ import UIKit
             stripeID: stripeID,
             livemode: livemode,
             clientSecret: clientSecret,
+            permissions: response["permissions"] as? [String] ?? [],
             allResponseFields: response
         ) as? Self
     }

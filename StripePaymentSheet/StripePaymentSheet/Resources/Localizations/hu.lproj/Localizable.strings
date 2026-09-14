@@ -46,6 +46,8 @@
 
 "Buy now or pay later with Klarna" = "Vegye meg most, vagy fizessen később Klarnával";
 
+"By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "A NICEPAY segítségével történő fizetés megerősítésével Ön engedélyezi %@ számára, hogy a feltételeinek megfelelően a jövőbeli fizetésekhez megterhelje ezt a fizetési módot.";
+
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "A fizetés megerősítésével a PayPalon engedélyezi, hogy a(z) %@ a feltételeinek megfelelően a jövőbeni kifizetésekkel megterhelje a PayPal számláját.";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Az Amazon Payre történő továbblépéssel engedélyezi, hogy a(z) %@ a feltételeinek megfelelően a jövőbeni kifizetésekkel megterhelje az Amazon Pay-számláját.";
@@ -85,6 +87,8 @@
 "By providing your phone number, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Telefonszáma megadásával Ön hozzájárul egy %1$@ számla létrehozásához és a fizetési adatok mentéséhez %1$@ helyre a %1$@ <terms>feltételei</terms> és <privacy>adatvédelmi szabályzata</privacy> szerint.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Azzal, hogy elmenti a bankszámlát a(z) %@ számára, beleegyezik a kifizetések engedélyezésébe ezen <terms>feltételek</terms> szerint.";
+
+"By saving your payment information, you allow %@ to charge you for future payments in accordance with their terms." = "Fizetési adatainak mentésével Ön engedélyezi a(z) %@ számára, hogy a feltételeinek megfelelően terhelje Önt a jövőbeli fizetésekért.";
 
 "By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "Azzal, hogy megrendelését elküldi ide: %1$@ és %2$@, Ön beleegyezik abba, hogy adatait a(z) %3$@ szolgáltatás menti a jövőbeni vásárlásokhoz, illetve beleegyezik abba, hogy engedélyezi a kifizetéseket <terms>a jelen feltételek</terms> szerint.";
 
@@ -190,6 +194,10 @@
 
 "Name on card" = "A kártyán szereplő név";
 
+"Naver Pay Card" = "Naver Pay kártya";
+
+"Naver Pay Money/Point" = "Naver Pay Money/Point";
+
 "New card" = "Új kártya";
 
 "New payment method" = "Új fizetési mód";
@@ -285,6 +293,8 @@
 "Saved" = "Mentett";
 
 "Select card" = "Kártya kiválasztása";
+
+"Select how you want to pay:" = "Válassza ki, hogyan szeretne fizetni:";
 
 "Select payment method" = "Fizetési mód választása";
 

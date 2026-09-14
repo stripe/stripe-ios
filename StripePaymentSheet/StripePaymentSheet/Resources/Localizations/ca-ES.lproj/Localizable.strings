@@ -46,6 +46,8 @@
 
 "Buy now or pay later with Klarna" = "Compra ara o paga més endavant amb Klarna";
 
+"By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "En confirmar el vostre pagament amb NICEPAY, permeteu a %@ carregar aquest mètode de pagament per a futurs pagaments d'acord amb les seves condicions.";
+
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Si confirmeu el pagament amb PayPal, permeteu que %@ faci càrrecs al vostre compte de PayPal per a pagaments en el futur d'acord amb les seves condicions.";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "En continuar a Amazon Pay, permeteu que %@ cobri pagaments futurs al vostre compte de d'Amazon Pay d'acord amb les seves condicions.";
@@ -85,6 +87,8 @@
 "By providing your phone number, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "En proporcionar el número de telèfon, accepteu crear un compte de %1$@ i desar la vostra informació de pagament a %1$@, d'acord amb les <terms>Condicions</terms> i la <privacy>Política de privadesa</privacy> de %1$@.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "En desar el compte bancari per a %@, accepteu l'autorització de pagaments d'acord amb <terms>aquests termes</terms>.";
+
+"By saving your payment information, you allow %@ to charge you for future payments in accordance with their terms." = "En desar la vostra informació de pagament, permeteu que %@ us cobri futurs pagaments d'acord amb les seves condicions.";
 
 "By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "Si envieu la comanda a %1$@ i %2$@, accepteu desar la vostra informació amb %3$@ per a compres futures i accepteu autoritzar els pagaments d'acord amb <terms>aquestes condicions</terms>.";
 
@@ -190,6 +194,10 @@
 
 "Name on card" = "Nom a la targeta";
 
+"Naver Pay Card" = "Targeta de Naver Pay";
+
+"Naver Pay Money/Point" = "Diners/Punt Naver Pay";
+
 "New card" = "Nova targeta";
 
 "New payment method" = "Nou mètode de pagament";
@@ -285,6 +293,8 @@
 "Saved" = "Desat";
 
 "Select card" = "Selecciona una targeta";
+
+"Select how you want to pay:" = "Seleccioneu com voleu pagar:";
 
 "Select payment method" = "Selecciona el mètode de pagament";
 

@@ -46,6 +46,8 @@
 
 "Buy now or pay later with Klarna" = "Ostke nüüd või makske hiljem Klarnaga";
 
+"By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "NICEPAY kaudu makse kinnitamisega lubate ettevõttel %@ debiteerida edaspidi makseid sellelt makseviisilt vastavalt nende tingimustele.";
+
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "PayPaliga makset kinnitades lubate %@-l võtta teie PayPali kontolt tulevaste maksete eest tasu vastavalt nende tingimustele.";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Amazon Payga jätkates lubate %@ teie Amazon Pay kontot tulevaste maksete tegemiseks vastavalt nende tingimustele.";
@@ -85,6 +87,8 @@
 "By providing your phone number, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Sisestades oma telefoninumbri, nõustute looma %1$@ konto ja salvestama makseandmed %1$@ vastavalt %1$@ <terms>tingimustele</terms> ja <privacy>privaatsuseeskirjadele</privacy>.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Salvestades oma pangakonto %@, nõustute maksete autoriseerimisega vastavalt nendele <terms>tingimustele</terms>.";
+
+"By saving your payment information, you allow %@ to charge you for future payments in accordance with their terms." = "Makseandmete salvestamisega lubate ettevõttel %@ teid tulevaste maksete eest vastavalt nende tingimustele debiteerida.";
 
 "By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "Esitades oma tellimuse %1$@ ja %2$@, nõustute salvestama oma andmed %3$@-ga tulevaste ostude jaoks ja nõustute autoriseerima makseid vastavalt <terms>nendele tingimustele</terms>.";
 
@@ -190,6 +194,10 @@
 
 "Name on card" = "Nimi kaardil";
 
+"Naver Pay Card" = "Naver Pay Card";
+
+"Naver Pay Money/Point" = "Naver Pay Money/Point";
+
 "New card" = "Uus kaart";
 
 "New payment method" = "Uus makseviis";
@@ -285,6 +293,8 @@
 "Saved" = "Salvestatud";
 
 "Select card" = "Vali kaart";
+
+"Select how you want to pay:" = "Valige, kuidas soovite maksta:";
 
 "Select payment method" = "Vali makseviis";
 

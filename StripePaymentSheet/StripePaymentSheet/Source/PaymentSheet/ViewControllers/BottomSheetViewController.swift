@@ -13,6 +13,7 @@ import SafariServices
 @_spi(STP) import StripeUICore
 import UIKit
 
+@MainActor
 protocol BottomSheetContentViewController: UIViewController {
 
     /// - Note: Implementing `navigationBar` as a computed variable will result in undefined behavior.

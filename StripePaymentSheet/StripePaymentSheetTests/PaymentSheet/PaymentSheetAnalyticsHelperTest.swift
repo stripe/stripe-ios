@@ -72,6 +72,18 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
         // Extract and separately validate timestamp, since that will always be different
         XCTAssertNotNil(payload.removeValue(forKey: "timestamp"))
         XCTAssertNotNil(expectedPayload.removeValue(forKey: "timestamp"))
+
+        // If analytics are being sent to R:
+        if STPAnalyticsClient.sendAnalyticsToRStripe {
+            // Add in the additional parameter
+            expectedPayload["event_name"] = analytic.event.rawValue
+
+            // Remove parameters that will be different.
+            XCTAssertNotNil(payload.removeValue(forKey: "event_id"))
+            XCTAssertNotNil(expectedPayload.removeValue(forKey: "event_id"))
+            XCTAssertNotNil(payload.removeValue(forKey: "created"))
+            XCTAssertNotNil(expectedPayload.removeValue(forKey: "created"))
+        }
         XCTAssertTrue((payload as NSDictionary).isEqual(to: expectedPayload))
     }
 

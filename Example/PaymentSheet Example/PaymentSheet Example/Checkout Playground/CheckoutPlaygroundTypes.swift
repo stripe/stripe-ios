@@ -7,8 +7,39 @@
 import Foundation
 @_spi(STP) import StripePaymentSheet
 
+extension ExpressCheckoutElement.ApplePayConfiguration.Display: CaseIterable, Identifiable {
+    public static var allCases: [Self] { [.automatic, .never] }
+    public var id: String { rawValue }
+}
+
+extension ExpressCheckoutElement.LinkConfiguration.Display: CaseIterable, Identifiable {
+    public static var allCases: [Self] { [.automatic, .never] }
+    public var id: String { rawValue }
+}
+
+extension ExpressCheckoutElement.Appearance.ButtonTheme: CaseIterable, Identifiable {
+    public static var allCases: [Self] { [.automatic, .light, .dark] }
+    public var id: String { rawValue }
+}
+
+extension ExpressCheckoutElement.BillingDetailsCollectionConfiguration.CollectionMode: @retroactive Identifiable {
+    public var id: String { rawValue }
+}
+
+extension ExpressCheckoutElement.BillingDetailsCollectionConfiguration.AddressCollectionMode: @retroactive Identifiable {
+    public var id: String { rawValue }
+}
+
 enum CheckoutPlayground {
-    enum UIFramework: String, CaseIterable, Identifiable {
+    enum LinkMode: String, CaseIterable, Identifiable, Codable {
+        case native
+        case web
+
+        var id: String { rawValue }
+        var displayName: String { rawValue.capitalized }
+    }
+
+    enum UIFramework: String, CaseIterable, Identifiable, Codable {
 
         case swiftUI
         case uiKit
@@ -23,7 +54,7 @@ enum CheckoutPlayground {
         }
     }
 
-    enum EndpointOption: String, CaseIterable, Identifiable {
+    enum EndpointOption: String, CaseIterable, Identifiable, Codable {
         case hosted
         case localhost
         case manual
@@ -44,15 +75,16 @@ enum CheckoutPlayground {
         var endpoint: String? {
             switch self {
             case .hosted:
-                return "https://stp-mobile-playground-backend-v7.stripedemos.com/checkout_session"
+                return "https://stp-mobile-playground-backend-v7.stripedemos.com"
             case .localhost:
-                return "http://127.0.0.1:8081/checkout_session"
+                return "http://127.0.0.1:8081"
             case .manual:
                 return nil
             }
         }
 
         static func from(endpoint: String) -> Self {
+            let endpoint = normalizedBaseURL(from: endpoint)
             if endpoint == Self.hosted.endpoint {
                 return .hosted
             }
@@ -61,9 +93,21 @@ enum CheckoutPlayground {
             }
             return .manual
         }
+
+        static func normalizedBaseURL(from endpoint: String) -> String {
+            var endpoint = endpoint
+            while endpoint.hasSuffix("/") {
+                endpoint.removeLast()
+            }
+            for legacyPath in ["/checkout_session", "/create_checkout_session"] where endpoint.hasSuffix(legacyPath) {
+                endpoint.removeLast(legacyPath.count)
+                break
+            }
+            return endpoint
+        }
     }
 
-    enum Currency: String, CaseIterable, Identifiable {
+    enum Currency: String, CaseIterable, Identifiable, Codable {
         case usd
         case eur
         case gbp
@@ -91,7 +135,7 @@ enum CheckoutPlayground {
         }
     }
 
-    enum CustomerType: String, CaseIterable, Identifiable {
+    enum CustomerType: String, CaseIterable, Identifiable, Codable {
         case returning
         case new
         case guest
@@ -99,7 +143,7 @@ enum CheckoutPlayground {
         var id: String { rawValue }
     }
 
-    enum AdaptivePricingCountry: String, CaseIterable, Identifiable {
+    enum AdaptivePricingCountry: String, CaseIterable, Identifiable, Codable {
         case none
         case us
         case fr
@@ -123,7 +167,7 @@ enum CheckoutPlayground {
         }
     }
 
-    enum BillingAddressCollection: String, CaseIterable, Identifiable {
+    enum BillingAddressCollection: String, CaseIterable, Identifiable, Codable {
         case automatic
         case required
 
@@ -137,7 +181,7 @@ enum CheckoutPlayground {
         }
     }
 
-    enum DefaultShippingAddressOption: String, CaseIterable, Identifiable {
+    enum DefaultShippingAddressOption: String, CaseIterable, Identifiable, Codable {
 
         case none
         case usTestAddress
@@ -154,7 +198,7 @@ enum CheckoutPlayground {
         }
     }
 
-    struct DefaultShippingAddress: Equatable {
+    struct DefaultShippingAddress: Equatable, Codable {
 
         var name: String
         var line1: String
@@ -189,7 +233,7 @@ enum CheckoutPlayground {
         }
     }
 
-    enum IntegrationType: String, CaseIterable, Identifiable {
+    enum IntegrationType: String, CaseIterable, Identifiable, Codable {
         case flowController
         case embedded
         case eceOnly
@@ -205,40 +249,55 @@ enum CheckoutPlayground {
         }
     }
 
-    enum ExpressCheckoutElementOption: String, CaseIterable, Identifiable {
-        case show
-        case hide
+    struct LineItemConfig: Identifiable, Codable {
+        let id: UUID
+        var name: String
+        var unitAmount: Int
+        var quantity: Int
 
-        var id: String { rawValue }
-
-        var displayName: String {
-            switch self {
-            case .show: return "show"
-            case .hide: return "hide"
-            }
+        init(
+            id: UUID = UUID(),
+            name: String,
+            unitAmount: Int,
+            quantity: Int
+        ) {
+            self.id = id
+            self.name = name
+            self.unitAmount = unitAmount
+            self.quantity = quantity
         }
+
+        static let defaults: [LineItemConfig] = [
+            LineItemConfig(name: "Classic T-Shirt", unitAmount: 3500, quantity: 2),
+            LineItemConfig(name: "Zip-Up Hoodie", unitAmount: 5000, quantity: 1),
+        ]
+
+        static let zeroAmount = [
+            LineItemConfig(name: "Free T-Shirt", unitAmount: 0, quantity: 1),
+        ]
     }
 
-    enum ExpressCheckoutElementButtonTheme: String, CaseIterable, Identifiable {
-        case light
-        case dark
-        case automatic
+    enum CartScenario: String, CaseIterable, Codable, Identifiable {
+        case standard
+        case zeroAmount = "zero_amount"
 
         var id: String { rawValue }
 
         var displayName: String {
             switch self {
-            case .light: return "Light"
-            case .dark: return "Dark"
-            case .automatic: return "Automatic"
+            case .standard:
+                return "Standard cart"
+            case .zeroAmount:
+                return "$0 cart"
             }
         }
 
-        var sdkValue: ExpressCheckoutElement.Appearance.ButtonTheme {
+        var lineItems: [LineItemConfig] {
             switch self {
-            case .light: return .light
-            case .dark: return .dark
-            case .automatic: return .automatic
+            case .standard:
+                return LineItemConfig.defaults
+            case .zeroAmount:
+                return LineItemConfig.zeroAmount
             }
         }
     }
@@ -267,15 +326,30 @@ enum CheckoutPlayground {
         }
     }
 
-    struct LineItemConfig: Identifiable {
-        let id = UUID()
-        var name: String
-        var unitAmount: Int
-        var quantity: Int
+    struct Settings: Codable {
 
-        static let defaults: [LineItemConfig] = [
-            LineItemConfig(name: "Classic T-Shirt", unitAmount: 3500, quantity: 2),
-            LineItemConfig(name: "Zip-Up Hoodie", unitAmount: 5000, quantity: 1),
-        ]
+        var uiFramework: UIFramework = .swiftUI
+        var integrationType: IntegrationType = .flowController
+        var showExpressCheckoutElement = true
+        var linkMode: LinkMode = .native
+        var currency: Currency = .usd
+        var customerType: CustomerType = .guest
+        var cartScenario: CartScenario = .standard
+        var shippingAddressCollection = true
+        var defaultShippingAddressOption: DefaultShippingAddressOption = .none
+        var customDefaultShippingAddress = DefaultShippingAddress.usTestAddress
+        var billingAddressCollection: BillingAddressCollection = .automatic
+        var automaticTax = true
+        var checkoutSessionPaymentMethodSave = true
+        var checkoutSessionPaymentMethodRemove = true
+        var adaptivePricingCountry: AdaptivePricingCountry = .none
+        var automaticPaymentMethods = false
+        var paymentMethodTypes: Set<String> = ["card"]
+        var currencySelectorAppearance = CurrencySelectorElement.Appearance()
+        var checkoutEndpointOption: EndpointOption = .hosted
+        var checkoutEndpoint = EndpointOption.hosted.endpoint ?? ""
+        var delayPaymentPagesRequests = false
+
+        static let nsUserDefaultsKey = "CheckoutPlaygroundSettings"
     }
 }

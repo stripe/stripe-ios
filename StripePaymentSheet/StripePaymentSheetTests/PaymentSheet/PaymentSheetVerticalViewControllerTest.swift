@@ -12,6 +12,7 @@
 @_spi(STP) import StripeUICore
 import XCTest
 
+@MainActor
 final class PaymentSheetVerticalViewControllerTest: XCTestCase {
 
     override func setUpWithError() throws {

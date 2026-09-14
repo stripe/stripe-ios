@@ -11,4 +11,7 @@ import Foundation
 @_spi(CryptoOnrampAlpha)
 public enum IdType: String, Codable, CaseIterable {
     case socialSecurityNumber = "social_security_number"
+    case canadianSocialInsuranceNumber = "ca_sin"
+    case colombianTaxIdentificationNumber = "co_nit"
+    case philippinesTaxpayerIdentificationNumber = "ph_tin"
 }

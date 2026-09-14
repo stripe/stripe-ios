@@ -125,6 +125,30 @@ class STPElementsSessionTest: XCTestCase {
         XCTAssertEqual(elementsSession.linkBrand, .link)
     }
 
+    func testDecodedObjectFromAPIResponseMapping_linkPaymentMethodBankAccountDataConsent() {
+        var elementsSessionJson = STPTestUtils.jsonNamed("ElementsSession")!
+        elementsSessionJson[jsonDict: "link_settings"]?["link_payment_session_context"] = [
+            "link_payment_method_bank_account_data_consent": "carlosmuvi-us can access account and ownership details, balances, and transactions. [Learn more](https://support.stripe.com/user/questions/what-data-does-stripe-access-from-my-linked-financial-account)",
+        ]
+
+        let elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
+
+        XCTAssertEqual(
+            elementsSession.linkSettings?.linkPaymentMethodBankAccountDataConsent,
+            "carlosmuvi-us can access account and ownership details, balances, and transactions. [Learn more](https://support.stripe.com/user/questions/what-data-does-stripe-access-from-my-linked-financial-account)"
+        )
+        XCTAssertEqual(elementsSession.linkPaymentMethodBankAccountDataConsent, elementsSession.linkSettings?.linkPaymentMethodBankAccountDataConsent)
+    }
+
+    func testDecodedObjectFromAPIResponseMapping_linkPaymentMethodBankAccountDataConsent_missing() {
+        let elementsSessionJson = STPTestUtils.jsonNamed("ElementsSession")!
+
+        let elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
+
+        XCTAssertNil(elementsSession.linkSettings?.linkPaymentMethodBankAccountDataConsent)
+        XCTAssertNil(elementsSession.linkPaymentMethodBankAccountDataConsent)
+    }
+
     func testDecodedObjectFromAPIResponseMapping_passiveCaptcha() {
         var elementsSessionJson = STPTestUtils.jsonNamed("ElementsSession")!
         elementsSessionJson["flags"] = ["elements_enable_passive_captcha": true]
@@ -172,6 +196,19 @@ class STPElementsSessionTest: XCTestCase {
         elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
         XCTAssertNotNil(elementsSession.merchantLogoUrl)
         XCTAssertEqual(elementsSession.merchantLogoUrl?.absoluteString, "https://example.com/valid-logo.png")
+    }
+
+    func testDecodedObjectFromAPIResponseMapping_accountID() {
+        // nil account_id
+        var elementsSessionJson = STPTestUtils.jsonNamed("ElementsSession")!
+        elementsSessionJson["account_id"] = nil
+        var elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
+        XCTAssertNil(elementsSession.accountID)
+
+        // valid account_id
+        elementsSessionJson["account_id"] = "acct_1HvTI7Lu5o3P18Zp"
+        elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
+        XCTAssertEqual(elementsSession.accountID, "acct_1HvTI7Lu5o3P18Zp")
     }
 
     func testMissingEPMResponseDoesntFireAnalytic() {

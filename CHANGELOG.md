@@ -2,11 +2,35 @@ The next release's version bump will so far be:
 MINOR
 
 ## X.Y.Z - changes pending release
-### Identity
-* [Added] Added a server-enabled 3D selfie capture flow with guided front, left, and right captures and MediaPipe face-pose detection. ([#6523](https://github.com/stripe/stripe-ios/pull/6523))
-* [Added] Added `IdentityVerificationSheet.Configuration.brandColor` to customize the native flow's primary action buttons.
-* [Changed] StripeIdentity now supports arm64 simulator builds only. Intel Macs and x86_64 simulator destinations are no longer supported.
 
+### General
+* [Added] Added support for Welsh.
+
+### Payments
+* [Added] Added API bindings for Scalapay.
+
+### PaymentSheet
+* [Added] Added support for Scalapay.
+
+## 26.10.0 2026-09-08
+### General
+* [Added] Added support for Arabic (Saudi Arabia).
+
+### CryptoOnramp (Alpha)
+* [Added] Added Canada SIN, Colombia NIT, and Philippines TIN values to `IdType`, and added `idType` to the `KycInfo` initializer.
+
+### PaymentSheet
+* [Added] Added support for Kakao Pay.
+* [Added] Added support for Naver Pay.
+* [Added] Added support for Korean cards.
+* [Added] Added support for PAYCO.
+* [Added] Added support for SeQura.
+
+## 26.9.0 2026-08-31
+### Payments
+* [Added] Added API bindings for Kakao Pay, SeQura, Korean cards, Naver Pay, and PAYCO.
+
+## 26.8.0 2026-08-24
 ### Payments
 * [Added] Added support for the following FPX banks: Agrobank, Bank of China, and MBSB Bank.
 * [Fixed] Fixed an issue where card decline error messages became generic after 3DS authentication.
@@ -16,6 +40,7 @@ MINOR
 
 ## 26.7.0 2026-08-17
 ### PaymentSheet
+* [Fixed] Fixed FlowController not presenting the Link sheet when tapping Link in the horizontal payment method layout.
 * [Added] StripePaymentSheet now depends on `StripeFinancialConnectionsLite` to support lightweight bank payment flows. If you use StripePaymentSheet with Carthage or by manually embedding the .xcframeworks, [you must also embed StripeFinancialConnectionsLite.xcframework](https://github.com/stripe/stripe-ios/blob/master/MIGRATING.md#migrating-from-versions--2670) in your app. No action is required for CocoaPods or Swift Package Manager users.
 * [Added] Added private preview support for setting up Alipay payment methods for future off-session use with PaymentIntents and SetupIntents.
 * [Changed] Address autocomplete results sourced from internal service.

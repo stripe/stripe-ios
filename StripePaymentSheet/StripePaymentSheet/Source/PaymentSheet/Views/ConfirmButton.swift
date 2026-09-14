@@ -33,6 +33,7 @@ class ConfirmButton: UIControl {
         case custom(title: String)
         case customWithLock(title: String)
 
+        @MainActor
         static func makeDefaultType(intent: Intent, withLock: Bool = true) -> Self {
             switch intent {
             case .paymentIntent(let paymentIntent):
@@ -48,11 +49,11 @@ class ConfirmButton: UIControl {
                 }
             case .checkout(let session):
                 guard !session.noPaymentRequired else { return .setup }
-                guard let amount = session.expectedAmount(), let currency = session.activePresentmentCurrency else {
-                    stpAssertionFailure("Checkout session is missing amount or currency")
+                guard let currency = session.activePresentmentCurrency else {
+                    stpAssertionFailure("Checkout session is missing currency")
                     return .setup
                 }
-                return .pay(amount: amount, currency: currency, withLock: withLock)
+                return .pay(amount: session.amount, currency: currency, withLock: withLock)
             }
         }
     }

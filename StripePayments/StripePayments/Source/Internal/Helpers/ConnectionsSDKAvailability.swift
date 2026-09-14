@@ -95,6 +95,7 @@ final class StubbedConnectionsSDKInterface: FinancialConnectionsSDKInterface {
         clientSecret: String,
         returnURL: String?,
         existingConsumer: FinancialConnectionsConsumer?,
+        hasRequestedDataPermissions: Bool,
         style: FinancialConnectionsStyle,
         elementsSessionContext: ElementsSessionContext?,
         linkBrand: LinkBrand?,

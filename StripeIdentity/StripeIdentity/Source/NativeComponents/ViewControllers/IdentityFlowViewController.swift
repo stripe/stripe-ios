@@ -40,8 +40,7 @@ class IdentityFlowViewController: UIViewController {
 
         if shouldShowCancelButton {
             navigationItem.rightBarButtonItem = UIBarButtonItem(
-                title: String.Localized.cancel,
-                style: .plain,
+                barButtonSystemItem: .close,
                 target: self,
                 action: #selector(didTapCancelButton)
             )
@@ -104,10 +103,7 @@ class IdentityFlowViewController: UIViewController {
         ) {
         navigationItem.backButtonTitle = backButtonTitle
         do {
-            try flowView.configure(
-                with: viewModel,
-                primaryButtonColor: sheetController?.flowController.brandColor
-            )
+            try flowView.configure(with: viewModel)
         } catch {
             if let sheetController = sheetController {
                 sheetController.analyticsClient.logGenericError(

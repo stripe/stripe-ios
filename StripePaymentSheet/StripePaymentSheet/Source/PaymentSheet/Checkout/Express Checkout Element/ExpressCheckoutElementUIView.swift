@@ -18,14 +18,14 @@ public final class ExpressCheckoutElementUIView: UIView {
 
     // MARK: - Private Properties
 
-    private let configuration: CheckoutController.Configuration
+    private let configuration: ExpressCheckoutElement.Configuration
     private let stackView = UIStackView()
     private var linkBrand: LinkBrand
     private weak var delegate: ExpressCheckoutElementDelegate?
 
     // MARK: - Init
 
-    init(session: CheckoutController.Session, configuration: CheckoutController.Configuration, delegate: ExpressCheckoutElementDelegate) {
+    init(session: CheckoutController.Session, configuration: ExpressCheckoutElement.Configuration, delegate: ExpressCheckoutElementDelegate) {
         self.configuration = configuration
         self.delegate = delegate
         self.linkBrand = session.elementsSession.linkBrand ?? .link
@@ -79,7 +79,7 @@ public final class ExpressCheckoutElementUIView: UIView {
             $0.removeFromSuperview()
         }
 
-        let layout = configuration.expressCheckoutElement.appearance.buttonLayout
+        let layout = configuration.appearance.buttonLayout
         let columns: Int
         if let maxColumns = layout.maxColumns {
             columns = max(maxColumns, 1)
@@ -139,7 +139,7 @@ public final class ExpressCheckoutElementUIView: UIView {
 
     /// `PayWithLinkButton` always uses Link's brand color, so `buttonTheme` only affects the Apple Pay button.
     private var applePayButtonStyle: PKPaymentButtonStyle {
-        switch configuration.expressCheckoutElement.appearance.buttonTheme {
+        switch configuration.appearance.buttonTheme {
         case .light:
             return .white
         case .dark:
@@ -154,7 +154,7 @@ public final class ExpressCheckoutElementUIView: UIView {
     }
 
     @objc private func handleLinkTapped() {
-        // TODO: Handle Link
+        confirm(.link)
     }
 
     private func confirm(_ paymentMethod: ExpressCheckoutElement.PaymentMethod) {
@@ -164,7 +164,7 @@ public final class ExpressCheckoutElementUIView: UIView {
                 paymentMethod,
                 presentationWindow: window
             ) else { return }
-            self.configuration.expressCheckoutElement.confirmHandler(result)
+            self.configuration.confirmHandler(result)
         }
     }
 }

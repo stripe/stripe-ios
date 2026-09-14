@@ -35,6 +35,7 @@ final class PayWithLinkButton: UIControl {
         let isRegistered: Bool
         let sessionState: PaymentSheetLinkAccount.SessionState
         let consumerSessionClientSecret: String?
+        let linkSessionKey: String?
     }
 
     /// Link account of the current user.
@@ -536,7 +537,8 @@ private func makeAccountStub(email: String, isRegistered: Bool, lastPM: LinkPMDi
         redactedPhoneNumber: nil,
         isRegistered: isRegistered,
         sessionState: .verified,
-        consumerSessionClientSecret: nil
+        consumerSessionClientSecret: nil,
+        linkSessionKey: nil
     )
 }
 

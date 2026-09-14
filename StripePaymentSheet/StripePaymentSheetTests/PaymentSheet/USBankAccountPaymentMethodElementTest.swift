@@ -13,6 +13,7 @@
 @testable@_spi(STP) import StripeUICore
 import XCTest
 
+@MainActor
 final class USBankAccountPaymentMethodElementTest: XCTestCase {
     let window: UIWindow = UIWindow(frame: .init(x: 0, y: 0, width: 428, height: 926))
 

@@ -65,7 +65,7 @@ private func settingMatchesSearch(_ settingName: String, searchText: String) -> 
 }
 
 /// Checks if a PickerEnum setting matches the search text by name or any of its values.
-/// e.g., searching "CheckoutSession" matches the "Type" setting, "usd" matches "Currency"
+/// e.g., searching "Client-side" matches the "Type" setting, "usd" matches "Currency"
 private func pickerEnumMatchesSearch<S: PickerEnum>(_ enumType: S.Type, searchText: String) -> Bool {
     if searchText.isEmpty { return true }
     if settingMatchesSearch(S.enumName, searchText: searchText) { return true }

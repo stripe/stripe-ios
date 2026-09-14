@@ -19,8 +19,7 @@ final class FaceScanner {
         static let minDuration: Double = 0.1
     }
 
-    private let faceDetector: FaceDetector?
-    private let faceGeometryDetector: FaceGeometryDetector?
+    private let faceDetector: FaceDetector
     private let configuration: Configuration
     private let motionBlurDetector: MotionBlurDetector
 
@@ -29,7 +28,6 @@ final class FaceScanner {
         configuration: Configuration
     ) {
         self.faceDetector = faceDetector
-        self.faceGeometryDetector = nil
         self.configuration = configuration
         self.motionBlurDetector = MotionBlurDetector(
             minIOU: MotionBlurGate.minIOU,
@@ -52,26 +50,13 @@ final class FaceScanner {
             configuration: configuration
         )
     }
-
-    init(
-        faceGeometryDetector: FaceGeometryDetector,
-        configuration: Configuration
-    ) {
-        self.faceDetector = nil
-        self.faceGeometryDetector = faceGeometryDetector
-        self.configuration = configuration
-        self.motionBlurDetector = MotionBlurDetector(
-            minIOU: MotionBlurGate.minIOU,
-            minTime: MotionBlurGate.minDuration
-        )
-    }
 }
 
 extension FaceScanner: ImageScanner {
     typealias Output = FaceScannerOutput
 
     var mlModelMetricsTrackers: [MLDetectorMetricsTrackerProtocol] {
-        return [faceDetector].compactMap { $0?.metricsTracker }
+        return [faceDetector].compactMap { $0.metricsTracker }
     }
 
     func scanImage(
@@ -80,23 +65,7 @@ extension FaceScanner: ImageScanner {
         cameraProperties: CameraSession.DeviceProperties?
     ) -> StripeCore.Future<FaceScannerOutput> {
         do {
-            let faceDetectorOutput: FaceDetectorOutput
-            let facePose: FacePose?
-            let faceLandmarkResult: String?
-            if let faceGeometryDetector {
-                let faceGeometry = try faceGeometryDetector.detectFace(pixelBuffer: pixelBuffer)
-                faceDetectorOutput = faceGeometry?.faceDetectorOutput ?? .init(predictions: [])
-                facePose = faceGeometry?.facePose
-                faceLandmarkResult = faceGeometry?.faceLandmarkResult
-            } else if let faceDetector {
-                faceDetectorOutput = try faceDetector.scanImage(pixelBuffer: pixelBuffer)
-                facePose = nil
-                faceLandmarkResult = nil
-            } else {
-                faceDetectorOutput = .init(predictions: [])
-                facePose = nil
-                faceLandmarkResult = nil
-            }
+            let faceDetectorOutput = try faceDetector.scanImage(pixelBuffer: pixelBuffer)
             return Promise(
                 value: .init(
                     faceDetectorOutput: faceDetectorOutput,
@@ -104,9 +73,7 @@ extension FaceScanner: ImageScanner {
                     configuration: configuration,
                     motionBlurResult: motionBlurResult(
                         faceDetectorOutput: faceDetectorOutput
-                    ),
-                    facePose: facePose,
-                    faceLandmarkResult: faceLandmarkResult
+                    )
                 )
             )
         } catch {
@@ -117,8 +84,7 @@ extension FaceScanner: ImageScanner {
 
     func reset() {
         motionBlurDetector.reset()
-        faceDetector?.metricsTracker?.reset()
-        faceGeometryDetector?.reset()
+        faceDetector.metricsTracker?.reset()
     }
 }
 

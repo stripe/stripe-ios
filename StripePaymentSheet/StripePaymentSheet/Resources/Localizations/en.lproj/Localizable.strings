@@ -71,6 +71,9 @@
 /* Subtitle shown on a button allowing a user to select to pay with Clearpay. */
 "Buy Now, Pay Later with Clearpay" = "Buy Now, Pay Later with Clearpay";
 
+/* Korean payment method mandate text */
+"By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms.";
+
 /* Paypal mandate text */
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms.";
 
@@ -291,6 +294,12 @@ with the transaction. */
 /* Label for name on card field */
 "Name on card" = "Name on card";
 
+/* Naver Pay card funding source */
+"Naver Pay Card" = "Naver Pay Card";
+
+/* Naver Pay money or points funding source */
+"Naver Pay Money/Point" = "Naver Pay Money/Point";
+
 /* Label of a button that appears on a checkout screen. When tapped, it displays a credit card form. This button is shown next to another button representing the customer's saved card; the word 'new' is meant to differentiate this button's action with the saved card button. */
 "New card" = "New card";
 
@@ -435,6 +444,9 @@ e.g, 'Pay faster at Example, Inc. and thousands of businesses.' */
 
 /* Title shown above a view containing the customer's card payment methods */
 "Select card" = "Select card";
+
+/* Label for the Naver Pay funding source selector */
+"Select how you want to pay:" = "Select how you want to pay:";
 
 /* Title shown above a view containing the customer's payment methods */
 "Select payment method" = "Select payment method";

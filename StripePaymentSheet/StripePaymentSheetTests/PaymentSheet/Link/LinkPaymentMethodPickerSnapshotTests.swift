@@ -114,10 +114,10 @@ class LinkPaymentMethodPickerSnapshotTests: STPSnapshotTestCase {
         verify(picker)
     }
 
-    func testUnknownPaymentMethodWithDisplayMetadata() {
+    func testGenericPaymentMethodWithDisplayMetadata() {
         let paymentMethods = LinkStubs.paymentMethods()
         let mockDataSource = MockDataSource(paymentMethods: paymentMethods)
-        mockDataSource.selectedIndex = LinkStubs.PaymentMethodIndices.unknownWithDisplay
+        mockDataSource.selectedIndex = LinkStubs.PaymentMethodIndices.genericWithDisplay
 
         let picker = LinkPaymentMethodPicker()
         picker.dataSource = mockDataSource

@@ -11,7 +11,7 @@
 import UIKit
 
 protocol IdentityFlowViewDelegate: AnyObject {
-    func scrollViewFullyLaidOut(_ scrollView: UIScrollView)
+    func scrollViewFullyLaiedOut(_ scrollView: UIScrollView)
 }
 
 // swift-format-ignore: DontRepeatTypeInStaticProperties
@@ -41,13 +41,8 @@ class IdentityFlowView: UIView {
         )
         static let stackViewSpacing: CGFloat = 8
 
-        static func buttonConfiguration(
-            isPrimary: Bool,
-            primaryButtonColor: UIColor?
-        ) -> Button.Configuration {
-            return isPrimary
-                ? .identityPrimary(backgroundColor: primaryButtonColor)
-                : .identitySecondary()
+        static func buttonConfiguration(isPrimary: Bool) -> Button.Configuration {
+            return isPrimary ? .identityPrimary() : .identitySecondary()
         }
     }
 
@@ -164,16 +159,10 @@ class IdentityFlowView: UIView {
     /// - Note: This method changes the view hierarchy and activates new
     /// constraints which can affect screen render performance. It should only be
     /// called from a view controller's `init` or `viewDidLoad`.
-    func configure(
-        with viewModel: ViewModel,
-        primaryButtonColor: UIColor? = nil
-    ) throws {
+    func configure(with viewModel: ViewModel) throws {
         configureHeaderView(with: viewModel.headerViewModel)
         configureContentView(with: viewModel.contentViewModel)
-        configureButtons(
-            with: viewModel.buttons,
-            primaryButtonColor: primaryButtonColor
-        )
+        configureButtons(with: viewModel.buttons)
         try configureButtonTop(with: viewModel.buttonTopContentViewModel)
         flowViewDelegate = viewModel.flowViewDelegate
         if let scrollViewDelegate = viewModel.scrollViewDelegate {
@@ -204,7 +193,7 @@ class IdentityFlowView: UIView {
         scrollView.contentInset.bottom = bottomInset
 
         if scrollView.contentSize.height > 0 {
-            flowViewDelegate?.scrollViewFullyLaidOut(scrollView)
+            flowViewDelegate?.scrollViewFullyLaiedOut(scrollView)
         }
 
         initialScrollViewBottomInsect = scrollView.contentInset.bottom
@@ -295,10 +284,7 @@ extension IdentityFlowView {
 // MARK: - Private Helpers: View Configurations
 
 extension IdentityFlowView {
-    fileprivate func configureButtons(
-        with buttonViewModels: [ViewModel.Button],
-        primaryButtonColor: UIColor?
-    ) {
+    fileprivate func configureButtons(with buttonViewModels: [ViewModel.Button]) {
         // If there are no buttons to display, hide the container view
         guard buttonViewModels.count > 0 else {
             buttonBackgroundView.isHidden = true
@@ -311,10 +297,7 @@ extension IdentityFlowView {
         defer {
             // Configure buttons
             zip(buttonViewModels, buttons).forEach { (viewModel, button) in
-                button.configure(
-                    with: viewModel,
-                    primaryButtonColor: primaryButtonColor
-                )
+                button.configure(with: viewModel)
             }
 
             // Cache tap actions
@@ -460,14 +443,10 @@ extension StripeUICore.Button {
         return tag
     }
 
-    fileprivate func configure(
-        with viewModel: IdentityFlowView.ViewModel.Button,
-        primaryButtonColor: UIColor?
-    ) {
+    fileprivate func configure(with viewModel: IdentityFlowView.ViewModel.Button) {
         self.title = viewModel.text
         self.configuration = IdentityFlowView.Style.buttonConfiguration(
-            isPrimary: viewModel.isPrimary,
-            primaryButtonColor: primaryButtonColor
+            isPrimary: viewModel.isPrimary
         )
         self.isEnabled = viewModel.state == .enabled
         self.isLoading = viewModel.state == .loading
@@ -482,20 +461,8 @@ extension Button.Configuration {
     }
 
     /// The default button configuration.
-    static func identityPrimary(backgroundColor: UIColor? = nil) -> Self {
+    static func identityPrimary() -> Self {
         var configuration: Button.Configuration = .primary()
-        if let backgroundColor {
-            let resolvedBackgroundColor = backgroundColor.resolvedColor(
-                with: UITraitCollection.current
-            )
-            let blackContrastRatio = resolvedBackgroundColor.contrastRatio(to: .black)
-            let whiteContrastRatio = resolvedBackgroundColor.contrastRatio(to: .white)
-
-            configuration.backgroundColor = resolvedBackgroundColor
-            configuration.foregroundColor = blackContrastRatio > whiteContrastRatio
-                ? .black
-                : .white
-        }
         configuration.font = buttonFont
         configuration.disabledForegroundColor = .systemGray
         return configuration

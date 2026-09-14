@@ -46,6 +46,8 @@
 
 "Buy now or pay later with Klarna" = "Klarna で後払い";
 
+"By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "NICEPAY による支払いを確定すると、%@ が規約に従って今後の支払いをこの決済手段に請求することを許可することになります。";
+
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "PayPal による支払いを確定すると、%@ が規約に従って今後の支払いをお客様の PayPal アカウントに請求することを許可することになります。";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Amazon Pay への処理を続行すると、%@ が規約に従って今後の支払いをお客様の Amazon Pay アカウントに請求することを許可することになります。";
@@ -85,6 +87,8 @@
 "By providing your phone number, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "電話番号を提供するには、%1$@ の<terms>規約</terms>と<privacy>プライバシーポリシー</privacy>に同意した上で、%1$@ アカウントを作成し、決済情報を %1$@ に保存してください。";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "%@ の銀行口座を保存すると、<terms>これらの規約</terms>に従って支払いをオーソリすることに同意したものと見なされます。";
+
+"By saving your payment information, you allow %@ to charge you for future payments in accordance with their terms." = "決済情報を保存することにより、お客様は %@ が利用規約に従い今後の決済について請求することを許可することになります";
 
 "By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "ご注文を %1$@ および %2$@ に送信することにより、お客様は今後の購入のためにお客様の情報を %3$@ に保存することに同意し、<terms>本規約</terms>に従って支払いをオーソリすることに同意したものとみなされます。";
 
@@ -190,6 +194,10 @@
 
 "Name on card" = "カード名義人";
 
+"Naver Pay Card" = "Naver Pay カード";
+
+"Naver Pay Money/Point" = "Naver Pay マネー / ポイント";
+
 "New card" = "新しいカード";
 
 "New payment method" = "新しい決済手段";
@@ -285,6 +293,8 @@
 "Saved" = "保存済み";
 
 "Select card" = "カードを選択する";
+
+"Select how you want to pay:" = "支払い方法を選択してください:";
 
 "Select payment method" = "決済手段を選択する";
 

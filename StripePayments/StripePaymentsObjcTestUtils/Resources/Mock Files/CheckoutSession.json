@@ -234,6 +234,7 @@
   },
   "elements_session": {
     "business_name": "CI Stuff",
+    "merchant_country": "US",
     "session_id": "elements_session_test123",
     "payment_method_preference": {
       "ordered_payment_method_types": ["card"]

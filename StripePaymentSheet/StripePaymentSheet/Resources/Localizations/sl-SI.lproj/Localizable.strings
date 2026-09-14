@@ -46,6 +46,8 @@
 
 "Buy now or pay later with Klarna" = "Kupite zdaj ali pa za plačilo pozneje uporabite Klarna";
 
+"By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "S potrditvijo plačila s storitvijo NICEPAY dovoljujete, da %@ bremeni ta način plačila za prihodnja plačila v skladu z njihovimi pogoji.";
+
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "S potrditvijo plačila s storitvijo PayPal pooblaščate podjetje %@, da bremeni vaš račun za PayPal s prihodnjimi plačili v skladu s pogoji podjetja.";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Če potrdite preusmeritev v storitev Amazon Pay, pooblaščate podjetje %@, da bremeni vaš račun Amazon Pay s prihodnjimi plačili v skladu s pogoji podjetja.";
@@ -85,6 +87,8 @@
 "By providing your phone number, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Z navedbo svoje telefonske številke se strinjate, da boste ustvarili račun ponudnika %1$@ in shranite plačilne podatke na %1$@ v skladu s <terms>Pogoji</terms> in <privacy>Pravilnikom o zasebnosti</privacy> ponudnika %1$@.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Če shranite bančni račun za %@, se strinjate z odobritvijo plačil v skladu s <terms>temi pogoji</terms>.";
+
+"By saving your payment information, you allow %@ to charge you for future payments in accordance with their terms." = "S shranjevanjem svojih podatkov za plačilo dovoljujete, da vas %@ bremeni za prihodnja plačila v skladu z njihovimi pogoji.";
 
 "By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "Z oddajo naročila %1$@ in %2$@ se strinjate, da bodo vaši podatki shranjeni pri %3$@ za prihodnje nakupe, in se strinjate, da boste odobrili plačila v skladu s <terms>temi pogoji</terms>.";
 
@@ -190,6 +194,10 @@
 
 "Name on card" = "Ime na kartici";
 
+"Naver Pay Card" = "Naver Pay Card";
+
+"Naver Pay Money/Point" = "Naver Pay Money/Point";
+
 "New card" = "Nova kartica";
 
 "New payment method" = "Nov način plačila";
@@ -285,6 +293,8 @@
 "Saved" = "Shranjeno";
 
 "Select card" = "Izberite kartico";
+
+"Select how you want to pay:" = "Izberite, kako želite plačati:";
 
 "Select payment method" = "Izberite način plačila";
 

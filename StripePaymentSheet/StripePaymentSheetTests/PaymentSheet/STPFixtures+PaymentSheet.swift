@@ -73,6 +73,7 @@ extension STPElementsSession {
         countryCode: String? = nil,
         merchantCountryCode: String? = nil,
         merchantLogoUrl: URL? = nil,
+        accountID: String? = nil,
         linkSettings: LinkSettings? = nil,
         experimentsData: ExperimentsData? = nil,
         flags: [String: Bool] = [:],
@@ -93,6 +94,7 @@ extension STPElementsSession {
             countryCode: countryCode,
             merchantCountryCode: merchantCountryCode,
             merchantLogoUrl: merchantLogoUrl,
+            accountID: accountID,
             linkSettings: linkSettings,
             experimentsData: experimentsData,
             flags: flags,
@@ -212,6 +214,7 @@ extension STPElementsSession {
         return elementsSession
     }
 
+    @MainActor
     static func _testValue(
         intent: Intent,
         isLinkPassthroughModeEnabled: Bool? = nil,
@@ -462,6 +465,7 @@ extension PaymentSheet.Appearance {
 }
 
 extension PaymentSheetLoader.LoadResult {
+    @MainActor
     static func _testValue(paymentMethodTypes: [String], savedPaymentMethods: [STPPaymentMethod]) -> Self {
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD")) { _, _ in return "" }
         let elementsSession = STPElementsSession._testValue(
@@ -489,6 +493,7 @@ extension PaymentSheetLoader.LoadResult {
 }
 
 extension PaymentMethodMessagingPromotionsHelper {
+    @MainActor
     static func _testValue() -> PaymentMethodMessagingPromotionsHelper? {
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD")) { _, _ in return "" }
         let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"])

@@ -419,6 +419,86 @@ extension PaymentSheet.Appearance: @retroactive Codable {
     }
 }
 
+extension CurrencySelectorElement.Appearance: @retroactive Codable {
+
+    private enum CodingKeys: String, CodingKey {
+        case contentVerticalPadding
+        case cornerRadius
+        case borderWidth
+        case border
+        case background
+        case selectedBackground
+        case fontDescriptor
+        case sizeScaleFactor
+        case text
+        case selectedText
+        case textSecondary
+        case danger
+        case labelContent
+    }
+
+    public init(from decoder: Decoder) throws {
+        self.init()
+
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        contentVerticalPadding = try container.decode(CGFloat.self, forKey: .contentVerticalPadding)
+        cornerRadius = try container.decode(CGFloat.self, forKey: .cornerRadius)
+        borderWidth = try container.decode(CGFloat.self, forKey: .borderWidth)
+        border = try container.decode(CodableUIColor.self, forKey: .border).uiColor
+        background = try container.decode(CodableUIColor.self, forKey: .background).uiColor
+        selectedBackground = try container.decode(CodableUIColor.self, forKey: .selectedBackground).uiColor
+
+        let fontDescriptorData = try container.decode(Data.self, forKey: .fontDescriptor)
+        guard let fontDescriptor = try NSKeyedUnarchiver.unarchivedObject(ofClass: UIFontDescriptor.self, from: fontDescriptorData) else {
+            throw AppearanceCodableError(description: "Failed to decode currency selector font descriptor")
+        }
+        font = UIFont(descriptor: fontDescriptor, size: 14)
+        sizeScaleFactor = try container.decode(CGFloat.self, forKey: .sizeScaleFactor)
+
+        text = try container.decode(CodableUIColor.self, forKey: .text).uiColor
+        selectedText = try container.decode(CodableUIColor.self, forKey: .selectedText).uiColor
+        textSecondary = try container.decode(CodableUIColor.self, forKey: .textSecondary).uiColor
+        danger = try container.decode(CodableUIColor.self, forKey: .danger).uiColor
+
+        switch try container.decode(String.self, forKey: .labelContent) {
+        case "automatic":
+            labelContent = .automatic
+        case "currencyCode":
+            labelContent = .currencyCode
+        case "amount":
+            labelContent = .amount
+        default:
+            throw AppearanceCodableError(description: "Unknown currency selector label content")
+        }
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(contentVerticalPadding, forKey: .contentVerticalPadding)
+        try container.encode(cornerRadius, forKey: .cornerRadius)
+        try container.encode(borderWidth, forKey: .borderWidth)
+        try container.encode(CodableUIColor(color: border), forKey: .border)
+        try container.encode(CodableUIColor(color: background), forKey: .background)
+        try container.encode(CodableUIColor(color: selectedBackground), forKey: .selectedBackground)
+
+        let fontDescriptorData = try NSKeyedArchiver.archivedData(withRootObject: font.fontDescriptor, requiringSecureCoding: false)
+        try container.encode(fontDescriptorData, forKey: .fontDescriptor)
+        try container.encode(sizeScaleFactor, forKey: .sizeScaleFactor)
+
+        try container.encode(CodableUIColor(color: text), forKey: .text)
+        try container.encode(CodableUIColor(color: selectedText), forKey: .selectedText)
+        try container.encode(CodableUIColor(color: textSecondary), forKey: .textSecondary)
+        try container.encode(CodableUIColor(color: danger), forKey: .danger)
+
+        let labelContentString = switch labelContent {
+        case .automatic: "automatic"
+        case .currencyCode: "currencyCode"
+        case .amount: "amount"
+        }
+        try container.encode(labelContentString, forKey: .labelContent)
+    }
+}
+
 private struct AppearanceCodableError: Error {
     let description: String
 }

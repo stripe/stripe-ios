@@ -213,7 +213,7 @@ extension LinkPaymentMethodPicker {
                 switch paymentMethod.details {
                 case .card(let card):
                     return card.hasExpired
-                case .bankAccount, .unparsable:
+                case .bankAccount, .generic:
                     return false
                 }
             }

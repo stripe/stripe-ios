@@ -12,10 +12,6 @@ import UIKit
 
 final class SuccessViewController: IdentityFlowViewController {
 
-    private enum Styling {
-        static let iconSize = CGSize(width: 32, height: 32)
-    }
-
     private let htmlView = HTMLViewWithIconLabels()
 
     init(
@@ -36,7 +32,6 @@ final class SuccessViewController: IdentityFlowViewController {
             try htmlView.configure(
                 with: .init(
                     bodyHtmlString: successContent.body,
-                    shouldCenterBodyText: true,
                     didOpenURL: { [weak self] url in
                         self?.openInSafariViewController(url: url)
                     }
@@ -46,33 +41,28 @@ final class SuccessViewController: IdentityFlowViewController {
             sheetController.analyticsClient.logGenericError(error: error, sheetController: sheetController)
         }
 
-        let clockIcon = Image.iconClock.makeImage(template: true)
-        let largeClockIcon = clockIcon.resized(to: Styling.iconSize) ?? clockIcon
-        var flowViewModel = IdentityFlowView.ViewModel(
-            headerViewModel: .init(
-                backgroundColor: .systemBackground,
-                headerType: .banner(
-                    iconViewModel: .init(
-                        iconType: .plain,
-                        iconImage: largeClockIcon,
-                        iconImageContentMode: .center,
-                        iconTintColor: .white,
-                        shouldIconBackgroundMatchTintColor: true,
-                        useLargeIcon: true
-                    )
-                ),
-                titleText: successContent.title
-            ),
-            contentView: htmlView,
-            buttonText: successContent.buttonText,
-            didTapButton: { [weak self] in
-                self?.didTapButton()
-            }
-        )
-        flowViewModel.flowViewDelegate = self
         configure(
             backButtonTitle: nil,
-            viewModel: flowViewModel
+            viewModel: .init(
+                headerViewModel: .init(
+                    backgroundColor: .systemBackground,
+                    headerType: .banner(
+                        iconViewModel: .init(
+                            iconType: .plain,
+                            iconImage: Image.iconClock.makeImage(template: true),
+                            iconImageContentMode: .center,
+                            iconTintColor: .white,
+                            shouldIconBackgroundMatchTintColor: true
+                        )
+                    ),
+                    titleText: successContent.title
+                ),
+                contentView: htmlView,
+                buttonText: successContent.buttonText,
+                didTapButton: { [weak self] in
+                    self?.didTapButton()
+                }
+            )
         )
     }
 
@@ -86,20 +76,5 @@ final class SuccessViewController: IdentityFlowViewController {
 extension SuccessViewController {
     fileprivate func didTapButton() {
         dismiss(animated: true, completion: nil)
-    }
-}
-
-extension SuccessViewController: IdentityFlowViewDelegate {
-    func scrollViewFullyLaidOut(_ scrollView: UIScrollView) {
-        let availableHeight = scrollView.bounds.height - scrollView.adjustedContentInset.bottom
-        let centeredTopInset = max(0, (availableHeight - scrollView.contentSize.height) / 2)
-
-        guard scrollView.contentInset.top != centeredTopInset else {
-            return
-        }
-
-        scrollView.contentInset.top = centeredTopInset
-        scrollView.verticalScrollIndicatorInsets.top = centeredTopInset
-        scrollView.contentOffset.y = -scrollView.adjustedContentInset.top
     }
 }

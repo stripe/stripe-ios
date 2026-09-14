@@ -19,7 +19,6 @@ final class VerificationSheetFlowControllerMock: VerificationSheetFlowController
     var uncollectedFields: Set<StripeAPI.VerificationPageFieldType>
     var isFinishedCollecting = false
     var analyticsLastScreen: IdentityFlowViewController?
-    var brandColor: UIColor?
 
     var visitedIndividualWelcomePage = false
 
@@ -74,8 +73,7 @@ final class VerificationSheetFlowControllerMock: VerificationSheetFlowController
 
     func transitionToSelfieCaptureScreen(
         staticContentResult: Result<StripeCore.StripeAPI.VerificationPage, Error>,
-        sheetController: StripeIdentity.VerificationSheetControllerProtocol,
-        trainingConsent: Bool?
+        sheetController: StripeIdentity.VerificationSheetControllerProtocol
     ) {
         // no-op
     }

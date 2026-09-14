@@ -13,6 +13,7 @@ import Foundation
 class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPI {
     var backingAPIClient: STPAPIClient = .shared
     var isLinkWithStripe: Bool = false
+    var hasRequestedDataPermissions: Bool = false
     var consumerPublishableKey: String?
     var consumerSession: StripeFinancialConnections.ConsumerSessionData?
     var authenticatedLinkBrand: LinkBrand?

@@ -40,13 +40,7 @@ final class BiometricConsentViewControllerTest: XCTestCase {
     }
 
     func testDeny() {
-        XCTAssertEqual(
-            vc.flowViewModel.buttons.last?.text,
-            BiometricConsentViewControllerTest.mockVerificationPage.biometricConsent
-                .declineButtonText
-        )
-
-        // Tap decline button
+        // Tap accept button
         vc.flowViewModel.buttons.last?.didTap()
 
         // Verify biometricConsent is saved

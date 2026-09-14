@@ -14,6 +14,7 @@ import OHHTTPStubsSwift
 import StripeCoreTestUtils
 import XCTest
 
+@MainActor
 class LinkURLGeneratorTests: XCTestCase {
     override func setUp() {
         super.setUp()

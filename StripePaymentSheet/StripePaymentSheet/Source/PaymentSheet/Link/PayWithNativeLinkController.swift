@@ -14,6 +14,7 @@ import UIKit
 /// Standalone Link controller
 @available(iOSApplicationExtension, unavailable)
 @available(macCatalystApplicationExtension, unavailable)
+@MainActor
 final class PayWithNativeLinkController {
     typealias ConfirmHandler = (STPAuthenticationContext, Intent, STPElementsSession, PaymentOption, @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void) -> Void
 

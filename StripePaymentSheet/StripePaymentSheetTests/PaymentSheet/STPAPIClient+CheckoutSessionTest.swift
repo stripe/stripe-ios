@@ -14,6 +14,49 @@ import XCTest
 
 final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
 
+    func testRetrieveCheckoutSession() async throws {
+        // Given an initialized Checkout Session
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession()
+        let sessionId = checkoutSessionResponse.id
+        let apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
+        _ = try await apiClient.initCheckoutSession(
+            checkoutSessionId: sessionId,
+            adaptivePricingAllowed: false
+        )
+
+        // When the full session is retrieved
+        let response = try await apiClient.retrieveCheckoutSession(
+            checkoutSessionId: sessionId
+        )
+
+        // Then the latest full Checkout Session is returned
+        XCTAssertEqual(response.sessionId, sessionId)
+        XCTAssertEqual(response.status, .open)
+        XCTAssertEqual(response.currency, "usd")
+    }
+
+    func testPollCheckoutSession() async throws {
+        // Given an initialized Checkout Session
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession()
+        let sessionId = checkoutSessionResponse.id
+        let apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
+        _ = try await apiClient.initCheckoutSession(
+            checkoutSessionId: sessionId,
+            adaptivePricingAllowed: false
+        )
+
+        // When the session is polled
+        let response = try await apiClient.pollCheckoutSession(
+            checkoutSessionId: sessionId,
+            timeout: 30
+        )
+
+        // Then its current poll state is returned
+        XCTAssertEqual(response.sessionId, sessionId)
+        XCTAssertEqual(response.state, .active)
+        XCTAssertNil(response.paymentObjectStatus)
+    }
+
     func testInitCheckoutSessionPayment() async throws {
         // Create a fresh checkout session with the test backend
         let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession()
@@ -47,7 +90,7 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
 
         // 2. Init the checkout session to get the actual amount
         let initResponse = try await apiClient.initCheckoutSession(checkoutSessionId: sessionId, adaptivePricingAllowed: false)
-        let expectedAmount = initResponse.makePublicSession().expectedAmount() ?? 0
+        let expectedAmount = initResponse.makePublicSession().amount
 
         // 3. Create a payment method with test card and billing email
         let cardParams = STPPaymentMethodCardParams()
@@ -61,12 +104,13 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
         let paymentMethod = try await apiClient.createPaymentMethod(with: paymentMethodParams)
 
         // 4. Confirm the checkout session
-        let response = try await apiClient.confirmCheckoutSession(
+        let requestParameters = CheckoutSessionConfirmationRequestParameters(
             sessionId: sessionId,
-            paymentMethod: paymentMethod.stripeId,
+            paymentMethodId: paymentMethod.stripeId,
             expectedAmount: expectedAmount,
             expectedPaymentMethodType: "card"
         )
+        let response = try await apiClient.confirmCheckoutSession(with: requestParameters)
 
         // 5. Verify response
         XCTAssertEqual(response.makePublicSession().status, .complete(.paid))
@@ -105,7 +149,8 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
     func testInitCheckoutSessionPaymentWithAdaptivePricingDisabled() async throws {
         // Same session config as above (DE location, adaptive pricing active automatically)
         // but client passes adaptivePricingAllowed: false
-        let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession(
+        // TODO: Use Mobile Elements once it honors adaptive_pricing[allowed]=false like Custom Checkout.
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.createLegacyCheckoutSession(
             merchantCountry: "us_tax",
             customerEmailLocation: "DE"
         )
@@ -152,7 +197,7 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
         )
 
         // 2. Create a checkout session for this customer
-        let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession(
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.createLegacyCheckoutSession(
             customerID: customerResponse.customer,
             additionalParameters: ["payment_intent_data": ["setup_future_usage": "on_session"]]
         )
@@ -199,7 +244,7 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
         )
 
         // 2. Create a checkout session for this customer
-        let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession(
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.createLegacyCheckoutSession(
             customerID: customerResponse.customer,
             additionalParameters: ["payment_intent_data": ["setup_future_usage": "on_session"]]
         )
@@ -286,12 +331,13 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
         let paymentMethod = try await apiClient.createPaymentMethod(with: paymentMethodParams)
 
         // 4. Confirm the checkout session (no expected amount for setup mode)
-        let response = try await apiClient.confirmCheckoutSession(
+        let requestParameters = CheckoutSessionConfirmationRequestParameters(
             sessionId: sessionId,
-            paymentMethod: paymentMethod.stripeId,
+            paymentMethodId: paymentMethod.stripeId,
             expectedAmount: nil,
             expectedPaymentMethodType: "card"
         )
+        let response = try await apiClient.confirmCheckoutSession(with: requestParameters)
 
         // 5. Verify response
         XCTAssertEqual(response.makePublicSession().status, .complete(.noPaymentRequired))

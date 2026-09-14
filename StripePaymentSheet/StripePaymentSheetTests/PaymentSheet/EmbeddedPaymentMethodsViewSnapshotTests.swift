@@ -12,6 +12,7 @@ import StripeCoreTestUtils
 @_spi(STP) @testable import StripeUICore
 import XCTest
 
+@MainActor
 class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
     private var testWindows: [UIWindow] = []
 
@@ -1530,6 +1531,7 @@ class MockMandateProvider: MandateTextProvider {
 }
 
 extension EmbeddedPaymentMethodsView {
+    @MainActor
     convenience init(
         initialSelection: RowButtonType? = nil,
         paymentMethodTypes: [PaymentSheet.PaymentMethodType] = [.stripe(.card), .stripe(.cashApp)],
@@ -1538,7 +1540,7 @@ extension EmbeddedPaymentMethodsView {
         shouldShowApplePay: Bool = true,
         shouldShowLink: Bool = true,
         savedPaymentMethodAccessoryType: RowButton.RightAccessoryButton.AccessoryType? = nil,
-        mandateProvider: MandateTextProvider = MockMandateProvider(),
+        mandateProvider: MandateTextProvider? = nil,
         shouldShowMandate: Bool = true,
         savedPaymentMethods: [STPPaymentMethod] = [],
         incentive: PaymentMethodIncentive? = nil,
@@ -1553,7 +1555,7 @@ extension EmbeddedPaymentMethodsView {
             shouldShowApplePay: shouldShowApplePay,
             shouldShowLink: shouldShowLink,
             savedPaymentMethodAccessoryType: savedPaymentMethodAccessoryType,
-            mandateProvider: mandateProvider,
+            mandateProvider: mandateProvider ?? MockMandateProvider(),
             shouldShowMandate: shouldShowMandate,
             savedPaymentMethods: savedPaymentMethods,
             incentive: incentive,

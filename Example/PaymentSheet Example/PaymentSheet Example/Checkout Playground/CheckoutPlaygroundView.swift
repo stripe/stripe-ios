@@ -4,11 +4,13 @@
 //
 //  Created by Nick Porter on 2/24/26.
 
+@_spi(STP) import StripePaymentSheet
 import SwiftUI
 
 struct CheckoutPlaygroundView: View {
     @StateObject private var viewModel = CheckoutPlayground.ViewModel()
     @State private var showCurrencySelectorAppearance = false
+    @State private var showBillingDetailsCollection = false
 
     var body: some View {
         Group {
@@ -32,11 +34,12 @@ struct CheckoutPlaygroundView: View {
                             customerType: $viewModel.customerType,
                             checkoutEndpointOption: $viewModel.checkoutEndpointOption,
                             checkoutEndpoint: $viewModel.checkoutEndpoint,
-                            delayPaymentPagesRequests: $viewModel.delayPaymentPagesRequests
+                            delayPaymentPagesRequests: $viewModel.delayPaymentPagesRequests,
+                            onReset: viewModel.reset
                         )
 
                         CheckoutPlaygroundLineItemsSection(
-                            lineItems: viewModel.lineItems,
+                            cartScenario: $viewModel.cartScenario,
                             currency: viewModel.currency
                         )
 
@@ -49,14 +52,21 @@ struct CheckoutPlaygroundView: View {
                             automaticTax: $viewModel.automaticTax,
                             checkoutSessionPaymentMethodSave: $viewModel.checkoutSessionPaymentMethodSave,
                             checkoutSessionPaymentMethodRemove: $viewModel.checkoutSessionPaymentMethodRemove,
-                            automaticPaymentMethods: $viewModel.automaticPaymentMethods
+                            automaticPaymentMethods: $viewModel.automaticPaymentMethods,
+                            linkMode: $viewModel.linkMode
                         )
 
                         CheckoutPlaygroundExpressCheckoutElementSection(
-                            expressCheckoutElementOption: $viewModel.expressCheckoutElementOption,
-                            expressCheckoutElementButtonTheme: $viewModel.expressCheckoutElementButtonTheme,
-                            expressCheckoutElementMaxColumns: $viewModel.expressCheckoutElementMaxColumns,
-                            expressCheckoutElementMaxRows: $viewModel.expressCheckoutElementMaxRows
+                            showExpressCheckoutElement: $viewModel.expressCheckoutElement.isEnabled,
+                            applePayDisplay: $viewModel.expressCheckoutElement.applePayDisplay,
+                            linkDisplay: $viewModel.expressCheckoutElement.linkDisplay,
+                            shippingAddressRequired: $viewModel.expressCheckoutElement.shippingAddressRequired,
+                            buttonTheme: $viewModel.expressCheckoutElement.appearance.buttonTheme,
+                            maxColumns: $viewModel.expressCheckoutElement.maxColumns,
+                            maxRows: $viewModel.expressCheckoutElement.maxRows,
+                            onCustomizeBillingDetailsCollection: {
+                                showBillingDetailsCollection = true
+                            }
                         )
 
                         currencySelectorAppearanceSection
@@ -95,8 +105,7 @@ struct CheckoutPlaygroundView: View {
                             defaultShippingAddress: viewModel.defaultShippingAddress,
                             adaptivePricing: true,
                             integrationType: viewModel.integrationType,
-                            showExpressCheckoutElement: viewModel.expressCheckoutElementOption == .show,
-                            expressCheckoutElementAppearance: viewModel.expressCheckoutElementAppearance,
+                            expressCheckoutElementSettings: viewModel.expressCheckoutElement,
                             currencySelectorAppearance: viewModel.currencySelectorAppearance,
                             delayPaymentPagesRequests: viewModel.delayPaymentPagesRequests
                         )
@@ -107,8 +116,7 @@ struct CheckoutPlaygroundView: View {
                             defaultShippingAddress: viewModel.defaultShippingAddress,
                             adaptivePricing: true,
                             integrationType: viewModel.integrationType,
-                            showExpressCheckoutElement: viewModel.expressCheckoutElementOption == .show,
-                            expressCheckoutElementAppearance: viewModel.expressCheckoutElementAppearance,
+                            expressCheckoutElementSettings: viewModel.expressCheckoutElement,
                             currencySelectorAppearance: viewModel.currencySelectorAppearance,
                             delayPaymentPagesRequests: viewModel.delayPaymentPagesRequests
                         )
@@ -123,6 +131,21 @@ struct CheckoutPlaygroundView: View {
                         showCurrencySelectorAppearance = false
                     }
                 )
+            }
+            .sheet(isPresented: $showBillingDetailsCollection) {
+                ExpressCheckoutElementBillingDetailsCollectionPlaygroundView(
+                    configuration: viewModel.expressCheckoutElement.billingDetailsCollectionConfiguration,
+                    doneAction: { updatedConfiguration in
+                        viewModel.expressCheckoutElement.billingDetailsCollectionConfiguration = updatedConfiguration
+                        showBillingDetailsCollection = false
+                    }
+                )
+            }
+            .onAppear {
+                viewModel.activateLinkModeOverride()
+            }
+            .onDisappear {
+                viewModel.deactivateLinkModeOverride()
             }
         }
     }

@@ -867,7 +867,13 @@ public class STPPaymentHandler: NSObject {
             .wero,
             .payByBank,
             .mbWay,
-            .bizum:
+            .bizum,
+            .kakaoPay,
+            .krCard,
+            .naverPay,
+            .payco,
+            .sequra,
+            .scalapay:
             return false
 
         case .unknown:

@@ -292,6 +292,10 @@ extension STPPaymentMethodType {
                 return .pm_type_grabpay
             case .konbini:
                 return .pm_type_konbini
+            case .kakaoPay:
+                return .pm_type_kakaopay
+            case .krCard:
+                return .pm_type_kr_card
             case .mobilePay:
                 return .pm_type_mobilepay
             case .vipps:
@@ -300,10 +304,14 @@ extension STPPaymentMethodType {
                 return .pm_type_mbway
             case .multibanco:
                 return .pm_type_multibanco
+            case .naverPay:
+                return .pm_type_naverpay
             case .OXXO:
                 return .pm_type_oxxo
             case .payByBank:
                 return .pm_type_paybybank
+            case .payco:
+                return .pm_type_payco
             case .paynow:
                 return .pm_type_paynow
             case .payPay:
@@ -312,6 +320,10 @@ extension STPPaymentMethodType {
                 return .pm_type_promptpay
             case .satispay:
                 return .pm_type_satispay
+            case .scalapay:
+                return .pm_type_scalapay
+            case .sequra:
+                return .pm_type_sequra
             case .wero:
                 return .pm_type_wero
             case .sunbit:

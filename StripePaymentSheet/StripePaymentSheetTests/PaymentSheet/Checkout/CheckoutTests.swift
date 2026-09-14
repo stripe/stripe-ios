@@ -33,7 +33,7 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
     // TODO(porter): unified mode does not yet support promo codes.
     func disabled_testPromotionCodeApplyEmitsSessionUpdates() async throws {
         let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession(
-            additionalParameters: ["allow_promotion_codes": true]
+            allowPromotionCodes: true
         )
         var configuration = CheckoutController.Configuration(clientSecret: checkoutSessionResponse.clientSecret, returnURL: "stripe-ios-test://checkout-return")
         configuration.apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
@@ -53,7 +53,7 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
     // TODO(porter): see disabled_testPromotionCodeApplyEmitsSessionUpdates above.
     func disabled_testApplyPromotionCode() async throws {
         let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession(
-            additionalParameters: ["allow_promotion_codes": true]
+            allowPromotionCodes: true
         )
         var configuration = CheckoutController.Configuration(clientSecret: checkoutSessionResponse.clientSecret, returnURL: "stripe-ios-test://checkout-return")
         configuration.apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
@@ -74,7 +74,7 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
     // TODO(porter): see disabled_testPromotionCodeApplyEmitsSessionUpdates above.
     func disabled_testRemovePromotionCode() async throws {
         let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession(
-            additionalParameters: ["allow_promotion_codes": true]
+            allowPromotionCodes: true
         )
         var configuration = CheckoutController.Configuration(clientSecret: checkoutSessionResponse.clientSecret, returnURL: "stripe-ios-test://checkout-return")
         configuration.apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
@@ -97,7 +97,7 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
     // TODO(porter): see disabled_testPromotionCodeApplyEmitsSessionUpdates above.
     func disabled_testApplyInvalidPromotionCode() async throws {
         let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession(
-            additionalParameters: ["allow_promotion_codes": true]
+            allowPromotionCodes: true
         )
         var configuration = CheckoutController.Configuration(clientSecret: checkoutSessionResponse.clientSecret, returnURL: "stripe-ios-test://checkout-return")
         configuration.apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
@@ -150,8 +150,7 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
 
     func testLoadUnifiedModeCheckoutSession() async throws {
         let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession(
-            merchantCountry: "us_tax",
-            useOneTimePrice: true
+            merchantCountry: "us_tax"
         )
         var configuration = CheckoutController.Configuration(clientSecret: checkoutSessionResponse.clientSecret, returnURL: "stripe-ios-test://checkout-return")
         configuration.apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
@@ -161,7 +160,7 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         XCTAssertEqual(session.id, checkoutSessionResponse.id)
         XCTAssertEqual(session.status, .open)
         XCTAssertEqual(session.totals.total.minorUnitsAmount, 2000)
-        XCTAssertEqual(session.expectedAmount(), 2000)
+        XCTAssertEqual(session.amount, 2000)
         XCTAssertEqual(session.orderSummaryItems.count, 1)
         guard case .oneTimePrice(let oneTimePrice) = session.orderSummaryItems.first else {
             return XCTFail("Expected one-time price order summary item")
@@ -178,21 +177,18 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         XCTAssertNil(item.unitLabel)
         XCTAssertEqual(item.quantity, 1)
         XCTAssertNil(item.adjustableQuantity)
-        XCTAssertEqual(oneTimePrice.amountDetails.subtotal.minorUnitsAmount, 2000)
-        XCTAssertEqual(oneTimePrice.amountDetails.total.minorUnitsAmount, 2000)
-        XCTAssertNil(oneTimePrice.amountDetails.taxAmounts)
-        XCTAssertEqual(oneTimePrice.amountDetails.discount.minorUnitsAmount, 0)
-        XCTAssertEqual(oneTimePrice.amountDetails.taxInclusive.minorUnitsAmount, 0)
-        XCTAssertEqual(oneTimePrice.amountDetails.taxExclusive.minorUnitsAmount, 0)
+        XCTAssertEqual(item.amountDetails.subtotal.minorUnitsAmount, 2000)
+        XCTAssertEqual(item.amountDetails.total.minorUnitsAmount, 2000)
+        XCTAssertNil(item.amountDetails.taxAmounts)
+        XCTAssertEqual(item.amountDetails.taxInclusive.minorUnitsAmount, 0)
+        XCTAssertEqual(item.amountDetails.taxExclusive.minorUnitsAmount, 0)
     }
 
     func testUpdateShippingAddress() async throws {
         let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession(
             merchantCountry: "us_tax",
-            additionalParameters: [
-                "automatic_tax": ["enabled": true],
-                "shipping_address_collection": ["allowed_countries": ["US"]],
-            ]
+            automaticTax: true,
+            allowedShippingCountries: ["US"]
         )
         var configuration = CheckoutController.Configuration(clientSecret: checkoutSessionResponse.clientSecret, returnURL: "stripe-ios-test://checkout-return")
         configuration.apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)

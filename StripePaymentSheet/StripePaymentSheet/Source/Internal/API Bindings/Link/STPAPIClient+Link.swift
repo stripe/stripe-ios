@@ -380,6 +380,8 @@ extension STPAPIClient {
         for consumerSessionClientSecret: String,
         linkMode: LinkMode? = nil,
         intentToken: String? = nil,
+        permissions: [String]? = nil,
+        merchantToken: String? = nil,
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<LinkAccountSession, Error>) -> Void
     ) {
@@ -393,6 +395,10 @@ extension STPAPIClient {
         ]
         parameters["link_mode"] = linkMode?.rawValue
         parameters["intent_token"] = intentToken
+        parameters["permissions"] = permissions
+        if permissions?.isEmpty == false {
+            parameters["merchant_token"] = merchantToken
+        }
 
         APIRequest<LinkAccountSession>.post(
             with: self,
@@ -735,6 +741,31 @@ extension STPAPIClient {
             }
         )
     }
+
+    func recordConnectionsConsentAcquired(
+        for consumerSessionClientSecret: String,
+        localizedConsentText: String,
+        requestSurface: LinkRequestSurface = .default,
+        completion: @escaping (Result<EmptyResponse, Error>) -> Void
+    ) {
+        let endpoint = "consumers/connections_consent_acquired"
+
+        guard
+            let consentData = try? JSONEncoder().encode(ConnectionsConsentPayload(localizedConsent: localizedConsentText)),
+            let consentJSONString = String(data: consentData, encoding: .utf8)
+        else {
+            completion(.failure(NSError.stp_genericFailedToParseResponseError()))
+            return
+        }
+
+        let parameters: [String: Any] = [
+            "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
+            "request_surface": requestSurface.rawValue,
+            "consent": consentJSONString,
+        ]
+
+        post(resource: endpoint, parameters: parameters, completion: completion)
+    }
 }
 
 // TODO(ramont): Remove this after switching to modern bindings.
@@ -788,10 +819,14 @@ private extension APIRequest {
 
 }
 
-// MARK: - Decodable helper wrappers
+// MARK: - Decodable/Encodable helper wrappers
 private extension STPAPIClient {
     struct DetailsResponse: Decodable {
         let redactedPaymentDetails: ConsumerPaymentDetails
+    }
+
+    struct ConnectionsConsentPayload: Encodable {
+        let localizedConsent: String
     }
 
     struct DetailsListResponse: Decodable {

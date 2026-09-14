@@ -87,6 +87,7 @@ extension CheckoutController {
         let billingAddressCollection: BillingAddressCollection
         let automaticTaxEnabled: Bool
         let automaticTaxAddressSource: String?
+        let merchantCountryCode: String
         let elementsSession: STPElementsSession
 
         enum BillingAddressCollection: String {
@@ -111,7 +112,7 @@ extension CheckoutController.Session {
         /// A group of one-time Prices.
         case oneTimePrice(OneTimePrice)
 
-        /// A group of one-time Prices and their aggregated amounts.
+        /// A group of one-time Prices.
         public struct OneTimePrice: Identifiable, Sendable, Hashable {
             /// The stable identity of this group within its Checkout Session.
             public var id: String { key }
@@ -124,9 +125,6 @@ extension CheckoutController.Session {
 
             /// The one-time Prices included in this group.
             public let items: [Item]
-
-            /// Amounts aggregated across all one-time Prices in this group.
-            public let amountDetails: AmountDetails
 
             /// A one-time Price included in the group.
             public struct Item: Identifiable, Sendable, Hashable {
@@ -156,27 +154,27 @@ extension CheckoutController.Session {
 
                 /// The allowed quantity range when the customer can adjust the quantity.
                 public let adjustableQuantity: AdjustableQuantity?
-            }
 
-            /// Amounts aggregated across all one-time Prices in the group.
-            public struct AmountDetails: Sendable, Hashable {
-                /// The total amount for the group.
-                public let total: Amount
+                /// The computed amounts for this Price.
+                public let amountDetails: AmountDetails
 
-                /// The subtotal amount for the group before discounts and exclusive tax.
-                public let subtotal: Amount
+                /// The computed amounts for a one-time Price.
+                public struct AmountDetails: Sendable, Hashable {
+                    /// The total amount for the Price.
+                    public let total: Amount
 
-                /// The tax amounts applied to the group, or `nil` when no tax was applied.
-                public let taxAmounts: [TaxAmount]?
+                    /// The subtotal amount for the Price before exclusive tax.
+                    public let subtotal: Amount
 
-                /// The discount applied to the group.
-                public let discount: Amount
+                    /// The tax amounts applied to the Price, or `nil` when no tax was applied.
+                    public let taxAmounts: [TaxAmount]?
 
-                /// The tax amount included in the prices.
-                public let taxInclusive: Amount
+                    /// The tax amount included in the Price.
+                    public let taxInclusive: Amount
 
-                /// The tax amount added to the prices.
-                public let taxExclusive: Amount
+                    /// The tax amount added to the Price.
+                    public let taxExclusive: Amount
+                }
             }
         }
     }
@@ -224,17 +222,56 @@ extension CheckoutController.Session {
         public let minimum: Int
     }
 
-    /// Display data for the currently selected payment option.
+    /// Contains details about a payment method that can be displayed to the customer
     public struct PaymentOptionDisplayData: Equatable {
-        /// An image representing a payment method, such as the Apple Pay logo or a card brand.
+        /// An image representing a payment method; e.g. the Apple Pay logo or a VISA logo
         public let image: UIImage
-        /// A customer-facing label representing the payment option.
+        /// A user facing string representing the payment method; e.g. "Apple Pay" or "····4242" for a card
         public let label: String
-        /// The billing details associated with the selected payment option.
-        public let billingDetails: PaymentSheet.BillingDetails?
-        /// A string representation of the selected payment method type.
+        /// The billing details associated with the customer's desired payment method
+        public let billingDetails: BillingDetails?
+        /// A string representation of the customer's desired payment method
+        /// - If this is a Stripe payment method, see https://stripe.com/docs/api/payment_methods/object#payment_method_object-type for possible values.
+        /// - If this is an external payment method, see https://stripe.com/docs/payments/external-payment-methods?platform=ios#available-external-payment-methods for possible values.
+        /// - If this is Apple Pay, the value is "apple_pay"
         public let paymentMethodType: String
-        /// Mandate text that must be displayed when the PaymentElement is configured not to display it.
+        /// If you set `configuration.embeddedViewDisplaysMandateText = false`, this text must be displayed in a `UITextView` (so that URLs in the text are handled) to the customer near your “Buy” button to comply with regulations.
         public let mandateText: NSAttributedString?
+
+        /// The billing details collected for a payment method.
+        public struct BillingDetails: Equatable {
+            /// The customer's billing address.
+            public let address: Address?
+
+            /// The customer's email address.
+            public let email: String?
+
+            /// The customer's full name.
+            public let name: String?
+
+            /// The customer's phone number.
+            public let phone: String?
+
+            /// A billing address.
+            public struct Address: Equatable {
+                /// City, district, suburb, town, or village.
+                public let city: String?
+
+                /// Two-letter country code (ISO 3166-1 alpha-2).
+                public let country: String?
+
+                /// Address line 1 (e.g., street, PO Box, or company name).
+                public let line1: String?
+
+                /// Address line 2 (e.g., apartment, suite, unit, or building).
+                public let line2: String?
+
+                /// ZIP or postal code.
+                public let postalCode: String?
+
+                /// State, county, province, or region.
+                public let state: String?
+            }
+        }
     }
 }

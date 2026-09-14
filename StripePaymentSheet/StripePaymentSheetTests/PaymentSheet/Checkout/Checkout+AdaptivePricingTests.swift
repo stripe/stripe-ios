@@ -28,7 +28,7 @@ final class Checkout_AdaptivePricingTests: STPNetworkStubbingTestCase {
             clientSecret: checkoutSessionResponse.clientSecret,
             returnURL: "stripe-ios-test://checkout-return"
         )
-        configuration.adaptivePricing.allowed = true
+        configuration.currencySelectorElement = .init()
         configuration.apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
 
         // When Checkout loads the session

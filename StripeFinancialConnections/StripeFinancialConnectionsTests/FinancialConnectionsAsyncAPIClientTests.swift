@@ -100,6 +100,10 @@ class FinancialConnectionsAsyncAPIClientTests: XCTestCase {
         apiClient.consumerSession = verifiedConsumerSession
         XCTAssertEqual(apiClient.consumerPublishableKeyProvider(canUseConsumerKey: true), consumerPublishableKey)
 
+        apiClient.hasRequestedDataPermissions = true
+        XCTAssertNil(apiClient.consumerPublishableKeyProvider(canUseConsumerKey: true))
+
+        apiClient.hasRequestedDataPermissions = false
         XCTAssertNil(apiClient.consumerPublishableKeyProvider(canUseConsumerKey: false))
     }
 
