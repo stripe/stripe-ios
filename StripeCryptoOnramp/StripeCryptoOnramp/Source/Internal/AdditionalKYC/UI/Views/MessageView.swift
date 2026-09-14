@@ -178,11 +178,11 @@ extension MessageView.Configuration {
               body: .Localized.documentsUnderReview, primaryActionTitle: UIButton.doneButtonTitle)
     }
 
-    /// A generic error with a contact-support action.
+    /// A generic error with a close action.
     static var genericError: Self {
         .init(icon: makeIcon(.iconExclamationCircle), iconForeground: .white, iconBackground: .surfaceCritical,
               heading: .Localized.something_went_wrong, body: .Localized.tryAgainLater,
-              primaryActionTitle: .Localized.contactSupport)
+              primaryActionTitle: .Localized.close)
     }
 
     private static func makeIcon(_ image: Image) -> SwiftUI.Image {

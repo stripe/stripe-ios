@@ -111,10 +111,6 @@ extension String.Localized {
         STPLocalizedString("Please try again later.", "Instruction after an unavailable operation")
     }
 
-    static var contactSupport: String {
-        STPLocalizedString("Contact support", "Button asking the owner to open its support destination")
-    }
-
     static func redactedCardDetails(using card: StripeAPI.PaymentMethod.Card) -> String? {
         let brand = stpCardBrand(from: card.brand)
         let brandString = STPCard.string(from: brand)
