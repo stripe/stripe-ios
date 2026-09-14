@@ -31,8 +31,8 @@ struct PrimaryActionButton: View {
                 .padding(.horizontal, 16)
                 .padding(.vertical, 12)
                 .frame(maxWidth: .infinity, minHeight: appearance.primaryButton.resolvedHeight)
-                .foregroundColor(Color(appearance.primaryButtonForeground))
-                .background(Color(appearance.primaryButtonBackground))
+                .foregroundColor(Color(uiColor: appearance.primaryButtonForeground))
+                .background(Color(uiColor: appearance.primaryButtonBackground))
                 .clipShape(RoundedRectangle(cornerRadius: appearance.primaryButton.resolvedCornerRadius))
                 .contentShape(RoundedRectangle(cornerRadius: appearance.primaryButton.resolvedCornerRadius))
         }

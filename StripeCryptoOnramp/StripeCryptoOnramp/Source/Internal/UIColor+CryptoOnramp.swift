@@ -6,6 +6,7 @@
 //
 
 @_spi(STP) import StripeUICore
+import SwiftUI
 import UIKit
 
 extension UIColor {
@@ -30,6 +31,17 @@ extension UIColor {
 
     /// The background surface for error indicators.
     static let surfaceCritical = UIColor(hex: 0xE61947)
+}
+
+/// Convenience extension for exposing the above semantic colors for SwiftUI usage.
+extension Color {
+    static let fallbackPrimaryButtonBackground = Color(uiColor: .fallbackPrimaryButtonBackground)
+    static let fallbackPrimaryButtonForeground = Color(uiColor: .fallbackPrimaryButtonForeground)
+    static let surfacePrimary = Color(uiColor: .surfacePrimary)
+    static let surfaceSecondary = Color(uiColor: .surfaceSecondary)
+    static let textPrimary = Color(uiColor: .textPrimary)
+    static let textTertiary = Color(uiColor: .textTertiary)
+    static let surfaceCritical = Color(uiColor: .surfaceCritical)
 }
 
 private extension UIColor {

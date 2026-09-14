@@ -25,7 +25,7 @@ struct CloseToolbarItem: ToolbarContent {
                 } else {
                     icon(size: 12)
                         .frame(width: 32, height: 32)
-                        .background(Color(UIColor.surfaceSecondary), in: Circle())
+                        .background(Color.surfaceSecondary, in: Circle())
                         .frame(width: 44, height: 44)
                         .contentShape(Rectangle())
                 }
@@ -40,7 +40,7 @@ struct CloseToolbarItem: ToolbarContent {
         SwiftUI.Image(uiImage: Image.iconClose.makeImage(template: true))
             .resizable()
             .frame(width: size, height: size)
-            .foregroundColor(Color(UIColor.textPrimary))
+            .foregroundColor(.textPrimary)
     }
 }
 

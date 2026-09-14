@@ -74,9 +74,9 @@ struct MessageView: View {
                 .padding(.horizontal, 20)
                 .padding(.top, 20)
                 .padding(.bottom, 16)
-                .background(Color(UIColor.surfacePrimary))
+                .background(Color.surfacePrimary)
         }
-        .background(Color(UIColor.surfacePrimary).ignoresSafeArea())
+        .background(Color.surfacePrimary.ignoresSafeArea())
         .environment(\.colorScheme, appearance.colorScheme ?? inheritedColorScheme)
     }
 
@@ -86,21 +86,21 @@ struct MessageView: View {
                 .resizable()
                 .scaledToFit()
                 .frame(width: 24, height: 24)
-                .foregroundColor(Color(configuration.iconForeground))
+                .foregroundColor(Color(uiColor: configuration.iconForeground))
                 .frame(width: 64, height: 64)
-                .background(Color(configuration.iconBackground), in: Circle())
+                .background(Color(uiColor: configuration.iconBackground), in: Circle())
                 .accessibilityHidden(true)
                 .padding(.bottom, 20)
 
             Text(configuration.heading)
                 .typography(.headingExtraLarge)
-                .foregroundColor(Color(UIColor.textPrimary))
+                .foregroundColor(.textPrimary)
                 .accessibilityAddTraits(.isHeader)
                 .padding(.bottom, 8)
 
             Text(configuration.body)
                 .typography(.bodyExtraLarge)
-                .foregroundColor(Color(UIColor.textTertiary))
+                .foregroundColor(.textTertiary)
         }
         .multilineTextAlignment(.center)
         .fixedSize(horizontal: false, vertical: true)
@@ -180,7 +180,7 @@ extension MessageView.Configuration {
 
     /// A generic error with a contact-support action.
     static var genericError: Self {
-        .init(icon: makeIcon(.iconExclamationCircle), iconForeground: .white, iconBackground: UIColor.surfaceCritical,
+        .init(icon: makeIcon(.iconExclamationCircle), iconForeground: .white, iconBackground: .surfaceCritical,
               heading: .Localized.something_went_wrong, body: .Localized.tryAgainLater,
               primaryActionTitle: .Localized.contactSupport)
     }
