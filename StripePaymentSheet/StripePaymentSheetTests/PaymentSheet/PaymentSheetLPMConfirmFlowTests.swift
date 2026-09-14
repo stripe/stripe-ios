@@ -648,6 +648,23 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                                expectedHierarchy: ExpectedFormHierarchy.RevolutPay.settingUp) { _ in }
     }
 
+    func testKakaoPayConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "KRW",
+                               paymentMethodType: .kakaoPay,
+                               merchantCountry: .US,
+                               expectedHierarchy: ExpectedFormHierarchy.KakaoPay.paymentIntent) { form in
+            form.getTextFieldElement("Email").setText("foo@bar.com")
+        }
+        try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .paymentIntentWithPMOSetupFutureUsage, .setupIntent],
+                               currency: "KRW",
+                               paymentMethodType: .kakaoPay,
+                               merchantCountry: .US,
+                               expectedHierarchy: ExpectedFormHierarchy.KakaoPay.settingUp) { form in
+            form.getTextFieldElement("Email").setText("foo@bar.com")
+        }
+    }
+
     func testNaverPayConfirmFlows() async throws {
         try await _testConfirm(intentKinds: [.paymentIntent],
                                currency: "KRW",
@@ -685,6 +702,15 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                                paymentMethodType: .sequra,
                                merchantCountry: .ES,
                                expectedHierarchy: ExpectedFormHierarchy.Sequra.paymentIntent) { _ in }
+    }
+
+    func testScalapayConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "EUR",
+                               amount: 10000,
+                               paymentMethodType: .scalapay,
+                               merchantCountry: .IT,
+                               expectedHierarchy: ExpectedFormHierarchy.Scalapay.paymentIntent) { _ in }
     }
 
     func testPaycoConfirmFlows() async throws {
@@ -1265,7 +1291,7 @@ extension PaymentSheetLPMConfirmFlowTests {
             }
             // TODO: Re-enable once unified-mode Checkout forwards `blik_code` to PaymentIntent confirmation.
             if shouldTest(.checkoutSession), paymentMethod != .blik {
-                let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession(
+                let checkoutSessionResponse = try await STPTestingAPIClient.shared.createLegacyCheckoutSession(
                     types: paymentMethodTypes,
                     currency: currency,
                     amount: amount,

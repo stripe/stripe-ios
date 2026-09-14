@@ -43,7 +43,7 @@ public final class CheckoutController: ObservableObject {
     private var currencySelectorElement: CurrencySelectorElement?
 
     /// The ShippingAddressElement for this CheckoutController instance.
-    private let shippingAddressElement: ShippingAddressElement
+    private let shippingAddressElement: ShippingAddressElement?
 
     let clientSecret: String
     let apiClient: STPAPIClient
@@ -73,6 +73,9 @@ public final class CheckoutController: ObservableObject {
 
     /// Guards confirmation across Payment Element and Express Checkout entry points.
     var confirmationInProgress = false
+
+    /// The last tax region successfully sent by this CheckoutController.
+    var currentTaxRegion: Address?
 
     /// Default timeout used by ``awaitPendingOperations(timeout:)``.
     nonisolated static let defaultPendingOperationsTimeout: TimeInterval = 30
@@ -107,13 +110,14 @@ public final class CheckoutController: ObservableObject {
 
             // Element initialization is intentionally sequential:
 
-            // 1. Initialize SAE so that its form can normalize the raw default shipping address before it is applied to the session
+            // 1. Initialize SAE, when configured, so that its form can normalize the raw default
+            // shipping address before it is applied to the session.
             let (shippingAddressElement, normalizedDefaultShippingAddress) = await Self.makeShippingAddressElement(
                 configuration: configuration,
                 session: loadedSession
             )
             self.shippingAddressElement = shippingAddressElement
-            self.shippingAddressElement.delegate = self
+            self.shippingAddressElement?.delegate = self
 
             try await applyDefaults(shippingAddress: normalizedDefaultShippingAddress)
 
@@ -134,11 +138,13 @@ public final class CheckoutController: ObservableObject {
             let sessionSource = CheckoutSessionSource(initialSession: session, sessionPublisher: $session)
 
             // 3. ECE
-            self.expressCheckoutElement = ExpressCheckoutElement(
-                sessionSource: sessionSource,
-                configuration: configuration.expressCheckoutElement,
-                delegate: self
-            )
+            if let expressCheckoutElementConfiguration = configuration.expressCheckoutElement {
+                self.expressCheckoutElement = ExpressCheckoutElement(
+                    sessionSource: sessionSource,
+                    configuration: expressCheckoutElementConfiguration,
+                    delegate: self
+                )
+            }
 
             // 4. CSE
             if let currencySelectorConfiguration = configuration.currencySelectorElement {
@@ -156,7 +162,7 @@ public final class CheckoutController: ObservableObject {
     private static func makeShippingAddressElement(
         configuration: Configuration,
         session: Session
-    ) async -> (ShippingAddressElement, Session.ShippingAddress?) {
+    ) async -> (ShippingAddressElement?, Session.ShippingAddress?) {
         let defaultShippingAddress: Session.ShippingAddress?
         if let shippingDetails = configuration.defaults.shippingDetails,
            let address = shippingDetails.address {
@@ -168,9 +174,13 @@ public final class CheckoutController: ObservableObject {
             defaultShippingAddress = nil
         }
 
+        guard let shippingAddressElementConfiguration = configuration.shippingAddressElement else {
+            return (nil, defaultShippingAddress)
+        }
+
         // Initialize the SAE with the raw default so its form can normalize the address.
         let shippingAddressElement = ShippingAddressElement(
-            configuration: configuration.shippingAddressElement,
+            configuration: shippingAddressElementConfiguration,
             initialShippingAddress: defaultShippingAddress ?? session.shippingAddress,
             allowedCountries: session.allowedShippingCountries,
             checkoutSessionId: session.id,
@@ -226,7 +236,7 @@ public final class CheckoutController: ObservableObject {
         if let address {
             taxRegion = address
         } else {
-            guard let country = session.paymentOption?.billingDetails?.address.country?.nonEmpty else {
+            guard let country = session.paymentOption?.billingDetails?.address?.country?.nonEmpty else {
                 return
             }
             // The Checkout Session update endpoint requires tax_region[country] and does not
@@ -325,8 +335,10 @@ public final class CheckoutController: ObservableObject {
     }
 
     /// Returns the ExpressCheckoutElement for this CheckoutController instance.
-    public func getExpressCheckoutElement() -> ExpressCheckoutElement? {
-        return expressCheckoutElement
+    public func getExpressCheckoutElement() -> ExpressCheckoutElement {
+        assert(configuration.expressCheckoutElement != nil, "Set Configuration.expressCheckoutElement before calling getExpressCheckoutElement().")
+        stpAssert(expressCheckoutElement != nil, "ExpressCheckoutElement should be initialized when Configuration.expressCheckoutElement is set.")
+        return expressCheckoutElement!
     }
 
     /// Returns Currency Selector Element when it was configured and Adaptive
@@ -341,7 +353,11 @@ public final class CheckoutController: ObservableObject {
 
     /// Returns the ShippingAddressElement for this CheckoutController instance.
     public func getShippingAddressElement() -> ShippingAddressElement {
-        return shippingAddressElement
+        assert(
+            configuration.shippingAddressElement != nil,
+            "Set Configuration.shippingAddressElement before initializing the CheckoutController to use ShippingAddressElement."
+        )
+        return shippingAddressElement!
     }
 
     // MARK: - Confirm
@@ -356,8 +372,7 @@ public final class CheckoutController: ObservableObject {
             return .failed(PaymentSheetError.integrationError(nonPIIDebugDescription: errorMessage))
         }
 
-        guard let paymentElement,
-              let flow = makeConfirmationFlow(
+        guard let flow = makeConfirmationFlow(
             for: paymentElement,
             presentingViewController: presentingViewController
         ) else {

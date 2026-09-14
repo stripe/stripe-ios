@@ -46,6 +46,8 @@
 
 "Buy now or pay later with Klarna" = "Vegye meg most, vagy fizessen később Klarnával";
 
+"By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "A NICEPAY segítségével történő fizetés megerősítésével Ön engedélyezi %@ számára, hogy a feltételeinek megfelelően a jövőbeli fizetésekhez megterhelje ezt a fizetési módot.";
+
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "A fizetés megerősítésével a PayPalon engedélyezi, hogy a(z) %@ a feltételeinek megfelelően a jövőbeni kifizetésekkel megterhelje a PayPal számláját.";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Az Amazon Payre történő továbblépéssel engedélyezi, hogy a(z) %@ a feltételeinek megfelelően a jövőbeni kifizetésekkel megterhelje az Amazon Pay-számláját.";
@@ -192,6 +194,10 @@
 
 "Name on card" = "A kártyán szereplő név";
 
+"Naver Pay Card" = "Naver Pay kártya";
+
+"Naver Pay Money/Point" = "Naver Pay Money/Point";
+
 "New card" = "Új kártya";
 
 "New payment method" = "Új fizetési mód";
@@ -287,6 +293,8 @@
 "Saved" = "Mentett";
 
 "Select card" = "Kártya kiválasztása";
+
+"Select how you want to pay:" = "Válassza ki, hogyan szeretne fizetni:";
 
 "Select payment method" = "Fizetési mód választása";
 

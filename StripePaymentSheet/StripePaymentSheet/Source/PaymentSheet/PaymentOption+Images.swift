@@ -292,6 +292,8 @@ extension STPPaymentMethodType {
                 return .pm_type_grabpay
             case .konbini:
                 return .pm_type_konbini
+            case .kakaoPay:
+                return .pm_type_kakaopay
             case .krCard:
                 return .pm_type_kr_card
             case .mobilePay:
@@ -318,6 +320,8 @@ extension STPPaymentMethodType {
                 return .pm_type_promptpay
             case .satispay:
                 return .pm_type_satispay
+            case .scalapay:
+                return .pm_type_scalapay
             case .sequra:
                 return .pm_type_sequra
             case .wero:

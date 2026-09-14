@@ -62,15 +62,16 @@ enum CheckoutPlayground {
         var endpoint: String? {
             switch self {
             case .hosted:
-                return "https://stp-mobile-playground-backend-v7.stripedemos.com/checkout_session"
+                return "https://stp-mobile-playground-backend-v7.stripedemos.com"
             case .localhost:
-                return "http://127.0.0.1:8081/checkout_session"
+                return "http://127.0.0.1:8081"
             case .manual:
                 return nil
             }
         }
 
         static func from(endpoint: String) -> Self {
+            let endpoint = normalizedBaseURL(from: endpoint)
             if endpoint == Self.hosted.endpoint {
                 return .hosted
             }
@@ -78,6 +79,18 @@ enum CheckoutPlayground {
                 return .localhost
             }
             return .manual
+        }
+
+        static func normalizedBaseURL(from endpoint: String) -> String {
+            var endpoint = endpoint
+            while endpoint.hasSuffix("/") {
+                endpoint.removeLast()
+            }
+            for legacyPath in ["/checkout_session", "/create_checkout_session"] where endpoint.hasSuffix(legacyPath) {
+                endpoint.removeLast(legacyPath.count)
+                break
+            }
+            return endpoint
         }
     }
 
@@ -246,6 +259,35 @@ enum CheckoutPlayground {
             LineItemConfig(name: "Classic T-Shirt", unitAmount: 3500, quantity: 2),
             LineItemConfig(name: "Zip-Up Hoodie", unitAmount: 5000, quantity: 1),
         ]
+
+        static let zeroAmount = [
+            LineItemConfig(name: "Free T-Shirt", unitAmount: 0, quantity: 1),
+        ]
+    }
+
+    enum CartScenario: String, CaseIterable, Codable, Identifiable {
+        case standard
+        case zeroAmount = "zero_amount"
+
+        var id: String { rawValue }
+
+        var displayName: String {
+            switch self {
+            case .standard:
+                return "Standard cart"
+            case .zeroAmount:
+                return "$0 cart"
+            }
+        }
+
+        var lineItems: [LineItemConfig] {
+            switch self {
+            case .standard:
+                return LineItemConfig.defaults
+            case .zeroAmount:
+                return LineItemConfig.zeroAmount
+            }
+        }
     }
 
     struct Settings: Codable {
@@ -256,7 +298,7 @@ enum CheckoutPlayground {
         var linkMode: LinkMode = .native
         var currency: Currency = .usd
         var customerType: CustomerType = .guest
-        var lineItems: [LineItemConfig] = LineItemConfig.defaults
+        var cartScenario: CartScenario = .standard
         var shippingAddressCollection = true
         var defaultShippingAddressOption: DefaultShippingAddressOption = .none
         var customDefaultShippingAddress = DefaultShippingAddress.usTestAddress

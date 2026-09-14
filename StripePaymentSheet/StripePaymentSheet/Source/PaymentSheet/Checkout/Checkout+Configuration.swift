@@ -39,8 +39,11 @@ extension CheckoutController {
         /// The default value is `nil`.
         public var paymentElement: PaymentElement.Configuration?
 
-        /// Configuration for ExpressCheckoutElement.
-        public var expressCheckoutElement: ExpressCheckoutElement.Configuration = .init()
+        /// Configuration for Express Checkout Element.
+        ///
+        /// Set this property to use Express Checkout Element with this CheckoutController.
+        /// The default value is `nil`.
+        public var expressCheckoutElement: ExpressCheckoutElement.Configuration?
 
         /// Configuration for Currency Selector Element.
         ///
@@ -48,9 +51,11 @@ extension CheckoutController {
         /// Pricing is available. The default value is `nil`.
         public var currencySelectorElement: CurrencySelectorElement.Configuration?
 
-        /// Configuration for the shipping address form returned by
-        /// ``CheckoutController.getShippingAddressElement()``.
-        public var shippingAddressElement: ShippingAddressElement.Configuration = .init()
+        /// Configuration for Shipping Address Element.
+        ///
+        /// Set this property to use Shipping Address Element with this CheckoutController.
+        /// The default value is `nil`.
+        public var shippingAddressElement: ShippingAddressElement.Configuration?
 
         /// The color styling to use for Checkout UI.
         public var userInterfaceStyle: UserInterfaceStyle = .automatic

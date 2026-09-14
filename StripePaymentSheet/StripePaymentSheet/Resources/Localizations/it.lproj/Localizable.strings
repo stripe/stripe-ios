@@ -46,6 +46,8 @@
 
 "Buy now or pay later with Klarna" = "Paga a rate con Klarna";
 
+"By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "Confermando il tuo pagamento con NICEPAY, consenti a %@ di addebitare i pagamenti futuri su questo metodo di pagamento in base a quanto previsto dai relativi termini e condizioni.";
+
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Confermando il tuo pagamento con PayPal, consenti a %@ di addebitare i pagamenti futuri sul tuo conto PayPal in base a quanto previsto dai relativi termini e condizioni.";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Continuando su Amazon Pay, consenti a %@ di addebitare i pagamenti futuri sul tuo account Amazon Pay in base a quanto previsto dai relativi termini e condizioni.";
@@ -192,6 +194,10 @@
 
 "Name on card" = "Nome sulla carta";
 
+"Naver Pay Card" = "Carta Naver Pay";
+
+"Naver Pay Money/Point" = "Naver Pay Money/Point";
+
 "New card" = "Nuova carta";
 
 "New payment method" = "Nuovo metodo di pagamento";
@@ -287,6 +293,8 @@
 "Saved" = "Salvata";
 
 "Select card" = "Seleziona la carta";
+
+"Select how you want to pay:" = "Seleziona quanto vuoi pagare:";
 
 "Select payment method" = "Seleziona il metodo di pagamento";
 

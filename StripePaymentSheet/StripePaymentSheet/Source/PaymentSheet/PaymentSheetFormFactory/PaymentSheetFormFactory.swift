@@ -282,7 +282,7 @@ class PaymentSheetFormFactory {
             case .SEPADebit:
                 return makeSepaDebit()
             case .grabPay, .paynow, .payPay, .mobilePay, .vipps, .zip, .crypto,
-                 .billie, .sunbit, .alma, .payByBank, .payco, .sequra:
+                 .billie, .sunbit, .alma, .payByBank, .payco, .sequra, .scalapay:
                 return makeContactInformationAndBillingAddressForm()
             case .alipay:
                 return makeContactInformationAndBillingAddressForm(
@@ -292,6 +292,12 @@ class PaymentSheetFormFactory {
                 return makeContactInformationAndBillingAddressForm(
                     emailRequired: true,
                     emailAPIPath: "billing_details[email]"
+                )
+            case .kakaoPay:
+                return makeContactInformationAndBillingAddressForm(
+                    emailRequired: true,
+                    emailAPIPath: "billing_details[email]",
+                    additionalElements: makeSetupMandateElements(for: paymentMethod)
                 )
             case .mbWay, .bizum:
                 return makeContactInformationAndBillingAddressForm(phoneRequired: true)
@@ -307,7 +313,7 @@ class PaymentSheetFormFactory {
                 return makeAUBECSDebit()
             case .FPX:
                 return makeFPX()
-            case .kakaoPay, .netBanking, .weChatPay, .link, .cardPresent, .unknown:
+            case .netBanking, .weChatPay, .link, .cardPresent, .unknown:
                 return makeUnexpectedEmptyForm(for: paymentMethod)
             @unknown default:
                 return makeUnexpectedEmptyForm(for: paymentMethod)
@@ -345,6 +351,8 @@ class PaymentSheetFormFactory {
         case .naverPay:
             return [makeKoreanPaymentMethodMandate()]
         case .krCard:
+            return [makeKoreanPaymentMethodMandate()]
+        case .kakaoPay:
             return [makeKoreanPaymentMethodMandate()]
         default:
             return []

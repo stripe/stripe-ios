@@ -32,9 +32,12 @@ extension CheckoutController: ExpressCheckoutElementDelegate {
         _ paymentMethod: ExpressCheckoutElement.PaymentMethod,
         presentationWindow: UIWindow?
     ) throws -> CheckoutConfirmationFlow {
+        guard let expressCheckoutElementConfiguration = configuration.expressCheckoutElement else {
+            throw CheckoutError.unknown(debugDescription: "Express Checkout Element configuration unexpectedly nil.")
+        }
         switch paymentMethod {
         case .applePay:
-            guard let applePayConfiguration = configuration.expressCheckoutElement.applePayConfiguration else {
+            guard let applePayConfiguration = expressCheckoutElementConfiguration.applePayConfiguration else {
                 throw CheckoutError.unknown(debugDescription: "Could not build a confirmation flow for \(paymentMethod). Express Checkout Element Apple Pay configuration unexpectedly nil.")
             }
             // TODO: Should next actions use an authentication context tied to `presentationWindow`
@@ -45,7 +48,7 @@ extension CheckoutController: ExpressCheckoutElementDelegate {
                 apiClient: apiClient,
                 returnURL: configuration.returnURL,
                 merchantDisplayName: effectiveMerchantDisplayName,
-                shippingAddressRequired: configuration.expressCheckoutElement.shippingAddressRequired,
+                shippingAddressRequired: expressCheckoutElementConfiguration.shippingAddressRequired,
                 defaultBillingDetails: configuration.defaults.billingDetails,
                 presentationWindow: presentationWindow,
                 confirmationHandler: { [apiClient, paymentHandler] requestParameters in
@@ -71,7 +74,7 @@ extension CheckoutController: ExpressCheckoutElementDelegate {
                 paymentElementConfiguration.defaultBillingDetails.set(billingDetails)
             }
             paymentElementConfiguration.defaultBillingDetails.email = session.email
-            switch configuration.expressCheckoutElement.linkConfiguration.display {
+            switch expressCheckoutElementConfiguration.linkConfiguration.display {
             case .automatic:
                 paymentElementConfiguration.link.display = .automatic
             case .never:
@@ -251,6 +254,9 @@ extension CheckoutController {
                     checkoutSessionId: sessionId,
                     parameters: update.parameters
                 )
+                if case .setTaxRegion(let address) = update {
+                    currentTaxRegion = address
+                }
             } else {
                 updatedSessionAPIResponse = nil
             }
