@@ -107,6 +107,42 @@ struct MessageView: View {
     }
 }
 
+extension MessageView.Configuration {
+
+    /// Creates a proof-of-address introduction.
+    /// - Parameters:
+    ///   - amount: The formatted monetary threshold, including its currency symbol.
+    static func proofOfAddress(amount: String) -> Self {
+        .init(icon: makeIcon(.iconLocationPin), heading: .Localized.uploadProofOfAddress,
+              body: .Localized.proofOfAddressExplanation(amount: amount), primaryActionTitle: .Localized.continue)
+    }
+
+    /// Creates a source-of-funds introduction.
+    /// - Parameters:
+    ///   - amount: The formatted monetary threshold, including its currency symbol.
+    static func sourceOfFunds(amount: String) -> Self {
+        .init(icon: makeIcon(.iconWallet), heading: .Localized.tellUsAboutYourSourceOfFunds,
+              body: .Localized.sourceOfFundsExplanation(amount: amount), primaryActionTitle: .Localized.continue)
+    }
+
+    /// A submission confirmation.
+    static var submitted: Self {
+        .init(icon: makeIcon(.iconClock), heading: .Localized.submittedForReview,
+              body: .Localized.documentsUnderReview, primaryActionTitle: UIButton.doneButtonTitle)
+    }
+
+    /// A generic error with a close action.
+    static var genericError: Self {
+        .init(icon: makeIcon(.iconExclamationCircle), iconForeground: .white, iconBackground: .surfaceCritical,
+              heading: .Localized.something_went_wrong, body: .Localized.tryAgainLater,
+              primaryActionTitle: .Localized.close)
+    }
+
+    private static func makeIcon(_ image: Image) -> SwiftUI.Image {
+        SwiftUI.Image(uiImage: image.makeImage(template: true))
+    }
+}
+
 #if DEBUG
 @available(iOS 17.0, *)
 #Preview("Proof of address") {
@@ -153,39 +189,3 @@ private struct MessageViewPreview: View {
     }
 }
 #endif
-
-extension MessageView.Configuration {
-
-    /// Creates a proof-of-address introduction.
-    /// - Parameters:
-    ///   - amount: The formatted monetary threshold, including its currency symbol.
-    static func proofOfAddress(amount: String) -> Self {
-        .init(icon: makeIcon(.iconLocationPin), heading: .Localized.uploadProofOfAddress,
-              body: .Localized.proofOfAddressExplanation(amount: amount), primaryActionTitle: .Localized.continue)
-    }
-
-    /// Creates a source-of-funds introduction.
-    /// - Parameters:
-    ///   - amount: The formatted monetary threshold, including its currency symbol.
-    static func sourceOfFunds(amount: String) -> Self {
-        .init(icon: makeIcon(.iconWallet), heading: .Localized.tellUsAboutYourSourceOfFunds,
-              body: .Localized.sourceOfFundsExplanation(amount: amount), primaryActionTitle: .Localized.continue)
-    }
-
-    /// A submission confirmation.
-    static var submitted: Self {
-        .init(icon: makeIcon(.iconClock), heading: .Localized.submittedForReview,
-              body: .Localized.documentsUnderReview, primaryActionTitle: UIButton.doneButtonTitle)
-    }
-
-    /// A generic error with a close action.
-    static var genericError: Self {
-        .init(icon: makeIcon(.iconExclamationCircle), iconForeground: .white, iconBackground: .surfaceCritical,
-              heading: .Localized.something_went_wrong, body: .Localized.tryAgainLater,
-              primaryActionTitle: .Localized.close)
-    }
-
-    private static func makeIcon(_ image: Image) -> SwiftUI.Image {
-        SwiftUI.Image(uiImage: image.makeImage(template: true))
-    }
-}
