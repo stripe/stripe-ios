@@ -122,7 +122,7 @@ extension PaymentSheet {
             if case .link(let option) = self {
                 switch option {
                 case .withPaymentDetails(_, let account, _, _, _):
-                    if account.hasCompletedSMSVerification {
+                    if account.currentSession?.hasVerifiedOTPVerification == true {
                         // This was a returning user who logged in
                         return "native-returning"
                     } else if account.sessionState == .verified {
@@ -296,7 +296,7 @@ extension PaymentSheet {
 
             let currentSession = LinkAccountContext.shared.account?.currentSession
 
-            if currentSession?.hasStartedSMSVerification == true && didDismissLinkVerificationDialog {
+            if currentSession?.hasStartedOTPVerification == true && didDismissLinkVerificationDialog {
                 // We asked the user to sign in once, and they declined.
                 return false
             }

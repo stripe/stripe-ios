@@ -971,7 +971,7 @@ import UIKit
             return
         }
 
-        self.linkAccount = PaymentSheetLinkAccount(
+        let updatedAccount = PaymentSheetLinkAccount(
             email: linkAccount.email,
             session: consumerSession,
             publishableKey: linkAccount.publishableKey,
@@ -979,8 +979,15 @@ import UIKit
             apiClient: linkAccount.apiClient,
             useMobileEndpoints: linkAccount.useMobileEndpoints,
             canSyncAttestationState: linkAccount.canSyncAttestationState,
-            requestSurface: linkAccount.requestSurface
+            requestSurface: linkAccount.requestSurface,
+            createdFromAuthIntentID: linkAccount.createdFromAuthIntentID
         )
+        updatedAccount.authLookupSettings = linkAccount.authLookupSettings
+        updatedAccount.authLookupEmail = linkAccount.authLookupEmail
+        updatedAccount.authCountryCode = linkAccount.authCountryCode
+        updatedAccount.authSessionLookup = linkAccount.authSessionLookup
+        updatedAccount.visitedFallbackURLs = linkAccount.visitedFallbackURLs
+        self.linkAccount = updatedAccount
     }
 
     private func presentVerificationWithConsent(

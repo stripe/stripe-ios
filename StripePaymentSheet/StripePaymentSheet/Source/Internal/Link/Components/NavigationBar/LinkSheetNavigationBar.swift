@@ -95,12 +95,22 @@ class LinkSheetNavigationBar: SheetNavigationBar {
     }
 
     override func createBackButton() -> UIButton {
+        return Self.createBackButton(
+            accessibilityIdentifier: "UIButton.Back",
+            appearance: appearance
+        )
+    }
+
+    static func createBackButton(
+        accessibilityIdentifier: String,
+        appearance: PaymentSheet.Appearance
+    ) -> UIButton {
         let image = Image.icon_chevron_left_standalone.makeImage(template: true)
             .imageFlippedForRightToLeftLayoutDirection()
-        return Self.createButton(
+        return createButton(
             with: image,
             accessibilityLabel: String.Localized.back,
-            accessibilityIdentifier: "UIButton.Back",
+            accessibilityIdentifier: accessibilityIdentifier,
             appearance: appearance
         )
     }
