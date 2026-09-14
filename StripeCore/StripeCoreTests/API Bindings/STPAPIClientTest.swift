@@ -97,14 +97,14 @@ final class STPAPIClientTest: APIStubbedTestCase {
 
         apiClient.get(
             url: apiClient.apiURL.appendingPathComponent("test"),
-            parameters: ["declaration_type": "terms"],
+            parameters: ["key": "value"],
             additionalHeaders: headers,
             completion: handler
         )
 
         let promise: Promise<EmptyResponse> = apiClient.get(
             resource: "test",
-            parameters: ["declaration_type": "terms"],
+            parameters: ["key": "value"],
             additionalHeaders: headers
         )
 
@@ -191,7 +191,7 @@ final class STPAPIClientTest: APIStubbedTestCase {
 
         apiClient.delete(
             resource: "test",
-            parameters: ["wallet_id": "wallet_test"],
+            parameters: ["key": "value"],
             additionalHeaders: [
                 "Stripe-Consumer-Auth-Token": "cscs_test",
                 "Stripe-Version": "test_version",
