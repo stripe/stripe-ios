@@ -46,6 +46,8 @@
 
 "Buy now or pay later with Klarna" = "Kjøp nå eller betal senere med Klarna";
 
+"By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "Når du bekrefter betalingen din med NICEPAY, tillater du at %@ belaster denne betalingsmetoden for fremtidige betalinger i henhold til deres vilkår.";
+
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Ved å bekrefte betalingen med PayPal, tillater du %@ å belaste PayPal for fremtidige betalinger i samsvar med vilkårene deres.";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Ved å fortsette til Amazon Pay, tillater du %@ å belaste Amazon Pay-kontoen din for fremtidige betalinger i samsvar med vilkårene deres.";
@@ -192,6 +194,10 @@
 
 "Name on card" = "Navn på kort";
 
+"Naver Pay Card" = "Naver Pay-kort";
+
+"Naver Pay Money/Point" = "Naver Pay Money/Point";
+
 "New card" = "Nytt kort";
 
 "New payment method" = "Ny betalingsmetode";
@@ -287,6 +293,8 @@
 "Saved" = "Lagret";
 
 "Select card" = "Velg kort";
+
+"Select how you want to pay:" = "Velg hvordan du vil betale:";
 
 "Select payment method" = "Velg betalingsmetode";
 

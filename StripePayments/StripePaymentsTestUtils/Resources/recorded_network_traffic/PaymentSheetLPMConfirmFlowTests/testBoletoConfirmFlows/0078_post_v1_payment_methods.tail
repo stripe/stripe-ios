@@ -3,40 +3,40 @@ https:\/\/api\.stripe\.com\/v1\/payment_methods$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=cga0kLUbh8Jz4ajQXBSkNXcn-jx0wS3QqbiGgRUH95gw54b7eELpiJE62r8hTjD8vfd-OuF7Wcro4aP0; report-to csp
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=p3nebgc8Yt7OLWAV-6CUS12366lIzAqxoYgNqRfnLdKgLzuauhC6zE8xEN3m7TQEW3dzq6aeWWKVMNUR; report-to csp
 Server: nginx
 Cache-Control: no-cache, no-store
-reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=cga0kLUbh8Jz4ajQXBSkNXcn-jx0wS3QqbiGgRUH95gw54b7eELpiJE62r8hTjD8vfd-OuF7Wcro4aP0&t=1"
-stripe-notice: You are using an outdated API version (2020-08-27). We recommend upgrading to the latest API version, 2026-06-24.dahlia. See https://docs.stripe.com/upgrades
+reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=p3nebgc8Yt7OLWAV-6CUS12366lIzAqxoYgNqRfnLdKgLzuauhC6zE8xEN3m7TQEW3dzq6aeWWKVMNUR&t=1"
+stripe-notice: You are using an outdated API version (2020-08-27). We recommend upgrading to the latest API version, 2026-08-26.dahlia. See https://docs.stripe.com/upgrades
 x-wc: 3c3
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
-report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=cga0kLUbh8Jz4ajQXBSkNXcn-jx0wS3QqbiGgRUH95gw54b7eELpiJE62r8hTjD8vfd-OuF7Wcro4aP0&t=1"}],"include_subdomains":true}
-request-id: req_JPOBlYCp2vBFQO
+report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=p3nebgc8Yt7OLWAV-6CUS12366lIzAqxoYgNqRfnLdKgLzuauhC6zE8xEN3m7TQEW3dzq6aeWWKVMNUR&t=1"}],"include_subdomains":true}
+request-id: req_DaCH9aodkqXaT5
 x-stripe-routing-context-priority-tier: api-testmode
-Content-Length: 655
+Content-Length: 650
 Vary: Origin
-Date: Wed, 01 Jul 2026 12:07:34 GMT
-original-request: req_JPOBlYCp2vBFQO
+Date: Tue, 01 Sep 2026 15:37:39 GMT
+original-request: req_DaCH9aodkqXaT5
 stripe-version: 2020-08-27
-idempotency-key: 9b1fb6f4-4d55-4af0-a078-19a5fd5adfff
+idempotency-key: ef8cdf39-0321-4933-8e2f-3f42c123b734
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
-X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[address]\[city]=S%C3%A3o%20Paulo&billing_details\[address]\[country]=BR&billing_details\[address]\[line1]=Rua%20das%20Flores%2C%20123&billing_details\[address]\[line2]=&billing_details\[address]\[postal_code]=01234567&billing_details\[address]\[state]=SP&billing_details\[email]=test%40example\.com&billing_details\[name]=Jane%20Doe&boleto\[tax_id]=00000000000&client_attribution_metadata\[checkout_session_id]=cs_test_a1Zqs4jqNTSh1GxAho3YcFMBef6aBxTdfdQCD7peP6UdacGNbVe8fpsqZj&client_attribution_metadata\[client_session_id]=.*&client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_method_selection_flow]=automatic&guid=.*&muid=.*&payment_user_agent=.*&sid=.*&type=boleto
+X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[address]\[city]=S%C3%A3o%20Paulo&billing_details\[address]\[country]=BR&billing_details\[address]\[line1]=Rua%20das%20Flores%2C%20123&billing_details\[address]\[line2]=&billing_details\[address]\[postal_code]=01234567&billing_details\[address]\[state]=SP&billing_details\[email]=foo%40bar\.com&billing_details\[name]=Jane%20Doe&boleto\[tax_id]=00000000000&client_attribution_metadata\[client_session_id]=.*&client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_intent_creation_flow]=deferred&client_attribution_metadata\[payment_method_selection_flow]=automatic&guid=.*&muid=.*&payment_user_agent=.*&sid=.*&type=boleto
 
 {
   "object" : "payment_method",
   "boleto" : {
-    "fingerprint" : "eu95CWJCBt545QEm",
+    "fingerprint" : "48wcl030Axz32v7b",
     "tax_id" : "00000000000"
   },
-  "id" : "pm_1ToMvSJQVROkWvqTSm2PLtB0",
+  "id" : "pm_1UAtklJQVROkWvqTi0olW2ok",
   "billing_details" : {
-    "email" : "test@example.com",
+    "email" : "foo@bar.com",
     "phone" : null,
     "tax_id" : null,
     "name" : "Jane Doe",
@@ -50,7 +50,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[address]\[ci
     }
   },
   "livemode" : false,
-  "created" : 1782907654,
+  "created" : 1788277059,
   "allow_redisplay" : "unspecified",
   "shared_payment_granted_token" : null,
   "customer" : null,

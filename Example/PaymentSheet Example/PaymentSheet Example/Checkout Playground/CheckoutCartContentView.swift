@@ -49,6 +49,7 @@ struct CheckoutCartContentView: View {
             }
             .padding(.top, 20)
             .padding(.bottom, 24)
+            .disabled(checkout.isUpdating)
         }
         .sheet(isPresented: $showsTaxDetails) {
             CheckoutTaxDetailsView(taxAmounts: checkout.session.taxAmounts ?? [])
@@ -93,6 +94,7 @@ struct CheckoutCartContentView: View {
                                 Text("\((item.unitAmountDecimal ?? item.unitAmount).amount) × \(item.quantity)")
                                     .font(.subheadline)
                                     .foregroundColor(.secondary)
+                                    .accessibilityIdentifier("checkout_line_item_amount")
                             }
                             Spacer()
                         }
@@ -215,14 +217,13 @@ struct CheckoutCartContentView: View {
 
     @ViewBuilder
     private var expressCheckoutSection: some View {
-        if showExpressCheckoutElement,
-           let expressCheckoutElement = checkout.getExpressCheckoutElement() {
+        if showExpressCheckoutElement {
             VStack(alignment: .leading, spacing: 16) {
                 Text("Express Checkout")
                     .font(.title2).bold()
                     .padding(.horizontal)
 
-                expressCheckoutElement.view
+                checkout.getExpressCheckoutElement().view
                     .padding(.horizontal)
             }
         }
@@ -245,6 +246,7 @@ struct CheckoutCartContentView: View {
                     Spacer()
                     Text(totals.subtotal.amount)
                         .foregroundColor(.primary)
+                        .accessibilityIdentifier("checkout_subtotal_amount")
                 }
                 if totals.discount.minorUnitsAmount > 0 {
                     HStack {
@@ -253,6 +255,7 @@ struct CheckoutCartContentView: View {
                         Spacer()
                         Text("-" + totals.discount.amount)
                             .foregroundColor(.green)
+                            .accessibilityIdentifier("checkout_discount_amount")
                     }
                 }
 
@@ -266,6 +269,7 @@ struct CheckoutCartContentView: View {
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .accessibilityElement(children: .combine)
+                    .accessibilityIdentifier("checkout_tax_prompt")
                 } else if totals.taxExclusive.minorUnitsAmount > 0 {
                     HStack {
                         HStack(spacing: 4) {
@@ -278,6 +282,7 @@ struct CheckoutCartContentView: View {
                         Spacer()
                         Text(totals.taxExclusive.amount)
                             .foregroundColor(.primary)
+                            .accessibilityIdentifier("checkout_tax_amount")
                     }
                 }
 
@@ -290,6 +295,7 @@ struct CheckoutCartContentView: View {
                     Spacer()
                     Text(totals.total.amount)
                         .font(.title3).bold()
+                        .accessibilityIdentifier("checkout_total_amount")
                 }
 
                 if taxAddressPrompt == nil && totals.taxInclusive.minorUnitsAmount > 0 {

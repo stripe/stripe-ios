@@ -86,6 +86,12 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
         }
     }
 
+    struct CompletedCheckoutSessionPoller: CheckoutSessionPolling {
+        func poll(checkoutSessionId: String) async -> CheckoutSessionPoller.Outcome {
+            return .completed
+        }
+    }
+
     enum MerchantCountry: String {
         case US = "us"
         case SG = "sg"
@@ -97,6 +103,7 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
         case JP = "jp"
         case BR = "br"
         case FR = "fr"
+        case ES = "es"
         case TH = "th"
         case DE = "de"
         case IT = "it"
@@ -123,6 +130,8 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                 return STPTestingBRPublishableKey
             case .FR:
                 return STPTestingFRPublishableKey
+            case .ES:
+                return STPTestingESPublishableKey
             case .TH:
                 return STPTestingTHPublishableKey
             case .DE:
@@ -639,6 +648,71 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                                expectedHierarchy: ExpectedFormHierarchy.RevolutPay.settingUp) { _ in }
     }
 
+    func testKakaoPayConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "KRW",
+                               paymentMethodType: .kakaoPay,
+                               merchantCountry: .US,
+                               expectedHierarchy: ExpectedFormHierarchy.KakaoPay.paymentIntent) { form in
+            form.getTextFieldElement("Email").setText("foo@bar.com")
+        }
+        try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .paymentIntentWithPMOSetupFutureUsage, .setupIntent],
+                               currency: "KRW",
+                               paymentMethodType: .kakaoPay,
+                               merchantCountry: .US,
+                               expectedHierarchy: ExpectedFormHierarchy.KakaoPay.settingUp) { form in
+            form.getTextFieldElement("Email").setText("foo@bar.com")
+        }
+    }
+
+    func testNaverPayConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "KRW",
+                               paymentMethodType: .naverPay,
+                               merchantCountry: .US,
+                               expectedHierarchy: ExpectedFormHierarchy.NaverPay.paymentIntent) { form in
+            let funding: DropdownFieldElement = form.getDropdownFieldElement(String.Localized.naver_pay_funding_label)
+            funding.selectedIndex = 1
+        }
+        try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .paymentIntentWithPMOSetupFutureUsage, .setupIntent],
+                               currency: "KRW",
+                               paymentMethodType: .naverPay,
+                               merchantCountry: .US,
+                               expectedHierarchy: ExpectedFormHierarchy.NaverPay.settingUp) { form in
+            let funding: DropdownFieldElement = form.getDropdownFieldElement(String.Localized.naver_pay_funding_label)
+            funding.selectedIndex = 1
+        }
+    }
+    func testKoreanCardsConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "KRW",
+                               paymentMethodType: .krCard,
+                               merchantCountry: .US,
+                               expectedHierarchy: ExpectedFormHierarchy.KoreanCards.paymentIntent) { _ in }
+        try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .paymentIntentWithPMOSetupFutureUsage, .setupIntent],
+                               currency: "KRW",
+                               paymentMethodType: .krCard,
+                               merchantCountry: .US,
+                               expectedHierarchy: ExpectedFormHierarchy.KoreanCards.settingUp) { _ in }
+    }
+    func testSequraConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "EUR",
+                               amount: 60000,
+                               paymentMethodType: .sequra,
+                               merchantCountry: .ES,
+                               expectedHierarchy: ExpectedFormHierarchy.Sequra.paymentIntent) { _ in }
+    }
+
+    func testScalapayConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "EUR",
+                               amount: 10000,
+                               paymentMethodType: .scalapay,
+                               merchantCountry: .IT,
+                               expectedHierarchy: ExpectedFormHierarchy.Scalapay.paymentIntent) { _ in }
+    }
+
     func testPaycoConfirmFlows() async throws {
         try await _testConfirm(intentKinds: [.paymentIntent],
                                currency: "KRW",
@@ -963,10 +1037,6 @@ extension PaymentSheetLPMConfirmFlowTests {
 
 // MARK: - Helper methods
 extension PaymentSheetLPMConfirmFlowTests {
-    /// Payment methods that Checkout supports in modeless mode. Last verified against
-    /// `/create_checkout_session_unified` on July 31, 2026.
-    static let paymentMethodsSupportedByModeless: Set<STPPaymentMethodType> = [.card]
-
     enum IntentKind: CaseIterable, Hashable {
         case paymentIntent
         case paymentIntentWithSetupFutureUsage
@@ -1219,8 +1289,9 @@ extension PaymentSheetLPMConfirmFlowTests {
             if shouldTest(.deferredIntent) {
                 intents.append(TestIntent("Deferred PaymentIntent - client side confirmation", makeDeferredIntent(deferredCSC)))
             }
-            if shouldTest(.checkoutSession), Self.paymentMethodsSupportedByModeless.contains(paymentMethod) {
-                let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession(
+            // TODO: Re-enable once unified-mode Checkout forwards `blik_code` to PaymentIntent confirmation.
+            if shouldTest(.checkoutSession), paymentMethod != .blik {
+                let checkoutSessionResponse = try await STPTestingAPIClient.shared.createLegacyCheckoutSession(
                     types: paymentMethodTypes,
                     currency: currency,
                     amount: amount,
@@ -1229,6 +1300,7 @@ extension PaymentSheetLPMConfirmFlowTests {
                     returnURL: "https://foo.com"
                 )
                 let csApiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
+                csApiClient.betas = apiClient.betas
                 let checkoutSession = try await csApiClient.initCheckoutSession(
                     checkoutSessionId: checkoutSessionResponse.id,
                     adaptivePricingAllowed: true
@@ -1782,7 +1854,8 @@ extension PaymentSheetLPMConfirmFlowTests {
                             with: confirmRequestParameters,
                             apiClient: configuration.apiClient,
                             authenticationContext: self,
-                            paymentHandler: paymentHandler
+                            paymentHandler: paymentHandler,
+                            poller: CompletedCheckoutSessionPoller()
                         )
                     } catch {
                         result = .failed(error)
@@ -1817,7 +1890,8 @@ extension PaymentSheetLPMConfirmFlowTests {
                             with: confirmRequestParameters,
                             apiClient: configuration.apiClient,
                             authenticationContext: self,
-                            paymentHandler: paymentHandler
+                            paymentHandler: paymentHandler,
+                            poller: CompletedCheckoutSessionPoller()
                         )
                     } catch {
                         result = .failed(error)

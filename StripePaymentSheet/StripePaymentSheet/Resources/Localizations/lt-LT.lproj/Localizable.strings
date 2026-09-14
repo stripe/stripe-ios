@@ -46,6 +46,8 @@
 
 "Buy now or pay later with Klarna" = "Pirkite dabar arba mokėkite vėliau naudodami \"Klarna\"";
 
+"By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "Patvirtindami savo mokėjimą naudojant „NICEPAY“, suteikiate leidimą %@ periodiškai nurašyti lėšas iš jūsų sąskaitos pagal jų nustatytas sąlygas.";
+
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Patvirtindami savo mokėjimą \"PayPal\" leidžiate \"%@\" nuskaityti mokestį nuo jūsų \"PayPal\" sąskaitos vėlesniems mokėjimams pagal jų sąlygas.";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Pereidami prie \"Amazon Pay\" leisite \"%@\" nuskaityti mokestį nuo jūsų \"Amazon Pay\" sąskaitos vėlesniems mokėjimams pagal jų sąlygas.";
@@ -192,6 +194,10 @@
 
 "Name on card" = "Ant kortelės nurodytas vardas ir pavardė";
 
+"Naver Pay Card" = "„Naver Pay“ kortelė";
+
+"Naver Pay Money/Point" = "„Naver Pay” pinigai / taškai";
+
 "New card" = "Nauja kortelė";
 
 "New payment method" = "Naujas mokėjimo būdas";
@@ -287,6 +293,8 @@
 "Saved" = "Įrašyta";
 
 "Select card" = "Pasirinkti kortelę";
+
+"Select how you want to pay:" = "Pasirinkite, kaip norite mokėti:";
 
 "Select payment method" = "Pasirinkti mokėjimo būdą";
 

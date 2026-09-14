@@ -102,8 +102,6 @@ import Foundation
     case mbWay
     /// A Bizum payment method
     case bizum
-    /// An ACSS Debit payment method.
-    @objc(STPPaymentMethodTypeACSSDebit) case ACSSDebit
     /// A Kakao Pay payment method
     case kakaoPay
     /// A Korean cards payment method
@@ -114,6 +112,10 @@ import Foundation
     case payco
     /// A SeQura payment method
     case sequra
+    /// A Scalapay payment method
+    case scalapay
+    /// An ACSS Debit payment method.
+    @objc(STPPaymentMethodTypeACSSDebit) case ACSSDebit
     /// An unknown type.
     case unknown
 
@@ -226,6 +228,8 @@ import Foundation
             return "PAYCO"
         case .sequra:
             return "SeQura"
+        case .scalapay:
+            return "Scalapay"
         case .cardPresent,
             .unknown:
             return STPLocalizedString("Unknown", "Default missing source type label")
@@ -341,6 +345,8 @@ import Foundation
             return "payco"
         case .sequra:
             return "sequra"
+        case .scalapay:
+            return "scalapay"
         }
     }
 
