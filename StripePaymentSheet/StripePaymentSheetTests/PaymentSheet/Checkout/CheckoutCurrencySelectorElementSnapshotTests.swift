@@ -65,7 +65,11 @@ final class CheckoutCurrencySelectorElementSnapshotTests: STPSnapshotTestCase {
         window.overrideUserInterfaceStyle = darkMode ? .dark : .light
         window.rootViewController = vc
         window.makeKeyAndVisible()
-        vc.view.frame = CGRect(origin: .zero, size: CGSize(width: 320, height: 57))
+        let size = vc.sizeThatFits(in: CGSize(width: 320, height: CGFloat.greatestFiniteMagnitude))
+        window.frame.size = CGSize(width: 320, height: ceil(size.height))
+        vc.view.frame = window.bounds
+        window.layoutIfNeeded()
+        vc.view.layoutIfNeeded()
 
         STPSnapshotVerifyView(vc.view, file: file, line: line)
     }
