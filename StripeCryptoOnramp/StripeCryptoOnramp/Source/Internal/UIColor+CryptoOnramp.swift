@@ -10,6 +10,12 @@ import UIKit
 
 extension UIColor {
 
+    /// The fallback primary button background color when no appearance override is supplied.
+    static let fallbackPrimaryButtonBackground = UIColor(hex: 0x00D670)
+
+    /// The fallback primary button foreground color when no appearance override is supplied.
+    static let fallbackPrimaryButtonForeground = UIColor(hex: 0x001F0F)
+
     /// The primary background surface.
     static let surfacePrimary = dynamic(light: UIColor(hex: 0xFFFFFF), dark: UIColor(hex: 0x1C1C1E))
 
