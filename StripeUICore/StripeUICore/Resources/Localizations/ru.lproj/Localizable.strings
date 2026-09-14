@@ -92,7 +92,7 @@
 
 "Prefecture" = "Префектура";
 
-"Processing..." = "Идет обработка...";
+"Processing..." = "Обработка…";
 
 "Province" = "Провинция";
 
@@ -108,7 +108,7 @@
 
 "Selection is empty." = "Ничего не выбрано.";
 
-"Something went wrong" = "Возникла неизвестная ошибка";
+"Something went wrong" = "Произошла ошибка";
 
 "Sort code" = "Код банка";
 
