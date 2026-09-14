@@ -37,3 +37,12 @@
 /* Error message shown when the submitted wallet ownership signature is invalid */
 "We couldn't verify ownership of this wallet. Please try again." = "We couldn't verify ownership of this wallet. Please try again.";
 
+/* Explanation introducing proof of address collection. %@ is a formatted monetary threshold, such as €1,000. */
+"We're required to confirm your address to enable spending over %@." = "We're required to confirm your address to enable spending over %@.";
+
+/* Explanation introducing source of funds collection. %@ is a formatted monetary threshold, such as €1,000. */
+"We're required to understand where your funds come from to enable spending over %@." = "We're required to understand where your funds come from to enable spending over %@.";
+
+/* Message confirming documents are being reviewed and the user will be notified when verification is complete. */
+"We’re reviewing your documents. We’ll let you know when verification is complete." = "We’re reviewing your documents. We’ll let you know when verification is complete.";
+
