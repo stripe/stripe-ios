@@ -263,7 +263,6 @@ struct CheckoutPlaygroundExpressCheckoutElementSection: View {
     @Binding var applePayDisplay: ExpressCheckoutElement.ApplePayConfiguration.Display
     @Binding var linkDisplay: ExpressCheckoutElement.LinkConfiguration.Display
     @Binding var shippingAddressRequired: Bool
-    var onCustomizeBillingDetailsCollection: () -> Void
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -293,25 +292,6 @@ struct CheckoutPlaygroundExpressCheckoutElementSection: View {
                         isOn: $shippingAddressRequired,
                         tooltip: "Sets `ExpressCheckoutElement.Configuration.shippingAddressRequired`. When on, wallets like Apple Pay require the customer to provide a shipping address."
                     )
-                    Button(action: onCustomizeBillingDetailsCollection) {
-                        HStack {
-                            Image(systemName: "person.text.rectangle.fill")
-                                .font(.system(size: 16))
-                                .frame(width: 24)
-                                .foregroundColor(.blue)
-                            Text("Billing Details Collection")
-                                .font(.subheadline)
-                                .foregroundColor(.primary)
-                            Spacer()
-                            Image(systemName: "chevron.right")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                        }
-                        .padding(.vertical, 12)
-                        .padding(.horizontal, 16)
-                        .background(Color(uiColor: .secondarySystemGroupedBackground))
-                    }
-                    .buttonStyle(PlainButtonStyle())
                 }
             }
             .background(Color(uiColor: .secondarySystemGroupedBackground))
