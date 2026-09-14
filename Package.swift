@@ -1,4 +1,4 @@
-// swift-tools-version:5.7
+// swift-tools-version:6.1
 import PackageDescription
 
 let package = Package(
@@ -57,9 +57,16 @@ let package = Package(
             targets: ["StripeCryptoOnramp"]
         )
     ],
+    traits: [
+        .trait(
+            name: "Identity",
+            description: "Enables StripeIdentity."
+        )
+    ],
     dependencies: [
         .package(
-            path: "LocalPackages/MediaPipeSPM"
+            url: "https://github.com/fedefrappi/stripe-mediapipe",
+            exact: "1.0.0"
         )
     ],
     targets: [
@@ -111,7 +118,11 @@ let package = Package(
                 "StripeCore",
                 "StripeUICore",
                 "StripeCameraCore",
-                .product(name: "MediaPipeSPM", package: "MediaPipeSPM"),
+                .product(
+                    name: "MediaPipeSPM",
+                    package: "stripe-mediapipe",
+                    condition: .when(traits: ["Identity"])
+                ),
             ],
             path: "StripeIdentity/StripeIdentity",
             exclude: ["Info.plist"],
@@ -208,5 +219,6 @@ let package = Package(
                 .process("Resources/StripeCryptoOnramp.xcassets")
             ]
         )
-    ]
+    ],
+    swiftLanguageModes: [.v5]
 )

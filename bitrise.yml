@@ -543,6 +543,10 @@ workflows:
         inputs:
         - lane: installation_spm_swift
         title: fastlane installation_spm_swift
+    - fastlane@3:
+        inputs:
+        - lane: installation_spm_identity_trait
+        title: fastlane installation_spm_identity_trait
     - xcode-test@6:
         is_always_run: true
         is_skippable: true

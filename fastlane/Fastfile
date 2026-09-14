@@ -210,6 +210,12 @@ platform :ios do
     )
   end
 
+  lane :installation_spm_identity_trait do
+    Dir.chdir('..') do
+      sh('./ci_scripts/check_spm_identity_trait.sh')
+    end
+  end
+
   lane :check_docs do
     Dir.chdir('..') do
       sh('./ci_scripts/check_documentation.sh')
