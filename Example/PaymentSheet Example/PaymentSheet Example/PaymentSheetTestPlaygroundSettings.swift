@@ -135,6 +135,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         static var enumName: String { "Currency" }
 
         case usd
+        case cad
         case eur
         case nok
         case aud
