@@ -44,7 +44,7 @@ struct MessageView: View {
     /// The action invoked by the primary button.
     let onPrimaryAction: () -> Void
 
-    /// The action invoked with the close toolbar button is pressed.
+    /// The action invoked when the close toolbar button is pressed.
     let onClose: () -> Void
 
     @Environment(\.colorScheme) private var inheritedColorScheme

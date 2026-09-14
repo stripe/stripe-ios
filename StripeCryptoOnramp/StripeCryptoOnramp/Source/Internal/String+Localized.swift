@@ -75,7 +75,7 @@ extension String.Localized {
     static func proofOfAddressExplanation(amount: String) -> String {
         String(
             format: STPLocalizedString(
-                "We're required to confirm your address to enable spending over %@.",
+                "We’re required to confirm your address to enable spending over %@.",
                 "Explanation introducing proof of address collection. %@ is a formatted monetary threshold, such as €1,000."
             ),
             amount
@@ -89,7 +89,7 @@ extension String.Localized {
     static func sourceOfFundsExplanation(amount: String) -> String {
         String(
             format: STPLocalizedString(
-                "We're required to understand where your funds come from to enable spending over %@.",
+                "We’re required to understand where your funds come from to enable spending over %@.",
                 "Explanation introducing source of funds collection. %@ is a formatted monetary threshold, such as €1,000."
             ),
             amount
