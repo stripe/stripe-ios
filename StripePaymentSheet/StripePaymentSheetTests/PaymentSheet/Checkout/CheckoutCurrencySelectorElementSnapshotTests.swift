@@ -61,6 +61,9 @@ final class CheckoutCurrencySelectorElementSnapshotTests: STPSnapshotTestCase {
         line: UInt = #line
     ) {
         let vc = UIHostingController(rootView: swiftUIView)
+        if #available(iOS 16.4, *) {
+            vc.safeAreaRegions = []
+        }
         let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 320, height: 200))
         window.overrideUserInterfaceStyle = darkMode ? .dark : .light
         window.rootViewController = vc
