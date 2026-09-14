@@ -4,7 +4,6 @@
 //
 //  Created by Nick Porter on 2/24/26.
 
-@_spi(STP) import StripePaymentSheet
 import SwiftUI
 
 struct CheckoutPlaygroundView: View {

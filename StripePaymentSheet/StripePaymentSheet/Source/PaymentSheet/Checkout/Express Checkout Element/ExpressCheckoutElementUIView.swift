@@ -72,7 +72,7 @@ public final class ExpressCheckoutElementUIView: UIView {
 
     // MARK: - Private Methods
 
-    /// Arranges `buttons` into rows of `appearance.buttonLayout.maxColumns`, capped at `appearance.buttonLayout.maxRows`.
+    /// Arranges `buttons` into no more than `appearance.buttonLayout.maxRows` rows of no more than `appearance.buttonLayout.maxColumns` columns. Defaults to 1 column
     private func layoutButtons(_ buttons: [ExpressCheckoutElement.PaymentMethod]) {
         stackView.arrangedSubviews.forEach {
             stackView.removeArrangedSubview($0)

@@ -242,6 +242,7 @@ enum CheckoutPlayground {
     }
 
     struct LineItemConfig: Identifiable, Codable {
+
         let id: UUID
         var name: String
         var unitAmount: Int
