@@ -92,6 +92,8 @@
 
 "Prefecture" = "Prefektur";
 
+"Processing..." = "Bearbetar ...";
+
 "Province" = "Provins";
 
 "Remove" = "Ta bort";
@@ -106,9 +108,13 @@
 
 "Selection is empty." = "Urvalet är tomt.";
 
+"Something went wrong" = "Det inträffade ett fel";
+
 "Sort code" = "Clearingnummer";
 
 "State" = "Delstat";
+
+"Submit" = "Skicka";
 
 "Suburb" = "Förort";
 
