@@ -238,7 +238,7 @@ public final class CheckoutController: ObservableObject {
         if let address {
             taxRegion = address
         } else {
-            guard let country = session.paymentOption?.billingDetails?.address.country?.nonEmpty else {
+            guard let country = session.paymentOption?.billingDetails?.address?.country?.nonEmpty else {
                 return
             }
             // The Checkout Session update endpoint requires tax_region[country] and does not
@@ -374,8 +374,7 @@ public final class CheckoutController: ObservableObject {
             return .failed(PaymentSheetError.integrationError(nonPIIDebugDescription: errorMessage))
         }
 
-        guard let paymentElement,
-              let flow = makeConfirmationFlow(
+        guard let flow = makeConfirmationFlow(
             for: paymentElement,
             presentingViewController: presentingViewController
         ) else {

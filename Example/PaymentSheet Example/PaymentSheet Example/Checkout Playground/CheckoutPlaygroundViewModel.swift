@@ -49,7 +49,7 @@ extension CheckoutPlayground {
         }
         @Published var currency: Currency
         @Published var customerType: CustomerType
-        @Published var lineItems: [LineItemConfig]
+        @Published var cartScenario: CartScenario
         @Published var shippingAddressCollection: Bool
         @Published var defaultShippingAddressOption: DefaultShippingAddressOption
         @Published var customDefaultShippingAddress: DefaultShippingAddress
@@ -81,7 +81,7 @@ extension CheckoutPlayground {
             linkMode = settings.linkMode
             currency = settings.currency
             customerType = settings.customerType
-            lineItems = settings.lineItems
+            cartScenario = settings.cartScenario
             shippingAddressCollection = settings.shippingAddressCollection
             defaultShippingAddressOption = settings.defaultShippingAddressOption
             customDefaultShippingAddress = settings.customDefaultShippingAddress
@@ -120,6 +120,10 @@ extension CheckoutPlayground {
 
         var isButtonDisabled: Bool {
             isCreating || (!automaticPaymentMethods && paymentMethodTypes.isEmpty) || lineItems.isEmpty
+        }
+
+        var lineItems: [LineItemConfig] {
+            cartScenario.lineItems
         }
 
         var defaultShippingAddress: DefaultShippingAddress? {
@@ -185,7 +189,7 @@ extension CheckoutPlayground {
                 linkMode: linkMode,
                 currency: currency,
                 customerType: customerType,
-                lineItems: lineItems,
+                cartScenario: cartScenario,
                 shippingAddressCollection: shippingAddressCollection,
                 defaultShippingAddressOption: defaultShippingAddressOption,
                 customDefaultShippingAddress: customDefaultShippingAddress,
@@ -210,7 +214,7 @@ extension CheckoutPlayground {
             linkMode = settings.linkMode
             currency = settings.currency
             customerType = settings.customerType
-            lineItems = settings.lineItems
+            cartScenario = settings.cartScenario
             shippingAddressCollection = settings.shippingAddressCollection
             defaultShippingAddressOption = settings.defaultShippingAddressOption
             customDefaultShippingAddress = settings.customDefaultShippingAddress

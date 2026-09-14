@@ -130,6 +130,68 @@ final class CheckoutApplePayContextTests: XCTestCase {
         XCTAssertEqual(items[0].amount, .zero)
     }
 
+    func testMakePaymentRequestUsesPresentmentCurrency() {
+        for (currency, amount, expectedAmount, exchangeRate) in [
+            ("jpy", 19181, "19181", "159.8416666667"),
+            ("eur", 10762, "107.62", "0.8968333333"),
+        ] {
+            // Given a USD merchant presenting a localized checkout
+            let session = CheckoutTestHelpers.makeSession([
+                "currency": currency,
+                "checkout_items": CheckoutTestHelpers.makeOneTimePriceCheckoutItems(currency: currency, unitAmount: amount),
+                "adaptive_pricing_info": [
+                    "integration_currency": "usd",
+                    "integration_amount": 12000,
+                    "active_presentment_currency": currency,
+                    "local_currency_options": [
+                        [
+                            "currency": currency,
+                            "amount": amount,
+                            "presentment_exchange_rate": exchangeRate,
+                            "conversion_markup_bps": 400,
+                        ],
+                    ],
+                ],
+            ]).makePublicSession()
+            let parameters = CheckoutController.ApplePayConfirmationParameters.makeMock(
+                apiClient: APIStubbedTestCase.stubbedAPIClient()
+            )
+
+            // When building the native payment sheet
+            let request = CheckoutApplePayContext.makePaymentRequest(
+                checkoutSession: session,
+                applePayConfirmationParameters: parameters
+            )
+
+            // Then its currency, line item, and total all use the presentment currency
+            XCTAssertEqual(request.currencyCode, currency.uppercased())
+            XCTAssertEqual(request.paymentSummaryItems.count, 2)
+            XCTAssertEqual(request.paymentSummaryItems.first?.amount, NSDecimalNumber(string: expectedAmount))
+            XCTAssertEqual(request.paymentSummaryItems.last?.amount, NSDecimalNumber(string: expectedAmount))
+        }
+    }
+
+    func testMakePaymentRequestWithoutAdaptivePricingUsesSessionCurrency() {
+        // Given a checkout without an alternate currency
+        let session = CheckoutTestHelpers.makeSession([
+            "currency": "usd",
+            "checkout_items": CheckoutTestHelpers.makeOneTimePriceCheckoutItems(unitAmount: 12000),
+        ]).makePublicSession()
+        let parameters = CheckoutController.ApplePayConfirmationParameters.makeMock(
+            apiClient: APIStubbedTestCase.stubbedAPIClient()
+        )
+
+        // When building the native payment sheet
+        let request = CheckoutApplePayContext.makePaymentRequest(
+            checkoutSession: session,
+            applePayConfirmationParameters: parameters
+        )
+
+        // Then it retains the session currency and amount
+        XCTAssertEqual(request.currencyCode, "USD")
+        XCTAssertEqual(request.paymentSummaryItems.last?.amount, NSDecimalNumber(string: "120"))
+    }
+
     // MARK: - makePaymentRequest shipping address
 
     func testMakePaymentRequestRequiresShippingAddress() {

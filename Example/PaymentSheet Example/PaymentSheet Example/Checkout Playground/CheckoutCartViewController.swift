@@ -632,7 +632,7 @@ final class CheckoutCartViewController: UIViewController {
     private func makeClearPaymentOptionButton() -> UIButton {
         let button = UIButton(type: .system)
         button.setTitle("Clear payment option", for: .normal)
-        button.setTitleColor(.systemRed, for: .normal)
+        button.setTitleColor(.secondaryLabel, for: .normal)
         button.titleLabel?.font = .preferredFont(forTextStyle: .subheadline)
         button.addTarget(self, action: #selector(clearPaymentOptionButtonTapped), for: .touchUpInside)
         return button
