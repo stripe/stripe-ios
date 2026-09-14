@@ -326,7 +326,7 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         )
 
         let response = try await apiClient.fulfillAdditionalKYCRequirement(request)
-        XCTAssertEqual(response.id, "submission_123")
+        XCTAssertEqual(response.id, "cks_123")
         XCTAssertEqual(response.status, "pending_verification")
         XCTAssertEqual(response.documents?.first?.status, "pending_verification")
         XCTAssertEqual(response.created, Date(timeIntervalSince1970: 1_723_264_800))
