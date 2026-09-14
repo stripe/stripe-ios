@@ -12,6 +12,9 @@ MINOR
 ### PaymentSheet
 * [Added] Added support for Scalapay.
 
+### CryptoOnramp (Alpha)
+* [Removed] Removed public exposure of `StripeCryptoOnramp.Image`, including `Image.linkIconSquare`.
+
 ## 26.10.0 2026-09-08
 ### General
 * [Added] Added support for Arabic (Saudi Arabia).
