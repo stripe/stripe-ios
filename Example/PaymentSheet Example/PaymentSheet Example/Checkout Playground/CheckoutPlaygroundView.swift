@@ -60,9 +60,7 @@ struct CheckoutPlaygroundView: View {
                             applePayDisplay: $viewModel.expressCheckoutElement.applePayDisplay,
                             linkDisplay: $viewModel.expressCheckoutElement.linkDisplay,
                             shippingAddressRequired: $viewModel.expressCheckoutElement.shippingAddressRequired,
-                            buttonTheme: $viewModel.expressCheckoutElement.appearance.buttonTheme,
-                            maxColumns: $viewModel.expressCheckoutElement.maxColumns,
-                            maxRows: $viewModel.expressCheckoutElement.maxRows
+                            appearance: $viewModel.expressCheckoutElement.appearance
                         )
 
                         currencySelectorAppearanceSection

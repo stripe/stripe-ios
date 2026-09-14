@@ -15,8 +15,6 @@ extension CheckoutPlayground {
         var linkDisplay: ExpressCheckoutElement.LinkConfiguration.Display = .automatic
         var shippingAddressRequired: Bool = false
         var appearance: ExpressCheckoutElement.Appearance = .init()
-        var maxColumns: ExpressCheckoutElementButtonLayoutLimit = .automatic
-        var maxRows: ExpressCheckoutElementButtonLayoutLimit = .automatic
     }
 
     @MainActor

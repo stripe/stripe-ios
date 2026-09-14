@@ -263,9 +263,7 @@ struct CheckoutPlaygroundExpressCheckoutElementSection: View {
     @Binding var applePayDisplay: ExpressCheckoutElement.ApplePayConfiguration.Display
     @Binding var linkDisplay: ExpressCheckoutElement.LinkConfiguration.Display
     @Binding var shippingAddressRequired: Bool
-    @Binding var buttonTheme: ExpressCheckoutElement.Appearance.ButtonTheme
-    @Binding var maxColumns: CheckoutPlayground.ExpressCheckoutElementButtonLayoutLimit
-    @Binding var maxRows: CheckoutPlayground.ExpressCheckoutElementButtonLayoutLimit
+    @Binding var appearance: ExpressCheckoutElement.Appearance
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -298,21 +296,21 @@ struct CheckoutPlaygroundExpressCheckoutElementSection: View {
                     CheckoutPlayground.PickerRow(
                         title: "Button Theme",
                         icon: "paintpalette.fill",
-                        selection: $buttonTheme,
+                        selection: $appearance.buttonTheme,
                         tooltip: "Sets `ExpressCheckoutElement.Configuration.Appearance.buttonTheme`. Only affects the Apple Pay button; the Link button always uses Link's brand color.",
                         displayText: { $0.displayName }
                     )
                     CheckoutPlayground.PickerRow(
                         title: "Max Columns",
                         icon: "square.grid.2x2",
-                        selection: $maxColumns,
+                        selection: maxColumns,
                         tooltip: "Sets `ExpressCheckoutElement.Configuration.Appearance.buttonLayout.maxColumns`.",
                         displayText: { $0.displayName }
                     )
                     CheckoutPlayground.PickerRow(
                         title: "Max Rows",
                         icon: "rectangle.grid.1x2",
-                        selection: $maxRows,
+                        selection: maxRows,
                         tooltip: "Sets `ExpressCheckoutElement.Configuration.Appearance.buttonLayout.maxRows`.",
                         displayText: { $0.displayName }
                     )
@@ -321,6 +319,20 @@ struct CheckoutPlaygroundExpressCheckoutElementSection: View {
             .background(Color(uiColor: .secondarySystemGroupedBackground))
             .clipShape(RoundedRectangle(cornerRadius: 12))
         }
+    }
+
+    private var maxColumns: Binding<CheckoutPlayground.ExpressCheckoutElementButtonLayoutLimit> {
+        Binding(
+            get: { .init(intValue: appearance.buttonLayout.maxColumns) },
+            set: { appearance.buttonLayout.maxColumns = $0.intValue }
+        )
+    }
+
+    private var maxRows: Binding<CheckoutPlayground.ExpressCheckoutElementButtonLayoutLimit> {
+        Binding(
+            get: { .init(intValue: appearance.buttonLayout.maxRows) },
+            set: { appearance.buttonLayout.maxRows = $0.intValue }
+        )
     }
 }
 

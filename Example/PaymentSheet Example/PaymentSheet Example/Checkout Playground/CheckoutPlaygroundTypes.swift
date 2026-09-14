@@ -303,7 +303,7 @@ enum CheckoutPlayground {
 
         var displayName: String {
             switch self {
-            case .automatic: return "Automatic"
+            case .automatic: return "automatic"
             case .one: return "1"
             case .two: return "2"
             }
@@ -314,6 +314,14 @@ enum CheckoutPlayground {
             case .automatic: return nil
             case .one: return 1
             case .two: return 2
+            }
+        }
+
+        init(intValue: Int?) {
+            switch intValue {
+            case 1: self = .one
+            case 2: self = .two
+            default: self = .automatic
             }
         }
     }
