@@ -18,6 +18,13 @@ import UIKit
 import XCTest
 
 extension PaymentPagesAPIResponse {
+    /// Convenience for fixtures that contain no client-local session state.
+    func makePublicSession() -> CheckoutController.Session {
+        return CheckoutController.Session(apiResponse: self, localState: .empty)
+    }
+}
+
+extension PaymentPagesAPIResponse {
     static func decode(
         fromAPIResponse response: [AnyHashable: Any]
     ) throws -> PaymentPagesAPIResponse {
