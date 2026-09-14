@@ -92,6 +92,8 @@
 
 "Prefecture" = "Prefectura";
 
+"Processing..." = "Processant...";
+
 "Province" = "Província";
 
 "Remove" = "Eliminar";
@@ -106,9 +108,13 @@
 
 "Selection is empty." = "La selecció és buida.";
 
+"Something went wrong" = "Hi ha hagut un error";
+
 "Sort code" = "Codi de classificació";
 
 "State" = "País";
+
+"Submit" = "Envia";
 
 "Suburb" = "Suburbi";
 

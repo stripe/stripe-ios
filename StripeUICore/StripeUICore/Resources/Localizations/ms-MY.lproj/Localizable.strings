@@ -92,6 +92,8 @@
 
 "Prefecture" = "Wilayah";
 
+"Processing..." = "Sedang diproses...";
+
 "Province" = "Wilayah";
 
 "Remove" = "Alih Keluar";
@@ -106,9 +108,13 @@
 
 "Selection is empty." = "Tiada pilihan dibuat.";
 
+"Something went wrong" = "Ada sesuatu yang tidak kena";
+
 "Sort code" = "Kod isihan";
 
 "State" = "Negeri";
+
+"Submit" = "Serahkan";
 
 "Suburb" = "Pinggir Bandar";
 

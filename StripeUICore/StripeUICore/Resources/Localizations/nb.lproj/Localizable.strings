@@ -92,6 +92,8 @@
 
 "Prefecture" = "Prefektur";
 
+"Processing..." = "Behandler …";
+
 "Province" = "Provins";
 
 "Remove" = "Fjern";
@@ -106,9 +108,13 @@
 
 "Selection is empty." = "Markeringen er tom.";
 
+"Something went wrong" = "Noe gikk galt";
+
 "Sort code" = "Sorteringskode";
 
 "State" = "Stat";
+
+"Submit" = "Send inn";
 
 "Suburb" = "Forstad";
 

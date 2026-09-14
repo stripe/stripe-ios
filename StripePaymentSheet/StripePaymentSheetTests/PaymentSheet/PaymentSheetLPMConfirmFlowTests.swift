@@ -704,6 +704,15 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                                expectedHierarchy: ExpectedFormHierarchy.Sequra.paymentIntent) { _ in }
     }
 
+    func testScalapayConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "EUR",
+                               amount: 10000,
+                               paymentMethodType: .scalapay,
+                               merchantCountry: .IT,
+                               expectedHierarchy: ExpectedFormHierarchy.Scalapay.paymentIntent) { _ in }
+    }
+
     func testPaycoConfirmFlows() async throws {
         try await _testConfirm(intentKinds: [.paymentIntent],
                                currency: "KRW",
@@ -1282,7 +1291,7 @@ extension PaymentSheetLPMConfirmFlowTests {
             }
             // TODO: Re-enable once unified-mode Checkout forwards `blik_code` to PaymentIntent confirmation.
             if shouldTest(.checkoutSession), paymentMethod != .blik {
-                let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession(
+                let checkoutSessionResponse = try await STPTestingAPIClient.shared.createLegacyCheckoutSession(
                     types: paymentMethodTypes,
                     currency: currency,
                     amount: amount,

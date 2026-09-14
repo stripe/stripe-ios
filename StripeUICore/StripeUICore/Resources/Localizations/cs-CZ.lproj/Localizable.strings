@@ -92,6 +92,8 @@
 
 "Prefecture" = "Prefektura";
 
+"Processing..." = "Zpracování...";
+
 "Province" = "Provincie";
 
 "Remove" = "Odebrat";
@@ -106,9 +108,13 @@
 
 "Selection is empty." = "Výběr je prázdný.";
 
+"Something went wrong" = "Něco se pokazilo";
+
 "Sort code" = "Kód řazení";
 
 "State" = "Stát";
+
+"Submit" = "Odeslat";
 
 "Suburb" = "Předměstí";
 
