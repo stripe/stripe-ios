@@ -46,7 +46,7 @@ final class RoundedTextField: UIView {
                 textFieldContainerView
             ]
         )
-        containerStackView.backgroundColor = FinancialConnectionsAppearance.Colors.background
+        containerStackView.backgroundColor = FinancialConnectionsAppearance.Colors.surfacePrimary
         containerStackView.axis = .horizontal
         containerStackView.spacing = 12
         containerStackView.isLayoutMarginsRelativeArrangement = true
@@ -193,10 +193,17 @@ final class RoundedTextField: UIView {
         if errorText != nil && !highlighted {
             containerHorizontalStackView.layer.borderColor = FinancialConnectionsAppearance.Colors.textCritical.cgColor
             containerHorizontalStackView.layer.borderWidth = 2.0
+        } else if highlighted {
+            containerHorizontalStackView.layer.borderColor = appearance.colors.textFieldFocused.cgColor
+            containerHorizontalStackView.layer.borderWidth = 2.0
+            if appearance.colors == .link {
+                containerHorizontalStackView.backgroundColor = FinancialConnectionsAppearance.Colors.surfacePrimary
+            }
         } else {
-            if highlighted {
-                containerHorizontalStackView.layer.borderColor = appearance.colors.textFieldFocused.cgColor
-                containerHorizontalStackView.layer.borderWidth = 2.0
+            if appearance.colors == .link {
+                containerHorizontalStackView.layer.borderWidth = 0
+                containerHorizontalStackView.layer.borderColor = UIColor.clear.cgColor
+                containerHorizontalStackView.backgroundColor = appearance.colors.iconBackground
             } else {
                 containerHorizontalStackView.layer.borderColor = FinancialConnectionsAppearance.Colors.borderNeutral.cgColor
                 containerHorizontalStackView.layer.borderWidth = 1.0
@@ -731,7 +738,7 @@ struct RoundedTextField_Previews: PreviewProvider {
             Spacer()
         }
         .padding()
-        .background(Color(FinancialConnectionsAppearance.Colors.background))
+        .background(Color(FinancialConnectionsAppearance.Colors.surfacePrimary))
 
         // Use separate devices to showcase highlighted state
         RoundedTextFieldUIViewRepresentable(

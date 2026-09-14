@@ -17,7 +17,7 @@ final class ConsentLogoView: UIView {
     private var multipleDotView: UIView?
     private var shadowLayers: [CALayer] = []
 
-    init(merchantLogo: [String], showsAnimatedDots: Bool) {
+    init(merchantLogo: [String], showsAnimatedDots: Bool, appearance: FinancialConnectionsAppearance) {
         super.init(frame: .zero)
         let horizontalStackView = UIStackView()
         horizontalStackView.axis = .horizontal
@@ -26,7 +26,7 @@ final class ConsentLogoView: UIView {
         if (1...3).contains(merchantLogo.count) {
             for i in 0..<merchantLogo.count {
                 let urlString = merchantLogo[i]
-                let logoView = CreateRoundedLogoView(urlString: urlString)
+                let logoView = CreateRoundedLogoView(urlString: urlString, appearance: appearance)
                 self.shadowLayers.append(logoView.layer)
                 horizontalStackView.addArrangedSubview(logoView)
 
@@ -337,11 +337,13 @@ private struct ConsentLogoViewUIViewRepresentable: UIViewRepresentable {
 
     var merchantLogo: [String]
     var showsAnimatedDots: Bool
+    var appearance: FinancialConnectionsAppearance = .stripe
 
     func makeUIView(context: Context) -> ConsentLogoView {
         ConsentLogoView(
             merchantLogo: merchantLogo,
-            showsAnimatedDots: showsAnimatedDots
+            showsAnimatedDots: showsAnimatedDots,
+            appearance: appearance
         )
     }
 
@@ -363,6 +365,7 @@ struct ConsentLogoView_Previews: PreviewProvider {
             ConsentLogoViewUIViewRepresentable(merchantLogo: twoLogos, showsAnimatedDots: true)
             Spacer()
             ConsentLogoViewUIViewRepresentable(merchantLogo: twoLogos, showsAnimatedDots: false)
+            ConsentLogoViewUIViewRepresentable(merchantLogo: twoLogos, showsAnimatedDots: false, appearance: .link)
         }
         .padding()
     }
