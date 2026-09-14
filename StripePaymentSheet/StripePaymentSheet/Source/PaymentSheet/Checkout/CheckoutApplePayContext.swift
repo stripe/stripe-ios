@@ -331,7 +331,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
     }
 
     static func makeSummaryItems(for session: CheckoutController.Session, label: String) -> [PKPaymentSummaryItem] {
-        return STPApplePayContext.makePaymentSummaryItems(for: session, label: label, currency: session.currency)
+        return STPApplePayContext.makePaymentSummaryItems(for: session, label: label, currency: session.activePresentmentCurrency)
     }
 
     /// Builds the `PKPaymentRequest` for a Checkout Session's Apple Pay flow, including which
@@ -344,7 +344,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         let paymentRequest = StripeAPI.paymentRequest(
             withMerchantIdentifier: applePayConfig.merchantId,
             country: checkoutSession.merchantCountryCode,
-            currency: checkoutSession.currency ?? "USD"
+            currency: checkoutSession.activePresentmentCurrency ?? "USD"
         )
 
         assert(!paymentRequest.merchantIdentifier.isEmpty, "You must set `merchantId` on `ApplePayConfiguration`.")
