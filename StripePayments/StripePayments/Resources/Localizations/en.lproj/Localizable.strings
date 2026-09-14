@@ -62,6 +62,9 @@
 "PayPal" = "PayPal";
 
 /* Payment Method type brand name. */
+"Pre-authorized Debit" = "Pre-authorized Debit";
+
+/* Payment Method type brand name. */
 "Przelewy24" = "Przelewy24";
 
 /* Payment method brand name */
