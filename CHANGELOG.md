@@ -1,7 +1,9 @@
 The next release's version bump will so far be:
-PATCH
+MINOR
 
 ## X.Y.Z - changes pending release
+### CryptoOnramp (Alpha)
+* [Removed] Removed public exposure of `StripeCryptoOnramp.Image`, including `Image.linkIconSquare`.
 
 ## 26.11.0 2026-09-14
 ### General
@@ -12,9 +14,6 @@ PATCH
 
 ### PaymentSheet
 * [Added] Added support for Scalapay.
-
-### CryptoOnramp (Alpha)
-* [Removed] Removed public exposure of `StripeCryptoOnramp.Image`, including `Image.linkIconSquare`.
 
 ## 26.10.0 2026-09-08
 ### General
