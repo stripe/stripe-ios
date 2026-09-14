@@ -269,7 +269,33 @@ final class PaymentElementTest: XCTestCase {
 
         // ...and the saved card remains selected after PaymentElement refreshes.
         XCTAssertEqual(checkout.session.paymentOption?.label, "•••• 4242")
-        XCTAssertEqual(checkout.session.paymentOption?.billingDetails?.address.country, "US")
+        let billingDetails = try XCTUnwrap(checkout.session.paymentOption?.billingDetails)
+        XCTAssertEqual(billingDetails.name, "Jenny Rosen")
+        XCTAssertEqual(billingDetails.email, "jenny.rosen@example.com")
+        XCTAssertEqual(billingDetails.phone, "+15555555555")
+        XCTAssertEqual(billingDetails.address?.country, "US")
+        XCTAssertEqual(billingDetails.address?.line1, "354 Oyster Point Blvd")
+        XCTAssertEqual(billingDetails.address?.city, "South San Francisco")
+        XCTAssertEqual(billingDetails.address?.state, "CA")
+        XCTAssertEqual(billingDetails.address?.postalCode, "94080")
+    }
+
+    func testPaymentOptionBillingDetailsOmitsEmptyAddress() {
+        // Given a payment option whose PaymentSheet billing details have no address fields
+        let paymentOption = EmbeddedPaymentElement.PaymentOptionDisplayData(
+            image: UIImage(),
+            label: "•••• 4242",
+            billingDetails: .init(),
+            paymentMethodType: "card",
+            mandateText: nil,
+            shippingDetails: nil
+        )
+
+        // When converting it to Checkout display data
+        let displayData = CheckoutController.Session.PaymentOptionDisplayData(paymentOption)
+
+        // Then Checkout represents the absent address as nil, not an empty Address()
+        XCTAssertNil(displayData.billingDetails?.address)
     }
 
     func testClearPaymentOptionResetsBillingTaxRegionToCountry() async throws {

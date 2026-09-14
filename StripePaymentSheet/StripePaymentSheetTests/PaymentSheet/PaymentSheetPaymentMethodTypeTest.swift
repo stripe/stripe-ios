@@ -333,6 +333,53 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         }
     }
 
+    // MARK: - Scalapay
+
+    func testScalapayRequiresReturnURLAndDoesNotSupportSetup() {
+        // Given
+        let paymentIntent = Intent._testPaymentIntent(paymentMethodTypes: [.scalapay])
+        let setupIntents: [Intent] = [
+            ._testPaymentIntent(paymentMethodTypes: [.scalapay], setupFutureUsage: .offSession),
+            ._testPaymentIntent(
+                paymentMethodTypes: [.scalapay],
+                paymentMethodOptionsSetupFutureUsage: [.scalapay: "off_session"]
+            ),
+            ._testSetupIntent(paymentMethodTypes: [.scalapay]),
+        ]
+
+        // When
+        let paymentWithoutReturnURL = PaymentSheet.PaymentMethodType.supportsAdding(
+            paymentMethod: .scalapay,
+            configuration: makeConfiguration(),
+            intent: paymentIntent,
+            elementsSession: ._testValue(intent: paymentIntent),
+            supportedPaymentMethods: [.scalapay]
+        )
+        let paymentWithReturnURL = PaymentSheet.PaymentMethodType.supportsAdding(
+            paymentMethod: .scalapay,
+            configuration: makeConfiguration(hasReturnURL: true),
+            intent: paymentIntent,
+            elementsSession: ._testValue(intent: paymentIntent),
+            supportedPaymentMethods: [.scalapay]
+        )
+
+        // Then
+        XCTAssertEqual(paymentWithoutReturnURL, .missingRequirements([.returnURL]))
+        XCTAssertEqual(paymentWithReturnURL, .supported)
+        for intent in setupIntents {
+            XCTAssertEqual(
+                PaymentSheet.PaymentMethodType.supportsAdding(
+                    paymentMethod: .scalapay,
+                    configuration: makeConfiguration(hasReturnURL: true),
+                    intent: intent,
+                    elementsSession: ._testValue(intent: intent),
+                    supportedPaymentMethods: [.scalapay]
+                ),
+                .missingRequirements([.unsupportedForSetup])
+            )
+        }
+    }
+
     // MARK: - PAYCO
 
     func testPaycoRequiresReturnURLAndDoesNotSupportSetup() {

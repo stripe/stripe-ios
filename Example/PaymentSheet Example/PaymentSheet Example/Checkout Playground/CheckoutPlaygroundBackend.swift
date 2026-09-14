@@ -63,7 +63,7 @@ extension CheckoutPlayground {
                 ],
             ] as [String: Any]
             var sessionParams: [String: Any] = [
-                "ui_mode": "elements",
+                "ui_mode": "mobile_elements",
                 "currency": currency.rawValue,
                 "items": [
                     oneTimePrice,

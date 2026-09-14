@@ -92,6 +92,8 @@
 
 "Prefecture" = "Câmara municipal";
 
+"Processing..." = "A processar…";
+
 "Province" = "Província";
 
 "Remove" = "Remover";
@@ -106,9 +108,13 @@
 
 "Selection is empty." = "A seleção está vazia.";
 
+"Something went wrong" = "Ocorreu um problema";
+
 "Sort code" = "Código da agência bancária";
 
 "State" = "Estado";
+
+"Submit" = "Enviar";
 
 "Suburb" = "Subúrbio";
 

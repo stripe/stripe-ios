@@ -239,7 +239,7 @@ extension CheckoutController.Session.PaymentOptionDisplayData {
         self.init(
             image: paymentOption.image,
             label: paymentOption.label,
-            billingDetails: paymentOption.billingDetails,
+            billingDetails: paymentOption.billingDetails.map(BillingDetails.init),
             paymentMethodType: paymentOption.paymentMethodType,
             mandateText: nil
         )
@@ -249,9 +249,33 @@ extension CheckoutController.Session.PaymentOptionDisplayData {
         self.init(
             image: paymentOption.image,
             label: paymentOption.label,
-            billingDetails: paymentOption.billingDetails,
+            billingDetails: paymentOption.billingDetails.map(BillingDetails.init),
             paymentMethodType: paymentOption.paymentMethodType,
             mandateText: paymentOption.mandateText
+        )
+    }
+}
+
+private extension CheckoutController.Session.PaymentOptionDisplayData.BillingDetails {
+    init(_ billingDetails: PaymentSheet.BillingDetails) {
+        self.init(
+            address: billingDetails.address == .init() ? nil : Address(billingDetails.address),
+            email: billingDetails.email,
+            name: billingDetails.name,
+            phone: billingDetails.phone
+        )
+    }
+}
+
+private extension CheckoutController.Session.PaymentOptionDisplayData.BillingDetails.Address {
+    init(_ address: PaymentSheet.Address) {
+        self.init(
+            city: address.city,
+            country: address.country,
+            line1: address.line1,
+            line2: address.line2,
+            postalCode: address.postalCode,
+            state: address.state
         )
     }
 }

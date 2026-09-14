@@ -105,6 +105,12 @@ enum ExpectedFormHierarchy {
         static var paymentIntent: FormHierarchyNode { emptyForm }
     }
 
+    // MARK: - Scalapay
+
+    enum Scalapay {
+        static var paymentIntent: FormHierarchyNode { emptyForm }
+    }
+
     // MARK: - PAYCO
 
     enum Payco {

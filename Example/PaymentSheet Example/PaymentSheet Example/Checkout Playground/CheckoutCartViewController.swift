@@ -209,7 +209,9 @@ final class CheckoutCartViewController: UIViewController {
                 configuration.shippingAddressElement = .init()
             }
             if expressCheckoutElementSettings.isEnabled {
-                var expressCheckoutElementConfiguration = ExpressCheckoutElement.Configuration()
+                var expressCheckoutElementConfiguration = ExpressCheckoutElement.Configuration { [weak self] result in
+                    self?.handleConfirmResult(result)
+                }
                 expressCheckoutElementConfiguration.applePayConfiguration = ExpressCheckoutElement.ApplePayConfiguration(
                     merchantId: "merchant.com.stripe.paymentsheet.example",
                     display: expressCheckoutElementSettings.applePayDisplay
@@ -218,10 +220,6 @@ final class CheckoutCartViewController: UIViewController {
                     display: expressCheckoutElementSettings.linkDisplay
                 )
                 expressCheckoutElementConfiguration.shippingAddressRequired = expressCheckoutElementSettings.shippingAddressRequired
-                expressCheckoutElementConfiguration.billingDetailsCollectionConfiguration = expressCheckoutElementSettings.billingDetailsCollectionConfiguration
-                expressCheckoutElementConfiguration.confirmHandler = { [weak self] result in
-                    self?.handleConfirmResult(result)
-                }
                 configuration.expressCheckoutElement = expressCheckoutElementConfiguration
             }
             if adaptivePricing {
@@ -286,9 +284,9 @@ final class CheckoutCartViewController: UIViewController {
 
         contentStackView.addArrangedSubview(makeLineItemsSection(session: session))
 
-        if expressCheckoutElementSettings.isEnabled, let expressCheckoutElement = checkout.getExpressCheckoutElement() {
+        if expressCheckoutElementSettings.isEnabled {
             contentStackView.addArrangedSubview(
-                makeSection(title: "Express Checkout", content: expressCheckoutElement.uiView)
+                makeSection(title: "Express Checkout", content: checkout.getExpressCheckoutElement().uiView)
             )
         }
 
@@ -633,7 +631,7 @@ final class CheckoutCartViewController: UIViewController {
     private func makeClearPaymentOptionButton() -> UIButton {
         let button = UIButton(type: .system)
         button.setTitle("Clear payment option", for: .normal)
-        button.setTitleColor(.systemRed, for: .normal)
+        button.setTitleColor(.secondaryLabel, for: .normal)
         button.titleLabel?.font = .preferredFont(forTextStyle: .subheadline)
         button.addTarget(self, action: #selector(clearPaymentOptionButtonTapped), for: .touchUpInside)
         return button
