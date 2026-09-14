@@ -1,0 +1,35 @@
+{
+  "requirements": {
+    "entries": [
+      {
+        "description": "source_of_funds",
+        "requested_by": "swapped",
+        "awaiting_action_from": "user",
+        "errors": [],
+        "document": {
+          "accepted_subtypes": [
+            {
+              "id": "payslip",
+              "label": "Payslip"
+            }
+          ],
+          "accepted_formats": ["pdf", "jpeg", "png"],
+          "min_documents": 1,
+          "instructions": ["Documents must have your full name and address on it"],
+          "additional_requirements": {
+            "questionnaire": {
+              "questions": [
+                {
+                  "id": "purchase_purpose",
+                  "prompt": "Why are you purchasing cryptocurrency?",
+                  "answer_type": "free_text",
+                  "required": true
+                }
+              ]
+            }
+          }
+        }
+      }
+    ]
+  }
+}
