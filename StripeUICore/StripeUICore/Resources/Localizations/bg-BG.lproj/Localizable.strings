@@ -92,7 +92,7 @@
 
 "Prefecture" = "Префектура";
 
-"Processing..." = "Обработване...";
+"Processing..." = "Обработва се...";
 
 "Province" = "Област";
 
@@ -108,13 +108,13 @@
 
 "Selection is empty." = "Изборът е празен.";
 
-"Something went wrong" = "Възникна грешка";
+"Something went wrong" = "Нещо се е объркало";
 
 "Sort code" = "Идентификационен банков код";
 
 "State" = "Щат";
 
-"Submit" = "Изпращане";
+"Submit" = "Подаване";
 
 "Suburb" = "Предградие";
 

@@ -1,10 +1,11 @@
 The next release's version bump will so far be:
-MINOR
+PATCH
 
 ## X.Y.Z - changes pending release
 ### CryptoOnramp (Alpha)
 * [Added] Added `CryptoOnrampCoordinator.presentTermsAndConditionsIfNeeded(from:)` and `presentTermsOfServiceIfNeeded(from:)` to present and record acceptance of current partner terms when required. Both methods return `PartnerTermsResult`.
 
+## 26.11.0 2026-09-14
 ### General
 * [Added] Added support for Welsh.
 
