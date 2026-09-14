@@ -101,6 +101,46 @@ class PaymentSheetFlowControllerTests: XCTestCase {
         XCTAssertNil(sut.paymentOption)
     }
 
+    @MainActor
+    func testClearPaymentOptionClearsHorizontalDefault() {
+        // Given Link is the default in a horizontal FlowController
+        let customerID = "cus_test_horizontal_clear_default"
+        defer {
+            CustomerPaymentOption.setDefaultPaymentMethod(nil, forCustomer: customerID)
+        }
+        CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: customerID)
+        let sut = makeHorizontalFlowController(customerID: customerID)
+        XCTAssertNotNil(sut.paymentOption)
+
+        // When we clear the payment option
+        sut.clearPaymentOption()
+
+        // Then no payment option is available
+        XCTAssertNil(sut.paymentOption)
+        XCTAssertNil(sut.internalPaymentOption)
+    }
+
+    @MainActor
+    func testClearPaymentOptionAllowsNextSelection() {
+        // Given Link was cleared from a horizontal FlowController
+        let customerID = "cus_test_horizontal_select_after_clear"
+        defer {
+            CustomerPaymentOption.setDefaultPaymentMethod(nil, forCustomer: customerID)
+        }
+        CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: customerID)
+        let sut = makeHorizontalFlowController(customerID: customerID)
+        sut.clearPaymentOption()
+
+        // When the customer chooses Link again
+        sut.viewController.linkConfirmOption = .wallet(brand: .link)
+        sut.flowControllerViewControllerShouldClose(sut.viewController, didCancel: false)
+        sut.updatePaymentOption()
+
+        // Then Link becomes the current payment option
+        XCTAssertEqual(sut.paymentOption?.paymentMethodType, "link")
+        XCTAssertNotNil(sut.internalPaymentOption)
+    }
+
     // MARK: - PaymentOptionDisplayData Labels Tests
 
     func testPaymentOptionDisplayData_CardLabels() {
