@@ -17,7 +17,6 @@ extension CheckoutPlayground {
         var appearance: ExpressCheckoutElement.Appearance = .init()
         var maxColumns: ExpressCheckoutElementButtonLayoutLimit = .automatic
         var maxRows: ExpressCheckoutElementButtonLayoutLimit = .automatic
-        var billingDetailsCollectionConfiguration = ExpressCheckoutElement.BillingDetailsCollectionConfiguration()
     }
 
     @MainActor

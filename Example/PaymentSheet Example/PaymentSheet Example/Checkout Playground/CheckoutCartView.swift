@@ -169,11 +169,9 @@ struct CheckoutCartView: View {
                     display: expressCheckoutElementSettings.linkDisplay
                 )
                 expressCheckoutElementConfiguration.shippingAddressRequired = expressCheckoutElementSettings.shippingAddressRequired
-                var appearance = expressCheckoutElementSettings.appearance
-                appearance.buttonLayout.maxColumns = expressCheckoutElementSettings.maxColumns.intValue
-                appearance.buttonLayout.maxRows = expressCheckoutElementSettings.maxRows.intValue
-                expressCheckoutElementConfiguration.appearance = appearance
-                expressCheckoutElementConfiguration.billingDetailsCollectionConfiguration = expressCheckoutElementSettings.billingDetailsCollectionConfiguration
+                expressCheckoutElementConfiguration.appearance.buttonTheme = expressCheckoutElementSettings.buttonTheme
+                expressCheckoutElementConfiguration.appearance.buttonLayout.maxColumns = expressCheckoutElementSettings.maxColumns.intValue
+                expressCheckoutElementConfiguration.appearance.buttonLayout.maxRows = expressCheckoutElementSettings.maxRows.intValue
                 config.expressCheckoutElement = expressCheckoutElementConfiguration
             }
             if adaptivePricing {

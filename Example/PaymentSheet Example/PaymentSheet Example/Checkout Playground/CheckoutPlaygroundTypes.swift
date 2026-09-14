@@ -22,14 +22,6 @@ extension ExpressCheckoutElement.Appearance.ButtonTheme: CaseIterable, Identifia
     public var id: String { rawValue }
 }
 
-extension ExpressCheckoutElement.BillingDetailsCollectionConfiguration.CollectionMode: @retroactive Identifiable {
-    public var id: String { rawValue }
-}
-
-extension ExpressCheckoutElement.BillingDetailsCollectionConfiguration.AddressCollectionMode: @retroactive Identifiable {
-    public var id: String { rawValue }
-}
-
 enum CheckoutPlayground {
     enum LinkMode: String, CaseIterable, Identifiable, Codable {
         case native

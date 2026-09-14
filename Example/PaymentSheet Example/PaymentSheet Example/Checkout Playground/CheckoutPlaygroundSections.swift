@@ -266,7 +266,6 @@ struct CheckoutPlaygroundExpressCheckoutElementSection: View {
     @Binding var buttonTheme: ExpressCheckoutElement.Appearance.ButtonTheme
     @Binding var maxColumns: CheckoutPlayground.ExpressCheckoutElementButtonLayoutLimit
     @Binding var maxRows: CheckoutPlayground.ExpressCheckoutElementButtonLayoutLimit
-    var onCustomizeBillingDetailsCollection: () -> Void
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -317,25 +316,6 @@ struct CheckoutPlaygroundExpressCheckoutElementSection: View {
                         tooltip: "Sets `ExpressCheckoutElement.Configuration.Appearance.buttonLayout.maxRows`.",
                         displayText: { $0.displayName }
                     )
-                    Button(action: onCustomizeBillingDetailsCollection) {
-                        HStack {
-                            Image(systemName: "person.text.rectangle.fill")
-                                .font(.system(size: 16))
-                                .frame(width: 24)
-                                .foregroundColor(.blue)
-                            Text("Billing Details Collection")
-                                .font(.subheadline)
-                                .foregroundColor(.primary)
-                            Spacer()
-                            Image(systemName: "chevron.right")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                        }
-                        .padding(.vertical, 12)
-                        .padding(.horizontal, 16)
-                        .background(Color(uiColor: .secondarySystemGroupedBackground))
-                    }
-                    .buttonStyle(PlainButtonStyle())
                 }
             }
             .background(Color(uiColor: .secondarySystemGroupedBackground))

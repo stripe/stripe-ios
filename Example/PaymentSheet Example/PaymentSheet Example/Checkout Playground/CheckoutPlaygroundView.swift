@@ -10,7 +10,6 @@ import SwiftUI
 struct CheckoutPlaygroundView: View {
     @StateObject private var viewModel = CheckoutPlayground.ViewModel()
     @State private var showCurrencySelectorAppearance = false
-    @State private var showBillingDetailsCollection = false
 
     var body: some View {
         Group {
@@ -63,10 +62,7 @@ struct CheckoutPlaygroundView: View {
                             shippingAddressRequired: $viewModel.expressCheckoutElement.shippingAddressRequired,
                             buttonTheme: $viewModel.expressCheckoutElement.appearance.buttonTheme,
                             maxColumns: $viewModel.expressCheckoutElement.maxColumns,
-                            maxRows: $viewModel.expressCheckoutElement.maxRows,
-                            onCustomizeBillingDetailsCollection: {
-                                showBillingDetailsCollection = true
-                            }
+                            maxRows: $viewModel.expressCheckoutElement.maxRows
                         )
 
                         currencySelectorAppearanceSection
@@ -129,15 +125,6 @@ struct CheckoutPlaygroundView: View {
                     doneAction: { updatedAppearance in
                         viewModel.currencySelectorAppearance = updatedAppearance
                         showCurrencySelectorAppearance = false
-                    }
-                )
-            }
-            .sheet(isPresented: $showBillingDetailsCollection) {
-                ExpressCheckoutElementBillingDetailsCollectionPlaygroundView(
-                    configuration: viewModel.expressCheckoutElement.billingDetailsCollectionConfiguration,
-                    doneAction: { updatedConfiguration in
-                        viewModel.expressCheckoutElement.billingDetailsCollectionConfiguration = updatedConfiguration
-                        showBillingDetailsCollection = false
                     }
                 )
             }
