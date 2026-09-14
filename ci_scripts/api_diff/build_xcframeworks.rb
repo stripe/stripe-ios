@@ -16,6 +16,7 @@ def checkout_build_generate(branch, archive_name)
   -configuration 'Release' \
   -archivePath './StripeFrameworks-sim-#{archive_name}.xcarchive' \
   -sdk iphonesimulator \
+  ARCHS=arm64 \
   SUPPORTS_MACCATALYST=NO \
   BUILD_LIBRARIES_FOR_DISTRIBUTION=YES \
   SWIFT_ACTIVE_COMPILATION_CONDITIONS=STRIPE_BUILD_PACKAGE \

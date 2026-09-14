@@ -359,10 +359,6 @@ enum EmptyClassificationType: Equatable {
 
 extension ImageScanningSession where ExpectedClassificationType == EmptyClassificationType {
 
-    func setStateScanned(capturedData: CapturedDataType) {
-        setStateScanned(expectedClassification: .empty, capturedData: capturedData)
-    }
-
     func startIfNeeded() {
         startIfNeeded(expectedClassification: .empty)
     }

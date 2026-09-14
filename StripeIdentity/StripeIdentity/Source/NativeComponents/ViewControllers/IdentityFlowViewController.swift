@@ -103,7 +103,10 @@ class IdentityFlowViewController: UIViewController {
         ) {
         navigationItem.backButtonTitle = backButtonTitle
         do {
-            try flowView.configure(with: viewModel)
+            try flowView.configure(
+                with: viewModel,
+                primaryButtonColor: sheetController?.flowController.brandColor
+            )
         } catch {
             if let sheetController = sheetController {
                 sheetController.analyticsClient.logGenericError(
