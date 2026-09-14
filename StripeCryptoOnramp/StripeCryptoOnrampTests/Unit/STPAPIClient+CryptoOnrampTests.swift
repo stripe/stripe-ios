@@ -895,6 +895,7 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         stub { request in
             XCTAssertEqual(request.url?.path, Constant.partnerTermsAPIPath)
             XCTAssertEqual(request.httpMethod, "POST")
+            XCTAssertEqual(request.value(forHTTPHeaderField: Constant.consumerAuthTokenHeader), Constant.requestSecret)
 
             guard let httpBody = request.ohhttpStubs_httpBody else {
                 XCTFail("Expected an httpBody data but found none.")
@@ -903,8 +904,7 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
 
             let parameters = String(data: httpBody, encoding: .utf8)?.parsedHTTPParametersDictionary ?? [:]
 
-            XCTAssertEqual(parameters.count, 2)
-            XCTAssertEqual(parameters["credentials[consumer_session_client_secret]"], Constant.requestSecret)
+            XCTAssertEqual(parameters.count, 1)
             XCTAssertEqual(parameters["declaration_id"], "copt_decl_123")
 
             return true
