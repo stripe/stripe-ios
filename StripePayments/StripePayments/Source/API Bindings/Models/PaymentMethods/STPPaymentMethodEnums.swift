@@ -114,6 +114,8 @@ import Foundation
     case sequra
     /// A Scalapay payment method
     case scalapay
+    /// An ACSS Debit payment method.
+    @objc(STPPaymentMethodTypeACSSDebit) case ACSSDebit
     /// An unknown type.
     case unknown
 
@@ -132,6 +134,8 @@ import Foundation
             return STPLocalizedString("SEPA Debit", "Payment method brand name")
         case .AUBECSDebit:
             return STPLocalizedString("AU Direct Debit", "Payment Method type brand name.")
+        case .ACSSDebit:
+            return STPLocalizedString("Pre-authorized Debit", "Payment Method type brand name.")
         case .grabPay:
             return STPLocalizedString("GrabPay", "Payment Method type brand name.")
         case .EPS:
@@ -253,6 +257,8 @@ import Foundation
             return "sepa_debit"
         case .AUBECSDebit:
             return "au_becs_debit"
+        case .ACSSDebit:
+            return "acss_debit"
         case .bacsDebit:
             return "bacs_debit"
         case .przelewy24:

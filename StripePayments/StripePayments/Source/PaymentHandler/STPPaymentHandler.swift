@@ -684,7 +684,7 @@ public class STPPaymentHandler: NSObject {
     ///   - setupIntentClientSecret: The client secret of the SetupIntent to handle next actions for.
     ///   - authenticationContext: The authentication context used to authenticate the SetupIntent.
     ///   - returnURL: An optional URL to redirect your customer back to after they authenticate or cancel in a webview. This should match the returnURL you specified during SetupIntent confirmation.
-    ///   - completion: The completion block. If the status returned is `STPPaymentHandlerActionStatusSucceeded`, the SetupIntent status will always be  STPSetupIntentStatusSucceeded.
+    ///   - completion: The completion block. A successful result can include a SetupIntent in the `requiresAction` state when the customer must complete the next action outside the SDK.
     @objc(handleNextActionForSetupIntent:authenticationContext:returnURL:completion:)
     public func handleNextAction(
         setupIntentClientSecret: String,
@@ -725,7 +725,7 @@ public class STPPaymentHandler: NSObject {
     ///   - authenticationContext: The authentication context used to authenticate the SetupIntent.
     ///   - returnURL: An optional URL to redirect your customer back to after they authenticate or cancel in a webview. This should match the returnURL you specified during SetupIntent confirmation.
     ///   - shouldSendStartAnalytic: Tracks whether STPPaymentHandler has already sent a start analytic for `handleNextAction` because this method was called from the other `handleNextAction`
-    ///   - completion: The completion block. If the status returned is `STPPaymentHandlerActionStatusSucceeded`, the SetupIntent status will always be  STPSetupIntentStatusSucceeded.
+    ///   - completion: The completion block. A successful result can include a SetupIntent in the `requiresAction` state when the customer must complete the next action outside the SDK.
     /// - Note: The SetupIntent must have been fetched with an expanded paymentMethod object (see how `handleNextAction(forPayment:)` does this).
     @_spi(STP) public func handleNextAction(
         for setupIntent: STPSetupIntent,
@@ -772,6 +772,8 @@ public class STPPaymentHandler: NSObject {
                 if let setupIntent = setupIntent,
                    error == nil,
                    setupIntent.status == .succeeded
+                    || (setupIntent.status == .requiresAction
+                        && strongSelf.isNextActionSuccessState(nextAction: setupIntent.nextAction))
                 {
                     completion(.succeeded, setupIntent, nil)
                 } else {
@@ -822,6 +824,7 @@ public class STPPaymentHandler: NSObject {
         // Asynchronous payment methods whose intent.status is 'processing' after handling the next action
         case .SEPADebit,
             .bacsDebit,  // Bacs Debit takes 2-3 business days
+            .ACSSDebit,
             .AUBECSDebit,
             .USBankAccount,
             .card: // When orchestration is enabled, cards move to a `processing` state after successful authorization.

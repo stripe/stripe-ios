@@ -22,6 +22,8 @@ class STPPaymentMethodTest: XCTestCase {
             STPPaymentMethod.type(from: "AU_BECS_DEBIT"),
             STPPaymentMethodType.AUBECSDebit
         )
+        XCTAssertEqual(STPPaymentMethod.type(from: "acss_debit"), .ACSSDebit)
+        XCTAssertEqual(STPPaymentMethod.type(from: "ACSS_DEBIT"), .ACSSDebit)
         XCTAssertEqual(STPPaymentMethod.type(from: "BACS_DEBIT"), STPPaymentMethodType.bacsDebit)
         XCTAssertEqual(STPPaymentMethod.type(from: "bacs_debit"), STPPaymentMethodType.bacsDebit)
         XCTAssertEqual(STPPaymentMethod.type(from: "BACS_DEBIT"), STPPaymentMethodType.bacsDebit)
@@ -56,6 +58,7 @@ class STPPaymentMethodTest: XCTestCase {
             "sepa_debit",
             "bacs_debit",
             "au_becs_debit",
+            "acss_debit",
             "multibanco",
             "vipps",
         ]
@@ -67,6 +70,7 @@ class STPPaymentMethodTest: XCTestCase {
             .SEPADebit,
             .bacsDebit,
             .AUBECSDebit,
+            .ACSSDebit,
             .multibanco,
             .vipps,
         ]
@@ -82,6 +86,7 @@ class STPPaymentMethodTest: XCTestCase {
             .SEPADebit,
             .bacsDebit,
             .AUBECSDebit,
+            .ACSSDebit,
             .OXXO,
             .alipay,
             .payPal,
@@ -107,6 +112,8 @@ class STPPaymentMethodTest: XCTestCase {
                 XCTAssertEqual(string, "bacs_debit")
             case .AUBECSDebit:
                 XCTAssertEqual(string, "au_becs_debit")
+            case .ACSSDebit:
+                XCTAssertEqual(string, "acss_debit")
             case .przelewy24:
                 XCTAssertEqual(string, "p24")
             case .bancontact:
