@@ -31,7 +31,7 @@ protocol AccountPickerViewControllerDelegate: AnyObject {
     )
     func accountPickerViewController(
         _ viewController: AccountPickerViewController,
-        didReceiveEvent event: FinancialConnectionsEvent
+        didReceiveEvent event: FinancialConnectionsEventPayload
     )
 }
 
@@ -92,7 +92,7 @@ final class AccountPickerViewController: UIViewController {
                     )
                 self.delegate?.accountPickerViewController(
                     self,
-                    didReceiveEvent: FinancialConnectionsEvent(name: .accountsSelected)
+                    didReceiveEvent: FinancialConnectionsEventPayload(name: .accountsSelected)
                 )
                 self.didSelectLinkAccounts(isSkipAccountSelection: false)
             },

@@ -26,6 +26,7 @@ final class HostControllerEventTests: XCTestCase {
         XCTAssertEqual(eventRecorder.events.map(\.name), [.open, .flowLaunchedInBrowser])
         XCTAssertEqual(emissionRecords.count, 2)
         for (event, record) in zip(eventRecorder.events, emissionRecords) {
+            XCTAssertEqual(event.financialConnectionsSessionId, synchronize.manifest.id)
             XCTAssertEqual(record["las_id"] as? String, synchronize.manifest.id)
             XCTAssertEqual(record["context_source"] as? String, "native_sdk")
             XCTAssertEqual(try eventPayload(record)["name"] as? String, event.name.rawValue)
@@ -64,7 +65,9 @@ final class HostControllerEventTests: XCTestCase {
         XCTAssertEqual(emissionRecords.count, eventRecorder.events.count)
         for (event, record) in zip(eventRecorder.events, emissionRecords) {
             let payload = try eventPayload(record)
+            XCTAssertEqual(event.financialConnectionsSessionId, synchronize.manifest.id)
             XCTAssertEqual(payload["name"] as? String, event.name.rawValue)
+            XCTAssertEqual(payload["financialConnectionsSessionId"] as? String, synchronize.manifest.id)
             XCTAssertEqual(payload["metadata"] as? NSDictionary, event.metadata.dictionary as NSDictionary)
         }
     }
@@ -89,6 +92,87 @@ final class HostControllerEventTests: XCTestCase {
         XCTAssertEqual(eventRecorder.events.last?.metadata.errorCode, .noEligibleAccounts)
         XCTAssertEqual(emissionRecords.count, 3)
         XCTAssertEqual(mockAnalytics.loggedAnalyticPayloads(withEventName: "linked_accounts.error.unexpected").count, 1)
+    }
+
+    func testEventsAreSuppressedUntilTheSessionIdIsKnown() throws {
+        // Given a new presentation that has not completed its initial request
+        let nativeController = makeNativeController(try makeSynchronize())
+
+        // When any of the event sources produces an event
+        hostController.hostViewController(hostController.hostViewController, didReceiveEvent: .init(name: .cancel))
+        hostController.nativeFlowController(nativeController, didReceiveEvent: .init(name: .accountsSelected))
+        hostController.webFlowViewController(UIViewController(), didReceiveEvent: .init(name: .success))
+        analyticsClient.logUnexpectedError(
+            NSError(domain: "test_initialization", code: 1),
+            errorName: "initialization_failed",
+            pane: .unparsable
+        )
+
+        // Then no event with a missing or client-secret-derived identifier is published
+        XCTAssertTrue(eventRecorder.events.isEmpty)
+        XCTAssertTrue(emissionRecords.isEmpty)
+        XCTAssertEqual(mockAnalytics.loggedAnalyticPayloads(withEventName: "linked_accounts.error.unexpected").count, 1)
+    }
+
+    func testInitializationFailureIsStillReturnedThroughCompletion() {
+        // Given a failed initial request with no session identifier
+        let error = NSError(domain: "test_initialization", code: 1)
+
+        // When the loading screen finishes with that failure
+        hostController.hostViewControllerDidFinish(hostController.hostViewController, lastError: error)
+
+        // Then completion retains the original failure without publishing an incomplete event
+        guard case .failed(let completedError) = eventRecorder.result else {
+            return XCTFail("Expected initialization failure")
+        }
+        XCTAssertEqual(completedError as NSError, error)
+        XCTAssertTrue(eventRecorder.events.isEmpty)
+        XCTAssertTrue(emissionRecords.isEmpty)
+    }
+
+    func testANewPresentationDoesNotReuseThePreviousSessionId() throws {
+        // Given a completed initialization for one presentation
+        let first = try makeSynchronize(id: "fcsess_first")
+        hostController.hostViewController(hostController.hostViewController, didFetch: first)
+        let secondHost = makeHostController()
+
+        // When another presentation emits before and after its own initialization
+        secondHost.hostViewController(secondHost.hostViewController, didReceiveEvent: .init(name: .cancel))
+        XCTAssertEqual(eventRecorder.events.count, 2)
+        let second = try makeSynchronize(id: "fcsess_second")
+        secondHost.hostViewController(secondHost.hostViewController, didFetch: second)
+
+        // Then each presentation uses only its own canonical session identifier
+        XCTAssertEqual(
+            eventRecorder.events.map(\.financialConnectionsSessionId),
+            ["fcsess_first", "fcsess_first", "fcsess_second", "fcsess_second"]
+        )
+    }
+
+    func testLinkedAccountResultDoesNotReplaceTheEventSessionId() throws {
+        // Given a flow initialized with the canonical session identifier
+        let synchronize = try makeSynchronize()
+        hostController.hostViewController(hostController.hostViewController, didFetch: synchronize)
+        let nativeController = makeNativeController(synchronize)
+
+        // When completion returns a linked-account identifier
+        hostController.nativeFlowController(nativeController, didFinish: .completed(.linkedAccount(id: "fca_linked_account")))
+        hostController.nativeFlowController(nativeController, didReceiveEvent: .init(name: .success))
+
+        // Then the event still references the session that was synchronized
+        XCTAssertEqual(eventRecorder.events.last?.financialConnectionsSessionId, synchronize.manifest.id)
+    }
+
+    func testEmptySessionIdDoesNotPublishEvents() throws {
+        // Given an invalid manifest without a session identifier
+        let synchronize = try makeSynchronize(id: "")
+
+        // When the manifest is received
+        hostController.hostViewController(hostController.hostViewController, didFetch: synchronize)
+
+        // Then the public contract cannot be violated with an empty identifier
+        XCTAssertTrue(eventRecorder.events.isEmpty)
+        XCTAssertTrue(emissionRecords.isEmpty)
     }
 
     private var emissionRecords: [[String: Any]] {
