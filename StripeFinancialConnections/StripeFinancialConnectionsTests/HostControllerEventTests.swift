@@ -163,14 +163,19 @@ final class HostControllerEventTests: XCTestCase {
         XCTAssertEqual(eventRecorder.events.last?.financialConnectionsSessionId, synchronize.manifest.id)
     }
 
-    func testEmptySessionIdDoesNotPublishEvents() throws {
+    func testEmptySessionIdFailsInitializationWithoutPublishingEvents() throws {
         // Given an invalid manifest without a session identifier
         let synchronize = try makeSynchronize(id: "")
 
         // When the manifest is received
         hostController.hostViewController(hostController.hostViewController, didFetch: synchronize)
 
-        // Then the public contract cannot be violated with an empty identifier
+        // Then initialization fails without creating a flow or publishing incomplete events
+        guard case .failed(let error) = eventRecorder.result else {
+            return XCTFail("Expected initialization failure")
+        }
+        XCTAssert(error is FinancialConnectionsSheetError)
+        XCTAssertTrue(hostController.navigationController.topViewController === hostController.hostViewController)
         XCTAssertTrue(eventRecorder.events.isEmpty)
         XCTAssertTrue(emissionRecords.isEmpty)
     }
