@@ -14,32 +14,37 @@ import StripeCoreTestUtils
 final class NetworkedIdentityFlowViewControllerSnapshotTest: STPSnapshotTestCase {
     private static let snapshotFrame = CGRect(x: 0, y: 0, width: 375, height: 812)
 
+    private lazy var linkSession = NetworkedIdentityLinkSessionTestMock()
     private lazy var apiClient = NetworkedIdentityAPIClientTestMock()
-    private lazy var identityAPIClient: IdentityAPIClientTestMock = {
-        let apiClient = IdentityAPIClientTestMock(verificationSessionId: "vs_123")
-        apiClient.supportsNetworkedIdentity = true
-        return apiClient
-    }()
-    private lazy var coordinator = NetworkedIdentityCoordinator(
-        apiClient: apiClient,
-        documentRequirements: .init(
-            allowedDocumentTypes: [.passport, .drivingLicense, .idCard],
-            requiresLiveCapture: false
-        ),
-        identityAPIClient: identityAPIClient,
-        verificationSessionClientSecrets: ["vs_client_secret"],
-        currentTime: { 1_800_000_000 }
-    )
-    private lazy var viewController: NetworkedIdentityFlowViewController = {
-        let viewController = NetworkedIdentityFlowViewController(
-            coordinator: coordinator
+    private lazy var actions = NetworkedIdentityActionsTestMock()
+    private var mode: NetworkedIdentityMode = .reuse
+    private lazy var coordinator: NetworkedIdentityCoordinator = {
+        let coordinator = NetworkedIdentityCoordinator(
+            linkSession: linkSession,
+            apiClient: apiClient,
+            actions: actions,
+            documentRequirements: .init(
+                allowedDocumentTypes: [.passport, .drivingLicense, .idCard],
+                requiresLiveCapture: false
+            ),
+            config: .init(
+                route: mode == .reuse ? .reuse : .save,
+                merchantPublishableKey: "pk_test_merchant",
+                merchantEmail: nil,
+                seedSavedDocuments: false
+            ),
+            handoff: nil,
+            currentTime: { 1_800_000_000 }
         )
+        coordinator.delegate = self
+        return coordinator
+    }()
+    private lazy var viewController: NetworkedIdentityFlowViewController = {
+        let viewController = NetworkedIdentityFlowViewController(coordinator: coordinator, includesSelfie: true)
         viewController.loadViewIfNeeded()
         return viewController
     }()
-    private lazy var navigationController = IdentityFlowNavigationController(
-        rootViewController: viewController
-    )
+    private lazy var navigationController = UINavigationController(rootViewController: viewController)
     private lazy var window: UIWindow = {
         let window = UIWindow(frame: Self.snapshotFrame)
         window.rootViewController = navigationController
@@ -48,10 +53,15 @@ final class NetworkedIdentityFlowViewControllerSnapshotTest: STPSnapshotTestCase
     }()
 
     func testEmailEntry() {
+        startAndConfigure()
+
+        XCTAssertEqual(viewController.visibleStep, .email)
         verifyView()
     }
 
     func testEmailEntryWithValidEmail() {
+        startAndConfigure()
+
         // When the consumer enters a valid email address
         viewController.emailView.emailElement.setText("jane.diaz@example.com")
 
@@ -64,9 +74,8 @@ final class NetworkedIdentityFlowViewControllerSnapshotTest: STPSnapshotTestCase
         // Given a fresh SMS code is ready for entry
         beginExistingConsumerFlow()
 
-        // Then the standard Link verification state is visible
-        XCTAssertEqual(coordinator.state, .awaitingOTP)
-        XCTAssertEqual(viewController.phoneOtpView?.viewModel, .InputtingOTP)
+        // Then the Link verification step is visible
+        XCTAssertEqual(coordinator.state, .awaitingOTP(invalidCode: false))
         verifyView()
     }
 
@@ -75,16 +84,15 @@ final class NetworkedIdentityFlowViewControllerSnapshotTest: STPSnapshotTestCase
         beginExistingConsumerFlow()
 
         // When Link rejects the code
-        viewController.didInputFullOtp(newOtp: "111111")
-        waitForState(.awaitingOTP) {
-            apiClient.confirmVerification.respondToNext(
-                with: .failure(
-                    consumerError(code: "consumer_verification_code_invalid")
-                )
-            )
-        }
+        coordinator.submitOTP("111111")
+        settle()
+        linkSession.confirmVerification.respondToNext(
+            with: .failure(consumerError(code: "consumer_verification_code_invalid"))
+        )
+        settle()
 
         // Then the invalid-code UI remains visible and editable
+        XCTAssertEqual(coordinator.state, .awaitingOTP(invalidCode: true))
         verifyView()
     }
 
@@ -95,9 +103,8 @@ final class NetworkedIdentityFlowViewControllerSnapshotTest: STPSnapshotTestCase
         // When they request another code
         coordinator.resendOTP()
 
-        // Then code entry and resend are disabled while the request is pending
+        // Then the request is shown as pending
         XCTAssertEqual(coordinator.state, .otpStartPending)
-        XCTAssertEqual(viewController.phoneOtpView?.viewModel, .SubmittingOTP(""))
         verifyView()
     }
 
@@ -110,65 +117,75 @@ final class NetworkedIdentityFlowViewControllerSnapshotTest: STPSnapshotTestCase
         // Given the consumer selected a saved document
         selectSavedDocument()
 
-        // When they continue, minting and attachment show a pending state
-        coordinator.continueWithSelectedDocument()
+        // When they share it, minting and attachment show a pending state
+        coordinator.shareSelectedDocument()
 
         // Then the screen cannot submit another action while attachment is pending
-        XCTAssertEqual(coordinator.state, .attachmentPending)
+        XCTAssertEqual(coordinator.state, .sharingDocument(passport))
+        verifyView()
+
+        // Finish the pending request so the attempt doesn't outlive the test
+        settle()
+        apiClient.associationToken.respondToNext(with: .failure(consumerError(code: "resource_missing")))
+        settle()
+    }
+
+    func testPhoneEntryForNewAccount() {
+        // Given a consumer without a Link account is saving
+        mode = .save
+        startAndConfigure()
+        coordinator.submitEmail("consumer@example.com")
+        settle()
+        linkSession.lookup.respondToNext(with: .success(nil))
+        settle()
+
+        // Then a phone number is collected to sign up
+        XCTAssertEqual(coordinator.state, .collectPhone(email: "consumer@example.com", error: nil))
         verifyView()
     }
 
-    func testSkippingNetworkedIdentity() {
-        // Given the consumer is on the email screen
-        viewController.loadViewIfNeeded()
+    func testSaveFailed() {
+        // Given a signed-in consumer is saving
+        mode = .save
+        startAndConfigure()
+        coordinator.submitEmail("consumer@example.com")
+        settle()
+        linkSession.lookup.respondToNext(with: .success(account(isVerified: true)))
+        settle()
 
-        // When they choose manual capture
-        coordinator.chooseManualCapture()
+        // When the save token can't be created
+        apiClient.saveAssociationToken.respondToNext(
+            with: .failure(consumerError(code: "resource_missing"))
+        )
+        settle()
 
-        // Then the screen shows the skip request is pending
-        XCTAssertEqual(coordinator.state, .skipPending)
+        // Then the failure stays on screen with its details
+        guard case .saveFailed = coordinator.state else {
+            return XCTFail("Expected a save failure, got \(coordinator.state)")
+        }
         verifyView()
-    }
-
-    private func selectSavedDocument() {
-        // Given a verified consumer has two reusable documents
-        beginExistingConsumerFlow()
-        viewController.didInputFullOtp(newOtp: "123456")
-        waitForState(.documentsPending) {
-            apiClient.confirmVerification.respondToNext(
-                with: .success(
-                    consumerSessionResponse(
-                        clientSecret: "cs_confirmed",
-                        verificationSessionState: .verified
-                    )
-                )
-            )
-        }
-        let drivingLicense = identityDocument(
-            id: "id_doc_license",
-            documentType: .drivingLicense,
-            redactedDocumentNumber: "•••• 4242"
-        )
-        let passport = identityDocument(
-            id: "id_doc_passport",
-            documentType: .passport,
-            redactedDocumentNumber: "•••• 6789"
-        )
-        waitForState(.selectDocument) {
-            apiClient.documentList.respondToNext(
-                with: .success(.init(data: [drivingLicense, passport]))
-            )
-        }
-
-        // When the consumer selects their passport
-        coordinator.selectDocument(passport)
-
-        // Then the selected state is visible in the saved-document list
-        XCTAssertEqual(coordinator.state, .selectedDocument)
     }
 }
 
+extension NetworkedIdentityFlowViewControllerSnapshotTest: NetworkedIdentityCoordinatorDelegate {
+    func networkedIdentityCoordinator(
+        _ coordinator: NetworkedIdentityCoordinator,
+        didTransitionTo state: NetworkedIdentityState
+    ) {
+        viewController.render(state)
+    }
+
+    func networkedIdentityCoordinator(
+        _ coordinator: NetworkedIdentityCoordinator,
+        didFinishWith outcome: NetworkedIdentityOutcome
+    ) {}
+}
+
 private extension NetworkedIdentityFlowViewControllerSnapshotTest {
+    var passport: NetworkedIdentityDocument {
+        identityDocument(id: "id_doc_passport", documentType: .passport, redactedDocumentNumber: "•••• 6789")
+    }
+
     func verifyView(
         file: StaticString = #filePath,
         line: UInt = #line
@@ -180,105 +197,57 @@ private extension NetworkedIdentityFlowViewControllerSnapshotTest {
         STPSnapshotVerifyView(navigationController.view, file: file, line: line)
     }
 
+    func startAndConfigure() {
+        _ = viewController
+        switch mode {
+        case .reuse:
+            coordinator.startReuse()
+        case .save:
+            coordinator.startSave()
+        }
+        settle()
+        linkSession.configure.respondToNext(with: .success(()))
+        settle()
+    }
+
     func beginExistingConsumerFlow() {
-        viewController.emailView.emailElement.setText("consumer@example.com")
-        viewController.emailView.continueToNextField(
-            element: viewController.emailView.emailElement
+        startAndConfigure()
+        coordinator.submitEmail("consumer@example.com")
+        settle()
+        linkSession.lookup.respondToNext(with: .success(account(isVerified: false)))
+        settle()
+        linkSession.startVerification.respondToNext(with: .success(account(isVerified: false)))
+        settle()
+    }
+
+    func selectSavedDocument() {
+        // Given a verified consumer has two reusable documents
+        beginExistingConsumerFlow()
+        coordinator.submitOTP("123456")
+        settle()
+        linkSession.confirmVerification.respondToNext(with: .success(account(isVerified: true)))
+        settle()
+        let drivingLicense = identityDocument(
+            id: "id_doc_license",
+            documentType: .drivingLicense,
+            redactedDocumentNumber: "•••• 4242"
         )
-        waitForState(.otpStartPending) {
-            apiClient.lookup.respondToNext(
-                with: .success(existingConsumerLookupResponse())
-            )
-        }
-        waitForState(.awaitingOTP) {
-            apiClient.startVerification.respondToNext(
-                with: .success(
-                    consumerSessionResponse(
-                        clientSecret: "cs_started",
-                        verificationSessionState: .started
-                    )
-                )
-            )
-        }
+        apiClient.documentList.respondToNext(with: .success(.init(data: [drivingLicense, passport])))
+        settle()
+
+        // When the consumer selects their passport
+        coordinator.selectDocument(passport)
+
+        // Then the selected state is visible in the saved-document list
+        XCTAssertEqual(coordinator.state, .selectDocument(documents: [drivingLicense, passport], selectedDocumentID: passport.id))
     }
 
-    func waitForState(
-        _ expectedState: NetworkedIdentityState,
-        action: () -> Void,
-        file: StaticString = #filePath,
-        line: UInt = #line
-    ) {
-        action()
-        let stateChanged = expectation(description: "State becomes \(expectedState)")
-        let deadline = Date().addingTimeInterval(0.9)
-
-        func checkState() {
-            if coordinator.state == expectedState {
-                stateChanged.fulfill()
-            } else if Date() < deadline {
-                DispatchQueue.main.asyncAfter(
-                    deadline: .now() + 0.01,
-                    execute: checkState
-                )
-            }
-        }
-        DispatchQueue.main.async(execute: checkState)
-        wait(for: [stateChanged], timeout: 1)
-        XCTAssertEqual(coordinator.state, expectedState, file: file, line: line)
-    }
-
-    func existingConsumerLookupResponse() -> NetworkedIdentityLookupResponse {
-        .found(
-            .init(
-                consumerSession: consumerSession(
-                    clientSecret: "cs_lookup",
-                    verificationSessionID: "cvs_old",
-                    verificationSessionState: .verified
-                ),
-                publishableKey: "pk_consumer_lookup",
-                accountID: "acct_123",
-                authSessionClientSecret: nil,
-                emailOTPRequiresAdditionalInfo: nil,
-                emailOTPVerifyPhoneDespiteSMSOTP: nil,
-                experiments: []
-            )
-        )
-    }
-
-    func consumerSessionResponse(
-        clientSecret: String,
-        verificationSessionState: NetworkedIdentityVerificationSessionState
-    ) -> NetworkedIdentityConsumerSessionResponse {
+    func account(isVerified: Bool) -> NetworkedIdentityLinkAccount {
         .init(
-            consumerSession: consumerSession(
-                clientSecret: clientSecret,
-                verificationSessionID: "cvs_fresh",
-                verificationSessionState: verificationSessionState
-            ),
-            authSessionClientSecret: nil
-        )
-    }
-
-    func consumerSession(
-        clientSecret: String,
-        verificationSessionID: String,
-        verificationSessionState: NetworkedIdentityVerificationSessionState
-    ) -> NetworkedIdentityConsumerSession {
-        .init(
-            clientSecret: clientSecret,
-            emailAddress: "consumer@example.com",
+            email: "consumer@example.com",
             redactedPhoneNumber: "(***) *** **34",
-            redactedFormattedPhoneNumber: "(***) *** **34",
-            unredactedPhoneNumber: nil,
-            phoneNumberCountry: "US",
-            verificationSessions: [
-                .init(
-                    id: verificationSessionID,
-                    state: verificationSessionState,
-                    type: .sms,
-                    verificationToken: nil
-                ),
-            ]
+            isVerified: isVerified,
+            credentials: .init(publishableKey: "pk_consumer", sessionClientSecret: "cs_consumer")
         )
     }
 
@@ -292,10 +261,10 @@ private extension NetworkedIdentityFlowViewControllerSnapshotTest {
             documentType: documentType,
             created: 1_700_000_000,
             country: "US",
-            region: "CA",
+            region: nil,
             redactedDocumentNumber: redactedDocumentNumber,
             expirationDate: 1_900_000_000,
-            liveCaptured: true
+            liveCaptured: false
         )
     }
 
@@ -303,7 +272,16 @@ private extension NetworkedIdentityFlowViewControllerSnapshotTest {
         NSError(
             domain: "NetworkedIdentityFlowViewControllerSnapshotTest",
             code: 0,
-            userInfo: [STPError.stripeErrorCodeKey: code]
+            userInfo: [
+                STPError.stripeErrorCodeKey: code,
+                NSLocalizedDescriptionKey: "The request could not be completed.",
+            ]
         )
+    }
+
+    /// Lets the coordinator's main-actor work run, keeping test names synchronous so they match the
+    /// reference image names.
+    func settle() {
+        RunLoop.main.run(until: Date().addingTimeInterval(0.05))
     }
 }

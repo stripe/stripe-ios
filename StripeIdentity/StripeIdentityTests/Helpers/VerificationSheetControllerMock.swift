@@ -52,6 +52,7 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
 
     private(set) var didCheckSubmitAndTransition = false
     private(set) var networkedIdentityResult: Result<StripeAPI.VerificationPageData, Error>?
+    private(set) var sharedDocumentAttachment: StripeAPI.VerificationPageData?
     private(set) var didSaveDocumentFrontAndDecideBack = false
     private(set) var didSaveDocumentBackAndTransition = false
 
@@ -111,6 +112,14 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
         completion: @escaping () -> Void
     ) {
         networkedIdentityResult = result
+        completion()
+    }
+
+    func saveConsentAfterSharingDocument(
+        attached: StripeAPI.VerificationPageData,
+        completion: @escaping () -> Void
+    ) {
+        sharedDocumentAttachment = attached
         completion()
     }
 

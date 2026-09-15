@@ -31,8 +31,6 @@ protocol VerificationSheetFlowControllerProtocol: AnyObject {
     var visitedIndividualWelcomePage: Bool { get }
     var primaryButtonStyle: IdentityVerificationSheet.Configuration.PrimaryButtonStyle { get }
 
-    func resetNetworkedIdentityForNewPresentation()
-
     func transitionToNextScreen(
         skipTestMode: Bool,
         staticContentResult: Result<StripeAPI.VerificationPage, Error>,
@@ -88,6 +86,10 @@ final class VerificationSheetFlowController: NSObject {
     let brandLogo: UIImage
     let primaryButtonStyle: IdentityVerificationSheet.Configuration.PrimaryButtonStyle
     let biometricConsentConfiguration: IdentityVerificationSheet.Configuration.BiometricConsentConfiguration?
+    let networkedIdentityOptions: IdentityVerificationSheet.Configuration.NetworkedIdentityOptions?
+
+    /// The user shared a saved ID from Link, so the success screen doesn't offer saving it.
+    private(set) var hasSharedNetworkedIdentityDocument = false
 
     weak var delegate: VerificationSheetFlowControllerDelegate?
 
@@ -97,25 +99,13 @@ final class VerificationSheetFlowController: NSObject {
 
     private(set) var documentUploader: DocumentUploaderProtocol?
 
-    private let networkedIdentityAPIClientFactory: (String) -> NetworkedIdentityAPIClient
-    private var attemptedNetworkedIdentitySessionID: String?
-    private var networkedIdentityPresentationID = UUID()
-    private weak var networkedIdentityViewController: NetworkedIdentityFlowViewController?
-    private weak var networkedIdentitySheetController: VerificationSheetControllerProtocol?
-    private var networkedIdentityFallback: (() -> Void)?
-
     init(
-        configuration: IdentityVerificationSheet.Configuration,
-        networkedIdentityAPIClientFactory: @escaping (String) -> NetworkedIdentityAPIClient = { key in
-            let apiClient = STPAPIClient(publishableKey: key)
-            apiClient.appInfo = STPAPIClient.shared.appInfo
-            return NetworkedIdentityAPIClientImpl(apiClient: apiClient, merchantPublishableKey: key)
-        }
+        configuration: IdentityVerificationSheet.Configuration
     ) {
         self.brandLogo = configuration.brandLogo
         self.primaryButtonStyle = configuration.primaryButtonStyle
         self.biometricConsentConfiguration = configuration.biometricConsent
-        self.networkedIdentityAPIClientFactory = networkedIdentityAPIClientFactory
+        self.networkedIdentityOptions = configuration.networkedIdentity
     }
 
     private(set) lazy var navigationController: UINavigationController = {
@@ -128,16 +118,6 @@ final class VerificationSheetFlowController: NSObject {
 }
 
 extension VerificationSheetFlowController: VerificationSheetFlowControllerProtocol {
-    func resetNetworkedIdentityForNewPresentation() {
-        // A canceled presentation is not a persisted skip. Let fresh bootstrap state decide
-        // whether a later presentation of the same VerificationSession can offer reuse again.
-        attemptedNetworkedIdentitySessionID = nil
-        networkedIdentityPresentationID = UUID()
-        networkedIdentityViewController = nil
-        networkedIdentitySheetController = nil
-        networkedIdentityFallback = nil
-    }
-
     /// Transitions to the next view controller in the flow with a 'push' animation.
     /// - Note: This may replace the navigation stack or push an additional view
     ///   controller onto the stack, depending on whether on where the user is in the flow.
@@ -416,11 +396,9 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
 
         // If it's biometric consent, it's either the first screen of a doc type verification, or the first doc-fallback screen of phone type verification, don't show go back.
         let isBiometricConsent = nextViewController is BiometricConsentViewController
-        let entersOrLeavesNetworkedIdentity = nextViewController is NetworkedIdentityFlowViewController
-            || navigationController.topViewController is NetworkedIdentityFlowViewController
 
         // Don't display a back button, so replace the navigation stack
-        if isTransitioningFromLoading || isTransitioningFromDebug || isSuccessState || isBiometricConsent || entersOrLeavesNetworkedIdentity {
+        if isTransitioningFromLoading || isTransitioningFromDebug || isSuccessState || isBiometricConsent {
             navigationController.setViewControllers([nextViewController], animated: shouldAnimate)
         } else {
             navigationController.pushViewController(nextViewController, animated: shouldAnimate)
@@ -506,79 +484,13 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
             return completion(
                 SuccessViewController(
                     successContent: staticContent.success,
+                    networkedIdentity: networkedIdentityContext(
+                        staticContent: staticContent,
+                        sheetController: sheetController
+                    ),
                     sheetController: sheetController
                 )
             )
-        }
-
-        let sessionStatus = updateDataResponse?.status ?? staticContent.status
-        let sessionSubmitted = updateDataResponse?.submitted ?? staticContent.submitted
-        let sessionClosed = updateDataResponse?.closed ?? false
-        if sheetController.apiClient.supportsNetworkedIdentity,
-           sessionStatus == .requiresInput,
-           !sessionClosed,
-           !sessionSubmitted || updateDataResponse?.needsFallback() == true,
-           attemptedNetworkedIdentitySessionID != staticContent.id {
-            let presentationID = networkedIdentityPresentationID
-            let route = staticContent.networkedIdentityRoute
-            if route == .resumeReuse || route == .resumeSave,
-               updateDataResponse == nil, missingRequirements.isEmpty {
-                attemptedNetworkedIdentitySessionID = staticContent.id
-                // A prepared/attached session still needs ordinary submit; empty requirements
-                // alone do not mean verification succeeded.
-                completion(LoadingViewController())
-                DispatchQueue.main.async { [weak self, weak sheetController] in
-                    guard self?.networkedIdentityPresentationID == presentationID else { return }
-                    sheetController?.continueAfterNetworkedIdentity(
-                        with: .success(.init(
-                            id: staticContent.id,
-                            requirements: .init(errors: [], missing: missingRequirements),
-                            status: staticContent.status,
-                            submitted: false,
-                            closed: false
-                        )),
-                        completion: {}
-                    )
-                }
-                return
-            }
-            if route == .reuse,
-               !missingRequirements.contains(.biometricConsent),
-               !missingRequirements.isDisjoint(with: [.idDocumentFront, .idDocumentBack]),
-               let merchantKey = staticContent.merchantPublishableKey,
-               !merchantKey.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                attemptedNetworkedIdentitySessionID = staticContent.id
-                networkedIdentitySheetController = sheetController
-                networkedIdentityFallback = { [weak self, weak sheetController] in
-                    guard let self, let sheetController else { return }
-                    self.transitionToNextScreen(
-                        skipTestMode: true,
-                        staticContentResult: .success(staticContent),
-                        updateDataResult: updateDataResult,
-                        sheetController: sheetController,
-                        completion: {}
-                    )
-                }
-                DispatchQueue.main.async { [weak self, weak sheetController] in
-                    guard let self, let sheetController,
-                          self.networkedIdentityPresentationID == presentationID else { return }
-                    let coordinator = NetworkedIdentityCoordinator(
-                        apiClient: self.networkedIdentityAPIClientFactory(merchantKey),
-                        documentRequirements: .init(verificationPage: staticContent),
-                        identityAPIClient: sheetController.apiClient
-                    )
-                    let viewController = NetworkedIdentityFlowViewController(
-                        coordinator: coordinator,
-                        providedEmailAddress: staticContent.networkedIdentity?.email
-                    )
-                    self.networkedIdentityViewController = viewController
-                    viewController.delegate = self
-                    completion(viewController)
-                }
-                return
-            }
-            // #TODO - Networked Identity: Add the save offer after design resolves whether
-            // opt-in happens before or after capture. Resumed save/reuse follows requirements.
         }
 
         switch missingRequirements.nextDestination(collectedData: sheetController.collectedData) {
@@ -644,6 +556,10 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
             return completion(
                 SuccessViewController(
                     successContent: staticContent.success,
+                    networkedIdentity: networkedIdentityContext(
+                        staticContent: staticContent,
+                        sheetController: sheetController
+                    ),
                     sheetController: sheetController
                 )
             )
@@ -736,6 +652,10 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
                 showsStripeLogo: !staticContent.isStripe,
                 consentContent: staticContent.biometricConsent,
                 configuration: biometricConsentConfiguration,
+                networkedIdentity: networkedIdentityContext(
+                    staticContent: staticContent,
+                    sheetController: sheetController
+                ),
                 sheetController: sheetController
             )
         } catch {
@@ -746,6 +666,24 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
                 )
             )
         }
+    }
+
+    func networkedIdentityContext(
+        staticContent: StripeAPI.VerificationPage,
+        sheetController: VerificationSheetControllerProtocol
+    ) -> NetworkedIdentityContext? {
+        guard let networkedIdentityOptions else {
+            return nil
+        }
+        return NetworkedIdentityContext(
+            options: networkedIdentityOptions,
+            verificationPage: staticContent,
+            identityAPIClient: sheetController.apiClient,
+            hasSharedDocument: hasSharedNetworkedIdentityDocument,
+            didShareDocument: { [weak self] in
+                self?.hasSharedNetworkedIdentityDocument = true
+            }
+        )
     }
 
     func makeDocumentWarmupViewController(
@@ -952,42 +890,6 @@ extension VerificationSheetFlowController: VerificationFlowWebViewControllerDele
 extension VerificationSheetFlowController: SFSafariViewControllerDelegate {
     func safariViewControllerDidFinish(_ controller: SFSafariViewController) {
         delegate?.verificationSheetFlowControllerDidDismissWebView(self)
-    }
-}
-
-extension VerificationSheetFlowController: NetworkedIdentityFlowViewControllerDelegate {
-    func networkedIdentityFlowViewControllerDidCancel(
-        _ viewController: NetworkedIdentityFlowViewController
-    ) {
-        guard networkedIdentityViewController === viewController else { return }
-        networkedIdentityViewController = nil
-        networkedIdentityFallback = nil
-        networkedIdentitySheetController = nil
-        navigationController.dismiss(animated: true)
-    }
-
-    func networkedIdentityFlowViewController(
-        _ viewController: NetworkedIdentityFlowViewController,
-        didRequestFullCapture reason: NetworkedIdentityFallbackReason
-    ) {
-        guard networkedIdentityViewController === viewController else { return }
-        networkedIdentityViewController = nil
-        let fallback = networkedIdentityFallback
-        networkedIdentityFallback = nil
-        networkedIdentitySheetController = nil
-        fallback?()
-    }
-
-    func networkedIdentityFlowViewController(
-        _ viewController: NetworkedIdentityFlowViewController,
-        didCompleteWith result: Result<StripeAPI.VerificationPageData, Error>
-    ) {
-        guard networkedIdentityViewController === viewController else { return }
-        networkedIdentityViewController = nil
-        let sheetController = networkedIdentitySheetController
-        networkedIdentityFallback = nil
-        networkedIdentitySheetController = nil
-        sheetController?.continueAfterNetworkedIdentity(with: result, completion: {})
     }
 }
 

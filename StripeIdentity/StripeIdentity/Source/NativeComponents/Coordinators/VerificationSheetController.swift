@@ -46,6 +46,11 @@ protocol VerificationSheetControllerProtocol: AnyObject {
         completion: @escaping () -> Void
     )
 
+    func saveConsentAfterSharingDocument(
+        attached: StripeAPI.VerificationPageData,
+        completion: @escaping () -> Void
+    )
+
     func saveDocumentFrontAndDecideBack(
         from fromScreen: IdentityAnalyticsClient.ScreenName,
         documentUploader: DocumentUploaderProtocol,
@@ -193,7 +198,6 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
 
     /// Makes API calls to load the verification sheet. When the API response is complete, transitions to the first screen in the flow.
     func loadAndUpdateUI(skipTestMode: Bool) {
-        flowController.resetNetworkedIdentityForNewPresentation()
         load().observe(on: .main) { result in
             self.flowController.transitionToNextScreen(
                 skipTestMode: skipTestMode,
@@ -269,9 +273,39 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
         with result: Result<StripeAPI.VerificationPageData, Error>,
         completion: @escaping () -> Void
     ) {
+        guard let data = acceptNetworkedIdentityUpdate(result, completion: completion) else {
+            return
+        }
+        if data.submittedAndClosed() {
+            isVerificationPageSubmitted = true
+            transitionWithVerificaionPageDataResult(result, completion: completion)
+        } else {
+            checkSubmitAndTransition(updateDataResult: result, completion: completion)
+        }
+    }
+
+    /// Networked Identity: sharing a saved ID also accepts consent. `attached` becomes the requirement
+    /// baseline first, so recording consent doesn't clear the attached document; the consent response's
+    /// requirements then decide what comes next.
+    func saveConsentAfterSharingDocument(
+        attached: StripeAPI.VerificationPageData,
+        completion: @escaping () -> Void
+    ) {
+        guard acceptNetworkedIdentityUpdate(.success(attached), completion: completion) != nil else {
+            return
+        }
+        saveAndTransition(from: .biometricConsent, collectedData: .init(biometricConsent: true), completion: completion)
+    }
+
+    /// Checks a verification update made by a Networked Identity action and makes its requirements the new
+    /// baseline. Returns nil after transitioning to an error.
+    private func acceptNetworkedIdentityUpdate(
+        _ result: Result<StripeAPI.VerificationPageData, Error>,
+        completion: @escaping () -> Void
+    ) -> StripeAPI.VerificationPageData? {
         guard case .success(let data) = result, data.requirements.errors.isEmpty else {
             transitionWithVerificaionPageDataResult(result, completion: completion)
-            return
+            return nil
         }
 
         guard data.status != .canceled,
@@ -282,7 +316,7 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
                 .failure(VerificationSheetControllerError.networkedIdentitySessionNotWritable),
                 completion: completion
             )
-            return
+            return nil
         }
 
         // Attached files exist on the server, not in collectedData. Refresh the baseline so
@@ -293,13 +327,7 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
         for field in data.requirements.missing {
             collectedData.clearData(field: field)
         }
-
-        if data.submittedAndClosed() {
-            isVerificationPageSubmitted = true
-            transitionWithVerificaionPageDataResult(result, completion: completion)
-        } else {
-            checkSubmitAndTransition(updateDataResult: result, completion: completion)
-        }
+        return data
     }
 
     /// 1. Check If all fields have been collected, submits the verification page
