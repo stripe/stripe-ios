@@ -210,19 +210,22 @@ struct NetworkedIdentityStartVerificationRequest: Equatable {
     let locale: String?
     let accountPhoneNumber: String?
     let verificationSessionClientSecrets: [String]?
+    let isResendingSMSCode: Bool
 
     init(
         consumerSessionClientSecret: String,
         type: NetworkedIdentityVerificationType = .sms,
         locale: String? = nil,
         accountPhoneNumber: String? = nil,
-        verificationSessionClientSecrets: [String]? = nil
+        verificationSessionClientSecrets: [String]? = nil,
+        isResendingSMSCode: Bool = false
     ) {
         self.consumerSessionClientSecret = consumerSessionClientSecret
         self.type = type
         self.locale = locale
         self.accountPhoneNumber = accountPhoneNumber
         self.verificationSessionClientSecrets = verificationSessionClientSecrets
+        self.isResendingSMSCode = isResendingSMSCode
     }
 }
 

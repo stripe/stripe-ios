@@ -46,6 +46,40 @@ final class VerificationPageNetworkingDataTest: XCTestCase {
         XCTAssertEqual(verificationPage.networkedIdentityRoute, .none)
     }
 
+    func testDecodesProvidedEmailAndPreservesItWhenUpdatingRequirements() throws {
+        // Given the backend supplies the merchant-provided email on the VerificationPage
+        let verificationPage = try makeNetworkedIdentityVerificationPage(
+            providedDetails: ["email": "consumer@example.com"]
+        )
+        XCTAssertEqual(verificationPage.providedDetails?.email, "consumer@example.com")
+
+        // When the flow updates its missing requirements
+        let copy = verificationPage.copyWithNewMissings(newMissings: [.idDocumentFront])
+
+        // Then the supplied email remains available for Link lookup
+        XCTAssertEqual(copy.providedDetails, verificationPage.providedDetails)
+    }
+
+    func testProvidedEmailIsOptional() throws {
+        // Given older responses or sessions without a merchant-provided email
+        let providedDetailsValues: [Any?] = [
+            nil,
+            NSNull(),
+            [String: Any](),
+            ["email": NSNull()],
+        ]
+        for providedDetails in providedDetailsValues {
+            // When the VerificationPage is decoded
+            let verificationPage = try makeNetworkedIdentityVerificationPage(
+                providedDetails: providedDetails
+            )
+
+            // Then decoding succeeds without an email and preserves the eligibility flags
+            XCTAssertNil(verificationPage.providedDetails?.email)
+            XCTAssertEqual(verificationPage.networkedIdentityRoute, .reuse)
+        }
+    }
+
     func testRequiresAllBaseEligibilityFlags() {
         XCTAssertEqual(features(viCompatible: false).route, .none)
         XCTAssertEqual(features(viMerchantEligible: false).route, .none)
@@ -82,11 +116,14 @@ final class VerificationPageNetworkingDataTest: XCTestCase {
 }
 
 private extension VerificationPageNetworkingDataTest {
-    func makeNetworkedIdentityVerificationPage() throws -> StripeAPI.VerificationPage {
+    func makeNetworkedIdentityVerificationPage(
+        providedDetails: Any? = nil
+    ) throws -> StripeAPI.VerificationPage {
         let fixtureData = try VerificationPageMock.response200.data()
         var fixture = try XCTUnwrap(
             JSONSerialization.jsonObject(with: fixtureData) as? [String: Any]
         )
+        fixture["provided_details"] = providedDetails
         fixture["networking_data"] = [
             "features": [
                 "vi_compatible": true,

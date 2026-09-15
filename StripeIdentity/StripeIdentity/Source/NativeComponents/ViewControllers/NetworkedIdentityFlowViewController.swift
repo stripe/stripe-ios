@@ -37,6 +37,7 @@ final class NetworkedIdentityFlowViewController: UIViewController {
             let sendingBody: (String) -> String
             let body: (String) -> String
             let invalidCodeMessage: String
+            var resendButtonText: String = String.Localized.resend_code
         }
 
         struct Documents {
@@ -80,6 +81,7 @@ final class NetworkedIdentityFlowViewController: UIViewController {
     private var pendingAccessibilityScreen: AccessibilityScreen?
     private weak var pendingAccessibilityFocusView: UIView?
     private var hasAnnouncedCurrentOTPError = false
+    private var shouldUseProvidedEmailOnAppearance = false
 
     weak var delegate: NetworkedIdentityFlowViewControllerDelegate?
 
@@ -90,12 +92,21 @@ final class NetworkedIdentityFlowViewController: UIViewController {
 
     init(
         coordinator: NetworkedIdentityCoordinator,
-        content: Content = .networkedIdentity
+        content: Content = .networkedIdentity,
+        providedEmailAddress: String? = nil
     ) {
         self.coordinator = coordinator
         self.content = content
         emailView = NetworkedIdentityEmailView(bodyText: content.email.body)
         super.init(nibName: nil, bundle: nil)
+
+        if let providedEmailAddress {
+            let trimmedEmailAddress = providedEmailAddress.trimmingCharacters(in: .whitespacesAndNewlines)
+            emailView.emailElement.setText(trimmedEmailAddress)
+            // Input sanitization must not silently change which account we look up.
+            shouldUseProvidedEmailOnAppearance = emailView.emailAddress == trimmedEmailAddress
+                && emailView.hasValidEmailAddress
+        }
 
         coordinator.delegate = self
         emailView.delegate = self
@@ -146,6 +157,15 @@ final class NetworkedIdentityFlowViewController: UIViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+
+        // #TODO - Networked Identity: Confirm this provisional email-screen behavior with design.
+        // A valid supplied email starts lookup once; reauthentication remains an explicit action.
+        if shouldUseProvidedEmailOnAppearance {
+            shouldUseProvidedEmailOnAppearance = false
+            if coordinator.state == .collectEmail {
+                submitEmail()
+            }
+        }
 
         postPendingAccessibilityScreenChangeIfNeeded()
         if coordinator.state == .awaitingOTP,
@@ -339,6 +359,7 @@ private extension NetworkedIdentityFlowViewController {
             || phoneOtpView == nil
             || phoneNumber != displayedPhoneNumber
             || body != displayedOTPBody {
+            clearOTPView()
             displayedPhoneNumber = phoneNumber
             displayedOTPBody = body
             let phoneOtpView = PhoneOtpView(
@@ -370,12 +391,21 @@ private extension NetworkedIdentityFlowViewController {
                 headerViewModel: plainHeader(title: content.otp.title),
                 contentView: phoneOtpView,
                 buttons: [
+                    .init(
+                        text: content.otp.resendButtonText,
+                        state: state == .awaitingOTP ? .enabled : .disabled,
+                        isPrimary: false,
+                        configuration: .networkedIdentitySecondary(),
+                        didTap: { [weak self] in
+                            self?.coordinator.resendOTP()
+                        }
+                    ),
                     manualCaptureButton(configuration: .networkedIdentityPlain()),
                 ]
             )
         )
-        // #TODO - Networked Identity: Add resend and alternate-channel controls when their
-        // API contracts are available. The Figma actions must not be rendered as dead controls.
+        // #TODO - Networked Identity: Add alternate-channel controls when their API contracts
+        // are available. Resend follows the existing Link SMS API.
         announceScreenChangeIfNeeded(
             state == .otpStartPending ? .otpSending : .otp,
             focusView: phoneOtpView
@@ -409,7 +439,9 @@ private extension NetworkedIdentityFlowViewController {
             focusView: documentSelectionView.accessibilityFocusView
         )
 
-        // #TODO - Networked Identity: Present reuse consent and continue into clone once those contracts are defined.
+        // The preceding Identity welcome screen discloses sharing document/selfie data.
+        // #TODO - Networked Identity: Continue into clone once its API contract is available;
+        // the current product does not require a separate granular-attribute consent screen.
         // #TODO - Networked Identity: Replace the provisional list treatment when a final
         // multi-document mobile frame is approved.
     }

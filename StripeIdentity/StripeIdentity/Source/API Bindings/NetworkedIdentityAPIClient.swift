@@ -60,21 +60,17 @@ final class NetworkedIdentityAPIClientImpl: NetworkedIdentityAPIClient {
     private static let requestSurfaceParameter = "request_surface"
     private static let requestSurface = "web_identity_product"
     private static let signUpConsentAction = "entered_phone_number_email_clicked_save_with_link_identity"
-    private static let identityClientVersionHeader = "X-Stripe-Identity-Client-Version"
-
     private static let requestedWithHeader = "X-Requested-With"
     private static let documentListRetryDelay: TimeInterval = 0.25
     private static let maximumDocumentListAttempts = 2
 
     private let apiClient: STPAPIClient
     private let merchantPublishableKey: String
-    private let clientVersion: String
     private let retryScheduler: RetryScheduler
 
     init(
         apiClient: STPAPIClient,
         merchantPublishableKey: String,
-        clientVersion: String,
         retryScheduler: @escaping RetryScheduler = { delay, action in
             DispatchQueue.global(qos: .utility).asyncAfter(deadline: .now() + delay) {
                 action()
@@ -83,7 +79,6 @@ final class NetworkedIdentityAPIClientImpl: NetworkedIdentityAPIClient {
     ) {
         self.apiClient = apiClient
         self.merchantPublishableKey = merchantPublishableKey
-        self.clientVersion = clientVersion
         self.retryScheduler = retryScheduler
     }
 
@@ -142,6 +137,9 @@ final class NetworkedIdentityAPIClientImpl: NetworkedIdentityAPIClient {
         parameters["type"] = request.type.rawValue
         parameters["locale"] = request.locale
         parameters["account_phone_number"] = request.accountPhoneNumber
+        if request.isResendingSMSCode {
+            parameters["is_resend_sms_code"] = true
+        }
         addCookies(request.verificationSessionClientSecrets, to: &parameters)
 
         return post(
@@ -297,7 +295,6 @@ final class NetworkedIdentityAPIClientImpl: NetworkedIdentityAPIClient {
             for: url,
             using: authorizationKey,
             additionalHeaders: [
-                Self.identityClientVersionHeader: clientVersion,
                 Self.requestedWithHeader: "fetch",
                 "Content-Length": String(formData?.count ?? 0),
                 "Content-Type": "application/x-www-form-urlencoded",

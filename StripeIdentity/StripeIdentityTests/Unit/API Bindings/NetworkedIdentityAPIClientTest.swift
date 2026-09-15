@@ -13,7 +13,6 @@ import XCTest
 final class NetworkedIdentityAPIClientTest: APIStubbedTestCase {
     private static let merchantPublishableKey = "pk_test_merchant"
     private static let consumerPublishableKey = "pk_test_consumer"
-    private static let clientVersion = "identity-client-version"
     private static let requestSurface = "web_identity_product"
     private static let consumerSessionClientSecret = "css_123"
 
@@ -175,7 +174,7 @@ final class NetworkedIdentityAPIClientTest: APIStubbedTestCase {
         }
     }
 
-    func testStartVerification() {
+    func testStartVerificationOmitsResendFlag() {
         let request = NetworkedIdentityStartVerificationRequest(
             consumerSessionClientSecret: Self.consumerSessionClientSecret,
             type: .sms,
@@ -204,6 +203,40 @@ final class NetworkedIdentityAPIClientTest: APIStubbedTestCase {
             )
         ) { response in
             XCTAssertEqual(response.consumerSession.emailAddress, "person@example.com")
+        }
+    }
+
+    func testResendSMSVerification() {
+        // Given an explicit SMS resend request
+        let request = NetworkedIdentityStartVerificationRequest(
+            consumerSessionClientSecret: Self.consumerSessionClientSecret,
+            locale: "en-US",
+            verificationSessionClientSecrets: ["auth_1"],
+            isResendingSMSCode: true
+        )
+        stubRequest(
+            path: "/v1/consumers/sessions/start_verification",
+            authorizationKey: Self.consumerPublishableKey,
+            expectedParameters: consumerParameters(
+                additionalParameters: [
+                    "type": "SMS",
+                    "locale": "en-US",
+                    "is_resend_sms_code": true,
+                    "cookies": ["verification_session_client_secrets": ["auth_1"]],
+                ]
+            ),
+            responseJSON: consumerSessionResponseJSON
+        )
+
+        // When starting verification again
+        assertSuccess(
+            apiClient.startVerification(
+                request: request,
+                consumerPublishableKey: Self.consumerPublishableKey
+            )
+        ) { response in
+            // Then the resend response is decoded as a consumer session
+            XCTAssertEqual(response.consumerSession.clientSecret, Self.consumerSessionClientSecret)
         }
     }
 
@@ -464,7 +497,6 @@ final class NetworkedIdentityAPIClientTest: APIStubbedTestCase {
         return NetworkedIdentityAPIClientImpl(
             apiClient: backingAPIClient,
             merchantPublishableKey: Self.merchantPublishableKey,
-            clientVersion: Self.clientVersion,
             retryScheduler: retryScheduler
         )
     }
@@ -507,14 +539,21 @@ final class NetworkedIdentityAPIClientTest: APIStubbedTestCase {
         expectedParameters: [String: Any],
         response: @escaping (URLRequest) -> HTTPStubsResponse
     ) {
+        let defaultRequest = backingAPIClient.configuredRequest(for: URL(string: "https://api.stripe.com/v1")!)
         stub { request in
             XCTAssertEqual(request.url?.path, path)
             XCTAssertEqual(request.httpMethod, "POST")
             XCTAssertEqual(request.value(forHTTPHeaderField: "Authorization"), "Bearer \(authorizationKey)")
+            XCTAssertNil(request.value(forHTTPHeaderField: "X-Stripe-Identity-Client-Version"))
             XCTAssertEqual(
-                request.value(forHTTPHeaderField: "X-Stripe-Identity-Client-Version"),
-                Self.clientVersion
+                request.value(forHTTPHeaderField: "Stripe-Version"),
+                defaultRequest.value(forHTTPHeaderField: "Stripe-Version")
             )
+            let userAgent = request.value(forHTTPHeaderField: "X-Stripe-User-Agent")
+                .flatMap { $0.data(using: .utf8) }
+                .flatMap { try? JSONSerialization.jsonObject(with: $0) as? [String: String] }
+            XCTAssertEqual(userAgent?["bindings_version"], STPAPIClient.STPSDKVersion)
+            XCTAssertEqual(userAgent?["lang"], "objective-c")
             XCTAssertEqual(request.value(forHTTPHeaderField: "X-Requested-With"), "fetch")
             XCTAssertEqual(
                 request.value(forHTTPHeaderField: "Content-Type"),

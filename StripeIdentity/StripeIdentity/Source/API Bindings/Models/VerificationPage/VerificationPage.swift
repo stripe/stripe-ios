@@ -13,6 +13,10 @@ extension StripeAPI {
     /// A VerificationPage contains the static content and initial state that is required for Stripe Identity's native mobile SDKs to render the verification flow.
 
     struct VerificationPage: Decodable, Equatable {
+        struct ProvidedDetails: Decodable, Equatable {
+            let email: String?
+        }
+
         enum Status: String, Codable, Equatable {
             case canceled = "canceled"
             case processing = "processing"
@@ -33,6 +37,8 @@ extension StripeAPI {
         /// Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.
         let livemode: Bool
         let networkingData: VerificationPageNetworkingData?
+        /// Merchant-provided details for the associated VerificationSession.
+        let providedDetails: ProvidedDetails?
         let requirements: VerificationPageRequirements
         /// Static content for the selfie page
         let selfie: VerificationPageStaticContentSelfiePage?
@@ -58,6 +64,6 @@ extension StripeAPI {
 
 extension StripeAPI.VerificationPage {
     func copyWithNewMissings(newMissings: Set<StripeAPI.VerificationPageFieldType>) -> StripeAPI.VerificationPage {
-        return StripeAPI.VerificationPage(biometricConsent: self.biometricConsent, documentCapture: self.documentCapture, documentSelect: self.documentSelect, individual: self.individual, countryNotListed: self.countryNotListed, individualWelcome: self.individualWelcome, phoneOtp: self.phoneOtp, fallbackUrl: self.fallbackUrl, id: self.id, livemode: self.livemode, networkingData: self.networkingData, requirements: StripeAPI.VerificationPageRequirements(missing: newMissings), selfie: self.selfie, status: self.status, submitted: self.submitted, success: self.success, unsupportedClient: self.unsupportedClient, bottomsheet: self.bottomsheet, userSessionId: self.userSessionId, experiments: self.experiments, isStripe: self.isStripe, skipSuccessPage: self.skipSuccessPage)
+        return StripeAPI.VerificationPage(biometricConsent: self.biometricConsent, documentCapture: self.documentCapture, documentSelect: self.documentSelect, individual: self.individual, countryNotListed: self.countryNotListed, individualWelcome: self.individualWelcome, phoneOtp: self.phoneOtp, fallbackUrl: self.fallbackUrl, id: self.id, livemode: self.livemode, networkingData: self.networkingData, providedDetails: self.providedDetails, requirements: StripeAPI.VerificationPageRequirements(missing: newMissings), selfie: self.selfie, status: self.status, submitted: self.submitted, success: self.success, unsupportedClient: self.unsupportedClient, bottomsheet: self.bottomsheet, userSessionId: self.userSessionId, experiments: self.experiments, isStripe: self.isStripe, skipSuccessPage: self.skipSuccessPage)
     }
 }

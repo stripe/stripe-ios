@@ -22,6 +22,10 @@ final class NetworkedIdentityFlowViewControllerTest: XCTestCase {
 
     override func setUp() {
         super.setUp()
+        setUpFlow()
+    }
+
+    private func setUpFlow(providedEmailAddress: String? = nil) {
         apiClient = NetworkedIdentityAPIClientTestMock()
         coordinator = NetworkedIdentityCoordinator(
             apiClient: apiClient,
@@ -33,11 +37,152 @@ final class NetworkedIdentityFlowViewControllerTest: XCTestCase {
         )
         viewController = NetworkedIdentityFlowViewController(
             coordinator: coordinator,
-            content: makeContent()
+            content: makeContent(),
+            providedEmailAddress: providedEmailAddress
         )
         delegate = NetworkedIdentityFlowViewControllerDelegateSpy()
         viewController.delegate = delegate
         viewController.loadViewIfNeeded()
+    }
+
+    func testProvidedEmailStartsLookupOnceWhenFlowAppears() {
+        // Given a merchant supplied a valid email, with incidental whitespace
+        setUpFlow(providedEmailAddress: "  consumer@example.com\n")
+        XCTAssertEqual(coordinator.state, .collectEmail)
+        XCTAssertTrue(apiClient.lookup.requestHistory.isEmpty)
+
+        // When the screen appears more than once
+        viewController.viewDidAppear(false)
+        viewController.viewDidAppear(false)
+
+        // Then the supplied email is used without another user submission
+        XCTAssertEqual(coordinator.state, .lookupPending)
+        XCTAssertEqual(
+            apiClient.lookup.requestHistory,
+            [.init(emailAddress: "consumer@example.com", verificationSessionClientSecrets: ["vs_client_secret"])]
+        )
+        XCTAssertFalse(viewController.emailView.isUserInteractionEnabled)
+    }
+
+    func testMissingOrInvalidProvidedEmailStaysEditable() {
+        let emailAddresses: [String?] = [nil, " \n ", "not-an-email"]
+        for emailAddress in emailAddresses {
+            // Given the supplied email cannot be used for lookup
+            setUpFlow(providedEmailAddress: emailAddress)
+
+            // When the screen appears
+            viewController.viewDidAppear(false)
+
+            // Then normal email entry remains available without a network request
+            XCTAssertEqual(coordinator.state, .collectEmail)
+            XCTAssertTrue(apiClient.lookup.requestHistory.isEmpty)
+            XCTAssertTrue(viewController.emailView.isUserInteractionEnabled)
+            XCTAssertFalse(viewController.emailView.hasValidEmailAddress)
+        }
+    }
+
+    func testProvidedEmailDoesNotStartLookupAfterCancellation() {
+        // Given the host cancels before showing the screen
+        setUpFlow(providedEmailAddress: "consumer@example.com")
+        viewController.cancel()
+
+        // When an appearance callback arrives afterward
+        viewController.viewDidAppear(false)
+
+        // Then the ended flow cannot restart lookup
+        XCTAssertEqual(coordinator.state, .cancelled)
+        XCTAssertTrue(apiClient.lookup.requestHistory.isEmpty)
+        XCTAssertEqual(delegate.cancelCount, 1)
+    }
+
+    func testSanitizedProvidedEmailRequiresExplicitSubmission() {
+        for emailAddress in ["john doe@example.com", "john\ndoe@example.com"] {
+            // Given input sanitization would change the supplied address into a valid one
+            setUpFlow(providedEmailAddress: emailAddress)
+            XCTAssertTrue(viewController.emailView.hasValidEmailAddress)
+            XCTAssertNotEqual(viewController.emailView.emailAddress, emailAddress)
+
+            // When the screen appears
+            viewController.viewDidAppear(false)
+
+            // Then the consumer must explicitly review and submit the changed address
+            XCTAssertEqual(coordinator.state, .collectEmail)
+            XCTAssertTrue(apiClient.lookup.requestHistory.isEmpty)
+            XCTAssertTrue(viewController.emailView.isUserInteractionEnabled)
+        }
+    }
+
+    func testProvidedEmailDoesNotAutomaticallyRetryAfterSessionExpiry() {
+        // Given automatic lookup has started verification
+        setUpFlow(providedEmailAddress: "consumer@example.com")
+        viewController.viewDidAppear(false)
+        waitForState(.otpStartPending) {
+            apiClient.lookup.respondToNext(with: .success(existingConsumerLookupResponse()))
+        }
+
+        // When that session expires and the screen appears again
+        waitForState(.reauthenticationRequired) {
+            apiClient.startVerification.respondToNext(
+                with: .failure(consumerError(code: "consumer_session_expired"))
+            )
+        }
+        viewController.viewDidAppear(false)
+
+        // Then sign-in stays explicit instead of looping through automatic lookup
+        XCTAssertEqual(coordinator.state, .reauthenticationRequired)
+        XCTAssertEqual(apiClient.lookup.requestHistory.count, 1)
+        XCTAssertTrue(viewController.emailView.isUserInteractionEnabled)
+    }
+
+    func testResendDisablesInputAndReplacesTheOTPControl() throws {
+        // Given the consumer has started entering a code
+        beginExistingConsumerFlow()
+        let originalOTPView = try XCTUnwrap(viewController.phoneOtpView)
+        let originalCodeField = try XCTUnwrap(
+            originalOTPView.descendants(ofType: OneTimeCodeTextField.self).first
+        )
+        originalCodeField.value = "123"
+        let resendButton = try XCTUnwrap(
+            viewController.view.descendants(ofType: StripeUICore.Button.self).first {
+                $0.title == String.Localized.resend_code
+            }
+        )
+        XCTAssertTrue(resendButton.isEnabled)
+
+        // When they resend the code
+        let buttonTarget = try XCTUnwrap(resendButton.allTargets.first as? NSObject)
+        let buttonAction = try XCTUnwrap(
+            resendButton.actions(forTarget: buttonTarget, forControlEvent: .touchUpInside)?.first
+        )
+        buttonTarget.perform(NSSelectorFromString(buttonAction), with: resendButton)
+
+        // Then the old code is cleared and further resend/submission is disabled
+        XCTAssertEqual(coordinator.state, .otpStartPending)
+        XCTAssertEqual(apiClient.startVerification.requestHistory.count, 2)
+        XCTAssertEqual(apiClient.startVerification.requestHistory.last?.request.isResendingSMSCode, true)
+        XCTAssertEqual(originalCodeField.value, "")
+        XCTAssertFalse(originalOTPView === viewController.phoneOtpView)
+        XCTAssertEqual(viewController.phoneOtpView?.viewModel, .SubmittingOTP(""))
+        XCTAssertFalse(
+            try XCTUnwrap(viewController.view.descendants(ofType: StripeUICore.Button.self).first {
+                $0.title == String.Localized.resend_code
+            }).isEnabled
+        )
+
+        // When Link resends within the same active verification session
+        waitForState(.awaitingOTP) {
+            apiClient.startVerification.respondToNext(
+                with: .success(consumerSessionResponse(clientSecret: "cs_resent", verificationSessionState: .started))
+            )
+        }
+
+        // Then code entry and resend become available again
+        XCTAssertEqual(viewController.phoneOtpView?.viewModel, .InputtingOTP)
+        XCTAssertTrue(
+            try XCTUnwrap(viewController.view.descendants(ofType: StripeUICore.Button.self).first {
+                $0.title == String.Localized.resend_code
+            }).isEnabled
+        )
     }
 
     func testValidEmailStartsLookupAndDisablesDuplicateInput() {

@@ -82,6 +82,19 @@ final class NetworkedIdentityFlowViewControllerSnapshotTest: STPSnapshotTestCase
         verifyView()
     }
 
+    func testResendingOTP() {
+        // Given the consumer has already received a fresh SMS code
+        beginExistingConsumerFlow()
+
+        // When they request another code
+        coordinator.resendOTP()
+
+        // Then code entry and resend are disabled while the request is pending
+        XCTAssertEqual(coordinator.state, .otpStartPending)
+        XCTAssertEqual(viewController.phoneOtpView?.viewModel, .SubmittingOTP(""))
+        verifyView()
+    }
+
     func testSelectedSavedDocument() {
         // Given a verified consumer has two reusable documents
         beginExistingConsumerFlow()

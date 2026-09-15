@@ -141,7 +141,12 @@ final class NetworkedIdentityCoordinator {
         }
     }
 
-    // #TODO - Networked Identity: Add explicit OTP resend after the mobile contract defines whether start_verification requires is_resend_sms_code and whether it returns a replacement session ID.
+    func resendOTP() {
+        guard state == .awaitingOTP else {
+            return
+        }
+        beginFreshSMSVerification(isResendingSMSCode: true)
+    }
 
     func selectDocument(_ document: NetworkedIdentityDocument) {
         guard state == .selectDocument || state == .selectedDocument,
@@ -152,7 +157,7 @@ final class NetworkedIdentityCoordinator {
         self.selectedDocument = selectedDocument
         transition(to: .selectedDocument)
 
-        // #TODO - Networked Identity: Plumb recipient and requested-attribute metadata, present the documented explicit reuse consent, and define cloneConsumerIdentityDocument before requesting an association token or completing the flow.
+        // #TODO - Networked Identity: Define cloneConsumerIdentityDocument and association-token sequencing before completing reuse. The existing welcome screen discloses sharing verification data; granular requested-attribute metadata is not required.
     }
 
     func chooseManualCapture() {
@@ -183,7 +188,7 @@ private extension NetworkedIdentityCoordinator {
             return
         }
 
-        // #TODO - Networked Identity: Clear networking_data through the dedicated mobile API once its contract is available.
+        // Cancelling must not submit save consent or attempt to undo a previously saved document.
         let logout = credentialStore.readConsumerCredentials { credentials, verificationSessionClientSecrets in
             apiClient.logOut(
                 consumerSessionClientSecret: credentials.sessionClientSecret,
@@ -280,7 +285,8 @@ private extension NetworkedIdentityCoordinator {
         }
     }
 
-    func beginFreshSMSVerification() {
+    func beginFreshSMSVerification(isResendingSMSCode: Bool = false) {
+        let resendVerificationSessionID = isResendingSMSCode ? activeSMSVerificationSessionID : nil
         activeSMSVerificationSessionID = nil
         let knownSMSVerificationSessionIDs = knownSMSVerificationSessionIDs
         guard let request = credentialStore.readConsumerCredentials({ credentials, verificationSessionClientSecrets in
@@ -290,7 +296,8 @@ private extension NetworkedIdentityCoordinator {
                     type: .sms,
                     locale: Locale.current.toLanguageTag(),
                     accountPhoneNumber: nil,
-                    verificationSessionClientSecrets: verificationSessionClientSecrets
+                    verificationSessionClientSecrets: verificationSessionClientSecrets,
+                    isResendingSMSCode: isResendingSMSCode
                 ),
                 credentials.publishableKey
             )
@@ -341,12 +348,20 @@ private extension NetworkedIdentityCoordinator {
                     }
                     return !knownSMSVerificationSessionIDs.contains(id)
                 }
-                // #TODO - Networked Identity: Confirm start_verification always returns a newly created SMS verification session ID on mobile; this freshness check intentionally falls back if the backend reuses an existing ID.
+                // Explicit resend may keep the active SMS session ID. Prefer a new ID if one
+                // is returned, and never accept any unrelated historical verification session.
+                let retainedSMSSessions = response.consumerSession.verificationSessions.filter {
+                    $0.id == resendVerificationSessionID && $0.type == .sms && $0.state == .started
+                }
+                let eligibleSMSSessions = startedSMSSessions.isEmpty && resendVerificationSessionID != nil
+                    ? retainedSMSSessions
+                    : startedSMSSessions
+                // #TODO - Networked Identity: Verify resend's same-ID/replacement-ID behavior against the web flow and an NI-enabled backend. Initial and expired-code starts still require a new ID.
                 self.knownSMSVerificationSessionIDs.formUnion(
                     self.smsVerificationSessionIDs(in: response.consumerSession)
                 )
-                guard startedSMSSessions.count == 1,
-                      let verificationSessionID = startedSMSSessions[0].id,
+                guard eligibleSMSSessions.count == 1,
+                      let verificationSessionID = eligibleSMSSessions[0].id,
                       !verificationSessionID.isEmpty else {
                     self.fallBackToFullCapture(reason: .unavailable)
                     return
@@ -419,7 +434,7 @@ private extension NetworkedIdentityCoordinator {
     }
 
     func fallBackToFullCapture(reason: NetworkedIdentityFallbackReason) {
-        // #TODO - Networked Identity: Clear networking_data through the dedicated mobile API once its contract is available.
+        // #TODO - Networked Identity: Skip and manual capture share the dedicated networking_data clear API; wire it here once the request/response contract is available.
         let logout = credentialStore.readConsumerCredentials { credentials, verificationSessionClientSecrets in
             apiClient.logOut(
                 consumerSessionClientSecret: credentials.sessionClientSecret,
@@ -445,8 +460,7 @@ private extension NetworkedIdentityCoordinator {
         // Logout is best effort. Local credentials have already been cleared.
         logout?.observe { _ in }
 
-        // #TODO - Networked Identity: Offering save-to-Link after manual capture is blocked on the missing write-back API contract.
-        // #TODO - Networked Identity: Define session extension/rotation before retaining, rather than logging out, an authenticated Link session through manual capture for Save ID.
+        // #TODO - Networked Identity: After document/selfie capture, offer Link login and explicit save opt-in. The new API must record consent and the Link account reference on the VerificationSession; the backend copies images asynchronously after verification succeeds. Its contract is still missing.
     }
 
     func requireReauthentication() {

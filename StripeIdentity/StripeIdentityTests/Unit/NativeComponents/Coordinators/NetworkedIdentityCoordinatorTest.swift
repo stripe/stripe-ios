@@ -74,14 +74,14 @@ final class NetworkedIdentityCoordinatorTest: XCTestCase {
             )
         }
 
-        // Then selection stops before the currently undefined consent and clone work
+        // Then selection stops before the currently undefined clone work
         coordinator.selectDocument(identityDocument(id: document.id, country: "CA"))
         XCTAssertEqual(coordinator.state, .selectedDocument)
         XCTAssertEqual(coordinator.selectedDocument, document)
         XCTAssertEqual(apiClient.associationToken.requestHistory.count, 0)
     }
 
-    func testCanChangeSelectedDocumentBeforeConsent() {
+    func testCanChangeSelectedDocumentBeforeReuse() {
         // Given the consumer has two reusable documents
         beginExistingConsumerFlow()
         coordinator.submitOTP("123456")
@@ -103,7 +103,7 @@ final class NetworkedIdentityCoordinatorTest: XCTestCase {
             )
         }
 
-        // When the consumer changes their selection before consent
+        // When the consumer changes their selection before reuse
         coordinator.selectDocument(firstDocument)
         coordinator.selectDocument(secondDocument)
 
@@ -164,6 +164,225 @@ final class NetworkedIdentityCoordinatorTest: XCTestCase {
         // Then account details are cleared with the credentials
         XCTAssertNil(coordinator.emailAddress)
         XCTAssertNil(coordinator.redactedFormattedPhoneNumber)
+    }
+
+    func testResendRequestsOneReplacementAndConfirmsTheNewSession() {
+        // Given the user entered an invalid code for the first fresh SMS session
+        beginExistingConsumerFlow()
+        XCTAssertEqual(apiClient.startVerification.requestHistory.first?.request.isResendingSMSCode, false)
+        coordinator.submitOTP("111111")
+        waitForTransition(to: .awaitingOTP) {
+            apiClient.confirmVerification.respondToNext(
+                with: .failure(consumerError(code: "consumer_verification_code_invalid"))
+            )
+        }
+
+        // When resend is tapped twice and confirmation is attempted while it is pending
+        coordinator.resendOTP()
+        coordinator.resendOTP()
+        coordinator.submitOTP("222222")
+
+        // Then only one replacement request is sent using the current credentials
+        XCTAssertEqual(coordinator.state, .otpStartPending)
+        XCTAssertEqual(apiClient.startVerification.requestHistory.count, 2)
+        XCTAssertEqual(apiClient.startVerification.pendingRequestCount, 1)
+        XCTAssertEqual(apiClient.confirmVerification.requestHistory.count, 1)
+        XCTAssertEqual(apiClient.startVerification.requestHistory.last?.request.isResendingSMSCode, true)
+        XCTAssertEqual(apiClient.startVerification.requestHistory.last?.request.consumerSessionClientSecret, "cs_started")
+
+        // When the replacement SMS session is returned and then verified
+        waitForTransition(to: .awaitingOTP) {
+            apiClient.startVerification.respondToNext(
+                with: .success(
+                    consumerSessionResponse(
+                        clientSecret: "cs_resent",
+                        verificationSessions: [
+                            verificationSession(id: "cvs_fresh", state: .started),
+                            verificationSession(id: "cvs_resent", state: .started),
+                        ]
+                    )
+                )
+            )
+        }
+        XCTAssertNil(coordinator.lastOTPError)
+        coordinator.submitOTP("333333")
+        XCTAssertEqual(apiClient.confirmVerification.requestHistory.last?.request.consumerSessionClientSecret, "cs_resent")
+        waitForTransition(to: .documentsPending) {
+            apiClient.confirmVerification.respondToNext(
+                with: .success(
+                    consumerSessionResponse(
+                        clientSecret: "cs_resent_confirmed",
+                        verificationSessionID: "cvs_resent",
+                        verificationState: .verified
+                    )
+                )
+            )
+        }
+
+        // Then only the verified replacement session unlocks document listing
+        XCTAssertEqual(apiClient.documentList.requestHistory.count, 1)
+        XCTAssertEqual(apiClient.documentList.requestHistory.first?.consumerSessionClientSecret, "cs_resent_confirmed")
+    }
+
+    func testResendRejectsConfirmationOfThePreviousSession() {
+        // Given resend replaced the original SMS verification session
+        beginExistingConsumerFlow()
+        coordinator.resendOTP()
+        waitForTransition(to: .awaitingOTP) {
+            apiClient.startVerification.respondToNext(
+                with: .success(
+                    consumerSessionResponse(
+                        clientSecret: "cs_resent",
+                        verificationSessionID: "cvs_resent"
+                    )
+                )
+            )
+        }
+
+        // When only the old SMS session is verified
+        coordinator.submitOTP("111111")
+        waitForTransition(to: .fullCaptureFallback) {
+            apiClient.confirmVerification.respondToNext(
+                with: .success(
+                    consumerSessionResponse(
+                        clientSecret: "cs_old_confirmed",
+                        verificationSessions: [
+                            verificationSession(id: "cvs_fresh", state: .verified),
+                            verificationSession(id: "cvs_resent", state: .started),
+                        ]
+                    )
+                )
+            )
+        }
+
+        // Then the superseded code cannot authenticate document reuse
+        XCTAssertEqual(apiClient.documentList.requestHistory.count, 0)
+        XCTAssertTrue(credentialStore.isEmpty)
+    }
+
+    func testResendCanRetainTheActiveSMSID() {
+        // Given the current SMS session was freshly started by this flow
+        beginExistingConsumerFlow()
+        coordinator.resendOTP()
+
+        // When resend retains that active session in its started state
+        waitForTransition(to: .awaitingOTP) {
+            apiClient.startVerification.respondToNext(
+                with: .success(consumerSessionResponse(clientSecret: "cs_resent_same_id"))
+            )
+        }
+        XCTAssertEqual(apiClient.documentList.requestHistory.count, 0)
+
+        // Then confirmation must still verify the active session before documents can load
+        coordinator.submitOTP("123456")
+        waitForTransition(to: .documentsPending) {
+            apiClient.confirmVerification.respondToNext(
+                with: .success(
+                    consumerSessionResponse(
+                        clientSecret: "cs_same_id_confirmed",
+                        verificationState: .verified
+                    )
+                )
+            )
+        }
+        XCTAssertEqual(apiClient.documentList.requestHistory.count, 1)
+    }
+
+    func testResendCannotAdoptAnUnrelatedHistoricalSMSID() {
+        // Given this flow already has a fresh active SMS session
+        beginExistingConsumerFlow()
+        coordinator.resendOTP()
+
+        // When resend returns only the unrelated session originally seen at lookup
+        waitForTransition(to: .fullCaptureFallback) {
+            apiClient.startVerification.respondToNext(
+                with: .success(
+                    consumerSessionResponse(
+                        clientSecret: "cs_historical_resend",
+                        verificationSessionID: "cvs_old"
+                    )
+                )
+            )
+        }
+
+        // Then accepting the same active ID never permits an unrelated historical ID
+        XCTAssertEqual(coordinator.fallbackReason, .unavailable)
+        XCTAssertEqual(apiClient.confirmVerification.requestHistory.count, 0)
+        XCTAssertTrue(credentialStore.isEmpty)
+    }
+
+    func testResendSessionExpiryRequiresReauthentication() {
+        // Given the user requests another SMS code
+        beginExistingConsumerFlow()
+        coordinator.resendOTP()
+
+        // When the consumer session has expired
+        waitForTransition(to: .reauthenticationRequired) {
+            apiClient.startVerification.respondToNext(
+                with: .failure(consumerError(code: "consumer_session_expired"))
+            )
+        }
+
+        // Then the user must sign in again without an automatic lookup loop
+        XCTAssertEqual(coordinator.lastOTPError, .sessionExpired)
+        XCTAssertFalse(credentialStore.hasConsumerCredentials)
+        XCTAssertEqual(apiClient.lookup.requestHistory.count, 1)
+    }
+
+    func testResendFailureFallsBackAndClearsCredentials() {
+        // Given the user requests another SMS code
+        beginExistingConsumerFlow()
+        coordinator.resendOTP()
+
+        // When the replacement code cannot be sent
+        waitForTransition(to: .fullCaptureFallback) {
+            apiClient.startVerification.respondToNext(
+                with: .failure(consumerError(code: "consumer_verification_max_attempts_exceeded"))
+            )
+        }
+
+        // Then manual capture remains available and the Link credentials are cleared
+        XCTAssertEqual(coordinator.fallbackReason, .unavailable)
+        XCTAssertTrue(credentialStore.isEmpty)
+        XCTAssertEqual(delegate.fullCaptureFallbackCount, 1)
+        XCTAssertEqual(apiClient.logOut.requestHistory.count, 1)
+    }
+
+    func testCancellationLogsOutSecretReturnedByPendingResend() {
+        // Given resend is in flight when the user cancels
+        beginExistingConsumerFlow()
+        coordinator.resendOTP()
+        let rotatedSecretLoggedOut = expectation(description: "Late resend credentials are logged out")
+        apiClient.logOut.callBackOnRequest {
+            if self.apiClient.logOut.requestHistory.count == 2 {
+                rotatedSecretLoggedOut.fulfill()
+            }
+        }
+
+        // When resend returns new credentials after cancellation
+        coordinator.cancel()
+        coordinator.resendOTP()
+        apiClient.startVerification.respondToNext(
+            with: .success(
+                consumerSessionResponse(
+                    clientSecret: "cs_resent_after_cancel",
+                    verificationSessionID: "cvs_resent",
+                    authSessionClientSecret: "auth_resent_after_cancel"
+                )
+            )
+        )
+        wait(for: [rotatedSecretLoggedOut], timeout: 1)
+
+        // Then the late response cannot reopen the flow and both credential sets are logged out
+        XCTAssertEqual(coordinator.state, .cancelled)
+        XCTAssertTrue(credentialStore.isEmpty)
+        XCTAssertEqual(apiClient.startVerification.requestHistory.count, 2)
+        XCTAssertEqual(apiClient.logOut.requestHistory.count, 2)
+        XCTAssertEqual(apiClient.logOut.requestHistory.last?.consumerSessionClientSecret, "cs_resent_after_cancel")
+        XCTAssertEqual(
+            apiClient.logOut.requestHistory.last?.verificationSessionClientSecrets,
+            ["vs_client_secret", "auth_resent_after_cancel"]
+        )
     }
 
     func testRetainsAuthSessionClientSecretsAcrossRequestsAndLogout() {
@@ -610,17 +829,21 @@ final class NetworkedIdentityCoordinatorTest: XCTestCase {
     }
 
     func testDuplicateOTPSubmissionWhilePendingIsIgnored() {
-        // Given the coordinator is awaiting a fresh SMS code
+        // Given resend is unavailable until the coordinator is awaiting a fresh SMS code
+        coordinator.resendOTP()
+        XCTAssertEqual(apiClient.startVerification.requestHistory.count, 0)
         beginExistingConsumerFlow()
 
-        // When submit is tapped twice before the first request completes
+        // When submit and resend are tapped before the first confirmation completes
         coordinator.submitOTP("123456")
         coordinator.submitOTP("123456")
+        coordinator.resendOTP()
 
         // Then only one confirmation request is in flight
         XCTAssertEqual(coordinator.state, .otpConfirmPending)
         XCTAssertEqual(apiClient.confirmVerification.requestHistory.count, 1)
         XCTAssertEqual(apiClient.confirmVerification.pendingRequestCount, 1)
+        XCTAssertEqual(apiClient.startVerification.requestHistory.count, 1)
     }
 
     func testUserCanChooseManualCapture() {
