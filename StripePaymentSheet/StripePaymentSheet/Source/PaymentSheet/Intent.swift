@@ -50,6 +50,20 @@ enum Intent {
         }
     }
 
+    var isSetupOnly: Bool {
+        switch self {
+        case .setupIntent:
+            return true
+        case .deferredIntent(let intentConfig):
+            if case .setup = intentConfig.mode {
+                return true
+            }
+            return false
+        case .paymentIntent, .checkout:
+            return false
+        }
+    }
+
     var isDeferredIntent: Bool {
         switch self {
         case .paymentIntent:

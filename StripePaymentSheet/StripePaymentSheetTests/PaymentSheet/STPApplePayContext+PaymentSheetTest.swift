@@ -23,6 +23,11 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
         return config
     }()
 
+    override func tearDown() {
+        StripeAPI.additionalEnabledApplePayNetworks = []
+        super.tearDown()
+    }
+
     func testCreatePaymentRequest_PaymentIntent() {
         let intent = Intent._testValue()
         let deferredIntent = Intent.deferredIntent(intentConfig: .init(mode: .payment(amount: 2345, currency: "USD"), confirmHandler: dummyDeferredConfirmHandler))
@@ -202,6 +207,79 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
         )
     }
 
+    func testCreate_setupIntentRemovesChinaUnionPayAndEMV() {
+        StripeAPI.additionalEnabledApplePayNetworks = [.chinaUnionPay]
+        let intent = Intent.setupIntent(STPFixtures.setupIntent())
+
+        let paymentRequest = paymentRequestAfterCustomHandler(intent: intent) { $0 }
+
+        XCTAssertFalse(paymentRequest.supportedNetworks.contains(.chinaUnionPay))
+        XCTAssertFalse(paymentRequest.merchantCapabilities.contains(.capabilityEMV))
+    }
+
+    func testCreate_deferredSetupIntentRemovesChinaUnionPayAndEMV() {
+        StripeAPI.additionalEnabledApplePayNetworks = [.chinaUnionPay]
+        let intent = Intent.deferredIntent(
+            intentConfig: .init(
+                mode: .setup(currency: "USD"),
+                confirmHandler: dummyDeferredConfirmHandler
+            )
+        )
+
+        let paymentRequest = paymentRequestAfterCustomHandler(intent: intent) { $0 }
+
+        XCTAssertFalse(paymentRequest.supportedNetworks.contains(.chinaUnionPay))
+        XCTAssertFalse(paymentRequest.merchantCapabilities.contains(.capabilityEMV))
+    }
+
+    func testCreate_setupIntentRemovesChinaUnionPayAndEMVAddedByHandler() {
+        let intent = Intent.setupIntent(STPFixtures.setupIntent())
+
+        let paymentRequest = paymentRequestAfterCustomHandler(intent: intent) { paymentRequest in
+            paymentRequest.supportedNetworks = [.visa, .chinaUnionPay]
+            paymentRequest.merchantCapabilities = [.capability3DS, .capabilityEMV, .capabilityCredit]
+            return paymentRequest
+        }
+
+        XCTAssertEqual(paymentRequest.supportedNetworks, [.visa])
+        XCTAssertEqual(
+            paymentRequest.merchantCapabilities,
+            [.capability3DS, .capabilityCredit]
+        )
+    }
+
+    func testCreate_paymentIntentWithSetupFutureUsageRetainsChinaUnionPayAndEMV() {
+        StripeAPI.additionalEnabledApplePayNetworks = [.chinaUnionPay]
+        let intent = Intent._testPaymentIntent(
+            paymentMethodTypes: [.card],
+            setupFutureUsage: .offSession
+        )
+
+        let paymentRequest = paymentRequestAfterCustomHandler(intent: intent) { $0 }
+
+        XCTAssertTrue(paymentRequest.supportedNetworks.contains(.chinaUnionPay))
+        XCTAssertTrue(paymentRequest.merchantCapabilities.contains(.capabilityEMV))
+    }
+
+    func testCreate_deferredPaymentIntentWithSetupFutureUsageRetainsChinaUnionPayAndEMV() {
+        StripeAPI.additionalEnabledApplePayNetworks = [.chinaUnionPay]
+        let intent = Intent.deferredIntent(
+            intentConfig: .init(
+                mode: .payment(
+                    amount: 2345,
+                    currency: "USD",
+                    setupFutureUsage: .offSession
+                ),
+                confirmHandler: dummyDeferredConfirmHandler
+            )
+        )
+
+        let paymentRequest = paymentRequestAfterCustomHandler(intent: intent) { $0 }
+
+        XCTAssertTrue(paymentRequest.supportedNetworks.contains(.chinaUnionPay))
+        XCTAssertTrue(paymentRequest.merchantCapabilities.contains(.capabilityEMV))
+    }
+
     func testCreate_normalizesMerchantCapabilitiesAfterHandlerAddsChinaUnionPay() {
         let paymentRequest = paymentRequestAfterCustomHandler { paymentRequest in
             paymentRequest.supportedNetworks = [.visa, .chinaUnionPay]
@@ -231,6 +309,7 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
     }
 
     private func paymentRequestAfterCustomHandler(
+        intent: Intent = ._testValue(),
         _ paymentRequestHandler: @escaping (PKPaymentRequest) -> PKPaymentRequest
     ) -> PKPaymentRequest {
         var handledPaymentRequest: PKPaymentRequest?
@@ -245,7 +324,6 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
             merchantCountryCode: "GB",
             customHandlers: handlers
         )
-        let intent = Intent._testValue()
         let elementsSession = STPElementsSession._testValue()
         let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadata(
             intent: intent,

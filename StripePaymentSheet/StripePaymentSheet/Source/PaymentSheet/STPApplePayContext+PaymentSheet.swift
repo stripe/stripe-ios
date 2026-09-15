@@ -377,6 +377,10 @@ extension STPApplePayContext {
         if let paymentRequestHandler = configuration.applePay?.customHandlers?.paymentRequestHandler {
             paymentRequest = paymentRequestHandler(paymentRequest)
         }
+        // CUP Apple Pay setup-only flows are temporarily disabled.
+        if intent.isSetupOnly {
+            paymentRequest.supportedNetworks.removeAll { $0 == .chinaUnionPay }
+        }
         normalizeEMVCapabilityForChinaUnionPay(for: paymentRequest)
 
         // Keep tax in sync with the billing address as the user switches cards.
