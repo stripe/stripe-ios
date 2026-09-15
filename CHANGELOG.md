@@ -3,6 +3,9 @@ PATCH
 
 ## X.Y.Z - changes pending release
 
+### PaymentSheet
+* [Fixed] Fixed card funding warnings not appearing after scanning a card.
+
 ## 26.11.0 2026-09-14
 ### General
 * [Added] Added support for Welsh.
