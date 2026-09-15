@@ -14,6 +14,10 @@ import Foundation
     case cryptoOnramp = "ios_crypto_onramp"
     /// Used for requests from the standalone `LinkController` API.
     case standaloneLink = "ios_link_standalone"
+    /// Used for requests from the `StripeIdentity` SDK (Networked Identity).
+    /// #TODO - Networked Identity [NI-Contract]: restore "ios_identity_product" once the backend accepts
+    /// it. It is agreed but not deployed yet, and the API rejects it today.
+    case identity = "web_identity_product"
 }
 
 @_spi(STP) public extension LinkRequestSurface {
