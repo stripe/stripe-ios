@@ -121,15 +121,22 @@ import UIKit
         -> URLRequest
     {
         var request = URLRequest(url: url)
-        var headers = defaultHeaders(
+        let headers = defaultHeaders(
             ephemeralKeySecret: ephemeralKeySecret,
             apiVersionOverride: apiVersionOverride
         )
-        // additionalHeaders can overwrite defaultHeaders.
-        for (k, v) in additionalHeaders { headers[k] = v }
         headers.forEach { key, value in
             request.setValue(value, forHTTPHeaderField: key)
         }
+
+        // Note that we apply the default headers first before adding additional headers.
+        // Additional headers may replace values for default headers case-insensitively.
+        // `setValue(_:forHTTPHeaderField)` ensures the original key casing is preserved,
+        // but values will be overwritten.
+        additionalHeaders.forEach { key, value in
+            request.setValue(value, forHTTPHeaderField: key)
+        }
+
         return request
     }
 
@@ -513,6 +520,9 @@ extension STPAPIClient {
             request.setValue(nil, forHTTPHeaderField: "Stripe-Account")
         }
 
+        // Note that we apply the additional headers last here rather than in the call to `configuredRequest` above.
+        // this is because "Authorization" and "Stripe-Account" headers are applied after the call to `configuredRequest`,
+        // so the default behavior of this method would potentially overwrite `additionalHeaders` passed in otherwise.
         for (key, value) in additionalHeaders {
             request.setValue(value, forHTTPHeaderField: key)
         }
@@ -589,10 +599,14 @@ extension STPAPIClient {
                 additionalHeaders: [
                     "Content-Length": String(format: "%lu", UInt(formData?.count ?? 0)),
                     "Content-Type": "application/x-www-form-urlencoded",
-                ].merging(additionalHeaders) { _, newValue in newValue }
+                ]
             )
             request.httpBody = formData
             request.httpMethod = HTTPMethod.post.rawValue
+
+            for (key, value) in additionalHeaders {
+                request.setValue(value, forHTTPHeaderField: key)
+            }
 
             self.sendRequest(request: request, completion: completion)
         } catch {
