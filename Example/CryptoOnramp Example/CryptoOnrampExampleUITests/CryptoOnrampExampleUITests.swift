@@ -72,7 +72,10 @@ final class CryptoOnrampExampleUITests: XCTestCase {
         let otpField = app.textViews["Code field"].firstMatch
         enterText("000000", in: otpField)
 
-        // Step 4: Wait for wallet selection screen and tap the Next button.
+        // Step 4: Continue after determining that terms of service acceptance is not required.
+        continuePastTermsOfService()
+
+        // Step 5: Wait for wallet selection screen and tap the Next button.
         // The Next button will be enabled once the user's wallets load and we auto-select the first wallet.
         let walletsLabel = app.staticTexts["Wallets"].firstMatch
         XCTAssertTrue(walletsLabel.waitForExistence(timeout: .networkTimeout), "Wallet selection screen should appear")
@@ -82,7 +85,7 @@ final class CryptoOnrampExampleUITests: XCTestCase {
         XCTAssertTrue(nextButton.wait(for: \.isEnabled, toEqual: true, timeout: .networkTimeout), "Next button should become enabled.")
         nextButton.tap()
 
-        // Step 5: Wait for the payment screen, select the $3 button, and the most recent payment method, then tap Next.
+        // Step 6: Wait for the payment screen, select the $3 button, and the most recent payment method, then tap Next.
         let paymentLabel = app.staticTexts["Payment"].firstMatch
         XCTAssertTrue(paymentLabel.waitForExistence(timeout: .networkTimeout), "Payment screen should appear")
         waitForLoadingToFinish()
@@ -103,7 +106,7 @@ final class CryptoOnrampExampleUITests: XCTestCase {
         XCTAssertTrue(continueButton.exists, "Continue button should exist")
         continueButton.tap()
 
-        // Step 6: Wait for the Review screen, and then tap the Confirm button.
+        // Step 7: Wait for the Review screen, and then tap the Confirm button.
         let reviewLabel = app.staticTexts["Review"].firstMatch
         XCTAssertTrue(reviewLabel.waitForExistence(timeout: .networkTimeout), "Review screen should appear")
         waitForLoadingToFinish()
@@ -112,7 +115,7 @@ final class CryptoOnrampExampleUITests: XCTestCase {
         XCTAssertTrue(confirmButton.exists, "Confirm button should exist")
         confirmButton.tap()
 
-        // Step 7: Wait for the Success screen, then log out.
+        // Step 8: Wait for the Success screen, then log out.
         let successLabel = app.staticTexts["Purchase successful"].firstMatch
         XCTAssertTrue(successLabel.waitForExistence(timeout: .networkTimeout), "Success screen should appear")
         waitForLoadingToFinish()
@@ -125,7 +128,7 @@ final class CryptoOnrampExampleUITests: XCTestCase {
         XCTAssertTrue(logOutMenuItem.waitForExistence(timeout: .animationTimeout), "Log out menu item should exist")
         logOutMenuItem.tap()
 
-        // Step 8: Authenticate again using seamless sign-in (no OTP, stored auth token from prior login).
+        // Step 9: Authenticate again using seamless sign-in (no OTP, stored auth token from prior login).
         let seamlessSignInLabel = app.staticTexts["Continue as onramptest2@stripe.com?"]
         XCTAssertTrue(seamlessSignInLabel.waitForExistence(timeout: .networkTimeout), "Seamless sign-in label should exist")
         waitForLoadingToFinish()
@@ -134,7 +137,10 @@ final class CryptoOnrampExampleUITests: XCTestCase {
         XCTAssertTrue(seamlessSignInButton.exists, "Seamless sign-in (Continue) button should exist")
         seamlessSignInButton.tap()
 
-        // Step 9: We should skip right to the wallet selection screen without the need to enter an OTP code.
+        // Step 10: We should skip OTP and proceed to terms of service, where acceptance is not required.
+        continuePastTermsOfService()
+
+        // Step 11: Wait for the wallet selection screen.
         let walletsLabel2 = app.staticTexts["Wallets"].firstMatch
         XCTAssertTrue(walletsLabel2.waitForExistence(timeout: .networkTimeout), "Wallet selection screen should appear")
     }
@@ -156,17 +162,20 @@ final class CryptoOnrampExampleUITests: XCTestCase {
         // Step 2: Provide full US KYC information.
         try completeFullUSKYC(address: address)
 
-        // Step 3: Complete document verification with the synchronous test-mode success option.
+        // Step 3: Continue after determining that terms of service acceptance is not required.
+        continuePastTermsOfService()
+
+        // Step 4: Complete document verification with the synchronous test-mode success option.
         completeSuccessfulIdentityVerification()
 
-        // Step 4: Register a new Solana wallet.
+        // Step 5: Register a new Solana wallet.
         addSolanaWallet(address: Self.solanaWalletAddress)
 
         let nextButton = app.buttons["Next"].firstMatch
         XCTAssertTrue(nextButton.wait(for: \.isEnabled, toEqual: true, timeout: .networkTimeout), "Next button should become enabled")
         nextButton.tap()
 
-        // Step 5: Add a credit card and make a $3 purchase.
+        // Step 6: Add a credit card and make a $3 purchase.
         let paymentLabel = app.staticTexts["Payment"].firstMatch
         XCTAssertTrue(paymentLabel.waitForExistence(timeout: .networkTimeout), "Payment screen should appear")
         waitForLoadingToFinish()
@@ -219,7 +228,7 @@ final class CryptoOnrampExampleUITests: XCTestCase {
         )
         continueButton.tap()
 
-        // Step 6: Confirm checkout and reach the success screen.
+        // Step 7: Confirm checkout and reach the success screen.
         let reviewLabel = app.staticTexts["Review"].firstMatch
         XCTAssertTrue(reviewLabel.waitForExistence(timeout: .networkTimeout), "Review screen should appear")
         waitForLoadingToFinish()
@@ -259,10 +268,13 @@ final class CryptoOnrampExampleUITests: XCTestCase {
         // Step 2: Provide full US KYC information.
         try completeFullUSKYC(address: Self.testAddress)
 
-        // Step 3: Complete document verification with the synchronous test-mode success option.
+        // Step 3: Continue after determining that terms of service acceptance is not required.
+        continuePastTermsOfService()
+
+        // Step 4: Complete document verification with the synchronous test-mode success option.
         completeSuccessfulIdentityVerification()
 
-        // Step 4: Register a new Solana wallet and continue to payment.
+        // Step 5: Register a new Solana wallet and continue to payment.
         addSolanaWallet(address: Self.solanaWalletAddress)
 
         let nextButton = app.buttons["Next"].firstMatch
@@ -273,7 +285,7 @@ final class CryptoOnrampExampleUITests: XCTestCase {
         XCTAssertTrue(paymentLabel.waitForExistence(timeout: .networkTimeout), "Payment screen should appear")
         waitForLoadingToFinish()
 
-        // Step 5: Refresh the customer's KYC address from the authenticated-user toolbar.
+        // Step 6: Refresh the customer's KYC address from the authenticated-user toolbar.
         let userButton = app.images["person.fill"].firstMatch
         XCTAssertTrue(userButton.exists, "User toolbar button should exist")
         userButton.tap()
@@ -315,7 +327,7 @@ final class CryptoOnrampExampleUITests: XCTestCase {
         XCTAssertTrue(successAlert.staticTexts["KYC information confirmed."].exists, "KYC refresh should be confirmed")
         successAlert.buttons["OK"].tap()
 
-        // Step 6: Add the Success test bank account and select standard ACH.
+        // Step 7: Add the Success test bank account and select standard ACH.
         app.buttons["$3"].firstMatch.tap()
         app.buttons["Select a payment method"].firstMatch.tap()
 
@@ -372,7 +384,7 @@ final class CryptoOnrampExampleUITests: XCTestCase {
         )
         paymentContinueButton.tap()
 
-        // Step 7: Confirm checkout and reach the success screen.
+        // Step 8: Confirm checkout and reach the success screen.
         let reviewLabel = app.staticTexts["Review"].firstMatch
         XCTAssertTrue(reviewLabel.waitForExistence(timeout: .networkTimeout), "Review screen should appear")
         waitForLoadingToFinish()
@@ -433,7 +445,10 @@ final class CryptoOnrampExampleUITests: XCTestCase {
         XCTAssertTrue(submitKYCButton.isEnabled, "KYC Submit button should be enabled")
         submitKYCButton.tap()
 
-        // Step 3: Submit an appropriately formatted value for the compliance identifier requested by the backend.
+        // Step 3: Continue after determining that terms of service acceptance is not required.
+        continuePastTermsOfService()
+
+        // Step 4: Submit an appropriately formatted value for the compliance identifier requested by the backend.
         let identifiersLabel = app.staticTexts["Add identifiers"].firstMatch
         XCTAssertTrue(identifiersLabel.waitForExistence(timeout: .networkTimeout), "Compliance identifiers screen should appear")
         waitForLoadingToFinish()
@@ -445,7 +460,7 @@ final class CryptoOnrampExampleUITests: XCTestCase {
         XCTAssertTrue(submitIdentifiersButton.isEnabled, "Submit Identifiers button should be enabled")
         submitIdentifiersButton.tap()
 
-        // Step 4: Cancel user attestation once, then re-present and accept it.
+        // Step 5: Cancel user attestation once, then re-present and accept it.
         let userAttestationLabel = app.staticTexts["Accept user attestation"].firstMatch
         XCTAssertTrue(userAttestationLabel.waitForExistence(timeout: .networkTimeout), "User attestation screen should appear")
         waitForLoadingToFinish()
@@ -466,10 +481,10 @@ final class CryptoOnrampExampleUITests: XCTestCase {
         attestationScrollView.swipeUp(velocity: .fast)
         app.buttons["Accept"].firstMatch.tap()
 
-        // Step 5: Complete document verification with the synchronous test-mode success option.
+        // Step 6: Complete document verification with the synchronous test-mode success option.
         completeSuccessfulIdentityVerification()
 
-        // Step 6: Register and verify a Solana wallet.
+        // Step 7: Register and verify a Solana wallet.
         addSolanaWallet(address: Self.solanaWalletAddress)
 
         let verifyOwnershipButton = app.buttons["Verify Ownership"].firstMatch
