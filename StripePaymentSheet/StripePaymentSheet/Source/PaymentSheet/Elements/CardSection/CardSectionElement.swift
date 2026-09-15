@@ -252,6 +252,7 @@ final class CardSectionElement: ContainerElement {
             return
         }
 
+        let previousWarning = panElement.warningLabelText
         // TODO: BIN retrieval is broken if you don't use STPAPIClient.shared (https://jira.corp.stripe.com/browse/MOBILESDK-4322)
         fundingBinController.retrieveBINRanges(
             apiClient: STPAPIClient.shared,
@@ -260,8 +261,13 @@ final class CardSectionElement: ContainerElement {
             onlyFetchForVariableLengthBINs: false
         ) { [weak self] _ in
             guard let self = self else { return }
-            // Trigger re-validation so warningLabel can read the now-cached funding data
-            delegate?.didUpdate(element: self)
+            // Only refresh the section when the warning changes to avoid an update loop.
+            if panElement.warningLabelText != previousWarning {
+                // This calls back into didUpdate(element:), which notifies our delegate.
+                cardSection.didUpdate(element: panElement)
+            } else {
+                delegate?.didUpdate(element: self)
+            }
         }
     }
 

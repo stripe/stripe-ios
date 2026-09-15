@@ -11,6 +11,7 @@ MINOR
 
 ### PaymentSheet
 * [Added] Added support for Scalapay.
+* [Fixed] Fixed card funding warnings not appearing after scanning a card.
 
 ## 26.10.0 2026-09-08
 ### General
