@@ -92,6 +92,8 @@
 
 "Prefecture" = "Prefectură";
 
+"Processing..." = "Se procesează...";
+
 "Province" = "Provincie";
 
 "Remove" = "Eliminare";
@@ -106,9 +108,13 @@
 
 "Selection is empty." = "Selecția este goală.";
 
+"Something went wrong" = "Ceva nu a mers bine";
+
 "Sort code" = "Cod de sortare";
 
 "State" = "Stat";
+
+"Submit" = "Trimitere";
 
 "Suburb" = "Suburbie";
 

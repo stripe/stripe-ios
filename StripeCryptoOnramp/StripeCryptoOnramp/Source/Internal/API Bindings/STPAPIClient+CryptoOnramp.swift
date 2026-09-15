@@ -49,6 +49,32 @@ extension STPAPIClient {
         return try await post(resource: endpoint, object: requestObject)
     }
 
+    /// Retrieves the authenticated customer's outstanding additional KYC requirements.
+    /// - Parameter linkAccountInfo: Information associated with the Link account, including its client secret and verification state.
+    /// - Returns: The customer's additional KYC requirements.
+    /// Throws if the Link account is not verified, its client secret is unavailable, or an API error occurs.
+    func retrieveKYCRequirements(linkAccountInfo: PaymentSheetLinkAccountInfoProtocol) async throws -> RetrieveKYCRequirementsResponse {
+        guard let consumerSessionClientSecret = linkAccountInfo.consumerSessionClientSecret else {
+            throw CryptoOnrampAPIError.missingConsumerSessionClientSecret
+        }
+
+        try validateSessionState(using: linkAccountInfo)
+
+        let endpoint = "crypto/internal/kyc_requirements"
+        return try await get(
+            resource: endpoint,
+            consumerSessionClientSecret: consumerSessionClientSecret
+        )
+    }
+
+    /// Submits documents and questionnaire answers for one additional KYC requirement.
+    /// - Parameter request: The requirement fulfillment payload.
+    /// - Returns: The newly created additional KYC submission.
+    func fulfillAdditionalKYCRequirement(_ request: FulfillAdditionalKYCRequirementRequest) async throws -> FulfillAdditionalKYCRequirementResponse {
+        let endpoint = "crypto/internal/fulfill_additional_kyc_requirement"
+        return try await post(resource: endpoint, object: request)
+    }
+
     /// Attaches the specific KYC info to the current Link user on the backend.
     /// - Parameters:
     ///   - info: The collected customer information.
@@ -127,7 +153,7 @@ extension STPAPIClient {
         let endpoint = "crypto/internal/identifier_requirements"
         return try await get(
             resource: endpoint,
-            parameters: try credentialsParameters(consumerSessionClientSecret: consumerSessionClientSecret)
+            consumerSessionClientSecret: consumerSessionClientSecret
         )
     }
 
@@ -172,7 +198,7 @@ extension STPAPIClient {
         let endpoint = "crypto/internal/crs_carf_declaration"
         return try await get(
             resource: endpoint,
-            parameters: try credentialsParameters(consumerSessionClientSecret: consumerSessionClientSecret)
+            consumerSessionClientSecret: consumerSessionClientSecret
         )
     }
 
@@ -371,12 +397,6 @@ extension STPAPIClient {
             throw CryptoOnrampAPIError.linkAccountNotVerified
         }
     }
-
-    private func credentialsParameters(consumerSessionClientSecret: String) throws -> [String: Any] {
-        return try EmptyRequestWithCredentials(
-            consumerSessionClientSecret: consumerSessionClientSecret
-        ).encodeJSONDictionary()
-    }
 }
 
 private extension STPAPIClient {
@@ -419,9 +439,45 @@ private extension STPAPIClient {
             }
         }
     }
+
+    func get<T: Decodable>(
+        resource: String,
+        parameters: [String: Any] = [:],
+        consumerSessionClientSecret: String
+    ) async throws -> T {
+        let url = apiURL.appendingPathComponent(resource)
+        var request = configuredRequest(
+            for: url,
+            apiVersionOverride: CryptoOnrampAPI.stripeAPIVersion,
+            additionalHeaders: [
+                CryptoOnrampAPI.consumerAuthTokenHeader: consumerSessionClientSecret,
+            ]
+        )
+        request.stp_addParameters(toURL: parameters)
+        request.httpMethod = "GET"
+
+        return try await withCheckedThrowingContinuation { continuation in
+            urlSession.stp_performDataTask(
+                with: request,
+                completionHandler: { data, response, error in
+                    DispatchQueue.main.async {
+                        let result: Result<T, Error> = STPAPIClient.decodeResponse(
+                            data: data,
+                            error: error,
+                            response: response,
+                            request: request
+                        )
+                        continuation.resume(with: result)
+                    }
+                }
+            )
+        }
+    }
 }
 
 private enum CryptoOnrampAPI {
+    static let consumerAuthTokenHeader = "Stripe-Consumer-Auth-Token"
+
     // Use a preview API version for networks and parameters behind preview API features.
     // Bump this when new onramp features require a newer API version.
     static let stripeAPIVersion = "2026-03-25.preview"
