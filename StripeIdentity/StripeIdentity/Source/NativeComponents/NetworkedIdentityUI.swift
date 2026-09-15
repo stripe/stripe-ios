@@ -24,6 +24,12 @@ enum NetworkedIdentityUI {
         )
     }
 
+    static var captionFont: UIFont {
+        UIFontMetrics(forTextStyle: .footnote).scaledFont(
+            for: .systemFont(ofSize: 13, weight: .regular)
+        )
+    }
+
     static var bodyEmphasizedFont: UIFont {
         UIFontMetrics(forTextStyle: .body).scaledFont(
             for: .systemFont(ofSize: 16, weight: .semibold)

@@ -5,7 +5,8 @@
 //  Created by Mel Ludowise on 3/3/21.
 //
 
-import StripeIdentity
+@_spi(STP) import StripeIdentity
+@_spi(STP) import StripePaymentSheet
 @_spi(STP) import StripeUICore
 import UIKit
 
@@ -48,6 +49,9 @@ class PlaygroundViewController: UIViewController {
     private let phoneElement: PhoneNumberElement
 
     private let phoneView: UIView
+
+    private let networkedIdentityView = NetworkedIdentityPlaygroundView()
+    private let scrollView = UIScrollView()
 
     enum InvocationType: CaseIterable {
         case native
@@ -129,6 +133,7 @@ class PlaygroundViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        embedContentInScrollView()
         nativeOrWebSelector.isEnabled = true
 
         mockDocumentCameraForSimulator()
@@ -136,11 +141,56 @@ class PlaygroundViewController: UIViewController {
         phoneView.isHidden = true
         phoneOtpContainerView.addArrangedSubview(phoneView)
 
+        // Networked Identity reuses Link, which needs native Link.
+        PaymentSheet.LinkFeatureFlags.nativeLinkEnabledOverride = true
+        nativeComponentsOptionsContainerView.addArrangedSubview(networkedIdentityView)
+
         activityIndicator.hidesWhenStopped = true
         verifyButton.addTarget(self, action: #selector(didTapVerifyButton), for: .touchUpInside)
         // TODO(ccen) enable phoneOtpContainerView when backend adds support to PII
         phoneOtpContainerView.isHidden = true
         didChangeNewOrReuse(self)
+    }
+
+    /// The storyboard pins the options stack to the top only, so it overflows small screens. Moving it into a
+    /// scroll view keeps every option reachable.
+    private func embedContentInScrollView() {
+        guard let content = view.subviews.first(where: { $0 is UIStackView }) else { return }
+        content.removeFromSuperview()
+        scrollView.keyboardDismissMode = .interactive
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        content.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(scrollView)
+        scrollView.addSubview(content)
+        NSLayoutConstraint.activate([
+            scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            content.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor),
+            content.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor, constant: -16),
+            content.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor, constant: 4),
+            content.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor, constant: -4),
+            content.widthAnchor.constraint(equalTo: scrollView.frameLayoutGuide.widthAnchor, constant: -8),
+        ])
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(keyboardWillChangeFrame),
+            name: UIResponder.keyboardWillChangeFrameNotification,
+            object: nil
+        )
+    }
+
+    /// Keeps the focused field, and the buttons right below it, above the keyboard.
+    @objc private func keyboardWillChangeFrame(_ notification: Notification) {
+        guard let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else {
+            return
+        }
+        let overlap = max(0, scrollView.convert(scrollView.bounds, to: nil).maxY - keyboardFrame.minY)
+        scrollView.contentInset.bottom = overlap
+        scrollView.verticalScrollIndicatorInsets.bottom = overlap
+        guard overlap > 0, let field = scrollView.firstResponderDescendant else { return }
+        scrollView.scrollRectToVisible(field.convert(field.bounds, to: scrollView).insetBy(dx: 0, dy: -60), animated: true)
     }
 
     @objc
@@ -359,12 +409,14 @@ class PlaygroundViewController: UIViewController {
             assertionFailure("Did not receive a valid ephemeral key secret.")
             return
         }
+        var configuration = IdentityVerificationSheet.Configuration(
+            brandLogo: UIImage(named: "BrandLogo")!
+        )
+        configuration.networkedIdentity = networkedIdentityView.networkedIdentityOptions
         self.verificationSheet = IdentityVerificationSheet(
             verificationSessionId: verificationSessionId,
             ephemeralKeySecret: ephemeralKeySecret,
-            configuration: IdentityVerificationSheet.Configuration(
-                brandLogo: UIImage(named: "BrandLogo")!
-            )
+            configuration: configuration
         )
     }
 
@@ -598,5 +650,15 @@ extension PlaygroundViewController: UITextFieldDelegate {
 
     func textFieldDidChangeSelection(_ textField: UITextField) {
         textField.selectAll(nil)
+    }
+}
+
+private extension UIView {
+    var firstResponderDescendant: UIView? {
+        if isFirstResponder { return self }
+        for subview in subviews {
+            if let responder = subview.firstResponderDescendant { return responder }
+        }
+        return nil
     }
 }
