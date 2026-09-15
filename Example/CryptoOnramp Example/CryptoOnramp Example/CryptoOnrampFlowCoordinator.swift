@@ -258,7 +258,9 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
 
         if shouldShowKYCInfo {
             path.append(.kycInfo(collectionMode: kycInfoCollectionMode, initialResidence: kycResidence))
-        } else if hasKYCRegion && !hasHandledTermsOfService {
+        } else if hasKYCRegion,
+            kycResidence.requiresTermsOfServiceCheck,
+            !hasHandledTermsOfService {
             path.append(.termsOfService)
         } else if
             isEUCustomer,
