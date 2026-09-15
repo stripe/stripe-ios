@@ -23,7 +23,7 @@ protocol HostViewControllerDelegate: AnyObject {
 
     func hostViewController(
         _ hostViewController: HostViewController,
-        didReceiveEvent event: FinancialConnectionsEvent
+        didReceiveEvent event: FinancialConnectionsEventPayload
     )
 }
 
@@ -140,7 +140,7 @@ extension HostViewController {
                     self.lastError = nil
                     self.delegate?.hostViewController(self, didFetch: synchronizePayload)
                 case .failure(let error):
-                    FinancialConnectionsEvent
+                    FinancialConnectionsEventPayload
                         .events(fromError: error)
                         .forEach { event in
                             self.delegate?.hostViewController(self, didReceiveEvent: event)
@@ -167,7 +167,7 @@ private extension HostViewController {
     func didTapClose() {
         delegate?.hostViewController(
             self,
-            didReceiveEvent: FinancialConnectionsEvent(name: .cancel)
+            didReceiveEvent: FinancialConnectionsEventPayload(name: .cancel)
         )
         delegate?.hostViewControllerDidFinish(self, lastError: lastError)
     }

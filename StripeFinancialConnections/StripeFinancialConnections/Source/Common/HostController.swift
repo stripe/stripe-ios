@@ -176,7 +176,7 @@ extension HostController: HostViewControllerDelegate {
     ) {
         self.linkAccountSessionId = synchronizePayload.manifest.id
         analyticsClient.setAdditionalParameters(fromManifest: synchronizePayload.manifest)
-        publish(FinancialConnectionsEvent(name: .open))
+        publish(FinancialConnectionsEventPayload(name: .open))
 
         let flowRouter = FlowRouter(
             synchronizePayload: synchronizePayload,
@@ -203,7 +203,7 @@ extension HostController: HostViewControllerDelegate {
 
     func hostViewController(
         _ hostViewController: HostViewController,
-        didReceiveEvent event: FinancialConnectionsEvent
+        didReceiveEvent event: FinancialConnectionsEventPayload
     ) {
         publish(event)
     }
@@ -213,7 +213,15 @@ extension HostController: HostViewControllerDelegate {
 
 private extension HostController {
 
-    func publish(_ event: FinancialConnectionsEvent) {
+    func publish(_ payload: FinancialConnectionsEventPayload) {
+        guard let linkAccountSessionId, !linkAccountSessionId.isEmpty else {
+            return
+        }
+        let event = FinancialConnectionsEvent(
+            name: payload.name,
+            financialConnectionsSessionId: linkAccountSessionId,
+            metadata: payload.metadata
+        )
         analyticsClient.logExternalEvent(
             event,
             pane: FinancialConnectionsAnalyticsClient.paneFromViewController(navigationController.topViewController)
@@ -222,7 +230,7 @@ private extension HostController {
     }
 
     func continueWithWebFlow(_ manifest: FinancialConnectionsSessionManifest, prefillDetails: WebPrefillDetails? = nil) {
-        publish(FinancialConnectionsEvent(name: .flowLaunchedInBrowser))
+        publish(FinancialConnectionsEventPayload(name: .flowLaunchedInBrowser))
 
         let accountFetcher = FinancialConnectionsAccountAPIFetcher(api: apiClient, clientSecret: clientSecret)
         let sessionFetcher = FinancialConnectionsSessionAPIFetcher(
@@ -286,7 +294,7 @@ extension HostController: FinancialConnectionsWebFlowViewControllerDelegate {
 
     func webFlowViewController(
         _ webFlowViewController: UIViewController,
-        didReceiveEvent event: FinancialConnectionsEvent
+        didReceiveEvent event: FinancialConnectionsEventPayload
     ) {
         publish(event)
     }
@@ -314,7 +322,7 @@ extension HostController: NativeFlowControllerDelegate {
 
     func nativeFlowController(
         _ nativeFlowController: NativeFlowController,
-        didReceiveEvent event: FinancialConnectionsEvent
+        didReceiveEvent event: FinancialConnectionsEventPayload
     ) {
         publish(event)
     }
@@ -334,7 +342,7 @@ extension HostController: FinancialConnectionsAnalyticsClientDelegate {
 
     func analyticsClient(
         _ analyticsClient: FinancialConnectionsAnalyticsClient,
-        didReceiveEvent event: FinancialConnectionsEvent
+        didReceiveEvent event: FinancialConnectionsEventPayload
     ) {
         publish(event)
     }
