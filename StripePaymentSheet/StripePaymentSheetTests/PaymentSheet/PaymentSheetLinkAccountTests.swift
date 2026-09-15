@@ -405,6 +405,26 @@ class PaymentSheetLinkAccountDelegateStub: PaymentSheetLinkAccountDelegate {
 }
 
 extension PaymentSheetLinkAccountTests {
+    func testConsumerPublishableKey_returnsAccountPublishableKey() {
+        // Given an account created with a consumer publishable key
+        let sut = PaymentSheetLinkAccount(
+            email: "user@example.com",
+            session: LinkStubs.consumerSession(),
+            publishableKey: "pk_consumer_123",
+            displayablePaymentDetails: nil,
+            apiClient: STPAPIClient(publishableKey: STPTestingDefaultPublishableKey),
+            useMobileEndpoints: false,
+            canSyncAttestationState: false
+        )
+
+        // Then the key is exposed for consumer API calls made outside of Link
+        XCTAssertEqual(sut.consumerPublishableKey, "pk_consumer_123")
+    }
+
+    func testConsumerPublishableKey_isNilWithoutPublishableKey() {
+        XCTAssertNil(makeSUT().consumerPublishableKey)
+    }
+
     func makeVerifiedSession() -> ConsumerSession {
         return ConsumerSession.make(
             clientSecret: "client_secret",

@@ -36,6 +36,7 @@ final class LinkSignUpViewController: UIViewController {
     private let brand: LinkBrand
     private let appearance: LinkAppearance?
     private let theme: ElementsAppearance
+    private let authentication: LinkController.AuthenticationContent?
 
     private lazy var selectionBehavior: SelectionBehavior = {
         // This is lazily computed so that the iOS 26 style can be applied to LinkUI.
@@ -49,14 +50,14 @@ final class LinkSignUpViewController: UIViewController {
         return SelectionBehavior.highlightBorder(configuration: config)
     }()
 
-    private let titleLabel: UILabel = {
+    private lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.font = LinkUI.font(forTextStyle: .title)
         label.textColor = .linkTextPrimary
         label.adjustsFontForContentSizeCategory = true
         label.numberOfLines = 0
         label.textAlignment = .center
-        label.text = STPLocalizedString(
+        label.text = authentication?.title ?? STPLocalizedString(
             "Fast, secure checkout",
             "Title for the Link signup screen"
         )
@@ -70,7 +71,7 @@ final class LinkSignUpViewController: UIViewController {
         label.adjustsFontForContentSizeCategory = true
         label.numberOfLines = 0
         label.textAlignment = .center
-        label.text = String.Localized.pay_faster_everywhere_brand_is_accepted(brand: brand)
+        label.text = authentication?.subtitle ?? String.Localized.pay_faster_everywhere_brand_is_accepted(brand: brand)
         label.accessibilityLabel = brand.accessibilityText(from: label.text ?? "")
         return label
     }()
@@ -189,14 +190,19 @@ final class LinkSignUpViewController: UIViewController {
         brand: LinkBrand = .link,
         country: String? = nil,
         defaultBillingDetails: PaymentSheet.BillingDetails?,
-        appearance: LinkAppearance? = nil
+        appearance: LinkAppearance? = nil,
+        authentication: LinkController.AuthenticationContent? = nil,
+        requestSurface: LinkRequestSurface = .default
     ) {
         self.viewModel = LinkSignUpViewModel(
             accountService: accountService,
             linkAccount: linkAccount,
             legalName: defaultBillingDetails?.name,
-            country: country ?? defaultBillingDetails?.address.country
+            country: country ?? defaultBillingDetails?.address.country,
+            consentAction: authentication?.consentAction ?? .clicked_button_mobile_v1,
+            requestSurface: requestSurface
         )
+        self.authentication = authentication
         self.defaultBillingDetails = defaultBillingDetails
         self.brand = brand
         self.appearance = appearance

@@ -21,6 +21,8 @@ final class PayWithNativeLinkController {
     enum Mode {
         case full
         case paymentMethodSelection
+        /// Sign in or sign up only, for another Stripe product; the wallet isn't shown.
+        case authentication
     }
 
     enum CompletionResult {
@@ -33,6 +35,8 @@ final class PayWithNativeLinkController {
             confirmOption: PaymentSheet.LinkConfirmOption?,
             shouldReturnToPaymentSheet: Bool = false
         )
+        /// The verified account, or nil when the user dismissed Link.
+        case authentication(PaymentSheetLinkAccount?)
 
         var shouldShowPaymentSheetAgain: Bool {
             switch self {
@@ -40,6 +44,8 @@ final class PayWithNativeLinkController {
                 return result.isCanceledOrFailed
             case .paymentMethodSelection(let confirmOption, _):
                 return confirmOption == nil
+            case .authentication:
+                return false
             }
         }
     }
@@ -135,6 +141,38 @@ final class PayWithNativeLinkController {
                 if case .failed(let error) = result {
                     completion(nil, false, error)
                 }
+            case .authentication:
+                break
+            }
+        }
+    }
+
+    func presentForAuthentication(
+        from presentingController: UIViewController,
+        content: LinkController.AuthenticationContent,
+        requestSurface: LinkRequestSurface,
+        completion: @escaping (Result<PaymentSheetLinkAccount?, Error>) -> Void
+    ) {
+        if let linkAccount = LinkAccountContext.shared.account, linkAccount.sessionState == .verified {
+            completion(.success(linkAccount))
+            return
+        }
+        presentAsBottomSheetInternal(
+            from: presentingController,
+            shouldOfferApplePay: false,
+            hidingUnderlyingBottomSheet: false,
+            shouldFinishOnClose: true,
+            canContinueWithoutLink: false,
+            authentication: content,
+            requestSurface: requestSurface
+        ) { completionResult in
+            switch completionResult {
+            case .authentication(let linkAccount):
+                completion(.success(linkAccount))
+            case .full(.failed(let error), _, _):
+                completion(.failure(error))
+            case .full, .paymentMethodSelection:
+                completion(.success(nil))
             }
         }
     }
@@ -148,6 +186,8 @@ final class PayWithNativeLinkController {
         callToAction: ConfirmButton.CallToActionType? = nil,
         shouldFinishOnClose: Bool,
         canContinueWithoutLink: Bool = true,
+        authentication: LinkController.AuthenticationContent? = nil,
+        requestSurface: LinkRequestSurface = .default,
         completion: @escaping (CompletionResult) -> Void
     ) {
         self.selfRetainer = self
@@ -170,16 +210,12 @@ final class PayWithNativeLinkController {
                 analyticsHelper: self.analyticsHelper,
                 supportedPaymentMethodTypes: self.supportedPaymentMethodTypes,
                 linkAppearance: self.linkAppearance,
-                linkConfiguration: self.linkConfiguration
+                linkConfiguration: self.linkConfiguration,
+                authentication: authentication,
+                requestSurface: requestSurface
             )
 
             payWithLinkVC.payWithLinkDelegate = self
-            presentingController.presentAsBottomSheet(
-                payWithLinkVC,
-                appearance: self.configuration.appearance,
-                completion: {}
-            )
-
             self.completion =  { completionResult in
                 payWithLinkVC.dismiss(animated: true) {
                     completion(completionResult)
@@ -193,6 +229,11 @@ final class PayWithNativeLinkController {
                     }
                 }
             }
+            presentingController.presentAsBottomSheet(
+                payWithLinkVC,
+                appearance: self.configuration.appearance,
+                completion: {}
+            )
         }
 
         // Dismiss the underlying bottom sheet
@@ -216,6 +257,16 @@ extension PayWithNativeLinkController: PayWithLinkViewControllerDelegate {
     ) {
         payWithLinkViewController.dismiss(animated: true) {
             self.completion?(.paymentMethodSelection(confirmOption: confirmOption))
+        }
+    }
+
+    func payWithLinkViewControllerDidAuthenticate(
+        _ payWithLinkViewController: PayWithLinkViewController,
+        linkAccount: PaymentSheetLinkAccount
+    ) {
+        payWithLinkViewController.dismiss(animated: true) {
+            self.completion?(.authentication(linkAccount))
+            self.selfRetainer = nil
         }
     }
 
@@ -265,6 +316,8 @@ extension PayWithNativeLinkController: PayWithLinkViewControllerDelegate {
                     return .paymentMethodSelection(confirmOption: nil, shouldReturnToPaymentSheet: shouldReturnToPaymentSheet)
                 case .full:
                     return .full(result: .canceled, deferredIntentConfirmationType: nil, didFinish: false)
+                case .authentication:
+                    return .authentication(nil)
                 }
             }()
 

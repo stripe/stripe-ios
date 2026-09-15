@@ -256,6 +256,16 @@ class LinkInlineSignupViewModelTests: STPNetworkStubbingTestCase {
 extension LinkInlineSignupViewModelTests {
 
     struct MockAccountService: LinkAccountServiceProtocol {
+        func restoreConsumerSession(
+            consumerSessionClientSecret: String,
+            consumerPublishableKey: String?,
+            requestSurface: LinkRequestSurface,
+            completion: @escaping (Result<PaymentSheetLinkAccount, Error>) -> Void
+        ) {
+            XCTFail("Inline signup should not restore an external session")
+            completion(.failure(NSError.stp_genericConnectionError()))
+        }
+
         let shouldFailLookup: Bool
 
         func lookupAccount(
