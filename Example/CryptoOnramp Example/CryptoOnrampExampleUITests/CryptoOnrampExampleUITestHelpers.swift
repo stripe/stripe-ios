@@ -133,6 +133,45 @@ extension CryptoOnrampExampleUITests {
         submitButton.tap()
     }
 
+    func continuePastTermsOfService(
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        let termsOfServiceLabel = app.staticTexts["Review terms of service"].firstMatch
+        XCTAssertTrue(
+            termsOfServiceLabel.waitForExistence(timeout: .networkTimeout),
+            "Terms of service screen should appear",
+            file: file,
+            line: line
+        )
+
+        waitForLoadingToFinish(file: file, line: line)
+
+        let continueButton = app.buttons["Continue"].firstMatch
+        XCTAssertTrue(
+            continueButton.wait(for: \.isEnabled, toEqual: true, timeout: .animationTimeout),
+            "Terms of service Continue button should be enabled",
+            file: file,
+            line: line
+        )
+        continueButton.tap()
+
+        let notRequiredAlert = app.alerts["Terms of service not required"].firstMatch
+        XCTAssertTrue(
+            notRequiredAlert.waitForExistence(timeout: .networkTimeout),
+            "Terms of service not required alert should appear",
+            file: file,
+            line: line
+        )
+        notRequiredAlert.buttons["OK"].tap()
+        XCTAssertTrue(
+            notRequiredAlert.waitForNonExistence(timeout: .animationTimeout),
+            "Terms of service not required alert should close",
+            file: file,
+            line: line
+        )
+    }
+
     func addSolanaWallet(
         address: String,
         file: StaticString = #filePath,
