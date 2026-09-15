@@ -2,6 +2,9 @@ The next release's version bump will so far be:
 PATCH
 
 ## X.Y.Z - changes pending release
+### Financial Connections
+* [Fixed] Preserved `no_eligible_accounts` in `onEvent` error callbacks instead of reporting it as `unexpected_error`.
+* [Fixed] Recorded native `onEvent` emissions with the session context for diagnostics.
 
 ## 26.12.0 2026-09-21
 ### CryptoOnramp (Alpha)
@@ -50,9 +53,6 @@ PATCH
 
 ### PaymentSheet
 * [Added] Added `financialConnectionsPermissions` to `LinkConfiguration`, allowing `LinkControllerPreview` users to request Financial Connections data permissions (private preview).
-
-### Financial Connections
-* [Fixed] Preserved `no_eligible_accounts` in `onEvent` error callbacks instead of reporting it as `unexpected_error`.
 
 ## 26.7.0 2026-08-17
 ### PaymentSheet
