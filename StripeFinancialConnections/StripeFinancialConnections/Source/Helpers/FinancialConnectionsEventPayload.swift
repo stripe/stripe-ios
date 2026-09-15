@@ -1,5 +1,5 @@
 //
-//  FinancialConnectionsEvent+Extensions.swift
+//  FinancialConnectionsEventPayload.swift
 //  StripeFinancialConnections
 //
 //  Created by Krisjanis Gaidis on 10/10/23.
@@ -8,9 +8,23 @@
 import Foundation
 @_spi(STP) import StripeCore
 
-extension FinancialConnectionsEvent {
+/// An event awaiting the canonical session identifier before publication.
+struct FinancialConnectionsEventPayload {
+    let name: FinancialConnectionsEvent.Name
+    let metadata: FinancialConnectionsEvent.Metadata
 
-    static func events(fromError error: Error) -> [FinancialConnectionsEvent] {
+    init(
+        name: FinancialConnectionsEvent.Name,
+        metadata: FinancialConnectionsEvent.Metadata = .init()
+    ) {
+        self.name = name
+        self.metadata = metadata
+    }
+}
+
+extension FinancialConnectionsEventPayload {
+
+    static func events(fromError error: Error) -> [FinancialConnectionsEventPayload] {
         var errorCodes: [FinancialConnectionsEvent.ErrorCode] = []
         if
             let error = error as? StripeError,
@@ -40,7 +54,7 @@ extension FinancialConnectionsEvent {
             errorCodes.append(.unexpectedError)
         }
         return errorCodes.map { errorCode in
-            FinancialConnectionsEvent(
+            FinancialConnectionsEventPayload(
                 name: .error,
                 metadata: FinancialConnectionsEvent.Metadata(
                     errorCode: errorCode

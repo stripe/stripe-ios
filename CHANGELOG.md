@@ -25,6 +25,7 @@ MINOR
 * [Fixed] Preserved PaymentIntent error codes, decline codes, and types in checkout errors after authentication.
 
 ### Financial Connections
+* [Added] Added `financialConnectionsSessionId` to `FinancialConnectionsEvent`. Events are emitted after the session identifier is available.
 * [Fixed] Preserved `no_eligible_accounts` in `onEvent` error callbacks instead of reporting it as `unexpected_error`.
 * [Fixed] Recorded native `onEvent` emissions with the session context for diagnostics.
 

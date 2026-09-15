@@ -29,7 +29,7 @@ class FinancialConnectionsEventExtensionsTests: XCTestCase {
         )
 
         // When the SDK converts the response into public events
-        let events = FinancialConnectionsEvent.events(fromError: error)
+        let events = FinancialConnectionsEventPayload.events(fromError: error)
 
         // Then it preserves the backend error code instead of using unexpected_error
         XCTAssertEqual(events.count, 1)
