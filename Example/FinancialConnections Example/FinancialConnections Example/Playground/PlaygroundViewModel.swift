@@ -384,7 +384,7 @@ final class PlaygroundViewModel: ObservableObject {
                     linkBrand: self.playgroundConfiguration.linkBrand,
                     onEvent: { event in
                         if self.liveEvents.wrappedValue == true {
-                            let message = "\(event.name.rawValue); \(event.metadata.dictionary)"
+                            let message = "\(event.name.rawValue); \(event.financialConnectionsSessionId); \(event.metadata.dictionary)"
                             BannerHelper.shared.showBanner(with: message, for: 3.0)
                         }
                         onEventEvents.append(event.name.rawValue)
