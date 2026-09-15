@@ -174,6 +174,16 @@ extension HostController: HostViewControllerDelegate {
         _ viewController: HostViewController,
         didFetch synchronizePayload: FinancialConnectionsSynchronize
     ) {
+        guard !synchronizePayload.manifest.id.isEmpty else {
+            linkAccountSessionId = nil
+            hostViewControllerDidFinish(
+                viewController,
+                lastError: FinancialConnectionsSheetError.unknown(
+                    debugDescription: "The Financial Connections session is missing its identifier."
+                )
+            )
+            return
+        }
         self.linkAccountSessionId = synchronizePayload.manifest.id
         analyticsClient.setAdditionalParameters(fromManifest: synchronizePayload.manifest)
         publish(FinancialConnectionsEventPayload(name: .open))
