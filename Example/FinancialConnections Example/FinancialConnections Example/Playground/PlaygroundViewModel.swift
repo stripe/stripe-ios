@@ -518,7 +518,7 @@ final class PlaygroundViewModel: ObservableObject {
                 onEvent: { event in
                     if self.liveEvents.wrappedValue {
                         BannerHelper.shared.showBanner(
-                            with: "\(event.name.rawValue); \(event.metadata.dictionary)",
+                            with: "\(event.name.rawValue); \(event.financialConnectionsSessionId); \(event.metadata.dictionary)",
                             for: 3.0
                         )
                     }
