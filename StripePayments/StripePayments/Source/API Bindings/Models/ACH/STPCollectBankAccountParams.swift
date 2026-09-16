@@ -39,8 +39,6 @@ public class STPCollectBankAccountParams: NSObject {
     /// - Parameters:
     ///     - name: The customer's full name. _required_
     ///     - email: The customer's email. If included, can be used to notify the customer of pending micro-deposit verification.
-    ///     - address: The customer's billing address.
-    ///     - phone: The customer's billing phone number.
     @objc(collectUSBankAccountParamsWithName:email:address:phone:)
     public class func collectUSBankAccountParams(
         with name: String,
