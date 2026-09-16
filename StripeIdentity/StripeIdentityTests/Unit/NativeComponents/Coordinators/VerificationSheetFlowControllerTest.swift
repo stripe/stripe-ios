@@ -348,19 +348,18 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
     }
 
     func testNextViewControllerSelfie() throws {
-        // Mock that face ML models successfully loaded
-        mockMLModelLoader.faceModelsPromise.resolve(with: .init(FaceScannerMock()))
-
-        let exp = expectation(description: "testNextViewControllerSelfie")
+        // The selfie destination constructs SelfieWarmupViewController synchronously,
+        // so there is no need to resolve the face models promise or wait asynchronously.
+        var capturedVC: UIViewController?
         try nextViewController(
             missingRequirements: [.face],
             completion: { nextVC in
-                XCTAssertIs(nextVC, SelfieWarmupViewController.self)
-                exp.fulfill()
+                capturedVC = nextVC
             }
         )
 
-        wait(for: [exp], timeout: 1)
+        XCTAssertNotNil(capturedVC, "Completion should be called synchronously")
+        XCTAssertIs(capturedVC as Any, SelfieWarmupViewController.self)
     }
 
     func testDelegateChain() {
