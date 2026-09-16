@@ -1610,6 +1610,145 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         }
     }
 
+    func testCreatePaymentTokenSendsCountryHintWhenProvided() async throws {
+        // Given a stub asserting the country hint is included in the request
+        let mockResponseData = try jsonEncoder.encode(Constant.validCreatePaymentTokenResponseObject)
+
+        stub { request in
+            XCTAssertEqual(request.url?.path, Constant.createPaymentTokenAPIPath)
+
+            guard let httpBody = request.ohhttpStubs_httpBody else {
+                XCTFail("Expected an httpBody data but found none.")
+                return false
+            }
+
+            let parameters = String(data: httpBody, encoding: .utf8)?.parsedHTTPParametersDictionary ?? [:]
+
+            XCTAssertEqual(parameters.count, 4)
+            XCTAssertEqual(parameters["payment_method"], Constant.validPaymentId)
+            XCTAssertEqual(parameters["crypto_customer_id"], Constant.validCustomerId)
+            XCTAssertEqual(parameters["ui_mode"], "headless")
+            XCTAssertEqual(parameters["country_hint"], "GB")
+
+            return true
+        } response: { _ in
+            return HTTPStubsResponse(data: mockResponseData, statusCode: 200, headers: nil)
+        }
+
+        let apiClient = stubbedAPIClient()
+
+        // When creating a payment token with a country hint
+        let response = try await apiClient.createPaymentToken(
+            for: Constant.validPaymentId,
+            cryptoCustomerId: Constant.validCustomerId,
+            countryHint: "GB"
+        )
+
+        // Then the token is returned
+        XCTAssertEqual(response.id, Constant.validPaymentTokenId)
+    }
+
+    func testGetPlatformSettingsOmitsCryptoCustomerIdWhenNotProvided() async throws {
+        // Given a stub asserting no crypto customer ID is sent
+        let mockResponseData = try jsonEncoder.encode(Constant.validPlatformSettingsResponseObject)
+
+        stub { request in
+            XCTAssertEqual(request.url?.path, Constant.getPlatformSettingsAPIPath)
+
+            guard let queryParametersString = request.url?.query else {
+                XCTFail("Expected query parameters but found none.")
+                return false
+            }
+
+            let parameters = queryParametersString.parsedHTTPParametersDictionary
+
+            XCTAssertEqual(parameters.count, 1)
+            XCTAssertNil(parameters["crypto_customer_id"])
+            XCTAssertEqual(parameters["ui_mode"], "headless")
+
+            return true
+        } response: { _ in
+            return HTTPStubsResponse(data: mockResponseData, statusCode: 200, headers: nil)
+        }
+
+        let apiClient = stubbedAPIClient()
+
+        // When retrieving platform settings without a crypto customer ID
+        let response = try await apiClient.getPlatformSettings(cryptoCustomerId: nil)
+
+        // Then the platform publishable key is returned
+        XCTAssertEqual(response.publishableKey, Constant.validPublishableKey)
+    }
+
+    func testGetPlatformSettingsSendsCountryHintWhenProvided() async throws {
+        // Given a stub asserting the country hint is included in the request
+        let mockResponseData = try jsonEncoder.encode(Constant.validPlatformSettingsResponseObject)
+
+        stub { request in
+            XCTAssertEqual(request.url?.path, Constant.getPlatformSettingsAPIPath)
+
+            guard let queryParametersString = request.url?.query else {
+                XCTFail("Expected query parameters but found none.")
+                return false
+            }
+
+            let parameters = queryParametersString.parsedHTTPParametersDictionary
+
+            XCTAssertEqual(parameters.count, 3)
+            XCTAssertEqual(parameters["crypto_customer_id"], Constant.validCustomerId)
+            XCTAssertEqual(parameters["ui_mode"], "headless")
+            XCTAssertEqual(parameters["country_hint"], "GB")
+
+            return true
+        } response: { _ in
+            return HTTPStubsResponse(data: mockResponseData, statusCode: 200, headers: nil)
+        }
+
+        let apiClient = stubbedAPIClient()
+
+        // When retrieving platform settings with a country hint
+        let response = try await apiClient.getPlatformSettings(
+            cryptoCustomerId: Constant.validCustomerId,
+            countryHint: "GB"
+        )
+
+        // Then the platform publishable key is returned
+        XCTAssertEqual(response.publishableKey, Constant.validPublishableKey)
+    }
+
+    func testGetPlatformSettingsSurfacesUnsupportedCountryError() async throws {
+        // Given a stub returning an unsupported-country API error
+        let errorResponse: [String: Any] = [
+            "error": [
+                "type": "invalid_request_error",
+                "code": "crypto_onramp_transactions_unavailable_in_country",
+                "message": "Onramp transactions are unavailable in this country.",
+            ]
+        ]
+
+        stub { request in
+            request.url?.path == Constant.getPlatformSettingsAPIPath
+        } response: { _ in
+            return HTTPStubsResponse(jsonObject: errorResponse, statusCode: 400, headers: nil)
+        }
+
+        let apiClient = stubbedAPIClient()
+
+        do {
+            // When retrieving platform settings with an unsupported country hint
+            _ = try await apiClient.getPlatformSettings(cryptoCustomerId: nil, countryHint: "ZZ")
+            XCTFail("Expected failure but got success.")
+        } catch {
+            // Then the API error is surfaced unchanged
+            guard let stripeError = error as? StripeError, case let .apiError(apiError) = stripeError else {
+                XCTFail("Expected a Stripe API error but got: \(error).")
+                return
+            }
+
+            XCTAssertEqual(apiError.code, "crypto_onramp_transactions_unavailable_in_country")
+        }
+    }
+
     func testGetPlatformSettingsFailure() async throws {
         stub { request in
             XCTAssertEqual(request.url?.path, Constant.getPlatformSettingsAPIPath)
