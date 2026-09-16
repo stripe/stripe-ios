@@ -326,10 +326,17 @@ extension CustomerAddPaymentMethodViewController {
     }
     func handleCollectBankAccount(from viewController: UIViewController, clientSecret: String) {
         guard
-            let usBankAccountPaymentMethodElement = self.paymentMethodFormElement as? USBankAccountPaymentMethodElement,
-            let name = usBankAccountPaymentMethodElement.name,
-            let email = usBankAccountPaymentMethodElement.email
+            let usBankAccountPaymentMethodElement = self.paymentMethodFormElement
+                as? USBankAccountPaymentMethodElement
         else {
+            let errorAnalytic = ErrorAnalytic(event: .unexpectedCustomerSheetError,
+                                              error: Error.usBankAccountParamsMissing)
+            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+            stpAssertionFailure()
+            return
+        }
+        let billingDetails = usBankAccountPaymentMethodElement.billingDetails
+        guard let name = billingDetails.name, let email = billingDetails.email else {
             let errorAnalytic = ErrorAnalytic(event: .unexpectedCustomerSheetError,
                                               error: Error.usBankAccountParamsMissing)
             STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
@@ -339,7 +346,9 @@ extension CustomerAddPaymentMethodViewController {
 
         let params = STPCollectBankAccountParams.collectUSBankAccountParams(
             with: name,
-            email: email
+            email: email,
+            address: billingDetails.address,
+            phone: billingDetails.phone
         )
         let bankAccountCollectorStyle: STPBankAccountCollectorUserInterfaceStyle = {
             switch configuration.style {

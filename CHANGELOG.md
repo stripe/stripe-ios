@@ -12,6 +12,9 @@ MINOR
 ### Payments
 * [Added] Added billing address and phone support to `STPCollectBankAccountParams` for US bank accounts.
 
+### PaymentSheet
+* [Fixed] Fixed US bank account collection omitting configured billing addresses and phone numbers.
+
 ## 26.11.0 2026-09-14
 ### General
 * [Added] Added support for Welsh.

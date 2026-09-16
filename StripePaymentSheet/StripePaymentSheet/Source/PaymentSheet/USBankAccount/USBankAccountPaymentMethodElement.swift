@@ -61,24 +61,36 @@ final class USBankAccountPaymentMethodElement: ContainerElement {
         return params != nil && name != nil && email != nil
     }
 
-    var name: String? {
-        return self.formElement.updateParams(params: IntentConfirmParams(type: .stripe(.USBankAccount)))?.paymentMethodParams.nonnil_billingDetails.name
-            ?? defaultName
+    var billingDetails: STPPaymentMethodBillingDetails {
+        let billingDetails =
+            formElement.updateParams(params: IntentConfirmParams(type: .stripe(.USBankAccount)))?
+            .paymentMethodParams.billingDetails ?? STPPaymentMethodBillingDetails()
+        guard configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod else {
+            return billingDetails
+        }
+        let defaultBillingDetails = configuration.defaultBillingDetails
+        billingDetails.name = billingDetails.name ?? defaultBillingDetails.name
+        billingDetails.email = billingDetails.email ?? defaultBillingDetails.email
+        billingDetails.phone = billingDetails.phone ?? defaultBillingDetails.phone
+        if defaultBillingDetails.address != .init() {
+            let address = billingDetails.address ?? STPPaymentMethodAddress()
+            address.city = address.city ?? defaultBillingDetails.address.city
+            address.country = address.country ?? defaultBillingDetails.address.country
+            address.line1 = address.line1 ?? defaultBillingDetails.address.line1
+            address.line2 = address.line2 ?? defaultBillingDetails.address.line2
+            address.postalCode = address.postalCode ?? defaultBillingDetails.address.postalCode
+            address.state = address.state ?? defaultBillingDetails.address.state
+            billingDetails.address = address
+        }
+        return billingDetails
     }
 
-    private var defaultName: String? {
-        guard configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod else { return nil }
-        return configuration.defaultBillingDetails.name
+    var name: String? {
+        return billingDetails.name
     }
 
     var email: String? {
-        return self.formElement.updateParams(params: IntentConfirmParams(type: .stripe( .USBankAccount)))?.paymentMethodParams.nonnil_billingDetails.email
-            ?? defaultEmail
-    }
-
-    private var defaultEmail: String? {
-        guard configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod else { return nil }
-        return configuration.defaultBillingDetails.email
+        return billingDetails.email
     }
 
     init(
