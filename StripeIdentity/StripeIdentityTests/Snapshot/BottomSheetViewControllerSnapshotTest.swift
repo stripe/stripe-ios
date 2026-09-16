@@ -91,17 +91,42 @@ final class BottomSheetViewControllerSnapshotTest: STPSnapshotTestCase {
         file: StaticString = #filePath,
         line: UInt = #line
     ) throws {
-        let viewController = try BottomSheetViewController.makeForPresentation(content: content)
-        let width = UIScreen.main.bounds.width
-        viewController.view.frame = CGRect(
-            origin: .zero,
-            size: CGSize(
-                width: width,
-                height: viewController.preferredDetentHeight
-            )
+        let verificationPage = try VerificationPageMock.response200.make()
+        let welcomeViewController = try IndividualWelcomeViewController(
+            brandLogo: SnapshotTestMockData.uiImage(image: .headerIcon),
+            welcomeContent: verificationPage.individualWelcome,
+            sheetController: VerificationSheetControllerMock()
         )
-        viewController.view.layoutIfNeeded()
+        let hostViewController = IdentityFlowNavigationController(
+            rootViewController: welcomeViewController
+        )
+        let window = UIWindow(frame: UIScreen.main.bounds)
+        window.rootViewController = hostViewController
+        window.makeKeyAndVisible()
+        defer { window.isHidden = true }
+        window.layoutIfNeeded()
+        hostViewController.beginAppearanceTransition(true, animated: false)
+        hostViewController.endAppearanceTransition()
 
-        STPSnapshotVerifyView(viewController.view, file: file, line: line)
+        let sheetViewController = try BottomSheetViewController.makeForPresentation(content: content)
+        let dimmingView = UIView(frame: hostViewController.view.bounds)
+        dimmingView.backgroundColor = UIColor.black.withAlphaComponent(0.2)
+        hostViewController.view.addSubview(dimmingView)
+
+        hostViewController.addChild(sheetViewController)
+        sheetViewController.view.frame = CGRect(
+            x: 0,
+            y: hostViewController.view.bounds.height - sheetViewController.preferredDetentHeight,
+            width: hostViewController.view.bounds.width,
+            height: sheetViewController.preferredDetentHeight
+        )
+        sheetViewController.view.layer.cornerRadius = 8
+        sheetViewController.view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+        sheetViewController.view.clipsToBounds = true
+        hostViewController.view.addSubview(sheetViewController.view)
+        sheetViewController.didMove(toParent: hostViewController)
+        window.layoutIfNeeded()
+
+        STPSnapshotVerifyView(window, file: file, line: line)
     }
 }
