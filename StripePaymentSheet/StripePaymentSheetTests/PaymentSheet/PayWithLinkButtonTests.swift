@@ -13,6 +13,7 @@ final class PayWithLinkButtonTests: XCTestCase {
         let isRegistered: Bool
         let sessionState: PaymentSheetLinkAccount.SessionState
         let consumerSessionClientSecret: String?
+        let linkSessionKey: String?
     }
 
     func testWalletHeaderViewUsesProvidedBrandForPayWithLinkButton() throws {
@@ -94,7 +95,8 @@ final class PayWithLinkButtonTests: XCTestCase {
             redactedPhoneNumber: nil,
             isRegistered: true,
             sessionState: .verified,
-            consumerSessionClientSecret: nil
+            consumerSessionClientSecret: nil,
+            linkSessionKey: nil
         )
 
         onelinkButton.frame = CGRect(origin: .zero, size: CGSize(width: 240, height: 44))

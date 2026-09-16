@@ -22,7 +22,9 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
         [.biometricConsent], [.idDocumentFront, .idDocumentBack],
     ]
 
-    let flowController = VerificationSheetFlowController(brandLogo: UIImage())
+    let flowController = VerificationSheetFlowController(
+        configuration: .init(brandLogo: UIImage())
+    )
     var mockMLModelLoader: IdentityMLModelLoaderMock!
     var mockSheetController: VerificationSheetControllerMock!
 
@@ -45,6 +47,28 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
         )
     }
 
+    func testConfigurationIsPreservedWithNetworkedIdentityClientFactory() {
+        // Given merchant appearance and consent configuration alongside an injected Link client
+        let brandLogo = UIImage()
+        var configuration = IdentityVerificationSheet.Configuration(brandLogo: brandLogo)
+        configuration.primaryButtonStyle = .custom(backgroundColor: .purple, textColor: .yellow)
+        configuration.biometricConsent = .init(hideBrandingHeader: true)
+
+        // When the merged initializer constructs the flow
+        let flow = VerificationSheetFlowController(configuration: configuration) { _ in
+            NetworkedIdentityAPIClientTestMock()
+        }
+
+        // Then both upstream configuration and Networked Identity injection are supported
+        XCTAssertTrue(flow.brandLogo === brandLogo)
+        XCTAssertEqual(flow.biometricConsentConfiguration?.hideBrandingHeader, true)
+        guard case .custom(let backgroundColor, let textColor) = flow.primaryButtonStyle else {
+            return XCTFail("Expected the configured primary button style")
+        }
+        XCTAssertEqual(backgroundColor, .purple)
+        XCTAssertEqual(textColor, .yellow)
+    }
+
     @MainActor
     func testNetworkedIdentityReuseWaitsForConsentAndRoutesOnlyOnce() throws {
         // Given preview is enabled and reuse is available
@@ -52,7 +76,7 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
         api.supportsNetworkedIdentity = true
         let linkAPI = NetworkedIdentityAPIClientTestMock()
         var receivedKey: String?
-        let flow = VerificationSheetFlowController(brandLogo: UIImage()) { key in
+        let flow = VerificationSheetFlowController(configuration: .init(brandLogo: UIImage())) { key in
             receivedKey = key
             return linkAPI
         }
@@ -92,7 +116,7 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
         for (preview, key) in [(false, "pk_test_merchant"), (true, ""), (true, "   ")] {
             let api = IdentityAPIClientTestMock()
             api.supportsNetworkedIdentity = preview
-            let flow = VerificationSheetFlowController(brandLogo: UIImage()) { _ in
+            let flow = VerificationSheetFlowController(configuration: .init(brandLogo: UIImage())) { _ in
                 XCTFail("Link client should not be created")
                 return NetworkedIdentityAPIClientTestMock()
             }
@@ -112,7 +136,7 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
         // Given an eligible session whose first presentation was canceled without persisting skip
         let api = IdentityAPIClientTestMock()
         api.supportsNetworkedIdentity = true
-        let flow = VerificationSheetFlowController(brandLogo: UIImage()) { _ in NetworkedIdentityAPIClientTestMock() }
+        let flow = VerificationSheetFlowController(configuration: .init(brandLogo: UIImage())) { _ in NetworkedIdentityAPIClientTestMock() }
         let sheet = VerificationSheetControllerMock(apiClient: api, flowController: flow)
         let page = try makeNetworkedIdentityPage().copyWithNewMissings(newMissings: [.idDocumentFront])
         var firstScreen: NetworkedIdentityFlowViewController?
@@ -160,7 +184,7 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
         let api = IdentityAPIClientTestMock()
         api.supportsNetworkedIdentity = true
         var createdClients = 0
-        let flow = VerificationSheetFlowController(brandLogo: UIImage()) { _ in
+        let flow = VerificationSheetFlowController(configuration: .init(brandLogo: UIImage())) { _ in
             createdClients += 1
             return NetworkedIdentityAPIClientTestMock()
         }
@@ -193,7 +217,7 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
     func testNetworkedIdentityQueuedResumeFromPreviousPresentationDoesNotSubmit() throws {
         let api = IdentityAPIClientTestMock()
         api.supportsNetworkedIdentity = true
-        let flow = VerificationSheetFlowController(brandLogo: UIImage())
+        let flow = VerificationSheetFlowController(configuration: .init(brandLogo: UIImage()))
         let sheet = VerificationSheetControllerMock(apiClient: api, flowController: flow)
         let page = try makeNetworkedIdentityPage(
             state: ["consented": true, "skipped": false, "direction": "consumer_to_merchant"]
@@ -219,7 +243,7 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
     func testNetworkedIdentityDoesNotInterruptRemainingIndividualFields() throws {
         let api = IdentityAPIClientTestMock()
         api.supportsNetworkedIdentity = true
-        let flow = VerificationSheetFlowController(brandLogo: UIImage()) { _ in
+        let flow = VerificationSheetFlowController(configuration: .init(brandLogo: UIImage())) { _ in
             XCTFail("Link client should not be created")
             return NetworkedIdentityAPIClientTestMock()
         }
@@ -245,7 +269,7 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
             // Given an eligible bootstrap that is now stale after the consent update
             let api = IdentityAPIClientTestMock()
             api.supportsNetworkedIdentity = true
-            let flow = VerificationSheetFlowController(brandLogo: UIImage()) { _ in
+            let flow = VerificationSheetFlowController(configuration: .init(brandLogo: UIImage())) { _ in
                 XCTFail("An unwritable session must not start Link")
                 return NetworkedIdentityAPIClientTestMock()
             }
@@ -275,7 +299,7 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
     func testNetworkedIdentityCanEnterForWritableDocumentFallbackAfterSubmission() throws {
         let api = IdentityAPIClientTestMock()
         api.supportsNetworkedIdentity = true
-        let flow = VerificationSheetFlowController(brandLogo: UIImage()) { _ in NetworkedIdentityAPIClientTestMock() }
+        let flow = VerificationSheetFlowController(configuration: .init(brandLogo: UIImage())) { _ in NetworkedIdentityAPIClientTestMock() }
         let sheet = VerificationSheetControllerMock(apiClient: api, flowController: flow)
         let page = try makeNetworkedIdentityPage()
         let update = StripeAPI.VerificationPageData(
@@ -303,7 +327,7 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
         for state in states {
             let api = IdentityAPIClientTestMock()
             api.supportsNetworkedIdentity = true
-            let flow = VerificationSheetFlowController(brandLogo: UIImage()) { _ in
+            let flow = VerificationSheetFlowController(configuration: .init(brandLogo: UIImage())) { _ in
                 XCTFail("Resume and skip must not restart Link")
                 return NetworkedIdentityAPIClientTestMock()
             }
@@ -321,7 +345,7 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
         for direction in ["consumer_to_merchant", "merchant_to_consumer"] {
             let api = IdentityAPIClientTestMock()
             api.supportsNetworkedIdentity = true
-            let flow = VerificationSheetFlowController(brandLogo: UIImage())
+            let flow = VerificationSheetFlowController(configuration: .init(brandLogo: UIImage()))
             let sheet = VerificationSheetControllerMock(apiClient: api, flowController: flow)
             let page = try makeNetworkedIdentityPage(
                 state: ["consented": true, "skipped": false, "direction": direction]
@@ -347,7 +371,7 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
     func testNetworkedIdentityCompletionReturnsBackendResultToSheet() throws {
         let api = IdentityAPIClientTestMock()
         api.supportsNetworkedIdentity = true
-        let flow = VerificationSheetFlowController(brandLogo: UIImage()) { _ in NetworkedIdentityAPIClientTestMock() }
+        let flow = VerificationSheetFlowController(configuration: .init(brandLogo: UIImage())) { _ in NetworkedIdentityAPIClientTestMock() }
         let sheet = VerificationSheetControllerMock(apiClient: api, flowController: flow)
         let page = try makeNetworkedIdentityPage().copyWithNewMissings(newMissings: [.idDocumentFront])
         let appeared = expectation(description: "NI reuse screen")
@@ -375,7 +399,7 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
         let linkAPI = NetworkedIdentityAPIClientTestMock()
         let lookedUp = expectation(description: "NI begins lookup after appearing")
         linkAPI.lookup.callBackOnRequest { lookedUp.fulfill() }
-        let flow = VerificationSheetFlowController(brandLogo: UIImage()) { _ in linkAPI }
+        let flow = VerificationSheetFlowController(configuration: .init(brandLogo: UIImage())) { _ in linkAPI }
         let sheet = VerificationSheetControllerMock(apiClient: api, flowController: flow)
         let page = try makeNetworkedIdentityPage().copyWithNewMissings(newMissings: [.idDocumentFront])
         let appeared = expectation(description: "NI reuse screen")

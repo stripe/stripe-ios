@@ -29,6 +29,7 @@ protocol VerificationSheetFlowControllerProtocol: AnyObject {
 
     var documentUploader: DocumentUploaderProtocol? { get }
     var visitedIndividualWelcomePage: Bool { get }
+    var primaryButtonStyle: IdentityVerificationSheet.Configuration.PrimaryButtonStyle { get }
 
     func resetNetworkedIdentityForNewPresentation()
 
@@ -85,6 +86,8 @@ protocol VerificationSheetFlowControllerProtocol: AnyObject {
 final class VerificationSheetFlowController: NSObject {
 
     let brandLogo: UIImage
+    let primaryButtonStyle: IdentityVerificationSheet.Configuration.PrimaryButtonStyle
+    let biometricConsentConfiguration: IdentityVerificationSheet.Configuration.BiometricConsentConfiguration?
 
     weak var delegate: VerificationSheetFlowControllerDelegate?
 
@@ -102,14 +105,16 @@ final class VerificationSheetFlowController: NSObject {
     private var networkedIdentityFallback: (() -> Void)?
 
     init(
-        brandLogo: UIImage,
+        configuration: IdentityVerificationSheet.Configuration,
         networkedIdentityAPIClientFactory: @escaping (String) -> NetworkedIdentityAPIClient = { key in
             let apiClient = STPAPIClient(publishableKey: key)
             apiClient.appInfo = STPAPIClient.shared.appInfo
             return NetworkedIdentityAPIClientImpl(apiClient: apiClient, merchantPublishableKey: key)
         }
     ) {
-        self.brandLogo = brandLogo
+        self.brandLogo = configuration.brandLogo
+        self.primaryButtonStyle = configuration.primaryButtonStyle
+        self.biometricConsentConfiguration = configuration.biometricConsent
         self.networkedIdentityAPIClientFactory = networkedIdentityAPIClientFactory
     }
 
@@ -730,6 +735,7 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
                 brandLogo: brandLogo,
                 showsStripeLogo: !staticContent.isStripe,
                 consentContent: staticContent.biometricConsent,
+                configuration: biometricConsentConfiguration,
                 sheetController: sheetController
             )
         } catch {

@@ -120,6 +120,9 @@ In the PR description's `## Testing` section:
 - If new test coverage was added, describe each new test in plain, simple English.
 - Don't use test commands or test names as the test description.
 
+### Changelog Entries
+If adding a new CHANGELOG entry, always put it in the "changes pending release" section.
+
 ## Project Architecture
 
 ### Module Structure

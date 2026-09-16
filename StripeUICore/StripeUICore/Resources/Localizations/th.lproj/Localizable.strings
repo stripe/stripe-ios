@@ -92,6 +92,8 @@
 
 "Prefecture" = "อำเภอ";
 
+"Processing..." = "กำลังประมวลผล...";
+
 "Province" = "จังหวัด";
 
 "Remove" = "นำออก";
@@ -106,9 +108,13 @@
 
 "Selection is empty." = "การเลือกว่างเปล่า";
 
+"Something went wrong" = "เกิดข้อผิดพลาดบางอย่าง";
+
 "Sort code" = "Sort Code";
 
 "State" = "รัฐ";
+
+"Submit" = "ส่ง";
 
 "Suburb" = "ชานเมือง";
 

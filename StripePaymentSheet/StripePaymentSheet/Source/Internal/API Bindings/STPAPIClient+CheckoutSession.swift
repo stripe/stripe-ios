@@ -15,13 +15,13 @@ struct CheckoutSessionConfirmationRequestParameters {
     let sessionId: String
 
     /// The ID of the PaymentMethod to use for confirmation. The PaymentMethod must have a billing email.
-    let paymentMethodId: String
+    let paymentMethodId: String?
 
     /// The expected amount for validation. `nil` for setup-style Sessions.
     let expectedAmount: Int?
 
     /// The expected PaymentMethod type (e.g., `card`).
-    let expectedPaymentMethodType: String
+    let expectedPaymentMethodType: String?
 
     /// The optional top-level `save_payment_method` value that controls whether confirmation
     /// attaches the PaymentMethod to the Checkout Session's customer.
@@ -43,17 +43,23 @@ struct CheckoutSessionConfirmationRequestParameters {
     /// The optional hCaptcha challenge response token.
     let passiveCaptchaToken: String?
 
+    /// Legacy customer information required today when confirming without a PaymentMethod.
+    /// TODO: Remove this once the server can construct no-PaymentMethod `CustomerInfo` entirely
+    /// from fixed and independently collected information.
+    let customerData: [String: Any]?
+
     init(
         sessionId: String,
-        paymentMethodId: String,
+        paymentMethodId: String?,
         expectedAmount: Int?,
-        expectedPaymentMethodType: String,
+        expectedPaymentMethodType: String?,
         savePaymentMethod: Bool? = nil,
         returnURL: String? = nil,
         shipping: STPPaymentIntentShippingDetailsParams? = nil,
         paymentMethodOptions: STPConfirmPaymentMethodOptions? = nil,
         clientAttributionMetadata: STPClientAttributionMetadata? = nil,
-        passiveCaptchaToken: String? = nil
+        passiveCaptchaToken: String? = nil,
+        customerData: [String: Any]? = nil
     ) {
         self.sessionId = sessionId
         self.paymentMethodId = paymentMethodId
@@ -65,6 +71,7 @@ struct CheckoutSessionConfirmationRequestParameters {
         self.paymentMethodOptions = paymentMethodOptions
         self.clientAttributionMetadata = clientAttributionMetadata
         self.passiveCaptchaToken = passiveCaptchaToken
+        self.customerData = customerData
     }
 }
 
@@ -80,7 +87,7 @@ extension CheckoutSessionConfirmationRequestParameters {
         self.init(
             sessionId: checkoutSession.id,
             paymentMethodId: paymentMethod.stripeId,
-            expectedAmount: checkoutSession.expectedAmount(),
+            expectedAmount: checkoutSession.amount,
             expectedPaymentMethodType: paymentMethod.type.identifier,
             savePaymentMethod: checkoutSession.noPaymentRequired ? nil : savePaymentMethod,
             returnURL: configuration.returnURL,
@@ -253,8 +260,6 @@ extension STPAPIClient {
         with requestParameters: CheckoutSessionConfirmationRequestParameters
     ) async throws -> PaymentPagesAPIResponse {
         var parameters: [String: Any] = [
-            "payment_method": requestParameters.paymentMethodId,
-            "expected_payment_method_type": requestParameters.expectedPaymentMethodType,
             "elements_session_client": ["is_aggregation_expected": true],
             "expand": [
                 "payment_intent",
@@ -263,6 +268,14 @@ extension STPAPIClient {
                 "setup_intent.payment_method",
             ],
         ]
+
+        if let paymentMethodId = requestParameters.paymentMethodId {
+            parameters["payment_method"] = paymentMethodId
+        }
+
+        if let expectedPaymentMethodType = requestParameters.expectedPaymentMethodType {
+            parameters["expected_payment_method_type"] = expectedPaymentMethodType
+        }
 
         if let expectedAmount = requestParameters.expectedAmount {
             parameters["expected_amount"] = expectedAmount
@@ -291,6 +304,10 @@ extension STPAPIClient {
 
         if let passiveCaptchaToken = requestParameters.passiveCaptchaToken {
             parameters["passive_captcha_token"] = passiveCaptchaToken
+        }
+
+        if let customerData = requestParameters.customerData {
+            parameters["customer_data"] = customerData
         }
 
         return try await post(
