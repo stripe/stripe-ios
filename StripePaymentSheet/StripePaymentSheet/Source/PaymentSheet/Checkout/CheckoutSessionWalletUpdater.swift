@@ -15,6 +15,8 @@
 /// regular enqueued update path.
 @MainActor
 protocol CheckoutSessionWalletUpdater: AnyObject {
+    var currentTaxRegion: CheckoutController.Address? { get }
+
     /// Updates tax region for billing and shipping addresses
     /// but does not enqueue behind the checkout's pending session updates.
     ///

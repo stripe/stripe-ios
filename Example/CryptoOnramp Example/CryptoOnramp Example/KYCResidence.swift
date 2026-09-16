@@ -129,6 +129,16 @@ enum KYCResidence: String, CaseIterable, Hashable, Identifiable {
         }
     }
 
+    /// Whether this residence requires checking for partner terms of service.
+    var requiresTermsOfServiceCheck: Bool {
+        switch self {
+        case .unitedStates, .europeanUnion:
+            return false
+        case .canada, .colombia, .philippines:
+            return true
+        }
+    }
+
     /// Whether this residence follows the existing EU compliance and downstream flow.
     var followsEUFlow: Bool {
         self == .europeanUnion

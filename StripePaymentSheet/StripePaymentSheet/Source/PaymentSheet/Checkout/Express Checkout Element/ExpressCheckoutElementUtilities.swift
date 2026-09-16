@@ -13,7 +13,6 @@ enum ExpressCheckoutElementUtilities {
         case notSupportedInSession = "not_supported_in_session"
         case linkConfiguration = "link_configuration"
         case shippingAddressCollection = "shipping_address_collection"
-        case billingDetailsCollection = "billing_details_collection"
         case automaticTaxAddress = "automatic_tax_address"
     }
 
@@ -60,16 +59,6 @@ enum ExpressCheckoutElementUtilities {
         }
         if configuration.shippingAddressRequired {
             reasons.append(.shippingAddressCollection)
-        }
-
-        let requiresBillingDetails = configuration.billingDetailsCollectionConfiguration.name == .always
-        || configuration.billingDetailsCollectionConfiguration.address == .full
-        let nativeLinkAvailable = deviceCanUseNativeLink(
-            useAttestationEndpoints: elementsSession.linkSettings?.useAttestationEndpoints,
-            apiClient: configuration.apiClient
-        )
-        if requiresBillingDetails && !nativeLinkAvailable {
-            reasons.append(.billingDetailsCollection)
         }
         if elementsSession.disableLinkForAutomaticTaxBilling {
             reasons.append(.automaticTaxAddress)

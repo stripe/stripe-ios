@@ -9,8 +9,13 @@ import Foundation
 @_spi(STP) import StripeUICore
 
 /// The canonical set of all image files in the `StripeCryptoOnramp` module.
-@_spi(CryptoOnrampAlpha) public enum Image: String, CaseIterable, ImageMaker {
-    @_spi(CryptoOnrampAlpha) public typealias BundleLocator = StripeCryptoOnrampBundleLocator
+enum Image: String, CaseIterable, ImageMaker {
+    typealias BundleLocator = StripeCryptoOnrampBundleLocator
 
     case linkIconSquare = "link_icon_square"
+    case iconLocationPin = "icon_location_pin"
+    case iconWallet = "icon_wallet"
+    case iconClock = "icon_clock"
+    case iconExclamationCircle = "icon_exclamation_circle"
+    case iconClose = "icon_close"
 }

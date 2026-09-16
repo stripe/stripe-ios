@@ -50,10 +50,14 @@ extension CheckoutController {
         public let minorUnitsAmountDivisor: Int?
 
         /// The currently selected payment option.
-        public let paymentOption: PaymentOptionDisplayData?
+        public var paymentOption: PaymentOptionDisplayData? {
+            return localState.paymentOption
+        }
 
         /// Shipping address of the customer.
-        public let shippingAddress: ShippingAddress?
+        public var shippingAddress: ShippingAddress? {
+            return localState.shippingAddress
+        }
 
         /// Status of the Checkout Session.
         public let status: Status
@@ -79,6 +83,7 @@ extension CheckoutController {
 
         let paymentStatus: Status.PaymentStatus
         let paymentMethodOptions: STPPaymentMethodOptions?
+        var localState: LocalState
         let customer: PaymentPagesAPIResponse.Customer?
         let savedPaymentMethodsOfferSave: STPCheckoutSessionSavedPaymentMethodsOfferSave?
         let setupFutureUsage: String?
@@ -97,6 +102,111 @@ extension CheckoutController {
             case automatic = "auto"
             case required
         }
+
+        struct LocalState {
+            var shippingAddress: ShippingAddress?
+            var paymentOption: PaymentOptionDisplayData?
+
+            static let empty = Self(shippingAddress: nil, paymentOption: nil)
+        }
+    }
+}
+
+extension CheckoutController.Session {
+    /// Builds a read-only session snapshot from server-backed and local state.
+    init(
+        apiResponse: PaymentPagesAPIResponse,
+        localState: LocalState,
+        expressCheckoutConfiguration: ExpressCheckoutElement.Configuration? = nil
+    ) {
+        let elementsSessionValue = apiResponse.elementsSession.value
+        let publicDiscountAmounts = PaymentPagesAPIResponse.makeDiscountAmounts(
+            from: apiResponse.recurringDetails?.totalDiscountAmounts ?? [],
+            currency: apiResponse.currency
+        )
+        // TODO: Have Payment Pages return session-level tax amounts directly. `recurring_details`
+        // is an odd source for one-time-price modeless Checkout, and clients shouldn't need to
+        // derive this aggregate from recurring-specific response models.
+        let publicTaxAmounts = apiResponse.recurringDetails?.totalTaxAmounts.map {
+            PaymentPagesAPIResponse.makeSessionTaxAmount(
+                from: $0,
+                currency: apiResponse.currency,
+                locale: .autoupdatingCurrent
+            )
+        }
+        let publicOrderSummaryItems = PaymentPagesAPIResponse.makeOrderSummaryItems(
+            from: apiResponse.checkoutItems,
+            locale: .autoupdatingCurrent
+        )
+        let publicTotals = PaymentPagesAPIResponse.makeTotals(
+            from: apiResponse.checkoutItems,
+            currency: apiResponse.currency
+        )
+        let publicTax = PaymentPagesAPIResponse.makeTax(
+            taxMeta: apiResponse.taxMeta,
+            taxContext: apiResponse.taxContext
+        )
+        let localizedPricesMetas = PaymentPagesAPIResponse.makeLocalizedPricesMetas(
+            from: apiResponse.adaptivePricingInfo
+        )
+        let exchangeRateMeta = PaymentPagesAPIResponse.makeExchangeRateMeta(
+            from: apiResponse.adaptivePricingInfo
+        )
+        // TODO: Read explicit integration and presentment currency fields from the mobile
+        // translation layer once available instead of deriving them from the PP response shape.
+        let presentmentDetails = apiResponse.adaptivePricingInfo.map {
+            CheckoutController.Session.PresentmentDetails(presentmentCurrency: $0.activePresentmentCurrency)
+        }
+        let automaticTaxEnabled = apiResponse.taxContext?.automaticTaxEnabled ?? false
+        let automaticTaxAddressSource = PaymentPagesAPIResponse.makeAutomaticTaxAddressSource(
+            from: apiResponse.taxContext?.automaticTaxAddressSource
+        )
+        if automaticTaxEnabled && automaticTaxAddressSource == "billing" {
+            elementsSessionValue.disableLinkForAutomaticTaxBilling = true
+        }
+        let availableExpressCheckoutPaymentMethods = expressCheckoutConfiguration.map {
+            ExpressCheckoutElementUtilities.availablePaymentMethods(
+                for: elementsSessionValue,
+                configuration: $0
+            )
+        } ?? []
+
+        self.init(
+            id: apiResponse.sessionId,
+            businessName: apiResponse.elementsSession.businessName,
+            currency: apiResponse.adaptivePricingInfo?.integrationCurrency ?? apiResponse.currency,
+            presentmentDetails: presentmentDetails,
+            discountAmounts: publicDiscountAmounts,
+            email: apiResponse.customerEmail ?? apiResponse.customer?.email,
+            orderSummaryItems: publicOrderSummaryItems,
+            livemode: apiResponse.livemode,
+            minorUnitsAmountDivisor: PaymentPagesAPIResponse.makeMinorUnitsAmountDivisor(
+                currency: apiResponse.currency
+            ),
+            status: apiResponse.status,
+            tax: publicTax,
+            taxAmounts: publicTaxAmounts,
+            totals: publicTotals,
+            availableExpressCheckoutPaymentMethods: availableExpressCheckoutPaymentMethods,
+            paymentStatus: apiResponse.paymentStatus,
+            paymentMethodOptions: apiResponse.paymentMethodOptions,
+            localState: localState,
+            customer: apiResponse.customer,
+            savedPaymentMethodsOfferSave: PaymentPagesAPIResponse.makeSavedPaymentMethodsOfferSave(
+                from: apiResponse.savedPaymentMethodsOfferSave
+            ),
+            setupFutureUsage: apiResponse.setupFutureUsage,
+            setupFutureUsageForPaymentMethodType: apiResponse.setupFutureUsageForPaymentMethodType ?? [:],
+            allowedShippingCountries: apiResponse.shippingAddressCollection?.allowedCountries.map { $0.uppercased() },
+            localizedPricesMetas: localizedPricesMetas,
+            exchangeRateMeta: exchangeRateMeta,
+            adaptivePricingActive: apiResponse.adaptivePricingInfo != nil,
+            billingAddressCollection: apiResponse.billingAddressCollection.flatMap(CheckoutController.Session.BillingAddressCollection.init(rawValue:)) ?? .automatic,
+            automaticTaxEnabled: automaticTaxEnabled,
+            automaticTaxAddressSource: automaticTaxAddressSource,
+            merchantCountryCode: apiResponse.elementsSession.merchantCountryCode,
+            elementsSession: elementsSessionValue
+        )
     }
 }
 
@@ -232,7 +342,7 @@ extension CheckoutController.Session {
         /// A user facing string representing the payment method; e.g. "Apple Pay" or "····4242" for a card
         public let label: String
         /// The billing details associated with the customer's desired payment method
-        public let billingDetails: PaymentSheet.BillingDetails?
+        public let billingDetails: BillingDetails?
         /// A string representation of the customer's desired payment method
         /// - If this is a Stripe payment method, see https://stripe.com/docs/api/payment_methods/object#payment_method_object-type for possible values.
         /// - If this is an external payment method, see https://stripe.com/docs/payments/external-payment-methods?platform=ios#available-external-payment-methods for possible values.
@@ -240,5 +350,41 @@ extension CheckoutController.Session {
         public let paymentMethodType: String
         /// If you set `configuration.embeddedViewDisplaysMandateText = false`, this text must be displayed in a `UITextView` (so that URLs in the text are handled) to the customer near your “Buy” button to comply with regulations.
         public let mandateText: NSAttributedString?
+
+        /// The billing details collected for a payment method.
+        public struct BillingDetails: Equatable {
+            /// The customer's billing address.
+            public let address: Address?
+
+            /// The customer's email address.
+            public let email: String?
+
+            /// The customer's full name.
+            public let name: String?
+
+            /// The customer's phone number.
+            public let phone: String?
+
+            /// A billing address.
+            public struct Address: Equatable {
+                /// City, district, suburb, town, or village.
+                public let city: String?
+
+                /// Two-letter country code (ISO 3166-1 alpha-2).
+                public let country: String?
+
+                /// Address line 1 (e.g., street, PO Box, or company name).
+                public let line1: String?
+
+                /// Address line 2 (e.g., apartment, suite, unit, or building).
+                public let line2: String?
+
+                /// ZIP or postal code.
+                public let postalCode: String?
+
+                /// State, county, province, or region.
+                public let state: String?
+            }
+        }
     }
 }

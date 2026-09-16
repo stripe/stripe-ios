@@ -32,9 +32,12 @@ extension CheckoutController: ExpressCheckoutElementDelegate {
         _ paymentMethod: ExpressCheckoutElement.PaymentMethod,
         presentationWindow: UIWindow?
     ) throws -> CheckoutConfirmationFlow {
+        guard let expressCheckoutElementConfiguration = configuration.expressCheckoutElement else {
+            throw CheckoutError.unknown(debugDescription: "Express Checkout Element configuration unexpectedly nil.")
+        }
         switch paymentMethod {
         case .applePay:
-            guard let applePayConfiguration = configuration.expressCheckoutElement.applePayConfiguration else {
+            guard let applePayConfiguration = expressCheckoutElementConfiguration.applePayConfiguration else {
                 throw CheckoutError.unknown(debugDescription: "Could not build a confirmation flow for \(paymentMethod). Express Checkout Element Apple Pay configuration unexpectedly nil.")
             }
             // TODO: Should next actions use an authentication context tied to `presentationWindow`
@@ -45,8 +48,7 @@ extension CheckoutController: ExpressCheckoutElementDelegate {
                 apiClient: apiClient,
                 returnURL: configuration.returnURL,
                 merchantDisplayName: effectiveMerchantDisplayName,
-                shippingAddressRequired: configuration.expressCheckoutElement.shippingAddressRequired,
-                billingDetailsCollectionConfiguration: configuration.expressCheckoutElement.billingDetailsCollectionConfiguration.paymentSheetConfiguration(),
+                shippingAddressRequired: expressCheckoutElementConfiguration.shippingAddressRequired,
                 defaultBillingDetails: configuration.defaults.billingDetails,
                 presentationWindow: presentationWindow,
                 confirmationHandler: { [apiClient, paymentHandler] requestParameters in
@@ -68,12 +70,11 @@ extension CheckoutController: ExpressCheckoutElementDelegate {
             paymentElementConfiguration.returnURL = configuration.returnURL
             paymentElementConfiguration.merchantDisplayName = effectiveMerchantDisplayName
             paymentElementConfiguration.style = configuration.userInterfaceStyle
-            paymentElementConfiguration.billingDetailsCollectionConfiguration = configuration.expressCheckoutElement.billingDetailsCollectionConfiguration.paymentSheetConfiguration()
             if let billingDetails = configuration.defaults.billingDetails {
                 paymentElementConfiguration.defaultBillingDetails.set(billingDetails)
             }
             paymentElementConfiguration.defaultBillingDetails.email = session.email
-            switch configuration.expressCheckoutElement.linkConfiguration.display {
+            switch expressCheckoutElementConfiguration.linkConfiguration.display {
             case .automatic:
                 paymentElementConfiguration.link.display = .automatic
             case .never:
@@ -118,9 +119,9 @@ extension CheckoutController {
     // MARK: - Payment Option
 
     func dangerouslySetPaymentOptionDirectly(_ paymentOption: Session.PaymentOptionDisplayData?) {
-        dangerouslySetSessionDirectly(
-            session.makeCopyOverriding(paymentOption: .newValue(paymentOption))
-        )
+        var updatedSession = session
+        updatedSession.localState.paymentOption = paymentOption
+        dangerouslySetSessionDirectly(updatedSession)
     }
 
     // MARK: - Session Updates
@@ -208,24 +209,24 @@ extension CheckoutController {
 
     /// Enqueues a serialized session update.
     ///
-    /// - If `update` is non-nil, the side effect (if any) is applied first, then the
-    ///   API mutation is performed and the session is updated from the response.
-    /// - If `update` is nil, the side effect is applied locally without making a network request.
+    /// - If `update` is non-nil, the API mutation is performed, then the session is updated from
+    ///   the response and the local state mutation is applied.
+    /// - If `update` is nil, the local state mutation is applied without making a network request.
     ///
     /// - Parameters:
     ///   - update: The API mutation to perform, or nil for a local-only update.
-    ///   - shippingAddress: A local shipping-address change to apply after the API call (or on its own).
     ///   - canUpdateWhileSheetPresented: Bypasses the sheet-presented guard (e.g. billing sync on dismiss).
+    ///   - mutateLocalState: A local state change to apply after the API call (or on its own).
     func performUpdate(
         _ update: SessionUpdate? = nil,
-        shippingAddress: SessionFieldUpdate<Session.ShippingAddress> = .keepOldValue,
-        canUpdateWhileSheetPresented: Bool = false
+        canUpdateWhileSheetPresented: Bool = false,
+        mutateLocalState: @escaping LocalStateMutation = { _ in }
     ) async throws {
         try await enqueueSessionUpdate {
             try await self.applySessionUpdate(
                 update,
-                shippingAddress: shippingAddress,
-                canUpdateWhileSheetPresented: canUpdateWhileSheetPresented
+                canUpdateWhileSheetPresented: canUpdateWhileSheetPresented,
+                mutateLocalState: mutateLocalState
             )
         }
     }
@@ -239,8 +240,8 @@ extension CheckoutController {
     ///   nested operation's predecessor would be the still-running outer operation itself.
     func applySessionUpdate(
         _ update: SessionUpdate? = nil,
-        shippingAddress: SessionFieldUpdate<Session.ShippingAddress> = .keepOldValue,
-        canUpdateWhileSheetPresented: Bool = false
+        canUpdateWhileSheetPresented: Bool = false,
+        mutateLocalState: LocalStateMutation = { _ in }
     ) async throws {
         if !canUpdateWhileSheetPresented {
             try requireSheetNotPresented()
@@ -253,6 +254,9 @@ extension CheckoutController {
                     checkoutSessionId: sessionId,
                     parameters: update.parameters
                 )
+                if case .setTaxRegion(let address) = update {
+                    currentTaxRegion = address
+                }
             } else {
                 updatedSessionAPIResponse = nil
             }
@@ -260,10 +264,7 @@ extension CheckoutController {
             // Errors from here should still get wrapped in API errors since the only way
             //  local session application throws is if the API returned a session state that
             //  the UI can't handle.
-            try await commitSession(
-                updatedSessionAPIResponse,
-                shippingAddress: shippingAddress
-            )
+            try await commitSession(updatedSessionAPIResponse, mutateLocalState: mutateLocalState)
         } catch {
             throw CheckoutError.apiError(message: error.nonGenericDescription)
         }

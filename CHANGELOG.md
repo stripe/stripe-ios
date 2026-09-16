@@ -3,21 +3,39 @@ MINOR
 
 ## X.Y.Z - changes pending release
 ### CryptoOnramp (Alpha)
+* [Removed] Removed public exposure of `StripeCryptoOnramp.Image`, including `Image.linkIconSquare`.
+* [Added] Added `CryptoOnrampCoordinator.presentTermsAndConditionsIfNeeded(from:)` and `presentTermsOfServiceIfNeeded(from:)` to present and record acceptance of current partner terms when required. Both methods return `PartnerTermsResult`.
+
+### StripeCore
+* [Added] Added `additionalHeaders` support to the `STPAPIClient` GET, POST, and DELETE APIs exposed through the `STP` SPI.
+
+## 26.11.0 2026-09-14
+### General
+* [Added] Added support for Welsh.
+
+### Payments
+* [Added] Added API bindings for Scalapay.
+
+### PaymentSheet
+* [Added] Added support for Scalapay.
+
+## 26.10.0 2026-09-08
+### General
+* [Added] Added support for Arabic (Saudi Arabia).
+
+### CryptoOnramp (Alpha)
 * [Added] Added Canada SIN, Colombia NIT, and Philippines TIN values to `IdType`, and added `idType` to the `KycInfo` initializer.
 
 ### PaymentSheet
+* [Added] Added support for Kakao Pay.
 * [Added] Added support for Naver Pay.
 * [Added] Added support for Korean cards.
+* [Added] Added support for PAYCO.
+* [Added] Added support for SeQura.
 
 ## 26.9.0 2026-08-31
 ### Payments
 * [Added] Added API bindings for Kakao Pay, SeQura, Korean cards, Naver Pay, and PAYCO.
-
-### PaymentSheet
-* [Added] Added support for PAYCO.
-
-### PaymentSheet
-* [Added] Added support for SeQura.
 
 ## 26.8.0 2026-08-24
 ### Payments
