@@ -14,6 +14,7 @@ MINOR
 
 ### PaymentSheet
 * [Fixed] Fixed US bank account collection omitting configured billing addresses and phone numbers.
+* [Fixed] Fixed card funding warnings not appearing after scanning a card.
 
 ## 26.11.0 2026-09-14
 ### General
