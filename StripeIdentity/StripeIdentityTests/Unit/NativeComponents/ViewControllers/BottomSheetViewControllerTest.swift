@@ -28,14 +28,14 @@ final class BottomSheetViewControllerTest: XCTestCase {
         )
         XCTAssertNil(viewController.navigationItem.rightBarButtonItem)
 
-        // ...and it starts at its calculated content height and can expand to large
+        // ...and it uses its calculated content height
         if #available(iOS 16.0, *) {
             let contentDetentIdentifier = UISheetPresentationController.Detent.Identifier(
                 "StripeIdentity.content"
             )
             XCTAssertEqual(
                 viewController.sheetPresentationController?.detents.map(\.identifier),
-                [contentDetentIdentifier, .large]
+                [contentDetentIdentifier]
             )
             XCTAssertEqual(
                 viewController.sheetPresentationController?.selectedDetentIdentifier,

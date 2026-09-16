@@ -37,7 +37,7 @@ final class BottomSheetViewController: UIViewController {
             ) { [weak viewController] context in
                 min(viewController?.preferredDetentHeight ?? context.maximumDetentValue, context.maximumDetentValue)
             }
-            viewController.sheetPresentationController?.detents = [contentDetent, .large()]
+            viewController.sheetPresentationController?.detents = [contentDetent]
             viewController.sheetPresentationController?.selectedDetentIdentifier = contentDetentIdentifier
         } else {
             viewController.sheetPresentationController?.detents = [.medium(), .large()]
