@@ -10,7 +10,9 @@ import Foundation
 
 extension PaymentPagesAPIResponse {
     /// Builds a public, read-only ``CheckoutController.Session`` snapshot from this API response object.
-    func makePublicSession() -> CheckoutController.Session {
+    func makePublicSession(
+        expressCheckoutConfiguration: ExpressCheckoutElement.Configuration = .init()
+    ) -> CheckoutController.Session {
         let elementsSessionValue = elementsSession.value
         let publicDiscountAmounts = Self.makeDiscountAmounts(
             from: recurringDetails?.totalDiscountAmounts ?? [],
@@ -42,6 +44,10 @@ extension PaymentPagesAPIResponse {
         if automaticTaxEnabled && automaticTaxAddressSource == "billing" {
             elementsSessionValue.disableLinkForAutomaticTaxBilling = true
         }
+        let availableExpressCheckoutPaymentMethods = ExpressCheckoutElementUtilities.availablePaymentMethods(
+            for: elementsSessionValue,
+            configuration: expressCheckoutConfiguration
+        )
 
         return CheckoutController.Session(
             id: sessionId,
@@ -59,6 +65,7 @@ extension PaymentPagesAPIResponse {
             tax: publicTax,
             taxAmounts: publicTaxAmounts,
             totals: publicTotals,
+            availableExpressCheckoutPaymentMethods: availableExpressCheckoutPaymentMethods,
             paymentStatus: paymentStatus,
             paymentMethodOptions: paymentMethodOptions,
             customer: customer,

@@ -92,6 +92,7 @@ public final class CheckoutController: ObservableObject {
         #if DEBUG
         configuration.validateReturnURL()
         #endif
+        configuration.expressCheckoutElement.apiClient = configuration.apiClient
         self.clientSecret = clientSecret
         self.configuration = configuration
         self.apiClient = configuration.apiClient
@@ -103,7 +104,9 @@ public final class CheckoutController: ObservableObject {
                 checkoutSessionId: sessionId,
                 adaptivePricingAllowed: configuration.currencySelectorElement != nil
             )
-            let loadedSession = apiResponse.makePublicSession()
+            let loadedSession = apiResponse.makePublicSession(
+                expressCheckoutConfiguration: configuration.expressCheckoutElement
+            )
             self.session = loadedSession
 
             // Element initialization is intentionally sequential:
@@ -135,7 +138,6 @@ public final class CheckoutController: ObservableObject {
             let sessionSource = CheckoutSessionSource(initialSession: session, sessionPublisher: $session)
 
             // 3. ECE
-            configuration.expressCheckoutElement.apiClient = configuration.apiClient
             self.expressCheckoutElement = ExpressCheckoutElement(
                 sessionSource: sessionSource,
                 configuration: configuration.expressCheckoutElement,
@@ -418,7 +420,9 @@ extension CheckoutController {
         shippingAddress: SessionFieldUpdate<Session.ShippingAddress> = .keepOldValue,
         paymentOption: SessionFieldUpdate<Session.PaymentOptionDisplayData> = .keepOldValue
     ) async throws {
-        let newSession = apiResponse?.makePublicSession() ?? session
+        let newSession = apiResponse?.makePublicSession(
+            expressCheckoutConfiguration: configuration.expressCheckoutElement
+        ) ?? session
         session = newSession.makeCopyOverriding(
             shippingAddress: .newValue(
                 shippingAddress.resolved(currentValue: session.shippingAddress)
