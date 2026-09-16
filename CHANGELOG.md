@@ -9,6 +9,9 @@ MINOR
 ### StripeCore
 * [Added] Added `additionalHeaders` support to the `STPAPIClient` GET, POST, and DELETE APIs exposed through the `STP` SPI.
 
+### PaymentSheet
+* [Fixed] Fixed card funding warnings not appearing after scanning a card.
+
 ## 26.11.0 2026-09-14
 ### General
 * [Added] Added support for Welsh.
