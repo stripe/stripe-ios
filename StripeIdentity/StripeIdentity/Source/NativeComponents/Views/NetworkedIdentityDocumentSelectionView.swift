@@ -26,7 +26,9 @@ final class NetworkedIdentityDocumentSelectionView: UIView {
     private(set) var documents: [NetworkedIdentityDocument] = []
     private(set) var selectedDocumentID: String?
     private(set) var isLoading = false
-    var accessibilityFocusView: UIView { bodyLabel }
+    var accessibilityFocusView: UIView {
+        isLoading && loadingContainer.isAccessibilityElement ? loadingContainer : bodyLabel
+    }
 
     private let bodyLabel: UILabel = {
         let label = UILabel()
@@ -86,6 +88,8 @@ final class NetworkedIdentityDocumentSelectionView: UIView {
         bodyLabel.text = bodyText
         loadingIndicator.stopAnimating()
         loadingContainer.isHidden = true
+        loadingContainer.isAccessibilityElement = false
+        loadingContainer.accessibilityLabel = nil
         listView.isHidden = false
 
         listView.configure(
@@ -117,13 +121,15 @@ final class NetworkedIdentityDocumentSelectionView: UIView {
         }
     }
 
-    func configureLoading(bodyText: String) {
+    func configureLoading(bodyText: String, accessibilityLabel: String? = nil) {
         documents = []
         selectedDocumentID = nil
         isLoading = true
         bodyLabel.text = bodyText
         listView.isHidden = true
         loadingContainer.isHidden = false
+        loadingContainer.isAccessibilityElement = accessibilityLabel != nil
+        loadingContainer.accessibilityLabel = accessibilityLabel
         loadingIndicator.startAnimating()
     }
 }

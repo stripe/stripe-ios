@@ -41,6 +41,11 @@ protocol VerificationSheetControllerProtocol: AnyObject {
         completion: @escaping () -> Void
     )
 
+    func continueAfterNetworkedIdentity(
+        with result: Result<StripeAPI.VerificationPageData, Error>,
+        completion: @escaping () -> Void
+    )
+
     func saveDocumentFrontAndDecideBack(
         from fromScreen: IdentityAnalyticsClient.ScreenName,
         documentUploader: DocumentUploaderProtocol,
@@ -127,6 +132,7 @@ private enum VerificationSheetControllerError: String, AnalyticLoggableStringErr
     case missingVerificationPageResponseForDocumentCaptureTransition
     case missingVerificationPageResponseForPageDataTransition
     case missingVerificationPageResponseForClearDataCalculation
+    case networkedIdentitySessionNotWritable
 }
 
 final class VerificationSheetController: VerificationSheetControllerProtocol {
@@ -187,6 +193,7 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
 
     /// Makes API calls to load the verification sheet. When the API response is complete, transitions to the first screen in the flow.
     func loadAndUpdateUI(skipTestMode: Bool) {
+        flowController.resetNetworkedIdentityForNewPresentation()
         load().observe(on: .main) { result in
             self.flowController.transitionToNextScreen(
                 skipTestMode: skipTestMode,
@@ -255,6 +262,43 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
                 updateDataResult: result,
                 completion: completion
             )
+        }
+    }
+
+    func continueAfterNetworkedIdentity(
+        with result: Result<StripeAPI.VerificationPageData, Error>,
+        completion: @escaping () -> Void
+    ) {
+        guard case .success(let data) = result, data.requirements.errors.isEmpty else {
+            transitionWithVerificaionPageDataResult(result, completion: completion)
+            return
+        }
+
+        guard data.status != .canceled,
+              data.submittedAndClosed()
+                || (!data.closed && data.status == .requiresInput
+                    && (!data.submitted || !data.requirements.missing.isEmpty)) else {
+            transitionWithVerificaionPageDataResult(
+                .failure(VerificationSheetControllerError.networkedIdentitySessionNotWritable),
+                completion: completion
+            )
+            return
+        }
+
+        // Attached files exist on the server, not in collectedData. Refresh the baseline so
+        // a later address/selfie update cannot clear those files as uncollected fields.
+        if case .success(let page) = verificationPageResponse {
+            verificationPageResponse = .success(page.copyWithNewMissings(newMissings: data.requirements.missing))
+        }
+        for field in data.requirements.missing {
+            collectedData.clearData(field: field)
+        }
+
+        if data.submittedAndClosed() {
+            isVerificationPageSubmitted = true
+            transitionWithVerificaionPageDataResult(result, completion: completion)
+        } else {
+            checkSubmitAndTransition(updateDataResult: result, completion: completion)
         }
     }
 

@@ -435,6 +435,97 @@ final class NetworkedIdentityAPIClientTest: APIStubbedTestCase {
         }
     }
 
+    func testCreateSaveAssociationTokenUsesConsumerAuthorizationAndTargetSession() {
+        // Given a merchant client with a connected-account header
+        backingAPIClient.stripeAccount = "acct_merchant"
+        stubRequest(
+            path: "/v1/consumers/identity_documents/save_association_token",
+            authorizationKey: Self.consumerPublishableKey,
+            expectedParameters: consumerParameters(
+                additionalParameters: ["verification_session": "vs_target"]
+            )
+        ) { request in
+            // Then the consumer capability request is not scoped to the merchant's connected account
+            XCTAssertNil(request.value(forHTTPHeaderField: "Stripe-Account"))
+            XCTAssertNil(request.value(forHTTPHeaderField: "X-Stripe-Mock-Request"))
+            return HTTPStubsResponse(
+                data: Data("{\"association_token\":\"save_token\"}".utf8),
+                statusCode: 200,
+                headers: nil
+            )
+        }
+
+        // When creating a save token, separate from a saved-document reuse token
+        assertSuccess(
+            apiClient.createSaveAssociationToken(
+                verificationSessionID: "vs_target",
+                consumerSessionClientSecret: Self.consumerSessionClientSecret,
+                consumerPublishableKey: Self.consumerPublishableKey
+            )
+        ) { response in
+            XCTAssertEqual(response.associationToken, "save_token")
+        }
+    }
+
+    func testCreateSaveAssociationTokenDoesNotRetry() {
+        apiClient = makeAPIClient { _, _ in
+            XCTFail("Save token creation must not schedule a retry")
+        }
+        for statusCode in [Int32(429), Int32(500)] {
+            var requestCount = 0
+            stubRequest(
+                path: "/v1/consumers/identity_documents/save_association_token",
+                authorizationKey: Self.consumerPublishableKey,
+                expectedParameters: consumerParameters(
+                    additionalParameters: ["verification_session": "vs_target"]
+                )
+            ) { _ in
+                requestCount += 1
+                return HTTPStubsResponse(data: Data(), statusCode: statusCode, headers: nil)
+            }
+
+            assertFailure(
+                apiClient.createSaveAssociationToken(
+                    verificationSessionID: "vs_target",
+                    consumerSessionClientSecret: Self.consumerSessionClientSecret,
+                    consumerPublishableKey: Self.consumerPublishableKey
+                )
+            ) { _ in
+                XCTAssertEqual(requestCount, 1)
+            }
+        }
+    }
+
+    func testCreateSaveAssociationTokenDoesNotRetryTransportFailure() {
+        // Given a timed-out mint request whose server outcome is unknown
+        apiClient = makeAPIClient { _, _ in
+            XCTFail("Save token creation must not schedule a retry")
+        }
+        var requestCount = 0
+        stubRequest(
+            path: "/v1/consumers/identity_documents/save_association_token",
+            authorizationKey: Self.consumerPublishableKey,
+            expectedParameters: consumerParameters(
+                additionalParameters: ["verification_session": "vs_target"]
+            )
+        ) { _ in
+            requestCount += 1
+            return HTTPStubsResponse(error: URLError(.timedOut))
+        }
+
+        // When minting fails, then return the failure without an automatic replay
+        assertFailure(
+            apiClient.createSaveAssociationToken(
+                verificationSessionID: "vs_target",
+                consumerSessionClientSecret: Self.consumerSessionClientSecret,
+                consumerPublishableKey: Self.consumerPublishableKey
+            )
+        ) { error in
+            XCTAssertEqual((error as NSError).code, NSURLErrorTimedOut)
+            XCTAssertEqual(requestCount, 1)
+        }
+    }
+
     func testLogOut() {
         stubRequest(
             path: "/v1/consumers/sessions/log_out",

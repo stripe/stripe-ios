@@ -15,12 +15,18 @@ final class NetworkedIdentityFlowViewControllerSnapshotTest: STPSnapshotTestCase
     private static let snapshotFrame = CGRect(x: 0, y: 0, width: 375, height: 812)
 
     private lazy var apiClient = NetworkedIdentityAPIClientTestMock()
+    private lazy var identityAPIClient: IdentityAPIClientTestMock = {
+        let apiClient = IdentityAPIClientTestMock(verificationSessionId: "vs_123")
+        apiClient.supportsNetworkedIdentity = true
+        return apiClient
+    }()
     private lazy var coordinator = NetworkedIdentityCoordinator(
         apiClient: apiClient,
         documentRequirements: .init(
             allowedDocumentTypes: [.passport, .drivingLicense, .idCard],
             requiresLiveCapture: false
         ),
+        identityAPIClient: identityAPIClient,
         verificationSessionClientSecrets: ["vs_client_secret"],
         currentTime: { 1_800_000_000 }
     )
@@ -96,6 +102,35 @@ final class NetworkedIdentityFlowViewControllerSnapshotTest: STPSnapshotTestCase
     }
 
     func testSelectedSavedDocument() {
+        selectSavedDocument()
+        verifyView()
+    }
+
+    func testAttachingSavedDocument() {
+        // Given the consumer selected a saved document
+        selectSavedDocument()
+
+        // When they continue, minting and attachment show a pending state
+        coordinator.continueWithSelectedDocument()
+
+        // Then the screen cannot submit another action while attachment is pending
+        XCTAssertEqual(coordinator.state, .attachmentPending)
+        verifyView()
+    }
+
+    func testSkippingNetworkedIdentity() {
+        // Given the consumer is on the email screen
+        viewController.loadViewIfNeeded()
+
+        // When they choose manual capture
+        coordinator.chooseManualCapture()
+
+        // Then the screen shows the skip request is pending
+        XCTAssertEqual(coordinator.state, .skipPending)
+        verifyView()
+    }
+
+    private func selectSavedDocument() {
         // Given a verified consumer has two reusable documents
         beginExistingConsumerFlow()
         viewController.didInputFullOtp(newOtp: "123456")
@@ -130,7 +165,6 @@ final class NetworkedIdentityFlowViewControllerSnapshotTest: STPSnapshotTestCase
 
         // Then the selected state is visible in the saved-document list
         XCTAssertEqual(coordinator.state, .selectedDocument)
-        verifyView()
     }
 }
 

@@ -16,9 +16,14 @@ protocol NetworkedIdentityCoordinatorDelegate: AnyObject {
     func networkedIdentityCoordinatorDidRequestFullCaptureFallback(
         _ coordinator: NetworkedIdentityCoordinator
     )
+
+    func networkedIdentityCoordinator(
+        _ coordinator: NetworkedIdentityCoordinator,
+        didCompleteWith result: Result<StripeAPI.VerificationPageData, Error>
+    )
 }
 
-/// Coordinates the Link lookup and authentication work that can safely happen before document reuse.
+/// Coordinates Link authentication, saved-document selection, and preview Identity actions.
 @MainActor
 final class NetworkedIdentityCoordinator {
     private enum ConsumerErrorCode: String {
@@ -29,6 +34,7 @@ final class NetworkedIdentityCoordinator {
     }
 
     private let apiClient: NetworkedIdentityAPIClient
+    private let identityAPIClient: IdentityAPIClient?
     private let documentRequirements: NetworkedIdentityDocumentRequirements
     private let credentialStore: NetworkedIdentityCredentialStore
     private let currentTime: () -> TimeInterval
@@ -45,14 +51,20 @@ final class NetworkedIdentityCoordinator {
     private(set) var emailAddress: String?
     private(set) var redactedFormattedPhoneNumber: String?
 
+    var supportsDocumentAttachment: Bool {
+        identityAPIClient?.supportsNetworkedIdentity == true
+    }
+
     init(
         apiClient: NetworkedIdentityAPIClient,
         documentRequirements: NetworkedIdentityDocumentRequirements,
+        identityAPIClient: IdentityAPIClient? = nil,
         verificationSessionClientSecrets: [String]? = nil,
         credentialStore: NetworkedIdentityCredentialStore? = nil,
         currentTime: @escaping () -> TimeInterval = { Date().timeIntervalSince1970 }
     ) {
         self.apiClient = apiClient
+        self.identityAPIClient = identityAPIClient
         self.documentRequirements = documentRequirements
         self.currentTime = currentTime
         self.credentialStore = credentialStore
@@ -157,11 +169,69 @@ final class NetworkedIdentityCoordinator {
         self.selectedDocument = selectedDocument
         transition(to: .selectedDocument)
 
-        // #TODO - Networked Identity: Define cloneConsumerIdentityDocument and association-token sequencing before completing reuse. The existing welcome screen discloses sharing verification data; granular requested-attribute metadata is not required.
+        // Selection is not consent to attach. The user must explicitly continue.
+    }
+
+    func continueWithSelectedDocument() {
+        guard state == .selectedDocument,
+              supportsDocumentAttachment,
+              let identityAPIClient,
+              let selectedDocument else {
+            return
+        }
+        guard documentRequirements.allows(selectedDocument, at: currentTime()),
+              let credentials = credentialStore.readConsumerCredentials({ credentials, _ in credentials }) else {
+            fallBackToFullCapture(reason: .unavailable)
+            return
+        }
+
+        transition(to: .attachmentPending)
+        guard state == .attachmentPending else { return }
+        // Mint only after the user continues, then redeem immediately. Tokens are short-lived
+        // and single-use, so they must not be cached in screen state or automatically replayed.
+        apiClient.createAssociationToken(
+            identityDocumentID: selectedDocument.id,
+            consumerSessionClientSecret: credentials.sessionClientSecret,
+            consumerPublishableKey: credentials.publishableKey
+        ).observe(on: .main) { [weak self] result in
+            guard let self, self.state == .attachmentPending else {
+                return
+            }
+            guard case .success(let response) = result, !response.associationToken.isEmpty else {
+                self.finishAction(with: .failure(NetworkedIdentityActionError.tokenUnavailable))
+                return
+            }
+            identityAPIClient.attachNetworkedIdentityDocument(
+                associationToken: response.associationToken
+            ).observe(on: .main) { [weak self] result in
+                guard let self, self.state == .attachmentPending else {
+                    return
+                }
+                if case .failure(let error) = result,
+                   error._stp_error_code == "networked_identity_unavailable" {
+                    self.fallBackToFullCapture(reason: .unavailable)
+                    return
+                }
+                // #TODO - Networked Identity: Add bounded fresh-token recovery after final
+                // error codes and ambiguous-redemption recovery are approved. Never replay a token.
+                self.finishAction(with: result.mapError { _ in NetworkedIdentityActionError.attachmentFailed })
+            }
+        }
     }
 
     func chooseManualCapture() {
-        guard state != .cancelled, state != .fullCaptureFallback else {
+        guard !flowHasEnded, state != .attachmentPending, state != .skipPending else {
+            return
+        }
+        if let identityAPIClient, identityAPIClient.supportsNetworkedIdentity {
+            transition(to: .skipPending)
+            guard state == .skipPending else { return }
+            identityAPIClient.skipNetworkedIdentity().observe(on: .main) { [weak self] result in
+                guard let self, self.state == .skipPending else {
+                    return
+                }
+                self.finishAction(with: result.mapError { _ in NetworkedIdentityActionError.skipFailed })
+            }
             return
         }
         fallBackToFullCapture(reason: .userSelectedManualCapture)
@@ -184,7 +254,7 @@ final class NetworkedIdentityCoordinator {
 
 private extension NetworkedIdentityCoordinator {
     func endAsCancelled(notifyDelegate: Bool) {
-        guard state != .cancelled else {
+        guard state != .cancelled, state != .completed else {
             return
         }
 
@@ -246,7 +316,7 @@ private extension NetworkedIdentityCoordinator {
                 return
             }
             guard self.state == .lookupPending else {
-                if self.flowHasEnded,
+                if self.flowHasEnded || self.state == .skipPending,
                    case .success(.found(let response)) = result {
                     self.bestEffortLogOut(
                         consumerSessionClientSecret: response.consumerSession.clientSecret,
@@ -434,7 +504,8 @@ private extension NetworkedIdentityCoordinator {
     }
 
     func fallBackToFullCapture(reason: NetworkedIdentityFallbackReason) {
-        // #TODO - Networked Identity: Skip and manual capture share the dedicated networking_data clear API; wire it here once the request/response contract is available.
+        // Automatic unavailability is not an explicit skip. Only chooseManualCapture persists
+        // the user's choice through the v8 skip action; closing the sheet never calls it.
         let logout = credentialStore.readConsumerCredentials { credentials, verificationSessionClientSecrets in
             apiClient.logOut(
                 consumerSessionClientSecret: credentials.sessionClientSecret,
@@ -460,7 +531,36 @@ private extension NetworkedIdentityCoordinator {
         // Logout is best effort. Local credentials have already been cleared.
         logout?.observe { _ in }
 
-        // #TODO - Networked Identity: After document/selfie capture, offer Link login and explicit save opt-in. The new API must record consent and the Link account reference on the VerificationSession; the backend copies images asynchronously after verification succeeds. Its contract is still missing.
+        // #TODO - Networked Identity: Wire save opt-in through save_association_token and
+        // prepare_document_save after reconciling the new pre-capture proposal with earlier
+        // post-capture design guidance. Saving itself stays asynchronous on the backend.
+    }
+
+    func finishAction(with result: Result<StripeAPI.VerificationPageData, Error>) {
+        let checkedResult: Result<StripeAPI.VerificationPageData, Error>
+        if case .success(let pageData) = result, pageData.id != identityAPIClient?.verificationSessionId {
+            checkedResult = .failure(NetworkedIdentityActionError.unexpectedSession)
+        } else {
+            checkedResult = result
+        }
+        let logout = credentialStore.readConsumerCredentials { credentials, secrets in
+            apiClient.logOut(
+                consumerSessionClientSecret: credentials.sessionClientSecret,
+                verificationSessionClientSecrets: secrets,
+                consumerPublishableKey: credentials.publishableKey
+            )
+        }
+        credentialStore.clear()
+        emailAddress = nil
+        redactedFormattedPhoneNumber = nil
+        activeSMSVerificationSessionID = nil
+        knownSMSVerificationSessionIDs = []
+        lastOTPError = nil
+        availableDocuments = []
+        selectedDocument = nil
+        transition(to: .completed)
+        delegate?.networkedIdentityCoordinator(self, didCompleteWith: checkedResult)
+        logout?.observe { _ in }
     }
 
     func requireReauthentication() {
@@ -493,7 +593,7 @@ private extension NetworkedIdentityCoordinator {
     }
 
     var flowHasEnded: Bool {
-        state == .cancelled || state == .fullCaptureFallback
+        state == .cancelled || state == .fullCaptureFallback || state == .completed
     }
 
     func logOutIfFlowEnded(
@@ -501,7 +601,7 @@ private extension NetworkedIdentityCoordinator {
         consumerPublishableKey: String,
         verificationSessionClientSecrets: [String]?
     ) {
-        guard flowHasEnded, case .success(let response) = result else {
+        guard flowHasEnded || state == .skipPending, case .success(let response) = result else {
             return
         }
         Self.bestEffortLogOut(

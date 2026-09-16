@@ -12,6 +12,10 @@ import XCTest
 
 @MainActor
 final class NetworkedIdentityFlowViewControllerTest: XCTestCase {
+    private struct AccessibilityScreenChange {
+        weak var focusView: UIView?
+    }
+
     private var apiClient: NetworkedIdentityAPIClientTestMock!
     private var coordinator: NetworkedIdentityCoordinator!
     private var viewController: NetworkedIdentityFlowViewController!
@@ -19,13 +23,18 @@ final class NetworkedIdentityFlowViewControllerTest: XCTestCase {
     private var delegate: NetworkedIdentityFlowViewControllerDelegateSpy!
     private var otpBodyPhoneNumbers: [String] = []
     private var otpSendingBodyPhoneNumbers: [String] = []
+    private var accessibilityScreenChanges: [AccessibilityScreenChange] = []
 
     override func setUp() {
         super.setUp()
         setUpFlow()
     }
 
-    private func setUpFlow(providedEmailAddress: String? = nil) {
+    private func setUpFlow(
+        providedEmailAddress: String? = nil,
+        identityAPIClient: IdentityAPIClient? = nil
+    ) {
+        accessibilityScreenChanges = []
         apiClient = NetworkedIdentityAPIClientTestMock()
         coordinator = NetworkedIdentityCoordinator(
             apiClient: apiClient,
@@ -33,12 +42,18 @@ final class NetworkedIdentityFlowViewControllerTest: XCTestCase {
                 allowedDocumentTypes: [.passport, .drivingLicense, .idCard],
                 requiresLiveCapture: false
             ),
+            identityAPIClient: identityAPIClient,
             verificationSessionClientSecrets: ["vs_client_secret"]
         )
         viewController = NetworkedIdentityFlowViewController(
             coordinator: coordinator,
             content: makeContent(),
-            providedEmailAddress: providedEmailAddress
+            providedEmailAddress: providedEmailAddress,
+            postAccessibilityNotification: { [weak self] notification, argument in
+                if notification == .screenChanged, let focusView = argument as? UIView {
+                    self?.accessibilityScreenChanges.append(.init(focusView: focusView))
+                }
+            }
         )
         delegate = NetworkedIdentityFlowViewControllerDelegateSpy()
         viewController.delegate = delegate
@@ -362,6 +377,135 @@ final class NetworkedIdentityFlowViewControllerTest: XCTestCase {
         XCTAssertEqual(apiClient.associationToken.requestHistory.count, 0)
     }
 
+    func testContinueAttachesSelectedDocumentAndNotifiesHostOnce() throws {
+        // Given a v8 flow has a reusable document, but the consumer has not selected it
+        let identityAPI = IdentityAPIClientTestMock(verificationSessionId: "vs_123")
+        identityAPI.supportsNetworkedIdentity = true
+        setUpFlow(identityAPIClient: identityAPI)
+        beginExistingConsumerFlow()
+        viewController.didInputFullOtp(newOtp: "123456")
+        waitForState(.documentsPending) {
+            apiClient.confirmVerification.respondToNext(
+                with: .success(consumerSessionResponse(clientSecret: "cs_confirmed", verificationSessionState: .verified))
+            )
+        }
+        let document = identityDocument(id: "id_doc_123")
+        waitForState(.selectDocument) {
+            apiClient.documentList.respondToNext(with: .success(.init(data: [document])))
+        }
+        let continueButton = try XCTUnwrap(
+            viewController.view.descendants(ofType: StripeUICore.Button.self).first {
+                $0.title == String.Localized.continue
+            }
+        )
+        XCTAssertFalse(continueButton.isEnabled)
+
+        // When they select the document and explicitly continue
+        coordinator.selectDocument(document)
+        XCTAssertTrue(continueButton.isEnabled)
+        XCTAssertTrue(apiClient.associationToken.requestHistory.isEmpty)
+        let window = UIWindow(frame: UIScreen.main.bounds)
+        window.rootViewController = viewController
+        window.makeKeyAndVisible()
+        defer {
+            window.isHidden = true
+            window.rootViewController = nil
+        }
+        viewController.viewDidAppear(false)
+        accessibilityScreenChanges = []
+        let target = try XCTUnwrap(continueButton.allTargets.first as? NSObject)
+        let action = try XCTUnwrap(continueButton.actions(forTarget: target, forControlEvent: .touchUpInside)?.first)
+        target.perform(NSSelectorFromString(action), with: continueButton)
+
+        // Then the pending screen prevents another attach or manual-capture race
+        XCTAssertEqual(coordinator.state, .attachmentPending)
+        XCTAssertTrue(viewController.documentSelectionView.isLoading)
+        XCTAssertTrue(delegate.completionResults.isEmpty)
+        XCTAssertEqual(accessibilityScreenChanges.count, 1)
+        XCTAssertTrue(accessibilityScreenChanges.first?.focusView?.isAccessibilityElement == true)
+        XCTAssertEqual(accessibilityScreenChanges.first?.focusView?.accessibilityLabel, "Reusing your identity document")
+        let attachRequested = expectation(description: "Selected document attachment starts")
+        identityAPI.attachNetworkedIdentityDocument.callBackOnRequest { attachRequested.fulfill() }
+        apiClient.associationToken.respondToNext(with: .success(.init(associationToken: "single_use_token")))
+        wait(for: [attachRequested], timeout: 1)
+
+        // When attachment returns the remaining Identity requirements
+        let pageData = StripeAPI.VerificationPageData(
+            id: "vs_123", requirements: .init(errors: [], missing: [.face]),
+            status: .requiresInput, submitted: false, closed: false
+        )
+        waitForState(.completed) {
+            identityAPI.attachNetworkedIdentityDocument.respondToNext(with: .success(pageData))
+        }
+        viewController.cancel()
+
+        // Then the host receives requirements once, not a successful-verification signal
+        XCTAssertEqual(delegate.completionResults.count, 1)
+        XCTAssertEqual(try delegate.completionResults.first?.get(), pageData)
+        XCTAssertEqual(viewController.navigationItem.rightBarButtonItem?.isEnabled, false)
+        XCTAssertEqual(delegate.cancelCount, 0)
+        XCTAssertTrue(delegate.fallbackReasons.isEmpty)
+    }
+
+    func testExplicitManualCaptureWaitsForSkipBeforeCompleting() throws {
+        // Given the v8 flow is still on email entry
+        let identityAPI = IdentityAPIClientTestMock(verificationSessionId: "vs_123")
+        identityAPI.supportsNetworkedIdentity = true
+        setUpFlow(identityAPIClient: identityAPI)
+
+        // When the consumer chooses manual capture twice
+        viewController.chooseManualCapture()
+        viewController.chooseManualCapture()
+
+        // Then only one skip is sent, and no navigation occurs until it finishes
+        XCTAssertEqual(coordinator.state, .skipPending)
+        XCTAssertEqual(identityAPI.networkedIdentitySkip.requestHistory.count, 1)
+        XCTAssertTrue(delegate.completionResults.isEmpty)
+        XCTAssertTrue(delegate.fallbackReasons.isEmpty)
+        let pageData = StripeAPI.VerificationPageData(
+            id: "vs_123", requirements: .init(errors: [], missing: [.idDocumentFront]),
+            status: .requiresInput, submitted: false, closed: false
+        )
+        waitForState(.completed) {
+            identityAPI.networkedIdentitySkip.respondToNext(with: .success(pageData))
+        }
+        XCTAssertEqual(delegate.completionResults.count, 1)
+        XCTAssertEqual(try delegate.completionResults.first?.get(), pageData)
+    }
+
+    func testSkipWhileLoadingDocumentsAnnouncesNewAccessibleStatus() {
+        // Given document loading has already been announced to VoiceOver
+        let identityAPI = IdentityAPIClientTestMock(verificationSessionId: "vs_123")
+        identityAPI.supportsNetworkedIdentity = true
+        setUpFlow(identityAPIClient: identityAPI)
+        beginExistingConsumerFlow()
+        viewController.didInputFullOtp(newOtp: "123456")
+        waitForState(.documentsPending) {
+            apiClient.confirmVerification.respondToNext(
+                with: .success(consumerSessionResponse(clientSecret: "cs_confirmed", verificationSessionState: .verified))
+            )
+        }
+        let window = UIWindow(frame: UIScreen.main.bounds)
+        window.rootViewController = viewController
+        window.makeKeyAndVisible()
+        defer {
+            window.isHidden = true
+            window.rootViewController = nil
+        }
+        viewController.viewDidAppear(false)
+        XCTAssertEqual(accessibilityScreenChanges.count, 1)
+        accessibilityScreenChanges = []
+
+        // When the consumer switches to manual capture while document loading is pending
+        viewController.chooseManualCapture()
+
+        // Then the new skip status is announced, with a nonempty accessible focus target
+        XCTAssertEqual(coordinator.state, .skipPending)
+        XCTAssertEqual(accessibilityScreenChanges.count, 1)
+        XCTAssertTrue(accessibilityScreenChanges.first?.focusView?.isAccessibilityElement == true)
+        XCTAssertEqual(accessibilityScreenChanges.first?.focusView?.accessibilityLabel, "Continuing without Link")
+    }
+
     func testManualCaptureNotifiesHostOnce() throws {
         // When manual verification is selected more than once
         let manualCaptureButton = try XCTUnwrap(
@@ -604,6 +748,14 @@ private final class NetworkedIdentityFlowViewControllerDelegateSpy:
 {
     private(set) var cancelCount = 0
     private(set) var fallbackReasons: [NetworkedIdentityFallbackReason] = []
+    private(set) var completionResults: [Result<StripeAPI.VerificationPageData, Error>] = []
+
+    func networkedIdentityFlowViewController(
+        _ viewController: NetworkedIdentityFlowViewController,
+        didCompleteWith result: Result<StripeAPI.VerificationPageData, Error>
+    ) {
+        completionResults.append(result)
+    }
 
     func networkedIdentityFlowViewControllerDidCancel(
         _ viewController: NetworkedIdentityFlowViewController

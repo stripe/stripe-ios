@@ -18,6 +18,13 @@ final class NetworkedIdentityCoordinatorTest: XCTestCase {
 
     override func setUp() {
         super.setUp()
+        setUpCoordinator()
+    }
+
+    private func setUpCoordinator(
+        identityAPIClient: IdentityAPIClient? = nil,
+        currentTime: @escaping () -> TimeInterval = { 1_800_000_000 }
+    ) {
         apiClient = NetworkedIdentityAPIClientTestMock()
         credentialStore = NetworkedIdentityCredentialStore(
             verificationSessionClientSecrets: ["vs_client_secret"]
@@ -28,8 +35,9 @@ final class NetworkedIdentityCoordinatorTest: XCTestCase {
                 allowedDocumentTypes: [.passport, .drivingLicense, .idCard],
                 requiresLiveCapture: false
             ),
+            identityAPIClient: identityAPIClient,
             credentialStore: credentialStore,
-            currentTime: { 1_800_000_000 }
+            currentTime: currentTime
         )
         delegate = NetworkedIdentityCoordinatorDelegateSpy()
         coordinator.delegate = delegate
@@ -74,11 +82,304 @@ final class NetworkedIdentityCoordinatorTest: XCTestCase {
             )
         }
 
-        // Then selection stops before the currently undefined clone work
+        // Then selection waits for the user to explicitly continue before requesting reuse
         coordinator.selectDocument(identityDocument(id: document.id, country: "CA"))
         XCTAssertEqual(coordinator.state, .selectedDocument)
         XCTAssertEqual(coordinator.selectedDocument, document)
         XCTAssertEqual(apiClient.associationToken.requestHistory.count, 0)
+    }
+
+    func testContinueRequiresV8ClientAndExplicitDocumentSelection() {
+        // Given the existing standalone flow has no Identity mutation client
+        beginSelectedDocumentFlow()
+        coordinator.continueWithSelectedDocument()
+        XCTAssertFalse(coordinator.supportsDocumentAttachment)
+        XCTAssertTrue(apiClient.associationToken.requestHistory.isEmpty)
+
+        // When a v7 Identity client is present, attachment remains disabled
+        let identityClient = IdentityAPIClientTestMock(verificationSessionId: "vs_target")
+        setUpCoordinator(identityAPIClient: identityClient)
+        beginSelectedDocumentFlow()
+        coordinator.continueWithSelectedDocument()
+        XCTAssertTrue(apiClient.associationToken.requestHistory.isEmpty)
+
+        // Then even v8 cannot request a token before the consumer has selected a document
+        identityClient.supportsNetworkedIdentity = true
+        setUpCoordinator(identityAPIClient: identityClient)
+        coordinator.continueWithSelectedDocument()
+        XCTAssertEqual(coordinator.state, .collectEmail)
+        XCTAssertTrue(apiClient.associationToken.requestHistory.isEmpty)
+    }
+
+    func testContinueMintsTokenThenAttachesWithConfirmedCredentialsAndCleansUp() throws {
+        let identityClient = enableDocumentAttachment()
+        beginSelectedDocumentFlow()
+        XCTAssertTrue(apiClient.associationToken.requestHistory.isEmpty)
+
+        // When Continue is tapped repeatedly, or manual capture is tapped while attaching
+        coordinator.continueWithSelectedDocument()
+        coordinator.continueWithSelectedDocument()
+        coordinator.chooseManualCapture()
+
+        // Then one token is minted for the actual selected document and latest confirmed secret
+        XCTAssertEqual(coordinator.state, .attachmentPending)
+        XCTAssertEqual(apiClient.associationToken.requestHistory, [
+            .init(
+                identityDocumentID: "id_doc_selected",
+                consumerSessionClientSecret: "cs_confirmed",
+                consumerPublishableKey: "pk_consumer_lookup"
+            ),
+        ])
+        XCTAssertTrue(identityClient.networkedIdentitySkip.requestHistory.isEmpty)
+        XCTAssertTrue(identityClient.attachNetworkedIdentityDocument.requestHistory.isEmpty)
+
+        respondWithAssociationToken(identityClient: identityClient)
+        XCTAssertEqual(identityClient.attachNetworkedIdentityDocument.requestHistory, ["reuse_token"])
+        let pageData = actionPageData()
+        waitForTransition(to: .completed) {
+            identityClient.attachNetworkedIdentityDocument.respondToNext(with: .success(pageData))
+        }
+
+        XCTAssertEqual(try delegate.completions.first?.get(), pageData)
+        XCTAssertEqual(delegate.completions.count, 1)
+        XCTAssertEqual(delegate.fullCaptureFallbackCount, 0)
+        XCTAssertTrue(credentialStore.isEmpty)
+        XCTAssertNil(coordinator.selectedDocument)
+        XCTAssertNil(coordinator.emailAddress)
+        XCTAssertTrue(coordinator.availableDocuments.isEmpty)
+        XCTAssertEqual(apiClient.logOut.requestHistory.first?.consumerSessionClientSecret, "cs_confirmed")
+        coordinator.continueWithSelectedDocument()
+        coordinator.chooseManualCapture()
+        coordinator.cancel()
+        XCTAssertEqual(coordinator.state, .completed)
+        XCTAssertEqual(apiClient.associationToken.requestHistory.count, 1)
+        XCTAssertEqual(apiClient.logOut.requestHistory.count, 1)
+    }
+
+    func testContinueRechecksDocumentExpirationBeforeMintingToken() {
+        // Given a selected document was eligible when it was listed
+        let identityClient = IdentityAPIClientTestMock(verificationSessionId: "vs_target")
+        identityClient.supportsNetworkedIdentity = true
+        var now: TimeInterval = 1_800_000_000
+        setUpCoordinator(identityAPIClient: identityClient, currentTime: { now })
+        beginSelectedDocumentFlow()
+
+        // When that document expires while the consumer is deciding whether to continue
+        now = 1_900_000_000
+        coordinator.continueWithSelectedDocument()
+
+        // Then manual capture resumes without minting or attaching an expired document
+        XCTAssertEqual(coordinator.state, .fullCaptureFallback)
+        XCTAssertEqual(coordinator.fallbackReason, .unavailable)
+        XCTAssertEqual(delegate.fullCaptureFallbackCount, 1)
+        XCTAssertTrue(apiClient.associationToken.requestHistory.isEmpty)
+        XCTAssertTrue(identityClient.attachNetworkedIdentityDocument.requestHistory.isEmpty)
+        XCTAssertTrue(identityClient.networkedIdentitySkip.requestHistory.isEmpty)
+        XCTAssertTrue(credentialStore.isEmpty)
+    }
+
+    func testEmptyOrFailedAssociationTokenNeverAttaches() {
+        let tokenResults: [Result<NetworkedIdentityAssociationTokenResponse, Error>] = [
+            .success(.init(associationToken: "")),
+            .failure(consumerError(code: "css_sensitive")),
+        ]
+        for result in tokenResults {
+            let identityClient = enableDocumentAttachment()
+            beginSelectedDocumentFlow()
+            coordinator.continueWithSelectedDocument()
+            waitForTransition(to: .completed) {
+                apiClient.associationToken.respondToNext(with: result)
+            }
+
+            XCTAssertTrue(identityClient.attachNetworkedIdentityDocument.requestHistory.isEmpty)
+            XCTAssertTrue(identityClient.networkedIdentitySkip.requestHistory.isEmpty)
+            XCTAssertEqual(delegate.actionErrors, [.tokenUnavailable])
+            XCTAssertTrue(credentialStore.isEmpty)
+        }
+    }
+
+    func testAttachFailureIsSanitizedAndDoesNotReplayOrSkip() {
+        let identityClient = enableDocumentAttachment()
+        beginSelectedDocumentFlow()
+        coordinator.continueWithSelectedDocument()
+        respondWithAssociationToken(identityClient: identityClient)
+
+        // When redemption fails with a potentially sensitive backend error
+        waitForTransition(to: .completed) {
+            identityClient.attachNetworkedIdentityDocument.respondToNext(
+                with: .failure(consumerError(code: "css_sensitive_reuse_token"))
+            )
+        }
+        coordinator.continueWithSelectedDocument()
+        coordinator.chooseManualCapture()
+
+        // Then no possibly consumed capability is replayed, and only a safe error reaches the host
+        XCTAssertEqual(delegate.actionErrors, [.attachmentFailed])
+        XCTAssertEqual(apiClient.associationToken.requestHistory.count, 1)
+        XCTAssertEqual(identityClient.attachNetworkedIdentityDocument.requestHistory.count, 1)
+        XCTAssertTrue(identityClient.networkedIdentitySkip.requestHistory.isEmpty)
+        XCTAssertEqual(delegate.fullCaptureFallbackCount, 0)
+        XCTAssertTrue(credentialStore.isEmpty)
+    }
+
+    func testAttachRejectsResponseForAnotherVerificationSession() {
+        let identityClient = enableDocumentAttachment()
+        beginSelectedDocumentFlow()
+        coordinator.continueWithSelectedDocument()
+        respondWithAssociationToken(identityClient: identityClient)
+        waitForTransition(to: .completed) {
+            identityClient.attachNetworkedIdentityDocument.respondToNext(
+                with: .success(actionPageData(id: "vs_unrelated"))
+            )
+        }
+        XCTAssertEqual(delegate.actionErrors, [.unexpectedSession])
+        XCTAssertTrue(credentialStore.isEmpty)
+    }
+
+    func testAttachmentUnavailableFallsBackWithoutRetryingOrPersistingSkip() {
+        let identityClient = enableDocumentAttachment()
+        beginSelectedDocumentFlow()
+        coordinator.continueWithSelectedDocument()
+        respondWithAssociationToken(identityClient: identityClient)
+
+        // When the backend explicitly says Networked Identity is unavailable
+        waitForTransition(to: .fullCaptureFallback) {
+            identityClient.attachNetworkedIdentityDocument.respondToNext(
+                with: .failure(consumerError(code: "networked_identity_unavailable"))
+            )
+        }
+
+        // Then normal capture resumes without replaying the token or saving an explicit skip
+        XCTAssertEqual(coordinator.fallbackReason, .unavailable)
+        XCTAssertEqual(delegate.fullCaptureFallbackCount, 1)
+        XCTAssertTrue(delegate.completions.isEmpty)
+        XCTAssertTrue(identityClient.networkedIdentitySkip.requestHistory.isEmpty)
+        XCTAssertEqual(apiClient.associationToken.requestHistory.count, 1)
+        XCTAssertEqual(identityClient.attachNetworkedIdentityDocument.requestHistory.count, 1)
+        XCTAssertTrue(credentialStore.isEmpty)
+        XCTAssertEqual(apiClient.logOut.requestHistory.count, 1)
+    }
+
+    func testCancelPendingTokenPreventsAttachment() {
+        let identityClient = enableDocumentAttachment()
+        beginSelectedDocumentFlow()
+        coordinator.continueWithSelectedDocument()
+        coordinator.cancel()
+        processPendingResponse {
+            apiClient.associationToken.respondToNext(with: .success(.init(associationToken: "late_token")))
+        }
+        XCTAssertEqual(coordinator.state, .cancelled)
+        XCTAssertTrue(identityClient.attachNetworkedIdentityDocument.requestHistory.isEmpty)
+        XCTAssertTrue(identityClient.networkedIdentitySkip.requestHistory.isEmpty)
+        XCTAssertTrue(delegate.completions.isEmpty)
+        XCTAssertTrue(credentialStore.isEmpty)
+    }
+
+    func testCancelPendingAttachmentIgnoresCompletionWithoutUndoingIt() {
+        let identityClient = enableDocumentAttachment()
+        beginSelectedDocumentFlow()
+        coordinator.continueWithSelectedDocument()
+        respondWithAssociationToken(identityClient: identityClient)
+        coordinator.cancel()
+        processPendingResponse {
+            identityClient.attachNetworkedIdentityDocument.respondToNext(with: .success(actionPageData()))
+        }
+        XCTAssertEqual(coordinator.state, .cancelled)
+        XCTAssertTrue(delegate.completions.isEmpty)
+        XCTAssertTrue(identityClient.networkedIdentitySkip.requestHistory.isEmpty)
+        XCTAssertEqual(apiClient.logOut.requestHistory.count, 1)
+    }
+
+    func testExplicitManualCaptureSkipsOnceAndReturnsServerRequirements() throws {
+        let identityClient = enableDocumentAttachment()
+        beginExistingConsumerFlow()
+        coordinator.chooseManualCapture()
+        coordinator.chooseManualCapture()
+        coordinator.continueWithSelectedDocument()
+        XCTAssertEqual(coordinator.state, .skipPending)
+        XCTAssertEqual(identityClient.networkedIdentitySkip.requestHistory.count, 1)
+        let pageData = actionPageData()
+        waitForTransition(to: .completed) {
+            identityClient.networkedIdentitySkip.respondToNext(with: .success(pageData))
+        }
+        XCTAssertEqual(try delegate.completions.first?.get(), pageData)
+        XCTAssertEqual(delegate.completions.count, 1)
+        XCTAssertEqual(delegate.fullCaptureFallbackCount, 0)
+        XCTAssertTrue(apiClient.associationToken.requestHistory.isEmpty)
+        XCTAssertTrue(credentialStore.isEmpty)
+        XCTAssertEqual(apiClient.logOut.requestHistory.first?.consumerSessionClientSecret, "cs_started")
+    }
+
+    func testSkipFailureIsSanitizedAndNotRetriedOrReportedAsFallback() {
+        let identityClient = enableDocumentAttachment()
+        coordinator.chooseManualCapture()
+        waitForTransition(to: .completed) {
+            identityClient.networkedIdentitySkip.respondToNext(
+                with: .failure(consumerError(code: "css_sensitive"))
+            )
+        }
+        coordinator.chooseManualCapture()
+        XCTAssertEqual(delegate.actionErrors, [.skipFailed])
+        XCTAssertEqual(delegate.fullCaptureFallbackCount, 0)
+        XCTAssertEqual(identityClient.networkedIdentitySkip.requestHistory.count, 1)
+        XCTAssertTrue(credentialStore.isEmpty)
+    }
+
+    func testCancelPendingSkipIgnoresLateServerResult() {
+        let identityClient = enableDocumentAttachment()
+        coordinator.chooseManualCapture()
+        coordinator.cancel()
+        processPendingResponse {
+            identityClient.networkedIdentitySkip.respondToNext(with: .success(actionPageData()))
+        }
+        XCTAssertEqual(coordinator.state, .cancelled)
+        XCTAssertTrue(delegate.completions.isEmpty)
+        XCTAssertEqual(delegate.fullCaptureFallbackCount, 0)
+        XCTAssertEqual(identityClient.networkedIdentitySkip.requestHistory.count, 1)
+    }
+
+    func testAutomaticNoAccountFallbackDoesNotPersistAnExplicitSkip() {
+        let identityClient = enableDocumentAttachment()
+        coordinator.start(emailAddress: "new@example.com")
+        waitForTransition(to: .fullCaptureFallback) {
+            apiClient.lookup.respondToNext(with: .success(.notFound(.init(errorMessage: "No account found"))))
+        }
+        XCTAssertEqual(coordinator.fallbackReason, .noLinkAccount)
+        XCTAssertEqual(delegate.fullCaptureFallbackCount, 1)
+        XCTAssertTrue(identityClient.networkedIdentitySkip.requestHistory.isEmpty)
+        XCTAssertTrue(delegate.completions.isEmpty)
+    }
+
+    func testSkipPendingLogsOutLateRotatedCredentialsBeforeSkipResolves() {
+        let identityClient = enableDocumentAttachment()
+        beginExistingConsumerLookup()
+        coordinator.chooseManualCapture()
+        XCTAssertEqual(coordinator.state, .skipPending)
+        let lateCredentialsLoggedOut = expectation(description: "Late credentials cleaned up while skip is pending")
+        apiClient.logOut.callBackOnRequest {
+            lateCredentialsLoggedOut.fulfill()
+        }
+
+        // When the pending SMS request returns fresh credentials before skip completes
+        apiClient.startVerification.respondToNext(
+            with: .success(
+                consumerSessionResponse(
+                    clientSecret: "cs_late_start",
+                    authSessionClientSecret: "auth_late_start"
+                )
+            )
+        )
+        wait(for: [lateCredentialsLoggedOut], timeout: 1)
+
+        // Then they are not left alive while waiting on the separate Identity request
+        XCTAssertEqual(coordinator.state, .skipPending)
+        XCTAssertEqual(apiClient.logOut.requestHistory.first?.consumerSessionClientSecret, "cs_late_start")
+        XCTAssertEqual(
+            apiClient.logOut.requestHistory.first?.verificationSessionClientSecrets,
+            ["vs_client_secret", "auth_late_start"]
+        )
+        XCTAssertTrue(delegate.completions.isEmpty)
+        XCTAssertEqual(identityClient.networkedIdentitySkip.pendingRequestCount, 1)
     }
 
     func testCanChangeSelectedDocumentBeforeReuse() {
@@ -1233,6 +1534,61 @@ final class NetworkedIdentityCoordinatorTest: XCTestCase {
 }
 
 private extension NetworkedIdentityCoordinatorTest {
+    func enableDocumentAttachment() -> IdentityAPIClientTestMock {
+        let identityClient = IdentityAPIClientTestMock(verificationSessionId: "vs_target")
+        identityClient.supportsNetworkedIdentity = true
+        setUpCoordinator(identityAPIClient: identityClient)
+        return identityClient
+    }
+
+    func beginSelectedDocumentFlow() {
+        beginExistingConsumerFlow()
+        coordinator.submitOTP("123456")
+        waitForTransition(to: .documentsPending) {
+            apiClient.confirmVerification.respondToNext(
+                with: .success(
+                    consumerSessionResponse(clientSecret: "cs_confirmed", verificationState: .verified)
+                )
+            )
+        }
+        let document = identityDocument(id: "id_doc_selected")
+        waitForTransition(to: .selectDocument) {
+            apiClient.documentList.respondToNext(with: .success(.init(data: [document])))
+        }
+        coordinator.selectDocument(document)
+    }
+
+    func respondWithAssociationToken(identityClient: IdentityAPIClientTestMock) {
+        let attachmentRequested = expectation(description: "Token is exchanged for document attachment")
+        identityClient.attachNetworkedIdentityDocument.callBackOnRequest {
+            attachmentRequested.fulfill()
+        }
+        apiClient.associationToken.respondToNext(with: .success(.init(associationToken: "reuse_token")))
+        wait(for: [attachmentRequested], timeout: 1)
+    }
+
+    func actionPageData(id: String = "vs_target") -> StripeAPI.VerificationPageData {
+        .init(
+            id: id,
+            requirements: .init(errors: [], missing: [.face]),
+            status: .requiresInput,
+            submitted: false,
+            closed: false
+        )
+    }
+
+    func processPendingResponse(_ action: () -> Void) {
+        let unexpectedTransition = expectation(description: "Cancelled flow ignores the queued response")
+        unexpectedTransition.isInverted = true
+        delegate.onTransition = { _ in
+            unexpectedTransition.fulfill()
+        }
+        action()
+        // Futures first dispatch through their private queue before reaching the main queue.
+        wait(for: [unexpectedTransition], timeout: 0.1)
+        delegate.onTransition = nil
+    }
+
     func beginExistingConsumerFlow() {
         beginExistingConsumerLookup()
 
@@ -1427,6 +1783,14 @@ private final class NetworkedIdentityCoordinatorDelegateSpy:
 {
     var onTransition: ((NetworkedIdentityState) -> Void)?
     private(set) var fullCaptureFallbackCount = 0
+    private(set) var completions: [Result<StripeAPI.VerificationPageData, Error>] = []
+
+    var actionErrors: [NetworkedIdentityActionError] {
+        completions.compactMap { result in
+            guard case .failure(let error) = result else { return nil }
+            return error as? NetworkedIdentityActionError
+        }
+    }
 
     func networkedIdentityCoordinator(
         _ coordinator: NetworkedIdentityCoordinator,
@@ -1439,6 +1803,13 @@ private final class NetworkedIdentityCoordinatorDelegateSpy:
         _ coordinator: NetworkedIdentityCoordinator
     ) {
         fullCaptureFallbackCount += 1
+    }
+
+    func networkedIdentityCoordinator(
+        _ coordinator: NetworkedIdentityCoordinator,
+        didCompleteWith result: Result<StripeAPI.VerificationPageData, Error>
+    ) {
+        completions.append(result)
     }
 }
 

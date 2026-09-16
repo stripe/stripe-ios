@@ -37,6 +37,12 @@ protocol NetworkedIdentityAPIClient: AnyObject {
         consumerPublishableKey: String
     ) -> Promise<NetworkedIdentityAssociationTokenResponse>
 
+    func createSaveAssociationToken(
+        verificationSessionID: String,
+        consumerSessionClientSecret: String,
+        consumerPublishableKey: String
+    ) -> Promise<NetworkedIdentityAssociationTokenResponse>
+
     func logOut(
         consumerSessionClientSecret: String,
         verificationSessionClientSecrets: [String]?,
@@ -58,6 +64,7 @@ final class NetworkedIdentityAPIClientImpl: NetworkedIdentityAPIClient {
     }
 
     private static let requestSurfaceParameter = "request_surface"
+    // #TODO - Networked Identity: Replace with the mobile request surface once its value is approved.
     private static let requestSurface = "web_identity_product"
     private static let signUpConsentAction = "entered_phone_number_email_clicked_save_with_link_identity"
     private static let requestedWithHeader = "X-Requested-With"
@@ -196,6 +203,24 @@ final class NetworkedIdentityAPIClientImpl: NetworkedIdentityAPIClient {
             parameters: consumerSessionParameters(
                 consumerSessionClientSecret: consumerSessionClientSecret
             ),
+            authorization: .consumer(consumerPublishableKey)
+        )
+    }
+
+    func createSaveAssociationToken(
+        verificationSessionID: String,
+        consumerSessionClientSecret: String,
+        consumerPublishableKey: String
+    ) -> Promise<NetworkedIdentityAssociationTokenResponse> {
+        var parameters = consumerSessionParameters(
+            consumerSessionClientSecret: consumerSessionClientSecret
+        )
+        parameters["verification_session"] = verificationSessionID
+        // #TODO - Networked Identity: Confirm the draft save-token endpoint before rollout.
+        // The short-lived token is distinct from a saved-document reuse token and must not be cached or replayed.
+        return post(
+            pathComponents: ["consumers", "identity_documents", "save_association_token"],
+            parameters: parameters,
             authorization: .consumer(consumerPublishableKey)
         )
     }

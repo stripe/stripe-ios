@@ -35,6 +35,7 @@ final class VerificationSheetFlowControllerMock: VerificationSheetFlowController
     private(set) var replacedWithViewController: UIViewController?
 
     private(set) var didPopToScreenWithField: StripeAPI.VerificationPageFieldType?
+    private(set) var networkedIdentityPresentationResetCount = 0
 
     init(
         uncollectedFields: Set<StripeAPI.VerificationPageFieldType> = []
@@ -54,6 +55,10 @@ final class VerificationSheetFlowControllerMock: VerificationSheetFlowController
         transitionedWithUpdateDataResult = updateDataResult
         didTransitionToNextScreenExp.fulfill()
         completion()
+    }
+
+    func resetNetworkedIdentityForNewPresentation() {
+        networkedIdentityPresentationResetCount += 1
     }
 
     func transitionToCountryNotListedScreen(

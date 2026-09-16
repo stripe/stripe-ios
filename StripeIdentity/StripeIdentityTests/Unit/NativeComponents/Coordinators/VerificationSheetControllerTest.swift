@@ -67,6 +67,7 @@ final class VerificationSheetControllerTest: XCTestCase {
 
         // Verify 1 request made with secret
         XCTAssertEqual(mockAPIClient.verificationPage.requestHistory.count, 1)
+        XCTAssertEqual(mockFlowController.networkedIdentityPresentationResetCount, 0)
 
         // Verify result is nil until API responds to request
         XCTAssertNil(controller.verificationPageResponse)
@@ -81,6 +82,139 @@ final class VerificationSheetControllerTest: XCTestCase {
         XCTAssertEqual(try? controller.verificationPageResponse?.get(), mockResponse)
         XCTAssertTrue(mockMLModelLoader.didStartLoadingDocumentModels)
         XCTAssertTrue(mockMLModelLoader.didStartLoadingFaceModels)
+    }
+
+    func testNetworkedIdentityResultPreservesAttachedFilesOnLaterUpdates() throws {
+        // Given document and selfie requirements were satisfied by an NI attachment
+        let page = try VerificationPageMock.response200.make().copyWithNewMissings(
+            newMissings: [.biometricConsent, .idDocumentFront, .idDocumentBack, .face, .phoneOtp]
+        )
+        controller.verificationPageResponse = .success(page)
+        controller.collectedData = .init(biometricConsent: true, phoneOtp: "old-code")
+        let result = try VerificationPageDataMock.noErrorsWithMissings(with: [.phoneOtp])
+
+        // When the server response is handed back to the ordinary Identity flow
+        controller.continueAfterNetworkedIdentity(with: .success(result)) { self.exp.fulfill() }
+        wait(for: [exp], timeout: 1)
+
+        // Then stale missing values are cleared, but valid local consent is retained
+        XCTAssertNil(controller.collectedData.phoneOtp)
+        XCTAssertEqual(controller.collectedData.biometricConsent, true)
+        XCTAssertEqual(try controller.verificationPageResponse?.get().requirements.missing, [.phoneOtp])
+        XCTAssertTrue(mockAPIClient.verificationSessionSubmit.requestHistory.isEmpty)
+        XCTAssertFalse(controller.isVerificationPageSubmitted)
+
+        // ...and collecting the remaining field does not clear the server-owned images
+        controller.saveAndTransition(from: .phoneOtp, collectedData: .init(phoneOtp: "123456"), completion: {})
+        let clearData = try XCTUnwrap(mockAPIClient.verificationPageData.requestHistory.last?.clearData)
+        XCTAssertEqual(clearData.idDocumentFront, false)
+        XCTAssertEqual(clearData.idDocumentBack, false)
+        XCTAssertEqual(clearData.face, false)
+        XCTAssertEqual(clearData.biometricConsent, false)
+    }
+
+    func testNetworkedIdentityEmptyRequirementsSubmitBeforeSuccess() throws {
+        // Given attach or resume has no remaining fields but has not submitted the VS
+        controller.verificationPageResponse = .success(try VerificationPageMock.response200.make())
+        let result = try VerificationPageDataMock.noErrors.make()
+
+        // When NI completes, it must go through the existing submit API
+        controller.continueAfterNetworkedIdentity(with: .success(result)) { self.exp.fulfill() }
+        XCTAssertEqual(mockAPIClient.verificationSessionSubmit.requestHistory.count, 1)
+        XCTAssertFalse(controller.isVerificationPageSubmitted)
+        XCTAssertNil(mockFlowController.transitionedWithUpdateDataResult)
+
+        // Then completion is only reported after the submit response
+        let submitted = try VerificationPageDataMock.submitted.make()
+        mockAPIClient.verificationSessionSubmit.respondToRequests(with: .success(submitted))
+        wait(for: [exp], timeout: 1)
+        XCTAssertTrue(controller.isVerificationPageSubmitted)
+        XCTAssertEqual(try mockFlowController.transitionedWithUpdateDataResult?.get(), submitted)
+    }
+
+    func testNetworkedIdentityValidationErrorDoesNotSubmitOrReplaceRequirements() throws {
+        // Given the backend rejected the mutation
+        let page = try VerificationPageMock.response200.make()
+        controller.verificationPageResponse = .success(page)
+        let result = try VerificationPageDataMock.response200.make()
+        XCTAssertFalse(result.requirements.errors.isEmpty)
+
+        // When the response returns to the host
+        controller.continueAfterNetworkedIdentity(with: .success(result)) { self.exp.fulfill() }
+        wait(for: [exp], timeout: 1)
+
+        // Then it is routed as an error without a submit or fabricated state change
+        XCTAssertEqual(try controller.verificationPageResponse?.get(), page)
+        XCTAssertTrue(mockAPIClient.verificationSessionSubmit.requestHistory.isEmpty)
+        XCTAssertFalse(controller.isVerificationPageSubmitted)
+        XCTAssertEqual(try mockFlowController.transitionedWithUpdateDataResult?.get(), result)
+    }
+
+    func testNetworkedIdentityRequestFailureDoesNotSubmit() throws {
+        let page = try VerificationPageMock.response200.make()
+        controller.verificationPageResponse = .success(page)
+        let error = NSError(domain: "NetworkedIdentityTest", code: 1)
+
+        controller.continueAfterNetworkedIdentity(with: .failure(error)) { self.exp.fulfill() }
+        wait(for: [exp], timeout: 1)
+
+        XCTAssertEqual(try controller.verificationPageResponse?.get(), page)
+        XCTAssertTrue(mockAPIClient.verificationSessionSubmit.requestHistory.isEmpty)
+        XCTAssertFalse(controller.isVerificationPageSubmitted)
+        guard case .failure(let receivedError) = mockFlowController.transitionedWithUpdateDataResult else {
+            return XCTFail("Expected the NI request error")
+        }
+        XCTAssertEqual(receivedError as NSError, error)
+    }
+
+    func testNetworkedIdentityAlreadySubmittedResultDoesNotResubmit() throws {
+        controller.verificationPageResponse = .success(try VerificationPageMock.response200.make())
+        let result = try VerificationPageDataMock.submitted.make()
+
+        controller.continueAfterNetworkedIdentity(with: .success(result)) { self.exp.fulfill() }
+        wait(for: [exp], timeout: 1)
+
+        XCTAssertTrue(mockAPIClient.verificationSessionSubmit.requestHistory.isEmpty)
+        XCTAssertTrue(controller.isVerificationPageSubmitted)
+        XCTAssertEqual(try mockFlowController.transitionedWithUpdateDataResult?.get(), result)
+    }
+
+    func testNetworkedIdentityRejectsCanceledOrUnwritableSessions() throws {
+        let cases: [(StripeAPI.VerificationPage.Status, Bool, Bool)] = [
+            (.canceled, false, false),
+            (.canceled, true, true),
+            (.requiresInput, false, true),
+            (.processing, false, false),
+            (.verified, false, false),
+            (.requiresInput, true, false),
+        ]
+        for (status, submitted, closed) in cases {
+            // Given an action response is not writable and is not a valid completed flow
+            let page = try VerificationPageMock.response200.make()
+            let flow = VerificationSheetFlowControllerMock()
+            let sheet = VerificationSheetController(
+                apiClient: mockAPIClient,
+                flowController: flow,
+                mlModelLoader: mockMLModelLoader,
+                analyticsClient: identityAnalyticsClient
+            )
+            sheet.verificationPageResponse = .success(page)
+            let response = StripeAPI.VerificationPageData(
+                id: page.id, requirements: .init(errors: [], missing: []),
+                status: status, submitted: submitted, closed: closed
+            )
+
+            // When NI hands the response to the host
+            sheet.continueAfterNetworkedIdentity(with: .success(response), completion: {})
+
+            // Then there is no write, fabricated success, or cached-requirements change
+            XCTAssertTrue(mockAPIClient.verificationSessionSubmit.requestHistory.isEmpty)
+            XCTAssertFalse(sheet.isVerificationPageSubmitted)
+            XCTAssertEqual(try sheet.verificationPageResponse?.get(), page)
+            guard case .failure = flow.transitionedWithUpdateDataResult else {
+                return XCTFail("Expected a terminal state error for \(status)")
+            }
+        }
     }
 
     func testLoadSubmittedValidResponse() throws {
@@ -133,6 +267,7 @@ final class VerificationSheetControllerTest: XCTestCase {
     func testLoadAndUpdateUI() throws {
         let mockResponse = try VerificationPageMock.response200.make()
         controller.loadAndUpdateUI(skipTestMode: true)
+        XCTAssertEqual(mockFlowController.networkedIdentityPresentationResetCount, 1)
 
         // Respond to request with success
         mockAPIClient.verificationPage.respondToRequests(with: .success(mockResponse))

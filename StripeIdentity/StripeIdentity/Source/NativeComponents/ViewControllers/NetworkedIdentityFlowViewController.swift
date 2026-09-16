@@ -17,6 +17,11 @@ protocol NetworkedIdentityFlowViewControllerDelegate: AnyObject {
         _ viewController: NetworkedIdentityFlowViewController,
         didRequestFullCapture reason: NetworkedIdentityFallbackReason
     )
+
+    func networkedIdentityFlowViewController(
+        _ viewController: NetworkedIdentityFlowViewController,
+        didCompleteWith result: Result<StripeAPI.VerificationPageData, Error>
+    )
 }
 
 /// Presents the contract-backed portion of Networked Identity without deciding how it enters
@@ -47,6 +52,7 @@ final class NetworkedIdentityFlowViewController: UIViewController {
             let loadingBody: String
             let label: NetworkedIdentityDocumentSelectionView.LabelProvider
             let accessibilityLabel: NetworkedIdentityDocumentSelectionView.AccessibilityLabelProvider
+            var continueButtonText: String = String.Localized.continue
         }
 
         let email: Email
@@ -68,10 +74,13 @@ final class NetworkedIdentityFlowViewController: UIViewController {
         case otp
         case documentLoading
         case documents
+        case attachmentPending
+        case skipPending
     }
 
     private let coordinator: NetworkedIdentityCoordinator
     private let content: Content
+    private let postAccessibilityNotification: (UIAccessibility.Notification, Any?) -> Void
     private let flowView = IdentityFlowView()
     private var displayedPhoneNumber: String?
     private var displayedOTPBody: String?
@@ -93,10 +102,14 @@ final class NetworkedIdentityFlowViewController: UIViewController {
     init(
         coordinator: NetworkedIdentityCoordinator,
         content: Content = .networkedIdentity,
-        providedEmailAddress: String? = nil
+        providedEmailAddress: String? = nil,
+        postAccessibilityNotification: @escaping (UIAccessibility.Notification, Any?) -> Void = {
+            UIAccessibility.post(notification: $0, argument: $1)
+        }
     ) {
         self.coordinator = coordinator
         self.content = content
+        self.postAccessibilityNotification = postAccessibilityNotification
         emailView = NetworkedIdentityEmailView(bodyText: content.email.body)
         super.init(nibName: nil, bundle: nil)
 
@@ -299,6 +312,13 @@ private extension NetworkedIdentityFlowViewController {
             renderDocumentLoading()
         case .selectDocument, .selectedDocument:
             renderDocuments()
+        case .attachmentPending, .skipPending:
+            renderActionPending()
+        case .completed:
+            // Completion delivers the server requirements to the host, not verification success.
+            // The host may still be submitting; don't leave an enabled close action on this
+            // terminal screen while it waits to be replaced by the ordinary Identity flow.
+            navigationItem.rightBarButtonItem?.isEnabled = false
         case .fullCaptureFallback:
             // The coordinator's dedicated fallback callback carries the reason.
             break
@@ -424,6 +444,20 @@ private extension NetworkedIdentityFlowViewController {
             labelProvider: content.documents.label,
             accessibilityLabelProvider: content.documents.accessibilityLabel
         )
+        var buttons: [IdentityFlowView.ViewModel.Button] = []
+        if coordinator.supportsDocumentAttachment {
+            buttons.append(
+                .init(
+                    text: content.documents.continueButtonText,
+                    state: coordinator.selectedDocument == nil ? .disabled : .enabled,
+                    configuration: .networkedIdentityPrimary(),
+                    didTap: { [weak self] in
+                        self?.coordinator.continueWithSelectedDocument()
+                    }
+                )
+            )
+        }
+        buttons.append(manualCaptureButton())
         configureFlow(
             with: .init(
                 headerViewModel: plainHeader(
@@ -431,7 +465,7 @@ private extension NetworkedIdentityFlowViewController {
                     topInset: NetworkedIdentityUI.compactHeaderTopInset
                 ),
                 contentView: documentSelectionView,
-                buttons: [manualCaptureButton()]
+                buttons: buttons
             )
         )
         announceScreenChangeIfNeeded(
@@ -440,10 +474,28 @@ private extension NetworkedIdentityFlowViewController {
         )
 
         // The preceding Identity welcome screen discloses sharing document/selfie data.
-        // #TODO - Networked Identity: Continue into clone once its API contract is available;
-        // the current product does not require a separate granular-attribute consent screen.
+        // Explicit Continue mints and redeems the selected document's one-time capability.
         // #TODO - Networked Identity: Replace the provisional list treatment when a final
         // multi-document mobile frame is approved.
+    }
+
+    func renderActionPending() {
+        visibleStep = .documents
+        let title = coordinator.state == .skipPending
+            ? STPLocalizedString("Continuing without Link", "Loading title when skipping Link identity reuse")
+            : STPLocalizedString("Reusing your identity document", "Loading title when attaching a saved identity document")
+        documentSelectionView.configureLoading(bodyText: "", accessibilityLabel: title)
+        configureFlow(
+            with: .init(
+                headerViewModel: plainHeader(title: title),
+                contentView: documentSelectionView,
+                buttons: []
+            )
+        )
+        announceScreenChangeIfNeeded(
+            coordinator.state == .skipPending ? .skipPending : .attachmentPending,
+            focusView: documentSelectionView.accessibilityFocusView
+        )
     }
 
     func renderDocumentLoading() {
@@ -522,7 +574,7 @@ private extension NetworkedIdentityFlowViewController {
         announcedAccessibilityScreen = pendingAccessibilityScreen
         self.pendingAccessibilityScreen = nil
         pendingAccessibilityFocusView = nil
-        UIAccessibility.post(notification: .screenChanged, argument: focusView)
+        postAccessibilityNotification(.screenChanged, focusView)
     }
 
     private func announceInvalidOTPErrorIfNeeded() {
@@ -530,10 +582,7 @@ private extension NetworkedIdentityFlowViewController {
             return
         }
         hasAnnouncedCurrentOTPError = true
-        UIAccessibility.post(
-            notification: .announcement,
-            argument: content.otp.invalidCodeMessage
-        )
+        postAccessibilityNotification(.announcement, content.otp.invalidCodeMessage)
     }
 
     func clearOTPView() {
@@ -557,6 +606,15 @@ private extension NetworkedIdentityFlowViewController {
 // MARK: - Coordinator delegate
 
 extension NetworkedIdentityFlowViewController: NetworkedIdentityCoordinatorDelegate {
+    func networkedIdentityCoordinator(
+        _ coordinator: NetworkedIdentityCoordinator,
+        didCompleteWith result: Result<StripeAPI.VerificationPageData, Error>
+    ) {
+        guard !hasFinished else { return }
+        hasFinished = true
+        delegate?.networkedIdentityFlowViewController(self, didCompleteWith: result)
+    }
+
     func networkedIdentityCoordinator(
         _ coordinator: NetworkedIdentityCoordinator,
         didTransitionTo state: NetworkedIdentityState

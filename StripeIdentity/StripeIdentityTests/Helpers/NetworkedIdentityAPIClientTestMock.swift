@@ -4,7 +4,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(STP) @testable import StripeCore
 
 @testable import StripeIdentity
 
@@ -26,6 +26,12 @@ final class NetworkedIdentityAPIClientTestMock: NetworkedIdentityAPIClient {
 
     struct AssociationTokenRequest: Equatable {
         let identityDocumentID: String
+        let consumerSessionClientSecret: String
+        let consumerPublishableKey: String
+    }
+
+    struct SaveAssociationTokenRequest: Equatable {
+        let verificationSessionID: String
         let consumerSessionClientSecret: String
         let consumerPublishableKey: String
     }
@@ -53,6 +59,9 @@ final class NetworkedIdentityAPIClientTestMock: NetworkedIdentityAPIClient {
     >()
     let associationToken = NetworkedIdentityMockAPIRequests<
         AssociationTokenRequest, NetworkedIdentityAssociationTokenResponse
+    >()
+    let saveAssociationToken = NetworkedIdentityMockAPIRequests<
+        SaveAssociationTokenRequest, NetworkedIdentityAssociationTokenResponse
     >()
     let logOut = NetworkedIdentityMockAPIRequests<
         LogOutRequest, NetworkedIdentityConsumerSessionResponse
@@ -143,6 +152,20 @@ final class NetworkedIdentityAPIClientTestMock: NetworkedIdentityAPIClient {
         )
     }
 
+    func createSaveAssociationToken(
+        verificationSessionID: String,
+        consumerSessionClientSecret: String,
+        consumerPublishableKey: String
+    ) -> Promise<NetworkedIdentityAssociationTokenResponse> {
+        saveAssociationToken.makeRequest(
+            with: .init(
+                verificationSessionID: verificationSessionID,
+                consumerSessionClientSecret: consumerSessionClientSecret,
+                consumerPublishableKey: consumerPublishableKey
+            )
+        )
+    }
+
     func extendSession(
         consumerSessionClientSecret: String,
         consumerPublishableKey: String
@@ -179,6 +202,11 @@ final class NetworkedIdentityMockAPIRequests<Parameters, Response> {
 
     func respondToNext(with result: Result<Response, Error>) {
         precondition(!pendingRequests.isEmpty, "No pending Networked Identity request")
-        pendingRequests.removeFirst().fullfill(with: result)
+        let promise = pendingRequests.removeFirst()
+        // Future reads its result on this queue, but does not serialize fulfillment itself.
+        // Keep immediate mock responses from racing observation and corrupting the test result.
+        promise.propertyAccessQueue.async {
+            promise.fullfill(with: result)
+        }
     }
 }

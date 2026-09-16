@@ -18,8 +18,19 @@ enum NetworkedIdentityState: Equatable {
     case documentsPending
     case selectDocument
     case selectedDocument
+    case attachmentPending
+    case skipPending
+    /// The NI action ended; the host must still process requirements and normal submission.
+    case completed
     case fullCaptureFallback
     case cancelled
+}
+
+enum NetworkedIdentityActionError: String, Error {
+    case tokenUnavailable
+    case attachmentFailed
+    case skipFailed
+    case unexpectedSession
 }
 
 enum NetworkedIdentityFallbackReason: Equatable {

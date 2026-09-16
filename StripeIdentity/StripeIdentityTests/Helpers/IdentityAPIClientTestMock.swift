@@ -16,6 +16,7 @@ import XCTest
 final class IdentityAPIClientTestMock: IdentityAPIClient {
 
     var apiVersion: Int = IdentityAPIClientImpl.productionApiVersion
+    var supportsNetworkedIdentity = false
 
     struct ImageUploadRequestParams {
         let image: UIImage
@@ -34,6 +35,9 @@ final class IdentityAPIClientTestMock: IdentityAPIClient {
     let verificationSessionSubmit = MockAPIRequests<Void, StripeAPI.VerificationPageData>()
     let verificationPageGeneratePhoneOtp = MockAPIRequests<Void, StripeAPI.VerificationPageData>()
     let verificationPageCannotVerifyPhoneOtp = MockAPIRequests<Void, StripeAPI.VerificationPageData>()
+    let attachNetworkedIdentityDocument = NetworkedIdentityMockAPIRequests<String, StripeAPI.VerificationPageData>()
+    let prepareNetworkedIdentityDocumentSave = NetworkedIdentityMockAPIRequests<String, StripeAPI.VerificationPageData>()
+    let networkedIdentitySkip = NetworkedIdentityMockAPIRequests<Void, StripeAPI.VerificationPageData>()
     let imageUpload = MockAPIRequests<ImageUploadRequestParams, STPAPIClient.FileAndUploadMetrics>()
 
     var verificationSessionId: String
@@ -90,6 +94,22 @@ final class IdentityAPIClientTestMock: IdentityAPIClient {
 
     func cannotPhoneVerifyOtp() -> StripeCore.Promise<StripeCore.StripeAPI.VerificationPageData> {
         return verificationPageCannotVerifyPhoneOtp.makeRequest(with: ())
+    }
+
+    func attachNetworkedIdentityDocument(
+        associationToken: String
+    ) -> Promise<StripeAPI.VerificationPageData> {
+        attachNetworkedIdentityDocument.makeRequest(with: associationToken)
+    }
+
+    func prepareNetworkedIdentityDocumentSave(
+        associationToken: String
+    ) -> Promise<StripeAPI.VerificationPageData> {
+        prepareNetworkedIdentityDocumentSave.makeRequest(with: associationToken)
+    }
+
+    func skipNetworkedIdentity() -> Promise<StripeAPI.VerificationPageData> {
+        networkedIdentitySkip.makeRequest(with: ())
     }
 
     // Ensures `count` number of files are uploaded
