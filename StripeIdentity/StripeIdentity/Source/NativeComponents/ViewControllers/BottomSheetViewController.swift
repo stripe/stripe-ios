@@ -22,7 +22,7 @@ final class BottomSheetViewController: UIViewController {
         "StripeIdentity.content"
     )
 
-    private var preferredDetentHeight: CGFloat = 0
+    private(set) var preferredDetentHeight: CGFloat = 0
 
     static func makeForPresentation(
         content: BottomSheetContent
