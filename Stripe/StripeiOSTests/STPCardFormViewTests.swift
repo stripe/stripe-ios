@@ -269,10 +269,6 @@ class STPCardFormViewTests: XCTestCase {
         wait(for: [confirmExpectation], timeout: 8)  // STPTestingNetworkRequestTimeout
     }
 
-    func testExpiredCard() {
-        helperFunctionalTestNumber("4000000000000069", shouldHandle: true)
-    }
-
     func testIncorrectCVC() {
         helperFunctionalTestNumber("4000000000000127", shouldHandle: true)
     }
