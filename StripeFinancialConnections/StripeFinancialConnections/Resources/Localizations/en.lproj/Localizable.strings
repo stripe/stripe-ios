@@ -153,12 +153,6 @@
 /* The title of the 'Institution Picker' screen where users get to select an institution (ex. a bank like Bank of America). */
 "Select bank" = "Select bank";
 
-/* Title of a screen that shows an error. The error screen appears after user has selected a bank. The error is a generic one: something wrong happened and we are not sure what. */
-"Something went wrong" = "Something went wrong";
-
-/* The submit button for a screen that allows a user to manually enter their bank account information. */
-"Submit" = "Submit";
-
 /* The title of the success screen that appears when a user is done with the process of connecting their bank account to an application. Now that the bank account is connected (or linked), the user will be able to use the bank account for payments. */
 "Success" = "Success";
 

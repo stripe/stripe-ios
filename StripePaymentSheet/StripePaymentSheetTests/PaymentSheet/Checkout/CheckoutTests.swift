@@ -33,7 +33,7 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
     // TODO(porter): unified mode does not yet support promo codes.
     func disabled_testPromotionCodeApplyEmitsSessionUpdates() async throws {
         let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession(
-            additionalParameters: ["allow_promotion_codes": true]
+            allowPromotionCodes: true
         )
         var configuration = CheckoutController.Configuration(clientSecret: checkoutSessionResponse.clientSecret, returnURL: "stripe-ios-test://checkout-return")
         configuration.apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
@@ -53,7 +53,7 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
     // TODO(porter): see disabled_testPromotionCodeApplyEmitsSessionUpdates above.
     func disabled_testApplyPromotionCode() async throws {
         let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession(
-            additionalParameters: ["allow_promotion_codes": true]
+            allowPromotionCodes: true
         )
         var configuration = CheckoutController.Configuration(clientSecret: checkoutSessionResponse.clientSecret, returnURL: "stripe-ios-test://checkout-return")
         configuration.apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
@@ -74,7 +74,7 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
     // TODO(porter): see disabled_testPromotionCodeApplyEmitsSessionUpdates above.
     func disabled_testRemovePromotionCode() async throws {
         let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession(
-            additionalParameters: ["allow_promotion_codes": true]
+            allowPromotionCodes: true
         )
         var configuration = CheckoutController.Configuration(clientSecret: checkoutSessionResponse.clientSecret, returnURL: "stripe-ios-test://checkout-return")
         configuration.apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
@@ -97,7 +97,7 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
     // TODO(porter): see disabled_testPromotionCodeApplyEmitsSessionUpdates above.
     func disabled_testApplyInvalidPromotionCode() async throws {
         let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession(
-            additionalParameters: ["allow_promotion_codes": true]
+            allowPromotionCodes: true
         )
         var configuration = CheckoutController.Configuration(clientSecret: checkoutSessionResponse.clientSecret, returnURL: "stripe-ios-test://checkout-return")
         configuration.apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
@@ -150,8 +150,7 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
 
     func testLoadUnifiedModeCheckoutSession() async throws {
         let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession(
-            merchantCountry: "us_tax",
-            useOneTimePrice: true
+            merchantCountry: "us_tax"
         )
         var configuration = CheckoutController.Configuration(clientSecret: checkoutSessionResponse.clientSecret, returnURL: "stripe-ios-test://checkout-return")
         configuration.apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
@@ -188,10 +187,8 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
     func testUpdateShippingAddress() async throws {
         let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession(
             merchantCountry: "us_tax",
-            additionalParameters: [
-                "automatic_tax": ["enabled": true],
-                "shipping_address_collection": ["allowed_countries": ["US"]],
-            ]
+            automaticTax: true,
+            allowedShippingCountries: ["US"]
         )
         var configuration = CheckoutController.Configuration(clientSecret: checkoutSessionResponse.clientSecret, returnURL: "stripe-ios-test://checkout-return")
         configuration.apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)

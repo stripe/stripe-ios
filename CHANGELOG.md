@@ -1,18 +1,30 @@
 The next release's version bump will so far be:
-PATCH
+MINOR
 
 ## X.Y.Z - changes pending release
+### CryptoOnramp (Alpha)
+* [Removed] Removed public exposure of `StripeCryptoOnramp.Image`, including `Image.linkIconSquare`.
+* [Added] Added `CryptoOnrampCoordinator.presentTermsAndConditionsIfNeeded(from:)` and `presentTermsOfServiceIfNeeded(from:)` to present and record acceptance of current partner terms when required. Both methods return `PartnerTermsResult`.
+
+### StripeCore
+* [Added] Added `additionalHeaders` support to the `STPAPIClient` GET, POST, and DELETE APIs exposed through the `STP` SPI.
+
+### PaymentSheet
+* [Fixed] PaymentSheet now keeps the Apple Pay EMV merchant capability aligned with China UnionPay in the final supported network list.
+
+## 26.11.0 2026-09-14
+### General
+* [Added] Added support for Welsh.
 
 ### Payments
 * [Added] Added API bindings for Scalapay.
 
 ### PaymentSheet
-* [Fixed] PaymentSheet now keeps the Apple Pay EMV merchant capability aligned with China UnionPay in the final supported network list.
+* [Added] Added support for Scalapay.
 
 ## 26.10.0 2026-09-08
 ### General
 * [Added] Added support for Arabic (Saudi Arabia).
-* [Added] Added support for Welsh.
 
 ### CryptoOnramp (Alpha)
 * [Added] Added Canada SIN, Colombia NIT, and Philippines TIN values to `IdType`, and added `idType` to the `KycInfo` initializer.

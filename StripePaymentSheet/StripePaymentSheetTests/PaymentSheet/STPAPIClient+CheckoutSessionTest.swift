@@ -149,7 +149,8 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
     func testInitCheckoutSessionPaymentWithAdaptivePricingDisabled() async throws {
         // Same session config as above (DE location, adaptive pricing active automatically)
         // but client passes adaptivePricingAllowed: false
-        let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession(
+        // TODO: Use Mobile Elements once it honors adaptive_pricing[allowed]=false like Custom Checkout.
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.createLegacyCheckoutSession(
             merchantCountry: "us_tax",
             customerEmailLocation: "DE"
         )
@@ -196,7 +197,7 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
         )
 
         // 2. Create a checkout session for this customer
-        let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession(
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.createLegacyCheckoutSession(
             customerID: customerResponse.customer,
             additionalParameters: ["payment_intent_data": ["setup_future_usage": "on_session"]]
         )
@@ -243,7 +244,7 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
         )
 
         // 2. Create a checkout session for this customer
-        let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession(
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.createLegacyCheckoutSession(
             customerID: customerResponse.customer,
             additionalParameters: ["payment_intent_data": ["setup_future_usage": "on_session"]]
         )

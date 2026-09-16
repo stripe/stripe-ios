@@ -297,6 +297,18 @@ import Foundation
         STPLocalizedString("OK", "ok button")
     }
 
+    static var submit: String {
+        STPLocalizedString("Submit", "Button that submits the information entered on a screen")
+    }
+
+    static var something_went_wrong: String {
+        STPLocalizedString("Something went wrong", "Heading for a generic error when an operation fails")
+    }
+
+    static var processing: String {
+        STPLocalizedString("Processing...", "Label of a disabled button while its action is processing")
+    }
+
     static var `continue`: String {
         STPLocalizedString("Continue", "Text for continue button")
     }

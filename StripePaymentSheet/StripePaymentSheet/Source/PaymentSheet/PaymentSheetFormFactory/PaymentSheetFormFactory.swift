@@ -282,7 +282,7 @@ class PaymentSheetFormFactory {
             case .SEPADebit:
                 return makeSepaDebit()
             case .grabPay, .paynow, .payPay, .mobilePay, .vipps, .zip, .crypto,
-                 .billie, .sunbit, .alma, .payByBank, .payco, .sequra:
+                 .billie, .sunbit, .alma, .payByBank, .payco, .sequra, .scalapay:
                 return makeContactInformationAndBillingAddressForm()
             case .alipay:
                 return makeContactInformationAndBillingAddressForm(
@@ -313,7 +313,7 @@ class PaymentSheetFormFactory {
                 return makeAUBECSDebit()
             case .FPX:
                 return makeFPX()
-            case .netBanking, .weChatPay, .link, .cardPresent, .scalapay, .unknown:
+            case .netBanking, .weChatPay, .link, .cardPresent, .unknown:
                 return makeUnexpectedEmptyForm(for: paymentMethod)
             @unknown default:
                 return makeUnexpectedEmptyForm(for: paymentMethod)
