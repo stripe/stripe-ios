@@ -174,6 +174,95 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
         }
     }
 
+    // MARK: - Merchant Capabilities Tests
+
+    func testNormalizeEMVCapabilityForChinaUnionPay_addsEMVForChinaUnionPay() {
+        let paymentRequest = PKPaymentRequest()
+        paymentRequest.supportedNetworks = [.visa, .chinaUnionPay]
+        paymentRequest.merchantCapabilities = [.capability3DS, .capabilityCredit, .capabilityDebit]
+
+        STPApplePayContext.normalizeEMVCapabilityForChinaUnionPay(for: paymentRequest)
+
+        XCTAssertEqual(
+            paymentRequest.merchantCapabilities,
+            [.capability3DS, .capabilityEMV, .capabilityCredit, .capabilityDebit]
+        )
+    }
+
+    func testNormalizeEMVCapabilityForChinaUnionPay_removesEMVWithoutChinaUnionPay() {
+        let paymentRequest = PKPaymentRequest()
+        paymentRequest.supportedNetworks = [.visa]
+        paymentRequest.merchantCapabilities = [.capability3DS, .capabilityEMV, .capabilityCredit, .capabilityDebit]
+
+        STPApplePayContext.normalizeEMVCapabilityForChinaUnionPay(for: paymentRequest)
+
+        XCTAssertEqual(
+            paymentRequest.merchantCapabilities,
+            [.capability3DS, .capabilityCredit, .capabilityDebit]
+        )
+    }
+
+    func testCreate_normalizesMerchantCapabilitiesAfterHandlerAddsChinaUnionPay() {
+        let paymentRequest = paymentRequestAfterCustomHandler { paymentRequest in
+            paymentRequest.supportedNetworks = [.visa, .chinaUnionPay]
+            paymentRequest.merchantCapabilities = [.capability3DS, .capabilityCredit]
+            return paymentRequest
+        }
+
+        XCTAssertEqual(paymentRequest.supportedNetworks, [.visa, .chinaUnionPay])
+        XCTAssertEqual(
+            paymentRequest.merchantCapabilities,
+            [.capability3DS, .capabilityEMV, .capabilityCredit]
+        )
+    }
+
+    func testCreate_normalizesMerchantCapabilitiesAfterHandlerRemovesChinaUnionPay() {
+        let paymentRequest = paymentRequestAfterCustomHandler { paymentRequest in
+            paymentRequest.supportedNetworks = [.visa]
+            paymentRequest.merchantCapabilities = [.capability3DS, .capabilityEMV, .capabilityDebit]
+            return paymentRequest
+        }
+
+        XCTAssertEqual(paymentRequest.supportedNetworks, [.visa])
+        XCTAssertEqual(
+            paymentRequest.merchantCapabilities,
+            [.capability3DS, .capabilityDebit]
+        )
+    }
+
+    private func paymentRequestAfterCustomHandler(
+        _ paymentRequestHandler: @escaping (PKPaymentRequest) -> PKPaymentRequest
+    ) -> PKPaymentRequest {
+        var handledPaymentRequest: PKPaymentRequest?
+        let handlers = PaymentSheet.ApplePayConfiguration.Handlers(paymentRequestHandler: { paymentRequest in
+            let paymentRequest = paymentRequestHandler(paymentRequest)
+            handledPaymentRequest = paymentRequest
+            return paymentRequest
+        })
+        var configuration = configuration
+        configuration.applePay = PaymentSheet.ApplePayConfiguration(
+            merchantId: "merchant_id",
+            merchantCountryCode: "GB",
+            customHandlers: handlers
+        )
+        let intent = Intent._testValue()
+        let elementsSession = STPElementsSession._testValue()
+        let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadata(
+            intent: intent,
+            elementsSession: elementsSession
+        )
+
+        _ = STPApplePayContext.create(
+            intent: intent,
+            elementsSession: elementsSession,
+            configuration: configuration,
+            clientAttributionMetadata: clientAttributionMetadata,
+            completion: { _, _ in }
+        )
+
+        return handledPaymentRequest!
+    }
+
     // MARK: - Card Funding Acceptance Tests
 
     func testCreatePaymentRequest_fundingAcceptance_all() {

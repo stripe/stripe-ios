@@ -9,6 +9,9 @@ MINOR
 ### StripeCore
 * [Added] Added `additionalHeaders` support to the `STPAPIClient` GET, POST, and DELETE APIs exposed through the `STP` SPI.
 
+### PaymentSheet
+* [Fixed] PaymentSheet now keeps the Apple Pay EMV merchant capability aligned with China UnionPay in the final supported network list.
+
 ## 26.11.0 2026-09-14
 ### General
 * [Added] Added support for Welsh.
