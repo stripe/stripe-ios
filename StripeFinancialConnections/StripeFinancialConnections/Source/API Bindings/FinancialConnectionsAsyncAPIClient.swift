@@ -262,7 +262,10 @@ extension FinancialConnectionsAsyncAPIClient {
         parameters["mobile"] = mobileParameters
 
         if let preCollectedConsent {
-            parameters["pre_collected_consent"] = try Self.encodeAsParameters(preCollectedConsent)
+            parameters["pre_collected_consent"] = [
+                "consent": preCollectedConsent.consent,
+                "collected_at": preCollectedConsent.collectedAt,
+            ]
         }
 
         return try await post(endpoint: .synchronize, parameters: parameters)

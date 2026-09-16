@@ -15,7 +15,7 @@ import Foundation
 /// Stripe-issued consent text, and preserve that value across retries or modal
 /// reopen. Do not replace it with the Financial Connections launch time.
 @objc(STPFinancialConnectionsPreCollectedConsent)
-public final class FinancialConnectionsPreCollectedConsent: NSObject, Encodable {
+public final class FinancialConnectionsPreCollectedConsent: NSObject {
     /// ID of the `financial_connections.consent` object returned by the merchant's server.
     @objc
     public let consent: String
@@ -35,10 +35,5 @@ public final class FinancialConnectionsPreCollectedConsent: NSObject, Encodable 
     ) {
         self.consent = consent
         self.collectedAt = collectedAt
-    }
-
-    private enum CodingKeys: String, CodingKey {
-        case consent
-        case collectedAt = "collected_at"
     }
 }
