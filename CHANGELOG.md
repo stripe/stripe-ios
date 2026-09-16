@@ -9,6 +9,9 @@ MINOR
 ### StripeCore
 * [Added] Added `additionalHeaders` support to the `STPAPIClient` GET, POST, and DELETE APIs exposed through the `STP` SPI.
 
+### Payments
+* [Added] Added billing address and phone support to `STPCollectBankAccountParams` for US bank accounts.
+
 ## 26.11.0 2026-09-14
 ### General
 * [Added] Added support for Welsh.

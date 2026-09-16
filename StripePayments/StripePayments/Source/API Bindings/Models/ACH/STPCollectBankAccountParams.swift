@@ -27,9 +27,46 @@ public class STPCollectBankAccountParams: NSObject {
         with name: String,
         email: String?
     ) -> STPCollectBankAccountParams {
+        return makeUSBankAccountParams(
+            name: name,
+            email: email,
+            address: nil,
+            phone: nil
+        )
+    }
+
+    /// Configures and returns an instance of `STPCollectBankAccountParams` for US Bank Accounts
+    /// - Parameters:
+    ///     - name: The customer's full name. _required_
+    ///     - email: The customer's email. If included, can be used to notify the customer of pending micro-deposit verification.
+    ///     - address: The customer's billing address.
+    ///     - phone: The customer's billing phone number.
+    @objc(collectUSBankAccountParamsWithName:email:address:phone:)
+    public class func collectUSBankAccountParams(
+        with name: String,
+        email: String?,
+        address: STPPaymentMethodAddress?,
+        phone: String?
+    ) -> STPCollectBankAccountParams {
+        return makeUSBankAccountParams(
+            name: name,
+            email: email,
+            address: address,
+            phone: phone
+        )
+    }
+
+    private class func makeUSBankAccountParams(
+        name: String,
+        email: String?,
+        address: STPPaymentMethodAddress?,
+        phone: String?
+    ) -> STPCollectBankAccountParams {
         let billingDetails = STPPaymentMethodBillingDetails()
         billingDetails.name = name
         billingDetails.email = email
+        billingDetails.address = address
+        billingDetails.phone = phone
 
         let paymentMethodParams = STPPaymentMethodParams()
         paymentMethodParams.billingDetails = billingDetails
