@@ -62,27 +62,15 @@ final class USBankAccountPaymentMethodElement: ContainerElement {
     }
 
     var billingDetails: STPPaymentMethodBillingDetails {
-        let billingDetails =
-            formElement.updateParams(params: IntentConfirmParams(type: .stripe(.USBankAccount)))?
-            .paymentMethodParams.billingDetails ?? STPPaymentMethodBillingDetails()
-        guard configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod else {
-            return billingDetails
+        let params = IntentConfirmParams(type: .stripe(.USBankAccount))
+        switch configuration {
+        case .paymentElement(let config, _):
+            params.setDefaultBillingDetailsIfNecessary(for: config)
+        case .customerSheet(let config):
+            params.setDefaultBillingDetailsIfNecessary(for: config)
         }
-        let defaultBillingDetails = configuration.defaultBillingDetails
-        billingDetails.name = billingDetails.name ?? defaultBillingDetails.name
-        billingDetails.email = billingDetails.email ?? defaultBillingDetails.email
-        billingDetails.phone = billingDetails.phone ?? defaultBillingDetails.phone
-        if defaultBillingDetails.address != .init() {
-            let address = billingDetails.address ?? STPPaymentMethodAddress()
-            address.city = address.city ?? defaultBillingDetails.address.city
-            address.country = address.country ?? defaultBillingDetails.address.country
-            address.line1 = address.line1 ?? defaultBillingDetails.address.line1
-            address.line2 = address.line2 ?? defaultBillingDetails.address.line2
-            address.postalCode = address.postalCode ?? defaultBillingDetails.address.postalCode
-            address.state = address.state ?? defaultBillingDetails.address.state
-            billingDetails.address = address
-        }
-        return billingDetails
+        return formElement.updateParams(params: params)?.paymentMethodParams.billingDetails
+            ?? params.paymentMethodParams.nonnil_billingDetails
     }
 
     var name: String? {
