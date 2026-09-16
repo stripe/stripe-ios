@@ -128,7 +128,7 @@ class FinancialConnectionsSheetTests: XCTestCase {
         let expectation = expectation(description: "presentation completed")
         sheet.present(
             from: mockViewController,
-            preCollectedConsent: FinancialConnectionsPreCollectedConsent(consent: "fccons_123")
+            preCollectedConsent: FinancialConnectionsPreCollectedConsent(consent: "fccons_123", collectedAt: 1_725_000_123)
         ) { (result: FinancialConnectionsSheet.Result) in
             guard case .canceled = result else {
                 XCTFail("Unexpected result: \(result)")
@@ -138,6 +138,7 @@ class FinancialConnectionsSheetTests: XCTestCase {
         }
 
         XCTAssertEqual(sheet.preCollectedConsent?.consent, "fccons_123")
+        XCTAssertEqual(sheet.preCollectedConsent?.collectedAt, 1_725_000_123)
 
         // Mock that financialConnections is completed
         let host = HostController(

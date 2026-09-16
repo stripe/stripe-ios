@@ -34,6 +34,16 @@ final class STPBankAccountCollectorTests: APIStubbedTestCase {
         XCTAssertEqual(collector.style, .alwaysDark)
     }
 
+    func testPreCollectedConsentSwiftInitializer() {
+        let evidence = FinancialConnectionsPreCollectedConsent(
+            consent: "fccons_123",
+            collectedAt: 1_725_000_123
+        )
+
+        XCTAssertEqual(evidence.consent, "fccons_123")
+        XCTAssertEqual(evidence.collectedAt, 1_725_000_123)
+    }
+
     func testUserInterfaceStyleMapping() {
         XCTAssertEqual(STPBankAccountCollectorUserInterfaceStyle.automatic.asFinancialConnectionsConfigurationStyle, .automatic)
         XCTAssertEqual(STPBankAccountCollectorUserInterfaceStyle.alwaysLight.asFinancialConnectionsConfigurationStyle, .alwaysLight)
@@ -139,7 +149,7 @@ final class STPBankAccountCollectorTests: APIStubbedTestCase {
             clientSecret: clientSecret,
             returnURL: nil,
             params: makeParams(),
-            preCollectedConsent: FinancialConnectionsPreCollectedConsent(consent: "fccons_123"),
+            preCollectedConsent: FinancialConnectionsPreCollectedConsent(consent: "fccons_123", collectedAt: 1_725_000_123),
             from: UIViewController(),
             onEvent: nil
         ) { intent, error in
@@ -147,6 +157,7 @@ final class STPBankAccountCollectorTests: APIStubbedTestCase {
             XCTAssertEqual(intent?.stripeId, paymentIntentID)
             XCTAssertEqual(intent?.status, .succeeded)
             XCTAssertEqual(StubbedConnectionsSDKInterface.lastReceivedPreCollectedConsent?.consent, "fccons_123")
+            XCTAssertEqual(StubbedConnectionsSDKInterface.lastReceivedPreCollectedConsent?.collectedAt, 1_725_000_123)
             expectation.fulfill()
         }
 
@@ -166,12 +177,13 @@ final class STPBankAccountCollectorTests: APIStubbedTestCase {
         let intent = try await collector.collectBankAccountForPayment(
             clientSecret: clientSecret,
             params: makeParams(),
-            preCollectedConsent: FinancialConnectionsPreCollectedConsent(consent: "fccons_123"),
+            preCollectedConsent: FinancialConnectionsPreCollectedConsent(consent: "fccons_123", collectedAt: 1_725_000_123),
             from: UIViewController()
         )
         XCTAssertEqual(intent.stripeId, paymentIntentID)
         XCTAssertEqual(intent.status, .succeeded)
         XCTAssertEqual(StubbedConnectionsSDKInterface.lastReceivedPreCollectedConsent?.consent, "fccons_123")
+        XCTAssertEqual(StubbedConnectionsSDKInterface.lastReceivedPreCollectedConsent?.collectedAt, 1_725_000_123)
     }
 
     func testCollectBankAccountForPaymentWithReturnURLSucceeds() {
@@ -250,7 +262,7 @@ final class STPBankAccountCollectorTests: APIStubbedTestCase {
             clientSecret: clientSecret,
             returnURL: nil,
             params: makeParams(),
-            preCollectedConsent: FinancialConnectionsPreCollectedConsent(consent: "fccons_123"),
+            preCollectedConsent: FinancialConnectionsPreCollectedConsent(consent: "fccons_123", collectedAt: 1_725_000_123),
             from: UIViewController(),
             onEvent: nil
         ) { intent, error in
@@ -258,6 +270,7 @@ final class STPBankAccountCollectorTests: APIStubbedTestCase {
             XCTAssertEqual(intent?.stripeID, setupIntentID)
             XCTAssertEqual(intent?.status, .succeeded)
             XCTAssertEqual(StubbedConnectionsSDKInterface.lastReceivedPreCollectedConsent?.consent, "fccons_123")
+            XCTAssertEqual(StubbedConnectionsSDKInterface.lastReceivedPreCollectedConsent?.collectedAt, 1_725_000_123)
             exp.fulfill()
         }
         waitForExpectations(timeout: 2.0)
@@ -276,12 +289,13 @@ final class STPBankAccountCollectorTests: APIStubbedTestCase {
         let intent = try await collector.collectBankAccountForSetup(
             clientSecret: clientSecret,
             params: makeParams(),
-            preCollectedConsent: FinancialConnectionsPreCollectedConsent(consent: "fccons_123"),
+            preCollectedConsent: FinancialConnectionsPreCollectedConsent(consent: "fccons_123", collectedAt: 1_725_000_123),
             from: UIViewController()
         )
         XCTAssertEqual(intent.stripeID, setupIntentID)
         XCTAssertEqual(intent.status, .succeeded)
         XCTAssertEqual(StubbedConnectionsSDKInterface.lastReceivedPreCollectedConsent?.consent, "fccons_123")
+        XCTAssertEqual(StubbedConnectionsSDKInterface.lastReceivedPreCollectedConsent?.collectedAt, 1_725_000_123)
     }
 
     func testCollectBankAccountForDeferredIntentSucceeds() {

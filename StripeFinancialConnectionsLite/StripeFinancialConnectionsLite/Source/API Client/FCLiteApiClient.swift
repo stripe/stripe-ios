@@ -98,7 +98,10 @@ extension FCLiteAPIClient {
         ]
 
         if let preCollectedConsent {
-            parameters["pre_collected_consent"] = ["consent": preCollectedConsent.consent]
+            parameters["pre_collected_consent"] = [
+                "consent": preCollectedConsent.consent,
+                "collected_at": preCollectedConsent.collectedAt,
+            ]
         }
 
         return try await post(endpoint: .synchronize, parameters: parameters)

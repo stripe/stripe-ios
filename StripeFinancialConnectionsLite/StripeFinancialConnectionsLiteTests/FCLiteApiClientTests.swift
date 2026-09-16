@@ -93,11 +93,19 @@ class FCLiteApiClientTests: XCTestCase {
             returnUrl: nil,
             canUseNativeLink: false,
             secureWebviewFeatureFlagEnabled: false,
-            preCollectedConsent: FinancialConnectionsPreCollectedConsent(consent: "fccons_123")
+            preCollectedConsent: FinancialConnectionsPreCollectedConsent(consent: "fccons_123", collectedAt: 1_725_000_123)
         )
 
         let body = capturedRequest?.capturedBody.flatMap { String(data: $0, encoding: .utf8) }
-        XCTAssertEqual(body?.contains("pre_collected_consent[consent]=fccons_123"), true)
+        let consentParameters = URLComponents(string: "?\(body ?? "")")?.queryItems?
+            .filter { $0.name.hasPrefix("pre_collected_consent[") }
+        XCTAssertEqual(
+            Dictionary(uniqueKeysWithValues: consentParameters?.map { ($0.name, $0.value) } ?? []),
+            [
+                "pre_collected_consent[consent]": "fccons_123",
+                "pre_collected_consent[collected_at]": "1725000123",
+            ]
+        )
     }
 
     func testSynchronizeOmitsPreCollectedConsentWhenNil() async {
