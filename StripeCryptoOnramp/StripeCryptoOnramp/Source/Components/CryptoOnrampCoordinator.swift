@@ -379,7 +379,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
         }
         do {
             let customerId = try await apiClient.createCryptoCustomer(with: linkAccountInfo).id
-            await cryptoCustomerState.setCustomerId(customerId)
+            await setCryptoCustomerId(customerId)
             analyticsClient.log(.linkRegistrationCompleted)
             return customerId
         } catch {
@@ -400,7 +400,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
         do {
             try await linkController.lookupLinkAuthToken(linkAuthTokenClientSecret)
             let customerId = try await apiClient.createCryptoCustomer(with: linkAccountInfo).id
-            await cryptoCustomerState.setCustomerId(customerId)
+            await setCryptoCustomerId(customerId)
             analyticsClient.log(.linkUserAuthenticationWithTokenCompleted)
         } catch {
             if let stripeError = error as? StripeError,
@@ -426,7 +426,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
             case .consented:
                 do {
                     let customerId = try await apiClient.createCryptoCustomer(with: linkAccountInfo).id
-                    await cryptoCustomerState.setCustomerId(customerId)
+                    await setCryptoCustomerId(customerId)
                     analyticsClient.log(.linkAuthorizationCompleted(consented: true))
                     return .consented(customerId: customerId)
                 } catch {
@@ -838,6 +838,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
         do {
             pendingApplePayPaymentSource = nil
             selectedPaymentSource = nil
+            platformApiClient = nil
             try await linkController.logOut()
             analyticsClient.log(.userLoggedOut)
         } catch {
@@ -999,18 +1000,28 @@ private extension CryptoOnrampCoordinator {
         }
     }
 
+    /// Stores the crypto customer ID and discards any cached platform API client.
+    ///
+    /// A platform API client may have been resolved before authentication, in which case the merchant of record was
+    /// selected without knowledge of the customer’s KYC region. Discarding it ensures the merchant of record is
+    /// re-resolved for the authenticated customer.
+    private func setCryptoCustomerId(_ customerId: String) async {
+        await cryptoCustomerState.setCustomerId(customerId)
+        platformApiClient = nil
+    }
+
     /// Returns a dedicated API client configured with the platform publishable key.
     /// Caches the API client after first creation to avoid repeated API calls.
+    ///
+    /// When no crypto customer ID is available yet, platform settings are resolved using the publishable key alone,
+    /// which allows presenting Apple Pay before the customer authenticates with Link.
     private func getPlatformApiClient() async throws -> STPAPIClient {
         if let platformApiClient {
             return platformApiClient
         }
 
-        guard let cryptoCustomerId = await cryptoCustomerState.getCustomerId() else {
-            throw Error.missingCryptoCustomerID
-        }
-
         // Fetch platform settings and create API client
+        let cryptoCustomerId = await cryptoCustomerState.getCustomerId()
         let platformSettings = try await apiClient.getPlatformSettings(cryptoCustomerId: cryptoCustomerId)
         let newPlatformApiClient = STPAPIClient(publishableKey: platformSettings.publishableKey)
         platformApiClient = newPlatformApiClient
