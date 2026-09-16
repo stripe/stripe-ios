@@ -72,7 +72,7 @@ public final class ExpressCheckoutElementUIView: UIView {
 
     // MARK: - Private Methods
 
-    /// Arranges `buttons` into no more than `appearance.buttonLayout.maxRows` rows of no more than `appearance.buttonLayout.maxColumns` columns. Defaults to 1 column
+    /// Arranges `buttons` into no more than `appearance.buttonLayout.maxRows` rows of no more than `appearance.buttonLayout.maxColumns` columns.
     private func layoutButtons(_ buttons: [ExpressCheckoutElement.PaymentMethod]) {
         stackView.arrangedSubviews.forEach {
             stackView.removeArrangedSubview($0)
@@ -110,12 +110,22 @@ public final class ExpressCheckoutElementUIView: UIView {
     }
 
     private func makeButton(for paymentMethod: ExpressCheckoutElement.PaymentMethod) -> UIView {
-        switch paymentMethod {
+        let button = switch paymentMethod {
         case .applePay:
-            return makeApplePayButton()
+            makeApplePayButton()
         case .link:
-            return makeLinkButton()
+            makeLinkButton()
         }
+
+        if LiquidGlassDetector.isEnabledInMerchantApp {
+            if let applePayButton = button as? PKPaymentButton {
+                // `cornerConfiguration` doesn't work on PKPaymentButton.
+                applePayButton.cornerRadius = 22
+            } else {
+                button.ios26_applyCapsuleCornerConfiguration()
+            }
+        }
+        return button
     }
 
     private func makeApplePayButton() -> UIView {
