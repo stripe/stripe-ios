@@ -335,8 +335,10 @@ extension CustomerAddPaymentMethodViewController {
             stpAssertionFailure()
             return
         }
-        let billingDetails = usBankAccountPaymentMethodElement.billingDetails
-        guard let name = billingDetails.name, let email = billingDetails.email else {
+        guard
+            let name = usBankAccountPaymentMethodElement.name,
+            let email = usBankAccountPaymentMethodElement.email
+        else {
             let errorAnalytic = ErrorAnalytic(event: .unexpectedCustomerSheetError,
                                               error: Error.usBankAccountParamsMissing)
             STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
@@ -347,8 +349,8 @@ extension CustomerAddPaymentMethodViewController {
         let params = STPCollectBankAccountParams.collectUSBankAccountParams(
             with: name,
             email: email,
-            address: billingDetails.address,
-            phone: billingDetails.phone
+            address: usBankAccountPaymentMethodElement.address,
+            phone: usBankAccountPaymentMethodElement.phone
         )
         let bankAccountCollectorStyle: STPBankAccountCollectorUserInterfaceStyle = {
             switch configuration.style {

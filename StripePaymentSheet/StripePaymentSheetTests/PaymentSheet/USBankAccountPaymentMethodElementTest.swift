@@ -72,17 +72,16 @@ final class USBankAccountPaymentMethodElementTest: XCTestCase {
         )
 
         let form = makeForm(configuration: configuration, previousCustomerInput: nil)
-        let billingDetails = form.billingDetails
 
-        XCTAssertEqual(billingDetails.name, "Test Customer")
-        XCTAssertEqual(billingDetails.email, "customer@example.com")
-        XCTAssertEqual(billingDetails.phone, "+15555550100")
-        XCTAssertEqual(billingDetails.address?.city, "Springfield")
-        XCTAssertEqual(billingDetails.address?.country, "US")
-        XCTAssertEqual(billingDetails.address?.line1, "123 Main Street")
-        XCTAssertEqual(billingDetails.address?.line2, "Apt 4")
-        XCTAssertEqual(billingDetails.address?.postalCode, "12345")
-        XCTAssertEqual(billingDetails.address?.state, "CA")
+        XCTAssertEqual(form.name, "Test Customer")
+        XCTAssertEqual(form.email, "customer@example.com")
+        XCTAssertEqual(form.phone, "+15555550100")
+        XCTAssertEqual(form.address?.city, "Springfield")
+        XCTAssertEqual(form.address?.country, "US")
+        XCTAssertEqual(form.address?.line1, "123 Main Street")
+        XCTAssertEqual(form.address?.line2, "Apt 4")
+        XCTAssertEqual(form.address?.postalCode, "12345")
+        XCTAssertEqual(form.address?.state, "CA")
     }
 
     private func makeForm(

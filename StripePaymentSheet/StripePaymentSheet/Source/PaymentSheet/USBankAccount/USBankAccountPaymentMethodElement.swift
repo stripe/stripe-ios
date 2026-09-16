@@ -30,7 +30,10 @@ final class USBankAccountPaymentMethodElement: ContainerElement {
         }
     }
 
+    let nameElement: TextFieldElement?
+    let emailElement: TextFieldElement?
     let phoneElement: PhoneNumberElement?
+    let addressElement: AddressSectionElement?
     private(set) var mandateString: NSMutableAttributedString?
     private let configuration: PaymentSheetFormFactoryConfig
     private let merchantName: String
@@ -61,24 +64,39 @@ final class USBankAccountPaymentMethodElement: ContainerElement {
         return params != nil && name != nil && email != nil
     }
 
-    var billingDetails: STPPaymentMethodBillingDetails {
-        let params = IntentConfirmParams(type: .stripe(.USBankAccount))
-        switch configuration {
-        case .paymentElement(let config, _):
-            params.setDefaultBillingDetailsIfNecessary(for: config)
-        case .customerSheet(let config):
-            params.setDefaultBillingDetailsIfNecessary(for: config)
-        }
-        return formElement.updateParams(params: params)?.paymentMethodParams.billingDetails
-            ?? params.paymentMethodParams.nonnil_billingDetails
-    }
-
     var name: String? {
-        return billingDetails.name
+        return nameElement?.text ?? defaultBillingDetails?.name
     }
 
     var email: String? {
-        return billingDetails.email
+        return emailElement?.text ?? defaultBillingDetails?.email
+    }
+
+    var phone: String? {
+        return phoneElement?.phoneNumber?.string(as: .e164) ?? defaultBillingDetails?.phone
+    }
+
+    var address: STPPaymentMethodAddress? {
+        let defaultAddress = defaultBillingDetails?.address
+        if addressElement == nil {
+            guard let defaultAddress, defaultAddress != .init() else { return nil }
+            return STPPaymentMethodAddress(address: defaultAddress)
+        }
+        let address = STPPaymentMethodAddress()
+        address.city = addressElement?.city?.text ?? defaultAddress?.city
+        address.country = addressElement?.selectedCountryCode ?? defaultAddress?.country
+        address.line1 = addressElement?.line1?.text ?? defaultAddress?.line1
+        address.line2 = addressElement?.line2?.text ?? defaultAddress?.line2
+        address.postalCode = addressElement?.postalCode?.text ?? defaultAddress?.postalCode
+        address.state = addressElement?.state?.rawData ?? defaultAddress?.state
+        return address
+    }
+
+    private var defaultBillingDetails: PaymentSheet.BillingDetails? {
+        guard configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod else {
+            return nil
+        }
+        return configuration.defaultBillingDetails
     }
 
     init(
@@ -110,7 +128,10 @@ final class USBankAccountPaymentMethodElement: ContainerElement {
             "If name or email are not collected, they must be provided through defaults"
         )
 
+        self.nameElement = nameElement?.element
+        self.emailElement = emailElement?.element
         self.phoneElement = phoneElement?.element
+        self.addressElement = addressElement?.element
 
         self.configuration = configuration
         self.linkedBank = initialLinkedBank

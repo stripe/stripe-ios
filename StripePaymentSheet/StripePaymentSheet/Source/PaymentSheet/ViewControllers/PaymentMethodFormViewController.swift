@@ -471,8 +471,7 @@ extension PaymentMethodFormViewController {
             stpAssertionFailure()
             return
         }
-        let billingDetails = usBankAccountFormElement.billingDetails
-        guard let name = billingDetails.name, let email = billingDetails.email else {
+        guard let name = usBankAccountFormElement.name, let email = usBankAccountFormElement.email else {
             let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetError,
                                               error: Error.usBankAccountParamsMissing)
             STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
@@ -483,8 +482,8 @@ extension PaymentMethodFormViewController {
         let params = STPCollectBankAccountParams.collectUSBankAccountParams(
             with: name,
             email: email,
-            address: billingDetails.address,
-            phone: billingDetails.phone
+            address: usBankAccountFormElement.address,
+            phone: usBankAccountFormElement.phone
         )
         let client = STPBankAccountCollector(style: bankAccountCollectorStyle)
         let genericError = PaymentSheetError.accountLinkFailure
