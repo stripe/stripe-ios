@@ -12,6 +12,7 @@ PATCH
 
 ### PaymentSheet
 * [Added] Added support for Scalapay.
+* [Added] Added support for Card program name for saved payment methods when using CustomerSessions
 
 ## 26.10.0 2026-09-08
 ### General
