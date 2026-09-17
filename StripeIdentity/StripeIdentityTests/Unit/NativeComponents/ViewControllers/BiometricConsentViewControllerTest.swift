@@ -11,7 +11,6 @@ import Foundation
 import UIKit
 import XCTest
 
-// swift-format-ignore
 @_spi(STP) @testable import StripeIdentity
 
 final class BiometricConsentViewControllerTest: XCTestCase {
@@ -51,7 +50,9 @@ final class BiometricConsentViewControllerTest: XCTestCase {
     }
 
     func testDefaultContinueButtonUsesTintColor() throws {
-        for configuration: IdentityVerificationSheet.Configuration.BiometricConsentConfiguration? in [nil, .init(hideBrandingHeader: true)] {
+        for configuration: IdentityVerificationSheet.Configuration.BiometricConsentConfiguration? in [
+            nil, .init(hideBrandingHeader: true),
+        ] {
             // Given the default style, including a header-only configuration
             let controller = try makeViewController(configuration: configuration)
             controller.view.tintColor = .magenta
@@ -114,6 +115,36 @@ final class BiometricConsentViewControllerTest: XCTestCase {
         XCTAssertEqual(declineButton.backgroundColor, .secondarySystemFill)
     }
 
+    func testCustomDeclineButtonDynamicColors() throws {
+        // Given dynamic secondary button colors and the default primary style
+        let controller = try makeViewController(
+            secondaryButtonStyle: .custom(
+                backgroundColor: .dynamic(light: .white, dark: .black),
+                textColor: .dynamic(light: .black, dark: .white)
+            )
+        )
+        controller.view.tintColor = .magenta
+        controller.scrolledToBottom = true
+        let consentButtons = buttons(in: controller.view)
+        let continueButton = try XCTUnwrap(consentButtons.first)
+        let continueLabel = try XCTUnwrap(continueButton.subviews.compactMap { $0 as? UILabel }.first)
+        let declineButton = try XCTUnwrap(consentButtons.last)
+        let declineLabel = try XCTUnwrap(declineButton.subviews.compactMap { $0 as? UILabel }.first)
+
+        // When the same buttons' colors resolve in light and dark mode
+        for style: UIUserInterfaceStyle in [.light, .dark] {
+            let traits = UITraitCollection(userInterfaceStyle: style)
+
+            // Then the decline button uses the custom colors
+            XCTAssertEqual(declineButton.backgroundColor?.resolvedColor(with: traits), style == .dark ? .black : .white)
+            XCTAssertEqual(declineLabel.textColor.resolvedColor(with: traits), style == .dark ? .white : .black)
+        }
+
+        // ...and the Continue button keeps its standard tint-based appearance
+        XCTAssertEqual(continueButton.backgroundColor, .magenta)
+        XCTAssertEqual(continueLabel.textColor, .white)
+    }
+
     func testCustomContinueButtonIsDisabledUntilScrolled() throws {
         // Given unread consent with custom button colors
         let controller = try makeViewController(
@@ -124,7 +155,10 @@ final class BiometricConsentViewControllerTest: XCTestCase {
         XCTAssertFalse(button.isEnabled)
         for style: UIUserInterfaceStyle in [.light, .dark] {
             let traits = UITraitCollection(userInterfaceStyle: style)
-            XCTAssertEqual(button.backgroundColor?.resolvedColor(with: traits), UIColor.systemGray4.resolvedColor(with: traits))
+            XCTAssertEqual(
+                button.backgroundColor?.resolvedColor(with: traits),
+                UIColor.systemGray4.resolvedColor(with: traits)
+            )
             XCTAssertEqual(label.textColor.resolvedColor(with: traits), UIColor.systemGray.resolvedColor(with: traits))
         }
 
@@ -139,10 +173,12 @@ final class BiometricConsentViewControllerTest: XCTestCase {
 
     private func makeViewController(
         configuration: IdentityVerificationSheet.Configuration.BiometricConsentConfiguration? = nil,
-        primaryButtonStyle: IdentityVerificationSheet.Configuration.PrimaryButtonStyle = .default
+        primaryButtonStyle: IdentityVerificationSheet.Configuration.PrimaryButtonStyle = .default,
+        secondaryButtonStyle: IdentityVerificationSheet.Configuration.SecondaryButtonStyle = .default
     ) throws -> BiometricConsentViewController {
         var sheetConfiguration = IdentityVerificationSheet.Configuration(brandLogo: UIImage())
         sheetConfiguration.primaryButtonStyle = primaryButtonStyle
+        sheetConfiguration.secondaryButtonStyle = secondaryButtonStyle
         mockSheetController = VerificationSheetControllerMock(
             flowController: VerificationSheetFlowController(configuration: sheetConfiguration)
         )
