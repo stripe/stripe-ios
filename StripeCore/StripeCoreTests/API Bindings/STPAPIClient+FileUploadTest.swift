@@ -207,6 +207,97 @@ final class STPAPIClient_FileUploadTest: APIStubbedTestCase {
         }
     }
 
+    func testUploadReportsProgress() async throws {
+        let originalMaxRetries = StripeAPI.maxRetries
+        StripeAPI.maxRetries = 1
+        defer { StripeAPI.maxRetries = originalMaxRetries }
+
+        let sourceFileURL = temporaryDirectoryURL.appendingPathComponent("document.pdf")
+        try Self.testData.write(to: sourceFileURL)
+
+        // We run this test twice, once with a problem-free HTTP 200, and another with an initial 429 (rate limited) followed by a successful (200) retry.
+        for statusCodes in [[200], [429, 200]] {
+            let configuration = URLSessionConfiguration.ephemeral
+
+            // Note that we're using a URLProtocol instead of OHHTTPStubs for this test.
+            // No actual network requests are performed.
+            // OHHTTPStubs does not support/expose upload progress.
+            configuration.protocolClasses = [UploadProgressURLProtocol.self]
+            let apiClient = stubbedAPIClient(configuration: configuration)
+
+            // Regarding `nonisolated(unsafe)`, the testing stub emits progress sequentially before completing each request,
+            // and the array is read after the upload finishes.
+            // We don't actually have a concurrency concern here with the approach taken below.
+            nonisolated(unsafe) var progressValues: [Double] = []
+            var attempts = 0
+
+            defer {
+                UploadProgressURLProtocol.requestHandler = nil
+                apiClient.urlSession.invalidateAndCancel()
+            }
+
+            UploadProgressURLProtocol.requestHandler = {
+                let tasks = await apiClient.urlSession.allTasks
+                let task = try XCTUnwrap(tasks.first { $0.state == .running })
+                XCTAssertTrue(task is URLSessionUploadTask)
+                let delegate = try XCTUnwrap(task.delegate)
+                for (bytesSent, totalBytesSent, totalBytesExpectedToSend): (Int64, Int64, Int64) in [
+                    // Invalid total size tests:
+                    (0, 0, NSURLSessionTransferSizeUnknown), // Unknown total size, can't report progress.
+                    (0, 0, 0), // Invalid total size, can't report progress.
+
+                    // Valid progress tests:
+                    (0, 0, 100), // 0%
+                    (25, 25, 100), // 25% chunk, overall progress is 25%
+                    (25, 50, 100), // 25% chunk, overall progress is 50%
+                    (50, 100, 100), // 50% chunk, overall progress is 100%
+
+                    // Unexpected boundary tests:
+                    (10, 110, 100), // 10% chunk, overall progress remains clamped at 100%
+                    (0, -10, 100), // negative progress, clamped at 0%
+                ] {
+                    delegate.urlSession?(
+                        apiClient.urlSession,
+                        task: task,
+                        didSendBodyData: bytesSent,
+                        totalBytesSent: totalBytesSent,
+                        totalBytesExpectedToSend: totalBytesExpectedToSend
+                    )
+                }
+
+                let statusCode = try XCTUnwrap(statusCodes.stp_boundSafeObject(at: attempts))
+                attempts += 1
+                let requestURL = try XCTUnwrap(task.originalRequest?.url)
+                let response = try XCTUnwrap(HTTPURLResponse(url: requestURL, statusCode: statusCode, httpVersion: nil, headerFields: nil))
+                let responseData = try JSONSerialization.data(withJSONObject: [
+                    "id": "file_test",
+                    "created": 1_700_000_000,
+                    "purpose": "crypto_onramp_kyc_document",
+                    "size": 16,
+                    "type": "pdf",
+                ])
+                return (responseData, response)
+            }
+
+            let file = try await apiClient.uploadFile(
+                at: sourceFileURL,
+                purpose: StripeFile.Purpose.cryptoOnrampKYCDocument.rawValue,
+                authorizationSecret: "lsk_test",
+                progress: {
+                    progressValues.append($0)
+                }
+            )
+
+            XCTAssertEqual(file.id, "file_test")
+            XCTAssertEqual(attempts, statusCodes.count)
+
+            // Here we assert our expected progress values documented above:
+            // 0%, 25%, 50%, 100%, 100% (clamped), 0% (clamped)
+            let expectedProgress = Array(repeating: [0.0, 0.25, 0.5, 1.0, 1.0, 0.0], count: statusCodes.count).flatMap { $0 }
+            XCTAssertEqual(progressValues, expectedProgress)
+        }
+    }
+
     func testUploadHonorsRetryLimit() async throws {
         let originalMaxRetries = StripeAPI.maxRetries
         defer { StripeAPI.maxRetries = originalMaxRetries }
@@ -295,5 +386,34 @@ final class STPAPIClient_FileUploadTest: APIStubbedTestCase {
 
     private func makeRateLimitResponse() -> HTTPStubsResponse {
         HTTPStubsResponse(jsonObject: ["error": ["type": "api_error", "message": "Rate limited"]], statusCode: 429, headers: ["Content-Type": "application/json"])
+    }
+}
+
+/// Helper URLProtocol used to mock progress updates predictably for upload tests.
+private final class UploadProgressURLProtocol: URLProtocol, @unchecked Sendable {
+    static var requestHandler: (() async throws -> (Data, HTTPURLResponse))?
+    private var loadingTask: Task<Void, Never>?
+
+    // MARK: - URLProtocol
+
+    override static func canInit(with request: URLRequest) -> Bool { true }
+    override static func canonicalRequest(for request: URLRequest) -> URLRequest { request }
+
+    override func startLoading() {
+        loadingTask = Task {
+            do {
+                let requestHandler = try XCTUnwrap(Self.requestHandler)
+                let (responseData, response) = try await requestHandler()
+                client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
+                client?.urlProtocol(self, didLoad: responseData)
+                client?.urlProtocolDidFinishLoading(self)
+            } catch {
+                client?.urlProtocol(self, didFailWithError: error)
+            }
+        }
+    }
+
+    override func stopLoading() {
+        loadingTask?.cancel()
     }
 }
