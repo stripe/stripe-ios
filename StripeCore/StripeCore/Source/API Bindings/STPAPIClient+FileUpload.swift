@@ -19,10 +19,8 @@ extension StripeFile.Purpose {
             return 16_000_000
         case .disputeEvidence:
             return 5_000_000
-        case .cryptoOnrampKYCDocument:
-            // TODO: Confirm with the backend whether each KYC document should have a 5 MB limit.
-            return nil
-        case .unparsable:
+        case .cryptoOnrampKYCDocument,
+             .unparsable:
             return nil
         }
     }
