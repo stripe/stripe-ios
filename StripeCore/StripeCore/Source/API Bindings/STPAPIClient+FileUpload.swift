@@ -305,7 +305,6 @@ extension STPAPIClient {
             throw FileUploadError.invalidResponse(statusCode: (response as? HTTPURLResponse)?.statusCode, underlying: error)
         }
     }
-
 }
 
 private let FileUploadURL = "https://uploads.stripe.com/v1/files"
