@@ -24,7 +24,7 @@ class FinancialConnectionsEventExtensionsTests: XCTestCase {
                         }
                     }
                 ]
-                """
+                """,
             ]
         )
 
