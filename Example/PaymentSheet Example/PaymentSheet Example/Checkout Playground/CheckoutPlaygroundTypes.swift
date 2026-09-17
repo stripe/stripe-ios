@@ -18,6 +18,30 @@ extension ExpressCheckoutElement.LinkConfiguration.Display: CaseIterable, Identi
 }
 
 enum CheckoutPlayground {
+    enum ExpressCheckoutPaymentMethodOrder: String, CaseIterable, Identifiable {
+        case dynamic
+        case applePayFirst
+        case linkFirst
+
+        var id: String { rawValue }
+
+        var displayName: String {
+            switch self {
+            case .dynamic: return "Dynamic"
+            case .applePayFirst: return "Apple Pay first"
+            case .linkFirst: return "Link first"
+            }
+        }
+
+        var paymentMethodOrder: [String]? {
+            switch self {
+            case .dynamic: return nil
+            case .applePayFirst: return ["apple_pay", "link"]
+            case .linkFirst: return ["link", "apple_pay"]
+            }
+        }
+    }
+
     enum LinkMode: String, CaseIterable, Identifiable, Codable {
         case native
         case web

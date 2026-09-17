@@ -44,7 +44,7 @@ public final class ExpressCheckoutElementUIView: UIView {
             stackView.bottomAnchor.constraint(equalTo: bottomAnchor),
         ])
 
-        let buttons = ExpressCheckoutElementUtilities.resolveButtons(for: session, configuration: configuration)
+        let buttons = session.availableExpressCheckoutPaymentMethods.compactMap(ExpressCheckoutElement.PaymentMethod.init(rawValue:))
         buttons.forEach { stackView.addArrangedSubview(makeButton(for: $0)) }
     }
 
@@ -58,7 +58,7 @@ public final class ExpressCheckoutElementUIView: UIView {
     func update(with session: CheckoutController.Session) {
         linkBrand = session.elementsSession.linkBrand ?? .link
         stackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
-        let buttons = ExpressCheckoutElementUtilities.resolveButtons(for: session, configuration: configuration)
+        let buttons = session.availableExpressCheckoutPaymentMethods.compactMap(ExpressCheckoutElement.PaymentMethod.init(rawValue:))
         buttons.forEach { stackView.addArrangedSubview(makeButton(for: $0)) }
         invalidateIntrinsicContentSize()
     }

@@ -169,6 +169,7 @@ struct CheckoutCartView: View {
                     display: expressCheckoutElementSettings.linkDisplay
                 )
                 expressCheckoutElementConfiguration.shippingAddressRequired = expressCheckoutElementSettings.shippingAddressRequired
+                expressCheckoutElementConfiguration.paymentMethodOrder = expressCheckoutElementSettings.paymentMethodOrder.paymentMethodOrder
                 config.expressCheckoutElement = expressCheckoutElementConfiguration
             }
             if adaptivePricing {
