@@ -89,6 +89,8 @@ class IdentityFlowView: UIView {
         var buttonTopContentViewModel: HTMLTextView.ViewModel?
         var scrollViewDelegate: UIScrollViewDelegate?
         var flowViewDelegate: IdentityFlowViewDelegate?
+        /// A view shown directly above the buttons, e.g. the Networked Identity saved ID chip.
+        var buttonTopAccessoryView: UIView?
     }
 
     private let headerView = HeaderView()
@@ -133,6 +135,7 @@ class IdentityFlowView: UIView {
     }()
 
     private let buttonTopContentView = HTMLTextView()
+    private var buttonTopAccessoryView: UIView?
 
     private var flowViewDelegate: IdentityFlowViewDelegate?
 
@@ -173,6 +176,7 @@ class IdentityFlowView: UIView {
         configureContentView(with: viewModel.contentViewModel)
         configureButtons(with: viewModel.buttons, primaryButtonStyle: primaryButtonStyle)
         try configureButtonTop(with: viewModel.buttonTopContentViewModel)
+        configureButtonTopAccessory(viewModel.buttonTopAccessoryView)
         flowViewDelegate = viewModel.flowViewDelegate
         if let scrollViewDelegate = viewModel.scrollViewDelegate {
             scrollView.delegate = scrollViewDelegate
@@ -367,6 +371,17 @@ extension IdentityFlowView {
             } catch {
                 throw error
             }
+        }
+    }
+
+    fileprivate func configureButtonTopAccessory(_ view: UIView?) {
+        guard view !== buttonTopAccessoryView else {
+            return
+        }
+        buttonTopAccessoryView?.removeFromSuperview()
+        buttonTopAccessoryView = view
+        if let view {
+            buttonStackView.insertArrangedSubview(view, at: 0)
         }
     }
 

@@ -28,6 +28,11 @@ final class BiometricConsentViewController: IdentityFlowViewController {
     let consentContent: StripeAPI.VerificationPageStaticContentConsentPage
     let configuration: IdentityVerificationSheet.Configuration.BiometricConsentConfiguration?
 
+    private let networkedIdentityContext: NetworkedIdentityContext?
+    private let networkedIdentity: NetworkedIdentityPresenter?
+    private lazy var linkEntryChip = LinkSavedIdChipView { [weak self] in self?.didDismissLinkEntry() }
+    private var isLinkEntryVisible = true
+
     struct Style {
         static let contentHorizontalPadding: CGFloat = 32
         static let contentTopPadding: CGFloat = 16
@@ -69,7 +74,31 @@ final class BiometricConsentViewController: IdentityFlowViewController {
         }
 
         var buttons: [IdentityFlowView.ViewModel.Button] = []
-        if scrolledToBottom {
+        if scrolledToBottom, let networkedIdentity, networkedIdentity.entry.offersReuse, isLinkEntryVisible {
+            // Networked Identity "Integrated on intro": sharing a saved ID also accepts consent.
+            buttons.append(
+                .init(
+                    text: "Continue with Link",
+                    state: acceptButtonState,
+                    didTap: { [weak self] in
+                        guard let self else { return }
+                        networkedIdentity.startReuse(from: self) { [weak self] outcome in
+                            self?.didFinishNetworkedIdentity(outcome)
+                        }
+                    }
+                )
+            )
+            buttons.append(
+                .init(
+                    text: "Manually verify instead",
+                    state: acceptButtonState == .loading ? .disabled : acceptButtonState,
+                    isPrimary: false,
+                    didTap: { [weak self] in
+                        self?.didTapButton(consentValue: true)
+                    }
+                )
+            )
+        } else if scrolledToBottom {
             buttons.append(
                 .init(
                     text: consentContent.acceptButtonText,
@@ -127,7 +156,8 @@ final class BiometricConsentViewController: IdentityFlowViewController {
             ),
             buttons: buttons,
             scrollViewDelegate: self,
-            flowViewDelegate: self
+            flowViewDelegate: self,
+            buttonTopAccessoryView: networkedIdentity == nil ? nil : linkEntryChip
         )
     }
 
@@ -136,12 +166,15 @@ final class BiometricConsentViewController: IdentityFlowViewController {
         showsStripeLogo: Bool,
         consentContent: StripeAPI.VerificationPageStaticContentConsentPage,
         configuration: IdentityVerificationSheet.Configuration.BiometricConsentConfiguration? = nil,
+        networkedIdentity context: NetworkedIdentityContext? = nil,
         sheetController: VerificationSheetControllerProtocol
     ) throws {
         self.brandLogo = brandLogo
         self.showsStripeLogo = showsStripeLogo
         self.consentContent = consentContent
         self.configuration = configuration
+        self.networkedIdentityContext = context
+        self.networkedIdentity = context.map(NetworkedIdentityPresenter.init(context:)).flatMap { $0.entry.linkAvailable ? $0 : nil }
         super.init(sheetController: sheetController, analyticsScreenName: .biometricConsent)
 
         // Set up the content stack view with both main content and privacy policy
@@ -171,6 +204,11 @@ final class BiometricConsentViewController: IdentityFlowViewController {
         )
 
         updateUI()
+        networkedIdentity?.onEntryChange = { [weak self] in
+            self?.renderLinkEntryChip()
+            self?.updateUI()
+        }
+        networkedIdentity?.refreshEntry()
     }
 
     required init?(
@@ -180,6 +218,7 @@ final class BiometricConsentViewController: IdentityFlowViewController {
     }
 
     private func setupContentStackView() {
+        renderLinkEntryChip()
         contentStackView.addArrangedSubview(multilineContent)
 
         // Create a container for the privacy policy with centered alignment
@@ -211,6 +250,36 @@ extension BiometricConsentViewController {
             ),
             viewModel: flowViewModel
         )
+    }
+
+    /// Without a known account there's no chip; the sheet asks for the email instead.
+    fileprivate func renderLinkEntryChip() {
+        let email = networkedIdentity?.entry.accountEmail
+        linkEntryChip.email = email
+        linkEntryChip.isHidden = email == nil || !isLinkEntryVisible
+    }
+
+    fileprivate func didDismissLinkEntry() {
+        isLinkEntryVisible = false
+        linkEntryChip.isHidden = true
+        updateUI()
+    }
+
+    fileprivate func didFinishNetworkedIdentity(_ outcome: NetworkedIdentityOutcome) {
+        switch outcome {
+        case .documentShared(_, let attached):
+            networkedIdentityContext?.didShareDocument()
+            // Sharing a saved ID also accepts consent.
+            consentSelection = true
+            isSaving = true
+            sheetController?.saveConsentAfterSharingDocument(attached: attached) { [weak self] in
+                self?.isSaving = false
+            }
+        case .fallback:
+            didTapButton(consentValue: true)
+        case .cancelled, .saved:
+            break
+        }
     }
 
     fileprivate func didTapButton(consentValue: Bool) {
@@ -264,5 +333,73 @@ extension BiometricConsentViewController: IdentityFlowViewDelegate {
         if visibleContentHeight > contentSizeHeight {
             scrolledToBottom = true
         }
+    }
+}
+
+/// Networked Identity: the saved ID chip shown above the intro buttons, matching Android's `LinkSavedIdChip`.
+private final class LinkSavedIdChipView: UIView {
+    private let label = UILabel()
+    private let onDismiss: () -> Void
+
+    var email: String? {
+        didSet {
+            // #TODO - Networked Identity: localize once the final mobile copy is approved.
+            label.text = email.map { "Saved ID · \($0)" } ?? "Saved ID"
+        }
+    }
+
+    init(onDismiss: @escaping () -> Void) {
+        self.onDismiss = onDismiss
+        super.init(frame: .zero)
+
+        let logoView = UIImageView(image: Image.linkLogo.makeImage())
+        logoView.contentMode = .scaleAspectFit
+        logoView.isAccessibilityElement = true
+        logoView.accessibilityLabel = "Link"
+
+        label.font = UIFontMetrics(forTextStyle: .subheadline).scaledFont(for: .systemFont(ofSize: 14))
+        label.adjustsFontForContentSizeCategory = true
+        label.textColor = .label
+        label.numberOfLines = 0
+
+        let dismissButton = UIButton(type: .system)
+        dismissButton.setImage(
+            UIImage(systemName: "xmark", withConfiguration: UIImage.SymbolConfiguration(pointSize: 12, weight: .semibold)),
+            for: .normal
+        )
+        dismissButton.tintColor = .label
+        dismissButton.accessibilityLabel = "Dismiss"
+        dismissButton.addAction(UIAction { [weak self] _ in self?.onDismiss() }, for: .touchUpInside)
+
+        let row = UIStackView(arrangedSubviews: [logoView, label, dismissButton])
+        row.alignment = .center
+        row.spacing = 8
+        row.setCustomSpacing(0, after: label)
+        addAndPinSubview(row, insets: .init(top: 0, leading: 12, bottom: 0, trailing: 0))
+
+        NSLayoutConstraint.activate([
+            logoView.widthAnchor.constraint(equalToConstant: 40),
+            logoView.heightAnchor.constraint(equalToConstant: 16),
+            dismissButton.widthAnchor.constraint(equalToConstant: 48),
+            dismissButton.heightAnchor.constraint(equalToConstant: 48),
+        ])
+        label.setContentHuggingPriority(.defaultLow, for: .horizontal)
+
+        layer.cornerRadius = 12
+        layer.borderWidth = 1
+        updateBorderColor()
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        updateBorderColor()
+    }
+
+    private func updateBorderColor() {
+        layer.borderColor = UIColor.label.withAlphaComponent(0.15).resolvedColor(with: traitCollection).cgColor
     }
 }

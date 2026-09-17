@@ -5,7 +5,8 @@
 //  Created by Mel Ludowise on 3/3/21.
 //
 
-import StripeIdentity
+@_spi(STP) import StripeIdentity
+@_spi(STP) import StripePaymentSheet
 @_spi(STP) import StripeUICore
 import UIKit
 
@@ -48,6 +49,8 @@ class PlaygroundViewController: UIViewController {
     private let phoneElement: PhoneNumberElement
 
     private let phoneView: UIView
+
+    private let networkedIdentityView = NetworkedIdentityPlaygroundView()
 
     enum InvocationType: CaseIterable {
         case native
@@ -135,6 +138,10 @@ class PlaygroundViewController: UIViewController {
 
         phoneView.isHidden = true
         phoneOtpContainerView.addArrangedSubview(phoneView)
+
+        // Networked Identity reuses Link, which needs native Link.
+        PaymentSheet.LinkFeatureFlags.nativeLinkEnabledOverride = true
+        nativeComponentsOptionsContainerView.addArrangedSubview(networkedIdentityView)
 
         activityIndicator.hidesWhenStopped = true
         verifyButton.addTarget(self, action: #selector(didTapVerifyButton), for: .touchUpInside)
@@ -359,12 +366,14 @@ class PlaygroundViewController: UIViewController {
             assertionFailure("Did not receive a valid ephemeral key secret.")
             return
         }
+        var configuration = IdentityVerificationSheet.Configuration(
+            brandLogo: UIImage(named: "BrandLogo")!
+        )
+        configuration.networkedIdentity = networkedIdentityView.networkedIdentityOptions
         self.verificationSheet = IdentityVerificationSheet(
             verificationSessionId: verificationSessionId,
             ephemeralKeySecret: ephemeralKeySecret,
-            configuration: IdentityVerificationSheet.Configuration(
-                brandLogo: UIImage(named: "BrandLogo")!
-            )
+            configuration: configuration
         )
     }
 

@@ -67,7 +67,6 @@ final class VerificationSheetControllerTest: XCTestCase {
 
         // Verify 1 request made with secret
         XCTAssertEqual(mockAPIClient.verificationPage.requestHistory.count, 1)
-        XCTAssertEqual(mockFlowController.networkedIdentityPresentationResetCount, 0)
 
         // Verify result is nil until API responds to request
         XCTAssertNil(controller.verificationPageResponse)
@@ -111,6 +110,25 @@ final class VerificationSheetControllerTest: XCTestCase {
         XCTAssertEqual(clearData.idDocumentBack, false)
         XCTAssertEqual(clearData.face, false)
         XCTAssertEqual(clearData.biometricConsent, false)
+    }
+
+    func testSharedDocumentKeepsTheAttachmentWhenRecordingConsent() throws {
+        // Given the consent screen still lists the document as missing
+        let page = try VerificationPageMock.response200.make().copyWithNewMissings(
+            newMissings: [.biometricConsent, .idDocumentFront, .idDocumentBack, .face]
+        )
+        controller.verificationPageResponse = .success(page)
+        let attached = try VerificationPageDataMock.noErrorsWithMissings(with: [.biometricConsent, .face])
+
+        // When the user shares a saved ID from Link
+        controller.saveConsentAfterSharingDocument(attached: attached, completion: {})
+
+        // Then consent is recorded without clearing the attached document
+        let request = try XCTUnwrap(mockAPIClient.verificationPageData.requestHistory.last)
+        XCTAssertEqual(request.collectedData?.biometricConsent, true)
+        XCTAssertEqual(request.clearData?.idDocumentFront, false)
+        XCTAssertEqual(request.clearData?.idDocumentBack, false)
+        XCTAssertEqual(try controller.verificationPageResponse?.get().requirements.missing, [.biometricConsent, .face])
     }
 
     func testNetworkedIdentityEmptyRequirementsSubmitBeforeSuccess() throws {
@@ -267,7 +285,6 @@ final class VerificationSheetControllerTest: XCTestCase {
     func testLoadAndUpdateUI() throws {
         let mockResponse = try VerificationPageMock.response200.make()
         controller.loadAndUpdateUI(skipTestMode: true)
-        XCTAssertEqual(mockFlowController.networkedIdentityPresentationResetCount, 1)
 
         // Respond to request with success
         mockAPIClient.verificationPage.respondToRequests(with: .success(mockResponse))
