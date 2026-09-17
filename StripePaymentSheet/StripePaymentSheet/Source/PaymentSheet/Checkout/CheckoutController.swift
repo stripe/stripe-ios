@@ -105,11 +105,7 @@ public final class CheckoutController: ObservableObject {
                 checkoutSessionId: sessionId,
                 adaptivePricingAllowed: configuration.currencySelectorElement != nil
             )
-            let loadedSession = Session(
-                apiResponse: apiResponse,
-                localState: .empty,
-                expressCheckoutConfiguration: configuration.expressCheckoutElement
-            )
+            let loadedSession = Session(apiResponse: apiResponse, localState: .empty)
             self.session = loadedSession
 
             // Element initialization is intentionally sequential:
@@ -440,11 +436,7 @@ extension CheckoutController {
         mutateLocalState(&localState)
 
         if let apiResponse {
-            session = Session(
-                apiResponse: apiResponse,
-                localState: localState,
-                expressCheckoutConfiguration: configuration.expressCheckoutElement
-            )
+            session = Session(apiResponse: apiResponse, localState: localState)
         } else {
             session.localState = localState
         }

@@ -15,23 +15,6 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
 
     // MARK: - Available payment methods tests
 
-    func testAvailablePaymentMethodsStoredOnSession() {
-        // Given a session listing Link before Apple Pay
-        var configuration = ExpressCheckoutElement.Configuration(confirmHandler: { _ in })
-        configuration.applePayConfiguration = ExpressCheckoutElement.ApplePayConfiguration(
-            merchantId: "merchant.com.example"
-        )
-
-        // When the public session is created with the ECE configuration
-        let session = makeSessionWithWalletTypes(["link", "apple_pay"]).makePublicSession(
-            expressCheckoutConfiguration: configuration
-        )
-
-        // Then it stores the available methods in display order
-        let expectedPaymentMethods = StripeAPI.deviceSupportsApplePay() ? ["link", "apple_pay"] : ["link"]
-        XCTAssertEqual(session.availableExpressCheckoutPaymentMethods, expectedPaymentMethods)
-    }
-
     func testNoButtonsWhenSessionHasNoWalletTypes() {
         // Given a session with no wallet types in the elements session
         let session = CheckoutTestHelpers.makeOpenSession().makePublicSession()
