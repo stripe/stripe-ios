@@ -26,6 +26,7 @@ MINOR
 * [Added] Added Naira bank transfer API bindings and PaymentSheet support for PaymentIntents.
 * [Added] Added Naira Wallet API bindings and PaymentSheet support for PaymentIntents.
 * [Added] Added Naira USSD API bindings and PaymentSheet support for PaymentIntents.
+* [Added] Added Mondu API bindings and PaymentSheet support for PaymentIntents.
 
 ## 26.12.1 2026-09-28
 ### CryptoOnramp (Alpha)
