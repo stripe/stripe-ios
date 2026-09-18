@@ -831,6 +831,7 @@ public class STPPaymentHandler: NSObject {
         // Synchronous
         case .ngCard,
             .ngBankTransfer,
+            .ngWallet,
             .goPay,
             .gcash,
             .shopeePay,

@@ -53,6 +53,7 @@ extension PaymentSheet {
         .pix,
         .goPay,
         .qris,
+        .ngWallet,
         .shopeePay,
         .gcash,
         .momo,

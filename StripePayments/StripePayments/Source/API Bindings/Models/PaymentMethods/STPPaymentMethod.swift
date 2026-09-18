@@ -118,6 +118,8 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
     @objc private(set) public var goPay: STPPaymentMethodGoPay?
     /// If this is a QRIS PaymentMethod, this contains additional details.
     @objc private(set) public var qris: STPPaymentMethodQRIS?
+    /// If this is a Naira Wallet PaymentMethod, this contains additional details.
+    @objc private(set) public var ngWallet: STPPaymentMethodNgWallet?
     /// If this is a ShopeePay PaymentMethod, this contains additional details.
     @objc private(set) public var shopeePay: STPPaymentMethodShopeePay?
     /// If this is a GCash PaymentMethod, this contains additional details.
@@ -211,6 +213,7 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
             "scalapay = \(String(describing: scalapay))",
             "goPay = \(String(describing: goPay))",
             "qris = \(String(describing: qris))",
+            "ngWallet = \(String(describing: ngWallet))",
             "shopeePay = \(String(describing: shopeePay))",
             "gcash = \(String(describing: gcash))",
             "momo = \(String(describing: momo))",
@@ -449,6 +452,9 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
         )
         paymentMethod.qris = STPPaymentMethodQRIS.decodedObject(
             fromAPIResponse: dict.stp_dictionary(forKey: "qris")
+        )
+        paymentMethod.ngWallet = STPPaymentMethodNgWallet.decodedObject(
+            fromAPIResponse: dict.stp_dictionary(forKey: "ng_wallet")
         )
         paymentMethod.shopeePay = STPPaymentMethodShopeePay.decodedObject(
             fromAPIResponse: dict.stp_dictionary(forKey: "shopeepay")

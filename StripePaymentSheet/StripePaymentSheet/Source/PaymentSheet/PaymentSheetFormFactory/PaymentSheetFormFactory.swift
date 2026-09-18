@@ -291,6 +291,11 @@ class PaymentSheetFormFactory {
                     allowedBillingCountries: ["PH"],
                     additionalElements: makeSetupMandateElements(for: paymentMethod)
                 )
+            case .ngWallet:
+                return makeContactInformationAndBillingAddressForm(
+                    allowedBillingCountries: ["US"],
+                    additionalElements: [makeNigerianPaymentMethodMandate(terms: String.Localized.nigerian_wallet_terms)]
+                )
             case .shopeePay, .qris:
                 return makeContactInformationAndBillingAddressForm(allowedBillingCountries: ["US", "ID"])
             case .momo, .goPay, .grabPay, .paynow, .payPay, .mobilePay, .vipps, .zip, .crypto,
