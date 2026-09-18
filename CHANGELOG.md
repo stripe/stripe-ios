@@ -33,6 +33,7 @@ MINOR
 * [Added] Added `uploadFile(at:purpose:authorizationSecret:progress:)` and associated error type `FileUploadError`, exposed through the `STP` SPI.
 
 ### PaymentSheet
+* [Added] Added GoPay API bindings and support for payments and setup in PaymentSheet.
 * [Fixed] Fixed card funding warnings not appearing after scanning a card.
 
 ## 26.11.0 2026-09-14
