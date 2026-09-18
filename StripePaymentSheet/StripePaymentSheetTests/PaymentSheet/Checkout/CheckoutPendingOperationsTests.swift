@@ -123,6 +123,48 @@ final class CheckoutPendingOperationsTests: XCTestCase {
         XCTAssertTrue(checkout.pendingOperations.isEmpty)
     }
 
+    func testUpdateEmailUsesLatestQueuedValue() async throws {
+        // Given a Checkout Session with a blocked update
+        let checkout = try await CheckoutController(
+            configuration: CheckoutTestHelpers.makeConfiguration(
+                paymentElementConfiguration: nil,
+                expressCheckoutElementConfiguration: nil
+            )
+        )
+        let gate = CheckoutPendingOperationsTestGate()
+        let blockingTask = Task { @MainActor in
+            try await checkout.enqueueSessionUpdate {
+                await gate.wait()
+            }
+        }
+        defer { gate.open() }
+        try await waitUntil {
+            checkout.pendingOperations.count == 1 && gate.isWaiting
+        }
+
+        // When an email is set and then cleared while the first update is blocked
+        let setEmailTask = Task { @MainActor in
+            try await checkout.updateEmail("local@example.com")
+        }
+        try await waitUntil {
+            checkout.pendingOperations.count == 2
+        }
+        let clearEmailTask = Task { @MainActor in
+            try await checkout.updateEmail(nil)
+        }
+        try await waitUntil {
+            checkout.pendingOperations.count == 3
+        }
+        gate.open()
+        try await blockingTask.value
+        try await setEmailTask.value
+        try await clearEmailTask.value
+
+        // Then the latest queued email wins
+        XCTAssertNil(checkout.session.email)
+        XCTAssertTrue(checkout.pendingOperations.isEmpty)
+    }
+
     // MARK: - Confirm with pending operations
 
     func testEPEConfirmFailsWhenCheckoutPendingOperationsExist() async throws {
