@@ -106,6 +106,19 @@ extension PaymentSheetFormFactory {
         return makeMandate(mandateText: mandateText)
     }
 
+    func makeNigerianPaymentMethodMandate() -> SimpleMandateElement {
+        let mandateText = STPStringUtils.applyLinksToString(
+            template: String.Localized.nigerian_payment_method_terms,
+            links: ["terms": URL(string: "https://d37ugbyn3rpeym.cloudfront.net/docs/GSSL%20-%20Buyer%20T&Cs%20(Final).pdf")!]
+        )
+        if isSettingUp {
+            mandateText.append(NSAttributedString(string: "\n\n" + String(
+                format: String.Localized.nigerian_payment_method_mandate_text,
+                configuration.merchantDisplayName
+            )))
+        }
+        return makeMandate(mandateText: mandateText)
+    }
     func makeGCashMandate() -> SimpleMandateElement {
         let mandateText = String(format: String.Localized.gcash_mandate_text, configuration.merchantDisplayName)
         return makeMandate(mandateText: mandateText)

@@ -56,6 +56,7 @@ extension PaymentSheet {
         .shopeePay,
         .gcash,
         .momo,
+        .ngCard,
     ]
 
     /// A list of `STPPaymentMethodType` that can be saved in PaymentSheet
@@ -383,11 +384,11 @@ extension PaymentSheet {
 
     /// Payment method types that require mandate data for PaymentIntents when `setup_future_usage` is set
     static var requiresMandateDataForPaymentIntent: Set<STPPaymentMethodType> {
-        [.momo, .gcash, .goPay, .alipay, .payPal, .cashApp, .revolutPay, .amazonPay, .klarna, .satispay, .twint, .kakaoPay, .naverPay, .krCard, .pix]
+        [.momo, .gcash, .ngCard, .goPay, .alipay, .payPal, .cashApp, .revolutPay, .amazonPay, .klarna, .satispay, .twint, .kakaoPay, .naverPay, .krCard, .pix]
     }
 
     /// Payment method types that require mandate data for SetupIntents
     static var requiresMandateDataForSetupIntent: Set<STPPaymentMethodType> {
-        [.momo, .gcash, .goPay, .alipay, .payPal, .revolutPay, .satispay, .twint, .kakaoPay, .naverPay, .krCard, .pix]
+        [.momo, .gcash, .ngCard, .goPay, .alipay, .payPal, .revolutPay, .satispay, .twint, .kakaoPay, .naverPay, .krCard, .pix]
     }
 }
