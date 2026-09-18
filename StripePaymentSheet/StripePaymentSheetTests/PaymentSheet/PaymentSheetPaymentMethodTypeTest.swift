@@ -289,6 +289,47 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
             .missingRequirements([.unsupportedForSetup])
         )
     }
+    func testMomoAvailability() {
+        // Given
+        let intents: [Intent] = [
+            ._testPaymentIntent(paymentMethodTypes: [.momo]),
+            ._testPaymentIntent(paymentMethodTypes: [.momo], setupFutureUsage: .offSession),
+        ]
+
+        for intent in intents {
+            // When
+            let withoutReturnURL = PaymentSheet.PaymentMethodType.supportsAdding(
+                paymentMethod: .momo,
+                configuration: makeConfiguration(),
+                intent: intent,
+                elementsSession: ._testValue(intent: intent),
+                supportedPaymentMethods: [.momo]
+            )
+            let withReturnURL = PaymentSheet.PaymentMethodType.supportsAdding(
+                paymentMethod: .momo,
+                configuration: makeConfiguration(hasReturnURL: true),
+                intent: intent,
+                elementsSession: ._testValue(intent: intent),
+                supportedPaymentMethods: [.momo]
+            )
+
+            // Then
+            XCTAssertEqual(withoutReturnURL, .missingRequirements([.returnURL]))
+            XCTAssertEqual(withReturnURL, .supported)
+        }
+
+        let setupIntent = Intent._testSetupIntent(paymentMethodTypes: [.momo])
+        XCTAssertEqual(
+            PaymentSheet.PaymentMethodType.supportsAdding(
+                paymentMethod: .momo,
+                configuration: makeConfiguration(hasReturnURL: true),
+                intent: setupIntent,
+                elementsSession: ._testValue(intent: setupIntent),
+                supportedPaymentMethods: [.momo]
+            ),
+            .missingRequirements([.unsupportedForSetup])
+        )
+    }
     func testNaverPayRequiresReturnURLForPaymentAndSetup() {
         // Given
         let intents: [Intent] = [

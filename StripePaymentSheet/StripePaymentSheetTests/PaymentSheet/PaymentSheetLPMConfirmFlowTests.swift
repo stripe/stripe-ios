@@ -755,6 +755,20 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                                merchantCountry: .US,
                                expectedHierarchy: ExpectedFormHierarchy.GoPay.paymentIntent) { _ in }
     }
+    func testMomoConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "VND",
+                               amount: 100000,
+                               paymentMethodType: .momo,
+                               merchantCountry: .US,
+                               expectedHierarchy: ExpectedFormHierarchy.Momo.paymentIntent) { _ in }
+        try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .paymentIntentWithPMOSetupFutureUsage],
+                               currency: "VND",
+                               amount: 100000,
+                               paymentMethodType: .momo,
+                               merchantCountry: .US,
+                               expectedHierarchy: ExpectedFormHierarchy.Momo.paymentIntent) { _ in }
+    }
     func testPaycoConfirmFlows() async throws {
         try await _testConfirm(intentKinds: [.paymentIntent],
                                currency: "KRW",
