@@ -48,13 +48,19 @@ final public class IdentityVerificationSheet {
             /// Whether to hide the branding header above the consent title.
             public var hideBrandingHeader: Bool
 
-            /// Initializes a biometric consent header configuration.
+            /// Whether to hide the decline button on the consent welcome screen.
+            public var hideDeclineButton: Bool
+
+            /// Initializes a biometric consent configuration.
             /// - Parameters:
             ///   - hideBrandingHeader: Whether to hide the branding header above the consent title.
+            ///   - hideDeclineButton: Whether to hide the decline button on the consent welcome screen.
             public init(
-                hideBrandingHeader: Bool
+                hideBrandingHeader: Bool,
+                hideDeclineButton: Bool = false
             ) {
                 self.hideBrandingHeader = hideBrandingHeader
+                self.hideDeclineButton = hideDeclineButton
             }
         }
 
