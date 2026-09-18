@@ -22,7 +22,10 @@ public final class CurrencySelectorElementUIView: UIView {
         selectorView?.setEnabled(enabled)
     }
 
-    private weak var delegate: CurrencySelectorElementDelegate?
+    private let needsUpdateSuperviewHeight: () -> Void
+    var didUpdateContentHeight: () -> Void = {}
+
+    private weak var currencySelectionDelegate: CurrencySelectorElementCheckoutDelegate?
     private let appearance: CurrencySelectorElement.Appearance
     private let checkoutSessionId: String
     private let flagImageManager = AdaptivePricingFlagImageManager()
@@ -40,15 +43,17 @@ public final class CurrencySelectorElementUIView: UIView {
 
     init?(
         session: CheckoutController.Session,
-        delegate: CurrencySelectorElementDelegate,
-        appearance: CurrencySelectorElement.Appearance
+        delegate: CurrencySelectorElementCheckoutDelegate,
+        appearance: CurrencySelectorElement.Appearance,
+        needsUpdateSuperviewHeight: @escaping () -> Void
     ) async {
         guard let (_, exchangeRateMeta, rawCurrency) = CurrencySelectorUtilities.adaptivePricingData(from: session) else {
             return nil
         }
-        self.delegate = delegate
+        self.currencySelectionDelegate = delegate
         self.appearance = appearance
         self.checkoutSessionId = session.id
+        self.needsUpdateSuperviewHeight = needsUpdateSuperviewHeight
         super.init(frame: .zero)
 
         await flagImageManager.prefetchFlagImages(for: session)
@@ -143,7 +148,10 @@ public final class CurrencySelectorElementUIView: UIView {
             leftItem: left,
             rightItem: right,
             selectedItemId: currency.apiValue,
-            appearance: appearance
+            appearance: appearance,
+            needsUpdateSuperviewHeight: { [weak self] in
+                self?.contentHeightDidChange()
+            }
         )
         newSelector.delegate = self
         newSelector.translatesAutoresizingMaskIntoConstraints = false
@@ -151,7 +159,7 @@ public final class CurrencySelectorElementUIView: UIView {
 
         selectorView = newSelector
         newSelector.setEnabled(isUserInteractionEnabled)
-        invalidateIntrinsicContentSize()
+        invalidateContentSize()
     }
 
     private func updateCaption(
@@ -164,19 +172,30 @@ public final class CurrencySelectorElementUIView: UIView {
         )
         let detailText = CurrencySelectorUtilities.detailText(exchangeRateMeta: exchangeRateMeta)
         selectorView?.updateCaption(caption, detailText: detailText)
+        invalidateContentSize()
     }
 
     func showError(_ message: String) {
         errorLabel.text = message
         errorLabel.setHiddenIfNecessary(false)
-        invalidateIntrinsicContentSize()
+        invalidateContentSize()
     }
 
     func clearError() {
         guard errorLabel.text != nil else { return }
         errorLabel.text = nil
         errorLabel.setHiddenIfNecessary(true)
+        invalidateContentSize()
+    }
+
+    private func contentHeightDidChange() {
+        invalidateContentSize()
+        needsUpdateSuperviewHeight()
+    }
+
+    private func invalidateContentSize() {
         invalidateIntrinsicContentSize()
+        didUpdateContentHeight()
     }
 }
 
@@ -187,9 +206,9 @@ extension CurrencySelectorElementUIView: TwoOptionSelectorViewDelegate {
         selectorView?.setEnabled(false)
 
         Task { [weak self] in
-            guard let self, let delegate else { return }
+            guard let self, let currencySelectionDelegate else { return }
             do {
-                try await delegate.selectCurrency(id)
+                try await currencySelectionDelegate.selectCurrency(id)
                 STPAnalyticsClient.sharedClient.log(
                     analytic: PaymentSheetAnalytic(
                         event: .adaptivePricingCurrencyToggled,
