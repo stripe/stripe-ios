@@ -33,6 +33,7 @@ MINOR
 * [Added] Added `uploadFile(at:purpose:authorizationSecret:progress:)` and associated error type `FileUploadError`, exposed through the `STP` SPI.
 
 ### PaymentSheet
+* [Added] Added QRIS API bindings and support for payments in PaymentSheet.
 * [Added] Added ShopeePay API bindings and support for payments in PaymentSheet.
 * [Added] Added GCash API bindings and support for payments and setup in PaymentSheet.
 * [Added] Added MoMo API bindings and support for payments and setup in PaymentSheet.
