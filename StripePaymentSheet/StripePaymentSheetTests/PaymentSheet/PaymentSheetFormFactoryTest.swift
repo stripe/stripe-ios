@@ -2553,6 +2553,56 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         sendEventToSubviews(.viewDidAppear, from: form.view)
         XCTAssertNotNil(form.updateParams(params: IntentConfirmParams(type: .stripe(.ngBankTransfer))))
     }
+    func testNairaWalletShowsMerchantOfRecordTerms() {
+        // Given a one-time Naira Wallet payment
+        let form = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.ngWallet]),
+            elementsSession: ._testValue(paymentMethodTypes: ["ng_wallet"]),
+            configuration: .paymentElement(PaymentSheet.Configuration()),
+            paymentMethod: .stripe(.ngWallet)
+        ).make()
+
+        // Then the form shows the exact Web disclosure without a future-payment mandate
+        let text = form.getMandateElement()?.mandateTextView.textView.attributedText
+        let expected = "By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their terms."
+        XCTAssertEqual(text?.string, expected)
+        XCTAssertEqual(
+            text?.attribute(.link, at: (expected as NSString).range(of: "terms").location, effectiveRange: nil) as? URL,
+            URL(string: "https://d37ugbyn3rpeym.cloudfront.net/docs/GSSL%20-%20Buyer%20T&Cs%20(Final).pdf")
+        )
+        XCTAssertFalse(form.collectsUserInput)
+        XCTAssertNil(form.updateParams(params: IntentConfirmParams(type: .stripe(.ngWallet))))
+
+        // When the customer sees the disclosure, the payment can be confirmed
+        sendEventToSubviews(.viewDidAppear, from: form.view)
+        XCTAssertNotNil(form.updateParams(params: IntentConfirmParams(type: .stripe(.ngWallet))))
+    }
+
+    func testNairaWalletRestrictsBillingCountryToUnitedStates() throws {
+        // Given Naira Wallet with full billing address collection
+        let loadExpectation = expectation(description: "Load address specs")
+        AddressSpecProvider.shared.loadAddressSpecs {
+            loadExpectation.fulfill()
+        }
+        waitForExpectations(timeout: 1)
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.address = .full
+        let form = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.ngWallet]),
+            elementsSession: ._testValue(paymentMethodTypes: ["ng_wallet"]),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.ngWallet)
+        ).make()
+
+        // When reading the billing address countries
+        let address = try XCTUnwrap(
+            form.getAllUnwrappedSubElements().compactMap { $0 as? AddressSectionElement }.first
+        )
+
+        // Then the form matches Web's United States-only policy and default
+        XCTAssertEqual(address.countryCodes, ["US"])
+        XCTAssertEqual(address.selectedCountryCode, "US")
+    }
 
     func testNairaBankTransferDefaultsBillingCountryToNigeria() throws {
         // Given Naira bank transfer with full billing address collection
