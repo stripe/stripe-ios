@@ -120,6 +120,8 @@ import Foundation
     case momo
     /// A GCash payment method
     case gcash
+    /// A ShopeePay payment method
+    case shopeePay
     /// An unknown type.
     case unknown
 
@@ -236,6 +238,8 @@ import Foundation
             return "MoMo"
         case .gcash:
             return "GCash"
+        case .shopeePay:
+            return "ShopeePay"
         case .goPay:
             return "GoPay"
         case .cardPresent,
@@ -357,6 +361,8 @@ import Foundation
             return "momo"
         case .gcash:
             return "gcash"
+        case .shopeePay:
+            return "shopeepay"
         case .goPay:
             return "gopay"
         }

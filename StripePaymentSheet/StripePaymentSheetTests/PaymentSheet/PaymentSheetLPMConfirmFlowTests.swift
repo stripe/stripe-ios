@@ -759,6 +759,14 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                                merchantCountry: .US,
                                expectedHierarchy: ExpectedFormHierarchy.GCash.settingUp) { _ in }
     }
+    func testShopeePayConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "IDR",
+                               amount: 1000000,
+                               paymentMethodType: .shopeePay,
+                               merchantCountry: .US,
+                               expectedHierarchy: ExpectedFormHierarchy.ShopeePay.paymentIntent) { _ in }
+    }
     func testPaycoConfirmFlows() async throws {
         try await _testConfirm(intentKinds: [.paymentIntent],
                                currency: "KRW",
@@ -1337,7 +1345,7 @@ extension PaymentSheetLPMConfirmFlowTests {
             }
             // TODO: Re-enable once unified-mode Checkout forwards `blik_code` to PaymentIntent confirmation.
             if shouldTest(.checkoutSession),
-               ![STPPaymentMethodType.blik, .goPay].contains(paymentMethod) {
+               ![STPPaymentMethodType.blik, .goPay, .shopeePay].contains(paymentMethod) {
                 let checkoutSessionResponse = try await STPTestingAPIClient.shared.createLegacyCheckoutSession(
                     types: paymentMethodTypes,
                     currency: currency,
