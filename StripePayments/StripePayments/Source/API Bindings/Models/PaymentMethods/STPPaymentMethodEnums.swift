@@ -130,6 +130,8 @@ import Foundation
     case ngCard
     /// A Naira bank transfer payment method
     case ngBankTransfer
+    /// A Touch 'n Go payment method
+    case touchNGo
     /// A Naira USSD payment method
     case ngUSSD
     /// A Naira Wallet payment method
@@ -262,6 +264,8 @@ import Foundation
             return "Naira card"
         case .ngBankTransfer:
             return "Naira bank transfer"
+        case .touchNGo:
+            return "Touch 'n Go"
         case .ngUSSD:
             return "Naira USSD"
         case .ngWallet:
@@ -399,6 +403,8 @@ import Foundation
             return "ng_card"
         case .ngBankTransfer:
             return "ng_bank_transfer"
+        case .touchNGo:
+            return "touch_n_go"
         case .ngUSSD:
             return "ng_ussd"
         case .ngWallet:

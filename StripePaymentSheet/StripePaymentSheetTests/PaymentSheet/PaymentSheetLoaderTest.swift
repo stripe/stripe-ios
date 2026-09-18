@@ -952,6 +952,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
             .gcash,
             .ngCard,
             .ngBankTransfer,
+            .touchNGo,
             .ngUSSD,
             .ngWallet,
             .mondu,

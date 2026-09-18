@@ -293,6 +293,11 @@ class PaymentSheetFormFactory {
                     allowedBillingCountries: ["PH"],
                     additionalElements: makeSetupMandateElements(for: paymentMethod)
                 )
+            case .touchNGo:
+                return makeContactInformationAndBillingAddressForm(
+                    allowedBillingCountries: ["MY"],
+                    additionalElements: makeSetupMandateElements(for: paymentMethod)
+                )
             case .ngUSSD:
                 return makeContactInformationAndBillingAddressForm(
                     defaultBillingCountry: "NG",
@@ -360,6 +365,8 @@ class PaymentSheetFormFactory {
     private func makeSetupMandateElements(for paymentMethod: STPPaymentMethodType) -> [Element] {
         guard isSettingUp else { return [] }
         switch paymentMethod {
+        case .touchNGo:
+            return [makeTouchNGoMandate()]
         case .gcash:
             return [makeGCashMandate()]
         case .alipay:
