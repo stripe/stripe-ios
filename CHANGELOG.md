@@ -25,6 +25,7 @@ MINOR
 * [Added] Added Naira card API bindings and PaymentSheet support for PaymentIntents.
 * [Added] Added Naira bank transfer API bindings and PaymentSheet support for PaymentIntents.
 * [Added] Added Touch 'n Go API bindings and PaymentSheet support for payments and setup.
+* [Added] Added TrueMoney API bindings and PaymentSheet support for payments and setup.
 * [Added] Added Naira Wallet API bindings and PaymentSheet support for PaymentIntents.
 * [Added] Added Naira USSD API bindings and PaymentSheet support for PaymentIntents.
 * [Added] Added Mondu API bindings and PaymentSheet support for PaymentIntents.
