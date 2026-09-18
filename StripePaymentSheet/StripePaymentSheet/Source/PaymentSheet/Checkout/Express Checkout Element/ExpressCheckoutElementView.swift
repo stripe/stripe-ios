@@ -41,13 +41,19 @@ final class ExpressCheckoutElementViewModel: ObservableObject {
         uiView: ExpressCheckoutElementUIView
     ) {
         self.uiView = uiView
-        self.isAvailable = !ExpressCheckoutElementUtilities.resolveButtons(for: sessionSource.initialSession, configuration: configuration).isEmpty
+        self.isAvailable = !ExpressCheckoutElementUtilities.availablePaymentMethods(
+            for: sessionSource.initialSession.elementsSession,
+            configuration: configuration
+        ).isEmpty
         sessionCancellable = sessionSource.sessionPublisher
             .dropFirst()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] session in
                 self?.uiView.update(with: session)
-                self?.isAvailable = !ExpressCheckoutElementUtilities.resolveButtons(for: session, configuration: configuration).isEmpty
+                self?.isAvailable = !ExpressCheckoutElementUtilities.availablePaymentMethods(
+                    for: session.elementsSession,
+                    configuration: configuration
+                ).isEmpty
             }
     }
 }

@@ -41,7 +41,11 @@ public final class ExpressCheckoutElement {
         delegate: ExpressCheckoutElementDelegate
     ) {
         let uiView = ExpressCheckoutElementUIView(session: sessionSource.initialSession, configuration: configuration, delegate: delegate)
-        let viewModel = ExpressCheckoutElementViewModel(sessionSource: sessionSource, configuration: configuration, uiView: uiView)
+        let viewModel = ExpressCheckoutElementViewModel(
+            sessionSource: sessionSource,
+            configuration: configuration,
+            uiView: uiView
+        )
         self.uiView = uiView
         self.view = ExpressCheckoutElementView(viewModel: viewModel)
     }

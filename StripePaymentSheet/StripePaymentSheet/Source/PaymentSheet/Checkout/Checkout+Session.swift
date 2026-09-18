@@ -157,7 +157,6 @@ extension CheckoutController.Session {
         if automaticTaxEnabled && automaticTaxAddressSource == "billing" {
             elementsSessionValue.disableLinkForAutomaticTaxBilling = true
         }
-
         self.init(
             id: apiResponse.sessionId,
             businessName: apiResponse.elementsSession.businessName,
