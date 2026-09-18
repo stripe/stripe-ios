@@ -345,6 +345,12 @@ extension String.Localized {
         )
     }
 
+    static var gcash_mandate_text: String {
+        STPLocalizedString(
+            "By confirming your payment with GCash, you allow %@ to charge your GCash account for future payments in accordance with their terms.",
+            "GCash mandate text. The placeholder is the merchant's name."
+        )
+    }
     static var korean_payment_method_mandate_text: String {
         STPLocalizedString(
             "By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms.",
