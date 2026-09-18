@@ -107,6 +107,8 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
         case TH = "th"
         case DE = "de"
         case IT = "it"
+        case NG = "ng"
+        case NGWallet = "ng_wallet"
 
         var publishableKey: String {
             switch self {
@@ -138,6 +140,10 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                 return STPTestingDEPublishableKey
             case .IT:
                 return STPTestingITPublishableKey
+            case .NG:
+                return STPTestingNGPublishableKey
+            case .NGWallet:
+                return STPTestingNGWalletPublishableKey
             }
         }
     }
@@ -728,6 +734,22 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                                paymentMethodType: .goPay,
                                merchantCountry: .US,
                                expectedHierarchy: ExpectedFormHierarchy.GoPay.settingUp) { _ in }
+    }
+    func testNairaCardConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "NGN",
+                               amount: 100000,
+                               paymentMethodType: .ngCard,
+                               merchantCountry: .NG,
+                               expectedHierarchy: ExpectedFormHierarchy.NairaCard.paymentIntent) { _ in }
+        // TODO(porter): Add `.paymentIntentWithPMOSetupFutureUsage` once Confirmation Tokens
+        // accepts `client_context[payment_method_options][ng_card]`.
+        try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .setupIntent],
+                               currency: "NGN",
+                               amount: 100000,
+                               paymentMethodType: .ngCard,
+                               merchantCountry: .NG,
+                               expectedHierarchy: ExpectedFormHierarchy.NairaCard.settingUp) { _ in }
     }
     func testMomoConfirmFlows() async throws {
         try await _testConfirm(intentKinds: [.paymentIntent],
@@ -1353,7 +1375,9 @@ extension PaymentSheetLPMConfirmFlowTests {
             }
             // TODO: Re-enable once unified-mode Checkout forwards `blik_code` to PaymentIntent confirmation.
             if shouldTest(.checkoutSession),
-               ![STPPaymentMethodType.blik, .goPay, .shopeePay, .qris].contains(paymentMethod) {
+               ![STPPaymentMethodType.blik, .goPay, .shopeePay, .qris].contains(paymentMethod),
+               merchantCountry != .NG,
+               merchantCountry != .NGWallet {
                 let checkoutSessionResponse = try await STPTestingAPIClient.shared.createLegacyCheckoutSession(
                     types: paymentMethodTypes,
                     currency: currency,
