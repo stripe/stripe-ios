@@ -798,6 +798,28 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                                defaultCountry: "PH",
                                expectedHierarchy: ExpectedFormHierarchy.GCash.settingUp) { _ in }
     }
+    func testTouchNGoConfirmFlows() async throws {
+        // The Malaysia live-recording account is not enabled for `touch_n_go`, so there are no
+        // network fixtures for this test yet. Remove this skip after enabling the payment method
+        // and recording the complete flow matrix.
+        let testAccountSupportsTouchNGo = false
+        guard testAccountSupportsTouchNGo else {
+            throw XCTSkip("The Malaysia test account is not enabled for touch_n_go.")
+        }
+
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "MYR",
+                               amount: 1000,
+                               paymentMethodType: .touchNGo,
+                               merchantCountry: .MY,
+                               expectedHierarchy: ExpectedFormHierarchy.TouchNGo.paymentIntent) { _ in }
+        try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .paymentIntentWithPMOSetupFutureUsage, .setupIntent],
+                               currency: "MYR",
+                               amount: 1000,
+                               paymentMethodType: .touchNGo,
+                               merchantCountry: .MY,
+                               expectedHierarchy: ExpectedFormHierarchy.TouchNGo.settingUp) { _ in }
+    }
     func testShopeePayConfirmFlows() async throws {
         try await _testConfirm(intentKinds: [.paymentIntent],
                                currency: "IDR",
