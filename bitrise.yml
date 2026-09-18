@@ -28,13 +28,10 @@ trigger_map:
 pipelines:
   main-trigger-pipeline:
     workflows:
-      lint-tests:
-        abort_on_fail: true
       update-snapshots-and-lokalise: {}
       framework-tests: {}
-      lpm-confirm-flow-tests: {}
-      framework-tests-and-builds-xcode-26-1: {}
-      install-and-integration-tests: {}
+      lpm-confirm-flow-tests:
+        abort_on_fail: true
       size-report: {}
       ui-tests-paymentsheet:
         parallel: 4
@@ -60,6 +57,8 @@ pipelines:
   nightly-pipeline:
     workflows:
       framework-tests-no-mocks: {}
+      framework-tests-and-builds-xcode-26-1: {}
+      install-and-integration-tests: {}
       check-docs: {}
       legacy-tests-15: {}
       legacy-tests-16: {}
@@ -423,6 +422,44 @@ workflows:
         machine_type_id: g2.mac.large
   lpm-confirm-flow-tests:
     steps:
+    - script@1: &lint_fetch_master
+        title: Fetch enough history to find origin/master
+        inputs:
+        - content: |-
+            #!/usr/bin/env bash
+            set -euo pipefail
+            if [[ "$(git rev-parse --is-shallow-repository)" == "true" ]]; then
+              deepen_by=50
+              while true; do
+                git fetch --deepen="$deepen_by" origin master:refs/remotes/origin/master
+                if git merge-base origin/master HEAD >/dev/null 2>&1; then
+                  break
+                fi
+                deepen_by=$((deepen_by * 2))
+              done
+            else
+              git fetch origin master:refs/remotes/origin/master
+            fi
+    - script@1: &lint_swift_files
+        inputs:
+        - content: ./ci_scripts/lint_modified_files.sh
+        title: Run swiftlint
+    - script@1: &lint_paymentsheet_sharding
+        inputs:
+        - content: ./ci_scripts/check_paymentsheet_test_sharding.rb
+        title: Check PaymentSheet test sharding
+    - script@1: &lint_image_format
+        inputs:
+        - content: ./ci_scripts/check_image_format.sh
+        title: Check png image format is 8-bit
+    - fastlane@3: &lint_build_extras
+        inputs:
+        - lane: build_extras
+        title: fastlane build_extras
+    - fastlane@3: &lint_analyze
+        inputs:
+        - lane: analyze
+        title: fastlane analyze
     - xcode-test@6:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
@@ -634,30 +671,12 @@ workflows:
         inputs:
         - merge_pr: "no"
         - clone_depth: -1
-    - script@1:
-        inputs:
-        - content: git fetch origin master
-        title: Fetch origin/master
-    - script@1:
-        inputs:
-        - content: ./ci_scripts/lint_modified_files.sh
-        title: Run swiftlint
-    - script@1:
-        inputs:
-        - content: ./ci_scripts/check_paymentsheet_test_sharding.rb
-        title: Check PaymentSheet test sharding
-    - script@1:
-        inputs:
-        - content: ./ci_scripts/check_image_format.sh
-        title: Check png image format is 8-bit
-    - fastlane@3:
-        inputs:
-        - lane: build_extras
-        title: fastlane build_extras
-    - fastlane@3:
-        inputs:
-        - lane: analyze
-        title: fastlane analyze
+    - script@1: *lint_fetch_master
+    - script@1: *lint_swift_files
+    - script@1: *lint_paymentsheet_sharding
+    - script@1: *lint_image_format
+    - fastlane@3: *lint_build_extras
+    - fastlane@3: *lint_analyze
     meta:
       bitrise.io:
         stack: osx-xcode-26.4.x
