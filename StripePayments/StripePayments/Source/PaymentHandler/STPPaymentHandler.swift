@@ -830,6 +830,7 @@ public class STPPaymentHandler: NSObject {
 
         // Synchronous
         case .goPay,
+            .gcash,
             .alipay,
             .iDEAL,
             .FPX,
