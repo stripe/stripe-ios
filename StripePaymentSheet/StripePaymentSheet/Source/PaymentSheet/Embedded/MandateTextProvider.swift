@@ -22,12 +22,20 @@ class VerticalListMandateProvider: MandateTextProvider {
     private let elementsSession: STPElementsSession
     private let intent: Intent
     private let analyticsHelper: PaymentSheetAnalyticsHelper
+    private let shouldShowForm: (PaymentMethodElement) -> Bool
 
-    init(configuration: PaymentElementConfiguration, elementsSession: STPElementsSession, intent: Intent, analyticsHelper: PaymentSheetAnalyticsHelper) {
+    init(
+        configuration: PaymentElementConfiguration,
+        elementsSession: STPElementsSession,
+        intent: Intent,
+        analyticsHelper: PaymentSheetAnalyticsHelper,
+        shouldShowForm: @escaping (PaymentMethodElement) -> Bool = { $0.collectsUserInput }
+    ) {
         self.configuration = configuration
         self.elementsSession = elementsSession
         self.intent = intent
         self.analyticsHelper = analyticsHelper
+        self.shouldShowForm = shouldShowForm
     }
 
     /// Returns the mandate text for a given payment method type if we aren't going to show the form to the customer.
@@ -73,16 +81,8 @@ class VerticalListMandateProvider: MandateTextProvider {
                 analyticsHelper: analyticsHelper
             ).make()
 
-            if let embeddedPaymentElementConfiguration = configuration as? EmbeddedPaymentElement.Configuration {
-                // Embedded has special logic to determine whether it will show the form or not. If it shows the form, return nil.
-                if EmbeddedPaymentElement.shouldShowForm(form, configuration: embeddedPaymentElementConfiguration) {
-                    return nil
-                }
-            } else {
-                // If we're not embeded, and the form collects user input, the mandate will be displayed in the form and not here, so return nil
-                if form.collectsUserInput {
-                    return nil
-                }
+            if shouldShowForm(form) {
+                return nil
             }
 
             // If we get to this point, we didn't show the form, so return the mandate from the form if it exists
