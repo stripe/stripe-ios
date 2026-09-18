@@ -253,6 +253,36 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
             XCTAssertEqual(withReturnURL, .supported)
         }
     }
+    func testTrueMoneyRequiresReturnURLForPaymentAndSetup() {
+        // Given
+        let intents: [Intent] = [
+            ._testPaymentIntent(paymentMethodTypes: [.trueMoney]),
+            ._testPaymentIntent(paymentMethodTypes: [.trueMoney], setupFutureUsage: .offSession),
+            ._testSetupIntent(paymentMethodTypes: [.trueMoney]),
+        ]
+
+        for intent in intents {
+            // When
+            let withoutReturnURL = PaymentSheet.PaymentMethodType.supportsAdding(
+                paymentMethod: .trueMoney,
+                configuration: makeConfiguration(),
+                intent: intent,
+                elementsSession: ._testValue(intent: intent),
+                supportedPaymentMethods: [.trueMoney]
+            )
+            let withReturnURL = PaymentSheet.PaymentMethodType.supportsAdding(
+                paymentMethod: .trueMoney,
+                configuration: makeConfiguration(hasReturnURL: true),
+                intent: intent,
+                elementsSession: ._testValue(intent: intent),
+                supportedPaymentMethods: [.trueMoney]
+            )
+
+            // Then
+            XCTAssertEqual(withoutReturnURL, .missingRequirements([.returnURL]))
+            XCTAssertEqual(withReturnURL, .supported)
+        }
+    }
     func testTouchNGoRequiresReturnURLForPaymentAndSetup() {
         // Given
         let intents: [Intent] = [

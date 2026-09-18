@@ -289,6 +289,8 @@ class PaymentSheetFormFactory {
                 return makeContactInformationAndBillingAddressForm(additionalElements: makeSetupMandateElements(for: paymentMethod))
             case .touchNGo:
                 return makeContactInformationAndBillingAddressForm(additionalElements: makeSetupMandateElements(for: paymentMethod))
+            case .trueMoney:
+                return makeContactInformationAndBillingAddressForm(additionalElements: makeSetupMandateElements(for: paymentMethod))
             case .momo, .shopeePay, .qris, .goPay, .grabPay, .paynow, .payPay, .mobilePay, .vipps, .zip, .crypto,
                  .billie, .sunbit, .alma, .payByBank, .payco, .sequra, .scalapay:
                 return makeContactInformationAndBillingAddressForm()
@@ -342,6 +344,8 @@ class PaymentSheetFormFactory {
     private func makeSetupMandateElements(for paymentMethod: STPPaymentMethodType) -> [Element] {
         guard isSettingUp else { return [] }
         switch paymentMethod {
+        case .trueMoney:
+            return [makeTrueMoneyMandate()]
         case .touchNGo:
             return [makeTouchNGoMandate()]
         case .gcash:
