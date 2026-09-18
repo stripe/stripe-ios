@@ -352,6 +352,12 @@ extension String.Localized {
         )
     }
 
+    static var nigerian_wallet_terms: String {
+        STPLocalizedString(
+            "By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their <terms>terms</terms>.",
+            "Naira Wallet disclosure. The terms tags mark the link to the merchant of record's terms."
+        )
+    }
     static var nigerian_payment_method_mandate_text: String {
         STPLocalizedString(
             "By confirming your payment with Global Stack Services Limited, you allow %@ to charge this payment method for future payments in accordance with their terms.",

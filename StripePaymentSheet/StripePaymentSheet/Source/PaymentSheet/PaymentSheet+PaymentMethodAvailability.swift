@@ -52,6 +52,7 @@ extension PaymentSheet {
         .scalapay,
         .goPay,
         .qris,
+        .ngWallet,
         .shopeePay,
         .trueMoney,
         .touchNGo,
