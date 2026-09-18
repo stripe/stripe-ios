@@ -111,6 +111,7 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
         case IT = "it"
         case NG = "ng"
         case NGWallet = "ng_wallet"
+        case Mondu = "mondu"
 
         var publishableKey: String {
             switch self {
@@ -146,6 +147,8 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                 return STPTestingNGPublishableKey
             case .NGWallet:
                 return STPTestingNGWalletPublishableKey
+            case .Mondu:
+                return STPTestingMonduPublishableKey
             }
         }
     }
@@ -826,6 +829,14 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                                paymentMethodType: .ngWallet,
                                merchantCountry: .NGWallet,
                                expectedHierarchy: ExpectedFormHierarchy.NgWallet.paymentIntent) { _ in }
+    }
+    func testMonduConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "EUR",
+                               amount: 3500,
+                               paymentMethodType: .mondu,
+                               merchantCountry: .Mondu,
+                               expectedHierarchy: ExpectedFormHierarchy.Mondu.paymentIntent) { _ in }
     }
     func testPaycoConfirmFlows() async throws {
         try await _testConfirm(intentKinds: [.paymentIntent],
