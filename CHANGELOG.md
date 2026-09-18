@@ -5,6 +5,7 @@ MINOR
 ### CryptoOnramp (Alpha)
 * [Removed] Removed public exposure of `StripeCryptoOnramp.Image`, including `Image.linkIconSquare`.
 * [Added] Added `CryptoOnrampCoordinator.presentTermsAndConditionsIfNeeded(from:)` and `presentTermsOfServiceIfNeeded(from:)` to present and record acceptance of current partner terms when required. Both methods return `PartnerTermsResult`.
+* [Added] Added `email` and `phone` to `KycInfo`, populated from Apple Pay billing or shipping contact information when requested by the payment request. Both values are for prefill only and `phone` is not normalized to E.164. As a result, `kycInfo` may now be non-`nil` when Apple Pay returned only an email address and/or phone number.
 
 ### StripeCore
 * [Added] Added `additionalHeaders` support to the `STPAPIClient` GET, POST, and DELETE APIs exposed through the `STP` SPI.
