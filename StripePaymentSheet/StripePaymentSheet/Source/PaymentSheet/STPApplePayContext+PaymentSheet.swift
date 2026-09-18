@@ -408,7 +408,7 @@ extension STPApplePayContext {
             applePayContext.apiClient = configuration.apiClient
             applePayContext.returnUrl = configuration.returnURL
             applePayContext.clientAttributionMetadata = clientAttributionMetadata
-            applePayContext.fallbackBillingDetails = makeFallbackBillingDetails(intent: intent, configuration: configuration)
+            applePayContext.fallbackBillingDetails = makeFallbackBillingDetails(configuration: configuration)
             return applePayContext
         } else {
             // Delegate only deallocs when Apple Pay completes
@@ -514,13 +514,12 @@ private func makeShippingDetails(from configuration: PaymentElementConfiguration
 
 @MainActor
 private func makeFallbackBillingDetails(
-    intent: Intent,
     configuration: PaymentElementConfiguration
 ) -> StripeAPI.BillingDetails? {
     var fallbackBillingDetails = StripeAPI.BillingDetails()
     var hasFallbackBillingDetails = false
 
-    if case .checkout(let session) = intent, let email = session.email {
+    if let email = configuration.customerProvider.email {
         fallbackBillingDetails.email = email
         hasFallbackBillingDetails = true
     }

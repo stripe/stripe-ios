@@ -36,7 +36,7 @@ extension PaymentSheet {
                 // Link saved payment methods don't require ephemeral keys, API will error if provided
                 guard !isFromLink && !isSavedFromLink(from: confirmType) else { return nil }
 
-                return configuration.customer?.ephemeralKeySecret(basedOn: elementsSession)
+                return configuration.customerProvider.ephemeralKeySecret(basedOn: elementsSession)
             }()
 
             // 2. Create the ConfirmationToken
@@ -171,7 +171,7 @@ extension PaymentSheet {
         // This helps catch integration errors during development (e.g. mismatched currency/amount/SFU)
         // without breaking production payments if server intent changes after client configuration.
         #if DEBUG
-        confirmationTokenParams.clientContext = intentConfig.createClientContext(customerId: configuration.customer?.id)
+        confirmationTokenParams.clientContext = intentConfig.createClientContext(customerId: configuration.customerProvider.customerID)
         #endif
 
         // 2. Configure payment method details based on confirm type
