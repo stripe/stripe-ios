@@ -8,7 +8,7 @@
 import Foundation
 @testable @_spi(STP) import StripeCore
 @testable @_spi(CryptoOnrampAlpha) import StripeCryptoOnramp
-@testable @_spi(STP) import StripePayments
+import StripePayments
 @testable @_spi(STP) import StripePaymentSheet
 import XCTest
 

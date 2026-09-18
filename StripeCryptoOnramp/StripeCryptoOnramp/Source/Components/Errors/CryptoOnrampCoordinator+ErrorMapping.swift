@@ -7,7 +7,7 @@
 
 import Foundation
 @_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
+import StripePayments
 @_spi(STP) import StripePaymentSheet
 
 extension CryptoOnrampCoordinator {
