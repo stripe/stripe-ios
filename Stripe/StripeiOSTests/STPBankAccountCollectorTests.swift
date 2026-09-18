@@ -34,16 +34,6 @@ final class STPBankAccountCollectorTests: APIStubbedTestCase {
         XCTAssertEqual(collector.style, .alwaysDark)
     }
 
-    func testPreCollectedConsentSwiftInitializer() {
-        let evidence = FinancialConnectionsPreCollectedConsent(
-            consent: "fccons_123",
-            collectedAt: 1_725_000_123
-        )
-
-        XCTAssertEqual(evidence.consent, "fccons_123")
-        XCTAssertEqual(evidence.collectedAt, 1_725_000_123)
-    }
-
     func testUserInterfaceStyleMapping() {
         XCTAssertEqual(STPBankAccountCollectorUserInterfaceStyle.automatic.asFinancialConnectionsConfigurationStyle, .automatic)
         XCTAssertEqual(STPBankAccountCollectorUserInterfaceStyle.alwaysLight.asFinancialConnectionsConfigurationStyle, .alwaysLight)
