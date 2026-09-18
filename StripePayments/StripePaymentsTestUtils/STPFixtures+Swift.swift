@@ -300,6 +300,26 @@ public extension STPPaymentMethod {
         ])!
     }
 
+    static func _testLinkGeneric(label: String = "PayPal", sublabel: String? = "sam@stripe.com") -> STPPaymentMethod {
+        let paymentMethod = STPPaymentMethod.decodedObject(fromAPIResponse: [
+            "id": "pm_123",
+            "type": "link",
+            "created": "12345",
+            "billing_details": [
+                "name": "Sam Stripe",
+                "email": "sam@stripe.com",
+            ] as [String: Any],
+        ])!
+        paymentMethod.linkPaymentDetails = .generic(
+            LinkPaymentDetails.Generic(
+                id: "csmr_123",
+                label: label,
+                sublabel: sublabel
+            )
+        )
+        return paymentMethod
+    }
+
     static func _testLink(displayName: String? = nil) -> STPPaymentMethod {
         let paymentMethod = STPPaymentMethod.decodedObject(fromAPIResponse: [
             "id": "pm_123",

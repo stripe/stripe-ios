@@ -102,6 +102,7 @@ extension SavedPaymentMethodFormFactory {
     ) -> PaymentMethodElement {
         let textField = TextFieldElement.NameConfiguration(
             defaultValue: genericDetails.formattedDisplayText,
+            label: String.Localized.payment_method_details,
             editConfiguration: .readOnly
         ).makeElement(theme: configuration.appearance.asElementsTheme)
 
