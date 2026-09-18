@@ -2544,6 +2544,26 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             XCTAssertNotNil(form.updateParams(params: IntentConfirmParams(type: .stripe(.goPay))))
         }
     }
+    func testQRISUsesHostedAuthorizationWithoutNativeMandate() {
+        // Given a one-time QRIS payment
+        let intents: [Intent] = [
+            ._testPaymentIntent(paymentMethodTypes: [.qris]),
+        ]
+        for intent in intents {
+            // When the form uses automatic billing collection
+            let form = PaymentSheetFormFactory(
+                intent: intent,
+                elementsSession: ._testValue(paymentMethodTypes: ["qris"]),
+                configuration: .paymentElement(PaymentSheet.Configuration()),
+                paymentMethod: .stripe(.qris)
+            ).make()
+
+            // Then the hosted flow owns authorization and the native form needs no mandate
+            XCTAssertFalse(form.collectsUserInput)
+            XCTAssertNil(form.getMandateElement())
+            XCTAssertNotNil(form.updateParams(params: IntentConfirmParams(type: .stripe(.qris))))
+        }
+    }
     func testShopeePayUsesHostedAuthorizationWithoutNativeMandate() {
         // Given a one-time ShopeePay payment
         let intents: [Intent] = [
