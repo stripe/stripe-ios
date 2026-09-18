@@ -126,6 +126,8 @@ import Foundation
     case qris
     /// A GCash payment method
     case gcash
+    /// A Naira card payment method
+    case ngCard
     /// An unknown type.
     case unknown
 
@@ -248,6 +250,8 @@ import Foundation
             return "QRIS"
         case .gcash:
             return "GCash"
+        case .ngCard:
+            return "Naira card"
         case .goPay:
             return "GoPay"
         case .cardPresent,
@@ -375,6 +379,8 @@ import Foundation
             return "qris"
         case .gcash:
             return "gcash"
+        case .ngCard:
+            return "ng_card"
         case .goPay:
             return "gopay"
         }

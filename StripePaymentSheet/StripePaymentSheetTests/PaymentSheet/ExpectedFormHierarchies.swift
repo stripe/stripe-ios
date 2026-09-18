@@ -133,6 +133,15 @@ enum ExpectedFormHierarchy {
     enum GoPay {
         static var paymentIntent: FormHierarchyNode { emptyForm }
     }
+    // MARK: - Naira card
+
+    enum NairaCard {
+        static var paymentIntent: FormHierarchyNode {
+            FormHierarchyNode(type: "FormElement", children: [
+                FormHierarchyNode(type: "SimpleMandateElement", properties: ["text": "By confirming your payment, you agree that your tr..."])
+            ])
+        }
+    }
     // MARK: - MoMo
 
     enum Momo {
