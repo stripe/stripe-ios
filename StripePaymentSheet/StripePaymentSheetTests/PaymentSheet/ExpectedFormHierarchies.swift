@@ -177,6 +177,15 @@ enum ExpectedFormHierarchy {
     enum ShopeePay {
         static var paymentIntent: FormHierarchyNode { emptyForm }
     }
+    // MARK: - Naira Wallet
+
+    enum NgWallet {
+        static var paymentIntent: FormHierarchyNode {
+            FormHierarchyNode(type: "FormElement", children: [
+                FormHierarchyNode(type: "SimpleMandateElement", properties: ["text": "By confirming your payment, you agree that your tr..."])
+            ])
+        }
+    }
     // MARK: - QRIS
 
     enum QRIS {
