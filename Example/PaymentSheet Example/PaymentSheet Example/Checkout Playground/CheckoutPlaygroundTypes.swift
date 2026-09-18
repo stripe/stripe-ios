@@ -17,6 +17,11 @@ extension ExpressCheckoutElement.LinkConfiguration.Display: CaseIterable, Identi
     public var id: String { rawValue }
 }
 
+extension ExpressCheckoutElement.Appearance.ButtonTheme: CaseIterable, Identifiable {
+    public static var allCases: [Self] { [.automatic, .light, .dark] }
+    public var id: String { rawValue }
+}
+
 enum CheckoutPlayground {
     enum LinkMode: String, CaseIterable, Identifiable, Codable {
         case native
@@ -286,6 +291,38 @@ enum CheckoutPlayground {
                 return LineItemConfig.defaults
             case .zeroAmount:
                 return LineItemConfig.zeroAmount
+            }
+        }
+    }
+
+    enum ExpressCheckoutElementButtonLayoutLimit: String, CaseIterable, Identifiable {
+        case automatic
+        case one
+        case two
+
+        var id: String { rawValue }
+
+        var displayName: String {
+            switch self {
+            case .automatic: return "automatic"
+            case .one: return "1"
+            case .two: return "2"
+            }
+        }
+
+        var intValue: Int? {
+            switch self {
+            case .automatic: return nil
+            case .one: return 1
+            case .two: return 2
+            }
+        }
+
+        init(intValue: Int?) {
+            switch intValue {
+            case 1: self = .one
+            case 2: self = .two
+            default: self = .automatic
             }
         }
     }

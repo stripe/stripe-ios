@@ -14,6 +14,7 @@ extension CheckoutPlayground {
         var applePayDisplay: ExpressCheckoutElement.ApplePayConfiguration.Display = .automatic
         var linkDisplay: ExpressCheckoutElement.LinkConfiguration.Display = .automatic
         var shippingAddressRequired: Bool = false
+        var appearance: ExpressCheckoutElement.Appearance = .init()
     }
 
     @MainActor

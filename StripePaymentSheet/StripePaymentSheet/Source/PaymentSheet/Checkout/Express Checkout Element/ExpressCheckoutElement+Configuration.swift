@@ -22,6 +22,9 @@ extension ExpressCheckoutElement {
         /// Called after a wallet payment confirmation completes.
         public var confirmHandler: ConfirmHandler
 
+        /// Controls appearance of Express Checkout Element.
+        public var appearance: Appearance = .init()
+
         /// Creates a configuration with default values.
         public init(confirmHandler: @escaping ConfirmHandler) {
             self.confirmHandler = confirmHandler
@@ -80,6 +83,35 @@ extension ExpressCheckoutElement {
         public init(display: Display = .automatic) {
             self.display = display
         }
+    }
+
+    public struct Appearance {
+        /// Controls the theme of express payment buttons.
+        public enum ButtonTheme: String {
+            /// Light theme which contrasts with a dark background.
+            case light
+            /// Dark theme which contrasts with a light background.
+            case dark
+            /// Automatic theme which contrasts with background depending on system theme.
+            case automatic
+        }
+
+        /// Controls the layout of express payment buttons.
+        public struct ButtonLayout {
+            /// Maximum number of columns. nil uses the default.
+            public var maxColumns: Int?
+            /// Maximum number of rows. nil uses the default.
+            public var maxRows: Int?
+            public init() {}
+        }
+
+        /// Theme of the express payment buttons.
+        public var buttonTheme: ButtonTheme = .automatic
+
+        /// Layout of the express payment buttons.
+        public var buttonLayout: ButtonLayout = .init()
+
+        public init() {}
     }
 
     /// A closure called after a wallet payment confirmation completes.
