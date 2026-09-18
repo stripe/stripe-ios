@@ -1,0 +1,47 @@
+GET
+https:\/\/api\.stripe\.com\/v1\/setup_intents\/seti_1UIX73FY0qyl6XeWboS4E5oB\?client_secret=seti_1UIX73FY0qyl6XeWboS4E5oB_secret_VJ9PGV1hwhsTsI0c8kWlY3ZawI88vfC$
+200
+application/json
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=sq-9U6611fkeVzoxEEzFOWo7F8422L5e4_UvahPCNaZdZO4nykxpQ9d9wJH0wMbWGxZyNHkg8_-BDZcC; report-to csp
+Server: nginx
+Cache-Control: no-cache, no-store
+reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=sq-9U6611fkeVzoxEEzFOWo7F8422L5e4_UvahPCNaZdZO4nykxpQ9d9wJH0wMbWGxZyNHkg8_-BDZcC&t=1"
+stripe-notice: You are using an outdated API version (2020-08-27). We recommend upgrading to the latest API version, 2026-08-26.dahlia. See https://docs.stripe.com/upgrades
+x-wc: 3c3
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+x-stripe-routing-context-priority-tier: api-testmode
+x-stripe-priority-routing-enabled: true
+report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=sq-9U6611fkeVzoxEEzFOWo7F8422L5e4_UvahPCNaZdZO4nykxpQ9d9wJH0wMbWGxZyNHkg8_-BDZcC&t=1"}],"include_subdomains":true}
+request-id: req_nIZDyiqYFDBdHx
+Content-Length: 615
+Vary: Origin
+Date: Tue, 22 Sep 2026 17:04:14 GMT
+stripe-version: 2020-08-27
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+
+{
+  "id" : "seti_1UIX73FY0qyl6XeWboS4E5oB",
+  "description" : null,
+  "excluded_payment_method_types" : null,
+  "next_action" : null,
+  "livemode" : false,
+  "payment_method" : null,
+  "payment_method_configuration_details" : null,
+  "usage" : "off_session",
+  "allowed_payment_method_types" : null,
+  "payment_method_types" : [
+    "gopay"
+  ],
+  "object" : "setup_intent",
+  "last_setup_error" : null,
+  "created" : 1790096653,
+  "client_secret" : "seti_1UIX73FY0qyl6XeWboS4E5oB_secret_VJ9PGV1hwhsTsI0c8kWlY3ZawI88vfC",
+  "automatic_payment_methods" : null,
+  "cancellation_reason" : null,
+  "status" : "requires_payment_method"
+}
