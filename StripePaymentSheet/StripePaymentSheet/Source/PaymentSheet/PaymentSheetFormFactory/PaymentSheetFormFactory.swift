@@ -283,6 +283,8 @@ class PaymentSheetFormFactory {
                 return makeSepaDebit()
             case .ngCard:
                 return makeContactInformationAndBillingAddressForm(additionalElements: [makeNigerianPaymentMethodMandate()])
+            case .ngBankTransfer:
+                return makeContactInformationAndBillingAddressForm(additionalElements: [makeNigerianPaymentMethodMandate()])
             case .gcash:
                 return makeContactInformationAndBillingAddressForm(additionalElements: makeSetupMandateElements(for: paymentMethod))
             case .momo, .shopeePay, .qris, .goPay, .grabPay, .paynow, .payPay, .mobilePay, .vipps, .zip, .crypto,

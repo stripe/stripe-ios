@@ -951,6 +951,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
             .shopeePay,
             .qris,
             .ngCard,
+            .ngBankTransfer,
         ]
         // Test successful load with valid payment method options
         let all_payment_methods_pmo_sfu_values: [STPPaymentMethodType: PaymentSheet.IntentConfiguration.SetupFutureUsage] = STPPaymentMethodType.allCases.reduce([:]) { partialResult, type in
