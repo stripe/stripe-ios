@@ -488,7 +488,7 @@ final class FinancialConnectionsUITests: XCTestCase {
 
         let notNowButton = app.fc_nativeNetworkingNotNowButton
         XCTAssert(notNowButton.waitForExistence(timeout: 60)) // wait for networking sign up to show
-        app.fc_dismissKeyboard()
+        app.stp_dismissKeyboard()
         notNowButton.waitForExistenceAndTap() // skip networking sign up
 
         // ...the success pane will be skipped...
@@ -518,7 +518,7 @@ final class FinancialConnectionsUITests: XCTestCase {
         app.fc_nativeConnectAccountsButton.tap()
 
         XCTAssert(app.fc_nativeNetworkingNotNowButton.waitForExistence(timeout: 60)) // wait for networking sign up to show
-        app.fc_dismissKeyboard()
+        app.stp_dismissKeyboard()
         app.fc_nativeNetworkingNotNowButton.waitForExistenceAndTap() // skip networking sign up
 
         app.fc_nativeSuccessDoneButton.tap()
@@ -548,7 +548,7 @@ final class FinancialConnectionsUITests: XCTestCase {
         app.fc_nativeConnectAccountsButton.tap()
 
         XCTAssert(app.fc_nativeNetworkingNotNowButton.waitForExistence(timeout: 60)) // wait for networking sign up to show
-        app.fc_dismissKeyboard()
+        app.stp_dismissKeyboard()
         app.fc_nativeNetworkingNotNowButton.waitForExistenceAndTap() // skip networking sign up
 
         app.fc_nativeSuccessDoneButton.tap()
@@ -577,7 +577,7 @@ final class FinancialConnectionsUITests: XCTestCase {
 
         // the not now button could appear if networking manual entry is enabled
         if app.fc_nativeNetworkingNotNowButton.waitForExistence(timeout: 5) {
-            app.fc_dismissKeyboard()
+            app.stp_dismissKeyboard()
             app.fc_nativeNetworkingNotNowButton.waitForExistenceAndTap() // skip networking sign up
         }
 
@@ -604,7 +604,7 @@ final class FinancialConnectionsUITests: XCTestCase {
         app.fc_nativeConnectAccountsButton.tap()
 
         XCTAssert(app.fc_nativeNetworkingNotNowButton.waitForExistence(timeout: 60)) // wait for networking sign up to show
-        app.fc_dismissKeyboard()
+        app.stp_dismissKeyboard()
         app.fc_nativeNetworkingNotNowButton.waitForExistenceAndTap() // skip networking sign up
 
         app.fc_nativeSuccessDoneButton.tap()
