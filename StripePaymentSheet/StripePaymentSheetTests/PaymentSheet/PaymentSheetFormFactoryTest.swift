@@ -2617,6 +2617,41 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             }
         }
     }
+    func testTrueMoneyShowsMandateOnlyForFuturePayments() {
+        // Given a payment, two ways to request future usage, and a setup intent
+        let intents: [Intent] = [
+            ._testPaymentIntent(paymentMethodTypes: [.trueMoney]),
+            ._testPaymentIntent(paymentMethodTypes: [.trueMoney], setupFutureUsage: .offSession),
+            ._testPaymentIntent(paymentMethodTypes: [.trueMoney], paymentMethodOptionsSetupFutureUsage: [.trueMoney: "off_session"]),
+            ._testSetupIntent(paymentMethodTypes: [.trueMoney]),
+        ]
+        var configuration = PaymentSheet.Configuration()
+        configuration.merchantDisplayName = "Example Merchant"
+        for (index, intent) in intents.enumerated() {
+            // When the form uses automatic billing collection
+            let form = PaymentSheetFormFactory(
+                intent: intent,
+                elementsSession: ._testValue(paymentMethodTypes: ["truemoney"]),
+                configuration: .paymentElement(configuration),
+                paymentMethod: .stripe(.trueMoney)
+            ).make()
+
+            // Then only future payments require the exact web mandate
+            XCTAssertFalse(form.collectsUserInput)
+            if index == 0 {
+                XCTAssertNil(form.getMandateElement())
+                XCTAssertNotNil(form.updateParams(params: IntentConfirmParams(type: .stripe(.trueMoney))))
+            } else {
+                XCTAssertEqual(
+                    form.getMandateElement()?.mandateTextView.textView.text,
+                    "By confirming your payment with TrueMoney, you allow Example Merchant to charge your TrueMoney account for future payments in accordance with their terms."
+                )
+                XCTAssertNil(form.updateParams(params: IntentConfirmParams(type: .stripe(.trueMoney))))
+                sendEventToSubviews(.viewDidAppear, from: form.view)
+                XCTAssertNotNil(form.updateParams(params: IntentConfirmParams(type: .stripe(.trueMoney))))
+            }
+        }
+    }
     func testGoPayUsesHostedAuthorizationWithoutNativeMandate() {
         // Given the payment and setup modes supported by GoPay
         let intents: [Intent] = [

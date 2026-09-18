@@ -162,6 +162,16 @@ enum ExpectedFormHierarchy {
             ])
         }
     }
+    // MARK: - TrueMoney
+
+    enum TrueMoney {
+        static var paymentIntent: FormHierarchyNode { emptyForm }
+        static var settingUp: FormHierarchyNode {
+            FormHierarchyNode(type: "FormElement", children: [
+                FormHierarchyNode(type: "SimpleMandateElement", properties: ["text": "By confirming your payment with TrueMoney, you all..."])
+            ])
+        }
+    }
     // MARK: - ShopeePay
 
     enum ShopeePay {

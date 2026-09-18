@@ -133,6 +133,8 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
     @objc public var qris: STPPaymentMethodQRISParams?
     /// If this is a ShopeePay PaymentMethod, this contains additional details.
     @objc public var shopeePay: STPPaymentMethodShopeePayParams?
+    /// If this is a TrueMoney PaymentMethod, this contains additional details.
+    @objc public var trueMoney: STPPaymentMethodTrueMoneyParams?
     /// If this is a Touch 'n Go PaymentMethod, this contains additional details.
     @objc public var touchNGo: STPPaymentMethodTouchNGoParams?
     /// If this is a GCash PaymentMethod, this contains additional details.
@@ -976,6 +978,24 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
         self.metadata = metadata
     }
 
+    /// Creates params for a TrueMoney PaymentMethod.
+    /// - Parameters:
+    ///   - trueMoney:       An object containing additional TrueMoney details.
+    ///   - billingDetails: Billing information associated with the PaymentMethod.
+    ///   - metadata:       Additional information to attach to the PaymentMethod.
+    @objc
+    public convenience init(
+        trueMoney: STPPaymentMethodTrueMoneyParams,
+        billingDetails: STPPaymentMethodBillingDetails?,
+        metadata: [String: String]?
+    ) {
+        self.init()
+        self.type = .trueMoney
+        self.trueMoney = trueMoney
+        self.billingDetails = billingDetails
+        self.metadata = metadata
+    }
+
     /// Creates params for a Touch 'n Go PaymentMethod.
     /// - Parameters:
     ///   - touchNGo:       An object containing additional Touch 'n Go details.
@@ -1121,6 +1141,7 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
             NSStringFromSelector(#selector(getter: goPay)): "gopay",
             NSStringFromSelector(#selector(getter: qris)): "qris",
             NSStringFromSelector(#selector(getter: shopeePay)): "shopeepay",
+            NSStringFromSelector(#selector(getter: trueMoney)): "truemoney",
             NSStringFromSelector(#selector(getter: touchNGo)): "touch_n_go",
             NSStringFromSelector(#selector(getter: gcash)): "gcash",
             NSStringFromSelector(#selector(getter: momo)): "momo",
@@ -1593,6 +1614,8 @@ extension STPPaymentMethodParams {
             qris = STPPaymentMethodQRISParams()
         case .shopeePay:
             shopeePay = STPPaymentMethodShopeePayParams()
+        case .trueMoney:
+            trueMoney = STPPaymentMethodTrueMoneyParams()
         case .touchNGo:
             touchNGo = STPPaymentMethodTouchNGoParams()
         case .gcash:
