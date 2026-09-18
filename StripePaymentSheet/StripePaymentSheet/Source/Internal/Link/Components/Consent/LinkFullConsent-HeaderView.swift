@@ -80,7 +80,7 @@ final class LinkFullConsentHeaderView: UIView {
 private extension UIImageView {
     func setImage(from url: URL) {
         Task {
-            guard let image = try? await DownloadManager.sharedManager.downloadImage(url: url) else {
+            guard let image = try? await DownloadManager.shared.image(for: url) else {
                 return
             }
 

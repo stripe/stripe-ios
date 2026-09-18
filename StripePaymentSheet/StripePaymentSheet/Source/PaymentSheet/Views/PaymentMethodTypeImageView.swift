@@ -14,6 +14,7 @@ class PaymentMethodTypeImageView: UIImageView {
     let contrastMatchingColor: UIColor
     let currency: String?
     let iconStyle: PaymentSheet.Appearance.IconStyle
+    private var imageTask: Task<Void, Never>?
 
     /// Initializes a PaymentMethodTypeImageView with the specified payment method type and a color to match contrast.
     ///
@@ -34,6 +35,10 @@ class PaymentMethodTypeImageView: UIImageView {
         fatalError("init(coder:) has not been implemented")
     }
 
+    deinit {
+        imageTask?.cancel()
+    }
+
 #if !os(visionOS)
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
@@ -42,24 +47,44 @@ class PaymentMethodTypeImageView: UIImageView {
 #endif
 
     func updateImage() {
-        // Unfortunately the DownloadManager API returns either a placeholder image _or_ the actual image
-        // Set the image now...
-        let image = paymentMethodType.makeImage(forDarkBackground: contrastMatchingColor.roundToBlackOrWhite == .white, currency: currency, iconStyle: iconStyle) { [weak self] image in
-            DispatchQueue.main.async {
-                // ...and set it again if the callback is called with a downloaded image
-                self?.setImage(image)
-            }
+        imageTask?.cancel()
+        let forDarkBackground = resolvedContrastMatchingColor == .white
+        let paymentMethodType = self.paymentMethodType
+        let currency = self.currency
+        let iconStyle = self.iconStyle
+        setImage(
+            paymentMethodType.makeImage(
+                forDarkBackground: forDarkBackground,
+                currency: currency,
+                iconStyle: iconStyle
+            )
+        )
+        imageTask = Task { @MainActor [weak self] in
+            let image = await paymentMethodType.loadImage(
+                forDarkBackground: forDarkBackground,
+                currency: currency,
+                iconStyle: iconStyle
+            )
+            guard !Task.isCancelled else { return }
+            self?.setImage(image)
         }
-        setImage(image)
     }
 
     func setImage(_ image: UIImage) {
         if self.paymentMethodType.iconRequiresTinting  {
             self.image = image.withRenderingMode(.alwaysTemplate)
-            tintColor = contrastMatchingColor.roundToBlackOrWhite
+            tintColor = resolvedContrastMatchingColor
         } else {
             self.image = image
             tintColor = nil
         }
+    }
+
+    private var resolvedContrastMatchingColor: UIColor {
+        var resolvedColor: UIColor = .black
+        traitCollection.performAsCurrent {
+            resolvedColor = contrastMatchingColor.roundToBlackOrWhite
+        }
+        return resolvedColor
     }
 }
