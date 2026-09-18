@@ -107,6 +107,43 @@ class FinancialConnectionsAsyncAPIClientTests: XCTestCase {
         XCTAssertNil(apiClient.consumerPublishableKeyProvider(canUseConsumerKey: false))
     }
 
+    func testSynchronizeIncludesConsumerSessionClientSecretWhenDataPermissionsRequested() async {
+        // Given an existing consumer and requested data permissions
+        apiClient.consumerSession = ConsumerSessionData(
+            clientSecret: "consumer_session_client_secret_123",
+            emailAddress: "email@example.com",
+            redactedFormattedPhoneNumber: "+1********23",
+            verificationSessions: []
+        )
+        apiClient.hasRequestedDataPermissions = true
+
+        // When synchronizing
+        let parameters = await synchronizeParameters(apiClient: apiClient)
+
+        // Then the consumer session client secret is included
+        XCTAssertEqual(
+            parameters["consumer_session_client_secret"],
+            "consumer_session_client_secret_123"
+        )
+    }
+
+    func testSynchronizeOmitsConsumerSessionClientSecretWithoutDataPermissions() async {
+        // Given an existing consumer without requested data permissions
+        apiClient.consumerSession = ConsumerSessionData(
+            clientSecret: "consumer_session_client_secret_123",
+            emailAddress: "email@example.com",
+            redactedFormattedPhoneNumber: "+1********23",
+            verificationSessions: []
+        )
+        apiClient.hasRequestedDataPermissions = false
+
+        // When synchronizing
+        let parameters = await synchronizeParameters(apiClient: apiClient)
+
+        // Then the consumer session client secret is omitted
+        XCTAssertNil(parameters["consumer_session_client_secret"])
+    }
+
     func testEmptyBillingAddressEncodedAsParameters() throws {
         let billingAddress = BillingAddress()
         let encodedBillingAddress = try FinancialConnectionsAsyncAPIClient.encodeAsParameters(billingAddress)
@@ -437,5 +474,40 @@ class FinancialConnectionsAsyncAPIClientTests: XCTestCase {
             "product": "bank_account",
             "single_account": false,
         ]
+    }
+
+    private func synchronizeParameters(
+        apiClient: FinancialConnectionsAsyncAPIClient
+    ) async -> [String: String] {
+        let configuration = URLSessionConfiguration.ephemeral
+        configuration.protocolClasses = [MockURLProtocol.self]
+        apiClient.backingAPIClient.urlSession = URLSession(configuration: configuration)
+
+        var requestParameters: [String: String] = [:]
+        MockURLProtocol.requestHandler = { request in
+            let body = request.httpBodyOrBodyStream.flatMap { String(data: $0, encoding: .utf8) }
+            var components = URLComponents()
+            components.query = body
+            requestParameters = Dictionary(
+                uniqueKeysWithValues: (components.queryItems ?? []).map { ($0.name, $0.value ?? "") }
+            )
+
+            let response = HTTPURLResponse(
+                url: request.url!,
+                statusCode: 200,
+                httpVersion: nil,
+                headerFields: ["Content-Type": "application/json"]
+            )!
+            return (response, Data("{}".utf8))
+        }
+        defer {
+            MockURLProtocol.requestHandler = nil
+        }
+
+        _ = try? await apiClient.synchronize(
+            clientSecret: "financial_connections_session_client_secret_123",
+            returnURL: nil
+        )
+        return requestParameters
     }
 }
