@@ -51,6 +51,7 @@ extension PaymentSheet {
         .sequra,
         .scalapay,
         .goPay,
+        .qris,
         .shopeePay,
         .gcash,
         .momo,
