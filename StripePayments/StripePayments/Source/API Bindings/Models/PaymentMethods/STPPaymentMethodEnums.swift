@@ -124,6 +124,8 @@ import Foundation
     case shopeePay
     /// A QRIS payment method
     case qris
+    /// A GCash payment method
+    case gcash
     /// An unknown type.
     case unknown
 
@@ -244,6 +246,8 @@ import Foundation
             return "ShopeePay"
         case .qris:
             return "QRIS"
+        case .gcash:
+            return "GCash"
         case .goPay:
             return "GoPay"
         case .cardPresent,
@@ -369,6 +373,8 @@ import Foundation
             return "shopeepay"
         case .qris:
             return "qris"
+        case .gcash:
+            return "gcash"
         case .goPay:
             return "gopay"
         }
