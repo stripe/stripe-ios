@@ -11,4 +11,8 @@ import Foundation
 // String values should map to those in zoolander/../common.proto/VerificationType
 enum SupportedVerificationType: String, CaseIterable {
     case sms = "SMS"
+    case email = "EMAIL"
+
+    // This declaration must match the factors the native auth flow can drive.
+    static let nativeCapabilities: [Self] = [.sms, .email]
 }
