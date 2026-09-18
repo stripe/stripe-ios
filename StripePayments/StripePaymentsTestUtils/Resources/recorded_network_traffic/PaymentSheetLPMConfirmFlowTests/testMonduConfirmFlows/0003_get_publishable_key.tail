@@ -1,0 +1,17 @@
+GET
+https:\/\/stp-mobile-playground-backend-v7\.stripedemos\.com\/publishable_key\?merchant=mondu$
+200
+application/json
+Server: Google Frontend
+Content-Type: application/json; charset=utf-8
+x-powered-by: Express
+x-cloud-trace-context: 8d6860036b05ec4c1485f13be14dda32
+Via: 1.1 google
+Date: Mon, 28 Sep 2026 15:26:10 GMT
+Content-Length: 129
+Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+Etag: W/"81-6BB2NYfZMKJFMOycAdXbwyb3v1w"
+
+{
+  "publishable_key" : "pk_test_51RQcmLL2ttF1aQ6KGGG8Qea5S4gvjnfOhUijlYg0TXy9LRhFAAMcUcHxyKT9CwbXn7A1uPoU6OJi0icb4SI0kFAQ0010GQbZsl"
+}
