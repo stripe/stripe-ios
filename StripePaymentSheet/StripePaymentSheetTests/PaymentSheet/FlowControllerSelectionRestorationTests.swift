@@ -99,7 +99,7 @@ final class FlowControllerSelectionRestorationTests: XCTestCase {
         var configuration = PaymentSheet.Configuration._testValue_MostPermissive(isApplePayEnabled: false)
         configuration.customer = .init(id: customerID, ephemeralKeySecret: "ek_test")
         configuration.defaultBillingDetails.email = "test@example.com"
-        let loadResult = makeLoadResult()
+        let loadResult = makeLoadResult(customerProvider: configuration.customerProvider)
         let flowController = PaymentSheet.FlowController(
             configuration: configuration,
             loadResult: loadResult,
@@ -144,7 +144,10 @@ final class FlowControllerSelectionRestorationTests: XCTestCase {
         // When the horizontal controller is rebuilt after cancellation
         let viewController = PaymentSheetFlowControllerViewController(
             configuration: configuration,
-            loadResult: makeLoadResult(orientation: .horizontal),
+            loadResult: makeLoadResult(
+                orientation: .horizontal,
+                customerProvider: configuration.customerProvider
+            ),
             analyticsHelper: ._testValue(),
             initialState: .restoringAfterCancellation(
                 .init(
@@ -181,7 +184,10 @@ final class FlowControllerSelectionRestorationTests: XCTestCase {
         // When an ordinary session update rebuilds the horizontal controller
         let viewController = PaymentSheetFlowControllerViewController(
             configuration: configuration,
-            loadResult: makeLoadResult(orientation: .horizontal),
+            loadResult: makeLoadResult(
+                orientation: .horizontal,
+                customerProvider: configuration.customerProvider
+            ),
             analyticsHelper: ._testValue(),
             initialState: .preservingFormInput(from: .new(confirmParams: confirmParams))
         )
@@ -200,7 +206,8 @@ final class FlowControllerSelectionRestorationTests: XCTestCase {
             savedPaymentMethods: savedPaymentMethods,
             paymentMethodTypes: [.stripe(.card)],
             paymentMethodMessagingPromotionsHelper: ._testValue(),
-            paymentMethodOrientation: orientation
+            paymentMethodOrientation: orientation,
+            customerProvider: CustomerProvider(customer: nil)
         )
         return PaymentSheet.FlowController(
             configuration: PaymentSheet.Configuration(),
@@ -277,7 +284,8 @@ final class FlowControllerSelectionRestorationTests: XCTestCase {
     }
 
     private func makeLoadResult(
-        orientation: PaymentSheet.PaymentMethodLayout.ResolvedLayout = .vertical
+        orientation: PaymentSheet.PaymentMethodLayout.ResolvedLayout = .vertical,
+        customerProvider: CustomerProvider
     ) -> PaymentSheetLoader.LoadResult {
         return PaymentSheetLoader.LoadResult(
             intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
@@ -285,7 +293,8 @@ final class FlowControllerSelectionRestorationTests: XCTestCase {
             savedPaymentMethods: [],
             paymentMethodTypes: [.stripe(.card), .instantDebits],
             paymentMethodMessagingPromotionsHelper: ._testValue(),
-            paymentMethodOrientation: orientation
+            paymentMethodOrientation: orientation,
+            customerProvider: customerProvider
         )
     }
 
