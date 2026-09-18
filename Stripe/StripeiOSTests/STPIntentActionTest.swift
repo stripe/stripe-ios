@@ -40,7 +40,7 @@ class STPIntentActionTest: XCTestCase {
             [
                         "type": "redirect_to_url",
                         "redirect_to_url": [
-                        "url": "not a url"
+                        "url": "http://%"
                     ],
                     ])
         XCTAssertNotNil(badURL)
@@ -72,7 +72,7 @@ class STPIntentActionTest: XCTestCase {
                         "type": "redirect_to_url",
                         "redirect_to_url": [
                         "url": "https://stripe.com/",
-                        "return_url": "not a url",
+                        "return_url": "http://%",
                     ],
                     ])
         XCTAssertNotNil(badReturnURL)
