@@ -293,6 +293,11 @@ class PaymentSheetFormFactory {
                     allowedBillingCountries: ["PH"],
                     additionalElements: makeSetupMandateElements(for: paymentMethod)
                 )
+            case .ngUSSD:
+                return makeContactInformationAndBillingAddressForm(
+                    defaultBillingCountry: "NG",
+                    additionalElements: [makeNigerianPaymentMethodMandate()]
+                )
             case .momo, .goPay, .grabPay, .paynow, .payPay, .mobilePay, .vipps, .zip, .crypto,
                  .billie, .sunbit, .alma, .payByBank, .payco, .sequra, .scalapay:
                 return makeContactInformationAndBillingAddressForm()
