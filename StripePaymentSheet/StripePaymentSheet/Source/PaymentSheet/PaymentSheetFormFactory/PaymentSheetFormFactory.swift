@@ -281,7 +281,7 @@ class PaymentSheetFormFactory {
                 return makeNaverPay()
             case .SEPADebit:
                 return makeSepaDebit()
-            case .shopeePay:
+            case .shopeePay, .qris:
                 return makeContactInformationAndBillingAddressForm(allowedBillingCountries: ["US", "ID"])
             case .momo, .goPay, .grabPay, .paynow, .payPay, .mobilePay, .vipps, .zip, .crypto,
                  .billie, .sunbit, .alma, .payByBank, .payco, .sequra, .scalapay:
