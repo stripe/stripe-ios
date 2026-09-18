@@ -54,6 +54,7 @@ extension PaymentSheet {
         .goPay,
         .ngUSSD,
         .qris,
+        .ngWallet,
         .shopeePay,
         .gcash,
         .momo,
