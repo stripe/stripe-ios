@@ -25,6 +25,9 @@ public struct PaymentMethodDisplayData {
         /// The user chose Apple pay for payment.
         case applePay
 
+        /// The user chose a payment method type the SDK doesn't explicitly parse (likely an LPM).
+        case generic
+
         /// Creates a new instance of `PaymentMethodType` converting from `LinkController.PaymentMethodPreview.PaymentMethodType`.
         /// - Parameter paymentMethodType: The Link payment method type to convert from.
         init(paymentMethodType: LinkController.PaymentMethodPreview.PaymentMethodType) {
@@ -33,8 +36,10 @@ public struct PaymentMethodDisplayData {
                 self = .card
             case .bankAccount:
                 self = .bankAccount
+            case .generic:
+                self = .generic
             @unknown default:
-                self = .card
+                self = .generic
             }
         }
     }
