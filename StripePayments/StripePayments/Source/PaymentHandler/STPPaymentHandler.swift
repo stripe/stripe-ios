@@ -980,7 +980,12 @@ public class STPPaymentHandler: NSObject {
                 if lastSetupError.code == STPSetupIntentLastSetupError.CodeAuthenticationFailure {
                     action.complete(
                         with: STPPaymentHandlerActionStatus.failed,
-                        error: _error(for: .notAuthenticatedErrorCode)
+                        error: _error(
+                            for: .notAuthenticatedErrorCode,
+                            apiErrorCode: lastSetupError.code,
+                            declineCode: lastSetupError.declineCode,
+                            apiErrorType: lastSetupError.allResponseFields["type"] as? String
+                        )
                     )
                 } else if lastSetupError.type == .card {
                     action.complete(
@@ -988,13 +993,20 @@ public class STPPaymentHandler: NSObject {
                         error: _error(
                             for: .paymentErrorCode,
                             apiErrorCode: lastSetupError.code,
-                            localizedDescription: lastSetupError.message
+                            localizedDescription: lastSetupError.message,
+                            declineCode: lastSetupError.declineCode,
+                            apiErrorType: lastSetupError.allResponseFields["type"] as? String
                         )
                     )
                 } else {
                     action.complete(
                         with: STPPaymentHandlerActionStatus.failed,
-                        error: _error(for: .paymentErrorCode, apiErrorCode: lastSetupError.code)
+                        error: _error(
+                            for: .paymentErrorCode,
+                            apiErrorCode: lastSetupError.code,
+                            declineCode: lastSetupError.declineCode,
+                            apiErrorType: lastSetupError.allResponseFields["type"] as? String
+                        )
                     )
                 }
             } else {
@@ -1051,7 +1063,12 @@ public class STPPaymentHandler: NSObject {
                 {
                     action.complete(
                         with: STPPaymentHandlerActionStatus.failed,
-                        error: _error(for: .notAuthenticatedErrorCode)
+                        error: _error(
+                            for: .notAuthenticatedErrorCode,
+                            apiErrorCode: lastPaymentError.code,
+                            declineCode: lastPaymentError.declineCode,
+                            apiErrorType: lastPaymentError.allResponseFields["type"] as? String
+                        )
                     )
                 } else if lastPaymentError.type == .card {
 
@@ -1060,13 +1077,20 @@ public class STPPaymentHandler: NSObject {
                         error: _error(
                             for: .paymentErrorCode,
                             apiErrorCode: lastPaymentError.code,
-                            localizedDescription: lastPaymentError.message
+                            localizedDescription: lastPaymentError.message,
+                            declineCode: lastPaymentError.declineCode,
+                            apiErrorType: lastPaymentError.allResponseFields["type"] as? String
                         )
                     )
                 } else {
                     action.complete(
                         with: STPPaymentHandlerActionStatus.failed,
-                        error: _error(for: .paymentErrorCode, apiErrorCode: lastPaymentError.code)
+                        error: _error(
+                            for: .paymentErrorCode,
+                            apiErrorCode: lastPaymentError.code,
+                            declineCode: lastPaymentError.declineCode,
+                            apiErrorType: lastPaymentError.allResponseFields["type"] as? String
+                        )
                     )
                 }
             } else {
@@ -2327,11 +2351,16 @@ public class STPPaymentHandler: NSObject {
         for errorCode: STPPaymentHandlerErrorCode,
         apiErrorCode: String? = nil,
         loggingSafeErrorMessage: String? = nil,
-        localizedDescription: String? = nil
+        localizedDescription: String? = nil,
+        declineCode: String? = nil,
+        apiErrorType: String? = nil
     ) -> NSError {
         var userInfo = [String: String]()
         userInfo[STPError.errorMessageKey] = loggingSafeErrorMessage
         userInfo[NSLocalizedDescriptionKey] = localizedDescription
+        userInfo[STPError.stripeErrorCodeKey] = apiErrorCode
+        userInfo[STPError.stripeDeclineCodeKey] = declineCode
+        userInfo[STPError.stripeErrorTypeKey] = apiErrorType
         switch errorCode {
         // 3DS(2) flow expected user errors
         case .notAuthenticatedErrorCode:

@@ -9,6 +9,9 @@ MINOR
 ### StripeCore
 * [Added] Added `additionalHeaders` support to the `STPAPIClient` GET, POST, and DELETE APIs exposed through the `STP` SPI.
 
+### Payments
+* [Fixed] Preserved PaymentIntent and SetupIntent error codes, decline codes, and types in `STPPaymentHandler` errors after authentication.
+
 ### PaymentSheet
 * [Fixed] Fixed card funding warnings not appearing after scanning a card.
 
