@@ -832,6 +832,7 @@ public class STPPaymentHandler: NSObject {
         case .ngCard,
             .ngBankTransfer,
             .touchNGo,
+            .trueMoney,
             .goPay,
             .gcash,
             .shopeePay,

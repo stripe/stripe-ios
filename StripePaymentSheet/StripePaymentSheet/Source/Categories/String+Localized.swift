@@ -370,6 +370,12 @@ extension String.Localized {
             "Touch 'n Go mandate text. The placeholder is the merchant's name."
         )
     }
+    static var truemoney_mandate_text: String {
+        STPLocalizedString(
+            "By confirming your payment with TrueMoney, you allow %@ to charge your TrueMoney account for future payments in accordance with their terms.",
+            "TrueMoney mandate text. The placeholder is the merchant's name."
+        )
+    }
     static var korean_payment_method_mandate_text: String {
         STPLocalizedString(
             "By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms.",
