@@ -743,6 +743,22 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                                merchantCountry: .US,
                                expectedHierarchy: ExpectedFormHierarchy.Momo.settingUp) { _ in }
     }
+    func testGCashConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "PHP",
+                               amount: 10000,
+                               paymentMethodType: .gcash,
+                               merchantCountry: .US,
+                               expectedHierarchy: ExpectedFormHierarchy.GCash.paymentIntent) { _ in }
+        // TODO(porter): Add `.paymentIntentWithPMOSetupFutureUsage` once Confirmation Tokens
+        // accepts `client_context[payment_method_options][gcash]`.
+        try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .setupIntent],
+                               currency: "PHP",
+                               amount: 10000,
+                               paymentMethodType: .gcash,
+                               merchantCountry: .US,
+                               expectedHierarchy: ExpectedFormHierarchy.GCash.settingUp) { _ in }
+    }
     func testPaycoConfirmFlows() async throws {
         try await _testConfirm(intentKinds: [.paymentIntent],
                                currency: "KRW",
