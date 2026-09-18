@@ -1,0 +1,12 @@
+POST
+https:\/\/stp-mobile-ci-test-backend-e1b3\.stripedemos\.com\/create_payment_intent$
+200
+text/html
+X-Content-Type-Options: nosniff
+Set-Cookie: rack.session=pnU0ku5X0wxV9WnJp3vvaYZkOiO1WnbdAaZ5%2BlrXdLesqGoZpyaEjr9DOS%2FpfLgaaDf8Xf7XkTvZHL3i1GECCv0Aum3JAOVz7IsTNJiYRignHqjdw7Lvh039xRDO%2FU5nZepDCDOQuN6hbxpSV7seanYOZQawHYbrILqIgMnIOPuqOdZhoU7TZxP6RFrXb2cu; path=/
+Content-Length: 267
+Content-Type: text/html;charset=utf-8
+X-Frame-Options: SAMEORIGIN
+X-XSS-Protection: 1; mode=block
+
+{"intent":"pi_3UIXzXL2ttF1aQ6K0DOtUTns","secret":"pi_3UIXzXL2ttF1aQ6K0DOtUTns_secret_7YBEbiFPIJO8jN4la94fnnc0q","status":"requires_action","publishable_key":"pk_test_51RQcmLL2ttF1aQ6KGGG8Qea5S4gvjnfOhUijlYg0TXy9LRhFAAMcUcHxyKT9CwbXn7A1uPoU6OJi0icb4SI0kFAQ0010GQbZsl"}

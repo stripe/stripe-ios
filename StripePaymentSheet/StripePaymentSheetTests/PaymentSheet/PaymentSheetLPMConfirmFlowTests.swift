@@ -109,6 +109,7 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
         case IT = "it"
         case NG = "ng"
         case NGWallet = "ng_wallet"
+        case Mondu = "mondu"
 
         var publishableKey: String {
             switch self {
@@ -144,6 +145,8 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                 return STPTestingNGPublishableKey
             case .NGWallet:
                 return STPTestingNGWalletPublishableKey
+            case .Mondu:
+                return STPTestingMonduPublishableKey
             }
         }
     }
@@ -851,6 +854,14 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                                merchantCountry: .NG,
                                expectedHierarchy: ExpectedFormHierarchy.NgUSSD.paymentIntent) { _ in }
     }
+    func testMonduConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "EUR",
+                               amount: 3500,
+                               paymentMethodType: .mondu,
+                               merchantCountry: .Mondu,
+                               expectedHierarchy: ExpectedFormHierarchy.Mondu.paymentIntent) { _ in }
+    }
     func testPaycoConfirmFlows() async throws {
         try await _testConfirm(intentKinds: [.paymentIntent],
                                currency: "KRW",
@@ -1429,7 +1440,7 @@ extension PaymentSheetLPMConfirmFlowTests {
             }
             // TODO: Re-enable once unified-mode Checkout forwards `blik_code` to PaymentIntent confirmation.
             if shouldTest(.checkoutSession),
-               ![STPPaymentMethodType.blik, .goPay, .shopeePay, .qris].contains(paymentMethod),
+               ![STPPaymentMethodType.blik, .goPay, .shopeePay, .qris, .mondu].contains(paymentMethod),
                merchantCountry != .NG,
                merchantCountry != .NGWallet {
                 let checkoutSessionResponse = try await STPTestingAPIClient.shared.createLegacyCheckoutSession(

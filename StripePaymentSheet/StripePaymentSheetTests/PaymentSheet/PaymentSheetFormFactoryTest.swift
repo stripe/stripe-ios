@@ -2700,6 +2700,25 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             }
         }
     }
+    func testMonduMatchesPaymentElementCopyWithoutMandate() {
+        // Given a one-time Mondu payment with automatic billing collection
+        let form = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.mondu]),
+            elementsSession: ._testValue(paymentMethodTypes: ["mondu"]),
+            configuration: .paymentElement(PaymentSheet.Configuration()),
+            paymentMethod: .stripe(.mondu)
+        ).make()
+
+        // Then the form uses the same selection copy as the web Payment Element
+        let labels = form.getAllUnwrappedSubElements()
+            .compactMap { $0 as? SubtitleElement }
+            .flatMap { [$0.view] + $0.view.subviews }
+            .compactMap { ($0 as? UILabel)?.text }
+        XCTAssertEqual(labels, ["Mondu selected."])
+        XCTAssertFalse(form.collectsUserInput)
+        XCTAssertNil(form.getMandateElement())
+        XCTAssertNotNil(form.updateParams(params: IntentConfirmParams(type: .stripe(.mondu))))
+    }
     func testGoPayUsesHostedAuthorizationWithoutNativeMandate() {
         // Given the payment and setup modes supported by GoPay
         let intents: [Intent] = [

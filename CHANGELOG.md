@@ -10,6 +10,7 @@ MINOR
 * [Added] Added `additionalHeaders` support to the `STPAPIClient` GET, POST, and DELETE APIs exposed through the `STP` SPI.
 
 ### PaymentSheet
+* [Added] Added Mondu API bindings and support for payments in PaymentSheet.
 * [Added] Added Naira USSD API bindings and support for payments in PaymentSheet.
 * [Added] Added QRIS API bindings and support for payments in PaymentSheet.
 * [Added] Added Naira Wallet API bindings and support for payments in PaymentSheet.
