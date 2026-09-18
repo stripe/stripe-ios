@@ -16,35 +16,42 @@ enum ExpressCheckoutElementUtilities {
         case automaticTaxAddress = "automatic_tax_address"
     }
 
-    static func resolveButtons(
-        for session: CheckoutController.Session,
+    static func availablePaymentMethods(
+        for elementsSession: STPElementsSession,
         configuration: ExpressCheckoutElement.Configuration
-    ) -> [ExpressCheckoutElement.PaymentMethod] {
-        var buttons: [ExpressCheckoutElement.PaymentMethod] = []
-        for button in session.availableExpressButtonTypes {
-            switch button {
+    ) -> [String] {
+        var paymentMethods: [String] = []
+        for paymentMethod in availablePaymentMethodTypes(for: elementsSession) {
+            switch paymentMethod {
             case .applePay:
                 if let applePayConfiguration = configuration.applePayConfiguration,
                    applePayConfiguration.display != .never,
                    StripeAPI.deviceSupportsApplePay() {
-                    buttons.append(.applePay)
+                    paymentMethods.append(paymentMethod.rawValue)
                 }
             case .link:
-                if linkDisabledReasons(for: session, configuration: configuration).isEmpty {
-                    buttons.append(.link)
+                if linkDisabledReasons(for: elementsSession, configuration: configuration).isEmpty {
+                    paymentMethods.append(paymentMethod.rawValue)
                 }
             }
         }
-        return buttons
+        return paymentMethods
     }
 
     static func linkDisabledReasons(
         for session: CheckoutController.Session,
         configuration: ExpressCheckoutElement.Configuration
     ) -> [LinkDisabledReason] {
+        return linkDisabledReasons(for: session.elementsSession, configuration: configuration)
+    }
+
+    static func linkDisabledReasons(
+        for elementsSession: STPElementsSession,
+        configuration: ExpressCheckoutElement.Configuration
+    ) -> [LinkDisabledReason] {
         var reasons: [LinkDisabledReason] = []
 
-        if !session.availableExpressButtonTypes.contains(.link) {
+        if !availablePaymentMethodTypes(for: elementsSession).contains(.link) {
             reasons.append(.notSupportedInSession)
         }
         if configuration.linkConfiguration.display == .never {
@@ -53,10 +60,30 @@ enum ExpressCheckoutElementUtilities {
         if configuration.shippingAddressRequired {
             reasons.append(.shippingAddressCollection)
         }
-        if session.elementsSession.disableLinkForAutomaticTaxBilling {
+        if elementsSession.disableLinkForAutomaticTaxBilling {
             reasons.append(.automaticTaxAddress)
         }
 
         return reasons
+    }
+
+    private static func availablePaymentMethodTypes(
+        for elementsSession: STPElementsSession
+    ) -> [ExpressCheckoutElement.PaymentMethod] {
+        var types: [ExpressCheckoutElement.PaymentMethod] = []
+        for type in elementsSession.orderedPaymentMethodTypesAndWallets {
+            switch type {
+            case "apple_pay" where !types.contains(.applePay) && elementsSession.isApplePayEnabled:
+                types.append(.applePay)
+            case "link" where !types.contains(.link):
+                types.append(.link)
+            default:
+                continue
+            }
+        }
+        if elementsSession.linkPassthroughModeEnabled, !types.contains(.link) {
+            types.append(.link)
+        }
+        return types
     }
 }
