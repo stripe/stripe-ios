@@ -542,6 +542,8 @@ extension RowButton {
                     }
                 case .stripe(.affirm):
                     return String.Localized.pay_over_time_with_affirm
+                case .stripe(.mondu):
+                    return String.Localized.mondu_invoice_message
                 case .external(let externalPaymentOption):
                     return externalPaymentOption.displaySubtext
                 default:
