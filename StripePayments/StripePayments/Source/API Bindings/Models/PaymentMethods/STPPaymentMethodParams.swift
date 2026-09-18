@@ -129,6 +129,8 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
     @objc public var scalapay: STPPaymentMethodScalapayParams?
     /// If this is a GoPay PaymentMethod, this contains additional details.
     @objc public var goPay: STPPaymentMethodGoPayParams?
+    /// If this is a MoMo PaymentMethod, this contains additional details.
+    @objc public var momo: STPPaymentMethodMomoParams?
 
     /// Radar options that may contain HCaptcha token
     @objc @_spi(STP) public var radarOptions: STPRadarOptions?
@@ -926,6 +928,24 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
         self.metadata = metadata
     }
 
+    /// Creates params for a MoMo PaymentMethod.
+    /// - Parameters:
+    ///   - momo:       An object containing additional MoMo details.
+    ///   - billingDetails: Billing information associated with the PaymentMethod.
+    ///   - metadata:       Additional information to attach to the PaymentMethod.
+    @objc
+    public convenience init(
+        momo: STPPaymentMethodMomoParams,
+        billingDetails: STPPaymentMethodBillingDetails?,
+        metadata: [String: String]?
+    ) {
+        self.init()
+        self.type = .momo
+        self.momo = momo
+        self.billingDetails = billingDetails
+        self.metadata = metadata
+    }
+
     // MARK: - STPFormEncodable
     @objc
     public class func rootObjectName() -> String? {
@@ -979,6 +999,7 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
             NSStringFromSelector(#selector(getter: sequra)): "sequra",
             NSStringFromSelector(#selector(getter: scalapay)): "scalapay",
             NSStringFromSelector(#selector(getter: goPay)): "gopay",
+            NSStringFromSelector(#selector(getter: momo)): "momo",
             NSStringFromSelector(#selector(getter: link)): "link",
             NSStringFromSelector(#selector(getter: radarOptions)): "radar_options",
             NSStringFromSelector(#selector(getter: metadata)): "metadata",
@@ -1442,6 +1463,8 @@ extension STPPaymentMethodParams {
             scalapay = STPPaymentMethodScalapayParams()
         case .goPay:
             goPay = STPPaymentMethodGoPayParams()
+        case .momo:
+            momo = STPPaymentMethodMomoParams()
         case .cardPresent, .paynow, .zip, .konbini, .promptPay, .mbWay, .bizum:
             // These payment methods don't have any params
             break
