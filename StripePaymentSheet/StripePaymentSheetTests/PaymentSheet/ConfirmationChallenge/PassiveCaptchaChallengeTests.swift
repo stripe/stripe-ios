@@ -9,6 +9,36 @@
 @_spi(STP) @testable import StripePaymentSheet
 import XCTest
 
+enum PassiveCaptchaTestError: Error {
+    case expected
+}
+
+final class PassiveCaptchaCreateCounter {
+    private let lock = NSLock()
+    private var value = 0
+
+    var count: Int {
+        lock.lock()
+        defer { lock.unlock() }
+        return value
+    }
+
+    func increment() {
+        lock.lock()
+        defer { lock.unlock() }
+        value += 1
+    }
+}
+
+struct CountingFailingPassiveCaptchaFactory: HCaptchaFactory {
+    let counter: PassiveCaptchaCreateCounter
+
+    func create(siteKey: String, rqdata: String?) throws -> HCaptcha {
+        counter.increment()
+        throw PassiveCaptchaTestError.expected
+    }
+}
+
 class PassiveCaptchaChallengeTests: XCTestCase {
     var window: UIWindow?
 
@@ -49,15 +79,29 @@ class PassiveCaptchaChallengeTests: XCTestCase {
     // OCS mobile test key from https://dashboard.hcaptcha.com/sites/edit/143aadb6-fb60-4ab6-b128-f7fe53426d4a
     let siteKey = "143aadb6-fb60-4ab6-b128-f7fe53426d4a"
 
+    private func waitUntilTokenIsReady(_ passiveCaptchaChallenge: PassiveCaptchaChallenge) async throws {
+        try await withTimeout(30) {
+            while !(await passiveCaptchaChallenge.isTokenReady) {
+                try await Task.sleep(nanoseconds: 100_000_000)
+            }
+        }.get()
+    }
+
     func testPassiveCaptcha() async throws {
         let passiveCaptchaData = PassiveCaptchaData(siteKey: siteKey, rqdata: nil)
         let passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptchaData: passiveCaptchaData)
-        // wait to make sure that the token will be ready by the time we call fetchToken
-        try await Task.sleep(nanoseconds: 6_000_000_000)
-        let hcaptchaToken = try await passiveCaptchaChallenge.fetchToken()
-        XCTAssertNotNil(hcaptchaToken)
-        let isReady = await passiveCaptchaChallenge.isTokenReady
-        XCTAssertTrue(isReady, "Token should be ready if not expired")
+
+        // Wait to make sure that the token will be ready by the time we consume it
+        try await waitUntilTokenIsReady(passiveCaptchaChallenge)
+        let isReadyBeforeConsumption = await passiveCaptchaChallenge.isTokenReady
+        XCTAssertTrue(isReadyBeforeConsumption, "Token should be ready if not expired")
+
+        let hcaptchaToken = try await passiveCaptchaChallenge.consumeToken()
+        XCTAssertFalse(hcaptchaToken.value.isEmpty)
+        XCTAssertTrue(hcaptchaToken.wasReady)
+        let isReadyAfterConsumption = await passiveCaptchaChallenge.isTokenReady
+        XCTAssertFalse(isReadyAfterConsumption, "Token should be discarded after consumption")
+
         let passiveCaptchaEvents = STPAnalyticsClient.sharedClient._testLogHistory.map({ $0["event"] as? String }).filter({ $0?.starts(with: "elements.captcha.passive") ?? false })
         XCTAssertEqual(passiveCaptchaEvents, ["elements.captcha.passive.init", "elements.captcha.passive.execute", "elements.captcha.passive.success"])
         let successAnalytic = STPAnalyticsClient.sharedClient._testLogHistory.first(where: { $0["event"] as? String == "elements.captcha.passive.success" })
@@ -69,7 +113,7 @@ class PassiveCaptchaChallengeTests: XCTestCase {
         let passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptchaData: passiveCaptchaData, hcaptchaFactory: TestDelayHCaptchaFactory())
         let startTime = Date()
         let hcaptchaTokenResult = await withTimeout(1) {
-            try await passiveCaptchaChallenge.fetchToken()
+            try await passiveCaptchaChallenge.consumeToken()
         }
         XCTAssertLessThan(Date().timeIntervalSince(startTime), 1.5)
         // should return TimeoutError
@@ -84,54 +128,56 @@ class PassiveCaptchaChallengeTests: XCTestCase {
         let passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptchaData: passiveCaptchaData)
         let startTime = Date()
         let hcaptchaToken = try await withTimeout(30) {
-            try await passiveCaptchaChallenge.fetchToken()
+            try await passiveCaptchaChallenge.consumeToken()
         }.get()
         // didn't time out because it finished early
         XCTAssertLessThan(Date().timeIntervalSince(startTime), 10)
-        XCTAssertNotNil(hcaptchaToken)
+        XCTAssertFalse(hcaptchaToken.value.isEmpty)
     }
 
     func testTokenResetAndRefetchAfterExpiration() async throws {
-        // Use a very short expiration time (5 seconds) for testing
-        let passiveCaptchaData = PassiveCaptchaData(siteKey: siteKey, rqdata: nil, tokenTimeoutSeconds: 5)
+        // Use a very short expiration time for testing
+        let passiveCaptchaData = PassiveCaptchaData(siteKey: siteKey, rqdata: nil, tokenTimeoutSeconds: 2)
         let passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptchaData: passiveCaptchaData, hcaptchaFactory: PassiveHCaptchaFactory())
 
-        // Fetch first token
-        let token = try await passiveCaptchaChallenge.fetchToken()
-        XCTAssertNotNil(token)
-
-        // Verify token is ready
-        var isReadyBefore = await passiveCaptchaChallenge.isTokenReady
-        XCTAssertTrue(isReadyBefore, "Token should be ready after first fetch")
-
-        // Fetch a token before expiration - should succeed without fetching a new token
-        let sameToken = try await passiveCaptchaChallenge.fetchToken()
-        XCTAssertNotNil(sameToken)
-
-        // Verify token is ready
-        isReadyBefore = await passiveCaptchaChallenge.isTokenReady
-        XCTAssertTrue(isReadyBefore, "Token should be ready after first fetch")
-
-        let passiveCaptchaEvents = STPAnalyticsClient.sharedClient._testLogHistory.map({ $0["event"] as? String }).filter({ $0?.starts(with: "elements.captcha.passive") ?? false })
-        // We should not see these events more than once because we shouldn't need to fetch more than once
-        XCTAssertEqual(passiveCaptchaEvents, ["elements.captcha.passive.init", "elements.captcha.passive.execute", "elements.captcha.passive.success"])
+        // Wait for the preloaded token to be ready
+        try await waitUntilTokenIsReady(passiveCaptchaChallenge)
+        let isReadyBefore = await passiveCaptchaChallenge.isTokenReady
+        XCTAssertTrue(isReadyBefore, "Token should be ready before expiration")
 
         // Wait for session to expire
-        try await Task.sleep(nanoseconds: 5_000_000_000)
+        try await Task.sleep(nanoseconds: 2_100_000_000)
 
         // Check that expiration triggers reset
         let isReadyAfter = await passiveCaptchaChallenge.isTokenReady
         XCTAssertFalse(isReadyAfter, "Token should not be ready after session expiration")
 
-        // Fetch a new token after expiration - should succeed with a new token
-        let newToken = try await passiveCaptchaChallenge.fetchToken()
-        XCTAssertNotNil(newToken)
+        // Consume after expiration - should fetch a new token
+        let newToken = try await passiveCaptchaChallenge.consumeToken()
+        XCTAssertFalse(newToken.value.isEmpty)
+        XCTAssertFalse(newToken.wasReady)
 
-        // Verify token is ready again after successful refetch
+        // Consuming the new token should leave no token cached
         let isReadyFinal = await passiveCaptchaChallenge.isTokenReady
-        XCTAssertTrue(isReadyFinal, "Token should be ready after refetch")
+        XCTAssertFalse(isReadyFinal, "Token should be discarded after consumption")
 
         let passiveCaptchaExecuteEvents = STPAnalyticsClient.sharedClient._testLogHistory.map({ $0["event"] as? String }).filter({ $0?.starts(with: "elements.captcha.passive.execute") ?? false })
         XCTAssertEqual(passiveCaptchaExecuteEvents.count, 2, "Should have re-fetched token after expiration")
+    }
+
+    func testConcurrentConsumeTokenRequestsDoNotShareTask() async {
+        // Given a preloaded token task that fails deterministically
+        let counter = PassiveCaptchaCreateCounter()
+        let factory = CountingFailingPassiveCaptchaFactory(counter: counter)
+        let passiveCaptchaData = PassiveCaptchaData(siteKey: siteKey, rqdata: nil)
+        let passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptchaData: passiveCaptchaData, hcaptchaFactory: factory)
+
+        // When two callers consume concurrently
+        let firstTokenTask = Task { try? await passiveCaptchaChallenge.consumeToken() }
+        let secondTokenTask = Task { try? await passiveCaptchaChallenge.consumeToken() }
+        _ = await (firstTokenTask.value, secondTokenTask.value)
+
+        // Then each caller should execute its own challenge
+        XCTAssertEqual(counter.count, 2)
     }
 }
