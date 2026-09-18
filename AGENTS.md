@@ -61,6 +61,8 @@ ci_scripts/run_tests.rb --scheme StripeCore --result-bundle-path /tmp/my-results
 ci_scripts/run_tests.rb --help
 ```
 
+**Build validation** — invoke `delegate-low-reasoning-work` before running routine tests, builds, formatting, lint, snapshot-diff checks, or generated-output validation. Delegate when a low-cost subagent is available.
+
 ### Inspecting Test Failures
 
 When tests fail, the runner saves an xcresult bundle and prints an inspection hint. Use `--failures` to get a structured summary:
