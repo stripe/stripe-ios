@@ -502,6 +502,50 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
 
     // MARK: - PAYCO
 
+    func testNgBankTransferRequiresReturnURLAndDoesNotSupportSetup() {
+        // Given
+        let paymentIntent = Intent._testPaymentIntent(paymentMethodTypes: [.ngBankTransfer])
+        let setupIntents: [Intent] = [
+            ._testPaymentIntent(paymentMethodTypes: [.ngBankTransfer], setupFutureUsage: .offSession),
+            ._testPaymentIntent(
+                paymentMethodTypes: [.ngBankTransfer],
+                paymentMethodOptionsSetupFutureUsage: [.ngBankTransfer: "off_session"]
+            ),
+            ._testSetupIntent(paymentMethodTypes: [.ngBankTransfer]),
+        ]
+
+        // When
+        let paymentWithoutReturnURL = PaymentSheet.PaymentMethodType.supportsAdding(
+            paymentMethod: .ngBankTransfer,
+            configuration: makeConfiguration(),
+            intent: paymentIntent,
+            elementsSession: ._testValue(intent: paymentIntent),
+            supportedPaymentMethods: [.ngBankTransfer]
+        )
+        let paymentWithReturnURL = PaymentSheet.PaymentMethodType.supportsAdding(
+            paymentMethod: .ngBankTransfer,
+            configuration: makeConfiguration(hasReturnURL: true),
+            intent: paymentIntent,
+            elementsSession: ._testValue(intent: paymentIntent),
+            supportedPaymentMethods: [.ngBankTransfer]
+        )
+
+        // Then
+        XCTAssertEqual(paymentWithoutReturnURL, .missingRequirements([.returnURL]))
+        XCTAssertEqual(paymentWithReturnURL, .supported)
+        for intent in setupIntents {
+            XCTAssertEqual(
+                PaymentSheet.PaymentMethodType.supportsAdding(
+                    paymentMethod: .ngBankTransfer,
+                    configuration: makeConfiguration(hasReturnURL: true),
+                    intent: intent,
+                    elementsSession: ._testValue(intent: intent),
+                    supportedPaymentMethods: [.ngBankTransfer]
+                ),
+                .missingRequirements([.unsupportedForSetup])
+            )
+        }
+    }
     func testQRISRequiresReturnURLAndDoesNotSupportSetup() {
         // Given
         let paymentIntent = Intent._testPaymentIntent(paymentMethodTypes: [.qris])

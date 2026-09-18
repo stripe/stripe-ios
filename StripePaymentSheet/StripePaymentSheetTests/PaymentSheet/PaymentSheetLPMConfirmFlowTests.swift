@@ -751,6 +751,14 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                                merchantCountry: .NG,
                                expectedHierarchy: ExpectedFormHierarchy.NairaCard.settingUp) { _ in }
     }
+    func testNairaBankTransferConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "NGN",
+                               amount: 100000,
+                               paymentMethodType: .ngBankTransfer,
+                               merchantCountry: .NG,
+                               expectedHierarchy: ExpectedFormHierarchy.NairaBankTransfer.paymentIntent) { _ in }
+    }
     func testMomoConfirmFlows() async throws {
         try await _testConfirm(intentKinds: [.paymentIntent],
                                currency: "VND",

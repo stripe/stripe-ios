@@ -2487,6 +2487,30 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertEqual(setupForm.getMandateElement()?.mandateTextView.textView.text, expectedMandate)
     }
 
+    func testNairaBankTransferShowsMerchantOfRecordTerms() {
+        // Given a one-time Naira bank transfer payment
+        let form = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.ngBankTransfer]),
+            elementsSession: ._testValue(paymentMethodTypes: ["ng_bank_transfer"]),
+            configuration: .paymentElement(PaymentSheet.Configuration()),
+            paymentMethod: .stripe(.ngBankTransfer)
+        ).make()
+
+        // Then the form shows the web disclosure without a future-payment mandate
+        let text = form.getMandateElement()?.mandateTextView.textView.attributedText
+        let expected = "By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their terms of use."
+        XCTAssertEqual(text?.string, expected)
+        XCTAssertEqual(
+            text?.attribute(.link, at: (expected as NSString).range(of: "terms of use").location, effectiveRange: nil) as? URL,
+            URL(string: "https://d37ugbyn3rpeym.cloudfront.net/docs/GSSL%20-%20Buyer%20T&Cs%20(Final).pdf")
+        )
+        XCTAssertFalse(form.collectsUserInput)
+        XCTAssertNil(form.updateParams(params: IntentConfirmParams(type: .stripe(.ngBankTransfer))))
+
+        // When the customer sees the disclosure, the payment can be confirmed
+        sendEventToSubviews(.viewDidAppear, from: form.view)
+        XCTAssertNotNil(form.updateParams(params: IntentConfirmParams(type: .stripe(.ngBankTransfer))))
+    }
     func testNairaCardShowsTermsAndFuturePaymentMandate() {
         // Given each supported Naira card intent
         let intents: [Intent] = [

@@ -126,6 +126,8 @@ import Foundation
     case qris
     /// A Naira card payment method
     case ngCard
+    /// A Naira bank transfer payment method
+    case ngBankTransfer
     /// An unknown type.
     case unknown
 
@@ -248,6 +250,8 @@ import Foundation
             return "QRIS"
         case .ngCard:
             return "Naira card"
+        case .ngBankTransfer:
+            return "Naira bank transfer"
         case .goPay:
             return "GoPay"
         case .cardPresent,
@@ -375,6 +379,8 @@ import Foundation
             return "qris"
         case .ngCard:
             return "ng_card"
+        case .ngBankTransfer:
+            return "ng_bank_transfer"
         case .goPay:
             return "gopay"
         }
