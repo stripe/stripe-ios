@@ -7,9 +7,45 @@
 
 import Foundation
 @_spi(STP) import StripeCore
+@_spi(STP) import StripePayments
 @_spi(STP) import StripePaymentSheet
 
 extension CryptoOnrampCoordinator {
+
+    /// Adds the PaymentIntent's last payment error details to a failed checkout error.
+    static func checkoutError(
+        _ error: Swift.Error?,
+        paymentIntent: STPPaymentIntent?
+    ) -> Swift.Error {
+        let error = error ?? CheckoutError.paymentFailed
+
+        guard let lastPaymentError = paymentIntent?.lastPaymentError else {
+            return error
+        }
+
+        let nsError = error as NSError
+        var userInfo = nsError.userInfo
+
+        if let message = lastPaymentError.message {
+            userInfo[STPError.errorMessageKey] = message
+            userInfo[NSLocalizedDescriptionKey] = message
+        }
+        if let code = lastPaymentError.code {
+            userInfo[STPError.stripeErrorCodeKey] = code
+        }
+        if let declineCode = lastPaymentError.declineCode {
+            userInfo[STPError.stripeDeclineCodeKey] = declineCode
+        }
+        if let type = lastPaymentError.allResponseFields["type"] as? String {
+            userInfo[STPError.stripeErrorTypeKey] = type
+        }
+
+        return NSError(
+            domain: nsError.domain,
+            code: nsError.code,
+            userInfo: userInfo
+        )
+    }
 
     /// Maps Stripe API errors into Crypto Onramp errors with user-facing copy and developer diagnostics.
     ///

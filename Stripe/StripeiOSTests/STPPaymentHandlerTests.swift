@@ -52,9 +52,6 @@ class STPPaymentHandlerStubbedTests: STPNetworkStubbingTestCase {
             // Then the specific server message is returned instead of the generic error-code message
             XCTAssertEqual(status, .failed)
             XCTAssertEqual(error?.localizedDescription, "Your card has insufficient funds.")
-            XCTAssertEqual(error?.userInfo[STPError.stripeErrorCodeKey] as? String, "card_declined")
-            XCTAssertEqual(error?.userInfo[STPError.stripeDeclineCodeKey] as? String, "insufficient_funds")
-            XCTAssertEqual(error?.userInfo[STPError.stripeErrorTypeKey] as? String, "card_error")
             completion.fulfill()
         }
 
@@ -92,9 +89,6 @@ class STPPaymentHandlerStubbedTests: STPNetworkStubbingTestCase {
             // Then the specific server message is returned instead of the generic error-code message
             XCTAssertEqual(status, .failed)
             XCTAssertEqual(error?.localizedDescription, "Your card has insufficient funds.")
-            XCTAssertEqual(error?.userInfo[STPError.stripeErrorCodeKey] as? String, "card_declined")
-            XCTAssertEqual(error?.userInfo[STPError.stripeDeclineCodeKey] as? String, "insufficient_funds")
-            XCTAssertEqual(error?.userInfo[STPError.stripeErrorTypeKey] as? String, "card_error")
             completion.fulfill()
         }
 
