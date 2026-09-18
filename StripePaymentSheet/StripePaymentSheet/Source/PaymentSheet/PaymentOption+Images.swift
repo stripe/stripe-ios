@@ -302,6 +302,8 @@ extension STPPaymentMethodType {
                 return .pm_type_ng_bank_transfer
             case .ngWallet:
                 return .pm_type_ng_wallet
+            case .ngUSSD:
+                return .pm_type_ng_ussd
             case .goPay:
                 return .pm_type_gopay
             case .grabPay:

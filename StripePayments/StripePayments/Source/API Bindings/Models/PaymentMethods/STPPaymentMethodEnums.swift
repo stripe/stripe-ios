@@ -132,6 +132,8 @@ import Foundation
     case ngBankTransfer
     /// A Naira Wallet payment method
     case ngWallet
+    /// A Naira USSD payment method
+    case ngUSSD
     /// An unknown type.
     case unknown
 
@@ -260,6 +262,8 @@ import Foundation
             return "Naira bank transfer"
         case .ngWallet:
             return "Naira Wallet"
+        case .ngUSSD:
+            return "Naira USSD"
         case .goPay:
             return "GoPay"
         case .cardPresent,
@@ -393,6 +397,8 @@ import Foundation
             return "ng_bank_transfer"
         case .ngWallet:
             return "ng_wallet"
+        case .ngUSSD:
+            return "ng_ussd"
         case .goPay:
             return "gopay"
         }
