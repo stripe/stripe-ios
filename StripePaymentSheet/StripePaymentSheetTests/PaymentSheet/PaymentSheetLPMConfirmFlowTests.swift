@@ -836,6 +836,22 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                                merchantCountry: .MY,
                                expectedHierarchy: ExpectedFormHierarchy.TouchNGo.settingUp) { _ in }
     }
+    func testTrueMoneyConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "THB",
+                               amount: 10000,
+                               paymentMethodType: .trueMoney,
+                               merchantCountry: .US,
+                               expectedHierarchy: ExpectedFormHierarchy.TrueMoney.paymentIntent) { _ in }
+        // TODO(porter): Add `.paymentIntentWithPMOSetupFutureUsage` once Confirmation Tokens
+        // accepts `client_context[payment_method_options][truemoney]`.
+        try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .setupIntent],
+                               currency: "THB",
+                               amount: 10000,
+                               paymentMethodType: .trueMoney,
+                               merchantCountry: .US,
+                               expectedHierarchy: ExpectedFormHierarchy.TrueMoney.settingUp) { _ in }
+    }
     func testNgUSSDConfirmFlows() async throws {
         try await _testConfirm(intentKinds: [.paymentIntent],
                                currency: "NGN",

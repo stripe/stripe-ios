@@ -370,6 +370,12 @@ extension String.Localized {
             "Touch 'n Go mandate text. The placeholder is the merchant's name."
         )
     }
+    static var truemoney_mandate_text: String {
+        STPLocalizedString(
+            "By confirming your payment with TrueMoney, you allow %@ to charge your TrueMoney account for future payments in accordance with their terms.",
+            "TrueMoney mandate text. The placeholder is the merchant's name."
+        )
+    }
     static var mondu_buyer_message: String {
         STPLocalizedString("Invoice payment for business buyers.", "Message shown when Mondu is selected")
     }
