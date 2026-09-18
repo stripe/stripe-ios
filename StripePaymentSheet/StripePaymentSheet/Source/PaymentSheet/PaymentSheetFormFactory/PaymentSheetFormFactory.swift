@@ -283,6 +283,11 @@ class PaymentSheetFormFactory {
                 return makeSepaDebit()
             case .shopeePay, .qris:
                 return makeContactInformationAndBillingAddressForm(allowedBillingCountries: ["US", "ID"])
+            case .ngCard:
+                return makeContactInformationAndBillingAddressForm(
+                    defaultBillingCountry: "NG",
+                    additionalElements: [makeNigerianPaymentMethodMandate()]
+                )
             case .gcash:
                 return makeContactInformationAndBillingAddressForm(
                     allowedBillingCountries: ["PH"],
@@ -585,6 +590,7 @@ extension PaymentSheetFormFactory {
         defaultFieldsToCollect: AddressSectionElement.FieldsToCollect = .all,
         minimumFieldsToCollectByCountry: [String: AddressSectionElement.FieldsToCollect] = [:],
         countries: [String]? = nil,
+        defaultCountry: String? = nil,
         countryAPIPath: String? = nil,
         includeEmail: Bool = false,
         includePhone: Bool = false
@@ -600,6 +606,10 @@ extension PaymentSheetFormFactory {
         } else {
             displayBillingSameAsShippingCheckbox = false
             defaultAddress = defaultBillingDetails().address.addressSectionDefaults
+        }
+
+        if defaultAddress.address.country == nil {
+            defaultAddress.address.country = defaultCountry
         }
 
         if includePhone {
@@ -867,6 +877,7 @@ extension PaymentSheetFormFactory {
         emailAPIPath: String? = nil,
         phoneRequired: Bool = false,
         allowedBillingCountries: [String]? = nil,
+        defaultBillingCountry: String? = nil,
         additionalElements: [Element] = []
     ) -> PaymentMethodElement {
         let contactInfoSection = makeContactInformationSection(
@@ -877,7 +888,8 @@ extension PaymentSheetFormFactory {
         )
         let billingDetails = makeBillingAddressSectionIfNecessary(
             requiredByPaymentMethod: false,
-            allowedCountries: allowedBillingCountries
+            allowedCountries: allowedBillingCountries,
+            defaultCountry: defaultBillingCountry
         )
         let elements = [contactInfoSection, billingDetails].compactMap { $0 } + additionalElements
         return makeDefaultsApplierWrapper(
@@ -1113,7 +1125,8 @@ extension PaymentSheetFormFactory {
 
     func makeBillingAddressSectionIfNecessary(
         requiredByPaymentMethod: Bool,
-        allowedCountries: [String]? = nil
+        allowedCountries: [String]? = nil,
+        defaultCountry: String? = nil
     ) -> Element? {
         let defaultFieldsToCollect: AddressSectionElement.FieldsToCollect? = {
             switch (configuration.billingDetailsCollectionConfiguration.address, requiredByPaymentMethod) {
@@ -1132,7 +1145,8 @@ extension PaymentSheetFormFactory {
 
         return makeBillingAddressSection(
             defaultFieldsToCollect: defaultFieldsToCollect,
-            countries: allowedCountries ?? configuration.billingDetailsCollectionConfiguration.allowedCountriesArray
+            countries: allowedCountries ?? configuration.billingDetailsCollectionConfiguration.allowedCountriesArray,
+            defaultCountry: defaultCountry
         )
     }
 

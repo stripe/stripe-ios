@@ -22,6 +22,7 @@ MINOR
 * [Added] Added ShopeePay API bindings and PaymentSheet support for PaymentIntents.
 * [Added] Added QRIS API bindings and PaymentSheet support for PaymentIntents.
 * [Added] Added GCash API bindings and PaymentSheet support for payments and setup.
+* [Added] Added Naira card API bindings and PaymentSheet support for PaymentIntents.
 
 ## 26.12.1 2026-09-28
 ### CryptoOnramp (Alpha)
