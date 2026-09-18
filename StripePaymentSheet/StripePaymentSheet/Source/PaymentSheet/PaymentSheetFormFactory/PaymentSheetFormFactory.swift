@@ -283,6 +283,8 @@ class PaymentSheetFormFactory {
                 return makeSepaDebit()
             case .shopeePay, .qris:
                 return makeContactInformationAndBillingAddressForm(allowedBillingCountries: ["US", "ID"])
+            case .gcash:
+                return makeContactInformationAndBillingAddressForm(additionalElements: makeSetupMandateElements(for: paymentMethod))
             case .momo, .goPay, .grabPay, .paynow, .payPay, .mobilePay, .vipps, .zip, .crypto,
                  .billie, .sunbit, .alma, .payByBank, .payco, .sequra, .scalapay:
                 return makeContactInformationAndBillingAddressForm()
@@ -338,6 +340,8 @@ class PaymentSheetFormFactory {
     private func makeSetupMandateElements(for paymentMethod: STPPaymentMethodType) -> [Element] {
         guard isSettingUp else { return [] }
         switch paymentMethod {
+        case .gcash:
+            return [makeGCashMandate()]
         case .alipay:
             return [makeAlipayMandate()]
         case .cashApp:
