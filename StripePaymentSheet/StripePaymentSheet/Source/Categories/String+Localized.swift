@@ -382,6 +382,16 @@ extension String.Localized {
             "TrueMoney mandate text. The placeholder is the merchant's name."
         )
     }
+    static var mondu_invoice_message: String {
+        STPLocalizedString("Invoice payment for business buyers.", "Description of Mondu invoice payments")
+    }
+
+    static var mondu_redirect_message: String {
+        STPLocalizedString(
+            "After submission, you will be redirected to Mondu to complete the next steps.",
+            "Instructions shown before redirecting the customer to Mondu"
+        )
+    }
     static var korean_payment_method_mandate_text: String {
         STPLocalizedString(
             "By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms.",

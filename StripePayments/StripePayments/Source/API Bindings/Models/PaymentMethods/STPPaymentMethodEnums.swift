@@ -136,6 +136,8 @@ import Foundation
     case ngWallet
     /// A Naira USSD payment method
     case ngUSSD
+    /// A Mondu payment method
+    case mondu
     /// An unknown type.
     case unknown
 
@@ -268,6 +270,8 @@ import Foundation
             return "Naira Wallet"
         case .ngUSSD:
             return "Naira USSD"
+        case .mondu:
+            return "Mondu"
         case .goPay:
             return "GoPay"
         case .cardPresent,
@@ -405,6 +409,8 @@ import Foundation
             return "ng_wallet"
         case .ngUSSD:
             return "ng_ussd"
+        case .mondu:
+            return "mondu"
         case .goPay:
             return "gopay"
         }

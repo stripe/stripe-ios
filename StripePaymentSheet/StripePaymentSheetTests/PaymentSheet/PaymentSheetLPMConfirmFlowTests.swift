@@ -837,6 +837,14 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                                merchantCountry: .US,
                                expectedHierarchy: ExpectedFormHierarchy.NgUSSD.paymentIntent) { _ in }
     }
+    func testMonduConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "EUR",
+                               amount: 10000,
+                               paymentMethodType: .mondu,
+                               merchantCountry: .DE,
+                               expectedHierarchy: ExpectedFormHierarchy.Mondu.paymentIntent) { _ in }
+    }
     func testPaycoConfirmFlows() async throws {
         try await _testConfirm(intentKinds: [.paymentIntent],
                                currency: "KRW",

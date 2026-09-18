@@ -2700,6 +2700,25 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             }
         }
     }
+    func testMonduShowsInvoiceAndRedirectCopyWithoutMandate() {
+        // Given a one-time Mondu payment with automatic billing collection
+        let form = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.mondu]),
+            elementsSession: ._testValue(paymentMethodTypes: ["mondu"]),
+            configuration: .paymentElement(PaymentSheet.Configuration()),
+            paymentMethod: .stripe(.mondu)
+        ).make()
+
+        // Then the form explains invoice payment and hosted authorization, as in the web spec
+        let labels = form.getAllUnwrappedSubElements()
+            .compactMap { $0 as? SubtitleElement }
+            .flatMap { [$0.view] + $0.view.subviews }
+            .compactMap { ($0 as? UILabel)?.text }
+        XCTAssertEqual(labels, ["Invoice payment for business buyers.\n\nAfter submission, you will be redirected to Mondu to complete the next steps."])
+        XCTAssertFalse(form.collectsUserInput)
+        XCTAssertNil(form.getMandateElement())
+        XCTAssertNotNil(form.updateParams(params: IntentConfirmParams(type: .stripe(.mondu))))
+    }
     func testGoPayUsesHostedAuthorizationWithoutNativeMandate() {
         // Given the payment and setup modes supported by GoPay
         let intents: [Intent] = [
