@@ -461,6 +461,9 @@ extension StripeUICore.Button {
             isPrimary: viewModel.isPrimary,
             primaryButtonStyle: primaryButtonStyle
         )
+        if LiquidGlassDetector.isEnabledInMerchantApp {
+            ios26_applyCapsuleCornerConfiguration()
+        }
         self.isEnabled = viewModel.state == .enabled
         self.isLoading = viewModel.state == .loading
     }
