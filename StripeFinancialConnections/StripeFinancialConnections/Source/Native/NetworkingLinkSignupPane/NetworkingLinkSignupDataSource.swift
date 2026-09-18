@@ -95,6 +95,8 @@ final class NetworkingLinkSignupDataSourceImplementation: NetworkingLinkSignupDa
                 amount: nil,
                 currency: nil,
                 incentiveEligibilitySession: nil,
+                linkConsumerIncentive: nil,
+                onBehalfOf: nil,
                 useMobileEndpoints: manifest.verified,
                 pane: .networkingLinkSignupPane
             ).chained { [weak self] response -> Future<FinancialConnectionsAPI.SaveAccountsToNetworkAndLinkResponse> in
