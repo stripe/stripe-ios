@@ -154,6 +154,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case idr
         case php
         case vnd
+        case ngn
     }
 
     enum MerchantCountry: String, PickerEnum {

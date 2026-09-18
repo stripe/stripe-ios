@@ -727,6 +727,20 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                                merchantCountry: .US,
                                expectedHierarchy: ExpectedFormHierarchy.GoPay.settingUp) { _ in }
     }
+    func testNairaCardConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "NGN",
+                               amount: 100000,
+                               paymentMethodType: .ngCard,
+                               merchantCountry: .US,
+                               expectedHierarchy: ExpectedFormHierarchy.NairaCard.paymentIntent) { _ in }
+        try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .paymentIntentWithPMOSetupFutureUsage, .setupIntent],
+                               currency: "NGN",
+                               amount: 100000,
+                               paymentMethodType: .ngCard,
+                               merchantCountry: .US,
+                               expectedHierarchy: ExpectedFormHierarchy.NairaCard.settingUp) { _ in }
+    }
     func testMomoConfirmFlows() async throws {
         try await _testConfirm(intentKinds: [.paymentIntent],
                                currency: "VND",
