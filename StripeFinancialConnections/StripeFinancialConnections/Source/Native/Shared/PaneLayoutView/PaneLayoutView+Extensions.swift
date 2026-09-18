@@ -29,7 +29,8 @@ extension PaneLayoutView {
         headerAlignment: UIStackView.Alignment = .leading,
         horizontalPadding: CGFloat = Constants.Layout.defaultHorizontalMargin,
         contentView: UIView?,
-        isSheet: Bool = false
+        isSheet: Bool = false,
+        appearance: FinancialConnectionsAppearance? = nil
     ) -> UIView {
         let verticalStackView = UIStackView()
         verticalStackView.axis = .vertical
@@ -40,14 +41,17 @@ extension PaneLayoutView {
                 accessibleTitle: accessibleTitle,
                 alignment: headerAlignment,
                 horizontalPadding: horizontalPadding,
-                isSheet: isSheet
+                isSheet: isSheet,
+                appearance: appearance
             )
             verticalStackView.addArrangedSubview(headerView)
         }
         if accessibleSubtitle != nil || contentView != nil {
             let bodyView = createBodyView(
                 accessibleText: accessibleSubtitle,
-                contentView: contentView
+                contentView: contentView,
+                isSheet: isSheet,
+                appearance: appearance
             )
             verticalStackView.addArrangedSubview(bodyView)
         }
@@ -62,7 +66,8 @@ extension PaneLayoutView {
         headerAlignment: UIStackView.Alignment = .leading,
         horizontalPadding: CGFloat = Constants.Layout.defaultHorizontalMargin,
         contentView: UIView?,
-        isSheet: Bool = false
+        isSheet: Bool = false,
+        appearance: FinancialConnectionsAppearance? = nil
     ) -> UIView {
         createContentView(
             iconView: iconView,
@@ -71,7 +76,8 @@ extension PaneLayoutView {
             headerAlignment: headerAlignment,
             horizontalPadding: horizontalPadding,
             contentView: contentView,
-            isSheet: isSheet
+            isSheet: isSheet,
+            appearance: appearance
         )
     }
 
@@ -81,31 +87,41 @@ extension PaneLayoutView {
         accessibleTitle: AccessibleText?,
         alignment: UIStackView.Alignment = .leading,
         horizontalPadding: CGFloat = Constants.Layout.defaultHorizontalMargin,
-        isSheet: Bool = false
+        isSheet: Bool = false,
+        appearance: FinancialConnectionsAppearance? = nil
     ) -> UIView {
+        let isLink = appearance?.colors == .link
+        let resolvedAlignment: UIStackView.Alignment = {
+            guard isLink else { return alignment }
+            return isSheet ? .leading : .center
+        }()
+
         let headerStackView = HitTestStackView()
         headerStackView.axis = .vertical
         headerStackView.spacing = 16
-        headerStackView.alignment = alignment
+        headerStackView.alignment = resolvedAlignment
         if let iconView = iconView {
             headerStackView.addArrangedSubview(iconView)
         }
 
         if let title = accessibleTitle {
             let textAlignment: NSTextAlignment? = {
-                switch alignment {
+                switch resolvedAlignment {
                 case .leading: return .left
                 case .center: return .center
                 case .trailing: return .right
                 default: return nil
                 }
             }()
-            let titleFont: FinancialConnectionsFont = isSheet ? .heading(.large) : .heading(.extraLarge)
+            let titleFont: FinancialConnectionsFont =
+                isSheet
+                ? .heading(.large, weight: isLink ? .semibold : .bold)
+                : .heading(.extraLarge, weight: isLink ? .semibold : .bold)
             let titleLabel = AttributedTextView(
                 font: titleFont,
                 boldFont: titleFont,
                 linkFont: titleFont,
-                textColor: FinancialConnectionsAppearance.Colors.textDefault,
+                textColor: appearance?.colors.textPrimary ?? FinancialConnectionsAppearance.Colors.textDefault,
                 alignment: textAlignment
             )
             titleLabel.setText(title.text)
@@ -124,8 +140,8 @@ extension PaneLayoutView {
             top: isSheet ? 0 : 16, // the sheet handle adds some padding
             leading: horizontalPadding,
             // if there is a subtitle in the "body/content view,"
-            // we will add extra "8" padding
-            bottom: 16,
+            // we will add extra padding
+            bottom: isLink ? 4 : 16,
             trailing: horizontalPadding
         )
         return paddingStackView
@@ -137,34 +153,38 @@ extension PaneLayoutView {
         title: String?,
         alignment: UIStackView.Alignment = .leading,
         horizontalPadding: CGFloat = Constants.Layout.defaultHorizontalMargin,
-        isSheet: Bool = false
+        isSheet: Bool = false,
+        appearance: FinancialConnectionsAppearance? = nil
     ) -> UIView {
         createHeaderView(
             iconView: iconView,
             accessibleTitle: title.map { AccessibleText($0) },
             alignment: alignment,
             horizontalPadding: horizontalPadding,
-            isSheet: isSheet
+            isSheet: isSheet,
+            appearance: appearance
         )
     }
 
     @available(iOSApplicationExtension, unavailable)
     static func createBodyView(
         accessibleText: AccessibleText?,
-        contentView: UIView?
+        contentView: UIView?,
+        isSheet: Bool = false,
+        appearance: FinancialConnectionsAppearance? = nil
     ) -> UIView {
+        let isLink = appearance?.colors == .link
         let willShowDescriptionText = (accessibleText != nil)
 
         let paddingStackView = HitTestStackView()
         paddingStackView.axis = .vertical
-        // add 24 spacing between the text and `contentView`
-        paddingStackView.spacing = willShowDescriptionText ? 24 : 0
+        // add spacing between the text and `contentView`
+        paddingStackView.spacing = willShowDescriptionText ? (isLink ? 16 : 24) : 0
         paddingStackView.isLayoutMarginsRelativeArrangement = true
         paddingStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
-            // when we don't show text, add extra 8 spacing
-            // to create 24 spacing between "content" and "header"
-            // where 16 spacing is already added in `createHeaderView`
-            top: willShowDescriptionText ? 0 : 8,
+            // when we don't show text, add extra top spacing so the "content"
+            // and "header" are separated by the same amount as when text is shown
+            top: willShowDescriptionText ? 0 : (isLink ? 12 : 8),
             leading: Constants.Layout.defaultHorizontalMargin,
             bottom: 8,
             trailing: Constants.Layout.defaultHorizontalMargin
@@ -175,7 +195,8 @@ extension PaneLayoutView {
                 font: .body(.medium),
                 boldFont: .body(.mediumEmphasized),
                 linkFont: .body(.mediumEmphasized),
-                textColor: FinancialConnectionsAppearance.Colors.textDefault
+                textColor: appearance?.colors.textTertiary ?? FinancialConnectionsAppearance.Colors.textDefault,
+                alignment: isLink && !isSheet ? .center : nil
             )
             textLabel.setText(text.text)
             textLabel.accessibilityLabel = text.accessibilityText
@@ -192,11 +213,15 @@ extension PaneLayoutView {
     @available(iOSApplicationExtension, unavailable)
     static func createBodyView(
         text: String?,
-        contentView: UIView?
+        contentView: UIView?,
+        isSheet: Bool = false,
+        appearance: FinancialConnectionsAppearance? = nil
     ) -> UIView {
         createBodyView(
             accessibleText: text.map { AccessibleText($0) },
-            contentView: contentView
+            contentView: contentView,
+            isSheet: isSheet,
+            appearance: appearance
         )
     }
 
@@ -234,18 +259,29 @@ extension PaneLayoutView {
         topText: String? = nil,
         appearance: FinancialConnectionsAppearance,
         bottomText: String? = nil,
-        didSelectURL: ((URL) -> Void)? = nil
+        didSelectURL: ((URL) -> Void)? = nil,
+        preferHorizontalButtonsForLink: Bool = false
     ) -> (footerView: UIView?, primaryButton: StripeUICore.Button?, secondaryButton: StripeUICore.Button?) {
         guard
             primaryButtonConfiguration != nil || secondaryButtonConfiguration != nil
         else {
             return (nil, nil, nil)  // display no footer
         }
+        let useHorizontalLayout =
+            preferHorizontalButtonsForLink
+            && appearance.colors == .link
+            && primaryButtonConfiguration != nil
+            && secondaryButtonConfiguration != nil
         let footerStackView = FooterStackView(
             didSelectPrimaryButton: primaryButtonConfiguration?.action,
             didSelectSecondaryButton: secondaryButtonConfiguration?.action
         )
-        footerStackView.axis = .vertical
+        if useHorizontalLayout {
+            footerStackView.axis = .horizontal
+            footerStackView.distribution = .fillEqually
+        } else {
+            footerStackView.axis = .vertical
+        }
         footerStackView.spacing = 8
 
         if let topText = topText {
@@ -253,7 +289,7 @@ extension PaneLayoutView {
                 font: .label(.small),
                 boldFont: .label(.smallEmphasized),
                 linkFont: .label(.small),
-                textColor: FinancialConnectionsAppearance.Colors.textDefault,
+                textColor: appearance.colors.textTertiary,
                 alignment: .center
             )
             topTextLabel.setText(
@@ -278,14 +314,18 @@ extension PaneLayoutView {
             )
             primaryButton.translatesAutoresizingMaskIntoConstraints = false
             NSLayoutConstraint.activate([
-                primaryButton.heightAnchor.constraint(equalToConstant: 56)
+                primaryButton.heightAnchor.constraint(equalToConstant: appearance.buttonHeight)
             ])
-            footerStackView.addArrangedSubview(primaryButton)
+            // In the horizontal layout, the secondary button is added first (left),
+            // so the primary button (right) is added below once both exist.
+            if !useHorizontalLayout {
+                footerStackView.addArrangedSubview(primaryButton)
+            }
         }
 
         var secondaryButtonReference: StripeUICore.Button?
         if let secondaryButtonConfiguration = secondaryButtonConfiguration {
-            let secondaryButton = Button.secondary()
+            let secondaryButton = Button.secondary(appearance: appearance)
             secondaryButtonReference = secondaryButton
             secondaryButton.title = secondaryButtonConfiguration.title.text
             secondaryButton.accessibilityLabel = secondaryButtonConfiguration.title.accessibilityText
@@ -296,10 +336,26 @@ extension PaneLayoutView {
                 for: .touchUpInside
             )
             secondaryButton.translatesAutoresizingMaskIntoConstraints = false
-            NSLayoutConstraint.activate([
-                secondaryButton.heightAnchor.constraint(equalToConstant: 56)
-            ])
-            footerStackView.addArrangedSubview(secondaryButton)
+            if useHorizontalLayout {
+                secondaryButton.layer.borderWidth = 1 / stp_screenNativeScale
+                secondaryButton.layer.borderColor = appearance.colors.border.cgColor
+                secondaryButton.layer.cornerRadius = appearance.buttonHeight / 2
+                secondaryButton.clipsToBounds = true
+                NSLayoutConstraint.activate([
+                    secondaryButton.heightAnchor.constraint(equalToConstant: appearance.buttonHeight)
+                ])
+                footerStackView.addArrangedSubview(secondaryButton)
+                if let primaryButton = primaryButtonReference {
+                    footerStackView.addArrangedSubview(primaryButton)
+                }
+            } else {
+                if appearance.colors != .link {
+                    NSLayoutConstraint.activate([
+                        secondaryButton.heightAnchor.constraint(equalToConstant: 56)
+                    ])
+                }
+                footerStackView.addArrangedSubview(secondaryButton)
+            }
         }
 
         if let bottomText {
@@ -307,7 +363,7 @@ extension PaneLayoutView {
                 font: .label(.small),
                 boldFont: .label(.smallEmphasized),
                 linkFont: .label(.small),
-                textColor: FinancialConnectionsAppearance.Colors.textDefault,
+                textColor: appearance.colors.textTertiary,
                 alignment: .center
             )
             bottomTextLabel.setText(

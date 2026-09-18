@@ -40,7 +40,7 @@ final class ErrorViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = FinancialConnectionsAppearance.Colors.background
+        view.backgroundColor = FinancialConnectionsAppearance.Colors.surfacePrimary
         navigationItem.hidesBackButton = true
 
         let error = dataSource.error
@@ -123,7 +123,8 @@ final class ErrorViewController: UIViewController {
                             }()
                             return beginningOfSubtitle + " " + endOfSubtitle
                         }(),
-                        contentView: nil
+                        contentView: nil,
+                        appearance: dataSource.manifest.appearance
                     ),
                     footerView: PaneLayoutView.createFooterView(
                         primaryButtonConfiguration: primaryButtonConfiguration,
@@ -167,7 +168,8 @@ final class ErrorViewController: UIViewController {
                                 )
                             }
                         }(),
-                        contentView: nil
+                        contentView: nil,
+                        appearance: dataSource.manifest.appearance
                     ),
                     footerView: PaneLayoutView.createFooterView(
                         primaryButtonConfiguration: primaryButtonConfiguration,

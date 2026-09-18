@@ -11,25 +11,14 @@ import Foundation
 import UIKit
 
 final class NetworkingLinkLoginWarmupBodyView: HitTestView {
-    var borderLayer: CALayer?
 
     init(email: String) {
         super.init(frame: .zero)
-        let emailView = CreateEmailView(email: email)
-        self.borderLayer = emailView.layer
-        addAndPinSubview(emailView)
+        addAndPinSubview(CreateEmailView(email: email))
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-
-    // CGColor's need to be manually updated when the system theme changes.
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
-        guard traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) else { return }
-
-        borderLayer?.borderColor = FinancialConnectionsAppearance.Colors.borderNeutral.cgColor
     }
 }
 
@@ -38,8 +27,8 @@ private func CreateEmailView(
 ) -> UIView {
 
     let emailLabel = AttributedLabel(
-        font: .body(.small),
-        textColor: FinancialConnectionsAppearance.Colors.textDefault
+        font: .body(.medium),
+        textColor: FinancialConnectionsAppearance.Colors.linkGreen200
     )
     emailLabel.setText(email)
 
@@ -59,19 +48,16 @@ private func CreateEmailView(
         bottom: 12,
         trailing: 16
     )
-    horizontalStack.layer.borderColor = FinancialConnectionsAppearance.Colors.borderNeutral.cgColor
-    horizontalStack.layer.borderWidth = 1
+    horizontalStack.backgroundColor = FinancialConnectionsAppearance.Colors.linkBrand50
     horizontalStack.layer.cornerRadius = 12
     return horizontalStack
 }
 
 private func CreateAvatarView(email: String) -> UIView {
-    // Always use Link-themed appearance for this avatar view.
-    let appearance = FinancialConnectionsAppearance.link
-    let diameter: CGFloat = 36
+    let diameter: CGFloat = 32
 
     let circleView = UIView()
-    circleView.backgroundColor = appearance.colors.primary
+    circleView.backgroundColor = FinancialConnectionsAppearance.Colors.linkGreen200
     circleView.layer.cornerRadius = diameter / 2
     circleView.translatesAutoresizingMaskIntoConstraints = false
     NSLayoutConstraint.activate([
@@ -80,8 +66,8 @@ private func CreateAvatarView(email: String) -> UIView {
     ])
 
     let letterLabel = AttributedLabel(
-        font: .body(.small),
-        textColor: appearance.colors.primaryAccent
+        font: .body(.mediumEmphasized),
+        textColor: FinancialConnectionsAppearance.Colors.linkBrand900
     )
     letterLabel.setText(String(email.uppercased().first ?? "E"))
     circleView.addSubview(letterLabel)

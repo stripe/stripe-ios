@@ -73,7 +73,7 @@ final class PhoneCountryCodeSelectorView: UIView {
         super.init(frame: .zero)
         pickerView.delegate = self
 
-        backgroundColor = FinancialConnectionsAppearance.Colors.backgroundSecondary
+        backgroundColor = FinancialConnectionsAppearance.Colors.surfaceSecondary
         layer.cornerRadius = 8
         clipsToBounds = true
         accessibilityIdentifier = "phone_country_code_selector"
@@ -200,7 +200,7 @@ struct PhoneCountryCodeSelectorView_Previews: PreviewProvider {
             Spacer()
         }
         .padding()
-        .background(Color(FinancialConnectionsAppearance.Colors.background))
+        .background(Color(FinancialConnectionsAppearance.Colors.surfacePrimary))
     }
 }
 
