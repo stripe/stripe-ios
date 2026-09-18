@@ -1598,6 +1598,50 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         XCTAssertNotNil(paymentMethodOptionsFutureUsagePaymentIntentParams.mandateData)
         XCTAssertNotNil(setupIntentParams.mandateData)
     }
+    func testMakeIntentParams_gcash_setsMandate() {
+        // Given
+        let paymentMethodParams = STPPaymentMethodParams(type: .gcash)
+        let confirmType = PaymentSheet.ConfirmPaymentMethodType.new(
+            params: paymentMethodParams,
+            paymentOptions: STPConfirmPaymentMethodOptions(),
+            saveForFutureUseCheckboxState: .hidden
+        )
+        let configuration = PaymentSheet.Configuration._testValue_MostPermissive()
+
+        // When
+        let regularPaymentIntentParams = PaymentSheet.makePaymentIntentParams(
+            confirmPaymentMethodType: confirmType,
+            paymentIntent: STPFixtures.makePaymentIntent(),
+            configuration: configuration
+        )
+        let futureUsagePaymentIntentParams = PaymentSheet.makePaymentIntentParams(
+            confirmPaymentMethodType: confirmType,
+            paymentIntent: STPFixtures.makePaymentIntent(setupFutureUsage: .offSession),
+            configuration: configuration
+        )
+        let paymentMethodOptionsFutureUsagePaymentIntentParams = PaymentSheet.makePaymentIntentParams(
+            confirmPaymentMethodType: confirmType,
+            paymentIntent: STPFixtures.makePaymentIntent(
+                paymentMethodOptions: STPPaymentMethodOptions(
+                    usBankAccount: nil,
+                    card: nil,
+                    allResponseFields: ["gcash": ["setup_future_usage": "off_session"]]
+                )
+            ),
+            configuration: configuration
+        )
+        let setupIntentParams = PaymentSheet.makeSetupIntentParams(
+            confirmPaymentMethodType: confirmType,
+            setupIntent: STPFixtures.makeSetupIntent(paymentMethodTypes: [.gcash]),
+            configuration: configuration
+        )
+
+        // Then
+        XCTAssertNil(regularPaymentIntentParams.mandateData)
+        XCTAssertNotNil(futureUsagePaymentIntentParams.mandateData)
+        XCTAssertNotNil(paymentMethodOptionsFutureUsagePaymentIntentParams.mandateData)
+        XCTAssertNotNil(setupIntentParams.mandateData)
+    }
     func testMakeIntentParams_momo_setsMandate() {
         // Given
         let paymentMethodParams = STPPaymentMethodParams(type: .momo)

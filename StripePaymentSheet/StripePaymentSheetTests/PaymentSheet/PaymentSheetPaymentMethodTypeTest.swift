@@ -253,6 +253,36 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
             XCTAssertEqual(withReturnURL, .supported)
         }
     }
+    func testGCashRequiresReturnURLForPaymentAndSetup() {
+        // Given
+        let intents: [Intent] = [
+            ._testPaymentIntent(paymentMethodTypes: [.gcash]),
+            ._testPaymentIntent(paymentMethodTypes: [.gcash], setupFutureUsage: .offSession),
+            ._testSetupIntent(paymentMethodTypes: [.gcash]),
+        ]
+
+        for intent in intents {
+            // When
+            let withoutReturnURL = PaymentSheet.PaymentMethodType.supportsAdding(
+                paymentMethod: .gcash,
+                configuration: makeConfiguration(),
+                intent: intent,
+                elementsSession: ._testValue(intent: intent),
+                supportedPaymentMethods: [.gcash]
+            )
+            let withReturnURL = PaymentSheet.PaymentMethodType.supportsAdding(
+                paymentMethod: .gcash,
+                configuration: makeConfiguration(hasReturnURL: true),
+                intent: intent,
+                elementsSession: ._testValue(intent: intent),
+                supportedPaymentMethods: [.gcash]
+            )
+
+            // Then
+            XCTAssertEqual(withoutReturnURL, .missingRequirements([.returnURL]))
+            XCTAssertEqual(withReturnURL, .supported)
+        }
+    }
     func testMomoRequiresReturnURLForPaymentAndSetup() {
         // Given
         let intents: [Intent] = [
