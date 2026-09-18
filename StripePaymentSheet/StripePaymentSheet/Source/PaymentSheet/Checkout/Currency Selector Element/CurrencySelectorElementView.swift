@@ -57,4 +57,14 @@ private struct CurrencySelectorElementUIViewRepresentable: UIViewRepresentable {
     func updateUIView(_ uiView: CurrencySelectorElementUIView, context: Context) {
         uiView.setEnabled(context.environment.isEnabled)
     }
+
+    @available(iOS 16.0, *)
+    func sizeThatFits(_ proposal: ProposedViewSize, uiView: CurrencySelectorElementUIView, context: Context) -> CGSize? {
+        guard let width = proposal.width, width.isFinite else { return nil }
+        return uiView.systemLayoutSizeFitting(
+            CGSize(width: width, height: UIView.layoutFittingCompressedSize.height),
+            withHorizontalFittingPriority: .required,
+            verticalFittingPriority: .fittingSizeLevel
+        )
+    }
 }
