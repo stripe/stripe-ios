@@ -828,7 +828,8 @@ public class STPPaymentHandler: NSObject {
             return true
 
         // Synchronous
-        case .alipay,
+        case .goPay,
+            .alipay,
             .iDEAL,
             .FPX,
             .cardPresent,

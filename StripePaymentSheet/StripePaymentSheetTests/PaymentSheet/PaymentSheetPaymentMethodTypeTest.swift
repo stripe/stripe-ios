@@ -223,6 +223,36 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
 
     // MARK: - Naver Pay
 
+    func testGoPayRequiresReturnURLForPaymentAndSetup() {
+        // Given
+        let intents: [Intent] = [
+            ._testPaymentIntent(paymentMethodTypes: [.goPay]),
+            ._testPaymentIntent(paymentMethodTypes: [.goPay], setupFutureUsage: .offSession),
+            ._testSetupIntent(paymentMethodTypes: [.goPay]),
+        ]
+
+        for intent in intents {
+            // When
+            let withoutReturnURL = PaymentSheet.PaymentMethodType.supportsAdding(
+                paymentMethod: .goPay,
+                configuration: makeConfiguration(),
+                intent: intent,
+                elementsSession: ._testValue(intent: intent),
+                supportedPaymentMethods: [.goPay]
+            )
+            let withReturnURL = PaymentSheet.PaymentMethodType.supportsAdding(
+                paymentMethod: .goPay,
+                configuration: makeConfiguration(hasReturnURL: true),
+                intent: intent,
+                elementsSession: ._testValue(intent: intent),
+                supportedPaymentMethods: [.goPay]
+            )
+
+            // Then
+            XCTAssertEqual(withoutReturnURL, .missingRequirements([.returnURL]))
+            XCTAssertEqual(withReturnURL, .supported)
+        }
+    }
     func testNaverPayRequiresReturnURLForPaymentAndSetup() {
         // Given
         let intents: [Intent] = [

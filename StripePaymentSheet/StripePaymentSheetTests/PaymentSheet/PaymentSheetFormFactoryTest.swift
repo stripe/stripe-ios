@@ -2487,6 +2487,28 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertEqual(setupForm.getMandateElement()?.mandateTextView.textView.text, expectedMandate)
     }
 
+    func testGoPayUsesHostedAuthorizationWithoutNativeMandate() {
+        // Given the payment and setup modes supported by GoPay
+        let intents: [Intent] = [
+            ._testPaymentIntent(paymentMethodTypes: [.goPay]),
+            ._testPaymentIntent(paymentMethodTypes: [.goPay], setupFutureUsage: .offSession),
+            ._testSetupIntent(paymentMethodTypes: [.goPay]),
+        ]
+        for intent in intents {
+            // When the form uses automatic billing collection
+            let form = PaymentSheetFormFactory(
+                intent: intent,
+                elementsSession: ._testValue(paymentMethodTypes: ["gopay"]),
+                configuration: .paymentElement(PaymentSheet.Configuration()),
+                paymentMethod: .stripe(.goPay)
+            ).make()
+
+            // Then account linking and consent remain in the hosted flow, as on web
+            XCTAssertFalse(form.collectsUserInput)
+            XCTAssertNil(form.getMandateElement())
+            XCTAssertNotNil(form.updateParams(params: IntentConfirmParams(type: .stripe(.goPay))))
+        }
+    }
     func testKakaoPayDisplaysMandateWhenSettingUp() {
         // Given
         let configuration = PaymentSheet.Configuration._testValue_MostPermissive()
