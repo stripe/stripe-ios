@@ -2,6 +2,10 @@ The next release's version bump will so far be:
 MINOR
 
 ## X.Y.Z - changes pending release
+### Financial Connections
+* [Fixed] Preserved `no_eligible_accounts` in `onEvent` error callbacks instead of reporting it as `unexpected_error`.
+* [Fixed] Recorded native `onEvent` emissions with the session context for diagnostics.
+
 ### CryptoOnramp (Alpha)
 * [Removed] Removed public exposure of `StripeCryptoOnramp.Image`, including `Image.linkIconSquare`.
 * [Added] Added `CryptoOnrampCoordinator.presentTermsAndConditionsIfNeeded(from:)` and `presentTermsOfServiceIfNeeded(from:)` to present and record acceptance of current partner terms when required. Both methods return `PartnerTermsResult`.
