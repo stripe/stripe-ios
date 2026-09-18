@@ -8,10 +8,55 @@
 import Foundation
 @testable @_spi(STP) import StripeCore
 @testable @_spi(CryptoOnrampAlpha) import StripeCryptoOnramp
+import StripePayments
 @testable @_spi(STP) import StripePaymentSheet
 import XCTest
 
 final class CryptoOnrampCoordinatorErrorMappingTests: XCTestCase {
+
+    func testCheckoutErrorPreservesLastPaymentErrorDetails() throws {
+        // Given a PaymentIntent declined after authentication and a generic payment handler error
+        let paymentIntent = try XCTUnwrap(STPPaymentIntent.decodedObject(fromAPIResponse: [
+            "id": "pi_123",
+            "client_secret": "pi_123_secret_123",
+            "amount": 2345,
+            "currency": "usd",
+            "status": "requires_payment_method",
+            "livemode": false,
+            "created": 1_652_736_692.0,
+            "payment_method_types": ["card"],
+            "last_payment_error": [
+                "code": "card_declined",
+                "decline_code": "do_not_honor",
+                "message": "Your card was declined.",
+                "type": "card_error",
+            ],
+        ]))
+        let originalError = NSError(
+            domain: STPError.STPPaymentHandlerErrorDomain,
+            code: 1,
+            userInfo: [
+                STPError.errorMessageKey: "There was an error confirming the Intent.",
+                STPError.stripeRequestIDKey: "req_123",
+            ]
+        )
+
+        // When Crypto Onramp maps the failed next action
+        let checkoutError = CryptoOnrampCoordinator.checkoutError(
+            originalError,
+            paymentIntent: paymentIntent
+        ) as NSError
+
+        // Then the original error metadata and structured PaymentIntent error details are preserved
+        XCTAssertEqual(checkoutError.domain, originalError.domain)
+        XCTAssertEqual(checkoutError.code, originalError.code)
+        XCTAssertEqual(checkoutError.userInfo[STPError.stripeRequestIDKey] as? String, "req_123")
+        XCTAssertEqual(checkoutError.userInfo[STPError.errorMessageKey] as? String, "Your card was declined.")
+        XCTAssertEqual(checkoutError.localizedDescription, "Your card was declined.")
+        XCTAssertEqual(checkoutError.userInfo[STPError.stripeErrorCodeKey] as? String, "card_declined")
+        XCTAssertEqual(checkoutError.userInfo[STPError.stripeDeclineCodeKey] as? String, "do_not_honor")
+        XCTAssertEqual(checkoutError.userInfo[STPError.stripeErrorTypeKey] as? String, "card_error")
+    }
 
     func testMappedErrorMapsAttestationErrorDecodedFromStripeAPIResponse() throws {
         let responseData = try StripeAPIErrorResponseMock.appAttestationFailure.data()
