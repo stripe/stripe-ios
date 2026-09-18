@@ -1,0 +1,84 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/setup_intents\/seti_1UH57bFY0qyl6XeWgpu5lm8Z\/confirm$
+200
+application/json
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=eohel5bRkLkDobjS8JvUzpx56kWg8f8uMZyneHo7dTwfV72kLFtiBCrJ0UVPqUxz7h_XggrbQ-UUKTpp; report-to csp
+Server: nginx
+Cache-Control: no-cache, no-store
+reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=eohel5bRkLkDobjS8JvUzpx56kWg8f8uMZyneHo7dTwfV72kLFtiBCrJ0UVPqUxz7h_XggrbQ-UUKTpp&t=1"
+stripe-notice: You are using an outdated API version (2020-08-27). We recommend upgrading to the latest API version, 2026-08-26.dahlia. See https://docs.stripe.com/upgrades
+x-wc: 3c3
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=eohel5bRkLkDobjS8JvUzpx56kWg8f8uMZyneHo7dTwfV72kLFtiBCrJ0UVPqUxz7h_XggrbQ-UUKTpp&t=1"}],"include_subdomains":true}
+request-id: req_T6ZQiLCm5q9WGc
+x-stripe-routing-context-priority-tier: api-testmode
+Content-Length: 1406
+Vary: Origin
+Date: Fri, 18 Sep 2026 16:58:48 GMT
+original-request: req_T6ZQiLCm5q9WGc
+stripe-version: 2020-08-27
+idempotency-key: 83e4a437-1df2-403e-b6ec-448b81459a39
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+X-Stripe-Mock-Request: client_attribution_metadata\[client_session_id]=.*&client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_intent_creation_flow]=deferred&client_attribution_metadata\[payment_method_selection_flow]=merchant_specified&client_secret=seti_1UH57bFY0qyl6XeWgpu5lm8Z_secret_VHeQGukSCxJi5m8XwMATTXv0EVrrEk0&confirmation_token=ctoken_1UH57bFY0qyl6XeW0Jy0ZRFQ&expand\[0]=payment_method&return_url=https%3A\/\/foo\.com&use_stripe_sdk=true
+
+{
+  "id" : "seti_1UH57bFY0qyl6XeWgpu5lm8Z",
+  "description" : null,
+  "excluded_payment_method_types" : null,
+  "next_action" : {
+    "type" : "redirect_to_url",
+    "redirect_to_url" : {
+      "return_url" : "https:\/\/foo.com",
+      "url" : "https:\/\/pm-redirects.stripe.com\/authorize\/acct_1G6m1pFY0qyl6XeW\/sa_nonce_VHeQRVTzH5CvCO2KewUrNlaLi3TnPEE"
+    }
+  },
+  "livemode" : false,
+  "payment_method" : {
+    "object" : "payment_method",
+    "momo" : {
+
+    },
+    "id" : "pm_1UH57bFY0qyl6XeWRbpLH85n",
+    "billing_details" : {
+      "email" : null,
+      "phone" : null,
+      "tax_id" : null,
+      "name" : null,
+      "address" : {
+        "state" : null,
+        "country" : null,
+        "line2" : null,
+        "city" : null,
+        "line1" : null,
+        "postal_code" : null
+      }
+    },
+    "livemode" : false,
+    "created" : 1789750727,
+    "allow_redisplay" : "unspecified",
+    "shared_payment_granted_token" : null,
+    "customer" : null,
+    "type" : "momo",
+    "customer_account" : null
+  },
+  "payment_method_configuration_details" : null,
+  "usage" : "off_session",
+  "allowed_payment_method_types" : null,
+  "payment_method_types" : [
+    "momo"
+  ],
+  "object" : "setup_intent",
+  "last_setup_error" : null,
+  "created" : 1789750727,
+  "client_secret" : "seti_1UH57bFY0qyl6XeWgpu5lm8Z_secret_VHeQGukSCxJi5m8XwMATTXv0EVrrEk0",
+  "automatic_payment_methods" : null,
+  "cancellation_reason" : null,
+  "status" : "requires_action"
+}

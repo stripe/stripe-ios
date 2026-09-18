@@ -116,6 +116,8 @@ import Foundation
     case scalapay
     /// A GoPay payment method
     case goPay
+    /// A MoMo payment method
+    case momo
     /// An unknown type.
     case unknown
 
@@ -228,6 +230,8 @@ import Foundation
             return "SeQura"
         case .scalapay:
             return "Scalapay"
+        case .momo:
+            return "MoMo"
         case .goPay:
             return "GoPay"
         case .cardPresent,
@@ -345,6 +349,8 @@ import Foundation
             return "sequra"
         case .scalapay:
             return "scalapay"
+        case .momo:
+            return "momo"
         case .goPay:
             return "gopay"
         }
