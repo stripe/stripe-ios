@@ -334,7 +334,7 @@ extension IdentityFlowView {
         // Remove old buttons and create new ones and add them to the stack view
         buttons.forEach { $0.removeFromSuperview() }
         buttons = buttonViewModels.indices.map { index in
-            let button = IdentityButton(
+            let button = Button(
                 index: index,
                 target: self,
                 action: #selector(didTapButton(button:))
@@ -450,30 +450,17 @@ extension IdentityFlowView.ViewModel.Button {
     }
 }
 
-private final class IdentityButton: Button {
-    private var minimumHeightConstraint: NSLayoutConstraint?
-
-    convenience init(index: Int, target: Any?, action: Selector) {
+extension StripeUICore.Button {
+    fileprivate convenience init(
+        index: Int,
+        target: Any?,
+        action: Selector
+    ) {
         self.init()
-        tag = index
+        self.tag = index
         addTarget(target, action: action, for: .touchUpInside)
     }
 
-    var minimumHeight: CGFloat? {
-        didSet {
-            guard minimumHeight != oldValue else {
-                return
-            }
-            minimumHeightConstraint?.isActive = false
-            minimumHeightConstraint = minimumHeight.map {
-                heightAnchor.constraint(greaterThanOrEqualToConstant: $0)
-            }
-            minimumHeightConstraint?.isActive = true
-        }
-    }
-}
-
-extension StripeUICore.Button {
     fileprivate var index: Int {
         return tag
     }
@@ -489,19 +476,32 @@ extension StripeUICore.Button {
             primaryButtonStyle: primaryButtonStyle,
             secondaryButtonStyle: secondaryButtonStyle
         )
-        if let button = self as? IdentityButton {
-            switch (viewModel.isPrimary, primaryButtonStyle, secondaryButtonStyle) {
-            case (true, .custom(_, _, let height), _), (false, _, .custom(_, _, let height)):
-                button.minimumHeight = height
-            default:
-                button.minimumHeight = nil
-            }
+        let minimumHeight: CGFloat?
+        switch (viewModel.isPrimary, primaryButtonStyle, secondaryButtonStyle) {
+        case (true, .custom(_, _, let height), _), (false, _, .custom(_, _, let height)):
+            minimumHeight = height
+        default:
+            minimumHeight = nil
         }
+        updateMinimumHeightConstraint(to: minimumHeight)
         if LiquidGlassDetector.isEnabledInMerchantApp {
             ios26_applyCapsuleCornerConfiguration()
         }
         self.isEnabled = viewModel.state == .enabled
         self.isLoading = viewModel.state == .loading
+    }
+
+    private func updateMinimumHeightConstraint(to minimumHeight: CGFloat?) {
+        let identifier = "IdentityFlowView.minimumButtonHeight"
+        constraints.first { $0.identifier == identifier }?.isActive = false
+
+        guard let minimumHeight else {
+            return
+        }
+
+        let constraint = heightAnchor.constraint(greaterThanOrEqualToConstant: minimumHeight)
+        constraint.identifier = identifier
+        constraint.isActive = true
     }
 }
 
