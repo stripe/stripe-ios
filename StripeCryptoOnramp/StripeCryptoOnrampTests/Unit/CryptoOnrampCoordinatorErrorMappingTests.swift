@@ -37,6 +37,7 @@ final class CryptoOnrampCoordinatorErrorMappingTests: XCTestCase {
             code: 1,
             userInfo: [
                 STPError.errorMessageKey: "There was an error confirming the Intent.",
+                NSLocalizedDescriptionKey: "The payment handler selected this localized message.",
                 STPError.stripeRequestIDKey: "req_123",
             ]
         )
@@ -52,10 +53,53 @@ final class CryptoOnrampCoordinatorErrorMappingTests: XCTestCase {
         XCTAssertEqual(checkoutError.code, originalError.code)
         XCTAssertEqual(checkoutError.userInfo[STPError.stripeRequestIDKey] as? String, "req_123")
         XCTAssertEqual(checkoutError.userInfo[STPError.errorMessageKey] as? String, "Your card was declined.")
-        XCTAssertEqual(checkoutError.localizedDescription, "Your card was declined.")
+        XCTAssertEqual(checkoutError.localizedDescription, "The payment handler selected this localized message.")
         XCTAssertEqual(checkoutError.userInfo[STPError.stripeErrorCodeKey] as? String, "card_declined")
         XCTAssertEqual(checkoutError.userInfo[STPError.stripeDeclineCodeKey] as? String, "do_not_honor")
         XCTAssertEqual(checkoutError.userInfo[STPError.stripeErrorTypeKey] as? String, "card_error")
+    }
+
+    func testCheckoutErrorDoesNotExposeNonCardMessageAsLocalizedDescription() throws {
+        // Given a non-card PaymentIntent error with developer-facing API details
+        let paymentIntent = try XCTUnwrap(STPPaymentIntent.decodedObject(fromAPIResponse: [
+            "id": "pi_123",
+            "client_secret": "pi_123_secret_123",
+            "amount": 2345,
+            "currency": "usd",
+            "status": "requires_payment_method",
+            "livemode": false,
+            "created": 1_652_736_692.0,
+            "payment_method_types": ["card"],
+            "last_payment_error": [
+                "code": "parameter_invalid_integer",
+                "message": "Developer-facing API details.",
+                "type": "invalid_request_error",
+            ],
+        ]))
+        let originalError = NSError(
+            domain: STPError.STPPaymentHandlerErrorDomain,
+            code: 1,
+            userInfo: [
+                NSLocalizedDescriptionKey: "We couldn't complete your payment.",
+            ]
+        )
+
+        // When Crypto Onramp maps the failed next action
+        let checkoutError = CryptoOnrampCoordinator.checkoutError(
+            originalError,
+            paymentIntent: paymentIntent
+        ) as NSError
+
+        // Then the API message is preserved as metadata without replacing user-safe copy
+        XCTAssertEqual(
+            checkoutError.userInfo[STPError.errorMessageKey] as? String,
+            "Developer-facing API details."
+        )
+        XCTAssertEqual(checkoutError.localizedDescription, "We couldn't complete your payment.")
+        XCTAssertEqual(
+            checkoutError.userInfo[STPError.stripeErrorTypeKey] as? String,
+            "invalid_request_error"
+        )
     }
 
     func testMappedErrorMapsAttestationErrorDecodedFromStripeAPIResponse() throws {

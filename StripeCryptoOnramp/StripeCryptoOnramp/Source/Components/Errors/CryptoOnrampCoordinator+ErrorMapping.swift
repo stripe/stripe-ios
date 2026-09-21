@@ -28,7 +28,6 @@ extension CryptoOnrampCoordinator {
 
         if let message = lastPaymentError.message {
             userInfo[STPError.errorMessageKey] = message
-            userInfo[NSLocalizedDescriptionKey] = message
         }
         if let code = lastPaymentError.code {
             userInfo[STPError.stripeErrorCodeKey] = code
