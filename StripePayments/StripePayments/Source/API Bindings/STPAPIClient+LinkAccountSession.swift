@@ -24,6 +24,8 @@ public extension STPAPIClient {
         paymentMethodType: STPPaymentMethodType,
         customerName: String?,
         customerEmailAddress: String?,
+        customerAddress: STPPaymentMethodAddress? = nil,
+        customerPhone: String? = nil,
         linkMode: LinkMode?,
         additionalParameters: [String: Any] = [:],
         completion: @escaping STPLinkAccountSessionBlock
@@ -35,6 +37,8 @@ public extension STPAPIClient {
             paymentMethodType: paymentMethodType,
             customerName: customerName,
             customerEmailAddress: customerEmailAddress,
+            customerAddress: customerAddress,
+            customerPhone: customerPhone,
             linkMode: linkMode,
             additionalParameters: additionalParameters,
             completion: completion
@@ -47,6 +51,8 @@ public extension STPAPIClient {
         paymentMethodType: STPPaymentMethodType,
         customerName: String?,
         customerEmailAddress: String?,
+        customerAddress: STPPaymentMethodAddress? = nil,
+        customerPhone: String? = nil,
         linkMode: LinkMode?,
         additionalParameters: [String: Any] = [:],
         completion: @escaping STPLinkAccountSessionBlock
@@ -58,6 +64,8 @@ public extension STPAPIClient {
             paymentMethodType: paymentMethodType,
             customerName: customerName,
             customerEmailAddress: customerEmailAddress,
+            customerAddress: customerAddress,
+            customerPhone: customerPhone,
             linkMode: linkMode,
             additionalParameters: additionalParameters,
             completion: completion
@@ -80,12 +88,12 @@ public extension STPAPIClient {
         parameters["amount"] = amount
         parameters["currency"] = currency
         parameters["on_behalf_of"] = onBehalfOf
-        
+
         let hostedSurface = parameters["hosted_surface"]
         if hostedSurface != nil {
             parameters["link_mode"] = linkMode?.rawValue ?? "LINK_DISABLED"
         }
-        
+
         APIRequest<LinkAccountSession>.post(
             with: self,
             endpoint: endpoint,
@@ -102,6 +110,8 @@ public extension STPAPIClient {
         paymentMethodType: STPPaymentMethodType,
         customerName: String?,
         customerEmailAddress: String?,
+        customerAddress: STPPaymentMethodAddress?,
+        customerPhone: String?,
         linkMode: LinkMode?,
         additionalParameters: [String: Any],
         completion: @escaping STPLinkAccountSessionBlock
@@ -118,7 +128,14 @@ public extension STPAPIClient {
         if let customerEmailAddress = customerEmailAddress {
             parameters["payment_method_data[billing_details][email]"] = customerEmailAddress
         }
-        
+        if let customerAddress = customerAddress {
+            parameters["payment_method_data[billing_details][address]"] =
+                STPFormEncoder.dictionary(forObject: customerAddress)
+        }
+        if let customerPhone = customerPhone {
+            parameters["payment_method_data[billing_details][phone]"] = customerPhone
+        }
+
         let hostedSurface = parameters["hosted_surface"]
         if hostedSurface != nil {
             parameters["link_mode"] = linkMode?.rawValue ?? "LINK_DISABLED"
