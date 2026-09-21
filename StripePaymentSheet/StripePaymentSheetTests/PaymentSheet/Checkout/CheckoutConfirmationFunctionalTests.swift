@@ -48,9 +48,6 @@ final class CheckoutConfirmationFunctionalTests: STPNetworkStubbingTestCase {
         XCTAssertEqual(checkout.session.status, .complete(.noPaymentRequired))
     }
 
-    // TODO: Re-enable after https://git.corp.stripe.com/stripe-internal/mint/pull/2587796 deploys
-    // customer_email with no PM billing email returns checkout_email_missing.
-    /*
     func test_confirm_with_card_and_checkout_session_customer_email_completes_with_payment_intent() async throws {
         // Given a Checkout Session with customer_email and a selected card without a billing email
         let checkout = try await makeCheckout(
@@ -67,7 +64,6 @@ final class CheckoutConfirmationFunctionalTests: STPNetworkStubbingTestCase {
         assertCompleted(result, paymentStatus: .paid)
         XCTAssertEqual(checkout.session.status, .complete(.paid))
     }
-    */
 
     func test_confirm_with_card_and_customer_object_email_completes_with_payment_intent() async throws {
         // Given a Checkout Session with Customer.email and a selected card without a billing email
@@ -86,9 +82,6 @@ final class CheckoutConfirmationFunctionalTests: STPNetworkStubbingTestCase {
         XCTAssertEqual(checkout.session.status, .complete(.paid))
     }
 
-    // TODO: Re-enable after https://git.corp.stripe.com/stripe-internal/mint/pull/2587796 deploys
-    // customer_email with a different PM billing email returns customer_and_confirmation_email_mismatch.
-    /*
     func test_confirm_with_sepa_debit_and_different_payment_method_email_completes_with_payment_intent() async throws {
         // Given a Checkout Session with customer_email and a SEPA Debit form requiring a different email
         var defaultBillingDetails = CheckoutController.Configuration.Defaults.BillingDetails()
@@ -142,7 +135,6 @@ final class CheckoutConfirmationFunctionalTests: STPNetworkStubbingTestCase {
         assertCompleted(result, paymentStatus: .unpaid)
         XCTAssertEqual(checkout.session.status, .complete(.unpaid))
     }
-    */
 
     private func makeCheckout(
         amount: Int,
@@ -217,9 +209,6 @@ final class CheckoutConfirmationFunctionalTests: STPNetworkStubbingTestCase {
         XCTAssertEqual(paymentStatus, expectedPaymentStatus, file: file, line: line)
     }
 
-    // TODO: Re-enable after https://git.corp.stripe.com/stripe-internal/mint/pull/2587796 deploys
-    // Helper for the disabled SEPA Debit test.
-    /*
     private func waitUntil(
         timeout: TimeInterval = 5,
         file: StaticString = #filePath,
@@ -235,7 +224,6 @@ final class CheckoutConfirmationFunctionalTests: STPNetworkStubbingTestCase {
             try await Task.sleep(nanoseconds: 1_000_000)
         }
     }
-    */
 
     private enum ServerEmailSource {
         case checkoutSession(String)
@@ -243,5 +231,4 @@ final class CheckoutConfirmationFunctionalTests: STPNetworkStubbingTestCase {
     }
 }
 
-// Used by the disabled SEPA Debit test's waitUntil helper.
-// private struct CheckoutConfirmationFunctionalTestTimeoutError: Error {}
+private struct CheckoutConfirmationFunctionalTestTimeoutError: Error {}
