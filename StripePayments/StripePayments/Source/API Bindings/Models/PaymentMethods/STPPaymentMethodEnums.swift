@@ -132,6 +132,8 @@ import Foundation
     case touchNGo
     /// A TrueMoney payment method
     case trueMoney
+    /// A Naira Wallet payment method
+    case ngWallet
     /// An unknown type.
     case unknown
 
@@ -260,6 +262,8 @@ import Foundation
             return "Touch 'n Go"
         case .trueMoney:
             return "TrueMoney"
+        case .ngWallet:
+            return "Naira Wallet"
         case .goPay:
             return "GoPay"
         case .cardPresent,
@@ -393,6 +397,8 @@ import Foundation
             return "touch_n_go"
         case .trueMoney:
             return "truemoney"
+        case .ngWallet:
+            return "ng_wallet"
         case .goPay:
             return "gopay"
         }
