@@ -302,6 +302,8 @@ extension STPPaymentMethodType {
                 return .pm_type_ng_bank_transfer
             case .touchNGo:
                 return .pm_type_touch_n_go
+            case .trueMoney:
+                return .pm_type_truemoney
             case .goPay:
                 return .pm_type_gopay
             case .grabPay:

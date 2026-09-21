@@ -12,6 +12,7 @@ MINOR
 ### PaymentSheet
 * [Added] Added QRIS API bindings and support for payments in PaymentSheet.
 * [Added] Added ShopeePay API bindings and support for payments in PaymentSheet.
+* [Added] Added TrueMoney API bindings and support for payments and setup in PaymentSheet.
 * [Added] Added Touch 'n Go API bindings and support for payments and setup in PaymentSheet.
 * [Added] Added GCash API bindings and support for payments and setup in PaymentSheet.
 * [Added] Added MoMo API bindings and support for payments and setup in PaymentSheet.
