@@ -720,7 +720,9 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                                paymentMethodType: .goPay,
                                merchantCountry: .US,
                                expectedHierarchy: ExpectedFormHierarchy.GoPay.paymentIntent) { _ in }
-        try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .paymentIntentWithPMOSetupFutureUsage, .setupIntent],
+        // TODO(porter): Add `.paymentIntentWithPMOSetupFutureUsage` once Confirmation Tokens
+        // accepts `client_context[payment_method_options][gopay]`.
+        try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .setupIntent],
                                currency: "IDR",
                                amount: 1000000,
                                paymentMethodType: .goPay,
@@ -1304,7 +1306,9 @@ extension PaymentSheetLPMConfirmFlowTests {
                 intents.append(TestIntent("Deferred PaymentIntent - client side confirmation", makeDeferredIntent(deferredCSC)))
             }
             // TODO: Re-enable once unified-mode Checkout forwards `blik_code` to PaymentIntent confirmation.
-            if shouldTest(.checkoutSession), paymentMethod != .blik {
+            // TODO(porter): Re-enable GoPay once the test backend accepts it in
+            // `payment_method_types` when creating a Checkout Session.
+            if shouldTest(.checkoutSession), paymentMethod != .blik, paymentMethod != .goPay {
                 let checkoutSessionResponse = try await STPTestingAPIClient.shared.createLegacyCheckoutSession(
                     types: paymentMethodTypes,
                     currency: currency,
