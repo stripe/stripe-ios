@@ -105,7 +105,8 @@ class IdentityFlowViewController: UIViewController {
         do {
             try flowView.configure(
                 with: viewModel,
-                primaryButtonStyle: sheetController?.flowController.primaryButtonStyle ?? .default
+                primaryButtonStyle: sheetController?.flowController.primaryButtonStyle ?? .default,
+                secondaryButtonStyle: sheetController?.flowController.secondaryButtonStyle ?? .default
             )
         } catch {
             if let sheetController = sheetController {
