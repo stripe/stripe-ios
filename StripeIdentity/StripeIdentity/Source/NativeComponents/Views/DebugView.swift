@@ -309,9 +309,9 @@ extension DebugView: CompleteOptionViewDelegate {
 
 extension DebugView {
     // Debug strings, not translatable.
-    static let testModeTitle: String = "You're currently in testmode"
+    static let testModeTitle: String = "You're currently testing"
 
-    static let testModeContent: String = "This page is only shown in testmode."
+    static let testModeContent: String = "This page is only shown for test accounts."
 
     static let finishMobileFlow: String = "Terminate mobile SDK flow"
 
