@@ -1,5 +1,11 @@
 "Debit cards are most likely to be accepted." = "บัตรเดบิตเป็นบัตรที่มีแนวโน้มที่จะได้รับการยอมรับมากที่สุด";
 
+"Please try again later." = "โปรดลองอีกครั้งในภายหลัง";
+
+"Submitted for review" = "ส่งไปตรวจสอบแล้ว";
+
+"Tell us about your source of funds" = "แจ้งให้เราทราบเกี่ยวกับแหล่งที่มาของเงินทุนของคุณ";
+
 "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "ยืนยันแอปนี้ไม่ได้เนื่องจากเกิดข้อผิดพลาดในการรับรอง โปรดลองอีกครั้งในภายหลังหรือติดต่อนักพัฒนาหากยังพบปัญหาอยู่";
 
 "This app couldn't be verified. Contact the app developer for help." = "แอปนี้ไม่สามารถตรวจสอบยืนยันได้ โปรดติดต่อนักพัฒนาแอปเพื่อขอความช่วยเหลือ";
@@ -12,4 +18,12 @@
 
 "This wallet verification request is invalid. Please try again." = "คำขอยืนยันกระเป๋าเงินนี้ไม่ถูกต้อง โปรดลองอีกครั้ง";
 
+"Upload your proof of address" = "อัปโหลดหลักฐานที่อยู่ของคุณ";
+
 "We couldn't verify ownership of this wallet. Please try again." = "เราไม่สามารถยืนยันการเป็นเจ้าของกระเป๋าเงินนี้ได้ โปรดลองอีกครั้ง";
+
+"We’re required to confirm your address to enable spending over %@." = "เราจำเป็นต้องยืนยันที่อยู่ของคุณเพื่อเปิดใช้งานการใช้จ่ายที่มียอดเกิน %@";
+
+"We’re required to understand where your funds come from to enable spending over %@." = "เราจำเป็นต้องทราบแหล่งที่มาของเงินทุนของคุณเพื่อเปิดใช้งานการใช้จ่ายที่มียอดเกิน %@";
+
+"We’re reviewing your documents. We’ll let you know when verification is complete." = "เรากำลังตรวจสอบเอกสารของคุณ โดยจะแจ้งให้คุณทราบเมื่อการยืนยันเสร็จเรียบร้อย";

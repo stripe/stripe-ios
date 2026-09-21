@@ -330,6 +330,10 @@
 
 "Tax" = "Davek";
 
+"Terms and Conditions" = "Pogoji in določila";
+
+"Terms of Service" = "Pogoji storitve";
+
 "The IBAN you entered is incomplete." = "Vnesena koda IBAN ni popolna.";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Vnesena koda IBAN ni veljavna. »%@« ni podprta koda države.";

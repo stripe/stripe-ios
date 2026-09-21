@@ -330,6 +330,10 @@
 
 "Tax" = "Tax";
 
+"Terms and Conditions" = "Terms and Conditions";
+
+"Terms of Service" = "Terms of Service";
+
 "The IBAN you entered is incomplete." = "The IBAN you entered is incomplete.";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "The IBAN you entered is invalid. \"%@\" is not a supported country code.";

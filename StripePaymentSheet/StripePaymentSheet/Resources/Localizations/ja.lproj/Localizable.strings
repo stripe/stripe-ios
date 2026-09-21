@@ -330,6 +330,10 @@
 
 "Tax" = "税金";
 
+"Terms and Conditions" = "利用規約";
+
+"Terms of Service" = "利用規約";
+
 "The IBAN you entered is incomplete." = "入力した IBAN に不備があります。";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "入力した IBAN が無効です。「%@」はサポートされている国コードではありません。";
