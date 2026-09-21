@@ -43,9 +43,12 @@ class IdentityFlowView: UIView {
 
         static func buttonConfiguration(
             isPrimary: Bool,
-            primaryButtonStyle: IdentityVerificationSheet.Configuration.PrimaryButtonStyle
+            primaryButtonStyle: IdentityVerificationSheet.Configuration.PrimaryButtonStyle,
+            secondaryButtonStyle: IdentityVerificationSheet.Configuration.SecondaryButtonStyle
         ) -> Button.Configuration {
-            return isPrimary ? .identityPrimary(style: primaryButtonStyle) : .identitySecondary()
+            return isPrimary
+                ? .identityPrimary(style: primaryButtonStyle)
+                : .identitySecondary(style: secondaryButtonStyle)
         }
     }
 
@@ -164,11 +167,16 @@ class IdentityFlowView: UIView {
     /// called from a view controller's `init` or `viewDidLoad`.
     func configure(
         with viewModel: ViewModel,
-        primaryButtonStyle: IdentityVerificationSheet.Configuration.PrimaryButtonStyle = .default
+        primaryButtonStyle: IdentityVerificationSheet.Configuration.PrimaryButtonStyle = .default,
+        secondaryButtonStyle: IdentityVerificationSheet.Configuration.SecondaryButtonStyle = .default
     ) throws {
         configureHeaderView(with: viewModel.headerViewModel)
         configureContentView(with: viewModel.contentViewModel)
-        configureButtons(with: viewModel.buttons, primaryButtonStyle: primaryButtonStyle)
+        configureButtons(
+            with: viewModel.buttons,
+            primaryButtonStyle: primaryButtonStyle,
+            secondaryButtonStyle: secondaryButtonStyle
+        )
         try configureButtonTop(with: viewModel.buttonTopContentViewModel)
         flowViewDelegate = viewModel.flowViewDelegate
         if let scrollViewDelegate = viewModel.scrollViewDelegate {
@@ -292,7 +300,8 @@ extension IdentityFlowView {
 extension IdentityFlowView {
     fileprivate func configureButtons(
         with buttonViewModels: [ViewModel.Button],
-        primaryButtonStyle: IdentityVerificationSheet.Configuration.PrimaryButtonStyle
+        primaryButtonStyle: IdentityVerificationSheet.Configuration.PrimaryButtonStyle,
+        secondaryButtonStyle: IdentityVerificationSheet.Configuration.SecondaryButtonStyle
     ) {
         // If there are no buttons to display, hide the container view
         guard buttonViewModels.count > 0 else {
@@ -306,7 +315,11 @@ extension IdentityFlowView {
         defer {
             // Configure buttons
             zip(buttonViewModels, buttons).forEach { (viewModel, button) in
-                button.configure(with: viewModel, primaryButtonStyle: primaryButtonStyle)
+                button.configure(
+                    with: viewModel,
+                    primaryButtonStyle: primaryButtonStyle,
+                    secondaryButtonStyle: secondaryButtonStyle
+                )
             }
 
             // Cache tap actions
@@ -454,13 +467,18 @@ extension StripeUICore.Button {
 
     fileprivate func configure(
         with viewModel: IdentityFlowView.ViewModel.Button,
-        primaryButtonStyle: IdentityVerificationSheet.Configuration.PrimaryButtonStyle
+        primaryButtonStyle: IdentityVerificationSheet.Configuration.PrimaryButtonStyle,
+        secondaryButtonStyle: IdentityVerificationSheet.Configuration.SecondaryButtonStyle
     ) {
         self.title = viewModel.text
         self.configuration = IdentityFlowView.Style.buttonConfiguration(
             isPrimary: viewModel.isPrimary,
-            primaryButtonStyle: primaryButtonStyle
+            primaryButtonStyle: primaryButtonStyle,
+            secondaryButtonStyle: secondaryButtonStyle
         )
+        if LiquidGlassDetector.isEnabledInMerchantApp {
+            ios26_applyCapsuleCornerConfiguration()
+        }
         self.isEnabled = viewModel.state == .enabled
         self.isLoading = viewModel.state == .loading
     }
@@ -486,9 +504,14 @@ extension Button.Configuration {
     }
 
     /// A less prominent button.
-    static func identitySecondary() -> Self {
+    static func identitySecondary(style: IdentityVerificationSheet.Configuration.SecondaryButtonStyle = .default) -> Self {
         var configuration: Button.Configuration = .secondary()
         configuration.font = buttonFont
+        if case let .custom(backgroundColor, textColor) = style {
+            configuration.backgroundColor = backgroundColor
+            configuration.foregroundColor = textColor
+            configuration.disabledBackgroundColor = .secondarySystemFill
+        }
         return configuration
     }
 }

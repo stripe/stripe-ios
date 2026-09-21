@@ -34,6 +34,15 @@ final public class IdentityVerificationSheet {
             case custom(backgroundColor: UIColor, textColor: UIColor)
         }
 
+        /// The appearance of secondary action buttons throughout the native verification flow.
+        @_spi(STP) public enum SecondaryButtonStyle {
+            /// Uses the default secondary button appearance.
+            case `default`
+            /// Uses the supplied background and text colors.
+            /// Provide dynamic colors to support different colors in light and dark mode.
+            case custom(backgroundColor: UIColor, textColor: UIColor)
+        }
+
         /// Configuration for the biometric consent screen's header.
         @_spi(STP) public struct BiometricConsentConfiguration {
             /// Whether to hide the branding header above the consent title.
@@ -59,6 +68,10 @@ final public class IdentityVerificationSheet {
         /// The style of primary action buttons throughout the native verification flow.
         /// Disabled buttons retain the default disabled appearance. Secondary buttons are unaffected.
         @_spi(STP) public var primaryButtonStyle: PrimaryButtonStyle = .default
+
+        /// The style of secondary action buttons throughout the native verification flow.
+        /// Disabled buttons retain the default disabled appearance. Primary buttons are unaffected.
+        @_spi(STP) public var secondaryButtonStyle: SecondaryButtonStyle = .default
 
         /// Configuration for the biometric consent screen's header.
         ///
