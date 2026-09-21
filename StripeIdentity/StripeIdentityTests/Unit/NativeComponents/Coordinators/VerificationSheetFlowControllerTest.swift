@@ -160,20 +160,19 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
         wait(for: [exp], timeout: 1)
     }
 
-    // Requires document photo without type - should return DocumentTypeSelectViewController
+    // Requires document photo without type - should return DocumentWarmupViewController
     func testMissingDocFrontNoType() throws {
-        // Mock that document ML models successfully loaded
-        mockMLModelLoader.documentModelsPromise.resolve(with: .init(DocumentScannerMock()))
+        // Given the document models have not loaded
+        var nextViewController: UIViewController?
 
-        let exp = expectation(description: "testMissingDocFrontNoType")
-        try nextViewController(
+        // When the document front is required without a selected document type
+        try self.nextViewController(
             missingRequirements: [.idDocumentFront],
-            completion: { nextVC in
-                XCTAssertIs(nextVC, DocumentWarmupViewController.self)
-                exp.fulfill()
-            }
+            completion: { nextViewController = $0 }
         )
-        wait(for: [exp], timeout: 1)
+
+        // Then routing completes synchronously without waiting for the models
+        XCTAssertIs(try XCTUnwrap(nextViewController), DocumentWarmupViewController.self)
     }
 
     func testNoSelfieConfigError() throws {
@@ -320,47 +319,38 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
     }
 
     func testNextViewControllerDocumentWarmup() throws {
-        // Mock that user has selected document type
-        mockSheetController.collectedData = .init()
+        // Given the document models have not loaded
+        var frontViewController: UIViewController?
+        var backViewController: UIViewController?
 
-        // Mock that document ML models successfully loaded
-        mockMLModelLoader.documentModelsPromise.resolve(with: .init(DocumentScannerMock()))
-
-        let frontExp = expectation(description: "front")
+        // When either side of the document is required
         try nextViewController(
             missingRequirements: [.idDocumentFront],
-            completion: { nextVC in
-                XCTAssertIs(nextVC, DocumentWarmupViewController.self.self)
-                frontExp.fulfill()
-            }
+            completion: { frontViewController = $0 }
         )
 
-        let backExp = expectation(description: "back")
         try nextViewController(
             missingRequirements: [.idDocumentBack],
-            completion: { nextVC in
-                XCTAssertIs(nextVC, DocumentWarmupViewController.self)
-                backExp.fulfill()
-            }
+            completion: { backViewController = $0 }
         )
 
-        wait(for: [frontExp, backExp], timeout: 1)
+        // Then both routes complete synchronously without waiting for the models
+        XCTAssertIs(try XCTUnwrap(frontViewController), DocumentWarmupViewController.self)
+        XCTAssertIs(try XCTUnwrap(backViewController), DocumentWarmupViewController.self)
     }
 
     func testNextViewControllerSelfie() throws {
-        // Mock that face ML models successfully loaded
-        mockMLModelLoader.faceModelsPromise.resolve(with: .init(FaceScannerMock()))
+        // Given the face models have not loaded
+        var nextViewController: UIViewController?
 
-        let exp = expectation(description: "testNextViewControllerSelfie")
-        try nextViewController(
+        // When a selfie is required
+        try self.nextViewController(
             missingRequirements: [.face],
-            completion: { nextVC in
-                XCTAssertIs(nextVC, SelfieWarmupViewController.self)
-                exp.fulfill()
-            }
+            completion: { nextViewController = $0 }
         )
 
-        wait(for: [exp], timeout: 1)
+        // Then routing completes synchronously without waiting for the models
+        XCTAssertIs(try XCTUnwrap(nextViewController), SelfieWarmupViewController.self)
     }
 
     func testDelegateChain() {
