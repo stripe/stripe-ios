@@ -1,0 +1,103 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3UIDiWFY0qyl6XeW0liQsVvh\/confirm$
+200
+application/json
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=crvi1NGRomJgIvJQvEJtPuhuhl_uFSPY1rJaWgpDLaEVaku2_-5NXvIs8FpO81F1-LUIvI5extuXTou3; report-to csp
+Server: nginx
+Cache-Control: no-cache, no-store
+reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=crvi1NGRomJgIvJQvEJtPuhuhl_uFSPY1rJaWgpDLaEVaku2_-5NXvIs8FpO81F1-LUIvI5extuXTou3&t=1"
+stripe-notice: You are using an outdated API version (2020-08-27). We recommend upgrading to the latest API version, 2026-08-26.dahlia. See https://docs.stripe.com/upgrades
+x-wc: 3c3
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=crvi1NGRomJgIvJQvEJtPuhuhl_uFSPY1rJaWgpDLaEVaku2_-5NXvIs8FpO81F1-LUIvI5extuXTou3&t=1"}],"include_subdomains":true}
+request-id: req_SOoc1w1nGV9XGR
+x-stripe-routing-context-priority-tier: api-testmode
+Content-Length: 1762
+Vary: Origin
+Date: Mon, 21 Sep 2026 20:21:37 GMT
+original-request: req_SOoc1w1nGV9XGR
+stripe-version: 2020-08-27
+idempotency-key: d93dc5da-3085-48f8-bf9e-a880e5186ddb
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+X-Stripe-Mock-Request: client_attribution_metadata\[client_session_id]=.*&client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_intent_creation_flow]=deferred&client_attribution_metadata\[payment_method_selection_flow]=merchant_specified&client_secret=pi_3UIDiWFY0qyl6XeW0liQsVvh_secret_rrFqwIP95uuwWUbdDjkmDzI73&confirmation_token=ctoken_1UIDiWFY0qyl6XeWVX2EZSEG&expand\[0]=payment_method&return_url=https%3A\/\/foo\.com&use_stripe_sdk=true
+
+{
+  "payment_method_configuration_details" : null,
+  "canceled_at" : null,
+  "source" : null,
+  "amount" : 1000000,
+  "capture_method" : "automatic",
+  "livemode" : false,
+  "shipping" : null,
+  "status" : "requires_action",
+  "object" : "payment_intent",
+  "currency" : "idr",
+  "last_payment_error" : null,
+  "amount_subtotal" : 1000000,
+  "automatic_payment_methods" : null,
+  "cancellation_reason" : null,
+  "next_action" : {
+    "type" : "redirect_to_url",
+    "redirect_to_url" : {
+      "return_url" : "https:\/\/foo.com",
+      "url" : "https:\/\/pm-redirects.stripe.com\/authorize\/acct_1G6m1pFY0qyl6XeW\/pa_nonce_VIpNDizTlOuTA2Wwzsr7AYQutWDKbZ0"
+    }
+  },
+  "total_details" : {
+    "amount_discount" : 0,
+    "amount_tip" : null,
+    "amount_tax" : 0
+  },
+  "payment_method" : {
+    "object" : "payment_method",
+    "id" : "pm_1UIDiWFY0qyl6XeWb4VMtLdK",
+    "billing_details" : {
+      "email" : null,
+      "phone" : null,
+      "tax_id" : null,
+      "name" : null,
+      "address" : {
+        "state" : null,
+        "country" : null,
+        "line2" : null,
+        "city" : null,
+        "line1" : null,
+        "postal_code" : null
+      }
+    },
+    "gopay" : {
+
+    },
+    "livemode" : false,
+    "created" : 1790022096,
+    "allow_redisplay" : "unspecified",
+    "type" : "gopay",
+    "customer" : null,
+    "customer_account" : null
+  },
+  "client_secret" : "pi_3UIDiWFY0qyl6XeW0liQsVvh_secret_rrFqwIP95uuwWUbdDjkmDzI73",
+  "id" : "pi_3UIDiWFY0qyl6XeW0liQsVvh",
+  "allowed_payment_method_types" : null,
+  "confirmation_method" : "automatic",
+  "amount_details" : {
+    "tip" : {
+
+    }
+  },
+  "excluded_payment_method_types" : null,
+  "processing" : null,
+  "receipt_email" : null,
+  "payment_method_types" : [
+    "gopay"
+  ],
+  "setup_future_usage" : "off_session",
+  "created" : 1790022096,
+  "description" : null
+}

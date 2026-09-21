@@ -713,6 +713,22 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                                expectedHierarchy: ExpectedFormHierarchy.Scalapay.paymentIntent) { _ in }
     }
 
+    func testGoPayConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "IDR",
+                               amount: 1000000,
+                               paymentMethodType: .goPay,
+                               merchantCountry: .US,
+                               expectedHierarchy: ExpectedFormHierarchy.GoPay.paymentIntent) { _ in }
+        // TODO(porter): Add `.paymentIntentWithPMOSetupFutureUsage` once Confirmation Tokens
+        // accepts `client_context[payment_method_options][gopay]`.
+        try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .setupIntent],
+                               currency: "IDR",
+                               amount: 1000000,
+                               paymentMethodType: .goPay,
+                               merchantCountry: .US,
+                               expectedHierarchy: ExpectedFormHierarchy.GoPay.settingUp) { _ in }
+    }
     func testPaycoConfirmFlows() async throws {
         try await _testConfirm(intentKinds: [.paymentIntent],
                                currency: "KRW",
@@ -1290,7 +1306,9 @@ extension PaymentSheetLPMConfirmFlowTests {
                 intents.append(TestIntent("Deferred PaymentIntent - client side confirmation", makeDeferredIntent(deferredCSC)))
             }
             // TODO: Re-enable once unified-mode Checkout forwards `blik_code` to PaymentIntent confirmation.
-            if shouldTest(.checkoutSession), paymentMethod != .blik {
+            // TODO(porter): Re-enable GoPay once the test backend accepts it in
+            // `payment_method_types` when creating a Checkout Session.
+            if shouldTest(.checkoutSession), paymentMethod != .blik, paymentMethod != .goPay {
                 let checkoutSessionResponse = try await STPTestingAPIClient.shared.createLegacyCheckoutSession(
                     types: paymentMethodTypes,
                     currency: currency,

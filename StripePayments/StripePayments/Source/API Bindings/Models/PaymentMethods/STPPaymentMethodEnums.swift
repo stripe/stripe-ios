@@ -114,6 +114,8 @@ import Foundation
     case sequra
     /// A Scalapay payment method
     case scalapay
+    /// A GoPay payment method
+    case goPay
     /// An unknown type.
     case unknown
 
@@ -226,6 +228,8 @@ import Foundation
             return "SeQura"
         case .scalapay:
             return "Scalapay"
+        case .goPay:
+            return "GoPay"
         case .cardPresent,
             .unknown:
             return STPLocalizedString("Unknown", "Default missing source type label")
@@ -341,6 +345,8 @@ import Foundation
             return "sequra"
         case .scalapay:
             return "scalapay"
+        case .goPay:
+            return "gopay"
         }
     }
 
