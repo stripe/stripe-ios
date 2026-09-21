@@ -341,8 +341,45 @@ extension CheckoutController.Session {
         /// - If this is an external payment method, see https://stripe.com/docs/payments/external-payment-methods?platform=ios#available-external-payment-methods for possible values.
         /// - If this is Apple Pay, the value is "apple_pay"
         public let paymentMethodType: String
-        /// If you set `configuration.embeddedViewDisplaysMandateText = false`, this text must be displayed in a `UITextView` (so that URLs in the text are handled) to the customer near your “Buy” button to comply with regulations.
-        public let mandateText: NSAttributedString?
+        /// If you set `PaymentElement.Configuration.displaysMandateText = false`, display this text in a `UITextView` (so that URLs are handled) near your “Buy” button.
+        public var mandateText: NSAttributedString? {
+            mandate.merchantDidAccessMandateText()
+            return mandate.text
+        }
+
+        // Internal inspection must read `mandate.text` without marking it handled.
+        let mandate: MandateText
+
+        init(image: UIImage, label: String, billingDetails: BillingDetails?, paymentMethodType: String, mandateText: NSAttributedString?) {
+            self.image = image
+            self.label = label
+            self.billingDetails = billingDetails
+            self.paymentMethodType = paymentMethodType
+            self.mandate = MandateText(text: mandateText)
+        }
+
+        // Session and PaymentOptionDisplayData are value types. This wrapper lets merchant reads on any
+        // copy update Checkout's shared access flag while preserving that copy's text. Internal reads of
+        // `text` do not report merchant access.
+        final class MandateText: Equatable {
+            let text: NSAttributedString?
+            var merchantAccess: BoolReference?
+
+            init(text: NSAttributedString?) {
+                self.text = text
+            }
+
+            func merchantDidAccessMandateText() {
+                if let text, text.length > 0 {
+                    merchantAccess?.value = true
+                }
+            }
+
+            static func == (lhs: MandateText, rhs: MandateText) -> Bool {
+                // Handling a mandate does not change the payment option's display data.
+                return lhs.text == rhs.text
+            }
+        }
 
         /// The billing details collected for a payment method.
         public struct BillingDetails: Equatable {

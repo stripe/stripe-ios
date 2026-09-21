@@ -18,6 +18,331 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
 
     // MARK: - Coordinator
 
+    func testSavedSEPARequiresMandateBeforeConfirmingWithoutPresentingPaymentElement() async throws {
+        try await assertSavedSEPAMandate(accept: true)
+    }
+
+    func testDismissingSavedSEPAMandateCancelsWithoutConfirming() async throws {
+        try await assertSavedSEPAMandate(accept: false)
+    }
+
+    func testSavedSEPADoesNotRepeatMandateAfterContinuingFromSheet() async throws {
+        // Given a saved SEPA method whose mandate was accepted in the sheet
+        let checkout = try await makeSavedSEPACheckout()
+        let flowController = checkout.getPaymentElement().paymentSheetFlowController
+        flowController.flowControllerViewControllerShouldClose(flowController.viewController, didCancel: false)
+        flowController.updatePaymentOption()
+        XCTAssertTrue(flowController.didPresentAndContinue)
+        XCTAssertTrue(checkout.getPaymentElement().paymentOptionSourceOfTruthIsFlowController)
+        let confirmRequested = stubConfirmationExpecting(sessionId: checkout.session.id, savePaymentMethod: nil)
+
+        // When the merchant confirms, no additional mandate UI is needed
+        let result = await checkout.confirm(from: UIViewController())
+
+        // Then Checkout confirms directly
+        assertSucceeded(result)
+        await fulfillment(of: [confirmRequested], timeout: 5)
+    }
+
+    func testSavedSEPADoesNotPresentMandateWhenEmbeddedViewIsDisplayed() async throws {
+        // Given the merchant is displaying the embedded PaymentElement
+        let checkout = try await makeSavedSEPACheckout(displaysMandateText: true)
+        let presenter = UIViewController()
+        let window = UIWindow(frame: UIScreen.main.bounds)
+        window.rootViewController = presenter
+        presenter.view.addSubview(checkout.getPaymentElement().uiView)
+        window.makeKeyAndVisible()
+        defer { window.isHidden = true }
+        let confirmRequested = stubConfirmationExpecting(sessionId: checkout.session.id, savePaymentMethod: nil)
+
+        // When the merchant confirms
+        let result = await checkout.confirm(from: presenter)
+
+        // Then the embedded mandate behavior is preserved without an extra sheet
+        assertSucceeded(result)
+        XCTAssertNil(presenter.presentedViewController)
+        await fulfillment(of: [confirmRequested], timeout: 5)
+    }
+
+    func testSavedSEPAMandateRemainsHandledAfterEmbeddedViewLeavesScreen() async throws {
+        // Given the embedded view displayed the mandate on an earlier screen
+        let checkout = try await makeSavedSEPACheckout(displaysMandateText: true)
+        let window = UIWindow(frame: UIScreen.main.bounds)
+        let view = checkout.getPaymentElement().uiView
+        window.addSubview(view)
+        view.removeFromSuperview()
+        XCTAssertNil(view.window)
+
+        // Then confirming on another screen does not require the mandate again
+        assertRequiresSEPAMandate(checkout, expected: false)
+    }
+
+    func testAccessingUIViewSkipsSavedSEPAMandateWithoutDisplayingIt() async throws {
+        // Given an integration with inline mandate text disabled
+        let checkout = try await makeSavedSEPACheckout()
+
+        // When the merchant obtains the UIKit view without displaying it
+        _ = checkout.getPaymentElement().uiView
+
+        // Then embedded mandate display is the merchant's responsibility
+        assertRequiresSEPAMandate(checkout, expected: false)
+    }
+
+    func testAccessingSwiftUIViewSkipsSavedSEPAMandateWithoutDisplayingIt() async throws {
+        let checkout = try await makeSavedSEPACheckout()
+
+        // When the merchant obtains the SwiftUI view without displaying it
+        _ = checkout.getPaymentElement().view
+
+        // Then embedded mandate display is the merchant's responsibility
+        assertRequiresSEPAMandate(checkout, expected: false)
+    }
+
+    func testInternalViewCallbacksDoNotSkipSavedSEPAMandate() async throws {
+        let checkout = try await makeSavedSEPACheckout()
+        let element = checkout.getPaymentElement()
+
+        // When the SDK constructs the views and forwards embedded callbacks
+        element.embeddedPaymentElementDidUpdateHeight(embeddedPaymentElement: element.embeddedPaymentElement)
+        element.embeddedPaymentElementWillPresent(embeddedPaymentElement: element.embeddedPaymentElement)
+
+        // Then internal access does not opt the merchant into embedded mandate display
+        assertRequiresSEPAMandate(checkout, expected: true)
+    }
+
+    func testViewAccessSurvivesPaymentElementUpdate() async throws {
+        let checkout = try await makeSavedSEPACheckout()
+        _ = checkout.getPaymentElement().uiView
+
+        // When a session update refreshes PaymentElement
+        try await checkout.getPaymentElement().update(checkout: checkout)
+
+        // Then the integration remains responsible for embedded mandate display
+        assertRequiresSEPAMandate(checkout, expected: false)
+    }
+
+    func testReadingSavedSEPAMandateHandlesItWithoutDisplayingPaymentElement() async throws {
+        // Given a merchant that renders the mandate from a copy of the payment option
+        let checkout = try await makeSavedSEPACheckout()
+        let paymentOption = try XCTUnwrap(checkout.session.paymentOption)
+        XCTAssertNotNil(paymentOption.mandateText)
+
+        // Then confirmation does not present a second mandate
+        assertRequiresSEPAMandate(checkout, expected: false)
+    }
+
+    func testReadingSavedSEPAMandateSurvivesPaymentElementUpdate() async throws {
+        // Given the merchant has read the current mandate
+        let checkout = try await makeSavedSEPACheckout()
+        XCTAssertNotNil(checkout.session.paymentOption?.mandateText)
+
+        // When session updates reconstruct the payment option
+        try await checkout.getPaymentElement().update(checkout: checkout)
+
+        // Then the same saved method and mandate remain handled
+        assertRequiresSEPAMandate(checkout, expected: false)
+    }
+
+    func testDebugDescriptionAndEqualityDoNotHandleSavedSEPAMandate() async throws {
+        let checkout = try await makeSavedSEPACheckout()
+
+        // When SDK diagnostics and equality inspect the payment option
+        _ = checkout.session.debugDescription
+        XCTAssertEqual(checkout.session.paymentOption, checkout.session.paymentOption)
+
+        // Then the merchant has not taken responsibility for displaying the mandate
+        assertRequiresSEPAMandate(checkout, expected: true)
+    }
+
+    func testReadingSEPAMandateAppliesToAnotherSavedSEPAMethod() async throws {
+        let checkout = try await makeSavedSEPACheckout()
+        // Given the merchant has already read the SEPA mandate
+        XCTAssertNotNil(checkout.session.paymentOption?.mandateText)
+        let element = checkout.getPaymentElement()
+        var otherMethodJSON = STPPaymentMethod._testSEPA().allResponseFields
+        otherMethodJSON["id"] = "pm_other_sepa"
+        let otherMethod = try XCTUnwrap(STPPaymentMethod.decodedObject(fromAPIResponse: otherMethodJSON))
+
+        // When another saved SEPA method with the same mandate is selected
+        element.embeddedPaymentElement._test_paymentOption = .saved(paymentMethod: otherMethod, confirmParams: nil)
+        element.embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: element.embeddedPaymentElement)
+
+        // Then reading the mandate once is sufficient for the new selection
+        assertRequiresSEPAMandate(checkout, expected: false)
+    }
+
+    func testReadingSEPAMandateSurvivesClearingTheSelection() async throws {
+        let checkout = try await makeSavedSEPACheckout()
+        XCTAssertNotNil(checkout.session.paymentOption?.mandateText)
+
+        // When the selection is cleared and a saved SEPA method is selected again
+        try await checkout.clearPaymentOption()
+        let element = checkout.getPaymentElement()
+        element.embeddedPaymentElement._test_paymentOption = .saved(paymentMethod: STPPaymentMethod._testSEPA(), confirmParams: nil)
+        element.embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: element.embeddedPaymentElement)
+
+        // Then the earlier mandate access is still sufficient
+        assertRequiresSEPAMandate(checkout, expected: false)
+    }
+
+    func testReadingSEPAMandateSurvivesChangedMandateText() async throws {
+        let checkout = try await makeSavedSEPACheckout()
+        let option = try XCTUnwrap(checkout.session.paymentOption)
+        XCTAssertNotNil(option.mandateText)
+
+        // When the display data is replaced with different mandate text
+        checkout.dangerouslySetPaymentOptionDirectly(.init(
+            image: option.image,
+            label: option.label,
+            billingDetails: option.billingDetails,
+            paymentMethodType: option.paymentMethodType,
+            mandateText: NSAttributedString(string: "Updated SEPA mandate")
+        ))
+
+        // Then the earlier mandate access is still sufficient
+        assertRequiresSEPAMandate(checkout, expected: false)
+    }
+
+    func testReadingOldSEPAMandateCopyStillCountsAfterSelectionChanges() async throws {
+        let checkout = try await makeSavedSEPACheckout()
+        let oldOption = try XCTUnwrap(checkout.session.paymentOption)
+        try await checkout.clearPaymentOption()
+        let element = checkout.getPaymentElement()
+        element.embeddedPaymentElement._test_paymentOption = .saved(paymentMethod: STPPaymentMethod._testSEPA(), confirmParams: nil)
+        element.embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: element.embeddedPaymentElement)
+
+        // When the merchant reads a copy obtained before the selection changed
+        XCTAssertNotNil(oldOption.mandateText)
+
+        // Then access is recorded for the Checkout lifetime
+        assertRequiresSEPAMandate(checkout, expected: false)
+    }
+
+    func testContinuingFromSheetStillCountsAfterSelectionSourceChanges() async throws {
+        let checkout = try await makeSavedSEPACheckout()
+        let element = checkout.getPaymentElement()
+        let flowController = element.paymentSheetFlowController
+        flowController.flowControllerViewControllerShouldClose(flowController.viewController, didCancel: false)
+        flowController.updatePaymentOption()
+
+        // When Embedded becomes the selection source after the customer continued from the sheet
+        element.embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: element.embeddedPaymentElement)
+        XCTAssertFalse(element.paymentOptionSourceOfTruthIsFlowController)
+
+        // Then the sheet's sticky flag still suppresses the mandate, just as in FlowController
+        assertRequiresSEPAMandate(checkout, expected: false)
+    }
+
+    func testSEPAMandateAccessDoesNotCarryOverToAnotherCheckout() async throws {
+        let firstCheckout = try await makeSavedSEPACheckout()
+        XCTAssertNotNil(firstCheckout.session.paymentOption?.mandateText)
+
+        let secondCheckout = try await makeSavedSEPACheckout()
+
+        assertRequiresSEPAMandate(secondCheckout, expected: true)
+    }
+
+    func testViewAccessAppliesToSubsequentSavedSelection() async throws {
+        let checkout = try await makeSavedSEPACheckout()
+        let element = checkout.getPaymentElement()
+        _ = element.uiView
+
+        // When the customer subsequently selects another saved method
+        var otherMethodJSON = STPPaymentMethod._testSEPA().allResponseFields
+        otherMethodJSON["id"] = "pm_other_sepa"
+        let otherMethod = try XCTUnwrap(STPPaymentMethod.decodedObject(fromAPIResponse: otherMethodJSON))
+        element.embeddedPaymentElement._test_paymentOption = .saved(paymentMethod: otherMethod, confirmParams: nil)
+        element.embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: element.embeddedPaymentElement)
+
+        // Then the merchant remains responsible for displaying its mandate
+        assertRequiresSEPAMandate(checkout, expected: false)
+    }
+
+    private func assertRequiresSEPAMandate(
+        _ checkout: CheckoutController,
+        expected: Bool,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        guard case .paymentMethod(let parameters, _) = checkout.makeConfirmationFlow(
+            for: checkout.getPaymentElement(),
+            presentingViewController: UIViewController()
+        ) else {
+            return XCTFail("Expected a payment method confirmation flow", file: file, line: line)
+        }
+        XCTAssertEqual(parameters.requiresSEPAMandate, expected, file: file, line: line)
+    }
+
+    private func makeSavedSEPACheckout(displaysMandateText: Bool = false) async throws -> CheckoutController {
+        let elementsSession = STPElementsSession._testValue(
+            paymentMethodTypes: ["sepa_debit"],
+            customerSessionData: [:],
+            paymentMethods: [STPPaymentMethod._testSEPA().allResponseFields]
+        )
+        let session = CheckoutTestHelpers.makeSession([
+            "session_id": "cs_test_123",
+            "currency": "eur",
+            "checkout_items": CheckoutTestHelpers.makeOneTimePriceCheckoutItems(currency: "eur"),
+            "payment_method_types": ["sepa_debit"],
+            "elements_session": elementsSession.allResponseFields,
+        ])
+        var configuration = PaymentElement.Configuration()
+        configuration.displaysMandateText = displaysMandateText
+        return try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration(
+            apiResponse: session,
+            paymentElementConfiguration: configuration
+        ))
+    }
+
+    private func assertSavedSEPAMandate(accept: Bool) async throws {
+        // Given a default saved SEPA method and a merchant that hasn't presented PaymentElement
+        let checkout = try await makeSavedSEPACheckout()
+        XCTAssertEqual(checkout.session.paymentOption?.paymentMethodType, "sepa_debit")
+        XCTAssertFalse(checkout.getPaymentElement().paymentSheetFlowController.didPresentAndContinue)
+
+        let presenter = UIViewController()
+        let window = UIWindow(frame: UIScreen.main.bounds)
+        window.rootViewController = presenter
+        window.makeKeyAndVisible()
+        defer {
+            presenter.dismiss(animated: false)
+            window.isHidden = true
+        }
+        let confirmRequested = expectation(description: "Confirm requested only after mandate acceptance")
+        confirmRequested.isInverted = !accept
+        var didAcceptMandate = false
+        stub { $0.url?.path.hasSuffix("/confirm") == true } response: { _ in
+            XCTAssertTrue(didAcceptMandate)
+            confirmRequested.fulfill()
+            return HTTPStubsResponse(jsonObject: Self.confirmedSessionJSON, statusCode: 200, headers: nil)
+        }
+
+        // When the merchant confirms without opening the sheet
+        let confirmation = Task { await checkout.confirm(from: presenter) }
+
+        // Then the mandate is shown before any confirmation request
+        try await waitUntil { presenter.presentedViewController?.children.first is SepaMandateViewController }
+        let mandate = try XCTUnwrap(presenter.presentedViewController?.children.first as? SepaMandateViewController)
+        try await waitUntil { presenter.presentedViewController?.isBeingPresented == false }
+        didAcceptMandate = accept
+        if accept {
+            mandate.completion(true)
+        } else {
+            mandate.didTapOrSwipeToDismiss()
+        }
+        let result = await confirmation.value
+        if accept {
+            assertSucceeded(result)
+        } else {
+            guard case .canceled = result else {
+                return XCTFail("Expected cancellation, got \(result)")
+            }
+            XCTAssertEqual(checkout.session.status, .open)
+        }
+        XCTAssertNil(presenter.presentedViewController)
+        await fulfillment(of: [confirmRequested], timeout: accept ? 5 : 0.1)
+    }
+
     func testConfirmCommitsReturnedSessionAndMapsSuccess() async throws {
         // Given an open Checkout Session whose confirmation succeeds
         let checkout = try await makeCheckout()
