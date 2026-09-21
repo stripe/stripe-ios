@@ -145,6 +145,38 @@ final class BiometricConsentViewControllerTest: XCTestCase {
         XCTAssertEqual(continueLabel.textColor, .white)
     }
 
+    func testCustomContinueButtonHeightDoesNotAffectDeclineButton() throws {
+        // Given a custom minimum height for the primary button
+        let controller = try makeViewController(
+            primaryButtonStyle: .custom(backgroundColor: .purple, textColor: .yellow, height: 52)
+        )
+
+        // When the biometric consent buttons are displayed
+        let consentButtons = buttons(in: controller.view)
+        let continueButton = try XCTUnwrap(consentButtons.first)
+        let declineButton = try XCTUnwrap(consentButtons.last)
+
+        // Then only the Continue button uses the custom minimum height
+        XCTAssertEqual(continueButton.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height, 52)
+        XCTAssertEqual(declineButton.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height, 44)
+    }
+
+    func testCustomDeclineButtonHeightDoesNotAffectContinueButton() throws {
+        // Given a custom minimum height for the secondary button
+        let controller = try makeViewController(
+            secondaryButtonStyle: .custom(backgroundColor: .purple, textColor: .yellow, height: 52)
+        )
+
+        // When the biometric consent buttons are displayed
+        let consentButtons = buttons(in: controller.view)
+        let continueButton = try XCTUnwrap(consentButtons.first)
+        let declineButton = try XCTUnwrap(consentButtons.last)
+
+        // Then only the decline button uses the custom minimum height
+        XCTAssertEqual(continueButton.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height, 44)
+        XCTAssertEqual(declineButton.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height, 52)
+    }
+
     func testCustomContinueButtonIsDisabledUntilScrolled() throws {
         // Given unread consent with custom button colors
         let controller = try makeViewController(

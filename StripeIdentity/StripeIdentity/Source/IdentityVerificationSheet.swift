@@ -29,18 +29,18 @@ final public class IdentityVerificationSheet {
         @_spi(STP) public enum PrimaryButtonStyle {
             /// Uses the app's tint color.
             case `default`
-            /// Uses the supplied background and text colors.
+            /// Uses the supplied background and text colors, and an optional minimum height.
             /// Provide dynamic colors to support different colors in light and dark mode.
-            case custom(backgroundColor: UIColor, textColor: UIColor)
+            case custom(backgroundColor: UIColor, textColor: UIColor, height: CGFloat? = nil)
         }
 
         /// The appearance of secondary action buttons throughout the native verification flow.
         @_spi(STP) public enum SecondaryButtonStyle {
             /// Uses the default secondary button appearance.
             case `default`
-            /// Uses the supplied background and text colors.
+            /// Uses the supplied background and text colors, and an optional minimum height.
             /// Provide dynamic colors to support different colors in light and dark mode.
-            case custom(backgroundColor: UIColor, textColor: UIColor)
+            case custom(backgroundColor: UIColor, textColor: UIColor, height: CGFloat? = nil)
         }
 
         /// Configuration for the biometric consent screen's header.
