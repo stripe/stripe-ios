@@ -114,7 +114,10 @@ public final class EmbeddedPaymentElement {
         var config = configuration
         checkout.session.applyAddressOverrides(to: &config)
 
-        try validateRowSelectionConfiguration(configuration: config)
+        try validateRowSelectionConfiguration(
+            configuration: config,
+            customerProvider: CustomerProvider(checkoutSession: checkout.session)
+        )
 
         AnalyticsHelper.shared.generateSessionID()
         STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: EmbeddedPaymentElement.self)
@@ -226,6 +229,7 @@ public final class EmbeddedPaymentElement {
 
             // 2. At this point, we're still the latest update and update is successful - update self properties and inform our delegate.
             let previousPaymentOption = self._paymentOption
+            self.configuration.customerProvider = loadResult.customerProvider
             self.loadResult = loadResult
             self.confirmationChallenge = confirmationChallenge
             self.savedPaymentMethods = loadResult.savedPaymentMethods
@@ -235,9 +239,9 @@ public final class EmbeddedPaymentElement {
                 case .none:
                     return true
                 case .applePay:
-                    return PaymentSheet.isApplePayEnabled(elementsSession: loadResult.elementsSession, configuration: configuration)
+                    return PaymentSheet.isApplePayEnabled(elementsSession: loadResult.elementsSession, configuration: self.configuration)
                 case .link:
-                    return PaymentSheet.shouldShowLinkButton(elementsSession: loadResult.elementsSession, configuration: configuration)
+                    return PaymentSheet.shouldShowLinkButton(elementsSession: loadResult.elementsSession, configuration: self.configuration)
                 case .saved(paymentMethod: let paymentMethod, confirmParams: _):
                     return loadResult.savedPaymentMethods.contains(paymentMethod)
                 case .new(confirmParams: let confirmParams):
@@ -273,7 +277,7 @@ public final class EmbeddedPaymentElement {
                 }
             }()
             self.embeddedPaymentMethodsView = Self.makeView(
-                configuration: configuration,
+                configuration: self.configuration,
                 loadResult: loadResult,
                 analyticsHelper: analyticsHelper,
                 previousSelection: shouldSelectPreviousRow ? previousSelectedRowType : nil,
@@ -440,7 +444,10 @@ public final class EmbeddedPaymentElement {
         }
     }
     internal private(set) lazy var savedPaymentMethodManager: SavedPaymentMethodManager = {
-        SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession, intent: intent)
+        SavedPaymentMethodManager(
+            configuration: configuration,
+            elementsSession: elementsSession
+        )
     }()
 
     internal private(set) lazy var paymentHandler: STPPaymentHandler = STPPaymentHandler(apiClient: configuration.apiClient)
@@ -463,6 +470,8 @@ public final class EmbeddedPaymentElement {
         analyticsHelper: PaymentSheetAnalyticsHelper,
         initialSelection: RowButtonType? = nil
     ) {
+        var configuration = configuration
+        configuration.customerProvider = loadResult.customerProvider
         self.configuration = configuration
         self.loadResult = loadResult
         self.savedPaymentMethods = loadResult.savedPaymentMethods
