@@ -71,12 +71,25 @@ final class TwoOptionSelectorView: UIView {
     let expandableDetailView: ExpandableDetailView
     private var leftButton = UIButton(type: .custom)
     private var rightButton = UIButton(type: .custom)
+    private lazy var panGestureRecognizer: UIPanGestureRecognizer = {
+        let gesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan(_:)))
+        gesture.maximumNumberOfTouches = 1
+        // Decide between scrolling and scrubbing before a button starts tracking the touch.
+        gesture.delaysTouchesBegan = true
+        gesture.delegate = self
+        return gesture
+    }()
+    private let selectionFeedback = UISelectionFeedbackGenerator()
+    private var previewItemId: String?
+    private var dragStartCenterX: CGFloat = 0
+    private var dragStartLocationX: CGFloat = 0
 
+    private static let swipeDistance: CGFloat = 30
     private static let trackPadding: CGFloat = 3
     private static let defaultContentHeight: CGFloat = 26
 
-    private var indicatorLeadingConstraint: NSLayoutConstraint?
-    private var indicatorTrailingConstraint: NSLayoutConstraint?
+    private var indicatorLeftConstraint: NSLayoutConstraint?
+    private var indicatorRightConstraint: NSLayoutConstraint?
 
     // MARK: - Init
 
@@ -133,6 +146,7 @@ final class TwoOptionSelectorView: UIView {
         trackView.layer.cornerRadius = trackCornerRadius
         trackView.layer.cornerCurve = .circular
         trackView.clipsToBounds = false
+        trackView.addGestureRecognizer(panGestureRecognizer)
 
         // Selection indicator pill
         selectionIndicatorView.backgroundColor = appearance.pillBackground
@@ -187,10 +201,10 @@ final class TwoOptionSelectorView: UIView {
             selectionIndicatorView.bottomAnchor.constraint(equalTo: buttonsStackView.bottomAnchor),
         ])
 
-        indicatorLeadingConstraint = selectionIndicatorView.leadingAnchor.constraint(equalTo: leftButton.leadingAnchor)
-        indicatorTrailingConstraint = selectionIndicatorView.trailingAnchor.constraint(equalTo: leftButton.trailingAnchor)
-        indicatorLeadingConstraint?.isActive = true
-        indicatorTrailingConstraint?.isActive = true
+        indicatorLeftConstraint = selectionIndicatorView.leftAnchor.constraint(equalTo: leftButton.leftAnchor)
+        indicatorRightConstraint = selectionIndicatorView.rightAnchor.constraint(equalTo: leftButton.rightAnchor)
+        indicatorLeftConstraint?.isActive = true
+        indicatorRightConstraint?.isActive = true
 
         updateBorderColors()
         updateButtonStyles(animated: false)
@@ -213,33 +227,35 @@ final class TwoOptionSelectorView: UIView {
 
     private func updateButtonStyles(animated: Bool) {
         let isLeftSelected = leftItem.id == selectedItemId
-        let font = appearance.scaledFont(for: appearance.font.medium, style: .footnote)
-
-        applyTitleColor(to: leftButton, item: leftItem, color: isLeftSelected ? appearance.selectedTextColor : appearance.unselectedTextColor, font: font)
-        applyTitleColor(to: rightButton, item: rightItem, color: !isLeftSelected ? appearance.selectedTextColor : appearance.unselectedTextColor, font: font)
+        updateTitleColors(selectedItemId: selectedItemId)
 
         leftButton.accessibilityTraits = isLeftSelected ? [.button, .selected] : .button
         rightButton.accessibilityTraits = !isLeftSelected ? [.button, .selected] : .button
 
-        indicatorLeadingConstraint?.isActive = false
-        indicatorTrailingConstraint?.isActive = false
+        indicatorLeftConstraint?.isActive = false
+        indicatorRightConstraint?.isActive = false
 
-        if isLeftSelected {
-            indicatorLeadingConstraint = selectionIndicatorView.leadingAnchor.constraint(equalTo: leftButton.leadingAnchor)
-            indicatorTrailingConstraint = selectionIndicatorView.trailingAnchor.constraint(equalTo: leftButton.trailingAnchor)
-        } else {
-            indicatorLeadingConstraint = selectionIndicatorView.leadingAnchor.constraint(equalTo: rightButton.leadingAnchor)
-            indicatorTrailingConstraint = selectionIndicatorView.trailingAnchor.constraint(equalTo: rightButton.trailingAnchor)
-        }
+        let selectedButton = isLeftSelected ? leftButton : rightButton
+        indicatorLeftConstraint = selectionIndicatorView.leftAnchor.constraint(equalTo: selectedButton.leftAnchor)
+        indicatorRightConstraint = selectionIndicatorView.rightAnchor.constraint(equalTo: selectedButton.rightAnchor)
 
-        indicatorLeadingConstraint?.isActive = true
-        indicatorTrailingConstraint?.isActive = true
+        indicatorLeftConstraint?.isActive = true
+        indicatorRightConstraint?.isActive = true
 
-        if animated {
-            UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0, options: .curveEaseInOut) {
+        if animated && !UIAccessibility.isReduceMotionEnabled {
+            UIView.animate(withDuration: 0.2, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 0, options: [.curveEaseInOut, .beginFromCurrentState, .allowUserInteraction]) {
                 self.layoutIfNeeded()
             }
+        } else if animated {
+            layoutIfNeeded()
         }
+    }
+
+    private func updateTitleColors(selectedItemId: String) {
+        let isLeftSelected = leftItem.id == selectedItemId
+        let font = appearance.scaledFont(for: appearance.font.medium, style: .footnote)
+        applyTitleColor(to: leftButton, item: leftItem, color: isLeftSelected ? appearance.selectedTextColor : appearance.unselectedTextColor, font: font)
+        applyTitleColor(to: rightButton, item: rightItem, color: !isLeftSelected ? appearance.selectedTextColor : appearance.unselectedTextColor, font: font)
     }
 
     private func applyTitleColor(to button: UIButton, item: TwoOptionSelectorItem, color: UIColor, font: UIFont) {
@@ -275,6 +291,66 @@ final class TwoOptionSelectorView: UIView {
 
     // MARK: - Selection
 
+    @objc private func handlePan(_ gesture: UIPanGestureRecognizer) {
+        if gesture.state == .began {
+            // Start from the visible pill position so grabbing it mid-animation doesn't jump.
+            let indicatorFrame = selectionIndicatorView.layer.presentation()?.frame ?? selectionIndicatorView.frame
+            let indicatorCenterX = indicatorFrame.midX - buttonsStackView.frame.minX
+            let grabbedPill = abs(dragStartLocationX - indicatorCenterX) <= indicatorFrame.width / 2
+            dragStartCenterX = grabbedPill ? indicatorCenterX : dragStartLocationX
+            selectionIndicatorView.layer.removeAllAnimations()
+            selectionFeedback.prepare()
+        }
+
+        // Include the movement before the pan recognizer began tracking.
+        let locationX = gesture.location(in: buttonsStackView).x
+        let translationX = locationX - dragStartLocationX
+        let proposedCenterX = dragStartCenterX + translationX
+        let minCenterX = min(leftButton.center.x, rightButton.center.x)
+        let maxCenterX = max(leftButton.center.x, rightButton.center.x)
+        let centerX = min(max(proposedCenterX, minCenterX), maxCenterX)
+
+        // Drags starting on the other option should select what is under the finger.
+        let selectedButton = selectedItemId == leftItem.id ? leftButton : rightButton
+        let otherButton = selectedItemId == leftItem.id ? rightButton : leftButton
+        let startedOnSelection = abs(dragStartLocationX - selectedButton.center.x) < abs(dragStartLocationX - otherButton.center.x)
+        let selectionX: CGFloat
+        if startedOnSelection && abs(translationX) >= Self.swipeDistance {
+            selectionX = translationX > 0 ? maxCenterX : minCenterX
+        } else {
+            selectionX = locationX
+        }
+        let isLeftClosest = abs(selectionX - leftButton.center.x) < abs(selectionX - rightButton.center.x)
+        let itemId = isLeftClosest ? leftItem.id : rightItem.id
+
+        switch gesture.state {
+        case .began, .changed:
+            let offset = centerX - selectedButton.center.x
+            indicatorLeftConstraint?.constant = offset
+            indicatorRightConstraint?.constant = offset
+            layoutIfNeeded()
+
+            if itemId != (previewItemId ?? selectedItemId) {
+                selectionFeedback.selectionChanged()
+                selectionFeedback.prepare()
+            }
+            previewItemId = itemId
+            updateTitleColors(selectedItemId: itemId)
+        case .ended:
+            previewItemId = nil
+            if itemId != selectedItemId {
+                select(itemId, notifyDelegate: true)
+            } else {
+                updateButtonStyles(animated: true)
+            }
+        case .cancelled, .failed:
+            previewItemId = nil
+            updateButtonStyles(animated: true)
+        default:
+            break
+        }
+    }
+
     @objc private func buttonTapped(_ sender: UIButton) {
         let tappedId = sender === leftButton ? leftItem.id : rightItem.id
         select(tappedId, notifyDelegate: true)
@@ -304,6 +380,24 @@ final class TwoOptionSelectorView: UIView {
     func setEnabled(_ enabled: Bool) {
         leftButton.isEnabled = enabled
         rightButton.isEnabled = enabled
+        panGestureRecognizer.isEnabled = enabled
         alpha = enabled ? 1.0 : 0.6
+    }
+}
+
+extension TwoOptionSelectorView: UIGestureRecognizerDelegate {
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+        if gestureRecognizer === panGestureRecognizer {
+            dragStartLocationX = touch.location(in: buttonsStackView).x
+        }
+        return true
+    }
+
+    override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        guard gestureRecognizer === panGestureRecognizer else {
+            return super.gestureRecognizerShouldBegin(gestureRecognizer)
+        }
+        let velocity = panGestureRecognizer.velocity(in: trackView)
+        return abs(velocity.x) > abs(velocity.y)
     }
 }
