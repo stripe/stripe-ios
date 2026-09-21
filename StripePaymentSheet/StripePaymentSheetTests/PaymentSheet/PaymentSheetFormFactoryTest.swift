@@ -2544,6 +2544,26 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             XCTAssertNotNil(form.updateParams(params: IntentConfirmParams(type: .stripe(.goPay))))
         }
     }
+    func testShopeePayUsesHostedAuthorizationWithoutNativeMandate() {
+        // Given a one-time ShopeePay payment
+        let intents: [Intent] = [
+            ._testPaymentIntent(paymentMethodTypes: [.shopeePay]),
+        ]
+        for intent in intents {
+            // When the form uses automatic billing collection
+            let form = PaymentSheetFormFactory(
+                intent: intent,
+                elementsSession: ._testValue(paymentMethodTypes: ["shopeepay"]),
+                configuration: .paymentElement(PaymentSheet.Configuration()),
+                paymentMethod: .stripe(.shopeePay)
+            ).make()
+
+            // Then account linking and consent remain in the hosted flow, as on web
+            XCTAssertFalse(form.collectsUserInput)
+            XCTAssertNil(form.getMandateElement())
+            XCTAssertNotNil(form.updateParams(params: IntentConfirmParams(type: .stripe(.shopeePay))))
+        }
+    }
     func testMomoUsesHostedAuthorizationWithoutNativeMandate() {
         // Given the payment and setup modes supported by Momo
         let intents: [Intent] = [
