@@ -13,11 +13,12 @@ import XCTest
 
 final class IdentityFlowViewControllerTest: XCTestCase {
     func testCustomPrimaryButtonStyleAcrossScreens() throws {
-        // Given a flow configured with dynamic primary button colors
+        // Given a flow configured with dynamic primary button colors and a minimum height
         var configuration = IdentityVerificationSheet.Configuration(brandLogo: UIImage())
         configuration.primaryButtonStyle = .custom(
             backgroundColor: .dynamic(light: .black, dark: .white),
-            textColor: .dynamic(light: .white, dark: .black)
+            textColor: .dynamic(light: .white, dark: .black),
+            height: 52
         )
         let sheetController = VerificationSheetControllerMock(
             flowController: VerificationSheetFlowController(configuration: configuration)
@@ -42,6 +43,7 @@ final class IdentityFlowViewControllerTest: XCTestCase {
             let button = try XCTUnwrap(buttons(in: controller.view).first)
             let label = try XCTUnwrap(button.subviews.compactMap { $0 as? UILabel }.first)
             XCTAssertTrue(button.isEnabled, "\(type(of: controller))")
+            XCTAssertEqual(button.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height, 52)
             for style: UIUserInterfaceStyle in [.light, .dark] {
                 let traits = UITraitCollection(userInterfaceStyle: style)
                 XCTAssertEqual(
@@ -106,12 +108,99 @@ final class IdentityFlowViewControllerTest: XCTestCase {
         }
     }
 
+    func testDefaultAndNilCustomHeightsPreserveIntrinsicHeight() throws {
+        // Given primary and secondary buttons with default styles
+        let flowView = IdentityFlowView()
+        let viewModel = IdentityFlowView.ViewModel(
+            headerViewModel: nil,
+            contentView: UIView(),
+            buttons: [
+                .continueButton(didTap: {}),
+                .init(text: "Secondary", isPrimary: false, didTap: {}),
+            ]
+        )
+
+        // When the default styles are applied
+        try flowView.configure(with: viewModel)
+        let defaultButtons = buttons(in: flowView)
+
+        // Then both buttons keep their intrinsic height
+        XCTAssertEqual(defaultButtons.count, 2)
+        XCTAssertEqual(defaultButtons[0].systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height, 44)
+        XCTAssertEqual(defaultButtons[1].systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height, 44)
+
+        // When custom colors are applied without heights
+        try flowView.configure(
+            with: viewModel,
+            primaryButtonStyle: .custom(backgroundColor: .purple, textColor: .yellow, height: nil),
+            secondaryButtonStyle: .custom(backgroundColor: .orange, textColor: .blue, height: nil)
+        )
+
+        // Then both buttons still keep their intrinsic height
+        let customButtons = buttons(in: flowView)
+        XCTAssertEqual(customButtons[0].systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height, 44)
+        XCTAssertEqual(customButtons[1].systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height, 44)
+    }
+
+    func testRepeatedConfigurationUpdatesReplaceMinimumHeightConstraints() throws {
+        // Given a flow with primary and secondary buttons
+        let flowView = IdentityFlowView()
+        let viewModel = IdentityFlowView.ViewModel(
+            headerViewModel: nil,
+            contentView: UIView(),
+            buttons: [
+                .continueButton(didTap: {}),
+                .init(text: "Secondary", isPrimary: false, didTap: {}),
+            ]
+        )
+
+        // When styles and states are repeatedly updated
+        for state: IdentityFlowView.ViewModel.Button.State in [.enabled, .loading, .disabled, .enabled] {
+            let updatedViewModel = IdentityFlowView.ViewModel(
+                headerViewModel: nil,
+                contentView: UIView(),
+                buttons: [
+                    .continueButton(state: state, didTap: {}),
+                    .init(text: "Secondary", state: state, isPrimary: false, didTap: {}),
+                ]
+            )
+            try flowView.configure(
+                with: updatedViewModel,
+                primaryButtonStyle: .custom(backgroundColor: .purple, textColor: .yellow, height: 52),
+                secondaryButtonStyle: .custom(backgroundColor: .orange, textColor: .blue, height: nil)
+            )
+        }
+
+        // Then only the primary button has one minimum-height constraint
+        var configuredButtons = buttons(in: flowView)
+        XCTAssertEqual(minimumHeightConstraints(in: configuredButtons[0]).map(\.constant), [52])
+        XCTAssertTrue(minimumHeightConstraints(in: configuredButtons[1]).isEmpty)
+
+        // When the customized height moves to the secondary style
+        try flowView.configure(
+            with: viewModel,
+            primaryButtonStyle: .custom(backgroundColor: .purple, textColor: .yellow, height: nil),
+            secondaryButtonStyle: .custom(backgroundColor: .orange, textColor: .blue, height: 52)
+        )
+
+        // Then the primary constraint is removed and the secondary receives one constraint
+        configuredButtons = buttons(in: flowView)
+        XCTAssertTrue(minimumHeightConstraints(in: configuredButtons[0]).isEmpty)
+        XCTAssertEqual(minimumHeightConstraints(in: configuredButtons[1]).map(\.constant), [52])
+    }
+
     private func buttons(in view: UIView) -> [Button] {
         return view.subviews.flatMap { subview in
             if let button = subview as? Button {
                 return [button]
             }
             return buttons(in: subview)
+        }
+    }
+
+    private func minimumHeightConstraints(in button: Button) -> [NSLayoutConstraint] {
+        return button.constraints.filter {
+            $0.firstAttribute == .height && $0.relation == .greaterThanOrEqual
         }
     }
 }

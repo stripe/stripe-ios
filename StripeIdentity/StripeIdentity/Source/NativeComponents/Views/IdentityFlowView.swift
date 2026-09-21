@@ -334,7 +334,7 @@ extension IdentityFlowView {
         // Remove old buttons and create new ones and add them to the stack view
         buttons.forEach { $0.removeFromSuperview() }
         buttons = buttonViewModels.indices.map { index in
-            let button = Button(
+            let button = IdentityButton(
                 index: index,
                 target: self,
                 action: #selector(didTapButton(button:))
@@ -450,17 +450,30 @@ extension IdentityFlowView.ViewModel.Button {
     }
 }
 
-extension StripeUICore.Button {
-    fileprivate convenience init(
-        index: Int,
-        target: Any?,
-        action: Selector
-    ) {
+private final class IdentityButton: Button {
+    private var minimumHeightConstraint: NSLayoutConstraint?
+
+    convenience init(index: Int, target: Any?, action: Selector) {
         self.init()
-        self.tag = index
+        tag = index
         addTarget(target, action: action, for: .touchUpInside)
     }
 
+    var minimumHeight: CGFloat? {
+        didSet {
+            guard minimumHeight != oldValue else {
+                return
+            }
+            minimumHeightConstraint?.isActive = false
+            minimumHeightConstraint = minimumHeight.map {
+                heightAnchor.constraint(greaterThanOrEqualToConstant: $0)
+            }
+            minimumHeightConstraint?.isActive = true
+        }
+    }
+}
+
+extension StripeUICore.Button {
     fileprivate var index: Int {
         return tag
     }
@@ -476,6 +489,14 @@ extension StripeUICore.Button {
             primaryButtonStyle: primaryButtonStyle,
             secondaryButtonStyle: secondaryButtonStyle
         )
+        if let button = self as? IdentityButton {
+            switch (viewModel.isPrimary, primaryButtonStyle, secondaryButtonStyle) {
+            case (true, .custom(_, _, let height), _), (false, _, .custom(_, _, let height)):
+                button.minimumHeight = height
+            default:
+                button.minimumHeight = nil
+            }
+        }
         if LiquidGlassDetector.isEnabledInMerchantApp {
             ios26_applyCapsuleCornerConfiguration()
         }
@@ -496,7 +517,7 @@ extension Button.Configuration {
         var configuration: Button.Configuration = .primary()
         configuration.font = buttonFont
         configuration.disabledForegroundColor = .systemGray
-        if case let .custom(backgroundColor, textColor) = style {
+        if case let .custom(backgroundColor, textColor, _) = style {
             configuration.backgroundColor = backgroundColor
             configuration.foregroundColor = textColor
         }
@@ -507,7 +528,7 @@ extension Button.Configuration {
     static func identitySecondary(style: IdentityVerificationSheet.Configuration.SecondaryButtonStyle = .default) -> Self {
         var configuration: Button.Configuration = .secondary()
         configuration.font = buttonFont
-        if case let .custom(backgroundColor, textColor) = style {
+        if case let .custom(backgroundColor, textColor, _) = style {
             configuration.backgroundColor = backgroundColor
             configuration.foregroundColor = textColor
             configuration.disabledBackgroundColor = .secondarySystemFill
