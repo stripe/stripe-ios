@@ -2582,6 +2582,41 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             }
         }
     }
+    func testTouchNGoShowsMandateOnlyForFuturePayments() {
+        // Given a payment, two ways to request future usage, and a setup intent
+        let intents: [Intent] = [
+            ._testPaymentIntent(paymentMethodTypes: [.touchNGo]),
+            ._testPaymentIntent(paymentMethodTypes: [.touchNGo], setupFutureUsage: .offSession),
+            ._testPaymentIntent(paymentMethodTypes: [.touchNGo], paymentMethodOptionsSetupFutureUsage: [.touchNGo: "off_session"]),
+            ._testSetupIntent(paymentMethodTypes: [.touchNGo]),
+        ]
+        var configuration = PaymentSheet.Configuration()
+        configuration.merchantDisplayName = "Example Merchant"
+        for (index, intent) in intents.enumerated() {
+            // When the form uses automatic billing collection
+            let form = PaymentSheetFormFactory(
+                intent: intent,
+                elementsSession: ._testValue(paymentMethodTypes: ["touch_n_go"]),
+                configuration: .paymentElement(configuration),
+                paymentMethod: .stripe(.touchNGo)
+            ).make()
+
+            // Then only future payments require the exact web mandate
+            XCTAssertFalse(form.collectsUserInput)
+            if index == 0 {
+                XCTAssertNil(form.getMandateElement())
+                XCTAssertNotNil(form.updateParams(params: IntentConfirmParams(type: .stripe(.touchNGo))))
+            } else {
+                XCTAssertEqual(
+                    form.getMandateElement()?.mandateTextView.textView.text,
+                    "By confirming your payment with Touch 'n Go, you allow Example Merchant to charge your Touch 'n Go account for future payments in accordance with their terms."
+                )
+                XCTAssertNil(form.updateParams(params: IntentConfirmParams(type: .stripe(.touchNGo))))
+                sendEventToSubviews(.viewDidAppear, from: form.view)
+                XCTAssertNotNil(form.updateParams(params: IntentConfirmParams(type: .stripe(.touchNGo))))
+            }
+        }
+    }
     func testGoPayUsesHostedAuthorizationWithoutNativeMandate() {
         // Given the payment and setup modes supported by GoPay
         let intents: [Intent] = [

@@ -779,6 +779,20 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                                merchantCountry: .US,
                                expectedHierarchy: ExpectedFormHierarchy.GCash.settingUp) { _ in }
     }
+    func testTouchNGoConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "MYR",
+                               amount: 1000,
+                               paymentMethodType: .touchNGo,
+                               merchantCountry: .US,
+                               expectedHierarchy: ExpectedFormHierarchy.TouchNGo.paymentIntent) { _ in }
+        try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .paymentIntentWithPMOSetupFutureUsage, .setupIntent],
+                               currency: "MYR",
+                               amount: 1000,
+                               paymentMethodType: .touchNGo,
+                               merchantCountry: .US,
+                               expectedHierarchy: ExpectedFormHierarchy.TouchNGo.settingUp) { _ in }
+    }
     func testShopeePayConfirmFlows() async throws {
         try await _testConfirm(intentKinds: [.paymentIntent],
                                currency: "IDR",
