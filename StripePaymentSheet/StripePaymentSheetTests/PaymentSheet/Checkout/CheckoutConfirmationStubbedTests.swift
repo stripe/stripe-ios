@@ -108,7 +108,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         // When a session update is queued behind it
         var updateExecuted = false
         let update = Task { @MainActor in
-            await checkout.enqueueSessionUpdate {
+            try await checkout.enqueueSessionUpdate {
                 updateExecuted = true
             }
         }
@@ -117,7 +117,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         // Then the update waits until confirmation has finished
         XCTAssertFalse(updateExecuted)
         assertSucceeded(await confirmation.value)
-        await update.value
+        try await update.value
         XCTAssertTrue(updateExecuted)
         XCTAssertTrue(checkout.pendingOperations.isEmpty)
     }
