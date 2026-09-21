@@ -2487,6 +2487,42 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertEqual(setupForm.getMandateElement()?.mandateTextView.textView.text, expectedMandate)
     }
 
+    func testNairaCardShowsTermsAndFuturePaymentMandate() {
+        // Given each supported Naira card intent
+        let intents: [Intent] = [
+            ._testPaymentIntent(paymentMethodTypes: [.ngCard]),
+            ._testPaymentIntent(paymentMethodTypes: [.ngCard], setupFutureUsage: .offSession),
+            ._testSetupIntent(paymentMethodTypes: [.ngCard]),
+        ]
+        let terms = "By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their terms of use."
+        var configuration = PaymentSheet.Configuration()
+        configuration.merchantDisplayName = "Example Merchant"
+        for (index, intent) in intents.enumerated() {
+            // When PaymentSheet builds the form
+            let form = PaymentSheetFormFactory(
+                intent: intent,
+                elementsSession: ._testValue(paymentMethodTypes: ["ng_card"]),
+                configuration: .paymentElement(configuration),
+                paymentMethod: .stripe(.ngCard)
+            ).make()
+            let text = form.getMandateElement()?.mandateTextView.textView.attributedText
+            let expected = index == 0 ? terms : terms + "\n\nBy confirming your payment with Global Stack Services Limited, you allow Example Merchant to charge this payment method for future payments in accordance with their terms."
+
+            // Then the web disclosure is linked and reuse adds the merchant mandate
+            XCTAssertEqual(text?.string, expected)
+            let linkIndex = (terms as NSString).range(of: "terms of use").location
+            XCTAssertEqual(
+                text?.attribute(.link, at: linkIndex, effectiveRange: nil) as? URL,
+                URL(string: "https://d37ugbyn3rpeym.cloudfront.net/docs/GSSL%20-%20Buyer%20T&Cs%20(Final).pdf")
+            )
+            XCTAssertFalse(form.collectsUserInput)
+            XCTAssertNil(form.updateParams(params: IntentConfirmParams(type: .stripe(.ngCard))))
+
+            // ...and confirmation becomes valid after the customer sees the disclosure
+            form.getMandateElement()?.mandateTextView.handleEvent(.viewDidAppear)
+            XCTAssertNotNil(form.updateParams(params: IntentConfirmParams(type: .stripe(.ngCard))))
+        }
+    }
     func testGCashShowsMandateOnlyForFuturePayments() {
         // Given a payment, two ways to request future usage, and a setup intent
         let intents: [Intent] = [

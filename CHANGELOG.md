@@ -14,6 +14,7 @@ MINOR
 * [Added] Added ShopeePay API bindings and support for payments in PaymentSheet.
 * [Added] Added GCash API bindings and support for payments and setup in PaymentSheet.
 * [Added] Added MoMo API bindings and support for payments and setup in PaymentSheet.
+* [Added] Added Naira card API bindings and support for payments and setup in PaymentSheet.
 * [Added] Added GoPay API bindings and support for payments and setup in PaymentSheet.
 * [Fixed] Fixed card funding warnings not appearing after scanning a card.
 
