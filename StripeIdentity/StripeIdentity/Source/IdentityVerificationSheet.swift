@@ -43,7 +43,7 @@ final public class IdentityVerificationSheet {
             case custom(backgroundColor: UIColor, textColor: UIColor)
         }
 
-        /// Configuration for the biometric consent screen's header.
+        /// Configuration for the biometric consent screen.
         @_spi(STP) public struct BiometricConsentConfiguration {
             /// Whether to hide the branding header above the consent title.
             public var hideBrandingHeader: Bool
@@ -51,16 +51,22 @@ final public class IdentityVerificationSheet {
             /// Whether to hide the decline button on the consent welcome screen.
             public var hideDeclineButton: Bool
 
+            /// Whether to display the privacy policy below the consent buttons.
+            public var movePrivacyPolicyToFooter: Bool
+
             /// Initializes a biometric consent configuration.
             /// - Parameters:
             ///   - hideBrandingHeader: Whether to hide the branding header above the consent title.
             ///   - hideDeclineButton: Whether to hide the decline button on the consent welcome screen.
+            ///   - movePrivacyPolicyToFooter: Whether to display the privacy policy below the consent buttons.
             public init(
                 hideBrandingHeader: Bool,
-                hideDeclineButton: Bool = false
+                hideDeclineButton: Bool = false,
+                movePrivacyPolicyToFooter: Bool = false
             ) {
                 self.hideBrandingHeader = hideBrandingHeader
                 self.hideDeclineButton = hideDeclineButton
+                self.movePrivacyPolicyToFooter = movePrivacyPolicyToFooter
             }
         }
 
@@ -79,9 +85,9 @@ final public class IdentityVerificationSheet {
         /// Disabled buttons retain the default disabled appearance. Primary buttons are unaffected.
         @_spi(STP) public var secondaryButtonStyle: SecondaryButtonStyle = .default
 
-        /// Configuration for the biometric consent screen's header.
+        /// Configuration for the biometric consent screen.
         ///
-        /// When `nil`, the biometric consent screen uses the default header.
+        /// When `nil`, the biometric consent screen uses its default layout.
         @_spi(STP) public var biometricConsent: BiometricConsentConfiguration?
 
         /// Initializes a Configuration.
