@@ -12,6 +12,7 @@ extension CheckoutPlayground {
     struct ExpressCheckoutElementSettings {
         var isEnabled = true
         var applePayDisplay: ExpressCheckoutElement.ApplePayConfiguration.Display = .automatic
+        var applePayButtonType: ApplePayButtonType = .plain
         var linkDisplay: ExpressCheckoutElement.LinkConfiguration.Display = .automatic
         var shippingAddressRequired: Bool = false
         var appearance: ExpressCheckoutElement.Appearance = .init()

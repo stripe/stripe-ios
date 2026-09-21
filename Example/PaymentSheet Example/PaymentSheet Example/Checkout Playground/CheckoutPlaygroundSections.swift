@@ -261,6 +261,7 @@ struct CheckoutPlaygroundFeaturesSection: View {
 struct CheckoutPlaygroundExpressCheckoutElementSection: View {
     @Binding var showExpressCheckoutElement: Bool
     @Binding var applePayDisplay: ExpressCheckoutElement.ApplePayConfiguration.Display
+    @Binding var applePayButtonType: CheckoutPlayground.ApplePayButtonType
     @Binding var linkDisplay: ExpressCheckoutElement.LinkConfiguration.Display
     @Binding var shippingAddressRequired: Bool
     @Binding var appearance: ExpressCheckoutElement.Appearance
@@ -280,6 +281,13 @@ struct CheckoutPlaygroundExpressCheckoutElementSection: View {
                         selection: $applePayDisplay,
                         tooltip: "Sets `ExpressCheckoutElement.Configuration.applePayConfiguration.display`.",
                         displayText: { $0.rawValue.capitalized }
+                    )
+                    CheckoutPlayground.PickerRow(
+                        title: "Apple Pay Button Type",
+                        icon: "apple.logo",
+                        selection: $applePayButtonType,
+                        tooltip: "Sets `ExpressCheckoutElement.Configuration.applePayConfiguration.buttonType`.",
+                        displayText: { $0.displayName }
                     )
                     CheckoutPlayground.PickerRow(
                         title: "Link Display",

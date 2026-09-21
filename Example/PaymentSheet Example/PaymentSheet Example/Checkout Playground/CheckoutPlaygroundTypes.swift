@@ -5,6 +5,7 @@
 //  Created by Nick Porter on 2/24/26.
 
 import Foundation
+import PassKit
 @_spi(STP) import StripePaymentSheet
 
 extension ExpressCheckoutElement.ApplePayConfiguration.Display: CaseIterable, Identifiable {
@@ -23,6 +24,33 @@ extension ExpressCheckoutElement.Appearance.ButtonTheme: CaseIterable, Identifia
 }
 
 enum CheckoutPlayground {
+    enum ApplePayButtonType: String, CaseIterable, Identifiable {
+        case plain
+        case buy
+        case setup
+        case checkout
+
+        var id: String { rawValue }
+
+        var displayName: String {
+            switch self {
+            case .plain: return "Plain"
+            case .buy: return "Buy"
+            case .setup: return "Set Up"
+            case .checkout: return "Checkout"
+            }
+        }
+
+        var pkPaymentButtonType: PKPaymentButtonType {
+            switch self {
+            case .plain: return .plain
+            case .buy: return .buy
+            case .setup: return .setUp
+            case .checkout: return .checkout
+            }
+        }
+    }
+
     enum LinkMode: String, CaseIterable, Identifiable, Codable {
         case native
         case web
