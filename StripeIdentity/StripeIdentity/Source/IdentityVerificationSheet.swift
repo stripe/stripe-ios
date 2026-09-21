@@ -43,18 +43,24 @@ final public class IdentityVerificationSheet {
             case custom(backgroundColor: UIColor, textColor: UIColor)
         }
 
-        /// Configuration for the biometric consent screen's header.
+        /// Configuration for the biometric consent screen.
         @_spi(STP) public struct BiometricConsentConfiguration {
             /// Whether to hide the branding header above the consent title.
             public var hideBrandingHeader: Bool
 
-            /// Initializes a biometric consent header configuration.
+            /// Whether to display the privacy policy below the consent buttons.
+            public var movePrivacyPolicyToFooter: Bool
+
+            /// Initializes a biometric consent screen configuration.
             /// - Parameters:
             ///   - hideBrandingHeader: Whether to hide the branding header above the consent title.
+            ///   - movePrivacyPolicyToFooter: Whether to display the privacy policy below the consent buttons.
             public init(
-                hideBrandingHeader: Bool
+                hideBrandingHeader: Bool,
+                movePrivacyPolicyToFooter: Bool = false
             ) {
                 self.hideBrandingHeader = hideBrandingHeader
+                self.movePrivacyPolicyToFooter = movePrivacyPolicyToFooter
             }
         }
 
@@ -73,9 +79,9 @@ final public class IdentityVerificationSheet {
         /// Disabled buttons retain the default disabled appearance. Primary buttons are unaffected.
         @_spi(STP) public var secondaryButtonStyle: SecondaryButtonStyle = .default
 
-        /// Configuration for the biometric consent screen's header.
+        /// Configuration for the biometric consent screen.
         ///
-        /// When `nil`, the biometric consent screen uses the default header.
+        /// When `nil`, the biometric consent screen uses its default layout.
         @_spi(STP) public var biometricConsent: BiometricConsentConfiguration?
 
         /// Initializes a Configuration.
