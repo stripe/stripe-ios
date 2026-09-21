@@ -39,6 +39,7 @@ class IdentityFlowView: UIView {
             bottom: -8,
             trailing: 0
         )
+        static let buttonBottomSpacing: CGFloat = 16
         static let stackViewSpacing: CGFloat = 8
 
         static func buttonConfiguration(
@@ -87,6 +88,7 @@ class IdentityFlowView: UIView {
         let contentViewModel: Content
         let buttons: [Button]
         var buttonTopContentViewModel: HTMLTextView.ViewModel?
+        var buttonBottomContentView: UIView?
         var scrollViewDelegate: UIScrollViewDelegate?
         var flowViewDelegate: IdentityFlowViewDelegate?
     }
@@ -133,6 +135,8 @@ class IdentityFlowView: UIView {
     }()
 
     private let buttonTopContentView = HTMLTextView()
+    private let buttonBottomContentContainer = UIView()
+    private var configuredButtonBottomContentView: UIView?
 
     private var flowViewDelegate: IdentityFlowViewDelegate?
 
@@ -178,6 +182,7 @@ class IdentityFlowView: UIView {
             secondaryButtonStyle: secondaryButtonStyle
         )
         try configureButtonTop(with: viewModel.buttonTopContentViewModel)
+        configureButtonBottom(with: viewModel.buttonBottomContentView)
         flowViewDelegate = viewModel.flowViewDelegate
         if let scrollViewDelegate = viewModel.scrollViewDelegate {
             scrollView.delegate = scrollViewDelegate
@@ -252,6 +257,7 @@ extension IdentityFlowView {
         buttonTopBackgroundView.addSubview(buttonTopContentView)
 
         addSubview(buttonBackgroundView)
+        buttonStackView.addArrangedSubview(buttonBottomContentContainer)
         buttonBackgroundView.addAndPinSubviewToSafeArea(
             buttonStackView,
             insets: Style.buttonInsets
@@ -339,7 +345,7 @@ extension IdentityFlowView {
                 target: self,
                 action: #selector(didTapButton(button:))
             )
-            buttonStackView.addArrangedSubview(button)
+            buttonStackView.insertArrangedSubview(button, at: index)
             return button
         }
     }
@@ -380,7 +386,35 @@ extension IdentityFlowView {
         }
     }
 
+    fileprivate func configureButtonBottom(with contentView: UIView?) {
+        if configuredButtonBottomContentView !== contentView {
+            configuredButtonBottomContentView?.removeFromSuperview()
+            configuredButtonBottomContentView = contentView
+
+            if let contentView = contentView {
+                buttonBottomContentContainer.addSubview(contentView)
+                contentView.translatesAutoresizingMaskIntoConstraints = false
+                NSLayoutConstraint.activate([
+                    contentView.topAnchor.constraint(equalTo: buttonBottomContentContainer.topAnchor),
+                    contentView.leadingAnchor.constraint(greaterThanOrEqualTo: buttonBottomContentContainer.leadingAnchor),
+                    contentView.trailingAnchor.constraint(lessThanOrEqualTo: buttonBottomContentContainer.trailingAnchor),
+                    contentView.centerXAnchor.constraint(equalTo: buttonBottomContentContainer.centerXAnchor),
+                    contentView.bottomAnchor.constraint(equalTo: buttonBottomContentContainer.bottomAnchor),
+                ])
+            }
+        }
+
+        buttonBottomContentContainer.isHidden = contentView == nil
+        if contentView != nil, let lastButton = buttons.last {
+            buttonStackView.setCustomSpacing(Style.buttonBottomSpacing, after: lastButton)
+        }
+    }
+
     static func privacyPolicyLineContentStyle() -> HTMLStyle {
+        return privacyPolicyLineContentStyle(shouldCenterText: false)
+    }
+
+    static func privacyPolicyLineContentStyle(shouldCenterText: Bool) -> HTMLStyle {
         let boldFont = IdentityUI.preferredFont(forTextStyle: UIFont.TextStyle.caption1, weight: .bold)
         let contentColor = IdentityUI.htmlLineTextColor
         return .init(
@@ -393,7 +427,7 @@ extension IdentityFlowView {
             h5Font: boldFont,
             h6Font: boldFont,
             isLinkUnderlined: true,
-            shouldCenterText: false,
+            shouldCenterText: shouldCenterText,
             linkColor: contentColor
         )
     }
@@ -406,6 +440,7 @@ extension IdentityFlowView.ViewModel {
         buttonText: String,
         state: Button.State = .enabled,
         buttonTopContentViewModel: HTMLTextView.ViewModel? = nil,
+        buttonBottomContentView: UIView? = nil,
         didTapButton: @escaping () -> Void
     ) {
         self.init(
@@ -419,7 +454,8 @@ extension IdentityFlowView.ViewModel {
                     didTap: didTapButton
                 ),
             ],
-            buttonTopContentViewModel: buttonTopContentViewModel
+            buttonTopContentViewModel: buttonTopContentViewModel,
+            buttonBottomContentView: buttonBottomContentView
         )
     }
 
