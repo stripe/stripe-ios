@@ -283,7 +283,7 @@ class PaymentSheetFormFactory {
                 return makeSepaDebit()
             case .gcash:
                 return makeContactInformationAndBillingAddressForm(additionalElements: makeSetupMandateElements(for: paymentMethod))
-            case .momo, .shopeePay, .goPay, .grabPay, .paynow, .payPay, .mobilePay, .vipps, .zip, .crypto,
+            case .momo, .shopeePay, .qris, .goPay, .grabPay, .paynow, .payPay, .mobilePay, .vipps, .zip, .crypto,
                  .billie, .sunbit, .alma, .payByBank, .payco, .sequra, .scalapay:
                 return makeContactInformationAndBillingAddressForm()
             case .alipay:
