@@ -92,6 +92,8 @@
 
 "Prefecture" = "Prefektura";
 
+"Processing..." = "Obdelujem ...";
+
 "Province" = "Provinca";
 
 "Remove" = "Odstrani";
@@ -106,9 +108,13 @@
 
 "Selection is empty." = "Izbor je prazen.";
 
+"Something went wrong" = "Prišlo je do napake";
+
 "Sort code" = "Številka banke";
 
 "State" = "Zvezna država";
+
+"Submit" = "Oddaj";
 
 "Suburb" = "Predmestje";
 

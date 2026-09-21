@@ -2,7 +2,17 @@ The next release's version bump will so far be:
 MINOR
 
 ## X.Y.Z - changes pending release
+### CryptoOnramp (Alpha)
+* [Removed] Removed public exposure of `StripeCryptoOnramp.Image`, including `Image.linkIconSquare`.
+* [Added] Added `CryptoOnrampCoordinator.presentTermsAndConditionsIfNeeded(from:)` and `presentTermsOfServiceIfNeeded(from:)` to present and record acceptance of current partner terms when required. Both methods return `PartnerTermsResult`.
 
+### StripeCore
+* [Added] Added `additionalHeaders` support to the `STPAPIClient` GET, POST, and DELETE APIs exposed through the `STP` SPI.
+
+### PaymentSheet
+* [Fixed] Fixed card funding warnings not appearing after scanning a card.
+
+## 26.11.0 2026-09-14
 ### General
 * [Added] Added support for Welsh.
 
@@ -11,6 +21,7 @@ MINOR
 
 ### PaymentSheet
 * [Added] Added support for Scalapay.
+* [Added] Added support for Card program name for saved payment methods when using CustomerSessions
 
 ## 26.10.0 2026-09-08
 ### General
