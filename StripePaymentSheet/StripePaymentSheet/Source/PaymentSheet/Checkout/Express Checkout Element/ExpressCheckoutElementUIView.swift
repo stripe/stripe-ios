@@ -16,6 +16,12 @@ import UIKit
 @MainActor
 public final class ExpressCheckoutElementUIView: UIView {
 
+    private enum Constants {
+        static let buttonHeight: CGFloat = 44
+        static let buttonSpacing: CGFloat = 8
+        static let cornerRadius: CGFloat = 6
+    }
+
     // MARK: - Private Properties
 
     private let configuration: ExpressCheckoutElement.Configuration
@@ -32,7 +38,7 @@ public final class ExpressCheckoutElementUIView: UIView {
         super.init(frame: .zero)
 
         stackView.axis = .vertical
-        stackView.spacing = 8
+        stackView.spacing = Constants.buttonSpacing
         stackView.translatesAutoresizingMaskIntoConstraints = false
 
         addSubview(stackView)
@@ -102,7 +108,7 @@ public final class ExpressCheckoutElementUIView: UIView {
             } else {
                 let rowStackView = UIStackView(arrangedSubviews: row.map { makeButton(for: $0) })
                 rowStackView.axis = .horizontal
-                rowStackView.spacing = 8
+                rowStackView.spacing = Constants.buttonSpacing
                 rowStackView.distribution = .fillEqually
                 stackView.addArrangedSubview(rowStackView)
             }
@@ -110,39 +116,36 @@ public final class ExpressCheckoutElementUIView: UIView {
     }
 
     private func makeButton(for paymentMethod: ExpressCheckoutElement.PaymentMethod) -> UIView {
-        let button = switch paymentMethod {
+        switch paymentMethod {
         case .applePay:
-            makeApplePayButton()
+            return makeApplePayButton()
         case .link:
-            makeLinkButton()
+            return makeLinkButton()
         }
-
-        if LiquidGlassDetector.isEnabledInMerchantApp {
-            if let applePayButton = button as? PKPaymentButton {
-                // `cornerConfiguration` doesn't work on PKPaymentButton.
-                applePayButton.cornerRadius = 22
-            } else {
-                button.ios26_applyCapsuleCornerConfiguration()
-            }
-        }
-        return button
     }
 
     private func makeApplePayButton() -> UIView {
         let buttonType = configuration.applePayConfiguration?.buttonType ?? .plain
         let button = PKPaymentButton(paymentButtonType: buttonType, paymentButtonStyle: applePayButtonStyle)
-        button.cornerRadius = 6
+        // `cornerConfiguration` doesn't work on PKPaymentButton, so set the radius directly.
+        button.cornerRadius = LiquidGlassDetector.isEnabledInMerchantApp
+            ? Constants.buttonHeight / 2
+            : Constants.cornerRadius
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.heightAnchor.constraint(equalToConstant: 44).isActive = true
+        button.heightAnchor.constraint(equalToConstant: Constants.buttonHeight).isActive = true
         button.addTarget(self, action: #selector(handleApplePayTapped), for: .touchUpInside)
         return button
     }
 
     private func makeLinkButton() -> UIView {
         let button = PayWithLinkButton(brand: linkBrand)
-        button.cornerRadius = 6
+        if LiquidGlassDetector.isEnabledInMerchantApp {
+            button.ios26_applyCapsuleCornerConfiguration()
+        } else {
+            button.cornerRadius = Constants.cornerRadius
+        }
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.heightAnchor.constraint(equalToConstant: 44).isActive = true
+        button.heightAnchor.constraint(equalToConstant: Constants.buttonHeight).isActive = true
         button.addTarget(self, action: #selector(handleLinkTapped), for: .touchUpInside)
         return button
     }
