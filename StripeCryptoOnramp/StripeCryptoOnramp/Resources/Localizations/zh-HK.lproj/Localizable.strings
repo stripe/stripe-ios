@@ -1,5 +1,11 @@
 "Debit cards are most likely to be accepted." = "扣賬卡最有可能獲接受。";
 
+"Please try again later." = "請稍後重試。";
+
+"Submitted for review" = "已提交審查";
+
+"Tell us about your source of funds" = "請告訴我們閣下的資金來源";
+
 "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "由於認證錯誤，無法驗證此應用程式。請稍後重試；若問題仍未解決，請聯絡開發人員。";
 
 "This app couldn't be verified. Contact the app developer for help." = "無法驗證此應用程式。聯絡應用程式開發人員求助。";
@@ -12,4 +18,12 @@
 
 "This wallet verification request is invalid. Please try again." = "此錢包核實請求無效。請再試一次。";
 
+"Upload your proof of address" = "上載閣下的地址證明";
+
 "We couldn't verify ownership of this wallet. Please try again." = "我們無法核實此錢包的所有權。請重試。";
+
+"We’re required to confirm your address to enable spending over %@." = "我們需要確認閣下的地址，才能啟用超過 %@ 的消費。";
+
+"We’re required to understand where your funds come from to enable spending over %@." = "我們需要了解閣下的資金來源，才能啟用超過 %@ 的消費。";
+
+"We’re reviewing your documents. We’ll let you know when verification is complete." = "我們正在審查閣下的文件。核實完成後，我們會通知閣下。";

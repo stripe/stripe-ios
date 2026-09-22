@@ -1,5 +1,11 @@
 "Debit cards are most likely to be accepted." = "Es más probable que se acepten tarjetas de débito.";
 
+"Please try again later." = "Vuelve a intentarlo más tarde.";
+
+"Submitted for review" = "Enviado para revisión";
+
+"Tell us about your source of funds" = "Háblanos del origen de tus fondos";
+
 "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "Esta aplicación no ha podido ser verificada debido a un error de certificado. Por favor, inténtalo de nuevo más tarde o contacta con el desarrollador si el problema continúa.";
 
 "This app couldn't be verified. Contact the app developer for help." = "Esta aplicación no se ha podido verificar. Contacta con el desarrollador de la aplicación para recibir ayuda.";
@@ -12,4 +18,12 @@
 
 "This wallet verification request is invalid. Please try again." = "Esta petición de verificación del monedero no es válida. Vuelve a intentarlo.";
 
+"Upload your proof of address" = "Sube tu comprobante de domicilio";
+
 "We couldn't verify ownership of this wallet. Please try again." = "No hemos podido verificar la titularidad de este monedero. Inténtalo de nuevo.";
+
+"We’re required to confirm your address to enable spending over %@." = "Tenemos que confirmar tu dirección para permitir gastos superiores a %@.";
+
+"We’re required to understand where your funds come from to enable spending over %@." = "Tenemos que entender de dónde proceden tus fondos para permitir gastos superiores a %@.";
+
+"We’re reviewing your documents. We’ll let you know when verification is complete." = "Estamos revisando tus documentos. Te avisaremos cuando se complete la verificación.";

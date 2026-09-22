@@ -1,5 +1,11 @@
 "Debit cards are most likely to be accepted." = "Dažniausiai priimamos debeto kortelės.";
 
+"Please try again later." = "Bandykite dar kartą vėliau.";
+
+"Submitted for review" = "Pateikta peržiūrai";
+
+"Tell us about your source of funds" = "Papasakokite apie savo lėšų šaltinį";
+
 "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "Šios programėlės nebuvo galima patvirtinti dėl patvirtinimo klaidos. Prašome pabandyti vėliau arba susisiekti su kūrėju, jei problema neišsprendžiama.";
 
 "This app couldn't be verified. Contact the app developer for help." = "Šios programos patvirtinti nepavyko. Kreipkitės pagalbos į programos kūrėją.";
@@ -12,4 +18,12 @@
 
 "This wallet verification request is invalid. Please try again." = "Piniginės patvirtinimo užklausa netinkama. Bandykite dar kartą.";
 
+"Upload your proof of address" = "Įkelkite adresą patvirtinančius dokumentus";
+
 "We couldn't verify ownership of this wallet. Please try again." = "Piniginės nuosavybės patvirtinti nepavyko. Bandykite dar kartą.";
+
+"We’re required to confirm your address to enable spending over %@." = "Privalome patvirtinti jūsų adresą, kad galėtumėte išleisti daugiau nei %@.";
+
+"We’re required to understand where your funds come from to enable spending over %@." = "Privalome suprasti, iš kur gaunamos jūsų lėšos, kad galėtumėte išleisti daugiau nei %@.";
+
+"We’re reviewing your documents. We’ll let you know when verification is complete." = "Peržiūrime jūsų dokumentus. Pranešime jums, kai patikrinimas bus baigtas.";

@@ -330,6 +330,10 @@
 
 "Tax" = "Φόρος";
 
+"Terms and Conditions" = "Όροι και Προϋποθέσεις";
+
+"Terms of Service" = "Όροι παροχής υπηρεσιών";
+
 "The IBAN you entered is incomplete." = "Ο κωδικός IBAN που εισαγάγατε είναι ελλιπής.";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Το IBAN που εισάγατε δεν είναι έγκυρο, το \"%@\" δεν είναι υποστηριζόμενος κωδικός χώρας.";

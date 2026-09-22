@@ -330,6 +330,10 @@
 
 "Tax" = "Maks";
 
+"Terms and Conditions" = "Tingimused";
+
+"Terms of Service" = "Teenusetingimused";
+
 "The IBAN you entered is incomplete." = "Sisestatud IBAN on puudulik.";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Sisestatud IBAN on kehtetu, „%@“ ei ole toetatud riigikood.";

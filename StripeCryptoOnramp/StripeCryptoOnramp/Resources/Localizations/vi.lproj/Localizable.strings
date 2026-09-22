@@ -1,5 +1,11 @@
 "Debit cards are most likely to be accepted." = "Thẻ ghi nợ có khả năng cao được chấp nhận.";
 
+"Please try again later." = "Vui lòng thử lại sau.";
+
+"Submitted for review" = "Đã gửi để đánh giá";
+
+"Tell us about your source of funds" = "Hãy cho chúng tôi biết về nguồn vốn của bạn";
+
 "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "Ứng dụng này không thể được xác minh do lỗi chứng thực. Vui lòng thử lại sau hoặc liên hệ với nhà phát triển nếu sự cố vẫn tiếp diễn.";
 
 "This app couldn't be verified. Contact the app developer for help." = "Ứng dụng này không thể được xác minh. Hãy liên hệ với nhà phát triển ứng dụng để được trợ giúp.";
@@ -12,4 +18,12 @@
 
 "This wallet verification request is invalid. Please try again." = "Yêu cầu xác minh ví này không hợp lệ. Vui lòng thử lại.";
 
+"Upload your proof of address" = "Tải lên bằng chứng địa chỉ của bạn";
+
 "We couldn't verify ownership of this wallet. Please try again." = "Chúng tôi không thể xác minh quyền sở hữu ví này. Vui lòng thử lại.";
+
+"We’re required to confirm your address to enable spending over %@." = "Chúng tôi bắt buộc phải xác nhận địa chỉ của bạn để cho phép chi tiêu trên %@.";
+
+"We’re required to understand where your funds come from to enable spending over %@." = "Chúng tôi bắt buộc phải biết vốn của bạn đến từ đâu để cho phép chi tiêu trên %@.";
+
+"We’re reviewing your documents. We’ll let you know when verification is complete." = "Chúng tôi đang xem xét các tài liệu của bạn. Chúng tôi sẽ thông báo cho bạn khi quá trình xác minh hoàn tất.";
