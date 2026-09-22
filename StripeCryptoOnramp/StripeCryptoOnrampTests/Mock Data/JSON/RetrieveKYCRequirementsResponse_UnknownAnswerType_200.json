@@ -38,7 +38,7 @@
             {
               "id": "purchase_purpose",
               "prompt": "Why are you purchasing cryptocurrency through swapped.com?",
-              "answer_type": "free_text",
+              "answer_type": "future_answer_type",
               "required": true
             }
           ]

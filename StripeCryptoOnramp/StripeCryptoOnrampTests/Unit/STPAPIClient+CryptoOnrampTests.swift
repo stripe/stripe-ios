@@ -231,15 +231,51 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
 
         let apiClient = stubbedAPIClient()
         let response = try await apiClient.retrieveKYCRequirements(linkAccountInfo: Constant.validLinkAccountInfo)
-        let requirement = try XCTUnwrap(response.requirements.entries.first)
-        XCTAssertEqual(requirement.description, "source_of_funds")
+        XCTAssertEqual(response.requirements.count, 1)
+        let requirement = try XCTUnwrap(response.requirements["source_of_funds"])
         XCTAssertEqual(requirement.requestedBy, "swapped")
         XCTAssertEqual(requirement.awaitingActionFrom, .user)
-        XCTAssertEqual(requirement.document?.acceptedFormats, ["pdf", "jpeg", "png"])
-        XCTAssertEqual(requirement.document?.acceptedSubtypes.first?.label, "Payslip")
-        XCTAssertEqual(requirement.document?.instructions, ["Documents must have your full name and address on it"])
-        XCTAssertEqual(requirement.document?.additionalRequirements?.questionnaire?.questions.first?.answerType, .freeText)
-        XCTAssertEqual(requirement.errors, [])
+        XCTAssertEqual(requirement.errors, [
+            .init(code: "document_rejected", description: "The submitted document could not be verified."),
+        ])
+
+        let document = try XCTUnwrap(requirement.document)
+        XCTAssertEqual(document.acceptedFormats, ["pdf", "jpeg", "png", "docx", "xlsx", "csv", "txt"])
+        XCTAssertEqual(document.acceptedSubtypes, [
+            .init(id: "payslip", label: "Payslip", description: "Recent payslips from your employer"),
+            .init(id: "bank_statement", label: "Bank statement", description: "Statements from your bank"),
+        ])
+        XCTAssertEqual(document.maxFileSizeBytes, 5_000_000)
+        XCTAssertEqual(document.minDocumentTypes, 1)
+        XCTAssertEqual(document.maxDocumentTypes, 2)
+        XCTAssertEqual(document.fileRequirements, "PDF, JPEG/JPG, PNG, DOCX, XLSX, CSV, or TXT, up to 5 MB per file.")
+        XCTAssertEqual(document.instructions, [
+            "Documents must include your name and a balance or financial value.",
+            "Bank statements must be original PDFs issued through online banking; screenshots aren't accepted.",
+        ])
+
+        let questionnaire = try XCTUnwrap(requirement.additionalRequirements?.questionnaire)
+        XCTAssertEqual(questionnaire.questions, [
+            .init(
+                id: "purchase_purpose",
+                prompt: "Why are you purchasing cryptocurrency through swapped.com?",
+                answerType: .freeText,
+                required: true
+            ),
+        ])
+    }
+
+    func testRetrieveKYCRequirementsDecodesEmptyRequirements() async throws {
+        let mockResponseData = try RetrieveKYCRequirementsResponseMock.notRequired.data()
+        stub { request in
+            request.url?.path == "/v1/crypto/internal/kyc_requirements"
+        } response: { _ in
+            HTTPStubsResponse(data: mockResponseData, statusCode: 200, headers: nil)
+        }
+
+        let apiClient = stubbedAPIClient()
+        let response = try await apiClient.retrieveKYCRequirements(linkAccountInfo: Constant.validLinkAccountInfo)
+        XCTAssertTrue(response.requirements.isEmpty)
     }
 
     func testRetrieveKYCRequirementsThrowsWithInvalidArguments() async {
@@ -264,8 +300,11 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
 
         let apiClient = stubbedAPIClient()
         let response = try await apiClient.retrieveKYCRequirements(linkAccountInfo: Constant.validLinkAccountInfo)
-        XCTAssertEqual(response.requirements.entries.first?.awaitingActionFrom, .partner)
-        XCTAssertNil(response.requirements.entries.first?.document)
+        let requirement = try XCTUnwrap(response.requirements["source_of_funds"])
+        XCTAssertEqual(requirement.awaitingActionFrom, .partner)
+        XCTAssertEqual(requirement.errors, [])
+        XCTAssertNil(requirement.document)
+        XCTAssertNil(requirement.additionalRequirements)
     }
 
     func testRetrieveKYCRequirementsPreservesUnknownActionParty() async throws {
@@ -278,7 +317,24 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
 
         let apiClient = stubbedAPIClient()
         let response = try await apiClient.retrieveKYCRequirements(linkAccountInfo: Constant.validLinkAccountInfo)
-        XCTAssertEqual(response.requirements.entries.first?.awaitingActionFrom, .unknown("future_party"))
+        let requirement = try XCTUnwrap(response.requirements["proof_of_address"])
+        XCTAssertEqual(requirement.requestedBy, "future_partner")
+        XCTAssertEqual(requirement.awaitingActionFrom, .unknown("future_party"))
+    }
+
+    func testRetrieveKYCRequirementsPreservesUnknownAnswerType() async throws {
+        let mockResponseData = try RetrieveKYCRequirementsResponseMock.unknownAnswerType.data()
+        stub { request in
+            request.url?.path == "/v1/crypto/internal/kyc_requirements"
+        } response: { _ in
+            HTTPStubsResponse(data: mockResponseData, statusCode: 200, headers: nil)
+        }
+
+        let apiClient = stubbedAPIClient()
+        let response = try await apiClient.retrieveKYCRequirements(linkAccountInfo: Constant.validLinkAccountInfo)
+        let requirement = try XCTUnwrap(response.requirements["source_of_funds"])
+        let question = try XCTUnwrap(requirement.additionalRequirements?.questionnaire?.questions.first)
+        XCTAssertEqual(question.answerType, .unknown("future_answer_type"))
     }
 
     func testFulfillAdditionalKYCRequirementEncodesPayload() async throws {
