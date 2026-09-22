@@ -18,7 +18,8 @@
           },
           {
             "id": "bank_statement",
-            "label": "Bank statement"
+            "label": "Bank statement",
+            "description": "Statements from your bank"
           }
         ],
         "accepted_formats": ["pdf", "jpeg", "png", "docx", "xlsx", "csv", "txt"],
@@ -37,7 +38,7 @@
             {
               "id": "purchase_purpose",
               "prompt": "Why are you purchasing cryptocurrency through swapped.com?",
-              "answer_type": "free_text",
+              "answer_type": "future_answer_type",
               "required": true
             }
           ]
