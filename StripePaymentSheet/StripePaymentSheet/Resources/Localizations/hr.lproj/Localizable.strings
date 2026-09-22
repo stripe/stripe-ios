@@ -330,6 +330,10 @@
 
 "Tax" = "Porez";
 
+"Terms and Conditions" = "Uvjeti i odredbe";
+
+"Terms of Service" = "Uvjeti usluge";
+
 "The IBAN you entered is incomplete." = "Uneseni IBAN nije potpun.";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "IBAN koji ste upisali nije valjan, „%@” nije podržani kod države.";

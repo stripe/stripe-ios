@@ -1,5 +1,11 @@
 "Debit cards are most likely to be accepted." = "Чаще всего принимаются дебетовые карты.";
 
+"Please try again later." = "Повторите попытку позже.";
+
+"Submitted for review" = "Отправлено на рассмотрение";
+
+"Tell us about your source of funds" = "Укажите источник ваших средств";
+
 "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "Не удалось подтвердить данное приложение из-за ошибки при аттестации. Повторите попытку несколько позже или свяжитесь с разработчиком, если проблема не исчезнет.";
 
 "This app couldn't be verified. Contact the app developer for help." = "Не удалось проверить это приложение. Обратитесь за помощью к разработчику приложения.";
@@ -12,4 +18,12 @@
 
 "This wallet verification request is invalid. Please try again." = "Этот запрос на подтверждение кошелька недействителен. Попробуйте еще раз.";
 
+"Upload your proof of address" = "Загрузите подтверждение адреса";
+
 "We couldn't verify ownership of this wallet. Please try again." = "Не удалось подтвердить право собственности на этот кошелек. Попробуйте еще раз.";
+
+"We’re required to confirm your address to enable spending over %@." = "Мы обязаны подтвердить ваш адрес, чтобы разрешить расходы на сумму свыше %@.";
+
+"We’re required to understand where your funds come from to enable spending over %@." = "Мы обязаны уточнить источник ваших средств, чтобы разрешить расходы на сумму свыше %@.";
+
+"We’re reviewing your documents. We’ll let you know when verification is complete." = "Мы проверяем ваши документы и сообщим, когда все будет готово.";
