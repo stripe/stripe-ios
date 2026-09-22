@@ -8,6 +8,7 @@
 extension CheckoutPlayground {
     struct SessionFactory {
         private static let checkoutAPISettings = "2026-08-26.preview"
+        private static let returningCustomerEmail = "jenny.rosen@example.com"
 
         let backend: PlaygroundBackend
         let apiClient: STPAPIClient
@@ -25,9 +26,12 @@ extension CheckoutPlayground {
             automaticPaymentMethods: Bool,
             paymentMethodTypes: Set<String>
         ) async throws -> String {
-            let customerEmail = adaptivePricingCountry == .none
-                ? nil
-                : "test+location_\(adaptivePricingCountry.rawValue.uppercased())@example.com"
+            let customerEmail: String?
+            if adaptivePricingCountry == .none {
+                customerEmail = customerType == .returning ? Self.returningCustomerEmail : nil
+            } else {
+                customerEmail = "test+location_\(adaptivePricingCountry.rawValue.uppercased())@example.com"
+            }
 
             var customerID: String?
             if customerType != .guest {
@@ -135,7 +139,7 @@ extension CheckoutPlayground {
 
             let billingDetails = STPPaymentMethodBillingDetails()
             billingDetails.name = "Jenny Rosen"
-            billingDetails.email = "jenny.rosen@example.com"
+            billingDetails.email = Self.returningCustomerEmail
             billingDetails.phone = "+15555555555"
             billingDetails.address = address
 

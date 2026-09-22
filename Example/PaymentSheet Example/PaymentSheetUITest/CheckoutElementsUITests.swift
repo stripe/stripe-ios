@@ -16,10 +16,6 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
         XCTAssertTrue(app.buttons["Returning"].waitForExistenceAndTap())
         app.switches["Collect Shipping Address"].scrollToAndTap(in: app)
         app.switches["Automatic Tax"].scrollToAndTap(in: app)
-        // The Playground uses its test-location email to give the fresh returning Customer an
-        // email, which Checkout requires when the customer chooses to save a new payment method.
-        app.buttons["No Override"].scrollToAndTap(in: app)
-        app.buttons["United States (US)"].waitForExistenceAndTap()
         app.buttons["Create Checkout Session"].waitForExistenceAndTap()
 
         XCTAssertTrue(app.navigationBars["Your Cart"].waitForExistence(timeout: 15))
@@ -35,7 +31,7 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
         XCTAssertTrue(app.staticTexts["•••• 4242"].waitForExistence(timeout: 10))
 
         // When the customer removes the saved card
-        // The hosted returning-customer fixture creates a fresh Customer for each request, so
+        // The returning-customer fixture creates a fresh Customer for each request, so
         // removing this payment method does not mutate shared test state.
         paymentMethodButton.waitForExistenceAndTap()
         app.buttons["edit_saved_button"].waitForExistenceAndTap()
