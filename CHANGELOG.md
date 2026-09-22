@@ -1,7 +1,9 @@
 The next release's version bump will so far be:
-MINOR
+PATCH
 
 ## X.Y.Z - changes pending release
+
+## 26.12.0 2026-09-21
 ### CryptoOnramp (Alpha)
 * [Removed] Removed public exposure of `StripeCryptoOnramp.Image`, including `Image.linkIconSquare`.
 * [Added] Added `CryptoOnrampCoordinator.presentTermsAndConditionsIfNeeded(from:)` and `presentTermsOfServiceIfNeeded(from:)` to present and record acceptance of current partner terms when required. Both methods return `PartnerTermsResult`.

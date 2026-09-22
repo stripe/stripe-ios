@@ -330,6 +330,10 @@
 
 "Tax" = "Nodoklis";
 
+"Terms and Conditions" = "Noteikumi un nosacījumi";
+
+"Terms of Service" = "Pakalpojuma lietošanas noteikumi";
+
 "The IBAN you entered is incomplete." = "Ievadītais IBAN nav pilnīgs.";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Ievadītais IBAN nav derīgs, “%@” nav atbalstīts valsts kods.";

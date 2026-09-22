@@ -96,6 +96,62 @@ struct CheckoutPlaygroundConfigurationSection: View {
     }
 }
 
+struct CheckoutPlaygroundEmailSection: View {
+    @ObservedObject var viewModel: CheckoutPlayground.ViewModel
+
+    private var usesLocationEmail: Bool {
+        viewModel.email.source.isServer && viewModel.adaptivePricingCountry != .none
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            CheckoutPlayground.SectionHeader(title: "Email", icon: "envelope.fill")
+            VStack(alignment: .leading, spacing: 12) {
+                CheckoutPlayground.PickerRow(
+                    title: "Email source",
+                    selection: $viewModel.email.source,
+                    displayText: { $0.displayName }
+                )
+                if viewModel.email.source != .none {
+                    TextField("Email address", text: Binding(
+                        get: { viewModel.resolvedEmail.value },
+                        set: { viewModel.email.value = $0 }
+                    ))
+                    .keyboardType(.emailAddress)
+                    .textInputAutocapitalization(.never)
+                    .autocorrectionDisabled()
+                    .disabled(usesLocationEmail)
+                    .accessibilityIdentifier("checkout_email_value")
+                    .padding(.horizontal, 16)
+                    .padding(.bottom, 12)
+                }
+            }
+            .background(Color(uiColor: .secondarySystemGroupedBackground))
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+
+            if usesLocationEmail {
+                Text("Email controlled by AP country override. Stripe recognizes +location_XX in test mode. Choose No Override under Currency Selector to edit it.")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            } else if viewModel.email.source == .local {
+                Text("Used as the local default. You can update or clear it in checkout. Leave blank to start without an email.")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            } else if viewModel.email.source.isServer {
+                Text("Set when creating the session or Customer; cannot be changed in checkout.")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
+            if let error = viewModel.emailConfigurationError {
+                Text(error)
+                    .font(.caption)
+                    .foregroundColor(.red)
+                    .accessibilityIdentifier("checkout_email_configuration_error")
+            }
+        }
+    }
+}
+
 struct CheckoutPlaygroundLineItemsSection: View {
     @Binding var cartScenario: CheckoutPlayground.CartScenario
     let currency: CheckoutPlayground.Currency

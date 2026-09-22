@@ -1,6 +1,9 @@
 /* Label shown in the Link UI indicating that debit cards are more likely to be accepted */
 "Debit cards are most likely to be accepted." = "Debit cards are most likely to be accepted.";
 
+/* Heading confirming a document was uploaded successfully */
+"Document uploaded successfully" = "Document uploaded successfully";
+
 /* Instruction after an unavailable operation */
 "Please try again later." = "Please try again later.";
 
@@ -34,12 +37,15 @@
 /* Error message shown when the submitted wallet ownership signature is invalid */
 "We couldn't verify ownership of this wallet. Please try again." = "We couldn't verify ownership of this wallet. Please try again.";
 
-/* Explanation introducing proof of address collection. %@ is a formatted monetary threshold, such as €1,000. */
-"We’re required to confirm your address to enable spending over %@." = "We’re required to confirm your address to enable spending over %@.";
+/* Explanation introducing proof of address collection. */
+"We may request proof of address for larger transactions." = "We may request proof of address for larger transactions.";
 
-/* Explanation introducing source of funds collection. %@ is a formatted monetary threshold, such as €1,000. */
-"We’re required to understand where your funds come from to enable spending over %@." = "We’re required to understand where your funds come from to enable spending over %@.";
+/* Explanation introducing source of funds collection. */
+"We may request source of funds for larger transactions." = "We may request source of funds for larger transactions.";
 
 /* Message confirming documents are being reviewed and the user will be notified when verification is complete. */
 "We’re reviewing your documents. We’ll let you know when verification is complete." = "We’re reviewing your documents. We’ll let you know when verification is complete.";
+
+/* Message confirming the document was uploaded and the user can continue while verification happens in the background. */
+"You can continue while we verify your document in the background." = "You can continue while we verify your document in the background.";
 

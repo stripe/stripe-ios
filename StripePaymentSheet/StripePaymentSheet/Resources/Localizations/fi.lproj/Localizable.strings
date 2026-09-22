@@ -330,6 +330,10 @@
 
 "Tax" = "Vero";
 
+"Terms and Conditions" = "Ehdot";
+
+"Terms of Service" = "Palveluehdot";
+
 "The IBAN you entered is incomplete." = "IBAN on puutteellinen.";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Antamasi IBAN on virheellinen, %@ ei ole tuettu maakoodi.";
