@@ -126,7 +126,7 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
     // Cancellation must be visible even while the camera queue is busy. Never do camera or UI work under this lock.
     private let scanningStateLock = NSLock()
     private var isScanning = false
-    // Each new request gets a different ID. isScanning alone cannot distinguish a cancelled scan from a restart.
+    // Starting or explicitly cancelling changes this ID. isScanning alone cannot distinguish an old scan from a restart.
     private var scanIdentifier = 0
     private var startTime: Date?
 
@@ -205,6 +205,13 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
     func stop() {
         dispatchPrecondition(condition: .onQueue(.main))
         finish(didSucceed: false)
+
+        // Recognition may already have finished, with its completion waiting for shutdown or the main queue.
+        // Invalidate that completion even if finish found no active scan: an explicit close takes precedence.
+        scanningStateLock.lock()
+        scanIdentifier += 1
+        scanningStateLock.unlock()
+        feedbackGenerator = nil
     }
 
     private func finishWithError(scanIdentifier: Int) {
@@ -417,8 +424,10 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
         if timeoutTime == nil {
             timeoutTime = Date().addingTimeInterval(Self.scanningTimeout)
             DispatchQueue.main.async { [weak self] in
-                self?.cameraView?.playSnapshotAnimation()
-                self?.feedbackGenerator?.notificationOccurred(.success)
+                // A successful scan can still show feedback, but a closed or replaced scan must not.
+                guard let self, self.scanIdentifierIsCurrent(scanIdentifier) else { return }
+                self.cameraView?.playSnapshotAnimation()
+                self.feedbackGenerator?.notificationOccurred(.success)
             }
             // Just in case we don't get any frames, add another call to `finishIfReady` after timeoutTime to check
             // Capture this scan's ID: a delayed timeout must never complete a newly reopened scanner.
@@ -517,12 +526,14 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
         // Mark the request finished immediately, even though the camera may take time to stop.
         // This also ensures repeated cancellation or recognition callbacks only enqueue one shutdown.
         isScanning = false
+        let finishedScanIdentifier = scanIdentifier
 
         // stopRunning blocks. Always enqueue it, including when finishing from a frame callback,
         // so neither PaymentSheet dismissal nor the current frame callback has to wait for it.
         captureSessionQueue.async {
+            let captureSession = self.captureSession
             self.videoDataOutput?.setSampleBufferDelegate(nil, queue: nil)
-            self.captureSession?.stopRunning()
+            captureSession?.stopRunning()
             // Frame processing uses this same queue, so none of these objects are still in use by a frame callback.
             self.captureSession = nil
             self.videoDataOutput = nil
@@ -535,10 +546,16 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
                 } else {
                     STPAnalyticsClient.sharedClient.logCardScanCancelled(withDuration: duration)
                 }
-                self.feedbackGenerator = nil
-                self.cameraView?.captureSession = nil
-                // Successful scans and errors must be delivered after capture shutdown and UI cleanup.
-                completion?()
+                // Cleanup still belongs to the stopped session even if the user has since requested another scan.
+                // Compare sessions so this delayed block cannot detach the new scan's preview.
+                if self.cameraView?.videoPreviewLayer.session === captureSession {
+                    self.cameraView?.captureSession = nil
+                }
+                if self.scanIdentifierIsCurrent(finishedScanIdentifier) {
+                    self.feedbackGenerator = nil
+                    // Successful scans and errors must be delivered after capture shutdown and UI cleanup.
+                    completion?()
+                }
             }
         }
         scanningStateLock.unlock()
@@ -548,6 +565,14 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
         scanningStateLock.lock()
         defer { scanningStateLock.unlock() }
         return isScanning && self.scanIdentifier == scanIdentifier
+    }
+
+    private func scanIdentifierIsCurrent(_ scanIdentifier: Int) -> Bool {
+        // A naturally finished scan is no longer active, but may still deliver its final callback.
+        // Only an explicit close or another start invalidates that callback.
+        scanningStateLock.lock()
+        defer { scanningStateLock.unlock() }
+        return self.scanIdentifier == scanIdentifier
     }
 }
 
