@@ -1,5 +1,11 @@
 "Debit cards are most likely to be accepted." = "És molt probable que s'acceptin les targetes de dèbit.";
 
+"Please try again later." = "Torneu-ho a provar més tard.";
+
+"Submitted for review" = "Enviat per a revisar";
+
+"Tell us about your source of funds" = "Parleu-nos sobre l'origen dels vostres fons";
+
 "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "Aquesta aplicació no s'ha pogut verificar a causa d'un error d'atestació. Torneu-ho a provar més tard o poseu-vos en contacte amb el desenvolupador si el problema persisteix.";
 
 "This app couldn't be verified. Contact the app developer for help." = "Aquesta aplicació no s'ha pogut verificar. Contacteu amb la persona que la va desenvolupar per a demanar ajuda.";
@@ -12,4 +18,12 @@
 
 "This wallet verification request is invalid. Please try again." = "Aquesta sol·licitud de verificació de la cartera no és vàlida. Torneu-ho a provar.";
 
+"Upload your proof of address" = "Pugeu el vostre comprovant d'adreça";
+
 "We couldn't verify ownership of this wallet. Please try again." = "No hem pogut verificar la propietat d'aquesta cartera. Torneu-ho a provar.";
+
+"We’re required to confirm your address to enable spending over %@." = "Hem de confirmar la vostra adreça per habilitar la despesa superior a %@.";
+
+"We’re required to understand where your funds come from to enable spending over %@." = "Hem d'entendre d'on provenen els vostres fons per habilitar la despesa superior a %@.";
+
+"We’re reviewing your documents. We’ll let you know when verification is complete." = "Estem revisant els vostres documents. Us avisarem quan la verificació s'hagi completat.";

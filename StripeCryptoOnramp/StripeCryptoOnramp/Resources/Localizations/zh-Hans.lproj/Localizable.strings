@@ -1,5 +1,11 @@
 "Debit cards are most likely to be accepted." = "借记卡最有可能被接受。";
 
+"Please try again later." = "请稍后重试。";
+
+"Submitted for review" = "已提交审核";
+
+"Tell us about your source of funds" = "请说明资金来源";
+
 "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "因认证校验异常，应用无法完成验证。请稍后重试，若问题持续存在，可联系应用开发者。";
 
 "This app couldn't be verified. Contact the app developer for help." = "此应用无法通过验证。请联系应用开发者寻求帮助。";
@@ -12,4 +18,12 @@
 
 "This wallet verification request is invalid. Please try again." = "此钱包验证请求无效。请重试。";
 
+"Upload your proof of address" = "请上传地址证明";
+
 "We couldn't verify ownership of this wallet. Please try again." = "我们无法验证此钱包的所有权，请重试。";
+
+"We’re required to confirm your address to enable spending over %@." = "我们需要确认您的地址，才允许进行超过 %@ 的消费。";
+
+"We’re required to understand where your funds come from to enable spending over %@." = "我们需要了解您的资金来源，才允许进行超过 %@ 的消费。";
+
+"We’re reviewing your documents. We’ll let you know when verification is complete." = "我们正在审核您的文件。验证完成后，我们会通知您。";

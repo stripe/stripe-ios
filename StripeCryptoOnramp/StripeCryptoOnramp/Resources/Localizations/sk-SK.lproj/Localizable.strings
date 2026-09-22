@@ -1,5 +1,11 @@
 "Debit cards are most likely to be accepted." = "Debetné karty s najväčšou pravdepodobnosťou budú akceptované.";
 
+"Please try again later." = "Skúste to znova neskôr.";
+
+"Submitted for review" = "Odoslané na kontrolu";
+
+"Tell us about your source of funds" = "Povedzte nám o svojom zdroji finančných prostriedkov";
+
 "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "Túto aplikáciu nebolo možné overiť z dôvodu chyby pri potvrdzovaní. Ak problém pretrváva, skúste to znova neskôr alebo kontaktujte vývojára.";
 
 "This app couldn't be verified. Contact the app developer for help." = "Túto aplikáciu nebolo možné overiť. Požiadajte o pomoc vývojára aplikácie.";
@@ -12,4 +18,12 @@
 
 "This wallet verification request is invalid. Please try again." = "Táto požiadavka na overenie peňaženky je neplatná. Skúste to znova.";
 
+"Upload your proof of address" = "Nahrajte svoj doklad o adrese";
+
 "We couldn't verify ownership of this wallet. Please try again." = "Vlastníctvo tejto peňaženky sa nám nepodarilo overiť. Skúste to znova.";
+
+"We’re required to confirm your address to enable spending over %@." = "Musíme potvrdiť vašu adresu, aby sme umožnili výdavky nad hodnotu %@.";
+
+"We’re required to understand where your funds come from to enable spending over %@." = "Musíme pochopiť, odkiaľ pochádzajú vaše finančné prostriedky, aby sme umožnili výdavky nad hodnotu %@.";
+
+"We’re reviewing your documents. We’ll let you know when verification is complete." = "Kontrolujeme vaše dokumenty. Keď dokončíme overenie, budeme vás informovať.";

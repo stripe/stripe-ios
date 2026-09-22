@@ -1,5 +1,11 @@
 "Debit cards are most likely to be accepted." = "Debitne će kartice najvjerojatnije biti prihvaćene.";
 
+"Please try again later." = "Pokušajte ponovno poslije.";
+
+"Submitted for review" = "Predano na pregled";
+
+"Tell us about your source of funds" = "Recite nam o svojem izvoru sredstava";
+
 "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "Ova se aplikacija nije mogla potvrditi zbog pogreške u potvrdi. Pokušajte ponovno poslije ili se obratite razvijatelju ako problem i dalje traje.";
 
 "This app couldn't be verified. Contact the app developer for help." = "Ova aplikacija nije se mogla potvrditi. Obratite se razvijatelju aplikacije za pomoć.";
@@ -12,4 +18,12 @@
 
 "This wallet verification request is invalid. Please try again." = "Ovaj zahtjev za provjeru novčanika nije valjan. Pokušajte ponovno.";
 
+"Upload your proof of address" = "Učitajte svoj dokaz o adresi";
+
 "We couldn't verify ownership of this wallet. Please try again." = "Nismo mogli potvrditi vlasništvo nad ovim novčanikom. Pokušajte ponovno.";
+
+"We’re required to confirm your address to enable spending over %@." = "Obvezni smo potvrditi vašu adresu kako bismo omogućili potrošnju veću od %@.";
+
+"We’re required to understand where your funds come from to enable spending over %@." = "Obvezni smo razumjeti odakle dolaze vaša sredstva kako bismo omogućili potrošnju veću od %@.";
+
+"We’re reviewing your documents. We’ll let you know when verification is complete." = "Pregledavamo vaše dokumente. Obavijestit ćemo vas kada provjera bude dovršena.";

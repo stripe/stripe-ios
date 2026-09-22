@@ -1,5 +1,11 @@
 "Debit cards are most likely to be accepted." = "직불 카드가 더 널리 사용될 것으로 예상됩니다.";
 
+"Please try again later." = "나중에 다시 시도해 주십시오.";
+
+"Submitted for review" = "검토를 위해 제출됨";
+
+"Tell us about your source of funds" = "자금 출처에 대해 알려주십시오";
+
 "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "증명 오류로 인해 이 앱을 확인할 수 없습니다. 나중에 다시 시도하시거나, 문제가 지속되면 개발자에게 문의해 주십시오.";
 
 "This app couldn't be verified. Contact the app developer for help." = "이 앱을 확인할 수 없습니다. 앱 개발자에게 문의하여 도움을 받으십시오.";
@@ -12,4 +18,12 @@
 
 "This wallet verification request is invalid. Please try again." = "이 간편결제 인증 요청은 유효하지 않습니다. 다시 시도해 주십시오.";
 
+"Upload your proof of address" = "주소지 증빙을 업로드하십시오";
+
 "We couldn't verify ownership of this wallet. Please try again." = "이 간편결제의 소유권을 확인할 수 없습니다. 다시 시도해 주십시오.";
+
+"We’re required to confirm your address to enable spending over %@." = "%@을(를) 초과하여 지출하려면 주소를 확인해야 합니다.";
+
+"We’re required to understand where your funds come from to enable spending over %@." = "%@을(를) 초과하여 지출하려면 자금 출처를 파악해야 합니다.";
+
+"We’re reviewing your documents. We’ll let you know when verification is complete." = "문서를 검토 중입니다. 확인이 완료되면 알려드리겠습니다.";
