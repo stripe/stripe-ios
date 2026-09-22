@@ -1,35 +1,49 @@
 {
   "requirements": {
-    "entries": [
-      {
-        "description": "source_of_funds",
-        "requested_by": "swapped",
-        "awaiting_action_from": "user",
-        "errors": [],
-        "document": {
-          "accepted_subtypes": [
-            {
-              "id": "payslip",
-              "label": "Payslip"
-            }
-          ],
-          "accepted_formats": ["pdf", "jpeg", "png"],
-          "min_documents": 1,
-          "instructions": ["Documents must have your full name and address on it"],
-          "additional_requirements": {
-            "questionnaire": {
-              "questions": [
-                {
-                  "id": "purchase_purpose",
-                  "prompt": "Why are you purchasing cryptocurrency?",
-                  "answer_type": "free_text",
-                  "required": true
-                }
-              ]
-            }
+    "source_of_funds": {
+      "requested_by": "swapped",
+      "awaiting_action_from": "user",
+      "errors": [
+        {
+          "code": "document_rejected",
+          "description": "The submitted document could not be verified."
+        }
+      ],
+      "document": {
+        "accepted_subtypes": [
+          {
+            "id": "payslip",
+            "label": "Payslip",
+            "description": "Recent payslips from your employer"
+          },
+          {
+            "id": "bank_statement",
+            "label": "Bank statement",
+            "description": "Statements from your bank"
           }
+        ],
+        "accepted_formats": ["pdf", "jpeg", "png", "docx", "xlsx", "csv", "txt"],
+        "max_file_size_bytes": 5000000,
+        "min_document_types": 1,
+        "max_document_types": 2,
+        "file_requirements": "PDF, JPEG/JPG, PNG, DOCX, XLSX, CSV, or TXT, up to 5 MB per file.",
+        "instructions": [
+          "Documents must include your name and a balance or financial value.",
+          "Bank statements must be original PDFs issued through online banking; screenshots aren't accepted."
+        ]
+      },
+      "additional_requirements": {
+        "questionnaire": {
+          "questions": [
+            {
+              "id": "purchase_purpose",
+              "prompt": "Why are you purchasing cryptocurrency through swapped.com?",
+              "answer_type": "free_text",
+              "required": true
+            }
+          ]
         }
       }
-    ]
+    }
   }
 }
