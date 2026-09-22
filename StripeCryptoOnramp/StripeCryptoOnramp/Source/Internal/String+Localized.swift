@@ -68,6 +68,49 @@ extension String.Localized {
         )
     }
 
+    static var uploadProofOfAddress: String {
+        STPLocalizedString("Upload your proof of address", "Heading introducing proof of address collection")
+    }
+
+    static func proofOfAddressExplanation(amount: String) -> String {
+        String(
+            format: STPLocalizedString(
+                "We’re required to confirm your address to enable spending over %@.",
+                "Explanation introducing proof of address collection. %@ is a formatted monetary threshold, such as €1,000."
+            ),
+            amount
+        )
+    }
+
+    static var tellUsAboutYourSourceOfFunds: String {
+        STPLocalizedString("Tell us about your source of funds", "Heading introducing source of funds collection")
+    }
+
+    static func sourceOfFundsExplanation(amount: String) -> String {
+        String(
+            format: STPLocalizedString(
+                "We’re required to understand where your funds come from to enable spending over %@.",
+                "Explanation introducing source of funds collection. %@ is a formatted monetary threshold, such as €1,000."
+            ),
+            amount
+        )
+    }
+
+    static var submittedForReview: String {
+        STPLocalizedString("Submitted for review", "Heading confirming documents were submitted for review")
+    }
+
+    static var documentsUnderReview: String {
+        STPLocalizedString(
+            "We’re reviewing your documents. We’ll let you know when verification is complete.",
+            "Message confirming documents are being reviewed and the user will be notified when verification is complete."
+        )
+    }
+
+    static var tryAgainLater: String {
+        STPLocalizedString("Please try again later.", "Instruction after an unavailable operation")
+    }
+
     static func redactedCardDetails(using card: StripeAPI.PaymentMethod.Card) -> String? {
         let brand = stpCardBrand(from: card.brand)
         let brandString = STPCard.string(from: brand)

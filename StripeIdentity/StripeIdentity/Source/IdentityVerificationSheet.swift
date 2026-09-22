@@ -25,12 +25,58 @@ final public class IdentityVerificationSheet {
 
     /// Configuration for an IdentityVerificationSheet
     public struct Configuration {
+        /// The appearance of primary action buttons throughout the native verification flow.
+        @_spi(STP) public enum PrimaryButtonStyle {
+            /// Uses the app's tint color.
+            case `default`
+            /// Uses the supplied background and text colors.
+            /// Provide dynamic colors to support different colors in light and dark mode.
+            case custom(backgroundColor: UIColor, textColor: UIColor)
+        }
+
+        /// The appearance of secondary action buttons throughout the native verification flow.
+        @_spi(STP) public enum SecondaryButtonStyle {
+            /// Uses the default secondary button appearance.
+            case `default`
+            /// Uses the supplied background and text colors.
+            /// Provide dynamic colors to support different colors in light and dark mode.
+            case custom(backgroundColor: UIColor, textColor: UIColor)
+        }
+
+        /// Configuration for the biometric consent screen's header.
+        @_spi(STP) public struct BiometricConsentConfiguration {
+            /// Whether to hide the branding header above the consent title.
+            public var hideBrandingHeader: Bool
+
+            /// Initializes a biometric consent header configuration.
+            /// - Parameters:
+            ///   - hideBrandingHeader: Whether to hide the branding header above the consent title.
+            public init(
+                hideBrandingHeader: Bool
+            ) {
+                self.hideBrandingHeader = hideBrandingHeader
+            }
+        }
+
         /// An image of your customer-facing business logo.
         ///
         /// - Note: The recommended image size is 32 x 32 points. The image will be
         /// displayed in both light and dark modes, if the app supports it. Use a
         /// dynamic UIImage to support different images in light vs dark mode.
         public var brandLogo: UIImage
+
+        /// The style of primary action buttons throughout the native verification flow.
+        /// Disabled buttons retain the default disabled appearance. Secondary buttons are unaffected.
+        @_spi(STP) public var primaryButtonStyle: PrimaryButtonStyle = .default
+
+        /// The style of secondary action buttons throughout the native verification flow.
+        /// Disabled buttons retain the default disabled appearance. Primary buttons are unaffected.
+        @_spi(STP) public var secondaryButtonStyle: SecondaryButtonStyle = .default
+
+        /// Configuration for the biometric consent screen's header.
+        ///
+        /// When `nil`, the biometric consent screen uses the default header.
+        @_spi(STP) public var biometricConsent: BiometricConsentConfiguration?
 
         /// Initializes a Configuration.
         /// - Parameters:
@@ -41,6 +87,7 @@ final public class IdentityVerificationSheet {
             brandLogo: UIImage
         ) {
             self.brandLogo = brandLogo
+            self.biometricConsent = nil
         }
     }
 
@@ -91,7 +138,7 @@ final public class IdentityVerificationSheet {
                     ephemeralKeySecret: ephemeralKeySecret
                 ),
                 flowController: VerificationSheetFlowController(
-                    brandLogo: configuration.brandLogo
+                    configuration: configuration
                 ),
                 mlModelLoader: IdentityMLModelLoader(),
                 analyticsClient: IdentityAnalyticsClient(

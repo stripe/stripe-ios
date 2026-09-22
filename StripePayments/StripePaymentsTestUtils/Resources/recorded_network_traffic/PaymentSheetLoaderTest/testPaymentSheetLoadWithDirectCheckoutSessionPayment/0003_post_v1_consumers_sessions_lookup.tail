@@ -1,0 +1,19 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/consumers\/sessions\/lookup$
+200
+text/plain
+Content-Length: 346
+X-Stripe-Mock-Request: email_address=test%40example\.com&email_source=customer_email&request_surface=ios_payment_element&session_id=elements_session_1WADpXzp4Ih
+
+{
+  "exists": true,
+  "publishable_key": "pk_test_abc123",
+  "auth_session_client_secret": null,
+  "consumer_session": {
+      "client_secret": "pscs_abc123",
+      "email_address": "foo@bar.com",
+      "redacted_formatted_phone_number": "(***) *** **12",
+      "verification_sessions": [],
+      "support_paymnet_details_types": ["CARD"],
+  }
+}

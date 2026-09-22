@@ -8,9 +8,9 @@
 @_spi(STP)
 @_spi(ReactNativeSDK)
 extension PaymentElement {
-    /// Configuration for Link.
+    /// Configuration related to Link
     public struct LinkConfiguration {
-        /// Controls whether Link is displayed.
+        /// The Link display mode.
         public var display: Display = .automatic
 
         /// Creates a Link configuration.
@@ -18,13 +18,14 @@ extension PaymentElement {
             self.display = display
         }
 
-        /// Controls whether Link is displayed.
+        /// Display configuration for Link
         public enum Display: String {
-            /// Show Link when it is available.
+            /// Link will be displayed when available.
             case automatic
-            /// Never show Link.
+            /// Link will never be displayed.
             case never
-            /// Keep Link enabled, but hide its button or row in PaymentElement.
+            /// Link remains enabled (e.g. for automatic Link verification, Instant Bank Payments, Link Card Brand, and inline signup)
+            /// but its button/row will not be shown in the payment element UI.
             case walletButtonHidden
         }
     }

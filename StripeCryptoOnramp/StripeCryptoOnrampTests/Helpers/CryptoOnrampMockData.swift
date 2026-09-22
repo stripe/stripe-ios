@@ -16,6 +16,24 @@ private class ClassForBundle {}
 
 // MARK: Responses
 
+enum FulfillAdditionalKYCRequirementResponseMock: String, MockData {
+    var bundle: Bundle { return Bundle(for: ClassForBundle.self) }
+
+    typealias ResponseType = FulfillAdditionalKYCRequirementResponse
+
+    case fulfillAdditionalKYCRequirementResponse_200 = "FulfillAdditionalKYCRequirementResponse_200"
+}
+
+enum RetrieveKYCRequirementsResponseMock: String, MockData {
+    var bundle: Bundle { return Bundle(for: ClassForBundle.self) }
+
+    typealias ResponseType = RetrieveKYCRequirementsResponse
+
+    case sourceOfFundsWithQuestionnaire = "RetrieveKYCRequirementsResponse_SourceOfFundsWithQuestionnaire_200"
+    case partnerReview = "RetrieveKYCRequirementsResponse_PartnerReview_200"
+    case unknownActionParty = "RetrieveKYCRequirementsResponse_UnknownActionParty_200"
+}
+
 enum RetrieveKYCInfoResponseMock: String, MockData {
     var bundle: Bundle { return Bundle(for: ClassForBundle.self) }
 
@@ -63,6 +81,24 @@ enum ConfirmUserAttestationResponseMock: String, MockData {
     typealias ResponseType = EmptyResponse
 
     case confirmUserAttestationResponse_200 = "ConfirmUserAttestationResponse_200"
+}
+
+enum RetrievePartnerTermsResponseMock: String, MockData {
+    var bundle: Bundle { return Bundle(for: ClassForBundle.self) }
+
+    typealias ResponseType = PartnerTerms
+
+    case retrievePartnerTermsResponse_TermsAndConditionsRequired_200 = "RetrievePartnerTermsResponse_TermsAndConditionsRequired_200"
+    case retrievePartnerTermsResponse_TOSRequired_200 = "RetrievePartnerTermsResponse_TOSRequired_200"
+    case retrievePartnerTermsResponse_NotRequired_200 = "RetrievePartnerTermsResponse_NotRequired_200"
+}
+
+enum ConfirmPartnerTermsResponseMock: String, MockData {
+    var bundle: Bundle { return Bundle(for: ClassForBundle.self) }
+
+    typealias ResponseType = EmptyResponse
+
+    case confirmPartnerTermsResponse_200 = "ConfirmPartnerTermsResponse_200"
 }
 
 enum WalletOwnershipChallengeResponseMock: String, MockData {

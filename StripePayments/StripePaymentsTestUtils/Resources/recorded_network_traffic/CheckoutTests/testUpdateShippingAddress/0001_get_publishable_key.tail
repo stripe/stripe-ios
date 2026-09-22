@@ -1,0 +1,17 @@
+GET
+https:\/\/stp-mobile-playground-backend-v7\.stripedemos\.com\/publishable_key\?merchant=us_tax$
+200
+application/json
+Server: Google Frontend
+Content-Type: application/json; charset=utf-8
+x-powered-by: Express
+x-cloud-trace-context: a575878c7d904279ca518fbfc0d1fedc;o=1
+Via: 1.1 google
+Date: Thu, 10 Sep 2026 18:07:23 GMT
+Content-Length: 129
+Alt-Svc: h3=":443"; ma=2592000
+Etag: W/"81-JcspoLP/Y5qIex01y5ElS8mdBC4"
+
+{
+  "publishable_key" : "pk_test_51T6wBXK8p6Sx2i8adADCFk8mpPEn4UtaTLP3AZS8kzJBgX8ldmV2VCX9oKqXOTH969NHb0zKvYcBK1OC9wBaJE0O00F0x7v2ci"
+}
