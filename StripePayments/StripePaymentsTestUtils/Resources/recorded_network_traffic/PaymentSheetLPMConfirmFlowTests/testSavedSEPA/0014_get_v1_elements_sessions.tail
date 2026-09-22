@@ -1,0 +1,1420 @@
+GET
+https:\/\/api\.stripe\.com\/v1\/elements\/sessions\?customer_session_client_secret=cuss_secret_VIstvFFZ3YfE3wm6oNfcZBXv1CofgSvSyJJbCEiebpYxd15&deferred_intent%5Bamount%5D=1099&deferred_intent%5Bcapture_method%5D=automatic&deferred_intent%5Bcurrency%5D=eur&deferred_intent%5Bmode%5D=payment&locale=.*&mobile_app_id=.*&type=deferred_intent$
+200
+application/json
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=mjBNyYLaVwdxD4CGxL-DIdCuLcV2t7Ll37X8JpzQU1KP6hAvQ6S099wyro_rC0NN6gERYubm92c4hIy_; report-to csp
+Server: nginx
+Cache-Control: no-cache, no-store
+reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=mjBNyYLaVwdxD4CGxL-DIdCuLcV2t7Ll37X8JpzQU1KP6hAvQ6S099wyro_rC0NN6gERYubm92c4hIy_&t=1"
+stripe-notice: You are using an outdated API version (2020-08-27). We recommend upgrading to the latest API version, 2026-08-26.dahlia. See https://docs.stripe.com/upgrades
+x-wc: 3c3
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+x-stripe-routing-context-priority-tier: api-testmode
+x-stripe-priority-routing-enabled: true
+report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=mjBNyYLaVwdxD4CGxL-DIdCuLcV2t7Ll37X8JpzQU1KP6hAvQ6S099wyro_rC0NN6gERYubm92c4hIy_&t=1"}],"include_subdomains":true}
+request-id: req_XieVsruVSwy9MX
+Content-Length: 55035
+Vary: Origin
+Date: Mon, 21 Sep 2026 23:59:41 GMT
+stripe-version: 2020-08-27
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+
+{
+  "payment_method_preference" : {
+    "country_code" : "US",
+    "object" : "payment_method_preference",
+    "type" : "deferred_intent",
+    "ordered_payment_method_types" : [
+      "card",
+      "pay_by_bank",
+      "ideal",
+      "bancontact",
+      "sepa_debit",
+      "p24",
+      "eps"
+    ]
+  },
+  "capability_enabled_card_networks" : [
+    "cartes_bancaires",
+    "jcb",
+    "diners",
+    "discover"
+  ],
+  "flags" : {
+    "elements_google_pay_block_india_issued_cards" : true,
+    "enable_tax_id_suspicious_pattern_check" : false,
+    "elements_easel_enable_elements_inspector_for_advanced_integrations_backend" : true,
+    "link_enable_signup_in_summary_in_habanero" : true,
+    "financial_connections_enable_deferred_intent_flow" : true,
+    "elements_enable_remove_last_validation" : false,
+    "apple_pay_prb_killswitch" : false,
+    "elements_enable_easel_for_pi" : true,
+    "elements_mobile_card_funding_filtering" : false,
+    "link_payment_element_minor_signup_ui_updates" : false,
+    "elements_link_instant_bank_payments_require_billing_address_for_non_us_merchants" : true,
+    "elements_disable_express_checkout_button_amazon_pay" : false,
+    "elements_easel_disable_appearance_api" : false,
+    "link_auth_partner_enable_ppac_signup_suppression" : false,
+    "elements_disable_link_email_otp" : false,
+    "restrict_taxid_selection_to_buyer_address" : false,
+    "enable_afterpay_clearpay_cbt_afterpay_rails" : false,
+    "ocs_buyer_xp_elements_card_brand_choice_toggle" : true,
+    "paypal_billing_address_support_in_ece" : true,
+    "elements_enable_pay_by_bank_remember_bank_selection" : true,
+    "link_auth_partner_enable_ios_instagram" : true,
+    "elements_disable_sepa_debit_eea_address_requirement" : false,
+    "elements_enable_instant_debits_postal_code_collection" : false,
+    "elements_financial_connections_canada_enabled" : false,
+    "elements_easel_disable_feedback" : false,
+    "link_enable_link_session_key_financial_connections" : true,
+    "elements_us_bank_account_manual_entry_first" : false,
+    "elements_extend_hcaptcha_refresh_time" : true,
+    "link_enable_hashed_normalized_referrer_path" : false,
+    "ocs_buyer_xp_elements_remove_cpm_redirect_text" : false,
+    "elements_enable_south_korea_market_underlying_pms" : false,
+    "link_enable_signup_element" : false,
+    "elements_mobile_force_setup_future_use_behavior_and_new_mandate_text" : false,
+    "link_enable_apple_pay_in_safari_returning_in_guacamole" : true,
+    "elements_disable_payment_element_card_country_zip_validations" : false,
+    "link_payment_element_default_value_auto_open_modal" : true,
+    "link_payment_element_steerage_enabled" : true,
+    "elements_enable_link_name_prefill" : true,
+    "elements_ewcs_allow_spm_incomplete_billing" : false,
+    "elements_enable_link_card_brand_in_saved_payment_methods" : true,
+    "elements_disable_link_global_holdback_lookup" : false,
+    "elements_enable_pbb_uk_new_banks" : false,
+    "enable_instant_debits_billing_address_force_collection_for_iat" : false,
+    "financial_connections_enable_ca_accounts" : false,
+    "link_enable_link_session_key_klarna" : true,
+    "ocs_buyer_xp_elements_link_opt_in_on_payment_select" : true,
+    "elements_easel_disable_address_fill" : false,
+    "ocs_buyer_xp_elements_remove_redirect_lpm_content" : false,
+    "elements_enable_payment_method_options_setup_future_usage" : true,
+    "enable_custom_checkout_currency_selector_element" : false,
+    "elements_mobile_android_tap_to_add_enabled" : true,
+    "link_enable_address_country_restrictions" : false,
+    "link_auth_partner_enable_android_fb" : true,
+    "checkout_kr_lpm_no_billing_address_collection" : false,
+    "elements_easel_disable_health_check" : false,
+    "link_mobile_express_checkout_element_inline_otp_killswitch" : false,
+    "elements_disable_paypal_express" : false,
+    "disable_confirmation_modal_bacs" : false,
+    "legacy_customer_session_payment_element_features" : false,
+    "link_habanero_no_otp_required_for_non_link_pm_signup" : true,
+    "elements_enable_express_checkout_element_custom_payment_methods" : false,
+    "elements_enable_terms_element" : false,
+    "smor_ewcs_vf_terms" : false,
+    "checkout_habanero_returning_user_expanded_accordion" : false,
+    "link_auth_partner_enable_authentication_element" : true,
+    "elements_allow_manual_payment_method_creation_with_spm" : false,
+    "elements_easel_disable" : false,
+    "elements_us_bank_account_require_billing_address_for_non_us_merchant" : true,
+    "link_enable_auth_partner_communication" : true,
+    "elements_apply_amex_icon_sorting" : false,
+    "elements_hide_card_brand_icons" : false,
+    "elements_mobile_android_nfc_scanning_enabled" : true,
+    "elements_easel_disable_customer_location_mocking" : false,
+    "disable_legal_text_on_non_confirmation_modal_bacs" : false,
+    "link_auth_partner_enable_ppac_deferred_flow_signal" : false,
+    "elements_easel_disable_position_customization" : false,
+    "elements_enable_appearance_recompute" : false,
+    "link_enable_link_session_key_confirm_and_start_verification" : true,
+    "elements_enable_link_takeover_in_habanero" : false,
+    "link_ulm_screen_height_updates" : false,
+    "elements_enable_19_digit_pans" : false,
+    "always_show_ece_paypal_recurring_button" : false,
+    "enable_payment_method_api_shop_pay" : false,
+    "enable_elements_tax_id_type_filtering" : false,
+    "elements_human_security_enabled" : false,
+    "link_enable_white_ece_button_theme" : false,
+    "elements_webmcp_tools_enabled" : true,
+    "link_in_accordion_layout_available_in_stripejs" : false,
+    "link_payment_element_widget_view_enabled" : true,
+    "ocs_mobile_enable_analytics_to_r" : false,
+    "elements_easel_disable_magic_fill" : false,
+    "checkout_agent_lpt_steering_optimizations_enabled" : false,
+    "avoid_redundant_billing_details_for_klarna" : false,
+    "distinctly_link_payment_element_ramp" : true,
+    "link_enable_ewcs_customer_name_prefill" : false,
+    "smor_enable_visible_pms_override_link_saved" : false,
+    "link_auth_partner_bypass_bridge_check" : false,
+    "link_disable_cookie_login" : false,
+    "elements_disable_express_checkout_button_shop_pay" : false,
+    "payment_element_link_modal_preload_killswitch" : false,
+    "link_enable_pass_checkout_session_id_to_signup" : true,
+    "elements_enable_hcaptcha_async_token_logging" : true,
+    "checkout_konbini_seven_eleven_enabled" : false,
+    "elements_enable_jp_card_installments" : true,
+    "elements_show_expanded_spm" : false,
+    "disable_payment_element_if_required_billing_config" : false,
+    "elements_enable_link_otp_takeover_in_guacamole" : false,
+    "elements_enable_link_spm" : true,
+    "elements_enable_read_allow_redisplay" : true,
+    "elements_enable_save_for_future_payments_pre_check" : false,
+    "checkout_habanero_automatic_tax_legacy_minimal_address_precision" : false,
+    "elements_disable_link_instant_debits_in_non_dl_for_non_us_merchants" : false,
+    "link_forest_enable_ece_bank_use_shipping_as_billing" : false,
+    "elements_disable_express_checkout_button_klarna" : false,
+    "distinctly_link_cbc_killswitch" : false,
+    "elements_disable_express_checkout_element_custom_payment_methods" : false,
+    "elements_prefer_fc_lite" : false,
+    "elements_disable_payment_element_custom_payment_methods_byof" : false,
+    "elements_mobile_cardscan_use_mlkit" : true,
+    "elements_enable_link_takeover_in_guacamole" : false,
+    "link_disable_auth_partner_ua_check" : false,
+    "link_enable_link_session_key_incentives_and_status" : true,
+    "elements_easel_disable_optimizations_check" : false,
+    "elements_enable_passive_captcha" : true,
+    "link_fresh_session_sync_enabled" : false,
+    "distinctly_link_payment_element_opt_out_merchant_blocklist" : false,
+    "link_enable_non_blocking_doi_signup" : false,
+    "elements_enable_new_google_places_api" : true,
+    "checkout_form_automatic_tax_address_collection_precision" : true,
+    "elements_enable_express_checkout_button_demo_pay" : false,
+    "disable_cbc_in_link_popup" : false,
+    "elements_enable_installments_on_deferred_intents" : true,
+    "elements_sepa_debit_instant_microdeposits" : false,
+    "elements_spm_set_as_default" : false,
+    "elements_does_not_collect_postal_code_for_non_us_card_transactions_killswitch" : false,
+    "link_disable_login_if_signed_up_outside_of_elements" : true,
+    "elements_enable_link_autofill_prompt_padding_fix" : false,
+    "elements_mobile_attest_on_intent_confirmation" : false,
+    "link_trusted_origin_skip_secure_click" : true,
+    "elements_stop_move_focus_to_first_errored_field" : true,
+    "ocs_buyer_xp_enable_payment_element_accordion_box_shadow" : false,
+    "elements_enable_customer_address" : true,
+    "elements_mobile_allow_stripecardscan" : false,
+    "elements_use_checkout_app_id_for_human_security" : false,
+    "link_enable_klarna_in_lae" : false,
+    "sandboxes_rebrand_testmode" : true,
+    "link_enable_card_brand_choice" : true,
+    "link_auth_partner_enable_ppac" : true,
+    "adaptive_pricing_for_elements_with_payment_intents" : false,
+    "elements_allow_custom_payment_method_creation" : false,
+    "elements_disable_recurring_express_checkout_button_amazon_pay" : false,
+    "elements_mobile_link_inline_signup_with_saved_pm_enabled" : false,
+    "link_purchase_protections_rollout" : true,
+    "link_ulm_dark_mode" : true,
+    "elements_disable_fc_lite" : false,
+    "link_auth_partner_delay_recognition" : true,
+    "elements_enable_payment_element_custom_payment_methods_byof" : false,
+    "ocs_mobile_should_use_autocomplete_proxy_endpoints" : true,
+    "show_swish_factoring_notice" : true,
+    "elements_enable_nme_for_us_bank_account_skip_verification" : false,
+    "ocs_buyer_xp_elements_remove_wallets_redirect_text" : false,
+    "elements_easel_enable_elements_inspector" : true,
+    "apple_pay_pe_killswitch" : false,
+    "disable_link_on_obo_self" : true,
+    "paypal_phone_number_support_in_ece" : false,
+    "elements_enable_pay_by_bank_multi_country_bank_selector_rollout_countries" : false,
+    "elements_easel_disable_payment_fill" : false,
+    "elements_easel_disable_tax_id_fill" : false,
+    "elements_smp_cardholder_name_by_country" : false,
+    "elements_enable_link_ulm_in_guacamole" : false,
+    "elements_disable_card_metadata_funding_validation" : false,
+    "elements_spm_max_visible_payment_methods" : false,
+    "id_bank_transfers_v1_integration" : false,
+    "checkout_habanero_early_ece_ready_enabled" : true,
+    "elements_enable_mx_card_installments" : true,
+    "link_enable_link_session_key_cross_region_apis" : false,
+    "elements_easel_disable_appearance_api_per_element_options" : true,
+    "link_hide_prefilled_signup_values" : false,
+    "elements_enable_easel_for_pi_killswitch" : false,
+    "elements_easel_disable_pi_migrate_to_ewcs_warning" : false,
+    "elements_disable_link_lpms_in_guacamole" : false,
+    "enable_pe_options_for_billing_details_collection" : true,
+    "elements_spm_messages" : false,
+    "link_enable_link_session_key_shipping_addresses" : true,
+    "elements_easel_disable_session_summary" : false,
+    "apple_pay_ece_killswitch" : false,
+    "distinctly_link_pe_purchase_protection" : true,
+    "link_enable_link_session_key_consumer_person_details" : true,
+    "link_auth_partner_delay_android_fb_cookie_login" : false,
+    "elements_ae_hide_name_field" : false,
+    "legacy_confirmation_tokens" : false,
+    "link_auth_partner_enable_ece" : true,
+    "elements_easel_disable_elements_inspector_for_pi" : false,
+    "link_enable_link_session_key_payment_details" : true,
+    "distinctly_link_pe_backup_payment_method" : true,
+    "link_dedupe_shipping_address_creation" : true,
+    "ece_apple_pay_payment_request_passthrough" : false,
+    "checkout_link_pay_token_enabled" : false,
+    "link_enable_link_session_key_link_onboarding_session" : true,
+    "elements_mobile_force_vertical_payment_method_layout" : false,
+    "elements_enable_card_billing_details_tax_id" : false,
+    "checkout_disable_ai_agent_payment_steering" : false,
+    "checkout_link_in_habanero_enabled" : true,
+    "elements_disable_progressive_cursor" : false,
+    "link_enable_auth_partner_sizing_logging" : true,
+    "enable_checkout_session_update_customer" : false,
+    "elements_human_security_replaces_hcaptcha" : false
+  },
+  "merchant_logo_url" : null,
+  "merchant_of_record_country" : "GB",
+  "session_id" : "elements_session_1GAxFufvEGY",
+  "card_installments_enabled" : false,
+  "account_id" : "acct_1KmkHbGoesj9fw9Q",
+  "config_id" : "57fc36c8-34b8-40f9-afc2-614d9a9c752a",
+  "merchant_currency" : "gbp",
+  "merchant_id" : "acct_1KmkHbGoesj9fw9Q",
+  "sepa_debit_info" : {
+    "creditor_id" : "GB67ZZZSDDDEUT0000000184776",
+    "creditor_name" : "Stripe Payments UK Ltd."
+  },
+  "card_brand_choice" : {
+    "eligible" : false,
+    "preferred_networks" : [
+      "cartes_bancaires"
+    ],
+    "supported_cobranded_networks" : {
+      "cartes_bancaires" : true
+    }
+  },
+  "shipping_address_settings" : {
+    "autocomplete_allowed" : true
+  },
+  "external_payment_method_data" : null,
+  "custom_payment_method_data" : null,
+  "meta_pay_signed_container_context" : null,
+  "apple_pay_preference" : "enabled",
+  "payment_method_configuration_id" : "pmc_1KputQGoesj9fw9QC9XSIbwt",
+  "managed_payments_enabled" : false,
+  "google_pay_preference" : "enabled",
+  "merchant_country" : "GB",
+  "experiments_data" : {
+    "arb_id" : "b984dc92-c881-428e-800b-17346418c0d5",
+    "experiment_metadata" : {
+      "seed" : "1547e195184c61562077841eb773774a1802d6c658ff39f5f335caa365c9517c",
+      "semi_dominant_payment_methods" : [
+
+      ],
+      "lpm_holdback_t1_payment_methods" : [
+        "eps"
+      ],
+      "lpm_adoption_ranking_upe_v2_ignore_fixed_lpms" : false,
+      "lpm_holdback_t2_payment_methods" : [
+        "bancontact",
+        "eps",
+        "ideal",
+        "p24",
+        "sepa_debit",
+        "pay_by_bank"
+      ]
+    },
+    "experiment_assignments" : {
+      "link_growth_ncdv_exp_pipeline_aa" : "control",
+      "ff_elements_ewcs_ece_default_email_eff" : "control",
+      "link_pe_signup_ui_variant_comparison" : "control",
+      "link_pe_signup_copy_aa" : "control",
+      "ocs_buyer_xp_elements_lpm_holdback" : "control",
+      "link_pe_signup_toggle" : "control",
+      "link_dl_pe_inline_entrypoint" : "control",
+      "link_dl_pe_inline_entrypoint_aa" : "control",
+      "ff_elements_pe_google_pay_mit_fields_eff" : "control",
+      "link_pe_hide_signup_email_aa" : "control",
+      "ff_elements_eps_luxe_eff" : "control",
+      "ocs_buyer_xp_elements_save_card_checkbox_copy" : "control",
+      "link_pe_row_prominent_signup_aa" : "control",
+      "link_ce_conversion_ncdv_aa" : "control",
+      "ocs_mobile_horizontal_mode_aa" : "control",
+      "ocs_mobile_payment_method_messaging_promotions" : "control",
+      "ff_elements_enable_trusted_pm_data_confirmation_eff" : "treatment",
+      "ibp_bank_tab_name_aa" : "control",
+      "ff_elements_test_frontend_eff" : "control",
+      "ff_elements_enable_appearance_recompute_eff" : "treatment",
+      "ocs_buyer_xp_elements_link_opt_in_on_payment_select" : "control",
+      "ff_elements_autocomplete_partial_autofill_eff" : "control",
+      "link_pe_signup_green_logo_aa" : "control",
+      "ocs_mobile_nfc_scanning_feature_holdback" : "control",
+      "link_ce_conversion_unrecognized_copy_change" : "control",
+      "ff_elements_with_private_label_card_support_eff" : "control",
+      "ocs_mobile_card_art" : "control",
+      "elements_instant_debits_returning_user_bank_add_incentive_steerage_copy" : "control",
+      "ff_elements_ewcs_allow_spm_incomplete_billing_eff" : "treatment",
+      "ocs_mobile_horizontal_mode" : "control",
+      "ibp_bank_tab_name" : "control",
+      "link_ce_conversion_unrecognized_aa" : "control",
+      "link_ab_test_aa" : "control",
+      "ff_elements_enable_pm_data_controller_eff" : "control",
+      "ff_elements_ae_autofill_validation" : "treatment",
+      "link_dl_pe_email_v3" : "control",
+      "link_growth_ece_ncdv" : "control",
+      "ff_elements_ae_south_korea_locality_eff" : "treatment",
+      "elements_ae_postal_cjk_normalization_aa" : "control",
+      "link_optional_doi_signup_holdback" : "control",
+      "elements_card_brand_icons" : "control",
+      "elements_ae_postal_cjk_normalization" : "control",
+      "elements_hcaptcha_init_timeout" : "control",
+      "ff_checkout_show_pbb_logos_eff" : "control",
+      "elements_instant_debits_returning_user_bank_add_incentive_steerage_ui_phase_3" : "control",
+      "link_dl_pe_email_v2" : "control",
+      "link_pe_row_prominent_signup" : "control",
+      "link_ulm_in_ece_aa" : "control",
+      "ff_elements_apple_pay_billing_address_change_eff" : "control",
+      "ff_elements_currency_card_brand_blocking_fe_eff" : "control",
+      "link_pe_hide_signup_email" : "control",
+      "connections_elements_variable_incentives_for_ibp_recurring_payments" : "control",
+      "link_lpm_elements_klarna_powered_by_link" : "control",
+      "link_sign_up_form_container_aa" : "control",
+      "link_ulm_in_ece" : "control",
+      "ocs_buyer_xp_elements_l10n_holdback" : "control",
+      "billing_address_link_opt_in_aa" : "control",
+      "ibp_localized_featured_institutions_accordion" : "treatment",
+      "ff_elements_p24_luxe_eff" : "control",
+      "elements_instant_debits_returning_user_bank_add_incentive_steerage_ui_phase_2" : "control",
+      "ff_checkout_habanero_amount_summary_expanded_eff" : "control",
+      "ff_elements_disable_link_cookie_login_for_spm_eff" : "control",
+      "ff_elements_ece_payer_failure_reasons_eff" : "control",
+      "ff_elements_pe_wallet_details_eff" : "treatment",
+      "paypal_payment_handler" : "control",
+      "pbb_label_change_elements" : "control",
+      "ff_elements_pe_dedupe_more_button_icons_eff" : "treatment",
+      "ff_wero_remove_country_selector" : "control",
+      "elements_instant_debits_returning_user_bank_add_incentive_steerage_ui_phase_1" : "control",
+      "link_lpm_elements_klarna_powered_by_link_aa" : "control",
+      "link_growth_ncdv_exp_pipeline" : "control",
+      "link_signup_name_from_billing_ae" : "control",
+      "link_pe_signup_copy" : "control",
+      "ff_elements_intersection_observer_secure_click_fixes_eff" : "control",
+      "link_ce_ulm_resend_sms_otp_aa" : "control",
+      "ff_elements_submit_link_payment_method" : "control",
+      "link_signup_element_show_email" : "control",
+      "pmme_financing_as_low_as" : "control",
+      "link_spm_show_checkbox_signup" : "control",
+      "link_growth_ece_ncdv_aa" : "control",
+      "link_sign_up_form_container" : "control",
+      "ff_elements_ae_recollect_billing_on_spm_removal_eff" : "treatment",
+      "link_optional_doi_signup_holdback_aa" : "control",
+      "link_pe_signup_ui_variant_comparison_aa" : "control",
+      "ff_link_ulm_modal_in_modal" : "control",
+      "link_ce_conversion_cookie_aa" : "control",
+      "link_ce_ulm_resend_sms_otp" : "control",
+      "ff_elements_card_brand_funding_filtering_eff" : "control",
+      "br_card_lpa_elements_synapse_lpa_fields" : "control",
+      "billing_address_link_opt_in" : "control",
+      "ff_elements_ae_default_values_equality" : "treatment",
+      "ff_elements_ewcs_require_complete_address_eff" : "control",
+      "ff_elements_ewcs_tax_display_eff" : "control",
+      "ff_elements_payment_element_remount_hydration_eff" : "control",
+      "ff_elements_pe_auto_tax_binding_eff" : "treatment",
+      "ff_elements_adaptive_pricing_conversion_disclosure" : "treatment",
+      "ff_elements_samsung_pay_merchant_id_eff" : "treatment",
+      "link_ce_conversion_recognized_loading_animation" : "control",
+      "link_ce_conversion_unrecognized_post_entry_aa" : "control",
+      "link_spm_show_checkbox_signup_aa" : "control",
+      "ff_elements_ewcs_integration_error_fatal_reclassification_eff" : "control",
+      "ff_checkout_habanero_remount_crash_fix_eff" : "treatment",
+      "ff_elements_ae_expanded_autocomplete_eff" : "control",
+      "ff_checkout_habanero_combined_contact_payment_view_eff" : "treatment",
+      "link_pe_signup_green_logo" : "control"
+    }
+  },
+  "legacy_customer" : null,
+  "link_settings" : {
+    "link_passthrough_mode_enabled" : true,
+    "link_payment_element_smart_defaults_enabled" : true,
+    "link_mobile_attestation_state_sync_enabled" : true,
+    "link_no_code_default_values_recall" : true,
+    "link_funding_sources" : [
+      "CARD"
+    ],
+    "link_crypto_onramp_force_cvc_reverification" : false,
+    "link_enable_signup_in_express_checkout_element" : true,
+    "link_modal_disable_in_ece" : false,
+    "link_consumer_incentive" : null,
+    "link_crypto_onramp_bank_upsell" : false,
+    "link_ece_browser_compatibility_override" : false,
+    "link_wanderlust_in_elements_enabled" : false,
+    "link_use_current_authentication_level_for_is_verified" : false,
+    "link_enable_email_otp_for_link_popup" : true,
+    "link_crypto_onramp_elements_logout_disabled" : false,
+    "link_popup_enable_new_google_places_api" : true,
+    "link_no_code_default_values_identification" : true,
+    "link_pay_button_element_enabled" : true,
+    "link_payment_element_enable_webauthn_login" : true,
+    "link_bank_onboarding_enabled" : false,
+    "link_enable_instant_debits_in_testmode" : false,
+    "link_enable_sensitive_changes" : true,
+    "link_payment_element_disabled_by_targeting" : false,
+    "link_sign_up_opt_in_feature_enabled" : false,
+    "link_only_for_payment_method_types_enabled" : false,
+    "link_disabled_reasons" : {
+      "payment_element_payment_method_mode" : [
+        "gated_into_enable_m2_passthrough_mode"
+      ],
+      "payment_element_passthrough_mode" : [
+
+      ]
+    },
+    "link_sign_up_opt_in_initial_value" : false,
+    "link_popup_disable_in_ece" : false,
+    "link_mobile_use_attestation_endpoints" : false,
+    "link_popup_shorten_signup_redirect_timeout" : true,
+    "link_elements_pageload_sign_up_disabled" : false,
+    "link_disable_pe_signup_prompt" : false,
+    "link_elements_is_crypto_onramp" : false,
+    "link_no_code_default_values_usage" : true,
+    "link_enable_webauthn_for_link_popup" : true,
+    "link_email_verification_login_enabled" : false,
+    "link_popup_webview_option" : "shared",
+    "link_targeting_results" : {
+      "payment_element_passthrough_mode" : null
+    },
+    "link_trusted_merchant_check_enabled" : false,
+    "link_global_holdback_on" : false,
+    "link_show_prefer_debit_card_hint" : false,
+    "link_popup_payment_method_utf8_encoding_enabled" : true,
+    "link_local_storage_login_enabled" : true,
+    "link_payment_session_context" : {
+      "bank_account_permissions" : [
+
+      ],
+      "link_payment_method_bank_account_permissions" : null,
+      "bank_account_verification_method" : null,
+      "link_supported_payment_methods" : [
+        "CARD"
+      ]
+    },
+    "link_session_storage_login_enabled" : true,
+    "link_brand" : "link",
+    "link_disable_in_safari_private_browsing" : false,
+    "link_cbc_mastercard_revamp" : false,
+    "link_mobile_disable_rux_in_flow_controller" : false,
+    "link_authenticated_change_event_enabled" : false,
+    "link_ppac_origin_eligible" : false,
+    "link_popup_ios26_trampoline_enabled" : true,
+    "link_pm_killswitch_on_in_elements" : false,
+    "link_supported_payment_methods_onboarding_enabled" : [
+      "CARD"
+    ],
+    "link_hcaptcha_site_key" : "20000000-ffff-ffff-ffff-000000000002",
+    "link_payment_element_disable_signup" : false,
+    "link_enable_displayable_default_values_in_ece" : false,
+    "link_disable_email_otp" : false,
+    "link_hcaptcha_rqdata" : null,
+    "link_default_opt_in" : "FULL",
+    "link_supported_payment_methods" : [
+      "CARD"
+    ],
+    "link_mobile_disable_default_opt_in" : true,
+    "link_mode" : "LINK_CARD_BRAND",
+    "link_mobile_disable_signup" : false,
+    "link_popup_smart_defaults_enabled" : true
+  },
+  "passive_captcha" : {
+    "rqdata" : null,
+    "captcha_provider_payload" : null,
+    "site_key" : "20000000-ffff-ffff-ffff-000000000002",
+    "token_timeout_seconds" : 1770
+  },
+  "payment_method_specs" : [
+    {
+      "async" : false,
+      "fields" : [
+        {
+          "type" : "name",
+          "api_path" : {
+            "v1" : "billing_details[name]"
+          }
+        },
+        {
+          "for" : "email",
+          "type" : "placeholder"
+        },
+        {
+          "for" : "phone",
+          "type" : "placeholder"
+        },
+        {
+          "for" : "billing_address",
+          "type" : "placeholder"
+        },
+        {
+          "for" : "sepa_mandate",
+          "type" : "placeholder"
+        }
+      ],
+      "selector_icon" : {
+        "light_theme_png" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-bancontact@3x-5b31be92d86c437286200810aeaa49ce.png",
+        "light_theme_svg" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-bancontact-c6d62da104212dacefee6ea12a070237.svg"
+      },
+      "type" : "bancontact",
+      "next_action_spec" : {
+        "confirm_response_status_specs" : {
+          "requires_action" : {
+            "type" : "redirect_to_url"
+          }
+        },
+        "post_confirm_handling_pi_status_specs" : {
+          "requires_action" : {
+            "type" : "canceled"
+          },
+          "succeeded" : {
+            "type" : "finished"
+          }
+        }
+      }
+    },
+    {
+      "async" : false,
+      "type" : "card",
+      "fields" : [
+
+      ]
+    },
+    {
+      "async" : false,
+      "fields" : [
+        {
+          "type" : "name",
+          "api_path" : {
+            "v1" : "billing_details[name]"
+          }
+        },
+        {
+          "for" : "email",
+          "type" : "placeholder"
+        },
+        {
+          "for" : "phone",
+          "type" : "placeholder"
+        },
+        {
+          "items" : [
+            {
+              "asset" : {
+                "light_theme_svg" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-eps-bank-arzteundapothekerbank-54dfe22d218d05489515cb78c3fb7293.svg"
+              },
+              "api_value" : "arzte_und_apotheker_bank",
+              "display_text" : "Ärzte- und Apothekerbank"
+            },
+            {
+              "asset" : {
+                "light_theme_svg" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-eps-bank-austriananadibankag-d9cbe65cc043ee22bb078f865fb5cf01.svg"
+              },
+              "api_value" : "austrian_anadi_bank_ag",
+              "display_text" : "Austrian Anadi Bank AG"
+            },
+            {
+              "asset" : {
+                "light_theme_svg" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-eps-bank-bankaustria-fe84d8c11dc43988408208dbaf0a1fc3.svg"
+              },
+              "api_value" : "bank_austria",
+              "display_text" : "Bank Austria"
+            },
+            {
+              "asset" : {
+                "light_theme_svg" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-eps-bank-bank99ag-5ed15d6ab0bbccbf07dbe579e9097e51.svg"
+              },
+              "api_value" : "brull_kallmus_bank_ag",
+              "display_text" : "bank99 AG"
+            },
+            {
+              "asset" : {
+                "light_theme_svg" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-eps-bank-bankhauscarlspangler-71a58bb413b4af5b3d970ff07e4f0c66.svg"
+              },
+              "api_value" : "bankhaus_carl_spangler",
+              "display_text" : "Bankhaus Carl Spängler & Co.AG"
+            },
+            {
+              "asset" : {
+                "light_theme_svg" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-eps-bank-bankhausschelhammerundschatteraag-e7b6ed2d3034e85793bcbd9022833394.svg"
+              },
+              "api_value" : "bankhaus_schelhammer_und_schattera_ag",
+              "display_text" : "Bankhaus Schelhammer & Schattera AG"
+            },
+            {
+              "asset" : {
+                "light_theme_svg" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-eps-bank-bawagpskag-aa2382ad27fbde06c97f96c824dc1167.svg"
+              },
+              "api_value" : "bawag_psk_ag",
+              "display_text" : "BAWAG P.S.K. AG"
+            },
+            {
+              "asset" : {
+                "light_theme_svg" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-eps-bank-bksbankag-c94625cae92400213c38a0607a2b8b2a.svg"
+              },
+              "api_value" : "bks_bank_ag",
+              "display_text" : "BKS Bank AG"
+            },
+            {
+              "asset" : {
+                "light_theme_svg" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-eps-bank-btvvierlanderbank-4a757724316719aa0326b9be29d6b88e.svg"
+              },
+              "api_value" : "btv_vier_lander_bank",
+              "display_text" : "BTV VIER LÄNDER BANK"
+            },
+            {
+              "asset" : {
+                "light_theme_svg" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-eps-bank-capitalbankgrawegruppeag-8c8bb8bfbb992fc8d4f092aaf821f740.svg"
+              },
+              "api_value" : "capital_bank_grawe_gruppe_ag",
+              "display_text" : "Capital Bank Grawe Gruppe AG"
+            },
+            {
+              "asset" : {
+                "light_theme_svg" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-eps-bank-dolomitenbank-7b32872b66d7fcc8c366125b76597b81.svg"
+              },
+              "api_value" : "dolomitenbank",
+              "display_text" : "Dolomitenbank"
+            },
+            {
+              "asset" : {
+                "light_theme_svg" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-eps-bank-easybankag-3702d6a4ad568d5ca9872c9a6c9a7c89.svg"
+              },
+              "api_value" : "easybank_ag",
+              "display_text" : "Easybank AG"
+            },
+            {
+              "asset" : {
+                "light_theme_svg" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-eps-bank-erstebankundsparkassen-5165ed0df1fe830d6a9e3c3aa6383cf0.svg"
+              },
+              "api_value" : "erste_bank_und_sparkassen",
+              "display_text" : "Erste Bank und Sparkassen"
+            },
+            {
+              "asset" : {
+                "light_theme_svg" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-eps-bank-hypoalpeadriabankinternationalag-b68173e96fa4efd1ee159c3884f99599.svg"
+              },
+              "api_value" : "hypo_alpeadriabank_international_ag",
+              "display_text" : "Hypo Alpe-Adria-Bank International AG"
+            },
+            {
+              "asset" : {
+                "light_theme_svg" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-eps-bank-hyponoelbfurniederosterreichuwien-928d49af8c6bd23654f8e5dbfc682428.svg"
+              },
+              "api_value" : "hypo_noe_lb_fur_niederosterreich_u_wien",
+              "display_text" : "HYPO NOE LB für Niederösterreich u. Wien"
+            },
+            {
+              "asset" : {
+                "light_theme_svg" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-eps-bank-hypooberosterreichsalzburgsteiermark-09bb03a07b21d84a3ab577236c8ca960.svg"
+              },
+              "api_value" : "hypo_oberosterreich_salzburg_steiermark",
+              "display_text" : "HYPO Oberösterreich,Salzburg,Steiermark"
+            },
+            {
+              "asset" : {
+                "light_theme_svg" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-eps-bank-hypotirolbankag-d6a2d01b559bf92437abfe705e473851.svg"
+              },
+              "api_value" : "hypo_tirol_bank_ag",
+              "display_text" : "Hypo Tirol Bank AG"
+            },
+            {
+              "asset" : {
+                "light_theme_svg" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-eps-bank-hypovorarlbergbankag-f7169eb51a2cc855cd9967b4765f2e03.svg"
+              },
+              "api_value" : "hypo_vorarlberg_bank_ag",
+              "display_text" : "Hypo Vorarlberg Bank AG"
+            },
+            {
+              "asset" : {
+                "light_theme_svg" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-eps-bank-hypobankburgenlandaktiengesellschaft-5a8a3e2b618f34767353ede8e41d498a.svg"
+              },
+              "api_value" : "hypo_bank_burgenland_aktiengesellschaft",
+              "display_text" : "HYPO-BANK BURGENLAND Aktiengesellschaft"
+            },
+            {
+              "asset" : {
+                "light_theme_svg" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-eps-bank-marchfelderbank-8914616ba961a10c9461346646255095.svg"
+              },
+              "api_value" : "marchfelder_bank",
+              "display_text" : "Marchfelder Bank"
+            },
+            {
+              "asset" : {
+                "light_theme_svg" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-eps-bank-oberbankag-a8f9da612037c4dc417ec6e368b4cbf0.svg"
+              },
+              "api_value" : "oberbank_ag",
+              "display_text" : "Oberbank AG"
+            },
+            {
+              "asset" : {
+                "light_theme_svg" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-eps-bank-raiffeisenbankengruppeosterreich-d8adcd6f7ed6468b08c583c22fc7c072.svg"
+              },
+              "api_value" : "raiffeisen_bankengruppe_osterreich",
+              "display_text" : "Raiffeisen Bankengruppe Österreich"
+            },
+            {
+              "asset" : {
+                "light_theme_svg" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-eps-bank-schoellerbankag-2bf2fd9cc71ee4d142d0a547609769c2.svg"
+              },
+              "api_value" : "schoellerbank_ag",
+              "display_text" : "Schoellerbank AG"
+            },
+            {
+              "asset" : {
+                "light_theme_svg" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-eps-bank-spardabankwien-fe76e22a31966869e891a1258ce66f7f.svg"
+              },
+              "api_value" : "sparda_bank_wien",
+              "display_text" : "Sparda-Bank Wien"
+            },
+            {
+              "asset" : {
+                "light_theme_svg" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-eps-bank-volksbankgruppe-5ec62a271b1f57ec3f4c68542da6d7e2.svg"
+              },
+              "api_value" : "volksbank_gruppe",
+              "display_text" : "Volksbank Gruppe"
+            },
+            {
+              "asset" : {
+                "light_theme_svg" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-eps-bank-volkskreditbankag-b5ad14630e0af0e933703bb8c281daff.svg"
+              },
+              "api_value" : "volkskreditbank_ag",
+              "display_text" : "Volkskreditbank AG"
+            },
+            {
+              "asset" : {
+                "light_theme_svg" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-eps-bank-vrbankbraunau-ba031bc773f5f259df61280ed957dc27.svg"
+              },
+              "api_value" : "vr_bank_braunau",
+              "display_text" : "VR-Bank Braunau"
+            }
+          ],
+          "type" : "selector",
+          "translation_id" : "upe.labels.eps.bank",
+          "api_path" : {
+            "v1" : "eps[bank]"
+          }
+        },
+        {
+          "for" : "billing_address",
+          "type" : "placeholder"
+        }
+      ],
+      "selector_icon" : {
+        "light_theme_png" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-eps@3x-a0caea1adef8d0aebc0cc61c9d5fa261.png",
+        "light_theme_svg" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-eps-a79e75517cae239fc4ddfa2fbdb73b46.svg"
+      },
+      "type" : "eps",
+      "next_action_spec" : {
+        "confirm_response_status_specs" : {
+          "requires_action" : {
+            "type" : "redirect_to_url"
+          }
+        },
+        "post_confirm_handling_pi_status_specs" : {
+          "requires_action" : {
+            "type" : "canceled"
+          },
+          "succeeded" : {
+            "type" : "finished"
+          }
+        }
+      }
+    },
+    {
+      "async" : false,
+      "fields" : [
+        {
+          "type" : "name",
+          "api_path" : {
+            "v1" : "billing_details[name]"
+          }
+        },
+        {
+          "for" : "email",
+          "type" : "placeholder"
+        },
+        {
+          "for" : "phone",
+          "type" : "placeholder"
+        },
+        {
+          "items" : [
+            {
+              "display_text" : "ABN Amro",
+              "api_value" : "abn_amro"
+            },
+            {
+              "display_text" : "ASN Bank",
+              "api_value" : "asn_bank"
+            },
+            {
+              "display_text" : "bunq B.V.",
+              "api_value" : "bunq"
+            },
+            {
+              "display_text" : "ING Bank",
+              "api_value" : "ing"
+            },
+            {
+              "display_text" : "Knab",
+              "api_value" : "knab"
+            },
+            {
+              "display_text" : "N26",
+              "api_value" : "n26"
+            },
+            {
+              "display_text" : "Nationale-Nederlanden",
+              "api_value" : "nn"
+            },
+            {
+              "display_text" : "Rabobank",
+              "api_value" : "rabobank"
+            },
+            {
+              "display_text" : "RegioBank",
+              "api_value" : "regiobank"
+            },
+            {
+              "display_text" : "Revolut",
+              "api_value" : "revolut"
+            },
+            {
+              "display_text" : "SNS Bank",
+              "api_value" : "sns_bank"
+            },
+            {
+              "display_text" : "Triodos Bank",
+              "api_value" : "triodos_bank"
+            },
+            {
+              "display_text" : "Van Lanschot",
+              "api_value" : "van_lanschot"
+            },
+            {
+              "display_text" : "Yoursafe",
+              "api_value" : "yoursafe"
+            }
+          ],
+          "type" : "selector",
+          "translation_id" : "upe.labels.ideal.bank",
+          "api_path" : {
+            "v1" : "ideal[bank]"
+          }
+        },
+        {
+          "for" : "billing_address",
+          "type" : "placeholder"
+        },
+        {
+          "for" : "sepa_mandate",
+          "type" : "placeholder"
+        }
+      ],
+      "selector_icon" : {
+        "light_theme_png" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-ideal-wero-b3ee04b8148cf8faf33e1bc78baea615.png",
+        "light_theme_svg" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-ideal-wero-068ca19e74f4f6cf7365d64e0e3b8581.svg"
+      },
+      "type" : "ideal",
+      "next_action_spec" : {
+        "confirm_response_status_specs" : {
+          "requires_action" : {
+            "type" : "redirect_to_url"
+          }
+        },
+        "post_confirm_handling_pi_status_specs" : {
+          "requires_action" : {
+            "type" : "canceled"
+          },
+          "succeeded" : {
+            "type" : "finished"
+          }
+        }
+      }
+    },
+    {
+      "async" : false,
+      "fields" : [
+        {
+          "type" : "name",
+          "api_path" : {
+            "v1" : "billing_details[name]"
+          }
+        },
+        {
+          "type" : "email",
+          "api_path" : {
+            "v1" : "billing_details[email]"
+          }
+        },
+        {
+          "for" : "phone",
+          "type" : "placeholder"
+        },
+        {
+          "items" : [
+            {
+              "asset" : {
+                "light_theme_svg" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-p24-bank-aliorbank-83078b08db665c7f23f48a6f41c083d1.svg"
+              },
+              "api_value" : "alior_bank",
+              "display_text" : "Alior Bank"
+            },
+            {
+              "asset" : {
+                "light_theme_svg" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-p24-bank-bankmillennium-29e172fa0c59d6b3824bb3e3df83e702.svg"
+              },
+              "api_value" : "bank_millennium",
+              "display_text" : "Bank Millenium"
+            },
+            {
+              "asset" : {
+                "light_theme_svg" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-p24-bank-banknowybfg-f00c9cdd68d2ac24116009e88af0a0d4.svg"
+              },
+              "api_value" : "bank_nowy_bfg_sa",
+              "display_text" : "Bank Nowy BFG S.A."
+            },
+            {
+              "asset" : {
+                "light_theme_svg" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-p24-bank-bankpekao-1ea9f1e5f862ad15cbdec3adab8200d1.svg"
+              },
+              "api_value" : "bank_pekao_sa",
+              "display_text" : "Bank PEKAO S.A"
+            },
+            {
+              "asset" : {
+                "light_theme_svg" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-p24-bank-bankspotdzielcze-c4e65e2011be1d3a6e096c1b3f8f70d5.svg"
+              },
+              "api_value" : "banki_spbdzielcze",
+              "display_text" : "Bank spółdzielczy"
+            },
+            {
+              "asset" : {
+                "light_theme_svg" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-p24-bank-blik-aa0f0abfcba6180e6522dba9330a3411.svg"
+              },
+              "api_value" : "blik",
+              "display_text" : "BLIK"
+            },
+            {
+              "asset" : {
+                "light_theme_svg" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-p24-bank-bnpparibas-592de9163c8e08d89254695e05be9133.svg"
+              },
+              "api_value" : "bnp_paribas",
+              "display_text" : "BNP Paribas"
+            },
+            {
+              "asset" : {
+                "light_theme_svg" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-p24-bank-bosbank-c05ae00e54e0976c5c83021c8ef12b47.svg"
+              },
+              "api_value" : "boz",
+              "display_text" : "BOZ"
+            },
+            {
+              "asset" : {
+                "light_theme_svg" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-p24-bank-citihandlowy-43f79510fb9c5bd2ccaa9b4289154f5c.svg"
+              },
+              "api_value" : "citi_handlowy",
+              "display_text" : "CitiHandlowy"
+            },
+            {
+              "asset" : {
+                "light_theme_svg" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-p24-bank-creditagricole-49a52d53ca7d129208bb07e3be740900.svg"
+              },
+              "api_value" : "credit_agricole",
+              "display_text" : "Credit Agricole"
+            },
+            {
+              "asset" : {
+                "light_theme_svg" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-p24-bank-pocztowy24-849d60c36a927b061f739b6ced7ab67e.svg"
+              },
+              "api_value" : "etransfer_pocztowy24",
+              "display_text" : "e-Transfer Pocztowy24"
+            },
+            {
+              "asset" : {
+                "light_theme_svg" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-p24-bank-getinbank-d48abcc84cfdfe4100153db89c34d226.svg"
+              },
+              "api_value" : "getin_bank",
+              "display_text" : "Getin Bank"
+            },
+            {
+              "asset" : {
+                "light_theme_svg" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-p24-bank-ideabank-774cf4d22061e16cd9f8216326b90db7.svg"
+              },
+              "api_value" : "ideabank",
+              "display_text" : "IdeaBank"
+            },
+            {
+              "asset" : {
+                "light_theme_svg" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-p24-bank-ing-f3b364dd0f56ed968da59b4a18c347bf.svg"
+              },
+              "api_value" : "ing",
+              "display_text" : "ING"
+            },
+            {
+              "asset" : {
+                "light_theme_svg" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-p24-bank-inteligo-c42cdfa3db398acc0d5dc59d24f80b4d.svg"
+              },
+              "api_value" : "inteligo",
+              "display_text" : "inteligo"
+            },
+            {
+              "asset" : {
+                "light_theme_svg" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-p24-bank-mbank-441562a54c6eb5028101fd9f0c4419c8.svg"
+              },
+              "api_value" : "mbank_mtransfer",
+              "display_text" : "mBank"
+            },
+            {
+              "asset" : {
+                "light_theme_svg" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-p24-bank-nestbank-84e85dc22072b4a30b70156e7d25acc3.svg"
+              },
+              "api_value" : "nest_przelew",
+              "display_text" : "Nest Przelew"
+            },
+            {
+              "asset" : {
+                "light_theme_svg" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-p24-bank-noblebank-08ee620e6b380a6d6d4ac391ad7fb812.svg"
+              },
+              "api_value" : "noble_pay",
+              "display_text" : "Noble Pay"
+            },
+            {
+              "asset" : {
+                "light_theme_svg" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-p24-bank-ipko-c897d7dc0a1bc338afcf84de0dc45a08.svg"
+              },
+              "api_value" : "pbac_z_ipko",
+              "display_text" : "Płać z iPKO (PKO BP)"
+            },
+            {
+              "asset" : {
+                "light_theme_svg" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-p24-bank-plusbank-64e1fd10a7508da5d00ad37ea336cf12.svg"
+              },
+              "api_value" : "plus_bank",
+              "display_text" : "Plus Bank"
+            },
+            {
+              "asset" : {
+                "light_theme_svg" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-p24-bank-santander-6f1e2840e854b68434e03954f4c98c8f.svg"
+              },
+              "api_value" : "santander_przelew24",
+              "display_text" : "Santander"
+            },
+            {
+              "asset" : {
+                "light_theme_svg" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-p24-bank-toyotabank-8e408e88dd6ed537640c72382aa22cb4.svg"
+              },
+              "api_value" : "toyota_bank",
+              "display_text" : "Toyota Bank"
+            },
+            {
+              "asset" : {
+                "light_theme_svg" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-p24-bank-velobank-ebb8934e262714be37ab7a0bca238d51.svg"
+              },
+              "api_value" : "velobank",
+              "display_text" : "VeloBank"
+            },
+            {
+              "asset" : {
+                "light_theme_svg" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-p24-bank-volkswagenbank-d8d9c65e792c7eb2e7d787dff3bffed6.svg"
+              },
+              "api_value" : "volkswagen_bank",
+              "display_text" : "Volkswagen Bank"
+            }
+          ],
+          "type" : "selector",
+          "translation_id" : "upe.labels.p24.bank",
+          "api_path" : {
+            "v1" : "p24[bank]"
+          }
+        },
+        {
+          "for" : "billing_address",
+          "type" : "placeholder"
+        }
+      ],
+      "selector_icon" : {
+        "light_theme_png" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-p24@3x-2aad3ef3d17848230d8152ecca7b46d6.png",
+        "light_theme_svg" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-p24-680f81150a94ae5da954d8bde657486e.svg"
+      },
+      "type" : "p24",
+      "next_action_spec" : {
+        "confirm_response_status_specs" : {
+          "requires_action" : {
+            "type" : "redirect_to_url"
+          }
+        },
+        "post_confirm_handling_pi_status_specs" : {
+          "requires_action" : {
+            "type" : "canceled"
+          },
+          "succeeded" : {
+            "type" : "finished"
+          }
+        }
+      }
+    },
+    {
+      "async" : false,
+      "fields" : [
+
+      ],
+      "selector_icon" : {
+        "light_theme_png" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-pay-by-bank.png",
+        "light_theme_svg" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-pay_by_bank-8556bc310241a5152eacaf5f77d8cf71.svg"
+      },
+      "type" : "pay_by_bank",
+      "next_action_spec" : {
+        "confirm_response_status_specs" : {
+          "requires_action" : {
+            "type" : "in_context_completion",
+            "url" : {
+              "intent_path" : "next_action[use_stripe_sdk][url]"
+            }
+          }
+        }
+      }
+    },
+    {
+      "async" : true,
+      "fields" : [
+        {
+          "type" : "name",
+          "api_path" : {
+            "v1" : "billing_details[name]"
+          }
+        },
+        {
+          "type" : "email",
+          "api_path" : {
+            "v1" : "billing_details[email]"
+          }
+        },
+        {
+          "for" : "phone",
+          "type" : "placeholder"
+        },
+        {
+          "type" : "iban",
+          "api_path" : {
+            "v1" : "sepa_debit[iban]"
+          }
+        },
+        {
+          "type" : "billing_address",
+          "allowed_country_codes" : null
+        },
+        {
+          "type" : "sepa_mandate"
+        }
+      ],
+      "selector_icon" : {
+        "light_theme_png" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-sepa@3x-2f1a402961484c52aa2880acad84afcb.png",
+        "light_theme_svg" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-sepa-debit-e88864f53237730b8cd73f85cf8bbadf.svg"
+      },
+      "type" : "sepa_debit",
+      "next_action_spec" : {
+        "confirm_response_status_specs" : {
+          "succeeded" : {
+            "type" : "finished"
+          },
+          "processing" : {
+            "type" : "finished"
+          }
+        }
+      }
+    }
+  ],
+  "paypal_express_config" : {
+    "client_id" : null,
+    "client_token" : null,
+    "paypal_merchant_id" : null
+  },
+  "prefill_selectors" : {
+    "default_values" : {
+      "email" : [
+
+      ],
+      "merchant_provides_default_values_on_update" : true
+    },
+    "default_values_exp" : {
+      "merchant_provides_default_values_on_update" : true,
+      "selectors_by_surface" : {
+
+      }
+    }
+  },
+  "unactivated_payment_method_types" : [
+    "pay_by_bank",
+    "ideal",
+    "bancontact",
+    "sepa_debit",
+    "p24",
+    "eps"
+  ],
+  "unverified_payment_methods_on_domain" : [
+    "apple_pay"
+  ],
+  "order" : null,
+  "link_purchase_protections_data" : {
+    "type" : null,
+    "is_eligible" : false
+  },
+  "apple_pay_merchant_token_webhook_url" : "https:\/\/pm-hooks.stripe.com\/apple_pay\/merchant_token\/pDq7tf9uieoQWMVJixFwuOve\/acct_1KmkHbGoesj9fw9Q\/",
+  "blocked_card_brands" : [
+
+  ],
+  "customer" : {
+    "payment_methods" : [
+      {
+        "object" : "payment_method",
+        "sepa_debit" : {
+          "fingerprint" : "TadlYGPrD03gCeZx",
+          "country" : "AT",
+          "last4" : "3201",
+          "bank_code" : "19043",
+          "generated_from" : {
+            "setup_attempt" : null,
+            "charge" : null
+          },
+          "branch_code" : ""
+        },
+        "id" : "pm_1UIH7TGoesj9fw9QKsohjrLa",
+        "billing_details" : {
+          "email" : "email@email.com",
+          "phone" : "555-555-5555",
+          "tax_id" : null,
+          "name" : "Isaac Asimov",
+          "address" : {
+            "state" : null,
+            "country" : "GB",
+            "line2" : null,
+            "city" : "London",
+            "line1" : "Stripe, 7th Floor The Bower Warehouse",
+            "postal_code" : "EC1V 9NR"
+          }
+        },
+        "livemode" : false,
+        "created" : 1790035175,
+        "allow_redisplay" : "unspecified",
+        "shared_payment_granted_token" : null,
+        "customer" : "cus_VIst1MRJmaqqXf",
+        "type" : "sepa_debit",
+        "customer_account" : null
+      }
+    ],
+    "payment_methods_with_link_details" : [
+      {
+        "payment_method" : {
+          "object" : "payment_method",
+          "sepa_debit" : {
+            "fingerprint" : "TadlYGPrD03gCeZx",
+            "country" : "AT",
+            "last4" : "3201",
+            "bank_code" : "19043",
+            "generated_from" : {
+              "setup_attempt" : null,
+              "charge" : null
+            },
+            "branch_code" : ""
+          },
+          "id" : "pm_1UIH7TGoesj9fw9QKsohjrLa",
+          "billing_details" : {
+            "email" : "email@email.com",
+            "phone" : "555-555-5555",
+            "tax_id" : null,
+            "name" : "Isaac Asimov",
+            "address" : {
+              "state" : null,
+              "country" : "GB",
+              "line2" : null,
+              "city" : "London",
+              "line1" : "Stripe, 7th Floor The Bower Warehouse",
+              "postal_code" : "EC1V 9NR"
+            }
+          },
+          "livemode" : false,
+          "created" : 1790035175,
+          "allow_redisplay" : "unspecified",
+          "shared_payment_granted_token" : null,
+          "customer" : "cus_VIst1MRJmaqqXf",
+          "type" : "sepa_debit",
+          "customer_account" : null
+        },
+        "link_payment_details" : null,
+        "is_link_origin" : false,
+        "deduplication_key" : "a2214139abd58b7561ef48979d8e8eec50b1f573a2ed2eb8a8fe4f5601624e86"
+      }
+    ],
+    "card_art" : [
+
+    ],
+    "default_payment_method" : null,
+    "customer_session" : {
+      "object" : "customer_session",
+      "api_key_expiry" : 1790038778,
+      "id" : "cuss_1UIH7TGoesj9fw9QOTbQge77",
+      "livemode" : false,
+      "components" : {
+        "payment_element" : {
+          "enabled" : false,
+          "features" : null
+        },
+        "buy_button" : {
+          "enabled" : false
+        },
+        "customer_portal" : {
+          "enabled" : false
+        },
+        "customer_sheet" : {
+          "enabled" : false,
+          "features" : null
+        },
+        "tax_id_element" : {
+          "enabled" : false,
+          "features" : {
+            "tax_id_redisplay" : "disabled",
+            "tax_id_save" : "disabled"
+          }
+        },
+        "pricing_table" : {
+          "enabled" : false
+        },
+        "active_entitlements" : {
+          "enabled" : false
+        },
+        "mobile_payment_element" : {
+          "enabled" : true,
+          "features" : {
+            "payment_method_save_allow_redisplay_override" : null,
+            "payment_method_redisplay" : "enabled",
+            "payment_method_save" : "enabled",
+            "payment_method_set_as_default" : "disabled",
+            "payment_method_allow_redisplay_filters" : [
+              "unspecified",
+              "limited",
+              "always"
+            ],
+            "payment_method_remove" : "enabled",
+            "payment_method_remove_last" : "enabled"
+          }
+        }
+      },
+      "customer" : "cus_VIst1MRJmaqqXf",
+      "api_key" : "ek_test_YWNjdF8xS21rSGJHb2VzajlmdzlRLG1JVW9ZYkk2ZHBUc3BjaWFnUlJMbkNDdXpBWDluNmM_00e4K1TEjh"
+    }
+  },
+  "klarna_express_config" : {
+    "klarna_mid" : null
+  },
+  "lpm_killswitches" : {
+    "express_checkout" : [
+
+    ],
+    "payment_element" : [
+
+    ]
+  },
+  "business_name" : "GB Mobile Account",
+  "ordered_payment_method_types_and_wallets" : [
+    "card",
+    "apple_pay",
+    "card_wallet_link",
+    "pay_by_bank",
+    "ideal",
+    "google_pay",
+    "bancontact",
+    "sepa_debit",
+    "p24",
+    "eps"
+  ],
+  "customer_error" : null
+}

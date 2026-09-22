@@ -219,7 +219,6 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
     }
 
     func testBLIKConfirmFlows() async throws {
-        // Use a merchant available in both backends; the playground has no Belgium mapping.
         try await _testConfirm(intentKinds: [.paymentIntent], currency: "PLN", paymentMethodType: .blik, merchantCountry: .FR,
                                expectedHierarchy: ExpectedFormHierarchy.BLIK.paymentIntent) { form in
             form.getTextFieldElement("BLIK code").setText("123456")
@@ -494,8 +493,8 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
             return
         }
 
-        // Update the API client based on the merchant country
-        let apiClient = STPAPIClient(publishableKey: MerchantCountry.US.publishableKey)
+        let merchantCountry = MerchantCountry.GB
+        let apiClient = STPAPIClient(publishableKey: merchantCountry.publishableKey)
 
         // Confirm saved SEPA with every confirm variation
         // Use a fresh customer per intent kind to avoid lock contention on the Customer object
@@ -504,7 +503,7 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
             // Create customer session for confirmation token support
             let customerAndCustomerSession = try await STPTestingAPIClient.shared().fetchCustomerAndCustomerSessionClientSecret(
                 customerID: nil,
-                merchantCountry: "us",
+                merchantCountry: merchantCountry.rawValue,
                 paymentMethodSave: true
             )
             let customer = customerAndCustomerSession.customer
@@ -513,7 +512,7 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
             let savedSepaPM = try await apiClient.createPaymentMethod(with: ._testSEPA())
             _ = try await STPTestingAPIClient.shared.fetchSetupIntent(
                 types: ["sepa_debit"],
-                merchantCountry: "us",
+                merchantCountry: merchantCountry.rawValue,
                 paymentMethodID: savedSepaPM.stripeId,
                 customerID: customer,
                 confirm: true,
@@ -542,23 +541,12 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                 return config
             }()
 
-            for testIntent in try await makeTestIntents(intentKind: intentKind, currency: "eur", paymentMethod: .SEPADebit, merchantCountry: .US, customer: customer, apiClient: apiClient) {
+            for testIntent in try await makeTestIntents(intentKind: intentKind, currency: "eur", paymentMethod: .SEPADebit, merchantCountry: merchantCountry, customer: customer, apiClient: apiClient) {
                 let description = testIntent.description
                 let intent = testIntent.intent
-                var configuration = configuration
-                let apiClient = testIntent.checkoutAPIClient ?? apiClient
-                configuration.apiClient = apiClient
-                let paymentMethod: STPPaymentMethod
                 if case .checkout(let session) = intent {
-                    // Checkout uses a different playground merchant, so its saved method must belong to that account.
-                    configuration.customer = nil
-                    paymentMethod = try await apiClient.createPaymentMethod(with: ._testSEPA())
-                    try await STPTestingAPIClient.shared.attachCheckoutPaymentMethod(
-                        paymentMethod.stripeId,
-                        to: XCTUnwrap(session.customerId)
-                    )
-                } else {
-                    paymentMethod = savedSepaPM
+                    XCTAssertEqual(testIntent.checkoutAPIClient?.publishableKey, apiClient.publishableKey)
+                    XCTAssertEqual(session.customerId, customer)
                 }
 
                 // Create elements session with customer configuration for proper ephemeral keys
@@ -585,7 +573,7 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                     testIntent: testIntent,
                     configuration: configuration,
                     elementsSession: elementsSession,
-                    paymentOption: .saved(paymentMethod: paymentMethod, confirmParams: nil),
+                    paymentOption: .saved(paymentMethod: savedSepaPM, confirmParams: nil),
                     paymentHandler: paymentHandler,
                     analyticsHelper: ._testValue()
                 ) { result, _  in
@@ -606,9 +594,6 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
 
     func testKlarnaConfirmFlows() async throws {
         // Use the French merchant shared by both backends so all Klarna flows use the same account.
-        // The backends use different US accounts. The playground US account has
-        // enable_klarna_continue_authorization_on_refresh_calls enabled, which makes refreshing
-        // an unfinished Klarna payment cancel it and surface an authentication failure instead of cancellation.
         try await _testConfirm(intentKinds: [.paymentIntent],
                                currency: "EUR",
                                paymentMethodType: .klarna,
@@ -865,6 +850,7 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
             intentKinds: [.paymentIntent, .paymentIntentWithSetupFutureUsage, .paymentIntentWithPMOSetupFutureUsage, .setupIntent],
             currency: "USD",
             intentPaymentMethodType: .card,
+            merchantCountry: .GB,
             linkFundingSources: [ParsedEnum(.card)],
             makeLinkPaymentMethod: { apiClient in
                 let params = STPPaymentMethodParams._testCardValue(email: "paymentsheet-link-card-confirm-flows@example.com")
@@ -887,14 +873,22 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
             intentKinds: [.paymentIntent, .paymentIntentWithSetupFutureUsage, .paymentIntentWithPMOSetupFutureUsage],
             currency: "USD",
             intentPaymentMethodType: .USBankAccount,
+            merchantCountry: .GB,
             linkFundingSources: [ParsedEnum(.bankAccount)],
             makeLinkPaymentMethod: { apiClient in
-                try await apiClient.createPaymentMethod(
-                    with: ._testUSBankAccountValue(
-                        name: "Link Bank Test",
-                        email: "paymentsheet-link-bank-confirm-flows@example.com"
-                    )
+                let params = STPPaymentMethodParams._testUSBankAccountValue(
+                    name: "Link Bank Test",
+                    email: "paymentsheet-link-bank-confirm-flows@example.com"
                 )
+                // International ACH requires the US account holder's billing address.
+                let address = STPPaymentMethodAddress()
+                address.line1 = "354 Oyster Point Blvd"
+                address.city = "South San Francisco"
+                address.state = "CA"
+                address.postalCode = "94080"
+                address.country = "US"
+                params.billingDetails?.address = address
+                return try await apiClient.createPaymentMethod(with: params)
             }
         )
     }
@@ -1319,22 +1313,12 @@ extension PaymentSheetLPMConfirmFlowTests {
                 intents.append(TestIntent("Deferred PaymentIntent - client side confirmation", makeDeferredIntent(deferredCSC)))
             }
             if shouldTest(.checkoutSession) {
-                // CI and playground maintain separate merchant mappings; customers cannot cross accounts.
-                let checkoutCustomer: String?
-                if customer != nil {
-                    checkoutCustomer = try await STPTestingAPIClient.shared.createCheckoutCustomer(
-                        email: "lpm-confirm@example.com",
-                        merchantCountry: merchantCountry.rawValue
-                    )
-                } else {
-                    checkoutCustomer = nil
-                }
                 let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession(
                     types: paymentMethodTypes,
                     currency: currency,
                     amount: amount,
                     merchantCountry: merchantCountry.rawValue,
-                    customerID: checkoutCustomer
+                    customerID: customer
                 )
                 let csApiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
                 csApiClient.betas = apiClient.betas
@@ -1725,11 +1709,9 @@ extension PaymentSheetLPMConfirmFlowTests {
             for testIntent in intents {
                 let description = testIntent.description
                 let intent = testIntent.intent
-                var configuration = configuration
-                let apiClient = testIntent.checkoutAPIClient ?? apiClient
-                configuration.apiClient = apiClient
-                if testIntent.checkout != nil {
-                    configuration.customer = nil
+                if case .checkout(let session) = intent {
+                    XCTAssertEqual(testIntent.checkoutAPIClient?.publishableKey, apiClient.publishableKey)
+                    XCTAssertEqual(session.customerId, customerAndEphemeralKey.customer)
                 }
                 let linkPaymentMethod = try await makeLinkPaymentMethod(apiClient)
 
