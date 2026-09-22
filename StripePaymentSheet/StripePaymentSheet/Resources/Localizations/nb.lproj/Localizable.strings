@@ -330,6 +330,10 @@
 
 "Tax" = "Avgifter";
 
+"Terms and Conditions" = "Vilkår";
+
+"Terms of Service" = "Tjenestevilkår";
+
 "The IBAN you entered is incomplete." = "IBAN-nummeret du la inn er ufullstendig.";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Du oppga et ugyldig IBAN-nummer, «%@» er ikke en støttet landskode.";

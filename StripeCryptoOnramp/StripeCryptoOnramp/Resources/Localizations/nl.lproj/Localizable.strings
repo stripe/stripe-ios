@@ -1,5 +1,11 @@
 "Debit cards are most likely to be accepted." = "Debitcards worden meestal geaccepteerd.";
 
+"Please try again later." = "Probeer het later nog eens.";
+
+"Submitted for review" = "Ingediend ter controle";
+
+"Tell us about your source of funds" = "Vertel ons over de herkomst van je geld";
+
 "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "Deze app kan niet worden geverifieerd vanwege een attestatiefout. Probeer het later opnieuw of neem contact op met de developer als het probleem zich blijft voordoen.";
 
 "This app couldn't be verified. Contact the app developer for help." = "Deze app kan niet worden geverifieerd. Neem voor hulp contact op met de developer.";
@@ -12,4 +18,12 @@
 
 "This wallet verification request is invalid. Please try again." = "Deze aanvraag voor walletverificatie is ongeldig. Probeer het opnieuw.";
 
+"Upload your proof of address" = "Upload je bewijs van adres";
+
 "We couldn't verify ownership of this wallet. Please try again." = "We konden het eigendom van deze wallet niet verifiëren. Probeer het nog eens.";
+
+"We’re required to confirm your address to enable spending over %@." = "We zijn verplicht om je adres te bevestigen om uitgaven van meer dan %@ mogelijk te maken.";
+
+"We’re required to understand where your funds come from to enable spending over %@." = "We zijn verplicht om te begrijpen waar je geld vandaan komt om uitgaven van meer dan %@ mogelijk te maken.";
+
+"We’re reviewing your documents. We’ll let you know when verification is complete." = "We beoordelen je documenten. We laten het je weten wanneer de verificatie is voltooid.";

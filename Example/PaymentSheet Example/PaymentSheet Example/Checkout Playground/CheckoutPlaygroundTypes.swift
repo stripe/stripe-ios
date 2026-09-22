@@ -155,6 +155,38 @@ enum CheckoutPlayground {
         }
     }
 
+    enum EmailSource: String, CaseIterable, Identifiable, Codable {
+        case none
+        case checkoutSession
+        case customer
+        case local
+
+        var id: String { rawValue }
+
+        var displayName: String {
+            switch self {
+            case .none: return "None"
+            case .checkoutSession: return "Server — Checkout Session"
+            case .customer: return "Server — Customer"
+            case .local: return "Local"
+            }
+        }
+
+        var isServer: Bool { self == .checkoutSession || self == .customer }
+    }
+
+    struct EmailSettings: Codable {
+        var source: EmailSource = .checkoutSession
+        var value = "jenny@example.com"
+
+        var email: String? {
+            let trimmed = value.trimmingCharacters(in: .whitespacesAndNewlines)
+            return source == .none || trimmed.isEmpty ? nil : trimmed
+        }
+
+        var localDefaultEmail: String? { source == .local ? email : nil }
+    }
+
     enum CustomerType: String, CaseIterable, Identifiable, Codable {
         case returning
         case new
@@ -363,6 +395,7 @@ enum CheckoutPlayground {
         var linkMode: LinkMode = .native
         var currency: Currency = .usd
         var customerType: CustomerType = .guest
+        var email: EmailSettings? = .init()
         var cartScenario: CartScenario = .standard
         var shippingAddressCollection = true
         var defaultShippingAddressOption: DefaultShippingAddressOption = .none
