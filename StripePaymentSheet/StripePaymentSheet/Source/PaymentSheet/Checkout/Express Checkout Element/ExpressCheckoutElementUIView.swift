@@ -102,23 +102,41 @@ public final class ExpressCheckoutElementUIView: UIView {
         for buttons: [ExpressCheckoutElement.PaymentMethod],
         layout: ExpressCheckoutElement.Appearance.ButtonLayout
     ) -> [[ExpressCheckoutElement.PaymentMethod]] {
-        guard !buttons.isEmpty else { return [] }
-
-        let maxRows = layout.maxRows ?? buttons.count
-        let maxColumns = layout.maxColumns ?? buttons.count
-        let visibleButtonLimit = maxRows > buttons.count / maxColumns
-            ? buttons.count
-            : maxRows * maxColumns
-        let visibleButtons = Array(buttons.prefix(visibleButtonLimit))
-        let columnsNeeded = visibleButtons.count / maxRows + (visibleButtons.count % maxRows == 0 ? 0 : 1)
-        let columns = min(
-            maxColumns,
-            max(columnsNeeded, 1)
+        let visibleButtonCount = calculateVisibleButtonCount(
+            buttonCount: buttons.count,
+            maxColumns: layout.maxColumns,
+            maxRows: layout.maxRows
         )
+        let columns = calculateColumnCount(
+            buttonCount: visibleButtonCount,
+            maxRows: layout.maxRows
+        )
+        let visibleButtons = Array(buttons.prefix(visibleButtonCount))
 
         return stride(from: 0, to: visibleButtons.count, by: columns).map {
             Array(visibleButtons[$0..<min($0 + columns, visibleButtons.count)])
         }
+    }
+
+    static func calculateVisibleButtonCount(
+        buttonCount: Int,
+        maxColumns: Int?,
+        maxRows: Int?
+    ) -> Int {
+        guard let maxColumns, let maxRows else {
+            return buttonCount
+        }
+        return min(maxRows * maxColumns, buttonCount)
+    }
+
+    static func calculateColumnCount(buttonCount: Int, maxRows: Int?) -> Int {
+        guard buttonCount > 0 else {
+            return 1
+        }
+        guard let maxRows, maxRows < buttonCount else {
+            return 1
+        }
+        return (buttonCount + maxRows - 1) / maxRows
     }
 
     private func makeButton(for paymentMethod: ExpressCheckoutElement.PaymentMethod) -> UIView {
