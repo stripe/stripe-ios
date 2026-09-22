@@ -289,7 +289,50 @@ final class CheckoutUnitTests: XCTestCase {
         XCTAssertEqual(emissionRecorder.loading, [true, false])
     }
 
-// MARK: - Address Override Tests
+    // MARK: - Email Updates
+
+    func testUpdateEmailSetsEmailLocally() async throws {
+        // Given a Checkout Session without a server email
+        let checkout = try await CheckoutController(
+            configuration: CheckoutTestHelpers.makeConfiguration(
+                paymentElementConfiguration: nil,
+                expressCheckoutElementConfiguration: nil
+            )
+        )
+        let recorder = CheckoutEmissionRecorder(checkout)
+
+        // When the merchant updates the email
+        try await checkout.updateEmail("local@example.com")
+
+        // Then Checkout publishes the local email
+        XCTAssertEqual(checkout.session.localState.email, "local@example.com")
+        XCTAssertEqual(checkout.session.email, "local@example.com")
+        XCTAssertEqual(recorder.sessions.count, 1)
+        XCTAssertEqual(recorder.loading, [true, false])
+    }
+
+    func testUpdateEmailClearsEmailLocally() async throws {
+        // Given a Checkout Session with a local email
+        let checkout = try await CheckoutController(
+            configuration: CheckoutTestHelpers.makeConfiguration(
+                paymentElementConfiguration: nil,
+                expressCheckoutElementConfiguration: nil
+            )
+        )
+        try await checkout.updateEmail("local@example.com")
+        let recorder = CheckoutEmissionRecorder(checkout)
+
+        // When the merchant clears the email
+        try await checkout.updateEmail(nil)
+
+        // Then Checkout publishes a Session without an email
+        XCTAssertNil(checkout.session.localState.email)
+        XCTAssertNil(checkout.session.email)
+        XCTAssertEqual(recorder.sessions.count, 1)
+        XCTAssertEqual(recorder.loading, [true, false])
+    }
+
+    // MARK: - Address Override Tests
 
     func testUpdateShippingAddress_noTax_setsLocallyAndEmitsUpdates() async throws {
         let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration())

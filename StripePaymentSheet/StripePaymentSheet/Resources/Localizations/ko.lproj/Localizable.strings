@@ -330,6 +330,10 @@
 
 "Tax" = "세금";
 
+"Terms and Conditions" = "이용 약관";
+
+"Terms of Service" = "서비스 약관";
+
 "The IBAN you entered is incomplete." = "입력한 IBAN이 불완전합니다.";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "입력하신 IBAN이 유효하지 않습니다. “%@”은(는) 지원되는 국가 코드가 아닙니다.";

@@ -72,13 +72,10 @@ extension String.Localized {
         STPLocalizedString("Upload your proof of address", "Heading introducing proof of address collection")
     }
 
-    static func proofOfAddressExplanation(amount: String) -> String {
-        String(
-            format: STPLocalizedString(
-                "We’re required to confirm your address to enable spending over %@.",
-                "Explanation introducing proof of address collection. %@ is a formatted monetary threshold, such as €1,000."
-            ),
-            amount
+    static var proofOfAddressExplanation: String {
+        STPLocalizedString(
+            "We may request proof of address for larger transactions.",
+            "Explanation introducing proof of address collection."
         )
     }
 
@@ -86,13 +83,21 @@ extension String.Localized {
         STPLocalizedString("Tell us about your source of funds", "Heading introducing source of funds collection")
     }
 
-    static func sourceOfFundsExplanation(amount: String) -> String {
-        String(
-            format: STPLocalizedString(
-                "We’re required to understand where your funds come from to enable spending over %@.",
-                "Explanation introducing source of funds collection. %@ is a formatted monetary threshold, such as €1,000."
-            ),
-            amount
+    static var sourceOfFundsExplanation: String {
+        STPLocalizedString(
+            "We may request source of funds for larger transactions.",
+            "Explanation introducing source of funds collection."
+        )
+    }
+
+    static var documentUploadedSuccessfully: String {
+        STPLocalizedString("Document uploaded successfully", "Heading confirming a document was uploaded successfully")
+    }
+
+    static var documentVerificationInBackground: String {
+        STPLocalizedString(
+            "You can continue while we verify your document in the background.",
+            "Message confirming the document was uploaded and the user can continue while verification happens in the background."
         )
     }
 

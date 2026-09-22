@@ -330,6 +330,10 @@
 
 "Tax" = "Vergi";
 
+"Terms and Conditions" = "Şartlar ve Koşullar";
+
+"Terms of Service" = "Hizmet Koşulları";
+
 "The IBAN you entered is incomplete." = "Girdiğiniz IBAN eksik.";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Girdiğiniz IBAN geçersiz, \"%@\" desteklenen bir ülke kodu değil.";
