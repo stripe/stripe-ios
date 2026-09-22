@@ -1,0 +1,44 @@
+/* The text for warning when a debugger is currently attached to the process. */
+"A debugger is attached to the App." = "Mae nodwedd difa chwilod wedi’i chysylltu â’r Ap.";
+
+/* The text for warning when an emulator is being used to run the application. */
+"An emulator is being used to run the App." = "Mae efelychydd yn cael ei ddefnyddio i redeg yr Ap.";
+
+/* The text for the button that cancels the current challenge process. */
+"Cancel" = "Canslo";
+
+/* Accessibility label for expandandable text control to indicate text is hidden. */
+"Collapsed" = "Wedi crebachu";
+
+/* Accessibility label for expandandable text control to indicate that the UI has been expanded and additional text is available. */
+"Expanded" = "Wedi ehangu";
+
+/* Spoken by VoiceOver when the challenge is loading. */
+"Loading" = "Wrthi’n llwytho";
+
+/* The no answer to a yes or no question. */
+"No" = "Na";
+
+/* The title for the challenge response step of an authenticated checkout. */
+"Secure checkout" = "Talu’n ddiogel";
+
+/* Indicates that a button is selected. */
+"Selected" = "Wedi’i ddewis";
+
+/* The text for warning when a device is jailbroken */
+"The device is jailbroken." = "Mae’r ddyfais wedi’i dad-gyfyngu.";
+
+/* The text for warning when the integrity of the SDK has been tampered with */
+"The integrity of the SDK has been tampered." = "Mae rhywbeth wedi ymyrryd ag uniondeb yr SDK.";
+
+/* The text for warning when the SDK is running on an unsupported OS or OS version. */
+"The OS or the OS Version is not supported." = "Does dim modd delio â’r OS na’r Fersiwn OS.";
+
+/* Error description for when a network request times out. English value is as required by UL certification. */
+"Timeout" = "Terfyn amser";
+
+/* Indicates that a button is not selected. */
+"Unselected" = "Heb ddewis";
+
+/* The yes answer to a yes or no question. */
+"Yes" = "Ie";

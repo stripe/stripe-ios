@@ -51,6 +51,10 @@ extension CheckoutController.Session {
         return paymentStatus == .noPaymentRequired
     }
 
+    var amount: Int {
+        return Int(totals.total.minorUnitsAmount)
+    }
+
     /// The currency associated with the session's amounts.
     var activePresentmentCurrency: String? {
         return presentmentDetails?.presentmentCurrency ?? currency
@@ -65,12 +69,6 @@ extension CheckoutController.Session {
     /// - Parameter addressType: Either `"billing"` or `"shipping"`.
     func shouldSendTaxRegion(for addressType: String) -> Bool {
         return automaticTaxEnabled && automaticTaxAddressSource == addressType
-    }
-
-    /// Returns the expected amount for payment-style sessions and `nil` for setup-style sessions.
-    func expectedAmount() -> Int? {
-        guard !noPaymentRequired else { return nil }
-        return Int(totals.total.minorUnitsAmount)
     }
 
     func merchantWillSavePaymentMethod(_ paymentMethodType: STPPaymentMethodType) -> Bool {
@@ -98,60 +96,6 @@ extension CheckoutController.Session {
     }
 }
 
-enum SessionFieldUpdate<Value> {
-    case keepOldValue
-    case newValue(Value?)
-
-    func resolved(currentValue: Value?) -> Value? {
-        switch self {
-        case .keepOldValue:
-            return currentValue
-        case .newValue(let newValue):
-            return newValue
-        }
-    }
-}
-
-extension CheckoutController.Session {
-    /// Apologetic explanation for this method:
-    /// - Situation: Session is immutable, so all mutations must create a new one.
-    /// - Complication: Optional fields need three states here: keep the old value, replace with a non-nil value, or explicitly clear to nil.
-    /// - Resolution: SessionFieldUpdate keeps that distinction visible at call sites instead of relying on double optionals.
-    func makeCopyOverriding(
-        shippingAddress: SessionFieldUpdate<CheckoutController.Session.ShippingAddress> = .keepOldValue,
-        paymentOption: SessionFieldUpdate<CheckoutController.Session.PaymentOptionDisplayData> = .keepOldValue
-    ) -> Self {
-        return Self(
-            id: id,
-            businessName: businessName,
-            currency: currency,
-            presentmentDetails: presentmentDetails,
-            discountAmounts: discountAmounts,
-            email: email,
-            orderSummaryItems: orderSummaryItems,
-            livemode: livemode,
-            minorUnitsAmountDivisor: minorUnitsAmountDivisor,
-            paymentOption: paymentOption.resolved(currentValue: self.paymentOption),
-            shippingAddress: shippingAddress.resolved(currentValue: self.shippingAddress),
-            status: status,
-            tax: tax,
-            taxAmounts: taxAmounts,
-            totals: totals,
-            paymentStatus: paymentStatus,
-            paymentMethodOptions: paymentMethodOptions,
-            customer: customer,
-            savedPaymentMethodsOfferSave: savedPaymentMethodsOfferSave,
-            setupFutureUsage: setupFutureUsage,
-            setupFutureUsageForPaymentMethodType: setupFutureUsageForPaymentMethodType,
-            allowedShippingCountries: allowedShippingCountries,
-            localizedPricesMetas: localizedPricesMetas,
-            exchangeRateMeta: exchangeRateMeta,
-            adaptivePricingActive: adaptivePricingActive,
-            billingAddressCollection: billingAddressCollection,
-            automaticTaxEnabled: automaticTaxEnabled,
-            automaticTaxAddressSource: automaticTaxAddressSource,
-            merchantCountryCode: merchantCountryCode,
-            elementsSession: elementsSession
-        )
-    }
+extension CheckoutController {
+    typealias LocalStateMutation = @MainActor @Sendable (inout Session.LocalState) -> Void
 }

@@ -41,8 +41,14 @@ class IdentityFlowView: UIView {
         )
         static let stackViewSpacing: CGFloat = 8
 
-        static func buttonConfiguration(isPrimary: Bool) -> Button.Configuration {
-            return isPrimary ? .identityPrimary() : .identitySecondary()
+        static func buttonConfiguration(
+            isPrimary: Bool,
+            primaryButtonStyle: IdentityVerificationSheet.Configuration.PrimaryButtonStyle,
+            secondaryButtonStyle: IdentityVerificationSheet.Configuration.SecondaryButtonStyle
+        ) -> Button.Configuration {
+            return isPrimary
+                ? .identityPrimary(style: primaryButtonStyle)
+                : .identitySecondary(style: secondaryButtonStyle)
         }
     }
 
@@ -159,10 +165,18 @@ class IdentityFlowView: UIView {
     /// - Note: This method changes the view hierarchy and activates new
     /// constraints which can affect screen render performance. It should only be
     /// called from a view controller's `init` or `viewDidLoad`.
-    func configure(with viewModel: ViewModel) throws {
+    func configure(
+        with viewModel: ViewModel,
+        primaryButtonStyle: IdentityVerificationSheet.Configuration.PrimaryButtonStyle = .default,
+        secondaryButtonStyle: IdentityVerificationSheet.Configuration.SecondaryButtonStyle = .default
+    ) throws {
         configureHeaderView(with: viewModel.headerViewModel)
         configureContentView(with: viewModel.contentViewModel)
-        configureButtons(with: viewModel.buttons)
+        configureButtons(
+            with: viewModel.buttons,
+            primaryButtonStyle: primaryButtonStyle,
+            secondaryButtonStyle: secondaryButtonStyle
+        )
         try configureButtonTop(with: viewModel.buttonTopContentViewModel)
         flowViewDelegate = viewModel.flowViewDelegate
         if let scrollViewDelegate = viewModel.scrollViewDelegate {
@@ -284,7 +298,11 @@ extension IdentityFlowView {
 // MARK: - Private Helpers: View Configurations
 
 extension IdentityFlowView {
-    fileprivate func configureButtons(with buttonViewModels: [ViewModel.Button]) {
+    fileprivate func configureButtons(
+        with buttonViewModels: [ViewModel.Button],
+        primaryButtonStyle: IdentityVerificationSheet.Configuration.PrimaryButtonStyle,
+        secondaryButtonStyle: IdentityVerificationSheet.Configuration.SecondaryButtonStyle
+    ) {
         // If there are no buttons to display, hide the container view
         guard buttonViewModels.count > 0 else {
             buttonBackgroundView.isHidden = true
@@ -297,7 +315,11 @@ extension IdentityFlowView {
         defer {
             // Configure buttons
             zip(buttonViewModels, buttons).forEach { (viewModel, button) in
-                button.configure(with: viewModel)
+                button.configure(
+                    with: viewModel,
+                    primaryButtonStyle: primaryButtonStyle,
+                    secondaryButtonStyle: secondaryButtonStyle
+                )
             }
 
             // Cache tap actions
@@ -443,11 +465,20 @@ extension StripeUICore.Button {
         return tag
     }
 
-    fileprivate func configure(with viewModel: IdentityFlowView.ViewModel.Button) {
+    fileprivate func configure(
+        with viewModel: IdentityFlowView.ViewModel.Button,
+        primaryButtonStyle: IdentityVerificationSheet.Configuration.PrimaryButtonStyle,
+        secondaryButtonStyle: IdentityVerificationSheet.Configuration.SecondaryButtonStyle
+    ) {
         self.title = viewModel.text
         self.configuration = IdentityFlowView.Style.buttonConfiguration(
-            isPrimary: viewModel.isPrimary
+            isPrimary: viewModel.isPrimary,
+            primaryButtonStyle: primaryButtonStyle,
+            secondaryButtonStyle: secondaryButtonStyle
         )
+        if LiquidGlassDetector.isEnabledInMerchantApp {
+            ios26_applyCapsuleCornerConfiguration()
+        }
         self.isEnabled = viewModel.state == .enabled
         self.isLoading = viewModel.state == .loading
     }
@@ -461,17 +492,26 @@ extension Button.Configuration {
     }
 
     /// The default button configuration.
-    static func identityPrimary() -> Self {
+    static func identityPrimary(style: IdentityVerificationSheet.Configuration.PrimaryButtonStyle = .default) -> Self {
         var configuration: Button.Configuration = .primary()
         configuration.font = buttonFont
         configuration.disabledForegroundColor = .systemGray
+        if case let .custom(backgroundColor, textColor) = style {
+            configuration.backgroundColor = backgroundColor
+            configuration.foregroundColor = textColor
+        }
         return configuration
     }
 
     /// A less prominent button.
-    static func identitySecondary() -> Self {
+    static func identitySecondary(style: IdentityVerificationSheet.Configuration.SecondaryButtonStyle = .default) -> Self {
         var configuration: Button.Configuration = .secondary()
         configuration.font = buttonFont
+        if case let .custom(backgroundColor, textColor) = style {
+            configuration.backgroundColor = backgroundColor
+            configuration.foregroundColor = textColor
+            configuration.disabledBackgroundColor = .secondarySystemFill
+        }
         return configuration
     }
 }

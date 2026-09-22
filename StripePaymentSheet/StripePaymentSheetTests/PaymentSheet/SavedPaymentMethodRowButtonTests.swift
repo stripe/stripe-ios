@@ -158,6 +158,64 @@ final class SavedPaymentMethodRowButtonTests: XCTestCase {
         XCTAssertEqual(sublabel.textLabel.text, "Onelink")
     }
 
+    func testCardArtProgramNameIsShownAsSublabel() {
+        // Given a saved card with card art
+        let sut = SavedPaymentMethodRowButton(
+            paymentMethod: STPPaymentMethod._testCardWithCardArt(),
+            appearance: appearance
+        )
+
+        // Then the last four is the label and the program name sits beneath it
+        XCTAssertEqual(sut.rowButton.label.text, "•••• 4242")
+        let sublabel = sut.rowButton.sublabel as! RowButton.PlainSublabelView
+        XCTAssertEqual(sublabel.textLabel.text, "Test Program")
+    }
+
+    func testNoSublabelWhenCardHasNoCardArt() {
+        // Given a saved card without card art
+        let sut = SavedPaymentMethodRowButton(
+            paymentMethod: mockPaymentMethod,
+            appearance: appearance
+        )
+
+        // Then there is no sublabel
+        let sublabel = sut.rowButton.sublabel as! RowButton.PlainSublabelView
+        XCTAssertFalse(sublabel.hasText)
+    }
+
+    func testLinkSublabelTakesPrecedenceOverCardArtProgramName() {
+        // Given a Link passthrough card that also has card art...
+        let paymentMethod = STPPaymentMethod._testCardWithCardArt()
+        paymentMethod.isLinkOrigin = true
+
+        let sut = SavedPaymentMethodRowButton(
+            paymentMethod: paymentMethod,
+            appearance: appearance
+        )
+
+        // ...then the Link funding details win the sublabel, not the program name
+        XCTAssertEqual(sut.rowButton.label.text, "Link")
+        let sublabel = sut.rowButton.sublabel as! RowButton.PlainSublabelView
+        XCTAssertEqual(sublabel.textLabel.text, "•••• 4242")
+    }
+
+    func testAccessibilityLabelIncludesCardArtProgramName() {
+        // Given a default saved card with card art
+        let paymentMethod = STPPaymentMethod._testCardWithCardArt()
+        let sut = SavedPaymentMethodRowButton(
+            paymentMethod: paymentMethod,
+            appearance: appearance,
+            showDefaultPMBadge: true
+        )
+
+        // Then the program name is announced between the card description and the default badge
+        let accessibilityLabel = (sut.rowButton.accessibilityElements?.first as? UIView)?.accessibilityLabel
+        XCTAssertEqual(
+            accessibilityLabel,
+            "\(paymentMethod.paymentSheetAccessibilityLabel!), Test Program, \(String.Localized.default_text)"
+        )
+    }
+
     func testLinkPassthroughPreservesFundingDetailsInAccessibilityLabel() {
         let paymentMethod = STPPaymentMethod._testCard()
         paymentMethod.isLinkOrigin = true

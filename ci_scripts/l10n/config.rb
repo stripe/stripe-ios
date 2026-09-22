@@ -11,6 +11,7 @@ LANGUAGES = %w[
   bg-BG
   ca-ES
   cs-CZ
+  cy-GB
   da
   de
   el-GR

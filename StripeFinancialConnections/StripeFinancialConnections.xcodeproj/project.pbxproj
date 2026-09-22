@@ -240,6 +240,7 @@
 				"bg-BG",
 				"ca-ES",
 				"cs-CZ",
+				"cy-GB",
 				da,
 				de,
 				"el-GR",
@@ -278,6 +279,8 @@
 				"zh-Hans",
 				"zh-Hant",
 				Base,
+				"nn-NO",
+				th,
 			);
 			mainGroup = 7879CBA341D7E807714A831B;
 			packageReferences = (

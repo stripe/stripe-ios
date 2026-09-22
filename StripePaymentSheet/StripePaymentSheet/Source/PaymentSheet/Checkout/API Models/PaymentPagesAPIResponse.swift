@@ -12,8 +12,8 @@ import Foundation
 
 /// Internal response model for the Payment Pages API endpoints.
 ///
-/// Properties in this model mirror the API payload. Conversion to the public Checkout
-/// representation belongs in `makePublicSession()`.
+/// Properties in this model mirror the API payload. Construction of the public Checkout
+/// representation belongs to `CheckoutController.Session`.
 struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible {
     // TODO: Make this Decodable instead, we don't need _allResponseFieldStorage.
     var _allResponseFieldsStorage: NonEncodableParameters?

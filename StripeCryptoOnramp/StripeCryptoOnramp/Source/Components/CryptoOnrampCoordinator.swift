@@ -107,6 +107,24 @@ protocol CryptoOnrampCoordinatorProtocol {
     @MainActor
     func presentUserAttestation(from viewController: UIViewController) async throws -> UserAttestationResult
 
+    /// Presents the current terms and conditions when acceptance is required.
+    /// Requires an authenticated Link user.
+    ///
+    /// - Parameter viewController: The view controller from which to present the terms and conditions.
+    /// - Returns: A `PartnerTermsResult` indicating whether the user accepted, canceled, or no presentation was required.
+    /// Throws if an authenticated Link user is not available or an API error occurs.
+    @MainActor
+    func presentTermsAndConditionsIfNeeded(from viewController: UIViewController) async throws -> PartnerTermsResult
+
+    /// Presents the current terms of service when acceptance is required.
+    /// Requires an authenticated Link user.
+    ///
+    /// - Parameter viewController: The view controller from which to present the terms of service.
+    /// - Returns: A `PartnerTermsResult` indicating whether the user accepted, canceled, or no presentation was required.
+    /// Throws if an authenticated Link user is not available or an API error occurs.
+    @MainActor
+    func presentTermsOfServiceIfNeeded(from viewController: UIViewController) async throws -> PartnerTermsResult
+
     /// Initiates the KYC verification flow, which displays the user’s currently collected KYC information with the ability to confirm or update the displayed address.
     ///
     /// - Parameters:
@@ -478,6 +496,40 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
             }
         } catch {
             try logAndThrow(error, during: .presentUserAttestation)
+        }
+    }
+
+    @MainActor
+    public func presentTermsAndConditionsIfNeeded(from viewController: UIViewController) async throws -> PartnerTermsResult {
+        analyticsClient.log(.termsAndConditionsStarted)
+        do {
+            let result = try await presentPartnerTermsIfNeeded(
+                declarationType: .transactionTerms,
+                from: viewController
+            )
+            if result == .accepted {
+                analyticsClient.log(.termsAndConditionsCompleted)
+            }
+            return result
+        } catch {
+            try logAndThrow(error, during: .presentTermsAndConditionsIfNeeded)
+        }
+    }
+
+    @MainActor
+    public func presentTermsOfServiceIfNeeded(from viewController: UIViewController) async throws -> PartnerTermsResult {
+        analyticsClient.log(.termsOfServiceStarted)
+        do {
+            let result = try await presentPartnerTermsIfNeeded(
+                declarationType: .termsOfService,
+                from: viewController
+            )
+            if result == .accepted {
+                analyticsClient.log(.termsOfServiceCompleted)
+            }
+            return result
+        } catch {
+            try logAndThrow(error, during: .presentTermsOfServiceIfNeeded)
         }
     }
 
@@ -889,6 +941,59 @@ private extension CryptoOnrampCoordinator {
                     continuation.resume(throwing: error ?? CheckoutError.paymentFailed)
                 @unknown default:
                     continuation.resume(throwing: CheckoutError.unexpectedError)
+                }
+            }
+        }
+    }
+
+    @MainActor
+    private func presentPartnerTermsIfNeeded(
+        declarationType: PartnerDeclarationType,
+        from viewController: UIViewController
+    ) async throws -> PartnerTermsResult {
+        let linkAccountInfo = try await self.linkAccountInfo
+        let terms = try await apiClient.retrievePartnerTerms(
+            declarationType: declarationType,
+            linkAccountInfo: linkAccountInfo
+        )
+
+        switch terms {
+        case .notRequired:
+            return .notRequired
+        case let .required(_, declaration):
+            let onAccept: () async throws -> Void = { [apiClient] in
+                _ = try await apiClient.confirmPartnerTerms(
+                    declarationId: declaration.id,
+                    linkAccountInfo: linkAccountInfo
+                )
+            }
+
+            switch declarationType {
+            case .transactionTerms:
+                let result = try await linkController.presentTermsAndConditions(
+                    html: declaration.html,
+                    appearance: appearance,
+                    from: viewController,
+                    onAccept: onAccept
+                )
+                switch result {
+                case .accepted:
+                    return .accepted
+                case .canceled:
+                    return .canceled
+                }
+            case .termsOfService:
+                let result = try await linkController.presentTermsOfService(
+                    html: declaration.html,
+                    appearance: appearance,
+                    from: viewController,
+                    onAccept: onAccept
+                )
+                switch result {
+                case .accepted:
+                    return .accepted
+                case .canceled:
+                    return .canceled
                 }
             }
         }

@@ -73,7 +73,7 @@ struct CheckoutPlaygroundConfigurationSection: View {
                         .frame(width: 24)
                         .foregroundColor(.blue)
 
-                    TextField("Checkout Endpoint", text: $checkoutEndpoint)
+                    TextField("Backend URL", text: $checkoutEndpoint)
                         .font(.subheadline)
                         .textInputAutocapitalization(.never)
                         .autocorrectionDisabled()
@@ -97,15 +97,25 @@ struct CheckoutPlaygroundConfigurationSection: View {
 }
 
 struct CheckoutPlaygroundLineItemsSection: View {
-    let lineItems: [CheckoutPlayground.LineItemConfig]
+    @Binding var cartScenario: CheckoutPlayground.CartScenario
     let currency: CheckoutPlayground.Currency
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            CheckoutPlayground.SectionHeader(title: "Line Items", icon: "cart.fill")
+            HStack {
+                CheckoutPlayground.SectionHeader(title: "Line Items", icon: "cart.fill")
+                Spacer()
+                Picker("Cart Scenario", selection: $cartScenario) {
+                    ForEach(CheckoutPlayground.CartScenario.allCases) { scenario in
+                        Text(scenario.displayName).tag(scenario)
+                    }
+                }
+                .pickerStyle(.menu)
+                .labelsHidden()
+            }
 
             VStack(spacing: 12) {
-                ForEach(lineItems) { item in
+                ForEach(cartScenario.lineItems) { item in
                     CheckoutPlaygroundLineItemCard(
                         item: item,
                         currency: currency
@@ -191,7 +201,7 @@ struct CheckoutPlaygroundFeaturesSection: View {
                 CheckoutPlayground.ToggleRow(
                     title: "Collect Shipping Address",
                     isOn: $shippingAddressCollection,
-                    tooltip: "Sets `shipping_address_collection` to allow specific countries (US, CA, GB, AU). Necessary for physical goods."
+                    tooltip: "Sets `shipping_address_collection` to allow specific countries (US, CA, GB, AU) and configures Shipping Address Element. Necessary for physical goods."
                 )
                 CheckoutPlayground.PickerRow(
                     title: "Default Shipping Address",
@@ -253,7 +263,6 @@ struct CheckoutPlaygroundExpressCheckoutElementSection: View {
     @Binding var applePayDisplay: ExpressCheckoutElement.ApplePayConfiguration.Display
     @Binding var linkDisplay: ExpressCheckoutElement.LinkConfiguration.Display
     @Binding var shippingAddressRequired: Bool
-    var onCustomizeBillingDetailsCollection: () -> Void
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -283,25 +292,6 @@ struct CheckoutPlaygroundExpressCheckoutElementSection: View {
                         isOn: $shippingAddressRequired,
                         tooltip: "Sets `ExpressCheckoutElement.Configuration.shippingAddressRequired`. When on, wallets like Apple Pay require the customer to provide a shipping address."
                     )
-                    Button(action: onCustomizeBillingDetailsCollection) {
-                        HStack {
-                            Image(systemName: "person.text.rectangle.fill")
-                                .font(.system(size: 16))
-                                .frame(width: 24)
-                                .foregroundColor(.blue)
-                            Text("Billing Details Collection")
-                                .font(.subheadline)
-                                .foregroundColor(.primary)
-                            Spacer()
-                            Image(systemName: "chevron.right")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                        }
-                        .padding(.vertical, 12)
-                        .padding(.horizontal, 16)
-                        .background(Color(uiColor: .secondarySystemGroupedBackground))
-                    }
-                    .buttonStyle(PlainButtonStyle())
                 }
             }
             .background(Color(uiColor: .secondarySystemGroupedBackground))
