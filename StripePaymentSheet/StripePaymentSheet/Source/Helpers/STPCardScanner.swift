@@ -89,7 +89,6 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
     }
 
     private weak var delegate: STPCardScannerDelegate?
-    private var captureDevice: AVCaptureDevice?
     private var captureSession: AVCaptureSession?
     private var captureSessionQueue: DispatchQueue?
     private var videoDataOutput: AVCaptureVideoDataOutput?
@@ -123,7 +122,6 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
 
     deinit {
         if isScanning {
-            captureDevice?.unlockForConfiguration()
             captureSession?.stopRunning()
         }
     }
@@ -191,8 +189,6 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
             finishWithError()
             return
         }
-        self.captureDevice = captureDevice
-
         captureSession = AVCaptureSession()
         captureSession?.sessionPreset = .hd1920x1080
 
@@ -239,8 +235,13 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
         captureSession?.startRunning()
 
         do {
-            try self.captureDevice?.lockForConfiguration()
-            self.captureDevice?.autoFocusRangeRestriction = .near
+            // The device lock only protects changes to camera settings. Holding it for the whole scan
+            // makes teardown responsible for unlocking a device that setup may not have locked yet.
+            try captureDevice.lockForConfiguration()
+            defer { captureDevice.unlockForConfiguration() }
+            if captureDevice.isAutoFocusRangeRestrictionSupported {
+                captureDevice.autoFocusRangeRestriction = .near
+            }
         } catch {
         }
     }
@@ -451,7 +452,6 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
             duration = Date().timeIntervalSince(startTime)
         }
         isScanning = false
-        captureDevice?.unlockForConfiguration()
         captureSession?.stopRunning()
 
         DispatchQueue.main.async {
