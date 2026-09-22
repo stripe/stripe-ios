@@ -1,5 +1,11 @@
 "Debit cards are most likely to be accepted." = "Il-karti tad-debitu huma l-aktar probabbli li jiġu aċċettati.";
 
+"Please try again later." = "Jekk jogħġbok erġa’ pprova aktar tard.";
+
+"Submitted for review" = "Sottomess għar-reviżjoni";
+
+"Tell us about your source of funds" = "Għidilna dwar is-sors tal-fondi tiegħek";
+
 "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "Din l-app ma setgħetx tiġi vverifikata minħabba żball ta’ attestazzjoni. Jekk jogħġbok erġa’ pprova aktar tard jew ikkuntattja lill-iżviluppatur jekk il-problema tibqa’.";
 
 "This app couldn't be verified. Contact the app developer for help." = "Din l-app ma setgħetx tiġi vverifikata. Ikkuntattja lill-iżviluppatur tal-app għall-għajnuna.";
@@ -12,4 +18,12 @@
 
 "This wallet verification request is invalid. Please try again." = "Din it-talba ta' verifika tal-kartiera hija invalida. Jekk jogħġbok erġa' pprova.";
 
+"Upload your proof of address" = "Tella' l-prova tal-indirizz tiegħek";
+
 "We couldn't verify ownership of this wallet. Please try again." = "Ma stajniex nivverifikaw is-sjieda ta' din il-kartiera. Jekk jogħġbok erġa' pprova.";
+
+"We’re required to confirm your address to enable spending over %@." = "Aħna mitluba nikkonfermaw l-indirizz tiegħek biex nippermettu l-infiq ta' aktar minn %@.";
+
+"We’re required to understand where your funds come from to enable spending over %@." = "Aħna mitluba nifhmu minn fejn ġejjin il-fondi tiegħek biex nippermettu l-infiq ta' aktar minn %@.";
+
+"We’re reviewing your documents. We’ll let you know when verification is complete." = "Qegħdin nirrevedu d-dokumenti tiegħek. Se ninfurmawk meta titlesta l-verifika.";

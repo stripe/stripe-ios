@@ -32,6 +32,8 @@ enum RetrieveKYCRequirementsResponseMock: String, MockData {
     case sourceOfFundsWithQuestionnaire = "RetrieveKYCRequirementsResponse_SourceOfFundsWithQuestionnaire_200"
     case partnerReview = "RetrieveKYCRequirementsResponse_PartnerReview_200"
     case unknownActionParty = "RetrieveKYCRequirementsResponse_UnknownActionParty_200"
+    case unknownAnswerType = "RetrieveKYCRequirementsResponse_UnknownAnswerType_200"
+    case notRequired = "RetrieveKYCRequirementsResponse_NotRequired_200"
 }
 
 enum RetrieveKYCInfoResponseMock: String, MockData {

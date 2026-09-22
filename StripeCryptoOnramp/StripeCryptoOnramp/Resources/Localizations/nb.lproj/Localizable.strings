@@ -1,5 +1,11 @@
 "Debit cards are most likely to be accepted." = "Debetkort vil mest sannsynlig bli akseptert.";
 
+"Please try again later." = "Prøv igjen senere.";
+
+"Submitted for review" = "Sendt til vurdering";
+
+"Tell us about your source of funds" = "Fortell oss om midlenes kilde";
+
 "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "Denne appen kan ikke bekreftes på grunn av en attesteringsfeil. Prøv på nytt senere eller kontakt utvikleren hvis problemet vedvarer.";
 
 "This app couldn't be verified. Contact the app developer for help." = "Denne appen kan ikke bekreftes. Ta kontakt med apputvikleren for å få hjelp.";
@@ -12,4 +18,12 @@
 
 "This wallet verification request is invalid. Please try again." = "Denne forespørselen om lommebokbekreftelse er ugyldig. Prøv igjen.";
 
+"Upload your proof of address" = "Last opp adressebeviset ditt";
+
 "We couldn't verify ownership of this wallet. Please try again." = "Vi kan ikke bekrefte eierskapet til denne lommeboken. Prøv igjen.";
+
+"We’re required to confirm your address to enable spending over %@." = "Vi er pålagt å bekrefte adressen din for å tillate forbruk over %@.";
+
+"We’re required to understand where your funds come from to enable spending over %@." = "Vi er pålagt å forstå hvor midlene dine kommer fra for å tillate forbruk over %@.";
+
+"We’re reviewing your documents. We’ll let you know when verification is complete." = "Vi gjennomgår dokumentene dine og varsler deg når bekreftelsen er fullført.";

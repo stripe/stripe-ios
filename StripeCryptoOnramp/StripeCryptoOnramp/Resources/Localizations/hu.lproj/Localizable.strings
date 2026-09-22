@@ -1,5 +1,11 @@
 "Debit cards are most likely to be accepted." = "A legnagyobb valószínűséggel a betéti kártyák lesznek elfogadva.";
 
+"Please try again later." = "Kérjük, próbálja újra később.";
+
+"Submitted for review" = "Felülvizsgálatra beküldve";
+
+"Tell us about your source of funds" = "Adjon információt az alapok forrásáról";
+
 "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "Ez az alkalmazás igazolási hiba miatt nem ellenőrizhető. Próbálja újra később, vagy ha a probléma továbbra is fennáll, lépjen kapcsolatba a fejlesztővel.";
 
 "This app couldn't be verified. Contact the app developer for help." = "Ez az alkalmazás nem ellenőrizhető. Segítségért lépjen kapcsolatba az alkalmazás fejlesztőjével.";
@@ -12,4 +18,12 @@
 
 "This wallet verification request is invalid. Please try again." = "Ez a pénztárca-hitelesítési kérés érvénytelen. Kérjük, próbálja újra.";
 
+"Upload your proof of address" = "Töltse fel lakcímigazolását";
+
 "We couldn't verify ownership of this wallet. Please try again." = "Nem tudtuk ellenőrizni ennek a pénztárcának a tulajdonjogát. Kérjük, próbálja újra.";
+
+"We’re required to confirm your address to enable spending over %@." = "A(z) %@ feletti költés engedélyezéséhez meg kell erősítenünk a címét.";
+
+"We’re required to understand where your funds come from to enable spending over %@." = "A(z) %@ feletti költés engedélyezéséhez meg kell értenünk, honnan származnak az alapjai.";
+
+"We’re reviewing your documents. We’ll let you know when verification is complete." = "Vizsgáljuk a dokumentumait. Értesítjük, amint az ellenőrzés befejeződött.";

@@ -1,5 +1,11 @@
 "Debit cards are most likely to be accepted." = "受け付けられる可能性が最も高いのはデビットカードです。";
 
+"Please try again later." = "後で再度お試しください。";
+
+"Submitted for review" = "審査に提出されました";
+
+"Tell us about your source of funds" = "資金源についてお聞かせください";
+
 "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "認証証明エラーのため、このアプリを認証できませんでした。後でもう一度お試しいただくか、問題が解決しない場合は開発者にお問い合わせください。";
 
 "This app couldn't be verified. Contact the app developer for help." = "このアプリを確認できませんでした。サポートが必要な場合は、アプリの開発者にお問い合わせください。";
@@ -12,4 +18,12 @@
 
 "This wallet verification request is invalid. Please try again." = "このウォレットの確認リクエストは無効です。もう一度お試しください。";
 
+"Upload your proof of address" = "住所確認書類をアップロード";
+
 "We couldn't verify ownership of this wallet. Please try again." = "ウォレットの所有権を確認できませんでした。もう一度お試しください。";
+
+"We’re required to confirm your address to enable spending over %@." = "%@ を超える支払いを有効にするには、住所を確認する必要があります。";
+
+"We’re required to understand where your funds come from to enable spending over %@." = "%@ を超える支払いを有効にするには、資金の出所を確認する必要があります。";
+
+"We’re reviewing your documents. We’ll let you know when verification is complete." = "書類を審査しています。確認が完了次第、お知らせします。";

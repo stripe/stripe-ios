@@ -58,7 +58,7 @@ final class PaymentElementTest: XCTestCase {
         let paymentSheetConfiguration = paymentElement.paymentSheetFlowController.configuration
         let embeddedConfiguration = paymentElement.embeddedPaymentElement.configuration
 
-        // Then both configurations receive the same default billing details
+        // Then both configurations receive the Checkout defaults for prefill
         XCTAssertEqual(checkout.configuration.returnURL, "stripe-ios-test://checkout-return")
         XCTAssertEqual(paymentSheetConfiguration.defaultBillingDetails.email, "test@example.com")
         XCTAssertEqual(paymentSheetConfiguration.defaultBillingDetails.phone, "+15555550123")
@@ -69,8 +69,30 @@ final class PaymentElementTest: XCTestCase {
         XCTAssertEqual(paymentSheetConfiguration.defaultBillingDetails.address.city, "San Francisco")
         XCTAssertEqual(paymentSheetConfiguration.defaultBillingDetails.address.state, "CA")
         XCTAssertEqual(paymentSheetConfiguration.defaultBillingDetails.address.postalCode, "94105")
+        XCTAssertEqual(checkout.session.email, "test@example.com")
 
         XCTAssertEqual(embeddedConfiguration.defaultBillingDetails, paymentSheetConfiguration.defaultBillingDetails)
+    }
+
+    func testUpdateEmailUpdatesPaymentElementPrefill() async throws {
+        // Given Checkout with Payment Element
+        let checkout = try await CheckoutController(
+            configuration: CheckoutTestHelpers.makeConfiguration()
+        )
+
+        // When the Checkout email is updated
+        try await checkout.updateEmail("updated@example.com")
+        let paymentElement = checkout.getPaymentElement()
+
+        // Then both Payment Element presentations receive the updated email for prefill
+        XCTAssertEqual(
+            paymentElement.paymentSheetFlowController.configuration.defaultBillingDetails.email,
+            "updated@example.com"
+        )
+        XCTAssertEqual(
+            paymentElement.embeddedPaymentElement.configuration.defaultBillingDetails.email,
+            "updated@example.com"
+        )
     }
 
     func testConfigurationSetsCheckoutMerchantDisplayName() async throws {

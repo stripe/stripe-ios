@@ -8,7 +8,6 @@
 extension CheckoutPlayground {
     struct SessionFactory {
         private static let checkoutAPISettings = "2026-08-26.preview"
-        private static let returningCustomerEmail = "jenny.rosen@example.com"
 
         let backend: PlaygroundBackend
         let apiClient: STPAPIClient
@@ -22,22 +21,15 @@ extension CheckoutPlayground {
             automaticTax: Bool,
             paymentMethodSave: Bool,
             paymentMethodRemove: Bool,
-            adaptivePricingCountry: AdaptivePricingCountry,
+            email: EmailSettings,
             automaticPaymentMethods: Bool,
             paymentMethodTypes: Set<String>
         ) async throws -> String {
-            let customerEmail: String?
-            if adaptivePricingCountry == .none {
-                customerEmail = customerType == .returning ? Self.returningCustomerEmail : nil
-            } else {
-                customerEmail = "test+location_\(adaptivePricingCountry.rawValue.uppercased())@example.com"
-            }
-
             var customerID: String?
             if customerType != .guest {
                 var customerParams: [String: Any] = [:]
-                if let customerEmail {
-                    customerParams["email"] = customerEmail
+                if email.source == .customer, let serverEmail = email.email {
+                    customerParams["email"] = serverEmail
                 }
                 customerID = try await backend.createCustomer(requestParams: customerParams)
 
@@ -104,7 +96,9 @@ extension CheckoutPlayground {
                     }
                 }
             } else {
-                sessionParams["customer_email"] = customerEmail ?? "jenny@example.com"
+                if email.source == .checkoutSession, let serverEmail = email.email {
+                    sessionParams["customer_email"] = serverEmail
+                }
                 if paymentMethodSave {
                     sessionParams["customer_creation"] = "always"
                 }
@@ -139,7 +133,7 @@ extension CheckoutPlayground {
 
             let billingDetails = STPPaymentMethodBillingDetails()
             billingDetails.name = "Jenny Rosen"
-            billingDetails.email = Self.returningCustomerEmail
+            billingDetails.email = "jenny.rosen@example.com"
             billingDetails.phone = "+15555555555"
             billingDetails.address = address
 

@@ -1,5 +1,11 @@
 "Debit cards are most likely to be accepted." = "Pankkikortit hyväksytään todennäköisesti.";
 
+"Please try again later." = "Yritä myöhemmin uudelleen.";
+
+"Submitted for review" = "Lähetetty tarkasteltavaksi";
+
+"Tell us about your source of funds" = "Kerro meille varojesi lähteestä";
+
 "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "Tätä sovellusta ei voitu vahvistaa todistusvirheen vuoksi. Yritä myöhemmin uudelleen tai ota yhteys ohjelmoijaan, jos ongelma jatkuu.";
 
 "This app couldn't be verified. Contact the app developer for help." = "Tätä sovellusta ei voitu todentaa. Saat apua ottamalla yhteyttä sovelluksen kehittäjään.";
@@ -12,4 +18,12 @@
 
 "This wallet verification request is invalid. Please try again." = "Tämä lompakon vahvistuspyyntö on virheellinen. Yritä uudelleen.";
 
+"Upload your proof of address" = "Lataa osoitetodistuksesi";
+
 "We couldn't verify ownership of this wallet. Please try again." = "Emme voineet vahvistaa tämän lompakon omistajuutta. Yritä uudelleen.";
+
+"We’re required to confirm your address to enable spending over %@." = "Meidän on vahvistettava osoitteesi, jotta voit käyttää yli %@.";
+
+"We’re required to understand where your funds come from to enable spending over %@." = "Meidän on ymmärrettävä, mistä varasi ovat peräisin, jotta voit käyttää yli %@.";
+
+"We’re reviewing your documents. We’ll let you know when verification is complete." = "Tarkistamme asiakirjojasi. Ilmoitamme, kun vahvistus on valmis.";
