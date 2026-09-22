@@ -108,6 +108,9 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
     private var captureSession: AVCaptureSession?
     private var videoDataOutput: AVCaptureVideoDataOutput?
     private var textRequest: VNRecognizeTextRequest?
+    // The camera can still be delivering scan A's frames after the user has requested scan B.
+    // Keep the camera's ID separate from the requested ID so those frames cannot become results for B.
+    private var captureScanIdentifier: Int?
     private var textOrientation: CGImagePropertyOrientation = .right
     private var regionOfInterest = CGRect.zero
     private var detectedNumbers = NSCountedSet()
@@ -123,6 +126,8 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
     // Cancellation must be visible even while the camera queue is busy. Never do camera or UI work under this lock.
     private let scanningStateLock = NSLock()
     private var isScanning = false
+    // Each new request gets a different ID. isScanning alone cannot distinguish a cancelled scan from a restart.
+    private var scanIdentifier = 0
     private var startTime: Date?
 
     // MARK: - Initialization
@@ -153,34 +158,37 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
         }
 
         isScanning = true
+        scanIdentifier += 1
+        let scanIdentifier = scanIdentifier
         startTime = Date()
 
         // Updating state and enqueueing must happen under the same lock. Otherwise a new start could
         // observe that the old scan finished and enter the queue before the old scan's stop operation.
         captureSessionQueue.async { [weak self] in
-            guard let self, self.scanIsActive() else { return }
+            guard let self, self.scanIsActive(scanIdentifier) else { return }
 
             #if targetEnvironment(simulator)
             // Camera not supported on Simulator
-            self.finishWithError()
+            self.finishWithError(scanIdentifier: scanIdentifier)
             return
             #else
+            self.captureScanIdentifier = scanIdentifier
             self.timeoutTime = nil
             self.detectedNumbers = NSCountedSet()
             self.detectedExpirations = NSCountedSet()
             guard self.setupCamera(), let captureSession = self.captureSession else {
-                self.finishWithError()
+                self.finishWithError(scanIdentifier: scanIdentifier)
                 return
             }
             // Keep startup separate from configuration so setup failures cannot attach a partial session.
             // Cancellation during setup skips startup. If startRunning is already in progress, the queued stop handles it.
-            guard self.scanIsActive() else { return }
+            guard self.scanIsActive(scanIdentifier) else { return }
 
             captureSession.startRunning()
-            guard self.scanIsActive() else { return }
+            guard self.scanIsActive(scanIdentifier) else { return }
 
             DispatchQueue.main.async { [weak self] in
-                guard let self, self.scanIsActive() else { return }
+                guard let self, self.scanIsActive(scanIdentifier) else { return }
                 // Capture this session instead of reading a property that a later setup can replace.
                 self.cameraView?.captureSession = captureSession
                 self.cameraView?.videoPreviewLayer.connection?.videoOrientation = self.videoOrientation
@@ -199,8 +207,8 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
         finish(didSucceed: false)
     }
 
-    private func finishWithError() {
-        finish(didSucceed: false) { [weak self] in
+    private func finishWithError(scanIdentifier: Int) {
+        finish(didSucceed: false, scanIdentifier: scanIdentifier) { [weak self] in
             guard let self else { return }
             self.delegate?.cardScannerDidError(self)
         }
@@ -280,7 +288,13 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
         from connection: AVCaptureConnection
     ) {
         dispatchPrecondition(condition: .onQueue(captureSessionQueue))
-        guard output === videoDataOutput, scanIsActive(), let textRequest else { return }
+        // A callback may already be queued when its output is disconnected. Reject both old outputs
+        // and frames belonging to a scan that was cancelled while the camera queue was busy.
+        guard output === videoDataOutput,
+            let scanIdentifier = captureScanIdentifier,
+            scanIsActive(scanIdentifier),
+            let textRequest
+        else { return }
 
         let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)
         if pixelBuffer == nil {
@@ -297,13 +311,16 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
         do {
             try handler?.perform([textRequest])
             // perform is synchronous. Process results here so the whole recognition path stays on this queue.
-            processVNRequest(textRequest)
+            processVNRequest(textRequest, scanIdentifier: scanIdentifier)
         } catch {
-            finishWithError()
+            finishWithError(scanIdentifier: scanIdentifier)
         }
     }
 
-    private func processVNRequest(_ request: VNRequest) {
+    private func processVNRequest(_ request: VNRequest, scanIdentifier: Int) {
+        // Recognition can take time; the user may have cancelled while perform was running.
+        guard scanIsActive(scanIdentifier) else { return }
+
         var allNumbers: [String] = []
         for observation in request.results ?? [] {
             guard let observation = observation as? VNRecognizedTextObservation else {
@@ -327,9 +344,9 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
                     forNumber: possibleNumber, validatingCardBrand: true)
                     == .valid
                 {
-                    addDetectedNumber(possibleNumber)
+                    addDetectedNumber(possibleNumber, scanIdentifier: scanIdentifier)
                 } else if let sanitizedExpiration = STPStringUtils.sanitizedExpirationDateFromOCRString(recognizedText.string) {
-                    handlePossibleExpirationDate(sanitizedExpiration)
+                    handlePossibleExpirationDate(sanitizedExpiration, scanIdentifier: scanIdentifier)
                 } else if possibleNumber.count >= 4 && possibleNumber.count <= 6
                     && STPStringUtils.stringMayContainExpirationDate(recognizedText.string)
                 {
@@ -338,7 +355,7 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
                         from: recognizedText.string)
                     let sanitizedExpiration = STPCardValidator.sanitizedNumericString(
                         for: expirationString ?? "")
-                    handlePossibleExpirationDate(sanitizedExpiration)
+                    handlePossibleExpirationDate(sanitizedExpiration, scanIdentifier: scanIdentifier)
                 }
             }
         }
@@ -365,16 +382,16 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
                 forNumber: potentialCardString, validatingCardBrand: true)
                 == .valid
             {
-                addDetectedNumber(potentialCardString)
+                addDetectedNumber(potentialCardString, scanIdentifier: scanIdentifier)
             } else if STPCardValidator.validationState(
                 forNumber: potentialAmexString, validatingCardBrand: true) == .valid
             {
-                addDetectedNumber(potentialAmexString)
+                addDetectedNumber(potentialAmexString, scanIdentifier: scanIdentifier)
             }
         }
     }
 
-    private func handlePossibleExpirationDate(_ sanitizedExpiration: String) {
+    private func handlePossibleExpirationDate(_ sanitizedExpiration: String, scanIdentifier: Int) {
         let month = (sanitizedExpiration as NSString).substring(to: 2)
         let year = (sanitizedExpiration as NSString).substring(from: 2)
 
@@ -387,11 +404,13 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
             == .valid
             && Int(year) ?? 0 < maxYear
         {
-            addDetectedExpiration(sanitizedExpiration)
+            addDetectedExpiration(sanitizedExpiration, scanIdentifier: scanIdentifier)
         }
     }
 
-    private func addDetectedNumber(_ number: String) {
+    private func addDetectedNumber(_ number: String, scanIdentifier: Int) {
+        guard scanIsActive(scanIdentifier) else { return }
+
         detectedNumbers.add(number)
 
         // Set a timeout: If we don't get enough scans in the next 0.6 seconds, we'll use the best option we have.
@@ -402,27 +421,30 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
                 self?.feedbackGenerator?.notificationOccurred(.success)
             }
             // Just in case we don't get any frames, add another call to `finishIfReady` after timeoutTime to check
+            // Capture this scan's ID: a delayed timeout must never complete a newly reopened scanner.
             captureSessionQueue.asyncAfter(deadline: DispatchTime.now() + Self.scanningTimeout) { [weak self] in
-                guard let self = self, self.scanIsActive() else { return }
-                self.completeScanIfReady()
+                guard let self, self.scanIsActive(scanIdentifier) else { return }
+                self.completeScanIfReady(scanIdentifier: scanIdentifier)
             }
         }
 
         if detectedNumbers.count(for: number) >= Self.minimumValidScans {
-            completeScanIfReady()
+            completeScanIfReady(scanIdentifier: scanIdentifier)
         }
     }
 
-    private func addDetectedExpiration(_ expiration: String) {
+    private func addDetectedExpiration(_ expiration: String, scanIdentifier: Int) {
+        guard scanIsActive(scanIdentifier) else { return }
+
         detectedExpirations.add(expiration)
         if detectedExpirations.count(for: expiration) >= Self.minimumValidScans {
-            completeScanIfReady()
+            completeScanIfReady(scanIdentifier: scanIdentifier)
         }
     }
 
     // Check if card scanning has completed and finish if so
-    private func completeScanIfReady() {
-        guard scanIsActive() else { return }
+    private func completeScanIfReady(scanIdentifier: Int) {
+        guard scanIsActive(scanIdentifier) else { return }
 
         let detectedNumbers = self.detectedNumbers
         let detectedExpirations = self.detectedExpirations
@@ -466,7 +488,7 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
                 params.expYear = NSNumber(
                     value: Int((topExpiration as! NSString).substring(from: 2)) ?? 0)
             }
-            finish(didSucceed: true) { [weak self] in
+            finish(didSucceed: true, scanIdentifier: scanIdentifier) { [weak self] in
                 guard let self else { return }
                 self.delegate?.cardScanner(self, didCompleteWith: params)
             }
@@ -474,9 +496,16 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
     }
 
     // Finish the scanning session
-    private func finish(didSucceed: Bool, completion: (() -> Void)? = nil) {
+    private func finish(
+        didSucceed: Bool,
+        scanIdentifier expectedScanIdentifier: Int? = nil,
+        completion: (() -> Void)? = nil
+    ) {
         scanningStateLock.lock()
-        guard isScanning else {
+        // Results and errors must name their scan. Only an explicit stop may finish whichever scan is current.
+        guard isScanning,
+            expectedScanIdentifier == nil || expectedScanIdentifier == scanIdentifier
+        else {
             scanningStateLock.unlock()
             return
         }
@@ -498,6 +527,7 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
             self.captureSession = nil
             self.videoDataOutput = nil
             self.textRequest = nil
+            self.captureScanIdentifier = nil
 
             DispatchQueue.main.async {
                 if didSucceed {
@@ -514,10 +544,10 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
         scanningStateLock.unlock()
     }
 
-    private func scanIsActive() -> Bool {
+    private func scanIsActive(_ scanIdentifier: Int) -> Bool {
         scanningStateLock.lock()
         defer { scanningStateLock.unlock() }
-        return isScanning
+        return isScanning && self.scanIdentifier == scanIdentifier
     }
 }
 
