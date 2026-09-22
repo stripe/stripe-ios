@@ -9,7 +9,6 @@
 import UIKit
 import XCTest
 
-// swift-format-ignore
 @_spi(STP) @testable import StripeIdentity
 
 final class IdentityFlowViewControllerTest: XCTestCase {
@@ -53,6 +52,89 @@ final class IdentityFlowViewControllerTest: XCTestCase {
         }
     }
 
+    func testExplicitNetworkedIdentitySecondaryConfigurationOverridesMerchantStyle() throws {
+        // Given custom merchant colors for ordinary secondary buttons
+        var configuration = IdentityVerificationSheet.Configuration(brandLogo: UIImage())
+        configuration.secondaryButtonStyle = .custom(backgroundColor: .purple, textColor: .yellow)
+        let sheetController = VerificationSheetControllerMock(
+            flowController: VerificationSheetFlowController(configuration: configuration)
+        )
+        let controller = IdentityFlowViewController(sheetController: sheetController, analyticsScreenName: .individual)
+
+        // When a Link secondary action appears alongside an ordinary secondary action
+        controller.configure(
+            backButtonTitle: nil,
+            viewModel: .init(
+                headerViewModel: nil,
+                contentView: UIView(),
+                buttons: [
+                    .init(text: "Link", isPrimary: false, configuration: .networkedIdentitySecondary(), didTap: {}),
+                    .init(text: "Ordinary", isPrimary: false, didTap: {}),
+                ]
+            )
+        )
+        let configuredButtons = buttons(in: controller.view)
+        XCTAssertEqual(configuredButtons.count, 2)
+        let linkButton = try XCTUnwrap(configuredButtons.first)
+        let ordinaryButton = try XCTUnwrap(configuredButtons.last)
+
+        // Then the explicit Link style wins, while ordinary buttons use merchant colors
+        for style: UIUserInterfaceStyle in [.light, .dark] {
+            let traits = UITraitCollection(userInterfaceStyle: style)
+            XCTAssertEqual(
+                linkButton.configuration.backgroundColor?.resolvedColor(with: traits),
+                UIColor.secondarySystemBackground.resolvedColor(with: traits)
+            )
+            XCTAssertEqual(linkButton.configuration.foregroundColor?.resolvedColor(with: traits), UIColor.label.resolvedColor(with: traits))
+            XCTAssertEqual(ordinaryButton.configuration.backgroundColor?.resolvedColor(with: traits), .purple)
+            XCTAssertEqual(ordinaryButton.configuration.foregroundColor?.resolvedColor(with: traits), .yellow)
+        }
+    }
+
+    func testReusedButtonPreservesExplicitCornersAndDefaultCapsuleBehavior() throws {
+        // Given a flow view that reuses its button when the number of actions is unchanged
+        let view = IdentityFlowView()
+        let contentView = UIView()
+        var previousButton: Button?
+
+        // When the same action switches between default and explicit Link configurations
+        for usesLinkStyle in [false, true, false, true] {
+            try view.configure(with: .init(
+                headerViewModel: nil,
+                contentView: contentView,
+                buttons: [
+                    .init(
+                        text: "Continue",
+                        configuration: usesLinkStyle ? .networkedIdentityPrimary() : nil,
+                        didTap: {}
+                    ),
+                ]
+            ))
+            let button = try XCTUnwrap(buttons(in: view).first)
+            if let previousButton {
+                XCTAssertTrue(button === previousButton)
+            }
+            previousButton = button
+
+            // Then Link keeps its fixed corners, even after the button was a capsule
+            if usesLinkStyle {
+                XCTAssertEqual(button.configuration.cornerRadius, 12)
+            }
+            #if compiler(>=6.2)
+            if #available(iOS 26.0, visionOS 26.0, *) {
+                if !usesLinkStyle && LiquidGlassDetector.isEnabledInMerchantApp {
+                    XCTAssertEqual(button.cornerConfiguration, .capsule())
+                } else {
+                    XCTAssertEqual(
+                        button.cornerConfiguration,
+                        .uniformCorners(radius: .fixed(Double(button.configuration.cornerRadius)))
+                    )
+                }
+            }
+            #endif
+        }
+    }
+
     func testCustomPrimaryButtonStyleAcrossScreens() throws {
         // Given a flow configured with dynamic primary button colors
         var configuration = IdentityVerificationSheet.Configuration(brandLogo: UIImage())
@@ -69,7 +151,11 @@ final class IdentityFlowViewControllerTest: XCTestCase {
         let controllers: [IdentityFlowViewController] = [
             try DocumentWarmupViewController(sheetController: sheetController, staticContent: content.documentSelect),
             try SelfieWarmupViewController(sheetController: sheetController),
-            IndividualViewController(individualContent: content.individual, missing: [], sheetController: sheetController),
+            IndividualViewController(
+                individualContent: content.individual,
+                missing: [],
+                sheetController: sheetController
+            ),
             SuccessViewController(successContent: content.success, sheetController: sheetController),
         ]
 
@@ -81,8 +167,16 @@ final class IdentityFlowViewControllerTest: XCTestCase {
             XCTAssertTrue(button.isEnabled, "\(type(of: controller))")
             for style: UIUserInterfaceStyle in [.light, .dark] {
                 let traits = UITraitCollection(userInterfaceStyle: style)
-                XCTAssertEqual(button.backgroundColor?.resolvedColor(with: traits), style == .dark ? .white : .black, "\(type(of: controller))")
-                XCTAssertEqual(label.textColor.resolvedColor(with: traits), style == .dark ? .black : .white, "\(type(of: controller))")
+                XCTAssertEqual(
+                    button.backgroundColor?.resolvedColor(with: traits),
+                    style == .dark ? .white : .black,
+                    "\(type(of: controller))"
+                )
+                XCTAssertEqual(
+                    label.textColor.resolvedColor(with: traits),
+                    style == .dark ? .black : .white,
+                    "\(type(of: controller))"
+                )
             }
         }
     }
@@ -119,9 +213,18 @@ final class IdentityFlowViewControllerTest: XCTestCase {
                 let traits = UITraitCollection(userInterfaceStyle: style)
                 let expectedBackground: UIColor = state == .enabled ? .purple : .systemGray4
                 let expectedForeground: UIColor = state == .enabled ? .yellow : .systemGray
-                XCTAssertEqual(button.backgroundColor?.resolvedColor(with: traits), expectedBackground.resolvedColor(with: traits))
-                XCTAssertEqual(label.textColor.resolvedColor(with: traits), expectedForeground.resolvedColor(with: traits))
-                XCTAssertEqual(spinner.tintColor.resolvedColor(with: traits), expectedForeground.resolvedColor(with: traits))
+                XCTAssertEqual(
+                    button.backgroundColor?.resolvedColor(with: traits),
+                    expectedBackground.resolvedColor(with: traits)
+                )
+                XCTAssertEqual(
+                    label.textColor.resolvedColor(with: traits),
+                    expectedForeground.resolvedColor(with: traits)
+                )
+                XCTAssertEqual(
+                    spinner.tintColor.resolvedColor(with: traits),
+                    expectedForeground.resolvedColor(with: traits)
+                )
             }
         }
     }

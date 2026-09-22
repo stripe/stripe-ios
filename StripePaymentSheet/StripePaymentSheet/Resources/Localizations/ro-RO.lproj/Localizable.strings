@@ -330,6 +330,10 @@
 
 "Tax" = "Taxă";
 
+"Terms and Conditions" = "Termeni și condiții";
+
+"Terms of Service" = "Termeni privind utilizarea serviciilor";
+
 "The IBAN you entered is incomplete." = "Codul IBAN pe care l-ați introdus nu este complet.";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "IBAN-ul introdus este nevalid, „%@” nu este un cod de țară acceptat.";

@@ -46,6 +46,28 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
         .checkoutSession,
     ]
 
+    // TODO: Re-enable Checkout Session coverage after the test merchants are configured for these LPMs.
+    // BLIK also requires unified-mode Checkout to forward `blik_code` to PaymentIntent confirmation.
+    static let paymentMethodsExcludedFromCheckoutSession: Set<STPPaymentMethodType> = [
+        .AUBECSDebit,
+        .OXXO,
+        .alma,
+        .bacsDebit,
+        .bizum,
+        .blik,
+        .boleto,
+        .grabPay,
+        .konbini,
+        .mbWay,
+        .payByBank,
+        .payPay,
+        .paynow,
+        .promptPay,
+        .revolutPay,
+        .sequra,
+        .zip,
+    ]
+
     let window: UIWindow = UIWindow(frame: .init(x: 0, y: 0, width: 428, height: 926))
 
     enum ConfirmationType: Hashable {
@@ -1289,8 +1311,7 @@ extension PaymentSheetLPMConfirmFlowTests {
             if shouldTest(.deferredIntent) {
                 intents.append(TestIntent("Deferred PaymentIntent - client side confirmation", makeDeferredIntent(deferredCSC)))
             }
-            // TODO: Re-enable once unified-mode Checkout forwards `blik_code` to PaymentIntent confirmation.
-            if shouldTest(.checkoutSession), paymentMethod != .blik {
+            if shouldTest(.checkoutSession), !Self.paymentMethodsExcludedFromCheckoutSession.contains(paymentMethod) {
                 let checkoutSessionResponse = try await STPTestingAPIClient.shared.createLegacyCheckoutSession(
                     types: paymentMethodTypes,
                     currency: currency,

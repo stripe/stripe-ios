@@ -1,5 +1,11 @@
 "Debit cards are most likely to be accepted." = "Malamang na tanggapin ang mga debit card.";
 
+"Please try again later." = "Mangyaring subukang muli mamaya.";
+
+"Submitted for review" = "Isinumite para sa pagrepaso";
+
+"Tell us about your source of funds" = "Sabihin sa amin ang tungkol sa pinagmulan ng iyong mga pondo";
+
 "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "Hindi ma-verify ang app na ito dahil sa isang error sa pagpapatunay. Mangyaring subukang muli mamaya o makipag-ugnayan sa developer kung magpapatuloy ang isyu.";
 
 "This app couldn't be verified. Contact the app developer for help." = "Hindi ma-verify ang app na ito. Makipag-ugnayan sa developer ng app para sa tulong.";
@@ -12,4 +18,12 @@
 
 "This wallet verification request is invalid. Please try again." = "Hindi valid ang kahilingan sa pag-verify ng wallet na ito. Mangyaring subukang muli.";
 
+"Upload your proof of address" = "I-upload ang iyong katibayan ng address";
+
 "We couldn't verify ownership of this wallet. Please try again." = "Hindi namin ma-verify ang pagmamay-ari ng wallet na ito. Mangyaring subukang muli.";
+
+"We’re required to confirm your address to enable spending over %@." = "Kailangan naming kumpirmahin ang iyong address para paganahin ang paggastos nang higit sa %@.";
+
+"We’re required to understand where your funds come from to enable spending over %@." = "Kailangan naming maunawaan kung saan nagmumula ang iyong mga pondo para paganahin ang paggastos nang higit sa %@.";
+
+"We’re reviewing your documents. We’ll let you know when verification is complete." = "Sinusuri namin ang iyong mga dokumento. Ipapaalam namin sa iyo kapag nakumpleto na ang pag-verify.";

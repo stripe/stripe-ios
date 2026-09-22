@@ -10,7 +10,6 @@ import Foundation
 import UIKit
 import XCTest
 
-// swift-format-ignore
 @_spi(STP) @testable import StripeIdentity
 
 /// Mock to help us test behavior that relies on  VerificationSheetFlowController
@@ -23,6 +22,7 @@ final class VerificationSheetFlowControllerMock: VerificationSheetFlowController
 
     var visitedIndividualWelcomePage = false
     var primaryButtonStyle: IdentityVerificationSheet.Configuration.PrimaryButtonStyle = .default
+    var secondaryButtonStyle: IdentityVerificationSheet.Configuration.SecondaryButtonStyle = .default
 
     weak var delegate: VerificationSheetFlowControllerDelegate?
 
