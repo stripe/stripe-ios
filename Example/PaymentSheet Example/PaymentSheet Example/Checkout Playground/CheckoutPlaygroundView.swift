@@ -57,8 +57,7 @@ struct CheckoutPlaygroundView: View {
                         CheckoutPlaygroundExpressCheckoutElementSection(
                             showExpressCheckoutElement: $viewModel.expressCheckoutElement.isEnabled,
                             applePayDisplay: $viewModel.expressCheckoutElement.applePayDisplay,
-                            linkDisplay: $viewModel.expressCheckoutElement.linkDisplay,
-                            shippingAddressRequired: $viewModel.expressCheckoutElement.shippingAddressRequired
+                            linkDisplay: $viewModel.expressCheckoutElement.linkDisplay
                         )
 
                         currencySelectorAppearanceSection

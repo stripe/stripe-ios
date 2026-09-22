@@ -12,7 +12,6 @@ enum ExpressCheckoutElementUtilities {
     enum LinkDisabledReason: String {
         case notSupportedInSession = "not_supported_in_session"
         case linkConfiguration = "link_configuration"
-        case shippingAddressCollection = "shipping_address_collection"
         case automaticTaxAddress = "automatic_tax_address"
     }
 
@@ -49,9 +48,6 @@ enum ExpressCheckoutElementUtilities {
         }
         if configuration.linkConfiguration.display == .never {
             reasons.append(.linkConfiguration)
-        }
-        if configuration.shippingAddressRequired {
-            reasons.append(.shippingAddressCollection)
         }
         if session.elementsSession.disableLinkForAutomaticTaxBilling {
             reasons.append(.automaticTaxAddress)
