@@ -47,16 +47,24 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
     }
 
     // MARK: - Properties
+    // Views, feedback, and preview orientation are only accessed on the main queue.
     weak var cameraView: STPCameraView?
 
+    private weak var delegate: STPCardScannerDelegate?
     private var feedbackGenerator: UINotificationFeedbackGenerator?
+    private var stp_deviceOrientation: UIDeviceOrientation!
+    private var videoOrientation: AVCaptureVideoOrientation!
 
     @objc var deviceOrientation: UIDeviceOrientation {
         get {
+            dispatchPrecondition(condition: .onQueue(.main))
             return stp_deviceOrientation
         }
         set(newDeviceOrientation) {
+            dispatchPrecondition(condition: .onQueue(.main))
             stp_deviceOrientation = newDeviceOrientation
+            let textOrientation: CGImagePropertyOrientation
+            let regionOfInterest: CGRect
 
             // This is an optimization for portrait mode: The card will be centered in the screen,
             // so we can ignore the top and bottom. We'll use the whole frame in landscape.
@@ -85,19 +93,25 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
                 regionOfInterest = kSTPCardScanningScreenCenter
             }
             cameraView?.videoPreviewLayer.connection?.videoOrientation = videoOrientation
+            // Transfer recognition settings as values. The main queue must not mutate them while Vision reads a frame.
+            captureSessionQueue.async { [weak self] in
+                guard let self else { return }
+                self.textOrientation = textOrientation
+                self.regionOfInterest = regionOfInterest
+            }
         }
     }
 
-    private weak var delegate: STPCardScannerDelegate?
-    private var captureSession: AVCaptureSession?
+    // Camera operations and all recognition state share this queue, including frame callbacks and timeouts.
+    // A single queue prevents setup/cleanup from replacing the request or results while a frame is using them.
     private let captureSessionQueue = DispatchQueue(label: "com.stripe.CardScanning.CaptureSessionQueue")
+    private var captureSession: AVCaptureSession?
     private var videoDataOutput: AVCaptureVideoDataOutput?
-    private var videoDataOutputQueue: DispatchQueue?
     private var textRequest: VNRecognizeTextRequest?
-    // Cancellation must be visible even while the camera queue is busy. Never do camera or UI work under this lock.
-    private let scanningStateLock = NSLock()
-    private var isScanning = false
-
+    private var textOrientation: CGImagePropertyOrientation = .right
+    private var regionOfInterest = CGRect.zero
+    private var detectedNumbers = NSCountedSet()
+    private var detectedExpirations = NSCountedSet()
     private var timeoutTime: Date?
     private var didTimeout: Bool {
         if let timeoutTime = timeoutTime {
@@ -106,12 +120,9 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
         return false
     }
 
-    private var stp_deviceOrientation: UIDeviceOrientation!
-    private var videoOrientation: AVCaptureVideoOrientation!
-    private var textOrientation: CGImagePropertyOrientation!
-    private var regionOfInterest = CGRect.zero
-    private var detectedNumbers = NSCountedSet()
-    private var detectedExpirations = NSCountedSet()
+    // Cancellation must be visible even while the camera queue is busy. Never do camera or UI work under this lock.
+    private let scanningStateLock = NSLock()
+    private var isScanning = false
     private var startTime: Date?
 
     // MARK: - Initialization
@@ -143,7 +154,6 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
 
         isScanning = true
         startTime = Date()
-        timeoutTime = nil
 
         // Updating state and enqueueing must happen under the same lock. Otherwise a new start could
         // observe that the old scan finished and enter the queue before the old scan's stop operation.
@@ -155,6 +165,7 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
             self.finishWithError()
             return
             #else
+            self.timeoutTime = nil
             self.detectedNumbers = NSCountedSet()
             self.detectedExpirations = NSCountedSet()
             guard self.setupCamera(), let captureSession = self.captureSession else {
@@ -198,15 +209,7 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
     // MARK: - Camera Setup
     private func setupCamera() -> Bool {
         dispatchPrecondition(condition: .onQueue(captureSessionQueue))
-        textRequest = VNRecognizeTextRequest { [weak self] request, error in
-            guard let self, self.scanIsActive() else { return }
-
-            if error != nil {
-                self.finishWithError()
-                return
-            }
-            self.processVNRequest(request)
-        }
+        textRequest = VNRecognizeTextRequest()
 
         // The triple and dualWide cameras have a 0.5x lens for better macro focus.
         // If neither are available, use the default wide angle camera.
@@ -234,10 +237,11 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
             }
         }
 
-        videoDataOutputQueue = DispatchQueue(label: "com.stripe.CardScanning.VideoDataOutputQueue")
         videoDataOutput = AVCaptureVideoDataOutput()
+        // Recognition is synchronous on the camera queue. Drop incoming frames while it is busy,
+        // rather than building a backlog that could delay cancellation and camera shutdown.
         videoDataOutput?.alwaysDiscardsLateVideoFrames = true
-        videoDataOutput?.setSampleBufferDelegate(self, queue: videoDataOutputQueue)
+        videoDataOutput?.setSampleBufferDelegate(self, queue: captureSessionQueue)
 
         // This is the recommended pixel buffer format for Vision:
         videoDataOutput?.videoSettings = [
@@ -275,24 +279,27 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
         didOutput sampleBuffer: CMSampleBuffer,
         from connection: AVCaptureConnection
     ) {
-        if !scanIsActive() {
-            return
-        }
+        dispatchPrecondition(condition: .onQueue(captureSessionQueue))
+        guard output === videoDataOutput, scanIsActive(), let textRequest else { return }
+
         let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)
         if pixelBuffer == nil {
             return
         }
-        textRequest?.recognitionLevel = .accurate
-        textRequest?.usesLanguageCorrection = false
-        textRequest?.regionOfInterest = regionOfInterest
+        textRequest.recognitionLevel = .accurate
+        textRequest.usesLanguageCorrection = false
+        textRequest.regionOfInterest = regionOfInterest
         var handler: VNImageRequestHandler?
         if let pixelBuffer = pixelBuffer {
             handler = VNImageRequestHandler(
                 cvPixelBuffer: pixelBuffer, orientation: textOrientation, options: [:])
         }
         do {
-            try handler?.perform([textRequest].compactMap { $0 })
+            try handler?.perform([textRequest])
+            // perform is synchronous. Process results here so the whole recognition path stays on this queue.
+            processVNRequest(textRequest)
         } catch {
+            finishWithError()
         }
     }
 
@@ -395,7 +402,7 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
                 self?.feedbackGenerator?.notificationOccurred(.success)
             }
             // Just in case we don't get any frames, add another call to `finishIfReady` after timeoutTime to check
-            videoDataOutputQueue?.asyncAfter(deadline: DispatchTime.now() + Self.scanningTimeout) { [weak self] in
+            captureSessionQueue.asyncAfter(deadline: DispatchTime.now() + Self.scanningTimeout) { [weak self] in
                 guard let self = self, self.scanIsActive() else { return }
                 self.completeScanIfReady()
             }
@@ -487,6 +494,10 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
         captureSessionQueue.async {
             self.videoDataOutput?.setSampleBufferDelegate(nil, queue: nil)
             self.captureSession?.stopRunning()
+            // Frame processing uses this same queue, so none of these objects are still in use by a frame callback.
+            self.captureSession = nil
+            self.videoDataOutput = nil
+            self.textRequest = nil
 
             DispatchQueue.main.async {
                 if didSucceed {
