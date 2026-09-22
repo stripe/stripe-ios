@@ -90,10 +90,12 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
 
     private weak var delegate: STPCardScannerDelegate?
     private var captureSession: AVCaptureSession?
-    private var captureSessionQueue: DispatchQueue?
+    private let captureSessionQueue = DispatchQueue(label: "com.stripe.CardScanning.CaptureSessionQueue")
     private var videoDataOutput: AVCaptureVideoDataOutput?
     private var videoDataOutputQueue: DispatchQueue?
     private var textRequest: VNRecognizeTextRequest?
+    // Cancellation must be visible even while the camera queue is busy. Never do camera or UI work under this lock.
+    private let scanningStateLock = NSLock()
     private var isScanning = false
 
     private var timeoutTime: Date?
@@ -116,30 +118,37 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
     init(delegate: STPCardScannerDelegate?) {
         super.init()
         self.delegate = delegate
-        captureSessionQueue = DispatchQueue(label: "com.stripe.CardScanning.CaptureSessionQueue")
         deviceOrientation = UIDevice.current.orientation
     }
 
     deinit {
-        if isScanning {
+        // Releasing the last scanner reference can happen on the main queue too.
+        // Retain only the camera objects until shutdown completes; deinit must not capture self.
+        let captureSession = captureSession
+        let videoDataOutput = videoDataOutput
+        captureSessionQueue.async {
+            videoDataOutput?.setSampleBufferDelegate(nil, queue: nil)
             captureSession?.stopRunning()
         }
     }
 
     // MARK: - Public Methods
     func start() {
-        guard !isScanning else { return }
-
-        STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: STPCardScanner.self)
-        startTime = Date()
+        dispatchPrecondition(condition: .onQueue(.main))
+        scanningStateLock.lock()
+        guard !isScanning else {
+            scanningStateLock.unlock()
+            return
+        }
 
         isScanning = true
+        startTime = Date()
         timeoutTime = nil
-        feedbackGenerator = UINotificationFeedbackGenerator()
-        feedbackGenerator?.prepare()
 
-        captureSessionQueue?.async { [weak self] in
-            guard let self = self else { return }
+        // Updating state and enqueueing must happen under the same lock. Otherwise a new start could
+        // observe that the old scan finished and enter the queue before the old scan's stop operation.
+        captureSessionQueue.async { [weak self] in
+            guard let self, self.scanIsActive() else { return }
 
             #if targetEnvironment(simulator)
             // Camera not supported on Simulator
@@ -153,31 +162,44 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
                 return
             }
             // Keep startup separate from configuration so setup failures cannot attach a partial session.
+            // Cancellation during setup skips startup. If startRunning is already in progress, the queued stop handles it.
+            guard self.scanIsActive() else { return }
+
             captureSession.startRunning()
-            DispatchQueue.main.async {
+            guard self.scanIsActive() else { return }
+
+            DispatchQueue.main.async { [weak self] in
+                guard let self, self.scanIsActive() else { return }
                 // Capture this session instead of reading a property that a later setup can replace.
                 self.cameraView?.captureSession = captureSession
                 self.cameraView?.videoPreviewLayer.connection?.videoOrientation = self.videoOrientation
             }
             #endif
         }
+        scanningStateLock.unlock()
+
+        STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: STPCardScanner.self)
+        feedbackGenerator = UINotificationFeedbackGenerator()
+        feedbackGenerator?.prepare()
     }
 
     func stop() {
+        dispatchPrecondition(condition: .onQueue(.main))
         finish(didSucceed: false)
     }
 
     private func finishWithError() {
-        finish(didSucceed: false)
-        DispatchQueue.main.async {
+        finish(didSucceed: false) { [weak self] in
+            guard let self else { return }
             self.delegate?.cardScannerDidError(self)
         }
     }
 
     // MARK: - Camera Setup
     private func setupCamera() -> Bool {
+        dispatchPrecondition(condition: .onQueue(captureSessionQueue))
         textRequest = VNRecognizeTextRequest { [weak self] request, error in
-            guard let self, self.isScanning else { return }
+            guard let self, self.scanIsActive() else { return }
 
             if error != nil {
                 self.finishWithError()
@@ -253,7 +275,7 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
         didOutput sampleBuffer: CMSampleBuffer,
         from connection: AVCaptureConnection
     ) {
-        if !isScanning {
+        if !scanIsActive() {
             return
         }
         let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)
@@ -374,7 +396,7 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
             }
             // Just in case we don't get any frames, add another call to `finishIfReady` after timeoutTime to check
             videoDataOutputQueue?.asyncAfter(deadline: DispatchTime.now() + Self.scanningTimeout) { [weak self] in
-                guard let self = self, self.isScanning else { return }
+                guard let self = self, self.scanIsActive() else { return }
                 self.completeScanIfReady()
             }
         }
@@ -393,7 +415,7 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
 
     // Check if card scanning has completed and finish if so
     private func completeScanIfReady() {
-        guard isScanning else { return }
+        guard scanIsActive() else { return }
 
         let detectedNumbers = self.detectedNumbers
         let detectedExpirations = self.detectedExpirations
@@ -437,33 +459,54 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
                 params.expYear = NSNumber(
                     value: Int((topExpiration as! NSString).substring(from: 2)) ?? 0)
             }
-            finish(didSucceed: true)
-            DispatchQueue.main.async {
+            finish(didSucceed: true) { [weak self] in
+                guard let self else { return }
                 self.delegate?.cardScanner(self, didCompleteWith: params)
             }
         }
     }
 
     // Finish the scanning session
-    private func finish(didSucceed: Bool) {
-        guard isScanning else { return }
+    private func finish(didSucceed: Bool, completion: (() -> Void)? = nil) {
+        scanningStateLock.lock()
+        guard isScanning else {
+            scanningStateLock.unlock()
+            return
+        }
 
         var duration: TimeInterval = 0.0
         if let startTime {
             duration = Date().timeIntervalSince(startTime)
         }
+        // Mark the request finished immediately, even though the camera may take time to stop.
+        // This also ensures repeated cancellation or recognition callbacks only enqueue one shutdown.
         isScanning = false
-        captureSession?.stopRunning()
 
-        DispatchQueue.main.async {
-            if didSucceed {
-                STPAnalyticsClient.sharedClient.logCardScanSucceeded(withDuration: duration)
-            } else {
-                STPAnalyticsClient.sharedClient.logCardScanCancelled(withDuration: duration)
+        // stopRunning blocks. Always enqueue it, including when finishing from a frame callback,
+        // so neither PaymentSheet dismissal nor the current frame callback has to wait for it.
+        captureSessionQueue.async {
+            self.videoDataOutput?.setSampleBufferDelegate(nil, queue: nil)
+            self.captureSession?.stopRunning()
+
+            DispatchQueue.main.async {
+                if didSucceed {
+                    STPAnalyticsClient.sharedClient.logCardScanSucceeded(withDuration: duration)
+                } else {
+                    STPAnalyticsClient.sharedClient.logCardScanCancelled(withDuration: duration)
+                }
+                self.feedbackGenerator = nil
+                self.cameraView?.captureSession = nil
+                // Successful scans and errors must be delivered after capture shutdown and UI cleanup.
+                completion?()
             }
-            self.feedbackGenerator = nil
-            self.cameraView?.captureSession = nil
         }
+        scanningStateLock.unlock()
+    }
+
+    private func scanIsActive() -> Bool {
+        scanningStateLock.lock()
+        defer { scanningStateLock.unlock() }
+        return isScanning
     }
 }
 
