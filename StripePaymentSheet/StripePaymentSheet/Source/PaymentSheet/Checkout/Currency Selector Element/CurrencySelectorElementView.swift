@@ -21,7 +21,8 @@ public struct CurrencySelectorElementView: View {
 
     public var body: some View {
         CurrencySelectorElementUIViewRepresentable(viewModel: viewModel)
-            .fixedSize(horizontal: false, vertical: true)
+            .frame(maxWidth: .infinity)
+            .frame(height: viewModel.height)
     }
 }
 
@@ -30,6 +31,9 @@ public struct CurrencySelectorElementView: View {
 final class CurrencySelectorElementViewModel: ObservableObject {
     let uiView: CurrencySelectorElementUIView
 
+    @Published private(set) var height: CGFloat?
+
+    private var width: CGFloat = 0
     private var sessionCancellable: AnyCancellable?
 
     init(
@@ -38,7 +42,7 @@ final class CurrencySelectorElementViewModel: ObservableObject {
     ) {
         self.uiView = uiView
         uiView.didUpdateContentHeight = { [weak self] in
-            self?.objectWillChange.send()
+            self?.updateHeight()
         }
         sessionCancellable = sessionSource.sessionPublisher
             .dropFirst()
@@ -47,6 +51,30 @@ final class CurrencySelectorElementViewModel: ObservableObject {
                 self?.uiView.update(with: session)
             }
     }
+
+    func updateHeight(width: CGFloat? = nil) {
+        if let width, width > 0 {
+            self.width = width
+        }
+
+        Task { @MainActor [weak self] in
+            self?.updateHeightNow()
+        }
+    }
+
+    private func updateHeightNow() {
+        let fittingWidth = width > 0 ? width : uiView.bounds.width
+        guard fittingWidth > 0 else { return }
+
+        let newHeight = uiView.systemLayoutSizeFitting(
+            CGSize(width: fittingWidth, height: UIView.layoutFittingCompressedSize.height),
+            withHorizontalFittingPriority: .required,
+            verticalFittingPriority: .fittingSizeLevel
+        ).height
+
+        guard height.map({ abs($0 - newHeight) > 1 }) ?? true else { return }
+        height = newHeight
+    }
 }
 
 private struct CurrencySelectorElementUIViewRepresentable: UIViewRepresentable {
@@ -54,11 +82,13 @@ private struct CurrencySelectorElementUIViewRepresentable: UIViewRepresentable {
 
     func makeUIView(context: Context) -> CurrencySelectorElementUIView {
         viewModel.uiView.setEnabled(context.environment.isEnabled)
+        viewModel.updateHeight()
         return viewModel.uiView
     }
 
     func updateUIView(_ uiView: CurrencySelectorElementUIView, context: Context) {
         uiView.setEnabled(context.environment.isEnabled)
+        viewModel.updateHeight(width: uiView.bounds.width)
     }
 
     @available(iOS 16.0, *)
