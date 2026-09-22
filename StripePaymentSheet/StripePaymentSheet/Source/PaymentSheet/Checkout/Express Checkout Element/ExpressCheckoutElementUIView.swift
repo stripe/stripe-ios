@@ -85,24 +85,7 @@ public final class ExpressCheckoutElementUIView: UIView {
             $0.removeFromSuperview()
         }
 
-        let layout = configuration.appearance.buttonLayout
-        let columns: Int
-        if let maxColumns = layout.maxColumns {
-            columns = max(maxColumns, 1)
-        } else if let maxRows = layout.maxRows, maxRows > 0 {
-            // No explicit column limit, so spread buttons across the available rows rather than dropping any.
-            columns = max(Int((Double(buttons.count) / Double(maxRows)).rounded(.up)), 1)
-        } else {
-            columns = 1
-        }
-        var rows = stride(from: 0, to: buttons.count, by: columns).map {
-            Array(buttons[$0..<min($0 + columns, buttons.count)])
-        }
-        if let maxRows = layout.maxRows {
-            rows = Array(rows.prefix(max(maxRows, 0)))
-        }
-
-        for row in rows {
+        for row in Self.buttonRows(for: buttons, layout: configuration.appearance.buttonLayout) {
             if row.count == 1, let method = row.first {
                 stackView.addArrangedSubview(makeButton(for: method))
             } else {
@@ -112,6 +95,29 @@ public final class ExpressCheckoutElementUIView: UIView {
                 rowStackView.distribution = .fillEqually
                 stackView.addArrangedSubview(rowStackView)
             }
+        }
+    }
+
+    static func buttonRows(
+        for buttons: [ExpressCheckoutElement.PaymentMethod],
+        layout: ExpressCheckoutElement.Appearance.ButtonLayout
+    ) -> [[ExpressCheckoutElement.PaymentMethod]] {
+        guard !buttons.isEmpty else { return [] }
+
+        let maxRows = layout.maxRows ?? buttons.count
+        let maxColumns = layout.maxColumns ?? buttons.count
+        let visibleButtonLimit = maxRows > buttons.count / maxColumns
+            ? buttons.count
+            : maxRows * maxColumns
+        let visibleButtons = Array(buttons.prefix(visibleButtonLimit))
+        let columnsNeeded = visibleButtons.count / maxRows + (visibleButtons.count % maxRows == 0 ? 0 : 1)
+        let columns = min(
+            maxColumns,
+            max(columnsNeeded, 1)
+        )
+
+        return stride(from: 0, to: visibleButtons.count, by: columns).map {
+            Array(visibleButtons[$0..<min($0 + columns, visibleButtons.count)])
         }
     }
 

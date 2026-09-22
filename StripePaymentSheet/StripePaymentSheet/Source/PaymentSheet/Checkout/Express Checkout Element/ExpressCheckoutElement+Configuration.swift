@@ -86,7 +86,7 @@ extension ExpressCheckoutElement {
     }
 
     public struct Appearance {
-        /// Controls the theme of express payment buttons.
+        /// Controls the theme of Apple Pay buttons. Link buttons retain Link's required brand styling.
         public enum ButtonTheme: String {
             /// Light theme which contrasts with a dark background.
             case light
@@ -117,7 +117,7 @@ extension ExpressCheckoutElement {
             public init() {}
         }
 
-        /// Theme of the express payment buttons.
+        /// Theme of Apple Pay buttons. Link buttons retain Link's required brand styling.
         public var buttonTheme: ButtonTheme = .automatic
 
         /// Layout of the express payment buttons.

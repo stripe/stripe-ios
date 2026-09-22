@@ -36,6 +36,7 @@ final class ExpressCheckoutElementViewSnapshotTests: STPSnapshotTestCase {
     func testTwoColumnLayout() {
         var appearance = ExpressCheckoutElement.Appearance()
         appearance.buttonLayout.maxColumns = 2
+        appearance.buttonLayout.maxRows = 1
 
         verify(makeView(appearance: appearance))
     }

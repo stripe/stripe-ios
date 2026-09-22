@@ -13,6 +13,32 @@ import XCTest
 @MainActor
 final class ExpressCheckoutElementViewTests: XCTestCase {
 
+    func testButtonLayout() {
+        let buttons: [ExpressCheckoutElement.PaymentMethod] = [.link, .applePay, .link, .applePay]
+        let testCases: [(
+            maxColumns: Int?,
+            maxRows: Int?,
+            expected: [[ExpressCheckoutElement.PaymentMethod]]
+        )] = [
+            (nil, nil, [[.link], [.applePay], [.link], [.applePay]]),
+            (2, nil, [[.link], [.applePay], [.link], [.applePay]]),
+            (nil, 2, [[.link, .applePay], [.link, .applePay]]),
+            (2, 2, [[.link, .applePay], [.link, .applePay]]),
+            (1, 1, [[.link]]),
+            (2, 1, [[.link, .applePay]]),
+        ]
+
+        for testCase in testCases {
+            var layout = ExpressCheckoutElement.Appearance.ButtonLayout()
+            layout.maxColumns = testCase.maxColumns
+            layout.maxRows = testCase.maxRows
+
+            let rows = ExpressCheckoutElementUIView.buttonRows(for: buttons, layout: layout)
+
+            XCTAssertEqual(rows, testCase.expected)
+        }
+    }
+
     // MARK: - resolveButtons tests
 
     func testNoButtonsWhenSessionHasNoWalletTypes() {
