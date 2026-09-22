@@ -20,7 +20,7 @@ struct AdditionalKYCDocumentRequirement: Decodable, Equatable {
         let label: String
 
         /// Localized descriptive text about the document subtype, which may include examples (e.g. "Bank statement, bank letter").
-        let description: String
+        let description: String?
     }
 
     /// The document subtypes that the customer may provide.

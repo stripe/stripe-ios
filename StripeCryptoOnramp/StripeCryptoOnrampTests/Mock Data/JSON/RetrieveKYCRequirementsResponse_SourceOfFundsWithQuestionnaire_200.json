@@ -18,8 +18,7 @@
           },
           {
             "id": "bank_statement",
-            "label": "Bank statement",
-            "description": "Statements from your bank"
+            "label": "Bank statement"
           }
         ],
         "accepted_formats": ["pdf", "jpeg", "png", "docx", "xlsx", "csv", "txt"],

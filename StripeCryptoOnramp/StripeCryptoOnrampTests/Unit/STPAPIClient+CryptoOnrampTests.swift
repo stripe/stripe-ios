@@ -243,7 +243,7 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         XCTAssertEqual(document.acceptedFormats, ["pdf", "jpeg", "png", "docx", "xlsx", "csv", "txt"])
         XCTAssertEqual(document.acceptedSubtypes, [
             .init(id: "payslip", label: "Payslip", description: "Recent payslips from your employer"),
-            .init(id: "bank_statement", label: "Bank statement", description: "Statements from your bank"),
+            .init(id: "bank_statement", label: "Bank statement", description: nil),
         ])
         XCTAssertEqual(document.maxFileSizeBytes, 5_000_000)
         XCTAssertEqual(document.minDocumentTypes, 1)
