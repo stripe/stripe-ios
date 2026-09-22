@@ -9,7 +9,6 @@
 import UIKit
 import XCTest
 
-// swift-format-ignore
 @_spi(STP) @testable import StripeIdentity
 
 final class IdentityFlowViewControllerTest: XCTestCase {
@@ -29,7 +28,11 @@ final class IdentityFlowViewControllerTest: XCTestCase {
         let controllers: [IdentityFlowViewController] = [
             try DocumentWarmupViewController(sheetController: sheetController, staticContent: content.documentSelect),
             try SelfieWarmupViewController(sheetController: sheetController),
-            IndividualViewController(individualContent: content.individual, missing: [], sheetController: sheetController),
+            IndividualViewController(
+                individualContent: content.individual,
+                missing: [],
+                sheetController: sheetController
+            ),
             SuccessViewController(successContent: content.success, sheetController: sheetController),
         ]
 
@@ -41,8 +44,16 @@ final class IdentityFlowViewControllerTest: XCTestCase {
             XCTAssertTrue(button.isEnabled, "\(type(of: controller))")
             for style: UIUserInterfaceStyle in [.light, .dark] {
                 let traits = UITraitCollection(userInterfaceStyle: style)
-                XCTAssertEqual(button.backgroundColor?.resolvedColor(with: traits), style == .dark ? .white : .black, "\(type(of: controller))")
-                XCTAssertEqual(label.textColor.resolvedColor(with: traits), style == .dark ? .black : .white, "\(type(of: controller))")
+                XCTAssertEqual(
+                    button.backgroundColor?.resolvedColor(with: traits),
+                    style == .dark ? .white : .black,
+                    "\(type(of: controller))"
+                )
+                XCTAssertEqual(
+                    label.textColor.resolvedColor(with: traits),
+                    style == .dark ? .black : .white,
+                    "\(type(of: controller))"
+                )
             }
         }
     }
@@ -79,9 +90,18 @@ final class IdentityFlowViewControllerTest: XCTestCase {
                 let traits = UITraitCollection(userInterfaceStyle: style)
                 let expectedBackground: UIColor = state == .enabled ? .purple : .systemGray4
                 let expectedForeground: UIColor = state == .enabled ? .yellow : .systemGray
-                XCTAssertEqual(button.backgroundColor?.resolvedColor(with: traits), expectedBackground.resolvedColor(with: traits))
-                XCTAssertEqual(label.textColor.resolvedColor(with: traits), expectedForeground.resolvedColor(with: traits))
-                XCTAssertEqual(spinner.tintColor.resolvedColor(with: traits), expectedForeground.resolvedColor(with: traits))
+                XCTAssertEqual(
+                    button.backgroundColor?.resolvedColor(with: traits),
+                    expectedBackground.resolvedColor(with: traits)
+                )
+                XCTAssertEqual(
+                    label.textColor.resolvedColor(with: traits),
+                    expectedForeground.resolvedColor(with: traits)
+                )
+                XCTAssertEqual(
+                    spinner.tintColor.resolvedColor(with: traits),
+                    expectedForeground.resolvedColor(with: traits)
+                )
             }
         }
     }

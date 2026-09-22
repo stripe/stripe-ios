@@ -200,6 +200,23 @@ extension STPTestingAPIClient {
 
     // This helper is used by tests, which Periphery excludes from its scan.
     // periphery:ignore
+    func createCheckoutCustomer(
+        email: String,
+        merchantCountry: String? = "us"
+    ) async throws -> String {
+        let response: PlaygroundCustomerResponse = try await makePlaygroundRequest(
+            endpoint: "create_customer",
+            method: "POST",
+            params: [
+                "merchant": playgroundMerchant(for: merchantCountry),
+                "request_params": ["email": email],
+            ]
+        )
+        return response.id
+    }
+
+    // This helper is used by tests, which Periphery excludes from its scan.
+    // periphery:ignore
     /// Creates a Mobile Elements Checkout Session using the playground's raw API proxy.
     func createCheckoutSession(
         types: [String] = ["card"],
@@ -354,6 +371,12 @@ extension STPTestingAPIClient {
     private struct PlaygroundCheckoutSessionResponse: Decodable {
         let id: String
         let clientSecret: String
+    }
+
+    // This response is used by a test helper, which Periphery excludes from its scan.
+    // periphery:ignore
+    private struct PlaygroundCustomerResponse: Decodable {
+        let id: String
     }
 
     private struct PlaygroundPublishableKeyResponse: Decodable {

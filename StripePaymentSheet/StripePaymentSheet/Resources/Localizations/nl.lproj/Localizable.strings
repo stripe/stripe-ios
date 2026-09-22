@@ -330,6 +330,10 @@
 
 "Tax" = "Belasting";
 
+"Terms and Conditions" = "Algemene voorwaarden";
+
+"Terms of Service" = "Servicevoorwaarden";
+
 "The IBAN you entered is incomplete." = "Het opgegeven IBAN-nummer is onvolledig.";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Het opgegeven IBAN-nummer is ongeldig: \"%@\" is geen ondersteunde landcode.";

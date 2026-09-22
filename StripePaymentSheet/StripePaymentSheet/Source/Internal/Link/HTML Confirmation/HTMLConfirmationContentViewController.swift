@@ -1,8 +1,8 @@
 //
-//  UserAttestationContentViewController.swift
+//  HTMLConfirmationContentViewController.swift
 //  StripePaymentSheet
 //
-//  Created by Michael Liberatore on 4/23/26.
+//  Created by Michael Liberatore on 8/27/26.
 //
 
 import SafariServices
@@ -10,8 +10,8 @@ import SafariServices
 @_spi(STP) import StripeUICore
 import UIKit
 
-/// The content view of `UserAttestationViewController`, which displays user attestation HTML with a confirmation button.
-final class UserAttestationContentViewController: UIViewController, BottomSheetContentViewController {
+/// Displays HTML content with a configurable heading and confirmation button.
+final class HTMLConfirmationContentViewController: UIViewController, BottomSheetContentViewController {
 
     // MARK: - BottomSheetContentViewController
 
@@ -29,9 +29,11 @@ final class UserAttestationContentViewController: UIViewController, BottomSheetC
 
     let requiresFullScreen = false
 
-    // MARK: - UserAttestationContentViewController
+    // MARK: - HTMLConfirmationContentViewController
 
+    private let heading: String
     private let html: String
+    private let confirmationButtonTitle: String
     private let appearance: LinkAppearance
     private let brand: LinkBrand
 
@@ -39,28 +41,39 @@ final class UserAttestationContentViewController: UIViewController, BottomSheetC
         appearance.colors?.primary ?? LinkUI.appearance.primaryButton.backgroundColor ?? LinkUI.appearance.colors.primary
     }
 
-    private var attestationBaseAttributes: [NSAttributedString.Key: Any] {
+    private var htmlBaseAttributes: [NSAttributedString.Key: Any] {
         [
             .font: LinkUI.font(forTextStyle: .body),
             .foregroundColor: UIColor.linkTextPrimary,
         ]
     }
 
-    private var attestationLinkAttributes: [NSAttributedString.Key: Any] {
+    private var htmlLinkAttributes: [NSAttributedString.Key: Any] {
         [
             .foregroundColor: linkPrimaryButtonColor,
         ]
     }
 
-    /// Closure called when a user confirms or cancels the attestation.
-    var onResult: ((LinkController.UserAttestationResult) -> Void)?
+    /// Closure called when a customer confirms or cancels.
+    var onResult: ((HTMLConfirmationResult) -> Void)?
 
-    /// Creates a new instance of `UserAttestationContentViewController`.
+    /// Creates a new HTML confirmation content view controller.
     /// - Parameters:
-    ///   - html: The attestation HTML to display.
+    ///   - heading: The heading displayed above the HTML.
+    ///   - html: The HTML to display.
+    ///   - confirmationButtonTitle: The title of the confirmation button.
     ///   - appearance: Determines the colors, corner radius, and height of the confirmation button.
-    init(html: String, appearance: LinkAppearance, brand: LinkBrand) {
+    ///   - brand: The Link brand displayed in the navigation bar.
+    init(
+        heading: String,
+        html: String,
+        confirmationButtonTitle: String,
+        appearance: LinkAppearance,
+        brand: LinkBrand
+    ) {
+        self.heading = heading
         self.html = html
+        self.confirmationButtonTitle = confirmationButtonTitle
         self.appearance = appearance
         self.brand = brand
         super.init(nibName: nil, bundle: nil)
@@ -75,12 +88,12 @@ final class UserAttestationContentViewController: UIViewController, BottomSheetC
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = LinkUI.font(forTextStyle: .title)
         label.textColor = .linkTextPrimary
-        label.text = String.Localized.user_attestation
+        label.text = heading
         label.numberOfLines = 0
         return label
     }()
 
-    private lazy var attestationTextView: UITextView = {
+    private lazy var htmlTextView: UITextView = {
         let textView = UITextView()
         textView.translatesAutoresizingMaskIntoConstraints = false
         textView.backgroundColor = .clear
@@ -89,14 +102,14 @@ final class UserAttestationContentViewController: UIViewController, BottomSheetC
         textView.textContainerInset = .zero
         textView.textContainer.lineFragmentPadding = 0
         textView.delegate = self
-        textView.attributedText = attributedAttestationHTML
+        textView.attributedText = attributedHTML
         textView.linkTextAttributes = [
             .foregroundColor: linkPrimaryButtonColor,
         ]
         return textView
     }()
 
-    private var attributedAttestationHTML: NSAttributedString {
+    private var attributedHTML: NSAttributedString {
         guard let attributedString = try? NSMutableAttributedString(
             data: Data(html.utf8),
             options: [
@@ -105,7 +118,7 @@ final class UserAttestationContentViewController: UIViewController, BottomSheetC
             ],
             documentAttributes: nil
         ) else {
-            return NSAttributedString(string: html, attributes: attestationBaseAttributes)
+            return NSAttributedString(string: html, attributes: htmlBaseAttributes)
         }
 
         let fullRange = NSRange(location: 0, length: attributedString.length)
@@ -116,11 +129,11 @@ final class UserAttestationContentViewController: UIViewController, BottomSheetC
             }
         }
 
-        attributedString.addAttributes(attestationBaseAttributes, range: fullRange)
+        attributedString.addAttributes(htmlBaseAttributes, range: fullRange)
 
-        // Processing the HTML via NSAttributedString applies paragraph style properties. We need to apply our line height multiple to each of these
-        // paragraph styles individually, as setting the paragraph style for the entire range will overwrite other formatting aspects from the HTML,
-        // such as lists/bullet points and indentation.
+        // Processing the HTML via NSAttributedString applies paragraph style properties. Apply
+        // the line height to each style individually to preserve lists, indentation, and other
+        // formatting from the HTML.
         var paragraphStyles: [(style: NSMutableParagraphStyle, range: NSRange)] = []
         attributedString.enumerateAttribute(.paragraphStyle, in: fullRange) { value, range, _ in
             let paragraphStyle = (value as? NSParagraphStyle)?.mutableCopy() as? NSMutableParagraphStyle ?? NSMutableParagraphStyle()
@@ -132,7 +145,7 @@ final class UserAttestationContentViewController: UIViewController, BottomSheetC
             attributedString.addAttribute(.paragraphStyle, value: style, range: range)
         }
         linkRanges.forEach { range in
-            attributedString.addAttributes(attestationLinkAttributes, range: range)
+            attributedString.addAttributes(htmlLinkAttributes, range: range)
         }
 
         return attributedString
@@ -146,7 +159,7 @@ final class UserAttestationContentViewController: UIViewController, BottomSheetC
     }()
 
     private lazy var confirmButton = ConfirmButton.makeLinkButton(
-        callToAction: .custom(title: String.Localized.accept),
+        callToAction: .custom(title: confirmationButtonTitle),
         showProcessingLabel: false,
         linkAppearance: appearance
     ) { [weak self] in
@@ -157,7 +170,7 @@ final class UserAttestationContentViewController: UIViewController, BottomSheetC
         super.viewDidLoad()
 
         view.addSubview(headingLabel)
-        view.addSubview(attestationTextView)
+        view.addSubview(htmlTextView)
         view.addSubview(bottomButtonContainer)
 
         NSLayoutConstraint.activate([
@@ -165,10 +178,10 @@ final class UserAttestationContentViewController: UIViewController, BottomSheetC
             headingLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: LinkUI.contentSpacing),
             headingLabel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -LinkUI.contentSpacing),
 
-            attestationTextView.topAnchor.constraint(equalTo: headingLabel.bottomAnchor, constant: LinkUI.contentSpacing),
-            attestationTextView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: LinkUI.contentSpacing),
-            attestationTextView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -LinkUI.contentSpacing),
-            attestationTextView.bottomAnchor.constraint(equalTo: bottomButtonContainer.topAnchor),
+            htmlTextView.topAnchor.constraint(equalTo: headingLabel.bottomAnchor, constant: LinkUI.contentSpacing),
+            htmlTextView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: LinkUI.contentSpacing),
+            htmlTextView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -LinkUI.contentSpacing),
+            htmlTextView.bottomAnchor.constraint(equalTo: bottomButtonContainer.topAnchor),
 
             bottomButtonContainer.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             bottomButtonContainer.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
@@ -181,14 +194,12 @@ final class UserAttestationContentViewController: UIViewController, BottomSheetC
         onResult?(.confirmed)
     }
 
-    // MARK: - BottomSheetContentViewController
-
     func didTapOrSwipeToDismiss() {
         onResult?(.canceled)
     }
 }
 
-extension UserAttestationContentViewController: UITextViewDelegate {
+extension HTMLConfirmationContentViewController: UITextViewDelegate {
 
     // MARK: - UITextViewDelegate
 
@@ -212,5 +223,18 @@ extension UserAttestationContentViewController: UITextViewDelegate {
         }
 
         return false
+    }
+}
+
+extension HTMLConfirmationContentViewController: SheetNavigationBarDelegate {
+
+    // MARK: - SheetNavigationBarDelegate
+
+    func sheetNavigationBarDidClose(_ sheetNavigationBar: SheetNavigationBar) {
+        onResult?(.canceled)
+    }
+
+    func sheetNavigationBarDidBack(_ sheetNavigationBar: SheetNavigationBar) {
+        // All content is displayed on a single content view controller with no navigation.
     }
 }

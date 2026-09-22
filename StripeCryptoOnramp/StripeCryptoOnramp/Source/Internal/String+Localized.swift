@@ -68,6 +68,54 @@ extension String.Localized {
         )
     }
 
+    static var uploadProofOfAddress: String {
+        STPLocalizedString("Upload your proof of address", "Heading introducing proof of address collection")
+    }
+
+    static var proofOfAddressExplanation: String {
+        STPLocalizedString(
+            "We may request proof of address for larger transactions.",
+            "Explanation introducing proof of address collection."
+        )
+    }
+
+    static var tellUsAboutYourSourceOfFunds: String {
+        STPLocalizedString("Tell us about your source of funds", "Heading introducing source of funds collection")
+    }
+
+    static var sourceOfFundsExplanation: String {
+        STPLocalizedString(
+            "We may request source of funds for larger transactions.",
+            "Explanation introducing source of funds collection."
+        )
+    }
+
+    static var documentUploadedSuccessfully: String {
+        STPLocalizedString("Document uploaded successfully", "Heading confirming a document was uploaded successfully")
+    }
+
+    static var documentVerificationInBackground: String {
+        STPLocalizedString(
+            "You can continue while we verify your document in the background.",
+            "Message confirming the document was uploaded and the user can continue while verification happens in the background."
+        )
+    }
+
+    static var submittedForReview: String {
+        STPLocalizedString("Submitted for review", "Heading confirming documents were submitted for review")
+    }
+
+    static var documentsUnderReview: String {
+        STPLocalizedString(
+            "We’re reviewing your documents. We’ll let you know when verification is complete.",
+            "Message confirming documents are being reviewed and the user will be notified when verification is complete."
+        )
+    }
+
+    static var tryAgainLater: String {
+        STPLocalizedString("Please try again later.", "Instruction after an unavailable operation")
+    }
+
     static func redactedCardDetails(using card: StripeAPI.PaymentMethod.Card) -> String? {
         let brand = stpCardBrand(from: card.brand)
         let brandString = STPCard.string(from: brand)

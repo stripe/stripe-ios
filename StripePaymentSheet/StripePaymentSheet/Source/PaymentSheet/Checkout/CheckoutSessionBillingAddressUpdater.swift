@@ -23,11 +23,7 @@ protocol CheckoutSessionBillingAddressUpdater: AnyObject {
 
 extension CheckoutController: CheckoutSessionBillingAddressUpdater {
     func commitSession(_ apiResponse: PaymentPagesAPIResponse) async throws {
-        try await commitSession(
-            apiResponse,
-            shippingAddress: .keepOldValue,
-            paymentOption: .keepOldValue
-        )
+        try await commitSession(apiResponse, mutateLocalState: { _ in })
     }
 
     func updateBillingTaxRegionIfNecessaryForPaymentSheet(

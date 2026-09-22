@@ -10,13 +10,7 @@ import Foundation
 /// A response from `/v1/crypto/internal/kyc_requirements` containing the authenticated customer's additional KYC requirements.
 struct RetrieveKYCRequirementsResponse: Decodable, Equatable {
 
-    /// A collection of partner-specific KYC requirements returned for an authenticated customer.
-    struct Requirements: Decodable, Equatable {
-
-        /// The individual requirements associated with the customer.
-        let entries: [AdditionalKYCRequirement]
-    }
-
-    /// The customer's current additional KYC requirements.
-    let requirements: Requirements
+    /// The customer's current additional KYC requirements, keyed by requirement name (e.g. `proof_of_address`, `source_of_funds`).
+    /// An empty dictionary indicates that the customer has no outstanding requirements or no account with the partner.
+    let requirements: [String: AdditionalKYCRequirement]
 }

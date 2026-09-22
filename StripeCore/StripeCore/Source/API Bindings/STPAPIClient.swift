@@ -121,15 +121,22 @@ import UIKit
         -> URLRequest
     {
         var request = URLRequest(url: url)
-        var headers = defaultHeaders(
+        let headers = defaultHeaders(
             ephemeralKeySecret: ephemeralKeySecret,
             apiVersionOverride: apiVersionOverride
         )
-        // additionalHeaders can overwrite defaultHeaders.
-        for (k, v) in additionalHeaders { headers[k] = v }
         headers.forEach { key, value in
             request.setValue(value, forHTTPHeaderField: key)
         }
+
+        // Note that we apply the default headers first before adding additional headers.
+        // Additional headers may replace values for default headers case-insensitively.
+        // `setValue(_:forHTTPHeaderField)` ensures the original key casing is preserved,
+        // but values will be overwritten.
+        additionalHeaders.forEach { key, value in
+            request.setValue(value, forHTTPHeaderField: key)
+        }
+
         return request
     }
 
@@ -271,6 +278,7 @@ private let APIBaseURL = "https://api.stripe.com/v1"
 extension STPAPIClient {
     /// Make a GET request using the passed parameters.
     /// - Parameters:
+    ///   - additionalHeaders: Additional HTTP headers, overriding default values for matching fields.
     ///   - timeout: Optional timeout for each request attempt. The total request duration can be longer when retries are enabled.
     ///   - retriesEnabled: Whether to retry HTTP 429 responses using the standard retry policy.
     @_spi(STP) public func get<T: Decodable>(
@@ -279,6 +287,7 @@ extension STPAPIClient {
         ephemeralKeySecret: String? = nil,
         consumerPublishableKey: String? = nil,
         apiVersionOverride: String? = nil,
+        additionalHeaders: [String: String] = [:],
         timeout: TimeInterval? = nil,
         retriesEnabled: Bool = true,
         completion: @escaping (
@@ -291,6 +300,7 @@ extension STPAPIClient {
             ephemeralKeySecret: ephemeralKeySecret,
             consumerPublishableKey: consumerPublishableKey,
             apiVersionOverride: apiVersionOverride,
+            additionalHeaders: additionalHeaders,
             resource: resource,
             timeout: timeout,
             retryCount: retriesEnabled ? StripeAPI.maxRetries : 0,
@@ -305,6 +315,7 @@ extension STPAPIClient {
         ephemeralKeySecret: String? = nil,
         consumerPublishableKey: String? = nil,
         apiVersionOverride: String? = nil,
+        additionalHeaders: [String: String] = [:],
         completion: @escaping (
             Result<T, Error>
         ) -> Void
@@ -315,6 +326,7 @@ extension STPAPIClient {
             ephemeralKeySecret: ephemeralKeySecret,
             consumerPublishableKey: consumerPublishableKey,
             apiVersionOverride: apiVersionOverride,
+            additionalHeaders: additionalHeaders,
             url: url,
             completion: completion
         )
@@ -328,7 +340,8 @@ extension STPAPIClient {
         parameters: [String: Any],
         ephemeralKeySecret: String? = nil,
         consumerPublishableKey: String? = nil,
-        apiVersionOverride: String? = nil
+        apiVersionOverride: String? = nil,
+        additionalHeaders: [String: String] = [:]
     ) -> Promise<T> {
         return request(
             method: .get,
@@ -336,6 +349,7 @@ extension STPAPIClient {
             ephemeralKeySecret: ephemeralKeySecret,
             consumerPublishableKey: consumerPublishableKey,
             apiVersionOverride: apiVersionOverride,
+            additionalHeaders: additionalHeaders,
             resource: resource
         )
     }
@@ -347,6 +361,7 @@ extension STPAPIClient {
         ephemeralKeySecret: String? = nil,
         consumerPublishableKey: String? = nil,
         apiVersionOverride: String? = nil,
+        additionalHeaders: [String: String] = [:],
         completion: @escaping (Result<T, Error>) -> Void
     ) {
         request(
@@ -355,6 +370,7 @@ extension STPAPIClient {
             ephemeralKeySecret: ephemeralKeySecret,
             consumerPublishableKey: consumerPublishableKey,
             apiVersionOverride: apiVersionOverride,
+            additionalHeaders: additionalHeaders,
             resource: resource,
             completion: completion
         )
@@ -368,7 +384,8 @@ extension STPAPIClient {
         parameters: [String: Any],
         ephemeralKeySecret: String? = nil,
         consumerPublishableKey: String? = nil,
-        apiVersionOverride: String? = nil
+        apiVersionOverride: String? = nil,
+        additionalHeaders: [String: String] = [:]
     ) -> Promise<T> {
         return request(
             method: .post,
@@ -376,17 +393,20 @@ extension STPAPIClient {
             ephemeralKeySecret: ephemeralKeySecret,
             consumerPublishableKey: consumerPublishableKey,
             apiVersionOverride: apiVersionOverride,
+            additionalHeaders: additionalHeaders,
             resource: resource
         )
     }
 
     /// Make a DELETE request using the passed parameters.
+    /// - Parameter additionalHeaders: Additional HTTP headers, overriding default values for matching fields.
     @_spi(STP) public func delete<T: Decodable>(
         resource: String,
         parameters: [String: Any],
         ephemeralKeySecret: String? = nil,
         consumerPublishableKey: String? = nil,
         apiVersionOverride: String? = nil,
+        additionalHeaders: [String: String] = [:],
         completion: @escaping (Result<T, Error>) -> Void
     ) {
         request(
@@ -395,6 +415,7 @@ extension STPAPIClient {
             ephemeralKeySecret: ephemeralKeySecret,
             consumerPublishableKey: consumerPublishableKey,
             apiVersionOverride: apiVersionOverride,
+            additionalHeaders: additionalHeaders,
             resource: resource,
             completion: completion
         )
@@ -406,6 +427,7 @@ extension STPAPIClient {
         ephemeralKeySecret: String?,
         consumerPublishableKey: String?,
         apiVersionOverride: String?,
+        additionalHeaders: [String: String] = [:],
         resource: String
     ) -> Promise<T> {
         let promise = Promise<T>()
@@ -415,6 +437,7 @@ extension STPAPIClient {
             ephemeralKeySecret: ephemeralKeySecret,
             consumerPublishableKey: consumerPublishableKey,
             apiVersionOverride: apiVersionOverride,
+            additionalHeaders: additionalHeaders,
             resource: resource
         ) { result in
             promise.fullfill(with: result)
@@ -428,6 +451,7 @@ extension STPAPIClient {
         ephemeralKeySecret: String?,
         consumerPublishableKey: String?,
         apiVersionOverride: String?,
+        additionalHeaders: [String: String] = [:],
         resource: String,
         timeout: TimeInterval? = nil,
         retryCount: Int = StripeAPI.maxRetries,
@@ -440,6 +464,7 @@ extension STPAPIClient {
             ephemeralKeySecret: ephemeralKeySecret,
             consumerPublishableKey: consumerPublishableKey,
             apiVersionOverride: apiVersionOverride,
+            additionalHeaders: additionalHeaders,
             url: url,
             timeout: timeout,
             retryCount: retryCount,
@@ -453,6 +478,7 @@ extension STPAPIClient {
         ephemeralKeySecret: String?,
         consumerPublishableKey: String?,
         apiVersionOverride: String?,
+        additionalHeaders: [String: String] = [:],
         url: URL,
         timeout: TimeInterval? = nil,
         retryCount: Int = StripeAPI.maxRetries,
@@ -494,6 +520,13 @@ extension STPAPIClient {
             request.setValue(nil, forHTTPHeaderField: "Stripe-Account")
         }
 
+        // Note that we apply the additional headers last here rather than in the call to `configuredRequest` above.
+        // this is because "Authorization" and "Stripe-Account" headers are applied after the call to `configuredRequest`,
+        // so the default behavior of this method would potentially overwrite `additionalHeaders` passed in otherwise.
+        for (key, value) in additionalHeaders {
+            request.setValue(value, forHTTPHeaderField: key)
+        }
+
         self.sendRequest(
             request: request,
             retryCount: retryCount,
@@ -502,20 +535,23 @@ extension STPAPIClient {
     }
 
     /// Make a POST request using the passed Encodable object.
+    /// - Parameter additionalHeaders: Additional HTTP headers, overriding default values for matching fields.
     ///
     /// - Returns: a promise that is fullfilled when the request is complete.
     @_spi(STP) public func post<I: Encodable, O: Decodable>(
         resource: String,
         object: I,
         ephemeralKeySecret: String? = nil,
-        apiVersionOverride: String? = nil
+        apiVersionOverride: String? = nil,
+        additionalHeaders: [String: String] = [:]
     ) -> Promise<O> {
         let promise = Promise<O>()
         self.post(
             resource: resource,
             object: object,
             ephemeralKeySecret: ephemeralKeySecret,
-            apiVersionOverride: apiVersionOverride
+            apiVersionOverride: apiVersionOverride,
+            additionalHeaders: additionalHeaders
         ) { result in
             promise.fullfill(with: result)
         }
@@ -523,11 +559,13 @@ extension STPAPIClient {
     }
 
     /// Make a POST request using the passed Encodable object.
+    /// - Parameter additionalHeaders: Additional HTTP headers, overriding default values for matching fields.
     @_spi(STP) public func post<I: Encodable, O: Decodable>(
         resource: String,
         object: I,
         ephemeralKeySecret: String? = nil,
         apiVersionOverride: String? = nil,
+        additionalHeaders: [String: String] = [:],
         completion: @escaping (Result<O, Error>) -> Void
     ) {
         let url = apiURL.appendingPathComponent(resource)
@@ -536,16 +574,19 @@ extension STPAPIClient {
             object: object,
             ephemeralKeySecret: ephemeralKeySecret,
             apiVersionOverride: apiVersionOverride,
+            additionalHeaders: additionalHeaders,
             completion: completion
         )
     }
 
     /// Make a POST request using the passed Encodable object.
+    /// - Parameter additionalHeaders: Additional HTTP headers, overriding default values for matching fields.
     @_spi(STP) public func post<I: Encodable, O: Decodable>(
         url: URL,
         object: I,
         ephemeralKeySecret: String? = nil,
         apiVersionOverride: String? = nil,
+        additionalHeaders: [String: String] = [:],
         completion: @escaping (Result<O, Error>) -> Void
     ) {
         do {
@@ -562,6 +603,10 @@ extension STPAPIClient {
             )
             request.httpBody = formData
             request.httpMethod = HTTPMethod.post.rawValue
+
+            for (key, value) in additionalHeaders {
+                request.setValue(value, forHTTPHeaderField: key)
+            }
 
             self.sendRequest(request: request, completion: completion)
         } catch {

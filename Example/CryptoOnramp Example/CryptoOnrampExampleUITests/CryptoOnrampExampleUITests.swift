@@ -134,7 +134,7 @@ final class CryptoOnrampExampleUITests: XCTestCase {
         XCTAssertTrue(seamlessSignInButton.exists, "Seamless sign-in (Continue) button should exist")
         seamlessSignInButton.tap()
 
-        // Step 9: We should skip right to the wallet selection screen without the need to enter an OTP code.
+        // Step 9: Skip OTP and terms of service and wait for the wallet selection screen.
         let walletsLabel2 = app.staticTexts["Wallets"].firstMatch
         XCTAssertTrue(walletsLabel2.waitForExistence(timeout: .networkTimeout), "Wallet selection screen should appear")
     }

@@ -1,5 +1,11 @@
 "Debit cards are most likely to be accepted." = "Bankkort accepteras oftast.";
 
+"Please try again later." = "Försök igen senare.";
+
+"Submitted for review" = "Inskickat för granskning";
+
+"Tell us about your source of funds" = "Berätta för oss om din pengakälla";
+
 "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "Den här appen kunde inte verifieras på grund av ett intygsfel. Försök igen senare eller kontakta utvecklaren om problemet kvarstår.";
 
 "This app couldn't be verified. Contact the app developer for help." = "Den här appen kunde inte verifieras. Kontakta appens utvecklare för att få hjälp.";
@@ -12,4 +18,12 @@
 
 "This wallet verification request is invalid. Please try again." = "Den här begäran om plånboksverifiering är ogiltig. Försök igen.";
 
+"Upload your proof of address" = "Ladda upp ditt adressbevis";
+
 "We couldn't verify ownership of this wallet. Please try again." = "Vi kunde inte verifiera vem som äger den här plånboken. Försök igen.";
+
+"We’re required to confirm your address to enable spending over %@." = "Vi måste bekräfta din adress för att tillåta utgifter över %@.";
+
+"We’re required to understand where your funds come from to enable spending over %@." = "Vi måste förstå var dina medel kommer ifrån för att tillåta utgifter över %@.";
+
+"We’re reviewing your documents. We’ll let you know when verification is complete." = "Vi granskar dina dokument. Vi meddelar dig när verifieringen är klar.";

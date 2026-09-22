@@ -16,6 +16,7 @@ struct CheckoutCartUIKitView: UIViewControllerRepresentable {
     @Environment(\.dismiss) private var dismiss
 
     let clientSecret: String
+    let emailSettings: CheckoutPlayground.EmailSettings
     let shippingAddressCollection: Bool
     let defaultShippingAddress: CheckoutPlayground.DefaultShippingAddress?
     let adaptivePricing: Bool
@@ -27,6 +28,7 @@ struct CheckoutCartUIKitView: UIViewControllerRepresentable {
     func makeUIViewController(context: Context) -> UINavigationController {
         let viewController = CheckoutCartViewController(
             clientSecret: clientSecret,
+            emailSettings: emailSettings,
             shippingAddressCollection: shippingAddressCollection,
             defaultShippingAddress: defaultShippingAddress,
             adaptivePricing: adaptivePricing,
@@ -46,6 +48,7 @@ struct CheckoutCartUIKitView: UIViewControllerRepresentable {
 final class CheckoutCartViewController: UIViewController {
 
     private let clientSecret: String
+    private let emailSettings: CheckoutPlayground.EmailSettings
     private let shippingAddressCollection: Bool
     private let defaultShippingAddress: CheckoutPlayground.DefaultShippingAddress?
     private let adaptivePricing: Bool
@@ -79,6 +82,7 @@ final class CheckoutCartViewController: UIViewController {
 
     init(
         clientSecret: String,
+        emailSettings: CheckoutPlayground.EmailSettings,
         shippingAddressCollection: Bool,
         defaultShippingAddress: CheckoutPlayground.DefaultShippingAddress?,
         adaptivePricing: Bool,
@@ -89,6 +93,7 @@ final class CheckoutCartViewController: UIViewController {
         closeAction: @escaping () -> Void
     ) {
         self.clientSecret = clientSecret
+        self.emailSettings = emailSettings
         self.shippingAddressCollection = shippingAddressCollection
         self.defaultShippingAddress = defaultShippingAddress
         self.adaptivePricing = adaptivePricing
@@ -205,6 +210,7 @@ final class CheckoutCartViewController: UIViewController {
                 configuration.paymentElement = paymentElementConfiguration
             }
             configuration.defaults.shippingDetails = defaultShippingAddress?.checkoutShippingDetails
+            configuration.defaults.email = emailSettings.localDefaultEmail
             if shippingAddressCollection {
                 configuration.shippingAddressElement = .init()
             }
@@ -283,6 +289,7 @@ final class CheckoutCartViewController: UIViewController {
         }
 
         contentStackView.addArrangedSubview(makeLineItemsSection(session: session))
+        contentStackView.addArrangedSubview(makeEmailSection(session: session))
 
         if expressCheckoutElementSettings.isEnabled {
             contentStackView.addArrangedSubview(
@@ -889,6 +896,60 @@ final class CheckoutCartViewController: UIViewController {
                 errorMessage = error.localizedDescription
                 renderCheckout()
             }
+        }
+    }
+
+    private func makeEmailSection(session: CheckoutController.Session) -> UIView {
+        let emailLabel = UILabel()
+        emailLabel.text = session.email ?? "No email"
+        emailLabel.numberOfLines = 0
+        emailLabel.accessibilityIdentifier = "checkout_session_email"
+        let sourceLabel = UILabel()
+        sourceLabel.text = emailSettings.source.isServer ? "Server email cannot be changed in checkout." : emailSettings.source == .local ? "Local email" : "No email source selected."
+        sourceLabel.font = .preferredFont(forTextStyle: .caption1)
+        sourceLabel.textColor = .secondaryLabel
+        sourceLabel.numberOfLines = 0
+        let details = UIStackView(arrangedSubviews: [emailLabel, sourceLabel])
+        details.axis = .vertical
+        details.spacing = 8
+        let editButton = UIButton(type: .system)
+        editButton.setTitle("Edit email", for: .normal)
+        editButton.isEnabled = emailSettings.source == .local
+        editButton.addTarget(self, action: #selector(editEmailButtonTapped), for: .touchUpInside)
+        return makeSection(title: "Email", content: details, accessory: editButton)
+    }
+
+    @objc private func editEmailButtonTapped() {
+        guard let checkout, emailSettings.source == .local else { return }
+        let alert = UIAlertController(title: "Edit email", message: "Updates the local Checkout email.", preferredStyle: .alert)
+        alert.addTextField { field in
+            field.placeholder = "Email address"
+            field.text = checkout.session.email
+            field.keyboardType = .emailAddress
+            field.autocapitalizationType = .none
+            field.autocorrectionType = .no
+        }
+        alert.addAction(UIAlertAction(title: "Save email", style: .default) { [weak self, weak alert] _ in
+            self?.updateEmail(alert?.textFields?.first?.text)
+        })
+        alert.addAction(UIAlertAction(title: "Clear email", style: .destructive) { [weak self] _ in
+            self?.updateEmail(nil)
+        })
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        present(alert, animated: true)
+    }
+
+    private func updateEmail(_ email: String?) {
+        guard let checkout else { return }
+        Task {
+            errorMessage = nil
+            do {
+                let trimmed = email?.trimmingCharacters(in: .whitespacesAndNewlines)
+                try await checkout.updateEmail(trimmed?.isEmpty == true ? nil : trimmed)
+            } catch {
+                errorMessage = error.localizedDescription
+            }
+            renderCheckout()
         }
     }
 
