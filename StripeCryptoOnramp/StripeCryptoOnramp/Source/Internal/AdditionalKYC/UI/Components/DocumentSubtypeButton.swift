@@ -55,13 +55,16 @@ struct DocumentSubtypeButton: View {
 
 #if DEBUG
 @available(iOS 17.0, *)
-#Preview("Document subtype selections", traits: .sizeThatFitsLayout) {
-    VStack(spacing: 16) {
-        DocumentSubtypeButton(title: .Localized.documentType, selection: "Utility provider", action: {})
+#Preview("Utility provider", traits: .sizeThatFitsLayout) {
+    DocumentSubtypeButton(title: .Localized.documentType, selection: "Utility provider", action: {})
+        .padding(20)
+        .background(Color.surfacePrimary)
+}
 
-        DocumentSubtypeButton(title: .Localized.documentType, selection: "Government organization documents", action: {})
-    }
-    .padding(20)
-    .background(Color.surfacePrimary)
+@available(iOS 17.0, *)
+#Preview("Government organization documents", traits: .sizeThatFitsLayout) {
+    DocumentSubtypeButton(title: .Localized.documentType, selection: "Government organization documents test to span multiple lines", action: {})
+        .padding(20)
+        .background(Color.surfacePrimary)
 }
 #endif
