@@ -36,7 +36,9 @@ extension CheckoutController {
         public let discountAmounts: [DiscountAmount]
 
         /// The customer's email address.
-        public let email: String?
+        public var email: String? {
+            return serverEmail ?? localState.email
+        }
 
         /// The items included in the order summary.
         public let orderSummaryItems: [OrderSummaryItem]
@@ -83,6 +85,9 @@ extension CheckoutController {
 
         let paymentStatus: Status.PaymentStatus
         let paymentMethodOptions: STPPaymentMethodOptions?
+        /// The immutable email provided when creating the Checkout Session, either through
+        /// `customer_email` or the Checkout Session's Customer's email.
+        let serverEmail: String?
         var localState: LocalState
         let customer: PaymentPagesAPIResponse.Customer?
         let savedPaymentMethodsOfferSave: STPCheckoutSessionSavedPaymentMethodsOfferSave?
@@ -104,10 +109,11 @@ extension CheckoutController {
         }
 
         struct LocalState {
+            var email: String?
             var shippingAddress: ShippingAddress?
             var paymentOption: PaymentOptionDisplayData?
 
-            static let empty = Self(shippingAddress: nil, paymentOption: nil)
+            static let empty = Self(email: nil, shippingAddress: nil, paymentOption: nil)
         }
     }
 }
@@ -170,6 +176,7 @@ extension CheckoutController.Session {
                 configuration: $0
             )
         } ?? []
+        let serverEmail = apiResponse.customerEmail ?? apiResponse.customer?.email
 
         self.init(
             id: apiResponse.sessionId,
@@ -177,7 +184,6 @@ extension CheckoutController.Session {
             currency: apiResponse.adaptivePricingInfo?.integrationCurrency ?? apiResponse.currency,
             presentmentDetails: presentmentDetails,
             discountAmounts: publicDiscountAmounts,
-            email: apiResponse.customerEmail ?? apiResponse.customer?.email,
             orderSummaryItems: publicOrderSummaryItems,
             livemode: apiResponse.livemode,
             minorUnitsAmountDivisor: PaymentPagesAPIResponse.makeMinorUnitsAmountDivisor(
@@ -190,6 +196,7 @@ extension CheckoutController.Session {
             availableExpressCheckoutPaymentMethods: availableExpressCheckoutPaymentMethods,
             paymentStatus: apiResponse.paymentStatus,
             paymentMethodOptions: apiResponse.paymentMethodOptions,
+            serverEmail: serverEmail,
             localState: localState,
             customer: apiResponse.customer,
             savedPaymentMethodsOfferSave: PaymentPagesAPIResponse.makeSavedPaymentMethodsOfferSave(

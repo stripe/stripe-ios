@@ -330,6 +330,10 @@
 
 "Tax" = "Impost";
 
+"Terms and Conditions" = "Termes i condicions";
+
+"Terms of Service" = "Condicions del servei";
+
 "The IBAN you entered is incomplete." = "L'BAN és incomplet.";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "El Número internacional de compte bancari (IBAN) que heu introduït no és vàlid, \"%@\" no és un codi de país compatible.";

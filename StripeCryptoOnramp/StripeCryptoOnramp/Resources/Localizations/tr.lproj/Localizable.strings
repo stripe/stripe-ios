@@ -1,5 +1,11 @@
 "Debit cards are most likely to be accepted." = "Bankamatik kartlarının kabul edilme olasılığı en yüksektir.";
 
+"Please try again later." = "Lütfen daha sonra tekrar deneyin.";
+
+"Submitted for review" = "İncelemeye gönderildi";
+
+"Tell us about your source of funds" = "Bize fonlarınızın kaynağı hakkında bilgi verin";
+
 "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "Bir doğrulama hatası nedeniyle bu uygulama doğrulanamadı. Lütfen daha sonra tekrar deneyin veya sorun devam ederse geliştiriciyle iletişime geçin.";
 
 "This app couldn't be verified. Contact the app developer for help." = "Bu uygulama doğrulanamadı. Yardım için uygulama geliştiricisi ile iletişime geçin.";
@@ -12,4 +18,12 @@
 
 "This wallet verification request is invalid. Please try again." = "Bu cüzdan doğrulama talebi geçerli değil. Lütfen tekrar deneyin.";
 
+"Upload your proof of address" = "Adres kanıtınızı yükleyin";
+
 "We couldn't verify ownership of this wallet. Please try again." = "Bu cüzdanın sahipliğini doğrulayamadık. Lütfen tekrar deneyin.";
+
+"We’re required to confirm your address to enable spending over %@." = "%@ üzeri harcamaları etkinleştirmek için adresinizi onaylamamız gerekiyor.";
+
+"We’re required to understand where your funds come from to enable spending over %@." = "%@ üzeri harcamaları etkinleştirmek için fonlarınızın nereden geldiğini anlamamız gerekiyor.";
+
+"We’re reviewing your documents. We’ll let you know when verification is complete." = "Belgelerinizi inceliyoruz. Doğrulama tamamlandığında sizi bilgilendireceğiz.";

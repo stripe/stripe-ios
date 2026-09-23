@@ -694,6 +694,7 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
                 },
                 clientAttributionMetadata: clientAttributionMetadata
             ),
+            preCollectedConsent: nil,
             linkBrand: context.configuration.financialConnectionsLinkBrandOverride,
             onEvent: nil,
             from: self,

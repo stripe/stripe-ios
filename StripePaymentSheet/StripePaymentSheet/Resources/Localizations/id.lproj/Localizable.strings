@@ -330,6 +330,10 @@
 
 "Tax" = "Pajak";
 
+"Terms and Conditions" = "Ketentuan dan Persyaratan";
+
+"Terms of Service" = "Ketentuan Layanan";
+
 "The IBAN you entered is incomplete." = "IBAN yang Anda masukkan tidak lengkap.";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "IBAN yang Anda masukkan tidak valid. \"%@\" bukan kode negara yang didukung.";
