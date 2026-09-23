@@ -26,9 +26,6 @@ public extension CryptoOnrampCoordinator {
         /// A crypto customer ID is missing but required.
         case missingCryptoCustomerID
 
-        /// The selected Apple Pay payment method does not match the current merchant of record.
-        case applePayMerchantOfRecordMismatch
-
         /// The Link account is not in a verified state.
         case linkAccountNotVerified
 
@@ -47,8 +44,6 @@ public extension CryptoOnrampCoordinator {
                 return "An unexpected error occurred internally. Selected payment source was not set to an expected value."
             case .missingCryptoCustomerID:
                 return "A crypto customer ID is missing but required. A crypto customer ID must either be provided to the Crypto Onramp Coordinator in the `create` API, or generated during the onramp flow by verifying a Link account using the `registerLinkUser`, `authenticateUserWithToken`, or `authorize` APIs."
-            case .applePayMerchantOfRecordMismatch:
-                return "The selected Apple Pay payment method does not match the current merchant of record. Collect the Apple Pay payment method again before creating a crypto payment token."
             case .linkAccountNotVerified:
                 return "No active Link consumer is available in a verified state."
             case .seamlessSignInTokenInvalid:

@@ -31,35 +31,6 @@ final class CryptoOnrampCoordinatorTests: APIStubbedTestCase {
         XCTAssertNotNil(coordinator)
     }
 
-    func testApplePayPlatformPublishableKeyValidationSucceedsForMatchingKeys() throws {
-        // Given an Apple Pay payment method and current platform using the same publishable key
-        let publishableKey = "pk_test_matching"
-
-        // When validating the keys, then no error is thrown
-        XCTAssertNoThrow(try CryptoOnrampCoordinator.validateApplePayPlatformPublishableKey(
-            publishableKey,
-            currentPlatformPublishableKey: publishableKey
-        ))
-    }
-
-    func testApplePayPlatformPublishableKeyValidationFailsForDifferentKeys() throws {
-        do {
-            // When validating an Apple Pay payment method against a different current platform key
-            try CryptoOnrampCoordinator.validateApplePayPlatformPublishableKey(
-                "pk_test_selected",
-                currentPlatformPublishableKey: "pk_test_current"
-            )
-            XCTFail("Expected validation to fail.")
-        } catch {
-            // Then the mismatch requires Apple Pay to be collected again
-            guard let coordinatorError = error as? CryptoOnrampCoordinator.Error,
-                  case .applePayMerchantOfRecordMismatch = coordinatorError else {
-                XCTFail("Expected an Apple Pay merchant-of-record mismatch but got: \(error).")
-                return
-            }
-        }
-    }
-
     private static let linkElementsSession: [String: Any] = [
         "config_id": "config_crypto_onramp",
         "link_settings": [
