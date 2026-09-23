@@ -1,5 +1,11 @@
 "Debit cards are most likely to be accepted." = "Най-вероятно ще бъдат приемани дебитни карти.";
 
+"Please try again later." = "Моля, опитайте отново по-късно.";
+
+"Submitted for review" = "Изпратено за преглед";
+
+"Tell us about your source of funds" = "Разкажете ни за Вашия източник на средства";
+
 "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "Това приложение не можа да бъде потвърдено поради грешка в атестацията. Моля, опитайте отново по-късно или се свържете с разработчика, ако проблемът продължи.";
 
 "This app couldn't be verified. Contact the app developer for help." = "Това приложение не можеше да бъде потвърдено. Свържете се с разработчика на приложението за помощ.";
@@ -12,4 +18,12 @@
 
 "This wallet verification request is invalid. Please try again." = "Това искане за удостоверяване на портфейл е валидно. Моля, опитайте отново.";
 
+"Upload your proof of address" = "Качете Вашето доказателство за адрес";
+
 "We couldn't verify ownership of this wallet. Please try again." = "Не можахме да удостоверим собствеността на този портфейл. Моля, опитайте отново.";
+
+"We’re required to confirm your address to enable spending over %@." = "Задължени сме да потвърдим Вашия адрес, за да разрешим разходи над %@.";
+
+"We’re required to understand where your funds come from to enable spending over %@." = "Задължени сме да разберем откъде идват Вашите средства, за да разрешим разходи над %@.";
+
+"We’re reviewing your documents. We’ll let you know when verification is complete." = "Преглеждаме Вашите документи. Ще Ви уведомим, когато проверката приключи.";

@@ -48,6 +48,7 @@ extension CheckoutPlayground {
         }
         @Published var currency: Currency
         @Published var customerType: CustomerType
+        @Published var email: EmailSettings
         @Published var cartScenario: CartScenario
         @Published var shippingAddressCollection: Bool
         @Published var defaultShippingAddressOption: DefaultShippingAddressOption
@@ -80,6 +81,7 @@ extension CheckoutPlayground {
             linkMode = settings.linkMode
             currency = settings.currency
             customerType = settings.customerType
+            email = settings.email ?? Self.legacyEmailSettings(settings)
             cartScenario = settings.cartScenario
             shippingAddressCollection = settings.shippingAddressCollection
             defaultShippingAddressOption = settings.defaultShippingAddressOption
@@ -118,7 +120,39 @@ extension CheckoutPlayground {
         }
 
         var isButtonDisabled: Bool {
-            isCreating || (!automaticPaymentMethods && paymentMethodTypes.isEmpty) || lineItems.isEmpty
+            isCreating || (!automaticPaymentMethods && paymentMethodTypes.isEmpty) || lineItems.isEmpty || emailConfigurationError != nil
+        }
+
+        var emailConfigurationError: String? {
+            if email.source == .checkoutSession && customerType != .guest {
+                return "Checkout Session server email requires Guest. Choose Guest or a different email source."
+            }
+            if email.source == .customer && customerType == .guest {
+                return "Customer server email requires a New or Returning Customer."
+            }
+            if adaptivePricingCountry != .none && !email.source.isServer {
+                return "AP location simulation requires server email. Choose No Override under Currency Selector, or select a server email source."
+            }
+            if email.source.isServer && resolvedEmail.email == nil {
+                return "Enter a server email, or choose None for no email."
+            }
+            return nil
+        }
+
+        var resolvedEmail: EmailSettings {
+            var resolved = email
+            if email.source.isServer && adaptivePricingCountry != .none {
+                resolved.value = "test+location_\(adaptivePricingCountry.rawValue.uppercased())@example.com"
+            }
+            return resolved
+        }
+
+        private static func legacyEmailSettings(_ settings: Settings) -> EmailSettings {
+            // Preserve saved playground behavior when loading settings created before the email picker.
+            if settings.customerType == .guest {
+                return .init()
+            }
+            return .init(source: settings.adaptivePricingCountry == .none ? .none : .customer)
         }
 
         var lineItems: [LineItemConfig] {
@@ -137,6 +171,10 @@ extension CheckoutPlayground {
         }
 
         func createSession() async {
+            if let emailConfigurationError {
+                errorMessage = emailConfigurationError
+                return
+            }
             serializeSettingsToNSUserDefaults()
             isCreating = true
             errorMessage = nil
@@ -162,7 +200,7 @@ extension CheckoutPlayground {
                     automaticTax: automaticTax,
                     paymentMethodSave: checkoutSessionPaymentMethodSave,
                     paymentMethodRemove: checkoutSessionPaymentMethodRemove,
-                    adaptivePricingCountry: adaptivePricingCountry,
+                    email: resolvedEmail,
                     automaticPaymentMethods: automaticPaymentMethods,
                     paymentMethodTypes: paymentMethodTypes
                 )
@@ -188,6 +226,7 @@ extension CheckoutPlayground {
                 linkMode: linkMode,
                 currency: currency,
                 customerType: customerType,
+                email: email,
                 cartScenario: cartScenario,
                 shippingAddressCollection: shippingAddressCollection,
                 defaultShippingAddressOption: defaultShippingAddressOption,
@@ -213,6 +252,7 @@ extension CheckoutPlayground {
             linkMode = settings.linkMode
             currency = settings.currency
             customerType = settings.customerType
+            email = settings.email ?? Self.legacyEmailSettings(settings)
             cartScenario = settings.cartScenario
             shippingAddressCollection = settings.shippingAddressCollection
             defaultShippingAddressOption = settings.defaultShippingAddressOption

@@ -330,6 +330,10 @@
 
 "Tax" = "Buwis";
 
+"Terms and Conditions" = "Mga Tuntunin at Kondisyon";
+
+"Terms of Service" = "Mga Tuntunin ng Serbisyo";
+
 "The IBAN you entered is incomplete." = "Ang IBAN na iniligay mo ay di kumpleto.";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Ang IBAN na iyong inilagay ay hindi valid, ang \"%@\" ay hindi isang suportadong country code.";

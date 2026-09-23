@@ -1,5 +1,11 @@
 "Debit cards are most likely to be accepted." = "Οι χρεωστικές κάρτες είναι πιο πιθανό να γίνουν αποδεκτές.";
 
+"Please try again later." = "Δοκιμάστε ξανά αργότερα.";
+
+"Submitted for review" = "Υποβλήθηκε για έλεγχο";
+
+"Tell us about your source of funds" = "Πείτε μας για την πηγή των χρημάτων σας";
+
 "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "Δεν ήταν δυνατή η επαλήθευση αυτής της εφαρμογής λόγω σφάλματος βεβαίωσης. Δοκιμάστε ξανά αργότερα ή επικοινωνήστε με τον προγραμματιστή αν το πρόβλημα παραμένει.";
 
 "This app couldn't be verified. Contact the app developer for help." = "Δεν ήταν δυνατή η επαλήθευση αυτής της εφαρμογής. Επικοινωνήστε με τον προγραμματιστή της εφαρμογής για βοήθεια.";
@@ -12,4 +18,12 @@
 
 "This wallet verification request is invalid. Please try again." = "Αυτό το αίτημα επαλήθευσης πορτοφολιού δεν είναι έγκυρο. Δοκιμάστε ξανά.";
 
+"Upload your proof of address" = "Μεταφορτώστε το αποδεικτικό διεύθυνσής σας";
+
 "We couldn't verify ownership of this wallet. Please try again." = "Δεν μπορέσαμε να επαληθεύσουμε την ιδιοκτησία αυτού του πορτοφολιού. Δοκιμάστε ξανά.";
+
+"We’re required to confirm your address to enable spending over %@." = "Απαιτείται να επιβεβαιώσουμε τη διεύθυνσή σας για να ενεργοποιήσουμε δαπάνες άνω των %@.";
+
+"We’re required to understand where your funds come from to enable spending over %@." = "Απαιτείται να κατανοήσουμε από πού προέρχονται τα χρήματά σας για να ενεργοποιήσουμε δαπάνες άνω των %@.";
+
+"We’re reviewing your documents. We’ll let you know when verification is complete." = "Εξετάζουμε τα έγγραφά σας. Θα σας ενημερώσουμε όταν ολοκληρωθεί η επαλήθευση.";

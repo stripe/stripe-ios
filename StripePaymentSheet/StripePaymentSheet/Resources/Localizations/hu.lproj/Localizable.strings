@@ -330,6 +330,10 @@
 
 "Tax" = "Adó";
 
+"Terms and Conditions" = "Feltételek";
+
+"Terms of Service" = "Szolgáltatási feltételek";
+
 "The IBAN you entered is incomplete." = "A beírt IBAN-szám hiányos.";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "A beírt IBAN-szám érvénytelen: „%@” nem támogatott országkód.";
