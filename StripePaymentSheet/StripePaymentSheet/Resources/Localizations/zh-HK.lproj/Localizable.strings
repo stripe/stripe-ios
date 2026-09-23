@@ -330,6 +330,10 @@
 
 "Tax" = "稅";
 
+"Terms and Conditions" = "條款及細則";
+
+"Terms of Service" = "服務條款";
+
 "The IBAN you entered is incomplete." = "您輸入的 IBAN 不完整。";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "您輸入的 IBAN 無效，「%@」並非支援的國家/地區代碼。";

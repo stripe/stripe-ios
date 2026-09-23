@@ -330,6 +330,10 @@
 
 "Tax" = "Daň";
 
+"Terms and Conditions" = "Zmluvné podmienky";
+
+"Terms of Service" = "Podmienky služby";
+
 "The IBAN you entered is incomplete." = "Zadaný IBAN je neúplný.";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Zadaný IBAN je neplatný, „%@“ nie je podporovaný kód krajiny.";

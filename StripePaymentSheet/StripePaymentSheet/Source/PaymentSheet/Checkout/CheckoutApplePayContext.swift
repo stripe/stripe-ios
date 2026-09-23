@@ -33,7 +33,6 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
     private let returnURL: String
     private let presentationWindow: UIWindow?
     private let confirmationHandler: CheckoutController.ApplePayConfirmationParameters.ConfirmationHandler
-    private let fallbackBillingDetails: StripeAPI.BillingDetails?
     private let initialTaxRegion: CheckoutController.Address?
     let authorizationController: PKPaymentAuthorizationController
 
@@ -119,7 +118,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
                     StripeAPI.PaymentMethod.create(
                         apiClient: self.apiClient,
                         payment: payment,
-                        fallbackBillingDetails: self.fallbackBillingDetails,
+                        fallbackBillingDetails: nil,
                         clientAttributionMetadata: clientAttributionMetadata
                     ) { result in
                         continuation.resume(with: result)
@@ -142,7 +141,8 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
                     returnURL: self.returnURL,
                     shipping: self.makeShippingDetailsParams(from: payment)
                         ?? checkoutSession.shippingAddress?.shippingDetailsParams,
-                    clientAttributionMetadata: clientAttributionMetadata
+                    clientAttributionMetadata: clientAttributionMetadata,
+                    collectedInformation: .init(email: checkoutSession.localState.email)
                 )
                 let result = await self.confirmationHandler(requestParameters)
                 switch result {

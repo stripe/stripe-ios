@@ -7,11 +7,18 @@ import XCTest
 
 final class CheckoutElementsUITests: PaymentSheetUITestCase {
     func testElementsStaySynchronizedWithCheckoutSession() throws {
-        // Given a Checkout Session
+        // Given a Checkout Session with Customer.email simulating a customer in Germany
         app.launchEnvironment["STP_CHECKOUT_ELEMENTS"] = "true"
         app.launch()
 
         app.buttons["Reset"].waitForExistenceAndTap()
+        app.buttons["checkout_picker_Customer"].waitForExistenceAndTap()
+        app.buttons["New"].waitForExistenceAndTap()
+        let scrollStart = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
+        let scrollEnd = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.25))
+        scrollStart.press(forDuration: 0.1, thenDragTo: scrollEnd)
+        XCTAssertTrue(app.buttons["checkout_picker_Email source"].waitForExistenceAndTap())
+        XCTAssertTrue(app.buttons["Server — Customer"].waitForExistenceAndTap())
         app.buttons["No Override"].scrollToAndTap(in: app)
         app.buttons["Germany (DE)"].waitForExistenceAndTap()
         app.buttons["Create Checkout Session"].waitForExistenceAndTap()
@@ -62,8 +69,6 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
         waitForExpectations(timeout: 10)
 
         // When the customer saves an address in Shipping Address Element
-        let scrollStart = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
-        let scrollEnd = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.25))
         scrollStart.press(forDuration: 0.1, thenDragTo: scrollEnd)
         app.buttons["Add shipping address"].scrollToAndTap(in: app)
         fillShippingAddress()

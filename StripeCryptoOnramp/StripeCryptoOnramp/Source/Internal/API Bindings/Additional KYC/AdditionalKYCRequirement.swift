@@ -48,11 +48,15 @@ struct AdditionalKYCRequirement: Decodable, Equatable {
         let code: String
 
         /// A developer-facing explanation of the error that must not be displayed directly to the customer.
-        let message: String
+        let description: String
     }
 
-    /// A value describing the information the customer must provide (e.g. `proof_of_address`, `source_of_funds`).
-    let description: String
+    /// Information that must be collected in addition to the primary KYC submission.
+    struct AdditionalRequirements: Decodable, Equatable {
+
+        /// A questionnaire that must be completed with the primary submission.
+        let questionnaire: AdditionalKYCQuestionnaire?
+    }
 
     /// The liquidity provider that requested the information.
     let requestedBy: String
@@ -67,13 +71,16 @@ struct AdditionalKYCRequirement: Decodable, Equatable {
     /// This is omitted while Stripe or the liquidity partner is responsible for the next action.
     let document: AdditionalKYCDocumentRequirement?
 
+    /// Additional information that must be collected with the requirement.
+    let additionalRequirements: AdditionalRequirements?
+
     // MARK: - Decodable
 
     private enum CodingKeys: String, CodingKey {
-        case description
         case requestedBy = "requested_by"
         case awaitingActionFrom = "awaiting_action_from"
         case errors
         case document
+        case additionalRequirements = "additional_requirements"
     }
 }

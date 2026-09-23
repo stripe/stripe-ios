@@ -26,6 +26,10 @@ import UIKit
     /// Whether the Link Account Session requests merchant data permissions.
     @_spi(STP) public var hasRequestedDataPermissions: Bool = false
 
+    /// Evidence that the customer already accepted Financial Connections consent text
+    /// collected by the merchant's own UI.
+    @_spi(STP) public var preCollectedConsent: FinancialConnectionsPreCollectedConsent?
+
     private var navigationController: UINavigationController?
     private var wrapperViewController: FCLiteModalPresentationWrapper?
     private var completionHandler: ((FinancialConnectionsSDKResult) -> Void)?
@@ -67,6 +71,7 @@ import UIKit
             apiClient: apiClient,
             elementsSessionContext: elementsSessionContext,
             hasRequestedDataPermissions: hasRequestedDataPermissions,
+            preCollectedConsent: preCollectedConsent,
             completion: { [weak self] result in
                 guard let self else { return }
                 self.handleFlowCompletion(result: result)

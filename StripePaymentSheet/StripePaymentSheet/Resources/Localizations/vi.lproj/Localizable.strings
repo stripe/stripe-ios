@@ -330,6 +330,10 @@
 
 "Tax" = "Thuế";
 
+"Terms and Conditions" = "Điều khoản và Điều kiện";
+
+"Terms of Service" = "Điều khoản dịch vụ";
+
 "The IBAN you entered is incomplete." = "IBAN quý vị đã nhập chưa đầy đủ.";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "IBAN bạn đã nhập không hợp lệ, \"%@\" không phải là mã quốc gia được hỗ trợ.";
