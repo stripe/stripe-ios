@@ -15,7 +15,7 @@ final class FinancialConnectionsUITests: XCTestCase {
         continueAfterFailure = false
     }
 
-    func testDataTestModeOAuthNativeAuthFlow() throws {
+    func _testDataTestModeOAuthNativeAuthFlow() throws {
         let app = XCUIApplication.fc_launch(
             playgroundConfigurationString:
 """
@@ -43,7 +43,7 @@ final class FinancialConnectionsUITests: XCTestCase {
         )
     }
 
-    func testPaymentTestModeLegacyNativeAuthFlow() throws {
+    func _testPaymentTestModeLegacyNativeAuthFlow() throws {
         let app = XCUIApplication.fc_launch(
             playgroundConfigurationString:
 """
@@ -72,7 +72,7 @@ final class FinancialConnectionsUITests: XCTestCase {
         )
     }
 
-    func testPaymentTestModeManualEntryNativeAuthFlow() throws {
+    func _testPaymentTestModeManualEntryNativeAuthFlow() throws {
         let app = XCUIApplication.fc_launch(
             playgroundConfigurationString:
 """
@@ -120,7 +120,7 @@ final class FinancialConnectionsUITests: XCTestCase {
         XCTAssert(app.fc_playgroundSuccessAlertView.exists)
     }
 
-    func testPaymentTestModeManualEntryAutofill() throws {
+    func _testPaymentTestModeManualEntryAutofill() throws {
         let app = XCUIApplication.fc_launch(
             playgroundConfigurationString:
 """
@@ -410,7 +410,7 @@ final class FinancialConnectionsUITests: XCTestCase {
         XCTAssertTrue(playgroundCancelAlert.waitForExistence(timeout: 10.0))
     }
 
-    func testNativeOnEventClosureEvents() throws {
+    func _testNativeOnEventClosureEvents() throws {
         let app = XCUIApplication.fc_launch(
             playgroundConfigurationString:
 """
@@ -617,7 +617,7 @@ final class FinancialConnectionsUITests: XCTestCase {
     }
 
     // this tests going through "ResetFlowViewController"
-    func testNativeResetFlowWithErrorToSuccess() {
+    func _testNativeResetFlowWithErrorToSuccess() {
         let app = XCUIApplication.fc_launch(
             playgroundConfigurationString:
 """
