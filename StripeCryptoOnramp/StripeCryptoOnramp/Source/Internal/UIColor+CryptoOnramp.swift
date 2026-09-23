@@ -37,6 +37,9 @@ extension UIColor {
 
     /// The foreground color on success indicators, kept dark for contrast in both appearances.
     static let textOnSuccess = UIColor(hex: 0x171717)
+
+    /// The border color for document controls.
+    static let documentBorder = dynamic(light: UIColor(hex: 0xA3A3A3), dark: UIColor(hex: 0x737373))
 }
 
 /// Convenience extension for exposing the above semantic colors for SwiftUI usage.
@@ -50,6 +53,7 @@ extension Color {
     static let textPrimary = Color(uiColor: .textPrimary)
     static let textTertiary = Color(uiColor: .textTertiary)
     static let textOnSuccess = Color(uiColor: .textOnSuccess)
+    static let documentBorder = Color(uiColor: .documentBorder)
 }
 
 private extension UIColor {
