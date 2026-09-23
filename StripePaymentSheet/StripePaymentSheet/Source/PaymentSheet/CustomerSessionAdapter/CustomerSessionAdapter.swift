@@ -13,6 +13,7 @@ class CustomerSessionAdapter {
 
     let customerSessionClientSecretProvider: CustomerSessionClientSecretProvider
     private var _cachedCustomerSessionClientSecret: CachedCustomerSessionClientSecret?
+    private let timeProvider: () -> Date
     let intentConfiguration: CustomerSheet.IntentConfiguration
     let configuration: CustomerSheet.Configuration
 
@@ -21,25 +22,31 @@ class CustomerSessionAdapter {
         let apiKey: String
         let customerId: String
         let cacheDate: Date
+        private let timeProvider: () -> Date
 
-        init(customerSessionClientSecret: CustomerSessionClientSecret, apiKey: String) {
+        init(customerSessionClientSecret: CustomerSessionClientSecret,
+             apiKey: String,
+             timeProvider: @escaping () -> Date = Date.init) {
             self.customerSessionClientSecret = customerSessionClientSecret
             self.customerId = customerSessionClientSecret.customerId
-            self.cacheDate = Date()
+            self.cacheDate = timeProvider()
             self.apiKey = apiKey
+            self.timeProvider = timeProvider
         }
 
         func isExpired() -> Bool {
-            return Date() >= (cacheDate + CachedCustomerMaxAge)
+            return timeProvider() >= (cacheDate + CachedCustomerMaxAge)
         }
     }
 
     init(customerSessionClientSecretProvider: @escaping CustomerSessionClientSecretProvider,
          intentConfiguration: CustomerSheet.IntentConfiguration,
-         configuration: CustomerSheet.Configuration) {
+         configuration: CustomerSheet.Configuration,
+         timeProvider: @escaping () -> Date = Date.init) {
         self.customerSessionClientSecretProvider = customerSessionClientSecretProvider
         self.intentConfiguration = intentConfiguration
         self.configuration = configuration
+        self.timeProvider = timeProvider
     }
 
     func cachedCustomerSessionClientSecret() async throws -> CachedCustomerSessionClientSecret {
@@ -80,7 +87,8 @@ class CustomerSessionAdapter {
             }
 
             let tempCachedCustomerSessionClientSecret = CachedCustomerSessionClientSecret(customerSessionClientSecret: customerSessionClientSecret,
-                                                                                          apiKey: apiKey)
+                                                                                          apiKey: apiKey,
+                                                                                          timeProvider: timeProvider)
             self._cachedCustomerSessionClientSecret = tempCachedCustomerSessionClientSecret
             return (elementsSessionResponse, tempCachedCustomerSessionClientSecret)
         }
