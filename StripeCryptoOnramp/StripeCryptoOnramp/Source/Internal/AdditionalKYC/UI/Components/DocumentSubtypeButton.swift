@@ -57,9 +57,9 @@ struct DocumentSubtypeButton: View {
 @available(iOS 17.0, *)
 #Preview("Document subtype selections", traits: .sizeThatFitsLayout) {
     VStack(spacing: 16) {
-        DocumentSubtypeButton(title: .Localized.documentType, selection: "Utility bill", action: {})
+        DocumentSubtypeButton(title: .Localized.documentType, selection: "Utility provider", action: {})
 
-        DocumentSubtypeButton(title: .Localized.documentType, selection: "Government-issued proof of residential address", action: {})
+        DocumentSubtypeButton(title: .Localized.documentType, selection: "Government organization documents", action: {})
     }
     .padding(20)
     .background(Color.surfacePrimary)
