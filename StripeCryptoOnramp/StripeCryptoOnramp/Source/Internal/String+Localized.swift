@@ -90,6 +90,14 @@ extension String.Localized {
         )
     }
 
+    static var documentType: String {
+        STPLocalizedString("Document type", "Label and picker title for a document's category")
+    }
+
+    static var uploadDocument: String {
+        STPLocalizedString("Upload document", "Action to select an existing document for upload")
+    }
+
     static var documentUploadedSuccessfully: String {
         STPLocalizedString("Document uploaded successfully", "Heading confirming a document was uploaded successfully")
     }
