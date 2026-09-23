@@ -3,9 +3,6 @@ PATCH
 
 ## X.Y.Z - changes pending release
 
-### PaymentSheet
-* [Fixed] Fixed the Currency Selector Element showing a currency that did not match the Checkout Session.
-
 ## 26.12.0 2026-09-21
 ### CryptoOnramp (Alpha)
 * [Removed] Removed public exposure of `StripeCryptoOnramp.Image`, including `Image.linkIconSquare`.
