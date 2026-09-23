@@ -226,6 +226,7 @@ final class CheckoutCartViewController: UIViewController {
                     display: expressCheckoutElementSettings.linkDisplay
                 )
                 expressCheckoutElementConfiguration.shippingAddressRequired = expressCheckoutElementSettings.shippingAddressRequired
+                expressCheckoutElementConfiguration.paymentMethodOrder = expressCheckoutElementSettings.paymentMethodOrder.paymentMethodOrder
                 configuration.expressCheckoutElement = expressCheckoutElementConfiguration
             }
             if adaptivePricing {

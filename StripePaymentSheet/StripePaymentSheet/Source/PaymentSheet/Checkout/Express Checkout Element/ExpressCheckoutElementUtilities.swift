@@ -35,7 +35,24 @@ enum ExpressCheckoutElementUtilities {
                 }
             }
         }
-        return paymentMethods
+        guard let paymentMethodOrder = configuration.paymentMethodOrder else {
+            return paymentMethods
+        }
+
+        var orderedPaymentMethods: [String] = []
+        for paymentMethod in paymentMethodOrder {
+            guard
+                let index = paymentMethods.firstIndex(where: {
+                    $0.caseInsensitiveCompare(paymentMethod) == .orderedSame
+                }),
+                !orderedPaymentMethods.caseInsensitiveContains(paymentMethod)
+            else {
+                continue
+            }
+            orderedPaymentMethods.append(paymentMethods.remove(at: index))
+        }
+        orderedPaymentMethods.append(contentsOf: paymentMethods)
+        return orderedPaymentMethods
     }
 
     static func linkDisabledReasons(

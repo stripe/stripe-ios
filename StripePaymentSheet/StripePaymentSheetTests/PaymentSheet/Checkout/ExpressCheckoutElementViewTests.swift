@@ -195,6 +195,41 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
         XCTAssertEqual(buttons, expectedButtons)
     }
 
+    func testPaymentMethodOrder() {
+        // Given both payment methods are available in server order
+        let session = makeSessionWithWalletTypes(["apple_pay", "link"]).makePublicSession()
+        var configuration = ExpressCheckoutElement.Configuration(confirmHandler: { _ in })
+        configuration.applePayConfiguration = ExpressCheckoutElement.ApplePayConfiguration(
+            merchantId: "merchant.com.example"
+        )
+
+        func availablePaymentMethods(order: [String]?) -> [String] {
+            configuration.paymentMethodOrder = order
+            return ExpressCheckoutElementUtilities.availablePaymentMethods(
+                for: session.elementsSession,
+                configuration: configuration
+            )
+        }
+
+        guard StripeAPI.deviceSupportsApplePay() else {
+            XCTAssertEqual(availablePaymentMethods(order: ["apple_pay", "link"]), ["link"])
+            return
+        }
+
+        // Then configured methods are moved to the front
+        XCTAssertEqual(availablePaymentMethods(order: ["link"]), ["link", "apple_pay"])
+        // ...and matching is case-insensitive
+        XCTAssertEqual(availablePaymentMethods(order: ["LINK"]), ["link", "apple_pay"])
+        // ...and invalid and duplicate entries are ignored
+        XCTAssertEqual(
+            availablePaymentMethods(order: ["unknown", "link", "link"]),
+            ["link", "apple_pay"]
+        )
+        // ...and nil or empty ordering preserves server order
+        XCTAssertEqual(availablePaymentMethods(order: nil), ["apple_pay", "link"])
+        XCTAssertEqual(availablePaymentMethods(order: []), ["apple_pay", "link"])
+    }
+
     // MARK: - Helpers
 
     private func makeSessionWithWalletTypes(

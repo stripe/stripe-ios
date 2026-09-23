@@ -19,6 +19,8 @@ extension ExpressCheckoutElement {
         public var applePayConfiguration: ApplePayConfiguration?
         /// Sets the configuration for Link.
         public var linkConfiguration: LinkConfiguration = .init()
+        /// Overrides the display order of payment methods. `nil` uses the default dynamic ordering.
+        public var paymentMethodOrder: [String]?
         /// Called after a wallet payment confirmation completes.
         public var confirmHandler: ConfirmHandler
 
