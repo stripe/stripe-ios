@@ -330,6 +330,10 @@
 
 "Tax" = "Skatt";
 
+"Terms and Conditions" = "Villkor";
+
+"Terms of Service" = "Tjänstevillkor";
+
 "The IBAN you entered is incomplete." = "Angivet IBAN är ofullständigt.";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Angivet IBAN är ogiltigt, \"%@\" är inte en giltig landskod.";

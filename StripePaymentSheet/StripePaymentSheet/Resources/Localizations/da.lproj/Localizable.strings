@@ -330,6 +330,10 @@
 
 "Tax" = "Moms";
 
+"Terms and Conditions" = "Vilkår";
+
+"Terms of Service" = "Tjenestevilkår";
+
 "The IBAN you entered is incomplete." = "Det indtastede IBAN-nummer er ufuldstændigt.";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Den indtastede IBAN er ugyldig. \"%@\" er ikke en understøttet landekode.";

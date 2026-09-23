@@ -213,7 +213,8 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
             returnURL: context.returnUrl,
             shipping: shipping,
             paymentMethodOptions: nil,
-            clientAttributionMetadata: clientAttributionMetadata
+            clientAttributionMetadata: clientAttributionMetadata,
+            collectedInformation: .init(email: checkoutSession.localState.email)
         )
         let response = try await context.apiClient.confirmCheckoutSession(with: requestParameters)
 
@@ -408,7 +409,7 @@ extension STPApplePayContext {
             applePayContext.apiClient = configuration.apiClient
             applePayContext.returnUrl = configuration.returnURL
             applePayContext.clientAttributionMetadata = clientAttributionMetadata
-            applePayContext.fallbackBillingDetails = makeFallbackBillingDetails(intent: intent, configuration: configuration)
+            applePayContext.fallbackBillingDetails = makeFallbackBillingDetails(configuration: configuration)
             return applePayContext
         } else {
             // Delegate only deallocs when Apple Pay completes
@@ -514,23 +515,16 @@ private func makeShippingDetails(from configuration: PaymentElementConfiguration
 
 @MainActor
 private func makeFallbackBillingDetails(
-    intent: Intent,
     configuration: PaymentElementConfiguration
 ) -> StripeAPI.BillingDetails? {
+    guard configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod else {
+        return nil
+    }
+
     var fallbackBillingDetails = StripeAPI.BillingDetails()
     var hasFallbackBillingDetails = false
-
-    if case .checkout(let session) = intent, let email = session.email {
-        fallbackBillingDetails.email = email
-        hasFallbackBillingDetails = true
-    }
-
-    guard configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod else {
-        return hasFallbackBillingDetails ? fallbackBillingDetails : nil
-    }
-
     let defaultBillingDetails = configuration.defaultBillingDetails
-    if fallbackBillingDetails.email == nil, let email = defaultBillingDetails.email {
+    if let email = defaultBillingDetails.email {
         fallbackBillingDetails.email = email
         hasFallbackBillingDetails = true
     }

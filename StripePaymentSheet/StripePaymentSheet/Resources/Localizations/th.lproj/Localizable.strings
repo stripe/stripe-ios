@@ -330,6 +330,10 @@
 
 "Tax" = "ภาษี";
 
+"Terms and Conditions" = "ข้อกำหนดและเงื่อนไข";
+
+"Terms of Service" = "ข้อกำหนดการให้บริการ";
+
 "The IBAN you entered is incomplete." = "IBAN ที่คุณป้อนไม่ครบถ้วน";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "IBAN ที่คุณป้อนไม่ถูกต้อง \"%@\" ไม่ใช่รหัสประเทศที่รองรับ";
