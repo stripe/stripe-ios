@@ -30,7 +30,6 @@ extension CheckoutController {
         let returnURL: String
         let merchantDisplayName: String
         let shippingAddressRequired: Bool
-        let email: String?
         let defaultBillingDetails: Configuration.Defaults.BillingDetails?
         let presentationWindow: UIWindow?
         // TODO: This should probably live with the other methods that delegate to CheckoutController
@@ -155,7 +154,6 @@ extension CheckoutController {
                 returnURL: self.configuration.returnURL,
                 merchantDisplayName: effectiveMerchantDisplayName,
                 shippingAddressRequired: false,
-                email: session.email ?? self.configuration.defaults.email,
                 defaultBillingDetails: self.configuration.defaults.billingDetails,
                 presentationWindow: presentingViewController.view.window,
                 confirmationHandler: { [apiClient, paymentHandler] requestParameters in

@@ -61,11 +61,6 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         self.returnURL = applePayConfirmationParameters.returnURL
         self.presentationWindow = applePayConfirmationParameters.presentationWindow
         self.confirmationHandler = applePayConfirmationParameters.confirmationHandler
-        self.fallbackBillingDetails = applePayConfirmationParameters.email.map { email in
-            var details = StripeAPI.BillingDetails()
-            details.email = email
-            return details
-        }
         self.initialTaxRegion = checkoutWalletUpdater.currentTaxRegion
         self.authorizationController = authorizationController
         self.checkoutWalletUpdater = checkoutWalletUpdater
@@ -357,7 +352,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
             paymentRequest.requiredBillingContactFields.insert(.postalAddress)
         }
 
-        if applePayConfirmationParameters.email == nil {
+        if checkoutSession.email == nil {
             paymentRequest.requiredShippingContactFields.insert(.emailAddress)
         }
 

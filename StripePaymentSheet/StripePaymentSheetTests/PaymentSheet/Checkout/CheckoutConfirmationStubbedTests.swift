@@ -554,57 +554,6 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         XCTAssertTrue(parameters.shippingAddressRequired)
     }
 
-    func testExpressCheckoutApplePayRequiresEmailWhenSessionAndDefaultsHaveNoEmail() async throws {
-        let parameters = try await makeExpressCheckoutApplePayParameters(
-            sessionOverrides: [:],
-            defaultsEmail: nil
-        )
-
-        XCTAssertNil(parameters.email)
-    }
-
-    func testExpressCheckoutApplePayDoesNotRequireEmailWhenSessionHasEmail() async throws {
-        let parameters = try await makeExpressCheckoutApplePayParameters(
-            sessionOverrides: ["customer_email": "customer@example.com"],
-            defaultsEmail: nil
-        )
-
-        XCTAssertEqual(parameters.email, "customer@example.com")
-    }
-
-    func testExpressCheckoutApplePayDoesNotRequireEmailWhenDefaultsHaveEmail() async throws {
-        let parameters = try await makeExpressCheckoutApplePayParameters(
-            sessionOverrides: [:],
-            defaultsEmail: "merchant@example.com"
-        )
-
-        XCTAssertEqual(parameters.email, "merchant@example.com")
-    }
-
-    private func makeExpressCheckoutApplePayParameters(
-        sessionOverrides: [String: Any],
-        defaultsEmail: String?
-    ) async throws -> CheckoutController.ApplePayConfirmationParameters {
-        var configuration = CheckoutController.Configuration(
-            clientSecret: "cs_test_123_secret_abc",
-            returnURL: "stripe-ios-test://checkout-return"
-        )
-        configuration.defaults.email = defaultsEmail
-        var expressCheckoutElementConfiguration = ExpressCheckoutElement.Configuration(confirmHandler: { _ in })
-        expressCheckoutElementConfiguration.applePayConfiguration = .init(merchantId: "merchant.com.test")
-        configuration.expressCheckoutElement = expressCheckoutElementConfiguration
-        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration(
-            apiResponse: CheckoutTestHelpers.makeSession(sessionOverrides),
-            configuration: configuration
-        ))
-
-        let flow = try checkout.makeExpressCheckoutConfirmationFlow(.applePay, presentationWindow: nil)
-        guard case .applePay(let parameters) = flow else {
-            throw CheckoutError.unknown(debugDescription: "Expected an Apple Pay confirmation flow")
-        }
-        return parameters
-    }
-
     // MARK: - Link
 
     func testExpressCheckoutLinkBuildsWalletConfirmationFlow() async throws {
