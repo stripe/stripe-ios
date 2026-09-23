@@ -31,7 +31,11 @@ public struct ExpressCheckoutElementView: View {
 @MainActor
 final class ExpressCheckoutElementViewModel: ObservableObject {
     let uiView: ExpressCheckoutElementUIView
-    @Published var isAvailable: Bool
+    @Published private(set) var buttons: [ExpressCheckoutElement.PaymentMethod]
+
+    var isAvailable: Bool {
+        return !buttons.isEmpty
+    }
 
     private var sessionCancellable: AnyCancellable?
 
@@ -39,15 +43,28 @@ final class ExpressCheckoutElementViewModel: ObservableObject {
         sessionSource: CheckoutSessionSource,
         uiView: ExpressCheckoutElementUIView
     ) {
+        let initialSession = sessionSource.initialSession
+        let initialButtons = Self.resolveButtons(for: initialSession)
         self.uiView = uiView
-        self.isAvailable = !sessionSource.initialSession.availableExpressCheckoutPaymentMethods.isEmpty
+        self.buttons = initialButtons
+        uiView.update(with: initialSession, buttons: initialButtons)
         sessionCancellable = sessionSource.sessionPublisher
             .dropFirst()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] session in
-                self?.uiView.update(with: session)
-                self?.isAvailable = !session.availableExpressCheckoutPaymentMethods.isEmpty
+                guard let self else { return }
+                let buttons = Self.resolveButtons(for: session)
+                self.uiView.update(with: session, buttons: buttons)
+                self.buttons = buttons
             }
+    }
+
+    private static func resolveButtons(
+        for session: CheckoutController.Session
+    ) -> [ExpressCheckoutElement.PaymentMethod] {
+        return session.availableExpressCheckoutPaymentMethods.compactMap(
+            ExpressCheckoutElement.PaymentMethod.init(rawValue:)
+        )
     }
 }
 

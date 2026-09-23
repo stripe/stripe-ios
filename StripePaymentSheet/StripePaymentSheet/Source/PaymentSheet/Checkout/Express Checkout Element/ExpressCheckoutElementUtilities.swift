@@ -35,18 +35,11 @@ enum ExpressCheckoutElementUtilities {
                 }
             }
         }
-        return paymentMethods
-    }
-
-    static func orderedPaymentMethods(
-        _ availablePaymentMethods: [String],
-        paymentMethodOrder: [String]?
-    ) -> [String] {
-        guard let paymentMethodOrder else {
-            return availablePaymentMethods
+        guard let paymentMethodOrder = configuration.paymentMethodOrder else {
+            return paymentMethods
         }
 
-        var remainingPaymentMethods = availablePaymentMethods
+        var remainingPaymentMethods = paymentMethods
         var orderedPaymentMethods: [String] = []
         for paymentMethod in paymentMethodOrder {
             guard

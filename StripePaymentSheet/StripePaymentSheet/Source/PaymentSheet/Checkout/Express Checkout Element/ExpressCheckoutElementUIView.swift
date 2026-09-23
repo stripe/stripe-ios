@@ -44,8 +44,6 @@ public final class ExpressCheckoutElementUIView: UIView {
             stackView.bottomAnchor.constraint(equalTo: bottomAnchor),
         ])
 
-        let buttons = orderedPaymentMethods(for: session)
-        buttons.forEach { stackView.addArrangedSubview(makeButton(for: $0)) }
     }
 
     @available(*, unavailable)
@@ -55,10 +53,12 @@ public final class ExpressCheckoutElementUIView: UIView {
 
     // MARK: - Internal Methods
 
-    func update(with session: CheckoutController.Session) {
+    func update(
+        with session: CheckoutController.Session,
+        buttons: [ExpressCheckoutElement.PaymentMethod]
+    ) {
         linkBrand = session.elementsSession.linkBrand ?? .link
         stackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
-        let buttons = orderedPaymentMethods(for: session)
         buttons.forEach { stackView.addArrangedSubview(makeButton(for: $0)) }
         invalidateIntrinsicContentSize()
     }
@@ -73,15 +73,6 @@ public final class ExpressCheckoutElementUIView: UIView {
     }
 
     // MARK: - Private Methods
-
-    private func orderedPaymentMethods(
-        for session: CheckoutController.Session
-    ) -> [ExpressCheckoutElement.PaymentMethod] {
-        ExpressCheckoutElementUtilities.orderedPaymentMethods(
-            session.availableExpressCheckoutPaymentMethods,
-            paymentMethodOrder: configuration.paymentMethodOrder
-        ).compactMap(ExpressCheckoutElement.PaymentMethod.init(rawValue:))
-    }
 
     private func makeButton(for paymentMethod: ExpressCheckoutElement.PaymentMethod) -> UIView {
         switch paymentMethod {
