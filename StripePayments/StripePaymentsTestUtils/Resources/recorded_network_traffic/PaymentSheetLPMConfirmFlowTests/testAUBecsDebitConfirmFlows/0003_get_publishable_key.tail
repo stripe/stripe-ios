@@ -1,0 +1,17 @@
+GET
+https:\/\/stp-mobile-playground-backend-v7\.stripedemos\.com\/publishable_key\?merchant=AU$
+200
+application/json
+Server: Google Frontend
+Content-Type: application/json; charset=utf-8
+x-powered-by: Express
+x-cloud-trace-context: 15beab618b0e856bb36635e545f73fca
+Via: 1.1 google
+Date: Fri, 11 Sep 2026 21:59:10 GMT
+Content-Length: 129
+Alt-Svc: h3=":443"; ma=2592000
+Etag: W/"81-tOJDxxGonNnjTc9cCKGkekU8jjs"
+
+{
+  "publishable_key" : "pk_test_51KaoFxCPXw4rvZpfi7MgGvQHAyqydlZgq7qfazb65457ApNZVN12LdVmiZh0bmDfgBEDUlXtSM72F9rPweMN0QJP00hVaYXMkx"
+}
