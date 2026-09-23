@@ -1,0 +1,29 @@
+GET
+https:\/\/api\.stripe\.com\/edge-internal\/card-metadata\?bin_prefix=424242$
+401
+application/json
+Content-Type: application/json
+Access-Control-Allow-Origin: *
+reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=uyp5_jrtckDzn41lFHNWXfwkN48YYi_LCnkWXF59CV2OCsYjGRIBhTmi_9_0ag3d-zL92zY%3D&t=1"
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=uyp5_jrtckDzn41lFHNWXfwkN48YYi_LCnkWXF59CV2OCsYjGRIBhTmi_9_0ag3d-zL92zY%3D; report-to csp
+x-wc: 3a3
+access-control-allow-methods: DELETE, GET, HEAD, PATCH, POST, PUT
+Server: nginx
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=uyp5_jrtckDzn41lFHNWXfwkN48YYi_LCnkWXF59CV2OCsYjGRIBhTmi_9_0ag3d-zL92zY%3D&t=1"}],"include_subdomains":true}
+Cache-Control: no-cache, no-store
+Date: Wed, 23 Sep 2026 19:54:55 GMT
+x-robots-tag: none
+access-control-allow-credentials: true
+Content-Length: 342
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Vary: Origin
+Www-Authenticate: Basic realm="Stripe"
+
+{
+  "error" : {
+    "message" : "You did not provide an API key. You need to provide your API key in the Authorization header, using Bearer auth (e.g. 'Authorization: Bearer YOUR_SECRET_KEY'). See https:\/\/stripe.com\/docs\/api#authentication for details, or we can help at https:\/\/support.stripe.com\/.",
+    "type" : "invalid_request_error"
+  }
+}

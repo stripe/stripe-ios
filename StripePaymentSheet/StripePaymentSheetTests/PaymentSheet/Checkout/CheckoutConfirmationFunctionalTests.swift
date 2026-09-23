@@ -82,6 +82,40 @@ final class CheckoutConfirmationFunctionalTests: STPNetworkStubbingTestCase {
         XCTAssertEqual(checkout.session.status, .complete(.paid))
     }
 
+    func test_confirm_with_corrected_card_after_decline_completes() async throws {
+        // Given a Checkout Session with automatic tax and a card that will be declined
+        var billingDetails = CheckoutController.Configuration.Defaults.BillingDetails()
+        billingDetails.name = "Jenny Rosen"
+        billingDetails.address = .init(
+            country: "US",
+            line1: "510 Townsend St",
+            city: "San Francisco",
+            state: "CA",
+            postalCode: "94103"
+        )
+        let checkout = try await makeCheckout(
+            amount: 10_000,
+            serverEmailSource: .checkoutSession("test@example.com"),
+            localDefaultEmail: nil,
+            collectBillingAddress: true,
+            automaticTax: true,
+            paymentMethodLayout: .vertical,
+            defaultBillingDetails: billingDetails
+        )
+        try await selectCardThroughFlowController(number: "4000000000000002", on: checkout)
+        guard case .failed = await checkout.confirm(from: UIViewController()) else {
+            return XCTFail("Expected the first card confirmation to fail")
+        }
+
+        // When the declined card is replaced on the same Checkout Session
+        try await selectCardThroughFlowController(number: "4242424242424242", on: checkout)
+        let result = await checkout.confirm(from: UIViewController())
+
+        // Then confirmation completes with the corrected card
+        assertCompleted(result, paymentStatus: .paid)
+        XCTAssertEqual(checkout.session.status, .complete(.paid))
+    }
+
     func test_confirm_with_sepa_debit_and_different_payment_method_email_completes_with_payment_intent() async throws {
         // Given a Checkout Session with customer_email and a SEPA Debit form requiring a different email
         var defaultBillingDetails = CheckoutController.Configuration.Defaults.BillingDetails()
@@ -143,6 +177,9 @@ final class CheckoutConfirmationFunctionalTests: STPNetworkStubbingTestCase {
         types: [String] = ["card"],
         currency: String = "usd",
         merchantCountry: String = "us",
+        collectBillingAddress: Bool = false,
+        automaticTax: Bool = false,
+        paymentMethodLayout: PaymentSheet.PaymentMethodLayout = .automatic,
         defaultBillingDetails: CheckoutController.Configuration.Defaults.BillingDetails? = nil
     ) async throws -> CheckoutController {
         var customerEmail: String?
@@ -164,6 +201,8 @@ final class CheckoutConfirmationFunctionalTests: STPNetworkStubbingTestCase {
             amount: amount,
             merchantCountry: merchantCountry,
             customerID: customerID,
+            collectBillingAddress: collectBillingAddress,
+            automaticTax: automaticTax,
             returnURL: "stripe-ios-test://checkout-return",
             customerEmail: customerEmail
         )
@@ -174,15 +213,55 @@ final class CheckoutConfirmationFunctionalTests: STPNetworkStubbingTestCase {
         configuration.apiClient = STPAPIClient(publishableKey: sessionResponse.publishableKey)
         configuration.defaults.email = localDefaultEmail
         configuration.defaults.billingDetails = defaultBillingDetails
-        configuration.paymentElement = .init()
+        var paymentElementConfiguration = PaymentElement.Configuration()
+        paymentElementConfiguration.paymentMethodLayout = paymentMethodLayout
+        configuration.paymentElement = paymentElementConfiguration
         return try await CheckoutController(configuration: configuration)
     }
 
     private func selectCardWithoutBillingEmail(on checkout: CheckoutController) {
+        selectCard(number: "4242424242424242", on: checkout)
+    }
+
+    private func selectCardThroughFlowController(
+        number: String,
+        on checkout: CheckoutController
+    ) async throws {
+        let flowController = checkout.getPaymentElement().paymentSheetFlowController
+        let viewController = try XCTUnwrap(
+            flowController.viewController as? PaymentSheetVerticalViewController
+        )
+        let paymentMethodListViewController = try XCTUnwrap(
+            viewController.paymentMethodListViewController
+        )
+        let cardRow = try XCTUnwrap(
+            paymentMethodListViewController.rowButtons.first {
+                $0.type == .new(paymentMethodType: .stripe(.card))
+            }
+        )
+        paymentMethodListViewController.didTap(rowButton: cardRow, selection: cardRow.type)
+        let form = try XCTUnwrap(viewController.paymentMethodFormViewController?.form)
+        form.getTextFieldElement("Card number").setText(number)
+        form.getTextFieldElement("MM / YY").setText("1240")
+        form.getTextFieldElement("CVC").setText("123")
+        sendEventToSubviews(.viewDidAppear, from: form.view)
+        guard form.validationState.isValid else {
+            return XCTFail("Expected the completed card form to be valid")
+        }
+        flowController.updatePaymentOption()
+        try await waitUntil {
+            checkout.session.paymentOption?.label.hasSuffix(String(number.suffix(4))) == true
+        }
+    }
+
+    private func selectCard(
+        number: String,
+        on checkout: CheckoutController
+    ) {
         let paymentElement = checkout.getPaymentElement()
         let confirmParams = IntentConfirmParams(type: .stripe(.card))
         confirmParams.paymentMethodParams.card = STPPaymentMethodCardParams()
-        confirmParams.paymentMethodParams.card?.number = "4242424242424242"
+        confirmParams.paymentMethodParams.card?.number = number
         confirmParams.paymentMethodParams.card?.expMonth = 12
         confirmParams.paymentMethodParams.card?.expYear = 2040
         confirmParams.paymentMethodParams.card?.cvc = "123"
