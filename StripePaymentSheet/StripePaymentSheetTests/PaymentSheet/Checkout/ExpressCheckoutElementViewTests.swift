@@ -93,7 +93,7 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
         let buttons = ExpressCheckoutElementUtilities.availablePaymentMethods(for: session.elementsSession, configuration: configuration)
         XCTAssertFalse(buttons.contains("link"))
         XCTAssertTrue(
-            ExpressCheckoutElementUtilities.linkDisabledReasons(for: session, configuration: configuration)
+            ExpressCheckoutElementUtilities.linkDisabledReasons(for: session.elementsSession, configuration: configuration)
                 .contains(.linkConfiguration)
         )
     }
@@ -110,7 +110,7 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
         // Then Link is hidden because it cannot collect the required shipping address
         XCTAssertFalse(buttons.contains("link"))
         XCTAssertTrue(
-            ExpressCheckoutElementUtilities.linkDisabledReasons(for: session, configuration: configuration)
+            ExpressCheckoutElementUtilities.linkDisabledReasons(for: session.elementsSession, configuration: configuration)
                 .contains(.shippingAddressCollection)
         )
     }
@@ -125,7 +125,7 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
 
         // When
         let reasons = ExpressCheckoutElementUtilities.linkDisabledReasons(
-            for: session,
+            for: session.elementsSession,
             configuration: configuration
         )
 
@@ -147,7 +147,7 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
 
         // When
         let reasons = ExpressCheckoutElementUtilities.linkDisabledReasons(
-            for: session,
+            for: session.elementsSession,
             configuration: configuration
         )
 

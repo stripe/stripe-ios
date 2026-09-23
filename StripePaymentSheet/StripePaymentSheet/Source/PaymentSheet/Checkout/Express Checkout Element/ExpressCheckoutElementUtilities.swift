@@ -57,13 +57,6 @@ enum ExpressCheckoutElementUtilities {
     }
 
     static func linkDisabledReasons(
-        for session: CheckoutController.Session,
-        configuration: ExpressCheckoutElement.Configuration
-    ) -> [LinkDisabledReason] {
-        return linkDisabledReasons(for: session.elementsSession, configuration: configuration)
-    }
-
-    static func linkDisabledReasons(
         for elementsSession: STPElementsSession,
         configuration: ExpressCheckoutElement.Configuration
     ) -> [LinkDisabledReason] {
