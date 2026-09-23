@@ -251,6 +251,8 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
     private let countryHint: String?
 
     private var applePayCompletionContinuation: CheckedContinuation<ApplePayPaymentStatus, Swift.Error>?
+    private var pendingApplePayPlatformPublishableKey: String?
+    private var selectedApplePayPlatformPublishableKey: String?
 
     /// Apple Pay payment source created by `didCreatePaymentMethod` but not yet committed.
     ///
@@ -706,6 +708,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
         case .applePay(let paymentRequest):
             // This presents Apple Pay and promotes the pending payment source on success.
             pendingApplePayPaymentSource = nil
+            pendingApplePayPlatformPublishableKey = nil
             if #available(iOS 18.0, *) {
                 paymentRequest.merchantCategoryCode = PKPaymentRequest.MerchantCategoryCode(rawValue: 6051)
             }
@@ -744,8 +747,18 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
                 }
             } catch {
                 pendingApplePayPaymentSource = nil
+                pendingApplePayPlatformPublishableKey = nil
                 try logAndThrow(error, during: .collectPaymentMethod)
             }
+        }
+    }
+
+    static func validateApplePayPlatformPublishableKey(
+        _ selectedPlatformPublishableKey: String,
+        currentPlatformPublishableKey: String?
+    ) throws {
+        guard selectedPlatformPublishableKey == currentPlatformPublishableKey else {
+            throw Error.applePayMerchantOfRecordMismatch
         }
     }
 
@@ -772,6 +785,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
             guard let cryptoCustomerId = await cryptoCustomerState.getCustomerId() else {
                 throw Error.missingCryptoCustomerID
             }
+            try await validateApplePayMerchantOfRecord()
             let token = try await apiClient.createPaymentToken(
                 for: paymentMethodId,
                 cryptoCustomerId: cryptoCustomerId,
@@ -852,7 +866,9 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
     public func logOut() async throws {
         do {
             pendingApplePayPaymentSource = nil
+            pendingApplePayPlatformPublishableKey = nil
             selectedPaymentSource = nil
+            selectedApplePayPlatformPublishableKey = nil
             platformApiClient = nil
             try await linkController.logOut()
             analyticsClient.log(.userLoggedOut)
@@ -879,8 +895,9 @@ extension CryptoOnrampCoordinator: ApplePayContextDelegate {
     public func applePayContext(_ context: STPApplePayContext, didCompleteWith status: STPApplePayContext.PaymentStatus, error: Swift.Error?) {
         switch status {
         case .success:
-            if let pendingApplePayPaymentSource {
+            if let pendingApplePayPaymentSource, let pendingApplePayPlatformPublishableKey {
                 selectedPaymentSource = pendingApplePayPaymentSource
+                selectedApplePayPlatformPublishableKey = pendingApplePayPlatformPublishableKey
                 applePayCompletionContinuation?.resume(returning: .success)
             } else {
                 applePayCompletionContinuation?.resume(throwing: ApplePayPaymentStatus.Error.applePayFallbackError)
@@ -894,6 +911,7 @@ extension CryptoOnrampCoordinator: ApplePayContextDelegate {
         }
 
         pendingApplePayPaymentSource = nil
+        pendingApplePayPlatformPublishableKey = nil
         applePayCompletionContinuation = nil
     }
 }
@@ -918,6 +936,7 @@ private extension CryptoOnrampCoordinator {
                     // Configure Apple Pay context to use platform API client
                     let platformApiClient = try await getPlatformApiClient()
                     context.apiClient = platformApiClient
+                    pendingApplePayPlatformPublishableKey = platformApiClient.publishableKey
 
                     // Retain the continuation until we receive a completion delegate callback.
                     self.applePayCompletionContinuation = continuation
@@ -1012,6 +1031,25 @@ private extension CryptoOnrampCoordinator {
                     return .canceled
                 }
             }
+        }
+    }
+
+    func validateApplePayMerchantOfRecord() async throws {
+        guard case .applePay = selectedPaymentSource,
+              let selectedApplePayPlatformPublishableKey else {
+            return
+        }
+
+        let currentPlatformApiClient = try await getPlatformApiClient()
+        do {
+            try Self.validateApplePayPlatformPublishableKey(
+                selectedApplePayPlatformPublishableKey,
+                currentPlatformPublishableKey: currentPlatformApiClient.publishableKey
+            )
+        } catch {
+            selectedPaymentSource = nil
+            self.selectedApplePayPlatformPublishableKey = nil
+            throw error
         }
     }
 
