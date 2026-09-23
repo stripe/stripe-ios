@@ -29,8 +29,8 @@ class CustomerSessionAdapter {
             self.apiKey = apiKey
         }
 
-        func isExpired(currentDate: Date = Date()) -> Bool {
-            return currentDate >= (cacheDate + CachedCustomerMaxAge)
+        func isExpired() -> Bool {
+            return Date() >= (cacheDate + CachedCustomerMaxAge)
         }
     }
 

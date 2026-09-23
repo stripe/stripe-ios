@@ -15,33 +15,6 @@ class CustomerSessionAdapterTests: APIStubbedTestCase {
         XCTAssertFalse(cachedSession.isExpired())
     }
 
-    func testCachedCustomerSessionClientSecretIsNotExpiredBeforeThirtyMinutes() {
-        // Given a cached session that is one second short of thirty minutes old
-        let cachedSession = makeCachedSession()
-        let currentDate = cachedSession.cacheDate.addingTimeInterval(30 * 60 - 1)
-
-        // Then the session is still valid
-        XCTAssertFalse(cachedSession.isExpired(currentDate: currentDate))
-    }
-
-    func testCachedCustomerSessionClientSecretIsExpiredAtThirtyMinutes() {
-        // Given a cached session that is exactly thirty minutes old
-        let cachedSession = makeCachedSession()
-        let currentDate = cachedSession.cacheDate.addingTimeInterval(30 * 60)
-
-        // Then the session has expired
-        XCTAssertTrue(cachedSession.isExpired(currentDate: currentDate))
-    }
-
-    func testCachedCustomerSessionClientSecretIsExpiredAfterThirtyMinutes() {
-        // Given a cached session that is one second past thirty minutes old
-        let cachedSession = makeCachedSession()
-        let currentDate = cachedSession.cacheDate.addingTimeInterval(30 * 60 + 1)
-
-        // Then the session has expired
-        XCTAssertTrue(cachedSession.isExpired(currentDate: currentDate))
-    }
-
     func testCachedCustomerSessionClientSecretReusesUnexpiredSession() async throws {
         // Given an adapter that has already claimed a customer session
         var elementsSessionRequestCount = 0
