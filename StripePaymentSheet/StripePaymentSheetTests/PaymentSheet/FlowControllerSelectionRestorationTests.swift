@@ -34,6 +34,59 @@ final class FlowControllerSelectionRestorationTests: XCTestCase {
         assertCancelingPaymentOptionsRestoresPreviousSavedPaymentMethod(orientation: .horizontal)
     }
 
+    func testCancelAfterFailedSavedPaymentMethodTaxUpdatePreservesAcceptedPaymentOption() async throws {
+        // Given a FlowController with an accepted saved card
+        let acceptedPaymentMethod = STPPaymentMethod._testCard(id: "pm_accepted", country: "US")
+        let rejectedPaymentMethod = STPPaymentMethod._testCard(id: "pm_rejected", country: "US")
+        CustomerPaymentOption.setDefaultPaymentMethod(.stripeId(acceptedPaymentMethod.stripeId), forCustomer: nil)
+        let flowController = makeFlowController(
+            savedPaymentMethods: [acceptedPaymentMethod, rejectedPaymentMethod],
+            orientation: .horizontal
+        )
+        let viewController = try XCTUnwrap(
+            flowController.viewController as? PaymentSheetFlowControllerViewController
+        )
+        let updater = FailingCheckoutSessionBillingAddressUpdater()
+        viewController.checkoutBillingAddressUpdater = updater
+        viewController.loadViewIfNeeded()
+        let completion = present(flowController, expectedDidCancel: true)
+
+        // When selecting another card fails its tax update and the sheet is dismissed
+        let savedPaymentOptions = viewController.savedPaymentOptionsViewController
+        savedPaymentOptions.collectionView(
+            savedPaymentOptions.collectionView,
+            didSelectItemAt: IndexPath(item: 2, section: 0)
+        )
+        await fulfillment(of: [updater.updateStarted])
+        await fulfillment(
+            of: [
+                expectation(
+                    for: viewController.view,
+                    keyPath: \.isUserInteractionEnabled,
+                    equalsToValue: true
+                ),
+            ]
+        )
+        XCTAssertEqual(
+            savedPaymentMethodID(viewController.selectedPaymentOption),
+            acceptedPaymentMethod.stripeId
+        )
+        XCTAssertNotNil(viewController.error)
+        XCTAssertEqual(
+            viewController.error?.localizedDescription,
+            NSError.stp_genericErrorOccurredMessage()
+        )
+        flowController.flowControllerViewControllerShouldClose(viewController, didCancel: true)
+        await fulfillment(of: [completion])
+
+        // Then the previously accepted card remains usable by the merchant
+        XCTAssertEqual(flowController.paymentOption?.labels.sublabel, "•••• 4242")
+        XCTAssertEqual(
+            savedPaymentMethodID(flowController.internalPaymentOption),
+            acceptedPaymentMethod.stripeId
+        )
+    }
+
     func testExternalRestorationParamsPreserveBillingDetails() throws {
         let externalPaymentMethod = ExternalPaymentMethod(
             type: "external_paypal",
@@ -323,5 +376,24 @@ final class FlowControllerSelectionRestorationTests: XCTestCase {
             "No row button of type \(type)"
         )
         viewController.paymentMethodListViewController?.didTap(rowButton: row, selection: row.type)
+    }
+}
+
+@MainActor
+private final class FailingCheckoutSessionBillingAddressUpdater: CheckoutSessionBillingAddressUpdater {
+    let updateStarted = XCTestExpectation(description: "Billing tax region update started")
+
+    func updateBillingTaxRegionIfNecessaryForPaymentSheet(
+        address: CheckoutController.Address,
+        canUpdateWhileSheetPresented: Bool
+    ) async throws -> CheckoutController.Session {
+        updateStarted.fulfill()
+        throw CheckoutError.apiError(
+            message: NSError.stp_genericErrorOccurredMessage()
+        )
+    }
+
+    func commitSession(_ apiResponse: PaymentPagesAPIResponse) async throws {
+        XCTFail("Unexpected call to commitSession")
     }
 }

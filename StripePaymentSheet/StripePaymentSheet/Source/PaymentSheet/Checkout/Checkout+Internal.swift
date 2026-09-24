@@ -252,7 +252,12 @@ extension CheckoutController {
             //  the UI can't handle.
             try await commitSession(updatedSessionAPIResponse, mutateLocalState: mutateLocalState)
         } catch {
-            throw CheckoutError.apiError(message: error.nonGenericDescription)
+            let message = if (error as NSError).domain == NSURLErrorDomain {
+                NSError.stp_genericErrorOccurredMessage()
+            } else {
+                error.nonGenericDescription
+            }
+            throw CheckoutError.apiError(message: message)
         }
     }
 

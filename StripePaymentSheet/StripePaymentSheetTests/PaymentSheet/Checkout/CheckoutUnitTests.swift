@@ -606,6 +606,39 @@ final class CheckoutUnitTests: XCTestCase {
         XCTAssertEqual(checkout.session.shippingAddress, previousAddress)
     }
 
+    func testUpdateBillingTaxRegion_networkFailureReturnsRetryMessage() async throws {
+        // Given a Checkout Session using billing address for automatic tax calculation
+        var json = CheckoutTestHelpers.openSessionJSON
+        json["tax_context"] = [
+            "automatic_tax_enabled": true,
+            "automatic_tax_address_source": "session.billing",
+        ]
+        let session = try PaymentPagesAPIResponse.decode(fromAPIResponse: json)
+        let checkout = try await CheckoutController(
+            configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: session)
+        )
+        stub(condition: { request in
+            request.httpMethod == "POST"
+                && request.url?.path == "/v1/payment_pages/cs_test_123"
+        }) { _ in
+            HTTPStubsResponse(error: URLError(.notConnectedToInternet))
+        }
+        defer { HTTPStubs.removeAllStubs() }
+
+        // When the billing tax update fails because the device is offline
+        do {
+            try await checkout.updateBillingTaxRegionIfNecessary(
+                address: .init(country: "US", postalCode: "94105")
+            )
+            XCTFail("Expected CheckoutError.apiError")
+        } catch let CheckoutError.apiError(message) {
+            // Then Checkout provides retry instructions instead of exposing NSURLErrorDomain
+            XCTAssertEqual(message, NSError.stp_genericErrorOccurredMessage())
+        } catch {
+            XCTFail("Unexpected error: \(error)")
+        }
+    }
+
     // MARK: - Address Collection Decoding Tests
 
     func testBillingAddressCollection_whenRequired() {

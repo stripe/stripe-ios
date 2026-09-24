@@ -54,10 +54,13 @@ internal struct FlowControllerSelectionSnapshot {
             selectionToRestore.paymentOption = viewController.selectedPaymentOption
         }
 
-        if canReuseCurrentViewController(
+        // Rebuild when a failed update left an error on the controller. Reusing it would make
+        // FlowController treat the restored selection as invalid when dismissal republishes it.
+        if viewController.error == nil,
+           canReuseCurrentViewController(
             restoring: selectionToRestore.paymentOption,
             currentSelection: viewController.selectedPaymentOption
-        ) {
+           ) {
             return nil
         }
         return selectionToRestore
