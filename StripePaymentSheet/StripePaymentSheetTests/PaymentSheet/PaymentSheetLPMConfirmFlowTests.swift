@@ -46,28 +46,6 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
         .checkoutSession,
     ]
 
-    // TODO: Re-enable the Checkout Session cases disabled in #7208 after OCS_API-7598 is fixed
-    // and fresh live recordings pass. The failure also reproduces on mobile_elements.
-    static let paymentMethodsExcludedFromCheckoutSession: Set<STPPaymentMethodType> = [
-        .AUBECSDebit,
-        .OXXO,
-        .alma,
-        .bacsDebit,
-        .bizum,
-        .blik,
-        .boleto,
-        .grabPay,
-        .konbini,
-        .mbWay,
-        .payByBank,
-        .payPay,
-        .paynow,
-        .promptPay,
-        .revolutPay,
-        .sequra,
-        .zip,
-    ]
-
     let window: UIWindow = UIWindow(frame: .init(x: 0, y: 0, width: 428, height: 926))
 
     enum ConfirmationType: Hashable {
@@ -1334,7 +1312,7 @@ extension PaymentSheetLPMConfirmFlowTests {
             if shouldTest(.deferredIntent) {
                 intents.append(TestIntent("Deferred PaymentIntent - client side confirmation", makeDeferredIntent(deferredCSC)))
             }
-            if shouldTest(.checkoutSession), !Self.paymentMethodsExcludedFromCheckoutSession.contains(paymentMethod) {
+            if shouldTest(.checkoutSession) {
                 let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession(
                     types: paymentMethodTypes,
                     currency: currency,
