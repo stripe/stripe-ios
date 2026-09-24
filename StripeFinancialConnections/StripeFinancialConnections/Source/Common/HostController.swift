@@ -132,7 +132,8 @@ class HostController {
         elementsSessionContext: ElementsSessionContext?,
         preCollectedConsent: FinancialConnectionsPreCollectedConsent?,
         publishableKey: String?,
-        stripeAccount: String?
+        stripeAccount: String?,
+        analyticsClient: FinancialConnectionsAnalyticsClient = FinancialConnectionsAnalyticsClient()
     ) {
         self.apiClient = apiClient
         self.analyticsClientV1 = analyticsClientV1
@@ -141,7 +142,7 @@ class HostController {
         self.configuration = configuration
         self.elementsSessionContext = elementsSessionContext
         self.preCollectedConsent = preCollectedConsent
-        self.analyticsClient = FinancialConnectionsAnalyticsClient()
+        self.analyticsClient = analyticsClient
         analyticsClient.setAdditionalParameters(
             publishableKey: publishableKey,
             stripeAccount: stripeAccount
@@ -177,8 +178,9 @@ extension HostController: HostViewControllerDelegate {
         _ viewController: HostViewController,
         didFetch synchronizePayload: FinancialConnectionsSynchronize
     ) {
-        delegate?.hostController(self, didReceiveEvent: FinancialConnectionsEvent(name: .open))
         self.linkAccountSessionId = synchronizePayload.manifest.id
+        analyticsClient.setAdditionalParameters(fromManifest: synchronizePayload.manifest)
+        publish(FinancialConnectionsEvent(name: .open))
 
         let flowRouter = FlowRouter(
             synchronizePayload: synchronizePayload,
@@ -207,7 +209,7 @@ extension HostController: HostViewControllerDelegate {
         _ hostViewController: HostViewController,
         didReceiveEvent event: FinancialConnectionsEvent
     ) {
-        delegate?.hostController(self, didReceiveEvent: event)
+        publish(event)
     }
 }
 
@@ -215,13 +217,16 @@ extension HostController: HostViewControllerDelegate {
 
 private extension HostController {
 
-    func continueWithWebFlow(_ manifest: FinancialConnectionsSessionManifest, prefillDetails: WebPrefillDetails? = nil) {
-        delegate?.hostController(
-            self,
-            didReceiveEvent: FinancialConnectionsEvent(
-                name: .flowLaunchedInBrowser
-            )
+    func publish(_ event: FinancialConnectionsEvent) {
+        analyticsClient.logExternalEvent(
+            event,
+            pane: FinancialConnectionsAnalyticsClient.paneFromViewController(navigationController.topViewController)
         )
+        delegate?.hostController(self, didReceiveEvent: event)
+    }
+
+    func continueWithWebFlow(_ manifest: FinancialConnectionsSessionManifest, prefillDetails: WebPrefillDetails? = nil) {
+        publish(FinancialConnectionsEvent(name: .flowLaunchedInBrowser))
 
         let accountFetcher = FinancialConnectionsAccountAPIFetcher(api: apiClient, clientSecret: clientSecret)
         let sessionFetcher = FinancialConnectionsSessionAPIFetcher(
@@ -287,7 +292,7 @@ extension HostController: FinancialConnectionsWebFlowViewControllerDelegate {
         _ webFlowViewController: UIViewController,
         didReceiveEvent event: FinancialConnectionsEvent
     ) {
-        delegate?.hostController(self, didReceiveEvent: event)
+        publish(event)
     }
 }
 
@@ -315,7 +320,7 @@ extension HostController: NativeFlowControllerDelegate {
         _ nativeFlowController: NativeFlowController,
         didReceiveEvent event: FinancialConnectionsEvent
     ) {
-        delegate?.hostController(self, didReceiveEvent: event)
+        publish(event)
     }
 
     func nativeFlowController(
@@ -335,6 +340,6 @@ extension HostController: FinancialConnectionsAnalyticsClientDelegate {
         _ analyticsClient: FinancialConnectionsAnalyticsClient,
         didReceiveEvent event: FinancialConnectionsEvent
     ) {
-        delegate?.hostController(self, didReceiveEvent: event)
+        publish(event)
     }
 }
