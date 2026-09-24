@@ -1,3 +1,6 @@
+/* Label and placeholder for a questionnaire answer field */
+"Answer" = "Answer";
+
 /* Label shown in the Link UI indicating that debit cards are more likely to be accepted */
 "Debit cards are most likely to be accepted." = "Debit cards are most likely to be accepted.";
 
