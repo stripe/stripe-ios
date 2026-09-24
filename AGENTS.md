@@ -4,7 +4,11 @@ This file provides guidance to LLM-based coding agents when working with code in
 
 ## Simulator Setup
 
-The test runner (`ci_scripts/run_tests.rb`) handles simulator setup automatically. The project requires an iPhone 12 mini with iOS 16.4 for consistent screenshot tests.
+The test runner (`ci_scripts/run_tests.rb`) handles simulator setup automatically. `ci_scripts/setup_simulator.sh` routes to the appropriate implementation for the active Xcode version. It uses an iPhone 12 mini with iOS 16.4 through Xcode 26 and iOS 17.5 with Xcode 27 and later.
+
+Invoke `ci_scripts/run_tests.rb` directly as shown below. Do not prefix it with `ruby` or `bundle exec`; the runner has no bundled dependencies, and direct invocation lets agent environments grant it the simulator access it needs.
+
+If simulator setup reports `CoreSimulatorService` connection failures or permission errors under `~/Library/Logs/CoreSimulator`, rerun the same direct command with permission to access CoreSimulator. These errors do not mean the requested runtime is missing.
 
 **If simulator issues occur**, clear the cache and retry:
 ```bash
