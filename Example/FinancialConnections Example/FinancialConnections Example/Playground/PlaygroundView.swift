@@ -101,6 +101,42 @@ struct PlaygroundView: View {
                         }
                     }
 
+                    if viewModel.integrationType.wrappedValue == .standalone,
+                       viewModel.experience.wrappedValue == .financialConnections,
+                       viewModel.sdkType.wrappedValue != .fcLite {
+                        Section(header: Text("Pre-collected Consent")) {
+                            Picker("Consent mode", selection: viewModel.preCollectedConsentMode) {
+                                ForEach(PlaygroundConfiguration.PreCollectedConsentMode.allCases) {
+                                    Text($0.rawValue.capitalized).tag($0)
+                                }
+                            }
+                            .pickerStyle(.segmented)
+
+                            switch viewModel.preCollectedConsentMode.wrappedValue {
+                            case .off:
+                                Text("Stripe will collect consent in the Financial Connections flow.")
+                                    .font(.caption)
+                            case .guided:
+                                TextField("Consent locale (optional)", text: viewModel.consentLocale)
+                                    .autocapitalization(.none)
+                            case .manual:
+                                TextField("Consent ID (fccons_)", text: viewModel.manualConsentID)
+                                    .autocapitalization(.none)
+                                TextField("Collected at (Unix seconds)", text: viewModel.manualConsentCollectedAt)
+                                    .keyboardType(.numberPad)
+                                if viewModel.useCase.wrappedValue == .token {
+                                    TextField("Consent account holder (acct_)", text: viewModel.accountID)
+                                        .autocapitalization(.none)
+                                } else {
+                                    TextField("Consent customer holder (cus_)", text: viewModel.customerId)
+                                        .autocapitalization(.none)
+                                }
+                                Text("Use the Customer or Account that owns the Consent ID.")
+                                    .font(.caption)
+                            }
+                        }
+                    }
+
                     Section(header: Text(viewModel.useCase.wrappedValue == .token ? "Account" : "Customer")) {
                         TextField("Email (ex. existing Link consumer)", text: viewModel.email)
                             .keyboardType(.emailAddress)
@@ -112,6 +148,7 @@ struct PlaygroundView: View {
                                 .keyboardType(.phonePad)
                                 .accessibility(identifier: "playground-phone")
                         }
+
                     }
 
                     Section(header: Text("Configuration")) {
@@ -252,6 +289,32 @@ struct PlaygroundView: View {
         .navigationTitle("Playground")
         .navigationBarTitleDisplayMode(.inline)
         .animation(.easeIn(duration: 1), value: viewModel.experience.wrappedValue)
+        .sheet(item: $viewModel.pendingConsent, onDismiss: viewModel.didDismissConsentSheet) { consent in
+            NavigationView {
+                VStack(alignment: .leading, spacing: 16) {
+                    Text("The following complete text was issued by Stripe (\(consent.locale)).")
+                        .font(.subheadline)
+                    ScrollView {
+                        Text(consent.attributedText)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                    HStack {
+                        Button("Cancel") {
+                            viewModel.resolvePendingConsent(accepted: false)
+                        }
+                        Spacer()
+                        Button("Agree and continue") {
+                            viewModel.resolvePendingConsent(accepted: true)
+                        }
+                        .buttonStyle(.borderedProminent)
+                    }
+                }
+                .padding()
+                .navigationTitle("Financial Connections consent")
+                .navigationBarTitleDisplayMode(.inline)
+            }
+            .interactiveDismissDisabled()
+        }
     }
 
     private func hideKeyboardOnDownwardsDrag(_ value: DragGesture.Value) {

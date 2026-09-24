@@ -379,6 +379,51 @@ final class PlaygroundConfiguration {
             return rawValue
         }
     }
+
+    // MARK: - Pre-collected Consent
+
+    enum PreCollectedConsentMode: String, CaseIterable, Identifiable, Hashable {
+        case off
+        case guided
+        case manual
+
+        var id: String { rawValue }
+    }
+
+    private static let preCollectedConsentModeKey = "pre_collected_consent_mode"
+    var preCollectedConsentMode: PreCollectedConsentMode {
+        get {
+            guard let value = configurationStore[Self.preCollectedConsentModeKey] as? String else {
+                return .off
+            }
+            return PreCollectedConsentMode(rawValue: value) ?? .off
+        }
+        set { configurationStore[Self.preCollectedConsentModeKey] = newValue.rawValue }
+    }
+
+    private static let consentLocaleKey = "consent_locale"
+    var consentLocale: String {
+        get { configurationStore[Self.consentLocaleKey] as? String ?? "" }
+        set { configurationStore[Self.consentLocaleKey] = newValue }
+    }
+
+    private static let manualConsentIDKey = "manual_consent_id"
+    var manualConsentID: String {
+        get { configurationStore[Self.manualConsentIDKey] as? String ?? "" }
+        set { configurationStore[Self.manualConsentIDKey] = newValue }
+    }
+
+    private static let manualConsentCollectedAtKey = "manual_consent_collected_at"
+    var manualConsentCollectedAt: String {
+        get { configurationStore[Self.manualConsentCollectedAtKey] as? String ?? "" }
+        set { configurationStore[Self.manualConsentCollectedAtKey] = newValue }
+    }
+
+    private static let accountIDKey = "account_id"
+    var accountID: String {
+        get { configurationStore[Self.accountIDKey] as? String ?? "" }
+        set { configurationStore[Self.accountIDKey] = newValue }
+    }
     private static let useCaseKey = "use_case"
     var useCase: UseCase {
         get {
@@ -661,6 +706,19 @@ final class PlaygroundConfiguration {
         } else {
             self.useCase = .data
         }
+
+        if
+            let consentModeString = dictionary[Self.preCollectedConsentModeKey] as? String,
+            let consentMode = PreCollectedConsentMode(rawValue: consentModeString)
+        {
+            self.preCollectedConsentMode = consentMode
+        } else {
+            self.preCollectedConsentMode = .off
+        }
+        self.consentLocale = dictionary[Self.consentLocaleKey] as? String ?? ""
+        self.manualConsentID = dictionary[Self.manualConsentIDKey] as? String ?? ""
+        self.manualConsentCollectedAt = dictionary[Self.manualConsentCollectedAtKey] as? String ?? ""
+        self.accountID = dictionary[Self.accountIDKey] as? String ?? ""
 
         if let email = dictionary[Self.emailKey] as? String {
             self.email = email
