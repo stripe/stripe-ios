@@ -98,6 +98,16 @@ extension String.Localized {
         STPLocalizedString("Upload document", "Action to select an existing document for upload")
     }
 
+    /// The status shown while a document is uploading.
+    static var uploadingDocument: String {
+        STPLocalizedString("Uploading…", "Status while a document is uploading")
+    }
+
+    /// The status shown after a document uploads successfully.
+    static var documentUploaded: String {
+        STPLocalizedString("Uploaded", "Status after a document has uploaded successfully")
+    }
+
     static var documentUploadedSuccessfully: String {
         STPLocalizedString("Document uploaded successfully", "Heading confirming a document was uploaded successfully")
     }
