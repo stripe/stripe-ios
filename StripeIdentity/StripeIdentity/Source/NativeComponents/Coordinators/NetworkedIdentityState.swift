@@ -4,134 +4,72 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 
-/// The user-visible phases of the Networked Identity pre-capture flow.
-///
-/// Sensitive values intentionally live in `NetworkedIdentityCredentialStore`, not in this state.
+/// The user-visible phases of Networked Identity. Credentials never enter this state.
 enum NetworkedIdentityState: Equatable {
+    /// No attempt in progress; the Link sheet is hidden.
+    case idle
+    /// Configuring Link or restoring a handed-in session.
+    case preparing
     case collectEmail
     case lookupPending
+    /// Save only: the email has no Link account yet, so a phone number is needed to sign up.
+    case collectPhone(email: String, error: String? = nil)
+    case signUpPending(email: String)
     case otpStartPending
-    case awaitingOTP
+    case awaitingOTP(invalidCode: Bool)
     case otpConfirmPending
     case reauthenticationRequired
     case documentsPending
-    case selectDocument
-    case selectedDocument
-    case attachmentPending
+    case selectDocument(documents: [NetworkedIdentityDocument], selectedDocumentID: String?)
+    case sharingDocument(NetworkedIdentityDocument)
+    case documentShared(NetworkedIdentityDocument)
+    case savePending
+    case savePrepared
     case skipPending
-    /// The NI action ended; the host must still process requirements and normal submission.
-    case completed
-    case fullCaptureFallback
+    /// Saving failed; the sheet stays open to say so, since there's no capture to fall back to.
+    case saveFailed(details: String?)
+    case fullCaptureFallback(NetworkedIdentityFallbackReason)
     case cancelled
-}
+    /// Link's own screens handle sign-in and sign-up; Identity's sheet is hidden meanwhile.
+    case linkAuthentication
 
-enum NetworkedIdentityActionError: String, Error {
-    case tokenUnavailable
-    case attachmentFailed
-    case skipFailed
-    case unexpectedSession
+    /// Whether Identity's Link sheet shows this state. `linkAuthentication` is in progress but shown by Link.
+    var presentsIdentitySheet: Bool {
+        isSheetVisible && self != .linkAuthentication
+    }
+
+    /// Whether an attempt is in progress, so the Link sheet is shown.
+    var isSheetVisible: Bool {
+        switch self {
+        case .idle, .fullCaptureFallback, .cancelled:
+            return false
+        default:
+            return true
+        }
+    }
 }
 
 enum NetworkedIdentityFallbackReason: Equatable {
     case noLinkAccount
     case noReusableDocuments
-    case userSelectedManualCapture
     case unavailable
 }
 
-enum NetworkedIdentityOTPError: Equatable {
-    case invalidCode
-    case verificationExpired
-    case sessionExpired
-    case maxAttemptsExceeded
+enum NetworkedIdentityMode: Equatable {
+    /// Returning user: share a saved ID, started from the intro.
+    case reuse
+    /// Save this verification's ID to Link, started from the success screen.
+    case save
 }
 
-/// Holds short-lived credentials in memory for the lifetime of a single flow.
-@MainActor
-final class NetworkedIdentityCredentialStore {
-    struct ConsumerCredentials {
-        let publishableKey: String
-        let sessionClientSecret: String
-    }
-
-    private var consumerCredentials: ConsumerCredentials?
-    private var verificationSessionClientSecrets: [String]?
-
-    // #TODO - Networked Identity: Persist auth-session secrets through shared Link storage once its ownership, replacement, and expiry rules are defined.
-
-    init(verificationSessionClientSecrets: [String]? = nil) {
-        self.verificationSessionClientSecrets = verificationSessionClientSecrets
-    }
-
-    var hasConsumerCredentials: Bool {
-        consumerCredentials != nil
-    }
-
-    var isEmpty: Bool {
-        consumerCredentials == nil && verificationSessionClientSecrets == nil
-    }
-
-    func storeConsumerCredentials(
-        publishableKey: String,
-        sessionClientSecret: String
-    ) {
-        consumerCredentials = ConsumerCredentials(
-            publishableKey: publishableKey,
-            sessionClientSecret: sessionClientSecret
-        )
-    }
-
-    func updateConsumerSessionClientSecret(_ sessionClientSecret: String) {
-        guard let consumerCredentials else {
-            return
-        }
-        self.consumerCredentials = ConsumerCredentials(
-            publishableKey: consumerCredentials.publishableKey,
-            sessionClientSecret: sessionClientSecret
-        )
-    }
-
-    func retainAuthSessionClientSecret(_ authSessionClientSecret: String?) {
-        verificationSessionClientSecrets = Self.appending(
-            authSessionClientSecret,
-            to: verificationSessionClientSecrets
-        )
-    }
-
-    static func appending(
-        _ authSessionClientSecret: String?,
-        to verificationSessionClientSecrets: [String]?
-    ) -> [String]? {
-        guard let authSessionClientSecret, !authSessionClientSecret.isEmpty else {
-            return verificationSessionClientSecrets
-        }
-        var updatedSecrets = verificationSessionClientSecrets ?? []
-        if !updatedSecrets.contains(authSessionClientSecret) {
-            updatedSecrets.append(authSessionClientSecret)
-        }
-        return updatedSecrets
-    }
-
-    func readConsumerCredentials<T>(
-        _ body: (ConsumerCredentials, [String]?) -> T
-    ) -> T? {
-        guard let consumerCredentials else {
-            return nil
-        }
-        return body(consumerCredentials, verificationSessionClientSecrets)
-    }
-
-    func readVerificationSessionClientSecrets<T>(_ body: ([String]?) -> T) -> T {
-        body(verificationSessionClientSecrets)
-    }
-
-    func clearConsumerCredentials() {
-        consumerCredentials = nil
-    }
-
-    func clear() {
-        consumerCredentials = nil
-        verificationSessionClientSecrets = nil
-    }
+/// How an attempt ended, for the Identity flow to act on.
+enum NetworkedIdentityOutcome: Equatable {
+    /// `attached` is the verification after attaching, whose requirements the flow continues from.
+    case documentShared(NetworkedIdentityDocument, attached: StripeAPI.VerificationPageData)
+    case savePrepared
+    case manualCapture(StripeAPI.VerificationPageData)
+    case fallback(NetworkedIdentityFallbackReason)
+    case cancelled
 }

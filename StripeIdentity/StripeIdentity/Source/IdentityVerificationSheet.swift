@@ -78,6 +78,54 @@ final public class IdentityVerificationSheet {
         /// When `nil`, the biometric consent screen uses the default header.
         @_spi(STP) public var biometricConsent: BiometricConsentConfiguration?
 
+        /// A Link consumer session started outside Identity, e.g. by crypto onramp. It only lets the user
+        /// skip signing in to Link; Networked Identity still starts from an explicit user action.
+        @_spi(STP) public struct LinkSessionHandoff: Equatable {
+            public let email: String
+            public let consumerSessionClientSecret: String
+            public let consumerPublishableKey: String
+
+            public init(email: String, consumerSessionClientSecret: String, consumerPublishableKey: String) {
+                self.email = email
+                self.consumerSessionClientSecret = consumerSessionClientSecret
+                self.consumerPublishableKey = consumerPublishableKey
+            }
+        }
+
+        /// Networked Identity options for Stripe SDK modules and internal testing.
+        @_spi(STP) public struct NetworkedIdentityOptions: Equatable {
+            public var linkSessionHandoff: LinkSessionHandoff?
+            /// Debug-only until the VerificationPage returns it.
+            public var debugMerchantPublishableKey: String?
+            /// Debug-only until the VerificationPage returns it.
+            public var debugProvidedEmail: String?
+            /// Debug-only route override: "reuse", "save", "none", or nil to use the VerificationPage.
+            public var debugRoute: String?
+            /// Debug-only: sample saved documents simulate reuse and completion for test-mode sessions.
+            public var debugSeedSavedDocuments: Bool
+            /// Debug-only: sign in and sign up with Link's own screens instead of Identity's.
+            public var debugUseLinkUI: Bool
+
+            public init(
+                linkSessionHandoff: LinkSessionHandoff?,
+                debugMerchantPublishableKey: String?,
+                debugProvidedEmail: String?,
+                debugRoute: String?,
+                debugSeedSavedDocuments: Bool,
+                debugUseLinkUI: Bool = false
+            ) {
+                self.debugUseLinkUI = debugUseLinkUI
+                self.linkSessionHandoff = linkSessionHandoff
+                self.debugMerchantPublishableKey = debugMerchantPublishableKey
+                self.debugProvidedEmail = debugProvidedEmail
+                self.debugRoute = debugRoute
+                self.debugSeedSavedDocuments = debugSeedSavedDocuments
+            }
+        }
+
+        /// Networked Identity options. When nil, Networked Identity isn't offered.
+        @_spi(STP) public var networkedIdentity: NetworkedIdentityOptions?
+
         /// Initializes a Configuration.
         /// - Parameters:
         ///   - brandLogo: An image of your customer-facing business logo.
@@ -130,13 +178,16 @@ final public class IdentityVerificationSheet {
         ephemeralKeySecret: String,
         configuration: Configuration
     ) {
+        let apiClient = IdentityAPIClientImpl(
+            verificationSessionId: verificationSessionId,
+            ephemeralKeySecret: ephemeralKeySecret
+        )
         self.init(
             verificationSessionClientSecret: "",
             verificationSheetController: VerificationSheetController(
-                apiClient: IdentityAPIClientImpl(
-                    verificationSessionId: verificationSessionId,
-                    ephemeralKeySecret: ephemeralKeySecret
-                ),
+                apiClient: configuration.networkedIdentity?.debugSeedSavedDocuments == true
+                    ? SeededDocumentsIdentityAPIClient(delegate: apiClient)
+                    : apiClient,
                 flowController: VerificationSheetFlowController(
                     configuration: configuration
                 ),

@@ -23,4 +23,5 @@ Pod::Spec.new do |s|
   s.dependency                       'StripeUICore', "#{s.version}"
   s.dependency                       'StripeCameraCore', "#{s.version}"
   s.dependency                       'StripeCameraCore', "#{s.version}"
+  s.dependency                       'StripePaymentSheet', "#{s.version}"
 end
