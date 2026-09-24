@@ -103,6 +103,11 @@ extension String.Localized {
         STPLocalizedString("Upload document", "Action to select an existing document for upload")
     }
 
+    /// The action that opens document collection for a new funds source.
+    static var addDocuments: String {
+        STPLocalizedString("Add documents", "Action to add documents for another source of funds")
+    }
+
     /// The status shown while a document is uploading.
     static var uploadingDocument: String {
         STPLocalizedString("Uploading…", "Status while a document is uploading")
