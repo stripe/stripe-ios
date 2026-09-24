@@ -424,18 +424,23 @@ extension STPAPIClient {
     }
 
     /// Retrieves platform settings for the crypto onramp service.
-    /// - Parameter cryptoCustomerId: The ID for the crypto customer.
+    /// - Parameter cryptoCustomerId: The ID for the crypto customer, if one is available. When `nil`, platform settings
+    /// are resolved using the publishable key alone, which allows resolving a platform API client before authentication.
     /// - Returns: Platform settings including the publishable key.
     /// Throws if an API error occurs.
     func getPlatformSettings(
-        cryptoCustomerId: String
+        cryptoCustomerId: String?
     ) async throws -> PlatformSettingsResponse {
         let endpoint = "crypto/internal/platform_settings"
 
-        let parameters: [String: Any] = [
-            "crypto_customer_id": cryptoCustomerId,
+        var parameters: [String: Any] = [
             "ui_mode": "headless",
         ]
+
+        if let cryptoCustomerId {
+            parameters["crypto_customer_id"] = cryptoCustomerId
+        }
+
         return try await get(resource: endpoint, parameters: parameters)
     }
 
