@@ -35,50 +35,28 @@ final class KycInfoTests: XCTestCase {
         XCTAssertNil(KycInfo(payment: payment))
     }
 
-    func testInitPaymentReturnsKycInfoForEmailOnly() {
+    func testInitPaymentReturnsNilForEmailOnly() {
         // Given a billing contact containing only an email address
         let billingContact = PKContact()
         billingContact.emailAddress = "test@example.com"
 
         // When creating KYC info from the payment
         let payment = createMockPayment(billingContact: billingContact)
-        let kycInfo = KycInfo(payment: payment)
 
-        // Then the email is mapped
-        XCTAssertEqual(
-            kycInfo,
-            KycInfo(
-                firstName: nil,
-                lastName: nil,
-                idNumber: nil,
-                address: nil,
-                dateOfBirth: nil,
-                email: "test@example.com"
-            )
-        )
+        // Then no KYC info is produced
+        XCTAssertNil(KycInfo(payment: payment))
     }
 
-    func testInitPaymentReturnsKycInfoForPhoneOnly() {
+    func testInitPaymentReturnsNilForPhoneOnly() {
         // Given a billing contact containing only a display-formatted phone number
         let billingContact = PKContact()
         billingContact.phoneNumber = CNPhoneNumber(stringValue: "(212) 555-1234")
 
         // When creating KYC info from the payment
         let payment = createMockPayment(billingContact: billingContact)
-        let kycInfo = KycInfo(payment: payment)
 
-        // Then the phone number is preserved verbatim
-        XCTAssertEqual(
-            kycInfo,
-            KycInfo(
-                firstName: nil,
-                lastName: nil,
-                idNumber: nil,
-                address: nil,
-                dateOfBirth: nil,
-                phone: "(212) 555-1234"
-            )
-        )
+        // Then no KYC info is produced
+        XCTAssertNil(KycInfo(payment: payment))
     }
 
     func testInitPaymentReadsContactFieldsFromShippingContactWhenAbsentOnBillingContact() {
@@ -113,8 +91,11 @@ final class KycInfoTests: XCTestCase {
     }
 
     func testInitPaymentPrefersBillingContactContactFields() {
-        // Given contact fields on both the billing and shipping contacts
+        // Given a billing name and contact fields on both the billing and shipping contacts
         let billingContact = PKContact()
+        var name = PersonNameComponents()
+        name.givenName = "Test"
+        billingContact.name = name
         billingContact.emailAddress = "billing@example.com"
 
         let shippingContact = PKContact()

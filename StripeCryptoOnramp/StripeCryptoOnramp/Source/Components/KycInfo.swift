@@ -129,7 +129,7 @@ public struct KycInfo: Equatable {
 extension KycInfo {
 
     /// Creates a `KycInfo` from Apple Pay billing information.
-    /// Returns `nil` if the `PKPayment` does not contain any usable billing name, address, email, or phone fields.
+    /// Returns `nil` if the `PKPayment` does not contain any usable billing name or address fields.
     ///
     /// Email and phone are only returned by Apple Pay when the merchant requests them via the payment request’s
     /// `requiredBillingContactFields` or `requiredShippingContactFields`, and the customer may decline or edit them.
@@ -163,7 +163,7 @@ extension KycInfo {
         let phone = Self.trimmedNonEmptyValue(billingContact?.phoneNumber?.stringValue)
             ?? Self.trimmedNonEmptyValue(shippingContact?.phoneNumber?.stringValue)
 
-        guard firstName != nil || lastName != nil || address != nil || email != nil || phone != nil else {
+        guard firstName != nil || lastName != nil || address != nil else {
             return nil
         }
 
