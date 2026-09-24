@@ -56,17 +56,7 @@ struct DocumentFileRow: View {
             .frame(maxWidth: .infinity, alignment: .leading)
 
             if !isUploading {
-                Button(action: onRemove) {
-                    SwiftUI.Image(uiImage: Image.iconTrash.makeImage(template: true))
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 16, height: 16)
-                        .frame(width: 44, height: 44)
-                        .contentShape(Rectangle())
-                }
-                .buttonStyle(.plain)
-                .accessibilityLabel(String.Localized.remove)
-                .accessibilityValue(filename)
+                removeButton
             }
         }
         .foregroundColor(.textPrimary)
@@ -74,12 +64,29 @@ struct DocumentFileRow: View {
         .padding(.trailing, 6)
         .padding(.vertical, 16)
         .frame(minHeight: 76)
-        .background(backgroundColor, in: RoundedRectangle(cornerRadius: 12))
+        .background {
+            RoundedRectangle(cornerRadius: 12)
+                .fill(backgroundColor)
+        }
         .dashedDocumentBorderOverlay(isVisible: isUploading)
         .accessibilityElement(children: .contain)
     }
 
     // MARK: - DocumentFileRow
+
+    private var removeButton: some View {
+        Button(action: onRemove) {
+            SwiftUI.Image(uiImage: Image.iconTrash.makeImage(template: true))
+                .resizable()
+                .scaledToFit()
+                .frame(width: 16, height: 16)
+                .padding(14)
+                .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel(String.Localized.remove)
+        .accessibilityValue(filename)
+    }
 
     private var isUploading: Bool {
         if case .uploading = status {
