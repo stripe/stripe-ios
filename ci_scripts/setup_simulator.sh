@@ -1,22 +1,170 @@
 #!/bin/bash
 
 # setup_simulator.sh
-# Routes simulator setup to the implementation for the active Xcode version
+# Finds or creates the simulator used for testing with the active Xcode version
+# Caches the result to .stripe-ios-config for reuse
 
 set -e
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-XCODE_MAJOR_VERSION="$(xcodebuild -version | sed -n '1s/^Xcode \([0-9][0-9]*\).*/\1/p')"
+CONFIG_FILE=".stripe-ios-config"
+DEVICE_TYPE_IDENTIFIER="com.apple.CoreSimulator.SimDeviceType.iPhone-12-mini"
+SIMULATOR_NAME="iPhone 12 mini (Stripe)"
 
-if [ -z "$XCODE_MAJOR_VERSION" ]; then
-    echo "Error: Unable to determine the active Xcode version" >&2
-    return 1
-fi
+configure_runtime() {
+    local xcode_major_version
 
-if [ "$XCODE_MAJOR_VERSION" -ge 27 ]; then
-    # shellcheck source=/dev/null
-    source "$SCRIPT_DIR/setup_simulator_xcode_27.sh" "$@"
-else
-    # shellcheck source=/dev/null
-    source "$SCRIPT_DIR/setup_simulator_xcode_26.sh" "$@"
-fi
+    xcode_major_version="$(xcodebuild -version | sed -n '1s/^Xcode \([0-9][0-9]*\).*/\1/p')"
+    if [ -z "$xcode_major_version" ]; then
+        echo "Error: Unable to determine the active Xcode version" >&2
+        return 1
+    fi
+
+    if [ "$xcode_major_version" -ge 27 ]; then
+        IOS_VERSION="18.5"
+        RUNTIME_IDENTIFIER="com.apple.CoreSimulator.SimRuntime.iOS-18-5"
+    else
+        IOS_VERSION="16.4"
+        RUNTIME_IDENTIFIER="com.apple.CoreSimulator.SimRuntime.iOS-16-4"
+    fi
+}
+
+clear_cache() {
+    if [ -f "$CONFIG_FILE" ]; then
+        rm "$CONFIG_FILE"
+    fi
+}
+
+runtime_is_available() {
+    local runtimes_json
+
+    if ! runtimes_json="$(xcrun simctl list runtimes --json)"; then
+        echo "Error: Unable to query CoreSimulator runtimes." >&2
+        return 2
+    fi
+
+    printf "%s" "$runtimes_json" | ruby -rjson -e '
+      begin
+        document = JSON.parse(STDIN.read)
+        runtime = document.fetch("runtimes", []).find do |candidate|
+          candidate["identifier"] == ARGV[0]
+        end
+        exit(runtime && runtime["isAvailable"] ? 0 : 1)
+      rescue JSON::ParserError => error
+        warn "Error: Unable to parse CoreSimulator runtimes: #{error.message}"
+        exit 2
+      end
+    ' "$RUNTIME_IDENTIFIER"
+}
+
+find_existing_simulator() {
+    xcrun simctl list devices --json | ruby -rjson -e '
+        document = JSON.parse(STDIN.read)
+        devices = document.dig("devices", ARGV[0]) || []
+        device = devices.find do |candidate|
+          candidate["isAvailable"] && candidate["deviceTypeIdentifier"] == ARGV[1]
+        end
+        puts device["udid"] if device
+    ' "$RUNTIME_IDENTIFIER" "$DEVICE_TYPE_IDENTIFIER"
+}
+
+validate_uuid() {
+    local uuid="$1"
+    [[ "$uuid" =~ ^[A-F0-9]{8}-[A-F0-9]{4}-[A-F0-9]{4}-[A-F0-9]{4}-[A-F0-9]{12}$ ]]
+}
+
+create_simulator() {
+    xcrun simctl create "$SIMULATOR_NAME" "$DEVICE_TYPE_IDENTIFIER" "$RUNTIME_IDENTIFIER"
+}
+
+validate_simulator() {
+    local device_id="$1"
+
+    xcrun simctl list devices --json | ruby -rjson -e '
+        document = JSON.parse(STDIN.read)
+        devices = document.dig("devices", ARGV[0]) || []
+        valid = devices.any? do |device|
+          device["udid"] == ARGV[1] &&
+            device["isAvailable"] &&
+            device["deviceTypeIdentifier"] == ARGV[2]
+        end
+        exit(valid ? 0 : 1)
+    ' "$RUNTIME_IDENTIFIER" "$device_id" "$DEVICE_TYPE_IDENTIFIER"
+}
+
+print_help() {
+    echo "Usage: source ci_scripts/setup_simulator.sh [--clear-cache] [--help]"
+    echo ""
+    echo "For the active Xcode version, finds or creates an iPhone 12 mini with iOS $IOS_VERSION."
+    echo "Caches the result to .stripe-ios-config for reuse."
+    echo ""
+    echo "Options:"
+    echo "  --clear-cache    Clear the cached simulator ID"
+    echo "  --help, -h       Show this help message"
+    echo ""
+    echo "Usage:"
+    echo "  source ci_scripts/setup_simulator.sh"
+    echo "  xcodebuild [...] -destination \"id=\$DEVICE_ID_FROM_USER_SETTINGS,arch=arm64\" [...]"
+    echo ""
+    echo "The script exports DEVICE_ID_FROM_USER_SETTINGS to your environment."
+}
+
+main() {
+    local device_id runtime_status
+
+    if [ "$1" = "--clear-cache" ]; then
+        clear_cache
+        return 0
+    fi
+
+    configure_runtime
+
+    if [ "$1" = "--help" ] || [ "$1" = "-h" ]; then
+        print_help
+        return 0
+    fi
+
+    if runtime_is_available; then
+        :
+    else
+        runtime_status="$?"
+        if [ "$runtime_status" -eq 1 ]; then
+            echo "Error: The iOS $IOS_VERSION simulator runtime is not installed or available." >&2
+        fi
+        return 1
+    fi
+
+    if [ -f "$CONFIG_FILE" ]; then
+        # shellcheck source=/dev/null
+        source "$CONFIG_FILE"
+
+        if [ -n "$DEVICE_ID_FROM_USER_SETTINGS" ] && validate_uuid "$DEVICE_ID_FROM_USER_SETTINGS" && validate_simulator "$DEVICE_ID_FROM_USER_SETTINGS"; then
+            export DEVICE_ID_FROM_USER_SETTINGS
+            return 0
+        fi
+
+        clear_cache
+    fi
+
+    device_id="$(find_existing_simulator)"
+    if [ -z "$device_id" ]; then
+        if ! device_id="$(create_simulator)"; then
+            echo "Error: Failed to create an iPhone 12 mini with iOS $IOS_VERSION: $device_id" >&2
+            return 1
+        fi
+    fi
+
+    if ! validate_uuid "$device_id"; then
+        echo "Error: Extracted device ID '$device_id' is not a valid UUID" >&2
+        return 1
+    fi
+
+    cat > "$CONFIG_FILE" << EOF
+# Auto-generated by setup_simulator.sh
+# This file is sourced to set up the simulator device ID
+export DEVICE_ID_FROM_USER_SETTINGS="$device_id"
+EOF
+
+    export DEVICE_ID_FROM_USER_SETTINGS="$device_id"
+}
+
+main "$@"
