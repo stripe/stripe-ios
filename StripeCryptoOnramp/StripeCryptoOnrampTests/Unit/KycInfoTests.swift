@@ -144,6 +144,57 @@ final class KycInfoTests: XCTestCase {
         )
     }
 
+    func testInitPaymentReturnsKycInfoForShippingNameOnly() {
+        // Given a shipping name without a billing contact
+        let shippingContact = PKContact()
+        var name = PersonNameComponents()
+        name.givenName = " ShippingFirst "
+        name.familyName = " ShippingLast "
+        shippingContact.name = name
+
+        // When creating KYC info from the payment
+        let payment = createMockPayment(billingContact: nil, shippingContact: shippingContact)
+        let kycInfo = KycInfo(payment: payment)
+
+        // Then the trimmed shipping name is used
+        XCTAssertEqual(kycInfo?.firstName, "ShippingFirst")
+        XCTAssertEqual(kycInfo?.lastName, "ShippingLast")
+    }
+
+    func testInitPaymentFallsBackToShippingNamePerField() {
+        let billingNames: [(givenName: String?, familyName: String?)] = [
+            (nil, " BillingLast "),
+            (" BillingFirst ", nil),
+            (" \n", " BillingLast "),
+            (" BillingFirst ", " \n"),
+            ("", ""),
+            (" BillingFirst ", " BillingLast "),
+        ]
+
+        for billingName in billingNames {
+            // Given billing name fields and a complete shipping name
+            let billingContact = PKContact()
+            var name = PersonNameComponents()
+            name.givenName = billingName.givenName
+            name.familyName = billingName.familyName
+            billingContact.name = name
+
+            let shippingContact = PKContact()
+            var shippingName = PersonNameComponents()
+            shippingName.givenName = " ShippingFirst "
+            shippingName.familyName = " ShippingLast "
+            shippingContact.name = shippingName
+
+            // When creating KYC info from the payment
+            let payment = createMockPayment(billingContact: billingContact, shippingContact: shippingContact)
+            let kycInfo = KycInfo(payment: payment)
+
+            // Then each usable billing field takes precedence independently
+            XCTAssertEqual(kycInfo?.firstName, billingName.givenName == " BillingFirst " ? "BillingFirst" : "ShippingFirst")
+            XCTAssertEqual(kycInfo?.lastName, billingName.familyName == " BillingLast " ? "BillingLast" : "ShippingLast")
+        }
+    }
+
     func testInitPaymentReturnsKycInfoForBillingAddressOnly() {
         let billingContact = PKContact()
         let postalAddress = CNMutablePostalAddress()
