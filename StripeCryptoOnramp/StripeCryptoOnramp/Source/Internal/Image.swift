@@ -21,4 +21,6 @@ enum Image: String, CaseIterable, ImageMaker {
     case iconClose = "icon_close"
     case iconTrash = "icon_trash"
     case iconCheckCircle = "icon_check_circle"
+    case iconAdd = "icon_add"
+    case iconDocument = "icon_document"
 }
