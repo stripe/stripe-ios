@@ -1419,7 +1419,7 @@ extension STPPaymentMethodParams {
             sequra = STPPaymentMethodSequraParams()
         case .scalapay:
             scalapay = STPPaymentMethodScalapayParams()
-        case .cardPresent, .paynow, .zip, .konbini, .promptPay, .mbWay, .bizum:
+        case .cardPresent, .paynow, .zip, .konbini, .promptPay, .mbWay, .bizum, .pix:
             // These payment methods don't have any params
             break
         case .unknown:

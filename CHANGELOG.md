@@ -3,6 +3,12 @@ PATCH
 
 ## X.Y.Z - changes pending release
 
+### Payments
+* [Added] Added API bindings for Pix.
+
+### PaymentSheet
+* [Added] Added support for Pix payments.
+
 ## 26.12.0 2026-09-21
 ### CryptoOnramp (Alpha)
 * [Removed] Removed public exposure of `StripeCryptoOnramp.Image`, including `Image.linkIconSquare`.

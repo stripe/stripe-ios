@@ -80,7 +80,7 @@ class IntentStatusPoller {
 
             // If latest status is different than last known status notify our delegate
             if paymentIntent.status != self.lastStatus,
-               (self.isPolling || forceFetch) { // don't notify our delegate if polling is suspended, could happen if network request is in-flight
+               self.isPolling || forceFetch { // don't notify our delegate if polling is suspended, could happen if network request is in-flight
                 self.lastStatus = paymentIntent.status
                 self.delegate?.didUpdate(paymentIntent: paymentIntent)
             }
@@ -99,5 +99,81 @@ class IntentStatusPoller {
 
         guard let nextPollWorkItem = nextPollWorkItem else { return }
         pollingQueue.asyncAfter(deadline: .now() + retryInterval, execute: nextPollWorkItem)
+    }
+}
+
+protocol SetupIntentStatusPollerDelegate: AnyObject {
+    func didUpdate(setupIntent: STPSetupIntent)
+}
+
+protocol SetupIntentRetrievable {
+    func retrieveSetupIntent(withClientSecret clientSecret: String, completion: @escaping STPSetupIntentCompletionBlock)
+}
+
+extension STPAPIClient: SetupIntentRetrievable {}
+
+/// Polls a SetupIntent while an out-of-band payment method action is pending.
+class SetupIntentStatusPoller {
+    let retryInterval: TimeInterval
+    let intentRetriever: SetupIntentRetrievable
+    let clientSecret: String
+
+    private var lastStatus: STPSetupIntentStatus = .unknown
+    private let pollingQueue = DispatchQueue(label: "com.stripe.setup-intent.status.queue")
+    private var nextPollWorkItem: DispatchWorkItem?
+
+    weak var delegate: SetupIntentStatusPollerDelegate?
+
+    private var isPolling = false {
+        didSet {
+            if !oldValue && isPolling {
+                fetchStatus()
+            } else if !isPolling {
+                nextPollWorkItem?.cancel()
+            }
+        }
+    }
+
+    init(retryInterval: TimeInterval, intentRetriever: SetupIntentRetrievable, clientSecret: String) {
+        self.retryInterval = retryInterval
+        self.intentRetriever = intentRetriever
+        self.clientSecret = clientSecret
+    }
+
+    func beginPolling() {
+        isPolling = true
+    }
+
+    func suspendPolling() {
+        isPolling = false
+    }
+
+    func pollOnce(completion: ((STPSetupIntentStatus) -> Void)? = nil) {
+        fetchStatus(forceFetch: true, completion: completion)
+    }
+
+    private func fetchStatus(forceFetch: Bool = false, completion: ((STPSetupIntentStatus) -> Void)? = nil) {
+        intentRetriever.retrieveSetupIntent(withClientSecret: clientSecret) { [weak self] setupIntent, _ in
+            guard let self, let setupIntent else { return }
+            completion?(setupIntent.status)
+
+            if setupIntent.status != lastStatus, isPolling || forceFetch {
+                lastStatus = setupIntent.status
+                delegate?.didUpdate(setupIntent: setupIntent)
+            }
+
+            if isPolling {
+                retryAfterInterval()
+            }
+        }
+    }
+
+    private func retryAfterInterval() {
+        nextPollWorkItem = DispatchWorkItem { [weak self] in
+            self?.fetchStatus()
+        }
+        if let nextPollWorkItem {
+            pollingQueue.asyncAfter(deadline: .now() + retryInterval, execute: nextPollWorkItem)
+        }
     }
 }

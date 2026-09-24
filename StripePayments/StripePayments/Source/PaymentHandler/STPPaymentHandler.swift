@@ -873,7 +873,8 @@ public class STPPaymentHandler: NSObject {
             .naverPay,
             .payco,
             .sequra,
-            .scalapay:
+            .scalapay,
+            .pix:
             return false
 
         case .unknown:
@@ -1503,6 +1504,25 @@ public class STPPaymentHandler: NSObject {
                 // Present the polling view controller behind the web view so we can start polling right away
                 presentingVC.presentPollingVCForAction(action: currentAction, type: .promptPay, safariViewController: safariViewController)
             }
+        case .pixDisplayQrCode:
+            let returnURL = currentAction.returnURLString.flatMap(URL.init(string:))
+            guard let hostedInstructionsURL = authenticationAction.pixDisplayQrCode?.hostedInstructionsURL else {
+                failCurrentActionWithMissingNextActionDetails()
+                return
+            }
+            guard let presentingVC = currentAction.authenticationContext as? PaymentSheetAuthenticationContext else {
+                assertionFailure("Pix is not supported outside of PaymentSheet.")
+                currentAction.complete(with: .failed, error: _error(for: .unsupportedAuthenticationErrorCode, loggingSafeErrorMessage: "Pix is not supported outside of PaymentSheet."))
+                return
+            }
+            _handleRedirect(to: hostedInstructionsURL, fallbackURL: hostedInstructionsURL, return: returnURL, useWebAuthSession: false) { safariViewController in
+                // Present the polling view controller behind the web view so polling begins immediately.
+                if let paymentIntentAction = currentAction as? STPPaymentHandlerPaymentIntentActionParams {
+                    presentingVC.presentPollingVCForAction(action: paymentIntentAction, type: .pix, safariViewController: safariViewController)
+                } else if let setupIntentAction = currentAction as? STPPaymentHandlerSetupIntentActionParams {
+                    presentingVC.presentPollingVCForSetupIntentAction(action: setupIntentAction, type: .pix, safariViewController: safariViewController)
+                }
+            }
         case .swishHandleRedirect:
             guard let returnURL = URL(string: currentAction.returnURLString ?? "") else {
                 assertionFailure(missingReturnURLErrorMessage)
@@ -2100,6 +2120,7 @@ public class STPPaymentHandler: NSObject {
                 .cashAppRedirectToApp,
                 .payNowDisplayQrCode,
                 .promptpayDisplayQrCode,
+                .pixDisplayQrCode,
                 .swishHandleRedirect:
                 return false
             case .OXXODisplayDetails,
@@ -2136,7 +2157,7 @@ public class STPPaymentHandler: NSObject {
             .weChatPayRedirectToApp, .boletoDisplayDetails, .verifyWithMicrodeposits,
             .cashAppRedirectToApp, .konbiniDisplayDetails, .payNowDisplayQrCode,
             .promptpayDisplayQrCode, .swishHandleRedirect, .multibancoDisplayDetails,
-            .mbWayAwaitAuthorization, .awaitAuthorization:
+            .mbWayAwaitAuthorization, .awaitAuthorization, .pixDisplayQrCode:
             break
         }
 
@@ -2742,6 +2763,14 @@ extension STPPaymentHandler {
     func present(_ authenticationViewController: UIViewController, completion: @escaping () -> Void)
     func dismiss(_ authenticationViewController: UIViewController, completion: (() -> Void)?)
     func presentPollingVCForAction(action: STPPaymentHandlerPaymentIntentActionParams, type: STPPaymentMethodType, safariViewController: SFSafariViewController?)
+    func presentPollingVCForSetupIntentAction(action: STPPaymentHandlerSetupIntentActionParams, type: STPPaymentMethodType, safariViewController: SFSafariViewController?)
+}
+
+@_spi(STP) public extension PaymentSheetAuthenticationContext {
+    func presentPollingVCForSetupIntentAction(action: STPPaymentHandlerSetupIntentActionParams, type: STPPaymentMethodType, safariViewController: SFSafariViewController?) {
+        assertionFailure("SetupIntent polling has not been implemented by this PaymentSheet authentication context.")
+        action.complete(with: .failed, error: nil)
+    }
 }
 
 // MARK: - Deprecated public funcs

@@ -102,6 +102,31 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         )
     }
 
+    // MARK: - Pix
+
+    func testPixSupportsPaymentPaymentWithSetupFutureUsageAndSetup() {
+        // Given Pix PaymentIntents, a PaymentIntent with setup future usage, and a SetupIntent
+        let intents: [Intent] = [
+            ._testPaymentIntent(paymentMethodTypes: [.pix]),
+            ._testPaymentIntent(paymentMethodTypes: [.pix], setupFutureUsage: .offSession),
+            ._testSetupIntent(paymentMethodTypes: [.pix]),
+        ]
+
+        for intent in intents {
+            // When checking availability without a return URL or delayed payment method opt-in
+            let result = PaymentSheet.PaymentMethodType.supportsAdding(
+                paymentMethod: .pix,
+                configuration: makeConfiguration(),
+                intent: intent,
+                elementsSession: ._testValue(intent: intent),
+                supportedPaymentMethods: [.pix]
+            )
+
+            // Then Pix is supported
+            XCTAssertEqual(result, .supported)
+        }
+    }
+
     // MARK: - iDEAL
 
     /// Returns true, iDEAL in `supportedPaymentMethods` and URL requirement and not setting up requirement are met

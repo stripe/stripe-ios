@@ -563,6 +563,12 @@ extension BottomSheetViewController: PaymentSheetAuthenticationContext {
         pushContentViewController(pollingVC)
     }
 
+    func presentPollingVCForSetupIntentAction(action: STPPaymentHandlerSetupIntentActionParams, type: STPPaymentMethodType, safariViewController: SFSafariViewController?) {
+        let pollingVC = PollingViewController(currentAction: action, viewModel: PollingViewModel(paymentMethodType: type),
+                                              appearance: self.appearance, safariViewController: safariViewController)
+        pushContentViewController(pollingVC)
+    }
+
     func dismiss(_ authenticationViewController: UIViewController, completion: (() -> Void)?) {
         guard contentViewController is BottomSheet3DS2ViewController || contentViewController is PollingViewController else {
             assertionFailure("Dismiss called, but it will do nothing!")

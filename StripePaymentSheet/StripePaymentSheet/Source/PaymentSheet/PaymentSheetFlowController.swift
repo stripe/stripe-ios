@@ -1091,6 +1091,12 @@ class AuthenticationContext: NSObject, PaymentSheetAuthenticationContext {
         presentingViewController.present(pollingVC, animated: true, completion: nil)
     }
 
+    func presentPollingVCForSetupIntentAction(action: STPPaymentHandlerSetupIntentActionParams, type: STPPaymentMethodType, safariViewController: SFSafariViewController?) {
+        let pollingVC = PollingViewController(currentAction: action, viewModel: PollingViewModel(paymentMethodType: type),
+                                              appearance: self.appearance, safariViewController: safariViewController)
+        presentingViewController.present(pollingVC, animated: true, completion: nil)
+    }
+
     func dismiss(_ authenticationViewController: UIViewController, completion: (() -> Void)?) {
         authenticationViewController.dismiss(animated: true, completion: completion)
     }

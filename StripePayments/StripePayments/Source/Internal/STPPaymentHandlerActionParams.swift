@@ -110,24 +110,25 @@ public class STPPaymentHandlerPaymentIntentActionParams: NSObject, STPPaymentHan
     }
 }
 
-internal class STPPaymentHandlerSetupIntentActionParams: NSObject, STPPaymentHandlerActionParams {
+@_spi(STP)
+public class STPPaymentHandlerSetupIntentActionParams: NSObject, STPPaymentHandlerActionParams {
     private var serviceInitialized = false
 
-    let authenticationContext: STPAuthenticationContext
-    let apiClient: STPAPIClient
-    let threeDSCustomizationSettings: STPThreeDSCustomizationSettings
-    let setupIntentCompletion: STPPaymentHandlerActionSetupIntentCompletionBlock
-    let returnURLString: String?
-    var setupIntent: STPSetupIntent
-    var threeDS2Transaction: STDSTransaction?
+    @_spi(STP) public let authenticationContext: STPAuthenticationContext
+    @_spi(STP) public let apiClient: STPAPIClient
+    @_spi(STP) public let threeDSCustomizationSettings: STPThreeDSCustomizationSettings
+    @_spi(STP) public let setupIntentCompletion: STPPaymentHandlerActionSetupIntentCompletionBlock
+    @_spi(STP) public let returnURLString: String?
+    @_spi(STP) public var setupIntent: STPSetupIntent
+    @_spi(STP) public var threeDS2Transaction: STDSTransaction?
 
-    var intentStripeID: String {
+    @_spi(STP) public var intentStripeID: String {
         return setupIntent.stripeID
     }
 
     private var _threeDS2Service: STDSThreeDS2Service?
 
-    var threeDS2Service: STDSThreeDS2Service? {
+    @_spi(STP) public var threeDS2Service: STDSThreeDS2Service? {
         if !serviceInitialized {
             serviceInitialized = true
             _threeDS2Service = STDSThreeDS2Service()
@@ -176,11 +177,11 @@ internal class STPPaymentHandlerSetupIntentActionParams: NSObject, STPPaymentHan
         super.init()
     }
 
-    func nextAction() -> STPIntentAction? {
+    @_spi(STP) public func nextAction() -> STPIntentAction? {
         return setupIntent.nextAction
     }
 
-    func complete(with status: STPPaymentHandlerActionStatus, error: NSError?) {
+    @_spi(STP) public func complete(with status: STPPaymentHandlerActionStatus, error: NSError?) {
         setupIntentCompletion(status, setupIntent, error)
     }
 

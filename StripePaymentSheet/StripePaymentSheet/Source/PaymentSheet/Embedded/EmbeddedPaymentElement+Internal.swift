@@ -825,6 +825,12 @@ extension PaymentSheetAuthenticationContextViewController: PaymentSheetAuthentic
         shouldPresentPollingVC = true
     }
 
+    func presentPollingVCForSetupIntentAction(action: StripePayments.STPPaymentHandlerSetupIntentActionParams, type: StripePayments.STPPaymentMethodType, safariViewController: SFSafariViewController?) {
+        self.pollingVC = PollingViewController(currentAction: action, viewModel: PollingViewModel(paymentMethodType: type),
+                                              appearance: self.appearance, safariViewController: safariViewController)
+        shouldPresentPollingVC = true
+    }
+
     func authenticationContextDidDismiss(_ viewController: UIViewController) {
         // The following code should only be executed if we have dismissed a SFSafariViewController
         guard viewController is SFSafariViewController else { return }
