@@ -92,7 +92,7 @@ extension ExpressCheckoutElement {
             case light
             /// Dark theme which contrasts with a light background.
             case dark
-            /// Automatic theme which contrasts with background depending on system theme.
+            /// Automatic theme.
             case automatic
         }
 
