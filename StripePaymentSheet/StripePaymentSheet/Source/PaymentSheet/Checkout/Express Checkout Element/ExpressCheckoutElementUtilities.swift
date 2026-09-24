@@ -19,19 +19,19 @@ enum ExpressCheckoutElementUtilities {
     static func availablePaymentMethods(
         for elementsSession: STPElementsSession,
         configuration: ExpressCheckoutElement.Configuration
-    ) -> [String] {
-        var paymentMethods: [String] = []
+    ) -> [ExpressCheckoutElement.PaymentMethod] {
+        var paymentMethods: [ExpressCheckoutElement.PaymentMethod] = []
         for paymentMethod in availablePaymentMethodTypes(for: elementsSession) {
             switch paymentMethod {
             case .applePay:
                 if let applePayConfiguration = configuration.applePayConfiguration,
                    applePayConfiguration.display != .never,
                    StripeAPI.deviceSupportsApplePay() {
-                    paymentMethods.append(paymentMethod.rawValue)
+                    paymentMethods.append(paymentMethod)
                 }
             case .link:
                 if linkDisabledReasons(for: elementsSession, configuration: configuration).isEmpty {
-                    paymentMethods.append(paymentMethod.rawValue)
+                    paymentMethods.append(paymentMethod)
                 }
             }
         }
@@ -40,13 +40,15 @@ enum ExpressCheckoutElementUtilities {
         }
 
         var remainingPaymentMethods = paymentMethods
-        var orderedPaymentMethods: [String] = []
+        var orderedPaymentMethods: [ExpressCheckoutElement.PaymentMethod] = []
         for paymentMethod in paymentMethodOrder {
             guard
                 let index = remainingPaymentMethods.firstIndex(where: {
-                    $0.caseInsensitiveCompare(paymentMethod) == .orderedSame
+                    $0.rawValue.caseInsensitiveCompare(paymentMethod) == .orderedSame
                 }),
-                !orderedPaymentMethods.caseInsensitiveContains(paymentMethod)
+                !orderedPaymentMethods.contains(where: {
+                    $0.rawValue.caseInsensitiveCompare(paymentMethod) == .orderedSame
+                })
             else {
                 continue
             }

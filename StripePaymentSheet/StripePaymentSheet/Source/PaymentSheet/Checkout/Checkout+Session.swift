@@ -78,8 +78,9 @@ extension CheckoutController {
         /// Aggregate subtotal, tax, discount, and total amounts for the Checkout Session.
         public let totals: CheckoutController.Session.Totals
 
-        /// Express checkout payment methods available for this session, in display order.
-        public let availableExpressCheckoutPaymentMethods: [String]
+        /// Payment methods currently available after applying configuration and device eligibility, ordered
+        /// as displayed by `ExpressCheckoutElement`. Each updated Session reflects the latest availability.
+        public let availableExpressCheckoutPaymentMethods: [ExpressCheckoutElement.PaymentMethod]
 
         // MARK: - Internal Properties
 

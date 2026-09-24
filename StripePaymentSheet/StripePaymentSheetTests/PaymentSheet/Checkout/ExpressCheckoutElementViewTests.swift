@@ -28,7 +28,7 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
         )
 
         // Then it stores the available methods in display order
-        let expectedPaymentMethods = StripeAPI.deviceSupportsApplePay() ? ["link", "apple_pay"] : ["link"]
+        let expectedPaymentMethods: [ExpressCheckoutElement.PaymentMethod] = StripeAPI.deviceSupportsApplePay() ? [.link, .applePay] : [.link]
         XCTAssertEqual(session.availableExpressCheckoutPaymentMethods, expectedPaymentMethods)
     }
 
@@ -49,7 +49,7 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
         let configuration = ExpressCheckoutElement.Configuration(confirmHandler: { _ in })
 
         let buttons = ExpressCheckoutElementUtilities.availablePaymentMethods(for: session.elementsSession, configuration: configuration)
-        XCTAssertFalse(buttons.contains("apple_pay"))
+        XCTAssertFalse(buttons.contains(.applePay))
     }
 
     func testApplePayButtonWithApplePayConfiguration() {
@@ -59,7 +59,7 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
         configuration.applePayConfiguration = ExpressCheckoutElement.ApplePayConfiguration(merchantId: "merchant.com.example")
 
         let buttons = ExpressCheckoutElementUtilities.availablePaymentMethods(for: session.elementsSession, configuration: configuration)
-        XCTAssertEqual(buttons.contains("apple_pay"), StripeAPI.deviceSupportsApplePay())
+        XCTAssertEqual(buttons.contains(.applePay), StripeAPI.deviceSupportsApplePay())
     }
 
     func testLinkButtonShownByDefault() {
@@ -68,7 +68,7 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
         let configuration = ExpressCheckoutElement.Configuration(confirmHandler: { _ in })
 
         let buttons = ExpressCheckoutElementUtilities.availablePaymentMethods(for: session.elementsSession, configuration: configuration)
-        XCTAssertTrue(buttons.contains("link"))
+        XCTAssertTrue(buttons.contains(.link))
     }
 
     func testApplePayButtonHiddenWhenDisplayIsNever() {
@@ -81,7 +81,7 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
         )
 
         let buttons = ExpressCheckoutElementUtilities.availablePaymentMethods(for: session.elementsSession, configuration: configuration)
-        XCTAssertFalse(buttons.contains("apple_pay"))
+        XCTAssertFalse(buttons.contains(.applePay))
     }
 
     func testLinkButtonHiddenWhenDisplayIsNever() {
@@ -91,7 +91,7 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
         configuration.linkConfiguration = ExpressCheckoutElement.LinkConfiguration(display: .never)
 
         let buttons = ExpressCheckoutElementUtilities.availablePaymentMethods(for: session.elementsSession, configuration: configuration)
-        XCTAssertFalse(buttons.contains("link"))
+        XCTAssertFalse(buttons.contains(.link))
         XCTAssertTrue(
             ExpressCheckoutElementUtilities.linkDisabledReasons(for: session.elementsSession, configuration: configuration)
                 .contains(.linkConfiguration)
@@ -108,7 +108,7 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
         let buttons = ExpressCheckoutElementUtilities.availablePaymentMethods(for: session.elementsSession, configuration: configuration)
 
         // Then Link is hidden because it cannot collect the required shipping address
-        XCTAssertFalse(buttons.contains("link"))
+        XCTAssertFalse(buttons.contains(.link))
         XCTAssertTrue(
             ExpressCheckoutElementUtilities.linkDisabledReasons(for: session.elementsSession, configuration: configuration)
                 .contains(.shippingAddressCollection)
@@ -133,7 +133,7 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
         XCTAssertTrue(reasons.contains(.automaticTaxAddress))
         XCTAssertFalse(
             ExpressCheckoutElementUtilities.availablePaymentMethods(for: session.elementsSession, configuration: configuration)
-                .contains("link")
+                .contains(.link)
         )
     }
 
@@ -155,7 +155,7 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
         XCTAssertFalse(reasons.contains(.automaticTaxAddress))
         XCTAssertTrue(
             ExpressCheckoutElementUtilities.availablePaymentMethods(for: session.elementsSession, configuration: configuration)
-                .contains("link")
+                .contains(.link)
         )
     }
 
@@ -169,7 +169,7 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
         let buttons = ExpressCheckoutElementUtilities.availablePaymentMethods(for: session.elementsSession, configuration: configuration)
 
         // Then
-        XCTAssertFalse(buttons.contains("link"))
+        XCTAssertFalse(buttons.contains(.link))
     }
 
     func testApplePayButtonHiddenWhenDisabledOnSession() {
@@ -179,7 +179,7 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
         configuration.applePayConfiguration = ExpressCheckoutElement.ApplePayConfiguration(merchantId: "merchant.com.example")
 
         let buttons = ExpressCheckoutElementUtilities.availablePaymentMethods(for: session.elementsSession, configuration: configuration)
-        XCTAssertFalse(buttons.contains("apple_pay"))
+        XCTAssertFalse(buttons.contains(.applePay))
     }
 
     func testBothButtonsShownInSessionOrder() {
@@ -191,7 +191,7 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
         let buttons = ExpressCheckoutElementUtilities.availablePaymentMethods(for: session.elementsSession, configuration: configuration)
 
         // The order should match the session's wallet ordering, with Apple Pay's inclusion depending on device support
-        let expectedButtons = StripeAPI.deviceSupportsApplePay() ? ["link", "apple_pay"] : ["link"]
+        let expectedButtons: [ExpressCheckoutElement.PaymentMethod] = StripeAPI.deviceSupportsApplePay() ? [.link, .applePay] : [.link]
         XCTAssertEqual(buttons, expectedButtons)
     }
 
@@ -202,7 +202,7 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
         )
         let elementsSession = makeSessionWithWalletTypes(["apple_pay", "link"]).makePublicSession().elementsSession
 
-        func availablePaymentMethods(order: [String]?) -> [String] {
+        func availablePaymentMethods(order: [String]?) -> [ExpressCheckoutElement.PaymentMethod] {
             configuration.paymentMethodOrder = order
             return ExpressCheckoutElementUtilities.availablePaymentMethods(
                 for: elementsSession,
@@ -211,22 +211,22 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
         }
 
         guard StripeAPI.deviceSupportsApplePay() else {
-            XCTAssertEqual(availablePaymentMethods(order: ["apple_pay", "link"]), ["link"])
+            XCTAssertEqual(availablePaymentMethods(order: ["apple_pay", "link"]), [.link])
             return
         }
 
         // Then configured methods are moved to the front
-        XCTAssertEqual(availablePaymentMethods(order: ["link"]), ["link", "apple_pay"])
+        XCTAssertEqual(availablePaymentMethods(order: ["link"]), [.link, .applePay])
         // ...and matching is case-insensitive
-        XCTAssertEqual(availablePaymentMethods(order: ["LINK"]), ["link", "apple_pay"])
+        XCTAssertEqual(availablePaymentMethods(order: ["LINK"]), [.link, .applePay])
         // ...and invalid and duplicate entries are ignored
         XCTAssertEqual(
             availablePaymentMethods(order: ["unknown", "link", "link"]),
-            ["link", "apple_pay"]
+            [.link, .applePay]
         )
         // ...and nil or empty ordering preserves server order
-        XCTAssertEqual(availablePaymentMethods(order: nil), ["apple_pay", "link"])
-        XCTAssertEqual(availablePaymentMethods(order: []), ["apple_pay", "link"])
+        XCTAssertEqual(availablePaymentMethods(order: nil), [.applePay, .link])
+        XCTAssertEqual(availablePaymentMethods(order: []), [.applePay, .link])
     }
 
     func testAvailablePaymentMethodsStoredOnSessionApplyPaymentMethodOrder() {
@@ -240,7 +240,7 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
             expressCheckoutConfiguration: configuration
         )
 
-        let expectedPaymentMethods = StripeAPI.deviceSupportsApplePay() ? ["link", "apple_pay"] : ["link"]
+        let expectedPaymentMethods: [ExpressCheckoutElement.PaymentMethod] = StripeAPI.deviceSupportsApplePay() ? [.link, .applePay] : [.link]
         XCTAssertEqual(session.availableExpressCheckoutPaymentMethods, expectedPaymentMethods)
     }
 

@@ -44,7 +44,7 @@ final class ExpressCheckoutElementViewModel: ObservableObject {
         uiView: ExpressCheckoutElementUIView
     ) {
         let initialSession = sessionSource.initialSession
-        let initialButtons = Self.resolveButtons(for: initialSession)
+        let initialButtons = initialSession.availableExpressCheckoutPaymentMethods
         self.uiView = uiView
         self.buttons = initialButtons
         uiView.update(with: initialSession, buttons: initialButtons)
@@ -53,18 +53,10 @@ final class ExpressCheckoutElementViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] session in
                 guard let self else { return }
-                let buttons = Self.resolveButtons(for: session)
+                let buttons = session.availableExpressCheckoutPaymentMethods
                 self.uiView.update(with: session, buttons: buttons)
                 self.buttons = buttons
             }
-    }
-
-    private static func resolveButtons(
-        for session: CheckoutController.Session
-    ) -> [ExpressCheckoutElement.PaymentMethod] {
-        return session.availableExpressCheckoutPaymentMethods.compactMap(
-            ExpressCheckoutElement.PaymentMethod.init(rawValue:)
-        )
     }
 }
 
