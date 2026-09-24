@@ -1517,11 +1517,7 @@ public class STPPaymentHandler: NSObject {
             }
             _handleRedirect(to: hostedInstructionsURL, fallbackURL: hostedInstructionsURL, return: returnURL, useWebAuthSession: false) { safariViewController in
                 // Present the polling view controller behind the web view so polling begins immediately.
-                if let paymentIntentAction = currentAction as? STPPaymentHandlerPaymentIntentActionParams {
-                    presentingVC.presentPollingVCForAction(action: paymentIntentAction, type: .pix, safariViewController: safariViewController)
-                } else if let setupIntentAction = currentAction as? STPPaymentHandlerSetupIntentActionParams {
-                    presentingVC.presentPollingVCForSetupIntentAction(action: setupIntentAction, type: .pix, safariViewController: safariViewController)
-                }
+                presentingVC.presentPollingVCForAction(action: currentAction, type: .pix, safariViewController: safariViewController)
             }
         case .swishHandleRedirect:
             guard let returnURL = URL(string: currentAction.returnURLString ?? "") else {
@@ -2762,15 +2758,7 @@ extension STPPaymentHandler {
 @_spi(STP) public protocol PaymentSheetAuthenticationContext: STPAuthenticationContext {
     func present(_ authenticationViewController: UIViewController, completion: @escaping () -> Void)
     func dismiss(_ authenticationViewController: UIViewController, completion: (() -> Void)?)
-    func presentPollingVCForAction(action: STPPaymentHandlerPaymentIntentActionParams, type: STPPaymentMethodType, safariViewController: SFSafariViewController?)
-    func presentPollingVCForSetupIntentAction(action: STPPaymentHandlerSetupIntentActionParams, type: STPPaymentMethodType, safariViewController: SFSafariViewController?)
-}
-
-@_spi(STP) public extension PaymentSheetAuthenticationContext {
-    func presentPollingVCForSetupIntentAction(action: STPPaymentHandlerSetupIntentActionParams, type: STPPaymentMethodType, safariViewController: SFSafariViewController?) {
-        assertionFailure("SetupIntent polling has not been implemented by this PaymentSheet authentication context.")
-        action.complete(with: .failed, error: nil)
-    }
+    func presentPollingVCForAction(action: STPPaymentHandlerActionParams, type: STPPaymentMethodType, safariViewController: SFSafariViewController?)
 }
 
 // MARK: - Deprecated public funcs

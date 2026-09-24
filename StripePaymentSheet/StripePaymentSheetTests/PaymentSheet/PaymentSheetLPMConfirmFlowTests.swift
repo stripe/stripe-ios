@@ -1974,15 +1974,16 @@ extension PaymentSheetLPMConfirmFlowTests: PaymentSheetAuthenticationContext {
         completion?()
     }
 
-    func presentPollingVCForAction(action: STPPaymentHandlerPaymentIntentActionParams, type: STPPaymentMethodType, safariViewController: SFSafariViewController?) {
+    func presentPollingVCForAction(action: STPPaymentHandlerActionParams, type: STPPaymentMethodType, safariViewController: SFSafariViewController?) {
         // Simulate that the intent transitioned to succeeded
         // If we don't update the status to succeeded, completing the action with .succeeded may fail due to invalid state
-        action.paymentIntent = STPFixtures.paymentIntent(paymentMethodTypes: [type.identifier], status: .succeeded)
-        action.complete(with: .succeeded, error: nil)
-    }
-
-    func presentPollingVCForSetupIntentAction(action: STPPaymentHandlerSetupIntentActionParams, type: STPPaymentMethodType, safariViewController: SFSafariViewController?) {
-        action.setupIntent = STPFixtures.setupIntent(paymentMethodTypes: [type.identifier], status: .succeeded)
+        if let action = action as? STPPaymentHandlerPaymentIntentActionParams {
+            action.paymentIntent = STPFixtures.paymentIntent(paymentMethodTypes: [type.identifier], status: .succeeded)
+        } else if let action = action as? STPPaymentHandlerSetupIntentActionParams {
+            action.setupIntent = STPFixtures.setupIntent(paymentMethodTypes: [type.identifier], status: .succeeded)
+        } else {
+            XCTFail("Unexpected PaymentHandler action type: \(Swift.type(of: action))")
+        }
         action.complete(with: .succeeded, error: nil)
     }
 }

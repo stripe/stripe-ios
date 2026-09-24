@@ -25,33 +25,19 @@ class PollingViewController: UIViewController {
     // MARK: State
 
     private var oneSecondTimer: Timer?
-    private let paymentIntentAction: STPPaymentHandlerPaymentIntentActionParams?
-    private let setupIntentAction: STPPaymentHandlerSetupIntentActionParams?
+    private let currentAction: STPPaymentHandlerActionParams
     private let appearance: PaymentSheet.Appearance
     private let viewModel: PollingViewModel
     private let safariViewController: SFSafariViewController?
 
-    private lazy var paymentIntentPoller: IntentStatusPoller? = {
-        guard let paymentIntentAction else { return nil }
-        let poller = IntentStatusPoller(
-            retryInterval: viewModel.retryInterval,
-            intentRetriever: paymentIntentAction.apiClient,
-            clientSecret: paymentIntentAction.paymentIntent.clientSecret
-        )
-        poller.delegate = self
-        return poller
-    }()
-
-    private lazy var setupIntentPoller: SetupIntentStatusPoller? = {
-        guard let setupIntentAction else { return nil }
-        let poller = SetupIntentStatusPoller(
-            retryInterval: viewModel.retryInterval,
-            intentRetriever: setupIntentAction.apiClient,
-            clientSecret: setupIntentAction.setupIntent.clientSecret
-        )
-        poller.delegate = self
-        return poller
-    }()
+    private lazy var intentStatusPoller = IntentStatusPoller<STPPaymentHandlerPollingResult, STPPaymentHandlerPollingStatus>(
+        retryInterval: viewModel.retryInterval,
+        retrieveValue: currentAction.retrievePollingResult,
+        status: \.status,
+        didUpdate: { [weak self] result in
+            self?.didUpdate(result)
+        }
+    )
 
     private var timeRemaining: TimeInterval {
         return Date().distance(to: viewModel.deadline)
@@ -177,25 +163,11 @@ class PollingViewController: UIViewController {
 
     // MARK: Overrides
 
-    init(currentAction: STPPaymentHandlerPaymentIntentActionParams, viewModel: PollingViewModel, appearance: PaymentSheet.Appearance, safariViewController: SFSafariViewController? = nil) {
-        self.paymentIntentAction = currentAction
-        self.setupIntentAction = nil
+    init(currentAction: STPPaymentHandlerActionParams, viewModel: PollingViewModel, appearance: PaymentSheet.Appearance, safariViewController: SFSafariViewController? = nil) {
+        self.currentAction = currentAction
         self.appearance = appearance
         self.viewModel = viewModel
-        if let expiresAt = currentAction.paymentIntent.nextAction?.pixDisplayQrCode?.expiresAt {
-            self.viewModel.deadline = expiresAt
-        }
-        self.safariViewController = safariViewController
-
-        super.init(nibName: nil, bundle: nil)
-    }
-
-    init(currentAction: STPPaymentHandlerSetupIntentActionParams, viewModel: PollingViewModel, appearance: PaymentSheet.Appearance, safariViewController: SFSafariViewController? = nil) {
-        self.paymentIntentAction = nil
-        self.setupIntentAction = currentAction
-        self.appearance = appearance
-        self.viewModel = viewModel
-        if let expiresAt = currentAction.setupIntent.nextAction?.pixDisplayQrCode?.expiresAt {
+        if let expiresAt = currentAction.nextAction()?.pixDisplayQrCode?.expiresAt {
             self.viewModel.deadline = expiresAt
         }
         self.safariViewController = safariViewController
@@ -274,8 +246,7 @@ class PollingViewController: UIViewController {
     }
 
     private func dismiss(completion: (() -> Void)? = nil) {
-        let authenticationContext = paymentIntentAction?.authenticationContext ?? setupIntentAction?.authenticationContext
-        if let authContext = authenticationContext as? PaymentSheetAuthenticationContext {
+        if let authContext = currentAction.authenticationContext as? PaymentSheetAuthenticationContext {
             authContext.authenticationContextWillDismiss?(self)
             authContext.dismiss(self, completion: completion)
         }
@@ -342,26 +313,34 @@ class PollingViewController: UIViewController {
     }
 
     private func beginPolling() {
-        paymentIntentPoller?.beginPolling()
-        setupIntentPoller?.beginPolling()
+        intentStatusPoller.beginPolling()
     }
 
     private func suspendPolling() {
-        paymentIntentPoller?.suspendPolling()
-        setupIntentPoller?.suspendPolling()
+        intentStatusPoller.suspendPolling()
     }
 
     private func pollOnce(completion: @escaping (Bool) -> Void) {
-        if let paymentIntentPoller {
-            paymentIntentPoller.pollOnce { completion($0 == .succeeded) }
-        } else if let setupIntentPoller {
-            setupIntentPoller.pollOnce { completion($0 == .succeeded) }
-        }
+        intentStatusPoller.pollOnce { completion($0 == .succeeded) }
     }
 
     private func complete(with status: STPPaymentHandlerActionStatus) {
-        paymentIntentAction?.complete(with: status, error: nil)
-        setupIntentAction?.complete(with: status, error: nil)
+        currentAction.complete(with: status, error: nil)
+    }
+
+    private func didUpdate(_ result: STPPaymentHandlerPollingResult) {
+        result.updateActionIntent()
+        switch result.status {
+        case .pending:
+            break
+        case .succeeded:
+            setErrorStateWorkItem.cancel()
+            dismiss {
+                self.complete(with: .succeeded)
+            }
+        case .failed:
+            pollingState = .error
+        }
     }
 
 }
@@ -395,36 +374,4 @@ extension PollingViewController: SheetNavigationBarDelegate {
         dismiss()
     }
 
-}
-
-// MARK: IntentStatusPollerDelegate
-
-extension PollingViewController: IntentStatusPollerDelegate {
-    func didUpdate(paymentIntent: STPPaymentIntent) {
-        if paymentIntent.status == .succeeded {
-            setErrorStateWorkItem.cancel() // cancel the error work item incase it was scheduled
-            paymentIntentAction?.paymentIntent = paymentIntent // update the local copy of the intent with the latest from the server
-            dismiss {
-                self.complete(with: .succeeded)
-            }
-        } else if paymentIntent.status != .requiresAction {
-            // an error occured to take the intent out of requires action
-            // update polling state to indicate that we have encountered an error
-            pollingState = .error
-        }
-    }
-}
-
-extension PollingViewController: SetupIntentStatusPollerDelegate {
-    func didUpdate(setupIntent: STPSetupIntent) {
-        if setupIntent.status == .succeeded {
-            setErrorStateWorkItem.cancel()
-            setupIntentAction?.setupIntent = setupIntent
-            dismiss {
-                self.complete(with: .succeeded)
-            }
-        } else if setupIntent.status != .requiresAction {
-            pollingState = .error
-        }
-    }
 }

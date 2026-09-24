@@ -33,7 +33,7 @@ extension PaymentSheetFormFactory {
             elements: [PaymentMethodElementWrapper(taxID) { element, params in
                 params.paymentMethodParams.additionalAPIParameters["billing_details[tax_id]"] = element.text
                 return params
-            },],
+            }, ],
             theme: theme
         )
         let billingAddress = makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)

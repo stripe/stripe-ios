@@ -818,16 +818,10 @@ extension PaymentSheetAuthenticationContextViewController: PaymentSheetAuthentic
         }
     }
 
-    func presentPollingVCForAction(action: StripePayments.STPPaymentHandlerPaymentIntentActionParams, type: StripePayments.STPPaymentMethodType, safariViewController: SFSafariViewController?) {
+    func presentPollingVCForAction(action: StripePayments.STPPaymentHandlerActionParams, type: StripePayments.STPPaymentMethodType, safariViewController: SFSafariViewController?) {
         // Initialize the polling view controller and flag it for presentation
         self.pollingVC = PollingViewController(currentAction: action, viewModel: PollingViewModel(paymentMethodType: type),
                                                       appearance: self.appearance, safariViewController: safariViewController)
-        shouldPresentPollingVC = true
-    }
-
-    func presentPollingVCForSetupIntentAction(action: StripePayments.STPPaymentHandlerSetupIntentActionParams, type: StripePayments.STPPaymentMethodType, safariViewController: SFSafariViewController?) {
-        self.pollingVC = PollingViewController(currentAction: action, viewModel: PollingViewModel(paymentMethodType: type),
-                                              appearance: self.appearance, safariViewController: safariViewController)
         shouldPresentPollingVC = true
     }
 

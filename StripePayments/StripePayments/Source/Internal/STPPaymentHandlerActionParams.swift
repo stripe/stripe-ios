@@ -15,6 +15,28 @@ import UIKit
     import Stripe3DS2
 #endif
 
+/// The states relevant while polling an Intent for an out-of-band action.
+@_spi(STP) public enum STPPaymentHandlerPollingStatus: Equatable {
+    case pending
+    case succeeded
+    case failed
+}
+
+/// A retrieved polling status and the mutation that accepts its Intent as the action's latest value.
+@_spi(STP) public struct STPPaymentHandlerPollingResult {
+    @_spi(STP) public let status: STPPaymentHandlerPollingStatus
+    private let updateActionIntentBlock: () -> Void
+
+    init(status: STPPaymentHandlerPollingStatus, updateActionIntent: @escaping () -> Void) {
+        self.status = status
+        self.updateActionIntentBlock = updateActionIntent
+    }
+
+    @_spi(STP) public func updateActionIntent() {
+        updateActionIntentBlock()
+    }
+}
+
 @_spi(STP) public protocol STPPaymentHandlerActionParams: NSObject, ASWebAuthenticationPresentationContextProviding {
     var threeDS2Service: STDSThreeDS2Service? { get }
     var threeDS2Transaction: STDSTransaction? { get set }
@@ -25,6 +47,8 @@ import UIKit
     var intentStripeID: String { get }
     /// Returns the payment or setup intent's next action
     func nextAction() -> STPIntentAction?
+    /// Retrieves the latest Intent and its polling status without mutating the action.
+    func retrievePollingResult(completion: @escaping (STPPaymentHandlerPollingResult?) -> Void)
     func complete(with status: STPPaymentHandlerActionStatus, error: NSError?)
 }
 
@@ -100,6 +124,18 @@ public class STPPaymentHandlerPaymentIntentActionParams: NSObject, STPPaymentHan
         return paymentIntent.nextAction
     }
 
+    @_spi(STP) public func retrievePollingResult(completion: @escaping (STPPaymentHandlerPollingResult?) -> Void) {
+        apiClient.retrievePaymentIntent(withClientSecret: paymentIntent.clientSecret) { [weak self] paymentIntent, _ in
+            guard let self, let paymentIntent else {
+                completion(nil)
+                return
+            }
+            completion(STPPaymentHandlerPollingResult(status: paymentIntent.status.paymentHandlerPollingStatus, updateActionIntent: { [weak self] in
+                self?.paymentIntent = paymentIntent
+            }))
+        }
+    }
+
     @_spi(STP) public func complete(with status: STPPaymentHandlerActionStatus, error: NSError?) {
         paymentIntentCompletion(status, paymentIntent, error)
     }
@@ -110,25 +146,24 @@ public class STPPaymentHandlerPaymentIntentActionParams: NSObject, STPPaymentHan
     }
 }
 
-@_spi(STP)
-public class STPPaymentHandlerSetupIntentActionParams: NSObject, STPPaymentHandlerActionParams {
+internal class STPPaymentHandlerSetupIntentActionParams: NSObject, STPPaymentHandlerActionParams {
     private var serviceInitialized = false
 
-    @_spi(STP) public let authenticationContext: STPAuthenticationContext
-    @_spi(STP) public let apiClient: STPAPIClient
-    @_spi(STP) public let threeDSCustomizationSettings: STPThreeDSCustomizationSettings
-    @_spi(STP) public let setupIntentCompletion: STPPaymentHandlerActionSetupIntentCompletionBlock
-    @_spi(STP) public let returnURLString: String?
-    @_spi(STP) public var setupIntent: STPSetupIntent
-    @_spi(STP) public var threeDS2Transaction: STDSTransaction?
+    let authenticationContext: STPAuthenticationContext
+    let apiClient: STPAPIClient
+    let threeDSCustomizationSettings: STPThreeDSCustomizationSettings
+    let setupIntentCompletion: STPPaymentHandlerActionSetupIntentCompletionBlock
+    let returnURLString: String?
+    var setupIntent: STPSetupIntent
+    var threeDS2Transaction: STDSTransaction?
 
-    @_spi(STP) public var intentStripeID: String {
+    var intentStripeID: String {
         return setupIntent.stripeID
     }
 
     private var _threeDS2Service: STDSThreeDS2Service?
 
-    @_spi(STP) public var threeDS2Service: STDSThreeDS2Service? {
+    var threeDS2Service: STDSThreeDS2Service? {
         if !serviceInitialized {
             serviceInitialized = true
             _threeDS2Service = STDSThreeDS2Service()
@@ -177,17 +212,59 @@ public class STPPaymentHandlerSetupIntentActionParams: NSObject, STPPaymentHandl
         super.init()
     }
 
-    @_spi(STP) public func nextAction() -> STPIntentAction? {
+    func nextAction() -> STPIntentAction? {
         return setupIntent.nextAction
     }
 
-    @_spi(STP) public func complete(with status: STPPaymentHandlerActionStatus, error: NSError?) {
+    func retrievePollingResult(completion: @escaping (STPPaymentHandlerPollingResult?) -> Void) {
+        apiClient.retrieveSetupIntent(withClientSecret: setupIntent.clientSecret) { [weak self] setupIntent, _ in
+            guard let self, let setupIntent else {
+                completion(nil)
+                return
+            }
+            completion(STPPaymentHandlerPollingResult(status: setupIntent.status.paymentHandlerPollingStatus, updateActionIntent: { [weak self] in
+                self?.setupIntent = setupIntent
+            }))
+        }
+    }
+
+    func complete(with status: STPPaymentHandlerActionStatus, error: NSError?) {
         setupIntentCompletion(status, setupIntent, error)
     }
 
     // Translate the STPAuthenticationContext to an ASPresentationAnchor if possible
     public func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
         return authenticationContext.authenticationPresentingViewController().view.window ?? stp_makeFallbackPresentationAnchor()
+    }
+}
+
+private extension STPPaymentIntentStatus {
+    var paymentHandlerPollingStatus: STPPaymentHandlerPollingStatus {
+        switch self {
+        case .requiresAction:
+            return .pending
+        case .succeeded:
+            return .succeeded
+        case .unknown, .requiresPaymentMethod, .requiresConfirmation, .processing, .requiresCapture, .canceled:
+            return .failed
+        @unknown default:
+            return .failed
+        }
+    }
+}
+
+private extension STPSetupIntentStatus {
+    var paymentHandlerPollingStatus: STPPaymentHandlerPollingStatus {
+        switch self {
+        case .requiresAction:
+            return .pending
+        case .succeeded:
+            return .succeeded
+        case .unknown, .requiresPaymentMethod, .requiresConfirmation, .processing, .canceled:
+            return .failed
+        @unknown default:
+            return .failed
+        }
     }
 }
 
