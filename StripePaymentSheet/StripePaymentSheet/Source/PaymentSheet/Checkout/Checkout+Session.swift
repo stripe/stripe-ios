@@ -79,7 +79,7 @@ extension CheckoutController {
         public let totals: CheckoutController.Session.Totals
 
         /// Express checkout payment methods available for this session, in display order.
-        public internal(set) var availableExpressCheckoutPaymentMethods: [String] = []
+        public let availableExpressCheckoutPaymentMethods: [String]
 
         // MARK: - Internal Properties
 
