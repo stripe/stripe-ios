@@ -90,6 +90,11 @@ extension String.Localized {
         )
     }
 
+    /// The label and placeholder for a questionnaire answer field.
+    static var questionnaireAnswer: String {
+        STPLocalizedString("Answer", "Label and placeholder for a questionnaire answer field")
+    }
+
     static var documentType: String {
         STPLocalizedString("Document type", "Label and picker title for a document's category")
     }
