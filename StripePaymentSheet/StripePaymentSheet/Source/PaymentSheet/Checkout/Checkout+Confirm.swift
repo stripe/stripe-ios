@@ -17,6 +17,14 @@ extension CheckoutController {
         case link(LinkConfirmationParameters)
         case paymentMethod(PaymentMethodConfirmationParameters, preconfirmIntegrationShape: PaymentSheet.IntegrationShape)
         case withoutPaymentMethod(STPAuthenticationContext)
+
+        /// Whether the flow collects a required shipping address as part of confirmation.
+        var collectsShippingAddressDuringConfirmation: Bool {
+            guard case .applePay(let parameters) = self else {
+                return false
+            }
+            return parameters.shippingAddressRequired
+        }
     }
 
     /// The parameters needed to confirm a Checkout Session with Apple Pay.
@@ -220,6 +228,11 @@ extension CheckoutController {
         guard pendingOperations.isEmpty else {
             let error = PaymentSheetError.integrationError(nonPIIDebugDescription: "CheckoutController cannot confirm while the Checkout Session is updating. Wait until isUpdating is false.")
             return .failed(error)
+        }
+        guard !session.requiresShippingAddress
+                || session.shippingAddress?.shippingDetailsParams != nil
+                || flow.collectsShippingAddressDuringConfirmation else {
+            return .failed(CheckoutError.missingShippingAddress)
         }
 
         confirmationInProgress = true

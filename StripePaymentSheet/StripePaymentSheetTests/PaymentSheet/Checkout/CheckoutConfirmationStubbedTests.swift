@@ -148,6 +148,56 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         await fulfillment(of: [confirmRequest], timeout: 0.1)
     }
 
+    func testConfirmRequiresShippingAddressBeforeCallingConfirmAPI() async throws {
+        // Given an open Checkout Session that requires a shipping address, but none has been collected
+        let session = CheckoutTestHelpers.makeOpenSession(allowedCountries: ["US"])
+        var configuration = CheckoutTestHelpers.makeConfiguration(apiResponse: session)
+        configuration.shippingAddressElement = .init()
+        let checkout = try await CheckoutController(configuration: configuration)
+        let confirmRequest = expectation(description: "Confirmation API is not called")
+        confirmRequest.isInverted = true
+        stub { request in
+            request.url?.path.hasSuffix("/confirm") == true
+        } response: { _ in
+            confirmRequest.fulfill()
+            return HTTPStubsResponse(jsonObject: Self.confirmedSessionJSON, statusCode: 200, headers: nil)
+        }
+
+        // When confirmation is attempted
+        let result = await checkout.confirm(makePaymentMethodFlow(for: checkout))
+
+        // Then it fails with an actionable message before making an API request
+        guard case .failed(let error) = result else {
+            XCTFail("Expected confirmation without a shipping address to fail, got \(result)")
+            return
+        }
+        XCTAssertEqual(error.localizedDescription, "Enter your shipping address to continue.")
+        await fulfillment(of: [confirmRequest], timeout: 0.1)
+    }
+
+    func testConfirmAllowsRequiredShippingAddressWhenCollected() async throws {
+        // Given an open Checkout Session with its required shipping address collected
+        let session = CheckoutTestHelpers.makeOpenSession(allowedCountries: ["US"])
+        let checkout = try await makeCheckout(apiResponse: session)
+        try await checkout.updateShippingAddress(
+            name: "Jane Doe",
+            address: .init(
+                country: "US",
+                line1: "123 Main St.",
+                city: "Seattle",
+                state: "WA",
+                postalCode: "98101"
+            )
+        )
+        stubConfirmation()
+
+        // When confirmation is attempted
+        let result = await checkout.confirm(makePaymentMethodFlow(for: checkout))
+
+        // Then confirmation proceeds
+        assertSucceeded(result)
+    }
+
     func testOpenConfirmResponsePollsBeforeCompleting() async throws {
         // Given /confirm returns an open Session and polling observes completion
         let checkout = try await makeCheckout()

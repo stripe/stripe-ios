@@ -3,6 +3,9 @@ PATCH
 
 ## X.Y.Z - changes pending release
 
+### PaymentSheet
+* [Fixed] Checkout now asks customers to enter a required shipping address before confirmation.
+
 ## 26.12.0 2026-09-21
 ### CryptoOnramp (Alpha)
 * [Removed] Removed public exposure of `StripeCryptoOnramp.Image`, including `Image.linkIconSquare`.
