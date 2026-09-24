@@ -23,6 +23,9 @@ extension UIColor {
     /// The secondary surface used behind icons and controls.
     static let surfaceSecondary = dynamic(light: UIColor(hex: 0xF5F5F5), dark: UIColor(hex: 0x262626))
 
+    /// The tertiary background surface.
+    static let surfaceTertiary = dynamic(light: UIColor(hex: 0xE5E5E5), dark: UIColor(hex: 0x404040))
+
     /// The background surface for error indicators.
     static let surfaceCritical = UIColor(hex: 0xE61947)
 
@@ -47,6 +50,9 @@ extension UIColor {
     /// The border color for document controls.
     static let documentBorder = dynamic(light: UIColor(hex: 0xA3A3A3), dark: UIColor(hex: 0x737373))
 
+    /// The foreground color for document icons in funds source summaries.
+    static let documentIcon = dynamic(light: UIColor(hex: 0x3C4F69), dark: .textTertiary)
+
     /// The background for a document row displaying an error.
     static let documentErrorBackground = dynamic(light: UIColor(hex: 0xFEF4F6), dark: surfaceCritical.withAlphaComponent(0.12))
 }
@@ -57,6 +63,7 @@ extension Color {
     static let fallbackPrimaryButtonForeground = Color(uiColor: .fallbackPrimaryButtonForeground)
     static let surfacePrimary = Color(uiColor: .surfacePrimary)
     static let surfaceSecondary = Color(uiColor: .surfaceSecondary)
+    static let surfaceTertiary = Color(uiColor: .surfaceTertiary)
     static let surfaceCritical = Color(uiColor: .surfaceCritical)
     static let surfaceSuccess = Color(uiColor: .surfaceSuccess)
     static let textPrimary = Color(uiColor: .textPrimary)
@@ -65,6 +72,7 @@ extension Color {
     static let textOnSuccess = Color(uiColor: .textOnSuccess)
     static let documentSuccess = Color(uiColor: .documentSuccess)
     static let documentBorder = Color(uiColor: .documentBorder)
+    static let documentIcon = Color(uiColor: .documentIcon)
     static let documentErrorBackground = Color(uiColor: .documentErrorBackground)
 }
 
