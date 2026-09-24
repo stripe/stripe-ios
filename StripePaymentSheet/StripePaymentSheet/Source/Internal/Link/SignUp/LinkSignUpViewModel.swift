@@ -145,6 +145,8 @@ final class LinkSignUpViewModel: NSObject {
     private let accountService: LinkAccountServiceProtocol
     private let accountLookupDebouncer = OperationDebouncer(debounceTime: LinkUI.accountLookupDebounceTime)
     private let country: String?
+    private let consentAction: PaymentSheetLinkAccount.ConsentAction
+    private let requestSurface: LinkRequestSurface
 
     // MARK: Initializer
 
@@ -152,8 +154,12 @@ final class LinkSignUpViewModel: NSObject {
         accountService: LinkAccountServiceProtocol,
         linkAccount: PaymentSheetLinkAccount?,
         legalName: String?,
-        country: String?
+        country: String?,
+        consentAction: PaymentSheetLinkAccount.ConsentAction = .clicked_button_mobile_v1,
+        requestSurface: LinkRequestSurface = .default
     ) {
+        self.consentAction = consentAction
+        self.requestSurface = requestSurface
         self.accountService = accountService
         self.linkAccount = linkAccount
         self.emailAddress = linkAccount?.email
@@ -176,7 +182,7 @@ final class LinkSignUpViewModel: NSObject {
             with: phoneNumber,
             legalName: requiresNameCollection ? legalName : nil,
             countryCode: nil,
-            consentAction: .clicked_button_mobile_v1
+            consentAction: consentAction
         ) { [weak self] result in
             switch result {
             case .success:
@@ -210,7 +216,7 @@ private extension LinkSignUpViewModel {
                 withEmail: emailAddress,
                 emailSource: .userAction,
                 doNotLogConsumerFunnelEvent: false,
-                requestSurface: .default
+                requestSurface: self?.requestSurface ?? .default
             ) { result in
                 guard let self = self else { return }
 

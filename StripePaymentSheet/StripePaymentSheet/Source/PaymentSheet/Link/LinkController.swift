@@ -42,6 +42,31 @@ import UIKit
         @_spi(STP) @_spi(LinkControllerPreview) public let sublabel: String?
     }
 
+    /// Copy and consent for `presentForAuthentication`, so another Stripe product can reuse Link's sign-in and
+    /// sign-up screens.
+    @_spi(STP) public struct AuthenticationContent {
+        /// Title of the sign-in or sign-up screen.
+        @_spi(STP) public let title: String
+        /// Subtitle of the sign-in or sign-up screen.
+        @_spi(STP) public let subtitle: String
+        /// The consent recorded when a new account is created.
+        @_spi(STP) public let consentAction: PaymentSheetLinkAccount.ConsentAction
+
+        @_spi(STP) public init(title: String, subtitle: String, consentAction: PaymentSheetLinkAccount.ConsentAction) {
+            self.title = title
+            self.subtitle = subtitle
+            self.consentAction = consentAction
+        }
+    }
+
+    /// The result of `presentForAuthentication`.
+    @frozen @_spi(STP) public enum AuthenticationResult {
+        /// The user signed in or signed up; `linkAccount` holds the verified session.
+        case authenticated
+        /// The user dismissed Link.
+        case canceled
+    }
+
     @frozen @_spi(STP) public enum VerificationResult {
         /// Verification was completed successfully.
         case completed
@@ -85,6 +110,7 @@ import UIKit
         case noPaymentMethodSelected
         case noActiveLinkConsumer
         case missingAppAttestation
+        case verificationNotStarted
 
         @_spi(STP) public var errorDescription: String? {
             switch self {
@@ -94,6 +120,8 @@ import UIKit
                 return "No active Link consumer is available."
             case .missingAppAttestation:
                 return "App attestation is missing or device cannot use native Link."
+            case .verificationNotStarted:
+                return "The Link consumer does not require verification, or verification was not started with `startVerification`."
             }
         }
     }
@@ -382,9 +410,12 @@ import UIKit
             email: email,
             linkAccountService: linkAccountService,
             requestSurface: requestSurface
-        ) { result in
+        ) { [weak self] result in
             switch result {
             case .success(let linkAccount):
+                // Set directly so calls made right after completion (e.g. startVerification) see the account;
+                // the shared-context observer only updates it asynchronously.
+                self?.linkAccount = linkAccount
                 LinkAccountContext.shared.account = linkAccount
                 completion(.success(linkAccount?.isRegistered ?? false))
             case .failure(let error):
@@ -414,6 +445,37 @@ import UIKit
                 } else {
                     completion(.failure(PaymentSheetError.linkLookupNotFound(serverErrorMessage: "")))
                 }
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+
+    /// Restores a Link consumer session that was started outside of this `LinkController` (e.g. by another Stripe SDK module),
+    /// without presenting any UI. The session is refreshed to get its current verification state.
+    ///
+    /// Check `linkAccount?.sessionState` afterwards: `.verified` needs no further authentication,
+    /// `.requiresVerification` needs `startVerification` and `confirmVerification`.
+    ///
+    /// - Parameter consumerSessionClientSecret: The client secret of the consumer session to restore.
+    /// - Parameter consumerPublishableKey: The publishable key of the consumer account, if known.
+    /// - Parameter completion: A closure that is called when the session is restored, or with an error (e.g. an expired session).
+    @_spi(STP) public func restoreConsumerSession(
+        consumerSessionClientSecret: String,
+        consumerPublishableKey: String?,
+        completion: @escaping (Result<Void, Error>) -> Void
+    ) {
+        linkAccountService.restoreConsumerSession(
+            consumerSessionClientSecret: consumerSessionClientSecret,
+            consumerPublishableKey: consumerPublishableKey,
+            requestSurface: requestSurface
+        ) { [weak self] result in
+            switch result {
+            case .success(let linkAccount):
+                // Set directly so calls made right after completion see the account, then share it.
+                self?.linkAccount = linkAccount
+                LinkAccountContext.shared.account = linkAccount
+                completion(.success(()))
             case .failure(let error):
                 completion(.failure(error))
             }
@@ -482,6 +544,134 @@ import UIKit
             case .canceled, .switchAccount:
                 completion(.success(.canceled))
             case .failed(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+
+    /// Presents Link's own sign-in and sign-up screens, and one-time code verification when needed, without the
+    /// wallet. Completes once the session is verified, so the caller can continue with its own flow.
+    ///
+    /// - Parameter email: Prefills the email and looks it up first. When nil, Link asks for it.
+    /// - Parameter phoneNumber: Prefills the sign-up phone number, in E.164 format.
+    /// - Parameter content: The screen copy and the consent recorded for a new account.
+    /// - Parameter presentingViewController: The view controller from which to present Link.
+    /// - Parameter completion: `.authenticated` with `linkAccount` verified, `.canceled`, or an error.
+    @_spi(STP) public func presentForAuthentication(
+        email: String?,
+        phoneNumber: String? = nil,
+        content: AuthenticationContent,
+        from presentingViewController: UIViewController,
+        completion: @escaping (Result<AuthenticationResult, Error>) -> Void
+    ) {
+        if let email, let linkAccount, linkAccount.sessionState == .verified,
+           linkAccount.email.lowercased() == email.lowercased() {
+            completion(.success(.authenticated))
+            return
+        }
+
+        let present = { [weak self] in
+            guard let self else { return }
+            var paymentElementConfiguration = self.paymentElementConfiguration
+            if let email {
+                paymentElementConfiguration.defaultBillingDetails.email = email
+            }
+            if let phoneNumber {
+                paymentElementConfiguration.defaultBillingDetails.phone = phoneNumber
+            }
+            let linkController = PayWithNativeLinkController(
+                mode: .authentication,
+                intent: self.intent,
+                elementsSession: self.elementsSession,
+                configuration: paymentElementConfiguration,
+                logPayment: false,
+                analyticsHelper: self.analyticsHelper,
+                linkAppearance: self.appearance,
+                linkConfiguration: self.configuration
+            )
+            linkController.presentForAuthentication(
+                from: presentingViewController,
+                content: content,
+                requestSurface: self.requestSurface
+            ) { [weak self] result in
+                switch result {
+                case .success(let linkAccount?):
+                    self?.linkAccount = linkAccount
+                    LinkAccountContext.shared.account = linkAccount
+                    completion(.success(.authenticated))
+                case .success(nil):
+                    completion(.success(.canceled))
+                case .failure(let error):
+                    completion(.failure(error))
+                }
+            }
+        }
+
+        guard let email else {
+            LinkAccountContext.shared.account = nil
+            present()
+            return
+        }
+        lookupConsumer(with: email) { result in
+            switch result {
+            case .success:
+                present()
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+
+    /// Sends a one-time passcode to the current Link user, without presenting any UI.
+    /// Use this with `confirmVerification` to build a custom verification UI instead of `presentForVerification`.
+    /// `lookupConsumer` must be called before this.
+    ///
+    /// - Parameter isResendingSmsCode: Whether this call resends a previously sent code.
+    /// - Parameter completion: A closure that is called when the code was sent, or with an error.
+    @_spi(STP) public func startVerification(
+        isResendingSmsCode: Bool = false,
+        completion: @escaping (Result<Void, Error>) -> Void
+    ) {
+        guard let linkAccount, linkAccount.isRegistered else {
+            completion(.failure(IntegrationError.noActiveLinkConsumer))
+            return
+        }
+
+        linkAccount.startVerification(isResendingSmsCode: isResendingSmsCode) { result in
+            switch result {
+            case .success:
+                LinkAccountContext.shared.account = linkAccount
+                completion(.success(()))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+
+    /// Confirms the one-time passcode the current Link user entered, without presenting any UI.
+    /// `startVerification` must be called before this.
+    ///
+    /// - Parameter code: The one-time passcode entered by the user.
+    /// - Parameter completion: A closure that is called when the user is verified, or with an error (e.g. an invalid or expired code).
+    @_spi(STP) public func confirmVerification(
+        code: String,
+        completion: @escaping (Result<Void, Error>) -> Void
+    ) {
+        guard let linkAccount else {
+            completion(.failure(IntegrationError.noActiveLinkConsumer))
+            return
+        }
+        guard linkAccount.sessionState == .requiresVerification, linkAccount.hasStartedSMSVerification else {
+            completion(.failure(IntegrationError.verificationNotStarted))
+            return
+        }
+
+        linkAccount.verify(with: code) { result in
+            switch result {
+            case .success:
+                LinkAccountContext.shared.account = linkAccount
+                completion(.success(()))
+            case .failure(let error):
                 completion(.failure(error))
             }
         }
@@ -1456,6 +1646,66 @@ extension LinkController: LinkFullConsentViewControllerDelegate {
                 switch result {
                 case .success(let result):
                     continuation.resume(returning: result)
+                case .failure(let error):
+                    continuation.resume(throwing: error)
+                }
+            }
+        }
+    }
+
+    /// Sends a one-time passcode to the current Link user, without presenting any UI.
+    /// `lookupConsumer` must be called before this.
+    ///
+    /// - Parameter isResendingSmsCode: Whether this call resends a previously sent code.
+    /// Throws if `lookupConsumer` did not find a Link consumer, or an API error occurs.
+    func startVerification(isResendingSmsCode: Bool = false) async throws {
+        try await withCheckedThrowingContinuation { continuation in
+            startVerification(isResendingSmsCode: isResendingSmsCode) { result in
+                switch result {
+                case .success:
+                    continuation.resume(returning: ())
+                case .failure(let error):
+                    continuation.resume(throwing: error)
+                }
+            }
+        }
+    }
+
+    /// Confirms the one-time passcode the current Link user entered, without presenting any UI.
+    /// `startVerification` must be called before this.
+    ///
+    /// - Parameter code: The one-time passcode entered by the user.
+    /// Throws if verification was not started, the code is invalid or expired, or an API error occurs.
+    func confirmVerification(code: String) async throws {
+        try await withCheckedThrowingContinuation { continuation in
+            confirmVerification(code: code) { result in
+                switch result {
+                case .success:
+                    continuation.resume(returning: ())
+                case .failure(let error):
+                    continuation.resume(throwing: error)
+                }
+            }
+        }
+    }
+
+    /// Restores a Link consumer session that was started outside of this `LinkController`, without presenting any UI.
+    ///
+    /// - Parameter consumerSessionClientSecret: The client secret of the consumer session to restore.
+    /// - Parameter consumerPublishableKey: The publishable key of the consumer account, if known.
+    /// Throws if the session can't be restored (e.g. it expired), or an API error occurs.
+    func restoreConsumerSession(
+        consumerSessionClientSecret: String,
+        consumerPublishableKey: String?
+    ) async throws {
+        try await withCheckedThrowingContinuation { continuation in
+            restoreConsumerSession(
+                consumerSessionClientSecret: consumerSessionClientSecret,
+                consumerPublishableKey: consumerPublishableKey
+            ) { result in
+                switch result {
+                case .success:
+                    continuation.resume(returning: ())
                 case .failure(let error):
                     continuation.resume(throwing: error)
                 }
