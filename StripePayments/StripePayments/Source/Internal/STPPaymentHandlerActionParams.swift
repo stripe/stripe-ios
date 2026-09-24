@@ -16,7 +16,7 @@ import UIKit
 #endif
 
 /// The states relevant while polling an Intent for an out-of-band action.
-@_spi(STP) public enum STPPaymentHandlerPollingStatus: Equatable {
+@_spi(STP) @frozen public enum STPPaymentHandlerPollingStatus: Equatable {
     case pending
     case succeeded
     case failed
