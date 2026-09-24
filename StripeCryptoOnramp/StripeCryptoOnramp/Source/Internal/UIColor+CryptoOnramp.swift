@@ -35,11 +35,20 @@ extension UIColor {
     /// The foreground color for tertiary text.
     static let textTertiary = dynamic(light: UIColor(hex: 0x707070), dark: UIColor(hex: 0xD4D4D4))
 
+    /// The foreground color for error messages.
+    static let textCritical = dynamic(light: UIColor(hex: 0xC0123C), dark: surfaceCritical)
+
     /// The foreground color on success indicators, kept dark for contrast in both appearances.
     static let textOnSuccess = UIColor(hex: 0x171717)
 
+    /// The foreground color for document upload progress and success indicators.
+    static let documentSuccess = dynamic(light: UIColor(hex: 0x008A45), dark: UIColor(hex: 0x30D158))
+
     /// The border color for document controls.
     static let documentBorder = dynamic(light: UIColor(hex: 0xA3A3A3), dark: UIColor(hex: 0x737373))
+
+    /// The background for a document row displaying an error.
+    static let documentErrorBackground = dynamic(light: UIColor(hex: 0xFEF4F6), dark: surfaceCritical.withAlphaComponent(0.12))
 }
 
 /// Convenience extension for exposing the above semantic colors for SwiftUI usage.
@@ -52,8 +61,11 @@ extension Color {
     static let surfaceSuccess = Color(uiColor: .surfaceSuccess)
     static let textPrimary = Color(uiColor: .textPrimary)
     static let textTertiary = Color(uiColor: .textTertiary)
+    static let textCritical = Color(uiColor: .textCritical)
     static let textOnSuccess = Color(uiColor: .textOnSuccess)
+    static let documentSuccess = Color(uiColor: .documentSuccess)
     static let documentBorder = Color(uiColor: .documentBorder)
+    static let documentErrorBackground = Color(uiColor: .documentErrorBackground)
 }
 
 private extension UIColor {
