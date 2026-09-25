@@ -24,4 +24,5 @@ public enum CryptoNetwork: String, Codable, CaseIterable {
     case sui = "sui"
     case arbitrum = "arbitrum"
     case tempo = "tempo"
+    case celo = "celo"
 }
