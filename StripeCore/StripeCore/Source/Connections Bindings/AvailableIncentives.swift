@@ -8,5 +8,9 @@
 import Foundation
 
 @_spi(STP) public struct AvailableIncentives: Decodable {
-    @_spi(STP) public  let data: [LinkConsumerIncentive]
+    @_spi(STP) public let data: [LinkConsumerIncentive]
+
+    @_spi(STP) public var hasIncentiveValidForSession: Bool {
+        data.contains { $0.validForSession == true }
+    }
 }

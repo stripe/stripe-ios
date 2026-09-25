@@ -181,6 +181,8 @@ protocol FinancialConnectionsAPI {
         amount: Int?,
         currency: String?,
         incentiveEligibilitySession: ElementsSessionContext.IntentID?,
+        linkConsumerIncentive: LinkConsumerIncentive?,
+        onBehalfOf: String?,
         useMobileEndpoints: Bool,
         pane: FinancialConnectionsSessionManifest.NextPane
     ) -> Future<LinkSignUpResponse>
@@ -219,6 +221,8 @@ protocol FinancialConnectionsAPI {
     func updateAvailableIncentives(
         consumerSessionClientSecret: String,
         sessionID: String,
-        paymentDetailsID: String
+        paymentDetailsID: String,
+        intentID: String?,
+        onBehalfOf: String?
     ) -> Future<AvailableIncentives>
 }
