@@ -27,6 +27,7 @@ PATCH
 ### PaymentSheet
 * [Added] Added support for Scalapay.
 * [Added] Added support for Card program name for saved payment methods when using CustomerSessions
+* [Added] When you add China UnionPay as a supported Apple Pay network, you no longer need to manually set .capabilityEMV to the Apple Pay payment request merchantCapabilities list - it's added automatically.
 
 ## 26.10.0 2026-09-08
 ### General
