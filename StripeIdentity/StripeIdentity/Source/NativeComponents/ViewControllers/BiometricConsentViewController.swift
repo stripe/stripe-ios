@@ -88,16 +88,18 @@ final class BiometricConsentViewController: IdentityFlowViewController {
                 )
             )
         }
-        buttons.append(
-            .init(
-                text: consentContent.declineButtonText,
-                state: declineButtonState,
-                isPrimary: false,
-                didTap: { [weak self] in
-                    self?.didTapButton(consentValue: false)
-                }
+        if configuration?.hideDeclineButton != true {
+            buttons.append(
+                .init(
+                    text: consentContent.declineButtonText,
+                    state: declineButtonState,
+                    isPrimary: false,
+                    didTap: { [weak self] in
+                        self?.didTapButton(consentValue: false)
+                    }
+                )
             )
-        )
+        }
 
         return .init(
             headerViewModel: .init(
