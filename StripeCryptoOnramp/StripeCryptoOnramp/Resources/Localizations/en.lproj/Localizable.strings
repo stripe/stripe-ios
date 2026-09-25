@@ -1,3 +1,9 @@
+/* Action to add documents for another source of funds */
+"Add documents" = "Add documents";
+
+/* Label and placeholder for a questionnaire answer field */
+"Answer" = "Answer";
+
 /* Label shown in the Link UI indicating that debit cards are more likely to be accepted */
 "Debit cards are most likely to be accepted." = "Debit cards are most likely to be accepted.";
 
@@ -39,6 +45,12 @@
 
 /* Heading introducing proof of address collection */
 "Upload your proof of address" = "Upload your proof of address";
+
+/* Status after a document has uploaded successfully */
+"Uploaded" = "Uploaded";
+
+/* Status while a document is uploading */
+"Uploading…" = "Uploading…";
 
 /* Error message shown when the submitted wallet ownership signature is invalid */
 "We couldn't verify ownership of this wallet. Please try again." = "We couldn't verify ownership of this wallet. Please try again.";
