@@ -56,6 +56,64 @@ class EmbeddedPaymentElementTest: XCTestCase {
         STPAnalyticsClient.sharedClient._testLogHistory = []
     }
 
+    func testMakeViewDoesNotRestoreHiddenLinkDefault() {
+        // Given Link is the persisted default and is enabled but hidden
+        defer { CustomerPaymentOption.setDefaultPaymentMethod(nil, forCustomer: nil) }
+        CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: nil)
+        let savedPaymentMethod = STPPaymentMethod._testCard()
+        let loadResult = makeLinkEnabledPaymentIntentLoadResult(savedPaymentMethods: [savedPaymentMethod])
+        var config = configuration
+        config.link = .init(display: .walletButtonHidden)
+
+        // When the embedded payment methods view is created
+        let sut = EmbeddedPaymentElement.makeView(
+            configuration: config,
+            loadResult: loadResult,
+            analyticsHelper: ._testValue()
+        )
+
+        // Then Link remains enabled, but its hidden row is not restored
+        XCTAssertTrue(PaymentSheet.isLinkEnabled(elementsSession: loadResult.elementsSession, configuration: config))
+        XCTAssertFalse(sut.rowButtons.contains { $0.type == .link })
+        XCTAssertEqual(sut.selectedRowButton?.type, .saved(paymentMethod: savedPaymentMethod))
+    }
+
+    func testMakeViewRestoresVisibleLinkDefault() {
+        // Given Link is the persisted default and is visible
+        defer { CustomerPaymentOption.setDefaultPaymentMethod(nil, forCustomer: nil) }
+        CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: nil)
+        let loadResult = makeLinkEnabledPaymentIntentLoadResult(savedPaymentMethods: [._testCard()])
+        var config = configuration
+        config.link = .init(display: .automatic)
+
+        // When the embedded payment methods view is created
+        let sut = EmbeddedPaymentElement.makeView(
+            configuration: config,
+            loadResult: loadResult,
+            analyticsHelper: ._testValue()
+        )
+
+        // Then the Link row is selected
+        XCTAssertTrue(sut.rowButtons.contains { $0.type == .link })
+        XCTAssertEqual(sut.selectedRowButton?.type, .link)
+    }
+
+    private func makeLinkEnabledPaymentIntentLoadResult(
+        savedPaymentMethods: [STPPaymentMethod]
+    ) -> PaymentSheetLoader.LoadResult {
+        return PaymentSheetLoader.LoadResult(
+            intent: .deferredIntent(intentConfig: paymentIntentConfig),
+            elementsSession: ._testValue(
+                paymentMethodTypes: ["card"],
+                isLinkPassthroughModeEnabled: true
+            ),
+            savedPaymentMethods: savedPaymentMethods,
+            paymentMethodTypes: [.stripe(.card)],
+            paymentMethodMessagingPromotionsHelper: ._testValue(),
+            paymentMethodOrientation: .vertical
+        )
+    }
+
     // MARK: - `update` tests
 
     func testUpdate() async throws {
