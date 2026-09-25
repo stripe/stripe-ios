@@ -1,6 +1,9 @@
 /* Label shown in the Link UI indicating that debit cards are more likely to be accepted */
 "Debit cards are most likely to be accepted." = "Debit cards are most likely to be accepted.";
 
+/* Label and picker title for a document's category */
+"Document type" = "Document type";
+
 /* Heading confirming a document was uploaded successfully */
 "Document uploaded successfully" = "Document uploaded successfully";
 
@@ -30,6 +33,9 @@
 
 /* Error message shown when the wallet ownership challenge is invalid */
 "This wallet verification request is invalid. Please try again." = "This wallet verification request is invalid. Please try again.";
+
+/* Action to select an existing document for upload */
+"Upload document" = "Upload document";
 
 /* Heading introducing proof of address collection */
 "Upload your proof of address" = "Upload your proof of address";
