@@ -171,7 +171,6 @@ struct CheckoutCartView: View {
                 expressCheckoutElementConfiguration.linkConfiguration = ExpressCheckoutElement.LinkConfiguration(
                     display: expressCheckoutElementSettings.linkDisplay
                 )
-                expressCheckoutElementConfiguration.shippingAddressRequired = expressCheckoutElementSettings.shippingAddressRequired
                 config.expressCheckoutElement = expressCheckoutElementConfiguration
             }
             if adaptivePricing {

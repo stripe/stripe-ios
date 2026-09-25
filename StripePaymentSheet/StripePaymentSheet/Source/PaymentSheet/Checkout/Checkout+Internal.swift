@@ -48,7 +48,7 @@ extension CheckoutController: ExpressCheckoutElementDelegate {
                 apiClient: apiClient,
                 returnURL: configuration.returnURL,
                 merchantDisplayName: effectiveMerchantDisplayName,
-                shippingAddressRequired: expressCheckoutElementConfiguration.shippingAddressRequired,
+                shippingAddressRequired: session.requiresShippingAddress,
                 defaultBillingDetails: configuration.defaults.billingDetails,
                 presentationWindow: presentationWindow,
                 confirmationHandler: { [apiClient, paymentHandler] requestParameters in

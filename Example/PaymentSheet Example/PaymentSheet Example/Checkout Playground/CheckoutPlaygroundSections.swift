@@ -318,7 +318,6 @@ struct CheckoutPlaygroundExpressCheckoutElementSection: View {
     @Binding var showExpressCheckoutElement: Bool
     @Binding var applePayDisplay: ExpressCheckoutElement.ApplePayConfiguration.Display
     @Binding var linkDisplay: ExpressCheckoutElement.LinkConfiguration.Display
-    @Binding var shippingAddressRequired: Bool
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -342,11 +341,6 @@ struct CheckoutPlaygroundExpressCheckoutElementSection: View {
                         selection: $linkDisplay,
                         tooltip: "Sets `ExpressCheckoutElement.Configuration.linkConfiguration.display`.",
                         displayText: { $0.rawValue.capitalized }
-                    )
-                    CheckoutPlayground.ToggleRow(
-                        title: "Requires Shipping Address",
-                        isOn: $shippingAddressRequired,
-                        tooltip: "Sets `ExpressCheckoutElement.Configuration.shippingAddressRequired`. When on, wallets like Apple Pay require the customer to provide a shipping address."
                     )
                 }
             }

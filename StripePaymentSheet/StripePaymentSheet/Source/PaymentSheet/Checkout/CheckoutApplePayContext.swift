@@ -352,6 +352,10 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
             paymentRequest.requiredBillingContactFields.insert(.postalAddress)
         }
 
+        if checkoutSession.email == nil {
+            paymentRequest.requiredShippingContactFields.insert(.emailAddress)
+        }
+
         if applePayConfirmationParameters.shippingAddressRequired {
             paymentRequest.requiredShippingContactFields.insert(.postalAddress)
             paymentRequest.requiredShippingContactFields.insert(.name)
