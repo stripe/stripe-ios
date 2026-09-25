@@ -33,7 +33,7 @@ end
 def changed_files
   return nil if ENV['BITRISE_PULL_REQUEST'].to_s.empty?
 
-  output = `git diff --name-only --diff-filter=ACDMRTUXB origin/master HEAD 2>/dev/null`
+  output = `git diff --name-only --diff-filter=ACDMRTUXB origin/master...HEAD 2>/dev/null`
   return nil unless $?.success?
 
   output.lines(chomp: true)
@@ -44,7 +44,6 @@ def main
   should_run = files.nil? || files.empty? || files.any? { |path| relevant?(path) }
   value = should_run ? 'true' : 'false'
   pull_request = ENV['BITRISE_PULL_REQUEST'].to_s
-  notify_value = pull_request.empty? ? 'true' : 'false'
 
   if files
     puts "Changed files:\n  #{files.join("\n  ")}"
@@ -54,14 +53,11 @@ def main
     puts 'Could not determine the pull request diff; running FC stability tests as a safety fallback.'
   end
   puts "RUN_FC_STABILITY_TESTS=#{value}"
-  puts "NOTIFY_FC_STABILITY_TESTS=#{notify_value}"
 
   if system('which envman > /dev/null 2>&1')
     abort 'Failed to export RUN_FC_STABILITY_TESTS' unless system('envman', 'add', '--key', 'RUN_FC_STABILITY_TESTS', '--value', value)
-    abort 'Failed to export NOTIFY_FC_STABILITY_TESTS' unless system('envman', 'add', '--key', 'NOTIFY_FC_STABILITY_TESTS', '--value', notify_value)
   else
     ENV['RUN_FC_STABILITY_TESTS'] = value
-    ENV['NOTIFY_FC_STABILITY_TESTS'] = notify_value
   end
 end
 

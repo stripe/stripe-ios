@@ -257,26 +257,26 @@ workflows:
         inputs: *financial_connections_stability_tests_inputs
     - slack@3:
         is_always_run: true
-        run_if: '{{and (enveq "NOTIFY_FC_STABILITY_TESTS" "true") .IsBuildFailed}}'
+        run_if: '{{and (enveq "BITRISE_PULL_REQUEST" "") .IsBuildFailed}}'
         inputs:
         - webhook_url: $WEBHOOK_SLACK_CUX_BOTS
         - webhook_url_on_error: $WEBHOOK_SLACK_CUX_BOTS
         - text_on_error: "iOS build failed (c.c. @link-mobile-run)"
     - slack@3:
         is_always_run: true
-        run_if: '{{enveq "NOTIFY_FC_STABILITY_TESTS" "true"}}'
+        run_if: '{{enveq "BITRISE_PULL_REQUEST" ""}}'
         inputs:
         - webhook_url: $WEBHOOK_SLACK_CONNECTIONS_MOBILE
         - webhook_url_on_error: $WEBHOOK_SLACK_CONNECTIONS_MOBILE
     - slack@3:
         is_always_run: true
-        run_if: '{{and (enveq "NOTIFY_FC_STABILITY_TESTS" "true") .IsBuildFailed}}'
+        run_if: '{{and (enveq "BITRISE_PULL_REQUEST" "") .IsBuildFailed}}'
         inputs:
         - webhook_url: $SLACK_KGAIDIS_TESTING_WEBHOOK_URL
         - webhook_url_on_error: $SLACK_KGAIDIS_TESTING_WEBHOOK_URL
     - slack@3:
         is_always_run: true
-        run_if: '{{and (enveq "NOTIFY_FC_STABILITY_TESTS" "true") .IsBuildFailed}}'
+        run_if: '{{and (enveq "BITRISE_PULL_REQUEST" "") .IsBuildFailed}}'
         inputs:
         - webhook_url: $SLACK_CONNECTIONS_IOS_FAILURES_WEBHOOK_URL
         - webhook_url_on_error: $SLACK_CONNECTIONS_IOS_FAILURES_WEBHOOK_URL
