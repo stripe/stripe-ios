@@ -80,7 +80,7 @@ final class IntentConfirmParams {
         if let bankName = (financialConnectionsLinkedBank?.bankName ?? instantDebitsLinkedBank?.bankName) {
             return PaymentSheetImageLibrary.bankIcon(for: PaymentSheetImageLibrary.bankIconCode(for: bankName), iconStyle: iconStyle)
         } else {
-            return paymentMethodParams.makeIcon(forDarkBackground: forDarkBackground, currency: currency, iconStyle: iconStyle, updateHandler: nil)
+            return paymentMethodParams.makeIcon(forDarkBackground: forDarkBackground, currency: currency, iconStyle: iconStyle)
         }
     }
 

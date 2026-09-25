@@ -136,7 +136,7 @@ private extension UIImageView {
     func setImageAsTemplate(from url: URL, placeholder: Image) {
         image = placeholder.makeImage(template: true)
         Task {
-            guard let image = try? await DownloadManager.sharedManager.downloadImage(url: url) else {
+            guard let image = try? await DownloadManager.shared.image(for: url) else {
                 return
             }
             await MainActor.run {
