@@ -118,6 +118,9 @@ extension CheckoutController {
     // MARK: - Payment Option
 
     func dangerouslySetPaymentOptionDirectly(_ paymentOption: Session.PaymentOptionDisplayData?) {
+        if paymentOption?.paymentMethodType == "sepa_debit" {
+            paymentOption?.mandate.merchantAccess = merchantDidAccessSEPAMandateText
+        }
         var updatedSession = session
         updatedSession.localState.paymentOption = paymentOption
         dangerouslySetSessionDirectly(updatedSession)

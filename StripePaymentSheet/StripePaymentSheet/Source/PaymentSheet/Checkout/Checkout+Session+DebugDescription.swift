@@ -103,7 +103,7 @@ extension CheckoutController.Session: CustomDebugStringConvertible {
             lines.append("    billingDetails: nil")
         }
         lines.append(contentsOf: [
-            "    mandateText: \(paymentOption.mandateText == nil ? "nil" : "<redacted>")",
+            "    mandateText: \(paymentOption.mandate.text == nil ? "nil" : "<redacted>")",
             "  }",
         ])
         return lines

@@ -719,24 +719,16 @@ extension PaymentSheet {
             guard didPresentAndContinue || viewController.selectedPaymentMethodType != .stripe(.SEPADebit) else {
                 // We're legally required to show the customer the SEPA mandate before every payment/setup
                 // In the edge case where the customer never opened the sheet, and thus never saw the mandate, we present the mandate directly
-                presentSEPAMandate()
+                SepaMandateViewController.present(from: presentingViewController, configuration: configuration) { didAcceptMandate in
+                    if didAcceptMandate {
+                        confirm()
+                    } else {
+                        completion(.canceled)
+                    }
+                }
                 return
             }
             confirm()
-
-            func presentSEPAMandate() {
-                let sepaMandateVC = SepaMandateViewController(configuration: configuration) { didAcceptMandate in
-                    presentingViewController.dismiss(animated: true) {
-                        if didAcceptMandate {
-                            confirm()
-                        } else {
-                            completion(.canceled)
-                        }
-                    }
-                }
-                let bottomSheet = Self.makeBottomSheetViewController(sepaMandateVC, configuration: configuration)
-                presentingViewController.presentAsBottomSheet(bottomSheet, appearance: configuration.appearance)
-            }
 
             func confirm() {
                 PaymentSheet.confirm(
