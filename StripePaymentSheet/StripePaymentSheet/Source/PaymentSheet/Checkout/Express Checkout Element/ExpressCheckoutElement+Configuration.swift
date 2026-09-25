@@ -22,6 +22,9 @@ extension ExpressCheckoutElement {
         /// Called after a wallet payment confirmation completes.
         public var confirmHandler: ConfirmHandler
 
+        /// Controls appearance of Express Checkout Element.
+        public var appearance: Appearance = .init()
+
         /// Creates a configuration with default values.
         public init(confirmHandler: @escaping ConfirmHandler) {
             self.confirmHandler = confirmHandler
@@ -80,6 +83,47 @@ extension ExpressCheckoutElement {
         public init(display: Display = .automatic) {
             self.display = display
         }
+    }
+
+    public struct Appearance {
+        /// Controls the theme of Apple Pay buttons. Link buttons retain Link's required brand styling.
+        public enum ButtonTheme: String {
+            /// Light theme which contrasts with a dark background.
+            case light
+            /// Dark theme which contrasts with a light background.
+            case dark
+            /// Automatic theme.
+            case automatic
+        }
+
+        /// Controls the layout of express payment buttons.
+        public struct ButtonLayout {
+            /// Maximum number of columns. `nil` uses the default. Must be greater than zero when set.
+            public var maxColumns: Int? {
+                didSet {
+                    guard let maxColumns, maxColumns <= 0 else { return }
+                    assertionFailure("maxColumns must be greater than zero")
+                    self.maxColumns = oldValue
+                }
+            }
+            /// Maximum number of rows. `nil` uses the default. Must be greater than zero when set.
+            public var maxRows: Int? {
+                didSet {
+                    guard let maxRows, maxRows <= 0 else { return }
+                    assertionFailure("maxRows must be greater than zero")
+                    self.maxRows = oldValue
+                }
+            }
+            public init() {}
+        }
+
+        /// Theme of Apple Pay buttons. Link buttons retain Link's required brand styling.
+        public var buttonTheme: ButtonTheme = .automatic
+
+        /// Layout of the express payment buttons.
+        public var buttonLayout: ButtonLayout = .init()
+
+        public init() {}
     }
 
     /// A closure called after a wallet payment confirmation completes.

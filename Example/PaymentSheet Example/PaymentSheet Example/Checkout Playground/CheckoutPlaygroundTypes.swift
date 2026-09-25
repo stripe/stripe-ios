@@ -5,6 +5,7 @@
 //  Created by Nick Porter on 2/24/26.
 
 import Foundation
+import PassKit
 @_spi(STP) import StripePaymentSheet
 
 extension ExpressCheckoutElement.ApplePayConfiguration.Display: CaseIterable, Identifiable {
@@ -17,7 +18,39 @@ extension ExpressCheckoutElement.LinkConfiguration.Display: CaseIterable, Identi
     public var id: String { rawValue }
 }
 
+extension ExpressCheckoutElement.Appearance.ButtonTheme: CaseIterable, Identifiable {
+    public static var allCases: [Self] { [.automatic, .light, .dark] }
+    public var id: String { rawValue }
+}
+
 enum CheckoutPlayground {
+    enum ApplePayButtonType: String, CaseIterable, Identifiable {
+        case plain
+        case buy
+        case setup
+        case checkout
+
+        var id: String { rawValue }
+
+        var displayName: String {
+            switch self {
+            case .plain: return "Plain"
+            case .buy: return "Buy"
+            case .setup: return "Set Up"
+            case .checkout: return "Checkout"
+            }
+        }
+
+        var pkPaymentButtonType: PKPaymentButtonType {
+            switch self {
+            case .plain: return .plain
+            case .buy: return .buy
+            case .setup: return .setUp
+            case .checkout: return .checkout
+            }
+        }
+    }
+
     enum LinkMode: String, CaseIterable, Identifiable, Codable {
         case native
         case web
@@ -318,6 +351,38 @@ enum CheckoutPlayground {
                 return LineItemConfig.defaults
             case .zeroAmount:
                 return LineItemConfig.zeroAmount
+            }
+        }
+    }
+
+    enum ExpressCheckoutElementButtonLayoutLimit: String, CaseIterable, Identifiable {
+        case automatic
+        case one
+        case two
+
+        var id: String { rawValue }
+
+        var displayName: String {
+            switch self {
+            case .automatic: return "automatic"
+            case .one: return "1"
+            case .two: return "2"
+            }
+        }
+
+        var intValue: Int? {
+            switch self {
+            case .automatic: return nil
+            case .one: return 1
+            case .two: return 2
+            }
+        }
+
+        init(intValue: Int?) {
+            switch intValue {
+            case 1: self = .one
+            case 2: self = .two
+            default: self = .automatic
             }
         }
     }

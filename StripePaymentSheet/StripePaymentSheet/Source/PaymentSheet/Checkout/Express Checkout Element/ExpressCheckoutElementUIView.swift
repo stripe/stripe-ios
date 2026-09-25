@@ -16,6 +16,12 @@ import UIKit
 @MainActor
 public final class ExpressCheckoutElementUIView: UIView {
 
+    private enum Constants {
+        static let buttonHeight: CGFloat = 44
+        static let buttonSpacing: CGFloat = 8
+        static let cornerRadius: CGFloat = 6
+    }
+
     // MARK: - Private Properties
 
     private let configuration: ExpressCheckoutElement.Configuration
@@ -31,9 +37,8 @@ public final class ExpressCheckoutElementUIView: UIView {
         self.linkBrand = session.elementsSession.linkBrand ?? .link
         super.init(frame: .zero)
 
-        // TODO: Appearance
         stackView.axis = .vertical
-        stackView.spacing = 8
+        stackView.spacing = Constants.buttonSpacing
         stackView.translatesAutoresizingMaskIntoConstraints = false
 
         addSubview(stackView)
@@ -45,7 +50,7 @@ public final class ExpressCheckoutElementUIView: UIView {
         ])
 
         let buttons = ExpressCheckoutElementUtilities.resolveButtons(for: session, configuration: configuration)
-        buttons.forEach { stackView.addArrangedSubview(makeButton(for: $0)) }
+        layoutButtons(buttons)
     }
 
     @available(*, unavailable)
@@ -57,9 +62,8 @@ public final class ExpressCheckoutElementUIView: UIView {
 
     func update(with session: CheckoutController.Session) {
         linkBrand = session.elementsSession.linkBrand ?? .link
-        stackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
         let buttons = ExpressCheckoutElementUtilities.resolveButtons(for: session, configuration: configuration)
-        buttons.forEach { stackView.addArrangedSubview(makeButton(for: $0)) }
+        layoutButtons(buttons)
         invalidateIntrinsicContentSize()
     }
 
@@ -74,6 +78,67 @@ public final class ExpressCheckoutElementUIView: UIView {
 
     // MARK: - Private Methods
 
+    /// Arranges `buttons` into no more than `appearance.buttonLayout.maxRows` rows of no more than `appearance.buttonLayout.maxColumns` columns.
+    private func layoutButtons(_ buttons: [ExpressCheckoutElement.PaymentMethod]) {
+        stackView.arrangedSubviews.forEach {
+            stackView.removeArrangedSubview($0)
+            $0.removeFromSuperview()
+        }
+
+        for row in Self.buttonRows(for: buttons, layout: configuration.appearance.buttonLayout) {
+            if row.count == 1, let method = row.first {
+                stackView.addArrangedSubview(makeButton(for: method))
+            } else {
+                let rowStackView = UIStackView(arrangedSubviews: row.map { makeButton(for: $0) })
+                rowStackView.axis = .horizontal
+                rowStackView.spacing = Constants.buttonSpacing
+                rowStackView.distribution = .fillEqually
+                stackView.addArrangedSubview(rowStackView)
+            }
+        }
+    }
+
+    static func buttonRows(
+        for buttons: [ExpressCheckoutElement.PaymentMethod],
+        layout: ExpressCheckoutElement.Appearance.ButtonLayout
+    ) -> [[ExpressCheckoutElement.PaymentMethod]] {
+        let visibleButtonCount = calculateVisibleButtonCount(
+            buttonCount: buttons.count,
+            maxColumns: layout.maxColumns,
+            maxRows: layout.maxRows
+        )
+        let columns = calculateColumnCount(
+            buttonCount: visibleButtonCount,
+            maxRows: layout.maxRows
+        )
+        let visibleButtons = Array(buttons.prefix(visibleButtonCount))
+
+        return stride(from: 0, to: visibleButtons.count, by: columns).map {
+            Array(visibleButtons[$0..<min($0 + columns, visibleButtons.count)])
+        }
+    }
+
+    static func calculateVisibleButtonCount(
+        buttonCount: Int,
+        maxColumns: Int?,
+        maxRows: Int?
+    ) -> Int {
+        guard let maxColumns, let maxRows else {
+            return buttonCount
+        }
+        return min(maxRows * maxColumns, buttonCount)
+    }
+
+    static func calculateColumnCount(buttonCount: Int, maxRows: Int?) -> Int {
+        guard buttonCount > 0 else {
+            return 1
+        }
+        guard let maxRows, maxRows < buttonCount else {
+            return 1
+        }
+        return (buttonCount + maxRows - 1) / maxRows
+    }
+
     private func makeButton(for paymentMethod: ExpressCheckoutElement.PaymentMethod) -> UIView {
         switch paymentMethod {
         case .applePay:
@@ -85,23 +150,40 @@ public final class ExpressCheckoutElementUIView: UIView {
 
     private func makeApplePayButton() -> UIView {
         let buttonType = configuration.applePayConfiguration?.buttonType ?? .plain
-        let button = PKPaymentButton(paymentButtonType: buttonType, paymentButtonStyle: .automatic)
-        // TODO: Appearance
-        button.cornerRadius = 6
+        let button = PKPaymentButton(paymentButtonType: buttonType, paymentButtonStyle: applePayButtonStyle)
+        // `cornerConfiguration` doesn't work on PKPaymentButton, so set the radius directly.
+        button.cornerRadius = LiquidGlassDetector.isEnabledInMerchantApp
+            ? Constants.buttonHeight / 2
+            : Constants.cornerRadius
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.heightAnchor.constraint(equalToConstant: 44).isActive = true
+        button.heightAnchor.constraint(equalToConstant: Constants.buttonHeight).isActive = true
         button.addTarget(self, action: #selector(handleApplePayTapped), for: .touchUpInside)
         return button
     }
 
     private func makeLinkButton() -> UIView {
         let button = PayWithLinkButton(brand: linkBrand)
-        // TODO: Appearance
-        button.cornerRadius = 6
+        if LiquidGlassDetector.isEnabledInMerchantApp {
+            button.ios26_applyCapsuleCornerConfiguration()
+        } else {
+            button.cornerRadius = Constants.cornerRadius
+        }
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.heightAnchor.constraint(equalToConstant: 44).isActive = true
+        button.heightAnchor.constraint(equalToConstant: Constants.buttonHeight).isActive = true
         button.addTarget(self, action: #selector(handleLinkTapped), for: .touchUpInside)
         return button
+    }
+
+    /// `PayWithLinkButton` always uses Link's brand color, so `buttonTheme` only affects the Apple Pay button.
+    private var applePayButtonStyle: PKPaymentButtonStyle {
+        switch configuration.appearance.buttonTheme {
+        case .light:
+            return .white
+        case .dark:
+            return .black
+        case .automatic:
+            return .automatic
+        }
     }
 
     @objc private func handleApplePayTapped() {

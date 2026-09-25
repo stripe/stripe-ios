@@ -317,8 +317,10 @@ struct CheckoutPlaygroundFeaturesSection: View {
 struct CheckoutPlaygroundExpressCheckoutElementSection: View {
     @Binding var showExpressCheckoutElement: Bool
     @Binding var applePayDisplay: ExpressCheckoutElement.ApplePayConfiguration.Display
+    @Binding var applePayButtonType: CheckoutPlayground.ApplePayButtonType
     @Binding var linkDisplay: ExpressCheckoutElement.LinkConfiguration.Display
     @Binding var shippingAddressRequired: Bool
+    @Binding var appearance: ExpressCheckoutElement.Appearance
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -337,6 +339,13 @@ struct CheckoutPlaygroundExpressCheckoutElementSection: View {
                         displayText: { $0.rawValue.capitalized }
                     )
                     CheckoutPlayground.PickerRow(
+                        title: "Apple Pay Button Type",
+                        icon: "apple.logo",
+                        selection: $applePayButtonType,
+                        tooltip: "Sets `ExpressCheckoutElement.Configuration.applePayConfiguration.buttonType`.",
+                        displayText: { $0.displayName }
+                    )
+                    CheckoutPlayground.PickerRow(
                         title: "Link Display",
                         icon: "link",
                         selection: $linkDisplay,
@@ -348,11 +357,46 @@ struct CheckoutPlaygroundExpressCheckoutElementSection: View {
                         isOn: $shippingAddressRequired,
                         tooltip: "Sets `ExpressCheckoutElement.Configuration.shippingAddressRequired`. When on, wallets like Apple Pay require the customer to provide a shipping address."
                     )
+                    CheckoutPlayground.PickerRow(
+                        title: "Button Theme",
+                        icon: "paintpalette.fill",
+                        selection: $appearance.buttonTheme,
+                        tooltip: "Sets `ExpressCheckoutElement.Configuration.Appearance.buttonTheme`. Only affects the Apple Pay button; the Link button always uses Link's brand color.",
+                        displayText: { $0.displayName }
+                    )
+                    CheckoutPlayground.PickerRow(
+                        title: "Max Columns",
+                        icon: "square.grid.2x2",
+                        selection: maxColumns,
+                        tooltip: "Sets `ExpressCheckoutElement.Configuration.Appearance.buttonLayout.maxColumns`.",
+                        displayText: { $0.displayName }
+                    )
+                    CheckoutPlayground.PickerRow(
+                        title: "Max Rows",
+                        icon: "rectangle.grid.1x2",
+                        selection: maxRows,
+                        tooltip: "Sets `ExpressCheckoutElement.Configuration.Appearance.buttonLayout.maxRows`.",
+                        displayText: { $0.displayName }
+                    )
                 }
             }
             .background(Color(uiColor: .secondarySystemGroupedBackground))
             .clipShape(RoundedRectangle(cornerRadius: 12))
         }
+    }
+
+    private var maxColumns: Binding<CheckoutPlayground.ExpressCheckoutElementButtonLayoutLimit> {
+        Binding(
+            get: { .init(intValue: appearance.buttonLayout.maxColumns) },
+            set: { appearance.buttonLayout.maxColumns = $0.intValue }
+        )
+    }
+
+    private var maxRows: Binding<CheckoutPlayground.ExpressCheckoutElementButtonLayoutLimit> {
+        Binding(
+            get: { .init(intValue: appearance.buttonLayout.maxRows) },
+            set: { appearance.buttonLayout.maxRows = $0.intValue }
+        )
     }
 }
 
