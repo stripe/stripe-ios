@@ -266,17 +266,18 @@ Dir.chdir(REPO_ROOT)
 
 # Source setup_simulator.sh and capture the exported DEVICE_ID_FROM_USER_SETTINGS
 device_id = ENV["DEVICE_ID_FROM_USER_SETTINGS"]
-unless device_id && !device_id.empty?
+if options[:dry_run]
+  device_id = "$DEVICE_ID_FROM_USER_SETTINGS" unless device_id && !device_id.empty?
+elsif !device_id || device_id.empty?
   # Run setup_simulator.sh in a subshell that prints the device ID
   device_id = `bash -c 'source ci_scripts/setup_simulator.sh && echo "$DEVICE_ID_FROM_USER_SETTINGS"'`.strip
   if device_id.empty? || !$?.success?
-    abort "Error: Simulator setup failed. DEVICE_ID_FROM_USER_SETTINGS is not set.\n" \
-          "Try: ./ci_scripts/setup_simulator.sh --clear-cache && source ci_scripts/setup_simulator.sh"
+    abort "Error: Simulator setup failed."
   end
 end
 
 # Boot the simulator (ignore error if already booted)
-system("xcrun", "simctl", "boot", device_id, err: File::NULL, out: File::NULL)
+system("xcrun", "simctl", "boot", device_id, err: File::NULL, out: File::NULL) unless options[:dry_run]
 
 # --- Build xcodebuild command ---
 action = options[:build_only] ? "build-for-testing" : "test"

@@ -1,15 +1,33 @@
 #!/bin/bash
 
 # setup_simulator.sh
-# Automatically finds or creates an iPhone 12 mini with iOS 16.4 for testing
+# Finds or creates the simulator used for testing with the active Xcode version
 # Caches the result to .stripe-ios-config for reuse
 
 set -e
 
 CONFIG_FILE=".stripe-ios-config"
-DEVICE_TYPE="iPhone 12 mini"
-IOS_VERSION="16.4"
+DEVICE_TYPE_IDENTIFIER="com.apple.CoreSimulator.SimDeviceType.iPhone-12-mini"
 SIMULATOR_NAME="iPhone 12 mini (Stripe)"
+
+# Function to select the simulator runtime for the active Xcode version
+configure_runtime() {
+    local xcode_major_version
+
+    xcode_major_version="$(xcodebuild -version | sed -n '1s/^Xcode \([0-9][0-9]*\).*/\1/p')"
+    if [ -z "$xcode_major_version" ]; then
+        echo "Error: Unable to determine the active Xcode version" >&2
+        return 1
+    fi
+
+    if [ "$xcode_major_version" -ge 27 ]; then
+        IOS_VERSION="18.5"
+        RUNTIME_IDENTIFIER="com.apple.CoreSimulator.SimRuntime.iOS-18-5"
+    else
+        IOS_VERSION="16.4"
+        RUNTIME_IDENTIFIER="com.apple.CoreSimulator.SimRuntime.iOS-16-4"
+    fi
+}
 
 # Function to clear cache
 clear_cache() {
@@ -18,11 +36,39 @@ clear_cache() {
     fi
 }
 
-# Function to find existing simulator
+# Function to verify the selected runtime is installed and available
+runtime_is_available() {
+    local runtimes_json
+
+    if ! runtimes_json="$(xcrun simctl list runtimes --json)"; then
+        echo "Error: Unable to query CoreSimulator runtimes." >&2
+        return 2
+    fi
+
+    printf "%s" "$runtimes_json" | ruby -rjson -e '
+      begin
+        document = JSON.parse(STDIN.read)
+        runtime = document.fetch("runtimes", []).find do |candidate|
+          candidate["identifier"] == ARGV[0]
+        end
+        exit(runtime && runtime["isAvailable"] ? 0 : 1)
+      rescue JSON::ParserError => error
+        warn "Error: Unable to parse CoreSimulator runtimes: #{error.message}"
+        exit 2
+      end
+    ' "$RUNTIME_IDENTIFIER"
+}
+
+# Function to find an existing simulator for the selected runtime
 find_existing_simulator() {
-    # Extract UUID specifically (format: 8-4-4-4-12 hex digits)
-    # This avoids extracting simulator names or states in parentheses
-    xcrun simctl list devices available | grep "$DEVICE_TYPE.*$IOS_VERSION" | head -1 | sed -n 's/.*(\([A-F0-9]\{8\}-[A-F0-9]\{4\}-[A-F0-9]\{4\}-[A-F0-9]\{4\}-[A-F0-9]\{12\}\)).*/\1/p'
+    xcrun simctl list devices --json | ruby -rjson -e '
+        document = JSON.parse(STDIN.read)
+        devices = document.dig("devices", ARGV[0]) || []
+        device = devices.find do |candidate|
+          candidate["isAvailable"] && candidate["deviceTypeIdentifier"] == ARGV[1]
+        end
+        puts device["udid"] if device
+    ' "$RUNTIME_IDENTIFIER" "$DEVICE_TYPE_IDENTIFIER"
 }
 
 # Function to validate UUID format
@@ -31,75 +77,32 @@ validate_uuid() {
     [[ "$uuid" =~ ^[A-F0-9]{8}-[A-F0-9]{4}-[A-F0-9]{4}-[A-F0-9]{4}-[A-F0-9]{12}$ ]]
 }
 
-# Function to create new simulator
+# Function to create a new simulator
 create_simulator() {
-    xcrun simctl create "$SIMULATOR_NAME" "com.apple.CoreSimulator.SimDeviceType.iPhone-12-mini" "com.apple.CoreSimulator.SimRuntime.iOS-16-4"
+    xcrun simctl create "$SIMULATOR_NAME" "$DEVICE_TYPE_IDENTIFIER" "$RUNTIME_IDENTIFIER"
 }
 
-# Function to validate simulator exists
+# Function to validate the cached simulator's runtime and device type
 validate_simulator() {
     local device_id="$1"
-    xcrun simctl list devices | grep -q "$device_id"
+
+    xcrun simctl list devices --json | ruby -rjson -e '
+        document = JSON.parse(STDIN.read)
+        devices = document.dig("devices", ARGV[0]) || []
+        valid = devices.any? do |device|
+          device["udid"] == ARGV[1] &&
+            device["isAvailable"] &&
+            device["deviceTypeIdentifier"] == ARGV[2]
+        end
+        exit(valid ? 0 : 1)
+    ' "$RUNTIME_IDENTIFIER" "$device_id" "$DEVICE_TYPE_IDENTIFIER"
 }
 
-# Main logic
-main() {
-    # Handle --clear-cache flag
-    if [ "$1" = "--clear-cache" ]; then
-        clear_cache
-        return 0
-    fi
-
-    # Check if cached config exists and is valid
-    if [ -f "$CONFIG_FILE" ]; then
-        source "$CONFIG_FILE"
-
-        # Validate cached ID has correct format and simulator still exists
-        if [ -n "$DEVICE_ID_FROM_USER_SETTINGS" ] && validate_uuid "$DEVICE_ID_FROM_USER_SETTINGS" && validate_simulator "$DEVICE_ID_FROM_USER_SETTINGS"; then
-            # Config is valid, export it
-            export DEVICE_ID_FROM_USER_SETTINGS
-            return 0
-        else
-            # Invalid or stale cache, clear it
-            clear_cache
-        fi
-    fi
-
-    # Look for existing simulator
-    EXISTING_DEVICE=$(find_existing_simulator)
-
-    if [ -n "$EXISTING_DEVICE" ]; then
-        DEVICE_ID="$EXISTING_DEVICE"
-    else
-        DEVICE_ID=$(create_simulator)
-        if [ -z "$DEVICE_ID" ]; then
-            echo "Error: Failed to create simulator" >&2
-            return 1
-        fi
-    fi
-
-    # Validate the device ID before caching
-    if ! validate_uuid "$DEVICE_ID"; then
-        echo "Error: Extracted device ID '$DEVICE_ID' is not a valid UUID" >&2
-        return 1
-    fi
-
-    # Save to config file as a proper shell script
-    cat > "$CONFIG_FILE" << EOF
-# Auto-generated by setup_simulator.sh
-# This file is sourced to set up the simulator device ID
-export DEVICE_ID_FROM_USER_SETTINGS="$DEVICE_ID"
-EOF
-
-    # Export for current session
-    export DEVICE_ID_FROM_USER_SETTINGS="$DEVICE_ID"
-}
-
-# Show usage if requested
-if [ "$1" = "--help" ] || [ "$1" = "-h" ]; then
-    echo "Usage: source $0 [--clear-cache] [--help]"
+# Show usage for the active Xcode version
+print_help() {
+    echo "Usage: source ci_scripts/setup_simulator.sh [--clear-cache] [--help]"
     echo ""
-    echo "Automatically finds or creates an iPhone 12 mini with iOS 16.4 for testing."
+    echo "For the active Xcode version, finds or creates an iPhone 12 mini with iOS $IOS_VERSION."
     echo "Caches the result to .stripe-ios-config for reuse."
     echo ""
     echo "Options:"
@@ -111,7 +114,78 @@ if [ "$1" = "--help" ] || [ "$1" = "-h" ]; then
     echo "  xcodebuild [...] -destination \"id=\$DEVICE_ID_FROM_USER_SETTINGS,arch=arm64\" [...]"
     echo ""
     echo "The script exports DEVICE_ID_FROM_USER_SETTINGS to your environment."
-    return 0
-fi
+}
+
+# Main logic
+main() {
+    local device_id runtime_status
+
+    # Handle --clear-cache before querying Xcode or CoreSimulator
+    if [ "$1" = "--clear-cache" ]; then
+        clear_cache
+        return 0
+    fi
+
+    # Select the runtime for the active Xcode version
+    configure_runtime
+
+    # Handle --help after selecting the runtime shown in the usage text
+    if [ "$1" = "--help" ] || [ "$1" = "-h" ]; then
+        print_help
+        return 0
+    fi
+
+    # Report missing runtimes separately from CoreSimulator access failures
+    if runtime_is_available; then
+        :
+    else
+        runtime_status="$?"
+        if [ "$runtime_status" -eq 1 ]; then
+            echo "Error: The iOS $IOS_VERSION simulator runtime is not installed or available." >&2
+        fi
+        return 1
+    fi
+
+    # Check if cached config exists and is valid for the selected runtime
+    if [ -f "$CONFIG_FILE" ]; then
+        # shellcheck source=/dev/null
+        source "$CONFIG_FILE"
+
+        # Validate cached ID has the correct format, runtime, and device type
+        if [ -n "$DEVICE_ID_FROM_USER_SETTINGS" ] && validate_uuid "$DEVICE_ID_FROM_USER_SETTINGS" && validate_simulator "$DEVICE_ID_FROM_USER_SETTINGS"; then
+            # Config is valid, export it
+            export DEVICE_ID_FROM_USER_SETTINGS
+            return 0
+        fi
+
+        # Invalid or stale cache, clear it
+        clear_cache
+    fi
+
+    # Look for an existing simulator, or create one if needed
+    device_id="$(find_existing_simulator)"
+    if [ -z "$device_id" ]; then
+        if ! device_id="$(create_simulator)"; then
+            echo "Error: Failed to create an iPhone 12 mini with iOS $IOS_VERSION: $device_id" >&2
+            return 1
+        fi
+    fi
+
+    # Validate the device ID before caching
+    if ! validate_uuid "$device_id"; then
+        echo "Error: Extracted device ID '$device_id' is not a valid UUID" >&2
+        return 1
+    fi
+
+    # Save to config file as a proper shell script
+    cat > "$CONFIG_FILE" << EOF
+# Auto-generated by setup_simulator.sh
+# This file is sourced to set up the simulator device ID
+export DEVICE_ID_FROM_USER_SETTINGS="$device_id"
+EOF
+
+    # Export for current session
+    export DEVICE_ID_FROM_USER_SETTINGS="$device_id"
+}
 
 main "$@"
