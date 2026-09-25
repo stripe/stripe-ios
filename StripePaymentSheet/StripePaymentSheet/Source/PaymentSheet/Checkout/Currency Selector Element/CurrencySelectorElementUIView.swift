@@ -30,7 +30,7 @@ public final class CurrencySelectorElementUIView: UIView {
     private let checkoutSessionId: String
     private let flagImageManager = AdaptivePricingFlagImageManager()
     private var selectorView: TwoOptionSelectorView?
-    private var lastSelectedCurrency: String?
+    private var sessionCurrency: String
     private let containerStackView = UIStackView()
     private lazy var errorLabel: UILabel = {
         let label = ElementsUI.makeErrorLabel(
@@ -54,13 +54,13 @@ public final class CurrencySelectorElementUIView: UIView {
         self.appearance = appearance
         self.checkoutSessionId = session.id
         self.needsUpdateSuperviewHeight = needsUpdateSuperviewHeight
+        let currency = CurrencySelectorUtilities.CurrencyCode(rawCurrency)
+        self.sessionCurrency = currency.apiValue
         super.init(frame: .zero)
 
         await flagImageManager.prefetchFlagImages(for: session)
         setupContainerStackView()
-        let currency = CurrencySelectorUtilities.CurrencyCode(rawCurrency)
         buildSelectorView(session: session, exchangeRateMeta: exchangeRateMeta, currency: currency)
-        lastSelectedCurrency = currency.apiValue
         updateCaption(currency: currency, exchangeRateMeta: exchangeRateMeta)
     }
 
@@ -102,7 +102,8 @@ public final class CurrencySelectorElementUIView: UIView {
         let currency = CurrencySelectorUtilities.CurrencyCode(rawCurrency)
         clearError()
         updateSelectorItems(session: session, exchangeRateMeta: exchangeRateMeta)
-        lastSelectedCurrency = currency.apiValue
+        sessionCurrency = currency.apiValue
+        selectorView?.select(currency.apiValue)
         updateCaption(currency: currency, exchangeRateMeta: exchangeRateMeta)
     }
 
@@ -201,8 +202,6 @@ public final class CurrencySelectorElementUIView: UIView {
 
 extension CurrencySelectorElementUIView: TwoOptionSelectorViewDelegate {
     func twoOptionSelectorView(_: TwoOptionSelectorView, didSelectItemWithId id: String) {
-        let fromCurrency = lastSelectedCurrency
-        lastSelectedCurrency = id
         selectorView?.setEnabled(false)
 
         Task { [weak self] in
@@ -216,10 +215,7 @@ extension CurrencySelectorElementUIView: TwoOptionSelectorViewDelegate {
                     )
                 )
             } catch {
-                if let fromCurrency {
-                    selectorView?.select(fromCurrency)
-                    lastSelectedCurrency = fromCurrency
-                }
+                selectorView?.select(sessionCurrency)
 
                 STPAnalyticsClient.sharedClient.log(
                     analytic: PaymentSheetAnalytic(
