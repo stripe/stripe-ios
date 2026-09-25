@@ -68,6 +68,7 @@ final class LinkAccountService: LinkAccountServiceProtocol {
     let useMobileEndpoints: Bool
     let canSyncAttestationState: Bool
     let merchantLogoUrl: URL?
+    private var countryCode: String?
 
     convenience init(
         apiClient: STPAPIClient = .shared,
@@ -84,6 +85,7 @@ final class LinkAccountService: LinkAccountServiceProtocol {
             shouldPassCustomerIdToLookup: shouldPassCustomerIdToLookup,
             merchantLogoUrl: elementsSession.merchantLogoUrl
         )
+        countryCode = elementsSession.countryCode
     }
 
     init(
@@ -132,18 +134,25 @@ final class LinkAccountService: LinkAccountServiceProtocol {
                 STPAnalyticsClient.sharedClient.logLinkAccountLookupComplete(lookupResult: lookupResponse.responseType)
                 switch lookupResponse.responseType {
                 case .found(let session):
-                    completion(.success(
-                        PaymentSheetLinkAccount(
-                            email: session.consumerSession.emailAddress,
-                            session: session.consumerSession,
-                            publishableKey: session.publishableKey,
-                            displayablePaymentDetails: session.displayablePaymentDetails,
-                            apiClient: apiClient,
-                            useMobileEndpoints: self.useMobileEndpoints,
-                            canSyncAttestationState: self.canSyncAttestationState,
-                            requestSurface: requestSurface
+                    completion(
+                        .success(
+                            self.configureAuth(
+                                PaymentSheetLinkAccount(
+                                    email: email ?? session.consumerSession.emailAddress,
+                                    session: session.consumerSession,
+                                    publishableKey: session.publishableKey,
+                                    displayablePaymentDetails: session.displayablePaymentDetails,
+                                    apiClient: apiClient,
+                                    useMobileEndpoints: self.useMobileEndpoints,
+                                    canSyncAttestationState: self.canSyncAttestationState,
+                                    requestSurface: requestSurface
+                                ),
+                                settings: session.settings,
+                                lookupEmail: email,
+                                emailSource: emailSource
+                            )
                         )
-                    ))
+                    )
                 case .notFound(_, let suggestedEmail):
                     if let email = email {
                         let linkAccount = PaymentSheetLinkAccount(
@@ -203,7 +212,7 @@ final class LinkAccountService: LinkAccountServiceProtocol {
                 switch lookupResponse.responseType {
                 case .found(let session):
                     completion(.success(
-                        PaymentSheetLinkAccount(
+                        self.configureAuth(PaymentSheetLinkAccount(
                             email: session.consumerSession.emailAddress,
                             session: session.consumerSession,
                             publishableKey: session.publishableKey,
@@ -212,7 +221,7 @@ final class LinkAccountService: LinkAccountServiceProtocol {
                             useMobileEndpoints: self.useMobileEndpoints,
                             canSyncAttestationState: self.canSyncAttestationState,
                             requestSurface: requestSurface
-                        )
+                        ), settings: session.settings, lookupEmail: nil, emailSource: .prefilledEmail)
                     ))
                 case .notFound, .noAvailableLookupParams:
                     completion(.success(nil))
@@ -261,6 +270,9 @@ final class LinkAccountService: LinkAccountServiceProtocol {
                         requestSurface: requestSurface,
                         createdFromAuthIntentID: true
                     )
+                    linkAccount.authLookupSettings = session.settings
+                    linkAccount.authLookupEmail = nil
+                    linkAccount.authCountryCode = self.countryCode
                     let consentViewModel = LinkConsentViewModel(
                         email: session.consumerSession.emailAddress,
                         merchantLogoURL: self.merchantLogoUrl,
@@ -278,5 +290,44 @@ final class LinkAccountService: LinkAccountServiceProtocol {
                 completion(.failure(error))
             }
         }
+    }
+    private func configureAuth(
+        _ account: PaymentSheetLinkAccount,
+        settings: ConsumerSession.LookupSettings?,
+        lookupEmail: String?,
+        emailSource: EmailSource
+    ) -> PaymentSheetLinkAccount {
+        account.authLookupSettings = settings
+        account.authLookupEmail = lookupEmail
+        account.authCountryCode = countryCode
+        if let lookupEmail {
+            let requestSurface = account.requestSurface
+            account.authSessionLookup = { completion in
+                ConsumerSession.lookupSession(
+                    for: lookupEmail,
+                    emailSource: emailSource,
+                    sessionID: self.sessionID,
+                    customerID: self.customerID,
+                    with: self.apiClient,
+                    useMobileEndpoints: self.useMobileEndpoints,
+                    canSyncAttestationState: self.canSyncAttestationState,
+                    doNotLogConsumerFunnelEvent: true,
+                    requestSurface: requestSurface
+                ) { result in
+                    completion(
+                        result.flatMap { response in
+                            guard case .found(let session) = response.responseType else {
+                                return .failure(
+                                    PaymentSheetError.unknown(
+                                        debugDescription: "No Link account found during authentication recovery"
+                                    )
+                                )
+                        }
+                        return .success(ConsumerSession.AuthResponse(consumerSession: session.consumerSession, settings: session.settings))
+                    })
+                }
+            }
+        }
+        return account
     }
 }

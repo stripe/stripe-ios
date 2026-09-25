@@ -122,7 +122,7 @@ extension STPAPIClient {
         var mutableParameters = parameters
 
         if useMobileEndpoints {
-            mutableParameters["supported_verification_types"] = SupportedVerificationType.allCases.map(\.rawValue)
+            mutableParameters["supported_verification_types"] = SupportedVerificationType.nativeCapabilities.map(\.rawValue)
         }
 
         let requestAssertionHandle: StripeAttest.AssertionHandle? = await {
@@ -643,7 +643,7 @@ extension STPAPIClient {
                 "consumer_session_client_secret": consumerSessionClientSecret,
             ],
             "request_surface": requestSurface.rawValue,
-            "supported_verification_types": SupportedVerificationType.allCases.map(\.rawValue),
+            "supported_verification_types": SupportedVerificationType.nativeCapabilities.map(\.rawValue),
         ]
 
         makeConsumerSessionRequest(
@@ -651,6 +651,51 @@ extension STPAPIClient {
             parameters: parameters,
             completion: completion
         )
+    }
+
+    func startLinkVerification(
+        for consumerSessionClientSecret: String,
+        type: SupportedVerificationType,
+        emailAddress: String?,
+        accountPhoneNumber: String?,
+        isResending: Bool,
+        locale: Locale = .autoupdatingCurrent,
+        requestSurface: LinkRequestSurface = .default,
+        completion: @escaping (Result<ConsumerSession.AuthResponse, Error>) -> Void
+    ) {
+        var parameters: [String: Any] = [
+            "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
+            "type": type.rawValue,
+            "locale": locale.toLanguageTag(),
+            "request_surface": requestSurface.rawValue,
+        ]
+        // Resolve SMS/email factors by type rather than pinning a lookup response's factor ID.
+        parameters["email_address"] = emailAddress?.lowercased()
+        if type == .email {
+            parameters["account_phone_number"] = accountPhoneNumber
+        }
+        if type == .sms && isResending {
+            parameters["is_resend_sms_code"] = true
+        }
+        post(resource: "consumers/sessions/start_verification", parameters: parameters, completion: completion)
+    }
+
+    func confirmLinkVerification(
+        for consumerSessionClientSecret: String,
+        type: SupportedVerificationType,
+        code: String,
+        consentGranted: Bool?,
+        requestSurface: LinkRequestSurface = .default,
+        completion: @escaping (Result<ConsumerSession.AuthResponse, Error>) -> Void
+    ) {
+        var parameters: [String: Any] = [
+            "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
+            "type": type.rawValue,
+            "code": code,
+            "request_surface": requestSurface.rawValue,
+        ]
+        parameters["consent_granted"] = consentGranted
+        post(resource: "consumers/sessions/confirm_verification", parameters: parameters, completion: completion)
     }
 
     func startVerification(

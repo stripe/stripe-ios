@@ -42,6 +42,25 @@ final class LinkVerificationView: UIView {
     private let brand: LinkBrand
     private let allowLogoutInDialog: Bool
     private let consentViewModel: LinkConsentViewModel?
+    private let showsHeader: Bool
+
+    var recipient: String? {
+        didSet { bodyLabel.text = mode.bodyText(redactedPhoneNumber: recipient ?? "") }
+    }
+
+    var actionsButton: Button { resendCodeButton }
+
+    func configureActions(title: String, enabled: Bool, loading: Bool) {
+        resendCodeButton.title = title
+        resendCodeButton.isEnabled = enabled
+        resendCodeButton.isLoading = loading
+    }
+
+    func setCodeEntryEnabled(_ enabled: Bool) {
+        if !enabled { codeField.resignFirstResponder() }
+        codeField.isUserInteractionEnabled = enabled
+        codeField.alpha = enabled ? 1 : 0.5
+    }
 
     var sendingCode: Bool = false {
         didSet {
@@ -153,7 +172,8 @@ final class LinkVerificationView: UIView {
         brand: LinkBrand = .link,
         appearance: LinkAppearance? = nil,
         allowLogoutInDialog: Bool,
-        consentViewModel: LinkConsentViewModel? = nil
+        consentViewModel: LinkConsentViewModel? = nil,
+        showsHeader: Bool = true
     ) {
         self.mode = mode
         self.linkAccount = linkAccount
@@ -161,6 +181,7 @@ final class LinkVerificationView: UIView {
         self.appearance = appearance
         self.allowLogoutInDialog = allowLogoutInDialog
         self.consentViewModel = consentViewModel
+        self.showsHeader = showsHeader
         super.init(frame: .zero)
         setupUI()
     }
@@ -200,8 +221,7 @@ private extension LinkVerificationView {
     var arrangedSubViews: [UIView] {
         switch mode {
         case .modal, .inlineLogin:
-            var views = [
-                header,
+            var views = (showsHeader ? [header] : []) + [
                 headingLabel,
                 bodyLabel,
                 codeFieldContainer,
@@ -262,13 +282,15 @@ private extension LinkVerificationView {
             stackView.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor),
             stackView.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor),
             stackView.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor),
+            headingLabel.widthAnchor.constraint(equalTo: stackView.widthAnchor),
+            bodyLabel.widthAnchor.constraint(equalTo: stackView.widthAnchor),
 
             // OTC field
             codeFieldContainer.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
             codeFieldContainer.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
         ]
 
-        if mode.requiresModalPresentation {
+        if mode.requiresModalPresentation && showsHeader {
             constraints.append(contentsOf: [
                 // Header
                 header.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),

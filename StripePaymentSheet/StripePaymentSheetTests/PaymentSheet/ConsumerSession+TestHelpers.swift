@@ -13,7 +13,9 @@ extension ConsumerSession {
         mobileFallbackWebviewParams: MobileFallbackWebviewParams?,
         currentAuthenticationLevel: AuthenticationLevel? = nil,
         minimumAuthenticationLevel: AuthenticationLevel? = nil,
-        linkBrand: LinkBrand? = nil
+        linkBrand: LinkBrand? = nil,
+        availableVerificationFactors: [VerificationFactor]? = nil,
+        redactedPhoneNumber: String? = nil
     ) -> ConsumerSession {
         var payload: [String: Any] = [
             "clientSecret": clientSecret,
@@ -28,6 +30,12 @@ extension ConsumerSession {
         payload["currentAuthenticationLevel"] = currentAuthenticationLevel?.rawValue
         payload["minimumAuthenticationLevel"] = minimumAuthenticationLevel?.rawValue
         payload["link_brand"] = linkBrand?.rawValue
+        payload["redactedPhoneNumber"] = redactedPhoneNumber
+        payload["availableVerificationFactors"] = availableVerificationFactors?.map { factor -> [String: Any] in
+            var value: [String: Any] = ["type": factor.type.rawValue, "providesFurtherVerification": factor.providesFurtherVerification, "temporarilyDisabled": factor.temporarilyDisabled]
+            value["id"] = factor.id
+            return value
+        }
 
         let data = try! JSONSerialization.data(withJSONObject: payload)
         return try! JSONDecoder().decode(ConsumerSession.self, from: data)

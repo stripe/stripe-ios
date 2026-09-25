@@ -105,6 +105,59 @@ final class PaymentSheetLinkAccountTests: APIStubbedTestCase {
         waitForExpectations(timeout: 5)
     }
 
+    func testAuthCredentialRecoveryWithoutLookupDoesNotRefreshCurrentSession() {
+        // Given an account with a current session but no way to repeat its lookup.
+        let sut = makeSUT()
+        var refreshRequests = 0
+        stub(condition: isPath("/v1/consumers/sessions/refresh")) { _ in
+            refreshRequests += 1
+            return HTTPStubsResponse(jsonObject: [:], statusCode: 200, headers: nil)
+        }
+
+        // When credential recovery is requested.
+        let completed = expectation(description: "Credential recovery completed")
+        sut.refreshAuthSession(recoverCredentials: true) { result in
+            // Then it fails instead of attempting to refresh and reuse the same credential.
+            if case .success = result {
+                XCTFail("Credential recovery should require a new lookup")
+            }
+            completed.fulfill()
+        }
+
+        wait(for: [completed], timeout: 1)
+        XCTAssertEqual(refreshRequests, 0)
+    }
+
+    func testAuthCredentialRecoveryUsesLookupInsteadOfRefresh() {
+        // Given an account that can repeat the lookup to obtain a new session credential.
+        let sut = makeSUT()
+        let replacementSession = makeVerifiedSession()
+        var refreshRequests = 0
+        stub(condition: isPath("/v1/consumers/sessions/refresh")) { _ in
+            refreshRequests += 1
+            return HTTPStubsResponse(jsonObject: [:], statusCode: 200, headers: nil)
+        }
+        sut.authSessionLookup = { completion in
+            completion(.success(.init(consumerSession: replacementSession)))
+        }
+
+        // When credential recovery is requested.
+        let completed = expectation(description: "Credential recovery completed")
+        sut.refreshAuthSession(recoverCredentials: true) { result in
+            // Then the replacement session comes from lookup without calling refresh.
+            switch result {
+            case .success(let response):
+                XCTAssertTrue(response.consumerSession === replacementSession)
+            case .failure(let error):
+                XCTFail("Unexpected error: \(error)")
+            }
+            completed.fulfill()
+        }
+
+        wait(for: [completed], timeout: 1)
+        XCTAssertEqual(refreshRequests, 0)
+    }
+
     func testRecordConnectionsConsentAcquired_sendsExpectedConsentJSON() async throws {
         let sut = makeSUT()
         let consentText = "Rocket Deliveries can access account and ownership details, balances, and transactions."

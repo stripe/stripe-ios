@@ -38,7 +38,16 @@ final class LinkVerificationWebFallbackController: NSObject {
 
         authenticationSession?.presentationContextProvider = self
         authenticationSession?.prefersEphemeralWebBrowserSession = true
-        authenticationSession?.start()
+        if authenticationSession?.start() != true {
+            handleAuthenticationResult(callbackURL: nil, error: ASWebAuthenticationSessionError(.presentationContextInvalid))
+        }
+    }
+
+    func cancel() {
+        authenticationSession?.cancel()
+        authenticationSession = nil
+        completion = nil
+        selfRetainer = nil
     }
 
     private func handleAuthenticationResult(callbackURL: URL?, error: Error?) {
