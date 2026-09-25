@@ -149,6 +149,9 @@ public class STPPaymentIntentConfirmParams: NSObject {
             guard let paymentMethodType = paymentMethodType else {
                 return nil
             }
+            if paymentMethodType == .pix, setupFutureUsage == .offSession {
+                return .makeWithInferredValues()
+            }
             return Self.mandateDataIfRequired(for: paymentMethodType)
         }
         set {

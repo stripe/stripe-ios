@@ -6,6 +6,12 @@ PATCH
 * [Fixed] Preserved `no_eligible_accounts` in `onEvent` error callbacks instead of reporting it as `unexpected_error`.
 * [Fixed] Recorded native `onEvent` emissions with the session context for diagnostics.
 
+### Payments
+* [Added] Added API bindings for Pix.
+
+### PaymentSheet
+* [Added] Added support for Pix payments.
+
 ## 26.12.0 2026-09-21
 ### CryptoOnramp (Alpha)
 * [Removed] Removed public exposure of `StripeCryptoOnramp.Image`, including `Image.linkIconSquare`.

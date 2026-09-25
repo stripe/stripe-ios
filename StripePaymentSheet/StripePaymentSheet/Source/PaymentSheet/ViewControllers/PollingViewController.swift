@@ -25,18 +25,19 @@ class PollingViewController: UIViewController {
     // MARK: State
 
     private var oneSecondTimer: Timer?
-    private let currentAction: STPPaymentHandlerPaymentIntentActionParams
+    private let currentAction: STPPaymentHandlerActionParams
     private let appearance: PaymentSheet.Appearance
     private let viewModel: PollingViewModel
     private let safariViewController: SFSafariViewController?
 
-    private lazy var intentPoller: IntentStatusPoller = {
-        let intentPoller = IntentStatusPoller(retryInterval: viewModel.retryInterval,
-                                              intentRetriever: currentAction.apiClient,
-                                              clientSecret: currentAction.paymentIntent.clientSecret)
-        intentPoller.delegate = self
-        return intentPoller
-    }()
+    private lazy var intentStatusPoller = IntentStatusPoller<STPPaymentHandlerPollingResult, STPPaymentHandlerPollingStatus>(
+        retryInterval: viewModel.retryInterval,
+        retrieveValue: currentAction.retrievePollingResult,
+        status: \.status,
+        didUpdate: { [weak self] result in
+            self?.didUpdate(result)
+        }
+    )
 
     private var timeRemaining: TimeInterval {
         return Date().distance(to: viewModel.deadline)
@@ -54,14 +55,17 @@ class PollingViewController: UIViewController {
     }
 
     private var instructionLabelAttributedText: NSAttributedString {
-               let timeRemaining = dateFormatter.string(from: timeRemaining) ?? ""
-               let attrText = NSMutableAttributedString(string: String(
+        guard viewModel.showsCountdown else {
+            return NSAttributedString(string: viewModel.CTA)
+        }
+        let timeRemaining = dateFormatter.string(from: timeRemaining) ?? ""
+        let attrText = NSMutableAttributedString(string: String(
                 format: viewModel.CTA,
-                   timeRemaining
-               ))
-               attrText.addAttributes([.foregroundColor: appearance.colors.primary],
-                                      range: NSString(string: attrText.string).range(of: timeRemaining))
-               return attrText
+                timeRemaining
+        ))
+        attrText.addAttributes([.foregroundColor: appearance.colors.primary],
+                               range: NSString(string: attrText.string).range(of: timeRemaining))
+        return attrText
     }
 
     private var pollingState: PollingState = .polling {
@@ -159,10 +163,13 @@ class PollingViewController: UIViewController {
 
     // MARK: Overrides
 
-    init(currentAction: STPPaymentHandlerPaymentIntentActionParams, viewModel: PollingViewModel, appearance: PaymentSheet.Appearance, safariViewController: SFSafariViewController? = nil) {
+    init(currentAction: STPPaymentHandlerActionParams, viewModel: PollingViewModel, appearance: PaymentSheet.Appearance, safariViewController: SFSafariViewController? = nil) {
         self.currentAction = currentAction
         self.appearance = appearance
         self.viewModel = viewModel
+        if let expiresAt = currentAction.nextAction()?.pixDisplayQrCode?.expiresAt {
+            self.viewModel.deadline = expiresAt
+        }
         self.safariViewController = safariViewController
 
         super.init(nibName: nil, bundle: nil)
@@ -212,7 +219,7 @@ class PollingViewController: UIViewController {
         }
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 5) { [weak self] in
-            self?.intentPoller.beginPolling()
+            self?.beginPolling()
         }
 
         NotificationCenter.default.addObserver(self, selector: #selector(didEnterBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
@@ -222,7 +229,7 @@ class PollingViewController: UIViewController {
 
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        intentPoller.suspendPolling()
+        suspendPolling()
 
         NotificationCenter.default.removeObserver(self)
     }
@@ -233,7 +240,7 @@ class PollingViewController: UIViewController {
         dismiss {
             // Wait a short amount of time before completing the action to ensure smooth animations
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                self.currentAction.complete(with: .canceled, error: nil)
+                self.complete(with: .canceled)
             }
         }
     }
@@ -251,12 +258,12 @@ class PollingViewController: UIViewController {
 
     @objc func didBecomeActive(_ notification: Notification) {
         DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-            self.intentPoller.beginPolling()
+            self.beginPolling()
         }
     }
 
     @objc func didEnterBackground(_ notification: Notification) {
-        intentPoller.suspendPolling()
+        suspendPolling()
     }
 
     // MARK: Timer handler
@@ -281,29 +288,58 @@ class PollingViewController: UIViewController {
             self.titleLabel.text = .Localized.payment_failed
             self.instructionLabel.text = .Localized.please_go_back
             self.navigationBar.setStyle(.back(showAdditionalButton: false))
-            self.intentPoller.suspendPolling()
+            self.suspendPolling()
             self.oneSecondTimer?.invalidate()
 
             // If the intent is canceled while a web view is presented, we must dismiss it before we can complete the action with .canceled so STPPaymentHandler can properly update its state
             self.safariViewController?.dismiss(animated: true)
-            self.currentAction.complete(with: .canceled, error: nil)
+            self.complete(with: .canceled)
         }
     }
 
     // Called after the timer expires to wrap up polling
     private func finishPolling() {
-        self.intentPoller.suspendPolling()
+        self.suspendPolling()
 
         // Do one last force poll after deadline
         DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
             guard let self = self else { return }
-            self.intentPoller.pollOnce { [weak self] status in
-                // If the last poll doesn't show a succeeded on the intent, show the error UI
-                // In the case of a success the delegate will be notified and the UI will be updated accordingly
-                if status != .succeeded {
+            self.pollOnce { [weak self] succeeded in
+                if !succeeded {
                     self?.pollingState = .error
                 }
             }
+        }
+    }
+
+    private func beginPolling() {
+        intentStatusPoller.beginPolling()
+    }
+
+    private func suspendPolling() {
+        intentStatusPoller.suspendPolling()
+    }
+
+    private func pollOnce(completion: @escaping (Bool) -> Void) {
+        intentStatusPoller.pollOnce { completion($0 == .succeeded) }
+    }
+
+    private func complete(with status: STPPaymentHandlerActionStatus) {
+        currentAction.complete(with: status, error: nil)
+    }
+
+    private func didUpdate(_ result: STPPaymentHandlerPollingResult) {
+        result.updateActionIntent()
+        switch result.status {
+        case .pending:
+            break
+        case .succeeded:
+            setErrorStateWorkItem.cancel()
+            dismiss {
+                self.complete(with: .succeeded)
+            }
+        case .failed:
+            pollingState = .error
         }
     }
 
@@ -338,22 +374,4 @@ extension PollingViewController: SheetNavigationBarDelegate {
         dismiss()
     }
 
-}
-
-// MARK: IntentStatusPollerDelegate
-
-extension PollingViewController: IntentStatusPollerDelegate {
-    func didUpdate(paymentIntent: STPPaymentIntent) {
-        if paymentIntent.status == .succeeded {
-            setErrorStateWorkItem.cancel() // cancel the error work item incase it was scheduled
-            currentAction.paymentIntent = paymentIntent // update the local copy of the intent with the latest from the server
-            dismiss {
-                self.currentAction.complete(with: .succeeded, error: nil)
-            }
-        } else if paymentIntent.status != .requiresAction {
-            // an error occured to take the intent out of requires action
-            // update polling state to indicate that we have encountered an error
-            pollingState = .error
-        }
-    }
 }
