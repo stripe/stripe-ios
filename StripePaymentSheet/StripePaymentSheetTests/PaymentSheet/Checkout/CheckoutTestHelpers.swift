@@ -19,8 +19,14 @@ import XCTest
 
 extension PaymentPagesAPIResponse {
     /// Convenience for fixtures that contain no client-local session state.
-    func makePublicSession() -> CheckoutController.Session {
-        return CheckoutController.Session(apiResponse: self, localState: .empty)
+    func makePublicSession(
+        expressCheckoutConfiguration: ExpressCheckoutElement.Configuration? = nil
+    ) -> CheckoutController.Session {
+        return CheckoutController.Session(
+            apiResponse: self,
+            localState: .empty,
+            expressCheckoutConfiguration: expressCheckoutConfiguration
+        )
     }
 }
 

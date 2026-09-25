@@ -78,6 +78,10 @@ extension CheckoutController {
         /// Aggregate subtotal, tax, discount, and total amounts for the Checkout Session.
         public let totals: CheckoutController.Session.Totals
 
+        /// Payment methods currently available after applying configuration and device eligibility, ordered
+        /// as displayed by `ExpressCheckoutElement`. Each updated Session reflects the latest availability.
+        public let availableExpressCheckoutPaymentMethods: [ExpressCheckoutElement.PaymentMethod]
+
         // MARK: - Internal Properties
 
         let paymentStatus: Status.PaymentStatus
@@ -117,7 +121,11 @@ extension CheckoutController {
 
 extension CheckoutController.Session {
     /// Builds a read-only session snapshot from server-backed and local state.
-    init(apiResponse: PaymentPagesAPIResponse, localState: LocalState) {
+    init(
+        apiResponse: PaymentPagesAPIResponse,
+        localState: LocalState,
+        expressCheckoutConfiguration: ExpressCheckoutElement.Configuration? = nil
+    ) {
         let elementsSessionValue = apiResponse.elementsSession.value
         let publicDiscountAmounts = PaymentPagesAPIResponse.makeDiscountAmounts(
             from: apiResponse.recurringDetails?.totalDiscountAmounts ?? [],
@@ -163,6 +171,12 @@ extension CheckoutController.Session {
         if automaticTaxEnabled && automaticTaxAddressSource == "billing" {
             elementsSessionValue.disableLinkForAutomaticTaxBilling = true
         }
+        let availableExpressCheckoutPaymentMethods = expressCheckoutConfiguration.map {
+            ExpressCheckoutElementUtilities.availablePaymentMethods(
+                for: elementsSessionValue,
+                configuration: $0
+            )
+        } ?? []
         let serverEmail = apiResponse.customerEmail ?? apiResponse.customer?.email
 
         self.init(
@@ -180,6 +194,7 @@ extension CheckoutController.Session {
             tax: publicTax,
             taxAmounts: publicTaxAmounts,
             totals: publicTotals,
+            availableExpressCheckoutPaymentMethods: availableExpressCheckoutPaymentMethods,
             paymentStatus: apiResponse.paymentStatus,
             paymentMethodOptions: apiResponse.paymentMethodOptions,
             serverEmail: serverEmail,
