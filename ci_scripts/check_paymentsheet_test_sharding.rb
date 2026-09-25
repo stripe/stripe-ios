@@ -1,5 +1,6 @@
 #!/usr/bin/ruby
-# This script checks the PaymentSheet test plans, ensuring all tests are skipped once across Shard1 and Shard2.
+# This script checks the PaymentSheet test plans, ensuring every test class is
+# enabled in exactly one shard.
 
 require 'find'  
 require 'json'  
@@ -48,25 +49,19 @@ def main
     test_classes.concat(classes)  
   end  
   
-  skipped_tests1 = read_skipped_tests("#{$ROOT_DIR}/Example/PaymentSheet Example/PaymentSheet Example-Shard1.xctestplan")  
-  skipped_tests2 = read_skipped_tests("#{$ROOT_DIR}/Example/PaymentSheet Example/PaymentSheet Example-Shard2.xctestplan")  
-  skipped_tests3 = read_skipped_tests("#{$ROOT_DIR}/Example/PaymentSheet Example/PaymentSheet Example-Shard3.xctestplan")  
-  skipped_tests4 = read_skipped_tests("#{$ROOT_DIR}/Example/PaymentSheet Example/PaymentSheet Example-Shard4.xctestplan")  
-
-  all_skipped_tests = skipped_tests1 + skipped_tests2 + skipped_tests3 + skipped_tests4
+  shard_paths = Dir["#{$ROOT_DIR}/Example/PaymentSheet Example/PaymentSheet Example-Shard*.xctestplan"].sort
+  all_skipped_tests = shard_paths.flat_map { |path| read_skipped_tests(path) }
+  expected_skip_count = shard_paths.count - 1
   
   # Make sure every test in `test_classes` is skipped in one and only one of the test plans
   test_classes.each do |test_class|
-    # Check against skipped_tests1 through 4 to make sure it appears three times
-    if all_skipped_tests.count(test_class) != 3
-      puts "Test class #{test_class} is skipped in #{all_skipped_tests.count(test_class)} test plans. It should be skipped in 3/4 test plans."
-      puts "Please open \"PaymentSheet Example-Shard1.xctestplan\" through \"PaymentSheet Example-Shard4.xctestplan\" and ensure it is only enabled in one plan."
+    actual_skip_count = all_skipped_tests.count(test_class)
+    if actual_skip_count != expected_skip_count
+      puts "Test class #{test_class} is skipped in #{actual_skip_count}/#{shard_paths.count} test plans. It should be enabled in exactly one plan."
+      puts "Please update the PaymentSheet Example-Shard test plans so the class is enabled in only one plan."
       exit(1)
     end
   end
-
-  
-
 end  
   
-main  
+main
