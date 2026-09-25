@@ -254,8 +254,6 @@
 
 "Point the camera at your card." = "หันกล้องไปที่บัตร";
 
-"Processing..." = "กำลังประมวลผล...";
-
 "Przelewy24 Bank" = "ธนาคาร Przelewy24";
 
 "Remove %@" = "นำ %@ ออก";
@@ -331,6 +329,10 @@
 "Tap to expand" = "แตะเพื่อขยาย";
 
 "Tax" = "ภาษี";
+
+"Terms and Conditions" = "ข้อกำหนดและเงื่อนไข";
+
+"Terms of Service" = "ข้อกำหนดการให้บริการ";
 
 "The IBAN you entered is incomplete." = "IBAN ที่คุณป้อนไม่ครบถ้วน";
 

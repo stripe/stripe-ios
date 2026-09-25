@@ -21,19 +21,15 @@ extension CheckoutPlayground {
             automaticTax: Bool,
             paymentMethodSave: Bool,
             paymentMethodRemove: Bool,
-            adaptivePricingCountry: AdaptivePricingCountry,
+            email: EmailSettings,
             automaticPaymentMethods: Bool,
             paymentMethodTypes: Set<String>
         ) async throws -> String {
-            let customerEmail = adaptivePricingCountry == .none
-                ? nil
-                : "test+location_\(adaptivePricingCountry.rawValue.uppercased())@example.com"
-
             var customerID: String?
             if customerType != .guest {
                 var customerParams: [String: Any] = [:]
-                if let customerEmail {
-                    customerParams["email"] = customerEmail
+                if email.source == .customer, let serverEmail = email.email {
+                    customerParams["email"] = serverEmail
                 }
                 customerID = try await backend.createCustomer(requestParams: customerParams)
 
@@ -63,7 +59,7 @@ extension CheckoutPlayground {
                 ],
             ] as [String: Any]
             var sessionParams: [String: Any] = [
-                "ui_mode": "elements",
+                "ui_mode": "mobile_elements",
                 "currency": currency.rawValue,
                 "items": [
                     oneTimePrice,
@@ -100,7 +96,9 @@ extension CheckoutPlayground {
                     }
                 }
             } else {
-                sessionParams["customer_email"] = customerEmail ?? "jenny@example.com"
+                if email.source == .checkoutSession, let serverEmail = email.email {
+                    sessionParams["customer_email"] = serverEmail
+                }
                 if paymentMethodSave {
                     sessionParams["customer_creation"] = "always"
                 }

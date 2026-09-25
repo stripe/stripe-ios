@@ -200,8 +200,6 @@
 
 "Point the camera at your card." = "將相機正對金融卡。";
 
-"Processing..." = "處理中...";
-
 "Przelewy24 Bank" = "Przelewy24 銀行";
 
 "Remove card?" = "移除卡？";
@@ -265,6 +263,10 @@
 "Tap to close" = "點擊以關閉";
 
 "Tap to expand" = "點擊以展開";
+
+"Terms and Conditions" = "條款與條件";
+
+"Terms of Service" = "服務條款";
 
 "The IBAN you entered is incomplete." = "您輸入的 IBAN 不完整。";
 

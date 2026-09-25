@@ -142,6 +142,9 @@ Short string for postal code (text used in non-US countries) */
 /* Label of an address field */
 "Prefecture" = "Prefecture";
 
+/* Label of a disabled button while its action is processing */
+"Processing..." = "Processing...";
+
 /* Caption for Province field on address form (only countries that use province, like Canada)
 Label of an address field */
 "Province" = "Province";
@@ -164,12 +167,18 @@ Label of an address field */
 /* Error message for empty dropdown selection. */
 "Selection is empty." = "Selection is empty.";
 
+/* Heading for a generic error when an operation fails */
+"Something went wrong" = "Something went wrong";
+
 /* Placeholder for Bacs sort code (a bank routing number used in the UK and Ireland) */
 "Sort code" = "Sort code";
 
 /* Caption for State field on address form (only countries that use state , like United States)
 Label of an address field */
 "State" = "State";
+
+/* Button that submits the information entered on a screen */
+"Submit" = "Submit";
 
 /* Label of an address field */
 "Suburb" = "Suburb";

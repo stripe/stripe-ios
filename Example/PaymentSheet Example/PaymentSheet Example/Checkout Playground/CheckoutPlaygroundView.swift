@@ -9,7 +9,6 @@ import SwiftUI
 struct CheckoutPlaygroundView: View {
     @StateObject private var viewModel = CheckoutPlayground.ViewModel()
     @State private var showCurrencySelectorAppearance = false
-    @State private var showBillingDetailsCollection = false
 
     var body: some View {
         Group {
@@ -37,8 +36,10 @@ struct CheckoutPlaygroundView: View {
                             onReset: viewModel.reset
                         )
 
+                        CheckoutPlaygroundEmailSection(viewModel: viewModel)
+
                         CheckoutPlaygroundLineItemsSection(
-                            lineItems: viewModel.lineItems,
+                            cartScenario: $viewModel.cartScenario,
                             currency: viewModel.currency
                         )
 
@@ -59,10 +60,7 @@ struct CheckoutPlaygroundView: View {
                             showExpressCheckoutElement: $viewModel.expressCheckoutElement.isEnabled,
                             applePayDisplay: $viewModel.expressCheckoutElement.applePayDisplay,
                             linkDisplay: $viewModel.expressCheckoutElement.linkDisplay,
-                            shippingAddressRequired: $viewModel.expressCheckoutElement.shippingAddressRequired,
-                            onCustomizeBillingDetailsCollection: {
-                                showBillingDetailsCollection = true
-                            }
+                            shippingAddressRequired: $viewModel.expressCheckoutElement.shippingAddressRequired
                         )
 
                         currencySelectorAppearanceSection
@@ -79,6 +77,7 @@ struct CheckoutPlaygroundView: View {
                     .padding(.horizontal, 16)
                     .padding(.top, 20)
                 }
+                .disabled(viewModel.isCreating)
 
                 CheckoutPlayground.CreateButtonBar(
                     isCreating: viewModel.isCreating,
@@ -97,6 +96,7 @@ struct CheckoutPlaygroundView: View {
                     case .swiftUI:
                         CheckoutCartView(
                             clientSecret: clientSecret,
+                            emailSettings: viewModel.resolvedEmail,
                             shippingAddressCollection: viewModel.shippingAddressCollection,
                             defaultShippingAddress: viewModel.defaultShippingAddress,
                             adaptivePricing: true,
@@ -108,6 +108,7 @@ struct CheckoutPlaygroundView: View {
                     case .uiKit:
                         CheckoutCartUIKitView(
                             clientSecret: clientSecret,
+                            emailSettings: viewModel.resolvedEmail,
                             shippingAddressCollection: viewModel.shippingAddressCollection,
                             defaultShippingAddress: viewModel.defaultShippingAddress,
                             adaptivePricing: true,
@@ -125,15 +126,6 @@ struct CheckoutPlaygroundView: View {
                     doneAction: { updatedAppearance in
                         viewModel.currencySelectorAppearance = updatedAppearance
                         showCurrencySelectorAppearance = false
-                    }
-                )
-            }
-            .sheet(isPresented: $showBillingDetailsCollection) {
-                ExpressCheckoutElementBillingDetailsCollectionPlaygroundView(
-                    configuration: viewModel.expressCheckoutElement.billingDetailsCollectionConfiguration,
-                    doneAction: { updatedConfiguration in
-                        viewModel.expressCheckoutElement.billingDetailsCollectionConfiguration = updatedConfiguration
-                        showBillingDetailsCollection = false
                     }
                 )
             }

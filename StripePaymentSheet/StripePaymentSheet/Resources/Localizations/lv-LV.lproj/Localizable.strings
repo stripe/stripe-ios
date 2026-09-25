@@ -254,8 +254,6 @@
 
 "Point the camera at your card." = "Vērsiet kameru uz karti.";
 
-"Processing..." = "Apstrādā…";
-
 "Przelewy24 Bank" = "Przelewy24 Bank";
 
 "Remove %@" = "Noņemt %@";
@@ -331,6 +329,10 @@
 "Tap to expand" = "Pieskarieties, lai izvērstu";
 
 "Tax" = "Nodoklis";
+
+"Terms and Conditions" = "Noteikumi un nosacījumi";
+
+"Terms of Service" = "Pakalpojuma lietošanas noteikumi";
 
 "The IBAN you entered is incomplete." = "Ievadītais IBAN nav pilnīgs.";
 

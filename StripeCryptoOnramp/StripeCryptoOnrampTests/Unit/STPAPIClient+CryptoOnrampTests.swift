@@ -5,6 +5,7 @@
 //  Created by Michael Liberatore on 7/17/25.
 //
 
+import Foundation
 import StripeCore
 import StripeCoreTestUtils
 @testable @_spi(CryptoOnrampAlpha) import StripeCryptoOnramp
@@ -19,6 +20,7 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
     private enum Constant {
         // Common
         static let requestSecret = "cscs_12345"
+        static let consumerAuthTokenHeader = "Stripe-Consumer-Auth-Token"
         static let errorDomain = "STPAPIClientCryptoOnrampTests.Error"
         static let validCustomerId = "crc_12345"
         static let cryptoOnrampAPIVersion = "2026-03-25.preview"
@@ -105,6 +107,9 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
 
         // /v1/crypto/internal/crs_carf_declaration
         static let userAttestationAPIPath = "/v1/crypto/internal/crs_carf_declaration"
+
+        // /v1/crypto/internal/partner_terms
+        static let partnerTermsAPIPath = "/v1/crypto/internal/partner_terms"
 
         // /v1/crypto/internal/refresh_consumer_person
         static let refreshKYCInfoAPIPath = "/v1/crypto/internal/refresh_consumer_person"
@@ -208,6 +213,182 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         } catch {
             XCTFail("Expected a success response but got an error: \(error).")
         }
+    }
+
+    func testRetrieveKYCRequirementsSuccess() async throws {
+        let mockResponseData = try RetrieveKYCRequirementsResponseMock.sourceOfFundsWithQuestionnaire.data()
+        stub { request in
+            request.url?.path == "/v1/crypto/internal/kyc_requirements"
+        } response: { request in
+            XCTAssertEqual(request.httpMethod, "GET")
+            XCTAssertEqual(
+                request.value(forHTTPHeaderField: "Stripe-Consumer-Auth-Token"),
+                Constant.requestSecret
+            )
+            XCTAssertTrue(request.url?.query?.isEmpty ?? true)
+            return HTTPStubsResponse(data: mockResponseData, statusCode: 200, headers: nil)
+        }
+
+        let apiClient = stubbedAPIClient()
+        let response = try await apiClient.retrieveKYCRequirements(linkAccountInfo: Constant.validLinkAccountInfo)
+        XCTAssertEqual(response.requirements.count, 1)
+        let requirement = try XCTUnwrap(response.requirements["source_of_funds"])
+        XCTAssertEqual(requirement.requestedBy, "swapped")
+        XCTAssertEqual(requirement.awaitingActionFrom, .user)
+        XCTAssertEqual(requirement.errors, [
+            .init(code: "document_rejected", description: "The submitted document could not be verified."),
+        ])
+
+        let document = try XCTUnwrap(requirement.document)
+        XCTAssertEqual(document.acceptedFormats, ["pdf", "jpeg", "png", "docx", "xlsx", "csv", "txt"])
+        XCTAssertEqual(document.acceptedSubtypes, [
+            .init(id: "payslip", label: "Payslip", description: "Recent payslips from your employer"),
+            .init(id: "bank_statement", label: "Bank statement", description: nil),
+        ])
+        XCTAssertEqual(document.maxFileSizeBytes, 5_000_000)
+        XCTAssertEqual(document.minDocumentTypes, 1)
+        XCTAssertEqual(document.maxDocumentTypes, 2)
+        XCTAssertEqual(document.fileRequirements, "PDF, JPEG/JPG, PNG, DOCX, XLSX, CSV, or TXT, up to 5 MB per file.")
+        XCTAssertEqual(document.instructions, [
+            "Documents must include your name and a balance or financial value.",
+            "Bank statements must be original PDFs issued through online banking; screenshots aren't accepted.",
+        ])
+
+        let questionnaire = try XCTUnwrap(requirement.additionalRequirements?.questionnaire)
+        XCTAssertEqual(questionnaire.questions, [
+            .init(
+                id: "purchase_purpose",
+                prompt: "Why are you purchasing cryptocurrency through swapped.com?",
+                answerType: .freeText,
+                required: true
+            ),
+        ])
+    }
+
+    func testRetrieveKYCRequirementsDecodesEmptyRequirements() async throws {
+        let mockResponseData = try RetrieveKYCRequirementsResponseMock.notRequired.data()
+        stub { request in
+            request.url?.path == "/v1/crypto/internal/kyc_requirements"
+        } response: { _ in
+            HTTPStubsResponse(data: mockResponseData, statusCode: 200, headers: nil)
+        }
+
+        let apiClient = stubbedAPIClient()
+        let response = try await apiClient.retrieveKYCRequirements(linkAccountInfo: Constant.validLinkAccountInfo)
+        XCTAssertTrue(response.requirements.isEmpty)
+    }
+
+    func testRetrieveKYCRequirementsThrowsWithInvalidArguments() async {
+        let apiClient = stubbedAPIClient()
+
+        var noSecretLinkAccountInfo = Constant.validLinkAccountInfo
+        noSecretLinkAccountInfo.consumerSessionClientSecret = nil
+        await XCTAssertThrowsErrorAsync(_ = try await apiClient.retrieveKYCRequirements(linkAccountInfo: noSecretLinkAccountInfo))
+
+        var unverifiedLinkAccountInfo = Constant.validLinkAccountInfo
+        unverifiedLinkAccountInfo.sessionState = .requiresVerification
+        await XCTAssertThrowsErrorAsync(_ = try await apiClient.retrieveKYCRequirements(linkAccountInfo: unverifiedLinkAccountInfo))
+    }
+
+    func testRetrieveKYCRequirementsDecodesPartnerReview() async throws {
+        let mockResponseData = try RetrieveKYCRequirementsResponseMock.partnerReview.data()
+        stub { request in
+            request.url?.path == "/v1/crypto/internal/kyc_requirements"
+        } response: { _ in
+            HTTPStubsResponse(data: mockResponseData, statusCode: 200, headers: nil)
+        }
+
+        let apiClient = stubbedAPIClient()
+        let response = try await apiClient.retrieveKYCRequirements(linkAccountInfo: Constant.validLinkAccountInfo)
+        let requirement = try XCTUnwrap(response.requirements["source_of_funds"])
+        XCTAssertEqual(requirement.awaitingActionFrom, .partner)
+        XCTAssertEqual(requirement.errors, [])
+        XCTAssertNil(requirement.document)
+        XCTAssertNil(requirement.additionalRequirements)
+    }
+
+    func testRetrieveKYCRequirementsPreservesUnknownActionParty() async throws {
+        let mockResponseData = try RetrieveKYCRequirementsResponseMock.unknownActionParty.data()
+        stub { request in
+            request.url?.path == "/v1/crypto/internal/kyc_requirements"
+        } response: { _ in
+            HTTPStubsResponse(data: mockResponseData, statusCode: 200, headers: nil)
+        }
+
+        let apiClient = stubbedAPIClient()
+        let response = try await apiClient.retrieveKYCRequirements(linkAccountInfo: Constant.validLinkAccountInfo)
+        let requirement = try XCTUnwrap(response.requirements["proof_of_address"])
+        XCTAssertEqual(requirement.requestedBy, "future_partner")
+        XCTAssertEqual(requirement.awaitingActionFrom, .unknown("future_party"))
+    }
+
+    func testRetrieveKYCRequirementsPreservesUnknownAnswerType() async throws {
+        let mockResponseData = try RetrieveKYCRequirementsResponseMock.unknownAnswerType.data()
+        stub { request in
+            request.url?.path == "/v1/crypto/internal/kyc_requirements"
+        } response: { _ in
+            HTTPStubsResponse(data: mockResponseData, statusCode: 200, headers: nil)
+        }
+
+        let apiClient = stubbedAPIClient()
+        let response = try await apiClient.retrieveKYCRequirements(linkAccountInfo: Constant.validLinkAccountInfo)
+        let requirement = try XCTUnwrap(response.requirements["source_of_funds"])
+        let question = try XCTUnwrap(requirement.additionalRequirements?.questionnaire?.questions.first)
+        XCTAssertEqual(question.answerType, .unknown("future_answer_type"))
+    }
+
+    func testFulfillAdditionalKYCRequirementEncodesPayload() async throws {
+        let mockResponseData = try FulfillAdditionalKYCRequirementResponseMock.fulfillAdditionalKYCRequirementResponse_200.data()
+        stub { request in
+            request.url?.path == "/v1/crypto/internal/fulfill_additional_kyc_requirement"
+        } response: { request in
+            let body = request.ohhttpStubs_httpBody ?? Data()
+            let bodyString = String(bytes: body, encoding: .utf8) ?? ""
+            let queryItems = URLComponents(string: "?\(bodyString)")?.queryItems ?? []
+            func value(for name: String) -> String? {
+                queryItems.first(where: { $0.name == name })?.value
+            }
+            XCTAssertEqual(queryItems.count, 7)
+            XCTAssertEqual(value(for: "credentials[consumer_session_client_secret]"), "cscs_123")
+            XCTAssertEqual(value(for: "liquidity_provider"), "swapped")
+            XCTAssertEqual(value(for: "documents[0][document_type]"), "source_of_funds")
+            XCTAssertEqual(value(for: "documents[0][document_subtype]"), "payslip")
+            XCTAssertEqual(value(for: "documents[0][file_ids][0]"), "file_123")
+            XCTAssertNil(value(for: "documents[0][status]"))
+            XCTAssertEqual(value(for: "questionnaire[answers][0][question_id]"), "purchase_purpose")
+            XCTAssertEqual(
+                value(for: "questionnaire[answers][0][value]")?.removingPercentEncoding,
+                "Long-term investment"
+            )
+            return HTTPStubsResponse(data: mockResponseData, statusCode: 200, headers: nil)
+        }
+
+        let apiClient = stubbedAPIClient()
+        let request = FulfillAdditionalKYCRequirementRequest(
+            credentials: Credentials(consumerSessionClientSecret: "cscs_123"),
+            liquidityProvider: "swapped",
+            documents: [
+                FulfillAdditionalKYCRequirementRequest.Document(
+                    documentType: "source_of_funds",
+                    documentSubtype: "payslip",
+                    fileIds: ["file_123"]
+                ),
+            ],
+            questionnaire: AdditionalKYCFulfillmentQuestionnaire(
+                answers: [
+                    AdditionalKYCFulfillmentQuestionnaire.Answer(
+                        questionId: "purchase_purpose",
+                        value: "Long-term investment"
+                    ),
+                ]
+            )
+        )
+
+        let response = try await apiClient.fulfillAdditionalKYCRequirement(request)
+        XCTAssertEqual(response.id, "cks_123")
+        XCTAssertEqual(response.status, "pending_verification")
+        XCTAssertEqual(response.documents?.first?.status, "pending_verification")
+        XCTAssertEqual(response.created, Date(timeIntervalSince1970: 1_723_264_800))
     }
 
     func testcreateCryptoCustomerFailure() async {
@@ -448,15 +629,11 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         stub { request in
             XCTAssertEqual(request.url?.path, Constant.retrieveMissingIdentifiersAPIPath)
             XCTAssertEqual(request.httpMethod, "GET")
-
-            guard let queryParametersString = request.url?.query else {
-                XCTFail("Expected query parameters but found none.")
-                return false
-            }
-
-            let parameters = queryParametersString.removingPercentEncoding?.parsedHTTPParametersDictionary ?? [:]
-            XCTAssertEqual(parameters.count, 1)
-            XCTAssertEqual(parameters["credentials[consumer_session_client_secret]"], Constant.requestSecret)
+            XCTAssertEqual(
+                request.value(forHTTPHeaderField: Constant.consumerAuthTokenHeader),
+                Constant.requestSecret
+            )
+            XCTAssertTrue(request.url?.query?.isEmpty ?? true)
 
             return true
         } response: { _ in
@@ -579,15 +756,11 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         stub { request in
             XCTAssertEqual(request.url?.path, Constant.userAttestationAPIPath)
             XCTAssertEqual(request.httpMethod, "GET")
-
-            guard let queryParametersString = request.url?.query else {
-                XCTFail("Expected query parameters but found none.")
-                return false
-            }
-
-            let parameters = queryParametersString.removingPercentEncoding?.parsedHTTPParametersDictionary ?? [:]
-            XCTAssertEqual(parameters.count, 1)
-            XCTAssertEqual(parameters["credentials[consumer_session_client_secret]"], Constant.requestSecret)
+            XCTAssertEqual(
+                request.value(forHTTPHeaderField: Constant.consumerAuthTokenHeader),
+                Constant.requestSecret
+            )
+            XCTAssertTrue(request.url?.query?.isEmpty ?? true)
 
             return true
         } response: { _ in
@@ -649,6 +822,179 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         var unverifiedLinkAccountInfo = Constant.validLinkAccountInfo
         unverifiedLinkAccountInfo.sessionState = .requiresVerification
         await XCTAssertThrowsErrorAsync(_ = try await apiClient.confirmUserAttestation(linkAccountInfo: unverifiedLinkAccountInfo))
+    }
+
+    func testRetrievePartnerTermsAndConditionsRequiredSuccess() async throws {
+        let mockResponseData = try RetrievePartnerTermsResponseMock.retrievePartnerTermsResponse_TermsAndConditionsRequired_200.data()
+
+        stub { request in
+            XCTAssertEqual(request.url?.path, Constant.partnerTermsAPIPath)
+            XCTAssertEqual(request.httpMethod, "GET")
+
+            guard let queryParametersString = request.url?.query else {
+                XCTFail("Expected query parameters but found none.")
+                return false
+            }
+
+            let parameters = queryParametersString.removingPercentEncoding?.parsedHTTPParametersDictionary ?? [:]
+            XCTAssertEqual(parameters.count, 1)
+            XCTAssertEqual(parameters["declaration_type"], "transaction_terms")
+            XCTAssertEqual(request.value(forHTTPHeaderField: Constant.consumerAuthTokenHeader), Constant.requestSecret)
+
+            return true
+        } response: { _ in
+            HTTPStubsResponse(data: mockResponseData, statusCode: 200, headers: nil)
+        }
+
+        let apiClient = stubbedAPIClient()
+        let response = try await apiClient.retrievePartnerTerms(
+            declarationType: .transactionTerms,
+            linkAccountInfo: Constant.validLinkAccountInfo
+        )
+
+        XCTAssertEqual(
+            response,
+            .required(
+                partner: "swapped",
+                declaration: .init(
+                    id: "copt_decl_123",
+                    type: .transactionTerms,
+                    html: "<p>Partner terms and conditions</p>"
+                )
+            )
+        )
+    }
+
+    func testRetrievePartnerTermsOfServiceRequiredSuccess() async throws {
+        let mockResponseData = try RetrievePartnerTermsResponseMock.retrievePartnerTermsResponse_TOSRequired_200.data()
+
+        stub { request in
+            XCTAssertEqual(request.url?.path, Constant.partnerTermsAPIPath)
+
+            guard let queryParametersString = request.url?.query else {
+                XCTFail("Expected query parameters but found none.")
+                return false
+            }
+
+            let parameters = queryParametersString.removingPercentEncoding?.parsedHTTPParametersDictionary ?? [:]
+            XCTAssertEqual(parameters.count, 1)
+            XCTAssertEqual(parameters["declaration_type"], "terms_of_service")
+            XCTAssertEqual(request.value(forHTTPHeaderField: Constant.consumerAuthTokenHeader), Constant.requestSecret)
+
+            return true
+        } response: { _ in
+            HTTPStubsResponse(data: mockResponseData, statusCode: 200, headers: nil)
+        }
+
+        let apiClient = stubbedAPIClient()
+        let response = try await apiClient.retrievePartnerTerms(
+            declarationType: .termsOfService,
+            linkAccountInfo: Constant.validLinkAccountInfo
+        )
+
+        XCTAssertEqual(
+            response,
+            .required(
+                partner: "swapped",
+                declaration: .init(
+                    id: "copt_decl_456",
+                    type: .termsOfService,
+                    html: "<p>Partner terms of service</p>"
+                )
+            )
+        )
+    }
+
+    func testRetrievePartnerTermsNotRequiredSuccess() async throws {
+        let mockResponseData = try RetrievePartnerTermsResponseMock.retrievePartnerTermsResponse_NotRequired_200.data()
+
+        stub { request in
+            request.url?.path == Constant.partnerTermsAPIPath
+        } response: { _ in
+            HTTPStubsResponse(data: mockResponseData, statusCode: 200, headers: nil)
+        }
+
+        let apiClient = stubbedAPIClient()
+        let response = try await apiClient.retrievePartnerTerms(
+            declarationType: .transactionTerms,
+            linkAccountInfo: Constant.validLinkAccountInfo
+        )
+
+        XCTAssertEqual(response, .notRequired)
+    }
+
+    func testRetrievePartnerTermsThrowsWithInvalidArguments() async {
+        let apiClient = stubbedAPIClient()
+
+        var noSecretLinkAccountInfo = Constant.validLinkAccountInfo
+        noSecretLinkAccountInfo.consumerSessionClientSecret = nil
+        await XCTAssertThrowsErrorAsync(
+            _ = try await apiClient.retrievePartnerTerms(
+                declarationType: .transactionTerms,
+                linkAccountInfo: noSecretLinkAccountInfo
+            )
+        )
+
+        var unverifiedLinkAccountInfo = Constant.validLinkAccountInfo
+        unverifiedLinkAccountInfo.sessionState = .requiresVerification
+        await XCTAssertThrowsErrorAsync(
+            _ = try await apiClient.retrievePartnerTerms(
+                declarationType: .transactionTerms,
+                linkAccountInfo: unverifiedLinkAccountInfo
+            )
+        )
+    }
+
+    func testConfirmPartnerTermsSuccess() async throws {
+        let mockResponseData = try ConfirmPartnerTermsResponseMock.confirmPartnerTermsResponse_200.data()
+
+        stub { request in
+            XCTAssertEqual(request.url?.path, Constant.partnerTermsAPIPath)
+            XCTAssertEqual(request.httpMethod, "POST")
+            XCTAssertEqual(request.value(forHTTPHeaderField: Constant.consumerAuthTokenHeader), Constant.requestSecret)
+
+            guard let httpBody = request.ohhttpStubs_httpBody else {
+                XCTFail("Expected an httpBody data but found none.")
+                return false
+            }
+
+            let parameters = String(data: httpBody, encoding: .utf8)?.parsedHTTPParametersDictionary ?? [:]
+
+            XCTAssertEqual(parameters.count, 1)
+            XCTAssertEqual(parameters["declaration_id"], "copt_decl_123")
+
+            return true
+        } response: { _ in
+            HTTPStubsResponse(data: mockResponseData, statusCode: 200, headers: nil)
+        }
+
+        let apiClient = stubbedAPIClient()
+        _ = try await apiClient.confirmPartnerTerms(
+            declarationId: "copt_decl_123",
+            linkAccountInfo: Constant.validLinkAccountInfo
+        )
+    }
+
+    func testConfirmPartnerTermsThrowsWithInvalidArguments() async {
+        let apiClient = stubbedAPIClient()
+
+        var noSecretLinkAccountInfo = Constant.validLinkAccountInfo
+        noSecretLinkAccountInfo.consumerSessionClientSecret = nil
+        await XCTAssertThrowsErrorAsync(
+            _ = try await apiClient.confirmPartnerTerms(
+                declarationId: "copt_decl_123",
+                linkAccountInfo: noSecretLinkAccountInfo
+            )
+        )
+
+        var unverifiedLinkAccountInfo = Constant.validLinkAccountInfo
+        unverifiedLinkAccountInfo.sessionState = .requiresVerification
+        await XCTAssertThrowsErrorAsync(
+            _ = try await apiClient.confirmPartnerTerms(
+                declarationId: "copt_decl_123",
+                linkAccountInfo: unverifiedLinkAccountInfo
+            )
+        )
     }
 
     func testRefreshKycInfoSuccess() async throws {

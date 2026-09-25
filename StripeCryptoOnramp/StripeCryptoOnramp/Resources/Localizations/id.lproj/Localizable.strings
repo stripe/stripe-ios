@@ -1,5 +1,11 @@
 "Debit cards are most likely to be accepted." = "Kartu debit kemungkinan besar akan diterima.";
 
+"Please try again later." = "Coba lagi nanti.";
+
+"Submitted for review" = "Dikirim untuk ditinjau";
+
+"Tell us about your source of funds" = "Beri tahu kami tentang sumber dana Anda";
+
 "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "Aplikasi ini tidak dapat diverifikasi karena kesalahan atestasi. Silakan coba lagi nanti atau hubungi pengembang jika masalah terus berlanjut.";
 
 "This app couldn't be verified. Contact the app developer for help." = "Aplikasi ini tidak dapat diverifikasi. Hubungi pengembang aplikasi untuk mendapatkan bantuan.";
@@ -12,4 +18,12 @@
 
 "This wallet verification request is invalid. Please try again." = "Permintaan verifikasi dompet digital ini tidak valid. Silakan coba lagi.";
 
+"Upload your proof of address" = "Unggah bukti alamat Anda";
+
 "We couldn't verify ownership of this wallet. Please try again." = "Kami tidak dapat memverifikasi kepemilikan dompet digital ini. Coba lagi.";
+
+"We’re required to confirm your address to enable spending over %@." = "Kami diwajibkan untuk mengonfirmasi alamat Anda untuk mengaktifkan pengeluaran di atas %@.";
+
+"We’re required to understand where your funds come from to enable spending over %@." = "Kami diwajibkan untuk memahami asal dana Anda untuk mengaktifkan pengeluaran di atas %@.";
+
+"We’re reviewing your documents. We’ll let you know when verification is complete." = "Kami sedang meninjau dokumen Anda. Kami akan memberi tahu Anda setelah verifikasi selesai.";

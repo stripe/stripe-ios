@@ -254,8 +254,6 @@
 
 "Point the camera at your card." = "Ipponta l-kamera lejn il-karta tiegħek.";
 
-"Processing..." = "Qed jiġi pproċessat...";
-
 "Przelewy24 Bank" = "Bank permezz ta' Przelewy24";
 
 "Remove %@" = "Neħħi %@";
@@ -331,6 +329,10 @@
 "Tap to expand" = "Agħfas biex tkabbar";
 
 "Tax" = "Taxxa";
+
+"Terms and Conditions" = "Termini u kundizzjonijiet";
+
+"Terms of Service" = "Termini tas-Servizz";
 
 "The IBAN you entered is incomplete." = "L-IBAN li daħħalt mhux komplut.";
 

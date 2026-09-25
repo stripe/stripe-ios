@@ -254,8 +254,6 @@
 
 "Point the camera at your card." = "Îndreptați camera spre cardul dvs.";
 
-"Processing..." = "Se procesează...";
-
 "Przelewy24 Bank" = "Banca Przelewy24";
 
 "Remove %@" = "Eliminare %@";
@@ -331,6 +329,10 @@
 "Tap to expand" = "Atingeți pentru a extinde";
 
 "Tax" = "Taxă";
+
+"Terms and Conditions" = "Termeni și condiții";
+
+"Terms of Service" = "Termeni privind utilizarea serviciilor";
 
 "The IBAN you entered is incomplete." = "Codul IBAN pe care l-ați introdus nu este complet.";
 

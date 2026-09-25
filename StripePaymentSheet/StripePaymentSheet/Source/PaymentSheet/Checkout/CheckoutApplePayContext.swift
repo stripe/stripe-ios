@@ -33,7 +33,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
     private let returnURL: String
     private let presentationWindow: UIWindow?
     private let confirmationHandler: CheckoutController.ApplePayConfirmationParameters.ConfirmationHandler
-    private let fallbackBillingDetails: StripeAPI.BillingDetails?
+    private let initialTaxRegion: CheckoutController.Address?
     let authorizationController: PKPaymentAuthorizationController
 
     private weak var checkoutWalletUpdater: CheckoutSessionWalletUpdater?
@@ -61,10 +61,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         self.returnURL = applePayConfirmationParameters.returnURL
         self.presentationWindow = applePayConfirmationParameters.presentationWindow
         self.confirmationHandler = applePayConfirmationParameters.confirmationHandler
-        self.fallbackBillingDetails = Self.makeFallbackBillingDetails(
-            checkoutSession: checkoutSession,
-            applePayConfirmationParameters: applePayConfirmationParameters
-        )
+        self.initialTaxRegion = checkoutWalletUpdater.currentTaxRegion
         self.authorizationController = authorizationController
         self.checkoutWalletUpdater = checkoutWalletUpdater
         super.init()
@@ -116,7 +113,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
                     StripeAPI.PaymentMethod.create(
                         apiClient: self.apiClient,
                         payment: payment,
-                        fallbackBillingDetails: self.fallbackBillingDetails,
+                        fallbackBillingDetails: nil,
                         clientAttributionMetadata: clientAttributionMetadata
                     ) { result in
                         continuation.resume(with: result)
@@ -133,13 +130,14 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
                 let requestParameters = CheckoutSessionConfirmationRequestParameters(
                     sessionId: checkoutSession.id,
                     paymentMethodId: paymentMethod.id,
-                    expectedAmount: checkoutSession.expectedAmount(),
+                    expectedAmount: checkoutSession.amount,
                     expectedPaymentMethodType: paymentMethod.type?.rawValue ?? STPPaymentMethodType.card.identifier,
                     savePaymentMethod: savePaymentMethod,
                     returnURL: self.returnURL,
                     shipping: self.makeShippingDetailsParams(from: payment)
                         ?? checkoutSession.shippingAddress?.shippingDetailsParams,
-                    clientAttributionMetadata: clientAttributionMetadata
+                    clientAttributionMetadata: clientAttributionMetadata,
+                    collectedInformation: .init(email: checkoutSession.localState.email)
                 )
                 let result = await self.confirmationHandler(requestParameters)
                 switch result {
@@ -164,6 +162,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
             Task {
                 await shippingContactUpdateTask?.value
                 await paymentMethodUpdateTask?.value
+                await restoreInitialTaxRegionIfNecessary()
                 await controller.dismiss()
                 self.resume(with: .canceled())
                 self._end()
@@ -328,7 +327,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
     }
 
     static func makeSummaryItems(for session: CheckoutController.Session, label: String) -> [PKPaymentSummaryItem] {
-        return STPApplePayContext.makePaymentSummaryItems(for: session, label: label, currency: session.currency)
+        return STPApplePayContext.makePaymentSummaryItems(for: session, label: label, currency: session.activePresentmentCurrency)
     }
 
     /// Builds the `PKPaymentRequest` for a Checkout Session's Apple Pay flow, including which
@@ -341,7 +340,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         let paymentRequest = StripeAPI.paymentRequest(
             withMerchantIdentifier: applePayConfig.merchantId,
             country: checkoutSession.merchantCountryCode,
-            currency: checkoutSession.currency ?? "USD"
+            currency: checkoutSession.activePresentmentCurrency ?? "USD"
         )
 
         assert(!paymentRequest.merchantIdentifier.isEmpty, "You must set `merchantId` on `ApplePayConfiguration`.")
@@ -349,12 +348,9 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         let merchantLabel = applePayConfirmationParameters.merchantDisplayName
         paymentRequest.paymentSummaryItems = CheckoutApplePayContext.makeSummaryItems(for: checkoutSession, label: merchantLabel)
 
-        let billingDetailsCollectionConfiguration = applePayConfirmationParameters.billingDetailsCollectionConfiguration
-        paymentRequest.requiredBillingContactFields = billingDetailsCollectionConfiguration.applePayRequiredBillingContactFields
         if checkoutSession.collectsTaxFromBillingAddress {
             paymentRequest.requiredBillingContactFields.insert(.postalAddress)
         }
-        paymentRequest.requiredShippingContactFields = billingDetailsCollectionConfiguration.applePayRequiredShippingContactFields
 
         if applePayConfirmationParameters.shippingAddressRequired {
             paymentRequest.requiredShippingContactFields.insert(.postalAddress)
@@ -389,38 +385,6 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         return contact
     }
 
-    static func makeFallbackBillingDetails(
-        checkoutSession: CheckoutController.Session,
-        applePayConfirmationParameters: CheckoutController.ApplePayConfirmationParameters
-    ) -> StripeAPI.BillingDetails? {
-        var details = StripeAPI.BillingDetails()
-        var hasDetails = false
-        if let email = checkoutSession.email {
-            details.email = email
-            hasDetails = true
-        }
-        guard applePayConfirmationParameters.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod,
-              let defaults = applePayConfirmationParameters.defaultBillingDetails else {
-            return hasDetails ? details : nil
-        }
-        if let name = defaults.name {
-            details.name = name
-            hasDetails = true
-        }
-        if let address = defaults.address {
-            details.address = .init(
-                city: address.city,
-                country: address.country,
-                line1: address.line1,
-                line2: address.line2,
-                postalCode: address.postalCode,
-                state: address.state
-            )
-            hasDetails = true
-        }
-        return hasDetails ? details : nil
-    }
-
     static func makeBillingContact(
         from billingDetails: CheckoutController.Configuration.Defaults.BillingDetails
     ) -> PKContact {
@@ -445,6 +409,18 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         shippingContactUpdateTask = nil
         paymentMethodUpdateTask = nil
         didFinish = true
+    }
+
+    private func restoreInitialTaxRegionIfNecessary() async {
+        guard let checkoutWalletUpdater,
+              checkoutWalletUpdater.currentTaxRegion != initialTaxRegion else {
+            return
+        }
+        let taxRegionToRestore = initialTaxRegion ?? .init(country: session.merchantCountryCode)
+        _ = try? await checkoutWalletUpdater.updateTaxRegionWithoutEnqueueing(
+            address: taxRegionToRestore,
+            canUpdateWhileSheetPresented: true
+        )
     }
 
     private func resume(with result: CheckoutController.InternalConfirmResult) {

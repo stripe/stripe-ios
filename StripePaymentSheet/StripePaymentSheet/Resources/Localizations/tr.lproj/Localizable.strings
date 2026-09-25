@@ -254,8 +254,6 @@
 
 "Point the camera at your card." = "Kamerayı kartınıza doğrultun.";
 
-"Processing..." = "İşleniyor...";
-
 "Przelewy24 Bank" = "Przelewy24 Bank";
 
 "Remove %@" = "%@ kaldır";
@@ -331,6 +329,10 @@
 "Tap to expand" = "Genişletmek için dokunun";
 
 "Tax" = "Vergi";
+
+"Terms and Conditions" = "Şartlar ve Koşullar";
+
+"Terms of Service" = "Hizmet Koşulları";
 
 "The IBAN you entered is incomplete." = "Girdiğiniz IBAN eksik.";
 

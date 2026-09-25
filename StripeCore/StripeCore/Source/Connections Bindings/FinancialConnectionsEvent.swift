@@ -112,6 +112,9 @@ public struct FinancialConnectionsEvent {
         /// The system could not retrieve accounts for the selected institution.
         case accountsUnavailable = "accounts_unavailable"
 
+        /// No eligible accounts were available for the selected institution.
+        case noEligibleAccounts = "no_eligible_accounts"
+
         /// For payment flows, no debitable account was available at the selected institution.
         case noDebitableAccount = "no_debitable_account"
 

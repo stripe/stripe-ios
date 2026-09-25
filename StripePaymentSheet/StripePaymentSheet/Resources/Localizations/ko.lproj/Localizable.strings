@@ -254,8 +254,6 @@
 
 "Point the camera at your card." = "카메라가 카드를 향하도록 하세요.";
 
-"Processing..." = "처리 중...";
-
 "Przelewy24 Bank" = "Przelewy24 은행";
 
 "Remove %@" = "%@ 제거";
@@ -331,6 +329,10 @@
 "Tap to expand" = "탭하여 확장";
 
 "Tax" = "세금";
+
+"Terms and Conditions" = "이용 약관";
+
+"Terms of Service" = "서비스 약관";
 
 "The IBAN you entered is incomplete." = "입력한 IBAN이 불완전합니다.";
 

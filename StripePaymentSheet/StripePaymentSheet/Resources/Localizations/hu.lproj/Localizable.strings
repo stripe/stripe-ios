@@ -254,8 +254,6 @@
 
 "Point the camera at your card." = "Tegye a kártyát a kamera elé.";
 
-"Processing..." = "Feldolgozás...";
-
 "Przelewy24 Bank" = "Przelewy24 Bank";
 
 "Remove %@" = "%@ eltávolítása";
@@ -331,6 +329,10 @@
 "Tap to expand" = "Koppintson a kinyitáshoz";
 
 "Tax" = "Adó";
+
+"Terms and Conditions" = "Feltételek";
+
+"Terms of Service" = "Szolgáltatási feltételek";
 
 "The IBAN you entered is incomplete." = "A beírt IBAN-szám hiányos.";
 

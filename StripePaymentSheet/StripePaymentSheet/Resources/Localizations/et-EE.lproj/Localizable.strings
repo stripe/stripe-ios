@@ -254,8 +254,6 @@
 
 "Point the camera at your card." = "Suunake kaamera oma kaardile.";
 
-"Processing..." = "Töötlemine ...";
-
 "Przelewy24 Bank" = "Pank Przelewy24";
 
 "Remove %@" = "Eemalda %@";
@@ -331,6 +329,10 @@
 "Tap to expand" = "Puudutage laiendamiseks";
 
 "Tax" = "Maks";
+
+"Terms and Conditions" = "Tingimused";
+
+"Terms of Service" = "Teenusetingimused";
 
 "The IBAN you entered is incomplete." = "Sisestatud IBAN on puudulik.";
 

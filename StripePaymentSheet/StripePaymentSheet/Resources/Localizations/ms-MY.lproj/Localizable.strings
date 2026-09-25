@@ -254,8 +254,6 @@
 
 "Point the camera at your card." = "Halakan kamera pada kad anda.";
 
-"Processing..." = "Sedang diproses...";
-
 "Przelewy24 Bank" = "Bank Przelewy24";
 
 "Remove %@" = "Alih keluar %@";
@@ -331,6 +329,10 @@
 "Tap to expand" = "Ketik untuk kembangkan";
 
 "Tax" = "Cukai";
+
+"Terms and Conditions" = "Terma dan Syarat";
+
+"Terms of Service" = "Terma Perkhidmatan";
 
 "The IBAN you entered is incomplete." = "IBAN yang anda masukkan tidak lengkap.";
 

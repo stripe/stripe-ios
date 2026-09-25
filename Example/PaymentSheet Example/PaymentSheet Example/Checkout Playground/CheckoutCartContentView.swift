@@ -11,6 +11,7 @@ import SwiftUI
 
 struct CheckoutCartContentView: View {
     @ObservedObject var checkout: CheckoutController
+    var emailSource: CheckoutPlayground.EmailSource
     var showsCurrencySelectorElement: Bool
     var showsShippingAddressSection: Bool
     var errorMessage: String?
@@ -18,6 +19,9 @@ struct CheckoutCartContentView: View {
     var integrationType: CheckoutPlayground.IntegrationType
     let onConfirm: (CheckoutController.ConfirmResult) -> Void
     @State private var showsTaxDetails = false
+    @State private var showsEmailEditor = false
+    @State private var emailDraft = ""
+    @State private var emailUpdateError: String?
 
     var body: some View {
         ScrollView {
@@ -32,6 +36,7 @@ struct CheckoutCartContentView: View {
 
                 currencySelectorSection
                 lineItemsSection
+                emailSection
                 expressCheckoutSection
                 if showsShippingAddressSection {
                     shippingAddressSection
@@ -54,9 +59,55 @@ struct CheckoutCartContentView: View {
         .sheet(isPresented: $showsTaxDetails) {
             CheckoutTaxDetailsView(taxAmounts: checkout.session.taxAmounts ?? [])
         }
+        .alert("Edit email", isPresented: $showsEmailEditor) {
+            TextField("Email address", text: $emailDraft)
+                .keyboardType(.emailAddress)
+                .textInputAutocapitalization(.never)
+                .autocorrectionDisabled()
+            Button("Save email") { updateEmail(emailDraft) }
+            Button("Clear email", role: .destructive) { updateEmail(nil) }
+            Button("Cancel", role: .cancel) { }
+        } message: {
+            Text("Updates the local Checkout email.")
+        }
     }
 
     // MARK: - Sections
+
+    private var emailSection: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack {
+                Text("Email").font(.title2).bold()
+                Spacer()
+                Button("Edit email") {
+                    emailDraft = checkout.session.email ?? ""
+                    showsEmailEditor = true
+                }
+                .disabled(emailSource != .local)
+            }
+            Text(checkout.session.email ?? "No email")
+                .accessibilityIdentifier("checkout_session_email")
+            Text(emailSource.isServer ? "Server email cannot be changed in checkout." : emailSource == .local ? "Local email" : "No email source selected.")
+                .font(.caption)
+                .foregroundColor(.secondary)
+            if let emailUpdateError {
+                Text(emailUpdateError).foregroundColor(.red)
+            }
+        }
+        .padding(.horizontal)
+    }
+
+    private func updateEmail(_ email: String?) {
+        Task {
+            emailUpdateError = nil
+            do {
+                let trimmed = email?.trimmingCharacters(in: .whitespacesAndNewlines)
+                try await checkout.updateEmail(trimmed?.isEmpty == true ? nil : trimmed)
+            } catch {
+                emailUpdateError = error.localizedDescription
+            }
+        }
+    }
 
     @ViewBuilder
     private var lineItemsSection: some View {
@@ -217,14 +268,13 @@ struct CheckoutCartContentView: View {
 
     @ViewBuilder
     private var expressCheckoutSection: some View {
-        if showExpressCheckoutElement,
-           let expressCheckoutElement = checkout.getExpressCheckoutElement() {
+        if showExpressCheckoutElement {
             VStack(alignment: .leading, spacing: 16) {
                 Text("Express Checkout")
                     .font(.title2).bold()
                     .padding(.horizontal)
 
-                expressCheckoutElement.view
+                checkout.getExpressCheckoutElement().view
                     .padding(.horizontal)
             }
         }
@@ -395,6 +445,7 @@ struct CheckoutCartSheet: View {
 
                 CheckoutCartContentView(
                     checkout: checkout,
+                    emailSource: .none,
                     showsCurrencySelectorElement: false,
                     showsShippingAddressSection: true,
                     errorMessage: nil,

@@ -254,8 +254,6 @@
 
 "Point the camera at your card." = "Hướng camera vào thẻ.";
 
-"Processing..." = "Đang xử lý...";
-
 "Przelewy24 Bank" = "Ngân hàng Przelewy24";
 
 "Remove %@" = "Xóa %@";
@@ -331,6 +329,10 @@
 "Tap to expand" = "Nhấp chạm vào để mở rộng";
 
 "Tax" = "Thuế";
+
+"Terms and Conditions" = "Điều khoản và Điều kiện";
+
+"Terms of Service" = "Điều khoản dịch vụ";
 
 "The IBAN you entered is incomplete." = "IBAN quý vị đã nhập chưa đầy đủ.";
 

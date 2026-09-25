@@ -254,8 +254,6 @@
 
 "Point the camera at your card." = "Apunta la cámara a la tarjeta.";
 
-"Processing..." = "Procesando...";
-
 "Przelewy24 Bank" = "Banco que opera con Przelewy24";
 
 "Remove %@" = "Elimina %@";
@@ -331,6 +329,10 @@
 "Tap to expand" = "Pulsa para expandir";
 
 "Tax" = "Impuesto";
+
+"Terms and Conditions" = "Condiciones generales";
+
+"Terms of Service" = "Condiciones de uso";
 
 "The IBAN you entered is incomplete." = "El IBAN que ingresaste está incompleto.";
 

@@ -20,6 +20,7 @@ struct CheckoutCartView: View {
     @State private var showsCheckoutDetails = false
 
     let clientSecret: String
+    let emailSettings: CheckoutPlayground.EmailSettings
     let shippingAddressCollection: Bool
     let defaultShippingAddress: CheckoutPlayground.DefaultShippingAddress?
     let adaptivePricing: Bool
@@ -37,6 +38,7 @@ struct CheckoutCartView: View {
                 if let checkout {
                     CheckoutCartContentView(
                         checkout: checkout,
+                        emailSource: emailSettings.source,
                         showsCurrencySelectorElement: adaptivePricing,
                         showsShippingAddressSection: shippingAddressCollection,
                         errorMessage: errorMessage,
@@ -151,6 +153,7 @@ struct CheckoutCartView: View {
                 config.paymentElement = paymentElementConfiguration
             }
             config.defaults.shippingDetails = defaultShippingAddress?.checkoutShippingDetails
+            config.defaults.email = emailSettings.localDefaultEmail
             if shippingAddressCollection {
                 var shippingAddressElementConfiguration = ShippingAddressElement.Configuration()
                 shippingAddressElementConfiguration.title = "Shipping Address"
@@ -158,7 +161,9 @@ struct CheckoutCartView: View {
                 config.shippingAddressElement = shippingAddressElementConfiguration
             }
             if expressCheckoutElementSettings.isEnabled {
-                var expressCheckoutElementConfiguration = ExpressCheckoutElement.Configuration()
+                var expressCheckoutElementConfiguration = ExpressCheckoutElement.Configuration { result in
+                    confirmResult = result
+                }
                 expressCheckoutElementConfiguration.applePayConfiguration = ExpressCheckoutElement.ApplePayConfiguration(
                     merchantId: "merchant.com.stripe.paymentsheet.example",
                     display: expressCheckoutElementSettings.applePayDisplay
@@ -167,10 +172,6 @@ struct CheckoutCartView: View {
                     display: expressCheckoutElementSettings.linkDisplay
                 )
                 expressCheckoutElementConfiguration.shippingAddressRequired = expressCheckoutElementSettings.shippingAddressRequired
-                expressCheckoutElementConfiguration.billingDetailsCollectionConfiguration = expressCheckoutElementSettings.billingDetailsCollectionConfiguration
-                expressCheckoutElementConfiguration.confirmHandler = { result in
-                    confirmResult = result
-                }
                 config.expressCheckoutElement = expressCheckoutElementConfiguration
             }
             if adaptivePricing {

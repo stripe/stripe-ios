@@ -254,8 +254,6 @@
 
 "Point the camera at your card." = "Usmjerite kameru na svoju karticu.";
 
-"Processing..." = "Obrađuje se...";
-
 "Przelewy24 Bank" = "Banka Przelewy24";
 
 "Remove %@" = "Ukloni %@";
@@ -331,6 +329,10 @@
 "Tap to expand" = "Dodirnite za proširivanje";
 
 "Tax" = "Porez";
+
+"Terms and Conditions" = "Uvjeti i odredbe";
+
+"Terms of Service" = "Uvjeti usluge";
 
 "The IBAN you entered is incomplete." = "Uneseni IBAN nije potpun.";
 

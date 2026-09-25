@@ -254,8 +254,6 @@
 
 "Point the camera at your card." = "Itapat ang kamera sa iyong kard.";
 
-"Processing..." = "Pinoproseso...";
-
 "Przelewy24 Bank" = "Przelewy24 Bank";
 
 "Remove %@" = "Tanggalin ang %@";
@@ -331,6 +329,10 @@
 "Tap to expand" = "I-tap para i-expand";
 
 "Tax" = "Buwis";
+
+"Terms and Conditions" = "Mga Tuntunin at Kondisyon";
+
+"Terms of Service" = "Mga Tuntunin ng Serbisyo";
 
 "The IBAN you entered is incomplete." = "Ang IBAN na iniligay mo ay di kumpleto.";
 

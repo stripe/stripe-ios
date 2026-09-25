@@ -74,6 +74,9 @@ public final class CheckoutController: ObservableObject {
     /// Guards confirmation across Payment Element and Express Checkout entry points.
     var confirmationInProgress = false
 
+    /// The last tax region successfully sent by this CheckoutController.
+    var currentTaxRegion: Address?
+
     /// Default timeout used by ``awaitPendingOperations(timeout:)``.
     nonisolated static let defaultPendingOperationsTimeout: TimeInterval = 30
 
@@ -84,7 +87,6 @@ public final class CheckoutController: ObservableObject {
 
     /// Initializes a CheckoutController instance
     public init(configuration: Configuration) async throws {
-        var configuration = configuration
         let clientSecret = configuration.clientSecret
         guard !clientSecret.isEmpty else {
             throw CheckoutError.invalidClientSecret
@@ -103,7 +105,7 @@ public final class CheckoutController: ObservableObject {
                 checkoutSessionId: sessionId,
                 adaptivePricingAllowed: configuration.currencySelectorElement != nil
             )
-            let loadedSession = apiResponse.makePublicSession()
+            let loadedSession = Session(apiResponse: apiResponse, localState: .empty)
             self.session = loadedSession
 
             // Element initialization is intentionally sequential:
@@ -136,12 +138,13 @@ public final class CheckoutController: ObservableObject {
             let sessionSource = CheckoutSessionSource(initialSession: session, sessionPublisher: $session)
 
             // 3. ECE
-            configuration.expressCheckoutElement.apiClient = configuration.apiClient
-            self.expressCheckoutElement = ExpressCheckoutElement(
-                sessionSource: sessionSource,
-                configuration: configuration.expressCheckoutElement,
-                delegate: self
-            )
+            if let expressCheckoutElementConfiguration = configuration.expressCheckoutElement {
+                self.expressCheckoutElement = ExpressCheckoutElement(
+                    sessionSource: sessionSource,
+                    configuration: expressCheckoutElementConfiguration,
+                    delegate: self
+                )
+            }
 
             // 4. CSE
             if let currencySelectorConfiguration = configuration.currencySelectorElement {
@@ -213,6 +216,21 @@ public final class CheckoutController: ObservableObject {
         try await paymentElement?.clearPaymentOption()
     }
 
+    // MARK: - Email
+
+    /// Use this method to update the Customer's email address.
+    /// - Important: You cannot use this method if the Checkout Session was created with
+    ///   `customer_email` or a Customer with an email. Those emails are immutable.
+    public func updateEmail(_ email: String?) async throws {
+        try await enqueueSessionUpdate {
+            guard self.canSetLocalEmail() else { return }
+            guard self.session.localState.email != email else { return }
+            try await self.applySessionUpdate { localState in
+                localState.email = email
+            }
+        }
+    }
+
     // MARK: - Addresses
 
     /// Updates the billing tax region for this checkout, if billing is the session's tax address source.
@@ -233,7 +251,7 @@ public final class CheckoutController: ObservableObject {
         if let address {
             taxRegion = address
         } else {
-            guard let country = session.paymentOption?.billingDetails?.address.country?.nonEmpty else {
+            guard let country = session.paymentOption?.billingDetails?.address?.country?.nonEmpty else {
                 return
             }
             // The Checkout Session update endpoint requires tax_region[country] and does not
@@ -263,12 +281,13 @@ public final class CheckoutController: ObservableObject {
         let shippingAddress = Session.ShippingAddress(name: name, address: address)
         guard session.shippingAddress != shippingAddress else { return }
         if session.shouldSendTaxRegion(for: "shipping") {
-            try await performUpdate(
-                .setTaxRegion(address),
-                shippingAddress: .newValue(shippingAddress)
-            )
+            try await performUpdate(.setTaxRegion(address)) {
+                $0.shippingAddress = shippingAddress
+            }
         } else {
-            try await performUpdate(shippingAddress: .newValue(shippingAddress))
+            try await performUpdate {
+                $0.shippingAddress = shippingAddress
+            }
         }
     }
 
@@ -279,13 +298,14 @@ public final class CheckoutController: ObservableObject {
             // support clearing tax_region, so keep the previous country.
             // TODO(porter) When migrating to the CheckoutClient API, stop sending country only and send nil
             let countryOnlyAddress = Address(country: shippingAddress.address.country)
-            try await performUpdate(
-                .setTaxRegion(countryOnlyAddress),
-                shippingAddress: .newValue(nil)
-            )
+            try await performUpdate(.setTaxRegion(countryOnlyAddress)) {
+                $0.shippingAddress = nil
+            }
         } else {
             // No server update is needed when shipping isn't the tax address source.
-            try await performUpdate(shippingAddress: .newValue(nil))
+            try await performUpdate {
+                $0.shippingAddress = nil
+            }
         }
     }
 
@@ -332,8 +352,10 @@ public final class CheckoutController: ObservableObject {
     }
 
     /// Returns the ExpressCheckoutElement for this CheckoutController instance.
-    public func getExpressCheckoutElement() -> ExpressCheckoutElement? {
-        return expressCheckoutElement
+    public func getExpressCheckoutElement() -> ExpressCheckoutElement {
+        assert(configuration.expressCheckoutElement != nil, "Set Configuration.expressCheckoutElement before calling getExpressCheckoutElement().")
+        stpAssert(expressCheckoutElement != nil, "ExpressCheckoutElement should be initialized when Configuration.expressCheckoutElement is set.")
+        return expressCheckoutElement!
     }
 
     /// Returns Currency Selector Element when it was configured and Adaptive
@@ -367,8 +389,7 @@ public final class CheckoutController: ObservableObject {
             return .failed(PaymentSheetError.integrationError(nonPIIDebugDescription: errorMessage))
         }
 
-        guard let paymentElement,
-              let flow = makeConfirmationFlow(
+        guard let flow = makeConfirmationFlow(
             for: paymentElement,
             presentingViewController: presentingViewController
         ) else {
@@ -395,6 +416,13 @@ public final class CheckoutController: ObservableObject {
 extension CheckoutController {
     func applyDefaults(shippingAddress: Session.ShippingAddress?) async throws {
         let defaults = configuration.defaults
+
+        if let email = defaults.email,
+           canSetLocalEmail() {
+            try await commitSession { localState in
+                localState.email = email
+            }
+        }
 
         if let billingDetails = defaults.billingDetails,
            let address = billingDetails.address {
@@ -424,18 +452,16 @@ extension CheckoutController {
     /// Existing local state is preserved unless explicitly replaced.
     func commitSession(
         _ apiResponse: PaymentPagesAPIResponse? = nil,
-        shippingAddress: SessionFieldUpdate<Session.ShippingAddress> = .keepOldValue,
-        paymentOption: SessionFieldUpdate<Session.PaymentOptionDisplayData> = .keepOldValue
+        mutateLocalState: LocalStateMutation = { _ in }
     ) async throws {
-        let newSession = apiResponse?.makePublicSession() ?? session
-        session = newSession.makeCopyOverriding(
-            shippingAddress: .newValue(
-                shippingAddress.resolved(currentValue: session.shippingAddress)
-            ),
-            paymentOption: .newValue(
-                paymentOption.resolved(currentValue: session.paymentOption)
-            )
-        )
+        var localState = session.localState
+        mutateLocalState(&localState)
+
+        if let apiResponse {
+            session = Session(apiResponse: apiResponse, localState: localState)
+        } else {
+            session.localState = localState
+        }
 
         // === Update Payment Element and all other asynchronously updated elements ==
         try await paymentElement?.update(checkout: self)
@@ -444,5 +470,15 @@ extension CheckoutController {
     /// - Warning: See `commitSession` for what this method *doesn't* do. That includes updating Checkout elements.
     func dangerouslySetSessionDirectly(_ session: Session) {
         self.session = session
+    }
+
+    private func canSetLocalEmail() -> Bool {
+        guard session.serverEmail == nil else {
+            assertionFailure(
+                "Email cannot be set locally when the Checkout Session was created with customer_email or a Customer with an email."
+            )
+            return false
+        }
+        return true
     }
 }

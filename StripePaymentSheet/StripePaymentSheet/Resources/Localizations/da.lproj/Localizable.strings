@@ -254,8 +254,6 @@
 
 "Point the camera at your card." = "Ret kameraet mod dit kort.";
 
-"Processing..." = "Behandler...";
-
 "Przelewy24 Bank" = "Przelewy24 Bank";
 
 "Remove %@" = "Fjern %@";
@@ -331,6 +329,10 @@
 "Tap to expand" = "Tryk for at udvide";
 
 "Tax" = "Moms";
+
+"Terms and Conditions" = "Vilkår";
+
+"Terms of Service" = "Tjenestevilkår";
 
 "The IBAN you entered is incomplete." = "Det indtastede IBAN-nummer er ufuldstændigt.";
 

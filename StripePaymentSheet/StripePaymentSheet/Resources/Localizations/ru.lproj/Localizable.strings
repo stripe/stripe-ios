@@ -254,8 +254,6 @@
 
 "Point the camera at your card." = "Направьте камеру телефона на карту.";
 
-"Processing..." = "Идет обработка...";
-
 "Przelewy24 Bank" = "Przelewy24 Bank";
 
 "Remove %@" = "Удалить %@";
@@ -331,6 +329,10 @@
 "Tap to expand" = "Коснитесь, чтобы развернуть";
 
 "Tax" = "Налог";
+
+"Terms and Conditions" = "Условия и положения";
+
+"Terms of Service" = "Условия обслуживания";
 
 "The IBAN you entered is incomplete." = "Введенный код IBAN неполон.";
 
