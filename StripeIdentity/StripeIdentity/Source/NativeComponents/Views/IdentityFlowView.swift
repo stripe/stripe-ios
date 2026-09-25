@@ -476,11 +476,32 @@ extension StripeUICore.Button {
             primaryButtonStyle: primaryButtonStyle,
             secondaryButtonStyle: secondaryButtonStyle
         )
+        let minimumHeight: CGFloat?
+        switch (viewModel.isPrimary, primaryButtonStyle, secondaryButtonStyle) {
+        case (true, .custom(_, _, let height), _), (false, _, .custom(_, _, let height)):
+            minimumHeight = height
+        default:
+            minimumHeight = nil
+        }
+        updateMinimumHeightConstraint(to: minimumHeight)
         if LiquidGlassDetector.isEnabledInMerchantApp {
             ios26_applyCapsuleCornerConfiguration()
         }
         self.isEnabled = viewModel.state == .enabled
         self.isLoading = viewModel.state == .loading
+    }
+
+    private func updateMinimumHeightConstraint(to minimumHeight: CGFloat?) {
+        let identifier = "IdentityFlowView.minimumButtonHeight"
+        constraints.first { $0.identifier == identifier }?.isActive = false
+
+        guard let minimumHeight else {
+            return
+        }
+
+        let constraint = heightAnchor.constraint(greaterThanOrEqualToConstant: minimumHeight)
+        constraint.identifier = identifier
+        constraint.isActive = true
     }
 }
 
@@ -496,7 +517,7 @@ extension Button.Configuration {
         var configuration: Button.Configuration = .primary()
         configuration.font = buttonFont
         configuration.disabledForegroundColor = .systemGray
-        if case let .custom(backgroundColor, textColor) = style {
+        if case let .custom(backgroundColor, textColor, _) = style {
             configuration.backgroundColor = backgroundColor
             configuration.foregroundColor = textColor
         }
@@ -507,7 +528,7 @@ extension Button.Configuration {
     static func identitySecondary(style: IdentityVerificationSheet.Configuration.SecondaryButtonStyle = .default) -> Self {
         var configuration: Button.Configuration = .secondary()
         configuration.font = buttonFont
-        if case let .custom(backgroundColor, textColor) = style {
+        if case let .custom(backgroundColor, textColor, _) = style {
             configuration.backgroundColor = backgroundColor
             configuration.foregroundColor = textColor
             configuration.disabledBackgroundColor = .secondarySystemFill
