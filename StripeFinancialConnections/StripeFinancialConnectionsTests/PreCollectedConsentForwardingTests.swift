@@ -81,7 +81,7 @@ final class PreCollectedConsentForwardingTests: XCTestCase {
             livemode: false,
             manualEntryMode: .automatic,
             manualEntryUsesMicrodeposits: false,
-            nextPane: .linkLogin,
+            nextPane: ParsedEnum(.linkLogin),
             paymentMethodType: nil,
             permissions: [],
             product: "external_api",

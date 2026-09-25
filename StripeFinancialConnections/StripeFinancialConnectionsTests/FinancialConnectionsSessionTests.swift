@@ -70,6 +70,27 @@ final class FinancialConnectionsSessionTests: XCTestCase {
         )
     }
 
+    func testSynchronizeParsesKnownNextPane() throws {
+        let synchronize = try makeSynchronize(nextPane: "consent")
+
+        XCTAssertEqual(synchronize.manifest.nextPane.value, .consent)
+        XCTAssertEqual(synchronize.manifest.nextPane.rawValue, "consent")
+    }
+
+    func testSynchronizePreservesUnknownNextPane() throws {
+        let synchronize = try makeSynchronize(nextPane: "future_pane")
+
+        XCTAssertNil(synchronize.manifest.nextPane.value)
+        XCTAssertEqual(synchronize.manifest.nextPane.rawValue, "future_pane")
+    }
+
+    func testSynchronizeParsesUnexpectedErrorNextPane() throws {
+        let synchronize = try makeSynchronize(nextPane: "unexpected_error")
+
+        XCTAssertEqual(synchronize.manifest.nextPane.value, .unexpectedError)
+        XCTAssertEqual(synchronize.manifest.nextPane.rawValue, "unexpected_error")
+    }
+
     func testSynchronizeParsesUnknownBrandAsUnparsable() throws {
         let synchronize = try makeSynchronize(brandValue: "random_brand")
 
@@ -106,11 +127,19 @@ final class FinancialConnectionsSessionTests: XCTestCase {
         XCTAssertTrue(manifest.appearance.colors.primary.isEqual(FinancialConnectionsAppearance.Colors.link.primary))
     }
 
-    private func makeSynchronize(brandValue: String?) throws -> FinancialConnectionsSynchronize {
+    private func makeSynchronize(
+        brandValue: String? = nil,
+        nextPane: String? = nil
+    ) throws -> FinancialConnectionsSynchronize {
         var payload = try JSONSerialization.jsonObject(with: FinancialConnectionsSynchronizeMock.synchronize.data()) as? [String: Any]
         var manifest = payload?["manifest"] as? [String: Any]
 
-        manifest?["link_brand"] = brandValue
+        if let brandValue {
+            manifest?["link_brand"] = brandValue
+        }
+        if let nextPane {
+            manifest?["next_pane"] = nextPane
+        }
         payload?["manifest"] = manifest
 
         let data = try JSONSerialization.data(withJSONObject: payload ?? [:])
@@ -174,7 +203,7 @@ final class FinancialConnectionsSessionTests: XCTestCase {
             livemode: false,
             manualEntryMode: .automatic,
             manualEntryUsesMicrodeposits: false,
-            nextPane: .consent,
+            nextPane: ParsedEnum(.consent),
             paymentMethodType: nil,
             permissions: [],
             product: "external_api",

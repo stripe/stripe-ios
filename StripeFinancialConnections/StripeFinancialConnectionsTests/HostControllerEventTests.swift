@@ -69,6 +69,45 @@ final class HostControllerEventTests: XCTestCase {
         }
     }
 
+    func testKnownInitialPaneLogsPaneLaunched() throws {
+        let synchronize = try makeSynchronize(nextPane: "consent")
+        let nativeController = makeNativeController(synchronize)
+
+        nativeController.startFlow()
+
+        let paneLaunchedEvents = mockAnalytics.loggedAnalyticPayloads(
+            withEventName: "linked_accounts.pane.launched"
+        )
+        XCTAssertEqual(paneLaunchedEvents.count, 1)
+        XCTAssertEqual(paneLaunchedEvents.first?["pane"] as? String, "consent")
+    }
+
+    func testUnknownInitialPaneLogsPaneNotFoundAndShowsTerminalError() throws {
+        let synchronize = try makeSynchronize(nextPane: "future_pane")
+        let nativeController = makeNativeController(synchronize)
+
+        nativeController.startFlow()
+
+        let paneNotFoundEvents = mockAnalytics.loggedAnalyticPayloads(
+            withEventName: "linked_accounts.error.pane_not_found"
+        )
+        XCTAssertEqual(paneNotFoundEvents.count, 1)
+        XCTAssertEqual(paneNotFoundEvents.first?["pane"] as? String, "future_pane")
+        XCTAssertTrue(hostController.navigationController.topViewController is TerminalErrorViewController)
+    }
+
+    func testUnexpectedErrorInitialPaneDoesNotLogPaneNotFound() throws {
+        let synchronize = try makeSynchronize(nextPane: "unexpected_error")
+        let nativeController = makeNativeController(synchronize)
+
+        nativeController.startFlow()
+
+        XCTAssertTrue(
+            mockAnalytics.loggedAnalyticPayloads(withEventName: "linked_accounts.error.pane_not_found").isEmpty
+        )
+        XCTAssertTrue(hostController.navigationController.topViewController is TerminalErrorViewController)
+    }
+
     func testServerErrorsKeepTheirCodeWithoutRecursiveEmissions() throws {
         // Given a synchronized session and a server-provided user-facing error
         let synchronize = try makeSynchronize()
@@ -117,13 +156,19 @@ final class HostControllerEventTests: XCTestCase {
         return controller
     }
 
-    private func makeSynchronize(id: String = "fcsess_canonical") throws -> FinancialConnectionsSynchronize {
+    private func makeSynchronize(
+        id: String = "fcsess_canonical",
+        nextPane: String? = nil
+    ) throws -> FinancialConnectionsSynchronize {
         var payload = try XCTUnwrap(
             JSONSerialization.jsonObject(with: FinancialConnectionsSynchronizeMock.synchronize.data()) as? [String: Any]
         )
         var manifest = try XCTUnwrap(payload["manifest"] as? [String: Any])
         manifest["id"] = id
         manifest["features"] = ["bank_connections_mobile_native_version_killswitch": true]
+        if let nextPane {
+            manifest["next_pane"] = nextPane
+        }
         payload["manifest"] = manifest
         return try StripeJSONDecoder().decode(
             FinancialConnectionsSynchronize.self,

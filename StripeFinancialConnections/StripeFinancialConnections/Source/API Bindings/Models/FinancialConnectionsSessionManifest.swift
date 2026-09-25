@@ -14,7 +14,7 @@ struct FinancialConnectionsSessionManifest: Decodable {
 
     // MARK: - Types
 
-    enum NextPane: String, SafeEnumCodable, Equatable {
+    enum NextPane: String, SafeEnumCodable, SafeParsedEnumCodable, Equatable {
         case accountPicker = "account_picker"
         case attachLinkedPaymentAccount = "attach_linked_payment_account"
         case authOptions = "auth_options"
@@ -37,6 +37,7 @@ struct FinancialConnectionsSessionManifest: Decodable {
         case unparsable
 
         // client-side only panes
+        case unknown = "unknown"
         case genericError = "generic_error"
         case resetFlow = "reset_flow"
         case terminalError = "terminal_error"
@@ -105,7 +106,7 @@ struct FinancialConnectionsSessionManifest: Decodable {
     let livemode: Bool
     let manualEntryMode: ManualEntryMode
     let manualEntryUsesMicrodeposits: Bool
-    let nextPane: NextPane
+    let nextPane: ParsedEnum<NextPane>
     let paymentMethodType: FinancialConnectionsPaymentMethodType?
     let permissions: [StripeAPI.FinancialConnectionsAccount.Permissions]
     let product: String

@@ -263,7 +263,7 @@ private struct NetowrkingOTPViewRepresentable: UIViewRepresentable {
                 livemode: true,
                 manualEntryMode: .automatic,
                 manualEntryUsesMicrodeposits: false,
-                nextPane: .success,
+                nextPane: ParsedEnum(.success),
                 paymentMethodType: nil,
                 permissions: [],
                 product: "product",

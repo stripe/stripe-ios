@@ -69,17 +69,19 @@ class NativeFlowController {
 
     func startFlow() {
         assert(navigationController.analyticsClient != nil)
-        let pane = dataManager.manifest.nextPane
+        let nextPane = dataManager.manifest.nextPane
+        let pane = nextPane.value ?? .unknown
         guard
             let viewController = CreatePaneViewController(
                 pane: pane,
+                rawPane: nextPane.rawValue,
                 nativeFlowController: self,
                 dataManager: dataManager
             )
         else {
-            assertionFailure(
-                "We should always get a view controller for the first pane: \(dataManager.manifest.nextPane)"
-            )
+            if pane != .unknown && pane != .unexpectedError {
+                assertionFailure("We should always get a view controller for the first pane: \(nextPane.rawValue)")
+            }
             showTerminalError()
             return
         }
@@ -173,7 +175,25 @@ extension NativeFlowController {
     }
 
     private func pushPane(
+        _ pane: ParsedEnum<FinancialConnectionsSessionManifest.NextPane>,
+        parameters: CreatePaneParameters? = nil,
+        animated: Bool,
+        clearNavigationStack: Bool = false,
+        removeCurrent: Bool = false
+    ) {
+        pushPane(
+            pane.value ?? .unknown,
+            rawPane: pane.rawValue,
+            parameters: parameters,
+            animated: animated,
+            clearNavigationStack: clearNavigationStack,
+            removeCurrent: removeCurrent
+        )
+    }
+
+    private func pushPane(
         _ pane: FinancialConnectionsSessionManifest.NextPane,
+        rawPane: String? = nil,
         parameters: CreatePaneParameters? = nil,
         animated: Bool,
         // useful for cases where we want to prevent the user from navigating back
@@ -192,6 +212,7 @@ extension NativeFlowController {
         } else {
             let paneViewController = CreatePaneViewController(
                 pane: pane,
+                rawPane: rawPane,
                 parameters: parameters,
                 nativeFlowController: self,
                 dataManager: dataManager
@@ -764,7 +785,7 @@ extension NativeFlowController: ConsentViewControllerDelegate {
 
         let nextPane = result.nextPane
         if nextPane == .networkingLinkLoginWarmup {
-            presentPaneAsSheet(nextPane)
+            presentPaneAsSheet(.networkingLinkLoginWarmup)
         } else {
             pushPane(nextPane, animated: true)
         }
@@ -828,7 +849,7 @@ extension NativeFlowController: IDConsentContentViewControllerDelegate {
 
         let nextPane = manifest.nextPane
         if nextPane == .networkingLinkLoginWarmup {
-            presentPaneAsSheet(nextPane)
+            presentPaneAsSheet(.networkingLinkLoginWarmup)
         } else {
             pushPane(nextPane, animated: true)
         }
@@ -1476,6 +1497,7 @@ extension NativeFlowController: GenericErrorViewControllerDelegate {
 
 private func CreatePaneViewController(
     pane: FinancialConnectionsSessionManifest.NextPane,
+    rawPane: String? = nil,
     parameters: CreatePaneParameters? = nil,
     nativeFlowController: NativeFlowController,
     dataManager: NativeFlowDataManager,
@@ -1793,6 +1815,8 @@ private func CreatePaneViewController(
         viewController = networkingLinkWarmupViewController
 
     // client-side only panes below
+    case .unknown:
+        viewController = nil
     case .resetFlow:
         let resetFlowDataSource = ResetFlowDataSourceImplementation(
             apiClient: dataManager.apiClient,
@@ -1848,16 +1872,8 @@ private func CreatePaneViewController(
                 pane: pane
             )
         dataManager.lastPaneLaunched = pane
-    } else {
-        dataManager
-            .analyticsClient
-            .logUnexpectedError(
-                FinancialConnectionsSheetError.unknown(
-                    debugDescription: "Pane Not Found: either app state is invalid, or an unsupported pane was requested."
-                ),
-                errorName: "PaneNotFound",
-                pane: pane
-            )
+    } else if pane == .unknown {
+        dataManager.analyticsClient.logPaneNotFound(rawPane: rawPane ?? pane.rawValue)
     }
 
     // Applies the style configuration to each view controller.

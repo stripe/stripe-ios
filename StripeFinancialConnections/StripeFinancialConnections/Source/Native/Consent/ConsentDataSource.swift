@@ -27,9 +27,9 @@ struct ConsentAcquiredResult {
     var consumerSession: ConsumerSessionData?
     var consumerPublishableKey: String?
 
-    var nextPane: FinancialConnectionsSessionManifest.NextPane {
+    var nextPane: ParsedEnum<FinancialConnectionsSessionManifest.NextPane> {
         // If we have a consumer session, then provide the returning-user experience
-        consumerSession != nil ? .networkingLinkLoginWarmup : manifest.nextPane
+        consumerSession != nil ? ParsedEnum(.networkingLinkLoginWarmup) : manifest.nextPane
     }
 }
 

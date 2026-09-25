@@ -5,6 +5,7 @@
 //  Created by Mat Schmid on 2024-07-24.
 //
 
+@_spi(STP) import StripeCore
 @_spi(STP) import StripeCoreTestUtils
 @testable import StripeFinancialConnections
 import XCTest
@@ -192,7 +193,7 @@ class FlowRouterTests: XCTestCase {
                 livemode: false,
                 manualEntryMode: .automatic,
                 manualEntryUsesMicrodeposits: false,
-                nextPane: .consent,
+                nextPane: ParsedEnum(.consent),
                 paymentMethodType: nil,
                 permissions: [],
                 product: experience == .instantDebits ? "instant_debits" : "connections",

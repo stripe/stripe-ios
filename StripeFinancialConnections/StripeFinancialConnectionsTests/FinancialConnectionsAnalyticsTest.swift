@@ -8,9 +8,28 @@
 import XCTest
 
 @_spi(STP) import StripeCore
+@_spi(STP) import StripeCoreTestUtils
 @testable @_spi(STP) import StripeFinancialConnections
 
 final class FinancialConnectionsSheetAnalyticsTest: XCTestCase {
+
+    func testPaneNotFoundAnalyticUsesRawPane() throws {
+        let mockAnalytics = MockAnalyticsClientV2()
+        let analyticsClient = FinancialConnectionsAnalyticsClient(analyticsClient: mockAnalytics)
+
+        analyticsClient.logPaneNotFound(rawPane: "future_pane")
+
+        let payload = try XCTUnwrap(
+            mockAnalytics.loggedAnalyticPayloads(withEventName: "linked_accounts.error.pane_not_found").first
+        )
+        XCTAssertEqual(payload["pane"] as? String, "future_pane")
+        XCTAssertEqual(payload["error"] as? String, "PaneNotFound")
+        XCTAssertEqual(payload["error_type"] as? String, "PaneNotFound")
+        XCTAssertEqual(
+            payload["error_message"] as? String,
+            "Pane not found: an unsupported pane was requested."
+        )
+    }
 
     func testFinancialConnectionsSheetFailedAnalyticEncoding() {
         let analytic = FinancialConnectionsSheetFailedAnalytic(

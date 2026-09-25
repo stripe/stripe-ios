@@ -38,13 +38,21 @@ final class FinancialConnectionsAnalyticsClient {
         parameters: [String: Any] = [:],
         pane: FinancialConnectionsSessionManifest.NextPane
     ) {
+        log(eventName: eventName, parameters: parameters, pane: pane.rawValue)
+    }
+
+    private func log(
+        eventName: String,
+        parameters: [String: Any],
+        pane: String
+    ) {
         let eventName = "linked_accounts.\(eventName)"
 
         var parameters = parameters
         // !!! BE CAREFUL MODIFYING "PANE" ANALYTICS CODE
         // ITS CRITICAL FOR PANE CONVERSION !!!
         assert(parameters["pane"] == nil, "Unexpected logic: will override 'pane' parameter.")
-        parameters["pane"] = pane.rawValue
+        parameters["pane"] = pane
         parameters = parameters.merging(
             additionalParameters,
             uniquingKeysWith: { eventParameter, _ in
@@ -109,6 +117,18 @@ extension FinancialConnectionsAnalyticsClient {
 
     func logPaneLoaded(pane: FinancialConnectionsSessionManifest.NextPane) {
         log(eventName: "pane.loaded", pane: pane)
+    }
+
+    func logPaneNotFound(rawPane: String) {
+        log(
+            eventName: "error.pane_not_found",
+            parameters: [
+                "error": "PaneNotFound",
+                "error_type": "PaneNotFound",
+                "error_message": "Pane not found: an unsupported pane was requested.",
+            ],
+            pane: rawPane
+        )
     }
 
     func logExpectedError(
