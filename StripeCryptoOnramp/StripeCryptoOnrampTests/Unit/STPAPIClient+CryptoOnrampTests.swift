@@ -1666,6 +1666,38 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         }
     }
 
+    func testGetPlatformSettingsOmitsCryptoCustomerIdWhenNotProvided() async throws {
+        // Given a stub asserting no crypto customer ID is sent
+        let mockResponseData = try jsonEncoder.encode(Constant.validPlatformSettingsResponseObject)
+
+        stub { request in
+            XCTAssertEqual(request.url?.path, Constant.getPlatformSettingsAPIPath)
+
+            guard let queryParametersString = request.url?.query else {
+                XCTFail("Expected query parameters but found none.")
+                return false
+            }
+
+            let parameters = queryParametersString.parsedHTTPParametersDictionary
+
+            XCTAssertEqual(parameters.count, 1)
+            XCTAssertNil(parameters["crypto_customer_id"])
+            XCTAssertEqual(parameters["ui_mode"], "headless")
+
+            return true
+        } response: { _ in
+            return HTTPStubsResponse(data: mockResponseData, statusCode: 200, headers: nil)
+        }
+
+        let apiClient = stubbedAPIClient()
+
+        // When retrieving platform settings without a crypto customer ID
+        let response = try await apiClient.getPlatformSettings(cryptoCustomerId: nil)
+
+        // Then the platform publishable key is returned
+        XCTAssertEqual(response.publishableKey, Constant.validPublishableKey)
+    }
+
     func testGetPlatformSettingsFailure() async throws {
         stub { request in
             XCTAssertEqual(request.url?.path, Constant.getPlatformSettingsAPIPath)

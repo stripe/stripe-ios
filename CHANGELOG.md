@@ -2,6 +2,9 @@ The next release's version bump will so far be:
 PATCH
 
 ## X.Y.Z - changes pending release
+### CryptoOnramp (Alpha)
+* [Changed] Apple Pay can now be presented via `CryptoOnrampCoordinator.collectPaymentMethod(type:from:)` before the user authenticates with Link. `createCryptoPaymentToken()` still requires an authenticated user.
+
 ### Financial Connections
 * [Fixed] Preserved `no_eligible_accounts` in `onEvent` error callbacks instead of reporting it as `unexpected_error`.
 * [Fixed] Recorded native `onEvent` emissions with the session context for diagnostics.
