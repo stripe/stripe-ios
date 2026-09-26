@@ -7,11 +7,18 @@ import XCTest
 
 final class CheckoutElementsUITests: PaymentSheetUITestCase {
     func testElementsStaySynchronizedWithCheckoutSession() throws {
-        // Given a Checkout Session
+        // Given a Checkout Session with Customer.email simulating a customer in Germany
         app.launchEnvironment["STP_CHECKOUT_ELEMENTS"] = "true"
         app.launch()
 
         app.buttons["Reset"].waitForExistenceAndTap()
+        app.buttons["checkout_picker_Customer"].waitForExistenceAndTap()
+        app.buttons["New"].waitForExistenceAndTap()
+        let scrollStart = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
+        let scrollEnd = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.25))
+        scrollStart.press(forDuration: 0.1, thenDragTo: scrollEnd)
+        XCTAssertTrue(app.buttons["checkout_picker_Email source"].waitForExistenceAndTap())
+        XCTAssertTrue(app.buttons["Server — Customer"].waitForExistenceAndTap())
         app.buttons["No Override"].scrollToAndTap(in: app)
         app.buttons["Germany (DE)"].waitForExistenceAndTap()
         app.buttons["Create Checkout Session"].waitForExistenceAndTap()
@@ -33,6 +40,11 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
         XCTAssertTrue(subtotalAmount.label.contains("€"))
         XCTAssertEqual(totalAmount.label, subtotalAmount.label)
         XCTAssertTrue(buyButton.label.contains(totalAmount.label))
+        let applePayButton = app.buttons.matching(
+            NSPredicate(format: "label BEGINSWITH %@", "Buy with Apple")
+        ).firstMatch
+        XCTAssertTrue(applePayButton.waitForExistence(timeout: 10))
+        XCTAssertTrue(app.buttons["Pay with Link"].exists)
         XCTAssertTrue(app.buttons["Select payment method"].exists)
 
         // When the customer selects the integration currency in Currency Selector Element
@@ -57,8 +69,6 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
         waitForExpectations(timeout: 10)
 
         // When the customer saves an address in Shipping Address Element
-        let scrollStart = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
-        let scrollEnd = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.25))
         scrollStart.press(forDuration: 0.1, thenDragTo: scrollEnd)
         app.buttons["Add shipping address"].scrollToAndTap(in: app)
         fillShippingAddress()
@@ -101,6 +111,47 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
         buyButton.scrollToAndTap(in: app)
 
         XCTAssertTrue(app.alerts["Success"].waitForExistence(timeout: 20))
+    }
+
+    func testExpressCheckoutElementApplePayCompletesCheckout() {
+        // Given an ECE-only Checkout Session without address-dependent tax in the normal hosted playground
+        app.launchEnvironment["STP_CHECKOUT_ELEMENTS"] = "true"
+        app.launch()
+
+        app.buttons["Reset"].waitForExistenceAndTap()
+        let paymentElementPicker = app.buttons.matching(
+            NSPredicate(format: "label BEGINSWITH %@", "PaymentElement")
+        ).firstMatch
+        XCTAssertTrue(paymentElementPicker.waitForExistenceAndTap())
+        XCTAssertTrue(app.buttons["ece only"].waitForExistenceAndTap())
+
+        // ECE Apple Pay does not yet request a shipping postal address. Enabling shipping-sourced
+        // automatic tax causes confirmation to fail with `customer_tax_location_invalid` until
+        // CheckoutApplePayContext implements shipping contact collection.
+        let collectShippingAddress = app.switches["Collect Shipping Address"]
+        XCTAssertTrue(collectShippingAddress.waitForExistence(timeout: 4))
+        collectShippingAddress.scrollToAndTap(in: app)
+        let automaticTax = app.switches["Automatic Tax"]
+        XCTAssertTrue(automaticTax.waitForExistence(timeout: 4))
+        automaticTax.scrollToAndTap(in: app)
+        app.buttons["Create Checkout Session"].waitForExistenceAndTap()
+
+        XCTAssertTrue(app.navigationBars["Your Cart"].waitForExistence(timeout: 15))
+        let applePayButton = app.buttons.matching(
+            NSPredicate(format: "label BEGINSWITH %@", "Buy with Apple")
+        ).firstMatch
+        XCTAssertTrue(applePayButton.waitForExistence(timeout: 10))
+        XCTAssertFalse(app.buttons["Select payment method"].exists)
+        let buyButton = app.buttons.matching(
+            NSPredicate(format: "label BEGINSWITH %@", "Buy ·")
+        ).firstMatch
+        XCTAssertFalse(buyButton.exists)
+
+        // When the customer confirms with Apple Pay from Express Checkout Element
+        applePayButton.tap()
+
+        // Then Checkout completes using the wallet confirmation flow
+        payWithApplePay(successElement: app.alerts["Success"])
     }
 
     private func fillShippingAddress() {

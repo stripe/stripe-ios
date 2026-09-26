@@ -330,6 +330,10 @@
 
 "Tax" = "Налог";
 
+"Terms and Conditions" = "Условия и положения";
+
+"Terms of Service" = "Условия обслуживания";
+
 "The IBAN you entered is incomplete." = "Введенный код IBAN неполон.";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Введенный вами номер IBAN недействителен, «%@» не является поддерживаемым кодом страны.";

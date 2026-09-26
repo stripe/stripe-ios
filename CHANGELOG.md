@@ -1,12 +1,20 @@
 The next release's version bump will so far be:
-MINOR
+PATCH
 
 ## X.Y.Z - changes pending release
 ### CryptoOnramp (Alpha)
-* [Removed] Removed public exposure of `StripeCryptoOnramp.Image`, including `Image.linkIconSquare`.
-* [Added] Added `CryptoOnrampCoordinator.presentTermsAndConditionsIfNeeded(from:)` and `presentTermsOfServiceIfNeeded(from:)` to present and record acceptance of current partner terms when required. Both methods return `PartnerTermsResult`.
 * [Changed] Apple Pay can now be presented via `CryptoOnrampCoordinator.collectPaymentMethod(type:from:)` before the user authenticates with Link. `createCryptoPaymentToken()` still requires an authenticated user.
 * [Added] Added an optional `countryHint` parameter to `CryptoOnrampCoordinator.create(...)`, used to help select a merchant of record for a customer who does not yet have an established KYC region.
+
+### Financial Connections
+* [Fixed] Preserved `no_eligible_accounts` in `onEvent` error callbacks instead of reporting it as `unexpected_error`.
+* [Fixed] Recorded native `onEvent` emissions with the session context for diagnostics.
+
+## 26.12.0 2026-09-21
+### CryptoOnramp (Alpha)
+* [Removed] Removed public exposure of `StripeCryptoOnramp.Image`, including `Image.linkIconSquare`.
+* [Added] Added `CryptoOnrampCoordinator.presentTermsAndConditionsIfNeeded(from:)` and `presentTermsOfServiceIfNeeded(from:)` to present and record acceptance of current partner terms when required. Both methods return `PartnerTermsResult`.
+* [Fixed] Preserved PaymentIntent error codes, decline codes, and types in checkout errors after authentication.
 
 ### StripeCore
 * [Added] Added `additionalHeaders` support to the `STPAPIClient` GET, POST, and DELETE APIs exposed through the `STP` SPI.
@@ -23,6 +31,7 @@ MINOR
 
 ### PaymentSheet
 * [Added] Added support for Scalapay.
+* [Added] Added support for Card program name for saved payment methods when using CustomerSessions
 
 ## 26.10.0 2026-09-08
 ### General

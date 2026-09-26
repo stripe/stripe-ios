@@ -234,7 +234,8 @@ extension FinancialConnectionsAsyncAPIClient {
     func synchronize(
         clientSecret: String,
         returnURL: String?,
-        initialSynchronize: Bool = false
+        initialSynchronize: Bool = false,
+        preCollectedConsent: FinancialConnectionsPreCollectedConsent? = nil
     ) async throws -> FinancialConnectionsSynchronize {
         var parameters: [String: Any] = [
             "expand": ["manifest.active_auth_session"],
@@ -259,6 +260,14 @@ extension FinancialConnectionsAsyncAPIClient {
         }
 
         parameters["mobile"] = mobileParameters
+
+        if let preCollectedConsent {
+            parameters["pre_collected_consent"] = [
+                "consent": preCollectedConsent.consent,
+                "collected_at": preCollectedConsent.collectedAt,
+            ]
+        }
+
         return try await post(endpoint: .synchronize, parameters: parameters)
     }
 

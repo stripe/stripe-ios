@@ -24,6 +24,7 @@ public class FinancialConnectionsSDKImplementation: FinancialConnectionsSDKInter
         hasRequestedDataPermissions: Bool,
         style: FinancialConnectionsStyle,
         elementsSessionContext: ElementsSessionContext?,
+        preCollectedConsent: FinancialConnectionsPreCollectedConsent?,
         linkBrand: LinkBrand?,
         onEvent: ((StripeCore.FinancialConnectionsEvent) -> Void)?,
         from presentingViewController: UIViewController,
@@ -46,6 +47,7 @@ public class FinancialConnectionsSDKImplementation: FinancialConnectionsSDKInter
         financialConnectionsSheet.existingConsumer = existingConsumer
         financialConnectionsSheet.hasRequestedDataPermissions = hasRequestedDataPermissions
         financialConnectionsSheet.elementsSessionContext = elementsSessionContext
+        financialConnectionsSheet.preCollectedConsent = preCollectedConsent
         financialConnectionsSheet.onEvent = onEvent
 
         // Captures self explicitly until the callback is invoked
