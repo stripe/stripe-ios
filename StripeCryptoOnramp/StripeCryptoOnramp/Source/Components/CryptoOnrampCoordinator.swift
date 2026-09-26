@@ -217,20 +217,53 @@ protocol CryptoOnrampCoordinatorProtocol {
     func logOut() async throws
 }
 
-/// Actor to manage crypto customer state in a thread-safe manner
-private actor CryptoCustomerState {
-    private var _customerId: String?
+/// Manages the customer ID and its associated platform API client together.
+actor CryptoOnrampState {
+    private var customerId: String?
+    private var platformApiClient: (client: STPAPIClient, customerId: String?)?
 
     init(_ initialCustomerId: String?) {
-        _customerId = initialCustomerId
+        customerId = initialCustomerId
     }
 
-    func setCustomerId(_ id: String) {
-        _customerId = id
+    func setCustomerId(_ id: String?) {
+        customerId = id
     }
 
     func getCustomerId() -> String? {
-        return _customerId
+        return customerId
+    }
+
+    private func cachedPlatformApiClient() -> STPAPIClient? {
+        guard let cached = platformApiClient, cached.customerId == customerId else {
+            return nil
+        }
+        return cached.client
+    }
+
+    func getPlatformApiClient(
+        create: (String?) async throws -> STPAPIClient
+    ) async throws -> STPAPIClient {
+        while true {
+            try Task.checkCancellation()
+            if let cached = cachedPlatformApiClient() {
+                return cached
+            }
+
+            let requestedCustomerId = customerId
+            let client = try await create(requestedCustomerId)
+
+            // Customer state can change while the request is suspended.
+            guard requestedCustomerId == customerId else {
+                continue
+            }
+            // Another request may already have populated the cache for this customer.
+            if let cached = cachedPlatformApiClient() {
+                return cached
+            }
+            platformApiClient = (client, requestedCustomerId)
+            return client
+        }
     }
 }
 
@@ -253,10 +286,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
     /// attempt starts, completes, or the user logs out.
     private var pendingApplePayPaymentSource: SelectedPaymentSource?
     private var selectedPaymentSource: SelectedPaymentSource?
-    private let cryptoCustomerState: CryptoCustomerState
-
-    /// Dedicated API client configured with the platform publishable key
-    private var platformApiClient: STPAPIClient?
+    private let cryptoCustomerState: CryptoOnrampState
 
     private var linkAccountInfo: PaymentSheetLinkAccountInfoProtocol {
         get async throws {
@@ -285,7 +315,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
         self.appearance = appearance
         self.analyticsClient = analyticsClient
         self.additionalSDKVersions = additionalSDKVersions
-        self.cryptoCustomerState = CryptoCustomerState(cryptoCustomerID)
+        self.cryptoCustomerState = CryptoOnrampState(cryptoCustomerID)
         super.init()
     }
 
@@ -838,6 +868,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
         do {
             pendingApplePayPaymentSource = nil
             selectedPaymentSource = nil
+            await cryptoCustomerState.setCustomerId(nil)
             try await linkController.logOut()
             analyticsClient.log(.userLoggedOut)
         } catch {
@@ -1004,22 +1035,15 @@ private extension CryptoOnrampCoordinator {
         }
     }
 
-    /// Returns a dedicated API client configured with the platform publishable key.
-    /// Caches the API client after first creation to avoid repeated API calls.
+    /// Returns a platform API client cached for the current customer ID.
     private func getPlatformApiClient() async throws -> STPAPIClient {
-        if let platformApiClient {
-            return platformApiClient
+        try await cryptoCustomerState.getPlatformApiClient { [apiClient] cryptoCustomerId in
+            guard let cryptoCustomerId else {
+                throw Error.missingCryptoCustomerID
+            }
+            let platformSettings = try await apiClient.getPlatformSettings(cryptoCustomerId: cryptoCustomerId)
+            return STPAPIClient(publishableKey: platformSettings.publishableKey)
         }
-
-        guard let cryptoCustomerId = await cryptoCustomerState.getCustomerId() else {
-            throw Error.missingCryptoCustomerID
-        }
-
-        // Fetch platform settings and create API client
-        let platformSettings = try await apiClient.getPlatformSettings(cryptoCustomerId: cryptoCustomerId)
-        let newPlatformApiClient = STPAPIClient(publishableKey: platformSettings.publishableKey)
-        platformApiClient = newPlatformApiClient
-        return newPlatformApiClient
     }
 
     /// Performs checkout and retrieves the resulting PaymentIntent.
