@@ -4,6 +4,8 @@ MINOR
 ## X.Y.Z - changes pending release
 ### CryptoOnramp (Alpha)
 * [Added] Added optional `email` and `phone` fields to `KycInfo`, populated from Apple Pay billing or shipping contact information when requested. Both values are for prefill only and `phone` is not normalized to E.164. Names fall back to shipping contact values when billing values are missing or blank. Creating `KycInfo` from an Apple Pay payment still requires a usable name or billing address; email or phone alone is insufficient.
+* [Changed] Apple Pay can now be presented via `CryptoOnrampCoordinator.collectPaymentMethod(type:from:)` before the user authenticates with Link. `createCryptoPaymentToken()` still requires an authenticated user.
+* [Added] Added an optional `countryHint` parameter to `CryptoOnrampCoordinator.create(...)`, used to help select a merchant of record for a customer who does not yet have an established KYC region.
 
 ### Financial Connections
 * [Fixed] Preserved `no_eligible_accounts` in `onEvent` error callbacks instead of reporting it as `unexpected_error`.

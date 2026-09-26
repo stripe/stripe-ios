@@ -409,33 +409,50 @@ extension STPAPIClient {
     /// - Parameters:
     ///   - paymentMethodId: The originating payment method ID.
     ///   - cryptoCustomerId: The crypto customer ID.
+    ///   - countryHint: An optional two-letter country code (ISO 3166-1 alpha-2) used to help select a merchant of
+    ///   record when the customer does not yet have an established KYC region.
     /// - Returns: The created crypto payment token.
     /// Throws if an API error occurs.
     func createPaymentToken(
         for paymentMethodId: String,
-        cryptoCustomerId: String
+        cryptoCustomerId: String,
+        countryHint: String? = nil
     ) async throws -> CreatePaymentTokenResponse {
         let endpoint = "crypto/internal/payment_token"
         let requestObject = CreatePaymentTokenRequest(
             paymentMethod: paymentMethodId,
-            cryptoCustomerId: cryptoCustomerId
+            cryptoCustomerId: cryptoCustomerId,
+            countryHint: countryHint
         )
         return try await post(resource: endpoint, object: requestObject)
     }
 
     /// Retrieves platform settings for the crypto onramp service.
-    /// - Parameter cryptoCustomerId: The ID for the crypto customer.
+    /// - Parameters:
+    ///   - cryptoCustomerId: The ID for the crypto customer, if one is available. When `nil`, platform settings are
+    ///   resolved using the publishable key alone, which allows resolving a platform API client before authentication.
+    ///   - countryHint: An optional two-letter country code (ISO 3166-1 alpha-2) used to help select a merchant of
+    ///   record when the customer does not yet have an established KYC region.
     /// - Returns: Platform settings including the publishable key.
     /// Throws if an API error occurs.
     func getPlatformSettings(
-        cryptoCustomerId: String
+        cryptoCustomerId: String?,
+        countryHint: String? = nil
     ) async throws -> PlatformSettingsResponse {
         let endpoint = "crypto/internal/platform_settings"
 
-        let parameters: [String: Any] = [
-            "crypto_customer_id": cryptoCustomerId,
+        var parameters: [String: Any] = [
             "ui_mode": "headless",
         ]
+
+        if let cryptoCustomerId {
+            parameters["crypto_customer_id"] = cryptoCustomerId
+        }
+
+        if let countryHint {
+            parameters["country_hint"] = countryHint
+        }
+
         return try await get(resource: endpoint, parameters: parameters)
     }
 
