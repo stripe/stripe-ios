@@ -72,7 +72,10 @@ class TestModeAutofillBannerView: UIView {
     private lazy var autofillDataButton: UIButton = {
         let button = UIButton()
         button.setTitle(context.buttonLabel, for: .normal)
-        button.setTitleColor(appearance.colors.textAction, for: .normal)
+        let buttonTitleColor: UIColor = appearance.colors == .link
+            ? FinancialConnectionsAppearance.Colors.textDefault
+            : appearance.colors.textAction
+        button.setTitleColor(buttonTitleColor, for: .normal)
         button.titleLabel?.textAlignment = .right
         button.titleLabel?.font = FinancialConnectionsFont.label(.mediumEmphasized).uiFont
         button.titleLabel?.numberOfLines = 0
