@@ -4,6 +4,10 @@ MINOR
 ## X.Y.Z - changes pending release
 ### PaymentSheet
 * [Fixed] Fixed a potential crash when using certain card brands in PaymentSheet.
+* [Fixed] Fixed Apple Pay failing to open for fractional amounts in COP, HUF, IDR, LAK, LBP, PKR, and RSD.
+
+### Payments
+* [Fixed] Amounts in LBP are now displayed correctly.
 
 ### CryptoOnramp (Alpha)
 * [Added] Added `STPAPIClient.CryptoOnrampAPIError.missingLinkSessionKey` to report when a Link session key is unavailable.
