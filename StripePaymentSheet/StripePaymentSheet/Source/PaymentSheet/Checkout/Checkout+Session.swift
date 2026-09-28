@@ -123,10 +123,7 @@ extension CheckoutController.Session {
             from: apiResponse.recurringDetails?.totalDiscountAmounts ?? [],
             currency: apiResponse.currency
         )
-        // TODO: Have Payment Pages return session-level tax amounts directly. `recurring_details`
-        // is an odd source for one-time-price modeless Checkout, and clients shouldn't need to
-        // derive this aggregate from recurring-specific response models.
-        let publicTaxAmounts = apiResponse.recurringDetails?.totalTaxAmounts.map {
+        let publicTaxAmounts = apiResponse.totalSummary?.totalTaxAmounts?.map {
             PaymentPagesAPIResponse.makeSessionTaxAmount(
                 from: $0,
                 currency: apiResponse.currency,
