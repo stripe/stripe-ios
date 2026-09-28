@@ -9,15 +9,6 @@ import Combine
 import SwiftUI
 
 extension CheckoutPlayground {
-    struct ExpressCheckoutElementSettings {
-        var isEnabled = true
-        var applePayDisplay: ExpressCheckoutElement.ApplePayConfiguration.Display = .automatic
-        var applePayButtonType: ApplePayButtonType = .plain
-        var linkDisplay: ExpressCheckoutElement.LinkConfiguration.Display = .automatic
-        var shippingAddressRequired: Bool = false
-        var appearance: ExpressCheckoutElement.Appearance = .init()
-    }
-
     @MainActor
     final class ViewModel: ObservableObject {
 
@@ -79,7 +70,7 @@ extension CheckoutPlayground {
             let settings = Self.settingsFromDefaults() ?? Settings()
             uiFramework = settings.uiFramework
             integrationType = settings.integrationType
-            expressCheckoutElement = Self.expressCheckoutElementSettings(from: settings)
+            expressCheckoutElement = settings.expressCheckoutElement
             linkMode = settings.linkMode
             currency = settings.currency
             customerType = settings.customerType
@@ -157,25 +148,6 @@ extension CheckoutPlayground {
             return .init(source: settings.adaptivePricingCountry == .none ? .none : .customer)
         }
 
-        private static func expressCheckoutElementSettings(from settings: Settings) -> ExpressCheckoutElementSettings {
-            var appearance = ExpressCheckoutElement.Appearance()
-            appearance.buttonTheme = settings.expressCheckoutElementButtonTheme
-                .flatMap(ExpressCheckoutElement.Appearance.ButtonTheme.init(rawValue:)) ?? .automatic
-            appearance.buttonLayout.maxColumns = settings.expressCheckoutElementMaxColumns
-            appearance.buttonLayout.maxRows = settings.expressCheckoutElementMaxRows
-
-            return ExpressCheckoutElementSettings(
-                isEnabled: settings.showExpressCheckoutElement,
-                applePayDisplay: settings.expressCheckoutElementApplePayDisplay
-                    .flatMap(ExpressCheckoutElement.ApplePayConfiguration.Display.init(rawValue:)) ?? .automatic,
-                applePayButtonType: settings.expressCheckoutElementApplePayButtonType ?? .plain,
-                linkDisplay: settings.expressCheckoutElementLinkDisplay
-                    .flatMap(ExpressCheckoutElement.LinkConfiguration.Display.init(rawValue:)) ?? .automatic,
-                shippingAddressRequired: settings.expressCheckoutElementShippingAddressRequired ?? false,
-                appearance: appearance
-            )
-        }
-
         var lineItems: [LineItemConfig] {
             cartScenario.lineItems
         }
@@ -243,14 +215,7 @@ extension CheckoutPlayground {
             Settings(
                 uiFramework: uiFramework,
                 integrationType: integrationType,
-                showExpressCheckoutElement: expressCheckoutElement.isEnabled,
-                expressCheckoutElementApplePayDisplay: expressCheckoutElement.applePayDisplay.rawValue,
-                expressCheckoutElementApplePayButtonType: expressCheckoutElement.applePayButtonType,
-                expressCheckoutElementLinkDisplay: expressCheckoutElement.linkDisplay.rawValue,
-                expressCheckoutElementShippingAddressRequired: expressCheckoutElement.shippingAddressRequired,
-                expressCheckoutElementButtonTheme: expressCheckoutElement.appearance.buttonTheme.rawValue,
-                expressCheckoutElementMaxColumns: expressCheckoutElement.appearance.buttonLayout.maxColumns,
-                expressCheckoutElementMaxRows: expressCheckoutElement.appearance.buttonLayout.maxRows,
+                expressCheckoutElement: expressCheckoutElement,
                 linkMode: linkMode,
                 currency: currency,
                 customerType: customerType,
@@ -276,7 +241,7 @@ extension CheckoutPlayground {
         private func apply(_ settings: Settings) {
             uiFramework = settings.uiFramework
             integrationType = settings.integrationType
-            expressCheckoutElement = Self.expressCheckoutElementSettings(from: settings)
+            expressCheckoutElement = settings.expressCheckoutElement
             linkMode = settings.linkMode
             currency = settings.currency
             customerType = settings.customerType

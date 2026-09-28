@@ -387,18 +387,79 @@ enum CheckoutPlayground {
         }
     }
 
+    struct ExpressCheckoutElementSettings: Codable {
+        var isEnabled: Bool
+        var applePayDisplay: ExpressCheckoutElement.ApplePayConfiguration.Display
+        var applePayButtonType: ApplePayButtonType
+        var linkDisplay: ExpressCheckoutElement.LinkConfiguration.Display
+        var shippingAddressRequired: Bool
+        var appearance: ExpressCheckoutElement.Appearance
+
+        init(
+            isEnabled: Bool = true,
+            applePayDisplay: ExpressCheckoutElement.ApplePayConfiguration.Display = .automatic,
+            applePayButtonType: ApplePayButtonType = .plain,
+            linkDisplay: ExpressCheckoutElement.LinkConfiguration.Display = .automatic,
+            shippingAddressRequired: Bool = false,
+            appearance: ExpressCheckoutElement.Appearance = .init()
+        ) {
+            self.isEnabled = isEnabled
+            self.applePayDisplay = applePayDisplay
+            self.applePayButtonType = applePayButtonType
+            self.linkDisplay = linkDisplay
+            self.shippingAddressRequired = shippingAddressRequired
+            self.appearance = appearance
+        }
+
+        private enum CodingKeys: String, CodingKey {
+            case isEnabled
+            case applePayDisplay
+            case applePayButtonType
+            case linkDisplay
+            case shippingAddressRequired
+            case buttonTheme
+            case maxColumns
+            case maxRows
+        }
+
+        init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            var appearance = ExpressCheckoutElement.Appearance()
+            appearance.buttonTheme = try container.decodeIfPresent(String.self, forKey: .buttonTheme)
+                .flatMap(ExpressCheckoutElement.Appearance.ButtonTheme.init(rawValue:)) ?? .automatic
+            appearance.buttonLayout.maxColumns = try container.decodeIfPresent(Int.self, forKey: .maxColumns)
+            appearance.buttonLayout.maxRows = try container.decodeIfPresent(Int.self, forKey: .maxRows)
+
+            self.init(
+                isEnabled: try container.decodeIfPresent(Bool.self, forKey: .isEnabled) ?? true,
+                applePayDisplay: try container.decodeIfPresent(String.self, forKey: .applePayDisplay)
+                    .flatMap(ExpressCheckoutElement.ApplePayConfiguration.Display.init(rawValue:)) ?? .automatic,
+                applePayButtonType: try container.decodeIfPresent(ApplePayButtonType.self, forKey: .applePayButtonType) ?? .plain,
+                linkDisplay: try container.decodeIfPresent(String.self, forKey: .linkDisplay)
+                    .flatMap(ExpressCheckoutElement.LinkConfiguration.Display.init(rawValue:)) ?? .automatic,
+                shippingAddressRequired: try container.decodeIfPresent(Bool.self, forKey: .shippingAddressRequired) ?? false,
+                appearance: appearance
+            )
+        }
+
+        func encode(to encoder: Encoder) throws {
+            var container = encoder.container(keyedBy: CodingKeys.self)
+            try container.encode(isEnabled, forKey: .isEnabled)
+            try container.encode(applePayDisplay.rawValue, forKey: .applePayDisplay)
+            try container.encode(applePayButtonType, forKey: .applePayButtonType)
+            try container.encode(linkDisplay.rawValue, forKey: .linkDisplay)
+            try container.encode(shippingAddressRequired, forKey: .shippingAddressRequired)
+            try container.encode(appearance.buttonTheme.rawValue, forKey: .buttonTheme)
+            try container.encodeIfPresent(appearance.buttonLayout.maxColumns, forKey: .maxColumns)
+            try container.encodeIfPresent(appearance.buttonLayout.maxRows, forKey: .maxRows)
+        }
+    }
+
     struct Settings: Codable {
 
         var uiFramework: UIFramework = .swiftUI
         var integrationType: IntegrationType = .flowController
-        var showExpressCheckoutElement = true
-        var expressCheckoutElementApplePayDisplay: String?
-        var expressCheckoutElementApplePayButtonType: ApplePayButtonType?
-        var expressCheckoutElementLinkDisplay: String?
-        var expressCheckoutElementShippingAddressRequired: Bool?
-        var expressCheckoutElementButtonTheme: String?
-        var expressCheckoutElementMaxColumns: Int?
-        var expressCheckoutElementMaxRows: Int?
+        var expressCheckoutElement = ExpressCheckoutElementSettings()
         var linkMode: LinkMode = .native
         var currency: Currency = .usd
         var customerType: CustomerType = .guest
