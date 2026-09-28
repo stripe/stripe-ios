@@ -105,26 +105,29 @@ class RotatingCardBrandsView: UIView {
     var isAnimating: Bool = false
     var stopAfterNextTransition = false
 
-    func rotateCardBrand() {
+    func rotateCardBrand(animation: UIViewPropertyAnimator? = nil) {
         isAnimating = true
-        var nextIndex = self.rotatingIndex + 1
-        if nextIndex >= self.rotatingCardBrands.count {
-            nextIndex = 0
-        }
-        let animation = UIViewPropertyAnimator(duration: Self.AnimationDuration,
-                                               controlPoint1: CGPoint(x: 0.19, y: 0.22),
-                                               controlPoint2: CGPoint(x: 1, y: 1))
+        let animation = animation ?? UIViewPropertyAnimator(duration: Self.AnimationDuration,
+                                                            controlPoint1: CGPoint(x: 0.19, y: 0.22),
+                                                            controlPoint2: CGPoint(x: 1, y: 1))
         animation.addAnimations {
             UIView.transition(with: self.rotatingCardBrandView,
                               duration: Self.AnimationDuration,
                               options: [.transitionCrossDissolve],
                               animations: {
+                guard !self.rotatingCardBrands.isEmpty else {
+                    return
+                }
+                var nextIndex = self.rotatingIndex + 1
+                if nextIndex >= self.rotatingCardBrands.count {
+                    nextIndex = 0
+                }
                 self.rotatingCardBrandView.image = STPImageLibrary.cardBrandImage(for: self.rotatingCardBrands[nextIndex])
-
+                self.rotatingIndex = nextIndex
             })
         }
         animation.addCompletion { _ in
-            guard !self.stopAfterNextTransition else {
+            guard !self.stopAfterNextTransition, !self.rotatingCardBrands.isEmpty else {
                 self.stopAfterNextTransition = false
                 self.isAnimating = false
                 return
@@ -132,7 +135,6 @@ class RotatingCardBrandsView: UIView {
             self.rotateCardBrand()
         }
         animation.startAnimation(afterDelay: Self.RotationInterval)
-        self.rotatingIndex = nextIndex
     }
 
     func startAnimating() {
