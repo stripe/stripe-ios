@@ -112,6 +112,8 @@
 
 "Code sent" = "Codul a fost trimis";
 
+"Complete the payment using Pix to finish the purchase." = "Finalizați plata folosind Pix pentru a încheia achiziția.";
+
 "Confirm" = "Confirmare";
 
 "Confirm payment details" = "Confirmare detalii de plată";
@@ -341,6 +343,8 @@
 "The provided verification code has expired." = "Codul de verificare furnizat a expirat.";
 
 "The provided verification code is incorrect." = "Codul de verificare furnizat este incorect.";
+
+"This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Aceasta este o achiziție internațională și exclude o taxă IOF de 3,5 %. Continuând, confirmați că ați luat la cunoștință și acceptați <terms>termenii și condițiile Ebanx</terms>.";
 
 "This is your default" = "Aceasta este setarea dvs. implicită";
 

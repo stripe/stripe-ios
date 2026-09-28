@@ -1,5 +1,7 @@
 "Debit cards are most likely to be accepted." = "Thẻ ghi nợ có khả năng cao được chấp nhận.";
 
+"Document uploaded successfully" = "Tải tài liệu lên thành công";
+
 "Please try again later." = "Vui lòng thử lại sau.";
 
 "Submitted for review" = "Đã gửi để đánh giá";
@@ -22,8 +24,10 @@
 
 "We couldn't verify ownership of this wallet. Please try again." = "Chúng tôi không thể xác minh quyền sở hữu ví này. Vui lòng thử lại.";
 
-"We’re required to confirm your address to enable spending over %@." = "Chúng tôi bắt buộc phải xác nhận địa chỉ của bạn để cho phép chi tiêu trên %@.";
+"We may request proof of address for larger transactions." = "Chúng tôi có thể yêu cầu bằng chứng địa chỉ cho các giao dịch lớn hơn.";
 
-"We’re required to understand where your funds come from to enable spending over %@." = "Chúng tôi bắt buộc phải biết vốn của bạn đến từ đâu để cho phép chi tiêu trên %@.";
+"We may request source of funds for larger transactions." = "Chúng tôi có thể yêu cầu nguồn vốn cho các giao dịch lớn hơn.";
 
 "We’re reviewing your documents. We’ll let you know when verification is complete." = "Chúng tôi đang xem xét các tài liệu của bạn. Chúng tôi sẽ thông báo cho bạn khi quá trình xác minh hoàn tất.";
+
+"You can continue while we verify your document in the background." = "Bạn có thể tiếp tục trong khi chúng tôi xác minh tài liệu của bạn trong nền.";

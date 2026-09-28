@@ -112,6 +112,8 @@
 
 "Code sent" = "Kood saadetud";
 
+"Complete the payment using Pix to finish the purchase." = "Ostu lõpetamiseks viige makse Pixi abil lõpule.";
+
 "Confirm" = "Kinnita";
 
 "Confirm payment details" = "Kinnitage makseandmed";
@@ -341,6 +343,8 @@
 "The provided verification code has expired." = "Esitatud tuvastuskood on aegunud.";
 
 "The provided verification code is incorrect." = "Esitatud tuvastuskood on vale.";
+
+"This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "See on rahvusvaheline ost ja ei sisalda 3,5% IOF-tasu. Jätkates tunnistate ja nõustute <terms>Ebanxi tingimustega<terms>.";
 
 "This is your default" = "See on teie vaikimisi makseviis";
 

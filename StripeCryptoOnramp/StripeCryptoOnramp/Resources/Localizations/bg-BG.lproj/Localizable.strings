@@ -1,5 +1,7 @@
 "Debit cards are most likely to be accepted." = "Най-вероятно ще бъдат приемани дебитни карти.";
 
+"Document uploaded successfully" = "Документът е качен успешно";
+
 "Please try again later." = "Моля, опитайте отново по-късно.";
 
 "Submitted for review" = "Изпратено за преглед";
@@ -22,8 +24,10 @@
 
 "We couldn't verify ownership of this wallet. Please try again." = "Не можахме да удостоверим собствеността на този портфейл. Моля, опитайте отново.";
 
-"We’re required to confirm your address to enable spending over %@." = "Задължени сме да потвърдим Вашия адрес, за да разрешим разходи над %@.";
+"We may request proof of address for larger transactions." = "Може да изискаме доказателство за адрес за по-големи трансакции.";
 
-"We’re required to understand where your funds come from to enable spending over %@." = "Задължени сме да разберем откъде идват Вашите средства, за да разрешим разходи над %@.";
+"We may request source of funds for larger transactions." = "Може да изискаме произход на средствата за по-големи трансакции.";
 
 "We’re reviewing your documents. We’ll let you know when verification is complete." = "Преглеждаме Вашите документи. Ще Ви уведомим, когато проверката приключи.";
+
+"You can continue while we verify your document in the background." = "Можете да продължите, докато удостоверяваме Вашия документ във фонов режим.";

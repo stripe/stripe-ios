@@ -112,6 +112,8 @@
 
 "Code sent" = "Codice inviato";
 
+"Complete the payment using Pix to finish the purchase." = "Completa il pagamento con Pix per concludere l'acquisto.";
+
 "Confirm" = "Conferma";
 
 "Confirm payment details" = "Conferma i dati di pagamento";
@@ -341,6 +343,8 @@
 "The provided verification code has expired." = "Il codice di verifica specificato è scaduto.";
 
 "The provided verification code is incorrect." = "Il codice di verifica specificato non è corretto.";
+
+"This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Si tratta di un acquisto internazionale ed esclude una commissione IOF del 3,5%. Procedendo, accetti <terms>Termini e condizioni</terms> di Ebanx.";
 
 "This is your default" = "È la tua impostazione predefinita";
 
