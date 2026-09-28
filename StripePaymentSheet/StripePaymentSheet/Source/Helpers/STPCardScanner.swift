@@ -141,6 +141,10 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
     // MARK: - Public Methods
     func start() {
         dispatchPrecondition(condition: .onQueue(.main))
+        // Register before queuing camera work, outside the lifecycle lock.
+        // Registration is idempotent, so it is safe even if the scan is already active.
+        STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: STPCardScanner.self)
+
         scanningStateLock.lock()
         guard !isScanning else {
             scanningStateLock.unlock()
@@ -182,9 +186,8 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
         }
         scanningStateLock.unlock()
 
-        // Keep analytics and UIKit work outside the lifecycle lock. Scanner completion is dispatched to main,
-        // so it cannot overtake these synchronous preparations within start().
-        STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: STPCardScanner.self)
+        // Keep UIKit work outside the lifecycle lock. Main-queue completion callbacks cannot run
+        // until start() returns, after haptic preparation.
         feedbackGenerator = UINotificationFeedbackGenerator()
         feedbackGenerator?.prepare()
     }
