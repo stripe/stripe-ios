@@ -19,16 +19,29 @@ public final class ExpressCheckoutElementUIView: UIView {
     // MARK: - Private Properties
 
     private let configuration: ExpressCheckoutElement.Configuration
+    private let apiClient: STPAPIClient
+    private let analyticsClient: STPAnalyticsClientProtocol
     private let stackView = UIStackView()
+    private var hasReportedInit = false
     private var linkBrand: LinkBrand
+    private var session: CheckoutController.Session
     private weak var delegate: ExpressCheckoutElementDelegate?
 
     // MARK: - Init
 
-    init(session: CheckoutController.Session, configuration: ExpressCheckoutElement.Configuration, delegate: ExpressCheckoutElementDelegate) {
+    init(
+        session: CheckoutController.Session,
+        configuration: ExpressCheckoutElement.Configuration,
+        delegate: ExpressCheckoutElementDelegate,
+        apiClient: STPAPIClient = .shared,
+        analyticsClient: STPAnalyticsClientProtocol = STPAnalyticsClient.sharedClient
+    ) {
         self.configuration = configuration
+        self.apiClient = apiClient
+        self.analyticsClient = analyticsClient
         self.delegate = delegate
         self.linkBrand = session.elementsSession.linkBrand ?? .link
+        self.session = session
         super.init(frame: .zero)
 
         // TODO: Appearance
@@ -56,6 +69,7 @@ public final class ExpressCheckoutElementUIView: UIView {
     // MARK: - Internal Methods
 
     func update(with session: CheckoutController.Session) {
+        self.session = session
         linkBrand = session.elementsSession.linkBrand ?? .link
         stackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
         let buttons = ExpressCheckoutElementUtilities.resolveButtons(for: session, configuration: configuration)
@@ -69,6 +83,19 @@ public final class ExpressCheckoutElementUIView: UIView {
         CGSize(
             width: UIView.noIntrinsicMetric,
             height: stackView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height
+        )
+    }
+
+    public override func didMoveToWindow() {
+        super.didMoveToWindow()
+        guard window != nil, !hasReportedInit else { return }
+        hasReportedInit = true
+        analyticsClient.log(
+            analytic: ExpressCheckoutElementInitAnalytic(
+                session: session,
+                configuration: configuration
+            ),
+            apiClient: apiClient
         )
     }
 
@@ -120,6 +147,35 @@ public final class ExpressCheckoutElementUIView: UIView {
                 presentationWindow: window
             ) else { return }
             self.configuration.confirmHandler(result)
+        }
+    }
+}
+
+private struct ExpressCheckoutElementInitAnalytic: Analytic {
+    let event: STPAnalyticEvent = .expressCheckoutElementInit
+    let params: [String: Any]
+
+    init(
+        session: CheckoutController.Session,
+        configuration: ExpressCheckoutElement.Configuration
+    ) {
+        params = [
+            "ordered_lpms": session.availableExpressButtonTypes.map(\.analyticsValue).joined(separator: ","),
+            "ece_config": [
+                "link_visibility": configuration.linkConfiguration.display.rawValue,
+                "apple_pay_visibility": configuration.applePayConfiguration?.display.rawValue ?? "never",
+            ],
+        ]
+    }
+}
+
+private extension ExpressCheckoutElement.PaymentMethod {
+    var analyticsValue: String {
+        switch self {
+        case .applePay:
+            return "apple_pay"
+        case .link:
+            return "link"
         }
     }
 }

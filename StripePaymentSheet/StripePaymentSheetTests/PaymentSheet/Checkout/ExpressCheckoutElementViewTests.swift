@@ -7,11 +7,45 @@
 
 import PassKit
 @testable @_spi(STP) import StripeCore
+@testable @_spi(STP) import StripeCoreTestUtils
 @testable @_spi(STP) import StripePaymentSheet
 import XCTest
 
 @MainActor
 final class ExpressCheckoutElementViewTests: XCTestCase {
+
+    func testReportsInitWhenAddedToWindowOnce() throws {
+        // Given
+        let session = makeSessionWithWalletTypes(["link"]).makePublicSession()
+        var configuration = ExpressCheckoutElement.Configuration(confirmHandler: { _ in })
+        configuration.applePayConfiguration = .init(merchantId: "merchant.com.example")
+        let analyticsClient = MockAnalyticsClient()
+        let view = ExpressCheckoutElementUIView(
+            session: session,
+            configuration: configuration,
+            delegate: FakeExpressCheckoutElementDelegate(),
+            analyticsClient: analyticsClient
+        )
+        let window = UIWindow()
+
+        // When
+        window.addSubview(view)
+        view.removeFromSuperview()
+        window.addSubview(view)
+
+        // Then
+        let analytic = try XCTUnwrap(analyticsClient.loggedAnalytics.first)
+        XCTAssertEqual(analyticsClient.loggedAnalytics.count, 1)
+        XCTAssertEqual(analytic.event, .expressCheckoutElementInit)
+        XCTAssertEqual(analytic.params["ordered_lpms"] as? String, "link")
+        XCTAssertEqual(
+            analytic.params["ece_config"] as? [String: String],
+            [
+                "link_visibility": "automatic",
+                "apple_pay_visibility": "automatic",
+            ]
+        )
+    }
 
     // MARK: - resolveButtons tests
 
@@ -209,5 +243,15 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
             ]
         }
         return CheckoutTestHelpers.makeSession(session)
+    }
+}
+
+@MainActor
+private final class FakeExpressCheckoutElementDelegate: ExpressCheckoutElementDelegate {
+    func expressCheckoutElementShouldConfirm(
+        _ paymentMethod: ExpressCheckoutElement.PaymentMethod,
+        presentationWindow: UIWindow?
+    ) async -> CheckoutController.ConfirmResult {
+        return .canceled
     }
 }
