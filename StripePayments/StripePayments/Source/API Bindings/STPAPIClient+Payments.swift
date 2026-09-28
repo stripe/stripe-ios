@@ -227,7 +227,8 @@ extension StripeFile.Purpose {
             return .identityDocument
         case .disputeEvidence:
             return .disputeEvidence
-        case .identityPrivate,
+        case .cryptoOnrampKYCDocument,
+            .identityPrivate,
             .unparsable:
             return .unknown
         }
