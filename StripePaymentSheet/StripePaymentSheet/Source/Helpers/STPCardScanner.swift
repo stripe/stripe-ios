@@ -96,11 +96,13 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
     private var videoDataOutput: AVCaptureVideoDataOutput?
     private var videoDataOutputQueue: DispatchQueue?
     private var textRequest: VNRecognizeTextRequest?
+    // Tags the installed recognition state, which can outlive the active scan while shutdown is pending.
     private var recognitionScanIdentifier = 0
     // start()/stop() run on main, but finish() also runs from camera and recognition callbacks.
     // Protect lifecycle state and enqueueing, but never hold this lock during camera work.
     private let scanningStateLock = NSLock()
     private var isScanning = false
+    // start() and stop() advance this identifier; isScanning alone cannot distinguish a restarted scan from old work.
     private var scanIdentifier = 0
 
     private var timeoutTime: Date?
@@ -191,6 +193,7 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
         dispatchPrecondition(condition: .onQueue(.main))
         finish(didSucceed: false)
         // Invalidate a success/error callback that is already waiting for shutdown to finish.
+        // finish() may already have marked the scan inactive without delivering its queued callback yet.
         scanningStateLock.lock()
         scanIdentifier += 1
         scanningStateLock.unlock()
@@ -399,6 +402,7 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
         // Set a timeout: If we don't get enough scans in the next 0.6 seconds, we'll use the best option we have.
         if timeoutTime == nil {
             timeoutTime = Date().addingTimeInterval(Self.scanningTimeout)
+            // A delayed timeout can run after shutdown drains the queue; keep the originating scan's identifier.
             let scanIdentifier = recognitionScanIdentifier
             DispatchQueue.main.async { [weak self] in
                 guard let self, self.scanIdentifierIsCurrent(scanIdentifier) else { return }
@@ -480,6 +484,7 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
     // Only the first accepted finish for an active scan queues teardown and its completion callback.
     private func finish(didSucceed: Bool, scanIdentifier expectedScanIdentifier: Int? = nil, completion: (() -> Void)? = nil) {
         scanningStateLock.lock()
+        // Reject a late result/error from an older scan without ending a newer scan.
         guard isScanning, expectedScanIdentifier == nil || expectedScanIdentifier == scanIdentifier else {
             scanningStateLock.unlock()
             return
@@ -517,6 +522,8 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
                 if self.cameraView?.videoPreviewLayer.session === captureSession {
                     self.cameraView?.captureSession = nil
                 }
+                // Always clean up the old preview above, even when stop() invalidated this scan.
+                // Only a still-current scan may clear feedback or notify its delegate.
                 guard self.scanIdentifierIsCurrent(finishedScanIdentifier) else { return }
                 self.feedbackGenerator = nil
                 completion?()
@@ -531,6 +538,8 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
         return isScanning && self.scanIdentifier == scanIdentifier
     }
 
+    // Successful completion sets isScanning to false before queued UI work runs. Check identity alone
+    // so that work still runs unless stop() or another start() invalidated it.
     private func scanIdentifierIsCurrent(_ scanIdentifier: Int) -> Bool {
         scanningStateLock.lock()
         defer { scanningStateLock.unlock() }
