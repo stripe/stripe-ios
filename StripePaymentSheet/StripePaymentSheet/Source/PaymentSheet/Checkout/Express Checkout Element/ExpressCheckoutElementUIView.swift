@@ -38,6 +38,7 @@ public final class ExpressCheckoutElementUIView: UIView {
         super.init(frame: .zero)
 
         stackView.axis = .vertical
+        stackView.alignment = .center
         stackView.spacing = Constants.buttonSpacing
         stackView.translatesAutoresizingMaskIntoConstraints = false
 
@@ -76,23 +77,39 @@ public final class ExpressCheckoutElementUIView: UIView {
         )
     }
 
-    // MARK: - Private Methods
-
     /// Arranges `buttons` into no more than `appearance.buttonLayout.maxRows` rows of no more than `appearance.buttonLayout.maxColumns` columns.
-    private func layoutButtons(_ buttons: [ExpressCheckoutElement.PaymentMethod]) {
+    func layoutButtons(_ buttons: [ExpressCheckoutElement.PaymentMethod]) {
         stackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
 
-        for row in Self.buttonRows(for: buttons, layout: configuration.appearance.buttonLayout) {
-            if row.count == 1, let method = row.first {
-                stackView.addArrangedSubview(makeButton(for: method))
-            } else {
-                let rowStackView = UIStackView(arrangedSubviews: row.map { makeButton(for: $0) })
-                rowStackView.axis = .horizontal
-                rowStackView.spacing = Constants.buttonSpacing
-                rowStackView.distribution = .fillEqually
-                stackView.addArrangedSubview(rowStackView)
+        let buttonRows = Self.buttonRows(for: buttons, layout: configuration.appearance.buttonLayout)
+            .map { row in row.map { makeButton(for: $0) } }
+        guard let referenceButton = buttonRows[0].first else { return }
+        let columnCount = buttonRows[0].count
+
+        // Set button width matching the referenceButton width
+        buttonRows.joined().dropFirst().forEach {
+            $0.widthAnchor.constraint(equalTo: referenceButton.widthAnchor).isActive = true
+        }
+
+        for buttons in buttonRows {
+            let rowStackView = makeRowStackView(buttons)
+            stackView.addArrangedSubview(rowStackView)
+
+            // Complete rows establish the column width. Incomplete rows retain that
+            // button width and are centered by the outer stack view.
+            if buttons.count == columnCount {
+                rowStackView.widthAnchor.constraint(equalTo: stackView.widthAnchor).isActive = true
             }
         }
+    }
+
+    // MARK: - Private Methods
+
+    private func makeRowStackView(_ buttons: [UIView]) -> UIStackView {
+        let rowStackView = UIStackView(arrangedSubviews: buttons)
+        rowStackView.axis = .horizontal
+        rowStackView.spacing = Constants.buttonSpacing
+        return rowStackView
     }
 
     static func buttonRows(

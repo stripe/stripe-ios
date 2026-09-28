@@ -42,6 +42,17 @@ final class ExpressCheckoutElementViewSnapshotTests: STPSnapshotTestCase {
         verify(makeView(appearance: appearance))
     }
 
+    func testThreeButtonsInTwoByTwoGrid() {
+        var appearance = ExpressCheckoutElement.Appearance()
+        appearance.buttonLayout.maxColumns = 2
+        appearance.buttonLayout.maxRows = 2
+
+        verify(makeView(
+            appearance: appearance,
+            buttons: [.link, .applePay, .link]
+        ))
+    }
+
     func testOneColumnOneRowLayout() {
         var appearance = ExpressCheckoutElement.Appearance()
         appearance.buttonLayout.maxColumns = 1
@@ -60,7 +71,8 @@ final class ExpressCheckoutElementViewSnapshotTests: STPSnapshotTestCase {
     // MARK: - Helpers
 
     private func makeView(
-        appearance: ExpressCheckoutElement.Appearance = .init()
+        appearance: ExpressCheckoutElement.Appearance = .init(),
+        buttons: [ExpressCheckoutElement.PaymentMethod]? = nil
     ) -> ExpressCheckoutElementUIView {
         var configuration = ExpressCheckoutElement.Configuration(confirmHandler: { _ in })
         configuration.applePayConfiguration = .init(merchantId: "merchant.com.example")
@@ -71,6 +83,9 @@ final class ExpressCheckoutElementViewSnapshotTests: STPSnapshotTestCase {
             configuration: configuration,
             delegate: Delegate()
         )
+        if let buttons {
+            view.layoutButtons(buttons)
+        }
         view.setNeedsLayout()
         view.layoutIfNeeded()
         return view
