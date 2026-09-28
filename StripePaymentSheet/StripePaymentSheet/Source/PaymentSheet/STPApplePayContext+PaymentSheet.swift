@@ -422,8 +422,8 @@ extension STPApplePayContext {
     static func roundAmountForApplePay(_ amount: NSDecimalNumber, currency: String?) -> NSDecimalNumber {
         // PassKit rejects fractional amounts for these two-decimal currencies.
         // Match Stripe.js by rounding up so the displayed total is never less than the amount charged.
-        let wholeAmountCurrencies = ["COP", "HUF", "IDR", "LAK", "LBP", "PKR", "RSD"]
-        guard let currency, wholeAmountCurrencies.contains(currency.uppercased()) else {
+        // Valid ISK amounts are already whole, so rounding leaves them unchanged.
+        guard let currency, NSDecimalNumber.decimalCountSpecialCases[currency.uppercased()] != nil else {
             return amount
         }
         return amount.rounding(accordingToBehavior: NSDecimalNumberHandler(

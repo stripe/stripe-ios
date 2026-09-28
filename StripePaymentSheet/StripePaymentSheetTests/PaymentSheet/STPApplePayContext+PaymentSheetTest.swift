@@ -60,12 +60,27 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
     }
 
     func testCreatePaymentRequest_roundsFractionalApplePayAmounts() {
-        for currency in ["cop", "huf", "idr", "lak", "lbp", "pkr", "rsd"] {
+        for currency in ["cop", "huf", "idr", "isk", "lak", "lbp", "pkr", "rsd"] {
             for (amount, expected) in [(0, "0"), (1, "1"), (2300, "23"), (2301, "24"), (2345, "24"), (2399, "24")] {
                 let intent = Intent.deferredIntent(intentConfig: .init(mode: .payment(amount: amount, currency: currency), confirmHandler: dummyDeferredConfirmHandler))
                 let request = STPApplePayContext.createPaymentRequest(intent: intent, configuration: configuration, applePay: applePayConfiguration)
                 XCTAssertEqual(request.paymentSummaryItems.last?.amount, NSDecimalNumber(string: expected), "\(amount) \(currency)")
             }
+        }
+    }
+
+    func testCreatePaymentRequest_ISK() {
+        // Given a valid ISK amount with zero fractional minor units
+        for currency in ["isk", "ISK"] {
+            let intent = Intent.deferredIntent(intentConfig: .init(mode: .payment(amount: 199400, currency: currency), confirmHandler: dummyDeferredConfirmHandler))
+
+            // When building the Apple Pay request
+            let request = STPApplePayContext.createPaymentRequest(intent: intent, configuration: configuration, applePay: applePayConfiguration)
+
+            // Then conversion and rounding preserve the whole-krona amount and the amount to charge
+            XCTAssertEqual(request.paymentSummaryItems.last?.amount, NSDecimalNumber(string: "1994"))
+            XCTAssertEqual(request.currencyCode, "ISK")
+            XCTAssertEqual(intent.amount, 199400)
         }
     }
 
