@@ -21,6 +21,7 @@ struct CryptoOnrampExampleView: View {
     @State private var coordinator: CryptoOnrampCoordinator?
     @State private var livemode: Bool = false
     @State private var isL0KYCModeEnabled: Bool = false
+    @State private var isApplePayPrefillModeEnabled: Bool = false
     @State private var selectedScopes: Set<OAuthScopes> = Set(OAuthScopes.requiredScopes)
     @State private var isShowingScopesSheet = false
     @State private var alert: Alert?
@@ -53,7 +54,14 @@ struct CryptoOnrampExampleView: View {
     var body: some View {
         NavigationStack(path: flowCoordinator.pathBinding) {
             ZStack {
-                if let seamlessSignInEmail {
+                if isApplePayPrefillModeEnabled {
+                    ApplePayPrefillView(
+                        coordinator: coordinator,
+                        flowCoordinator: flowCoordinator,
+                        livemode: livemode,
+                        alert: $alert
+                    )
+                } else if let seamlessSignInEmail {
                     SeamlessSignInView(
                         coordinator: coordinator,
                         flowCoordinator: flowCoordinator,
@@ -73,6 +81,7 @@ struct CryptoOnrampExampleView: View {
                 }
             }
             .animation(.default, value: seamlessSignInEmail)
+            .animation(.default, value: isApplePayPrefillModeEnabled)
             .navigationTitle("CryptoOnramp Example")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -82,11 +91,15 @@ struct CryptoOnrampExampleView: View {
                             Toggle(isOn: $livemode) {
                                 Label("Livemode", systemImage: "server.rack")
                             }
-                            // Livemode is disabled on the simulator.
-                            .disabled(isRunningOnSimulator)
+                            // Livemode is disabled on the simulator, and Apple Pay Prefill Mode is testmode-only.
+                            .disabled(isRunningOnSimulator || isApplePayPrefillModeEnabled)
 
                             Toggle(isOn: $isL0KYCModeEnabled) {
                                 Label("L0 KYC Mode", systemImage: "person.text.rectangle")
+                            }
+
+                            Toggle(isOn: $isApplePayPrefillModeEnabled) {
+                                Label("ApplePay Prefill Mode", systemImage: "apple.logo")
                             }
 
                             if seamlessSignInEmail == nil {
@@ -212,8 +225,8 @@ struct CryptoOnrampExampleView: View {
         .onAppear {
             flowCoordinator.isLoading = isLoading
 
-            // Force livemode to false on simulator
-            if isRunningOnSimulator {
+            // Force livemode to false on simulator, or when Apple Pay Prefill Mode is enabled (testmode-only).
+            if isRunningOnSimulator || isApplePayPrefillModeEnabled {
                 livemode = false
             }
 
@@ -226,6 +239,11 @@ struct CryptoOnrampExampleView: View {
             coordinator = nil
             APIClient.shared.clearAuthState()
             initializeCoordinator()
+        }
+        .onChange(of: isApplePayPrefillModeEnabled) { isEnabled in
+            // Apple Pay Prefill Mode is testmode-only.
+            guard isEnabled else { return }
+            livemode = false
         }
         .onChange(of: storedSeamlessSignInData == nil) { didClearSeamlessSignInData in
             // Clear our local seamless sign-in state if the app storage data becomes `nil`.
