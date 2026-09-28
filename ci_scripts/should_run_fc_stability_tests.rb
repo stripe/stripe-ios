@@ -33,7 +33,8 @@ end
 def changed_files
   return nil if ENV['BITRISE_PULL_REQUEST'].to_s.empty?
 
-  output = `git diff --name-only --diff-filter=ACDMRTUXB origin/master...HEAD 2>/dev/null`
+  # This branch-local override isolates the final demo commit from its parent.
+  output = `git diff --name-only --diff-filter=ACDMRTUXB HEAD^ HEAD 2>/dev/null`
   return nil unless $?.success?
 
   output.lines(chomp: true)
