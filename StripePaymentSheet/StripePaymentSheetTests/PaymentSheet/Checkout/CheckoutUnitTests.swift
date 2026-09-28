@@ -722,10 +722,9 @@ final class CheckoutUnitTests: XCTestCase {
     }
 
     func testTotalTaxAmounts_presentButEmpty_isEmpty() {
-        // Given a response with an explicitly empty total_tax_amounts array
+        // Given a response with an explicitly empty session-level total_tax_amounts array
         var json = CheckoutTestHelpers.openSessionJSON
-        json["recurring_details"] = [
-            "total_discount_amounts": [],
+        json["total_summary"] = [
             "total_tax_amounts": [],
         ]
 
@@ -735,6 +734,34 @@ final class CheckoutUnitTests: XCTestCase {
         // Then taxAmounts remains an empty, non-nil array
         XCTAssertNotNil(session.taxAmounts)
         XCTAssertTrue(session.taxAmounts?.isEmpty == true)
+    }
+
+    func testTotalTaxAmounts_usesTopLevelTotalSummary() throws {
+        // Given a response with session-level tax amounts and no recurring details
+        var json = CheckoutTestHelpers.openSessionJSON
+        let totalTaxAmount: [String: Any] = [
+            "amount": 195,
+            "inclusive": false,
+            "tax_rate": [
+                "display_name": "Sales Tax",
+                "percentage": 9.75,
+                "rate_type": "percentage",
+            ],
+        ]
+        json["total_summary"] = [
+            "total_tax_amounts": [totalTaxAmount],
+        ]
+        json.removeValue(forKey: "recurring_details")
+
+        // When decoding the public Session
+        let session = try PaymentPagesAPIResponse.decode(fromAPIResponse: json).makePublicSession()
+
+        // Then session tax amounts use the session-level aggregate
+        let taxAmount = try XCTUnwrap(session.taxAmounts?.first)
+        XCTAssertEqual(session.taxAmounts?.count, 1)
+        XCTAssertEqual(taxAmount.minorUnitsAmount, 195)
+        XCTAssertEqual(taxAmount.displayName, "Sales Tax")
+        XCTAssertEqual(taxAmount.percentage, 9.75)
     }
 
     func testAutomaticTaxComplete_zeroTaxableAmount_preservesComputedZeroTax() throws {
