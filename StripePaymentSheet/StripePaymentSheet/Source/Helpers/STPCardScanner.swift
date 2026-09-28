@@ -166,8 +166,7 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
     }
 
     private func finishWithError() {
-        finish(didSucceed: false)
-        DispatchQueue.main.async {
+        finish(didSucceed: false) {
             self.delegate?.cardScannerDidError(self)
         }
     }
@@ -436,15 +435,14 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
                 params.expYear = NSNumber(
                     value: Int((topExpiration as! NSString).substring(from: 2)) ?? 0)
             }
-            finish(didSucceed: true)
-            DispatchQueue.main.async {
+            finish(didSucceed: true) {
                 self.delegate?.cardScanner(self, didCompleteWith: params)
             }
         }
     }
 
     // Finish the scanning session
-    private func finish(didSucceed: Bool) {
+    private func finish(didSucceed: Bool, completion: (() -> Void)? = nil) {
         guard isScanning else { return }
 
         var duration: TimeInterval = 0.0
@@ -462,6 +460,7 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
             }
             self.feedbackGenerator = nil
             self.cameraView?.captureSession = nil
+            completion?()
         }
     }
 }
