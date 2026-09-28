@@ -6,6 +6,7 @@
 import XCTest
 
 final class CheckoutElementsUITests: PaymentSheetUITestCase {
+
     func testSavedPaymentMethodControls() throws {
         // Given a Checkout Session for a returning customer with saved payment method controls enabled
         app.launchEnvironment["STP_CHECKOUT_ELEMENTS"] = "true"
@@ -19,9 +20,13 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
         scrollStart.press(forDuration: 0.1, thenDragTo: scrollEnd)
         XCTAssertTrue(app.buttons["checkout_picker_Email source"].waitForExistenceAndTap())
         XCTAssertTrue(app.buttons["Server — Customer"].waitForExistenceAndTap())
-        app.switches["Collect Shipping Address"].scrollToAndTap(in: app)
-        app.switches["Automatic Tax"].scrollToAndTap(in: app)
-        app.buttons["Create Checkout Session"].waitForExistenceAndTap()
+        scrollStart.press(forDuration: 0.1, thenDragTo: scrollEnd)
+        for label in ["Collect Shipping Address", "Automatic Tax"] {
+            let toggle = app.switches[label]
+            toggle.scrollToAndTap(in: app)
+            XCTAssertEqual(toggle.value as? String, "0")
+        }
+        XCTAssertTrue(app.buttons["Create Checkout Session"].waitForExistenceAndTap())
 
         XCTAssertTrue(app.navigationBars["Your Cart"].waitForExistence(timeout: 15))
 
@@ -32,22 +37,22 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
         // Then their saved card is displayed and can be selected
         let savedCard = app.buttons["•••• 4242"].firstMatch
         XCTAssertTrue(savedCard.waitForExistence(timeout: 10))
-        savedCard.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
-        XCTAssertTrue(app.staticTexts["•••• 4242"].waitForExistence(timeout: 10))
+        savedCard.tap()
+        XCTAssertTrue(paymentMethodButton.staticTexts["•••• 4242"].waitForExistence(timeout: 10))
 
         // When the customer removes the saved card
         // The returning-customer fixture creates a fresh Customer for each request, so
         // removing this payment method does not mutate shared test state.
-        paymentMethodButton.waitForExistenceAndTap()
-        app.buttons["edit_saved_button"].waitForExistenceAndTap()
-        app.cells["•••• 4242"].buttons["CircularButton.Edit"].waitForExistenceAndTap()
-        app.buttons["Remove"].waitForExistenceAndTap()
-        app.alerts.buttons["Remove"].waitForExistenceAndTap()
+        paymentMethodButton.forceTapWhenHittableInTestCase(self)
+        XCTAssertTrue(app.buttons["edit_saved_button"].waitForExistenceAndTap())
+        let editSavedCardButton = app.cells["•••• 4242"].buttons["CircularButton.Edit"]
+        XCTAssertTrue(editSavedCardButton.waitForExistence(timeout: 5))
+        editSavedCardButton.tap()
+        XCTAssertTrue(app.buttons["Remove"].waitForExistenceAndTap())
+        XCTAssertTrue(app.alerts.buttons["Remove"].waitForExistenceAndTap())
 
         // Then the saved card is removed and the customer can add and save a new card
-        XCTAssertFalse(savedCard.waitForExistence(timeout: 2))
-        app.buttons["Done"].waitForExistenceAndTap()
-        paymentMethodButton.waitForExistenceAndTap()
+        XCTAssertTrue(savedCard.waitForNonExistence(timeout: 10))
         app.buttons["Add new payment method"].forceTapWhenHittableInTestCase(self)
         try fillCardData(app, cardNumber: "5555555555554444")
 
@@ -59,14 +64,11 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
         savePaymentMethodToggle.tap()
         XCTAssertTrue(savePaymentMethodToggle.isSelected)
 
-        app.stp_dismissKeyboard()
         app.buttons["Continue"].forceTapWhenHittableInTestCase(self)
 
         // When the customer confirms with the new card, Checkout completes successfully
-        XCTAssertTrue(app.staticTexts["•••• 4444"].waitForExistence(timeout: 10))
-        let buyButton = app.buttons.matching(
-            NSPredicate(format: "label BEGINSWITH %@", "Buy")
-        ).firstMatch
+        XCTAssertTrue(paymentMethodButton.staticTexts["•••• 4444"].waitForExistence(timeout: 10))
+        let buyButton = app.buttons["checkout_buy_button"]
         buyButton.scrollToAndTap(in: app)
 
         XCTAssertTrue(app.alerts["Success"].waitForExistence(timeout: 20))
