@@ -1,5 +1,7 @@
 "Debit cards are most likely to be accepted." = "Debit cards are most likely to be accepted.";
 
+"Document uploaded successfully" = "Document uploaded successfully";
+
 "Please try again later." = "Please try again later.";
 
 "Submitted for review" = "Submitted for review";
@@ -22,8 +24,10 @@
 
 "We couldn't verify ownership of this wallet. Please try again." = "We couldn't verify ownership of this wallet. Please try again.";
 
-"We’re required to confirm your address to enable spending over %@." = "We're required to confirm your address to enable spending over %@.";
+"We may request proof of address for larger transactions." = "We may request proof of address for larger transactions.";
 
-"We’re required to understand where your funds come from to enable spending over %@." = "We're required to understand where your funds come from to enable spending over %@.";
+"We may request source of funds for larger transactions." = "We may request source of funds for larger transactions.";
 
 "We’re reviewing your documents. We’ll let you know when verification is complete." = "We're reviewing your documents. We'll let you know when verification is complete.";
+
+"You can continue while we verify your document in the background." = "You can continue while we verify your document in the background.";

@@ -112,6 +112,8 @@
 
 "Code sent" = "Kods nosūtīts";
 
+"Complete the payment using Pix to finish the purchase." = "Veiciet maksājumu, izmantojot Pix, lai pabeigtu pirkumu.";
+
 "Confirm" = "Apstiprināt";
 
 "Confirm payment details" = "Apstiprināt maksājuma informāciju";
@@ -341,6 +343,8 @@
 "The provided verification code has expired." = "Norādītajam verifikācijas kodam ir beidzies derīguma termiņš.";
 
 "The provided verification code is incorrect." = "Norādītais verifikācijas kods nav pareizs.";
+
+"This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Šis ir starptautisks pirkums, un tajā nav iekļauta 3,5 % IOF maksa. Turpinot jūs apliecināt un piekrītat <terms>Ebanx noteikumi un nosacījumi<terms>.";
 
 "This is your default" = "Tas ir jūsu noklusējums";
 

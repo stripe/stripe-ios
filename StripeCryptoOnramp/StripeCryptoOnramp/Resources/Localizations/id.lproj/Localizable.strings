@@ -1,5 +1,7 @@
 "Debit cards are most likely to be accepted." = "Kartu debit kemungkinan besar akan diterima.";
 
+"Document uploaded successfully" = "Dokumen berhasil diunggah";
+
 "Please try again later." = "Coba lagi nanti.";
 
 "Submitted for review" = "Dikirim untuk ditinjau";
@@ -22,8 +24,10 @@
 
 "We couldn't verify ownership of this wallet. Please try again." = "Kami tidak dapat memverifikasi kepemilikan dompet digital ini. Coba lagi.";
 
-"We’re required to confirm your address to enable spending over %@." = "Kami diwajibkan untuk mengonfirmasi alamat Anda untuk mengaktifkan pengeluaran di atas %@.";
+"We may request proof of address for larger transactions." = "Kami mungkin meminta bukti alamat untuk transaksi yang lebih besar.";
 
-"We’re required to understand where your funds come from to enable spending over %@." = "Kami diwajibkan untuk memahami asal dana Anda untuk mengaktifkan pengeluaran di atas %@.";
+"We may request source of funds for larger transactions." = "Kami mungkin meminta sumber dana untuk transaksi yang lebih besar.";
 
 "We’re reviewing your documents. We’ll let you know when verification is complete." = "Kami sedang meninjau dokumen Anda. Kami akan memberi tahu Anda setelah verifikasi selesai.";
+
+"You can continue while we verify your document in the background." = "Anda dapat melanjutkan sementara kami memverifikasi dokumen Anda di latar belakang.";
