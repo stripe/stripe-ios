@@ -37,6 +37,7 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
     let setupFutureUsageForPaymentMethodType: [String: String]?
     let billingAddressCollection: String?
     let shippingAddressCollection: ShippingAddressCollection?
+    let totalSummary: TotalSummary?
     let recurringDetails: RecurringDetails?
     let adaptivePricingInfo: AdaptivePricingInfo?
     let taxContext: TaxContext?
@@ -95,6 +96,7 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
         case setupFutureUsageForPaymentMethodType
         case billingAddressCollection
         case shippingAddressCollection
+        case totalSummary
         case recurringDetails
         case adaptivePricingInfo
         case taxContext
@@ -186,6 +188,7 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
             ShippingAddressCollection.self,
             forKey: .shippingAddressCollection
         )
+        totalSummary = try container.decodeIfPresent(TotalSummary.self, forKey: .totalSummary)
         recurringDetails = try container.decodeIfPresent(RecurringDetails.self, forKey: .recurringDetails)
         adaptivePricingInfo = try container.decodeIfPresent(
             AdaptivePricingInfo.self,
@@ -393,6 +396,10 @@ extension PaymentPagesAPIResponse {
 
     struct RecurringDetails: Decodable {
         let totalDiscountAmounts: [DiscountAmount]
+        let totalTaxAmounts: [TaxAmount]
+    }
+
+    struct TotalSummary: Decodable {
         let totalTaxAmounts: [TaxAmount]
     }
 
