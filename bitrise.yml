@@ -32,6 +32,7 @@ pipelines:
         abort_on_fail: true
       update-snapshots-and-lokalise: {}
       framework-tests: {}
+      financial-connections-stability-tests: {}
       lpm-confirm-flow-tests: {}
       framework-tests-and-builds-xcode-26-1: {}
       install-and-integration-tests: {}
@@ -46,6 +47,7 @@ pipelines:
       lint-tests:
         abort_on_fail: true
       framework-tests-no-mocks: {}
+      financial-connections-stability-tests: {}
       framework-tests-and-builds-xcode-26-1: {}
       deploy-docs: {}
       install-and-integration-tests: {}
@@ -228,8 +230,17 @@ workflows:
     - install-runtime-16
     - prep_all
     steps:
+    - script@1:
+        title: Fetch master for relevance check
+        inputs:
+        - content: git fetch origin master --depth=1
+    - script@1:
+        title: Check whether FC stability tests are relevant
+        inputs:
+        - content: ruby ci_scripts/should_run_fc_stability_tests.rb
     - xcode-test@6:
         is_skippable: true
+        run_if: '{{enveq "RUN_FC_STABILITY_TESTS" "true"}}'
         inputs: &financial_connections_stability_tests_inputs
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
@@ -237,37 +248,40 @@ workflows:
         - scheme: FinancialConnections Example
     - script@1:
         is_always_run: true
+        run_if: '{{enveq "RUN_FC_STABILITY_TESTS" "true"}}'
         title: Retry gate for test-runner hang
         inputs:
         - content: ./ci_scripts/xcode_test_runner_hang_gate.sh
     - xcode-test@6:
-        run_if: '{{enveq "STRIPE_RETRY_XCODE_TEST" "yes"}}'
+        run_if: '{{and (enveq "RUN_FC_STABILITY_TESTS" "true") (enveq "STRIPE_RETRY_XCODE_TEST" "yes")}}'
         inputs: *financial_connections_stability_tests_inputs
     - slack@3:
         is_always_run: true
-        run_if: .IsBuildFailed
+        run_if: '{{and (enveq "BITRISE_PULL_REQUEST" "") .IsBuildFailed}}'
         inputs:
         - webhook_url: $WEBHOOK_SLACK_CUX_BOTS
         - webhook_url_on_error: $WEBHOOK_SLACK_CUX_BOTS
         - text_on_error: "iOS build failed (c.c. @link-mobile-run)"
     - slack@3:
         is_always_run: true
+        run_if: '{{enveq "BITRISE_PULL_REQUEST" ""}}'
         inputs:
         - webhook_url: $WEBHOOK_SLACK_CONNECTIONS_MOBILE
         - webhook_url_on_error: $WEBHOOK_SLACK_CONNECTIONS_MOBILE
     - slack@3:
         is_always_run: true
-        run_if: .IsBuildFailed
+        run_if: '{{and (enveq "BITRISE_PULL_REQUEST" "") .IsBuildFailed}}'
         inputs:
         - webhook_url: $SLACK_KGAIDIS_TESTING_WEBHOOK_URL
         - webhook_url_on_error: $SLACK_KGAIDIS_TESTING_WEBHOOK_URL
     - slack@3:
         is_always_run: true
-        run_if: .IsBuildFailed
+        run_if: '{{and (enveq "BITRISE_PULL_REQUEST" "") .IsBuildFailed}}'
         inputs:
         - webhook_url: $SLACK_CONNECTIONS_IOS_FAILURES_WEBHOOK_URL
         - webhook_url_on_error: $SLACK_CONNECTIONS_IOS_FAILURES_WEBHOOK_URL
-    - deploy-to-bitrise-io@2: {}
+    - deploy-to-bitrise-io@2:
+        run_if: '{{enveq "RUN_FC_STABILITY_TESTS" "true"}}'
     envs:
     - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
   financial-connections-stability-tests-for-edge:
