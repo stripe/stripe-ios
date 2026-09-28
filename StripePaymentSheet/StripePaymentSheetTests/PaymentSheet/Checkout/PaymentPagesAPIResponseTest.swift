@@ -594,8 +594,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
     func testAggregateTaxAmountsRemainSeparateFromTotals() {
         let session = CheckoutTestHelpers.makeSession([
             "mode": "modeless",
-            "recurring_details": [
-                "total_discount_amounts": [],
+            "total_summary": [
                 "total_tax_amounts": [
                     ["amount": 186, "inclusive": false, "taxable_amount": 2000,
                      "tax_rate": ["percentage": 7.45, "display_name": "Sales Tax"], ],
@@ -617,6 +616,11 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         let session = CheckoutTestHelpers.makeSession([
             "mode": "modeless",
             "recurring_details": [
+                "total_discount_amounts": [
+                    ["amount": 332, "coupon": ["code": "co_test", "name": "Welcome"]],
+                ],
+            ],
+            "total_summary": [
                 "total_tax_amounts": [
                     [
                         "amount": 148,
@@ -624,9 +628,6 @@ class PaymentPagesAPIResponseTest: XCTestCase {
                         "taxable_amount": 2000,
                         "tax_rate": ["percentage": 7.4, "display_name": "Sales Tax"],
                     ],
-                ],
-                "total_discount_amounts": [
-                    ["amount": 332, "coupon": ["code": "co_test", "name": "Welcome"]],
                 ],
             ],
             "checkout_items": [

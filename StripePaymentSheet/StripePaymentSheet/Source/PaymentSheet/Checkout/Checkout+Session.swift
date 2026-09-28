@@ -123,12 +123,7 @@ extension CheckoutController.Session {
             from: apiResponse.recurringDetails?.totalDiscountAmounts ?? [],
             currency: apiResponse.currency
         )
-        // `total_summary` is the session-level aggregate. Fall back to the legacy
-        // recurring-specific field for older Payment Pages response profiles.
-        let publicTaxAmounts = (
-            apiResponse.totalSummary?.totalTaxAmounts
-                ?? apiResponse.recurringDetails?.totalTaxAmounts
-        )?.map {
+        let publicTaxAmounts = apiResponse.totalSummary?.totalTaxAmounts?.map {
             PaymentPagesAPIResponse.makeSessionTaxAmount(
                 from: $0,
                 currency: apiResponse.currency,

@@ -396,11 +396,10 @@ extension PaymentPagesAPIResponse {
 
     struct RecurringDetails: Decodable {
         let totalDiscountAmounts: [DiscountAmount]
-        let totalTaxAmounts: [TaxAmount]
     }
 
     struct TotalSummary: Decodable {
-        let totalTaxAmounts: [TaxAmount]
+        let totalTaxAmounts: [TaxAmount]?
     }
 
     struct DiscountAmount: Decodable {

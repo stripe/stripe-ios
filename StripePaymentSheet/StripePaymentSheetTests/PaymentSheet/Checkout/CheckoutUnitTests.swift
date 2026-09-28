@@ -645,8 +645,7 @@ final class CheckoutUnitTests: XCTestCase {
 
     func testTotalTaxExclusive_singleAmount() {
         var json = CheckoutTestHelpers.openSessionJSON
-        json["recurring_details"] = [
-            "total_discount_amounts": [],
+        json["total_summary"] = [
             "total_tax_amounts": [
                 [
                     "amount": 1185,
@@ -673,8 +672,7 @@ final class CheckoutUnitTests: XCTestCase {
 
     func testTotalTaxExclusive_multipleAmounts() {
         var json = CheckoutTestHelpers.openSessionJSON
-        json["recurring_details"] = [
-            "total_discount_amounts": [],
+        json["total_summary"] = [
             "total_tax_amounts": [
                 [
                     "amount": 500,
@@ -710,8 +708,9 @@ final class CheckoutUnitTests: XCTestCase {
     }
 
     func testTotalTaxAmounts_absent_isNil() {
-        // Given a response without total_tax_amounts
-        let json = CheckoutTestHelpers.openSessionJSON
+        // Given a total summary without total_tax_amounts
+        var json = CheckoutTestHelpers.openSessionJSON
+        json["total_summary"] = ["total": 1000]
 
         // When decoding the public Session
         let session = try! PaymentPagesAPIResponse.decode(fromAPIResponse: json).makePublicSession()
@@ -788,19 +787,7 @@ final class CheckoutUnitTests: XCTestCase {
             "computation_type": "automatic",
             "status": "complete",
         ]
-        json["recurring_details"] = [
-            "subtotal": 12000,
-            "total": 12000,
-            "total_discount_amounts": [],
-            "total_summary": [
-                "due": 12000,
-                "subtotal": 12000,
-                "total": 12000,
-                "total_discount_amount_aggregate": 0,
-                "total_discount_amounts": [],
-                "total_proration_amount_aggregate": 0,
-                "total_tax_amounts": [zeroTaxAmount],
-            ],
+        json["total_summary"] = [
             "total_tax_amounts": [zeroTaxAmount],
         ]
         setOneTimePriceAmounts(
@@ -849,6 +836,8 @@ final class CheckoutUnitTests: XCTestCase {
         ]
         sessionJSON["recurring_details"] = [
             "total_discount_amounts": [discountAmount],
+        ]
+        sessionJSON["total_summary"] = [
             "total_tax_amounts": [],
         ]
         var session = try! PaymentPagesAPIResponse.decode(fromAPIResponse: sessionJSON)
@@ -958,8 +947,7 @@ final class CheckoutUnitTests: XCTestCase {
         // Given sessions with absent and present-but-empty tax amounts
         let absent = CheckoutTestHelpers.makeOpenSession().makePublicSession()
         var emptyJSON = CheckoutTestHelpers.openSessionJSON
-        emptyJSON["recurring_details"] = [
-            "total_discount_amounts": [],
+        emptyJSON["total_summary"] = [
             "total_tax_amounts": [],
         ]
         let empty = try! PaymentPagesAPIResponse.decode(fromAPIResponse: emptyJSON).makePublicSession()
@@ -990,8 +978,7 @@ final class CheckoutUnitTests: XCTestCase {
         var json = CheckoutTestHelpers.openSessionJSON
         json["billing_address_collection"] = "required"
         json["shipping_address_collection"] = ["allowed_countries": ["US", "CA", "GB"]]
-        json["recurring_details"] = [
-            "total_discount_amounts": [],
+        json["total_summary"] = [
             "total_tax_amounts": [
                 [
                     "amount": 1000,
@@ -1341,7 +1328,6 @@ final class CheckoutUnitTests: XCTestCase {
                     "promotion_code": ["code": promotionCode],
                 ],
             ],
-            "total_tax_amounts": [],
         ]
         setOneTimePriceAmounts(
             in: &json,
