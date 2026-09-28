@@ -167,6 +167,9 @@
 /* Text of a notification shown to the user when a login code is successfully sent via SMS. */
 "Code sent" = "Code sent";
 
+/* Instructions shown while waiting for a Pix payment authorization */
+"Complete the payment using Pix to finish the purchase." = "Complete the payment using Pix to finish the purchase.";
+
 /* Title used for various UIs, including a button that confirms entered payment details or the selection of a payment method. */
 "Confirm" = "Confirm";
 
@@ -520,6 +523,9 @@ is not supported by the merchant */
 
 /* Error message shown when the user enters an incorrect verification code. */
 "The provided verification code is incorrect." = "The provided verification code is incorrect.";
+
+/* Disclosure for an international Pix payment. The terms tags enclose a link to Ebanx's terms. */
+"This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>.";
 
 /* Text of a label indicating that a payment method is the default. */
 "This is your default" = "This is your default";
