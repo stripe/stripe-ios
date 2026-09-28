@@ -288,7 +288,10 @@ extension STPTestingAPIClient {
             method: "POST",
             params: [
                 "merchant": playgroundMerchant,
-                "stripe_version": Self.checkoutMobileElementsAPISettings,
+                // Checkout retains the creation API version for the underlying PaymentIntent.
+                "stripe_version": types.contains("vipps")
+                    ? "\(Self.checkoutMobileElementsAPISettings); vipps_preview=v1"
+                    : Self.checkoutMobileElementsAPISettings,
                 "request_params": sessionParameters,
             ]
         )
@@ -305,7 +308,7 @@ extension STPTestingAPIClient {
 
     // This helper is used by tests, which Periphery excludes from its scan.
     // periphery:ignore
-    /// Keeps LPM confirmation tests on the CI backend while they are migrated separately.
+    /// Creates legacy Checkout Sessions on the CI backend for tests that have not migrated yet.
     func createLegacyCheckoutSession(
         types: [String] = ["card"],
         currency: String = "usd",
@@ -395,6 +398,10 @@ extension STPTestingAPIClient {
 
     private func playgroundMerchant(for merchantCountry: String?) -> String {
         let playgroundMerchant = merchantCountry ?? "us"
+        // The CI backend uses "mex" for Mexico, but the playground has its own mapping and expects "MX".
+        if playgroundMerchant.lowercased() == "mex" {
+            return "MX"
+        }
         return playgroundMerchant.count == 2 ? playgroundMerchant.uppercased() : playgroundMerchant
     }
 
