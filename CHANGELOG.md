@@ -7,6 +7,7 @@ MINOR
 
 ### PaymentSheet
 * [Fixed] Fixed Apple Pay failing to open for fractional amounts in COP, HUF, IDR, LAK, LBP, PKR, and RSD.
+* [Fixed] Avoid blocking the main thread when stopping the card scanner.
 
 ### CryptoOnramp (Alpha)
 * [Added] Added `STPAPIClient.CryptoOnrampAPIError.missingLinkSessionKey` to report when a Link session key is unavailable.
