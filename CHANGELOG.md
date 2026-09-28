@@ -1,13 +1,21 @@
 The next release's version bump will so far be:
-PATCH
+MINOR
 
 ## X.Y.Z - changes pending release
 ### CryptoOnramp (Alpha)
 * [Changed] Apple Pay can now be presented via `CryptoOnrampCoordinator.collectPaymentMethod(type:from:)` before the user authenticates with Link. `createCryptoPaymentToken()` still requires an authenticated user.
+* [Added] Added `STPAPIClient.CryptoOnrampAPIError.missingLinkSessionKey` to report when a Link session key is unavailable.
 
+## 26.12.1 2026-09-28
 ### Financial Connections
 * [Fixed] Preserved `no_eligible_accounts` in `onEvent` error callbacks instead of reporting it as `unexpected_error`.
 * [Fixed] Recorded native `onEvent` emissions with the session context for diagnostics.
+
+### Payments
+* [Added] Added API bindings for Pix.
+
+### PaymentSheet
+* [Added] Added support for Pix payments.
 
 ## 26.12.0 2026-09-21
 ### CryptoOnramp (Alpha)
@@ -17,6 +25,7 @@ PATCH
 
 ### StripeCore
 * [Added] Added `additionalHeaders` support to the `STPAPIClient` GET, POST, and DELETE APIs exposed through the `STP` SPI.
+* [Added] Added `uploadFile(at:purpose:authorizationSecret:progress:)` and associated error type `FileUploadError`, exposed through the `STP` SPI.
 
 ### PaymentSheet
 * [Fixed] Fixed card funding warnings not appearing after scanning a card.

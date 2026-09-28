@@ -112,6 +112,8 @@
 
 "Code sent" = "Kodas išsiųstas";
 
+"Complete the payment using Pix to finish the purchase." = "Atlikite mokėjimą naudodami „Pix”, kad užbaigtumėte pirkimą.";
+
 "Confirm" = "Patvirtinti";
 
 "Confirm payment details" = "Patvirtinti mokėjimo duomenis";
@@ -341,6 +343,8 @@
 "The provided verification code has expired." = "Pateiktas patvirtinimo kodas nebegalioja.";
 
 "The provided verification code is incorrect." = "Nurodytas neteisingas patikrinimo kodas.";
+
+"This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Tai – tarptautinis pirkinys, kuriam netaikomas 3,5 % IOF mokestis. Tęsdami, patvirtinate ir sutinkate su <terms>„Ebanx“ sąlygomis ir nuostatomis</terms>.";
 
 "This is your default" = "Tai jūsų numatytasis mokėjimo būdas";
 

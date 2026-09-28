@@ -1,5 +1,7 @@
 "Debit cards are most likely to be accepted." = "Bankamatik kartlarının kabul edilme olasılığı en yüksektir.";
 
+"Document uploaded successfully" = "Belge başarıyla yüklendi";
+
 "Please try again later." = "Lütfen daha sonra tekrar deneyin.";
 
 "Submitted for review" = "İncelemeye gönderildi";
@@ -22,8 +24,10 @@
 
 "We couldn't verify ownership of this wallet. Please try again." = "Bu cüzdanın sahipliğini doğrulayamadık. Lütfen tekrar deneyin.";
 
-"We’re required to confirm your address to enable spending over %@." = "%@ üzeri harcamaları etkinleştirmek için adresinizi onaylamamız gerekiyor.";
+"We may request proof of address for larger transactions." = "Daha büyük işlemler için adres kanıtı talep edebiliriz.";
 
-"We’re required to understand where your funds come from to enable spending over %@." = "%@ üzeri harcamaları etkinleştirmek için fonlarınızın nereden geldiğini anlamamız gerekiyor.";
+"We may request source of funds for larger transactions." = "Daha büyük işlemler için fonların kaynağını talep edebiliriz.";
 
 "We’re reviewing your documents. We’ll let you know when verification is complete." = "Belgelerinizi inceliyoruz. Doğrulama tamamlandığında sizi bilgilendireceğiz.";
+
+"You can continue while we verify your document in the background." = "Arka planda belgenizi doğrularken devam edebilirsiniz.";

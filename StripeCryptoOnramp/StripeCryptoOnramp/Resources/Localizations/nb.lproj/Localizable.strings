@@ -1,5 +1,7 @@
 "Debit cards are most likely to be accepted." = "Debetkort vil mest sannsynlig bli akseptert.";
 
+"Document uploaded successfully" = "Dokumentet ble lastet opp";
+
 "Please try again later." = "Prøv igjen senere.";
 
 "Submitted for review" = "Sendt til vurdering";
@@ -22,8 +24,10 @@
 
 "We couldn't verify ownership of this wallet. Please try again." = "Vi kan ikke bekrefte eierskapet til denne lommeboken. Prøv igjen.";
 
-"We’re required to confirm your address to enable spending over %@." = "Vi er pålagt å bekrefte adressen din for å tillate forbruk over %@.";
+"We may request proof of address for larger transactions." = "Vi kan be deg oppgi adressebevis for større transaksjoner.";
 
-"We’re required to understand where your funds come from to enable spending over %@." = "Vi er pålagt å forstå hvor midlene dine kommer fra for å tillate forbruk over %@.";
+"We may request source of funds for larger transactions." = "Vi kan be deg oppgi kilden til midlene for større transaksjoner.";
 
 "We’re reviewing your documents. We’ll let you know when verification is complete." = "Vi gjennomgår dokumentene dine og varsler deg når bekreftelsen er fullført.";
+
+"You can continue while we verify your document in the background." = "Du kan fortsette mens vi bekrefter dokumentet ditt i bakgrunnen.";
