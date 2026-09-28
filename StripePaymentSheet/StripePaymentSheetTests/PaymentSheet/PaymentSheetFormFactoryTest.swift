@@ -1364,6 +1364,48 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         }
     }
 
+    func testPixForms() throws {
+        // Given a cross-border Pix form
+        let internationalForm = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.pix]),
+            elementsSession: ._testValue(orderedPaymentMethodTypes: [.pix], countryCode: "US"),
+            configuration: .paymentElement(PaymentSheet.Configuration()),
+            paymentMethod: .stripe(.pix)
+        ).make()
+
+        // When the required buyer details are entered
+        internationalForm.getTextFieldElement("Full name").setText("Jane Doe")
+        internationalForm.getTextFieldElement("Email").setText("jane@example.com")
+        internationalForm.getTextFieldElement("CPF/CPNJ").setText("52998224725")
+        sendEventToSubviews(.viewDidAppear, from: internationalForm.view)
+        let params = try XCTUnwrap(
+            internationalForm.updateParams(params: .init(type: .stripe(.pix)))
+        )
+
+        // Then Pix sends standard billing details and the billing tax ID
+        XCTAssertEqual(params.paymentMethodParams.billingDetails?.name, "Jane Doe")
+        XCTAssertEqual(params.paymentMethodParams.billingDetails?.email, "jane@example.com")
+        XCTAssertEqual(
+            params.paymentMethodParams.additionalAPIParameters["billing_details[tax_id]"] as? String,
+            "52998224725"
+        )
+        XCTAssertTrue(params.didDisplayMandate)
+
+        // Given a domestic Pix form
+        let domesticForm = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.pix]),
+            elementsSession: ._testValue(orderedPaymentMethodTypes: [.pix], countryCode: "BR"),
+            configuration: .paymentElement(PaymentSheet.Configuration()),
+            paymentMethod: .stripe(.pix)
+        ).make()
+
+        // Then it does not require the cross-border buyer fields or disclosure
+        XCTAssertNil(domesticForm.getTextFieldElement("Full name"))
+        XCTAssertNil(domesticForm.getTextFieldElement("Email"))
+        XCTAssertNil(domesticForm.getTextFieldElement("CPF/CPNJ"))
+        XCTAssertFalse(domesticForm.updateParams(params: .init(type: .stripe(.pix)))?.didDisplayMandate ?? true)
+    }
+
     func testNaverPayFundingSelector() {
         // Given
         let form = PaymentSheetFormFactory(

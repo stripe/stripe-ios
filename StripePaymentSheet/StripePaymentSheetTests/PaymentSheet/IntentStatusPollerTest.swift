@@ -6,100 +6,152 @@
 //
 
 @testable import StripePaymentSheet
-import StripePaymentsTestUtils
 import XCTest
 
-class IntentStatusPollerTest: XCTestCase {
-    let retryInterval = 0.1
-    var sut: IntentStatusPoller!
-    var mockIntentRetriever: MockPaymentIntentRetriever!
-    var mockDelegate: MockIntentStatusPollerDelegate!
-    var intentRetrieverExpectation: XCTestExpectation!
-    var delegateExpectation: XCTestExpectation!
+final class IntentStatusPollerTest: XCTestCase {
+    private enum TestStatus: Equatable {
+        case pending
+        case succeeded
+        case failed
+    }
+
+    private let retryInterval = 0.1
+    private var sut: IntentStatusPoller<TestStatus, TestStatus>!
+    private var retriever: MockStatusRetriever<TestStatus>!
+    private var updates: [TestStatus]!
+    private var updateExpectation: XCTestExpectation?
 
     override func setUp() {
         super.setUp()
-        mockIntentRetriever = MockPaymentIntentRetriever()
-        mockDelegate = MockIntentStatusPollerDelegate()
-        sut = IntentStatusPoller(retryInterval: retryInterval, intentRetriever: mockIntentRetriever, clientSecret: "test_client_secret")
-        sut.delegate = mockDelegate
+        retriever = MockStatusRetriever()
+        updates = []
+        sut = IntentStatusPoller(
+            retryInterval: retryInterval,
+            retrieveValue: retriever.retrieve,
+            status: \.self,
+            didUpdate: { [weak self] status in
+                self?.updates.append(status)
+                self?.updateExpectation?.fulfill()
+            }
+        )
     }
 
-    func setExpectations(apiExpectedCount: Int, delegateExpectedCount: Int) {
-        intentRetrieverExpectation = XCTestExpectation()
-        delegateExpectation = XCTestExpectation()
-        delegateExpectation.assertForOverFulfill = true
-        intentRetrieverExpectation.expectedFulfillmentCount = apiExpectedCount
-        delegateExpectation.expectedFulfillmentCount = delegateExpectedCount
-
-        mockIntentRetriever.expectation =  intentRetrieverExpectation
-        mockDelegate.expectation = delegateExpectation
+    override func tearDown() {
+        sut.suspendPolling()
+        sut = nil
+        retriever = nil
+        updates = nil
+        updateExpectation = nil
+        super.tearDown()
     }
 
-    func testPolling_beginSuspendBegin() {
-        // Poll 3 times
-        // Should call retrievePaymentIntent 3 times
-        // Delegate should be notified on the first poll but not subsequent polls
-        setExpectations(apiExpectedCount: 3, delegateExpectedCount: 1)
-        mockIntentRetriever.mockedStatus = .requiresPaymentMethod
+    func testPollingCanBeSuspendedAndResumed() {
+        // Given a pending status
+        retriever.statuses = [.pending, .pending, .pending]
+        retriever.expectation = expectation(description: "Poll three times")
+        retriever.expectation?.expectedFulfillmentCount = 3
+        updateExpectation = expectation(description: "Report the first status")
 
+        // When polling begins
         sut.beginPolling()
 
-        wait(for: [intentRetrieverExpectation, delegateExpectation], timeout: (retryInterval * 2) * 3) // longer timeout for 3 polls
-        XCTAssertEqual(mockDelegate.latestPaymentIntent?.status, .requiresPaymentMethod)
+        // Then it polls repeatedly and reports the status once
+        wait(for: [retriever.expectation!, updateExpectation!], timeout: retryInterval * 6)
+        XCTAssertEqual(updates, [.pending])
 
-        sut.suspendPolling() // We should no longer notify the delegate or call the API
+        // When polling is suspended
+        sut.suspendPolling()
+        retriever.statuses = [.succeeded]
+        let suspendedRetrieval = expectation(description: "Do not retrieve while suspended")
+        suspendedRetrieval.isInverted = true
+        retriever.expectation = suspendedRetrieval
+        updateExpectation = expectation(description: "Do not report while suspended")
+        updateExpectation?.isInverted = true
 
-        // Make the API client return succeeded, then the delegate should NOT be notified, and API should NOT be called due to suspended polling
-        setExpectations(apiExpectedCount: 1, delegateExpectedCount: 1)
-        intentRetrieverExpectation.isInverted = true // expectations should not be fufilled since polling is suspended
-        delegateExpectation.isInverted = true
-        mockIntentRetriever.mockedStatus = .succeeded
+        // Then it does not retrieve or report a status
+        wait(for: [suspendedRetrieval, updateExpectation!], timeout: retryInterval * 2)
+        XCTAssertEqual(updates, [.pending])
 
-        wait(for: [intentRetrieverExpectation, delegateExpectation], timeout: retryInterval * 2)
-        // delegate should not have been notified of succeeded since polling was suspended
-        XCTAssertEqual(mockDelegate.latestPaymentIntent?.status, .requiresPaymentMethod)
-
-        // Resume polling
-        setExpectations(apiExpectedCount: 1, delegateExpectedCount: 1)
+        // When polling resumes with a succeeded status
+        retriever.expectation = expectation(description: "Retrieve after resuming")
+        updateExpectation = expectation(description: "Report succeeded")
         sut.beginPolling()
 
-        wait(for: [intentRetrieverExpectation, delegateExpectation], timeout: retryInterval * 2)
-        XCTAssertEqual(mockDelegate.latestPaymentIntent?.status, .succeeded)
+        // Then it reports the new status
+        wait(for: [retriever.expectation!, updateExpectation!], timeout: retryInterval * 2)
+        XCTAssertEqual(updates, [.pending, .succeeded])
     }
 
-    func testPollOnce() {
-        setExpectations(apiExpectedCount: 1, delegateExpectedCount: 1)
-        mockIntentRetriever.mockedStatus = .requiresPaymentMethod
+    func testPollOnceReportsTheCurrentStatus() {
+        // Given a pending status while continuous polling is inactive
+        retriever.statuses = [.pending]
+        retriever.expectation = expectation(description: "Retrieve once")
+        updateExpectation = expectation(description: "Report once")
+        let completionExpectation = expectation(description: "Complete once")
 
-        sut.pollOnce()
+        // When polling once
+        sut.pollOnce { status in
+            XCTAssertEqual(status, .pending)
+            completionExpectation.fulfill()
+        }
 
-        // API client should be called and delegate should be notified of the new status since updating from .unknown`
-        wait(for: [intentRetrieverExpectation, delegateExpectation], timeout: retryInterval * 2)
-        XCTAssertEqual(mockDelegate.latestPaymentIntent?.status, .requiresPaymentMethod)
+        // Then it reports and returns the current status
+        wait(for: [retriever.expectation!, updateExpectation!, completionExpectation], timeout: retryInterval * 2)
+        XCTAssertEqual(updates, [.pending])
+    }
+
+    func testPollingContinuesAfterRetrievalFailure() {
+        // Given a transient retrieval failure followed by a pending status
+        retriever.statuses = [nil, .pending]
+        retriever.expectation = expectation(description: "Retry after failure")
+        retriever.expectation?.expectedFulfillmentCount = 2
+        updateExpectation = expectation(description: "Report recovered status")
+
+        // When polling begins
+        sut.beginPolling()
+
+        // Then it retries and reports the next status
+        wait(for: [retriever.expectation!, updateExpectation!], timeout: retryInterval * 4)
+        XCTAssertEqual(updates, [.pending])
+    }
+
+    func testResponseFromSuspendedPollingGenerationIsIgnored() {
+        // Given an in-flight request from the first polling generation
+        retriever.automaticallyCompletes = false
+        retriever.expectation = expectation(description: "Start two generations")
+        retriever.expectation?.expectedFulfillmentCount = 2
+        sut.beginPolling()
+
+        // When polling is suspended and resumed before the first request completes
+        sut.suspendPolling()
+        sut.beginPolling()
+        wait(for: [retriever.expectation!], timeout: retryInterval * 2)
+        updateExpectation = expectation(description: "Report only the current generation")
+        retriever.completeRequest(at: 0, with: .failed)
+        retriever.completeRequest(at: 0, with: .pending)
+
+        // Then the stale response is ignored
+        wait(for: [updateExpectation!], timeout: retryInterval * 2)
+        XCTAssertEqual(updates, [.pending])
     }
 }
 
-// Mock our PaymentIntentRetrievable for testing.
-class MockPaymentIntentRetriever: PaymentIntentRetrievable {
+private final class MockStatusRetriever<Status> {
+    var automaticallyCompletes = true
     var expectation: XCTestExpectation?
-    var mockedStatus: STPPaymentIntentStatus = .unknown
+    var statuses: [Status?] = []
+    private var pendingCompletions: [(Status?) -> Void] = []
 
-    func retrievePaymentIntent(withClientSecret clientSecret: String, completion: @escaping STPPaymentIntentCompletionBlock) {
-        let paymentIntent = STPFixtures.paymentIntent(paymentMethodTypes: ["card"], status: mockedStatus)
-
+    func retrieve(completion: @escaping (Status?) -> Void) {
         expectation?.fulfill()
-        completion(paymentIntent, nil)
+        if automaticallyCompletes {
+            completion(statuses.isEmpty ? nil : statuses.removeFirst())
+        } else {
+            pendingCompletions.append(completion)
+        }
     }
-}
 
-// Mock delegate
-class MockIntentStatusPollerDelegate: IntentStatusPollerDelegate {
-    var expectation: XCTestExpectation?
-    var latestPaymentIntent: STPPaymentIntent?
-
-    func didUpdate(paymentIntent: STPPaymentIntent) {
-        self.latestPaymentIntent = paymentIntent
-        self.expectation?.fulfill()
+    func completeRequest(at index: Int, with status: Status?) {
+        pendingCompletions.remove(at: index)(status)
     }
 }
