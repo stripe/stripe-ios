@@ -419,6 +419,23 @@ extension STPApplePayContext {
         }
     }
 
+    static func roundAmountForApplePay(_ amount: NSDecimalNumber, currency: String?) -> NSDecimalNumber {
+        // PassKit rejects fractional amounts for these two-decimal currencies.
+        // Match Stripe.js by rounding up so the displayed total is never less than the amount charged.
+        let wholeAmountCurrencies = ["COP", "HUF", "IDR", "LAK", "LBP", "PKR", "RSD"]
+        guard let currency, wholeAmountCurrencies.contains(currency.uppercased()) else {
+            return amount
+        }
+        return amount.rounding(accordingToBehavior: NSDecimalNumberHandler(
+            roundingMode: .up,
+            scale: 0,
+            raiseOnExactness: false,
+            raiseOnOverflow: false,
+            raiseOnUnderflow: false,
+            raiseOnDivideByZero: false
+        ))
+    }
+
     @MainActor
     static func createPaymentRequest(
         intent: Intent,
@@ -456,7 +473,7 @@ extension STPApplePayContext {
                     currency: intent.currency
                 )
                 paymentRequest.paymentSummaryItems = [
-                    PKPaymentSummaryItem(label: label, amount: decimalAmount, type: .final),
+                    PKPaymentSummaryItem(label: label, amount: roundAmountForApplePay(decimalAmount, currency: intent.currency), type: .final),
                 ]
             } else {
                 paymentRequest.paymentSummaryItems = [

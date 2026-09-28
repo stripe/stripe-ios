@@ -20,6 +20,7 @@ extension NSDecimalNumber {
         "IDR": 2,
         "ISK": 2,
         "HUF": 2,
+        "LBP": 2,
     ]
 
     /// Converts an amount from a currency's minor units to its major units.

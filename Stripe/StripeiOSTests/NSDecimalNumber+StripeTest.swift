@@ -29,6 +29,7 @@ class NSDecimalNumberStripeTest: XCTestCase {
         "lak",
         "rsd",
         "huf",
+        "lbp",
     ]
 
     private let noDecimalPointCurrencies = [
@@ -68,6 +69,15 @@ class NSDecimalNumberStripeTest: XCTestCase {
         for currency in noDecimalPointCurrencies {
             let decimalNumber = NSDecimalNumber.stp_decimalNumber(withAmount: 92123, currency: currency)
             XCTAssertEqual(decimalNumber, NSDecimalNumber(string: "92123"))
+        }
+    }
+
+    func testDecimalAmount_LBP() {
+        for currency in ["lbp", "LBP", "Lbp"] {
+            for (amount, expected) in [(0, "0"), (1, "0.01"), (100, "1"), (92123, "921.23")] {
+                let decimalNumber = NSDecimalNumber.stp_decimalNumber(withAmount: amount, currency: currency)
+                XCTAssertEqual(decimalNumber, NSDecimalNumber(string: expected), "\(amount) \(currency)")
+            }
         }
     }
 

@@ -41,6 +41,42 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
         }
     }
 
+    func testCreatePaymentRequest_LBP() {
+        // Given an amount of 23.45 LBP in each supported intent type
+        let intents = [
+            Intent._testPaymentIntent(paymentMethodTypes: [.card], currency: "lbp"),
+            Intent.deferredIntent(intentConfig: .init(mode: .payment(amount: 2345, currency: "LBP"), confirmHandler: dummyDeferredConfirmHandler)),
+            Intent._testCheckoutSession(amount: 2345, currency: "lbp"),
+        ]
+        for intent in intents {
+            // When building the Apple Pay request
+            let request = STPApplePayContext.createPaymentRequest(intent: intent, configuration: configuration, applePay: applePayConfiguration)
+
+            // Then the displayed total rounds up to whole pounds without changing the amount to charge
+            XCTAssertEqual(request.paymentSummaryItems.last?.amount, NSDecimalNumber(string: "24"))
+            XCTAssertEqual(request.currencyCode, "LBP")
+            XCTAssertEqual(intent.amount, 2345)
+        }
+    }
+
+    func testCreatePaymentRequest_roundsFractionalApplePayAmounts() {
+        for currency in ["cop", "huf", "idr", "lak", "lbp", "pkr", "rsd"] {
+            for (amount, expected) in [(0, "0"), (1, "1"), (2300, "23"), (2301, "24"), (2345, "24"), (2399, "24")] {
+                let intent = Intent.deferredIntent(intentConfig: .init(mode: .payment(amount: amount, currency: currency), confirmHandler: dummyDeferredConfirmHandler))
+                let request = STPApplePayContext.createPaymentRequest(intent: intent, configuration: configuration, applePay: applePayConfiguration)
+                XCTAssertEqual(request.paymentSummaryItems.last?.amount, NSDecimalNumber(string: expected), "\(amount) \(currency)")
+            }
+        }
+    }
+
+    func testCreatePaymentRequest_preservesOtherCurrencyPrecision() {
+        for (currency, expected) in [("usd", "23.45"), ("jpy", "2345"), ("kwd", "2.345")] {
+            let intent = Intent.deferredIntent(intentConfig: .init(mode: .payment(amount: 2345, currency: currency), confirmHandler: dummyDeferredConfirmHandler))
+            let request = STPApplePayContext.createPaymentRequest(intent: intent, configuration: configuration, applePay: applePayConfiguration)
+            XCTAssertEqual(request.paymentSummaryItems.last?.amount, NSDecimalNumber(string: expected), currency)
+        }
+    }
+
     func testCreatePaymentRequest_PaymentIntentWithSetupFutureUsage() {
         let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card], setupFutureUsage: .offSession)
         let deferredIntent = Intent.deferredIntent(intentConfig: .init(mode: .payment(amount: 2345, currency: "USD", setupFutureUsage: .offSession), confirmHandler: dummyDeferredConfirmHandler))
@@ -598,6 +634,24 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
         XCTAssertEqual(sut.paymentSummaryItems[4].label, "Acme")
         XCTAssertEqual(sut.paymentSummaryItems[4].amount, NSDecimalNumber(string: "32.00"))
         XCTAssertEqual(sut.paymentSummaryItems[4].type, .final)
+    }
+
+    func testCreatePaymentRequest_CheckoutSession_LBPWithTaxAndQuantity() {
+        // Given three items at 23.01 LBP each and 0.49 LBP in tax
+        let intent = Intent._testCheckoutSession(
+            amount: 6952,
+            currency: "lbp",
+            oneTimePriceItems: [.init(key: "li_1", displayName: "Widget", quantity: 3, unitAmount: 2301)],
+            subtotal: 6903,
+            taxAmount: 49
+        )
+
+        // When building the Apple Pay request
+        let request = STPApplePayContext.createPaymentRequest(intent: intent, configuration: configuration, applePay: applePayConfiguration)
+
+        // Then every row uses whole pounds, with rounding applied after multiplying by quantity
+        XCTAssertEqual(request.paymentSummaryItems.map(\.amount), [70, 70, 1, 70])
+        XCTAssertEqual(intent.amount, 6952)
     }
 
     func testCreatePaymentRequest_CheckoutSession_OmitsBreakdownWhenZero() {
