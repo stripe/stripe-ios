@@ -251,7 +251,7 @@ struct LinkPMDisplayDetails {
         ) { [weak self] result in
             switch result {
             case .success(let newSession):
-                self?.currentSession = newSession
+                self?.updateCurrentSession(newSession, retainingLinkSessionKeyFrom: session)
                 completion(.success(newSession.hasStartedSMSVerification))
             case .failure(let error):
                 completion(.failure(error))
@@ -287,7 +287,7 @@ struct LinkPMDisplayDetails {
         ) { [weak self] result in
             switch result {
             case .success(let verifiedSession):
-                self?.currentSession = verifiedSession
+                self?.updateCurrentSession(verifiedSession, retainingLinkSessionKeyFrom: session)
                 completion(.success(()))
             case .failure(let error):
                 completion(.failure(error))
@@ -570,7 +570,7 @@ struct LinkPMDisplayDetails {
             requestSurface: requestSurface
         ) { [weak self] result in
             if case .success(let refreshedSession) = result {
-                self?.currentSession = refreshedSession
+                self?.updateCurrentSession(refreshedSession, retainingLinkSessionKeyFrom: session)
             }
             completion(result)
         }
@@ -620,6 +620,13 @@ private extension PaymentSheetLinkAccount {
 
     typealias CompletionBlock<T> = (Result<T, Error>) -> Void
 
+    func updateCurrentSession(_ newSession: ConsumerSession, retainingLinkSessionKeyFrom previousSession: ConsumerSession?) {
+        if newSession.linkSessionKey?.isEmpty ?? true {
+            newSession.linkSessionKey = previousSession?.linkSessionKey
+        }
+        currentSession = newSession
+    }
+
     /// Attempts attempts a request using apiCall. If the session
     /// is invalid, refresh it and re-attempt the apiCall.
     func retryingOnAuthError<T>(
@@ -634,10 +641,11 @@ private extension PaymentSheetLinkAccount {
             case .failure(let error as NSError):
                 if error.isLinkAuthError && shouldRetry && self?.createdFromAuthIntentID != true {
                     DispatchQueue.main.async { [weak self] in
+                        let session = self?.currentSession
                         self?.refreshSession { refreshSessionResult in
                             switch refreshSessionResult {
                             case .success(let refreshedSession):
-                                self?.currentSession = refreshedSession
+                                self?.updateCurrentSession(refreshedSession, retainingLinkSessionKeyFrom: session)
                                 apiCall(completion)
                             case .failure:
                                 completion(result)
