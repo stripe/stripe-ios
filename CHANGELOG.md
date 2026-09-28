@@ -1,7 +1,9 @@
 The next release's version bump will so far be:
-PATCH
+MINOR
 
 ## X.Y.Z - changes pending release
+### CryptoOnramp (Alpha)
+* [Added] Added `STPAPIClient.CryptoOnrampAPIError.missingLinkSessionKey` to report when a Link session key is unavailable.
 
 ## 26.12.1 2026-09-28
 ### Financial Connections
