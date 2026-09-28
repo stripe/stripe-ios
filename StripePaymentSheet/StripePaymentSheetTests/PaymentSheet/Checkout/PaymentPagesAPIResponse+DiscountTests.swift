@@ -20,7 +20,6 @@ final class PaymentPagesAPIResponseDiscountTests: XCTestCase {
         let dict: [String: Any] = [
             "currency": "usd",
             "recurring_details": [
-                "total_tax_amounts": [],
                 "total_discount_amounts": [
                     [
                         "amount": 500,
@@ -54,7 +53,6 @@ final class PaymentPagesAPIResponseDiscountTests: XCTestCase {
         let dict: [String: Any] = [
             "currency": "usd",
             "recurring_details": [
-                "total_tax_amounts": [],
                 "total_discount_amounts": [
                     [
                         "amount": 1000,
@@ -84,7 +82,6 @@ final class PaymentPagesAPIResponseDiscountTests: XCTestCase {
     func testZeroAmountDiscountIsFiltered() {
         let dict: [String: Any] = [
             "recurring_details": [
-                "total_tax_amounts": [],
                 "total_discount_amounts": [
                     [
                         "amount": 0,
@@ -106,7 +103,6 @@ final class PaymentPagesAPIResponseDiscountTests: XCTestCase {
     func testEmptyDiscountAmountsArray() {
         let dict: [String: Any] = [
             "recurring_details": [
-                "total_tax_amounts": [],
                 "total_discount_amounts": [] as [[AnyHashable: Any]],
             ],
         ]
@@ -132,7 +128,6 @@ final class PaymentPagesAPIResponseDiscountTests: XCTestCase {
         let dict: [String: Any] = [
             "currency": "usd",
             "recurring_details": [
-                "total_tax_amounts": [],
                 "total_discount_amounts": [
                     [
                         "amount": 500,
@@ -179,7 +174,6 @@ final class PaymentPagesAPIResponseDiscountTests: XCTestCase {
         let dict: [String: Any] = [
             "currency": "usd",
             "recurring_details": [
-                "total_tax_amounts": [],
                 "total_discount_amounts": [
                     [
                         "amount": 0,
@@ -219,7 +213,6 @@ final class PaymentPagesAPIResponseDiscountTests: XCTestCase {
             let json = CheckoutTestHelpers.makeSessionJSON([
                 "currency": "usd",
                 "recurring_details": [
-                    "total_tax_amounts": [],
                     "total_discount_amounts": [invalidDiscount],
                 ],
             ])
@@ -235,7 +228,6 @@ final class PaymentPagesAPIResponseDiscountTests: XCTestCase {
         let json = CheckoutTestHelpers.makeSessionJSON([
             "currency": "usd",
             "recurring_details": [
-                "total_tax_amounts": [],
                 "total_discount_amounts": [
                     [
                         "amount": 100,
@@ -254,7 +246,6 @@ final class PaymentPagesAPIResponseDiscountTests: XCTestCase {
         let dict: [String: Any] = [
             "currency": "usd",
             "recurring_details": [
-                "total_tax_amounts": [],
                 "total_discount_amounts": [
                     [
                         "amount": 250,
@@ -273,21 +264,14 @@ final class PaymentPagesAPIResponseDiscountTests: XCTestCase {
         XCTAssertEqual(discounts[0].percentOff, 5)
     }
 
-    func testRecurringDetailsRejectsMissingRequiredAmountArrays() {
-        for field in ["total_discount_amounts", "total_tax_amounts"] {
-            var recurringDetails: [String: Any] = [
-                "total_discount_amounts": [],
-                "total_tax_amounts": [],
-            ]
-            recurringDetails.removeValue(forKey: field)
-            let json = CheckoutTestHelpers.makeSessionJSON([
-                "recurring_details": recurringDetails,
-            ])
+    func testRecurringDetailsRejectsMissingRequiredDiscountAmounts() {
+        let json = CheckoutTestHelpers.makeSessionJSON([
+            "recurring_details": [:],
+        ])
 
-            XCTAssertThrowsError(
-                try PaymentPagesAPIResponse.decode(fromAPIResponse: json),
-                "Expected missing \(field) to fail decoding"
-            )
-        }
+        XCTAssertThrowsError(
+            try PaymentPagesAPIResponse.decode(fromAPIResponse: json),
+            "Expected missing total_discount_amounts to fail decoding"
+        )
     }
 }
