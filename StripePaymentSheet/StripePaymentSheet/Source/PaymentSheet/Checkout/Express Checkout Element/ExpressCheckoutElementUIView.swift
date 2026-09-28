@@ -83,13 +83,8 @@ public final class ExpressCheckoutElementUIView: UIView {
 
         let buttonRows = Self.buttonRows(for: buttons, layout: configuration.appearance.buttonLayout)
             .map { row in row.map { makeButton(for: $0) } }
-        guard let referenceButton = buttonRows[0].first else { return }
-        let columnCount = buttonRows[0].count
-
-        // Set button width matching the referenceButton width
-        buttonRows.joined().dropFirst().forEach {
-            $0.widthAnchor.constraint(equalTo: referenceButton.widthAnchor).isActive = true
-        }
+        guard let firstRow = buttonRows.first, let referenceButton = firstRow.first else { return }
+        let columnCount = firstRow.count
 
         for buttons in buttonRows {
             let rowStackView = makeRowStackView(buttons)
@@ -100,6 +95,11 @@ public final class ExpressCheckoutElementUIView: UIView {
             if buttons.count == columnCount {
                 rowStackView.widthAnchor.constraint(equalTo: stackView.widthAnchor).isActive = true
             }
+        }
+
+        // Set button widths matching the referenceButton width
+        buttonRows.joined().dropFirst().forEach {
+            $0.widthAnchor.constraint(equalTo: referenceButton.widthAnchor).isActive = true
         }
     }
 
