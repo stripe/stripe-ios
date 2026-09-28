@@ -166,7 +166,7 @@ main() {
     device_id="$(find_existing_simulator)"
     if [ -z "$device_id" ]; then
         if ! device_id="$(create_simulator)"; then
-            echo "Error: Failed to create an iPhone 12 mini with iOS $IOS_VERSION: $device_id" >&2
+            echo "Error: Failed to create an iPhone 12 mini with iOS $IOS_VERSION" >&2
             return 1
         fi
     fi

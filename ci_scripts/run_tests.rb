@@ -266,13 +266,16 @@ Dir.chdir(REPO_ROOT)
 
 # Source setup_simulator.sh and capture the exported DEVICE_ID_FROM_USER_SETTINGS
 device_id = ENV["DEVICE_ID_FROM_USER_SETTINGS"]
-if options[:dry_run]
-  device_id = "$DEVICE_ID_FROM_USER_SETTINGS" unless device_id && !device_id.empty?
-elsif !device_id || device_id.empty?
-  # Run setup_simulator.sh in a subshell that prints the device ID
-  device_id = `bash -c 'source ci_scripts/setup_simulator.sh && echo "$DEVICE_ID_FROM_USER_SETTINGS"'`.strip
-  if device_id.empty? || !$?.success?
-    abort "Error: Simulator setup failed."
+if !device_id || device_id.empty?
+  if options[:dry_run]
+    # Avoid accessing CoreSimulator during dry runs when no device ID was provided.
+    device_id = "<simulator-device-id>"
+  else
+    # Run setup_simulator.sh in a subshell that prints the device ID
+    device_id = `bash -c 'source ci_scripts/setup_simulator.sh && echo "$DEVICE_ID_FROM_USER_SETTINGS"'`.strip
+    if device_id.empty? || !$?.success?
+      abort "Error: Simulator setup failed."
+    end
   end
 end
 
