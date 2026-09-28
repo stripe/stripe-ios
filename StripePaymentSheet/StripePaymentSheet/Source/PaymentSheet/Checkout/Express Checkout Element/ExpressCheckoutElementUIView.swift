@@ -80,10 +80,7 @@ public final class ExpressCheckoutElementUIView: UIView {
 
     /// Arranges `buttons` into no more than `appearance.buttonLayout.maxRows` rows of no more than `appearance.buttonLayout.maxColumns` columns.
     private func layoutButtons(_ buttons: [ExpressCheckoutElement.PaymentMethod]) {
-        stackView.arrangedSubviews.forEach {
-            stackView.removeArrangedSubview($0)
-            $0.removeFromSuperview()
-        }
+        stackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
 
         for row in Self.buttonRows(for: buttons, layout: configuration.appearance.buttonLayout) {
             if row.count == 1, let method = row.first {
@@ -107,15 +104,22 @@ public final class ExpressCheckoutElementUIView: UIView {
             maxColumns: layout.maxColumns,
             maxRows: layout.maxRows
         )
-        let columns = calculateColumnCount(
+        let visibleButtons = Array(buttons.prefix(visibleButtonCount))
+        let columnCount = calculateColumnCount(
             buttonCount: visibleButtonCount,
             maxRows: layout.maxRows
         )
-        let visibleButtons = Array(buttons.prefix(visibleButtonCount))
 
-        return stride(from: 0, to: visibleButtons.count, by: columns).map {
-            Array(visibleButtons[$0..<min($0 + columns, visibleButtons.count)])
+        var rows: [[ExpressCheckoutElement.PaymentMethod]] = []
+        var rowStartIndex = 0
+        while rowStartIndex < visibleButtons.count {
+            // The final row may contain fewer buttons than the other rows.
+            let rowEndIndex = min(rowStartIndex + columnCount, visibleButtons.count)
+            let row = Array(visibleButtons[rowStartIndex..<rowEndIndex])
+            rows.append(row)
+            rowStartIndex = rowEndIndex
         }
+        return rows
     }
 
     static func calculateVisibleButtonCount(
@@ -123,6 +127,8 @@ public final class ExpressCheckoutElementUIView: UIView {
         maxColumns: Int?,
         maxRows: Int?
     ) -> Int {
+        // A single limit affects how the buttons are arranged, but it cannot
+        // limit the grid's total capacity without the other dimension.
         guard let maxColumns, let maxRows else {
             return buttonCount
         }
@@ -133,9 +139,12 @@ public final class ExpressCheckoutElementUIView: UIView {
         guard buttonCount > 0 else {
             return 1
         }
+        // Prefer one column unless that would exceed the configured row limit.
         guard let maxRows, maxRows < buttonCount else {
             return 1
         }
+        // Integer division rounds down. Adding `maxRows - 1` rounds the result
+        // up so every visible button fits within `maxRows` rows.
         return (buttonCount + maxRows - 1) / maxRows
     }
 

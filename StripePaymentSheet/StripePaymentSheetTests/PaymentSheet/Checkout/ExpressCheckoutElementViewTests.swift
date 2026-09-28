@@ -13,55 +13,33 @@ import XCTest
 @MainActor
 final class ExpressCheckoutElementViewTests: XCTestCase {
 
-    func testCalculateVisibleButtonCount() {
-        let testCases: [(buttonCount: Int, maxColumns: Int?, maxRows: Int?, expected: Int)] = [
-            (0, 2, 2, 0),
-            (5, nil, nil, 5),
-            (5, 2, nil, 5),
-            (5, nil, 2, 5),
-            (5, 2, 2, 4),
-            (3, 2, 2, 3),
-        ]
-
-        for testCase in testCases {
-            XCTAssertEqual(
-                ExpressCheckoutElementUIView.calculateVisibleButtonCount(
-                    buttonCount: testCase.buttonCount,
-                    maxColumns: testCase.maxColumns,
-                    maxRows: testCase.maxRows
-                ),
-                testCase.expected
-            )
-        }
-    }
-
-    func testCalculateColumnCount() {
-        let testCases: [(buttonCount: Int, maxRows: Int?, expected: Int)] = [
-            (0, 2, 1),
-            (5, nil, 1),
-            (3, 5, 1),
-            (3, 3, 1),
-            (4, 2, 2),
-            (5, 2, 3),
-            (5, 1, 5),
-        ]
-
-        for testCase in testCases {
-            XCTAssertEqual(
-                ExpressCheckoutElementUIView.calculateColumnCount(
-                    buttonCount: testCase.buttonCount,
-                    maxRows: testCase.maxRows
-                ),
-                testCase.expected
-            )
-        }
-    }
-
     func testButtonRowsPreserveOrderAndApplyLimits() {
-        let buttons: [ExpressCheckoutElement.PaymentMethod] = [.link, .applePay, .link]
+        let buttons: [ExpressCheckoutElement.PaymentMethod] = [.link, .applePay, .link, .applePay, .link]
         var layout = ExpressCheckoutElement.Appearance.ButtonLayout()
-        layout.maxColumns = 1
+        layout.maxColumns = 2
         layout.maxRows = 2
+
+        XCTAssertEqual(
+            ExpressCheckoutElementUIView.buttonRows(for: buttons, layout: layout),
+            [[.link, .applePay], [.link, .applePay]]
+        )
+    }
+
+    func testButtonRowsUsesFewestColumnsNeededToRespectMaxRows() {
+        let buttons: [ExpressCheckoutElement.PaymentMethod] = [.link, .applePay, .link, .applePay, .link]
+        var layout = ExpressCheckoutElement.Appearance.ButtonLayout()
+        layout.maxRows = 2
+
+        XCTAssertEqual(
+            ExpressCheckoutElementUIView.buttonRows(for: buttons, layout: layout),
+            [[.link, .applePay, .link], [.applePay, .link]]
+        )
+    }
+
+    func testButtonRowsPrefersOneColumnWhenOnlyMaxColumnsIsSet() {
+        let buttons: [ExpressCheckoutElement.PaymentMethod] = [.link, .applePay]
+        var layout = ExpressCheckoutElement.Appearance.ButtonLayout()
+        layout.maxColumns = 2
 
         XCTAssertEqual(
             ExpressCheckoutElementUIView.buttonRows(for: buttons, layout: layout),

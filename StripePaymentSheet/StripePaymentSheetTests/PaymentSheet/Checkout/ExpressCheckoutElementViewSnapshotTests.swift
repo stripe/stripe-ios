@@ -15,7 +15,8 @@ import UIKit
 // @iOS26
 final class ExpressCheckoutElementViewSnapshotTests: STPSnapshotTestCase {
 
-    func testDefaultAppearance() {
+    // The default one-column layout displays Apple Pay and Link in two rows.
+    func testDefaultTwoRowLayout() {
         verify(makeView())
     }
 
