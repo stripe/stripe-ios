@@ -164,7 +164,7 @@ class EmbeddedPlaygroundViewController: UIViewController {
         case .immediateAction:
             paymentMethodButton
         case .default:
-            embeddedPaymentElement.view
+            makeHighlightedContainer(for: embeddedPaymentElement.view)
         @unknown default:
             fatalError("Implement how new row selection behavior should be displayed")
         }
@@ -203,6 +203,23 @@ class EmbeddedPlaygroundViewController: UIViewController {
             clearPaymentOptionButton.heightAnchor.constraint(equalToConstant: 45),
         ])
         paymentOptionView.configure(with: embeddedPaymentElement.paymentOption, showMandate: !configuration.embeddedViewDisplaysMandateText)
+    }
+
+    private func makeHighlightedContainer(for embeddedPaymentElementView: UIView) -> UIView {
+        let containerView = UIView()
+        containerView.layer.borderColor = UIColor.systemRed.cgColor
+        containerView.layer.borderWidth = 4
+
+        embeddedPaymentElementView.translatesAutoresizingMaskIntoConstraints = false
+        containerView.addSubview(embeddedPaymentElementView)
+
+        NSLayoutConstraint.activate([
+            embeddedPaymentElementView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 8),
+            embeddedPaymentElementView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 8),
+            embeddedPaymentElementView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -8),
+            embeddedPaymentElementView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -8),
+        ])
+        return containerView
     }
 
     private func setupLoadingIndicator() {
