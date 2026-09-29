@@ -1,5 +1,7 @@
 "Debit cards are most likely to be accepted." = "Debetní karty budou s největší pravděpodobností akceptovány.";
 
+"Document uploaded successfully" = "Dokument byl úspěšně nahrán";
+
 "Please try again later." = "Zkuste to prosím znovu později.";
 
 "Submitted for review" = "Odesláno ke kontrole";
@@ -22,8 +24,10 @@
 
 "We couldn't verify ownership of this wallet. Please try again." = "Nepodařilo se nám ověřit vlastnictví této peněženky s Bitcoiny. Zkuste to znovu.";
 
-"We’re required to confirm your address to enable spending over %@." = "Jsme povinni potvrdit vaši adresu, abychom umožnili výdaj překračující %@.";
+"We may request proof of address for larger transactions." = "U větších transakcí si můžeme vyžádat doklad o adrese.";
 
-"We’re required to understand where your funds come from to enable spending over %@." = "Jsme povinni porozumět tomu, odkud pocházejí vaše finance, abychom umožnili výdaj překračující %@.";
+"We may request source of funds for larger transactions." = "U větších transakcí si můžeme vyžádat zdroj financí.";
 
 "We’re reviewing your documents. We’ll let you know when verification is complete." = "Kontrolujeme vaše dokumenty. Jakmile bude ověření dokončeno, dáme vám vědět.";
+
+"You can continue while we verify your document in the background." = "Můžete pokračovat, zatímco na pozadí ověřujeme váš dokument.";

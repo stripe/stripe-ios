@@ -1,5 +1,7 @@
 "Debit cards are most likely to be accepted." = "Visticamāk, tiks pieņemtas debetkartes.";
 
+"Document uploaded successfully" = "Dokuments veiksmīgi augšupielādēts";
+
 "Please try again later." = "Mēģiniet vēlāk vēlreiz.";
 
 "Submitted for review" = "Iesniegts pārskatīšanai";
@@ -22,8 +24,10 @@
 
 "We couldn't verify ownership of this wallet. Please try again." = "Mums neizdevās pārbaudīt šī maka īpašumtiesības. Lūdzu, mēģiniet vēlreiz.";
 
-"We’re required to confirm your address to enable spending over %@." = "Mums ir jāapstiprina jūsu adrese, lai iespējotu tēriņus virs %@.";
+"We may request proof of address for larger transactions." = "Mēs varam pieprasīt adresi apliecinošu dokumentu lielākiem darījumiem.";
 
-"We’re required to understand where your funds come from to enable spending over %@." = "Mums ir jāsaprot, no kurienes tiek saņemts jūsu finansējums, lai iespējotu tēriņus virs %@.";
+"We may request source of funds for larger transactions." = "Mēs varam pieprasīt finanšu līdzekļu avotu lielākiem darījumiem.";
 
 "We’re reviewing your documents. We’ll let you know when verification is complete." = "Mēs izskatām jūsu dokumentus. Mēs jums paziņosim, kad pārbaude būs pabeigta.";
+
+"You can continue while we verify your document in the background." = "Jūs varat turpināt, kamēr mēs fonā pārbaudām jūsu dokumentu.";

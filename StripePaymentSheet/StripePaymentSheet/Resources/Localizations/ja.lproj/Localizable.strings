@@ -112,6 +112,8 @@
 
 "Code sent" = "コードが送信されました";
 
+"Complete the payment using Pix to finish the purchase." = "Pix を使用して支払い、購入を完了してください。";
+
 "Confirm" = "確定する";
 
 "Confirm payment details" = "支払い情報を確定する";
@@ -341,6 +343,8 @@
 "The provided verification code has expired." = "入力された確認コードは期限が切れています。";
 
 "The provided verification code is incorrect." = "入力された確認コードは正しくありません。";
+
+"This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "これは海外購入であり、3.5% の IOF 手数料は含まれません。続行することにより、<terms>Ebanx の利用規約</terms>を承認し、同意したとみなされます。";
 
 "This is your default" = "これはデフォルトです";
 

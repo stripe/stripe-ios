@@ -116,5 +116,14 @@ class NSString_StripeTest: XCTestCase {
             ),
             "ISK 1,994"
         )
+
+        XCTAssertEqual(
+            String.localizedAmountDisplayString(
+                for: 199400,
+                currency: "LBP",
+                locale: Locale(identifier: "en_US")
+            ),
+            "LBP 1,994"
+        )
     }
 }

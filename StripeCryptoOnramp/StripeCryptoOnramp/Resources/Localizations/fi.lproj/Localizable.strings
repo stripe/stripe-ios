@@ -1,5 +1,7 @@
 "Debit cards are most likely to be accepted." = "Pankkikortit hyväksytään todennäköisesti.";
 
+"Document uploaded successfully" = "Asiakirjan lataus onnistui";
+
 "Please try again later." = "Yritä myöhemmin uudelleen.";
 
 "Submitted for review" = "Lähetetty tarkasteltavaksi";
@@ -22,8 +24,10 @@
 
 "We couldn't verify ownership of this wallet. Please try again." = "Emme voineet vahvistaa tämän lompakon omistajuutta. Yritä uudelleen.";
 
-"We’re required to confirm your address to enable spending over %@." = "Meidän on vahvistettava osoitteesi, jotta voit käyttää yli %@.";
+"We may request proof of address for larger transactions." = "Saatamme pyytää osoitetodistuksen suuremmissa tapahtumissa.";
 
-"We’re required to understand where your funds come from to enable spending over %@." = "Meidän on ymmärrettävä, mistä varasi ovat peräisin, jotta voit käyttää yli %@.";
+"We may request source of funds for larger transactions." = "Saatamme pyytää selvityksen varojen alkuperästä suuremmissa tapahtumissa.";
 
 "We’re reviewing your documents. We’ll let you know when verification is complete." = "Tarkistamme asiakirjojasi. Ilmoitamme, kun vahvistus on valmis.";
+
+"You can continue while we verify your document in the background." = "Voit jatkaa sillä aikaa, kun vahvistamme asiakirjasi taustalla.";
