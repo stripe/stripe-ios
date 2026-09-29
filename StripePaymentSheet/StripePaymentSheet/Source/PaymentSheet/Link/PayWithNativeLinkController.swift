@@ -164,6 +164,7 @@ final class PayWithNativeLinkController {
                 linkAccount: LinkAccountContext.shared.account,
                 elementsSession: self.elementsSession,
                 configuration: self.configuration,
+                customerProvider: self.customerProvider,
                 shouldOfferApplePay: shouldOfferApplePay,
                 shouldFinishOnClose: shouldFinishOnClose,
                 canContinueWithoutLink: canContinueWithoutLink,

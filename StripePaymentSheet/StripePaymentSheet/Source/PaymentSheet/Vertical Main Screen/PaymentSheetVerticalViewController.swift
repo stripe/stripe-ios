@@ -338,7 +338,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 
     func updateMandate(animated: Bool = true) {
         let hadLabelInStackView = mandateView.attributedText != nil || errorLabel.text != nil
-        let mandateProvider = VerticalListMandateProvider(configuration: configuration, elementsSession: elementsSession, intent: intent, analyticsHelper: analyticsHelper)
+        let mandateProvider = VerticalListMandateProvider(configuration: configuration, customerProvider: loadResult.customerProvider, elementsSession: elementsSession, intent: intent, analyticsHelper: analyticsHelper)
         let newMandateText = mandateProvider.mandate(
             for: selectedPaymentOption?.paymentMethodType,
             savedPaymentMethod: selectedPaymentOption?.savedPaymentMethod,
@@ -1039,6 +1039,7 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
             previousCustomerInput: previousFormConfirmParams,
             formCache: formCache,
             configuration: configuration,
+            customerProvider: loadResult.customerProvider,
             paymentMethodOrientation: loadResult.paymentMethodOrientation,
             headerView: headerView,
             analyticsHelper: analyticsHelper,
@@ -1058,7 +1059,7 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
         return PaymentSheetFormFactory(
             intent: intent,
             elementsSession: elementsSession,
-            configuration: .paymentElement(configuration),
+            configuration: .paymentElement(configuration, customerProvider: loadResult.customerProvider),
             paymentMethod: paymentMethodType,
             paymentMethodOrientation: loadResult.paymentMethodOrientation,
             previousCustomerInput: nil,

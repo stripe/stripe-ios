@@ -62,9 +62,13 @@ extension EmbeddedPaymentElement {
         }()
         let mandateProvider = VerticalListMandateProvider(
             configuration: configuration,
+            customerProvider: loadResult.customerProvider,
             elementsSession: loadResult.elementsSession,
             intent: loadResult.intent,
-            analyticsHelper: analyticsHelper
+            analyticsHelper: analyticsHelper,
+            shouldShowForm: {
+                EmbeddedPaymentElement.shouldShowForm($0, configuration: configuration)
+            }
         )
         return EmbeddedPaymentMethodsView(
             initialSelectedRowType: initialSelection,
@@ -106,6 +110,7 @@ extension EmbeddedPaymentElement {
         selection: RowButtonType?,
         previousPaymentOption: PaymentOption?,
         configuration: Configuration,
+        customerProvider: CustomerProvider,
         intent: Intent,
         elementsSession: STPElementsSession,
         savedPaymentMethods: [STPPaymentMethod],
@@ -121,6 +126,7 @@ extension EmbeddedPaymentElement {
 
         let formViewController = EmbeddedFormViewController(
             configuration: configuration,
+            customerProvider: customerProvider,
             intent: intent,
             elementsSession: elementsSession,
             shouldUseNewCardNewCardHeader: savedPaymentMethods.first?.type == .card,
@@ -171,6 +177,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
             // Carry the accepted option into the next form so cancel can restore the previous row.
             previousPaymentOption: selectedFormViewController?.paymentOptionToRestoreOnCancellation,
             configuration: configuration,
+            customerProvider: loadResult.customerProvider,
             intent: intent,
             elementsSession: elementsSession,
             savedPaymentMethods: savedPaymentMethods,
@@ -352,6 +359,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
             selection: rowButtonType,
             previousPaymentOption: nil, // This is just to check if there's a form, so this data isn't necessary
             configuration: configuration,
+            customerProvider: loadResult.customerProvider,
             intent: intent,
             elementsSession: elementsSession,
             savedPaymentMethods: savedPaymentMethods,
@@ -566,6 +574,7 @@ extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
             selection: selection,
             previousPaymentOption: paymentOption,
             configuration: configuration,
+            customerProvider: loadResult.customerProvider,
             intent: intent,
             elementsSession: elementsSession,
             savedPaymentMethods: savedPaymentMethods,
