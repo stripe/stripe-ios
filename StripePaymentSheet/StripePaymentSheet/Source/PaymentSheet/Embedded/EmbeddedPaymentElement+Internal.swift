@@ -39,8 +39,8 @@ extension EmbeddedPaymentElement {
             isFirstCardCoBranded: loadResult.savedPaymentMethods.first?.isCoBrandedCard ?? false,
             isCBCEligible: loadResult.elementsSession.isCardBrandChoiceEligible,
             allowsRemovalOfLastSavedPaymentMethod: loadResult.elementsSession.paymentMethodRemoveLast(configuration: configuration),
-            allowsPaymentMethodRemoval: loadResult.intent.allowsPaymentMethodRemoval(elementsSession: loadResult.elementsSession),
-            allowsPaymentMethodUpdate: loadResult.intent.allowsPaymentMethodUpdate(elementsSession: loadResult.elementsSession),
+            allowsPaymentMethodRemoval: loadResult.customerProvider.allowsPaymentMethodRemoval(elementsSession: loadResult.elementsSession),
+            allowsPaymentMethodUpdate: loadResult.customerProvider.allowsPaymentMethodUpdate(elementsSession: loadResult.elementsSession),
             omitChevron: configuration.appearance.embeddedPaymentElement.row.style.omitChevronInAccessoryButton
         )
         let initialSelection: RowButtonType? = {
@@ -50,7 +50,7 @@ extension EmbeddedPaymentElement {
             }
 
             // If there's no previous customer input, default to the customer's default or the first saved payment method, if any
-            let customerDefault = CustomerPaymentOption.selectedPaymentMethod(for: configuration.customer?.id, elementsSession: loadResult.elementsSession, surface: .paymentSheet)
+            let customerDefault = CustomerPaymentOption.selectedPaymentMethod(for: loadResult.customerProvider.customerID, elementsSession: loadResult.elementsSession, surface: .paymentSheet)
             switch customerDefault {
             case .applePay:
                 return .applePay
@@ -299,7 +299,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         }
         CustomerPaymentOption.setDefaultPaymentMethod(
             paymentOption,
-            forCustomer: configuration.customer?.id
+            forCustomer: loadResult.customerProvider.customerID
         )
     }
 
@@ -312,8 +312,8 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
                                                                                billingDetailsCollectionConfiguration: configuration.billingDetailsCollectionConfiguration,
                                                                                hostedSurface: .paymentSheet,
                                                                                cardBrandFilter: configuration.cardBrandFilter,
-                                                                               canRemove: elementsSession.paymentMethodRemoveLast(configuration: configuration) && intent.allowsPaymentMethodRemoval(elementsSession: elementsSession),
-                                                                               canUpdate: intent.allowsPaymentMethodUpdate(elementsSession: elementsSession),
+                                                                               canRemove: elementsSession.paymentMethodRemoveLast(configuration: configuration) && loadResult.customerProvider.allowsPaymentMethodRemoval(elementsSession: elementsSession),
+                                                                               canUpdate: loadResult.customerProvider.allowsPaymentMethodUpdate(elementsSession: elementsSession),
                                                                                isCBCEligible: paymentMethod.isCoBrandedCard && elementsSession.isCardBrandChoiceEligible,
                                                                                allowsSetAsDefaultPM: elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
                                                                                isDefault: paymentMethod == defaultPaymentMethod)
@@ -332,6 +332,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
 
         let verticalSavedPaymentMethodsViewController = VerticalSavedPaymentMethodsViewController(
             configuration: configuration,
+            customerProvider: loadResult.customerProvider,
             intent: intent,
             checkout: checkout,
             selectedPaymentMethod: selectedSavedPaymentMethod,
@@ -459,8 +460,8 @@ extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {
             isFirstCardCoBranded: savedPaymentMethods.first?.isCoBrandedCard ?? false,
             isCBCEligible: elementsSession.isCardBrandChoiceEligible,
             allowsRemovalOfLastSavedPaymentMethod: elementsSession.paymentMethodRemoveLast(configuration: configuration),
-            allowsPaymentMethodRemoval: intent.allowsPaymentMethodRemoval(elementsSession: elementsSession),
-            allowsPaymentMethodUpdate: intent.allowsPaymentMethodUpdate(elementsSession: elementsSession),
+            allowsPaymentMethodRemoval: loadResult.customerProvider.allowsPaymentMethodRemoval(elementsSession: elementsSession),
+            allowsPaymentMethodUpdate: loadResult.customerProvider.allowsPaymentMethodUpdate(elementsSession: elementsSession),
             omitChevron: configuration.appearance.embeddedPaymentElement.row.style.omitChevronInAccessoryButton
         )
     }
@@ -742,10 +743,13 @@ extension EmbeddedPaymentElement {
         clearPaymentOption()
     }
 
-    static func validateRowSelectionConfiguration(configuration: Configuration) throws {
+    static func validateRowSelectionConfiguration(
+        configuration: Configuration,
+        customerProvider: CustomerProvider
+    ) throws {
         switch configuration.rowSelectionBehavior {
         case .immediateAction:
-            if case .confirm = configuration.formSheetAction, configuration.applePay != nil || configuration.customer != nil {
+            if case .confirm = configuration.formSheetAction, configuration.applePay != nil || customerProvider.hasCustomer {
                 // Fail init if the merchant is using immediateAction and confirm form sheet action along w/ either a Customer or Apple Pay configuration
                 throw PaymentSheetError.integrationError(nonPIIDebugDescription: "Using .immediateAction with .confirm form sheet action is not supported when Apple Pay or a customer configuration is provided. Use .default row selection behavior or disable Apple Pay and saved payment methods.")
             }

@@ -132,6 +132,27 @@ final class CustomerProviderTests: XCTestCase {
         XCTAssertEqual(provider.source, .checkoutSession)
     }
 
+    func testLoadedCheckoutCustomerDoesNotReplaceMerchantConfiguration() async {
+        // Given a merchant configuration and a separate Checkout customer
+        await AddressSpecProvider.shared.loadAddressSpecs()
+        var configuration = EmbeddedPaymentElement.Configuration()
+        configuration.customer = .init(id: "cus_merchant", ephemeralKeySecret: "ek_test")
+        let session = CheckoutTestHelpers.makeSession()
+            .withCustomer(id: "cus_checkout")
+            .makePublicSession()
+
+        // When the payment surface accepts the Checkout load result
+        let sut = EmbeddedPaymentElement(
+            configuration: configuration,
+            loadResult: makeLoadResult(session: session),
+            analyticsHelper: ._testValue()
+        )
+
+        // Then consumers can use the loaded customer without mutating merchant input
+        XCTAssertEqual(sut.savedPaymentMethodManager.customerProvider.customerID, "cus_checkout")
+        XCTAssertEqual(sut.configuration.customer?.id, "cus_merchant")
+    }
+
     func testLoadResultsRetainTheirOwnCustomerSnapshots() {
         let firstSession = CheckoutTestHelpers.makeSession()
             .withCustomer(id: "cus_first")

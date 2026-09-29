@@ -231,6 +231,7 @@ final class FlowControllerSelectionRestorationTests: XCTestCase {
         let reorderedPaymentMethods = [paymentMethod] + paymentMethods.filter { $0.stripeId != paymentMethod.stripeId }
         let manageViewController = VerticalSavedPaymentMethodsViewController(
             configuration: viewController.configuration,
+            customerProvider: CustomerProvider(customer: viewController.configuration.customer),
             intent: viewController.intent,
             selectedPaymentMethod: paymentMethod,
             paymentMethods: reorderedPaymentMethods,
