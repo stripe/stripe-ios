@@ -37,7 +37,6 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     // MARK: Private properties
     private let configuration: PaymentElementConfiguration
     private let customerProvider: CustomerProvider
-    private let intent: Intent
     private weak var checkout: CheckoutSessionBillingAddressUpdater?
     private let elementsSession: STPElementsSession
     private let paymentMethodRemove: Bool
@@ -131,7 +130,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     }
 
     private lazy var savedPaymentMethodManager: SavedPaymentMethodManager = {
-        SavedPaymentMethodManager(configuration: configuration, customerProvider: customerProvider, elementsSession: elementsSession, intent: intent)
+        SavedPaymentMethodManager(configuration: configuration, customerProvider: customerProvider, elementsSession: elementsSession)
     }()
 
     // MARK: Internal properties
@@ -186,7 +185,6 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     init(
         configuration: PaymentElementConfiguration,
         customerProvider: CustomerProvider,
-        intent: Intent,
         checkout: CheckoutSessionBillingAddressUpdater? = nil,
         selectedPaymentMethod: STPPaymentMethod?,
         paymentMethods: [STPPaymentMethod],
@@ -196,7 +194,6 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     ) {
         self.configuration = configuration
         self.customerProvider = customerProvider
-        self.intent = intent
         self.checkout = checkout
         self.elementsSession = elementsSession
         self.defaultPaymentMethod = defaultPaymentMethod
