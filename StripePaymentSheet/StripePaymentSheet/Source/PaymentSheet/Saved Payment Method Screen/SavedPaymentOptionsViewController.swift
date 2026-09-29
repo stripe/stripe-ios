@@ -179,7 +179,6 @@ class SavedPaymentOptionsViewController: UIViewController {
     }
 
     let configuration: Configuration
-    private let intent: Intent
     private let paymentSheetConfiguration: PaymentSheet.Configuration
     private let analyticsHelper: PaymentSheetAnalyticsHelper
     private let linkBrandProvider: () -> LinkBrand
@@ -350,7 +349,6 @@ class SavedPaymentOptionsViewController: UIViewController {
         savedPaymentMethods: [STPPaymentMethod],
         configuration: Configuration,
         paymentSheetConfiguration: PaymentSheet.Configuration,
-        intent: Intent,
         appearance: PaymentSheet.Appearance,
         elementsSession: STPElementsSession,
         cbcEligible: Bool = false,
@@ -361,7 +359,6 @@ class SavedPaymentOptionsViewController: UIViewController {
         self.savedPaymentMethods = savedPaymentMethods
         self.configuration = configuration
         self.paymentSheetConfiguration = paymentSheetConfiguration
-        self.intent = intent
         self.appearance = appearance
         self.elementsSession = elementsSession
         self.defaultPaymentMethod = elementsSession.customer?.getDefaultPaymentMethod()
