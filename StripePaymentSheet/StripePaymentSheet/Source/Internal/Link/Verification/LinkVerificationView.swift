@@ -250,6 +250,10 @@ private extension LinkVerificationView {
 
     func setupUI() {
         directionalLayoutMargins = .insets(amount: Constants.edgeMargin)
+        // This content is always hosted inside a dialog or embedded container, never full-screen,
+        // so it shouldn't inherit the host's safe area (which would otherwise widen the effective
+        // margin beyond `edgeMargin` and starve the space `fittingHeight(width:)` accounted for).
+        insetsLayoutMarginsFromSafeArea = false
 
         let stackView = UIStackView(arrangedSubviews: arrangedSubViews)
         stackView.spacing = LinkUI.smallContentSpacing

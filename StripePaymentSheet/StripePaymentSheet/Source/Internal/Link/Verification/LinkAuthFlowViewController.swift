@@ -29,6 +29,7 @@ final class LinkAuthFlowViewController: UIViewController {
     private var timer: Timer?
     private var lastInputRevision = -1
     private var webController: LinkVerificationWebFallbackController?
+    private var lastSettledEmbeddedBounds: CGRect?
 
     init(
         mode: LinkVerificationView.Mode = .modal,
@@ -154,6 +155,16 @@ final class LinkAuthFlowViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         (presentationController as? PresentationController)?.updatePresentedViewFrame()
+        // In embedded mode, contentStack's height is imposed by the host (via view's frame)
+        // rather than derived from its own content, unlike the scroll-view-hosted modal path.
+        // UIStackView's arranged-subview sizing (childContainer, and in turn the active child
+        // controller's view) doesn't fully converge to that imposed height within a single
+        // layout pass, so force a second pass whenever the bounds actually change.
+        if !mode.requiresModalPresentation, view.bounds != lastSettledEmbeddedBounds {
+            lastSettledEmbeddedBounds = view.bounds
+            view.setNeedsLayout()
+            view.layoutIfNeeded()
+        }
     }
 
     func fittingHeight(width: CGFloat) -> CGFloat {
