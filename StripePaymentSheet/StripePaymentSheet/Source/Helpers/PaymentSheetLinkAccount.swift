@@ -641,11 +641,10 @@ private extension PaymentSheetLinkAccount {
             case .failure(let error as NSError):
                 if error.isLinkAuthError && shouldRetry && self?.createdFromAuthIntentID != true {
                     DispatchQueue.main.async { [weak self] in
-                        let session = self?.currentSession
                         self?.refreshSession { refreshSessionResult in
                             switch refreshSessionResult {
                             case .success(let refreshedSession):
-                                self?.updateCurrentSession(refreshedSession, retainingLinkSessionKeyFrom: session)
+                                self?.currentSession = refreshedSession
                                 apiCall(completion)
                             case .failure:
                                 completion(result)
