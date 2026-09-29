@@ -431,7 +431,7 @@ class PaymentSheetFlowControllerTests: XCTestCase {
         let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card])
         let elementsSession = STPElementsSession._testCardValue()
         let loadResult = PaymentSheetLoader.LoadResult(intent: intent, elementsSession: elementsSession, savedPaymentMethods: [], paymentMethodTypes: [.stripe(.card)], paymentMethodMessagingPromotionsHelper: ._testValue(),
- paymentMethodOrientation: .vertical, customerProvider: configuration.customerProvider)
+ paymentMethodOrientation: .vertical, customerProvider: CustomerProvider(customer: configuration.customer))
 
         let flowController = PaymentSheet.FlowController(
             configuration: configuration,
@@ -549,7 +549,7 @@ class PaymentSheetFlowControllerTests: XCTestCase {
             paymentMethodTypes: [.stripe(.card)],
             paymentMethodMessagingPromotionsHelper: ._testValue(),
             paymentMethodOrientation: .horizontal,
-            customerProvider: configuration.customerProvider
+            customerProvider: CustomerProvider(customer: configuration.customer)
         )
         return PaymentSheet.FlowController(
             configuration: configuration,

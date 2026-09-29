@@ -501,10 +501,17 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
             intent: intent,
             elementsSession: elementsSession
         )
+        let customerProvider: CustomerProvider
+        if case .checkout(let session) = intent {
+            customerProvider = CustomerProvider(checkoutSession: session)
+        } else {
+            customerProvider = CustomerProvider(customer: (configuration ?? self.configuration).customer)
+        }
         guard let context = STPApplePayContext.create(
             intent: intent,
             elementsSession: elementsSession,
             configuration: configuration ?? self.configuration,
+            customerProvider: customerProvider,
             clientAttributionMetadata: clientAttributionMetadata,
             checkout: checkout ?? Self.makeCheckoutUpdaterIfNecessary(for: intent),
             completion: { _, _ in }

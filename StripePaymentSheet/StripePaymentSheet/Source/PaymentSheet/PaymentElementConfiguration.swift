@@ -23,7 +23,7 @@ protocol PaymentElementConfiguration: PaymentMethodRequirementProvider {
     var primaryButtonColor: UIColor? { get set }
     var primaryButtonLabel: String? { get set }
     var style: PaymentSheet.UserInterfaceStyle { get set }
-    var customerProvider: CustomerProvider { get set }
+    var customer: PaymentSheet.CustomerConfiguration? { get set }
     var merchantDisplayName: String { get set }
     var returnURL: String? { get set }
     var defaultBillingDetails: PaymentSheet.BillingDetails { get set }

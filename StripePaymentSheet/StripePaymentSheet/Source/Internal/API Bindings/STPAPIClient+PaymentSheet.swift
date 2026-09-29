@@ -112,7 +112,8 @@ extension STPAPIClient {
     func retrieveElementsSession(
         paymentIntentClientSecret: String,
         clientDefaultPaymentMethod: String?,
-        configuration: PaymentElementConfiguration
+        configuration: PaymentElementConfiguration,
+        customerProvider: CustomerProvider
     ) async throws -> (STPPaymentIntent, STPElementsSession) {
         let elementsSession = try await APIRequest<STPElementsSession>.getWith(
             self,
@@ -122,7 +123,7 @@ extension STPAPIClient {
                 epmConfiguration: configuration.externalPaymentMethodConfiguration,
                 cpmConfiguration: configuration.customPaymentMethodConfiguration,
                 clientDefaultPaymentMethod: clientDefaultPaymentMethod,
-                customerProvider: configuration.customerProvider,
+                customerProvider: customerProvider,
                 linkDisallowFundingSourceCreation: configuration.link.disallowFundingSourceCreation,
                 userOverrideCountry: configuration.userOverrideCountry
             )
@@ -134,14 +135,15 @@ extension STPAPIClient {
         else {
             throw PaymentSheetError.unknown(debugDescription: "PaymentIntent missing from v1/elements/sessions response")
         }
-        try verifyCustomerSessionForPaymentSheet(configuration: configuration, elementsSession: elementsSession)
+        try verifyCustomerSessionForPaymentSheet(customerProvider: customerProvider, elementsSession: elementsSession)
         return (paymentIntent, elementsSession)
     }
 
     func retrieveElementsSession(
         setupIntentClientSecret: String,
         clientDefaultPaymentMethod: String?,
-        configuration: PaymentElementConfiguration
+        configuration: PaymentElementConfiguration,
+        customerProvider: CustomerProvider
     ) async throws -> (STPSetupIntent, STPElementsSession) {
         let elementsSession = try await APIRequest<STPElementsSession>.getWith(
             self,
@@ -151,7 +153,7 @@ extension STPAPIClient {
                 epmConfiguration: configuration.externalPaymentMethodConfiguration,
                 cpmConfiguration: configuration.customPaymentMethodConfiguration,
                 clientDefaultPaymentMethod: clientDefaultPaymentMethod,
-                customerProvider: configuration.customerProvider,
+                customerProvider: customerProvider,
                 linkDisallowFundingSourceCreation: configuration.link.disallowFundingSourceCreation,
                 userOverrideCountry: configuration.userOverrideCountry
             )
@@ -163,21 +165,22 @@ extension STPAPIClient {
         else {
             throw PaymentSheetError.unknown(debugDescription: "SetupIntent missing from v1/elements/sessions response")
         }
-        try verifyCustomerSessionForPaymentSheet(configuration: configuration, elementsSession: elementsSession)
+        try verifyCustomerSessionForPaymentSheet(customerProvider: customerProvider, elementsSession: elementsSession)
         return (setupIntent, elementsSession)
     }
 
     func retrieveDeferredElementsSession(
         withIntentConfig intentConfig: PaymentSheet.IntentConfiguration,
         clientDefaultPaymentMethod: String?,
-        configuration: PaymentElementConfiguration
+        configuration: PaymentElementConfiguration,
+        customerProvider: CustomerProvider
     ) async throws -> STPElementsSession {
         let parameters = makeElementsSessionsParams(
             mode: .deferredIntent(intentConfig),
             epmConfiguration: configuration.externalPaymentMethodConfiguration,
             cpmConfiguration: configuration.customPaymentMethodConfiguration,
             clientDefaultPaymentMethod: clientDefaultPaymentMethod,
-            customerProvider: configuration.customerProvider,
+            customerProvider: customerProvider,
             linkDisallowFundingSourceCreation: configuration.link.disallowFundingSourceCreation,
             userOverrideCountry: configuration.userOverrideCountry
         )
@@ -186,12 +189,12 @@ extension STPAPIClient {
             endpoint: APIEndpointElementsSessions,
             parameters: parameters
         )
-        try verifyCustomerSessionForPaymentSheet(configuration: configuration, elementsSession: elementsSession)
+        try verifyCustomerSessionForPaymentSheet(customerProvider: customerProvider, elementsSession: elementsSession)
         return elementsSession
     }
 
-    func verifyCustomerSessionForPaymentSheet(configuration: PaymentElementConfiguration, elementsSession: STPElementsSession) throws {
-        if configuration.customerProvider.usesCustomerSession {
+    func verifyCustomerSessionForPaymentSheet(customerProvider: CustomerProvider, elementsSession: STPElementsSession) throws {
+        if customerProvider.usesCustomerSession {
             // User passed in a customerSessionClient secret
             if let customer = elementsSession.customer {
                 // If claimed, customer will be not nil.

@@ -207,7 +207,7 @@ final class CheckoutPendingOperationsTests: XCTestCase {
             paymentMethodTypes: [.stripe(.card)],
             paymentMethodMessagingPromotionsHelper: ._testValue(),
             paymentMethodOrientation: .vertical,
-            customerProvider: configuration.customerProvider
+            customerProvider: CustomerProvider(customer: configuration.customer)
         )
         let fc = PaymentSheet.FlowController(
             configuration: configuration,

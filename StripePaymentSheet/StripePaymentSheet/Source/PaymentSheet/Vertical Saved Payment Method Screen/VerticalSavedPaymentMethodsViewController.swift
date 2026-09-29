@@ -36,6 +36,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
 
     // MARK: Private properties
     private let configuration: PaymentElementConfiguration
+    private let customerProvider: CustomerProvider
     private let intent: Intent
     private weak var checkout: CheckoutSessionBillingAddressUpdater?
     private let elementsSession: STPElementsSession
@@ -131,8 +132,9 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
 
     private lazy var savedPaymentMethodManager: SavedPaymentMethodManager = {
         SavedPaymentMethodManager(
-            configuration: configuration,
-            elementsSession: elementsSession
+            customerProvider: customerProvider,
+            elementsSession: elementsSession,
+            apiClient: configuration.apiClient
         )
     }()
 
@@ -187,6 +189,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
 
     init(
         configuration: PaymentElementConfiguration,
+        customerProvider: CustomerProvider,
         intent: Intent,
         checkout: CheckoutSessionBillingAddressUpdater? = nil,
         selectedPaymentMethod: STPPaymentMethod?,
@@ -196,13 +199,14 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         defaultPaymentMethod: STPPaymentMethod?
     ) {
         self.configuration = configuration
+        self.customerProvider = customerProvider
         self.intent = intent
         self.checkout = checkout
         self.elementsSession = elementsSession
         self.defaultPaymentMethod = defaultPaymentMethod
-        self.paymentMethodRemove = configuration.customerProvider.allowsPaymentMethodRemoval(elementsSession: elementsSession)
+        self.paymentMethodRemove = customerProvider.allowsPaymentMethodRemoval(elementsSession: elementsSession)
         self.paymentMethodRemoveLast = elementsSession.paymentMethodRemoveLast(configuration: configuration)
-        self.paymentMethodUpdate = configuration.customerProvider.allowsPaymentMethodUpdate(elementsSession: elementsSession)
+        self.paymentMethodUpdate = customerProvider.allowsPaymentMethodUpdate(elementsSession: elementsSession)
         self.paymentMethodSetAsDefault = elementsSession.paymentMethodSetAsDefaultForPaymentSheet
         self.isCBCEligible = elementsSession.isCardBrandChoiceEligible
         self.analyticsHelper = analyticsHelper
@@ -450,7 +454,7 @@ extension VerticalSavedPaymentMethodsViewController: SavedPaymentMethodRowButton
         }
         CustomerPaymentOption.setDefaultPaymentMethod(
             .stripeId(paymentMethod.stripeId),
-            forCustomer: configuration.customerProvider.customerID
+            forCustomer: customerProvider.customerID
         )
     }
 

@@ -10,6 +10,7 @@
 @testable @_spi(STP) import StripePayments
 @testable @_spi(STP) import StripePaymentSheet
 import StripePaymentsObjcTestUtils
+@_spi(STP) import StripeUICore
 import XCTest
 
 @MainActor
@@ -18,7 +19,7 @@ final class CustomerProviderTests: XCTestCase {
     func testPaymentSheetConfigurationWithoutCustomerUsesNoCustomer() {
         let configuration = PaymentSheet.Configuration()
 
-        let provider = configuration.customerProvider
+        let provider = CustomerProvider(customer: configuration.customer)
 
         XCTAssertEqual(provider.source, .none)
         XCTAssertFalse(provider.hasCustomer)
@@ -34,7 +35,7 @@ final class CustomerProviderTests: XCTestCase {
         )
         var parameters: [String: Any] = [:]
 
-        let provider = configuration.customerProvider
+        let provider = CustomerProvider(customer: configuration.customer)
         provider.addElementsSessionParams(to: &parameters)
 
         XCTAssertEqual(provider.source, .legacyEphemeralKey)
@@ -60,7 +61,7 @@ final class CustomerProviderTests: XCTestCase {
             .elementsSessionWithCustomerSessionForPaymentSheet(apiKey: "ek_from_session")
         var parameters: [String: Any] = [:]
 
-        let provider = configuration.customerProvider
+        let provider = CustomerProvider(customer: configuration.customer)
         provider.addElementsSessionParams(to: &parameters)
 
         XCTAssertEqual(provider.source, .customerSession)
@@ -131,41 +132,40 @@ final class CustomerProviderTests: XCTestCase {
         XCTAssertEqual(provider.source, .checkoutSession)
     }
 
-    func testConfigurationCustomerProviderCanBeReplacedWithoutErasingConcreteType() {
-        var configuration: PaymentElementConfiguration = EmbeddedPaymentElement.Configuration()
-        configuration.merchantDisplayName = "Example merchant"
+    func testLoadedCheckoutCustomerDoesNotReplaceMerchantConfiguration() async {
+        // Given a merchant configuration and a separate Checkout customer
+        await AddressSpecProvider.shared.loadAddressSpecs()
+        var configuration = EmbeddedPaymentElement.Configuration()
+        configuration.customer = .init(id: "cus_merchant", ephemeralKeySecret: "ek_test")
         let session = CheckoutTestHelpers.makeSession()
             .withCustomer(id: "cus_checkout")
             .makePublicSession()
-        configuration.customerProvider = CustomerProvider(checkoutSession: session)
 
-        XCTAssertEqual(configuration.merchantDisplayName, "Example merchant")
-        XCTAssertEqual(configuration.customerProvider.customerID, "cus_checkout")
-        XCTAssertTrue(configuration is EmbeddedPaymentElement.Configuration)
-        XCTAssertEqual(
-            configuration.analyticPayload["customer"] as? Bool,
-            true
+        // When the payment surface accepts the Checkout load result
+        let sut = EmbeddedPaymentElement(
+            configuration: configuration,
+            loadResult: makeLoadResult(session: session),
+            analyticsHelper: ._testValue()
         )
-        XCTAssertEqual(
-            configuration.analyticPayload["customer_access_provider"] as? String,
-            "checkout_session"
-        )
+
+        // Then consumers can use the loaded customer without mutating merchant input
+        XCTAssertEqual(sut.savedPaymentMethodManager.customerProvider.customerID, "cus_checkout")
+        XCTAssertEqual(sut.configuration.customer?.id, "cus_merchant")
     }
 
-    func testConfigurationCustomerProviderOverrideUsesItsSessionSnapshot() {
+    func testLoadResultsRetainTheirOwnCustomerSnapshots() {
         let firstSession = CheckoutTestHelpers.makeSession()
             .withCustomer(id: "cus_first")
             .makePublicSession()
         let secondSession = CheckoutTestHelpers.makeSession()
             .withCustomer(id: "cus_second")
             .makePublicSession()
-        var firstConfiguration = PaymentSheet.Configuration()
-        firstConfiguration.customerProvider = CustomerProvider(checkoutSession: firstSession)
-        var secondConfiguration = PaymentSheet.Configuration()
-        secondConfiguration.customerProvider = CustomerProvider(checkoutSession: secondSession)
 
-        XCTAssertEqual(firstConfiguration.customerProvider.customerID, "cus_first")
-        XCTAssertEqual(secondConfiguration.customerProvider.customerID, "cus_second")
+        let firstLoad = makeLoadResult(session: firstSession)
+        let secondLoad = makeLoadResult(session: secondSession)
+
+        XCTAssertEqual(firstLoad.customerProvider.customerID, "cus_first")
+        XCTAssertEqual(secondLoad.customerProvider.customerID, "cus_second")
     }
 
     func testCheckoutCustomerIDKeysLocalDefaultPaymentMethodFallback() {
@@ -173,8 +173,7 @@ final class CustomerProviderTests: XCTestCase {
         let session = CheckoutTestHelpers.makeSession()
             .withCustomer(id: customerID)
             .makePublicSession()
-        var configuration = PaymentSheet.Configuration()
-        configuration.customerProvider = CustomerProvider(checkoutSession: session)
+        let loadResult = makeLoadResult(session: session)
         CustomerPaymentOption.setDefaultPaymentMethod(
             .stripeId("pm_default"),
             forCustomer: customerID
@@ -184,11 +183,23 @@ final class CustomerProviderTests: XCTestCase {
         }
 
         let selectedPaymentMethod = CustomerPaymentOption.selectedPaymentMethod(
-            for: configuration.customerProvider.customerID,
+            for: loadResult.customerProvider.customerID,
             elementsSession: session.elementsSession,
             surface: .paymentSheet
         )
 
         XCTAssertEqual(selectedPaymentMethod, .stripeId("pm_default"))
+    }
+
+    private func makeLoadResult(session: CheckoutController.Session) -> PaymentSheetLoader.LoadResult {
+        return .init(
+            intent: .checkout(session),
+            elementsSession: session.elementsSession,
+            savedPaymentMethods: session.customer?.paymentMethods ?? [],
+            paymentMethodTypes: [.stripe(.card)],
+            paymentMethodMessagingPromotionsHelper: nil,
+            paymentMethodOrientation: .vertical,
+            customerProvider: CustomerProvider(checkoutSession: session)
+        )
     }
 }

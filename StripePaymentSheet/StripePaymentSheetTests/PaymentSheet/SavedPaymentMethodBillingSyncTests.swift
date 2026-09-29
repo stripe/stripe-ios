@@ -98,6 +98,7 @@ private extension SavedPaymentMethodBillingSyncTests {
         )
         let viewController = VerticalSavedPaymentMethodsViewController(
             configuration: EmbeddedPaymentElement.Configuration(),
+            customerProvider: CustomerProvider(customer: EmbeddedPaymentElement.Configuration().customer),
             intent: intent,
             checkout: updater,
             selectedPaymentMethod: paymentMethods[0],

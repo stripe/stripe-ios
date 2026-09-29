@@ -27,6 +27,7 @@ final class PayWithLinkController {
     let intent: Intent
     let elementsSession: STPElementsSession
     let configuration: PaymentElementConfiguration
+    private let customerProvider: CustomerProvider
     let analyticsHelper: PaymentSheetAnalyticsHelper
     private let confirmationChallenge: ConfirmationChallenge?
     // If you pass a confirmHandler, it's used to confirm the payment. Otherwise, PaymentSheet.confirm is used.
@@ -36,6 +37,7 @@ final class PayWithLinkController {
         intent: Intent,
         elementsSession: STPElementsSession,
         configuration: PaymentElementConfiguration,
+        customerProvider: CustomerProvider,
         analyticsHelper: PaymentSheetAnalyticsHelper,
         confirmationChallenge: ConfirmationChallenge?,
         confirmHandler: ConfirmHandler? = nil
@@ -43,6 +45,7 @@ final class PayWithLinkController {
         self.intent = intent
         self.elementsSession = elementsSession
         self.configuration = configuration
+        self.customerProvider = customerProvider
         self.paymentHandler = .init(apiClient: configuration.apiClient)
         self.analyticsHelper = analyticsHelper
         self.confirmationChallenge = confirmationChallenge
@@ -89,6 +92,7 @@ extension PayWithLinkController: PayWithLinkWebControllerDelegate {
 
         PaymentSheet.confirm(
             configuration: configuration,
+            customerProvider: customerProvider,
             authenticationContext: payWithLinkWebController,
             intent: intent,
             elementsSession: elementsSession,

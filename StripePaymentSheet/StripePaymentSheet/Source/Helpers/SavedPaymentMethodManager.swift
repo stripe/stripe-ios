@@ -18,22 +18,24 @@ final class SavedPaymentMethodManager {
         case missingUpdatedPaymentMethod
     }
 
-    let configuration: PaymentElementConfiguration
+    let customerProvider: CustomerProvider
+    let apiClient: STPAPIClient
     let elementsSession: STPElementsSession
 
-    init(configuration: PaymentElementConfiguration, elementsSession: STPElementsSession) {
-        self.configuration = configuration
+    init(customerProvider: CustomerProvider, elementsSession: STPElementsSession, apiClient: STPAPIClient) {
+        self.customerProvider = customerProvider
+        self.apiClient = apiClient
         self.elementsSession = elementsSession
     }
 
     func update(paymentMethod: STPPaymentMethod,
                 with updateParams: STPPaymentMethodUpdateParams) async throws -> STPPaymentMethod {
         do {
-            return try await configuration.customerProvider.update(
+            return try await customerProvider.update(
                 paymentMethod: paymentMethod,
                 with: updateParams,
                 elementsSession: elementsSession,
-                apiClient: configuration.apiClient
+                apiClient: apiClient
             )
         } catch CustomerProvider.Error.missingUpdatedPaymentMethod {
             let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetError,
@@ -52,10 +54,10 @@ final class SavedPaymentMethodManager {
     }
 
     func detach(paymentMethod: STPPaymentMethod) {
-        let didStartDetaching = configuration.customerProvider.detach(
+        let didStartDetaching = customerProvider.detach(
             paymentMethod: paymentMethod,
             elementsSession: elementsSession,
-            apiClient: configuration.apiClient
+            apiClient: apiClient
         )
         if !didStartDetaching {
             logMissingEphemeralKey()
@@ -64,10 +66,10 @@ final class SavedPaymentMethodManager {
 
     func setAsDefaultPaymentMethod(defaultPaymentMethodId: String) async throws -> STPCustomer {
         do {
-            return try await configuration.customerProvider.setAsDefaultPaymentMethod(
+            return try await customerProvider.setAsDefaultPaymentMethod(
                 defaultPaymentMethodId,
                 elementsSession: elementsSession,
-                apiClient: configuration.apiClient
+                apiClient: apiClient
             )
         } catch CustomerProvider.Error.missingEphemeralKey {
             logMissingEphemeralKey()
@@ -86,7 +88,7 @@ final class SavedPaymentMethodManager {
             event: .unexpectedPaymentSheetError,
             error: Error.missingEphemeralKey,
             additionalNonPIIParams: [
-                "customer_access_provider": configuration.customerProvider.analyticValue ?? "unknown",
+                "customer_access_provider": customerProvider.analyticValue ?? "unknown",
             ]
         )
         STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)

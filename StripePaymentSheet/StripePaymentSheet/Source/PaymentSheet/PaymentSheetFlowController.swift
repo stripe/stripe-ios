@@ -351,10 +351,9 @@ extension PaymentSheet {
             confirmationChallenge: ConfirmationChallenge? = nil,
             analyticsHelper: PaymentSheetAnalyticsHelper
         ) {
-            var configuration = configuration
-            configuration.customerProvider = loadResult.customerProvider
             self.configuration = configuration
             self.analyticsHelper = analyticsHelper
+            self.analyticsHelper.didLoad(loadResult)
             self.analyticsHelper.logInitialized()
             self.analyticsHelper.startTimeMeasurement(.checkout)
             self.viewController = Self.makeViewController(
@@ -539,7 +538,7 @@ extension PaymentSheet {
             // Capture the accepted selection before presenting payment options.
             selectionSnapshotBeforePresentation = FlowControllerSelectionSnapshot(
                 viewController: viewController,
-                customerID: configuration.customerProvider.customerID
+                customerID: viewController.loadResult.customerProvider.customerID
             )
 
             // Overwrite completion closure to retain self until called
@@ -679,6 +678,7 @@ extension PaymentSheet {
             presentingViewController.presentNativeLink(
                 selectedPaymentDetailsID: selectedPaymentDetailsID,
                 configuration: configuration,
+                customerProvider: viewController.loadResult.customerProvider,
                 intent: intent,
                 elementsSession: elementsSession,
                 analyticsHelper: analyticsHelper,
@@ -744,6 +744,7 @@ extension PaymentSheet {
                 let confirmBlock = { [self] in
                     PaymentSheet.confirm(
                         configuration: self.configuration,
+                        customerProvider: viewController.loadResult.customerProvider,
                         authenticationContext: authenticationContext,
                         intent: self.intent,
                         elementsSession: self.elementsSession,
@@ -762,7 +763,7 @@ extension PaymentSheet {
                             // Remember Link as default payment method for users who just created an account.
                             CustomerPaymentOption.setDefaultPaymentMethod(
                                 .link,
-                                forCustomer: self.configuration.customerProvider.customerID
+                                forCustomer: self.viewController.loadResult.customerProvider.customerID
                             )
                         }
 
@@ -862,8 +863,7 @@ extension PaymentSheet {
                 switch result {
                 case .success(let (loadResult, confirmationChallenge)):
                     // 2. Re-initialize PaymentSheetFlowControllerViewController to update the UI to match the newly loaded data e.g. payment method types may have changed.
-                    self.configuration.customerProvider = loadResult.customerProvider
-
+                    self.analyticsHelper.didLoad(loadResult)
                     self.viewController = Self.makeViewController(
                         configuration: self.configuration,
                         loadResult: loadResult,

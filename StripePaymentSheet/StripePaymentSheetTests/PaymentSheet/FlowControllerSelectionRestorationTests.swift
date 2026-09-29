@@ -99,7 +99,7 @@ final class FlowControllerSelectionRestorationTests: XCTestCase {
         var configuration = PaymentSheet.Configuration._testValue_MostPermissive(isApplePayEnabled: false)
         configuration.customer = .init(id: customerID, ephemeralKeySecret: "ek_test")
         configuration.defaultBillingDetails.email = "test@example.com"
-        let loadResult = makeLoadResult(customerProvider: configuration.customerProvider)
+        let loadResult = makeLoadResult(customerProvider: CustomerProvider(customer: configuration.customer))
         let flowController = PaymentSheet.FlowController(
             configuration: configuration,
             loadResult: loadResult,
@@ -146,7 +146,7 @@ final class FlowControllerSelectionRestorationTests: XCTestCase {
             configuration: configuration,
             loadResult: makeLoadResult(
                 orientation: .horizontal,
-                customerProvider: configuration.customerProvider
+                customerProvider: CustomerProvider(customer: configuration.customer)
             ),
             analyticsHelper: ._testValue(),
             initialState: .restoringAfterCancellation(
@@ -186,7 +186,7 @@ final class FlowControllerSelectionRestorationTests: XCTestCase {
             configuration: configuration,
             loadResult: makeLoadResult(
                 orientation: .horizontal,
-                customerProvider: configuration.customerProvider
+                customerProvider: CustomerProvider(customer: configuration.customer)
             ),
             analyticsHelper: ._testValue(),
             initialState: .preservingFormInput(from: .new(confirmParams: confirmParams))
@@ -231,6 +231,7 @@ final class FlowControllerSelectionRestorationTests: XCTestCase {
         let reorderedPaymentMethods = [paymentMethod] + paymentMethods.filter { $0.stripeId != paymentMethod.stripeId }
         let manageViewController = VerticalSavedPaymentMethodsViewController(
             configuration: viewController.configuration,
+            customerProvider: CustomerProvider(customer: viewController.configuration.customer),
             intent: viewController.intent,
             selectedPaymentMethod: paymentMethod,
             paymentMethods: reorderedPaymentMethods,

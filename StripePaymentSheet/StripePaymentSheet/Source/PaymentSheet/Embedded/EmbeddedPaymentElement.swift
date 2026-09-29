@@ -77,7 +77,7 @@ public final class EmbeddedPaymentElement {
         intentConfiguration: IntentConfiguration,
         configuration: Configuration
     ) async throws -> EmbeddedPaymentElement {
-        try validateRowSelectionConfiguration(configuration: configuration)
+        try validateRowSelectionConfiguration(configuration: configuration, customerProvider: CustomerProvider(customer: configuration.customer))
 
         AnalyticsHelper.shared.generateSessionID()
         STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: EmbeddedPaymentElement.self)
@@ -229,8 +229,8 @@ public final class EmbeddedPaymentElement {
 
             // 2. At this point, we're still the latest update and update is successful - update self properties and inform our delegate.
             let previousPaymentOption = self._paymentOption
-            self.configuration.customerProvider = loadResult.customerProvider
             self.loadResult = loadResult
+            self.analyticsHelper.didLoad(loadResult)
             self.confirmationChallenge = confirmationChallenge
             self.savedPaymentMethods = loadResult.savedPaymentMethods
             self.formCache = .init() // Clear the cache because the form may have changed e.g. different mandate or different fields.
@@ -257,6 +257,7 @@ public final class EmbeddedPaymentElement {
                 selection: isPreviousPaymentOptionStillDisplayed ? previousSelectedRowType : nil,
                 previousPaymentOption: previousPaymentOption,
                 configuration: self.configuration,
+                customerProvider: loadResult.customerProvider,
                 intent: loadResult.intent,
                 elementsSession: loadResult.elementsSession,
                 savedPaymentMethods: loadResult.savedPaymentMethods,
@@ -443,12 +444,13 @@ public final class EmbeddedPaymentElement {
             return nil
         }
     }
-    internal private(set) lazy var savedPaymentMethodManager: SavedPaymentMethodManager = {
+    internal var savedPaymentMethodManager: SavedPaymentMethodManager {
         SavedPaymentMethodManager(
-            configuration: configuration,
-            elementsSession: elementsSession
+            customerProvider: loadResult.customerProvider,
+            elementsSession: elementsSession,
+            apiClient: configuration.apiClient
         )
-    }()
+    }
 
     internal private(set) lazy var paymentHandler: STPPaymentHandler = STPPaymentHandler(apiClient: configuration.apiClient)
 
@@ -470,13 +472,12 @@ public final class EmbeddedPaymentElement {
         analyticsHelper: PaymentSheetAnalyticsHelper,
         initialSelection: RowButtonType? = nil
     ) {
-        var configuration = configuration
-        configuration.customerProvider = loadResult.customerProvider
         self.configuration = configuration
         self.loadResult = loadResult
         self.savedPaymentMethods = loadResult.savedPaymentMethods
         self.defaultPaymentMethod = loadResult.elementsSession.customer?.getDefaultPaymentMethod()
         self.analyticsHelper = analyticsHelper
+        self.analyticsHelper.didLoad(loadResult)
         self.initialSelection = initialSelection
         self.confirmationChallenge = confirmationChallenge
 

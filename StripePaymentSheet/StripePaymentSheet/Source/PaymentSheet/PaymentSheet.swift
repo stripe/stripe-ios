@@ -149,7 +149,7 @@ public class PaymentSheet {
             ) { result in
                 switch result {
                 case .success(let (loadResult, confirmationChallenge)):
-                    self.configuration.customerProvider = loadResult.customerProvider
+                    self.analyticsHelper.didLoad(loadResult)
                     self.confirmationChallenge = confirmationChallenge
                     let presentPaymentSheet: () -> Void = {
                         let paymentSheetVC = self.makePaymentSheetVC(
@@ -173,7 +173,7 @@ public class PaymentSheet {
                         verificationController.present(from: self.bottomSheetViewController) { result in
                             switch result {
                             case .completed:
-                                self.presentPayWithNativeLinkController(from: self.bottomSheetViewController, intent: loadResult.intent, elementsSession: loadResult.elementsSession, shouldOfferApplePay: self.configuration.isApplePayEnabled, shouldFinishOnClose: false, onClose: {
+                                self.presentPayWithNativeLinkController(from: self.bottomSheetViewController, intent: loadResult.intent, elementsSession: loadResult.elementsSession, customerProvider: loadResult.customerProvider, shouldOfferApplePay: self.configuration.isApplePayEnabled, shouldFinishOnClose: false, onClose: {
                                     presentPaymentSheet()
                                 })
                             case .canceled, .switchAccount:
@@ -319,7 +319,7 @@ public class PaymentSheet {
             return checkout
         }()
         persistedSelectionSnapshotBeforePresentation = .init(
-            customerID: configuration.customerProvider.customerID,
+            customerID: loadResult.customerProvider.customerID,
             availableSavedPaymentMethods: loadResult.savedPaymentMethods
         )
         switch loadResult.paymentMethodOrientation {
@@ -359,6 +359,7 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
         let confirm: (@escaping (PaymentSheetResult, StripeCore.STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void) -> Void = { completion in
             PaymentSheet.confirm(
                 configuration: self.configuration,
+                customerProvider: paymentSheetViewController.loadResult.customerProvider,
                 authenticationContext: self.bottomSheetViewController,
                 intent: paymentSheetViewController.intent,
                 elementsSession: paymentSheetViewController.elementsSession,
@@ -440,7 +441,7 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
     func paymentSheetViewControllerDidSelectPayWithLink(_ paymentSheetViewController: PaymentSheetViewControllerProtocol) {
         let useNativeLink = deviceCanUseNativeLink(elementsSession: paymentSheetViewController.elementsSession, configuration: configuration)
         if useNativeLink {
-            presentPayWithNativeLinkController(from: paymentSheetViewController, intent: paymentSheetViewController.intent, elementsSession: paymentSheetViewController.elementsSession, shouldOfferApplePay: false, shouldFinishOnClose: false)
+            presentPayWithNativeLinkController(from: paymentSheetViewController, intent: paymentSheetViewController.intent, elementsSession: paymentSheetViewController.elementsSession, customerProvider: paymentSheetViewController.loadResult.customerProvider, shouldOfferApplePay: false, shouldFinishOnClose: false)
         } else {
             self.presentPayWithLinkController(
                 from: paymentSheetViewController,
@@ -468,6 +469,8 @@ extension PaymentSheet: LoadingViewControllerDelegate {
 // MARK: - PaymentSheetViewControllerProtocol
 
 internal protocol PaymentSheetViewControllerProtocol: UIViewController, BottomSheetContentViewController {
+
+    var loadResult: PaymentSheetLoader.LoadResult { get }
     var intent: Intent { get }
     var elementsSession: STPElementsSession { get }
     var savedPaymentMethods: [STPPaymentMethod] { get }

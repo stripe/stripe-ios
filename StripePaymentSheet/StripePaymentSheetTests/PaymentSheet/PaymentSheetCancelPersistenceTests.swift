@@ -71,7 +71,7 @@ final class PaymentSheetCancelPersistenceTests: XCTestCase {
         )
         let loadResult = makeLoadResult(
             savedPaymentMethods: [cardA, cardB],
-            customerProvider: configuration.customerProvider
+            customerProvider: CustomerProvider(customer: configuration.customer)
         )
         _ = sheet.makePaymentSheetVC(
             loadResult: loadResult,

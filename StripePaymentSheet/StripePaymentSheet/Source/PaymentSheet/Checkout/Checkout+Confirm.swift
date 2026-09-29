@@ -41,6 +41,7 @@ extension CheckoutController {
         // TODO: Lots of stuff in here because current Link code nominally requires it but it may not all really be necessary.
         let confirmOption: PaymentSheet.LinkConfirmOption
         let configuration: PaymentElementConfiguration
+        let customerProvider: CustomerProvider
         let confirmationChallenge: ConfirmationChallenge?
         let analyticsHelper: PaymentSheetAnalyticsHelper
         let authenticationContext: STPAuthenticationContext
@@ -95,6 +96,7 @@ extension CheckoutController {
     ) -> CheckoutConfirmationFlow? {
         let paymentOption: PaymentOption
         let configuration: PaymentElementConfiguration
+        let customerProvider: CustomerProvider
         let integrationShape: PaymentSheet.IntegrationShape
         let confirmationChallenge: ConfirmationChallenge?
 
@@ -104,6 +106,7 @@ extension CheckoutController {
             }
             paymentOption = resolvedPaymentOption
             configuration = paymentElement.paymentSheetFlowController.configuration
+            customerProvider = paymentElement.paymentSheetFlowController.viewController.loadResult.customerProvider
             integrationShape = .flowController
             confirmationChallenge = paymentElement.paymentSheetFlowController.confirmationChallenge
         } else {
@@ -112,6 +115,7 @@ extension CheckoutController {
             }
             paymentOption = resolvedPaymentOption
             configuration = paymentElement.embeddedPaymentElement.configuration
+            customerProvider = paymentElement.embeddedPaymentElement.loadResult.customerProvider
             integrationShape = .embedded
             confirmationChallenge = paymentElement.embeddedPaymentElement.confirmationChallenge
         }
@@ -149,6 +153,7 @@ extension CheckoutController {
             return .link(.init(
                 confirmOption: confirmOption,
                 configuration: configuration,
+                customerProvider: customerProvider,
                 confirmationChallenge: confirmationChallenge,
                 analyticsHelper: analyticsHelper,
                 authenticationContext: authenticationContext,

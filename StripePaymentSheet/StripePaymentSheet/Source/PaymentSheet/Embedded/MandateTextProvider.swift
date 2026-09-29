@@ -18,7 +18,9 @@ protocol MandateTextProvider {
 /// A class that can provide the attributed string for a given payment method type and configuration for the vertical list of PMs.
 @MainActor
 class VerticalListMandateProvider: MandateTextProvider {
+
     private let configuration: PaymentElementConfiguration
+    private let customerProvider: CustomerProvider
     private let elementsSession: STPElementsSession
     private let intent: Intent
     private let analyticsHelper: PaymentSheetAnalyticsHelper
@@ -26,12 +28,14 @@ class VerticalListMandateProvider: MandateTextProvider {
 
     init(
         configuration: PaymentElementConfiguration,
+        customerProvider: CustomerProvider,
         elementsSession: STPElementsSession,
         intent: Intent,
         analyticsHelper: PaymentSheetAnalyticsHelper,
         shouldShowForm: @escaping (PaymentMethodElement) -> Bool = { $0.collectsUserInput }
     ) {
         self.configuration = configuration
+        self.customerProvider = customerProvider
         self.elementsSession = elementsSession
         self.intent = intent
         self.analyticsHelper = analyticsHelper
@@ -72,7 +76,7 @@ class VerticalListMandateProvider: MandateTextProvider {
             let form = PaymentSheetFormFactory(
                 intent: intent,
                 elementsSession: elementsSession,
-                configuration: .paymentElement(configuration, isLinkUI: false),
+                configuration: .paymentElement(configuration, customerProvider: customerProvider, isLinkUI: false),
                 paymentMethod: paymentMethodType,
                 paymentMethodOrientation: .vertical,
                 previousCustomerInput: nil,

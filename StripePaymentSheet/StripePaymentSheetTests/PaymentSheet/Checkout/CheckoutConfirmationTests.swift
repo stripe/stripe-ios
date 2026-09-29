@@ -503,6 +503,7 @@ final class CheckoutConfirmationTests: APIStubbedTestCase {
         let flow = CheckoutController.CheckoutConfirmationFlow.link(.init(
             confirmOption: makeLinkConfirmOption(),
             configuration: configuration,
+            customerProvider: checkout.getPaymentElement().embeddedPaymentElement.loadResult.customerProvider,
             confirmationChallenge: nil,
             analyticsHelper: ._testValue(),
             authenticationContext: self,
@@ -534,6 +535,7 @@ final class CheckoutConfirmationTests: APIStubbedTestCase {
         let flow = CheckoutController.CheckoutConfirmationFlow.link(.init(
             confirmOption: makeLinkConfirmOption(),
             configuration: configuration,
+            customerProvider: checkout.getPaymentElement().embeddedPaymentElement.loadResult.customerProvider,
             confirmationChallenge: nil,
             analyticsHelper: ._testValue(),
             authenticationContext: self,

@@ -9,10 +9,12 @@
 @_spi(STP) import StripePayments
 
 extension PaymentSheetLoader {
+
     @MainActor
     static func loadLink(
         elementsSession: STPElementsSession,
         configuration: PaymentElementConfiguration,
+        customerProvider: CustomerProvider,
         analyticsHelper: PaymentSheetAnalyticsHelper,
         prefetchedEmailAndSourceTask: Task<(email: String, source: EmailSource)?, Never>,
         loadTimings: LoadTimings,
@@ -27,6 +29,7 @@ extension PaymentSheetLoader {
             let linkAccount = try? await Self.lookupLinkAccount(
                 elementsSession: elementsSession,
                 configuration: configuration,
+                customerProvider: customerProvider,
                 prefetchedEmailAndSource: prefetchedLinkEmailAndSource,
                 loadTimings: loadTimings,
                 isUpdate: isUpdate
@@ -70,6 +73,7 @@ extension PaymentSheetLoader {
     static func lookupLinkAccount(
         elementsSession: STPElementsSession,
         configuration: PaymentElementConfiguration,
+        customerProvider: CustomerProvider,
         prefetchedEmailAndSource: (email: String, source: EmailSource)?,
         loadTimings: LoadTimings,
         isUpdate: Bool
@@ -107,7 +111,7 @@ extension PaymentSheetLoader {
         } else if let prefetchedEmailAndSource {
             // 2. We fetched the Customer object before calling this method to get its email when using EKs
             lookupEmail = prefetchedEmailAndSource
-        } else if let email = configuration.customerProvider.email {
+        } else if let email = customerProvider.email {
             // 3. Checkout Session returns the customer email in its session response.
             lookupEmail = (email, EmailSource.customerObject)
         } else if let email = elementsSession.customer?.email {
@@ -178,11 +182,12 @@ extension PaymentSheetLoader {
     @MainActor
     static func getCustomerEmailForLinkWithEphemeralKey(
         configuration: PaymentElementConfiguration,
+        customerProvider: CustomerProvider,
         loadTimings: LoadTimings
     ) async throws -> (email: String, source: EmailSource)? {
         guard
             configuration.defaultBillingDetails.email == nil, // If email was already provided, don't make a network request to retrieve it.
-            let credentials = configuration.customerProvider.legacyEphemeralKeyCredentials
+            let credentials = customerProvider.legacyEphemeralKeyCredentials
         else {
             return nil
         }

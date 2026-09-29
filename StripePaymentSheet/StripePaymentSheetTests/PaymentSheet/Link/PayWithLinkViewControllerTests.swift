@@ -48,11 +48,12 @@ class PayWithLinkViewControllerTests: XCTestCase {
             intent: ._testValue(),
             elementsSession: ._testValue(intent: ._testValue()),
             configuration: config,
+            customerProvider: CustomerProvider(customer: config.customer),
             analyticsHelper: ._testValue()
         )
 
         // Now make the fake PayWithLinkViewController and present it
-        let vc = PayWithLinkViewController(intent: ._testValue(), linkAccount: nil, elementsSession: ._testValue(intent: ._testValue()), configuration: config, analyticsHelper: ._testValue())
+        let vc = PayWithLinkViewController(intent: ._testValue(), linkAccount: nil, elementsSession: ._testValue(intent: ._testValue()), configuration: config, customerProvider: CustomerProvider(customer: config.customer), analyticsHelper: ._testValue())
         vc.payWithLinkDelegate = paymentSheet
         hostVC.present(vc, animated: true, completion: {})
 

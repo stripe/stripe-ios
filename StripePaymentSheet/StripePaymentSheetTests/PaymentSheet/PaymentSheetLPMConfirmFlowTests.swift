@@ -545,7 +545,8 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                     elementsSession = try await apiClient.retrieveDeferredElementsSession(
                         withIntentConfig: intentConfig,
                         clientDefaultPaymentMethod: nil,
-                        configuration: configuration
+                        configuration: configuration,
+                        customerProvider: CustomerProvider(customer: configuration.customer)
                     )
                 case .checkout:
                     elementsSession = ._testValue(intent: intent)
@@ -833,6 +834,7 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                     intent: intent,
                     elementsSession: elementsSession,
                     configuration: configuration,
+                    customerProvider: CustomerProvider(customer: configuration.customer),
                     clientAttributionMetadata: clientAttributionMetadata,
                     checkout: testIntent.checkout,
                     completion: { result, _ in
@@ -1058,7 +1060,7 @@ extension PaymentSheetLPMConfirmFlowTests {
             let intent = testIntent.intent
 
             func makeFormVC(previousCustomerInput: IntentConfirmParams?) -> PaymentMethodFormViewController {
-                return PaymentMethodFormViewController(type: .stripe(paymentMethodType), intent: intent, elementsSession: ._testValue(intent: intent, allowsSetAsDefaultPM: allowsSetAsDefaultPM), previousCustomerInput: previousCustomerInput, formCache: .init(), configuration: configuration, paymentMethodOrientation: .vertical, headerView: nil, analyticsHelper: ._testValue(), delegate: self)
+                return PaymentMethodFormViewController(type: .stripe(paymentMethodType), intent: intent, elementsSession: ._testValue(intent: intent, allowsSetAsDefaultPM: allowsSetAsDefaultPM), previousCustomerInput: previousCustomerInput, formCache: .init(), configuration: configuration, customerProvider: CustomerProvider(customer: configuration.customer), paymentMethodOrientation: .vertical, headerView: nil, analyticsHelper: ._testValue(), delegate: self)
             }
             // Make the form
             let formVC = makeFormVC(previousCustomerInput: nil)
@@ -1675,7 +1677,7 @@ extension PaymentSheetLPMConfirmFlowTests {
         noFieldsConfig.billingDetailsCollectionConfiguration.email = .never
         noFieldsConfig.billingDetailsCollectionConfiguration.phone = .never
         noFieldsConfig.billingDetailsCollectionConfiguration.address = .never
-        var form = PaymentSheetFormFactory(intent: ._testPaymentIntent(paymentMethodTypes: [paymentMethodType]), elementsSession: .emptyElementsSession, configuration: .paymentElement(noFieldsConfig), paymentMethod: .stripe(paymentMethodType)).make()
+        var form = PaymentSheetFormFactory(intent: ._testPaymentIntent(paymentMethodTypes: [paymentMethodType]), elementsSession: .emptyElementsSession, configuration: .paymentElement(noFieldsConfig, customerProvider: CustomerProvider(customer: noFieldsConfig.customer)), paymentMethod: .stripe(paymentMethodType)).make()
 
         XCTAssertNil(getName(from: form))
         XCTAssertNil(form.getTextFieldElement("Email"))
@@ -1708,7 +1710,7 @@ extension PaymentSheetLPMConfirmFlowTests {
                 state: "CA"
             )
         )
-        form = PaymentSheetFormFactory(intent: ._testPaymentIntent(paymentMethodTypes: [paymentMethodType]), elementsSession: .emptyElementsSession, configuration: .paymentElement(allFieldsConfig), paymentMethod: .stripe(paymentMethodType)).make()
+        form = PaymentSheetFormFactory(intent: ._testPaymentIntent(paymentMethodTypes: [paymentMethodType]), elementsSession: .emptyElementsSession, configuration: .paymentElement(allFieldsConfig, customerProvider: CustomerProvider(customer: allFieldsConfig.customer)), paymentMethod: .stripe(paymentMethodType)).make()
         XCTAssertNotNil(getName(from: form))
         XCTAssertNotNil(form.getTextFieldElement("Email"))
         XCTAssertNotNil(form.getPhoneNumberElement())
@@ -1735,6 +1737,7 @@ extension PaymentSheetLPMConfirmFlowTests {
         guard case .checkout(let checkoutSession) = testIntent.intent else {
             PaymentSheet.confirm(
                 configuration: configuration,
+                customerProvider: CustomerProvider(customer: configuration.customer),
                 authenticationContext: self,
                 intent: testIntent.intent,
                 elementsSession: elementsSession,
@@ -1823,6 +1826,7 @@ extension PaymentSheetLPMConfirmFlowTests {
                 let parameters = CheckoutController.LinkConfirmationParameters(
                     confirmOption: confirmOption,
                     configuration: configuration,
+                    customerProvider: CustomerProvider(checkoutSession: checkoutSession),
                     confirmationChallenge: nil,
                     analyticsHelper: analyticsHelper,
                     authenticationContext: self,

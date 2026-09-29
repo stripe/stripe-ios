@@ -108,8 +108,9 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
 
     private lazy var savedPaymentMethodManager: SavedPaymentMethodManager = {
         return SavedPaymentMethodManager(
-            configuration: configuration,
-            elementsSession: elementsSession
+            customerProvider: loadResult.customerProvider,
+            elementsSession: elementsSession,
+            apiClient: configuration.apiClient
         )
     }()
 
@@ -215,7 +216,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         self.savedPaymentOptionsViewController = SavedPaymentOptionsViewController(
             savedPaymentMethods: loadResult.savedPaymentMethods,
             configuration: .init(
-                customerID: configuration.customerProvider.customerID,
+                customerID: loadResult.customerProvider.customerID,
                 showApplePay: isApplePayEnabled,
                 showLink: isLinkEnabled,
                 linkBrand: configuration.resolvedLinkBrand(elementsSession: elementsSession, linkAccount: LinkAccountContext.shared.account),
@@ -224,9 +225,9 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
                 isCVCRecollectionEnabled: false,
                 isTestMode: configuration.apiClient.isTestmode,
                 allowsRemovalOfLastSavedPaymentMethod: elementsSession.paymentMethodRemoveLast(configuration: configuration),
-                allowsRemovalOfPaymentMethods: configuration.customerProvider.allowsPaymentMethodRemoval(elementsSession: elementsSession),
+                allowsRemovalOfPaymentMethods: loadResult.customerProvider.allowsPaymentMethodRemoval(elementsSession: elementsSession),
                 allowsSetAsDefaultPM: elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
-                allowsUpdatePaymentMethod: configuration.customerProvider.allowsPaymentMethodUpdate(elementsSession: elementsSession)
+                allowsUpdatePaymentMethod: loadResult.customerProvider.allowsPaymentMethodUpdate(elementsSession: elementsSession)
             ),
             paymentSheetConfiguration: configuration,
             intent: intent,
@@ -242,6 +243,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
             intent: intent,
             elementsSession: elementsSession,
             configuration: configuration,
+            customerProvider: loadResult.customerProvider,
             paymentMethodOrientation: loadResult.paymentMethodOrientation,
             previousCustomerInput: previousConfirmParams, // Restore the customer's previous new payment method input
             paymentMethodTypes: loadResult.paymentMethodTypes,
@@ -279,18 +281,18 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         self.addPaymentMethodViewController.delegate = self
         if initialState.paymentOption == nil,
            shouldUseLinkOnlyWalletHeader,
-           Self.customerDefaultIsLink(configuration: configuration, elementsSession: elementsSession) {
+           Self.customerDefaultIsLink(customerProvider: loadResult.customerProvider, elementsSession: elementsSession) {
             mode = .addingNew
             isHackyLinkButtonSelected = true
         }
     }
 
     private static func customerDefaultIsLink(
-        configuration: PaymentElementConfiguration,
+        customerProvider: CustomerProvider,
         elementsSession: STPElementsSession
     ) -> Bool {
         return CustomerPaymentOption.selectedPaymentMethod(
-            for: configuration.customerProvider.customerID,
+            for: customerProvider.customerID,
             elementsSession: elementsSession,
             surface: .paymentSheet
         ) == .link
@@ -352,6 +354,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         presentNativeLink(
             selectedPaymentDetailsID: selectedPaymentOption?.currentLinkPaymentMethod,
             configuration: configuration,
+            customerProvider: loadResult.customerProvider,
             intent: intent,
             elementsSession: elementsSession,
             analyticsHelper: analyticsHelper

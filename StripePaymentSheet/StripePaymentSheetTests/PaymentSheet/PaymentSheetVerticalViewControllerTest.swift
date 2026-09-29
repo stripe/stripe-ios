@@ -157,7 +157,7 @@ final class PaymentSheetVerticalViewControllerTest: XCTestCase {
                 paymentMethodTypes: [.stripe(.card)],
                 paymentMethodMessagingPromotionsHelper: ._testValue(),
                 paymentMethodOrientation: .vertical,
-                customerProvider: configuration.customerProvider
+                customerProvider: CustomerProvider(customer: configuration.customer)
             )
             return PaymentSheetVerticalViewController(
                 configuration: configuration,
@@ -239,7 +239,7 @@ final class PaymentSheetVerticalViewControllerTest: XCTestCase {
                 paymentMethodTypes: [.stripe(.card)],
                 paymentMethodMessagingPromotionsHelper: ._testValue(),
                 paymentMethodOrientation: .vertical,
-                customerProvider: configuration.customerProvider
+                customerProvider: CustomerProvider(customer: configuration.customer)
             )
             return PaymentSheetVerticalViewController(
                 configuration: configuration,
