@@ -547,10 +547,18 @@ extension PayWithLinkViewController {
 
 extension PayWithLinkViewController: SheetNavigationBarDelegate {
     func sheetNavigationBarDidClose(_ sheetNavigationBar: SheetNavigationBar) {
+        if let authController = contentStack.first as? VerifyAccountViewController {
+            authController.didTapOrSwipeToDismiss()
+            return
+        }
         payWithLinkDelegate?.payWithLinkViewControllerDidCancel(self, shouldReturnToPaymentSheet: false)
     }
 
     func sheetNavigationBarDidBack(_ sheetNavigationBar: SheetNavigationBar) {
+        if let authController = contentStack.first as? VerifyAccountViewController {
+            authController.goBackInAuthentication()
+            return
+        }
         _ = self.popContentViewController()
     }
 }

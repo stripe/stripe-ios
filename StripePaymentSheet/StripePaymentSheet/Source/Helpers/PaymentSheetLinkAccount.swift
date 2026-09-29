@@ -129,10 +129,6 @@ struct LinkPMDisplayDetails {
         return currentSession?.hasStartedSMSVerification ?? false
     }
 
-    var hasCompletedSMSVerification: Bool {
-        return currentSession?.hasVerifiedSMSSession ?? false
-    }
-
     var meetsMinimumAuthenticationLevel: Bool {
         return currentSession?.meetsMinimumAuthenticationLevel ?? false
     }
@@ -556,28 +552,6 @@ struct LinkPMDisplayDetails {
                     completion: completionRetryingOnAuthErrors
                 )
             }
-        }
-    }
-
-    func refresh(
-        completion: @escaping (Result<ConsumerSession, Error>) -> Void
-    ) {
-        guard let session = currentSession else {
-            stpAssertionFailure()
-            completion(.failure(
-                PaymentSheetError.unknown(debugDescription: "Refreshing session without valid current session")
-            ))
-            return
-        }
-
-        session.refreshSession(
-            with: apiClient,
-            requestSurface: requestSurface
-        ) { [weak self] result in
-            if case .success(let refreshedSession) = result {
-                self?.updateCurrentSession(refreshedSession, retainingLinkSessionKeyFrom: session)
-            }
-            completion(result)
         }
     }
 

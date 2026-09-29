@@ -19,6 +19,7 @@ extension LinkVerificationView {
         }
 
         private let brand: LinkBrand
+        private let buttonSize = LinkUI.navigationBarButtonSize
 
         private lazy var logoView: UIImageView = {
             let logoView = UIImageView(image: brand.paymentSheetLogoImage)
@@ -36,8 +37,24 @@ extension LinkVerificationView {
             )
         }()
 
+        let backButton: UIButton = {
+            let button = LinkSheetNavigationBar.createBackButton(
+                accessibilityIdentifier: "LinkVerificationBackButton",
+                appearance: LinkUI.appearance
+            )
+            button.isHidden = true
+            return button
+        }()
+
+        var showsBackButton = false {
+            didSet {
+                backButton.isHidden = !showsBackButton
+                logoView.isHidden = showsBackButton
+            }
+        }
+
         override var intrinsicContentSize: CGSize {
-            return CGSize(width: 72, height: 32)
+            return CGSize(width: 72, height: buttonSize)
         }
 
         init(brand: LinkBrand = .link) {
@@ -46,6 +63,7 @@ extension LinkVerificationView {
 
             addSubview(logoView)
             addSubview(closeButton)
+            addSubview(backButton)
 
             NSLayoutConstraint.activate([
                 // Logo
@@ -57,6 +75,11 @@ extension LinkVerificationView {
                 closeButton.topAnchor.constraint(equalTo: topAnchor),
                 closeButton.trailingAnchor.constraint(equalTo: trailingAnchor),
                 closeButton.bottomAnchor.constraint(equalTo: bottomAnchor),
+                closeButton.widthAnchor.constraint(equalTo: closeButton.heightAnchor),
+                backButton.leadingAnchor.constraint(equalTo: leadingAnchor),
+                backButton.topAnchor.constraint(equalTo: topAnchor),
+                backButton.bottomAnchor.constraint(equalTo: bottomAnchor),
+                backButton.widthAnchor.constraint(equalTo: backButton.heightAnchor),
             ])
 
             tintColor = .linkSurfacePrimary
