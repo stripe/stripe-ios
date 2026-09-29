@@ -16,7 +16,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
           fetch-depth: 100
 
@@ -45,13 +45,13 @@ jobs:
             echo "diff_result.txt not found, skipping." 
           fi
 
-      - uses: davidme-stripe/find-comment@v1
+      - uses: davidme-stripe/find-comment@d2dae40ed151c634e4189471272b57e76ec19ba8 # v1.3.0
         id: find_comment
         with:
           issue-number: ${{ github.event.pull_request.number }}
           body-includes: Public API changes detected
 
-      - uses: davidme-stripe/create-or-update-comment@v1
+      - uses: davidme-stripe/create-or-update-comment@a35cf36e5301d70b76f316e867e7788a55a31dae # v1.4.5
         id: create-update-comment
         if: env.diff != ''
         with:
@@ -71,7 +71,7 @@ jobs:
             If you confirm these APIs need to be added/updated and have undergone necessary review, add the label `modifies public API` to this PR to acknowledge the interface change.
             Additionally, if you modified or removed an existing API, ensure you update the changelog to reflect the necessary version bump for your changes. Regular public API changes require a MAJOR version bump, and SPI API changes (other than declarations using only `@_spi(STP)` and/or `@_spi(ReactNativeSDK)`) require a MINOR or MAJOR version bump.
 
-            ℹ️ If this comment appears to be left in error, make sure your branch is up-to-date with `master`.
+            ℹ️ If this comment appears to be left in error, make sure your branch is up-to-date with `master`. If it still appears spurious, you can ignore this optional check.
           edit-mode: replace
           comment-id: ${{ steps.find_comment.outputs.comment-id }}
           issue-number: ${{ github.event.pull_request.number }}

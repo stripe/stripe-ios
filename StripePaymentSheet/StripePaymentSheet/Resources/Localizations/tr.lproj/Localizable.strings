@@ -46,6 +46,8 @@
 
 "Buy now or pay later with Klarna" = "Şimdi satın alın veya daha sonra Klarna ile ödeyin";
 
+"By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "Ödemenizi NICEPAY ile onayladığınızda, %@’in kendi koşullarına uygun olarak gelecekteki ödemeler için bu ödeme yönteminden ücret almasına izin vermiş olursunuz.";
+
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "PayPal'la ödemeyi onayladığınızda, %@ şirketine gelecekteki ödemeler için kendi koşullarına uygun olarak PayPal hesabınızı ücretlendirme izni vermiş olursunuz.";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Amazon Pay'a devam ederek, %@ şirketine gelecekteki ödemeler için kendi koşullarına uygun olarak Amazon Pay hesabınızı ücretlendirme izni vermiş olursunuz.";
@@ -86,6 +88,8 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "%@ için banka hesabınızı kaydettiğinizde ödemeleri <terms>bu koşullara</terms> göre yetkilendirmeyi kabul etmiş olursunuz.";
 
+"By saving your payment information, you allow %@ to charge you for future payments in accordance with their terms." = "Ödeme bilgilerinizi kaydederek, %@’un gelecekteki ödemeler için kendi koşullarına uygun olarak ücret almasına izin vermiş olursunuz.";
+
 "By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "Siparişinizi %1$@ ve %2$@'e göndererek, bilgilerinizi gelecekteki satın alımlar için %3$@ ile kaydetmeyi ve <terms>bu koşullar</terms> uyarınca ödemeleri yetkilendirmeyi kabul etmiş olursunuz.";
 
 "By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Siparişinizi %@’ye göndererek ödemeleri <terms>bu koşullara</terms> uygun olarak yetkilendirmeyi kabul etmiş olursunuz.";
@@ -108,9 +112,15 @@
 
 "Code sent" = "Kod gönderildi";
 
+"Complete the payment using Pix to finish the purchase." = "Satın alma işlemini bitirmek için Pix kullanarak ödemeyi tamamlayın.";
+
 "Confirm" = "Onayla";
 
 "Confirm payment details" = "Ödeme bilgilerini onayla";
+
+"Confirm the Bizum payment in your mobile banking application within %@ to complete the purchase." = "Satın alma işlemini tamamlamak için %@ içinde mobil bankacılık uygulamanızdaki Bizum ödemesini onaylayın.";
+
+"Confirm the payment in your MB WAY app within %@ to complete the purchase." = "Satın alma işlemini tamamlamak için %@ içinde MB WAY uygulamanızdaki ödemeyi onaylayın.";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "%@ içinde banka veya ödeme uygulamanızla ödemeyi onaylayarak satın almayı tamamlayın.";
 
@@ -136,9 +146,15 @@
 
 "Did you mean %@? %@." = "%1$@ mi demek istediniz? %2$@.";
 
+"Discard Changes" = "Değişiklikleri İptal Et";
+
+"Discard changes?" = "Değişiklikler iptal edilsin mi?";
+
 "Discount" = "İndirim";
 
 "EPS Bank" = "EPS Bank";
+
+"Edit address" = "Adresi düzenle";
 
 "Enter address manually" = "Adresi manuel olarak girin";
 
@@ -157,6 +173,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Stripe'ın %@ adına Otomatik Ödeme alacağını anlıyorum. Hesap sahibi ve bu hesaptan ödemeleri yetkilendirmek için gereken tek kişi olduğumu onaylıyorum.";
 
 "IBAN" = "IBAN";
+
+"Keep Editing" = "Düzenlemeye Devam Et";
 
 "Last 4 digits of SSN" = "SSN'nin son 4 hanesi";
 
@@ -177,6 +195,10 @@
 "Manage your payment methods" = "Ödeme yöntemlerinizi yönetin";
 
 "Name on card" = "Karttaki isim";
+
+"Naver Pay Card" = "Naver Pay Kartı";
+
+"Naver Pay Money/Point" = "Naver Pay Money/Point";
 
 "New card" = "Yeni kart";
 
@@ -234,8 +256,6 @@
 
 "Point the camera at your card." = "Kamerayı kartınıza doğrultun.";
 
-"Processing..." = "İşleniyor...";
-
 "Przelewy24 Bank" = "Przelewy24 Bank";
 
 "Remove %@" = "%@ kaldır";
@@ -274,6 +294,8 @@
 
 "Select card" = "Kart seçin";
 
+"Select how you want to pay:" = "Nasıl ödeme yapmak istediğinizi seçin:";
+
 "Select payment method" = "Ödeme yöntemini seçin";
 
 "Select your payment method" = "Ödeme yönteminizi seçin";
@@ -283,8 +305,6 @@
 "Set as default payment method" = "Varsayılan ödeme yöntemi olarak ayarla";
 
 "Set up" = "Ayarla";
-
-"Shipping" = "Gönderim";
 
 "Shipping to %@ is not supported." = "Varış noktası %@ olan gönderimler desteklenmez.";
 
@@ -312,6 +332,10 @@
 
 "Tax" = "Vergi";
 
+"Terms and Conditions" = "Şartlar ve Koşullar";
+
+"Terms of Service" = "Hizmet Koşulları";
+
 "The IBAN you entered is incomplete." = "Girdiğiniz IBAN eksik.";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Girdiğiniz IBAN geçersiz, \"%@\" desteklenen bir ülke kodu değil.";
@@ -319,6 +343,8 @@
 "The provided verification code has expired." = "Sağlanan doğrulama kodunun süresi dolmuş.";
 
 "The provided verification code is incorrect." = "Sağlanan doğrulama kodu yanlış.";
+
+"This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Bu uluslararası bir satın alma işlemidir ve %3,5 IOF ücreti hariçtir. Devam ederek <terms>Ebanx'ın hüküm ve koşullarını</terms> onaylamış ve kabul etmiş olursunuz.";
 
 "This is your default" = "Bu varsayılan ödeme yönteminizdir";
 
@@ -339,3 +365,5 @@
 "Yes, update" = "Evet, güncelle";
 
 "Your IBAN should start with a two-letter country code." = "IBAN numaranız iki harfli bir ülke koduyla başlamalıdır.";
+
+"Your address changes won't be saved." = "Adres değişiklikleriniz kaydedilmeyecek.";

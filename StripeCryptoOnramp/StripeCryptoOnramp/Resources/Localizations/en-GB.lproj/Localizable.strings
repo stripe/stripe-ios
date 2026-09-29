@@ -1,5 +1,13 @@
 "Debit cards are most likely to be accepted." = "Debit cards are most likely to be accepted.";
 
+"Document uploaded successfully" = "Document uploaded successfully";
+
+"Please try again later." = "Please try again later.";
+
+"Submitted for review" = "Submitted for review";
+
+"Tell us about your source of funds" = "Tell us about your source of funds";
+
 "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists.";
 
 "This app couldn't be verified. Contact the app developer for help." = "This app couldn't be verified. Contact the app developer for help.";
@@ -12,4 +20,14 @@
 
 "This wallet verification request is invalid. Please try again." = "This wallet verification request is invalid. Please try again.";
 
+"Upload your proof of address" = "Upload your proof of address";
+
 "We couldn't verify ownership of this wallet. Please try again." = "We couldn't verify ownership of this wallet. Please try again.";
+
+"We may request proof of address for larger transactions." = "We may request proof of address for larger transactions.";
+
+"We may request source of funds for larger transactions." = "We may request source of funds for larger transactions.";
+
+"We’re reviewing your documents. We’ll let you know when verification is complete." = "We're reviewing your documents. We'll let you know when verification is complete.";
+
+"You can continue while we verify your document in the background." = "You can continue while we verify your document in the background.";

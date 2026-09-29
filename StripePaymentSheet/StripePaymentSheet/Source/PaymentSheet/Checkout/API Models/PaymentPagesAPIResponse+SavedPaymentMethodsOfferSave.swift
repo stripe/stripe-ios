@@ -26,19 +26,4 @@ struct STPCheckoutSessionSavedPaymentMethodsOfferSave {
         /// Checkbox should be unchecked by default.
         case notAccepted
     }
-
-    static func decodedObject(from dict: [AnyHashable: Any]?) -> STPCheckoutSessionSavedPaymentMethodsOfferSave? {
-        guard let dict = dict else {
-            return nil
-        }
-
-        let enabled = dict["enabled"] as? Bool ?? false
-        let statusString = dict["status"] as? String
-        let status: Status = (statusString == "accepted") ? .accepted : .notAccepted
-
-        return STPCheckoutSessionSavedPaymentMethodsOfferSave(
-            enabled: enabled,
-            status: status
-        )
-    }
 }

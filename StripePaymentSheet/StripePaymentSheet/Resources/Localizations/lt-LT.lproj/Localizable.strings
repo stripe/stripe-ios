@@ -46,6 +46,8 @@
 
 "Buy now or pay later with Klarna" = "Pirkite dabar arba mokėkite vėliau naudodami \"Klarna\"";
 
+"By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "Patvirtindami savo mokėjimą naudojant „NICEPAY“, suteikiate leidimą %@ periodiškai nurašyti lėšas iš jūsų sąskaitos pagal jų nustatytas sąlygas.";
+
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Patvirtindami savo mokėjimą \"PayPal\" leidžiate \"%@\" nuskaityti mokestį nuo jūsų \"PayPal\" sąskaitos vėlesniems mokėjimams pagal jų sąlygas.";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Pereidami prie \"Amazon Pay\" leisite \"%@\" nuskaityti mokestį nuo jūsų \"Amazon Pay\" sąskaitos vėlesniems mokėjimams pagal jų sąlygas.";
@@ -86,6 +88,8 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Išsaugodami savo banko sąskaitą %@, sutinkate autorizuoti mokėjimus pagal šias <terms>sąlygas</terms>.";
 
+"By saving your payment information, you allow %@ to charge you for future payments in accordance with their terms." = "Išsaugodami su mokėjimais susijusią informaciją, leidžiate %@ pagal atitinkamas sąlygas iš jūsų sąskaitos išskaičiuoti mokesčius už būsimus mokėjimus.";
+
 "By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "Pateikdami užsakymą %1$@ ir %2$@, sutinkate išsaugoti savo informaciją %3$@ būsimiems pirkiniams ir sutinkate pagal <terms>šias sąlygas</terms> autorizuoti mokėjimus.";
 
 "By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Pateikdami užsakymą %@, sutinkate mokėjimus autorizuoti pagal <terms>šias sąlygas</terms>.";
@@ -108,9 +112,15 @@
 
 "Code sent" = "Kodas išsiųstas";
 
+"Complete the payment using Pix to finish the purchase." = "Atlikite mokėjimą naudodami „Pix”, kad užbaigtumėte pirkimą.";
+
 "Confirm" = "Patvirtinti";
 
 "Confirm payment details" = "Patvirtinti mokėjimo duomenis";
+
+"Confirm the Bizum payment in your mobile banking application within %@ to complete the purchase." = "Per %@ naudodamiesi mobiliosios bankininkystės programėle patvirtinkite „Bizum“ mokėjimą, kad užbaigtumėte pirkimą.";
+
+"Confirm the payment in your MB WAY app within %@ to complete the purchase." = "Per %@ naudodamiesi „MB WAY“ programėle patvirtinkite mokėjimą, kad užbaigtumėte pirkimą.";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Patvirtinkite mokėjimą banke ar programėlėje per %@ ir užbaikite pirkimą.";
 
@@ -136,9 +146,15 @@
 
 "Did you mean %@? %@." = "Ar norėjote %1$@? %2$@.";
 
+"Discard Changes" = "Atšaukti pakeitimus";
+
+"Discard changes?" = "Atšaukti pakeitimus?";
+
 "Discount" = "Nuolaida";
 
 "EPS Bank" = "EPS bankas";
+
+"Edit address" = "Keisti adresą";
 
 "Enter address manually" = "Įvesti adresą rankiniu būdu";
 
@@ -157,6 +173,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Suprantu, kad \"Stripe\" atliks tiesioginio debeto nuskaitymus \"%@\" vardu ir patvirtinu, kad esu sąskaitos turėtojas bei vienintelis asmuo, galintis leisti atlikti debeto nuskaitymus nuo šios sąskaitos.";
 
 "IBAN" = "IBAN";
+
+"Keep Editing" = "Tęsti taisymą";
 
 "Last 4 digits of SSN" = "Paskutiniai 4 SSN skaitmenys";
 
@@ -177,6 +195,10 @@
 "Manage your payment methods" = "Valdykite savo mokėjimo būdus";
 
 "Name on card" = "Ant kortelės nurodytas vardas ir pavardė";
+
+"Naver Pay Card" = "„Naver Pay“ kortelė";
+
+"Naver Pay Money/Point" = "„Naver Pay” pinigai / taškai";
 
 "New card" = "Nauja kortelė";
 
@@ -234,8 +256,6 @@
 
 "Point the camera at your card." = "Nukreipkite fotoaparatą į kortelę.";
 
-"Processing..." = "Apdorojama...";
-
 "Przelewy24 Bank" = "Bankas \"Przelewy24\"";
 
 "Remove %@" = "Šalinti %@";
@@ -274,6 +294,8 @@
 
 "Select card" = "Pasirinkti kortelę";
 
+"Select how you want to pay:" = "Pasirinkite, kaip norite mokėti:";
+
 "Select payment method" = "Pasirinkti mokėjimo būdą";
 
 "Select your payment method" = "Pasirinkite mokėjimo būdą";
@@ -283,8 +305,6 @@
 "Set as default payment method" = "Nustatyti kaip numatytąjį mokėjimo būdą";
 
 "Set up" = "Nustatyti";
-
-"Shipping" = "Siuntimas";
 
 "Shipping to %@ is not supported." = "Siuntimas į %@ nepalaikomas.";
 
@@ -312,6 +332,10 @@
 
 "Tax" = "Mokestis";
 
+"Terms and Conditions" = "Sąlygos ir nuostatos";
+
+"Terms of Service" = "Paslaugų sąlygos";
+
 "The IBAN you entered is incomplete." = "Įvedėte ne visą IBAN.";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Jūsų įvestas IBAN yra neteisingas, „%@“ nėra palaikomas šalies kodas.";
@@ -319,6 +343,8 @@
 "The provided verification code has expired." = "Pateiktas patvirtinimo kodas nebegalioja.";
 
 "The provided verification code is incorrect." = "Nurodytas neteisingas patikrinimo kodas.";
+
+"This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Tai – tarptautinis pirkinys, kuriam netaikomas 3,5 % IOF mokestis. Tęsdami, patvirtinate ir sutinkate su <terms>„Ebanx“ sąlygomis ir nuostatomis</terms>.";
 
 "This is your default" = "Tai jūsų numatytasis mokėjimo būdas";
 
@@ -339,3 +365,5 @@
 "Yes, update" = "Taip, atnaujinti";
 
 "Your IBAN should start with a two-letter country code." = "Jūsų IBAN turėtų prasidėti šalies kodu iš dviejų raidžių.";
+
+"Your address changes won't be saved." = "Su adresu susiję pakeitimai nebus išsaugoti.";

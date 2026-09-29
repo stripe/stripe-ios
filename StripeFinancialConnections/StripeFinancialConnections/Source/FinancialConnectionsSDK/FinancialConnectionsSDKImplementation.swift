@@ -21,8 +21,10 @@ public class FinancialConnectionsSDKImplementation: FinancialConnectionsSDKInter
         clientSecret: String,
         returnURL: String?,
         existingConsumer: FinancialConnectionsConsumer?,
+        hasRequestedDataPermissions: Bool,
         style: FinancialConnectionsStyle,
         elementsSessionContext: ElementsSessionContext?,
+        preCollectedConsent: FinancialConnectionsPreCollectedConsent?,
         linkBrand: LinkBrand?,
         onEvent: ((StripeCore.FinancialConnectionsEvent) -> Void)?,
         from presentingViewController: UIViewController,
@@ -43,7 +45,9 @@ public class FinancialConnectionsSDKImplementation: FinancialConnectionsSDKInter
         )
         financialConnectionsSheet.apiClient = apiClient
         financialConnectionsSheet.existingConsumer = existingConsumer
+        financialConnectionsSheet.hasRequestedDataPermissions = hasRequestedDataPermissions
         financialConnectionsSheet.elementsSessionContext = elementsSessionContext
+        financialConnectionsSheet.preCollectedConsent = preCollectedConsent
         financialConnectionsSheet.onEvent = onEvent
 
         // Captures self explicitly until the callback is invoked
@@ -79,6 +83,8 @@ public class FinancialConnectionsSDKImplementation: FinancialConnectionsSDKInter
                         completion(.completed(.instantDebits(instantDebitsLinkedBank)))
                     case .linkedAccount(let id):
                         completion(.completed(.linkedAccount(id: id)))
+                    case .paymentDetails(let id):
+                        completion(.completed(.paymentDetails(id: id)))
                     }
                 case .canceled:
                     completion(.cancelled)

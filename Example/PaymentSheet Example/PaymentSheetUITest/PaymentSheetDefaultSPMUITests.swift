@@ -70,9 +70,8 @@ class PaymentSheetDefaultSPMUITests: PaymentSheetUITestCase {
         XCTAssertEqual(analyticsLog.filter { $0[string: "event"] == "mc_load_succeeded" }.last?["has_default_payment_method"] as? Bool, false)
         XCTAssertEqual(analyticsLog.filter { $0[string: "event"] == "mc_complete_payment_newpm_success" }.last?["set_as_default"] as? Bool, true)
 
-        // Reload the sheet
-        app.buttons["Reload"].waitForExistenceAndTap()
-        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+        // Reload and wait to make sure the default is set in the backend
+        reloadAndWaitForDefaultPaymentMethod(settings: settings)
 
         // Check that the card ending in 4242 is selected
         XCTAssertTrue(app.buttons["•••• 4242"].isSelected)
@@ -209,7 +208,9 @@ class PaymentSheetDefaultSPMUITests: PaymentSheetUITestCase {
         app.buttons["Save"].waitForExistenceAndTap()
         app.buttons["Done"].waitForExistenceAndTap()
         // Check that the card ending in 4242 has a default badge and is selected
-        XCTAssertTrue(app.buttons["Visa ending in 4 2 4 2, Default"].isSelected)
+        let cardButton = app.buttons["•••• 4242"]
+        XCTAssertTrue(cardButton.isSelected)
+        XCTAssertTrue(cardButton.label.hasSuffix(", Default"))
         XCTAssertEqual(analyticsLog.last?[string: "event"], "mc_set_default_payment_method")
         XCTAssertEqual(analyticsLog.last?[string: "payment_method_type"], "card")
         app.buttons["Back"].waitForExistenceAndTap()
@@ -229,7 +230,9 @@ class PaymentSheetDefaultSPMUITests: PaymentSheetUITestCase {
         app.buttons["View more"].waitForExistenceAndTap()
         app.buttons["Edit"].waitForExistenceAndTap()
         // Check that the card ending in 4242 still has the default badge
-        XCTAssertTrue(app.buttons["Visa ending in 4 2 4 2, Default"].waitForExistenceAndTap())
+        XCTAssertTrue(cardButton.waitForExistence(timeout: 3))
+        XCTAssertTrue(cardButton.label.hasSuffix(", Default"))
+        XCTAssertTrue(cardButton.waitForExistenceAndTap())
         // Ensure checkbox is not enabled if it's already the default
         let setDefaultToggle = app.switches["Default payment method"]
         XCTAssertTrue(setDefaultToggle.waitForExistence(timeout: 3))
@@ -240,4 +243,26 @@ class PaymentSheetDefaultSPMUITests: PaymentSheetUITestCase {
         XCTAssertEqual(analyticsLog.filter { $0[string: "event"] == "mc_load_succeeded" }.last?["set_as_default_enabled"] as? Bool, true)
         XCTAssertEqual(analyticsLog.filter { $0[string: "event"] == "mc_load_succeeded" }.last?["has_default_payment_method"] as? Bool, true)
     }
+
+    func reloadAndWaitForDefaultPaymentMethod(
+        settings: PaymentSheetTestPlaygroundSettings,
+        maxAttempts: Int = 5
+    ) {
+        for _ in 1...maxAttempts {
+            reload(app, settings: settings)
+            app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+            // Wait for the sheet to render; mc_load_succeeded fires during initialization
+            _ = app.buttons["Pay $50.99"].waitForExistence(timeout: 10)
+            let hasDefault = analyticsLog
+                .filter { $0["event"] as? String == "mc_load_succeeded" }
+                .last?["has_default_payment_method"] as? Bool == true
+            if hasDefault {
+                return
+            }
+            // Default not yet propagated — close and retry
+            app.buttons["Close"].waitForExistenceAndTap()
+        }
+        XCTFail("Default payment method was not reflected in analytics after \(maxAttempts) reload attempts")
+    }
+
 }

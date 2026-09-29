@@ -46,6 +46,8 @@
 
 "Buy now or pay later with Klarna" = "Kupite zdaj ali pa za plačilo pozneje uporabite Klarna";
 
+"By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "S potrditvijo plačila s storitvijo NICEPAY dovoljujete, da %@ bremeni ta način plačila za prihodnja plačila v skladu z njihovimi pogoji.";
+
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "S potrditvijo plačila s storitvijo PayPal pooblaščate podjetje %@, da bremeni vaš račun za PayPal s prihodnjimi plačili v skladu s pogoji podjetja.";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Če potrdite preusmeritev v storitev Amazon Pay, pooblaščate podjetje %@, da bremeni vaš račun Amazon Pay s prihodnjimi plačili v skladu s pogoji podjetja.";
@@ -86,6 +88,8 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Če shranite bančni račun za %@, se strinjate z odobritvijo plačil v skladu s <terms>temi pogoji</terms>.";
 
+"By saving your payment information, you allow %@ to charge you for future payments in accordance with their terms." = "S shranjevanjem svojih podatkov za plačilo dovoljujete, da vas %@ bremeni za prihodnja plačila v skladu z njihovimi pogoji.";
+
 "By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "Z oddajo naročila %1$@ in %2$@ se strinjate, da bodo vaši podatki shranjeni pri %3$@ za prihodnje nakupe, in se strinjate, da boste odobrili plačila v skladu s <terms>temi pogoji</terms>.";
 
 "By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Z oddajo naročila podjetju %@ se strinjate, da boste odobrili plačila v skladu s <terms>temi pogoji</terms>.";
@@ -108,9 +112,15 @@
 
 "Code sent" = "Koda je bila poslana";
 
+"Complete the payment using Pix to finish the purchase." = "Dokončajte plačilo z uporabo Pix za zaključek nakupa.";
+
 "Confirm" = "Potrdi";
 
 "Confirm payment details" = "Potrdite podatke o plačilu";
+
+"Confirm the Bizum payment in your mobile banking application within %@ to complete the purchase." = "Potrdite plačilo Bizum v svoji mobilni bančni aplikaciji v %@, da dokončate nakup.";
+
+"Confirm the payment in your MB WAY app within %@ to complete the purchase." = "Potrdite plačilo v svoji aplikaciji MB WAY v %@, da dokončate nakup.";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Potrdite plačilo v aplikaciji banke ali aplikaciji za plačilo v %@, da zaključite nakup.";
 
@@ -136,9 +146,15 @@
 
 "Did you mean %@? %@." = "Ali ste mislili %1$@? %2$@.";
 
+"Discard Changes" = "Opusti spremembe";
+
+"Discard changes?" = "Opusti spremembe?";
+
 "Discount" = "Popust";
 
 "EPS Bank" = "Banka EPS";
+
+"Edit address" = "Uredi naslov";
 
 "Enter address manually" = "Naslov vnesite ročno";
 
@@ -157,6 +173,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Potrjujem, da bo družba Stripe zbirala direktne obremenitve v imenu podjetja %@ ter da sem lastnik računa in edina oseba, ki lahko odobri bremenitve s tega računa.";
 
 "IBAN" = "IBAN";
+
+"Keep Editing" = "Nadaljuj z urejanjem";
 
 "Last 4 digits of SSN" = "Zadnje 4 števke SSN";
 
@@ -177,6 +195,10 @@
 "Manage your payment methods" = "Upravljajte svoje načine plačila";
 
 "Name on card" = "Ime na kartici";
+
+"Naver Pay Card" = "Naver Pay Card";
+
+"Naver Pay Money/Point" = "Naver Pay Money/Point";
 
 "New card" = "Nova kartica";
 
@@ -234,8 +256,6 @@
 
 "Point the camera at your card." = "Usmerite kamero v kartico.";
 
-"Processing..." = "Obdelovanje ...";
-
 "Przelewy24 Bank" = "Banka Przelewy24";
 
 "Remove %@" = "Odstranite %@";
@@ -274,6 +294,8 @@
 
 "Select card" = "Izberite kartico";
 
+"Select how you want to pay:" = "Izberite, kako želite plačati:";
+
 "Select payment method" = "Izberite način plačila";
 
 "Select your payment method" = "Izberite način plačila";
@@ -283,8 +305,6 @@
 "Set as default payment method" = "Nastavi kot privzeti način plačila";
 
 "Set up" = "Nastavi";
-
-"Shipping" = "Dostava";
 
 "Shipping to %@ is not supported." = "Dostava v državo %@ ni podprta.";
 
@@ -312,6 +332,10 @@
 
 "Tax" = "Davek";
 
+"Terms and Conditions" = "Pogoji in določila";
+
+"Terms of Service" = "Pogoji storitve";
+
 "The IBAN you entered is incomplete." = "Vnesena koda IBAN ni popolna.";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Vnesena koda IBAN ni veljavna. »%@« ni podprta koda države.";
@@ -319,6 +343,8 @@
 "The provided verification code has expired." = "Navedena potrditvena koda je potekla.";
 
 "The provided verification code is incorrect." = "Navedena potrditvena koda ni pravilna.";
+
+"This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "To je mednarodni nakup in ne vključuje 3,5-% pristojbine IOF. Z nadaljevanjem potrjujete in sprejemate <terms>Pogoje in določila družbe Ebanx</terms>.";
 
 "This is your default" = "To je vaš privzeti način plačila";
 
@@ -339,3 +365,5 @@
 "Yes, update" = "Da, posodobi";
 
 "Your IBAN should start with a two-letter country code." = "Vaša koda IBAN se mora začeti z dvomestno kodo države.";
+
+"Your address changes won't be saved." = "Vaše spremembe naslova ne bodo shranjene.";

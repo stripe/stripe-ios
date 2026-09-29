@@ -46,6 +46,8 @@
 
 "Buy now or pay later with Klarna" = "Paiement fractionné avec Klarna";
 
+"By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "En confirmant votre paiement avec NICEPAY, vous autorisez %@ à débiter ce mode de paiement pour des paiements futurs conformément à ses conditions.";
+
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "En confirmant votre paiement avec PayPal, vous autorisez %@ à débiter votre compte PayPal pour les paiements à venir, conformément à ses conditions.";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "En poursuivant sur Amazon Pay, vous autorisez %@ à débiter votre compte Amazon Pay pour les paiements à venir, conformément à ses conditions.";
@@ -86,6 +88,8 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "En enregistrant votre compte bancaire pour %@, vous autorisez les paiements conformément à <terms>ces conditions</terms>.";
 
+"By saving your payment information, you allow %@ to charge you for future payments in accordance with their terms." = "En enregistrant vos informations de paiement, vous autorisez %@ à vous prélever le montant des paiements à venir conformément à ses conditions.";
+
 "By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "En envoyant votre commande à %1$@ et %2$@, vous acceptez de sauvegarder vos informations auprès de %3$@ pour des achats futurs, et vous autorisez les paiements en vertu des <terms>présentes conditions</terms>.";
 
 "By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "En envoyant votre commande à %@, vous autorisez les paiements en vertu des <terms>présentes conditions</terms>.";
@@ -108,9 +112,15 @@
 
 "Code sent" = "Code envoyé";
 
+"Complete the payment using Pix to finish the purchase." = "Effectuez le paiement par Pix pour finaliser l’achat.";
+
 "Confirm" = "Confirmer";
 
 "Confirm payment details" = "Confirmer les informations de paiement";
+
+"Confirm the Bizum payment in your mobile banking application within %@ to complete the purchase." = "Confirmez le paiement Bizum dans votre application bancaire mobile dans les %@ pour finaliser l’achat.";
+
+"Confirm the payment in your MB WAY app within %@ to complete the purchase." = "Veuillez confirmer le paiement dans votre application MB WAY sous %@ pour effectuer l’achat.";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Veuillez confirmer le paiement dans votre application bancaire ou de paiement sous %@ pour effectuer l'achat.";
 
@@ -136,9 +146,15 @@
 
 "Did you mean %@? %@." = "Vouliez-vous dire [ %1$s]? [ %2$s].";
 
+"Discard Changes" = "Ignorer les modifications";
+
+"Discard changes?" = "Ignorer les modifications?";
+
 "Discount" = "Rabais";
 
 "EPS Bank" = "Banque EPS";
+
+"Edit address" = "Modifier l’adresse";
 
 "Enter address manually" = "Saisir l'adresse manuellement";
 
@@ -157,6 +173,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Je comprends que Stripe effectuera des prélèvements automatiques pour le compte de %@, et je confirme que je suis la personne titulaire du compte et la seule personne habilitée à autoriser des prélèvements sur ce compte.";
 
 "IBAN" = "IBAN";
+
+"Keep Editing" = "Continuer la modification";
 
 "Last 4 digits of SSN" = "4 derniers chiffres du numéro de sécurité sociale";
 
@@ -177,6 +195,10 @@
 "Manage your payment methods" = "Gérer vos moyens de paiement";
 
 "Name on card" = "Nom du titulaire de la carte";
+
+"Naver Pay Card" = "Carte Naver Pay";
+
+"Naver Pay Money/Point" = "Naver Pay Money/Point";
 
 "New card" = "Nouvelle carte";
 
@@ -234,8 +256,6 @@
 
 "Point the camera at your card." = "Pointez le capteur de l'appareil photo sur votre carte.";
 
-"Processing..." = "Traitement en cours...";
-
 "Przelewy24 Bank" = "Banque Przelewy24";
 
 "Remove %@" = "Supprimer %@";
@@ -274,6 +294,8 @@
 
 "Select card" = "Choisir une carte";
 
+"Select how you want to pay:" = "Choisissez la façon dont vous souhaitez payer :";
+
 "Select payment method" = "Choisir un moyen de paiement";
 
 "Select your payment method" = "Sélectionnez votre moyen de paiement";
@@ -283,8 +305,6 @@
 "Set as default payment method" = "Définir comme moyen de paiement par défaut";
 
 "Set up" = "Configurer";
-
-"Shipping" = "Livraison";
 
 "Shipping to %@ is not supported." = "La livraison dans le pays suivant : %@ n'est pas prise en charge.";
 
@@ -312,6 +332,10 @@
 
 "Tax" = "Taxe";
 
+"Terms and Conditions" = "Conditions générales";
+
+"Terms of Service" = "Conditions d’utilisation du service";
+
 "The IBAN you entered is incomplete." = "L'IBAN que vous avez saisi est incomplet.";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "L’IBAN que vous avez saisi n’est pas valide, \"%@\" n’est pas un code pays pris en charge.";
@@ -319,6 +343,8 @@
 "The provided verification code has expired." = "Le code de vérification indiqué a expiré.";
 
 "The provided verification code is incorrect." = "Le code de vérification fourni est incorrect.";
+
+"This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Il s’agit d’un achat international qui exclut des frais IOF de 3,5 %. En continuant, vous reconnaissez et acceptez <terms>les conditions générales d’utilisation d’Ebanx</terms>.";
 
 "This is your default" = "Votre moyen de paiement par défaut";
 
@@ -339,3 +365,5 @@
 "Yes, update" = "Oui, mettre à jour";
 
 "Your IBAN should start with a two-letter country code." = "Votre IBAN doit commencer par un code pays à deux lettres.";
+
+"Your address changes won't be saved." = "Vos modifications d’adresse ne seront pas enregistrées.";

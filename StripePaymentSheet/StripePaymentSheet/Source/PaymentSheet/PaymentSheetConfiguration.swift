@@ -251,9 +251,6 @@ extension PaymentSheet {
         /// If true, the card form will instead initialize with the card scanner already open.
         public var opensCardScannerAutomatically: Bool = false
 
-        /// When true, uses the Stripe autocomplete endpoints for billing address autocomplete instead of Apple MapKit.
-        @_spi(STP) public var useAutocompleteEndpoints: Bool = false
-
         /// Set to `true` if using a wallet buttons view. This changes a few behaviors of PaymentSheet (for example, wallet buttons will never be selected by default).
         @_spi(STP) public var willUseWalletButtonsView = false
 
@@ -517,11 +514,14 @@ extension PaymentSheet {
             case automatic
             /// Link will never be displayed.
             case never
+            /// Link remains enabled (e.g. for automatic Link verification, Instant Bank Payments, Link Card Brand, and inline signup).
+            /// Its button/row is shown when an existing Link user is detected and hidden otherwise.
+            case walletButtonHidden
         }
 
         var shouldDisplay: Bool {
             switch display {
-            case .automatic: true
+            case .automatic, .walletButtonHidden: true
             case .never: false
             }
         }
@@ -782,6 +782,30 @@ extension PaymentSheet {
         /// Your implementation should complete the payment and return the result.
         /// - Note: This is always called on the main thread.
         public var customPaymentMethodConfirmHandler: CustomPaymentMethodConfirmHandler
+    }
+}
+
+extension PaymentSheet.BillingDetailsCollectionConfiguration {
+    var applePayRequiredBillingContactFields: Set<PKContactField> {
+        var fields = Set<PKContactField>()
+        if address == .automatic || address == .full {
+            fields.insert(.postalAddress)
+        }
+        if name == .always {
+            fields.insert(.name)
+        }
+        return fields
+    }
+
+    var applePayRequiredShippingContactFields: Set<PKContactField> {
+        var fields = Set<PKContactField>()
+        if email == .always {
+            fields.insert(.emailAddress)
+        }
+        if phone == .always {
+            fields.insert(.phoneNumber)
+        }
+        return fields
     }
 }
 

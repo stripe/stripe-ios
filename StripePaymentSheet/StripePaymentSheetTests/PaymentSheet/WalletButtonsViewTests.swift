@@ -10,6 +10,7 @@ import SwiftUI
 import XCTest
 
 @available(iOS 16.0, *)
+@MainActor
 class WalletButtonsViewTests: XCTestCase {
     func testWalletButtonsWithLinkAndApplePay() {
         // Create mock elements session with Link and Apple Pay
@@ -23,6 +24,7 @@ class WalletButtonsViewTests: XCTestCase {
             countryCode: nil,
             merchantCountryCode: nil,
             merchantLogoUrl: nil,
+            accountID: nil,
             linkSettings: nil,
             experimentsData: nil,
             flags: [:],
@@ -63,6 +65,7 @@ class WalletButtonsViewTests: XCTestCase {
             countryCode: nil,
             merchantCountryCode: nil,
             merchantLogoUrl: nil,
+            accountID: nil,
             linkSettings: nil,
             experimentsData: nil,
             flags: [:],
@@ -103,6 +106,7 @@ class WalletButtonsViewTests: XCTestCase {
             countryCode: nil,
             merchantCountryCode: nil,
             merchantLogoUrl: nil,
+            accountID: nil,
             linkSettings: nil,
             experimentsData: nil,
             flags: [:],
@@ -143,6 +147,7 @@ class WalletButtonsViewTests: XCTestCase {
             countryCode: nil,
             merchantCountryCode: nil,
             merchantLogoUrl: nil,
+            accountID: nil,
             linkSettings: LinkSettings._testValue(),
             experimentsData: nil,
             flags: [:],
@@ -183,6 +188,7 @@ class WalletButtonsViewTests: XCTestCase {
             countryCode: nil,
             merchantCountryCode: nil,
             merchantLogoUrl: nil,
+            accountID: nil,
             linkSettings: nil,
             experimentsData: nil,
             flags: [:],
@@ -223,6 +229,7 @@ class WalletButtonsViewTests: XCTestCase {
             countryCode: nil,
             merchantCountryCode: nil,
             merchantLogoUrl: nil,
+            accountID: nil,
             linkSettings: nil,
             experimentsData: nil,
             flags: [:],
@@ -272,6 +279,7 @@ class WalletButtonsViewTests: XCTestCase {
             countryCode: nil,
             merchantCountryCode: nil,
             merchantLogoUrl: nil,
+            accountID: nil,
             linkSettings: nil,
             experimentsData: nil,
             flags: [:],
@@ -326,6 +334,7 @@ class WalletButtonsViewTests: XCTestCase {
             countryCode: nil,
             merchantCountryCode: nil,
             merchantLogoUrl: nil,
+            accountID: nil,
             linkSettings: nil,
             experimentsData: nil,
             flags: [:],
@@ -381,6 +390,7 @@ class WalletButtonsViewTests: XCTestCase {
             countryCode: nil,
             merchantCountryCode: nil,
             merchantLogoUrl: nil,
+            accountID: nil,
             linkSettings: nil,
             experimentsData: nil,
             flags: [:],

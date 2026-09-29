@@ -109,7 +109,7 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
                 .init(
                     light: loadTestImage("cashapp-afterpay-logo"),
                     dark: loadTestImage("cashapp-afterpay-logo-dark"),
-                    altText: "Cash App Afterpay", code: "afterpay_clearpay"
+                    altText: "Afterpay", code: "afterpay_clearpay"
                 ),
                 .init(
                     light: loadTestImage("affirm-logo"),
@@ -236,7 +236,7 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
                 .init(
                     light: darkImage1,
                     dark: darkImage1,
-                    altText: "Cash App Afterpay", code: "afterpay_clearpay"
+                    altText: "Afterpay", code: "afterpay_clearpay"
                 ),
                 .init(
                     light: darkImage2,
@@ -305,7 +305,7 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
                 .init(
                     light: flatImage1,
                     dark: flatImage1,
-                    altText: "Cash App Afterpay", code: "afterpay_clearpay"
+                    altText: "Afterpay", code: "afterpay_clearpay"
                 ),
                 .init(
                     light: flatImage2,
@@ -754,7 +754,7 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
                 .init(
                     light: loadTestImage("cashapp-afterpay-logo"),
                     dark: loadTestImage("cashapp-afterpay-logo-dark"),
-                    altText: "Cash App Afterpay", code: "afterpay_clearpay"
+                    altText: "Afterpay", code: "afterpay_clearpay"
                 ),
                 .init(
                     light: loadTestImage("affirm-logo"),

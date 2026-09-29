@@ -22,7 +22,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
     let formCache: PaymentMethodFormCache = .init()
     let analyticsHelper: PaymentSheetAnalyticsHelper
     let loadResult: PaymentSheetLoader.LoadResult
-    weak var checkout: Checkout?
+    weak var checkoutBillingAddressUpdater: CheckoutSessionBillingAddressUpdater?
     var savedPaymentMethods: [STPPaymentMethod] {
         return savedPaymentOptionsViewController.savedPaymentMethods
     }
@@ -112,7 +112,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
 
     // MARK: - Views
     private let addPaymentMethodViewController: AddPaymentMethodViewController
-    private let savedPaymentOptionsViewController: SavedPaymentOptionsViewController
+    let savedPaymentOptionsViewController: SavedPaymentOptionsViewController
     private lazy var headerLabel: UILabel = {
         return PaymentSheetUI.makeHeaderLabel(appearance: configuration.appearance)
     }()
@@ -183,7 +183,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         configuration: PaymentSheet.Configuration,
         loadResult: PaymentSheetLoader.LoadResult,
         analyticsHelper: PaymentSheetAnalyticsHelper,
-        checkout: Checkout? = nil,
+        checkoutBillingAddressUpdater: CheckoutSessionBillingAddressUpdater? = nil,
         initialState: FlowControllerViewControllerInitialState = .preservingFormInput(from: nil)
     ) {
         let previousConfirmParams = initialState.previousCustomerInputForHorizontalController
@@ -191,9 +191,9 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         self.loadResult = loadResult
         self.intent = loadResult.intent
         self.elementsSession = loadResult.elementsSession
-        self.checkout = checkout
+        self.checkoutBillingAddressUpdater = checkoutBillingAddressUpdater
         self.isApplePayEnabled = PaymentSheet.isApplePayEnabled(elementsSession: elementsSession, configuration: configuration)
-        self.isLinkEnabled = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration)
+        self.isLinkEnabled = PaymentSheet.shouldShowLinkButton(elementsSession: elementsSession, configuration: configuration)
         self.couldShowLinkInHeader = isLinkEnabled && !isApplePayEnabled
         self.configuration = configuration
         self.analyticsHelper = analyticsHelper
@@ -274,7 +274,9 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         }
         self.savedPaymentOptionsViewController.delegate = self
         self.addPaymentMethodViewController.delegate = self
-        if shouldUseLinkOnlyWalletHeader && Self.customerDefaultIsLink(configuration: configuration, elementsSession: elementsSession) {
+        if initialState.paymentOption == nil,
+           shouldUseLinkOnlyWalletHeader,
+           Self.customerDefaultIsLink(configuration: configuration, elementsSession: elementsSession) {
             mode = .addingNew
             isHackyLinkButtonSelected = true
         }
@@ -350,10 +352,25 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
             intent: intent,
             elementsSession: elementsSession,
             analyticsHelper: analyticsHelper
-        ) { [weak self] confirmOption, _ in
+        ) { [weak self] confirmOption, shouldReturnToPaymentSheet, _ in
             guard let self else { return }
             self.linkConfirmOption = confirmOption
-            self.flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
+
+            // A Link payment method was selected — report it and close the FlowController sheet.
+            guard confirmOption == nil else {
+                self.flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
+                return
+            }
+
+            // The user left Link without selecting it (e.g. tapped "Continue another way") or dismissed the
+            // Link sheet. PayWithNativeLinkController re-presents this sheet automatically, so we must NOT
+            // close the flow here. Clear a lingering Link selection so Link doesn't stay selected after the
+            // user chose to pay another way (matches presentNativeLinkInPlaceOfFlowController).
+            if shouldReturnToPaymentSheet,
+               case .link(let option) = self.selectedPaymentOption,
+               case .wallet = option {
+                self.clearSelection()
+            }
         }
     }
 
@@ -547,7 +564,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
     /// Syncs billing address to the checkout session, then closes the sheet.
     /// If the sync fails, stays on the sheet and shows the error instead.
     private func syncCheckoutBillingThenClose() {
-        guard let checkout,
+        guard let checkoutBillingAddressUpdater,
               let paymentOption = selectedPaymentOption else {
             flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
             return
@@ -561,20 +578,17 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         Task { @MainActor [weak self] in
             guard let self else { return }
             do {
-                try await checkout.syncBillingAddress(from: paymentOption.checkoutBillingDetails)
+                try await checkoutBillingAddressUpdater.syncBillingAddress(from: paymentOption.checkoutBillingDetails)
             } catch {
                 self.error = error
             }
             self.setUserInteraction(enabled: true)
-            self.updateButton()
-
-            if let error = self.error {
-                self.errorLabel.text = error.nonGenericDescription
-                UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
-                    self.errorLabel.setHiddenIfNecessary(false)
-                }
-            } else {
-                self.flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
+            self.updateUI()
+            if self.error == nil {
+                self.flowControllerDelegate?.flowControllerViewControllerShouldClose(
+                    self,
+                    didCancel: false
+                )
             }
         }
     }
@@ -649,7 +663,8 @@ extension PaymentSheetFlowControllerViewController: SavedPaymentOptionsViewContr
 
     func didUpdateSelection(
         viewController: SavedPaymentOptionsViewController,
-        paymentMethodSelection: SavedPaymentOptionsViewController.Selection
+        paymentMethodSelection: SavedPaymentOptionsViewController.Selection,
+        previousSelection: SavedPaymentOptionsViewController.SelectionSnapshot
     ) {
         analyticsHelper.logSavedPMScreenOptionSelected(option: paymentMethodSelection)
         guard case Mode.selectingSaved = mode else {
@@ -665,11 +680,75 @@ extension PaymentSheetFlowControllerViewController: SavedPaymentOptionsViewContr
             mode = .addingNew
             error = nil // Clear any errors
             updateUI()
-        case .applePay, .link, .saved:
-            updateUI()
-            if isDismissable, !(selectedPaymentMethodType?.requiresMandateDisplayForSavedSelection ?? false) {
+        case .saved(let paymentMethod):
+            error = nil
+            guard isDismissable,
+                  !(selectedPaymentMethodType?.requiresMandateDisplayForSavedSelection ?? false) else {
+                updateUI()
+                return
+            }
+            if let checkoutBillingAddressUpdater {
+                syncCheckoutBillingThenClose(
+                    checkoutBillingAddressUpdater: checkoutBillingAddressUpdater,
+                    billingDetails: paymentMethod.billingDetails,
+                    previousSelection: previousSelection
+                )
+            } else {
+                updateUI()
                 flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
             }
+        case .applePay:
+            error = nil
+            updateUI()
+            if isDismissable {
+                flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
+            }
+        case .link:
+            error = nil
+            updateUI()
+            guard isDismissable else { return }
+            if canPresentLinkOnWalletButton {
+                // RUX: present the native Link sheet in place (matches the wallet-header path),
+                // then close the FlowController sheet from presentLink()'s completion.
+                presentLink()
+            } else {
+                // Legacy: report Link (.wallet) as the selection and let the merchant confirm later.
+                flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
+            }
+        }
+    }
+
+    /// Syncs Checkout billing before accepting a saved-method tap.
+    private func syncCheckoutBillingThenClose(
+        checkoutBillingAddressUpdater: CheckoutSessionBillingAddressUpdater,
+        billingDetails: STPPaymentMethodBillingDetails?,
+        previousSelection: SavedPaymentOptionsViewController.SelectionSnapshot
+    ) {
+        error = nil
+        updateUI()
+        savedPaymentOptionsViewController.setSelectedCellLoading(true)
+        setUserInteraction(enabled: false)
+
+        Task { @MainActor [weak self] in
+            guard let self else { return }
+            do {
+                try await checkoutBillingAddressUpdater.syncBillingAddress(from: billingDetails)
+            } catch {
+                self.savedPaymentOptionsViewController.setSelectedCellLoading(false)
+                self.savedPaymentOptionsViewController.restoreSelection(previousSelection)
+                self.error = error
+                self.setUserInteraction(enabled: true)
+                self.updateUI()
+                return
+            }
+
+            self.savedPaymentOptionsViewController.setSelectedCellLoading(false)
+            self.setUserInteraction(enabled: true)
+            self.updateUI()
+            self.flowControllerDelegate?.flowControllerViewControllerShouldClose(
+                self,
+                didCancel: false
+            )
         }
     }
 

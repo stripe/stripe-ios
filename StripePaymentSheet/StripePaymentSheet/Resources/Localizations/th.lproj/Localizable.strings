@@ -46,6 +46,8 @@
 
 "Buy now or pay later with Klarna" = "ซื้อตอนนี้หรือจ่ายทีหลังด้วย Klarna";
 
+"By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "การยืนยันการการชำระเงินด้วย NICEPAY หมายความว่าคุณอนุญาตให้ %@ เรียกเก็บเงินจากวิธีนี้สำหรับการชำระเงินในอนาคตตามเงื่อนไขของผู้ค้ารายดังกล่าว";
+
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "การยืนยันการการชำระเงินด้วย PayPal หมายความว่าคุณอนุญาตให้ %@ เรียกเก็บเงินจากบัญชี PayPal ของคุณสำหรับการชำระเงินในอนาคตตามเงื่อนไขของผู้ค้ารายดังกล่าว";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "การดำเนินการต่อที่ Amazon Pay หมายความว่าคุณอนุญาตให้ %@ เรียกเก็บเงินจากบัญชี Amazon Pay ของคุณสำหรับการชำระเงินในอนาคตตามเงื่อนไขของผู้ค้ารายดังกล่าว";
@@ -86,6 +88,8 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "การบันทึกบัญชีธนาคารของ %@ หมายความว่าคุณตกลงที่จะอนุมัติการชำระเงินซึ่งดำเนินการตาม<terms>ข้อกำหนดเหล่านี้</terms>";
 
+"By saving your payment information, you allow %@ to charge you for future payments in accordance with their terms." = "เมื่อบันทึกข้อมูลการชำระเงิน แสดงว่าคุณอนุญาตให้ %@ เรียกเก็บเงินจากคุณสำหรับการชำระเงินในอนาคตตามข้อกำหนดของบุคคลนั้นๆ";
+
 "By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "การส่งคำสั่งซื้อของคุณไปยัง %1$@ และ %2$@ หมายความว่าคุณตกลงที่จะบันทึกข้อมูลไว้กับ %3$@ สำหรับการซื้อในอนาคต และตกลงที่จะอนุมัติการชำระเงินตาม<terms>ข้อกำหนดเหล่านี้</terms>";
 
 "By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "การส่งคำสั่งซื้อให้ %@ หมายความว่าคุณตกลงที่จะอนุมัติการชำระเงินตาม<terms>ข้อกำหนดเหล่านี้</terms>";
@@ -108,9 +112,15 @@
 
 "Code sent" = "ส่งรหัสแล้ว";
 
+"Complete the payment using Pix to finish the purchase." = "ชำระเงินด้วย Pix เพื่อดำเนินการสั่งซื้อให้เสร็จสิ้น";
+
 "Confirm" = "ยืนยัน";
 
 "Confirm payment details" = "ยืนยันรายละเอียดการชำระเงิน";
+
+"Confirm the Bizum payment in your mobile banking application within %@ to complete the purchase." = "ยืนยันการชำระเงินผ่าน Bizum ในแอปพลิเคชันโมบายแบงก์กิ้งของคุณภายใน %@ เพื่อให้การซื้อเสร็จสมบูรณ์";
+
+"Confirm the payment in your MB WAY app within %@ to complete the purchase." = "ยืนยันการชำระเงินในแอป MB WAY ของคุณภายใน %@ เพื่อให้การซื้อเสร็จสมบูรณ์";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "ยืนยันการชำระเงินในแอปของธนาคารหรือแอปชำระเงินภายใน %@ เพื่อชำระเงินให้เสร็จสิ้น";
 
@@ -136,9 +146,15 @@
 
 "Did you mean %@? %@." = "คุณหมายถึง %1$@ ใช่หรือไม่ %2$@";
 
+"Discard Changes" = "ยกเลิกการเปลี่ยนแปลง";
+
+"Discard changes?" = "ยกเลิกการเปลี่ยนแปลงหรือไม่";
+
 "Discount" = "ส่วนลด";
 
 "EPS Bank" = "EPS Bank";
+
+"Edit address" = "แก้ไขที่อยู่";
 
 "Enter address manually" = "ป้อนที่อยู่ด้วยตนเอง";
 
@@ -157,6 +173,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "ฉันเข้าใจว่า Stripe จะดำเนินการหักบัญชีอัตโนมัติในนามของ %@ และยืนยันว่าฉันเป็นเจ้าของบัญชีและเป็นบุคคลเดียวเท่านั้นที่อนุญาตให้หักเงินจากบัญชีนี้ได้";
 
 "IBAN" = "IBAN";
+
+"Keep Editing" = "แก้ไขต่อ";
 
 "Last 4 digits of SSN" = "ตัวเลข 4 หลักสุดท้ายของ SSN";
 
@@ -177,6 +195,10 @@
 "Manage your payment methods" = "จัดการวิธีการชำระเงินของคุณ";
 
 "Name on card" = "ชื่อบนบัตร";
+
+"Naver Pay Card" = "Naver Pay Card";
+
+"Naver Pay Money/Point" = "เงิน/คะแนนใน Naver Pay";
 
 "New card" = "บัตรใหม่";
 
@@ -234,8 +256,6 @@
 
 "Point the camera at your card." = "หันกล้องไปที่บัตร";
 
-"Processing..." = "กำลังประมวลผล...";
-
 "Przelewy24 Bank" = "ธนาคาร Przelewy24";
 
 "Remove %@" = "นำ %@ ออก";
@@ -274,6 +294,8 @@
 
 "Select card" = "เลือกบัตร";
 
+"Select how you want to pay:" = "เลือกวิธีการชำระเงินที่ต้องการ";
+
 "Select payment method" = "เลือกวิธีการชำระเงิน";
 
 "Select your payment method" = "เลือกวิธีการชำระเงิน";
@@ -283,8 +305,6 @@
 "Set as default payment method" = "ตั้งเป็นวิธีการชำระเงินเริ่มต้น";
 
 "Set up" = "ตั้งค่า";
-
-"Shipping" = "การจัดส่ง";
 
 "Shipping to %@ is not supported." = "ระบบไม่รองรับการจัดส่งไปยัง%@";
 
@@ -312,6 +332,10 @@
 
 "Tax" = "ภาษี";
 
+"Terms and Conditions" = "ข้อกำหนดและเงื่อนไข";
+
+"Terms of Service" = "ข้อกำหนดการให้บริการ";
+
 "The IBAN you entered is incomplete." = "IBAN ที่คุณป้อนไม่ครบถ้วน";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "IBAN ที่คุณป้อนไม่ถูกต้อง \"%@\" ไม่ใช่รหัสประเทศที่รองรับ";
@@ -319,6 +343,8 @@
 "The provided verification code has expired." = "รหัสยืนยันที่ป้อนหมดอายุแล้ว";
 
 "The provided verification code is incorrect." = "รหัสยืนยันที่ป้อนไม่ถูกต้อง";
+
+"This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "นี่เป็นการซื้อระหว่างประเทศและไม่รวมค่าธรรมเนียม IOF 3.5% การดำเนินการต่อถือว่าคุณรับทราบและยอมรับ<terms>ข้อกำหนดและเงื่อนไขของ Ebanx</terms>";
 
 "This is your default" = "นี่คือค่าเริ่มต้นของคุณ";
 
@@ -339,3 +365,5 @@
 "Yes, update" = "ใช่ อัปเดต";
 
 "Your IBAN should start with a two-letter country code." = "IBAN ควรเริ่มต้นด้วยรหัสประเทศ 2 ตัวอักษร";
+
+"Your address changes won't be saved." = "การเปลี่ยนแปลงที่อยู่ของคุณจะไม่ได้รับการบันทึก";

@@ -46,6 +46,8 @@
 
 "Buy now or pay later with Klarna" = "Osta nyt tai maksa myöhemmin Klarnalla";
 
+"By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "Vahvistamalla maksusi NICEPAYn avulla annat taholle %@ luvan veloittaa tältä maksutavalta tulevia maksuja heidän ehtojensa mukaisesti.";
+
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Vahvistamalla maksusi PayPalin kanssa valtuutat %@ veloittamaan tulevia maksuja PayPal-tililtäsi heidän ehtojensa mukaisesti.";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Jatkamalla Amazon Payhin valtuutat %@ veloittamaan tulevia maksuja Amazon Pay -tililtäsi heidän ehtojensa mukaisesti.";
@@ -86,6 +88,8 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Tallentamalla pankkitilisi yritykselle %@, hyväksyt maksujen valtuutuksen <terms>näiden ehtojen mukaisesti</terms>.";
 
+"By saving your payment information, you allow %@ to charge you for future payments in accordance with their terms." = "Tallentamalla maksutietosi sallit tahon %@ veloittaa sinua tulevista maksuista sen ehtojen mukaisesti.";
+
 "By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "Lähettämällä tilauksesi kohteille %1$@ ja %2$@ valtuutat tallentamaan tietosi kohteen %3$@ kanssa tulevia ostoksia varten, ja valtuutat maksut <terms>näiden ehtojen</terms> mukaisesti.";
 
 "By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Lähettämällä tilauksesi yritykselle %@, valtuutat maksut <terms>näiden ehtojen</terms> mukaisesti.";
@@ -108,9 +112,15 @@
 
 "Code sent" = "Koodi lähetetty";
 
+"Complete the payment using Pix to finish the purchase." = "Viimeistele osto suorittamalla maksu Pixillä.";
+
 "Confirm" = "Vahvista";
 
 "Confirm payment details" = "Vahvista maksutiedot";
+
+"Confirm the Bizum payment in your mobile banking application within %@ to complete the purchase." = "Vahvista Bizum-maksu mobiilipankkisovelluksessasi %@ sisällä viedäksesi ostoksen loppuun.";
+
+"Confirm the payment in your MB WAY app within %@ to complete the purchase." = "Vahvista maksu MB WAY -sovelluksessasi %@ sisällä viedäksesi ostoksen loppuun.";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Suorita osto vahvistamalla maksu pankkisi kanssa tai maksusovelluksessa %@.";
 
@@ -136,9 +146,15 @@
 
 "Did you mean %@? %@." = "Tarkoititko %1$@? %2$@.";
 
+"Discard Changes" = "Hylkää muutokset";
+
+"Discard changes?" = "Hylätäänkö muutokset?";
+
 "Discount" = "Alennus";
 
 "EPS Bank" = "EPS-pankki";
+
+"Edit address" = "Muokkaa osoitetta";
 
 "Enter address manually" = "Syötä osoite manuaalisesti";
 
@@ -157,6 +173,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Ymmärrän, että Stripe kerää suoraveloituksia yrityksen %@ puolesta sekä vahvistan, että olen tilinhaltija ja ainoa henkilö, jota tarvitaan tämän tilin veloitusten varmentamiseen.";
 
 "IBAN" = "IBAN";
+
+"Keep Editing" = "Jatka muokkaamista";
 
 "Last 4 digits of SSN" = "SSN:n 4 viimeistä numeroa";
 
@@ -177,6 +195,10 @@
 "Manage your payment methods" = "Hallitse maksutapojasi";
 
 "Name on card" = "Kortissa oleva nimi";
+
+"Naver Pay Card" = "Naver Pay Card";
+
+"Naver Pay Money/Point" = "Naver Pay Money/Point";
 
 "New card" = "Uusi kortti";
 
@@ -234,8 +256,6 @@
 
 "Point the camera at your card." = "Osoita kamera korttia kohti.";
 
-"Processing..." = "Käsitellään...";
-
 "Przelewy24 Bank" = "Przelewy24 Bank";
 
 "Remove %@" = "Poista %@";
@@ -274,6 +294,8 @@
 
 "Select card" = "Valitse kortti";
 
+"Select how you want to pay:" = "Valitse, miten haluat maksaa:";
+
 "Select payment method" = "Valitse maksutapa";
 
 "Select your payment method" = "Valitse maksutapa";
@@ -283,8 +305,6 @@
 "Set as default payment method" = "Aseta oletusarvoiseksi maksutavaksi";
 
 "Set up" = "Määritä";
-
-"Shipping" = "Toimitus";
 
 "Shipping to %@ is not supported." = "Toimitusta kohteeseen %@ ei tueta.";
 
@@ -312,6 +332,10 @@
 
 "Tax" = "Vero";
 
+"Terms and Conditions" = "Ehdot";
+
+"Terms of Service" = "Palveluehdot";
+
 "The IBAN you entered is incomplete." = "IBAN on puutteellinen.";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Antamasi IBAN on virheellinen, %@ ei ole tuettu maakoodi.";
@@ -319,6 +343,8 @@
 "The provided verification code has expired." = "Annettu vahvistuskoodi on vanhentunut.";
 
 "The provided verification code is incorrect." = "Annettu vahvistuskoodi on virheellinen.";
+
+"This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Tämä on kansainvälinen ostos, eikä siihen sisälly 3,5 %:n IOF-maksua. Jatkamalla ostoa hyväksyt <terms>Ebanxin ehdot</terms>.";
 
 "This is your default" = "Tämä on oletusarvoinen";
 
@@ -339,3 +365,5 @@
 "Yes, update" = "Kyllä, päivitä";
 
 "Your IBAN should start with a two-letter country code." = "IBAN-tilinumero alkaa kaksikirjaimisella maakoodilla.";
+
+"Your address changes won't be saved." = "Osoitteesi muutoksia ei tallenneta.";

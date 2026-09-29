@@ -251,7 +251,7 @@ extension XCUIApplication {
     func fillAddressWithAutocomplete(
         addressFieldIdentifier: String = "Address",
         searchTerm: String = "354 Oyster Point",
-        expectedResult: String = "354 Oyster Point Blvd",
+        expectedResult: String = "354 Oyster Point Boulevard",
         context: XCUIElement? = nil
     ) {
         let contextElement = context ?? self

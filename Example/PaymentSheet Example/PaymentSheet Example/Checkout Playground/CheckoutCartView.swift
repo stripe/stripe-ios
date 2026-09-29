@@ -11,17 +11,23 @@ import SwiftUI
 
 struct CheckoutCartView: View {
     @Environment(\.dismiss) private var dismiss
-    @State private var checkout: Checkout?
+    @State private var checkout: CheckoutController?
+    @StateObject private var diagnostics = CheckoutSessionDiagnostics()
 
     @State private var isLoading = false
     @State private var errorMessage: String?
+    @State private var confirmResult: CheckoutController.ConfirmResult?
+    @State private var showsCheckoutDetails = false
 
     let clientSecret: String
+    let emailSettings: CheckoutPlayground.EmailSettings
     let shippingAddressCollection: Bool
+    let defaultShippingAddress: CheckoutPlayground.DefaultShippingAddress?
     let adaptivePricing: Bool
     let integrationType: CheckoutPlayground.IntegrationType
-    var showExpressCheckoutElement: Bool = false
+    let expressCheckoutElementSettings: CheckoutPlayground.ExpressCheckoutElementSettings
     var currencySelectorAppearance = CurrencySelectorElement.Appearance()
+    var delayPaymentPagesRequests = false
 
     var body: some View {
         NavigationView {
@@ -32,36 +38,14 @@ struct CheckoutCartView: View {
                 if let checkout {
                     CheckoutCartContentView(
                         checkout: checkout,
+                        emailSource: emailSettings.source,
+                        showsCurrencySelectorElement: adaptivePricing,
                         showsShippingAddressSection: shippingAddressCollection,
-                        isLoading: $isLoading,
-                        errorMessage: $errorMessage
-                    )
-                    .overlay(alignment: .bottom) {
-                        VStack(spacing: 0) {
-                            if checkout.session.total != nil {
-                                if showExpressCheckoutElement,
-                                   let ece = checkout.getExpressCheckoutElement() {
-                                    ece.view
-                                        .padding(.horizontal)
-                                        .padding(.top, 16)
-                                }
-                                switch integrationType {
-                                case .flowController:
-                                    CheckoutCartPaymentButton(checkout: checkout)
-                                        .clipped()
-                                case .embedded:
-                                    CheckoutCartEmbeddedPaymentView(checkout: checkout)
-                                        .clipped()
-                                case .eceOnly:
-                                    EmptyView()
-                                }
-                            }
-                        }
-                        .background(
-                            Color(UIColor.systemBackground)
-                                .shadow(color: Color.black.opacity(0.1), radius: 10, x: 0, y: -5)
-                                .ignoresSafeArea()
-                        )
+                        errorMessage: errorMessage,
+                        showExpressCheckoutElement: expressCheckoutElementSettings.isEnabled,
+                        integrationType: integrationType
+                    ) { result in
+                        confirmResult = result
                     }
                 } else if isLoading {
                     ProgressView("Loading Cart...")
@@ -90,10 +74,66 @@ struct CheckoutCartView: View {
                             .foregroundColor(.primary)
                     }
                 }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        showsCheckoutDetails = true
+                    } label: {
+                        Image(systemName: "ladybug")
+                    }
+                    .disabled(checkout == nil)
+                    .opacity(checkout == nil ? 0 : 1)
+                    .accessibilityLabel("Session diagnostics")
+                }
+            }
+            .sheet(isPresented: $showsCheckoutDetails) {
+                if let checkout {
+                    CheckoutSessionDetailsView(
+                        diagnostics: diagnostics,
+                        checkout: checkout
+                    )
+                }
             }
             .task {
                 await loadCheckout()
             }
+            .alert(
+                confirmResultAlertTitle,
+                isPresented: Binding(get: { confirmResult != nil }, set: { if !$0 { confirmResult = nil } }),
+                actions: { Button("OK") { acknowledgeConfirmResult() } },
+                message: { Text(confirmResultAlertMessage) }
+            )
+        }
+    }
+
+    private var confirmResultAlertTitle: String {
+        switch confirmResult {
+        case .completed: return "Success"
+        case .canceled: return "Canceled"
+        case .failed: return "Unable to complete checkout"
+        case nil: return ""
+        }
+    }
+
+    private var confirmResultAlertMessage: String {
+        switch confirmResult {
+        case .completed(let paymentStatus): return "Payment status: \(paymentStatus)"
+        case .canceled: return "The payment was canceled."
+        case .failed(let error):
+            return "Localized: \(error.localizedDescription)\n\nDebug: \(String(reflecting: error))"
+        case nil: return ""
+        }
+    }
+
+    private func acknowledgeConfirmResult() {
+        let confirmationSucceeded: Bool
+        if case .completed = confirmResult {
+            confirmationSucceeded = true
+        } else {
+            confirmationSucceeded = false
+        }
+        confirmResult = nil
+        if confirmationSucceeded {
+            dismiss()
         }
     }
 
@@ -101,13 +141,46 @@ struct CheckoutCartView: View {
         isLoading = true
         errorMessage = nil
         do {
-            var config = Checkout.Configuration(clientSecret: clientSecret, returnURL: "payments-example://stripe-redirect")
-            config.adaptivePricing.allowed = adaptivePricing
-            config.applePayConfiguration = Checkout.ApplePayConfiguration(
-                merchantId: "merchant.com.stripe.paymentsheet.example"
+            var config = CheckoutController.Configuration(clientSecret: clientSecret, returnURL: "payments-example://stripe-redirect")
+            config.apiClient = diagnostics.makeAPIClient(
+                paymentPagesRequestDelay: delayPaymentPagesRequests ? 1 : 0
             )
-            config.currencySelectorElement.appearance = currencySelectorAppearance
-            checkout = try await Checkout(configuration: config)
+            if integrationType != .eceOnly {
+                var paymentElementConfiguration = PaymentElement.Configuration()
+                paymentElementConfiguration.applePayConfiguration = PaymentElement.ApplePayConfiguration(
+                    merchantId: "merchant.com.stripe.paymentsheet.example"
+                )
+                config.paymentElement = paymentElementConfiguration
+            }
+            config.defaults.shippingDetails = defaultShippingAddress?.checkoutShippingDetails
+            config.defaults.email = emailSettings.localDefaultEmail
+            if shippingAddressCollection {
+                var shippingAddressElementConfiguration = ShippingAddressElement.Configuration()
+                shippingAddressElementConfiguration.title = "Shipping Address"
+                shippingAddressElementConfiguration.buttonTitle = "Save Address"
+                config.shippingAddressElement = shippingAddressElementConfiguration
+            }
+            if expressCheckoutElementSettings.isEnabled {
+                var expressCheckoutElementConfiguration = ExpressCheckoutElement.Configuration { result in
+                    confirmResult = result
+                }
+                expressCheckoutElementConfiguration.applePayConfiguration = ExpressCheckoutElement.ApplePayConfiguration(
+                    merchantId: "merchant.com.stripe.paymentsheet.example",
+                    display: expressCheckoutElementSettings.applePayDisplay
+                )
+                expressCheckoutElementConfiguration.linkConfiguration = ExpressCheckoutElement.LinkConfiguration(
+                    display: expressCheckoutElementSettings.linkDisplay
+                )
+                expressCheckoutElementConfiguration.shippingAddressRequired = expressCheckoutElementSettings.shippingAddressRequired
+                expressCheckoutElementConfiguration.paymentMethodOrder = expressCheckoutElementSettings.paymentMethodOrder.paymentMethodOrder
+                config.expressCheckoutElement = expressCheckoutElementConfiguration
+            }
+            if adaptivePricing {
+                var currencySelectorConfiguration = CurrencySelectorElement.Configuration()
+                currencySelectorConfiguration.appearance = currencySelectorAppearance
+                config.currencySelectorElement = currencySelectorConfiguration
+            }
+            checkout = try await CheckoutController(configuration: config)
         } catch {
             errorMessage = error.localizedDescription
         }

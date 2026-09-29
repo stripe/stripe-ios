@@ -23,6 +23,9 @@ class ConfirmationChallengeTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
+        // Clear analytics at the start of each test to prevent contamination from lingering
+        // background tasks started by a previous test.
+        STPAnalyticsClient.sharedClient._testLogHistory = []
         // Create a key window for HCaptcha WebView to initialize properly
         let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene
         if let windowScene = windowScene {
@@ -189,6 +192,21 @@ class ConfirmationChallengeTests: XCTestCase {
         XCTAssertNotNil(radarOptions)
         XCTAssertNotNil(radarOptions?.hcaptchaToken)
         XCTAssertNotNil(radarOptions?.iosVerificationObject)
+        await confirmationChallenge.complete()
+    }
+
+    func testMakeRadarOptionsConsumesPassiveCaptchaTask() async {
+        // Given a challenge whose captcha creation fails deterministically
+        let counter = PassiveCaptchaCreateCounter()
+        let factory = CountingFailingPassiveCaptchaFactory(counter: counter)
+        let confirmationChallenge = ConfirmationChallenge(elementsSession: elementsSession, stripeAttest: stripeAttest, hcaptchaFactory: factory)
+
+        // When radar options are requested twice
+        _ = await confirmationChallenge.makeRadarOptions(for: .card)
+        _ = await confirmationChallenge.makeRadarOptions(for: .card)
+
+        // Then each request should execute its own captcha challenge
+        XCTAssertEqual(counter.count, 2)
         await confirmationChallenge.complete()
     }
 

@@ -213,7 +213,7 @@ import Foundation
     // MARK: - Autocomplete
     case addressAutocompleteStart = "mc_address_autocomplete_start"
     case addressAutocompleteSuggestions = "mc_address_autocomplete_suggestions"
-    case addressAutocompleteComplete = "mc_address_autocomplete_complete"
+    case addressAutocompleteSelected = "mc_address_autocomplete_selected"
     case addressAutocompleteError = "mc_address_autocomplete_error"
 
     // MARK: - PaymentSheet Force Success
@@ -359,5 +359,12 @@ import Foundation
     case adaptivePricingCurrencyToggled = "elements.adaptive_pricing.currency_toggled"
     case adaptivePricingCurrencyToggledFailed = "elements.adaptive_pricing.currency_toggled.failed"
     case adaptivePricingFlagImageLoadFailed = "elements.adaptive_pricing.flag_image_load.failed"
+
+    // MARK: - Shipping Address Element
+    case shippingAddressElementShown = "elements.shipping_address.shown"
+    case shippingAddressElementCanceled = "elements.shipping_address.canceled"
+    case shippingAddressElementSaveStarted = "elements.shipping_address.save_started"
+    case shippingAddressElementSaveFailed = "elements.shipping_address.save_failed"
+    case shippingAddressElementSaveCompleted = "elements.shipping_address.save_completed"
 
 }

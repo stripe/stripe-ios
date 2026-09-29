@@ -199,7 +199,7 @@ public class CustomerSheet {
                              paymentMethodSyncDefault: paymentMethodSyncDefault,
                              allowsRemovalOfLastSavedPaymentMethod: allowsRemovalOfLastSavedPaymentMethod,
                              cbcEligible: elementsSession.cardBrandChoice?.eligible ?? false,
-                             useAutocompleteEndpoints: self.configuration.useAutocompleteEndpoints && elementsSession.shouldUseAutocompleteProxyEndpoints,
+                             useAutocompleteEndpoints: elementsSession.shouldUseAutocompleteProxyEndpoints,
                              elementsSessionConfigId: elementsSession.configID)
                 var params: [String: Any] = [:]
                 if elementsSession.customer?.customerSession != nil {

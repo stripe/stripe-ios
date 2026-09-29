@@ -15,6 +15,7 @@ final class PayWithLinkButtonSnapshotTests: STPSnapshotTestCase {
         let isRegistered: Bool
         let sessionState: PaymentSheetLinkAccount.SessionState
         let consumerSessionClientSecret: String?
+        let linkSessionKey: String?
     }
 
     func testLoggedOutLink() {
@@ -73,7 +74,8 @@ final class PayWithLinkButtonSnapshotTests: STPSnapshotTestCase {
                 redactedPhoneNumber: nil,
                 isRegistered: true,
                 sessionState: .verified,
-                consumerSessionClientSecret: nil
+                consumerSessionClientSecret: nil,
+                linkSessionKey: nil
             )
         }
 

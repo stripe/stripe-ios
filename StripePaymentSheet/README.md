@@ -38,4 +38,5 @@ If you link this library manually, use a version from our [releases](https://git
 - `StripePayments.xcframework`
 - `StripePaymentsUI.xcframework`
 - `StripeApplePay.xcframework`
+- `StripeFinancialConnectionsLite.xcframework`
 - `StripePaymentSheet.xcframework`

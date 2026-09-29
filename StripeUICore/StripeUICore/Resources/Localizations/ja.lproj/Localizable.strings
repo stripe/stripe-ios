@@ -92,6 +92,8 @@
 
 "Prefecture" = "都道府県";
 
+"Processing..." = "処理中...";
+
 "Province" = "都道府県";
 
 "Remove" = "削除";
@@ -106,9 +108,13 @@
 
 "Selection is empty." = "項目が選択されていません。";
 
+"Something went wrong" = "問題が発生しました";
+
 "Sort code" = "銀行コード";
 
 "State" = "都道府県";
+
+"Submit" = "送信";
 
 "Suburb" = "近郊";
 

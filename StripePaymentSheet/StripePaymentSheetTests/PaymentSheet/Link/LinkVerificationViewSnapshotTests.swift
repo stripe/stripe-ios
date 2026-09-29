@@ -93,6 +93,7 @@ extension LinkVerificationViewSnapshotTests {
         let isRegistered: Bool
         let sessionState: PaymentSheetLinkAccount.SessionState
         let consumerSessionClientSecret: String?
+        let linkSessionKey: String?
     }
 
     func makeSUT(
@@ -108,7 +109,8 @@ extension LinkVerificationViewSnapshotTests {
                 redactedPhoneNumber: "(•••) ••• ••55",
                 isRegistered: true,
                 sessionState: .verified,
-                consumerSessionClientSecret: nil
+                consumerSessionClientSecret: nil,
+                linkSessionKey: nil
             ),
             brand: brand,
             appearance: appearance,

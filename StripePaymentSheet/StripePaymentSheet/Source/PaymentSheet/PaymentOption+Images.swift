@@ -275,6 +275,8 @@ extension STPPaymentMethodType {
                 return .pm_type_amazonpay
             case .billie:
                 return .pm_type_billie
+            case .bizum:
+                return .pm_type_bizum
             case .boleto:
                 return .pm_type_boleto
             case .crypto:
@@ -290,22 +292,40 @@ extension STPPaymentMethodType {
                 return .pm_type_grabpay
             case .konbini:
                 return .pm_type_konbini
+            case .kakaoPay:
+                return .pm_type_kakaopay
+            case .krCard:
+                return .pm_type_kr_card
             case .mobilePay:
                 return .pm_type_mobilepay
+            case .vipps:
+                return .pm_type_vipps
+            case .mbWay:
+                return .pm_type_mbway
             case .multibanco:
                 return .pm_type_multibanco
+            case .naverPay:
+                return .pm_type_naverpay
             case .OXXO:
                 return .pm_type_oxxo
             case .payByBank:
                 return .pm_type_paybybank
+            case .payco:
+                return .pm_type_payco
             case .paynow:
                 return .pm_type_paynow
             case .payPay:
                 return .pm_type_paypay
             case .promptPay:
                 return .pm_type_promptpay
+            case .pix:
+                return .pm_type_pix
             case .satispay:
                 return .pm_type_satispay
+            case .scalapay:
+                return .pm_type_scalapay
+            case .sequra:
+                return .pm_type_sequra
             case .wero:
                 return .pm_type_wero
             case .sunbit:

@@ -46,6 +46,8 @@
 
 "Buy now or pay later with Klarna" = "Compra ara o paga més endavant amb Klarna";
 
+"By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "En confirmar el vostre pagament amb NICEPAY, permeteu a %@ carregar aquest mètode de pagament per a futurs pagaments d'acord amb les seves condicions.";
+
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Si confirmeu el pagament amb PayPal, permeteu que %@ faci càrrecs al vostre compte de PayPal per a pagaments en el futur d'acord amb les seves condicions.";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "En continuar a Amazon Pay, permeteu que %@ cobri pagaments futurs al vostre compte de d'Amazon Pay d'acord amb les seves condicions.";
@@ -86,6 +88,8 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "En desar el compte bancari per a %@, accepteu l'autorització de pagaments d'acord amb <terms>aquests termes</terms>.";
 
+"By saving your payment information, you allow %@ to charge you for future payments in accordance with their terms." = "En desar la vostra informació de pagament, permeteu que %@ us cobri futurs pagaments d'acord amb les seves condicions.";
+
 "By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "Si envieu la comanda a %1$@ i %2$@, accepteu desar la vostra informació amb %3$@ per a compres futures i accepteu autoritzar els pagaments d'acord amb <terms>aquestes condicions</terms>.";
 
 "By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "En enviar la comanda a %@, accepteu l'autorització de pagaments d'acord amb <terms>aquestes condicions</terms>.";
@@ -108,9 +112,15 @@
 
 "Code sent" = "Codi enviat";
 
+"Complete the payment using Pix to finish the purchase." = "Completeu el pagament amb Pix per finalitzar la compra.";
+
 "Confirm" = "Confirma";
 
 "Confirm payment details" = "Confirmació de les dades de pagament";
+
+"Confirm the Bizum payment in your mobile banking application within %@ to complete the purchase." = "Confirmeu el pagament de Bizum a la vostra aplicació de banca mòbil en %@ per completar la compra.";
+
+"Confirm the payment in your MB WAY app within %@ to complete the purchase." = "Confirmeu el pagament a la vostra aplicació MB WAY en %@ per completar la compra.";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Confirmeu el pagament al vostre banc o a l'aplicació de pagament en un termini de %@ per completar la compra.";
 
@@ -136,9 +146,15 @@
 
 "Did you mean %@? %@." = "Volíeu dir %1$@? %2$@.";
 
+"Discard Changes" = "Descarta els canvis";
+
+"Discard changes?" = "Voleu descarteu els canvis?";
+
 "Discount" = "Descompte";
 
 "EPS Bank" = "Banc EPS";
+
+"Edit address" = "Edita l'adreça";
 
 "Enter address manually" = "Introduir l'adreça manualment";
 
@@ -157,6 +173,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Entenc que Stripe cobrarà els dèbits directes de part de %@ i confirmo que soc el titular del compte i l'única persona requerida per autoritzar dèbits des d'aquest compte.";
 
 "IBAN" = "IBAN";
+
+"Keep Editing" = "Continua editant";
 
 "Last 4 digits of SSN" = "Últims 4 dígits del número de la seguretat social (SSN)";
 
@@ -177,6 +195,10 @@
 "Manage your payment methods" = "Administreu els vostres mètodes de pagament";
 
 "Name on card" = "Nom a la targeta";
+
+"Naver Pay Card" = "Targeta de Naver Pay";
+
+"Naver Pay Money/Point" = "Diners/Punt Naver Pay";
 
 "New card" = "Nova targeta";
 
@@ -234,8 +256,6 @@
 
 "Point the camera at your card." = "Apunta a la targeta amb la càmera.";
 
-"Processing..." = "Processant...";
-
 "Przelewy24 Bank" = "Banc Przelewy24";
 
 "Remove %@" = "Elimina %@";
@@ -274,6 +294,8 @@
 
 "Select card" = "Selecciona una targeta";
 
+"Select how you want to pay:" = "Seleccioneu com voleu pagar:";
+
 "Select payment method" = "Selecciona el mètode de pagament";
 
 "Select your payment method" = "Selecciona el teu mètode de pagament";
@@ -283,8 +305,6 @@
 "Set as default payment method" = "Configura com a mètode de pagament per defecte";
 
 "Set up" = "Configuració";
-
-"Shipping" = "Enviament";
 
 "Shipping to %@ is not supported." = "L'enviament a %@ no s'admet.";
 
@@ -312,6 +332,10 @@
 
 "Tax" = "Impost";
 
+"Terms and Conditions" = "Termes i condicions";
+
+"Terms of Service" = "Condicions del servei";
+
 "The IBAN you entered is incomplete." = "L'BAN és incomplet.";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "El Número internacional de compte bancari (IBAN) que heu introduït no és vàlid, \"%@\" no és un codi de país compatible.";
@@ -319,6 +343,8 @@
 "The provided verification code has expired." = "El codi de verificació proporcionat ha caducat.";
 
 "The provided verification code is incorrect." = "El codi de verificació proporcionat no és correcte.";
+
+"This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Aquesta és una compra internacional i exclou una comissió del 3,5 % d'IOF. En continuar, accepteu les <terms>condicions d'Ebanx</terms>.";
 
 "This is your default" = "Aquesta és l'opció per defecte";
 
@@ -339,3 +365,5 @@
 "Yes, update" = "Sí, actualitzar";
 
 "Your IBAN should start with a two-letter country code." = "El teu IBAN ha de començar amb un codi de país de dues lletres.";
+
+"Your address changes won't be saved." = "Els canvis de la vostra adreça no es desaran.";

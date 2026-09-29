@@ -24,7 +24,12 @@ final class RoundedIconView: UIView {
         case circle
     }
 
-    init(image: ImageType, style: Style, appearance: FinancialConnectionsAppearance) {
+    init(
+        image: ImageType,
+        style: Style,
+        appearance: FinancialConnectionsAppearance,
+        imageFlipsForRightToLeftLayoutDirection: Bool = false
+    ) {
         super.init(frame: .zero)
         let diameter: CGFloat = 56
         let cornerRadius: CGFloat
@@ -55,6 +60,9 @@ final class RoundedIconView: UIView {
                 placeholder: placeholder?.makeImage(template: true),
                 useAlwaysTemplateRenderingMode: true
             )
+        }
+        if imageFlipsForRightToLeftLayoutDirection {
+            iconImageView.image = iconImageView.image?.imageFlippedForRightToLeftLayoutDirection()
         }
         addSubview(iconImageView)
         iconImageView.translatesAutoresizingMaskIntoConstraints = false

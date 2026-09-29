@@ -30,6 +30,8 @@
 
 "Buy now or pay later with Klarna" = "用 Klarna 先買後付";
 
+"By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "透過 NICEPAY 確認您的支付，即表示您允許 %@ 根據其條款使用此支付方式為未來支付扣款。";
+
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "確認您的 PayPal 付款，即表示您允許 %@ 按照他們的條款從您的 PayPal 扣取未來款項。";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "繼續使用 Amazon Pay，即表示您允許 %@ 按照他們的條款從您的 Amazon Pay 帳戶扣取未來款項。";
@@ -60,6 +62,8 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "儲存您的 %@ 銀行帳戶即表示您同意按照<terms>這些條款</terms>授權付款。";
 
+"By saving your payment information, you allow %@ to charge you for future payments in accordance with their terms." = "儲存您的支付資訊，即表示您允許 %@ 按照其條款向您收款未來的支付。";
+
 "CPF/CPNJ" = "CPF/CPNJ";
 
 "Cancel and pay another way" = "取消並用另一方式支付";
@@ -74,9 +78,15 @@
 
 "Code sent" = "驗證碼已發送";
 
+"Complete the payment using Pix to finish the purchase." = "使用 Pix 完成支付即可完成購買。";
+
 "Confirm" = "確定";
 
 "Confirm payment details" = "確認支付詳情";
+
+"Confirm the Bizum payment in your mobile banking application within %@ to complete the purchase." = "請在 %@ 內於您的行動銀行應用程式中確認 Bizum 支付，以完成購買。";
+
+"Confirm the payment in your MB WAY app within %@ to complete the purchase." = "請在 %@ 內於您的 MB WAY 應用程式中確認支付，以完成購買。";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "在您的銀行或支付應用程式中確認向 %@ 的付款，以完成購物。";
 
@@ -96,7 +106,13 @@
 
 "Default payment method" = "預設支付方式";
 
+"Discard Changes" = "放棄變更";
+
+"Discard changes?" = "要放棄變更嗎？";
+
 "EPS Bank" = "EPS 銀行";
+
+"Edit address" = "編輯地址";
 
 "Enter address manually" = "手動輸入地址";
 
@@ -111,6 +127,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "我理解 Stripe 將代表 %@ 收取直接扣款，且確認我是該開戶人，且是唯一一個需要授權該帳戶扣款的人。";
 
 "IBAN" = "IBAN";
+
+"Keep Editing" = "繼續編輯";
 
 "Manage SEPA debit" = "管理 SEPA 借記";
 
@@ -129,6 +147,10 @@
 "Manage your payment methods" = "管理您的支付方式";
 
 "Name on card" = "持卡人姓名";
+
+"Naver Pay Card" = "Naver Pay 銀行卡";
+
+"Naver Pay Money/Point" = "Naver Pay Money/Point";
 
 "New card" = "添加新卡";
 
@@ -180,8 +202,6 @@
 
 "Point the camera at your card." = "將相機正對金融卡。";
 
-"Processing..." = "處理中...";
-
 "Przelewy24 Bank" = "Przelewy24 銀行";
 
 "Remove card?" = "移除卡？";
@@ -214,6 +234,8 @@
 
 "Select card" = "選擇金融卡";
 
+"Select how you want to pay:" = "選取您的支付方式：";
+
 "Select payment method" = "選擇支付方式";
 
 "Select your payment method" = "選擇您的支付方式";
@@ -244,11 +266,17 @@
 
 "Tap to expand" = "點擊以展開";
 
+"Terms and Conditions" = "條款與條件";
+
+"Terms of Service" = "服務條款";
+
 "The IBAN you entered is incomplete." = "您輸入的 IBAN 不完整。";
 
 "The provided verification code has expired." = "提供的驗證碼已過期。";
 
 "The provided verification code is incorrect." = "提供的驗證碼不正確。";
+
+"This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "此為國際購買，且不含 3.5% 的 IOF 費用。繼續購買，即表示您承認並接受 <terms>Ebanx 的條款和條件</terms>。";
 
 "This is your default" = "這是您的預設支付方式";
 
@@ -265,3 +293,5 @@
 "View more" = "檢視更多";
 
 "Your IBAN should start with a two-letter country code." = "您的 IBAN 應以兩個字母的國家代碼開頭。";
+
+"Your address changes won't be saved." = "您的地址變更將不會儲存。";

@@ -92,10 +92,6 @@
 
 "Select bank" = "銀行を選択";
 
-"Something went wrong" = "問題が発生しました";
-
-"Submit" = "送信";
-
 "Success" = "成功";
 
 "The account you selected isn't available for payments" = "選択した口座は、お支払いには使用できません";

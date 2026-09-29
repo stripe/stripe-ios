@@ -10,6 +10,7 @@ import Foundation
 @_spi(STP) import StripePayments
 
 /// Provides shared implementations of common operations for managing saved payment methods in PaymentSheet
+@MainActor
 final class SavedPaymentMethodManager {
 
     enum Error: Swift.Error {
@@ -43,8 +44,8 @@ final class SavedPaymentMethodManager {
                 with updateParams: STPPaymentMethodUpdateParams) async throws -> STPPaymentMethod {
         switch intent {
         case .checkout(let session):
-            let billing = Checkout.PaymentMethodBillingDetails(updateParams.billingDetails)
-            let expiry = Checkout.PaymentMethodExpiryDetails(updateParams.card)
+            let billing = CheckoutController.PaymentMethodBillingDetails(updateParams.billingDetails)
+            let expiry = CheckoutController.PaymentMethodExpiryDetails(updateParams.card)
             guard billing != nil || expiry != nil else {
                 throw PaymentSheetError.unknown(debugDescription: "Tried to update a payment method without billing details or expiry details.")
             }

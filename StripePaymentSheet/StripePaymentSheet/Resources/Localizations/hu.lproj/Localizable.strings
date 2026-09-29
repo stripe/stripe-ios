@@ -46,6 +46,8 @@
 
 "Buy now or pay later with Klarna" = "Vegye meg most, vagy fizessen később Klarnával";
 
+"By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "A NICEPAY segítségével történő fizetés megerősítésével Ön engedélyezi %@ számára, hogy a feltételeinek megfelelően a jövőbeli fizetésekhez megterhelje ezt a fizetési módot.";
+
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "A fizetés megerősítésével a PayPalon engedélyezi, hogy a(z) %@ a feltételeinek megfelelően a jövőbeni kifizetésekkel megterhelje a PayPal számláját.";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Az Amazon Payre történő továbblépéssel engedélyezi, hogy a(z) %@ a feltételeinek megfelelően a jövőbeni kifizetésekkel megterhelje az Amazon Pay-számláját.";
@@ -86,6 +88,8 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Azzal, hogy elmenti a bankszámlát a(z) %@ számára, beleegyezik a kifizetések engedélyezésébe ezen <terms>feltételek</terms> szerint.";
 
+"By saving your payment information, you allow %@ to charge you for future payments in accordance with their terms." = "Fizetési adatainak mentésével Ön engedélyezi a(z) %@ számára, hogy a feltételeinek megfelelően terhelje Önt a jövőbeli fizetésekért.";
+
 "By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "Azzal, hogy megrendelését elküldi ide: %1$@ és %2$@, Ön beleegyezik abba, hogy adatait a(z) %3$@ szolgáltatás menti a jövőbeni vásárlásokhoz, illetve beleegyezik abba, hogy engedélyezi a kifizetéseket <terms>a jelen feltételek</terms> szerint.";
 
 "By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "A megrendelésének a(z) %@ részére történő elküldésével Ön beleegyezik abba, hogy engedélyezi a fizetéseket a <terms>jelen feltételek</terms> szerint.";
@@ -108,9 +112,15 @@
 
 "Code sent" = "Kód elküldve";
 
+"Complete the payment using Pix to finish the purchase." = "A vásárlás befejezéséhez teljesítse a fizetést a Pix használatával.";
+
 "Confirm" = "Megerősítés";
 
 "Confirm payment details" = "Fizetési adatok megerősítése";
+
+"Confirm the Bizum payment in your mobile banking application within %@ to complete the purchase." = "A vásárlás befejezéséhez erősítse meg a Bizum fizetést a mobil banki alkalmazásában %@ belül.";
+
+"Confirm the payment in your MB WAY app within %@ to complete the purchase." = "A vásárlás befejezéséhez erősítse meg a fizetést az MB WAY alkalmazásában %@ belül.";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "A vásárlás befejezéséhez %@ percen belül erősítse meg a fizetést a bankjánál vagy a fizetést biztosító alkalmazásban.";
 
@@ -136,9 +146,15 @@
 
 "Did you mean %@? %@." = "Erre gondolt: %1$@? %2$@.";
 
+"Discard Changes" = "Módosítások elvetése";
+
+"Discard changes?" = "Módosítások elvetése?";
+
 "Discount" = "Engedmény";
 
 "EPS Bank" = "EPS Bank";
+
+"Edit address" = "Cím szerkesztése";
 
 "Enter address manually" = "Cím megadása kézzel";
 
@@ -157,6 +173,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Tudomásul veszem, hogy a Stripe beszedéseket végez a(z) %@ nevében, és megerősítem, hogy én vagyok a számla tulajdonosa és az egyetlen személy, aki a terheléseket engedélyezheti erről a számláról.";
 
 "IBAN" = "IBAN";
+
+"Keep Editing" = "Szerkesztés folytatása";
 
 "Last 4 digits of SSN" = "Az SSN utolsó 4 számjegye";
 
@@ -177,6 +195,10 @@
 "Manage your payment methods" = "Fizetési módok kezelése";
 
 "Name on card" = "A kártyán szereplő név";
+
+"Naver Pay Card" = "Naver Pay kártya";
+
+"Naver Pay Money/Point" = "Naver Pay Money/Point";
 
 "New card" = "Új kártya";
 
@@ -234,8 +256,6 @@
 
 "Point the camera at your card." = "Tegye a kártyát a kamera elé.";
 
-"Processing..." = "Feldolgozás...";
-
 "Przelewy24 Bank" = "Przelewy24 Bank";
 
 "Remove %@" = "%@ eltávolítása";
@@ -274,6 +294,8 @@
 
 "Select card" = "Kártya kiválasztása";
 
+"Select how you want to pay:" = "Válassza ki, hogyan szeretne fizetni:";
+
 "Select payment method" = "Fizetési mód választása";
 
 "Select your payment method" = "Fizetési mód kiválasztása";
@@ -283,8 +305,6 @@
 "Set as default payment method" = "Legyen ez az alapértelmezett fizetési mód";
 
 "Set up" = "Beállítás";
-
-"Shipping" = "Szállítás";
 
 "Shipping to %@ is not supported." = "Ebbe az országba nem támogatott a szállítás: %@";
 
@@ -312,6 +332,10 @@
 
 "Tax" = "Adó";
 
+"Terms and Conditions" = "Feltételek";
+
+"Terms of Service" = "Szolgáltatási feltételek";
+
 "The IBAN you entered is incomplete." = "A beírt IBAN-szám hiányos.";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "A beírt IBAN-szám érvénytelen: „%@” nem támogatott országkód.";
@@ -319,6 +343,8 @@
 "The provided verification code has expired." = "A megadott ellenőrző kód lejárt.";
 
 "The provided verification code is incorrect." = "A megadott ellenőrző kód hibás.";
+
+"This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Ez egy nemzetközi vásárlás, amely nem tartalmazza a 3,5%-os IOF díjat. A folytatással Ön tudomásul veszi és elfogadja <terms>az Ebanx feltételeit<terms>.";
 
 "This is your default" = "Ez az alapértelmezett";
 
@@ -339,3 +365,5 @@
 "Yes, update" = "Igen, frissítés";
 
 "Your IBAN should start with a two-letter country code." = "Az IBAN-számának egy kétbetűs országkóddal kell kezdődnie.";
+
+"Your address changes won't be saved." = "A cím módosításai nem lesznek mentve.";

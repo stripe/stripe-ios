@@ -1,17 +1,157 @@
 POST
-https:\/\/stp-mobile-ci-test-backend-e1b3\.stripedemos\.com\/create_checkout_session$
+https:\/\/stp-mobile-playground-backend-v7\.stripedemos\.com\/create_checkout_session$
 200
-text/html
-x-content-type-options: nosniff
-x-cloud-trace-context: 8b81742b21aca4b840dca199101409fa
-Content-Type: text/html;charset=utf-8
-Set-Cookie: rack.session=jMIbz4eiavKmjWWPPu0ld4OXfjJRjx6eOLzVV0q2L16VISkDwkBWVxYq0%2FnEWaUp1MZPzxLTtG5FajzqdxuvYDiOqpZyvP2CCod48YCgq%2F%2FMsuqFiRb9pIQSEvIj2imfoq0%2FPNDytwmYbEA%2FzT5976bv3kmfVB87VrsalVb44Y62ntQUjgzhlsYSzzy9LMPu%2FtkvItyyfbHg3RGcx9dTKlMO%2BUywzmqzmK3hM4ZAqOA%3D; path=/
+application/json
 Server: Google Frontend
+Content-Type: application/json; charset=utf-8
+x-powered-by: Express
+x-cloud-trace-context: 42b30566eab7bce2d97269fdd0227490
 Via: 1.1 google
-Date: Wed, 01 Jul 2026 12:11:25 GMT
-x-frame-options: SAMEORIGIN
-x-xss-protection: 1; mode=block
-Content-Length: 358
+Date: Thu, 24 Sep 2026 15:10:51 GMT
+Content-Length: 2542
 Alt-Svc: h3=":443"; ma=2592000
+Etag: W/"9ee-p9TiZOA6V3KLfLBtFlw8chPppq8"
 
-{"id":"cs_test_a16u3y5YvCMlk4eK6YMQICbxukpu1l6OitqBS71z4QAK0b6yWCbEuoouGq","client_secret":"cs_test_a16u3y5YvCMlk4eK6YMQICbxukpu1l6OitqBS71z4QAK0b6yWCbEuoouGq_secret_fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdwbEhqYWAnPydmcHZxamgneCUl","publishable_key":"pk_test_51H7oXMAOnZToJom1hqiSvNGsUVTrG1SaXRSBon9xcEp0yDFAxEh5biA4n0ty6paEsD5Mo5ps1b7Taj9WAHQzjup800m8A8Nc3u"}
+{
+  "billing_address_collection" : null,
+  "id" : "cs_test_a1sgEQYPNpNbLXFp2e2Wji4EBuBhg0VbVX7xCxdPpXX5LxTAf5lXOChns8",
+  "client_secret" : "cs_test_a1sgEQYPNpNbLXFp2e2Wji4EBuBhg0VbVX7xCxdPpXX5LxTAf5lXOChns8_secret_fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdwbEhqYWAnPydoamdsaWBaYGlgaGBrcXYneCUl",
+  "discounts" : [
+
+  ],
+  "custom_text" : {
+    "shipping_address" : null,
+    "terms_of_service_acceptance" : null,
+    "submit" : null,
+    "after_submit" : null
+  },
+  "customer" : null,
+  "metadata" : {
+
+  },
+  "payment_method_configuration_details" : null,
+  "payment_method_options" : null,
+  "ui_mode" : "mobile_elements",
+  "created" : 1790262651,
+  "client_reference_id" : null,
+  "allowed_payment_method_types" : [
+    "grabpay"
+  ],
+  "mode" : "none",
+  "allow_promotion_codes" : null,
+  "items" : [
+    {
+      "key" : "checkout_item_VJs2lO6J",
+      "one_time_price" : {
+        "items" : [
+          {
+            "quantity" : 1,
+            "adjustable_quantity" : null,
+            "price" : "price_1UJEIRFZ0FIhclplwOlmwHJU",
+            "tax_rates" : null
+          }
+        ],
+        "metadata" : {
+
+        }
+      },
+      "type" : "one_time_price"
+    }
+  ],
+  "after_expiration" : null,
+  "saved_payment_method_options" : {
+    "payment_method_save" : null,
+    "allow_redisplay_filters" : [
+      "always"
+    ],
+    "payment_method_remove" : "disabled"
+  },
+  "payment_link" : null,
+  "currency" : "sgd",
+  "status" : "open",
+  "url" : null,
+  "branding_settings" : {
+    "button_color" : "#0074d4",
+    "border_style" : "rounded",
+    "background_color" : "#ffffff",
+    "display_name" : "Singapore merchant",
+    "font_family" : "default",
+    "icon" : null,
+    "logo" : null
+  },
+  "customer_details" : null,
+  "wallet_options" : null,
+  "adaptive_pricing" : {
+    "enabled" : true
+  },
+  "consent" : null,
+  "shipping_options" : [
+
+  ],
+  "amount_subtotal" : 2000,
+  "submit_type" : null,
+  "locale" : null,
+  "permissions" : null,
+  "subscription" : null,
+  "success_url" : null,
+  "setup_intent" : null,
+  "payment_intent" : null,
+  "phone_number_collection" : {
+    "enabled" : false
+  },
+  "origin_context" : null,
+  "amount_total" : 2000,
+  "consent_collection" : null,
+  "payment_method_types" : [
+    "grabpay"
+  ],
+  "recovered_from" : null,
+  "customer_creation" : "always",
+  "object" : "checkout.session",
+  "checkout_items" : [
+
+  ],
+  "invoice" : null,
+  "customer_account" : null,
+  "managed_payments" : null,
+  "shipping_cost" : null,
+  "cancel_url" : null,
+  "automatic_tax" : {
+    "status" : null,
+    "address_collection_precision" : null,
+    "enabled" : false,
+    "liability" : null,
+    "provider" : null
+  },
+  "custom_fields" : [
+
+  ],
+  "collected_information" : null,
+  "integration_identifier" : null,
+  "invoice_creation" : {
+    "enabled" : false,
+    "invoice_data" : {
+      "footer" : null,
+      "issuer" : null,
+      "custom_fields" : null,
+      "rendering_options" : null,
+      "account_tax_ids" : null,
+      "description" : null,
+      "metadata" : {
+
+      }
+    }
+  },
+  "shipping_address_collection" : null,
+  "payment_method_collection" : "auto",
+  "currency_conversion" : null,
+  "payment_status" : "unpaid",
+  "total_details" : {
+    "amount_discount" : 0,
+    "amount_shipping" : 0,
+    "amount_tax" : 0
+  },
+  "livemode" : false,
+  "customer_email" : null,
+  "expires_at" : 1790349051
+}

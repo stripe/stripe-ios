@@ -12,6 +12,7 @@
 @testable @_spi(AppearanceAPIAdditionsPreview) @_spi(STP) import StripeUICore
 import XCTest
 
+@MainActor
 class PaymentSheetFlowControllerTests: XCTestCase {
 
     func makePaymentDetailsStub(nickname: String? = nil) -> ConsumerPaymentDetails {
@@ -489,15 +490,15 @@ class PaymentSheetFlowControllerTests: XCTestCase {
             analyticsHelper: ._testValue()
         )
 
-        let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration())
+        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration())
 
         // Move session to complete
-        let completedSession = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: {
+        let completedSession = try PaymentPagesAPIResponse.decode(fromAPIResponse: {
             var json = CheckoutTestHelpers.openSessionJSON
             json["status"] = "complete"
             json["payment_status"] = "paid"
             return json
-        }())!
+        }())
         try await checkout.commitSession(completedSession)
         XCTAssertFalse(checkout.sessionIsOpen)
 

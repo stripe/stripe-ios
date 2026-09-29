@@ -10,22 +10,10 @@ import Foundation
 
 @_spi(STP)
 @_spi(ReactNativeSDK)
-extension Checkout {
+extension CheckoutController {
     public typealias UserInterfaceStyle = PaymentSheet.UserInterfaceStyle
 
-    /// Configuration options for a ``Checkout`` instance.
-    ///
-    /// Supply a configuration when creating a ``Checkout`` to customize behavior:
-    ///
-    /// ```swift
-    /// var config = Checkout.Configuration(
-    ///     clientSecret: "cs_xxx_secret_yyy",
-    ///     returnURL: "my-app://stripe-redirect"
-    /// )
-    /// config.adaptivePricing.allowed = true
-    ///
-    /// let checkout = try await Checkout(configuration: config)
-    /// ```
+    /// Configuration for initializing a CheckoutController.
     public struct Configuration {
         /// The client secret for your Checkout Session.
         public var clientSecret: String
@@ -45,40 +33,36 @@ extension Checkout {
         /// Default customer details used to pre-populate Checkout integrations.
         public var defaults: Defaults = Defaults()
 
-        /// Controls whether adaptive pricing is requested for this session.
+        /// Configuration for Payment Element.
         ///
-        /// When allowed, Stripe may present prices in the customer's local
-        /// currency alongside the merchant's settlement currency.
+        /// Set this property to use Payment Element with this CheckoutController.
+        /// The default value is `nil`.
+        public var paymentElement: PaymentElement.Configuration?
+
+        /// Configuration for Express Checkout Element.
         ///
-        /// Default: ``AdaptivePricing.init()`` (`allowed: false`).
-        public var adaptivePricing: AdaptivePricing = AdaptivePricing()
+        /// Set this property to use Express Checkout Element with this CheckoutController.
+        /// The default value is `nil`.
+        public var expressCheckoutElement: ExpressCheckoutElement.Configuration?
 
-        /// Configuration for PaymentElement.
-        public var paymentElement: PaymentElement.Configuration = .init()
+        /// Configuration for Currency Selector Element.
+        ///
+        /// Set this property to enable Currency Selector Element when Adaptive
+        /// Pricing is available. The default value is `nil`.
+        public var currencySelectorElement: CurrencySelectorElement.Configuration?
 
-        /// Configuration for ExpressCheckoutElement.
-        public var expressCheckoutElement: ExpressCheckoutElement.Configuration = .init()
-
-        /// Configuration for the shipping address form returned by
-        /// ``Checkout.getShippingAddressElement()``.
-        public var shippingAddressElement: ShippingAddressElement.Configuration = .init()
-
-        /// Apple Pay configuration.
-        public var applePayConfiguration: ApplePayConfiguration?
-
-        /// Link configuration.
-        public var linkConfiguration: LinkConfiguration?
+        /// Configuration for Shipping Address Element.
+        ///
+        /// Set this property to use Shipping Address Element with this CheckoutController.
+        /// The default value is `nil`.
+        public var shippingAddressElement: ShippingAddressElement.Configuration?
 
         /// The color styling to use for Checkout UI.
         public var userInterfaceStyle: UserInterfaceStyle = .automatic
 
-        /// Configuration for the Adaptive Pricing currency selector returned by
-        /// ``Checkout.getCurrencySelectorElement()``.
-        public var currencySelectorElement: CurrencySelectorElement.Configuration = .init()
-
-        /// Creates a configuration.
-        /// - Parameter clientSecret: The client secret for your Checkout Session.
-        /// - Parameter returnURL: A custom URL scheme that redirects back to your app after authenticating a payment method, e.g. `my-app://stripe-redirect`. Register this URL scheme in your app and forward incoming URLs to `StripeAPI.handleURLCallback(with:)`.
+        /// Initializes a `CheckoutController.Configuration` with default values.
+        /// - Parameter clientSecret: The CheckoutSession client secret.
+        /// - Parameter returnURL: A URL that redirects back to your app after authenticating a payment method.
         public init(clientSecret: String, returnURL: String) {
             self.clientSecret = clientSecret
             self.returnURL = returnURL
@@ -106,7 +90,7 @@ extension Checkout {
             guard let url = URL(string: returnURL),
                   let scheme = url.scheme,
                   !scheme.isEmpty else {
-                assertionFailure("Checkout.Configuration.returnURL must be a valid URL with a scheme.")
+                assertionFailure("CheckoutController.Configuration.returnURL must be a valid URL with a scheme.")
                 return
             }
 
@@ -116,7 +100,7 @@ extension Checkout {
             STPURLCallbackHandler.shared().unregisterListener(listener)
             assert(
                 handled && listener.handledURL == url,
-                "Checkout.Configuration.returnURL must be forwarded to StripeAPI.handleURLCallback(with:) when your app receives the URL in application(_:open:options:) or scene(_:openURLContexts:)."
+                "CheckoutController.Configuration.returnURL must be forwarded to StripeAPI.handleURLCallback(with:) when your app receives the URL in application(_:open:options:) or scene(_:openURLContexts:)."
             )
 
             guard scheme.lowercased() != "http" && scheme.lowercased() != "https" else {
@@ -129,7 +113,7 @@ extension Checkout {
                 .map { $0.lowercased() } ?? []
             assert(
                 registeredSchemes.contains(scheme.lowercased()),
-                "Checkout.Configuration.returnURL uses the custom URL scheme '\(scheme)', but it is not registered in CFBundleURLTypes."
+                "CheckoutController.Configuration.returnURL uses the custom URL scheme '\(scheme)', but it is not registered in CFBundleURLTypes."
             )
         }
 #endif
@@ -138,7 +122,7 @@ extension Checkout {
 
 @_spi(STP)
 @_spi(ReactNativeSDK)
-extension Checkout.Configuration {
+extension CheckoutController.Configuration {
     /// Default customer details used to pre-populate Checkout integrations.
     public struct Defaults {
         /// Default billing details.
@@ -146,6 +130,12 @@ extension Checkout.Configuration {
 
         /// Default shipping details.
         public var shippingDetails: ShippingDetails?
+
+        /// The customer's phone number.
+        public var phone: String?
+
+        /// The customer's email address.
+        public var email: String?
 
         /// Creates default customer details.
         public init() {}
@@ -156,7 +146,7 @@ extension Checkout.Configuration {
             public var name: String?
 
             /// The customer's billing address.
-            public var address: Checkout.Address?
+            public var address: CheckoutController.Address?
 
             /// Creates default billing details.
             public init() {}
@@ -168,34 +158,10 @@ extension Checkout.Configuration {
             public var name: String?
 
             /// The customer's shipping address.
-            public var address: Checkout.Address?
+            public var address: CheckoutController.Address?
 
             /// Creates default shipping details.
             public init() {}
         }
-    }
-}
-
-@_spi(STP)
-@_spi(ReactNativeSDK)
-extension Checkout.Configuration {
-    /// Options for adaptive pricing behavior.
-    ///
-    /// Adaptive pricing lets customers see prices converted to their local
-    /// currency. When ``allowed`` is `true`, the Checkout Session
-    /// init request tells Stripe that the integration supports adaptive pricing;
-    /// Stripe then decides whether to activate it based on the session's
-    /// server-side configuration.
-    public struct AdaptivePricing {
-        /// Whether the integration allows adaptive pricing for this session.
-        ///
-        /// Set to `true` to have Stripe activate adaptive pricing,
-        /// returning localized currency amounts.
-        ///
-        /// Default: `false`.
-        public var allowed: Bool = false
-
-        /// Creates an adaptive pricing configuration with default values.
-        public init() {}
     }
 }

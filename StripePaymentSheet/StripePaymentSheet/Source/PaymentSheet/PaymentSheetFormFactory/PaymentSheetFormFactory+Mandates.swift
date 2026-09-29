@@ -70,6 +70,11 @@ extension PaymentSheetFormFactory {
         return makeMandate(mandateText: mandateText)
     }
 
+    func makeAlipayMandate() -> SimpleMandateElement {
+        let mandateText = String(format: String.Localized.alipay_mandate_text, configuration.merchantDisplayName)
+        return makeMandate(mandateText: mandateText)
+    }
+
     func makeRevolutPayMandate() -> SimpleMandateElement {
         let mandateText = String(format: String.Localized.revolut_pay_mandate_text, configuration.merchantDisplayName)
         return makeMandate(mandateText: mandateText)
@@ -98,6 +103,14 @@ extension PaymentSheetFormFactory {
 
     func makeTwintMandate() -> SimpleMandateElement {
         let mandateText: String = String(format: String.Localized.twint_mandate_text, configuration.merchantDisplayName)
+        return makeMandate(mandateText: mandateText)
+    }
+
+    func makeKoreanPaymentMethodMandate() -> SimpleMandateElement {
+        let mandateText = String(
+            format: String.Localized.korean_payment_method_mandate_text,
+            configuration.merchantDisplayName
+        )
         return makeMandate(mandateText: mandateText)
     }
 }

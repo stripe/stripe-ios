@@ -19,11 +19,14 @@ struct LogInSignUpView: View {
     /// The flow coordinator used to advance to the next steps after authentication.
     let flowCoordinator: CryptoOnrampFlowCoordinator
 
-    /// Whether livemode is enabled, which can be toggled from this view.
-    @Binding var livemode: Bool
+    /// Whether livemode is enabled.
+    let livemode: Bool
 
     /// Whether to use level 0 KYC collection mode from the KYC info screen.
-    @Binding var isL0KYCModeEnabled: Bool
+    let isL0KYCModeEnabled: Bool
+
+    /// The OAuth scopes to request during Link authentication.
+    let selectedScopes: Set<OAuthScopes>
 
     /// Specifies an alert originating from this view to display by the parent.
     @Binding var alert: Alert?
@@ -32,9 +35,6 @@ struct LogInSignUpView: View {
 
     @State private var email: String = ""
     @State private var password: String = ""
-    @State private var selectedScopes: Set<OAuthScopes> = Set(OAuthScopes.requiredScopes)
-    @State private var isShowingScopesSheet = false
-
     @FocusState private var isEmailFieldFocused: Bool
     @FocusState private var isPasswordFieldFocused: Bool
 
@@ -44,14 +44,6 @@ struct LogInSignUpView: View {
 
     private var kycInfoCollectionMode: KYCInfoView.CollectionMode {
         isL0KYCModeEnabled ? .kycLevel0 : .original
-    }
-
-    private var isRunningOnSimulator: Bool {
-        #if targetEnvironment(simulator)
-        return true
-        #else
-        return false
-        #endif
     }
 
     // MARK: - View
@@ -86,31 +78,6 @@ struct LogInSignUpView: View {
             }
             .padding()
         }
-        .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Menu {
-                    Toggle(isOn: $livemode) {
-                        Label("Livemode", systemImage: "server.rack")
-                    }
-                    // Livemode is disabled on the simulator.
-                    .disabled(isRunningOnSimulator)
-
-                    Toggle(isOn: $isL0KYCModeEnabled) {
-                        Label("L0 KYC Mode", systemImage: "person.text.rectangle")
-                    }
-
-                    Divider()
-
-                    Button {
-                        isShowingScopesSheet = true
-                    } label: {
-                        Label("OAuth Scopes…", systemImage: "slider.horizontal.3")
-                    }
-                } label: {
-                    Image(systemName: "gearshape")
-                }
-            }
-        }
         .safeAreaInset(edge: .bottom) {
             VStack(spacing: 8) {
                 Button("Log In") {
@@ -130,18 +97,6 @@ struct LogInSignUpView: View {
             .disabled(shouldDisableButtons)
             .opacity(shouldDisableButtons ? 0.5 : 1)
             .padding()
-        }
-        .sheet(isPresented: $isShowingScopesSheet) {
-            OAuthScopeSelectionView(
-                selectedScopes: $selectedScopes,
-                onOnrampScopesSelected: {
-                    selectedScopes = Set(OAuthScopes.requiredScopes)
-                },
-                onAllScopesSelected: {
-                    selectedScopes = Set(OAuthScopes.allScopes)
-                }
-            )
-            .presentationDetents([.medium])
         }
     }
 
@@ -240,8 +195,9 @@ struct LogInSignUpView: View {
         LogInSignUpView(
             coordinator: coordinator,
             flowCoordinator: .init(),
-            livemode: .constant(false),
-            isL0KYCModeEnabled: .constant(false),
+            livemode: false,
+            isL0KYCModeEnabled: false,
+            selectedScopes: Set(OAuthScopes.requiredScopes),
             alert: .constant(nil)
         )
     }

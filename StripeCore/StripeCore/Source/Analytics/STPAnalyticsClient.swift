@@ -25,6 +25,16 @@ import UIKit
 
 @_spi(STP) public class STPAnalyticsClient: NSObject, STPAnalyticsClientProtocol {
     @objc public static let sharedClient = STPAnalyticsClient()
+
+    /// When `true`, sends analytics directly to r.stripe.com via POST.
+    /// When `false`, sends to q.stripe.com via GET (legacy path).
+    @_spi(STP) public static var sendAnalyticsToRStripe: Bool = false
+
+    private static let rStripeUrl = URL(string: "https://r.stripe.com/0")!
+    private static let qStripeUrl = URL(string: "https://q.stripe.com")!
+    private static let rStripeClientId = "stripe-mobile-payments-sdk"
+    private static let rStripeOrigin = "stripe-mobile-payments-sdk-ios"
+
     /// When this class logs a payload in an XCTestCase, it's added to `_testLogHistory` instead of being sent over the network.
     /// This is a hack - ideally, we inject a different analytics client in our tests. This is an escape hatch until we can make that (significant) refactor
     private var _testLogHistoryStorage: [[String: Any]] = []
@@ -45,7 +55,6 @@ import UIKit
     @objc public var productUsage: Set<String> = Set()
     private var additionalInfoSet: Set<String> = Set()
     let urlSession: URLSession
-    let url = URL(string: "https://q.stripe.com")!
     private let analyticsEventTranslator = STPAnalyticsEventTranslator()
 
     public init(
@@ -110,6 +119,9 @@ import UIKit
         var payload = commonPayload(apiClient)
 
         payload["event"] = analytic.event.rawValue
+        if STPAnalyticsClient.sendAnalyticsToRStripe {
+            payload["event_name"] = analytic.event.rawValue
+        }
 
         payload.mergeAssertingOnOverwrites(analytic.params)
         return payload
@@ -153,10 +165,19 @@ import UIKit
             return
         }
 
-        var request = URLRequest(url: url)
-        request.stp_addParameters(toURL: payload)
-        let task: URLSessionDataTask = urlSession.dataTask(with: request as URLRequest)
-        task.resume()
+        if STPAnalyticsClient.sendAnalyticsToRStripe {
+            var request = URLRequest(url: STPAnalyticsClient.rStripeUrl)
+            request.httpMethod = "POST"
+            request.stp_setFormPayload(payload)
+            request.setValue(STPAnalyticsClient.rStripeOrigin, forHTTPHeaderField: "Origin")
+            let task: URLSessionDataTask = urlSession.dataTask(with: request as URLRequest)
+            task.resume()
+        } else {
+            var request = URLRequest(url: STPAnalyticsClient.qStripeUrl)
+            request.stp_addParameters(toURL: payload)
+            let task: URLSessionDataTask = urlSession.dataTask(with: request as URLRequest)
+            task.resume()
+        }
     }
 
     /// Whether to send the analytic  or not. If `false`, appends payload to `self._testLogHistory` instead.
@@ -206,7 +227,13 @@ extension STPAnalyticsClient {
         payload["install"] = InstallMethod.current.rawValue
         payload["publishable_key"] = apiClient.sanitizedPublishableKey ?? "unknown"
         payload["session_id"] = AnalyticsHelper.shared.sessionID
-        payload["timestamp"] = Date().timeIntervalSince1970
+        let timestamp = Date().timeIntervalSince1970
+        payload["timestamp"] = timestamp
+        if STPAnalyticsClient.sendAnalyticsToRStripe {
+            payload["client_id"] = STPAnalyticsClient.rStripeClientId
+            payload["event_id"] = UUID().uuidString
+            payload["created"] = timestamp
+        }
         if STPAnalyticsClient.isSimulatorOrTest {
             payload["is_development"] = true
         }

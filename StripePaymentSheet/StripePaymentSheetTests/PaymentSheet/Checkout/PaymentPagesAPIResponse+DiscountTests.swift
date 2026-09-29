@@ -7,9 +7,8 @@
 import XCTest
 
 private extension PaymentPagesAPIResponse {
-    static func parseDiscounts(from dict: [AnyHashable: Any]) -> [Checkout.DiscountAmount] {
-        let currency = dict["currency"] as? String
-        return parseDiscountAmounts(from: dict, currency: currency)
+    static func makeDiscounts(from overrides: [String: Any]) -> [CheckoutController.Session.DiscountAmount] {
+        return CheckoutTestHelpers.makeSession(overrides).makePublicSession().discountAmounts
     }
 }
 
@@ -18,14 +17,14 @@ final class PaymentPagesAPIResponseDiscountTests: XCTestCase {
     // MARK: - Valid discount with coupon + promotion code
 
     func testParseDiscountWithCouponAndPromotionCode() {
-        let dict: [AnyHashable: Any] = [
+        let dict: [String: Any] = [
             "currency": "usd",
             "recurring_details": [
                 "total_discount_amounts": [
                     [
                         "amount": 500,
                         "coupon": [
-                            "id": "coupon_abc",
+                            "code": "coupon_abc",
                             "name": "25% Off",
                             "percent_off": 25.0,
                         ] as [String: Any],
@@ -37,26 +36,28 @@ final class PaymentPagesAPIResponseDiscountTests: XCTestCase {
             ],
         ]
 
-        let discounts = PaymentPagesAPIResponse.parseDiscounts(from: dict)
+        let discounts = PaymentPagesAPIResponse.makeDiscounts(from: dict)
         XCTAssertEqual(discounts.count, 1)
 
         let discount = discounts[0]
         XCTAssertEqual(discount.displayName, "25% Off")
         XCTAssertEqual(discount.promotionCode, "SAVE25")
-        XCTAssertEqual(discount.amount.minorUnitsAmount, 500)
+        XCTAssertEqual(discount.amount, "$5.00")
+        XCTAssertEqual(discount.minorUnitsAmount, 500)
+        XCTAssertEqual(discount.percentOff, 25)
     }
 
     // MARK: - Discount with coupon only (no promotion code)
 
     func testParseDiscountWithCouponOnly() {
-        let dict: [AnyHashable: Any] = [
+        let dict: [String: Any] = [
             "currency": "usd",
             "recurring_details": [
                 "total_discount_amounts": [
                     [
                         "amount": 1000,
                         "coupon": [
-                            "id": "coupon_def",
+                            "code": "coupon_def",
                             "name": "$10 Off",
                             "amount_off": 1000,
                         ] as [String: Any],
@@ -65,25 +66,27 @@ final class PaymentPagesAPIResponseDiscountTests: XCTestCase {
             ],
         ]
 
-        let discounts = PaymentPagesAPIResponse.parseDiscounts(from: dict)
+        let discounts = PaymentPagesAPIResponse.makeDiscounts(from: dict)
         XCTAssertEqual(discounts.count, 1)
 
         let discount = discounts[0]
         XCTAssertEqual(discount.displayName, "$10 Off")
         XCTAssertNil(discount.promotionCode)
-        XCTAssertEqual(discount.amount.minorUnitsAmount, 1000)
+        XCTAssertEqual(discount.amount, "$10.00")
+        XCTAssertEqual(discount.minorUnitsAmount, 1000)
+        XCTAssertNil(discount.percentOff)
     }
 
     // MARK: - Zero amount is filtered out
 
     func testZeroAmountDiscountIsFiltered() {
-        let dict: [AnyHashable: Any] = [
+        let dict: [String: Any] = [
             "recurring_details": [
                 "total_discount_amounts": [
                     [
                         "amount": 0,
                         "coupon": [
-                            "id": "coupon_zero",
+                            "code": "coupon_zero",
                             "name": "No-op",
                         ],
                     ] as [String: Any],
@@ -91,47 +94,47 @@ final class PaymentPagesAPIResponseDiscountTests: XCTestCase {
             ],
         ]
 
-        let discounts = PaymentPagesAPIResponse.parseDiscounts(from: dict)
+        let discounts = PaymentPagesAPIResponse.makeDiscounts(from: dict)
         XCTAssertTrue(discounts.isEmpty)
     }
 
     // MARK: - Empty discount_amounts array
 
     func testEmptyDiscountAmountsArray() {
-        let dict: [AnyHashable: Any] = [
+        let dict: [String: Any] = [
             "recurring_details": [
                 "total_discount_amounts": [] as [[AnyHashable: Any]],
             ],
         ]
 
-        let discounts = PaymentPagesAPIResponse.parseDiscounts(from: dict)
+        let discounts = PaymentPagesAPIResponse.makeDiscounts(from: dict)
         XCTAssertTrue(discounts.isEmpty)
     }
 
     // MARK: - Missing recurring_details key
 
     func testMissingRecurringDetails() {
-        let dict: [AnyHashable: Any] = [
+        let dict: [String: Any] = [
             "session_id": "cs_test_123",
         ]
 
-        let discounts = PaymentPagesAPIResponse.parseDiscounts(from: dict)
+        let discounts = PaymentPagesAPIResponse.makeDiscounts(from: dict)
         XCTAssertTrue(discounts.isEmpty)
     }
 
     // MARK: - Multiple discounts
 
     func testMultipleDiscounts() {
-        let dict: [AnyHashable: Any] = [
+        let dict: [String: Any] = [
             "currency": "usd",
             "recurring_details": [
                 "total_discount_amounts": [
                     [
                         "amount": 500,
                         "coupon": [
-                            "id": "coupon_first",
+                            "code": "coupon_first",
                             "name": "First",
-                            "percent_off": 10.0,
+                            "percent_off": 10.5,
                         ] as [String: Any],
                         "promotion_code": [
                             "code": "FIRST10",
@@ -140,7 +143,7 @@ final class PaymentPagesAPIResponseDiscountTests: XCTestCase {
                     [
                         "amount": 200,
                         "coupon": [
-                            "id": "coupon_second",
+                            "code": "coupon_second",
                             "name": "Second",
                             "amount_off": 200,
                         ] as [String: Any],
@@ -149,36 +152,40 @@ final class PaymentPagesAPIResponseDiscountTests: XCTestCase {
             ],
         ]
 
-        let discounts = PaymentPagesAPIResponse.parseDiscounts(from: dict)
+        let discounts = PaymentPagesAPIResponse.makeDiscounts(from: dict)
         XCTAssertEqual(discounts.count, 2)
 
         XCTAssertEqual(discounts[0].displayName, "First")
         XCTAssertEqual(discounts[0].promotionCode, "FIRST10")
-        XCTAssertEqual(discounts[0].amount.minorUnitsAmount, 500)
+        XCTAssertEqual(discounts[0].amount, "$5.00")
+        XCTAssertEqual(discounts[0].minorUnitsAmount, 500)
+        XCTAssertEqual(discounts[0].percentOff, 10.5)
 
         XCTAssertEqual(discounts[1].displayName, "Second")
         XCTAssertNil(discounts[1].promotionCode)
-        XCTAssertEqual(discounts[1].amount.minorUnitsAmount, 200)
+        XCTAssertEqual(discounts[1].amount, "$2.00")
+        XCTAssertEqual(discounts[1].minorUnitsAmount, 200)
+        XCTAssertNil(discounts[1].percentOff)
     }
 
     // MARK: - Zero amount mixed with valid discounts
 
     func testZeroAmountFilteredFromMultipleDiscounts() {
-        let dict: [AnyHashable: Any] = [
+        let dict: [String: Any] = [
             "currency": "usd",
             "recurring_details": [
                 "total_discount_amounts": [
                     [
                         "amount": 0,
                         "coupon": [
-                            "id": "coupon_zero",
+                            "code": "coupon_zero",
                             "name": "Zero",
                         ] as [String: Any],
                     ] as [String: Any],
                     [
                         "amount": 300,
                         "coupon": [
-                            "id": "coupon_valid",
+                            "code": "coupon_valid",
                             "name": "Valid",
                         ] as [String: Any],
                     ] as [String: Any],
@@ -186,42 +193,64 @@ final class PaymentPagesAPIResponseDiscountTests: XCTestCase {
             ],
         ]
 
-        let discounts = PaymentPagesAPIResponse.parseDiscounts(from: dict)
+        let discounts = PaymentPagesAPIResponse.makeDiscounts(from: dict)
         XCTAssertEqual(discounts.count, 1)
         XCTAssertEqual(discounts[0].displayName, "Valid")
-        XCTAssertEqual(discounts[0].amount.minorUnitsAmount, 300)
+        XCTAssertEqual(discounts[0].minorUnitsAmount, 300)
     }
 
-    // MARK: - Missing coupon key (fallback display name)
+    // MARK: - Missing required discount fields
 
-    func testDiscountWithNoCoupon() {
-        let dict: [AnyHashable: Any] = [
+    func testDiscountRejectsMissingAmountOrCoupon() {
+        let validDiscount: [String: Any] = [
+            "amount": 100,
+            "coupon": ["code": "coupon_test"],
+        ]
+
+        for field in ["amount", "coupon"] {
+            var invalidDiscount = validDiscount
+            invalidDiscount.removeValue(forKey: field)
+            let json = CheckoutTestHelpers.makeSessionJSON([
+                "currency": "usd",
+                "recurring_details": [
+                    "total_discount_amounts": [invalidDiscount],
+                ],
+            ])
+
+            XCTAssertThrowsError(
+                try PaymentPagesAPIResponse.decode(fromAPIResponse: json),
+                "Expected missing \(field) to fail decoding"
+            )
+        }
+    }
+
+    func testDiscountRejectsCouponWithoutCode() {
+        let json = CheckoutTestHelpers.makeSessionJSON([
             "currency": "usd",
             "recurring_details": [
                 "total_discount_amounts": [
                     [
                         "amount": 100,
+                        "coupon": ["name": "Welcome"],
                     ] as [String: Any],
                 ],
             ],
-        ]
+        ])
 
-        let discounts = PaymentPagesAPIResponse.parseDiscounts(from: dict)
-        XCTAssertEqual(discounts.count, 1)
-        XCTAssertEqual(discounts[0].displayName, "Discount")
+        XCTAssertThrowsError(try PaymentPagesAPIResponse.decode(fromAPIResponse: json))
     }
 
-    // MARK: - Coupon without name uses ID then default
+    // MARK: - Coupon without name uses code
 
-    func testCouponWithoutNameFallsBackToId() {
-        let dict: [AnyHashable: Any] = [
+    func testCouponWithoutNameFallsBackToCode() {
+        let dict: [String: Any] = [
             "currency": "usd",
             "recurring_details": [
                 "total_discount_amounts": [
                     [
                         "amount": 250,
                         "coupon": [
-                            "id": "coupon_no_id",
+                            "code": "coupon_no_name",
                             "percent_off": 5.0,
                         ] as [String: Any],
                     ] as [String: Any],
@@ -229,8 +258,20 @@ final class PaymentPagesAPIResponseDiscountTests: XCTestCase {
             ],
         ]
 
-        let discounts = PaymentPagesAPIResponse.parseDiscounts(from: dict)
+        let discounts = PaymentPagesAPIResponse.makeDiscounts(from: dict)
         XCTAssertEqual(discounts.count, 1)
-        XCTAssertEqual(discounts[0].displayName, "coupon_no_id")
+        XCTAssertEqual(discounts[0].displayName, "coupon_no_name")
+        XCTAssertEqual(discounts[0].percentOff, 5)
+    }
+
+    func testRecurringDetailsRejectsMissingRequiredDiscountAmounts() {
+        let json = CheckoutTestHelpers.makeSessionJSON([
+            "recurring_details": [:],
+        ])
+
+        XCTAssertThrowsError(
+            try PaymentPagesAPIResponse.decode(fromAPIResponse: json),
+            "Expected missing total_discount_amounts to fail decoding"
+        )
     }
 }

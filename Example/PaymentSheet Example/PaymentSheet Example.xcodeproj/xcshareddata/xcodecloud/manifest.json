@@ -1,0 +1,9 @@
+{
+  "id" : "1f768185-d6d0-4f48-a2fd-9e0bbfefe467",
+  "targets" : [
+    {
+      "id" : "67708C99-D0C0-43EC-ADFF-29745CA90E88",
+      "name" : "PaymentSheetExample"
+    }
+  ]
+}

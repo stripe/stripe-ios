@@ -46,6 +46,8 @@
 
 "Buy now or pay later with Klarna" = "用 Klarna 先买后付";
 
+"By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "确认使用 NICEPAY 付款，即表示您允许 %@ 根据其条款，使用此支付方式为未来交易扣款。";
+
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "确认您的 PayPal 付款即表示您允许 %@ 按照他们的条款从您的 PayPal 扣取未来款项。";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "继续前往 Amazon Pay 即表示您允许 %@ 按照他们的条款从您的 Amazon Pay 账户扣取未来款项。";
@@ -86,6 +88,8 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "保存您的 %@ 银行账户即表示您同意按照<terms>这些条款</terms>授权付款。";
 
+"By saving your payment information, you allow %@ to charge you for future payments in accordance with their terms." = "保存您的支付信息，即表示您允许 %@ 按照其条款向您收取后续款项。";
+
 "By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "通过向 %1$@ 和 %2$@ 提交订单，您同意将您的信息保存在 %3$@ 用于将来购买使用，并同意根据<terms>这些条款</terms>授权支付。";
 
 "By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "向 %@ 提交您的订单即表示您同意按照<terms>这些条款</terms>授权付款。";
@@ -108,9 +112,15 @@
 
 "Code sent" = "验证码已发送";
 
+"Complete the payment using Pix to finish the purchase." = "使用 Pix 完成付款即可完成购买。";
+
 "Confirm" = "确定";
 
 "Confirm payment details" = "确认支付详情";
+
+"Confirm the Bizum payment in your mobile banking application within %@ to complete the purchase." = "请在 %@ 内在您的手机银行应用中确认 Bizum 支付，以完成购买。";
+
+"Confirm the payment in your MB WAY app within %@ to complete the purchase." = "请在 %@ 内在您的 MB WAY 应用中确认支付，以完成购买。";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "在您的银行或支付应用程序中确认向 %@ 的付款，以完成购物。";
 
@@ -136,9 +146,15 @@
 
 "Did you mean %@? %@." = "你是指 %1$@ 吗？%2$@。";
 
+"Discard Changes" = "放弃更改";
+
+"Discard changes?" = "放弃更改？";
+
 "Discount" = "折扣";
 
 "EPS Bank" = "EPS 银行";
+
+"Edit address" = "编辑地址";
 
 "Enter address manually" = "手动输入地址";
 
@@ -157,6 +173,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "我理解 Stripe 将代表 %@ 收取直接借记，且确认我是该账户持有人，且是唯一一个需要授权该账户扣款的人。";
 
 "IBAN" = "IBAN";
+
+"Keep Editing" = "继续编辑";
 
 "Last 4 digits of SSN" = "社会保障号码 (SSN) 最后 4 位";
 
@@ -177,6 +195,10 @@
 "Manage your payment methods" = "管理您的支付方式";
 
 "Name on card" = "持卡人姓名";
+
+"Naver Pay Card" = "Naver Pay Card";
+
+"Naver Pay Money/Point" = "Naver Pay Money/Point";
 
 "New card" = "添加新卡";
 
@@ -234,8 +256,6 @@
 
 "Point the camera at your card." = "将摄像头正对银行卡。";
 
-"Processing..." = "处理中...";
-
 "Przelewy24 Bank" = "Przelewy24 银行";
 
 "Remove %@" = "移除 %@";
@@ -274,6 +294,8 @@
 
 "Select card" = "选择卡";
 
+"Select how you want to pay:" = "选择您想使用的支付方式：";
+
 "Select payment method" = "选择支付方式";
 
 "Select your payment method" = "选择您的支付方式";
@@ -283,8 +305,6 @@
 "Set as default payment method" = "设置为默认支付方式";
 
 "Set up" = "设置";
-
-"Shipping" = "配送";
 
 "Shipping to %@ is not supported." = "不支持向 %@ 配送。";
 
@@ -312,6 +332,10 @@
 
 "Tax" = "税费";
 
+"Terms and Conditions" = "条款和条件";
+
+"Terms of Service" = "服务条款";
+
 "The IBAN you entered is incomplete." = "您输入的 IBAN 不完整。";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "您输入的 IBAN 无效，\"%@\" 不是受支持的国家/地区代码。";
@@ -319,6 +343,8 @@
 "The provided verification code has expired." = "提供的验证码已过期。";
 
 "The provided verification code is incorrect." = "提供的验证码不正确。";
+
+"This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "此为国际购买，不含 3.5% 的 IOF 费用。继续购买即表示您承认并接受 <terms>Ebanx 的条款和条件</terms>。";
 
 "This is your default" = "这是您的默认地址";
 
@@ -339,3 +365,5 @@
 "Yes, update" = "是的，更新";
 
 "Your IBAN should start with a two-letter country code." = "您的 IBAN 应以两个字母的国家代码开头。";
+
+"Your address changes won't be saved." = "您的地址更改不会被保存。";

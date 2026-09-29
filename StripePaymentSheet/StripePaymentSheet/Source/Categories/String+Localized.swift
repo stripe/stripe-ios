@@ -303,6 +303,13 @@ extension String.Localized {
         )
     }
 
+    static var alipay_mandate_text: String {
+        STPLocalizedString(
+            "By saving your payment information, you allow %@ to charge you for future payments in accordance with their terms.",
+            "Alipay mandate text"
+        )
+    }
+
     static var revolut_pay_mandate_text: String {
         STPLocalizedString(
             "By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms.",
@@ -338,6 +345,24 @@ extension String.Localized {
         )
     }
 
+    static var korean_payment_method_mandate_text: String {
+        STPLocalizedString(
+            "By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms.",
+            "Korean payment method mandate text"
+        )
+    }
+
+    static var naver_pay_funding_label: String {
+        STPLocalizedString("Select how you want to pay:", "Label for the Naver Pay funding source selector")
+    }
+
+    static var naver_pay_card: String {
+        STPLocalizedString("Naver Pay Card", "Naver Pay card funding source")
+    }
+
+    static var naver_pay_money_point: String {
+        STPLocalizedString("Naver Pay Money/Point", "Naver Pay money or points funding source")
+    }
     static var blik_confirm_payment: String {
         STPLocalizedString("Confirm the payment in your bank's app within %@ to complete the purchase.",
                            "Text for alert message when user needs to confirm payment in their banking app")
@@ -350,6 +375,30 @@ extension String.Localized {
     static var paynow_confirm_payment: String {
         STPLocalizedString("Confirm the payment in your bank or payment app within %@ to complete the purchase.",
                            "Text for alert message when user needs to confirm payment in their banking app")
+    }
+
+    static var pix_international_disclosure: String {
+        STPLocalizedString(
+            "This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>.",
+            "Disclosure for an international Pix payment. The terms tags enclose a link to Ebanx's terms."
+        )
+    }
+
+    static var pix_confirm_payment: String {
+        STPLocalizedString(
+            "Complete the payment using Pix to finish the purchase.",
+            "Instructions shown while waiting for a Pix payment authorization"
+        )
+    }
+
+    static var mb_way_confirm_payment: String {
+        STPLocalizedString("Confirm the payment in your MB WAY app within %@ to complete the purchase.",
+                           "Instructions shown while waiting for an MB WAY payment authorization")
+    }
+
+    static var bizum_confirm_payment: String {
+        STPLocalizedString("Confirm the Bizum payment in your mobile banking application within %@ to complete the purchase.",
+                           "Instructions shown while waiting for a Bizum payment authorization")
     }
 
     static var cpf_cpnj: String {
@@ -686,6 +735,34 @@ extension String.Localized {
         STPLocalizedString("Use billing address for shipping", "Label for checkbox in address form allowing user to use billing address")
     }
 
+    static var discard_changes_title: String {
+        STPLocalizedString(
+            "Discard changes?",
+            "Title of a confirmation alert shown when the customer tries to close the address form after making changes."
+        )
+    }
+
+    static var discard_changes_message: String {
+        STPLocalizedString(
+            "Your address changes won't be saved.",
+            "Message of a confirmation alert warning the customer that closing the address form will discard their unsaved changes."
+        )
+    }
+
+    static var discard_changes: String {
+        STPLocalizedString(
+            "Discard Changes",
+            "Button title in a confirmation alert that discards the customer's unsaved address changes and closes the form."
+        )
+    }
+
+    static var keep_editing: String {
+        STPLocalizedString(
+            "Keep Editing",
+            "Button title in a confirmation alert that dismisses the alert and returns the customer to editing their address."
+        )
+    }
+
     static var confirm_your_information: String {
         STPLocalizedString("Confirm your information", "Title label for a know-your-customer (KYC) verification screen")
     }
@@ -696,6 +773,14 @@ extension String.Localized {
 
     static var user_attestation: String {
         STPLocalizedString("Declarations", "Title label for a screen showing user attestation")
+    }
+
+    static var terms_and_conditions: String {
+        STPLocalizedString("Terms and Conditions", "Title label for a screen showing terms and conditions")
+    }
+
+    static var terms_of_service: String {
+        STPLocalizedString("Terms of Service", "Title label for a screen showing terms of service")
     }
 
     static var accept: String {
@@ -745,13 +830,6 @@ extension String.Localized {
         STPLocalizedString(
             "Subtotal",
             "Label for the subtotal row in an order summary, before tax/shipping/discounts."
-        )
-    }
-
-    static var shipping: String {
-        STPLocalizedString(
-            "Shipping",
-            "Label for the shipping cost row in an order summary."
         )
     }
 

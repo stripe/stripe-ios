@@ -6,22 +6,97 @@
 //
 
 @_spi(STP) import StripeCore
+@_spi(STP) import StripePayments
 
 enum ExpressCheckoutElementUtilities {
-    static func resolveButtons(for session: Checkout.Session, configuration: Checkout.Configuration) -> [ExpressButton] {
-        var buttons: [ExpressButton] = []
-        for button in session.availableExpressButtonTypes {
-            switch button {
+    enum LinkDisabledReason: String {
+        case notSupportedInSession = "not_supported_in_session"
+        case linkConfiguration = "link_configuration"
+        case shippingAddressCollection = "shipping_address_collection"
+        case automaticTaxAddress = "automatic_tax_address"
+    }
+
+    static func availablePaymentMethods(
+        for elementsSession: STPElementsSession,
+        configuration: ExpressCheckoutElement.Configuration
+    ) -> [ExpressCheckoutElement.PaymentMethod] {
+        var paymentMethods: [ExpressCheckoutElement.PaymentMethod] = []
+        for paymentMethod in availablePaymentMethodTypes(for: elementsSession) {
+            switch paymentMethod {
             case .applePay:
-                if configuration.applePayConfiguration != nil && StripeAPI.deviceSupportsApplePay() {
-                    buttons.append(.applePay)
+                if let applePayConfiguration = configuration.applePayConfiguration,
+                   applePayConfiguration.display != .never,
+                   StripeAPI.deviceSupportsApplePay() {
+                    paymentMethods.append(paymentMethod)
                 }
             case .link:
-                if configuration.linkConfiguration?.display != .never {
-                    buttons.append(.link)
+                if linkDisabledReasons(for: elementsSession, configuration: configuration).isEmpty {
+                    paymentMethods.append(paymentMethod)
                 }
             }
         }
-        return buttons
+        guard let paymentMethodOrder = configuration.paymentMethodOrder else {
+            return paymentMethods
+        }
+
+        var remainingPaymentMethods = paymentMethods
+        var orderedPaymentMethods: [ExpressCheckoutElement.PaymentMethod] = []
+        for paymentMethod in paymentMethodOrder {
+            guard
+                let index = remainingPaymentMethods.firstIndex(where: {
+                    $0.rawValue.caseInsensitiveCompare(paymentMethod) == .orderedSame
+                }),
+                !orderedPaymentMethods.contains(where: {
+                    $0.rawValue.caseInsensitiveCompare(paymentMethod) == .orderedSame
+                })
+            else {
+                continue
+            }
+            orderedPaymentMethods.append(remainingPaymentMethods.remove(at: index))
+        }
+        orderedPaymentMethods.append(contentsOf: remainingPaymentMethods)
+        return orderedPaymentMethods
+    }
+
+    static func linkDisabledReasons(
+        for elementsSession: STPElementsSession,
+        configuration: ExpressCheckoutElement.Configuration
+    ) -> [LinkDisabledReason] {
+        var reasons: [LinkDisabledReason] = []
+
+        if !availablePaymentMethodTypes(for: elementsSession).contains(.link) {
+            reasons.append(.notSupportedInSession)
+        }
+        if configuration.linkConfiguration.display == .never {
+            reasons.append(.linkConfiguration)
+        }
+        if configuration.shippingAddressRequired {
+            reasons.append(.shippingAddressCollection)
+        }
+        if elementsSession.disableLinkForAutomaticTaxBilling {
+            reasons.append(.automaticTaxAddress)
+        }
+
+        return reasons
+    }
+
+    private static func availablePaymentMethodTypes(
+        for elementsSession: STPElementsSession
+    ) -> [ExpressCheckoutElement.PaymentMethod] {
+        var types: [ExpressCheckoutElement.PaymentMethod] = []
+        for type in elementsSession.orderedPaymentMethodTypesAndWallets {
+            switch type {
+            case "apple_pay" where !types.contains(.applePay) && elementsSession.isApplePayEnabled:
+                types.append(.applePay)
+            case "link" where !types.contains(.link):
+                types.append(.link)
+            default:
+                continue
+            }
+        }
+        if elementsSession.linkPassthroughModeEnabled, !types.contains(.link) {
+            types.append(.link)
+        }
+        return types
     }
 }

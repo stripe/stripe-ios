@@ -37,6 +37,7 @@ struct FinancialConnectionsSessionManifest: Decodable {
         case unparsable
 
         // client-side only panes
+        case genericError = "generic_error"
         case resetFlow = "reset_flow"
         case terminalError = "terminal_error"
     }

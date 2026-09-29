@@ -36,7 +36,7 @@ final class AUBECSLegalTermsView: UIView {
         return textView
     }()
 
-    init(configuration: PaymentSheetFormFactoryConfig, textAlignment: NSTextAlignment = .left) {
+    init(configuration: PaymentSheetFormFactoryConfig, textAlignment: NSTextAlignment = .natural) {
         self.configuration = configuration
         super.init(frame: .zero)
         self.textView.textAlignment = textAlignment

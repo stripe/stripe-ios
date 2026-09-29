@@ -156,7 +156,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
         self.elementsSession = loadResult.elementsSession
         self.configuration = configuration
         self.isApplePayEnabled = PaymentSheet.isApplePayEnabled(elementsSession: elementsSession, configuration: configuration)
-        self.isLinkEnabled = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration)
+        self.isLinkEnabled = PaymentSheet.shouldShowLinkButton(elementsSession: elementsSession, configuration: configuration)
         self.isCVCRecollectionEnabled = isCVCRecollectionEnabled
         self.delegate = delegate
         self.savedPaymentOptionsViewController = SavedPaymentOptionsViewController(
@@ -576,7 +576,8 @@ extension PaymentSheetViewController: SavedPaymentOptionsViewControllerDelegate 
 
     func didUpdateSelection(
         viewController: SavedPaymentOptionsViewController,
-        paymentMethodSelection: SavedPaymentOptionsViewController.Selection
+        paymentMethodSelection: SavedPaymentOptionsViewController.Selection,
+        previousSelection: SavedPaymentOptionsViewController.SelectionSnapshot
     ) {
         analyticsHelper.logSavedPMScreenOptionSelected(option: paymentMethodSelection)
         if case .add = paymentMethodSelection {

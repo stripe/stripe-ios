@@ -68,6 +68,73 @@ class STPPPaymentMethodPaymentSheetTests: XCTestCase {
         XCTAssertTrue(updatedPaymentMethod.isLinkOrigin)
     }
 
+    func testUpdateLocalFields_preservesCardArt() {
+        // Given a card with card art (only returned by v1/elements/sessions)...
+        let originalPaymentMethod = STPPaymentMethod._testCardWithCardArt()
+        XCTAssertEqual(originalPaymentMethod.cardArtProgramName, "Test Program")
+
+        // ...and an updated card from the update endpoint, which has no card art
+        let updatedPaymentMethod = STPPaymentMethod._testCard()
+        XCTAssertNil(updatedPaymentMethod.card?.cardArt)
+
+        // When the local fields are carried over
+        updatedPaymentMethod.updateLocalFields(from: originalPaymentMethod)
+
+        // Then the card art, and therefore the program name, survives the update
+        XCTAssertEqual(updatedPaymentMethod.card?.cardArt?.artImage?.url, originalPaymentMethod.card?.cardArt?.artImage?.url)
+        XCTAssertEqual(updatedPaymentMethod.cardArtProgramName, "Test Program")
+    }
+
+    // MARK: - cardArtProgramName
+
+    func testCardArtProgramName_returnsProgramName() {
+        // Given a card with both card art and a program name
+        let paymentMethod = STPPaymentMethod._testCardWithCardArt()
+
+        // Then the program name is returned
+        XCTAssertEqual(paymentMethod.cardArtProgramName, "Test Program")
+    }
+
+    func testCardArtProgramName_isNilWithoutCardArt() {
+        // Given a card with no card art at all
+        let paymentMethod = STPPaymentMethod._testCard()
+
+        // Then there is no program name
+        XCTAssertNil(paymentMethod.cardArtProgramName)
+    }
+
+    func testCardArtProgramName_isNilWithoutArtImage() {
+        // Given a card whose card art has a program name but no art image...
+        let paymentMethod = STPPaymentMethod._testCard()
+        paymentMethod.card?.cardArt = STPPaymentMethodCardArt.decodedObject(fromAPIResponse: [
+            "program_name": "Test Program",
+        ])
+
+        // Then there is no program name, since program names are only shown alongside card art
+        XCTAssertNil(paymentMethod.cardArtProgramName)
+    }
+
+    func testCardArtProgramName_isNilWhenProgramNameMissing() {
+        // Given a card whose card art has an art image but no program name
+        let paymentMethod = STPPaymentMethod._testCard()
+        paymentMethod.card?.cardArt = STPPaymentMethodCardArt.decodedObject(fromAPIResponse: [
+            "art_image": ["url": "https://example.com/art.png"],
+        ])
+
+        XCTAssertNil(paymentMethod.cardArtProgramName)
+    }
+
+    func testCardArtProgramName_isNilWhenProgramNameIsEmpty() {
+        // Given a card whose card art has an empty program name
+        let paymentMethod = STPPaymentMethod._testCard()
+        paymentMethod.card?.cardArt = STPPaymentMethodCardArt.decodedObject(fromAPIResponse: [
+            "art_image": ["url": "https://example.com/art.png"],
+            "program_name": "",
+        ])
+
+        XCTAssertNil(paymentMethod.cardArtProgramName)
+    }
+
     func testHasUpdatedCardParams() {
         XCTAssertFalse(_testHasUpdatedCardParams(STPPaymentMethod._testCard(), expMonth: 01, expYear: 40))
         XCTAssertTrue(_testHasUpdatedCardParams(STPPaymentMethod._testCard(), expMonth: 01, expYear: 41))

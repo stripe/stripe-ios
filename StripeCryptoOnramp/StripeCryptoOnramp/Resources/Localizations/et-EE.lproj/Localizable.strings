@@ -1,5 +1,13 @@
 "Debit cards are most likely to be accepted." = "Kõige tõenäolisemalt aktsepteeritakse deebetkaarte.";
 
+"Document uploaded successfully" = "Dokument on edukalt üles laaditud";
+
+"Please try again later." = "Proovige hiljem uuesti.";
+
+"Submitted for review" = "Esitatud ülevaatamiseks";
+
+"Tell us about your source of funds" = "Rääkige meile oma rahaliste vahendite allikast";
+
 "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "Seda rakendust ei saanud kinnitada atesteerimisvea tõttu. Palun proovige hiljem uuesti või võtke ühendust arendajaga, kui probleem püsib.";
 
 "This app couldn't be verified. Contact the app developer for help." = "Seda rakendust ei saanud kontrollida. Abi saamiseks võtke ühendust rakenduse arendajaga.";
@@ -12,4 +20,14 @@
 
 "This wallet verification request is invalid. Please try again." = "See rahakoti kinnitamise taotlus on kehtetu. Palun proovige uuesti.";
 
+"Upload your proof of address" = "Laadige üles oma aadressitõend";
+
 "We couldn't verify ownership of this wallet. Please try again." = "Me ei suutnud selle rahakoti omandiõigust kinnitada. Palun proovige uuesti.";
+
+"We may request proof of address for larger transactions." = "Suuremate tehingute puhul võime küsida aadressitõendit.";
+
+"We may request source of funds for larger transactions." = "Suuremate tehingute puhul võime küsida rahaliste vahendite päritolu.";
+
+"We’re reviewing your documents. We’ll let you know when verification is complete." = "Vaatame teie dokumente üle. Anname teile teada, kui kinnitamine on lõpule viidud.";
+
+"You can continue while we verify your document in the background." = "Saate jätkata, samal ajal kui me teie dokumenti taustal kontrollime.";

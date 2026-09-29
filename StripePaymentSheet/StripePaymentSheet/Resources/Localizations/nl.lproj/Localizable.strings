@@ -46,6 +46,8 @@
 
 "Buy now or pay later with Klarna" = "Koop nu of betaal later met Klarna";
 
+"By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "Door je betaling met NICEPAY te bevestigen, stem je in dat %@ toekomstige betalingen in rekening kan brengen bij deze betaalmethode volgens hun voorwaarden.";
+
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Als je je betaling met PayPal bevestigt, geef je %@ toestemming om toekomstige betalingen af te schrijven van je PayPal-rekening in overeenstemming met hun voorwaarden.";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Als je doorgaat naar Amazon Pay, geef je %@ toestemming om toekomstige betalingen in rekening te brengen op je Amazon Pay-account in overeenstemming met hun voorwaarden.";
@@ -86,6 +88,8 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Als je je bankrekening voor %@ opslaat, ga je ermee akkoord betalingen in overeenstemming met <terms>deze voorwaarden</terms> te autoriseren.";
 
+"By saving your payment information, you allow %@ to charge you for future payments in accordance with their terms." = "Door je betaalgegevens op te slaan, geef je %@ toestemming om toekomstige betalingen bij jou in rekening te brengen in overeenstemming met hun voorwaarden.";
+
 "By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "Door je bestelling bij %1$@ en %2$@ te plaatsen, ga je ermee akkoord dat je gegevens bij %3$@ opgeslagen worden voor toekomstige aankopen en autoriseer je betalingen in overeenstemming met <terms>deze voorwaarden</terms>.";
 
 "By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Door je bestelling te plaatsen bij %@, autoriseer je betalingen in overeenstemming met <terms>deze voorwaarden</terms>.";
@@ -108,9 +112,15 @@
 
 "Code sent" = "Code verstuurd";
 
+"Complete the payment using Pix to finish the purchase." = "Rond de betaling af met Pix om de aankoop te voltooien.";
+
 "Confirm" = "Bevestigen";
 
 "Confirm payment details" = "Betaalgegevens bevestigen";
+
+"Confirm the Bizum payment in your mobile banking application within %@ to complete the purchase." = "Bevestig de Bizum-betaling binnen %@ in je mobiele bankapp om de aankoop te voltooien.";
+
+"Confirm the payment in your MB WAY app within %@ to complete the purchase." = "Bevestig de betaling binnen %@ in je MB WAY-app om de aankoop te voltooien.";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Bevestig de betaling via je bank of betaal-app binnen %@ om de aankoop af te ronden.";
 
@@ -136,9 +146,15 @@
 
 "Did you mean %@? %@." = "Bedoelde je %1$@? %2$@.";
 
+"Discard Changes" = "Wijzigingen verwijderen";
+
+"Discard changes?" = "Wijzigingen verwijderen?";
+
 "Discount" = "Korting";
 
 "EPS Bank" = "EPS Bank";
+
+"Edit address" = "Adres bewerken";
 
 "Enter address manually" = "Adres handmatig invoeren";
 
@@ -157,6 +173,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Ik begrijp dat Stripe namens %@ bedragen via automatische incasso gaat afschrijven en ik bevestig dat ik als rekeninghouder de enige vereiste persoon ben om afschrijvingen van deze rekening te autoriseren.";
 
 "IBAN" = "IBAN";
+
+"Keep Editing" = "Doorgaan met bewerken";
 
 "Last 4 digits of SSN" = "Laatste 4 cijfers van BSN";
 
@@ -177,6 +195,10 @@
 "Manage your payment methods" = "Uw betaalmethoden beheren";
 
 "Name on card" = "Naam op betaalkaart";
+
+"Naver Pay Card" = "Naver Pay Card";
+
+"Naver Pay Money/Point" = "Naver Pay Money/Point";
 
 "New card" = "Nieuwe betaalkaart";
 
@@ -234,8 +256,6 @@
 
 "Point the camera at your card." = "Richt de camera op de kaart.";
 
-"Processing..." = "Verwerken...";
-
 "Przelewy24 Bank" = "Przelewy24 Bank";
 
 "Remove %@" = "Verwijder %@";
@@ -274,6 +294,8 @@
 
 "Select card" = "Betaalkaart selecteren";
 
+"Select how you want to pay:" = "Selecteer hoe je wilt betalen:";
+
 "Select payment method" = "Betaalmethode selecteren";
 
 "Select your payment method" = "Betaalmethode selecteren";
@@ -283,8 +305,6 @@
 "Set as default payment method" = "Instellen als standaardbetaalmethode";
 
 "Set up" = "Instellen";
-
-"Shipping" = "Verzending";
 
 "Shipping to %@ is not supported." = "Verzending naar %@ wordt niet ondersteund.";
 
@@ -312,6 +332,10 @@
 
 "Tax" = "Belasting";
 
+"Terms and Conditions" = "Algemene voorwaarden";
+
+"Terms of Service" = "Servicevoorwaarden";
+
 "The IBAN you entered is incomplete." = "Het opgegeven IBAN-nummer is onvolledig.";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Het opgegeven IBAN-nummer is ongeldig: \"%@\" is geen ondersteunde landcode.";
@@ -319,6 +343,8 @@
 "The provided verification code has expired." = "De opgegeven verificatiecode is verlopen.";
 
 "The provided verification code is incorrect." = "De opgegeven verificatiecode is onjuist.";
+
+"This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Dit is een internationale aankoop die exclusief 3,5% IOF-kosten is. Als je doorgaat, erken en accepteer je <terms>de voorwaarden van Ebanx</terms>.";
 
 "This is your default" = "Dit is je standaard";
 
@@ -339,3 +365,5 @@
 "Yes, update" = "Ja, bijwerken";
 
 "Your IBAN should start with a two-letter country code." = "Het IBAN-nummer moet beginnen met een landcode van twee letters.";
+
+"Your address changes won't be saved." = "Jouw adreswijzigingen worden niet opgeslagen.";

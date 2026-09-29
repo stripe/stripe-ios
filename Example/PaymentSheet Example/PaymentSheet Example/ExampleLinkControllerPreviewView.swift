@@ -76,6 +76,29 @@ struct ExampleLinkControllerPreviewView: View {
                         .pickerStyle(.segmented)
                     }
 
+                    DemoSection(title: "Financial Connections Permissions") {
+                        VStack(alignment: .leading, spacing: 16) {
+                            ForEach(LinkControllerDemoConfiguration.FCPermission.allCases, id: \.self) { permission in
+                                Button {
+                                    if configuration.requestedFCPermissions.contains(permission) {
+                                        configuration.requestedFCPermissions.remove(permission)
+                                    } else {
+                                        configuration.requestedFCPermissions.insert(permission)
+                                    }
+                                } label: {
+                                    HStack(spacing: 12) {
+                                        Image(systemName: configuration.requestedFCPermissions.contains(permission) ? "checkmark.square.fill" : "square")
+                                            .foregroundColor(configuration.requestedFCPermissions.contains(permission) ? .blue : .gray)
+                                        Text(permission.displayName)
+                                            .foregroundColor(.primary)
+                                        Spacer()
+                                    }
+                                }
+                                .buttonStyle(.plain)
+                            }
+                        }
+                    }
+
                     DemoSection(title: "Intent Mode") {
                         VStack(alignment: .leading, spacing: 16) {
                             Picker("Intent Mode", selection: $configuration.intentMode) {

@@ -46,6 +46,8 @@
 
 "Buy now or pay later with Klarna" = "Cumpărați acum sau plătiți mai târziu folosind Klarna";
 
+"By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "Prin confirmarea plății cu NICEPAY, permiteți ca %@ să taxeze această metodă de plată pentru plăți viitoare în conformitate cu termenii săi.";
+
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Prin confirmarea plății cu PayPal, permiteți %@ să vă taxeze contul PayPal pentru plățile viitoare în conformitate cu termenii acesteia.";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Prin continuarea către Amazon Pay, permiteți %@ să vă taxeze contul Amazon Pay pentru plățile viitoare în conformitate cu termenii acesteia.";
@@ -86,6 +88,8 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Prin salvarea contului dvs. bancar pentru %@ sunteți de acord să autorizați plățile în conformitate cu <terms>acești termeni</terms>.";
 
+"By saving your payment information, you allow %@ to charge you for future payments in accordance with their terms." = "Prin salvarea informațiilor de plată, permiteți %@ să vă taxeze pentru plăți viitoare în conformitate cu termenii acestora.";
+
 "By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "Prin trimiterea comenzii dvs. către %1$@ și %2$@, sunteți de acord să salvați informațiile dvs. în %3$@ pentru achiziții viitoare și sunteți de acord să autorizați plățile în conformitate cu <terms>acești termeni</terms>.";
 
 "By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Prin trimiterea comenzii dvs. către %@, sunteți de acord să autorizați plățile în conformitate cu <terms>acești termeni</terms>.";
@@ -108,9 +112,15 @@
 
 "Code sent" = "Codul a fost trimis";
 
+"Complete the payment using Pix to finish the purchase." = "Finalizați plata folosind Pix pentru a încheia achiziția.";
+
 "Confirm" = "Confirmare";
 
 "Confirm payment details" = "Confirmare detalii de plată";
+
+"Confirm the Bizum payment in your mobile banking application within %@ to complete the purchase." = "Confirmați plata Bizum în aplicația de servicii bancare pentru dispozitive mobile în %@ pentru a finaliza achiziția.";
+
+"Confirm the payment in your MB WAY app within %@ to complete the purchase." = "Confirmați plata în aplicația MB WAY în %@ pentru a finaliza achiziția.";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Confirmați plata în aplicația băncii dvs. sau în aplicația de plăți în termen de %@ pentru a finaliza achiziția.";
 
@@ -136,9 +146,15 @@
 
 "Did you mean %@? %@." = "Ați vrut să spuneți %1$@? %2$@.";
 
+"Discard Changes" = "Renunțare la modificări";
+
+"Discard changes?" = "Renunțați la modificări?";
+
 "Discount" = "Reducere";
 
 "EPS Bank" = "Banca EPS";
+
+"Edit address" = "Editare adresă";
 
 "Enter address manually" = "Introduceți adresa manual";
 
@@ -157,6 +173,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Înțeleg că Stripe va colecta debite directe în numele %@ și confirm că sunt titularul contului și singura persoană necesară pentru a autoriza debite din acest cont.";
 
 "IBAN" = "IBAN";
+
+"Keep Editing" = "Continuare editare";
 
 "Last 4 digits of SSN" = "Ultimele 4 cifre de la SSN";
 
@@ -177,6 +195,10 @@
 "Manage your payment methods" = "Gestionați metodele de plată";
 
 "Name on card" = "Numele titularului";
+
+"Naver Pay Card" = "Card Naver Pay";
+
+"Naver Pay Money/Point" = "Bani/Puncte Naver Pay";
 
 "New card" = "Card nou";
 
@@ -234,8 +256,6 @@
 
 "Point the camera at your card." = "Îndreptați camera spre cardul dvs.";
 
-"Processing..." = "Se procesează...";
-
 "Przelewy24 Bank" = "Banca Przelewy24";
 
 "Remove %@" = "Eliminare %@";
@@ -274,6 +294,8 @@
 
 "Select card" = "Selectare card";
 
+"Select how you want to pay:" = "Selectați cum doriți să plătiți:";
+
 "Select payment method" = "Selectare metodă de plată";
 
 "Select your payment method" = "Selectează metoda de plată";
@@ -283,8 +305,6 @@
 "Set as default payment method" = "Setează ca metodă de plată implicită";
 
 "Set up" = "Configurare";
-
-"Shipping" = "Expediere";
 
 "Shipping to %@ is not supported." = "Expedierea către %@ nu este acceptată.";
 
@@ -312,6 +332,10 @@
 
 "Tax" = "Taxă";
 
+"Terms and Conditions" = "Termeni și condiții";
+
+"Terms of Service" = "Termeni privind utilizarea serviciilor";
+
 "The IBAN you entered is incomplete." = "Codul IBAN pe care l-ați introdus nu este complet.";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "IBAN-ul introdus este nevalid, „%@” nu este un cod de țară acceptat.";
@@ -319,6 +343,8 @@
 "The provided verification code has expired." = "Codul de verificare furnizat a expirat.";
 
 "The provided verification code is incorrect." = "Codul de verificare furnizat este incorect.";
+
+"This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Aceasta este o achiziție internațională și exclude o taxă IOF de 3,5 %. Continuând, confirmați că ați luat la cunoștință și acceptați <terms>termenii și condițiile Ebanx</terms>.";
 
 "This is your default" = "Aceasta este setarea dvs. implicită";
 
@@ -339,3 +365,5 @@
 "Yes, update" = "Da, actualizare";
 
 "Your IBAN should start with a two-letter country code." = "Codul dvs. IBAN trebuie să înceapă cu un cod de țară format din două litere.";
+
+"Your address changes won't be saved." = "Modificările aplicate adresei nu vor fi salvate.";

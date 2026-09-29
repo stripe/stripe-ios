@@ -94,7 +94,7 @@ public final class EmbeddedPaymentElementViewModel: ObservableObject {
         }
     }
 
-    /// Asynchronously loads the EmbeddedPaymentElementViewModel using a Checkout.Session.
+    /// Asynchronously loads the EmbeddedPaymentElementViewModel using a CheckoutController.Session.
     /// This function should only be called once to initially load the EmbeddedPaymentElementViewModel.
     /// - Parameter checkout: A fully loaded Checkout object.
     /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, customer details, etc.
@@ -103,7 +103,7 @@ public final class EmbeddedPaymentElementViewModel: ObservableObject {
     @_spi(STP)
     @_spi(ReactNativeSDK)
     public func load(
-        checkout: Checkout,
+        checkout: CheckoutController,
         configuration: EmbeddedPaymentElement.Configuration
     ) async throws {
         // If we already have a load task (whether it's in progress or finished), throw an error
@@ -166,7 +166,7 @@ public final class EmbeddedPaymentElementViewModel: ObservableObject {
     /// - Returns: The result of the update. Any calls made to `update` before this call that are still in progress will return a `.canceled` result.
     /// - Note: Upon completion, `paymentOption` may become nil if it's no longer available.
     func update(
-        checkout: Checkout
+        checkout: CheckoutController
     ) async -> EmbeddedPaymentElement.UpdateResult {
         // Wait for the load task to complete if it exists
         if let loadTask = self.loadTask {

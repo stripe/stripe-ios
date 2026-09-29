@@ -34,6 +34,8 @@ class STPPaymentMethodTest: XCTestCase {
         XCTAssertEqual(STPPaymentMethod.type(from: "sepa_debit"), STPPaymentMethodType.SEPADebit)
         XCTAssertEqual(STPPaymentMethod.type(from: "SEPA_DEBIT"), STPPaymentMethodType.SEPADebit)
         XCTAssertEqual(STPPaymentMethod.type(from: "multibanco"), STPPaymentMethodType.multibanco)
+        XCTAssertEqual(STPPaymentMethod.type(from: "vipps"), STPPaymentMethodType.vipps)
+        XCTAssertEqual(STPPaymentMethod.type(from: "VIPPS"), STPPaymentMethodType.vipps)
         XCTAssertEqual(
             STPPaymentMethod.type(from: "card_present"),
             STPPaymentMethodType.cardPresent
@@ -55,6 +57,7 @@ class STPPaymentMethodTest: XCTestCase {
             "bacs_debit",
             "au_becs_debit",
             "multibanco",
+            "vipps",
         ]
         let expectedTypes: [STPPaymentMethodType] = [
             .card,
@@ -65,6 +68,7 @@ class STPPaymentMethodTest: XCTestCase {
             .bacsDebit,
             .AUBECSDebit,
             .multibanco,
+            .vipps,
         ]
         XCTAssertEqual(STPPaymentMethod.paymentMethodTypes(from: rawTypes), expectedTypes)
     }
@@ -82,6 +86,7 @@ class STPPaymentMethodTest: XCTestCase {
             .alipay,
             .payPal,
             .multibanco,
+            .vipps,
             .unknown,
         ]
         for type in values {
@@ -118,6 +123,8 @@ class STPPaymentMethodTest: XCTestCase {
                 XCTAssertEqual(string, "grabpay")
             case .multibanco:
                 XCTAssertEqual(string, "multibanco")
+            case .vipps:
+                XCTAssertEqual(string, "vipps")
             case .unknown:
                 XCTAssertNil(string)
             default:

@@ -7,6 +7,7 @@
 
 import PassKit
 @_spi(STP) import StripeCore
+@_spi(STP) import StripeUICore
 import UIKit
 
 /// A UIKit view that displays wallet payment buttons (Apple Pay, Link).
@@ -17,14 +18,14 @@ public final class ExpressCheckoutElementUIView: UIView {
 
     // MARK: - Private Properties
 
-    private let configuration: Checkout.Configuration
+    private let configuration: ExpressCheckoutElement.Configuration
     private let stackView = UIStackView()
     private var linkBrand: LinkBrand
     private weak var delegate: ExpressCheckoutElementDelegate?
 
     // MARK: - Init
 
-    init(session: Checkout.Session, configuration: Checkout.Configuration, delegate: ExpressCheckoutElementDelegate) {
+    init(session: CheckoutController.Session, configuration: ExpressCheckoutElement.Configuration, delegate: ExpressCheckoutElementDelegate) {
         self.configuration = configuration
         self.delegate = delegate
         self.linkBrand = session.elementsSession.linkBrand ?? .link
@@ -43,8 +44,6 @@ public final class ExpressCheckoutElementUIView: UIView {
             stackView.bottomAnchor.constraint(equalTo: bottomAnchor),
         ])
 
-        let buttons = ExpressCheckoutElementUtilities.resolveButtons(for: session, configuration: configuration)
-        buttons.forEach { stackView.addArrangedSubview(makeButton(for: $0)) }
     }
 
     @available(*, unavailable)
@@ -54,10 +53,12 @@ public final class ExpressCheckoutElementUIView: UIView {
 
     // MARK: - Internal Methods
 
-    func update(with session: Checkout.Session) {
+    func update(
+        with session: CheckoutController.Session,
+        buttons: [ExpressCheckoutElement.PaymentMethod]
+    ) {
         linkBrand = session.elementsSession.linkBrand ?? .link
         stackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
-        let buttons = ExpressCheckoutElementUtilities.resolveButtons(for: session, configuration: configuration)
         buttons.forEach { stackView.addArrangedSubview(makeButton(for: $0)) }
         invalidateIntrinsicContentSize()
     }
@@ -73,8 +74,8 @@ public final class ExpressCheckoutElementUIView: UIView {
 
     // MARK: - Private Methods
 
-    private func makeButton(for button: ExpressButton) -> UIView {
-        switch button {
+    private func makeButton(for paymentMethod: ExpressCheckoutElement.PaymentMethod) -> UIView {
+        switch paymentMethod {
         case .applePay:
             return makeApplePayButton()
         case .link:
@@ -104,10 +105,21 @@ public final class ExpressCheckoutElementUIView: UIView {
     }
 
     @objc private func handleApplePayTapped() {
-        // TODO: Handle Apple Pay
+        confirm(.applePay)
     }
 
     @objc private func handleLinkTapped() {
-        // TODO: Handle Link
+        confirm(.link)
+    }
+
+    private func confirm(_ paymentMethod: ExpressCheckoutElement.PaymentMethod) {
+        Task { @MainActor [weak self] in
+            guard let self else { return }
+            guard let result = await self.delegate?.expressCheckoutElementShouldConfirm(
+                paymentMethod,
+                presentationWindow: window
+            ) else { return }
+            self.configuration.confirmHandler(result)
+        }
     }
 }

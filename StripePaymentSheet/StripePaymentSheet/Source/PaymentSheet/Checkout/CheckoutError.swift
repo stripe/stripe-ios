@@ -9,9 +9,7 @@
 import Foundation
 
 /// An error returned by ``Checkout``.
-@_spi(STP)
-@_spi(ReactNativeSDK)
-public enum CheckoutError: Error, LocalizedError, Sendable {
+enum CheckoutError: Error, LocalizedError, Sendable {
     /// The client secret provided to ``Checkout`` is empty.
     case invalidClientSecret
 
@@ -21,14 +19,18 @@ public enum CheckoutError: Error, LocalizedError, Sendable {
     /// A pending Checkout operation did not complete before the timeout elapsed.
     case timedOut
 
+    /// The provided shipping country is not in the session's list of allowed shipping countries.
     case invalidShippingCountry(countryCode: String)
 
     /// The Stripe API returned an error with the given message.
     case apiError(message: String)
 
+    /// An unexpected error occurred in the Checkout SDK.
+    case unknown(debugDescription: String)
+
     // MARK: - LocalizedError
 
-    public var errorDescription: String? {
+    var errorDescription: String? {
         switch self {
         case .invalidClientSecret:
             return "Checkout was initialized with an empty client secret."
@@ -40,6 +42,8 @@ public enum CheckoutError: Error, LocalizedError, Sendable {
             return "Country code '\(countryCode)' is not in allowedShippingCountries"
         case .apiError(let message):
             return message
+        case .unknown(let debugDescription):
+            return debugDescription
         }
     }
 }

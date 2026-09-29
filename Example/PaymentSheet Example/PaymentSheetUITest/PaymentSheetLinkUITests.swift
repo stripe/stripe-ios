@@ -122,13 +122,13 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
 
         app.buttons["Payment method"].waitForExistenceAndTap()
         app.buttons["Link"].waitForExistenceAndTap()
-        app.buttons["Confirm"].waitForExistenceAndTap()
         let codeField = app.textViews["Code field"]
         _ = codeField.waitForExistence(timeout: 5.0)
         codeField.typeText("000000")
         let pwlController = app.otherElements["Stripe.Link.PayWithLinkViewController"]
-        let payButton = pwlController.buttons["Pay $50.99"]
-        _ = payButton.waitForExistenceAndTap()
+        let continueButton = pwlController.buttons["Continue"]
+        _ = continueButton.waitForExistenceAndTap()
+        app.buttons["Confirm"].waitForExistenceAndTap()
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
     }
 

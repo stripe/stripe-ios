@@ -16,7 +16,7 @@ import UIKit
         as? FinancialConnectionsSDKInterface.Type
 
     static let FinancialConnectionsLiteImplementation: FinancialConnectionsSDKInterface.Type? =
-        NSClassFromString("StripePaymentSheet.FCLiteImplementation")
+        NSClassFromString("StripeFinancialConnectionsLite.FCLiteImplementation")
         as? FinancialConnectionsSDKInterface.Type
 
     @_spi(STP) public static var fcLiteKillswitchEnabled: Bool = false
@@ -90,18 +90,24 @@ import UIKit
 }
 
 final class StubbedConnectionsSDKInterface: FinancialConnectionsSDKInterface {
+    /// Captures the most recently received `preCollectedConsent`, for tests to assert it was forwarded correctly.
+    static var lastReceivedPreCollectedConsent: FinancialConnectionsPreCollectedConsent?
+
     func presentFinancialConnectionsSheet(
         apiClient: STPAPIClient,
         clientSecret: String,
         returnURL: String?,
         existingConsumer: FinancialConnectionsConsumer?,
+        hasRequestedDataPermissions: Bool,
         style: FinancialConnectionsStyle,
         elementsSessionContext: ElementsSessionContext?,
+        preCollectedConsent: FinancialConnectionsPreCollectedConsent?,
         linkBrand: LinkBrand?,
         onEvent: ((FinancialConnectionsEvent) -> Void)?,
         from presentingViewController: UIViewController,
         completion: @escaping (FinancialConnectionsSDKResult) -> Void
     ) {
+        Self.lastReceivedPreCollectedConsent = preCollectedConsent
         DispatchQueue.main.async {
             let stubbedBank = FinancialConnectionsLinkedBank(
                 sessionId: "las_123",

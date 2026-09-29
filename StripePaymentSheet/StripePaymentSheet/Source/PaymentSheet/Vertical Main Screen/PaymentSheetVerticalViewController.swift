@@ -78,7 +78,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     let intent: Intent
     let elementsSession: STPElementsSession
     let formCache: PaymentMethodFormCache = .init()
-    weak var checkout: Checkout?
+    weak var checkoutBillingAddressUpdater: CheckoutSessionBillingAddressUpdater?
     let analyticsHelper: PaymentSheetAnalyticsHelper
     let walletButtonsShownExternally: Bool
     var error: Swift.Error?
@@ -163,7 +163,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         isFlowController: Bool,
         analyticsHelper: PaymentSheetAnalyticsHelper,
         walletButtonsViewState: PaymentSheet.WalletButtonsViewState = .hidden,
-        checkout: Checkout? = nil,
+        checkoutBillingAddressUpdater: CheckoutSessionBillingAddressUpdater? = nil,
         previousPaymentOption: PaymentOption? = nil
     ) {
         // Only call loadResult.intent.cvcRecollectionEnabled once per load
@@ -176,13 +176,13 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         self.configuration = configuration
         self.previousPaymentOption = previousPaymentOption
         self.isFlowController = isFlowController
-        self.checkout = checkout
+        self.checkoutBillingAddressUpdater = checkoutBillingAddressUpdater
         self.savedPaymentMethods = loadResult.savedPaymentMethods
         self.paymentMethodTypes = loadResult.paymentMethodTypes
         self.walletButtonsShownExternally = walletButtonsViewState.isVisible
         self.shouldShowApplePayInList = PaymentSheet.isApplePayEnabled(elementsSession: elementsSession, configuration: configuration) && isFlowController && Self.walletButtonsViewAllowsExpressType(.applePay, walletButtonsViewState: walletButtonsViewState, configuration: configuration)
         // Edge case: If Apple Pay isn't in the list, show Link as a wallet button and not in the list
-        self.shouldShowLinkInList = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration) && isFlowController && (shouldShowApplePayInList || walletButtonsViewState.showApplePay) && Self.walletButtonsViewAllowsExpressType(.link, walletButtonsViewState: walletButtonsViewState, configuration: configuration)
+        self.shouldShowLinkInList = PaymentSheet.shouldShowLinkButton(elementsSession: elementsSession, configuration: configuration) && isFlowController && (shouldShowApplePayInList || walletButtonsViewState.showApplePay) && Self.walletButtonsViewAllowsExpressType(.link, walletButtonsViewState: walletButtonsViewState, configuration: configuration)
         self.analyticsHelper = analyticsHelper
         super.init(nibName: nil, bundle: nil)
         // Link can be the customer's default even when it is rendered as a wallet button instead of a selected row.
@@ -220,7 +220,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             && !configuration.willUseWalletButtonsView {
             walletOptions.insert(.applePay)
         }
-        if PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration)
+        if PaymentSheet.shouldShowLinkButton(elementsSession: elementsSession, configuration: configuration)
             && !shouldShowLinkInList
             && !walletButtonsShownExternally
             && !configuration.willUseWalletButtonsView {
@@ -584,10 +584,25 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             intent: intent,
             elementsSession: elementsSession,
             analyticsHelper: analyticsHelper,
-            callback: { [weak self] confirmOption, _ in
+            callback: { [weak self] confirmOption, shouldReturnToPaymentSheet, _ in
                 guard let self else { return }
                 self.linkConfirmOption = confirmOption
-                self.flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
+
+                // A Link payment method was selected — report it and close the FlowController sheet.
+                guard confirmOption == nil else {
+                    self.flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
+                    return
+                }
+
+                // The user left Link without selecting it (e.g. tapped "Continue another way") or dismissed the
+                // Link sheet. PayWithNativeLinkController re-presents this sheet automatically, so we must NOT
+                // close the flow here. Clear a lingering Link selection so Link doesn't stay selected after the
+                // user chose to pay another way (matches presentNativeLinkInPlaceOfFlowController).
+                if shouldReturnToPaymentSheet,
+                   case .link(let option) = self.selectedPaymentOption,
+                   case .wallet = option {
+                    self.clearSelection()
+                }
             }
         )
     }
@@ -621,7 +636,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             visiblePaymentMethods.append(RowButtonType.applePay.analyticsIdentifier)
         }
         // if Link is showing as an express button
-        if PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration), !shouldShowLinkInList {
+        if PaymentSheet.shouldShowLinkButton(elementsSession: elementsSession, configuration: configuration), !shouldShowLinkInList {
             visiblePaymentMethods.append(RowButtonType.link.analyticsIdentifier)
         }
         paymentMethodListViewController?.rowButtons.forEach { rowButton in
@@ -793,7 +808,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     /// Syncs billing address to the checkout session, then closes the sheet.
     /// If the sync fails, stays on the sheet and shows the error instead.
     private func syncCheckoutBillingThenClose() {
-        guard let checkout,
+        guard let checkoutBillingAddressUpdater,
               let paymentOption = selectedPaymentOption else {
             flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
             return
@@ -808,7 +823,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         Task { @MainActor [weak self] in
             guard let self else { return }
             do {
-                try await checkout.syncBillingAddress(from: paymentOption.checkoutBillingDetails)
+                try await checkoutBillingAddressUpdater.syncBillingAddress(from: paymentOption.checkoutBillingDetails)
             } catch {
                 self.error = error
             }

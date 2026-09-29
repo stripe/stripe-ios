@@ -17,6 +17,7 @@ import UIKit
  This class creates a FormElement for a given payment method type and binds the FormElement's field values to an
  `IntentConfirmParams`.
  */
+@MainActor
 class PaymentSheetFormFactory {
     enum Error: Swift.Error {
         case unexpectedPaymentMethodType
@@ -276,17 +277,33 @@ class PaymentSheetFormFactory {
                 return makeiDEAL()
             case .wero:
                 return makeWero()
+            case .naverPay:
+                return makeNaverPay()
             case .SEPADebit:
                 return makeSepaDebit()
-            case .grabPay, .alipay, .paynow, .payPay, .mobilePay, .zip, .crypto,
-                 .billie, .sunbit, .alma, .payByBank:
+            case .grabPay, .paynow, .payPay, .mobilePay, .vipps, .zip, .crypto,
+                 .billie, .sunbit, .alma, .payByBank, .payco, .sequra, .scalapay:
                 return makeContactInformationAndBillingAddressForm()
+            case .pix:
+                return makePix()
+            case .alipay:
+                return makeContactInformationAndBillingAddressForm(
+                    additionalElements: makeSetupMandateElements(for: paymentMethod)
+                )
             case .promptPay, .multibanco:
                 return makeContactInformationAndBillingAddressForm(
                     emailRequired: true,
                     emailAPIPath: "billing_details[email]"
                 )
-            case .cashApp, .payPal, .revolutPay, .amazonPay, .satispay, .twint:
+            case .kakaoPay:
+                return makeContactInformationAndBillingAddressForm(
+                    emailRequired: true,
+                    emailAPIPath: "billing_details[email]",
+                    additionalElements: makeSetupMandateElements(for: paymentMethod)
+                )
+            case .mbWay, .bizum:
+                return makeContactInformationAndBillingAddressForm(phoneRequired: true)
+            case .cashApp, .payPal, .revolutPay, .amazonPay, .satispay, .twint, .krCard:
                 return makeContactInformationAndBillingAddressForm(
                     additionalElements: makeSetupMandateElements(for: paymentMethod)
                 )
@@ -319,6 +336,8 @@ class PaymentSheetFormFactory {
     private func makeSetupMandateElements(for paymentMethod: STPPaymentMethodType) -> [Element] {
         guard isSettingUp else { return [] }
         switch paymentMethod {
+        case .alipay:
+            return [makeAlipayMandate()]
         case .cashApp:
             return [makeCashAppMandate()]
         case .payPal:
@@ -331,6 +350,12 @@ class PaymentSheetFormFactory {
             return [makeSatispayMandate()]
         case .twint:
             return [makeTwintMandate()]
+        case .naverPay:
+            return [makeKoreanPaymentMethodMandate()]
+        case .krCard:
+            return [makeKoreanPaymentMethodMandate()]
+        case .kakaoPay:
+            return [makeKoreanPaymentMethodMandate()]
         default:
             return []
         }
@@ -393,6 +418,39 @@ extension PaymentSheetFormFactory {
                 params.paymentMethodParams.additionalAPIParameters[apiPath] = textField.text
             } else {
                 params.paymentMethodParams.nonnil_billingDetails.email = textField.text
+            }
+            return params
+        }
+    }
+
+    func makeDropdown(
+        label: String,
+        apiPath: String,
+        options: [(name: String, value: String)],
+        defaultValue: String? = nil,
+        paramsUpdater: ((String, IntentConfirmParams) -> Void)? = nil
+    ) -> PaymentMethodElementWrapper<DropdownFieldElement> {
+        let items = options.map {
+            DropdownFieldElement.DropdownItem(
+                pickerDisplayName: $0.name,
+                labelDisplayName: $0.name,
+                accessibilityValue: $0.name,
+                rawData: $0.value
+            )
+        }
+        let previousValue = defaultValue ?? getPreviousCustomerInput(for: apiPath)
+        let defaultIndex = items.firstIndex { $0.rawData == previousValue } ?? 0
+        let dropdown = DropdownFieldElement(
+            items: items,
+            defaultIndex: defaultIndex,
+            label: label,
+            theme: theme
+        )
+        return PaymentMethodElementWrapper(dropdown) { dropdown, params in
+            if let paramsUpdater {
+                paramsUpdater(dropdown.selectedItem.rawData, params)
+            } else {
+                params.paymentMethodParams.additionalAPIParameters[apiPath] = dropdown.selectedItem.rawData
             }
             return params
         }
@@ -608,7 +666,7 @@ extension PaymentSheetFormFactory {
         }
     }
 
-    static func makeBankMandateText(
+    nonisolated static func makeBankMandateText(
         isSettingUp: Bool,
         merchantName: String,
         sellerName: String?,
@@ -798,16 +856,43 @@ extension PaymentSheetFormFactory {
     func makeContactInformationAndBillingAddressForm(
         emailRequired: Bool = false,
         emailAPIPath: String? = nil,
+        phoneRequired: Bool = false,
         additionalElements: [Element] = []
     ) -> PaymentMethodElement {
         let contactInfoSection = makeContactInformationSection(
             nameRequiredByPaymentMethod: false,
             emailRequiredByPaymentMethod: emailRequired,
-            phoneRequiredByPaymentMethod: false,
+            phoneRequiredByPaymentMethod: phoneRequired,
             emailAPIPath: emailAPIPath
         )
         let billingDetails = makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
         let elements = [contactInfoSection, billingDetails].compactMap { $0 } + additionalElements
+        return makeDefaultsApplierWrapper(
+            for: FormElement(autoSectioningElements: elements, theme: theme)
+        )
+    }
+
+    func makeNaverPay() -> PaymentMethodElement {
+        let funding = makeDropdown(
+            label: String.Localized.naver_pay_funding_label,
+            apiPath: "naver_pay[funding]",
+            options: [
+                (String.Localized.naver_pay_card, "card"),
+                (String.Localized.naver_pay_money_point, "points"),
+            ],
+            defaultValue: previousCustomerInput?.paymentMethodParams.naverPay?.funding.stringValue,
+            paramsUpdater: { funding, params in
+                params.paymentMethodParams.naverPay?.funding = STPPaymentMethodNaverPayFunding(string: funding)
+            }
+        )
+        let contactInfoSection = makeContactInformationSection(
+            nameRequiredByPaymentMethod: false,
+            emailRequiredByPaymentMethod: false,
+            phoneRequiredByPaymentMethod: false
+        )
+        let billingDetails = makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
+        let elements = ([funding, contactInfoSection, billingDetails] as [Element?]).compactMap { $0 }
+            + makeSetupMandateElements(for: .naverPay)
         return makeDefaultsApplierWrapper(
             for: FormElement(autoSectioningElements: elements, theme: theme)
         )

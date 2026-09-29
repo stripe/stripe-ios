@@ -12,6 +12,7 @@ import UIKit
 @_spi(STP) import StripePayments
 @_spi(STP) import StripeUICore
 
+@MainActor
 protocol PayWithLinkViewControllerDelegate: AnyObject {
 
     func payWithLinkViewControllerDidConfirm(
@@ -43,6 +44,7 @@ protocol PayWithLinkViewControllerDelegate: AnyObject {
     )
 }
 
+@MainActor
 protocol PayWithLinkCoordinating: AnyObject {
     func confirm(
         with linkAccount: PaymentSheetLinkAccount,
@@ -68,16 +70,24 @@ protocol PayWithLinkCoordinating: AnyObject {
 /// Instantiate and present this controller when the user chooses to pay with Link.
 /// For internal SDK use only
 @objc(STP_Internal_PayWithLinkViewController)
+@MainActor
 final class PayWithLinkViewController: BottomSheetViewController {
 
-    enum LinkAccountError: Error {
+    enum LinkAccountError: LocalizedError {
         case noLinkAccount
+        case noFundingSources
 
-        var localizedDescription: String {
-            "No Link account is set"
+        var errorDescription: String? {
+            switch self {
+            case .noLinkAccount:
+                return "No Link account is set"
+            case .noFundingSources:
+                return "No supported payment methods available for this Link session"
+            }
         }
     }
 
+    @MainActor
     final class Context {
         let intent: Intent
         let elementsSession: STPElementsSession
@@ -113,7 +123,7 @@ final class PayWithLinkViewController: BottomSheetViewController {
         }
 
         /// Returns the supported payment details types for the current Link account, filtered by the supportedPaymentMethodTypes.
-        /// Returns [.card] as fallback if no types are supported after filtering.
+        /// Returns an empty set if no funding sources are available at the session-level, consumer-level, or their intersection.
         func getSupportedPaymentDetailsTypes(linkAccount: PaymentSheetLinkAccount) -> Set<ParsedEnum<ConsumerPaymentDetails.DetailsType>> {
             var allSupportedPaymentDetailsTypes = linkAccount.supportedPaymentDetailsTypes(for: elementsSession)
 
@@ -122,12 +132,7 @@ final class PayWithLinkViewController: BottomSheetViewController {
                 allSupportedPaymentDetailsTypes = allSupportedPaymentDetailsTypes.intersection(supportedPaymentDetailsTypes)
             }
 
-            if !allSupportedPaymentDetailsTypes.isEmpty {
-                return allSupportedPaymentDetailsTypes
-            } else {
-                // Card is the default payment method type when no other type is available.
-                return [ParsedEnum(.card)]
-            }
+            return allSupportedPaymentDetailsTypes
         }
 
         /// Creates a new Context object.
@@ -409,6 +414,12 @@ private extension PayWithLinkViewController {
         }
 
         let supportedPaymentDetailsTypesSet = context.getSupportedPaymentDetailsTypes(linkAccount: linkAccount)
+
+        guard !supportedPaymentDetailsTypesSet.isEmpty else {
+            finish(withResult: .failed(error: LinkAccountError.noFundingSources), deferredIntentConfirmationType: nil)
+            return
+        }
+
         let supportedPaymentDetailsTypes = supportedPaymentDetailsTypesSet.toSortedArray()
 
         Task { @MainActor in
@@ -586,9 +597,15 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
         sessionProvider { [weak self] sessionResult in
             switch sessionResult {
             case .success(let session):
+                let permissions = self?.context.linkConfiguration?.financialConnectionsPermissions
+                // The LAS response includes the default `payment_method` permission even when the merchant did not
+                // request data permissions. Use the normalized request to determine the session's authentication mode.
+                let requestedPermissions = (permissions?.isEmpty ?? true) ? nil : permissions
                 session.createLinkAccountSession(
                     linkMode: self?.context.elementsSession.linkSettings?.linkMode,
-                    intentToken: self?.context.intent.stripeId ?? self?.context.elementsSession.sessionID
+                    intentToken: self?.context.intent.stripeId ?? self?.context.elementsSession.sessionID,
+                    permissions: requestedPermissions,
+                    merchantToken: requestedPermissions == nil ? nil : self?.context.elementsSession.accountID
                 ) { [session, weak self] linkAccountSessionResult in
                     switch linkAccountSessionResult {
                     case .success(let linkAccountSession):
@@ -596,6 +613,7 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
                             with: linkAccountSession,
                             linkAccount: linkAccount,
                             consumerSession: session,
+                            hasRequestedDataPermissions: requestedPermissions != nil,
                             completion: completion
                         )
                     case .failure(let error):
@@ -612,6 +630,7 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
         with linkAccountSession: LinkAccountSession,
         linkAccount: PaymentSheetLinkAccount,
         consumerSession: ConsumerSession,
+        hasRequestedDataPermissions: Bool,
         completion: @escaping (PaymentSheetResult) -> Void
     ) {
         guard let financialConnectionsAPI = FinancialConnectionsSDKAvailability.financialConnections() else {
@@ -658,6 +677,7 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
             clientSecret: linkAccountSession.clientSecret,
             returnURL: context.configuration.returnURL,
             existingConsumer: consumer,
+            hasRequestedDataPermissions: hasRequestedDataPermissions,
             style: {
                 switch context.linkAppearance?.style {
                 case .alwaysLight: return .alwaysLight
@@ -674,20 +694,37 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
                 },
                 clientAttributionMetadata: clientAttributionMetadata
             ),
-            // Only `.onelink` should be treated as an explicit client override for FC.
-            // A `.link` selection should behave like no override so backend brand updates can still win.
-            linkBrand: context.configuration.link.brand == .onelink ? .onelink : nil,
+            preCollectedConsent: nil,
+            linkBrand: context.configuration.financialConnectionsLinkBrandOverride,
             onEvent: nil,
             from: self,
             completion: { result in
                 switch result {
                 case .completed(let financialConnectionsResult):
                     switch financialConnectionsResult {
+                    case .paymentDetails:
+                        completion(.completed)
                     case .linkedAccount(let id):
+                        guard !hasRequestedDataPermissions else {
+                            completion(.failed(error: PaymentSheetError.unknown(
+                                debugDescription: "Permissioned Link Account Session completed without generated payment details."
+                            )))
+                            return
+                        }
                         createPaymentDetails(linkedAccountId: id)
                     case .financialConnections(let linkedBank):
-                        createPaymentDetails(linkedAccountId: linkedBank.accountId)
+                        if hasRequestedDataPermissions {
+                            completion(.completed)
+                        } else {
+                            createPaymentDetails(linkedAccountId: linkedBank.accountId)
+                        }
                     case .instantDebits(let linkedBank):
+                        guard !hasRequestedDataPermissions else {
+                            completion(.failed(error: PaymentSheetError.unknown(
+                                debugDescription: "Permissioned Link Account Session completed without generated payment details."
+                            )))
+                            return
+                        }
                         guard let linkedAccountId = linkedBank.linkAccountId else { fallthrough }
                         createPaymentDetails(linkedAccountId: linkedAccountId)
                     @unknown default:

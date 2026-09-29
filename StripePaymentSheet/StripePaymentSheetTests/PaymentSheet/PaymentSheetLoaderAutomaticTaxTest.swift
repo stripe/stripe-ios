@@ -66,7 +66,7 @@ final class PaymentSheetLoaderAutomaticTaxTest: XCTestCase {
         guard case .checkout(let session) = incompleteIntent else {
             return XCTFail("Expected a Checkout Session intent")
         }
-        XCTAssertEqual(session.savedPaymentMethods.count, 1)
+        XCTAssertEqual(session.customer?.paymentMethods.count, 1)
     }
 
     func testOnlyFiltersCheckoutAutomaticTaxFromBilling() {

@@ -46,6 +46,8 @@
 
 "Buy now or pay later with Klarna" = "Платете сега или платете по-късно чрез Klarna";
 
+"By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "С потвърждаването на плащането си със NICEPAY разрешавате на %@ да дебитира този метод на плащане за бъдещи плащания в съответствие с техните условия.";
+
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Потвърждавайки плащането си в PayPal, разрешавате на %@ да таксува Вашия PayPal акаунт при бъдещи плащания съгласно условията му.";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Продължавайки към Amazon Pay, разрешавате на %@ да таксува Вашия акаунт в Amazon Pay за бъдещи плащания съгласно условията му.";
@@ -86,6 +88,8 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Като запазвате банковата си сметка за %@, Вие се съгласявате да оторизирате плащания съгласно <terms>тези условия</terms>.";
 
+"By saving your payment information, you allow %@ to charge you for future payments in accordance with their terms." = "Запазвайки вашата информация за плащане, Вие разрешавате на %@ да Ви дебитира за бъдещи плащания в съответствие с техните условия.";
+
 "By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "С изпращането на поръчката си до %1$@ и %2$@ се съгласявате да запазите информацията си в %3$@ за бъдещи покупки и се съгласявате да разрешите плащания съгласно <terms>тези условия</terms>.";
 
 "By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "С изпращането на поръчката си до %@ Вие се съгласявате да разрешите плащания съгласно <terms>тези условия</terms>.";
@@ -108,9 +112,15 @@
 
 "Code sent" = "Изпратен е код";
 
+"Complete the payment using Pix to finish the purchase." = "Завършете плащането чрез Pix, за да приключите покупката.";
+
 "Confirm" = "Потвърждаване";
 
 "Confirm payment details" = "Потвърждаване на данните за плащане";
+
+"Confirm the Bizum payment in your mobile banking application within %@ to complete the purchase." = "Потвърдете плащането с Bizum във вашето приложение за мобилно банкиране в рамките на %@, за да завършите покупката.";
+
+"Confirm the payment in your MB WAY app within %@ to complete the purchase." = "Потвърдете плащането в приложението си MB WAY в рамките на %@, за да завършите покупката.";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Потвърдете плащането във Вашата банка или приложение за плащане в рамките на %@, за да завършите покупката.";
 
@@ -136,9 +146,15 @@
 
 "Did you mean %@? %@." = "Имахте предвид %1$@? %2$@.";
 
+"Discard Changes" = "Отхвърляне на промените";
+
+"Discard changes?" = "Отхвърляне на промените?";
+
 "Discount" = "Отстъпка";
 
 "EPS Bank" = "Банка EPS";
+
+"Edit address" = "Редактиране на адрес";
 
 "Enter address manually" = "Ръчно въвеждане на адрес";
 
@@ -157,6 +173,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Разбирам, че Stripe ще взима директен дебит от името на %@ и потвърждавам, че съм титуляр на сметката и единственото лице, необходимо за оправомощаване на дебитиране от тази сметка.";
 
 "IBAN" = "IBAN";
+
+"Keep Editing" = "Продължаване на редактирането";
 
 "Last 4 digits of SSN" = "Последни 4 цифри на SSN";
 
@@ -177,6 +195,10 @@
 "Manage your payment methods" = "Управление на начините Ви на плащане";
 
 "Name on card" = "Име върху картата";
+
+"Naver Pay Card" = "Карта на Naver Pay";
+
+"Naver Pay Money/Point" = "Naver Pay пари/точки";
 
 "New card" = "Нова банкова карта";
 
@@ -234,8 +256,6 @@
 
 "Point the camera at your card." = "Насочете камерата към картата си.";
 
-"Processing..." = "Обработване...";
-
 "Przelewy24 Bank" = "Банка Przelewy24";
 
 "Remove %@" = "Премахване на %@";
@@ -274,6 +294,8 @@
 
 "Select card" = "Избор на карта";
 
+"Select how you want to pay:" = "Изберете как искате да платите:";
+
 "Select payment method" = "Избор на начин на плащане";
 
 "Select your payment method" = "Изберете метод на плащане";
@@ -283,8 +305,6 @@
 "Set as default payment method" = "Задаване на начин на плащане по подразбиране";
 
 "Set up" = "Създаване";
-
-"Shipping" = "Доставка";
 
 "Shipping to %@ is not supported." = "Доставки до %@ не се поддържат.";
 
@@ -312,6 +332,10 @@
 
 "Tax" = "Данък";
 
+"Terms and Conditions" = "Условия и правила";
+
+"Terms of Service" = "Общи условия";
+
 "The IBAN you entered is incomplete." = "Въведеният IBAN е непълен.";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Въведеният IBAN е невалиден, \"%@\" не е поддържан код на държава.";
@@ -319,6 +343,8 @@
 "The provided verification code has expired." = "Предоставеният код за потвърждаване е изтекъл.";
 
 "The provided verification code is incorrect." = "Предоставеният код за потвърждаване е неправилен.";
+
+"This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Това е международна покупка и не включва такса от 3,5% IOF. Продължавайки, Вие потвърждавате и приемате <terms>Правила и условия на Ebanx</terms>.";
 
 "This is your default" = "Това е настройката по подразбиране.";
 
@@ -339,3 +365,5 @@
 "Yes, update" = "Да, актуализиране";
 
 "Your IBAN should start with a two-letter country code." = "Вашият IBAN трябва да започва с двубуквен код на държава.";
+
+"Your address changes won't be saved." = "Промените във вашия адрес няма да бъдат запазени.";

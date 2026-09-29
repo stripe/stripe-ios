@@ -44,7 +44,6 @@ protocol PaymentElementConfiguration: PaymentMethodRequirementProvider {
     var disableWalletPaymentMethodFiltering: Bool { get set }
     var linkPaymentMethodsOnly: Bool { get set }
     var opensCardScannerAutomatically: Bool { get set }
-    var useAutocompleteEndpoints: Bool { get set }
     var termsDisplay: [STPPaymentMethodType: PaymentSheet.TermsDisplay] { get }
     func resolveLayout(elementsSession: STPElementsSession, paymentMethodTypes: [PaymentSheet.PaymentMethodType]) -> PaymentSheet.PaymentMethodLayout.ResolvedLayout
 }
@@ -57,6 +56,16 @@ extension PaymentElementConfiguration {
         return linkAccount?.linkBrand ?? elementsSession.linkBrand ?? .link
     }
 
+    var financialConnectionsLinkBrandOverride: LinkBrand? {
+        // Only Onelink should be treated as an explicit client override for Financial Connections.
+        // Link should behave like no override so backend and authenticated consumer updates can still win.
+        return link.brand == .onelink ? .onelink : nil
+    }
+
+    func financialConnectionsLinkBrandOverride(linkAccount: PaymentSheetLinkAccount?) -> LinkBrand? {
+        return financialConnectionsLinkBrandOverride ?? (linkAccount?.linkBrand == .onelink ? .onelink : nil)
+    }
+
     /// Returns `true` if the merchant requires the collection of _any_ billing detail fields - name, phone, email, address.
     func requiresBillingDetailCollection() -> Bool {
         return billingDetailsCollectionConfiguration.name == .always
@@ -65,6 +74,7 @@ extension PaymentElementConfiguration {
         || billingDetailsCollectionConfiguration.address == .full
     }
 
+    @MainActor
     var fulfilledRequirements: [PaymentMethodTypeRequirement] {
         var reqs = [PaymentMethodTypeRequirement]()
         if returnURL != nil { reqs.append(.returnURL) }

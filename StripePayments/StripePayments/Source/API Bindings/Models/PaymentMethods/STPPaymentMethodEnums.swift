@@ -80,6 +80,8 @@ import Foundation
     case crypto
     /// A MobilePay payment method
     case mobilePay
+    /// A Vipps payment method
+    case vipps
     /// A Konbini payment method
     case konbini
     /// A PromptPay payment method
@@ -96,6 +98,24 @@ import Foundation
     case wero
     /// A Pay by Bank payment method
     case payByBank
+    /// An MB WAY payment method
+    case mbWay
+    /// A Bizum payment method
+    case bizum
+    /// A Kakao Pay payment method
+    case kakaoPay
+    /// A Korean cards payment method
+    case krCard
+    /// A Naver Pay payment method
+    case naverPay
+    /// A PAYCO payment method
+    case payco
+    /// A SeQura payment method
+    case sequra
+    /// A Scalapay payment method
+    case scalapay
+    /// A Pix payment method
+    case pix
     /// An unknown type.
     case unknown
 
@@ -174,6 +194,8 @@ import Foundation
             return "Crypto"
         case .mobilePay:
             return "MobilePay"
+        case .vipps:
+            return "Vipps"
         case .konbini:
             return STPLocalizedString("Konbini", "Payment Method type brand name")
         case .promptPay:
@@ -190,6 +212,24 @@ import Foundation
             return "Wero"
         case .payByBank:
             return "Pay by Bank"
+        case .mbWay:
+            return "MB WAY"
+        case .bizum:
+            return "Bizum"
+        case .kakaoPay:
+            return "Kakao Pay"
+        case .krCard:
+            return "Korean cards"
+        case .naverPay:
+            return "Naver Pay"
+        case .payco:
+            return "PAYCO"
+        case .sequra:
+            return "SeQura"
+        case .scalapay:
+            return "Scalapay"
+        case .pix:
+            return "Pix"
         case .cardPresent,
             .unknown:
             return STPLocalizedString("Unknown", "Default missing source type label")
@@ -271,6 +311,8 @@ import Foundation
             return "crypto"
         case .mobilePay:
             return "mobilepay"
+        case .vipps:
+            return "vipps"
         case .konbini:
             return "konbini"
         case .promptPay:
@@ -287,6 +329,24 @@ import Foundation
             return "wero"
         case .payByBank:
             return "pay_by_bank"
+        case .mbWay:
+            return "mb_way"
+        case .bizum:
+            return "bizum"
+        case .kakaoPay:
+            return "kakao_pay"
+        case .krCard:
+            return "kr_card"
+        case .naverPay:
+            return "naver_pay"
+        case .payco:
+            return "payco"
+        case .sequra:
+            return "sequra"
+        case .scalapay:
+            return "scalapay"
+        case .pix:
+            return "pix"
         }
     }
 

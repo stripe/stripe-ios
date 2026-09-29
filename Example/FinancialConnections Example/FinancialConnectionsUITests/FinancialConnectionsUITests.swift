@@ -34,6 +34,7 @@ final class FinancialConnectionsUITests: XCTestCase {
 
         app.fc_nativePrepaneContinueButton.tap()
         app.fc_nativeConnectAccountsButton.tap()
+        app.fc_skipNetworkingSignupIfNeeded()
         app.fc_nativeSuccessDoneButton.tap()
 
         // ensure alert body contains "Stripe Bank" (AKA one bank is linked)
@@ -63,6 +64,7 @@ final class FinancialConnectionsUITests: XCTestCase {
         // "Success" institution is automatically selected as the first one
         app.fc_nativeConnectAccountsButton.tap()
 
+        app.fc_skipNetworkingSignupIfNeeded()
         app.fc_nativeSuccessDoneButton.tap()
 
         // ensure alert body contains "Stripe Bank" (AKA one bank is linked)
@@ -115,6 +117,7 @@ final class FinancialConnectionsUITests: XCTestCase {
         XCTAssertTrue(manualEntryContinueButton.waitForExistence(timeout: 120.0))
         manualEntryContinueButton.tap()
 
+        app.fc_skipNetworkingSignupIfNeeded()
         app.fc_nativeSuccessDoneButton.tap()
 
         XCTAssert(app.fc_playgroundSuccessAlertView.exists)
@@ -135,6 +138,7 @@ final class FinancialConnectionsUITests: XCTestCase {
 
         app.fc_nativeTestModeAutofillButton.waitForExistenceAndTap()
 
+        app.fc_skipNetworkingSignupIfNeeded()
         app.fc_nativeSuccessDoneButton.tap()
 
         XCTAssert(app.fc_playgroundSuccessAlertView.exists)
@@ -431,6 +435,7 @@ final class FinancialConnectionsUITests: XCTestCase {
 
         app.fc_nativeConnectAccountsButton.tap()
 
+        app.fc_skipNetworkingSignupIfNeeded()
         app.fc_nativeSuccessDoneButton.tap()
 
         // ensure alert body contains "Stripe Bank" (AKA one bank is linked)
@@ -641,6 +646,7 @@ final class FinancialConnectionsUITests: XCTestCase {
 
         app.fc_nativeConnectAccountsButton.waitForExistenceAndTap()
 
+        app.fc_skipNetworkingSignupIfNeeded()
         app.fc_nativeSuccessDoneButton.waitForExistenceAndTap()
 
         XCTAssert(

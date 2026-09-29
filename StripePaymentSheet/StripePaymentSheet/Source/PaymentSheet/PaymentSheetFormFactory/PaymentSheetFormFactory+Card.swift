@@ -15,7 +15,7 @@ import UIKit
 
 extension PaymentSheetFormFactory {
 
-    static let cardMinimumFieldsToCollectByCountry: [String: AddressSectionElement.FieldsToCollect] = [
+    nonisolated static let cardMinimumFieldsToCollectByCountry: [String: AddressSectionElement.FieldsToCollect] = [
         "US": .countryAndPostal,
         "GB": .countryAndPostal,
         "CA": .countryAndPostal,

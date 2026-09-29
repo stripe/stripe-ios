@@ -104,7 +104,7 @@ final class PaymentSheetLoader {
             let elementsSessionAndIntent = try await elementsSessionAndIntentTask.value
             let intent = elementsSessionAndIntent.intent
             let elementsSession = elementsSessionAndIntent.elementsSession
-            let (isLinkEnabled, didLinkLookupTimeOut) = await loadLink(
+            let (_, didLinkLookupTimeOut) = await loadLink(
                 elementsSession: elementsSession,
                 configuration: configuration,
                 analyticsHelper: analyticsHelper,
@@ -119,6 +119,9 @@ final class PaymentSheetLoader {
             // Disable FC Lite if killswitch is enabled
             let isFcLiteKillswitchEnabled = elementsSession.flags["elements_disable_fc_lite"] == true
             FinancialConnectionsSDKAvailability.fcLiteKillswitchEnabled = isFcLiteKillswitchEnabled
+
+            // Send legacy analytics to r.stripe.com instead of q.stripe.com if enabled
+            STPAnalyticsClient.sendAnalyticsToRStripe = elementsSession.isAnalyticsToRStripeEnabled
 
             let remoteFcLiteOverrideEnabled = shouldPreferFCLite(elementsSession: elementsSession)
             FinancialConnectionsSDKAvailability.remoteFcLiteOverride = remoteFcLiteOverrideEnabled
@@ -142,10 +145,8 @@ final class PaymentSheetLoader {
             // Initialize telemetry. Don't wait for this to finish to return.
             STPTelemetryClient.shared.sendTelemetryData()
 
-            // Filter out saved payment methods that the PI/SI or PaymentSheet doesn't support
-            let prefetchedSavedPaymentMethods = try await prefetchedSavedPaymentMethodsTask.value
-            let filteredSavedPaymentMethods = filterSavedPaymentMethods(intent: intent, elementsSession: elementsSession, configuration: configuration, prefetchedSPMs: prefetchedSavedPaymentMethods, loadTimings: loadTimings)
-
+            // fetchData() launches an unstructured task and returns immediately. Starting it before the
+            // await below lets the PMM request run while this MainActor loader is suspended for saved methods.
             let paymentMethodMessagingPromotionsHelper = PaymentMethodMessagingPromotionsHelper(
                 elementsSession: elementsSession,
                 intent: intent,
@@ -154,6 +155,10 @@ final class PaymentSheetLoader {
                 analyticsHelper: analyticsHelper
             )
             paymentMethodMessagingPromotionsHelper?.fetchData()
+
+            // Filter out saved payment methods that the PI/SI or PaymentSheet doesn't support
+            let prefetchedSavedPaymentMethods = try await prefetchedSavedPaymentMethodsTask.value
+            let filteredSavedPaymentMethods = filterSavedPaymentMethods(intent: intent, elementsSession: elementsSession, configuration: configuration, prefetchedSPMs: prefetchedSavedPaymentMethods, loadTimings: loadTimings)
 
             let paymentMethodOrientation = configuration.resolveLayout(
                 elementsSession: elementsSession,
@@ -166,7 +171,7 @@ final class PaymentSheetLoader {
                 savedPaymentMethods: filteredSavedPaymentMethods,
                 customerID: configuration.customer?.id,
                 showApplePay: integrationShape.canDefaultToLinkOrApplePay ? isApplePayEnabled : false,
-                showLink: integrationShape.canDefaultToLinkOrApplePay ? isLinkEnabled : false,
+                showLink: integrationShape.canDefaultToLinkOrApplePay ? PaymentSheet.shouldShowLinkButton(elementsSession: elementsSession, configuration: configuration) : false,
                 elementsSession: elementsSession,
                 defaultPaymentMethod: elementsSession.customer?.getDefaultPaymentMethod()
             )

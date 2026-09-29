@@ -46,6 +46,8 @@
 
 "Buy now or pay later with Klarna" = "Köp nu eller betala senare med Klarna";
 
+"By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "Genom att bekräfta betalningen med NICEPAY tillåter du %@ att debitera den här betalningsmetoden vid framtida betalningar i enlighet med deras villkor.";
+
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Genom att bekräfta betalningen med PayPal tillåter du att %@ debiterar ditt PayPal-konto för framtida betalningar i enlighet med deras villkor.";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Genom att fortsätta till Amazon Pay tillåter du att %@ debiterar ditt Amazon Pay-konto för framtida betalningar i enlighet med deras villkor.";
@@ -86,6 +88,8 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Genom att spara ditt bankkonto för %@ samtycker du till att godkänna betalningar i enlighet med <terms>dessa villkor</terms>.";
 
+"By saving your payment information, you allow %@ to charge you for future payments in accordance with their terms." = "Genom att spara din betalningsinformation ger du %@ tillåtelse att debitera dig för framtida betalningar enligt deras villkor.";
+
 "By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "Genom att skicka din beställning till %1$@ och %2$@ samtycker du till att spara din information hos %3$@ för framtida köp och godkänner auktorisering av betalningar i enlighet med <terms>dessa villkor</terms>.";
 
 "By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Genom att skicka din beställning till %@ samtycker du till att godkänna betalningar i enlighet med <terms>dessa villkor</terms>.";
@@ -108,9 +112,15 @@
 
 "Code sent" = "Koden har skickats";
 
+"Complete the payment using Pix to finish the purchase." = "Slutför betalningen med Pix för att avsluta köpet.";
+
 "Confirm" = "Bekräfta";
 
 "Confirm payment details" = "Bekräfta betalningsuppgifter";
+
+"Confirm the Bizum payment in your mobile banking application within %@ to complete the purchase." = "Bekräfta Bizum-betalningen i din mobila bankapp inom %@ för att slutföra köpet.";
+
+"Confirm the payment in your MB WAY app within %@ to complete the purchase." = "Bekräfta betalningen i din MB WAY-app inom %@ för att slutföra köpet.";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Bekräfta betalningen i din bankapp eller betalningsapp inom %@ för att slutföra köpet.";
 
@@ -136,9 +146,15 @@
 
 "Did you mean %@? %@." = "Menade du %1$@? %2$@.";
 
+"Discard Changes" = "Kassera ändringar";
+
+"Discard changes?" = "Kasta ändringar?";
+
 "Discount" = "Rabatt";
 
 "EPS Bank" = "EPS Bank";
+
+"Edit address" = "Redigera adress";
 
 "Enter address manually" = "Ange adress manuellt";
 
@@ -157,6 +173,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Jag är införstådd med att Stripe samlar in autogireringar på uppdrag av %@ och bekräftar att jag är kontoinnehavaren och den enda person som krävs för att godkänna debiteringar från detta konto.";
 
 "IBAN" = "IBAN";
+
+"Keep Editing" = "Fortsätt redigera";
 
 "Last 4 digits of SSN" = "Sista 4 siffrorna i SSN";
 
@@ -177,6 +195,10 @@
 "Manage your payment methods" = "Hantera dina betalningsmetoder";
 
 "Name on card" = "Namn på kortet";
+
+"Naver Pay Card" = "Naver Pay-kort";
+
+"Naver Pay Money/Point" = "Naver Pay-pengar/poäng";
 
 "New card" = "Nytt kort";
 
@@ -234,8 +256,6 @@
 
 "Point the camera at your card." = "Rikta kameran mot ditt kort.";
 
-"Processing..." = "Bearbetar ...";
-
 "Przelewy24 Bank" = "Przelewy24 Bank";
 
 "Remove %@" = "Ta bort %@";
@@ -274,6 +294,8 @@
 
 "Select card" = "Välj kort";
 
+"Select how you want to pay:" = "Välj hur du vill betala:";
+
 "Select payment method" = "Välj betalningsmetod";
 
 "Select your payment method" = "Välj din betalningsmetod";
@@ -283,8 +305,6 @@
 "Set as default payment method" = "Ställ in som standardbetalningsmetod";
 
 "Set up" = "Konfigurera";
-
-"Shipping" = "Frakt";
 
 "Shipping to %@ is not supported." = "Leverans till %@ stöds inte.";
 
@@ -312,6 +332,10 @@
 
 "Tax" = "Skatt";
 
+"Terms and Conditions" = "Villkor";
+
+"Terms of Service" = "Tjänstevillkor";
+
 "The IBAN you entered is incomplete." = "Angivet IBAN är ofullständigt.";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Angivet IBAN är ogiltigt, \"%@\" är inte en giltig landskod.";
@@ -319,6 +343,8 @@
 "The provided verification code has expired." = "Den angivna verifieringskoden har förfallit.";
 
 "The provided verification code is incorrect." = "Den angivna verifieringskoden är felaktig.";
+
+"This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Detta är ett internationellt köp och exkluderar en IOF-avgift på 3,5 %. Genom att fortsätta bekräftar och godkänner du <terms>Ebanx villkor</terms>.";
 
 "This is your default" = "Detta är din standardbetalningsmetod";
 
@@ -339,3 +365,5 @@
 "Yes, update" = "Ja, uppdatera";
 
 "Your IBAN should start with a two-letter country code." = "Ditt IBAN ska börja med en landskod (två bokstäver).";
+
+"Your address changes won't be saved." = "Dina adressändringar kommer inte att sparas.";

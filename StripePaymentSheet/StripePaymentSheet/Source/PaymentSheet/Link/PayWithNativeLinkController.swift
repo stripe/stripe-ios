@@ -14,6 +14,7 @@ import UIKit
 /// Standalone Link controller
 @available(iOSApplicationExtension, unavailable)
 @available(macCatalystApplicationExtension, unavailable)
+@MainActor
 final class PayWithNativeLinkController {
     typealias ConfirmHandler = (STPAuthenticationContext, Intent, STPElementsSession, PaymentOption, @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void) -> Void
 
@@ -115,7 +116,7 @@ final class PayWithNativeLinkController {
         from presentingController: UIViewController,
         initiallySelectedPaymentDetailsID: String?,
         canContinueWithoutLink: Bool = true,
-        completion: @escaping (_ confirmOption: PaymentSheet.LinkConfirmOption?, _ shouldReturnToPaymentSheet: Bool) -> Void
+        completion: @escaping (_ confirmOption: PaymentSheet.LinkConfirmOption?, _ shouldReturnToPaymentSheet: Bool, _ error: Error?) -> Void
     ) {
         presentAsBottomSheetInternal(
             from: presentingController,
@@ -127,11 +128,14 @@ final class PayWithNativeLinkController {
             shouldFinishOnClose: false,
             canContinueWithoutLink: canContinueWithoutLink
         ) { completionResult in
-            guard case .paymentMethodSelection(let confirmOption, let shouldReturnToPaymentSheet) = completionResult else {
-                return
+            switch completionResult {
+            case .paymentMethodSelection(let confirmOption, let shouldReturnToPaymentSheet):
+                completion(confirmOption, shouldReturnToPaymentSheet, nil)
+            case .full(let result, _, _):
+                if case .failed(let error) = result {
+                    completion(nil, false, error)
+                }
             }
-
-            completion(confirmOption, shouldReturnToPaymentSheet)
         }
     }
 

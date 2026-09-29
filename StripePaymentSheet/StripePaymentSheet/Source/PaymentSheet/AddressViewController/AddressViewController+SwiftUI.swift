@@ -49,7 +49,6 @@ struct AddressViewControllerRepresentable: UIViewControllerRepresentable {
             configuration: configuration,
             delegate: context.coordinator
         )
-        context.coordinator.addressViewController = addressViewController
 
         let navigationController = UINavigationController(rootViewController: addressViewController)
 
@@ -82,7 +81,6 @@ struct AddressViewControllerRepresentable: UIViewControllerRepresentable {
     class Coordinator: NSObject, AddressViewControllerDelegate, UIAdaptivePresentationControllerDelegate {
         var address: Binding<AddressViewController.AddressDetails?>
         var dismiss: () -> Void
-        weak var addressViewController: AddressViewController?
 
         init(address: Binding<AddressViewController.AddressDetails?>, dismiss: @escaping () -> Void) {
             self.address = address
@@ -101,9 +99,9 @@ struct AddressViewControllerRepresentable: UIViewControllerRepresentable {
             }
         }
 
-        // Called after the sheet has been dismissed by a swipe down
-        func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
-            addressViewController?.didContinue()
+        // Disallow swipe-to-dismiss. If there are unsaved changes we want to present the customer with an alert before they discard them.
+        func presentationControllerShouldDismiss(_ presentationController: UIPresentationController) -> Bool {
+            return false
         }
     }
 }

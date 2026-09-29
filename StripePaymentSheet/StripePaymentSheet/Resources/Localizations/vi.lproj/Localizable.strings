@@ -46,6 +46,8 @@
 
 "Buy now or pay later with Klarna" = "Mua ngay hoặc thanh toán sau bằng Klarna";
 
+"By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "Bằng việc xác nhận thanh toán của bạn với NICEPAY, bạn cho phép %@ tính phí phương thức thanh toán này cho các khoản thanh toán trong tương lai theo các điều khoản của họ.";
+
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Bằng cách xác nhận khoản thanh toán của quý vị với PayPal, quý vị cho phép %@ tính phí tài khoản PayPal của quý vị cho các khoản thanh toán trong tương lai theo các điều khoản của họ.";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Bằng cách tiếp tục với Amazon Pay, bạn cho phép %@ tính phí tài khoản Amazon Pay của bạn cho các khoản thanh toán trong tương lai theo các điều khoản của họ.";
@@ -86,6 +88,8 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Bằng việc lưu tài khoản ngân hàng của bạn cho %@ bạn đồng ý cho phép thanh toán tuân theo <terms>các điều khoản này</terms>.";
 
+"By saving your payment information, you allow %@ to charge you for future payments in accordance with their terms." = "Bằng cách lưu thông tin thanh toán, bạn cho phép %@ tính phí bạn cho các khoản thanh toán trong tương lai theo các điều khoản của họ.";
+
 "By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "Bằng cách gửi đơn hàng của bạn đến %1$@ và %2$@, bạn đồng ý lưu thông tin của mình với %3$@ cho các giao dịch mua trong tương lai và đồng ý ủy quyền thanh toán theo <terms>các điều khoản này</terms>.";
 
 "By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Bằng cách gửi đơn hàng của bạn đến %@, bạn đồng ý ủy quyền thanh toán theo <terms>các điều khoản này</terms>.";
@@ -108,9 +112,15 @@
 
 "Code sent" = "Mã đã được gửi";
 
+"Complete the payment using Pix to finish the purchase." = "Hoàn tất thanh toán bằng Pix để hoàn thành giao dịch mua.";
+
 "Confirm" = "Xác nhận";
 
 "Confirm payment details" = "Xác nhận thông tin thanh toán";
+
+"Confirm the Bizum payment in your mobile banking application within %@ to complete the purchase." = "Xác nhận thanh toán Bizum trong biểu mẫu ngân hàng di động của bạn trong vòng %@ để hoàn tất giao dịch mua.";
+
+"Confirm the payment in your MB WAY app within %@ to complete the purchase." = "Xác nhận thanh toán trong ứng dụng MB WAY của bạn trong vòng %@ để hoàn tất giao dịch mua.";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Hãy xác nhận thanh toán trong ứng dụng ngân hàng hoặc ứng dụng thanh toán của bạn trong vòng %@ để hoàn tất giao dịch mua.";
 
@@ -136,9 +146,15 @@
 
 "Did you mean %@? %@." = "Ý của quý vị có phải là %1$@? %2$@.";
 
+"Discard Changes" = "Hủy thay đổi";
+
+"Discard changes?" = "Hủy thay đổi?";
+
 "Discount" = "Giảm giá";
 
 "EPS Bank" = "Ngân hàng EPS";
+
+"Edit address" = "Chỉnh sửa địa chỉ";
 
 "Enter address manually" = "Nhập địa chỉ thủ công";
 
@@ -157,6 +173,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Tôi hiểu rằng Stripe sẽ thu Ghi nợ Trực tiếp thay mặt %@ và tôi xác nhận rằng tôi là chủ tài khoản và là người duy nhất cần có để ủy quyền ghi nợ từ tài khoản này.";
 
 "IBAN" = "IBAN";
+
+"Keep Editing" = "Tiếp tục chỉnh sửa";
 
 "Last 4 digits of SSN" = "4 chữ số cuối của SSN";
 
@@ -177,6 +195,10 @@
 "Manage your payment methods" = "Quản lý các phương thức thanh toán của bạn";
 
 "Name on card" = "Tên trên thẻ";
+
+"Naver Pay Card" = "Thẻ Naver Pay";
+
+"Naver Pay Money/Point" = "Số tiền/điểm Naver Pay";
 
 "New card" = "Thẻ mới";
 
@@ -234,8 +256,6 @@
 
 "Point the camera at your card." = "Hướng camera vào thẻ.";
 
-"Processing..." = "Đang xử lý...";
-
 "Przelewy24 Bank" = "Ngân hàng Przelewy24";
 
 "Remove %@" = "Xóa %@";
@@ -274,6 +294,8 @@
 
 "Select card" = "Chọn thẻ";
 
+"Select how you want to pay:" = "Chọn cách bạn muốn thanh toán:";
+
 "Select payment method" = "Chọn phương thức thanh toán";
 
 "Select your payment method" = "Chọn phương thức thanh toán của bạn";
@@ -283,8 +305,6 @@
 "Set as default payment method" = "Đặt làm phương thức thanh toán mặc định";
 
 "Set up" = "Cài đặt";
-
-"Shipping" = "Vận chuyển";
 
 "Shipping to %@ is not supported." = "Chuyển hàng đến %@ không được hỗ trợ.";
 
@@ -312,6 +332,10 @@
 
 "Tax" = "Thuế";
 
+"Terms and Conditions" = "Điều khoản và Điều kiện";
+
+"Terms of Service" = "Điều khoản dịch vụ";
+
 "The IBAN you entered is incomplete." = "IBAN quý vị đã nhập chưa đầy đủ.";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "IBAN bạn đã nhập không hợp lệ, \"%@\" không phải là mã quốc gia được hỗ trợ.";
@@ -319,6 +343,8 @@
 "The provided verification code has expired." = "Mã xác minh được cung cấp đã hết hạn.";
 
 "The provided verification code is incorrect." = "Mã xác minh đã cung cấp không chính xác.";
+
+"This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Đây là giao dịch mua quốc tế và không bao gồm phí IOF 3,5%. Khi tiếp tục, bạn thừa nhận và chấp nhận <terms>điều khoản và điều kiện của Ebanx</terms>.";
 
 "This is your default" = "Đây là thông tin mặc định của bạn";
 
@@ -339,3 +365,5 @@
 "Yes, update" = "Có, cập nhật";
 
 "Your IBAN should start with a two-letter country code." = "IBAN của quý vị phải bắt đầu bằng mã quốc gia gồm hai chữ cái.";
+
+"Your address changes won't be saved." = "Các thay đổi địa chỉ của bạn sẽ không được lưu.";

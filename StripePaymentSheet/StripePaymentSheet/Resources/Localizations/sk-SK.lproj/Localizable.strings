@@ -46,6 +46,8 @@
 
 "Buy now or pay later with Klarna" = "Kúpte teraz alebo zaplaťte neskôr pomocou služby Klarna";
 
+"By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "Potvrdením platby prostredníctvom služby NICEPAY umožňujete spoločnosti %@ spoplatniť tento spôsob platby pri budúcich platbách v súlade s jej podmienkami.";
+
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Potvrdením platby prostredníctvom služby PayPal povolíte spoločnosti %@, aby z vášho účtu PayPal účtovala poplatky za budúce platby v súlade s podmienkami tejto spoločnosti.";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Pokračovaním na službu Amazon Pay povolíte spoločnosti %@, aby z vášho účtu Amazon Pay účtovala poplatky za budúce platby v súlade s podmienkami tejto spoločnosti.";
@@ -86,6 +88,8 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Uložením bankového účtu pre spoločnosť %@ súhlasíte s autorizáciou platieb podľa <terms>týchto podmienok</terms>.";
 
+"By saving your payment information, you allow %@ to charge you for future payments in accordance with their terms." = "Uložením svojich platobných údajov umožňujete spoločnosti %@, aby vám účtovala za budúce platby v súlade s ich podmienkami.";
+
 "By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "Odoslaním objednávky do %1$@ a %2$@ súhlasíte s uložením vašich údajov v %3$@ pre budúce nákupy a súhlasíte s autorizáciou platieb podľa <terms>týchto podmienok</terms>.";
 
 "By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Odoslaním objednávky na %@ súhlasíte s autorizáciou platieb podľa <terms>týchto podmienok</terms>.";
@@ -108,9 +112,15 @@
 
 "Code sent" = "Kód odoslaný";
 
+"Complete the payment using Pix to finish the purchase." = "Na dokončenie nákupu zrealizujte platbu pomocou služby Pix.";
+
 "Confirm" = "Potvrdiť";
 
 "Confirm payment details" = "Potvrdiť informácie o platbe";
+
+"Confirm the Bizum payment in your mobile banking application within %@ to complete the purchase." = "Potvrďte platbu Bizum vo vašej žiadosti mobilného bankovníctva do %@ na dokončenie nákupu.";
+
+"Confirm the payment in your MB WAY app within %@ to complete the purchase." = "Dokončite nákup potvrdením platby v aplikácii MB WAY do %@.";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Dokončite nákup potvrdením platby v banke alebo platobnej aplikácii v priebehu %@.";
 
@@ -136,9 +146,15 @@
 
 "Did you mean %@? %@." = "Mysleli ste %1$@? %2$@.";
 
+"Discard Changes" = "Zahodiť zmeny";
+
+"Discard changes?" = "Zahodiť zmeny?";
+
 "Discount" = "Zľava";
 
 "EPS Bank" = "EPS Bank";
+
+"Edit address" = "Upraviť adresu";
 
 "Enter address manually" = "Zadať adresu manuálne";
 
@@ -157,6 +173,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Rozumiem, že spoločnosť Stripe bude inkasovať priame inkasá v mene spoločnosti %@ a potvrdzujem, že som majiteľom účtu a som jediná osoba, ktorá musí autorizovať inkasá z tohto účtu.";
 
 "IBAN" = "IBAN";
+
+"Keep Editing" = "Pokračovať v úpravách";
 
 "Last 4 digits of SSN" = "Posledné 4 číslice SSN";
 
@@ -177,6 +195,10 @@
 "Manage your payment methods" = "Spravovať spôsoby platby";
 
 "Name on card" = "Meno na karte";
+
+"Naver Pay Card" = "Karta Naver Pay";
+
+"Naver Pay Money/Point" = "Naver Pay Money/Point";
 
 "New card" = "Nová karta";
 
@@ -234,8 +256,6 @@
 
 "Point the camera at your card." = "Nasmerujte kameru na svoju kartu.";
 
-"Processing..." = "Prebieha spracovanie…";
-
 "Przelewy24 Bank" = "Przelewy24 Bank";
 
 "Remove %@" = "Odstrániť %@";
@@ -274,6 +294,8 @@
 
 "Select card" = "Vybrať kartu";
 
+"Select how you want to pay:" = "Vyberte, ako chcete platiť:";
+
 "Select payment method" = "Vybrať spôsob platby";
 
 "Select your payment method" = "Vyberte svoj spôsob platby";
@@ -283,8 +305,6 @@
 "Set as default payment method" = "Nastaviť ako predvolený spôsob platby";
 
 "Set up" = "Nastaviť";
-
-"Shipping" = "Dodanie";
 
 "Shipping to %@ is not supported." = "Dodanie na/do %@ sa nepodporuje.";
 
@@ -312,6 +332,10 @@
 
 "Tax" = "Daň";
 
+"Terms and Conditions" = "Zmluvné podmienky";
+
+"Terms of Service" = "Podmienky služby";
+
 "The IBAN you entered is incomplete." = "Zadaný IBAN je neúplný.";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Zadaný IBAN je neplatný, „%@“ nie je podporovaný kód krajiny.";
@@ -319,6 +343,8 @@
 "The provided verification code has expired." = "Platnosť zadaného overovacieho kódu skončila.";
 
 "The provided verification code is incorrect." = "Zadaný overovací kód je nesprávny.";
+
+"This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Ide o medzinárodný nákup, ktorý nezahŕňa 3,5 % poplatok IOF. Pokračovaním beriete na vedomie a akceptujete <terms>podmienky spoločnosti Ebanx</terms>.";
 
 "This is your default" = "Toto je váš predvolený spôsob platby";
 
@@ -339,3 +365,5 @@
 "Yes, update" = "Áno, aktualizovať";
 
 "Your IBAN should start with a two-letter country code." = "Váš IBAN by mal začínať dvojpísmenovým kódom krajiny.";
+
+"Your address changes won't be saved." = "Zmeny vašej adresy sa neuložia.";

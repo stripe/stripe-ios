@@ -7,17 +7,14 @@
 //
 
 @testable @_spi(STP) import StripeCore
-@testable @_spi(STP) import StripePayments
 @testable @_spi(STP) import StripePaymentSheet
-@testable @_spi(STP) import StripePaymentsTestUtils
-@_spi(STP) import StripeUICore
 import XCTest
 
 @MainActor
 final class CheckoutPendingOperationsTests: XCTestCase {
 
     func testEnqueueSessionUpdateSerializesOperations() async throws {
-        let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration())
+        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration())
         let firstGate = CheckoutPendingOperationsTestGate()
         var events: [String] = []
 
@@ -54,7 +51,7 @@ final class CheckoutPendingOperationsTests: XCTestCase {
     }
 
     func testAwaitPendingOperationsWaitsForQueuedWork() async throws {
-        let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration())
+        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration())
         let gate = CheckoutPendingOperationsTestGate()
         var waiterCompleted = false
 
@@ -90,7 +87,7 @@ final class CheckoutPendingOperationsTests: XCTestCase {
     }
 
     func testAwaitPendingOperationsTimesOutWithoutCancelingQueuedWork() async throws {
-        let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration())
+        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration())
         let gate = CheckoutPendingOperationsTestGate()
 
         let operationTask = Task { @MainActor in
@@ -123,128 +120,52 @@ final class CheckoutPendingOperationsTests: XCTestCase {
         XCTAssertTrue(checkout.pendingOperations.isEmpty)
     }
 
-    // MARK: - Confirm with pending operations
-
-    func testEPEConfirmFailsWhenCheckoutPendingOperationsExist() async throws {
-        await AddressSpecProvider.shared.loadAddressSpecs()
-
-        let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration())
-        let gate = CheckoutPendingOperationsTestGate()
-
-        let operationTask = Task { @MainActor in
-            try await checkout.enqueueSessionUpdate {
-                await gate.wait()
-            }
-        }
-        defer { gate.open() }
-
-        try await waitUntil {
-            checkout.pendingOperations.count == 1 && gate.isWaiting
-        }
-
-        let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card])
-        let elementsSession = STPElementsSession._testCardValue()
-        let loadResult = PaymentSheetLoader.LoadResult(
-            intent: intent,
-            elementsSession: elementsSession,
-            savedPaymentMethods: [],
-            paymentMethodTypes: [.stripe(.card)],
-            paymentMethodMessagingPromotionsHelper: ._testValue(),
-            paymentMethodOrientation: .vertical
-        )
-        let configuration = EmbeddedPaymentElement.Configuration._testValue_MostPermissive(isApplePayEnabled: false)
-        let sut = EmbeddedPaymentElement(
-            configuration: configuration,
-            loadResult: loadResult,
-            analyticsHelper: ._testValue()
-        )
-        sut.checkout = checkout
-        sut.presentingViewController = UIViewController()
-        sut._test_paymentOption = .new(confirmParams: IntentConfirmParams(type: .stripe(.card)))
-
-        let result = await sut.confirm()
-        switch result {
-        case .failed(let error):
-            XCTAssertTrue(
-                error.nonGenericDescription.contains("Checkout session is still loading"),
-                "Expected error about pending loading state, got: \(error.nonGenericDescription)"
+    func testUpdateEmailUsesLatestQueuedValue() async throws {
+        // Given a Checkout Session with a blocked update
+        let checkout = try await CheckoutController(
+            configuration: CheckoutTestHelpers.makeConfiguration(
+                paymentElementConfiguration: nil,
+                expressCheckoutElementConfiguration: nil
             )
-        default:
-            XCTFail("Expected confirm to fail due to pending operations, got: \(result)")
-        }
-
-        gate.open()
-        _ = try? await operationTask.value
-    }
-
-    func testFCConfirmFailsWhenCheckoutPendingOperationsExist() async throws {
-        await AddressSpecProvider.shared.loadAddressSpecs()
-
-        let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration())
+        )
         let gate = CheckoutPendingOperationsTestGate()
-
-        let operationTask = Task { @MainActor in
+        let blockingTask = Task { @MainActor in
             try await checkout.enqueueSessionUpdate {
                 await gate.wait()
             }
         }
         defer { gate.open() }
-
         try await waitUntil {
             checkout.pendingOperations.count == 1 && gate.isWaiting
         }
 
-        let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card])
-        let elementsSession = STPElementsSession._testCardValue()
-        let savedPaymentMethod = STPPaymentMethod._testCard()
-        let loadResult = PaymentSheetLoader.LoadResult(
-            intent: intent,
-            elementsSession: elementsSession,
-            savedPaymentMethods: [savedPaymentMethod],
-            paymentMethodTypes: [.stripe(.card)],
-            paymentMethodMessagingPromotionsHelper: ._testValue(),
-            paymentMethodOrientation: .vertical
-        )
-        var configuration = PaymentSheet.Configuration()
-        configuration.customer = .init(id: "cus_test", ephemeralKeySecret: "ek_test")
-        let fc = PaymentSheet.FlowController(
-            configuration: configuration,
-            loadResult: loadResult,
-            analyticsHelper: ._testValue()
-        )
-        fc.checkout = checkout
-
-        STPAssertTestUtil.shouldSuppressNextSTPAlert = true
-
-        let expectation = expectation(description: "Confirm completes")
-        fc.confirm(from: UIViewController()) { result in
-            switch result {
-            case .failed(let error):
-                XCTAssertTrue(
-                    error.nonGenericDescription.contains("Checkout session is still loading"),
-                    "Expected error about pending loading state, got: \(error.nonGenericDescription)"
-                )
-            default:
-                XCTFail("Expected confirm to fail due to pending operations, got: \(result)")
-            }
-            expectation.fulfill()
+        // When an email is set and then cleared while the first update is blocked
+        let setEmailTask = Task { @MainActor in
+            try await checkout.updateEmail("local@example.com")
         }
-
-        await fulfillment(of: [expectation], timeout: 2.0)
-
-        XCTAssertTrue(
-            STPAssertTestUtil.lastAssertMessage.contains("Checkout session is loading"),
-            "Expected assertion about Checkout session loading, got: \(STPAssertTestUtil.lastAssertMessage)"
-        )
-
+        try await waitUntil {
+            checkout.pendingOperations.count == 2
+        }
+        let clearEmailTask = Task { @MainActor in
+            try await checkout.updateEmail(nil)
+        }
+        try await waitUntil {
+            checkout.pendingOperations.count == 3
+        }
         gate.open()
-        _ = try? await operationTask.value
+        try await blockingTask.value
+        try await setEmailTask.value
+        try await clearEmailTask.value
+
+        // Then the latest queued email wins
+        XCTAssertNil(checkout.session.email)
+        XCTAssertTrue(checkout.pendingOperations.isEmpty)
     }
 
     // MARK: - Loading & Emission Tests
 
     func testLoadingStatePersistsAcrossConsecutiveQueuedOperations() async throws {
-        let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration())
+        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration())
         let recorder = CheckoutEmissionRecorder(checkout)
 
         // Gates let us pause each operation mid-flight so we can assert state at precise moments
@@ -254,11 +175,13 @@ final class CheckoutPendingOperationsTests: XCTestCase {
         // Two distinct sessions (different currencies) so we can tell them apart
         var firstJSON = CheckoutTestHelpers.openSessionJSON
         firstJSON["currency"] = "eur"
-        let firstSession = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: firstJSON)!
+        firstJSON["checkout_items"] = CheckoutTestHelpers.makeOneTimePriceCheckoutItems(currency: "eur")
+        let firstSession = try PaymentPagesAPIResponse.decode(fromAPIResponse: firstJSON)
 
         var secondJSON = CheckoutTestHelpers.openSessionJSON
         secondJSON["currency"] = "gbp"
-        let secondSession = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: secondJSON)!
+        secondJSON["checkout_items"] = CheckoutTestHelpers.makeOneTimePriceCheckoutItems(currency: "gbp")
+        let secondSession = try PaymentPagesAPIResponse.decode(fromAPIResponse: secondJSON)
 
         // First op blocks on firstGate until we explicitly open it
         let firstTask = Task { @MainActor in
@@ -281,7 +204,7 @@ final class CheckoutPendingOperationsTests: XCTestCase {
         try await waitUntil { checkout.pendingOperations.count == 2 }
 
         XCTContext.runActivity(named: "While first op is blocked") { _ in
-            XCTAssertTrue(checkout.isLoading)
+            XCTAssertTrue(checkout.isUpdating)
             XCTAssertEqual(recorder.loading, [true])
             XCTAssertEqual(recorder.sessions.count, 0)
         }
@@ -289,9 +212,9 @@ final class CheckoutPendingOperationsTests: XCTestCase {
         firstGate.open()
         try await waitUntil { secondGate.isWaiting }
 
-        // Key behavior: isLoading doesn't toggle off between queued operations
+        // Key behavior: isUpdating doesn't toggle off between queued operations
         XCTContext.runActivity(named: "Between ops — loading persists, first session committed") { _ in
-            XCTAssertTrue(checkout.isLoading)
+            XCTAssertTrue(checkout.isUpdating)
             XCTAssertEqual(recorder.loading, [true])
             XCTAssertEqual(recorder.sessions.count, 2)
             XCTAssertEqual(recorder.sessions.last?.currency, "eur")
@@ -303,7 +226,7 @@ final class CheckoutPendingOperationsTests: XCTestCase {
 
         // loading transitioned true→false exactly once across both operations
         XCTContext.runActivity(named: "After both ops complete") { _ in
-            XCTAssertFalse(checkout.isLoading)
+            XCTAssertFalse(checkout.isUpdating)
             XCTAssertEqual(recorder.loading, [true, false])
             XCTAssertEqual(recorder.sessions.count, 4)
             XCTAssertEqual(recorder.sessions.last?.currency, "gbp")
@@ -311,7 +234,7 @@ final class CheckoutPendingOperationsTests: XCTestCase {
     }
 
     func testThrowingOperationEmitsLoadingButNoSessionUpdate() async throws {
-        let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration())
+        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration())
         let recorder = CheckoutEmissionRecorder(checkout)
 
         do {
@@ -323,13 +246,13 @@ final class CheckoutPendingOperationsTests: XCTestCase {
             XCTAssertEqual((error as NSError).code, 42)
         }
 
-        XCTAssertFalse(checkout.isLoading)
+        XCTAssertFalse(checkout.isUpdating)
         XCTAssertEqual(recorder.loading, [true, false])
         XCTAssertEqual(recorder.sessions.count, 0)
     }
 
     func testNoOpOperationStillEmitsSessionUpdate() async throws {
-        let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration())
+        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration())
         let recorder = CheckoutEmissionRecorder(checkout)
 
         // Enqueue an operation that commits the same session (no actual mutation)

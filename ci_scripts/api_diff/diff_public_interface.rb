@@ -17,8 +17,8 @@ def normalize_line(line)
 end
 
 def sorted_diff_lines(old_path, new_path)
-  old_lines = File.readlines(old_path).map { |l| normalize_line(l) }.sort
-  new_lines = File.readlines(new_path).map { |l| normalize_line(l) }.sort
+  old_lines = File.exist?(old_path) ? File.readlines(old_path).map { |l| normalize_line(l) }.sort : []
+  new_lines = File.exist?(new_path) ? File.readlines(new_path).map { |l| normalize_line(l) }.sort : []
 
   old_temp = Tempfile.new(['sorted_old', File.extname(old_path)])
   new_temp = Tempfile.new(['sorted_new', File.extname(new_path)])

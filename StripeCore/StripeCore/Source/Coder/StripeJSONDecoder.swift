@@ -54,6 +54,34 @@ import Foundation
     }
 }
 
+extension Decoder {
+    /// Returns the raw JSON dictionary currently being decoded.
+    ///
+    /// This is an escape hatch for using ``STPAPIResponseDecodable`` models with `StripeDecodable`.
+    /// Callers should use it like this:
+    /// ```swift
+    /// let dictionary = try decoder.stripeJSONDictionary
+    /// guard let value = SomeSTPAPIResponseDecodableThing.decodedObject(fromAPIResponse: dictionary) else {
+    ///     throw DecodingError.dataCorrupted(...)
+    /// }
+    /// ```
+    @_spi(STP) public var stripeJSONDictionary: [AnyHashable: Any] {
+        get throws {
+            guard let decoder = self as? _stpinternal_JSONDecoder,
+                  let dictionary = decoder.jsonObject as? [AnyHashable: Any] else {
+                throw DecodingError.typeMismatch(
+                    [AnyHashable: Any].self,
+                    .init(
+                        codingPath: codingPath,
+                        debugDescription: "Expected StripeJSONDecoder to contain a JSON object"
+                    )
+                )
+            }
+            return dictionary
+        }
+    }
+}
+
 private class _stpinternal_JSONDecoder: Decoder, STPDecodingContainerProtocol {
     var userInfo: [CodingUserInfoKey: Any] = [:]
     var codingPath: [CodingKey] = []
@@ -320,7 +348,7 @@ private struct STPUnkeyedDecodingContainer: UnkeyedDecodingContainer, STPDecodin
     }
 
     mutating func _decode<T>(_ type: T.Type) throws -> T where T: Decodable {
-        let newPath = codingPath + [STPCodingKey(intValue: currentIndex)!]
+        let newPath = codingPath + [STPCodingKey(intValue: currentIndex)]
 
         let value: T = try castFromNSObject(codingPath: newPath, type, _popObject())
         if var sdValue = value as? UnknownFieldsDecodable {
@@ -681,13 +709,13 @@ extension STPDecodingContainerProtocol {
                 )
             }
             var convertedArray: [Any] = []
-            for i in array {
+            for (index, value) in array.enumerated() {
                 let arrayType = T.self as! (_STPDecodableIsArray.Type)
                 convertedArray.append(
                     try arrayType.valueType._castFromNSObject(
-                        codingPath: codingPath,
+                        codingPath: codingPath + [STPCodingKey(intValue: index)],
                         decodingContainer: self,
-                        object: i as! NSObject
+                        object: value as! NSObject
                     )
                 )
             }

@@ -92,8 +92,12 @@ struct WalletSelectionView: View {
                                 },
                                 onVerifyWalletOwnership: {
                                     startWalletOwnershipVerification(for: wallet)
+                                },
+                                onDelete: {
+                                    deleteWallet(wallet)
                                 }
                             )
+                            .transition(.move(edge: .trailing).combined(with: .opacity))
                         }
                     }
 
@@ -171,6 +175,31 @@ struct WalletSelectionView: View {
             alert: $alert
         ) { session in
             walletOwnershipVerificationSession = session
+        }
+    }
+
+    private func deleteWallet(_ wallet: Wallet) {
+        isLoading.wrappedValue = true
+
+        Task {
+            do {
+                try await coordinator.deleteWalletAddress(walletId: wallet.id)
+                await MainActor.run {
+                    isLoading.wrappedValue = false
+
+                    withAnimation {
+                        wallets.removeAll { $0.id == wallet.id }
+                        if selectedWallet == wallet {
+                            selectedWallet = wallets.first
+                        }
+                    }
+                }
+            } catch {
+                await MainActor.run {
+                    isLoading.wrappedValue = false
+                    alert = Alert(title: "Failed to delete wallet", message: error.localizedDescription)
+                }
+            }
         }
     }
 

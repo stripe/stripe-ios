@@ -57,9 +57,6 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case deferred_mc
         /// Def MP: Deferred multiprocessor flow
         case deferred_mp
-        /// CheckoutSession: Uses Stripe CheckoutSession APIs
-        case checkoutSession
-
         var displayName: String {
             switch self {
             case .normal:
@@ -72,14 +69,12 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
                 return "Deferred server side confirmation with manual confirmation"
             case .deferred_mp:
                 return "Deferred multiprocessor flow"
-            case .checkoutSession:
-                return "CheckoutSession"
             }
         }
 
         var isIntentFirst: Bool {
             switch self {
-            case .normal, .checkoutSession:
+            case .normal:
                 return true
             case .deferred_csc, .deferred_ssc, .deferred_mc, .deferred_mp:
                 return false
@@ -128,7 +123,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         }
         func customDisplayName(currency: Currency) -> String {
             switch currency {
-            case .jpy:
+            case .jpy, .krw:
                 return displayName.replacingOccurrences(of: ".", with: "")
             default:
                 return displayName
@@ -141,6 +136,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
 
         case usd
         case eur
+        case nok
         case aud
         case gbp
         case inr
@@ -149,6 +145,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case myr
         case mxn
         case jpy
+        case krw
         case cny
         case brl
         case thb
@@ -163,6 +160,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case GB
         case AU
         case FR
+        case ES
         case IN
         case SG
         case MY
@@ -320,6 +318,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
 
         case automatic
         case never
+        case walletButtonHidden
     }
 
     enum ForceOnelink: String, PickerEnum {
@@ -733,12 +732,6 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case on, off
     }
 
-    enum UseAutocompleteEndpoints: String, PickerEnum {
-        static var enumName: String { "Autocomplete Endpoints" }
-        case on
-        case off
-    }
-
     var uiStyle: UIStyle
     var layout: Layout
     var mode: Mode
@@ -815,7 +808,6 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var cardFundingAcceptance: CardFundingAcceptance
     var opensCardScannerAutomatically: OpensCardScannerAutomatically
     var termsDisplay: PaymentMethodTermsDisplay
-    var useAutocompleteEndpoints: UseAutocompleteEndpoints
 
     static func defaultValues() -> PaymentSheetTestPlaygroundSettings {
         return PaymentSheetTestPlaygroundSettings(
@@ -885,8 +877,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             cardBrandAcceptance: .all,
             cardFundingAcceptance: .all,
             opensCardScannerAutomatically: .off,
-            termsDisplay: .unset,
-            useAutocompleteEndpoints: .off
+            termsDisplay: .unset
         )
     }
 

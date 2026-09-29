@@ -16,5 +16,6 @@ import Foundation
         case financialConnections(FinancialConnectionsLinkedBank)
         case instantDebits(InstantDebitsLinkedBank)
         case linkedAccount(id: String)
+        case paymentDetails(id: String)
     }
 }

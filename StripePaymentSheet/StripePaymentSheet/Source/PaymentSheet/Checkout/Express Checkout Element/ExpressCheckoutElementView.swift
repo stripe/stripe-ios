@@ -27,27 +27,35 @@ public struct ExpressCheckoutElementView: View {
     }
 }
 
-/// Bridges ExpressCheckoutElement's UIKit state into SwiftUI without retaining Checkout.
+/// Bridges ExpressCheckoutElement's UIKit state into SwiftUI without retaining CheckoutController.
 @MainActor
 final class ExpressCheckoutElementViewModel: ObservableObject {
     let uiView: ExpressCheckoutElementUIView
-    @Published var isAvailable: Bool
+    @Published private(set) var buttons: [ExpressCheckoutElement.PaymentMethod]
+
+    var isAvailable: Bool {
+        return !buttons.isEmpty
+    }
 
     private var sessionCancellable: AnyCancellable?
 
     init(
         sessionSource: CheckoutSessionSource,
-        configuration: Checkout.Configuration,
         uiView: ExpressCheckoutElementUIView
     ) {
+        let initialSession = sessionSource.initialSession
+        let initialButtons = initialSession.availableExpressCheckoutPaymentMethods
         self.uiView = uiView
-        self.isAvailable = !ExpressCheckoutElementUtilities.resolveButtons(for: sessionSource.initialSession, configuration: configuration).isEmpty
+        self.buttons = initialButtons
+        uiView.update(with: initialSession, buttons: initialButtons)
         sessionCancellable = sessionSource.sessionPublisher
             .dropFirst()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] session in
-                self?.uiView.update(with: session)
-                self?.isAvailable = !ExpressCheckoutElementUtilities.resolveButtons(for: session, configuration: configuration).isEmpty
+                guard let self else { return }
+                let buttons = session.availableExpressCheckoutPaymentMethods
+                self.uiView.update(with: session, buttons: buttons)
+                self.buttons = buttons
             }
     }
 }

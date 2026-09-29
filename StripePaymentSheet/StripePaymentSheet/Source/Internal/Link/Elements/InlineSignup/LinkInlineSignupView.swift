@@ -104,7 +104,7 @@ final class LinkInlineSignupView: UIView {
         guard viewModel.mode != .signupOptIn else {
             return nil
         }
-        let legalView = LinkLegalTermsView(textAlignment: .left,
+        let legalView = LinkLegalTermsView(textAlignment: .natural,
                                            mode: viewModel.mode,
                                            brand: viewModel.brand,
                                            delegate: self)

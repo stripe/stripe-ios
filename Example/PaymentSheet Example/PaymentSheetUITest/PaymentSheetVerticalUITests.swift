@@ -88,7 +88,7 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         try! fillSepaData(app, tapCheckboxWithText: "Save this account for future Example, Inc. payments")
         continueButton.tap()
         sleep(1) // wait for 1 second for the sheet to dismiss
-        XCTAssertEqual(paymentMethodButton.label, "SEPA Debit, sepa_debit, John Doe, test@example.com, 354 Oyster Point Blvd, South San Francisco, CA, 94080, US")
+        XCTAssertEqual(paymentMethodButton.label, "SEPA Debit, sepa_debit, John Doe, test@example.com, 354 Oyster Point Boulevard, South San Francisco, CA, 94080, US")
         app.buttons["Confirm"].waitForExistenceAndTap(timeout: 3.0)
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
         XCTAssertEqual(
@@ -103,7 +103,7 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         )
         XCTAssertEqual(
             (initialDisplayedPaymentMethodsEvent.map { $0["hidden_payment_methods"] } as? [String])?.count,
-            2
+            3
         )
         XCTAssertEqual(
             initialDisplayedPaymentMethodsEvent.map { $0[string: "payment_method_orientation"] },
@@ -119,7 +119,7 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         // Reload
         reload(app, settings: settings)
         XCTAssertTrue(paymentMethodButton.waitForExistence(timeout: 10))
-        XCTAssertEqual(paymentMethodButton.label, "••••3000, sepa_debit, John Doe, test@example.com, 354 Oyster Point Blvd, South San Francisco, CA, 94080, US")
+        XCTAssertEqual(paymentMethodButton.label, "••••3000, sepa_debit, John Doe, test@example.com, 354 Oyster Point Boulevard, South San Francisco, CA, 94080, US")
         paymentMethodButton.tap()
 
         // Switch to the saved card...
@@ -468,7 +468,7 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         // ...should preserve the card
         XCTAssertEqual(app.buttons["Payment method"].label, "•••• 4242, card, 12345, US")
 
-        // 2. Now test Alipay, an example of *not* restoring due to Alipay not being valid for SetupIntent:
+        // 2. Now test Alipay, an example of restoring a payment method that is valid for SetupIntent:
         // Selecting Alipay w/ deferred PaymentIntent...
         app.buttons["Payment method"].waitForExistenceAndTap()
         app.buttons["Back"].waitForExistenceAndTap()
@@ -480,7 +480,7 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         app.buttons["Setup"].waitForExistenceAndTap()
         // ...(wait for it to finish updating)...
         _ = app.buttons["Reload"].waitForExistence(timeout: 10)
-        // ...should cause Alipay to no longer be the selected payment method, since it is not valid for setup.
-        XCTAssertEqual(app.buttons["Payment method"].label, "None")
+        // ...should preserve Alipay as the selected payment method, since it is valid for setup.
+        XCTAssertEqual(app.buttons["Payment method"].label, "Alipay, alipay")
     }
 }

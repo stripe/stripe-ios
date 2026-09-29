@@ -538,6 +538,89 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         wait(for: [loadExpectation], timeout: STPTestingNetworkRequestTimeout)
     }
 
+    // MARK: - Analytics destination flag
+
+    func testLoad_setsSendAnalyticsToRStripe_whenFlagEnabled() throws {
+        StubbedBackend.stubSessions(
+            fileMock: .elementsSessionsPaymentMethod_200,
+            responseCallback: { data in
+                var mutated = StubbedBackend.updatePaymentMethodDetail(
+                    data: data,
+                    variables: ["<paymentMethods>": "\"card\"", "<currency>": "\"usd\""]
+                )
+                var json = try! JSONSerialization.jsonObject(with: mutated) as! [String: Any]
+                json["flags"] = ["ocs_mobile_enable_analytics_to_r": true]
+                mutated = try! JSONSerialization.data(withJSONObject: json)
+                return mutated
+            }
+        )
+        StubbedBackend.stubPaymentMethods(paymentMethodTypes: [])
+        StubbedBackend.stubCustomers()
+        StubbedBackend.stubLookup()
+
+        STPAnalyticsClient.sendAnalyticsToRStripe = false
+        defer { STPAnalyticsClient.sendAnalyticsToRStripe = false }
+
+        let loaded = expectation(description: "Loaded")
+        let configuration = self.configuration(apiClient: stubbedAPIClient())
+        PaymentSheetLoader.load(
+            mode: .paymentIntentClientSecret("pi_12345_secret_54321"),
+            configuration: configuration,
+            analyticsHelper: ._testValue(integrationShape: .flowController, configuration: configuration),
+            integrationShape: .flowController
+        ) { result in
+            switch result {
+            case .success:
+                XCTAssertTrue(STPAnalyticsClient.sendAnalyticsToRStripe)
+                loaded.fulfill()
+            case .failure(let error):
+                XCTFail(error.nonGenericDescription)
+            }
+        }
+        wait(for: [loaded], timeout: 2)
+    }
+
+    func testLoad_doesNotSetSendAnalyticsToRStripe_whenFlagDisabled() throws {
+        StubbedBackend.stubSessions(
+            fileMock: .elementsSessionsPaymentMethod_200,
+            responseCallback: { data in
+                var mutated = StubbedBackend.updatePaymentMethodDetail(
+                    data: data,
+                    variables: ["<paymentMethods>": "\"card\"", "<currency>": "\"usd\""]
+                )
+                var json = try! JSONSerialization.jsonObject(with: mutated) as! [String: Any]
+                json["flags"] = ["ocs_mobile_enable_analytics_to_r": false]
+                mutated = try! JSONSerialization.data(withJSONObject: json)
+                return mutated
+            }
+        )
+        StubbedBackend.stubPaymentMethods(paymentMethodTypes: [])
+        StubbedBackend.stubCustomers()
+        StubbedBackend.stubLookup()
+
+        // Simulate a prior load having turned the flag on, to verify a subsequent load without the flag turns it back off.
+        STPAnalyticsClient.sendAnalyticsToRStripe = false
+        defer { STPAnalyticsClient.sendAnalyticsToRStripe = false }
+
+        let loaded = expectation(description: "Loaded")
+        let configuration = self.configuration(apiClient: stubbedAPIClient())
+        PaymentSheetLoader.load(
+            mode: .paymentIntentClientSecret("pi_12345_secret_54321"),
+            configuration: configuration,
+            analyticsHelper: ._testValue(integrationShape: .flowController, configuration: configuration),
+            integrationShape: .flowController
+        ) { result in
+            switch result {
+            case .success:
+                XCTAssertFalse(STPAnalyticsClient.sendAnalyticsToRStripe)
+                loaded.fulfill()
+            case .failure(let error):
+                XCTFail(error.nonGenericDescription)
+            }
+        }
+        wait(for: [loaded], timeout: 2)
+    }
+
     // MARK: - Link Lookup Session Preservation
 
     @MainActor

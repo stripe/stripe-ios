@@ -13,13 +13,28 @@ import UIKit
 final class RowButtonFlatWithDisclosure: RowButton {
     // MARK: - Subviews
     private lazy var disclosureImageView: UIImageView = {
-        let disclosureImage = appearance.embeddedPaymentElement.row.flat.disclosure.disclosureImage ?? Image.icon_chevron_right.makeImage(template: true)
+        let disclosureImage = appearance.embeddedPaymentElement.row.flat.disclosure.disclosureImage
+            ?? Image.icon_chevron_right.makeImage(template: true)
         let chevronImageView = UIImageView(image: disclosureImage)
         chevronImageView.tintColor = appearance.embeddedPaymentElement.row.flat.disclosure.color
         chevronImageView.contentMode = .scaleAspectFit
         chevronImageView.translatesAutoresizingMaskIntoConstraints = false
         return chevronImageView
     }()
+
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+
+        guard previousTraitCollection?.layoutDirection != traitCollection.layoutDirection,
+              appearance.embeddedPaymentElement.row.flat.disclosure.disclosureImage == nil else {
+            return
+        }
+
+        let disclosureImage = Image.icon_chevron_right.makeImage(template: true)
+        disclosureImageView.image = effectiveUserInterfaceLayoutDirection == .rightToLeft
+            ? disclosureImage.withHorizontallyFlippedOrientation()
+            : disclosureImage
+    }
 
     override func setupUI() {
         let labelsStackView = UIStackView(arrangedSubviews: [label, sublabel].compactMap { $0 })

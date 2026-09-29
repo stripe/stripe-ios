@@ -1,0 +1,467 @@
+//
+//  CheckoutApplePayContext.swift
+//  StripePaymentSheet
+//
+//  Created by Joyce Qin on 8/3/26.
+//  Copyright © 2026 Stripe, Inc. All rights reserved.
+//
+
+import Contacts
+import Foundation
+import PassKit
+@_spi(STP) import StripeApplePay
+@_spi(STP) import StripeCore
+@_spi(STP) import StripePayments
+import UIKit
+
+/// Responsible for handling the Apple Pay flow end to end: displaying line items,
+/// collecting billing and shipping, updating tax region, and confirming the Checkout Session.
+/// Owns the `PKPaymentAuthorizationController` and acts as its delegate directly.
+@MainActor
+final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerDelegate {
+
+    enum PaymentState {
+        case notStarted
+        case pending
+        case error
+        case success
+    }
+
+    private var session: CheckoutController.Session
+    private let merchantLabel: String
+    private let apiClient: STPAPIClient
+    private let returnURL: String
+    private let presentationWindow: UIWindow?
+    private let confirmationHandler: CheckoutController.ApplePayConfirmationParameters.ConfirmationHandler
+    private let initialTaxRegion: CheckoutController.Address?
+    let authorizationController: PKPaymentAuthorizationController
+
+    private weak var checkoutWalletUpdater: CheckoutSessionWalletUpdater?
+
+    // Internal state
+    private var continuation: CheckedContinuation<CheckoutController.InternalConfirmResult, Never>?
+    var result: CheckoutController.InternalConfirmResult?
+    var paymentState: PaymentState = .notStarted
+    /// YES if the flow cancelled or timed out.  This toggles which delegate method (didFinish or didAuthorize) resumes our continuation
+    var didCancelOrTimeoutWhilePending = false
+    /// Whether or not we fully completed the flow - if didFinish is `true`, that means `_end()` was called and this class is unusable.
+    private var didFinish = false
+    private var shippingContactUpdateTask: Task<Void, Never>?
+    private var paymentMethodUpdateTask: Task<Void, Never>?
+
+    init(
+        checkoutSession: CheckoutController.Session,
+        applePayConfirmationParameters: CheckoutController.ApplePayConfirmationParameters,
+        authorizationController: PKPaymentAuthorizationController,
+        checkoutWalletUpdater: CheckoutSessionWalletUpdater
+    ) {
+        self.session = checkoutSession
+        self.merchantLabel = applePayConfirmationParameters.merchantDisplayName
+        self.apiClient = applePayConfirmationParameters.apiClient
+        self.returnURL = applePayConfirmationParameters.returnURL
+        self.presentationWindow = applePayConfirmationParameters.presentationWindow
+        self.confirmationHandler = applePayConfirmationParameters.confirmationHandler
+        self.initialTaxRegion = checkoutWalletUpdater.currentTaxRegion
+        self.authorizationController = authorizationController
+        self.checkoutWalletUpdater = checkoutWalletUpdater
+        super.init()
+    }
+
+    // MARK: - PKPaymentAuthorizationControllerDelegate
+
+    func paymentAuthorizationController(
+        _ controller: PKPaymentAuthorizationController,
+        didAuthorizePayment payment: PKPayment,
+        handler completion: @escaping (PKPaymentAuthorizationResult) -> Void
+    ) {
+        // Some observations (on iOS 12 simulator):
+        // - The docs say localizedDescription can be shown in the Apple Pay sheet, but I haven't seen this.
+        // - If you call the completion block w/ a status of .failure and an error, the user is prompted to try again.
+
+        Task {
+            // Helpers to handle annoying logic around "Do I call completion block or dismiss + call delegate?"
+            // Helper 1: Handle an unsuccessful result
+            let handleUnsuccessfulResult = { (result: CheckoutController.InternalConfirmResult, error: Error?) in
+                self.paymentState = .error
+                self.result = result
+                if self.didCancelOrTimeoutWhilePending {
+                    self.finishAndDismiss()
+                } else {
+                    let pkError = error.flatMap(STPAPIClient.pkPaymentError(forStripeError:))
+                    completion(PKPaymentAuthorizationResult(status: .failure, errors: [pkError].compactMap { $0 }))
+                }
+            }
+            // Helper 2: Handle success
+            let handleSuccess = { (response: PaymentPagesAPIResponse) in
+                self.paymentState = .success
+                self.result = .completed(response)
+                if self.didCancelOrTimeoutWhilePending {
+                    self.finishAndDismiss()
+                } else {
+                    completion(PKPaymentAuthorizationResult(status: .success, errors: nil))
+                }
+            }
+
+            do {
+                // 1. Create PaymentMethod
+                let checkoutSession = self.session
+                let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadata(
+                    intent: .checkout(checkoutSession),
+                    elementsSession: checkoutSession.elementsSession
+                )
+                let paymentMethod = try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<StripeAPI.PaymentMethod, Error>) in
+                    StripeAPI.PaymentMethod.create(
+                        apiClient: self.apiClient,
+                        payment: payment,
+                        fallbackBillingDetails: nil,
+                        clientAttributionMetadata: clientAttributionMetadata
+                    ) { result in
+                        continuation.resume(with: result)
+                    }
+                }
+                guard !self.didFinish else {
+                    return // The user canceled mid-payment - just abort
+                }
+                self.paymentState = .pending  // After this point, we can't cancel
+                let savePaymentMethod: Bool? = checkoutSession.noPaymentRequired ? nil
+                    : checkoutSession.merchantWillSavePaymentMethod(STPPaymentMethodType.card) ? true : nil
+
+                // 2. Confirm
+                let requestParameters = CheckoutSessionConfirmationRequestParameters(
+                    sessionId: checkoutSession.id,
+                    paymentMethodId: paymentMethod.id,
+                    expectedAmount: checkoutSession.amount,
+                    expectedPaymentMethodType: paymentMethod.type?.rawValue ?? STPPaymentMethodType.card.identifier,
+                    savePaymentMethod: savePaymentMethod,
+                    returnURL: self.returnURL,
+                    shipping: self.makeShippingDetailsParams(from: payment)
+                        ?? checkoutSession.shippingAddress?.shippingDetailsParams,
+                    clientAttributionMetadata: clientAttributionMetadata,
+                    collectedInformation: .init(email: checkoutSession.localState.email)
+                )
+                let result = await self.confirmationHandler(requestParameters)
+                switch result {
+                case .completed(let response):
+                    handleSuccess(response)
+                case .canceled:
+                    handleUnsuccessfulResult(result, nil)
+                case .failed(let error, _):
+                    handleUnsuccessfulResult(result, error)
+                }
+            } catch {
+                handleUnsuccessfulResult(.failed(error), error)
+            }
+        }
+    }
+
+    func paymentAuthorizationControllerDidFinish(_ controller: PKPaymentAuthorizationController) {
+        // Note: If you don't dismiss the VC, the UI disappears, the VC blocks interaction, and this method gets called again.
+        // Note: This method is called if the user cancels (taps outside the sheet) or Apple Pay times out (empirically ~30 seconds)
+        switch paymentState {
+        case .notStarted:
+            Task {
+                await shippingContactUpdateTask?.value
+                await paymentMethodUpdateTask?.value
+                await restoreInitialTaxRegionIfNecessary()
+                await controller.dismiss()
+                self.resume(with: .canceled())
+                self._end()
+            }
+        case .pending:
+            // We can't cancel a pending payment. If we dismiss the VC now, the customer might interact with the app and miss seeing the result of the payment - risking a double charge, chargeback, etc.
+            // Instead, we'll dismiss and notify our delegate when the payment finishes.
+            didCancelOrTimeoutWhilePending = true
+        case .error:
+            Task {
+                await controller.dismiss()
+                self.resume(with: self.result ?? .failed(CheckoutError.unknown(debugDescription: "Apple Pay finished in error state without a result.")))
+                self._end()
+            }
+        case .success:
+            Task {
+                await controller.dismiss()
+                self.resume(with: self.result ?? .canceled())
+                self._end()
+            }
+        }
+    }
+
+    @objc nonisolated func presentationWindow(for controller: PKPaymentAuthorizationController) -> UIWindow? {
+        return presentationWindow
+    }
+
+    func paymentAuthorizationController(
+        _ controller: PKPaymentAuthorizationController,
+        didSelectPaymentMethod paymentMethod: PKPaymentMethod,
+        handler: @escaping (PKPaymentRequestPaymentMethodUpdate) -> Void
+    ) {
+        guard session.collectsTaxFromBillingAddress,
+              let postalAddress = paymentMethod.billingAddress?.postalAddresses.first?.value,
+              let address = STPApplePayContext.makeCheckoutAddress(from: postalAddress),
+              let checkoutWalletUpdater else {
+            handler(PKPaymentRequestPaymentMethodUpdate(paymentSummaryItems: summaryItems()))
+            return
+        }
+        paymentMethodUpdateTask = Task { @MainActor in
+            if let updatedSession = try? await checkoutWalletUpdater.updateTaxRegionWithoutEnqueueing(
+                address: address,
+                canUpdateWhileSheetPresented: true
+            ) {
+                self.session = updatedSession
+            }
+            handler(PKPaymentRequestPaymentMethodUpdate(paymentSummaryItems: summaryItems()))
+        }
+    }
+
+    func paymentAuthorizationController(
+        _ controller: PKPaymentAuthorizationController,
+        didSelectShippingContact contact: PKContact,
+        handler: @escaping (PKPaymentRequestShippingContactUpdate) -> Void
+    ) {
+        if let allowedCountries = session.allowedShippingCountries,
+           let country = contact.postalAddress?.isoCountryCode,
+           !allowedCountries.contains(country.uppercased()) {
+            let error = CheckoutError.invalidShippingCountry(countryCode: country)
+            handler(PKPaymentRequestShippingContactUpdate(
+                errors: [error],
+                paymentSummaryItems: summaryItems(),
+                shippingMethods: []
+            ))
+            return
+        }
+
+        guard session.shouldSendTaxRegion(for: "shipping"),
+              let postalAddress = contact.postalAddress,
+              let address = STPApplePayContext.makeCheckoutAddress(from: postalAddress),
+              let checkoutWalletUpdater else {
+            handler(PKPaymentRequestShippingContactUpdate(paymentSummaryItems: summaryItems()))
+            return
+        }
+        shippingContactUpdateTask = Task { @MainActor in
+            if let updatedSession = try? await checkoutWalletUpdater.updateTaxRegionWithoutEnqueueing(
+                address: address,
+                canUpdateWhileSheetPresented: true
+            ) {
+                self.session = updatedSession
+            }
+            handler(PKPaymentRequestShippingContactUpdate(paymentSummaryItems: summaryItems()))
+        }
+    }
+
+    func paymentAuthorizationController(
+        _ controller: PKPaymentAuthorizationController,
+        didSelectShippingMethod shippingMethod: PKShippingMethod,
+        handler: @escaping (PKPaymentRequestShippingMethodUpdate) -> Void
+    ) {
+        // TODO: Handle multiple shipping rates from the session.
+        handler(PKPaymentRequestShippingMethodUpdate(paymentSummaryItems: summaryItems()))
+    }
+
+    func paymentAuthorizationController(
+        _ controller: PKPaymentAuthorizationController,
+        didChangeCouponCode couponCode: String,
+        handler: @escaping (PKPaymentRequestCouponCodeUpdate) -> Void
+    ) {
+        // TODO: Wire up coupon code handling.
+        handler(PKPaymentRequestCouponCodeUpdate(paymentSummaryItems: summaryItems()))
+    }
+
+    // MARK: - Factory
+
+    static func create(
+        checkoutSession: CheckoutController.Session,
+        applePayConfirmationParameters: CheckoutController.ApplePayConfirmationParameters,
+        checkoutWalletUpdater: CheckoutSessionWalletUpdater
+    ) throws -> CheckoutApplePayContext {
+        guard PKPaymentAuthorizationController.canMakePayments() else {
+            let error = CheckoutError.unknown(debugDescription: "Apple Pay isn't set up on this device (e.g. no cards in wallet).")
+            STPAnalyticsClient.sharedClient.log(analytic: ErrorAnalytic(event: .unexpectedCheckoutElementsError, error: error))
+            throw error
+        }
+
+        // TODO: Product Usage
+
+        let paymentRequest = CheckoutApplePayContext.makePaymentRequest(
+            checkoutSession: checkoutSession,
+            applePayConfirmationParameters: applePayConfirmationParameters
+        )
+
+        // PKPaymentAuthorizationController.init is non-nullable even for invalid requests.
+        // Use PKPaymentAuthorizationViewController.init as a proxy — it IS nullable and
+        // returns nil when the request can't be presented (e.g. bad merchant ID, unsupported network).
+        guard PKPaymentAuthorizationViewController(paymentRequest: paymentRequest) != nil else {
+            let error = CheckoutError.unknown(debugDescription: "Apple Pay couldn't be set up, most likely because the Apple Pay merchant ID isn't valid or isn't provisioned for this app.")
+            STPAnalyticsClient.sharedClient.log(analytic: ErrorAnalytic(event: .unexpectedCheckoutElementsError, error: error))
+            throw error
+        }
+        let authorizationController = PKPaymentAuthorizationController(paymentRequest: paymentRequest)
+        return CheckoutApplePayContext(
+            checkoutSession: checkoutSession,
+            applePayConfirmationParameters: applePayConfirmationParameters,
+            authorizationController: authorizationController,
+            checkoutWalletUpdater: checkoutWalletUpdater
+        )
+    }
+
+    // MARK: - Present
+
+    func presentApplePay() async -> CheckoutController.InternalConfirmResult {
+        authorizationController.delegate = self
+        return await withCheckedContinuation { continuation in
+            self.continuation = continuation
+            authorizationController.present { [weak self] presented in
+                guard let self, !presented else { return }
+                Task { @MainActor [weak self] in
+                    let error = CheckoutError.unknown(debugDescription: "Could not present Apple Pay.")
+                    STPAnalyticsClient.sharedClient.log(analytic: ErrorAnalytic(event: .unexpectedCheckoutElementsError, error: error))
+                    self?.resume(with: .failed(error))
+                }
+            }
+        }
+    }
+
+    // MARK: - Helpers
+
+    private func summaryItems() -> [PKPaymentSummaryItem] {
+        return Self.makeSummaryItems(for: session, label: merchantLabel)
+    }
+
+    static func makeSummaryItems(for session: CheckoutController.Session, label: String) -> [PKPaymentSummaryItem] {
+        return STPApplePayContext.makePaymentSummaryItems(for: session, label: label, currency: session.activePresentmentCurrency)
+    }
+
+    /// Builds the `PKPaymentRequest` for a Checkout Session's Apple Pay flow, including which
+    /// billing/shipping contact fields Apple Pay must collect.
+    static func makePaymentRequest(
+        checkoutSession: CheckoutController.Session,
+        applePayConfirmationParameters: CheckoutController.ApplePayConfirmationParameters
+    ) -> PKPaymentRequest {
+        let applePayConfig = applePayConfirmationParameters.applePayConfiguration
+        let paymentRequest = StripeAPI.paymentRequest(
+            withMerchantIdentifier: applePayConfig.merchantId,
+            country: checkoutSession.merchantCountryCode,
+            currency: checkoutSession.activePresentmentCurrency ?? "USD"
+        )
+
+        assert(!paymentRequest.merchantIdentifier.isEmpty, "You must set `merchantId` on `ApplePayConfiguration`.")
+
+        let merchantLabel = applePayConfirmationParameters.merchantDisplayName
+        paymentRequest.paymentSummaryItems = CheckoutApplePayContext.makeSummaryItems(for: checkoutSession, label: merchantLabel)
+
+        if checkoutSession.collectsTaxFromBillingAddress {
+            paymentRequest.requiredBillingContactFields.insert(.postalAddress)
+        }
+
+        if applePayConfirmationParameters.shippingAddressRequired {
+            paymentRequest.requiredShippingContactFields.insert(.postalAddress)
+            paymentRequest.requiredShippingContactFields.insert(.name)
+            if let shippingAddress = checkoutSession.shippingAddress {
+                paymentRequest.shippingContact = makeShippingContact(from: shippingAddress)
+            }
+        }
+
+        if let defaults = applePayConfirmationParameters.defaultBillingDetails,
+           defaults.address?.line1 != nil {
+            paymentRequest.billingContact = makeBillingContact(from: defaults)
+        }
+
+        return paymentRequest
+    }
+
+    static func makeShippingContact(from shippingAddress: CheckoutController.Session.ShippingAddress) -> PKContact {
+        let contact = PKContact()
+        if let name = shippingAddress.name {
+            contact.name = PersonNameComponentsFormatter().personNameComponents(from: name)
+        }
+
+        let address = shippingAddress.address
+        let postalAddress = CNMutablePostalAddress()
+        postalAddress.isoCountryCode = address.country
+        postalAddress.street = [address.line1, address.line2].compactMap { $0 }.joined(separator: "\n")
+        postalAddress.city = address.city ?? ""
+        postalAddress.state = address.state ?? ""
+        postalAddress.postalCode = address.postalCode ?? ""
+        contact.postalAddress = postalAddress
+        return contact
+    }
+
+    static func makeBillingContact(
+        from billingDetails: CheckoutController.Configuration.Defaults.BillingDetails
+    ) -> PKContact {
+        let contact = PKContact()
+        if let name = billingDetails.name {
+            contact.name = PersonNameComponentsFormatter().personNameComponents(from: name)
+        }
+        if let address = billingDetails.address {
+            let postalAddress = CNMutablePostalAddress()
+            postalAddress.isoCountryCode = address.country
+            postalAddress.street = [address.line1, address.line2].compactMap { $0 }.joined(separator: "\n")
+            postalAddress.city = address.city ?? ""
+            postalAddress.state = address.state ?? ""
+            postalAddress.postalCode = address.postalCode ?? ""
+            contact.postalAddress = postalAddress
+        }
+        return contact
+    }
+
+    private func _end() {
+        authorizationController.delegate = nil
+        shippingContactUpdateTask = nil
+        paymentMethodUpdateTask = nil
+        didFinish = true
+    }
+
+    private func restoreInitialTaxRegionIfNecessary() async {
+        guard let checkoutWalletUpdater,
+              checkoutWalletUpdater.currentTaxRegion != initialTaxRegion else {
+            return
+        }
+        let taxRegionToRestore = initialTaxRegion ?? .init(country: session.merchantCountryCode)
+        _ = try? await checkoutWalletUpdater.updateTaxRegionWithoutEnqueueing(
+            address: taxRegionToRestore,
+            canUpdateWhileSheetPresented: true
+        )
+    }
+
+    private func resume(with result: CheckoutController.InternalConfirmResult) {
+        guard let c = continuation else { return }
+        continuation = nil
+        c.resume(returning: result)
+    }
+
+    private func finishAndDismiss() {
+        Task { @MainActor in
+            await self.authorizationController.dismiss()
+            self.resume(with: self.result ?? .canceled())
+            self._end()
+        }
+    }
+
+    private func makeShippingDetailsParams(from payment: PKPayment) -> STPPaymentIntentShippingDetailsParams? {
+        guard let shippingContact = payment.shippingContact,
+              let nameComponents = shippingContact.name else {
+            return nil
+        }
+
+        let name = PersonNameComponentsFormatter.localizedString(from: nameComponents, style: .default)
+        let shippingAddress = STPAddress(pkContact: shippingContact)
+
+        // country is required by the API; skip shipping if it's absent (e.g. simulator fixtures).
+        guard let line1 = shippingAddress.line1,
+              let country = shippingAddress.country else {
+            return nil
+        }
+
+        let addressParams = STPPaymentIntentShippingDetailsAddressParams(line1: line1)
+        addressParams.line2 = shippingAddress.line2
+        addressParams.city = shippingAddress.city
+        addressParams.state = shippingAddress.state
+        addressParams.postalCode = shippingAddress.postalCode
+        addressParams.country = country
+
+        let shippingDetailsParams = STPPaymentIntentShippingDetailsParams(address: addressParams, name: name)
+        shippingDetailsParams.phone = shippingAddress.phone
+
+        return shippingDetailsParams
+    }
+}

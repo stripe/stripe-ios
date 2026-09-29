@@ -13,6 +13,7 @@ import SafariServices
 @_spi(STP) import StripeUICore
 import UIKit
 
+@MainActor
 protocol BottomSheetContentViewController: UIViewController {
 
     /// - Note: Implementing `navigationBar` as a computed variable will result in undefined behavior.
@@ -556,7 +557,7 @@ extension BottomSheetViewController: PaymentSheetAuthenticationContext {
         self.removeBlurEffect(animated: true, completion: completion)
     }
 
-    func presentPollingVCForAction(action: STPPaymentHandlerPaymentIntentActionParams, type: STPPaymentMethodType, safariViewController: SFSafariViewController?) {
+    func presentPollingVCForAction(action: STPPaymentHandlerActionParams, type: STPPaymentMethodType, safariViewController: SFSafariViewController?) {
         let pollingVC = PollingViewController(currentAction: action, viewModel: PollingViewModel(paymentMethodType: type),
                                                       appearance: self.appearance, safariViewController: safariViewController)
         pushContentViewController(pollingVC)

@@ -63,6 +63,7 @@ final class PaymentSheetLinkAccountTests: APIStubbedTestCase {
         XCTAssertEqual(result?.allowRedisplay, .always)
     }
 
+    @MainActor
     func testRefreshesWhenNeeded() {
         let sut = makeSUT()
         let listedPaymentDetailsExp = expectation(description: "Lists payment details")
@@ -101,6 +102,144 @@ final class PaymentSheetLinkAccountTests: APIStubbedTestCase {
                 XCTFail("Should not have failed")
             }
         }
+        waitForExpectations(timeout: 5)
+    }
+
+    func testRecordConnectionsConsentAcquired_sendsExpectedConsentJSON() async throws {
+        let sut = makeSUT()
+        let consentText = "Rocket Deliveries can access account and ownership details, balances, and transactions."
+
+        var capturedFormFields: [String: String] = [:]
+        stub { urlRequest in
+            return urlRequest.url?.absoluteString.contains("consumers/connections_consent_acquired") ?? false
+        } response: { urlRequest in
+            let body = String(data: urlRequest.httpBodyOrBodyStream ?? Data(), encoding: .utf8) ?? ""
+            capturedFormFields = Self.decodeFormFields(from: body)
+            return HTTPStubsResponse(jsonObject: [String: Any](), statusCode: 200, headers: nil)
+        }
+
+        _ = try await sut.recordConnectionsConsentAcquired(localizedConsentText: consentText)
+
+        let consentJSONString = try XCTUnwrap(capturedFormFields["consent"])
+        let consentJSON = try XCTUnwrap(
+            JSONSerialization.jsonObject(with: Data(consentJSONString.utf8)) as? [String: Any]
+        )
+        XCTAssertEqual(consentJSON as? [String: String], ["localizedConsent": consentText])
+        XCTAssertNil(consentJSON["consentMessageTemplate"])
+
+        XCTAssertEqual(capturedFormFields["credentials[consumer_session_client_secret]"], "client_secret")
+        XCTAssertEqual(capturedFormFields["request_surface"], "ios_payment_element")
+    }
+
+    func testCreateLinkAccountSessionOmitsMerchantTokenWithoutPermissions() {
+        let apiClient = APIStubbedTestCase.stubbedAPIClient()
+        var capturedFormFields: [String: String] = [:]
+        stub { request in
+            request.url?.absoluteString.contains("consumers/link_account_sessions") ?? false
+        } response: { request in
+            let body = String(data: request.httpBodyOrBodyStream ?? Data(), encoding: .utf8) ?? ""
+            capturedFormFields = Self.decodeFormFields(from: body)
+            return HTTPStubsResponse(
+                jsonObject: [
+                    "id": "fcsess_123",
+                    "livemode": false,
+                    "client_secret": "fcsess_123_secret_456",
+                    "permissions": [],
+                ],
+                statusCode: 200,
+                headers: nil
+            )
+        }
+        let expectation = expectation(description: "Creates Link Account Session")
+
+        apiClient.createLinkAccountSession(
+            for: "consumer_session_secret",
+            permissions: [],
+            merchantToken: "acct_123"
+        ) { result in
+            XCTAssertNotNil(try? result.get())
+            expectation.fulfill()
+        }
+
+        wait(for: [expectation], timeout: 1)
+        XCTAssertNil(capturedFormFields["merchant_token"])
+    }
+
+    func testCreateLinkAccountSessionIncludesMerchantTokenWithPermissions() {
+        let apiClient = APIStubbedTestCase.stubbedAPIClient()
+        var capturedFormFields: [String: String] = [:]
+        stub { request in
+            request.url?.absoluteString.contains("consumers/link_account_sessions") ?? false
+        } response: { request in
+            let body = String(data: request.httpBodyOrBodyStream ?? Data(), encoding: .utf8) ?? ""
+            capturedFormFields = Self.decodeFormFields(from: body)
+            return HTTPStubsResponse(
+                jsonObject: [
+                    "id": "fcsess_123",
+                    "livemode": false,
+                    "client_secret": "fcsess_123_secret_456",
+                    "permissions": ["balances"],
+                ],
+                statusCode: 200,
+                headers: nil
+            )
+        }
+        let expectation = expectation(description: "Creates Link Account Session")
+
+        apiClient.createLinkAccountSession(
+            for: "consumer_session_secret",
+            permissions: ["balances"],
+            merchantToken: "acct_123"
+        ) { result in
+            XCTAssertNotNil(try? result.get())
+            expectation.fulfill()
+        }
+
+        wait(for: [expectation], timeout: 1)
+        XCTAssertEqual(capturedFormFields["merchant_token"], "acct_123")
+    }
+
+    /// Decodes an `application/x-www-form-urlencoded` request body into a flat `[key: value]` map, keeping
+    /// bracketed keys (e.g. `credentials[consumer_session_client_secret]`) as-is rather than nesting them.
+    private static func decodeFormFields(from body: String) -> [String: String] {
+        var fields: [String: String] = [:]
+        for pair in body.split(separator: "&") {
+            let parts = pair.split(separator: "=", maxSplits: 1)
+            guard parts.count == 2 else { continue }
+            let key = String(parts[0]).removingPercentEncoding ?? String(parts[0])
+            let value = String(parts[1]).replacingOccurrences(of: "+", with: " ").removingPercentEncoding ?? String(parts[1])
+            fields[key] = value
+        }
+        return fields
+    }
+
+    @MainActor
+    func testRecordConnectionsConsentAcquired_retriesOnAuthError() async throws {
+        let sut = makeSUT()
+        let refreshExp = expectation(description: "Refreshes when needed")
+
+        stub { urlRequest in
+            return urlRequest.url?.absoluteString.contains("consumers/connections_consent_acquired") ?? false
+        } response: { urlRequest in
+            let body = String(data: urlRequest.httpBodyOrBodyStream ?? Data(), encoding: .utf8) ?? ""
+            if !body.contains("unexpired_key") {
+                let errorResponse = [
+                    "error":
+                        [
+                            "message": "Fake invalid consumer session error.",
+                            "code": "consumer_session_credentials_invalid",
+                            "type": "invalid_request_error",
+                        ],
+                ]
+                return HTTPStubsResponse(jsonObject: errorResponse, statusCode: 401, headers: nil)
+            }
+
+            return HTTPStubsResponse(jsonObject: [String: Any](), statusCode: 200, headers: nil)
+        }
+
+        sut.paymentSheetLinkAccountDelegate = PaymentSheetLinkAccountDelegateStub(expectation: refreshExp)
+
+        _ = try await sut.recordConnectionsConsentAcquired(localizedConsentText: "consent text")
         waitForExpectations(timeout: 5)
     }
 
@@ -330,15 +469,15 @@ final class FundingSourceDetailsTypeMappingTests: XCTestCase {
         XCTAssertEqual(fundingSource.detailsType.value, .bankAccount)
     }
 
-    func test_unknownType_transfersRawValue() {
+    func test_genericType_transfersRawValue() {
         let fundingSource = ParsedEnum<LinkSettings.FundingSource>(rawValue: "PIX")
         let detailsType = fundingSource.detailsType
-        XCTAssertNil(detailsType.value, "Unknown funding source should produce an unparsed details type")
-        XCTAssertEqual(detailsType.rawValue, "PIX", "Raw value should be preserved for unknown types")
+        XCTAssertNil(detailsType.value, "Generic funding source should produce an unparsed details type")
+        XCTAssertEqual(detailsType.rawValue, "PIX", "Raw value should be preserved for generic types")
     }
 
-    func test_unknownType_appearsInIntersectionWhenConsumerSessionAlsoAdvertisesIt() {
-        // If both the funding sources and the consumer session advertise an unknown type,
+    func test_genericType_appearsInIntersectionWhenConsumerSessionAlsoAdvertisesIt() {
+        // If both the funding sources and the consumer session advertise a generic type,
         // it should survive the intersection even though neither side can parse it.
         let fundingSourceDetailsTypes: Set<ParsedEnum<ConsumerPaymentDetails.DetailsType>> = [
             ParsedEnum(rawValue: "PIX"),
@@ -353,7 +492,7 @@ final class FundingSourceDetailsTypeMappingTests: XCTestCase {
         XCTAssertNil(supported.first?.value)
     }
 
-    func test_unknownType_isExcludedFromIntersectionWhenSessionDoesNotAdvertiseIt() {
+    func test_genericType_isExcludedFromIntersectionWhenSessionDoesNotAdvertiseIt() {
         let fundingSourceDetailsTypes: Set<ParsedEnum<ConsumerPaymentDetails.DetailsType>> = [
             ParsedEnum(rawValue: "PIX"),
             ParsedEnum(.card),
@@ -364,5 +503,91 @@ final class FundingSourceDetailsTypeMappingTests: XCTestCase {
         let supported = fundingSourceDetailsTypes.intersection(sessionTypes)
         XCTAssertEqual(supported.count, 1)
         XCTAssertEqual(supported.first?.value, .card)
+    }
+}
+
+// MARK: - supportedPaymentMethodTypes tests
+
+final class SupportedPaymentMethodTypesTests: XCTestCase {
+
+    func test_supportedPaymentMethodTypes_returnsEmptyWhenSessionFundingSourcesEmpty() throws {
+        // Given a consumer session that supports cards, but the session-level funding sources list is empty
+        let consumerSession = ConsumerSession.make(
+            clientSecret: "client_secret",
+            emailAddress: "user@example.com",
+            redactedFormattedPhoneNumber: "(***) *** **55",
+            unredactedPhoneNumber: nil,
+            phoneNumberCountry: nil,
+            verificationSessions: [],
+            supportedPaymentDetailsTypes: [ParsedEnum(.card)],
+            mobileFallbackWebviewParams: nil
+        )
+        let linkAccount = PaymentSheetLinkAccount(
+            email: "user@example.com",
+            session: consumerSession,
+            publishableKey: nil,
+            displayablePaymentDetails: nil,
+            useMobileEndpoints: false,
+            canSyncAttestationState: false
+        )
+
+        let (_, elementsSession) = try PayWithLinkTestHelpers.makePaymentIntentAndElementsSession(linkFundingSources: [])
+        let result = linkAccount.supportedPaymentMethodTypes(for: elementsSession)
+
+        XCTAssertTrue(result.isEmpty, "Should return empty array when session has no funding sources")
+    }
+
+    func test_supportedPaymentMethodTypes_returnsEmptyWhenIntersectionIsEmpty() throws {
+        // Given a session that allows only bank accounts, but the consumer only supports cards
+        let consumerSession = ConsumerSession.make(
+            clientSecret: "client_secret",
+            emailAddress: "user@example.com",
+            redactedFormattedPhoneNumber: "(***) *** **55",
+            unredactedPhoneNumber: nil,
+            phoneNumberCountry: nil,
+            verificationSessions: [],
+            supportedPaymentDetailsTypes: [ParsedEnum(.card)],
+            mobileFallbackWebviewParams: nil
+        )
+        let linkAccount = PaymentSheetLinkAccount(
+            email: "user@example.com",
+            session: consumerSession,
+            publishableKey: nil,
+            displayablePaymentDetails: nil,
+            useMobileEndpoints: false,
+            canSyncAttestationState: false
+        )
+
+        let (_, elementsSession) = try PayWithLinkTestHelpers.makePaymentIntentAndElementsSession(linkFundingSources: ["BANK_ACCOUNT"])
+        let result = linkAccount.supportedPaymentMethodTypes(for: elementsSession)
+
+        XCTAssertTrue(result.isEmpty, "Should return empty array when intersection of session and consumer funding sources is empty")
+    }
+
+    func test_supportedPaymentMethodTypes_returnsCardWhenBothSidesHaveCard() throws {
+        // Given a session and consumer that both support cards
+        let consumerSession = ConsumerSession.make(
+            clientSecret: "client_secret",
+            emailAddress: "user@example.com",
+            redactedFormattedPhoneNumber: "(***) *** **55",
+            unredactedPhoneNumber: nil,
+            phoneNumberCountry: nil,
+            verificationSessions: [],
+            supportedPaymentDetailsTypes: [ParsedEnum(.card)],
+            mobileFallbackWebviewParams: nil
+        )
+        let linkAccount = PaymentSheetLinkAccount(
+            email: "user@example.com",
+            session: consumerSession,
+            publishableKey: nil,
+            displayablePaymentDetails: nil,
+            useMobileEndpoints: false,
+            canSyncAttestationState: false
+        )
+
+        let (_, elementsSession) = try PayWithLinkTestHelpers.makePaymentIntentAndElementsSession(linkFundingSources: ["CARD"])
+        let result = linkAccount.supportedPaymentMethodTypes(for: elementsSession)
+
+        XCTAssertEqual(result, [.card])
     }
 }

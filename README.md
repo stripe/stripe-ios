@@ -48,7 +48,7 @@ Table of contents
 
 **App Clips**: The `StripeApplePay` module provides a [lightweight SDK for offering Apple Pay in an App Clip](https://stripe.com/docs/apple-pay#app-clips).
 
-**Localized**: We support the following localizations: Bulgarian, Catalan, Chinese (Hong Kong), Chinese (Simplified), Chinese (Traditional), Croatian, Czech, Danish, Dutch, English (US), English (United Kingdom), Estonian, Filipino, Finnish, French, French (Canada), German, Greek, Hungarian, Indonesian, Italian, Japanese, Korean, Latvian, Lithuanian, Malay, Maltese, Norwegian Bokmål, Norwegian Nynorsk (Norway), Polish, Portuguese, Portuguese (Brazil), Romanian, Russian, Slovak, Slovenian, Spanish, Spanish (Latin America), Swedish, Turkish, Thai and Vietnamese.
+**Localized**: We support the following localizations: Arabic (Saudi Arabia), Bulgarian, Catalan, Chinese (Hong Kong), Chinese (Simplified), Chinese (Traditional), Croatian, Czech, Danish, Dutch, English (US), English (United Kingdom), Estonian, Filipino, Finnish, French, French (Canada), German, Greek, Hungarian, Indonesian, Italian, Japanese, Korean, Latvian, Lithuanian, Malay, Maltese, Norwegian Bokmål, Norwegian Nynorsk (Norway), Polish, Portuguese, Portuguese (Brazil), Romanian, Russian, Slovak, Slovenian, Spanish, Spanish (Latin America), Swedish, Turkish, Thai, Vietnamese and Welsh.
 
 **Identity**: Learn about our [Stripe Identity iOS SDK](StripeIdentity/README.md) to verify the identity of your users.
 
@@ -92,6 +92,7 @@ For the `Stripe` module, link the following frameworks:
 - `StripeApplePay.xcframework`
 - `StripePayments.xcframework`
 - `StripePaymentsUI.xcframework`
+- `StripeFinancialConnectionsLite.xcframework`
 - `StripeIssuing.xcframework`
 - `StripeCore.xcframework`
 - `StripeUICore.xcframework`
@@ -152,7 +153,7 @@ See [MIGRATING.md](https://github.com/stripe/stripe-ios/blob/master/MIGRATING.md
 ## Code style
 We use [swiftlint](https://github.com/realm/SwiftLint) to enforce code style.
 
-To install it, run `brew install swiftlint`
+The lint and formatting scripts automatically use the version pinned in `.swiftlint-version`, downloading it to a local cache if necessary. No separate installation is required.
 
 To lint your code before pushing you can run `ci_scripts/lint_modified_files.sh`
 

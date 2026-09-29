@@ -141,17 +141,7 @@ import XCTest
                 return fileName
             }
 
-            // The goal is for `basePath` to be e.g. `~/stripe-ios/Stripe/StripeiOSTests`
-            // A little gross/hardcoded (but it works fine); feel free to improve this...
-            let testDirectoryName = "stripe-ios/StripePayments/StripePaymentsTestUtils"
-            var basePath = "\(#file)"
-            while !basePath.hasSuffix(testDirectoryName) {
-                assert(
-                    basePath.contains(testDirectoryName),
-                    "Not in a subdirectory of \(testDirectoryName): \(#file)"
-                )
-                basePath = URL(fileURLWithPath: basePath).deletingLastPathComponent().path
-            }
+            let basePath = URL(fileURLWithPath: #filePath).deletingLastPathComponent().path
 
             let recordingPath = URL(fileURLWithPath: basePath)
                 .appendingPathComponent("Resources")
