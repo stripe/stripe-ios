@@ -384,6 +384,6 @@ extension PaymentSheet {
 
     /// Payment method types that require mandate data for SetupIntents
     static var requiresMandateDataForSetupIntent: Set<STPPaymentMethodType> {
-        [.goPay, .alipay, .payPal, .revolutPay, .satispay, .twint, .kakaoPay, .naverPay, .krCard, .pix]
+        [.alipay, .payPal, .revolutPay, .satispay, .twint, .kakaoPay, .naverPay, .krCard, .pix]
     }
 }

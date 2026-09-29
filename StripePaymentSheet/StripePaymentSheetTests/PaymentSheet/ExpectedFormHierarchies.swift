@@ -132,7 +132,6 @@ enum ExpectedFormHierarchy {
 
     enum GoPay {
         static var paymentIntent: FormHierarchyNode { emptyForm }
-        static var settingUp: FormHierarchyNode { emptyForm }
     }
     // MARK: - PAYCO
 

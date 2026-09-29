@@ -2530,11 +2530,10 @@ class PaymentSheetFormFactoryTest: XCTestCase {
     }
 
     func testGoPayUsesHostedAuthorizationWithoutNativeMandate() {
-        // Given the payment and setup modes supported by GoPay
+        // Given the payment modes supported by GoPay
         let intents: [Intent] = [
             ._testPaymentIntent(paymentMethodTypes: [.goPay]),
             ._testPaymentIntent(paymentMethodTypes: [.goPay], setupFutureUsage: .offSession),
-            ._testSetupIntent(paymentMethodTypes: [.goPay]),
         ]
         for intent in intents {
             // When the form uses automatic billing collection

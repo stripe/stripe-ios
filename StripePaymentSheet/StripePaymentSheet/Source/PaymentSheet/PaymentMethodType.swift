@@ -257,7 +257,9 @@ extension PaymentSheet {
             let requirements: [PaymentMethodTypeRequirement]
 
             // We have different requirements depending on whether or not the intent is setting up the payment method for future use
-            if intent.isSetupFutureUsageSet(for: paymentMethod) {
+            if paymentMethod == .goPay, case .setupIntent = intent {
+                requirements = [.unsupportedForSetup]
+            } else if intent.isSetupFutureUsageSet(for: paymentMethod) {
                 requirements = {
                     switch paymentMethod {
                     case .card, .pix:

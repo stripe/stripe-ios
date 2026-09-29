@@ -1586,17 +1586,10 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
             ),
             configuration: configuration
         )
-        let setupIntentParams = PaymentSheet.makeSetupIntentParams(
-            confirmPaymentMethodType: confirmType,
-            setupIntent: STPFixtures.makeSetupIntent(paymentMethodTypes: [.goPay]),
-            configuration: configuration
-        )
-
         // Then
         XCTAssertNil(regularPaymentIntentParams.mandateData)
         XCTAssertNotNil(futureUsagePaymentIntentParams.mandateData)
         XCTAssertNotNil(paymentMethodOptionsFutureUsagePaymentIntentParams.mandateData)
-        XCTAssertNotNil(setupIntentParams.mandateData)
     }
     func testMakeIntentParams_naverPay_setsMandate() {
         // Given
