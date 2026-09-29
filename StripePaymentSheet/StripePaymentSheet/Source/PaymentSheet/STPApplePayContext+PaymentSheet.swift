@@ -15,6 +15,7 @@ import PassKit
 typealias PaymentSheetResultCompletionBlock = ((PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void)
 
 /// A shim class; ApplePayContext expects a protocol/delegate, but PaymentSheet uses closures.
+@MainActor
 private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate {
     let completion: PaymentSheetResultCompletionBlock
     /// Retain this class until Apple Pay completes
@@ -198,22 +199,24 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
         )
 
         // 2. Get expected amount from checkout session
-        let expectedAmount = checkoutSession.expectedAmount()
+        let expectedAmount = checkoutSession.amount
 
         // 3. Extract shipping details from PKPayment (if provided)
         let shipping = makeShippingDetailsParams(from: paymentInformation)
 
         // 4. Call confirm API with the Apple Pay payment method
-        let response = try await context.apiClient.confirmCheckoutSession(
+        let requestParameters = CheckoutSessionConfirmationRequestParameters(
             sessionId: checkoutSession.id,
-            paymentMethod: paymentMethod.id,
+            paymentMethodId: paymentMethod.id,
             expectedAmount: expectedAmount,
             expectedPaymentMethodType: STPPaymentMethodType.card.identifier,
             returnURL: context.returnUrl,
             shipping: shipping,
             paymentMethodOptions: nil,
-            clientAttributionMetadata: clientAttributionMetadata
+            clientAttributionMetadata: clientAttributionMetadata,
+            collectedInformation: .init(email: checkoutSession.localState.email)
         )
+        let response = try await context.apiClient.confirmCheckoutSession(with: requestParameters)
 
         // 5. Update the Checkout instance with the confirmed session response
         try await checkout.commitSession(response)
@@ -345,6 +348,7 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
 
 extension STPApplePayContext {
 
+    @MainActor
     static func create(
         intent: Intent,
         elementsSession: STPElementsSession,
@@ -405,7 +409,7 @@ extension STPApplePayContext {
             applePayContext.apiClient = configuration.apiClient
             applePayContext.returnUrl = configuration.returnURL
             applePayContext.clientAttributionMetadata = clientAttributionMetadata
-            applePayContext.fallbackBillingDetails = makeFallbackBillingDetails(intent: intent, configuration: configuration)
+            applePayContext.fallbackBillingDetails = makeFallbackBillingDetails(configuration: configuration)
             return applePayContext
         } else {
             // Delegate only deallocs when Apple Pay completes
@@ -415,6 +419,22 @@ extension STPApplePayContext {
         }
     }
 
+    static func roundAmountForApplePay(_ amount: NSDecimalNumber, currency: String?) -> NSDecimalNumber {
+        // Apple Pay rejects fractional amounts for this list of currencies. Match Stripe.js by rounding them up.
+        guard let currency, NSDecimalNumber.decimalCountSpecialCases[currency.uppercased()] != nil else {
+            return amount
+        }
+        return amount.rounding(accordingToBehavior: NSDecimalNumberHandler(
+            roundingMode: .up,
+            scale: 0,
+            raiseOnExactness: false,
+            raiseOnOverflow: false,
+            raiseOnUnderflow: false,
+            raiseOnDivideByZero: false
+        ))
+    }
+
+    @MainActor
     static func createPaymentRequest(
         intent: Intent,
         configuration: PaymentElementConfiguration,
@@ -451,7 +471,7 @@ extension STPApplePayContext {
                     currency: intent.currency
                 )
                 paymentRequest.paymentSummaryItems = [
-                    PKPaymentSummaryItem(label: label, amount: decimalAmount, type: .final),
+                    PKPaymentSummaryItem(label: label, amount: roundAmountForApplePay(decimalAmount, currency: intent.currency), type: .final),
                 ]
             } else {
                 paymentRequest.paymentSummaryItems = [
@@ -508,24 +528,18 @@ private func makeShippingDetails(from configuration: PaymentElementConfiguration
     )
 }
 
+@MainActor
 private func makeFallbackBillingDetails(
-    intent: Intent,
     configuration: PaymentElementConfiguration
 ) -> StripeAPI.BillingDetails? {
+    guard configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod else {
+        return nil
+    }
+
     var fallbackBillingDetails = StripeAPI.BillingDetails()
     var hasFallbackBillingDetails = false
-
-    if case .checkout(let session) = intent, let email = session.email {
-        fallbackBillingDetails.email = email
-        hasFallbackBillingDetails = true
-    }
-
-    guard configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod else {
-        return hasFallbackBillingDetails ? fallbackBillingDetails : nil
-    }
-
     let defaultBillingDetails = configuration.defaultBillingDetails
-    if fallbackBillingDetails.email == nil, let email = defaultBillingDetails.email {
+    if let email = defaultBillingDetails.email {
         fallbackBillingDetails.email = email
         hasFallbackBillingDetails = true
     }
@@ -554,30 +568,11 @@ private func makeFallbackBillingDetails(
 }
 
 private func makeRequiredBillingDetails(from configuration: PaymentElementConfiguration) -> Set<PKContactField> {
-    var requiredPKContactFields = Set<PKContactField>()
-    let billingConfig = configuration.billingDetailsCollectionConfiguration
-    // By default, we always want to request the billing address (as it includes the postal code)
-    if billingConfig.address == .automatic || billingConfig.address == .full {
-        requiredPKContactFields.insert(.postalAddress)
-    }
-    // Only request name field - phone and email go into shipping contact fields
-    if billingConfig.name == .always {
-        requiredPKContactFields.insert(.name)
-    }
-    return requiredPKContactFields
+    return configuration.billingDetailsCollectionConfiguration.applePayRequiredBillingContactFields
 }
 
 private func makeRequiredShippingDetails(from configuration: PaymentElementConfiguration) -> Set<PKContactField> {
-    var requiredPKContactFields = Set<PKContactField>()
-    let billingConfig = configuration.billingDetailsCollectionConfiguration
-    // Phone and email are collected through shipping contact fields
-    if billingConfig.email == .always {
-        requiredPKContactFields.insert(.emailAddress)
-    }
-    if billingConfig.phone == .always {
-        requiredPKContactFields.insert(.phoneNumber)
-    }
-    return requiredPKContactFields
+    return configuration.billingDetailsCollectionConfiguration.applePayRequiredShippingContactFields
 }
 
 extension PKPaymentNetwork {

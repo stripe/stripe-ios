@@ -46,6 +46,8 @@
 
 "Buy now or pay later with Klarna" = "Ixtri issa jew ħallas iktar tard bi Klarna";
 
+"By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "Billi tikkonferma l-pagament tiegħek ma' NICEPAY, int qed tħalli lil %@ tiġbor il-ħlas minn dan il-metodu ta' pagament għal pagamenti futuri skont ir-regoli tagħhom.";
+
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Meta tikkonferma l-pagament b'PayPal tkun qed tħalli lil %@ tiġbor il-flus mill-kont ta' PayPal tiegħek għall-pagamenti tal-ġejjieni skont ir-regoli tagħha.";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Meta tkompli għal fuq Amazon Pay, tkun qed tagħti permess lil %@ biex fil-ġejjieni tiġbor il-pagamenti mill-kont Amazon Pay tiegħek skont ir-regoli tagħha.";
@@ -86,6 +88,8 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Meta tissejvja l-kont tal-bank tiegħek għal %@ tkun qed taqbel li tawtorizza l-pagamenti skont <terms>dar-regoli</terms>.";
 
+"By saving your payment information, you allow %@ to charge you for future payments in accordance with their terms." = "Billi tissejvja l-informazzjoni tal-pagament tiegħek, qed tippermetti lil %@ jiġbru l-ħlas mingħandek għal pagamenti futuri skont it-termini tagħhom.";
+
 "By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "Billi tissottometti l-ordni tiegħek lil %1$@ u %2$@, inti taqbel li tissejvja l-informazzjoni tiegħek ma’ %3$@ għal xirjiet futuri, u taqbel li tawtorizza pagamenti skont <terms>dawn it-termini</terms>.";
 
 "By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Billi tissottometti l-ordni tiegħek lil %@ inti taqbel li tawtorizza pagamenti skont <terms>dawn it-termini</terms>.";
@@ -107,6 +111,8 @@
 "Close card scanner" = "Agħlaq l-iskenner tal-karta";
 
 "Code sent" = "Il-kodiċi ntbagħat";
+
+"Complete the payment using Pix to finish the purchase." = "Lesti l-ħlas permezz ta' Pix biex tiffinalizza x-xiri.";
 
 "Confirm" = "Ikkonferma";
 
@@ -190,6 +196,10 @@
 
 "Name on card" = "L-isem fuq il-karta";
 
+"Naver Pay Card" = "Kard ta’ Naver Pay";
+
+"Naver Pay Money/Point" = "Naver Pay Money/Point";
+
 "New card" = "Karta ġdida";
 
 "New payment method" = "Metodu tal-pagament ġdid";
@@ -246,8 +256,6 @@
 
 "Point the camera at your card." = "Ipponta l-kamera lejn il-karta tiegħek.";
 
-"Processing..." = "Qed jiġi pproċessat...";
-
 "Przelewy24 Bank" = "Bank permezz ta' Przelewy24";
 
 "Remove %@" = "Neħħi %@";
@@ -286,6 +294,8 @@
 
 "Select card" = "Agħżel karta";
 
+"Select how you want to pay:" = "Agħżel kif trid tħallas:";
+
 "Select payment method" = "Agħżel metodu tal-pagament";
 
 "Select your payment method" = "Agħżel il-metodu tal-ħlas tiegħek";
@@ -322,6 +332,10 @@
 
 "Tax" = "Taxxa";
 
+"Terms and Conditions" = "Termini u kundizzjonijiet";
+
+"Terms of Service" = "Termini tas-Servizz";
+
 "The IBAN you entered is incomplete." = "L-IBAN li daħħalt mhux komplut.";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "L-IBAN li daħħalt huwa invalidu, \"%@\" mhuwiex kodiċi ta’ pajjiż appoġġjat.";
@@ -329,6 +343,8 @@
 "The provided verification code has expired." = "Il-kodiċi tal-verifika mogħti skada.";
 
 "The provided verification code is incorrect." = "Il-kodiċi tal-verifika mogħti mhuwiex tajjeb.";
+
+"This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Din hija xirja internazzjonali u teskludi tariffa IOF ta’ 3.5%. Billi tipproċedi, inti tirrikonoxxi u taċċetta t-<terms>termini u l-kundizzjonijiet ta’ Ebanx<terms>.";
 
 "This is your default" = "Dan il-metodu tal-pagament standard tiegħek";
 

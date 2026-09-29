@@ -24,7 +24,7 @@ extension LinkStubs {
         static let cardWithFailingChecks = 1
         static let bankAccount = 2
         static let expiredCard = 3
-        static let unknownWithDisplay = 4
+        static let genericWithDisplay = 4
         static let notExisting = -1
     }
 
@@ -88,7 +88,7 @@ extension LinkStubs {
             ),
             ConsumerPaymentDetails(
                 stripeID: "5",
-                details: .unparsable(rawValue: "CRYPTO"),
+                details: .generic(rawValue: "CRYPTO"),
                 billingAddress: nil,
                 billingEmailAddress: nil,
                 nickname: nil,

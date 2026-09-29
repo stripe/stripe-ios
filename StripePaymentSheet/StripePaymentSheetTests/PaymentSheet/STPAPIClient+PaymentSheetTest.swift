@@ -45,7 +45,7 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
             linkDisallowFundingSourceCreation: []
         )
         XCTAssertNotNil(parameters["mobile_session_id"])
-        XCTAssertEqual(parameters["key"] as? String, "pk_test")
+        XCTAssertNil(parameters["key"])
         XCTAssertEqual(parameters["locale"] as? String, Locale.current.toLanguageTag())
         XCTAssertEqual(parameters["external_payment_methods"] as? [String], ["external_foo", "external_bar"])
         XCTAssertEqual(parameters["custom_payment_methods"] as? [String], ["cpmt_123", "cpmt_789"])
@@ -81,7 +81,7 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
             linkDisallowFundingSourceCreation: []
         )
         XCTAssertNotNil(parameters["mobile_session_id"])
-        XCTAssertEqual(parameters["key"] as? String, "pk_test")
+        XCTAssertNil(parameters["key"])
         XCTAssertEqual(parameters["locale"] as? String, Locale.current.toLanguageTag())
         XCTAssertEqual(parameters["external_payment_methods"] as? [String], [])
         XCTAssertNil(parameters["payment_method_configurations"])

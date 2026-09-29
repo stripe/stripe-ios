@@ -4,7 +4,18 @@
   "total_summary": {
     "due": 2149,
     "subtotal": 2000,
-    "total": 2149
+    "total": 2149,
+    "total_tax_amounts": [
+      {
+        "amount": 149,
+        "inclusive": false,
+        "taxable_amount": 2000,
+        "tax_rate": {
+          "percentage": 7.45,
+          "display_name": "Sales Tax"
+        }
+      }
+    ]
   },
   "checkout_items": [
     {
@@ -77,17 +88,6 @@
     }
   ],
   "recurring_details": {
-    "total_tax_amounts": [
-      {
-        "amount": 149,
-        "inclusive": false,
-        "taxable_amount": 2000,
-        "tax_rate": {
-          "percentage": 7.45,
-          "display_name": "Sales Tax"
-        }
-      }
-    ],
     "total_discount_amounts": [],
     "subtotal": 2000,
     "total": 2149,
@@ -234,6 +234,7 @@
   },
   "elements_session": {
     "business_name": "CI Stuff",
+    "merchant_country": "US",
     "session_id": "elements_session_test123",
     "payment_method_preference": {
       "ordered_payment_method_types": ["card"]

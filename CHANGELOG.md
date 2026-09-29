@@ -3,6 +3,69 @@ MINOR
 
 ## X.Y.Z - changes pending release
 ### Payments
+* [Fixed] Amounts in LBP are now displayed correctly.
+
+### PaymentSheet
+* [Fixed] Fixed Apple Pay failing to open for fractional amounts in COP, HUF, IDR, LAK, LBP, PKR, and RSD.
+
+### CryptoOnramp (Alpha)
+* [Added] Added `STPAPIClient.CryptoOnrampAPIError.missingLinkSessionKey` to report when a Link session key is unavailable.
+
+## 26.12.1 2026-09-28
+### Financial Connections
+* [Fixed] Preserved `no_eligible_accounts` in `onEvent` error callbacks instead of reporting it as `unexpected_error`.
+* [Fixed] Recorded native `onEvent` emissions with the session context for diagnostics.
+
+### Payments
+* [Added] Added API bindings for Pix.
+
+### PaymentSheet
+* [Added] Added support for Pix payments.
+
+## 26.12.0 2026-09-21
+### CryptoOnramp (Alpha)
+* [Removed] Removed public exposure of `StripeCryptoOnramp.Image`, including `Image.linkIconSquare`.
+* [Added] Added `CryptoOnrampCoordinator.presentTermsAndConditionsIfNeeded(from:)` and `presentTermsOfServiceIfNeeded(from:)` to present and record acceptance of current partner terms when required. Both methods return `PartnerTermsResult`.
+* [Fixed] Preserved PaymentIntent error codes, decline codes, and types in checkout errors after authentication.
+
+### StripeCore
+* [Added] Added `additionalHeaders` support to the `STPAPIClient` GET, POST, and DELETE APIs exposed through the `STP` SPI.
+* [Added] Added `uploadFile(at:purpose:authorizationSecret:progress:)` and associated error type `FileUploadError`, exposed through the `STP` SPI.
+
+### PaymentSheet
+* [Fixed] Fixed card funding warnings not appearing after scanning a card.
+
+## 26.11.0 2026-09-14
+### General
+* [Added] Added support for Welsh.
+
+### Payments
+* [Added] Added API bindings for Scalapay.
+
+### PaymentSheet
+* [Added] Added support for Scalapay.
+* [Added] Added support for Card program name for saved payment methods when using CustomerSessions
+
+## 26.10.0 2026-09-08
+### General
+* [Added] Added support for Arabic (Saudi Arabia).
+
+### CryptoOnramp (Alpha)
+* [Added] Added Canada SIN, Colombia NIT, and Philippines TIN values to `IdType`, and added `idType` to the `KycInfo` initializer.
+
+### PaymentSheet
+* [Added] Added support for Kakao Pay.
+* [Added] Added support for Naver Pay.
+* [Added] Added support for Korean cards.
+* [Added] Added support for PAYCO.
+* [Added] Added support for SeQura.
+
+## 26.9.0 2026-08-31
+### Payments
+* [Added] Added API bindings for Kakao Pay, SeQura, Korean cards, Naver Pay, and PAYCO.
+
+## 26.8.0 2026-08-24
+### Payments
 * [Added] Added support for the following FPX banks: Agrobank, Bank of China, and MBSB Bank.
 * [Fixed] Fixed an issue where card decline error messages became generic after 3DS authentication.
 

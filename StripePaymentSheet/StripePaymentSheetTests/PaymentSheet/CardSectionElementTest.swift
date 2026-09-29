@@ -5,8 +5,10 @@
 //  Created by Joyce Qin on 3/5/26.
 //
 
+import OHHTTPStubs
+import OHHTTPStubsSwift
 @testable@_spi(STP) import StripePayments
-@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) @_spi(CardFundingFilteringPrivatePreview) import StripePaymentSheet
 @testable@_spi(STP) import StripeUICore
 import XCTest
 
@@ -19,7 +21,8 @@ class CardSectionElementTest: XCTestCase {
     private func makeCardSectionElement(
         preferredNetworks: [STPCardBrand]? = nil,
         cardBrandFilter: CardBrandFilter = .default,
-        cardBrandChoiceEligible: Bool = true
+        cardBrandChoiceEligible: Bool = true,
+        cardFundingFilter: CardFundingFilter = .default
     ) -> CardSectionElement {
         return CardSectionElement(
             collectName: false,
@@ -30,8 +33,112 @@ class CardSectionElementTest: XCTestCase {
             theme: .default,
             analyticsHelper: ._testValue(),
             cardBrandFilter: cardBrandFilter,
+            cardFundingFilter: cardFundingFilter,
             opensCardScannerAutomatically: false
         )
+    }
+
+    // MARK: - Card scanning
+
+    #if !os(visionOS)
+    func testDidScanCardShowsFundingWarningAfterMetadataLoads() throws {
+        try assertFundingWarningAfterMetadataLoads { cardSection in
+            let cardParams = STPPaymentMethodCardParams()
+            cardParams.number = "4242424242424242"
+            cardSection.didScanCard(cardParams: cardParams)
+        }
+    }
+
+    func testDidScanCardShowsDisallowedBrandError() {
+        // Given a form that does not accept Visa
+        let cardSection = makeCardSectionElement(
+            cardBrandFilter: .init(cardBrandAcceptance: .disallowed(brands: [.visa])),
+            cardBrandChoiceEligible: false
+        )
+        let label = cardSection.cardSection.sectionView.errorOrSubLabel
+        let cardParams = STPPaymentMethodCardParams()
+        cardParams.number = "4242424242424242"
+
+        // When a Visa card is scanned
+        cardSection.didScanCard(cardParams: cardParams)
+
+        // Then the error is visible without editing another field
+        XCTAssertEqual(label.text, TextFieldElement.PANConfiguration.Error.disallowedBrand(brand: .visa).localizedDescription)
+        XCTAssertFalse(label.isHidden)
+        XCTAssertFalse(cardSection.panElement.validationState.isValid)
+    }
+
+    func testDidScanCardShowsExpiredCardError() {
+        // Given a card form
+        let cardSection = makeCardSectionElement(cardBrandChoiceEligible: false)
+        let label = cardSection.cardSection.sectionView.errorOrSubLabel
+        let cardParams = STPPaymentMethodCardParams()
+        cardParams.number = "4242424242424242"
+        cardParams.expMonth = 12
+        cardParams.expYear = 20
+
+        // When an expired card is scanned
+        cardSection.didScanCard(cardParams: cardParams)
+
+        // Then the error is visible without editing another field
+        XCTAssertEqual(label.text, TextFieldElement.ExpiryDateConfiguration.Error.expired.localizedDescription)
+        XCTAssertFalse(label.isHidden)
+    }
+    #endif
+
+    func testManualEntryShowsFundingWarningAfterMetadataLoads() throws {
+        try assertFundingWarningAfterMetadataLoads { cardSection in
+            cardSection.panElement.textFieldView.textField.text = "4242424242424242"
+            cardSection.panElement.textFieldView.textDidChange()
+        }
+    }
+
+    private func assertFundingWarningAfterMetadataLoads(enterCard: (CardSectionElement) -> Void) throws {
+        // Given a debit-only form whose funding metadata has not loaded yet
+        let originalPublishableKey = STPAPIClient.shared.publishableKey
+        STPAPIClient.shared.publishableKey = "pk_test_card_scan" // swiftlint:disable:this no_shared_api_client_mutation_in_tests
+        let metadataStub = stub(condition: isPath("/edge-internal/card-metadata")) { _ in
+            let range: [String: Any] = [
+                "pan_length": 16,
+                "brand": "VISA",
+                "account_range_low": "4242420000000000",
+                "account_range_high": "4242429999999999",
+                "funding": "credit",
+            ]
+            return HTTPStubsResponse(jsonObject: ["data": [range]], statusCode: 200, headers: nil)
+        }
+        defer {
+            HTTPStubs.removeStub(metadataStub)
+            STPAPIClient.shared.publishableKey = originalPublishableKey // swiftlint:disable:this no_shared_api_client_mutation_in_tests
+        }
+        let cardSection = makeCardSectionElement(
+            cardBrandChoiceEligible: false,
+            cardFundingFilter: .init(allowedFundingTypes: .debit, filteringEnabled: true)
+        )
+        let label = cardSection.cardSection.sectionView.errorOrSubLabel
+
+        // When a credit card is entered and its funding metadata arrives
+        enterCard(cardSection)
+        XCTAssertTrue(label.isHidden)
+        let configuration = try XCTUnwrap(cardSection.panElement.configuration as? TextFieldElement.PANConfiguration)
+        let fundingBinController = try XCTUnwrap(configuration.fundingBinController)
+        let metadataLoaded = expectation(description: "Funding metadata loaded")
+        fundingBinController.retrieveBINRanges(
+            apiClient: STPAPIClient.shared,
+            forPrefix: "424242",
+            recordErrorsAsSuccess: false,
+            onlyFetchForVariableLengthBINs: false
+        ) { result in
+            XCTAssertEqual(try? result.get().first?.funding, .credit)
+            metadataLoaded.fulfill()
+        }
+        wait(for: [metadataLoaded], timeout: 5)
+
+        // Then the warning is rendered without another field update
+        XCTAssertEqual(label.text, "Only debit cards are accepted")
+        XCTAssertFalse(label.isHidden)
+        XCTAssertEqual(label.textColor, cardSection.theme.colors.danger)
+        XCTAssertTrue(cardSection.panElement.validationState.isValid)
     }
 
     // MARK: - Element hierarchy

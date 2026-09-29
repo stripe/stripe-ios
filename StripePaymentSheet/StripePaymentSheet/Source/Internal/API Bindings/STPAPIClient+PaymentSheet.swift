@@ -52,7 +52,6 @@ extension STPAPIClient {
         switch mode {
         case .deferredIntent(let intentConfig):
             parameters["type"] = "deferred_intent"
-            parameters["key"] = publishableKey
             if let sellerDetails = intentConfig.sellerDetails {
                 parameters["seller_details"] = [
                     "network_id": sellerDetails.networkId,

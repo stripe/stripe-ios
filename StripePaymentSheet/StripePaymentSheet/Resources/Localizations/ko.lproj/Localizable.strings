@@ -46,6 +46,8 @@
 
 "Buy now or pay later with Klarna" = "지금 구매하거나 Klarna로 나중에 결제";
 
+"By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "NICEPAY로 결제를 확인하면 %@에서 해당 약관에 따라 향후 결제에 대해 이 결제 방식으로 대금 청구하는 것을 허용하시는 것입니다.";
+
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "PayPal 결제를 확인하면 %@에서 해당 회사의 약관에 따라 향후 결제에 대해 PayPal 계정에 대금을 청구할 수 있습니다.";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Amazon Pay를 계속 사용하면 %@에서 해당 회사의 약관에 따라 향후 Amazon Pay 계정에 결제 대금을 청구할 수 있습니다.";
@@ -86,6 +88,8 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "%@에 대해 귀하의 은행 계좌를 저장하면 <terms>해당 약관</terms>에 따라 결제를 승인하는 데 동의하는 것입니다.";
 
+"By saving your payment information, you allow %@ to charge you for future payments in accordance with their terms." = "결제 정보를 저장하면 %@에서 해당 약관에 따라 향후 결제 시 귀하에게 대금을 청구하도록 허용하시게 됩니다.";
+
 "By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "%1$@ 및 %2$@에 주문을 제출하면 귀하는 향후 구매 시 사용하기 위해 귀하의 정보를 %3$@에 저장하고 <terms>이 약관</terms>에 따라 결제를 승인하는 데 동의하는 것입니다.";
 
 "By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "%@에 주문을 제출하면 귀하는 <terms>이 약관</terms>에 따라 결제 승인을 동의하는 것입니다.";
@@ -107,6 +111,8 @@
 "Close card scanner" = "카드 스캐너 닫기";
 
 "Code sent" = "코드 전송 완료";
+
+"Complete the payment using Pix to finish the purchase." = "구매를 마치려면 Pix를 사용하여 결제를 완료하십시오.";
 
 "Confirm" = "확인";
 
@@ -190,6 +196,10 @@
 
 "Name on card" = "카드 명의자";
 
+"Naver Pay Card" = "네이버페이 카드";
+
+"Naver Pay Money/Point" = "네이버페이 머니/포인트";
+
 "New card" = "새 카드";
 
 "New payment method" = "새 결제 방식";
@@ -246,8 +256,6 @@
 
 "Point the camera at your card." = "카메라가 카드를 향하도록 하세요.";
 
-"Processing..." = "처리 중...";
-
 "Przelewy24 Bank" = "Przelewy24 은행";
 
 "Remove %@" = "%@ 제거";
@@ -286,6 +294,8 @@
 
 "Select card" = "카드 선택";
 
+"Select how you want to pay:" = "원하는 결제 방식 선택:";
+
 "Select payment method" = "결제 방식 선택";
 
 "Select your payment method" = "결제 수단을 선택하세요.";
@@ -322,6 +332,10 @@
 
 "Tax" = "세금";
 
+"Terms and Conditions" = "이용 약관";
+
+"Terms of Service" = "서비스 약관";
+
 "The IBAN you entered is incomplete." = "입력한 IBAN이 불완전합니다.";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "입력하신 IBAN이 유효하지 않습니다. “%@”은(는) 지원되는 국가 코드가 아닙니다.";
@@ -329,6 +343,8 @@
 "The provided verification code has expired." = "제공된 확인 코드가 만료되었습니다.";
 
 "The provided verification code is incorrect." = "제공된 확인 코드가 올바르지 않습니다.";
+
+"This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "이는 국제 구매이며 3.5%의 IOF 비용이 제외됩니다. 진행하시면 귀하는 <terms>Ebanx의 이용 약관</terms>을 인정하고 이에 동의하는 것입니다.";
 
 "This is your default" = "기본값입니다";
 

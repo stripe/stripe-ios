@@ -143,6 +143,27 @@ extension XCUIApplication {
         return buttons["networking_link_signup_footer_view.not_now_button"]
     }
 
+    func fc_skipNetworkingSignupIfNeeded(timeout: TimeInterval = 10.0) {
+        let notNowButton = fc_nativeNetworkingNotNowButton
+        let successDoneButton = buttons["success_done_button"]
+
+        // Account selection can lead directly to Success or show the optional Link signup pane.
+        XCTAssertTrue(
+            notNowButton.wait(
+                until: { $0.exists || successDoneButton.exists },
+                timeout: timeout
+            ),
+            "Failed to open either the networking Link signup pane or Success pane"
+        )
+
+        if notNowButton.exists {
+            if keyboards.firstMatch.exists {
+                fc_dismissKeyboard()
+            }
+            notNowButton.waitForExistenceAndTap()
+        }
+    }
+
     var fc_nativeSuccessDoneButton: XCUIElement {
         let successDoneButton = buttons["success_done_button"]
         XCTAssertTrue(successDoneButton.waitForExistence(timeout: 120.0), "Failed to open Success pane - \(#function) waiting failed")  // wait for accounts to link

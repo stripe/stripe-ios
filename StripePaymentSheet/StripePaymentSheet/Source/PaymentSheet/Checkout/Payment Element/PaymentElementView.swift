@@ -8,7 +8,7 @@
 import SwiftUI
 import UIKit
 
-/// A SwiftUI view that displays payment methods.
+/// A view that displays payment methods.
 @_spi(STP)
 public struct PaymentElementView: View {
     @ObservedObject private var viewModel: PaymentElementViewModel

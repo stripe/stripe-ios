@@ -63,6 +63,7 @@ extension CheckoutPlayground {
                 }
                 .pickerStyle(.menu)
                 .labelsHidden()
+                .accessibilityIdentifier("checkout_picker_\(title)")
                 .accentColor(.secondary)
             }
             .padding(.vertical, 12)
@@ -114,7 +115,7 @@ extension CheckoutPlayground {
 
                             InfoButton(
                                 title: "Adaptive Pricing Location",
-                                message: "The playground mocks this location by sending a specially formatted customer email when it creates the Checkout Session. Choose No Override to omit the mock location."
+                                message: "Stripe's test backend recognizes +location_XX in a server email to simulate the country. Choose a server source in the Email section to use this override. Local or no email requires No Override."
                             )
                         }
 

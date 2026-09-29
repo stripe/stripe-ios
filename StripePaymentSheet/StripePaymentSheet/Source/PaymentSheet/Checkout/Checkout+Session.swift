@@ -36,7 +36,9 @@ extension CheckoutController {
         public let discountAmounts: [DiscountAmount]
 
         /// The customer's email address.
-        public let email: String?
+        public var email: String? {
+            return serverEmail ?? localState.email
+        }
 
         /// The items included in the order summary.
         public let orderSummaryItems: [OrderSummaryItem]
@@ -50,10 +52,14 @@ extension CheckoutController {
         public let minorUnitsAmountDivisor: Int?
 
         /// The currently selected payment option.
-        public let paymentOption: PaymentOptionDisplayData?
+        public var paymentOption: PaymentOptionDisplayData? {
+            return localState.paymentOption
+        }
 
         /// Shipping address of the customer.
-        public let shippingAddress: ShippingAddress?
+        public var shippingAddress: ShippingAddress? {
+            return localState.shippingAddress
+        }
 
         /// Status of the Checkout Session.
         public let status: Status
@@ -72,10 +78,18 @@ extension CheckoutController {
         /// Aggregate subtotal, tax, discount, and total amounts for the Checkout Session.
         public let totals: CheckoutController.Session.Totals
 
+        /// Payment methods currently available after applying configuration and device eligibility, ordered
+        /// as displayed by `ExpressCheckoutElement`. Each updated Session reflects the latest availability.
+        public let availableExpressCheckoutPaymentMethods: [ExpressCheckoutElement.PaymentMethod]
+
         // MARK: - Internal Properties
 
         let paymentStatus: Status.PaymentStatus
         let paymentMethodOptions: STPPaymentMethodOptions?
+        /// The immutable email provided when creating the Checkout Session, either through
+        /// `customer_email` or the Checkout Session's Customer's email.
+        let serverEmail: String?
+        var localState: LocalState
         let customer: PaymentPagesAPIResponse.Customer?
         let savedPaymentMethodsOfferSave: STPCheckoutSessionSavedPaymentMethodsOfferSave?
         let setupFutureUsage: String?
@@ -87,12 +101,117 @@ extension CheckoutController {
         let billingAddressCollection: BillingAddressCollection
         let automaticTaxEnabled: Bool
         let automaticTaxAddressSource: String?
+        let merchantCountryCode: String
         let elementsSession: STPElementsSession
 
         enum BillingAddressCollection: String {
             case automatic = "auto"
             case required
         }
+
+        struct LocalState {
+            var email: String?
+            var shippingAddress: ShippingAddress?
+            var paymentOption: PaymentOptionDisplayData?
+
+            static let empty = Self(email: nil, shippingAddress: nil, paymentOption: nil)
+        }
+    }
+}
+
+extension CheckoutController.Session {
+    /// Builds a read-only session snapshot from server-backed and local state.
+    init(
+        apiResponse: PaymentPagesAPIResponse,
+        localState: LocalState,
+        expressCheckoutConfiguration: ExpressCheckoutElement.Configuration? = nil
+    ) {
+        let elementsSessionValue = apiResponse.elementsSession.value
+        let publicDiscountAmounts = PaymentPagesAPIResponse.makeDiscountAmounts(
+            from: apiResponse.recurringDetails?.totalDiscountAmounts ?? [],
+            currency: apiResponse.currency
+        )
+        let publicTaxAmounts = apiResponse.totalSummary?.totalTaxAmounts?.map {
+            PaymentPagesAPIResponse.makeSessionTaxAmount(
+                from: $0,
+                currency: apiResponse.currency,
+                locale: .autoupdatingCurrent
+            )
+        }
+        let publicOrderSummaryItems = PaymentPagesAPIResponse.makeOrderSummaryItems(
+            from: apiResponse.checkoutItems,
+            locale: .autoupdatingCurrent
+        )
+        let publicTotals = PaymentPagesAPIResponse.makeTotals(
+            from: apiResponse.checkoutItems,
+            currency: apiResponse.currency
+        )
+        let publicTax = PaymentPagesAPIResponse.makeTax(
+            taxMeta: apiResponse.taxMeta,
+            taxContext: apiResponse.taxContext
+        )
+        let localizedPricesMetas = PaymentPagesAPIResponse.makeLocalizedPricesMetas(
+            from: apiResponse.adaptivePricingInfo
+        )
+        let exchangeRateMeta = PaymentPagesAPIResponse.makeExchangeRateMeta(
+            from: apiResponse.adaptivePricingInfo
+        )
+        // TODO: Read explicit integration and presentment currency fields from the mobile
+        // translation layer once available instead of deriving them from the PP response shape.
+        let presentmentDetails = apiResponse.adaptivePricingInfo.map {
+            CheckoutController.Session.PresentmentDetails(presentmentCurrency: $0.activePresentmentCurrency)
+        }
+        let automaticTaxEnabled = apiResponse.taxContext?.automaticTaxEnabled ?? false
+        let automaticTaxAddressSource = PaymentPagesAPIResponse.makeAutomaticTaxAddressSource(
+            from: apiResponse.taxContext?.automaticTaxAddressSource
+        )
+        if automaticTaxEnabled && automaticTaxAddressSource == "billing" {
+            elementsSessionValue.disableLinkForAutomaticTaxBilling = true
+        }
+        let availableExpressCheckoutPaymentMethods = expressCheckoutConfiguration.map {
+            ExpressCheckoutElementUtilities.availablePaymentMethods(
+                for: elementsSessionValue,
+                configuration: $0
+            )
+        } ?? []
+        let serverEmail = apiResponse.customerEmail ?? apiResponse.customer?.email
+
+        self.init(
+            id: apiResponse.sessionId,
+            businessName: apiResponse.elementsSession.businessName,
+            currency: apiResponse.adaptivePricingInfo?.integrationCurrency ?? apiResponse.currency,
+            presentmentDetails: presentmentDetails,
+            discountAmounts: publicDiscountAmounts,
+            orderSummaryItems: publicOrderSummaryItems,
+            livemode: apiResponse.livemode,
+            minorUnitsAmountDivisor: PaymentPagesAPIResponse.makeMinorUnitsAmountDivisor(
+                currency: apiResponse.currency
+            ),
+            status: apiResponse.status,
+            tax: publicTax,
+            taxAmounts: publicTaxAmounts,
+            totals: publicTotals,
+            availableExpressCheckoutPaymentMethods: availableExpressCheckoutPaymentMethods,
+            paymentStatus: apiResponse.paymentStatus,
+            paymentMethodOptions: apiResponse.paymentMethodOptions,
+            serverEmail: serverEmail,
+            localState: localState,
+            customer: apiResponse.customer,
+            savedPaymentMethodsOfferSave: PaymentPagesAPIResponse.makeSavedPaymentMethodsOfferSave(
+                from: apiResponse.savedPaymentMethodsOfferSave
+            ),
+            setupFutureUsage: apiResponse.setupFutureUsage,
+            setupFutureUsageForPaymentMethodType: apiResponse.setupFutureUsageForPaymentMethodType ?? [:],
+            allowedShippingCountries: apiResponse.shippingAddressCollection?.allowedCountries.map { $0.uppercased() },
+            localizedPricesMetas: localizedPricesMetas,
+            exchangeRateMeta: exchangeRateMeta,
+            adaptivePricingActive: apiResponse.adaptivePricingInfo != nil,
+            billingAddressCollection: apiResponse.billingAddressCollection.flatMap(CheckoutController.Session.BillingAddressCollection.init(rawValue:)) ?? .automatic,
+            automaticTaxEnabled: automaticTaxEnabled,
+            automaticTaxAddressSource: automaticTaxAddressSource,
+            merchantCountryCode: apiResponse.elementsSession.merchantCountryCode,
+            elementsSession: elementsSessionValue
+        )
     }
 }
 
@@ -111,7 +230,7 @@ extension CheckoutController.Session {
         /// A group of one-time Prices.
         case oneTimePrice(OneTimePrice)
 
-        /// A group of one-time Prices and their aggregated amounts.
+        /// A group of one-time Prices.
         public struct OneTimePrice: Identifiable, Sendable, Hashable {
             /// The stable identity of this group within its Checkout Session.
             public var id: String { key }
@@ -124,9 +243,6 @@ extension CheckoutController.Session {
 
             /// The one-time Prices included in this group.
             public let items: [Item]
-
-            /// Amounts aggregated across all one-time Prices in this group.
-            public let amountDetails: AmountDetails
 
             /// A one-time Price included in the group.
             public struct Item: Identifiable, Sendable, Hashable {
@@ -156,27 +272,27 @@ extension CheckoutController.Session {
 
                 /// The allowed quantity range when the customer can adjust the quantity.
                 public let adjustableQuantity: AdjustableQuantity?
-            }
 
-            /// Amounts aggregated across all one-time Prices in the group.
-            public struct AmountDetails: Sendable, Hashable {
-                /// The total amount for the group.
-                public let total: Amount
+                /// The computed amounts for this Price.
+                public let amountDetails: AmountDetails
 
-                /// The subtotal amount for the group before discounts and exclusive tax.
-                public let subtotal: Amount
+                /// The computed amounts for a one-time Price.
+                public struct AmountDetails: Sendable, Hashable {
+                    /// The total amount for the Price.
+                    public let total: Amount
 
-                /// The tax amounts applied to the group, or `nil` when no tax was applied.
-                public let taxAmounts: [TaxAmount]?
+                    /// The subtotal amount for the Price before exclusive tax.
+                    public let subtotal: Amount
 
-                /// The discount applied to the group.
-                public let discount: Amount
+                    /// The tax amounts applied to the Price, or `nil` when no tax was applied.
+                    public let taxAmounts: [TaxAmount]?
 
-                /// The tax amount included in the prices.
-                public let taxInclusive: Amount
+                    /// The tax amount included in the Price.
+                    public let taxInclusive: Amount
 
-                /// The tax amount added to the prices.
-                public let taxExclusive: Amount
+                    /// The tax amount added to the Price.
+                    public let taxExclusive: Amount
+                }
             }
         }
     }
@@ -224,17 +340,56 @@ extension CheckoutController.Session {
         public let minimum: Int
     }
 
-    /// Display data for the currently selected payment option.
+    /// Contains details about a payment method that can be displayed to the customer
     public struct PaymentOptionDisplayData: Equatable {
-        /// An image representing a payment method, such as the Apple Pay logo or a card brand.
+        /// An image representing a payment method; e.g. the Apple Pay logo or a VISA logo
         public let image: UIImage
-        /// A customer-facing label representing the payment option.
+        /// A user facing string representing the payment method; e.g. "Apple Pay" or "····4242" for a card
         public let label: String
-        /// The billing details associated with the selected payment option.
-        public let billingDetails: PaymentSheet.BillingDetails?
-        /// A string representation of the selected payment method type.
+        /// The billing details associated with the customer's desired payment method
+        public let billingDetails: BillingDetails?
+        /// A string representation of the customer's desired payment method
+        /// - If this is a Stripe payment method, see https://stripe.com/docs/api/payment_methods/object#payment_method_object-type for possible values.
+        /// - If this is an external payment method, see https://stripe.com/docs/payments/external-payment-methods?platform=ios#available-external-payment-methods for possible values.
+        /// - If this is Apple Pay, the value is "apple_pay"
         public let paymentMethodType: String
-        /// Mandate text that must be displayed when the PaymentElement is configured not to display it.
+        /// If you set `configuration.embeddedViewDisplaysMandateText = false`, this text must be displayed in a `UITextView` (so that URLs in the text are handled) to the customer near your “Buy” button to comply with regulations.
         public let mandateText: NSAttributedString?
+
+        /// The billing details collected for a payment method.
+        public struct BillingDetails: Equatable {
+            /// The customer's billing address.
+            public let address: Address?
+
+            /// The customer's email address.
+            public let email: String?
+
+            /// The customer's full name.
+            public let name: String?
+
+            /// The customer's phone number.
+            public let phone: String?
+
+            /// A billing address.
+            public struct Address: Equatable {
+                /// City, district, suburb, town, or village.
+                public let city: String?
+
+                /// Two-letter country code (ISO 3166-1 alpha-2).
+                public let country: String?
+
+                /// Address line 1 (e.g., street, PO Box, or company name).
+                public let line1: String?
+
+                /// Address line 2 (e.g., apartment, suite, unit, or building).
+                public let line2: String?
+
+                /// ZIP or postal code.
+                public let postalCode: String?
+
+                /// State, county, province, or region.
+                public let state: String?
+            }
+        }
     }
 }

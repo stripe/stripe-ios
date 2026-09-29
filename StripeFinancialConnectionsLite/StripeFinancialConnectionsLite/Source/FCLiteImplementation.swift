@@ -17,8 +17,10 @@ import UIKit
         clientSecret: String,
         returnURL: String?,
         existingConsumer: FinancialConnectionsConsumer?,
+        hasRequestedDataPermissions: Bool,
         style: FinancialConnectionsStyle,
         elementsSessionContext: ElementsSessionContext?,
+        preCollectedConsent: FinancialConnectionsPreCollectedConsent?,
         linkBrand: LinkBrand?,
         onEvent: ((FinancialConnectionsEvent) -> Void)?,
         from presentingViewController: UIViewController,
@@ -32,6 +34,8 @@ import UIKit
         )
         fcLite.elementsSessionContext = elementsSessionContext
         fcLite.existingConsumer = existingConsumer
+        fcLite.hasRequestedDataPermissions = hasRequestedDataPermissions
+        fcLite.preCollectedConsent = preCollectedConsent
         fcLite.present(from: presentingViewController, completion: completion)
     }
 }

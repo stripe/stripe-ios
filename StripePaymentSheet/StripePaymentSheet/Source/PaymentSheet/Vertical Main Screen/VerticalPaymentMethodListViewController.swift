@@ -118,6 +118,7 @@ class VerticalPaymentMethodListViewController: UIViewController {
             let savedPaymentMethodButton = RowButton.makeForSavedPaymentMethod(
                 paymentMethod: firstSavedPaymentMethod,
                 appearance: appearance,
+                subtext: firstSavedPaymentMethod.cardArtProgramName,
                 accessoryView: accessoryButton,
                 linkBrand: linkBrand
             ) { [weak self] in

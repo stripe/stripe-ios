@@ -696,35 +696,17 @@ extension EmbeddedPaymentElement {
 
         embeddedPaymentMethodsView.isUserInteractionEnabled = false
 
-        let confirmBlock: () async -> (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) = {
-            await PaymentSheet.confirm(
-                configuration: self.configuration,
-                authenticationContext: authContext,
-                intent: self.intent,
-                elementsSession: self.elementsSession,
-                paymentOption: paymentOption,
-                paymentHandler: self.paymentHandler,
-                integrationShape: .embedded,
-                confirmationChallenge: self.confirmationChallenge,
-                analyticsHelper: self.analyticsHelper
-            )
-        }
-
-        let result: PaymentSheetResult
-        let deferredIntentConfirmationType: STPAnalyticsClient.DeferredIntentConfirmationType?
-
-        if let checkout {
-            if !checkout.pendingOperations.isEmpty {
-                let errorMessage = "confirm was called while the Checkout session is still loading. Wait until CheckoutController.isUpdating is false."
-                let error = PaymentSheetError.integrationError(nonPIIDebugDescription: errorMessage)
-                return (.failed(error: error), nil)
-            }
-            (result, deferredIntentConfirmationType) = await checkout.enqueueSessionUpdate {
-                await confirmBlock()
-            }
-        } else {
-            (result, deferredIntentConfirmationType) = await confirmBlock()
-        }
+        let (result, deferredIntentConfirmationType) = await PaymentSheet.confirm(
+            configuration: configuration,
+            authenticationContext: authContext,
+            intent: intent,
+            elementsSession: elementsSession,
+            paymentOption: paymentOption,
+            paymentHandler: paymentHandler,
+            integrationShape: .embedded,
+            confirmationChallenge: confirmationChallenge,
+            analyticsHelper: analyticsHelper
+        )
 
         analyticsHelper.logPayment(
             paymentOption: paymentOption,
@@ -836,7 +818,7 @@ extension PaymentSheetAuthenticationContextViewController: PaymentSheetAuthentic
         }
     }
 
-    func presentPollingVCForAction(action: StripePayments.STPPaymentHandlerPaymentIntentActionParams, type: StripePayments.STPPaymentMethodType, safariViewController: SFSafariViewController?) {
+    func presentPollingVCForAction(action: StripePayments.STPPaymentHandlerActionParams, type: StripePayments.STPPaymentMethodType, safariViewController: SFSafariViewController?) {
         // Initialize the polling view controller and flag it for presentation
         self.pollingVC = PollingViewController(currentAction: action, viewModel: PollingViewModel(paymentMethodType: type),
                                                       appearance: self.appearance, safariViewController: safariViewController)

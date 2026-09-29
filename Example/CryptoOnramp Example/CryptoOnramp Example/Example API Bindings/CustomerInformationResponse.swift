@@ -102,7 +102,15 @@ extension CustomerInformationResponse {
     }
 
     var isEUCustomer: Bool {
-        kycRegion?.uppercased() == "EU"
+        kycResidence == .europeanUnion
+    }
+
+    var kycResidence: KYCResidence? {
+        guard let kycRegion else {
+            return nil
+        }
+
+        return KYCResidence(rawValue: kycRegion.uppercased())
     }
 
     var hasSubmittedIdentifiers: Bool {
@@ -129,7 +137,12 @@ extension CustomerInformationResponse {
             return .level2
         }
 
-        guard providedFieldSet.isSuperset(of: Self.level0RequiredFields) else {
+        var level0RequiredFields = Self.level0RequiredFields
+        if kycResidence?.requiresState == false {
+            level0RequiredFields.remove("address_state")
+        }
+
+        guard providedFieldSet.isSuperset(of: level0RequiredFields) else {
             return .none
         }
 

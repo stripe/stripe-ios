@@ -57,9 +57,6 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case deferred_mc
         /// Def MP: Deferred multiprocessor flow
         case deferred_mp
-        /// CheckoutSession: Uses Stripe CheckoutSession APIs
-        case checkoutSession
-
         var displayName: String {
             switch self {
             case .normal:
@@ -72,14 +69,12 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
                 return "Deferred server side confirmation with manual confirmation"
             case .deferred_mp:
                 return "Deferred multiprocessor flow"
-            case .checkoutSession:
-                return "CheckoutSession"
             }
         }
 
         var isIntentFirst: Bool {
             switch self {
-            case .normal, .checkoutSession:
+            case .normal:
                 return true
             case .deferred_csc, .deferred_ssc, .deferred_mc, .deferred_mp:
                 return false
@@ -128,7 +123,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         }
         func customDisplayName(currency: Currency) -> String {
             switch currency {
-            case .jpy:
+            case .jpy, .krw:
                 return displayName.replacingOccurrences(of: ".", with: "")
             default:
                 return displayName
@@ -150,6 +145,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case myr
         case mxn
         case jpy
+        case krw
         case cny
         case brl
         case thb
@@ -164,6 +160,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case GB
         case AU
         case FR
+        case ES
         case IN
         case SG
         case MY

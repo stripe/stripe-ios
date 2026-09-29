@@ -46,6 +46,8 @@
 
 "Buy now or pay later with Klarna" = "Pērciet tagad vai maksājiet vēlāk ar Klarna";
 
+"By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "Apstiprinot jūsu maksājumu ar NICEPAY, jūs atļaujat %@ ar šo maksājuma veidu iekasēt turpmākos maksājumus saskaņā ar viņu noteikumiem.";
+
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Apstiprinot maksājumu PayPal, jūs atļaujat %@ saskaņā ar viņu noteikumiem iekasēt no jūsu PayPal konta summas par turpmākajiem maksājumiem.";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Turpinot doties uz Amazon Pay, jūs atļaujat %@ iekasēt no jūsu Amazon Pay konta turpmākajiem maksājumiem saskaņā ar Klarna noteikumiem.";
@@ -86,6 +88,8 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Saglabājot savu bankas kontu %@, jūs piekrītat apstiprināt maksājumus saskaņā ar <terms>šiem noteikumiem</terms>.";
 
+"By saving your payment information, you allow %@ to charge you for future payments in accordance with their terms." = "Saglabājot savu maksājumu informāciju, jūs atļaujat %@ iekasēt no jums turpmākos maksājumus saskaņā ar to noteikumiem.";
+
 "By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "Iesniedzot pasūtījumu %1$@ un %2$@, jūs piekrītat saglabāt savu informāciju %3$@ nākamajiem pirkumiem un piekrītat autorizēt maksājumus saskaņā ar <terms>šiem noteikumiem</terms>.";
 
 "By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Iesniedzot savu pasūtījumu %@, jūs piekrītat autorizēt maksājumus saskaņā ar <terms>šiem noteikumiem</terms>.";
@@ -107,6 +111,8 @@
 "Close card scanner" = "Aizvērt kartes skeneri";
 
 "Code sent" = "Kods nosūtīts";
+
+"Complete the payment using Pix to finish the purchase." = "Veiciet maksājumu, izmantojot Pix, lai pabeigtu pirkumu.";
 
 "Confirm" = "Apstiprināt";
 
@@ -190,6 +196,10 @@
 
 "Name on card" = "Uz kartes norādītais vārds";
 
+"Naver Pay Card" = "Naver Pay karte";
+
+"Naver Pay Money/Point" = "Naver Pay Money/Point";
+
 "New card" = "Jauna karte";
 
 "New payment method" = "Jauns maksājumu veids";
@@ -246,8 +256,6 @@
 
 "Point the camera at your card." = "Vērsiet kameru uz karti.";
 
-"Processing..." = "Apstrādā…";
-
 "Przelewy24 Bank" = "Przelewy24 Bank";
 
 "Remove %@" = "Noņemt %@";
@@ -286,6 +294,8 @@
 
 "Select card" = "Atlasīt karti";
 
+"Select how you want to pay:" = "Atlasiet, kā vēlaties maksāt:";
+
 "Select payment method" = "Atlasīt maksājuma veidu";
 
 "Select your payment method" = "Izvēlēties savu maksājuma veidu";
@@ -322,6 +332,10 @@
 
 "Tax" = "Nodoklis";
 
+"Terms and Conditions" = "Noteikumi un nosacījumi";
+
+"Terms of Service" = "Pakalpojuma lietošanas noteikumi";
+
 "The IBAN you entered is incomplete." = "Ievadītais IBAN nav pilnīgs.";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Ievadītais IBAN nav derīgs, “%@” nav atbalstīts valsts kods.";
@@ -329,6 +343,8 @@
 "The provided verification code has expired." = "Norādītajam verifikācijas kodam ir beidzies derīguma termiņš.";
 
 "The provided verification code is incorrect." = "Norādītais verifikācijas kods nav pareizs.";
+
+"This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Šis ir starptautisks pirkums, un tajā nav iekļauta 3,5 % IOF maksa. Turpinot jūs apliecināt un piekrītat <terms>Ebanx noteikumi un nosacījumi<terms>.";
 
 "This is your default" = "Tas ir jūsu noklusējums";
 

@@ -36,8 +36,10 @@ struct CheckoutPlaygroundView: View {
                             onReset: viewModel.reset
                         )
 
+                        CheckoutPlaygroundEmailSection(viewModel: viewModel)
+
                         CheckoutPlaygroundLineItemsSection(
-                            lineItems: viewModel.lineItems,
+                            cartScenario: $viewModel.cartScenario,
                             currency: viewModel.currency
                         )
 
@@ -50,13 +52,16 @@ struct CheckoutPlaygroundView: View {
                             automaticTax: $viewModel.automaticTax,
                             checkoutSessionPaymentMethodSave: $viewModel.checkoutSessionPaymentMethodSave,
                             checkoutSessionPaymentMethodRemove: $viewModel.checkoutSessionPaymentMethodRemove,
-                            automaticPaymentMethods: $viewModel.automaticPaymentMethods
+                            automaticPaymentMethods: $viewModel.automaticPaymentMethods,
+                            linkMode: $viewModel.linkMode
                         )
 
                         CheckoutPlaygroundExpressCheckoutElementSection(
-                            expressCheckoutElementOption: $viewModel.expressCheckoutElementOption,
-                            applePayDisplay: $viewModel.applePayDisplay,
-                            linkDisplay: $viewModel.linkDisplay
+                            showExpressCheckoutElement: $viewModel.expressCheckoutElement.isEnabled,
+                            applePayDisplay: $viewModel.expressCheckoutElement.applePayDisplay,
+                            linkDisplay: $viewModel.expressCheckoutElement.linkDisplay,
+                            shippingAddressRequired: $viewModel.expressCheckoutElement.shippingAddressRequired,
+                            paymentMethodOrder: $viewModel.expressCheckoutElement.paymentMethodOrder
                         )
 
                         currencySelectorAppearanceSection
@@ -73,6 +78,7 @@ struct CheckoutPlaygroundView: View {
                     .padding(.horizontal, 16)
                     .padding(.top, 20)
                 }
+                .disabled(viewModel.isCreating)
 
                 CheckoutPlayground.CreateButtonBar(
                     isCreating: viewModel.isCreating,
@@ -91,26 +97,24 @@ struct CheckoutPlaygroundView: View {
                     case .swiftUI:
                         CheckoutCartView(
                             clientSecret: clientSecret,
+                            emailSettings: viewModel.resolvedEmail,
                             shippingAddressCollection: viewModel.shippingAddressCollection,
                             defaultShippingAddress: viewModel.defaultShippingAddress,
                             adaptivePricing: true,
                             integrationType: viewModel.integrationType,
-                            showExpressCheckoutElement: viewModel.expressCheckoutElementOption == .show,
-                            applePayDisplay: viewModel.applePayDisplay,
-                            linkDisplay: viewModel.linkDisplay,
+                            expressCheckoutElementSettings: viewModel.expressCheckoutElement,
                             currencySelectorAppearance: viewModel.currencySelectorAppearance,
                             delayPaymentPagesRequests: viewModel.delayPaymentPagesRequests
                         )
                     case .uiKit:
                         CheckoutCartUIKitView(
                             clientSecret: clientSecret,
+                            emailSettings: viewModel.resolvedEmail,
                             shippingAddressCollection: viewModel.shippingAddressCollection,
                             defaultShippingAddress: viewModel.defaultShippingAddress,
                             adaptivePricing: true,
                             integrationType: viewModel.integrationType,
-                            showExpressCheckoutElement: viewModel.expressCheckoutElementOption == .show,
-                            applePayDisplay: viewModel.applePayDisplay,
-                            linkDisplay: viewModel.linkDisplay,
+                            expressCheckoutElementSettings: viewModel.expressCheckoutElement,
                             currencySelectorAppearance: viewModel.currencySelectorAppearance,
                             delayPaymentPagesRequests: viewModel.delayPaymentPagesRequests
                         )
@@ -125,6 +129,12 @@ struct CheckoutPlaygroundView: View {
                         showCurrencySelectorAppearance = false
                     }
                 )
+            }
+            .onAppear {
+                viewModel.activateLinkModeOverride()
+            }
+            .onDisappear {
+                viewModel.deactivateLinkModeOverride()
             }
         }
     }

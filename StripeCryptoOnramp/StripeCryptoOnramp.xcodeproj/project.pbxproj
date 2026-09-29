@@ -266,6 +266,8 @@
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				"ar-SA",
+				"cy-GB",
 				en,
 				Base,
 				es,

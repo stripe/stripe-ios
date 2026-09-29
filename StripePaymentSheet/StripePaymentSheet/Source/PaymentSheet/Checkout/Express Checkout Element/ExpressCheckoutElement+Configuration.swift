@@ -6,25 +6,31 @@
 //
 
 import PassKit
+@_spi(STP) import StripeCore
 
 @_spi(STP)
 @_spi(ReactNativeSDK)
 extension ExpressCheckoutElement {
     /// Configuration options for ``ExpressCheckoutElement``.
     public struct Configuration {
-        /// A closure called after a wallet payment confirmation completes.
-        public typealias ConfirmHandler = (_ result: CheckoutController.ConfirmResult) -> Void
-
-        /// Called after a wallet payment confirmation completes.
-        public var confirmHandler: ConfirmHandler = { _ in }
-
+        /// Whether to require collecting a shipping address. Default: `false`.
+        public var shippingAddressRequired: Bool = false
         /// Sets the configuration for Apple Pay.
         public var applePayConfiguration: ApplePayConfiguration?
         /// Sets the configuration for Link.
         public var linkConfiguration: LinkConfiguration = .init()
+        /// Overrides the display order of payment methods. `nil` uses the default dynamic ordering.
+        /// Supported values are `"apple_pay"` and `"link"`.
+        /// - Example: ["link", "apple_pay"]
+        /// - Note: If you omit payment methods from this list, they’ll be automatically ordered by Stripe after the ones you provide. Invalid payment methods are ignored.
+        public var paymentMethodOrder: [String]?
+        /// Called after a wallet payment confirmation completes.
+        public var confirmHandler: ConfirmHandler
 
         /// Creates a configuration with default values.
-        public init() {}
+        public init(confirmHandler: @escaping ConfirmHandler) {
+            self.confirmHandler = confirmHandler
+        }
     }
 
     /// Configuration for Apple Pay.
@@ -80,4 +86,7 @@ extension ExpressCheckoutElement {
             self.display = display
         }
     }
+
+    /// A closure called after a wallet payment confirmation completes.
+    public typealias ConfirmHandler = (_ result: CheckoutController.ConfirmResult) -> Void
 }

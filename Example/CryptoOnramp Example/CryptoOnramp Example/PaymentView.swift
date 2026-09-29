@@ -86,17 +86,26 @@ struct PaymentView: View {
     private enum SourceCurrency: String, CaseIterable, Identifiable {
         case usd
         case eur
+        case cad
+        case cop
+        case php
 
         var displayName: String {
             rawValue.uppercased()
         }
 
-        var symbol: String {
+        var amountPrefix: String {
             switch self {
             case .usd:
                 "$"
             case .eur:
                 "€"
+            case .cad:
+                "CAD "
+            case .cop:
+                "COP "
+            case .php:
+                "PHP "
             }
         }
 
@@ -124,12 +133,12 @@ struct PaymentView: View {
     /// - Parameters:
     ///   - coordinator: The coordinator to use for collecting new payment methods and creating crypto payment tokens.
     ///   - wallet: The wallet being funded.
-    ///   - isEUCustomer: Whether the user's KYC region is EU.
+    ///   - kycResidence: The user's KYC residence, used to select the initial local source currency.
     ///   - onContinue: Called with the created onramp session when the user continues.
     init(
         coordinator: CryptoOnrampCoordinator,
         wallet: CustomerWalletsResponse.Wallet,
-        isEUCustomer: Bool,
+        kycResidence: KYCResidence,
         onContinue: @escaping (
             CreateOnrampSessionResponse,
             _ selectedPaymentMethodDescription: String,
@@ -139,7 +148,7 @@ struct PaymentView: View {
         self.coordinator = coordinator
         self.wallet = wallet
         self.onContinue = onContinue
-        self._sourceCurrency = State(initialValue: isEUCustomer ? .eur : .usd)
+        self._sourceCurrency = State(initialValue: SourceCurrency(rawValue: kycResidence.localCurrencyCode) ?? .usd)
     }
 
     @Environment(\.isLoading) private var isLoading
@@ -258,7 +267,7 @@ struct PaymentView: View {
             Spacer()
 
             VStack(spacing: 8) {
-                Text(sourceCurrency.symbol + (amountText.isEmpty ? "0" : amountText))
+                Text(sourceCurrency.amountPrefix + (amountText.isEmpty ? "0" : amountText))
                     .font(.system(size: 56, weight: .bold))
                     .monospacedDigit()
                     .frame(maxWidth: .infinity, alignment: .center)
@@ -615,7 +624,7 @@ struct PaymentView: View {
                 RoundedRectangle(cornerRadius: 10)
                     .fill(Color(.secondarySystemBackground))
 
-                Text("\(sourceCurrency.symbol)\(amount)")
+                Text("\(sourceCurrency.amountPrefix)\(amount)")
                     .font(.system(size: 18, weight: .semibold))
                     .foregroundColor(.primary)
             }
@@ -803,7 +812,7 @@ struct PaymentView: View {
         )
         request.paymentSummaryItems = [
             PKPaymentSummaryItem(
-                label: "\(sourceCurrency.symbol)\(amountText) \(sourceCurrency.rawValue) + fees",
+                label: "\(sourceCurrency.amountPrefix)\(amountText) \(sourceCurrency.rawValue) + fees",
                 amount: .zero,
                 type: .pending
             ),
@@ -1052,7 +1061,7 @@ private extension PaymentTokensResponse.PaymentToken {
                 walletAddress: "",
                 verifiedOwnership: false
             ),
-            isEUCustomer: false,
+            kycResidence: .unitedStates,
             onContinue: { _, _, _ in }
         )
     }

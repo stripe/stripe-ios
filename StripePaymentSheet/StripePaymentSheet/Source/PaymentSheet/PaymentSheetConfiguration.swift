@@ -514,8 +514,8 @@ extension PaymentSheet {
             case automatic
             /// Link will never be displayed.
             case never
-            /// Link remains enabled (e.g. for automatic Link verification, Instant Bank Payments, Link Card Brand, and inline signup)
-            /// but its button/row will not be shown in the payment element UI.
+            /// Link remains enabled (e.g. for automatic Link verification, Instant Bank Payments, Link Card Brand, and inline signup).
+            /// Its button/row is shown when an existing Link user is detected and hidden otherwise.
             case walletButtonHidden
         }
 
@@ -523,13 +523,6 @@ extension PaymentSheet {
             switch display {
             case .automatic, .walletButtonHidden: true
             case .never: false
-            }
-        }
-
-        var shouldShowButton: Bool {
-            switch display {
-            case .automatic: true
-            case .walletButtonHidden, .never: false
             }
         }
 
@@ -789,6 +782,30 @@ extension PaymentSheet {
         /// Your implementation should complete the payment and return the result.
         /// - Note: This is always called on the main thread.
         public var customPaymentMethodConfirmHandler: CustomPaymentMethodConfirmHandler
+    }
+}
+
+extension PaymentSheet.BillingDetailsCollectionConfiguration {
+    var applePayRequiredBillingContactFields: Set<PKContactField> {
+        var fields = Set<PKContactField>()
+        if address == .automatic || address == .full {
+            fields.insert(.postalAddress)
+        }
+        if name == .always {
+            fields.insert(.name)
+        }
+        return fields
+    }
+
+    var applePayRequiredShippingContactFields: Set<PKContactField> {
+        var fields = Set<PKContactField>()
+        if email == .always {
+            fields.insert(.emailAddress)
+        }
+        if phone == .always {
+            fields.insert(.phoneNumber)
+        }
+        return fields
     }
 }
 

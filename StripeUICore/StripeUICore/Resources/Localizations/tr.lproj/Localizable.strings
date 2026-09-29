@@ -92,6 +92,8 @@
 
 "Prefecture" = "İdari bölge";
 
+"Processing..." = "İşleniyor...";
+
 "Province" = "İlçe";
 
 "Remove" = "Kaldır";
@@ -106,9 +108,13 @@
 
 "Selection is empty." = "Seçim boş.";
 
+"Something went wrong" = "Bir sorun oluştu";
+
 "Sort code" = "Şube kodu";
 
 "State" = "Eyalet";
+
+"Submit" = "Gönder";
 
 "Suburb" = "Banliyö";
 

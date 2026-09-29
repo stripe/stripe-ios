@@ -198,6 +198,19 @@ class STPElementsSessionTest: XCTestCase {
         XCTAssertEqual(elementsSession.merchantLogoUrl?.absoluteString, "https://example.com/valid-logo.png")
     }
 
+    func testDecodedObjectFromAPIResponseMapping_accountID() {
+        // nil account_id
+        var elementsSessionJson = STPTestUtils.jsonNamed("ElementsSession")!
+        elementsSessionJson["account_id"] = nil
+        var elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
+        XCTAssertNil(elementsSession.accountID)
+
+        // valid account_id
+        elementsSessionJson["account_id"] = "acct_1HvTI7Lu5o3P18Zp"
+        elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
+        XCTAssertEqual(elementsSession.accountID, "acct_1HvTI7Lu5o3P18Zp")
+    }
+
     func testMissingEPMResponseDoesntFireAnalytic() {
         // If STPElementsSession decodes a dict...
         var elementsSessionJson = STPTestUtils.jsonNamed("ElementsSession")!

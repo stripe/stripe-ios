@@ -1,5 +1,13 @@
 "Debit cards are most likely to be accepted." = "Visticamāk, tiks pieņemtas debetkartes.";
 
+"Document uploaded successfully" = "Dokuments veiksmīgi augšupielādēts";
+
+"Please try again later." = "Mēģiniet vēlāk vēlreiz.";
+
+"Submitted for review" = "Iesniegts pārskatīšanai";
+
+"Tell us about your source of funds" = "Pastāstiet mums par jūsu finanšu līdzekļu avotu";
+
 "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "Šo lietotni nevarēja verificēt atestācijas kļūdas dēļ. Lūdzu, mēģiniet vēlreiz vēlāk vai sazinieties ar izstrādātāju, ja problēma joprojām pastāv.";
 
 "This app couldn't be verified. Contact the app developer for help." = "Šo lietotni nevarēja verificēt. Lai saņemtu palīdzību, sazinieties ar lietotnes izstrādātāju.";
@@ -12,4 +20,14 @@
 
 "This wallet verification request is invalid. Please try again." = "Šis maka verifikācijas pieprasījums ir nederīgs. Lūdzu, mēģiniet vēlreiz.";
 
+"Upload your proof of address" = "Augšupielādējiet jūsu adresi apliecinošu dokumentu";
+
 "We couldn't verify ownership of this wallet. Please try again." = "Mums neizdevās pārbaudīt šī maka īpašumtiesības. Lūdzu, mēģiniet vēlreiz.";
+
+"We may request proof of address for larger transactions." = "Mēs varam pieprasīt adresi apliecinošu dokumentu lielākiem darījumiem.";
+
+"We may request source of funds for larger transactions." = "Mēs varam pieprasīt finanšu līdzekļu avotu lielākiem darījumiem.";
+
+"We’re reviewing your documents. We’ll let you know when verification is complete." = "Mēs izskatām jūsu dokumentus. Mēs jums paziņosim, kad pārbaude būs pabeigta.";
+
+"You can continue while we verify your document in the background." = "Jūs varat turpināt, kamēr mēs fonā pārbaudām jūsu dokumentu.";

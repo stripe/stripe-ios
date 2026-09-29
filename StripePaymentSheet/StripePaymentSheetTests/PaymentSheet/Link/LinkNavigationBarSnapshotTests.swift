@@ -136,6 +136,7 @@ extension LinkNavigationBarSnapshotTests {
         let isRegistered: Bool
         let sessionState: PaymentSheetLinkAccount.SessionState
         let consumerSessionClientSecret: String?
+        let linkSessionKey: String?
     }
 
     fileprivate func makeAccountStub() -> LinkAccountStub {
@@ -144,7 +145,8 @@ extension LinkNavigationBarSnapshotTests {
             redactedPhoneNumber: "+1********55",
             isRegistered: true,
             sessionState: .verified,
-            consumerSessionClientSecret: nil
+            consumerSessionClientSecret: nil,
+            linkSessionKey: nil
         )
     }
 

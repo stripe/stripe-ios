@@ -46,6 +46,8 @@
 
 "Buy now or pay later with Klarna" = "Beli sekarang atau bayar kemudian dengan Klarna";
 
+"By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "Dengan mengesahkan pembayaran anda dengan NICEPAY, anda membenarkan %@ untuk mengecaj kaedah pembayaran ini bagi pembayaran akan datang mengikut terma mereka.";
+
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Dengan mengesahkan pembayaran anda dengan PayPal, anda membenarkan %@ mengecaj akaun PayPal anda bagi pembayaran masa hadapan menurut terma mereka.";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Dengan meneruskan langkah ke Amazon Pay, anda membenarkan %@ mengecaj akaun Amazon Pay anda bagi pembayaran masa hadapan menurut terma mereka.";
@@ -86,6 +88,8 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Dengan menyimpan akaun bank anda untuk %@, anda bersetuju untuk mengizinkan pembayaran menurut <terms>terma ini</terms>.";
 
+"By saving your payment information, you allow %@ to charge you for future payments in accordance with their terms." = "Dengan menyimpan maklumat pembayaran anda, anda membenarkan %@ mengenakan caj kepada anda untuk pembayaran masa hadapan mengikut terma mereka.";
+
 "By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "Dengan menghantar pesanan anda kepada %1$@ dan %2$@, anda bersetuju untuk menyimpan maklumat anda dengan %3$@ bagi pembelian masa hadapan, serta bersetuju untuk membenarkan pembayaran dibuat menurut <terms>terma ini</terms>.";
 
 "By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Dengan menghantar pesanan anda kepada %@ anda bersetuju untuk mengizinkan pembayaran mengikut <terms>terma-terma ini</terms>.";
@@ -107,6 +111,8 @@
 "Close card scanner" = "Tutup pengimbas kad";
 
 "Code sent" = "Kod dihantar";
+
+"Complete the payment using Pix to finish the purchase." = "Lengkapkan pembayaran menggunakan Pix untuk menyelesaikan pembelian.";
 
 "Confirm" = "Sahkan";
 
@@ -190,6 +196,10 @@
 
 "Name on card" = "Nama pada kad";
 
+"Naver Pay Card" = "Kad Naver Pay";
+
+"Naver Pay Money/Point" = "Naver Pay Money/Point";
+
 "New card" = "Kad baharu";
 
 "New payment method" = "Kaedah pembayaran baharu";
@@ -246,8 +256,6 @@
 
 "Point the camera at your card." = "Halakan kamera pada kad anda.";
 
-"Processing..." = "Sedang diproses...";
-
 "Przelewy24 Bank" = "Bank Przelewy24";
 
 "Remove %@" = "Alih keluar %@";
@@ -286,6 +294,8 @@
 
 "Select card" = "Pilih kad";
 
+"Select how you want to pay:" = "Pilih cara anda ingin membayar:";
+
 "Select payment method" = "Pilih kaedah pembayaran";
 
 "Select your payment method" = "Pilih kaedah pembayaran anda";
@@ -322,6 +332,10 @@
 
 "Tax" = "Cukai";
 
+"Terms and Conditions" = "Terma dan Syarat";
+
+"Terms of Service" = "Terma Perkhidmatan";
+
 "The IBAN you entered is incomplete." = "IBAN yang anda masukkan tidak lengkap.";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "IBAN yang anda masukkan tidak sah, “%@” bukan kod negara yang disokong.";
@@ -329,6 +343,8 @@
 "The provided verification code has expired." = "Kod penentusahan yang diberikan telah tamat tempoh.";
 
 "The provided verification code is incorrect." = "Kod penentusahan yang diberikan tidak betul.";
+
+"This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Ini adalah pembelian antarabangsa dan tidak termasuk yuran IOF sebanyak 3.5%. Dengan meneruskan, anda mengakui dan menerima <terms>terma dan syarat Ebanx<terms>.";
 
 "This is your default" = "Ini tetapan asal anda";
 

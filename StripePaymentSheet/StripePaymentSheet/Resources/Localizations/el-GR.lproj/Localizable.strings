@@ -46,6 +46,8 @@
 
 "Buy now or pay later with Klarna" = "Αγορά τώρα ή πληρωμή αργότερα με Klarna";
 
+"By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "Επιβεβαιώνοντας την πληρωμή σας μέσω NICEPAY, επιτρέπετε στο %@ να χρεώσει αυτήν τη μέθοδο πληρωμής για μελλοντικές πληρωμές, σύμφωνα με τους όρους του.";
+
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Με την επιβεβαίωση της πληρωμής σας μέσω PayPal, επιτρέπετε στην %@ να χρεώσει τον λογαριασμό σας PayPal για μελλοντικές πληρωμές σύμφωνα με τους όρους της.";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Αν συνεχίσετε στο Amazon Pay, επιτρέπετε στην %@ να χρεώνει τον λογαριασμό σας στο Amazon Pay για μελλοντικές πληρωμές σύμφωνα με τους όρους της.";
@@ -86,6 +88,8 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Αποθηκεύοντας τον τραπεζικό λογαριασμό σας για την %@, συμφωνείτε να εξουσιοδοτείτε πληρωμές σύμφωνα με <terms>αυτούς τους όρους</terms>.";
 
+"By saving your payment information, you allow %@ to charge you for future payments in accordance with their terms." = "Αποθηκεύοντας τα στοιχεία πληρωμής σας, επιτρέπετε στο %@ να σας χρεώνει για μελλοντικές πληρωμές σύμφωνα με τους όρους του.";
+
 "By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "Υποβάλλοντας την παραγγελία σας σε %1$@ και σε %2$@, συμφωνείτε στην αποθήκευση των στοιχείων σας στο %3$@ για μελλοντικές αγορές και συμφωνείτε στην εξουσιοδότηση πληρωμών σύμφωνα με <terms>αυτούς τους όρους</terms>.";
 
 "By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Υποβάλλοντας την παραγγελία σας σε %@, συμφωνείτε στην εξουσιοδότηση πληρωμών σύμφωνα με <terms>αυτούς τους όρους</terms>.";
@@ -107,6 +111,8 @@
 "Close card scanner" = "Κλείσιμο σαρωτή κάρτας";
 
 "Code sent" = "Ο κωδικός εστάλη";
+
+"Complete the payment using Pix to finish the purchase." = "Ολοκληρώστε την πληρωμή χρησιμοποιώντας το Pix για να ολοκληρώσετε την αγορά.";
 
 "Confirm" = "Επιβεβαίωση";
 
@@ -190,6 +196,10 @@
 
 "Name on card" = "Όνομα στην κάρτα";
 
+"Naver Pay Card" = "Κάρτα Naver Pay";
+
+"Naver Pay Money/Point" = "Naver Pay Money/Point";
+
 "New card" = "Νέα κάρτα";
 
 "New payment method" = "Νέα μέθοδος πληρωμής";
@@ -246,8 +256,6 @@
 
 "Point the camera at your card." = "Στρέψτε την κάμερα στην κάρτα σας.";
 
-"Processing..." = "Επεξεργασία…";
-
 "Przelewy24 Bank" = "Τράπεζα Przelewy24";
 
 "Remove %@" = "Αφαίρεση %@";
@@ -286,6 +294,8 @@
 
 "Select card" = "Επιλέξτε κάρτα";
 
+"Select how you want to pay:" = "Επιλέξτε πώς θέλετε να πληρώσετε:";
+
 "Select payment method" = "Επιλέξτε μέθοδο πληρωμής";
 
 "Select your payment method" = "Επιλέξτε τη μέθοδο πληρωμής σας";
@@ -322,6 +332,10 @@
 
 "Tax" = "Φόρος";
 
+"Terms and Conditions" = "Όροι και Προϋποθέσεις";
+
+"Terms of Service" = "Όροι παροχής υπηρεσιών";
+
 "The IBAN you entered is incomplete." = "Ο κωδικός IBAN που εισαγάγατε είναι ελλιπής.";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Το IBAN που εισάγατε δεν είναι έγκυρο, το \"%@\" δεν είναι υποστηριζόμενος κωδικός χώρας.";
@@ -329,6 +343,8 @@
 "The provided verification code has expired." = "Ο κωδικός επαλήθευσης που παρασχέθηκε έχει λήξει.";
 
 "The provided verification code is incorrect." = "Ο κωδικός επαλήθευσης που παρασχέθηκε είναι λανθασμένος.";
+
+"This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Αυτή είναι μια διεθνής αγορά και δεν περιλαμβάνει χρέωση IOF ύψους 3,5%. Συνεχίζοντας, αναγνωρίζετε και αποδέχεστε τους<terms> όρους και τις προϋποθέσεις της Ebanx</terms>.";
 
 "This is your default" = "Αυτή είναι η προεπιλογή σας";
 

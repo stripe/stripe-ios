@@ -17,6 +17,7 @@ import UIKit
     @_spi(STP) var isRegistered: Bool { get }
     @_spi(STP) var sessionState: PaymentSheetLinkAccount.SessionState { get }
     @_spi(STP) var consumerSessionClientSecret: String? { get }
+    @_spi(STP) var linkSessionKey: String? { get }
 }
 
 struct LinkPMDisplayDetails {
@@ -118,6 +119,10 @@ struct LinkPMDisplayDetails {
 
     @_spi(STP) public var consumerSessionClientSecret: String? {
         currentSession?.clientSecret
+    }
+
+    @_spi(STP) public var linkSessionKey: String? {
+        currentSession?.linkSessionKey
     }
 
     var hasStartedSMSVerification: Bool {
@@ -628,13 +633,15 @@ private extension PaymentSheetLinkAccount {
                 completion(result)
             case .failure(let error as NSError):
                 if error.isLinkAuthError && shouldRetry && self?.createdFromAuthIntentID != true {
-                    self?.refreshSession { refreshSessionResult in
-                        switch refreshSessionResult {
-                        case .success(let refreshedSession):
-                            self?.currentSession = refreshedSession
-                            apiCall(completion)
-                        case .failure:
-                            completion(result)
+                    DispatchQueue.main.async { [weak self] in
+                        self?.refreshSession { refreshSessionResult in
+                            switch refreshSessionResult {
+                            case .success(let refreshedSession):
+                                self?.currentSession = refreshedSession
+                                apiCall(completion)
+                            case .failure:
+                                completion(result)
+                            }
                         }
                     }
                 } else {
@@ -644,6 +651,7 @@ private extension PaymentSheetLinkAccount {
         }
     }
 
+    @MainActor
     func refreshSession(
         completion: @escaping (Result<ConsumerSession, Error>) -> Void
     ) {
@@ -781,6 +789,7 @@ struct UpdatePaymentDetailsParams {
     var metadata: PaymentMethodMetadata?
 }
 
+@MainActor
 protocol PaymentSheetLinkAccountDelegate {
     func refreshLinkSession(completion: @escaping (Result<ConsumerSession, Error>) -> Void)
 }
