@@ -138,10 +138,6 @@ extension ConsumerSession {
         return currentAuthenticationLevel >= minimumAuthenticationLevel
     }
 
-    var hasVerifiedSMSSession: Bool {
-        verificationSessions.containsVerifiedSMSSession
-    }
-
     var isVerifiedWithLinkAuthToken: Bool {
         verificationSessions.containsVerifiedLinkAuthTokenSession
     }
