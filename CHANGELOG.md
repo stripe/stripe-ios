@@ -2,10 +2,23 @@ The next release's version bump will so far be:
 MINOR
 
 ## X.Y.Z - changes pending release
+### Payments
+* [Fixed] Amounts in LBP are now displayed correctly.
+
+### PaymentSheet
+* [Fixed] Fixed Apple Pay failing to open for fractional amounts in COP, HUF, IDR, LAK, LBP, PKR, and RSD.
+
 ### CryptoOnramp (Alpha)
+* [Changed] Apple Pay can now be presented via `CryptoOnrampCoordinator.collectPaymentMethod(type:from:)` before the user authenticates with Link. `createCryptoPaymentToken()` still requires an authenticated user.
 * [Added] Added `STPAPIClient.CryptoOnrampAPIError.missingLinkSessionKey` to report when a Link session key is unavailable.
 
+### PaymentSheet
+* [Added] Added GoPay API bindings and support for payments, including setup future usage, in PaymentSheet.
+
 ## 26.12.1 2026-09-28
+### CryptoOnramp (Alpha)
+* [Fixed] Preserved PaymentIntent error codes, decline codes, and types in checkout errors after authentication.
+
 ### Financial Connections
 * [Fixed] Preserved `no_eligible_accounts` in `onEvent` error callbacks instead of reporting it as `unexpected_error`.
 * [Fixed] Recorded native `onEvent` emissions with the session context for diagnostics.
@@ -20,7 +33,6 @@ MINOR
 ### CryptoOnramp (Alpha)
 * [Removed] Removed public exposure of `StripeCryptoOnramp.Image`, including `Image.linkIconSquare`.
 * [Added] Added `CryptoOnrampCoordinator.presentTermsAndConditionsIfNeeded(from:)` and `presentTermsOfServiceIfNeeded(from:)` to present and record acceptance of current partner terms when required. Both methods return `PartnerTermsResult`.
-* [Fixed] Preserved PaymentIntent error codes, decline codes, and types in checkout errors after authentication.
 
 ### StripeCore
 * [Added] Added `additionalHeaders` support to the `STPAPIClient` GET, POST, and DELETE APIs exposed through the `STP` SPI.
