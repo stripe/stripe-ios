@@ -44,7 +44,7 @@ extension STPElementsSession {
     ) -> Bool {
         self.supportsLink &&
         linkAccount.sessionState == .requiresVerification &&
-        !linkAccount.hasStartedSMSVerification &&
+        linkAccount.currentSession?.hasStartedOTPVerification != true &&
         linkAccount.useMobileEndpoints &&
         self.linkSettings?.suppress2FAModal != true &&
         linkAccount.currentSession?.mobileFallbackWebviewParams?.webviewRequirementType != .required &&
