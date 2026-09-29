@@ -255,10 +255,9 @@ class EmbeddedPlaygroundViewController: UIViewController {
 
     @objc private func didToggleElementBounds() {
         let showsBounds = showElementBoundsSwitch.isOn
-        highlightedContainerView?.layer.borderWidth = showsBounds ? 4 : 0
-        highlightedContainerView?.layoutMargins = showsBounds
-            ? .init(top: 8, left: 8, bottom: 8, right: 8)
-            : .zero
+        highlightedContainerView?.layer.borderColor = showsBounds
+            ? UIColor.systemRed.cgColor
+            : UIColor.clear.cgColor
     }
 
     private func setupLoadingIndicator() {
