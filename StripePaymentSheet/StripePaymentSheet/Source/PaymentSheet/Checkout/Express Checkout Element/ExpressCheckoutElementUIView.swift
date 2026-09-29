@@ -75,9 +75,11 @@ public final class ExpressCheckoutElementUIView: UIView {
             height: stackView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height
         )
     }
+    
+    // MARK: - Private Methods
 
     /// Arranges `buttons` into no more than `appearance.buttonLayout.maxRows` rows of no more than `appearance.buttonLayout.maxColumns` columns.
-    func layoutButtons(_ buttons: [ExpressCheckoutElement.PaymentMethod]) {
+    private func layoutButtons(_ buttons: [ExpressCheckoutElement.PaymentMethod]) {
         stackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
 
         let buttonRows = Self.buttonRows(for: buttons, layout: configuration.appearance.buttonLayout)
@@ -101,8 +103,6 @@ public final class ExpressCheckoutElementUIView: UIView {
             $0.widthAnchor.constraint(equalTo: referenceButton.widthAnchor).isActive = true
         }
     }
-
-    // MARK: - Private Methods
 
     private func makeRowStackView(_ buttons: [UIView]) -> UIStackView {
         let rowStackView = UIStackView(arrangedSubviews: buttons)
