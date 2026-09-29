@@ -107,7 +107,11 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
     }
 
     private lazy var savedPaymentMethodManager: SavedPaymentMethodManager = {
-        return SavedPaymentMethodManager(configuration: configuration, customerProvider: loadResult.customerProvider, elementsSession: elementsSession)
+        return SavedPaymentMethodManager(
+            customerProvider: loadResult.customerProvider,
+            elementsSession: elementsSession,
+            apiClient: configuration.apiClient
+        )
     }()
 
     // MARK: - Views
