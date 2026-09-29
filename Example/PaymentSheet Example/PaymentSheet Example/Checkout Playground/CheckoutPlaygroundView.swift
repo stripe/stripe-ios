@@ -9,7 +9,6 @@ import SwiftUI
 struct CheckoutPlaygroundView: View {
     @StateObject private var viewModel = CheckoutPlayground.ViewModel()
     @State private var showCurrencySelectorAppearance = false
-    @State private var showBillingDetailsCollection = false
 
     var body: some View {
         Group {
@@ -37,8 +36,10 @@ struct CheckoutPlaygroundView: View {
                             onReset: viewModel.reset
                         )
 
+                        CheckoutPlaygroundEmailSection(viewModel: viewModel)
+
                         CheckoutPlaygroundLineItemsSection(
-                            lineItems: viewModel.lineItems,
+                            cartScenario: $viewModel.cartScenario,
                             currency: viewModel.currency
                         )
 
@@ -51,16 +52,17 @@ struct CheckoutPlaygroundView: View {
                             automaticTax: $viewModel.automaticTax,
                             checkoutSessionPaymentMethodSave: $viewModel.checkoutSessionPaymentMethodSave,
                             checkoutSessionPaymentMethodRemove: $viewModel.checkoutSessionPaymentMethodRemove,
-                            automaticPaymentMethods: $viewModel.automaticPaymentMethods
+                            automaticPaymentMethods: $viewModel.automaticPaymentMethods,
+                            linkMode: $viewModel.linkMode
                         )
 
                         CheckoutPlaygroundExpressCheckoutElementSection(
-                            expressCheckoutElementOption: $viewModel.expressCheckoutElement.option,
+                            showExpressCheckoutElement: $viewModel.expressCheckoutElement.isEnabled,
                             applePayDisplay: $viewModel.expressCheckoutElement.applePayDisplay,
+                            applePayButtonType: $viewModel.expressCheckoutElement.applePayButtonType,
                             linkDisplay: $viewModel.expressCheckoutElement.linkDisplay,
-                            onCustomizeBillingDetailsCollection: {
-                                showBillingDetailsCollection = true
-                            }
+                            paymentMethodOrder: $viewModel.expressCheckoutElement.paymentMethodOrder,
+                            appearance: $viewModel.expressCheckoutElement.appearance
                         )
 
                         currencySelectorAppearanceSection
@@ -77,6 +79,7 @@ struct CheckoutPlaygroundView: View {
                     .padding(.horizontal, 16)
                     .padding(.top, 20)
                 }
+                .disabled(viewModel.isCreating)
 
                 CheckoutPlayground.CreateButtonBar(
                     isCreating: viewModel.isCreating,
@@ -95,28 +98,24 @@ struct CheckoutPlaygroundView: View {
                     case .swiftUI:
                         CheckoutCartView(
                             clientSecret: clientSecret,
+                            emailSettings: viewModel.resolvedEmail,
                             shippingAddressCollection: viewModel.shippingAddressCollection,
                             defaultShippingAddress: viewModel.defaultShippingAddress,
                             adaptivePricing: true,
                             integrationType: viewModel.integrationType,
-                            showExpressCheckoutElement: viewModel.expressCheckoutElement.option == .show,
-                            applePayDisplay: viewModel.expressCheckoutElement.applePayDisplay,
-                            linkDisplay: viewModel.expressCheckoutElement.linkDisplay,
-                            eceBillingDetailsCollectionConfiguration: viewModel.expressCheckoutElement.billingDetailsCollectionConfiguration,
+                            expressCheckoutElementSettings: viewModel.expressCheckoutElement,
                             currencySelectorAppearance: viewModel.currencySelectorAppearance,
                             delayPaymentPagesRequests: viewModel.delayPaymentPagesRequests
                         )
                     case .uiKit:
                         CheckoutCartUIKitView(
                             clientSecret: clientSecret,
+                            emailSettings: viewModel.resolvedEmail,
                             shippingAddressCollection: viewModel.shippingAddressCollection,
                             defaultShippingAddress: viewModel.defaultShippingAddress,
                             adaptivePricing: true,
                             integrationType: viewModel.integrationType,
-                            showExpressCheckoutElement: viewModel.expressCheckoutElement.option == .show,
-                            applePayDisplay: viewModel.expressCheckoutElement.applePayDisplay,
-                            linkDisplay: viewModel.expressCheckoutElement.linkDisplay,
-                            eceBillingDetailsCollectionConfiguration: viewModel.expressCheckoutElement.billingDetailsCollectionConfiguration,
+                            expressCheckoutElementSettings: viewModel.expressCheckoutElement,
                             currencySelectorAppearance: viewModel.currencySelectorAppearance,
                             delayPaymentPagesRequests: viewModel.delayPaymentPagesRequests
                         )
@@ -132,14 +131,11 @@ struct CheckoutPlaygroundView: View {
                     }
                 )
             }
-            .sheet(isPresented: $showBillingDetailsCollection) {
-                ExpressCheckoutElementBillingDetailsCollectionPlaygroundView(
-                    configuration: viewModel.expressCheckoutElement.billingDetailsCollectionConfiguration,
-                    doneAction: { updatedConfiguration in
-                        viewModel.expressCheckoutElement.billingDetailsCollectionConfiguration = updatedConfiguration
-                        showBillingDetailsCollection = false
-                    }
-                )
+            .onAppear {
+                viewModel.activateLinkModeOverride()
+            }
+            .onDisappear {
+                viewModel.deactivateLinkModeOverride()
             }
         }
     }

@@ -199,7 +199,7 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
         )
 
         // 2. Get expected amount from checkout session
-        let expectedAmount = checkoutSession.expectedAmount()
+        let expectedAmount = checkoutSession.amount
 
         // 3. Extract shipping details from PKPayment (if provided)
         let shipping = makeShippingDetailsParams(from: paymentInformation)
@@ -213,7 +213,8 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
             returnURL: context.returnUrl,
             shipping: shipping,
             paymentMethodOptions: nil,
-            clientAttributionMetadata: clientAttributionMetadata
+            clientAttributionMetadata: clientAttributionMetadata,
+            collectedInformation: .init(email: checkoutSession.localState.email)
         )
         let response = try await context.apiClient.confirmCheckoutSession(with: requestParameters)
 
@@ -352,7 +353,6 @@ extension STPApplePayContext {
         intent: Intent,
         elementsSession: STPElementsSession,
         configuration: PaymentElementConfiguration,
-        customerProvider: CustomerProvider,
         clientAttributionMetadata: STPClientAttributionMetadata,
         checkout: CheckoutSessionBillingAddressUpdater? = nil,
         completion: @escaping PaymentSheetResultCompletionBlock
@@ -409,7 +409,7 @@ extension STPApplePayContext {
             applePayContext.apiClient = configuration.apiClient
             applePayContext.returnUrl = configuration.returnURL
             applePayContext.clientAttributionMetadata = clientAttributionMetadata
-            applePayContext.fallbackBillingDetails = makeFallbackBillingDetails(configuration: configuration, customerProvider: customerProvider)
+            applePayContext.fallbackBillingDetails = makeFallbackBillingDetails(configuration: configuration)
             return applePayContext
         } else {
             // Delegate only deallocs when Apple Pay completes
@@ -417,6 +417,21 @@ extension STPApplePayContext {
             delegate.selfRetainer = nil
             return nil
         }
+    }
+
+    static func roundAmountForApplePay(_ amount: NSDecimalNumber, currency: String?) -> NSDecimalNumber {
+        // Apple Pay rejects fractional amounts for this list of currencies. Match Stripe.js by rounding them up.
+        guard let currency, NSDecimalNumber.decimalCountSpecialCases[currency.uppercased()] != nil else {
+            return amount
+        }
+        return amount.rounding(accordingToBehavior: NSDecimalNumberHandler(
+            roundingMode: .up,
+            scale: 0,
+            raiseOnExactness: false,
+            raiseOnOverflow: false,
+            raiseOnUnderflow: false,
+            raiseOnDivideByZero: false
+        ))
     }
 
     @MainActor
@@ -456,7 +471,7 @@ extension STPApplePayContext {
                     currency: intent.currency
                 )
                 paymentRequest.paymentSummaryItems = [
-                    PKPaymentSummaryItem(label: label, amount: decimalAmount, type: .final),
+                    PKPaymentSummaryItem(label: label, amount: roundAmountForApplePay(decimalAmount, currency: intent.currency), type: .final),
                 ]
             } else {
                 paymentRequest.paymentSummaryItems = [
@@ -515,23 +530,16 @@ private func makeShippingDetails(from configuration: PaymentElementConfiguration
 
 @MainActor
 private func makeFallbackBillingDetails(
-    configuration: PaymentElementConfiguration,
-    customerProvider: CustomerProvider
+    configuration: PaymentElementConfiguration
 ) -> StripeAPI.BillingDetails? {
+    guard configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod else {
+        return nil
+    }
+
     var fallbackBillingDetails = StripeAPI.BillingDetails()
     var hasFallbackBillingDetails = false
-
-    if let email = customerProvider.email {
-        fallbackBillingDetails.email = email
-        hasFallbackBillingDetails = true
-    }
-
-    guard configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod else {
-        return hasFallbackBillingDetails ? fallbackBillingDetails : nil
-    }
-
     let defaultBillingDetails = configuration.defaultBillingDetails
-    if fallbackBillingDetails.email == nil, let email = defaultBillingDetails.email {
+    if let email = defaultBillingDetails.email {
         fallbackBillingDetails.email = email
         hasFallbackBillingDetails = true
     }

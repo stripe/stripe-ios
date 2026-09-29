@@ -11,8 +11,8 @@ import UIKit
 /// Handles Checkout mutations requested by a ShippingAddressElement.
 @MainActor
 protocol ShippingAddressElementDelegate: AnyObject {
-    /// Sets the customer's shipping address.
-    func updateShippingAddress(name: String?, address: CheckoutController.Address) async throws
+    /// Sets or clears the customer's shipping address.
+    func updateShippingAddress(name: String?, address: CheckoutController.Address?) async throws
 }
 
 /// A shipping address form backed by a Checkout Session.

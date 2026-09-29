@@ -46,6 +46,8 @@
 
 "Buy now or pay later with Klarna" = "Ostke nüüd või makske hiljem Klarnaga";
 
+"By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "NICEPAY kaudu makse kinnitamisega lubate ettevõttel %@ debiteerida edaspidi makseid sellelt makseviisilt vastavalt nende tingimustele.";
+
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "PayPaliga makset kinnitades lubate %@-l võtta teie PayPali kontolt tulevaste maksete eest tasu vastavalt nende tingimustele.";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Amazon Payga jätkates lubate %@ teie Amazon Pay kontot tulevaste maksete tegemiseks vastavalt nende tingimustele.";
@@ -109,6 +111,8 @@
 "Close card scanner" = "Kaardiskanneri sulgemine";
 
 "Code sent" = "Kood saadetud";
+
+"Complete the payment using Pix to finish the purchase." = "Ostu lõpetamiseks viige makse Pixi abil lõpule.";
 
 "Confirm" = "Kinnita";
 
@@ -192,6 +196,10 @@
 
 "Name on card" = "Nimi kaardil";
 
+"Naver Pay Card" = "Naver Pay Card";
+
+"Naver Pay Money/Point" = "Naver Pay Money/Point";
+
 "New card" = "Uus kaart";
 
 "New payment method" = "Uus makseviis";
@@ -248,8 +256,6 @@
 
 "Point the camera at your card." = "Suunake kaamera oma kaardile.";
 
-"Processing..." = "Töötlemine ...";
-
 "Przelewy24 Bank" = "Pank Przelewy24";
 
 "Remove %@" = "Eemalda %@";
@@ -288,6 +294,8 @@
 
 "Select card" = "Vali kaart";
 
+"Select how you want to pay:" = "Valige, kuidas soovite maksta:";
+
 "Select payment method" = "Vali makseviis";
 
 "Select your payment method" = "Valige makseviis";
@@ -324,6 +332,10 @@
 
 "Tax" = "Maks";
 
+"Terms and Conditions" = "Tingimused";
+
+"Terms of Service" = "Teenusetingimused";
+
 "The IBAN you entered is incomplete." = "Sisestatud IBAN on puudulik.";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Sisestatud IBAN on kehtetu, „%@“ ei ole toetatud riigikood.";
@@ -331,6 +343,8 @@
 "The provided verification code has expired." = "Esitatud tuvastuskood on aegunud.";
 
 "The provided verification code is incorrect." = "Esitatud tuvastuskood on vale.";
+
+"This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "See on rahvusvaheline ost ja ei sisalda 3,5% IOF-tasu. Jätkates tunnistate ja nõustute <terms>Ebanxi tingimustega<terms>.";
 
 "This is your default" = "See on teie vaikimisi makseviis";
 

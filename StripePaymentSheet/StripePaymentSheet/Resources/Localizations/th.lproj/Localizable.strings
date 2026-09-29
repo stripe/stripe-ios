@@ -46,6 +46,8 @@
 
 "Buy now or pay later with Klarna" = "ซื้อตอนนี้หรือจ่ายทีหลังด้วย Klarna";
 
+"By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "การยืนยันการการชำระเงินด้วย NICEPAY หมายความว่าคุณอนุญาตให้ %@ เรียกเก็บเงินจากวิธีนี้สำหรับการชำระเงินในอนาคตตามเงื่อนไขของผู้ค้ารายดังกล่าว";
+
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "การยืนยันการการชำระเงินด้วย PayPal หมายความว่าคุณอนุญาตให้ %@ เรียกเก็บเงินจากบัญชี PayPal ของคุณสำหรับการชำระเงินในอนาคตตามเงื่อนไขของผู้ค้ารายดังกล่าว";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "การดำเนินการต่อที่ Amazon Pay หมายความว่าคุณอนุญาตให้ %@ เรียกเก็บเงินจากบัญชี Amazon Pay ของคุณสำหรับการชำระเงินในอนาคตตามเงื่อนไขของผู้ค้ารายดังกล่าว";
@@ -109,6 +111,8 @@
 "Close card scanner" = "ปิดโปรแกรมสแกนบัตร";
 
 "Code sent" = "ส่งรหัสแล้ว";
+
+"Complete the payment using Pix to finish the purchase." = "ชำระเงินด้วย Pix เพื่อดำเนินการสั่งซื้อให้เสร็จสิ้น";
 
 "Confirm" = "ยืนยัน";
 
@@ -192,6 +196,10 @@
 
 "Name on card" = "ชื่อบนบัตร";
 
+"Naver Pay Card" = "Naver Pay Card";
+
+"Naver Pay Money/Point" = "เงิน/คะแนนใน Naver Pay";
+
 "New card" = "บัตรใหม่";
 
 "New payment method" = "วิธีการชำระเงินใหม่";
@@ -248,8 +256,6 @@
 
 "Point the camera at your card." = "หันกล้องไปที่บัตร";
 
-"Processing..." = "กำลังประมวลผล...";
-
 "Przelewy24 Bank" = "ธนาคาร Przelewy24";
 
 "Remove %@" = "นำ %@ ออก";
@@ -288,6 +294,8 @@
 
 "Select card" = "เลือกบัตร";
 
+"Select how you want to pay:" = "เลือกวิธีการชำระเงินที่ต้องการ";
+
 "Select payment method" = "เลือกวิธีการชำระเงิน";
 
 "Select your payment method" = "เลือกวิธีการชำระเงิน";
@@ -324,6 +332,10 @@
 
 "Tax" = "ภาษี";
 
+"Terms and Conditions" = "ข้อกำหนดและเงื่อนไข";
+
+"Terms of Service" = "ข้อกำหนดการให้บริการ";
+
 "The IBAN you entered is incomplete." = "IBAN ที่คุณป้อนไม่ครบถ้วน";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "IBAN ที่คุณป้อนไม่ถูกต้อง \"%@\" ไม่ใช่รหัสประเทศที่รองรับ";
@@ -331,6 +343,8 @@
 "The provided verification code has expired." = "รหัสยืนยันที่ป้อนหมดอายุแล้ว";
 
 "The provided verification code is incorrect." = "รหัสยืนยันที่ป้อนไม่ถูกต้อง";
+
+"This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "นี่เป็นการซื้อระหว่างประเทศและไม่รวมค่าธรรมเนียม IOF 3.5% การดำเนินการต่อถือว่าคุณรับทราบและยอมรับ<terms>ข้อกำหนดและเงื่อนไขของ Ebanx</terms>";
 
 "This is your default" = "นี่คือค่าเริ่มต้นของคุณ";
 

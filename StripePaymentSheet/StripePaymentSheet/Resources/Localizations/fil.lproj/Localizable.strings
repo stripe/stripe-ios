@@ -46,6 +46,8 @@
 
 "Buy now or pay later with Klarna" = "Bumili ngayon o magbayad sa ibang pagkakataon gamit ang Klarna";
 
+"By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "Sa pagkumpirma ng iyong pagbabayad gamit ang NICEPAY, pinapayagan mo ang %@ sa pagsingil sa paraan ng pagbabayad na ito para sa mga susunod na pagbabayad alinsunod sa kanilang mga tuntunin.";
+
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Sa pagkumpirma sa iyong pagbabayad sa PayPal, pinapayagan mo ang %@ na singilin ang iyong PayPal account para sa mga pagbabayad sa hinaharap alinsunod sa kanilang mga tuntunin.";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Sa pagpapatuloy sa Amazon Pay, pinahihintulutan mo ang %@ na singilin ang iyong Amazon Pay account para sa mga pagbabayad sa hinaharap alinsunod sa kanilang mga tuntunin.";
@@ -109,6 +111,8 @@
 "Close card scanner" = "Isara ang scanner ng kard";
 
 "Code sent" = "Naipadala na ang code";
+
+"Complete the payment using Pix to finish the purchase." = "Kumpletuhin ang pagbabayad gamit ang Pix para tapusin ang pagbili.";
 
 "Confirm" = "Kumpirmahin";
 
@@ -192,6 +196,10 @@
 
 "Name on card" = "Pangalan sa kard";
 
+"Naver Pay Card" = "Naver Pay Card";
+
+"Naver Pay Money/Point" = "Naver Pay Money/Point";
+
 "New card" = "Bagong kard";
 
 "New payment method" = "Bagong paraan ng pagbabayad";
@@ -248,8 +256,6 @@
 
 "Point the camera at your card." = "Itapat ang kamera sa iyong kard.";
 
-"Processing..." = "Pinoproseso...";
-
 "Przelewy24 Bank" = "Przelewy24 Bank";
 
 "Remove %@" = "Tanggalin ang %@";
@@ -288,6 +294,8 @@
 
 "Select card" = "Pumili ng kard";
 
+"Select how you want to pay:" = "Piliin kung paano mo gustong magbayad:";
+
 "Select payment method" = "Pumili ng paraan ng pagbabayad";
 
 "Select your payment method" = "Piliin ang iyong paraan ng pagbabayad";
@@ -324,6 +332,10 @@
 
 "Tax" = "Buwis";
 
+"Terms and Conditions" = "Mga Tuntunin at Kondisyon";
+
+"Terms of Service" = "Mga Tuntunin ng Serbisyo";
+
 "The IBAN you entered is incomplete." = "Ang IBAN na iniligay mo ay di kumpleto.";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Ang IBAN na iyong inilagay ay hindi valid, ang \"%@\" ay hindi isang suportadong country code.";
@@ -331,6 +343,8 @@
 "The provided verification code has expired." = "Paso na ang ibinigay na verification code.";
 
 "The provided verification code is incorrect." = "Mali ang ibinigay na verification code.";
+
+"This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Ito ay isang internasyonal na pagbili at hindi kasama ang 3.5% IOF na Bayarin. Sa pamamagitan ng pagpapatuloy, kinikilala at tinatanggap mo ang <terms>Mga Tuntunin at Kundisyon ng Ebanx</terms>.";
 
 "This is your default" = "Ito ang iyong default";
 

@@ -741,55 +741,29 @@ extension PaymentSheet {
             }
 
             func confirm() {
-                let confirmBlock = { [self] in
-                    PaymentSheet.confirm(
-                        configuration: self.configuration,
-                        customerProvider: viewController.loadResult.customerProvider,
-                        authenticationContext: authenticationContext,
-                        intent: self.intent,
-                        elementsSession: self.elementsSession,
+                PaymentSheet.confirm(
+                    configuration: self.configuration,
+                    customerProvider: self.viewController.loadResult.customerProvider,
+                    authenticationContext: authenticationContext,
+                    intent: self.intent,
+                    elementsSession: self.elementsSession,
+                    paymentOption: paymentOption,
+                    paymentHandler: self.paymentHandler,
+                    integrationShape: .flowController,
+                    confirmationChallenge: self.confirmationChallenge,
+                    analyticsHelper: self.analyticsHelper
+                ) { result, deferredIntentConfirmationType in
+                    self.analyticsHelper.logPayment(
                         paymentOption: paymentOption,
-                        paymentHandler: self.paymentHandler,
-                        integrationShape: .flowController,
-                        confirmationChallenge: self.confirmationChallenge,
-                        analyticsHelper: self.analyticsHelper
-                    ) { result, deferredIntentConfirmationType in
-                        self.analyticsHelper.logPayment(
-                            paymentOption: paymentOption,
-                            result: result,
-                            deferredIntentConfirmationType: deferredIntentConfirmationType
-                        )
-                        if case .completed = result, case .link = paymentOption {
-                            // Remember Link as default payment method for users who just created an account.
-                            CustomerPaymentOption.setDefaultPaymentMethod(
-                                .link,
-                                forCustomer: self.viewController.loadResult.customerProvider.customerID
-                            )
-                        }
+                        result: result,
+                        deferredIntentConfirmationType: deferredIntentConfirmationType
+                    )
+                    if case .completed = result, case .link = paymentOption {
+                        // Remember Link as default payment method for users who just created an account.
+                        CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: self.viewController.loadResult.customerProvider.customerID)
+                    }
 
-                        completion(result)
-                    }
-                }
-
-                if let checkout {
-                    // TODO(porter): Remove assumeIsolated once confirm is @MainActor (blocked on new FC API designs)
-                    if MainActor.assumeIsolated({ !checkout.pendingOperations.isEmpty }) {
-                        stpAssertionFailure("`confirm` should not be called while the Checkout session is loading.")
-                        let error = PaymentSheetError.flowControllerConfirmFailed(
-                            message: "confirmPayment was called while the Checkout session is still loading. Wait until CheckoutController.isUpdating is false."
-                        )
-                        completion(.failed(error: error))
-                        return
-                    }
-                    // We don't need to await this Task, just kick it off, because confirmBlock uses a completion.
-                    // We do need to open a task to use `Checkout`'s `enqueueSessionUpdate`, which uses Swift concurrency.
-                    Task { @MainActor in
-                        await checkout.enqueueSessionUpdate {
-                            confirmBlock()
-                        }
-                    }
-                } else {
-                    confirmBlock()
+                    completion(result)
                 }
             }
         }
@@ -1115,7 +1089,7 @@ class AuthenticationContext: NSObject, PaymentSheetAuthenticationContext {
         presentingViewController.present(authenticationViewController, animated: true, completion: nil)
     }
 
-    func presentPollingVCForAction(action: STPPaymentHandlerPaymentIntentActionParams, type: STPPaymentMethodType, safariViewController: SFSafariViewController?) {
+    func presentPollingVCForAction(action: STPPaymentHandlerActionParams, type: STPPaymentMethodType, safariViewController: SFSafariViewController?) {
         let pollingVC = PollingViewController(currentAction: action, viewModel: PollingViewModel(paymentMethodType: type),
                                               appearance: self.appearance, safariViewController: safariViewController)
         presentingViewController.present(pollingVC, animated: true, completion: nil)

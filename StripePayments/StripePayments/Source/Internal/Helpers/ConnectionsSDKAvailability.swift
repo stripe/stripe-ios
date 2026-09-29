@@ -90,18 +90,24 @@ import UIKit
 }
 
 final class StubbedConnectionsSDKInterface: FinancialConnectionsSDKInterface {
+    /// Captures the most recently received `preCollectedConsent`, for tests to assert it was forwarded correctly.
+    static var lastReceivedPreCollectedConsent: FinancialConnectionsPreCollectedConsent?
+
     func presentFinancialConnectionsSheet(
         apiClient: STPAPIClient,
         clientSecret: String,
         returnURL: String?,
         existingConsumer: FinancialConnectionsConsumer?,
+        hasRequestedDataPermissions: Bool,
         style: FinancialConnectionsStyle,
         elementsSessionContext: ElementsSessionContext?,
+        preCollectedConsent: FinancialConnectionsPreCollectedConsent?,
         linkBrand: LinkBrand?,
         onEvent: ((FinancialConnectionsEvent) -> Void)?,
         from presentingViewController: UIViewController,
         completion: @escaping (FinancialConnectionsSDKResult) -> Void
     ) {
+        Self.lastReceivedPreCollectedConsent = preCollectedConsent
         DispatchQueue.main.async {
             let stubbedBank = FinancialConnectionsLinkedBank(
                 sessionId: "las_123",

@@ -6,62 +6,31 @@
 //
 
 import PassKit
+@_spi(STP) import StripeCore
 
 @_spi(STP)
 @_spi(ReactNativeSDK)
 extension ExpressCheckoutElement {
     /// Configuration options for ``ExpressCheckoutElement``.
     public struct Configuration {
-        /// A closure called after a wallet payment confirmation completes.
-        public typealias ConfirmHandler = (_ result: CheckoutController.ConfirmResult) -> Void
-
-        /// Configuration for collecting billing details.
-        public var billingDetailsCollectionConfiguration: BillingDetailsCollectionConfiguration = .init()
-
-        /// Called after a wallet payment confirmation completes.
-        public var confirmHandler: ConfirmHandler = { _ in }
-
         /// Sets the configuration for Apple Pay.
         public var applePayConfiguration: ApplePayConfiguration?
         /// Sets the configuration for Link.
         public var linkConfiguration: LinkConfiguration = .init()
+        /// Overrides the display order of payment methods. `nil` uses the default dynamic ordering.
+        /// Supported values are `"apple_pay"` and `"link"`.
+        /// - Example: ["link", "apple_pay"]
+        /// - Note: If you omit payment methods from this list, they’ll be automatically ordered by Stripe after the ones you provide. Invalid payment methods are ignored.
+        public var paymentMethodOrder: [String]?
+        /// Called after a wallet payment confirmation completes.
+        public var confirmHandler: ConfirmHandler
+
+        /// Controls appearance of Express Checkout Element.
+        public var appearance: Appearance = .init()
 
         /// Creates a configuration with default values.
-        public init() {}
-    }
-
-    /// Configuration for how billing details are collected during checkout.
-    public struct BillingDetailsCollectionConfiguration: Equatable {
-        /// Billing details fields collection options.
-        public enum CollectionMode: String, CaseIterable {
-            /// The field will be collected depending on the Payment Method's requirements.
-            case automatic
-            /// The field will always be collected, even if it isn't required for the Payment Method.
-            case always
-        }
-
-        /// Billing address collection options.
-        public enum AddressCollectionMode: String, CaseIterable {
-            /// Only the fields required by the Payment Method will be collected, this may be none.
-            case automatic
-            /// Collect the full billing address, regardless of the Payment Method requirements.
-            case full
-        }
-
-        /// How to collect the name field.
-        /// Defaults to `automatic`.
-        public var name: CollectionMode = .automatic
-
-        /// How to collect the billing address.
-        /// Defaults to `automatic`.
-        public var address: AddressCollectionMode = .automatic
-
-        public init(
-            name: CollectionMode = .automatic,
-            address: AddressCollectionMode = .automatic
-        ) {
-            self.name = name
-            self.address = address
+        public init(confirmHandler: @escaping ConfirmHandler) {
+            self.confirmHandler = confirmHandler
         }
     }
 
@@ -118,16 +87,48 @@ extension ExpressCheckoutElement {
             self.display = display
         }
     }
-}
 
-extension ExpressCheckoutElement.BillingDetailsCollectionConfiguration {
-    func paymentSheetConfiguration() -> PaymentSheet.BillingDetailsCollectionConfiguration {
-        var configuration = PaymentSheet.BillingDetailsCollectionConfiguration()
-        configuration.name = .init(rawValue: name.rawValue)!
-        configuration.address = address == .full ? .full : .automatic
-        configuration.email = .never
-        configuration.phone = .never
-        configuration.attachDefaultsToPaymentMethod = false
-        return configuration
+    public struct Appearance {
+        /// Controls the theme of Apple Pay buttons. Link buttons retain Link's required brand styling.
+        public enum ButtonTheme: String {
+            /// Light theme which contrasts with a dark background.
+            case light
+            /// Dark theme which contrasts with a light background.
+            case dark
+            /// Automatic theme.
+            case automatic
+        }
+
+        /// Controls the layout of express payment buttons.
+        public struct ButtonLayout {
+            /// Maximum number of columns. `nil` uses the default. Must be greater than zero when set.
+            public var maxColumns: Int? {
+                didSet {
+                    guard let maxColumns, maxColumns <= 0 else { return }
+                    assertionFailure("maxColumns must be greater than zero")
+                    self.maxColumns = oldValue
+                }
+            }
+            /// Maximum number of rows. `nil` uses the default. Must be greater than zero when set.
+            public var maxRows: Int? {
+                didSet {
+                    guard let maxRows, maxRows <= 0 else { return }
+                    assertionFailure("maxRows must be greater than zero")
+                    self.maxRows = oldValue
+                }
+            }
+            public init() {}
+        }
+
+        /// Theme of Apple Pay buttons. Link buttons retain Link's required brand styling.
+        public var buttonTheme: ButtonTheme = .automatic
+
+        /// Layout of the express payment buttons.
+        public var buttonLayout: ButtonLayout = .init()
+
+        public init() {}
     }
+
+    /// A closure called after a wallet payment confirmation completes.
+    public typealias ConfirmHandler = (_ result: CheckoutController.ConfirmResult) -> Void
 }

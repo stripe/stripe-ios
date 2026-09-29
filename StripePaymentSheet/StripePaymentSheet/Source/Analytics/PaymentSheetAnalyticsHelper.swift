@@ -45,7 +45,7 @@ final class PaymentSheetAnalyticsHelper {
             }
         }
 
-        var isMPE: Bool {
+        var shouldMakeClientAttributionMetadata: Bool {
             switch self {
             case .complete, .flowController, .embedded:
                 return true

@@ -18,6 +18,19 @@ import UIKit
 import XCTest
 
 extension PaymentPagesAPIResponse {
+    /// Convenience for fixtures that contain no client-local session state.
+    func makePublicSession(
+        expressCheckoutConfiguration: ExpressCheckoutElement.Configuration? = nil
+    ) -> CheckoutController.Session {
+        return CheckoutController.Session(
+            apiResponse: self,
+            localState: .empty,
+            expressCheckoutConfiguration: expressCheckoutConfiguration
+        )
+    }
+}
+
+extension PaymentPagesAPIResponse {
     static func decode(
         fromAPIResponse response: [AnyHashable: Any]
     ) throws -> PaymentPagesAPIResponse {
@@ -86,6 +99,7 @@ enum CheckoutTestHelpers {
 
     static let minimalElementsSessionJSON: [String: Any] = [
         "session_id": "es_test",
+        "merchant_country": "US",
         "payment_method_preference": ["ordered_payment_method_types": ["card"]],
     ]
 
@@ -147,6 +161,37 @@ enum CheckoutTestHelpers {
         return try! PaymentPagesAPIResponse.decode(fromAPIResponse: json)
     }
 
+    static func makeSessionWithWalletTypes(
+        _ walletTypes: [String],
+        applePayPreference: String? = nil,
+        linkUseAttestation: Bool? = nil,
+        automaticTaxAddressSource: String? = nil
+    ) -> PaymentPagesAPIResponse {
+        var elementsSession: [String: Any] = [
+            "session_id": "es_test",
+            "merchant_country": "US",
+            "payment_method_preference": ["ordered_payment_method_types": ["card"]],
+            "ordered_payment_method_types_and_wallets": walletTypes,
+        ]
+        if let applePayPreference {
+            elementsSession["apple_pay_preference"] = applePayPreference
+        }
+        if let linkUseAttestation {
+            elementsSession["link_settings"] = [
+                "link_funding_sources": ["CARD"],
+                "link_mobile_use_attestation_endpoints": linkUseAttestation,
+            ]
+        }
+        var session: [String: Any] = ["elements_session": elementsSession]
+        if let automaticTaxAddressSource {
+            session["tax_context"] = [
+                "automatic_tax_enabled": true,
+                "automatic_tax_address_source": automaticTaxAddressSource,
+            ]
+        }
+        return makeSession(session)
+    }
+
     static func makeSessionJSON(_ overrides: [String: Any] = [:]) -> [String: Any] {
         baseSessionJSON.merging(overrides) { _, new in new }
     }
@@ -158,16 +203,25 @@ enum CheckoutTestHelpers {
     /// - Parameters:
     ///   - apiResponse: The Checkout Session response returned by the stubbed `/init` request.
     ///   - configuration: An optional base configuration for test-specific settings.
+    ///   - paymentElementConfiguration: The Payment Element configuration to use when the base configuration omits it.
     ///   - stubAllOutgoingRequests: Whether to stub every outgoing API request made by the client, or only the initialization request.
     @MainActor
     static func makeConfiguration(
         apiResponse: PaymentPagesAPIResponse = makeOpenSession(),
         configuration: CheckoutController.Configuration? = nil,
+        paymentElementConfiguration: PaymentElement.Configuration? = .init(),
+        expressCheckoutElementConfiguration: ExpressCheckoutElement.Configuration? = .init { _ in },
         stubAllOutgoingRequests: Bool = true
     ) -> CheckoutController.Configuration {
         // Use the production Checkout initializer with a test-controlled API client.
         let clientSecret = configuration?.clientSecret ?? "\(apiResponse.sessionId)_secret_abc"
         var resolvedConfiguration = configuration ?? CheckoutController.Configuration(clientSecret: clientSecret, returnURL: "stripe-ios-test://checkout-return")
+        if resolvedConfiguration.paymentElement == nil {
+            resolvedConfiguration.paymentElement = paymentElementConfiguration
+        }
+        if resolvedConfiguration.expressCheckoutElement == nil {
+            resolvedConfiguration.expressCheckoutElement = expressCheckoutElementConfiguration
+        }
         resolvedConfiguration.apiClient = makeStubbedAPIClient(
             apiResponse: apiResponse,
             clientSecret: clientSecret,
@@ -380,13 +434,78 @@ class MockPKPaymentAuthorizationController: PKPaymentAuthorizationController {
     }
 }
 
+@MainActor
+class MockCheckoutSessionWalletUpdater: CheckoutSessionWalletUpdater {
+    private(set) var currentTaxRegion: CheckoutController.Address?
+    private(set) var updateCallCount = 0
+    private(set) var lastAddress: CheckoutController.Address?
+    private(set) var lastCanUpdateWhileSheetPresented: Bool?
+    private let sessionToReturn: CheckoutController.Session?
+    private let errorToThrow: Error?
+    private let suspendsFirstUpdate: Bool
+    private var continuation: CheckedContinuation<CheckoutController.Session, Error>?
+    private var didSuspend = false
+
+    var isWaiting: Bool {
+        continuation != nil
+    }
+
+    init(
+        sessionToReturn: CheckoutController.Session? = nil,
+        errorToThrow: Error? = nil,
+        currentTaxRegion: CheckoutController.Address? = nil,
+        suspendsFirstUpdate: Bool = false
+    ) {
+        self.sessionToReturn = sessionToReturn
+        self.errorToThrow = errorToThrow
+        self.currentTaxRegion = currentTaxRegion
+        self.suspendsFirstUpdate = suspendsFirstUpdate
+    }
+
+    func updateTaxRegionWithoutEnqueueing(
+        address: CheckoutController.Address,
+        canUpdateWhileSheetPresented: Bool
+    ) async throws -> CheckoutController.Session {
+        updateCallCount += 1
+        lastAddress = address
+        lastCanUpdateWhileSheetPresented = canUpdateWhileSheetPresented
+        if let errorToThrow {
+            throw errorToThrow
+        }
+        guard let sessionToReturn else {
+            throw CheckoutError.unknown(debugDescription: "MockCheckoutSessionWalletUpdater has no session configured")
+        }
+        let session: CheckoutController.Session
+        if suspendsFirstUpdate && !didSuspend {
+            didSuspend = true
+            session = try await withCheckedThrowingContinuation { continuation in
+                self.continuation = continuation
+            }
+        } else {
+            session = sessionToReturn
+        }
+        currentTaxRegion = address
+        return session
+    }
+
+    func resume() {
+        guard let sessionToReturn else {
+            continuation?.resume(throwing: CheckoutError.unknown(debugDescription: "MockCheckoutSessionWalletUpdater has no session configured"))
+            continuation = nil
+            return
+        }
+        continuation?.resume(returning: sessionToReturn)
+        continuation = nil
+    }
+}
+
 extension CheckoutController.ApplePayConfirmationParameters {
     static func makeMock(
         apiClient: STPAPIClient,
         returnURL: String = "stripe-ios-test://checkout-return",
         merchantDisplayName: String = "Test Merchant",
-        applePayConfiguration: CheckoutController.ApplePayConfiguration = CheckoutController.ApplePayConfiguration(merchantId: "merchant.com.test"),
-        billingDetailsCollectionConfiguration: PaymentSheet.BillingDetailsCollectionConfiguration,
+        applePayConfiguration: CheckoutApplePayConfiguration = PaymentElement.ApplePayConfiguration(merchantId: "merchant.com.test"),
+        shippingAddressRequired: Bool = false,
         defaultBillingDetails: CheckoutController.Configuration.Defaults.BillingDetails? = nil,
         presentationWindow: UIWindow? = nil,
         confirmationHandler: @escaping CheckoutController.ApplePayConfirmationParameters.ConfirmationHandler = { _ in
@@ -398,7 +517,7 @@ extension CheckoutController.ApplePayConfirmationParameters {
             apiClient: apiClient,
             returnURL: returnURL,
             merchantDisplayName: merchantDisplayName,
-            billingDetailsCollectionConfiguration: billingDetailsCollectionConfiguration,
+            shippingAddressRequired: shippingAddressRequired,
             defaultBillingDetails: defaultBillingDetails,
             presentationWindow: presentationWindow,
             confirmationHandler: confirmationHandler

@@ -26,6 +26,7 @@ final class BiometricConsentViewController: IdentityFlowViewController {
     let brandLogo: UIImage
     let showsStripeLogo: Bool
     let consentContent: StripeAPI.VerificationPageStaticContentConsentPage
+    let configuration: IdentityVerificationSheet.Configuration.BiometricConsentConfiguration?
 
     struct Style {
         static let contentHorizontalPadding: CGFloat = 32
@@ -87,23 +88,26 @@ final class BiometricConsentViewController: IdentityFlowViewController {
                 )
             )
         }
-        buttons.append(
-            .init(
-                text: consentContent.declineButtonText,
-                state: declineButtonState,
-                isPrimary: false,
-                didTap: { [weak self] in
-                    self?.didTapButton(consentValue: false)
-                }
+        if configuration?.hideDeclineButton != true {
+            buttons.append(
+                .init(
+                    text: consentContent.declineButtonText,
+                    state: declineButtonState,
+                    isPrimary: false,
+                    didTap: { [weak self] in
+                        self?.didTapButton(consentValue: false)
+                    }
+                )
             )
-        )
+        }
 
         return .init(
             headerViewModel: .init(
                 backgroundColor: .systemBackground,
                 headerType: {
-                    if sheetController?.flowController.visitedIndividualWelcomePage == true {
-                        // If visited individual page, this is a fallback. Don't show icons
+                    if configuration?.hideBrandingHeader == true
+                        || sheetController?.flowController.visitedIndividualWelcomePage == true
+                    {
                         return .plain
                     } else {
                         // Otherwise this is the first screen, show icons
@@ -133,11 +137,13 @@ final class BiometricConsentViewController: IdentityFlowViewController {
         brandLogo: UIImage,
         showsStripeLogo: Bool,
         consentContent: StripeAPI.VerificationPageStaticContentConsentPage,
+        configuration: IdentityVerificationSheet.Configuration.BiometricConsentConfiguration? = nil,
         sheetController: VerificationSheetControllerProtocol
     ) throws {
         self.brandLogo = brandLogo
         self.showsStripeLogo = showsStripeLogo
         self.consentContent = consentContent
+        self.configuration = configuration
         super.init(sheetController: sheetController, analyticsScreenName: .biometricConsent)
 
         // Set up the content stack view with both main content and privacy policy

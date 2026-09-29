@@ -20,12 +20,22 @@ final class CheckoutCurrencySelectorElementSnapshotTests: STPSnapshotTestCase {
 
     func testDefaultAppearance() async throws {
         let view = try await makeCurrencySelectorElement(selectedCurrency: "gbp")
-        verify(view)
+        try await verify(view)
     }
 
     func testDarkMode() async throws {
         let view = try await makeCurrencySelectorElement(selectedCurrency: "gbp")
-        verify(view, darkMode: true)
+        try await verify(view, darkMode: true)
+    }
+
+    func testDetailExpanded() async throws {
+        let element = try await makeCurrencySelectorElement(selectedCurrency: "gbp")
+        try await verify(element, expanded: true)
+    }
+
+    func testDetailExpanded_darkMode() async throws {
+        let element = try await makeCurrencySelectorElement(selectedCurrency: "gbp")
+        try await verify(element, darkMode: true, expanded: true)
     }
 
     // MARK: - Helpers
@@ -33,9 +43,8 @@ final class CheckoutCurrencySelectorElementSnapshotTests: STPSnapshotTestCase {
     @MainActor
     private func makeCurrencySelectorElement(
         selectedCurrency: String = "usd",
-        appearance: CurrencySelectorElement.Appearance = .init(),
-        disabled: Bool = false
-    ) async throws -> some View {
+        appearance: CurrencySelectorElement.Appearance = .init()
+    ) async throws -> CurrencySelectorElement {
         let session = CheckoutTestHelpers.makeAdaptivePricingSession(currency: selectedCurrency)
         var configuration = CheckoutController.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
         var currencySelectorConfiguration = CurrencySelectorElement.Configuration()
@@ -48,25 +57,64 @@ final class CheckoutCurrencySelectorElementSnapshotTests: STPSnapshotTestCase {
             )
         )
 
-        return try XCTUnwrap(checkout.getCurrencySelectorElement()).view
-            .disabled(disabled)
-            .frame(width: 320)
-            .ignoresSafeArea()
+        return try XCTUnwrap(checkout.getCurrencySelectorElement())
     }
 
     private func verify(
-        _ swiftUIView: some View,
+        _ element: CurrencySelectorElement,
         darkMode: Bool = false,
+        expanded: Bool = false,
         file: StaticString = #filePath,
         line: UInt = #line
-    ) {
-        let vc = UIHostingController(rootView: swiftUIView)
+    ) async throws {
+        let verticalPadding: CGFloat = 8
+        let vc = UIHostingController(rootView: element.view.frame(width: 320))
+        vc.view.layoutMargins = .zero
+        vc.view.preservesSuperviewLayoutMargins = false
         let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 320, height: 200))
         window.overrideUserInterfaceStyle = darkMode ? .dark : .light
         window.rootViewController = vc
-        window.makeKeyAndVisible()
-        vc.view.frame = CGRect(origin: .zero, size: CGSize(width: 320, height: 57))
+        window.isHidden = false
+        vc.view.setNeedsLayout()
+        vc.view.layoutIfNeeded()
 
-        STPSnapshotVerifyView(vc.view, file: file, line: line)
+        if expanded {
+            let selector = try XCTUnwrap(element.uiView.subviews
+                .compactMap { ($0 as? UIStackView)?.arrangedSubviews.compactMap { $0 as? TwoOptionSelectorView }.first }
+                .first)
+            UIView.performWithoutAnimation {
+                selector.expandableDetailView.toggleExpansion()
+            }
+            let viewUpdate = expectation(description: "SwiftUI updates the expanded selector")
+            DispatchQueue.main.async {
+                viewUpdate.fulfill()
+            }
+            await fulfillment(of: [viewUpdate], timeout: 1)
+            vc.view.setNeedsLayout()
+            vc.view.layoutIfNeeded()
+        }
+
+        guard let renderedView = vc.view.subviews.first else {
+            XCTFail("SwiftUI content did not render", file: file, line: line)
+            return
+        }
+
+        let snapshotVC = UIViewController()
+        snapshotVC.view.frame = CGRect(
+            x: 0,
+            y: 0,
+            width: renderedView.bounds.width,
+            height: renderedView.bounds.height + verticalPadding * 2
+        )
+        snapshotVC.view.backgroundColor = .systemBackground
+        renderedView.removeFromSuperview()
+        renderedView.translatesAutoresizingMaskIntoConstraints = true
+        snapshotVC.view.addSubview(renderedView)
+        renderedView.frame.origin = CGPoint(x: 0, y: verticalPadding)
+        window.frame = snapshotVC.view.bounds
+        window.rootViewController = snapshotVC
+        snapshotVC.view.layoutIfNeeded()
+
+        STPSnapshotVerifyView(snapshotVC.view, file: file, line: line)
     }
 }

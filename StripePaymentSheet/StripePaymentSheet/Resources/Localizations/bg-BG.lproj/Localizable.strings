@@ -46,6 +46,8 @@
 
 "Buy now or pay later with Klarna" = "Платете сега или платете по-късно чрез Klarna";
 
+"By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "С потвърждаването на плащането си със NICEPAY разрешавате на %@ да дебитира този метод на плащане за бъдещи плащания в съответствие с техните условия.";
+
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Потвърждавайки плащането си в PayPal, разрешавате на %@ да таксува Вашия PayPal акаунт при бъдещи плащания съгласно условията му.";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Продължавайки към Amazon Pay, разрешавате на %@ да таксува Вашия акаунт в Amazon Pay за бъдещи плащания съгласно условията му.";
@@ -109,6 +111,8 @@
 "Close card scanner" = "Затваряне на скенера за карти";
 
 "Code sent" = "Изпратен е код";
+
+"Complete the payment using Pix to finish the purchase." = "Завършете плащането чрез Pix, за да приключите покупката.";
 
 "Confirm" = "Потвърждаване";
 
@@ -192,6 +196,10 @@
 
 "Name on card" = "Име върху картата";
 
+"Naver Pay Card" = "Карта на Naver Pay";
+
+"Naver Pay Money/Point" = "Naver Pay пари/точки";
+
 "New card" = "Нова банкова карта";
 
 "New payment method" = "Нов начин на плащане";
@@ -248,8 +256,6 @@
 
 "Point the camera at your card." = "Насочете камерата към картата си.";
 
-"Processing..." = "Обработване...";
-
 "Przelewy24 Bank" = "Банка Przelewy24";
 
 "Remove %@" = "Премахване на %@";
@@ -288,6 +294,8 @@
 
 "Select card" = "Избор на карта";
 
+"Select how you want to pay:" = "Изберете как искате да платите:";
+
 "Select payment method" = "Избор на начин на плащане";
 
 "Select your payment method" = "Изберете метод на плащане";
@@ -324,6 +332,10 @@
 
 "Tax" = "Данък";
 
+"Terms and Conditions" = "Условия и правила";
+
+"Terms of Service" = "Общи условия";
+
 "The IBAN you entered is incomplete." = "Въведеният IBAN е непълен.";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Въведеният IBAN е невалиден, \"%@\" не е поддържан код на държава.";
@@ -331,6 +343,8 @@
 "The provided verification code has expired." = "Предоставеният код за потвърждаване е изтекъл.";
 
 "The provided verification code is incorrect." = "Предоставеният код за потвърждаване е неправилен.";
+
+"This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Това е международна покупка и не включва такса от 3,5% IOF. Продължавайки, Вие потвърждавате и приемате <terms>Правила и условия на Ebanx</terms>.";
 
 "This is your default" = "Това е настройката по подразбиране.";
 

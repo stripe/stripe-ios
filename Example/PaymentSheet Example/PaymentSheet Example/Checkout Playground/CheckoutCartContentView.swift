@@ -11,9 +11,17 @@ import SwiftUI
 
 struct CheckoutCartContentView: View {
     @ObservedObject var checkout: CheckoutController
+    var emailSource: CheckoutPlayground.EmailSource
+    var showsCurrencySelectorElement: Bool
     var showsShippingAddressSection: Bool
     var errorMessage: String?
+    var showExpressCheckoutElement: Bool
+    var integrationType: CheckoutPlayground.IntegrationType
+    let onConfirm: (CheckoutController.ConfirmResult) -> Void
     @State private var showsTaxDetails = false
+    @State private var showsEmailEditor = false
+    @State private var emailDraft = ""
+    @State private var emailUpdateError: String?
 
     var body: some View {
         ScrollView {
@@ -28,19 +36,78 @@ struct CheckoutCartContentView: View {
 
                 currencySelectorSection
                 lineItemsSection
+                emailSection
+                expressCheckoutSection
                 if showsShippingAddressSection {
                     shippingAddressSection
                 }
+                if integrationType != .eceOnly {
+                    CheckoutCartPaymentMethodSection(
+                        checkout: checkout,
+                        integrationType: integrationType
+                    )
+                }
                 orderSummarySection
+                if integrationType != .eceOnly {
+                    CheckoutCartBuyButton(checkout: checkout, onConfirm: onConfirm)
+                }
             }
             .padding(.top, 20)
+            .padding(.bottom, 24)
+            .disabled(checkout.isUpdating)
         }
         .sheet(isPresented: $showsTaxDetails) {
             CheckoutTaxDetailsView(taxAmounts: checkout.session.taxAmounts ?? [])
         }
+        .alert("Edit email", isPresented: $showsEmailEditor) {
+            TextField("Email address", text: $emailDraft)
+                .keyboardType(.emailAddress)
+                .textInputAutocapitalization(.never)
+                .autocorrectionDisabled()
+            Button("Save email") { updateEmail(emailDraft) }
+            Button("Clear email", role: .destructive) { updateEmail(nil) }
+            Button("Cancel", role: .cancel) { }
+        } message: {
+            Text("Updates the local Checkout email.")
+        }
     }
 
     // MARK: - Sections
+
+    private var emailSection: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack {
+                Text("Email").font(.title2).bold()
+                Spacer()
+                Button("Edit email") {
+                    emailDraft = checkout.session.email ?? ""
+                    showsEmailEditor = true
+                }
+                .disabled(emailSource != .local)
+            }
+            Text(checkout.session.email ?? "No email")
+                .accessibilityIdentifier("checkout_session_email")
+            Text(emailSource.isServer ? "Server email cannot be changed in checkout." : emailSource == .local ? "Local email" : "No email source selected.")
+                .font(.caption)
+                .foregroundColor(.secondary)
+            if let emailUpdateError {
+                Text(emailUpdateError).foregroundColor(.red)
+            }
+        }
+        .padding(.horizontal)
+    }
+
+    private func updateEmail(_ email: String?) {
+        Task {
+            emailUpdateError = nil
+            do {
+                let trimmed = email?.trimmingCharacters(in: .whitespacesAndNewlines)
+                try await checkout.updateEmail(trimmed?.isEmpty == true ? nil : trimmed)
+            } catch {
+                emailUpdateError = error.localizedDescription
+            }
+        }
+    }
 
     @ViewBuilder
     private var lineItemsSection: some View {
@@ -78,6 +145,7 @@ struct CheckoutCartContentView: View {
                                 Text("\((item.unitAmountDecimal ?? item.unitAmount).amount) × \(item.quantity)")
                                     .font(.subheadline)
                                     .foregroundColor(.secondary)
+                                    .accessibilityIdentifier("checkout_line_item_amount")
                             }
                             Spacer()
                         }
@@ -191,9 +259,25 @@ struct CheckoutCartContentView: View {
 
     @ViewBuilder
     private var currencySelectorSection: some View {
-        if let currencySelectorElement = checkout.getCurrencySelectorElement() {
+        if showsCurrencySelectorElement,
+           let currencySelectorElement = checkout.getCurrencySelectorElement() {
             currencySelectorElement.view
                 .padding(.horizontal)
+        }
+    }
+
+    @ViewBuilder
+    private var expressCheckoutSection: some View {
+        if showExpressCheckoutElement,
+           !checkout.session.availableExpressCheckoutPaymentMethods.isEmpty {
+            VStack(alignment: .leading, spacing: 16) {
+                Text("Express Checkout")
+                    .font(.title2).bold()
+                    .padding(.horizontal)
+
+                checkout.getExpressCheckoutElement().view
+                    .padding(.horizontal)
+            }
         }
     }
 
@@ -214,6 +298,7 @@ struct CheckoutCartContentView: View {
                     Spacer()
                     Text(totals.subtotal.amount)
                         .foregroundColor(.primary)
+                        .accessibilityIdentifier("checkout_subtotal_amount")
                 }
                 if totals.discount.minorUnitsAmount > 0 {
                     HStack {
@@ -222,6 +307,7 @@ struct CheckoutCartContentView: View {
                         Spacer()
                         Text("-" + totals.discount.amount)
                             .foregroundColor(.green)
+                            .accessibilityIdentifier("checkout_discount_amount")
                     }
                 }
 
@@ -235,6 +321,7 @@ struct CheckoutCartContentView: View {
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .accessibilityElement(children: .combine)
+                    .accessibilityIdentifier("checkout_tax_prompt")
                 } else if totals.taxExclusive.minorUnitsAmount > 0 {
                     HStack {
                         HStack(spacing: 4) {
@@ -247,6 +334,7 @@ struct CheckoutCartContentView: View {
                         Spacer()
                         Text(totals.taxExclusive.amount)
                             .foregroundColor(.primary)
+                            .accessibilityIdentifier("checkout_tax_amount")
                     }
                 }
 
@@ -259,6 +347,7 @@ struct CheckoutCartContentView: View {
                     Spacer()
                     Text(totals.total.amount)
                         .font(.title3).bold()
+                        .accessibilityIdentifier("checkout_total_amount")
                 }
 
                 if taxAddressPrompt == nil && totals.taxInclusive.minorUnitsAmount > 0 {
@@ -357,8 +446,13 @@ struct CheckoutCartSheet: View {
 
                 CheckoutCartContentView(
                     checkout: checkout,
+                    emailSource: .none,
+                    showsCurrencySelectorElement: false,
                     showsShippingAddressSection: true,
-                    errorMessage: nil
+                    errorMessage: nil,
+                    showExpressCheckoutElement: false,
+                    integrationType: .flowController,
+                    onConfirm: { _ in }
                 )
             }
             .navigationTitle("Cart")

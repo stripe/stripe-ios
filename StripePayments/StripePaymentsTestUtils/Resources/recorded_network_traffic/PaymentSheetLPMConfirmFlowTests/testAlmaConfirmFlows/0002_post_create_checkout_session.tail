@@ -1,17 +1,157 @@
 POST
-https:\/\/stp-mobile-ci-test-backend-e1b3\.stripedemos\.com\/create_checkout_session$
+https:\/\/stp-mobile-playground-backend-v7\.stripedemos\.com\/create_checkout_session$
 200
-text/html
-x-content-type-options: nosniff
-x-cloud-trace-context: 31ba1009c4ecd1a363c34d4d6ec122d4
-Content-Type: text/html;charset=utf-8
-Set-Cookie: rack.session=jsEvKC0pJTjQKuB8lUXJYSabJ40U5Gr5XLV4RiGQbFdxcttspbf6vtGnWM4otTpO2H%2BRAb1qqGSkrfnrtrcqXwUlo6QjUkK1UJV%2BVjpfaDl3xZNN7EVWZmYfdYfRL5RrwbWtTAgPOwn9ZdM2s4D0h%2FDICZJCNdhkmMedrYH%2FAav5srrfzyNSYhH%2Bgu7cR6vQKzXuMy1Lq%2BNRmxAHUmrc7mDT8urzyeynGS2tSTrw2UA%3D; path=/
+application/json
 Server: Google Frontend
+Content-Type: application/json; charset=utf-8
+x-powered-by: Express
+x-cloud-trace-context: 2460975f2046f9b1694179cc7c94b4c7
 Via: 1.1 google
-Date: Wed, 01 Jul 2026 12:00:22 GMT
-x-frame-options: SAMEORIGIN
-x-xss-protection: 1; mode=block
-Content-Length: 358
+Date: Thu, 24 Sep 2026 15:08:33 GMT
+Content-Length: 2533
 Alt-Svc: h3=":443"; ma=2592000
+Etag: W/"9e5-V+JW5/lGOu+rAxb3lwSqi+lN4X0"
 
-{"id":"cs_test_a1e1KbgwkrFtfezEMQ6qwzgfIxBN37peRnhpsr8W97PkPUkelyM51Frxfm","client_secret":"cs_test_a1e1KbgwkrFtfezEMQ6qwzgfIxBN37peRnhpsr8W97PkPUkelyM51Frxfm_secret_fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdwbEhqYWAnPydmcHZxamgneCUl","publishable_key":"pk_test_51JtgfQKG6vc7r7YCU0qQNOkDaaHrEgeHgGKrJMNfuWwaKgXMLzPUA1f8ZlCNPonIROLOnzpUnJK1C1xFH3M3Mz8X00Q6O4GfUt"}
+{
+  "billing_address_collection" : null,
+  "id" : "cs_test_a134BSEmmXWnNCZaJseB4eqtdEsB2WvO8yJyOSHgMymKeRbJyGHWPlHpON",
+  "client_secret" : "cs_test_a134BSEmmXWnNCZaJseB4eqtdEsB2WvO8yJyOSHgMymKeRbJyGHWPlHpON_secret_fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdwbEhqYWAnPydoamdsaWBaYGlgaGBrcXYneCUl",
+  "discounts" : [
+
+  ],
+  "custom_text" : {
+    "shipping_address" : null,
+    "terms_of_service_acceptance" : null,
+    "submit" : null,
+    "after_submit" : null
+  },
+  "customer" : null,
+  "metadata" : {
+
+  },
+  "payment_method_configuration_details" : null,
+  "payment_method_options" : null,
+  "ui_mode" : "mobile_elements",
+  "created" : 1790262513,
+  "client_reference_id" : null,
+  "allowed_payment_method_types" : [
+    "alma"
+  ],
+  "mode" : "none",
+  "allow_promotion_codes" : null,
+  "items" : [
+    {
+      "key" : "checkout_item_VJs0txIc",
+      "one_time_price" : {
+        "items" : [
+          {
+            "quantity" : 1,
+            "adjustable_quantity" : null,
+            "price" : "price_1UJEGDKG6vc7r7YCkiXL99cz",
+            "tax_rates" : null
+          }
+        ],
+        "metadata" : {
+
+        }
+      },
+      "type" : "one_time_price"
+    }
+  ],
+  "after_expiration" : null,
+  "saved_payment_method_options" : {
+    "payment_method_save" : null,
+    "allow_redisplay_filters" : [
+      "always"
+    ],
+    "payment_method_remove" : "disabled"
+  },
+  "payment_link" : null,
+  "currency" : "eur",
+  "status" : "open",
+  "url" : null,
+  "branding_settings" : {
+    "button_color" : "#0074d4",
+    "border_style" : "rounded",
+    "background_color" : "#ffffff",
+    "display_name" : "France Merchant",
+    "font_family" : "default",
+    "icon" : null,
+    "logo" : null
+  },
+  "customer_details" : null,
+  "wallet_options" : null,
+  "adaptive_pricing" : {
+    "enabled" : true
+  },
+  "consent" : null,
+  "shipping_options" : [
+
+  ],
+  "amount_subtotal" : 5000,
+  "submit_type" : null,
+  "locale" : null,
+  "permissions" : null,
+  "subscription" : null,
+  "success_url" : null,
+  "setup_intent" : null,
+  "payment_intent" : null,
+  "phone_number_collection" : {
+    "enabled" : false
+  },
+  "origin_context" : null,
+  "amount_total" : 5000,
+  "consent_collection" : null,
+  "payment_method_types" : [
+    "alma"
+  ],
+  "recovered_from" : null,
+  "customer_creation" : "always",
+  "object" : "checkout.session",
+  "checkout_items" : [
+
+  ],
+  "invoice" : null,
+  "customer_account" : null,
+  "managed_payments" : null,
+  "shipping_cost" : null,
+  "cancel_url" : null,
+  "automatic_tax" : {
+    "status" : null,
+    "address_collection_precision" : null,
+    "enabled" : false,
+    "liability" : null,
+    "provider" : null
+  },
+  "custom_fields" : [
+
+  ],
+  "collected_information" : null,
+  "integration_identifier" : null,
+  "invoice_creation" : {
+    "enabled" : false,
+    "invoice_data" : {
+      "footer" : null,
+      "issuer" : null,
+      "custom_fields" : null,
+      "rendering_options" : null,
+      "account_tax_ids" : null,
+      "description" : null,
+      "metadata" : {
+
+      }
+    }
+  },
+  "shipping_address_collection" : null,
+  "payment_method_collection" : "auto",
+  "currency_conversion" : null,
+  "payment_status" : "unpaid",
+  "total_details" : {
+    "amount_discount" : 0,
+    "amount_shipping" : 0,
+    "amount_tax" : 0
+  },
+  "livemode" : false,
+  "customer_email" : null,
+  "expires_at" : 1790348913
+}

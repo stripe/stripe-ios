@@ -46,6 +46,8 @@
 
 "Buy now or pay later with Klarna" = "Koop nu of betaal later met Klarna";
 
+"By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "Door je betaling met NICEPAY te bevestigen, stem je in dat %@ toekomstige betalingen in rekening kan brengen bij deze betaalmethode volgens hun voorwaarden.";
+
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Als je je betaling met PayPal bevestigt, geef je %@ toestemming om toekomstige betalingen af te schrijven van je PayPal-rekening in overeenstemming met hun voorwaarden.";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Als je doorgaat naar Amazon Pay, geef je %@ toestemming om toekomstige betalingen in rekening te brengen op je Amazon Pay-account in overeenstemming met hun voorwaarden.";
@@ -109,6 +111,8 @@
 "Close card scanner" = "Kaartscanner afsluiten";
 
 "Code sent" = "Code verstuurd";
+
+"Complete the payment using Pix to finish the purchase." = "Rond de betaling af met Pix om de aankoop te voltooien.";
 
 "Confirm" = "Bevestigen";
 
@@ -192,6 +196,10 @@
 
 "Name on card" = "Naam op betaalkaart";
 
+"Naver Pay Card" = "Naver Pay Card";
+
+"Naver Pay Money/Point" = "Naver Pay Money/Point";
+
 "New card" = "Nieuwe betaalkaart";
 
 "New payment method" = "Nieuwe betaalmethode";
@@ -248,8 +256,6 @@
 
 "Point the camera at your card." = "Richt de camera op de kaart.";
 
-"Processing..." = "Verwerken...";
-
 "Przelewy24 Bank" = "Przelewy24 Bank";
 
 "Remove %@" = "Verwijder %@";
@@ -288,6 +294,8 @@
 
 "Select card" = "Betaalkaart selecteren";
 
+"Select how you want to pay:" = "Selecteer hoe je wilt betalen:";
+
 "Select payment method" = "Betaalmethode selecteren";
 
 "Select your payment method" = "Betaalmethode selecteren";
@@ -324,6 +332,10 @@
 
 "Tax" = "Belasting";
 
+"Terms and Conditions" = "Algemene voorwaarden";
+
+"Terms of Service" = "Servicevoorwaarden";
+
 "The IBAN you entered is incomplete." = "Het opgegeven IBAN-nummer is onvolledig.";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Het opgegeven IBAN-nummer is ongeldig: \"%@\" is geen ondersteunde landcode.";
@@ -331,6 +343,8 @@
 "The provided verification code has expired." = "De opgegeven verificatiecode is verlopen.";
 
 "The provided verification code is incorrect." = "De opgegeven verificatiecode is onjuist.";
+
+"This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Dit is een internationale aankoop die exclusief 3,5% IOF-kosten is. Als je doorgaat, erken en accepteer je <terms>de voorwaarden van Ebanx</terms>.";
 
 "This is your default" = "Dit is je standaard";
 

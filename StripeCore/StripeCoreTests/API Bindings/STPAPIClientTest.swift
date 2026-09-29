@@ -59,6 +59,194 @@ final class STPAPIClientTest: APIStubbedTestCase {
         XCTAssertEqual(recorder.requestCount, 1)
         XCTAssertEqual(recorder.timeoutInterval, expectedTimeout, accuracy: 0.001)
     }
+
+    func testGetUsesAdditionalHeaders() {
+        let apiClient = stubbedAPIClient()
+        apiClient.publishableKey = "pk_test_headers"
+
+        let headers = [
+            "Stripe-Consumer-Auth-Token": "cscs_test",
+            "Stripe-Version": "test_version",
+        ]
+
+        stub(condition: { _ in true }) { request in
+            XCTAssertEqual(request.httpMethod, "GET")
+            XCTAssertEqual(request.value(forHTTPHeaderField: "Stripe-Consumer-Auth-Token"), "cscs_test")
+            XCTAssertEqual(request.value(forHTTPHeaderField: "Stripe-Version"), "test_version")
+            XCTAssertEqual(request.value(forHTTPHeaderField: "Authorization"), "Bearer pk_test_headers")
+            XCTAssertEqual(request.url?.query, "key=value")
+            return HTTPStubsResponse(jsonObject: [:], statusCode: 200, headers: nil)
+        }
+
+        let completion = expectation(description: "All GET overloads completed")
+        completion.expectedFulfillmentCount = 3
+
+        let handler: (Result<EmptyResponse, Error>) -> Void = { result in
+            if case .failure(let error) = result {
+                XCTFail("Unexpected request failure: \(error)")
+            }
+            completion.fulfill()
+        }
+
+        apiClient.get(
+            resource: "test",
+            parameters: ["key": "value"],
+            additionalHeaders: headers,
+            completion: handler
+        )
+
+        apiClient.get(
+            url: apiClient.apiURL.appendingPathComponent("test"),
+            parameters: ["key": "value"],
+            additionalHeaders: headers,
+            completion: handler
+        )
+
+        let promise: Promise<EmptyResponse> = apiClient.get(
+            resource: "test",
+            parameters: ["key": "value"],
+            additionalHeaders: headers
+        )
+
+        promise.observe(using: handler)
+        wait(for: [completion], timeout: 5)
+    }
+
+    func testPostUsesAdditionalHeaders() {
+        let apiClient = stubbedAPIClient()
+        apiClient.publishableKey = "pk_test_headers"
+
+        let headers = [
+            "Stripe-Consumer-Auth-Token": "cscs_test",
+            "Stripe-Version": "test_version",
+        ]
+
+        stub(condition: { _ in true }) { request in
+            XCTAssertEqual(request.httpMethod, "POST")
+            XCTAssertEqual(request.value(forHTTPHeaderField: "Stripe-Consumer-Auth-Token"), "cscs_test")
+            XCTAssertEqual(request.value(forHTTPHeaderField: "Stripe-Version"), "test_version")
+            XCTAssertEqual(request.value(forHTTPHeaderField: "Authorization"), "Bearer pk_test_headers")
+            XCTAssertEqual(request.value(forHTTPHeaderField: "Content-Type"), "application/x-www-form-urlencoded")
+            let body = request.ohhttpStubs_httpBody ?? Data()
+            XCTAssertEqual(String(data: body, encoding: .utf8), "key=value")
+            XCTAssertEqual(request.value(forHTTPHeaderField: "Content-Length"), String(body.count))
+            return HTTPStubsResponse(jsonObject: [:], statusCode: 200, headers: nil)
+        }
+
+        let completion = expectation(description: "All POST overloads completed")
+        completion.expectedFulfillmentCount = 5
+        let handler: (Result<EmptyResponse, Error>) -> Void = { result in
+            if case .failure(let error) = result {
+                XCTFail("Unexpected request failure: \(error)")
+            }
+            completion.fulfill()
+        }
+
+        let parameters = ["key": "value"]
+        apiClient.post(resource: "test", parameters: parameters, additionalHeaders: headers, completion: handler)
+
+        let parametersPromise: Promise<EmptyResponse> = apiClient.post(
+            resource: "test",
+            parameters: parameters,
+            additionalHeaders: headers
+        )
+
+        parametersPromise.observe(using: handler)
+        apiClient.post(resource: "test", object: parameters, additionalHeaders: headers, completion: handler)
+
+        apiClient.post(
+            url: apiClient.apiURL.appendingPathComponent("test"),
+            object: parameters,
+            additionalHeaders: headers,
+            completion: handler
+        )
+
+        let objectPromise: Promise<EmptyResponse> = apiClient.post(
+            resource: "test",
+            object: parameters,
+            additionalHeaders: headers
+        )
+
+        objectPromise.observe(using: handler)
+        wait(for: [completion], timeout: 5)
+    }
+
+    func testDeleteUsesAdditionalHeaders() {
+        let apiClient = stubbedAPIClient()
+        apiClient.publishableKey = "pk_test_headers"
+
+        stub(condition: { _ in true }) { request in
+            XCTAssertEqual(request.httpMethod, "DELETE")
+            XCTAssertEqual(request.value(forHTTPHeaderField: "Stripe-Consumer-Auth-Token"), "cscs_test")
+            XCTAssertEqual(request.value(forHTTPHeaderField: "Stripe-Version"), "test_version")
+            XCTAssertEqual(request.value(forHTTPHeaderField: "Authorization"), "Bearer pk_test_headers")
+            XCTAssertEqual(request.value(forHTTPHeaderField: "Content-Type"), "application/x-www-form-urlencoded")
+            let body = request.ohhttpStubs_httpBody ?? Data()
+            XCTAssertEqual(String(data: body, encoding: .utf8), "key=value")
+            XCTAssertEqual(request.value(forHTTPHeaderField: "Content-Length"), String(body.count))
+            return HTTPStubsResponse(jsonObject: [:], statusCode: 200, headers: nil)
+        }
+
+        let completion = expectation(description: "DELETE completed")
+
+        apiClient.delete(
+            resource: "test",
+            parameters: ["key": "value"],
+            additionalHeaders: [
+                "Stripe-Consumer-Auth-Token": "cscs_test",
+                "Stripe-Version": "test_version",
+            ]
+        ) { (result: Result<EmptyResponse, Error>) in
+            if case .failure(let error) = result {
+                XCTFail("Unexpected request failure: \(error)")
+            }
+            completion.fulfill()
+        }
+
+        wait(for: [completion], timeout: 5)
+    }
+
+    func testAdditionalHeadersAreCaseInsensitive() {
+        let apiClient = stubbedAPIClient()
+        apiClient.publishableKey = "pk_test_headers"
+        let additionalHeaders = [
+            "authorization": "Bearer pk_test_override",
+            "STRIPE-VERSION": "test_version",
+            "content-type": "application/x-www-form-urlencoded; charset=utf-8",
+        ]
+
+        stub(condition: { _ in true }) { request in
+            // The original header casing is preserved, but the latest specified values are applied.
+            XCTAssertEqual(request.value(forHTTPHeaderField: "Authorization"), "Bearer pk_test_override")
+            XCTAssertEqual(request.value(forHTTPHeaderField: "Stripe-Version"), "test_version")
+            XCTAssertEqual(request.value(forHTTPHeaderField: "Content-Type"), "application/x-www-form-urlencoded; charset=utf-8")
+            return HTTPStubsResponse(jsonObject: [:], statusCode: 200, headers: nil)
+        }
+
+        let completion = expectation(description: "GET, POST, and DELETE completed")
+        completion.expectedFulfillmentCount = 4
+        let handler: (Result<EmptyResponse, Error>) -> Void = { result in
+            if case .failure(let error) = result {
+                XCTFail("Unexpected request failure: \(error)")
+            }
+            completion.fulfill()
+        }
+
+        let parameters = ["key": "value"]
+        apiClient.get(resource: "test", parameters: parameters, additionalHeaders: additionalHeaders, completion: handler)
+        apiClient.post(resource: "test", parameters: parameters, additionalHeaders: additionalHeaders, completion: handler)
+        apiClient.post(resource: "test", object: parameters, additionalHeaders: additionalHeaders, completion: handler)
+        apiClient.delete(resource: "test", parameters: parameters, additionalHeaders: additionalHeaders, completion: handler)
+
+        wait(for: [completion], timeout: 5)
+
+        // Additionally, we test `configuredRequest` separately, which doesn't carry out the request, to ensure its behavior matches the `get`/`post`/`delete` helpers.
+        let request = apiClient.configuredRequest(for: apiClient.apiURL, additionalHeaders: additionalHeaders)
+        XCTAssertEqual(request.value(forHTTPHeaderField: "Authorization"), "Bearer pk_test_override")
+        XCTAssertEqual(request.value(forHTTPHeaderField: "Stripe-Version"), "test_version")
+        XCTAssertEqual(request.value(forHTTPHeaderField: "Content-Type"), "application/x-www-form-urlencoded; charset=utf-8")
+    }
+
 }
 
 private final class RequestRecorder: @unchecked Sendable {

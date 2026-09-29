@@ -46,6 +46,8 @@
 
 "Buy now or pay later with Klarna" = "Cumpărați acum sau plătiți mai târziu folosind Klarna";
 
+"By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "Prin confirmarea plății cu NICEPAY, permiteți ca %@ să taxeze această metodă de plată pentru plăți viitoare în conformitate cu termenii săi.";
+
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Prin confirmarea plății cu PayPal, permiteți %@ să vă taxeze contul PayPal pentru plățile viitoare în conformitate cu termenii acesteia.";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Prin continuarea către Amazon Pay, permiteți %@ să vă taxeze contul Amazon Pay pentru plățile viitoare în conformitate cu termenii acesteia.";
@@ -109,6 +111,8 @@
 "Close card scanner" = "Închidere scaner card";
 
 "Code sent" = "Codul a fost trimis";
+
+"Complete the payment using Pix to finish the purchase." = "Finalizați plata folosind Pix pentru a încheia achiziția.";
 
 "Confirm" = "Confirmare";
 
@@ -192,6 +196,10 @@
 
 "Name on card" = "Numele titularului";
 
+"Naver Pay Card" = "Card Naver Pay";
+
+"Naver Pay Money/Point" = "Bani/Puncte Naver Pay";
+
 "New card" = "Card nou";
 
 "New payment method" = "Metodă de plată nouă";
@@ -248,8 +256,6 @@
 
 "Point the camera at your card." = "Îndreptați camera spre cardul dvs.";
 
-"Processing..." = "Se procesează...";
-
 "Przelewy24 Bank" = "Banca Przelewy24";
 
 "Remove %@" = "Eliminare %@";
@@ -288,6 +294,8 @@
 
 "Select card" = "Selectare card";
 
+"Select how you want to pay:" = "Selectați cum doriți să plătiți:";
+
 "Select payment method" = "Selectare metodă de plată";
 
 "Select your payment method" = "Selectează metoda de plată";
@@ -324,6 +332,10 @@
 
 "Tax" = "Taxă";
 
+"Terms and Conditions" = "Termeni și condiții";
+
+"Terms of Service" = "Termeni privind utilizarea serviciilor";
+
 "The IBAN you entered is incomplete." = "Codul IBAN pe care l-ați introdus nu este complet.";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "IBAN-ul introdus este nevalid, „%@” nu este un cod de țară acceptat.";
@@ -331,6 +343,8 @@
 "The provided verification code has expired." = "Codul de verificare furnizat a expirat.";
 
 "The provided verification code is incorrect." = "Codul de verificare furnizat este incorect.";
+
+"This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Aceasta este o achiziție internațională și exclude o taxă IOF de 3,5 %. Continuând, confirmați că ați luat la cunoștință și acceptați <terms>termenii și condițiile Ebanx</terms>.";
 
 "This is your default" = "Aceasta este setarea dvs. implicită";
 

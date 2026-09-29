@@ -16,6 +16,7 @@ extension CheckoutController {
         case applePay(ApplePayConfirmationParameters)
         case link(LinkConfirmationParameters)
         case paymentMethod(PaymentMethodConfirmationParameters, preconfirmIntegrationShape: PaymentSheet.IntegrationShape)
+        case withoutPaymentMethod(STPAuthenticationContext)
     }
 
     /// The parameters needed to confirm a Checkout Session with Apple Pay.
@@ -28,7 +29,7 @@ extension CheckoutController {
         let apiClient: STPAPIClient
         let returnURL: String
         let merchantDisplayName: String
-        let billingDetailsCollectionConfiguration: PaymentSheet.BillingDetailsCollectionConfiguration
+        let shippingAddressRequired: Bool
         let defaultBillingDetails: Configuration.Defaults.BillingDetails?
         let presentationWindow: UIWindow?
         // TODO: This should probably live with the other methods that delegate to CheckoutController
@@ -91,9 +92,25 @@ extension CheckoutController {
     // MARK: - Flow Construction
 
     func makeConfirmationFlow(
-        for paymentElement: PaymentElement,
+        for paymentElement: PaymentElement?,
         presentingViewController: UIViewController
     ) -> CheckoutConfirmationFlow? {
+        let authenticationContext = AuthenticationContext(
+            presentingViewController: presentingViewController,
+            appearance: configuration.paymentElement?.appearance ?? .default
+        )
+        if session.paymentOption == nil {
+            return .withoutPaymentMethod(authenticationContext)
+        }
+
+        guard let paymentElement else {
+            logUnexpectedCheckoutElementsErrorAndAssert(
+                "Checkout Session has a payment option without a PaymentElement.",
+                apiClient: apiClient
+            )
+            return nil
+        }
+
         let paymentOption: PaymentOption
         let configuration: PaymentElementConfiguration
         let customerProvider: CustomerProvider
@@ -102,6 +119,10 @@ extension CheckoutController {
 
         if paymentElement.paymentOptionSourceOfTruthIsFlowController {
             guard let resolvedPaymentOption = paymentElement.paymentSheetFlowController.internalPaymentOption else {
+                logUnexpectedCheckoutElementsErrorAndAssert(
+                    "Checkout Session payment option and FlowController payment option are out of sync.",
+                    apiClient: apiClient
+                )
                 return nil
             }
             paymentOption = resolvedPaymentOption
@@ -111,6 +132,10 @@ extension CheckoutController {
             confirmationChallenge = paymentElement.paymentSheetFlowController.confirmationChallenge
         } else {
             guard let resolvedPaymentOption = paymentElement.embeddedPaymentElement._paymentOption else {
+                logUnexpectedCheckoutElementsErrorAndAssert(
+                    "Checkout Session payment option and EmbeddedPaymentElement payment option are out of sync.",
+                    apiClient: apiClient
+                )
                 return nil
             }
             paymentOption = resolvedPaymentOption
@@ -120,21 +145,19 @@ extension CheckoutController {
             confirmationChallenge = paymentElement.embeddedPaymentElement.confirmationChallenge
         }
 
-        let authenticationContext = AuthenticationContext(
-            presentingViewController: presentingViewController,
-            appearance: configuration.appearance
-        )
-
         // Normalize Payment Element state here, then build the corresponding confirmation flow.
         switch paymentOption {
         case .applePay:
-            guard let applePayConfiguration = self.configuration.applePayConfiguration else { return nil }
+            guard let paymentElementConfiguration = self.configuration.paymentElement,
+                  let applePayConfiguration = paymentElementConfiguration.applePayConfiguration else {
+                return nil
+            }
             return .applePay(.init(
                 applePayConfiguration: applePayConfiguration,
                 apiClient: apiClient,
                 returnURL: self.configuration.returnURL,
                 merchantDisplayName: effectiveMerchantDisplayName,
-                billingDetailsCollectionConfiguration: configuration.billingDetailsCollectionConfiguration,
+                shippingAddressRequired: false,
                 defaultBillingDetails: self.configuration.defaults.billingDetails,
                 presentationWindow: presentingViewController.view.window,
                 confirmationHandler: { [apiClient, paymentHandler] requestParameters in
@@ -213,8 +236,29 @@ extension CheckoutController {
                 // Switch based on the confirmation flow
                 let result: InternalConfirmResult
                 switch flow {
+                case .withoutPaymentMethod(let authenticationContext):
+                    let requestParameters = CheckoutSessionConfirmationRequestParameters(
+                        sessionId: self.session.id,
+                        paymentMethodId: nil,
+                        expectedAmount: self.session.amount,
+                        expectedPaymentMethodType: nil,
+                        returnURL: self.configuration.returnURL,
+                        clientAttributionMetadata: STPClientAttributionMetadata.makeClientAttributionMetadata(
+                            intent: .checkout(self.session),
+                            elementsSession: self.session.elementsSession
+                        ),
+                        // Due to legacy reasons, in the no-PM case /confirm requires customerData be sent with at least email
+                        // TODO: Remove this once no-PM confirmation can use the Checkout Session's server email without `customer_data`.
+                        customerData: self.session.email.map { ["email": $0] }
+                    )
+                    result = await Self.confirmCheckoutSession(
+                        with: requestParameters,
+                        apiClient: self.apiClient,
+                        authenticationContext: authenticationContext,
+                        paymentHandler: self.paymentHandler
+                    )
                 case .applePay(let parameters):
-                    result = await Self.confirmApplePay(checkoutSession: self.session, parameters: parameters)
+                    result = await self.confirmApplePay(checkoutSession: self.session, parameters: parameters)
                 case .link(let parameters):
                     result = await Self.confirmLink(checkoutSession: self.session, parameters: parameters)
                 case .paymentMethod(let paymentMethodParameters, let integrationShape):
@@ -272,7 +316,7 @@ extension CheckoutController {
     static func mapConfirmationResult(_ result: InternalConfirmResult) -> ConfirmResult {
         switch result {
         case .completed(let response):
-            return .succeeded(paymentStatus: response.paymentStatus)
+            return .completed(paymentStatus: response.paymentStatus)
         case .canceled:
             return .canceled
         case .failed(let error, _):
@@ -348,11 +392,6 @@ extension CheckoutController {
             confirmParams.paymentMethodParams.radarOptions = await confirmationChallenge?.makeRadarOptions(for: confirmParams.paymentMethodParams.type)
             // TODO: Why set client attribution metadata here and also in /confirm request?
             confirmParams.paymentMethodParams.clientAttributionMetadata = clientAttributionMetadata
-            // Ensure email is set on the payment method — fall back to the Checkout Session's customer email.
-            if confirmParams.paymentMethodParams.billingDetails?.email == nil,
-               let customerEmail = checkoutSession.email {
-                confirmParams.paymentMethodParams.nonnil_billingDetails.email = customerEmail
-            }
             // TODO: Stop creating a PaymentMethod and send payment_method_data directly to /confirm.
             let paymentMethod = try await configuration.apiClient.createPaymentMethod(
                 with: confirmParams.paymentMethodParams
@@ -432,7 +471,7 @@ extension CheckoutController {
         }
 
         // 2. Handle any next action required by the Intent.
-        let clientCompletedIntent: PaymentOrSetupIntent
+        let clientCompletedIntent: PaymentOrSetupIntent?
         if let paymentIntent = response.paymentIntent {
             let result: (STPPaymentHandlerActionStatus, STPPaymentIntent?, Error?) = await withCheckedContinuation { continuation in
                 paymentHandler.handleNextAction(
@@ -486,17 +525,19 @@ extension CheckoutController {
                 return .failed(error, sessionResponse: response)
             }
         } else {
-            let error = CheckoutError.unknown(debugDescription: "Checkout Session confirm response contained neither a PaymentIntent nor a SetupIntent.")
-            return .failed(error, sessionResponse: response)
+            clientCompletedIntent = nil
         }
 
         // 3. Poll if the Checkout Session is still in progress.
+        var didPollToCompletion = false
         switch response.status {
         case .open:
             let pollOutcome = await poller.poll(checkoutSessionId: response.sessionId)
             switch pollOutcome {
-            case .completed,
-                 .timedOut:
+            case .completed:
+                didPollToCompletion = true
+                // Continue to step 4.
+            case .timedOut:
                 // Continue to step 4.
                 break
             case .requiresPaymentMethod,
@@ -543,6 +584,10 @@ extension CheckoutController {
             // PaymentHandler already verified that the Intent is client-complete. Only update
             // Session fields we can derive from the newer Intent; otherwise preserve `/confirm`.
             switch clientCompletedIntent {
+            case nil:
+                if didPollToCompletion {
+                    responseFields["status"] = "complete"
+                }
             case .paymentIntent(let paymentIntent):
                 responseFields["payment_intent"] = paymentIntent.allResponseFields
                 switch paymentIntent.status {

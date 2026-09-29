@@ -110,6 +110,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case _100 = 100
         case _5099 = 5099
         case _10000 = 10000
+        case _1000000 = 1000000
 
         var displayName: String {
             switch self {
@@ -119,11 +120,13 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
                 return "50.99"
             case ._10000:
                 return "100.00"
+            case ._1000000:
+                return "10000.00"
             }
         }
         func customDisplayName(currency: Currency) -> String {
             switch currency {
-            case .jpy:
+            case .jpy, .krw:
                 return displayName.replacingOccurrences(of: ".", with: "")
             default:
                 return displayName
@@ -145,11 +148,13 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case myr
         case mxn
         case jpy
+        case krw
         case cny
         case brl
         case thb
         case sek
         case chf
+        case idr
     }
 
     enum MerchantCountry: String, PickerEnum {
@@ -159,6 +164,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case GB
         case AU
         case FR
+        case ES
         case IN
         case SG
         case MY

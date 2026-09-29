@@ -131,6 +131,74 @@ final class PaymentSheetLinkAccountTests: APIStubbedTestCase {
         XCTAssertEqual(capturedFormFields["request_surface"], "ios_payment_element")
     }
 
+    func testCreateLinkAccountSessionOmitsMerchantTokenWithoutPermissions() {
+        let apiClient = APIStubbedTestCase.stubbedAPIClient()
+        var capturedFormFields: [String: String] = [:]
+        stub { request in
+            request.url?.absoluteString.contains("consumers/link_account_sessions") ?? false
+        } response: { request in
+            let body = String(data: request.httpBodyOrBodyStream ?? Data(), encoding: .utf8) ?? ""
+            capturedFormFields = Self.decodeFormFields(from: body)
+            return HTTPStubsResponse(
+                jsonObject: [
+                    "id": "fcsess_123",
+                    "livemode": false,
+                    "client_secret": "fcsess_123_secret_456",
+                    "permissions": [],
+                ],
+                statusCode: 200,
+                headers: nil
+            )
+        }
+        let expectation = expectation(description: "Creates Link Account Session")
+
+        apiClient.createLinkAccountSession(
+            for: "consumer_session_secret",
+            permissions: [],
+            merchantToken: "acct_123"
+        ) { result in
+            XCTAssertNotNil(try? result.get())
+            expectation.fulfill()
+        }
+
+        wait(for: [expectation], timeout: 1)
+        XCTAssertNil(capturedFormFields["merchant_token"])
+    }
+
+    func testCreateLinkAccountSessionIncludesMerchantTokenWithPermissions() {
+        let apiClient = APIStubbedTestCase.stubbedAPIClient()
+        var capturedFormFields: [String: String] = [:]
+        stub { request in
+            request.url?.absoluteString.contains("consumers/link_account_sessions") ?? false
+        } response: { request in
+            let body = String(data: request.httpBodyOrBodyStream ?? Data(), encoding: .utf8) ?? ""
+            capturedFormFields = Self.decodeFormFields(from: body)
+            return HTTPStubsResponse(
+                jsonObject: [
+                    "id": "fcsess_123",
+                    "livemode": false,
+                    "client_secret": "fcsess_123_secret_456",
+                    "permissions": ["balances"],
+                ],
+                statusCode: 200,
+                headers: nil
+            )
+        }
+        let expectation = expectation(description: "Creates Link Account Session")
+
+        apiClient.createLinkAccountSession(
+            for: "consumer_session_secret",
+            permissions: ["balances"],
+            merchantToken: "acct_123"
+        ) { result in
+            XCTAssertNotNil(try? result.get())
+            expectation.fulfill()
+        }
+
+        wait(for: [expectation], timeout: 1)
+        XCTAssertEqual(capturedFormFields["merchant_token"], "acct_123")
+    }
+
     /// Decodes an `application/x-www-form-urlencoded` request body into a flat `[key: value]` map, keeping
     /// bracketed keys (e.g. `credentials[consumer_session_client_secret]`) as-is rather than nesting them.
     private static func decodeFormFields(from body: String) -> [String: String] {
@@ -401,15 +469,15 @@ final class FundingSourceDetailsTypeMappingTests: XCTestCase {
         XCTAssertEqual(fundingSource.detailsType.value, .bankAccount)
     }
 
-    func test_unknownType_transfersRawValue() {
+    func test_genericType_transfersRawValue() {
         let fundingSource = ParsedEnum<LinkSettings.FundingSource>(rawValue: "PIX")
         let detailsType = fundingSource.detailsType
-        XCTAssertNil(detailsType.value, "Unknown funding source should produce an unparsed details type")
-        XCTAssertEqual(detailsType.rawValue, "PIX", "Raw value should be preserved for unknown types")
+        XCTAssertNil(detailsType.value, "Generic funding source should produce an unparsed details type")
+        XCTAssertEqual(detailsType.rawValue, "PIX", "Raw value should be preserved for generic types")
     }
 
-    func test_unknownType_appearsInIntersectionWhenConsumerSessionAlsoAdvertisesIt() {
-        // If both the funding sources and the consumer session advertise an unknown type,
+    func test_genericType_appearsInIntersectionWhenConsumerSessionAlsoAdvertisesIt() {
+        // If both the funding sources and the consumer session advertise a generic type,
         // it should survive the intersection even though neither side can parse it.
         let fundingSourceDetailsTypes: Set<ParsedEnum<ConsumerPaymentDetails.DetailsType>> = [
             ParsedEnum(rawValue: "PIX"),
@@ -424,7 +492,7 @@ final class FundingSourceDetailsTypeMappingTests: XCTestCase {
         XCTAssertNil(supported.first?.value)
     }
 
-    func test_unknownType_isExcludedFromIntersectionWhenSessionDoesNotAdvertiseIt() {
+    func test_genericType_isExcludedFromIntersectionWhenSessionDoesNotAdvertiseIt() {
         let fundingSourceDetailsTypes: Set<ParsedEnum<ConsumerPaymentDetails.DetailsType>> = [
             ParsedEnum(rawValue: "PIX"),
             ParsedEnum(.card),

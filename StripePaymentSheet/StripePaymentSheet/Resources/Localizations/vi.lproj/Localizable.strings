@@ -46,6 +46,8 @@
 
 "Buy now or pay later with Klarna" = "Mua ngay hoặc thanh toán sau bằng Klarna";
 
+"By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "Bằng việc xác nhận thanh toán của bạn với NICEPAY, bạn cho phép %@ tính phí phương thức thanh toán này cho các khoản thanh toán trong tương lai theo các điều khoản của họ.";
+
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Bằng cách xác nhận khoản thanh toán của quý vị với PayPal, quý vị cho phép %@ tính phí tài khoản PayPal của quý vị cho các khoản thanh toán trong tương lai theo các điều khoản của họ.";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Bằng cách tiếp tục với Amazon Pay, bạn cho phép %@ tính phí tài khoản Amazon Pay của bạn cho các khoản thanh toán trong tương lai theo các điều khoản của họ.";
@@ -109,6 +111,8 @@
 "Close card scanner" = "Đóng máy quét thẻ";
 
 "Code sent" = "Mã đã được gửi";
+
+"Complete the payment using Pix to finish the purchase." = "Hoàn tất thanh toán bằng Pix để hoàn thành giao dịch mua.";
 
 "Confirm" = "Xác nhận";
 
@@ -192,6 +196,10 @@
 
 "Name on card" = "Tên trên thẻ";
 
+"Naver Pay Card" = "Thẻ Naver Pay";
+
+"Naver Pay Money/Point" = "Số tiền/điểm Naver Pay";
+
 "New card" = "Thẻ mới";
 
 "New payment method" = "Phương thức thanh toán mới";
@@ -248,8 +256,6 @@
 
 "Point the camera at your card." = "Hướng camera vào thẻ.";
 
-"Processing..." = "Đang xử lý...";
-
 "Przelewy24 Bank" = "Ngân hàng Przelewy24";
 
 "Remove %@" = "Xóa %@";
@@ -288,6 +294,8 @@
 
 "Select card" = "Chọn thẻ";
 
+"Select how you want to pay:" = "Chọn cách bạn muốn thanh toán:";
+
 "Select payment method" = "Chọn phương thức thanh toán";
 
 "Select your payment method" = "Chọn phương thức thanh toán của bạn";
@@ -324,6 +332,10 @@
 
 "Tax" = "Thuế";
 
+"Terms and Conditions" = "Điều khoản và Điều kiện";
+
+"Terms of Service" = "Điều khoản dịch vụ";
+
 "The IBAN you entered is incomplete." = "IBAN quý vị đã nhập chưa đầy đủ.";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "IBAN bạn đã nhập không hợp lệ, \"%@\" không phải là mã quốc gia được hỗ trợ.";
@@ -331,6 +343,8 @@
 "The provided verification code has expired." = "Mã xác minh được cung cấp đã hết hạn.";
 
 "The provided verification code is incorrect." = "Mã xác minh đã cung cấp không chính xác.";
+
+"This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Đây là giao dịch mua quốc tế và không bao gồm phí IOF 3,5%. Khi tiếp tục, bạn thừa nhận và chấp nhận <terms>điều khoản và điều kiện của Ebanx</terms>.";
 
 "This is your default" = "Đây là thông tin mặc định của bạn";
 

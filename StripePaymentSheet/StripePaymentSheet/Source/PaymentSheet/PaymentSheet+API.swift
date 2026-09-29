@@ -280,7 +280,6 @@ extension PaymentSheet {
                     intent: intent,
                     elementsSession: elementsSession,
                     configuration: configuration,
-                    customerProvider: customerProvider,
                     clientAttributionMetadata: clientAttributionMetadata,
                     completion: completion
                 )
@@ -1039,7 +1038,7 @@ private extension ConsumerPaymentDetails {
         switch details {
         case .bankAccount(let bankAccount):
             return bankAccount
-        case .card, .unparsable:
+        case .card, .generic:
             return nil
         }
     }

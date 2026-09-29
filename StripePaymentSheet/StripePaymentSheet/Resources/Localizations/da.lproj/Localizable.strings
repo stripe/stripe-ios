@@ -46,6 +46,8 @@
 
 "Buy now or pay later with Klarna" = "Køb nu eller betal senere med Klarna";
 
+"By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "Ved at bekræfte din betaling med NICEPAY tillader du, at %@ debiterer denne betalingsmetode for fremtidige betalinger i overensstemmelse med deres vilkår.";
+
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Ved at bekræfte din betaling med PayPal, tillader du %@ at debitere din PayPal-konto for fremtidige betalinger i overensstemmelse med deres vilkår.";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Ved at fortsætte til Amazon Pay, tillader du %@ at debitere din Revolut Pay-konto for fremtidige betalinger i overensstemmelse med deres vilkår.";
@@ -109,6 +111,8 @@
 "Close card scanner" = "Luk kortscanner";
 
 "Code sent" = "Kode sendt";
+
+"Complete the payment using Pix to finish the purchase." = "Gennemfør betalingen med Pix for at afslutte købet.";
 
 "Confirm" = "Bekræft";
 
@@ -192,6 +196,10 @@
 
 "Name on card" = "Kortholderens navn";
 
+"Naver Pay Card" = "Naver Pay-kort";
+
+"Naver Pay Money/Point" = "Naver Pay Money/Point";
+
 "New card" = "Nyt kort";
 
 "New payment method" = "Ny betalingsmetode";
@@ -248,8 +256,6 @@
 
 "Point the camera at your card." = "Ret kameraet mod dit kort.";
 
-"Processing..." = "Behandler...";
-
 "Przelewy24 Bank" = "Przelewy24 Bank";
 
 "Remove %@" = "Fjern %@";
@@ -288,6 +294,8 @@
 
 "Select card" = "Vælg kort";
 
+"Select how you want to pay:" = "Vælg, hvordan du vil betale:";
+
 "Select payment method" = "Vælg betalingsmetode";
 
 "Select your payment method" = "Vælg din betalingsmetode";
@@ -324,6 +332,10 @@
 
 "Tax" = "Moms";
 
+"Terms and Conditions" = "Vilkår";
+
+"Terms of Service" = "Tjenestevilkår";
+
 "The IBAN you entered is incomplete." = "Det indtastede IBAN-nummer er ufuldstændigt.";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Den indtastede IBAN er ugyldig. \"%@\" er ikke en understøttet landekode.";
@@ -331,6 +343,8 @@
 "The provided verification code has expired." = "Den angivne verifikationskode er udløbet.";
 
 "The provided verification code is incorrect." = "Den angivne verifikationskode er forkert.";
+
+"This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Dette er et internationalt køb og ekskluderer et IOF-gebyr på 3,5 %. Ved at fortsætte accepterer du <terms>Ebanx’ vilkår<terms>.";
 
 "This is your default" = "Dette er din standard";
 

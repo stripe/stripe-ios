@@ -46,6 +46,8 @@
 
 "Buy now or pay later with Klarna" = "Pirkite dabar arba mokėkite vėliau naudodami \"Klarna\"";
 
+"By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "Patvirtindami savo mokėjimą naudojant „NICEPAY“, suteikiate leidimą %@ periodiškai nurašyti lėšas iš jūsų sąskaitos pagal jų nustatytas sąlygas.";
+
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Patvirtindami savo mokėjimą \"PayPal\" leidžiate \"%@\" nuskaityti mokestį nuo jūsų \"PayPal\" sąskaitos vėlesniems mokėjimams pagal jų sąlygas.";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Pereidami prie \"Amazon Pay\" leisite \"%@\" nuskaityti mokestį nuo jūsų \"Amazon Pay\" sąskaitos vėlesniems mokėjimams pagal jų sąlygas.";
@@ -109,6 +111,8 @@
 "Close card scanner" = "Išjungti kortelės skaitytuvą";
 
 "Code sent" = "Kodas išsiųstas";
+
+"Complete the payment using Pix to finish the purchase." = "Atlikite mokėjimą naudodami „Pix”, kad užbaigtumėte pirkimą.";
 
 "Confirm" = "Patvirtinti";
 
@@ -192,6 +196,10 @@
 
 "Name on card" = "Ant kortelės nurodytas vardas ir pavardė";
 
+"Naver Pay Card" = "„Naver Pay“ kortelė";
+
+"Naver Pay Money/Point" = "„Naver Pay” pinigai / taškai";
+
 "New card" = "Nauja kortelė";
 
 "New payment method" = "Naujas mokėjimo būdas";
@@ -248,8 +256,6 @@
 
 "Point the camera at your card." = "Nukreipkite fotoaparatą į kortelę.";
 
-"Processing..." = "Apdorojama...";
-
 "Przelewy24 Bank" = "Bankas \"Przelewy24\"";
 
 "Remove %@" = "Šalinti %@";
@@ -288,6 +294,8 @@
 
 "Select card" = "Pasirinkti kortelę";
 
+"Select how you want to pay:" = "Pasirinkite, kaip norite mokėti:";
+
 "Select payment method" = "Pasirinkti mokėjimo būdą";
 
 "Select your payment method" = "Pasirinkite mokėjimo būdą";
@@ -324,6 +332,10 @@
 
 "Tax" = "Mokestis";
 
+"Terms and Conditions" = "Sąlygos ir nuostatos";
+
+"Terms of Service" = "Paslaugų sąlygos";
+
 "The IBAN you entered is incomplete." = "Įvedėte ne visą IBAN.";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Jūsų įvestas IBAN yra neteisingas, „%@“ nėra palaikomas šalies kodas.";
@@ -331,6 +343,8 @@
 "The provided verification code has expired." = "Pateiktas patvirtinimo kodas nebegalioja.";
 
 "The provided verification code is incorrect." = "Nurodytas neteisingas patikrinimo kodas.";
+
+"This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Tai – tarptautinis pirkinys, kuriam netaikomas 3,5 % IOF mokestis. Tęsdami, patvirtinate ir sutinkate su <terms>„Ebanx“ sąlygomis ir nuostatomis</terms>.";
 
 "This is your default" = "Tai jūsų numatytasis mokėjimo būdas";
 

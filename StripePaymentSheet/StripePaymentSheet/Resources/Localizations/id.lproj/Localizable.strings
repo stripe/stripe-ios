@@ -46,6 +46,8 @@
 
 "Buy now or pay later with Klarna" = "Beli sekarang atau bayar nanti dengan Klarna";
 
+"By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "Dengan mengonfirmasi pembayaran Anda dengan NICEPAY, Anda mengizinkan %@ untuk men-charge metode pembayaran ini untuk pembayaran di masa mendatang sesuai dengan ketentuan mereka.";
+
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Dengan mengonfirmasi pembayaran menggunakan PayPal, berarti Anda mengizinkan %@ mengenakan charge untuk pembayaran mendatang pada akun PayPal Anda sesuai dengan ketentuan mereka.";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Dengan melanjutkan ke Amazon Pay, berarti Anda mengizinkan %@ mengenakan charge untuk pembayaran mendatang pada akun Amazon Pay Anda sesuai dengan ketentuan mereka.";
@@ -109,6 +111,8 @@
 "Close card scanner" = "Tutup pemindai kartu";
 
 "Code sent" = "Kode dikirim";
+
+"Complete the payment using Pix to finish the purchase." = "Selesaikan pembayaran menggunakan Pix untuk menyelesaikan pembelian.";
 
 "Confirm" = "Konfirmasikan";
 
@@ -192,6 +196,10 @@
 
 "Name on card" = "Nama pada kartu";
 
+"Naver Pay Card" = "Naver Pay Card";
+
+"Naver Pay Money/Point" = "Naver Pay Money/Point";
+
 "New card" = "Kartu baru";
 
 "New payment method" = "Metode pembayaran baru";
@@ -248,8 +256,6 @@
 
 "Point the camera at your card." = "Arahkan kamera pada kartu Anda";
 
-"Processing..." = "Memproses...";
-
 "Przelewy24 Bank" = "Bank Przelewy24";
 
 "Remove %@" = "Hapus %@";
@@ -288,6 +294,8 @@
 
 "Select card" = "Pilih kartu";
 
+"Select how you want to pay:" = "Pilih cara Anda ingin membayar:";
+
 "Select payment method" = "Pilih metode pembayaran";
 
 "Select your payment method" = "Pilih metode pembayaran Anda";
@@ -324,6 +332,10 @@
 
 "Tax" = "Pajak";
 
+"Terms and Conditions" = "Ketentuan dan Persyaratan";
+
+"Terms of Service" = "Ketentuan Layanan";
+
 "The IBAN you entered is incomplete." = "IBAN yang Anda masukkan tidak lengkap.";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "IBAN yang Anda masukkan tidak valid. \"%@\" bukan kode negara yang didukung.";
@@ -331,6 +343,8 @@
 "The provided verification code has expired." = "Kode verifikasi yang diberikan telah kedaluwarsa.";
 
 "The provided verification code is incorrect." = "Kode verifikasi yang diberikan salah.";
+
+"This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Ini adalah pembelian internasional dan tidak termasuk biaya IOF 3,5%. Dengan melanjutkan, Anda mengakui dan menerima <terms>syarat dan ketentuan Ebanx</terms>.";
 
 "This is your default" = "Ini default Anda";
 

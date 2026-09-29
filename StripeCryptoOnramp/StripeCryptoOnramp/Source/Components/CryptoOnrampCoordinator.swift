@@ -107,6 +107,24 @@ protocol CryptoOnrampCoordinatorProtocol {
     @MainActor
     func presentUserAttestation(from viewController: UIViewController) async throws -> UserAttestationResult
 
+    /// Presents the current terms and conditions when acceptance is required.
+    /// Requires an authenticated Link user.
+    ///
+    /// - Parameter viewController: The view controller from which to present the terms and conditions.
+    /// - Returns: A `PartnerTermsResult` indicating whether the user accepted, canceled, or no presentation was required.
+    /// Throws if an authenticated Link user is not available or an API error occurs.
+    @MainActor
+    func presentTermsAndConditionsIfNeeded(from viewController: UIViewController) async throws -> PartnerTermsResult
+
+    /// Presents the current terms of service when acceptance is required.
+    /// Requires an authenticated Link user.
+    ///
+    /// - Parameter viewController: The view controller from which to present the terms of service.
+    /// - Returns: A `PartnerTermsResult` indicating whether the user accepted, canceled, or no presentation was required.
+    /// Throws if an authenticated Link user is not available or an API error occurs.
+    @MainActor
+    func presentTermsOfServiceIfNeeded(from viewController: UIViewController) async throws -> PartnerTermsResult
+
     /// Initiates the KYC verification flow, which displays the user’s currently collected KYC information with the ability to confirm or update the displayed address.
     ///
     /// - Parameters:
@@ -361,7 +379,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
         }
         do {
             let customerId = try await apiClient.createCryptoCustomer(with: linkAccountInfo).id
-            await cryptoCustomerState.setCustomerId(customerId)
+            await setCryptoCustomerId(customerId)
             analyticsClient.log(.linkRegistrationCompleted)
             return customerId
         } catch {
@@ -382,7 +400,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
         do {
             try await linkController.lookupLinkAuthToken(linkAuthTokenClientSecret)
             let customerId = try await apiClient.createCryptoCustomer(with: linkAccountInfo).id
-            await cryptoCustomerState.setCustomerId(customerId)
+            await setCryptoCustomerId(customerId)
             analyticsClient.log(.linkUserAuthenticationWithTokenCompleted)
         } catch {
             if let stripeError = error as? StripeError,
@@ -408,7 +426,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
             case .consented:
                 do {
                     let customerId = try await apiClient.createCryptoCustomer(with: linkAccountInfo).id
-                    await cryptoCustomerState.setCustomerId(customerId)
+                    await setCryptoCustomerId(customerId)
                     analyticsClient.log(.linkAuthorizationCompleted(consented: true))
                     return .consented(customerId: customerId)
                 } catch {
@@ -478,6 +496,40 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
             }
         } catch {
             try logAndThrow(error, during: .presentUserAttestation)
+        }
+    }
+
+    @MainActor
+    public func presentTermsAndConditionsIfNeeded(from viewController: UIViewController) async throws -> PartnerTermsResult {
+        analyticsClient.log(.termsAndConditionsStarted)
+        do {
+            let result = try await presentPartnerTermsIfNeeded(
+                declarationType: .transactionTerms,
+                from: viewController
+            )
+            if result == .accepted {
+                analyticsClient.log(.termsAndConditionsCompleted)
+            }
+            return result
+        } catch {
+            try logAndThrow(error, during: .presentTermsAndConditionsIfNeeded)
+        }
+    }
+
+    @MainActor
+    public func presentTermsOfServiceIfNeeded(from viewController: UIViewController) async throws -> PartnerTermsResult {
+        analyticsClient.log(.termsOfServiceStarted)
+        do {
+            let result = try await presentPartnerTermsIfNeeded(
+                declarationType: .termsOfService,
+                from: viewController
+            )
+            if result == .accepted {
+                analyticsClient.log(.termsOfServiceCompleted)
+            }
+            return result
+        } catch {
+            try logAndThrow(error, during: .presentTermsOfServiceIfNeeded)
         }
     }
 
@@ -786,6 +838,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
         do {
             pendingApplePayPaymentSource = nil
             selectedPaymentSource = nil
+            platformApiClient = nil
             try await linkController.logOut()
             analyticsClient.log(.userLoggedOut)
         } catch {
@@ -886,7 +939,12 @@ private extension CryptoOnrampCoordinator {
                 case .canceled:
                     continuation.resume(returning: .canceled)
                 case .failed:
-                    continuation.resume(throwing: error ?? CheckoutError.paymentFailed)
+                    continuation.resume(
+                        throwing: Self.checkoutError(
+                            error,
+                            paymentIntent: paymentIntent
+                        )
+                    )
                 @unknown default:
                     continuation.resume(throwing: CheckoutError.unexpectedError)
                 }
@@ -894,18 +952,81 @@ private extension CryptoOnrampCoordinator {
         }
     }
 
+    @MainActor
+    private func presentPartnerTermsIfNeeded(
+        declarationType: PartnerDeclarationType,
+        from viewController: UIViewController
+    ) async throws -> PartnerTermsResult {
+        let linkAccountInfo = try await self.linkAccountInfo
+        let terms = try await apiClient.retrievePartnerTerms(
+            declarationType: declarationType,
+            linkAccountInfo: linkAccountInfo
+        )
+
+        switch terms {
+        case .notRequired:
+            return .notRequired
+        case let .required(_, declaration):
+            let onAccept: () async throws -> Void = { [apiClient] in
+                _ = try await apiClient.confirmPartnerTerms(
+                    declarationId: declaration.id,
+                    linkAccountInfo: linkAccountInfo
+                )
+            }
+
+            switch declarationType {
+            case .transactionTerms:
+                let result = try await linkController.presentTermsAndConditions(
+                    html: declaration.html,
+                    appearance: appearance,
+                    from: viewController,
+                    onAccept: onAccept
+                )
+                switch result {
+                case .accepted:
+                    return .accepted
+                case .canceled:
+                    return .canceled
+                }
+            case .termsOfService:
+                let result = try await linkController.presentTermsOfService(
+                    html: declaration.html,
+                    appearance: appearance,
+                    from: viewController,
+                    onAccept: onAccept
+                )
+                switch result {
+                case .accepted:
+                    return .accepted
+                case .canceled:
+                    return .canceled
+                }
+            }
+        }
+    }
+
+    /// Stores the crypto customer ID and discards any cached platform API client.
+    ///
+    /// A platform API client may have been resolved before authentication, in which case the merchant of record was
+    /// selected without knowledge of the customer’s KYC region. Discarding it ensures the merchant of record is
+    /// re-resolved for the authenticated customer.
+    private func setCryptoCustomerId(_ customerId: String) async {
+        await cryptoCustomerState.setCustomerId(customerId)
+        platformApiClient = nil
+    }
+
     /// Returns a dedicated API client configured with the platform publishable key.
     /// Caches the API client after first creation to avoid repeated API calls.
+    ///
+    /// When no crypto customer ID is available yet, platform settings are resolved using the publishable key alone,
+    /// which allows presenting Apple Pay before the customer authenticates with Link.
     private func getPlatformApiClient() async throws -> STPAPIClient {
         if let platformApiClient {
             return platformApiClient
         }
 
-        guard let cryptoCustomerId = await cryptoCustomerState.getCustomerId() else {
-            throw Error.missingCryptoCustomerID
-        }
-
         // Fetch platform settings and create API client
+        let cryptoCustomerId = await cryptoCustomerState.getCustomerId()
         let platformSettings = try await apiClient.getPlatformSettings(cryptoCustomerId: cryptoCustomerId)
         let newPlatformApiClient = STPAPIClient(publishableKey: platformSettings.publishableKey)
         platformApiClient = newPlatformApiClient

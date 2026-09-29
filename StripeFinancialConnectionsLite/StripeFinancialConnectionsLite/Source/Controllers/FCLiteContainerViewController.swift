@@ -13,12 +13,14 @@ class FCLiteContainerViewController: UIViewController {
     private let returnUrl: URL?
     private let apiClient: FCLiteAPIClient
     private let completion: ((FinancialConnectionsSDKResult) -> Void)
+    private let hasRequestedDataPermissions: Bool
 
     private let spinner = UIActivityIndicatorView(style: .large)
     private var errorView: ErrorView?
 
     private var manifest: LinkAccountSessionManifest?
     private let elementsSessionContext: ElementsSessionContext?
+    private let preCollectedConsent: FinancialConnectionsPreCollectedConsent?
 
     private var isInstantDebits: Bool {
         manifest?.isInstantDebits == true
@@ -48,12 +50,16 @@ class FCLiteContainerViewController: UIViewController {
         returnUrl: URL?,
         apiClient: FCLiteAPIClient,
         elementsSessionContext: ElementsSessionContext?,
+        hasRequestedDataPermissions: Bool,
+        preCollectedConsent: FinancialConnectionsPreCollectedConsent?,
         completion: @escaping ((FinancialConnectionsSDKResult) -> Void)
     ) {
         self.clientSecret = clientSecret
         self.returnUrl = returnUrl
         self.apiClient = apiClient
         self.elementsSessionContext = elementsSessionContext
+        self.hasRequestedDataPermissions = hasRequestedDataPermissions
+        self.preCollectedConsent = preCollectedConsent
         self.completion = completion
         super.init(nibName: nil, bundle: nil)
     }
@@ -94,7 +100,8 @@ class FCLiteContainerViewController: UIViewController {
                 clientSecret: clientSecret,
                 returnUrl: returnUrl,
                 canUseNativeLink: canUseNativeLink,
-                secureWebviewFeatureFlagEnabled: secureWebviewFeatureFlagEnabled
+                secureWebviewFeatureFlagEnabled: secureWebviewFeatureFlagEnabled,
+                preCollectedConsent: preCollectedConsent
             )
             self.manifest = synchronize.manifest
             showWebView(for: synchronize.manifest)
@@ -106,7 +113,9 @@ class FCLiteContainerViewController: UIViewController {
     private func completeFlow(result: FCLiteWebFlowResult) async {
         switch result {
         case .success(let returnUrl):
-            if isInstantDebits {
+            if hasRequestedDataPermissions {
+                await fetchSessionAndComplete()
+            } else if isInstantDebits {
                 do {
                     if let linkedBank = try createInstantDebitsLinkedBank(from: returnUrl) {
                         completion(.completed(.instantDebits(linkedBank)))

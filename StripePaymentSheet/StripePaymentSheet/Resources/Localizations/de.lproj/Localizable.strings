@@ -46,6 +46,8 @@
 
 "Buy now or pay later with Klarna" = "Jetzt kaufen oder später bezahlen mit Klarna";
 
+"By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "Indem Sie Ihre Zahlung mit NICEPAY bestätigen, erlauben Sie %@, künftige Zahlungen gemäß deren Konditionen von dieser Zahlungsmethode abzubuchen.";
+
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Indem Sie Ihre Zahlung bei PayPal bestätigen, erklären Sie sich damit einverstanden, dass %@ Ihr PayPal-Konto zur Durchführung zukünftiger Zahlungen gemäß der Nutzungsbedingungen belastet.";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Indem Sie zur Amazon-Pay-Website wechseln, erklären Sie sich damit einverstanden, dass %@ Ihr Amazon-Pay-Konto zur Durchführung zukünftiger Zahlungen gemäß den Nutzungsbedingungen belastet.";
@@ -109,6 +111,8 @@
 "Close card scanner" = "Kartenscanner schließen";
 
 "Code sent" = "Code wurde gesendet";
+
+"Complete the payment using Pix to finish the purchase." = "Führen Sie die Zahlung mit Pix durch, um den Kauf abzuschließen.";
 
 "Confirm" = "Bestätigen";
 
@@ -192,6 +196,10 @@
 
 "Name on card" = "Name auf Karte";
 
+"Naver Pay Card" = "Naver Pay Card";
+
+"Naver Pay Money/Point" = "Naver Pay Money/Point";
+
 "New card" = "Neue Karte";
 
 "New payment method" = "Neue Zahlungsmethode";
@@ -248,8 +256,6 @@
 
 "Point the camera at your card." = "Richten Sie die Kamera auf die Karte.";
 
-"Processing..." = "Wird verarbeitet …";
-
 "Przelewy24 Bank" = "Przelewy24 Bank";
 
 "Remove %@" = "%@ entfernen";
@@ -288,6 +294,8 @@
 
 "Select card" = "Karte auswählen";
 
+"Select how you want to pay:" = "Wählen Sie aus, wie Sie zahlen möchten:";
+
 "Select payment method" = "Zahlungsmethode auswählen";
 
 "Select your payment method" = "Zahlungsmethode auswählen";
@@ -324,6 +332,10 @@
 
 "Tax" = "Steuer";
 
+"Terms and Conditions" = "Allgemeine Geschäftsbedingungen";
+
+"Terms of Service" = "Allgemeine Geschäftsbedingungen";
+
 "The IBAN you entered is incomplete." = "Die eingegebene IBAN ist unvollständig.";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Die eingegebene IBAN ist ungültig. „%@“ ist kein unterstützter Ländercode.";
@@ -331,6 +343,8 @@
 "The provided verification code has expired." = "Der angegebene Verifizierungscode ist abgelaufen.";
 
 "The provided verification code is incorrect." = "Der angegebene Verifizierungscode ist falsch.";
+
+"This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Dies ist ein internationaler Kauf und schließt eine IOF-Gebühr von 3,5 % aus. Mit dem Fortfahren erkennen Sie die <terms>allgemeinen Geschäftsbedingungen von Ebanx<terms> an und akzeptieren diese.";
 
 "This is your default" = "Dies ist Ihre Standard-Methode";
 

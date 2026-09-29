@@ -46,6 +46,8 @@
 
 "Buy now or pay later with Klarna" = "Köp nu eller betala senare med Klarna";
 
+"By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "Genom att bekräfta betalningen med NICEPAY tillåter du %@ att debitera den här betalningsmetoden vid framtida betalningar i enlighet med deras villkor.";
+
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Genom att bekräfta betalningen med PayPal tillåter du att %@ debiterar ditt PayPal-konto för framtida betalningar i enlighet med deras villkor.";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Genom att fortsätta till Amazon Pay tillåter du att %@ debiterar ditt Amazon Pay-konto för framtida betalningar i enlighet med deras villkor.";
@@ -109,6 +111,8 @@
 "Close card scanner" = "Stäng kortskanner";
 
 "Code sent" = "Koden har skickats";
+
+"Complete the payment using Pix to finish the purchase." = "Slutför betalningen med Pix för att avsluta köpet.";
 
 "Confirm" = "Bekräfta";
 
@@ -192,6 +196,10 @@
 
 "Name on card" = "Namn på kortet";
 
+"Naver Pay Card" = "Naver Pay-kort";
+
+"Naver Pay Money/Point" = "Naver Pay-pengar/poäng";
+
 "New card" = "Nytt kort";
 
 "New payment method" = "Ny betalningsmetod";
@@ -248,8 +256,6 @@
 
 "Point the camera at your card." = "Rikta kameran mot ditt kort.";
 
-"Processing..." = "Bearbetar ...";
-
 "Przelewy24 Bank" = "Przelewy24 Bank";
 
 "Remove %@" = "Ta bort %@";
@@ -288,6 +294,8 @@
 
 "Select card" = "Välj kort";
 
+"Select how you want to pay:" = "Välj hur du vill betala:";
+
 "Select payment method" = "Välj betalningsmetod";
 
 "Select your payment method" = "Välj din betalningsmetod";
@@ -324,6 +332,10 @@
 
 "Tax" = "Skatt";
 
+"Terms and Conditions" = "Villkor";
+
+"Terms of Service" = "Tjänstevillkor";
+
 "The IBAN you entered is incomplete." = "Angivet IBAN är ofullständigt.";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Angivet IBAN är ogiltigt, \"%@\" är inte en giltig landskod.";
@@ -331,6 +343,8 @@
 "The provided verification code has expired." = "Den angivna verifieringskoden har förfallit.";
 
 "The provided verification code is incorrect." = "Den angivna verifieringskoden är felaktig.";
+
+"This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Detta är ett internationellt köp och exkluderar en IOF-avgift på 3,5 %. Genom att fortsätta bekräftar och godkänner du <terms>Ebanx villkor</terms>.";
 
 "This is your default" = "Detta är din standardbetalningsmetod";
 

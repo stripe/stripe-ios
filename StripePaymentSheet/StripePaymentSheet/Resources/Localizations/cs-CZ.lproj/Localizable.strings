@@ -46,6 +46,8 @@
 
 "Buy now or pay later with Klarna" = "Koupit nyní nebo zaplatit pomocí Klarna";
 
+"By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "Potvrzením platby přes službu NICEPAY povolujete %@ strhávat prostřednictvím tohoto způsobu platby budoucí platby v souladu s jejími podmínkami.";
+
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Potvrzením platby prostřednictvím služby PayPal povolujete, aby společnost %@ účtovala z vašeho účtu PayPal budoucí platby v souladu s jejich podmínkami.";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Pokračováním v Amazon Pay povolujete společnosti %@, aby v souladu se svými podmínkami účtovala na váš účet Revolut Pay budoucí platby.";
@@ -109,6 +111,8 @@
 "Close card scanner" = "Zavřít skener karty";
 
 "Code sent" = "Kód odeslán";
+
+"Complete the payment using Pix to finish the purchase." = "Dokončete platbu pomocí Pix, abyste nákup dokončili.";
 
 "Confirm" = "Potvrdit";
 
@@ -192,6 +196,10 @@
 
 "Name on card" = "Jméno na kartě";
 
+"Naver Pay Card" = "Karta Naver Pay";
+
+"Naver Pay Money/Point" = "Naver Pay Money/Point";
+
 "New card" = "Nová karta";
 
 "New payment method" = "Nová platební metoda";
@@ -248,8 +256,6 @@
 
 "Point the camera at your card." = "Namiřte fotoaparát na kartu.";
 
-"Processing..." = "Zpracování...";
-
 "Przelewy24 Bank" = "Banka Przelewy24";
 
 "Remove %@" = "Odebrat %@";
@@ -288,6 +294,8 @@
 
 "Select card" = "Vybrat kartu";
 
+"Select how you want to pay:" = "Vyberte, jak chcete platit:";
+
 "Select payment method" = "Vybrat způsob platby";
 
 "Select your payment method" = "Vyberte svou platební metodu";
@@ -324,6 +332,10 @@
 
 "Tax" = "Daň";
 
+"Terms and Conditions" = "Smluvní podmínky";
+
+"Terms of Service" = "Podmínky služby";
+
 "The IBAN you entered is incomplete." = "Číslo IBAN, které jste zadali, je neúplné.";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Zadaný IBAN je neplatný,„%@“ není podporovaný kód země.";
@@ -331,6 +343,8 @@
 "The provided verification code has expired." = "Platnost zadaného ověřovacího kódu vypršela.";
 
 "The provided verification code is incorrect." = "Zadaný ověřovací kód není správný.";
+
+"This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Toto je mezinárodní nákup a nezahrnuje 3,5% poplatek IOF. Pokračováním berete na vědomí a souhlasíte <terms>s podmínkami společnosti Ebanx</terms>.";
 
 "This is your default" = "Toto je výchozí nastavení";
 

@@ -345,6 +345,24 @@ extension String.Localized {
         )
     }
 
+    static var korean_payment_method_mandate_text: String {
+        STPLocalizedString(
+            "By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms.",
+            "Korean payment method mandate text"
+        )
+    }
+
+    static var naver_pay_funding_label: String {
+        STPLocalizedString("Select how you want to pay:", "Label for the Naver Pay funding source selector")
+    }
+
+    static var naver_pay_card: String {
+        STPLocalizedString("Naver Pay Card", "Naver Pay card funding source")
+    }
+
+    static var naver_pay_money_point: String {
+        STPLocalizedString("Naver Pay Money/Point", "Naver Pay money or points funding source")
+    }
     static var blik_confirm_payment: String {
         STPLocalizedString("Confirm the payment in your bank's app within %@ to complete the purchase.",
                            "Text for alert message when user needs to confirm payment in their banking app")
@@ -357,6 +375,20 @@ extension String.Localized {
     static var paynow_confirm_payment: String {
         STPLocalizedString("Confirm the payment in your bank or payment app within %@ to complete the purchase.",
                            "Text for alert message when user needs to confirm payment in their banking app")
+    }
+
+    static var pix_international_disclosure: String {
+        STPLocalizedString(
+            "This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>.",
+            "Disclosure for an international Pix payment. The terms tags enclose a link to Ebanx's terms."
+        )
+    }
+
+    static var pix_confirm_payment: String {
+        STPLocalizedString(
+            "Complete the payment using Pix to finish the purchase.",
+            "Instructions shown while waiting for a Pix payment authorization"
+        )
     }
 
     static var mb_way_confirm_payment: String {
@@ -741,6 +773,14 @@ extension String.Localized {
 
     static var user_attestation: String {
         STPLocalizedString("Declarations", "Title label for a screen showing user attestation")
+    }
+
+    static var terms_and_conditions: String {
+        STPLocalizedString("Terms and Conditions", "Title label for a screen showing terms and conditions")
+    }
+
+    static var terms_of_service: String {
+        STPLocalizedString("Terms of Service", "Title label for a screen showing terms of service")
     }
 
     static var accept: String {

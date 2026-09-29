@@ -17,6 +17,7 @@ import UIKit
     @_spi(STP) var isRegistered: Bool { get }
     @_spi(STP) var sessionState: PaymentSheetLinkAccount.SessionState { get }
     @_spi(STP) var consumerSessionClientSecret: String? { get }
+    @_spi(STP) var linkSessionKey: String? { get }
 }
 
 struct LinkPMDisplayDetails {
@@ -118,6 +119,10 @@ struct LinkPMDisplayDetails {
 
     @_spi(STP) public var consumerSessionClientSecret: String? {
         currentSession?.clientSecret
+    }
+
+    @_spi(STP) public var linkSessionKey: String? {
+        currentSession?.linkSessionKey
     }
 
     var hasStartedSMSVerification: Bool {
@@ -246,7 +251,7 @@ struct LinkPMDisplayDetails {
         ) { [weak self] result in
             switch result {
             case .success(let newSession):
-                self?.currentSession = newSession
+                self?.updateCurrentSession(newSession, retainingLinkSessionKeyFrom: session)
                 completion(.success(newSession.hasStartedSMSVerification))
             case .failure(let error):
                 completion(.failure(error))
@@ -282,7 +287,7 @@ struct LinkPMDisplayDetails {
         ) { [weak self] result in
             switch result {
             case .success(let verifiedSession):
-                self?.currentSession = verifiedSession
+                self?.updateCurrentSession(verifiedSession, retainingLinkSessionKeyFrom: session)
                 completion(.success(()))
             case .failure(let error):
                 completion(.failure(error))
@@ -565,7 +570,7 @@ struct LinkPMDisplayDetails {
             requestSurface: requestSurface
         ) { [weak self] result in
             if case .success(let refreshedSession) = result {
-                self?.currentSession = refreshedSession
+                self?.updateCurrentSession(refreshedSession, retainingLinkSessionKeyFrom: session)
             }
             completion(result)
         }
@@ -614,6 +619,13 @@ extension PaymentSheetLinkAccount: Equatable {
 private extension PaymentSheetLinkAccount {
 
     typealias CompletionBlock<T> = (Result<T, Error>) -> Void
+
+    func updateCurrentSession(_ newSession: ConsumerSession, retainingLinkSessionKeyFrom previousSession: ConsumerSession?) {
+        if newSession.linkSessionKey?.isEmpty ?? true {
+            newSession.linkSessionKey = previousSession?.linkSessionKey
+        }
+        currentSession = newSession
+    }
 
     /// Attempts attempts a request using apiCall. If the session
     /// is invalid, refresh it and re-attempt the apiCall.

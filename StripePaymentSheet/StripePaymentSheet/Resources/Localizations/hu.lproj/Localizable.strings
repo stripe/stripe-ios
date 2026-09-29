@@ -46,6 +46,8 @@
 
 "Buy now or pay later with Klarna" = "Vegye meg most, vagy fizessen később Klarnával";
 
+"By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "A NICEPAY segítségével történő fizetés megerősítésével Ön engedélyezi %@ számára, hogy a feltételeinek megfelelően a jövőbeli fizetésekhez megterhelje ezt a fizetési módot.";
+
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "A fizetés megerősítésével a PayPalon engedélyezi, hogy a(z) %@ a feltételeinek megfelelően a jövőbeni kifizetésekkel megterhelje a PayPal számláját.";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Az Amazon Payre történő továbblépéssel engedélyezi, hogy a(z) %@ a feltételeinek megfelelően a jövőbeni kifizetésekkel megterhelje az Amazon Pay-számláját.";
@@ -109,6 +111,8 @@
 "Close card scanner" = "Kártyabeolvasó bezárása";
 
 "Code sent" = "Kód elküldve";
+
+"Complete the payment using Pix to finish the purchase." = "A vásárlás befejezéséhez teljesítse a fizetést a Pix használatával.";
 
 "Confirm" = "Megerősítés";
 
@@ -192,6 +196,10 @@
 
 "Name on card" = "A kártyán szereplő név";
 
+"Naver Pay Card" = "Naver Pay kártya";
+
+"Naver Pay Money/Point" = "Naver Pay Money/Point";
+
 "New card" = "Új kártya";
 
 "New payment method" = "Új fizetési mód";
@@ -248,8 +256,6 @@
 
 "Point the camera at your card." = "Tegye a kártyát a kamera elé.";
 
-"Processing..." = "Feldolgozás...";
-
 "Przelewy24 Bank" = "Przelewy24 Bank";
 
 "Remove %@" = "%@ eltávolítása";
@@ -288,6 +294,8 @@
 
 "Select card" = "Kártya kiválasztása";
 
+"Select how you want to pay:" = "Válassza ki, hogyan szeretne fizetni:";
+
 "Select payment method" = "Fizetési mód választása";
 
 "Select your payment method" = "Fizetési mód kiválasztása";
@@ -324,6 +332,10 @@
 
 "Tax" = "Adó";
 
+"Terms and Conditions" = "Feltételek";
+
+"Terms of Service" = "Szolgáltatási feltételek";
+
 "The IBAN you entered is incomplete." = "A beírt IBAN-szám hiányos.";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "A beírt IBAN-szám érvénytelen: „%@” nem támogatott országkód.";
@@ -331,6 +343,8 @@
 "The provided verification code has expired." = "A megadott ellenőrző kód lejárt.";
 
 "The provided verification code is incorrect." = "A megadott ellenőrző kód hibás.";
+
+"This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Ez egy nemzetközi vásárlás, amely nem tartalmazza a 3,5%-os IOF díjat. A folytatással Ön tudomásul veszi és elfogadja <terms>az Ebanx feltételeit<terms>.";
 
 "This is your default" = "Ez az alapértelmezett";
 
