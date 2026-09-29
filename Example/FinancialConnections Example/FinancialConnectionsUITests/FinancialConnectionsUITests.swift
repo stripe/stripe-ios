@@ -10,6 +10,10 @@ import XCTest
 
 final class FinancialConnectionsUITests: XCTestCase {
 
+    func testFCStabilityCITriggerDemo() {
+        XCTFail("Intentional failure to verify FC stability tests run for relevant pull requests")
+    }
+
     override func setUpWithError() throws {
         try super.setUpWithError()
         continueAfterFailure = false
