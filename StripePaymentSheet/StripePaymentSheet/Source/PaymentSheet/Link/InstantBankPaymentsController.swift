@@ -553,6 +553,7 @@ import UIKit
                         .routeDeferredIntentConfirmation(
                             confirmType: .saved(paymentMethod, paymentOptions: nil, clientAttributionMetadata: nil, radarOptions: nil), // InstantBankPaymentsController is standalone and isn't a part of MPE, so it doesn't generate a client_session_id and doesn't have an elements session object so we don't want to send CAM here
                             configuration: configuration,
+                            customerProvider: CustomerProvider(customer: configuration.customer),
                             intentConfig: intentConfiguration,
                             authenticationContext: authenticationContext,
                             paymentHandler: STPPaymentHandler.shared(),

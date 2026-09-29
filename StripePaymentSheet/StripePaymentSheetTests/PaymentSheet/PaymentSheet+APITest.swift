@@ -108,6 +108,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
 
                         PaymentSheet.confirm(
                             configuration: self.configuration,
+                            customerProvider: CustomerProvider(customer: self.configuration.customer),
                             authenticationContext: self,
                             intent: loadResult.intent,
                             elementsSession: loadResult.elementsSession,
@@ -192,7 +193,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
                     return
                 }
 
-                PaymentSheet.confirm(configuration: self.configuration,
+                PaymentSheet.confirm(configuration: self.configuration, customerProvider: CustomerProvider(customer: self.configuration.customer),
                                      authenticationContext: self,
                                      intent: .deferredIntent(intentConfig: intentConfig),
                                      elementsSession: loadResult.elementsSession,
@@ -257,7 +258,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
                     return
                 }
 
-                PaymentSheet.confirm(configuration: self.configuration,
+                PaymentSheet.confirm(configuration: self.configuration, customerProvider: CustomerProvider(customer: self.configuration.customer),
                                      authenticationContext: self,
                                      intent: .deferredIntent(intentConfig: intentConfig),
                                      elementsSession: loadResult.elementsSession,
@@ -310,6 +311,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
                 // 2. Confirm with saved card
                 PaymentSheet.confirm(
                     configuration: self.configuration,
+                    customerProvider: CustomerProvider(customer: self.configuration.customer),
                     authenticationContext: self,
                     intent: loadResult.intent,
                     elementsSession: loadResult.elementsSession,
@@ -377,6 +379,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
                         // 2. Confirm the intent with a new card
                         PaymentSheet.confirm(
                             configuration: configuration,
+                            customerProvider: CustomerProvider(customer: configuration.customer),
                             authenticationContext: self,
                             intent: loadResult.intent,
                             elementsSession: loadResult.elementsSession,
@@ -456,6 +459,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
                 // 2. Confirm the intent with a new card
                 PaymentSheet.confirm(
                     configuration: configuration,
+                    customerProvider: CustomerProvider(customer: configuration.customer),
                     authenticationContext: self,
                     intent: loadResult.intent,
                     elementsSession: loadResult.elementsSession,
@@ -532,6 +536,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
                 // 2. Confirm the intent with a new card
                 PaymentSheet.confirm(
                     configuration: configuration,
+                    customerProvider: CustomerProvider(customer: configuration.customer),
                     authenticationContext: self,
                     intent: .deferredIntent(intentConfig: intentConfig),
                     elementsSession: loadResult.elementsSession,
@@ -598,6 +603,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
                 // 2. Confirm the intent with a new card
                 PaymentSheet.confirm(
                     configuration: configuration,
+                    customerProvider: CustomerProvider(customer: configuration.customer),
                     authenticationContext: self,
                     intent: .deferredIntent(intentConfig: intentConfig),
                     elementsSession: loadResult.elementsSession,
@@ -880,6 +886,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         configuration.customer = .init(id: "", ephemeralKeySecret: "")
         PaymentSheet.confirm(
             configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer),
             authenticationContext: self,
             intent: intent,
             elementsSession: ._testCardValue(),
@@ -944,6 +951,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         }
         PaymentSheet.confirm(
             configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer),
             authenticationContext: self,
             intent: .deferredIntent(intentConfig: intentConfig),
             elementsSession: ._testCardValue(),
@@ -977,6 +985,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         }
         PaymentSheet.confirm(
             configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer),
             authenticationContext: self,
             intent: .deferredIntent(intentConfig: intentConfig),
             elementsSession: ._testCardValue(),
@@ -1010,6 +1019,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         }
         PaymentSheet.confirm(
             configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer),
             authenticationContext: self,
             intent: .deferredIntent(intentConfig: intentConfig),
             elementsSession: ._testCardValue(),
@@ -1208,7 +1218,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         var config = configuration
         // ...PaymentSheet should set shipping params on /confirm
         XCTAssertNotNil(PaymentSheet.makeShippingParams(for: pi, configuration: config))
-        XCTAssertNotNil(PaymentSheet.makePaymentIntentParams(confirmPaymentMethodType: .saved(STPFixtures.paymentMethod(), paymentOptions: nil, clientAttributionMetadata: nil, radarOptions: nil), paymentIntent: pi, configuration: config).shipping)
+        XCTAssertNotNil(PaymentSheet.makePaymentIntentParams(confirmPaymentMethodType: .saved(STPFixtures.paymentMethod(), paymentOptions: nil, clientAttributionMetadata: nil, radarOptions: nil), paymentIntent: pi, configuration: config, customerProvider: CustomerProvider(customer: config.customer)).shipping)
 
         // However, if the PI and config have the same shipping...
         config.shippingDetails = {
@@ -1227,7 +1237,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         }
         // ...PaymentSheet should not set shipping params on /confirm
         XCTAssertNil(PaymentSheet.makeShippingParams(for: pi, configuration: config))
-        XCTAssertNil(PaymentSheet.makePaymentIntentParams(confirmPaymentMethodType: .saved(STPFixtures.paymentMethod(), paymentOptions: nil, clientAttributionMetadata: nil, radarOptions: nil), paymentIntent: pi, configuration: config).shipping)
+        XCTAssertNil(PaymentSheet.makePaymentIntentParams(confirmPaymentMethodType: .saved(STPFixtures.paymentMethod(), paymentOptions: nil, clientAttributionMetadata: nil, radarOptions: nil), paymentIntent: pi, configuration: config, customerProvider: CustomerProvider(customer: config.customer)).shipping)
     }
 
     /// Setting SFU to `true` when a customer is set should set the parameter to `off_session`.
@@ -1237,7 +1247,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         paymentIntentParams.paymentMethodOptions?.setSetupFutureUsageIfNecessary(
             true,
             paymentMethodType: .card,
-            customer: .init(id: "", ephemeralKeySecret: "")
+            customerProvider: CustomerProvider(customer: .init(id: "", ephemeralKeySecret: ""))
         )
 
         let params = STPFormEncoder.dictionary(forObject: paymentIntentParams)
@@ -1260,7 +1270,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         paymentIntentParams.paymentMethodOptions?.setSetupFutureUsageIfNecessary(
             false,
             paymentMethodType: .card,
-            customer: .init(id: "", ephemeralKeySecret: "")
+            customerProvider: CustomerProvider(customer: .init(id: "", ephemeralKeySecret: ""))
         )
 
         let params = STPFormEncoder.dictionary(forObject: paymentIntentParams)
@@ -1283,7 +1293,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         paymentIntentParams.paymentMethodOptions?.setSetupFutureUsageIfNecessary(
             false,
             paymentMethodType: .card,
-            customer: nil
+            customerProvider: CustomerProvider(customer: nil)
         )
 
         let params = STPFormEncoder.dictionary(forObject: paymentIntentParams)
@@ -1297,7 +1307,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         paymentIntentParams.paymentMethodOptions?.setSetupFutureUsageIfNecessary(
             false,
             paymentMethodType: .card,
-            customer: nil
+            customerProvider: CustomerProvider(customer: nil)
         )
 
         let params = STPFormEncoder.dictionary(forObject: paymentIntentParams)
@@ -1317,7 +1327,8 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
 
         let pi_params = PaymentSheet.makePaymentIntentParams(confirmPaymentMethodType: confirmType,
                                                              paymentIntent: STPFixtures.paymentIntent(),
-                                                             configuration: configuration)
+                                                             configuration: configuration,
+                                                             customerProvider: CustomerProvider(customer: configuration.customer))
         XCTAssertEqual(pi_params.paymentMethodOptions?.cardOptions?.cvc, "123")
 
     }
@@ -1338,7 +1349,8 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
             let pi_params = PaymentSheet.makePaymentIntentParams(
                 confirmPaymentMethodType: confirmType,
                 paymentIntent: STPFixtures.paymentIntent(),
-                configuration: configuration
+                configuration: configuration,
+                customerProvider: CustomerProvider(customer: configuration.customer)
             )
             XCTAssertEqual(pi_params.paymentMethodType, .card)
             XCTAssertEqual(pi_params.returnURL, configuration.returnURL)
@@ -1401,7 +1413,8 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
             let params_for_pi_without_sfu = PaymentSheet.makePaymentIntentParams(
                 confirmPaymentMethodType: confirmType,
                 paymentIntent: STPFixtures.makePaymentIntent(),
-                configuration: configuration
+                configuration: configuration,
+                customerProvider: CustomerProvider(customer: configuration.customer)
             )
             // ...shouldn't have mandate data
             XCTAssertNil(params_for_pi_without_sfu.mandateData)
@@ -1409,7 +1422,8 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
             let params_for_pi_with_sfu_off_session = PaymentSheet.makePaymentIntentParams(
                 confirmPaymentMethodType: confirmType,
                 paymentIntent: STPFixtures.makePaymentIntent(setupFutureUsage: .offSession),
-                configuration: configuration
+                configuration: configuration,
+                customerProvider: CustomerProvider(customer: configuration.customer)
             )
             // ...should have mandate data
             XCTAssertNotNil(params_for_pi_with_sfu_off_session.mandateData)
@@ -1418,7 +1432,8 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
             let params_for_pi_with_sfu_on_session = PaymentSheet.makePaymentIntentParams(
                 confirmPaymentMethodType: confirmType,
                 paymentIntent: STPFixtures.makePaymentIntent(setupFutureUsage: .onSession),
-                configuration: configuration
+                configuration: configuration,
+                customerProvider: CustomerProvider(customer: configuration.customer)
             )
             // ...shouldn't have mandate data
             // ...should have mandate data
@@ -1437,7 +1452,8 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
             let params_for_pi_with_pmo_sfu_off_session = PaymentSheet.makePaymentIntentParams(
                 confirmPaymentMethodType: confirmType,
                 paymentIntent: STPFixtures.makePaymentIntent(paymentMethodOptions: STPPaymentMethodOptions(usBankAccount: nil, card: nil, allResponseFields: ["paypal": ["setup_future_usage": "off_session"]])),
-                configuration: configuration
+                configuration: configuration,
+                customerProvider: CustomerProvider(customer: configuration.customer)
             )
             // ...should have mandate data
             XCTAssertNotNil(params_for_pi_with_pmo_sfu_off_session.mandateData)
@@ -1445,7 +1461,8 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
             let params_for_pi_with_pmo_sfu_on_session = PaymentSheet.makePaymentIntentParams(
                 confirmPaymentMethodType: confirmType,
                 paymentIntent: STPFixtures.makePaymentIntent(paymentMethodOptions: STPPaymentMethodOptions(usBankAccount: nil, card: nil, allResponseFields: ["paypal": ["setup_future_usage": "on_session"]])),
-                configuration: configuration
+                configuration: configuration,
+                customerProvider: CustomerProvider(customer: configuration.customer)
             )
             // ...shouldn't have mandate data
             XCTAssertNotNil(params_for_pi_with_pmo_sfu_on_session.mandateData)
@@ -1453,7 +1470,8 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
             let params_for_pi_with_top_level_sfu_pmo_none = PaymentSheet.makePaymentIntentParams(
                 confirmPaymentMethodType: confirmType,
                 paymentIntent: STPFixtures.makePaymentIntent(setupFutureUsage: .offSession, paymentMethodOptions: STPPaymentMethodOptions(usBankAccount: nil, card: nil, allResponseFields: ["paypal": ["setup_future_usage": "none"]])),
-                configuration: configuration
+                configuration: configuration,
+                customerProvider: CustomerProvider(customer: configuration.customer)
             )
             // ...shouldn't have mandate data
             XCTAssertNil(params_for_pi_with_top_level_sfu_pmo_none.mandateData)
@@ -1478,12 +1496,14 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         let regularPaymentIntentParams = PaymentSheet.makePaymentIntentParams(
             confirmPaymentMethodType: confirmType,
             paymentIntent: STPFixtures.makePaymentIntent(),
-            configuration: configuration
+            configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer)
         )
         let futureUsagePaymentIntentParams = PaymentSheet.makePaymentIntentParams(
             confirmPaymentMethodType: confirmType,
             paymentIntent: STPFixtures.makePaymentIntent(setupFutureUsage: .offSession),
-            configuration: configuration
+            configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer)
         )
         let paymentMethodOptionsFutureUsagePaymentIntentParams = PaymentSheet.makePaymentIntentParams(
             confirmPaymentMethodType: confirmType,
@@ -1494,7 +1514,8 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
                     allResponseFields: ["alipay": ["setup_future_usage": "off_session"]]
                 )
             ),
-            configuration: configuration
+            configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer)
         )
         let setupIntentParams = PaymentSheet.makeSetupIntentParams(
             confirmPaymentMethodType: confirmType,
@@ -1523,12 +1544,14 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         let regularPaymentIntentParams = PaymentSheet.makePaymentIntentParams(
             confirmPaymentMethodType: confirmType,
             paymentIntent: STPFixtures.makePaymentIntent(),
-            configuration: configuration
+            configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer)
         )
         let futureUsagePaymentIntentParams = PaymentSheet.makePaymentIntentParams(
             confirmPaymentMethodType: confirmType,
             paymentIntent: STPFixtures.makePaymentIntent(setupFutureUsage: .offSession),
-            configuration: configuration
+            configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer)
         )
         let paymentMethodOptionsFutureUsagePaymentIntentParams = PaymentSheet.makePaymentIntentParams(
             confirmPaymentMethodType: confirmType,
@@ -1539,7 +1562,8 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
                     allResponseFields: ["kakao_pay": ["setup_future_usage": "off_session"]]
                 )
             ),
-            configuration: configuration
+            configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer)
         )
         let setupIntentParams = PaymentSheet.makeSetupIntentParams(
             confirmPaymentMethodType: confirmType,
@@ -1568,12 +1592,14 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         let regularPaymentIntentParams = PaymentSheet.makePaymentIntentParams(
             confirmPaymentMethodType: confirmType,
             paymentIntent: STPFixtures.makePaymentIntent(),
-            configuration: configuration
+            configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer)
         )
         let futureUsagePaymentIntentParams = PaymentSheet.makePaymentIntentParams(
             confirmPaymentMethodType: confirmType,
             paymentIntent: STPFixtures.makePaymentIntent(setupFutureUsage: .offSession),
-            configuration: configuration
+            configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer)
         )
         let paymentMethodOptionsFutureUsagePaymentIntentParams = PaymentSheet.makePaymentIntentParams(
             confirmPaymentMethodType: confirmType,
@@ -1584,7 +1610,8 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
                     allResponseFields: ["gopay": ["setup_future_usage": "off_session"]]
                 )
             ),
-            configuration: configuration
+            configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer)
         )
         // Then
         XCTAssertNil(regularPaymentIntentParams.mandateData)
@@ -1605,12 +1632,14 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         let regularPaymentIntentParams = PaymentSheet.makePaymentIntentParams(
             confirmPaymentMethodType: confirmType,
             paymentIntent: STPFixtures.makePaymentIntent(),
-            configuration: configuration
+            configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer)
         )
         let futureUsagePaymentIntentParams = PaymentSheet.makePaymentIntentParams(
             confirmPaymentMethodType: confirmType,
             paymentIntent: STPFixtures.makePaymentIntent(setupFutureUsage: .offSession),
-            configuration: configuration
+            configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer)
         )
         let paymentMethodOptionsFutureUsagePaymentIntentParams = PaymentSheet.makePaymentIntentParams(
             confirmPaymentMethodType: confirmType,
@@ -1621,7 +1650,8 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
                     allResponseFields: ["naver_pay": ["setup_future_usage": "off_session"]]
                 )
             ),
-            configuration: configuration
+            configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer)
         )
         let setupIntentParams = PaymentSheet.makeSetupIntentParams(
             confirmPaymentMethodType: confirmType,
@@ -1650,12 +1680,14 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         let regularPaymentIntentParams = PaymentSheet.makePaymentIntentParams(
             confirmPaymentMethodType: confirmType,
             paymentIntent: STPFixtures.makePaymentIntent(),
-            configuration: configuration
+            configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer)
         )
         let futureUsagePaymentIntentParams = PaymentSheet.makePaymentIntentParams(
             confirmPaymentMethodType: confirmType,
             paymentIntent: STPFixtures.makePaymentIntent(setupFutureUsage: .offSession),
-            configuration: configuration
+            configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer)
         )
         let paymentMethodOptionsFutureUsagePaymentIntentParams = PaymentSheet.makePaymentIntentParams(
             confirmPaymentMethodType: confirmType,
@@ -1666,7 +1698,8 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
                     allResponseFields: ["kr_card": ["setup_future_usage": "off_session"]]
                 )
             ),
-            configuration: configuration
+            configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer)
         )
         let setupIntentParams = PaymentSheet.makeSetupIntentParams(
             confirmPaymentMethodType: confirmType,
@@ -1771,6 +1804,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         CustomerPaymentOption.setDefaultPaymentMethod(.stripeId("old_default_value"), forCustomer: configuration.customer?.id)
         PaymentSheet.confirm(
             configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer),
             authenticationContext: self,
             intent: intent,
             elementsSession: elementsSession,

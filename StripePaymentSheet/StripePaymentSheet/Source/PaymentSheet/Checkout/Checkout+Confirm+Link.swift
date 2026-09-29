@@ -144,6 +144,7 @@ extension CheckoutController {
                         parameters: LinkConfirmationParameters(
                             confirmOption: confirmOption,
                             configuration: configuration,
+                            customerProvider: parameters.customerProvider,
                             confirmationChallenge: confirmationChallenge,
                             analyticsHelper: parameters.analyticsHelper,
                             authenticationContext: linkAuthenticationContext,
@@ -158,6 +159,7 @@ extension CheckoutController {
             PaymentSheet.confirmLinkPaymentOption(
                 confirmOption: parameters.confirmOption,
                 configuration: configuration,
+                customerProvider: parameters.customerProvider,
                 authenticationContext: parameters.authenticationContext,
                 intent: .checkout(checkoutSession),
                 elementsSession: elementsSession,

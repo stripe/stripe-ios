@@ -46,6 +46,7 @@ final class PaymentSheetCustomPaymentMethodTests: XCTestCase {
         // Confirm the intent with the form details
         PaymentSheet.confirm(
             configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer),
             authenticationContext: self,
             intent: intent,
             elementsSession: ._testCardValue(),
@@ -128,6 +129,7 @@ final class PaymentSheetCustomPaymentMethodTests: XCTestCase {
         }
         PaymentSheet.confirm(
             configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer),
             authenticationContext: self,
             intent: intent,
             elementsSession: ._testCardValue(),
@@ -155,6 +157,7 @@ final class PaymentSheetCustomPaymentMethodTests: XCTestCase {
             }))
             PaymentSheet.confirm(
                 configuration: configuration,
+                customerProvider: CustomerProvider(customer: configuration.customer),
                 authenticationContext: self,
                 intent: intent,
                 elementsSession: ._testCardValue(),
