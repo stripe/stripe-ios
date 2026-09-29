@@ -225,6 +225,7 @@ final class CheckoutCartViewController: UIViewController {
                 expressCheckoutElementConfiguration.linkConfiguration = ExpressCheckoutElement.LinkConfiguration(
                     display: expressCheckoutElementSettings.linkDisplay
                 )
+                expressCheckoutElementConfiguration.paymentMethodOrder = expressCheckoutElementSettings.paymentMethodOrder.paymentMethodOrder
                 configuration.expressCheckoutElement = expressCheckoutElementConfiguration
             }
             if adaptivePricing {
@@ -290,7 +291,8 @@ final class CheckoutCartViewController: UIViewController {
         contentStackView.addArrangedSubview(makeLineItemsSection(session: session))
         contentStackView.addArrangedSubview(makeEmailSection(session: session))
 
-        if expressCheckoutElementSettings.isEnabled {
+        if expressCheckoutElementSettings.isEnabled,
+           !session.availableExpressCheckoutPaymentMethods.isEmpty {
             contentStackView.addArrangedSubview(
                 makeSection(title: "Express Checkout", content: checkout.getExpressCheckoutElement().uiView)
             )

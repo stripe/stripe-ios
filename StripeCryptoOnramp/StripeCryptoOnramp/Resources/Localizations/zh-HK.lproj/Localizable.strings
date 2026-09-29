@@ -1,5 +1,7 @@
 "Debit cards are most likely to be accepted." = "扣賬卡最有可能獲接受。";
 
+"Document uploaded successfully" = "文件已成功上傳";
+
 "Please try again later." = "請稍後重試。";
 
 "Submitted for review" = "已提交審查";
@@ -22,8 +24,10 @@
 
 "We couldn't verify ownership of this wallet. Please try again." = "我們無法核實此錢包的所有權。請重試。";
 
-"We’re required to confirm your address to enable spending over %@." = "我們需要確認閣下的地址，才能啟用超過 %@ 的消費。";
+"We may request proof of address for larger transactions." = "對於較大額的交易，我們可能會請求提供地址證明。";
 
-"We’re required to understand where your funds come from to enable spending over %@." = "我們需要了解閣下的資金來源，才能啟用超過 %@ 的消費。";
+"We may request source of funds for larger transactions." = "對於較大額的交易，我們可能會請求提供資金來源證明。";
 
 "We’re reviewing your documents. We’ll let you know when verification is complete." = "我們正在審查閣下的文件。核實完成後，我們會通知閣下。";
+
+"You can continue while we verify your document in the background." = "在我們於後台核實閣下的文件時，閣下可以繼續操作。";

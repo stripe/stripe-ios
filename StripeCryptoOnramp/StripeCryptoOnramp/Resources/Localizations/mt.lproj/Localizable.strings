@@ -1,5 +1,7 @@
 "Debit cards are most likely to be accepted." = "Il-karti tad-debitu huma l-aktar probabbli li jiġu aċċettati.";
 
+"Document uploaded successfully" = "Dokument ittella' b'suċċess";
+
 "Please try again later." = "Jekk jogħġbok erġa’ pprova aktar tard.";
 
 "Submitted for review" = "Sottomess għar-reviżjoni";
@@ -22,8 +24,10 @@
 
 "We couldn't verify ownership of this wallet. Please try again." = "Ma stajniex nivverifikaw is-sjieda ta' din il-kartiera. Jekk jogħġbok erġa' pprova.";
 
-"We’re required to confirm your address to enable spending over %@." = "Aħna mitluba nikkonfermaw l-indirizz tiegħek biex nippermettu l-infiq ta' aktar minn %@.";
+"We may request proof of address for larger transactions." = "Jaf nitolbu prova tal-indirizz għal tranżazzjonijiet akbar.";
 
-"We’re required to understand where your funds come from to enable spending over %@." = "Aħna mitluba nifhmu minn fejn ġejjin il-fondi tiegħek biex nippermettu l-infiq ta' aktar minn %@.";
+"We may request source of funds for larger transactions." = "Jaf nitolbu sors ta' fondi għal tranżazzjonijiet akbar.";
 
 "We’re reviewing your documents. We’ll let you know when verification is complete." = "Qegħdin nirrevedu d-dokumenti tiegħek. Se ninfurmawk meta titlesta l-verifika.";
+
+"You can continue while we verify your document in the background." = "Tista' tkompli waqt li nivverifikaw id-dokument tiegħek fl-isfond.";

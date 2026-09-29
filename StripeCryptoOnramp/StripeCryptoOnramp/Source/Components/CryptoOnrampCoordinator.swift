@@ -938,7 +938,12 @@ private extension CryptoOnrampCoordinator {
                 case .canceled:
                     continuation.resume(returning: .canceled)
                 case .failed:
-                    continuation.resume(throwing: error ?? CheckoutError.paymentFailed)
+                    continuation.resume(
+                        throwing: Self.checkoutError(
+                            error,
+                            paymentIntent: paymentIntent
+                        )
+                    )
                 @unknown default:
                     continuation.resume(throwing: CheckoutError.unexpectedError)
                 }

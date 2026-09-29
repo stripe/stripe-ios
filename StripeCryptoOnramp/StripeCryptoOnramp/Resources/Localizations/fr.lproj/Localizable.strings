@@ -1,5 +1,7 @@
 "Debit cards are most likely to be accepted." = "Les cartes de débit sont les plus susceptibles d’être acceptées.";
 
+"Document uploaded successfully" = "Document téléversé avec succès";
+
 "Please try again later." = "Veuillez réessayer plus tard.";
 
 "Submitted for review" = "Envoyé pour vérification";
@@ -22,8 +24,10 @@
 
 "We couldn't verify ownership of this wallet. Please try again." = "Nous n’avons pas pu vérifier que ce wallet vous appartient. Veuillez réessayer.";
 
-"We’re required to confirm your address to enable spending over %@." = "Nous devons confirmer votre adresse pour autoriser les dépenses supérieures à %@.";
+"We may request proof of address for larger transactions." = "Nous pouvons vous demander un justificatif de domicile pour les transactions d’un montant élevé.";
 
-"We’re required to understand where your funds come from to enable spending over %@." = "Nous devons vérifier la provenance de vos fonds pour autoriser les dépenses supérieures à %@.";
+"We may request source of funds for larger transactions." = "Nous pouvons vous demander un justificatif de l’origine des fonds pour les transactions d’un montant élevé.";
 
 "We’re reviewing your documents. We’ll let you know when verification is complete." = "Nous examinons vos documents. Nous vous informerons une fois la vérification terminée.";
+
+"You can continue while we verify your document in the background." = "Vous pouvez poursuivre l’exécution des transactions pendant que nous vérifions votre document en arrière-plan.";

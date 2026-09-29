@@ -13,6 +13,7 @@ extension CheckoutPlayground {
         var isEnabled = true
         var applePayDisplay: ExpressCheckoutElement.ApplePayConfiguration.Display = .automatic
         var linkDisplay: ExpressCheckoutElement.LinkConfiguration.Display = .automatic
+        var paymentMethodOrder: ExpressCheckoutPaymentMethodOrder = .dynamic
     }
 
     @MainActor

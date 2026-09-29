@@ -1,5 +1,7 @@
 "Debit cards are most likely to be accepted." = "A legnagyobb valószínűséggel a betéti kártyák lesznek elfogadva.";
 
+"Document uploaded successfully" = "Dokumentum sikeresen feltöltve";
+
 "Please try again later." = "Kérjük, próbálja újra később.";
 
 "Submitted for review" = "Felülvizsgálatra beküldve";
@@ -22,8 +24,10 @@
 
 "We couldn't verify ownership of this wallet. Please try again." = "Nem tudtuk ellenőrizni ennek a pénztárcának a tulajdonjogát. Kérjük, próbálja újra.";
 
-"We’re required to confirm your address to enable spending over %@." = "A(z) %@ feletti költés engedélyezéséhez meg kell erősítenünk a címét.";
+"We may request proof of address for larger transactions." = "Nagyobb tranzakciók esetén lakcímigazolást kérhetünk.";
 
-"We’re required to understand where your funds come from to enable spending over %@." = "A(z) %@ feletti költés engedélyezéséhez meg kell értenünk, honnan származnak az alapjai.";
+"We may request source of funds for larger transactions." = "Nagyobb tranzakciók esetén kérhetjük az alapok forrásának megadását.";
 
 "We’re reviewing your documents. We’ll let you know when verification is complete." = "Vizsgáljuk a dokumentumait. Értesítjük, amint az ellenőrzés befejeződött.";
+
+"You can continue while we verify your document in the background." = "Folytathatja, amíg a háttérben ellenőrizzük a dokumentumot.";

@@ -17,8 +17,17 @@ struct Typography {
     /// Body/XLarge: 18-point regular text with a 28-point target line height.
     static let bodyExtraLarge = Typography(font: .systemFont(ofSize: 18), lineHeight: 28, relativeTo: .body)
 
+    /// Body/Large: 16-point regular text with a 24-point target line height.
+    static let bodyLarge = Typography(font: .systemFont(ofSize: 16), lineHeight: 24, relativeTo: .body)
+
     /// Body/Large Emphasized: 16-point medium text with a 24-point target line height.
     static let bodyLargeEmphasized = Typography(font: .systemFont(ofSize: 16, weight: .medium), lineHeight: 24, relativeTo: .body)
+
+    /// Body/Medium: 14-point regular text with a 20-point target line height.
+    static let bodyMedium = Typography(font: .systemFont(ofSize: 14), lineHeight: 20, relativeTo: .subheadline)
+
+    /// Body/Small: 12-point regular text with a 16-point target line height.
+    static let bodySmall = Typography(font: .systemFont(ofSize: 12), lineHeight: 16, relativeTo: .caption)
 
     /// The base font before Dynamic Type scaling.
     let font: UIFont

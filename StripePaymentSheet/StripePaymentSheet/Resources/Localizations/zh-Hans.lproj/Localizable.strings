@@ -112,6 +112,8 @@
 
 "Code sent" = "验证码已发送";
 
+"Complete the payment using Pix to finish the purchase." = "使用 Pix 完成付款即可完成购买。";
+
 "Confirm" = "确定";
 
 "Confirm payment details" = "确认支付详情";
@@ -341,6 +343,8 @@
 "The provided verification code has expired." = "提供的验证码已过期。";
 
 "The provided verification code is incorrect." = "提供的验证码不正确。";
+
+"This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "此为国际购买，不含 3.5% 的 IOF 费用。继续购买即表示您承认并接受 <terms>Ebanx 的条款和条件</terms>。";
 
 "This is your default" = "这是您的默认地址";
 

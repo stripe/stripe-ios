@@ -413,7 +413,10 @@ final class PlaygroundViewModel: ObservableObject {
     private func setupStandalone() {
         switch playgroundConfiguration.preCollectedConsentMode {
         case .off:
-            launchStandalone(evidence: nil, accountHolder: nil)
+            launchSession(
+                configuration: playgroundConfiguration.configurationDictionary,
+                evidence: nil
+            )
         case .manual:
             launchStandalone(evidence: manualEvidence, accountHolder: manualAccountHolder)
         case .guided:
@@ -508,6 +511,26 @@ final class PlaygroundViewModel: ObservableObject {
             }
             self.isLoading = false
             var events: [String] = []
+            if evidence == nil {
+                PresentFinancialConnectionsSheetWithoutPreCollectedConsent(
+                    useCase: self.playgroundConfiguration.useCase,
+                    stripeAccount: self.playgroundConfiguration.merchant.stripeAccount,
+                    setupPlaygroundResponseJSON: response,
+                    style: self.playgroundConfiguration.style,
+                    linkBrand: self.playgroundConfiguration.linkBrand,
+                    onEvent: { event in
+                        if self.liveEvents.wrappedValue {
+                            BannerHelper.shared.showBanner(
+                                with: "\(event.name.rawValue); \(event.metadata.dictionary)",
+                                for: 3.0
+                            )
+                        }
+                        events.append(event.name.rawValue)
+                    },
+                    completionHandler: { result in self.handleHostControllerResult(result, events: events) }
+                )
+                return
+            }
             PresentFinancialConnectionsSheet(
                 useCase: self.playgroundConfiguration.useCase,
                 stripeAccount: self.playgroundConfiguration.merchant.stripeAccount,
@@ -526,6 +549,49 @@ final class PlaygroundViewModel: ObservableObject {
                 },
                 completionHandler: { result in self.handleSessionResult(result, events: events) }
             )
+        }
+    }
+
+    private func handleHostControllerResult(
+        _ result: HostControllerResult,
+        events: [String]
+    ) {
+        switch result {
+        case .completed(let flow):
+            switch flow {
+            case .financialConnections(let session):
+                handleSessionResult(.completed(session: session), events: events)
+            case .instantDebits(let linkedBank):
+                let sessionId = linkedBank.linkAccountSessionId ?? "N/a"
+                let bankAccount: String
+                if let bankName = linkedBank.bankName, let last4 = linkedBank.last4 {
+                    bankAccount = "\(bankName) ....\(last4)"
+                } else {
+                    bankAccount = "Bank details unavailable"
+                }
+                let message = """
+                \(bankAccount)
+
+                session_id=\(sessionId)
+                payment_method_id=\(linkedBank.paymentMethod.id)
+                events=\(events.joined(separator: ","))
+                """
+                sessionOutput[.message] = message
+                sessionOutput[.sessionId] = sessionId
+                UIAlertController.showAlert(title: "Success", message: message)
+            @unknown default:
+                UIAlertController.showAlert(message: "Unknown payment method flow")
+            }
+        case .canceled:
+            UIAlertController.showAlert(title: "Cancelled")
+        case .failed(let error):
+            let message: String
+            if case .unknown(let debugDescription) = error as? FinancialConnectionsSheetError {
+                message = debugDescription
+            } else {
+                message = error.localizedDescription
+            }
+            UIAlertController.showAlert(title: "Failed", message: message)
         }
     }
 
@@ -945,6 +1011,80 @@ private func SetupPlayground(
             }
         }
         .resume()
+}
+
+private func PresentFinancialConnectionsSheetWithoutPreCollectedConsent(
+    useCase: PlaygroundConfiguration.UseCase,
+    stripeAccount: String?,
+    setupPlaygroundResponseJSON: [String: String],
+    style: PlaygroundConfiguration.Style,
+    linkBrand: PlaygroundConfiguration.LinkBrand,
+    onEvent: @escaping (FinancialConnectionsEvent) -> Void,
+    completionHandler: @escaping (HostControllerResult) -> Void
+) {
+    if let error = setupPlaygroundResponseJSON["error"] {
+        completionHandler(
+            .failed(error: FinancialConnectionsSheetError.unknown(debugDescription: error))
+        )
+        return
+    }
+    guard let clientSecret = setupPlaygroundResponseJSON["client_secret"] else {
+        completionHandler(
+            .failed(error: FinancialConnectionsSheetError.unknown(
+                debugDescription: "Server returned no client_secret. Try clearing 'Custom Keys' or delete & re-install the app."
+            ))
+        )
+        return
+    }
+    guard let publishableKey = setupPlaygroundResponseJSON["publishable_key"] else {
+        completionHandler(
+            .failed(error: FinancialConnectionsSheetError.unknown(
+                debugDescription: "Server returned no publishable_key. Try clearing 'Custom Keys' or delete & re-install the app."
+            ))
+        )
+        return
+    }
+
+    STPAPIClient.shared.publishableKey = publishableKey
+
+    let isUITest = (ProcessInfo.processInfo.environment["UITesting"] != nil)
+    var configuration = FinancialConnectionsSheet.Configuration()
+    configuration.style = style.configurationValue
+    configuration.linkBrand = linkBrand == .on ? .onelink : nil
+    let financialConnectionsSheet = FinancialConnectionsSheet(
+        financialConnectionsSessionClientSecret: clientSecret,
+        // disable app-to-app for UI tests
+        returnURL: isUITest ? nil : PlaygroundViewModel.returnUrl,
+        configuration: configuration
+    )
+    financialConnectionsSheet.apiClient.stripeAccount = stripeAccount
+    financialConnectionsSheet.onEvent = onEvent
+    let topMostViewController = UIViewController.topMostViewController()!
+    if useCase == .token {
+        // For testing: Use async API for token presentation
+        Task { @MainActor in
+            let result = await financialConnectionsSheet.presentForToken(from: topMostViewController)
+            completionHandler({
+                switch result {
+                case .completed(result: let tuple):
+                    return .completed(.financialConnections(tuple.session))
+                case .canceled:
+                    return .canceled
+                case .failed(error: let error):
+                    return .failed(error: error)
+                }
+            }())
+            _ = financialConnectionsSheet  // retain the sheet
+        }
+    } else {
+        financialConnectionsSheet.present(
+            from: topMostViewController,
+            completion: { (result: HostControllerResult) in
+                completionHandler(result)
+                _ = financialConnectionsSheet  // retain the sheet
+            }
+        )
+    }
 }
 
 private func PresentFinancialConnectionsSheet(

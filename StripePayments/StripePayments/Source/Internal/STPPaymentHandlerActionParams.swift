@@ -15,6 +15,28 @@ import UIKit
     import Stripe3DS2
 #endif
 
+/// The states relevant while polling an Intent for an out-of-band action.
+@_spi(STP) @frozen public enum STPPaymentHandlerPollingStatus: Equatable {
+    case pending
+    case succeeded
+    case failed
+}
+
+/// A retrieved polling status and the mutation that accepts its Intent as the action's latest value.
+@_spi(STP) public struct STPPaymentHandlerPollingResult {
+    @_spi(STP) public let status: STPPaymentHandlerPollingStatus
+    private let updateActionIntentBlock: () -> Void
+
+    init(status: STPPaymentHandlerPollingStatus, updateActionIntent: @escaping () -> Void) {
+        self.status = status
+        self.updateActionIntentBlock = updateActionIntent
+    }
+
+    @_spi(STP) public func updateActionIntent() {
+        updateActionIntentBlock()
+    }
+}
+
 @_spi(STP) public protocol STPPaymentHandlerActionParams: NSObject, ASWebAuthenticationPresentationContextProviding {
     var threeDS2Service: STDSThreeDS2Service? { get }
     var threeDS2Transaction: STDSTransaction? { get set }
@@ -25,6 +47,8 @@ import UIKit
     var intentStripeID: String { get }
     /// Returns the payment or setup intent's next action
     func nextAction() -> STPIntentAction?
+    /// Retrieves the latest Intent and its polling status without mutating the action.
+    func retrievePollingResult(completion: @escaping (STPPaymentHandlerPollingResult?) -> Void)
     func complete(with status: STPPaymentHandlerActionStatus, error: NSError?)
 }
 
@@ -98,6 +122,18 @@ public class STPPaymentHandlerPaymentIntentActionParams: NSObject, STPPaymentHan
 
     @_spi(STP) public func nextAction() -> STPIntentAction? {
         return paymentIntent.nextAction
+    }
+
+    @_spi(STP) public func retrievePollingResult(completion: @escaping (STPPaymentHandlerPollingResult?) -> Void) {
+        apiClient.retrievePaymentIntent(withClientSecret: paymentIntent.clientSecret) { [weak self] paymentIntent, _ in
+            guard let self, let paymentIntent else {
+                completion(nil)
+                return
+            }
+            completion(STPPaymentHandlerPollingResult(status: paymentIntent.status.paymentHandlerPollingStatus, updateActionIntent: { [weak self] in
+                self?.paymentIntent = paymentIntent
+            }))
+        }
     }
 
     @_spi(STP) public func complete(with status: STPPaymentHandlerActionStatus, error: NSError?) {
@@ -180,6 +216,18 @@ internal class STPPaymentHandlerSetupIntentActionParams: NSObject, STPPaymentHan
         return setupIntent.nextAction
     }
 
+    func retrievePollingResult(completion: @escaping (STPPaymentHandlerPollingResult?) -> Void) {
+        apiClient.retrieveSetupIntent(withClientSecret: setupIntent.clientSecret) { [weak self] setupIntent, _ in
+            guard let self, let setupIntent else {
+                completion(nil)
+                return
+            }
+            completion(STPPaymentHandlerPollingResult(status: setupIntent.status.paymentHandlerPollingStatus, updateActionIntent: { [weak self] in
+                self?.setupIntent = setupIntent
+            }))
+        }
+    }
+
     func complete(with status: STPPaymentHandlerActionStatus, error: NSError?) {
         setupIntentCompletion(status, setupIntent, error)
     }
@@ -187,6 +235,36 @@ internal class STPPaymentHandlerSetupIntentActionParams: NSObject, STPPaymentHan
     // Translate the STPAuthenticationContext to an ASPresentationAnchor if possible
     public func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
         return authenticationContext.authenticationPresentingViewController().view.window ?? stp_makeFallbackPresentationAnchor()
+    }
+}
+
+private extension STPPaymentIntentStatus {
+    var paymentHandlerPollingStatus: STPPaymentHandlerPollingStatus {
+        switch self {
+        case .requiresAction:
+            return .pending
+        case .succeeded:
+            return .succeeded
+        case .unknown, .requiresPaymentMethod, .requiresConfirmation, .processing, .requiresCapture, .canceled:
+            return .failed
+        @unknown default:
+            return .failed
+        }
+    }
+}
+
+private extension STPSetupIntentStatus {
+    var paymentHandlerPollingStatus: STPPaymentHandlerPollingStatus {
+        switch self {
+        case .requiresAction:
+            return .pending
+        case .succeeded:
+            return .succeeded
+        case .unknown, .requiresPaymentMethod, .requiresConfirmation, .processing, .canceled:
+            return .failed
+        @unknown default:
+            return .failed
+        }
     }
 }
 
