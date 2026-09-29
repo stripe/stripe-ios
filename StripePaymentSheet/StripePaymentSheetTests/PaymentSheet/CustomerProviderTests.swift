@@ -181,4 +181,32 @@ final class CustomerProviderTests: XCTestCase {
 
         XCTAssertNil(provider.email)
     }
+
+    func testElementsSessionAuthenticationMatchesTheCustomerSource() {
+        let checkoutSession = CheckoutTestHelpers.makeSession().withCustomer().makePublicSession()
+        let cases: [(CustomerProvider, [String: String], Bool)] = [
+            (.init(customer: nil), [:], false),
+            (
+                .init(customer: .init(id: "cus_legacy", ephemeralKeySecret: "ek_test")),
+                ["legacy_customer_ephemeral_key": "ek_test"],
+                false
+            ),
+            (
+                .init(customer: .init(id: "cus_session", customerSessionClientSecret: "cuss_test")),
+                ["customer_session_client_secret": "cuss_test"],
+                true
+            ),
+            (.init(checkoutSession: checkoutSession), [:], false),
+        ]
+
+        for (provider, expectedParameters, usesCustomerSession) in cases {
+            var parameters: [String: Any] = ["unrelated": "preserved"]
+            provider.addElementsSessionParams(to: &parameters)
+
+            var expectedParameters = expectedParameters
+            expectedParameters["unrelated"] = "preserved"
+            XCTAssertEqual(parameters as? [String: String], expectedParameters)
+            XCTAssertEqual(provider.usesCustomerSession, usesCustomerSession)
+        }
+    }
 }
