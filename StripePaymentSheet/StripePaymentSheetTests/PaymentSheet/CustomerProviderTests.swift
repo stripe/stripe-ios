@@ -132,4 +132,53 @@ final class CustomerProviderTests: XCTestCase {
         XCTAssertEqual(provider.source, .checkoutSession)
     }
 
+    func testLoadResultsRetainTheirOwnCustomerSnapshots() {
+        let firstSession = CheckoutTestHelpers.makeSession()
+            .withCustomer(id: "cus_first")
+            .makePublicSession()
+        let secondSession = CheckoutTestHelpers.makeSession()
+            .withCustomer(id: "cus_second")
+            .makePublicSession()
+
+        let firstLoad = makeLoadResult(session: firstSession)
+        let secondLoad = makeLoadResult(session: secondSession)
+
+        XCTAssertEqual(firstLoad.customerProvider.customerID, "cus_first")
+        XCTAssertEqual(secondLoad.customerProvider.customerID, "cus_second")
+    }
+
+    func testCheckoutCustomerIDKeysLocalDefaultPaymentMethodFallback() {
+        let customerID = "cus_checkout_default"
+        let session = CheckoutTestHelpers.makeSession()
+            .withCustomer(id: customerID)
+            .makePublicSession()
+        let loadResult = makeLoadResult(session: session)
+        CustomerPaymentOption.setDefaultPaymentMethod(
+            .stripeId("pm_default"),
+            forCustomer: customerID
+        )
+        defer {
+            CustomerPaymentOption.setDefaultPaymentMethod(nil, forCustomer: customerID)
+        }
+
+        let selectedPaymentMethod = CustomerPaymentOption.selectedPaymentMethod(
+            for: loadResult.customerProvider.customerID,
+            elementsSession: session.elementsSession,
+            surface: .paymentSheet
+        )
+
+        XCTAssertEqual(selectedPaymentMethod, .stripeId("pm_default"))
+    }
+
+    private func makeLoadResult(session: CheckoutController.Session) -> PaymentSheetLoader.LoadResult {
+        return .init(
+            intent: .checkout(session),
+            elementsSession: session.elementsSession,
+            savedPaymentMethods: session.customer?.paymentMethods ?? [],
+            paymentMethodTypes: [.stripe(.card)],
+            paymentMethodMessagingPromotionsHelper: nil,
+            paymentMethodOrientation: .vertical,
+            customerProvider: CustomerProvider(checkoutSession: session)
+        )
+    }
 }

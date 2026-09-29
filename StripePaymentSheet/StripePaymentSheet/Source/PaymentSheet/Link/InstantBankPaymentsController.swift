@@ -413,27 +413,31 @@ import UIKit
         }
 
         do {
+            let customerProvider = CustomerProvider(customer: configuration.customer)
             let linkBrand: LinkBrand?
             switch mode {
             case .paymentIntentClientSecret(let clientSecret):
                 let (_, elementsSession) = try await configuration.apiClient.retrieveElementsSession(
                     paymentIntentClientSecret: clientSecret,
                     clientDefaultPaymentMethod: nil,
-                    configuration: configuration
+                    configuration: configuration,
+                    customerProvider: customerProvider
                 )
                 linkBrand = elementsSession.linkBrand
             case .setupIntentClientSecret(let clientSecret):
                 let (_, elementsSession) = try await configuration.apiClient.retrieveElementsSession(
                     setupIntentClientSecret: clientSecret,
                     clientDefaultPaymentMethod: nil,
-                    configuration: configuration
+                    configuration: configuration,
+                    customerProvider: customerProvider
                 )
                 linkBrand = elementsSession.linkBrand
             case .deferredIntent(let intentConfiguration):
                 let elementsSession = try await configuration.apiClient.retrieveDeferredElementsSession(
                     withIntentConfig: intentConfiguration,
                     clientDefaultPaymentMethod: nil,
-                    configuration: configuration
+                    configuration: configuration,
+                    customerProvider: customerProvider
                 )
                 linkBrand = elementsSession.linkBrand
             case .checkout:
