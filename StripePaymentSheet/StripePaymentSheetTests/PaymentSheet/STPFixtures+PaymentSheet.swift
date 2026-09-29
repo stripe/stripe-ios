@@ -487,7 +487,8 @@ extension PaymentSheetLoader.LoadResult {
             savedPaymentMethods: savedPaymentMethods,
             paymentMethodTypes: pmTypes,
             paymentMethodMessagingPromotionsHelper: promotionsHelper,
-            paymentMethodOrientation: .vertical
+            paymentMethodOrientation: .vertical,
+            customerProvider: CustomerProvider(customer: nil)
         )
     }
 }

@@ -212,7 +212,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         self.savedPaymentOptionsViewController = SavedPaymentOptionsViewController(
             savedPaymentMethods: loadResult.savedPaymentMethods,
             configuration: .init(
-                customerID: configuration.customer?.id,
+                customerID: loadResult.customerProvider.customerID,
                 showApplePay: isApplePayEnabled,
                 showLink: isLinkEnabled,
                 linkBrand: configuration.resolvedLinkBrand(elementsSession: elementsSession, linkAccount: LinkAccountContext.shared.account),
@@ -276,18 +276,18 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         self.addPaymentMethodViewController.delegate = self
         if initialState.paymentOption == nil,
            shouldUseLinkOnlyWalletHeader,
-           Self.customerDefaultIsLink(configuration: configuration, elementsSession: elementsSession) {
+           Self.customerDefaultIsLink(customerProvider: loadResult.customerProvider, elementsSession: elementsSession) {
             mode = .addingNew
             isHackyLinkButtonSelected = true
         }
     }
 
     private static func customerDefaultIsLink(
-        configuration: PaymentSheet.Configuration,
+        customerProvider: CustomerProvider,
         elementsSession: STPElementsSession
     ) -> Bool {
         return CustomerPaymentOption.selectedPaymentMethod(
-            for: configuration.customer?.id,
+            for: customerProvider.customerID,
             elementsSession: elementsSession,
             surface: .paymentSheet
         ) == .link
