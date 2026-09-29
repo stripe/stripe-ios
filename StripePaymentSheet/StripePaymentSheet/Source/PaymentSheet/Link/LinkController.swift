@@ -290,6 +290,7 @@ import UIKit
                     return
                 }
 
+                analyticsHelper.didLoad(loadResult)
                 let controller = LinkController(
                     apiClient: apiClient,
                     mode: mode,
@@ -355,6 +356,7 @@ import UIKit
                     return
                 }
 
+                analyticsHelper.didLoad(loadResult)
                 let controller = LinkController(
                     apiClient: apiClient,
                     mode: .setup,
