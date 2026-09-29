@@ -873,7 +873,6 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         let vc = VerticalSavedPaymentMethodsViewController(
             configuration: configuration,
             customerProvider: loadResult.customerProvider,
-            intent: intent,
             selectedPaymentMethod: selectedPaymentOption?.savedPaymentMethod,
             paymentMethods: savedPaymentMethods,
             elementsSession: elementsSession,

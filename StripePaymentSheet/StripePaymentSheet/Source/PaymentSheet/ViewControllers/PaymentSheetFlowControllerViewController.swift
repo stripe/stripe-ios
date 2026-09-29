@@ -230,7 +230,6 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
                 allowsUpdatePaymentMethod: loadResult.customerProvider.allowsPaymentMethodUpdate(elementsSession: elementsSession)
             ),
             paymentSheetConfiguration: configuration,
-            intent: intent,
             appearance: configuration.appearance,
             elementsSession: elementsSession,
             cbcEligible: elementsSession.isCardBrandChoiceEligible,

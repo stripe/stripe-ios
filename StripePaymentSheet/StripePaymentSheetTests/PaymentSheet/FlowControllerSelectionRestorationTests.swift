@@ -232,7 +232,6 @@ final class FlowControllerSelectionRestorationTests: XCTestCase {
         let manageViewController = VerticalSavedPaymentMethodsViewController(
             configuration: viewController.configuration,
             customerProvider: CustomerProvider(customer: viewController.configuration.customer),
-            intent: viewController.intent,
             selectedPaymentMethod: paymentMethod,
             paymentMethods: reorderedPaymentMethods,
             elementsSession: viewController.elementsSession,
