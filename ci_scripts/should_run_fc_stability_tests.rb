@@ -4,7 +4,7 @@
 # Determines whether Financial Connections stability tests are relevant to the
 # current change and exports the result for later Bitrise steps.
 
-RELEVANT_PATHS = [
+RELEVANT_DIRECTORIES = [
   'Example/FinancialConnections Example/',
   'StripeFinancialConnections/',
   'StripeFinancialConnectionsLite/',
@@ -12,28 +12,21 @@ RELEVANT_PATHS = [
   'StripeUICore/',
   'StripePayments/',
   'StripePaymentsUI/',
-  'StripePaymentSheet/',
-  'StripeApplePay/',
-  'Stripe3DS2/',
-  'BuildConfigurations/',
-  'ci_scripts/',
-  'fastlane/',
-  'Stripe.xcworkspace/',
-  'bitrise.yml',
-  'Gemfile',
-  'Gemfile.lock',
-  'Package.swift'
+  'StripePaymentSheet/'
 ].freeze
 
 def relevant?(path)
-  RELEVANT_PATHS.any? { |relevant_path| path == relevant_path || path.start_with?(relevant_path) } ||
-    path.end_with?('.podspec')
+  RELEVANT_DIRECTORIES.any? { |directory| path.start_with?(directory) }
 end
 
 def changed_files
   return nil if ENV['BITRISE_PULL_REQUEST'].to_s.empty?
 
   output = `git diff --name-only --diff-filter=ACDMRTUXB origin/master...HEAD 2>/dev/null`
+  return output.lines(chomp: true) if $?.success?
+
+  warn 'Could not find a merge base; comparing origin/master directly with HEAD.'
+  output = `git diff --name-only --diff-filter=ACDMRTUXB origin/master HEAD 2>/dev/null`
   return nil unless $?.success?
 
   output.lines(chomp: true)

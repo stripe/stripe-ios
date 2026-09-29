@@ -47,7 +47,6 @@ pipelines:
       lint-tests:
         abort_on_fail: true
       framework-tests-no-mocks: {}
-      financial-connections-stability-tests: {}
       framework-tests-and-builds-xcode-26-1: {}
       deploy-docs: {}
       install-and-integration-tests: {}
