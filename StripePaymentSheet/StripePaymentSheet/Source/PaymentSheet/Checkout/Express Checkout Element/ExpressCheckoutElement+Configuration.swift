@@ -13,8 +13,6 @@ import PassKit
 extension ExpressCheckoutElement {
     /// Configuration options for ``ExpressCheckoutElement``.
     public struct Configuration {
-        /// Whether to require collecting a shipping address. Default: `false`.
-        public var shippingAddressRequired: Bool = false
         /// Sets the configuration for Apple Pay.
         public var applePayConfiguration: ApplePayConfiguration?
         /// Sets the configuration for Link.
