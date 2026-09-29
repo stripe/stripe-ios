@@ -40,6 +40,7 @@ final class EmbeddedFormViewControllerSnapshotTests: STPSnapshotTestCase {
 
         return EmbeddedFormViewController(
             configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer),
             intent: loadResult.intent,
             elementsSession: loadResult.elementsSession,
             shouldUseNewCardNewCardHeader: loadResult.savedPaymentMethods.first?.type == .card,

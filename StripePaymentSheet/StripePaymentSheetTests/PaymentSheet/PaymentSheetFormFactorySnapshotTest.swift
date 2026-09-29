@@ -439,7 +439,7 @@ extension PaymentSheetFormFactorySnapshotTest {
         return PaymentSheetFormFactory(
             intent: intent,
             elementsSession: ._testValue(intent: intent),
-            configuration: .paymentElement(configuration),
+            configuration: .paymentElement(configuration, customerProvider: CustomerProvider(customer: configuration.customer)),
             paymentMethod: .stripe(paymentMethodType)
         )
     }

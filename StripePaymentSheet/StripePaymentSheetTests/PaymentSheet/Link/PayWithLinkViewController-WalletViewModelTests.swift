@@ -501,6 +501,7 @@ extension PayWithLinkViewController_WalletViewModelTests {
                 intent: intent,
                 elementsSession: elementsSession,
                 configuration: paymentSheetConfiguration,
+                customerProvider: CustomerProvider(customer: paymentSheetConfiguration.customer),
                 linkBrand: .link,
                 shouldOfferApplePay: false,
                 shouldFinishOnClose: false,

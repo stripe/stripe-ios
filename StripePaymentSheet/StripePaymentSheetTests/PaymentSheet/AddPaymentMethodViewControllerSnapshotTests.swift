@@ -43,6 +43,7 @@ final class AddPaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase {
             intent: intent,
             elementsSession: ._testValue(intent: intent),
             configuration: config,
+            customerProvider: CustomerProvider(customer: config.customer),
             previousCustomerInput: previousCustomerInput,
             paymentMethodTypes: [.stripe(.payPal), .stripe(.card), .stripe(.cashApp)],
             formCache: .init(),
@@ -62,13 +63,14 @@ final class AddPaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase {
         let intent = Intent._testPaymentIntent(paymentMethodTypes: [.payPal, .card, .cashApp])
         var config = PaymentSheet.Configuration._testValue_MostPermissive()
         // ...and a "Save this card" checkbox...
-        config.customer = .init(id: "id", ephemeralKeySecret: "ek")
+        config.customer = .init(id: "id", customerSessionClientSecret: "cuss_123")
         // ...the AddPMVC should show the card type selected with the form pre-filled with the previous input
         let sut = AddPaymentMethodViewController(
             intent: intent,
             // ...and a "Set as default" checkbox...
             elementsSession: ._testValue(intent: intent, paymentMethods: [STPPaymentMethod._testCardJSON], allowsSetAsDefaultPM: true),
             configuration: config,
+            customerProvider: CustomerProvider(customer: config.customer),
             previousCustomerInput: previousCustomerInput,
             paymentMethodTypes: [.stripe(.payPal), .stripe(.card), .stripe(.cashApp)],
             formCache: .init(),
@@ -90,6 +92,7 @@ final class AddPaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase {
             intent: intent,
             elementsSession: ._testValue(intent: intent),
             configuration: config,
+            customerProvider: CustomerProvider(customer: config.customer),
             previousCustomerInput: nil,
             paymentMethodTypes: [.stripe(.card)],
             formCache: .init(),

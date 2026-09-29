@@ -104,7 +104,7 @@ class PaymentSheetFormFactory {
 
         /// Whether or not the card form should show the link inline signup checkbox
         let showLinkInlineCardSignup: Bool = {
-            guard case .paymentElement(let configuration, _) = configuration else {
+            guard case .paymentElement(let configuration, _, _) = configuration else {
                 return false
             }
 
@@ -128,7 +128,7 @@ class PaymentSheetFormFactory {
         }()
         let linkBrand: LinkBrand = {
             switch configuration {
-            case .paymentElement(let configuration, _):
+            case .paymentElement(let configuration, _, _):
                 return configuration.resolvedLinkBrand(elementsSession: elementsSession, linkAccount: linkAccount)
             case .customerSheet:
                 return .link
@@ -154,7 +154,9 @@ class PaymentSheetFormFactory {
                   forceSaveFutureUseBehavior: elementsSession.forceSaveFutureUseBehaviorAndNewMandateText,
                   signupOptInFeatureEnabled: elementsSession.linkSignupOptInFeatureEnabled,
                   signupOptInInitialValue: elementsSession.linkSignupOptInInitialValue,
-                  isFirstSavedPaymentMethod: elementsSession.customer?.paymentMethods.isEmpty ?? true,
+                  isFirstSavedPaymentMethod: configuration.savedPaymentMethods(
+                    elementsSession: elementsSession
+                  ).isEmpty,
                   analyticsHelper: analyticsHelper,
                   paymentMethodMessagingPromotionsHelper: paymentMethodMessagingPromotionsHelper,
                   paymentMethodIncentive: elementsSession.incentive,
