@@ -240,18 +240,18 @@ extension STPConfirmPaymentMethodOptions {
         _ shouldSave: Bool,
         currentSetupFutureUsage: String? = nil,
         paymentMethodType: STPPaymentMethodType,
-        customer: PaymentSheet.CustomerConfiguration?
+        customerProvider: CustomerProvider
     ) {
         // Something went wrong if we're trying to save and there's no Customer!
-        assert(!(shouldSave && customer == nil))
+        assert(!(shouldSave && !customerProvider.hasCustomer))
 
         var allowedPaymentMethodTypes: [STPPaymentMethodType] = [.card, .USBankAccount]
 
-        if let customer, case .customerSession = customer.customerAccessProvider {
+        if customerProvider.supportsLinkSetupFutureUsage {
             allowedPaymentMethodTypes.append(.link)
         }
 
-        guard customer != nil && allowedPaymentMethodTypes.contains(paymentMethodType) else {
+        guard customerProvider.hasCustomer && allowedPaymentMethodTypes.contains(paymentMethodType) else {
             return
         }
 

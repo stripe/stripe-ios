@@ -2058,6 +2058,7 @@ extension PaymentSheetLPMConfirmFlowTests {
         guard case .checkout(let checkoutSession) = testIntent.intent else {
             PaymentSheet.confirm(
                 configuration: configuration,
+                customerProvider: CustomerProvider(customer: configuration.customer),
                 authenticationContext: self,
                 intent: testIntent.intent,
                 elementsSession: elementsSession,
@@ -2148,6 +2149,7 @@ extension PaymentSheetLPMConfirmFlowTests {
                 let parameters = CheckoutElementsController.LinkConfirmationParameters(
                     confirmOption: confirmOption,
                     configuration: configuration,
+                    customerProvider: CustomerProvider(checkoutSession: checkoutSession),
                     returnURL: returnURL,
                     nativeSheetPresentation: nil,
                     confirmationChallenge: nil,
@@ -2217,7 +2219,7 @@ extension PaymentSheetLPMConfirmFlowTests {
         let lhs = IntentConfirmParams(type: .stripe(.card))
         let rhs = IntentConfirmParams(type: .stripe(.card))
         // When lhs has an obscure difference w/ rhs...
-        lhs.confirmPaymentMethodOptions.setSetupFutureUsageIfNecessary(true, paymentMethodType: .card, customer: .init(id: "", ephemeralKeySecret: ""))
+        lhs.confirmPaymentMethodOptions.setSetupFutureUsageIfNecessary(true, paymentMethodType: .card, customerProvider: CustomerProvider(customer: .init(id: "", ephemeralKeySecret: "")))
         // ...they should not be equal
         XCTAssertNotEqual(lhs, rhs)
     }

@@ -27,6 +27,7 @@ final class PayWithLinkController {
     let intent: Intent
     let elementsSession: STPElementsSession
     let configuration: PaymentElementConfiguration
+    private let customerProvider: CustomerProvider
     private let nativeSheetPresentation: SheetImplementationResolver?
     let analyticsHelper: PaymentSheetAnalyticsHelper
     private let confirmationChallenge: ConfirmationChallenge?
@@ -37,6 +38,7 @@ final class PayWithLinkController {
         intent: Intent,
         elementsSession: STPElementsSession,
         configuration: PaymentElementConfiguration,
+        customerProvider: CustomerProvider,
         nativeSheetPresentation: SheetImplementationResolver? = nil,
         analyticsHelper: PaymentSheetAnalyticsHelper,
         confirmationChallenge: ConfirmationChallenge?,
@@ -45,6 +47,7 @@ final class PayWithLinkController {
         self.intent = intent
         self.elementsSession = elementsSession
         self.configuration = configuration
+        self.customerProvider = customerProvider
         self.nativeSheetPresentation = nativeSheetPresentation
         self.paymentHandler = .init(apiClient: configuration.apiClient)
         self.analyticsHelper = analyticsHelper
@@ -94,6 +97,7 @@ extension PayWithLinkController: PayWithLinkWebControllerDelegate {
 
         PaymentSheet.confirm(
             configuration: configuration,
+            customerProvider: customerProvider,
             nativeSheetPresentation: nativeSheetPresentation,
             authenticationContext: payWithLinkWebController,
             intent: intent,

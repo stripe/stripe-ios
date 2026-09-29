@@ -279,4 +279,8 @@ struct CustomerProvider {
         )
         STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
     }
+
+    var supportsLinkSetupFutureUsage: Bool {
+        return usesCustomerSession
+    }
 }
