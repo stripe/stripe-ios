@@ -524,6 +524,36 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         )
     }
 
+    // MARK: - Express Checkout
+
+    func testExpressCheckoutApplePayRequiresShippingAddressWhenSessionCollectsShipping() async throws {
+        // Given a Checkout Session that collects shipping addresses
+        let apiResponse = CheckoutTestHelpers.makeSession([
+            "shipping_address_collection": ["allowed_countries": ["US"]],
+        ])
+        var configuration = CheckoutController.Configuration(
+            clientSecret: "cs_test_123_secret_abc",
+            returnURL: "stripe-ios-test://checkout-return"
+        )
+        var eceConfiguration = ExpressCheckoutElement.Configuration(confirmHandler: { _ in })
+        eceConfiguration.applePayConfiguration = .init(merchantId: "merchant.com.test")
+        configuration.expressCheckoutElement = eceConfiguration
+        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration(
+            apiResponse: apiResponse,
+            configuration: configuration
+        ))
+
+        // When ECE constructs its Apple Pay confirmation flow
+        let flow = try checkout.makeExpressCheckoutConfirmationFlow(.applePay, presentationWindow: nil)
+
+        // Then Apple Pay requires a shipping address
+        guard case .applePay(let parameters) = flow else {
+            XCTFail("Expected an Apple Pay confirmation flow")
+            return
+        }
+        XCTAssertTrue(parameters.shippingAddressRequired)
+    }
+
     // MARK: - Link
 
     func testExpressCheckoutLinkBuildsWalletConfirmationFlow() async throws {

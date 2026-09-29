@@ -416,7 +416,6 @@ enum CheckoutPlayground {
         var applePayDisplay: ExpressCheckoutElement.ApplePayConfiguration.Display
         var applePayButtonType: ApplePayButtonType
         var linkDisplay: ExpressCheckoutElement.LinkConfiguration.Display
-        var shippingAddressRequired: Bool
         var paymentMethodOrder: ExpressCheckoutPaymentMethodOrder
         var appearance: ExpressCheckoutElement.Appearance
 
@@ -425,7 +424,6 @@ enum CheckoutPlayground {
             applePayDisplay: ExpressCheckoutElement.ApplePayConfiguration.Display = .automatic,
             applePayButtonType: ApplePayButtonType = .plain,
             linkDisplay: ExpressCheckoutElement.LinkConfiguration.Display = .automatic,
-            shippingAddressRequired: Bool = false,
             paymentMethodOrder: ExpressCheckoutPaymentMethodOrder = .dynamic,
             appearance: ExpressCheckoutElement.Appearance = .init()
         ) {
@@ -433,7 +431,6 @@ enum CheckoutPlayground {
             self.applePayDisplay = applePayDisplay
             self.applePayButtonType = applePayButtonType
             self.linkDisplay = linkDisplay
-            self.shippingAddressRequired = shippingAddressRequired
             self.paymentMethodOrder = paymentMethodOrder
             self.appearance = appearance
         }
@@ -443,7 +440,6 @@ enum CheckoutPlayground {
             case applePayDisplay
             case applePayButtonType
             case linkDisplay
-            case shippingAddressRequired
             case paymentMethodOrder
             case buttonTheme
             case maxColumns
@@ -465,7 +461,6 @@ enum CheckoutPlayground {
                 applePayButtonType: try container.decodeIfPresent(ApplePayButtonType.self, forKey: .applePayButtonType) ?? .plain,
                 linkDisplay: try container.decodeIfPresent(String.self, forKey: .linkDisplay)
                     .flatMap(ExpressCheckoutElement.LinkConfiguration.Display.init(rawValue:)) ?? .automatic,
-                shippingAddressRequired: try container.decodeIfPresent(Bool.self, forKey: .shippingAddressRequired) ?? false,
                 paymentMethodOrder: try container.decodeIfPresent(ExpressCheckoutPaymentMethodOrder.self, forKey: .paymentMethodOrder) ?? .dynamic,
                 appearance: appearance
             )
@@ -477,7 +472,6 @@ enum CheckoutPlayground {
             try container.encode(applePayDisplay.rawValue, forKey: .applePayDisplay)
             try container.encode(applePayButtonType, forKey: .applePayButtonType)
             try container.encode(linkDisplay.rawValue, forKey: .linkDisplay)
-            try container.encode(shippingAddressRequired, forKey: .shippingAddressRequired)
             try container.encode(paymentMethodOrder, forKey: .paymentMethodOrder)
             try container.encode(appearance.buttonTheme.rawValue, forKey: .buttonTheme)
             try container.encodeIfPresent(appearance.buttonLayout.maxColumns, forKey: .maxColumns)

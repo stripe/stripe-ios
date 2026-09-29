@@ -19,6 +19,7 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
         scrollStart.press(forDuration: 0.1, thenDragTo: scrollEnd)
         XCTAssertTrue(app.buttons["checkout_picker_Email source"].waitForExistenceAndTap())
         XCTAssertTrue(app.buttons["Server — Customer"].waitForExistenceAndTap())
+        scrollStart.press(forDuration: 0.1, thenDragTo: scrollEnd)
         app.buttons["No Override"].scrollToAndTap(in: app)
         app.buttons["Germany (DE)"].waitForExistenceAndTap()
         app.buttons["Create Checkout Session"].waitForExistenceAndTap()

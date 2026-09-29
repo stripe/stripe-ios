@@ -132,23 +132,6 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
         )
     }
 
-    func testLinkButtonHiddenWhenShippingAddressIsRequired() {
-        // Given a session with Link and ECE configured to require a shipping address
-        let session = CheckoutTestHelpers.makeSessionWithWalletTypes(["link"]).makePublicSession()
-        var configuration = ExpressCheckoutElement.Configuration(confirmHandler: { _ in })
-        configuration.shippingAddressRequired = true
-
-        // When
-        let buttons = ExpressCheckoutElementUtilities.availablePaymentMethods(for: session.elementsSession, configuration: configuration)
-
-        // Then Link is hidden because it cannot collect the required shipping address
-        XCTAssertFalse(buttons.contains(.link))
-        XCTAssertTrue(
-            ExpressCheckoutElementUtilities.linkDisabledReasons(for: session.elementsSession, configuration: configuration)
-                .contains(.shippingAddressCollection)
-        )
-    }
-
     func testLinkButtonHiddenWhenAutomaticTaxUsesBillingAddress() {
         // Given a session that calculates automatic tax from the billing address
         let session = CheckoutTestHelpers.makeSessionWithWalletTypes(
