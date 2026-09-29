@@ -9,115 +9,145 @@
 @testable @_spi(STP) import StripeCoreTestUtils
 @testable @_spi(STP) import StripePayments
 @testable @_spi(STP) import StripePaymentSheet
-import StripePaymentsObjcTestUtils
 @_spi(STP) import StripeUICore
 import XCTest
 
 @MainActor
 final class CustomerProviderTests: XCTestCase {
 
-    func testPaymentSheetConfigurationWithoutCustomerUsesNoCustomer() {
-        let configuration = PaymentSheet.Configuration()
+    func testNoCustomerHasNoIdentity() {
+        let provider = CustomerProvider(customer: nil)
 
-        let provider = CustomerProvider(customer: configuration.customer)
-
-        XCTAssertEqual(provider.source, .none)
         XCTAssertFalse(provider.hasCustomer)
         XCTAssertNil(provider.customerID)
-        XCTAssertNil(provider.analyticValue)
     }
 
-    func testLegacyEphemeralKeyCustomerProvidesCredentials() {
-        var configuration = PaymentSheet.Configuration()
-        configuration.customer = .init(
-            id: "cus_legacy",
-            ephemeralKeySecret: "ek_test_legacy"
-        )
-        var parameters: [String: Any] = [:]
+    func testMerchantCustomerIdentity() {
+        let customers: [PaymentSheet.CustomerConfiguration] = [
+            .init(id: "cus_merchant", ephemeralKeySecret: "ek_test"),
+            .init(id: "cus_merchant", customerSessionClientSecret: "cuss_test"),
+        ]
 
-        let provider = CustomerProvider(customer: configuration.customer)
+        for customer in customers {
+            let provider = CustomerProvider(customer: customer)
+
+            XCTAssertTrue(provider.hasCustomer)
+            XCTAssertEqual(provider.customerID, "cus_merchant")
+        }
+    }
+
+    func testCheckoutCustomerIdentity() {
+        let session = CheckoutTestHelpers.makeSession()
+            .withCustomer(id: "cus_checkout")
+            .makePublicSession()
+        let provider = CustomerProvider(checkoutSession: session)
+
+        XCTAssertTrue(provider.hasCustomer)
+        XCTAssertEqual(provider.customerID, "cus_checkout")
+
+        let guestProvider = CustomerProvider(
+            checkoutSession: CheckoutTestHelpers.makeSession().makePublicSession()
+        )
+        XCTAssertFalse(guestProvider.hasCustomer)
+        XCTAssertNil(guestProvider.customerID)
+    }
+
+    func testSavedPaymentMethodsComeFromTheResolvedCustomerSource() {
+        // Given different saved methods in each loading source
+        let elementsSession = STPElementsSession
+            .elementsSessionWithCustomerSessionForPaymentSheet(apiKey: "ek_from_session")
+        let checkoutSession = CheckoutTestHelpers.makeSession([
+            "customer": [
+                "id": "cus_checkout",
+                "payment_methods": [["id": "pm_checkout", "type": "card"]],
+            ],
+        ]).makePublicSession()
+        let prefetchedPaymentMethod = STPPaymentMethod.decodedObject(
+            fromAPIResponse: ["id": "pm_prefetched", "type": "card"]
+        )!
+        let cases: [(CustomerProvider, [String]?)] = [
+            (.init(customer: nil), nil),
+            (.init(customer: .init(id: "cus_legacy", ephemeralKeySecret: "ek_legacy")), ["pm_prefetched"]),
+            (.init(customer: .init(id: "cus_session", customerSessionClientSecret: "cuss_secret")), ["pm_1234", "pm_4567"]),
+            (.init(checkoutSession: checkoutSession), ["pm_checkout"]),
+        ]
+
+        for (provider, expectedIDs) in cases {
+            // When all sources are available, the resolved customer determines which one is used
+            let paymentMethods = provider.savedPaymentMethods(
+                elementsSession: elementsSession,
+                prefetchedPaymentMethods: [prefetchedPaymentMethod]
+            )
+
+            // Then saved methods from another source cannot replace the resolved customer's methods
+            XCTAssertEqual(paymentMethods?.map(\.stripeId), expectedIDs)
+        }
+    }
+
+    func testLegacyCustomerProvidesElementsSessionCredentials() {
+        let provider = CustomerProvider(
+            customer: .init(id: "cus_legacy", ephemeralKeySecret: "ek_test_legacy")
+        )
+        var parameters: [String: Any] = ["unrelated": "preserved"]
+
         provider.addElementsSessionParams(to: &parameters)
 
-        XCTAssertEqual(provider.source, .legacyEphemeralKey)
-        XCTAssertEqual(provider.customerID, "cus_legacy")
-        XCTAssertEqual(provider.analyticValue, "legacy")
-        XCTAssertEqual(
-            provider.ephemeralKeySecret(basedOn: nil),
-            "ek_test_legacy"
-        )
-        XCTAssertEqual(
-            parameters["legacy_customer_ephemeral_key"] as? String,
-            "ek_test_legacy"
-        )
+        XCTAssertEqual(parameters as? [String: String], [
+            "unrelated": "preserved",
+            "legacy_customer_ephemeral_key": "ek_test_legacy",
+        ])
+        XCTAssertEqual(provider.legacyEphemeralKeyCredentials?.customerID, "cus_legacy")
+        XCTAssertEqual(provider.legacyEphemeralKeyCredentials?.ephemeralKeySecret, "ek_test_legacy")
+        XCTAssertEqual(provider.ephemeralKeySecret(basedOn: nil), "ek_test_legacy")
+        XCTAssertFalse(provider.usesCustomerSession)
     }
 
-    func testCustomerSessionCustomerProvidesCredentialsAndCapabilities() {
-        var configuration = PaymentSheet.Configuration()
-        configuration.customer = .init(
-            id: "cus_session",
-            customerSessionClientSecret: "cuss_test_secret"
+    func testCustomerSessionCredentialsUseTheLoadedAPIKey() {
+        let provider = CustomerProvider(
+            customer: .init(id: "cus_session", customerSessionClientSecret: "cuss_test_secret")
         )
         let elementsSession = STPElementsSession
             .elementsSessionWithCustomerSessionForPaymentSheet(apiKey: "ek_from_session")
         var parameters: [String: Any] = [:]
 
-        let provider = CustomerProvider(customer: configuration.customer)
         provider.addElementsSessionParams(to: &parameters)
 
-        XCTAssertEqual(provider.source, .customerSession)
-        XCTAssertEqual(provider.customerID, "cus_session")
-        XCTAssertEqual(provider.analyticValue, "customer_session")
-        XCTAssertEqual(provider.customerSessionClientSecret, "cuss_test_secret")
-        XCTAssertTrue(provider.supportsLinkSetupFutureUsage)
-        XCTAssertEqual(
-            provider.ephemeralKeySecret(basedOn: elementsSession),
-            "ek_from_session"
-        )
-        XCTAssertEqual(
-            parameters["customer_session_client_secret"] as? String,
-            "cuss_test_secret"
-        )
+        XCTAssertEqual(parameters as? [String: String], ["customer_session_client_secret": "cuss_test_secret"])
+        XCTAssertEqual(provider.ephemeralKeySecret(basedOn: elementsSession), "ek_from_session")
+        XCTAssertNil(provider.ephemeralKeySecret(basedOn: nil))
+        XCTAssertNil(provider.legacyEphemeralKeyCredentials)
+        XCTAssertTrue(provider.usesCustomerSession)
     }
 
-    func testCheckoutSessionProvidesCustomerDataAndCapabilities() {
-        let session = try! PaymentPagesAPIResponse.decode(
-            fromAPIResponse: STPTestUtils.jsonNamed("CheckoutSession")!
-        ).makePublicSession()
-        let provider = CustomerProvider(checkoutSession: session)
+    func testCheckoutAndGuestCustomersDoNotProvideElementsSessionCredentials() {
+        let checkoutSession = CheckoutTestHelpers.makeSession()
+            .withCustomer()
+            .makePublicSession()
+        let providers: [CustomerProvider] = [
+            .init(customer: nil),
+            .init(checkoutSession: checkoutSession),
+        ]
+        let elementsSession = STPElementsSession
+            .elementsSessionWithCustomerSessionForPaymentSheet(apiKey: "ek_unrelated")
 
-        XCTAssertEqual(provider.source, .checkoutSession)
-        XCTAssertEqual(provider.customerID, "cus_test123456")
-        XCTAssertEqual(provider.email, "customer@example.com")
-        XCTAssertEqual(provider.name, "Test Customer")
-        XCTAssertEqual(provider.phone, "+15555555555")
-        XCTAssertEqual(provider.analyticValue, "checkout_session")
-        XCTAssertEqual(
-            provider.saveConsent,
-            .init(enabled: true, initiallyChecked: false)
-        )
-        XCTAssertEqual(
-            provider.savedPaymentMethods(
-                elementsSession: session.elementsSession,
-                prefetchedPaymentMethods: nil
-            )?.count,
-            2
-        )
-        XCTAssertFalse(
-            provider.allowsPaymentMethodRemoval(
-                elementsSession: session.elementsSession
-            )
-        )
-        XCTAssertTrue(
-            provider.allowsPaymentMethodUpdate(
-                elementsSession: session.elementsSession
-            )
-        )
-        XCTAssertEqual(
-            provider.savePaymentMethodConsentBehavior(
-                elementsSession: session.elementsSession
-            ),
-            .paymentSheetWithCheckoutSessionPaymentMethodSaveEnabled
-        )
+        for provider in providers {
+            var parameters: [String: Any] = ["unrelated": "preserved"]
+            provider.addElementsSessionParams(to: &parameters)
+
+            XCTAssertEqual(parameters as? [String: String], ["unrelated": "preserved"])
+            XCTAssertNil(provider.ephemeralKeySecret(basedOn: elementsSession))
+            XCTAssertNil(provider.legacyEphemeralKeyCredentials)
+            XCTAssertFalse(provider.usesCustomerSession)
+        }
+    }
+
+    func testCheckoutEmailPrefersTheCustomerEmail() {
+        let session = CheckoutTestHelpers.makeSession([
+            "customer": ["id": "cus_checkout", "email": "customer@example.com"],
+            "customer_email": "fallback@example.com",
+        ]).makePublicSession()
+
+        XCTAssertEqual(CustomerProvider(checkoutSession: session).email, "customer@example.com")
     }
 
     func testCheckoutSessionFallsBackToTopLevelEmail() {
@@ -125,11 +155,141 @@ final class CustomerProviderTests: XCTestCase {
             customerEmail: "fallback@example.com"
         ).makePublicSession()
 
-        let provider = CustomerProvider(checkoutSession: session)
+        XCTAssertEqual(CustomerProvider(checkoutSession: session).email, "fallback@example.com")
+    }
 
-        XCTAssertFalse(provider.hasCustomer)
-        XCTAssertEqual(provider.email, "fallback@example.com")
-        XCTAssertEqual(provider.source, .checkoutSession)
+    func testMerchantCustomerDoesNotProvideAnEmail() {
+        let provider = CustomerProvider(
+            customer: .init(id: "cus_merchant", customerSessionClientSecret: "cuss_test")
+        )
+
+        XCTAssertNil(provider.email)
+    }
+
+    func testCheckoutPermissionsUseTheCheckoutSession() {
+        for canDetach in [true, false] {
+            let session = CheckoutTestHelpers.makeSession([
+                "customer": ["id": "cus_checkout", "can_detach_payment_method": canDetach],
+            ]).makePublicSession()
+            let provider = CustomerProvider(checkoutSession: session)
+
+            XCTAssertEqual(provider.allowsPaymentMethodRemoval(elementsSession: .emptyElementsSession), canDetach)
+            XCTAssertTrue(provider.allowsPaymentMethodUpdate(elementsSession: .emptyElementsSession))
+        }
+    }
+
+    func testCustomerPermissionsUseTheElementsSession() {
+        let provider = CustomerProvider(
+            customer: .init(id: "cus_session", customerSessionClientSecret: "cuss_test")
+        )
+        for enabled in [true, false] {
+            let elementsSession = STPElementsSession._testValue(
+                paymentMethodTypes: ["card"],
+                customerSessionData: [
+                    "mobile_payment_element": [
+                        "enabled": enabled,
+                        "features": [
+                            "payment_method_save": "enabled",
+                            "payment_method_remove": "enabled",
+                        ],
+                    ],
+                ]
+            )
+
+            XCTAssertEqual(provider.allowsPaymentMethodRemoval(elementsSession: elementsSession), enabled)
+            XCTAssertEqual(provider.allowsPaymentMethodUpdate(elementsSession: elementsSession), enabled)
+        }
+    }
+
+    func testCheckoutSaveConsentRequiresACustomerAndAnEnabledOffer() {
+        for hasCustomer in [true, false] {
+            for enabled in [true, false] {
+                var overrides: [String: Any] = [
+                    "customer_managed_saved_payment_methods_offer_save": [
+                        "enabled": enabled,
+                        "status": "not_accepted",
+                    ],
+                ]
+                if hasCustomer {
+                    overrides["customer"] = ["id": "cus_checkout"]
+                }
+                let provider = CustomerProvider(
+                    checkoutSession: CheckoutTestHelpers.makeSession(overrides).makePublicSession()
+                )
+
+                XCTAssertEqual(
+                    provider.savePaymentMethodConsentBehavior(elementsSession: .emptyElementsSession),
+                    hasCustomer && enabled
+                        ? .paymentSheetWithCheckoutSessionPaymentMethodSaveEnabled
+                        : .paymentSheetWithCheckoutSessionPaymentMethodSaveDisabled
+                )
+            }
+        }
+
+        let providerWithoutOffer = CustomerProvider(
+            checkoutSession: CheckoutTestHelpers.makeSession().withCustomer().makePublicSession()
+        )
+        XCTAssertEqual(
+            providerWithoutOffer.savePaymentMethodConsentBehavior(elementsSession: .emptyElementsSession),
+            .paymentSheetWithCheckoutSessionPaymentMethodSaveDisabled
+        )
+    }
+
+    func testCustomerSaveConsentUsesTheElementsSession() {
+        let provider = CustomerProvider(
+            customer: .init(id: "cus_session", customerSessionClientSecret: "cuss_test")
+        )
+        XCTAssertEqual(provider.savePaymentMethodConsentBehavior(elementsSession: .emptyElementsSession), .legacy)
+
+        for enabled in [true, false] {
+            let elementsSession = STPElementsSession._testValue(
+                paymentMethodTypes: ["card"],
+                customerSessionData: [
+                    "mobile_payment_element": [
+                        "enabled": true,
+                        "features": [
+                            "payment_method_save": enabled ? "enabled" : "disabled",
+                            "payment_method_remove": "enabled",
+                        ],
+                    ],
+                ]
+            )
+
+            XCTAssertEqual(
+                provider.savePaymentMethodConsentBehavior(elementsSession: elementsSession),
+                enabled
+                    ? .paymentSheetWithCustomerSessionPaymentMethodSaveEnabled
+                    : .paymentSheetWithCustomerSessionPaymentMethodSaveDisabled
+            )
+        }
+    }
+
+    func testOnlyCustomerSessionSupportsLinkSetupFutureUsage() {
+        let checkoutSession = CheckoutTestHelpers.makeSession().withCustomer().makePublicSession()
+        let cases: [(CustomerProvider, Bool)] = [
+            (.init(customer: nil), false),
+            (.init(customer: .init(id: "cus_legacy", ephemeralKeySecret: "ek_test")), false),
+            (.init(customer: .init(id: "cus_session", customerSessionClientSecret: "cuss_test")), true),
+            (.init(checkoutSession: checkoutSession), false),
+        ]
+
+        for (provider, expected) in cases {
+            XCTAssertEqual(provider.supportsLinkSetupFutureUsage, expected)
+        }
+    }
+
+    func testCustomerAnalyticsIdentifyTheResolvedIntegration() {
+        let checkoutSession = CheckoutTestHelpers.makeSession().makePublicSession()
+        let cases: [(CustomerProvider, String?)] = [
+            (.init(customer: nil), nil),
+            (.init(customer: .init(id: "cus_legacy", ephemeralKeySecret: "ek_test")), "legacy"),
+            (.init(customer: .init(id: "cus_session", customerSessionClientSecret: "cuss_test")), "customer_session"),
+            (.init(checkoutSession: checkoutSession), "checkout_session"),
+        ]
+
+        for (provider, expected) in cases {
+            XCTAssertEqual(provider.analyticValue, expected)
+        }
     }
 
     func testLoadedCheckoutCustomerDoesNotReplaceMerchantConfiguration() async {

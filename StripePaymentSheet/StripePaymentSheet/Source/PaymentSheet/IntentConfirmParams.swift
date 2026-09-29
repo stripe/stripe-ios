@@ -240,20 +240,6 @@ extension STPConfirmPaymentMethodOptions {
         _ shouldSave: Bool,
         currentSetupFutureUsage: String? = nil,
         paymentMethodType: STPPaymentMethodType,
-        customer: PaymentSheet.CustomerConfiguration?
-    ) {
-        setSetupFutureUsageIfNecessary(
-            shouldSave,
-            currentSetupFutureUsage: currentSetupFutureUsage,
-            paymentMethodType: paymentMethodType,
-            customerProvider: CustomerProvider(customer: customer)
-        )
-    }
-
-    func setSetupFutureUsageIfNecessary(
-        _ shouldSave: Bool,
-        currentSetupFutureUsage: String? = nil,
-        paymentMethodType: STPPaymentMethodType,
         customerProvider: CustomerProvider
     ) {
         // Something went wrong if we're trying to save and there's no Customer!

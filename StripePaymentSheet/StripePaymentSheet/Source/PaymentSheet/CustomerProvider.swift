@@ -12,76 +12,26 @@ import Foundation
 /// Provides a common view of customer data and capabilities across PaymentSheet integrations.
 struct CustomerProvider {
 
-    enum Source: Equatable {
-        case none
-        case legacyEphemeralKey
-        case customerSession
-        case checkoutSession
-    }
-
-    enum Error: Swift.Error {
-        case missingCustomerID
-        case missingEphemeralKey
-        case missingUpdatedPaymentMethod
-    }
-
-    struct SaveConsent: Equatable {
-        let enabled: Bool
-        let initiallyChecked: Bool
-    }
-
     private enum Backing {
-        case none
-        case legacyEphemeralKey(customerID: String?, ephemeralKeySecret: String)
-        case customerSession(customerID: String?, clientSecret: String)
+
+        case customer(PaymentSheet.CustomerConfiguration?)
         case checkoutSession(CheckoutController.Session)
     }
 
     private let backing: Backing
 
     init(customer: PaymentSheet.CustomerConfiguration?) {
-        guard let customer else {
-            backing = .none
-            return
-        }
-
-        switch customer.customerAccessProvider {
-        case .legacyCustomerEphemeralKey(let ephemeralKeySecret):
-            backing = .legacyEphemeralKey(
-                customerID: customer.id,
-                ephemeralKeySecret: ephemeralKeySecret
-            )
-        case .customerSession(let clientSecret):
-            backing = .customerSession(
-                customerID: customer.id,
-                clientSecret: clientSecret
-            )
-        }
+        backing = .customer(customer)
     }
 
     init(checkoutSession: CheckoutController.Session) {
         backing = .checkoutSession(checkoutSession)
     }
 
-    var source: Source {
-        switch backing {
-        case .none:
-            return .none
-        case .legacyEphemeralKey:
-            return .legacyEphemeralKey
-        case .customerSession:
-            return .customerSession
-        case .checkoutSession:
-            return .checkoutSession
-        }
-    }
-
     var customerID: String? {
         switch backing {
-        case .none:
-            return nil
-        case .legacyEphemeralKey(let customerID, _), .customerSession(let customerID, _):
-            return customerID
+        case .customer(let customer):
+            return customer?.id
         case .checkoutSession(let session):
             return session.customer?.id
         }
@@ -91,6 +41,13 @@ struct CustomerProvider {
         return customerID != nil
     }
 
+    enum Error: Swift.Error {
+
+        case missingCustomerID
+        case missingEphemeralKey
+        case missingUpdatedPaymentMethod
+    }
+
     var email: String? {
         guard case .checkoutSession(let session) = backing else {
             return nil
@@ -98,87 +55,55 @@ struct CustomerProvider {
         return session.customer?.email ?? session.email
     }
 
-    var name: String? {
-        guard case .checkoutSession(let session) = backing else {
-            return nil
-        }
-        return session.customer?.name
-    }
-
-    var phone: String? {
-        guard case .checkoutSession(let session) = backing else {
-            return nil
-        }
-        return session.customer?.phone
-    }
-
-    var saveConsent: SaveConsent? {
-        guard case .checkoutSession(let session) = backing,
-              let offerSave = session.savedPaymentMethodsOfferSave else {
-            return nil
-        }
-        return SaveConsent(
-            enabled: offerSave.enabled,
-            initiallyChecked: offerSave.status == .accepted
-        )
-    }
-
     var analyticValue: String? {
-        switch source {
-        case .none:
-            return nil
-        case .legacyEphemeralKey:
-            return "legacy"
-        case .customerSession:
-            return "customer_session"
+        switch backing {
+        case .customer(let customer):
+            return customer?.customerAccessProvider.analyticValue
         case .checkoutSession:
             return "checkout_session"
         }
     }
 
-    var customerSessionClientSecret: String? {
-        guard case .customerSession(_, let clientSecret) = backing else {
-            return nil
-        }
-        return clientSecret
-    }
-
     var usesCustomerSession: Bool {
-        return source == .customerSession
+        guard case .customer(let customer) = backing,
+              case .customerSession = customer?.customerAccessProvider else {
+            return false
+        }
+        return true
     }
 
     var legacyEphemeralKeyCredentials: (customerID: String, ephemeralKeySecret: String)? {
-        guard case .legacyEphemeralKey(let customerID, let ephemeralKeySecret) = backing,
-              let customerID else {
+        guard case .customer(let customer) = backing,
+              let customer,
+              case .legacyCustomerEphemeralKey(let ephemeralKeySecret) = customer.customerAccessProvider else {
             return nil
         }
-        return (customerID, ephemeralKeySecret)
+        return (customer.id, ephemeralKeySecret)
     }
 
     var supportsLinkSetupFutureUsage: Bool {
-        return source == .customerSession
+        return usesCustomerSession
     }
 
     func addElementsSessionParams(to parameters: inout [String: Any]) {
-        switch backing {
-        case .legacyEphemeralKey(_, let ephemeralKeySecret):
+        guard case .customer(let customer) = backing else {
+            return
+        }
+        switch customer?.customerAccessProvider {
+        case .legacyCustomerEphemeralKey(let ephemeralKeySecret):
             parameters["legacy_customer_ephemeral_key"] = ephemeralKeySecret
-        case .customerSession(_, let clientSecret):
+        case .customerSession(let clientSecret):
             parameters["customer_session_client_secret"] = clientSecret
-        case .none, .checkoutSession:
+        case nil:
             break
         }
     }
 
     func ephemeralKeySecret(basedOn elementsSession: STPElementsSession?) -> String? {
-        switch backing {
-        case .legacyEphemeralKey(_, let ephemeralKeySecret):
-            return ephemeralKeySecret
-        case .customerSession:
-            return elementsSession?.customer?.customerSession.apiKey
-        case .none, .checkoutSession:
+        guard case .customer(let customer) = backing else {
             return nil
         }
+        return customer?.ephemeralKeySecret(basedOn: elementsSession)
     }
 
     func savedPaymentMethods(
@@ -186,12 +111,15 @@ struct CustomerProvider {
         prefetchedPaymentMethods: [STPPaymentMethod]?
     ) -> [STPPaymentMethod]? {
         switch backing {
-        case .none:
-            return nil
-        case .legacyEphemeralKey:
-            return prefetchedPaymentMethods
-        case .customerSession:
-            return elementsSession.customer?.paymentMethods
+        case .customer(let customer):
+            switch customer?.customerAccessProvider {
+            case .legacyCustomerEphemeralKey:
+                return prefetchedPaymentMethods
+            case .customerSession:
+                return elementsSession.customer?.paymentMethods
+            case nil:
+                return nil
+            }
         case .checkoutSession(let session):
             return session.customer?.paymentMethods
         }
@@ -201,12 +129,12 @@ struct CustomerProvider {
         elementsSession: STPElementsSession
     ) -> PaymentSheetFormFactory.SavePaymentMethodConsentBehavior {
         switch backing {
-        case .checkoutSession:
-            guard hasCustomer, saveConsent?.enabled == true else {
+        case .checkoutSession(let session):
+            guard hasCustomer, session.savedPaymentMethodsOfferSave?.enabled == true else {
                 return .paymentSheetWithCheckoutSessionPaymentMethodSaveDisabled
             }
             return .paymentSheetWithCheckoutSessionPaymentMethodSaveEnabled
-        case .none, .legacyEphemeralKey, .customerSession:
+        case .customer:
             return elementsSession.savePaymentMethodConsentBehavior
         }
     }
@@ -215,7 +143,7 @@ struct CustomerProvider {
         switch backing {
         case .checkoutSession(let session):
             return session.customer?.canDetachPaymentMethod ?? false
-        case .none, .legacyEphemeralKey, .customerSession:
+        case .customer:
             return elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()
         }
     }
@@ -224,7 +152,7 @@ struct CustomerProvider {
         switch backing {
         case .checkoutSession:
             return true
-        case .none, .legacyEphemeralKey, .customerSession:
+        case .customer:
             return elementsSession.paymentMethodUpdateForPaymentSheet
         }
     }
@@ -258,7 +186,7 @@ struct CustomerProvider {
                 throw Error.missingUpdatedPaymentMethod
             }
             updatedPaymentMethod = paymentMethod
-        case .none, .legacyEphemeralKey, .customerSession:
+        case .customer:
             guard let ephemeralKey = ephemeralKeySecret(basedOn: elementsSession) else {
                 throw Error.missingEphemeralKey
             }
@@ -288,39 +216,34 @@ struct CustomerProvider {
                 )
             }
             return true
-        case .customerSession(let customerID, let clientSecret):
-            guard let ephemeralKey = ephemeralKeySecret(basedOn: elementsSession) else {
+        case .customer(let customer):
+            guard let customer,
+                  let ephemeralKey = ephemeralKeySecret(basedOn: elementsSession) else {
                 return false
             }
-            guard let customerID else {
-                return false
-            }
-            if paymentMethod.type == .card {
-                apiClient.detachPaymentMethodRemoveDuplicates(
-                    paymentMethod.stripeId,
-                    customerId: customerID,
-                    fromCustomerUsing: ephemeralKey,
-                    withCustomerSessionClientSecret: clientSecret
-                ) { _ in }
-            } else {
+            switch customer.customerAccessProvider {
+            case .customerSession(let clientSecret):
+                if paymentMethod.type == .card {
+                    apiClient.detachPaymentMethodRemoveDuplicates(
+                        paymentMethod.stripeId,
+                        customerId: customer.id,
+                        fromCustomerUsing: ephemeralKey,
+                        withCustomerSessionClientSecret: clientSecret
+                    ) { _ in }
+                } else {
+                    apiClient.detachPaymentMethod(
+                        paymentMethod.stripeId,
+                        fromCustomerUsing: ephemeralKey,
+                        withCustomerSessionClientSecret: clientSecret
+                    ) { _ in }
+                }
+            case .legacyCustomerEphemeralKey:
                 apiClient.detachPaymentMethod(
                     paymentMethod.stripeId,
-                    fromCustomerUsing: ephemeralKey,
-                    withCustomerSessionClientSecret: clientSecret
+                    fromCustomerUsing: ephemeralKey
                 ) { _ in }
             }
             return true
-        case .legacyEphemeralKey:
-            guard let ephemeralKey = ephemeralKeySecret(basedOn: elementsSession) else {
-                return false
-            }
-            apiClient.detachPaymentMethod(
-                paymentMethod.stripeId,
-                fromCustomerUsing: ephemeralKey
-            ) { _ in }
-            return true
-        case .none:
-            return false
         }
     }
 

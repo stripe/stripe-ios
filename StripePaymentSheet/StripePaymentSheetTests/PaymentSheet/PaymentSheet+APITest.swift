@@ -1247,7 +1247,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         paymentIntentParams.paymentMethodOptions?.setSetupFutureUsageIfNecessary(
             true,
             paymentMethodType: .card,
-            customer: .init(id: "", ephemeralKeySecret: "")
+            customerProvider: CustomerProvider(customer: .init(id: "", ephemeralKeySecret: ""))
         )
 
         let params = STPFormEncoder.dictionary(forObject: paymentIntentParams)
@@ -1270,7 +1270,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         paymentIntentParams.paymentMethodOptions?.setSetupFutureUsageIfNecessary(
             false,
             paymentMethodType: .card,
-            customer: .init(id: "", ephemeralKeySecret: "")
+            customerProvider: CustomerProvider(customer: .init(id: "", ephemeralKeySecret: ""))
         )
 
         let params = STPFormEncoder.dictionary(forObject: paymentIntentParams)
@@ -1293,7 +1293,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         paymentIntentParams.paymentMethodOptions?.setSetupFutureUsageIfNecessary(
             false,
             paymentMethodType: .card,
-            customer: nil
+            customerProvider: CustomerProvider(customer: nil)
         )
 
         let params = STPFormEncoder.dictionary(forObject: paymentIntentParams)
@@ -1307,7 +1307,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         paymentIntentParams.paymentMethodOptions?.setSetupFutureUsageIfNecessary(
             false,
             paymentMethodType: .card,
-            customer: nil
+            customerProvider: CustomerProvider(customer: nil)
         )
 
         let params = STPFormEncoder.dictionary(forObject: paymentIntentParams)

@@ -2039,7 +2039,7 @@ extension PaymentSheetLPMConfirmFlowTests {
         let lhs = IntentConfirmParams(type: .stripe(.card))
         let rhs = IntentConfirmParams(type: .stripe(.card))
         // When lhs has an obscure difference w/ rhs...
-        lhs.confirmPaymentMethodOptions.setSetupFutureUsageIfNecessary(true, paymentMethodType: .card, customer: .init(id: "", ephemeralKeySecret: ""))
+        lhs.confirmPaymentMethodOptions.setSetupFutureUsageIfNecessary(true, paymentMethodType: .card, customerProvider: CustomerProvider(customer: .init(id: "", ephemeralKeySecret: "")))
         // ...they should not be equal
         XCTAssertNotEqual(lhs, rhs)
     }
