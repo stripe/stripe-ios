@@ -239,9 +239,9 @@ public final class EmbeddedPaymentElement {
                 case .none:
                     return true
                 case .applePay:
-                    return PaymentSheet.isApplePayEnabled(elementsSession: loadResult.elementsSession, configuration: configuration)
+                    return PaymentSheet.isApplePayEnabled(elementsSession: loadResult.elementsSession, configuration: self.configuration)
                 case .link:
-                    return PaymentSheet.shouldShowLinkButton(elementsSession: loadResult.elementsSession, configuration: configuration)
+                    return PaymentSheet.shouldShowLinkButton(elementsSession: loadResult.elementsSession, configuration: self.configuration)
                 case .saved(paymentMethod: let paymentMethod, confirmParams: _):
                     return loadResult.savedPaymentMethods.contains(paymentMethod)
                 case .new(confirmParams: let confirmParams):
@@ -277,7 +277,7 @@ public final class EmbeddedPaymentElement {
                 }
             }()
             self.embeddedPaymentMethodsView = Self.makeView(
-                configuration: configuration,
+                configuration: self.configuration,
                 loadResult: loadResult,
                 analyticsHelper: analyticsHelper,
                 previousSelection: shouldSelectPreviousRow ? previousSelectedRowType : nil,
@@ -443,9 +443,9 @@ public final class EmbeddedPaymentElement {
             return nil
         }
     }
-    internal private(set) lazy var savedPaymentMethodManager: SavedPaymentMethodManager = {
-        SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession, intent: intent)
-    }()
+    internal var savedPaymentMethodManager: SavedPaymentMethodManager {
+        SavedPaymentMethodManager(configuration: configuration, customerProvider: loadResult.customerProvider, elementsSession: elementsSession, intent: intent)
+    }
 
     internal private(set) lazy var paymentHandler: STPPaymentHandler = STPPaymentHandler(apiClient: configuration.apiClient)
 

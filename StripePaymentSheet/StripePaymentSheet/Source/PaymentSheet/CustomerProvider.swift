@@ -124,4 +124,60 @@ struct CustomerProvider {
             return elementsSession.paymentMethodUpdateForPaymentSheet
         }
     }
+
+    enum Error: Swift.Error {
+
+        case missingEphemeralKey
+        case missingUpdatedPaymentMethod
+    }
+
+    func ephemeralKeySecret(basedOn elementsSession: STPElementsSession?) -> String? {
+        guard case .customer(let customer) = backing else {
+            return nil
+        }
+        return customer?.ephemeralKeySecret(basedOn: elementsSession)
+    }
+
+    @MainActor
+    func update(
+        paymentMethod: STPPaymentMethod,
+        with updateParams: STPPaymentMethodUpdateParams,
+        elementsSession: STPElementsSession,
+        apiClient: STPAPIClient
+    ) async throws -> STPPaymentMethod {
+        let updatedPaymentMethod: STPPaymentMethod
+        switch backing {
+        case .checkoutSession(let session):
+            let billing = CheckoutController.PaymentMethodBillingDetails(updateParams.billingDetails)
+            let expiry = CheckoutController.PaymentMethodExpiryDetails(updateParams.card)
+            guard billing != nil || expiry != nil else {
+                throw PaymentSheetError.unknown(
+                    debugDescription: "Tried to update a payment method without billing details or expiry details."
+                )
+            }
+            let updatedSession = try await apiClient.updatePaymentMethod(
+                paymentMethod.stripeId,
+                inCheckoutSession: session.id,
+                billingDetails: billing,
+                expiryDetails: expiry
+            )
+            guard let paymentMethod = updatedSession.customer?.paymentMethods.first(where: {
+                $0.stripeId == paymentMethod.stripeId
+            }) else {
+                throw Error.missingUpdatedPaymentMethod
+            }
+            updatedPaymentMethod = paymentMethod
+        case .customer:
+            guard let ephemeralKey = ephemeralKeySecret(basedOn: elementsSession) else {
+                throw Error.missingEphemeralKey
+            }
+            updatedPaymentMethod = try await apiClient.updatePaymentMethod(
+                with: paymentMethod.stripeId,
+                paymentMethodUpdateParams: updateParams,
+                ephemeralKeySecret: ephemeralKey
+            )
+        }
+        updatedPaymentMethod.updateLocalFields(from: paymentMethod)
+        return updatedPaymentMethod
+    }
 }
