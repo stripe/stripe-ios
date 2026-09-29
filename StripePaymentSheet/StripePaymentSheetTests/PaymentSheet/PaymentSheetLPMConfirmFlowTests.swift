@@ -969,7 +969,6 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                     intent: intent,
                     elementsSession: elementsSession,
                     configuration: configuration,
-                    customerProvider: CustomerProvider(customer: configuration.customer),
                     clientAttributionMetadata: clientAttributionMetadata,
                     checkout: testIntent.checkout,
                     completion: { result, _ in
