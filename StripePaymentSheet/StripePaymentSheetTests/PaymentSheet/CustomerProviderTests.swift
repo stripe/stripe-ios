@@ -209,4 +209,18 @@ final class CustomerProviderTests: XCTestCase {
             XCTAssertEqual(provider.usesCustomerSession, usesCustomerSession)
         }
     }
+
+    func testCustomerAnalyticsIdentifyTheResolvedIntegration() {
+        let checkoutSession = CheckoutTestHelpers.makeSession().makePublicSession()
+        let cases: [(CustomerProvider, String?)] = [
+            (.init(customer: nil), nil),
+            (.init(customer: .init(id: "cus_legacy", ephemeralKeySecret: "ek_test")), "legacy"),
+            (.init(customer: .init(id: "cus_session", customerSessionClientSecret: "cuss_test")), "customer_session"),
+            (.init(checkoutSession: checkoutSession), "checkout_session"),
+        ]
+
+        for (provider, expected) in cases {
+            XCTAssertEqual(provider.analyticValue, expected)
+        }
+    }
 }
