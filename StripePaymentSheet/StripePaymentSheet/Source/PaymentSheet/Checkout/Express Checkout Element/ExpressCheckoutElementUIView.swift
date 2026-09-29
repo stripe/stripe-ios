@@ -75,7 +75,7 @@ public final class ExpressCheckoutElementUIView: UIView {
             height: stackView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height
         )
     }
-    
+
     // MARK: - Private Methods
 
     /// Arranges `buttons` into no more than `appearance.buttonLayout.maxRows` rows of no more than `appearance.buttonLayout.maxColumns` columns.
