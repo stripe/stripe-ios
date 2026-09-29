@@ -78,14 +78,17 @@ final class ExpressCheckoutElementViewSnapshotTests: STPSnapshotTestCase {
         configuration.applePayConfiguration = .init(merchantId: "merchant.com.example")
         configuration.appearance = appearance
 
+        let session = CheckoutTestHelpers.makeSessionWithWalletTypes(["link", "apple_pay"])
+            .makePublicSession(expressCheckoutConfiguration: configuration)
         let view = ExpressCheckoutElementUIView(
-            session: CheckoutTestHelpers.makeSessionWithWalletTypes(["link", "apple_pay"]).makePublicSession(),
+            session: session,
             configuration: configuration,
             delegate: Delegate()
         )
-        if let buttons {
-            view.layoutButtons(buttons)
-        }
+        view.update(
+            with: session,
+            buttons: buttons ?? session.availableExpressCheckoutPaymentMethods
+        )
         view.setNeedsLayout()
         view.layoutIfNeeded()
         return view
