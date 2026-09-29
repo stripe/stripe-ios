@@ -19,9 +19,10 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
         scrollStart.press(forDuration: 0.1, thenDragTo: scrollEnd)
         XCTAssertTrue(app.buttons["checkout_picker_Email source"].waitForExistenceAndTap())
         XCTAssertTrue(app.buttons["Server — Customer"].waitForExistenceAndTap())
-        scrollStart.press(forDuration: 0.1, thenDragTo: scrollEnd)
-        app.buttons["No Override"].scrollToAndTap(in: app)
-        app.buttons["Germany (DE)"].waitForExistenceAndTap()
+        let adaptivePricingLocationPicker = app.buttons["checkout_picker_Adaptive Pricing Location"]
+        adaptivePricingLocationPicker.scrollToAndTap(in: app)
+        XCTAssertTrue(app.buttons["Germany (DE)"].waitForExistenceAndTap())
+        XCTAssertTrue(adaptivePricingLocationPicker.label.contains("Germany (DE)"))
         app.buttons["Create Checkout Session"].waitForExistenceAndTap()
 
         XCTAssertTrue(app.navigationBars["Your Cart"].waitForExistence(timeout: 15))
