@@ -450,7 +450,11 @@ extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {
 
     private func updateDefault(paymentMethod: StripePayments.STPPaymentMethod) async -> Result<Void, Error> {
         do {
-            _ = try await savedPaymentMethodManager.setAsDefaultPaymentMethod(defaultPaymentMethodId: paymentMethod.stripeId)
+            _ = try await loadResult.customerProvider.setAsDefaultPaymentMethod(
+                paymentMethod.stripeId,
+                elementsSession: elementsSession,
+                apiClient: configuration.apiClient
+            )
             defaultPaymentMethod = paymentMethod
             return .success(())
         } catch {

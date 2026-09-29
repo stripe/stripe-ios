@@ -1,5 +1,5 @@
 //
-//  SavedPaymentMethodManagerTests.swift
+//  CustomerProviderPaymentMethodTests.swift
 //  StripePaymentSheet
 //
 //  Created by Nick Porter on 5/3/24.
@@ -17,7 +17,7 @@ import UIKit
 import XCTest
 
 @MainActor
-final class SavedPaymentMethodManagerTests: XCTestCase {
+final class CustomerProviderPaymentMethodTests: XCTestCase {
 
     let ephemeralKey = "test-eph-key"
     let paymentMethod = STPPaymentMethod.stubbedPaymentMethod()
@@ -267,6 +267,59 @@ final class SavedPaymentMethodManagerTests: XCTestCase {
         } catch {}
     }
 
+    func testMissingCustomerSessionKeyPreservesOperationErrorsAndAnalytics() async {
+        // Given a Customer Session whose loaded response has no ephemeral key
+        let sut = CustomerProvider(customer: .init(id: "cus_test", customerSessionClientSecret: "cuss_test"))
+        let elementsSession = STPElementsSession._testCardValue()
+        let apiClient = configuration.apiClient
+        let analyticsClient = STPAnalyticsClient.sharedClient
+        analyticsClient._testLogHistory = []
+        defer { analyticsClient._testLogHistory = [] }
+
+        // When updating or setting a default, preserve the operation-specific PaymentSheet error.
+        STPAssertTestUtil.shouldSuppressNextSTPAlert = true
+        do {
+            _ = try await sut.update(
+                paymentMethod: paymentMethod,
+                with: STPPaymentMethodUpdateParams(),
+                elementsSession: elementsSession,
+                apiClient: apiClient
+            )
+            XCTFail("Expected the update to fail without credentials")
+        } catch PaymentSheetError.unknown(let description) {
+            XCTAssertEqual(description, "Failed to read ephemeral key while updating a payment method.")
+        } catch {
+            XCTFail("Unexpected error: \(error)")
+        }
+
+        STPAssertTestUtil.shouldSuppressNextSTPAlert = true
+        do {
+            _ = try await sut.setAsDefaultPaymentMethod(
+                paymentMethod.stripeId,
+                elementsSession: elementsSession,
+                apiClient: apiClient
+            )
+            XCTFail("Expected setting a default to fail without credentials")
+        } catch PaymentSheetError.unknown(let description) {
+            XCTAssertEqual(description, "Failed to read ephemeral key while setting a payment method as default.")
+        } catch {
+            XCTFail("Unexpected error: \(error)")
+        }
+
+        // ...and removal still returns immediately, with the same diagnostic as the throwing operations.
+        STPAssertTestUtil.shouldSuppressNextSTPAlert = true
+        sut.detach(paymentMethod: paymentMethod, elementsSession: elementsSession, apiClient: apiClient)
+
+        // Then all three operations retain their existing analytics identity and customer context.
+        let events = analyticsClient._testLogHistory.filter { $0["event"] as? String == "unexpected_error.paymentsheet" }
+        XCTAssertEqual(events.count, 3)
+        for event in events {
+            XCTAssertEqual(event["error_type"] as? String, "StripePaymentSheet.SavedPaymentMethodManager.Error")
+            XCTAssertEqual(event["error_code"] as? String, "missingEphemeralKey")
+            XCTAssertEqual(event["customer_access_provider"] as? String, "customer_session")
+        }
+    }
+
     func testCheckoutUpdateMissingPaymentMethodPreservesErrorAndAnalytics() async throws {
         // Given a successful Checkout update response that omits the requested payment method
         let checkoutSessionID = "cs_test_missing_updated_method"
@@ -381,7 +434,7 @@ final class SavedPaymentMethodManagerTests: XCTestCase {
     }
 }
 
-extension SavedPaymentMethodManagerTests {
+extension CustomerProviderPaymentMethodTests {
 
     // MARK: HTTP Stubs
 

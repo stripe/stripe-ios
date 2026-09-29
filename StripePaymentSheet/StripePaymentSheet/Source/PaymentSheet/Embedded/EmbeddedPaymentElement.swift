@@ -400,10 +400,6 @@ public final class EmbeddedPaymentElement {
             return nil
         }
     }
-    internal var savedPaymentMethodManager: SavedPaymentMethodManager {
-        SavedPaymentMethodManager(configuration: configuration, customerProvider: loadResult.customerProvider, elementsSession: elementsSession)
-    }
-
     internal private(set) lazy var paymentHandler: STPPaymentHandler = STPPaymentHandler(apiClient: configuration.apiClient)
 
     internal var confirmationChallenge: ConfirmationChallenge?
