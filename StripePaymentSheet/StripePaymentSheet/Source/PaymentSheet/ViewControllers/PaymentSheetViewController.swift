@@ -64,7 +64,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
     private(set) var isDismissable: Bool = true
 
     private lazy var savedPaymentMethodManager: SavedPaymentMethodManager = {
-        return SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession, intent: intent)
+        return SavedPaymentMethodManager(configuration: configuration, customerProvider: loadResult.customerProvider, elementsSession: elementsSession, intent: intent)
     }()
 
     // MARK: - Views
@@ -560,8 +560,12 @@ extension PaymentSheetViewController: SavedPaymentOptionsViewControllerDelegate 
             throw PaymentSheetError.unknown(debugDescription: "Failed to read payment method from payment method selection")
         }
 
-        return try await savedPaymentMethodManager.update(paymentMethod: paymentMethod,
-                                                                  with: updateParams)
+        return try await loadResult.customerProvider.update(
+            paymentMethod: paymentMethod,
+            with: updateParams,
+            elementsSession: elementsSession,
+            apiClient: configuration.apiClient
+        )
     }
 
     func didSelectUpdateDefault(viewController: SavedPaymentOptionsViewController,
