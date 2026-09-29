@@ -15,6 +15,9 @@ MINOR
 * [Added] Added GoPay API bindings and support for payments, including setup future usage, in PaymentSheet.
 
 ## 26.12.1 2026-09-28
+### CryptoOnramp (Alpha)
+* [Fixed] Preserved PaymentIntent error codes, decline codes, and types in checkout errors after authentication.
+
 ### Financial Connections
 * [Fixed] Preserved `no_eligible_accounts` in `onEvent` error callbacks instead of reporting it as `unexpected_error`.
 * [Fixed] Recorded native `onEvent` emissions with the session context for diagnostics.
@@ -29,7 +32,6 @@ MINOR
 ### CryptoOnramp (Alpha)
 * [Removed] Removed public exposure of `StripeCryptoOnramp.Image`, including `Image.linkIconSquare`.
 * [Added] Added `CryptoOnrampCoordinator.presentTermsAndConditionsIfNeeded(from:)` and `presentTermsOfServiceIfNeeded(from:)` to present and record acceptance of current partner terms when required. Both methods return `PartnerTermsResult`.
-* [Fixed] Preserved PaymentIntent error codes, decline codes, and types in checkout errors after authentication.
 
 ### StripeCore
 * [Added] Added `additionalHeaders` support to the `STPAPIClient` GET, POST, and DELETE APIs exposed through the `STP` SPI.
