@@ -40,4 +40,32 @@ struct CustomerProvider {
     var hasCustomer: Bool {
         return customerID != nil
     }
+
+    var legacyEphemeralKeyCredentials: (customerID: String, ephemeralKeySecret: String)? {
+        guard case .customer(let customer) = backing,
+              let customer,
+              case .legacyCustomerEphemeralKey(let ephemeralKeySecret) = customer.customerAccessProvider else {
+            return nil
+        }
+        return (customer.id, ephemeralKeySecret)
+    }
+
+    func savedPaymentMethods(
+        elementsSession: STPElementsSession,
+        prefetchedPaymentMethods: [STPPaymentMethod]?
+    ) -> [STPPaymentMethod]? {
+        switch backing {
+        case .customer(let customer):
+            switch customer?.customerAccessProvider {
+            case .legacyCustomerEphemeralKey:
+                return prefetchedPaymentMethods
+            case .customerSession:
+                return elementsSession.customer?.paymentMethods
+            case nil:
+                return nil
+            }
+        case .checkoutSession(let session):
+            return session.customer?.paymentMethods
+        }
+    }
 }
