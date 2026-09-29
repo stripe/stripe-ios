@@ -426,6 +426,23 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
         }
     }
 
+    func testPixConfirmFlows() async throws {
+        let configuration = PaymentSheet.Configuration()
+
+        try await _testConfirm(
+            intentKinds: [.paymentIntent, .paymentIntentWithSetupFutureUsage, .setupIntent],
+            currency: "BRL",
+            paymentMethodType: .pix,
+            merchantCountry: .US,
+            configuration: configuration,
+            expectedHierarchy: ExpectedFormHierarchy.Pix.international
+        ) { form in
+            form.getTextFieldElement("Full name").setText("Jane Doe")
+            form.getTextFieldElement("Email").setText("jane@example.com")
+            form.getTextFieldElement("CPF/CPNJ").setText("00000000000")
+        }
+    }
+
     func testSwishConfirmFlows() async throws {
         try await _testConfirm(
             intentKinds: [.paymentIntent],
@@ -722,6 +739,22 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                                expectedHierarchy: ExpectedFormHierarchy.Scalapay.paymentIntent) { _ in }
     }
 
+    func testGoPayConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "IDR",
+                               amount: 1000000,
+                               paymentMethodType: .goPay,
+                               merchantCountry: .US,
+                               expectedHierarchy: ExpectedFormHierarchy.GoPay.paymentIntent) { _ in }
+        // TODO(porter): Add `.paymentIntentWithPMOSetupFutureUsage` once Confirmation Tokens
+        // accepts `client_context[payment_method_options][gopay]`.
+        try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage],
+                               currency: "IDR",
+                               amount: 1000000,
+                               paymentMethodType: .goPay,
+                               merchantCountry: .US,
+                               expectedHierarchy: ExpectedFormHierarchy.GoPay.paymentIntent) { _ in }
+    }
     func testPaycoConfirmFlows() async throws {
         try await _testConfirm(intentKinds: [.paymentIntent],
                                currency: "KRW",
@@ -1962,10 +1995,16 @@ extension PaymentSheetLPMConfirmFlowTests: PaymentSheetAuthenticationContext {
         completion?()
     }
 
-    func presentPollingVCForAction(action: STPPaymentHandlerPaymentIntentActionParams, type: STPPaymentMethodType, safariViewController: SFSafariViewController?) {
+    func presentPollingVCForAction(action: STPPaymentHandlerActionParams, type: STPPaymentMethodType, safariViewController: SFSafariViewController?) {
         // Simulate that the intent transitioned to succeeded
         // If we don't update the status to succeeded, completing the action with .succeeded may fail due to invalid state
-        action.paymentIntent = STPFixtures.paymentIntent(paymentMethodTypes: [type.identifier], status: .succeeded)
+        if let action = action as? STPPaymentHandlerPaymentIntentActionParams {
+            action.paymentIntent = STPFixtures.paymentIntent(paymentMethodTypes: [type.identifier], status: .succeeded)
+        } else if let action = action as? STPPaymentHandlerSetupIntentActionParams {
+            action.setupIntent = STPFixtures.setupIntent(paymentMethodTypes: [type.identifier], status: .succeeded)
+        } else {
+            XCTFail("Unexpected PaymentHandler action type: \(Swift.type(of: action))")
+        }
         action.complete(with: .succeeded, error: nil)
     }
 }

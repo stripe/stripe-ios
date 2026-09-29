@@ -2,12 +2,33 @@ The next release's version bump will so far be:
 MINOR
 
 ## X.Y.Z - changes pending release
+### Payments
+* [Fixed] Amounts in LBP are now displayed correctly.
+
+### PaymentSheet
+* [Fixed] Fixed Apple Pay failing to open for fractional amounts in COP, HUF, IDR, LAK, LBP, PKR, and RSD.
+
 ### CryptoOnramp (Alpha)
 * [Added] Added optional `email` and `phone` fields to `KycInfo`, populated from Apple Pay billing or shipping contact information when requested. Both values are for prefill only and `phone` is not normalized to E.164. Names fall back to shipping contact values when billing values are missing or blank. Creating `KycInfo` from an Apple Pay payment still requires a usable name or billing address; email or phone alone is insufficient.
+* [Changed] Apple Pay can now be presented via `CryptoOnrampCoordinator.collectPaymentMethod(type:from:)` before the user authenticates with Link. `createCryptoPaymentToken()` still requires an authenticated user.
+* [Added] Added `STPAPIClient.CryptoOnrampAPIError.missingLinkSessionKey` to report when a Link session key is unavailable.
+
+### PaymentSheet
+* [Added] Added GoPay API bindings and support for payments, including setup future usage, in PaymentSheet.
+
+## 26.12.1 2026-09-28
+### CryptoOnramp (Alpha)
+* [Fixed] Preserved PaymentIntent error codes, decline codes, and types in checkout errors after authentication.
 
 ### Financial Connections
 * [Fixed] Preserved `no_eligible_accounts` in `onEvent` error callbacks instead of reporting it as `unexpected_error`.
 * [Fixed] Recorded native `onEvent` emissions with the session context for diagnostics.
+
+### Payments
+* [Added] Added API bindings for Pix.
+
+### PaymentSheet
+* [Added] Added support for Pix payments.
 
 ## 26.12.0 2026-09-21
 ### CryptoOnramp (Alpha)
@@ -16,6 +37,7 @@ MINOR
 
 ### StripeCore
 * [Added] Added `additionalHeaders` support to the `STPAPIClient` GET, POST, and DELETE APIs exposed through the `STP` SPI.
+* [Added] Added `uploadFile(at:purpose:authorizationSecret:progress:)` and associated error type `FileUploadError`, exposed through the `STP` SPI.
 
 ### PaymentSheet
 * [Fixed] Fixed card funding warnings not appearing after scanning a card.

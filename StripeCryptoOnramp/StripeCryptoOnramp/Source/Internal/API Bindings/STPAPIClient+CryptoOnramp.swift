@@ -20,6 +20,9 @@ extension STPAPIClient {
         /// No consumer session client secret was found to be associated with the active link account session.
         case missingConsumerSessionClientSecret
 
+        /// No Link session key was found for the active Link account session.
+        case missingLinkSessionKey
+
         /// The request requires a session with a verified link account, but the account was found to not be verified.
         case linkAccountNotVerified
 
@@ -28,6 +31,8 @@ extension STPAPIClient {
             switch self {
             case .missingConsumerSessionClientSecret:
                 return "No consumer session client secret was found to be associated with the active link account session."
+            case .missingLinkSessionKey:
+                return "No Link session key was found for the active Link account session."
             case .linkAccountNotVerified:
                 return "The request requires a session with a verified link account, but the account was found to not be verified."
             }
@@ -67,12 +72,25 @@ extension STPAPIClient {
         )
     }
 
-    /// Submits documents and questionnaire answers for one additional KYC requirement.
-    /// - Parameter request: The requirement fulfillment payload.
-    /// - Returns: The newly created additional KYC submission.
-    func fulfillAdditionalKYCRequirement(_ request: FulfillAdditionalKYCRequirementRequest) async throws -> FulfillAdditionalKYCRequirementResponse {
-        let endpoint = "crypto/internal/fulfill_additional_kyc_requirement"
-        return try await post(resource: endpoint, object: request)
+    /// Submits documents and questionnaire answers for the specified KYC requirements.
+    /// - Parameters:
+    ///   - request: The fulfillment payloads keyed by requirement name.
+    ///   - linkAccountInfo: Information associated with the Link account, including its session key and verification state.
+    /// - Returns: An empty response after the submission is accepted.
+    /// - Throws: An error if the Link account is not verified, its session key is missing or empty, or an API error occurs.
+    @discardableResult
+    func fulfillKYCRequirements(
+        _ request: FulfillKYCRequirementsRequest,
+        linkAccountInfo: PaymentSheetLinkAccountInfoProtocol
+    ) async throws -> EmptyResponse {
+        guard let linkSessionKey = linkAccountInfo.linkSessionKey, !linkSessionKey.isEmpty else {
+            throw CryptoOnrampAPIError.missingLinkSessionKey
+        }
+
+        try validateSessionState(using: linkAccountInfo)
+
+        let endpoint = "crypto/internal/fulfill_kyc_requirements"
+        return try await post(resource: endpoint, object: request, ephemeralKeySecret: linkSessionKey)
     }
 
     /// Attaches the specific KYC info to the current Link user on the backend.
@@ -424,18 +442,23 @@ extension STPAPIClient {
     }
 
     /// Retrieves platform settings for the crypto onramp service.
-    /// - Parameter cryptoCustomerId: The ID for the crypto customer.
+    /// - Parameter cryptoCustomerId: The ID for the crypto customer, if one is available. When `nil`, platform settings
+    /// are resolved using the publishable key alone, which allows resolving a platform API client before authentication.
     /// - Returns: Platform settings including the publishable key.
     /// Throws if an API error occurs.
     func getPlatformSettings(
-        cryptoCustomerId: String
+        cryptoCustomerId: String?
     ) async throws -> PlatformSettingsResponse {
         let endpoint = "crypto/internal/platform_settings"
 
-        let parameters: [String: Any] = [
-            "crypto_customer_id": cryptoCustomerId,
+        var parameters: [String: Any] = [
             "ui_mode": "headless",
         ]
+
+        if let cryptoCustomerId {
+            parameters["crypto_customer_id"] = cryptoCustomerId
+        }
+
         return try await get(resource: endpoint, parameters: parameters)
     }
 
@@ -452,12 +475,14 @@ private extension STPAPIClient {
     func post<T: Decodable>(
         resource: String,
         object: Encodable,
+        ephemeralKeySecret: String? = nil,
         additionalHeaders: [String: String] = [:]
     ) async throws -> T {
         return try await withCheckedThrowingContinuation { continuation in
             post(
                 resource: resource,
                 object: object,
+                ephemeralKeySecret: ephemeralKeySecret,
                 apiVersionOverride: CryptoOnrampAPI.stripeAPIVersion,
                 additionalHeaders: additionalHeaders
             ) { (result: Result<T, Error>) in

@@ -281,9 +281,11 @@ class PaymentSheetFormFactory {
                 return makeNaverPay()
             case .SEPADebit:
                 return makeSepaDebit()
-            case .grabPay, .paynow, .payPay, .mobilePay, .vipps, .zip, .crypto,
+            case .goPay, .grabPay, .paynow, .payPay, .mobilePay, .vipps, .zip, .crypto,
                  .billie, .sunbit, .alma, .payByBank, .payco, .sequra, .scalapay:
                 return makeContactInformationAndBillingAddressForm()
+            case .pix:
+                return makePix()
             case .alipay:
                 return makeContactInformationAndBillingAddressForm(
                     additionalElements: makeSetupMandateElements(for: paymentMethod)

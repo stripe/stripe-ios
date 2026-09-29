@@ -1,5 +1,7 @@
 "Debit cards are most likely to be accepted." = "Malamang na tanggapin ang mga debit card.";
 
+"Document uploaded successfully" = "Matagumpay na na-upload ang dokumento";
+
 "Please try again later." = "Mangyaring subukang muli mamaya.";
 
 "Submitted for review" = "Isinumite para sa pagrepaso";
@@ -22,8 +24,10 @@
 
 "We couldn't verify ownership of this wallet. Please try again." = "Hindi namin ma-verify ang pagmamay-ari ng wallet na ito. Mangyaring subukang muli.";
 
-"We’re required to confirm your address to enable spending over %@." = "Kailangan naming kumpirmahin ang iyong address para paganahin ang paggastos nang higit sa %@.";
+"We may request proof of address for larger transactions." = "Maaari kaming humiling ng katibayan ng address para sa mas malalaking transaksyon.";
 
-"We’re required to understand where your funds come from to enable spending over %@." = "Kailangan naming maunawaan kung saan nagmumula ang iyong mga pondo para paganahin ang paggastos nang higit sa %@.";
+"We may request source of funds for larger transactions." = "Maaari kaming humiling ng pinagmulan ng mga pondo para sa mas malalaking transaksyon.";
 
 "We’re reviewing your documents. We’ll let you know when verification is complete." = "Sinusuri namin ang iyong mga dokumento. Ipapaalam namin sa iyo kapag nakumpleto na ang pag-verify.";
+
+"You can continue while we verify your document in the background." = "Maaari kang magpatuloy habang bini-verify namin ang iyong dokumento sa background.";

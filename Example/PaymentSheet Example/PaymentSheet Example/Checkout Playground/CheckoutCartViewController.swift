@@ -220,12 +220,16 @@ final class CheckoutCartViewController: UIViewController {
                 }
                 expressCheckoutElementConfiguration.applePayConfiguration = ExpressCheckoutElement.ApplePayConfiguration(
                     merchantId: "merchant.com.stripe.paymentsheet.example",
+                    buttonType: expressCheckoutElementSettings.applePayButtonType.pkPaymentButtonType,
                     display: expressCheckoutElementSettings.applePayDisplay
                 )
                 expressCheckoutElementConfiguration.linkConfiguration = ExpressCheckoutElement.LinkConfiguration(
                     display: expressCheckoutElementSettings.linkDisplay
                 )
-                expressCheckoutElementConfiguration.shippingAddressRequired = expressCheckoutElementSettings.shippingAddressRequired
+                expressCheckoutElementConfiguration.paymentMethodOrder = expressCheckoutElementSettings.paymentMethodOrder.paymentMethodOrder
+                expressCheckoutElementConfiguration.appearance.buttonTheme = expressCheckoutElementSettings.appearance.buttonTheme
+                expressCheckoutElementConfiguration.appearance.buttonLayout.maxColumns = expressCheckoutElementSettings.appearance.buttonLayout.maxColumns
+                expressCheckoutElementConfiguration.appearance.buttonLayout.maxRows = expressCheckoutElementSettings.appearance.buttonLayout.maxRows
                 configuration.expressCheckoutElement = expressCheckoutElementConfiguration
             }
             if adaptivePricing {
@@ -291,7 +295,8 @@ final class CheckoutCartViewController: UIViewController {
         contentStackView.addArrangedSubview(makeLineItemsSection(session: session))
         contentStackView.addArrangedSubview(makeEmailSection(session: session))
 
-        if expressCheckoutElementSettings.isEnabled {
+        if expressCheckoutElementSettings.isEnabled,
+           !session.availableExpressCheckoutPaymentMethods.isEmpty {
             contentStackView.addArrangedSubview(
                 makeSection(title: "Express Checkout", content: checkout.getExpressCheckoutElement().uiView)
             )
