@@ -11,6 +11,9 @@ MINOR
 ### CryptoOnramp (Alpha)
 * [Added] Added `STPAPIClient.CryptoOnrampAPIError.missingLinkSessionKey` to report when a Link session key is unavailable.
 
+### PaymentSheet
+* [Added] Added GoPay API bindings and support for payments, including setup future usage, in PaymentSheet.
+
 ## 26.12.1 2026-09-28
 ### Financial Connections
 * [Fixed] Preserved `no_eligible_accounts` in `onEvent` error callbacks instead of reporting it as `unexpected_error`.
