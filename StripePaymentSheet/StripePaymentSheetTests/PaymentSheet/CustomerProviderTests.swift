@@ -54,16 +54,22 @@ final class CustomerProviderTests: XCTestCase {
 
     func testSavedPaymentMethodsComeFromTheResolvedCustomerSource() {
         // Given different saved methods in each loading source
-        let elementsSession = STPElementsSession
-            .elementsSessionWithCustomerSessionForPaymentSheet(apiKey: "ek_from_session")
+        let elementsSession = STPElementsSession._testValue(
+            paymentMethodTypes: ["card"],
+            customerSessionData: [:],
+            paymentMethods: [
+                ["id": "pm_1234", "type": "card", "created": 12345],
+                ["id": "pm_4567", "type": "card", "created": 12345],
+            ]
+        )
         let checkoutSession = CheckoutTestHelpers.makeSession([
             "customer": [
                 "id": "cus_checkout",
-                "payment_methods": [["id": "pm_checkout", "type": "card"]],
+                "payment_methods": [["id": "pm_checkout", "type": "card", "created": 12345]],
             ],
         ]).makePublicSession()
         let prefetchedPaymentMethod = STPPaymentMethod.decodedObject(
-            fromAPIResponse: ["id": "pm_prefetched", "type": "card"]
+            fromAPIResponse: ["id": "pm_prefetched", "type": "card", "created": 12345]
         )!
         let cases: [(CustomerProvider, [String]?)] = [
             (.init(customer: nil), nil),
