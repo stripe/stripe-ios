@@ -61,6 +61,10 @@ final class LinkPhoneMatchViewController: UIViewController, ElementDelegate {
         super.viewDidLoad()
         view.backgroundColor = .clear
         view.directionalLayoutMargins = .insets(amount: LinkVerificationView.Constants.edgeMargin)
+        // This content is always hosted inside a dialog or embedded container, never full-screen,
+        // so it shouldn't inherit the host's safe area (which would otherwise widen the effective
+        // margin beyond `edgeMargin` and starve the space `fittingHeight(width:)` accounted for).
+        view.insetsLayoutMarginsFromSafeArea = false
         let title = label(
             STPLocalizedString(
                 "Verify your phone number",
