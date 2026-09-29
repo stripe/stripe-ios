@@ -109,6 +109,7 @@ import UIKit
     private let mode: Mode
     private let elementsSession: STPElementsSession
     private let intent: Intent
+    private let customerProvider: CustomerProvider
     private let paymentElementConfiguration: PaymentElementConfiguration
     private let initialLinkBrand: LinkBrand
     private let appearance: LinkAppearance?
@@ -160,6 +161,7 @@ import UIKit
         mode: Mode,
         elementsSession: STPElementsSession,
         intent: Intent,
+        customerProvider: CustomerProvider,
         paymentElementConfiguration: PaymentElementConfiguration,
         linkBrand: LinkBrand,
         appearance: LinkAppearance?,
@@ -171,6 +173,7 @@ import UIKit
         self.mode = mode
         self.elementsSession = elementsSession
         self.intent = intent
+        self.customerProvider = customerProvider
         self.paymentElementConfiguration = paymentElementConfiguration
         self.initialLinkBrand = linkBrand
         self.appearance = appearance
@@ -292,6 +295,7 @@ import UIKit
                     mode: mode,
                     elementsSession: loadResult.elementsSession,
                     intent: loadResult.intent,
+                    customerProvider: loadResult.customerProvider,
                     paymentElementConfiguration: paymentElementConfiguration,
                     linkBrand: paymentElementConfiguration.resolvedLinkBrand(
                         elementsSession: loadResult.elementsSession,
@@ -356,6 +360,7 @@ import UIKit
                     mode: .setup,
                     elementsSession: loadResult.elementsSession,
                     intent: loadResult.intent,
+                    customerProvider: loadResult.customerProvider,
                     paymentElementConfiguration: paymentElementConfiguration,
                     linkBrand: paymentElementConfiguration.resolvedLinkBrand(
                         elementsSession: loadResult.elementsSession,
@@ -517,6 +522,7 @@ import UIKit
         presentingViewController.presentNativeLink(
             selectedPaymentDetailsID: selectedPaymentDetails?.stripeID,
             configuration: paymentElementConfiguration,
+            customerProvider: customerProvider,
             intent: intent,
             elementsSession: elementsSession,
             analyticsHelper: analyticsHelper,
@@ -577,6 +583,7 @@ import UIKit
             presentingViewController.presentNativeLink(
                 selectedPaymentDetailsID: nil,
                 configuration: paymentElementConfiguration,
+                customerProvider: customerProvider,
                 intent: self.intent,
                 elementsSession: self.elementsSession,
                 analyticsHelper: self.analyticsHelper,

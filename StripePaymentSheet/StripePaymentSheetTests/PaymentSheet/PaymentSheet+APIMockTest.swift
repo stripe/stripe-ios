@@ -107,6 +107,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
         let elementsSession = STPElementsSession.linkPassthroughElementsSession
         PaymentSheet.confirm(
             configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer),
             authenticationContext: self,
             intent: .deferredIntent(intentConfig: MockParams.deferredPaymentIntentConfiguration(clientSecret: MockParams.paymentIntentClientSecret)),
             elementsSession: elementsSession,
@@ -210,6 +211,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
 
         PaymentSheet.confirm(
             configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer),
             authenticationContext: self,
             intent: .paymentIntent(paymentIntent),
             elementsSession: elementsSession,

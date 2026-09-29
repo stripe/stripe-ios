@@ -48,6 +48,7 @@ class PayWithLinkViewControllerTests: XCTestCase {
             intent: ._testValue(),
             elementsSession: ._testValue(intent: ._testValue()),
             configuration: config,
+            customerProvider: CustomerProvider(customer: config.customer),
             analyticsHelper: ._testValue()
         )
 

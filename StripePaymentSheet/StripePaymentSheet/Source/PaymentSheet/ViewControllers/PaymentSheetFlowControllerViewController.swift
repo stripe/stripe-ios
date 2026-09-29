@@ -353,6 +353,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         presentNativeLink(
             selectedPaymentDetailsID: selectedPaymentOption?.currentLinkPaymentMethod,
             configuration: configuration,
+            customerProvider: loadResult.customerProvider,
             intent: intent,
             elementsSession: elementsSession,
             analyticsHelper: analyticsHelper

@@ -1875,6 +1875,7 @@ extension PaymentSheetLPMConfirmFlowTests {
         guard case .checkout(let checkoutSession) = testIntent.intent else {
             PaymentSheet.confirm(
                 configuration: configuration,
+                customerProvider: CustomerProvider(customer: configuration.customer),
                 authenticationContext: self,
                 intent: testIntent.intent,
                 elementsSession: elementsSession,
@@ -1965,6 +1966,7 @@ extension PaymentSheetLPMConfirmFlowTests {
                 let parameters = CheckoutController.LinkConfirmationParameters(
                     confirmOption: confirmOption,
                     configuration: configuration,
+                    customerProvider: CustomerProvider(checkoutSession: checkoutSession),
                     confirmationChallenge: nil,
                     analyticsHelper: analyticsHelper,
                     authenticationContext: self,
