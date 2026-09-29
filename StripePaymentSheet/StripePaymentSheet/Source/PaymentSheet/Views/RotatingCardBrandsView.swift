@@ -105,11 +105,11 @@ class RotatingCardBrandsView: UIView {
     var isAnimating: Bool = false
     var stopAfterNextTransition = false
 
-    func rotateCardBrand(animation: UIViewPropertyAnimator? = nil) {
+    func rotateCardBrand() {
         isAnimating = true
-        let animation = animation ?? UIViewPropertyAnimator(duration: Self.AnimationDuration,
-                                                            controlPoint1: CGPoint(x: 0.19, y: 0.22),
-                                                            controlPoint2: CGPoint(x: 1, y: 1))
+        let animation = UIViewPropertyAnimator(duration: Self.AnimationDuration,
+                                               controlPoint1: CGPoint(x: 0.19, y: 0.22),
+                                               controlPoint2: CGPoint(x: 1, y: 1))
         animation.addAnimations {
             UIView.transition(with: self.rotatingCardBrandView,
                               duration: Self.AnimationDuration,
