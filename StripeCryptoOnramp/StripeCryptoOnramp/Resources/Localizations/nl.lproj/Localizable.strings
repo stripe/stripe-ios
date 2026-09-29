@@ -1,5 +1,7 @@
 "Debit cards are most likely to be accepted." = "Debitcards worden meestal geaccepteerd.";
 
+"Document uploaded successfully" = "Document succesvol geüpload";
+
 "Please try again later." = "Probeer het later nog eens.";
 
 "Submitted for review" = "Ingediend ter controle";
@@ -22,8 +24,10 @@
 
 "We couldn't verify ownership of this wallet. Please try again." = "We konden het eigendom van deze wallet niet verifiëren. Probeer het nog eens.";
 
-"We’re required to confirm your address to enable spending over %@." = "We zijn verplicht om je adres te bevestigen om uitgaven van meer dan %@ mogelijk te maken.";
+"We may request proof of address for larger transactions." = "We kunnen voor grotere transacties om een adresbewijs vragen.";
 
-"We’re required to understand where your funds come from to enable spending over %@." = "We zijn verplicht om te begrijpen waar je geld vandaan komt om uitgaven van meer dan %@ mogelijk te maken.";
+"We may request source of funds for larger transactions." = "We kunnen voor grotere transacties om de herkomst van het geld vragen.";
 
 "We’re reviewing your documents. We’ll let you know when verification is complete." = "We beoordelen je documenten. We laten het je weten wanneer de verificatie is voltooid.";
+
+"You can continue while we verify your document in the background." = "Je kunt doorgaan terwijl we je document op de achtergrond verifiëren.";

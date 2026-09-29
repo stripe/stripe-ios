@@ -89,7 +89,6 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
     }
 
     private weak var delegate: STPCardScannerDelegate?
-    private var captureDevice: AVCaptureDevice?
     private var captureSession: AVCaptureSession?
     private var captureSessionQueue: DispatchQueue?
     private var videoDataOutput: AVCaptureVideoDataOutput?
@@ -123,7 +122,6 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
 
     deinit {
         if isScanning {
-            captureDevice?.unlockForConfiguration()
             captureSession?.stopRunning()
         }
     }
@@ -150,9 +148,13 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
             #else
             self.detectedNumbers = NSCountedSet()
             self.detectedExpirations = NSCountedSet()
-            self.setupCamera()
+            guard self.setupCamera(), let captureSession = self.captureSession else {
+                self.finishWithError()
+                return
+            }
+            captureSession.startRunning()
             DispatchQueue.main.async {
-                self.cameraView?.captureSession = self.captureSession
+                self.cameraView?.captureSession = captureSession
                 self.cameraView?.videoPreviewLayer.connection?.videoOrientation = self.videoOrientation
             }
             #endif
@@ -164,14 +166,15 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
     }
 
     private func finishWithError() {
-        finish(didSucceed: false)
-        DispatchQueue.main.async {
+        finish(didSucceed: false) {
             self.delegate?.cardScannerDidError(self)
         }
     }
 
     // MARK: - Camera Setup
-    private func setupCamera() {
+    // Called only on devices; Periphery indexes the simulator build.
+    // periphery:ignore
+    private func setupCamera() -> Bool {
         textRequest = VNRecognizeTextRequest { [weak self] request, error in
             guard let self, self.isScanning else { return }
 
@@ -188,10 +191,8 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
                                                                     [.builtInTripleCamera, .builtInDualWideCamera, .builtInWideAngleCamera],
                                                                 mediaType: .video, position: .back)
         guard let captureDevice = discoverySession.devices.first else {
-            finishWithError()
-            return
+            return false
         }
-        self.captureDevice = captureDevice
 
         captureSession = AVCaptureSession()
         captureSession?.sessionPreset = .hd1920x1080
@@ -200,16 +201,14 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
         do {
             deviceInput = try AVCaptureDeviceInput(device: captureDevice)
         } catch {
-            finishWithError()
-            return
+            return false
         }
 
         if let deviceInput = deviceInput {
             if captureSession?.canAddInput(deviceInput) ?? false {
                 captureSession?.addInput(deviceInput)
             } else {
-                finishWithError()
-                return
+                return false
             }
         }
 
@@ -228,21 +227,22 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
             if captureSession?.canAddOutput(videoDataOutput) ?? false {
                 captureSession?.addOutput(videoDataOutput)
             } else {
-                finishWithError()
-                return
+                return false
             }
         }
 
         // This improves recognition quality, but means the VideoDataOutput buffers won't match what we're seeing on screen.
         videoDataOutput?.connection(with: .video)?.preferredVideoStabilizationMode = .auto
 
-        captureSession?.startRunning()
-
         do {
-            try self.captureDevice?.lockForConfiguration()
-            self.captureDevice?.autoFocusRangeRestriction = .near
+            try captureDevice.lockForConfiguration()
+            defer { captureDevice.unlockForConfiguration() }
+            if captureDevice.isAutoFocusRangeRestrictionSupported {
+                captureDevice.autoFocusRangeRestriction = .near
+            }
         } catch {
         }
+        return true
     }
 
     // MARK: - Video Processing
@@ -435,15 +435,14 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
                 params.expYear = NSNumber(
                     value: Int((topExpiration as! NSString).substring(from: 2)) ?? 0)
             }
-            finish(didSucceed: true)
-            DispatchQueue.main.async {
+            finish(didSucceed: true) {
                 self.delegate?.cardScanner(self, didCompleteWith: params)
             }
         }
     }
 
     // Finish the scanning session
-    private func finish(didSucceed: Bool) {
+    private func finish(didSucceed: Bool, completion: (() -> Void)? = nil) {
         guard isScanning else { return }
 
         var duration: TimeInterval = 0.0
@@ -451,7 +450,6 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
             duration = Date().timeIntervalSince(startTime)
         }
         isScanning = false
-        captureDevice?.unlockForConfiguration()
         captureSession?.stopRunning()
 
         DispatchQueue.main.async {
@@ -462,6 +460,7 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
             }
             self.feedbackGenerator = nil
             self.cameraView?.captureSession = nil
+            completion?()
         }
     }
 }
