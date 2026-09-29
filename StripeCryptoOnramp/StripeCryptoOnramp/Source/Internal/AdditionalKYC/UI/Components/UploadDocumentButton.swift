@@ -40,10 +40,7 @@ struct UploadDocumentButton: View {
             .foregroundColor(.textPrimary)
             .padding(16)
             .frame(minHeight: 76)
-            .overlay(
-                RoundedRectangle(cornerRadius: 12)
-                    .strokeBorder(Color.documentBorder, style: StrokeStyle(lineWidth: 1, dash: [4, 4]))
-            )
+            .dashedDocumentBorderOverlay()
             .contentShape(RoundedRectangle(cornerRadius: 12))
         }
         .buttonStyle(.plain)

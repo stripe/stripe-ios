@@ -90,12 +90,32 @@ extension String.Localized {
         )
     }
 
+    /// The label and placeholder for a questionnaire answer field.
+    static var questionnaireAnswer: String {
+        STPLocalizedString("Answer", "Label and placeholder for a questionnaire answer field")
+    }
+
     static var documentType: String {
         STPLocalizedString("Document type", "Label and picker title for a document's category")
     }
 
     static var uploadDocument: String {
         STPLocalizedString("Upload document", "Action to select an existing document for upload")
+    }
+
+    /// The action that opens document collection for a new funds source.
+    static var addDocuments: String {
+        STPLocalizedString("Add documents", "Action to add documents for another source of funds")
+    }
+
+    /// The status shown while a document is uploading.
+    static var uploadingDocument: String {
+        STPLocalizedString("Uploading…", "Status while a document is uploading")
+    }
+
+    /// The status shown after a document uploads successfully.
+    static var documentUploaded: String {
+        STPLocalizedString("Uploaded", "Status after a document has uploaded successfully")
     }
 
     static var documentUploadedSuccessfully: String {

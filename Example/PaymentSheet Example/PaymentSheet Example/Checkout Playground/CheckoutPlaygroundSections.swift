@@ -320,6 +320,7 @@ struct CheckoutPlaygroundExpressCheckoutElementSection: View {
     @Binding var applePayButtonType: CheckoutPlayground.ApplePayButtonType
     @Binding var linkDisplay: ExpressCheckoutElement.LinkConfiguration.Display
     @Binding var shippingAddressRequired: Bool
+    @Binding var paymentMethodOrder: CheckoutPlayground.ExpressCheckoutPaymentMethodOrder
     @Binding var appearance: ExpressCheckoutElement.Appearance
 
     var body: some View {
@@ -356,6 +357,12 @@ struct CheckoutPlaygroundExpressCheckoutElementSection: View {
                         title: "Requires Shipping Address",
                         isOn: $shippingAddressRequired,
                         tooltip: "Sets `ExpressCheckoutElement.Configuration.shippingAddressRequired`. When on, wallets like Apple Pay require the customer to provide a shipping address."
+                    )
+                    CheckoutPlayground.PickerRow(
+                        title: "Payment Method Order",
+                        selection: $paymentMethodOrder,
+                        tooltip: "Sets `ExpressCheckoutElement.Configuration.paymentMethodOrder`.",
+                        displayText: { $0.displayName }
                     )
                     CheckoutPlayground.PickerRow(
                         title: "Button Theme",

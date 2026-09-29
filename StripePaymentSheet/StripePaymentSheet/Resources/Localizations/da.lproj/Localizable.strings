@@ -112,6 +112,8 @@
 
 "Code sent" = "Kode sendt";
 
+"Complete the payment using Pix to finish the purchase." = "Gennemfør betalingen med Pix for at afslutte købet.";
+
 "Confirm" = "Bekræft";
 
 "Confirm payment details" = "Bekræft betalingsoplysninger";
@@ -341,6 +343,8 @@
 "The provided verification code has expired." = "Den angivne verifikationskode er udløbet.";
 
 "The provided verification code is incorrect." = "Den angivne verifikationskode er forkert.";
+
+"This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Dette er et internationalt køb og ekskluderer et IOF-gebyr på 3,5 %. Ved at fortsætte accepterer du <terms>Ebanx’ vilkår<terms>.";
 
 "This is your default" = "Dette er din standard";
 

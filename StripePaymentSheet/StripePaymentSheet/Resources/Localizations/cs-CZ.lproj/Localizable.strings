@@ -112,6 +112,8 @@
 
 "Code sent" = "Kód odeslán";
 
+"Complete the payment using Pix to finish the purchase." = "Dokončete platbu pomocí Pix, abyste nákup dokončili.";
+
 "Confirm" = "Potvrdit";
 
 "Confirm payment details" = "Potvrdit detaily platby";
@@ -341,6 +343,8 @@
 "The provided verification code has expired." = "Platnost zadaného ověřovacího kódu vypršela.";
 
 "The provided verification code is incorrect." = "Zadaný ověřovací kód není správný.";
+
+"This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Toto je mezinárodní nákup a nezahrnuje 3,5% poplatek IOF. Pokračováním berete na vědomí a souhlasíte <terms>s podmínkami společnosti Ebanx</terms>.";
 
 "This is your default" = "Toto je výchozí nastavení";
 
