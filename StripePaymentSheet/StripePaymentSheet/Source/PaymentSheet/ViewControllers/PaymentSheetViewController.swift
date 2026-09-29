@@ -171,9 +171,9 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
                 isCVCRecollectionEnabled: isCVCRecollectionEnabled,
                 isTestMode: configuration.apiClient.isTestmode,
                 allowsRemovalOfLastSavedPaymentMethod: elementsSession.paymentMethodRemoveLast(configuration: configuration),
-                allowsRemovalOfPaymentMethods: intent.allowsPaymentMethodRemoval(elementsSession: elementsSession),
+                allowsRemovalOfPaymentMethods: loadResult.customerProvider.allowsPaymentMethodRemoval(elementsSession: elementsSession),
                 allowsSetAsDefaultPM: elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
-                allowsUpdatePaymentMethod: intent.allowsPaymentMethodUpdate(elementsSession: elementsSession)
+                allowsUpdatePaymentMethod: loadResult.customerProvider.allowsPaymentMethodUpdate(elementsSession: elementsSession)
             ),
             paymentSheetConfiguration: configuration,
             intent: intent,
