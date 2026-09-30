@@ -210,7 +210,7 @@ private struct AuthenticatedUserToolbarItemModifier: ViewModifier {
             }
 
             do {
-                let result = try await coordinator.fulfillAdditionalKYCRequirement(from: presentingViewController)
+                let result = try await coordinator.fulfillKYCRequirement(from: presentingViewController)
                 switch result {
                 case .submitted:
                     alert = Alert(title: "Document submitted", message: "Your document is being verified.")

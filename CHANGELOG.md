@@ -14,7 +14,7 @@ MINOR
 * [Changed] Apple Pay can now be presented via `CryptoOnrampCoordinator.collectPaymentMethod(type:from:)` before the user authenticates with Link. `createCryptoPaymentToken()` still requires an authenticated user.
 * [Added] Added an optional `countryHint` parameter to `CryptoOnrampCoordinator.create(...)`, used to help select a merchant of record for a customer who does not yet have an established KYC region.
 * [Added] Added `STPAPIClient.CryptoOnrampAPIError.missingLinkSessionKey` to report when a Link session key is unavailable.
-* [Added] Added `CryptoOnrampCoordinator.fulfillAdditionalKYCRequirement(from:)` to retrieve additional KYC requirements and present document collection when needed.
+* [Added] Added `CryptoOnrampCoordinator.fulfillKYCRequirement(from:)` to retrieve additional KYC requirements and present document collection when needed.
 
 ### PaymentSheet
 * [Added] Added GoPay API bindings and support for payments, including setup future usage, in PaymentSheet.

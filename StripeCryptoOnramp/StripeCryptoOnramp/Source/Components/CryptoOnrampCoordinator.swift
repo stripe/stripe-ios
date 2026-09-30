@@ -113,12 +113,12 @@ protocol CryptoOnrampCoordinatorProtocol {
     /// Requires an authenticated Link user.
     ///
     /// - Parameter viewController: The view controller from which to present document collection.
-    /// - Returns: A `FulfillAdditionalKYCRequirementResult` indicating whether a document was submitted,
+    /// - Returns: A `FulfillKYCRequirementResult` indicating whether a document was submitted,
     ///   verification is pending, the user canceled collection, or no requirement remains.
     /// Throws if an authenticated Link user is not available, the requirement is unsupported,
     /// the view controller cannot present collection, or an API error occurs.
     @MainActor
-    func fulfillAdditionalKYCRequirement(from viewController: UIViewController) async throws -> FulfillAdditionalKYCRequirementResult
+    func fulfillKYCRequirement(from viewController: UIViewController) async throws -> FulfillKYCRequirementResult
 
     /// Presents the current terms and conditions when acceptance is required.
     /// Requires an authenticated Link user.
@@ -522,8 +522,8 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
     }
 
     @MainActor
-    public func fulfillAdditionalKYCRequirement(from viewController: UIViewController) async throws -> FulfillAdditionalKYCRequirementResult {
-        analyticsClient.log(.additionalKYCRequirementFulfillmentStarted)
+    public func fulfillKYCRequirement(from viewController: UIViewController) async throws -> FulfillKYCRequirementResult {
+        analyticsClient.log(.kycRequirementFulfillmentStarted)
         do {
             let account = try await linkAccountInfo
             let flow = AdditionalKYCFlowCoordinator(apiClient: apiClient, linkAccountInfo: account, appearance: appearance)
@@ -531,14 +531,14 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
 
             switch result {
             case .submitted, .pendingVerification:
-                analyticsClient.log(.additionalKYCRequirementFulfillmentCompleted)
+                analyticsClient.log(.kycRequirementFulfillmentCompleted)
             case .canceled, .notRequired:
                 break
             }
 
             return result
         } catch {
-            try logAndThrow(error, during: .fulfillAdditionalKYCRequirement)
+            try logAndThrow(error, during: .fulfillKYCRequirement)
         }
     }
 
