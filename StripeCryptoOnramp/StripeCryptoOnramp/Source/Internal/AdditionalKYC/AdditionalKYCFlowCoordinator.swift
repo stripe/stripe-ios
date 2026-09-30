@@ -129,6 +129,7 @@ final class AdditionalKYCFlowCoordinator: NSObject, UIAdaptivePresentationContro
     ) {
         let navigationController = UINavigationController()
         navigationController.modalPresentationStyle = .pageSheet
+        navigationController.sheetPresentationController?.prefersGrabberVisible = true
         navigationController.presentationController?.delegate = self
         appearance.applyInterfaceStyle(to: navigationController)
 

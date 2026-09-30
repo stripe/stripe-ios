@@ -52,9 +52,6 @@ final class ProofOfAddressViewController: UIHostingController<ProofOfAddressView
         super.viewWillAppear(animated)
         isLeaving = false
 
-        // Keep the collection sheet's grabber visible after navigation pushes this screen.
-        navigationController?.sheetPresentationController?.prefersGrabberVisible = true
-
         // Without Liquid Glass, omit the introduction screen's title from the back button.
         if !LiquidGlassDetector.isEnabledInMerchantApp,
            let controllers = navigationController?.viewControllers,
