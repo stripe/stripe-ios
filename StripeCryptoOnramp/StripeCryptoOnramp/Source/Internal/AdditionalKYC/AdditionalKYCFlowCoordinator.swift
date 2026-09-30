@@ -213,7 +213,8 @@ final class AdditionalKYCFlowCoordinator: NSObject, UIAdaptivePresentationContro
             }
         ))
 
-        navigationController.pushViewController(hostingController, animated: true)
+        // Submission is complete, prevent returning to document collection.
+        navigationController.setViewControllers([hostingController], animated: true)
     }
 
     private func close() {
