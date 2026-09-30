@@ -4,11 +4,11 @@
 /* Label and placeholder for a questionnaire answer field */
 "Answer" = "Answer";
 
-/* Action to open the system document picker */
-"Choose file" = "Choose file";
+/* Action to open the system document picker to select a file */
+"Choose File…" = "Choose File…";
 
-/* Action to open the system photo picker */
-"Choose photo" = "Choose photo";
+/* Action to open the system photo picker to select a photo */
+"Choose Photo…" = "Choose Photo…";
 
 /* Label shown in the Link UI indicating that debit cards are more likely to be accepted */
 "Debit cards are most likely to be accepted." = "Debit cards are most likely to be accepted.";

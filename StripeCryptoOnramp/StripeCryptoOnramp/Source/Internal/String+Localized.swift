@@ -104,11 +104,11 @@ extension String.Localized {
     }
 
     static var chooseDocumentFile: String {
-        STPLocalizedString("Choose file", "Action to open the system document picker")
+        STPLocalizedString("Choose File…", "Action to open the system document picker to select a file")
     }
 
     static var chooseDocumentPhoto: String {
-        STPLocalizedString("Choose photo", "Action to open the system photo picker")
+        STPLocalizedString("Choose Photo…", "Action to open the system photo picker to select a photo")
     }
 
     static func unsupportedDocumentFormat(formats: [String]) -> String {

@@ -142,13 +142,14 @@ struct ProofOfAddressView: View {
         }
         .accessibilityAction(.escape, close)
         .onDisappear { submissionTask?.cancel() }
-        .confirmationDialog(String.Localized.uploadDocument, isPresented: $showsSourcePicker, titleVisibility: .visible) {
+        .alert(String.Localized.uploadDocument, isPresented: $showsSourcePicker) {
             Button(String.Localized.chooseDocumentFile) {
                 beginSelection(.files)
             }
             Button(String.Localized.chooseDocumentPhoto) {
                 beginSelection(.photos)
             }
+            Button(String.Localized.cancel, role: .cancel) {}
         }
         .sheet(item: $activeSheet) { sheet in
             switch sheet {
