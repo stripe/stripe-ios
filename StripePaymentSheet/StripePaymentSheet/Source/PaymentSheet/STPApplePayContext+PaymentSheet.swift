@@ -498,9 +498,13 @@ extension STPApplePayContext {
             paymentRequest.merchantCapabilities = merchantCapabilities
         }
 
-        // China UnionPay requires EMV. Re-add it in case the funding filter above replaced merchantCapabilities.
+        // China UnionPay requires EMV. Re-sync after the filters above, which may remove China UnionPay
+        // or replace merchantCapabilities. This runs before the merchant's paymentRequestHandler,
+        // so the only EMV flag present here is the one StripeAPI.paymentRequest added.
         if paymentRequest.supportedNetworks.contains(.chinaUnionPay) {
             paymentRequest.merchantCapabilities.insert(.emv)
+        } else {
+            paymentRequest.merchantCapabilities.remove(.emv)
         }
 
         // Pre-populate billingContact from the configuration's default billing details, but only
