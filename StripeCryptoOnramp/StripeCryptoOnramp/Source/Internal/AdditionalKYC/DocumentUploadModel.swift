@@ -58,7 +58,7 @@ final class DocumentUploadModel: ObservableObject {
         /// The upload completed. The associated value is the Files API identifier.
         case uploaded(fileID: String)
 
-        /// The upload failed, and the retained file can be retried.
+        /// The upload failed. The customer can select a new file.
         case failed
     }
 
@@ -76,13 +76,11 @@ final class DocumentUploadModel: ObservableObject {
     @Published private(set) var document: Document?
 
     private let uploader: DocumentUploading
-    private var file: DocumentFile?
     private var task: Task<Void, Never>?
     private var isActive = true
 
-    // Each attempt gets a new ID. Callbacks from an older attempt are ignored after removal or retry.
+    // Each upload gets a new ID. Callbacks from an older upload are ignored after removal or replacement.
     private var operationID: UUID?
-
 
     /// The Files API identifier after a successful upload, or `nil` otherwise.
     var uploadedFileID: String? {
@@ -105,15 +103,6 @@ final class DocumentUploadModel: ObservableObject {
             return
         }
         remove()
-        self.file = file
-        upload(file)
-    }
-
-    /// Retries the last failed upload using the retained file.
-    func retry() {
-        guard case .failed = document?.status, let file else {
-            return
-        }
         upload(file)
     }
 
@@ -122,7 +111,6 @@ final class DocumentUploadModel: ObservableObject {
         operationID = nil
         task?.cancel()
         task = nil
-        file = nil
         document = nil
     }
 
@@ -132,7 +120,7 @@ final class DocumentUploadModel: ObservableObject {
         remove()
     }
 
-    /// Starts or retries a transfer.
+    /// Starts a transfer for the selected file.
     private func upload(_ file: DocumentFile) {
         let id = UUID()
         operationID = id
@@ -152,7 +140,6 @@ final class DocumentUploadModel: ObservableObject {
                     return
                 }
                 self.document?.status = .uploaded(fileID: fileID)
-                self.file = nil
                 self.task = nil
                 file.remove()
             } catch {
@@ -161,6 +148,7 @@ final class DocumentUploadModel: ObservableObject {
                 }
                 self.document?.status = .failed
                 self.task = nil
+                file.remove()
             }
         }
     }
