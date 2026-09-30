@@ -1,7 +1,17 @@
 The next release's version bump will so far be:
-PATCH
+MINOR
 
 ## X.Y.Z - changes pending release
+### Payments
+* [Fixed] Amounts in LBP are now displayed correctly.
+
+### PaymentSheet
+* [Fixed] Fixed Apple Pay failing to open for fractional amounts in COP, HUF, IDR, LAK, LBP, PKR, and RSD.
+
+### CryptoOnramp (Alpha)
+* [Added] Added `STPAPIClient.CryptoOnrampAPIError.missingLinkSessionKey` to report when a Link session key is unavailable.
+
+## 26.12.1 2026-09-28
 ### Financial Connections
 * [Fixed] Preserved `no_eligible_accounts` in `onEvent` error callbacks instead of reporting it as `unexpected_error`.
 * [Fixed] Recorded native `onEvent` emissions with the session context for diagnostics.

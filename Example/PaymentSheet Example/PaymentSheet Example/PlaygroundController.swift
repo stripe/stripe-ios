@@ -1334,10 +1334,16 @@ extension AddressViewController.AddressDetails {
 
 // MARK: - Analytics observer
 
-class AnalyticsLogObserver: ObservableObject {
+class AnalyticsLogObserver: ObservableObject, STPAnalyticsClientDelegate {
     static let shared: AnalyticsLogObserver = .init()
     /// All analytic events sent by the SDK since the playground was loaded.
     @Published var analyticsLog: [[String: Any]] = []
+
+    func analyticsClientDidLog(analyticsClient: STPAnalyticsClient, payload: [String: Any]) {
+        DispatchQueue.main.async {
+            self.analyticsLog.append(payload)
+        }
+    }
 }
 
 // MARK: Embedded helpers

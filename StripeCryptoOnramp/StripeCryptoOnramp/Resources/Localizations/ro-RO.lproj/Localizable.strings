@@ -1,5 +1,7 @@
 "Debit cards are most likely to be accepted." = "Este cel mai probabil ca cardurile de debit să fie acceptate.";
 
+"Document uploaded successfully" = "Document încărcat cu succes";
+
 "Please try again later." = "Vă rugăm să încercați din nou mai târziu.";
 
 "Submitted for review" = "Trimis pentru revizuire";
@@ -22,8 +24,10 @@
 
 "We couldn't verify ownership of this wallet. Please try again." = "Nu am putut verifica dreptul de proprietate asupra acestui portofel. Vă rugăm să încercați din nou.";
 
-"We’re required to confirm your address to enable spending over %@." = "Trebuie să confirmăm adresa dvs. pentru a vă permite să efectuați cheltuieli de peste %@.";
+"We may request proof of address for larger transactions." = "Este posibil să solicităm dovada adresei pentru tranzacțiile mai mari.";
 
-"We’re required to understand where your funds come from to enable spending over %@." = "Trebuie să știm de unde provin fondurile dvs. pentru a vă permite să cheltuiți peste %@.";
+"We may request source of funds for larger transactions." = "Este posibil să solicităm sursa fondurilor pentru tranzacțiile mai mari.";
 
 "We’re reviewing your documents. We’ll let you know when verification is complete." = "În prezent, vă revizuim documentele. Vă vom anunța când procesul de verificare va fi finalizat.";
+
+"You can continue while we verify your document in the background." = "Puteți continua în timp ce vă verificăm documentul în fundal.";

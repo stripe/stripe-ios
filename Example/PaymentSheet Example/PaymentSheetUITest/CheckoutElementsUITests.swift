@@ -19,6 +19,7 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
         scrollStart.press(forDuration: 0.1, thenDragTo: scrollEnd)
         XCTAssertTrue(app.buttons["checkout_picker_Email source"].waitForExistenceAndTap())
         XCTAssertTrue(app.buttons["Server — Customer"].waitForExistenceAndTap())
+        scrollStart.press(forDuration: 0.1, thenDragTo: scrollEnd)
         app.buttons["No Override"].scrollToAndTap(in: app)
         app.buttons["Germany (DE)"].waitForExistenceAndTap()
         app.buttons["Create Checkout Session"].waitForExistenceAndTap()
@@ -146,12 +147,18 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
             NSPredicate(format: "label BEGINSWITH %@", "Buy ·")
         ).firstMatch
         XCTAssertFalse(buyButton.exists)
+        assertAnalyticsEvents([
+            "elements.express_checkout_element.init",
+        ])
 
         // When the customer confirms with Apple Pay from Express Checkout Element
         applePayButton.tap()
 
         // Then Checkout completes using the wallet confirmation flow
         payWithApplePay(successElement: app.alerts["Success"])
+        assertAnalyticsEvents([
+            "elements.express_checkout_element.init",
+        ])
     }
 
     private func fillShippingAddress() {
@@ -172,5 +179,18 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
 
         app.textFields["ZIP"].tap()
         app.typeText("94102")
+    }
+
+    private func assertAnalyticsEvents(
+        _ expectedEvents: [String],
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        XCTAssertEqual(
+            analyticsLog.compactMap { $0[string: "event"] },
+            expectedEvents,
+            file: file,
+            line: line
+        )
     }
 }

@@ -57,8 +57,6 @@ public final class ExpressCheckoutElementUIView: UIView {
             stackView.bottomAnchor.constraint(equalTo: bottomAnchor),
         ])
 
-        let buttons = ExpressCheckoutElementUtilities.resolveButtons(for: session, configuration: configuration)
-        buttons.forEach { stackView.addArrangedSubview(makeButton(for: $0)) }
     }
 
     @available(*, unavailable)
@@ -68,11 +66,13 @@ public final class ExpressCheckoutElementUIView: UIView {
 
     // MARK: - Internal Methods
 
-    func update(with session: CheckoutController.Session) {
+    func update(
+        with session: CheckoutController.Session,
+        buttons: [ExpressCheckoutElement.PaymentMethod]
+    ) {
         self.session = session
         linkBrand = session.elementsSession.linkBrand ?? .link
         stackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
-        let buttons = ExpressCheckoutElementUtilities.resolveButtons(for: session, configuration: configuration)
         buttons.forEach { stackView.addArrangedSubview(makeButton(for: $0)) }
         invalidateIntrinsicContentSize()
     }
@@ -160,7 +160,7 @@ private struct ExpressCheckoutElementInitAnalytic: Analytic {
         configuration: ExpressCheckoutElement.Configuration
     ) {
         params = [
-            "ordered_lpms": session.availableExpressButtonTypes.map(\.analyticsValue).joined(separator: ","),
+            "ordered_lpms": session.availableExpressCheckoutPaymentMethods.map(\.analyticsValue).joined(separator: ","),
             "ece_config": [
                 "link_visibility": configuration.linkConfiguration.display.rawValue,
                 "apple_pay_visibility": configuration.applePayConfiguration?.display.rawValue ?? "never",

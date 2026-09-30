@@ -1,5 +1,7 @@
 "Debit cards are most likely to be accepted." = "És molt probable que s'acceptin les targetes de dèbit.";
 
+"Document uploaded successfully" = "El document s'ha carregat correctament";
+
 "Please try again later." = "Torneu-ho a provar més tard.";
 
 "Submitted for review" = "Enviat per a revisar";
@@ -22,8 +24,10 @@
 
 "We couldn't verify ownership of this wallet. Please try again." = "No hem pogut verificar la propietat d'aquesta cartera. Torneu-ho a provar.";
 
-"We’re required to confirm your address to enable spending over %@." = "Hem de confirmar la vostra adreça per habilitar la despesa superior a %@.";
+"We may request proof of address for larger transactions." = "És possible que sol·licitem un justificant de domicili per a transaccions més grans.";
 
-"We’re required to understand where your funds come from to enable spending over %@." = "Hem d'entendre d'on provenen els vostres fons per habilitar la despesa superior a %@.";
+"We may request source of funds for larger transactions." = "És possible que sol·licitem l'origen dels fons per a transaccions més grans.";
 
 "We’re reviewing your documents. We’ll let you know when verification is complete." = "Estem revisant els vostres documents. Us avisarem quan la verificació s'hagi completat.";
+
+"You can continue while we verify your document in the background." = "Podeu continuar mentre verifiquem el vostre document en segon pla.";
