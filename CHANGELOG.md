@@ -2,11 +2,12 @@ The next release's version bump will so far be:
 MINOR
 
 ## X.Y.Z - changes pending release
+### PaymentSheet
+* [Fixed] Fixed a potential crash when using certain card brands in PaymentSheet.
+* [Fixed] Fixed Apple Pay failing to open for fractional amounts in COP, HUF, IDR, LAK, LBP, PKR, and RSD.
+
 ### Payments
 * [Fixed] Amounts in LBP are now displayed correctly.
-
-### PaymentSheet
-* [Fixed] Fixed Apple Pay failing to open for fractional amounts in COP, HUF, IDR, LAK, LBP, PKR, and RSD.
 
 ### CryptoOnramp (Alpha)
 * [Added] Added optional `email` and `phone` fields to `KycInfo`, populated from Apple Pay billing or shipping contact information when requested. Both values are for prefill only and `phone` is not normalized to E.164. Names fall back to shipping contact values when billing values are missing or blank. Creating `KycInfo` from an Apple Pay payment still requires a usable name or billing address; email or phone alone is insufficient.
