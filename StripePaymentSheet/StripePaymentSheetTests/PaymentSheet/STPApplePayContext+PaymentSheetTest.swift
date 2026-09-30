@@ -227,58 +227,52 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
 
     // MARK: - Merchant Capabilities Tests
 
-    func testNormalizeEMVCapabilityForChinaUnionPay_addsEMVForChinaUnionPay() {
-        let paymentRequest = PKPaymentRequest()
-        paymentRequest.supportedNetworks = [.visa, .chinaUnionPay]
-        paymentRequest.merchantCapabilities = [.capability3DS, .capabilityCredit, .capabilityDebit]
-
-        STPApplePayContext.normalizeEMVCapabilityForChinaUnionPay(for: paymentRequest)
-
-        XCTAssertEqual(
-            paymentRequest.merchantCapabilities,
-            [.capability3DS, .capabilityEMV, .capabilityCredit, .capabilityDebit]
-        )
+    func testCreatePaymentRequest_chinaUnionPay_addsEMV() {
+        StripeAPI.additionalEnabledApplePayNetworks = [.chinaUnionPay]
+        defer { StripeAPI.additionalEnabledApplePayNetworks = [] }
+        let sut = STPApplePayContext.createPaymentRequest(intent: Intent._testValue(), configuration: configuration, applePay: applePayConfiguration)
+        XCTAssertTrue(sut.supportedNetworks.contains(.chinaUnionPay))
+        XCTAssertEqual(sut.merchantCapabilities, [.threeDSecure, .emv])
     }
 
-    func testNormalizeEMVCapabilityForChinaUnionPay_removesEMVWithoutChinaUnionPay() {
-        let paymentRequest = PKPaymentRequest()
-        paymentRequest.supportedNetworks = [.visa]
-        paymentRequest.merchantCapabilities = [.capability3DS, .capabilityEMV, .capabilityCredit, .capabilityDebit]
-
-        STPApplePayContext.normalizeEMVCapabilityForChinaUnionPay(for: paymentRequest)
-
-        XCTAssertEqual(
-            paymentRequest.merchantCapabilities,
-            [.capability3DS, .capabilityCredit, .capabilityDebit]
-        )
+    func testCreatePaymentRequest_noChinaUnionPay_noEMV() {
+        let sut = STPApplePayContext.createPaymentRequest(intent: Intent._testValue(), configuration: configuration, applePay: applePayConfiguration)
+        XCTAssertFalse(sut.supportedNetworks.contains(.chinaUnionPay))
+        XCTAssertEqual(sut.merchantCapabilities, .threeDSecure)
     }
 
-    func testCreate_normalizesMerchantCapabilitiesAfterHandlerAddsChinaUnionPay() {
+    func testCreatePaymentRequest_chinaUnionPayRemovedByBrandAcceptance_removesEMV() {
+        StripeAPI.additionalEnabledApplePayNetworks = [.chinaUnionPay]
+        defer { StripeAPI.additionalEnabledApplePayNetworks = [] }
+        var configuration = configuration
+        configuration.cardBrandAcceptance = .allowed(brands: [.visa])
+        let sut = STPApplePayContext.createPaymentRequest(intent: Intent._testValue(), configuration: configuration, applePay: applePayConfiguration)
+        XCTAssertEqual(sut.supportedNetworks, [.visa])
+        XCTAssertEqual(sut.merchantCapabilities, .threeDSecure)
+    }
+
+    func testCreatePaymentRequest_chinaUnionPayWithFundingFilter_keepsEMV() {
+        StripeAPI.additionalEnabledApplePayNetworks = [.chinaUnionPay]
+        defer { StripeAPI.additionalEnabledApplePayNetworks = [] }
+        let cardFundingFilter = CardFundingFilter(allowedFundingTypes: .debit, filteringEnabled: true)
+        let sut = STPApplePayContext.createPaymentRequest(intent: Intent._testValue(), configuration: configuration, applePay: applePayConfiguration, cardFundingFilter: cardFundingFilter)
+        XCTAssertEqual(sut.merchantCapabilities, [.threeDSecure, .emv, .debit])
+    }
+
+    func testCreate_paymentRequestHandlerHasFinalSayOnMerchantCapabilities() {
+        StripeAPI.additionalEnabledApplePayNetworks = [.chinaUnionPay]
+        defer { StripeAPI.additionalEnabledApplePayNetworks = [] }
+        var capabilitiesPassedToHandler: PKMerchantCapability?
         let paymentRequest = paymentRequestAfterCustomHandler { paymentRequest in
-            paymentRequest.supportedNetworks = [.visa, .chinaUnionPay]
-            paymentRequest.merchantCapabilities = [.capability3DS, .capabilityCredit]
-            return paymentRequest
-        }
-
-        XCTAssertEqual(paymentRequest.supportedNetworks, [.visa, .chinaUnionPay])
-        XCTAssertEqual(
-            paymentRequest.merchantCapabilities,
-            [.capability3DS, .capabilityEMV, .capabilityCredit]
-        )
-    }
-
-    func testCreate_normalizesMerchantCapabilitiesAfterHandlerRemovesChinaUnionPay() {
-        let paymentRequest = paymentRequestAfterCustomHandler { paymentRequest in
+            capabilitiesPassedToHandler = paymentRequest.merchantCapabilities
+            // Merchant removes China UnionPay but keeps EMV; Stripe must not override this
             paymentRequest.supportedNetworks = [.visa]
-            paymentRequest.merchantCapabilities = [.capability3DS, .capabilityEMV, .capabilityDebit]
             return paymentRequest
         }
 
+        XCTAssertEqual(capabilitiesPassedToHandler, [.threeDSecure, .emv])
         XCTAssertEqual(paymentRequest.supportedNetworks, [.visa])
-        XCTAssertEqual(
-            paymentRequest.merchantCapabilities,
-            [.capability3DS, .capabilityDebit]
-        )
+        XCTAssertEqual(paymentRequest.merchantCapabilities, [.threeDSecure, .emv])
     }
 
     private func paymentRequestAfterCustomHandler(

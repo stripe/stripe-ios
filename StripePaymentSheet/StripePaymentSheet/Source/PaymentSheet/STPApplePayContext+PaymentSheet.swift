@@ -348,14 +348,6 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
 
 extension STPApplePayContext {
 
-    static func normalizeEMVCapabilityForChinaUnionPay(for paymentRequest: PKPaymentRequest) {
-        if paymentRequest.supportedNetworks.contains(.chinaUnionPay) {
-            paymentRequest.merchantCapabilities.insert(.capabilityEMV)
-        } else {
-            paymentRequest.merchantCapabilities.remove(.capabilityEMV)
-        }
-    }
-
     @MainActor
     static func create(
         intent: Intent,
@@ -378,7 +370,6 @@ extension STPApplePayContext {
         if let paymentRequestHandler = configuration.applePay?.customHandlers?.paymentRequestHandler {
             paymentRequest = paymentRequestHandler(paymentRequest)
         }
-        normalizeEMVCapabilityForChinaUnionPay(for: paymentRequest)
 
         // Keep tax in sync with the billing address as the user switches cards.
         let paymentMethodUpdateHandler: ((PKPaymentMethod, @escaping ((PKPaymentRequestPaymentMethodUpdate) -> Void)) -> Void)? = {
@@ -505,6 +496,15 @@ extension STPApplePayContext {
         // Only override if a specific funding type filter is configured
         if let merchantCapabilities = cardFundingFilter.applePayMerchantCapabilities() {
             paymentRequest.merchantCapabilities = merchantCapabilities
+        }
+
+        // China UnionPay requires EMV. Re-sync after the filters above, which may remove China UnionPay
+        // or replace merchantCapabilities. This runs before the merchant's paymentRequestHandler,
+        // so the only EMV flag present here is the one StripeAPI.paymentRequest added.
+        if paymentRequest.supportedNetworks.contains(.chinaUnionPay) {
+            paymentRequest.merchantCapabilities.insert(.emv)
+        } else {
+            paymentRequest.merchantCapabilities.remove(.emv)
         }
 
         // Pre-populate billingContact from the configuration's default billing details, but only

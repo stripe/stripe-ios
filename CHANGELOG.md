@@ -18,7 +18,7 @@ MINOR
 * [Added] Added GoPay API bindings and support for payments, including setup future usage, in PaymentSheet.
 
 ### Apple Pay
-* [Fixed] PaymentSheet now keeps the Apple Pay EMV merchant capability aligned with China UnionPay in the final supported network list.
+* [Changed] Apple Pay payment requests now include the `.emv` merchant capability when China UnionPay is enabled via `StripeAPI.additionalEnabledApplePayNetworks`.
 
 ## 26.12.1 2026-09-28
 ### CryptoOnramp (Alpha)
