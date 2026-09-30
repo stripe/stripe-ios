@@ -49,6 +49,23 @@ final class BiometricConsentViewControllerTest: XCTestCase {
         XCTAssertEqual(mockSheetController.savedData?.biometricConsent, false)
     }
 
+    func testHideDeclineButtonOnlyHidesDeclineButton() throws {
+        // Given a biometric consent screen configured to hide the decline button
+        let controller = try makeViewController(
+            configuration: .init(hideBrandingHeader: false, hideDeclineButton: true)
+        )
+
+        // Then the scroll-to-continue button and close button remain visible
+        XCTAssertEqual(controller.flowViewModel.buttons.map(\.text), [Self.mockVerificationPage.biometricConsent.scrollToContinueButtonText])
+        XCTAssertNotNil(controller.navigationItem.rightBarButtonItem)
+
+        // When the user has read the consent
+        controller.scrolledToBottom = true
+
+        // Then the continue button remains visible and the decline button remains hidden
+        XCTAssertEqual(controller.flowViewModel.buttons.map(\.text), [Self.mockVerificationPage.biometricConsent.acceptButtonText])
+    }
+
     func testDefaultContinueButtonUsesTintColor() throws {
         for configuration: IdentityVerificationSheet.Configuration.BiometricConsentConfiguration? in [
             nil, .init(hideBrandingHeader: true),

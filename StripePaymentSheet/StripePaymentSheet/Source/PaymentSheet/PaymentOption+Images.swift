@@ -318,6 +318,8 @@ extension STPPaymentMethodType {
                 return .pm_type_paypay
             case .promptPay:
                 return .pm_type_promptpay
+            case .pix:
+                return .pm_type_pix
             case .satispay:
                 return .pm_type_satispay
             case .scalapay:

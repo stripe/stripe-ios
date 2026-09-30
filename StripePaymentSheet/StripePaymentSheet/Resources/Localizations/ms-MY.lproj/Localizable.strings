@@ -112,6 +112,8 @@
 
 "Code sent" = "Kod dihantar";
 
+"Complete the payment using Pix to finish the purchase." = "Lengkapkan pembayaran menggunakan Pix untuk menyelesaikan pembelian.";
+
 "Confirm" = "Sahkan";
 
 "Confirm payment details" = "Sahkan butiran pembayaran";
@@ -341,6 +343,8 @@
 "The provided verification code has expired." = "Kod penentusahan yang diberikan telah tamat tempoh.";
 
 "The provided verification code is incorrect." = "Kod penentusahan yang diberikan tidak betul.";
+
+"This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Ini adalah pembelian antarabangsa dan tidak termasuk yuran IOF sebanyak 3.5%. Dengan meneruskan, anda mengakui dan menerima <terms>terma dan syarat Ebanx<terms>.";
 
 "This is your default" = "Ini tetapan asal anda";
 

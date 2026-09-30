@@ -377,6 +377,20 @@ extension String.Localized {
                            "Text for alert message when user needs to confirm payment in their banking app")
     }
 
+    static var pix_international_disclosure: String {
+        STPLocalizedString(
+            "This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>.",
+            "Disclosure for an international Pix payment. The terms tags enclose a link to Ebanx's terms."
+        )
+    }
+
+    static var pix_confirm_payment: String {
+        STPLocalizedString(
+            "Complete the payment using Pix to finish the purchase.",
+            "Instructions shown while waiting for a Pix payment authorization"
+        )
+    }
+
     static var mb_way_confirm_payment: String {
         STPLocalizedString("Confirm the payment in your MB WAY app within %@ to complete the purchase.",
                            "Instructions shown while waiting for an MB WAY payment authorization")

@@ -107,8 +107,9 @@ extension STPApplePayContext {
         minorUnitsAmount: Double,
         currency: String?
     ) -> NSDecimalNumber {
-        return NSDecimalNumber(value: minorUnitsAmount)
+        let amount = NSDecimalNumber(value: minorUnitsAmount)
             .multiplying(by: NSDecimalNumber.stp_decimalNumber(withAmount: 1, currency: currency))
+        return roundAmountForApplePay(amount, currency: currency)
     }
 
     // Partial billing or shipping address from the Apple Pay sheet (no street until authorization).

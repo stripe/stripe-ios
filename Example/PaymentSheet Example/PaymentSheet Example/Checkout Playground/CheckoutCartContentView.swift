@@ -268,7 +268,8 @@ struct CheckoutCartContentView: View {
 
     @ViewBuilder
     private var expressCheckoutSection: some View {
-        if showExpressCheckoutElement {
+        if showExpressCheckoutElement,
+           !checkout.session.availableExpressCheckoutPaymentMethods.isEmpty {
             VStack(alignment: .leading, spacing: 16) {
                 Text("Express Checkout")
                     .font(.title2).bold()

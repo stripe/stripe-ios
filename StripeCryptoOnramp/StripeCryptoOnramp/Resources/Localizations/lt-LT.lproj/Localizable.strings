@@ -1,5 +1,7 @@
 "Debit cards are most likely to be accepted." = "Dažniausiai priimamos debeto kortelės.";
 
+"Document uploaded successfully" = "Dokumentas sėkmingai įkeltas";
+
 "Please try again later." = "Bandykite dar kartą vėliau.";
 
 "Submitted for review" = "Pateikta peržiūrai";
@@ -22,8 +24,10 @@
 
 "We couldn't verify ownership of this wallet. Please try again." = "Piniginės nuosavybės patvirtinti nepavyko. Bandykite dar kartą.";
 
-"We’re required to confirm your address to enable spending over %@." = "Privalome patvirtinti jūsų adresą, kad galėtumėte išleisti daugiau nei %@.";
+"We may request proof of address for larger transactions." = "Atliekant didesnės vertės operacijas, galime paprašyti pateikti adreso įrodymą.";
 
-"We’re required to understand where your funds come from to enable spending over %@." = "Privalome suprasti, iš kur gaunamos jūsų lėšos, kad galėtumėte išleisti daugiau nei %@.";
+"We may request source of funds for larger transactions." = "Atliekant didesnės vertės operacijas, galime paprašyti pateikti lėšų kilmę patvirtinantį dokumentą.";
 
 "We’re reviewing your documents. We’ll let you know when verification is complete." = "Peržiūrime jūsų dokumentus. Pranešime jums, kai patikrinimas bus baigtas.";
+
+"You can continue while we verify your document in the background." = "Galite tęsti, kol mes fone tikriname jūsų dokumentą.";

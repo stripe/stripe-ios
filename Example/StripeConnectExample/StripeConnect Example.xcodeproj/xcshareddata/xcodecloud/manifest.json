@@ -1,0 +1,9 @@
+{
+  "id" : "751bc6e4-f166-47c3-95d1-a59a648d05d8",
+  "targets" : [
+    {
+      "id" : "9C2807B2-5958-4695-98D3-225BCD0EED92",
+      "name" : "StripeConnect Example"
+    }
+  ]
+}

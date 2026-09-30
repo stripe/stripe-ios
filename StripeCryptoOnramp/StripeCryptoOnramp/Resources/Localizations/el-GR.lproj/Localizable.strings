@@ -1,5 +1,7 @@
 "Debit cards are most likely to be accepted." = "Οι χρεωστικές κάρτες είναι πιο πιθανό να γίνουν αποδεκτές.";
 
+"Document uploaded successfully" = "Το έγγραφο μεταφορτώθηκε με επιτυχία";
+
 "Please try again later." = "Δοκιμάστε ξανά αργότερα.";
 
 "Submitted for review" = "Υποβλήθηκε για έλεγχο";
@@ -22,8 +24,10 @@
 
 "We couldn't verify ownership of this wallet. Please try again." = "Δεν μπορέσαμε να επαληθεύσουμε την ιδιοκτησία αυτού του πορτοφολιού. Δοκιμάστε ξανά.";
 
-"We’re required to confirm your address to enable spending over %@." = "Απαιτείται να επιβεβαιώσουμε τη διεύθυνσή σας για να ενεργοποιήσουμε δαπάνες άνω των %@.";
+"We may request proof of address for larger transactions." = "Ενδέχεται να ζητήσουμε αποδεικτικό διεύθυνσης για μεγαλύτερες συναλλαγές.";
 
-"We’re required to understand where your funds come from to enable spending over %@." = "Απαιτείται να κατανοήσουμε από πού προέρχονται τα χρήματά σας για να ενεργοποιήσουμε δαπάνες άνω των %@.";
+"We may request source of funds for larger transactions." = "Ενδέχεται να ζητήσουμε την προέλευση των χρημάτων για μεγαλύτερες συναλλαγές.";
 
 "We’re reviewing your documents. We’ll let you know when verification is complete." = "Εξετάζουμε τα έγγραφά σας. Θα σας ενημερώσουμε όταν ολοκληρωθεί η επαλήθευση.";
+
+"You can continue while we verify your document in the background." = "Μπορείτε να συνεχίσετε όσο επαληθεύουμε το έγγραφό σας στο παρασκήνιο.";
