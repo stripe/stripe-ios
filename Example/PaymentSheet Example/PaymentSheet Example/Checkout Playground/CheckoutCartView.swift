@@ -15,6 +15,7 @@ struct CheckoutCartView: View {
     @State private var checkout: CheckoutController?
     @StateObject private var diagnostics = CheckoutSessionDiagnostics()
     @StateObject private var analyticsLogObserver = AnalyticsLogObserver.shared
+    @StateObject private var analyticsLogRecorder = CheckoutAnalyticsLogRecorder()
 
     @State private var isLoading = false
     @State private var errorMessage: String?
@@ -99,7 +100,7 @@ struct CheckoutCartView: View {
             }
             .task {
                 analyticsLogObserver.analyticsLog.removeAll()
-                STPAnalyticsClient.sharedClient.delegate = analyticsLogObserver
+                STPAnalyticsClient.sharedClient.delegate = analyticsLogRecorder
                 await loadCheckout()
             }
             .alert(
@@ -190,5 +191,13 @@ struct CheckoutCartView: View {
             errorMessage = error.localizedDescription
         }
         isLoading = false
+    }
+}
+
+private final class CheckoutAnalyticsLogRecorder: ObservableObject, STPAnalyticsClientDelegate {
+    func analyticsClientDidLog(analyticsClient: STPAnalyticsClient, payload: [String: Any]) {
+        DispatchQueue.main.async {
+            AnalyticsLogObserver.shared.analyticsLog.append(payload)
+        }
     }
 }
