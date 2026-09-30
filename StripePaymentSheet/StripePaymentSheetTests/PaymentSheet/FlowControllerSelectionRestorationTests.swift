@@ -85,6 +85,7 @@ final class FlowControllerSelectionRestorationTests: XCTestCase {
             savedPaymentMethodID(flowController.internalPaymentOption),
             acceptedPaymentMethod.stripeId
         )
+        XCTAssertIdentical(flowController.viewController.checkoutBillingAddressUpdater, updater)
     }
 
     func testExternalRestorationParamsPreserveBillingDetails() throws {
