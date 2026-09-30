@@ -107,6 +107,17 @@ protocol CryptoOnrampCoordinatorProtocol {
     @MainActor
     func presentUserAttestation(from viewController: UIViewController) async throws -> UserAttestationResult
 
+    /// Retrieves fresh additional KYC requirements and presents document collection when needed.
+    /// Requires an authenticated Link user.
+    ///
+    /// - Parameter viewController: The view controller from which to present document collection.
+    /// - Returns: A `FulfillAdditionalKYCRequirementResult` indicating whether a document was submitted,
+    ///   verification is pending, the user canceled collection, or no requirement remains.
+    /// Throws if an authenticated Link user is not available, the requirement is unsupported,
+    /// the view controller cannot present collection, or an API error occurs.
+    @MainActor
+    func fulfillAdditionalKYCRequirement(from viewController: UIViewController) async throws -> FulfillAdditionalKYCRequirementResult
+
     /// Presents the current terms and conditions when acceptance is required.
     /// Requires an authenticated Link user.
     ///
@@ -496,6 +507,17 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
             }
         } catch {
             try logAndThrow(error, during: .presentUserAttestation)
+        }
+    }
+
+    @MainActor
+    public func fulfillAdditionalKYCRequirement(from viewController: UIViewController) async throws -> FulfillAdditionalKYCRequirementResult {
+        do {
+            let account = try await linkAccountInfo
+            let flow = AdditionalKYCFlowCoordinator(apiClient: apiClient, linkAccountInfo: account, appearance: appearance)
+            return try await flow.present(from: viewController)
+        } catch {
+            throw Self.mappedError(error, during: .fulfillAdditionalKYCRequirement, apiClient: apiClient, additionalSDKVersions: additionalSDKVersions)
         }
     }
 
