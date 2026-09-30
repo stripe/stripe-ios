@@ -1,5 +1,7 @@
 "Debit cards are most likely to be accepted." = "Najverjetneje bodo sprejete debetne kartice.";
 
+"Document uploaded successfully" = "Dokument je uspešno naložen";
+
 "Please try again later." = "Poskusite znova pozneje.";
 
 "Submitted for review" = "Oddano v pregled";
@@ -22,8 +24,10 @@
 
 "We couldn't verify ownership of this wallet. Please try again." = "Lastništva te denarnice ni bilo mogoče preveriti. Poskusite znova.";
 
-"We’re required to confirm your address to enable spending over %@." = "Potrditi moramo vaš naslov, da omogočimo porabo nad %@.";
+"We may request proof of address for larger transactions." = "Za večje transakcije lahko zahtevamo dokazilo o naslovu.";
 
-"We’re required to understand where your funds come from to enable spending over %@." = "Razumeti moramo, od kod izvirajo vaša sredstva, da omogočimo porabo nad %@.";
+"We may request source of funds for larger transactions." = "Za večje transakcije lahko zahtevamo izvor sredstev.";
 
 "We’re reviewing your documents. We’ll let you know when verification is complete." = "Pregledujemo vaše dokumente. Ko bo preverjanje končano, vas bomo obvestili.";
+
+"You can continue while we verify your document in the background." = "Lahko nadaljujete, medtem ko v ozadju preverjamo vaš dokument.";

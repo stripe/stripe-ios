@@ -112,6 +112,8 @@
 
 "Code sent" = "Kod je poslan";
 
+"Complete the payment using Pix to finish the purchase." = "Dovršite plaćanje uz Pix kako biste dovršili kupnju.";
+
 "Confirm" = "Potvrdi";
 
 "Confirm payment details" = "Potvrdite podatke o plaćanju";
@@ -341,6 +343,8 @@
 "The provided verification code has expired." = "Navedeni kontrolni kôd je istekao.";
 
 "The provided verification code is incorrect." = "Navedeni kontrolni kôd nije točan.";
+
+"This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Ovo je međunarodna kupnja i ne obuhvaća naknadu od 3,5 % IOF. Nastavkom potvrđujete i prihvaćate <terms>uvjete i odredbe Ebanx</terms>.";
 
 "This is your default" = "Ovo je vaša zadana vrijednost";
 

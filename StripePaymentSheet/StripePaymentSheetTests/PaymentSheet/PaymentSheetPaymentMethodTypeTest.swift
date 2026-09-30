@@ -102,6 +102,31 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         )
     }
 
+    // MARK: - Pix
+
+    func testPixSupportsPaymentPaymentWithSetupFutureUsageAndSetup() {
+        // Given Pix PaymentIntents, a PaymentIntent with setup future usage, and a SetupIntent
+        let intents: [Intent] = [
+            ._testPaymentIntent(paymentMethodTypes: [.pix]),
+            ._testPaymentIntent(paymentMethodTypes: [.pix], setupFutureUsage: .offSession),
+            ._testSetupIntent(paymentMethodTypes: [.pix]),
+        ]
+
+        for intent in intents {
+            // When checking availability without a return URL or delayed payment method opt-in
+            let result = PaymentSheet.PaymentMethodType.supportsAdding(
+                paymentMethod: .pix,
+                configuration: makeConfiguration(),
+                intent: intent,
+                elementsSession: ._testValue(intent: intent),
+                supportedPaymentMethods: [.pix]
+            )
+
+            // Then Pix is supported
+            XCTAssertEqual(result, .supported)
+        }
+    }
+
     // MARK: - iDEAL
 
     /// Returns true, iDEAL in `supportedPaymentMethods` and URL requirement and not setting up requirement are met
@@ -223,6 +248,47 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
 
     // MARK: - Naver Pay
 
+    func testGoPayAvailability() {
+        // Given
+        let intents: [Intent] = [
+            ._testPaymentIntent(paymentMethodTypes: [.goPay]),
+            ._testPaymentIntent(paymentMethodTypes: [.goPay], setupFutureUsage: .offSession),
+        ]
+
+        for intent in intents {
+            // When
+            let withoutReturnURL = PaymentSheet.PaymentMethodType.supportsAdding(
+                paymentMethod: .goPay,
+                configuration: makeConfiguration(),
+                intent: intent,
+                elementsSession: ._testValue(intent: intent),
+                supportedPaymentMethods: [.goPay]
+            )
+            let withReturnURL = PaymentSheet.PaymentMethodType.supportsAdding(
+                paymentMethod: .goPay,
+                configuration: makeConfiguration(hasReturnURL: true),
+                intent: intent,
+                elementsSession: ._testValue(intent: intent),
+                supportedPaymentMethods: [.goPay]
+            )
+
+            // Then
+            XCTAssertEqual(withoutReturnURL, .missingRequirements([.returnURL]))
+            XCTAssertEqual(withReturnURL, .supported)
+        }
+
+        let setupIntent = Intent._testSetupIntent(paymentMethodTypes: [.goPay])
+        XCTAssertEqual(
+            PaymentSheet.PaymentMethodType.supportsAdding(
+                paymentMethod: .goPay,
+                configuration: makeConfiguration(hasReturnURL: true),
+                intent: setupIntent,
+                elementsSession: ._testValue(intent: setupIntent),
+                supportedPaymentMethods: [.goPay]
+            ),
+            .missingRequirements([.unsupportedForSetup])
+        )
+    }
     func testNaverPayRequiresReturnURLForPaymentAndSetup() {
         // Given
         let intents: [Intent] = [

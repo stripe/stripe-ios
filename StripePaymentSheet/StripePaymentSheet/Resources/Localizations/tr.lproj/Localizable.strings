@@ -112,6 +112,8 @@
 
 "Code sent" = "Kod gönderildi";
 
+"Complete the payment using Pix to finish the purchase." = "Satın alma işlemini bitirmek için Pix kullanarak ödemeyi tamamlayın.";
+
 "Confirm" = "Onayla";
 
 "Confirm payment details" = "Ödeme bilgilerini onayla";
@@ -341,6 +343,8 @@
 "The provided verification code has expired." = "Sağlanan doğrulama kodunun süresi dolmuş.";
 
 "The provided verification code is incorrect." = "Sağlanan doğrulama kodu yanlış.";
+
+"This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Bu uluslararası bir satın alma işlemidir ve %3,5 IOF ücreti hariçtir. Devam ederek <terms>Ebanx'ın hüküm ve koşullarını</terms> onaylamış ve kabul etmiş olursunuz.";
 
 "This is your default" = "Bu varsayılan ödeme yönteminizdir";
 

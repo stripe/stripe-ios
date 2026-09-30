@@ -1364,6 +1364,48 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         }
     }
 
+    func testPixForms() throws {
+        // Given a cross-border Pix form
+        let internationalForm = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.pix]),
+            elementsSession: ._testValue(orderedPaymentMethodTypes: [.pix], countryCode: "US"),
+            configuration: .paymentElement(PaymentSheet.Configuration()),
+            paymentMethod: .stripe(.pix)
+        ).make()
+
+        // When the required buyer details are entered
+        internationalForm.getTextFieldElement("Full name").setText("Jane Doe")
+        internationalForm.getTextFieldElement("Email").setText("jane@example.com")
+        internationalForm.getTextFieldElement("CPF/CPNJ").setText("52998224725")
+        sendEventToSubviews(.viewDidAppear, from: internationalForm.view)
+        let params = try XCTUnwrap(
+            internationalForm.updateParams(params: .init(type: .stripe(.pix)))
+        )
+
+        // Then Pix sends standard billing details and the billing tax ID
+        XCTAssertEqual(params.paymentMethodParams.billingDetails?.name, "Jane Doe")
+        XCTAssertEqual(params.paymentMethodParams.billingDetails?.email, "jane@example.com")
+        XCTAssertEqual(
+            params.paymentMethodParams.additionalAPIParameters["billing_details[tax_id]"] as? String,
+            "52998224725"
+        )
+        XCTAssertTrue(params.didDisplayMandate)
+
+        // Given a domestic Pix form
+        let domesticForm = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.pix]),
+            elementsSession: ._testValue(orderedPaymentMethodTypes: [.pix], countryCode: "BR"),
+            configuration: .paymentElement(PaymentSheet.Configuration()),
+            paymentMethod: .stripe(.pix)
+        ).make()
+
+        // Then it does not require the cross-border buyer fields or disclosure
+        XCTAssertNil(domesticForm.getTextFieldElement("Full name"))
+        XCTAssertNil(domesticForm.getTextFieldElement("Email"))
+        XCTAssertNil(domesticForm.getTextFieldElement("CPF/CPNJ"))
+        XCTAssertFalse(domesticForm.updateParams(params: .init(type: .stripe(.pix)))?.didDisplayMandate ?? true)
+    }
+
     func testNaverPayFundingSelector() {
         // Given
         let form = PaymentSheetFormFactory(
@@ -2487,6 +2529,27 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertEqual(setupForm.getMandateElement()?.mandateTextView.textView.text, expectedMandate)
     }
 
+    func testGoPayUsesHostedAuthorizationWithoutNativeMandate() {
+        // Given the payment modes supported by GoPay
+        let intents: [Intent] = [
+            ._testPaymentIntent(paymentMethodTypes: [.goPay]),
+            ._testPaymentIntent(paymentMethodTypes: [.goPay], setupFutureUsage: .offSession),
+        ]
+        for intent in intents {
+            // When the form uses automatic billing collection
+            let form = PaymentSheetFormFactory(
+                intent: intent,
+                elementsSession: ._testValue(paymentMethodTypes: ["gopay"]),
+                configuration: .paymentElement(PaymentSheet.Configuration()),
+                paymentMethod: .stripe(.goPay)
+            ).make()
+
+            // Then account linking and consent remain in the hosted flow, as on web
+            XCTAssertFalse(form.collectsUserInput)
+            XCTAssertNil(form.getMandateElement())
+            XCTAssertNotNil(form.updateParams(params: IntentConfirmParams(type: .stripe(.goPay))))
+        }
+    }
     func testKakaoPayDisplaysMandateWhenSettingUp() {
         // Given
         let configuration = PaymentSheet.Configuration._testValue_MostPermissive()
