@@ -138,7 +138,7 @@ final class LinkAccountService: LinkAccountServiceProtocol {
                         .success(
                             self.configureAuth(
                                 PaymentSheetLinkAccount(
-                                    email: email ?? session.consumerSession.emailAddress,
+                                    email: session.consumerSession.emailAddress,
                                     session: session.consumerSession,
                                     publishableKey: session.publishableKey,
                                     displayablePaymentDetails: session.displayablePaymentDetails,
