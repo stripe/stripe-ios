@@ -85,6 +85,8 @@ final class FlowControllerSelectionRestorationTests: XCTestCase {
             savedPaymentMethodID(flowController.internalPaymentOption),
             acceptedPaymentMethod.stripeId
         )
+        XCTAssertIdentical(flowController.viewController, viewController)
+        XCTAssertNil(viewController.error)
         XCTAssertIdentical(flowController.viewController.checkoutBillingAddressUpdater, updater)
     }
 

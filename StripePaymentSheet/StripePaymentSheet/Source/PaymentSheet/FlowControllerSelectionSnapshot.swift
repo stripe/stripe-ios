@@ -64,8 +64,6 @@ internal struct FlowControllerSelectionSnapshot {
     }
 
     /// Returns whether the current controller can be reused without comparing editable form state.
-    /// Controllers with an error rebuild so FlowController does not treat the restored selection as
-    /// invalid when dismissal republishes it.
     /// A captured nil has no accepted option to reconstruct, so the current/default selection remains.
     /// Apple Pay, Link wallet, and ordinary saved methods have stable identities. All form-backed
     /// options rebuild.
@@ -73,10 +71,6 @@ internal struct FlowControllerSelectionSnapshot {
         _ viewController: FlowControllerViewControllerProtocol,
         restoring capturedSelection: PaymentOption?
     ) -> Bool {
-        guard viewController.error == nil else {
-            return false
-        }
-
         let currentSelection = viewController.selectedPaymentOption
         switch (capturedSelection, currentSelection) {
         case (nil, _), (.applePay?, .applePay?), (.link(.wallet)?, .link(.wallet)?):

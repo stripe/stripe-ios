@@ -907,6 +907,7 @@ extension PaymentSheet {
             guard let selection = snapshot.selectionForRebuilding(
                 using: viewController
             ) else {
+                viewController.clearErrorForReuseAfterCancellation()
                 return
             }
 
@@ -1132,6 +1133,7 @@ internal protocol FlowControllerViewControllerProtocol: BottomSheetContentViewCo
     var flowControllerDelegate: FlowControllerViewControllerDelegate? { get set }
     var checkoutBillingAddressUpdater: CheckoutSessionBillingAddressUpdater? { get set }
     func clearSelection()
+    func clearErrorForReuseAfterCancellation()
 }
 
 extension PaymentOption {
