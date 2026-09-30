@@ -31,6 +31,7 @@ private struct AuthenticatedUserToolbarItemModifier: ViewModifier {
 
     @Environment(\.isLoading) private var isLoading
     @State private var isPresentingUpdateAddress = false
+    @State private var isFulfillingAdditionalKYC = false
     @State private var alert: Alert?
     @State private var customerInformationTextToCopy: String?
 
@@ -80,6 +81,12 @@ private struct AuthenticatedUserToolbarItemModifier: ViewModifier {
                             verifyKYC()
                         } label: {
                             Label("Verify KYC Info…", systemImage: "doc.text.magnifyingglass")
+                        }
+
+                        Button {
+                            fulfillAdditionalKYCRequirement()
+                        } label: {
+                            Label("Check Additional KYC Requirements…", systemImage: "doc.text")
                         }
 
                         Button {
@@ -186,6 +193,38 @@ private struct AuthenticatedUserToolbarItemModifier: ViewModifier {
                 await MainActor.run {
                     alert = Alert(title: "KYC verification failed", message: error.localizedDescription)
                 }
+            }
+        }
+    }
+
+    private func fulfillAdditionalKYCRequirement() {
+        guard !isFulfillingAdditionalKYC else { return }
+        isFulfillingAdditionalKYC = true
+
+        Task { @MainActor in
+            defer { isFulfillingAdditionalKYC = false }
+
+            guard let presentingViewController = UIApplication.shared.findTopNavigationController() else {
+                alert = Alert(title: "Unable to collect documents", message: "Unable to find a view controller to present from.")
+                return
+            }
+
+            do {
+                let result = try await coordinator.fulfillAdditionalKYCRequirement(from: presentingViewController)
+                switch result {
+                case .submitted:
+                    alert = Alert(title: "Document submitted", message: "Your document is being verified.")
+                case .pendingVerification:
+                    alert = Alert(title: "Verification pending", message: "Your information is still being reviewed.")
+                case .canceled:
+                    break
+                case .notRequired:
+                    alert = Alert(title: "No document required", message: "No additional document is needed right now.")
+                @unknown default:
+                    alert = Alert(title: "Unable to collect documents", message: "Received an unexpected result from document collection.")
+                }
+            } catch {
+                alert = Alert(title: "Unable to collect documents", message: error.localizedDescription)
             }
         }
     }
