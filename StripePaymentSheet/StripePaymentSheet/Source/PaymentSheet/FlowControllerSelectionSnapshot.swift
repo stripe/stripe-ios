@@ -54,26 +54,30 @@ internal struct FlowControllerSelectionSnapshot {
             selectionToRestore.paymentOption = viewController.selectedPaymentOption
         }
 
-        // Rebuild when a failed update left an error on the controller. Reusing it would make
-        // FlowController treat the restored selection as invalid when dismissal republishes it.
-        if viewController.error == nil,
-           canReuseCurrentViewController(
-            restoring: selectionToRestore.paymentOption,
-            currentSelection: viewController.selectedPaymentOption
-           ) {
+        if canReuseCurrentViewController(
+            viewController,
+            restoring: selectionToRestore.paymentOption
+        ) {
             return nil
         }
         return selectionToRestore
     }
 
     /// Returns whether the current controller can be reused without comparing editable form state.
+    /// Controllers with an error rebuild so FlowController does not treat the restored selection as
+    /// invalid when dismissal republishes it.
     /// A captured nil has no accepted option to reconstruct, so the current/default selection remains.
     /// Apple Pay, Link wallet, and ordinary saved methods have stable identities. All form-backed
     /// options rebuild.
     private func canReuseCurrentViewController(
-        restoring capturedSelection: PaymentOption?,
-        currentSelection: PaymentOption?
+        _ viewController: FlowControllerViewControllerProtocol,
+        restoring capturedSelection: PaymentOption?
     ) -> Bool {
+        guard viewController.error == nil else {
+            return false
+        }
+
+        let currentSelection = viewController.selectedPaymentOption
         switch (capturedSelection, currentSelection) {
         case (nil, _), (.applePay?, .applePay?), (.link(.wallet)?, .link(.wallet)?):
             return true
