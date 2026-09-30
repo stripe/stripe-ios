@@ -19,8 +19,14 @@ import XCTest
 
 extension PaymentPagesAPIResponse {
     /// Convenience for fixtures that contain no client-local session state.
-    func makePublicSession() -> CheckoutController.Session {
-        return CheckoutController.Session(apiResponse: self, localState: .empty)
+    func makePublicSession(
+        expressCheckoutConfiguration: ExpressCheckoutElement.Configuration? = nil
+    ) -> CheckoutController.Session {
+        return CheckoutController.Session(
+            apiResponse: self,
+            localState: .empty,
+            expressCheckoutConfiguration: expressCheckoutConfiguration
+        )
     }
 }
 
@@ -153,6 +159,37 @@ enum CheckoutTestHelpers {
     static func makeSession(_ overrides: [String: Any] = [:]) -> PaymentPagesAPIResponse {
         let json = makeSessionJSON(overrides)
         return try! PaymentPagesAPIResponse.decode(fromAPIResponse: json)
+    }
+
+    static func makeSessionWithWalletTypes(
+        _ walletTypes: [String],
+        applePayPreference: String? = nil,
+        linkUseAttestation: Bool? = nil,
+        automaticTaxAddressSource: String? = nil
+    ) -> PaymentPagesAPIResponse {
+        var elementsSession: [String: Any] = [
+            "session_id": "es_test",
+            "merchant_country": "US",
+            "payment_method_preference": ["ordered_payment_method_types": ["card"]],
+            "ordered_payment_method_types_and_wallets": walletTypes,
+        ]
+        if let applePayPreference {
+            elementsSession["apple_pay_preference"] = applePayPreference
+        }
+        if let linkUseAttestation {
+            elementsSession["link_settings"] = [
+                "link_funding_sources": ["CARD"],
+                "link_mobile_use_attestation_endpoints": linkUseAttestation,
+            ]
+        }
+        var session: [String: Any] = ["elements_session": elementsSession]
+        if let automaticTaxAddressSource {
+            session["tax_context"] = [
+                "automatic_tax_enabled": true,
+                "automatic_tax_address_source": automaticTaxAddressSource,
+            ]
+        }
+        return makeSession(session)
     }
 
     static func makeSessionJSON(_ overrides: [String: Any] = [:]) -> [String: Any] {
