@@ -33,7 +33,7 @@ final class DocumentFileTests: XCTestCase {
             ("txt", "txt", "public.plain-text"),
             ("heic", "heic", "public.heic"),
         ]
-        
+
         let bytes = Data("Document contents are not inspected".utf8)
         for (extensionName, acceptedExtension, typeIdentifier) in examples {
             let configuration = DocumentCollectionConfiguration(
