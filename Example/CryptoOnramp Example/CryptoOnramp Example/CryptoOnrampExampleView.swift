@@ -84,8 +84,13 @@ struct CryptoOnrampExampleView: View {
             .animation(.default, value: isApplePayPrefillModeEnabled)
             .navigationTitle("CryptoOnramp Example")
             .navigationBarTitleDisplayMode(.inline)
+            .authenticatedUserToolbar(
+                isShown: isApplePayPrefillModeEnabled && flowCoordinator.path.isEmpty,
+                coordinator: coordinator,
+                flowCoordinator: flowCoordinator
+            )
             .toolbar {
-                if flowCoordinator.path.isEmpty {
+                if flowCoordinator.path.isEmpty && !isApplePayPrefillModeEnabled {
                     ToolbarItem(placement: .navigationBarTrailing) {
                         Menu {
                             Toggle(isOn: $livemode) {
