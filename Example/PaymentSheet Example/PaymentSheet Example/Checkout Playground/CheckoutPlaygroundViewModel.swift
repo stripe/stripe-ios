@@ -10,13 +10,6 @@ import Combine
 import SwiftUI
 
 extension CheckoutPlayground {
-    struct ExpressCheckoutElementSettings {
-        var isEnabled = true
-        var applePayDisplay: ExpressCheckoutElement.ApplePayConfiguration.Display = .automatic
-        var linkDisplay: ExpressCheckoutElement.LinkConfiguration.Display = .automatic
-        var paymentMethodOrder: ExpressCheckoutPaymentMethodOrder = .dynamic
-    }
-
     @MainActor
     final class ViewModel: ObservableObject, STPAnalyticsClientDelegate {
 
@@ -78,7 +71,7 @@ extension CheckoutPlayground {
             let settings = Self.settingsFromDefaults() ?? Settings()
             uiFramework = settings.uiFramework
             integrationType = settings.integrationType
-            expressCheckoutElement = ExpressCheckoutElementSettings(isEnabled: settings.showExpressCheckoutElement)
+            expressCheckoutElement = settings.expressCheckoutElement
             linkMode = settings.linkMode
             currency = settings.currency
             customerType = settings.customerType
@@ -231,7 +224,7 @@ extension CheckoutPlayground {
             Settings(
                 uiFramework: uiFramework,
                 integrationType: integrationType,
-                showExpressCheckoutElement: expressCheckoutElement.isEnabled,
+                expressCheckoutElement: expressCheckoutElement,
                 linkMode: linkMode,
                 currency: currency,
                 customerType: customerType,
@@ -257,7 +250,7 @@ extension CheckoutPlayground {
         private func apply(_ settings: Settings) {
             uiFramework = settings.uiFramework
             integrationType = settings.integrationType
-            expressCheckoutElement.isEnabled = settings.showExpressCheckoutElement
+            expressCheckoutElement = settings.expressCheckoutElement
             linkMode = settings.linkMode
             currency = settings.currency
             customerType = settings.customerType

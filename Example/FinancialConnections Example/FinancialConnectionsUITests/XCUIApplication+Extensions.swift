@@ -157,10 +157,16 @@ extension XCUIApplication {
         )
 
         if notNowButton.exists {
-            if keyboards.firstMatch.exists {
+            // The email field can become focused shortly after this pane appears. Wait for
+            // that transition so the keyboard cannot race the tap on the footer button.
+            if keyboards.firstMatch.waitForExistence(timeout: 2.0) {
                 fc_dismissKeyboard()
             }
-            notNowButton.waitForExistenceAndTap()
+            XCTAssertTrue(
+                notNowButton.wait(until: { $0.isHittable }, timeout: 10.0),
+                "Networking Link signup Not now button failed to become hittable"
+            )
+            notNowButton.tap()
         }
     }
 
@@ -205,13 +211,19 @@ extension XCUIApplication {
     }
 
     func fc_dismissKeyboard() {
+        let keyboard = keyboards.firstMatch
+
         // Try the toolbar Done button first (iOS 18 and earlier)
         let doneButtonByLabel = toolbars.buttons["Done"]
         if doneButtonByLabel.waitForExistence(timeout: 1) {
             doneButtonByLabel.tap()
-            return
         }
         // iOS 26 fallback: tap on the title label to dismiss the keyboard
         otherElements["fc_pane_title_label"].tap()
+
+        XCTAssertTrue(
+            keyboard.wait(until: { !$0.exists }, timeout: 5.0),
+            "Keyboard failed to dismiss"
+        )
     }
 }
