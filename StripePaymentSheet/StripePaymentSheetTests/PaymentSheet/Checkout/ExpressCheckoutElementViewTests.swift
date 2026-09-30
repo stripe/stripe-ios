@@ -18,7 +18,14 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
         // Given
         var configuration = ExpressCheckoutElement.Configuration(confirmHandler: { _ in })
         configuration.applePayConfiguration = .init(merchantId: "merchant.com.example")
-        let session = makeSessionWithWalletTypes(["link"]).makePublicSession(
+        let session = CheckoutTestHelpers.makeSession([
+            "elements_session": [
+                "session_id": "es_test",
+                "merchant_country": "US",
+                "payment_method_preference": ["ordered_payment_method_types": ["card"]],
+                "ordered_payment_method_types_and_wallets": ["link"],
+            ],
+        ]).makePublicSession(
             expressCheckoutConfiguration: configuration
         )
         let analyticsClient = MockAnalyticsClient()
