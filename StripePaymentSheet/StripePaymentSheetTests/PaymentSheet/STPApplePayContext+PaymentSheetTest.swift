@@ -241,14 +241,15 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
         XCTAssertEqual(sut.merchantCapabilities, .threeDSecure)
     }
 
-    func testCreatePaymentRequest_chinaUnionPayRemovedByBrandAcceptance_removesEMV() {
+    func testCreatePaymentRequest_chinaUnionPayRemovedByBrandAcceptance_keepsEMV() {
         StripeAPI.additionalEnabledApplePayNetworks = [.chinaUnionPay]
         defer { StripeAPI.additionalEnabledApplePayNetworks = [] }
         var configuration = configuration
         configuration.cardBrandAcceptance = .allowed(brands: [.visa])
         let sut = STPApplePayContext.createPaymentRequest(intent: Intent._testValue(), configuration: configuration, applePay: applePayConfiguration)
         XCTAssertEqual(sut.supportedNetworks, [.visa])
-        XCTAssertEqual(sut.merchantCapabilities, .threeDSecure)
+        // EMV added by StripeAPI.paymentRequest is not removed when the brand filter drops China UnionPay
+        XCTAssertEqual(sut.merchantCapabilities, [.threeDSecure, .emv])
     }
 
     func testCreatePaymentRequest_chinaUnionPayWithFundingFilter_keepsEMV() {
