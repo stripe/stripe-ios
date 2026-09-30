@@ -16,7 +16,7 @@ MINOR
 * [Added] Added `STPAPIClient.CryptoOnrampAPIError.missingLinkSessionKey` to report when a Link session key is unavailable.
 
 ### PaymentSheet
-* [Added] Added MoMo API bindings and support for payments, including setup future usage, in PaymentSheet.
+* [Added] Added MoMo API bindings and PaymentSheet support for PaymentIntents and PaymentIntents with setup future usage.
 * [Added] Added GoPay API bindings and support for payments, including setup future usage, in PaymentSheet.
 
 ## 26.12.1 2026-09-28
