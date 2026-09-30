@@ -5,6 +5,9 @@
 //  Created by Michael Liberatore on 9/16/26.
 //
 
+import Foundation
+import UniformTypeIdentifiers
+
 /// Presentation and validation inputs for document collection.
 struct DocumentCollectionConfiguration {
 
@@ -38,6 +41,60 @@ struct DocumentCollectionConfiguration {
 
     /// Guidance describing the accepted formats and file size limit.
     let uploadHint: String
+
+    /// Maps the file extensions to `UTType`s for use in filtering with Files.
+    var documentPickerContentTypes: [UTType] {
+        acceptedFormats.map { format in
+            guard let type = UTType(filenameExtension: format.normalizedDocumentFileExtension), !type.isDynamic else {
+                return .data
+            }
+            return type
+        }
+    }
+
+    /// Whether to offer access to the photo library, based on document type (e.g. don't allow picking from photo library if we require PDF).
+    var allowsPhotoSelection: Bool {
+        documentPickerContentTypes.contains { $0.conforms(to: .image) }
+    }
+
+    /// User-readable file size limit.
+    var maximumFileSizeLabel: String {
+        ByteCountFormatter.string(fromByteCount: Int64(maximumFileSize), countStyle: .file)
+    }
+}
+
+extension DocumentCollectionConfiguration {
+
+    /// Adapts a requirement that can be fulfilled with one proof-of-address file.
+    init(proofOfAddress requirement: AdditionalKYCDocumentRequirement) throws {
+        guard requirement.minDocumentTypes >= 0,
+              requirement.minDocumentTypes <= 1,
+              requirement.maxDocumentTypes >= 1,
+              requirement.maxFileSizeBytes > 0,
+              !requirement.acceptedSubtypes.isEmpty else {
+            throw DocumentCollectionError.unsupportedRequirement
+        }
+
+        let formats = requirement.acceptedFormats.map(\.normalizedDocumentFileExtension)
+
+        guard !formats.isEmpty else {
+            throw DocumentCollectionError.unsupportedRequirement
+        }
+
+        self.init(
+            acceptedSubtypes: requirement.acceptedSubtypes.map { subtype in
+                .init(id: subtype.id, label: subtype.label, description: subtype.description)
+            },
+            acceptedFormats: formats.reduce(into: []) { result, format in
+                if !result.contains(format) {
+                    result.append(format)
+                }
+            },
+            instructions: requirement.instructions,
+            maximumFileSize: requirement.maxFileSizeBytes,
+            uploadHint: requirement.fileRequirements
+        )
+    }
 }
 
 #if DEBUG
