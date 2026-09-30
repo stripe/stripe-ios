@@ -144,8 +144,8 @@ final class AdditionalKYCFlowCoordinator: NSObject, UIAdaptivePresentationContro
                     appearance: self.appearance,
                     uploader: KYCDocumentUploader(apiClient: self.apiClient, linkSessionKey: linkSessionKey),
                     initialErrorMessage: self.message(for: requirement.errors),
-                    onSubmit: { [weak self] submission in
-                        guard let self else { throw CancellationError() }
+                    onSubmit: { [weak self, weak navigationController] submission in
+                        guard let self, let navigationController else { throw CancellationError() }
                         try await self.submit(submission, requirement: requirement, in: navigationController)
                     },
                     onClose: { [weak self] in
