@@ -523,12 +523,22 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
 
     @MainActor
     public func fulfillAdditionalKYCRequirement(from viewController: UIViewController) async throws -> FulfillAdditionalKYCRequirementResult {
+        analyticsClient.log(.additionalKYCRequirementFulfillmentStarted)
         do {
             let account = try await linkAccountInfo
             let flow = AdditionalKYCFlowCoordinator(apiClient: apiClient, linkAccountInfo: account, appearance: appearance)
-            return try await flow.present(from: viewController)
+            let result = try await flow.present(from: viewController)
+
+            switch result {
+            case .submitted, .pendingVerification:
+                analyticsClient.log(.additionalKYCRequirementFulfillmentCompleted)
+            case .canceled, .notRequired:
+                break
+            }
+
+            return result
         } catch {
-            throw Self.mappedError(error, during: .fulfillAdditionalKYCRequirement, apiClient: apiClient, additionalSDKVersions: additionalSDKVersions)
+            try logAndThrow(error, during: .fulfillAdditionalKYCRequirement)
         }
     }
 

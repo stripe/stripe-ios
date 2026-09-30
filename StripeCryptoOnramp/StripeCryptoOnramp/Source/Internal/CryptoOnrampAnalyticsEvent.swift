@@ -48,6 +48,8 @@ enum CryptoOnrampAnalyticsEvent {
     case identifiersSubmitted(completed: Bool)
     case userAttestationStarted
     case userAttestationCompleted
+    case additionalKYCRequirementFulfillmentStarted
+    case additionalKYCRequirementFulfillmentCompleted
     case termsAndConditionsStarted
     case termsAndConditionsCompleted
     case termsOfServiceStarted
@@ -96,6 +98,10 @@ enum CryptoOnrampAnalyticsEvent {
             return "onramp.user_attestation_started"
         case .userAttestationCompleted:
             return "onramp.user_attestation_completed"
+        case .additionalKYCRequirementFulfillmentStarted:
+            return "onramp.fulfill_additional_kyc_requirement_started"
+        case .additionalKYCRequirementFulfillmentCompleted:
+            return "onramp.fulfill_additional_kyc_requirement_completed"
         case .termsAndConditionsStarted:
             return "onramp.terms_and_conditions_started"
         case .termsAndConditionsCompleted:
@@ -144,6 +150,8 @@ enum CryptoOnrampAnalyticsEvent {
              .identityVerificationCompleted,
              .kycInfoSubmitted,
              .userAttestationCompleted,
+             .additionalKYCRequirementFulfillmentStarted,
+             .additionalKYCRequirementFulfillmentCompleted,
              .termsAndConditionsStarted,
              .termsAndConditionsCompleted,
              .termsOfServiceStarted,
