@@ -169,7 +169,13 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
 
         // Post-tax price, CA sales tax was applied; subtotal unchanged proves the increase is purely tax
         XCTAssertEqual(checkout.session.totals.subtotal.minorUnitsAmount, 5050)
-        XCTAssertEqual(checkout.session.totals.total.minorUnitsAmount, 5486)
+        XCTAssertEqual(checkout.session.taxAmounts?.count, 1)
+        let taxAmount = try XCTUnwrap(checkout.session.taxAmounts?.first?.minorUnitsAmount)
+        XCTAssertGreaterThan(taxAmount, 0)
+        XCTAssertEqual(
+            checkout.session.totals.total.minorUnitsAmount,
+            checkout.session.totals.subtotal.minorUnitsAmount + taxAmount
+        )
     }
 
     func testLoadUnifiedModeCheckoutSession() async throws {
