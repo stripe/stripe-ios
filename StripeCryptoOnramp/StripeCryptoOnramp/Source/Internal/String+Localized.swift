@@ -99,6 +99,45 @@ extension String.Localized {
         STPLocalizedString("Document type", "Label and picker title for a document's category")
     }
 
+    static var documentRequirementsExplanation: String {
+        STPLocalizedString("Make sure your document meets following requirements.", "Explanation above the document upload control")
+    }
+
+    static var chooseDocumentFile: String {
+        STPLocalizedString("Choose File…", "Action to open the system document picker to select a file")
+    }
+
+    static var chooseDocumentPhoto: String {
+        STPLocalizedString("Choose Photo…", "Action to open the system photo picker to select a photo")
+    }
+
+    static func unsupportedDocumentFormat(formats: [String]) -> String {
+        guard !formats.isEmpty else {
+            return STPLocalizedString("This file type isn’t supported.", "Validation error when no document formats are available")
+        }
+        let acceptedFormats = formats.map { $0.uppercased() }.formatted(.list(type: .or))
+        return String(
+            format: STPLocalizedString("This file type isn’t supported. Upload a %@ file.", "Validation error for an unsupported document format. The placeholder is a locale-aware formatted list of one or more accepted document formats."),
+            acceptedFormats
+        )
+    }
+
+    static var unableToOpenDocument: String {
+        STPLocalizedString("We couldn’t open this document. Please choose it again.", "Error when a file provider cannot supply a document")
+    }
+
+    static func documentTooLarge(size: String) -> String {
+        String(format: STPLocalizedString("This file is larger than %@. Choose a file that is %@ or smaller.", "Validation error for a document exceeding the size limit"), size, size)
+    }
+
+    static var documentUploadFailed: String {
+        STPLocalizedString("We couldn’t upload this file. Please try again.", "Error after a document upload fails")
+    }
+
+    static var previousDocumentIssue: String {
+        STPLocalizedString("There was a problem with your previous document. Please upload a new one.", "Message shown when a previous document has a requirement error")
+    }
+
     static var uploadDocument: String {
         STPLocalizedString("Upload document", "Action to select an existing document for upload")
     }
