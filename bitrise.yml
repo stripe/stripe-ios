@@ -30,17 +30,25 @@ pipelines:
     workflows:
       lint-tests:
         abort_on_fail: true
-      update-snapshots-and-lokalise: {}
+      snapshots-ios16: {}
+      snapshots-ios26: {}
+      update-snapshots-and-lokalise:
+        depends_on:
+        - snapshots-ios16
+        - snapshots-ios26
       framework-unit-tests:
         uses: framework-tests
         inputs:
         - CI_SNAPSHOTS_IN_DEDICATED_WORKFLOW: "true"
+        - CI_FRAMEWORK_CHECKS_IN_DEDICATED_WORKFLOW: "true"
+      framework-checks: {}
       paymentsheet-unit-tests:
         uses: framework-tests-paymentsheet
         inputs:
         - CI_SNAPSHOTS_IN_DEDICATED_WORKFLOW: "true"
       financial-connections-stability-tests: {}
-      lpm-confirm-flow-tests: {}
+      lpm-confirm-flow-tests:
+        parallel: 2
       framework-tests-and-builds-xcode-26-1: {}
       installation-tests-cocoapods: {}
       installation-tests-spm: {}
@@ -80,7 +88,84 @@ pipelines:
       deploy-dry-run: {}
       pod-lint-tests: {}
 workflows:
+  snapshots-ios16:
+    before_run:
+    - install-runtime-16
+    - prep_all
+    - record-snapshot-runtime
+    envs:
+    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
+    - SNAPSHOT_IOS_VERSION: "16.4"
+    - SNAPSHOT_RESULTS_KEY: SNAPSHOT_IOS16_RESULTS
+  snapshots-ios26:
+    before_run:
+    - prep_all
+    - record-snapshot-runtime
+    envs:
+    - DEFAULT_TEST_DEVICE: $DEFAULT_TEST_DEVICE_26_4_1
+    - SNAPSHOT_IOS_VERSION: "26.4.1"
+    - SNAPSHOT_RESULTS_KEY: SNAPSHOT_IOS26_RESULTS
+  record-snapshot-runtime:
+    steps:
+    - script@1:
+        title: Install ImageMagick
+        inputs:
+        - content: brew install imagemagick
+    - script@1:
+        title: Record snapshots and export changes
+        inputs:
+        - content: |-
+            #!/usr/bin/env bash
+            set -euo pipefail
+            snapshot_base=$(git rev-parse HEAD)
+            ruby ci_scripts/record_snapshots.rb --commit --version "$SNAPSHOT_IOS_VERSION"
+            snapshot_results="$BITRISE_DEPLOY_DIR/snapshot-ios$SNAPSHOT_IOS_VERSION"
+            mkdir -p "$snapshot_results"
+            git diff --binary "$snapshot_base" HEAD -- Tests/ReferenceImages_64 > "$snapshot_results/snapshot-ios$SNAPSHOT_IOS_VERSION.patch"
+    - deploy-to-bitrise-io@2:
+        inputs:
+        # Directories are archived, preserving an empty patch when nothing changed.
+        - pipeline_intermediate_files: "$BITRISE_DEPLOY_DIR/snapshot-ios$SNAPSHOT_IOS_VERSION:$SNAPSHOT_RESULTS_KEY"
   update-snapshots-and-lokalise:
+    before_run:
+    - prep_source
+    envs:
+    - SNAPSHOT_CHANGES_TO_PUSH: "false"
+    - LOKALISE_API_KEY: $LOKALISE_API_KEY
+    steps:
+    - activate-ssh-key@4: {}
+    - pull-intermediate-files@1.3.7:
+        inputs:
+        - artifact_sources: snapshots-ios16,snapshots-ios26
+    - script@1:
+        title: Combine snapshot updates
+        inputs:
+        - content: |-
+            #!/usr/bin/env bash
+            set -euo pipefail
+            for patch in "${SNAPSHOT_IOS16_RESULTS:?Missing iOS 16 results}/snapshot-ios16.4.patch" "${SNAPSHOT_IOS26_RESULTS:?Missing iOS 26 results}/snapshot-ios26.4.1.patch"; do
+              test -f "$patch"
+              if [[ -s "$patch" ]]; then
+                git apply --index "$patch"
+              fi
+            done
+            if ! git diff --cached --quiet; then
+              git commit -m "Update snapshot reference images"
+              envman add --key SNAPSHOT_CHANGES_TO_PUSH --value true
+            else
+              echo "No snapshot changes to publish."
+            fi
+    - script@1:
+        title: Push snapshot changes
+        run_if: '{{enveq "SNAPSHOT_CHANGES_TO_PUSH" "true"}}'
+        inputs:
+        - content: ruby ci_scripts/push_snapshots.rb
+    - script@1:
+        title: Upload strings to lokalise
+        inputs:
+        - content: bundle exec ./ci_scripts/upload_localized_strings_to_lokalise.sh
+  record-all-snapshots-and-lokalise:
+    description: Standalone recorder for both runtimes, including artifact upload, one snapshot push, and localization updates.
     steps:
     - activate-ssh-key@4: {}
     - script@1:
@@ -322,6 +407,7 @@ workflows:
   framework-tests:
     envs:
     - CI_SNAPSHOTS_IN_DEDICATED_WORKFLOW: "false"
+    - CI_FRAMEWORK_CHECKS_IN_DEDICATED_WORKFLOW: "false"
     steps:
     - script@1:
         title: Delegate snapshots to the dedicated workflow
@@ -336,11 +422,13 @@ workflows:
         - lane: preflight
         title: fastlane preflight
         is_always_run: true
+        run_if: '{{not (enveq "CI_FRAMEWORK_CHECKS_IN_DEDICATED_WORKFLOW" "true")}}'
     - fastlane@3:
         inputs:
         - lane: threeds2_tests
         title: fastlane threeds2_tests
         is_always_run: true
+        run_if: '{{not (enveq "CI_FRAMEWORK_CHECKS_IN_DEDICATED_WORKFLOW" "true")}}'
     - xcode-test@6:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
@@ -381,6 +469,26 @@ workflows:
       bitrise.io:
         stack: osx-xcode-26.4.x
         machine_type_id: g2.mac.large
+  framework-checks:
+    steps:
+    - fastlane@3:
+        inputs:
+        - lane: preflight
+        title: fastlane preflight
+        is_always_run: true
+    - fastlane@3:
+        inputs:
+        - lane: threeds2_tests
+        title: fastlane threeds2_tests
+        is_always_run: true
+    - deploy-to-bitrise-io@2: {}
+    before_run:
+    - install-runtime-16
+    - prep_all
+    meta:
+      bitrise.io:
+        stack: osx-xcode-26.4.x
+        machine_type_id: g2.mac.large
   framework-tests-paymentsheet:
     envs:
     - CI_SNAPSHOTS_IN_DEDICATED_WORKFLOW: "false"
@@ -413,13 +521,39 @@ workflows:
         machine_type_id: g2.mac.large
   lpm-confirm-flow-tests:
     steps:
+    - script@1:
+        title: Select LPM confirmation shard
+        inputs:
+        - content: |-
+            #!/usr/bin/env bash
+            set -euo pipefail
+            test_class="StripePaymentSheetTests/PaymentSheetLPMConfirmFlowTests"
+            # These two methods take about half the suite's execution time.
+            dedicated_methods=(testAmazonPayConfirmFlows testTwintConfirmFlows)
+            options=("-only-testing:$test_class")
+            case "${BITRISE_IO_PARALLEL_TOTAL:-1}:${BITRISE_IO_PARALLEL_INDEX:-0}" in
+              1:0) ;; # Standalone runs retain the entire class.
+              2:0)
+                options=()
+                for method in "${dedicated_methods[@]}"; do
+                  options+=("-only-testing:$test_class/$method")
+                done
+                ;;
+              2:1)
+                for method in "${dedicated_methods[@]}"; do
+                  options+=("-skip-testing:$test_class/$method")
+                done
+                ;;
+              *) echo "Unsupported LPM shard index or count" >&2; exit 1 ;;
+            esac
+            envman add --key LPM_TEST_OPTIONS --value "${options[*]}"
     - xcode-test@6:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "2"
         - scheme: StripePaymentSheet
-        - xcodebuild_options: -only-testing:StripePaymentSheetTests/PaymentSheetLPMConfirmFlowTests
+        - xcodebuild_options: $LPM_TEST_OPTIONS
     - deploy-to-bitrise-io@2: {}
     - save-spm-cache@1: {}
     before_run:
@@ -721,6 +855,12 @@ workflows:
               sudo "$STRIPE_XCODES_PATH" runtimes install "iOS 16.4"
             fi
   prep_all:
+    before_run:
+    - prep_simulator
+    - prep_source
+    steps:
+    - restore-spm-cache@2.1: {}
+  prep_simulator:
     steps:
     - xcode-start-simulator@0:
         inputs:
@@ -741,6 +881,8 @@ workflows:
         - destination_keys: CONFIGURATION_TEMP_DIR
         - value: $BITRISE_SOURCE_DIR/stpbuild/intermediates
         title: Set CONFIGURATION_TEMP_DIR
+  prep_source:
+    steps:
     - script@1:
         inputs:
         - content: bundle config set path 'vendor/bundle'
@@ -769,7 +911,6 @@ workflows:
         - key: bundle-cache-{{ checksum "Gemfile.lock" }}
         - paths: |
             vendor
-    - restore-spm-cache@2.1: {}
   size-report:
     steps:
     - script@1:
@@ -808,10 +949,17 @@ workflows:
     - script@1:
         inputs:
         - content: |
+            UI_TEST_WORKERS="${UI_TEST_WORKERS:-6}"
+            case "$UI_TEST_WORKERS" in
+              [1-8]) ;;
+              *) echo "UI_TEST_WORKERS must be an integer from 1 to 8" >&2; exit 1 ;;
+            esac
+            envman add --key UI_TEST_WORKERS --value "$UI_TEST_WORKERS"
             # Convert 0-indexed parallel index to 1-indexed shard number
             SHARD_NUM=$((BITRISE_IO_PARALLEL_INDEX + 1))
             envman add --key TEST_PLAN_SHARD --value "PaymentSheet Example-Shard${SHARD_NUM}"
-            echo "Running shard ${SHARD_NUM} of ${BITRISE_IO_PARALLEL_TOTAL}"
+            echo "Running shard ${SHARD_NUM} of ${BITRISE_IO_PARALLEL_TOTAL} with ${UI_TEST_WORKERS} test workers"
+            sysctl machdep.cpu.brand_string hw.ncpu hw.memsize
         title: Set test plan based on parallel index
     - script@1:
         is_skippable: true
@@ -830,7 +978,7 @@ workflows:
         - scheme: PaymentSheet Example
         - test_plan: $TEST_PLAN_SHARD
         - log_formatter: xcbeautify
-        - xcodebuild_options: -parallel-testing-enabled YES -maximum-parallel-testing-workers 2
+        - xcodebuild_options: -parallel-testing-enabled YES -parallel-testing-worker-count $UI_TEST_WORKERS
     - script@1:
         is_always_run: true
         title: Retry gate for test-runner hang
@@ -847,7 +995,7 @@ workflows:
     meta:
       bitrise.io:
         stack: osx-xcode-26.4.x
-        machine_type_id: g2.mac.large
+        machine_type_id: g2.mac.x-large
   ui-tests-connect-crypto:
     steps:
     - script@1:
