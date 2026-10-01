@@ -253,17 +253,22 @@ final class PaymentSheetPresentationTests: XCTestCase {
 
     @MainActor
     func testOffscreenContentReplacementDoesNotManufactureAppearanceCallbacks() async {
-        let content = MeasuredSheetContentViewController()
+        // Given
+        let content = NativeSheetStubContentViewController()
         let sheet = NativeSheetContainerViewController(
-            contentViewController: MeasuredSheetContentViewController(),
+            contentViewController: NativeSheetStubContentViewController(),
             appearance: .default,
             isTestMode: true,
             didCancelNative3DS2: {}
         )
 
+        // When replacing content before the sheet is presented
         sheet.setViewControllers([content])
+
+        // Then UIKit has not yet delivered the content's first appearance
         XCTAssertEqual(content.didAppearCount, 0)
 
+        // When presenting the prepared sheet
         let presenter = UIViewController()
         let window = UIWindow(frame: UIScreen.main.bounds)
         window.rootViewController = presenter
@@ -272,8 +277,38 @@ final class PaymentSheetPresentationTests: XCTestCase {
         let presented = expectation(description: "Prepared content presented")
         presenter.presentAsSheet(sheet) { presented.fulfill() }
 
+        // Then the content appears exactly once through UIKit's presentation
         await fulfillment(of: [presented], timeout: 3)
         XCTAssertEqual(content.didAppearCount, 1)
+    }
+
+    @MainActor
+    func testPopReusesContainedContentViewController() {
+        // Given
+        let initialContent = NativeSheetStubContentViewController()
+        let pushedContent = NativeSheetStubContentViewController()
+        let sheet = NativeSheetContainerViewController(
+            contentViewController: initialContent,
+            appearance: .default,
+            isTestMode: true,
+            didCancelNative3DS2: {}
+        )
+        sheet.pushContentViewController(pushedContent)
+        XCTAssertIdentical(initialContent.parent, sheet)
+        XCTAssertIdentical(pushedContent.parent, sheet)
+        var completionCount = 0
+
+        // When
+        let poppedContent = sheet.popContentViewController {
+            completionCount += 1
+        }
+
+        // Then the retained controller is reused without adding it as a child again
+        XCTAssertIdentical(poppedContent, pushedContent)
+        XCTAssertNil(pushedContent.parent)
+        XCTAssertIdentical(initialContent.parent, sheet)
+        XCTAssertEqual(sheet.children.count, 1)
+        XCTAssertEqual(completionCount, 1)
     }
 
     @MainActor
@@ -419,6 +454,12 @@ private final class NativeSheetStubContentViewController: UIViewController, Bott
     lazy var navigationBar = SheetNavigationBar(isTestMode: true, appearance: .default)
     let requiresFullScreen = false
     private(set) var dismissalAttemptCount = 0
+    private(set) var didAppearCount = 0
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        didAppearCount += 1
+    }
 
     func didTapOrSwipeToDismiss() {
         dismissalAttemptCount += 1
