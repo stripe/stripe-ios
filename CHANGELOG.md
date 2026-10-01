@@ -17,6 +17,7 @@ MINOR
 * [Added] Added `CryptoOnrampCoordinator.fulfillKYCRequirement(from:)` to retrieve additional KYC requirements and present document collection when needed.
 
 ### PaymentSheet
+* [Added] Added MoMo API bindings and PaymentSheet support for PaymentIntents.
 * [Added] Added GoPay API bindings and PaymentSheet support for PaymentIntents.
 
 ## 26.12.1 2026-09-28
