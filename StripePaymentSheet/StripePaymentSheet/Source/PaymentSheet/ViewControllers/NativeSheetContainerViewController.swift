@@ -82,6 +82,7 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
     }()
     #endif
 
+    // Navigation updates this logical stack immediately; native presentation may defer the visible child change.
     private(set) var contentStack: [BottomSheetContentViewController] = []
 
     var navigationBarHeight: CGFloat {
@@ -100,6 +101,11 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
             scrollView.setContentOffset(CGPoint(x: 0, y: newContentOffset), animated: false)
         }
     }
+
+    private var pendingNativeContentViewController: BottomSheetContentViewController?
+    private var pendingNativeContentCompletions: [() -> Void] = []
+    private var isWaitingForNativePresentation = false
+    private var isUpdatingNativeContent = false
 
     func setViewControllers(_ viewControllers: [BottomSheetContentViewController]) {
         contentStack = viewControllers
@@ -121,11 +127,6 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
         }
 
         let popped = contentStack.remove(at: 0)
-        // If you are implementing your own container view controller, it must call the willMove(toParent:) method of the child view controller before calling the removeFromParent() method, passing in a parent value of nil.
-        // The removeFromParent() method automatically calls the didMove(toParent:) method of the child view controller after it removes the child.
-        popped.willMove(toParent: nil)
-        popped.removeFromParent()
-
         updateContent(to: toVC, completion: completion)
         return popped
     }
@@ -218,6 +219,56 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
     }
 
     func updateContent(to newContentViewController: BottomSheetContentViewController, completion: (() -> Void)? = nil) {
+        // Keep only the latest visual destination, but complete every requested operation.
+        pendingNativeContentViewController = newContentViewController
+        if let completion {
+            pendingNativeContentCompletions.append(completion)
+        }
+        updateNativeContentIfPossible()
+    }
+
+    private func updateNativeContentIfPossible() {
+        guard !isWaitingForNativePresentation, !isUpdatingNativeContent,
+              let newContentViewController = pendingNativeContentViewController else {
+            return
+        }
+
+        if isBeingPresented || isBeingDismissed, let transitionCoordinator {
+            isWaitingForNativePresentation = true
+            transitionCoordinator.animate(alongsideTransition: nil) { [weak self] _ in
+                // UIKit must finish forwarding the parent's appearance callbacks before we change its children.
+                DispatchQueue.main.async { [weak self] in
+                    guard let self else { return }
+                    self.isWaitingForNativePresentation = false
+                    self.updateNativeContentIfPossible()
+                }
+            }
+            return
+        }
+
+        let completions = pendingNativeContentCompletions
+        pendingNativeContentViewController = nil
+        pendingNativeContentCompletions = []
+        isUpdatingNativeContent = true
+        updateDisplayedContent(to: newContentViewController) {
+            self.removeUnusedNativeContentViewControllers()
+            completions.forEach { $0() }
+            self.isUpdatingNativeContent = false
+            self.updateNativeContentIfPossible()
+        }
+    }
+
+    private func removeUnusedNativeContentViewControllers() {
+        // Wait until the visual transition finishes before detaching popped or replaced children.
+        for child in children where child is BottomSheetContentViewController
+            && child !== contentViewController
+            && !contentStack.contains(where: { $0 === child }) {
+            child.willMove(toParent: nil)
+            child.removeFromParent()
+        }
+    }
+
+    private func updateDisplayedContent(to newContentViewController: BottomSheetContentViewController, completion: (() -> Void)? = nil) {
         guard contentViewController !== newContentViewController else {
             completion?()
             return
@@ -586,7 +637,8 @@ extension NativeSheetContainerViewController: PaymentSheetAuthenticationContext 
     }
 
     func dismiss(_ authenticationViewController: UIViewController, completion: (() -> Void)?) {
-        guard contentViewController is BottomSheet3DS2ViewController || contentViewController is PollingViewController else {
+        // Authentication can finish before a queued native content transition becomes visible.
+        guard contentStack.first is BottomSheet3DS2ViewController || contentStack.first is PollingViewController else {
             assertionFailure("Dismiss called, but it will do nothing!")
             return
         }
