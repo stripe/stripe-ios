@@ -1,0 +1,40 @@
+name: HunchPredictionDemo
+options:
+  bundleIdPrefix: com.stripe.connect.demo
+  deploymentTarget:
+    iOS: "18.0"
+  createIntermediateGroups: true
+packages:
+  Stripe:
+    path: ../..
+targets:
+  HunchPredictionDemo:
+    type: application
+    platform: iOS
+    sources:
+      - path: HunchPredictionDemo
+      - path: ../EmbeddedComponentsDemoKit
+    dependencies:
+      - package: Stripe
+        product: StripeConnect
+    info:
+      path: HunchPredictionDemo/Info.plist
+      properties:
+        CFBundleDisplayName: Hunch
+        CFBundleShortVersionString: "1.0"
+        CFBundleVersion: "1"
+        UILaunchScreen:
+          UIColorName: ""
+        UIUserInterfaceStyle: Light
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+        NSCameraUsageDescription: Hunch uses the camera to verify your identity documents.
+        NSAppTransportSecurity:
+          NSAllowsLocalNetworking: true
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.stripe.connect.demo.hunch
+        SWIFT_VERSION: "5.0"
+        CODE_SIGN_STYLE: Automatic
+        TARGETED_DEVICE_FAMILY: "1"
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor

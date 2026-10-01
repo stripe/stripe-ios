@@ -1,0 +1,408 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		025369337CAB587F1A1AB609 /* KestrelAppearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1748B9386E8D354595796C63 /* KestrelAppearance.swift */; };
+		150B985F6B0066F3E2C41ECA /* PortfolioChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8A5ACF9D41F0C62B43A042E /* PortfolioChart.swift */; };
+		1992E9F45C767FFBDC140472 /* PayoutInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DCC434F2268395E161641B0 /* PayoutInfoView.swift */; };
+		1BCB8C7495F7D113E7150D9D /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A5F45936B95A1783B2D6421 /* HomeView.swift */; };
+		256B275A863A9442349DD592 /* AccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B3EECE49FE3D8F9A865AF3A /* AccountView.swift */; };
+		49F6A7E7C683176F29C50A34 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 044E0C7361F9CBA46D6ADDA8 /* Theme.swift */; };
+		6D4C45652EDF99BD2AB6D0E9 /* WithdrawView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90E0C5E3420FDBBDF0F43DA7 /* WithdrawView.swift */; };
+		6E169ADF513A4FAA08D694FA /* PayoutMethodsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 127BBA44C071AC9BFCA902DA /* PayoutMethodsView.swift */; };
+		70EF49DB097727AE3013FFBF /* KestrelApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6294D19988D0F23CEAA48F3F /* KestrelApp.swift */; };
+		736699C7697E9680AAE9D040 /* MarketData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C15F539BA44657D26F90CB0 /* MarketData.swift */; };
+		87644F7681342DCB69D1AFBF /* StripeConnect in Frameworks */ = {isa = PBXBuildFile; productRef = ADCA46A26D117FA52A80C375 /* StripeConnect */; };
+		DCA4F3BBA1F5D1E893D29FC2 /* ConnectService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 067A7E96AF50B639E368C2EA /* ConnectService.swift */; };
+		EDEBCA49E4152A6979E9D395 /* EmbeddedComponentCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB77E04D67BA68736D4B44C /* EmbeddedComponentCard.swift */; };
+		F40B583FB81BAD1F52A9DBE8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D80B631CB95E3D9E02E81D4E /* Assets.xcassets */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		044E0C7361F9CBA46D6ADDA8 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		067A7E96AF50B639E368C2EA /* ConnectService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectService.swift; sourceTree = "<group>"; };
+		127BBA44C071AC9BFCA902DA /* PayoutMethodsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayoutMethodsView.swift; sourceTree = "<group>"; };
+		15C328D5DA4C715C5FA07476 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		1748B9386E8D354595796C63 /* KestrelAppearance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KestrelAppearance.swift; sourceTree = "<group>"; };
+		1A5F45936B95A1783B2D6421 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		2DCC434F2268395E161641B0 /* PayoutInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayoutInfoView.swift; sourceTree = "<group>"; };
+		3C15F539BA44657D26F90CB0 /* MarketData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketData.swift; sourceTree = "<group>"; };
+		6294D19988D0F23CEAA48F3F /* KestrelApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KestrelApp.swift; sourceTree = "<group>"; };
+		8157E630A0596EACC739C8E5 /* stripe-ios */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "stripe-ios"; path = ../..; sourceTree = SOURCE_ROOT; };
+		8B3EECE49FE3D8F9A865AF3A /* AccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountView.swift; sourceTree = "<group>"; };
+		8BB77E04D67BA68736D4B44C /* EmbeddedComponentCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmbeddedComponentCard.swift; sourceTree = "<group>"; };
+		90E0C5E3420FDBBDF0F43DA7 /* WithdrawView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawView.swift; sourceTree = "<group>"; };
+		C8A5ACF9D41F0C62B43A042E /* PortfolioChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortfolioChart.swift; sourceTree = "<group>"; };
+		D80B631CB95E3D9E02E81D4E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		F8058BBE1D0F517DE4760122 /* KestrelBrokerageDemo.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = KestrelBrokerageDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		05AAA8E6B71FEB16AE74164A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				87644F7681342DCB69D1AFBF /* StripeConnect in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		4FF60F2819DA64F0A650D417 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F8058BBE1D0F517DE4760122 /* KestrelBrokerageDemo.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5165BB4CF6F150B8B741D310 /* EmbeddedComponentsDemoKit */ = {
+			isa = PBXGroup;
+			children = (
+				067A7E96AF50B639E368C2EA /* ConnectService.swift */,
+				8BB77E04D67BA68736D4B44C /* EmbeddedComponentCard.swift */,
+			);
+			path = EmbeddedComponentsDemoKit;
+			sourceTree = "<group>";
+		};
+		AA98996C0D2C88D0AB333448 /* Example */ = {
+			isa = PBXGroup;
+			children = (
+				5165BB4CF6F150B8B741D310 /* EmbeddedComponentsDemoKit */,
+			);
+			name = Example;
+			path = ..;
+			sourceTree = "<group>";
+		};
+		BE5DE90CA733421722B454A9 /* KestrelBrokerageDemo */ = {
+			isa = PBXGroup;
+			children = (
+				8B3EECE49FE3D8F9A865AF3A /* AccountView.swift */,
+				D80B631CB95E3D9E02E81D4E /* Assets.xcassets */,
+				1A5F45936B95A1783B2D6421 /* HomeView.swift */,
+				15C328D5DA4C715C5FA07476 /* Info.plist */,
+				6294D19988D0F23CEAA48F3F /* KestrelApp.swift */,
+				1748B9386E8D354595796C63 /* KestrelAppearance.swift */,
+				3C15F539BA44657D26F90CB0 /* MarketData.swift */,
+				2DCC434F2268395E161641B0 /* PayoutInfoView.swift */,
+				127BBA44C071AC9BFCA902DA /* PayoutMethodsView.swift */,
+				C8A5ACF9D41F0C62B43A042E /* PortfolioChart.swift */,
+				044E0C7361F9CBA46D6ADDA8 /* Theme.swift */,
+				90E0C5E3420FDBBDF0F43DA7 /* WithdrawView.swift */,
+			);
+			path = KestrelBrokerageDemo;
+			sourceTree = "<group>";
+		};
+		C1FDBE86E73ACA82E3856C45 /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				8157E630A0596EACC739C8E5 /* stripe-ios */,
+			);
+			name = Packages;
+			sourceTree = "<group>";
+		};
+		E1B3006B22D8164D7B41057A = {
+			isa = PBXGroup;
+			children = (
+				AA98996C0D2C88D0AB333448 /* Example */,
+				BE5DE90CA733421722B454A9 /* KestrelBrokerageDemo */,
+				C1FDBE86E73ACA82E3856C45 /* Packages */,
+				4FF60F2819DA64F0A650D417 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		D3083C4DFBFA971E94C2083F /* KestrelBrokerageDemo */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E4CC9F5338E6FE387252F23F /* Build configuration list for PBXNativeTarget "KestrelBrokerageDemo" */;
+			buildPhases = (
+				56BB5EA0C637792BF7054DA1 /* Sources */,
+				F0B87006B32093D0F96B72C6 /* Resources */,
+				05AAA8E6B71FEB16AE74164A /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = KestrelBrokerageDemo;
+			packageProductDependencies = (
+				ADCA46A26D117FA52A80C375 /* StripeConnect */,
+			);
+			productName = KestrelBrokerageDemo;
+			productReference = F8058BBE1D0F517DE4760122 /* KestrelBrokerageDemo.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		D9543E59BC69FB2E223F3EB5 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					D3083C4DFBFA971E94C2083F = {
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 17FD3F91FB601396BEEC58C2 /* Build configuration list for PBXProject "KestrelBrokerageDemo" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = E1B3006B22D8164D7B41057A;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				8F0D88DF41A487A2B2426CDA /* XCLocalSwiftPackageReference "../.." */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 4FF60F2819DA64F0A650D417 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				D3083C4DFBFA971E94C2083F /* KestrelBrokerageDemo */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		F0B87006B32093D0F96B72C6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F40B583FB81BAD1F52A9DBE8 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		56BB5EA0C637792BF7054DA1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				256B275A863A9442349DD592 /* AccountView.swift in Sources */,
+				DCA4F3BBA1F5D1E893D29FC2 /* ConnectService.swift in Sources */,
+				EDEBCA49E4152A6979E9D395 /* EmbeddedComponentCard.swift in Sources */,
+				1BCB8C7495F7D113E7150D9D /* HomeView.swift in Sources */,
+				70EF49DB097727AE3013FFBF /* KestrelApp.swift in Sources */,
+				025369337CAB587F1A1AB609 /* KestrelAppearance.swift in Sources */,
+				736699C7697E9680AAE9D040 /* MarketData.swift in Sources */,
+				1992E9F45C767FFBDC140472 /* PayoutInfoView.swift in Sources */,
+				6E169ADF513A4FAA08D694FA /* PayoutMethodsView.swift in Sources */,
+				150B985F6B0066F3E2C41ECA /* PortfolioChart.swift in Sources */,
+				49F6A7E7C683176F29C50A34 /* Theme.swift in Sources */,
+				6D4C45652EDF99BD2AB6D0E9 /* WithdrawView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		8ADA2CEA4EB29E4452177002 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		AAE9F0751E24D4594EC87CAF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		BC06D7D07C4A0D02AD1CBD00 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = KestrelBrokerageDemo/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.connect.demo.kestrel;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		DB5546F889ABD310AA4B6EB3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = KestrelBrokerageDemo/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.connect.demo.kestrel;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		17FD3F91FB601396BEEC58C2 /* Build configuration list for PBXProject "KestrelBrokerageDemo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AAE9F0751E24D4594EC87CAF /* Debug */,
+				8ADA2CEA4EB29E4452177002 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		E4CC9F5338E6FE387252F23F /* Build configuration list for PBXNativeTarget "KestrelBrokerageDemo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BC06D7D07C4A0D02AD1CBD00 /* Debug */,
+				DB5546F889ABD310AA4B6EB3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		8F0D88DF41A487A2B2426CDA /* XCLocalSwiftPackageReference "../.." */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../..;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		ADCA46A26D117FA52A80C375 /* StripeConnect */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = StripeConnect;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = D9543E59BC69FB2E223F3EB5 /* Project object */;
+}

@@ -1,0 +1,404 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0CED5789B868B4946B42566C /* ConnectService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 373CCD05A2BB99E05ACAF44E /* ConnectService.swift */; };
+		471EE0E2CF96485F2AE0F842 /* PortfolioView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6853117177E024CC59F12BD5 /* PortfolioView.swift */; };
+		57FCCDA530154FA25B0B0A46 /* HunchApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F37AD033E8CEF0CE57CD211 /* HunchApp.swift */; };
+		59DDEFD4227A248824ADECD9 /* OrderTicketView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ADA4ED298442925D881BD96 /* OrderTicketView.swift */; };
+		5C3F8CACBBA26BF4F49822BE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D643B4B03AC572D02E1BC455 /* Assets.xcassets */; };
+		69770F9F3DF3DB91CC96FC16 /* MarketDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F229A4B2B462064C1AC69C2 /* MarketDetailView.swift */; };
+		8DD1300DCC0F957810863B8B /* CashOutViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = E20D45A6ED0D71DDBD4C75BB /* CashOutViews.swift */; };
+		91A8F77F5320BD848232834A /* ProbabilityChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1706D2BC121694FFE336305 /* ProbabilityChart.swift */; };
+		B745716903897317065E8E32 /* Markets.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0F5950F853B4DE7BF9A4D19 /* Markets.swift */; };
+		C2774D5C803EE9AC56338F83 /* StripeConnect in Frameworks */ = {isa = PBXBuildFile; productRef = 1F0C86B01F7F167B0BEAB68B /* StripeConnect */; };
+		CB431BBE0CA6D14B6171882D /* HunchTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FA7AAC387A67EEEC2083DE8 /* HunchTheme.swift */; };
+		D227878087AFCEB5769E792C /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F761A2B7884E31E5B40635E /* HomeView.swift */; };
+		E2941E0FF2A763293D1DA172 /* EmbeddedComponentCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D39C64EA4F6E298921D8DA /* EmbeddedComponentCard.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		0F761A2B7884E31E5B40635E /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		373CCD05A2BB99E05ACAF44E /* ConnectService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectService.swift; sourceTree = "<group>"; };
+		3ADA4ED298442925D881BD96 /* OrderTicketView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderTicketView.swift; sourceTree = "<group>"; };
+		3FA7AAC387A67EEEC2083DE8 /* HunchTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HunchTheme.swift; sourceTree = "<group>"; };
+		40D39C64EA4F6E298921D8DA /* EmbeddedComponentCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmbeddedComponentCard.swift; sourceTree = "<group>"; };
+		666C2A7F8E52F3C6E1E4D60F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		6853117177E024CC59F12BD5 /* PortfolioView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortfolioView.swift; sourceTree = "<group>"; };
+		6F37AD033E8CEF0CE57CD211 /* HunchApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HunchApp.swift; sourceTree = "<group>"; };
+		7F229A4B2B462064C1AC69C2 /* MarketDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketDetailView.swift; sourceTree = "<group>"; };
+		A1706D2BC121694FFE336305 /* ProbabilityChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProbabilityChart.swift; sourceTree = "<group>"; };
+		B0E7444CD4192F46384F0958 /* stripe-ios */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "stripe-ios"; path = ../..; sourceTree = SOURCE_ROOT; };
+		CD0D0B26C7640B76EAC057CD /* HunchPredictionDemo.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = HunchPredictionDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D0F5950F853B4DE7BF9A4D19 /* Markets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Markets.swift; sourceTree = "<group>"; };
+		D643B4B03AC572D02E1BC455 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		E20D45A6ED0D71DDBD4C75BB /* CashOutViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CashOutViews.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		51A7AF9205E6B5DC10B3AE82 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C2774D5C803EE9AC56338F83 /* StripeConnect in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		0E00CA7B3643F7C99993BFDD /* EmbeddedComponentsDemoKit */ = {
+			isa = PBXGroup;
+			children = (
+				373CCD05A2BB99E05ACAF44E /* ConnectService.swift */,
+				40D39C64EA4F6E298921D8DA /* EmbeddedComponentCard.swift */,
+			);
+			path = EmbeddedComponentsDemoKit;
+			sourceTree = "<group>";
+		};
+		38FFBE15D5B49109D65F41EA /* Example */ = {
+			isa = PBXGroup;
+			children = (
+				0E00CA7B3643F7C99993BFDD /* EmbeddedComponentsDemoKit */,
+			);
+			name = Example;
+			path = ..;
+			sourceTree = "<group>";
+		};
+		4671FDB32327706CA05E2C75 /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				B0E7444CD4192F46384F0958 /* stripe-ios */,
+			);
+			name = Packages;
+			sourceTree = "<group>";
+		};
+		4F38BD0FAF23BEC1F9270E7A /* HunchPredictionDemo */ = {
+			isa = PBXGroup;
+			children = (
+				D643B4B03AC572D02E1BC455 /* Assets.xcassets */,
+				E20D45A6ED0D71DDBD4C75BB /* CashOutViews.swift */,
+				0F761A2B7884E31E5B40635E /* HomeView.swift */,
+				6F37AD033E8CEF0CE57CD211 /* HunchApp.swift */,
+				3FA7AAC387A67EEEC2083DE8 /* HunchTheme.swift */,
+				666C2A7F8E52F3C6E1E4D60F /* Info.plist */,
+				7F229A4B2B462064C1AC69C2 /* MarketDetailView.swift */,
+				D0F5950F853B4DE7BF9A4D19 /* Markets.swift */,
+				3ADA4ED298442925D881BD96 /* OrderTicketView.swift */,
+				6853117177E024CC59F12BD5 /* PortfolioView.swift */,
+				A1706D2BC121694FFE336305 /* ProbabilityChart.swift */,
+			);
+			path = HunchPredictionDemo;
+			sourceTree = "<group>";
+		};
+		9CBB6C5B90A2FFE4D71CAC6D = {
+			isa = PBXGroup;
+			children = (
+				38FFBE15D5B49109D65F41EA /* Example */,
+				4F38BD0FAF23BEC1F9270E7A /* HunchPredictionDemo */,
+				4671FDB32327706CA05E2C75 /* Packages */,
+				A4BD1FB032ED77B6E252D8EA /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		A4BD1FB032ED77B6E252D8EA /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				CD0D0B26C7640B76EAC057CD /* HunchPredictionDemo.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		334BFDB2288A752E471647EE /* HunchPredictionDemo */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 02E0C7D46CFF3F26F19AC01D /* Build configuration list for PBXNativeTarget "HunchPredictionDemo" */;
+			buildPhases = (
+				FD56F3E20AD3BDF626A67CC2 /* Sources */,
+				A59D2039407FF9A3FA6DA879 /* Resources */,
+				51A7AF9205E6B5DC10B3AE82 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = HunchPredictionDemo;
+			packageProductDependencies = (
+				1F0C86B01F7F167B0BEAB68B /* StripeConnect */,
+			);
+			productName = HunchPredictionDemo;
+			productReference = CD0D0B26C7640B76EAC057CD /* HunchPredictionDemo.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		8AD17A509B0649BE271AA072 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					334BFDB2288A752E471647EE = {
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 4836B32F863AC2EE49473C06 /* Build configuration list for PBXProject "HunchPredictionDemo" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 9CBB6C5B90A2FFE4D71CAC6D;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				0A1DB74FB6D2189BD0449D1C /* XCLocalSwiftPackageReference "../.." */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = A4BD1FB032ED77B6E252D8EA /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				334BFDB2288A752E471647EE /* HunchPredictionDemo */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		A59D2039407FF9A3FA6DA879 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5C3F8CACBBA26BF4F49822BE /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		FD56F3E20AD3BDF626A67CC2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8DD1300DCC0F957810863B8B /* CashOutViews.swift in Sources */,
+				0CED5789B868B4946B42566C /* ConnectService.swift in Sources */,
+				E2941E0FF2A763293D1DA172 /* EmbeddedComponentCard.swift in Sources */,
+				D227878087AFCEB5769E792C /* HomeView.swift in Sources */,
+				57FCCDA530154FA25B0B0A46 /* HunchApp.swift in Sources */,
+				CB431BBE0CA6D14B6171882D /* HunchTheme.swift in Sources */,
+				69770F9F3DF3DB91CC96FC16 /* MarketDetailView.swift in Sources */,
+				B745716903897317065E8E32 /* Markets.swift in Sources */,
+				59DDEFD4227A248824ADECD9 /* OrderTicketView.swift in Sources */,
+				471EE0E2CF96485F2AE0F842 /* PortfolioView.swift in Sources */,
+				91A8F77F5320BD848232834A /* ProbabilityChart.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		22C5D497C94CBA2AC24078B6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		631C9051B282FF50763C5983 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = HunchPredictionDemo/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.connect.demo.hunch;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		D8371F64B6732AE3DFC68953 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = HunchPredictionDemo/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.connect.demo.hunch;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		E66CB21051AFDDB702ADDCB8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		02E0C7D46CFF3F26F19AC01D /* Build configuration list for PBXNativeTarget "HunchPredictionDemo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				631C9051B282FF50763C5983 /* Debug */,
+				D8371F64B6732AE3DFC68953 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		4836B32F863AC2EE49473C06 /* Build configuration list for PBXProject "HunchPredictionDemo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E66CB21051AFDDB702ADDCB8 /* Debug */,
+				22C5D497C94CBA2AC24078B6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		0A1DB74FB6D2189BD0449D1C /* XCLocalSwiftPackageReference "../.." */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../..;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		1F0C86B01F7F167B0BEAB68B /* StripeConnect */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = StripeConnect;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 8AD17A509B0649BE271AA072 /* Project object */;
+}
