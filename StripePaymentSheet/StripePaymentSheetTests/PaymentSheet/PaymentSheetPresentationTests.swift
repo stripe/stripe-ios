@@ -32,10 +32,14 @@ final class PaymentSheetPresentationTests: XCTestCase {
         presentingViewController.presentAsSheet(sheetViewController)
 
         // Then
-        XCTAssertIdentical(presentedViewController, sheetViewController)
-        XCTAssertEqual(sheetViewController.modalPresentationStyle, .pageSheet)
+        let navigationController = try XCTUnwrap(presentedViewController as? UINavigationController)
+        XCTAssertIdentical(navigationController.topViewController, sheetViewController)
+        XCTAssertIdentical(navigationController.bottomSheetController, sheetViewController)
+        XCTAssertIdentical(contentViewController.navigationBar.systemNavigationItem, sheetViewController.navigationItem)
+        XCTAssertEqual(navigationController.modalPresentationStyle, .automatic)
 
-        let sheetPresentationController = try XCTUnwrap(sheetViewController.sheetPresentationController)
+        let sheetPresentationController = try XCTUnwrap(navigationController.sheetPresentationController)
+        XCTAssertIdentical(sheetPresentationController.delegate, sheetViewController)
         XCTAssertEqual(sheetPresentationController.detents.count, 1)
         if #available(iOS 16.0, *) {
             XCTAssertEqual(
@@ -61,7 +65,8 @@ final class PaymentSheetPresentationTests: XCTestCase {
         let previousAppearance = BottomSheetTransitioningDelegate.appearance
         defer { BottomSheetTransitioningDelegate.appearance = previousAppearance }
         BottomSheetTransitioningDelegate.appearance.sheetCornerRadius = 48
-        let presenter = PresentationCapturingViewController { _ in }
+        var presentedViewController: UIViewController?
+        let presenter = PresentationCapturingViewController { presentedViewController = $0 }
 
         for radius: CGFloat in [0, 24] {
             var appearance = PaymentSheet.Appearance.default
@@ -77,7 +82,7 @@ final class PaymentSheetPresentationTests: XCTestCase {
             presenter.presentAsSheet(sheet)
 
             // Then its own configured radius is applied, independently of the legacy global
-            let presentationController = try XCTUnwrap(sheet.sheetPresentationController)
+            let presentationController = try XCTUnwrap(presentedViewController?.sheetPresentationController)
             XCTAssertEqual(presentationController.preferredCornerRadius, radius)
         }
     }
@@ -91,14 +96,16 @@ final class PaymentSheetPresentationTests: XCTestCase {
             didCancelNative3DS2: {}
         )
 
-        PresentationCapturingViewController { _ in }.presentAsSheet(sheet)
+        var presentedViewController: UIViewController?
+        PresentationCapturingViewController { presentedViewController = $0 }.presentAsSheet(sheet)
 
-        XCTAssertEqual(try XCTUnwrap(sheet.sheetPresentationController).preferredCornerRadius, LinkUI.largeCornerRadius)
+        XCTAssertEqual(try XCTUnwrap(presentedViewController?.sheetPresentationController).preferredCornerRadius, LinkUI.largeCornerRadius)
     }
 
     @MainActor
-    func testContentDetentMeasuresCurrentNavigationBar() throws {
+    func testContentDetentMeasuresSystemNavigationBar() throws {
         guard #available(iOS 16.0, *) else { throw XCTSkip("Content-sized detents are used on iOS 16 and later.") }
+        // A taller legacy bar must not affect sizing once UIKit owns the navigation bar.
         let initialContent = MeasuredSheetContentViewController(contentHeight: 200, navigationBarHeight: 70)
         let sheet = NativeSheetContainerViewController(
             contentViewController: initialContent,
@@ -106,21 +113,24 @@ final class PaymentSheetPresentationTests: XCTestCase {
             isTestMode: true,
             didCancelNative3DS2: {}
         )
-        sheet.view.frame = CGRect(x: 0, y: 0, width: 375, height: 800)
+        let navigationController = UINavigationController(rootViewController: sheet)
+        navigationController.view.frame = CGRect(x: 0, y: 0, width: 375, height: 800)
         sheet.prepareForPresentation(in: 375)
         let context = SheetDetentResolutionContext()
+        let navigationBarHeight = navigationController.navigationBar.sizeThatFits(CGSize(width: 375, height: 0)).height
 
-        XCTAssertEqual(try XCTUnwrap(sheet.contentSizedDetent.resolvedValue(in: context)), 270, accuracy: 0.5)
+        XCTAssertEqual(try XCTUnwrap(sheet.contentSizedDetent.resolvedValue(in: context)), 200 + navigationBarHeight, accuracy: 0.5)
 
-        // When moving to content with a different bar, the detent measures the replacement
+        // When moving to content with a different custom bar, only the UIKit bar contributes height
         sheet.pushContentViewController(MeasuredSheetContentViewController(contentHeight: 300, navigationBarHeight: 90))
         sheet.view.layoutIfNeeded()
 
-        XCTAssertEqual(try XCTUnwrap(sheet.contentSizedDetent.resolvedValue(in: context)), 390, accuracy: 0.5)
+        XCTAssertEqual(try XCTUnwrap(sheet.contentSizedDetent.resolvedValue(in: context)), 300 + navigationBarHeight, accuracy: 0.5)
+        XCTAssertNil(initialContent.navigationBar.systemNavigationItem)
     }
 
     @MainActor
-    func testNativeGlassContentTracksActualNavigationBarHeight() throws {
+    func testNativeGlassContentUsesNavigationControllerSafeArea() throws {
         guard #available(iOS 26.0, *) else { throw XCTSkip("Glass navigation bars require iOS 26.") }
         var appearance = PaymentSheet.Appearance.default
         appearance.navigationBarStyle = .glass
@@ -131,17 +141,19 @@ final class PaymentSheetPresentationTests: XCTestCase {
             isTestMode: true,
             didCancelNative3DS2: {}
         )
-        sheet.view.frame = CGRect(x: 0, y: 0, width: 375, height: 800)
+        let navigationController = UINavigationController(rootViewController: sheet)
+        navigationController.view.frame = CGRect(x: 0, y: 0, width: 375, height: 800)
         sheet.prepareForPresentation(in: 375)
 
-        XCTAssertEqual(initialContent.view.convert(.zero, to: sheet.scrollView).y, 90, accuracy: 0.5)
+        XCTAssertEqual(initialContent.view.convert(.zero, to: sheet.view).y, sheet.view.safeAreaLayoutGuide.layoutFrame.minY, accuracy: 0.5)
 
         let replacement = MeasuredSheetContentViewController(contentHeight: 200, navigationBarHeight: 110, appearance: appearance)
         sheet.pushContentViewController(replacement)
         sheet.view.layoutIfNeeded()
 
-        XCTAssertEqual(replacement.view.convert(.zero, to: sheet.scrollView).y, 110, accuracy: 0.5)
-        XCTAssertEqual(try XCTUnwrap(sheet.contentSizedDetent.resolvedValue(in: SheetDetentResolutionContext())), 310, accuracy: 0.5)
+        XCTAssertEqual(replacement.view.convert(.zero, to: sheet.view).y, sheet.view.safeAreaLayoutGuide.layoutFrame.minY, accuracy: 0.5)
+        let navigationBarHeight = navigationController.navigationBar.sizeThatFits(CGSize(width: 375, height: 0)).height
+        XCTAssertEqual(try XCTUnwrap(sheet.contentSizedDetent.resolvedValue(in: SheetDetentResolutionContext())), 200 + navigationBarHeight, accuracy: 0.5)
     }
 
     @MainActor
@@ -174,7 +186,7 @@ final class PaymentSheetPresentationTests: XCTestCase {
             presentationCompleted = true
             presented.fulfill()
         }
-        XCTAssertTrue(sheet.isBeingPresented)
+        XCTAssertTrue(sheet.rootParent.isBeingPresented)
         sheet.setViewControllers([skippedContent])
         sheet.setViewControllers([finalContent])
 
@@ -242,7 +254,7 @@ final class PaymentSheetPresentationTests: XCTestCase {
         let popped = expectation(description: "Pop after native presentation")
 
         presenter.presentAsSheet(sheet)
-        XCTAssertTrue(sheet.isBeingPresented)
+        XCTAssertTrue(sheet.rootParent.isBeingPresented)
         _ = sheet.popContentViewController { popped.fulfill() }
 
         XCTAssertIdentical(initialContent.parent, sheet)
