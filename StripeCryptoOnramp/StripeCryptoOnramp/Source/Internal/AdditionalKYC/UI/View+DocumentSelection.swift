@@ -71,6 +71,7 @@ struct DocumentSelectionState {
         importID = UUID()
         errorMessage = nil
         rejectedFile = nil
+
         switch source {
         case .files:
             sheet = .files
@@ -136,9 +137,11 @@ private struct DocumentSelectionModifier: ViewModifier {
                 Button(String.Localized.chooseDocumentFile) {
                     onSelectSource(.files)
                 }
+
                 Button(String.Localized.chooseDocumentPhoto) {
                     onSelectSource(.photos)
                 }
+
                 Button(String.Localized.cancel, role: .cancel) {}
             }
             .sheet(item: $state.sheet) { sheet in
@@ -157,12 +160,14 @@ private struct DocumentSelectionModifier: ViewModifier {
                         guard operation == state.importID else {
                             return
                         }
+
                         state.importingFilename = filename
                         state.sheet = nil
                     }, onCompletion: { result in
                         guard operation == state.importID else {
                             return
                         }
+
                         let filename = state.importingFilename ?? ""
                         state.importingFilename = nil
                         state.sheet = nil

@@ -94,7 +94,7 @@ final class AdditionalKYCFlowCoordinator: NSObject, UIAdaptivePresentationContro
             guard let document = requirement.document else {
                 throw DocumentCollectionError.unsupportedRequirement
             }
-            
+
             let configuration: DocumentCollectionConfiguration
             switch key {
             case .proofOfAddress:
@@ -272,7 +272,7 @@ final class AdditionalKYCFlowCoordinator: NSObject, UIAdaptivePresentationContro
         let controller = DocumentCollectionViewController(rootView: view, appearance: appearance, onLeave: {
             uploads.cancel()
         })
-        
+
         navigationController.pushViewController(controller, animated: true)
     }
 
