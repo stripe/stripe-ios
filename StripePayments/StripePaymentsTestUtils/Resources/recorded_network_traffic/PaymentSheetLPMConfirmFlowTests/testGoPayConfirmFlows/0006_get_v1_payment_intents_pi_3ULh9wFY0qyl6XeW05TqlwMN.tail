@@ -1,23 +1,23 @@
 GET
-https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3UKgTEFY0qyl6XeW1jvr7Y48\?client_secret=pi_3UKgTEFY0qyl6XeW1jvr7Y48_secret_ljRPKcXy67FyfnSCN4zaKFk6h&expand%5B0%5D=payment_method$
+https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3ULh9wFY0qyl6XeW05TqlwMN\?client_secret=pi_3ULh9wFY0qyl6XeW05TqlwMN_secret_Gn6vOMmjaU3JfdSW5Fi7YRsy1&expand%5B0%5D=payment_method$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=2w1JthgRoz5BcOMq1iUFaQkSsnBgX0OXHdZ_SsHDVHM4tAz8-VRuWZIndpBODQ8v7ylili1n__W0hn-_; report-to csp
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=QEY1iaCGodLu3RfOQwmpeWqkSho4zETDHVEBg6FJ_eD5fxWqLIO_5csAAbtFhxZs-P46WU3ZErIBOgfG; report-to csp
 Server: nginx
 Cache-Control: no-cache, no-store
-reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=2w1JthgRoz5BcOMq1iUFaQkSsnBgX0OXHdZ_SsHDVHM4tAz8-VRuWZIndpBODQ8v7ylili1n__W0hn-_&t=1"
+reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=QEY1iaCGodLu3RfOQwmpeWqkSho4zETDHVEBg6FJ_eD5fxWqLIO_5csAAbtFhxZs-P46WU3ZErIBOgfG&t=1"
 stripe-notice: You are using an outdated API version (2020-08-27). We recommend upgrading to the latest API version, 2026-08-26.dahlia. See https://docs.stripe.com/upgrades
 x-wc: 3c3
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Access-Control-Allow-Origin: *
 x-stripe-routing-context-priority-tier: api-testmode
 x-stripe-priority-routing-enabled: true
-report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=2w1JthgRoz5BcOMq1iUFaQkSsnBgX0OXHdZ_SsHDVHM4tAz8-VRuWZIndpBODQ8v7ylili1n__W0hn-_&t=1"}],"include_subdomains":true}
-request-id: req_tB9JdMWpItbXl3
-Content-Length: 1762
+report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=QEY1iaCGodLu3RfOQwmpeWqkSho4zETDHVEBg6FJ_eD5fxWqLIO_5csAAbtFhxZs-P46WU3ZErIBOgfG&t=1"}],"include_subdomains":true}
+request-id: req_fBPpppoJ9tWKnH
+Content-Length: 1753
 Vary: Origin
-Date: Mon, 28 Sep 2026 15:28:01 GMT
+Date: Thu, 01 Oct 2026 10:24:27 GMT
 stripe-version: 2020-08-27
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
@@ -43,7 +43,7 @@ Content-Type: application/json
     "type" : "redirect_to_url",
     "redirect_to_url" : {
       "return_url" : "https:\/\/foo.com",
-      "url" : "https:\/\/pm-redirects.stripe.com\/authorize\/acct_1G6m1pFY0qyl6XeW\/pa_nonce_VLNDkQ0pB0COaWO7xkYy4mvHweASTuQ"
+      "url" : "https:\/\/pm-redirects.stripe.com\/authorize\/acct_1G6m1pFY0qyl6XeW\/pa_nonce_VMQ0B5IQ9Yq8dvtJeN1LaaZ5ytjQRNW"
     }
   },
   "total_details" : {
@@ -53,7 +53,7 @@ Content-Type: application/json
   },
   "payment_method" : {
     "object" : "payment_method",
-    "id" : "pm_1UKgTDFY0qyl6XeWKN5Nbew7",
+    "id" : "pm_1ULhA6FY0qyl6XeWaM0IffU3",
     "billing_details" : {
       "email" : null,
       "phone" : null,
@@ -72,14 +72,14 @@ Content-Type: application/json
 
     },
     "livemode" : false,
-    "created" : 1790609279,
+    "created" : 1790850266,
     "allow_redisplay" : "unspecified",
     "type" : "gopay",
     "customer" : null,
     "customer_account" : null
   },
-  "client_secret" : "pi_3UKgTEFY0qyl6XeW1jvr7Y48_secret_ljRPKcXy67FyfnSCN4zaKFk6h",
-  "id" : "pi_3UKgTEFY0qyl6XeW1jvr7Y48",
+  "client_secret" : "pi_3ULh9wFY0qyl6XeW05TqlwMN_secret_Gn6vOMmjaU3JfdSW5Fi7YRsy1",
+  "id" : "pi_3ULh9wFY0qyl6XeW05TqlwMN",
   "allowed_payment_method_types" : null,
   "confirmation_method" : "automatic",
   "amount_details" : {
@@ -93,7 +93,7 @@ Content-Type: application/json
   "payment_method_types" : [
     "gopay"
   ],
-  "setup_future_usage" : "off_session",
-  "created" : 1790609280,
+  "setup_future_usage" : null,
+  "created" : 1790850256,
   "description" : null
 }
