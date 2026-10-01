@@ -83,6 +83,7 @@ class EmbeddedFormViewController: UIViewController {
 
     private let paymentMethodType: PaymentSheet.PaymentMethodType
     private let configuration: EmbeddedPaymentElement.Configuration
+    private let customerProvider: CustomerProvider
     private let intent: Intent
     private let elementsSession: STPElementsSession
     private let shouldUseNewCardNewCardHeader: Bool
@@ -142,6 +143,7 @@ class EmbeddedFormViewController: UIViewController {
             previousCustomerInput: previousCustomerInput,
             formCache: formCache,
             configuration: configuration,
+            customerProvider: customerProvider,
             paymentMethodOrientation: .vertical,
             headerView: headerView,
             analyticsHelper: analyticsHelper,
@@ -158,6 +160,7 @@ class EmbeddedFormViewController: UIViewController {
     weak var delegate: EmbeddedFormViewControllerDelegate?
 
     init(configuration: EmbeddedPaymentElement.Configuration,
+         customerProvider: CustomerProvider,
          intent: Intent,
          elementsSession: STPElementsSession,
          shouldUseNewCardNewCardHeader: Bool,
@@ -173,6 +176,7 @@ class EmbeddedFormViewController: UIViewController {
         self.elementsSession = elementsSession
         self.shouldUseNewCardNewCardHeader = shouldUseNewCardNewCardHeader
         self.configuration = configuration
+        self.customerProvider = customerProvider
         self.paymentOptionToRestoreOnCancellation = previousPaymentOption
         self.analyticsHelper = analyticsHelper
         self.paymentMethodMessagingPromotionsHelper = paymentMethodMessagingPromotionsHelper
@@ -225,7 +229,16 @@ class EmbeddedFormViewController: UIViewController {
     }
 
     func updateMandate() {
-        let mandateProvider = VerticalListMandateProvider(configuration: configuration, elementsSession: elementsSession, intent: intent, analyticsHelper: analyticsHelper)
+        let mandateProvider = VerticalListMandateProvider(
+            configuration: configuration,
+            customerProvider: customerProvider,
+            elementsSession: elementsSession,
+            intent: intent,
+            analyticsHelper: analyticsHelper,
+            shouldShowForm: {
+                EmbeddedPaymentElement.shouldShowForm($0, configuration: self.configuration)
+            }
+        )
         let newMandateText = mandateProvider.mandate(
             for: selectedPaymentOption?.paymentMethodType,
             savedPaymentMethod: selectedPaymentOption?.savedPaymentMethod,
