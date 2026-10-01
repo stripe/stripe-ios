@@ -24,6 +24,7 @@ public protocol AddressViewControllerDelegate: AnyObject {
 /// - Seealso: https://stripe.com/docs/elements/address-element?platform=ios
 @objc(STPAddressViewController)
 public class AddressViewController: UIViewController {
+
     // MARK: - Public properties
     /// Configuration containing e.g. appearance styling properties, default values, etc.
     public let configuration: Configuration
@@ -278,6 +279,12 @@ public class AddressViewController: UIViewController {
         self.useAutocompleteEndpoints = useAutocompleteEndpoints
         super.init(nibName: nil, bundle: nil)
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: closeButton)
+        #if compiler(>=6.4) && os(iOS)
+        if #available(iOS 27.1, *) {
+            // This compact custom control can participate in the sheet's vertical bar.
+            navigationItem.leftBarButtonItem?.axisBehavior = .verticalPreferred
+        }
+        #endif
         if configuration.useNavigationBarTitle {
             title = configuration.title
         }
