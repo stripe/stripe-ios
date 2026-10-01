@@ -83,27 +83,27 @@ extension STPAnalyticsClient {
         return ["verification_type": type.rawValue]
     }
 
-    func logLink2FAStart(type: SupportedVerificationType?) {
+    func logLink2FAStart(type: SupportedVerificationType? = nil) {
         self.logPaymentSheetEvent(event: .link2FAStart, params: verificationTypeParams(type))
     }
 
-    func logLink2FAStartFailure(type: SupportedVerificationType?) {
+    func logLink2FAStartFailure(type: SupportedVerificationType? = nil) {
         self.logPaymentSheetEvent(event: .link2FAStartFailure, params: verificationTypeParams(type))
     }
 
-    func logLink2FAComplete(type: SupportedVerificationType?) {
+    func logLink2FAComplete(type: SupportedVerificationType? = nil) {
         self.logPaymentSheetEvent(event: .link2FAComplete, params: verificationTypeParams(type))
     }
 
-    func logLink2FAFailure(type: SupportedVerificationType?) {
+    func logLink2FAFailure(type: SupportedVerificationType? = nil) {
         self.logPaymentSheetEvent(event: .link2FAFailure, params: verificationTypeParams(type))
     }
 
-    func logLink2FACancel(type: SupportedVerificationType?) {
+    func logLink2FACancel(type: SupportedVerificationType? = nil) {
         self.logPaymentSheetEvent(event: .link2FACancel, params: verificationTypeParams(type))
     }
 
-    func logLink2FAResendCode(type: SupportedVerificationType?) {
+    func logLink2FAResendCode(type: SupportedVerificationType? = nil) {
         self.logPaymentSheetEvent(event: .link2FAResendCode, params: verificationTypeParams(type))
     }
 
