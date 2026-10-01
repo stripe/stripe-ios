@@ -9,10 +9,12 @@ import Foundation
 @_spi(STP) import StripePayments
 
 extension PaymentSheet {
+
     @MainActor
     static func handleDeferredIntentConfirmation_confirmationToken(
         confirmType: ConfirmPaymentMethodType,
         configuration: PaymentElementConfiguration,
+        customerProvider: CustomerProvider,
         intentConfig: PaymentSheet.IntentConfiguration,
         authenticationContext: STPAuthenticationContext,
         paymentHandler: STPPaymentHandler,
@@ -26,6 +28,7 @@ extension PaymentSheet {
             // 1. Create the confirmation token params
             let confirmationTokenParams = createConfirmationTokenParams(confirmType: confirmType,
                                                                         configuration: configuration,
+                                                                        customerProvider: customerProvider,
                                                                         intentConfig: intentConfig,
                                                                         allowsSetAsDefaultPM: allowsSetAsDefaultPM,
                                                                         elementsSession: elementsSession)
@@ -36,7 +39,7 @@ extension PaymentSheet {
                 // Link saved payment methods don't require ephemeral keys, API will error if provided
                 guard !isFromLink && !isSavedFromLink(from: confirmType) else { return nil }
 
-                return configuration.customer?.ephemeralKeySecret(basedOn: elementsSession)
+                return customerProvider.ephemeralKeySecret(basedOn: elementsSession)
             }()
 
             // 2. Create the ConfirmationToken
@@ -86,7 +89,7 @@ extension PaymentSheet {
                         ) { status, paymentIntent, error in
                             let intent = paymentIntent.flatMap { PaymentOrSetupIntent.paymentIntent($0) }
                             if let intent {
-                                setDefaultPaymentMethodIfNecessary(actionStatus: status, intent: intent, configuration: configuration, paymentMethodSetAsDefault: allowsSetAsDefaultPM)
+                                setDefaultPaymentMethodIfNecessary(actionStatus: status, intent: intent, customerProvider: customerProvider, paymentMethodSetAsDefault: allowsSetAsDefaultPM)
                             }
                             continuation.resume(returning: (makePaymentSheetResult(for: status, error: error), .client))
                         }
@@ -102,7 +105,7 @@ extension PaymentSheet {
                         ) { status, paymentIntent, error in
                             let intent = paymentIntent.flatMap { PaymentOrSetupIntent.paymentIntent($0) }
                             if let intent {
-                                setDefaultPaymentMethodIfNecessary(actionStatus: status, intent: intent, configuration: configuration, paymentMethodSetAsDefault: allowsSetAsDefaultPM)
+                                setDefaultPaymentMethodIfNecessary(actionStatus: status, intent: intent, customerProvider: customerProvider, paymentMethodSetAsDefault: allowsSetAsDefaultPM)
                             }
                             continuation.resume(returning: (makePaymentSheetResult(for: status, error: error), .server))
                         }
@@ -126,7 +129,7 @@ extension PaymentSheet {
                         ) { status, setupIntent, error in
                             let intent = setupIntent.flatMap { PaymentOrSetupIntent.setupIntent($0) }
                             if let intent {
-                                setDefaultPaymentMethodIfNecessary(actionStatus: status, intent: intent, configuration: configuration, paymentMethodSetAsDefault: allowsSetAsDefaultPM)
+                                setDefaultPaymentMethodIfNecessary(actionStatus: status, intent: intent, customerProvider: customerProvider, paymentMethodSetAsDefault: allowsSetAsDefaultPM)
                             }
                             continuation.resume(returning: (makePaymentSheetResult(for: status, error: error), .client))
                         }
@@ -142,7 +145,7 @@ extension PaymentSheet {
                         ) { status, setupIntent, error in
                             let intent = setupIntent.flatMap { PaymentOrSetupIntent.setupIntent($0) }
                             if let intent {
-                                setDefaultPaymentMethodIfNecessary(actionStatus: status, intent: intent, configuration: configuration, paymentMethodSetAsDefault: allowsSetAsDefaultPM)
+                                setDefaultPaymentMethodIfNecessary(actionStatus: status, intent: intent, customerProvider: customerProvider, paymentMethodSetAsDefault: allowsSetAsDefaultPM)
                             }
                             continuation.resume(returning: (makePaymentSheetResult(for: status, error: error), .server))
                         }
@@ -158,6 +161,7 @@ extension PaymentSheet {
     static func createConfirmationTokenParams(
         confirmType: ConfirmPaymentMethodType,
         configuration: PaymentElementConfiguration,
+        customerProvider: CustomerProvider,
         intentConfig: PaymentSheet.IntentConfiguration,
         allowsSetAsDefaultPM: Bool = false,
         elementsSession: STPElementsSession
@@ -171,7 +175,7 @@ extension PaymentSheet {
         // This helps catch integration errors during development (e.g. mismatched currency/amount/SFU)
         // without breaking production payments if server intent changes after client configuration.
         #if DEBUG
-        confirmationTokenParams.clientContext = intentConfig.createClientContext(customerId: configuration.customer?.id)
+        confirmationTokenParams.clientContext = intentConfig.createClientContext(customerId: customerProvider.customerID)
         #endif
 
         // 2. Configure payment method details based on confirm type

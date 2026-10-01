@@ -698,6 +698,7 @@ extension EmbeddedPaymentElement {
 
         let (result, deferredIntentConfirmationType) = await PaymentSheet.confirm(
             configuration: configuration,
+            customerProvider: loadResult.customerProvider,
             authenticationContext: authContext,
             intent: intent,
             elementsSession: elementsSession,

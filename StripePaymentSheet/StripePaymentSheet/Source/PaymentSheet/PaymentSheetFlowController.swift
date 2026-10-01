@@ -679,6 +679,7 @@ extension PaymentSheet {
             presentingViewController.presentNativeLink(
                 selectedPaymentDetailsID: selectedPaymentDetailsID,
                 configuration: configuration,
+                customerProvider: viewController.loadResult.customerProvider,
                 intent: intent,
                 elementsSession: elementsSession,
                 analyticsHelper: analyticsHelper,
@@ -743,6 +744,7 @@ extension PaymentSheet {
             func confirm() {
                 PaymentSheet.confirm(
                     configuration: self.configuration,
+                    customerProvider: self.viewController.loadResult.customerProvider,
                     authenticationContext: authenticationContext,
                     intent: self.intent,
                     elementsSession: self.elementsSession,

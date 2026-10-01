@@ -54,6 +54,7 @@ final class PayWithNativeLinkController {
     let intent: Intent
     let elementsSession: STPElementsSession
     let configuration: PaymentElementConfiguration
+    private let customerProvider: CustomerProvider
     let logPayment: Bool
     let analyticsHelper: PaymentSheetAnalyticsHelper
     let supportedPaymentMethodTypes: [LinkPaymentMethodType]?
@@ -69,6 +70,7 @@ final class PayWithNativeLinkController {
         intent: Intent,
         elementsSession: STPElementsSession,
         configuration: PaymentElementConfiguration,
+        customerProvider: CustomerProvider,
         logPayment: Bool = true,
         analyticsHelper: PaymentSheetAnalyticsHelper,
         supportedPaymentMethodTypes: [LinkPaymentMethodType]? = nil,
@@ -82,6 +84,7 @@ final class PayWithNativeLinkController {
         self.logPayment = logPayment
         self.elementsSession = elementsSession
         self.configuration = configuration
+        self.customerProvider = customerProvider
         self.analyticsHelper = analyticsHelper
         self.supportedPaymentMethodTypes = supportedPaymentMethodTypes
         self.paymentHandler = .init(apiClient: configuration.apiClient)
@@ -241,6 +244,7 @@ extension PayWithNativeLinkController: PayWithLinkViewControllerDelegate {
 
         PaymentSheet.confirm(
             configuration: configuration,
+            customerProvider: customerProvider,
             authenticationContext: payWithLinkViewController,
             intent: intent,
             elementsSession: elementsSession,
@@ -306,6 +310,7 @@ extension PayWithNativeLinkController: PayWithLinkWebControllerDelegate {
 
         PaymentSheet.confirm(
             configuration: configuration,
+            customerProvider: customerProvider,
             authenticationContext: payWithLinkWebController,
             intent: intent,
             elementsSession: elementsSession,

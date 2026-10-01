@@ -247,4 +247,8 @@ struct CustomerProvider {
             using: ephemeralKey
         )
     }
+
+    var supportsLinkSetupFutureUsage: Bool {
+        return usesCustomerSession
+    }
 }
