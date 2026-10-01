@@ -5,9 +5,9 @@
 //  Created by Yuki Tokuhiro on 7/10/26.
 //
 
+import PassKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
-import PassKit
 
 extension PaymentElement {
     /// Configuration for PaymentElement

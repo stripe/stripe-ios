@@ -26,7 +26,7 @@ extension ExpressCheckoutElement {
         public var appearance: Appearance = .init()
 
         let completion: CompletionHandler
-        
+
         /// Creates an Express Checkout Element configuration with default values.
         /// - Parameters:
         ///   - completion: A handler called after a wallet payment confirmation completes.
@@ -101,7 +101,7 @@ extension ExpressCheckoutElement.Configuration {
             /// Automatic theme.
             case automatic
         }
-        
+
         /// Controls the layout of express payment buttons.
         public struct ButtonLayout {
             /// Maximum number of columns. `nil` uses the default. Must be greater than zero when set.
@@ -122,16 +122,16 @@ extension ExpressCheckoutElement.Configuration {
             }
             public init() {}
         }
-        
+
         /// Theme of Apple Pay buttons. Link buttons retain Link's required brand styling.
         public var buttonTheme: ButtonTheme = .automatic
-        
+
         /// Layout of the express payment buttons.
         public var buttonLayout: ButtonLayout = .init()
-        
+
         public init() {}
     }
-    
+
     /// A closure called after a wallet payment confirmation completes.
     public typealias CompletionHandler = (_ result: CheckoutController.ConfirmResult) -> Void
 }
