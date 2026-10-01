@@ -178,13 +178,8 @@ extension KycInfo {
         let rawPhone = Self.trimmedNonEmptyValue(billingContact?.phoneNumber?.stringValue)
             ?? Self.trimmedNonEmptyValue(shippingContact?.phoneNumber?.stringValue)
 
-        // Normalizing a national number (e.g. "(212) 555-1234") requires a region to interpret it against; Apple only
-        // ever surfaces this via the postal address on the same contact that provided the phone number. A number
-        // already in E.164 form (e.g. "+12125551234") can be parsed without a region hint.
         let regionCode = rawPhoneContact?.postalAddress?.isoCountryCode
-        let phone = rawPhone.flatMap { rawPhone in
-            PhoneNumber.fromE164(rawPhone) ?? regionCode.flatMap { PhoneNumber(number: rawPhone, countryCode: $0) }
-        }?.string(as: .e164)
+        let phone = Self.normalizedE164Phone(rawPhone, regionCode: regionCode)
 
         guard firstName != nil || lastName != nil || address != nil else {
             return nil
@@ -200,6 +195,25 @@ extension KycInfo {
             phone: phone,
             rawPhone: rawPhone
         )
+    }
+
+    /// Normalizes a phone number to E.164, or returns `nil` if it cannot be normalized.
+    ///
+    /// Normalizing a national number (e.g. "(212) 555-1234") requires a region to interpret it against; Apple only
+    /// ever surfaces this via the postal address on the same contact that provided the phone number. A number
+    /// already in E.164 form (e.g. "+12125551234") can be parsed without a region hint.
+    /// - Parameters:
+    ///   - rawPhone: The phone number to normalize, in either national or E.164 form.
+    ///   - regionCode: The two-letter country code (ISO 3166-1 alpha-2) to use when interpreting a national number.
+    private static func normalizedE164Phone(_ rawPhone: String?, regionCode: String?) -> String? {
+        guard let rawPhone else {
+            return nil
+        }
+
+        let phoneNumber = PhoneNumber.fromE164(rawPhone)
+            ?? regionCode.flatMap { PhoneNumber(number: rawPhone, countryCode: $0) }
+
+        return phoneNumber?.string(as: .e164)
     }
 
     /// Returns the provided value trimmed of surrounding whitespace, or `nil` if it is missing or empty.
