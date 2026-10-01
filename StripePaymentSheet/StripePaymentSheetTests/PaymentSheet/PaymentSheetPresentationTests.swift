@@ -82,6 +82,9 @@ final class PaymentSheetPresentationTests: XCTestCase {
         guard !UIAccessibility.isReduceMotionEnabled else { throw XCTSkip("Presentation animations require Reduce Motion to be off.") }
         // Given real payment content using native sheets and Liquid Glass
         await AddressSpecProvider.shared.loadAddressSpecs()
+        let previousOverride = PaymentSheet.NativeSheetFeatureFlags.nativeSheetEnabledOverride
+        PaymentSheet.NativeSheetFeatureFlags.nativeSheetEnabledOverride = true
+        defer { PaymentSheet.NativeSheetFeatureFlags.nativeSheetEnabledOverride = previousOverride }
         var appearance = PaymentSheet.Appearance.default
         appearance.applyLiquidGlass()
         for variant in ["horizontal", "vertical", "embedded"] {
@@ -100,7 +103,7 @@ final class PaymentSheetPresentationTests: XCTestCase {
             // When opening the FlowController picker or Embedded's card form
             let loadResult = PaymentSheetLoader.LoadResult(
                 intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
-                elementsSession: ._testValue(orderedPaymentMethodTypes: [.card], flags: ["elements_mobile_ios_native_sheet_enabled": true]),
+                elementsSession: ._testValue(paymentMethodTypes: ["card"]),
                 savedPaymentMethods: [],
                 paymentMethodTypes: [.stripe(.card)],
                 paymentMethodMessagingPromotionsHelper: ._testValue(),

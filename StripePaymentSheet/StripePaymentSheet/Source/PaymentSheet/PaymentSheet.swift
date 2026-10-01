@@ -285,9 +285,14 @@ public class PaymentSheet {
 
     /// The parent view controller to present
     lazy var bottomSheetViewController: any PaymentSheetContainer = {
+        // The playground can opt in while complete PaymentSheet remains outside the server-controlled rollout.
+        let usesNativeSheet = NativeSheetFeatureFlags.nativeSheetEnabledOverride == true
+            && UIDevice.current.userInterfaceIdiom == .phone
+
         let vc = PaymentSheetContainerFactory.make(
             contentViewController: loadingViewController,
             appearance: configuration.appearance,
+            usesNativeSheet: usesNativeSheet,
             didCancelNative3DS2: { [weak self] in
                 self?.paymentHandler.cancel3DS2ChallengeFlow()
             }
