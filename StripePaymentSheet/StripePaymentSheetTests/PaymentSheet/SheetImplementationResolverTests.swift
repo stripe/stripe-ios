@@ -15,8 +15,7 @@ import XCTest
 @MainActor
 final class SheetImplementationResolverTests: XCTestCase {
 
-    func testRequiresEnabledFlagAndTreatmentAssignment() throws {
-        try XCTSkipIf(SheetImplementationResolver.isRequiredForDevice, "Duo bypasses the rollout.")
+    func testRequiresEnabledFlagAndTreatmentAssignment() {
         let flags: [Bool?] = [nil, false, true]
         let groups: [ExperimentGroup?] = [nil, .control, .treatment, .holdback, .controlTest]
 
@@ -48,19 +47,6 @@ final class SheetImplementationResolverTests: XCTestCase {
                 }
             }
         }
-    }
-
-    func testDuoBypassesDisabledFlagAndControlAssignmentWithoutExposure() throws {
-        try XCTSkipUnless(SheetImplementationResolver.isRequiredForDevice, "Requires iPhone Duo.")
-        let analyticsClient = MockAnalyticsClientV2()
-        let presentation = SheetImplementationResolver(
-            elementsSession: makeSession(flag: false, group: .control),
-            analyticsHelper: ._testValue(analyticsClientV2: analyticsClient),
-            integrationShape: "embedded"
-        )
-
-        XCTAssertTrue(presentation.usesNativeSheet)
-        XCTAssertTrue(analyticsClient.loggedAnalyticPayloads(withEventName: PaymentSheetAnalyticsHelper.eventName).isEmpty)
     }
 
     private func makeSession(flag: Bool?, group: ExperimentGroup?) -> STPElementsSession {
