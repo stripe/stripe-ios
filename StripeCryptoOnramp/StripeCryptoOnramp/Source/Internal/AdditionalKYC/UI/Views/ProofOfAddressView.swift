@@ -100,17 +100,7 @@ struct ProofOfAddressView: View {
             }
             .padding(20)
         }
-        .safeAreaInset(edge: .bottom, spacing: 0) {
-            VStack(spacing: 0) {
-                Divider()
-
-                PrimaryActionButton(title: .Localized.submit, appearance: appearance, action: submit, isEnabled: canSubmit, isProcessing: isSubmitting)
-                    .padding(.horizontal, 20)
-                    .padding(.top, 12)
-                    .padding(.bottom, 16)
-                    .background(Color.surfacePrimary)
-            }
-        }
+        .primaryActionInset(title: .Localized.submit, appearance: appearance, action: submit, isEnabled: canSubmit, isProcessing: isSubmitting)
         .background(Color.surfacePrimary.ignoresSafeArea())
         .environment(\.colorScheme, appearance.colorScheme ?? inheritedColorScheme)
         .preferredColorScheme(appearance.colorScheme)
