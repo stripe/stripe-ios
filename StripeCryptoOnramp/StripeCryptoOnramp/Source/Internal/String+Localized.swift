@@ -90,6 +90,17 @@ extension String.Localized {
         )
     }
 
+    static var sourceOfFundsDocumentsExplanation: String {
+        STPLocalizedString(
+            "How are you funding your transactions? Please list all of your sources. For example, salary, savings, investment earnings, etc.",
+            "Explanation above the summary of source-of-funds documents."
+        )
+    }
+
+    static var fundsSource: String {
+        STPLocalizedString("Funds source", "Label for the selected source of funds in the document editor")
+    }
+
     /// The label and placeholder for a questionnaire answer field.
     static var questionnaireAnswer: String {
         STPLocalizedString("Answer", "Label and placeholder for a questionnaire answer field")
@@ -145,6 +156,20 @@ extension String.Localized {
     /// The action that opens document collection for a new funds source.
     static var addDocuments: String {
         STPLocalizedString("Add documents", "Action to add documents for another source of funds")
+    }
+
+    /// The action that saves the selected number of documents to a funds source.
+    /// - Parameter count: The number of documents being added to the source.
+    /// - Returns: A localized title with the appropriate plural form.
+    static func addDocuments(count: Int) -> String {
+        if count == 1 {
+            return STPLocalizedString("Add 1 document", "Action to add exactly one uploaded document to a source of funds")
+        } else {
+            return String(
+                format: STPLocalizedString("Add %ld documents", "Action to add multiple uploaded documents to a source of funds. The placeholder is the document count."),
+                count
+            )
+        }
     }
 
     /// The status shown while a document is uploading.

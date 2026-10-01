@@ -23,13 +23,38 @@ final class AdditionalKYCFlowCoordinator: NSObject, UIAdaptivePresentationContro
         /// Existing requirements are awaiting Stripe or partner review.
         case pendingVerification
 
-        /// The customer must submit a proof-of-address document using the supplied configuration.
-        case proofOfAddress(AdditionalKYCRequirement, DocumentCollectionConfiguration)
+        /// The customer must supply documents and any accompanying questionnaire answers.
+        case collect(Collection)
     }
 
     private enum RequirementKey: String {
         case proofOfAddress = "proof_of_address"
         case sourceOfFunds = "source_of_funds"
+    }
+
+    private struct Collection {
+        let key: RequirementKey
+        let requirement: AdditionalKYCRequirement
+        let configuration: DocumentCollectionConfiguration
+        let questionnaire: AdditionalKYCQuestionnaireModel?
+
+        var introduction: MessageView.Configuration {
+            switch key {
+            case .proofOfAddress:
+                return .proofOfAddress
+            case .sourceOfFunds:
+                return .sourceOfFunds
+            }
+        }
+
+        var confirmation: MessageView.Configuration {
+            switch key {
+            case .proofOfAddress:
+                return .documentUploaded
+            case .sourceOfFunds:
+                return .submitted
+            }
+        }
     }
 
     private let apiClient: STPAPIClient
@@ -40,6 +65,7 @@ final class AdditionalKYCFlowCoordinator: NSObject, UIAdaptivePresentationContro
     private var didSubmit = false
     private var isSubmitting = false
     private var fulfillmentTask: Task<Void, Error>?
+    private var sourceOfFundsModel: SourceOfFundsModel?
 
     /// Creates a flow using the Link account and appearance supplied by the coordinator.
     /// - Parameters:
@@ -59,15 +85,32 @@ final class AdditionalKYCFlowCoordinator: NSObject, UIAdaptivePresentationContro
     private func route(_ response: RetrieveKYCRequirementsResponse) throws -> Route {
         let requirements = response.requirements
         guard !requirements.isEmpty else { return .notRequired }
-        if let requirement = requirements[RequirementKey.proofOfAddress.rawValue], requirement.awaitingActionFrom == .user {
+
+        for key in [RequirementKey.proofOfAddress, .sourceOfFunds] {
+            guard let requirement = requirements[key.rawValue], requirement.awaitingActionFrom == .user else {
+                continue
+            }
+
             guard let document = requirement.document else {
                 throw DocumentCollectionError.unsupportedRequirement
             }
 
-            return .proofOfAddress(requirement, try DocumentCollectionConfiguration(proofOfAddress: document))
-        } else if requirements[RequirementKey.sourceOfFunds.rawValue]?.awaitingActionFrom == .user {
-            throw DocumentCollectionError.unsupportedRequirement
-        } else if requirements.values.allSatisfy({ $0.awaitingActionFrom == .partner || $0.awaitingActionFrom == .stripe }) {
+            let configuration: DocumentCollectionConfiguration
+            switch key {
+            case .proofOfAddress:
+                configuration = try .init(proofOfAddress: document)
+            case .sourceOfFunds:
+                configuration = try .init(document: document)
+            }
+
+            let questionnaire = try requirement.additionalRequirements?.questionnaire.map {
+                try AdditionalKYCQuestionnaireModel(questionnaire: $0)
+            }
+
+            return .collect(.init(key: key, requirement: requirement, configuration: configuration, questionnaire: questionnaire))
+        }
+
+        if requirements.values.allSatisfy({ $0.awaitingActionFrom == .partner || $0.awaitingActionFrom == .stripe }) {
             return .pendingVerification
         } else {
             throw DocumentCollectionError.unsupportedRequirement
@@ -87,7 +130,7 @@ final class AdditionalKYCFlowCoordinator: NSObject, UIAdaptivePresentationContro
             return .notRequired
         case .pendingVerification:
             return .pendingVerification
-        case let .proofOfAddress(requirement, configuration):
+        case .collect(let collection):
             guard presentingViewController.viewIfLoaded?.window != nil,
                   presentingViewController.presentedViewController == nil else {
                 throw DocumentCollectionError.invalidPresenter
@@ -106,9 +149,8 @@ final class AdditionalKYCFlowCoordinator: NSObject, UIAdaptivePresentationContro
                         return
                     }
 
-                    presentProofOfAddress(
-                        configuration: configuration,
-                        requirement: requirement,
+                    presentCollection(
+                        collection,
                         linkSessionKey: key,
                         from: presentingViewController
                     )
@@ -121,9 +163,8 @@ final class AdditionalKYCFlowCoordinator: NSObject, UIAdaptivePresentationContro
         }
     }
 
-    private func presentProofOfAddress(
-        configuration: DocumentCollectionConfiguration,
-        requirement: AdditionalKYCRequirement,
+    private func presentCollection(
+        _ collection: Collection,
         linkSessionKey: String,
         from presentingViewController: UIViewController
     ) {
@@ -134,25 +175,28 @@ final class AdditionalKYCFlowCoordinator: NSObject, UIAdaptivePresentationContro
         appearance.applyInterfaceStyle(to: navigationController)
 
         let hostingController = UIHostingController(rootView: MessageView(
-            configuration: .proofOfAddress,
+            configuration: collection.introduction,
             appearance: appearance,
             onPrimaryAction: { [weak self, weak navigationController] in
                 guard let self, let navigationController else { return }
 
-                let collectionViewController = ProofOfAddressViewController(
-                    configuration: configuration,
-                    appearance: self.appearance,
-                    uploader: KYCDocumentUploader(apiClient: self.apiClient, linkSessionKey: linkSessionKey),
-                    initialErrorMessage: self.message(for: requirement.errors),
-                    onSubmit: { [weak self, weak navigationController] submission in
-                        guard let self, let navigationController else { throw CancellationError() }
-                        try await self.submit(submission, requirement: requirement, in: navigationController)
-                    },
-                    onClose: { [weak self] in
-                        self?.close()
-                    }
-                )
-                navigationController.pushViewController(collectionViewController, animated: true)
+                if let questionnaire = collection.questionnaire, !questionnaire.questions.isEmpty {
+                    let questionnaireView = AdditionalKYCQuestionnaireView(
+                        heading: collection.introduction.heading,
+                        appearance: self.appearance,
+                        model: questionnaire,
+                        onContinue: { [weak self, weak navigationController] in
+                            guard let self, let navigationController, questionnaire.canContinue else { return }
+                            self.showDocuments(for: collection, linkSessionKey: linkSessionKey, in: navigationController)
+                        },
+                        onClose: { [weak self] in
+                            self?.close()
+                        }
+                    )
+                    navigationController.pushViewController(DocumentCollectionViewController(rootView: questionnaireView, appearance: self.appearance), animated: true)
+                } else {
+                    self.showDocuments(for: collection, linkSessionKey: linkSessionKey, in: navigationController)
+                }
             },
             onClose: { [weak self] in
                 self?.close()
@@ -165,8 +209,78 @@ final class AdditionalKYCFlowCoordinator: NSObject, UIAdaptivePresentationContro
         navigationController.presentationController?.delegate = self
     }
 
-    private func submit(_ submission: ProofOfAddressView.Submission, requirement: AdditionalKYCRequirement, in navigationController: UINavigationController) async throws {
+    private func showDocuments(for collection: Collection, linkSessionKey: String, in navigationController: UINavigationController) {
+        let uploader = KYCDocumentUploader(apiClient: apiClient, linkSessionKey: linkSessionKey)
+        let onSubmit: ([FulfillKYCRequirementsRequest.Document]) async throws -> Void = { [weak self, weak navigationController] documents in
+            guard let self, let navigationController else { throw CancellationError() }
+            try await self.submit(documents, collection: collection, in: navigationController)
+        }
+
+        let onClose: () -> Void = { [weak self] in
+            self?.close()
+        }
+
+        switch collection.key {
+        case .proofOfAddress:
+            let controller = ProofOfAddressViewController(
+                configuration: collection.configuration,
+                appearance: appearance,
+                uploader: uploader,
+                initialErrorMessage: message(for: collection.requirement.errors),
+                onSubmit: { submission in
+                    try await onSubmit([.init(documentSubtype: submission.subtypeID, fileIds: [submission.fileID])])
+                },
+                onClose: onClose
+            )
+            navigationController.pushViewController(controller, animated: true)
+        case .sourceOfFunds:
+            let model = sourceOfFundsModel ?? SourceOfFundsModel(configuration: collection.configuration)
+            sourceOfFundsModel = model
+            let view = SourceOfFundsView(
+                appearance: appearance,
+                model: model,
+                initialErrorMessage: message(for: collection.requirement.errors),
+                onEdit: { [weak self, weak navigationController] source in
+                    guard let self, let navigationController else { return }
+                    self.editSource(source, model: model, uploader: uploader, in: navigationController)
+                },
+                onSubmit: onSubmit,
+                onClose: onClose
+            )
+            navigationController.pushViewController(DocumentCollectionViewController(rootView: view, appearance: appearance), animated: true)
+        }
+    }
+
+    private func editSource(_ source: SourceOfFundsModel.Source?, model: SourceOfFundsModel, uploader: DocumentUploading, in navigationController: UINavigationController) {
+        guard source != nil || model.canAddSource else { return }
+        let uploads = DocumentCollectionModel(uploader: uploader, uploadedFiles: source?.files ?? [])
+        let view = SourceOfFundsDocumentView(
+            configuration: model.configuration,
+            subtypes: model.availableSubtypes(editing: source?.id),
+            appearance: appearance,
+            collection: uploads,
+            selectedSubtype: source?.subtype,
+            onSave: { [weak navigationController] subtype, files in
+                model.save(subtype: subtype, files: files, replacing: source?.id)
+                navigationController?.popViewController(animated: true)
+            },
+            onClose: { [weak self] in
+                self?.close()
+            }
+        )
+
+        let controller = DocumentCollectionViewController(rootView: view, appearance: appearance, onLeave: {
+            uploads.cancel()
+        })
+
+        navigationController.pushViewController(controller, animated: true)
+    }
+
+    private func submit(_ documents: [FulfillKYCRequirementsRequest.Document], collection: Collection, in navigationController: UINavigationController) async throws {
         guard !isSubmitting, !didSubmit, continuation != nil else { throw CancellationError() }
+        guard collection.questionnaire?.canContinue != false else {
+            throw DocumentCollectionError.unsupportedRequirement
+        }
 
         isSubmitting = true
         navigationController.isModalInPresentation = true
@@ -177,10 +291,12 @@ final class AdditionalKYCFlowCoordinator: NSObject, UIAdaptivePresentationContro
         }
 
         let request = FulfillKYCRequirementsRequest(requirements: [
-            RequirementKey.proofOfAddress.rawValue: .init(
-                requestedBy: requirement.requestedBy,
-                documents: [.init(documentSubtype: submission.subtypeID, fileIds: [submission.fileID])],
-                additionalRequirements: nil
+            collection.key.rawValue: .init(
+                requestedBy: collection.requirement.requestedBy,
+                documents: documents,
+                additionalRequirements: collection.questionnaire.map {
+                    .init(questionnaire: $0.fulfillment)
+                }
             ),
         ])
         let task = Task { [apiClient, linkAccountInfo] in
@@ -203,7 +319,7 @@ final class AdditionalKYCFlowCoordinator: NSObject, UIAdaptivePresentationContro
         didSubmit = true
 
         let hostingController = UIHostingController(rootView: MessageView(
-            configuration: .documentUploaded,
+            configuration: collection.confirmation,
             appearance: appearance,
             onPrimaryAction: { [weak self] in
                 self?.close()
