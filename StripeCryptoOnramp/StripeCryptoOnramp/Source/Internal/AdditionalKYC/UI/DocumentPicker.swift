@@ -9,7 +9,7 @@ import PhotosUI
 import SwiftUI
 import UniformTypeIdentifiers
 
-/// Imports existing files or photos without requesting camera access or transcoding images.
+/// Imports existing files or photos without requesting camera access.
 struct DocumentPicker: UIViewControllerRepresentable {
 
     /// The system picker used to select an existing document.
@@ -51,7 +51,7 @@ struct DocumentPicker: UIViewControllerRepresentable {
             var settings = PHPickerConfiguration()
             settings.filter = .images
             settings.selectionLimit = 1
-            settings.preferredAssetRepresentationMode = .current
+            settings.preferredAssetRepresentationMode = .compatible
             let picker = PHPickerViewController(configuration: settings)
             picker.delegate = context.coordinator
             return picker
