@@ -1,3 +1,9 @@
+/* Action to add multiple uploaded documents to a source of funds. The placeholder is the document count. */
+"Add %ld documents" = "Add %ld documents";
+
+/* Action to add exactly one uploaded document to a source of funds */
+"Add 1 document" = "Add 1 document";
+
 /* Action to add documents for another source of funds */
 "Add documents" = "Add documents";
 
@@ -18,6 +24,12 @@
 
 /* Heading confirming a document was uploaded successfully */
 "Document uploaded successfully" = "Document uploaded successfully";
+
+/* Label for the selected source of funds in the document editor */
+"Funds source" = "Funds source";
+
+/* Explanation above the summary of source-of-funds documents. */
+"How are you funding your transactions? Please list all of your sources. For example, salary, savings, investment earnings, etc." = "How are you funding your transactions? Please list all of your sources. For example, salary, savings, investment earnings, etc.";
 
 /* Explanation above the document upload control */
 "Make sure your document meets following requirements." = "Make sure your document meets following requirements.";
