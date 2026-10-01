@@ -23,23 +23,6 @@ struct ProofOfAddressView: View {
         let fileID: String
     }
 
-    private struct RejectedFile {
-        let filename: String
-        let message: String
-    }
-
-    private enum Sheet: String, Identifiable {
-        case subtype
-        case files
-        case photos
-
-        // MARK: - Identifiable
-
-        var id: String {
-            rawValue
-        }
-    }
-
     /// The accepted documents, file constraints, and upload instructions.
     let configuration: DocumentCollectionConfiguration
 
@@ -56,14 +39,9 @@ struct ProofOfAddressView: View {
     let onClose: () -> Void
 
     @State private var selectedSubtype: DocumentCollectionConfiguration.Subtype?
-    @State private var activeSheet: Sheet?
-    @State private var showsSourcePicker = false
-    @State private var importingFilename: String?
-    @State private var rejectedFile: RejectedFile?
+    @State private var documentSelection = DocumentSelectionState()
     @State private var isSubmitting = false
-    @State private var errorMessage: String?
     @State private var submissionTask: Task<Void, Never>?
-    @State private var importID = UUID()
     @Environment(\.colorScheme) private var inheritedColorScheme
 
     /// Creates document collection with the first available subtype selected.
@@ -81,7 +59,7 @@ struct ProofOfAddressView: View {
         self.onSubmit = onSubmit
         self.onClose = onClose
         _selectedSubtype = State(initialValue: configuration.acceptedSubtypes.first)
-        _errorMessage = State(initialValue: initialErrorMessage)
+        _documentSelection = State(initialValue: .init(errorMessage: initialErrorMessage))
     }
 
     // MARK: - View
@@ -104,16 +82,16 @@ struct ProofOfAddressView: View {
                 VStack(spacing: 16) {
                     if let selectedSubtype {
                         DocumentSubtypeButton(title: .Localized.documentType, selection: selectedSubtype.label) {
-                            activeSheet = .subtype
+                            documentSelection.sheet = .subtype
                         }
                         .disabled(isSubmitting)
                     }
 
                     documentControl
 
-                    if let errorMessage {
+                    if let errorMessage = documentSelection.errorMessage {
                         InlineErrorMessageView(message: errorMessage)
-                    } else if rejectedFile == nil && upload.document?.status == .failed {
+                    } else if documentSelection.rejectedFile == nil && upload.document?.status == .failed {
                         InlineErrorMessageView(message: .Localized.documentUploadFailed)
                     }
                 }
@@ -142,78 +120,37 @@ struct ProofOfAddressView: View {
         }
         .accessibilityAction(.escape, close)
         .onDisappear { submissionTask?.cancel() }
-        .alert(String.Localized.uploadDocument, isPresented: $showsSourcePicker) {
-            Button(String.Localized.chooseDocumentFile) {
-                beginSelection(.files)
-            }
-            Button(String.Localized.chooseDocumentPhoto) {
-                beginSelection(.photos)
-            }
-            Button(String.Localized.cancel, role: .cancel) {}
-        }
-        .sheet(item: $activeSheet) { sheet in
-            switch sheet {
-            case .subtype:
-                NavigationView {
-                    DocumentSubtypePickerView(title: .Localized.documentType, subtypes: configuration.acceptedSubtypes, selectedID: selectedSubtype?.id, appearance: appearance) {
-                        selectedSubtype = $0
-                    }
-                }
-                .navigationViewStyle(.stack)
-                .preferredColorScheme(appearance.colorScheme)
-            case .files, .photos:
-                let operation = importID
-                DocumentPicker(source: sheet == .files ? .files : .photos, configuration: configuration, onBeginImport: { filename in
-                    importingFilename = filename
-                    activeSheet = nil
-                }, onCompletion: { result in
-                    guard operation == importID else {
-                        return
-                    }
-                    let selectedFilename = importingFilename ?? ""
-                    activeSheet = nil
-                    importingFilename = nil
-                    switch result {
-                    case .success(let file):
-                        upload.select(file)
-                    case .failure(let error):
-                        if let collectionError = error as? DocumentCollectionError,
-                           collectionError == .unsupportedFormat || collectionError == .fileTooLarge {
-                            rejectedFile = .init(
-                                filename: selectedFilename.isEmpty ? "File" : selectedFilename,
-                                message: importErrorMessage(error)
-                            )
-                        } else {
-                            errorMessage = importErrorMessage(error)
-                        }
-                    case nil:
-                        break
-                    }
-                })
-            }
-        }
+        .documentSelection(
+            state: $documentSelection,
+            configuration: configuration,
+            subtypes: configuration.acceptedSubtypes,
+            selectedSubtype: $selectedSubtype,
+            appearance: appearance,
+            onSelectSource: beginSelection,
+            onSelectFile: upload.select
+        )
     }
 
     // MARK: - ProofOfAddressView
 
     @ViewBuilder
     private var documentControl: some View {
-        if let importingFilename {
+        if let importingFilename = documentSelection.importingFilename {
             DocumentFileRow(filename: importingFilename.isEmpty ? "File" : importingFilename, status: .uploading(0), onRemove: {})
-        } else if let rejectedFile {
+        } else if let rejectedFile = documentSelection.rejectedFile {
             DocumentFileRow(filename: rejectedFile.filename, status: .failed(message: rejectedFile.message), onRemove: {
-                self.rejectedFile = nil
+                documentSelection.rejectedFile = nil
             })
         } else if let document = upload.document, document.status != .failed {
             DocumentFileRow(filename: document.name, status: rowStatus(for: document.status), onRemove: {
                 upload.remove()
-                errorMessage = nil
+                documentSelection.errorMessage = nil
             })
             .disabled(isSubmitting)
         } else {
             UploadDocumentButton(detail: configuration.uploadHint) {
                 if configuration.allowsPhotoSelection {
-                    showsSourcePicker = true
+                    documentSelection.showsSourcePicker = true
                 } else {
                     beginSelection(.files)
                 }
@@ -223,7 +160,7 @@ struct ProofOfAddressView: View {
     }
 
     private var canSubmit: Bool {
-        selectedSubtype != nil && upload.uploadedFileID != nil && importingFilename == nil && rejectedFile == nil && !isSubmitting
+        selectedSubtype != nil && upload.uploadedFileID != nil && documentSelection.importingFilename == nil && documentSelection.rejectedFile == nil && !isSubmitting
     }
 
     private func rowStatus(for status: DocumentUploadModel.Status) -> DocumentFileRow.Status {
@@ -237,14 +174,11 @@ struct ProofOfAddressView: View {
         }
     }
 
-    private func beginSelection(_ sheet: Sheet) {
-        importID = UUID()
-        errorMessage = nil
-        rejectedFile = nil
+    private func beginSelection(_ source: DocumentPicker.Source) {
+        documentSelection.beginSelection(source)
         if upload.document?.status == .failed {
             upload.remove()
         }
-        activeSheet = sheet
     }
 
     private func submit() {
@@ -252,7 +186,7 @@ struct ProofOfAddressView: View {
             return
         }
         isSubmitting = true
-        errorMessage = nil
+        documentSelection.errorMessage = nil
         submissionTask = Task { @MainActor in
             defer {
                 isSubmitting = false
@@ -262,7 +196,7 @@ struct ProofOfAddressView: View {
                 try await onSubmit(.init(subtypeID: selectedSubtype.id, fileID: fileID))
             } catch {
                 if !Task.isCancelled {
-                    errorMessage = .Localized.tryAgainLater
+                    documentSelection.errorMessage = .Localized.tryAgainLater
                 }
             }
         }
@@ -270,21 +204,10 @@ struct ProofOfAddressView: View {
 
     private func close() {
         guard !isSubmitting else { return }
-        importID = UUID()
+        documentSelection.cancelImport()
         submissionTask?.cancel()
         upload.cancel()
         onClose()
-    }
-
-    private func importErrorMessage(_ error: Error) -> String {
-        switch error as? DocumentCollectionError {
-        case .unsupportedFormat:
-            return .Localized.unsupportedDocumentFormat(formats: configuration.acceptedFormats)
-        case .fileTooLarge:
-            return .Localized.documentTooLarge(size: configuration.maximumFileSizeLabel)
-        default:
-            return .Localized.unableToOpenDocument
-        }
     }
 }
 

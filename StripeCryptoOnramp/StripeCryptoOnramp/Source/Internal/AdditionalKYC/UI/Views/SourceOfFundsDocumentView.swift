@@ -12,22 +12,6 @@ import SwiftUI
 
 /// Edits the document category and uploaded files for one source of funds.
 struct SourceOfFundsDocumentView: View {
-    private enum Sheet: String, Identifiable {
-        case subtype
-        case files
-        case photos
-
-        // MARK: - Identifiable
-
-        var id: String {
-            rawValue
-        }
-    }
-
-    private struct RejectedFile {
-        let name: String
-        let message: String
-    }
 
     /// The formats, size limit, and instructions used for each selected file.
     let configuration: DocumentCollectionConfiguration
@@ -51,12 +35,7 @@ struct SourceOfFundsDocumentView: View {
     let onClose: () -> Void
 
     @State private var selectedSubtype: DocumentCollectionConfiguration.Subtype?
-    @State private var activeSheet: Sheet?
-    @State private var showsSourcePicker = false
-    @State private var importingFilename: String?
-    @State private var rejectedFile: RejectedFile?
-    @State private var errorMessage: String?
-    @State private var importID = UUID()
+    @State private var documentSelection = DocumentSelectionState()
     @Environment(\.colorScheme) private var inheritedColorScheme
 
     /// Creates an editor with the existing source's category, or the first available category, selected.
@@ -101,7 +80,7 @@ struct SourceOfFundsDocumentView: View {
                 VStack(spacing: 16) {
                     if let selectedSubtype {
                         DocumentSubtypeButton(title: .Localized.fundsSource, selection: selectedSubtype.label) {
-                            activeSheet = .subtype
+                            documentSelection.sheet = .subtype
                         }
                     }
 
@@ -113,29 +92,28 @@ struct SourceOfFundsDocumentView: View {
                         }
                     }
 
-                    if let importingFilename {
+                    if let importingFilename = documentSelection.importingFilename {
                         DocumentFileRow(filename: importingFilename.isEmpty ? "File" : importingFilename, status: .uploading(0), onRemove: {
-                            importID = UUID()
-                            self.importingFilename = nil
+                            documentSelection.cancelImport()
                         })
                     }
 
-                    if let rejectedFile {
-                        DocumentFileRow(filename: rejectedFile.name, status: .failed(message: rejectedFile.message), onRemove: {
-                            self.rejectedFile = nil
+                    if let rejectedFile = documentSelection.rejectedFile {
+                        DocumentFileRow(filename: rejectedFile.filename, status: .failed(message: rejectedFile.message), onRemove: {
+                            documentSelection.rejectedFile = nil
                         })
                     }
 
                     UploadDocumentButton(detail: configuration.uploadHint) {
                         if configuration.allowsPhotoSelection {
-                            showsSourcePicker = true
+                            documentSelection.showsSourcePicker = true
                         } else {
-                            beginSelection(.files)
+                            documentSelection.beginSelection(.files)
                         }
                     }
-                    .disabled(selectedSubtype == nil || importingFilename != nil)
+                    .disabled(selectedSubtype == nil || documentSelection.importingFilename != nil)
 
-                    if let errorMessage {
+                    if let errorMessage = documentSelection.errorMessage {
                         InlineErrorMessageView(message: errorMessage)
                     }
                 }
@@ -163,60 +141,21 @@ struct SourceOfFundsDocumentView: View {
             CloseToolbarItem(action: close)
         }
         .accessibilityAction(.escape, close)
-        .alert(String.Localized.uploadDocument, isPresented: $showsSourcePicker) {
-            Button(String.Localized.chooseDocumentFile) {
-                beginSelection(.files)
-            }
-            Button(String.Localized.chooseDocumentPhoto) {
-                beginSelection(.photos)
-            }
-            Button(String.Localized.cancel, role: .cancel) {}
-        }
-        .sheet(item: $activeSheet) { sheet in
-            switch sheet {
-            case .subtype:
-                NavigationView {
-                    DocumentSubtypePickerView(title: .Localized.documentType, subtypes: subtypes, selectedID: selectedSubtype?.id, appearance: appearance) {
-                        selectedSubtype = $0
-                    }
-                }
-                .navigationViewStyle(.stack)
-                .preferredColorScheme(appearance.colorScheme)
-            case .files, .photos:
-                let operation = importID
-                DocumentPicker(source: sheet == .files ? .files : .photos, configuration: configuration, onBeginImport: { filename in
-                    guard operation == importID else {
-                        return
-                    }
-                    importingFilename = filename
-                    activeSheet = nil
-                }, onCompletion: { result in
-                    guard operation == importID else {
-                        return
-                    }
-                    let filename = importingFilename ?? ""
-                    importingFilename = nil
-                    activeSheet = nil
-                    switch result {
-                    case .success(let file):
-                        collection.add(file)
-                    case .failure(let error):
-                        if let error = error as? DocumentCollectionError,
-                           error == .unsupportedFormat || error == .fileTooLarge {
-                            rejectedFile = .init(name: filename.isEmpty ? "File" : filename, message: importErrorMessage(error))
-                        } else {
-                            errorMessage = importErrorMessage(error)
-                        }
-                    case nil:
-                        break
-                    }
-                })
-            }
-        }
+        .documentSelection(
+            state: $documentSelection,
+            configuration: configuration,
+            subtypes: subtypes,
+            selectedSubtype: $selectedSubtype,
+            appearance: appearance,
+            onSelectSource: {
+                documentSelection.beginSelection($0)
+            },
+            onSelectFile: collection.add
+        )
     }
 
     private var canSave: Bool {
-        selectedSubtype != nil && collection.isComplete && (isEditing || !collection.files.isEmpty) && importingFilename == nil && rejectedFile == nil
+        selectedSubtype != nil && collection.isComplete && (isEditing || !collection.files.isEmpty) && documentSelection.importingFilename == nil && documentSelection.rejectedFile == nil
     }
 
     private var saveTitle: String {
@@ -234,16 +173,9 @@ struct SourceOfFundsDocumentView: View {
     }
 
     private func close() {
-        importID = UUID()
+        documentSelection.cancelImport()
         collection.cancel()
         onClose()
-    }
-
-    private func beginSelection(_ sheet: Sheet) {
-        importID = UUID()
-        rejectedFile = nil
-        errorMessage = nil
-        activeSheet = sheet
     }
 
     private func rowStatus(for status: DocumentUploadModel.Status) -> DocumentFileRow.Status {
@@ -254,17 +186,6 @@ struct SourceOfFundsDocumentView: View {
             return .uploaded
         case .failed:
             return .failed(message: .Localized.documentUploadFailed)
-        }
-    }
-
-    private func importErrorMessage(_ error: Error) -> String {
-        switch error as? DocumentCollectionError {
-        case .unsupportedFormat:
-            return .Localized.unsupportedDocumentFormat(formats: configuration.acceptedFormats)
-        case .fileTooLarge:
-            return .Localized.documentTooLarge(size: configuration.maximumFileSizeLabel)
-        default:
-            return .Localized.unableToOpenDocument
         }
     }
 }
