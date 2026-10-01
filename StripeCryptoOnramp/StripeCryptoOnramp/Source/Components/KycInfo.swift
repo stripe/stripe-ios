@@ -173,12 +173,13 @@ extension KycInfo {
         let email = Self.trimmedNonEmptyValue(billingContact?.emailAddress)
             ?? Self.trimmedNonEmptyValue(shippingContact?.emailAddress)
 
-        // Preserved exactly as provided by Apple Pay, which may be display-formatted rather than E.164.
-        let rawPhoneContact = billingContact?.phoneNumber != nil ? billingContact : shippingContact
-        let rawPhone = Self.trimmedNonEmptyValue(billingContact?.phoneNumber?.stringValue)
-            ?? Self.trimmedNonEmptyValue(shippingContact?.phoneNumber?.stringValue)
+        // Resolved once so the raw phone and its region always come from the same contact.
+        let phoneContact = Self.trimmedNonEmptyValue(billingContact?.phoneNumber?.stringValue) != nil
+            ? billingContact : shippingContact
 
-        let regionCode = rawPhoneContact?.postalAddress?.isoCountryCode
+        // Preserved exactly as provided by Apple Pay, which may be display-formatted rather than E.164.
+        let rawPhone = Self.trimmedNonEmptyValue(phoneContact?.phoneNumber?.stringValue)
+        let regionCode = phoneContact?.postalAddress?.isoCountryCode
         let phone = Self.normalizedE164Phone(rawPhone, regionCode: regionCode)
 
         guard firstName != nil || lastName != nil || address != nil else {
