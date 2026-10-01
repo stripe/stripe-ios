@@ -173,8 +173,8 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
 
     // MARK: - Update Payment Method
 
-    // Dedicated fixtures on the Checkout playground's US merchant. The customer has the
-    // attached 4242 card so recording these tests doesn't create a new saved payment method.
+    // This US Checkout playground customer has a saved 4242 card. Reuse it to avoid
+    // creating another saved card whenever we update the recordings.
     private static let checkoutCustomerID = "cus_VMJjZr3UjTC5RV"
     private static let checkoutCustomerCardID = "pm_1ULb6NLu5o3P18ZpMiQa7Egg"
 
@@ -191,38 +191,36 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
     }
 
     func testUpdatePaymentMethodExpiry() async throws {
-        // Given a Checkout Session customer with an attached card
+        // Given a Checkout Session for a customer with a saved card
         let setup = try await makeCheckoutSessionWithSavedCard()
 
-        // ...and the session is initialized
         _ = try await setup.apiClient.initCheckoutSession(
             checkoutSessionId: setup.checkoutSessionID,
             adaptivePricingAllowed: false
         )
 
-        // When the attached card's expiry is updated through Checkout
+        // When updating the saved card's expiry
         let updatedSession = try await setup.apiClient.updatePaymentMethod(
             setup.paymentMethodID,
             inCheckoutSession: setup.checkoutSessionID,
             expiryDetails: CheckoutController.PaymentMethodExpiryDetails(expMonth: 6, expYear: 2029)
         ).makePublicSession()
 
-        // Then the API accepts the update and returns the session
+        // Then Payment Pages returns the updated session
         XCTAssertEqual(updatedSession.id, setup.checkoutSessionID)
         XCTAssertEqual(updatedSession.status, .open)
     }
 
     func testUpdatePaymentMethodBillingDetails() async throws {
-        // Given a Checkout Session customer with an attached card
+        // Given a Checkout Session for a customer with a saved card
         let setup = try await makeCheckoutSessionWithSavedCard()
 
-        // ...and the session is initialized
         _ = try await setup.apiClient.initCheckoutSession(
             checkoutSessionId: setup.checkoutSessionID,
             adaptivePricingAllowed: false
         )
 
-        // When the attached card's billing details are updated through Checkout
+        // When updating the saved card's billing details
         let updatedSession = try await setup.apiClient.updatePaymentMethod(
             setup.paymentMethodID,
             inCheckoutSession: setup.checkoutSessionID,
@@ -240,7 +238,7 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
             )
         ).makePublicSession()
 
-        // Then the API accepts the update and returns the session
+        // Then Payment Pages returns the updated session
         XCTAssertEqual(updatedSession.id, setup.checkoutSessionID)
         XCTAssertEqual(updatedSession.status, .open)
     }
