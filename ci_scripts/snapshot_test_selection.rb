@@ -15,6 +15,16 @@ module SnapshotTestSelection
     end.compact.sort.uniq
   end
 
+  # @iOS26 also marks behavioral tests whose classes are not named SnapshotTest.
+  # Use the generated plan as the complete inventory for this runtime.
+  def self.classes_in_plan(plan)
+    plan.fetch('testTargets').flat_map do |target|
+      target.fetch('selectedTests').map do |test|
+        "#{target.fetch('target').fetch('name')}/#{test.split('/').first}"
+      end
+    end.sort.uniq
+  end
+
   # Xcode test targets link additional SDKs and shared test utilities that are
   # absent from the shipping Package.swift graph. Include these dependencies.
   def self.graph(root)

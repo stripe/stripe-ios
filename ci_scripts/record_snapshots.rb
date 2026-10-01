@@ -67,20 +67,7 @@ if commit
 end
 
 snapshot_tests = SnapshotTestSelection.discover(ROOT_DIR)
-snapshot_tests = SnapshotTestSelection.select(snapshot_tests, ROOT_DIR) unless all_tests
-if snapshot_tests.empty?
-  puts '==> No snapshot targets are affected by this change.'
-  exit 0
-end
-puts "==> Recording #{snapshot_tests.size} snapshot classes in: #{snapshot_tests.map { |test| test.split('/').first }.uniq.join(', ')}"
-require_imagemagick!
-
-# Maps rel_path -> recorded absolute path for changed/added files
-changed_files = {}
-added_files = {}
-FileUtils.rm_rf('/tmp/snapshot-all-recorded')
-
-versions.each do |os_version|
+selections = versions.map do |os_version|
   selected_tests = snapshot_tests
   plan = nil
   if os_version.split('.').first.to_i >= 26
@@ -93,16 +80,30 @@ versions.each do |os_version|
     ensure
       File.binwrite(plan_path, original_plan)
     end
-    annotated_tests = plan.fetch('testTargets').flat_map do |target|
-      target.fetch('selectedTests').map { |test| "#{target.fetch('target').fetch('name')}/#{test.split('/').first}" }
-    end
-    selected_tests = snapshot_tests & annotated_tests
-    if selected_tests.empty?
-      puts "==> No affected snapshots have iOS #{os_version} annotations; skipping this runtime."
-      next
-    end
+    selected_tests = SnapshotTestSelection.classes_in_plan(plan)
+  end
+  selected_tests = SnapshotTestSelection.select(selected_tests, ROOT_DIR) unless all_tests
+  [os_version, selected_tests, plan]
+end
+
+if selections.all? { |_, tests, _| tests.empty? }
+  puts '==> No snapshot or annotated iOS 26 targets are affected by this change.'
+  exit 0
+end
+require_imagemagick!
+
+# Maps rel_path -> recorded absolute path for changed/added files
+changed_files = {}
+added_files = {}
+FileUtils.rm_rf('/tmp/snapshot-all-recorded')
+
+selections.each do |os_version, selected_tests, plan|
+  if selected_tests.empty?
+    puts "==> No affected tests for iOS #{os_version}; skipping this runtime."
+    next
   end
 
+  puts "==> Selected #{selected_tests.size} test classes for iOS #{os_version} in: #{selected_tests.map { |test| test.split('/').first }.uniq.join(', ')}"
   puts "==> Recording snapshots (iOS #{os_version})..."
 
   # Ensure the simulator exists for this version
@@ -150,9 +151,15 @@ versions.each do |os_version|
                        "#{RECORD_DIR}_64"
                      elsif Dir.exist?(RECORD_DIR)
                        RECORD_DIR
-                     else
-                       abort "Error: No snapshots recorded (expected #{RECORD_DIR} or #{RECORD_DIR}_64)"
                      end
+  unless actual_record_dir
+    # Some modules have only annotated behavioral tests on this runtime.
+    if plan && (selected_tests & snapshot_tests).empty?
+      puts "==> Annotated tests passed on iOS #{os_version}; no snapshot images were produced."
+      next
+    end
+    abort "Error: No snapshots recorded (expected #{RECORD_DIR} or #{RECORD_DIR}_64)"
+  end
 
   puts "==> Comparing against reference images (iOS #{os_version})..."
 

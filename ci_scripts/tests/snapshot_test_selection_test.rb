@@ -4,6 +4,7 @@ require 'minitest/autorun'
 require 'tmpdir'
 require 'fileutils'
 require_relative '../snapshot_test_selection'
+require_relative '../generate_ios26_testplan'
 
 class SnapshotTestSelectionTest < Minitest::Test
   ROOT = File.expand_path('../..', __dir__)
@@ -51,6 +52,49 @@ class SnapshotTestSelectionTest < Minitest::Test
     assert_equal %w[StripeIdentityTests StripePaymentSheetTests StripeiOSTests], selected.map { |test| test.split('/').first }.uniq.sort
   end
 
+  def test_generated_ios26_plan_retains_every_annotated_method
+    with_workspace do |directory|
+      plan_path = File.join(directory, 'Stripe/AllStripeFrameworks-iOS26.xctestplan')
+      FileUtils.cp(File.join(ROOT, 'Stripe/AllStripeFrameworks-iOS26.xctestplan'), plan_path)
+      generator = IOS26TestPlanGeneratorV2.new
+      generator.instance_variable_set(:@test_plan_file, plan_path)
+      capture_io { Dir.chdir(ROOT) { generator.generate } }
+      plan = JSON.parse(File.read(plan_path))
+      classes = SnapshotTestSelection.classes_in_plan(plan)
+      assert_includes classes, 'StripeiOSTests/ConfirmButtonTests'
+      # An unknown CI input must retain every generated annotation.
+      selected = SnapshotTestSelection.affected(classes, ['bitrise.yml'], @graph)
+      SnapshotTestSelection.with_scheme(directory, selected, plan: plan) do |scheme|
+        generated = JSON.parse(File.read(File.join(directory, "Stripe/#{scheme}.xctestplan")))
+        methods = lambda do |value|
+          value.fetch('testTargets').each_with_object({}) do |target, result|
+            tests = target.fetch('selectedTests')
+            result[target.fetch('target').fetch('name')] = tests unless tests.empty?
+          end
+        end
+        assert_equal methods.call(plan), methods.call(generated)
+        assert_includes methods.call(generated).fetch('StripeiOSTests'),
+                        'ConfirmButtonTests/testBuyButtonShouldAutomaticallyAdjustItsForegroundColor()'
+      end
+    end
+  end
+
+  def test_annotation_only_target_is_selected_without_snapshot_classes
+    with_workspace do |directory|
+      plan = JSON.parse(File.read(File.join(ROOT, 'Stripe/AllStripeFrameworks-iOS26.xctestplan')))
+      plan.fetch('testTargets').select! { |target| target.fetch('target').fetch('name') == 'StripeCoreTests' }
+      methods = ['EnvironmentTests/testAnnotatedBehavior()', 'EnvironmentTests/testOtherAnnotatedBehavior()']
+      plan.fetch('testTargets').first['selectedTests'] = methods
+      refute @tests.any? { |test| test.start_with?('StripeCoreTests/') }
+      selected = SnapshotTestSelection.affected(SnapshotTestSelection.classes_in_plan(plan), ['StripeCore/StripeCore/Environment.swift'], @graph)
+      assert_equal ['StripeCoreTests/EnvironmentTests'], selected
+      SnapshotTestSelection.with_scheme(directory, selected, plan: plan) do |scheme|
+        generated = JSON.parse(File.read(File.join(directory, "Stripe/#{scheme}.xctestplan")))
+        assert_equal methods, generated.fetch('testTargets').first.fetch('selectedTests')
+      end
+    end
+  end
+
   def test_generated_scheme_builds_selected_tests_and_keeps_annotations
     Dir.mktmpdir('snapshot-selection-') do |directory|
       schemes = File.join(directory, 'Stripe.xcworkspace/xcshareddata/xcschemes')
@@ -80,6 +124,18 @@ class SnapshotTestSelectionTest < Minitest::Test
       end
       refute File.exist?(generated)
       assert_empty Dir.glob(File.join(directory, 'Stripe/*.xctestplan'))
+    end
+  end
+
+  private
+
+  def with_workspace
+    Dir.mktmpdir('snapshot-selection-') do |directory|
+      schemes = File.join(directory, 'Stripe.xcworkspace/xcshareddata/xcschemes')
+      FileUtils.mkdir_p(schemes)
+      FileUtils.mkdir_p(File.join(directory, 'Stripe'))
+      FileUtils.cp(File.join(ROOT, 'Stripe.xcworkspace/xcshareddata/xcschemes/AllStripeFrameworks.xcscheme'), schemes)
+      yield directory
     end
   end
 end
