@@ -55,6 +55,7 @@ final class PayWithNativeLinkController {
     let intent: Intent
     let elementsSession: STPElementsSession
     let configuration: PaymentElementConfiguration
+    private let nativeSheetPresentation: SheetImplementationResolver?
     let logPayment: Bool
     let analyticsHelper: PaymentSheetAnalyticsHelper
     let supportedPaymentMethodTypes: [LinkPaymentMethodType]?
@@ -70,6 +71,7 @@ final class PayWithNativeLinkController {
         intent: Intent,
         elementsSession: STPElementsSession,
         configuration: PaymentElementConfiguration,
+        nativeSheetPresentation: SheetImplementationResolver? = nil,
         logPayment: Bool = true,
         analyticsHelper: PaymentSheetAnalyticsHelper,
         supportedPaymentMethodTypes: [LinkPaymentMethodType]? = nil,
@@ -83,6 +85,7 @@ final class PayWithNativeLinkController {
         self.logPayment = logPayment
         self.elementsSession = elementsSession
         self.configuration = configuration
+        self.nativeSheetPresentation = nativeSheetPresentation
         self.analyticsHelper = analyticsHelper
         self.supportedPaymentMethodTypes = supportedPaymentMethodTypes
         self.paymentHandler = .init(apiClient: configuration.apiClient)
@@ -163,6 +166,7 @@ final class PayWithNativeLinkController {
                 linkAccount: LinkAccountContext.shared.account,
                 elementsSession: self.elementsSession,
                 configuration: self.configuration,
+                nativeSheetPresentation: self.nativeSheetPresentation,
                 shouldOfferApplePay: shouldOfferApplePay,
                 shouldFinishOnClose: shouldFinishOnClose,
                 canContinueWithoutLink: canContinueWithoutLink,
@@ -242,6 +246,7 @@ extension PayWithNativeLinkController: PayWithLinkViewControllerDelegate {
 
         PaymentSheet.confirm(
             configuration: configuration,
+            nativeSheetPresentation: nativeSheetPresentation,
             authenticationContext: payWithLinkViewController.sheetContainer,
             intent: intent,
             elementsSession: elementsSession,
@@ -307,6 +312,7 @@ extension PayWithNativeLinkController: PayWithLinkWebControllerDelegate {
 
         PaymentSheet.confirm(
             configuration: configuration,
+            nativeSheetPresentation: nativeSheetPresentation,
             authenticationContext: payWithLinkWebController,
             intent: intent,
             elementsSession: elementsSession,

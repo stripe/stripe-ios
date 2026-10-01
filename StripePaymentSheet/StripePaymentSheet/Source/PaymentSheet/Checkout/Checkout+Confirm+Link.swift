@@ -79,6 +79,7 @@ extension CheckoutController {
                     let paymentMethodParameters = PaymentMethodConfirmationParameters(
                         option: .new(confirmParams),
                         configuration: configuration,
+                        nativeSheetPresentation: parameters.nativeSheetPresentation,
                         confirmationChallenge: confirmationChallenge,
                         authenticationContext: parameters.authenticationContext,
                         paymentHandler: parameters.paymentHandler
@@ -105,6 +106,7 @@ extension CheckoutController {
                     let paymentMethodParameters = PaymentMethodConfirmationParameters(
                         option: .saved(paymentMethod, nil),
                         configuration: configuration,
+                        nativeSheetPresentation: parameters.nativeSheetPresentation,
                         confirmationChallenge: confirmationChallenge,
                         authenticationContext: parameters.authenticationContext,
                         paymentHandler: parameters.paymentHandler
@@ -144,6 +146,7 @@ extension CheckoutController {
                         parameters: LinkConfirmationParameters(
                             confirmOption: confirmOption,
                             configuration: configuration,
+                            nativeSheetPresentation: parameters.nativeSheetPresentation,
                             confirmationChallenge: confirmationChallenge,
                             analyticsHelper: parameters.analyticsHelper,
                             authenticationContext: linkAuthenticationContext,
@@ -158,6 +161,7 @@ extension CheckoutController {
             PaymentSheet.confirmLinkPaymentOption(
                 confirmOption: parameters.confirmOption,
                 configuration: configuration,
+                nativeSheetPresentation: parameters.nativeSheetPresentation,
                 authenticationContext: parameters.authenticationContext,
                 intent: .checkout(checkoutSession),
                 elementsSession: elementsSession,
