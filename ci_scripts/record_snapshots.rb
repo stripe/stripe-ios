@@ -15,6 +15,7 @@
 
 require 'fileutils'
 require 'optparse'
+require 'open3'
 require_relative 'snapshot_test_selection'
 
 SCRIPT_DIR = __dir__
@@ -54,6 +55,25 @@ def significant_difference?(file_a, file_b)
   return true if total_pixels == 0
 
   (num_diff.to_f / total_pixels * 100) > DIFF_THRESHOLD
+end
+
+def snapshot_simulator_id(os_version)
+  # simctl names patch runtimes by major.minor (26.4 for iOS 26.4.1).
+  # Match the runtime identifier and use a UDID to avoid duplicate-name ambiguity.
+  runtime = "com.apple.CoreSimulator.SimRuntime.iOS-#{os_version.split('.')[0..1].join('-')}"
+  output, status = Open3.capture2('xcrun', 'simctl', 'list', 'devices', 'available', '--json')
+  abort 'Error: Could not list available simulators' unless status.success?
+
+  devices = JSON.parse(output).fetch('devices').fetch(runtime, []).select { |device| device.fetch('name') == DEVICE_MODEL }
+  existing = devices.find { |device| device['state'] == 'Booted' } || devices.first
+  return existing.fetch('udid') if existing
+
+  puts "    Creating #{DEVICE_MODEL} simulator for iOS #{os_version} (runtime: #{runtime})..."
+  identifier, status = Open3.capture2('xcrun', 'simctl', 'create', DEVICE_MODEL,
+                                    'com.apple.CoreSimulator.SimDeviceType.iPhone-12-mini', runtime)
+  abort "Error: Could not create simulator for iOS #{os_version}" unless status.success?
+
+  identifier.strip
 end
 
 # Skip if the last commit is already a snapshot update from CI (prevents infinite loops)
@@ -106,16 +126,8 @@ selections.each do |os_version, selected_tests, plan|
   puts "==> Selected #{selected_tests.size} test classes for iOS #{os_version} in: #{selected_tests.map { |test| test.split('/').first }.uniq.join(', ')}"
   puts "==> Recording snapshots (iOS #{os_version})..."
 
-  # Ensure the simulator exists for this version
-  existing = `xcrun simctl list devices "#{DEVICE_MODEL}" available`.strip
-  unless existing.include?(os_version)
-    # Runtime IDs use major.minor only (e.g., iOS-26-4 for 26.4.1)
-    major_minor = os_version.split('.')[0..1].join('-')
-    runtime = "com.apple.CoreSimulator.SimRuntime.iOS-#{major_minor}"
-    device_type = 'com.apple.CoreSimulator.SimDeviceType.iPhone-12-mini'
-    puts "    Creating #{DEVICE_MODEL} simulator for iOS #{os_version} (runtime: #{runtime})..."
-    system('xcrun', 'simctl', 'create', DEVICE_MODEL, device_type, runtime, exception: true)
-  end
+  device_id = snapshot_simulator_id(os_version)
+  puts "    Using simulator #{device_id}"
 
   FileUtils.rm_rf(RECORD_DIR)
   FileUtils.rm_rf("#{RECORD_DIR}_64")
@@ -124,8 +136,7 @@ selections.each do |os_version, selected_tests, plan|
     extra_args = plan ? [] : ['--only-test', selected_tests.join(',')]
     system('./ci_scripts/test.rb', *extra_args,
            '--scheme', scheme,
-           '--device', DEVICE_MODEL,
-           '--version', os_version)
+           '--device-id', device_id)
   end
   unless succeeded
     puts "==> Tests failed for iOS #{os_version}. Inspecting failures..."
