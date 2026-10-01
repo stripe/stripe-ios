@@ -59,8 +59,8 @@ import UIKit
     }
 
     /// The parent view controller to present
-    private lazy var bottomSheetViewController: BottomSheetViewController = {
-        let vc = BottomSheetViewController(
+    private lazy var bottomSheetViewController: any PaymentSheetContainer = {
+        let vc = PaymentSheetContainerFactory.make(
             contentViewController: loadingViewController,
             appearance: PaymentSheet.Appearance.default,
             isTestMode: configuration.apiClient.isTestmode,

@@ -285,10 +285,10 @@ public class PaymentSheet {
     lazy var paymentHandler: STPPaymentHandler = { STPPaymentHandler(apiClient: configuration.apiClient) }()
 
     /// The parent view controller to present
-    lazy var bottomSheetViewController: BottomSheetViewController = {
+    lazy var bottomSheetViewController: any PaymentSheetContainer = {
         let isTestMode = configuration.apiClient.isTestmode
 
-        let vc = BottomSheetViewController(
+        let vc = PaymentSheetContainerFactory.make(
             contentViewController: loadingViewController,
             appearance: configuration.appearance,
             isTestMode: isTestMode,

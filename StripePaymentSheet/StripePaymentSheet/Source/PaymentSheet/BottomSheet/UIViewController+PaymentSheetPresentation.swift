@@ -10,7 +10,7 @@ import UIKit
 
 extension UIViewController {
 
-    /// Presents the selected PaymentSheet container using its own presentation lifecycle.
+    /// Presents either the legacy or native container using its own presentation lifecycle.
     func presentAsSheet(
         _ viewControllerToPresent: any PaymentSheetContainer,
         completion: (() -> Void)? = nil
