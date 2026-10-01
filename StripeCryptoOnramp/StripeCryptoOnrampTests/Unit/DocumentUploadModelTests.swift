@@ -32,7 +32,7 @@ final class DocumentUploadModelTests: XCTestCase {
         await fulfillment(of: [uploadStartedExpectation], timeout: 2)
         XCTAssertNil(model.uploadedFileID)
 
-        await uploader.finish(.success("file_success"))
+        await uploader.finish(for: selectedFile.url, result: .success("file_success"))
         await fulfillment(of: [uploadCompletedExpectation], timeout: 2)
 
         XCTAssertEqual(model.uploadedFileID, "file_success")
@@ -43,7 +43,8 @@ final class DocumentUploadModelTests: XCTestCase {
         let uploadStartedExpectation = expectation(description: "Upload started")
         let uploader = MockUploader(uploadStartedExpectation: uploadStartedExpectation)
         let model = DocumentUploadModel(uploader: uploader)
-        model.select(try makeFile())
+        let selectedFile = try makeFile()
+        model.select(selectedFile)
 
         await fulfillment(of: [uploadStartedExpectation], timeout: 2)
 
@@ -62,7 +63,7 @@ final class DocumentUploadModelTests: XCTestCase {
             documentObservation.cancel()
         }
 
-        await uploader.finish(.success("file_obsolete"))
+        await uploader.finish(for: selectedFile.url, result: .success("file_obsolete"))
         await fulfillment(of: [unexpectedDocumentRestorationExpectation], timeout: 0.2)
 
         XCTAssertNil(model.document)
@@ -90,30 +91,5 @@ final class DocumentUploadModelTests: XCTestCase {
         }
 
         return try DocumentFile.copy(from: sourceURL, acceptedFormats: ["pdf"], maximumFileSize: 100)
-    }
-}
-
-private actor MockUploader: DocumentUploading {
-    let uploadStartedExpectation: XCTestExpectation
-    private var uploadContinuation: CheckedContinuation<String, Error>?
-
-    init(uploadStartedExpectation: XCTestExpectation) {
-        self.uploadStartedExpectation = uploadStartedExpectation
-    }
-
-    // MARK: - DocumentUploading
-
-    func upload(_ file: DocumentFile, progress: @escaping @Sendable (Double) -> Void) async throws -> String {
-        return try await withCheckedThrowingContinuation { continuation in
-            uploadContinuation = continuation
-            uploadStartedExpectation.fulfill()
-        }
-    }
-
-    // MARK: - MockUploader
-
-    func finish(_ uploadResult: Result<String, Error>) {
-        uploadContinuation?.resume(with: uploadResult)
-        uploadContinuation = nil
     }
 }
