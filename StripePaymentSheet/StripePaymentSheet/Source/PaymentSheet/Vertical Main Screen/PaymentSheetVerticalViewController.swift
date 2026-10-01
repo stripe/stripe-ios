@@ -76,7 +76,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     let loadResult: PaymentSheetLoader.LoadResult
     let paymentMethodTypes: [PaymentSheet.PaymentMethodType]
     let configuration: PaymentSheet.Configuration
-    private let nativeSheetPresentation: NativeSheetPresentation?
+    private let nativeSheetPresentation: SheetImplementationResolver?
     let intent: Intent
     let elementsSession: STPElementsSession
     let formCache: PaymentMethodFormCache = .init()
@@ -161,7 +161,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 
     init(
         configuration: PaymentSheet.Configuration,
-        nativeSheetPresentation: NativeSheetPresentation? = nil,
+        nativeSheetPresentation: SheetImplementationResolver? = nil,
         loadResult: PaymentSheetLoader.LoadResult,
         isFlowController: Bool,
         analyticsHelper: PaymentSheetAnalyticsHelper,

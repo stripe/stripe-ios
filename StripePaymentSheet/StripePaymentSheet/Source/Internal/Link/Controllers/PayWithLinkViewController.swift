@@ -210,7 +210,7 @@ final class PayWithLinkViewController: NSObject {
         linkAccount: PaymentSheetLinkAccount?,
         elementsSession: STPElementsSession,
         configuration: PaymentElementConfiguration,
-        nativeSheetPresentation: NativeSheetPresentation? = nil,
+        nativeSheetPresentation: SheetImplementationResolver? = nil,
         shouldOfferApplePay: Bool = false,
         shouldFinishOnClose: Bool = false,
         canContinueWithoutLink: Bool = true,
@@ -246,7 +246,7 @@ final class PayWithLinkViewController: NSObject {
         )
     }
 
-    private init(context: Context, linkAccount: PaymentSheetLinkAccount?, nativeSheetPresentation: NativeSheetPresentation?) {
+    private init(context: Context, linkAccount: PaymentSheetLinkAccount?, nativeSheetPresentation: SheetImplementationResolver?) {
         self.context = context
         let initialVC: BaseViewController = Self.initialVC(linkAccount: linkAccount, context: context)
 
