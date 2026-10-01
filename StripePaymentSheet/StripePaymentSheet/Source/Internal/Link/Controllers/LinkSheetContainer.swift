@@ -36,7 +36,7 @@ enum LinkSheetContainerFactory {
         #if os(visionOS)
         let shouldUseNativeSheet = false
         #else
-        let shouldUseNativeSheet = NativeSheetPresentation.isRequiredForDevice || usesNativeSheet
+        let shouldUseNativeSheet = SheetImplementationResolver.isRequiredForDevice || usesNativeSheet
         #endif
 
         if shouldUseNativeSheet {

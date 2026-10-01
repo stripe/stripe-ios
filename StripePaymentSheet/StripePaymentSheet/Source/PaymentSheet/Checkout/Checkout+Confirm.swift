@@ -43,7 +43,7 @@ extension CheckoutController {
         // TODO: Lots of stuff in here because current Link code nominally requires it but it may not all really be necessary.
         let confirmOption: PaymentSheet.LinkConfirmOption
         let configuration: PaymentElementConfiguration
-        let nativeSheetPresentation: NativeSheetPresentation?
+        let nativeSheetPresentation: SheetImplementationResolver?
         let confirmationChallenge: ConfirmationChallenge?
         let analyticsHelper: PaymentSheetAnalyticsHelper
         let authenticationContext: STPAuthenticationContext
@@ -60,7 +60,7 @@ extension CheckoutController {
 
         let option: Option
         let configuration: PaymentElementConfiguration
-        let nativeSheetPresentation: NativeSheetPresentation?
+        let nativeSheetPresentation: SheetImplementationResolver?
         let confirmationChallenge: ConfirmationChallenge?
         let authenticationContext: STPAuthenticationContext
         let paymentHandler: STPPaymentHandler
@@ -116,7 +116,7 @@ extension CheckoutController {
 
         let paymentOption: PaymentOption
         let configuration: PaymentElementConfiguration
-        let nativeSheetPresentation: NativeSheetPresentation
+        let nativeSheetPresentation: SheetImplementationResolver
         let integrationShape: PaymentSheet.IntegrationShape
         let confirmationChallenge: ConfirmationChallenge?
 
