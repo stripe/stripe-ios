@@ -8,6 +8,7 @@
 import Foundation
 import PassKit
 @_spi(STP) import StripePayments
+@_spi(STP) import StripeUICore
 
 /// Represents KYC information required for crypto operations.
 @_spi(CryptoOnrampAlpha)
@@ -75,16 +76,24 @@ public struct KycInfo: Equatable {
     /// payload, so it is ignored when attaching KYC info.
     public var email: String?
 
-    /// The customer’s phone number, if collected.
+    /// The customer’s phone number in E.164 format (for example, `+12125551234`), if collected and successfully
+    /// normalized. This value can be passed directly to `registerLinkUser(email:fullName:phone:country:)`.
     ///
-    /// When this value originates from a wallet such as Apple Pay, it is passed through exactly as the wallet provided
-    /// it and is **not** normalized to E.164 (for example, it may look like `(212) 555-1234`). Convert it to E.164
-    /// before passing it to `registerLinkUser(email:fullName:phone:country:)`, which throws `invalidPhoneFormat` for
-    /// other formats.
+    /// This is `nil` whenever `rawPhone` is `nil`, and also when `rawPhone` could not be normalized to E.164 (for
+    /// example, if no country could be determined to interpret the number). In that case, use `rawPhone` to recover
+    /// the original value.
     ///
     /// This value is intended for prefilling Link registration or account lookup and is not part of the KYC submission
     /// payload, so it is ignored when attaching KYC info.
     public var phone: String?
+
+    /// The customer’s phone number exactly as provided by the originating source (for example, a wallet such as
+    /// Apple Pay), if collected. Unlike `phone`, this value is **not** normalized and may be display-formatted
+    /// (for example, `(212) 555-1234`).
+    ///
+    /// This value is intended for prefilling Link registration or account lookup and is not part of the KYC submission
+    /// payload, so it is ignored when attaching KYC info.
+    public var rawPhone: String?
 
     /// Creates a new instance of `KycInfo`.
     /// - Parameters:
@@ -98,7 +107,8 @@ public struct KycInfo: Equatable {
     ///   - birthCity: The customer’s city of birth, if collected. Required for EU customers.
     ///   - nationalities: The two-letter country codes of the customer’s nationalities (ISO 3166-1 alpha-2), if collected. Required for EU customers.
     ///   - email: The customer’s email address, if collected. Used for prefill only.
-    ///   - phone: The customer’s phone number, if collected. Used for prefill only, and not normalized to E.164.
+    ///   - phone: The customer’s phone number in E.164 format, if collected and normalized. Used for prefill only.
+    ///   - rawPhone: The customer’s phone number exactly as provided by the originating source, if collected. Used for prefill only, and not normalized to E.164.
     public init(
         firstName: String?,
         lastName: String?,
@@ -110,7 +120,8 @@ public struct KycInfo: Equatable {
         birthCity: String? = nil,
         nationalities: [String]? = nil,
         email: String? = nil,
-        phone: String? = nil
+        phone: String? = nil,
+        rawPhone: String? = nil
     ) {
         self.firstName = firstName
         self.lastName = lastName
@@ -123,6 +134,7 @@ public struct KycInfo: Equatable {
         self.nationalities = nationalities
         self.email = email
         self.phone = phone
+        self.rawPhone = rawPhone
     }
 }
 
@@ -162,8 +174,17 @@ extension KycInfo {
             ?? Self.trimmedNonEmptyValue(shippingContact?.emailAddress)
 
         // Preserved exactly as provided by Apple Pay, which may be display-formatted rather than E.164.
-        let phone = Self.trimmedNonEmptyValue(billingContact?.phoneNumber?.stringValue)
+        let rawPhoneContact = billingContact?.phoneNumber != nil ? billingContact : shippingContact
+        let rawPhone = Self.trimmedNonEmptyValue(billingContact?.phoneNumber?.stringValue)
             ?? Self.trimmedNonEmptyValue(shippingContact?.phoneNumber?.stringValue)
+
+        // Normalizing a national number (e.g. "(212) 555-1234") requires a region to interpret it against; Apple only
+        // ever surfaces this via the postal address on the same contact that provided the phone number. A number
+        // already in E.164 form (e.g. "+12125551234") can be parsed without a region hint.
+        let regionCode = rawPhoneContact?.postalAddress?.isoCountryCode
+        let phone = rawPhone.flatMap { rawPhone in
+            PhoneNumber.fromE164(rawPhone) ?? regionCode.flatMap { PhoneNumber(number: rawPhone, countryCode: $0) }
+        }?.string(as: .e164)
 
         guard firstName != nil || lastName != nil || address != nil else {
             return nil
@@ -176,7 +197,8 @@ extension KycInfo {
             address: address,
             dateOfBirth: nil,
             email: email,
-            phone: phone
+            phone: phone,
+            rawPhone: rawPhone
         )
     }
 
