@@ -77,7 +77,7 @@ public final class EmbeddedPaymentElement {
         intentConfiguration: IntentConfiguration,
         configuration: Configuration
     ) async throws -> EmbeddedPaymentElement {
-        try validateRowSelectionConfiguration(configuration: configuration)
+        try validateRowSelectionConfiguration(configuration: configuration, customerProvider: CustomerProvider(customer: configuration.customer))
 
         AnalyticsHelper.shared.generateSessionID()
         STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: EmbeddedPaymentElement.self)
@@ -114,7 +114,10 @@ public final class EmbeddedPaymentElement {
         var config = configuration
         checkout.session.applyAddressOverrides(to: &config)
 
-        try validateRowSelectionConfiguration(configuration: config)
+        try validateRowSelectionConfiguration(
+            configuration: config,
+            customerProvider: CustomerProvider(checkoutSession: checkout.session)
+        )
 
         AnalyticsHelper.shared.generateSessionID()
         STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: EmbeddedPaymentElement.self)

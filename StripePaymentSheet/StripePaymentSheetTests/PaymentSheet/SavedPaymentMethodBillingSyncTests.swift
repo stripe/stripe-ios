@@ -98,6 +98,7 @@ private extension SavedPaymentMethodBillingSyncTests {
         )
         let viewController = VerticalSavedPaymentMethodsViewController(
             configuration: EmbeddedPaymentElement.Configuration(),
+            customerProvider: CustomerProvider(customer: EmbeddedPaymentElement.Configuration().customer),
             intent: intent,
             checkout: updater,
             selectedPaymentMethod: paymentMethods[0],
@@ -121,7 +122,8 @@ private extension SavedPaymentMethodBillingSyncTests {
             savedPaymentMethods: paymentMethods,
             paymentMethodTypes: [.stripe(.card)],
             paymentMethodMessagingPromotionsHelper: ._testValue(),
-            paymentMethodOrientation: .horizontal
+            paymentMethodOrientation: .horizontal,
+            customerProvider: CustomerProvider(checkoutSession: checkout.session)
         )
         return PaymentSheetFlowControllerViewController(
             configuration: PaymentSheet.Configuration(),
