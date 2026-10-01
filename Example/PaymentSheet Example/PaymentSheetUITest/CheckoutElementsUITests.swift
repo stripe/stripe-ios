@@ -227,6 +227,10 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
         payWithApplePay(successElement: app.alerts["Success"])
         assertAnalyticsEvents([
             "elements.express_checkout_element.init",
+            "stripeios.token_creation",
+            "stripeios.payment_method_creation",
+            "stripeios.paymenthandler.handle_next_action.started",
+            "stripeios.paymenthandler.handle_next_action.finished",
         ])
     }
 
