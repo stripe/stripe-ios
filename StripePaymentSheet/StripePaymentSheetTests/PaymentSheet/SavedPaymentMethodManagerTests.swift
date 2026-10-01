@@ -11,6 +11,7 @@ import OHHTTPStubsSwift
 import StripeCoreTestUtils
 @_spi(STP) @testable import StripePayments
 @_spi(STP)@testable import StripePaymentSheet
+@_spi(STP) import StripeUICore
 import XCTest
 
 @MainActor
@@ -34,7 +35,7 @@ final class SavedPaymentMethodManagerTests: XCTestCase {
         var configuration = configuration
         configuration.customer = .init(id: "cus_test123", ephemeralKeySecret: ephemeralKey)
 
-        let sut = SavedPaymentMethodManager(configuration: configuration, elementsSession: ._testCardValue(), intent: ._testValue())
+        let sut = SavedPaymentMethodManager(configuration: configuration, customerProvider: CustomerProvider(customer: configuration.customer), elementsSession: ._testCardValue(), intent: ._testValue())
         let updatedPaymentMethod = try await sut.update(paymentMethod: paymentMethod,
                            with: STPPaymentMethodUpdateParams())
 
@@ -61,12 +62,55 @@ final class SavedPaymentMethodManagerTests: XCTestCase {
             ],
         ])
 
-        let sut = SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession, intent: ._testValue())
+        let sut = SavedPaymentMethodManager(configuration: configuration, customerProvider: CustomerProvider(customer: configuration.customer), elementsSession: elementsSession, intent: ._testValue())
         let updatedPaymentMethod = try await sut.update(paymentMethod: paymentMethod,
                            with: STPPaymentMethodUpdateParams())
 
         XCTAssertEqual("pm_123card", updatedPaymentMethod.stripeId)
         await fulfillment(of: [expectation], timeout: 5.0)
+    }
+
+    func testEmbeddedPaymentMethodUpdateUsesCurrentCustomerSessionKey() async throws {
+        // Given an Embedded element whose saved-method manager has already been used
+        await AddressSpecProvider.shared.loadAddressSpecs()
+        var embeddedConfiguration = EmbeddedPaymentElement.Configuration._testValue_MostPermissive(isApplePayEnabled: false)
+        embeddedConfiguration.apiClient = configuration.apiClient
+        let customerProvider = CustomerProvider(customer: .init(id: "cus_test", customerSessionClientSecret: "cuss_test"))
+        func makeLoadResult(apiKey: String) -> PaymentSheetLoader.LoadResult {
+            return .init(
+                intent: ._testValue(),
+                elementsSession: .elementsSessionWithCustomerSessionForPaymentSheet(apiKey: apiKey),
+                savedPaymentMethods: [paymentMethod],
+                paymentMethodTypes: [.stripe(.card)],
+                paymentMethodMessagingPromotionsHelper: nil,
+                paymentMethodOrientation: .vertical,
+                customerProvider: customerProvider
+            )
+        }
+        let sut = EmbeddedPaymentElement(
+            configuration: embeddedConfiguration,
+            loadResult: makeLoadResult(apiKey: "ek_previous"),
+            analyticsHelper: ._testValue()
+        )
+        _ = sut.savedPaymentMethodManager
+
+        // When an accepted load refreshes the Customer Session's key
+        sut.loadResult = makeLoadResult(apiKey: "ek_refreshed")
+        let requestReceived = expectation(description: "Payment method update uses refreshed credentials")
+        let paymentMethodID = paymentMethod.stripeId
+        let requestStub = stub { request in
+            request.url?.absoluteString.contains("/payment_methods/\(paymentMethodID)") == true && request.httpMethod == "POST"
+        } response: { request in
+            XCTAssertEqual(request.value(forHTTPHeaderField: "Authorization"), "Bearer ek_refreshed")
+            requestReceived.fulfill()
+            return HTTPStubsResponse(jsonObject: STPPaymentMethod.paymentMethodJson, statusCode: 200, headers: nil)
+        }
+        defer { HTTPStubs.removeStub(requestStub) }
+
+        // Then the next saved-method operation uses that key
+        let updatedPaymentMethod = try await sut.savedPaymentMethodManager.update(paymentMethod: paymentMethod, with: STPPaymentMethodUpdateParams())
+        XCTAssertEqual(updatedPaymentMethod.stripeId, paymentMethodID)
+        await fulfillment(of: [requestReceived], timeout: 5)
     }
 
     func testUpdatePaymentMethod_preservesLocalLinkFields() async throws {
@@ -88,7 +132,7 @@ final class SavedPaymentMethodManagerTests: XCTestCase {
         var configuration = configuration
         configuration.customer = .init(id: "cus_test123", ephemeralKeySecret: ephemeralKey)
 
-        let sut = SavedPaymentMethodManager(configuration: configuration, elementsSession: ._testCardValue(), intent: ._testValue())
+        let sut = SavedPaymentMethodManager(configuration: configuration, customerProvider: CustomerProvider(customer: configuration.customer), elementsSession: ._testCardValue(), intent: ._testValue())
         let updatedPaymentMethod = try await sut.update(paymentMethod: paymentMethod,
                                                         with: STPPaymentMethodUpdateParams())
 
@@ -107,6 +151,7 @@ final class SavedPaymentMethodManagerTests: XCTestCase {
         let checkoutSession = makeCheckoutSession(id: checkoutSessionId)
         let sut = SavedPaymentMethodManager(
             configuration: configuration,
+            customerProvider: CustomerProvider(checkoutSession: checkoutSession.makePublicSession()),
             elementsSession: ._testValue(paymentMethodTypes: ["card"]),
             intent: .checkout(checkoutSession.makePublicSession())
         )
@@ -142,6 +187,7 @@ final class SavedPaymentMethodManagerTests: XCTestCase {
         let checkoutSession = makeCheckoutSession(id: checkoutSessionId)
         let sut = SavedPaymentMethodManager(
             configuration: configuration,
+            customerProvider: CustomerProvider(checkoutSession: checkoutSession.makePublicSession()),
             elementsSession: ._testValue(paymentMethodTypes: ["card"]),
             intent: .checkout(checkoutSession.makePublicSession())
         )
@@ -166,6 +212,7 @@ final class SavedPaymentMethodManagerTests: XCTestCase {
         let checkoutSession = makeCheckoutSession(id: "cs_test_checkout_session")
         let sut = SavedPaymentMethodManager(
             configuration: configuration,
+            customerProvider: CustomerProvider(checkoutSession: checkoutSession.makePublicSession()),
             elementsSession: ._testValue(paymentMethodTypes: ["card"]),
             intent: .checkout(checkoutSession.makePublicSession())
         )
@@ -184,7 +231,7 @@ final class SavedPaymentMethodManagerTests: XCTestCase {
         let expectation = stubDetachPaymentMethod(paymentMethod: STPPaymentMethod.stubbedPaymentMethod(),
                                                   ephemeralKey: ephemeralKey)
 
-        let sut = SavedPaymentMethodManager(configuration: configuration, elementsSession: ._testValue(paymentMethodTypes: ["card"]), intent: ._testValue())
+        let sut = SavedPaymentMethodManager(configuration: configuration, customerProvider: CustomerProvider(customer: configuration.customer), elementsSession: ._testValue(paymentMethodTypes: ["card"]), intent: ._testValue())
         sut.detach(paymentMethod: paymentMethod)
 
         wait(for: [expectation], timeout: 5.0)
@@ -213,7 +260,7 @@ final class SavedPaymentMethodManagerTests: XCTestCase {
                                              ],
                                          ])
 
-        let sut = SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession, intent: ._testValue())
+        let sut = SavedPaymentMethodManager(configuration: configuration, customerProvider: CustomerProvider(customer: configuration.customer), elementsSession: elementsSession, intent: ._testValue())
         sut.detach(paymentMethod: paymentMethod)
 
         wait(for: [listPaymentMethodsExpectation, detachExpectation], timeout: 5.0)
@@ -230,6 +277,7 @@ final class SavedPaymentMethodManagerTests: XCTestCase {
 
         let sut = SavedPaymentMethodManager(
             configuration: configuration,
+            customerProvider: CustomerProvider(checkoutSession: checkoutSession.makePublicSession()),
             elementsSession: ._testValue(paymentMethodTypes: ["card"]),
             intent: .checkout(checkoutSession.makePublicSession())
         )
