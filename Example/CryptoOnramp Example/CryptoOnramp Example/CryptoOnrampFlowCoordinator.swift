@@ -277,6 +277,12 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
     }
 
     private func advanceToNextStep() {
+        // Checkout already succeeded; don't re-evaluate KYC/identity routing on the way to the success screen.
+        if let successfulCheckoutMessage {
+            path.append(.checkoutSuccess(message: successfulCheckoutMessage))
+            return
+        }
+
         // Auto-route to KYC info collection based on selected collection mode:
         // - `.original` uses `kyc_verified` demo backend status.
         // - Any non-original mode uses provided level-0 fields.
@@ -307,8 +313,6 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
             path.append(.userAttestation)
         } else if shouldShowIdentity {
             path.append(.identity)
-        } else if let successfulCheckoutMessage {
-            path.append(.checkoutSuccess(message: successfulCheckoutMessage))
         } else if let createOnrampSessionResponse, let selectedPaymentMethodDescription, let settlementSpeed {
             path.append(.paymentSummary(createOnrampSessionResponse: createOnrampSessionResponse, selectedPaymentMethodDescription: selectedPaymentMethodDescription, settlementSpeed: settlementSpeed))
         } else if let selectedWallet {
