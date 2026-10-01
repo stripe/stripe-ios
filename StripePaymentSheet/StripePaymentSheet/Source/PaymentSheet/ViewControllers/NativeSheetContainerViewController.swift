@@ -55,10 +55,6 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
         return scrollView
     }()
 
-    private lazy var navigationBarContainerView: UIStackView = {
-        return UIStackView()
-    }()
-
     private lazy var contentContainerView: UIStackView = {
         return UIStackView()
     }()
@@ -70,24 +66,8 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
         return tapGestureRecognizer
     }()
 
-    #if compiler(>=6.2)
-    private lazy var navigationBarBlur: UIInteraction? = {
-        guard appearance.navigationBarStyle.isGlass, #available(iOS 26.0, visionOS 26.0, *) else {
-            return nil
-        }
-        let interaction = UIScrollEdgeElementContainerInteraction()
-        interaction.scrollView = scrollView
-        interaction.edge = .top
-        return interaction
-    }()
-    #endif
-
     // Navigation updates this logical stack immediately; native presentation may defer the visible child change.
     private(set) var contentStack: [BottomSheetContentViewController] = []
-
-    var navigationBarHeight: CGFloat {
-        SheetNavigationBar.height(appearance: appearance)
-    }
 
     /// Content offset of the scroll view as a percentage (0 - 1.0) of the total height.
     var contentOffsetPercentage: CGFloat {
@@ -144,6 +124,8 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
 
     func setUserInteractionEnabled(_ enabled: Bool) {
         view.isUserInteractionEnabled = enabled
+        // Native controls live in the navigation controller, outside our content view.
+        contentViewController.navigationBar.isUserInteractionEnabled = enabled
     }
 
     required init(
@@ -163,7 +145,7 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
         addChild(contentViewController)
         contentViewController.didMove(toParent: self)
         contentContainerView.addArrangedSubview(contentViewController.view)
-        navigationBarContainerView.addArrangedSubview(contentViewController.navigationBar)
+        contentViewController.navigationBar.systemNavigationItem = navigationItem
         self.view.backgroundColor = appearance.colors.background
     }
 
@@ -233,7 +215,7 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
             return
         }
 
-        if isBeingPresented || isBeingDismissed, let transitionCoordinator {
+        if rootParent.isBeingPresented || rootParent.isBeingDismissed, let transitionCoordinator = rootParent.transitionCoordinator {
             isWaitingForNativePresentation = true
             transitionCoordinator.animate(alongsideTransition: nil) { [weak self] _ in
                 // UIKit must finish forwarding the parent's appearance callbacks before we change its children.
@@ -307,8 +289,8 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
         scrollView.layoutIfNeeded()
         scrollView.updateConstraintsIfNeeded()
         oldContentViewController.navigationBar.removeFromSuperview()
-        navigationBarContainerView.addArrangedSubview(newContentViewController.navigationBar)
-        navigationBarContainerView.layoutIfNeeded()
+        oldContentViewController.navigationBar.systemNavigationItem = nil
+        newContentViewController.navigationBar.systemNavigationItem = navigationItem
         newContentViewController.view.alpha = 0
 
         let transitionCompletion: (Bool) -> Void = { _ in
@@ -386,17 +368,26 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
     private var hasScheduledDetentInvalidation = false
 
     private var fittedContentHeight: CGFloat {
-        // Measure both views at the same width so wrapped content and custom navigation bars fit together.
-        let width = max(contentContainerView.bounds.width, view.bounds.width)
+        // A vertical system bar narrows the usable content width, which can increase wrapped content height.
+        let width = scrollView.bounds.width > 0
+            ? scrollView.bounds.width
+            : view.bounds.inset(by: view.safeAreaInsets).width
         guard width > 0 else {
-            return navigationBarContainerView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height
+            return 0
         }
         let fittingSize = CGSize(width: width, height: UIView.layoutFittingCompressedSize.height)
-        let navigationBarHeight = navigationBarContainerView.systemLayoutSizeFitting(
-            fittingSize,
-            withHorizontalFittingPriority: .required,
-            verticalFittingPriority: .fittingSizeLevel
-        ).height
+        let navigationBarHeight: CGFloat
+        if let navigationController {
+            if view.window != nil {
+                // Only include space above the content. A vertical bar consumes width, not height.
+                let contentTop = view.convert(CGPoint(x: 0, y: view.safeAreaInsets.top), to: navigationController.view).y
+                navigationBarHeight = max(0, contentTop - navigationController.view.safeAreaInsets.top)
+            } else {
+                navigationBarHeight = navigationController.navigationBar.sizeThatFits(fittingSize).height
+            }
+        } else {
+            navigationBarHeight = 0
+        }
         let contentHeight = contentContainerView.systemLayoutSizeFitting(
             fittingSize,
             withHorizontalFittingPriority: .required,
@@ -407,8 +398,10 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
 
     func prepareForPresentation(in availableWidth: CGFloat) {
         loadViewIfNeeded()
-        // Resolve an initial height before UIKit asks the custom detent for its first value.
-        view.bounds.size.width = availableWidth
+        // Lay out the navigation host too so the first detent uses its actual content area.
+        rootParent.view.bounds.size.width = availableWidth
+        rootParent.view.setNeedsLayout()
+        rootParent.view.layoutIfNeeded()
         view.setNeedsLayout()
         view.layoutIfNeeded()
         lastFittedContentHeight = fittedContentHeight
@@ -419,8 +412,8 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
         guard #available(iOS 16.0, *) else {
             return
         }
-        sheetPresentationController?.animateChanges {
-            self.sheetPresentationController?.invalidateDetents()
+        rootParent.sheetPresentationController?.animateChanges {
+            self.rootParent.sheetPresentationController?.invalidateDetents()
         }
         #endif
     }
@@ -429,10 +422,8 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
     public override func viewDidLoad() {
         super.viewDidLoad()
 
-        [scrollView, navigationBarContainerView].forEach({  // Note: Order important here, navigation bar should be on top
-            view.addSubview($0)
-            $0.translatesAutoresizingMaskIntoConstraints = false
-        })
+        view.addSubview(scrollView)
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
 
         // Content view controllers already constrain their contents against the safe area.
         scrollView.contentInsetAdjustmentBehavior = .never
@@ -440,28 +431,11 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
         bottomAnchor.priority = .defaultLow
 
         NSLayoutConstraint.activate([
-            navigationBarContainerView.topAnchor.constraint(equalTo: view.topAnchor),  // For unknown reasons, safeAreaLayoutGuide can have incorrect padding; we'll rely on our superview instead
-            navigationBarContainerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            navigationBarContainerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-
+            scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             scrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             bottomAnchor,
         ])
-
-        if appearance.navigationBarStyle.isGlass {
-            NSLayoutConstraint.activate([
-                // Allow scroll view to extend under the navigation bar for blur effect
-                scrollView.topAnchor.constraint(equalTo: view.topAnchor),
-            ])
-        } else {
-            NSLayoutConstraint.activate([
-                scrollView.topAnchor.constraint(equalTo: navigationBarContainerView.bottomAnchor)
-            ])
-        }
-        #if compiler(>=6.2)
-        enableNavigationBarBlurInteraction()
-        #endif
 
         contentContainerView.translatesAutoresizingMaskIntoConstraints = false
         contentContainerView.directionalLayoutMargins = appearance.formInsets
@@ -472,26 +446,10 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
         scrollViewHeightConstraint.priority = .fittingSizeLevel
         self.scrollViewHeightConstraint = scrollViewHeightConstraint
 
-        let contentTopAnchor: NSLayoutYAxisAnchor
-        if appearance.navigationBarStyle.isGlass {
-            // Reserve the current navigation bar's actual height while allowing content to scroll underneath it.
-            let navigationBarSpace = UILayoutGuide()
-            scrollView.addLayoutGuide(navigationBarSpace)
-            NSLayoutConstraint.activate([
-                navigationBarSpace.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor),
-                navigationBarSpace.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor),
-                navigationBarSpace.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor),
-                navigationBarSpace.heightAnchor.constraint(equalTo: navigationBarContainerView.heightAnchor),
-            ])
-            contentTopAnchor = navigationBarSpace.bottomAnchor
-        } else {
-            contentTopAnchor = scrollView.contentLayoutGuide.topAnchor
-        }
-
         NSLayoutConstraint.activate([
             contentContainerView.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor),
             contentContainerView.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor),
-            contentContainerView.topAnchor.constraint(equalTo: contentTopAnchor),
+            contentContainerView.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor),
             contentContainerView.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor),
             contentContainerView.widthAnchor.constraint(equalTo: scrollView.frameLayoutGuide.widthAnchor),
             scrollViewHeightConstraint,
@@ -509,7 +467,7 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
         guard outsideSheetTapGestureRecognizer.view == nil else {
             return
         }
-        presentationController?.containerView?.addGestureRecognizer(outsideSheetTapGestureRecognizer)
+        rootParent.presentationController?.containerView?.addGestureRecognizer(outsideSheetTapGestureRecognizer)
     }
 
     override func viewDidLayoutSubviews() {
@@ -529,18 +487,6 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
             self.invalidateContentDetent()
         }
     }
-    #if compiler(>=6.2)
-    func enableNavigationBarBlurInteraction() {
-        guard let navigationBarBlur,
-            navigationBarBlur.view == nil,
-            navigationController != nil,
-        // Hack: This line causes PaymentSheetSnapshotTests to fail on iOS 26 - the sheet becomes transparent. I can't figure out a fix, so just remove it out for tests.
-        NSClassFromString("XCTest") == nil else {
-            return
-        }
-        navigationBarContainerView.addInteraction(navigationBarBlur)
-    }
-    #endif
 
     func didTapOrSwipeToDismiss() {
         contentViewController.didTapOrSwipeToDismiss()
@@ -554,11 +500,31 @@ extension NativeSheetContainerViewController {
 
     func present(from presentingViewController: UIViewController, completion: (() -> Void)?) {
         #if !os(visionOS)
-        modalPresentationStyle = .pageSheet
-        modalPresentationCapturesStatusBarAppearance = true
+        // UIKit adapts navigation items into the appropriate horizontal or vertical system bar.
+        let navigationController = navigationController ?? UINavigationController(rootViewController: self)
+        navigationController.modalPresentationStyle = .automatic
+        navigationController.modalPresentationCapturesStatusBarAppearance = true
+        navigationController.overrideUserInterfaceStyle = overrideUserInterfaceStyle
+        navigationController.navigationBar.tintColor = appearance.colors.icon
 
-        // Share the content dismissal contract while UIKit owns native presentation and gestures.
-        if let sheetPresentationController {
+        let barAppearance = UINavigationBarAppearance()
+        barAppearance.configureWithDefaultBackground()
+        barAppearance.titleTextAttributes = [
+            .font: appearance.scaledFont(
+                for: appearance.font.base.medium,
+                style: .headline,
+                maximumPointSize: 20
+            ),
+            .foregroundColor: appearance.colors.text,
+        ]
+        if appearance.navigationBarStyle.isPlain {
+            barAppearance.backgroundColor = appearance.colors.background
+        }
+        navigationController.navigationBar.standardAppearance = barAppearance
+        navigationController.navigationBar.scrollEdgeAppearance = barAppearance
+        navigationController.navigationBar.compactAppearance = barAppearance
+
+        if let sheetPresentationController = navigationController.sheetPresentationController {
             if #available(iOS 16.0, *) {
                 prepareForPresentation(in: presentingViewController.view.bounds.width)
                 sheetPresentationController.detents = [contentSizedDetent]
@@ -571,10 +537,10 @@ extension NativeSheetContainerViewController {
             sheetPresentationController.prefersGrabberVisible = true
             sheetPresentationController.prefersScrollingExpandsWhenScrolledToEdge = false
         }
-        presentationController?.delegate = self
+        navigationController.presentationController?.delegate = self
 
         presentingViewController.viewIfLoaded?.endEditing(true)
-        presentingViewController.present(self, animated: true, completion: completion)
+        presentingViewController.present(navigationController, animated: true, completion: completion)
         #endif
     }
 }
@@ -659,8 +625,8 @@ extension NativeSheetContainerViewController: UIGestureRecognizerDelegate {
         -> Bool
     {
         if gestureRecognizer === outsideSheetTapGestureRecognizer {
-            let location = touch.location(in: view)
-            return !view.point(inside: location, with: nil)
+            let location = touch.location(in: rootParent.view)
+            return !rootParent.view.point(inside: location, with: nil)
         }
 
         // I can't find another way to allow custom UIControl subclasses to receive touches
