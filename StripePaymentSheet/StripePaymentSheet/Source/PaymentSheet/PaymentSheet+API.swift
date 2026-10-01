@@ -62,8 +62,10 @@ extension PaymentSheet {
     }
 
     /// Confirms a PaymentIntent with the given PaymentOption and returns a PaymentResult
+    /// Shares the owning flow's presentation state without resolving it until a sheet is needed.
     static func confirm(
         configuration: PaymentElementConfiguration,
+        nativeSheetPresentation: NativeSheetPresentation? = nil,
         authenticationContext: STPAuthenticationContext,
         intent: Intent,
         elementsSession: STPElementsSession,
@@ -85,6 +87,7 @@ extension PaymentSheet {
         Task { @MainActor in
             let preconfirmActionsResult = await handlePreconfirmActionsIfNecessary(
                 configuration: configuration,
+                nativeSheetPresentation: nativeSheetPresentation,
                 authenticationContext: authenticationContext,
                 intent: intent,
                 paymentOption: paymentOption,
@@ -106,6 +109,7 @@ extension PaymentSheet {
 
             confirmAfterHandlingLocalActions(
                 configuration: configuration,
+                nativeSheetPresentation: nativeSheetPresentation,
                 authenticationContext: authenticationContext,
                 intent: intent,
                 elementsSession: elementsSession,
@@ -126,6 +130,7 @@ extension PaymentSheet {
     @MainActor
     static func handlePreconfirmActionsIfNecessary(
         configuration: PaymentElementConfiguration,
+        nativeSheetPresentation: NativeSheetPresentation?,
         authenticationContext: STPAuthenticationContext,
         intent: Intent,
         paymentOption: PaymentOption,
@@ -191,6 +196,7 @@ extension PaymentSheet {
                 let bottomSheetVC = FlowController.makePaymentSheetContainerViewController(
                     preConfirmationViewController,
                     configuration: configuration,
+                    nativeSheetPresentation: nativeSheetPresentation,
                     didCancelNative3DS2: {
                         paymentHandler.cancel3DS2ChallengeFlow()
                     }
@@ -205,6 +211,7 @@ extension PaymentSheet {
 
     static func confirm(
         configuration: PaymentElementConfiguration,
+        nativeSheetPresentation: NativeSheetPresentation? = nil,
         authenticationContext: STPAuthenticationContext,
         intent: Intent,
         elementsSession: STPElementsSession,
@@ -219,6 +226,7 @@ extension PaymentSheet {
             Task { @MainActor in
                 confirm(
                     configuration: configuration,
+                    nativeSheetPresentation: nativeSheetPresentation,
                     authenticationContext: authenticationContext,
                     intent: intent,
                     elementsSession: elementsSession,
@@ -238,6 +246,7 @@ extension PaymentSheet {
     @MainActor
     static fileprivate func confirmAfterHandlingLocalActions(
         configuration: PaymentElementConfiguration,
+        nativeSheetPresentation: NativeSheetPresentation?,
         authenticationContext: STPAuthenticationContext,
         intent: Intent,
         elementsSession: STPElementsSession,
@@ -597,6 +606,7 @@ extension PaymentSheet {
             ) {
                 PaymentSheet.confirm(
                     configuration: configuration,
+                    nativeSheetPresentation: nativeSheetPresentation,
                     authenticationContext: linkAuthenticationContext,
                     intent: linkIntent,
                     elementsSession: linkElementsSession,
@@ -612,6 +622,7 @@ extension PaymentSheet {
             confirmLinkPaymentOption(
                 confirmOption: confirmOption,
                 configuration: configuration,
+                nativeSheetPresentation: nativeSheetPresentation,
                 authenticationContext: authenticationContext,
                 intent: intent,
                 elementsSession: elementsSession,
@@ -639,6 +650,7 @@ extension PaymentSheet {
     static func confirmLinkPaymentOption(
         confirmOption: LinkConfirmOption,
         configuration: PaymentElementConfiguration,
+        nativeSheetPresentation: NativeSheetPresentation?,
         authenticationContext: STPAuthenticationContext,
         intent: Intent,
         elementsSession: STPElementsSession,
@@ -742,6 +754,7 @@ extension PaymentSheet {
                     intent: intent,
                     elementsSession: elementsSession,
                     configuration: configuration,
+                    nativeSheetPresentation: nativeSheetPresentation,
                     logPayment: false,
                     analyticsHelper: analyticsHelper,
                     confirmationChallenge: confirmationChallenge,
@@ -755,6 +768,7 @@ extension PaymentSheet {
                     intent: intent,
                     elementsSession: elementsSession,
                     configuration: configuration,
+                    nativeSheetPresentation: nativeSheetPresentation,
                     analyticsHelper: analyticsHelper,
                     confirmationChallenge: confirmationChallenge,
                     confirmHandler: confirmHandler

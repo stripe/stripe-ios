@@ -341,6 +341,8 @@ extension PaymentSheet {
         private(set) var didPresentAndContinue: Bool = false
         var confirmationChallenge: ConfirmationChallenge?
         let analyticsHelper: PaymentSheetAnalyticsHelper
+        /// Retains this flow's initial rollout assignment and exposure state across configuration updates.
+        let nativeSheetPresentation: NativeSheetPresentation
         private var linkAccountObserver: LinkAccountContextObserver?
 
         // MARK: - Initializer (Internal)
@@ -351,12 +353,19 @@ extension PaymentSheet {
             confirmationChallenge: ConfirmationChallenge? = nil,
             analyticsHelper: PaymentSheetAnalyticsHelper
         ) {
+            // Each new flow captures its own decision, even when a previous flow's configuration is reused.
+            self.nativeSheetPresentation = NativeSheetPresentation(
+                elementsSession: loadResult.elementsSession,
+                analyticsHelper: analyticsHelper,
+                integrationShape: "flowcontroller"
+            )
             self.configuration = configuration
             self.analyticsHelper = analyticsHelper
             self.analyticsHelper.logInitialized()
             self.analyticsHelper.startTimeMeasurement(.checkout)
             self.viewController = Self.makeViewController(
                 configuration: configuration,
+                nativeSheetPresentation: nativeSheetPresentation,
                 loadResult: loadResult,
                 analyticsHelper: analyticsHelper,
                 walletButtonsViewState: self.walletButtonsViewState
@@ -570,6 +579,7 @@ extension PaymentSheet {
                 let bottomSheetVC = Self.makePaymentSheetContainerViewController(
                     self.viewController,
                     configuration: self.configuration,
+                    nativeSheetPresentation: self.nativeSheetPresentation,
                     // TODO(MOBILESDK-864): didCancelNative3DS2 is not used in FlowController
                     didCancelNative3DS2: { [weak self] in
                         self?.paymentHandler.cancel3DS2ChallengeFlow()
@@ -608,6 +618,7 @@ extension PaymentSheet {
             let bottomSheetVC = Self.makePaymentSheetContainerViewController(
                 loadingVC,
                 configuration: configuration,
+                nativeSheetPresentation: nativeSheetPresentation,
                 // TODO(MOBILESDK-864): didCancelNative3DS2 is not used in FlowController
                 didCancelNative3DS2: { [weak self] in
                     self?.paymentHandler.cancel3DS2ChallengeFlow()
@@ -677,6 +688,7 @@ extension PaymentSheet {
             presentingViewController.presentNativeLink(
                 selectedPaymentDetailsID: selectedPaymentDetailsID,
                 configuration: configuration,
+                nativeSheetPresentation: nativeSheetPresentation,
                 intent: intent,
                 elementsSession: elementsSession,
                 analyticsHelper: analyticsHelper,
@@ -734,13 +746,18 @@ extension PaymentSheet {
                         }
                     }
                 }
-                let bottomSheet = Self.makePaymentSheetContainerViewController(sepaMandateVC, configuration: configuration)
+                let bottomSheet = Self.makePaymentSheetContainerViewController(
+                    sepaMandateVC,
+                    configuration: configuration,
+                    nativeSheetPresentation: nativeSheetPresentation
+                )
                 presentingViewController.presentAsSheet(bottomSheet)
             }
 
             func confirm() {
                 PaymentSheet.confirm(
                     configuration: self.configuration,
+                    nativeSheetPresentation: self.nativeSheetPresentation,
                     authenticationContext: authenticationContext,
                     intent: self.intent,
                     elementsSession: self.elementsSession,
@@ -837,6 +854,7 @@ extension PaymentSheet {
 
                     self.viewController = Self.makeViewController(
                         configuration: self.configuration,
+                        nativeSheetPresentation: self.nativeSheetPresentation,
                         loadResult: loadResult,
                         analyticsHelper: analyticsHelper,
                         walletButtonsViewState: walletButtonsViewState,
@@ -863,6 +881,7 @@ extension PaymentSheet {
             // Rebuild with the current saved methods so deleted methods don't reappear.
             self.viewController = Self.makeViewController(
                 configuration: self.configuration,
+                nativeSheetPresentation: nativeSheetPresentation,
                 loadResult: makeLoadResultWithCurrentSavedPaymentMethods(),
                 analyticsHelper: analyticsHelper,
                 walletButtonsViewState: self.walletButtonsViewState,
@@ -909,6 +928,7 @@ extension PaymentSheet {
 
             self.viewController = Self.makeViewController(
                 configuration: configuration,
+                nativeSheetPresentation: nativeSheetPresentation,
                 loadResult: makeLoadResultWithCurrentSavedPaymentMethods(
                     prioritizing: selection.paymentOption
                 ),
@@ -946,12 +966,18 @@ extension PaymentSheet {
         static func makePaymentSheetContainerViewController(
             _ contentViewController: BottomSheetContentViewController,
             configuration: PaymentElementConfiguration,
+            nativeSheetPresentation: NativeSheetPresentation?,
             didCancelNative3DS2: (() -> Void)? = nil
         ) -> any PaymentSheetContainer {
+            // FlowController's presentation APIs require the main thread but are not yet actor-isolated.
+            let usesNativeSheet = MainActor.assumeIsolated {
+                nativeSheetPresentation?.usesNativeSheet ?? false
+            }
             let sheet = PaymentSheetContainerFactory.make(
                 contentViewController: contentViewController,
                 appearance: configuration.appearance,
                 isTestMode: configuration.apiClient.isTestmode,
+                usesNativeSheet: usesNativeSheet,
                 didCancelNative3DS2: didCancelNative3DS2 ?? { } // TODO(MOBILESDK-864): Refactor this out.
             )
 
@@ -961,6 +987,7 @@ extension PaymentSheet {
 
         static func makeViewController(
             configuration: Configuration,
+            nativeSheetPresentation: NativeSheetPresentation,
             loadResult: PaymentSheetLoader.LoadResult,
             analyticsHelper: PaymentSheetAnalyticsHelper,
             walletButtonsViewState: PaymentSheet.WalletButtonsViewState,
@@ -972,6 +999,7 @@ extension PaymentSheet {
             case .horizontal:
                 controller = PaymentSheetFlowControllerViewController(
                     configuration: configuration,
+                    nativeSheetPresentation: nativeSheetPresentation,
                     loadResult: loadResult,
                     analyticsHelper: analyticsHelper,
                     checkoutBillingAddressUpdater: checkoutBillingAddressUpdater,
@@ -980,6 +1008,7 @@ extension PaymentSheet {
             case .vertical:
                 controller = PaymentSheetVerticalViewController(
                     configuration: configuration,
+                    nativeSheetPresentation: nativeSheetPresentation,
                     loadResult: loadResult,
                     isFlowController: true,
                     analyticsHelper: analyticsHelper,

@@ -12,6 +12,7 @@
 import UIKit
 
 class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewControllerProtocol, PaymentSheetViewControllerProtocol {
+
     enum Error: Swift.Error {
         case missingPaymentMethodListViewController
         case missingContentViewController
@@ -75,6 +76,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     let loadResult: PaymentSheetLoader.LoadResult
     let paymentMethodTypes: [PaymentSheet.PaymentMethodType]
     let configuration: PaymentSheet.Configuration
+    private let nativeSheetPresentation: NativeSheetPresentation?
     let intent: Intent
     let elementsSession: STPElementsSession
     let formCache: PaymentMethodFormCache = .init()
@@ -159,6 +161,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 
     init(
         configuration: PaymentSheet.Configuration,
+        nativeSheetPresentation: NativeSheetPresentation? = nil,
         loadResult: PaymentSheetLoader.LoadResult,
         isFlowController: Bool,
         analyticsHelper: PaymentSheetAnalyticsHelper,
@@ -174,6 +177,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         self.elementsSession = loadResult.elementsSession
         self.defaultPaymentMethod = elementsSession.customer?.getDefaultPaymentMethod()
         self.configuration = configuration
+        self.nativeSheetPresentation = nativeSheetPresentation
         self.previousPaymentOption = previousPaymentOption
         self.isFlowController = isFlowController
         self.checkoutBillingAddressUpdater = checkoutBillingAddressUpdater
@@ -581,6 +585,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         presentNativeLink(
             selectedPaymentDetailsID: nil,
             configuration: configuration,
+            nativeSheetPresentation: nativeSheetPresentation,
             intent: intent,
             elementsSession: elementsSession,
             analyticsHelper: analyticsHelper,

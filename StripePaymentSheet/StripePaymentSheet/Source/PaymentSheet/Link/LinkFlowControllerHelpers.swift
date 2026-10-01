@@ -22,6 +22,7 @@ extension UIViewController {
     func presentNativeLink(
         selectedPaymentDetailsID: String?,
         configuration: PaymentElementConfiguration,
+        nativeSheetPresentation: NativeSheetPresentation? = nil,
         intent: Intent,
         elementsSession: STPElementsSession,
         analyticsHelper: PaymentSheetAnalyticsHelper,
@@ -36,6 +37,7 @@ extension UIViewController {
             intent: intent,
             elementsSession: elementsSession,
             configuration: configuration,
+            nativeSheetPresentation: nativeSheetPresentation,
             logPayment: false,
             analyticsHelper: analyticsHelper,
             supportedPaymentMethodTypes: supportedPaymentMethodTypes,

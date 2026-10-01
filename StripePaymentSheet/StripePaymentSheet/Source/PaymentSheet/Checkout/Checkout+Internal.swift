@@ -91,6 +91,7 @@ extension CheckoutController: ExpressCheckoutElementDelegate {
             return .link(.init(
                 confirmOption: .wallet(brand: session.elementsSession.linkBrand ?? .link),
                 configuration: paymentElementConfiguration,
+                nativeSheetPresentation: nil,
                 confirmationChallenge: ConfirmationChallenge(
                     elementsSession: session.elementsSession,
                     stripeAttest: apiClient.stripeAttest),

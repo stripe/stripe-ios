@@ -51,7 +51,7 @@ extension PaymentSheetContainer {
     }
 }
 
-/// Selects the concrete container before presentation begins.
+/// Selects a concrete container once, before any presentation lifecycle begins.
 enum PaymentSheetContainerFactory {
 
     static func make(
@@ -61,8 +61,13 @@ enum PaymentSheetContainerFactory {
         usesNativeSheet: Bool = false,
         didCancelNative3DS2: @escaping () -> Void
     ) -> any PaymentSheetContainer {
-        #if !os(visionOS)
-        if usesNativeSheet {
+        #if os(visionOS)
+        let shouldUseNativeSheet = false
+        #else
+        let shouldUseNativeSheet = NativeSheetPresentation.isRequiredForDevice || usesNativeSheet
+        #endif
+
+        if shouldUseNativeSheet {
             return NativeSheetContainerViewController(
                 contentViewController: contentViewController,
                 appearance: appearance,
@@ -70,9 +75,6 @@ enum PaymentSheetContainerFactory {
                 didCancelNative3DS2: didCancelNative3DS2
             )
         }
-        #endif
-
-        // Existing flows remain on the legacy container until they explicitly opt in.
         return BottomSheetViewController(
             contentViewController: contentViewController,
             appearance: appearance,

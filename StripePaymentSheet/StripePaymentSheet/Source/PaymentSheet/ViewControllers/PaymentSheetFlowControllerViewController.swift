@@ -15,10 +15,12 @@ import UIKit
 
 /// For internal SDK use only
 class PaymentSheetFlowControllerViewController: UIViewController, FlowControllerViewControllerProtocol {
+
     // MARK: - Internal Properties
     let intent: Intent
     let elementsSession: STPElementsSession
     let configuration: PaymentSheet.Configuration
+    private let nativeSheetPresentation: NativeSheetPresentation?
     let formCache: PaymentMethodFormCache = .init()
     let analyticsHelper: PaymentSheetAnalyticsHelper
     let loadResult: PaymentSheetLoader.LoadResult
@@ -181,6 +183,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
 
     required init(
         configuration: PaymentSheet.Configuration,
+        nativeSheetPresentation: NativeSheetPresentation? = nil,
         loadResult: PaymentSheetLoader.LoadResult,
         analyticsHelper: PaymentSheetAnalyticsHelper,
         checkoutBillingAddressUpdater: CheckoutSessionBillingAddressUpdater? = nil,
@@ -196,6 +199,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         self.isLinkEnabled = PaymentSheet.shouldShowLinkButton(elementsSession: elementsSession, configuration: configuration)
         self.couldShowLinkInHeader = isLinkEnabled && !isApplePayEnabled
         self.configuration = configuration
+        self.nativeSheetPresentation = nativeSheetPresentation
         self.analyticsHelper = analyticsHelper
 
         // Restore completed form input from the selected initialization policy.
@@ -349,6 +353,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         presentNativeLink(
             selectedPaymentDetailsID: selectedPaymentOption?.currentLinkPaymentMethod,
             configuration: configuration,
+            nativeSheetPresentation: nativeSheetPresentation,
             intent: intent,
             elementsSession: elementsSession,
             analyticsHelper: analyticsHelper

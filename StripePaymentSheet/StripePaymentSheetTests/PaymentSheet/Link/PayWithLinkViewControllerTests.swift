@@ -54,9 +54,9 @@ class PayWithLinkViewControllerTests: XCTestCase {
         // Now make the fake PayWithLinkViewController and present it
         let vc = PayWithLinkViewController(intent: ._testValue(), linkAccount: nil, elementsSession: ._testValue(intent: ._testValue()), configuration: config, analyticsHelper: ._testValue())
         vc.payWithLinkDelegate = paymentSheet
-        hostVC.present(vc, animated: true, completion: {})
+        hostVC.present(vc.sheetContainer, animated: true, completion: {})
 
-        payWithNativeLinkController.presentAsSheet(from: vc, shouldOfferApplePay: false, shouldFinishOnClose: false, completion: { _, _, _ in })
+        payWithNativeLinkController.presentAsSheet(from: vc.sheetContainer, shouldOfferApplePay: false, shouldFinishOnClose: false, completion: { _, _, _ in })
 
         // Wait a bit: Attestation should be attempted, but immediately fail.
         await fulfillment(of: [exp], timeout: 2.0)

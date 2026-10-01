@@ -39,9 +39,11 @@ extension CheckoutController {
 
     /// The parameters needed to confirm a Checkout Session with Link.
     struct LinkConfirmationParameters {
+
         // TODO: Lots of stuff in here because current Link code nominally requires it but it may not all really be necessary.
         let confirmOption: PaymentSheet.LinkConfirmOption
         let configuration: PaymentElementConfiguration
+        let nativeSheetPresentation: NativeSheetPresentation?
         let confirmationChallenge: ConfirmationChallenge?
         let analyticsHelper: PaymentSheetAnalyticsHelper
         let authenticationContext: STPAuthenticationContext
@@ -50,6 +52,7 @@ extension CheckoutController {
 
     /// The parameters needed to confirm a Checkout Session with a new or saved payment method.
     struct PaymentMethodConfirmationParameters {
+
         enum Option {
             case new(IntentConfirmParams)
             case saved(STPPaymentMethod, IntentConfirmParams?)
@@ -57,6 +60,7 @@ extension CheckoutController {
 
         let option: Option
         let configuration: PaymentElementConfiguration
+        let nativeSheetPresentation: NativeSheetPresentation?
         let confirmationChallenge: ConfirmationChallenge?
         let authenticationContext: STPAuthenticationContext
         let paymentHandler: STPPaymentHandler
@@ -112,6 +116,7 @@ extension CheckoutController {
 
         let paymentOption: PaymentOption
         let configuration: PaymentElementConfiguration
+        let nativeSheetPresentation: NativeSheetPresentation
         let integrationShape: PaymentSheet.IntegrationShape
         let confirmationChallenge: ConfirmationChallenge?
 
@@ -125,6 +130,7 @@ extension CheckoutController {
             }
             paymentOption = resolvedPaymentOption
             configuration = paymentElement.paymentSheetFlowController.configuration
+            nativeSheetPresentation = paymentElement.paymentSheetFlowController.nativeSheetPresentation
             integrationShape = .flowController
             confirmationChallenge = paymentElement.paymentSheetFlowController.confirmationChallenge
         } else {
@@ -137,6 +143,7 @@ extension CheckoutController {
             }
             paymentOption = resolvedPaymentOption
             configuration = paymentElement.embeddedPaymentElement.configuration
+            nativeSheetPresentation = paymentElement.embeddedPaymentElement.nativeSheetPresentation
             integrationShape = .embedded
             confirmationChallenge = paymentElement.embeddedPaymentElement.confirmationChallenge
         }
@@ -172,6 +179,7 @@ extension CheckoutController {
             return .link(.init(
                 confirmOption: confirmOption,
                 configuration: configuration,
+                nativeSheetPresentation: nativeSheetPresentation,
                 confirmationChallenge: confirmationChallenge,
                 analyticsHelper: analyticsHelper,
                 authenticationContext: authenticationContext,
@@ -182,6 +190,7 @@ extension CheckoutController {
                 .init(
                     option: .new(confirmParams),
                     configuration: configuration,
+                    nativeSheetPresentation: nativeSheetPresentation,
                     confirmationChallenge: confirmationChallenge,
                     authenticationContext: authenticationContext,
                     paymentHandler: paymentHandler
@@ -193,6 +202,7 @@ extension CheckoutController {
                 .init(
                     option: .saved(paymentMethod, confirmParams),
                     configuration: configuration,
+                    nativeSheetPresentation: nativeSheetPresentation,
                     confirmationChallenge: confirmationChallenge,
                     authenticationContext: authenticationContext,
                     paymentHandler: paymentHandler
@@ -336,6 +346,7 @@ extension CheckoutController {
 
         return await PaymentSheet.handlePreconfirmActionsIfNecessary(
             configuration: parameters.configuration,
+            nativeSheetPresentation: parameters.nativeSheetPresentation,
             authenticationContext: parameters.authenticationContext,
             intent: .checkout(checkoutSession),
             paymentOption: paymentOption,

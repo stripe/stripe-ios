@@ -65,6 +65,149 @@ final class NativeSheetPresentationTests: XCTestCase {
 
         XCTAssertTrue(presentation.usesNativeSheet)
         XCTAssertTrue(analyticsClient.loggedAnalyticPayloads(withEventName: PaymentSheetAnalyticsHelper.eventName).isEmpty)
+
+        // The device override also applies to surfaces outside the experiment.
+        let sheet = PaymentSheetContainerFactory.make(
+            contentViewController: StubBottomSheetContentViewController(),
+            appearance: .default,
+            isTestMode: true,
+            didCancelNative3DS2: {}
+        )
+        XCTAssertTrue(sheet is NativeSheetContainerViewController)
+    }
+
+    func testEmbeddedKeepsInitialDecisionWhenElementsSessionChanges() async throws {
+        try XCTSkipIf(NativeSheetPresentation.isRequiredForDevice, "Duo bypasses the rollout.")
+        await AddressSpecProvider.shared.loadAddressSpecs()
+        let analyticsClient = MockAnalyticsClientV2()
+        let element = EmbeddedPaymentElement(
+            configuration: .init(),
+            loadResult: makeLoadResult(flag: true, group: .treatment),
+            analyticsHelper: ._testValue(analyticsClientV2: analyticsClient)
+        )
+        let initialPresentation = element.nativeSheetPresentation
+
+        // When an update replaces the Elements Session before the first sheet is opened
+        element.loadResult = makeLoadResult(flag: false, group: .control)
+        XCTAssertTrue(analyticsClient.loggedAnalyticPayloads(withEventName: PaymentSheetAnalyticsHelper.eventName).isEmpty)
+        let sheet = element.bottomSheetController(with: StubBottomSheetContentViewController())
+
+        // Then the original assignment is retained by the owner and its container
+        XCTAssertIdentical(element.nativeSheetPresentation, initialPresentation)
+        #if os(visionOS)
+        XCTAssertTrue(sheet is BottomSheetViewController)
+        #else
+        XCTAssertEqual(sheet is NativeSheetContainerViewController, UIDevice.current.userInterfaceIdiom == .phone)
+        #endif
+    }
+
+    func testNewFlowControllerDoesNotShareDecisionWhenConfigurationIsReused() async throws {
+        try XCTSkipIf(NativeSheetPresentation.isRequiredForDevice, "Duo bypasses the rollout.")
+        await AddressSpecProvider.shared.loadAddressSpecs()
+        let previousFlowController = PaymentSheet.FlowController(
+            configuration: .init(),
+            loadResult: makeLoadResult(flag: true, group: .treatment),
+            analyticsHelper: ._testValue()
+        )
+        let analyticsClient = MockAnalyticsClientV2()
+
+        // When a merchant reuses a previous FlowController's configuration for a new flow
+        let flowController = PaymentSheet.FlowController(
+            configuration: previousFlowController.configuration,
+            loadResult: makeLoadResult(flag: true, group: .control),
+            analyticsHelper: ._testValue(analyticsClientV2: analyticsClient)
+        )
+
+        // Then the new flow captures its own assignment without logging an early exposure
+        XCTAssertFalse(flowController.nativeSheetPresentation === previousFlowController.nativeSheetPresentation)
+        XCTAssertTrue(analyticsClient.loggedAnalyticPayloads(withEventName: PaymentSheetAnalyticsHelper.eventName).isEmpty)
+        let sheet = PaymentSheet.FlowController.makePaymentSheetContainerViewController(
+            flowController.viewController,
+            configuration: flowController.configuration,
+            nativeSheetPresentation: flowController.nativeSheetPresentation
+        )
+        XCTAssertTrue(sheet is BottomSheetViewController)
+    }
+
+    func testCompletePaymentSheetDoesNotInheritFlowControllerRollout() async {
+        await AddressSpecProvider.shared.loadAddressSpecs()
+        let analyticsClient = MockAnalyticsClientV2()
+        // Given a FlowController with a treatment assignment
+        let flowController = PaymentSheet.FlowController(
+            configuration: .init(),
+            loadResult: makeLoadResult(flag: true, group: .treatment),
+            analyticsHelper: ._testValue(analyticsClientV2: analyticsClient)
+        )
+
+        // When complete PaymentSheet reuses its configuration
+        let paymentSheet = PaymentSheet(
+            intentConfiguration: .init(mode: .payment(amount: 1000, currency: "usd")) { _, _ in "" },
+            configuration: flowController.configuration
+        )
+
+        // Then complete PaymentSheet stays outside the rollout and does not expose the other flow
+        XCTAssertEqual(
+            paymentSheet.bottomSheetViewController is NativeSheetContainerViewController,
+            NativeSheetPresentation.isRequiredForDevice
+        )
+        XCTAssertTrue(analyticsClient.loggedAnalyticPayloads(withEventName: PaymentSheetAnalyticsHelper.eventName).isEmpty)
+    }
+
+    #if !os(visionOS)
+    func testNativeLinkInheritsPresentationDecision() async throws {
+        try XCTSkipIf(NativeSheetPresentation.isRequiredForDevice, "Duo bypasses the rollout.")
+        await AddressSpecProvider.shared.loadAddressSpecs()
+        for group in [ExperimentGroup.control, .treatment] {
+            let analyticsClient = MockAnalyticsClientV2()
+            let analyticsHelper = PaymentSheetAnalyticsHelper._testValue(analyticsClientV2: analyticsClient)
+            let loadResult = makeLoadResult(flag: true, group: group)
+            let flowController = PaymentSheet.FlowController(
+                configuration: .init(),
+                loadResult: loadResult,
+                analyticsHelper: analyticsHelper
+            )
+
+            // When native Link is opened with its owning flow's presentation state
+            let sheet = PayWithLinkViewController(
+                intent: loadResult.intent,
+                linkAccount: nil,
+                elementsSession: loadResult.elementsSession,
+                configuration: flowController.configuration,
+                nativeSheetPresentation: flowController.nativeSheetPresentation,
+                analyticsHelper: analyticsHelper
+            )
+
+            // Then the Link container uses the same assignment and shares its one exposure
+            XCTAssertEqual(
+                sheet.sheetContainer is NativeSheetContainerViewController,
+                UIDevice.current.userInterfaceIdiom == .phone && group == .treatment
+            )
+            _ = flowController.nativeSheetPresentation.usesNativeSheet
+            let exposures = analyticsClient.loggedAnalyticPayloads(withEventName: PaymentSheetAnalyticsHelper.eventName)
+            XCTAssertEqual(exposures.count, UIDevice.current.userInterfaceIdiom == .phone ? 1 : 0)
+        }
+    }
+    #endif
+
+    func testLegacyContainerKeepsKeyboardAndPresentationTransitionHandling() throws {
+        try XCTSkipIf(NativeSheetPresentation.isRequiredForDevice, "Duo always uses native presentation.")
+        let sheet = BottomSheetViewController(
+            contentViewController: StubBottomSheetContentViewController(),
+            appearance: .default,
+            isTestMode: true,
+            didCancelNative3DS2: {}
+        )
+        sheet.loadViewIfNeeded()
+        XCTAssertTrue(sheet.view.constraints.contains {
+            $0.firstItem === sheet.scrollView && $0.firstAttribute == .bottom
+                && $0.secondItem === sheet.view && $0.secondAttribute == .bottom
+        })
+        var presentationFinished = false
+        sheet.completeBottomSheetPresentationTransition = { _ in presentationFinished = true }
+
+        sheet.setViewControllers([StubBottomSheetContentViewController()])
+
+        XCTAssertTrue(presentationFinished)
     }
 
     private func makeSession(flag: Bool?, group: ExperimentGroup?) -> STPElementsSession {
@@ -77,6 +220,18 @@ final class NativeSheetPresentationTests: XCTestCase {
                 )
             },
             flags: flag.map { ["elements_mobile_ios_native_sheet_enabled": $0] } ?? [:]
+        )
+    }
+
+    private func makeLoadResult(flag: Bool?, group: ExperimentGroup?) -> PaymentSheetLoader.LoadResult {
+        let intentConfiguration = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "usd")) { _, _ in "" }
+        return .init(
+            intent: .deferredIntent(intentConfig: intentConfiguration),
+            elementsSession: makeSession(flag: flag, group: group),
+            savedPaymentMethods: [],
+            paymentMethodTypes: [.stripe(.card)],
+            paymentMethodMessagingPromotionsHelper: nil,
+            paymentMethodOrientation: .vertical
         )
     }
 }

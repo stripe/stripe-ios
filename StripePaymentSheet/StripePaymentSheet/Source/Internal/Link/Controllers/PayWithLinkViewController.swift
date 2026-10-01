@@ -65,13 +65,13 @@ protocol PayWithLinkCoordinating: AnyObject {
     func cancel3DS2ChallengeFlow()
 }
 
-/// A view controller for paying with Link.
+/// Coordinates Link content inside the selected sheet container.
 ///
-/// Instantiate and present this controller when the user chooses to pay with Link.
+/// Instantiate this coordinator when the user chooses to pay with Link, then present its `sheetContainer`.
 /// For internal SDK use only
 @objc(STP_Internal_PayWithLinkViewController)
 @MainActor
-final class PayWithLinkViewController: BottomSheetViewController {
+final class PayWithLinkViewController: NSObject {
 
     enum LinkAccountError: LocalizedError {
         case noLinkAccount
@@ -193,20 +193,14 @@ final class PayWithLinkViewController: BottomSheetViewController {
 
     weak var payWithLinkDelegate: PayWithLinkViewControllerDelegate?
 
+    let sheetContainer: any PaymentSheetContainer
+
     var shippingAddressResponse: ShippingAddressesResponse?
 
     var defaultShippingAddress: ShippingAddressesResponse.ShippingAddress? {
         shippingAddressResponse?.shippingAddresses.first {
             $0.isDefault ?? false
         } ?? shippingAddressResponse?.shippingAddresses.first
-    }
-
-    override var sheetCornerRadius: CGFloat? {
-        LinkUI.largeCornerRadius
-    }
-
-    override var navigationBarHeight: CGFloat {
-        LinkUI.navigationBarHeight
     }
 
     private var isBailingToWebFlow: Bool = false
@@ -216,6 +210,7 @@ final class PayWithLinkViewController: BottomSheetViewController {
         linkAccount: PaymentSheetLinkAccount?,
         elementsSession: STPElementsSession,
         configuration: PaymentElementConfiguration,
+        nativeSheetPresentation: NativeSheetPresentation? = nil,
         shouldOfferApplePay: Bool = false,
         shouldFinishOnClose: Bool = false,
         canContinueWithoutLink: Bool = true,
@@ -246,25 +241,30 @@ final class PayWithLinkViewController: BottomSheetViewController {
                 linkAppearance: linkAppearance,
                 linkConfiguration: linkConfiguration
             ),
-            linkAccount: linkAccount
+            linkAccount: linkAccount,
+            nativeSheetPresentation: nativeSheetPresentation
         )
     }
 
-    private init(context: Context, linkAccount: PaymentSheetLinkAccount?) {
+    private init(context: Context, linkAccount: PaymentSheetLinkAccount?, nativeSheetPresentation: NativeSheetPresentation?) {
         self.context = context
         let initialVC: BaseViewController = Self.initialVC(linkAccount: linkAccount, context: context)
 
         // Create a local variable that will hold the handler
         var cancellationHandler: (() -> Void)?
-
-        super.init(
-            contentViewController: initialVC,
-            appearance: LinkUI.appearance,
-            isTestMode: false,
-            didCancelNative3DS2: {
-                cancellationHandler?()
+        let didCancelNative3DS2: () -> Void = {
+            if let cancellationHandler {
+                cancellationHandler()
             }
+        }
+
+        sheetContainer = LinkSheetContainerFactory.make(
+            contentViewController: initialVC,
+            usesNativeSheet: nativeSheetPresentation?.usesNativeSheet ?? false,
+            didCancelNative3DS2: didCancelNative3DS2
         )
+
+        super.init()
 
         cancellationHandler = { [weak self] in
             self?.cancel3DS2ChallengeFlow()
@@ -273,22 +273,13 @@ final class PayWithLinkViewController: BottomSheetViewController {
         initialVC.coordinator = self
         initialVC.navigationBar.delegate = self
         self.linkAccount = linkAccount
+        start()
     }
 
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
+    private func start() {
+        sheetContainer.view.accessibilityIdentifier = "Stripe.Link.PayWithLinkViewController"
 
-    required init(contentViewController: BottomSheetContentViewController, appearance: PaymentSheet.Appearance, isTestMode: Bool, didCancelNative3DS2: @escaping () -> Void) {
-        fatalError("init(contentViewController:appearance:isTestMode:didCancelNative3DS2:) has not been implemented")
-    }
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        view.accessibilityIdentifier = "Stripe.Link.PayWithLinkViewController"
-
-        context.configuration.style.configure(self)
+        context.configuration.style.configure(sheetContainer)
 
         updateSupportedPaymentMethods()
 
@@ -316,6 +307,22 @@ final class PayWithLinkViewController: BottomSheetViewController {
         LinkAccountContext.shared.removeObserver(self)
     }
 
+    var view: UIView {
+        sheetContainer.view
+    }
+
+    var presentingViewController: UIViewController? {
+        sheetContainer.presentingViewController
+    }
+
+    var contentStack: [BottomSheetContentViewController] {
+        sheetContainer.contentStack
+    }
+
+    func dismiss(animated: Bool, completion: (() -> Void)? = nil) {
+        sheetContainer.dismiss(animated: animated, completion: completion)
+    }
+
     @objc
     func onAccountChange(_ notification: Notification) {
         DispatchQueue.main.async { [weak self] in
@@ -325,13 +332,13 @@ final class PayWithLinkViewController: BottomSheetViewController {
         }
     }
 
-    override func pushContentViewController(_ contentViewController: any BottomSheetContentViewController) {
-        super.pushContentViewController(contentViewController)
+    func pushContentViewController(_ contentViewController: any BottomSheetContentViewController) {
+        sheetContainer.pushContentViewController(contentViewController)
 
         // Re-enable user interaction when presenting a new controller.
         let wasUserInteractionEnabled = view.isUserInteractionEnabled
         if !wasUserInteractionEnabled {
-            view.isUserInteractionEnabled = true
+            setUserInteractionEnabled(true)
         }
 
         if let viewController = contentViewController as? BaseViewController {
@@ -343,13 +350,22 @@ final class PayWithLinkViewController: BottomSheetViewController {
         }
     }
 
-    override func setViewControllers(_ viewControllers: [any BottomSheetContentViewController]) {
-        super.setViewControllers(viewControllers)
+    func setViewControllers(_ viewControllers: [any BottomSheetContentViewController]) {
+        sheetContainer.setViewControllers(viewControllers)
         for viewController in viewControllers {
             guard let viewController = viewController as? BaseViewController else { continue }
             viewController.coordinator = self
             viewController.navigationBar.delegate = self
         }
+    }
+
+    @discardableResult
+    func popContentViewController(completion: (() -> Void)? = nil) -> BottomSheetContentViewController? {
+        sheetContainer.popContentViewController(completion: completion)
+    }
+
+    func setUserInteractionEnabled(_ enabled: Bool) {
+        sheetContainer.setUserInteractionEnabled(enabled)
     }
 
     private static func initialVC(linkAccount: PaymentSheetLinkAccount?, context: Context) -> BaseViewController {
@@ -558,6 +574,7 @@ extension PayWithLinkViewController: SheetNavigationBarDelegate {
 // MARK: - Coordinating
 
 extension PayWithLinkViewController: PayWithLinkCoordinating {
+
     func handlePaymentDetailsSelected(
         _ paymentDetails: ConsumerPaymentDetails,
         confirmationExtras: LinkConfirmationExtras
@@ -697,7 +714,7 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
             preCollectedConsent: nil,
             linkBrand: context.configuration.financialConnectionsLinkBrandOverride,
             onEvent: nil,
-            from: self,
+            from: sheetContainer,
             completion: { result in
                 switch result {
                 case .completed(let financialConnectionsResult):
@@ -768,7 +785,7 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
     }
 
     func allowSheetDismissal(_ enable: Bool) {
-        view.isUserInteractionEnabled = enable
+        setUserInteractionEnabled(enable)
         context.isDismissible = enable
     }
 
@@ -801,7 +818,7 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
     }
 
     func finish(withResult result: PaymentSheetResult, deferredIntentConfirmationType: STPAnalyticsClient.DeferredIntentConfirmationType?) {
-        view.isUserInteractionEnabled = false
+        setUserInteractionEnabled(false)
         payWithLinkDelegate?.payWithLinkViewControllerDidFinish(self, result: result, deferredIntentConfirmationType: deferredIntentConfirmationType)
     }
 
@@ -886,7 +903,7 @@ extension PayWithLinkViewController: PaymentSheetLinkAccountDelegate {
                         configuration: self.context.configuration,
                         appearance: self.context.linkAppearance
                     )
-                    verificationController.present(from: self) { result in
+                    verificationController.present(from: self.sheetContainer) { result in
                         switch result {
                         case .completed:
                             // Return the session from the new account
