@@ -24,3 +24,12 @@ struct NativeSheetExperiment: LoggableExperiment {
         dimensions = ["integration_shape": integrationShape]
     }
 }
+
+extension PaymentSheet {
+
+    @_spi(STP) public enum NativeSheetFeatureFlags {
+
+        /// Overrides the native-sheet experiment decision. Intended for test playgrounds only.
+        @_spi(STP) public static var nativeSheetEnabledOverride: Bool?
+    }
+}

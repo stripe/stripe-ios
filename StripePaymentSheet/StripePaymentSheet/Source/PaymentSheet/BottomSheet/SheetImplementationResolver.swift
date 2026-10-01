@@ -33,6 +33,7 @@ final class SheetImplementationResolver {
     }()
 
     private let isEnabled: Bool
+    private let enabledOverride: Bool?
     private let analyticsHelper: PaymentSheetAnalyticsHelper
     private let experiment: NativeSheetExperiment?
     private var exposureLogged = false
@@ -42,6 +43,10 @@ final class SheetImplementationResolver {
         // Forced-native devices must not be counted in the experiment's control group.
         if Self.isRequiredForDevice {
             return true
+        }
+        // Capture playground overrides per flow so changing the setting cannot switch an existing presentation.
+        if let enabledOverride {
+            return enabledOverride && UIDevice.current.userInterfaceIdiom == .phone
         }
         guard isEnabled, UIDevice.current.userInterfaceIdiom == .phone else {
             return false
@@ -56,6 +61,7 @@ final class SheetImplementationResolver {
 
     init(elementsSession: STPElementsSession, analyticsHelper: PaymentSheetAnalyticsHelper, integrationShape: String) {
         isEnabled = elementsSession.isNativeSheetEnabled
+        enabledOverride = PaymentSheet.NativeSheetFeatureFlags.nativeSheetEnabledOverride
         experiment = NativeSheetExperiment(elementsSession: elementsSession, integrationShape: integrationShape)
         self.analyticsHelper = analyticsHelper
     }

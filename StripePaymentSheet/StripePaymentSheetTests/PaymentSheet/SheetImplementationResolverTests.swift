@@ -15,6 +15,11 @@ import XCTest
 @MainActor
 final class SheetImplementationResolverTests: XCTestCase {
 
+    override func tearDown() {
+        PaymentSheet.NativeSheetFeatureFlags.nativeSheetEnabledOverride = nil
+        super.tearDown()
+    }
+
     func testRequiresEnabledFlagAndTreatmentAssignment() {
         let flags: [Bool?] = [nil, false, true]
         let groups: [ExperimentGroup?] = [nil, .control, .treatment, .holdback, .controlTest]
@@ -46,6 +51,35 @@ final class SheetImplementationResolverTests: XCTestCase {
                     XCTAssertEqual(exposure["dimensions-integration_shape"] as? String, "flowcontroller")
                 }
             }
+        }
+    }
+
+    func testPlaygroundOverrideForcesDecisionAndIsCapturedPerFlow() {
+        let cases: [(override: Bool, flag: Bool, group: ExperimentGroup)] = [
+            (true, false, .control),
+            (false, true, .treatment),
+        ]
+
+        for testCase in cases {
+            // Given an override that contradicts the server-provided rollout decision
+            PaymentSheet.NativeSheetFeatureFlags.nativeSheetEnabledOverride = testCase.override
+            let analyticsClient = MockAnalyticsClientV2()
+            let presentation = SheetImplementationResolver(
+                elementsSession: makeSession(flag: testCase.flag, group: testCase.group),
+                analyticsHelper: ._testValue(analyticsClientV2: analyticsClient),
+                integrationShape: "flowcontroller"
+            )
+
+            // When the global override changes after this flow captures its decision
+            PaymentSheet.NativeSheetFeatureFlags.nativeSheetEnabledOverride = !testCase.override
+
+            // Then this flow retains the original override without logging an experiment exposure
+            let expectedDecision = SheetImplementationResolver.isRequiredForDevice
+                || (UIDevice.current.userInterfaceIdiom == .phone && testCase.override)
+            XCTAssertEqual(presentation.usesNativeSheet, expectedDecision)
+            XCTAssertTrue(
+                analyticsClient.loggedAnalyticPayloads(withEventName: PaymentSheetAnalyticsHelper.eventName).isEmpty
+            )
         }
     }
 

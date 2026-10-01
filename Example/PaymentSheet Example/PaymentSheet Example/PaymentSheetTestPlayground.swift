@@ -32,6 +32,9 @@ struct PaymentSheetTestPlayground: View {
             disabledSettings: [],
             searchText: searchText
         )
+        if playgroundController.settings.uiStyle != .paymentSheet {
+            SearchableSettingView(setting: nativeSheetExperimentOverrideBinding, searchText: searchText)
+        }
         if playgroundController.settings.uiStyle != .embedded {
             SearchableSettingView(setting: $playgroundController.settings.layout, searchText: searchText)
         }
@@ -421,6 +424,14 @@ struct PaymentSheetTestPlayground: View {
             }
 
             playgroundController.settings.uiStyle = newUIStyle
+        }
+    }
+
+    var nativeSheetExperimentOverrideBinding: Binding<PaymentSheetTestPlaygroundSettings.NativeSheetExperimentOverride> {
+        Binding<PaymentSheetTestPlaygroundSettings.NativeSheetExperimentOverride> {
+            return playgroundController.settings.nativeSheetExperimentOverride ?? .automatic
+        } set: { newOverride in
+            playgroundController.settings.nativeSheetExperimentOverride = newOverride == .automatic ? nil : newOverride
         }
     }
 
