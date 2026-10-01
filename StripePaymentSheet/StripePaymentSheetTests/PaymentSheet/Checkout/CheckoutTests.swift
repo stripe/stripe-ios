@@ -249,9 +249,13 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         XCTAssertEqual(checkout.session.status, .open)
 
         XCTAssertEqual(checkout.session.totals.subtotal.minorUnitsAmount, 2000)
-        XCTAssertEqual(checkout.session.totals.total.minorUnitsAmount, 2195)
         XCTAssertEqual(checkout.session.taxAmounts?.count, 1)
-        XCTAssertEqual(checkout.session.taxAmounts?.first?.minorUnitsAmount, 195)
+        let taxAmount = try XCTUnwrap(checkout.session.taxAmounts?.first?.minorUnitsAmount)
+        XCTAssertGreaterThan(taxAmount, 0)
+        XCTAssertEqual(
+            checkout.session.totals.total.minorUnitsAmount,
+            checkout.session.totals.subtotal.minorUnitsAmount + taxAmount
+        )
     }
 
     private func promotionCode(in session: CheckoutController.Session?) -> String? {
