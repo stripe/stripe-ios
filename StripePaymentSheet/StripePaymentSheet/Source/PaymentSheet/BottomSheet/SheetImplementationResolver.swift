@@ -1,5 +1,5 @@
 //
-//  NativeSheetPresentation.swift
+//  SheetImplementationResolver.swift
 //  StripePaymentSheet
 //
 //  Created by George Birch on 9/30/26.
@@ -9,7 +9,7 @@ import UIKit
 
 /// Captures the rollout decision for one FlowController or Embedded Payment Element instance.
 /// Retains the initial assignment across Elements Session updates so presentation does not switch mid-flow.
-final class NativeSheetPresentation {
+final class SheetImplementationResolver {
 
     static let isRequiredForDevice: Bool = {
         #if os(iOS) && !targetEnvironment(macCatalyst)
@@ -34,22 +34,11 @@ final class NativeSheetPresentation {
 
     private let isEnabled: Bool
     private let analyticsHelper: PaymentSheetAnalyticsHelper
-    // Log exposure before reading the assignment, at most once for this flow.
-    private let _experiment: NativeSheetExperiment?
+    private let experiment: NativeSheetExperiment?
     private var exposureLogged = false
-    private var experiment: NativeSheetExperiment? {
-        if let _experiment, !exposureLogged {
-            analyticsHelper.logExposure(experiment: _experiment)
-            exposureLogged = true
-        }
-        return _experiment
-    }
 
     @MainActor
     var usesNativeSheet: Bool {
-        #if os(visionOS)
-        return false
-        #else
         // Forced-native devices must not be counted in the experiment's control group.
         if Self.isRequiredForDevice {
             return true
@@ -57,13 +46,17 @@ final class NativeSheetPresentation {
         guard isEnabled, UIDevice.current.userInterfaceIdiom == .phone else {
             return false
         }
+        // Log exposure immediately before reading the assignment, at most once for this flow.
+        if let experiment, !exposureLogged {
+            analyticsHelper.logExposure(experiment: experiment)
+            exposureLogged = true
+        }
         return experiment?.group == .treatment
-        #endif
     }
 
     init(elementsSession: STPElementsSession, analyticsHelper: PaymentSheetAnalyticsHelper, integrationShape: String) {
         isEnabled = elementsSession.isNativeSheetEnabled
-        _experiment = NativeSheetExperiment(elementsSession: elementsSession, integrationShape: integrationShape)
+        experiment = NativeSheetExperiment(elementsSession: elementsSession, integrationShape: integrationShape)
         self.analyticsHelper = analyticsHelper
     }
 }
