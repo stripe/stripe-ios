@@ -380,7 +380,7 @@ extension PaymentSheet {
 
     /// Payment method types that require mandate data for PaymentIntents when `setup_future_usage` is set
     static var requiresMandateDataForPaymentIntent: Set<STPPaymentMethodType> {
-        [.momo, .goPay, .alipay, .payPal, .cashApp, .revolutPay, .amazonPay, .klarna, .satispay, .twint, .kakaoPay, .naverPay, .krCard, .pix]
+        [.goPay, .alipay, .payPal, .cashApp, .revolutPay, .amazonPay, .klarna, .satispay, .twint, .kakaoPay, .naverPay, .krCard, .pix]
     }
 
     /// Payment method types that require mandate data for SetupIntents

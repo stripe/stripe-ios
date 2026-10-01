@@ -1591,43 +1591,6 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         XCTAssertNotNil(futureUsagePaymentIntentParams.mandateData)
         XCTAssertNotNil(paymentMethodOptionsFutureUsagePaymentIntentParams.mandateData)
     }
-    func testMakeIntentParams_momo_setsMandate() {
-        // Given
-        let paymentMethodParams = STPPaymentMethodParams(type: .momo)
-        let confirmType = PaymentSheet.ConfirmPaymentMethodType.new(
-            params: paymentMethodParams,
-            paymentOptions: STPConfirmPaymentMethodOptions(),
-            saveForFutureUseCheckboxState: .hidden
-        )
-        let configuration = PaymentSheet.Configuration._testValue_MostPermissive()
-
-        // When
-        let regularPaymentIntentParams = PaymentSheet.makePaymentIntentParams(
-            confirmPaymentMethodType: confirmType,
-            paymentIntent: STPFixtures.makePaymentIntent(),
-            configuration: configuration
-        )
-        let futureUsagePaymentIntentParams = PaymentSheet.makePaymentIntentParams(
-            confirmPaymentMethodType: confirmType,
-            paymentIntent: STPFixtures.makePaymentIntent(setupFutureUsage: .offSession),
-            configuration: configuration
-        )
-        let paymentMethodOptionsFutureUsagePaymentIntentParams = PaymentSheet.makePaymentIntentParams(
-            confirmPaymentMethodType: confirmType,
-            paymentIntent: STPFixtures.makePaymentIntent(
-                paymentMethodOptions: STPPaymentMethodOptions(
-                    usBankAccount: nil,
-                    card: nil,
-                    allResponseFields: ["momo": ["setup_future_usage": "off_session"]]
-                )
-            ),
-            configuration: configuration
-        )
-        // Then
-        XCTAssertNil(regularPaymentIntentParams.mandateData)
-        XCTAssertNotNil(futureUsagePaymentIntentParams.mandateData)
-        XCTAssertNotNil(paymentMethodOptionsFutureUsagePaymentIntentParams.mandateData)
-    }
     func testMakeIntentParams_naverPay_setsMandate() {
         // Given
         let paymentMethodParams = STPPaymentMethodParams(type: .naverPay)

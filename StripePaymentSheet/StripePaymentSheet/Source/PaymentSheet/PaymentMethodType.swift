@@ -257,15 +257,15 @@ extension PaymentSheet {
             let requirements: [PaymentMethodTypeRequirement]
 
             // We have different requirements depending on whether or not the intent is setting up the payment method for future use
-            // GoPay and MoMo support PaymentIntents with or without setup_future_usage, but not SetupIntents.
-            if [.goPay, .momo].contains(paymentMethod), case .setupIntent = intent {
+            // GoPay supports PaymentIntents with or without setup_future_usage, but not SetupIntents.
+            if paymentMethod == .goPay, case .setupIntent = intent {
                 requirements = [.unsupportedForSetup]
             } else if intent.isSetupFutureUsageSet(for: paymentMethod) {
                 requirements = {
                     switch paymentMethod {
                     case .card, .pix:
                         return []
-                    case .momo, .goPay, .alipay, .payPal, .cashApp, .revolutPay, .amazonPay, .klarna, .satispay, .twint, .kakaoPay, .naverPay, .krCard:
+                    case .goPay, .alipay, .payPal, .cashApp, .revolutPay, .amazonPay, .klarna, .satispay, .twint, .kakaoPay, .naverPay, .krCard:
                         return [.returnURL]
                     case .USBankAccount, .boleto:
                         return [.userSupportsDelayedPaymentMethods]
@@ -276,7 +276,7 @@ extension PaymentSheet {
                         return [.userSupportsDelayedPaymentMethods]
                     case .bacsDebit:
                         return [.returnURL, .userSupportsDelayedPaymentMethods]
-                    case .cardPresent, .blik, .weChatPay, .grabPay, .FPX, .przelewy24, .EPS,
+                    case .momo, .cardPresent, .blik, .weChatPay, .grabPay, .FPX, .przelewy24, .EPS,
                         .netBanking, .OXXO, .afterpayClearpay, .link, .affirm, .paynow, .zip, .alma,
                         .mobilePay, .vipps, .unknown, .konbini, .promptPay, .swish, .multibanco,
                         .sunbit, .billie, .crypto, .payPay, .wero, .payByBank, .mbWay, .bizum,
