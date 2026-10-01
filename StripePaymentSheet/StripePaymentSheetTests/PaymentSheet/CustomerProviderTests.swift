@@ -326,4 +326,67 @@ final class CustomerProviderTests: XCTestCase {
             XCTAssertEqual(provider.supportsLinkSetupFutureUsage, expected)
         }
     }
+
+    func testCheckoutSaveConsentRequiresACustomerAndAnEnabledOffer() {
+        for hasCustomer in [true, false] {
+            for enabled in [true, false] {
+                var overrides: [String: Any] = [
+                    "customer_managed_saved_payment_methods_offer_save": [
+                        "enabled": enabled,
+                        "status": "not_accepted",
+                    ],
+                ]
+                if hasCustomer {
+                    overrides["customer"] = ["id": "cus_checkout"]
+                }
+                let provider = CustomerProvider(
+                    checkoutSession: CheckoutTestHelpers.makeSession(overrides).makePublicSession()
+                )
+
+                XCTAssertEqual(
+                    provider.savePaymentMethodConsentBehavior(elementsSession: .emptyElementsSession),
+                    hasCustomer && enabled
+                        ? .paymentSheetWithCheckoutSessionPaymentMethodSaveEnabled
+                        : .paymentSheetWithCheckoutSessionPaymentMethodSaveDisabled
+                )
+            }
+        }
+
+        let providerWithoutOffer = CustomerProvider(
+            checkoutSession: CheckoutTestHelpers.makeSession().withCustomer().makePublicSession()
+        )
+        XCTAssertEqual(
+            providerWithoutOffer.savePaymentMethodConsentBehavior(elementsSession: .emptyElementsSession),
+            .paymentSheetWithCheckoutSessionPaymentMethodSaveDisabled
+        )
+    }
+
+    func testCustomerSaveConsentUsesTheElementsSession() {
+        let provider = CustomerProvider(
+            customer: .init(id: "cus_session", customerSessionClientSecret: "cuss_test")
+        )
+        XCTAssertEqual(provider.savePaymentMethodConsentBehavior(elementsSession: .emptyElementsSession), .legacy)
+
+        for enabled in [true, false] {
+            let elementsSession = STPElementsSession._testValue(
+                paymentMethodTypes: ["card"],
+                customerSessionData: [
+                    "mobile_payment_element": [
+                        "enabled": true,
+                        "features": [
+                            "payment_method_save": enabled ? "enabled" : "disabled",
+                            "payment_method_remove": "enabled",
+                        ],
+                    ],
+                ]
+            )
+
+            XCTAssertEqual(
+                provider.savePaymentMethodConsentBehavior(elementsSession: elementsSession),
+                enabled
+                    ? .paymentSheetWithCustomerSessionPaymentMethodSaveEnabled
+                    : .paymentSheetWithCustomerSessionPaymentMethodSaveDisabled
+            )
+        }
+    }
 }
