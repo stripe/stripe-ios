@@ -42,6 +42,12 @@ struct DocumentCollectionConfiguration {
     /// Guidance describing the accepted formats and file size limit.
     let uploadHint: String
 
+    /// The minimum number of distinct document categories required for submission.
+    var minimumDocumentTypes = 1
+
+    /// The maximum number of distinct document categories that may be submitted.
+    var maximumDocumentTypes = 1
+
     /// Maps the file extensions to `UTType`s for use in filtering with Files.
     var documentPickerContentTypes: [UTType] {
         acceptedFormats.map { format in
@@ -66,12 +72,25 @@ struct DocumentCollectionConfiguration {
 extension DocumentCollectionConfiguration {
 
     /// Adapts a requirement that can be fulfilled with one proof-of-address file.
+    /// - Parameter requirement: The document requirements returned by the backend.
     init(proofOfAddress requirement: AdditionalKYCDocumentRequirement) throws {
+        guard requirement.minDocumentTypes <= 1 else {
+            throw DocumentCollectionError.unsupportedRequirement
+        }
+        try self.init(document: requirement)
+    }
+
+    /// Adapts document requirements, including bounds on the number of distinct categories.
+    /// - Parameter requirement: The document requirements returned by the backend.
+    /// - Throws: `DocumentCollectionError.unsupportedRequirement` when the requirements cannot be collected.
+    init(document requirement: AdditionalKYCDocumentRequirement) throws {
         guard requirement.minDocumentTypes >= 0,
-              requirement.minDocumentTypes <= 1,
-              requirement.maxDocumentTypes >= 1,
+              requirement.maxDocumentTypes >= max(1, requirement.minDocumentTypes),
+              requirement.minDocumentTypes <= requirement.acceptedSubtypes.count,
               requirement.maxFileSizeBytes > 0,
-              !requirement.acceptedSubtypes.isEmpty else {
+              !requirement.acceptedSubtypes.isEmpty,
+              requirement.acceptedSubtypes.allSatisfy({ !$0.id.isEmpty }),
+              Set(requirement.acceptedSubtypes.map(\.id)).count == requirement.acceptedSubtypes.count else {
             throw DocumentCollectionError.unsupportedRequirement
         }
 
@@ -92,7 +111,9 @@ extension DocumentCollectionConfiguration {
             },
             instructions: requirement.instructions,
             maximumFileSize: requirement.maxFileSizeBytes,
-            uploadHint: requirement.fileRequirements
+            uploadHint: requirement.fileRequirements,
+            minimumDocumentTypes: requirement.minDocumentTypes,
+            maximumDocumentTypes: requirement.maxDocumentTypes
         )
     }
 }
@@ -119,10 +140,13 @@ extension DocumentCollectionConfiguration {
 
     /// An example source-of-funds configuration with sample text for previews.
     static var sourceOfFundsPreview: Self {
-        .init(acceptedSubtypes: [.init(id: "payslip", label: "Payslip", description: "Recent payslips from your employer")], acceptedFormats: ["pdf", "jpeg", "png", "docx", "xlsx", "csv", "txt"], instructions: [
+        .init(acceptedSubtypes: [
+            .init(id: "salary", label: "Salary", description: "Recent payslips from your employer"),
+            .init(id: "company_profits", label: "Company profits", description: "Dividend distribution statements"),
+        ], acceptedFormats: ["pdf", "jpeg", "png", "docx", "xlsx", "csv", "txt"], instructions: [
             "Documents must include your name and a balance or financial value.",
             "Bank statements must be original PDFs issued through online banking; screenshots aren't accepted.",
-        ], maximumFileSize: 5_000_000, uploadHint: "PDF, JPEG/JPG, PNG, DOCX, XLSX, CSV, or TXT, up to 5 MB per file.")
+        ], maximumFileSize: 5_000_000, uploadHint: "PDF, JPEG/JPG, PNG, DOCX, XLSX, CSV, or TXT, up to 5 MB per file.", maximumDocumentTypes: 2)
     }
 }
 #endif
