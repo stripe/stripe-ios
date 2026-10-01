@@ -52,7 +52,9 @@ class SnapshotTestSelectionTest < Minitest::Test
   end
 
   def test_generated_scheme_builds_selected_tests_and_keeps_annotations
-    Dir.mktmpdir('snapshot-selection-', File.expand_path('~/stripe')) do |directory|
+    test_root = File.expand_path('~/stripe')
+    FileUtils.mkdir_p(test_root)
+    Dir.mktmpdir('snapshot-selection-', test_root) do |directory|
       schemes = File.join(directory, 'Stripe.xcworkspace/xcshareddata/xcschemes')
       FileUtils.mkdir_p(schemes)
       FileUtils.mkdir_p(File.join(directory, 'Stripe'))
