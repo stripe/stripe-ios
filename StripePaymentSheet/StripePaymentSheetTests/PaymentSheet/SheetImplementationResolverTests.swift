@@ -1,5 +1,5 @@
 //
-//  NativeSheetPresentationTests.swift
+//  SheetImplementationResolverTests.swift
 //  StripePaymentSheetTests
 //
 //  Created by George Birch on 9/30/26.
@@ -13,10 +13,9 @@ import UIKit
 import XCTest
 
 @MainActor
-final class NativeSheetPresentationTests: XCTestCase {
+final class SheetImplementationResolverTests: XCTestCase {
 
-    func testRequiresEnabledFlagAndTreatmentAssignment() throws {
-        try XCTSkipIf(NativeSheetPresentation.isRequiredForDevice, "Duo bypasses the rollout.")
+    func testRequiresEnabledFlagAndTreatmentAssignment() {
         let flags: [Bool?] = [nil, false, true]
         let groups: [ExperimentGroup?] = [nil, .control, .treatment, .holdback, .controlTest]
 
@@ -24,7 +23,7 @@ final class NativeSheetPresentationTests: XCTestCase {
             for group in groups {
                 // Given all combinations of the kill switch and experiment assignment
                 let analyticsClient = MockAnalyticsClientV2()
-                let presentation = NativeSheetPresentation(
+                let presentation = SheetImplementationResolver(
                     elementsSession: makeSession(flag: flag, group: group),
                     analyticsHelper: ._testValue(analyticsClientV2: analyticsClient),
                     integrationShape: "flowcontroller"
@@ -36,11 +35,7 @@ final class NativeSheetPresentationTests: XCTestCase {
                 XCTAssertEqual(presentation.usesNativeSheet, firstDecision)
 
                 // Then only enabled treatment uses native presentation, and eligible exposure is logged once
-                #if os(visionOS)
-                let isEligibleDevice = false
-                #else
                 let isEligibleDevice = UIDevice.current.userInterfaceIdiom == .phone
-                #endif
                 XCTAssertEqual(firstDecision, isEligibleDevice && flag == true && group == .treatment)
                 let exposures = analyticsClient.loggedAnalyticPayloads(withEventName: PaymentSheetAnalyticsHelper.eventName)
                 XCTAssertEqual(exposures.count, isEligibleDevice && flag == true && group != nil ? 1 : 0)
@@ -52,19 +47,6 @@ final class NativeSheetPresentationTests: XCTestCase {
                 }
             }
         }
-    }
-
-    func testDuoBypassesDisabledFlagAndControlAssignmentWithoutExposure() throws {
-        try XCTSkipUnless(NativeSheetPresentation.isRequiredForDevice, "Requires iPhone Duo.")
-        let analyticsClient = MockAnalyticsClientV2()
-        let presentation = NativeSheetPresentation(
-            elementsSession: makeSession(flag: false, group: .control),
-            analyticsHelper: ._testValue(analyticsClientV2: analyticsClient),
-            integrationShape: "embedded"
-        )
-
-        XCTAssertTrue(presentation.usesNativeSheet)
-        XCTAssertTrue(analyticsClient.loggedAnalyticPayloads(withEventName: PaymentSheetAnalyticsHelper.eventName).isEmpty)
     }
 
     private func makeSession(flag: Bool?, group: ExperimentGroup?) -> STPElementsSession {
