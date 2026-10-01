@@ -590,8 +590,7 @@ workflows:
         - content: |-
             #!/usr/bin/env bash
             set -euo pipefail
-            xcodes_dir="$HOME/stripe/ci-tools/xcodes/2.1.0"
-            mkdir -p "$xcodes_dir"
+            xcodes_dir="$(mktemp -d)"
             curl --fail --location --silent --show-error --retry 3 \
               https://github.com/XcodesOrg/xcodes/releases/download/2.1.0/xcodes.zip \
               --output "$xcodes_dir/xcodes.zip"

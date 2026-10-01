@@ -12,9 +12,7 @@ class CIOptimizationTest < Minitest::Test
   SCRIPT = File.expand_path('../prepare_ci_branch.rb', __dir__)
 
   def setup
-    test_root = File.expand_path('~/stripe')
-    FileUtils.mkdir_p(test_root)
-    @directory = Dir.mktmpdir('ci-optimization-tests-', test_root)
+    @directory = Dir.mktmpdir('ci-optimization-tests-')
     @git_environment = {
       'GIT_CONFIG_GLOBAL' => '/dev/null',
       'GIT_CONFIG_NOSYSTEM' => '1',
