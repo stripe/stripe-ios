@@ -15,6 +15,7 @@
 
 require 'fileutils'
 require 'optparse'
+require_relative 'snapshot_test_selection'
 
 SCRIPT_DIR = __dir__
 ROOT_DIR = File.expand_path('..', SCRIPT_DIR)
@@ -29,11 +30,13 @@ FUZZ = '5%' # per-pixel color tolerance before counting as different
 
 commit = false
 dry_run = false
+all_tests = false
 versions = []
 OptionParser.new do |opts|
   opts.banner = "Usage: record_snapshots.rb [options]"
   opts.on('--commit', 'Commit changes (for CI)') { commit = true }
   opts.on('--dry-run', 'Show what would change without updating') { dry_run = true }
+  opts.on('--all', 'Record all snapshot targets, including on pull requests') { all_tests = true }
   opts.on('--version VERSION', 'iOS version to record (can be specified multiple times)') { |v| versions << v }
 end.parse!
 
@@ -53,8 +56,6 @@ def significant_difference?(file_a, file_b)
   (num_diff.to_f / total_pixels * 100) > DIFF_THRESHOLD
 end
 
-require_imagemagick!
-
 # Skip if the last commit is already a snapshot update from CI (prevents infinite loops)
 if commit
   last_commit_author = `git log -1 --format='%an'`.strip
@@ -65,12 +66,43 @@ if commit
   end
 end
 
+snapshot_tests = SnapshotTestSelection.discover(ROOT_DIR)
+snapshot_tests = SnapshotTestSelection.select(snapshot_tests, ROOT_DIR) unless all_tests
+if snapshot_tests.empty?
+  puts '==> No snapshot targets are affected by this change.'
+  exit 0
+end
+puts "==> Recording #{snapshot_tests.size} snapshot classes in: #{snapshot_tests.map { |test| test.split('/').first }.uniq.join(', ')}"
+require_imagemagick!
+
 # Maps rel_path -> recorded absolute path for changed/added files
 changed_files = {}
 added_files = {}
 FileUtils.rm_rf('/tmp/snapshot-all-recorded')
 
 versions.each do |os_version|
+  selected_tests = snapshot_tests
+  plan = nil
+  if os_version.split('.').first.to_i >= 26
+    # Generate the annotations once and keep the checked-in plan untouched.
+    plan_path = File.join(ROOT_DIR, 'Stripe/AllStripeFrameworks-iOS26.xctestplan')
+    original_plan = File.binread(plan_path)
+    begin
+      system('ruby', 'ci_scripts/generate_ios26_testplan.rb', exception: true)
+      plan = JSON.parse(File.read(plan_path))
+    ensure
+      File.binwrite(plan_path, original_plan)
+    end
+    annotated_tests = plan.fetch('testTargets').flat_map do |target|
+      target.fetch('selectedTests').map { |test| "#{target.fetch('target').fetch('name')}/#{test.split('/').first}" }
+    end
+    selected_tests = snapshot_tests & annotated_tests
+    if selected_tests.empty?
+      puts "==> No affected snapshots have iOS #{os_version} annotations; skipping this runtime."
+      next
+    end
+  end
+
   puts "==> Recording snapshots (iOS #{os_version})..."
 
   # Ensure the simulator exists for this version
@@ -87,22 +119,16 @@ versions.each do |os_version|
   FileUtils.rm_rf(RECORD_DIR)
   FileUtils.rm_rf("#{RECORD_DIR}_64")
 
-  # For iOS 26+, only run tests marked with // @iOS26 (test plan handles filtering)
-  major = os_version.split('.').first.to_i
-  scheme = 'AllStripeFrameworks'
-  extra_args = ['--only-snapshot-tests']
-  if major >= 26
-    system('ruby', 'ci_scripts/generate_ios26_testplan.rb', exception: true)
-    scheme = 'AllStripeFrameworks-iOS26'
-    extra_args = [] # test plan already selects the right tests
+  succeeded = SnapshotTestSelection.with_scheme(ROOT_DIR, selected_tests, plan: plan) do |scheme|
+    extra_args = plan ? [] : ['--only-test', selected_tests.join(',')]
+    system('./ci_scripts/test.rb', *extra_args,
+           '--scheme', scheme,
+           '--device', DEVICE_MODEL,
+           '--version', os_version)
   end
-
-  unless system('./ci_scripts/test.rb', *extra_args,
-                '--scheme', scheme,
-                '--device', DEVICE_MODEL,
-                '--version', os_version)
+  unless succeeded
     puts "==> Tests failed for iOS #{os_version}. Inspecting failures..."
-    system('ruby', 'ci_scripts/run_tests.rb', '--failures')
+    system('./ci_scripts/run_tests.rb', '--failures')
 
     # Copy xcresult to deploy dir for upload
     deploy_dir = ENV['BITRISE_DEPLOY_DIR']

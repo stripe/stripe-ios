@@ -30,49 +30,37 @@
   "testTargets" : [
     {
       "parallelizable" : true,
-      "skippedTests" : [
-        "CheckoutElementsUITests",
-        "CustomerSheetSnapshotTests",
-        "CustomerSheetUITest",
-        "EmbeddedUITests",
-        "EmbeddedUITests\/testUpdate()",
+      "selectedTests" : [
+        "CustomerSheetUITest\/testAddPaymentMethod_RemoveBeforeConfirming()",
+        "CustomerSheetUITest\/testAddTwoPaymentMethods_RemoveTwoPaymentMethods()",
+        "CustomerSheetUITest\/testCustomerSheetCardScannerOpensAutomatically()",
+        "CustomerSheetUITest\/testPrevPM_AddPM_canceled()",
+        "CustomerSheetUITest\/testRemoveLastSavedPaymentMethod_clientConfig()",
+        "EmbeddedUITests\/testApplePay()",
+        "EmbeddedUITests\/testCVCRecollection()",
+        "EmbeddedUITests\/testCashAppPayAndSetup()",
+        "EmbeddedUITests\/testLink()",
+        "EmbeddedUITests\/testMultipleCard_remove_selectSavedCard()",
+        "EmbeddedUITests\/testSEPA()",
+        "EmbeddedUITests\/testSingleCardCBC_onRemove_selectStateNone()",
         "FCLiteUITests",
-        "FCLiteUITests\/testFCLiteInitialPaneAndDismiss()",
-        "InstantBankPaymentsControllerUITest",
-        "PaymentSheetBillingCollectionBankTests",
-        "PaymentSheetCVCRecollectionUITests",
-        "PaymentSheetCardBrandFilteringUITests",
         "PaymentSheetCustomerSessionCBCUITests",
-        "PaymentSheetCustomerSessionDedupeUITests",
-        "PaymentSheetDefaultSPMUITests",
-        "PaymentSheetDefaultSPMUITests\/testDefaultSPMHorizontalNavigation()",
-        "PaymentSheetDefaultSPMUITests\/testDefaultSPMNavigationFlagOff()",
-        "PaymentSheetDefaultSPMUITests\/testDefaultSPMVerticalNavigation()",
+        "PaymentSheetCustomerSessionDedupeUITests\/test_RemoveLastSavedPaymentMethodFlowController_clientConfig()",
+        "PaymentSheetCustomerSessionDedupeUITests\/test_updatePaymentMethod_fullBilling()",
         "PaymentSheetDeferredServerSideUITests",
-        "PaymentSheetExternalPMUITests",
-        "PaymentSheetStandardLPMUICBCTests",
-        "PaymentSheetStandardLPMUICase",
+        "PaymentSheetLinkUITests\/testBankPaymentInNativeLinkInPaymentMethodMode()",
+        "PaymentSheetLinkUITests\/testBillingDetailsCollectionInNativeLinkInPassthroughModeForExistingUser()",
+        "PaymentSheetLinkUITests\/testLinkInlineSignup_deferred()",
+        "PaymentSheetLinkUITests\/testLinkPaymentSheetFlowController_returnsCardPaymentOptionDisplayDataForLinkInlineSignup()",
+        "PaymentSheetLinkUITests\/testLinkPaymentSheetFlow_disabledApplePay_disabledSPM_firstTimeLinkUser()",
+        "PaymentSheetLinkUITests\/testLinkPaymentSheetFlow_disabledApplePay_enabledSPM_hasSPMs_firstTimeLinkUser()",
         "PaymentSheetStandardLPMUIOneTests",
-        "PaymentSheetStandardLPMUITests",
-        "PaymentSheetStandardLPMUIThreeTests",
-        "PaymentSheetStandardLPMUITwoTests",
-        "PaymentSheetStandardUITests",
-        "PaymentSheetUITestCase",
-        "PaymentSheetVerticalUITests",
         "PaymentSheet_AddressTests"
       ],
       "target" : {
         "containerPath" : "container:PaymentSheet Example.xcodeproj",
         "identifier" : "AAF1424C7F0424C3506712E6",
         "name" : "PaymentSheetUITest"
-      }
-    },
-    {
-      "enabled" : false,
-      "target" : {
-        "containerPath" : "container:PaymentSheet Example.xcodeproj",
-        "identifier" : "5BBB41069612B9B628C5E65D",
-        "name" : "PaymentSheetLocalizationScreenshotGenerator"
       }
     }
   ],
