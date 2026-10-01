@@ -49,6 +49,16 @@ struct KYCDocumentUploader: DocumentUploading {
 @MainActor
 final class DocumentUploadModel: ObservableObject {
 
+    /// An uploaded document retained for editing and eventual requirement submission.
+    struct UploadedFile: Equatable {
+
+        /// The filename displayed in collection and source summaries.
+        let name: String
+
+        /// The Files API identifier used when fulfilling the requirement.
+        let fileID: String
+    }
+
     /// The current transfer state of the selected document.
     enum Status: Hashable {
 
@@ -90,10 +100,23 @@ final class DocumentUploadModel: ObservableObject {
         return fileID
     }
 
-    /// Creates upload state using the supplied uploader.
-    /// - Parameter uploader: The instance that uploads selected documents.
-    init(uploader: DocumentUploading) {
+    /// The uploaded document's display information and identifier, when available.
+    var uploadedFile: UploadedFile? {
+        guard let document, let fileID = uploadedFileID else {
+            return nil
+        }
+        return .init(name: document.name, fileID: fileID)
+    }
+
+    /// Creates upload state, optionally restoring a previously uploaded document when revisiting document collection.
+    /// - Parameters:
+    ///   - uploader: The instance that uploads selected documents.
+    ///   - uploadedFile: A document already uploaded in this flow. Restoring it does not upload it again.
+    init(uploader: DocumentUploading, uploadedFile: UploadedFile? = nil) {
         self.uploader = uploader
+        if let uploadedFile {
+            document = .init(name: uploadedFile.name, status: .uploaded(fileID: uploadedFile.fileID))
+        }
     }
 
     /// Replaces the current selection and starts uploading the new file.
