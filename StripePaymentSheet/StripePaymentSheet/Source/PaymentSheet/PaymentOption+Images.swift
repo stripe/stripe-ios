@@ -288,6 +288,8 @@ extension STPPaymentMethodType {
                 }
             case .FPX:
                 return .pm_type_fpx
+            case .goPay:
+                return .pm_type_gopay
             case .grabPay:
                 return .pm_type_grabpay
             case .konbini:

@@ -257,12 +257,15 @@ extension PaymentSheet {
             let requirements: [PaymentMethodTypeRequirement]
 
             // We have different requirements depending on whether or not the intent is setting up the payment method for future use
-            if intent.isSetupFutureUsageSet(for: paymentMethod) {
+            // GoPay supports PaymentIntents with or without setup_future_usage, but not SetupIntents.
+            if paymentMethod == .goPay, case .setupIntent = intent {
+                requirements = [.unsupportedForSetup]
+            } else if intent.isSetupFutureUsageSet(for: paymentMethod) {
                 requirements = {
                     switch paymentMethod {
                     case .card, .pix:
                         return []
-                    case .alipay, .payPal, .cashApp, .revolutPay, .amazonPay, .klarna, .satispay, .twint, .kakaoPay, .naverPay, .krCard:
+                    case .goPay, .alipay, .payPal, .cashApp, .revolutPay, .amazonPay, .klarna, .satispay, .twint, .kakaoPay, .naverPay, .krCard:
                         return [.returnURL]
                     case .USBankAccount, .boleto:
                         return [.userSupportsDelayedPaymentMethods]
@@ -288,7 +291,7 @@ extension PaymentSheet {
                     switch paymentMethod {
                     case .blik, .card, .cardPresent, .weChatPay, .paynow, .promptPay, .mbWay, .bizum, .pix:
                         return []
-                    case .alipay, .EPS, .FPX, .grabPay, .netBanking, .payPal, .przelewy24, .klarna,
+                    case .goPay, .alipay, .EPS, .FPX, .grabPay, .netBanking, .payPal, .przelewy24, .klarna,
                             .bancontact, .iDEAL, .cashApp, .affirm, .zip, .revolutPay, .amazonPay, .alma,
                             .mobilePay, .vipps, .swish, .twint, .sunbit, .billie, .satispay, .crypto, .afterpayClearpay, .payPay,
                             .wero, .payByBank, .kakaoPay, .krCard, .naverPay, .payco, .sequra, .scalapay:
@@ -550,7 +553,7 @@ extension STPPaymentMethodParams {
             } else {
                 return "FPX"
             }
-        case .paynow, .zip, .amazonPay, .alma, .mobilePay, .vipps, .konbini, .promptPay, .swish, .sunbit, .billie, .satispay, .crypto, .iDEAL, .SEPADebit, .bacsDebit, .AUBECSDebit, .przelewy24, .EPS, .bancontact, .netBanking, .OXXO, .grabPay, .payPal, .afterpayClearpay, .blik, .weChatPay, .boleto, .link, .klarna, .affirm, .USBankAccount, .cashApp, .revolutPay, .twint, .multibanco, .alipay, .cardPresent, .payPay, .wero, .payByBank, .mbWay, .bizum, .kakaoPay, .krCard, .naverPay, .payco, .sequra, .scalapay, .pix:
+        case .goPay, .paynow, .zip, .amazonPay, .alma, .mobilePay, .vipps, .konbini, .promptPay, .swish, .sunbit, .billie, .satispay, .crypto, .iDEAL, .SEPADebit, .bacsDebit, .AUBECSDebit, .przelewy24, .EPS, .bancontact, .netBanking, .OXXO, .grabPay, .payPal, .afterpayClearpay, .blik, .weChatPay, .boleto, .link, .klarna, .affirm, .USBankAccount, .cashApp, .revolutPay, .twint, .multibanco, .alipay, .cardPresent, .payPay, .wero, .payByBank, .mbWay, .bizum, .kakaoPay, .krCard, .naverPay, .payco, .sequra, .scalapay, .pix:
             // Use the label already defined in STPPaymentMethodType; the params object for these types don't contain additional information that affect the display label (like cards do)
             return type.displayName
         case .unknown:
