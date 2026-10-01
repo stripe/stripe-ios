@@ -176,8 +176,14 @@ final class PaymentElementTest: XCTestCase {
     }
 
     func testConfigurationAllowsAllCheckoutPaymentMethodRequirements() async throws {
-        // Given a Checkout configuration
-        let checkoutConfiguration = CheckoutController.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
+        // Given a Checkout configuration with Link overrides
+        var checkoutConfiguration = CheckoutController.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
+        var paymentElementConfiguration = PaymentElement.Configuration()
+        var linkConfiguration = PaymentElement.LinkConfiguration()
+        linkConfiguration.disallowFundingSourceCreation = ["usInstantBankPayment"]
+        linkConfiguration.collectMissingBillingDetailsForExistingPaymentMethods = false
+        paymentElementConfiguration.linkConfiguration = linkConfiguration
+        checkoutConfiguration.paymentElement = paymentElementConfiguration
 
         // When Checkout creates PaymentElement
         let checkout = try await CheckoutController(
@@ -192,31 +198,10 @@ final class PaymentElementTest: XCTestCase {
         XCTAssertTrue(paymentSheetConfiguration.allowsPaymentMethodsRequiringShippingAddress)
         XCTAssertTrue(embeddedConfiguration.allowsDelayedPaymentMethods)
         XCTAssertTrue(embeddedConfiguration.allowsPaymentMethodsRequiringShippingAddress)
-    }
-
-    func testConfigurationSetsLinkConfiguration() async throws {
-        // Given Checkout with Link configuration overrides
-        var checkoutConfiguration = CheckoutController.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
-        var paymentElementConfiguration = PaymentElement.Configuration()
-        var linkConfiguration = PaymentElement.LinkConfiguration()
-        linkConfiguration.disallowFundingSourceCreation = ["usInstantBankPayment"]
-        linkConfiguration.collectMissingBillingDetailsForExistingPaymentMethods = false
-        paymentElementConfiguration.linkConfiguration = linkConfiguration
-        checkoutConfiguration.paymentElement = paymentElementConfiguration
-
-        // When Checkout creates PaymentElement
-        let checkout = try await CheckoutController(
-            configuration: CheckoutTestHelpers.makeConfiguration(configuration: checkoutConfiguration)
-        )
-        let paymentElement = checkout.getPaymentElement()
-        let paymentSheetLinkConfiguration = paymentElement.paymentSheetFlowController.configuration.link
-        let embeddedLinkConfiguration = paymentElement.embeddedPaymentElement.configuration.link
-
-        // Then both presentations use the Link configuration overrides
-        XCTAssertEqual(paymentSheetLinkConfiguration.disallowFundingSourceCreation, ["usInstantBankPayment"])
-        XCTAssertFalse(paymentSheetLinkConfiguration.collectMissingBillingDetailsForExistingPaymentMethods)
-        XCTAssertEqual(embeddedLinkConfiguration.disallowFundingSourceCreation, ["usInstantBankPayment"])
-        XCTAssertFalse(embeddedLinkConfiguration.collectMissingBillingDetailsForExistingPaymentMethods)
+        XCTAssertEqual(paymentSheetConfiguration.link.disallowFundingSourceCreation, ["usInstantBankPayment"])
+        XCTAssertFalse(paymentSheetConfiguration.link.collectMissingBillingDetailsForExistingPaymentMethods)
+        XCTAssertEqual(embeddedConfiguration.link.disallowFundingSourceCreation, ["usInstantBankPayment"])
+        XCTAssertFalse(embeddedConfiguration.link.collectMissingBillingDetailsForExistingPaymentMethods)
     }
 
     func testConfigurationSetsCheckoutDefaultShippingDetails() async throws {
