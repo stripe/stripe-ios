@@ -1892,6 +1892,7 @@ extension PaymentSheetLPMConfirmFlowTests {
                 let parameters = CheckoutController.PaymentMethodConfirmationParameters(
                     option: .new(confirmParams),
                     configuration: configuration,
+                    nativeSheetPresentation: nil,
                     confirmationChallenge: nil,
                     authenticationContext: self,
                     paymentHandler: paymentHandler
@@ -1928,6 +1929,7 @@ extension PaymentSheetLPMConfirmFlowTests {
                 let parameters = CheckoutController.PaymentMethodConfirmationParameters(
                     option: .saved(paymentMethod, confirmParams),
                     configuration: configuration,
+                    nativeSheetPresentation: nil,
                     confirmationChallenge: nil,
                     authenticationContext: self,
                     paymentHandler: paymentHandler
@@ -1964,6 +1966,7 @@ extension PaymentSheetLPMConfirmFlowTests {
                 let parameters = CheckoutController.LinkConfirmationParameters(
                     confirmOption: confirmOption,
                     configuration: configuration,
+                    nativeSheetPresentation: nil,
                     confirmationChallenge: nil,
                     analyticsHelper: analyticsHelper,
                     authenticationContext: self,

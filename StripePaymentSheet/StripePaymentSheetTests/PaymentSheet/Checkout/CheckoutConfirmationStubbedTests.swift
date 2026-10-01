@@ -598,6 +598,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         XCTAssertEqual(parameters.configuration.defaultBillingDetails.address.country, "US")
         XCTAssertEqual(parameters.configuration.defaultBillingDetails.address.postalCode, "94107")
         XCTAssertNil(parameters.configuration.defaultBillingDetails.email)
+        XCTAssertNil(parameters.nativeSheetPresentation)
     }
 
     func testExpressCheckoutLinkRequiresPresentingViewController() async throws {
@@ -623,6 +624,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         let flow = CheckoutController.CheckoutConfirmationFlow.link(.init(
             confirmOption: makeLinkConfirmOption(),
             configuration: configuration,
+            nativeSheetPresentation: checkout.getPaymentElement().embeddedPaymentElement.nativeSheetPresentation,
             confirmationChallenge: nil,
             analyticsHelper: ._testValue(),
             authenticationContext: self,
@@ -654,6 +656,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         let flow = CheckoutController.CheckoutConfirmationFlow.link(.init(
             confirmOption: makeLinkConfirmOption(),
             configuration: configuration,
+            nativeSheetPresentation: checkout.getPaymentElement().embeddedPaymentElement.nativeSheetPresentation,
             confirmationChallenge: nil,
             analyticsHelper: ._testValue(),
             authenticationContext: self,
@@ -700,6 +703,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         let parameters = CheckoutController.PaymentMethodConfirmationParameters(
             option: option,
             configuration: configuration,
+            nativeSheetPresentation: checkout.getPaymentElement().embeddedPaymentElement.nativeSheetPresentation,
             confirmationChallenge: nil,
             authenticationContext: self,
             paymentHandler: STPPaymentHandler(apiClient: configuration.apiClient)
