@@ -17,7 +17,7 @@ MINOR
 
 ### PaymentSheet
 * [Added] Added MoMo API bindings and PaymentSheet support for PaymentIntents.
-* [Added] Added GoPay API bindings and support for payments, including setup future usage, in PaymentSheet.
+* [Added] Added GoPay API bindings and PaymentSheet support for PaymentIntents.
 
 ## 26.12.1 2026-09-28
 ### CryptoOnramp (Alpha)
