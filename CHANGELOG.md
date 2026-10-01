@@ -14,6 +14,9 @@ MINOR
 ### PaymentSheet
 * [Added] Added GoPay API bindings and support for payments, including setup future usage, in PaymentSheet.
 
+### PaymentSheet
+* [Added] The Link auth flow now natively supports email OTP and multi-factor authentication (MFA) enabled accounts.
+
 ## 26.12.1 2026-09-28
 ### CryptoOnramp (Alpha)
 * [Fixed] Preserved PaymentIntent error codes, decline codes, and types in checkout errors after authentication.
