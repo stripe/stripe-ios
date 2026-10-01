@@ -400,6 +400,11 @@ extension STPElementsSession {
         flags["elements_mobile_force_vertical_payment_method_layout"] == true
     }
 
+    // The server gate must be explicitly enabled before the experiment assignment can take effect.
+    var isNativeSheetEnabled: Bool {
+        flags["elements_mobile_ios_native_sheet_enabled"] == true
+    }
+
     var shouldUseAutocompleteProxyEndpoints: Bool {
         flags["ocs_mobile_should_use_autocomplete_proxy_endpoints"] == true
     }
