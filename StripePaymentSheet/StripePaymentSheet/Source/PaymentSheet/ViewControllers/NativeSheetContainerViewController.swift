@@ -22,6 +22,28 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
         appearance.sheetCornerRadius
     }
 
+    #if !os(visionOS)
+    static let contentDetentIdentifier = UISheetPresentationController.Detent.Identifier(
+        "com.stripe.paymentsheet.content"
+    )
+
+    // UIKit caps content-sized sheets at the available height; authentication may request that full height.
+    lazy var contentSizedDetent: UISheetPresentationController.Detent = {
+        guard #available(iOS 16.0, *) else {
+            return .large()
+        }
+        return .custom(identifier: Self.contentDetentIdentifier) { [weak self] context in
+            guard let self else {
+                return context.maximumDetentValue
+            }
+            guard !self.contentRequiresFullScreen else {
+                return context.maximumDetentValue
+            }
+            return min(self.fittedContentHeight, context.maximumDetentValue)
+        }
+    }()
+    #endif
+
     // MARK: - Views
     lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
@@ -257,6 +279,7 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
             completion?()
         }
 
+        invalidateContentDetent()
         guard sendsAppearanceCallbacks else {
             // A canceled presentation leaves the container offscreen. Prepare its latest content for reuse
             // without manufacturing appearance callbacks that UIKit will deliver on its next presentation.
@@ -308,6 +331,49 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
     // MARK: -
     private var scrollViewHeightConstraint: NSLayoutConstraint?
 
+    private var lastFittedContentHeight: CGFloat = 0
+    private var hasScheduledDetentInvalidation = false
+
+    private var fittedContentHeight: CGFloat {
+        // Measure both views at the same width so wrapped content and custom navigation bars fit together.
+        let width = max(contentContainerView.bounds.width, view.bounds.width)
+        guard width > 0 else {
+            return navigationBarContainerView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height
+        }
+        let fittingSize = CGSize(width: width, height: UIView.layoutFittingCompressedSize.height)
+        let navigationBarHeight = navigationBarContainerView.systemLayoutSizeFitting(
+            fittingSize,
+            withHorizontalFittingPriority: .required,
+            verticalFittingPriority: .fittingSizeLevel
+        ).height
+        let contentHeight = contentContainerView.systemLayoutSizeFitting(
+            fittingSize,
+            withHorizontalFittingPriority: .required,
+            verticalFittingPriority: .fittingSizeLevel
+        ).height
+        return navigationBarHeight + contentHeight
+    }
+
+    func prepareForPresentation(in availableWidth: CGFloat) {
+        loadViewIfNeeded()
+        // Resolve an initial height before UIKit asks the custom detent for its first value.
+        view.bounds.size.width = availableWidth
+        view.setNeedsLayout()
+        view.layoutIfNeeded()
+        lastFittedContentHeight = fittedContentHeight
+    }
+
+    func invalidateContentDetent() {
+        #if !os(visionOS)
+        guard #available(iOS 16.0, *) else {
+            return
+        }
+        sheetPresentationController?.animateChanges {
+            self.sheetPresentationController?.invalidateDetents()
+        }
+        #endif
+    }
+
     /// :nodoc:
     public override func viewDidLoad() {
         super.viewDidLoad()
@@ -350,18 +416,31 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
         contentContainerView.directionalLayoutMargins = appearance.formInsets
         scrollView.addSubview(contentContainerView)
 
-        // Give the scroll view a desired height
+        // Prefer the content's natural height while allowing UIKit to cap the sheet at the available height.
         let scrollViewHeightConstraint = scrollView.heightAnchor.constraint(equalTo: scrollView.contentLayoutGuide.heightAnchor)
         scrollViewHeightConstraint.priority = .fittingSizeLevel
         self.scrollViewHeightConstraint = scrollViewHeightConstraint
 
-        // Move the contentContainerView to start below the sheet
-        let topOffset = appearance.navigationBarStyle.isGlass ? navigationBarHeight : 0.0
+        let contentTopAnchor: NSLayoutYAxisAnchor
+        if appearance.navigationBarStyle.isGlass {
+            // Reserve the current navigation bar's actual height while allowing content to scroll underneath it.
+            let navigationBarSpace = UILayoutGuide()
+            scrollView.addLayoutGuide(navigationBarSpace)
+            NSLayoutConstraint.activate([
+                navigationBarSpace.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor),
+                navigationBarSpace.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor),
+                navigationBarSpace.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor),
+                navigationBarSpace.heightAnchor.constraint(equalTo: navigationBarContainerView.heightAnchor),
+            ])
+            contentTopAnchor = navigationBarSpace.bottomAnchor
+        } else {
+            contentTopAnchor = scrollView.contentLayoutGuide.topAnchor
+        }
 
         NSLayoutConstraint.activate([
             contentContainerView.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor),
             contentContainerView.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor),
-            contentContainerView.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor, constant: topOffset),
+            contentContainerView.topAnchor.constraint(equalTo: contentTopAnchor),
             contentContainerView.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor),
             contentContainerView.widthAnchor.constraint(equalTo: scrollView.frameLayoutGuide.widthAnchor),
             scrollViewHeightConstraint,
@@ -382,6 +461,23 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
         presentationController?.containerView?.addGestureRecognizer(outsideSheetTapGestureRecognizer)
     }
 
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+
+        let fittedContentHeight = fittedContentHeight
+        guard abs(fittedContentHeight - lastFittedContentHeight) > 0.5,
+              !hasScheduledDetentInvalidation else {
+            return
+        }
+        lastFittedContentHeight = fittedContentHeight
+        // Coalesce layout-driven changes and invalidate after the current layout pass completes.
+        hasScheduledDetentInvalidation = true
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+            self.hasScheduledDetentInvalidation = false
+            self.invalidateContentDetent()
+        }
+    }
     #if compiler(>=6.2)
     func enableNavigationBarBlurInteraction() {
         guard let navigationBarBlur,
@@ -412,8 +508,14 @@ extension NativeSheetContainerViewController {
 
         // Share the content dismissal contract while UIKit owns native presentation and gestures.
         if let sheetPresentationController {
-            sheetPresentationController.detents = [.large()]
-            sheetPresentationController.selectedDetentIdentifier = .large
+            if #available(iOS 16.0, *) {
+                prepareForPresentation(in: presentingViewController.view.bounds.width)
+                sheetPresentationController.detents = [contentSizedDetent]
+                sheetPresentationController.selectedDetentIdentifier = Self.contentDetentIdentifier
+            } else {
+                sheetPresentationController.detents = [.large()]
+                sheetPresentationController.selectedDetentIdentifier = .large
+            }
             sheetPresentationController.preferredCornerRadius = sheetCornerRadius
             sheetPresentationController.prefersGrabberVisible = true
             sheetPresentationController.prefersScrollingExpandsWhenScrolledToEdge = false
