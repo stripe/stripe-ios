@@ -342,7 +342,7 @@ extension PaymentSheet {
         var confirmationChallenge: ConfirmationChallenge?
         let analyticsHelper: PaymentSheetAnalyticsHelper
         /// Retains this flow's initial rollout assignment and exposure state across configuration updates.
-        let nativeSheetPresentation: NativeSheetPresentation
+        let nativeSheetPresentation: SheetImplementationResolver
         private var linkAccountObserver: LinkAccountContextObserver?
 
         // MARK: - Initializer (Internal)
@@ -354,7 +354,7 @@ extension PaymentSheet {
             analyticsHelper: PaymentSheetAnalyticsHelper
         ) {
             // Each new flow captures its own decision, even when a previous flow's configuration is reused.
-            self.nativeSheetPresentation = NativeSheetPresentation(
+            self.nativeSheetPresentation = SheetImplementationResolver(
                 elementsSession: loadResult.elementsSession,
                 analyticsHelper: analyticsHelper,
                 integrationShape: "flowcontroller"
@@ -966,7 +966,7 @@ extension PaymentSheet {
         static func makePaymentSheetContainerViewController(
             _ contentViewController: BottomSheetContentViewController,
             configuration: PaymentElementConfiguration,
-            nativeSheetPresentation: NativeSheetPresentation?,
+            nativeSheetPresentation: SheetImplementationResolver?,
             didCancelNative3DS2: (() -> Void)? = nil
         ) -> any PaymentSheetContainer {
             // FlowController's presentation APIs require the main thread but are not yet actor-isolated.
@@ -987,7 +987,7 @@ extension PaymentSheet {
 
         static func makeViewController(
             configuration: Configuration,
-            nativeSheetPresentation: NativeSheetPresentation,
+            nativeSheetPresentation: SheetImplementationResolver,
             loadResult: PaymentSheetLoader.LoadResult,
             analyticsHelper: PaymentSheetAnalyticsHelper,
             walletButtonsViewState: PaymentSheet.WalletButtonsViewState,

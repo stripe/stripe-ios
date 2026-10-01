@@ -65,7 +65,7 @@ extension PaymentSheet {
     /// Shares the owning flow's presentation state without resolving it until a sheet is needed.
     static func confirm(
         configuration: PaymentElementConfiguration,
-        nativeSheetPresentation: NativeSheetPresentation? = nil,
+        nativeSheetPresentation: SheetImplementationResolver? = nil,
         authenticationContext: STPAuthenticationContext,
         intent: Intent,
         elementsSession: STPElementsSession,
@@ -130,7 +130,7 @@ extension PaymentSheet {
     @MainActor
     static func handlePreconfirmActionsIfNecessary(
         configuration: PaymentElementConfiguration,
-        nativeSheetPresentation: NativeSheetPresentation?,
+        nativeSheetPresentation: SheetImplementationResolver?,
         authenticationContext: STPAuthenticationContext,
         intent: Intent,
         paymentOption: PaymentOption,
@@ -211,7 +211,7 @@ extension PaymentSheet {
 
     static func confirm(
         configuration: PaymentElementConfiguration,
-        nativeSheetPresentation: NativeSheetPresentation? = nil,
+        nativeSheetPresentation: SheetImplementationResolver? = nil,
         authenticationContext: STPAuthenticationContext,
         intent: Intent,
         elementsSession: STPElementsSession,
@@ -246,7 +246,7 @@ extension PaymentSheet {
     @MainActor
     static fileprivate func confirmAfterHandlingLocalActions(
         configuration: PaymentElementConfiguration,
-        nativeSheetPresentation: NativeSheetPresentation?,
+        nativeSheetPresentation: SheetImplementationResolver?,
         authenticationContext: STPAuthenticationContext,
         intent: Intent,
         elementsSession: STPElementsSession,
@@ -650,7 +650,7 @@ extension PaymentSheet {
     static func confirmLinkPaymentOption(
         confirmOption: LinkConfirmOption,
         configuration: PaymentElementConfiguration,
-        nativeSheetPresentation: NativeSheetPresentation?,
+        nativeSheetPresentation: SheetImplementationResolver?,
         authenticationContext: STPAuthenticationContext,
         intent: Intent,
         elementsSession: STPElementsSession,

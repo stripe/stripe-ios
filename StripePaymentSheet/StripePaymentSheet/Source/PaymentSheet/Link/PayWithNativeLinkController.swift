@@ -55,7 +55,7 @@ final class PayWithNativeLinkController {
     let intent: Intent
     let elementsSession: STPElementsSession
     let configuration: PaymentElementConfiguration
-    private let nativeSheetPresentation: NativeSheetPresentation?
+    private let nativeSheetPresentation: SheetImplementationResolver?
     let logPayment: Bool
     let analyticsHelper: PaymentSheetAnalyticsHelper
     let supportedPaymentMethodTypes: [LinkPaymentMethodType]?
@@ -71,7 +71,7 @@ final class PayWithNativeLinkController {
         intent: Intent,
         elementsSession: STPElementsSession,
         configuration: PaymentElementConfiguration,
-        nativeSheetPresentation: NativeSheetPresentation? = nil,
+        nativeSheetPresentation: SheetImplementationResolver? = nil,
         logPayment: Bool = true,
         analyticsHelper: PaymentSheetAnalyticsHelper,
         supportedPaymentMethodTypes: [LinkPaymentMethodType]? = nil,

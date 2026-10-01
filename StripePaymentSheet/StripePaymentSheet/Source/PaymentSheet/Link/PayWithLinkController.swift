@@ -27,7 +27,7 @@ final class PayWithLinkController {
     let intent: Intent
     let elementsSession: STPElementsSession
     let configuration: PaymentElementConfiguration
-    private let nativeSheetPresentation: NativeSheetPresentation?
+    private let nativeSheetPresentation: SheetImplementationResolver?
     let analyticsHelper: PaymentSheetAnalyticsHelper
     private let confirmationChallenge: ConfirmationChallenge?
     // If you pass a confirmHandler, it's used to confirm the payment. Otherwise, PaymentSheet.confirm is used.
@@ -37,7 +37,7 @@ final class PayWithLinkController {
         intent: Intent,
         elementsSession: STPElementsSession,
         configuration: PaymentElementConfiguration,
-        nativeSheetPresentation: NativeSheetPresentation? = nil,
+        nativeSheetPresentation: SheetImplementationResolver? = nil,
         analyticsHelper: PaymentSheetAnalyticsHelper,
         confirmationChallenge: ConfirmationChallenge?,
         confirmHandler: ConfirmHandler? = nil
