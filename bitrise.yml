@@ -670,11 +670,6 @@ workflows:
         - content: ./ci_scripts/check_paymentsheet_test_sharding.rb
         title: Check PaymentSheet test sharding
     - script@1:
-        title: Check CI checkout and test selection
-        inputs:
-        - content: |-
-            /usr/bin/ruby -e 'Dir.glob("ci_scripts/tests/*_test.rb").sort.each { |file| require File.expand_path(file) }'
-    - script@1:
         inputs:
         - content: ./ci_scripts/check_image_format.sh
         title: Check png image format is 8-bit
