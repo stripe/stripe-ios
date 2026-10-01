@@ -22,18 +22,21 @@ extension ExpressCheckoutElement {
         /// - Example: ["link", "apple_pay"]
         /// - Note: If you omit payment methods from this list, they’ll be automatically ordered by Stripe after the ones you provide. Invalid payment methods are ignored.
         public var paymentMethodOrder: [String]?
-        /// Called after a wallet payment confirmation completes.
-        public var confirmHandler: ConfirmHandler
-
         /// Controls appearance of Express Checkout Element.
         public var appearance: Appearance = .init()
 
-        /// Creates a configuration with default values.
-        public init(confirmHandler: @escaping ConfirmHandler) {
-            self.confirmHandler = confirmHandler
+        let completion: CompletionHandler
+        
+        /// Creates an Express Checkout Element configuration with default values.
+        /// - Parameters:
+        ///   - completion: A handler called after a wallet payment confirmation completes.
+        public init(completion: @escaping CompletionHandler) {
+            self.completion = completion
         }
     }
+}
 
+extension ExpressCheckoutElement.Configuration {
     /// Configuration for Apple Pay.
     public struct ApplePayConfiguration: CheckoutApplePayConfiguration {
         /// The Apple Pay merchant identifier.
@@ -63,7 +66,7 @@ extension ExpressCheckoutElement {
             buttonType: PKPaymentButtonType? = nil,
             display: Display = .automatic
         ) {
-                self.merchantId = merchantId
+            self.merchantId = merchantId
             self.buttonType = buttonType
             self.display = display
         }
@@ -98,7 +101,7 @@ extension ExpressCheckoutElement {
             /// Automatic theme.
             case automatic
         }
-
+        
         /// Controls the layout of express payment buttons.
         public struct ButtonLayout {
             /// Maximum number of columns. `nil` uses the default. Must be greater than zero when set.
@@ -119,16 +122,16 @@ extension ExpressCheckoutElement {
             }
             public init() {}
         }
-
+        
         /// Theme of Apple Pay buttons. Link buttons retain Link's required brand styling.
         public var buttonTheme: ButtonTheme = .automatic
-
+        
         /// Layout of the express payment buttons.
         public var buttonLayout: ButtonLayout = .init()
-
+        
         public init() {}
     }
-
+    
     /// A closure called after a wallet payment confirmation completes.
-    public typealias ConfirmHandler = (_ result: CheckoutController.ConfirmResult) -> Void
+    public typealias CompletionHandler = (_ result: CheckoutController.ConfirmResult) -> Void
 }
