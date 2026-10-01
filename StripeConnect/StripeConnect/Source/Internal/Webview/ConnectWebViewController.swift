@@ -48,6 +48,12 @@ class ConnectWebViewController: UIViewController {
 
     private var nativeAccessoryLayerViewControllers: [NativeAccessoryLayerViewController] = []
 
+    /// Background for native overlay sheets, so they match the web content they host.
+    var nativeAccessoryLayerBackgroundColor: UIColor { .systemBackground }
+
+    /// Text color for native overlay sheet chrome (title and subtitle).
+    var nativeAccessoryLayerTextColor: UIColor { .label }
+
     init(configuration: WKWebViewConfiguration,
          analyticsClient: ComponentAnalyticsClient,
          allowedHosts: [String],
@@ -234,17 +240,32 @@ private extension ConnectWebViewController {
             configuration: configuration,
             nativeLayerId: nativeLayerId,
             prefersLargeDetent: nativeOverlaySize == "large",
-            name: nativeOverlayName
+            name: nativeOverlayName,
+            backgroundColor: nativeAccessoryLayerBackgroundColor,
+            textColor: nativeAccessoryLayerTextColor
         )
         accessoryLayerViewController.didClose = { [weak self, weak accessoryLayerViewController] in
             self?.nativeAccessoryLayerViewControllers.removeAll {
                 $0 === accessoryLayerViewController
             }
         }
-        let presenter = nativeAccessoryLayerViewControllers.last ?? self
         nativeAccessoryLayerViewControllers.append(accessoryLayerViewController)
-        presenter.present(accessoryLayerViewController, animated: true)
+        // Resolve the presenter when the sheet is ready, not now: opening one overlay often closes another
+        // (e.g. a menu item that opens a dialog), and a sheet can't be presented from one that's dismissing.
+        accessoryLayerViewController.presentWhenReady(
+            stagingHost: view.window ?? view,
+            presenter: { [weak self] in self?.topmostPresenter() }
+        )
         return accessoryLayerViewController.webView
+    }
+
+    /// The top of the presentation stack above this web view, skipping sheets that are being dismissed.
+    func topmostPresenter() -> UIViewController {
+        var top: UIViewController = self
+        while let presented = top.presentedViewController, !presented.isBeingDismissed {
+            top = presented
+        }
+        return top
     }
 
     // Opens the given URL in an SFSafariViewController

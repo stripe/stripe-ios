@@ -19,6 +19,14 @@ class ConnectComponentWebViewController: ConnectWebViewController {
 
     var onDismiss: (() -> Void)?
 
+    override var nativeAccessoryLayerBackgroundColor: UIColor {
+        componentManager.appearance.colors.background ?? .systemBackground
+    }
+
+    override var nativeAccessoryLayerTextColor: UIColor {
+        componentManager.appearance.colors.text ?? .label
+    }
+
     /// The embedded component manager that will be used for requests.
     let componentManager: EmbeddedComponentManager
 
@@ -410,14 +418,13 @@ private extension ConnectComponentWebViewController {
                 injectionTime: .atDocumentEnd,
                 forMainFrameOnly: true
             ))
-            addMessageHandler(ScriptMessageHandler<ContentHeightPayload>(
-                name: "connectContentHeight",
-                analyticsClient: analyticsClient
-            ) { payload in
-                let height = CGFloat(payload.height)
-                guard height.isFinite, height >= 0 else { return }
-                onContentHeightChange(height)
-            })
+            // Native overlay sheets share this content controller (WebKit requires popups to reuse the
+            // opener's configuration), so only accept heights reported by this component's own web view.
+            contentController.add(
+                ContentHeightMessageHandler(webView: webView, onContentHeightChange: onContentHeightChange),
+                contentWorld: .page,
+                name: ContentHeightMessageHandler.name
+            )
         }
     }
 
@@ -528,6 +535,8 @@ private extension ConnectComponentWebViewController {
     static let contentHeightObserverScript = """
     (function() {
       if (window.__stripeConnectHeightObserver) { return; }
+      // Overlay sheets opened by the component load accessory layer pages in this same configuration.
+      if (/accessory_layer_/.test(location.pathname)) { return; }
       window.__stripeConnectHeightObserver = true;
       var last = -1;
       function report(force) {
@@ -549,6 +558,26 @@ private extension ConnectComponentWebViewController {
     """
 }
 
-private struct ContentHeightPayload: Decodable {
-    let height: Double
+/// Reports content height from a size-to-content component's own web view, ignoring any other
+/// web views (such as native overlay sheets) that share its content controller.
+private final class ContentHeightMessageHandler: NSObject, WKScriptMessageHandler {
+    static let name = "connectContentHeight"
+
+    private weak var webView: WKWebView?
+    private let onContentHeightChange: (CGFloat) -> Void
+
+    init(webView: WKWebView, onContentHeightChange: @escaping (CGFloat) -> Void) {
+        self.webView = webView
+        self.onContentHeightChange = onContentHeightChange
+    }
+
+    func userContentController(_ userContentController: WKUserContentController,
+                               didReceive message: WKScriptMessage) {
+        guard message.webView === webView,
+              let body = message.body as? [String: Any],
+              let number = body["height"] as? NSNumber else { return }
+        let height = CGFloat(truncating: number)
+        guard height.isFinite, height >= 0 else { return }
+        onContentHeightChange(height)
+    }
 }
