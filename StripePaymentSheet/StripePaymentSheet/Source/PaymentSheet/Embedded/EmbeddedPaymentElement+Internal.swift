@@ -39,8 +39,8 @@ extension EmbeddedPaymentElement {
             isFirstCardCoBranded: loadResult.savedPaymentMethods.first?.isCoBrandedCard ?? false,
             isCBCEligible: loadResult.elementsSession.isCardBrandChoiceEligible,
             allowsRemovalOfLastSavedPaymentMethod: loadResult.elementsSession.paymentMethodRemoveLast(configuration: configuration),
-            allowsPaymentMethodRemoval: loadResult.intent.allowsPaymentMethodRemoval(elementsSession: loadResult.elementsSession),
-            allowsPaymentMethodUpdate: loadResult.intent.allowsPaymentMethodUpdate(elementsSession: loadResult.elementsSession),
+            allowsPaymentMethodRemoval: loadResult.customerProvider.allowsPaymentMethodRemoval(elementsSession: loadResult.elementsSession),
+            allowsPaymentMethodUpdate: loadResult.customerProvider.allowsPaymentMethodUpdate(elementsSession: loadResult.elementsSession),
             omitChevron: configuration.appearance.embeddedPaymentElement.row.style.omitChevronInAccessoryButton
         )
         let initialSelection: RowButtonType? = {
@@ -312,8 +312,8 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
                                                                                billingDetailsCollectionConfiguration: configuration.billingDetailsCollectionConfiguration,
                                                                                hostedSurface: .paymentSheet,
                                                                                cardBrandFilter: configuration.cardBrandFilter,
-                                                                               canRemove: elementsSession.paymentMethodRemoveLast(configuration: configuration) && intent.allowsPaymentMethodRemoval(elementsSession: elementsSession),
-                                                                               canUpdate: intent.allowsPaymentMethodUpdate(elementsSession: elementsSession),
+                                                                               canRemove: elementsSession.paymentMethodRemoveLast(configuration: configuration) && loadResult.customerProvider.allowsPaymentMethodRemoval(elementsSession: elementsSession),
+                                                                               canUpdate: loadResult.customerProvider.allowsPaymentMethodUpdate(elementsSession: elementsSession),
                                                                                isCBCEligible: paymentMethod.isCoBrandedCard && elementsSession.isCardBrandChoiceEligible,
                                                                                allowsSetAsDefaultPM: elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
                                                                                isDefault: paymentMethod == defaultPaymentMethod)
@@ -460,8 +460,8 @@ extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {
             isFirstCardCoBranded: savedPaymentMethods.first?.isCoBrandedCard ?? false,
             isCBCEligible: elementsSession.isCardBrandChoiceEligible,
             allowsRemovalOfLastSavedPaymentMethod: elementsSession.paymentMethodRemoveLast(configuration: configuration),
-            allowsPaymentMethodRemoval: intent.allowsPaymentMethodRemoval(elementsSession: elementsSession),
-            allowsPaymentMethodUpdate: intent.allowsPaymentMethodUpdate(elementsSession: elementsSession),
+            allowsPaymentMethodRemoval: loadResult.customerProvider.allowsPaymentMethodRemoval(elementsSession: elementsSession),
+            allowsPaymentMethodUpdate: loadResult.customerProvider.allowsPaymentMethodUpdate(elementsSession: elementsSession),
             omitChevron: configuration.appearance.embeddedPaymentElement.row.style.omitChevronInAccessoryButton
         )
     }
