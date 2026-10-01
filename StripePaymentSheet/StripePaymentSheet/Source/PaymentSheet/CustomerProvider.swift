@@ -68,4 +68,11 @@ struct CustomerProvider {
             return session.customer?.paymentMethods
         }
     }
+
+    var email: String? {
+        guard case .checkoutSession(let session) = backing else {
+            return nil
+        }
+        return session.customer?.email ?? session.email
+    }
 }
