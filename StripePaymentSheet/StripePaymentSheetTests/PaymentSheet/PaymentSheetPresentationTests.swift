@@ -5,13 +5,118 @@
 //  Created by George Birch on 8/10/26.
 //
 
-@_spi(AppearanceAPIAdditionsPreview) @testable import StripePaymentSheet
+@_spi(STP) @testable import StripePayments
+@_spi(STP) @_spi(AppearanceAPIAdditionsPreview) @testable import StripePaymentSheet
 @_spi(STP) import StripeUICore
 import UIKit
 import XCTest
 
 #if !os(visionOS)
 final class PaymentSheetPresentationTests: XCTestCase {
+
+    @MainActor
+    func testNativeGlassPresentationFadesBackground() async throws {
+        guard #available(iOS 26.0, *) else { throw XCTSkip("Liquid Glass requires iOS 26.") }
+        guard !UIAccessibility.isReduceMotionEnabled else { throw XCTSkip("Presentation animations require Reduce Motion to be off.") }
+        // Given real payment content using native sheets and Liquid Glass
+        await AddressSpecProvider.shared.loadAddressSpecs()
+        let previousOverride = PaymentSheet.NativeSheetFeatureFlags.nativeSheetEnabledOverride
+        PaymentSheet.NativeSheetFeatureFlags.nativeSheetEnabledOverride = true
+        defer { PaymentSheet.NativeSheetFeatureFlags.nativeSheetEnabledOverride = previousOverride }
+        var appearance = PaymentSheet.Appearance.default
+        appearance.applyLiquidGlass()
+        for variant in ["horizontal", "vertical", "embedded"] {
+            let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first)
+            let presenter = UIViewController()
+            presenter.view.backgroundColor = .white
+            let window = UIWindow(windowScene: scene)
+            window.frame = UIScreen.main.bounds
+            window.rootViewController = presenter
+            window.makeKeyAndVisible()
+            defer { window.isHidden = true }
+            try await Task.sleep(nanoseconds: 200_000_000)
+            var flowController: PaymentSheet.FlowController?
+            var embeddedElement: EmbeddedPaymentElement?
+
+            // When opening the FlowController picker or Embedded's card form
+            let loadResult = PaymentSheetLoader.LoadResult(
+                intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
+                elementsSession: ._testValue(paymentMethodTypes: ["card"]),
+                savedPaymentMethods: [],
+                paymentMethodTypes: [.stripe(.card)],
+                paymentMethodMessagingPromotionsHelper: ._testValue(),
+                paymentMethodOrientation: variant == "horizontal" ? .horizontal : .vertical
+            )
+            var configuration = PaymentSheet.Configuration()
+            configuration.appearance = appearance
+            configuration.applePay = nil
+            configuration.link = .init(display: .never)
+            if variant == "embedded" {
+                var embeddedConfiguration = EmbeddedPaymentElement.Configuration()
+                embeddedConfiguration.appearance = appearance
+                let element = EmbeddedPaymentElement(configuration: embeddedConfiguration, loadResult: loadResult, analyticsHelper: ._testValue())
+                embeddedElement = element
+                element.presentingViewController = presenter
+                presenter.view.addSubview(element.view)
+                element.view.frame = presenter.view.bounds
+                element.embeddedPaymentMethodsView.didTap(rowButton: element.embeddedPaymentMethodsView.getRowButton(accessibilityIdentifier: "Card"))
+            } else {
+                flowController = PaymentSheet.FlowController(configuration: configuration, loadResult: loadResult, analyticsHelper: ._testValue())
+                flowController?.presentPaymentOptions(from: presenter, completion: {})
+            }
+
+            // Then the rendered background starts lighter and darkens during the opening animation.
+            try await Task.sleep(nanoseconds: 25_000_000)
+            let navigationController = try XCTUnwrap(presenter.presentedViewController as? UINavigationController)
+            XCTAssertTrue(navigationController.viewControllers.first is NativeSheetContainerViewController)
+            var pending = [window as UIView]
+            var dimmingLayer: CALayer?
+            while let view = pending.popLast() {
+                // Search UIKit's presentation chrome, not the payment form's own animations.
+                guard view !== navigationController.view, view !== presenter.view else { continue }
+                if let alpha = view.layer.backgroundColor?.alpha, alpha > 0, alpha < 1,
+                   view.layer.animation(forKey: "backgroundColor") != nil {
+                    dimmingLayer = view.layer
+                    break
+                }
+                pending.append(contentsOf: view.subviews)
+            }
+            let layer = try XCTUnwrap(dimmingLayer, "Missing dimming animation for \(variant)")
+            let targetAlpha = try XCTUnwrap(layer.backgroundColor?.alpha)
+            let initialAlpha = try XCTUnwrap(layer.presentation()?.backgroundColor?.alpha)
+            XCTAssertLessThan(initialAlpha, targetAlpha * 0.75, "\(variant) dimmed immediately")
+            try await Task.sleep(nanoseconds: 75_000_000)
+            let laterAlpha = try XCTUnwrap(layer.presentation()?.backgroundColor?.alpha)
+            XCTAssertGreaterThan(laterAlpha, initialAlpha + 0.01, "\(variant) did not fade")
+
+            // Let UIKit finish presenting before dismissing this variant.
+            try await Task.sleep(nanoseconds: 500_000_000)
+            let dismissed = expectation(description: "Dismissed \(variant)")
+            presenter.dismiss(animated: false) { dismissed.fulfill() }
+            await fulfillment(of: [dismissed], timeout: 3)
+            withExtendedLifetime((flowController, embeddedElement)) {}
+        }
+    }
+
+    @MainActor
+    func testPreparingNativeSheetDoesNotResizePresentationHost() {
+        // Given a navigation controller whose bounds differ from the content's available width
+        let sheet = NativeSheetContainerViewController(
+            contentViewController: MeasuredSheetContentViewController(),
+            appearance: .default,
+            isTestMode: true,
+            didCancelNative3DS2: {}
+        )
+        let navigationController = UINavigationController(rootViewController: sheet)
+        navigationController.view.frame = CGRect(x: 0, y: 0, width: 1024, height: 800)
+
+        // When measuring content before presentation
+        sheet.prepareForPresentation(in: 375)
+
+        // Then only the content is resized; UIKit retains control of the presentation host's layout
+        XCTAssertEqual(sheet.view.bounds.width, 375)
+        XCTAssertEqual(navigationController.view.bounds.width, 1024)
+    }
 
     @MainActor
     func testPresentAsSheetUsesNativeSheetBehavior() throws {

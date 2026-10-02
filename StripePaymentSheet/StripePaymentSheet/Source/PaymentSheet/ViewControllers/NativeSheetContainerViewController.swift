@@ -400,10 +400,9 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
 
     func prepareForPresentation(in availableWidth: CGFloat) {
         loadViewIfNeeded()
-        // Lay out the navigation host too so the first detent uses its actual content area.
-        rootParent.view.bounds.size.width = availableWidth
-        rootParent.view.setNeedsLayout()
-        rootParent.view.layoutIfNeeded()
+        // Laying out the navigation controller here interrupts UIKit's opening dimming animation
+        // on iOS 26.1. Measure only our content and let UIKit lay out its presentation host.
+        view.bounds.size.width = availableWidth
         view.setNeedsLayout()
         view.layoutIfNeeded()
         lastFittedContentHeight = fittedContentHeight
@@ -426,9 +425,7 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
         // Wait until UIKit finishes presenting or dismissing before starting a height animation.
         if rootParent.isBeingPresented || rootParent.isBeingDismissed {
             guard let transitionCoordinator = rootParent.transitionCoordinator else { return }
-            // A completion-only registration disrupts UIKit's dimming animation on iOS 26.1.
-            // Supply an empty animation block so the background still fades during presentation.
-            isWaitingForDetentTransition = transitionCoordinator.animate(alongsideTransition: { _ in }) { [weak self] _ in
+            isWaitingForDetentTransition = transitionCoordinator.animate(alongsideTransition: nil) { [weak self] _ in
                 // UIKit must clear the parent's transition state before we start another sheet animation.
                 DispatchQueue.main.async { [weak self] in
                     guard let self else { return }
