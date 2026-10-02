@@ -77,7 +77,7 @@ class PaymentSheetStandardLPMUITwoTests: PaymentSheetStandardLPMUICase {
         _testInstantDebits(mode: .setup)
     }
 
-    func _testSavedSEPADebitPaymentMethod_FlowController_ShowsMandate() {
+    func testSavedSEPADebitPaymentMethod_FlowController_ShowsMandate() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.layout = .horizontal
         settings.merchantCountryCode = .FR
@@ -110,13 +110,15 @@ class PaymentSheetStandardLPMUITwoTests: PaymentSheetStandardLPMUICase {
 
         // Tapping confirm without presenting flowcontroller should show the mandate
         app.buttons["Confirm"].tap()
-        XCTAssertTrue(app.otherElements.matching(identifier: "mandatetextview").element.waitForExistence(timeout: 1))
+        // The FlowController sheet presents asynchronously; give the mandate view time to render
+        // instead of a 1s budget that regularly loses the race on a loaded runner. (RUN_MOBILESDK-5436)
+        XCTAssertTrue(app.otherElements.matching(identifier: "mandatetextview").element.waitForExistence(timeout: 10.0))
         // Tapping out should cancel the payment
-        app.buttons["UIButton.Close"].tap()
+        XCTAssertTrue(app.buttons["UIButton.Close"].waitForExistenceAndTap(timeout: 10.0))
         XCTAssertTrue(app.staticTexts["Payment canceled."].waitForExistence(timeout: 10.0))
         // Tapping confirm again and hitting continue should confirm the payment
-        app.buttons["Confirm"].tap()
-        app.buttons["Continue"].tap()
+        XCTAssertTrue(app.buttons["Confirm"].waitForExistenceAndTap(timeout: 10.0))
+        XCTAssertTrue(app.buttons["Continue"].waitForExistenceAndTap(timeout: 10.0))
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
 
         // Reload w/ same customer (retry to avoid lock contention on the customer object)
@@ -126,9 +128,9 @@ class PaymentSheetStandardLPMUITwoTests: PaymentSheetStandardLPMUICase {
         XCTAssert(paymentMethodButton.label.hasPrefix("••••3201, sepa_debit"))
         paymentMethodButton.waitForExistenceAndTap()
 
-        XCTAssertTrue(app.otherElements.matching(identifier: "mandatetextview").element.exists)
+        XCTAssertTrue(app.otherElements.matching(identifier: "mandatetextview").element.waitForExistence(timeout: 10.0))
         // ...you shouldn't see the mandate again when you confirm
-        app.buttons["Continue"].tap()
+        XCTAssertTrue(app.buttons["Continue"].waitForExistenceAndTap(timeout: 10.0))
         app.otherElements.matching(identifier: "mandatetextview").element.waitForNonExistence(timeout: 5.0)
         app.buttons["Confirm"].waitForExistenceAndTap()
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
