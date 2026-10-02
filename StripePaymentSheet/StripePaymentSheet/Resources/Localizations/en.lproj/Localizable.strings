@@ -237,6 +237,9 @@ with the transaction. */
 /* Text for a button that allows manual entry of an address */
 "Enter address manually" = "Enter address manually";
 
+/* Error when Link email verification requires a phone number. */
+"Enter the phone number on your Link account." = "Enter the phone number on your Link account.";
+
 /* Label title for EPS Bank */
 "EPS Bank" = "EPS Bank";
 
@@ -533,6 +536,9 @@ is not supported by the merchant */
 /* Content for alert popup prompting if they want to remove a payment method when using payment_method_remove == .partial. %@ is replaced by the merchant name */
 "This payment method will be removed but will remain available for %@ subscriptions." = "This payment method will be removed but will remain available for %@ subscriptions.";
 
+/* Error when the phone number entered before Link email verification does not match the account. */
+"This phone number doesn't match your Link account. Please try again." = "This phone number doesn't match your Link account. Please try again.";
+
 /* Error message shown when the user enters an incorrect verification code too many times. */
 "Too many attempts. Please try again in a few minutes." = "Too many attempts. Please try again in a few minutes.";
 
@@ -551,6 +557,9 @@ the heading the screen itself. */
 
 /* Text shown on a button that displays a customer's default saved payment method. When tapped, it opens a screen that shows all of the customer's saved payment methods. */
 "View more" = "View more";
+
+/* Link authentication cannot continue with the available verification methods. */
+"We couldn't verify your account. Please close this window and try again." = "We couldn't verify your account. Please close this window and try again.";
 
 /* Text for a tappable link that will update the email field with a suggested email address. */
 "Yes, update" = "Yes, update";
