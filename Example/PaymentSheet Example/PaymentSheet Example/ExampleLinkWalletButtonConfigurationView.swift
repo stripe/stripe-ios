@@ -14,6 +14,7 @@ struct LinkWalletButtonDemoConfiguration {
     var supportedPaymentMethodTypes: Set<LinkPaymentMethodType> = Set(LinkPaymentMethodType.allCases)
     var useCustomAppearance: Bool = false
     var uiFramework: UIFramework = .swiftUI
+    var showsPaymentMethodPreviewOnButton: Bool = true
 
     enum UIFramework: String, CaseIterable {
         case swiftUI = "SwiftUI"
@@ -103,6 +104,11 @@ struct ExampleLinkWalletButtonConfigurationView: View {
                                 .font(.caption)
                                 .foregroundColor(.secondary)
                         }
+
+                        Toggle("Show PM preview on button", isOn: $configuration.showsPaymentMethodPreviewOnButton)
+                        Text("When off, the button shows the customer's email instead of their payment method.")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
                     }
                 }
 

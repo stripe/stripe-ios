@@ -78,6 +78,28 @@ final class LinkWalletButtonTests: XCTestCase {
         XCTAssertEqual(button.displayedPaymentMethodPreview?.last4, "4242")
     }
 
+    func testShowsEmailWhenPaymentMethodPreviewIsDisabled() {
+        // Given an account with a default card
+        let controller = MockLinkWalletButtonController()
+        controller.linkAccount = Stubs.linkAccount(email: email, paymentMethodType: .card)
+        controller.selectedPaymentDetails = LinkStubs.paymentMethods()[LinkStubs.PaymentMethodIndices.card]
+        let button = makeButton(controller: controller)
+        XCTAssertNotNil(button.displayedPaymentMethodPreview)
+
+        // When the payment method preview is disabled
+        button.showsPaymentMethodPreview = false
+
+        // Then the button shows the email instead
+        XCTAssertEqual(button.displayedLinkAccount?.email, email)
+        XCTAssertNil(button.displayedPaymentMethodPreview)
+
+        // When it's enabled again
+        button.showsPaymentMethodPreview = true
+
+        // Then the payment method is shown again
+        XCTAssertEqual(button.displayedPaymentMethodPreview?.last4, "1234")
+    }
+
     func testHidesAccountDetailsWhenEmailDoesNotMatch() {
         // Given an account for a different customer
         let controller = MockLinkWalletButtonController()
