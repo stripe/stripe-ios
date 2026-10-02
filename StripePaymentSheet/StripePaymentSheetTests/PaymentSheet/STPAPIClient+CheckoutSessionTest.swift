@@ -173,8 +173,7 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
 
     // MARK: - Update Payment Method
 
-    // This customer and saved 4242 card are dedicated to these tests in the US Checkout
-    // playground account. Reuse them to avoid creating another card for each recording.
+    // Dedicated US Checkout playground customer with a saved 4242 card.
     private static let checkoutCustomerID = "cus_VMuutnh9o7Jq9z"
     private static let checkoutCustomerCardID = "pm_1UMB4RLu5o3P18ZpsmyagQld"
 
