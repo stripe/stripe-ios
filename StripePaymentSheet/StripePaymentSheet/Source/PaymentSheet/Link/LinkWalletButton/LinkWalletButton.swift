@@ -62,6 +62,8 @@ import UIKit
     private var isLookingUp = false
     private var cancellables: Set<AnyCancellable> = []
 
+    static let stateTransitionDuration: TimeInterval = 0.25
+
     /// Creates a `LinkWalletButton`.
     /// - Parameter linkController: The `LinkController` used to look up the customer and present the Link flow.
     /// - Parameter email: The customer's email address.
@@ -123,18 +125,40 @@ import UIKit
     }
 
     func updateButton() {
-        button.brand = linkController.resolvedLinkBrand
-
+        let brand = linkController.resolvedLinkBrand
+        let linkAccount: PaymentSheetLinkAccount?
+        let paymentMethodPreview: LinkPaymentMethodPreview?
         // Only show account details for the customer the merchant provided
-        guard let linkAccount = linkController.linkAccount, Self.accountMatches(linkAccount, email: email) else {
-            button.linkAccount = nil
-            button.paymentMethodPreview = nil
+        if let account = linkController.linkAccount, Self.accountMatches(account, email: email) {
+            linkAccount = account
+            paymentMethodPreview = Self.paymentMethodPreview(
+                selectedPaymentDetails: linkController.selectedPaymentDetails,
+                linkAccount: account
+            )
+        } else {
+            linkAccount = nil
+            paymentMethodPreview = nil
+        }
+
+        let isVisibleChange = brand != button.brand
+            || PayWithLinkButton.linkAccountState(linkAccount: linkAccount, paymentMethodPreview: paymentMethodPreview) != button.linkAccountState
+
+        let applyChanges = { [button] in
+            button.brand = brand
+            button.linkAccount = linkAccount
+            button.paymentMethodPreview = paymentMethodPreview
+        }
+
+        // Cross-fade between states once the button is on screen, e.g. when the lookup reveals the customer's email
+        guard isVisibleChange, window != nil else {
+            applyChanges()
             return
         }
-        button.linkAccount = linkAccount
-        button.paymentMethodPreview = Self.paymentMethodPreview(
-            selectedPaymentDetails: linkController.selectedPaymentDetails,
-            linkAccount: linkAccount
+        UIView.transition(
+            with: button,
+            duration: Self.stateTransitionDuration,
+            options: [.transitionCrossDissolve, .allowUserInteraction, .beginFromCurrentState],
+            animations: applyChanges
         )
     }
 
