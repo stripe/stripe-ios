@@ -40,7 +40,8 @@ pipelines:
         inputs:
         - CI_SNAPSHOTS_IN_DEDICATED_WORKFLOW: "true"
       financial-connections-stability-tests: {}
-      lpm-confirm-flow-tests: {}
+      lpm-confirm-flow-tests:
+        parallel: 2
       framework-tests-and-builds-xcode-26-1: {}
       install-and-integration-tests: {}
       size-report: {}
@@ -408,13 +409,39 @@ workflows:
         machine_type_id: g2.mac.large
   lpm-confirm-flow-tests:
     steps:
+    - script@1:
+        title: Select LPM confirmation shard
+        inputs:
+        - content: |-
+            #!/usr/bin/env bash
+            set -euo pipefail
+            test_class="StripePaymentSheetTests/PaymentSheetLPMConfirmFlowTests"
+            # These two methods take about half the suite's execution time.
+            dedicated_methods=(testAmazonPayConfirmFlows testTwintConfirmFlows)
+            options=("-only-testing:$test_class")
+            case "${BITRISE_IO_PARALLEL_TOTAL:-1}:${BITRISE_IO_PARALLEL_INDEX:-0}" in
+              1:0) ;; # Standalone runs retain the entire class.
+              2:0)
+                options=()
+                for method in "${dedicated_methods[@]}"; do
+                  options+=("-only-testing:$test_class/$method")
+                done
+                ;;
+              2:1)
+                for method in "${dedicated_methods[@]}"; do
+                  options+=("-skip-testing:$test_class/$method")
+                done
+                ;;
+              *) echo "Unsupported LPM shard index or count" >&2; exit 1 ;;
+            esac
+            envman add --key LPM_TEST_OPTIONS --value "${options[*]}"
     - xcode-test@6:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "2"
         - scheme: StripePaymentSheet
-        - xcodebuild_options: -only-testing:StripePaymentSheetTests/PaymentSheetLPMConfirmFlowTests
+        - xcodebuild_options: $LPM_TEST_OPTIONS
     - deploy-to-bitrise-io@2: {}
     - save-spm-cache@1: {}
     before_run:
@@ -805,10 +832,17 @@ workflows:
     - script@1:
         inputs:
         - content: |
+            UI_TEST_WORKERS="${UI_TEST_WORKERS:-4}"
+            case "$UI_TEST_WORKERS" in
+              [1-8]) ;;
+              *) echo "UI_TEST_WORKERS must be an integer from 1 to 8" >&2; exit 1 ;;
+            esac
+            envman add --key UI_TEST_WORKERS --value "$UI_TEST_WORKERS"
             # Convert 0-indexed parallel index to 1-indexed shard number
             SHARD_NUM=$((BITRISE_IO_PARALLEL_INDEX + 1))
             envman add --key TEST_PLAN_SHARD --value "PaymentSheet Example-Shard${SHARD_NUM}"
-            echo "Running shard ${SHARD_NUM} of ${BITRISE_IO_PARALLEL_TOTAL}"
+            echo "Running shard ${SHARD_NUM} of ${BITRISE_IO_PARALLEL_TOTAL} with ${UI_TEST_WORKERS} test workers"
+            sysctl machdep.cpu.brand_string hw.ncpu hw.memsize
         title: Set test plan based on parallel index
     - script@1:
         is_skippable: true
@@ -827,7 +861,7 @@ workflows:
         - scheme: PaymentSheet Example
         - test_plan: $TEST_PLAN_SHARD
         - log_formatter: xcbeautify
-        - xcodebuild_options: -parallel-testing-enabled YES -maximum-parallel-testing-workers 2
+        - xcodebuild_options: -parallel-testing-enabled YES -parallel-testing-worker-count $UI_TEST_WORKERS
     - script@1:
         is_always_run: true
         title: Retry gate for test-runner hang
@@ -844,7 +878,7 @@ workflows:
     meta:
       bitrise.io:
         stack: osx-xcode-26.4.x
-        machine_type_id: g2.mac.large
+        machine_type_id: g2.mac.4x-large
   ui-tests-connect-crypto:
     steps:
     - script@1:
@@ -891,7 +925,7 @@ workflows:
         - scheme: CryptoOnramp Example
         - test_plan: CryptoOnrampExampleUITests
         - log_formatter: xcbeautify
-        - xcodebuild_options: -parallel-testing-enabled YES -maximum-parallel-testing-workers 2
+        - xcodebuild_options: -parallel-testing-enabled YES -parallel-testing-worker-count 4
     - script@1:
         is_always_run: true
         title: Retry gate for test-runner hang
@@ -909,7 +943,7 @@ workflows:
     meta:
       bitrise.io:
         stack: osx-xcode-26.4.x
-        machine_type_id: g2.mac.large
+        machine_type_id: g2.mac.x-large
   upload_logs:
     steps:
     - deploy-to-bitrise-io@2:
