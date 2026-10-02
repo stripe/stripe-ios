@@ -6,7 +6,8 @@
 import SwiftUI
 import UIKit
 
-@_spi(LinkControllerPreview) import StripePaymentSheet
+@_spi(STP) import StripeCore
+@_spi(STP) @_spi(LinkControllerPreview) import StripePaymentSheet
 
 struct LinkWalletButtonDemoConfiguration {
     var email: String = "foo@bar.com"
@@ -15,10 +16,26 @@ struct LinkWalletButtonDemoConfiguration {
     var useCustomAppearance: Bool = false
     var uiFramework: UIFramework = .swiftUI
     var showsPaymentMethodPreviewOnButton: Bool = true
+    var linkBrand: LinkBrandOverride = .automatic
 
     enum UIFramework: String, CaseIterable {
         case swiftUI = "SwiftUI"
         case uiKit = "UIKit"
+    }
+
+    enum LinkBrandOverride: String, CaseIterable {
+        case automatic = "Automatic"
+        case link = "Link"
+        case onelink = "Onelink"
+
+        /// The brand to force, or `nil` to let Stripe choose.
+        var brand: LinkBrand? {
+            switch self {
+            case .automatic: nil
+            case .link: .link
+            case .onelink: .onelink
+            }
+        }
     }
 
     var appearance: LinkAppearance? {
@@ -107,6 +124,21 @@ struct ExampleLinkWalletButtonConfigurationView: View {
 
                         Toggle("Show PM preview on button", isOn: $configuration.showsPaymentMethodPreviewOnButton)
                         Text("When off, the button shows the customer's email instead of their payment method.")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                }
+
+                DemoSection(title: "Link Brand") {
+                    VStack(alignment: .leading, spacing: 16) {
+                        Picker("Link Brand", selection: $configuration.linkBrand) {
+                            ForEach(LinkWalletButtonDemoConfiguration.LinkBrandOverride.allCases, id: \.self) { brand in
+                                Text(brand.rawValue).tag(brand)
+                            }
+                        }
+                        .pickerStyle(.segmented)
+
+                        Text("Automatic uses the brand chosen by Stripe. Link and Onelink override it for the button and the Link flow.")
                             .font(.caption)
                             .foregroundColor(.secondary)
                     }

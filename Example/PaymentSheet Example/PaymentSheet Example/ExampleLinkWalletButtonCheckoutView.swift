@@ -7,7 +7,7 @@ import SwiftUI
 import UIKit
 
 import StripePayments
-@_spi(LinkControllerPreview) import StripePaymentSheet
+@_spi(STP) @_spi(LinkControllerPreview) import StripePaymentSheet
 
 @available(iOS 16.0, *)
 @MainActor
@@ -34,6 +34,9 @@ final class LinkWalletButtonDemoSession: ObservableObject, LinkWalletButtonDeleg
             let config = try await LinkControllerDemoBackendClient.fetchConfig()
             STPAPIClient.shared.publishableKey = config.publishableKey
 
+            // Only read when the controller is created, so reset it to avoid affecting other demos
+            LinkController.forcedLinkBrandForTesting = configuration.linkBrand.brand
+            defer { LinkController.forcedLinkBrandForTesting = nil }
             let linkController = try await LinkController.create(
                 appearance: configuration.appearance,
                 configuration: .init(
