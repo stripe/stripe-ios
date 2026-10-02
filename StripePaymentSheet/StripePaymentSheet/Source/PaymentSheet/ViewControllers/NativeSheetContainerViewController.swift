@@ -39,7 +39,8 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
             guard !self.contentRequiresFullScreen else {
                 return context.maximumDetentValue
             }
-            return min(self.fittedContentHeight, context.maximumDetentValue)
+            // Layout may change the form before a resize starts; keep the detent stable until we animate it.
+            return min(self.lastFittedContentHeight, context.maximumDetentValue)
         }
     }()
     #endif
@@ -366,6 +367,7 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
 
     private var lastFittedContentHeight: CGFloat = 0
     private var hasScheduledDetentInvalidation = false
+    private var isWaitingForDetentTransition = false
 
     private var fittedContentHeight: CGFloat {
         // A vertical system bar narrows the usable content width, which can increase wrapped content height.
@@ -412,7 +414,32 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
         guard #available(iOS 16.0, *) else {
             return
         }
+        guard viewIfLoaded?.window != nil else {
+            // Prepare the next presentation's height without starting an offscreen sheet animation.
+            lastFittedContentHeight = fittedContentHeight
+            return
+        }
+        guard !isWaitingForDetentTransition else {
+            return
+        }
+
+        // Wait until UIKit finishes presenting or dismissing before starting a height animation.
+        if rootParent.isBeingPresented || rootParent.isBeingDismissed {
+            guard let transitionCoordinator = rootParent.transitionCoordinator else { return }
+            isWaitingForDetentTransition = transitionCoordinator.animate(alongsideTransition: nil) { [weak self] _ in
+                // UIKit must clear the parent's transition state before we start another sheet animation.
+                DispatchQueue.main.async { [weak self] in
+                    guard let self else { return }
+                    self.isWaitingForDetentTransition = false
+                    self.invalidateContentDetent()
+                }
+            }
+            return
+        }
+
+        let fittedContentHeight = fittedContentHeight
         rootParent.sheetPresentationController?.animateChanges {
+            self.lastFittedContentHeight = fittedContentHeight
             self.rootParent.sheetPresentationController?.invalidateDetents()
         }
         #endif
@@ -474,16 +501,18 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
         super.viewDidLayoutSubviews()
 
         let fittedContentHeight = fittedContentHeight
-        guard abs(fittedContentHeight - lastFittedContentHeight) > 0.5,
+        guard view.window != nil,
+              abs(fittedContentHeight - lastFittedContentHeight) > 0.5,
               !hasScheduledDetentInvalidation else {
             return
         }
-        lastFittedContentHeight = fittedContentHeight
         // Coalesce layout-driven changes and invalidate after the current layout pass completes.
         hasScheduledDetentInvalidation = true
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
             self.hasScheduledDetentInvalidation = false
+            // An explicit content update may already have resized the sheet in its own animation.
+            guard abs(self.fittedContentHeight - self.lastFittedContentHeight) > 0.5 else { return }
             self.invalidateContentDetent()
         }
     }
