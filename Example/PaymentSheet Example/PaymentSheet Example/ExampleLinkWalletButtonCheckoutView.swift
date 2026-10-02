@@ -48,6 +48,7 @@ final class LinkWalletButtonDemoSession: ObservableObject, LinkWalletButtonDeleg
                 phoneNumber: configuration.phone.isEmpty ? nil : configuration.phone
             )
             button.delegate = self
+            button.showsPaymentMethodPreview = configuration.showsPaymentMethodPreviewOnButton
 
             phase = .ready(linkController, button)
         } catch {

@@ -56,6 +56,15 @@ import UIKit
     /// The customer's phone number in E.164 format, used to prefill the Link signup form.
     public var phoneNumber: String?
 
+    /// Whether the button shows the customer's Link payment method (e.g. "Visa •••• 4242") once one is available.
+    /// If `false`, the button shows the customer's email instead. Defaults to `true`.
+    public var showsPaymentMethodPreview: Bool = true {
+        didSet {
+            guard oldValue != showsPaymentMethodPreview else { return }
+            updateButton()
+        }
+    }
+
     private let linkController: LinkWalletButtonControlling
     private let button: PayWithLinkButton
     private var isPresenting = false
@@ -131,10 +140,9 @@ import UIKit
         // Only show account details for the customer the merchant provided
         if let account = linkController.linkAccount, Self.accountMatches(account, email: email) {
             linkAccount = account
-            paymentMethodPreview = Self.paymentMethodPreview(
-                selectedPaymentDetails: linkController.selectedPaymentDetails,
-                linkAccount: account
-            )
+            paymentMethodPreview = showsPaymentMethodPreview
+                ? Self.paymentMethodPreview(selectedPaymentDetails: linkController.selectedPaymentDetails, linkAccount: account)
+                : nil
         } else {
             linkAccount = nil
             paymentMethodPreview = nil
