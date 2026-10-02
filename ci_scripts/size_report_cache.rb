@@ -71,7 +71,7 @@ class SizeReportCache
     nil
   rescue Errno::ENOENT
     nil
-  rescue JSON::ParserError, KeyError, TypeError => e
+  rescue JSON::ParserError, KeyError, TypeError, SystemCallError => e
     warn "Ignoring invalid size cache for #{sdk}: #{e.message}"
     nil
   end
@@ -83,6 +83,8 @@ class SizeReportCache
     FileUtils.mkdir_p(File.dirname(destination))
     # Store raw app totals, before subtracting the current run's empty-app size.
     File.write(destination, JSON.generate(identity(commit, sdk).merge('app_size_kb' => sizes)))
+  rescue SystemCallError => e
+    warn "Could not cache size measurement for #{sdk}: #{e.message}"
   end
 
   def self.prepared_comparison
