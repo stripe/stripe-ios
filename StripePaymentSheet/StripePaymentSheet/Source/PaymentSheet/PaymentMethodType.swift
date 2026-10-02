@@ -262,7 +262,7 @@ extension PaymentSheet {
                     switch paymentMethod {
                     case .card, .pix:
                         return []
-                    case .momo, .gcash, .touchNGo, .trueMoney, .goPay, .alipay, .payPal, .cashApp, .revolutPay, .amazonPay, .klarna, .satispay, .twint, .kakaoPay, .naverPay, .krCard:
+                    case .gcash, .touchNGo, .trueMoney, .alipay, .payPal, .cashApp, .revolutPay, .amazonPay, .klarna, .satispay, .twint, .kakaoPay, .naverPay, .krCard:
                         return [.returnURL]
                     case .USBankAccount, .boleto:
                         return [.userSupportsDelayedPaymentMethods]
