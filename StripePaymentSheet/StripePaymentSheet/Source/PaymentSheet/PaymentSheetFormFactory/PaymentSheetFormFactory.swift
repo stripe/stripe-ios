@@ -303,6 +303,8 @@ class PaymentSheetFormFactory {
                     allowedBillingCountries: ["US"],
                     additionalElements: [makeNigerianPaymentMethodMandate(terms: String.Localized.nigerian_wallet_terms)]
                 )
+            case .mondu:
+                return makeMondu()
             case .momo, .goPay, .grabPay, .paynow, .payPay, .mobilePay, .vipps, .zip, .crypto,
                  .billie, .sunbit, .alma, .payByBank, .payco, .sequra, .scalapay:
                 return makeContactInformationAndBillingAddressForm()
@@ -907,6 +909,16 @@ extension PaymentSheetFormFactory {
         )
     }
 
+    func makeMondu() -> PaymentMethodElement {
+        let description = makeSectionTitleLabelWith(
+            text: String.Localized.mondu_buyer_message
+        )
+        return makeContactInformationAndBillingAddressForm(
+            allowedBillingCountries: ["DE", "NL", "FR", "FI", "AT", "IT", "ES", "BE", "PL", "NO", "DK", "SE", "CH", "GB"],
+            defaultBillingCountry: "DE",
+            additionalElements: [description]
+        )
+    }
     func makeNaverPay() -> PaymentMethodElement {
         let funding = makeDropdown(
             label: String.Localized.naver_pay_funding_label,
