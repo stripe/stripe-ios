@@ -173,10 +173,10 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
 
     // MARK: - Update Payment Method
 
-    // This US Checkout playground customer has a saved 4242 card. Reuse it to avoid
-    // creating another saved card whenever we update the recordings.
-    private static let checkoutCustomerID = "cus_VMJjZr3UjTC5RV"
-    private static let checkoutCustomerCardID = "pm_1ULb6NLu5o3P18ZpMiQa7Egg"
+    // This customer and saved 4242 card are dedicated to these tests in the US Checkout
+    // playground account. Reuse them to avoid creating another card for each recording.
+    private static let checkoutCustomerID = "cus_VMuutnh9o7Jq9z"
+    private static let checkoutCustomerCardID = "pm_1UMB4RLu5o3P18ZpsmyagQld"
 
     private func makeCheckoutSessionWithSavedCard() async throws -> (
         apiClient: STPAPIClient,
