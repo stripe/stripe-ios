@@ -2,6 +2,9 @@ The next release's version bump will so far be:
 MINOR
 
 ## X.Y.Z - changes pending release
+### Payments
+* [Fixed] `STPPaymentCardTextField.isValid` no longer returns `true` while the US ZIP field holds an incomplete postal code. Postal validation now goes through `STPPostalCodeValidator`, matching `STPCardFormView`.
+
 ### PaymentSheet
 * [Fixed] Fixed a potential crash when using certain card brands in PaymentSheet.
 * [Fixed] Fixed Apple Pay failing to open for fractional amounts in COP, HUF, IDR, LAK, LBP, PKR, and RSD.
