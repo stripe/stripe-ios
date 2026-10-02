@@ -415,10 +415,6 @@ extension IdentityFlowView {
     }
 
     static func privacyPolicyLineContentStyle() -> HTMLStyle {
-        return privacyPolicyLineContentStyle(shouldCenterText: false)
-    }
-
-    static func privacyPolicyLineContentStyle(shouldCenterText: Bool) -> HTMLStyle {
         let boldFont = IdentityUI.preferredFont(forTextStyle: UIFont.TextStyle.caption1, weight: .bold)
         let contentColor = IdentityUI.htmlLineTextColor
         return .init(
@@ -431,7 +427,7 @@ extension IdentityFlowView {
             h5Font: boldFont,
             h6Font: boldFont,
             isLinkUnderlined: true,
-            shouldCenterText: shouldCenterText,
+            shouldCenterText: true,
             linkColor: contentColor
         )
     }

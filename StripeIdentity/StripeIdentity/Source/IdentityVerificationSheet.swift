@@ -51,14 +51,14 @@ final public class IdentityVerificationSheet {
             /// Whether to hide the decline button on the consent welcome screen.
             public var hideDeclineButton: Bool
 
-            /// Whether to display the privacy policy below the consent buttons.
+            /// Whether to display the privacy policy below the consent buttons (true) or below the body text (false - the default)
             public var movePrivacyPolicyToFooter: Bool
 
             /// Initializes a biometric consent configuration.
             /// - Parameters:
             ///   - hideBrandingHeader: Whether to hide the branding header above the consent title.
             ///   - hideDeclineButton: Whether to hide the decline button on the consent welcome screen.
-            ///   - movePrivacyPolicyToFooter: Whether to display the privacy policy below the consent buttons.
+            ///   - movePrivacyPolicyToFooter: Whether to display the privacy policy below the consent buttons (true) or below the body text (false - the default)
             public init(
                 hideBrandingHeader: Bool,
                 hideDeclineButton: Bool = false,
