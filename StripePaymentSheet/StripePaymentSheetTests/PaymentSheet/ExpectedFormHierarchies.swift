@@ -151,6 +151,15 @@ enum ExpectedFormHierarchy {
             ])
         }
     }
+    // MARK: - Naira USSD
+
+    enum NgUSSD {
+        static var paymentIntent: FormHierarchyNode {
+            FormHierarchyNode(type: "FormElement", children: [
+                FormHierarchyNode(type: "SimpleMandateElement", properties: ["text": "By confirming your payment, you agree that your tr..."])
+            ])
+        }
+    }
     // MARK: - MoMo
 
     enum Momo {

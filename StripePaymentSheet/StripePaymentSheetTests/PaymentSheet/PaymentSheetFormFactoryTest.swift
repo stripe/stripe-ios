@@ -2580,6 +2580,57 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertEqual(address.selectedCountryCode, "NG")
     }
 
+    func testNairaUSSDShowsMerchantOfRecordTerms() {
+        // Given a one-time Naira USSD payment
+        let form = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.ngUSSD]),
+            elementsSession: ._testValue(paymentMethodTypes: ["ng_ussd"]),
+            configuration: .paymentElement(PaymentSheet.Configuration()),
+            paymentMethod: .stripe(.ngUSSD)
+        ).make()
+
+        // Then the form shows the web disclosure without a future-payment mandate
+        let text = form.getMandateElement()?.mandateTextView.textView.attributedText
+        let expected = "By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their terms of use."
+        XCTAssertEqual(text?.string, expected)
+        XCTAssertEqual(
+            text?.attribute(.link, at: (expected as NSString).range(of: "terms of use").location, effectiveRange: nil) as? URL,
+            URL(string: "https://d37ugbyn3rpeym.cloudfront.net/docs/GSSL%20-%20Buyer%20T&Cs%20(Final).pdf")
+        )
+        XCTAssertFalse(form.collectsUserInput)
+        XCTAssertNil(form.updateParams(params: IntentConfirmParams(type: .stripe(.ngUSSD))))
+
+        // When the customer sees the disclosure, the payment can be confirmed
+        sendEventToSubviews(.viewDidAppear, from: form.view)
+        XCTAssertNotNil(form.updateParams(params: IntentConfirmParams(type: .stripe(.ngUSSD))))
+    }
+
+    func testNairaUSSDDefaultsBillingCountryToNigeria() throws {
+        // Given Naira USSD with full billing address collection
+        let loadExpectation = expectation(description: "Load address specs")
+        AddressSpecProvider.shared.loadAddressSpecs {
+            loadExpectation.fulfill()
+        }
+        waitForExpectations(timeout: 1)
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.address = .full
+        let form = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.ngUSSD]),
+            elementsSession: ._testValue(paymentMethodTypes: ["ng_ussd"]),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.ngUSSD)
+        ).make()
+
+        // When reading the billing address countries
+        let address = try XCTUnwrap(
+            form.getAllUnwrappedSubElements().compactMap { $0 as? AddressSectionElement }.first
+        )
+
+        // Then all countries remain available and Nigeria is the Web default
+        XCTAssertTrue(address.countryCodes.count > 2)
+        XCTAssertEqual(address.selectedCountryCode, "NG")
+    }
+
     func testNairaCardShowsMerchantOfRecordTerms() {
         // Given a one-time Naira card payment
         let form = PaymentSheetFormFactory(
