@@ -33,6 +33,9 @@ public final class CheckoutController: ObservableObject {
 
     // MARK: - Internal Properties
 
+    // Like FlowController.didPresentAndContinue, once set this stays true for the lifetime of the checkout.
+    let merchantDidAccessSEPAMandateText = BoolReference()
+
     /// The PaymentElement for this CheckoutController instance
     private(set) var paymentElement: PaymentElement?
 

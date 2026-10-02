@@ -60,6 +60,7 @@ extension CheckoutController {
         let confirmationChallenge: ConfirmationChallenge?
         let authenticationContext: STPAuthenticationContext
         let paymentHandler: STPPaymentHandler
+        var requiresSEPAMandate = false
     }
 
     enum InternalConfirmResult {
@@ -189,13 +190,18 @@ extension CheckoutController {
                 preconfirmIntegrationShape: integrationShape
             )
         case .saved(let paymentMethod, let confirmParams):
+            let requiresSEPAMandate = paymentMethod.type == .SEPADebit
+                && !paymentElement.merchantDidAccessView
+                && !paymentElement.paymentSheetFlowController.didPresentAndContinue
+                && !merchantDidAccessSEPAMandateText.value
             return .paymentMethod(
                 .init(
                     option: .saved(paymentMethod, confirmParams),
                     configuration: configuration,
                     confirmationChallenge: confirmationChallenge,
                     authenticationContext: authenticationContext,
-                    paymentHandler: paymentHandler
+                    paymentHandler: paymentHandler,
+                    requiresSEPAMandate: requiresSEPAMandate
                 ),
                 preconfirmIntegrationShape: integrationShape
             )
@@ -326,6 +332,20 @@ extension CheckoutController {
         parameters: PaymentMethodConfirmationParameters,
         preconfirmIntegrationShape: PaymentSheet.IntegrationShape
     ) async -> PaymentSheet.PreconfirmActionsResult {
+        if parameters.requiresSEPAMandate {
+            let didAcceptMandate = await withCheckedContinuation { continuation in
+                SepaMandateViewController.present(
+                    from: parameters.authenticationContext.authenticationPresentingViewController(),
+                    configuration: parameters.configuration
+                ) { didAcceptMandate in
+                    continuation.resume(returning: didAcceptMandate)
+                }
+            }
+            guard didAcceptMandate else {
+                return .canceled
+            }
+        }
+
         let paymentOption: PaymentOption
         switch parameters.option {
         case .new(let confirmParams):

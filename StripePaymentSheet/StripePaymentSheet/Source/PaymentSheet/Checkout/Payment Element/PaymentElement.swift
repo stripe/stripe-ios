@@ -17,10 +17,16 @@ public final class PaymentElement {
     // MARK: - Public Properties
 
     /// A SwiftUI View that displays payment methods.
-    public internal(set) var view: PaymentElementView
+    public var view: PaymentElementView {
+        merchantDidAccessView = true
+        return _view
+    }
 
     /// A UIView that displays payment methods.
-    public internal(set) var uiView: PaymentElementUIView
+    public var uiView: PaymentElementUIView {
+        merchantDidAccessView = true
+        return _uiView
+    }
 
     // MARK: - Public methods
 
@@ -60,6 +66,10 @@ public final class PaymentElement {
 
     let paymentSheetFlowController: PaymentSheet.FlowController
     let embeddedPaymentElement: EmbeddedPaymentElement
+    // Accessing either public view opts the merchant into embedded's mandate display contract.
+    private(set) var merchantDidAccessView = false
+    private let _view: PaymentElementView
+    private let _uiView: PaymentElementUIView
     private let configuration: Configuration
     weak var checkout: CheckoutController?
     private var cancellables = Set<AnyCancellable>()
@@ -106,8 +116,8 @@ public final class PaymentElement {
         )
         self.embeddedPaymentElement.notifiesDelegateOnInitialHeight = true
         let uiView = PaymentElementUIView(contentView: embeddedPaymentElement.view)
-        self.view = PaymentElementView(viewModel: PaymentElementViewModel(uiView: uiView))
-        self.uiView = uiView
+        self._view = PaymentElementView(viewModel: PaymentElementViewModel(uiView: uiView))
+        self._uiView = uiView
         self.embeddedPaymentElement.delegate = self
         self.checkout = checkout
         self.paymentSheetFlowController.$paymentOption
@@ -216,11 +226,11 @@ extension PaymentElement {
 // Note: The EPE delegate methods just get forwarded to the PaymentElementUIView delegate
 extension PaymentElement: EmbeddedPaymentElementDelegate {
     public func embeddedPaymentElementDidUpdateHeight(embeddedPaymentElement: EmbeddedPaymentElement) {
-        uiView.embeddedPaymentElementDidUpdateHeight()
+        _uiView.embeddedPaymentElementDidUpdateHeight()
     }
 
     public func embeddedPaymentElementWillPresent(embeddedPaymentElement: EmbeddedPaymentElement) {
-        uiView.embeddedPaymentElementWillPresent()
+        _uiView.embeddedPaymentElementWillPresent()
     }
 
     public func embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: EmbeddedPaymentElement) {
