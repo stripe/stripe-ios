@@ -21,7 +21,7 @@ final class STPPaymentMethodCardArtImageTest: APIStubbedTestCase {
         super.setUp()
         urlSessionConfig = APIStubbedTestCase.stubbedURLSessionConfig()
         urlSessionConfig.urlCache = URLCache(memoryCapacity: 5_000_000, diskCapacity: 0)
-        downloadManager = DownloadManager(urlSessionConfiguration: urlSessionConfig)
+        downloadManager = DownloadManager(urlSessionConfiguration: urlSessionConfig, isTesting: true)
         downloadManager.resetCache()
     }
 
