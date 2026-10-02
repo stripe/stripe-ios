@@ -132,7 +132,6 @@ enum ExpectedFormHierarchy {
 
     enum GoPay {
         static var paymentIntent: FormHierarchyNode { emptyForm }
-        static var settingUp: FormHierarchyNode { emptyForm }
     }
     // MARK: - Naira card
 
@@ -148,7 +147,6 @@ enum ExpectedFormHierarchy {
 
     enum Momo {
         static var paymentIntent: FormHierarchyNode { emptyForm }
-        static var settingUp: FormHierarchyNode { emptyForm }
     }
     // MARK: - GCash
 

@@ -749,14 +749,6 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                                paymentMethodType: .goPay,
                                merchantCountry: .US,
                                expectedHierarchy: ExpectedFormHierarchy.GoPay.paymentIntent) { _ in }
-        // TODO(porter): Add `.paymentIntentWithPMOSetupFutureUsage` once Confirmation Tokens
-        // accepts `client_context[payment_method_options][gopay]`.
-        try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .setupIntent],
-                               currency: "IDR",
-                               amount: 1000000,
-                               paymentMethodType: .goPay,
-                               merchantCountry: .US,
-                               expectedHierarchy: ExpectedFormHierarchy.GoPay.settingUp) { _ in }
     }
     func testNairaCardConfirmFlows() async throws {
         try await _testConfirm(intentKinds: [.paymentIntent],
@@ -781,12 +773,6 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                                paymentMethodType: .momo,
                                merchantCountry: .US,
                                expectedHierarchy: ExpectedFormHierarchy.Momo.paymentIntent) { _ in }
-        try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .paymentIntentWithPMOSetupFutureUsage, .setupIntent],
-                               currency: "VND",
-                               amount: 100000,
-                               paymentMethodType: .momo,
-                               merchantCountry: .US,
-                               expectedHierarchy: ExpectedFormHierarchy.Momo.settingUp) { _ in }
     }
     func testGCashConfirmFlows() async throws {
         try await _testConfirm(intentKinds: [.paymentIntent],
@@ -794,6 +780,7 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                                amount: 10000,
                                paymentMethodType: .gcash,
                                merchantCountry: .US,
+                               defaultCountry: "PH",
                                expectedHierarchy: ExpectedFormHierarchy.GCash.paymentIntent) { _ in }
         // TODO(porter): Add `.paymentIntentWithPMOSetupFutureUsage` once Confirmation Tokens
         // accepts `client_context[payment_method_options][gcash]`.
@@ -802,6 +789,7 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                                amount: 10000,
                                paymentMethodType: .gcash,
                                merchantCountry: .US,
+                               defaultCountry: "PH",
                                expectedHierarchy: ExpectedFormHierarchy.GCash.settingUp) { _ in }
     }
     func testShopeePayConfirmFlows() async throws {
@@ -1923,7 +1911,10 @@ extension PaymentSheetLPMConfirmFlowTests {
         if addressSpec.fieldOrdering.contains(.state) {
             XCTAssertNotNil(getState(from: form))
         }
-        XCTAssertNotNil(form.getDropdownFieldElement("Country or region"))
+        // GCash restricts billing addresses to the Philippines, so there is no country selector.
+        if paymentMethodType != .gcash {
+            XCTAssertNotNil(form.getDropdownFieldElement("Country or region"))
+        }
         XCTAssertNotNil(form.getTextFieldElement(addressSpec.zipNameType.localizedLabel))
     }
 

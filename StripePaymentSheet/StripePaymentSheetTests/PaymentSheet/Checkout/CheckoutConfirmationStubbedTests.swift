@@ -8,7 +8,7 @@ import OHHTTPStubsSwift
 @testable @_spi(STP) import StripeCore
 import StripeCoreTestUtils
 @testable @_spi(STP) import StripePayments
-@testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(STP) @_spi(CollectMissingLinkBillingDetailsPreview) import StripePaymentSheet
 @testable @_spi(STP) import StripePaymentsTestUtils
 import UIKit
 import XCTest
@@ -524,6 +524,36 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         )
     }
 
+    // MARK: - Express Checkout
+
+    func testExpressCheckoutApplePayRequiresShippingAddressWhenSessionCollectsShipping() async throws {
+        // Given a Checkout Session that collects shipping addresses
+        let apiResponse = CheckoutTestHelpers.makeSession([
+            "shipping_address_collection": ["allowed_countries": ["US"]],
+        ])
+        var configuration = CheckoutController.Configuration(
+            clientSecret: "cs_test_123_secret_abc",
+            returnURL: "stripe-ios-test://checkout-return"
+        )
+        var eceConfiguration = ExpressCheckoutElement.Configuration(confirmHandler: { _ in })
+        eceConfiguration.applePayConfiguration = .init(merchantId: "merchant.com.test")
+        configuration.expressCheckoutElement = eceConfiguration
+        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration(
+            apiResponse: apiResponse,
+            configuration: configuration
+        ))
+
+        // When ECE constructs its Apple Pay confirmation flow
+        let flow = try checkout.makeExpressCheckoutConfirmationFlow(.applePay, presentationWindow: nil)
+
+        // Then Apple Pay requires a shipping address
+        guard case .applePay(let parameters) = flow else {
+            XCTFail("Expected an Apple Pay confirmation flow")
+            return
+        }
+        XCTAssertTrue(parameters.shippingAddressRequired)
+    }
+
     // MARK: - Link
 
     func testExpressCheckoutLinkBuildsWalletConfirmationFlow() async throws {
@@ -538,7 +568,10 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         billingDetails.name = "Jenny Rosen"
         billingDetails.address = .init(country: "US", postalCode: "94107")
         configuration.defaults.billingDetails = billingDetails
-        configuration.expressCheckoutElement = ExpressCheckoutElement.Configuration(confirmHandler: { _ in })
+        var expressCheckoutElementConfiguration = ExpressCheckoutElement.Configuration(confirmHandler: { _ in })
+        expressCheckoutElementConfiguration.linkConfiguration.disallowFundingSourceCreation = ["usInstantBankPayment"]
+        expressCheckoutElementConfiguration.linkConfiguration.collectMissingBillingDetailsForExistingPaymentMethods = false
+        configuration.expressCheckoutElement = expressCheckoutElementConfiguration
         let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration(
             apiResponse: CheckoutTestHelpers.makeSession(["customer_email": "jenny@example.com"]),
             configuration: configuration
@@ -568,6 +601,8 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         XCTAssertEqual(parameters.configuration.defaultBillingDetails.address.country, "US")
         XCTAssertEqual(parameters.configuration.defaultBillingDetails.address.postalCode, "94107")
         XCTAssertNil(parameters.configuration.defaultBillingDetails.email)
+        XCTAssertEqual(parameters.configuration.link.disallowFundingSourceCreation, ["usInstantBankPayment"])
+        XCTAssertFalse(parameters.configuration.link.collectMissingBillingDetailsForExistingPaymentMethods)
     }
 
     func testExpressCheckoutLinkRequiresPresentingViewController() async throws {
