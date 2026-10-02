@@ -2546,6 +2546,48 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertNil(form.getMandateElement())
         XCTAssertNotNil(form.updateParams(params: IntentConfirmParams(type: .stripe(.goPay))))
     }
+    func testQRISUsesHostedAuthorizationWithoutNativeMandate() {
+        // Given a one-time QRIS payment
+        let intents: [Intent] = [
+            ._testPaymentIntent(paymentMethodTypes: [.qris]),
+        ]
+        for intent in intents {
+            // When the form uses automatic billing collection
+            let form = PaymentSheetFormFactory(
+                intent: intent,
+                elementsSession: ._testValue(paymentMethodTypes: ["qris"]),
+                configuration: .paymentElement(PaymentSheet.Configuration()),
+                paymentMethod: .stripe(.qris)
+            ).make()
+
+            // Then the hosted flow owns authorization and the native form needs no mandate
+            XCTAssertFalse(form.collectsUserInput)
+            XCTAssertNil(form.getMandateElement())
+            XCTAssertNotNil(form.updateParams(params: IntentConfirmParams(type: .stripe(.qris))))
+        }
+    }
+
+    func testQRISRestrictsBillingCountryToWebSupportedCountries() throws {
+        // Given QRIS with full billing address collection
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.address = .full
+        let form = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.qris]),
+            elementsSession: ._testValue(paymentMethodTypes: ["qris"]),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.qris)
+        ).make()
+
+        // When the billing address is built
+        let address = try XCTUnwrap(
+            form.getAllUnwrappedSubElements().compactMap { $0 as? AddressSectionElement }.first
+        )
+
+        // Then the country choices and default match web Payment Element
+        XCTAssertEqual(address.countryCodes, ["ID", "US"])
+        XCTAssertEqual(address.selectedCountryCode, "US")
+    }
+
     func testShopeePayUsesHostedAuthorizationWithoutNativeMandate() {
         // Given a one-time ShopeePay payment
         let intents: [Intent] = [
