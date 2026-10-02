@@ -189,7 +189,7 @@ class NotificationBannerExampleViewController: UIViewController {
             ?? .secondarySystemGroupedBackground
         let textColor = appearance.colors.text ?? .label
         let secondaryTextColor = appearance.colors.secondaryText ?? .secondaryLabel
-        let cornerRadius = appearance.cornerRadius.base ?? 12
+        let cornerRadius = appearance.cornerRadius.base ?? 8
         let borderColor = appearance.colors.border?.resolvedColor(with: traitCollection)
 
         view.backgroundColor = backgroundColor
@@ -364,7 +364,7 @@ private final class NotificationBannerSkeletonView: UIView {
         } ?? .tertiarySystemFill
 
         self.backgroundColor = backgroundColor
-        layer.cornerRadius = appearance.cornerRadius.base ?? 12
+        layer.cornerRadius = appearance.cornerRadius.base ?? 8
         skeletonBorderColor = appearance.colors.border ?? .separator
         setNeedsLayout()
         bars.forEach { $0.backgroundColor = barColor }
