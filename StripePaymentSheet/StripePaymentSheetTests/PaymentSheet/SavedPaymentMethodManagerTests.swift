@@ -35,7 +35,7 @@ final class SavedPaymentMethodManagerTests: XCTestCase {
         var configuration = configuration
         configuration.customer = .init(id: "cus_test123", ephemeralKeySecret: ephemeralKey)
 
-        let sut = SavedPaymentMethodManager(configuration: configuration, customerProvider: CustomerProvider(customer: configuration.customer), elementsSession: ._testCardValue(), intent: ._testValue())
+        let sut = SavedPaymentMethodManager(configuration: configuration, customerProvider: CustomerProvider(customer: configuration.customer), elementsSession: ._testCardValue())
         let updatedPaymentMethod = try await sut.update(paymentMethod: paymentMethod,
                            with: STPPaymentMethodUpdateParams())
 
@@ -62,7 +62,7 @@ final class SavedPaymentMethodManagerTests: XCTestCase {
             ],
         ])
 
-        let sut = SavedPaymentMethodManager(configuration: configuration, customerProvider: CustomerProvider(customer: configuration.customer), elementsSession: elementsSession, intent: ._testValue())
+        let sut = SavedPaymentMethodManager(configuration: configuration, customerProvider: CustomerProvider(customer: configuration.customer), elementsSession: elementsSession)
         let updatedPaymentMethod = try await sut.update(paymentMethod: paymentMethod,
                            with: STPPaymentMethodUpdateParams())
 
@@ -132,7 +132,7 @@ final class SavedPaymentMethodManagerTests: XCTestCase {
         var configuration = configuration
         configuration.customer = .init(id: "cus_test123", ephemeralKeySecret: ephemeralKey)
 
-        let sut = SavedPaymentMethodManager(configuration: configuration, customerProvider: CustomerProvider(customer: configuration.customer), elementsSession: ._testCardValue(), intent: ._testValue())
+        let sut = SavedPaymentMethodManager(configuration: configuration, customerProvider: CustomerProvider(customer: configuration.customer), elementsSession: ._testCardValue())
         let updatedPaymentMethod = try await sut.update(paymentMethod: paymentMethod,
                                                         with: STPPaymentMethodUpdateParams())
 
@@ -152,8 +152,7 @@ final class SavedPaymentMethodManagerTests: XCTestCase {
         let sut = SavedPaymentMethodManager(
             configuration: configuration,
             customerProvider: CustomerProvider(checkoutSession: checkoutSession.makePublicSession()),
-            elementsSession: ._testValue(paymentMethodTypes: ["card"]),
-            intent: .checkout(checkoutSession.makePublicSession())
+            elementsSession: ._testValue(paymentMethodTypes: ["card"])
         )
 
         let card = STPPaymentMethodCardParams()
@@ -188,8 +187,7 @@ final class SavedPaymentMethodManagerTests: XCTestCase {
         let sut = SavedPaymentMethodManager(
             configuration: configuration,
             customerProvider: CustomerProvider(checkoutSession: checkoutSession.makePublicSession()),
-            elementsSession: ._testValue(paymentMethodTypes: ["card"]),
-            intent: .checkout(checkoutSession.makePublicSession())
+            elementsSession: ._testValue(paymentMethodTypes: ["card"])
         )
 
         let card = STPPaymentMethodCardParams()
@@ -213,8 +211,7 @@ final class SavedPaymentMethodManagerTests: XCTestCase {
         let sut = SavedPaymentMethodManager(
             configuration: configuration,
             customerProvider: CustomerProvider(checkoutSession: checkoutSession.makePublicSession()),
-            elementsSession: ._testValue(paymentMethodTypes: ["card"]),
-            intent: .checkout(checkoutSession.makePublicSession())
+            elementsSession: ._testValue(paymentMethodTypes: ["card"])
         )
 
         do {
@@ -231,7 +228,7 @@ final class SavedPaymentMethodManagerTests: XCTestCase {
         let expectation = stubDetachPaymentMethod(paymentMethod: STPPaymentMethod.stubbedPaymentMethod(),
                                                   ephemeralKey: ephemeralKey)
 
-        let sut = SavedPaymentMethodManager(configuration: configuration, customerProvider: CustomerProvider(customer: configuration.customer), elementsSession: ._testValue(paymentMethodTypes: ["card"]), intent: ._testValue())
+        let sut = SavedPaymentMethodManager(configuration: configuration, customerProvider: CustomerProvider(customer: configuration.customer), elementsSession: ._testValue(paymentMethodTypes: ["card"]))
         sut.detach(paymentMethod: paymentMethod)
 
         wait(for: [expectation], timeout: 5.0)
@@ -260,7 +257,7 @@ final class SavedPaymentMethodManagerTests: XCTestCase {
                                              ],
                                          ])
 
-        let sut = SavedPaymentMethodManager(configuration: configuration, customerProvider: CustomerProvider(customer: configuration.customer), elementsSession: elementsSession, intent: ._testValue())
+        let sut = SavedPaymentMethodManager(configuration: configuration, customerProvider: CustomerProvider(customer: configuration.customer), elementsSession: elementsSession)
         sut.detach(paymentMethod: paymentMethod)
 
         wait(for: [listPaymentMethodsExpectation, detachExpectation], timeout: 5.0)
@@ -278,8 +275,7 @@ final class SavedPaymentMethodManagerTests: XCTestCase {
         let sut = SavedPaymentMethodManager(
             configuration: configuration,
             customerProvider: CustomerProvider(checkoutSession: checkoutSession.makePublicSession()),
-            elementsSession: ._testValue(paymentMethodTypes: ["card"]),
-            intent: .checkout(checkoutSession.makePublicSession())
+            elementsSession: ._testValue(paymentMethodTypes: ["card"])
         )
         sut.detach(paymentMethod: paymentMethod)
 

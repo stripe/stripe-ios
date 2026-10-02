@@ -180,4 +180,51 @@ struct CustomerProvider {
         updatedPaymentMethod.updateLocalFields(from: paymentMethod)
         return updatedPaymentMethod
     }
+
+    @MainActor
+    @discardableResult
+    func detach(
+        paymentMethod: STPPaymentMethod,
+        elementsSession: STPElementsSession,
+        apiClient: STPAPIClient
+    ) -> Bool {
+        switch backing {
+        case .checkoutSession(let session):
+            Task {
+                try? await apiClient.detachPaymentMethod(
+                    paymentMethod.stripeId,
+                    fromCheckoutSession: session.id
+                )
+            }
+            return true
+        case .customer(let customer):
+            guard let customer,
+                  let ephemeralKey = ephemeralKeySecret(basedOn: elementsSession) else {
+                return false
+            }
+            switch customer.customerAccessProvider {
+            case .customerSession(let clientSecret):
+                if paymentMethod.type == .card {
+                    apiClient.detachPaymentMethodRemoveDuplicates(
+                        paymentMethod.stripeId,
+                        customerId: customer.id,
+                        fromCustomerUsing: ephemeralKey,
+                        withCustomerSessionClientSecret: clientSecret
+                    ) { _ in }
+                } else {
+                    apiClient.detachPaymentMethod(
+                        paymentMethod.stripeId,
+                        fromCustomerUsing: ephemeralKey,
+                        withCustomerSessionClientSecret: clientSecret
+                    ) { _ in }
+                }
+            case .legacyCustomerEphemeralKey:
+                apiClient.detachPaymentMethod(
+                    paymentMethod.stripeId,
+                    fromCustomerUsing: ephemeralKey
+                ) { _ in }
+            }
+            return true
+        }
+    }
 }
