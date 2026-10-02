@@ -63,6 +63,14 @@ final class PayWithLinkButton: UIControl {
         }
     }
 
+    /// A preview of a Link payment method to display instead of the email.
+    /// Only shown when `linkAccount` is registered. Defaults to `nil`, in which case the email is shown.
+    var paymentMethodPreview: LinkPaymentMethodPreview? {
+        didSet {
+            updateUI()
+        }
+    }
+
     var cornerRadius: CGFloat = ElementsUI.defaultCornerRadius {
         didSet {
             setNeedsLayout()
@@ -163,7 +171,7 @@ final class PayWithLinkButton: UIControl {
     private lazy var cardBrandView: UIImageView = {
         let brandView = UIImageView(image: STPImageLibrary.unknownCardCardImage())
         brandView.translatesAutoresizingMaskIntoConstraints = false
-        brandView.contentMode = .scaleAspectFill
+        brandView.contentMode = .scaleAspectFit
 
         NSLayoutConstraint.activate([
             brandView.widthAnchor.constraint(equalToConstant: Constants.cardBrandSize.width),
@@ -191,13 +199,17 @@ final class PayWithLinkButton: UIControl {
 
     enum LinkAccountState {
         case noValidAccount
-        case hasCard(last4: String, brand: STPCardBrand)
+        case hasPaymentMethod(LinkPaymentMethodPreview)
         case hasEmail(email: String)
     }
 
     var linkAccountState: LinkAccountState {
         if !(linkAccount?.isRegistered ?? false) {
             return .noValidAccount
+        }
+
+        if let paymentMethodPreview {
+            return .hasPaymentMethod(paymentMethodPreview)
         }
 
         if let email = linkAccount?.email {
@@ -207,16 +219,20 @@ final class PayWithLinkButton: UIControl {
         return .noValidAccount
     }
 
-    init(brand: LinkBrand = .link) {
+    /// - Parameter observesLinkAccountContext: Whether the button keeps `linkAccount` in sync with `LinkAccountContext`.
+    ///   Pass `false` when the owner sets `linkAccount` itself.
+    init(brand: LinkBrand = .link, observesLinkAccountContext: Bool = true) {
         self.brand = brand
         super.init(frame: CGRect(origin: .zero, size: Constants.defaultSize))
         isAccessibilityElement = true
-        self.linkAccount = LinkAccountContext.shared.account
+        self.linkAccount = observesLinkAccountContext ? LinkAccountContext.shared.account : nil
         setupUI()
         applyStyle()
         updateUI()
-        // Listen for account changes
-        LinkAccountContext.shared.addObserver(self, selector: #selector(onAccountChange(_:)))
+        if observesLinkAccountContext {
+            // Listen for account changes
+            LinkAccountContext.shared.addObserver(self, selector: #selector(onAccountChange(_:)))
+        }
     }
     @objc
     func onAccountChange(_ notification: Notification) {
@@ -240,6 +256,16 @@ final class PayWithLinkButton: UIControl {
 
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         bounds.contains(point) ? self : nil
+    }
+
+    /// Applies the standard Link button corner style: a capsule when Liquid Glass is enabled
+    /// in the merchant app, otherwise the default corner radius.
+    func applyDefaultCornerStyle() {
+        if LiquidGlassDetector.isEnabledInMerchantApp {
+            ios26_applyCapsuleCornerConfiguration()
+        } else {
+            cornerRadius = ElementsUI.defaultCornerRadius
+        }
     }
 
 }
@@ -371,13 +397,12 @@ private extension PayWithLinkButton {
 
     func updateUI() {
         switch linkAccountState {
-        case .hasCard(let last4, let brand):
-            let cardImage = STPImageLibrary.cardBrandImage(for: brand)
+        case .hasPaymentMethod(let paymentMethodPreview):
+            cardBrandView.image = paymentMethodPreview.icon
                 .withAlignmentRectInsets(
                     Constants.cardBrandInsets
                 )
-            cardBrandView.image = cardImage
-            last4Label.text = last4
+            last4Label.text = paymentMethodPreview.last4
 
             cardStackView.isHidden = false
             payWithLinkView.isHidden = true
@@ -498,8 +523,8 @@ private extension PayWithLinkButton {
         accessibilityLabel = brand.accessibilityText(from: String.Localized.pay_with_link(brand: brand))
 
         switch linkAccountState {
-        case .hasCard(let last4, let brand):
-            accessibilityValue = "\(STPCardBrandUtilities.stringFrom(brand) ?? "Unknown") \(last4)"
+        case .hasPaymentMethod(let paymentMethodPreview):
+            accessibilityValue = paymentMethodPreview.accessibilityValue
         case .hasEmail(let email):
             accessibilityValue = email
         case .noValidAccount:
@@ -531,7 +556,7 @@ struct UIViewPreview<View: UIView>: UIViewRepresentable {
     }
 }
 
-private func makeAccountStub(email: String, isRegistered: Bool, lastPM: LinkPMDisplayDetails?) -> PayWithLinkButton.LinkAccountStub {
+private func makeAccountStub(email: String, isRegistered: Bool) -> PayWithLinkButton.LinkAccountStub {
     return PayWithLinkButton.LinkAccountStub(
         email: email,
         redactedPhoneNumber: nil,
@@ -551,17 +576,18 @@ struct LinkButtonPreviews_Previews: PreviewProvider {
             }.padding()
             UIViewPreview {
                 let lb = PayWithLinkButton()
-                lb.linkAccount = makeAccountStub(email: "theop@example.com", isRegistered: true, lastPM: nil)
+                lb.linkAccount = makeAccountStub(email: "theop@example.com", isRegistered: true)
                 return lb
             }.padding()
             UIViewPreview {
                 let lb = PayWithLinkButton()
-                lb.linkAccount = makeAccountStub(email: "theopetersonmarks@longestemaildomain.com", isRegistered: true, lastPM: nil)
+                lb.linkAccount = makeAccountStub(email: "theopetersonmarks.longname@example.com", isRegistered: true)
                 return lb
             }.padding()
             UIViewPreview {
                 let lb = PayWithLinkButton()
-                lb.linkAccount = makeAccountStub(email: "test@test.com", isRegistered: true, lastPM: .init(last4: "3155", brand: .visa))
+                lb.linkAccount = makeAccountStub(email: "test@test.com", isRegistered: true)
+                lb.paymentMethodPreview = .init(icon: STPImageLibrary.unpaddedCardBrandImage(for: .visa), last4: "3155")
                 return lb
             }.padding()
         }
