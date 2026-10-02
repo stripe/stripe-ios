@@ -136,7 +136,6 @@ class IdentityFlowView: UIView {
 
     private let buttonTopContentView = HTMLTextView()
     private let buttonBottomContentContainer = UIView()
-    private var configuredButtonBottomContentView: UIView?
 
     private var flowViewDelegate: IdentityFlowViewDelegate?
 
@@ -387,9 +386,8 @@ extension IdentityFlowView {
     }
 
     fileprivate func configureButtonBottom(with contentView: UIView?) {
-        if configuredButtonBottomContentView !== contentView {
-            configuredButtonBottomContentView?.removeFromSuperview()
-            configuredButtonBottomContentView = contentView
+        if buttonBottomContentContainer.subviews.first !== contentView {
+            buttonBottomContentContainer.subviews.forEach { $0.removeFromSuperview() }
 
             if let contentView = contentView {
                 buttonBottomContentContainer.addSubview(contentView)
