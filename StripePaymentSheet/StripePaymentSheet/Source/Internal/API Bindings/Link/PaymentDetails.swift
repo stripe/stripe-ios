@@ -141,6 +141,13 @@ extension ConsumerPaymentDetails {
         let label: String
         let sublabel: String?
 
+        var formattedDisplayText: String {
+            [label, sublabel]
+                .compactMap { $0 }
+                .filter { !$0.isEmpty }
+                .joined(separator: " ")
+        }
+
         let icon: Icon?
         struct Icon: Decodable {
             let main: URL?
@@ -393,9 +400,7 @@ extension ConsumerPaymentDetails {
             let sublabel = "•••• \(bankAccount.last4)"
             return [label, sublabel].joined(separator: " ")
         case .generic:
-            guard let display else { return nil }
-            let components = [display.label, display.sublabel].compactMap { $0 }
-            return components.joined(separator: " ")
+            return display?.formattedDisplayText
         }
     }
 
@@ -429,9 +434,7 @@ extension ConsumerPaymentDetails {
                 digits
             )
         case .generic:
-            guard let display else { return "" }
-            let components = [display.label, display.sublabel].compactMap { $0 }
-            return components.joined(separator: " ")
+            return display?.formattedDisplayText ?? ""
         }
     }
 

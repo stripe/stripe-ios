@@ -47,21 +47,25 @@ extension ConsumerSession {
         let defaultCardBrand: String?
         let defaultPaymentType: PaymentType?
         let last4: String?
+        let display: ConsumerPaymentDetails.DisplayMetadata?
 
         init(
             defaultCardBrand: String?,
             defaultPaymentType: PaymentType?,
-            last4: String?
+            last4: String?,
+            display: ConsumerPaymentDetails.DisplayMetadata? = nil
         ) {
             self.defaultCardBrand = defaultCardBrand
             self.defaultPaymentType = defaultPaymentType
             self.last4 = last4
+            self.display = display
         }
 
         private enum CodingKeys: String, CodingKey {
             case defaultCardBrand = "default_card_brand"
             case defaultPaymentType = "default_payment_type"
             case last4 = "last_4"
+            case display
         }
 
         init(from decoder: Decoder) throws {
@@ -69,6 +73,7 @@ extension ConsumerSession {
             self.defaultCardBrand = try container.decodeIfPresent(String.self, forKey: .defaultCardBrand)
             self.defaultPaymentType = try container.decodeIfPresent(PaymentType.self, forKey: .defaultPaymentType)
             self.last4 = try container.decodeIfPresent(String.self, forKey: .last4)
+            self.display = try container.decodeIfPresent(ConsumerPaymentDetails.DisplayMetadata.self, forKey: .display)
         }
     }
 }

@@ -104,6 +104,58 @@ class LinkButtonSnapshotTests: STPSnapshotTestCase {
 
         STPSnapshotVerifyView(vc.view, identifier: "bank_payment_method", file: #filePath, line: #line)
     }
+
+    func testLinkPaymentMethodPreview_usesLPMDisplayMetadata() throws {
+        let iconUrl = URL(string: "https://cdn.stripe.com/pix.png")!
+        let paymentDetails = ConsumerSession.DisplayablePaymentDetails(
+            defaultCardBrand: nil,
+            defaultPaymentType: .unparsable,
+            last4: nil,
+            display: .init(
+                label: "Pix",
+                sublabel: "000••••••••",
+                icon: .init(main: iconUrl)
+            )
+        )
+
+        let preview = try XCTUnwrap(LinkPaymentMethodPreview(from: paymentDetails))
+
+        XCTAssertEqual(preview.displayText, "Pix 000••••••••")
+        XCTAssertEqual(preview.iconUrl, iconUrl)
+    }
+
+    func testLinkPaymentMethodPreview_fallsBackToLPMDisplayLabel() throws {
+        let paymentDetails = ConsumerSession.DisplayablePaymentDetails(
+            defaultCardBrand: nil,
+            defaultPaymentType: .unparsable,
+            last4: nil,
+            display: .init(label: "Pix", sublabel: nil, icon: nil)
+        )
+
+        let preview = try XCTUnwrap(LinkPaymentMethodPreview(from: paymentDetails))
+
+        XCTAssertEqual(preview.displayText, "Pix")
+    }
+
+    func testLinkButton_genericPaymentMethodPreview() {
+        let linkAccount = Stubs.linkAccount(
+            email: "user@example.com",
+            paymentMethodType: .unparsable,
+            isRegistered: true
+        )
+
+        let viewModel = LinkButtonViewModel()
+        viewModel.setAccount(linkAccount)
+
+        let linkButton = LinkButton(viewModel: viewModel, borderColor: .gray, action: {})
+        let vc = UIHostingController(rootView: linkButton)
+
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 428, height: 100))
+        window.rootViewController = vc
+        window.makeKeyAndVisible()
+
+        STPSnapshotVerifyView(vc.view, identifier: "generic_payment_method", file: #filePath, line: #line)
+    }
 }
 
 // MARK: - Test Stubs
@@ -124,11 +176,19 @@ enum Stubs {
     static func displayablePaymentDetails(
         paymentMethodType: ConsumerSession.DisplayablePaymentDetails.PaymentType
     ) -> ConsumerSession.DisplayablePaymentDetails {
-        .init(
-            defaultCardBrand: "VISA",
-            defaultPaymentType: paymentMethodType,
-            last4: paymentMethodType == .card ? "4242" : "6789"
-        )
+        switch paymentMethodType {
+        case .card:
+            return .init(defaultCardBrand: "VISA", defaultPaymentType: paymentMethodType, last4: "4242")
+        case .bankAccount:
+            return .init(defaultCardBrand: nil, defaultPaymentType: paymentMethodType, last4: "6789")
+        case .unparsable:
+            return .init(
+                defaultCardBrand: nil,
+                defaultPaymentType: paymentMethodType,
+                last4: nil,
+                display: .init(label: "Pix", sublabel: "000••••••••", icon: nil)
+            )
+        }
     }
 
     static func linkAccount(
