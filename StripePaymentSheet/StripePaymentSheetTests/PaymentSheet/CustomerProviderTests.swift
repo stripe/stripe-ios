@@ -223,4 +223,39 @@ final class CustomerProviderTests: XCTestCase {
             XCTAssertEqual(provider.analyticValue, expected)
         }
     }
+
+    func testCheckoutPermissionsUseTheCheckoutSession() {
+        for canDetach in [true, false] {
+            let session = CheckoutTestHelpers.makeSession([
+                "customer": ["id": "cus_checkout", "can_detach_payment_method": canDetach],
+            ]).makePublicSession()
+            let provider = CustomerProvider(checkoutSession: session)
+
+            XCTAssertEqual(provider.allowsPaymentMethodRemoval(elementsSession: .emptyElementsSession), canDetach)
+            XCTAssertTrue(provider.allowsPaymentMethodUpdate(elementsSession: .emptyElementsSession))
+        }
+    }
+
+    func testCustomerPermissionsUseTheElementsSession() {
+        let provider = CustomerProvider(
+            customer: .init(id: "cus_session", customerSessionClientSecret: "cuss_test")
+        )
+        for enabled in [true, false] {
+            let elementsSession = STPElementsSession._testValue(
+                paymentMethodTypes: ["card"],
+                customerSessionData: [
+                    "mobile_payment_element": [
+                        "enabled": enabled,
+                        "features": [
+                            "payment_method_save": "enabled",
+                            "payment_method_remove": "enabled",
+                        ],
+                    ],
+                ]
+            )
+
+            XCTAssertEqual(provider.allowsPaymentMethodRemoval(elementsSession: elementsSession), enabled)
+            XCTAssertEqual(provider.allowsPaymentMethodUpdate(elementsSession: elementsSession), enabled)
+        }
+    }
 }
