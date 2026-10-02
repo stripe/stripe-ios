@@ -149,6 +149,159 @@ final class PayWithLinkButtonTests: XCTestCase {
         XCTAssertEqual(button.accessibilityValue, "test@example.com")
     }
 
+    func testLogoFrameMatchesRenderedLogo() throws {
+        for brand in [LinkBrand.link, .onelink] {
+            for linkAccount in [nil, makeLinkAccount(isRegistered: true)] {
+                // Given a button showing the Link logo
+                let button = PayWithLinkButton(brand: brand, observesLinkAccountContext: false)
+                button.linkAccount = linkAccount
+                button.frame = CGRect(origin: .zero, size: CGSize(width: 260, height: 44))
+                button.layoutIfNeeded()
+                let state = button.linkAccountState
+
+                // When the logo is hidden
+                let imageWithLogo = renderedRGBAImage(of: button)
+                button.setLogoHidden(true, for: state)
+                let imageWithoutLogo = renderedRGBAImage(of: button)
+
+                // Then the pixels that change are within the logo frame
+                let renderedLogoFrame = try XCTUnwrap(differingRect(between: imageWithLogo, and: imageWithoutLogo))
+                let logoFrame = try XCTUnwrap(button.logoFrame(for: state))
+                let message = "\(brand) \(state)"
+                XCTAssertEqual(renderedLogoFrame.minX, logoFrame.minX, accuracy: 1, message)
+                XCTAssertEqual(renderedLogoFrame.maxX, logoFrame.maxX, accuracy: 1, message)
+                XCTAssertEqual(renderedLogoFrame.minY, logoFrame.minY, accuracy: 1, message)
+                XCTAssertEqual(renderedLogoFrame.maxY, logoFrame.maxY, accuracy: 1, message)
+            }
+        }
+    }
+
+    func testAnimatedStateChangeMovesLogoAndCleansUp() {
+        // Given a logged out button on screen
+        let window = UIWindow(frame: CGRect(origin: .zero, size: CGSize(width: 320, height: 100)))
+        let button = PayWithLinkButton(brand: .link, observesLinkAccountContext: false)
+        button.frame = CGRect(origin: .zero, size: CGSize(width: 260, height: 44))
+        window.addSubview(button)
+        button.layoutIfNeeded()
+        let subviewCount = button.subviews.count
+
+        // When the customer is recognized, with animation
+        button.performStateChange(animated: true, duration: 0.25) {
+            button.linkAccount = makeLinkAccount(isRegistered: true)
+        }
+
+        // Then a logo is added to move between the two layouts, and both layouts are on screen
+        XCTAssertEqual(button.subviews.count, subviewCount + 1)
+        XCTAssertEqual(button.subviews.filter { !$0.isHidden }.count, 3)
+
+        // When the transition finishes
+        button.finishStateTransition()
+
+        // Then only the new layout remains
+        XCTAssertEqual(button.subviews.count, subviewCount)
+        let visibleSubviews = button.subviews.filter { !$0.isHidden }
+        XCTAssertEqual(visibleSubviews.count, 1)
+        XCTAssertEqual(visibleSubviews.first?.alpha, 1)
+        XCTAssertEqual(button.linkAccountState, .hasEmail(email: "test@example.com"))
+    }
+
+    func testRedundantStateChangeDuringTransitionKeepsAnimating() {
+        // Given an in-flight transition
+        let window = UIWindow(frame: CGRect(origin: .zero, size: CGSize(width: 320, height: 100)))
+        let button = PayWithLinkButton(brand: .link, observesLinkAccountContext: false)
+        button.frame = CGRect(origin: .zero, size: CGSize(width: 260, height: 44))
+        window.addSubview(button)
+        button.layoutIfNeeded()
+        let subviewCount = button.subviews.count
+        let linkAccount = makeLinkAccount(isRegistered: true)
+        button.performStateChange(animated: true, duration: 0.25) {
+            button.linkAccount = linkAccount
+        }
+
+        // When the same state is applied again, as happens when several properties of the Link account are published
+        button.performStateChange(animated: true, duration: 0.25) {
+            button.brand = .link
+            button.linkAccount = linkAccount
+            button.paymentMethodPreview = nil
+        }
+        button.linkAccount = linkAccount
+
+        // Then the transition keeps running
+        XCTAssertEqual(button.subviews.count, subviewCount + 1)
+        XCTAssertEqual(button.subviews.filter { !$0.isHidden }.count, 3)
+    }
+
+    func testStateChangeDuringTransitionFinishesTransition() {
+        // Given an in-flight transition
+        let window = UIWindow(frame: CGRect(origin: .zero, size: CGSize(width: 320, height: 100)))
+        let button = PayWithLinkButton(brand: .link, observesLinkAccountContext: false)
+        button.frame = CGRect(origin: .zero, size: CGSize(width: 260, height: 44))
+        window.addSubview(button)
+        button.layoutIfNeeded()
+        let subviewCount = button.subviews.count
+        button.performStateChange(animated: true, duration: 0.25) {
+            button.linkAccount = makeLinkAccount(isRegistered: true)
+        }
+
+        // When the customer logs out before it completes
+        button.linkAccount = nil
+
+        // Then the button shows only the logged out layout
+        XCTAssertEqual(button.subviews.count, subviewCount)
+        XCTAssertEqual(button.subviews.filter { !$0.isHidden }.count, 1)
+        XCTAssertEqual(button.linkAccountState, .noValidAccount)
+    }
+
+    private struct RGBAImage {
+        let width: Int
+        let height: Int
+        let scale: CGFloat
+        let pixels: [UInt8]
+    }
+
+    private func renderedRGBAImage(of view: UIView, scale: CGFloat = 3) -> RGBAImage {
+        let width = Int(view.bounds.width * scale)
+        let height = Int(view.bounds.height * scale)
+        var pixels = [UInt8](repeating: 0, count: width * height * 4)
+        pixels.withUnsafeMutableBytes { buffer in
+            let context = CGContext(
+                data: buffer.baseAddress,
+                width: width,
+                height: height,
+                bitsPerComponent: 8,
+                bytesPerRow: width * 4,
+                space: CGColorSpaceCreateDeviceRGB(),
+                bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue
+            )!
+            // Flip to UIKit's coordinate space
+            context.translateBy(x: 0, y: CGFloat(height))
+            context.scaleBy(x: scale, y: -scale)
+            view.layer.render(in: context)
+        }
+        return RGBAImage(width: width, height: height, scale: scale, pixels: pixels)
+    }
+
+    private func differingRect(between image: RGBAImage, and otherImage: RGBAImage) -> CGRect? {
+        var minX = Int.max, minY = Int.max, maxX = Int.min, maxY = Int.min
+        for y in 0..<image.height {
+            for x in 0..<image.width {
+                let offset = (y * image.width + x) * 4
+                // Ignore anti-aliasing noise
+                let difference = (0..<4).map { abs(Int(image.pixels[offset + $0]) - Int(otherImage.pixels[offset + $0])) }.max() ?? 0
+                guard difference > 16 else { continue }
+                minX = min(minX, x)
+                minY = min(minY, y)
+                maxX = max(maxX, x)
+                maxY = max(maxY, y)
+            }
+        }
+        guard minX <= maxX else {
+            return nil
+        }
+        return CGRect(x: minX, y: minY, width: maxX - minX + 1, height: maxY - minY + 1)
+            .applying(CGAffineTransform(scaleX: 1 / image.scale, y: 1 / image.scale))
+    }
+
     private func makeLinkAccount(isRegistered: Bool) -> LinkAccountStub {
         LinkAccountStub(
             email: "test@example.com",
