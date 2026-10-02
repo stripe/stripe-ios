@@ -98,9 +98,6 @@
 /* Legal text shown when creating a Link account. */
 "By continuing you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "By continuing you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.";
 
-/* Nigerian payment method setup terms. The terms tags mark the link to the merchant of record's terms of use. */
-"By continuing, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their terms of use. You consent to be charged for this payment and future payments in accordance with <terms>their terms</terms>." = "By continuing, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their terms of use. You consent to be charged for this payment and future payments in accordance with <terms>their terms</terms>.";
-
 /* Text providing link to terms for ACH payments */
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>.";
 

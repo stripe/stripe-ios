@@ -287,34 +287,44 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
             ), .missingRequirements([.unsupportedForSetup]))
         }
     }
-    func testNgCardRequiresReturnURLForPaymentAndSetup() {
+    func testNgCardRequiresReturnURLAndDoesNotSupportSetup() {
         // Given
-        let intents: [Intent] = [
-            ._testPaymentIntent(paymentMethodTypes: [.ngCard]),
+        let paymentIntent = Intent._testPaymentIntent(paymentMethodTypes: [.ngCard])
+        let setupIntents: [Intent] = [
             ._testPaymentIntent(paymentMethodTypes: [.ngCard], setupFutureUsage: .offSession),
             ._testSetupIntent(paymentMethodTypes: [.ngCard]),
         ]
 
-        for intent in intents {
-            // When
-            let withoutReturnURL = PaymentSheet.PaymentMethodType.supportsAdding(
-                paymentMethod: .ngCard,
-                configuration: makeConfiguration(),
-                intent: intent,
-                elementsSession: ._testValue(intent: intent),
-                supportedPaymentMethods: [.ngCard]
-            )
-            let withReturnURL = PaymentSheet.PaymentMethodType.supportsAdding(
-                paymentMethod: .ngCard,
-                configuration: makeConfiguration(hasReturnURL: true),
-                intent: intent,
-                elementsSession: ._testValue(intent: intent),
-                supportedPaymentMethods: [.ngCard]
-            )
+        // When
+        let withoutReturnURL = PaymentSheet.PaymentMethodType.supportsAdding(
+            paymentMethod: .ngCard,
+            configuration: makeConfiguration(),
+            intent: paymentIntent,
+            elementsSession: ._testValue(intent: paymentIntent),
+            supportedPaymentMethods: [.ngCard]
+        )
+        let withReturnURL = PaymentSheet.PaymentMethodType.supportsAdding(
+            paymentMethod: .ngCard,
+            configuration: makeConfiguration(hasReturnURL: true),
+            intent: paymentIntent,
+            elementsSession: ._testValue(intent: paymentIntent),
+            supportedPaymentMethods: [.ngCard]
+        )
 
-            // Then
-            XCTAssertEqual(withoutReturnURL, .missingRequirements([.returnURL]))
-            XCTAssertEqual(withReturnURL, .supported)
+        // Then
+        XCTAssertEqual(withoutReturnURL, .missingRequirements([.returnURL]))
+        XCTAssertEqual(withReturnURL, .supported)
+        for intent in setupIntents {
+            XCTAssertEqual(
+                PaymentSheet.PaymentMethodType.supportsAdding(
+                    paymentMethod: .ngCard,
+                    configuration: makeConfiguration(hasReturnURL: true),
+                    intent: intent,
+                    elementsSession: ._testValue(intent: intent),
+                    supportedPaymentMethods: [.ngCard]
+                ),
+                .missingRequirements([.unsupportedForSetup])
+            )
         }
     }
     func testGCashRequiresReturnURLForPaymentAndSetup() {

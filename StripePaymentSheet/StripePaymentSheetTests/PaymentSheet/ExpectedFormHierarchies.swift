@@ -141,7 +141,6 @@ enum ExpectedFormHierarchy {
                 FormHierarchyNode(type: "SimpleMandateElement", properties: ["text": "By confirming your payment, you agree that your tr..."])
             ])
         }
-        static var settingUp: FormHierarchyNode { paymentIntent }
     }
     // MARK: - Naira bank transfer
 
