@@ -30,18 +30,11 @@ pipelines:
     workflows:
       lint-tests:
         abort_on_fail: true
-      snapshots-ios16: {}
-      snapshots-ios26: {}
-      update-snapshots-and-lokalise:
-        depends_on:
-        - snapshots-ios16
-        - snapshots-ios26
+      record-all-snapshots-and-lokalise: {}
       framework-unit-tests:
         uses: framework-tests
         inputs:
         - CI_SNAPSHOTS_IN_DEDICATED_WORKFLOW: "true"
-        - CI_FRAMEWORK_CHECKS_IN_DEDICATED_WORKFLOW: "true"
-      framework-checks: {}
       paymentsheet-unit-tests:
         uses: framework-tests-paymentsheet
         inputs:
@@ -50,8 +43,7 @@ pipelines:
       lpm-confirm-flow-tests:
         parallel: 2
       framework-tests-and-builds-xcode-26-1: {}
-      installation-tests-cocoapods: {}
-      installation-tests-spm: {}
+      installation-tests: {}
       integration-tests: {}
       size-report:
         parallel: 3
@@ -88,82 +80,6 @@ pipelines:
       deploy-dry-run: {}
       pod-lint-tests: {}
 workflows:
-  snapshots-ios16:
-    before_run:
-    - install-runtime-16
-    - prep_all
-    - record-snapshot-runtime
-    envs:
-    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
-    - SNAPSHOT_IOS_VERSION: "16.4"
-    - SNAPSHOT_RESULTS_KEY: SNAPSHOT_IOS16_RESULTS
-  snapshots-ios26:
-    before_run:
-    - prep_all
-    - record-snapshot-runtime
-    envs:
-    - DEFAULT_TEST_DEVICE: $DEFAULT_TEST_DEVICE_26_4_1
-    - SNAPSHOT_IOS_VERSION: "26.4.1"
-    - SNAPSHOT_RESULTS_KEY: SNAPSHOT_IOS26_RESULTS
-  record-snapshot-runtime:
-    steps:
-    - script@1:
-        title: Install ImageMagick
-        inputs:
-        - content: brew install imagemagick
-    - script@1:
-        title: Record snapshots and export changes
-        inputs:
-        - content: |-
-            #!/usr/bin/env bash
-            set -euo pipefail
-            snapshot_base=$(git rev-parse HEAD)
-            ruby ci_scripts/record_snapshots.rb --commit --version "$SNAPSHOT_IOS_VERSION"
-            snapshot_results="$BITRISE_DEPLOY_DIR/snapshot-ios$SNAPSHOT_IOS_VERSION"
-            mkdir -p "$snapshot_results"
-            git diff --binary "$snapshot_base" HEAD -- Tests/ReferenceImages_64 > "$snapshot_results/snapshot-ios$SNAPSHOT_IOS_VERSION.patch"
-    - deploy-to-bitrise-io@2:
-        inputs:
-        # Directories are archived, preserving an empty patch when nothing changed.
-        - pipeline_intermediate_files: "$BITRISE_DEPLOY_DIR/snapshot-ios$SNAPSHOT_IOS_VERSION:$SNAPSHOT_RESULTS_KEY"
-  update-snapshots-and-lokalise:
-    before_run:
-    - prep_source
-    envs:
-    - SNAPSHOT_CHANGES_TO_PUSH: "false"
-    - LOKALISE_API_KEY: $LOKALISE_API_KEY
-    steps:
-    - activate-ssh-key@4: {}
-    - pull-intermediate-files@1.3.7:
-        inputs:
-        - artifact_sources: snapshots-ios16,snapshots-ios26
-    - script@1:
-        title: Combine snapshot updates
-        inputs:
-        - content: |-
-            #!/usr/bin/env bash
-            set -euo pipefail
-            for patch in "${SNAPSHOT_IOS16_RESULTS:?Missing iOS 16 results}/snapshot-ios16.4.patch" "${SNAPSHOT_IOS26_RESULTS:?Missing iOS 26 results}/snapshot-ios26.4.1.patch"; do
-              test -f "$patch"
-              if [[ -s "$patch" ]]; then
-                git apply --index "$patch"
-              fi
-            done
-            if ! git diff --cached --quiet; then
-              git commit -m "Update snapshot reference images"
-              envman add --key SNAPSHOT_CHANGES_TO_PUSH --value true
-            else
-              echo "No snapshot changes to publish."
-            fi
-    - script@1:
-        title: Push snapshot changes
-        run_if: '{{enveq "SNAPSHOT_CHANGES_TO_PUSH" "true"}}'
-        inputs:
-        - content: ruby ci_scripts/push_snapshots.rb
-    - script@1:
-        title: Upload strings to lokalise
-        inputs:
-        - content: bundle exec ./ci_scripts/upload_localized_strings_to_lokalise.sh
   record-all-snapshots-and-lokalise:
     description: Standalone recorder for both runtimes, including artifact upload, one snapshot push, and localization updates.
     steps:
@@ -407,7 +323,6 @@ workflows:
   framework-tests:
     envs:
     - CI_SNAPSHOTS_IN_DEDICATED_WORKFLOW: "false"
-    - CI_FRAMEWORK_CHECKS_IN_DEDICATED_WORKFLOW: "false"
     steps:
     - script@1:
         title: Delegate snapshots to the dedicated workflow
@@ -422,13 +337,11 @@ workflows:
         - lane: preflight
         title: fastlane preflight
         is_always_run: true
-        run_if: '{{not (enveq "CI_FRAMEWORK_CHECKS_IN_DEDICATED_WORKFLOW" "true")}}'
     - fastlane@3:
         inputs:
         - lane: threeds2_tests
         title: fastlane threeds2_tests
         is_always_run: true
-        run_if: '{{not (enveq "CI_FRAMEWORK_CHECKS_IN_DEDICATED_WORKFLOW" "true")}}'
     - xcode-test@6:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
@@ -465,26 +378,6 @@ workflows:
     - install-runtime-16
     - prep_all
     after_run: []
-    meta:
-      bitrise.io:
-        stack: osx-xcode-26.4.x
-        machine_type_id: g2.mac.large
-  framework-checks:
-    steps:
-    - fastlane@3:
-        inputs:
-        - lane: preflight
-        title: fastlane preflight
-        is_always_run: true
-    - fastlane@3:
-        inputs:
-        - lane: threeds2_tests
-        title: fastlane threeds2_tests
-        is_always_run: true
-    - deploy-to-bitrise-io@2: {}
-    before_run:
-    - install-runtime-16
-    - prep_all
     meta:
       bitrise.io:
         stack: osx-xcode-26.4.x
@@ -640,7 +533,37 @@ workflows:
       bitrise.io:
         stack: osx-xcode-26.4.x
         machine_type_id: g2.mac.large
+  installation-tests:
+    description: Run all five package installation variants with one simulator and dependency setup.
+    before_run:
+    - install-runtime-16
+    - prep_all
+    - installation-cocoapods-steps
+    - installation-spm-steps
+    steps:
+    - deploy-to-bitrise-io@2:
+        is_always_run: true
+    envs:
+    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
+    meta:
+      bitrise.io:
+        stack: osx-xcode-26.4.x
+        machine_type_id: g2.mac.large
   installation-tests-cocoapods:
+    before_run:
+    - install-runtime-16
+    - prep_all
+    - installation-cocoapods-steps
+    steps:
+    - deploy-to-bitrise-io@2:
+        is_always_run: true
+    envs:
+    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
+    meta:
+      bitrise.io:
+        stack: osx-xcode-26.4.x
+        machine_type_id: g2.mac.large
+  installation-cocoapods-steps:
     steps:
     - fastlane@3:
         inputs:
@@ -654,18 +577,21 @@ workflows:
         inputs:
         - lane: installation_cocoapods_frameworks_swift
         title: fastlane installation_cocoapods_frameworks_swift
-    - deploy-to-bitrise-io@2:
-        is_always_run: true
+  installation-tests-spm:
     before_run:
     - install-runtime-16
     - prep_all
+    - installation-spm-steps
+    steps:
+    - deploy-to-bitrise-io@2:
+        is_always_run: true
     envs:
     - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
     meta:
       bitrise.io:
         stack: osx-xcode-26.4.x
         machine_type_id: g2.mac.large
-  installation-tests-spm:
+  installation-spm-steps:
     steps:
     - fastlane@3:
         inputs:
@@ -675,17 +601,6 @@ workflows:
         inputs:
         - lane: installation_spm_swift
         title: fastlane installation_spm_swift
-    - deploy-to-bitrise-io@2:
-        is_always_run: true
-    before_run:
-    - install-runtime-16
-    - prep_all
-    envs:
-    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
-    meta:
-      bitrise.io:
-        stack: osx-xcode-26.4.x
-        machine_type_id: g2.mac.large
   integration-tests:
     steps:
     - xcode-test@6:
@@ -786,15 +701,32 @@ workflows:
         stack: osx-xcode-26.4.x
         machine_type_id: g2.mac.large
   lint-tests:
+    before_run:
+    - prep_source
     steps:
-    - git-clone@8.2:
-        inputs:
-        - merge_pr: "no"
-        - clone_depth: -1
     - script@1:
         inputs:
-        - content: git fetch origin master
-        title: Fetch origin/master
+        - content: |-
+            #!/usr/bin/env bash
+            set -euo pipefail
+            # PR preparation already fetched master. A commit-only push checkout
+            # may not have a branch ref yet.
+            if ! git show-ref --verify --quiet refs/remotes/origin/master; then
+              git fetch --no-tags --depth=100 origin +refs/heads/master:refs/remotes/origin/master
+            fi
+            source_commit="${BITRISE_GIT_COMMIT:-$(git rev-parse HEAD)}"
+            for depth in 500 2000 8000; do
+              if git merge-base origin/master HEAD >/dev/null; then
+                break
+              fi
+              git fetch --no-tags --depth="$depth" "${BITRISEIO_PULL_REQUEST_REPOSITORY_URL:-origin}" "$source_commit"
+              git fetch --no-tags --depth="$depth" origin +refs/heads/master:refs/remotes/origin/master
+            done
+            if ! git merge-base origin/master HEAD >/dev/null; then
+              echo "Cannot determine the comparison base for linting." >&2
+              exit 1
+            fi
+        title: Ensure origin/master is available for lint comparison
     - script@1:
         inputs:
         - content: ./ci_scripts/lint_modified_files.sh

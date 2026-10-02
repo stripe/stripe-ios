@@ -1,6 +1,6 @@
 require 'open3'
 require 'tempfile'
-require_relative 'get_frameworks'
+require_relative 'interface_cache'
 
 PUBLIC_SEVERITY = 'public'.freeze
 SPI_SEVERITY = 'spi'.freeze
@@ -29,7 +29,8 @@ def sorted_diff_lines(old_path, new_path)
     new_temp.write(new_lines.join)
     new_temp.flush
 
-    stdout, _stderr, _status = Open3.capture3('diff', '-u', old_temp.path, new_temp.path)
+    stdout, stderr, status = Open3.capture3('diff', '-u', old_temp.path, new_temp.path)
+    abort("Unable to compare interfaces: #{stderr}") unless [0, 1].include?(status.exitstatus)
     stdout.lines.filter_map do |line|
       next if line.start_with?('+++', '---', '@@')
       next unless line.start_with?('+', '-')
@@ -73,21 +74,24 @@ def write_output(path, content)
   File.write(path, content)
 end
 
+master_directory, branch_directory = ARGV
+abort('Usage: diff_public_interface.rb BASE_DIRECTORY HEAD_DIRECTORY') unless ARGV.length == 2
+master_manifest = InterfaceCache.load!(master_directory)
+branch_manifest = InterfaceCache.load!(branch_directory)
+abort('Interfaces were built with different toolchains or recipes') unless master_manifest['fingerprint'] == branch_manifest['fingerprint']
+
 final_diff_string = +''
 severity = NO_SEVERITY
 
-GetFrameworks.framework_names('./modules.yaml').each do |framework_name|
-  public_interface_dir = "#{framework_name}.framework/Modules/#{framework_name}.swiftmodule"
-  simulator_slice = 'ios-arm64_x86_64-simulator'
-
-  master_public_interface_path = "#{framework_name}-master.xcframework/#{simulator_slice}/#{public_interface_dir}/arm64-apple-ios-simulator.swiftinterface"
-  branch_public_interface_path = "#{framework_name}-new.xcframework/#{simulator_slice}/#{public_interface_dir}/arm64-apple-ios-simulator.swiftinterface"
+(master_manifest['frameworks'] | branch_manifest['frameworks']).sort.each do |framework_name|
+  master_public_interface_path = File.join(master_directory, framework_name, InterfaceCache::FILENAMES[0])
+  branch_public_interface_path = File.join(branch_directory, framework_name, InterfaceCache::FILENAMES[0])
   public_diff_lines = sorted_diff_lines(master_public_interface_path, branch_public_interface_path).reject do |line|
     line.match?(/^[+-]import\s/)
   end
 
-  master_private_interface_path = "#{framework_name}-master.xcframework/#{simulator_slice}/#{public_interface_dir}/arm64-apple-ios-simulator.private.swiftinterface"
-  branch_private_interface_path = "#{framework_name}-new.xcframework/#{simulator_slice}/#{public_interface_dir}/arm64-apple-ios-simulator.private.swiftinterface"
+  master_private_interface_path = File.join(master_directory, framework_name, InterfaceCache::FILENAMES[1])
+  branch_private_interface_path = File.join(branch_directory, framework_name, InterfaceCache::FILENAMES[1])
   spi_diff_lines = sorted_diff_lines(master_private_interface_path, branch_private_interface_path).select do |line|
     line.include?('@_spi(') && non_ignored_spi_line?(line)
   end
