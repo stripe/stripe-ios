@@ -535,7 +535,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
             clientSecret: "cs_test_123_secret_abc",
             returnURL: "stripe-ios-test://checkout-return"
         )
-        var eceConfiguration = ExpressCheckoutElement.Configuration(confirmHandler: { _ in })
+        var eceConfiguration = ExpressCheckoutElement.Configuration(completion: { _ in })
         eceConfiguration.applePayConfiguration = .init(merchantId: "merchant.com.test")
         configuration.expressCheckoutElement = eceConfiguration
         let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration(
@@ -568,7 +568,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         billingDetails.name = "Jenny Rosen"
         billingDetails.address = .init(country: "US", postalCode: "94107")
         configuration.defaults.billingDetails = billingDetails
-        var expressCheckoutElementConfiguration = ExpressCheckoutElement.Configuration(confirmHandler: { _ in })
+        var expressCheckoutElementConfiguration = ExpressCheckoutElement.Configuration(completion: { _ in })
         expressCheckoutElementConfiguration.linkConfiguration.disallowFundingSourceCreation = ["usInstantBankPayment"]
         expressCheckoutElementConfiguration.linkConfiguration.collectMissingBillingDetailsForExistingPaymentMethods = false
         configuration.expressCheckoutElement = expressCheckoutElementConfiguration

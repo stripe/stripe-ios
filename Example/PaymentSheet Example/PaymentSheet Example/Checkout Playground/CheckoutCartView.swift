@@ -147,7 +147,7 @@ struct CheckoutCartView: View {
             )
             if integrationType != .eceOnly {
                 var paymentElementConfiguration = PaymentElement.Configuration()
-                paymentElementConfiguration.applePayConfiguration = PaymentElement.ApplePayConfiguration(
+                paymentElementConfiguration.applePayConfiguration = PaymentElement.Configuration.ApplePayConfiguration(
                     merchantId: "merchant.com.stripe.paymentsheet.example"
                 )
                 config.paymentElement = paymentElementConfiguration
@@ -164,12 +164,12 @@ struct CheckoutCartView: View {
                 var expressCheckoutElementConfiguration = ExpressCheckoutElement.Configuration { result in
                     confirmResult = result
                 }
-                expressCheckoutElementConfiguration.applePayConfiguration = ExpressCheckoutElement.ApplePayConfiguration(
+                expressCheckoutElementConfiguration.applePayConfiguration = ExpressCheckoutElement.Configuration.ApplePayConfiguration(
                     merchantId: "merchant.com.stripe.paymentsheet.example",
                     buttonType: expressCheckoutElementSettings.applePayButtonType.pkPaymentButtonType,
                     display: expressCheckoutElementSettings.applePayDisplay
                 )
-                expressCheckoutElementConfiguration.linkConfiguration = ExpressCheckoutElement.LinkConfiguration(
+                expressCheckoutElementConfiguration.linkConfiguration = ExpressCheckoutElement.Configuration.LinkConfiguration(
                     display: expressCheckoutElementSettings.linkDisplay
                 )
                 expressCheckoutElementConfiguration.paymentMethodOrder = expressCheckoutElementSettings.paymentMethodOrder.paymentMethodOrder

@@ -143,7 +143,7 @@ final class PaymentElementTest: XCTestCase {
         // Given Apple Pay configured for a Checkout Session with a non-US merchant country
         var checkoutConfiguration = CheckoutController.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
         var paymentElementConfiguration = PaymentElement.Configuration()
-        paymentElementConfiguration.applePayConfiguration = PaymentElement.ApplePayConfiguration(
+        paymentElementConfiguration.applePayConfiguration = PaymentElement.Configuration.ApplePayConfiguration(
             merchantId: "merchant.com.example",
             buttonType: .donate
         )
@@ -179,7 +179,7 @@ final class PaymentElementTest: XCTestCase {
         // Given a Checkout configuration with Link overrides
         var checkoutConfiguration = CheckoutController.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
         var paymentElementConfiguration = PaymentElement.Configuration()
-        var linkConfiguration = PaymentElement.LinkConfiguration()
+        var linkConfiguration = PaymentElement.Configuration.LinkConfiguration()
         linkConfiguration.disallowFundingSourceCreation = ["usInstantBankPayment"]
         linkConfiguration.collectMissingBillingDetailsForExistingPaymentMethods = false
         paymentElementConfiguration.linkConfiguration = linkConfiguration

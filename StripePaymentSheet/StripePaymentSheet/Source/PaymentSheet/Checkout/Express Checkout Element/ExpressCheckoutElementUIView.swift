@@ -113,7 +113,7 @@ public final class ExpressCheckoutElementUIView: UIView {
 
     static func buttonRows(
         for buttons: [ExpressCheckoutElement.PaymentMethod],
-        layout: ExpressCheckoutElement.Appearance.ButtonLayout
+        layout: ExpressCheckoutElement.Configuration.Appearance.ButtonLayout
     ) -> [[ExpressCheckoutElement.PaymentMethod]] {
         let visibleButtonCount = calculateVisibleButtonCount(
             buttonCount: buttons.count,
@@ -226,7 +226,7 @@ public final class ExpressCheckoutElementUIView: UIView {
                 paymentMethod,
                 presentationWindow: window
             ) else { return }
-            self.configuration.confirmHandler(result)
+            self.configuration.completion(result)
         }
     }
 }
