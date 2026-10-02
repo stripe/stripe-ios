@@ -15,6 +15,7 @@ import UIKit
 /// - Note: See the concrete implementations of `PaymentElementConfiguration` for detailed doc comments.
 /// - Note: Not currently used by CustomerSheet.
 protocol PaymentElementConfiguration: PaymentMethodRequirementProvider {
+
     var allowsDelayedPaymentMethods: Bool { get set }
     var allowsPaymentMethodsRequiringShippingAddress: Bool { get set }
     var apiClient: STPAPIClient { get set }
