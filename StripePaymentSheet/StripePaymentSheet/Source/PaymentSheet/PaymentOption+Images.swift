@@ -294,6 +294,8 @@ extension STPPaymentMethodType {
                 return .pm_type_shopeepay
             case .qris:
                 return .pm_type_qris
+            case .gcash:
+                return .pm_type_gcash
             case .goPay:
                 return .pm_type_gopay
             case .grabPay:
