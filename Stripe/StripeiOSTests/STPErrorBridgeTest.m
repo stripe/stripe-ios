@@ -34,4 +34,19 @@
     XCTAssertEqualObjects(expectedError.domain, STPError.stripeDomain);
 }
 
+- (void)testCollectUSBankAccountParamsSelectors {
+    STPCollectBankAccountParams *legacyParams =
+        [STPCollectBankAccountParams collectUSBankAccountParamsWithName:@"Test Customer" email:nil];
+    XCTAssertNotNil(legacyParams);
+
+    STPPaymentMethodAddress *address = [[STPPaymentMethodAddress alloc] init];
+    address.line1 = @"123 Main Street";
+    STPCollectBankAccountParams *params =
+        [STPCollectBankAccountParams collectUSBankAccountParamsWithName:@"Test Customer"
+                                                                 email:@"customer@example.com"
+                                                               address:address
+                                                                 phone:@"+15555550100"];
+    XCTAssertNotNil(params);
+}
+
 @end

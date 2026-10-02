@@ -44,7 +44,11 @@ MINOR
 * [Added] Added `additionalHeaders` support to the `STPAPIClient` GET, POST, and DELETE APIs exposed through the `STP` SPI.
 * [Added] Added `uploadFile(at:purpose:authorizationSecret:progress:)` and associated error type `FileUploadError`, exposed through the `STP` SPI.
 
+### Payments
+* [Added] Added billing address and phone support to `STPCollectBankAccountParams` for US bank accounts.
+
 ### PaymentSheet
+* [Fixed] Fixed US bank account collection omitting configured billing addresses and phone numbers.
 * [Fixed] Fixed card funding warnings not appearing after scanning a card.
 
 ## 26.11.0 2026-09-14
