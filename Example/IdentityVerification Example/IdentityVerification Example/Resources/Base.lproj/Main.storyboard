@@ -46,6 +46,20 @@
                                                     <action selector="didChangeNewOrReuse:" destination="BYZ-38-t0r" eventType="valueChanged" id="8FD-3e-52a"/>
                                                 </connections>
                                             </segmentedControl>
+                                            <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="tmC-8m-Ode" userLabel="Test Mode">
+                                                <rect key="frame" x="0.0" y="78" width="406" height="31"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" verticalCompressionResistancePriority="1000" text="Test Mode" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tmL-8m-Ode">
+                                                        <rect key="frame" x="0.0" y="0.0" width="349" height="31"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                        <nil key="textColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="tmS-8m-Ode">
+                                                        <rect key="frame" x="357" y="0.0" width="51" height="31"/>
+                                                    </switch>
+                                                </subviews>
+                                            </stackView>
                                         </subviews>
                                         <viewLayoutGuide key="safeArea" id="EXd-ci-fc7"/>
                                     </stackView>
@@ -394,6 +408,8 @@
                         <outlet property="requireSelfieSwitch" destination="lmC-3a-Uxl" id="5NM-sT-NtW"/>
                         <outlet property="reuseVerificationIDContainerView" destination="amM-Qk-gdy" id="Smd-h9-WFJ"/>
                         <outlet property="reuseVerificationSessionIDInput" destination="geQ-dY-7mq" id="hQK-FO-ata"/>
+                        <outlet property="testModeContainerView" destination="tmC-8m-Ode" id="tmO-8m-Cnt"/>
+                        <outlet property="testModeSwitch" destination="tmS-8m-Ode" id="tmO-8m-Swt"/>
                         <outlet property="verificationTypeContainerView" destination="h9V-w1-BL7" id="3Oz-C8-LRc"/>
                         <outlet property="verificationTypeSelector" destination="U3Z-ei-dwD" id="EDa-tY-udC"/>
                         <outlet property="verifyButton" destination="hp2-OI-oTI" id="0LE-Z4-fuc"/>
