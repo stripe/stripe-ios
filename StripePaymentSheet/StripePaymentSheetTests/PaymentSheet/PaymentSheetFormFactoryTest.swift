@@ -2564,6 +2564,28 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             }
         }
     }
+
+    func testGCashRestrictsBillingCountryToPhilippines() throws {
+        // Given GCash with full billing address collection
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.address = .full
+        let form = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.gcash]),
+            elementsSession: ._testValue(paymentMethodTypes: ["gcash"]),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.gcash)
+        ).make()
+
+        // When reading the billing address countries
+        let address = try XCTUnwrap(
+            form.getAllUnwrappedSubElements().compactMap { $0 as? AddressSectionElement }.first
+        )
+
+        // Then the form matches web Payment Element's PH-only policy and default
+        XCTAssertEqual(address.countryCodes, ["PH"])
+        XCTAssertEqual(address.selectedCountryCode, "PH")
+    }
+
     func testGoPayUsesHostedAuthorizationWithoutNativeMandate() {
         // Given a GoPay PaymentIntent
         let intent = Intent._testPaymentIntent(paymentMethodTypes: [.goPay])

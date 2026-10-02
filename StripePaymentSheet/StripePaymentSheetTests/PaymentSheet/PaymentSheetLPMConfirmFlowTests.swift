@@ -777,6 +777,7 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                                amount: 10000,
                                paymentMethodType: .gcash,
                                merchantCountry: .US,
+                               defaultCountry: "PH",
                                expectedHierarchy: ExpectedFormHierarchy.GCash.paymentIntent) { _ in }
         // TODO(porter): Add `.paymentIntentWithPMOSetupFutureUsage` once Confirmation Tokens
         // accepts `client_context[payment_method_options][gcash]`.
@@ -785,6 +786,7 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                                amount: 10000,
                                paymentMethodType: .gcash,
                                merchantCountry: .US,
+                               defaultCountry: "PH",
                                expectedHierarchy: ExpectedFormHierarchy.GCash.settingUp) { _ in }
     }
     func testPaycoConfirmFlows() async throws {
@@ -1890,7 +1892,10 @@ extension PaymentSheetLPMConfirmFlowTests {
         if addressSpec.fieldOrdering.contains(.state) {
             XCTAssertNotNil(getState(from: form))
         }
-        XCTAssertNotNil(form.getDropdownFieldElement("Country or region"))
+        // GCash restricts billing addresses to the Philippines, so there is no country selector.
+        if paymentMethodType != .gcash {
+            XCTAssertNotNil(form.getDropdownFieldElement("Country or region"))
+        }
         XCTAssertNotNil(form.getTextFieldElement(addressSpec.zipNameType.localizedLabel))
     }
 
