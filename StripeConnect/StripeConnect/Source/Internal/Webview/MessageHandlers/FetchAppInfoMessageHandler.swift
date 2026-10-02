@@ -11,6 +11,7 @@ import Foundation
 class FetchAppInfoMessageHandler: ScriptMessageHandlerWithReply<VoidPayload, FetchAppInfoMessageHandler.Reply> {
     struct Reply: Encodable {
         let applicationId: String
+        let supportsNativeOverlayPresentation: Bool = true
     }
     init(didReceiveMessage: @escaping (VoidPayload) async throws -> Reply) {
         super.init(name: "fetchAppInfo", didReceiveMessage: didReceiveMessage)

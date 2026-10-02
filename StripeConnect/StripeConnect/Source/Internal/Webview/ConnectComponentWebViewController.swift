@@ -88,6 +88,7 @@ class ConnectComponentWebViewController: ConnectWebViewController {
         self.bundleIdProvider = bundleIdProvider
 
         let config = WKWebViewConfiguration()
+        config.preferences.javaScriptCanOpenWindowsAutomatically = true
 
         // Allows for custom JS message handlers for JS -> Swift communication
         config.userContentController = contentController
