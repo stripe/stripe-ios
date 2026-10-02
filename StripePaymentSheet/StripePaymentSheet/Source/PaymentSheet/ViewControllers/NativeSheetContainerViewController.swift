@@ -426,7 +426,9 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
         // Wait until UIKit finishes presenting or dismissing before starting a height animation.
         if rootParent.isBeingPresented || rootParent.isBeingDismissed {
             guard let transitionCoordinator = rootParent.transitionCoordinator else { return }
-            isWaitingForDetentTransition = transitionCoordinator.animate(alongsideTransition: nil) { [weak self] _ in
+            // A completion-only registration disrupts UIKit's dimming animation on iOS 26.1.
+            // Supply an empty animation block so the background still fades during presentation.
+            isWaitingForDetentTransition = transitionCoordinator.animate(alongsideTransition: { _ in }) { [weak self] _ in
                 // UIKit must clear the parent's transition state before we start another sheet animation.
                 DispatchQueue.main.async { [weak self] in
                     guard let self else { return }
