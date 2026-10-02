@@ -49,6 +49,10 @@ OptionParser.new do |opts|
     @is_dry_run = s
   end
 
+  opts.on('--headless', 'Run without GitHub token lookup, browser opens, or interactive prompts') do |s|
+    @is_headless = s
+  end
+
   opts.on('--continue-from NUMBER',
           'Continue from a specified step') do |t|
     @step_index = t.to_i
@@ -96,7 +100,7 @@ end
 
 def prompt_user(prompt)
   puts "#{prompt} \a".red
-  STDIN.gets unless @is_dry_run
+  STDIN.gets unless @is_dry_run || @is_headless
 end
 
 def notify_user
@@ -104,7 +108,7 @@ def notify_user
 end
 
 def open_url(url)
-  `open '#{url}'` unless @is_dry_run
+  `open '#{url}'` unless @is_dry_run || @is_headless
 end
 
 def get_current_release_version_of_repo(repo)
@@ -175,4 +179,4 @@ def execute_steps(steps, step_index)
   end
 end
 
-@github_client = github_login unless @is_dry_run
+@github_client = github_login unless @is_dry_run || @is_headless
