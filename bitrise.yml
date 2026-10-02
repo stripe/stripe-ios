@@ -20,14 +20,14 @@ app:
     FASTLANE_LANE: ios integration_all
 trigger_map:
 - push_branch: master
-  pipeline: main-trigger-pipeline
+  pipeline: master-trigger-pipeline
 - pull_request_source_branch: releases/*
   pipeline: releases-trigger-pipeline
 - pull_request_source_branch: '*'
   pipeline: main-trigger-pipeline
 pipelines:
   main-trigger-pipeline:
-    workflows:
+    workflows: &main_workflows
       lint-tests:
         abort_on_fail: true
       record-all-snapshots-and-lokalise: {}
@@ -43,11 +43,16 @@ pipelines:
       lpm-confirm-flow-tests: {}
       framework-tests-and-builds-xcode-26-1: {}
       install-and-integration-tests: {}
-      size-report:
-        parallel: 3
+      size-report: {}
       ui-tests-paymentsheet:
         parallel: 4
       ui-tests-connect-crypto: {}
+
+  master-trigger-pipeline:
+    workflows:
+      <<: *main_workflows
+      size-report:
+        parallel: 3
 
   releases-trigger-pipeline:
     workflows:
@@ -782,9 +787,32 @@ workflows:
         - paths: |
             vendor
     - script@1:
+        title: Prepare exact size baseline cache keys
+        inputs:
+        - content: ruby ci_scripts/size_report_cache.rb
+    - restore-cache@2.4.1:
+        is_skippable: true
+        inputs:
+        - key: $SIZE_REPORT_BASE_KEY-0
+    - restore-cache@2.4.1:
+        is_skippable: true
+        inputs:
+        - key: $SIZE_REPORT_BASE_KEY-1
+    - restore-cache@2.4.1:
+        is_skippable: true
+        inputs:
+        - key: $SIZE_REPORT_BASE_KEY-2
+    - script@1:
         inputs:
         - content: bundle exec fastlane size_report
         title: Generate size report
+    - save-cache@1.5.2:
+        run_if: '{{enveq "SIZE_REPORT_PUBLISH" "true"}}'
+        is_skippable: true
+        inputs:
+        - key: $SIZE_REPORT_HEAD_KEY
+        - paths: $SIZE_REPORT_SAVE_PATH
+        - compression_level: "1"
     meta:
       bitrise.io:
         stack: osx-xcode-26.4.x

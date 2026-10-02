@@ -16,6 +16,7 @@
 require 'yaml'
 require_relative '../ci_scripts/prepare_ci_branch'
 require_relative '../ci_scripts/size_report_modules'
+require_relative '../ci_scripts/size_report_cache'
 
 default_platform(:ios)
 
@@ -138,7 +139,7 @@ platform :ios do
 
   lane :size_report do
     Dir.chdir('..') do
-      comparison = CIBranch.prepare
+      comparison = SizeReportCache.prepared_comparison
       merge_base = comparison.fetch(:base)
       modules = YAML.load_file('modules.yaml')['modules'].select { |m| m.key?('size_report') }
       modules = SizeReportModules.select(modules, comparison)

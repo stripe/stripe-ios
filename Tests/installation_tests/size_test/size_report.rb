@@ -6,6 +6,7 @@ require 'optparse'
 require 'colorize'
 require 'yaml'
 require 'terminal-table'
+require_relative '../../../ci_scripts/size_report_cache'
 
 selected_modules = nil
 OptionParser.new do |opts|
@@ -195,6 +196,9 @@ def setup_project(branch, directory, sdk)
       patched_files.each do |file_name|
         file_contents = File.read(file_name)
         file_contents = file_contents.gsub(/\{\{SDK\}\}/, sdk)
+        sdk_import = sdk == 'StripeCryptoOnramp' ? '@_spi(CryptoOnrampAlpha) import StripeCryptoOnramp' : "import #{sdk}"
+        sdk_initialization = sdk == 'StripeCryptoOnramp' ? 'Task { _ = try await CryptoOnrampCoordinator.create() }' : 'StripeAPI.defaultPublishableKey = "foo"'
+        file_contents = file_contents.gsub('{{SDK_IMPORT}}', sdk_import).gsub('{{SDK_INITIALIZATION}}', sdk_initialization)
 
         File.open(file_name, 'w') do |file|
           file.puts file_contents
@@ -221,6 +225,10 @@ def check_size(modules, measure_branch, base_branch)
     `git checkout #{measure_branch}`
   end
 
+  cache = SizeReportCache.new
+  expected_fingerprint = ENV['SIZE_REPORT_FINGERPRINT']
+  raise 'Size report recipe changed after cache preparation' if expected_fingerprint && expected_fingerprint != cache.fingerprint
+
   # Build without including the SDK and store the result
   setup_project(measure_branch, @temp_dir, nil)
   unincluded_compressed_size, unincluded_uncompressed_size = build(@temp_dir)
@@ -228,6 +236,7 @@ def check_size(modules, measure_branch, base_branch)
 
   sdks_exceeding_max_size = []
   sdks_exceeding_incremental_size = []
+  failed_sdks = []
 
   size_report = Terminal::Table.new(
     title: 'Size report',
@@ -243,11 +252,10 @@ def check_size(modules, measure_branch, base_branch)
 
   modules.each do |m|
     sdk = m['framework_name']
-    if m['size_report'].is_a?(Hash)
-      max_compressed_size = m['size_report']['max_compressed_size'] 
-      max_uncompressed_size = m['size_report']['max_uncompressed_size']
-      max_incremental_uncompressed_size = m['size_report']['max_incremental_uncompressed_size']
-    end
+    limits = m['size_report'].is_a?(Hash) ? m['size_report'] : {}
+    max_compressed_size = limits['max_compressed_size']
+    max_uncompressed_size = limits['max_uncompressed_size']
+    max_incremental_uncompressed_size = limits['max_incremental_uncompressed_size']
 
     begin
       # Setup project to include SDK
@@ -256,6 +264,7 @@ def check_size(modules, measure_branch, base_branch)
       # Checkout measure branch and build with SDK
       puts "Building with #{sdk} on #{measure_branch}...".green
       measure_compressed_size, measure_uncompressed_size = build_from_branch(measure_branch, @temp_dir, sdk + 'Size')
+      cache.write(measure_branch, sdk, [measure_compressed_size, measure_uncompressed_size])
 
       measure_sdk_compressed = measure_compressed_size - unincluded_compressed_size
       measure_sdk_uncompressed = measure_uncompressed_size - unincluded_uncompressed_size
@@ -266,11 +275,15 @@ def check_size(modules, measure_branch, base_branch)
       # Checkout base branch and build with SDK
       base_compressed_size, base_uncompressed_size = nil
       unless base_branch.nil?
-        puts "Building with #{sdk} on #{base_branch}...".green
         if base_branch == measure_branch
           base_compressed_size, base_uncompressed_size = measure_compressed_size, measure_uncompressed_size
+        elsif (cached_sizes = cache.read(base_branch, sdk))
+          puts "Using cached baseline for #{sdk} at #{base_branch}".green
+          base_compressed_size, base_uncompressed_size = cached_sizes
         else
+          puts "Baseline cache miss; building with #{sdk} on #{base_branch}...".green
           base_compressed_size, base_uncompressed_size = build_from_branch(base_branch, @temp_dir, sdk + 'Size')
+          cache.write(base_branch, sdk, [base_compressed_size, base_uncompressed_size])
         end
 
         base_sdk_compressed = base_compressed_size - unincluded_compressed_size
@@ -296,7 +309,7 @@ def check_size(modules, measure_branch, base_branch)
 
         sdks_exceeding_max_size.append(sdk) if exceeds_max_size
 
-        puts "#{measure_branch} adds #{incremental_diff_uncompressed}kb when compressed, #{incremental_diff_compressed}kb when uncompressed to #{sdk.underline}".blue
+        puts "#{measure_branch} adds #{incremental_diff_compressed}kb when compressed, #{incremental_diff_uncompressed}kb when uncompressed to #{sdk.underline}".blue
         exceeds_max_incremental_size = false
         if !max_incremental_uncompressed_size.nil? && incremental_diff_uncompressed > max_incremental_uncompressed_size
           puts "This is over the #{max_incremental_uncompressed_size}kb incremental uncompressed threshold.".red
@@ -319,19 +332,19 @@ def check_size(modules, measure_branch, base_branch)
     rescue StandardError => e
       puts "#{sdk} could not be built on one of the specified branches".red
       puts e.message.to_s.red
+      failed_sdks << sdk
     end
-  end
-
-  # Go back to measure branch
-  Dir.chdir(@project_dir) do
-    `git checkout #{measure_branch}`
   end
 
   # Print size report table
   (0..4).each { |col| size_report.align_column(col, :right) }
   puts size_report
+  raise "Size measurements failed: #{failed_sdks.join(', ')}" unless failed_sdks.empty?
 
   [sdks_exceeding_max_size, sdks_exceeding_incremental_size]
+ensure
+  # Failed builds must also leave the checkout on the measured revision.
+  Dir.chdir(@project_dir) { `git checkout #{measure_branch}` }
 end
 
 if ARGV.empty?
@@ -343,8 +356,8 @@ if ARGV.empty?
   exit 1
 end
 
-measure_branch = ARGV[0]
-base_branch = ARGV[1]
+measure_branch = CIBranch.git('rev-parse', '--verify', "#{ARGV[0]}^{commit}")
+base_branch = CIBranch.git('rev-parse', '--verify', "#{ARGV[1]}^{commit}") if ARGV[1]
 
 modules = YAML.load_file(File.join_if_safe(@project_dir, 'modules.yaml'))['modules'].select { |m| m.key?('size_report') }
 if selected_modules
