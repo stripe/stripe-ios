@@ -43,7 +43,8 @@ pipelines:
       lpm-confirm-flow-tests:
         parallel: 2
       framework-tests-and-builds-xcode-26-1: {}
-      install-and-integration-tests: {}
+      installation-tests: {}
+      integration-tests: {}
       size-report: {}
       ui-tests-paymentsheet:
         parallel: 4
@@ -57,7 +58,9 @@ pipelines:
       framework-tests-no-mocks: {}
       framework-tests-and-builds-xcode-26-1: {}
       deploy-docs: {}
-      install-and-integration-tests: {}
+      installation-tests-cocoapods: {}
+      installation-tests-spm: {}
+      integration-tests: {}
       size-report: {}
       ui-tests-paymentsheet:
         parallel: 4
@@ -528,12 +531,38 @@ workflows:
       bitrise.io:
         stack: osx-xcode-26.4.x
         machine_type_id: g2.mac.large
-  install-and-integration-tests:
+  installation-tests:
+    description: Run all five package installation variants with one simulator and dependency setup.
+    before_run:
+    - install-runtime-16
+    - prep_all
+    - installation-cocoapods-steps
+    - installation-spm-steps
     steps:
-    - xcode-start-simulator@0:
-        title: Start iOS 16.4 installation test simulator
-        inputs:
-        - destination: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
+    - deploy-to-bitrise-io@2:
+        is_always_run: true
+    envs:
+    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
+    meta:
+      bitrise.io:
+        stack: osx-xcode-26.4.x
+        machine_type_id: g2.mac.large
+  installation-tests-cocoapods:
+    before_run:
+    - install-runtime-16
+    - prep_all
+    - installation-cocoapods-steps
+    steps:
+    - deploy-to-bitrise-io@2:
+        is_always_run: true
+    envs:
+    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
+    meta:
+      bitrise.io:
+        stack: osx-xcode-26.4.x
+        machine_type_id: g2.mac.large
+  installation-cocoapods-steps:
+    steps:
     - fastlane@3:
         inputs:
         - lane: installation_cocoapods_without_frameworks_objc
@@ -546,6 +575,22 @@ workflows:
         inputs:
         - lane: installation_cocoapods_frameworks_swift
         title: fastlane installation_cocoapods_frameworks_swift
+  installation-tests-spm:
+    before_run:
+    - install-runtime-16
+    - prep_all
+    - installation-spm-steps
+    steps:
+    - deploy-to-bitrise-io@2:
+        is_always_run: true
+    envs:
+    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
+    meta:
+      bitrise.io:
+        stack: osx-xcode-26.4.x
+        machine_type_id: g2.mac.large
+  installation-spm-steps:
+    steps:
     - fastlane@3:
         inputs:
         - lane: installation_spm_objc
@@ -554,6 +599,8 @@ workflows:
         inputs:
         - lane: installation_spm_swift
         title: fastlane installation_spm_swift
+  integration-tests:
+    steps:
     - xcode-test@6:
         is_always_run: true
         is_skippable: true
@@ -575,7 +622,6 @@ workflows:
     - deploy-to-bitrise-io@2:
         is_always_run: true
     before_run:
-    - install-runtime-16
     - prep_all
     envs:
     - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=26.4.1
