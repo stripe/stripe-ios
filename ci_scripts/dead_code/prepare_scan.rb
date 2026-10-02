@@ -33,7 +33,18 @@ source = capture!('git', 'rev-parse', 'HEAD').strip
 abort 'Checkout does not match the event commit' unless source == ENV.fetch('GITHUB_SHA')
 
 pull_request = event['pull_request']
-baseline = pull_request ? pull_request.fetch('base').fetch('sha') : event.fetch('before')
+if pull_request
+  # The event's base SHA can lag behind the base used for GitHub's merge commit.
+  # Raw headers retain parent IDs even when checkout fetched only one commit.
+  headers = capture!('git', 'cat-file', '-p', source).split("\n\n", 2).first
+  parents = headers.lines.map { |line| line[/\Aparent ([0-9a-f]{40})\n?\z/, 1] }.compact
+  unless parents.length == 2 && parents.last == pull_request.fetch('head').fetch('sha')
+    abort 'Expected the PR merge commit with the event head as its second parent'
+  end
+  baseline = parents.first
+else
+  baseline = event.fetch('before')
+end
 abort 'Expected an immutable base commit' unless baseline.match?(/\A[0-9a-f]{40}\z/)
 
 paths = nil

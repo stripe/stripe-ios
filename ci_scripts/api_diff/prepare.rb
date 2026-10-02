@@ -21,7 +21,14 @@ event = JSON.parse(File.read(ENV.fetch('GITHUB_EVENT_PATH')))
 head = capture!('git', 'rev-parse', 'HEAD').strip
 abort('The checkout does not match the immutable event revision') unless head == ENV.fetch('GITHUB_SHA')
 base = if ENV.fetch('GITHUB_EVENT_NAME') == 'pull_request'
-         event.fetch('pull_request').fetch('base').fetch('sha')
+         # GitHub may regenerate the merge against a newer base than the event payload.
+         # Read raw headers because shallow boundaries can hide parents from git log.
+         headers = capture!('git', 'cat-file', '-p', head).split("\n\n", 2).first
+         parents = headers.lines.filter_map { |line| line.delete_prefix('parent ').strip if line.start_with?('parent ') }
+         unless parents.length == 2 && parents.last == event.fetch('pull_request').fetch('head').fetch('sha')
+           abort('Expected a synthetic merge of the requested PR revision')
+         end
+         parents.first
        else
          event.fetch('before')
        end
@@ -30,9 +37,6 @@ if base == '0' * 40
   required = true
 else
   ensure_commit!(base)
-  if ENV.fetch('GITHUB_EVENT_NAME') == 'pull_request'
-    abort('The checked-out PR merge must include the event base revision') unless system('git', 'merge-base', '--is-ancestor', base, head)
-  end
   paths = capture!('git', 'diff', '--name-only', '--no-renames', '-z', base, head).split("\0")
   required = CIChangeScope.scan_required?(paths)
 end
