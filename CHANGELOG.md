@@ -20,6 +20,9 @@ MINOR
 * [Added] Added MoMo API bindings and PaymentSheet support for PaymentIntents.
 * [Added] Added GoPay API bindings and PaymentSheet support for PaymentIntents.
 
+### Apple Pay
+* [Changed] Apple Pay payment requests now include the `.emv` merchant capability when China UnionPay is enabled via `StripeAPI.additionalEnabledApplePayNetworks`.
+
 ## 26.12.1 2026-09-28
 ### CryptoOnramp (Alpha)
 * [Fixed] Preserved PaymentIntent error codes, decline codes, and types in checkout errors after authentication.

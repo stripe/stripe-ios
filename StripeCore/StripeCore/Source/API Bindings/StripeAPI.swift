@@ -72,9 +72,11 @@ import PassKit
 
     /// The SDK accepts Amex, Mastercard, Visa, and Discover for Apple Pay.
     ///
-    /// Set this property to enable other card networks in addition to these, such as .JCB, .cartesBancaires, or .eftpos (for eftpos Australia).
-    /// For example, `additionalEnabledApplePayNetworks = [.eftpos]` enables eftpos Australia.
-    /// Note: These networks require the merchant to support the respective payment network before enabling.
+    /// Set this property to enable other card networks in addition to these, such as .JCB, .cartesBancaires, .eftpos (for eftpos Australia), or .chinaUnionPay.
+    /// The merchant must be enabled for the respective payment network before adding it.
+    /// For example, enable China UnionPay with `StripeAPI.additionalEnabledApplePayNetworks = [.chinaUnionPay]`.
+    /// When `.chinaUnionPay` is enabled, `paymentRequest(withMerchantIdentifier:country:currency:)` also adds the `.emv` merchant capability, which China UnionPay requires.
+    /// If you build your own `PKPaymentRequest`, include `.emv` in `merchantCapabilities` yourself.
     @objc public static var additionalEnabledApplePayNetworks: [PKPaymentNetwork] = [] {
         didSet {
             // Reset deviceSupportsApplePay for the updated network list:
@@ -171,6 +173,10 @@ import PassKit
         #else
         paymentRequest.merchantCapabilities = .capability3DS
         #endif
+        // China UnionPay requires the EMV merchant capability
+        if paymentRequest.supportedNetworks.contains(.chinaUnionPay) {
+            paymentRequest.merchantCapabilities.insert(.emv)
+        }
         paymentRequest.countryCode = countryCode.uppercased()
         paymentRequest.currencyCode = currencyCode.uppercased()
         paymentRequest.requiredBillingContactFields = Set([.postalAddress])
