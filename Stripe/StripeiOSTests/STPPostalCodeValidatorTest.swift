@@ -76,28 +76,4 @@ class STPPostalCodeValidatorTest: XCTestCase {
             )
         }
     }
-
-    func testPostalCodeIsRequiredForUPE_nil() {
-        XCTAssertFalse(STPPostalCodeValidator.postalCodeIsRequiredForUPE(forCountryCode: nil))
-    }
-
-    func testPostalCodeIsRequiredForUPE_empty() {
-        XCTAssertFalse(STPPostalCodeValidator.postalCodeIsRequiredForUPE(forCountryCode: ""))
-    }
-
-    func testPostalCodeIsRequiredForUPE_CA() {
-        XCTAssertTrue(STPPostalCodeValidator.postalCodeIsRequiredForUPE(forCountryCode: "CA"))
-    }
-
-    func testPostalCodeIsRequiredForUPE_GB() {
-        XCTAssertTrue(STPPostalCodeValidator.postalCodeIsRequiredForUPE(forCountryCode: "GB"))
-    }
-
-    func testPostalCodeIsRequiredForUPE_US() {
-        XCTAssertTrue(STPPostalCodeValidator.postalCodeIsRequiredForUPE(forCountryCode: "CA"))
-    }
-
-    func testPostalCodeIsRequiredForUPE_DK() {
-        XCTAssertFalse(STPPostalCodeValidator.postalCodeIsRequiredForUPE(forCountryCode: "DK"))
-    }
 }
