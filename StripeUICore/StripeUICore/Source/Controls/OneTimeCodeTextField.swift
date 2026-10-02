@@ -36,6 +36,9 @@ import UIKit
         /// The height of each digit item.
         let itemHeight: CGFloat
 
+        /// The maximum width of each digit item.
+        let itemMaxWidth: CGFloat?
+
         /// The width of the focused ring's border.
         let itemFocusRingThickness: CGFloat
 
@@ -49,6 +52,7 @@ import UIKit
             font: UIFont = .systemFont(ofSize: 20),
             itemCornerRadius: CGFloat = 8,
             itemHeight: CGFloat = 60,
+            itemMaxWidth: CGFloat? = nil,
             itemFocusRingThickness: CGFloat = 2,
             itemFocusBackgroundColor: UIColor? = nil
         ) {
@@ -58,6 +62,7 @@ import UIKit
             self.font = font
             self.itemCornerRadius = itemCornerRadius
             self.itemHeight = itemHeight
+            self.itemMaxWidth = itemMaxWidth
             self.itemFocusRingThickness = itemFocusRingThickness
             self.itemFocusBackgroundColor = itemFocusBackgroundColor
         }
@@ -237,7 +242,33 @@ private extension OneTimeCodeTextField {
         stackView.alignment = .center
         stackView.distribution = .fillEqually
         stackView.semanticContentAttribute = .forceLeftToRight
-        addAndPinSubview(stackView)
+
+        guard let itemMaxWidth = configuration.itemMaxWidth else {
+            addAndPinSubview(stackView)
+            return
+        }
+
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(stackView)
+
+        let spacingWidth = CGFloat(configuration.numberOfDigits - 1) * configuration.itemSpacing
+            + (shouldGroupDigits ? configuration.groupSpacing - configuration.itemSpacing : 0)
+        let maximumWidth = CGFloat(configuration.numberOfDigits) * itemMaxWidth + spacingWidth
+        // Prefer the smaller of the available width and the configured maximum width.
+        let matchMaximumWidth = stackView.widthAnchor.constraint(equalToConstant: maximumWidth)
+        matchMaximumWidth.priority = .defaultHigh
+        let matchAvailableWidth = stackView.widthAnchor.constraint(equalTo: widthAnchor)
+        matchAvailableWidth.priority = .defaultHigh
+
+        NSLayoutConstraint.activate([
+            stackView.topAnchor.constraint(equalTo: topAnchor),
+            stackView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            stackView.centerXAnchor.constraint(equalTo: centerXAnchor),
+            stackView.widthAnchor.constraint(lessThanOrEqualTo: widthAnchor),
+            stackView.widthAnchor.constraint(lessThanOrEqualToConstant: maximumWidth),
+            matchMaximumWidth,
+            matchAvailableWidth,
+        ])
     }
 
     func arrangedDigitViews() -> [UIView] {

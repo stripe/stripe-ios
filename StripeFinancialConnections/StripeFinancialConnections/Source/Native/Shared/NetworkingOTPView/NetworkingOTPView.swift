@@ -56,9 +56,12 @@ final class NetworkingOTPView: UIView {
             configuration: OneTimeCodeTextField.Configuration(
                 itemSpacing: 8,
                 enableDigitGrouping: false,
-                font: UIFont.systemFont(ofSize: 28, weight: .regular),
+                font: dataSource.appearance.colors == .link
+                    ? UIFont.systemFont(ofSize: 24, weight: .semibold)
+                    : UIFont.systemFont(ofSize: 28, weight: .regular),
                 itemCornerRadius: 12,
-                itemHeight: 58
+                itemHeight: 58,
+                itemMaxWidth: dataSource.appearance.colors == .link ? 48 : nil
             ),
             theme: theme
         )
@@ -70,8 +73,14 @@ final class NetworkingOTPView: UIView {
         var theme: ElementsAppearance = .default
         theme.colors = {
             var colors = ElementsAppearance.Color()
-            colors.border = FinancialConnectionsAppearance.Colors.borderNeutral
-            colors.componentBackground = FinancialConnectionsAppearance.Colors.background
+            colors.border = dataSource.appearance.colors == .link
+                ? .clear
+                : FinancialConnectionsAppearance.Colors.borderNeutral
+            // Link DS 3.0: the code puncher has a grey background in every state
+            // (default, filled, error), matching Figma's Surface/Secondary token.
+            colors.componentBackground = dataSource.appearance.colors == .link
+                ? dataSource.appearance.colors.iconBackground
+                : FinancialConnectionsAppearance.Colors.surfacePrimary
             colors.textFieldText = FinancialConnectionsAppearance.Colors.textDefault
             colors.danger = FinancialConnectionsAppearance.Colors.textCritical
             return colors
@@ -158,10 +167,6 @@ final class NetworkingOTPView: UIView {
                 switch result {
                 case .success(let consumerSessionResponse):
                     self.delegate?.networkingOTPView(self, didStartVerification: consumerSessionResponse.consumerSession)
-
-                    // call this AFTER the delegate to ensure that the delegate-handler
-                    // adds the OTP view to the view-hierarchy
-                    self.otpTextField.becomeFirstResponder()
                 case .failure(let error):
                     self.delegate?.networkingOTPView(self, didFailToStartVerification: error)
                 }

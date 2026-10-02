@@ -20,7 +20,7 @@ final class AccountPickerFooterView: UIView {
         linkAccountsButton.addTarget(self, action: #selector(didSelectLinkAccountsButton), for: .touchUpInside)
         linkAccountsButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            linkAccountsButton.heightAnchor.constraint(equalToConstant: 56)
+            linkAccountsButton.heightAnchor.constraint(equalToConstant: appearance.buttonHeight)
         ])
         linkAccountsButton.accessibilityIdentifier = "connect_accounts_button"
         return linkAccountsButton
@@ -42,6 +42,7 @@ final class AccountPickerFooterView: UIView {
         if let dataAccessNotice {
             verticalStackView.addArrangedSubview(CreateDataAccessLabel(
                 dataAccessNotice: dataAccessNotice,
+                appearance: appearance,
                 didSelectLearnMore: didSelectMerchantDataAccessLearnMore
             ))
         }
@@ -102,13 +103,14 @@ final class AccountPickerFooterView: UIView {
 
 private func CreateDataAccessLabel(
     dataAccessNotice: String,
+    appearance: FinancialConnectionsAppearance,
     didSelectLearnMore: @escaping (URL) -> Void
 ) -> HitTestView {
     let label = AttributedTextView(
         font: .label(.small),
         boldFont: .label(.smallEmphasized),
         linkFont: .label(.small),
-        textColor: FinancialConnectionsAppearance.Colors.textDefault,
+        textColor: appearance.colors.textTertiary,
         alignment: .center
     )
     label.setText(
