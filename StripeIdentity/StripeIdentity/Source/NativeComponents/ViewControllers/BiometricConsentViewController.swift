@@ -51,14 +51,9 @@ final class BiometricConsentViewController: IdentityFlowViewController {
     private var scrolledToBottomYOffset: CGFloat?
 
     private var privacyPolicyViewModel: HTMLTextView.ViewModel {
-        let shouldCenterText = configuration?.movePrivacyPolicyToFooter == true
         return .init(
             text: consentContent.privacyPolicy,
-            style: .html {
-                IdentityFlowView.privacyPolicyLineContentStyle(
-                    shouldCenterText: shouldCenterText
-                )
-            },
+            style: .html(makeStyle: IdentityFlowView.privacyPolicyLineContentStyle),
             didOpenURL: { [weak self] url in
                 self?.openInSafariViewController(url: url)
             }
