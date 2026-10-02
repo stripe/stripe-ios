@@ -7,6 +7,13 @@ require 'colorize'
 require 'yaml'
 require 'terminal-table'
 
+selected_modules = nil
+OptionParser.new do |opts|
+  opts.on('--modules MODULES', Array, 'Measure only these SDKs and their embedded dependencies') do |names|
+    selected_modules = names
+  end
+end.parse!
+
 ################################################################################
 #
 # This script works by building the SPMTest project once without including an
@@ -270,7 +277,11 @@ def check_size(modules, measure_branch, base_branch)
       base_compressed_size, base_uncompressed_size = nil
       unless base_branch.nil?
         puts "Building with #{sdk} on #{base_branch}...".green
-        base_compressed_size, base_uncompressed_size = build_from_branch(base_branch, @temp_dir, sdk + 'Size')
+        if base_branch == measure_branch
+          base_compressed_size, base_uncompressed_size = measure_compressed_size, measure_uncompressed_size
+        else
+          base_compressed_size, base_uncompressed_size = build_from_branch(base_branch, @temp_dir, sdk + 'Size')
+        end
 
         base_sdk_compressed = base_compressed_size - unincluded_compressed_size
         base_sdk_uncompressed = base_uncompressed_size - unincluded_uncompressed_size
@@ -346,6 +357,13 @@ measure_branch = ARGV[0]
 base_branch = ARGV[1]
 
 modules = YAML.load_file(File.join_if_safe(@project_dir, 'modules.yaml'))['modules'].select { |m| m.key?('size_report') }
+if selected_modules
+  unknown = selected_modules - modules.map { |m| m.fetch('framework_name') }
+  abort "Unknown size report modules: #{unknown.join(', ')}" unless unknown.empty?
+  abort 'No size report modules selected' if selected_modules.empty?
+
+  modules = modules.select { |m| selected_modules.include?(m.fetch('framework_name')) }
+end
 sdks_exceeding_max_size, sdks_exceeding_incremental_size = check_size(modules, measure_branch, base_branch)
 
 # Clean up temp directory

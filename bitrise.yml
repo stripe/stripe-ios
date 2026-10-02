@@ -45,7 +45,8 @@ pipelines:
       framework-tests-and-builds-xcode-26-1: {}
       installation-tests: {}
       integration-tests: {}
-      size-report: {}
+      size-report:
+        parallel: 3
       ui-tests-paymentsheet:
         parallel: 4
       ui-tests-connect-crypto: {}
@@ -61,7 +62,8 @@ pipelines:
       installation-tests-cocoapods: {}
       installation-tests-spm: {}
       integration-tests: {}
-      size-report: {}
+      size-report:
+        parallel: 3
       ui-tests-paymentsheet:
         parallel: 4
       ui-tests-connect-crypto: {}
@@ -848,10 +850,15 @@ workflows:
         - content: bundle config set path 'vendor/bundle'
         is_always_run: true
         title: Set Bundler to use local vendor directory
-    - git-clone@8.2:
+    - git-clone@8.5.1:
         inputs:
         - merge_pr: "no"
-        - clone_depth: -1
+        - clone_depth: "1"
+        - ignore_branch_for_commit_fetch: "yes"
+        # Force commit checkout: PR-head checkout ignores the option above.
+        # GitHub makes fork PR commits fetchable from the destination repository.
+        - pull_request_head_branch: ""
+        - pull_request_repository_url: ""
     - restore-cache@2.4:
         inputs:
         - key: bundle-cache-{{ checksum "Gemfile.lock" }}
@@ -861,10 +868,6 @@ workflows:
         - key: bundle-cache-{{ checksum "Gemfile.lock" }}
         - paths: |
             vendor
-    - script@1:
-        inputs:
-        - content: git fetch origin
-        title: Fetch full branch history
     - script@1:
         inputs:
         - content: bundle exec fastlane size_report
