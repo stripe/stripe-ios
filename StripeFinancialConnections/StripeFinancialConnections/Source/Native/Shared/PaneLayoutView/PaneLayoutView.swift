@@ -22,7 +22,7 @@ final class PaneLayoutView {
     let scrollView: UIScrollView
 
     private var footerView: UIView?
-    private var footerViewBottomConstraint: NSLayoutConstraint?
+    private var paneLayoutViewBottomConstraint: NSLayoutConstraint?
     private weak var presentingView: UIView?
     private let keepFooterAboveKeyboard: Bool
 
@@ -76,7 +76,18 @@ final class PaneLayoutView {
         // must add `paneLayoutView` (and all it's subviews) to the `view`
         // BEFORE we can add a constraint for `UIScrollView` content
         self.presentingView = view
-        view.addAndPinSubviewToSafeArea(paneLayoutView)
+        paneLayoutView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(paneLayoutView)
+        let paneLayoutViewBottomConstraint = paneLayoutView.bottomAnchor.constraint(
+            equalTo: view.safeAreaLayoutGuide.bottomAnchor
+        )
+        self.paneLayoutViewBottomConstraint = paneLayoutViewBottomConstraint
+        NSLayoutConstraint.activate([
+            paneLayoutView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            paneLayoutView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            paneLayoutView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            paneLayoutViewBottomConstraint,
+        ])
         scrollViewContentView?.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor).isActive = true
 
         // Fit the scroll view height to be the size of the
@@ -137,7 +148,7 @@ final class PaneLayoutView {
     }
 
     private func updateFooterViewConstraints(keyboardHeight: CGFloat) {
-        guard let presentingView, let footerView else { return }
+        guard footerView != nil else { return }
         let adjustedKeyboardHeight: CGFloat
         if keyboardHeight > 0 {
             // Removes additional padding applied to footer view when showing above the keyboard.
@@ -146,15 +157,7 @@ final class PaneLayoutView {
             adjustedKeyboardHeight = keyboardHeight
         }
 
-        if let existingConstraint = footerViewBottomConstraint {
-            existingConstraint.constant = -adjustedKeyboardHeight
-        } else {
-            footerViewBottomConstraint = footerView.bottomAnchor.constraint(
-                equalTo: presentingView.safeAreaLayoutGuide.bottomAnchor,
-                constant: -adjustedKeyboardHeight
-            )
-            footerViewBottomConstraint?.isActive = true
-        }
+        paneLayoutViewBottomConstraint?.constant = -adjustedKeyboardHeight
         paneLayoutView.layoutIfNeeded()
     }
 
