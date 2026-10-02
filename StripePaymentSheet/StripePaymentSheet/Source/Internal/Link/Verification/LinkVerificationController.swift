@@ -9,16 +9,12 @@
 @_spi(STP) import StripeCore
 import UIKit
 
-/// Standalone verification controller.
+/// Presents the standalone Link authentication flow.
+@MainActor
 final class LinkVerificationController {
-
-    typealias CompletionBlock = (LinkVerificationViewController.VerificationResult) -> Void
-
-    private var completion: CompletionBlock?
-
+    typealias CompletionBlock = (LinkVerificationResult) -> Void
     private var selfRetainer: LinkVerificationController?
-    private let verificationViewController: LinkVerificationViewController
-    private let linkAccount: PaymentSheetLinkAccount
+    private let flowController: LinkAuthFlowViewController
 
     init(
         mode: LinkVerificationView.Mode = .modal,
@@ -30,9 +26,7 @@ final class LinkVerificationController {
         consentViewModel: LinkConsentViewModel? = nil
     ) {
         LinkUI.applyLiquidGlassIfPossible(configuration: configuration)
-
-        self.linkAccount = linkAccount
-        self.verificationViewController = LinkVerificationViewController(
+        flowController = LinkAuthFlowViewController(
             mode: mode,
             linkAccount: linkAccount,
             brand: brand,
@@ -40,103 +34,18 @@ final class LinkVerificationController {
             allowLogoutInDialog: allowLogoutInDialog,
             consentViewModel: consentViewModel
         )
-        verificationViewController.delegate = self
-        configuration.style.configure(verificationViewController)
+        configuration.style.configure(flowController)
     }
 
-    func present(
-        from presentingController: UIViewController,
-        completion: @escaping CompletionBlock
-    ) {
-        self.selfRetainer = self
-        self.completion = completion
-
-        // Determine the verification flow (potentially with refresh)
-        determineMobileFallbackURL { [weak self] url in
-            guard let self = self else { return }
-
-            DispatchQueue.main.async {
-                if let url = url {
-                    self.presentMobileFallbackWebview(from: presentingController, webviewUrl: url)
-                } else {
-                    presentingController.present(self.verificationViewController, animated: true)
-                }
-            }
-        }
-    }
-
-    private func determineMobileFallbackURL(completion: @escaping (URL?) -> Void) {
-        guard let mobileFallbackParams = linkAccount.currentSession?.mobileFallbackWebviewParams,
-              let webviewUrl = mobileFallbackParams.webviewOpenUrl,
-              mobileFallbackParams.webviewRequirementType == .required else {
-            completion(nil)
-            return
-        }
-
-        // Check if this URL was already visited
-        if linkAccount.visitedFallbackURLs.contains(webviewUrl) {
-            // Refresh to get a new URL
-            linkAccount.refresh { [weak self] _ in
-                guard let self = self else {
-                    completion(nil)
-                    return
-                }
-
-                // After refresh, get the new URL
-                let newURL = Self.mobileFallbackURL(from: self.linkAccount)
-                completion(newURL)
-            }
-        } else {
-            // URL is fresh, use it directly
-            completion(webviewUrl)
-        }
-    }
-
-    private static func mobileFallbackURL(from linkAccount: PaymentSheetLinkAccount) -> URL? {
-        guard let mobileFallbackParams = linkAccount.currentSession?.mobileFallbackWebviewParams,
-              let webviewUrl = mobileFallbackParams.webviewOpenUrl,
-              mobileFallbackParams.webviewRequirementType == .required else {
-            return nil
-        }
-        return webviewUrl
-    }
-
-    private func presentMobileFallbackWebview(from presentingController: UIViewController, webviewUrl: URL) {
-        // Mark this URL as visited
-        linkAccount.visitedFallbackURLs.append(webviewUrl)
-
-        let webviewController = LinkVerificationWebFallbackController(
-            authenticationUrl: webviewUrl,
-            presentingWindow: presentingController.view.window
-        )
-        webviewController.present { [weak self] result in
-            guard let self = self else { return }
-
-            // If verification completed successfully, refresh the session
-            if case .completed = result {
-                self.linkAccount.refresh { [weak self] _ in
-                    self?.completion?(result)
-                    self?.selfRetainer = nil
-                }
-            } else {
-                self.completion?(result)
+    func present(from presentingController: UIViewController, completion: @escaping CompletionBlock) {
+        selfRetainer = self
+        flowController.onFinish = { [weak self] result in
+            guard let self else { return }
+            self.flowController.dismiss(animated: true) {
+                completion(result)
                 self.selfRetainer = nil
             }
         }
+        presentingController.present(flowController, animated: true)
     }
-
-}
-
-extension LinkVerificationController: LinkVerificationViewControllerDelegate {
-
-    func verificationController(
-        _ controller: LinkVerificationViewController,
-        didFinishWithResult result: LinkVerificationViewController.VerificationResult
-    ) {
-        controller.dismiss(animated: true) { [weak self] in
-            self?.completion?(result)
-            self?.selfRetainer = nil
-        }
-    }
-
 }

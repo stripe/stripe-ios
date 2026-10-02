@@ -27,13 +27,11 @@ final class LinkVerificationViewControllerTests: STPNetworkStubbingTestCase {
         }
 
         let sut = makeSUT()
-        let delegate = MockLinkVerificationViewControllerDelegate { _ in
+        sut.onFinish = { _ in
             XCTFail("Delegate should not be called — user must close the view manually")
         }
-        sut.delegate = delegate
-
         sut.loadViewIfNeeded()
-        sut.viewWillAppear(false)
+        sut.coordinator.start()
 
         let errorDisplayedExpectation = expectation(description: "error displayed")
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
@@ -41,17 +39,9 @@ final class LinkVerificationViewControllerTests: STPNetworkStubbingTestCase {
         }
         wait(for: [errorDisplayedExpectation], timeout: 2.0)
 
-        let activityIndicator = try XCTUnwrap(
-            sut.view.subviews.compactMap { $0 as? ActivityIndicator }.first
-        )
-        XCTAssertFalse(activityIndicator.isAnimating)
-
-        let verificationView = try XCTUnwrap(
-            sut.view.subviews.compactMap { $0 as? LinkVerificationView }.first
-        )
-        XCTAssertFalse(verificationView.isHidden)
+        XCTAssertFalse(sut.coordinator.isLoading)
         XCTAssertEqual(
-            verificationView.errorMessage,
+            sut.coordinator.errorMessage,
             LinkUtils.ConsumerErrorCode.consumerVerificationMaxAttemptsExceeded.localizedDescription
         )
     }
@@ -59,7 +49,7 @@ final class LinkVerificationViewControllerTests: STPNetworkStubbingTestCase {
 
 private extension LinkVerificationViewControllerTests {
     @MainActor
-    func makeSUT() -> LinkVerificationViewController {
+    func makeSUT() -> LinkAuthFlowViewController {
         let session = ConsumerSession.make(
             clientSecret: "client_secret",
             emailAddress: "jane.diaz@example.com",
@@ -70,7 +60,8 @@ private extension LinkVerificationViewControllerTests {
             supportedPaymentDetailsTypes: [ParsedEnum(.card)],
             mobileFallbackWebviewParams: nil,
             currentAuthenticationLevel: .notAuthenticated,
-            minimumAuthenticationLevel: .oneFactorAuth
+            minimumAuthenticationLevel: .oneFactorAuth,
+            availableVerificationFactors: [.init(type: .sms, providesFurtherVerification: true, temporarilyDisabled: false, id: "sms_factor")]
         )
         let linkAccount = PaymentSheetLinkAccount(
             email: "jane.diaz@example.com",
@@ -82,22 +73,8 @@ private extension LinkVerificationViewControllerTests {
             canSyncAttestationState: false
         )
 
-        return LinkVerificationViewController(linkAccount: linkAccount)
+        return LinkAuthFlowViewController(linkAccount: linkAccount, brand: .link)
     }
 }
 
-private final class MockLinkVerificationViewControllerDelegate: LinkVerificationViewControllerDelegate {
-    private let onFinish: (LinkVerificationViewController.VerificationResult) -> Void
-
-    init(onFinish: @escaping (LinkVerificationViewController.VerificationResult) -> Void) {
-        self.onFinish = onFinish
-    }
-
-    func verificationController(
-        _ controller: LinkVerificationViewController,
-        didFinishWithResult result: LinkVerificationViewController.VerificationResult
-    ) {
-        onFinish(result)
-    }
-}
 #endif
