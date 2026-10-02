@@ -50,6 +50,16 @@ final class BiometricConsentViewController: IdentityFlowViewController {
 
     private var scrolledToBottomYOffset: CGFloat?
 
+    private var privacyPolicyViewModel: HTMLTextView.ViewModel {
+        return .init(
+            text: consentContent.privacyPolicy,
+            style: .html(makeStyle: IdentityFlowView.privacyPolicyLineContentStyle),
+            didOpenURL: { [weak self] url in
+                self?.openInSafariViewController(url: url)
+            }
+        )
+    }
+
     var flowViewModel: IdentityFlowView.ViewModel {
 
         // Display loading indicator on user's selection while saving
@@ -128,6 +138,9 @@ final class BiometricConsentViewController: IdentityFlowViewController {
                 inset: .init(top: Style.contentTopPadding, leading: Style.contentHorizontalPadding, bottom: Style.contentBottomPadding, trailing: Style.contentHorizontalPadding)
             ),
             buttons: buttons,
+            buttonBottomContentView: configuration?.movePrivacyPolicyToFooter == true
+                ? privacyPolicyView
+                : nil,
             scrollViewDelegate: self,
             flowViewDelegate: self
         )
@@ -161,16 +174,8 @@ final class BiometricConsentViewController: IdentityFlowViewController {
             }
         )
 
-        // Configure privacy policy content to be part of scrollable content
-        try privacyPolicyView.configure(
-            with: .init(
-                text: consentContent.privacyPolicy,
-                style: .html(makeStyle: IdentityFlowView.privacyPolicyLineContentStyle),
-                didOpenURL: { [weak self] url in
-                    self?.openInSafariViewController(url: url)
-                }
-            )
-        )
+        // Validate and configure the privacy policy before placing it in the selected location.
+        try privacyPolicyView.configure(with: privacyPolicyViewModel)
 
         updateUI()
     }
@@ -183,6 +188,10 @@ final class BiometricConsentViewController: IdentityFlowViewController {
 
     private func setupContentStackView() {
         contentStackView.addArrangedSubview(multilineContent)
+
+        guard configuration?.movePrivacyPolicyToFooter != true else {
+            return
+        }
 
         // Create a container for the privacy policy with centered alignment
         let privacyPolicyContainer = UIView()
