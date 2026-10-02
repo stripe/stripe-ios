@@ -2,16 +2,33 @@ The next release's version bump will so far be:
 MINOR
 
 ## X.Y.Z - changes pending release
+### PaymentSheet
+* [Fixed] Fixed a potential crash when using certain card brands in PaymentSheet.
+* [Fixed] Fixed Apple Pay failing to open for fractional amounts in COP, HUF, IDR, LAK, LBP, PKR, and RSD.
+
 ### Payments
 * [Fixed] Amounts in LBP are now displayed correctly.
 
-### PaymentSheet
-* [Fixed] Fixed Apple Pay failing to open for fractional amounts in COP, HUF, IDR, LAK, LBP, PKR, and RSD.
-
 ### CryptoOnramp (Alpha)
+* [Added] Added optional `email`, `phone`, and `rawPhone` fields to `KycInfo`, populated from Apple Pay billing or shipping contact information when requested. All values are for prefill only. `phone` is normalized to E.164 using the billing address's country when possible, and is otherwise `nil`; `rawPhone` always carries the wallet's original, unnormalized value. Names fall back to shipping contact values when billing values are missing or blank. Creating `KycInfo` from an Apple Pay payment still requires a usable name or billing address; email or phone alone is insufficient.
+* [Changed] Apple Pay can now be presented via `CryptoOnrampCoordinator.collectPaymentMethod(type:from:)` before the user authenticates with Link. `createCryptoPaymentToken()` still requires an authenticated user.
+* [Added] Added an optional `countryHint` parameter to `CryptoOnrampCoordinator.create(...)`, used to help select a merchant of record for a customer who does not yet have an established KYC region.
 * [Added] Added `STPAPIClient.CryptoOnrampAPIError.missingLinkSessionKey` to report when a Link session key is unavailable.
+* [Added] Added `CryptoOnrampCoordinator.fulfillKYCRequirement(from:)` to retrieve additional KYC requirements and present document collection when needed.
+
+### PaymentSheet
+* [Added] Added GCash API bindings and support for payments and setup in PaymentSheet.
+* [Added] Added MoMo API bindings and PaymentSheet support for PaymentIntents.
+* [Added] Added GoPay API bindings and PaymentSheet support for PaymentIntents.
+* [Added] Added ShopeePay API bindings and PaymentSheet support for PaymentIntents.
+* [Added] Added QRIS API bindings and PaymentSheet support for PaymentIntents.
+* [Added] Added Naira card API bindings and PaymentSheet support for payments and setup.
+* [Added] Added Naira bank transfer API bindings and PaymentSheet support for PaymentIntents.
 
 ## 26.12.1 2026-09-28
+### CryptoOnramp (Alpha)
+* [Fixed] Preserved PaymentIntent error codes, decline codes, and types in checkout errors after authentication.
+
 ### Financial Connections
 * [Fixed] Preserved `no_eligible_accounts` in `onEvent` error callbacks instead of reporting it as `unexpected_error`.
 * [Fixed] Recorded native `onEvent` emissions with the session context for diagnostics.
@@ -26,20 +43,12 @@ MINOR
 ### CryptoOnramp (Alpha)
 * [Removed] Removed public exposure of `StripeCryptoOnramp.Image`, including `Image.linkIconSquare`.
 * [Added] Added `CryptoOnrampCoordinator.presentTermsAndConditionsIfNeeded(from:)` and `presentTermsOfServiceIfNeeded(from:)` to present and record acceptance of current partner terms when required. Both methods return `PartnerTermsResult`.
-* [Fixed] Preserved PaymentIntent error codes, decline codes, and types in checkout errors after authentication.
 
 ### StripeCore
 * [Added] Added `additionalHeaders` support to the `STPAPIClient` GET, POST, and DELETE APIs exposed through the `STP` SPI.
 * [Added] Added `uploadFile(at:purpose:authorizationSecret:progress:)` and associated error type `FileUploadError`, exposed through the `STP` SPI.
 
 ### PaymentSheet
-* [Added] Added QRIS API bindings and support for payments in PaymentSheet.
-* [Added] Added ShopeePay API bindings and support for payments in PaymentSheet.
-* [Added] Added GCash API bindings and support for payments and setup in PaymentSheet.
-* [Added] Added MoMo API bindings and support for payments and setup in PaymentSheet.
-* [Added] Added Naira bank transfer API bindings and support for payments in PaymentSheet.
-* [Added] Added Naira card API bindings and support for payments and setup in PaymentSheet.
-* [Added] Added GoPay API bindings and support for payments and setup in PaymentSheet.
 * [Fixed] Fixed card funding warnings not appearing after scanning a card.
 
 ## 26.11.0 2026-09-14

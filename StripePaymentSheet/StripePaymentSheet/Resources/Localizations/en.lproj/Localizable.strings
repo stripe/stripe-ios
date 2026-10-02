@@ -71,11 +71,17 @@
 /* Subtitle shown on a button allowing a user to select to pay with Clearpay. */
 "Buy Now, Pay Later with Clearpay" = "Buy Now, Pay Later with Clearpay";
 
+/* GCash mandate text. The placeholder is the merchant's name. */
+"By confirming your payment with GCash, you allow %@ to charge your GCash account for future payments in accordance with their terms." = "By confirming your payment with GCash, you allow %@ to charge your GCash account for future payments in accordance with their terms.";
+
 /* Korean payment method mandate text */
 "By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms.";
 
 /* Paypal mandate text */
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms.";
+
+/* Nigerian payment method disclosure. The terms tags mark the link to the merchant of record's terms of use. */
+"By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their <terms>terms of use</terms>." = "By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their <terms>terms of use</terms>.";
 
 /* Amazon Pay mandate text */
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms.";
@@ -91,6 +97,9 @@
 
 /* Legal text shown when creating a Link account. */
 "By continuing you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "By continuing you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.";
+
+/* Nigerian payment method setup terms. The terms tags mark the link to the merchant of record's terms of use. */
+"By continuing, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their terms of use. You consent to be charged for this payment and future payments in accordance with <terms>their terms</terms>." = "By continuing, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their terms of use. You consent to be charged for this payment and future payments in accordance with <terms>their terms</terms>.";
 
 /* Text providing link to terms for ACH payments */
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>.";

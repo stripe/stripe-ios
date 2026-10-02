@@ -55,6 +55,11 @@ import Foundation
     // MARK: - Card Element Config
     case cardElementConfigLoadFailure = "stripeios.card_element_config_load_failure"
 
+    // MARK: - Card Element
+    case mobileCardElementShown = "stripeios.mobile_card_element_shown"
+    case mobileCardElementInteraction = "stripeios.mobile_card_element_interaction"
+    case mobileCardElementFormCompleted = "stripeios.mobile_card_element_form_completed"
+
     // MARK: - Identity Verification Flow
     case verificationSheetPresented = "stripeios.idprod.verification_sheet.presented"
     case verificationSheetClosed = "stripeios.idprod.verification_sheet.closed"
