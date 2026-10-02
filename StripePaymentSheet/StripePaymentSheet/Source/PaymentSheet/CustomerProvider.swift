@@ -127,6 +127,7 @@ struct CustomerProvider {
 
     enum Error: Swift.Error {
 
+        case missingCustomerID
         case missingEphemeralKey
         case missingUpdatedPaymentMethod
     }
@@ -226,5 +227,24 @@ struct CustomerProvider {
             }
             return true
         }
+    }
+
+    @MainActor
+    func setAsDefaultPaymentMethod(
+        _ paymentMethodID: String,
+        elementsSession: STPElementsSession,
+        apiClient: STPAPIClient
+    ) async throws -> STPCustomer {
+        guard let ephemeralKey = ephemeralKeySecret(basedOn: elementsSession) else {
+            throw Error.missingEphemeralKey
+        }
+        guard let customerID else {
+            throw Error.missingCustomerID
+        }
+        return try await apiClient.setAsDefaultPaymentMethod(
+            paymentMethodID,
+            for: customerID,
+            using: ephemeralKey
+        )
     }
 }

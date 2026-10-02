@@ -444,7 +444,11 @@ public final class EmbeddedPaymentElement {
         }
     }
     internal var savedPaymentMethodManager: SavedPaymentMethodManager {
-        SavedPaymentMethodManager(configuration: configuration, customerProvider: loadResult.customerProvider, elementsSession: elementsSession)
+        SavedPaymentMethodManager(
+            customerProvider: loadResult.customerProvider,
+            elementsSession: elementsSession,
+            apiClient: configuration.apiClient
+        )
     }
 
     internal private(set) lazy var paymentHandler: STPPaymentHandler = STPPaymentHandler(apiClient: configuration.apiClient)

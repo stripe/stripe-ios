@@ -130,7 +130,11 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     }
 
     private lazy var savedPaymentMethodManager: SavedPaymentMethodManager = {
-        SavedPaymentMethodManager(configuration: configuration, customerProvider: customerProvider, elementsSession: elementsSession)
+        SavedPaymentMethodManager(
+            customerProvider: customerProvider,
+            elementsSession: elementsSession,
+            apiClient: configuration.apiClient
+        )
     }()
 
     // MARK: Internal properties
