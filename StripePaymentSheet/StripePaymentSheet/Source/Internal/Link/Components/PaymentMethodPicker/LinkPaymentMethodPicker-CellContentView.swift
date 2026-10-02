@@ -23,6 +23,7 @@ extension LinkPaymentMethodPicker {
 
         var paymentMethod: ConsumerPaymentDetails? {
             didSet {
+                iconTask?.cancel()
                 switch paymentMethod?.details {
                 case .card(let card):
                     cardBrandView.setCardBrand(STPCard.brand(from: card.brand))
@@ -87,6 +88,7 @@ extension LinkPaymentMethodPicker {
         }()
 
         private lazy var cardBrandView: CardBrandView = CardBrandView(centerHorizontally: true)
+        private var iconTask: Task<Void, Never>?
 
         private let primaryLabel: UILabel = {
             let label = UILabel()
@@ -184,6 +186,10 @@ extension LinkPaymentMethodPicker {
             fatalError("init(coder:) has not been implemented")
         }
 
+        deinit {
+            iconTask?.cancel()
+        }
+
         private func makeBankIcon(for bankName: String?) -> UIImage {
             if let institutionIcon = PaymentSheetImageLibrary.bankInstitutionIcon(for: bankName) {
                 return institutionIcon
@@ -219,15 +225,15 @@ extension LinkPaymentMethodPicker {
 
         private func loadRemoteIcon(from url: URL) {
             let placeholder = createGenericPaymentMethodIcon()
-            genericIconView.image = DownloadManager.sharedManager.downloadImage(
-                url: url,
-                placeholder: placeholder,
-                updateHandler: { [weak self] image in
-                    DispatchQueue.main.async {
-                        self?.genericIconView.image = image
-                    }
+            genericIconView.image = DownloadManager.shared.cachedImage(for: url) ?? placeholder
+            iconTask = Task { @MainActor [weak self] in
+                guard let image = try? await DownloadManager.shared.image(for: url),
+                      !Task.isCancelled,
+                      self?.paymentMethod?.display?.icon?.main == url else {
+                    return
                 }
-            )
+                self?.genericIconView.image = image
+            }
         }
 
         private func refreshBankIconIfNeeded() {

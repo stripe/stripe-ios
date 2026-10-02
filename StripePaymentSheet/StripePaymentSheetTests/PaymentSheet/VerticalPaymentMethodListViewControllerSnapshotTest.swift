@@ -52,7 +52,7 @@ final class VerticalPaymentMethodListViewControllerSnapshotTest: STPSnapshotTest
 
     override func setUp() {
         super.setUp()
-        DownloadManager.sharedManager.resetCache()
+        DownloadManager.shared.clearCache()
     }
 
     func testNoSavedPM_noApplePayLink() {

@@ -12,7 +12,7 @@ extension PaymentMethodMessagingElement {
 
     // Initialize element from API response
     // Uses this logic tree: https://trailhead.corp.stripe.com/docs/payment-method-messaging/pmme-platform/elements-mobile
-    convenience init?(apiResponse: APIResponse, configuration: Configuration, analyticsHelper: PMMEAnalyticsHelper, downloadManager: DownloadManager = .sharedManager) async throws {
+    convenience init?(apiResponse: APIResponse, configuration: Configuration, analyticsHelper: PMMEAnalyticsHelper, downloadManager: DownloadManager = .shared) async throws {
         if apiResponse.paymentPlanGroups.count == 1, let paymentPlan = apiResponse.paymentPlanGroups.first {
             // case 1: 1 payment plan
 
@@ -136,8 +136,8 @@ extension PaymentMethodMessagingElement {
                     //     since the device interface style may change at any time
                     //     and we don't want to have to re-fetch the images
                     taskGroup.addTask {
-                        let lightImageTask = Task { try await downloadManager.downloadImage(url: image.lightThemePng.url) }
-                        let darkImageTask = Task { try await downloadManager.downloadImage(url: image.darkThemePng.url) }
+                        let lightImageTask = Task { try await downloadManager.image(for: image.lightThemePng.url) }
+                        let darkImageTask = Task { try await downloadManager.image(for: image.darkThemePng.url) }
                         defer { lightImageTask.cancel(); darkImageTask.cancel() }
                         let light = try await lightImageTask.value
                         let dark = try await darkImageTask.value
@@ -155,7 +155,7 @@ extension PaymentMethodMessagingElement {
                     // For all non-automatic styles, we fetch one image and use it for
                     //     both light and dark
                     taskGroup.addTask {
-                        let lightImage = try await downloadManager.downloadImage(url: image.lightThemePng.url)
+                        let lightImage = try await downloadManager.image(for: image.lightThemePng.url)
                         return (
                             index: i,
                             iconSet: LogoSet(
@@ -168,7 +168,7 @@ extension PaymentMethodMessagingElement {
                     }
                 case .alwaysDark:
                     taskGroup.addTask {
-                        let darkImage = try await downloadManager.downloadImage(url: image.darkThemePng.url)
+                        let darkImage = try await downloadManager.image(for: image.darkThemePng.url)
                         return (
                             index: i,
                             iconSet: LogoSet(
@@ -181,7 +181,7 @@ extension PaymentMethodMessagingElement {
                     }
                 case .flat:
                     taskGroup.addTask {
-                        let flatImage = try await downloadManager.downloadImage(url: image.flatThemePng.url)
+                        let flatImage = try await downloadManager.image(for: image.flatThemePng.url)
                         return (
                             index: i,
                             iconSet: LogoSet(

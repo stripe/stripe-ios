@@ -33,7 +33,7 @@ extension UIImageView {
         tag = url.hashValue
         Task { [weak self] in
             do {
-                let image = try await DownloadManager.sharedManager.downloadImage(url: url)
+                let image = try await DownloadManager.shared.image(for: url)
                 let processedImage = processOnDownloadedImage?(image) ?? image
                 await MainActor.run {
                     if self?.tag == url.hashValue {

@@ -250,6 +250,7 @@ extension PaymentMethodTypeCollectionView {
         lazy var paymentMethodLogoWidthConstraint: NSLayoutConstraint = {
             paymentMethodLogo.widthAnchor.constraint(equalToConstant: 0)
         }()
+        private var imageTask: Task<Void, Never>?
 
         // MARK: - UICollectionViewCell
 
@@ -295,6 +296,10 @@ extension PaymentMethodTypeCollectionView {
             fatalError("init(coder:) has not been implemented")
         }
 
+        deinit {
+            imageTask?.cancel()
+        }
+
         #if !os(visionOS)
         override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
             super.traitCollectionDidChange(previousTraitCollection)
@@ -325,28 +330,35 @@ extension PaymentMethodTypeCollectionView {
         }
 
         // MARK: - Private Methods
-        var paymentMethodTypeOfCurrentImage: PaymentSheet.PaymentMethodType = .stripe(.unknown)
         private func update() {
             selectableRectangle.appearance = appearance
             label.text = paymentMethodType.displayName
 
             label.font = appearance.scaledFont(for: appearance.font.base.medium, style: .footnote, maximumPointSize: 20)
-            let currPaymentMethodType = self.paymentMethodType
-            let image = paymentMethodType.makeImage(forDarkBackground: appearance.colors.componentBackground.contrastingColor == .white, currency: currency, iconStyle: appearance.iconStyle) { [weak self] image in
-                DispatchQueue.main.async {
-                    guard let self, currPaymentMethodType == self.paymentMethodType else {
-                        return
-                    }
-                    // Keep track of the PM type of the image
-                    self.paymentMethodTypeOfCurrentImage = currPaymentMethodType
-                    self.updateImage(image)
+            let paymentMethodType = self.paymentMethodType
+            let forDarkBackground = componentBackgroundContrastingColor == .white
+            let currency = self.currency
+            let iconStyle = appearance.iconStyle
+            updateImage(
+                paymentMethodType.makeImage(
+                    forDarkBackground: forDarkBackground,
+                    currency: currency,
+                    iconStyle: iconStyle
+                )
+            )
+            imageTask?.cancel()
+            imageTask = Task { @MainActor [weak self] in
+                let image = await paymentMethodType.loadImage(
+                    forDarkBackground: forDarkBackground,
+                    currency: currency,
+                    iconStyle: iconStyle
+                )
+                guard !Task.isCancelled,
+                      let self,
+                      paymentMethodType == self.paymentMethodType else {
+                    return
                 }
-            }
-            // Hacky workaround: If we update unconditionally, we'll overwrite the current PM's valid image with a 1x1 placeholder here
-            // until it gets overwritten again when the image download completion block runs.
-            // Ideally, the DownloadManager API is refactored to not return a placeholder or an image; then we can set the image to a placeholder only when the payment method type of this cell changes.
-            if paymentMethodTypeOfCurrentImage != self.paymentMethodType || image.size != CGSize(width: 1, height: 1) {
-                updateImage(image)
+                self.updateImage(image)
             }
 
             promoBadge.isHidden = promoBadgeText == nil
@@ -367,12 +379,20 @@ extension PaymentMethodTypeCollectionView {
             // tint icon for a few PMs to be a contrasting color to the component background
             if paymentMethodType.iconRequiresTinting  {
                 image = image.withRenderingMode(.alwaysTemplate)
-                paymentMethodLogo.tintColor = appearance.colors.componentBackground.contrastingColor
+                paymentMethodLogo.tintColor = componentBackgroundContrastingColor
             }
 
             paymentMethodLogo.image = image
             paymentMethodLogoWidthConstraint.constant = paymentMethodLogoSize.height / image.size.height * image.size.width
             setNeedsLayout()
+        }
+
+        private var componentBackgroundContrastingColor: UIColor {
+            var contrastingColor: UIColor = .black
+            traitCollection.performAsCurrent {
+                contrastingColor = appearance.colors.componentBackground.contrastingColor
+            }
+            return contrastingColor
         }
     }
 }
