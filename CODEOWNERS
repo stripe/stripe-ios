@@ -1,10 +1,81 @@
-# By default, allow reviews from all reviewers
-* @stripe/ios-sdk-reviewers @stripe/ios-sdk-non-core-reviewers
+# Allow the SDK-wide reviewer groups or an iOS OSS superuser to approve files
+# that do not belong to a category below.
+* @stripe/ios-sdk-reviewers @stripe/ios-sdk-non-core-reviewers @stripe/ios-oss-superusers
 
-# For payments, automatically request reviews from @ios-payments-reviewers, allow reviews from other reviewers
-*/StripePaymentSheet @stripe/ios-payments-reviewers @stripe/ios-sdk-reviewers @stripe/ios-sdk-non-core-reviewers
-*/StripePayments @stripe/ios-payments-reviewers @stripe/ios-sdk-reviewers @stripe/ios-sdk-non-core-reviewers
-*/StripePaymentsUI @stripe/ios-payments-reviewers @stripe/ios-sdk-reviewers @stripe/ios-sdk-non-core-reviewers
-*/StripeApplePay @stripe/ios-payments-reviewers @stripe/ios-sdk-reviewers @stripe/ios-sdk-non-core-reviewers
-*/Stripe3DS2 @stripe/ios-payments-reviewers @stripe/ios-sdk-reviewers @stripe/ios-sdk-non-core-reviewers
-*/StripeConnect @stripe/ios-connect-reviewers @stripe/ios-sdk-reviewers @stripe/ios-sdk-non-core-reviewers
+# Repository infrastructure
+/.claude/ @stripe/ios-oss-superusers
+/.clang-format @stripe/ios-oss-superusers
+/.cocoapods.yml @stripe/ios-oss-superusers
+/.gitattributes @stripe/ios-oss-superusers
+/.github/ @stripe/ios-oss-superusers
+/.gitignore @stripe/ios-oss-superusers
+/.jazzy.yaml @stripe/ios-oss-superusers
+/.jazzy/ @stripe/ios-oss-superusers
+/.nexus.yaml @stripe/ios-oss-superusers
+/.package.resolved @stripe/ios-oss-superusers
+/.periphery.yml @stripe/ios-oss-superusers
+/.swift-format @stripe/ios-oss-superusers
+/.swiftlint-sha256 @stripe/ios-oss-superusers
+/.swiftlint-version @stripe/ios-oss-superusers
+/.swiftlint.yml @stripe/ios-oss-superusers
+/.tuist-version @stripe/ios-oss-superusers
+/AGENTS.md @stripe/ios-oss-superusers
+/BuildConfigurations/ @stripe/ios-oss-superusers
+/CLAUDE.md @stripe/ios-oss-superusers
+/CODEOWNERS @stripe/ios-oss-superusers
+/FauxPasConfig/ @stripe/ios-oss-superusers
+/Gemfile @stripe/ios-oss-superusers
+/Gemfile.lock @stripe/ios-oss-superusers
+/OriginalAssets/ @stripe/ios-oss-superusers
+/Package.swift @stripe/ios-oss-superusers
+/*.podspec @stripe/ios-oss-superusers
+/Stripe.xcworkspace/ @stripe/ios-oss-superusers
+/VERSION @stripe/ios-oss-superusers
+/bitrise.yml @stripe/ios-oss-superusers
+/ci_scripts/ @stripe/ios-oss-superusers
+/fastlane/ @stripe/ios-oss-superusers
+/missing_translations.txt @stripe/ios-oss-superusers
+/modules.yaml @stripe/ios-oss-superusers
+
+# Payments SDK
+/Stripe/ @stripe/ios-payments-reviewers @stripe/ios-oss-superusers
+/Stripe3DS2/ @stripe/ios-payments-reviewers @stripe/ios-oss-superusers
+/StripeApplePay/ @stripe/ios-payments-reviewers @stripe/ios-oss-superusers
+/StripeCameraCore/ @stripe/ios-payments-reviewers @stripe/ios-oss-superusers
+/StripeCardScan/ @stripe/ios-payments-reviewers @stripe/ios-oss-superusers
+/StripeCore/ @stripe/ios-payments-reviewers @stripe/ios-oss-superusers
+/StripeIssuing/ @stripe/ios-payments-reviewers @stripe/ios-oss-superusers
+/StripePaymentSheet/ @stripe/ios-payments-reviewers @stripe/ios-link-reviewers @stripe/ios-oss-superusers
+/StripePayments/ @stripe/ios-payments-reviewers @stripe/ios-oss-superusers
+/StripePaymentsUI/ @stripe/ios-payments-reviewers @stripe/ios-oss-superusers
+/StripeUICore/ @stripe/ios-payments-reviewers @stripe/ios-oss-superusers
+/stripe3ds2-support/ @stripe/ios-payments-reviewers @stripe/ios-oss-superusers
+/Example/AppClipExample/ @stripe/ios-payments-reviewers @stripe/ios-oss-superusers
+/Example/CardImageVerification*/ @stripe/ios-payments-reviewers @stripe/ios-oss-superusers
+/Example/Non-Card*/ @stripe/ios-payments-reviewers @stripe/ios-oss-superusers
+/Example/PaymentSheet*/ @stripe/ios-payments-reviewers @stripe/ios-link-reviewers @stripe/ios-oss-superusers
+/Example/UI*/ @stripe/ios-payments-reviewers @stripe/ios-oss-superusers
+/Testers/ @stripe/ios-payments-reviewers @stripe/ios-oss-superusers
+/Tests/ @stripe/ios-payments-reviewers @stripe/ios-oss-superusers
+/Tests/ReferenceImages_64/StripePaymentSheetTests.*/ @stripe/ios-payments-reviewers @stripe/ios-link-reviewers @stripe/ios-oss-superusers
+
+# Link and Financial Connections SDK
+/StripeFinancialConnections/ @stripe/ios-link-reviewers @stripe/ios-oss-superusers
+/StripeFinancialConnectionsLite/ @stripe/ios-link-reviewers @stripe/ios-oss-superusers
+/Example/FinancialConnections*/ @stripe/ios-link-reviewers @stripe/ios-oss-superusers
+/readme-images/FinancialConnections* @stripe/ios-link-reviewers @stripe/ios-oss-superusers
+
+# Crypto Onramp SDK
+/StripeCryptoOnramp/ @stripe/android-crypto-onramp-reviewers @stripe/ios-oss-superusers
+/Example/CryptoOnramp*/ @stripe/android-crypto-onramp-reviewers @stripe/ios-oss-superusers
+
+# Identity SDK
+/StripeIdentity/ @stripe/ios-identity-reviewers @stripe/ios-oss-superusers
+/Example/IdentityVerification*/ @stripe/ios-identity-reviewers @stripe/ios-oss-superusers
+/Tests/ReferenceImages_64/StripeIdentityTests.*/ @stripe/ios-identity-reviewers @stripe/ios-oss-superusers
+/readme-images/Identity* @stripe/ios-identity-reviewers @stripe/ios-oss-superusers
+
+# Connect SDK
+/StripeConnect/ @stripe/ios-connect-reviewers @stripe/ios-oss-superusers
+/Example/StripeConnectExample/ @stripe/ios-connect-reviewers @stripe/ios-oss-superusers
+/readme-images/Connect* @stripe/ios-connect-reviewers @stripe/ios-oss-superusers
