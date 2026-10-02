@@ -584,15 +584,27 @@ workflows:
       bitrise.io:
         stack: osx-xcode-26.4.x
         machine_type_id: g2.mac.large
-  install-runtime-15:
+  install-xcodes:
     steps:
     - script@1:
-        title: Upgrade xcodes
+        title: Install pinned xcodes binary
         inputs:
         - content: |-
             #!/usr/bin/env bash
             set -euo pipefail
-            brew upgrade xcodesorg/made/xcodes || brew install xcodesorg/made/xcodes
+            xcodes_dir="$(mktemp -d)"
+            curl --fail --location --silent --show-error --retry 3 \
+              https://github.com/XcodesOrg/xcodes/releases/download/2.1.0/xcodes.zip \
+              --output "$xcodes_dir/xcodes.zip"
+            echo "f1519afe934a513e85dd9b32fc872394becbbb6a41db15d9ac3926a09a891888  $xcodes_dir/xcodes.zip" | shasum -a 256 --check
+            unzip -oq "$xcodes_dir/xcodes.zip" -d "$xcodes_dir"
+            chmod +x "$xcodes_dir/xcodes"
+            "$xcodes_dir/xcodes" version
+            envman add --key STRIPE_XCODES_PATH --value "$xcodes_dir/xcodes"
+  install-runtime-15:
+    before_run:
+    - install-xcodes
+    steps:
     - script@1:
         title: Install iOS 15.5 simulator runtime
         inputs:
@@ -603,7 +615,7 @@ workflows:
               echo "iOS 15.5 runtime already installed"
             else
               echo "Installing iOS 15.5 runtime..."
-              sudo xcodes runtimes install "iOS 15.5"
+              sudo "$STRIPE_XCODES_PATH" runtimes install "iOS 15.5"
             fi
   legacy-tests-15:
     steps:
@@ -642,15 +654,32 @@ workflows:
         stack: osx-xcode-26.4.x
         machine_type_id: g2.mac.large
   lint-tests:
+    before_run:
+    - prep_source
     steps:
-    - git-clone@8.2:
-        inputs:
-        - merge_pr: "no"
-        - clone_depth: -1
     - script@1:
         inputs:
-        - content: git fetch origin master
-        title: Fetch origin/master
+        - content: |-
+            #!/usr/bin/env bash
+            set -euo pipefail
+            # PR preparation already fetched master. A commit-only push checkout
+            # may not have a branch ref yet.
+            if ! git show-ref --verify --quiet refs/remotes/origin/master; then
+              git fetch --no-tags --depth=100 origin +refs/heads/master:refs/remotes/origin/master
+            fi
+            source_commit="${BITRISE_GIT_COMMIT:-$(git rev-parse HEAD)}"
+            for depth in 500 2000 8000; do
+              if git merge-base origin/master HEAD >/dev/null; then
+                break
+              fi
+              git fetch --no-tags --depth="$depth" "${BITRISEIO_PULL_REQUEST_REPOSITORY_URL:-origin}" "$source_commit"
+              git fetch --no-tags --depth="$depth" origin +refs/heads/master:refs/remotes/origin/master
+            done
+            if ! git merge-base origin/master HEAD >/dev/null; then
+              echo "Cannot determine the comparison base for linting." >&2
+              exit 1
+            fi
+        title: Ensure origin/master is available for lint comparison
     - script@1:
         inputs:
         - content: ./ci_scripts/lint_modified_files.sh
@@ -695,14 +724,9 @@ workflows:
     envs:
     - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
   install-runtime-16:
+    before_run:
+    - install-xcodes
     steps:
-    - script@1:
-        title: Upgrade xcodes
-        inputs:
-        - content: |-
-            #!/usr/bin/env bash
-            set -euo pipefail
-            brew upgrade xcodesorg/made/xcodes || brew install xcodesorg/made/xcodes
     - script@1:
         title: Install iOS 16.4 simulator runtime
         inputs:
@@ -713,9 +737,15 @@ workflows:
               echo "iOS 16.4 runtime already installed"
             else
               echo "Installing iOS 16.4 runtime..."
-              sudo xcodes runtimes install "iOS 16.4"
+              sudo "$STRIPE_XCODES_PATH" runtimes install "iOS 16.4"
             fi
   prep_all:
+    before_run:
+    - prep_simulator
+    - prep_source
+    steps:
+    - restore-spm-cache@2.1: {}
+  prep_simulator:
     steps:
     - xcode-start-simulator@0:
         inputs:
@@ -736,15 +766,27 @@ workflows:
         - destination_keys: CONFIGURATION_TEMP_DIR
         - value: $BITRISE_SOURCE_DIR/stpbuild/intermediates
         title: Set CONFIGURATION_TEMP_DIR
+  prep_source:
+    steps:
     - script@1:
         inputs:
         - content: bundle config set path 'vendor/bundle'
         is_always_run: true
         title: Set Bundler to use local vendor directory
-    - git-clone@8.2:
+    - git-clone@8.5.1:
         is_always_run: true
         inputs:
         - clone_depth: "1"
+        - merge_pr: "no"
+        - ignore_branch_for_commit_fetch: "yes"
+        # Force commit checkout: PR-head checkout ignores the option above.
+        # GitHub makes fork PR commits fetchable from the destination repository.
+        - pull_request_head_branch: ""
+        - pull_request_repository_url: ""
+    - script@1:
+        title: Merge PR with destination using scoped history
+        inputs:
+        - content: ruby ci_scripts/prepare_ci_branch.rb
     - restore-cache@2.4:
         inputs:
         - key: bundle-cache-{{ checksum "Gemfile.lock" }}
@@ -754,7 +796,6 @@ workflows:
         - key: bundle-cache-{{ checksum "Gemfile.lock" }}
         - paths: |
             vendor
-    - restore-spm-cache@2.1: {}
   size-report:
     steps:
     - script@1:
