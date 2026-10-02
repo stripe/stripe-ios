@@ -832,6 +832,10 @@ workflows:
     - script@1:
         inputs:
         - content: |
+            if [ "${BITRISE_IO_PARALLEL_TOTAL:-}" != 4 ]; then
+              echo "PaymentSheet UI tests require four shards, including the catch-all shard." >&2
+              exit 1
+            fi
             UI_TEST_WORKERS="${UI_TEST_WORKERS:-4}"
             case "$UI_TEST_WORKERS" in
               [1-8]) ;;

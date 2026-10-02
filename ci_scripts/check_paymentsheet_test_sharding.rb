@@ -1,104 +1,83 @@
 #!/usr/bin/ruby
-# Every UI test must run in exactly one shard, including methods of split classes.
+# Shards 1–3 select individual tests; shard 4 runs everything else, including new tests.
+# After rebalancing shards 1–3, run this script with --update to regenerate shard 4.
 
 require 'json'
-require 'set'
 
 module PaymentSheetTestSharding
-  ROOT = File.expand_path('..', __dir__)
-  EXAMPLE = File.join(ROOT, 'Example/PaymentSheet Example')
-  DECLARATION_PREFIX = /[ \t]*(?:(?:@\w+(?:\([^\n]*?\))?|public|open|internal|fileprivate|private|final|override|nonisolated)\s+)*/
+  EXAMPLE = File.expand_path('../Example/PaymentSheet Example', __dir__)
+  UI_TARGET = 'PaymentSheetUITest'
+  LOCALIZATION_TARGET = 'PaymentSheetLocalizationScreenshotGenerator'
 
-  def self.test_classes(directory)
-    classes = {}
-    Dir.glob(File.join(directory, '**/*.swift')).sort.each do |path|
-      # Commented-out tests are not part of the XCTest suite.
-      source = File.read(path).gsub(%r{/\*.*?\*/}m, '').gsub(%r{^\s*//[^\n]*}, '')
-      declarations = source.scan(/^#{DECLARATION_PREFIX}class\s+(\w+)\s*:\s*(\w+)/)
-      methods = source.scan(/^#{DECLARATION_PREFIX}func\s+(test\w+)\s*\(\s*\)/).flatten
-      candidates = source.scan(/\bfunc\s+(test\w+)\s*\(\s*\)/).flatten
-      unless candidates.sort == methods.sort
-        raise "Unrecognized test declaration in #{path}; update the sharding inventory parser"
+  def self.settings(plan)
+    plan.reject { |key, _| key == 'testTargets' }.merge(
+      'configurations' => plan.fetch('configurations').map { |config| config.reject { |key, _| %w[id name].include?(key) } }
+    )
+  end
+
+  def self.exclusions(plans)
+    raise 'Expected four PaymentSheet shard plans' unless plans.length == 4
+
+    targets = plans.each_with_index.map do |plan, index|
+      raise 'Shard settings must match' unless settings(plan) == settings(plans.first)
+
+      entries = plan.fetch('testTargets')
+      expected = index.zero? ? [UI_TARGET, LOCALIZATION_TARGET] : [UI_TARGET]
+      raise "Unexpected targets in shard #{index + 1}" unless entries.map { |entry| entry.fetch('target').fetch('name') }.sort == expected.sort
+
+      raise 'Shard targets must be enabled' if entries.any? { |entry| entry['enabled'] == false }
+
+      if index.zero?
+        localization = entries.find { |entry| entry.fetch('target').fetch('name') == LOCALIZATION_TARGET }
+        raise 'Shard 1 must run all localization tests' if localization.key?('selectedTests') || localization.key?('skippedTests')
       end
-      next if declarations.empty? && methods.empty?
-
-      # The UI suite keeps one test class per source file. Fail visibly if that
-      # changes, rather than assigning methods to the wrong class.
-      raise "Expected one test class in #{path}" unless declarations.length == 1
-
-      name, parent = declarations.first
-      classes[name] = { parent: parent, methods: methods }
+      entries.find { |entry| entry.fetch('target').fetch('name') == UI_TARGET }
     end
+    options = targets.map { |target| target.reject { |key, _| %w[selectedTests skippedTests].include?(key) } }
+    raise 'UI target and options must match across shards' unless options.uniq.length == 1
+    raise 'Shard 4 must run all tests except the generated exclusions' if targets.last.key?('selectedTests')
 
-    inherited_methods = lambda do |name|
-      return [] if name == 'XCTestCase'
+    selected = targets.first(3).flat_map do |target|
+      raise 'Shards 1–3 cannot skip tests' if target.key?('skippedTests')
 
-      definition = classes.fetch(name) { raise "Unknown test superclass #{name}" }
-      (definition[:methods] + inherited_methods.call(definition[:parent])).uniq
-    end
-
-    classes.to_h { |name, _| [name, inherited_methods.call(name)] }
-  end
-
-  def self.inventory(example = EXAMPLE)
-    %w[PaymentSheetUITest PaymentSheetLocalizationScreenshotGenerator].to_h do |target|
-      classes = test_classes(File.join(example, target))
-      raise "No test methods found for #{target}" if classes.values.flatten.empty?
-
-      [target, classes]
-    end
-  end
-
-  def self.expand(selectors, classes)
-    selectors.flat_map do |selector|
-      name, method = selector.split('/', 2)
-      methods = classes.fetch(name) { raise "Unknown test class #{name}" }
-      if method
-        method = method.delete_suffix('()')
-        raise "Unknown test #{selector}" unless methods.include?(method)
-
-        ["#{name}/#{method}"]
-      else
-        methods.map { |test| "#{name}/#{test}" }
+      tests = target.fetch('selectedTests')
+      unless tests.is_a?(Array) && !tests.empty? && tests.all? do |test|
+        test.is_a?(String) && test.split('/').length == 2 && test.end_with?('()') && !test.include?('*')
       end
-    end.to_set
-  end
-
-  def self.check(plans, inventory)
-    counts = Hash.new(0)
-    expected = inventory.flat_map do |target, classes|
-      classes.flat_map { |name, methods| methods.map { |method| "#{target}/#{name}/#{method}" } }
-    end
-
-    plans.each do |plan|
-      plan.fetch('testTargets').each do |target|
-        next if target['enabled'] == false
-
-        name = target.fetch('target').fetch('name')
-        classes = inventory.fetch(name) { raise "Unknown test target #{name}" }
-        selected = expand(target.fetch('selectedTests', classes.keys), classes)
-        skipped = expand(target.fetch('skippedTests', []), classes)
-        (selected - skipped).each { |test| counts["#{name}/#{test}"] += 1 }
+        raise 'Shards 1–3 must select individual Class/testMethod() entries'
       end
+      tests
     end
+    duplicates = selected.group_by { |test| test }.select { |_, occurrences| occurrences.length > 1 }.keys
+    raise "Tests assigned more than once: #{duplicates.join(', ')}" unless duplicates.empty?
 
-    expected.map do |test|
-      "#{test} runs in #{counts[test]} shards; expected exactly one." unless counts[test] == 1
-    end.compact
+    selected.sort
   end
 
-  def self.main
-    paths = Dir.glob(File.join(EXAMPLE, 'PaymentSheet Example-Shard*.xctestplan')).sort
-    raise 'No PaymentSheet shard plans found' if paths.empty?
+  def self.main(arguments = ARGV, example = EXAMPLE)
+    raise 'Usage: check_paymentsheet_test_sharding.rb [--update]' unless arguments.empty? || arguments == ['--update']
 
+    paths = (1..4).map { |index| File.join(example, "PaymentSheet Example-Shard#{index}.xctestplan") }
+    unless Dir.glob(File.join(example, 'PaymentSheet Example-Shard*.xctestplan')).sort == paths
+      raise 'Expected exactly PaymentSheet Example-Shard1 through Shard4.xctestplan'
+    end
     plans = paths.map { |path| JSON.parse(File.read(path)) }
-    errors = check(plans, inventory)
-    unless errors.empty?
-      warn errors.join("\n")
-      abort 'Update the PaymentSheet Example-Shard test plans so every UI test is selected exactly once.'
+    skipped = exclusions(plans)
+    catch_all = plans.last.fetch('testTargets').first
+    if arguments == ['--update']
+      catch_all['skippedTests'] = skipped
+      File.write(paths.last, JSON.pretty_generate(plans.last, space_before: ' ') + "\n")
+    elsif catch_all['skippedTests'] != skipped
+      raise 'Shard 4 exclusions are out of date. Run ci_scripts/check_paymentsheet_test_sharding.rb --update'
     end
-    puts "Every PaymentSheet UI test is selected exactly once across #{plans.length} shards."
+    puts 'Shards 1–3 have unique assignments; shard 4 selects all remaining UI tests.'
   end
 end
 
-PaymentSheetTestSharding.main if $PROGRAM_NAME == __FILE__
+if $PROGRAM_NAME == __FILE__
+  begin
+    PaymentSheetTestSharding.main
+  rescue StandardError => e
+    abort e.message
+  end
+end
