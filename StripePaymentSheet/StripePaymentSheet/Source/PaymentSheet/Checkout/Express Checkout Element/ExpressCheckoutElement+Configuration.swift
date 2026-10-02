@@ -24,8 +24,8 @@ extension ExpressCheckoutElement {
         public var paymentMethodOrder: [String]?
         /// Controls appearance of Express Checkout Element.
         public var appearance: Appearance = .init()
-
-        let completion: CompletionHandler
+        /// Called after a wallet payment confirmation completes.
+        public var completion: CompletionHandler
 
         /// Creates an Express Checkout Element configuration with default values.
         /// - Parameters:
