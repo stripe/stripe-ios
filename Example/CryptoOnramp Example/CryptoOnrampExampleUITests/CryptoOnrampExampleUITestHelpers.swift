@@ -12,7 +12,7 @@ import StripeCryptoOnramp
 
 import XCTest
 
-extension CryptoOnrampExampleUITests {
+extension CryptoOnrampExampleUITestCase {
     @MainActor
     func signUpAndAuthenticateNewUser(
         fullName: String,
