@@ -102,6 +102,15 @@ jobs:
             } >> "$GITHUB_ENV"
           fi
 
+      - name: Upload scan diagnostics
+        if: always() && steps.scope.outputs.required == 'true'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: dead-code-diagnostics-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/dead-code-reports
+          if-no-files-found: ignore
+          retention-days: 7
+
       - uses: davidme-stripe/find-comment@b30e6a3c0ed37e7c023ccd3f1db5c6c0b0c23aad # v4.0.0
         id: find_comment
         if: github.event_name == 'pull_request'
