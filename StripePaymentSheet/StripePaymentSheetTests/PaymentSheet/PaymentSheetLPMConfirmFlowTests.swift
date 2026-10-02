@@ -757,14 +757,6 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                                paymentMethodType: .ngCard,
                                merchantCountry: .NG,
                                expectedHierarchy: ExpectedFormHierarchy.NairaCard.paymentIntent) { _ in }
-        // TODO(porter): Add `.paymentIntentWithPMOSetupFutureUsage` once Confirmation Tokens
-        // accepts `client_context[payment_method_options][ng_card]`.
-        try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .setupIntent],
-                               currency: "NGN",
-                               amount: 100000,
-                               paymentMethodType: .ngCard,
-                               merchantCountry: .NG,
-                               expectedHierarchy: ExpectedFormHierarchy.NairaCard.settingUp) { _ in }
     }
     func testMomoConfirmFlows() async throws {
         try await _testConfirm(intentKinds: [.paymentIntent],

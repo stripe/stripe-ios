@@ -108,9 +108,7 @@ extension PaymentSheetFormFactory {
 
     func makeNigerianPaymentMethodMandate() -> SimpleMandateElement {
         let mandateText = STPStringUtils.applyLinksToString(
-            template: isSettingUp
-            ? String.Localized.nigerian_payment_method_setup_terms
-            : String.Localized.nigerian_payment_method_terms,
+            template: String.Localized.nigerian_payment_method_terms,
             links: ["terms": URL(string: "https://d37ugbyn3rpeym.cloudfront.net/docs/GSSL%20-%20Buyer%20T&Cs%20(Final).pdf")!]
         )
         return makeMandate(mandateText: mandateText)

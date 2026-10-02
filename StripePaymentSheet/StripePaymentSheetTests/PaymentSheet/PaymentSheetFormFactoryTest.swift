@@ -2529,43 +2529,29 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertEqual(setupForm.getMandateElement()?.mandateTextView.textView.text, expectedMandate)
     }
 
-    func testNairaCardShowsTermsAndFuturePaymentMandate() {
-        // Given each supported Naira card intent
-        let intents: [Intent] = [
-            ._testPaymentIntent(paymentMethodTypes: [.ngCard]),
-            ._testPaymentIntent(paymentMethodTypes: [.ngCard], setupFutureUsage: .offSession),
-            ._testSetupIntent(paymentMethodTypes: [.ngCard]),
-        ]
-        let paymentTerms = "By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their terms of use."
-        let setupTerms = "By continuing, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their terms of use. You consent to be charged for this payment and future payments in accordance with their terms."
-        var configuration = PaymentSheet.Configuration()
-        configuration.merchantDisplayName = "Example Merchant"
-        for (index, intent) in intents.enumerated() {
-            // When PaymentSheet builds the form
-            let form = PaymentSheetFormFactory(
-                intent: intent,
-                elementsSession: ._testValue(paymentMethodTypes: ["ng_card"]),
-                configuration: .paymentElement(configuration),
-                paymentMethod: .stripe(.ngCard)
-            ).make()
-            let text = form.getMandateElement()?.mandateTextView.textView.attributedText
-            let expected = index == 0 ? paymentTerms : setupTerms
+    func testNairaCardShowsMerchantOfRecordTerms() {
+        // Given a one-time Naira card payment
+        let form = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.ngCard]),
+            elementsSession: ._testValue(paymentMethodTypes: ["ng_card"]),
+            configuration: .paymentElement(PaymentSheet.Configuration()),
+            paymentMethod: .stripe(.ngCard)
+        ).make()
 
-            // Then the copy and linked terms match web Payment Element for this mode
-            XCTAssertEqual(text?.string, expected)
-            let linkedText = index == 0 ? "terms of use" : "their terms"
-            let linkIndex = (expected as NSString).range(of: linkedText, options: .backwards).location
-            XCTAssertEqual(
-                text?.attribute(.link, at: linkIndex, effectiveRange: nil) as? URL,
-                URL(string: "https://d37ugbyn3rpeym.cloudfront.net/docs/GSSL%20-%20Buyer%20T&Cs%20(Final).pdf")
-            )
-            XCTAssertFalse(form.collectsUserInput)
-            XCTAssertNil(form.updateParams(params: IntentConfirmParams(type: .stripe(.ngCard))))
+        // Then the copy and linked terms match Web Payment Element
+        let text = form.getMandateElement()?.mandateTextView.textView.attributedText
+        let expected = "By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their terms of use."
+        XCTAssertEqual(text?.string, expected)
+        XCTAssertEqual(
+            text?.attribute(.link, at: (expected as NSString).range(of: "terms of use").location, effectiveRange: nil) as? URL,
+            URL(string: "https://d37ugbyn3rpeym.cloudfront.net/docs/GSSL%20-%20Buyer%20T&Cs%20(Final).pdf")
+        )
+        XCTAssertFalse(form.collectsUserInput)
+        XCTAssertNil(form.updateParams(params: IntentConfirmParams(type: .stripe(.ngCard))))
 
-            // ...and confirmation becomes valid after the customer sees the disclosure
-            form.getMandateElement()?.mandateTextView.handleEvent(.viewDidAppear)
-            XCTAssertNotNil(form.updateParams(params: IntentConfirmParams(type: .stripe(.ngCard))))
-        }
+        // When the customer sees the disclosure, the payment can be confirmed
+        form.getMandateElement()?.mandateTextView.handleEvent(.viewDidAppear)
+        XCTAssertNotNil(form.updateParams(params: IntentConfirmParams(type: .stripe(.ngCard))))
     }
 
     func testNairaCardDefaultsBillingCountryToNigeria() throws {
