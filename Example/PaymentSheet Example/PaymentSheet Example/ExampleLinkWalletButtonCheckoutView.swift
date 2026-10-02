@@ -108,26 +108,24 @@ struct ExampleLinkWalletButtonCheckoutView: View {
                     }
                 }
 
-                DemoSection(title: "Pay With") {
-                    switch session.phase {
-                    case .loading:
-                        HStack(spacing: 12) {
-                            ProgressView()
-                            Text("Loading LinkController...")
-                                .foregroundColor(.secondary)
-                        }
-                        .frame(maxWidth: .infinity, minHeight: 44)
-                    case .ready(_, let button):
-                        switch configuration.uiFramework {
-                        case .swiftUI:
-                            LinkWalletButtonView(button: button)
-                        case .uiKit:
-                            LinkWalletButtonUIKitHost(button: button)
-                                .frame(height: 44)
-                        }
-                    case .error(let errorMessage):
-                        MessageBanner(text: "Failed to load: \(errorMessage)", tint: .red)
+                switch session.phase {
+                case .loading:
+                    HStack(spacing: 12) {
+                        ProgressView()
+                        Text("Loading LinkController...")
+                            .foregroundColor(.secondary)
                     }
+                    .frame(maxWidth: .infinity, minHeight: 44)
+                case .ready(_, let button):
+                    switch configuration.uiFramework {
+                    case .swiftUI:
+                        LinkWalletButtonView(button: button)
+                    case .uiKit:
+                        LinkWalletButtonUIKitHost(button: button)
+                            .frame(height: 44)
+                    }
+                case .error(let errorMessage):
+                    MessageBanner(text: "Failed to load: \(errorMessage)", tint: .red)
                 }
 
                 if let message = session.message {
