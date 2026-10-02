@@ -1593,7 +1593,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         )
 
         // Then
-        XCTAssertNil(regularPaymentIntentParams.mandateData)
+        XCTAssertNotNil(regularPaymentIntentParams.mandateData)
         XCTAssertNotNil(futureUsagePaymentIntentParams.mandateData)
         XCTAssertNotNil(paymentMethodOptionsFutureUsagePaymentIntentParams.mandateData)
         XCTAssertNotNil(setupIntentParams.mandateData)

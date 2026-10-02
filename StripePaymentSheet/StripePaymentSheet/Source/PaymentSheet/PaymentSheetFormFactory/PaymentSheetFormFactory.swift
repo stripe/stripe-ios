@@ -282,7 +282,10 @@ class PaymentSheetFormFactory {
             case .SEPADebit:
                 return makeSepaDebit()
             case .gcash:
-                return makeContactInformationAndBillingAddressForm(additionalElements: makeSetupMandateElements(for: paymentMethod))
+                return makeContactInformationAndBillingAddressForm(
+                    allowedBillingCountries: ["PH"],
+                    additionalElements: makeSetupMandateElements(for: paymentMethod)
+                )
             case .momo, .goPay, .grabPay, .paynow, .payPay, .mobilePay, .vipps, .zip, .crypto,
                  .billie, .sunbit, .alma, .payByBank, .payco, .sequra, .scalapay:
                 return makeContactInformationAndBillingAddressForm()
@@ -861,6 +864,7 @@ extension PaymentSheetFormFactory {
         emailRequired: Bool = false,
         emailAPIPath: String? = nil,
         phoneRequired: Bool = false,
+        allowedBillingCountries: [String]? = nil,
         additionalElements: [Element] = []
     ) -> PaymentMethodElement {
         let contactInfoSection = makeContactInformationSection(
@@ -869,7 +873,10 @@ extension PaymentSheetFormFactory {
             phoneRequiredByPaymentMethod: phoneRequired,
             emailAPIPath: emailAPIPath
         )
-        let billingDetails = makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
+        let billingDetails = makeBillingAddressSectionIfNecessary(
+            requiredByPaymentMethod: false,
+            allowedCountries: allowedBillingCountries
+        )
         let elements = [contactInfoSection, billingDetails].compactMap { $0 } + additionalElements
         return makeDefaultsApplierWrapper(
             for: FormElement(autoSectioningElements: elements, theme: theme)
@@ -1103,7 +1110,8 @@ extension PaymentSheetFormFactory {
     }
 
     func makeBillingAddressSectionIfNecessary(
-        requiredByPaymentMethod: Bool
+        requiredByPaymentMethod: Bool,
+        allowedCountries: [String]? = nil
     ) -> Element? {
         let defaultFieldsToCollect: AddressSectionElement.FieldsToCollect? = {
             switch (configuration.billingDetailsCollectionConfiguration.address, requiredByPaymentMethod) {
@@ -1122,7 +1130,7 @@ extension PaymentSheetFormFactory {
 
         return makeBillingAddressSection(
             defaultFieldsToCollect: defaultFieldsToCollect,
-            countries: configuration.billingDetailsCollectionConfiguration.allowedCountriesArray
+            countries: allowedCountries ?? configuration.billingDetailsCollectionConfiguration.allowedCountriesArray
         )
     }
 
