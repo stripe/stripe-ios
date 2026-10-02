@@ -126,6 +126,29 @@ final class LinkWalletButtonTests: XCTestCase {
         XCTAssertNil(button.displayedPaymentMethodPreview)
     }
 
+    func testRepeatedStateUpdatesDoNotInterruptAnimation() throws {
+        // Given a logged out button on screen
+        let controller = MockLinkWalletButtonController()
+        let button = makeButton(controller: controller)
+        let window = UIWindow(frame: CGRect(origin: .zero, size: CGSize(width: 320, height: 100)))
+        button.frame = CGRect(origin: .zero, size: CGSize(width: 260, height: 44))
+        window.isHidden = false
+        window.addSubview(button)
+        button.layoutIfNeeded()
+        let payWithLinkButton = try XCTUnwrap(button.subviews.first as? PayWithLinkButton)
+        let subviewCount = payWithLinkButton.subviews.count
+
+        // When the customer is recognized, and the controller then publishes the same state again
+        controller.linkAccount = Stubs.linkAccount(email: email)
+        waitForMainQueue()
+        controller.selectedPaymentDetails = nil
+        waitForMainQueue()
+
+        // Then the animation to the email is still running
+        XCTAssertEqual(payWithLinkButton.subviews.count, subviewCount + 1)
+        XCTAssertEqual(button.displayedLinkAccount?.email, email)
+    }
+
     func testUpdatesWhenEmailChanges() {
         // Given a button showing the customer's account
         let controller = MockLinkWalletButtonController()

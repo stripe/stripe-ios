@@ -140,26 +140,12 @@ import UIKit
             paymentMethodPreview = nil
         }
 
-        let isVisibleChange = brand != button.brand
-            || PayWithLinkButton.linkAccountState(linkAccount: linkAccount, paymentMethodPreview: paymentMethodPreview) != button.linkAccountState
-
-        let applyChanges = { [button] in
+        // Animate once the button is on screen, e.g. when the lookup reveals the customer's email
+        button.performStateChange(animated: window != nil, duration: Self.stateTransitionDuration) { [button] in
             button.brand = brand
             button.linkAccount = linkAccount
             button.paymentMethodPreview = paymentMethodPreview
         }
-
-        // Cross-fade between states once the button is on screen, e.g. when the lookup reveals the customer's email
-        guard isVisibleChange, window != nil else {
-            applyChanges()
-            return
-        }
-        UIView.transition(
-            with: button,
-            duration: Self.stateTransitionDuration,
-            options: [.transitionCrossDissolve, .allowUserInteraction, .beginFromCurrentState],
-            animations: applyChanges
-        )
     }
 
     func lookUpIfNeeded() {
