@@ -132,13 +132,11 @@ enum ExpectedFormHierarchy {
 
     enum GoPay {
         static var paymentIntent: FormHierarchyNode { emptyForm }
-        static var settingUp: FormHierarchyNode { emptyForm }
     }
     // MARK: - MoMo
 
     enum Momo {
         static var paymentIntent: FormHierarchyNode { emptyForm }
-        static var settingUp: FormHierarchyNode { emptyForm }
     }
     // MARK: - GCash
 
