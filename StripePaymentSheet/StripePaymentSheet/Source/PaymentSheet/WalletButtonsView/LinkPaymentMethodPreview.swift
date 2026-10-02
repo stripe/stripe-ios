@@ -8,7 +8,7 @@
 @_spi(STP) import StripePaymentsUI
 import UIKit
 
-struct LinkPaymentMethodPreview {
+struct LinkPaymentMethodPreview: Equatable {
     let icon: UIImage
     let last4: String
     /// A human-readable name for the payment method (e.g. "Visa"), used for accessibility.

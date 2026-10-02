@@ -112,6 +112,54 @@ final class PayWithLinkButtonTests: XCTestCase {
         XCTAssertGreaterThan(logoView.bounds.width, PayWithLinkButton.Constants.logoSize.width)
     }
 
+    func testPaymentMethodPreviewIsShownForRegisteredAccount() {
+        // Given a registered account
+        let button = PayWithLinkButton(brand: .link, observesLinkAccountContext: false)
+        button.linkAccount = makeLinkAccount(isRegistered: true)
+
+        // When a payment method preview is set
+        let preview = LinkPaymentMethodPreview(icon: UIImage(), last4: "4242", accessibilityName: "Visa")
+        button.paymentMethodPreview = preview
+
+        // Then the button shows the payment method
+        XCTAssertEqual(button.linkAccountState, .hasPaymentMethod(preview))
+        XCTAssertEqual(button.accessibilityValue, "Visa 4242")
+    }
+
+    func testPaymentMethodPreviewIsIgnoredForUnregisteredAccount() {
+        // Given an unregistered account
+        let button = PayWithLinkButton(brand: .link, observesLinkAccountContext: false)
+        button.linkAccount = makeLinkAccount(isRegistered: false)
+
+        // When a payment method preview is set
+        button.paymentMethodPreview = LinkPaymentMethodPreview(icon: UIImage(), last4: "4242", accessibilityName: "Visa")
+
+        // Then the button stays logged out
+        XCTAssertEqual(button.linkAccountState, .noValidAccount)
+        XCTAssertNil(button.accessibilityValue)
+    }
+
+    func testRegisteredAccountWithoutPaymentMethodPreviewShowsEmail() {
+        // Given a registered account and no payment method preview
+        let button = PayWithLinkButton(brand: .link, observesLinkAccountContext: false)
+        button.linkAccount = makeLinkAccount(isRegistered: true)
+
+        // Then the button shows the email
+        XCTAssertEqual(button.linkAccountState, .hasEmail(email: "test@example.com"))
+        XCTAssertEqual(button.accessibilityValue, "test@example.com")
+    }
+
+    private func makeLinkAccount(isRegistered: Bool) -> LinkAccountStub {
+        LinkAccountStub(
+            email: "test@example.com",
+            redactedPhoneNumber: nil,
+            isRegistered: isRegistered,
+            sessionState: isRegistered ? .verified : .requiresSignUp,
+            consumerSessionClientSecret: nil,
+            linkSessionKey: nil
+        )
+    }
+
     private func renderedPNGData(for image: UIImage) -> Data? {
         let renderer = UIGraphicsImageRenderer(size: image.size)
         return renderer.pngData { _ in

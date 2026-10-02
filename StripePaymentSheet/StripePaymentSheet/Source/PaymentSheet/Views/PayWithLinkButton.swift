@@ -197,13 +197,20 @@ final class PayWithLinkButton: UIControl {
         return stackView
     }()
 
-    enum LinkAccountState {
+    enum LinkAccountState: Equatable {
         case noValidAccount
         case hasPaymentMethod(LinkPaymentMethodPreview)
         case hasEmail(email: String)
     }
 
     var linkAccountState: LinkAccountState {
+        Self.linkAccountState(linkAccount: linkAccount, paymentMethodPreview: paymentMethodPreview)
+    }
+
+    static func linkAccountState(
+        linkAccount: PaymentSheetLinkAccountInfoProtocol?,
+        paymentMethodPreview: LinkPaymentMethodPreview?
+    ) -> LinkAccountState {
         if !(linkAccount?.isRegistered ?? false) {
             return .noValidAccount
         }
