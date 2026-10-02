@@ -198,12 +198,8 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
         // ECE Apple Pay does not yet request a shipping postal address. Enabling shipping-sourced
         // automatic tax causes confirmation to fail with `customer_tax_location_invalid` until
         // CheckoutApplePayContext implements shipping contact collection.
-        let collectShippingAddress = app.switches["Collect Shipping Address"]
-        XCTAssertTrue(collectShippingAddress.waitForExistence(timeout: 4))
-        collectShippingAddress.scrollToAndTap(in: app)
-        let automaticTax = app.switches["Automatic Tax"]
-        XCTAssertTrue(automaticTax.waitForExistence(timeout: 4))
-        automaticTax.scrollToAndTap(in: app)
+        turnOffCheckoutSetting("Collect Shipping Address")
+        turnOffCheckoutSetting("Automatic Tax")
         app.buttons["Create Checkout Session"].waitForExistenceAndTap()
 
         XCTAssertTrue(app.navigationBars["Your Cart"].waitForExistence(timeout: 15))
@@ -234,6 +230,38 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
         ])
     }
 
+    func testExpressCheckoutElementLinkAnalytics() {
+        // Given an ECE-only Checkout Session without address-dependent tax
+        app.launchEnvironment["STP_CHECKOUT_ELEMENTS"] = "true"
+        app.launch()
+
+        app.buttons["Reset"].waitForExistenceAndTap()
+        let paymentElementPicker = app.buttons.matching(
+            NSPredicate(format: "label BEGINSWITH %@", "PaymentElement")
+        ).firstMatch
+        XCTAssertTrue(paymentElementPicker.waitForExistenceAndTap())
+        XCTAssertTrue(app.buttons["ece only"].waitForExistenceAndTap())
+
+        turnOffCheckoutSetting("Collect Shipping Address")
+        turnOffCheckoutSetting("Automatic Tax")
+        app.buttons["Create Checkout Session"].waitForExistenceAndTap()
+
+        XCTAssertTrue(app.navigationBars["Your Cart"].waitForExistence(timeout: 15))
+        let linkButton = app.buttons["Pay with Link"]
+        XCTAssertTrue(linkButton.waitForExistence(timeout: 10))
+        assertAnalyticsEvents(["elements.express_checkout_element.init"])
+
+        // When the customer opens Link from Express Checkout Element
+        linkButton.tap()
+
+        // Then Link opens and its analytics remain part of the ECE sequence
+        XCTAssertTrue(app.textFields["Email"].waitForExistence(timeout: 10))
+        assertAnalyticsEvents([
+            "elements.express_checkout_element.init",
+            "link.signup.flow_presented",
+        ], ignoringEventPrefixes: ["elements.captcha.passive.", "stripeios.attest."])
+    }
+
     private func fillShippingAddress() {
         app.textFields["Full name"].waitForExistenceAndTap()
         app.typeText("Jane Doe")
@@ -254,13 +282,33 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
         app.typeText("94102")
     }
 
+    private func turnOffCheckoutSetting(_ label: String) {
+        let toggle = app.switches[label]
+        XCTAssertTrue(toggle.waitForExistence(timeout: 4))
+        if String(describing: toggle.value ?? "") == "1" {
+            var scrolls = 0
+            while !toggle.isHittable && scrolls < 20 {
+                app.swipeUp()
+                scrolls += 1
+            }
+            XCTAssertTrue(toggle.isHittable)
+            toggle.coordinate(withNormalizedOffset: CGVector(dx: 0.75, dy: 0.5)).tap()
+        }
+        expectation(for: NSPredicate(format: "value == 0 OR value == '0'"), evaluatedWith: toggle)
+        waitForExpectations(timeout: 5)
+    }
+
     private func assertAnalyticsEvents(
         _ expectedEvents: [String],
+        ignoringEventPrefixes: [String] = [],
         file: StaticString = #filePath,
         line: UInt = #line
     ) {
+        // Keep the sequence exact so new Checkout Session metrics require updated ECE expectations.
         XCTAssertEqual(
-            analyticsLog.compactMap { $0[string: "event"] },
+            analyticsLog.compactMap { $0[string: "event"] }.filter { event in
+                !ignoringEventPrefixes.contains { event.hasPrefix($0) }
+            },
             expectedEvents,
             file: file,
             line: line
