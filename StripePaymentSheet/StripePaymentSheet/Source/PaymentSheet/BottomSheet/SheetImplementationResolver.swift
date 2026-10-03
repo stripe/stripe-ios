@@ -7,8 +7,8 @@
 
 import UIKit
 
-/// Captures the rollout decision for one FlowController or Embedded Payment Element instance.
-/// Retains the initial assignment across Elements Session updates so presentation does not switch mid-flow.
+/// Captures the native-sheet feature flag for one FlowController or Embedded Payment Element instance.
+/// Retains the initial decision across Elements Session updates so presentation does not switch mid-flow.
 final class SheetImplementationResolver {
 
     static let isRequiredForDevice: Bool = {
@@ -33,30 +33,18 @@ final class SheetImplementationResolver {
     }()
 
     private let isEnabled: Bool
-    private let analyticsHelper: PaymentSheetAnalyticsHelper
-    private let experiment: NativeSheetExperiment?
-    private var exposureLogged = false
 
     @MainActor
     var usesNativeSheet: Bool {
-        // Forced-native devices must not be counted in the experiment's control group.
+        // iPhone Duo requires native presentation even when the feature flag is disabled.
         if Self.isRequiredForDevice {
             return true
         }
-        guard isEnabled, UIDevice.current.userInterfaceIdiom == .phone else {
-            return false
-        }
-        // Log exposure immediately before reading the assignment, at most once for this flow.
-        if let experiment, !exposureLogged {
-            analyticsHelper.logExposure(experiment: experiment)
-            exposureLogged = true
-        }
-        return experiment?.group == .treatment
+        return isEnabled && UIDevice.current.userInterfaceIdiom == .phone
     }
 
-    init(elementsSession: STPElementsSession, analyticsHelper: PaymentSheetAnalyticsHelper, integrationShape: String) {
+    init(elementsSession: STPElementsSession) {
+        // Capture the initial feature flag so Elements Session updates cannot switch an existing presentation.
         isEnabled = elementsSession.isNativeSheetEnabled
-        experiment = NativeSheetExperiment(elementsSession: elementsSession, integrationShape: integrationShape)
-        self.analyticsHelper = analyticsHelper
     }
 }

@@ -5,13 +5,77 @@
 //  Created by George Birch on 8/10/26.
 //
 
-@_spi(AppearanceAPIAdditionsPreview) @testable import StripePaymentSheet
+@_spi(STP) @testable import StripePayments
+@_spi(STP) @_spi(AppearanceAPIAdditionsPreview) @testable import StripePaymentSheet
 @_spi(STP) import StripeUICore
 import UIKit
 import XCTest
 
 #if !os(visionOS)
 final class PaymentSheetPresentationTests: XCTestCase {
+
+    @MainActor
+    func testNativeSheetResizesToScrollableContentAtRegularWidth() async throws {
+        guard #available(iOS 17.0, *) else { throw XCTSkip("Trait overrides require iOS 17.") }
+        // Given the regular-width presentation used by an unfolded phone
+        let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first)
+        let presenter = UIViewController()
+        presenter.traitOverrides.horizontalSizeClass = .regular
+        let window = UIWindow(windowScene: scene)
+        window.frame = scene.coordinateSpace.bounds
+        window.rootViewController = presenter
+        window.makeKeyAndVisible()
+        defer { window.isHidden = true }
+        await AddressSpecProvider.shared.loadAddressSpecs()
+        let paymentMethodTypes: [STPPaymentMethodType] = [
+            .card, .cashApp, .klarna, .affirm, .USBankAccount, .afterpayClearpay, .payPal,
+            .revolutPay, .alipay, .bancontact, .EPS, .iDEAL, .SEPADebit, .OXXO,
+        ]
+        let loadResult = PaymentSheetLoader.LoadResult(
+            intent: ._testPaymentIntent(paymentMethodTypes: paymentMethodTypes),
+            elementsSession: ._testValue(paymentMethodTypes: paymentMethodTypes.compactMap { STPPaymentMethod.string(from: $0) }),
+            savedPaymentMethods: [],
+            paymentMethodTypes: paymentMethodTypes.map { .stripe($0) },
+            paymentMethodMessagingPromotionsHelper: ._testValue(),
+            paymentMethodOrientation: .vertical
+        )
+        var configuration = PaymentSheet.Configuration()
+        configuration.applePay = nil
+        configuration.link = .init(display: .never)
+        let content = PaymentSheetVerticalViewController(
+            configuration: configuration,
+            loadResult: loadResult,
+            isFlowController: false,
+            analyticsHelper: ._testValue()
+        )
+        let paymentSheet = PaymentSheet(paymentIntentClientSecret: "pi_test_secret_test", configuration: configuration)
+        let sheet = NativeSheetContainerViewController(
+            contentViewController: paymentSheet.loadingViewController,
+            appearance: .default,
+            isTestMode: true,
+            didCancelNative3DS2: {}
+        )
+        let presented = expectation(description: "Regular-width native sheet presented")
+
+        // When replacing the loading spinner with content taller than the available sheet
+        presenter.presentAsSheet(sheet) { presented.fulfill() }
+        await fulfillment(of: [presented], timeout: 3)
+        let presentedSheet = try XCTUnwrap(presenter.presentedViewController as? NativeSheetContainerViewController)
+        let sheetPresentationController = try XCTUnwrap(presentedSheet.sheetPresentationController)
+        XCTAssertEqual(sheetPresentationController.selectedDetentIdentifier, NativeSheetContainerViewController.contentDetentIdentifier)
+        let contentVisible = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            content.view.window != nil && content.view.alpha == 1
+        }, object: nil)
+        sheet.setViewControllers([content])
+
+        // Then resizing completes, the viewport stays capped, and the app can dismiss the sheet
+        await fulfillment(of: [contentVisible], timeout: 3)
+        XCTAssertGreaterThan(sheet.scrollView.contentSize.height, sheet.scrollView.bounds.height)
+        XCTAssertLessThanOrEqual(sheet.scrollView.frame.maxY, sheet.view.bounds.maxY + 0.5)
+        let dismissed = expectation(description: "Regular-width native sheet dismissed")
+        presenter.dismiss(animated: false) { dismissed.fulfill() }
+        await fulfillment(of: [dismissed], timeout: 3)
+    }
 
     @MainActor
     func testPresentAsSheetUsesNativeSheetBehavior() throws {
@@ -34,6 +98,7 @@ final class PaymentSheetPresentationTests: XCTestCase {
         // Then
         XCTAssertIdentical(presentedViewController, sheetViewController)
         XCTAssertEqual(sheetViewController.modalPresentationStyle, .pageSheet)
+        XCTAssertTrue(sheetViewController.isModalInPresentation)
 
         let sheetPresentationController = try XCTUnwrap(sheetViewController.sheetPresentationController)
         XCTAssertEqual(sheetPresentationController.detents.count, 1)
@@ -49,7 +114,7 @@ final class PaymentSheetPresentationTests: XCTestCase {
         } else {
             XCTAssertEqual(sheetPresentationController.selectedDetentIdentifier, .large)
         }
-        XCTAssertTrue(sheetPresentationController.prefersGrabberVisible)
+        XCTAssertFalse(sheetPresentationController.prefersGrabberVisible)
         XCTAssertEqual(sheetPresentationController.preferredCornerRadius, sheetViewController.appearance.sheetCornerRadius)
         XCTAssertFalse(sheetPresentationController.prefersScrollingExpandsWhenScrolledToEdge)
         XCTAssertFalse(sheetPresentationController.prefersEdgeAttachedInCompactHeight)
@@ -205,7 +270,7 @@ final class PaymentSheetPresentationTests: XCTestCase {
     }
 
     @MainActor
-    func testInteractiveDismissalWaitsForDismissalAttemptToFinish() throws {
+    func testNativeSheetIgnoresInteractiveDismissalAttempts() throws {
         // Given
         let contentViewController = NativeSheetStubContentViewController()
         let sheetViewController = NativeSheetContainerViewController(
@@ -214,21 +279,23 @@ final class PaymentSheetPresentationTests: XCTestCase {
             isTestMode: true,
             didCancelNative3DS2: {}
         )
-        sheetViewController.modalPresentationStyle = .pageSheet
-        let presentationController = try XCTUnwrap(sheetViewController.sheetPresentationController)
+        var presentedViewController: UIViewController?
+        PresentationCapturingViewController { presentedViewController = $0 }.presentAsSheet(sheetViewController)
+        let presentationController = try XCTUnwrap(presentedViewController?.presentationController)
+        let delegate = try XCTUnwrap(presentationController.delegate)
 
-        // When
-        let shouldDismiss = sheetViewController.presentationControllerShouldDismiss(presentationController)
+        // When UIKit requests interactive dismissal
+        let shouldDismiss = delegate.presentationControllerShouldDismiss?(presentationController)
 
-        // Then
-        XCTAssertFalse(shouldDismiss)
+        // Then the sheet stays open without forwarding dismissal to its content
+        XCTAssertEqual(shouldDismiss, false)
         XCTAssertEqual(contentViewController.dismissalAttemptCount, 0)
 
-        // When
-        sheetViewController.presentationControllerDidAttemptToDismiss(presentationController)
+        // When UIKit reports a blocked swipe or outside-tap dismissal attempt
+        delegate.presentationControllerDidAttemptToDismiss?(presentationController)
 
-        // Then
-        XCTAssertEqual(contentViewController.dismissalAttemptCount, 1)
+        // Then the content still receives no dismissal request
+        XCTAssertEqual(contentViewController.dismissalAttemptCount, 0)
     }
 
     @MainActor
@@ -292,6 +359,39 @@ final class PaymentSheetPresentationTests: XCTestCase {
 
         // Then
         XCTAssertEqual(sheetViewController.invalidationCount, 1)
+    }
+
+    @MainActor
+    func testNativeSheetDoesNotAddBottomSafeAreaPadding() async throws {
+        guard #available(iOS 16.0, *) else { throw XCTSkip("Content-sized detents require iOS 16.") }
+        // Given content whose existing bottom padding is included in its natural height
+        let content = MeasuredSheetContentViewController(contentHeight: 200)
+        let sheet = NativeSheetContainerViewController(
+            contentViewController: content,
+            appearance: .default,
+            isTestMode: true,
+            didCancelNative3DS2: {}
+        )
+        let presenter = UIViewController()
+        let window = UIWindow(frame: UIScreen.main.bounds)
+        window.rootViewController = presenter
+        window.makeKeyAndVisible()
+        defer { window.isHidden = true }
+        let presented = expectation(description: "Content-sized native sheet presented")
+
+        // When UIKit presents the sheet on a device with a home indicator
+        presenter.presentAsSheet(sheet) { presented.fulfill() }
+        await fulfillment(of: [presented], timeout: 3)
+        sheet.view.layoutIfNeeded()
+
+        // Then the content reaches the sheet's bottom, as it does in the legacy container
+        XCTAssertEqual(sheet.scrollView.frame.maxY, sheet.view.bounds.maxY, accuracy: 0.5)
+        let contentFrame = content.view.convert(content.view.bounds, to: sheet.view)
+        XCTAssertEqual(contentFrame.maxY, sheet.view.bounds.maxY, accuracy: 0.5)
+        XCTAssertEqual(sheet.scrollView.bounds.height, 200, accuracy: 0.5)
+        let dismissed = expectation(description: "Native sheet dismissed")
+        presenter.dismiss(animated: false) { dismissed.fulfill() }
+        await fulfillment(of: [dismissed], timeout: 3)
     }
 
     @MainActor
