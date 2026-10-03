@@ -7,8 +7,8 @@
 
 import UIKit
 
-/// Captures the rollout decision for one FlowController or Embedded Payment Element instance.
-/// Retains the initial assignment across Elements Session updates so presentation does not switch mid-flow.
+/// Captures the native-sheet feature flag for one FlowController or Embedded Payment Element instance.
+/// Retains the initial decision across Elements Session updates so presentation does not switch mid-flow.
 final class SheetImplementationResolver {
 
     static let isRequiredForDevice: Bool = {
@@ -33,36 +33,32 @@ final class SheetImplementationResolver {
     }()
 
     private let isEnabled: Bool
-    private let enabledOverride: Bool?
-    private let analyticsHelper: PaymentSheetAnalyticsHelper
-    private let experiment: NativeSheetExperiment?
-    private var exposureLogged = false
 
     @MainActor
     var usesNativeSheet: Bool {
-        // Forced-native devices must not be counted in the experiment's control group.
+        // iPhone Duo requires native presentation even when the feature flag is disabled.
         if Self.isRequiredForDevice {
             return true
         }
-        // Capture playground overrides per flow so changing the setting cannot switch an existing presentation.
-        if let enabledOverride {
-            return enabledOverride && UIDevice.current.userInterfaceIdiom == .phone
-        }
-        guard isEnabled, UIDevice.current.userInterfaceIdiom == .phone else {
-            return false
-        }
-        // Log exposure immediately before reading the assignment, at most once for this flow.
-        if let experiment, !exposureLogged {
-            analyticsHelper.logExposure(experiment: experiment)
-            exposureLogged = true
-        }
-        return experiment?.group == .treatment
+        return isEnabled && UIDevice.current.userInterfaceIdiom == .phone
     }
 
-    init(elementsSession: STPElementsSession, analyticsHelper: PaymentSheetAnalyticsHelper, integrationShape: String) {
-        isEnabled = elementsSession.isNativeSheetEnabled
-        enabledOverride = PaymentSheet.NativeSheetFeatureFlags.nativeSheetEnabledOverride
-        experiment = NativeSheetExperiment(elementsSession: elementsSession, integrationShape: integrationShape)
-        self.analyticsHelper = analyticsHelper
+    init(elementsSession: STPElementsSession) {
+        // Capture playground overrides per flow so changing the setting cannot switch an existing presentation.
+        isEnabled = PaymentSheet.NativeSheetFeatureFlags.nativeSheetEnabledOverride ?? elementsSession.isNativeSheetEnabled
+    }
+}
+
+extension PaymentSheet {
+
+    @_spi(STP) public enum NativeSheetFeatureFlags {
+
+        /// Whether the current device requires native sheets, regardless of the feature flag.
+        @_spi(STP) public static var isNativeSheetRequiredForDevice: Bool {
+            SheetImplementationResolver.isRequiredForDevice
+        }
+
+        /// Overrides the native-sheet feature flag. Intended for test playgrounds only.
+        @_spi(STP) public static var nativeSheetEnabledOverride: Bool?
     }
 }

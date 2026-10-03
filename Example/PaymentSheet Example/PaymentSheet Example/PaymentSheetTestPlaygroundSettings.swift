@@ -18,8 +18,9 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case embedded
     }
 
-    enum NativeSheetExperimentOverride: String, PickerEnum {
-        static var enumName: String { "Native sheets experiment" }
+    enum NativeSheetOverride: String, PickerEnum {
+
+        static var enumName: String { "Native sheets" }
 
         case automatic
         case on
@@ -757,7 +758,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
 
     var uiStyle: UIStyle
     // Keep this optional so saved settings and QR payloads from older builds remain decodable.
-    var nativeSheetExperimentOverride: NativeSheetExperimentOverride?
+    var nativeSheetOverride: NativeSheetOverride?
     var layout: Layout
     var mode: Mode
     var style: ConfigurationStyle
@@ -837,7 +838,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     static func defaultValues() -> PaymentSheetTestPlaygroundSettings {
         return PaymentSheetTestPlaygroundSettings(
             uiStyle: .paymentSheet,
-            nativeSheetExperimentOverride: nil,
+            nativeSheetOverride: nil,
             layout: .automatic,
             mode: .payment,
             style: .automatic,

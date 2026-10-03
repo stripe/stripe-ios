@@ -20,90 +20,74 @@ final class SheetImplementationResolverTests: XCTestCase {
         super.tearDown()
     }
 
-    func testRequiresEnabledFlagAndTreatmentAssignment() {
+    func testUsesFeatureFlagRegardlessOfExperimentAssignment() {
         let flags: [Bool?] = [nil, false, true]
         let groups: [ExperimentGroup?] = [nil, .control, .treatment, .holdback, .controlTest]
 
         for flag in flags {
             for group in groups {
-                // Given all combinations of the kill switch and experiment assignment
-                let analyticsClient = MockAnalyticsClientV2()
+                // Given a feature flag and an assignment from the previous native-sheet experiment
                 let presentation = SheetImplementationResolver(
-                    elementsSession: makeSession(flag: flag, group: group),
-                    analyticsHelper: ._testValue(analyticsClientV2: analyticsClient),
-                    integrationShape: "flowcontroller"
+                    elementsSession: makeSession(flag: flag, group: group)
                 )
-                XCTAssertTrue(analyticsClient.loggedAnalyticPayloads(withEventName: PaymentSheetAnalyticsHelper.eventName).isEmpty)
 
                 // When the presentation decision is used more than once
                 let firstDecision = presentation.usesNativeSheet
                 XCTAssertEqual(presentation.usesNativeSheet, firstDecision)
 
-                // Then only enabled treatment uses native presentation, and eligible exposure is logged once
-                let isEligibleDevice = UIDevice.current.userInterfaceIdiom == .phone
-                XCTAssertEqual(firstDecision, isEligibleDevice && flag == true && group == .treatment)
-                let exposures = analyticsClient.loggedAnalyticPayloads(withEventName: PaymentSheetAnalyticsHelper.eventName)
-                XCTAssertEqual(exposures.count, isEligibleDevice && flag == true && group != nil ? 1 : 0)
-                if let exposure = exposures.first {
-                    XCTAssertEqual(exposure["experiment_retrieved"] as? String, NativeSheetExperiment.experimentName)
-                    XCTAssertEqual(exposure["assignment_group"] as? String, group?.rawValue)
-                    XCTAssertEqual(exposure["arb_id"] as? String, "arb_native_sheet")
-                    XCTAssertEqual(exposure["dimensions-integration_shape"] as? String, "flowcontroller")
-                }
+                // Then the feature flag alone enables native presentation on eligible devices
+                let expectedDecision = SheetImplementationResolver.isRequiredForDevice
+                    || (UIDevice.current.userInterfaceIdiom == .phone && flag == true)
+                XCTAssertEqual(firstDecision, expectedDecision)
             }
         }
     }
 
     func testPlaygroundOverrideForcesDecisionAndIsCapturedPerFlow() {
-        let cases: [(override: Bool, flag: Bool, group: ExperimentGroup)] = [
-            (true, false, .control),
-            (false, true, .treatment),
+        let cases: [(override: Bool, flag: Bool)] = [
+            (true, false),
+            (false, true),
         ]
 
         for testCase in cases {
-            // Given an override that contradicts the server-provided rollout decision
+            // Given an override that contradicts the server-provided feature flag
             PaymentSheet.NativeSheetFeatureFlags.nativeSheetEnabledOverride = testCase.override
-            let analyticsClient = MockAnalyticsClientV2()
             let presentation = SheetImplementationResolver(
-                elementsSession: makeSession(flag: testCase.flag, group: testCase.group),
-                analyticsHelper: ._testValue(analyticsClientV2: analyticsClient),
-                integrationShape: "flowcontroller"
+                elementsSession: makeSession(flag: testCase.flag)
             )
 
             // When the global override changes after this flow captures its decision
             PaymentSheet.NativeSheetFeatureFlags.nativeSheetEnabledOverride = !testCase.override
 
-            // Then this flow retains the original override without logging an experiment exposure
+            // Then this flow retains the original override
             let expectedDecision = SheetImplementationResolver.isRequiredForDevice
                 || (UIDevice.current.userInterfaceIdiom == .phone && testCase.override)
             XCTAssertEqual(presentation.usesNativeSheet, expectedDecision)
-            XCTAssertTrue(
-                analyticsClient.loggedAnalyticPayloads(withEventName: PaymentSheetAnalyticsHelper.eventName).isEmpty
-            )
         }
     }
 
     func testEmbeddedKeepsInitialDecisionWhenElementsSessionChanges() async {
         await AddressSpecProvider.shared.loadAddressSpecs()
-        let analyticsClient = MockAnalyticsClientV2()
         let element = EmbeddedPaymentElement(
             configuration: .init(),
-            loadResult: makeLoadResult(flag: true, group: .treatment),
-            analyticsHelper: ._testValue(analyticsClientV2: analyticsClient)
+            loadResult: makeLoadResult(flag: true),
+            analyticsHelper: ._testValue()
         )
         let initialPresentation = element.nativeSheetPresentation
 
         // When an update replaces the Elements Session before the first sheet is opened
-        element.loadResult = makeLoadResult(flag: false, group: .control)
-        XCTAssertTrue(analyticsClient.loggedAnalyticPayloads(withEventName: PaymentSheetAnalyticsHelper.eventName).isEmpty)
+        element.loadResult = makeLoadResult(flag: false)
         let sheet = element.bottomSheetController(with: StubBottomSheetContentViewController())
 
-        // Then the original assignment is retained by the owner and its container
+        // Then the original feature flag is retained by the owner and its container
         XCTAssertIdentical(element.nativeSheetPresentation, initialPresentation)
         #if os(visionOS)
         XCTAssertTrue(sheet is BottomSheetViewController)
         #else
-        XCTAssertEqual(sheet is NativeSheetContainerViewController, UIDevice.current.userInterfaceIdiom == .phone)
+        XCTAssertEqual(
+            sheet is NativeSheetContainerViewController,
+            SheetImplementationResolver.isRequiredForDevice || UIDevice.current.userInterfaceIdiom == .phone
+        )
         #endif
     }
 
@@ -111,37 +95,34 @@ final class SheetImplementationResolverTests: XCTestCase {
         await AddressSpecProvider.shared.loadAddressSpecs()
         let previousFlowController = PaymentSheet.FlowController(
             configuration: .init(),
-            loadResult: makeLoadResult(flag: true, group: .treatment),
+            loadResult: makeLoadResult(flag: true),
             analyticsHelper: ._testValue()
         )
-        let analyticsClient = MockAnalyticsClientV2()
 
         // When a merchant reuses a previous FlowController's configuration for a new flow
         let flowController = PaymentSheet.FlowController(
             configuration: previousFlowController.configuration,
-            loadResult: makeLoadResult(flag: true, group: .control),
-            analyticsHelper: ._testValue(analyticsClientV2: analyticsClient)
+            loadResult: makeLoadResult(flag: false),
+            analyticsHelper: ._testValue()
         )
 
-        // Then the new flow captures its own assignment without logging an early exposure
+        // Then the new flow captures its own feature flag
         XCTAssertFalse(flowController.nativeSheetPresentation === previousFlowController.nativeSheetPresentation)
-        XCTAssertTrue(analyticsClient.loggedAnalyticPayloads(withEventName: PaymentSheetAnalyticsHelper.eventName).isEmpty)
         let sheet = PaymentSheet.FlowController.makePaymentSheetContainerViewController(
             flowController.viewController,
             configuration: flowController.configuration,
             nativeSheetPresentation: flowController.nativeSheetPresentation
         )
-        XCTAssertTrue(sheet is BottomSheetViewController)
+        XCTAssertEqual(sheet is NativeSheetContainerViewController, SheetImplementationResolver.isRequiredForDevice)
     }
 
-    func testCompletePaymentSheetDoesNotInheritFlowControllerRollout() async {
+    func testCompletePaymentSheetDoesNotInheritFlowControllerFeatureFlag() async {
         await AddressSpecProvider.shared.loadAddressSpecs()
-        let analyticsClient = MockAnalyticsClientV2()
-        // Given a FlowController with a treatment assignment
+        // Given a FlowController with the native-sheet feature flag enabled
         let flowController = PaymentSheet.FlowController(
             configuration: .init(),
-            loadResult: makeLoadResult(flag: true, group: .treatment),
-            analyticsHelper: ._testValue(analyticsClientV2: analyticsClient)
+            loadResult: makeLoadResult(flag: true),
+            analyticsHelper: ._testValue()
         )
 
         // When complete PaymentSheet reuses its configuration
@@ -150,18 +131,20 @@ final class SheetImplementationResolverTests: XCTestCase {
             configuration: flowController.configuration
         )
 
-        // Then complete PaymentSheet stays outside the rollout and does not expose the other flow
-        XCTAssertFalse(paymentSheet.bottomSheetViewController is NativeSheetContainerViewController)
-        XCTAssertTrue(analyticsClient.loggedAnalyticPayloads(withEventName: PaymentSheetAnalyticsHelper.eventName).isEmpty)
+        // Then complete PaymentSheet uses native presentation only when required by the device
+        XCTAssertEqual(
+            paymentSheet.bottomSheetViewController is NativeSheetContainerViewController,
+            SheetImplementationResolver.isRequiredForDevice
+        )
     }
 
     #if !os(visionOS)
     func testNativeLinkInheritsPresentationDecision() async {
         await AddressSpecProvider.shared.loadAddressSpecs()
-        for group in [ExperimentGroup.control, .treatment] {
+        for flag in [false, true] {
             let analyticsClient = MockAnalyticsClientV2()
             let analyticsHelper = PaymentSheetAnalyticsHelper._testValue(analyticsClientV2: analyticsClient)
-            let loadResult = makeLoadResult(flag: true, group: group)
+            let loadResult = makeLoadResult(flag: flag)
             let flowController = PaymentSheet.FlowController(
                 configuration: .init(),
                 loadResult: loadResult,
@@ -178,14 +161,14 @@ final class SheetImplementationResolverTests: XCTestCase {
                 analyticsHelper: analyticsHelper
             )
 
-            // Then the Link container uses the same assignment and shares its one exposure
+            // Then the Link container uses the same feature flag without logging an experiment exposure
             XCTAssertEqual(
                 sheet.sheetContainer is NativeSheetContainerViewController,
-                UIDevice.current.userInterfaceIdiom == .phone && group == .treatment
+                SheetImplementationResolver.isRequiredForDevice || (UIDevice.current.userInterfaceIdiom == .phone && flag)
             )
             _ = flowController.nativeSheetPresentation.usesNativeSheet
             let exposures = analyticsClient.loggedAnalyticPayloads(withEventName: PaymentSheetAnalyticsHelper.eventName)
-            XCTAssertEqual(exposures.count, UIDevice.current.userInterfaceIdiom == .phone ? 1 : 0)
+            XCTAssertTrue(exposures.isEmpty)
         }
     }
     #endif
@@ -210,12 +193,12 @@ final class SheetImplementationResolverTests: XCTestCase {
         XCTAssertTrue(presentationFinished)
     }
 
-    private func makeSession(flag: Bool?, group: ExperimentGroup?) -> STPElementsSession {
+    private func makeSession(flag: Bool?, group: ExperimentGroup? = nil) -> STPElementsSession {
         return ._testValue(
             experimentsData: group.map {
                 ExperimentsData(
                     arbId: "arb_native_sheet",
-                    experimentAssignments: [NativeSheetExperiment.experimentName: $0],
+                    experimentAssignments: ["elements_mobile_ios_native_sheet": $0],
                     allResponseFields: [:]
                 )
             },
@@ -223,11 +206,11 @@ final class SheetImplementationResolverTests: XCTestCase {
         )
     }
 
-    private func makeLoadResult(flag: Bool?, group: ExperimentGroup?) -> PaymentSheetLoader.LoadResult {
+    private func makeLoadResult(flag: Bool?) -> PaymentSheetLoader.LoadResult {
         let intentConfiguration = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "usd")) { _, _ in "" }
         return .init(
             intent: .deferredIntent(intentConfig: intentConfiguration),
-            elementsSession: makeSession(flag: flag, group: group),
+            elementsSession: makeSession(flag: flag),
             savedPaymentMethods: [],
             paymentMethodTypes: [.stripe(.card)],
             paymentMethodMessagingPromotionsHelper: nil,

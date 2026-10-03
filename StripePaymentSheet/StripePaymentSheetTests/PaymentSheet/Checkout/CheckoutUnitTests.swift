@@ -78,7 +78,7 @@ final class CheckoutUnitTests: XCTestCase {
         // When updating Checkout rebuilds both configurations
         try await element.update(checkout: checkout)
 
-        // Then each integration retains its original assignment and exposure state
+        // Then each integration retains its original native-sheet feature flag
         XCTAssertIdentical(element.paymentSheetFlowController.nativeSheetPresentation, flowControllerPresentation)
         XCTAssertIdentical(element.embeddedPaymentElement.nativeSheetPresentation, embeddedPresentation)
     }

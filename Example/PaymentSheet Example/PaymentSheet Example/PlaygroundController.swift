@@ -651,11 +651,11 @@ import UIKit
         self.settings = settings
         self.appearance = appearance
         self.currentlyRenderedSettings = .defaultValues()
-        updateNativeSheetExperimentOverride(settings)
+        updateNativeSheetOverride(settings)
         updateForcedConsumerLinkBrand(settings)
 
         $settings.removeDuplicates().sink { [weak self] newValue in
-            self?.updateNativeSheetExperimentOverride(newValue)
+            self?.updateNativeSheetOverride(newValue)
             if newValue.autoreload == .on {
                 // This closure is called *before* `settings` is updated! Wait until the next run loop before calling `load`
                 DispatchQueue.main.async {
@@ -697,9 +697,9 @@ import UIKit
             settings.forceOnelinkConsumer == .on ? .onelink : nil
     }
 
-    private func updateNativeSheetExperimentOverride(_ settings: PaymentSheetTestPlaygroundSettings) {
+    private func updateNativeSheetOverride(_ settings: PaymentSheetTestPlaygroundSettings) {
         PaymentSheet.NativeSheetFeatureFlags.nativeSheetEnabledOverride =
-            (settings.nativeSheetExperimentOverride ?? .automatic).value
+            (settings.nativeSheetOverride ?? .automatic).value
     }
 
     func buildPaymentSheet() {
