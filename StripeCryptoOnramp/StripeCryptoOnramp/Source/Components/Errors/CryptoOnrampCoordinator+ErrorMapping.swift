@@ -12,6 +12,19 @@ import StripePayments
 
 extension CryptoOnrampCoordinator {
 
+    static func paymentMethodMerchantChangedError(
+        apiClient: STPAPIClient,
+        additionalSDKVersions: [SDKVersion] = []
+    ) -> PaymentMethodMerchantChangedError {
+        return PaymentMethodMerchantChangedError(
+            diagnosticContext: makeDiagnosticContext(
+                during: .createCryptoPaymentToken,
+                apiClient: apiClient,
+                additionalSDKVersions: additionalSDKVersions
+            )
+        )
+    }
+
     /// Adds the PaymentIntent's last payment error details to a failed checkout error.
     static func checkoutError(
         _ error: Swift.Error?,
