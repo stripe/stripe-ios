@@ -1,0 +1,11 @@
+//
+//  PaymentSheet-Example-LiquidGlassOptOut.xcconfig
+//  PaymentSheet Example
+//
+//  Created by George Birch on 10/2/26.
+//
+
+#include "PaymentSheet-Example-Shared.xcconfig"
+
+// Use a Boolean YES in the app's plist to opt UIKit out of Liquid Glass.
+INFOPLIST_FILE = PaymentSheet Example/Info-LiquidGlassOptOut.plist

@@ -114,6 +114,7 @@
 		9F9C96D25ED549D6255FC274 /* StripeUICore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeUICore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B69C155A2B9FDCBD009CE667 /* PaymentSheet Example.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = "PaymentSheet Example.entitlements"; path = "PaymentSheet Example/PaymentSheet Example.entitlements"; sourceTree = "<group>"; };
 		B96951DD278BA611BBCBB10A /* PaymentSheet Example-Shard1.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = "PaymentSheet Example-Shard1.xctestplan"; sourceTree = "<group>"; };
+		BBDBF8A17C684AF4B26DC992 /* PaymentSheet-Example-LiquidGlassOptOut.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "PaymentSheet-Example-LiquidGlassOptOut.xcconfig"; sourceTree = "<group>"; };
 		C2655A8B1DF0649CD996E045 /* Stripe3DS2.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Stripe3DS2.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C9BC6E49FF08F3B2DB837734 /* PaymentSheet Example-Shard2.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = "PaymentSheet Example-Shard2.xctestplan"; sourceTree = "<group>"; };
 		E8A5A0B5A4A1BF06663BE2BF /* PaymentSheetLocalizationScreenshotGenerator.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PaymentSheetLocalizationScreenshotGenerator.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -126,6 +127,7 @@
 		31C5F7B12EB2AD99005770FA /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				"Info-LiquidGlassOptOut.plist",
 				Info.plist,
 			);
 			target = D017784615929C0DD3717FE8 /* PaymentSheet Example */;
@@ -193,6 +195,7 @@
 			children = (
 				EFDB8AECB67684ACA122981F /* PaymentSheet-Example-Debug.xcconfig */,
 				4609AB90957A6F72852677BF /* PaymentSheet-Example-Release.xcconfig */,
+				BBDBF8A17C684AF4B26DC992 /* PaymentSheet-Example-LiquidGlassOptOut.xcconfig */,
 				0F208CB855923E7FD7BB0DC3 /* PaymentSheetLocalizationScreenshotGenerator-Debug.xcconfig */,
 				28CE345E1398AF3E28F164EF /* PaymentSheetLocalizationScreenshotGenerator-Release.xcconfig */,
 				2C720CA9AA1AECA0BB248B49 /* PaymentSheetUITest-Debug.xcconfig */,
@@ -572,6 +575,98 @@
 			};
 			name = Debug;
 		};
+		CC9583240B394B2E81203D6A /* Debug-LiquidGlassOptOut */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = BBDBF8A17C684AF4B26DC992 /* PaymentSheet-Example-LiquidGlassOptOut.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = "PaymentSheet Example/PaymentSheet Example.entitlements";
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.PaymentSheet-Example";
+				PRODUCT_NAME = PaymentSheetExample;
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator xros xrsimulator";
+				SUPPORTS_MACCATALYST = YES;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+			};
+			name = "Debug-LiquidGlassOptOut";
+		};
+		7CCF2F2CFB28458CB313C4DA /* Release-LiquidGlassOptOut */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = BBDBF8A17C684AF4B26DC992 /* PaymentSheet-Example-LiquidGlassOptOut.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = "PaymentSheet Example/PaymentSheet Example.entitlements";
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.PaymentSheet-Example";
+				PRODUCT_NAME = PaymentSheetExample;
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator xros xrsimulator";
+				SUPPORTS_MACCATALYST = YES;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+			};
+			name = "Release-LiquidGlassOptOut";
+		};
+		1C1D75D53E9841039FF82246 /* Debug-LiquidGlassOptOut */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3ED454099B55B5F3BCA1D642 /* Project-Debug.xcconfig */;
+			buildSettings = {
+			};
+			name = "Debug-LiquidGlassOptOut";
+		};
+		C34AD630902B486991A482B5 /* Release-LiquidGlassOptOut */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = EAD9EA5E2AB73F145F99B23B /* Project-Release.xcconfig */;
+			buildSettings = {
+			};
+			name = "Release-LiquidGlassOptOut";
+		};
+		30A68C6B01F64D97BB340502 /* Debug-LiquidGlassOptOut */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2C720CA9AA1AECA0BB248B49 /* PaymentSheetUITest-Debug.xcconfig */;
+			buildSettings = {
+				INFOPLIST_FILE = PaymentSheetUITest/Info.plist;
+				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.PaymentSheetUITest;
+				PRODUCT_NAME = PaymentSheetUITest;
+				SDKROOT = iphoneos;
+				TEST_TARGET_NAME = "PaymentSheet Example";
+			};
+			name = "Debug-LiquidGlassOptOut";
+		};
+		82BD98EBF6C6498B8EBF8943 /* Release-LiquidGlassOptOut */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6CD01636EA3B4C6F84E9CC86 /* PaymentSheetUITest-Release.xcconfig */;
+			buildSettings = {
+				INFOPLIST_FILE = PaymentSheetUITest/Info.plist;
+				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.PaymentSheetUITest;
+				PRODUCT_NAME = PaymentSheetUITest;
+				SDKROOT = iphoneos;
+				TEST_TARGET_NAME = "PaymentSheet Example";
+			};
+			name = "Release-LiquidGlassOptOut";
+		};
+		754BE0A0AC804DBE92895AC7 /* Debug-LiquidGlassOptOut */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0F208CB855923E7FD7BB0DC3 /* PaymentSheetLocalizationScreenshotGenerator-Debug.xcconfig */;
+			buildSettings = {
+				INFOPLIST_FILE = PaymentSheetLocalizationScreenshotGenerator/Info.plist;
+				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.PaymentSheetLocalizationScreenshotGenerator;
+				PRODUCT_NAME = PaymentSheetLocalizationScreenshotGenerator;
+				SDKROOT = iphoneos;
+				TEST_TARGET_NAME = "PaymentSheet Example";
+			};
+			name = "Debug-LiquidGlassOptOut";
+		};
+		6411D72B2DA449349C5B62FA /* Release-LiquidGlassOptOut */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 28CE345E1398AF3E28F164EF /* PaymentSheetLocalizationScreenshotGenerator-Release.xcconfig */;
+			buildSettings = {
+				INFOPLIST_FILE = PaymentSheetLocalizationScreenshotGenerator/Info.plist;
+				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.PaymentSheetLocalizationScreenshotGenerator;
+				PRODUCT_NAME = PaymentSheetLocalizationScreenshotGenerator;
+				SDKROOT = iphoneos;
+				TEST_TARGET_NAME = "PaymentSheet Example";
+			};
+			name = "Release-LiquidGlassOptOut";
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -579,7 +674,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				4E900227E99B33992820534A /* Debug */,
+				CC9583240B394B2E81203D6A /* Debug-LiquidGlassOptOut */,
 				04B451E4262EF8B42D36A6AE /* Release */,
+				7CCF2F2CFB28458CB313C4DA /* Release-LiquidGlassOptOut */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -588,7 +685,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				ADEBEA6A93DBAF3002B62BF4 /* Debug */,
+				754BE0A0AC804DBE92895AC7 /* Debug-LiquidGlassOptOut */,
 				7AE8C5589540C4674E7BBC63 /* Release */,
+				6411D72B2DA449349C5B62FA /* Release-LiquidGlassOptOut */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -597,7 +696,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				DCC6BD9D7A91C48038D4D81A /* Debug */,
+				1C1D75D53E9841039FF82246 /* Debug-LiquidGlassOptOut */,
 				2C386A8D9783A99A67C22183 /* Release */,
+				C34AD630902B486991A482B5 /* Release-LiquidGlassOptOut */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -606,7 +707,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				5F414BE5696C47524967CAE5 /* Debug */,
+				30A68C6B01F64D97BB340502 /* Debug-LiquidGlassOptOut */,
 				CC0F3A04D6F6ADC2C952D7B7 /* Release */,
+				82BD98EBF6C6498B8EBF8943 /* Release-LiquidGlassOptOut */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

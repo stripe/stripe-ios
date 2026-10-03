@@ -414,6 +414,48 @@
 			};
 			name = Debug;
 		};
+		72FFCF48F8203940668A655D /* Debug-LiquidGlassOptOut */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 67C454346BE566F9F689543B /* Project-Debug.xcconfig */;
+			buildSettings = {
+			};
+			name = "Debug-LiquidGlassOptOut";
+		};
+		16C8F4707D6315B7F25D5A03 /* Release-LiquidGlassOptOut */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = D1FB364DF60C1DEE0DA8EE75 /* Project-Release.xcconfig */;
+			buildSettings = {
+			};
+			name = "Release-LiquidGlassOptOut";
+		};
+		08E30E050899307DF7BD9B30 /* Debug-LiquidGlassOptOut */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = E395C593AC970A8C79A8109C /* StripeiOS-Debug.xcconfig */;
+			buildSettings = {
+				INFOPLIST_FILE = StripeUICore/Info.plist;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.stripe-ui-core";
+				PRODUCT_NAME = StripeUICore;
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator xros xrsimulator";
+				SUPPORTS_MACCATALYST = YES;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+			};
+			name = "Debug-LiquidGlassOptOut";
+		};
+		678D9B145CD1B58AF7DED936 /* Release-LiquidGlassOptOut */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4CBAE2B07C5575F19470464D /* StripeiOS-Release.xcconfig */;
+			buildSettings = {
+				INFOPLIST_FILE = StripeUICore/Info.plist;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.stripe-ui-core";
+				PRODUCT_NAME = StripeUICore;
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator xros xrsimulator";
+				SUPPORTS_MACCATALYST = YES;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+			};
+			name = "Release-LiquidGlassOptOut";
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -421,7 +463,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				6600E0743D5AD7028F6ABC2C /* Debug */,
+				08E30E050899307DF7BD9B30 /* Debug-LiquidGlassOptOut */,
 				0E538ACBF1E137ADF66DB8F8 /* Release */,
+				678D9B145CD1B58AF7DED936 /* Release-LiquidGlassOptOut */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -430,7 +474,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				4C7CEEDE1477774F09EA2E3F /* Debug */,
+				72FFCF48F8203940668A655D /* Debug-LiquidGlassOptOut */,
 				8D85CFA6FA82B62D41B6313A /* Release */,
+				16C8F4707D6315B7F25D5A03 /* Release-LiquidGlassOptOut */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
