@@ -41,13 +41,6 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
         return UIStackView()
     }()
 
-    private lazy var outsideSheetTapGestureRecognizer: UITapGestureRecognizer = {
-        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapOutsideSheet))
-        tapGestureRecognizer.cancelsTouchesInView = false
-        tapGestureRecognizer.delegate = self
-        return tapGestureRecognizer
-    }()
-
     #if compiler(>=6.2)
     private lazy var navigationBarBlur: UIInteraction? = {
         guard appearance.navigationBarStyle.isGlass, #available(iOS 26.0, visionOS 26.0, *) else {
@@ -373,15 +366,6 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
         view.addGestureRecognizer(hideKeyboardGesture)
     }
 
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-
-        guard outsideSheetTapGestureRecognizer.view == nil else {
-            return
-        }
-        presentationController?.containerView?.addGestureRecognizer(outsideSheetTapGestureRecognizer)
-    }
-
     #if compiler(>=6.2)
     func enableNavigationBarBlurInteraction() {
         guard let navigationBarBlur,
@@ -408,6 +392,8 @@ extension NativeSheetContainerViewController {
     func present(from presentingViewController: UIViewController, completion: (() -> Void)?) {
         #if !os(visionOS)
         modalPresentationStyle = .pageSheet
+        // Dismissal is handled by the sheet's explicit controls rather than UIKit's interactive gestures.
+        isModalInPresentation = true
         modalPresentationCapturesStatusBarAppearance = true
 
         // Share the content dismissal contract while UIKit owns native presentation and gestures.
@@ -415,7 +401,7 @@ extension NativeSheetContainerViewController {
             sheetPresentationController.detents = [.large()]
             sheetPresentationController.selectedDetentIdentifier = .large
             sheetPresentationController.preferredCornerRadius = sheetCornerRadius
-            sheetPresentationController.prefersGrabberVisible = true
+            sheetPresentationController.prefersGrabberVisible = false
             sheetPresentationController.prefersScrollingExpandsWhenScrolledToEdge = false
         }
         presentationController?.delegate = self
@@ -429,12 +415,8 @@ extension NativeSheetContainerViewController {
 extension NativeSheetContainerViewController: UIAdaptivePresentationControllerDelegate {
 
     func presentationControllerShouldDismiss(_ presentationController: UIPresentationController) -> Bool {
-        // The content view controller decides whether dismissal is currently allowed after the interactive gesture ends.
+        // Also prevent UIKit's outside-tap dismissal when the presentation adapts to a form sheet.
         return false
-    }
-
-    func presentationControllerDidAttemptToDismiss(_ presentationController: UIPresentationController) {
-        didTapOrSwipeToDismiss()
     }
 }
 
@@ -504,17 +486,8 @@ extension NativeSheetContainerViewController: UIGestureRecognizerDelegate {
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch)
         -> Bool
     {
-        if gestureRecognizer === outsideSheetTapGestureRecognizer {
-            let location = touch.location(in: view)
-            return !view.point(inside: location, with: nil)
-        }
-
         // I can't find another way to allow custom UIControl subclasses to receive touches
         return !(touch.view is UIControl)
-    }
-
-    @objc private func didTapOutsideSheet() {
-        didTapOrSwipeToDismiss()
     }
 
     @objc func didTapAnywhere() {
