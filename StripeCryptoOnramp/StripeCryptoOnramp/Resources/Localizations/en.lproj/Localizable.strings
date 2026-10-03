@@ -1,8 +1,38 @@
+/* Action to add multiple uploaded documents to a source of funds. The placeholder is the document count. */
+"Add %ld documents" = "Add %ld documents";
+
+/* Action to add exactly one uploaded document to a source of funds */
+"Add 1 document" = "Add 1 document";
+
+/* Action to add documents for another source of funds */
+"Add documents" = "Add documents";
+
+/* Label and placeholder for a questionnaire answer field */
+"Answer" = "Answer";
+
+/* Action to open the system document picker to select a file */
+"Choose File…" = "Choose File…";
+
+/* Action to open the system photo picker to select a photo */
+"Choose Photo…" = "Choose Photo…";
+
 /* Label shown in the Link UI indicating that debit cards are more likely to be accepted */
 "Debit cards are most likely to be accepted." = "Debit cards are most likely to be accepted.";
 
+/* Label and picker title for a document's category */
+"Document type" = "Document type";
+
 /* Heading confirming a document was uploaded successfully */
 "Document uploaded successfully" = "Document uploaded successfully";
+
+/* Label for the selected source of funds in the document editor */
+"Funds source" = "Funds source";
+
+/* Explanation above the summary of source-of-funds documents. */
+"How are you funding your transactions? Please list all of your sources. For example, salary, savings, investment earnings, etc." = "How are you funding your transactions? Please list all of your sources. For example, salary, savings, investment earnings, etc.";
+
+/* Explanation above the document upload control */
+"Make sure your document meets following requirements." = "Make sure your document meets following requirements.";
 
 /* Instruction after an unavailable operation */
 "Please try again later." = "Please try again later.";
@@ -13,11 +43,23 @@
 /* Heading introducing source of funds collection */
 "Tell us about your source of funds" = "Tell us about your source of funds";
 
+/* Message shown when a previous document has a requirement error */
+"There was a problem with your previous document. Please upload a new one." = "There was a problem with your previous document. Please upload a new one.";
+
 /* Error message shown when app attestation fails */
 "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists.";
 
 /* Error message shown when app attestation is not configured for crypto onramp */
 "This app couldn't be verified. Contact the app developer for help." = "This app couldn't be verified. Contact the app developer for help.";
+
+/* Validation error for a document exceeding the size limit */
+"This file is larger than %@. Choose a file that is %@ or smaller." = "This file is larger than %1$@. Choose a file that is %2$@ or smaller.";
+
+/* Validation error when no document formats are available */
+"This file type isn’t supported." = "This file type isn’t supported.";
+
+/* Validation error for an unsupported document format. The placeholder is a locale-aware formatted list of one or more accepted document formats. */
+"This file type isn’t supported. Upload a %@ file." = "This file type isn’t supported. Upload a %@ file.";
 
 /* Error message shown when the wallet is not registered for crypto onramp */
 "This wallet couldn't be found. Please choose or add a wallet and try again." = "This wallet couldn't be found. Please choose or add a wallet and try again.";
@@ -31,11 +73,26 @@
 /* Error message shown when the wallet ownership challenge is invalid */
 "This wallet verification request is invalid. Please try again." = "This wallet verification request is invalid. Please try again.";
 
+/* Action to select an existing document for upload */
+"Upload document" = "Upload document";
+
 /* Heading introducing proof of address collection */
 "Upload your proof of address" = "Upload your proof of address";
 
+/* Status after a document has uploaded successfully */
+"Uploaded" = "Uploaded";
+
+/* Status while a document is uploading */
+"Uploading…" = "Uploading…";
+
 /* Error message shown when the submitted wallet ownership signature is invalid */
 "We couldn't verify ownership of this wallet. Please try again." = "We couldn't verify ownership of this wallet. Please try again.";
+
+/* Error when a file provider cannot supply a document */
+"We couldn’t open this document. Please choose it again." = "We couldn’t open this document. Please choose it again.";
+
+/* Error after a document upload fails */
+"We couldn’t upload this file. Please try again." = "We couldn’t upload this file. Please try again.";
 
 /* Explanation introducing proof of address collection. */
 "We may request proof of address for larger transactions." = "We may request proof of address for larger transactions.";

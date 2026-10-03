@@ -195,7 +195,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
     // MARK: - makePaymentRequest shipping address
 
     func testMakePaymentRequestRequiresShippingAddress() {
-        // Given Express Checkout Element is configured to require a shipping address
+        // Given Apple Pay requires a shipping address
         let session = CheckoutTestHelpers.makeSession().makePublicSession()
         let parameters = CheckoutController.ApplePayConfirmationParameters.makeMock(
             apiClient: APIStubbedTestCase.stubbedAPIClient(),
@@ -209,11 +209,12 @@ final class CheckoutApplePayContextTests: XCTestCase {
         )
 
         // Then Apple Pay requires the customer's name and postal address
-        XCTAssertEqual(paymentRequest.requiredShippingContactFields, [.name, .postalAddress])
+        XCTAssertTrue(paymentRequest.requiredShippingContactFields.contains(.name))
+        XCTAssertTrue(paymentRequest.requiredShippingContactFields.contains(.postalAddress))
     }
 
     func testMakePaymentRequestDoesNotRequireShippingAddressByDefault() {
-        // Given Express Checkout Element uses its default shipping address configuration
+        // Given an Apple Pay confirmation
         let session = CheckoutTestHelpers.makeSession().makePublicSession()
         let parameters = CheckoutController.ApplePayConfirmationParameters.makeMock(
             apiClient: APIStubbedTestCase.stubbedAPIClient()
@@ -224,8 +225,57 @@ final class CheckoutApplePayContextTests: XCTestCase {
             checkoutSession: session,
             applePayConfirmationParameters: parameters
         )
-        // Then Apple Pay does not require shipping contact fields
-        XCTAssertTrue(paymentRequest.requiredShippingContactFields.isEmpty)
+        // Then Apple Pay does not require shipping address contact fields
+        XCTAssertFalse(paymentRequest.requiredShippingContactFields.contains(.name))
+        XCTAssertFalse(paymentRequest.requiredShippingContactFields.contains(.postalAddress))
+    }
+
+    func testMakePaymentRequestRequiresEmail() {
+        // Given Apple Pay needs to collect the customer's email
+        let session = CheckoutTestHelpers.makeSession().makePublicSession()
+        let parameters = CheckoutController.ApplePayConfirmationParameters.makeMock(
+            apiClient: APIStubbedTestCase.stubbedAPIClient()
+        )
+
+        // When building the payment request
+        let paymentRequest = CheckoutApplePayContext.makePaymentRequest(
+            checkoutSession: session,
+            applePayConfirmationParameters: parameters
+        )
+
+        // Then Apple Pay requires an email contact field
+        XCTAssertTrue(paymentRequest.requiredShippingContactFields.contains(.emailAddress))
+    }
+
+    func testMakePaymentRequestDoesNotRequireEmailWhenSessionHasServerEmail() {
+        let session = CheckoutTestHelpers.makeSession([
+            "customer_email": "customer@example.com",
+        ]).makePublicSession()
+        let parameters = CheckoutController.ApplePayConfirmationParameters.makeMock(
+            apiClient: APIStubbedTestCase.stubbedAPIClient()
+        )
+
+        let paymentRequest = CheckoutApplePayContext.makePaymentRequest(
+            checkoutSession: session,
+            applePayConfirmationParameters: parameters
+        )
+
+        XCTAssertFalse(paymentRequest.requiredShippingContactFields.contains(.emailAddress))
+    }
+
+    func testMakePaymentRequestDoesNotRequireEmailWhenSessionHasMerchantDefaultEmail() {
+        var session = CheckoutTestHelpers.makeSession().makePublicSession()
+        session.localState.email = "merchant@example.com"
+        let parameters = CheckoutController.ApplePayConfirmationParameters.makeMock(
+            apiClient: APIStubbedTestCase.stubbedAPIClient()
+        )
+
+        let paymentRequest = CheckoutApplePayContext.makePaymentRequest(
+            checkoutSession: session,
+            applePayConfirmationParameters: parameters
+        )
+
+        XCTAssertFalse(paymentRequest.requiredShippingContactFields.contains(.emailAddress))
     }
 
     func testMakePaymentRequestPrefillsExistingShippingAddress() {

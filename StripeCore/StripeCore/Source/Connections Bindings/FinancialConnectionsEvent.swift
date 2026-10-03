@@ -112,6 +112,9 @@ public struct FinancialConnectionsEvent {
         /// The system could not retrieve accounts for the selected institution.
         case accountsUnavailable = "accounts_unavailable"
 
+        /// No eligible accounts were available for the selected institution.
+        case noEligibleAccounts = "no_eligible_accounts"
+
         /// For payment flows, no debitable account was available at the selected institution.
         case noDebitableAccount = "no_debitable_account"
 
@@ -141,11 +144,19 @@ public struct FinancialConnectionsEvent {
     /// during the financial connection process.
     public let name: Name
 
+    /// The identifier of the Financial Connections session that produced this event.
+    public let financialConnectionsSessionId: String
+
     /// Event-associated metadata. Provides further detail related to the occurred event.
     public let metadata: Metadata
 
-    @_spi(STP) public init(name: Name, metadata: Metadata = Metadata()) {
+    @_spi(STP) public init(
+        name: Name,
+        financialConnectionsSessionId: String,
+        metadata: Metadata = Metadata()
+    ) {
         self.name = name
+        self.financialConnectionsSessionId = financialConnectionsSessionId
         self.metadata = metadata
     }
 }

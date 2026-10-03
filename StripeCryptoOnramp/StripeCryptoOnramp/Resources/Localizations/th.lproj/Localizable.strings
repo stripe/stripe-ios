@@ -22,8 +22,4 @@
 
 "We couldn't verify ownership of this wallet. Please try again." = "เราไม่สามารถยืนยันการเป็นเจ้าของกระเป๋าเงินนี้ได้ โปรดลองอีกครั้ง";
 
-"We’re required to confirm your address to enable spending over %@." = "เราจำเป็นต้องยืนยันที่อยู่ของคุณเพื่อเปิดใช้งานการใช้จ่ายที่มียอดเกิน %@";
-
-"We’re required to understand where your funds come from to enable spending over %@." = "เราจำเป็นต้องทราบแหล่งที่มาของเงินทุนของคุณเพื่อเปิดใช้งานการใช้จ่ายที่มียอดเกิน %@";
-
 "We’re reviewing your documents. We’ll let you know when verification is complete." = "เรากำลังตรวจสอบเอกสารของคุณ โดยจะแจ้งให้คุณทราบเมื่อการยืนยันเสร็จเรียบร้อย";

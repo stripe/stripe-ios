@@ -244,7 +244,8 @@ extension IdentityFlowView {
         // Install scroll subviews: header + content
         scrollContainerStackView.addArrangedSubview(headerView)
         scrollContainerStackView.addArrangedSubview(insetContentView)
-        scrollView.addAndPinSubview(scrollContainerStackView)
+        scrollView.addSubview(scrollContainerStackView)
+        scrollContainerStackView.translatesAutoresizingMaskIntoConstraints = false
 
         // Arrange container stack view: scroll + button
         addAndPinSubview(scrollView)
@@ -264,6 +265,11 @@ extension IdentityFlowView {
         buttonTopContentView.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
+            scrollContainerStackView.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor),
+            scrollContainerStackView.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor),
+            scrollContainerStackView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
+            scrollContainerStackView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
+
             // Constrain buttonTop top of buttons
             buttonTopBackgroundView.leadingAnchor.constraint(equalTo: leadingAnchor),
             buttonTopBackgroundView.trailingAnchor.constraint(equalTo: trailingAnchor),

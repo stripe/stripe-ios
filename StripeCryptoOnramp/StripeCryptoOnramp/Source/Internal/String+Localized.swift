@@ -90,6 +90,98 @@ extension String.Localized {
         )
     }
 
+    static var sourceOfFundsDocumentsExplanation: String {
+        STPLocalizedString(
+            "How are you funding your transactions? Please list all of your sources. For example, salary, savings, investment earnings, etc.",
+            "Explanation above the summary of source-of-funds documents."
+        )
+    }
+
+    static var fundsSource: String {
+        STPLocalizedString("Funds source", "Label for the selected source of funds in the document editor")
+    }
+
+    /// The label and placeholder for a questionnaire answer field.
+    static var questionnaireAnswer: String {
+        STPLocalizedString("Answer", "Label and placeholder for a questionnaire answer field")
+    }
+
+    static var documentType: String {
+        STPLocalizedString("Document type", "Label and picker title for a document's category")
+    }
+
+    static var documentRequirementsExplanation: String {
+        STPLocalizedString("Make sure your document meets following requirements.", "Explanation above the document upload control")
+    }
+
+    static var chooseDocumentFile: String {
+        STPLocalizedString("Choose File…", "Action to open the system document picker to select a file")
+    }
+
+    static var chooseDocumentPhoto: String {
+        STPLocalizedString("Choose Photo…", "Action to open the system photo picker to select a photo")
+    }
+
+    static func unsupportedDocumentFormat(formats: [String]) -> String {
+        guard !formats.isEmpty else {
+            return STPLocalizedString("This file type isn’t supported.", "Validation error when no document formats are available")
+        }
+        let acceptedFormats = formats.map { $0.uppercased() }.formatted(.list(type: .or))
+        return String(
+            format: STPLocalizedString("This file type isn’t supported. Upload a %@ file.", "Validation error for an unsupported document format. The placeholder is a locale-aware formatted list of one or more accepted document formats."),
+            acceptedFormats
+        )
+    }
+
+    static var unableToOpenDocument: String {
+        STPLocalizedString("We couldn’t open this document. Please choose it again.", "Error when a file provider cannot supply a document")
+    }
+
+    static func documentTooLarge(size: String) -> String {
+        String(format: STPLocalizedString("This file is larger than %@. Choose a file that is %@ or smaller.", "Validation error for a document exceeding the size limit"), size, size)
+    }
+
+    static var documentUploadFailed: String {
+        STPLocalizedString("We couldn’t upload this file. Please try again.", "Error after a document upload fails")
+    }
+
+    static var previousDocumentIssue: String {
+        STPLocalizedString("There was a problem with your previous document. Please upload a new one.", "Message shown when a previous document has a requirement error")
+    }
+
+    static var uploadDocument: String {
+        STPLocalizedString("Upload document", "Action to select an existing document for upload")
+    }
+
+    /// The action that opens document collection for a new funds source.
+    static var addDocuments: String {
+        STPLocalizedString("Add documents", "Action to add documents for another source of funds")
+    }
+
+    /// The action that saves the selected number of documents to a funds source.
+    /// - Parameter count: The number of documents being added to the source.
+    /// - Returns: A localized title with the appropriate plural form.
+    static func addDocuments(count: Int) -> String {
+        if count == 1 {
+            return STPLocalizedString("Add 1 document", "Action to add exactly one uploaded document to a source of funds")
+        } else {
+            return String(
+                format: STPLocalizedString("Add %ld documents", "Action to add multiple uploaded documents to a source of funds. The placeholder is the document count."),
+                count
+            )
+        }
+    }
+
+    /// The status shown while a document is uploading.
+    static var uploadingDocument: String {
+        STPLocalizedString("Uploading…", "Status while a document is uploading")
+    }
+
+    /// The status shown after a document uploads successfully.
+    static var documentUploaded: String {
+        STPLocalizedString("Uploaded", "Status after a document has uploaded successfully")
+    }
+
     static var documentUploadedSuccessfully: String {
         STPLocalizedString("Document uploaded successfully", "Heading confirming a document was uploaded successfully")
     }
