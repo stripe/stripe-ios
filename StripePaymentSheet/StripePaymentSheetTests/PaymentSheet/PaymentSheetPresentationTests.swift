@@ -297,11 +297,13 @@ final class PaymentSheetPresentationTests: XCTestCase {
     }
 
     @MainActor
-    func testNativeGlassContentUsesNavigationControllerSafeArea() throws {
-        guard #available(iOS 26.0, *) else { throw XCTSkip("Glass navigation bars require iOS 26.") }
-        var appearance = PaymentSheet.Appearance.default
-        appearance.navigationBarStyle = .glass
-        let initialContent = MeasuredSheetContentViewController(contentHeight: 200, navigationBarHeight: 90, appearance: appearance)
+    func testNativeGlassContentScrollsBehindNavigationBarWithDefaultAppearance() throws {
+        guard #available(iOS 26.0, *), LiquidGlassDetector.isEnabledInMerchantApp else {
+            throw XCTSkip("The merchant app must enable Liquid Glass.")
+        }
+        // Given a glass-enabled app whose payment form still uses the default plain appearance
+        let appearance = PaymentSheet.Appearance.default
+        let initialContent = MeasuredSheetContentViewController(contentHeight: 1000, navigationBarHeight: 90, appearance: appearance)
         let sheet = NativeSheetContainerViewController(
             contentViewController: initialContent,
             appearance: appearance,
@@ -310,10 +312,23 @@ final class PaymentSheetPresentationTests: XCTestCase {
         )
         let navigationController = UINavigationController(rootViewController: sheet)
         navigationController.view.frame = CGRect(x: 0, y: 0, width: 375, height: 800)
+        navigationController.view.layoutIfNeeded()
         sheet.prepareForPresentation(in: 375)
 
+        // Then the scroll surface covers the header, while its inset keeps content below the controls at rest
+        XCTAssertGreaterThan(sheet.view.safeAreaInsets.top, 0)
+        XCTAssertEqual(sheet.scrollView.frame.minY, sheet.view.bounds.minY, accuracy: 0.5)
         XCTAssertEqual(initialContent.view.convert(.zero, to: sheet.view).y, sheet.view.safeAreaLayoutGuide.layoutFrame.minY, accuracy: 0.5)
 
+        // When scrolling, the content moves behind the header and restoring the top respects its inset
+        sheet.scrollView.setContentOffset(.zero, animated: false)
+        XCTAssertLessThan(initialContent.view.convert(.zero, to: sheet.view).y, sheet.view.safeAreaLayoutGuide.layoutFrame.minY)
+        sheet.contentOffsetPercentage = 1
+        XCTAssertEqual(initialContent.view.convert(initialContent.view.bounds, to: sheet.view).maxY, sheet.scrollView.frame.maxY, accuracy: 0.5)
+        sheet.contentOffsetPercentage = 0
+        XCTAssertEqual(initialContent.view.convert(.zero, to: sheet.view).y, sheet.view.safeAreaLayoutGuide.layoutFrame.minY, accuracy: 0.5)
+
+        // When replacing the content, the new form starts below the same native controls
         let replacement = MeasuredSheetContentViewController(contentHeight: 200, navigationBarHeight: 110, appearance: appearance)
         sheet.pushContentViewController(replacement)
         sheet.view.layoutIfNeeded()
@@ -321,6 +336,36 @@ final class PaymentSheetPresentationTests: XCTestCase {
         XCTAssertEqual(replacement.view.convert(.zero, to: sheet.view).y, sheet.view.safeAreaLayoutGuide.layoutFrame.minY, accuracy: 0.5)
         let navigationBarHeight = navigationController.navigationBar.sizeThatFits(CGSize(width: 375, height: 0)).height
         XCTAssertEqual(try XCTUnwrap(sheet.contentSizedDetent.resolvedValue(in: SheetDetentResolutionContext())), 200 + navigationBarHeight, accuracy: 0.5)
+    }
+
+    @MainActor
+    func testNativeSolidNavigationBarShowsShadowOnlyAfterScrolling() throws {
+        guard !LiquidGlassDetector.isEnabledInMerchantApp else { throw XCTSkip("The merchant app must use compatibility styling.") }
+        // Given a native sheet with enough content to scroll
+        let sheet = NativeSheetContainerViewController(
+            contentViewController: MeasuredSheetContentViewController(contentHeight: 1000),
+            appearance: .default,
+            isTestMode: true,
+            didCancelNative3DS2: {}
+        )
+        var presentedViewController: UIViewController?
+        PresentationCapturingViewController { presentedViewController = $0 }.presentAsSheet(sheet)
+        let navigationController = try XCTUnwrap(presentedViewController as? UINavigationController)
+        navigationController.view.frame = CGRect(x: 0, y: 0, width: 375, height: 800)
+        navigationController.view.layoutIfNeeded()
+        sheet.view.layoutIfNeeded()
+        let navigationBar = navigationController.navigationBar
+
+        // Then the solid header has no separator or shadow at rest
+        XCTAssertEqual(navigationBar.standardAppearance.backgroundColor, sheet.appearance.colors.background)
+        XCTAssertEqual(navigationBar.standardAppearance.shadowColor, .clear)
+        XCTAssertEqual(navigationBar.layer.shadowOpacity, 0)
+
+        // When scrolling away from the top, a soft shadow appears and disappears when returning
+        sheet.scrollView.setContentOffset(CGPoint(x: 0, y: 40), animated: false)
+        XCTAssertGreaterThan(navigationBar.layer.shadowOpacity, 0)
+        sheet.scrollView.setContentOffset(.zero, animated: false)
+        XCTAssertEqual(navigationBar.layer.shadowOpacity, 0)
     }
 
     @MainActor
@@ -582,7 +627,7 @@ final class PaymentSheetPresentationTests: XCTestCase {
         XCTAssertEqual(sheet.scrollView.frame.maxY, sheet.view.bounds.maxY, accuracy: 0.5)
         let contentFrame = content.view.convert(content.view.bounds, to: sheet.view)
         XCTAssertEqual(contentFrame.maxY, sheet.view.bounds.maxY, accuracy: 0.5)
-        XCTAssertEqual(sheet.scrollView.bounds.height, 200, accuracy: 0.5)
+        XCTAssertEqual(sheet.scrollView.bounds.height - sheet.scrollView.adjustedContentInset.top, 200, accuracy: 0.5)
         let dismissed = expectation(description: "Native sheet dismissed")
         presenter.dismiss(animated: false) { dismissed.fulfill() }
         await fulfillment(of: [dismissed], timeout: 3)
