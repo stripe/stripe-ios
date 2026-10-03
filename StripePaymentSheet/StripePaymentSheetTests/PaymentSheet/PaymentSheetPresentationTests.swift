@@ -34,11 +34,12 @@ final class PaymentSheetPresentationTests: XCTestCase {
         // Then
         XCTAssertIdentical(presentedViewController, sheetViewController)
         XCTAssertEqual(sheetViewController.modalPresentationStyle, .pageSheet)
+        XCTAssertTrue(sheetViewController.isModalInPresentation)
 
         let sheetPresentationController = try XCTUnwrap(sheetViewController.sheetPresentationController)
         XCTAssertEqual(sheetPresentationController.detents.count, 1)
         XCTAssertEqual(sheetPresentationController.selectedDetentIdentifier, .large)
-        XCTAssertTrue(sheetPresentationController.prefersGrabberVisible)
+        XCTAssertFalse(sheetPresentationController.prefersGrabberVisible)
         XCTAssertEqual(sheetPresentationController.preferredCornerRadius, sheetViewController.appearance.sheetCornerRadius)
         XCTAssertFalse(sheetPresentationController.prefersScrollingExpandsWhenScrolledToEdge)
         XCTAssertFalse(sheetPresentationController.prefersEdgeAttachedInCompactHeight)
@@ -92,7 +93,7 @@ final class PaymentSheetPresentationTests: XCTestCase {
     }
 
     @MainActor
-    func testInteractiveDismissalWaitsForDismissalAttemptToFinish() throws {
+    func testNativeSheetIgnoresInteractiveDismissalAttempts() throws {
         // Given
         let contentViewController = NativeSheetStubContentViewController()
         let sheetViewController = NativeSheetContainerViewController(
@@ -101,21 +102,23 @@ final class PaymentSheetPresentationTests: XCTestCase {
             isTestMode: true,
             didCancelNative3DS2: {}
         )
-        sheetViewController.modalPresentationStyle = .pageSheet
-        let presentationController = try XCTUnwrap(sheetViewController.sheetPresentationController)
+        var presentedViewController: UIViewController?
+        PresentationCapturingViewController { presentedViewController = $0 }.presentAsSheet(sheetViewController)
+        let presentationController = try XCTUnwrap(presentedViewController?.presentationController)
+        let delegate = try XCTUnwrap(presentationController.delegate)
 
-        // When
-        let shouldDismiss = sheetViewController.presentationControllerShouldDismiss(presentationController)
+        // When UIKit requests interactive dismissal
+        let shouldDismiss = delegate.presentationControllerShouldDismiss?(presentationController)
 
-        // Then
-        XCTAssertFalse(shouldDismiss)
+        // Then the sheet stays open without forwarding dismissal to its content
+        XCTAssertEqual(shouldDismiss, false)
         XCTAssertEqual(contentViewController.dismissalAttemptCount, 0)
 
-        // When
-        sheetViewController.presentationControllerDidAttemptToDismiss(presentationController)
+        // When UIKit reports a blocked swipe or outside-tap dismissal attempt
+        delegate.presentationControllerDidAttemptToDismiss?(presentationController)
 
-        // Then
-        XCTAssertEqual(contentViewController.dismissalAttemptCount, 1)
+        // Then the content still receives no dismissal request
+        XCTAssertEqual(contentViewController.dismissalAttemptCount, 0)
     }
 
     @MainActor
