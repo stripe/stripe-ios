@@ -250,9 +250,6 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
             completion?()
             return
         }
-        // Offscreen native containers receive their appearance callbacks from UIKit when presented later.
-        let sendsAppearanceCallbacks = view.window != nil
-        let needsContainment = newContentViewController.parent !== self
         let oldContentViewController = contentViewController
         contentViewController = newContentViewController
 
@@ -262,22 +259,14 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
         contentContainerView.addSubview(oldViewImage)
 
         // Remove the old VC
-        if sendsAppearanceCallbacks {
-            oldContentViewController.beginAppearanceTransition(false, animated: true)
-        }
+        oldContentViewController.beginAppearanceTransition(false, animated: true)
         oldContentViewController.view.removeFromSuperview()
-        if sendsAppearanceCallbacks {
-            oldContentViewController.endAppearanceTransition()
-        }
+        oldContentViewController.endAppearanceTransition()
 
         // Add the new VC
-        if sendsAppearanceCallbacks {
-            newContentViewController.beginAppearanceTransition(true, animated: true)
-        }
+        newContentViewController.beginAppearanceTransition(true, animated: true)
         // When your custom container calls the addChild(_:) method, it automatically calls the willMove(toParent:) method of the view controller to be added as a child before adding it.
-        if needsContainment {
-            addChild(newContentViewController)
-        }
+        addChild(newContentViewController)
         contentContainerView.addArrangedSubview(self.contentViewController.view)
 
         contentContainerView.layoutIfNeeded()
@@ -290,31 +279,18 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
 
         let transitionCompletion: (Bool) -> Void = { _ in
             // If you are implementing your own container view controller, it must call the didMove(toParent:) method of the child view controller after the transition to the new controller is complete or, if there is no transition, immediately after calling the addChild(_:) method.
-            if needsContainment {
-                newContentViewController.didMove(toParent: self)
-            }
-            if sendsAppearanceCallbacks {
-                newContentViewController.endAppearanceTransition()
-            }
+            newContentViewController.didMove(toParent: self)
+            newContentViewController.endAppearanceTransition()
 
             // Remove the old content snapshot
             oldViewImage.removeFromSuperview()
 
             // Inform accessibility
-            if sendsAppearanceCallbacks {
-                UIAccessibility.post(notification: .screenChanged, argument: newContentViewController.view)
-            }
+            UIAccessibility.post(notification: .screenChanged, argument: newContentViewController.view)
             completion?()
         }
 
         invalidateContentDetent()
-        guard sendsAppearanceCallbacks else {
-            // A canceled presentation leaves the container offscreen. Prepare its latest content for reuse
-            // without manufacturing appearance callbacks that UIKit will deliver on its next presentation.
-            newContentViewController.view.alpha = 1
-            transitionCompletion(true)
-            return
-        }
         UIView.animate(withDuration: 0.2, animations: {
             oldViewImage.alpha = 0
             newContentViewController.view.alpha = 1
