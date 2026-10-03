@@ -39,7 +39,9 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
             guard !self.contentRequiresFullScreen else {
                 return context.maximumDetentValue
             }
-            return min(self.fittedContentHeight, context.maximumDetentValue)
+            // Layout may change the form before a resize starts; keep the detent stable until we animate it.
+            // Content already includes bottom padding. UIKit adds the bottom safe area to edge-attached detents.
+            return min(max(0, self.lastFittedContentHeight - self.view.safeAreaInsets.bottom), context.maximumDetentValue)
         }
     }()
     #endif
@@ -57,13 +59,6 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
 
     private lazy var contentContainerView: UIStackView = {
         return UIStackView()
-    }()
-
-    private lazy var outsideSheetTapGestureRecognizer: UITapGestureRecognizer = {
-        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapOutsideSheet))
-        tapGestureRecognizer.cancelsTouchesInView = false
-        tapGestureRecognizer.delegate = self
-        return tapGestureRecognizer
     }()
 
     // Navigation updates this logical stack immediately; native presentation may defer the visible child change.
@@ -363,9 +358,11 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
 
     // MARK: -
     private var scrollViewHeightConstraint: NSLayoutConstraint?
+    private var keyboardAvoidanceConstraint: NSLayoutConstraint?
 
     private var lastFittedContentHeight: CGFloat = 0
     private var hasScheduledDetentInvalidation = false
+    private var isWaitingForDetentTransition = false
 
     private var fittedContentHeight: CGFloat {
         // A vertical system bar narrows the usable content width, which can increase wrapped content height.
@@ -398,10 +395,9 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
 
     func prepareForPresentation(in availableWidth: CGFloat) {
         loadViewIfNeeded()
-        // Lay out the navigation host too so the first detent uses its actual content area.
-        rootParent.view.bounds.size.width = availableWidth
-        rootParent.view.setNeedsLayout()
-        rootParent.view.layoutIfNeeded()
+        // Laying out the navigation controller here interrupts UIKit's opening dimming animation
+        // on iOS 26.1. Measure only our content and let UIKit lay out its presentation host.
+        view.bounds.size.width = availableWidth
         view.setNeedsLayout()
         view.layoutIfNeeded()
         lastFittedContentHeight = fittedContentHeight
@@ -412,8 +408,40 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
         guard #available(iOS 16.0, *) else {
             return
         }
-        rootParent.sheetPresentationController?.animateChanges {
+        guard viewIfLoaded?.window != nil else {
+            // Prepare the next presentation's height without starting an offscreen sheet animation.
+            lastFittedContentHeight = fittedContentHeight
+            return
+        }
+        guard !isWaitingForDetentTransition else {
+            return
+        }
+
+        // Wait until UIKit finishes presenting or dismissing before starting a height animation.
+        if rootParent.isBeingPresented || rootParent.isBeingDismissed {
+            guard let transitionCoordinator = rootParent.transitionCoordinator else { return }
+            isWaitingForDetentTransition = transitionCoordinator.animate(alongsideTransition: nil) { [weak self] _ in
+                // UIKit must clear the parent's transition state before we start another sheet animation.
+                DispatchQueue.main.async { [weak self] in
+                    guard let self else { return }
+                    self.isWaitingForDetentTransition = false
+                    self.invalidateContentDetent()
+                }
+            }
+            return
+        }
+
+        let fittedContentHeight = fittedContentHeight
+        let resize: () -> Void = {
+            self.lastFittedContentHeight = fittedContentHeight
             self.rootParent.sheetPresentationController?.invalidateDetents()
+        }
+        // UIKit's sheet animator can loop when resizing scrollable content at regular width.
+        // The presented sheet can be compact, so check the presenter's size class instead.
+        if rootParent.presentingViewController?.traitCollection.horizontalSizeClass == .regular {
+            animateHeightChange(forceAnimation: true, resize)
+        } else {
+            rootParent.sheetPresentationController?.animateChanges(resize)
         }
         #endif
     }
@@ -427,8 +455,13 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
 
         // Content view controllers already constrain their contents against the safe area.
         scrollView.contentInsetAdjustmentBehavior = .never
+        if #available(iOS 17.0, *) {
+            // Existing form padding extends to the sheet's bottom; only a visible keyboard should shorten it.
+            view.keyboardLayoutGuide.usesBottomSafeArea = false
+        }
         let bottomAnchor = scrollView.bottomAnchor.constraint(equalTo: view.keyboardLayoutGuide.topAnchor)
         bottomAnchor.priority = .defaultLow
+        keyboardAvoidanceConstraint = bottomAnchor
 
         NSLayoutConstraint.activate([
             scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
@@ -461,29 +494,32 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
         view.addGestureRecognizer(hideKeyboardGesture)
     }
 
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-
-        guard outsideSheetTapGestureRecognizer.view == nil else {
-            return
-        }
-        rootParent.presentationController?.containerView?.addGestureRecognizer(outsideSheetTapGestureRecognizer)
-    }
-
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 
+        if #unavailable(iOS 17.0) {
+            // Older keyboard guides always reserve the bottom safe area, even with the keyboard hidden.
+            let bottomInset = view.keyboardLayoutGuide.layoutFrame.height <= view.safeAreaInsets.bottom
+                ? view.safeAreaInsets.bottom : 0
+            if keyboardAvoidanceConstraint?.constant != bottomInset {
+                keyboardAvoidanceConstraint?.constant = bottomInset
+                view.layoutIfNeeded()
+            }
+        }
+
         let fittedContentHeight = fittedContentHeight
-        guard abs(fittedContentHeight - lastFittedContentHeight) > 0.5,
+        guard view.window != nil,
+              abs(fittedContentHeight - lastFittedContentHeight) > 0.5,
               !hasScheduledDetentInvalidation else {
             return
         }
-        lastFittedContentHeight = fittedContentHeight
         // Coalesce layout-driven changes and invalidate after the current layout pass completes.
         hasScheduledDetentInvalidation = true
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
             self.hasScheduledDetentInvalidation = false
+            // An explicit content update may already have resized the sheet in its own animation.
+            guard abs(self.fittedContentHeight - self.lastFittedContentHeight) > 0.5 else { return }
             self.invalidateContentDetent()
         }
     }
@@ -503,6 +539,8 @@ extension NativeSheetContainerViewController {
         // UIKit adapts navigation items into the appropriate horizontal or vertical system bar.
         let navigationController = navigationController ?? UINavigationController(rootViewController: self)
         navigationController.modalPresentationStyle = .automatic
+        // Dismissal is handled by the sheet's explicit controls rather than UIKit's interactive gestures.
+        navigationController.isModalInPresentation = true
         navigationController.modalPresentationCapturesStatusBarAppearance = true
         navigationController.overrideUserInterfaceStyle = overrideUserInterfaceStyle
         navigationController.navigationBar.tintColor = appearance.colors.icon
@@ -534,7 +572,7 @@ extension NativeSheetContainerViewController {
                 sheetPresentationController.selectedDetentIdentifier = .large
             }
             sheetPresentationController.preferredCornerRadius = sheetCornerRadius
-            sheetPresentationController.prefersGrabberVisible = true
+            sheetPresentationController.prefersGrabberVisible = false
             sheetPresentationController.prefersScrollingExpandsWhenScrolledToEdge = false
         }
         navigationController.presentationController?.delegate = self
@@ -548,12 +586,8 @@ extension NativeSheetContainerViewController {
 extension NativeSheetContainerViewController: UIAdaptivePresentationControllerDelegate {
 
     func presentationControllerShouldDismiss(_ presentationController: UIPresentationController) -> Bool {
-        // The content view controller decides whether dismissal is currently allowed after the interactive gesture ends.
+        // Also prevent UIKit's outside-tap dismissal when the presentation adapts to a form sheet.
         return false
-    }
-
-    func presentationControllerDidAttemptToDismiss(_ presentationController: UIPresentationController) {
-        didTapOrSwipeToDismiss()
     }
 }
 
@@ -624,17 +658,8 @@ extension NativeSheetContainerViewController: UIGestureRecognizerDelegate {
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch)
         -> Bool
     {
-        if gestureRecognizer === outsideSheetTapGestureRecognizer {
-            let location = touch.location(in: rootParent.view)
-            return !rootParent.view.point(inside: location, with: nil)
-        }
-
         // I can't find another way to allow custom UIControl subclasses to receive touches
         return !(touch.view is UIControl)
-    }
-
-    @objc private func didTapOutsideSheet() {
-        didTapOrSwipeToDismiss()
     }
 
     @objc func didTapAnywhere() {
