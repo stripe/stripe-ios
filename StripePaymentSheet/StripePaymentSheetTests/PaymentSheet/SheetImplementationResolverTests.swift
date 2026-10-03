@@ -13,6 +13,34 @@ import XCTest
 @MainActor
 final class SheetImplementationResolverTests: XCTestCase {
 
+    override func tearDown() {
+        PaymentSheet.NativeSheetFeatureFlags.nativeSheetEnabledOverride = nil
+        super.tearDown()
+    }
+
+    func testPlaygroundOverrideForcesDecisionAndIsCapturedPerFlow() {
+        let cases: [(override: Bool, flag: Bool)] = [
+            (true, false),
+            (false, true),
+        ]
+
+        for testCase in cases {
+            // Given an override that contradicts the server-provided feature flag
+            PaymentSheet.NativeSheetFeatureFlags.nativeSheetEnabledOverride = testCase.override
+            let presentation = SheetImplementationResolver(
+                elementsSession: makeSession(flag: testCase.flag)
+            )
+
+            // When the global override changes after this flow captures its decision
+            PaymentSheet.NativeSheetFeatureFlags.nativeSheetEnabledOverride = !testCase.override
+
+            // Then this flow retains the original override
+            let expectedDecision = SheetImplementationResolver.isRequiredForDevice
+                || (UIDevice.current.userInterfaceIdiom == .phone && testCase.override)
+            XCTAssertEqual(presentation.usesNativeSheet, expectedDecision)
+        }
+    }
+
     func testEmbeddedKeepsInitialDecisionWhenElementsSessionChanges() async {
         await AddressSpecProvider.shared.loadAddressSpecs()
         let element = EmbeddedPaymentElement(
