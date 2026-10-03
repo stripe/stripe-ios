@@ -341,7 +341,7 @@ extension PaymentSheet {
         private(set) var didPresentAndContinue: Bool = false
         var confirmationChallenge: ConfirmationChallenge?
         let analyticsHelper: PaymentSheetAnalyticsHelper
-        /// Retains this flow's initial rollout assignment and exposure state across configuration updates.
+        /// Retains this flow's initial native-sheet feature flag across configuration updates.
         let nativeSheetPresentation: SheetImplementationResolver
         private var linkAccountObserver: LinkAccountContextObserver?
 
@@ -355,9 +355,7 @@ extension PaymentSheet {
         ) {
             // Each new flow captures its own decision, even when a previous flow's configuration is reused.
             self.nativeSheetPresentation = SheetImplementationResolver(
-                elementsSession: loadResult.elementsSession,
-                analyticsHelper: analyticsHelper,
-                integrationShape: "flowcontroller"
+                elementsSession: loadResult.elementsSession
             )
             self.configuration = configuration
             self.analyticsHelper = analyticsHelper

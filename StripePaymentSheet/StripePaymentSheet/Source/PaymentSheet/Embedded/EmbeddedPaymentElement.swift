@@ -386,7 +386,7 @@ public final class EmbeddedPaymentElement {
     internal var defaultPaymentMethod: STPPaymentMethod?
     internal private(set) var latestUpdateTask: Task<UpdateResult, Never>?
     internal private(set) var analyticsHelper: PaymentSheetAnalyticsHelper
-    /// Retains this flow's initial rollout assignment and exposure state across configuration updates.
+    /// Retains this flow's initial native-sheet feature flag across configuration updates.
     let nativeSheetPresentation: SheetImplementationResolver
     private let initialSelection: RowButtonType?
     internal private(set) var formCache: PaymentMethodFormCache = .init()
@@ -467,9 +467,7 @@ public final class EmbeddedPaymentElement {
     ) {
         // Each new flow captures its own decision, even when a previous flow's configuration is reused.
         self.nativeSheetPresentation = SheetImplementationResolver(
-            elementsSession: loadResult.elementsSession,
-            analyticsHelper: analyticsHelper,
-            integrationShape: "embedded"
+            elementsSession: loadResult.elementsSession
         )
         self.configuration = configuration
         self.loadResult = loadResult
