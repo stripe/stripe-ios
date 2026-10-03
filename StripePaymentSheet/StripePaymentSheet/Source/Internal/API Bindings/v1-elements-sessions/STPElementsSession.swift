@@ -400,7 +400,7 @@ extension STPElementsSession {
         flags["elements_mobile_force_vertical_payment_method_layout"] == true
     }
 
-    // The server gate must be explicitly enabled before the experiment assignment can take effect.
+    /// Whether native-sheet presentation is enabled for this session.
     var isNativeSheetEnabled: Bool {
         flags["elements_mobile_ios_native_sheet_enabled"] == true
     }
