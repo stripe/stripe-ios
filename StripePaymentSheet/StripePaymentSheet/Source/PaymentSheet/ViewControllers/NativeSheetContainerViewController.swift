@@ -18,6 +18,9 @@ import UIKit
 @objc(STP_Internal_NativeSheetContainerViewController)
 class NativeSheetContainerViewController: UIViewController, PaymentSheetContainer {
 
+    // Native navigation follows the merchant app's design, independently of the payment form's appearance.
+    private let usesLiquidGlass = LiquidGlassDetector.isEnabledInMerchantApp
+
     var sheetCornerRadius: CGFloat? {
         appearance.sheetCornerRadius
     }
@@ -67,12 +70,13 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
     /// Content offset of the scroll view as a percentage (0 - 1.0) of the total height.
     var contentOffsetPercentage: CGFloat {
         get {
-            guard scrollView.contentSize.height > scrollView.bounds.height else { return 0 }
-            return scrollView.contentOffset.y / (scrollView.contentSize.height - scrollView.bounds.height)
+            let scrollableHeight = scrollView.contentSize.height + scrollView.adjustedContentInset.top - scrollView.bounds.height
+            guard scrollableHeight > 0 else { return 0 }
+            return (scrollView.contentOffset.y + scrollView.adjustedContentInset.top) / scrollableHeight
         }
         set {
-            let maxContentOffset = scrollView.contentSize.height - scrollView.bounds.height
-            let newContentOffset = maxContentOffset * newValue
+            let maxContentOffset = max(0, scrollView.contentSize.height + scrollView.adjustedContentInset.top - scrollView.bounds.height)
+            let newContentOffset = maxContentOffset * newValue - scrollView.adjustedContentInset.top
             scrollView.setContentOffset(CGPoint(x: 0, y: newContentOffset), animated: false)
         }
     }
@@ -464,7 +468,7 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
         keyboardAvoidanceConstraint = bottomAnchor
 
         NSLayoutConstraint.activate([
-            scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            scrollView.topAnchor.constraint(equalTo: usesLiquidGlass ? view.topAnchor : view.safeAreaLayoutGuide.topAnchor),
             scrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             bottomAnchor,
@@ -497,6 +501,17 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 
+        if usesLiquidGlass, scrollView.contentInset.top != view.safeAreaInsets.top {
+            // Reserve space for the native controls at rest while letting content scroll behind them.
+            // Adjust only the top inset: the forms already include their bottom safe-area padding.
+            let insetChange = view.safeAreaInsets.top - scrollView.contentInset.top
+            let contentOffset = scrollView.contentOffset
+            scrollView.contentInset.top = view.safeAreaInsets.top
+            scrollViewHeightConstraint?.constant = view.safeAreaInsets.top
+            scrollView.contentOffset = CGPoint(x: contentOffset.x, y: contentOffset.y - insetChange)
+        }
+        updateNavigationBarShadow()
+
         if #unavailable(iOS 17.0) {
             // Older keyboard guides always reserve the bottom safe area, even with the keyboard hidden.
             let bottomInset = view.keyboardLayoutGuide.layoutFrame.height <= view.safeAreaInsets.bottom
@@ -528,6 +543,15 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
         contentViewController.didTapOrSwipeToDismiss()
         STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetDismissed)
     }
+
+    private func updateNavigationBarShadow() {
+        guard !usesLiquidGlass, let navigationBar = navigationController?.navigationBar else { return }
+        // Match the legacy header's soft shadow without drawing a permanent separator.
+        navigationBar.layer.shadowPath = CGPath(rect: navigationBar.bounds, transform: nil)
+        navigationBar.layer.shadowColor = UIColor.black.cgColor
+        navigationBar.layer.shadowOffset = CGSize(width: 0, height: 2)
+        navigationBar.layer.shadowOpacity = scrollView.contentOffset.y > 0 ? 0.1 : 0
+    }
 }
 
 // MARK: - Presentation
@@ -544,9 +568,17 @@ extension NativeSheetContainerViewController {
         navigationController.modalPresentationCapturesStatusBarAppearance = true
         navigationController.overrideUserInterfaceStyle = overrideUserInterfaceStyle
         navigationController.navigationBar.tintColor = appearance.colors.icon
+        navigationController.navigationBar.isTranslucent = usesLiquidGlass
 
         let barAppearance = UINavigationBarAppearance()
-        barAppearance.configureWithDefaultBackground()
+        if usesLiquidGlass {
+            // UIKit provides the glass controls and scroll-edge effect over the transparent header.
+            barAppearance.configureWithTransparentBackground()
+        } else {
+            barAppearance.configureWithOpaqueBackground()
+            barAppearance.backgroundColor = appearance.colors.background
+            barAppearance.shadowColor = .clear
+        }
         barAppearance.titleTextAttributes = [
             .font: appearance.scaledFont(
                 for: appearance.font.base.medium,
@@ -555,12 +587,10 @@ extension NativeSheetContainerViewController {
             ),
             .foregroundColor: appearance.colors.text,
         ]
-        if appearance.navigationBarStyle.isPlain {
-            barAppearance.backgroundColor = appearance.colors.background
-        }
         navigationController.navigationBar.standardAppearance = barAppearance
-        navigationController.navigationBar.scrollEdgeAppearance = barAppearance
         navigationController.navigationBar.compactAppearance = barAppearance
+        navigationController.navigationBar.scrollEdgeAppearance = barAppearance
+        navigationController.navigationBar.compactScrollEdgeAppearance = barAppearance
 
         if let sheetPresentationController = navigationController.sheetPresentationController {
             if #available(iOS 16.0, *) {
@@ -594,11 +624,7 @@ extension NativeSheetContainerViewController: UIAdaptivePresentationControllerDe
 // MARK: - UIScrollViewDelegate
 extension NativeSheetContainerViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        if scrollView.contentOffset.y > 0 {
-            contentViewController.navigationBar.setShadowHidden(false)
-        } else {
-            contentViewController.navigationBar.setShadowHidden(true)
-        }
+        updateNavigationBarShadow()
     }
 }
 
