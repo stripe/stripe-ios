@@ -50,3 +50,34 @@ extension PaymentSheetContainer {
         present(from: presentingViewController, completion: nil)
     }
 }
+
+/// Selects the concrete container before presentation begins.
+enum PaymentSheetContainerFactory {
+
+    static func make(
+        contentViewController: BottomSheetContentViewController,
+        appearance: PaymentSheet.Appearance,
+        isTestMode: Bool,
+        usesNativeSheet: Bool = false,
+        didCancelNative3DS2: @escaping () -> Void
+    ) -> any PaymentSheetContainer {
+        #if !os(visionOS)
+        if usesNativeSheet {
+            return NativeSheetContainerViewController(
+                contentViewController: contentViewController,
+                appearance: appearance,
+                isTestMode: isTestMode,
+                didCancelNative3DS2: didCancelNative3DS2
+            )
+        }
+        #endif
+
+        // Existing flows remain on the legacy container until they explicitly opt in.
+        return BottomSheetViewController(
+            contentViewController: contentViewController,
+            appearance: appearance,
+            isTestMode: isTestMode,
+            didCancelNative3DS2: didCancelNative3DS2
+        )
+    }
+}

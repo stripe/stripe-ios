@@ -16,14 +16,10 @@ import UIKit
 /// A VC containing a content view controller and manages the layout of its SheetNavigationBar.
 /// For internal SDK use only
 @objc(STP_Internal_NativeSheetContainerViewController)
-class NativeSheetContainerViewController: UIViewController, BottomSheetPresentable, PaymentSheetContainer {
-
-    struct Constants {
-        static let keyboardAvoidanceEdgePadding: CGFloat = 16
-    }
+class NativeSheetContainerViewController: UIViewController, PaymentSheetContainer {
 
     var sheetCornerRadius: CGFloat? {
-        BottomSheetTransitioningDelegate.appearance.sheetCornerRadius
+        appearance.sheetCornerRadius
     }
 
     // MARK: - Views
@@ -75,9 +71,6 @@ class NativeSheetContainerViewController: UIViewController, BottomSheetPresentab
             scrollView.setContentOffset(CGPoint(x: 0, y: newContentOffset), animated: false)
         }
     }
-
-    /// If `setContent..` is called while `BottomSheetPresentationAnimator` is mid-transition, we complete the transition before setting content.
-    var completeBottomSheetPresentationTransition: ((Bool) -> Void)?
 
     func setViewControllers(_ viewControllers: [BottomSheetContentViewController]) {
         contentStack = viewControllers
@@ -133,7 +126,6 @@ class NativeSheetContainerViewController: UIViewController, BottomSheetPresentab
         self.appearance = appearance
         self.isTestMode = isTestMode
         self.didCancelNative3DS2 = didCancelNative3DS2
-
         super.init(nibName: nil, bundle: nil)
 
         contentStack = [contentViewController]
@@ -198,24 +190,11 @@ class NativeSheetContainerViewController: UIViewController, BottomSheetPresentab
 
     func updateContent(to newContentViewController: BottomSheetContentViewController, completion: (() -> Void)? = nil) {
         guard contentViewController !== newContentViewController else {
+            completion?()
             return
         }
         let oldContentViewController = contentViewController
         contentViewController = newContentViewController
-        // Handle edge case where BottomSheetPresentationAnimator is mid-presentation
-        // We need to finish *that* transition before starting this one.
-        completeBottomSheetPresentationTransition?(true)
-
-        // This is a hack to get the animation right.
-        // Instead of allowing the height change to implicitly occur within
-        // the animation block's layoutIfNeeded, we force a layout pass,
-        // calculate the old and new heights, and then only animate the height
-        // constraint change.
-        // Without this, the inner ScrollView tends to animate from the center
-        // instead of remaining pinned to the top.
-
-        // First, get the old height of the content + navigation bar + safe area.
-        manualHeightConstraint.constant = oldContentViewController.view.frame.size.height + navigationBarContainerView.bounds.size.height
 
         // Take a snapshot of the old content and add it to our container - we'll fade it out
         let oldView = oldContentViewController.view!
@@ -232,9 +211,6 @@ class NativeSheetContainerViewController: UIViewController, BottomSheetPresentab
         // When your custom container calls the addChild(_:) method, it automatically calls the willMove(toParent:) method of the view controller to be added as a child before adding it.
         addChild(newContentViewController)
         contentContainerView.addArrangedSubview(self.contentViewController.view)
-        if let presentationController = rootParent.presentationController as? BottomSheetPresentationController {
-            presentationController.forceFullHeight = newContentViewController.requiresFullScreen
-        }
 
         contentContainerView.layoutIfNeeded()
         scrollView.layoutIfNeeded()
@@ -242,40 +218,25 @@ class NativeSheetContainerViewController: UIViewController, BottomSheetPresentab
         oldContentViewController.navigationBar.removeFromSuperview()
         navigationBarContainerView.addArrangedSubview(newContentViewController.navigationBar)
         navigationBarContainerView.layoutIfNeeded()
-        // Layout is mostly completed at this point. The new height is the navigation bar + content
-        let newHeight = newContentViewController.view.bounds.size.height + navigationBarContainerView.bounds.size.height
-
-        // Force the old height, then force a layout pass
-        if modalPresentationStyle == .custom { // Only if we're using the custom presentation style (e.g. pinned to the bottom)
-            manualHeightConstraint.isActive = true
-        }
-        rootParent.presentationController?.containerView?.layoutIfNeeded()
         newContentViewController.view.alpha = 0
-        // Now animate to the correct height.
-        UIView.animate(withDuration: 0.2) {
-            // Fade old content snapshot out
-            oldViewImage.alpha = 0
-        }
-        animateHeightChange(forceAnimation: true, {
-            // Fade new content in
-            self.contentViewController.view.alpha = 1
-            self.manualHeightConstraint.constant = newHeight
-        }, completion: {_ in
+
+        let transitionCompletion: (Bool) -> Void = { _ in
             // If you are implementing your own container view controller, it must call the didMove(toParent:) method of the child view controller after the transition to the new controller is complete or, if there is no transition, immediately after calling the addChild(_:) method.
-            self.contentViewController.didMove(toParent: self)
-            self.contentViewController.endAppearanceTransition()
+            newContentViewController.didMove(toParent: self)
+            newContentViewController.endAppearanceTransition()
 
             // Remove the old content snapshot
             oldViewImage.removeFromSuperview()
 
             // Inform accessibility
-            UIAccessibility.post(notification: .screenChanged, argument: self.contentViewController.view)
-
-            // We shouldn't need this constraint anymore.
-            self.manualHeightConstraint.isActive = false
-
+            UIAccessibility.post(notification: .screenChanged, argument: newContentViewController.view)
             completion?()
-        })
+        }
+
+        UIView.animate(withDuration: 0.2, animations: {
+            oldViewImage.alpha = 0
+            newContentViewController.view.alpha = 1
+        }, completion: transitionCompletion)
     }
 
     func startSpinner() {
@@ -316,30 +277,19 @@ class NativeSheetContainerViewController: UIViewController, BottomSheetPresentab
     // MARK: -
     private var scrollViewHeightConstraint: NSLayoutConstraint?
 
-    private var bottomAnchor: NSLayoutConstraint?
-
-    private lazy var manualHeightConstraint: NSLayoutConstraint = {
-        let manualHeightConstraint: NSLayoutConstraint = self.view.heightAnchor.constraint(equalToConstant: 0)
-        manualHeightConstraint.priority = .defaultHigh
-        return manualHeightConstraint
-    }()
-
     /// :nodoc:
     public override func viewDidLoad() {
         super.viewDidLoad()
 
-        registerForKeyboardNotifications()
         [scrollView, navigationBarContainerView].forEach({  // Note: Order important here, navigation bar should be on top
             view.addSubview($0)
             $0.translatesAutoresizingMaskIntoConstraints = false
         })
 
-        // Our content VCs constrain against safeAreaLayoutGuide, we don't want the scroll view to adjust its content inset too. If `contentInsetAdjustmentBehavior` is left as the default (automatic),
-        // it causes an infinite layout loop under certain conditions when the content exceeds the height of the screen.
+        // Content view controllers already constrain their contents against the safe area.
         scrollView.contentInsetAdjustmentBehavior = .never
-        let bottomAnchor = scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        let bottomAnchor = scrollView.bottomAnchor.constraint(equalTo: view.keyboardLayoutGuide.topAnchor)
         bottomAnchor.priority = .defaultLow
-        self.bottomAnchor = bottomAnchor
 
         NSLayoutConstraint.activate([
             navigationBarContainerView.topAnchor.constraint(equalTo: view.topAnchor),  // For unknown reasons, safeAreaLayoutGuide can have incorrect padding; we'll rely on our superview instead
@@ -385,12 +335,13 @@ class NativeSheetContainerViewController: UIViewController, BottomSheetPresentab
             contentContainerView.widthAnchor.constraint(equalTo: scrollView.frameLayoutGuide.widthAnchor),
             scrollViewHeightConstraint,
         ])
-        let hideKeyboardGesture = UITapGestureRecognizer(
-            target: self, action: #selector(didTapAnywhere))
+
+        let hideKeyboardGesture = UITapGestureRecognizer(target: self, action: #selector(didTapAnywhere))
         hideKeyboardGesture.cancelsTouchesInView = false
         hideKeyboardGesture.delegate = self
         view.addGestureRecognizer(hideKeyboardGesture)
     }
+
     #if compiler(>=6.2)
     func enableNavigationBarBlurInteraction() {
         guard let navigationBarBlur,
@@ -403,114 +354,10 @@ class NativeSheetContainerViewController: UIViewController, BottomSheetPresentab
         navigationBarContainerView.addInteraction(navigationBarBlur)
     }
     #endif
-    private func registerForKeyboardNotifications() {
-        NotificationCenter.default.addObserver(
-            self, selector: #selector(keyboardDidHide),
-            name: UIResponder.keyboardWillHideNotification, object: nil)
-        NotificationCenter.default.addObserver(
-            self, selector: #selector(keyboardDidShow),
-            name: UIResponder.keyboardWillShowNotification, object: nil)
-    }
-
-    @objc
-    private func keyboardDidShow(notification: Notification) {
-        adjustForKeyboard(notification: notification) {
-            if let firstResponder = self.view.firstResponder() {
-                let firstResponderFrame = self.scrollView.convert(firstResponder.bounds, from: firstResponder).insetBy(
-                    dx: -Constants.keyboardAvoidanceEdgePadding,
-                    dy: -Constants.keyboardAvoidanceEdgePadding
-                )
-                self.scrollView.scrollRectToVisible(firstResponderFrame, animated: true)
-            }
-        }
-    }
-
-    @objc
-    private func keyboardDidHide(notification: Notification) {
-        adjustForKeyboard(notification: notification) {
-            if let firstResponder = self.view.firstResponder() {
-                let firstResponderFrame = self.scrollView.convert(firstResponder.bounds, from: firstResponder).insetBy(
-                    dx: -Constants.keyboardAvoidanceEdgePadding,
-                    dy: -Constants.keyboardAvoidanceEdgePadding
-                )
-                self.scrollView.scrollRectToVisible(firstResponderFrame, animated: true)
-            }
-        }
-    }
-
-    @objc
-    private func adjustForKeyboard(notification: Notification, animations: @escaping () -> Void) {
-        guard presentedViewController == nil else {
-            // The presentedVC handles the keyboard, not us.
-            return
-        }
-        let adjustForKeyboard = {
-            self.view.superview?.setNeedsLayout()
-            UIView.animateAlongsideKeyboard(notification) {
-                guard
-                    let keyboardScreenEndFrame =
-                        (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?
-                        .cgRectValue,
-                    let bottomAnchor = self.bottomAnchor
-                else {
-                    return
-                }
-
-                let keyboardViewEndFrame = self.view.convert(keyboardScreenEndFrame, from: self.view.window)
-                var keyboardInViewHeight = self.view.bounds.intersection(keyboardViewEndFrame).height
-                // Account for edge case where keyboard is taller than our view
-                if keyboardViewEndFrame.origin.y < 0 {
-                    // If keyboard frame is negative relative to our own, keyboardInViewHeight (the intersection of keyboard and our view) won't include it and we need to add the extra height:
-                    keyboardInViewHeight += -keyboardViewEndFrame.origin.y
-                }
-                if notification.name == UIResponder.keyboardWillHideNotification {
-                    bottomAnchor.constant = 0
-                } else {
-                    #if !os(visionOS)
-                    if #available(iOS 26.0, visionOS 26.0, *), let inputAccessoryView = self.view.firstResponder()?.inputAccessoryView {
-                        // On iOS 26, the input accessory view is transparent, so we don't want shift the content above it.
-                       keyboardInViewHeight -= inputAccessoryView.frame.height
-                    }
-                    #endif
-                    bottomAnchor.constant = -keyboardInViewHeight
-                }
-
-                self.view.superview?.layoutIfNeeded()
-                animations()
-            }
-        }
-        if self.modalPresentationStyle == .formSheet {
-            // If we're presenting as a form sheet (on an iPad etc), the form sheet presenter might move us around to center us on the screen.
-            // Then we can't calculate the keyboard's location correctly, because we'll be estimating based on the keyboard's size
-            // in our *old* location instead of the new one.
-            // To work around this, wait for a turn of the runloop, then add the keyboard padding.
-            DispatchQueue.main.async {
-                adjustForKeyboard()
-            }
-        } else {
-            // But usually we can do this immediately, as we control the presentation and know we'll always be pinned to the bottom of the screen.
-            adjustForKeyboard()
-        }
-    }
-
-    // MARK: - BottomSheetPresentable
-
-    var panScrollable: UIScrollView? {
-        // Returning the scroll view causes contentInset issues; I'm not sure why.
-        return nil
-    }
 
     func didTapOrSwipeToDismiss() {
         contentViewController.didTapOrSwipeToDismiss()
         STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetDismissed)
-    }
-}
-
-extension NativeSheetContainerViewController: UIAdaptivePresentationControllerDelegate {
-    func presentationControllerShouldDismiss(_ presentationController: UIPresentationController) -> Bool {
-        // On iPad, tapping outside the sheet dismisses it without informing us - so we override this method to be informed.
-        didTapOrSwipeToDismiss()
-        return false
     }
 }
 
@@ -519,28 +366,33 @@ extension NativeSheetContainerViewController: UIAdaptivePresentationControllerDe
 extension NativeSheetContainerViewController {
 
     func present(from presentingViewController: UIViewController, completion: (() -> Void)?) {
-        var presentsAsFormSheet: Bool {
-            #if os(visionOS)
-            return true
-            #else
-            return UIDevice.current.userInterfaceIdiom == .pad || UIDevice.current.userInterfaceIdiom == .mac
-            #endif
-        }
+        #if !os(visionOS)
+        modalPresentationStyle = .pageSheet
+        // Dismissal is handled by the sheet's explicit controls rather than UIKit's interactive gestures.
+        isModalInPresentation = true
+        modalPresentationCapturesStatusBarAppearance = true
 
-        if presentsAsFormSheet {
-            modalPresentationStyle = .formSheet
-            // Scrolling can otherwise trigger the system pull-down gesture too easily.
-            isModalInPresentation = true
-            presentationController?.delegate = self
-        } else {
-            modalPresentationStyle = .custom
-            modalPresentationCapturesStatusBarAppearance = true
-            BottomSheetTransitioningDelegate.appearance = appearance
-            transitioningDelegate = BottomSheetTransitioningDelegate.default
+        // Share the content dismissal contract while UIKit owns native presentation and gestures.
+        if let sheetPresentationController {
+            sheetPresentationController.detents = [.large()]
+            sheetPresentationController.selectedDetentIdentifier = .large
+            sheetPresentationController.preferredCornerRadius = sheetCornerRadius
+            sheetPresentationController.prefersGrabberVisible = false
+            sheetPresentationController.prefersScrollingExpandsWhenScrolledToEdge = false
         }
+        presentationController?.delegate = self
 
         presentingViewController.viewIfLoaded?.endEditing(true)
         presentingViewController.present(self, animated: true, completion: completion)
+        #endif
+    }
+}
+
+extension NativeSheetContainerViewController: UIAdaptivePresentationControllerDelegate {
+
+    func presentationControllerShouldDismiss(_ presentationController: UIPresentationController) -> Bool {
+        // Also prevent UIKit's outside-tap dismissal when the presentation adapts to a form sheet.
+        return false
     }
 }
 
@@ -597,9 +449,6 @@ extension NativeSheetContainerViewController: PaymentSheetAuthenticationContext 
         _ = popContentViewController(completion: completion)
     }
 }
-
-// MARK: - UIViewControllerTransitioningDelegate
-extension NativeSheetContainerViewController: UIViewControllerTransitioningDelegate {}
 
 // MARK: - UIGestureRecognizerDelegate
 extension NativeSheetContainerViewController: UIGestureRecognizerDelegate {

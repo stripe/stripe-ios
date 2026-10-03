@@ -1281,7 +1281,7 @@ import UIKit
 
         fullConsentViewController.delegate = self
 
-        let bottomSheetViewController = BottomSheetViewController(
+        let bottomSheetViewController = PaymentSheetContainerFactory.make(
             contentViewController: fullConsentViewController,
             appearance: paymentElementConfiguration.appearance,
             isTestMode: false,
