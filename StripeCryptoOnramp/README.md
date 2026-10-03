@@ -38,6 +38,8 @@ StripeCryptoOnramp helps you build a headless crypto onramp flow in your iOS app
 - Collect payment methods via Link (card, bank account) or Apple Pay with `collectPaymentMethod(type:from:)`. To receive partial `KycInfo` from Apple Pay, configure the provided `PKPaymentRequest` to request Apple Pay billing `.name` and/or `.postalAddress`.
 - Create crypto payment tokens with `createCryptoPaymentToken()`
 
+If an Apple Pay payment method was collected before authentication and the resolved platform key changes, `createCryptoPaymentToken()` throws `PaymentMethodMerchantChangedError` (`payment_method_merchant_changed`). Call `collectPaymentMethod(type: .applePay(paymentRequest:), from:)` again and retry token creation only after successful collection. Cancellation preserves the previous selection, which remains subject to validation; the SDK does not reopen Apple Pay automatically.
+
 **Checkout handling**: 
 - Present required partner terms and conditions with `presentTermsAndConditionsIfNeeded(from:)` before checkout
 - Complete purchases for an onramp session with `performCheckout(onrampSessionId:authenticationContext:onrampSessionClientSecretProvider:)`.

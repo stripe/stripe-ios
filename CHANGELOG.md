@@ -12,6 +12,7 @@ PATCH
 * [Fixed] Amounts in LBP are now displayed correctly.
 
 ### CryptoOnramp (Alpha)
+* [Fixed] Pre-authentication Apple Pay selections are now checked against freshly resolved platform settings before token creation. If the platform key changes, `PaymentMethodMerchantChangedError` instructs the integrator to collect Apple Pay again.
 * [Added] Added optional `email`, `phone`, and `rawPhone` fields to `KycInfo`, populated from Apple Pay billing or shipping contact information when requested. All values are for prefill only. `phone` is normalized to E.164 using the billing address's country when possible, and is otherwise `nil`; `rawPhone` always carries the wallet's original, unnormalized value. Names fall back to shipping contact values when billing values are missing or blank. Creating `KycInfo` from an Apple Pay payment still requires a usable name or billing address; email or phone alone is insufficient.
 * [Changed] Apple Pay can now be presented via `CryptoOnrampCoordinator.collectPaymentMethod(type:from:)` before the user authenticates with Link. `createCryptoPaymentToken()` still requires an authenticated user.
 * [Added] Added an optional `countryHint` parameter to `CryptoOnrampCoordinator.create(...)`, used to help select a merchant of record for a customer who does not yet have an established KYC region.

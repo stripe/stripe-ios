@@ -14,6 +14,49 @@ import XCTest
 
 final class CryptoOnrampCoordinatorErrorMappingTests: XCTestCase {
 
+    func testMerchantChangedErrorHasSafeRecoveryDiagnosticsAndPassesThroughMapping() throws {
+        let apiClient = STPAPIClient(publishableKey: "pk_test_private_partner_key")
+        let error = CryptoOnrampCoordinator.paymentMethodMerchantChangedError(
+            apiClient: apiClient,
+            additionalSDKVersions: [SDKVersion(name: "stripe-react-native", version: "1.2.3")]
+        )
+        let richError: StripeCryptoOnrampError = error
+        XCTAssertEqual(richError.code, "payment_method_merchant_changed")
+        XCTAssertEqual(richError.userMessage, "Please select your Apple Pay payment method again to continue.")
+        XCTAssertEqual(error.errorDescription, richError.userMessage)
+        XCTAssertEqual(error.localizedDescription, richError.userMessage)
+        XCTAssertEqual(error.debugDescription, richError.developerMessage)
+        XCTAssertNil(richError.underlyingError)
+        XCTAssertNil(richError.docURL)
+        XCTAssertFalse(richError is StripeCryptoOnrampAPIError)
+
+        let appIdentifier = try XCTUnwrap(Bundle.main.bundleIdentifier)
+        XCTAssertEqual(error.developerMessage, """
+        The selected Apple Pay payment method was created under a different platform key than the one currently resolved for this customer.
+
+        Request Context:
+          operation: create_crypto_payment_token
+          app_id: \(appIdentifier)
+          mode: test
+
+        Code: payment_method_merchant_changed
+        Next step: Call collectPaymentMethod(type: .applePay(paymentRequest:), from:) again and retry createCryptoPaymentToken() only after successful collection.
+        SDK: stripe-ios@\(STPAPIClient.STPSDKVersion), stripe-react-native@1.2.3
+        """)
+        for message in [error.userMessage, error.developerMessage] {
+            for sensitiveField in ["pk_test_", "pk_live_", "crypto_customer_", "request_id:", "email", "phone", "billing", "shipping"] {
+                XCTAssertFalse(message.contains(sensitiveField))
+            }
+        }
+
+        // Mapping a local error must preserve its original diagnostics and concrete type.
+        let mappedError = CryptoOnrampCoordinator.mappedError(error, during: .collectPaymentMethod, apiClient: apiClient)
+        let preservedError = try XCTUnwrap(mappedError as? PaymentMethodMerchantChangedError)
+        XCTAssertEqual(preservedError.code, error.code)
+        XCTAssertEqual(preservedError.userMessage, error.userMessage)
+        XCTAssertEqual(preservedError.developerMessage, error.developerMessage)
+    }
+
     func testCheckoutErrorPreservesLastPaymentErrorDetails() throws {
         // Given a PaymentIntent declined after authentication and a generic payment handler error
         let paymentIntent = try XCTUnwrap(STPPaymentIntent.decodedObject(fromAPIResponse: [
