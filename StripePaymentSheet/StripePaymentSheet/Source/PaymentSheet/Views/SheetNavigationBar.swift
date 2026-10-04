@@ -165,7 +165,11 @@ class SheetNavigationBar: UIView {
             break
         }
         if !testModeView.isHidden {
-            leadingItems.append(systemTestModeItem)
+            // Keep the badge in place when content changes so UIKit does not blur it during replacement.
+            let testModeItem = systemNavigationItem.leftBarButtonItems?.first {
+                $0.customView is TestModeView
+            } ?? systemTestModeItem
+            leadingItems.append(testModeItem)
         }
         systemNavigationItem.leftBarButtonItems = leadingItems
         systemNavigationItem.rightBarButtonItems = trailingItems
