@@ -34,6 +34,9 @@
 /* Explanation above the document upload control */
 "Make sure your document meets following requirements." = "Make sure your document meets following requirements.";
 
+/* Error message shown when an Apple Pay payment method must be collected again because the platform key changed */
+"Please select your Apple Pay payment method again to continue." = "Please select your Apple Pay payment method again to continue.";
+
 /* Instruction after an unavailable operation */
 "Please try again later." = "Please try again later.";
 
