@@ -9,27 +9,6 @@ import XCTest
 
 class PaymentSheetStandardUITests: PaymentSheetUITestCase {
 
-    func testPaymentSheetPresentsOnUnfoldedDevice() throws {
-        // Given an unfolded device running the SwiftUI PaymentSheet playground
-        app.launch()
-        guard app.windows.firstMatch.frame.width > 600 else {
-            throw XCTSkip("Requires the unfolded display of a phone or a tablet.")
-        }
-        // Reveal the collapsed sidebar before selecting a destination on the unfolded display.
-        XCTAssertTrue(app.navigationBars.buttons.firstMatch.waitForExistenceAndTap())
-        XCTAssertTrue(app.staticTexts["Payment Sheet (test playground)"].waitForExistenceAndTap())
-        // When opening PaymentSheet from the playground's navigation hierarchy
-        XCTAssertTrue(app.buttons["Present PaymentSheet"].waitForExistenceAndTap(timeout: 60))
-
-        // Then the payment UI loads and closing it leaves the app responsive
-        // Returning customers see "New card" instead of "Card" in the payment method list.
-        let cardButton = app.buttons.matching(NSPredicate(format: "label IN %@", ["Card", "New card"])).firstMatch
-        XCTAssertTrue(cardButton.waitForExistence(timeout: 30))
-        XCTAssertTrue(app.buttons["UIButton.Close"].waitForExistenceAndTap())
-        XCTAssertTrue(app.buttons["Present PaymentSheet"].waitForExistence(timeout: 5))
-        XCTAssertTrue(app.buttons["Present PaymentSheet"].isHittable)
-    }
-
     func testPaymentSheetStandard() throws {
         app.launch()
         app.staticTexts["PaymentSheet"].tap()

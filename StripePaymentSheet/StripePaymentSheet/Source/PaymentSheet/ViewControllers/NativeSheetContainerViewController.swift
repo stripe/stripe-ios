@@ -408,16 +408,12 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
         }
 
         let fittedContentHeight = fittedContentHeight
-        let resize: () -> Void = {
+        // Use a consistent spring for all native sheet height changes.
+        // UISheetPresentationController.animateChanges(_:) can cause an infinite layout loop
+        // when resizing scrollable content on an iPhone Duo with its screen open.
+        animateHeightChange(forceAnimation: true) {
             self.lastFittedContentHeight = fittedContentHeight
             self.rootParent.sheetPresentationController?.invalidateDetents()
-        }
-        // UIKit's sheet animator can loop when resizing scrollable content at regular width.
-        // The presented sheet can be compact, so check the presenter's size class instead.
-        if rootParent.presentingViewController?.traitCollection.horizontalSizeClass == .regular {
-            animateHeightChange(forceAnimation: true, resize)
-        } else {
-            rootParent.sheetPresentationController?.animateChanges(resize)
         }
         #endif
     }
@@ -431,10 +427,9 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
 
         // Content view controllers already constrain their contents against the safe area.
         scrollView.contentInsetAdjustmentBehavior = .never
-        if #available(iOS 17.0, *) {
-            // Existing form padding extends to the sheet's bottom; only a visible keyboard should shorten it.
-            view.keyboardLayoutGuide.usesBottomSafeArea = false
-        }
+        // Existing form padding extends to the sheet's bottom; only a visible keyboard should shorten it.
+        // TODO: When we drop iOS 16 support, set keyboardLayoutGuide.usesBottomSafeArea = false here.
+        // The hidden keyboard guide will then reach the view's bottom without the constraint adjustment below.
         let bottomAnchor = scrollView.bottomAnchor.constraint(equalTo: view.keyboardLayoutGuide.topAnchor)
         bottomAnchor.priority = .defaultLow
         keyboardAvoidanceConstraint = bottomAnchor
@@ -473,14 +468,13 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 
-        if #unavailable(iOS 17.0) {
-            // Older keyboard guides always reserve the bottom safe area, even with the keyboard hidden.
-            let bottomInset = view.keyboardLayoutGuide.layoutFrame.height <= view.safeAreaInsets.bottom
-                ? view.safeAreaInsets.bottom : 0
-            if keyboardAvoidanceConstraint?.constant != bottomInset {
-                keyboardAvoidanceConstraint?.constant = bottomInset
-                view.layoutIfNeeded()
-            }
+        // The keyboard guide reserves the bottom safe area by default, even with the keyboard hidden.
+        // TODO: When we drop iOS 16 support, remove this compensation after setting usesBottomSafeArea = false.
+        let bottomInset = view.keyboardLayoutGuide.layoutFrame.height <= view.safeAreaInsets.bottom
+            ? view.safeAreaInsets.bottom : 0
+        if keyboardAvoidanceConstraint?.constant != bottomInset {
+            keyboardAvoidanceConstraint?.constant = bottomInset
+            view.layoutIfNeeded()
         }
 
         let fittedContentHeight = fittedContentHeight
