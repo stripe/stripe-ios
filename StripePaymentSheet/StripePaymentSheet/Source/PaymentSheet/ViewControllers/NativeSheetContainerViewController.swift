@@ -27,8 +27,9 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
         "com.stripe.paymentsheet.content"
     )
 
-    // UIKit caps content-sized sheets at the available height; authentication may request that full height.
+    // UIKit caps content-sized sheets at the available height; 3DS may request that full height.
     lazy var contentSizedDetent: UISheetPresentationController.Detent = {
+        // For iOS 15 devices, we can't set custom detents and instead conservatively use the largest
         guard #available(iOS 16.0, *) else {
             return .large()
         }
@@ -39,8 +40,8 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
             guard !self.contentRequiresFullScreen else {
                 return context.maximumDetentValue
             }
-            // Layout may change the form before a resize starts; keep the detent stable until we animate it.
-            // Content already includes bottom padding. UIKit adds the bottom safe area to edge-attached detents.
+            // Since the form may change before a resize starts, we use the last measured height.
+            // UIKit adds its own bottom safe area padding, and so we remove that since our content already includes the intended bottom padding.
             return min(max(0, self.lastFittedContentHeight - self.view.safeAreaInsets.bottom), context.maximumDetentValue)
         }
     }()
@@ -64,18 +65,6 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
     private lazy var contentContainerView: UIStackView = {
         return UIStackView()
     }()
-
-    #if compiler(>=6.2)
-    private lazy var navigationBarBlur: UIInteraction? = {
-        guard appearance.navigationBarStyle.isGlass, #available(iOS 26.0, visionOS 26.0, *) else {
-            return nil
-        }
-        let interaction = UIScrollEdgeElementContainerInteraction()
-        interaction.scrollView = scrollView
-        interaction.edge = .top
-        return interaction
-    }()
-    #endif
 
     private(set) var contentStack: [BottomSheetContentViewController] = []
 
@@ -301,15 +290,14 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
 
     // MARK: -
     private var scrollViewHeightConstraint: NSLayoutConstraint?
-    private var keyboardAvoidanceConstraint: NSLayoutConstraint?
 
     private var lastFittedContentHeight: CGFloat = 0
-    private var hasScheduledDetentInvalidation = false
     private var isWaitingForDetentTransition = false
 
     private var fittedContentHeight: CGFloat {
         // Measure both views at the same width so wrapped content and custom navigation bars fit together.
         let width = max(contentContainerView.bounds.width, view.bounds.width)
+        // Handle case where initial layout hasn't happened yet.
         guard width > 0 else {
             return navigationBarContainerView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height
         }
@@ -328,7 +316,6 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
     }
 
     func prepareForPresentation(in availableWidth: CGFloat) {
-        loadViewIfNeeded()
         // Resolve an initial height before UIKit asks the custom detent for its first value.
         view.bounds.size.width = availableWidth
         view.setNeedsLayout()
@@ -342,10 +329,12 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
             return
         }
         guard viewIfLoaded?.window != nil else {
-            // Prepare the next presentation's height without starting an offscreen sheet animation.
+            // If the sheet is offscreen, we should just set the height and not perform an animation
             lastFittedContentHeight = fittedContentHeight
             return
         }
+
+        // Prevent multiple animations from happening (for example if this was called repeatedly during presentation or dismissal)
         guard !isWaitingForDetentTransition else {
             return
         }
@@ -353,6 +342,7 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
         // Wait until UIKit finishes presenting or dismissing before starting a height animation.
         if rootParent.isBeingPresented || rootParent.isBeingDismissed {
             guard let transitionCoordinator = rootParent.transitionCoordinator else { return }
+            // Set `isWaitingForDetentTransition` to true if animation work successfully starts
             isWaitingForDetentTransition = transitionCoordinator.animate(alongsideTransition: nil) { [weak self] _ in
                 // UIKit must clear the parent's transition state before we start another sheet animation.
                 DispatchQueue.main.async { [weak self] in
@@ -365,9 +355,9 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
         }
 
         let fittedContentHeight = fittedContentHeight
-        // Use a consistent spring for all native sheet height changes.
         // UISheetPresentationController.animateChanges(_:) can cause an infinite layout loop
         // when resizing scrollable content on an iPhone Duo with its screen open.
+        // Use the Stripe version instead
         animateHeightChange(forceAnimation: true) {
             self.lastFittedContentHeight = fittedContentHeight
             self.rootParent.sheetPresentationController?.invalidateDetents()
@@ -386,36 +376,20 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
 
         // Content view controllers already constrain their contents against the safe area.
         scrollView.contentInsetAdjustmentBehavior = .never
-        // Existing form padding extends to the sheet's bottom; only a visible keyboard should shorten it.
-        // TODO: When we drop iOS 16 support, set keyboardLayoutGuide.usesBottomSafeArea = false here.
-        // The hidden keyboard guide will then reach the view's bottom without the constraint adjustment below.
         let bottomAnchor = scrollView.bottomAnchor.constraint(equalTo: view.keyboardLayoutGuide.topAnchor)
         bottomAnchor.priority = .defaultLow
-        keyboardAvoidanceConstraint = bottomAnchor
 
         NSLayoutConstraint.activate([
             navigationBarContainerView.topAnchor.constraint(equalTo: view.topAnchor),  // For unknown reasons, safeAreaLayoutGuide can have incorrect padding; we'll rely on our superview instead
             navigationBarContainerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             navigationBarContainerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
 
+            // Keep content below the custom bar for both navigation styles.
+            scrollView.topAnchor.constraint(equalTo: navigationBarContainerView.bottomAnchor),
             scrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             bottomAnchor,
         ])
-
-        if appearance.navigationBarStyle.isGlass {
-            NSLayoutConstraint.activate([
-                // Allow scroll view to extend under the navigation bar for blur effect
-                scrollView.topAnchor.constraint(equalTo: view.topAnchor),
-            ])
-        } else {
-            NSLayoutConstraint.activate([
-                scrollView.topAnchor.constraint(equalTo: navigationBarContainerView.bottomAnchor)
-            ])
-        }
-        #if compiler(>=6.2)
-        enableNavigationBarBlurInteraction()
-        #endif
 
         contentContainerView.translatesAutoresizingMaskIntoConstraints = false
         contentContainerView.directionalLayoutMargins = appearance.formInsets
@@ -426,26 +400,10 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
         scrollViewHeightConstraint.priority = .fittingSizeLevel
         self.scrollViewHeightConstraint = scrollViewHeightConstraint
 
-        let contentTopAnchor: NSLayoutYAxisAnchor
-        if appearance.navigationBarStyle.isGlass {
-            // Reserve the current navigation bar's actual height while allowing content to scroll underneath it.
-            let navigationBarSpace = UILayoutGuide()
-            scrollView.addLayoutGuide(navigationBarSpace)
-            NSLayoutConstraint.activate([
-                navigationBarSpace.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor),
-                navigationBarSpace.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor),
-                navigationBarSpace.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor),
-                navigationBarSpace.heightAnchor.constraint(equalTo: navigationBarContainerView.heightAnchor),
-            ])
-            contentTopAnchor = navigationBarSpace.bottomAnchor
-        } else {
-            contentTopAnchor = scrollView.contentLayoutGuide.topAnchor
-        }
-
         NSLayoutConstraint.activate([
             contentContainerView.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor),
             contentContainerView.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor),
-            contentContainerView.topAnchor.constraint(equalTo: contentTopAnchor),
+            contentContainerView.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor),
             contentContainerView.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor),
             contentContainerView.widthAnchor.constraint(equalTo: scrollView.frameLayoutGuide.widthAnchor),
             scrollViewHeightConstraint,
@@ -456,47 +414,6 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
         hideKeyboardGesture.delegate = self
         view.addGestureRecognizer(hideKeyboardGesture)
     }
-
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-
-        // The keyboard guide reserves the bottom safe area by default, even with the keyboard hidden.
-        // TODO: When we drop iOS 16 support, remove this compensation after setting usesBottomSafeArea = false.
-        let bottomInset = view.keyboardLayoutGuide.layoutFrame.height <= view.safeAreaInsets.bottom
-            ? view.safeAreaInsets.bottom : 0
-        if keyboardAvoidanceConstraint?.constant != bottomInset {
-            keyboardAvoidanceConstraint?.constant = bottomInset
-            view.layoutIfNeeded()
-        }
-
-        let fittedContentHeight = fittedContentHeight
-        guard view.window != nil,
-              abs(fittedContentHeight - lastFittedContentHeight) > 0.5,
-              !hasScheduledDetentInvalidation else {
-            return
-        }
-        // Coalesce layout-driven changes and invalidate after the current layout pass completes.
-        hasScheduledDetentInvalidation = true
-        DispatchQueue.main.async { [weak self] in
-            guard let self else { return }
-            self.hasScheduledDetentInvalidation = false
-            // An explicit content update may already have resized the sheet in its own animation.
-            guard abs(self.fittedContentHeight - self.lastFittedContentHeight) > 0.5 else { return }
-            self.invalidateContentDetent()
-        }
-    }
-    #if compiler(>=6.2)
-    func enableNavigationBarBlurInteraction() {
-        guard let navigationBarBlur,
-            navigationBarBlur.view == nil,
-            navigationController != nil,
-        // Hack: This line causes PaymentSheetSnapshotTests to fail on iOS 26 - the sheet becomes transparent. I can't figure out a fix, so just remove it out for tests.
-        NSClassFromString("XCTest") == nil else {
-            return
-        }
-        navigationBarContainerView.addInteraction(navigationBarBlur)
-    }
-    #endif
 
     func didTapOrSwipeToDismiss() {
         contentViewController.didTapOrSwipeToDismiss()

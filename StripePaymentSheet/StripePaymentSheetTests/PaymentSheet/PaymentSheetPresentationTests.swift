@@ -5,7 +5,6 @@
 //  Created by George Birch on 8/10/26.
 //
 
-@_spi(STP) @testable import StripePayments
 @_spi(STP) @_spi(AppearanceAPIAdditionsPreview) @testable import StripePaymentSheet
 @_spi(STP) import StripeUICore
 import UIKit
@@ -13,69 +12,6 @@ import XCTest
 
 #if !os(visionOS)
 final class PaymentSheetPresentationTests: XCTestCase {
-
-    @MainActor
-    func testNativeSheetResizesToScrollableContentAtRegularWidth() async throws {
-        guard #available(iOS 17.0, *) else { throw XCTSkip("Trait overrides require iOS 17.") }
-        // Given the regular-width presentation used by an unfolded phone
-        let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first)
-        let presenter = UIViewController()
-        presenter.traitOverrides.horizontalSizeClass = .regular
-        let window = UIWindow(windowScene: scene)
-        window.frame = scene.coordinateSpace.bounds
-        window.rootViewController = presenter
-        window.makeKeyAndVisible()
-        defer { window.isHidden = true }
-        await AddressSpecProvider.shared.loadAddressSpecs()
-        let paymentMethodTypes: [STPPaymentMethodType] = [
-            .card, .cashApp, .klarna, .affirm, .USBankAccount, .afterpayClearpay, .payPal,
-            .revolutPay, .alipay, .bancontact, .EPS, .iDEAL, .SEPADebit, .OXXO,
-        ]
-        let loadResult = PaymentSheetLoader.LoadResult(
-            intent: ._testPaymentIntent(paymentMethodTypes: paymentMethodTypes),
-            elementsSession: ._testValue(paymentMethodTypes: paymentMethodTypes.compactMap { STPPaymentMethod.string(from: $0) }),
-            savedPaymentMethods: [],
-            paymentMethodTypes: paymentMethodTypes.map { .stripe($0) },
-            paymentMethodMessagingPromotionsHelper: ._testValue(),
-            paymentMethodOrientation: .vertical
-        )
-        var configuration = PaymentSheet.Configuration()
-        configuration.applePay = nil
-        configuration.link = .init(display: .never)
-        let content = PaymentSheetVerticalViewController(
-            configuration: configuration,
-            loadResult: loadResult,
-            isFlowController: false,
-            analyticsHelper: ._testValue()
-        )
-        let paymentSheet = PaymentSheet(paymentIntentClientSecret: "pi_test_secret_test", configuration: configuration)
-        let sheet = NativeSheetContainerViewController(
-            contentViewController: paymentSheet.loadingViewController,
-            appearance: .default,
-            isTestMode: true,
-            didCancelNative3DS2: {}
-        )
-        let presented = expectation(description: "Regular-width native sheet presented")
-
-        // When replacing the loading spinner with content taller than the available sheet
-        presenter.presentAsSheet(sheet) { presented.fulfill() }
-        await fulfillment(of: [presented], timeout: 3)
-        let presentedSheet = try XCTUnwrap(presenter.presentedViewController as? NativeSheetContainerViewController)
-        let sheetPresentationController = try XCTUnwrap(presentedSheet.sheetPresentationController)
-        XCTAssertEqual(sheetPresentationController.selectedDetentIdentifier, NativeSheetContainerViewController.contentDetentIdentifier)
-        let contentVisible = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
-            content.view.window != nil && content.view.alpha == 1
-        }, object: nil)
-        sheet.setViewControllers([content])
-
-        // Then resizing completes, the viewport stays capped, and the app can dismiss the sheet
-        await fulfillment(of: [contentVisible], timeout: 3)
-        XCTAssertGreaterThan(sheet.scrollView.contentSize.height, sheet.scrollView.bounds.height)
-        XCTAssertLessThanOrEqual(sheet.scrollView.frame.maxY, sheet.view.bounds.maxY + 0.5)
-        let dismissed = expectation(description: "Regular-width native sheet dismissed")
-        presenter.dismiss(animated: false) { dismissed.fulfill() }
-        await fulfillment(of: [dismissed], timeout: 3)
-    }
 
     @MainActor
     func testPresentAsSheetUsesNativeSheetBehavior() throws {
@@ -185,28 +121,41 @@ final class PaymentSheetPresentationTests: XCTestCase {
     }
 
     @MainActor
-    func testNativeGlassContentTracksActualNavigationBarHeight() throws {
-        guard #available(iOS 26.0, *) else { throw XCTSkip("Glass navigation bars require iOS 26.") }
-        var appearance = PaymentSheet.Appearance.default
-        appearance.navigationBarStyle = .glass
-        let initialContent = MeasuredSheetContentViewController(contentHeight: 200, navigationBarHeight: 90, appearance: appearance)
-        let sheet = NativeSheetContainerViewController(
-            contentViewController: initialContent,
-            appearance: appearance,
-            isTestMode: true,
-            didCancelNative3DS2: {}
-        )
-        sheet.view.frame = CGRect(x: 0, y: 0, width: 375, height: 800)
-        sheet.prepareForPresentation(in: 375)
+    func testNativeContentFitsBelowCurrentNavigationBar() throws {
+        guard #available(iOS 16.0, *) else { throw XCTSkip("Content-sized detents are used on iOS 16 and later.") }
+        var navigationBarStyles: [PaymentSheet.Appearance.NavigationBarStyle] = [.plain]
+        if #available(iOS 26.0, *) {
+            navigationBarStyles.append(.glass)
+        }
 
-        XCTAssertEqual(initialContent.view.convert(.zero, to: sheet.scrollView).y, 90, accuracy: 0.5)
+        for navigationBarStyle in navigationBarStyles {
+            // Given content below a custom navigation bar
+            var appearance = PaymentSheet.Appearance.default
+            appearance.navigationBarStyle = navigationBarStyle
+            let initialContent = MeasuredSheetContentViewController(contentHeight: 200, navigationBarHeight: 90, appearance: appearance)
+            let sheet = NativeSheetContainerViewController(
+                contentViewController: initialContent,
+                appearance: appearance,
+                isTestMode: true,
+                didCancelNative3DS2: {}
+            )
+            sheet.view.frame = CGRect(x: 0, y: 0, width: 375, height: 800)
+            sheet.prepareForPresentation(in: 375)
 
-        let replacement = MeasuredSheetContentViewController(contentHeight: 200, navigationBarHeight: 110, appearance: appearance)
-        sheet.pushContentViewController(replacement)
-        sheet.view.layoutIfNeeded()
+            XCTAssertEqual(sheet.scrollView.frame.minY, 90, accuracy: 0.5)
+            XCTAssertEqual(initialContent.view.convert(.zero, to: sheet.scrollView).y, 0, accuracy: 0.5)
+            XCTAssertEqual(try XCTUnwrap(sheet.contentSizedDetent.resolvedValue(in: SheetDetentResolutionContext())), 290, accuracy: 0.5)
 
-        XCTAssertEqual(replacement.view.convert(.zero, to: sheet.scrollView).y, 110, accuracy: 0.5)
-        XCTAssertEqual(try XCTUnwrap(sheet.contentSizedDetent.resolvedValue(in: SheetDetentResolutionContext())), 310, accuracy: 0.5)
+            // When replacing the content with a taller navigation bar
+            let replacement = MeasuredSheetContentViewController(contentHeight: 200, navigationBarHeight: 110, appearance: appearance)
+            sheet.pushContentViewController(replacement)
+            sheet.view.layoutIfNeeded()
+
+            // Then the content stays below the bar and its height is counted once
+            XCTAssertEqual(sheet.scrollView.frame.minY, 110, accuracy: 0.5)
+            XCTAssertEqual(replacement.view.convert(.zero, to: sheet.scrollView).y, 0, accuracy: 0.5)
+            XCTAssertEqual(try XCTUnwrap(sheet.contentSizedDetent.resolvedValue(in: SheetDetentResolutionContext())), 310, accuracy: 0.5)
+        }
     }
 
     @MainActor
@@ -236,102 +185,6 @@ final class PaymentSheetPresentationTests: XCTestCase {
 
         // Then the content still receives no dismissal request
         XCTAssertEqual(contentViewController.dismissalAttemptCount, 0)
-    }
-
-    @MainActor
-    func testSwitchingNestedContentInvalidatesContentDetent() {
-        // Given
-        let contentViewController = NativeSheetStubContentViewController()
-        let sheetViewController = DetentInvalidationSpyViewController(
-            contentViewController: contentViewController,
-            appearance: .default,
-            isTestMode: true,
-            didCancelNative3DS2: {}
-        )
-        let containerView = DynamicHeightContainerView()
-        contentViewController.view.addSubview(containerView)
-        contentViewController.add(
-            childViewController: UIViewController(),
-            containerView: containerView
-        )
-
-        // When
-        contentViewController.switchContentIfNecessary(
-            to: UIViewController(),
-            containerView: containerView
-        )
-
-        // Then
-        XCTAssertEqual(sheetViewController.invalidationCount, 1)
-    }
-
-    @MainActor
-    func testSelectingVerticalPaymentMethodInvalidatesContentDetent() throws {
-        // Given
-        let contentViewController = NativeSheetStubContentViewController()
-        let sheetViewController = DetentInvalidationSpyViewController(
-            contentViewController: contentViewController,
-            appearance: .default,
-            isTestMode: true,
-            didCancelNative3DS2: {}
-        )
-        let delegate = VerticalPaymentMethodListDelegateStub()
-        let paymentMethodListViewController = VerticalPaymentMethodListViewController(
-            initialSelection: nil,
-            savedPaymentMethods: [],
-            paymentMethodTypes: [.stripe(.affirm)],
-            shouldShowApplePay: false,
-            shouldShowLink: false,
-            savedPaymentMethodAccessoryType: nil,
-            overrideHeaderView: nil,
-            appearance: .default,
-            currency: "usd",
-            amount: 1_000,
-            incentive: nil,
-            delegate: delegate
-        )
-        contentViewController.addChild(paymentMethodListViewController)
-        paymentMethodListViewController.didMove(toParent: contentViewController)
-        let affirmRow = try XCTUnwrap(paymentMethodListViewController.rowButtons.first)
-
-        // When
-        paymentMethodListViewController.didTap(rowButton: affirmRow, selection: affirmRow.type)
-
-        // Then
-        XCTAssertEqual(sheetViewController.invalidationCount, 1)
-    }
-
-    @MainActor
-    func testNativeSheetDoesNotAddBottomSafeAreaPadding() async throws {
-        guard #available(iOS 16.0, *) else { throw XCTSkip("Content-sized detents require iOS 16.") }
-        // Given content whose existing bottom padding is included in its natural height
-        let content = MeasuredSheetContentViewController(contentHeight: 200)
-        let sheet = NativeSheetContainerViewController(
-            contentViewController: content,
-            appearance: .default,
-            isTestMode: true,
-            didCancelNative3DS2: {}
-        )
-        let presenter = UIViewController()
-        let window = UIWindow(frame: UIScreen.main.bounds)
-        window.rootViewController = presenter
-        window.makeKeyAndVisible()
-        defer { window.isHidden = true }
-        let presented = expectation(description: "Content-sized native sheet presented")
-
-        // When UIKit presents the sheet on a device with a home indicator
-        presenter.presentAsSheet(sheet) { presented.fulfill() }
-        await fulfillment(of: [presented], timeout: 3)
-        sheet.view.layoutIfNeeded()
-
-        // Then the content reaches the sheet's bottom, as it does in the legacy container
-        XCTAssertEqual(sheet.scrollView.frame.maxY, sheet.view.bounds.maxY, accuracy: 0.5)
-        let contentFrame = content.view.convert(content.view.bounds, to: sheet.view)
-        XCTAssertEqual(contentFrame.maxY, sheet.view.bounds.maxY, accuracy: 0.5)
-        XCTAssertEqual(sheet.scrollView.bounds.height, 200, accuracy: 0.5)
-        let dismissed = expectation(description: "Native sheet dismissed")
-        presenter.dismiss(animated: false) { dismissed.fulfill() }
-        await fulfillment(of: [dismissed], timeout: 3)
     }
 
     @MainActor
@@ -393,15 +246,6 @@ private final class NativeSheetStubContentViewController: UIViewController, Bott
     }
 }
 
-private final class DetentInvalidationSpyViewController: NativeSheetContainerViewController {
-
-    private(set) var invalidationCount = 0
-
-    override func invalidateContentDetent() {
-        invalidationCount += 1
-    }
-}
-
 private final class LinkCornerRadiusSheetViewController: NativeSheetContainerViewController {
 
     override var sheetCornerRadius: CGFloat? {
@@ -414,8 +258,6 @@ private final class MeasuredSheetContentViewController: UIViewController, Bottom
     let navigationBar: SheetNavigationBar
     let requiresFullScreen = false
     private let contentHeight: CGFloat
-    private(set) var didAppearCount = 0
-    var onDidAppear: (() -> Void)?
 
     init(contentHeight: CGFloat = 200, navigationBarHeight: CGFloat = 52, appearance: PaymentSheet.Appearance = .default) {
         self.contentHeight = contentHeight
@@ -430,12 +272,6 @@ private final class MeasuredSheetContentViewController: UIViewController, Bottom
     override func viewDidLoad() {
         super.viewDidLoad()
         view.heightAnchor.constraint(equalToConstant: contentHeight).isActive = true
-    }
-
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        didAppearCount += 1
-        onDidAppear?()
     }
 
     func didTapOrSwipeToDismiss() {}
@@ -466,14 +302,4 @@ private final class SheetDetentResolutionContext: NSObject, UISheetPresentationC
     let maximumDetentValue: CGFloat = 1000
 }
 
-private final class VerticalPaymentMethodListDelegateStub: VerticalPaymentMethodListViewControllerDelegate {
-
-    func willDisplayForm(_ rowButtonType: RowButtonType) -> Bool {
-        return false
-    }
-
-    func didTapPaymentMethod(_ selection: RowButtonType) {}
-
-    func didTapSavedPaymentMethodAccessoryButton() {}
-}
 #endif

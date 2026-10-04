@@ -108,7 +108,6 @@ extension UIViewController {
                     toVC.view.alpha = 1
                 },
                 postLayoutAnimations: {
-                    self.bottomSheetController?.invalidateContentDetent()
                     if let contentOffsetPercentage {
                         self.bottomSheetController?.contentOffsetPercentage = contentOffsetPercentage
                     }
