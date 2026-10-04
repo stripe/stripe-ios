@@ -185,28 +185,41 @@ final class PaymentSheetPresentationTests: XCTestCase {
     }
 
     @MainActor
-    func testNativeGlassContentTracksActualNavigationBarHeight() throws {
-        guard #available(iOS 26.0, *) else { throw XCTSkip("Glass navigation bars require iOS 26.") }
-        var appearance = PaymentSheet.Appearance.default
-        appearance.navigationBarStyle = .glass
-        let initialContent = MeasuredSheetContentViewController(contentHeight: 200, navigationBarHeight: 90, appearance: appearance)
-        let sheet = NativeSheetContainerViewController(
-            contentViewController: initialContent,
-            appearance: appearance,
-            isTestMode: true,
-            didCancelNative3DS2: {}
-        )
-        sheet.view.frame = CGRect(x: 0, y: 0, width: 375, height: 800)
-        sheet.prepareForPresentation(in: 375)
+    func testNativeContentFitsBelowCurrentNavigationBar() throws {
+        guard #available(iOS 16.0, *) else { throw XCTSkip("Content-sized detents are used on iOS 16 and later.") }
+        var navigationBarStyles: [PaymentSheet.Appearance.NavigationBarStyle] = [.plain]
+        if #available(iOS 26.0, *) {
+            navigationBarStyles.append(.glass)
+        }
 
-        XCTAssertEqual(initialContent.view.convert(.zero, to: sheet.scrollView).y, 90, accuracy: 0.5)
+        for navigationBarStyle in navigationBarStyles {
+            // Given content below a custom navigation bar
+            var appearance = PaymentSheet.Appearance.default
+            appearance.navigationBarStyle = navigationBarStyle
+            let initialContent = MeasuredSheetContentViewController(contentHeight: 200, navigationBarHeight: 90, appearance: appearance)
+            let sheet = NativeSheetContainerViewController(
+                contentViewController: initialContent,
+                appearance: appearance,
+                isTestMode: true,
+                didCancelNative3DS2: {}
+            )
+            sheet.view.frame = CGRect(x: 0, y: 0, width: 375, height: 800)
+            sheet.prepareForPresentation(in: 375)
 
-        let replacement = MeasuredSheetContentViewController(contentHeight: 200, navigationBarHeight: 110, appearance: appearance)
-        sheet.pushContentViewController(replacement)
-        sheet.view.layoutIfNeeded()
+            XCTAssertEqual(sheet.scrollView.frame.minY, 90, accuracy: 0.5)
+            XCTAssertEqual(initialContent.view.convert(.zero, to: sheet.scrollView).y, 0, accuracy: 0.5)
+            XCTAssertEqual(try XCTUnwrap(sheet.contentSizedDetent.resolvedValue(in: SheetDetentResolutionContext())), 290, accuracy: 0.5)
 
-        XCTAssertEqual(replacement.view.convert(.zero, to: sheet.scrollView).y, 110, accuracy: 0.5)
-        XCTAssertEqual(try XCTUnwrap(sheet.contentSizedDetent.resolvedValue(in: SheetDetentResolutionContext())), 310, accuracy: 0.5)
+            // When replacing the content with a taller navigation bar
+            let replacement = MeasuredSheetContentViewController(contentHeight: 200, navigationBarHeight: 110, appearance: appearance)
+            sheet.pushContentViewController(replacement)
+            sheet.view.layoutIfNeeded()
+
+            // Then the content stays below the bar and its height is counted once
+            XCTAssertEqual(sheet.scrollView.frame.minY, 110, accuracy: 0.5)
+            XCTAssertEqual(replacement.view.convert(.zero, to: sheet.scrollView).y, 0, accuracy: 0.5)
+            XCTAssertEqual(try XCTUnwrap(sheet.contentSizedDetent.resolvedValue(in: SheetDetentResolutionContext())), 310, accuracy: 0.5)
+        }
     }
 
     @MainActor
