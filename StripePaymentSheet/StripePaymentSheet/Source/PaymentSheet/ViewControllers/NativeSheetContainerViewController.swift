@@ -290,8 +290,10 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
 
     // MARK: -
     private var scrollViewHeightConstraint: NSLayoutConstraint?
+    private var keyboardAvoidanceConstraint: NSLayoutConstraint?
 
     private var lastFittedContentHeight: CGFloat = 0
+    private var hasScheduledDetentInvalidation = false
     private var isWaitingForDetentTransition = false
 
     private var fittedContentHeight: CGFloat {
@@ -376,8 +378,12 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
 
         // Content view controllers already constrain their contents against the safe area.
         scrollView.contentInsetAdjustmentBehavior = .never
+        // Existing form padding extends to the sheet's bottom; only a visible keyboard should shorten it.
+        // TODO: When we drop iOS 16 support, set keyboardLayoutGuide.usesBottomSafeArea = false here.
+        // The hidden keyboard guide will then reach the view's bottom without the constraint adjustment below.
         let bottomAnchor = scrollView.bottomAnchor.constraint(equalTo: view.keyboardLayoutGuide.topAnchor)
         bottomAnchor.priority = .defaultLow
+        keyboardAvoidanceConstraint = bottomAnchor
 
         NSLayoutConstraint.activate([
             navigationBarContainerView.topAnchor.constraint(equalTo: view.topAnchor),  // For unknown reasons, safeAreaLayoutGuide can have incorrect padding; we'll rely on our superview instead
@@ -415,6 +421,39 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
         view.addGestureRecognizer(hideKeyboardGesture)
     }
 
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+
+        // The keyboard guide reserves the bottom safe area by default, even with the keyboard hidden.
+        // TODO: When we drop iOS 16 support, remove this compensation after setting usesBottomSafeArea = false.
+        let bottomInset = view.keyboardLayoutGuide.layoutFrame.height <= view.safeAreaInsets.bottom
+            ? view.safeAreaInsets.bottom : 0
+        if keyboardAvoidanceConstraint?.constant != bottomInset {
+            keyboardAvoidanceConstraint?.constant = bottomInset
+            view.layoutIfNeeded()
+        }
+
+        let fittedContentHeight = fittedContentHeight
+        // Don't perform a layout update if:
+        //  a) The sheet is off screen
+        //  b) There is only a small difference in height (this can cause infinite loops)
+        //  c) There is already a schedule animation
+        guard view.window != nil,
+              abs(fittedContentHeight - lastFittedContentHeight) > 0.5,
+              !hasScheduledDetentInvalidation else {
+            return
+        }
+
+        // Coalesce layout-driven changes and invalidate after the current layout pass completes.
+        hasScheduledDetentInvalidation = true
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+            self.hasScheduledDetentInvalidation = false
+            // An explicit content update may already have resized the sheet in its own animation.
+            guard abs(self.fittedContentHeight - self.lastFittedContentHeight) > 0.5 else { return }
+            self.invalidateContentDetent()
+        }
+    }
     func didTapOrSwipeToDismiss() {
         contentViewController.didTapOrSwipeToDismiss()
         STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetDismissed)
