@@ -13,6 +13,7 @@ struct ApplePayPaymentSource {
     let paymentMethod: StripeAPI.PaymentMethod
     let kycInfo: KycInfo?
     let platformPublishableKey: String
+    /// True for the pre-auth Apple Pay flow; requires a fresh merchant check on every token attempt.
     let requiresMerchantRevalidation: Bool
 }
 

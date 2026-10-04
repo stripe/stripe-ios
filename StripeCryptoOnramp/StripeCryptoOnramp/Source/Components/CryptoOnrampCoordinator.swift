@@ -274,7 +274,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
     private var pendingApplePayPaymentSource: ApplePayPaymentSource?
     private struct ApplePayCollectionAttempt {
         let contextID: ObjectIdentifier
-        let platformPublishableKey: String
+        /// True if Apple Pay collection began before authentication, without a crypto customer ID.
         let requiresMerchantRevalidation: Bool
     }
     private var applePayCollectionAttempt: ApplePayCollectionAttempt?
@@ -940,10 +940,15 @@ extension CryptoOnrampCoordinator: ApplePayContextDelegate {
         guard let attempt = applePayCollectionAttempt, attempt.contextID == ObjectIdentifier(context) else {
             throw ApplePayPaymentStatus.Error.applePayFallbackError
         }
+        // Read the key from this payment method's context, never the coordinator's cached platformApiClient.
+        // Authentication may have cleared or replaced that cache while Apple Pay was collecting.
+        guard let publishableKey = context.apiClient.publishableKey, !publishableKey.isEmpty else {
+            throw ApplePayPaymentStatus.Error.applePayFallbackError
+        }
         pendingApplePayPaymentSource = ApplePayPaymentSource(
             paymentMethod: paymentMethod,
             kycInfo: KycInfo(payment: paymentInformation),
-            platformPublishableKey: attempt.platformPublishableKey,
+            platformPublishableKey: publishableKey,
             requiresMerchantRevalidation: attempt.requiresMerchantRevalidation
         )
 
@@ -982,12 +987,8 @@ extension CryptoOnrampCoordinator: ApplePayContextDelegate {
         applePayCollectionAttempt = nil
         let requiresMerchantRevalidation = await cryptoCustomerState.getCustomerId() == nil
         context.apiClient = try await getPlatformApiClient()
-        guard let publishableKey = context.apiClient.publishableKey, !publishableKey.isEmpty else {
-            throw ApplePayPaymentStatus.Error.applePayFallbackError
-        }
         applePayCollectionAttempt = ApplePayCollectionAttempt(
             contextID: ObjectIdentifier(context),
-            platformPublishableKey: publishableKey,
             requiresMerchantRevalidation: requiresMerchantRevalidation
         )
     }

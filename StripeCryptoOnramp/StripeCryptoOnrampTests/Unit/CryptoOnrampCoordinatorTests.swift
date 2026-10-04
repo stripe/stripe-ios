@@ -229,20 +229,42 @@ final class CryptoOnrampCoordinatorTests: APIStubbedTestCase {
     @MainActor
     func testAuthenticationBeforePaymentMethodCallbackPreservesAttemptProvenance() async throws {
         let coordinator = try await makeCoordinator()
+        try await collectApplePay(coordinator)
         let context = try await beginApplePay(coordinator)
 
-        // When authentication invalidates the cache while the wallet is still collecting
+        // When authentication clears the cache and token validation replaces it while Apple Pay collects
         await coordinator.setCryptoCustomerId(Self.customerID)
         resolvedKey = "pk_test_platform_B"
-        // Even mutating the originating client cannot rewrite the snapshotted key.
-        context.apiClient.publishableKey = "pk_test_platform_B"
+        try await assertMerchantChanged(coordinator)
+        XCTAssertEqual(context.apiClient.publishableKey, "pk_test_platform_A")
         try await stagePaymentMethod("pm_pre_auth", coordinator: coordinator, context: context)
         coordinator.applePayContext(context, didCompleteWith: .success, error: nil)
 
-        // Then callback-time authentication does not disable pre-auth validation
+        // Then the callback uses the context's key and retains the attempt's pre-auth requirement
         try await assertMerchantChanged(coordinator)
-        XCTAssertEqual(settingsRequests.count, 2)
+        XCTAssertEqual(settingsRequests.count, 3)
         XCTAssertTrue(tokenRequests.isEmpty)
+    }
+
+    @MainActor
+    func testPaymentMethodCallbackCapturesKeyFromItsContext() async throws {
+        let coordinator = try await makeCoordinator()
+        let context = try await beginApplePay(coordinator)
+        await coordinator.setCryptoCustomerId(Self.customerID)
+
+        // Given the context's client at payment-method creation differs from its initial client
+        resolvedKey = "pk_test_platform_B"
+        context.apiClient = STPAPIClient(publishableKey: resolvedKey)
+        try await stagePaymentMethod("pm_callback_context", coordinator: coordinator, context: context)
+
+        // When the client changes after the callback, the staged source retains the captured key
+        context.apiClient = STPAPIClient(publishableKey: "pk_test_platform_C")
+        coordinator.applePayContext(context, didCompleteWith: .success, error: nil)
+        _ = try await coordinator.createCryptoPaymentToken()
+
+        // Then validation matches the callback's key and submits its original payment method
+        XCTAssertEqual(requestOrder, ["settings", "settings", "token"])
+        XCTAssertEqual(bodyParameters(try XCTUnwrap(tokenRequests.last))["payment_method"], "pm_callback_context")
     }
 
     @MainActor
