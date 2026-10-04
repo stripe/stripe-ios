@@ -27,8 +27,9 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
         "com.stripe.paymentsheet.content"
     )
 
-    // UIKit caps content-sized sheets at the available height; authentication may request that full height.
+    // UIKit caps content-sized sheets at the available height; 3DS may request that full height.
     lazy var contentSizedDetent: UISheetPresentationController.Detent = {
+        // For iOS 15 devices, we can't set custom detents and instead conservatively use the largest
         guard #available(iOS 16.0, *) else {
             return .large()
         }
@@ -39,8 +40,8 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
             guard !self.contentRequiresFullScreen else {
                 return context.maximumDetentValue
             }
-            // Layout may change the form before a resize starts; keep the detent stable until we animate it.
-            // Content already includes bottom padding. UIKit adds the bottom safe area to edge-attached detents.
+            // Since the form may change before a resize starts, we use the last measured height.
+            // UIKit adds its own bottom safe area padding, and so we remove that since our content already includes the intended bottom padding.
             return min(max(0, self.lastFittedContentHeight - self.view.safeAreaInsets.bottom), context.maximumDetentValue)
         }
     }()
@@ -345,6 +346,7 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
         let width = scrollView.bounds.width > 0
             ? scrollView.bounds.width
             : view.bounds.inset(by: view.safeAreaInsets).width
+        // Handle case where initial layout hasn't happened yet.
         guard width > 0 else {
             return 0
         }
@@ -370,7 +372,6 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
     }
 
     func prepareForPresentation(in availableWidth: CGFloat) {
-        loadViewIfNeeded()
         // Laying out the navigation controller here interrupts UIKit's opening dimming animation
         // on iOS 26.1. Measure only our content and let UIKit lay out its presentation host.
         view.bounds.size.width = availableWidth
@@ -385,10 +386,12 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
             return
         }
         guard viewIfLoaded?.window != nil else {
-            // Prepare the next presentation's height without starting an offscreen sheet animation.
+            // If the sheet is offscreen, we should just set the height and not perform an animation
             lastFittedContentHeight = fittedContentHeight
             return
         }
+
+        // Prevent multiple animations from happening (for example if this was called repeatedly during presentation or dismissal)
         guard !isWaitingForDetentTransition else {
             return
         }
@@ -396,6 +399,7 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
         // Wait until UIKit finishes presenting or dismissing before starting a height animation.
         if rootParent.isBeingPresented || rootParent.isBeingDismissed {
             guard let transitionCoordinator = rootParent.transitionCoordinator else { return }
+            // Set `isWaitingForDetentTransition` to true if animation work successfully starts
             isWaitingForDetentTransition = transitionCoordinator.animate(alongsideTransition: nil) { [weak self] _ in
                 // UIKit must clear the parent's transition state before we start another sheet animation.
                 DispatchQueue.main.async { [weak self] in
@@ -408,9 +412,9 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
         }
 
         let fittedContentHeight = fittedContentHeight
-        // Use a consistent spring for all native sheet height changes.
         // UISheetPresentationController.animateChanges(_:) can cause an infinite layout loop
         // when resizing scrollable content on an iPhone Duo with its screen open.
+        // Use the Stripe version instead
         animateHeightChange(forceAnimation: true) {
             self.lastFittedContentHeight = fittedContentHeight
             self.rootParent.sheetPresentationController?.invalidateDetents()
@@ -478,11 +482,16 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
         }
 
         let fittedContentHeight = fittedContentHeight
+        // Don't perform a layout update if:
+        //  a) The sheet is off screen
+        //  b) There is only a small difference in height (this can cause infinite loops)
+        //  c) There is already a schedule animation
         guard view.window != nil,
               abs(fittedContentHeight - lastFittedContentHeight) > 0.5,
               !hasScheduledDetentInvalidation else {
             return
         }
+
         // Coalesce layout-driven changes and invalidate after the current layout pass completes.
         hasScheduledDetentInvalidation = true
         DispatchQueue.main.async { [weak self] in
