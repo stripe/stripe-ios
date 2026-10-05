@@ -46,6 +46,7 @@ protocol PayWithLinkViewControllerDelegate: AnyObject {
 
 @MainActor
 protocol PayWithLinkCoordinating: AnyObject {
+    func pushContentViewController(_ contentViewController: PayWithLinkViewController.BaseViewController)
     func confirm(
         with linkAccount: PaymentSheetLinkAccount,
         paymentDetails: ConsumerPaymentDetails,
@@ -326,6 +327,21 @@ final class PayWithLinkViewController: NSObject {
             linkAccount?.paymentSheetLinkAccountDelegate = self
             self?.syncContextLinkBrand(using: linkAccount)
         }
+    }
+
+    func pushContentViewController(_ contentViewController: BaseViewController) {
+        // Configure Link actions before the container displays the screen or publishes its navigation items.
+        contentViewController.coordinator = self
+        contentViewController.navigationBar.delegate = self
+        if !contentStack.isEmpty {
+            contentViewController.navigationBar.setStyle(.back(showAdditionalButton: false))
+        }
+
+        // Re-enable user interaction when presenting a new controller.
+        if !sheetContainer.view.isUserInteractionEnabled {
+            setUserInteractionEnabled(true)
+        }
+        sheetContainer.pushContentViewController(contentViewController)
     }
 
     func setViewControllers(_ viewControllers: [any BottomSheetContentViewController]) {
