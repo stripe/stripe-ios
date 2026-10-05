@@ -156,7 +156,8 @@ final class BiometricConsentViewController: IdentityFlowViewController {
             with: .init(
                 lines: consentContent.lines.map {
                     return ($0.icon, $0.content)
-                }
+                },
+                textColor: .label
             ) { [weak self] url in
                 self?.presentBottomsheet(withUrl: url)
             }
