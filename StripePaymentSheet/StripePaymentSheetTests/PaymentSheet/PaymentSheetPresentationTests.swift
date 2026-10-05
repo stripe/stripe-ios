@@ -15,6 +15,62 @@ import XCTest
 final class PaymentSheetPresentationTests: XCTestCase {
 
     @MainActor
+    func testNativeSheetResizesNestedContentAcrossMaximumHeight() async throws {
+        guard #available(iOS 16.0, *) else { throw XCTSkip("Content-sized detents require iOS 16.") }
+        // Given short content with a nested section taller than the available sheet
+        let content = NativeSheetStubContentViewController()
+        let initialSection = UIView()
+        initialSection.heightAnchor.constraint(equalToConstant: 200).isActive = true
+        let additionalSection = UIView()
+        // Allow the stack's required hiding constraint to collapse this fixed-height section.
+        let additionalSectionHeight = additionalSection.heightAnchor.constraint(equalToConstant: 1200)
+        additionalSectionHeight.priority = .defaultHigh
+        additionalSectionHeight.isActive = true
+        additionalSection.isHidden = true
+        let nestedStack = UIStackView(arrangedSubviews: [initialSection, additionalSection])
+        nestedStack.axis = .vertical
+        content.view.addAndPinSubview(nestedStack)
+        let sheet = NativeSheetContainerViewController(
+            contentViewController: content,
+            appearance: .default,
+            isTestMode: true,
+            didCancelNative3DS2: {}
+        )
+        let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first)
+        let presenter = UIViewController()
+        let window = UIWindow(windowScene: scene)
+        window.frame = scene.coordinateSpace.bounds
+        window.rootViewController = presenter
+        window.makeKeyAndVisible()
+        defer {
+            presenter.dismiss(animated: false)
+            window.isHidden = true
+        }
+        let presented = expectation(description: "Short native sheet presented")
+        presenter.presentAsSheet(sheet) { presented.fulfill() }
+        await fulfillment(of: [presented], timeout: 3)
+        let originalHeight = sheet.view.bounds.height
+
+        // When only the nested stack is laid out during expansion
+        nestedStack.toggleArrangedSubview(additionalSection, shouldShow: true, animated: true)
+        let expanded = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            sheet.view.bounds.height > originalHeight + 1
+                && sheet.scrollView.contentSize.height > sheet.scrollView.bounds.height
+        }, object: nil)
+
+        // Then the sheet grows to its maximum while keeping the overflow scrollable
+        await fulfillment(of: [expanded], timeout: 3)
+        XCTAssertLessThanOrEqual(sheet.scrollView.frame.maxY, sheet.view.bounds.maxY + 0.5)
+
+        // ...and collapsing the nested section returns the sheet to its content height
+        nestedStack.toggleArrangedSubview(additionalSection, shouldShow: false, animated: true)
+        let collapsed = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            abs(sheet.view.bounds.height - originalHeight) < 1
+        }, object: nil)
+        await fulfillment(of: [collapsed], timeout: 3)
+    }
+
+    @MainActor
     func testNativeSheetResizesToScrollableContentAtRegularWidth() async throws {
         guard #available(iOS 17.0, *) else { throw XCTSkip("Trait overrides require iOS 17.") }
         // Given the regular-width presentation used by an unfolded phone
@@ -632,21 +688,15 @@ final class PaymentSheetPresentationTests: XCTestCase {
     }
 
     @MainActor
-    func testSelectingVerticalPaymentMethodInvalidatesContentDetent() throws {
-        // Given
-        let contentViewController = NativeSheetStubContentViewController()
-        let sheetViewController = DetentInvalidationSpyViewController(
-            contentViewController: contentViewController,
-            appearance: .default,
-            isTestMode: true,
-            didCancelNative3DS2: {}
-        )
+    func testSelectingPromotionRowResizesNativeSheet() async throws {
+        // Given a list whose promotion wraps even at the Duo sheet's wider content width
+        let content = NativeSheetStubContentViewController()
         let delegate = VerticalPaymentMethodListDelegateStub()
-        let paymentMethodListViewController = VerticalPaymentMethodListViewController(
-            initialSelection: nil,
+        let list = VerticalPaymentMethodListViewController(
+            initialSelection: .applePay,
             savedPaymentMethods: [],
-            paymentMethodTypes: [.stripe(.affirm)],
-            shouldShowApplePay: false,
+            paymentMethodTypes: [.stripe(.card), .stripe(.affirm)],
+            shouldShowApplePay: true,
             shouldShowLink: false,
             savedPaymentMethodAccessoryType: nil,
             overrideHeaderView: nil,
@@ -654,17 +704,111 @@ final class PaymentSheetPresentationTests: XCTestCase {
             currency: "usd",
             amount: 1_000,
             incentive: nil,
+            paymentMethodMessagingPromotionsHelper: ._testValueInTreatment(
+                promotionText: String(repeating: "Pay in 4 interest-free payments of $12.50. ", count: 4)
+            ),
             delegate: delegate
         )
-        contentViewController.addChild(paymentMethodListViewController)
-        paymentMethodListViewController.didMove(toParent: contentViewController)
-        let affirmRow = try XCTUnwrap(paymentMethodListViewController.rowButtons.first)
+        content.addChild(list)
+        content.view.addAndPinSubview(list.view)
+        list.didMove(toParent: content)
+        let (window, sheet) = try await presentContentSizedSheet(content: content)
+        defer { window.rootViewController?.dismiss(animated: false); window.isHidden = true }
+        let initialHeight = sheet.view.bounds.height
+        let affirm = try XCTUnwrap(list.rowButtons.first { $0.type == .new(paymentMethodType: .stripe(.affirm)) })
+        let applePay = try XCTUnwrap(list.rowButtons.first { $0.type == .applePay })
 
-        // When
-        paymentMethodListViewController.didTap(rowButton: affirmRow, selection: affirmRow.type)
+        // When selecting the row shows the promotion through the actual selection entry point
+        list.didTap(rowButton: affirm, selection: affirm.type)
+        try await waitForSheetLayout {
+            sheet.view.bounds.height > initialHeight + 1
+        }
 
-        // Then
-        XCTAssertEqual(sheetViewController.invalidationCount, 1)
+        // Then the sheet makes room for the promotion
+        XCTAssertGreaterThan(sheet.view.bounds.height, initialHeight + 1)
+
+        // When selecting Apple Pay hides the promotion
+        list.didTap(rowButton: applePay, selection: applePay.type)
+        try await waitForSheetLayout {
+            abs(sheet.view.bounds.height - initialHeight) < 1
+        }
+
+        // Then the sheet returns to its original height
+        XCTAssertEqual(sheet.view.bounds.height, initialHeight, accuracy: 1)
+    }
+
+    @MainActor
+    func testCardScannerResizesNativeSheetOnOpenAndClose() async throws {
+        // Given an embedded card scanner that starts collapsed
+        let content = NativeSheetStubContentViewController()
+        let cardSection = UIView()
+        cardSection.heightAnchor.constraint(equalToConstant: 100).isActive = true
+        let delegate = CardSectionDelegateStub()
+        let scanner = CardSectionWithScannerView(
+            cardSectionView: cardSection,
+            opensCardScannerAutomatically: false,
+            delegate: delegate,
+            analyticsHelper: nil
+        )
+        content.view.addAndPinSubview(scanner)
+        let (window, sheet) = try await presentContentSizedSheet(content: content)
+        defer { window.rootViewController?.dismiss(animated: false); window.isHidden = true }
+        let initialHeight = sheet.view.bounds.height
+
+        // When opening the scanner through its actual entry point
+        scanner.didTapCardScanButton()
+        try await waitForSheetLayout {
+            sheet.view.bounds.height > initialHeight + 1
+        }
+
+        // Then the sheet grows to show the scanner
+        XCTAssertGreaterThan(sheet.view.bounds.height, initialHeight + 1)
+
+        // When closing the scanner without scanning a card
+        scanner.cardScanningViewShouldClose(scanner.cardScanningView, cardParams: nil)
+        try await waitForSheetLayout {
+            abs(sheet.view.bounds.height - initialHeight) < 1.5
+        }
+
+        // Then the sheet returns to its original height
+        XCTAssertEqual(sheet.view.bounds.height, initialHeight, accuracy: 1.5)
+    }
+
+    @MainActor
+    private func waitForSheetLayout(_ condition: () -> Bool) async throws {
+        // Read geometry on the main actor while allowing UIKit's animation and layout work to run.
+        let deadline = Date().addingTimeInterval(3)
+        while !condition(), Date() < deadline {
+            try await Task.sleep(nanoseconds: 20_000_000)
+        }
+    }
+
+    @MainActor
+    private func presentContentSizedSheet(content: BottomSheetContentViewController) async throws -> (UIWindow, NativeSheetContainerViewController) {
+        guard #available(iOS 16.0, *) else { throw XCTSkip("Content-sized detents require iOS 16.") }
+        let sheet = NativeSheetContainerViewController(
+            contentViewController: content,
+            appearance: .default,
+            isTestMode: true,
+            didCancelNative3DS2: {}
+        )
+        // A cold test-host launch may still be connecting its window scene.
+        let sceneConnected = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            UIApplication.shared.connectedScenes.contains { $0 is UIWindowScene }
+        }, object: nil)
+        await fulfillment(of: [sceneConnected], timeout: 5)
+        let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first)
+        let presenter = UIViewController()
+        let window = UIWindow(windowScene: scene)
+        window.frame = scene.coordinateSpace.bounds
+        window.rootViewController = presenter
+        window.makeKeyAndVisible()
+        let presented = expectation(description: "Content-sized native sheet presented")
+        presenter.presentAsSheet(sheet) { presented.fulfill() }
+        await fulfillment(of: [presented], timeout: 3)
+        // Settle any layout-driven resize before capturing the initial height.
+        try await Task.sleep(nanoseconds: 700_000_000)
+        return (window, sheet)
     }
 
     @MainActor
@@ -841,5 +985,10 @@ private final class VerticalPaymentMethodListDelegateStub: VerticalPaymentMethod
     func didTapPaymentMethod(_ selection: RowButtonType) {}
 
     func didTapSavedPaymentMethodAccessoryButton() {}
+}
+
+private final class CardSectionDelegateStub: CardSectionWithScannerViewDelegate {
+
+    func didScanCard(cardParams: STPPaymentMethodCardParams) {}
 }
 #endif

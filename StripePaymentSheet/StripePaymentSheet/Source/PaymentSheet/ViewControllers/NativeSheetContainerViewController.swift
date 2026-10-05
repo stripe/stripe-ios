@@ -346,6 +346,7 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
     // MARK: -
     private var scrollViewHeightConstraint: NSLayoutConstraint?
     private var keyboardAvoidanceConstraint: NSLayoutConstraint?
+    private var contentSizeObservation: NSKeyValueObservation?
 
     private var lastFittedContentHeight: CGFloat = 0
     private var hasScheduledDetentInvalidation = false
@@ -475,6 +476,13 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
             contentContainerView.widthAnchor.constraint(equalTo: scrollView.frameLayoutGuide.widthAnchor),
             scrollViewHeightConstraint,
         ])
+
+        // Nested stacks can change the scroll content's height without laying out this controller's view.
+        // Request a parent layout so those changes use the same coalesced detent update as other layouts.
+        contentSizeObservation = scrollView.observe(\.contentSize, options: [.old, .new]) { [weak self] _, change in
+            guard change.oldValue?.height != change.newValue?.height else { return }
+            self?.view.setNeedsLayout()
+        }
 
         let hideKeyboardGesture = UITapGestureRecognizer(target: self, action: #selector(didTapAnywhere))
         hideKeyboardGesture.cancelsTouchesInView = false
