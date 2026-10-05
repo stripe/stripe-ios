@@ -13,8 +13,6 @@ import UIKit
 /// Concrete containers own either the legacy bottom-sheet lifecycle or the native sheet lifecycle.
 protocol PaymentSheetContainer: UIViewController, PaymentSheetAuthenticationContext {
 
-    var appearance: PaymentSheet.Appearance { get }
-    var isTestMode: Bool { get }
     var contentStack: [BottomSheetContentViewController] { get }
     var contentOffsetPercentage: CGFloat { get set }
 
@@ -40,13 +38,5 @@ extension PaymentSheetContainer {
 
     func popContentViewController() -> BottomSheetContentViewController? {
         popContentViewController(completion: nil)
-    }
-
-    func removeBlurEffect(animated: Bool) {
-        removeBlurEffect(animated: animated, completion: nil)
-    }
-
-    func present(from presentingViewController: UIViewController) {
-        present(from: presentingViewController, completion: nil)
     }
 }
