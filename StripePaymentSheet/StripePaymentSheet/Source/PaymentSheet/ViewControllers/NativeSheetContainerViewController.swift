@@ -349,6 +349,7 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
 
     private var fittedContentHeight: CGFloat {
         // A vertical system bar narrows the usable content width, which can increase wrapped content height.
+        // Use the scroll view hasn't laid out yet, estimate the width by subtracting the insets from the sheet width.
         let width = scrollView.bounds.width > 0
             ? scrollView.bounds.width
             : view.bounds.inset(by: view.safeAreaInsets).width
@@ -357,13 +358,16 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
             return 0
         }
         let fittingSize = CGSize(width: width, height: UIView.layoutFittingCompressedSize.height)
+
+        // Calculate the height of the native navigation bar
         let navigationBarHeight: CGFloat
         if let navigationController {
             if view.window != nil {
-                // Only include space above the content. A vertical bar consumes width, not height.
+                // Only include space above the content. A vertical bar (iPhone Duo) consumes width, not height.
                 let contentTop = view.convert(CGPoint(x: 0, y: view.safeAreaInsets.top), to: navigationController.view).y
                 navigationBarHeight = max(0, contentTop - navigationController.view.safeAreaInsets.top)
             } else {
+                // Use sizeThatFits to estimate if presentation hasn't happened yet.
                 navigationBarHeight = navigationController.navigationBar.sizeThatFits(fittingSize).height
             }
         } else {
@@ -378,8 +382,7 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
     }
 
     func prepareForPresentation(in availableWidth: CGFloat) {
-        // Laying out the navigation controller here interrupts UIKit's opening dimming animation
-        // on iOS 26.1. Measure only our content and let UIKit lay out its presentation host.
+        // Resolve an initial height before UIKit asks the custom detent for its first value.
         view.bounds.size.width = availableWidth
         view.setNeedsLayout()
         view.layoutIfNeeded()
