@@ -52,8 +52,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
 
     private var isEditingPaymentMethods: Bool = false {
         didSet {
-            let additionalButtonTitle = isEditingPaymentMethods ? UIButton.doneButtonTitle : UIButton.editButtonTitle
-            navigationBar.additionalButton.setTitle(additionalButtonTitle, for: .normal)
+            navigationBar.configureEditButton(isEditingPaymentMethods: isEditingPaymentMethods)
             // Update header text unless we removed the last pm and we're getting kicked out to the main screen
             if !paymentMethodRows.isEmpty {
                 headerLabel.text = headerText
@@ -143,7 +142,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
                                         appearance: configuration.appearance)
         navBar.setStyle(navigationBarStyle())
         navBar.delegate = self
-        navBar.additionalButton.configureCommonEditButton(isEditingPaymentMethods: isEditingPaymentMethods, appearance: configuration.appearance)
+        navBar.configureEditButton(isEditingPaymentMethods: isEditingPaymentMethods)
         navBar.additionalButton.addTarget(self, action: #selector(didSelectEditSavedPaymentMethodsButton), for: .touchUpInside)
         return navBar
     }()
