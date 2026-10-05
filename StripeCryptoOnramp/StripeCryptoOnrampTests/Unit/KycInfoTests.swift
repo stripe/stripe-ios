@@ -27,6 +27,7 @@ final class KycInfoTests: XCTestCase {
 
         XCTAssertNil(kycInfo.email)
         XCTAssertNil(kycInfo.phone)
+        XCTAssertNil(kycInfo.rawPhone)
     }
 
     func testInitPaymentReturnsNilWhenBillingContactIsMissing() {
@@ -75,7 +76,7 @@ final class KycInfoTests: XCTestCase {
         let payment = createMockPayment(billingContact: billingContact, shippingContact: shippingContact)
         let kycInfo = KycInfo(payment: payment)
 
-        // Then fields from both contacts are mapped
+        // Then fields from both contacts are mapped, and the already-E.164 phone number is preserved
         XCTAssertEqual(
             kycInfo,
             KycInfo(
@@ -85,9 +86,48 @@ final class KycInfoTests: XCTestCase {
                 address: nil,
                 dateOfBirth: nil,
                 email: "test@example.com",
-                phone: "+12125551234"
+                phone: "+12125551234",
+                rawPhone: "+12125551234"
             )
         )
+    }
+
+    func testInitPaymentNormalizesDisplayFormattedPhoneUsingBillingAddressCountry() {
+        // Given a display-formatted phone number alongside a US billing address
+        let billingContact = PKContact()
+        var name = PersonNameComponents()
+        name.givenName = "John"
+        billingContact.name = name
+        billingContact.phoneNumber = CNPhoneNumber(stringValue: "(212) 555-1234")
+
+        let postalAddress = CNMutablePostalAddress()
+        postalAddress.isoCountryCode = "US"
+        billingContact.postalAddress = postalAddress
+
+        // When creating KYC info from the payment
+        let payment = createMockPayment(billingContact: billingContact)
+        let kycInfo = KycInfo(payment: payment)
+
+        // Then the phone number is normalized to E.164 using the billing address's country, and the raw value is preserved
+        XCTAssertEqual(kycInfo?.phone, "+12125551234")
+        XCTAssertEqual(kycInfo?.rawPhone, "(212) 555-1234")
+    }
+
+    func testInitPaymentLeavesPhoneNilWhenNormalizationFailsButPreservesRawPhone() {
+        // Given a display-formatted phone number with no address to supply a region
+        let billingContact = PKContact()
+        var name = PersonNameComponents()
+        name.givenName = "John"
+        billingContact.name = name
+        billingContact.phoneNumber = CNPhoneNumber(stringValue: "(212) 555-1234")
+
+        // When creating KYC info from the payment
+        let payment = createMockPayment(billingContact: billingContact)
+        let kycInfo = KycInfo(payment: payment)
+
+        // Then normalization fails and the raw value is still recoverable
+        XCTAssertNil(kycInfo?.phone)
+        XCTAssertEqual(kycInfo?.rawPhone, "(212) 555-1234")
     }
 
     func testInitPaymentPrefersBillingContactContactFields() {
