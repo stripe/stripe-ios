@@ -821,40 +821,33 @@ import UIKit
         from viewController: UIViewController,
         onConfirm: @escaping (() async throws -> Void)
     ) async throws -> VerifyKYCResult {
-        return try await withCheckedThrowingContinuation { continuation in
-            Task { @MainActor in
-                let verifyKYCViewController = VerifyKYCViewController(info: info, appearance: appearance)
-                verifyKYCViewController.onResult = { [weak verifyKYCViewController] result in
-                    verifyKYCViewController?.onResult = nil
+        let verifyKYCViewController = VerifyKYCViewController(info: info, appearance: appearance)
+        // The coordinator is used again for dismissal, so this operation owns it while awaiting user input.
+        let result: VerifyKYCResult = await withCheckedContinuation { continuation in
+            verifyKYCViewController.onResult = { [weak verifyKYCViewController] result in
+                verifyKYCViewController?.onResult = nil
+                continuation.resume(returning: result)
+            }
+            viewController.presentAsSheet(verifyKYCViewController.sheetContainer)
+        }
 
-                    // We'll report the result back to the caller after dismissal of the sheet.
-                    let dismissAndResumeWithResult: (Result<VerifyKYCResult, Swift.Error>) -> Void = { continuationResult in
-                        verifyKYCViewController?.dismiss(animated: true) {
-                            continuation.resume(with: continuationResult)
-                        }
-                    }
-
-                    switch result {
-                    case .canceled, .updateAddress:
-                        dismissAndResumeWithResult(.success(result))
-                    case .confirmed:
-                        Task {
-                            do {
-                                // Complete any async operation from the caller before dismissing.
-                                try await onConfirm()
-                                dismissAndResumeWithResult(.success(result))
-                            } catch {
-                                dismissAndResumeWithResult(.failure(error))
-                            }
-                        }
-                    @unknown default:
-                        dismissAndResumeWithResult(.success(result))
-                    }
-                }
-
-                viewController.presentAsSheet(verifyKYCViewController.sheetContainer)
+        var completionResult: Result<VerifyKYCResult, Swift.Error> = .success(result)
+        if case .confirmed = result {
+            do {
+                // Complete any async operation from the caller before dismissing.
+                try await onConfirm()
+            } catch {
+                completionResult = .failure(error)
             }
         }
+
+        // We'll report the result back to the caller after dismissal of the sheet.
+        await withCheckedContinuation { continuation in
+            verifyKYCViewController.dismiss(animated: true) {
+                continuation.resume(returning: ())
+            }
+        }
+        return try completionResult.get()
     }
 
     /// Presents the user attestation to the user.
@@ -970,42 +963,38 @@ import UIKit
         from viewController: UIViewController,
         onConfirm: @escaping (() async throws -> Void)
     ) async throws -> HTMLConfirmationResult {
-        return try await withCheckedThrowingContinuation { continuation in
-            Task { @MainActor in
-                let confirmationViewController = HTMLConfirmationViewController(
-                    heading: heading,
-                    html: html,
-                    confirmationButtonTitle: confirmationButtonTitle,
-                    appearance: appearance,
-                    brand: resolvedLinkBrand
-                )
-                confirmationViewController.onResult = { [weak confirmationViewController] result in
-                    confirmationViewController?.onResult = nil
+        let confirmationViewController = HTMLConfirmationViewController(
+            heading: heading,
+            html: html,
+            confirmationButtonTitle: confirmationButtonTitle,
+            appearance: appearance,
+            brand: resolvedLinkBrand
+        )
+        // The coordinator is used again for dismissal, so this operation owns it while awaiting user input.
+        let result: HTMLConfirmationResult = await withCheckedContinuation { continuation in
+            confirmationViewController.onResult = { [weak confirmationViewController] result in
+                confirmationViewController?.onResult = nil
+                continuation.resume(returning: result)
+            }
+            viewController.presentAsSheet(confirmationViewController.sheetContainer)
+        }
 
-                    let dismissAndResumeWithResult: (Result<HTMLConfirmationResult, Swift.Error>) -> Void = { continuationResult in
-                        confirmationViewController?.dismiss(animated: true) {
-                            continuation.resume(with: continuationResult)
-                        }
-                    }
-
-                    switch result {
-                    case .canceled:
-                        dismissAndResumeWithResult(.success(result))
-                    case .confirmed:
-                        Task {
-                            do {
-                                try await onConfirm()
-                                dismissAndResumeWithResult(.success(result))
-                            } catch {
-                                dismissAndResumeWithResult(.failure(error))
-                            }
-                        }
-                    }
-                }
-
-                viewController.presentAsSheet(confirmationViewController.sheetContainer)
+        var completionResult: Result<HTMLConfirmationResult, Swift.Error> = .success(result)
+        if case .confirmed = result {
+            do {
+                try await onConfirm()
+            } catch {
+                completionResult = .failure(error)
             }
         }
+
+        // Dismiss before returning, even when confirmation fails.
+        await withCheckedContinuation { continuation in
+            confirmationViewController.dismiss(animated: true) {
+                continuation.resume(returning: ())
+            }
+        }
+        return try completionResult.get()
     }
 
     /// Logs out the current Link user, if any.
