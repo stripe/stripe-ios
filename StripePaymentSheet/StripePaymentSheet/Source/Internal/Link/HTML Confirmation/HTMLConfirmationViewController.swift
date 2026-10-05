@@ -8,7 +8,7 @@
 @_spi(STP) import StripeCore
 import UIKit
 
-/// Owns the presentation container for a Link-styled HTML confirmation screen.
+/// Displays an HTML confirmation screen in a Link-styled bottom sheet.
 @MainActor
 final class HTMLConfirmationViewController {
 
@@ -29,7 +29,7 @@ final class HTMLConfirmationViewController {
     /// - Parameters:
     ///   - heading: The heading displayed above the HTML.
     ///   - html: The HTML to display.
-    ///   - confirmationButtonTitle: The confirmation button's title.
+    ///   - confirmationButtonTitle: The title of the confirmation button.
     ///   - appearance: Determines the colors, corner radius, button height, and user interface style.
     ///   - brand: The Link brand displayed in the navigation bar.
     init(
