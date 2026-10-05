@@ -206,11 +206,17 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
     }
 
     private func updateNativeContentIfPossible() {
-        guard !isWaitingForNativePresentation, !isUpdatingNativeContent,
+        // Don't update content if:
+        //  a) we are already waiting for sheet presentation/dismissal
+        //  b) we are already doing a content transition
+        //  c) we are out of content updates to perform
+        guard !isWaitingForNativePresentation,
+              !isUpdatingNativeContent,
               let newContentViewController = pendingNativeContentViewController else {
             return
         }
 
+        // If the sheet is currently being presented or dismissed, we wait until that's done
         if rootParent.isBeingPresented || rootParent.isBeingDismissed, let transitionCoordinator = rootParent.transitionCoordinator {
             isWaitingForNativePresentation = true
             transitionCoordinator.animate(alongsideTransition: nil) { [weak self] _ in
@@ -616,7 +622,6 @@ extension NativeSheetContainerViewController: PaymentSheetAuthenticationContext 
     }
 
     func dismiss(_ authenticationViewController: UIViewController, completion: (() -> Void)?) {
-        // Authentication can finish before a queued native content transition becomes visible.
         guard contentStack.first is BottomSheet3DS2ViewController || contentStack.first is PollingViewController else {
             assertionFailure("Dismiss called, but it will do nothing!")
             return
