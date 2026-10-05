@@ -32,7 +32,7 @@ class ShadowedRoundedRectangle: UIView {
         }
     }
 
-    /// Updates appearance and selection styling.
+    /// All mutations to this class should route to this single method to update the UI
     private func update() {
         // Background color
         if isEnabled {
