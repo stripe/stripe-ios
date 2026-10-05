@@ -1,0 +1,40 @@
+name: KestrelBrokerageDemo
+options:
+  bundleIdPrefix: com.stripe.connect.demo
+  deploymentTarget:
+    iOS: "17.0"
+  createIntermediateGroups: true
+packages:
+  Stripe:
+    path: ../..
+targets:
+  KestrelBrokerageDemo:
+    type: application
+    platform: iOS
+    sources:
+      - path: KestrelBrokerageDemo
+      - path: ../EmbeddedComponentsDemoKit
+    dependencies:
+      - package: Stripe
+        product: StripeConnect
+    info:
+      path: KestrelBrokerageDemo/Info.plist
+      properties:
+        CFBundleDisplayName: Kestrel
+        CFBundleShortVersionString: "1.0"
+        CFBundleVersion: "1"
+        UILaunchScreen:
+          UIColorName: LaunchBackground
+        UIUserInterfaceStyle: Dark
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+        NSCameraUsageDescription: Kestrel uses the camera to verify your identity documents.
+        NSAppTransportSecurity:
+          NSAllowsLocalNetworking: true
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.stripe.connect.demo.kestrel
+        SWIFT_VERSION: "5.0"
+        CODE_SIGN_STYLE: Automatic
+        TARGETED_DEVICE_FAMILY: "1"
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor

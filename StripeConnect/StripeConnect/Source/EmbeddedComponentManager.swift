@@ -119,6 +119,70 @@ public final class EmbeddedComponentManager {
         analyticsClientFactory: analyticsClientFactory)
     }
 
+    /// Creates account onboarding that renders inline and sizes itself to its content.
+    @_spi(DashboardOnly)
+    public func createInlineAccountOnboardingViewController(
+        fullTermsOfServiceUrl: URL? = nil,
+        recipientTermsOfServiceUrl: URL? = nil,
+        privacyPolicyUrl: URL? = nil,
+        skipTermsOfServiceCollection: Bool? = nil,
+        collectionOptions: AccountCollectionOptions = .init()
+    ) -> InlineComponentViewController {
+        let props = AccountOnboardingController.Props(
+            fullTermsOfServiceUrl: fullTermsOfServiceUrl,
+            recipientTermsOfServiceUrl: recipientTermsOfServiceUrl,
+            privacyPolicyUrl: privacyPolicyUrl,
+            skipTermsOfServiceCollection: skipTermsOfServiceCollection,
+            collectionOptions: collectionOptions
+        )
+        return .init(componentType: .onboarding,
+                     componentManager: self,
+                     loadContent: shouldLoadContent,
+                     analyticsClientFactory: analyticsClientFactory) { props }
+    }
+
+    /// Creates account management that renders inline and sizes itself to its content.
+    @_spi(DashboardOnly)
+    public func createInlineAccountManagementViewController(
+        collectionOptions: AccountCollectionOptions = .init()
+    ) -> InlineComponentViewController {
+        let props = AccountManagementViewController.Props(collectionOptions: collectionOptions)
+        return .init(componentType: .accountManagement,
+                     componentManager: self,
+                     loadContent: shouldLoadContent,
+                     analyticsClientFactory: analyticsClientFactory) { props }
+    }
+
+    /// Creates the balances component, rendered inline and sized to its content.
+    @_spi(DashboardOnly)
+    public func createInlineBalancesViewController() -> InlineComponentViewController {
+        .init(componentType: .balances,
+              componentManager: self,
+              loadContent: shouldLoadContent,
+              analyticsClientFactory: analyticsClientFactory,
+              fetchInitProps: VoidPayload.init)
+    }
+
+    /// Exploratory: creates the payout methods component, rendered inline and sized to its content.
+    @_spi(DashboardOnly)
+    public func createInlinePayoutMethodsViewController() -> InlineComponentViewController {
+        .init(componentType: .payoutMethods,
+              componentManager: self,
+              loadContent: shouldLoadContent,
+              analyticsClientFactory: analyticsClientFactory,
+              fetchInitProps: VoidPayload.init)
+    }
+
+    /// Exploratory: creates the payout session component, rendered inline and sized to its content.
+    @_spi(DashboardOnly)
+    public func createInlinePayoutSessionViewController() -> InlineComponentViewController {
+        .init(componentType: .payoutSession,
+              componentManager: self,
+              loadContent: shouldLoadContent,
+              analyticsClientFactory: analyticsClientFactory,
+              fetchInitProps: VoidPayload.init)
+    }
+
     @_spi(DashboardOnly)
     public func createPaymentDetailsViewController() -> PaymentDetailsViewController {
         .init(componentManager: self,
