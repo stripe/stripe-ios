@@ -307,10 +307,6 @@ final class PayWithLinkViewController: NSObject {
         LinkAccountContext.shared.removeObserver(self)
     }
 
-    var view: UIView {
-        sheetContainer.view
-    }
-
     var presentingViewController: UIViewController? {
         sheetContainer.presentingViewController
     }
@@ -329,24 +325,6 @@ final class PayWithLinkViewController: NSObject {
             let linkAccount = notification.object as? PaymentSheetLinkAccount
             linkAccount?.paymentSheetLinkAccountDelegate = self
             self?.syncContextLinkBrand(using: linkAccount)
-        }
-    }
-
-    func pushContentViewController(_ contentViewController: any BottomSheetContentViewController) {
-        sheetContainer.pushContentViewController(contentViewController)
-
-        // Re-enable user interaction when presenting a new controller.
-        let wasUserInteractionEnabled = view.isUserInteractionEnabled
-        if !wasUserInteractionEnabled {
-            setUserInteractionEnabled(true)
-        }
-
-        if let viewController = contentViewController as? BaseViewController {
-            viewController.coordinator = self
-            if contentStack.count > 1 {
-                viewController.navigationBar.setStyle(.back(showAdditionalButton: false))
-            }
-            viewController.navigationBar.delegate = self
         }
     }
 
