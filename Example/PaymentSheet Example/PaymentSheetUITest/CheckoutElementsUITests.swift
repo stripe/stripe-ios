@@ -185,21 +185,14 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
 
     func testExpressCheckoutElementApplePayCompletesCheckout() {
         // Given an ECE-only Checkout Session without address-dependent tax in the normal hosted playground
-        app.launchEnvironment["STP_CHECKOUT_ELEMENTS"] = "true"
-        app.launch()
-
-        app.buttons["Reset"].waitForExistenceAndTap()
-        let paymentElementPicker = app.buttons.matching(
-            NSPredicate(format: "label BEGINSWITH %@", "PaymentElement")
-        ).firstMatch
-        XCTAssertTrue(paymentElementPicker.waitForExistenceAndTap())
-        XCTAssertTrue(app.buttons["ece only"].waitForExistenceAndTap())
-
         // ECE Apple Pay does not yet request a shipping postal address. Enabling shipping-sourced
         // automatic tax causes confirmation to fail with `customer_tax_location_invalid` until
         // CheckoutApplePayContext implements shipping contact collection.
-        turnOffCheckoutSetting("Collect Shipping Address")
-        turnOffCheckoutSetting("Automatic Tax")
+        var settings = CheckoutPlayground.Settings()
+        settings.integrationType = .eceOnly
+        settings.shippingAddressCollection = false
+        settings.automaticTax = false
+        loadCheckoutPlayground(app, settings)
         app.buttons["Create Checkout Session"].waitForExistenceAndTap()
 
         XCTAssertTrue(app.navigationBars["Your Cart"].waitForExistence(timeout: 15))
@@ -231,24 +224,16 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
     }
 
     func testExpressCheckoutElementLinkAnalytics() {
-        // Given an ECE-only Checkout Session without address-dependent tax
-        app.launchEnvironment["STP_CHECKOUT_ELEMENTS"] = "true"
-        app.launch()
-
-        app.buttons["Reset"].waitForExistenceAndTap()
-        let paymentElementPicker = app.buttons.matching(
-            NSPredicate(format: "label BEGINSWITH %@", "PaymentElement")
-        ).firstMatch
-        XCTAssertTrue(paymentElementPicker.waitForExistenceAndTap())
-        XCTAssertTrue(app.buttons["ece only"].waitForExistenceAndTap())
-
-        turnOffCheckoutSetting("Collect Shipping Address")
-        turnOffCheckoutSetting("Automatic Tax")
+        // Given an ECE-only Checkout Session
+        var settings = CheckoutPlayground.Settings()
+        settings.integrationType = .eceOnly
+        loadCheckoutPlayground(app, settings)
         app.buttons["Create Checkout Session"].waitForExistenceAndTap()
 
         XCTAssertTrue(app.navigationBars["Your Cart"].waitForExistence(timeout: 15))
         let linkButton = app.buttons["Pay with Link"]
         XCTAssertTrue(linkButton.waitForExistence(timeout: 10))
+        XCTAssertFalse(app.buttons["Select payment method"].exists)
         assertAnalyticsEvents(["elements.express_checkout_element.init"])
 
         // When the customer opens Link from Express Checkout Element
@@ -280,32 +265,6 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
 
         app.textFields["ZIP"].tap()
         app.typeText("94102")
-    }
-
-    private func turnOffCheckoutSetting(_ label: String) {
-        let toggle = app.switches[label]
-        XCTAssertTrue(toggle.waitForExistence(timeout: 4))
-        for attempt in 0..<3 {
-            if String(describing: toggle.value ?? "") == "0" {
-                return
-            }
-            var scrolls = 0
-            while !toggle.isHittable && scrolls < 20 {
-                app.swipeUp()
-                scrolls += 1
-            }
-            XCTAssertTrue(toggle.isHittable)
-            if attempt == 0 {
-                toggle.tap()
-            } else {
-                toggle.coordinate(withNormalizedOffset: CGVector(dx: 0.75, dy: 0.5)).tap()
-            }
-            let off = NSPredicate(format: "value == 0 OR value == '0'")
-            if XCTWaiter.wait(for: [XCTNSPredicateExpectation(predicate: off, object: toggle)], timeout: 2) == .completed {
-                return
-            }
-        }
-        XCTAssertEqual(String(describing: toggle.value ?? ""), "0", "\(label) should be off")
     }
 
     private func assertAnalyticsEvents(

@@ -67,8 +67,8 @@ extension CheckoutPlayground {
         private var settingsSaveSubscription: AnyCancellable?
         private var isLinkModeOverrideActive = false
 
-        init() {
-            let settings = Self.settingsFromDefaults() ?? Settings()
+        init(settings: Settings? = nil) {
+            let settings = settings ?? Self.settingsFromDefaults() ?? Settings()
             uiFramework = settings.uiFramework
             integrationType = settings.integrationType
             expressCheckoutElement = settings.expressCheckoutElement
@@ -294,5 +294,6 @@ extension CheckoutPlayground {
                 return nil
             }
         }
+
     }
 }
