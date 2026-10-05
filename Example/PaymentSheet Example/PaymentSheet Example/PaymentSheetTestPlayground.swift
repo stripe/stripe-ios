@@ -449,9 +449,10 @@ struct PaymentSheetTestPlayground: View {
 
     var nativeSheetOverrideBinding: Binding<PaymentSheetTestPlaygroundSettings.NativeSheetOverride> {
         Binding<PaymentSheetTestPlaygroundSettings.NativeSheetOverride> {
-            return playgroundController.settings.nativeSheetOverride ?? .automatic
+            return playgroundController.settings.nativeSheetOverride ?? .on
         } set: { newOverride in
-            playgroundController.settings.nativeSheetOverride = newOverride == .automatic ? nil : newOverride
+            // Store Automatic explicitly because a missing setting defaults to On.
+            playgroundController.settings.nativeSheetOverride = newOverride
         }
     }
 
