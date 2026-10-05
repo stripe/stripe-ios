@@ -9,18 +9,20 @@
 import UIKit
 
 /// Displays an HTML confirmation screen in a Link-styled bottom sheet.
-final class HTMLConfirmationViewController: BottomSheetViewController {
+@MainActor
+final class HTMLConfirmationViewController {
+
     private weak var contentViewController: HTMLConfirmationContentViewController?
+    // The presented container owns the content, so keep this coordinator alive until dismissal completes.
+    private var selfRetainer: HTMLConfirmationViewController?
+
+    let sheetContainer: any PaymentSheetContainer
 
     /// Closure called when the customer takes action on the confirmation screen.
     var onResult: ((HTMLConfirmationResult) -> Void)? {
         didSet {
             contentViewController?.onResult = onResult
         }
-    }
-
-    override var sheetCornerRadius: CGFloat? {
-        LinkUI.largeCornerRadius
     }
 
     /// Creates a new HTML confirmation view controller.
@@ -45,31 +47,15 @@ final class HTMLConfirmationViewController: BottomSheetViewController {
             brand: brand
         )
         self.contentViewController = contentViewController
-
-        super.init(
-            contentViewController: contentViewController,
-            appearance: LinkUI.appearance,
-            isTestMode: false,
-            didCancelNative3DS2: {}
-        )
-
-        appearance.style.configure(self)
+        sheetContainer = LinkSheetContainerFactory.make(contentViewController: contentViewController)
+        appearance.style.configure(sheetContainer)
+        selfRetainer = self
     }
 
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
-    required init(
-        contentViewController: any BottomSheetContentViewController,
-        appearance: PaymentSheet.Appearance,
-        isTestMode: Bool,
-        didCancelNative3DS2: @escaping () -> Void
-    ) {
-        fatalError("init(contentViewController:appearance:isTestMode:didCancelNative3DS2:) has not been implemented")
-    }
-
-    override func didTapOrSwipeToDismiss() {
-        contentViewController?.didTapOrSwipeToDismiss()
+    func dismiss(animated: Bool, completion: (() -> Void)? = nil) {
+        sheetContainer.dismiss(animated: animated) { [self] in
+            selfRetainer = nil
+            completion?()
+        }
     }
 }
