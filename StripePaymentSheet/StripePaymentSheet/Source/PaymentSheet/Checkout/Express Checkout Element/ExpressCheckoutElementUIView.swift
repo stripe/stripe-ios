@@ -95,9 +95,15 @@ public final class ExpressCheckoutElementUIView: UIView {
         guard window != nil, !hasReportedInit else { return }
         hasReportedInit = true
         analyticsClient.log(
-            analytic: ExpressCheckoutElementInitAnalytic(
-                session: session,
-                configuration: configuration
+            analytic: PaymentSheetAnalytic(
+                event: .expressCheckoutElementInit,
+                additionalParams: [
+                    "ordered_lpms": session.availableExpressCheckoutPaymentMethods.map(\.analyticsValue).joined(separator: ","),
+                    "ece_config": [
+                        "link_visibility": configuration.linkConfiguration.display.rawValue,
+                        "apple_pay_visibility": configuration.applePayConfiguration?.display.rawValue ?? "never",
+                    ],
+                ]
             ),
             apiClient: apiClient
         )
@@ -255,24 +261,6 @@ public final class ExpressCheckoutElementUIView: UIView {
             ) else { return }
             self.configuration.confirmHandler(result)
         }
-    }
-}
-
-private struct ExpressCheckoutElementInitAnalytic: Analytic {
-    let event: STPAnalyticEvent = .expressCheckoutElementInit
-    let params: [String: Any]
-
-    init(
-        session: CheckoutController.Session,
-        configuration: ExpressCheckoutElement.Configuration
-    ) {
-        params = [
-            "ordered_lpms": session.availableExpressCheckoutPaymentMethods.map(\.analyticsValue).joined(separator: ","),
-            "ece_config": [
-                "link_visibility": configuration.linkConfiguration.display.rawValue,
-                "apple_pay_visibility": configuration.applePayConfiguration?.display.rawValue ?? "never",
-            ],
-        ]
     }
 }
 
