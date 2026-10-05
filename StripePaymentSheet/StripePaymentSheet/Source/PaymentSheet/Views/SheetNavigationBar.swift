@@ -51,10 +51,7 @@ class SheetNavigationBar: UIView {
     }()
 
     lazy var additionalButton: UIButton = {
-        let button = NavigationBarAdditionalButton()
-        button.didChange = { [weak self] in
-            self?.updateSystemNavigationBar()
-        }
+        let button = UIButton()
         button.setTitleColor(appearance.colors.primary, for: .normal)
         button.setTitleColor(appearance.colors.primary.disabledColor, for: .disabled)
         button.titleLabel?.font = appearance.scaledFont(for: appearance.font.base.bold, style: .footnote, maximumPointSize: 20)
@@ -86,22 +83,6 @@ class SheetNavigationBar: UIView {
             updateSystemNavigationBar()
         }
     }
-    private lazy var systemTestModeItem: UIBarButtonItem = {
-        let item = UIBarButtonItem(customView: TestModeView())
-        #if compiler(>=6.2) && os(iOS)
-        if #available(iOS 26.0, *) {
-            // TEST is a status badge, so it should not receive the glass background used by actions.
-            item.hidesSharedBackground = true
-        }
-        #endif
-        #if compiler(>=6.4) && os(iOS)
-        if #available(iOS 27.1, *) {
-            // Keep the badge with the controls when UIKit adapts the bar to a vertical layout.
-            item.axisBehavior = .verticalPreferred
-        }
-        #endif
-        return item
-    }()
 
     var systemNavigationTitle: String? { nil }
     var systemNavigationTitleView: UIView? { nil }
@@ -162,9 +143,6 @@ class SheetNavigationBar: UIView {
             trailingItems = showAdditionalButton ? [additionalItem] : []
         case .none:
             break
-        }
-        if !testModeView.isHidden {
-            leadingItems.append(systemTestModeItem)
         }
         systemNavigationItem.leftBarButtonItems = leadingItems
         systemNavigationItem.rightBarButtonItems = trailingItems
@@ -245,6 +223,20 @@ class SheetNavigationBar: UIView {
     @objc
     private func didTapAdditionalButton() {
         additionalButton.sendActions(for: .touchUpInside)
+    }
+
+    func configureEditButton(isEditingPaymentMethods: Bool) {
+        let title = isEditingPaymentMethods ? UIButton.doneButtonTitle : UIButton.editButtonTitle
+        additionalButton.titleLabel?.adjustsFontForContentSizeCategory = true
+        additionalButton.titleLabel?.textAlignment = .right
+        additionalButton.titleLabel?.font = appearance.scaledFont(for: appearance.font.base.medium, size: 14, maximumPointSize: 22)
+        additionalButton.accessibilityIdentifier = "edit_saved_button"
+        if appearance.navigationBarStyle.isGlass {
+            additionalButton.ios26_applyGlassConfiguration()
+        }
+        additionalButton.setTitle(title, for: .normal)
+        // Refresh the native items after the button's title and styling are fully configured.
+        updateSystemNavigationBar()
     }
 
     // MARK: -
@@ -334,38 +326,5 @@ class SheetNavigationBar: UIView {
         }
         closeButton.tintColor = appearance.colors.icon
         return closeButton
-    }
-}
-
-// Existing screens mutate this button directly; mirror those updates into the system navigation item.
-private final class NavigationBarAdditionalButton: UIButton {
-
-    var didChange: (() -> Void)?
-
-    override func setTitle(_ title: String?, for state: UIControl.State) {
-        super.setTitle(title, for: state)
-        didChange?()
-    }
-
-    override var isEnabled: Bool {
-        didSet {
-            didChange?()
-        }
-    }
-}
-
-extension UIButton {
-
-    func configureCommonEditButton(isEditingPaymentMethods: Bool, appearance: PaymentSheet.Appearance) {
-        let title = isEditingPaymentMethods ? UIButton.doneButtonTitle : UIButton.editButtonTitle
-        titleLabel?.adjustsFontForContentSizeCategory = true
-        titleLabel?.textAlignment = .right
-        titleLabel?.font = appearance.scaledFont(for: appearance.font.base.medium, size: 14, maximumPointSize: 22)
-        accessibilityIdentifier = "edit_saved_button"
-        if appearance.navigationBarStyle.isGlass {
-            ios26_applyGlassConfiguration()
-        }
-        // Publish the title after its styling so the native navigation item receives the final attributes.
-        setTitle(title, for: .normal)
     }
 }
