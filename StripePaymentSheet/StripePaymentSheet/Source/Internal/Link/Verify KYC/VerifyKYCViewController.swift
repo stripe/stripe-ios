@@ -7,7 +7,7 @@
 
 import UIKit
 
-/// Owns the presentation container for Link KYC verification.
+/// Container view controller that displays a list of KYC fields with the optional ability to initiate editing of the address.
 @MainActor
 final class VerifyKYCViewController {
 
@@ -17,16 +17,19 @@ final class VerifyKYCViewController {
 
     let sheetContainer: any PaymentSheetContainer
 
+    /// Closure called when a user takes action (confirm, cancel, or initiate editing of the address).
     var onResult: ((VerifyKYCResult) -> Void)? {
         didSet {
             contentViewController?.onResult = onResult
         }
     }
 
+    // MARK: - VerifyKYCViewController
+
     /// Creates a new instance of `VerifyKYCViewController`.
     /// - Parameters:
     ///   - info: The KYC information to display.
-    ///   - appearance: Determines the colors, corner radius, and height of the "Confirm" button and the user interface style.
+    ///   - appearance: Determines the colors, corner radius, and height of the "Confirm" button and the user interface style (i.e. light, dark, or system).
     init(info: VerifyKYCInfo, appearance: LinkAppearance) {
         let contentViewController = VerifyKYCContentViewController(info: info, appearance: appearance)
         self.contentViewController = contentViewController
@@ -42,6 +45,7 @@ final class VerifyKYCViewController {
         }
     }
 }
+
 extension VerifyKYCContentViewController: SheetNavigationBarDelegate {
 
     // MARK: - SheetNavigationBarDelegate
