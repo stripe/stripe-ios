@@ -168,14 +168,8 @@ extension PaymentSheetUITestCase {
         addApplePayBillingIfNeeded(applePay)
 
         let cardSelectionButton = applePay.buttons["Simulated Card - AmEx, ‪•••• 1234‬"].firstMatch
-        if cardSelectionButton.waitForExistence(timeout: 2.0) {
-            cardSelectionButton.forceTapElement()
-        } else {
-            // Newer Wallet simulators show card details after adding the billing address.
-            let doneButton = applePay.navigationBars.buttons["Done"].firstMatch
-            XCTAssertTrue(doneButton.waitForExistence(timeout: 10.0))
-            doneButton.tap()
-        }
+        XCTAssertTrue(cardSelectionButton.waitForExistence(timeout: 10.0))
+        cardSelectionButton.forceTapElement()
 
         let payButton = applePay.buttons["Pay with Passcode"]
         XCTAssertTrue(payButton.waitForExistence(timeout: 10.0))
@@ -216,7 +210,7 @@ extension PaymentSheetUITestCase {
             zipCell.tap()
             zipCell.typeText("95014")
 
-            applePay.navigationBars["Billing Address"].buttons["Done"].tap()
+            applePay.buttons["Done"].tap()
         }
     }
 
