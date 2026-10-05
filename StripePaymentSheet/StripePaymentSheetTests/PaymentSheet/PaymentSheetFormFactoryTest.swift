@@ -2546,6 +2546,47 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertNil(form.getMandateElement())
         XCTAssertNotNil(form.updateParams(params: IntentConfirmParams(type: .stripe(.goPay))))
     }
+    func testShopeePayUsesHostedAuthorizationWithoutNativeMandate() {
+        // Given a one-time ShopeePay payment
+        let intents: [Intent] = [
+            ._testPaymentIntent(paymentMethodTypes: [.shopeePay]),
+        ]
+        for intent in intents {
+            // When the form uses automatic billing collection
+            let form = PaymentSheetFormFactory(
+                intent: intent,
+                elementsSession: ._testValue(paymentMethodTypes: ["shopeepay"]),
+                configuration: .paymentElement(PaymentSheet.Configuration()),
+                paymentMethod: .stripe(.shopeePay)
+            ).make()
+
+            // Then account linking and consent remain in the hosted flow, as on web
+            XCTAssertFalse(form.collectsUserInput)
+            XCTAssertNil(form.getMandateElement())
+            XCTAssertNotNil(form.updateParams(params: IntentConfirmParams(type: .stripe(.shopeePay))))
+        }
+    }
+
+    func testShopeePayRestrictsBillingCountryToWebSupportedCountries() throws {
+        // Given ShopeePay with full billing address collection
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.address = .full
+        let form = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.shopeePay]),
+            elementsSession: ._testValue(paymentMethodTypes: ["shopeepay"]),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.shopeePay)
+        ).make()
+
+        // When the billing address is built
+        let address = try XCTUnwrap(
+            form.getAllUnwrappedSubElements().compactMap { $0 as? AddressSectionElement }.first
+        )
+
+        // Then the country choices and default match web Payment Element
+        XCTAssertEqual(address.countryCodes, ["ID", "US"])
+        XCTAssertEqual(address.selectedCountryCode, "US")
+    }
     func testMomoUsesHostedAuthorizationWithoutNativeMandate() {
         // Given a MoMo PaymentIntent
         let intent = Intent._testPaymentIntent(paymentMethodTypes: [.momo])
