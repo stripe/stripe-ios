@@ -22,6 +22,7 @@ extension STPAPIClient {
         customerID: String?,
         useMobileEndpoints: Bool,
         canSyncAttestationState: Bool,
+        supportedVerificationTypes: [SupportedVerificationType],
         doNotLogConsumerFunnelEvent: Bool,
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<ConsumerSession.LookupResponse, Error>) -> Void
@@ -52,6 +53,7 @@ extension STPAPIClient {
                 parameters: parameters,
                 useMobileEndpoints: useMobileEndpoints,
                 canSyncAttestationState: canSyncAttestationState,
+                supportedVerificationTypes: supportedVerificationTypes,
                 completion: completion
             )
         }
@@ -63,6 +65,7 @@ extension STPAPIClient {
         customerID: String?,
         useMobileEndpoints: Bool,
         canSyncAttestationState: Bool,
+        supportedVerificationTypes: [SupportedVerificationType],
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<ConsumerSession.LookupResponse, Error>) -> Void
     ) {
@@ -79,6 +82,7 @@ extension STPAPIClient {
                 parameters: parameters,
                 useMobileEndpoints: useMobileEndpoints,
                 canSyncAttestationState: canSyncAttestationState,
+                supportedVerificationTypes: supportedVerificationTypes,
                 completion: completion
             )
         }
@@ -90,6 +94,7 @@ extension STPAPIClient {
         customerID: String?,
         useMobileEndpoints: Bool,
         canSyncAttestationState: Bool,
+        supportedVerificationTypes: [SupportedVerificationType],
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<ConsumerSession.LookupResponse, Error>) -> Void
     ) {
@@ -105,6 +110,7 @@ extension STPAPIClient {
                 parameters: parameters,
                 useMobileEndpoints: useMobileEndpoints,
                 canSyncAttestationState: canSyncAttestationState,
+                supportedVerificationTypes: supportedVerificationTypes,
                 completion: completion
             )
         }
@@ -114,6 +120,7 @@ extension STPAPIClient {
         parameters: [String: Any],
         useMobileEndpoints: Bool,
         canSyncAttestationState: Bool,
+        supportedVerificationTypes: [SupportedVerificationType],
         completion: @escaping (Result<ConsumerSession.LookupResponse, Error>) -> Void
     ) async {
         let legacyEndpoint = "consumers/sessions/lookup"
@@ -122,7 +129,7 @@ extension STPAPIClient {
         var mutableParameters = parameters
 
         if useMobileEndpoints {
-            mutableParameters["supported_verification_types"] = SupportedVerificationType.nativeCapabilities.map(\.rawValue)
+            mutableParameters["supported_verification_types"] = supportedVerificationTypes.map(\.rawValue)
         }
 
         let requestAssertionHandle: StripeAttest.AssertionHandle? = await {
@@ -633,6 +640,7 @@ extension STPAPIClient {
 
     func refreshSession(
         consumerSessionClientSecret: String,
+        supportedVerificationTypes: [SupportedVerificationType],
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<ConsumerSession, Error>) -> Void
     ) {
@@ -643,7 +651,7 @@ extension STPAPIClient {
                 "consumer_session_client_secret": consumerSessionClientSecret,
             ],
             "request_surface": requestSurface.rawValue,
-            "supported_verification_types": SupportedVerificationType.nativeCapabilities.map(\.rawValue),
+            "supported_verification_types": supportedVerificationTypes.map(\.rawValue),
         ]
 
         makeConsumerSessionRequest(

@@ -55,6 +55,14 @@ extension STPElementsSession {
         linkSettings?.linkFlags ?? [:]
     }
 
+    var linkMFAAuthFlowEnabled: Bool {
+        linkSettings?.mfaAuthFlowEnabled ?? false
+    }
+
+    var linkSupportedVerificationTypes: [SupportedVerificationType] {
+        SupportedVerificationType.nativeCapabilities(mfaAuthFlowEnabled: linkMFAAuthFlowEnabled)
+    }
+
     var shouldShowPreferDebitCardHint: Bool {
         linkSettings?.linkShowPreferDebitCardHint ?? false
     }

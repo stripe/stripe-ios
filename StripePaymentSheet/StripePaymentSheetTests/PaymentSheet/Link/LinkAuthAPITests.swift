@@ -105,16 +105,46 @@ final class LinkAuthAPITests: STPNetworkStubbingTestCase {
         wait(for: [completed], timeout: 5)
     }
 
-    func testRefreshDeclaresTheNativeCapabilities() {
+    func testRefreshDeclaresOnlySMSWhenMFAAuthFlowIsDisabled() {
+        // Given a refresh with the SMS-only capabilities
+        // When the refresh request is sent
+        // Then only SMS is declared
+        assertRefreshDeclares(SupportedVerificationType.nativeCapabilities(mfaAuthFlowEnabled: false), expected: ["SMS"])
+    }
+
+    func testRefreshDeclaresSMSAndEmailWhenMFAAuthFlowIsEnabled() {
+        // Given a refresh with the MFA capabilities
+        // When the refresh request is sent
+        // Then both SMS and email are declared
+        assertRefreshDeclares(SupportedVerificationType.nativeCapabilities(mfaAuthFlowEnabled: true), expected: ["SMS", "EMAIL"])
+    }
+
+    func testElementsSessionFlagControlsSupportedVerificationTypes() {
+        // Given elements sessions with the MFA auth flow flag missing, off, and on
+        let missing = STPElementsSession._testValue(paymentMethodTypes: ["card", "link"])
+        let disabled = STPElementsSession._testValue(paymentMethodTypes: ["card", "link"], linkEnableMFAAuthFlow: false)
+        let enabled = STPElementsSession._testValue(paymentMethodTypes: ["card", "link"], linkEnableMFAAuthFlow: true)
+
+        // Then only an enabled flag adds email
+        XCTAssertEqual(missing.linkSupportedVerificationTypes, [.sms])
+        XCTAssertEqual(disabled.linkSupportedVerificationTypes, [.sms])
+        XCTAssertEqual(enabled.linkSupportedVerificationTypes, [.sms, .email])
+
+        // ...and the account service carries them into lookups and accounts
+        XCTAssertEqual(LinkAccountService(elementsSession: enabled).supportedVerificationTypes, [.sms, .email])
+        XCTAssertEqual(LinkAccountService(elementsSession: disabled).supportedVerificationTypes, [.sms])
+    }
+
+    private func assertRefreshDeclares(_ types: [SupportedVerificationType], expected: Set<String>, file: StaticString = #filePath, line: UInt = #line) {
         let completed = expectation(description: "Refreshed")
         stub(condition: isPath("/v1/consumers/sessions/refresh")) { request in
             let params = RequestBodyTestHelpers.formEncodedBodyParams(from: request)
             let declared = params.filter { $0.key.hasPrefix("supported_verification_types[") }.map(\.value)
-            XCTAssertEqual(Set(declared), Set(SupportedVerificationType.nativeCapabilities.map(\.rawValue)))
+            XCTAssertEqual(Set(declared), expected, file: file, line: line)
             return self.response(type: "SMS")
         }
-        STPAPIClient(publishableKey: "pk_test_auth").refreshSession(consumerSessionClientSecret: "secret") { result in
-            if case .failure(let error) = result { XCTFail("Unexpected error: \(error)") }
+        STPAPIClient(publishableKey: "pk_test_auth").refreshSession(consumerSessionClientSecret: "secret", supportedVerificationTypes: types) { result in
+            if case .failure(let error) = result { XCTFail("Unexpected error: \(error)", file: file, line: line) }
             completed.fulfill()
         }
         wait(for: [completed], timeout: 5)

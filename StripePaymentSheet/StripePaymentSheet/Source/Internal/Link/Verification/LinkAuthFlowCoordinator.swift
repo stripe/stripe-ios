@@ -8,6 +8,7 @@ protocol LinkAuthAccount: AnyObject {
     var sessionState: PaymentSheetLinkAccount.SessionState { get }
     var authLookupSettings: ConsumerSession.LookupSettings? { get }
     var useMobileEndpoints: Bool { get }
+    var supportedVerificationTypes: [SupportedVerificationType] { get }
     var visitedFallbackURLs: [URL] { get set }
 
     func applyAuthResponse(_ response: ConsumerSession.AuthResponse)
@@ -67,7 +68,6 @@ final class LinkAuthFlowCoordinator {
     }
 
     private let account: LinkAuthAccount
-    private let capabilities: [SupportedVerificationType]
     private let now: () -> Date
     private let consentGranted: Bool?
     private var history: [Route] = []
@@ -92,12 +92,10 @@ final class LinkAuthFlowCoordinator {
 
     init(
         account: LinkAuthAccount,
-        capabilities: [SupportedVerificationType] = SupportedVerificationType.nativeCapabilities,
         consentGranted: Bool? = nil,
         now: @escaping () -> Date = Date.init
     ) {
         self.account = account
-        self.capabilities = capabilities
         self.consentGranted = consentGranted
         self.now = now
     }
@@ -254,7 +252,7 @@ final class LinkAuthFlowCoordinator {
     }
 
     private func factor(for type: SupportedVerificationType) -> ConsumerSession.VerificationFactor? {
-        guard capabilities.contains(type) else { return nil }
+        guard account.supportedVerificationTypes.contains(type) else { return nil }
         if let factors = account.currentSession?.availableVerificationFactors {
             return factors.first { $0.isStartable && $0.type.verificationType == type }
         }
