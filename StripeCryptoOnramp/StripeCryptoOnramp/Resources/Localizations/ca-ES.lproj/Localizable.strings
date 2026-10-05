@@ -1,6 +1,26 @@
+"Add %ld documents" = "Afegiu %ld documents";
+
+"Add 1 document" = "Afegiu 1 document";
+
+"Add documents" = "Afegiu documents";
+
+"Answer" = "Responeu";
+
+"Choose File…" = "Tria un fitxer…";
+
+"Choose Photo…" = "Tria una foto…";
+
 "Debit cards are most likely to be accepted." = "És molt probable que s'acceptin les targetes de dèbit.";
 
+"Document type" = "Tipus de document";
+
 "Document uploaded successfully" = "El document s'ha carregat correctament";
+
+"Funds source" = "Origen dels fons";
+
+"How are you funding your transactions? Please list all of your sources. For example, salary, savings, investment earnings, etc." = "Com financeu les vostres transaccions? Indiqueu totes les vostres fonts. Per exemple, salari, estalvis, beneficis d'inversions, etc.";
+
+"Make sure your document meets following requirements." = "Assegureu-vos que el vostre document compleix els requisits següents.";
 
 "Please try again later." = "Torneu-ho a provar més tard.";
 
@@ -8,9 +28,17 @@
 
 "Tell us about your source of funds" = "Parleu-nos sobre l'origen dels vostres fons";
 
+"There was a problem with your previous document. Please upload a new one." = "Hi ha hagut un problema amb el vostre document anterior. Carregueu-ne un de nou.";
+
 "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "Aquesta aplicació no s'ha pogut verificar a causa d'un error d'atestació. Torneu-ho a provar més tard o poseu-vos en contacte amb el desenvolupador si el problema persisteix.";
 
 "This app couldn't be verified. Contact the app developer for help." = "Aquesta aplicació no s'ha pogut verificar. Contacteu amb la persona que la va desenvolupar per a demanar ajuda.";
+
+"This file is larger than %@. Choose a file that is %@ or smaller." = "Aquest fitxer és més gran que %1$@. Trieu un fitxer de %2$@ o més petit.";
+
+"This file type isn’t supported." = "No s'admet aquest tipus de fitxer.";
+
+"This file type isn’t supported. Upload a %@ file." = "No s'admet aquest tipus de fitxer. Carregueu un fitxer %@.";
 
 "This wallet couldn't be found. Please choose or add a wallet and try again." = "No s'ha pogut trobar aquesta cartera. Trieu o afegiu una cartera i torneu-ho a provar.";
 
@@ -20,9 +48,19 @@
 
 "This wallet verification request is invalid. Please try again." = "Aquesta sol·licitud de verificació de la cartera no és vàlida. Torneu-ho a provar.";
 
+"Upload document" = "Carrega el document";
+
 "Upload your proof of address" = "Pugeu el vostre comprovant d'adreça";
 
+"Uploaded" = "S'ha carregat";
+
+"Uploading…" = "Carregant…";
+
 "We couldn't verify ownership of this wallet. Please try again." = "No hem pogut verificar la propietat d'aquesta cartera. Torneu-ho a provar.";
+
+"We couldn’t open this document. Please choose it again." = "No hem pogut obrir aquest document. Torneu-lo a triar.";
+
+"We couldn’t upload this file. Please try again." = "No hem pogut carregar aquest fitxer. Torneu-ho a provar.";
 
 "We may request proof of address for larger transactions." = "És possible que sol·licitem un justificant de domicili per a transaccions més grans.";
 
