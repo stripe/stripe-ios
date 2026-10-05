@@ -285,17 +285,27 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
     private func turnOffCheckoutSetting(_ label: String) {
         let toggle = app.switches[label]
         XCTAssertTrue(toggle.waitForExistence(timeout: 4))
-        if String(describing: toggle.value ?? "") == "1" {
+        for attempt in 0..<3 {
+            if String(describing: toggle.value ?? "") == "0" {
+                return
+            }
             var scrolls = 0
             while !toggle.isHittable && scrolls < 20 {
                 app.swipeUp()
                 scrolls += 1
             }
             XCTAssertTrue(toggle.isHittable)
-            toggle.coordinate(withNormalizedOffset: CGVector(dx: 0.75, dy: 0.5)).tap()
+            if attempt == 0 {
+                toggle.tap()
+            } else {
+                toggle.coordinate(withNormalizedOffset: CGVector(dx: 0.75, dy: 0.5)).tap()
+            }
+            let off = NSPredicate(format: "value == 0 OR value == '0'")
+            if XCTWaiter.wait(for: [XCTNSPredicateExpectation(predicate: off, object: toggle)], timeout: 2) == .completed {
+                return
+            }
         }
-        expectation(for: NSPredicate(format: "value == 0 OR value == '0'"), evaluatedWith: toggle)
-        waitForExpectations(timeout: 5)
+        XCTAssertEqual(String(describing: toggle.value ?? ""), "0", "\(label) should be off")
     }
 
     private func assertAnalyticsEvents(
