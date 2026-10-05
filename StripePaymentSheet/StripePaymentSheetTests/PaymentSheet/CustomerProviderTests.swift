@@ -258,4 +258,58 @@ final class CustomerProviderTests: XCTestCase {
             XCTAssertEqual(provider.allowsPaymentMethodUpdate(elementsSession: elementsSession), enabled)
         }
     }
+
+    func testLoadedCheckoutCustomerDoesNotReplaceMerchantConfiguration() async {
+        // Given a merchant configuration and a separate Checkout customer
+        await AddressSpecProvider.shared.loadAddressSpecs()
+        var configuration = EmbeddedPaymentElement.Configuration()
+        configuration.customer = .init(id: "cus_merchant", ephemeralKeySecret: "ek_test")
+        let session = CheckoutTestHelpers.makeSession()
+            .withCustomer(id: "cus_checkout")
+            .makePublicSession()
+
+        // When the payment surface accepts the Checkout load result
+        let sut = EmbeddedPaymentElement(
+            configuration: configuration,
+            loadResult: makeLoadResult(session: session),
+            analyticsHelper: ._testValue()
+        )
+
+        // Then consumers can use the loaded customer without mutating merchant input
+        XCTAssertEqual(sut.savedPaymentMethodManager.customerProvider.customerID, "cus_checkout")
+        XCTAssertEqual(sut.configuration.customer?.id, "cus_merchant")
+    }
+
+    func testLegacyCustomerUsesTheConfiguredEphemeralKey() {
+        let provider = CustomerProvider(
+            customer: .init(id: "cus_legacy", ephemeralKeySecret: "ek_test_legacy")
+        )
+
+        XCTAssertEqual(provider.ephemeralKeySecret(basedOn: nil), "ek_test_legacy")
+    }
+
+    func testCustomerSessionCredentialsUseTheLoadedAPIKey() {
+        let provider = CustomerProvider(
+            customer: .init(id: "cus_session", customerSessionClientSecret: "cuss_test_secret")
+        )
+        let elementsSession = STPElementsSession
+            .elementsSessionWithCustomerSessionForPaymentSheet(apiKey: "ek_from_session")
+
+        XCTAssertEqual(provider.ephemeralKeySecret(basedOn: elementsSession), "ek_from_session")
+        XCTAssertNil(provider.ephemeralKeySecret(basedOn: nil))
+    }
+
+    func testCheckoutAndGuestCustomersDoNotUseElementsSessionEphemeralKeys() {
+        let checkoutSession = CheckoutTestHelpers.makeSession().withCustomer().makePublicSession()
+        let providers: [CustomerProvider] = [
+            .init(customer: nil),
+            .init(checkoutSession: checkoutSession),
+        ]
+        let elementsSession = STPElementsSession
+            .elementsSessionWithCustomerSessionForPaymentSheet(apiKey: "ek_unrelated")
+
+        for provider in providers {
+            XCTAssertNil(provider.ephemeralKeySecret(basedOn: elementsSession))
+        }
+    }
 }
