@@ -55,8 +55,8 @@ internal struct FlowControllerSelectionSnapshot {
         }
 
         if canReuseCurrentViewController(
-            restoring: selectionToRestore.paymentOption,
-            currentSelection: viewController.selectedPaymentOption
+            viewController,
+            restoring: selectionToRestore.paymentOption
         ) {
             return nil
         }
@@ -68,9 +68,10 @@ internal struct FlowControllerSelectionSnapshot {
     /// Apple Pay, Link wallet, and ordinary saved methods have stable identities. All form-backed
     /// options rebuild.
     private func canReuseCurrentViewController(
-        restoring capturedSelection: PaymentOption?,
-        currentSelection: PaymentOption?
+        _ viewController: FlowControllerViewControllerProtocol,
+        restoring capturedSelection: PaymentOption?
     ) -> Bool {
+        let currentSelection = viewController.selectedPaymentOption
         switch (capturedSelection, currentSelection) {
         case (nil, _), (.applePay?, .applePay?), (.link(.wallet)?, .link(.wallet)?):
             return true
