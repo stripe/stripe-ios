@@ -791,12 +791,6 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
         }
     }
 
-    /// Creates a crypto payment token for the currently selected payment method.
-    ///
-    /// Throws `PaymentMethodMerchantChangedError` if an Apple Pay payment method collected before
-    /// authentication was created under a different platform key. Call
-    /// `collectPaymentMethod(type: .applePay(paymentRequest:), from:)` again and retry token creation
-    /// only after successful collection. The Apple Pay sheet is not reopened automatically.
     public func createCryptoPaymentToken() async throws -> String {
         guard let selectedPaymentSource else {
             analyticsClient.log(.errorOccurred(during: .createCryptoPaymentToken, errorMessage: "No payment method selected"))
