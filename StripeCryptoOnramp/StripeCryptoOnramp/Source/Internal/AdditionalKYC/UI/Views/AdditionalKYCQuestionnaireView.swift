@@ -46,7 +46,7 @@ struct AdditionalKYCQuestionnaireView: View {
                         question: question.prompt,
                         answer: Binding(
                             get: { model.answers[question.id] ?? "" },
-                            set: { model.answers[question.id] = $0 }
+                            set: { model.setAnswer($0, for: question.id) }
                         ),
                         appearance: appearance
                     )
