@@ -138,6 +138,11 @@ enum ExpectedFormHierarchy {
     enum Momo {
         static var paymentIntent: FormHierarchyNode { emptyForm }
     }
+    // MARK: - ShopeePay
+
+    enum ShopeePay {
+        static var paymentIntent: FormHierarchyNode { emptyForm }
+    }
     // MARK: - PAYCO
 
     enum Payco {
