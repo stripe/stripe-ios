@@ -200,6 +200,8 @@ private extension PaymentElement.ApplePayConfiguration {
 
 private extension PaymentSheet.Configuration {
     mutating func apply(linkConfiguration: PaymentElement.LinkConfiguration?) {
+        link.disallowFundingSourceCreation = linkConfiguration?.disallowFundingSourceCreation ?? []
+        link.collectMissingBillingDetailsForExistingPaymentMethods = linkConfiguration?.collectMissingBillingDetailsForExistingPaymentMethods ?? true
         switch linkConfiguration?.display {
         case .none, .automatic:
             link.display = .automatic
@@ -213,6 +215,8 @@ private extension PaymentSheet.Configuration {
 
 private extension EmbeddedPaymentElement.Configuration {
     mutating func apply(linkConfiguration: PaymentElement.LinkConfiguration?) {
+        link.disallowFundingSourceCreation = linkConfiguration?.disallowFundingSourceCreation ?? []
+        link.collectMissingBillingDetailsForExistingPaymentMethods = linkConfiguration?.collectMissingBillingDetailsForExistingPaymentMethods ?? true
         switch linkConfiguration?.display {
         case .none, .automatic:
             link.display = .automatic
