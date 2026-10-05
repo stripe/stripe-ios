@@ -8,15 +8,9 @@
 @_spi(STP) import StripeCore
 import UIKit
 
-/// Owns the presentation container for a Link-styled HTML confirmation screen.
-@MainActor
-final class HTMLConfirmationViewController {
-
+/// Displays an HTML confirmation screen in a Link-styled bottom sheet.
+final class HTMLConfirmationViewController: BottomSheetViewController {
     private weak var contentViewController: HTMLConfirmationContentViewController?
-    // The presented container owns the content, so keep this coordinator alive until dismissal completes.
-    private var selfRetainer: HTMLConfirmationViewController?
-
-    let sheetContainer: any PaymentSheetContainer
 
     /// Closure called when the customer takes action on the confirmation screen.
     var onResult: ((HTMLConfirmationResult) -> Void)? {
@@ -25,11 +19,15 @@ final class HTMLConfirmationViewController {
         }
     }
 
+    override var sheetCornerRadius: CGFloat? {
+        LinkUI.largeCornerRadius
+    }
+
     /// Creates a new HTML confirmation view controller.
     /// - Parameters:
     ///   - heading: The heading displayed above the HTML.
     ///   - html: The HTML to display.
-    ///   - confirmationButtonTitle: The confirmation button's title.
+    ///   - confirmationButtonTitle: The title of the confirmation button.
     ///   - appearance: Determines the colors, corner radius, button height, and user interface style.
     ///   - brand: The Link brand displayed in the navigation bar.
     init(
@@ -47,15 +45,31 @@ final class HTMLConfirmationViewController {
             brand: brand
         )
         self.contentViewController = contentViewController
-        sheetContainer = LinkSheetContainerFactory.make(contentViewController: contentViewController)
-        appearance.style.configure(sheetContainer)
-        selfRetainer = self
+
+        super.init(
+            contentViewController: contentViewController,
+            appearance: LinkUI.appearance,
+            isTestMode: false,
+            didCancelNative3DS2: {}
+        )
+
+        appearance.style.configure(self)
     }
 
-    func dismiss(animated: Bool, completion: (() -> Void)? = nil) {
-        sheetContainer.dismiss(animated: animated) { [self] in
-            selfRetainer = nil
-            completion?()
-        }
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    required init(
+        contentViewController: any BottomSheetContentViewController,
+        appearance: PaymentSheet.Appearance,
+        isTestMode: Bool,
+        didCancelNative3DS2: @escaping () -> Void
+    ) {
+        fatalError("init(contentViewController:appearance:isTestMode:didCancelNative3DS2:) has not been implemented")
+    }
+
+    override func didTapOrSwipeToDismiss() {
+        contentViewController?.didTapOrSwipeToDismiss()
     }
 }

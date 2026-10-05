@@ -852,7 +852,7 @@ import UIKit
                     }
                 }
 
-                viewController.presentAsSheet(verifyKYCViewController.sheetContainer)
+                viewController.presentAsSheet(verifyKYCViewController)
             }
         }
     }
@@ -1003,7 +1003,7 @@ import UIKit
                     }
                 }
 
-                viewController.presentAsSheet(confirmationViewController.sheetContainer)
+                viewController.presentAsSheet(confirmationViewController)
             }
         }
     }
