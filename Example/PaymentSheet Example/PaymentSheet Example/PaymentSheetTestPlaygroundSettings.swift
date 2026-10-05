@@ -844,7 +844,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     static func defaultValues() -> PaymentSheetTestPlaygroundSettings {
         return PaymentSheetTestPlaygroundSettings(
             uiStyle: .paymentSheet,
-            nativeSheetOverride: nil,
+            nativeSheetOverride: .on,
             layout: .automatic,
             mode: .payment,
             style: .automatic,

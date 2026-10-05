@@ -699,7 +699,7 @@ import UIKit
 
     private func updateNativeSheetOverride(_ settings: PaymentSheetTestPlaygroundSettings) {
         PaymentSheet.NativeSheetFeatureFlags.nativeSheetEnabledOverride =
-            (settings.nativeSheetOverride ?? .automatic).value
+            (settings.nativeSheetOverride ?? .on).value
     }
 
     func buildPaymentSheet() {
