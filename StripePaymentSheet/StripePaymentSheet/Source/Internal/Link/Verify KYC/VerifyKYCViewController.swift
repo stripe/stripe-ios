@@ -12,8 +12,6 @@ import UIKit
 final class VerifyKYCViewController {
 
     private weak var contentViewController: VerifyKYCContentViewController?
-    // The presented container owns the content, so keep this coordinator alive until dismissal completes.
-    private var selfRetainer: VerifyKYCViewController?
 
     let sheetContainer: any PaymentSheetContainer
 
@@ -35,14 +33,10 @@ final class VerifyKYCViewController {
         self.contentViewController = contentViewController
         sheetContainer = LinkSheetContainerFactory.make(contentViewController: contentViewController)
         appearance.style.configure(sheetContainer)
-        selfRetainer = self
     }
 
     func dismiss(animated: Bool, completion: (() -> Void)? = nil) {
-        sheetContainer.dismiss(animated: animated) { [self] in
-            selfRetainer = nil
-            completion?()
-        }
+        sheetContainer.dismiss(animated: animated, completion: completion)
     }
 }
 
