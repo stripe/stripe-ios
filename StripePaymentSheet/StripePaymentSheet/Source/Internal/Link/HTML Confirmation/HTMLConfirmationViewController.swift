@@ -13,8 +13,6 @@ import UIKit
 final class HTMLConfirmationViewController {
 
     private weak var contentViewController: HTMLConfirmationContentViewController?
-    // The presented container owns the content, so keep this coordinator alive until dismissal completes.
-    private var selfRetainer: HTMLConfirmationViewController?
 
     let sheetContainer: any PaymentSheetContainer
 
@@ -49,13 +47,9 @@ final class HTMLConfirmationViewController {
         self.contentViewController = contentViewController
         sheetContainer = LinkSheetContainerFactory.make(contentViewController: contentViewController)
         appearance.style.configure(sheetContainer)
-        selfRetainer = self
     }
 
     func dismiss(animated: Bool, completion: (() -> Void)? = nil) {
-        sheetContainer.dismiss(animated: animated) { [self] in
-            selfRetainer = nil
-            completion?()
-        }
+        sheetContainer.dismiss(animated: animated, completion: completion)
     }
 }
