@@ -75,4 +75,26 @@ struct CustomerProvider {
         }
         return session.customer?.email ?? session.email
     }
+
+    var usesCustomerSession: Bool {
+        guard case .customer(let customer) = backing,
+              case .customerSession = customer?.customerAccessProvider else {
+            return false
+        }
+        return true
+    }
+
+    func addElementsSessionParams(to parameters: inout [String: Any]) {
+        guard case .customer(let customer) = backing else {
+            return
+        }
+        switch customer?.customerAccessProvider {
+        case .legacyCustomerEphemeralKey(let ephemeralKeySecret):
+            parameters["legacy_customer_ephemeral_key"] = ephemeralKeySecret
+        case .customerSession(let clientSecret):
+            parameters["customer_session_client_secret"] = clientSecret
+        case nil:
+            break
+        }
+    }
 }
