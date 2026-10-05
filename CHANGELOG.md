@@ -10,19 +10,22 @@ MINOR
 * [Fixed] Amounts in LBP are now displayed correctly.
 
 ### CryptoOnramp (Alpha)
-* [Added] Added optional `email` and `phone` fields to `KycInfo`, populated from Apple Pay billing or shipping contact information when requested. Both values are for prefill only and `phone` is not normalized to E.164. Names fall back to shipping contact values when billing values are missing or blank. Creating `KycInfo` from an Apple Pay payment still requires a usable name or billing address; email or phone alone is insufficient.
+* [Added] Added optional `email`, `phone`, and `rawPhone` fields to `KycInfo`, populated from Apple Pay billing or shipping contact information when requested. All values are for prefill only. `phone` is normalized to E.164 using the billing address's country when possible, and is otherwise `nil`; `rawPhone` always carries the wallet's original, unnormalized value. Names fall back to shipping contact values when billing values are missing or blank. Creating `KycInfo` from an Apple Pay payment still requires a usable name or billing address; email or phone alone is insufficient.
 * [Changed] Apple Pay can now be presented via `CryptoOnrampCoordinator.collectPaymentMethod(type:from:)` before the user authenticates with Link. `createCryptoPaymentToken()` still requires an authenticated user.
 * [Added] Added an optional `countryHint` parameter to `CryptoOnrampCoordinator.create(...)`, used to help select a merchant of record for a customer who does not yet have an established KYC region.
 * [Added] Added `STPAPIClient.CryptoOnrampAPIError.missingLinkSessionKey` to report when a Link session key is unavailable.
+* [Added] Added `CryptoOnrampCoordinator.fulfillKYCRequirement(from:)` to retrieve additional KYC requirements and present document collection when needed.
 
 ### PaymentSheet
-* [Added] Added GoPay API bindings and support for payments, including setup future usage, in PaymentSheet.
+* [Added] Added MoMo API bindings and PaymentSheet support for PaymentIntents.
+* [Added] Added GoPay API bindings and PaymentSheet support for PaymentIntents.
 
 ## 26.12.1 2026-09-28
 ### CryptoOnramp (Alpha)
 * [Fixed] Preserved PaymentIntent error codes, decline codes, and types in checkout errors after authentication.
 
 ### Financial Connections
+* [Added] Added `financialConnectionsSessionId` to `FinancialConnectionsEvent`. Events are emitted after the session identifier is available.
 * [Fixed] Preserved `no_eligible_accounts` in `onEvent` error callbacks instead of reporting it as `unexpected_error`.
 * [Fixed] Recorded native `onEvent` emissions with the session context for diagnostics.
 
