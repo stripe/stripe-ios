@@ -360,7 +360,7 @@ final class LinkAuthFlowViewSnapshotTests: STPSnapshotTestCase {
     private func makeFlow(types: [SupportedVerificationType], phoneMatch: Bool = false, mode: LinkVerificationView.Mode = .modal, onStart: @escaping () -> Void = {}) -> LinkAuthFlowViewController {
         let factors = types.map { ConsumerSession.VerificationFactor(type: $0 == .sms ? .sms : .email, providesFurtherVerification: true, temporarilyDisabled: false, id: $0.rawValue) }
         let session = ConsumerSession.make(clientSecret: "secret", emailAddress: "jane.diaz@example.com", redactedFormattedPhoneNumber: "(***) *** **23", unredactedPhoneNumber: nil, phoneNumberCountry: "US", verificationSessions: [], supportedPaymentDetailsTypes: [], mobileFallbackWebviewParams: nil, currentAuthenticationLevel: .notAuthenticated, minimumAuthenticationLevel: .oneFactorAuth, availableVerificationFactors: factors, redactedPhoneNumber: "+1********23")
-        let account = PaymentSheetLinkAccount(email: session.emailAddress, session: session, publishableKey: "pk_test_consumer", displayablePaymentDetails: nil, apiClient: STPAPIClient(publishableKey: "pk_test_auth"), useMobileEndpoints: true, canSyncAttestationState: false)
+        let account = PaymentSheetLinkAccount(email: session.emailAddress, session: session, publishableKey: "pk_test_consumer", displayablePaymentDetails: nil, apiClient: STPAPIClient(publishableKey: "pk_test_auth"), useMobileEndpoints: true, canSyncAttestationState: false, supportedVerificationTypes: [.sms, .email])
         account.authLookupSettings = .init(emailOtpRequiresAdditionalInfo: phoneMatch)
         stub(condition: isPath("/v1/consumers/sessions/start_verification")) { request in
             onStart()

@@ -37,8 +37,7 @@ final class LinkAuthFlowViewController: UIViewController {
         brand: LinkBrand,
         appearance: LinkAppearance? = nil,
         allowLogoutInDialog: Bool = false,
-        consentViewModel: LinkConsentViewModel? = nil,
-        capabilities: [SupportedVerificationType] = SupportedVerificationType.nativeCapabilities
+        consentViewModel: LinkConsentViewModel? = nil
     ) {
         self.mode = mode
         self.account = linkAccount
@@ -46,7 +45,6 @@ final class LinkAuthFlowViewController: UIViewController {
         let consentGranted: Bool? = if case .inline = consentViewModel { true } else { nil }
         coordinator = LinkAuthFlowCoordinator(
             account: linkAccount,
-            capabilities: capabilities,
             consentGranted: consentGranted
         )
         header = LinkVerificationView.Header(brand: brand)

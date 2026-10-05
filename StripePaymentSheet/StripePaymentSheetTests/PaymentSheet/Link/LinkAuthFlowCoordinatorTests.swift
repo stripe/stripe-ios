@@ -208,9 +208,25 @@ final class LinkAuthFlowCoordinatorTests: XCTestCase {
         XCTAssertTrue(account.starts.isEmpty)
     }
 
+    func testSMSOnlyCapabilitiesBlockEmailOnlyAccount() async {
+        // Given an email-only account while the MFA auth flow is disabled
+        let account = AuthAccountStub(session: authSession(factors: [email()]))
+        account.supportedVerificationTypes = SupportedVerificationType.nativeCapabilities(mfaAuthFlowEnabled: false)
+        let flow = LinkAuthFlowCoordinator(account: account)
+
+        // When the flow starts
+        flow.start()
+        await settle()
+
+        // Then no email code is sent and the flow is blocked
+        XCTAssertTrue(account.starts.isEmpty)
+        XCTAssertEqual(flow.screen, .blocked)
+    }
+
     func testCapabilitiesControlSelectionAndActions() async {
         let account = AuthAccountStub()
-        let flow = LinkAuthFlowCoordinator(account: account, capabilities: [.sms])
+        account.supportedVerificationTypes = [.sms]
+        let flow = LinkAuthFlowCoordinator(account: account)
         flow.start()
         await settle()
         XCTAssertEqual(flow.actions, [.resend])
@@ -221,7 +237,7 @@ final class LinkAuthFlowCoordinatorTests: XCTestCase {
     func testResendCooldownOnlyStartsOnSuccess() async {
         let account = AuthAccountStub()
         var date = Date(timeIntervalSince1970: 100)
-        let flow = LinkAuthFlowCoordinator(account: account, capabilities: [.sms, .email], now: { date })
+        let flow = LinkAuthFlowCoordinator(account: account, now: { date })
         flow.start()
         await settle()
         account.nextStartResult = .failure(authError("rate_limit_exceeded"))
@@ -378,7 +394,7 @@ final class LinkAuthFlowCoordinatorTests: XCTestCase {
     }
 
     private func makeFlow(_ account: AuthAccountStub) -> LinkAuthFlowCoordinator {
-        LinkAuthFlowCoordinator(account: account, capabilities: [.sms, .email])
+        LinkAuthFlowCoordinator(account: account)
     }
 
     /// Stub responses are synchronous; drain the main-queue callbacks including one recovery/replay.
@@ -414,6 +430,7 @@ private final class AuthAccountStub: LinkAuthAccount {
     var currentSession: ConsumerSession?
     var authLookupSettings: ConsumerSession.LookupSettings? = .init(emailOtpRequiresAdditionalInfo: false)
     var useMobileEndpoints = true
+    var supportedVerificationTypes: [SupportedVerificationType] = [.sms, .email]
     var visitedFallbackURLs: [URL] = []
     var sessionState: PaymentSheetLinkAccount.SessionState { currentSession?.meetsMinimumAuthenticationLevel == true ? .verified : .requiresVerification }
     var nextStartResult: Result<ConsumerSession.AuthResponse, Error>?

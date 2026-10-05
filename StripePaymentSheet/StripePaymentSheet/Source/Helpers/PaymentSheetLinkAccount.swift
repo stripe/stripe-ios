@@ -78,6 +78,7 @@ struct LinkPMDisplayDetails {
 
     let useMobileEndpoints: Bool
     let canSyncAttestationState: Bool
+    let supportedVerificationTypes: [SupportedVerificationType]
     let requestSurface: LinkRequestSurface
     let createdFromAuthIntentID: Bool
 
@@ -157,6 +158,7 @@ struct LinkPMDisplayDetails {
         apiClient: STPAPIClient = .shared,
         useMobileEndpoints: Bool,
         canSyncAttestationState: Bool,
+        supportedVerificationTypes: [SupportedVerificationType] = SupportedVerificationType.nativeCapabilities(mfaAuthFlowEnabled: false),
         requestSurface: LinkRequestSurface = .default,
         createdFromAuthIntentID: Bool = false
     ) {
@@ -168,6 +170,7 @@ struct LinkPMDisplayDetails {
         self.apiClient = apiClient
         self.useMobileEndpoints = useMobileEndpoints
         self.canSyncAttestationState = canSyncAttestationState
+        self.supportedVerificationTypes = supportedVerificationTypes
         self.requestSurface = requestSurface
         self.createdFromAuthIntentID = createdFromAuthIntentID
     }
@@ -649,7 +652,11 @@ extension PaymentSheetLinkAccount: LinkAuthAccount {
             completion(.failure(NSError.stp_genericConnectionError()))
             return
         }
-        currentSession.refreshSession(with: apiClient, requestSurface: requestSurface) { result in
+        currentSession.refreshSession(
+            with: apiClient,
+            supportedVerificationTypes: supportedVerificationTypes,
+            requestSurface: requestSurface
+        ) { result in
             completion(result.map { ConsumerSession.AuthResponse(consumerSession: $0) })
         }
     }

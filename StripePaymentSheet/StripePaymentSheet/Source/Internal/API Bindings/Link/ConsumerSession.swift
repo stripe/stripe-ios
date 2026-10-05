@@ -178,6 +178,7 @@ extension ConsumerSession {
         with apiClient: STPAPIClient = STPAPIClient.shared,
         useMobileEndpoints: Bool,
         canSyncAttestationState: Bool,
+        supportedVerificationTypes: [SupportedVerificationType],
         doNotLogConsumerFunnelEvent: Bool,
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<ConsumerSession.LookupResponse, Error>) -> Void
@@ -189,6 +190,7 @@ extension ConsumerSession {
             customerID: customerID,
             useMobileEndpoints: useMobileEndpoints,
             canSyncAttestationState: canSyncAttestationState,
+            supportedVerificationTypes: supportedVerificationTypes,
             doNotLogConsumerFunnelEvent: doNotLogConsumerFunnelEvent,
             requestSurface: requestSurface,
             completion: completion
@@ -202,6 +204,7 @@ extension ConsumerSession {
         with apiClient: STPAPIClient = STPAPIClient.shared,
         useMobileEndpoints: Bool,
         canSyncAttestationState: Bool,
+        supportedVerificationTypes: [SupportedVerificationType],
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<ConsumerSession.LookupResponse, Error>) -> Void
     ) {
@@ -211,6 +214,7 @@ extension ConsumerSession {
             customerID: customerID,
             useMobileEndpoints: useMobileEndpoints,
             canSyncAttestationState: canSyncAttestationState,
+            supportedVerificationTypes: supportedVerificationTypes,
             requestSurface: requestSurface,
             completion: completion
         )
@@ -223,6 +227,7 @@ extension ConsumerSession {
         with apiClient: STPAPIClient = STPAPIClient.shared,
         useMobileEndpoints: Bool,
         canSyncAttestationState: Bool,
+        supportedVerificationTypes: [SupportedVerificationType],
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<ConsumerSession.LookupResponse, Error>) -> Void
     ) {
@@ -232,6 +237,7 @@ extension ConsumerSession {
             customerID: customerID,
             useMobileEndpoints: useMobileEndpoints,
             canSyncAttestationState: canSyncAttestationState,
+            supportedVerificationTypes: supportedVerificationTypes,
             requestSurface: requestSurface,
             completion: completion
         )
@@ -470,11 +476,13 @@ extension ConsumerSession {
 
     func refreshSession(
         with apiClient: STPAPIClient = STPAPIClient.shared,
+        supportedVerificationTypes: [SupportedVerificationType],
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<ConsumerSession, Error>) -> Void
     ) {
         apiClient.refreshSession(
             consumerSessionClientSecret: clientSecret,
+            supportedVerificationTypes: supportedVerificationTypes,
             requestSurface: requestSurface,
             completion: completion
         )

@@ -443,6 +443,7 @@ extension LinkSettings {
             linkDefaultOptIn: nil,
             linkEnableDisplayableDefaultValuesInECE: nil,
             linkShowPreferDebitCardHint: nil,
+            mfaAuthFlowEnabled: nil,
             attestationStateSyncEnabled: nil,
             linkSupportedPaymentMethodsOnboardingEnabled: linkSupportedPaymentMethodsOnboardingEnabled,
             linkPaymentMethodBankAccountDataConsent: linkPaymentMethodBankAccountDataConsent,

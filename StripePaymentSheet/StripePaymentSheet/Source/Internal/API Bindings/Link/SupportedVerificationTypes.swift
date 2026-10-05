@@ -14,5 +14,7 @@ enum SupportedVerificationType: String, CaseIterable {
     case email = "EMAIL"
 
     // This declaration must match the factors the native auth flow can drive.
-    static let nativeCapabilities: [Self] = [.sms, .email]
+    static func nativeCapabilities(mfaAuthFlowEnabled: Bool) -> [Self] {
+        mfaAuthFlowEnabled ? [.sms, .email] : [.sms]
+    }
 }

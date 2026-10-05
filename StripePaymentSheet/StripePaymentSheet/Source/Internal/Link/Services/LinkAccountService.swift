@@ -67,6 +67,7 @@ final class LinkAccountService: LinkAccountServiceProtocol {
     let customerID: String?
     let useMobileEndpoints: Bool
     let canSyncAttestationState: Bool
+    let supportedVerificationTypes: [SupportedVerificationType]
     let merchantLogoUrl: URL?
     private var countryCode: String?
 
@@ -80,6 +81,7 @@ final class LinkAccountService: LinkAccountServiceProtocol {
             apiClient: apiClient,
             useMobileEndpoints: elementsSession.linkSettings?.useAttestationEndpoints ?? false,
             canSyncAttestationState: elementsSession.linkSettings?.attestationStateSyncEnabled ?? false,
+            supportedVerificationTypes: elementsSession.linkSupportedVerificationTypes,
             sessionID: elementsSession.sessionID,
             customerID: elementsSession.customer?.customerSession.customer,
             shouldPassCustomerIdToLookup: shouldPassCustomerIdToLookup,
@@ -92,6 +94,7 @@ final class LinkAccountService: LinkAccountServiceProtocol {
         apiClient: STPAPIClient = .shared,
         useMobileEndpoints: Bool,
         canSyncAttestationState: Bool,
+        supportedVerificationTypes: [SupportedVerificationType] = SupportedVerificationType.nativeCapabilities(mfaAuthFlowEnabled: false),
         sessionID: String,
         customerID: String?,
         shouldPassCustomerIdToLookup: Bool,
@@ -100,6 +103,7 @@ final class LinkAccountService: LinkAccountServiceProtocol {
         self.apiClient = apiClient
         self.useMobileEndpoints = useMobileEndpoints
         self.canSyncAttestationState = canSyncAttestationState
+        self.supportedVerificationTypes = supportedVerificationTypes
         self.sessionID = sessionID
         self.customerID = shouldPassCustomerIdToLookup ? customerID : nil
         self.merchantLogoUrl = merchantLogoUrl
@@ -125,6 +129,7 @@ final class LinkAccountService: LinkAccountServiceProtocol {
             with: apiClient,
             useMobileEndpoints: useMobileEndpoints,
             canSyncAttestationState: canSyncAttestationState,
+            supportedVerificationTypes: supportedVerificationTypes,
             doNotLogConsumerFunnelEvent: doNotLogConsumerFunnelEvent,
             requestSurface: requestSurface
         ) { [apiClient] result in
@@ -145,6 +150,7 @@ final class LinkAccountService: LinkAccountServiceProtocol {
                                     apiClient: apiClient,
                                     useMobileEndpoints: self.useMobileEndpoints,
                                     canSyncAttestationState: self.canSyncAttestationState,
+                                    supportedVerificationTypes: self.supportedVerificationTypes,
                                     requestSurface: requestSurface
                                 ),
                                 settings: session.settings,
@@ -163,6 +169,7 @@ final class LinkAccountService: LinkAccountServiceProtocol {
                             apiClient: self.apiClient,
                             useMobileEndpoints: self.useMobileEndpoints,
                             canSyncAttestationState: self.canSyncAttestationState,
+                            supportedVerificationTypes: self.supportedVerificationTypes,
                             requestSurface: requestSurface
                         )
                         linkAccount.suggestedEmail = suggestedEmail
@@ -204,6 +211,7 @@ final class LinkAccountService: LinkAccountServiceProtocol {
             customerID: customerID,
             useMobileEndpoints: useMobileEndpoints,
             canSyncAttestationState: canSyncAttestationState,
+            supportedVerificationTypes: supportedVerificationTypes,
             requestSurface: requestSurface
         ) { [apiClient] result in
             switch result {
@@ -220,6 +228,7 @@ final class LinkAccountService: LinkAccountServiceProtocol {
                             apiClient: apiClient,
                             useMobileEndpoints: self.useMobileEndpoints,
                             canSyncAttestationState: self.canSyncAttestationState,
+                            supportedVerificationTypes: self.supportedVerificationTypes,
                             requestSurface: requestSurface
                         ), settings: session.settings, lookupEmail: nil, emailSource: .prefilledEmail)
                     ))
@@ -251,6 +260,7 @@ final class LinkAccountService: LinkAccountServiceProtocol {
             with: apiClient,
             useMobileEndpoints: useMobileEndpoints,
             canSyncAttestationState: canSyncAttestationState,
+            supportedVerificationTypes: supportedVerificationTypes,
             requestSurface: requestSurface
         ) { [weak self, apiClient] result in
             guard let self else { return }
@@ -267,6 +277,7 @@ final class LinkAccountService: LinkAccountServiceProtocol {
                         apiClient: apiClient,
                         useMobileEndpoints: self.useMobileEndpoints,
                         canSyncAttestationState: self.canSyncAttestationState,
+                        supportedVerificationTypes: self.supportedVerificationTypes,
                         requestSurface: requestSurface,
                         createdFromAuthIntentID: true
                     )
@@ -311,6 +322,7 @@ final class LinkAccountService: LinkAccountServiceProtocol {
                     with: self.apiClient,
                     useMobileEndpoints: self.useMobileEndpoints,
                     canSyncAttestationState: self.canSyncAttestationState,
+                    supportedVerificationTypes: self.supportedVerificationTypes,
                     doNotLogConsumerFunnelEvent: true,
                     requestSurface: requestSurface
                 ) { result in
