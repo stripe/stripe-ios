@@ -16,6 +16,7 @@ import UIKit
 @available(macCatalystApplicationExtension, unavailable)
 @MainActor
 final class PayWithNativeLinkController {
+
     typealias ConfirmHandler = (STPAuthenticationContext, Intent, STPElementsSession, PaymentOption, @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void) -> Void
 
     enum Mode {
@@ -152,7 +153,8 @@ final class PayWithNativeLinkController {
     ) {
         self.selfRetainer = self
 
-        let targetBottomSheet = presentingController as? BottomSheetViewController ?? presentingController.bottomSheetController
+        let targetBottomSheet = (presentingController as? any PaymentSheetContainer)
+            ?? presentingController.bottomSheetController
         let targetPresentationController = targetBottomSheet?.presentingViewController
 
         let presentBottomSheet: (UIViewController) -> Void = { presentingController in
@@ -175,7 +177,7 @@ final class PayWithNativeLinkController {
 
             payWithLinkVC.payWithLinkDelegate = self
             presentingController.presentAsSheet(
-                payWithLinkVC,
+                payWithLinkVC.sheetContainer,
                 completion: {}
             )
 
@@ -234,13 +236,13 @@ extension PayWithNativeLinkController: PayWithLinkViewControllerDelegate {
 
         // If you pass a confirmHandler, it's used to confirm the payment. Otherwise, PaymentSheet.confirm is used.
         if let confirmHandler {
-            confirmHandler(payWithLinkViewController, intent, elementsSession, paymentOption, wrappedCompletion)
+            confirmHandler(payWithLinkViewController.sheetContainer, intent, elementsSession, paymentOption, wrappedCompletion)
             return
         }
 
         PaymentSheet.confirm(
             configuration: configuration,
-            authenticationContext: payWithLinkViewController,
+            authenticationContext: payWithLinkViewController.sheetContainer,
             intent: intent,
             elementsSession: elementsSession,
             paymentOption: paymentOption,
