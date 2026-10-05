@@ -535,6 +535,11 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         updateButton()
     }
 
+    func clearErrorForReuseAfterCancellation() {
+        error = nil
+        updateUI()
+    }
+
     @objc
     private func didTapContinueButton() {
         // The user is continuing with an LPM, so we un-select Link
