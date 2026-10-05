@@ -92,7 +92,9 @@ class SheetNavigationBar: UIView {
             item.hidesSharedBackground = true
         }
         #endif
-        #if compiler(>=6.4) && os(iOS)
+        // axisBehavior requires UIKit from the iOS 27.1 SDK (module version 9127.0.85.28).
+        // Xcode 27.0 and 27.1 both use Swift 6.4, so check the UIKit module version instead.
+        #if canImport(UIKit, _version: 9127.0.85) && os(iOS)
         if #available(iOS 27.1, *) {
             // Keep the badge with the controls when UIKit adapts the bar to a vertical layout.
             item.axisBehavior = .verticalPreferred
