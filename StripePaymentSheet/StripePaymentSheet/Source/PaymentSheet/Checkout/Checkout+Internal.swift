@@ -65,34 +65,32 @@ extension CheckoutController: ExpressCheckoutElementDelegate {
                 throw CheckoutError.unknown(debugDescription: "Could not build a confirmation flow for \(paymentMethod). Could not find a presenting view controller.")
             }
             // TODO: maybe add Link-specific configuration
-            var linkConfirmationConfiguration = PaymentSheet.Configuration()
-            linkConfirmationConfiguration.apiClient = apiClient
-            linkConfirmationConfiguration.returnURL = configuration.returnURL
-            linkConfirmationConfiguration.merchantDisplayName = effectiveMerchantDisplayName
-            linkConfirmationConfiguration.style = configuration.userInterfaceStyle
+            var paymentElementConfiguration = PaymentSheet.Configuration()
+            paymentElementConfiguration.apiClient = apiClient
+            paymentElementConfiguration.returnURL = configuration.returnURL
+            paymentElementConfiguration.merchantDisplayName = effectiveMerchantDisplayName
+            paymentElementConfiguration.style = configuration.userInterfaceStyle
             if let billingDetails = configuration.defaults.billingDetails {
-                linkConfirmationConfiguration.defaultBillingDetails.set(billingDetails)
+                paymentElementConfiguration.defaultBillingDetails.set(billingDetails)
             }
-            linkConfirmationConfiguration.link.disallowFundingSourceCreation = expressCheckoutElementConfiguration.linkConfiguration.disallowFundingSourceCreation
-            linkConfirmationConfiguration.link.collectMissingBillingDetailsForExistingPaymentMethods = expressCheckoutElementConfiguration.linkConfiguration.collectMissingBillingDetailsForExistingPaymentMethods
             switch expressCheckoutElementConfiguration.linkConfiguration.display {
             case .automatic:
-                linkConfirmationConfiguration.link.display = .automatic
+                paymentElementConfiguration.link.display = .automatic
             case .never:
-                linkConfirmationConfiguration.link.display = .never
+                paymentElementConfiguration.link.display = .never
             }
             // TODO: maybe separate out a LinkAnalyticsHelper
             let analyticsHelper = PaymentSheetAnalyticsHelper(
                 integrationShape: .complete, // Wallet Link analytics don't log integrationShape, so it's not worth adding an .expressCheckout case.
-                configuration: linkConfirmationConfiguration
+                configuration: paymentElementConfiguration
             )
             let authenticationContext = AuthenticationContext(
                 presentingViewController: presentingViewController,
-                appearance: linkConfirmationConfiguration.appearance
+                appearance: paymentElementConfiguration.appearance
             )
             return .link(.init(
                 confirmOption: .wallet(brand: session.elementsSession.linkBrand ?? .link),
-                configuration: linkConfirmationConfiguration,
+                configuration: paymentElementConfiguration,
                 confirmationChallenge: ConfirmationChallenge(
                     elementsSession: session.elementsSession,
                     stripeAttest: apiClient.stripeAttest),
