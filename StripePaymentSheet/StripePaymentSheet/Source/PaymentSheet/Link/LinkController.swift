@@ -1082,6 +1082,7 @@ import UIKit
             apiClient: linkAccount.apiClient,
             useMobileEndpoints: linkAccount.useMobileEndpoints,
             canSyncAttestationState: linkAccount.canSyncAttestationState,
+            supportedVerificationTypes: linkAccount.supportedVerificationTypes,
             requestSurface: linkAccount.requestSurface,
             createdFromAuthIntentID: linkAccount.createdFromAuthIntentID
         )
