@@ -52,6 +52,8 @@ extension PaymentSheet {
         .scalapay,
         .pix,
         .goPay,
+        .shopeePay,
+        .momo,
     ]
 
     /// A list of `STPPaymentMethodType` that can be saved in PaymentSheet
