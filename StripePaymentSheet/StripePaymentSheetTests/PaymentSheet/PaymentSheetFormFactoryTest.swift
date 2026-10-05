@@ -2529,6 +2529,40 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertEqual(setupForm.getMandateElement()?.mandateTextView.textView.text, expectedMandate)
     }
 
+    func testGoPayUsesHostedAuthorizationWithoutNativeMandate() {
+        // Given a GoPay PaymentIntent
+        let intent = Intent._testPaymentIntent(paymentMethodTypes: [.goPay])
+
+        // When the form uses automatic billing collection
+        let form = PaymentSheetFormFactory(
+            intent: intent,
+            elementsSession: ._testValue(paymentMethodTypes: ["gopay"]),
+            configuration: .paymentElement(PaymentSheet.Configuration()),
+            paymentMethod: .stripe(.goPay)
+        ).make()
+
+        // Then account linking and consent remain in the hosted flow, as on web
+        XCTAssertFalse(form.collectsUserInput)
+        XCTAssertNil(form.getMandateElement())
+        XCTAssertNotNil(form.updateParams(params: IntentConfirmParams(type: .stripe(.goPay))))
+    }
+    func testMomoUsesHostedAuthorizationWithoutNativeMandate() {
+        // Given a MoMo PaymentIntent
+        let intent = Intent._testPaymentIntent(paymentMethodTypes: [.momo])
+
+        // When the form uses automatic billing collection
+        let form = PaymentSheetFormFactory(
+            intent: intent,
+            elementsSession: ._testValue(paymentMethodTypes: ["momo"]),
+            configuration: .paymentElement(PaymentSheet.Configuration()),
+            paymentMethod: .stripe(.momo)
+        ).make()
+
+        // Then account linking and consent remain in the hosted flow, as on web
+        XCTAssertFalse(form.collectsUserInput)
+        XCTAssertNil(form.getMandateElement())
+        XCTAssertNotNil(form.updateParams(params: IntentConfirmParams(type: .stripe(.momo))))
+    }
     func testKakaoPayDisplaysMandateWhenSettingUp() {
         // Given
         let configuration = PaymentSheet.Configuration._testValue_MostPermissive()

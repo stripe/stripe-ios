@@ -820,7 +820,8 @@ public class STPPaymentHandler: NSObject {
     class func _isProcessingIntentSuccess(for type: STPPaymentMethodType) -> Bool {
         switch type {
         // Asynchronous payment methods whose intent.status is 'processing' after handling the next action
-        case .SEPADebit,
+        case .momo,
+            .SEPADebit,
             .bacsDebit,  // Bacs Debit takes 2-3 business days
             .AUBECSDebit,
             .USBankAccount,
@@ -828,7 +829,8 @@ public class STPPaymentHandler: NSObject {
             return true
 
         // Synchronous
-        case .alipay,
+        case .goPay,
+            .alipay,
             .iDEAL,
             .FPX,
             .cardPresent,
