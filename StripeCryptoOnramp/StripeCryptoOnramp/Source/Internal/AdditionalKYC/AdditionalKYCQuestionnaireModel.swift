@@ -12,14 +12,11 @@ import Foundation
 @MainActor
 final class AdditionalKYCQuestionnaireModel: ObservableObject {
 
-    /// Maximum Unicode scalars in each answer, matching the backend's 5,000-character safeguard.
-    private static let maximumAnswerLength = 5_000
-
     /// The questions to display, in the order supplied by the backend.
     let questions: [AdditionalKYCQuestionnaire.Question]
 
     /// Draft answers keyed by question identifier, preserved when navigating back to the questionnaire.
-    @Published private(set) var answers: [String: String] = [:]
+    @Published var answers: [String: String] = [:]
 
     /// Whether every required question has a nonblank answer.
     var canContinue: Bool {
@@ -43,14 +40,6 @@ final class AdditionalKYCQuestionnaireModel: ObservableObject {
             throw DocumentCollectionError.unsupportedRequirement
         }
         questions = questionnaire.questions
-    }
-
-    /// Stores an answer up to the backend's 5,000-character limit.
-    /// - Parameters:
-    ///   - answer: The customer's answer.
-    ///   - questionID: The identifier of the question being answered.
-    func setAnswer(_ answer: String, for questionID: String) {
-        answers[questionID] = String(answer.unicodeScalars.prefix(Self.maximumAnswerLength))
     }
 
     private func answer(for question: AdditionalKYCQuestionnaire.Question) -> String {
