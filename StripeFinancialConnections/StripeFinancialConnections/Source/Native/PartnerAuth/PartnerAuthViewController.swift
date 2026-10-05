@@ -19,7 +19,7 @@ protocol PartnerAuthViewControllerDelegate: AnyObject {
     )
     func partnerAuthViewController(
         _ viewController: PartnerAuthViewController,
-        didReceiveEvent event: FinancialConnectionsEvent
+        didReceiveEvent event: FinancialConnectionsEventPayload
     )
     func partnerAuthViewController(
         _ viewController: PartnerAuthViewController,

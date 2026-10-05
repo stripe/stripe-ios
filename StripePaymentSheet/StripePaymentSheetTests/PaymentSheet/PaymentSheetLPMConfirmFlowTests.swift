@@ -746,14 +746,14 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                                paymentMethodType: .goPay,
                                merchantCountry: .US,
                                expectedHierarchy: ExpectedFormHierarchy.GoPay.paymentIntent) { _ in }
-        // TODO(porter): Add `.paymentIntentWithPMOSetupFutureUsage` once Confirmation Tokens
-        // accepts `client_context[payment_method_options][gopay]`.
-        try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage],
-                               currency: "IDR",
-                               amount: 1000000,
-                               paymentMethodType: .goPay,
+    }
+    func testMomoConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "VND",
+                               amount: 100000,
+                               paymentMethodType: .momo,
                                merchantCountry: .US,
-                               expectedHierarchy: ExpectedFormHierarchy.GoPay.paymentIntent) { _ in }
+                               expectedHierarchy: ExpectedFormHierarchy.Momo.paymentIntent) { _ in }
     }
     func testPaycoConfirmFlows() async throws {
         try await _testConfirm(intentKinds: [.paymentIntent],
