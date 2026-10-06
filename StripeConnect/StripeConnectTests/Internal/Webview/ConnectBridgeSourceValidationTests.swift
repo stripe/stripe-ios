@@ -99,42 +99,66 @@ final class ConnectBridgeSourceValidationTests: XCTestCase {
         XCTAssertEqual(expectedHeight, 321)
     }
 
-    func testControllerAndWebViewAreNotRetainedBySourcePolicy() {
+    func testControllerAndWebViewAreNotRetainedBySourcePolicy() async throws {
         weak var controller: ConnectComponentWebViewController?
         weak var webView: WKWebView?
+        var policy: STPWebMessageSourcePolicy!
         autoreleasepool {
             let createdController = makeController(secretProvider: SecretProvider(secret: "unused-secret"))
             controller = createdController
             webView = createdController.webView
+            policy = createdController.messageSourcePolicy
         }
         XCTAssertNil(controller)
+        try await TestHelpers.withTimeout {
+            while webView != nil {
+                try await Task.sleep(nanoseconds: 10_000_000)
+            }
+        }
         XCTAssertNil(webView)
+        XCTAssertFalse(policy.isAuthorized(source: nil, scheme: "https", host: "connect-js.stripe.com", port: 443))
     }
 
     func testForeignNotificationBannerTaskMessageDoesNotPresentTask() async throws {
         let banner = makeNotificationBanner()
+        let host = UIViewController()
+        host.addChild(banner)
+        host.view.addSubview(banner.view)
+        banner.didMove(toParent: host)
         let window = UIWindow()
-        window.rootViewController = banner
+        window.rootViewController = host
         window.makeKeyAndVisible()
-        defer { window.isHidden = true }
+        defer {
+            host.dismiss(animated: false)
+            window.isHidden = true
+        }
 
+        XCTAssertNotNil(banner.view.window)
         _ = try await loadBridgeFixture(in: banner.webVC.webView, baseURL: URL(string: "https://foreign.test/banner.html")!, html: Self.notificationBannerTaskFixtureHTML)
-        try await assertNoPresentationDuringWindow(from: banner)
-        XCTAssertNil(banner.presentedViewController)
+        try await assertNoPresentationDuringWindow(from: host)
+        XCTAssertNil(host.presentedViewController)
     }
 
     func testTrustedNotificationBannerTaskMessagePresentsTask() async throws {
         let banner = makeNotificationBanner()
+        let host = UIViewController()
+        host.addChild(banner)
+        host.view.addSubview(banner.view)
+        banner.didMove(toParent: host)
         let window = UIWindow()
-        window.rootViewController = banner
+        window.rootViewController = host
         window.makeKeyAndVisible()
-        defer { window.isHidden = true }
+        defer {
+            host.dismiss(animated: false)
+            window.isHidden = true
+        }
 
+        XCTAssertNotNil(banner.view.window)
         _ = try await loadBridgeFixture(in: banner.webVC.webView, baseURL: StripeConnectConstants.connectJSBaseURL, html: Self.notificationBannerTaskFixtureHTML)
-        let taskNavigation = try await waitForPresentation(from: banner)
+        let taskNavigation = try await waitForPresentation(from: host)
         XCTAssertTrue(taskNavigation.topViewController is ConnectComponentWebViewController)
         taskNavigation.dismiss(animated: false)
-        try await waitForNoPresentation(from: banner)
+        try await waitForNoPresentation(from: host)
     }
 
     func testForeignMainDocumentCannotFetchClientSecret() async throws {
@@ -415,6 +439,11 @@ final class ConnectBridgeSourceValidationTests: XCTestCase {
 
         // When the production WKUIDelegate creates an allowed-host popup
         let popupController = try await openPopup(from: controller)
+        defer {
+            if controller.presentedViewController != nil {
+                popupController.webView.uiDelegate?.webViewDidClose?(popupController.webView)
+            }
+        }
         XCTAssertTrue(popupController.webView.configuration.userContentController === controller.webView.configuration.userContentController)
 
         // Then a popup WebView at the trusted origin cannot use the component bridge
@@ -460,10 +489,10 @@ final class ConnectBridgeSourceValidationTests: XCTestCase {
             html: Self.trustedAuthenticationFixtureHTML
         )
 
-        // Then the real manager returns a nil URL to the production page callback
+        // Then the real manager omits the URL from the production page callback
         XCTAssertTrue(event.wasSentByExpectedWebView)
         assertExpectedHTTPSOrigin(event.document, host: "connect-js.stripe.com")
-        XCTAssertEqual(event.result, .resolved("null"))
+        XCTAssertEqual(event.result, .resolved("undefined"))
         XCTAssertEqual(sessionFactory.createdURLs, [URL(string: "https://example.test/auth")!])
     }
 
@@ -575,7 +604,7 @@ private extension ConnectBridgeSourceValidationTests {
 
         controller.webView.loadHTMLString(Self.popupTriggerFixtureHTML, baseURL: StripeConnectConstants.connectJSBaseURL)
         _ = try await triggerObserver.waitForDocumentReady()
-        _ = try await controller.webView.evaluateJavaScript("window.open('https://connect.stripe.com/popup')")
+        _ = try await controller.webView.evaluateJavaScript("void window.open('https://connect.stripe.com/popup')")
 
         return try await TestHelpers.withTimeout {
             while true {
@@ -869,6 +898,20 @@ private extension ConnectBridgeSourceValidationTests {
     <script>
     window.webkit.messageHandlers.connectBridgeTestObserver.postMessage({ kind: "ready" });
     window.returnedFromAuthenticatedWebView = (message) => {
+      if (message.id !== "trusted-authentication") {
+        window.webkit.messageHandlers.connectBridgeTestObserver.postMessage({
+          kind: "result", locationOrigin: window.location.origin,
+          result: { kind: "rejected", value: "unexpected id" }
+        });
+        return;
+      }
+      if (message.url === undefined && Object.prototype.hasOwnProperty.call(message, "url")) {
+        window.webkit.messageHandlers.connectBridgeTestObserver.postMessage({
+          kind: "result", locationOrigin: window.location.origin,
+          result: { kind: "rejected", value: "undefined url field" }
+        });
+        return;
+      }
       window.webkit.messageHandlers.connectBridgeTestObserver.postMessage({
         kind: "result",
         locationOrigin: window.location.origin,
