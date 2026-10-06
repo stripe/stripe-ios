@@ -421,7 +421,8 @@ class IntentConfirmationChallengeViewControllerTests: XCTestCase {
         let completed = expectation(description: "JavaScript execution")
         var evaluationError: Error?
         var didComplete = false
-        webView.evaluateJavaScript(script) { _, error in
+        // Bridge results arrive through the observer; discard unbridgeable JS return values such as Promises.
+        webView.evaluateJavaScript("\(script)\nnull;") { _, error in
             evaluationError = error
             didComplete = true
             completed.fulfill()
