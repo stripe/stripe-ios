@@ -533,7 +533,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         testBankPaymentInNativeLink(passthroughMode: false)
     }
 
-    //TODO(link-mobile-run): Re-enable after #ir-appear-citadel is resolved
+    // TODO(link-mobile-run): Re-enable after #ir-appear-citadel is resolved
     func disabled_testBankPaymentInNativeLinkInPassthroughMode() {
         testBankPaymentInNativeLink(passthroughMode: true)
     }
