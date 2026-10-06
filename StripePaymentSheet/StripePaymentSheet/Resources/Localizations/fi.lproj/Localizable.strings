@@ -112,6 +112,8 @@
 
 "Code sent" = "Koodi lähetetty";
 
+"Complete the payment using Pix to finish the purchase." = "Viimeistele osto suorittamalla maksu Pixillä.";
+
 "Confirm" = "Vahvista";
 
 "Confirm payment details" = "Vahvista maksutiedot";
@@ -330,6 +332,10 @@
 
 "Tax" = "Vero";
 
+"Terms and Conditions" = "Ehdot";
+
+"Terms of Service" = "Palveluehdot";
+
 "The IBAN you entered is incomplete." = "IBAN on puutteellinen.";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Antamasi IBAN on virheellinen, %@ ei ole tuettu maakoodi.";
@@ -337,6 +343,8 @@
 "The provided verification code has expired." = "Annettu vahvistuskoodi on vanhentunut.";
 
 "The provided verification code is incorrect." = "Annettu vahvistuskoodi on virheellinen.";
+
+"This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Tämä on kansainvälinen ostos, eikä siihen sisälly 3,5 %:n IOF-maksua. Jatkamalla ostoa hyväksyt <terms>Ebanxin ehdot</terms>.";
 
 "This is your default" = "Tämä on oletusarvoinen";
 

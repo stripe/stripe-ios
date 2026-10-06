@@ -1,8 +1,44 @@
+"Add %ld documents" = "Προσθήκη %ld εγγράφων";
+
+"Add 1 document" = "Προσθήκη 1 εγγράφου";
+
+"Add documents" = "Προσθήκη εγγράφων";
+
+"Answer" = "Απάντηση";
+
+"Choose File…" = "Επιλογή αρχείου...";
+
+"Choose Photo…" = "Επιλέξτε φωτογραφία…";
+
 "Debit cards are most likely to be accepted." = "Οι χρεωστικές κάρτες είναι πιο πιθανό να γίνουν αποδεκτές.";
+
+"Document type" = "Τύπος εγγράφου";
+
+"Document uploaded successfully" = "Το έγγραφο μεταφορτώθηκε με επιτυχία";
+
+"Funds source" = "Πηγή χρημάτων";
+
+"How are you funding your transactions? Please list all of your sources. For example, salary, savings, investment earnings, etc." = "Πώς χρηματοδοτείτε τις συναλλαγές σας; Αναφέρετε όλες τις πηγές σας. Για παράδειγμα, μισθός, αποταμιεύσεις, έσοδα από επενδύσεις κ.λπ.";
+
+"Make sure your document meets following requirements." = "Βεβαιωθείτε ότι το έγγραφό σας πληροί τις παρακάτω απαιτήσεις.";
+
+"Please try again later." = "Δοκιμάστε ξανά αργότερα.";
+
+"Submitted for review" = "Υποβλήθηκε για έλεγχο";
+
+"Tell us about your source of funds" = "Πείτε μας για την πηγή των χρημάτων σας";
+
+"There was a problem with your previous document. Please upload a new one." = "Παρουσιάστηκε πρόβλημα με το προηγούμενο έγγραφό σας. Ανεβάστε ένα νέο.";
 
 "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "Δεν ήταν δυνατή η επαλήθευση αυτής της εφαρμογής λόγω σφάλματος βεβαίωσης. Δοκιμάστε ξανά αργότερα ή επικοινωνήστε με τον προγραμματιστή αν το πρόβλημα παραμένει.";
 
 "This app couldn't be verified. Contact the app developer for help." = "Δεν ήταν δυνατή η επαλήθευση αυτής της εφαρμογής. Επικοινωνήστε με τον προγραμματιστή της εφαρμογής για βοήθεια.";
+
+"This file is larger than %@. Choose a file that is %@ or smaller." = "Αυτό το αρχείο είναι μεγαλύτερο από %1$@. Επιλέξτε ένα αρχείο που είναι %2$@ ή μικρότερο.";
+
+"This file type isn’t supported." = "Αυτός ο τύπος αρχείου δεν υποστηρίζεται.";
+
+"This file type isn’t supported. Upload a %@ file." = "Αυτός ο τύπος αρχείου δεν υποστηρίζεται. Ανεβάστε ένα αρχείο %@.";
 
 "This wallet couldn't be found. Please choose or add a wallet and try again." = "Αυτό το πορτοφόλι δεν βρέθηκε. Επιλέξτε ή προσθέστε ένα πορτοφόλι και δοκιμάστε ξανά.";
 
@@ -12,4 +48,24 @@
 
 "This wallet verification request is invalid. Please try again." = "Αυτό το αίτημα επαλήθευσης πορτοφολιού δεν είναι έγκυρο. Δοκιμάστε ξανά.";
 
+"Upload document" = "Μεταφόρτωση εγγράφου";
+
+"Upload your proof of address" = "Μεταφορτώστε το αποδεικτικό διεύθυνσής σας";
+
+"Uploaded" = "Μεταφορτώθηκε";
+
+"Uploading…" = "Μεταφόρτωση…";
+
 "We couldn't verify ownership of this wallet. Please try again." = "Δεν μπορέσαμε να επαληθεύσουμε την ιδιοκτησία αυτού του πορτοφολιού. Δοκιμάστε ξανά.";
+
+"We couldn’t open this document. Please choose it again." = "Δεν μπορέσαμε να ανοίξουμε αυτό το έγγραφο. Επιλέξτε το ξανά.";
+
+"We couldn’t upload this file. Please try again." = "Δεν μπορέσαμε να ανεβάσουμε αυτό το αρχείο. Δοκιμάστε ξανά.";
+
+"We may request proof of address for larger transactions." = "Ενδέχεται να ζητήσουμε αποδεικτικό διεύθυνσης για μεγαλύτερες συναλλαγές.";
+
+"We may request source of funds for larger transactions." = "Ενδέχεται να ζητήσουμε την προέλευση των χρημάτων για μεγαλύτερες συναλλαγές.";
+
+"We’re reviewing your documents. We’ll let you know when verification is complete." = "Εξετάζουμε τα έγγραφά σας. Θα σας ενημερώσουμε όταν ολοκληρωθεί η επαλήθευση.";
+
+"You can continue while we verify your document in the background." = "Μπορείτε να συνεχίσετε όσο επαληθεύουμε το έγγραφό σας στο παρασκήνιο.";

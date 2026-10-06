@@ -359,7 +359,8 @@ extension PaymentSheet {
                 configuration: configuration,
                 loadResult: loadResult,
                 analyticsHelper: analyticsHelper,
-                walletButtonsViewState: self.walletButtonsViewState
+                walletButtonsViewState: self.walletButtonsViewState,
+                checkoutBillingAddressUpdater: nil
             )
             self.viewController.flowControllerDelegate = self
             self.confirmationChallenge = confirmationChallenge
@@ -577,7 +578,7 @@ extension PaymentSheet {
                 )
 
                 self.isPresented = true
-                presentingViewController.presentAsBottomSheet(bottomSheetVC, appearance: self.configuration.appearance)
+                presentingViewController.presentAsSheet(bottomSheetVC)
             }
 
             if canPresentLinkInPlaceOfFlowController {
@@ -613,7 +614,7 @@ extension PaymentSheet {
                     self?.paymentHandler.cancel3DS2ChallengeFlow()
                 }
             )
-            presentingViewController.presentAsBottomSheet(bottomSheetVC, appearance: configuration.appearance)
+            presentingViewController.presentAsSheet(bottomSheetVC)
 
             pendingPresentTask = Task { @MainActor [weak self] in
                 guard let self else { return }
@@ -735,55 +736,32 @@ extension PaymentSheet {
                     }
                 }
                 let bottomSheet = Self.makeBottomSheetViewController(sepaMandateVC, configuration: configuration)
-                presentingViewController.presentAsBottomSheet(bottomSheet, appearance: configuration.appearance)
+                presentingViewController.presentAsSheet(bottomSheet)
             }
 
             func confirm() {
-                let confirmBlock = { [self] in
-                    PaymentSheet.confirm(
-                        configuration: self.configuration,
-                        authenticationContext: authenticationContext,
-                        intent: self.intent,
-                        elementsSession: self.elementsSession,
+                PaymentSheet.confirm(
+                    configuration: self.configuration,
+                    authenticationContext: authenticationContext,
+                    intent: self.intent,
+                    elementsSession: self.elementsSession,
+                    paymentOption: paymentOption,
+                    paymentHandler: self.paymentHandler,
+                    integrationShape: .flowController,
+                    confirmationChallenge: self.confirmationChallenge,
+                    analyticsHelper: self.analyticsHelper
+                ) { result, deferredIntentConfirmationType in
+                    self.analyticsHelper.logPayment(
                         paymentOption: paymentOption,
-                        paymentHandler: self.paymentHandler,
-                        integrationShape: .flowController,
-                        confirmationChallenge: self.confirmationChallenge,
-                        analyticsHelper: self.analyticsHelper
-                    ) { result, deferredIntentConfirmationType in
-                        self.analyticsHelper.logPayment(
-                            paymentOption: paymentOption,
-                            result: result,
-                            deferredIntentConfirmationType: deferredIntentConfirmationType
-                        )
-                        if case .completed = result, case .link = paymentOption {
-                            // Remember Link as default payment method for users who just created an account.
-                            CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: self.configuration.customer?.id)
-                        }
+                        result: result,
+                        deferredIntentConfirmationType: deferredIntentConfirmationType
+                    )
+                    if case .completed = result, case .link = paymentOption {
+                        // Remember Link as default payment method for users who just created an account.
+                        CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: self.configuration.customer?.id)
+                    }
 
-                        completion(result)
-                    }
-                }
-
-                if let checkout {
-                    // TODO(porter): Remove assumeIsolated once confirm is @MainActor (blocked on new FC API designs)
-                    if MainActor.assumeIsolated({ !checkout.pendingOperations.isEmpty }) {
-                        stpAssertionFailure("`confirm` should not be called while the Checkout session is loading.")
-                        let error = PaymentSheetError.flowControllerConfirmFailed(
-                            message: "confirmPayment was called while the Checkout session is still loading. Wait until CheckoutController.isUpdating is false."
-                        )
-                        completion(.failed(error: error))
-                        return
-                    }
-                    // We don't need to await this Task, just kick it off, because confirmBlock uses a completion.
-                    // We do need to open a task to use `Checkout`'s `enqueueSessionUpdate`, which uses Swift concurrency.
-                    Task { @MainActor in
-                        await checkout.enqueueSessionUpdate {
-                            confirmBlock()
-                        }
-                    }
-                } else {
-                    confirmBlock()
+                    completion(result)
                 }
             }
         }
@@ -884,11 +862,13 @@ extension PaymentSheet {
 
         func updateForWalletButtonsView() {
             // Rebuild with the current saved methods so deleted methods don't reappear.
+            let checkoutBillingAddressUpdater = viewController.checkoutBillingAddressUpdater
             self.viewController = Self.makeViewController(
                 configuration: self.configuration,
                 loadResult: makeLoadResultWithCurrentSavedPaymentMethods(),
                 analyticsHelper: analyticsHelper,
                 walletButtonsViewState: self.walletButtonsViewState,
+                checkoutBillingAddressUpdater: checkoutBillingAddressUpdater,
                 initialState: .preservingFormInput(from: internalPaymentOption)
             )
             self.viewController.flowControllerDelegate = self
@@ -927,9 +907,11 @@ extension PaymentSheet {
             guard let selection = snapshot.selectionForRebuilding(
                 using: viewController
             ) else {
+                viewController.clearErrorForReuseAfterCancellation()
                 return
             }
 
+            let checkoutBillingAddressUpdater = viewController.checkoutBillingAddressUpdater
             self.viewController = Self.makeViewController(
                 configuration: configuration,
                 loadResult: makeLoadResultWithCurrentSavedPaymentMethods(
@@ -937,6 +919,7 @@ extension PaymentSheet {
                 ),
                 analyticsHelper: analyticsHelper,
                 walletButtonsViewState: walletButtonsViewState,
+                checkoutBillingAddressUpdater: checkoutBillingAddressUpdater,
                 initialState: .restoringAfterCancellation(selection)
             )
             self.viewController.flowControllerDelegate = self
@@ -987,7 +970,7 @@ extension PaymentSheet {
             loadResult: PaymentSheetLoader.LoadResult,
             analyticsHelper: PaymentSheetAnalyticsHelper,
             walletButtonsViewState: PaymentSheet.WalletButtonsViewState,
-            checkoutBillingAddressUpdater: CheckoutSessionBillingAddressUpdater? = nil,
+            checkoutBillingAddressUpdater: CheckoutSessionBillingAddressUpdater?,
             initialState: FlowControllerViewControllerInitialState = .preservingFormInput(from: nil)
         ) -> FlowControllerViewControllerProtocol {
             let controller: FlowControllerViewControllerProtocol
@@ -1108,7 +1091,7 @@ class AuthenticationContext: NSObject, PaymentSheetAuthenticationContext {
         presentingViewController.present(authenticationViewController, animated: true, completion: nil)
     }
 
-    func presentPollingVCForAction(action: STPPaymentHandlerPaymentIntentActionParams, type: STPPaymentMethodType, safariViewController: SFSafariViewController?) {
+    func presentPollingVCForAction(action: STPPaymentHandlerActionParams, type: STPPaymentMethodType, safariViewController: SFSafariViewController?) {
         let pollingVC = PollingViewController(currentAction: action, viewModel: PollingViewModel(paymentMethodType: type),
                                               appearance: self.appearance, safariViewController: safariViewController)
         presentingViewController.present(pollingVC, animated: true, completion: nil)
@@ -1150,6 +1133,7 @@ internal protocol FlowControllerViewControllerProtocol: BottomSheetContentViewCo
     var flowControllerDelegate: FlowControllerViewControllerDelegate? { get set }
     var checkoutBillingAddressUpdater: CheckoutSessionBillingAddressUpdater? { get set }
     func clearSelection()
+    func clearErrorForReuseAfterCancellation()
 }
 
 extension PaymentOption {

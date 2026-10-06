@@ -112,6 +112,8 @@
 
 "Code sent" = "Kód elküldve";
 
+"Complete the payment using Pix to finish the purchase." = "A vásárlás befejezéséhez teljesítse a fizetést a Pix használatával.";
+
 "Confirm" = "Megerősítés";
 
 "Confirm payment details" = "Fizetési adatok megerősítése";
@@ -330,6 +332,10 @@
 
 "Tax" = "Adó";
 
+"Terms and Conditions" = "Feltételek";
+
+"Terms of Service" = "Szolgáltatási feltételek";
+
 "The IBAN you entered is incomplete." = "A beírt IBAN-szám hiányos.";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "A beírt IBAN-szám érvénytelen: „%@” nem támogatott országkód.";
@@ -337,6 +343,8 @@
 "The provided verification code has expired." = "A megadott ellenőrző kód lejárt.";
 
 "The provided verification code is incorrect." = "A megadott ellenőrző kód hibás.";
+
+"This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Ez egy nemzetközi vásárlás, amely nem tartalmazza a 3,5%-os IOF díjat. A folytatással Ön tudomásul veszi és elfogadja <terms>az Ebanx feltételeit<terms>.";
 
 "This is your default" = "Ez az alapértelmezett";
 

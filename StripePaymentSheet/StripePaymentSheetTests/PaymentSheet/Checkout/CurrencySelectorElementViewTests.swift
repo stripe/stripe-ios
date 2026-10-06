@@ -31,6 +31,10 @@ final class CurrencySelectorElementViewTests: XCTestCase {
     }
 
     func testUpdatesSwiftUILayoutWhenDetailsChangeHeight() async throws {
+        guard #available(iOS 16.0, *) else {
+            throw XCTSkip("SwiftUI does not reliably invalidate UIViewRepresentable height before iOS 16")
+        }
+
         // Given a currency selector in a SwiftUI view hierarchy
         let session = CheckoutTestHelpers.makeAdaptivePricingSession()
         let checkout = try await CheckoutController(

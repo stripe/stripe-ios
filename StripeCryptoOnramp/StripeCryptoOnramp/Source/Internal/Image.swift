@@ -16,6 +16,11 @@ enum Image: String, CaseIterable, ImageMaker {
     case iconLocationPin = "icon_location_pin"
     case iconWallet = "icon_wallet"
     case iconClock = "icon_clock"
+    case iconCheck = "icon_check"
     case iconExclamationCircle = "icon_exclamation_circle"
     case iconClose = "icon_close"
+    case iconTrash = "icon_trash"
+    case iconCheckCircle = "icon_check_circle"
+    case iconAdd = "icon_add"
+    case iconDocument = "icon_document"
 }

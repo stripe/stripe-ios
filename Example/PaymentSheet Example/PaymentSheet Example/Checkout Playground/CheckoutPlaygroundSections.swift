@@ -96,6 +96,62 @@ struct CheckoutPlaygroundConfigurationSection: View {
     }
 }
 
+struct CheckoutPlaygroundEmailSection: View {
+    @ObservedObject var viewModel: CheckoutPlayground.ViewModel
+
+    private var usesLocationEmail: Bool {
+        viewModel.email.source.isServer && viewModel.adaptivePricingCountry != .none
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            CheckoutPlayground.SectionHeader(title: "Email", icon: "envelope.fill")
+            VStack(alignment: .leading, spacing: 12) {
+                CheckoutPlayground.PickerRow(
+                    title: "Email source",
+                    selection: $viewModel.email.source,
+                    displayText: { $0.displayName }
+                )
+                if viewModel.email.source != .none {
+                    TextField("Email address", text: Binding(
+                        get: { viewModel.resolvedEmail.value },
+                        set: { viewModel.email.value = $0 }
+                    ))
+                    .keyboardType(.emailAddress)
+                    .textInputAutocapitalization(.never)
+                    .autocorrectionDisabled()
+                    .disabled(usesLocationEmail)
+                    .accessibilityIdentifier("checkout_email_value")
+                    .padding(.horizontal, 16)
+                    .padding(.bottom, 12)
+                }
+            }
+            .background(Color(uiColor: .secondarySystemGroupedBackground))
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+
+            if usesLocationEmail {
+                Text("Email controlled by AP country override. Stripe recognizes +location_XX in test mode. Choose No Override under Currency Selector to edit it.")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            } else if viewModel.email.source == .local {
+                Text("Used as the local default. You can update or clear it in checkout. Leave blank to start without an email.")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            } else if viewModel.email.source.isServer {
+                Text("Set when creating the session or Customer; cannot be changed in checkout.")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
+            if let error = viewModel.emailConfigurationError {
+                Text(error)
+                    .font(.caption)
+                    .foregroundColor(.red)
+                    .accessibilityIdentifier("checkout_email_configuration_error")
+            }
+        }
+    }
+}
+
 struct CheckoutPlaygroundLineItemsSection: View {
     @Binding var cartScenario: CheckoutPlayground.CartScenario
     let currency: CheckoutPlayground.Currency
@@ -261,8 +317,10 @@ struct CheckoutPlaygroundFeaturesSection: View {
 struct CheckoutPlaygroundExpressCheckoutElementSection: View {
     @Binding var showExpressCheckoutElement: Bool
     @Binding var applePayDisplay: ExpressCheckoutElement.ApplePayConfiguration.Display
+    @Binding var applePayButtonType: CheckoutPlayground.ApplePayButtonType
     @Binding var linkDisplay: ExpressCheckoutElement.LinkConfiguration.Display
-    @Binding var shippingAddressRequired: Bool
+    @Binding var paymentMethodOrder: CheckoutPlayground.ExpressCheckoutPaymentMethodOrder
+    @Binding var appearance: ExpressCheckoutElement.Appearance
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -281,22 +339,65 @@ struct CheckoutPlaygroundExpressCheckoutElementSection: View {
                         displayText: { $0.rawValue.capitalized }
                     )
                     CheckoutPlayground.PickerRow(
+                        title: "Apple Pay Button Type",
+                        icon: "apple.logo",
+                        selection: $applePayButtonType,
+                        tooltip: "Sets `ExpressCheckoutElement.Configuration.applePayConfiguration.buttonType`.",
+                        displayText: { $0.displayName }
+                    )
+                    CheckoutPlayground.PickerRow(
                         title: "Link Display",
                         icon: "link",
                         selection: $linkDisplay,
                         tooltip: "Sets `ExpressCheckoutElement.Configuration.linkConfiguration.display`.",
                         displayText: { $0.rawValue.capitalized }
                     )
-                    CheckoutPlayground.ToggleRow(
-                        title: "Requires Shipping Address",
-                        isOn: $shippingAddressRequired,
-                        tooltip: "Sets `ExpressCheckoutElement.Configuration.shippingAddressRequired`. When on, wallets like Apple Pay require the customer to provide a shipping address."
+                    CheckoutPlayground.PickerRow(
+                        title: "Payment Method Order",
+                        selection: $paymentMethodOrder,
+                        tooltip: "Sets `ExpressCheckoutElement.Configuration.paymentMethodOrder`.",
+                        displayText: { $0.displayName }
+                    )
+                    CheckoutPlayground.PickerRow(
+                        title: "Button Theme",
+                        icon: "paintpalette.fill",
+                        selection: $appearance.buttonTheme,
+                        tooltip: "Sets `ExpressCheckoutElement.Configuration.Appearance.buttonTheme`. Only affects the Apple Pay button; the Link button always uses Link's brand color.",
+                        displayText: { $0.displayName }
+                    )
+                    CheckoutPlayground.PickerRow(
+                        title: "Max Columns",
+                        icon: "square.grid.2x2",
+                        selection: maxColumns,
+                        tooltip: "Sets `ExpressCheckoutElement.Configuration.Appearance.buttonLayout.maxColumns`.",
+                        displayText: { $0.displayName }
+                    )
+                    CheckoutPlayground.PickerRow(
+                        title: "Max Rows",
+                        icon: "rectangle.grid.1x2",
+                        selection: maxRows,
+                        tooltip: "Sets `ExpressCheckoutElement.Configuration.Appearance.buttonLayout.maxRows`.",
+                        displayText: { $0.displayName }
                     )
                 }
             }
             .background(Color(uiColor: .secondarySystemGroupedBackground))
             .clipShape(RoundedRectangle(cornerRadius: 12))
         }
+    }
+
+    private var maxColumns: Binding<CheckoutPlayground.ExpressCheckoutElementButtonLayoutLimit> {
+        Binding(
+            get: { .init(intValue: appearance.buttonLayout.maxColumns) },
+            set: { appearance.buttonLayout.maxColumns = $0.intValue }
+        )
+    }
+
+    private var maxRows: Binding<CheckoutPlayground.ExpressCheckoutElementButtonLayoutLimit> {
+        Binding(
+            get: { .init(intValue: appearance.buttonLayout.maxRows) },
+            set: { appearance.buttonLayout.maxRows = $0.intValue }
+        )
     }
 }
 

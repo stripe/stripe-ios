@@ -112,6 +112,8 @@
 
 "Code sent" = "Naipadala na ang code";
 
+"Complete the payment using Pix to finish the purchase." = "Kumpletuhin ang pagbabayad gamit ang Pix para tapusin ang pagbili.";
+
 "Confirm" = "Kumpirmahin";
 
 "Confirm payment details" = "Kumpirmahin ang mga detalye ng pagbabayad";
@@ -330,6 +332,10 @@
 
 "Tax" = "Buwis";
 
+"Terms and Conditions" = "Mga Tuntunin at Kondisyon";
+
+"Terms of Service" = "Mga Tuntunin ng Serbisyo";
+
 "The IBAN you entered is incomplete." = "Ang IBAN na iniligay mo ay di kumpleto.";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Ang IBAN na iyong inilagay ay hindi valid, ang \"%@\" ay hindi isang suportadong country code.";
@@ -337,6 +343,8 @@
 "The provided verification code has expired." = "Paso na ang ibinigay na verification code.";
 
 "The provided verification code is incorrect." = "Mali ang ibinigay na verification code.";
+
+"This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Ito ay isang internasyonal na pagbili at hindi kasama ang 3.5% IOF na Bayarin. Sa pamamagitan ng pagpapatuloy, kinikilala at tinatanggap mo ang <terms>Mga Tuntunin at Kundisyon ng Ebanx</terms>.";
 
 "This is your default" = "Ito ang iyong default";
 

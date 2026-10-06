@@ -112,6 +112,8 @@
 
 "Code sent" = "Код отправлен";
 
+"Complete the payment using Pix to finish the purchase." = "Оплатите покупку с помощью Pix, чтобы завершить оформление.";
+
 "Confirm" = "Подтвердить";
 
 "Confirm payment details" = "Подтвердить реквизиты платежа";
@@ -330,6 +332,10 @@
 
 "Tax" = "Налог";
 
+"Terms and Conditions" = "Условия и положения";
+
+"Terms of Service" = "Условия обслуживания";
+
 "The IBAN you entered is incomplete." = "Введенный код IBAN неполон.";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Введенный вами номер IBAN недействителен, «%@» не является поддерживаемым кодом страны.";
@@ -337,6 +343,8 @@
 "The provided verification code has expired." = "Указанный код подтверждения уже недействителен.";
 
 "The provided verification code is incorrect." = "Указанный код подтверждения недействителен.";
+
+"This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Это международная покупка, которая не облагается сбором IOF в размере 3,5 %. Продолжая, вы подтверждаете и принимаете <terms>условия и положения Ebanx</terms>.";
 
 "This is your default" = "Это ваше значение по умолчанию";
 

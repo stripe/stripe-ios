@@ -1,8 +1,44 @@
+"Add %ld documents" = "添加 %ld 份文件";
+
+"Add 1 document" = "添加 1 份文件";
+
+"Add documents" = "添加文件";
+
+"Answer" = "回答";
+
+"Choose File…" = "选择文件...";
+
+"Choose Photo…" = "选择照片...";
+
 "Debit cards are most likely to be accepted." = "借记卡最有可能被接受。";
+
+"Document type" = "单据类型";
+
+"Document uploaded successfully" = "文件上传成功";
+
+"Funds source" = "资金来源";
+
+"How are you funding your transactions? Please list all of your sources. For example, salary, savings, investment earnings, etc." = "您用什么方式为交易注资？请列出您的所有资金来源。例如，薪水、储蓄、投资收益等。";
+
+"Make sure your document meets following requirements." = "确保您的文档符合以下要求。";
+
+"Please try again later." = "请稍后重试。";
+
+"Submitted for review" = "已提交审核";
+
+"Tell us about your source of funds" = "请说明资金来源";
+
+"There was a problem with your previous document. Please upload a new one." = "您之前的文档存在问题。请上传新文档。";
 
 "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "因认证校验异常，应用无法完成验证。请稍后重试，若问题持续存在，可联系应用开发者。";
 
 "This app couldn't be verified. Contact the app developer for help." = "此应用无法通过验证。请联系应用开发者寻求帮助。";
+
+"This file is larger than %@. Choose a file that is %@ or smaller." = "此文件大于 %1$@。请选择大小不超过 %2$@ 的文件。";
+
+"This file type isn’t supported." = "不支持此文件类型。";
+
+"This file type isn’t supported. Upload a %@ file." = "不支持此文件类型。请上传 %@ 文件。";
 
 "This wallet couldn't be found. Please choose or add a wallet and try again." = "无法找到该钱包。请选择或添加一个钱包，然后重试。";
 
@@ -12,4 +48,24 @@
 
 "This wallet verification request is invalid. Please try again." = "此钱包验证请求无效。请重试。";
 
+"Upload document" = "上传单据";
+
+"Upload your proof of address" = "请上传地址证明";
+
+"Uploaded" = "已上传";
+
+"Uploading…" = "正在上传...";
+
 "We couldn't verify ownership of this wallet. Please try again." = "我们无法验证此钱包的所有权，请重试。";
+
+"We couldn’t open this document. Please choose it again." = "我们无法打开此文档。请重新选择。";
+
+"We couldn’t upload this file. Please try again." = "我们无法上传此文件。请重试。";
+
+"We may request proof of address for larger transactions." = "对于大额交易，我们可能会要求您提供地址证明。";
+
+"We may request source of funds for larger transactions." = "对于大额交易，我们可能会要求您提供资金来源证明。";
+
+"We’re reviewing your documents. We’ll let you know when verification is complete." = "我们正在审核您的文件。验证完成后，我们会通知您。";
+
+"You can continue while we verify your document in the background." = "在我们后台验证您的文件期间，您可以继续操作。";

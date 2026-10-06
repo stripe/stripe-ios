@@ -1,8 +1,44 @@
+"Add %ld documents" = "Pridėti %ld dokumentų";
+
+"Add 1 document" = "Pridėti 1 dokumentą";
+
+"Add documents" = "Pridėti dokumentus";
+
+"Answer" = "Atsakymas";
+
+"Choose File…" = "Pasirinkite failą";
+
+"Choose Photo…" = "Pasirinkite nuotrauką…";
+
 "Debit cards are most likely to be accepted." = "Dažniausiai priimamos debeto kortelės.";
+
+"Document type" = "Dokumento tipas";
+
+"Document uploaded successfully" = "Dokumentas sėkmingai įkeltas";
+
+"Funds source" = "Lėšų šaltinis";
+
+"How are you funding your transactions? Please list all of your sources. For example, salary, savings, investment earnings, etc." = "Iš kokių lėšų finansuojate savo operacijas? Nurodykite visus savo šaltinius. Pavyzdžiui, atlyginimas, santaupos, investicijų pelnas ir t. t.";
+
+"Make sure your document meets following requirements." = "Įsitikinkite, kad jūsų dokumentas atitinka šiuos reikalavimus.";
+
+"Please try again later." = "Bandykite dar kartą vėliau.";
+
+"Submitted for review" = "Pateikta peržiūrai";
+
+"Tell us about your source of funds" = "Papasakokite apie savo lėšų šaltinį";
+
+"There was a problem with your previous document. Please upload a new one." = "Kilo su jūsų ankstesniu dokumentu susijusi klaida. Įkelkite naują.";
 
 "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "Šios programėlės nebuvo galima patvirtinti dėl patvirtinimo klaidos. Prašome pabandyti vėliau arba susisiekti su kūrėju, jei problema neišsprendžiama.";
 
 "This app couldn't be verified. Contact the app developer for help." = "Šios programos patvirtinti nepavyko. Kreipkitės pagalbos į programos kūrėją.";
+
+"This file is larger than %@. Choose a file that is %@ or smaller." = "Šis failas didesnis nei %1$@. Pasirinkite failą, kuris yra %2$@ ar mažesnis.";
+
+"This file type isn’t supported." = "Šis failo tipas nepalaikomas.";
+
+"This file type isn’t supported. Upload a %@ file." = "Šis failo tipas nepalaikomas. Įkelkite %@ failą.";
 
 "This wallet couldn't be found. Please choose or add a wallet and try again." = "Piniginės rasti nepavyko. Pasirinkite arba pridėkite piniginę ir bandykite dar kartą.";
 
@@ -12,4 +48,24 @@
 
 "This wallet verification request is invalid. Please try again." = "Piniginės patvirtinimo užklausa netinkama. Bandykite dar kartą.";
 
+"Upload document" = "Įkelti dokumentą";
+
+"Upload your proof of address" = "Įkelkite adresą patvirtinančius dokumentus";
+
+"Uploaded" = "Įkelta";
+
+"Uploading…" = "Įkeliama…";
+
 "We couldn't verify ownership of this wallet. Please try again." = "Piniginės nuosavybės patvirtinti nepavyko. Bandykite dar kartą.";
+
+"We couldn’t open this document. Please choose it again." = "Nepavyko atidaryti šio dokumento. Pasirinkite jį dar kartą.";
+
+"We couldn’t upload this file. Please try again." = "Nepavyko įkelti šio failo. Bandykite dar kartą.";
+
+"We may request proof of address for larger transactions." = "Atliekant didesnės vertės operacijas, galime paprašyti pateikti adreso įrodymą.";
+
+"We may request source of funds for larger transactions." = "Atliekant didesnės vertės operacijas, galime paprašyti pateikti lėšų kilmę patvirtinantį dokumentą.";
+
+"We’re reviewing your documents. We’ll let you know when verification is complete." = "Peržiūrime jūsų dokumentus. Pranešime jums, kai patikrinimas bus baigtas.";
+
+"You can continue while we verify your document in the background." = "Galite tęsti, kol mes fone tikriname jūsų dokumentą.";

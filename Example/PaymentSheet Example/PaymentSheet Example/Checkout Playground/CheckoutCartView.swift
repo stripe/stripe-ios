@@ -13,6 +13,7 @@ struct CheckoutCartView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var checkout: CheckoutController?
     @StateObject private var diagnostics = CheckoutSessionDiagnostics()
+    @StateObject private var analyticsLogObserver = AnalyticsLogObserver.shared
 
     @State private var isLoading = false
     @State private var errorMessage: String?
@@ -20,6 +21,7 @@ struct CheckoutCartView: View {
     @State private var showsCheckoutDetails = false
 
     let clientSecret: String
+    let emailSettings: CheckoutPlayground.EmailSettings
     let shippingAddressCollection: Bool
     let defaultShippingAddress: CheckoutPlayground.DefaultShippingAddress?
     let adaptivePricing: Bool
@@ -37,6 +39,7 @@ struct CheckoutCartView: View {
                 if let checkout {
                     CheckoutCartContentView(
                         checkout: checkout,
+                        emailSource: emailSettings.source,
                         showsCurrencySelectorElement: adaptivePricing,
                         showsShippingAddressSection: shippingAddressCollection,
                         errorMessage: errorMessage,
@@ -62,6 +65,8 @@ struct CheckoutCartView: View {
                         .ignoresSafeArea()
                     ProgressView()
                 }
+
+                AnalyticsLogForTesting(analyticsLog: $analyticsLogObserver.analyticsLog)
             }
             .navigationTitle("Your Cart")
             .navigationBarTitleDisplayMode(.inline)
@@ -151,6 +156,7 @@ struct CheckoutCartView: View {
                 config.paymentElement = paymentElementConfiguration
             }
             config.defaults.shippingDetails = defaultShippingAddress?.checkoutShippingDetails
+            config.defaults.email = emailSettings.localDefaultEmail
             if shippingAddressCollection {
                 var shippingAddressElementConfiguration = ShippingAddressElement.Configuration()
                 shippingAddressElementConfiguration.title = "Shipping Address"
@@ -163,12 +169,16 @@ struct CheckoutCartView: View {
                 }
                 expressCheckoutElementConfiguration.applePayConfiguration = ExpressCheckoutElement.ApplePayConfiguration(
                     merchantId: "merchant.com.stripe.paymentsheet.example",
+                    buttonType: expressCheckoutElementSettings.applePayButtonType.pkPaymentButtonType,
                     display: expressCheckoutElementSettings.applePayDisplay
                 )
                 expressCheckoutElementConfiguration.linkConfiguration = ExpressCheckoutElement.LinkConfiguration(
                     display: expressCheckoutElementSettings.linkDisplay
                 )
-                expressCheckoutElementConfiguration.shippingAddressRequired = expressCheckoutElementSettings.shippingAddressRequired
+                expressCheckoutElementConfiguration.paymentMethodOrder = expressCheckoutElementSettings.paymentMethodOrder.paymentMethodOrder
+                expressCheckoutElementConfiguration.appearance.buttonTheme = expressCheckoutElementSettings.appearance.buttonTheme
+                expressCheckoutElementConfiguration.appearance.buttonLayout.maxColumns = expressCheckoutElementSettings.appearance.buttonLayout.maxColumns
+                expressCheckoutElementConfiguration.appearance.buttonLayout.maxRows = expressCheckoutElementSettings.appearance.buttonLayout.maxRows
                 config.expressCheckoutElement = expressCheckoutElementConfiguration
             }
             if adaptivePricing {

@@ -48,7 +48,7 @@ extension CheckoutController: ExpressCheckoutElementDelegate {
                 apiClient: apiClient,
                 returnURL: configuration.returnURL,
                 merchantDisplayName: effectiveMerchantDisplayName,
-                shippingAddressRequired: expressCheckoutElementConfiguration.shippingAddressRequired,
+                shippingAddressRequired: session.requiresShippingAddress,
                 defaultBillingDetails: configuration.defaults.billingDetails,
                 presentationWindow: presentationWindow,
                 confirmationHandler: { [apiClient, paymentHandler] requestParameters in
@@ -65,33 +65,32 @@ extension CheckoutController: ExpressCheckoutElementDelegate {
                 throw CheckoutError.unknown(debugDescription: "Could not build a confirmation flow for \(paymentMethod). Could not find a presenting view controller.")
             }
             // TODO: maybe add Link-specific configuration
-            var paymentElementConfiguration = PaymentSheet.Configuration()
-            paymentElementConfiguration.apiClient = apiClient
-            paymentElementConfiguration.returnURL = configuration.returnURL
-            paymentElementConfiguration.merchantDisplayName = effectiveMerchantDisplayName
-            paymentElementConfiguration.style = configuration.userInterfaceStyle
+            var linkConfirmationConfiguration = PaymentSheet.Configuration()
+            linkConfirmationConfiguration.apiClient = apiClient
+            linkConfirmationConfiguration.returnURL = configuration.returnURL
+            linkConfirmationConfiguration.merchantDisplayName = effectiveMerchantDisplayName
+            linkConfirmationConfiguration.style = configuration.userInterfaceStyle
             if let billingDetails = configuration.defaults.billingDetails {
-                paymentElementConfiguration.defaultBillingDetails.set(billingDetails)
+                linkConfirmationConfiguration.defaultBillingDetails.set(billingDetails)
             }
-            paymentElementConfiguration.defaultBillingDetails.email = session.email
             switch expressCheckoutElementConfiguration.linkConfiguration.display {
             case .automatic:
-                paymentElementConfiguration.link.display = .automatic
+                linkConfirmationConfiguration.link.display = .automatic
             case .never:
-                paymentElementConfiguration.link.display = .never
+                linkConfirmationConfiguration.link.display = .never
             }
             // TODO: maybe separate out a LinkAnalyticsHelper
             let analyticsHelper = PaymentSheetAnalyticsHelper(
                 integrationShape: .complete, // Wallet Link analytics don't log integrationShape, so it's not worth adding an .expressCheckout case.
-                configuration: paymentElementConfiguration
+                configuration: linkConfirmationConfiguration
             )
             let authenticationContext = AuthenticationContext(
                 presentingViewController: presentingViewController,
-                appearance: paymentElementConfiguration.appearance
+                appearance: linkConfirmationConfiguration.appearance
             )
             return .link(.init(
                 confirmOption: .wallet(brand: session.elementsSession.linkBrand ?? .link),
-                configuration: paymentElementConfiguration,
+                configuration: linkConfirmationConfiguration,
                 confirmationChallenge: ConfirmationChallenge(
                     elementsSession: session.elementsSession,
                     stripeAttest: apiClient.stripeAttest),
@@ -192,19 +191,6 @@ extension CheckoutController {
         }
 
         return try await typedOperation.value
-    }
-
-    /// Non-throwing variant of ``enqueueSessionUpdate(_:)-throws``.
-    ///
-    /// Use this when the enqueued work cannot fail. The operation is still
-    /// serialized behind any in-flight ops in the same FIFO order.
-    func enqueueSessionUpdate<T>(
-        _ body: @MainActor @escaping () async -> T
-    ) async -> T {
-        // Cast body to `throws` so that we call the underlying throwing version
-        // instead of recursing. The try! is safe because body cannot throw.
-        // swiftlint:disable:next force_try
-        return try! await enqueueSessionUpdate(body as (() async throws -> T))
     }
 
     /// Enqueues a serialized session update.

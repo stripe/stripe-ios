@@ -109,23 +109,26 @@ struct MessageView: View {
 
 extension MessageView.Configuration {
 
-    /// Creates a proof-of-address introduction.
-    /// - Parameters:
-    ///   - amount: The formatted monetary threshold, including its currency symbol.
-    static func proofOfAddress(amount: String) -> Self {
+    /// A proof-of-address introduction.
+    static var proofOfAddress: Self {
         .init(icon: makeIcon(.iconLocationPin), heading: .Localized.uploadProofOfAddress,
-              body: .Localized.proofOfAddressExplanation(amount: amount), primaryActionTitle: .Localized.continue)
+              body: .Localized.proofOfAddressExplanation, primaryActionTitle: .Localized.continue)
     }
 
-    /// Creates a source-of-funds introduction.
-    /// - Parameters:
-    ///   - amount: The formatted monetary threshold, including its currency symbol.
-    static func sourceOfFunds(amount: String) -> Self {
+    /// A source-of-funds introduction.
+    static var sourceOfFunds: Self {
         .init(icon: makeIcon(.iconWallet), heading: .Localized.tellUsAboutYourSourceOfFunds,
-              body: .Localized.sourceOfFundsExplanation(amount: amount), primaryActionTitle: .Localized.continue)
+              body: .Localized.sourceOfFundsExplanation, primaryActionTitle: .Localized.continue)
     }
 
-    /// A submission confirmation.
+    /// A document upload confirmation while verification continues in the background.
+    static var documentUploaded: Self {
+        .init(icon: makeIcon(.iconCheck), iconForeground: .textOnSuccess, iconBackground: .surfaceSuccess,
+              heading: .Localized.documentUploadedSuccessfully, body: .Localized.documentVerificationInBackground,
+              primaryActionTitle: UIButton.doneButtonTitle)
+    }
+
+    /// A submission confirmation for documents awaiting review.
     static var submitted: Self {
         .init(icon: makeIcon(.iconClock), heading: .Localized.submittedForReview,
               body: .Localized.documentsUnderReview, primaryActionTitle: UIButton.doneButtonTitle)
@@ -146,12 +149,17 @@ extension MessageView.Configuration {
 #if DEBUG
 @available(iOS 17.0, *)
 #Preview("Proof of address") {
-    MessageViewPreview(configuration: .proofOfAddress(amount: "€1,000"))
+    MessageViewPreview(configuration: .proofOfAddress)
 }
 
 @available(iOS 17.0, *)
 #Preview("Source of funds") {
-    MessageViewPreview(configuration: .sourceOfFunds(amount: "€1,000"))
+    MessageViewPreview(configuration: .sourceOfFunds)
+}
+
+@available(iOS 17.0, *)
+#Preview("Document uploaded successfully") {
+    MessageViewPreview(configuration: .documentUploaded)
 }
 
 @available(iOS 17.0, *)

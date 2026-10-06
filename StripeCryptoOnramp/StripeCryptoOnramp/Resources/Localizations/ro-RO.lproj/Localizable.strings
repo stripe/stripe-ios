@@ -1,8 +1,44 @@
+"Add %ld documents" = "Adăugați %ld documente";
+
+"Add 1 document" = "Adăugați 1 document";
+
+"Add documents" = "Adăugați documente";
+
+"Answer" = "Răspuns";
+
+"Choose File…" = "Alegeți un fișier…";
+
+"Choose Photo…" = "Alegeți o fotografie…";
+
 "Debit cards are most likely to be accepted." = "Este cel mai probabil ca cardurile de debit să fie acceptate.";
+
+"Document type" = "Tip document";
+
+"Document uploaded successfully" = "Document încărcat cu succes";
+
+"Funds source" = "Sursă fonduri";
+
+"How are you funding your transactions? Please list all of your sources. For example, salary, savings, investment earnings, etc." = "Cum vă finanțați tranzacțiile? Vă rugăm să enumerați toate sursele. De exemplu, salariu, economii, profituri din investiții etc.";
+
+"Make sure your document meets following requirements." = "Asigurați-vă că documentul îndeplinește următoarele cerințe.";
+
+"Please try again later." = "Vă rugăm să încercați din nou mai târziu.";
+
+"Submitted for review" = "Trimis pentru revizuire";
+
+"Tell us about your source of funds" = "Spuneți-ne despre sursa dvs. de fonduri";
+
+"There was a problem with your previous document. Please upload a new one." = "A apărut o problemă cu documentul dvs. anterior. Vă rugăm să încărcați unul nou.";
 
 "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "Această aplicație nu a putut fi verificată din cauza unei erori de atestare. Vă rugăm să încercați din nou mai târziu sau să contactați dezvoltatorul dacă problema persistă.";
 
 "This app couldn't be verified. Contact the app developer for help." = "Această aplicație nu a putut fi verificată. Contactați dezvoltatorul aplicației pentru ajutor.";
+
+"This file is larger than %@. Choose a file that is %@ or smaller." = "Acest fișier este mai mare de %1$@. Alegeți un fișier de %2$@ sau mai mic.";
+
+"This file type isn’t supported." = "Acest tip de fișier nu este acceptat.";
+
+"This file type isn’t supported. Upload a %@ file." = "Acest tip de fișier nu este acceptat. Încărcați un fișier %@.";
 
 "This wallet couldn't be found. Please choose or add a wallet and try again." = "Acest portofel nu a putut fi găsit. Vă rugăm să alegeți sau să adăugați un portofel și să încercați din nou.";
 
@@ -12,4 +48,24 @@
 
 "This wallet verification request is invalid. Please try again." = "Această solicitare de verificare a portofelului este nevalidă. Vă rugăm să încercați din nou.";
 
+"Upload document" = "Încărcați documentul";
+
+"Upload your proof of address" = "Încărcați dovada adresei";
+
+"Uploaded" = "Încărcat";
+
+"Uploading…" = "Se încarcă…";
+
 "We couldn't verify ownership of this wallet. Please try again." = "Nu am putut verifica dreptul de proprietate asupra acestui portofel. Vă rugăm să încercați din nou.";
+
+"We couldn’t open this document. Please choose it again." = "Nu am putut deschide acest document. Vă rugăm să îl selectați din nou.";
+
+"We couldn’t upload this file. Please try again." = "Nu am putut încărca acest fișier. Vă rugăm să încercați din nou.";
+
+"We may request proof of address for larger transactions." = "Este posibil să solicităm dovada adresei pentru tranzacțiile mai mari.";
+
+"We may request source of funds for larger transactions." = "Este posibil să solicităm sursa fondurilor pentru tranzacțiile mai mari.";
+
+"We’re reviewing your documents. We’ll let you know when verification is complete." = "În prezent, vă revizuim documentele. Vă vom anunța când procesul de verificare va fi finalizat.";
+
+"You can continue while we verify your document in the background." = "Puteți continua în timp ce vă verificăm documentul în fundal.";

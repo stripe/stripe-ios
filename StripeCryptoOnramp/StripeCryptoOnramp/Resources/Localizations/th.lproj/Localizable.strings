@@ -1,8 +1,44 @@
+"Add %ld documents" = "เพิ่มเอกสาร %ld ฉบับ";
+
+"Add 1 document" = "เพิ่มเอกสาร 1 ฉบับ";
+
+"Add documents" = "เพิ่มเอกสาร";
+
+"Answer" = "คำตอบ";
+
+"Choose File…" = "เลือกไฟล์…";
+
+"Choose Photo…" = "เลือกรูปภาพ…";
+
 "Debit cards are most likely to be accepted." = "บัตรเดบิตเป็นบัตรที่มีแนวโน้มที่จะได้รับการยอมรับมากที่สุด";
+
+"Document type" = "ประเภทเอกสาร";
+
+"Document uploaded successfully" = "อัปโหลดเอกสารสำเร็จแล้ว";
+
+"Funds source" = "แหล่งที่มาของเงินทุน";
+
+"How are you funding your transactions? Please list all of your sources. For example, salary, savings, investment earnings, etc." = "คุณจัดหาเงินทุนสำหรับธุรกรรมของคุณอย่างไร โปรดระบุแหล่งที่มาทั้งหมดของคุณ ตัวอย่างเช่น เงินเดือน เงินออม ผลกำไรจากการลงทุน เป็นต้น";
+
+"Make sure your document meets following requirements." = "โปรดตรวจสอบให้แน่ใจว่าเอกสารของคุณตรงตามข้อกำหนดต่อไปนี้";
+
+"Please try again later." = "โปรดลองอีกครั้งในภายหลัง";
+
+"Submitted for review" = "ส่งไปตรวจสอบแล้ว";
+
+"Tell us about your source of funds" = "แจ้งให้เราทราบเกี่ยวกับแหล่งที่มาของเงินทุนของคุณ";
+
+"There was a problem with your previous document. Please upload a new one." = "เกิดปัญหากับเอกสารรายการก่อนหน้าของคุณ โปรดอัปโหลดเอกสารใหม่";
 
 "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "ยืนยันแอปนี้ไม่ได้เนื่องจากเกิดข้อผิดพลาดในการรับรอง โปรดลองอีกครั้งในภายหลังหรือติดต่อนักพัฒนาหากยังพบปัญหาอยู่";
 
 "This app couldn't be verified. Contact the app developer for help." = "แอปนี้ไม่สามารถตรวจสอบยืนยันได้ โปรดติดต่อนักพัฒนาแอปเพื่อขอความช่วยเหลือ";
+
+"This file is larger than %@. Choose a file that is %@ or smaller." = "ไฟล์นี้มีขนาดใหญ่กว่า %1$@ โปรดเลือกไฟล์ที่มีขนาดไม่เกิน %2$@";
+
+"This file type isn’t supported." = "ไม่รองรับไฟล์ประเภทนี้";
+
+"This file type isn’t supported. Upload a %@ file." = "ไม่รองรับไฟล์ประเภทนี้ โปรดอัปโหลดไฟล์ %@";
 
 "This wallet couldn't be found. Please choose or add a wallet and try again." = "ไม่พบกระเป๋าเงินนี้ โปรดเลือกหรือเพิ่มกระเป๋าเงินแล้วลองอีกครั้ง";
 
@@ -12,4 +48,24 @@
 
 "This wallet verification request is invalid. Please try again." = "คำขอยืนยันกระเป๋าเงินนี้ไม่ถูกต้อง โปรดลองอีกครั้ง";
 
+"Upload document" = "อัปโหลดเอกสาร";
+
+"Upload your proof of address" = "อัปโหลดหลักฐานที่อยู่ของคุณ";
+
+"Uploaded" = "อัปโหลดแล้ว";
+
+"Uploading…" = "กำลังอัปโหลด...";
+
 "We couldn't verify ownership of this wallet. Please try again." = "เราไม่สามารถยืนยันการเป็นเจ้าของกระเป๋าเงินนี้ได้ โปรดลองอีกครั้ง";
+
+"We couldn’t open this document. Please choose it again." = "เราไม่สามารถเปิดเอกสารนี้ได้ โปรดเลือกอีกครั้ง";
+
+"We couldn’t upload this file. Please try again." = "เราไม่สามารถอัปโหลดไฟล์นี้ได้ โปรดลองอีกครั้ง";
+
+"We may request proof of address for larger transactions." = "เราอาจขอหลักฐานยืนยันที่อยู่สำหรับการทำธุรกรรมที่มีมูลค่าสูง";
+
+"We may request source of funds for larger transactions." = "เราอาจขอแหล่งที่มาของเงินทุนสำหรับการทำธุรกรรมที่มีมูลค่าสูง";
+
+"We’re reviewing your documents. We’ll let you know when verification is complete." = "เรากำลังตรวจสอบเอกสารของคุณ โดยจะแจ้งให้คุณทราบเมื่อการยืนยันเสร็จเรียบร้อย";
+
+"You can continue while we verify your document in the background." = "คุณสามารถดำเนินการต่อได้ในระหว่างที่เราตรวจสอบเอกสารของคุณในเบื้องหลัง";

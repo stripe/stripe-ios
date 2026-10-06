@@ -1,8 +1,44 @@
+"Add %ld documents" = "Thêm %ld tài liệu";
+
+"Add 1 document" = "Thêm 1 tài liệu";
+
+"Add documents" = "Thêm tài liệu";
+
+"Answer" = "Trả lời";
+
+"Choose File…" = "Chọn Tệp...";
+
+"Choose Photo…" = "Chọn Ảnh…";
+
 "Debit cards are most likely to be accepted." = "Thẻ ghi nợ có khả năng cao được chấp nhận.";
+
+"Document type" = "Loại tài liệu";
+
+"Document uploaded successfully" = "Tải tài liệu lên thành công";
+
+"Funds source" = "Nguồn vốn";
+
+"How are you funding your transactions? Please list all of your sources. For example, salary, savings, investment earnings, etc." = "Bạn đang cấp vốn cho các giao dịch của mình như thế nào? Vui lòng liệt kê tất cả các nguồn của bạn. Ví dụ: tiền lương, tiền tiết kiệm, lợi nhuận đầu tư, v.v.";
+
+"Make sure your document meets following requirements." = "Đảm bảo tài liệu của bạn đáp ứng các yêu cầu dưới đây.";
+
+"Please try again later." = "Vui lòng thử lại sau.";
+
+"Submitted for review" = "Đã gửi để đánh giá";
+
+"Tell us about your source of funds" = "Hãy cho chúng tôi biết về nguồn vốn của bạn";
+
+"There was a problem with your previous document. Please upload a new one." = "Đã xảy ra sự cố với tài liệu trước đó của bạn. Vui lòng tải lên tài liệu mới.";
 
 "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "Ứng dụng này không thể được xác minh do lỗi chứng thực. Vui lòng thử lại sau hoặc liên hệ với nhà phát triển nếu sự cố vẫn tiếp diễn.";
 
 "This app couldn't be verified. Contact the app developer for help." = "Ứng dụng này không thể được xác minh. Hãy liên hệ với nhà phát triển ứng dụng để được trợ giúp.";
+
+"This file is larger than %@. Choose a file that is %@ or smaller." = "Tệp này lớn hơn %1$@. Chọn tệp có kích thước %2$@ hoặc nhỏ hơn.";
+
+"This file type isn’t supported." = "Loại tệp này không được hỗ trợ.";
+
+"This file type isn’t supported. Upload a %@ file." = "Loại tệp này không được hỗ trợ. Vui lòng tải lên tệp %@.";
 
 "This wallet couldn't be found. Please choose or add a wallet and try again." = "Không thể tìm thấy ví này. Vui lòng chọn hoặc thêm ví và thử lại.";
 
@@ -12,4 +48,24 @@
 
 "This wallet verification request is invalid. Please try again." = "Yêu cầu xác minh ví này không hợp lệ. Vui lòng thử lại.";
 
+"Upload document" = "Tải tài liệu lên";
+
+"Upload your proof of address" = "Tải lên bằng chứng địa chỉ của bạn";
+
+"Uploaded" = "Đã tải lên";
+
+"Uploading…" = "Đang tải lên…";
+
 "We couldn't verify ownership of this wallet. Please try again." = "Chúng tôi không thể xác minh quyền sở hữu ví này. Vui lòng thử lại.";
+
+"We couldn’t open this document. Please choose it again." = "Chúng tôi không thể mở tài liệu này. Vui lòng chọn lại.";
+
+"We couldn’t upload this file. Please try again." = "Chúng tôi không thể tải lên tệp này. Vui lòng thử lại.";
+
+"We may request proof of address for larger transactions." = "Chúng tôi có thể yêu cầu bằng chứng địa chỉ cho các giao dịch lớn hơn.";
+
+"We may request source of funds for larger transactions." = "Chúng tôi có thể yêu cầu nguồn vốn cho các giao dịch lớn hơn.";
+
+"We’re reviewing your documents. We’ll let you know when verification is complete." = "Chúng tôi đang xem xét các tài liệu của bạn. Chúng tôi sẽ thông báo cho bạn khi quá trình xác minh hoàn tất.";
+
+"You can continue while we verify your document in the background." = "Bạn có thể tiếp tục trong khi chúng tôi xác minh tài liệu của bạn trong nền.";

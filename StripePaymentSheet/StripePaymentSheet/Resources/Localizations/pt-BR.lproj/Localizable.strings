@@ -112,6 +112,8 @@
 
 "Code sent" = "Código enviado";
 
+"Complete the payment using Pix to finish the purchase." = "Conclua o pagamento usando Pix para finalizar a compra.";
+
 "Confirm" = "Confirmar";
 
 "Confirm payment details" = "Confirmar dados de pagamento";
@@ -330,6 +332,10 @@
 
 "Tax" = "Imposto";
 
+"Terms and Conditions" = "Termos e condições";
+
+"Terms of Service" = "Termos de serviço";
+
 "The IBAN you entered is incomplete." = "O IBAN inserido está incompleto.";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "O IBAN inserido é inválido, \"%@\" não foi reconhecido como código de país.";
@@ -337,6 +343,8 @@
 "The provided verification code has expired." = "O código de verificação informado expirou.";
 
 "The provided verification code is incorrect." = "O código de verificação informado está incorreto.";
+
+"This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Esta é uma compra internacional e não inclui a tarifa de 3,5% de IOF. Ao prosseguir, você reconhece e aceita os <terms>termos e condições do Ebanx<terms>.";
 
 "This is your default" = "Este é o seu padrão";
 

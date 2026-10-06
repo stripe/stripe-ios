@@ -112,6 +112,8 @@
 
 "Code sent" = "코드 전송 완료";
 
+"Complete the payment using Pix to finish the purchase." = "구매를 마치려면 Pix를 사용하여 결제를 완료하십시오.";
+
 "Confirm" = "확인";
 
 "Confirm payment details" = "결제 세부사항 확인";
@@ -330,6 +332,10 @@
 
 "Tax" = "세금";
 
+"Terms and Conditions" = "이용 약관";
+
+"Terms of Service" = "서비스 약관";
+
 "The IBAN you entered is incomplete." = "입력한 IBAN이 불완전합니다.";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "입력하신 IBAN이 유효하지 않습니다. “%@”은(는) 지원되는 국가 코드가 아닙니다.";
@@ -337,6 +343,8 @@
 "The provided verification code has expired." = "제공된 확인 코드가 만료되었습니다.";
 
 "The provided verification code is incorrect." = "제공된 확인 코드가 올바르지 않습니다.";
+
+"This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "이는 국제 구매이며 3.5%의 IOF 비용이 제외됩니다. 진행하시면 귀하는 <terms>Ebanx의 이용 약관</terms>을 인정하고 이에 동의하는 것입니다.";
 
 "This is your default" = "기본값입니다";
 

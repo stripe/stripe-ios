@@ -99,6 +99,23 @@ enum ExpectedFormHierarchy {
         static var paymentIntent: FormHierarchyNode { emptyForm }
     }
 
+    // MARK: - Pix
+
+    enum Pix {
+        static var international: FormHierarchyNode {
+            FormHierarchyNode(type: "FormElement", children: [
+                FormHierarchyNode(type: "SectionElement", properties: ["title": "Contact information"], children: [
+                    FormHierarchyNode(type: "TextFieldElement", properties: ["label": "Full name"]),
+                    FormHierarchyNode(type: "TextFieldElement", properties: ["label": "Email"]),
+                ]),
+                FormHierarchyNode(type: "SectionElement", children: [
+                    FormHierarchyNode(type: "TextFieldElement", properties: ["label": "CPF/CPNJ"]),
+                ]),
+                FormHierarchyNode(type: "SimpleMandateElement", properties: ["text": "This is an international purchase and excludes a 3..."]),
+            ])
+        }
+    }
+
     // MARK: - SeQura
 
     enum Sequra {
@@ -111,6 +128,26 @@ enum ExpectedFormHierarchy {
         static var paymentIntent: FormHierarchyNode { emptyForm }
     }
 
+    // MARK: - GoPay
+
+    enum GoPay {
+        static var paymentIntent: FormHierarchyNode { emptyForm }
+    }
+    // MARK: - MoMo
+
+    enum Momo {
+        static var paymentIntent: FormHierarchyNode { emptyForm }
+    }
+    // MARK: - ShopeePay
+
+    enum ShopeePay {
+        static var paymentIntent: FormHierarchyNode { emptyForm }
+    }
+    // MARK: - QRIS
+
+    enum QRIS {
+        static var paymentIntent: FormHierarchyNode { emptyForm }
+    }
     // MARK: - PAYCO
 
     enum Payco {

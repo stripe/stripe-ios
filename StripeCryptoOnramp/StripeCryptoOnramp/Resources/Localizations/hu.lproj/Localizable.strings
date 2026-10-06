@@ -1,8 +1,44 @@
+"Add %ld documents" = "%ld dokumentum hozzáadása";
+
+"Add 1 document" = "1 dokumentum hozzáadása";
+
+"Add documents" = "Dokumentumok hozzáadása";
+
+"Answer" = "Válasz";
+
+"Choose File…" = "Fájl kiválasztása…";
+
+"Choose Photo…" = "Fénykép kiválasztása…";
+
 "Debit cards are most likely to be accepted." = "A legnagyobb valószínűséggel a betéti kártyák lesznek elfogadva.";
+
+"Document type" = "Dokumentum típusa";
+
+"Document uploaded successfully" = "Dokumentum sikeresen feltöltve";
+
+"Funds source" = "Alapok forrása";
+
+"How are you funding your transactions? Please list all of your sources. For example, salary, savings, investment earnings, etc." = "Hogyan finanszírozza a tranzakcióit? Kérjük, sorolja fel az összes forrását. Például fizetés, megtakarítások, befektetésből származó nyereség stb.";
+
+"Make sure your document meets following requirements." = "Győződjön meg arról, hogy a dokumentum megfelel a következő követelményeknek.";
+
+"Please try again later." = "Kérjük, próbálja újra később.";
+
+"Submitted for review" = "Felülvizsgálatra beküldve";
+
+"Tell us about your source of funds" = "Adjon információt az alapok forrásáról";
+
+"There was a problem with your previous document. Please upload a new one." = "Probléma merült fel a korábbi dokumentummal. Kérjük, töltsön fel újat.";
 
 "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "Ez az alkalmazás igazolási hiba miatt nem ellenőrizhető. Próbálja újra később, vagy ha a probléma továbbra is fennáll, lépjen kapcsolatba a fejlesztővel.";
 
 "This app couldn't be verified. Contact the app developer for help." = "Ez az alkalmazás nem ellenőrizhető. Segítségért lépjen kapcsolatba az alkalmazás fejlesztőjével.";
+
+"This file is larger than %@. Choose a file that is %@ or smaller." = "Ez a fájl nagyobb, mint %1$@. Válasszon olyan fájlt, amely legfeljebb %2$@.";
+
+"This file type isn’t supported." = "Ez a fájltípus nem támogatott.";
+
+"This file type isn’t supported. Upload a %@ file." = "Ez a fájltípus nem támogatott. Töltsön fel %@ fájlt.";
 
 "This wallet couldn't be found. Please choose or add a wallet and try again." = "Ez a pénztárca nem található. Kérjük, válasszon vagy adjon hozzá egy pénztárcát, és próbálja újra.";
 
@@ -12,4 +48,24 @@
 
 "This wallet verification request is invalid. Please try again." = "Ez a pénztárca-hitelesítési kérés érvénytelen. Kérjük, próbálja újra.";
 
+"Upload document" = "Dokumentum feltöltése";
+
+"Upload your proof of address" = "Töltse fel lakcímigazolását";
+
+"Uploaded" = "Feltöltve";
+
+"Uploading…" = "Feltöltés…";
+
 "We couldn't verify ownership of this wallet. Please try again." = "Nem tudtuk ellenőrizni ennek a pénztárcának a tulajdonjogát. Kérjük, próbálja újra.";
+
+"We couldn’t open this document. Please choose it again." = "Nem sikerült megnyitni ezt a dokumentumot. Kérjük, válassza ki újra.";
+
+"We couldn’t upload this file. Please try again." = "Nem sikerült feltölteni ezt a fájlt. Kérjük, próbálja újra.";
+
+"We may request proof of address for larger transactions." = "Nagyobb tranzakciók esetén lakcímigazolást kérhetünk.";
+
+"We may request source of funds for larger transactions." = "Nagyobb tranzakciók esetén kérhetjük az alapok forrásának megadását.";
+
+"We’re reviewing your documents. We’ll let you know when verification is complete." = "Vizsgáljuk a dokumentumait. Értesítjük, amint az ellenőrzés befejeződött.";
+
+"You can continue while we verify your document in the background." = "Folytathatja, amíg a háttérben ellenőrizzük a dokumentumot.";

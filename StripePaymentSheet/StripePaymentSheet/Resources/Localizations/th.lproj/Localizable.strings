@@ -112,6 +112,8 @@
 
 "Code sent" = "ส่งรหัสแล้ว";
 
+"Complete the payment using Pix to finish the purchase." = "ชำระเงินด้วย Pix เพื่อดำเนินการสั่งซื้อให้เสร็จสิ้น";
+
 "Confirm" = "ยืนยัน";
 
 "Confirm payment details" = "ยืนยันรายละเอียดการชำระเงิน";
@@ -330,6 +332,10 @@
 
 "Tax" = "ภาษี";
 
+"Terms and Conditions" = "ข้อกำหนดและเงื่อนไข";
+
+"Terms of Service" = "ข้อกำหนดการให้บริการ";
+
 "The IBAN you entered is incomplete." = "IBAN ที่คุณป้อนไม่ครบถ้วน";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "IBAN ที่คุณป้อนไม่ถูกต้อง \"%@\" ไม่ใช่รหัสประเทศที่รองรับ";
@@ -337,6 +343,8 @@
 "The provided verification code has expired." = "รหัสยืนยันที่ป้อนหมดอายุแล้ว";
 
 "The provided verification code is incorrect." = "รหัสยืนยันที่ป้อนไม่ถูกต้อง";
+
+"This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "นี่เป็นการซื้อระหว่างประเทศและไม่รวมค่าธรรมเนียม IOF 3.5% การดำเนินการต่อถือว่าคุณรับทราบและยอมรับ<terms>ข้อกำหนดและเงื่อนไขของ Ebanx</terms>";
 
 "This is your default" = "นี่คือค่าเริ่มต้นของคุณ";
 

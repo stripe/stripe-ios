@@ -17,6 +17,7 @@ import UIKit
 /// - Pins the presented view controller to the bottom of the screen, but doesn't constrain the height (unless `forceFullHeight` is `true`)
 @objc(STPBottomSheetPresentationController)
 class BottomSheetPresentationController: UIPresentationController {
+
     // MARK: - Properties
     private var bottomAnchor: NSLayoutConstraint?
     private var presentable: BottomSheetPresentable? {

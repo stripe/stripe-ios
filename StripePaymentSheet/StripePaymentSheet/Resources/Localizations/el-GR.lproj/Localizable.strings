@@ -112,6 +112,8 @@
 
 "Code sent" = "Ο κωδικός εστάλη";
 
+"Complete the payment using Pix to finish the purchase." = "Ολοκληρώστε την πληρωμή χρησιμοποιώντας το Pix για να ολοκληρώσετε την αγορά.";
+
 "Confirm" = "Επιβεβαίωση";
 
 "Confirm payment details" = "Επιβεβαίωση στοιχείων πληρωμής";
@@ -330,6 +332,10 @@
 
 "Tax" = "Φόρος";
 
+"Terms and Conditions" = "Όροι και Προϋποθέσεις";
+
+"Terms of Service" = "Όροι παροχής υπηρεσιών";
+
 "The IBAN you entered is incomplete." = "Ο κωδικός IBAN που εισαγάγατε είναι ελλιπής.";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Το IBAN που εισάγατε δεν είναι έγκυρο, το \"%@\" δεν είναι υποστηριζόμενος κωδικός χώρας.";
@@ -337,6 +343,8 @@
 "The provided verification code has expired." = "Ο κωδικός επαλήθευσης που παρασχέθηκε έχει λήξει.";
 
 "The provided verification code is incorrect." = "Ο κωδικός επαλήθευσης που παρασχέθηκε είναι λανθασμένος.";
+
+"This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Αυτή είναι μια διεθνής αγορά και δεν περιλαμβάνει χρέωση IOF ύψους 3,5%. Συνεχίζοντας, αναγνωρίζετε και αποδέχεστε τους<terms> όρους και τις προϋποθέσεις της Ebanx</terms>.";
 
 "This is your default" = "Αυτή είναι η προεπιλογή σας";
 

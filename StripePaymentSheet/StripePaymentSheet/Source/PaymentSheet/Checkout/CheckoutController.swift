@@ -100,12 +100,24 @@ public final class CheckoutController: ObservableObject {
 
         let sessionId = Self.extractSessionId(from: clientSecret)
         do {
+            // Load address specs etc. in parallel with /init. PaymentElement also loads these via
+            // PaymentSheetLoader, but integrations without it (e.g. ECE-only) still need them for
+            // address forms like the one in the Link wallet's "Add a payment method" screen.
+            // ⚠️ Using a Task instead of `async let`; see PaymentSheetLoader.load.
+            let loadMiscellaneousSingletonsTask = Task {
+                await PaymentSheetLoader.loadMiscellaneousSingletons()
+            }
             // Call /init
             let apiResponse = try await configuration.apiClient.initCheckoutSession(
                 checkoutSessionId: sessionId,
                 adaptivePricingAllowed: configuration.currencySelectorElement != nil
             )
-            let loadedSession = Session(apiResponse: apiResponse, localState: .empty)
+            await loadMiscellaneousSingletonsTask.value
+            let loadedSession = Session(
+                apiResponse: apiResponse,
+                localState: .empty,
+                expressCheckoutConfiguration: configuration.expressCheckoutElement
+            )
             self.session = loadedSession
 
             // Element initialization is intentionally sequential:
@@ -142,7 +154,8 @@ public final class CheckoutController: ObservableObject {
                 self.expressCheckoutElement = ExpressCheckoutElement(
                     sessionSource: sessionSource,
                     configuration: expressCheckoutElementConfiguration,
-                    delegate: self
+                    delegate: self,
+                    apiClient: apiClient
                 )
             }
 
@@ -214,6 +227,21 @@ public final class CheckoutController: ObservableObject {
     /// Clears the currently selected payment option.
     public func clearPaymentOption() async throws {
         try await paymentElement?.clearPaymentOption()
+    }
+
+    // MARK: - Email
+
+    /// Use this method to update the Customer's email address.
+    /// - Important: You cannot use this method if the Checkout Session was created with
+    ///   `customer_email` or a Customer with an email. Those emails are immutable.
+    public func updateEmail(_ email: String?) async throws {
+        try await enqueueSessionUpdate {
+            guard self.canSetLocalEmail() else { return }
+            guard self.session.localState.email != email else { return }
+            try await self.applySessionUpdate { localState in
+                localState.email = email
+            }
+        }
     }
 
     // MARK: - Addresses
@@ -402,6 +430,13 @@ extension CheckoutController {
     func applyDefaults(shippingAddress: Session.ShippingAddress?) async throws {
         let defaults = configuration.defaults
 
+        if let email = defaults.email,
+           canSetLocalEmail() {
+            try await commitSession { localState in
+                localState.email = email
+            }
+        }
+
         if let billingDetails = defaults.billingDetails,
            let address = billingDetails.address {
             try await updateBillingTaxRegionIfNecessary(address: address)
@@ -436,7 +471,11 @@ extension CheckoutController {
         mutateLocalState(&localState)
 
         if let apiResponse {
-            session = Session(apiResponse: apiResponse, localState: localState)
+            session = Session(
+                apiResponse: apiResponse,
+                localState: localState,
+                expressCheckoutConfiguration: configuration.expressCheckoutElement
+            )
         } else {
             session.localState = localState
         }
@@ -448,5 +487,15 @@ extension CheckoutController {
     /// - Warning: See `commitSession` for what this method *doesn't* do. That includes updating Checkout elements.
     func dangerouslySetSessionDirectly(_ session: Session) {
         self.session = session
+    }
+
+    private func canSetLocalEmail() -> Bool {
+        guard session.serverEmail == nil else {
+            assertionFailure(
+                "Email cannot be set locally when the Checkout Session was created with customer_email or a Customer with an email."
+            )
+            return false
+        }
+        return true
     }
 }

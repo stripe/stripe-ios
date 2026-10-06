@@ -112,6 +112,8 @@
 
 "Code sent" = "Codi enviat";
 
+"Complete the payment using Pix to finish the purchase." = "Completeu el pagament amb Pix per finalitzar la compra.";
+
 "Confirm" = "Confirma";
 
 "Confirm payment details" = "Confirmació de les dades de pagament";
@@ -330,6 +332,10 @@
 
 "Tax" = "Impost";
 
+"Terms and Conditions" = "Termes i condicions";
+
+"Terms of Service" = "Condicions del servei";
+
 "The IBAN you entered is incomplete." = "L'BAN és incomplet.";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "El Número internacional de compte bancari (IBAN) que heu introduït no és vàlid, \"%@\" no és un codi de país compatible.";
@@ -337,6 +343,8 @@
 "The provided verification code has expired." = "El codi de verificació proporcionat ha caducat.";
 
 "The provided verification code is incorrect." = "El codi de verificació proporcionat no és correcte.";
+
+"This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Aquesta és una compra internacional i exclou una comissió del 3,5 % d'IOF. En continuar, accepteu les <terms>condicions d'Ebanx</terms>.";
 
 "This is your default" = "Aquesta és l'opció per defecte";
 

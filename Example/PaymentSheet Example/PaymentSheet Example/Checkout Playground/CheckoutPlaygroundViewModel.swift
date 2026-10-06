@@ -5,19 +5,13 @@
 //  Created by Nick Porter on 2/24/26.
 
 import Combine
+@_spi(STP) import StripeCore
 @_spi(STP) import StripePaymentSheet
 import SwiftUI
 
 extension CheckoutPlayground {
-    struct ExpressCheckoutElementSettings {
-        var isEnabled = true
-        var applePayDisplay: ExpressCheckoutElement.ApplePayConfiguration.Display = .automatic
-        var linkDisplay: ExpressCheckoutElement.LinkConfiguration.Display = .automatic
-        var shippingAddressRequired: Bool = false
-    }
-
     @MainActor
-    final class ViewModel: ObservableObject {
+    final class ViewModel: ObservableObject, STPAnalyticsClientDelegate {
 
         // Unified mode currently supports card and Link.
         static let availablePaymentMethods = [
@@ -48,6 +42,7 @@ extension CheckoutPlayground {
         }
         @Published var currency: Currency
         @Published var customerType: CustomerType
+        @Published var email: EmailSettings
         @Published var cartScenario: CartScenario
         @Published var shippingAddressCollection: Bool
         @Published var defaultShippingAddressOption: DefaultShippingAddressOption
@@ -72,14 +67,15 @@ extension CheckoutPlayground {
         private var settingsSaveSubscription: AnyCancellable?
         private var isLinkModeOverrideActive = false
 
-        init() {
-            let settings = Self.settingsFromDefaults() ?? Settings()
+        init(settings: Settings? = nil) {
+            let settings = settings ?? Self.settingsFromDefaults() ?? Settings()
             uiFramework = settings.uiFramework
             integrationType = settings.integrationType
-            expressCheckoutElement = ExpressCheckoutElementSettings(isEnabled: settings.showExpressCheckoutElement)
+            expressCheckoutElement = settings.expressCheckoutElement
             linkMode = settings.linkMode
             currency = settings.currency
             customerType = settings.customerType
+            email = settings.email ?? Self.legacyEmailSettings(settings)
             cartScenario = settings.cartScenario
             shippingAddressCollection = settings.shippingAddressCollection
             defaultShippingAddressOption = settings.defaultShippingAddressOption
@@ -118,7 +114,39 @@ extension CheckoutPlayground {
         }
 
         var isButtonDisabled: Bool {
-            isCreating || (!automaticPaymentMethods && paymentMethodTypes.isEmpty) || lineItems.isEmpty
+            isCreating || (!automaticPaymentMethods && paymentMethodTypes.isEmpty) || lineItems.isEmpty || emailConfigurationError != nil
+        }
+
+        var emailConfigurationError: String? {
+            if email.source == .checkoutSession && customerType != .guest {
+                return "Checkout Session server email requires Guest. Choose Guest or a different email source."
+            }
+            if email.source == .customer && customerType == .guest {
+                return "Customer server email requires a New or Returning Customer."
+            }
+            if adaptivePricingCountry != .none && !email.source.isServer {
+                return "AP location simulation requires server email. Choose No Override under Currency Selector, or select a server email source."
+            }
+            if email.source.isServer && resolvedEmail.email == nil {
+                return "Enter a server email, or choose None for no email."
+            }
+            return nil
+        }
+
+        var resolvedEmail: EmailSettings {
+            var resolved = email
+            if email.source.isServer && adaptivePricingCountry != .none {
+                resolved.value = "test+location_\(adaptivePricingCountry.rawValue.uppercased())@example.com"
+            }
+            return resolved
+        }
+
+        private static func legacyEmailSettings(_ settings: Settings) -> EmailSettings {
+            // Preserve saved playground behavior when loading settings created before the email picker.
+            if settings.customerType == .guest {
+                return .init()
+            }
+            return .init(source: settings.adaptivePricingCountry == .none ? .none : .customer)
         }
 
         var lineItems: [LineItemConfig] {
@@ -137,7 +165,13 @@ extension CheckoutPlayground {
         }
 
         func createSession() async {
+            if let emailConfigurationError {
+                errorMessage = emailConfigurationError
+                return
+            }
             serializeSettingsToNSUserDefaults()
+            AnalyticsLogObserver.shared.analyticsLog.removeAll()
+            STPAnalyticsClient.sharedClient.delegate = self
             isCreating = true
             errorMessage = nil
             defer {
@@ -162,7 +196,7 @@ extension CheckoutPlayground {
                     automaticTax: automaticTax,
                     paymentMethodSave: checkoutSessionPaymentMethodSave,
                     paymentMethodRemove: checkoutSessionPaymentMethodRemove,
-                    adaptivePricingCountry: adaptivePricingCountry,
+                    email: resolvedEmail,
                     automaticPaymentMethods: automaticPaymentMethods,
                     paymentMethodTypes: paymentMethodTypes
                 )
@@ -176,6 +210,12 @@ extension CheckoutPlayground {
             }
         }
 
+        func analyticsClientDidLog(analyticsClient: STPAnalyticsClient, payload: [String: Any]) {
+            DispatchQueue.main.async {
+                AnalyticsLogObserver.shared.analyticsLog.append(payload)
+            }
+        }
+
         func reset() {
             apply(Settings())
         }
@@ -184,10 +224,11 @@ extension CheckoutPlayground {
             Settings(
                 uiFramework: uiFramework,
                 integrationType: integrationType,
-                showExpressCheckoutElement: expressCheckoutElement.isEnabled,
+                expressCheckoutElement: expressCheckoutElement,
                 linkMode: linkMode,
                 currency: currency,
                 customerType: customerType,
+                email: email,
                 cartScenario: cartScenario,
                 shippingAddressCollection: shippingAddressCollection,
                 defaultShippingAddressOption: defaultShippingAddressOption,
@@ -209,10 +250,11 @@ extension CheckoutPlayground {
         private func apply(_ settings: Settings) {
             uiFramework = settings.uiFramework
             integrationType = settings.integrationType
-            expressCheckoutElement.isEnabled = settings.showExpressCheckoutElement
+            expressCheckoutElement = settings.expressCheckoutElement
             linkMode = settings.linkMode
             currency = settings.currency
             customerType = settings.customerType
+            email = settings.email ?? Self.legacyEmailSettings(settings)
             cartScenario = settings.cartScenario
             shippingAddressCollection = settings.shippingAddressCollection
             defaultShippingAddressOption = settings.defaultShippingAddressOption
@@ -252,5 +294,6 @@ extension CheckoutPlayground {
                 return nil
             }
         }
+
     }
 }

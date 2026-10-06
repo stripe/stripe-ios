@@ -1,8 +1,44 @@
+"Add %ld documents" = "Добавете %ld документа";
+
+"Add 1 document" = "Добавете 1 документ";
+
+"Add documents" = "Добавете документи";
+
+"Answer" = "Отговор";
+
+"Choose File…" = "Избиране на файл...";
+
+"Choose Photo…" = "Изберете снимка…";
+
 "Debit cards are most likely to be accepted." = "Най-вероятно ще бъдат приемани дебитни карти.";
+
+"Document type" = "Тип документ";
+
+"Document uploaded successfully" = "Документът е качен успешно";
+
+"Funds source" = "Източник на средства";
+
+"How are you funding your transactions? Please list all of your sources. For example, salary, savings, investment earnings, etc." = "Как финансирате Вашите трансакции? Моля, посочете всички Ваши източници. Например заплата, спестявания, доходи от инвестиции и др.";
+
+"Make sure your document meets following requirements." = "Уверете се, че Вашият документ отговаря на следните изисквания.";
+
+"Please try again later." = "Моля, опитайте отново по-късно.";
+
+"Submitted for review" = "Изпратено за преглед";
+
+"Tell us about your source of funds" = "Разкажете ни за Вашия източник на средства";
+
+"There was a problem with your previous document. Please upload a new one." = "Възникна проблем с предишния Ви документ. Моля, качете нов.";
 
 "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "Това приложение не можа да бъде потвърдено поради грешка в атестацията. Моля, опитайте отново по-късно или се свържете с разработчика, ако проблемът продължи.";
 
 "This app couldn't be verified. Contact the app developer for help." = "Това приложение не можеше да бъде потвърдено. Свържете се с разработчика на приложението за помощ.";
+
+"This file is larger than %@. Choose a file that is %@ or smaller." = "Този файл е по-голям от %1$@. Изберете файл, който е %2$@ или по-малък.";
+
+"This file type isn’t supported." = "Този тип файл не се поддържа.";
+
+"This file type isn’t supported. Upload a %@ file." = "Този тип файл не се поддържа. Качете %@ файл.";
 
 "This wallet couldn't be found. Please choose or add a wallet and try again." = "Този портфейл не можа да бъде намерен. Моля, изберете или добавете портфейл и опитайте отново.";
 
@@ -12,4 +48,24 @@
 
 "This wallet verification request is invalid. Please try again." = "Това искане за удостоверяване на портфейл е валидно. Моля, опитайте отново.";
 
+"Upload document" = "Качване на документ";
+
+"Upload your proof of address" = "Качете Вашето доказателство за адрес";
+
+"Uploaded" = "Качено";
+
+"Uploading…" = "Качване…";
+
 "We couldn't verify ownership of this wallet. Please try again." = "Не можахме да удостоверим собствеността на този портфейл. Моля, опитайте отново.";
+
+"We couldn’t open this document. Please choose it again." = "Не успяхме да отворим този документ. Моля, изберете го отново.";
+
+"We couldn’t upload this file. Please try again." = "Не успяхме да качим този файл. Моля, опитайте отново.";
+
+"We may request proof of address for larger transactions." = "Може да изискаме доказателство за адрес за по-големи трансакции.";
+
+"We may request source of funds for larger transactions." = "Може да изискаме произход на средствата за по-големи трансакции.";
+
+"We’re reviewing your documents. We’ll let you know when verification is complete." = "Преглеждаме Вашите документи. Ще Ви уведомим, когато проверката приключи.";
+
+"You can continue while we verify your document in the background." = "Можете да продължите, докато удостоверяваме Вашия документ във фонов режим.";

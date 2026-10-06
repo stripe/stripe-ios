@@ -1,8 +1,44 @@
+"Add %ld documents" = "Tambah %ld dokumen";
+
+"Add 1 document" = "Tambah 1 dokumen";
+
+"Add documents" = "Tambah dokumen";
+
+"Answer" = "Jawapan";
+
+"Choose File…" = "Pilih fail";
+
+"Choose Photo…" = "Pilih Foto…";
+
 "Debit cards are most likely to be accepted." = "Kad debit paling berkemungkinan akan diterima.";
+
+"Document type" = "Jenis dokumen";
+
+"Document uploaded successfully" = "Dokumen berjaya dimuat naik";
+
+"Funds source" = "Sumber dana";
+
+"How are you funding your transactions? Please list all of your sources. For example, salary, savings, investment earnings, etc." = "Bagaimanakah anda membiayai transaksi anda? Sila senaraikan semua sumber anda. Contohnya, gaji, simpanan, perolehan pelaburan, dsb.";
+
+"Make sure your document meets following requirements." = "Pastikan dokumen anda memenuhi keperluan berikut.";
+
+"Please try again later." = "Sila cuba lagi kemudian.";
+
+"Submitted for review" = "Diserahkan untuk semakan";
+
+"Tell us about your source of funds" = "Beritahu kami tentang sumber dana anda";
+
+"There was a problem with your previous document. Please upload a new one." = "Terdapat masalah dengan dokumen anda yang sebelumnya. Sila muat naik dokumen baharu.";
 
 "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "Apl ini tidak dapat disahkan kerana ralat pengesahan. Sila cuba lagi kemudian atau hubungi pembangun jika isu berterusan.";
 
 "This app couldn't be verified. Contact the app developer for help." = "Aplikasi ini tidak dapat disahkan. Hubungi pembangun aplikasi untuk mendapatkan bantuan.";
+
+"This file is larger than %@. Choose a file that is %@ or smaller." = "Fail ini lebih besar daripada %1$@. Pilih fail bersaiz %2$@ atau lebih kecil.";
+
+"This file type isn’t supported." = "Jenis fail ini tidak disokong.";
+
+"This file type isn’t supported. Upload a %@ file." = "Jenis fail ini tidak disokong. Muat naik fail %@.";
 
 "This wallet couldn't be found. Please choose or add a wallet and try again." = "Dompet ini tidak dapat ditemukan. Sila pilih atau tambahkan dompet dan cuba lagi.";
 
@@ -12,4 +48,24 @@
 
 "This wallet verification request is invalid. Please try again." = "Permintaan pengesahan dompet ini tidak sah. Sila cuba lagi.";
 
+"Upload document" = "Muat naik dokumen";
+
+"Upload your proof of address" = "Muat naik bukti alamat anda";
+
+"Uploaded" = "Dimuat naik";
+
+"Uploading…" = "Memuat naik…";
+
 "We couldn't verify ownership of this wallet. Please try again." = "Kami tidak dapat mengesahkan pemilikan dompet ini. Sila cuba lagi.";
+
+"We couldn’t open this document. Please choose it again." = "Kami tidak dapat membuka dokumen ini. Sila pilih sekali lagi.";
+
+"We couldn’t upload this file. Please try again." = "Kami tidak dapat memuat naik fail ini. Sila cuba lagi.";
+
+"We may request proof of address for larger transactions." = "Kami mungkin meminta bukti alamat untuk transaksi yang lebih besar.";
+
+"We may request source of funds for larger transactions." = "Kami mungkin meminta sumber dana untuk transaksi yang lebih besar.";
+
+"We’re reviewing your documents. We’ll let you know when verification is complete." = "Kami sedang menyemak dokumen anda. Kami akan memaklumkan anda apabila pengesahan selesai.";
+
+"You can continue while we verify your document in the background." = "Anda boleh teruskan sementara kami mengesahkan dokumen anda di latar belakang.";

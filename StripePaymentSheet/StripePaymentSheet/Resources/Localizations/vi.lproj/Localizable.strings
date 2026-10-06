@@ -112,6 +112,8 @@
 
 "Code sent" = "Mã đã được gửi";
 
+"Complete the payment using Pix to finish the purchase." = "Hoàn tất thanh toán bằng Pix để hoàn thành giao dịch mua.";
+
 "Confirm" = "Xác nhận";
 
 "Confirm payment details" = "Xác nhận thông tin thanh toán";
@@ -330,6 +332,10 @@
 
 "Tax" = "Thuế";
 
+"Terms and Conditions" = "Điều khoản và Điều kiện";
+
+"Terms of Service" = "Điều khoản dịch vụ";
+
 "The IBAN you entered is incomplete." = "IBAN quý vị đã nhập chưa đầy đủ.";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "IBAN bạn đã nhập không hợp lệ, \"%@\" không phải là mã quốc gia được hỗ trợ.";
@@ -337,6 +343,8 @@
 "The provided verification code has expired." = "Mã xác minh được cung cấp đã hết hạn.";
 
 "The provided verification code is incorrect." = "Mã xác minh đã cung cấp không chính xác.";
+
+"This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Đây là giao dịch mua quốc tế và không bao gồm phí IOF 3,5%. Khi tiếp tục, bạn thừa nhận và chấp nhận <terms>điều khoản và điều kiện của Ebanx</terms>.";
 
 "This is your default" = "Đây là thông tin mặc định của bạn";
 

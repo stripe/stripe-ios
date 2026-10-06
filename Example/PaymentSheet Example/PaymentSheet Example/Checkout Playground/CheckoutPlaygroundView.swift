@@ -7,8 +7,12 @@
 import SwiftUI
 
 struct CheckoutPlaygroundView: View {
-    @StateObject private var viewModel = CheckoutPlayground.ViewModel()
+    @StateObject private var viewModel: CheckoutPlayground.ViewModel
     @State private var showCurrencySelectorAppearance = false
+
+    init(settings: CheckoutPlayground.Settings? = nil) {
+        _viewModel = StateObject(wrappedValue: CheckoutPlayground.ViewModel(settings: settings))
+    }
 
     var body: some View {
         Group {
@@ -36,6 +40,8 @@ struct CheckoutPlaygroundView: View {
                             onReset: viewModel.reset
                         )
 
+                        CheckoutPlaygroundEmailSection(viewModel: viewModel)
+
                         CheckoutPlaygroundLineItemsSection(
                             cartScenario: $viewModel.cartScenario,
                             currency: viewModel.currency
@@ -57,8 +63,10 @@ struct CheckoutPlaygroundView: View {
                         CheckoutPlaygroundExpressCheckoutElementSection(
                             showExpressCheckoutElement: $viewModel.expressCheckoutElement.isEnabled,
                             applePayDisplay: $viewModel.expressCheckoutElement.applePayDisplay,
+                            applePayButtonType: $viewModel.expressCheckoutElement.applePayButtonType,
                             linkDisplay: $viewModel.expressCheckoutElement.linkDisplay,
-                            shippingAddressRequired: $viewModel.expressCheckoutElement.shippingAddressRequired
+                            paymentMethodOrder: $viewModel.expressCheckoutElement.paymentMethodOrder,
+                            appearance: $viewModel.expressCheckoutElement.appearance
                         )
 
                         currencySelectorAppearanceSection
@@ -75,6 +83,7 @@ struct CheckoutPlaygroundView: View {
                     .padding(.horizontal, 16)
                     .padding(.top, 20)
                 }
+                .disabled(viewModel.isCreating)
 
                 CheckoutPlayground.CreateButtonBar(
                     isCreating: viewModel.isCreating,
@@ -93,6 +102,7 @@ struct CheckoutPlaygroundView: View {
                     case .swiftUI:
                         CheckoutCartView(
                             clientSecret: clientSecret,
+                            emailSettings: viewModel.resolvedEmail,
                             shippingAddressCollection: viewModel.shippingAddressCollection,
                             defaultShippingAddress: viewModel.defaultShippingAddress,
                             adaptivePricing: true,
@@ -104,6 +114,7 @@ struct CheckoutPlaygroundView: View {
                     case .uiKit:
                         CheckoutCartUIKitView(
                             clientSecret: clientSecret,
+                            emailSettings: viewModel.resolvedEmail,
                             shippingAddressCollection: viewModel.shippingAddressCollection,
                             defaultShippingAddress: viewModel.defaultShippingAddress,
                             adaptivePricing: true,

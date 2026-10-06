@@ -1,8 +1,44 @@
+"Add %ld documents" = "Żid %ld dokumenti";
+
+"Add 1 document" = "Żid dokument 1";
+
+"Add documents" = "Żid dokumenti";
+
+"Answer" = "Tweġiba";
+
+"Choose File…" = "Agħżel fajl";
+
+"Choose Photo…" = "Agħżel Ritratt…";
+
 "Debit cards are most likely to be accepted." = "Il-karti tad-debitu huma l-aktar probabbli li jiġu aċċettati.";
+
+"Document type" = "Tip ta’ dokument";
+
+"Document uploaded successfully" = "Dokument ittella' b'suċċess";
+
+"Funds source" = "Sors tal-fondi";
+
+"How are you funding your transactions? Please list all of your sources. For example, salary, savings, investment earnings, etc." = "Kif qed tiffinanzja t-tranżazzjonijiet tiegħek? Jekk jogħġbok elenka s-sorsi kollha tiegħek. Pereżempju, salarju, tfaddil, dħul minn investimenti, eċċ.";
+
+"Make sure your document meets following requirements." = "Kun żgur li d-dokument jissodisfa r-rekwiżiti li ġejjin.";
+
+"Please try again later." = "Jekk jogħġbok erġa’ pprova aktar tard.";
+
+"Submitted for review" = "Sottomess għar-reviżjoni";
+
+"Tell us about your source of funds" = "Għidilna dwar is-sors tal-fondi tiegħek";
+
+"There was a problem with your previous document. Please upload a new one." = "Kien hemm problema bid-dokument preċedenti. Jekk jogħġbok tella' wieħed ġdid.";
 
 "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "Din l-app ma setgħetx tiġi vverifikata minħabba żball ta’ attestazzjoni. Jekk jogħġbok erġa’ pprova aktar tard jew ikkuntattja lill-iżviluppatur jekk il-problema tibqa’.";
 
 "This app couldn't be verified. Contact the app developer for help." = "Din l-app ma setgħetx tiġi vverifikata. Ikkuntattja lill-iżviluppatur tal-app għall-għajnuna.";
+
+"This file is larger than %@. Choose a file that is %@ or smaller." = "Dan il-fajl huwa akbar minn %1$@. Agħżel fajl li huwa %2$@ jew iżgħar.";
+
+"This file type isn’t supported." = "Dan it-tip ta' fajl mhux appoġġjat.";
+
+"This file type isn’t supported. Upload a %@ file." = "Dan it-tip ta' fajl mhux appoġġjat. Tella' fajl %@.";
 
 "This wallet couldn't be found. Please choose or add a wallet and try again." = "Din il-kartiera ma setgħetx tinstab. Jekk jogħġbok agħżel jew żid kartiera u erġa' pprova.";
 
@@ -12,4 +48,24 @@
 
 "This wallet verification request is invalid. Please try again." = "Din it-talba ta' verifika tal-kartiera hija invalida. Jekk jogħġbok erġa' pprova.";
 
+"Upload document" = "Tella’ dokument";
+
+"Upload your proof of address" = "Tella' l-prova tal-indirizz tiegħek";
+
+"Uploaded" = "Ittella'";
+
+"Uploading…" = "Qed jittella'…";
+
 "We couldn't verify ownership of this wallet. Please try again." = "Ma stajniex nivverifikaw is-sjieda ta' din il-kartiera. Jekk jogħġbok erġa' pprova.";
+
+"We couldn’t open this document. Please choose it again." = "Ma stajniex niftħu dan id-dokument. Jekk jogħġbok agħżlu mill-ġdid.";
+
+"We couldn’t upload this file. Please try again." = "Ma stajniex intellgħu dan il-fajl. Jekk jogħġbok ipprova mill-ġdid.";
+
+"We may request proof of address for larger transactions." = "Jaf nitolbu prova tal-indirizz għal tranżazzjonijiet akbar.";
+
+"We may request source of funds for larger transactions." = "Jaf nitolbu sors ta' fondi għal tranżazzjonijiet akbar.";
+
+"We’re reviewing your documents. We’ll let you know when verification is complete." = "Qegħdin nirrevedu d-dokumenti tiegħek. Se ninfurmawk meta titlesta l-verifika.";
+
+"You can continue while we verify your document in the background." = "Tista' tkompli waqt li nivverifikaw id-dokument tiegħek fl-isfond.";

@@ -112,6 +112,8 @@
 
 "Code sent" = "Koden har skickats";
 
+"Complete the payment using Pix to finish the purchase." = "Slutför betalningen med Pix för att avsluta köpet.";
+
 "Confirm" = "Bekräfta";
 
 "Confirm payment details" = "Bekräfta betalningsuppgifter";
@@ -330,6 +332,10 @@
 
 "Tax" = "Skatt";
 
+"Terms and Conditions" = "Villkor";
+
+"Terms of Service" = "Tjänstevillkor";
+
 "The IBAN you entered is incomplete." = "Angivet IBAN är ofullständigt.";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Angivet IBAN är ogiltigt, \"%@\" är inte en giltig landskod.";
@@ -337,6 +343,8 @@
 "The provided verification code has expired." = "Den angivna verifieringskoden har förfallit.";
 
 "The provided verification code is incorrect." = "Den angivna verifieringskoden är felaktig.";
+
+"This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Detta är ett internationellt köp och exkluderar en IOF-avgift på 3,5 %. Genom att fortsätta bekräftar och godkänner du <terms>Ebanx villkor</terms>.";
 
 "This is your default" = "Detta är din standardbetalningsmetod";
 

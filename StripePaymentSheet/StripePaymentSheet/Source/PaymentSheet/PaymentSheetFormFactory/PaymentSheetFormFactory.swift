@@ -281,9 +281,13 @@ class PaymentSheetFormFactory {
                 return makeNaverPay()
             case .SEPADebit:
                 return makeSepaDebit()
-            case .grabPay, .paynow, .payPay, .mobilePay, .vipps, .zip, .crypto,
+            case .shopeePay, .qris:
+                return makeContactInformationAndBillingAddressForm(allowedBillingCountries: ["US", "ID"])
+            case .momo, .goPay, .grabPay, .paynow, .payPay, .mobilePay, .vipps, .zip, .crypto,
                  .billie, .sunbit, .alma, .payByBank, .payco, .sequra, .scalapay:
                 return makeContactInformationAndBillingAddressForm()
+            case .pix:
+                return makePix()
             case .alipay:
                 return makeContactInformationAndBillingAddressForm(
                     additionalElements: makeSetupMandateElements(for: paymentMethod)
@@ -855,6 +859,7 @@ extension PaymentSheetFormFactory {
         emailRequired: Bool = false,
         emailAPIPath: String? = nil,
         phoneRequired: Bool = false,
+        allowedBillingCountries: [String]? = nil,
         additionalElements: [Element] = []
     ) -> PaymentMethodElement {
         let contactInfoSection = makeContactInformationSection(
@@ -863,7 +868,10 @@ extension PaymentSheetFormFactory {
             phoneRequiredByPaymentMethod: phoneRequired,
             emailAPIPath: emailAPIPath
         )
-        let billingDetails = makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
+        let billingDetails = makeBillingAddressSectionIfNecessary(
+            requiredByPaymentMethod: false,
+            allowedCountries: allowedBillingCountries
+        )
         let elements = [contactInfoSection, billingDetails].compactMap { $0 } + additionalElements
         return makeDefaultsApplierWrapper(
             for: FormElement(autoSectioningElements: elements, theme: theme)
@@ -1097,7 +1105,8 @@ extension PaymentSheetFormFactory {
     }
 
     func makeBillingAddressSectionIfNecessary(
-        requiredByPaymentMethod: Bool
+        requiredByPaymentMethod: Bool,
+        allowedCountries: [String]? = nil
     ) -> Element? {
         let defaultFieldsToCollect: AddressSectionElement.FieldsToCollect? = {
             switch (configuration.billingDetailsCollectionConfiguration.address, requiredByPaymentMethod) {
@@ -1114,10 +1123,27 @@ extension PaymentSheetFormFactory {
         }()
         guard let defaultFieldsToCollect else { return nil }
 
+        let countries = billingCountries(allowedByPaymentMethod: allowedCountries)
         return makeBillingAddressSection(
             defaultFieldsToCollect: defaultFieldsToCollect,
-            countries: configuration.billingDetailsCollectionConfiguration.allowedCountriesArray
+            countries: countries
         )
+    }
+
+    /// Prefers countries allowed by both lists, falling back to merchant restrictions when there is no overlap.
+    private func billingCountries(allowedByPaymentMethod paymentMethodCountries: [String]?) -> [String]? {
+        let merchantCountries = configuration.billingDetailsCollectionConfiguration.allowedCountriesArray
+        guard let paymentMethodCountries else {
+            return merchantCountries
+        }
+        guard !paymentMethodCountries.isEmpty else { return merchantCountries }
+        guard let merchantCountries else { return paymentMethodCountries }
+        let countries = paymentMethodCountries.filter { merchantCountries.contains($0.uppercased()) }
+        guard !countries.isEmpty else {
+            stpAssertionFailure("Merchant billing countries do not overlap with the payment method's supported countries.")
+            return merchantCountries
+        }
+        return countries // Both the merchant and the payment method allow these countries.
     }
 
     func makeDefaultsApplierWrapper<T: PaymentMethodElement>(for element: T) -> PaymentMethodElementWrapper<T> {

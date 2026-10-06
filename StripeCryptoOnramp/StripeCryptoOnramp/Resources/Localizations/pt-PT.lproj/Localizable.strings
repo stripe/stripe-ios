@@ -1,8 +1,44 @@
+"Add %ld documents" = "Adicionar %ld documentos";
+
+"Add 1 document" = "Adicionar 1 documento";
+
+"Add documents" = "Adicionar documentos";
+
+"Answer" = "Resposta";
+
+"Choose File…" = "Escolher ficheiro...";
+
+"Choose Photo…" = "Escolher fotografia…";
+
 "Debit cards are most likely to be accepted." = "Os cartões de débito são mais prováveis de serem aceites.";
+
+"Document type" = "Tipo de documento";
+
+"Document uploaded successfully" = "Documento carregado com sucesso";
+
+"Funds source" = "Fonte de fundos";
+
+"How are you funding your transactions? Please list all of your sources. For example, salary, savings, investment earnings, etc." = "Como está a financiar as suas transações? Indique todas as suas fontes. Por exemplo, salário, poupanças, lucros de investimentos, etc.";
+
+"Make sure your document meets following requirements." = "Certifique-se de que o seu documento cumpre os seguintes requisitos.";
+
+"Please try again later." = "Tente novamente mais tarde.";
+
+"Submitted for review" = "Submetido para verificação";
+
+"Tell us about your source of funds" = "Fale-nos sobre a origem dos seus fundos";
+
+"There was a problem with your previous document. Please upload a new one." = "Ocorreu um problema com o seu documento anterior. Carregue um novo.";
 
 "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "Esta aplicação não pode ser verificada devido a um erro de atestado. Tente novamente mais tarde ou contacte o Programador se o problema persistir.";
 
 "This app couldn't be verified. Contact the app developer for help." = "Não foi possível verificar esta aplicação. Contacte o Programador para obter ajuda.";
+
+"This file is larger than %@. Choose a file that is %@ or smaller." = "Este ficheiro é maior do que %1$@. Escolha um ficheiro que tenha %2$@ ou menos.";
+
+"This file type isn’t supported." = "Este tipo de ficheiro não é suportado.";
+
+"This file type isn’t supported. Upload a %@ file." = "Este tipo de ficheiro não é suportado. Carregue um ficheiro %@.";
 
 "This wallet couldn't be found. Please choose or add a wallet and try again." = "Esta carteira não foi encontrada. Escolha ou adicione uma carteira e tente novamente.";
 
@@ -12,4 +48,24 @@
 
 "This wallet verification request is invalid. Please try again." = "Este pedido de verificação de carteira é inválido. Tente novamente.";
 
+"Upload document" = "Carregar documento";
+
+"Upload your proof of address" = "Carregue o seu comprovativo de morada";
+
+"Uploaded" = "Carregado";
+
+"Uploading…" = "A carregar…";
+
 "We couldn't verify ownership of this wallet. Please try again." = "Não foi possível verificar a propriedade desta carteira. Tente novamente.";
+
+"We couldn’t open this document. Please choose it again." = "Não foi possível abrir este documento. Escolha-o novamente.";
+
+"We couldn’t upload this file. Please try again." = "Não foi possível carregar este ficheiro. Tente novamente.";
+
+"We may request proof of address for larger transactions." = "Podemos solicitar um comprovativo de morada para transações de maior valor.";
+
+"We may request source of funds for larger transactions." = "Podemos solicitar a origem dos fundos para transações de maior valor.";
+
+"We’re reviewing your documents. We’ll let you know when verification is complete." = "Estamos a analisar os seus documentos. Informaremos quando a verificação estiver concluída.";
+
+"You can continue while we verify your document in the background." = "Pode continuar enquanto verificamos o seu documento em segundo plano.";

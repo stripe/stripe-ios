@@ -112,6 +112,8 @@
 
 "Code sent" = "Kód odoslaný";
 
+"Complete the payment using Pix to finish the purchase." = "Na dokončenie nákupu zrealizujte platbu pomocou služby Pix.";
+
 "Confirm" = "Potvrdiť";
 
 "Confirm payment details" = "Potvrdiť informácie o platbe";
@@ -330,6 +332,10 @@
 
 "Tax" = "Daň";
 
+"Terms and Conditions" = "Zmluvné podmienky";
+
+"Terms of Service" = "Podmienky služby";
+
 "The IBAN you entered is incomplete." = "Zadaný IBAN je neúplný.";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Zadaný IBAN je neplatný, „%@“ nie je podporovaný kód krajiny.";
@@ -337,6 +343,8 @@
 "The provided verification code has expired." = "Platnosť zadaného overovacieho kódu skončila.";
 
 "The provided verification code is incorrect." = "Zadaný overovací kód je nesprávny.";
+
+"This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Ide o medzinárodný nákup, ktorý nezahŕňa 3,5 % poplatok IOF. Pokračovaním beriete na vedomie a akceptujete <terms>podmienky spoločnosti Ebanx</terms>.";
 
 "This is your default" = "Toto je váš predvolený spôsob platby";
 

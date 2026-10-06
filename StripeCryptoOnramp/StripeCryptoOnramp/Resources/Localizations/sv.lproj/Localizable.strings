@@ -1,8 +1,44 @@
+"Add %ld documents" = "Lägg till %ld dokument";
+
+"Add 1 document" = "Lägg till 1 dokument";
+
+"Add documents" = "Lägg till dokument";
+
+"Answer" = "Svar";
+
+"Choose File…" = "Välj fil ...";
+
+"Choose Photo…" = "Välj foto ...";
+
 "Debit cards are most likely to be accepted." = "Bankkort accepteras oftast.";
+
+"Document type" = "Dokumenttyp";
+
+"Document uploaded successfully" = "Dokumentet har laddats upp";
+
+"Funds source" = "Källa för medel";
+
+"How are you funding your transactions? Please list all of your sources. For example, salary, savings, investment earnings, etc." = "Hur finansierar du dina transaktioner? Lista alla dina källor. Till exempel lön, besparingar, investeringsintäkter osv.";
+
+"Make sure your document meets following requirements." = "Se till att ditt dokument uppfyller följande krav.";
+
+"Please try again later." = "Försök igen senare.";
+
+"Submitted for review" = "Inskickat för granskning";
+
+"Tell us about your source of funds" = "Berätta för oss om din pengakälla";
+
+"There was a problem with your previous document. Please upload a new one." = "Det uppstod ett problem med ditt tidigare dokument. Ladda upp ett nytt.";
 
 "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "Den här appen kunde inte verifieras på grund av ett intygsfel. Försök igen senare eller kontakta utvecklaren om problemet kvarstår.";
 
 "This app couldn't be verified. Contact the app developer for help." = "Den här appen kunde inte verifieras. Kontakta appens utvecklare för att få hjälp.";
+
+"This file is larger than %@. Choose a file that is %@ or smaller." = "Den här filen är större än %1$@. Välj en fil som är %2$@ eller mindre.";
+
+"This file type isn’t supported." = "Den här filtypen stöds inte.";
+
+"This file type isn’t supported. Upload a %@ file." = "Den här filtypen stöds inte. Ladda upp en %@-fil.";
 
 "This wallet couldn't be found. Please choose or add a wallet and try again." = "Den här plånboken kunde inte hittas. Välj eller lägg till en plånbok och försök igen.";
 
@@ -12,4 +48,24 @@
 
 "This wallet verification request is invalid. Please try again." = "Den här begäran om plånboksverifiering är ogiltig. Försök igen.";
 
+"Upload document" = "Ladda upp dokument";
+
+"Upload your proof of address" = "Ladda upp ditt adressbevis";
+
+"Uploaded" = "Uppladdad";
+
+"Uploading…" = "Laddar upp ...";
+
 "We couldn't verify ownership of this wallet. Please try again." = "Vi kunde inte verifiera vem som äger den här plånboken. Försök igen.";
+
+"We couldn’t open this document. Please choose it again." = "Vi kunde inte öppna det här dokumentet. Välj det igen.";
+
+"We couldn’t upload this file. Please try again." = "Vi kunde inte ladda upp den här filen. Försök igen.";
+
+"We may request proof of address for larger transactions." = "Vi kan begära adressbevis för större transaktioner.";
+
+"We may request source of funds for larger transactions." = "Vi kan begära information om källan till medlen för större transaktioner.";
+
+"We’re reviewing your documents. We’ll let you know when verification is complete." = "Vi granskar dina dokument. Vi meddelar dig när verifieringen är klar.";
+
+"You can continue while we verify your document in the background." = "Du kan fortsätta medan vi verifierar ditt dokument i bakgrunden.";

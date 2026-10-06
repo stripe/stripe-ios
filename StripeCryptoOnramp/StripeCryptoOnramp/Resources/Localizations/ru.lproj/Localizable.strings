@@ -1,8 +1,44 @@
+"Add %ld documents" = "Добавить %ld док.";
+
+"Add 1 document" = "Добавить 1 документ";
+
+"Add documents" = "Добавить документы";
+
+"Answer" = "Ответить";
+
+"Choose File…" = "Выбрать файл";
+
+"Choose Photo…" = "Выбрать фото…";
+
 "Debit cards are most likely to be accepted." = "Чаще всего принимаются дебетовые карты.";
+
+"Document type" = "Тип документа";
+
+"Document uploaded successfully" = "Документ успешно выгружен";
+
+"Funds source" = "Источник средств";
+
+"How are you funding your transactions? Please list all of your sources. For example, salary, savings, investment earnings, etc." = "Как вы финансируете свои транзакции? Укажите все источники (например, зарплату, сбережения, доходы от инвестиций и т. д).";
+
+"Make sure your document meets following requirements." = "Убедитесь, что документ соответствует следующим требованиям.";
+
+"Please try again later." = "Повторите попытку позже.";
+
+"Submitted for review" = "Отправлено на рассмотрение";
+
+"Tell us about your source of funds" = "Укажите источник ваших средств";
+
+"There was a problem with your previous document. Please upload a new one." = "Возникла проблема с предыдущим документом. Загрузите новый.";
 
 "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "Не удалось подтвердить данное приложение из-за ошибки при аттестации. Повторите попытку несколько позже или свяжитесь с разработчиком, если проблема не исчезнет.";
 
 "This app couldn't be verified. Contact the app developer for help." = "Не удалось проверить это приложение. Обратитесь за помощью к разработчику приложения.";
+
+"This file is larger than %@. Choose a file that is %@ or smaller." = "Размер этого файла превышает %1$@. Выберите файл размером %2$@ или меньше.";
+
+"This file type isn’t supported." = "Этот тип файла не поддерживается.";
+
+"This file type isn’t supported. Upload a %@ file." = "Этот тип файла не поддерживается. Загрузите файл формата %@.";
 
 "This wallet couldn't be found. Please choose or add a wallet and try again." = "Не удалось найти этот кошелек. Выберите или добавьте кошелек и попробуйте еще раз.";
 
@@ -12,4 +48,24 @@
 
 "This wallet verification request is invalid. Please try again." = "Этот запрос на подтверждение кошелька недействителен. Попробуйте еще раз.";
 
+"Upload document" = "Загрузить документ";
+
+"Upload your proof of address" = "Загрузите подтверждение адреса";
+
+"Uploaded" = "Загружено";
+
+"Uploading…" = "Загрузка…";
+
 "We couldn't verify ownership of this wallet. Please try again." = "Не удалось подтвердить право собственности на этот кошелек. Попробуйте еще раз.";
+
+"We couldn’t open this document. Please choose it again." = "Не удалось открыть документ. Выберите его еще раз.";
+
+"We couldn’t upload this file. Please try again." = "Не удалось загрузить файл. Повторите попытку.";
+
+"We may request proof of address for larger transactions." = "При проведении крупных транзакций мы можем запросить подтверждение адреса.";
+
+"We may request source of funds for larger transactions." = "При проведении крупных транзакций мы можем запросить информацию об источнике средств.";
+
+"We’re reviewing your documents. We’ll let you know when verification is complete." = "Мы проверяем ваши документы и сообщим, когда все будет готово.";
+
+"You can continue while we verify your document in the background." = "Вы можете продолжить, пока мы проверяем документ в фоновом режиме.";

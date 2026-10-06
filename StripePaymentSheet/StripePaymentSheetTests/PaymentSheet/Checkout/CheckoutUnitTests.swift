@@ -289,7 +289,50 @@ final class CheckoutUnitTests: XCTestCase {
         XCTAssertEqual(emissionRecorder.loading, [true, false])
     }
 
-// MARK: - Address Override Tests
+    // MARK: - Email Updates
+
+    func testUpdateEmailSetsEmailLocally() async throws {
+        // Given a Checkout Session without a server email
+        let checkout = try await CheckoutController(
+            configuration: CheckoutTestHelpers.makeConfiguration(
+                paymentElementConfiguration: nil,
+                expressCheckoutElementConfiguration: nil
+            )
+        )
+        let recorder = CheckoutEmissionRecorder(checkout)
+
+        // When the merchant updates the email
+        try await checkout.updateEmail("local@example.com")
+
+        // Then Checkout publishes the local email
+        XCTAssertEqual(checkout.session.localState.email, "local@example.com")
+        XCTAssertEqual(checkout.session.email, "local@example.com")
+        XCTAssertEqual(recorder.sessions.count, 1)
+        XCTAssertEqual(recorder.loading, [true, false])
+    }
+
+    func testUpdateEmailClearsEmailLocally() async throws {
+        // Given a Checkout Session with a local email
+        let checkout = try await CheckoutController(
+            configuration: CheckoutTestHelpers.makeConfiguration(
+                paymentElementConfiguration: nil,
+                expressCheckoutElementConfiguration: nil
+            )
+        )
+        try await checkout.updateEmail("local@example.com")
+        let recorder = CheckoutEmissionRecorder(checkout)
+
+        // When the merchant clears the email
+        try await checkout.updateEmail(nil)
+
+        // Then Checkout publishes a Session without an email
+        XCTAssertNil(checkout.session.localState.email)
+        XCTAssertNil(checkout.session.email)
+        XCTAssertEqual(recorder.sessions.count, 1)
+        XCTAssertEqual(recorder.loading, [true, false])
+    }
+
+    // MARK: - Address Override Tests
 
     func testUpdateShippingAddress_noTax_setsLocallyAndEmitsUpdates() async throws {
         let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration())
@@ -602,8 +645,7 @@ final class CheckoutUnitTests: XCTestCase {
 
     func testTotalTaxExclusive_singleAmount() {
         var json = CheckoutTestHelpers.openSessionJSON
-        json["recurring_details"] = [
-            "total_discount_amounts": [],
+        json["total_summary"] = [
             "total_tax_amounts": [
                 [
                     "amount": 1185,
@@ -630,8 +672,7 @@ final class CheckoutUnitTests: XCTestCase {
 
     func testTotalTaxExclusive_multipleAmounts() {
         var json = CheckoutTestHelpers.openSessionJSON
-        json["recurring_details"] = [
-            "total_discount_amounts": [],
+        json["total_summary"] = [
             "total_tax_amounts": [
                 [
                     "amount": 500,
@@ -667,8 +708,9 @@ final class CheckoutUnitTests: XCTestCase {
     }
 
     func testTotalTaxAmounts_absent_isNil() {
-        // Given a response without total_tax_amounts
-        let json = CheckoutTestHelpers.openSessionJSON
+        // Given a total summary without total_tax_amounts
+        var json = CheckoutTestHelpers.openSessionJSON
+        json["total_summary"] = ["total": 1000]
 
         // When decoding the public Session
         let session = try! PaymentPagesAPIResponse.decode(fromAPIResponse: json).makePublicSession()
@@ -679,10 +721,9 @@ final class CheckoutUnitTests: XCTestCase {
     }
 
     func testTotalTaxAmounts_presentButEmpty_isEmpty() {
-        // Given a response with an explicitly empty total_tax_amounts array
+        // Given a response with an explicitly empty session-level total_tax_amounts array
         var json = CheckoutTestHelpers.openSessionJSON
-        json["recurring_details"] = [
-            "total_discount_amounts": [],
+        json["total_summary"] = [
             "total_tax_amounts": [],
         ]
 
@@ -692,6 +733,34 @@ final class CheckoutUnitTests: XCTestCase {
         // Then taxAmounts remains an empty, non-nil array
         XCTAssertNotNil(session.taxAmounts)
         XCTAssertTrue(session.taxAmounts?.isEmpty == true)
+    }
+
+    func testTotalTaxAmounts_usesTopLevelTotalSummary() throws {
+        // Given a response with session-level tax amounts and no recurring details
+        var json = CheckoutTestHelpers.openSessionJSON
+        let totalTaxAmount: [String: Any] = [
+            "amount": 195,
+            "inclusive": false,
+            "tax_rate": [
+                "display_name": "Sales Tax",
+                "percentage": 9.75,
+                "rate_type": "percentage",
+            ],
+        ]
+        json["total_summary"] = [
+            "total_tax_amounts": [totalTaxAmount],
+        ]
+        json.removeValue(forKey: "recurring_details")
+
+        // When decoding the public Session
+        let session = try PaymentPagesAPIResponse.decode(fromAPIResponse: json).makePublicSession()
+
+        // Then session tax amounts use the session-level aggregate
+        let taxAmount = try XCTUnwrap(session.taxAmounts?.first)
+        XCTAssertEqual(session.taxAmounts?.count, 1)
+        XCTAssertEqual(taxAmount.minorUnitsAmount, 195)
+        XCTAssertEqual(taxAmount.displayName, "Sales Tax")
+        XCTAssertEqual(taxAmount.percentage, 9.75)
     }
 
     func testAutomaticTaxComplete_zeroTaxableAmount_preservesComputedZeroTax() throws {
@@ -718,19 +787,7 @@ final class CheckoutUnitTests: XCTestCase {
             "computation_type": "automatic",
             "status": "complete",
         ]
-        json["recurring_details"] = [
-            "subtotal": 12000,
-            "total": 12000,
-            "total_discount_amounts": [],
-            "total_summary": [
-                "due": 12000,
-                "subtotal": 12000,
-                "total": 12000,
-                "total_discount_amount_aggregate": 0,
-                "total_discount_amounts": [],
-                "total_proration_amount_aggregate": 0,
-                "total_tax_amounts": [zeroTaxAmount],
-            ],
+        json["total_summary"] = [
             "total_tax_amounts": [zeroTaxAmount],
         ]
         setOneTimePriceAmounts(
@@ -779,6 +836,8 @@ final class CheckoutUnitTests: XCTestCase {
         ]
         sessionJSON["recurring_details"] = [
             "total_discount_amounts": [discountAmount],
+        ]
+        sessionJSON["total_summary"] = [
             "total_tax_amounts": [],
         ]
         var session = try! PaymentPagesAPIResponse.decode(fromAPIResponse: sessionJSON)
@@ -888,8 +947,7 @@ final class CheckoutUnitTests: XCTestCase {
         // Given sessions with absent and present-but-empty tax amounts
         let absent = CheckoutTestHelpers.makeOpenSession().makePublicSession()
         var emptyJSON = CheckoutTestHelpers.openSessionJSON
-        emptyJSON["recurring_details"] = [
-            "total_discount_amounts": [],
+        emptyJSON["total_summary"] = [
             "total_tax_amounts": [],
         ]
         let empty = try! PaymentPagesAPIResponse.decode(fromAPIResponse: emptyJSON).makePublicSession()
@@ -920,8 +978,7 @@ final class CheckoutUnitTests: XCTestCase {
         var json = CheckoutTestHelpers.openSessionJSON
         json["billing_address_collection"] = "required"
         json["shipping_address_collection"] = ["allowed_countries": ["US", "CA", "GB"]]
-        json["recurring_details"] = [
-            "total_discount_amounts": [],
+        json["total_summary"] = [
             "total_tax_amounts": [
                 [
                     "amount": 1000,
@@ -1271,7 +1328,6 @@ final class CheckoutUnitTests: XCTestCase {
                     "promotion_code": ["code": promotionCode],
                 ],
             ],
-            "total_tax_amounts": [],
         ]
         setOneTimePriceAmounts(
             in: &json,

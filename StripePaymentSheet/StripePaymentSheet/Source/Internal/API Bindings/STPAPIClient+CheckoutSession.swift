@@ -11,6 +11,18 @@ import Foundation
 
 /// The parameters sent to the Checkout Session `/confirm` endpoint.
 struct CheckoutSessionConfirmationRequestParameters {
+    struct CollectedInformation {
+        let email: String?
+
+        var parameters: [String: Any] {
+            var parameters: [String: Any] = [:]
+            if let email {
+                parameters["email"] = email
+            }
+            return parameters
+        }
+    }
+
     /// The ID of the Checkout Session (e.g., `cs_test_xxx`).
     let sessionId: String
 
@@ -43,6 +55,9 @@ struct CheckoutSessionConfirmationRequestParameters {
     /// The optional hCaptcha challenge response token.
     let passiveCaptchaToken: String?
 
+    /// Customer information collected independently of PaymentMethod billing details.
+    let collectedInformation: CollectedInformation?
+
     /// Legacy customer information required today when confirming without a PaymentMethod.
     /// TODO: Remove this once the server can construct no-PaymentMethod `CustomerInfo` entirely
     /// from fixed and independently collected information.
@@ -59,6 +74,7 @@ struct CheckoutSessionConfirmationRequestParameters {
         paymentMethodOptions: STPConfirmPaymentMethodOptions? = nil,
         clientAttributionMetadata: STPClientAttributionMetadata? = nil,
         passiveCaptchaToken: String? = nil,
+        collectedInformation: CollectedInformation? = nil,
         customerData: [String: Any]? = nil
     ) {
         self.sessionId = sessionId
@@ -71,6 +87,7 @@ struct CheckoutSessionConfirmationRequestParameters {
         self.paymentMethodOptions = paymentMethodOptions
         self.clientAttributionMetadata = clientAttributionMetadata
         self.passiveCaptchaToken = passiveCaptchaToken
+        self.collectedInformation = collectedInformation
         self.customerData = customerData
     }
 }
@@ -93,7 +110,8 @@ extension CheckoutSessionConfirmationRequestParameters {
             returnURL: configuration.returnURL,
             shipping: STPPaymentIntentShippingDetailsParams(paymentSheetConfiguration: configuration),
             paymentMethodOptions: paymentMethodOptions,
-            clientAttributionMetadata: clientAttributionMetadata
+            clientAttributionMetadata: clientAttributionMetadata,
+            collectedInformation: .init(email: checkoutSession.localState.email)
         )
     }
 }
@@ -304,6 +322,11 @@ extension STPAPIClient {
 
         if let passiveCaptchaToken = requestParameters.passiveCaptchaToken {
             parameters["passive_captcha_token"] = passiveCaptchaToken
+        }
+
+        if let collectedInformation = requestParameters.collectedInformation?.parameters,
+           !collectedInformation.isEmpty {
+            parameters["collected_information"] = collectedInformation
         }
 
         if let customerData = requestParameters.customerData {

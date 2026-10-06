@@ -112,6 +112,8 @@
 
 "Code sent" = "Il-kodiċi ntbagħat";
 
+"Complete the payment using Pix to finish the purchase." = "Lesti l-ħlas permezz ta' Pix biex tiffinalizza x-xiri.";
+
 "Confirm" = "Ikkonferma";
 
 "Confirm payment details" = "Ikkonferma d-dettalji tal-pagament";
@@ -330,6 +332,10 @@
 
 "Tax" = "Taxxa";
 
+"Terms and Conditions" = "Termini u kundizzjonijiet";
+
+"Terms of Service" = "Termini tas-Servizz";
+
 "The IBAN you entered is incomplete." = "L-IBAN li daħħalt mhux komplut.";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "L-IBAN li daħħalt huwa invalidu, \"%@\" mhuwiex kodiċi ta’ pajjiż appoġġjat.";
@@ -337,6 +343,8 @@
 "The provided verification code has expired." = "Il-kodiċi tal-verifika mogħti skada.";
 
 "The provided verification code is incorrect." = "Il-kodiċi tal-verifika mogħti mhuwiex tajjeb.";
+
+"This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Din hija xirja internazzjonali u teskludi tariffa IOF ta’ 3.5%. Billi tipproċedi, inti tirrikonoxxi u taċċetta t-<terms>termini u l-kundizzjonijiet ta’ Ebanx<terms>.";
 
 "This is your default" = "Dan il-metodu tal-pagament standard tiegħek";
 
