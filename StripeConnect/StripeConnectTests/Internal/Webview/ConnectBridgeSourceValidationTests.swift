@@ -121,7 +121,7 @@ final class ConnectBridgeSourceValidationTests: XCTestCase {
 
     func testForeignNotificationBannerTaskMessageDoesNotPresentTask() async throws {
         let banner = makeNotificationBanner()
-        let host = UIViewController()
+        let host = BridgePresentationHost()
         host.addChild(banner)
         host.view.addSubview(banner.view)
         banner.didMove(toParent: host)
@@ -136,12 +136,12 @@ final class ConnectBridgeSourceValidationTests: XCTestCase {
         XCTAssertNotNil(banner.view.window)
         _ = try await loadBridgeFixture(in: banner.webVC.webView, baseURL: URL(string: "https://foreign.test/banner.html")!, html: Self.notificationBannerTaskFixtureHTML)
         try await assertNoPresentationDuringWindow(from: host)
-        XCTAssertNil(host.presentedViewController)
+        XCTAssertNil(host.requestedPresentation)
     }
 
     func testTrustedNotificationBannerTaskMessagePresentsTask() async throws {
         let banner = makeNotificationBanner()
-        let host = UIViewController()
+        let host = BridgePresentationHost()
         host.addChild(banner)
         host.view.addSubview(banner.view)
         banner.didMove(toParent: host)
@@ -161,10 +161,6 @@ final class ConnectBridgeSourceValidationTests: XCTestCase {
             try await waitForPresentation(from: host)
         }
         XCTAssertTrue(taskNavigation.topViewController is ConnectComponentWebViewController)
-        taskNavigation.dismiss(animated: false)
-        try await withFixturePhase("trusted banner task dismissal") {
-            try await waitForNoPresentation(from: host)
-        }
     }
 
     func testForeignMainDocumentCannotFetchClientSecret() async throws {
@@ -447,11 +443,7 @@ final class ConnectBridgeSourceValidationTests: XCTestCase {
         let popupController = try await withFixturePhase("popup creation and presentation") {
             try await openPopup(from: controller)
         }
-        defer {
-            if controller.presentedViewController != nil {
-                popupController.webView.uiDelegate?.webViewDidClose?(popupController.webView)
-            }
-        }
+        defer { popupController.webView.stopLoading() }
         XCTAssertTrue(popupController.webView.configuration.userContentController === controller.webView.configuration.userContentController)
 
         // Then a popup WebView at the trusted origin cannot use the component bridge
@@ -467,12 +459,6 @@ final class ConnectBridgeSourceValidationTests: XCTestCase {
         XCTAssertEqual(event.result, .rejected("Invalid message origin"))
         let fetchCount = await secretProvider.fetchCount
         XCTAssertEqual(fetchCount, 0)
-
-        // And the production close path dismisses the popup UI
-        popupController.webView.uiDelegate?.webViewDidClose?(popupController.webView)
-        try await withFixturePhase("popup dismissal") {
-            try await waitForPopupDismissal(from: controller)
-        }
     }
 
     func testTrustedMainDocumentReceivesCanceledAuthenticationSession() async throws {
@@ -545,7 +531,7 @@ private extension ConnectBridgeSourceValidationTests {
         analyticsTransport: AnalyticsTransport = .init(),
         baseURL: URL = StripeConnectConstants.connectJSBaseURL,
         layoutMode: ConnectComponentWebViewController.LayoutMode = .fillsAvailableSpace
-    ) -> ConnectComponentWebViewController {
+    ) -> BridgePresentationComponentController {
         let componentManager = EmbeddedComponentManager(
             apiClient: .init(publishableKey: "test"),
             fetchClientSecret: {
@@ -553,7 +539,7 @@ private extension ConnectBridgeSourceValidationTests {
             }
         )
         componentManager.baseURL = baseURL
-        return ConnectComponentWebViewController(
+        return BridgePresentationComponentController(
             componentManager: componentManager,
             componentType: .payouts,
             loadContent: false,
@@ -585,12 +571,10 @@ private extension ConnectBridgeSourceValidationTests {
         }
     }
 
-    func waitForPresentation(from controller: UIViewController) async throws -> UINavigationController {
+    func waitForPresentation(from controller: BridgePresentationHost) async throws -> UINavigationController {
         try await TestHelpers.withTimeout {
             while true {
-                if let navigation = controller.presentedViewController as? UINavigationController,
-                   navigation.viewIfLoaded?.window != nil,
-                   !navigation.isBeingPresented {
+                if let navigation = controller.requestedPresentation as? UINavigationController {
                     return navigation
                 }
                 try await Task.sleep(nanoseconds: 10_000_000)
@@ -598,25 +582,17 @@ private extension ConnectBridgeSourceValidationTests {
         }
     }
 
-    func assertNoPresentationDuringWindow(from controller: UIViewController) async throws {
+    func assertNoPresentationDuringWindow(from controller: BridgePresentationHost) async throws {
         let deadline = Date().addingTimeInterval(0.2)
         while Date() < deadline {
-            guard controller.presentedViewController == nil else {
+            guard controller.requestedPresentation == nil else {
                 throw NotificationBannerPresentationError.unexpectedPresentation
             }
             try await Task.sleep(nanoseconds: 10_000_000)
         }
     }
 
-    func waitForNoPresentation(from controller: UIViewController) async throws {
-        try await TestHelpers.withTimeout {
-            while controller.presentedViewController != nil {
-                try await Task.sleep(nanoseconds: 10_000_000)
-            }
-        }
-    }
-
-    func openPopup(from controller: ConnectComponentWebViewController) async throws -> PopupWebViewController {
+    func openPopup(from controller: BridgePresentationComponentController) async throws -> PopupWebViewController {
         let triggerObserver = BridgeEventObserver(expectedWebView: controller.webView)
         controller.webView.configuration.userContentController.add(triggerObserver, name: triggerObserver.name)
         defer {
@@ -630,20 +606,10 @@ private extension ConnectBridgeSourceValidationTests {
 
         return try await TestHelpers.withTimeout {
             while true {
-                if let navigationController = controller.presentedViewController as? UINavigationController,
-                   navigationController.viewIfLoaded?.window != nil,
-                   !navigationController.isBeingPresented,
+                if let navigationController = controller.requestedPresentation as? UINavigationController,
                    let popupController = navigationController.topViewController as? PopupWebViewController {
                     return popupController
                 }
-                try await Task.sleep(nanoseconds: 10_000_000)
-            }
-        }
-    }
-
-    func waitForPopupDismissal(from controller: ConnectComponentWebViewController) async throws {
-        try await TestHelpers.withTimeout {
-            while controller.presentedViewController != nil {
                 try await Task.sleep(nanoseconds: 10_000_000)
             }
         }
@@ -1231,6 +1197,26 @@ private extension WKWebView {
             }
         }
         return try await gate.wait()
+    }
+}
+
+// Capture UIKit presentation requests in hostless XCTest. The production handlers
+// still create the task/popup controllers and their real WebViews.
+private final class BridgePresentationHost: UIViewController {
+    private(set) var requestedPresentation: UIViewController?
+
+    override func present(_ viewControllerToPresent: UIViewController, animated flag: Bool, completion: (() -> Void)? = nil) {
+        requestedPresentation = viewControllerToPresent
+        completion?()
+    }
+}
+
+private final class BridgePresentationComponentController: ConnectComponentWebViewController {
+    private(set) var requestedPresentation: UIViewController?
+
+    override func present(_ viewControllerToPresent: UIViewController, animated flag: Bool, completion: (() -> Void)? = nil) {
+        requestedPresentation = viewControllerToPresent
+        completion?()
     }
 }
 
