@@ -113,7 +113,8 @@ extension EmbeddedPaymentElement {
         paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper?,
         checkoutBillingAddressUpdater: CheckoutSessionBillingAddressUpdater?,
         formCache: PaymentMethodFormCache,
-        delegate: EmbeddedFormViewControllerDelegate
+        delegate: EmbeddedFormViewControllerDelegate,
+        presentation: EmbeddedFormViewController.Presentation = .sheet
     ) -> EmbeddedFormViewController? {
         guard case let .new(paymentMethodType) = selection else {
             return nil
@@ -130,7 +131,8 @@ extension EmbeddedPaymentElement {
             paymentMethodMessagingPromotionsHelper: paymentMethodMessagingPromotionsHelper,
             checkoutBillingAddressUpdater: checkoutBillingAddressUpdater,
             formCache: formCache,
-            delegate: delegate
+            delegate: delegate,
+            presentation: presentation
         )
 
         if Self.shouldShowForm(formViewController.form, configuration: configuration) {
@@ -530,6 +532,10 @@ extension EmbeddedPaymentElement.PaymentOptionDisplayData {
 }
 
 extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
+    func embeddedFormViewControllerDidUpdate(_ embeddedFormViewController: EmbeddedFormViewController) {
+        informDelegateIfPaymentOptionUpdated()
+    }
+
     func embeddedFormViewControllerShouldConfirm(
         _ embeddedFormViewController: EmbeddedFormViewController,
         with paymentOption: PaymentOption,
@@ -694,7 +700,8 @@ extension EmbeddedPaymentElement {
             }
         }
 
-        embeddedPaymentMethodsView.isUserInteractionEnabled = false
+        containerView.endEditing(true)
+        setUserInteractionEnabled(false)
 
         let (result, deferredIntentConfirmationType) = await PaymentSheet.confirm(
             configuration: configuration,
@@ -718,7 +725,7 @@ extension EmbeddedPaymentElement {
             hasConfirmedIntent = true
         } else {
             // Re-enable interaction for failed and canceled results
-            embeddedPaymentMethodsView.isUserInteractionEnabled = true
+            setUserInteractionEnabled(true)
         }
 
         return (result, deferredIntentConfirmationType)
@@ -743,6 +750,9 @@ extension EmbeddedPaymentElement {
     }
 
     static func validateRowSelectionConfiguration(configuration: Configuration) throws {
+        if configuration.allowsInlineCardForm, case .immediateAction = configuration.rowSelectionBehavior {
+            throw PaymentSheetError.integrationError(nonPIIDebugDescription: "Inline card forms require .default row selection behavior. Disable allowsInlineCardForm or use .default.")
+        }
         switch configuration.rowSelectionBehavior {
         case .immediateAction:
             if case .confirm = configuration.formSheetAction, configuration.applePay != nil || configuration.customer != nil {

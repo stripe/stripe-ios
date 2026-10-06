@@ -8,6 +8,95 @@
 import XCTest
 
 class EmbeddedUITests: PaymentSheetUITestCase {
+    func testInlineCardForm() throws {
+        // Given a card-only embedded element with the inline form enabled
+        let settings = inlineCardFormSettings()
+        loadPlayground(app, settings)
+        app.buttons["Present embedded payment element"].waitForExistenceAndTap()
+
+        // Then the form appears directly in the merchant checkout
+        XCTAssertTrue(app.staticTexts["Card information"].waitForExistence(timeout: 10))
+        XCTAssertFalse(app.buttons["Card"].exists)
+        XCTAssertFalse(app.buttons["Continue"].exists)
+        XCTAssertTrue(analyticsLog.contains { $0["event"] as? String == "mc_form_shown" })
+        XCTAssertFalse(app.buttons["Checkout"].isEnabled)
+        let emptyForm = XCTAttachment(screenshot: app.screenshot())
+        emptyForm.name = "Inline card form - empty"
+        emptyForm.lifetime = .keepAlways
+        add(emptyForm)
+
+        // The scanner opens within the embedded form and the merchant layout adapts
+        app.buttons["Scan card"].waitForExistenceAndTap()
+        let closeScanner = app.buttons["Close card scanner"]
+        XCTAssertTrue(closeScanner.waitForExistence(timeout: 10))
+        let scanner = XCTAttachment(screenshot: app.screenshot())
+        scanner.name = "Inline card form - scanner"
+        scanner.lifetime = .keepAlways
+        add(scanner)
+        closeScanner.tap()
+        XCTAssertFalse(closeScanner.exists)
+
+        // When the customer enters card details, the merchant button becomes enabled
+        try fillCardData(app, postalEnabled: true)
+        app.stp_dismissKeyboard()
+        XCTAssertTrue(app.buttons["Checkout"].isEnabled)
+        let completedForm = XCTAttachment(screenshot: app.screenshot())
+        completedForm.name = "Inline card form - complete"
+        completedForm.lifetime = .keepAlways
+        add(completedForm)
+
+        // Then the merchant can confirm the payment without a form sheet
+        app.buttons["Checkout"].waitForExistenceAndTap()
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 25))
+    }
+
+    private func inlineCardFormSettings() -> PaymentSheetTestPlaygroundSettings {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .guest
+        settings.mode = .payment
+        settings.integrationType = .deferred_csc
+        settings.uiStyle = .embedded
+        settings.apmsEnabled = .off
+        settings.supportedPaymentMethods = "card"
+        settings.applePayEnabled = .off
+        settings.linkDisplay = .never
+        settings.allowsInlineCardForm = .on
+        return settings
+    }
+
+    func testInlineCardFormWithSavedCardsUsesPicker() {
+        // Given saved payment methods, opting in still shows the normal embedded picker
+        var settings = inlineCardFormSettings()
+        settings.customerMode = .returning
+        loadPlayground(app, settings)
+        app.buttons["Present embedded payment element"].waitForExistenceAndTap()
+        XCTAssertTrue(app.buttons["New card"].waitForExistence(timeout: 10))
+        XCTAssertFalse(app.staticTexts["Card information"].exists)
+        let picker = XCTAttachment(screenshot: app.screenshot())
+        picker.name = "Inline card flag - saved payment methods"
+        picker.lifetime = .keepAlways
+        add(picker)
+    }
+
+    func testInlineCardFormPresents3DSAuthentication() throws {
+        // Given an inline card that requires authentication
+        var settings = inlineCardFormSettings()
+        settings.currency = .eur
+        loadPlayground(app, settings)
+        app.buttons["Present embedded payment element"].waitForExistenceAndTap()
+        XCTAssertTrue(app.staticTexts["Card information"].waitForExistence(timeout: 10))
+        try fillCardData(app, cardNumber: "4000002760003184")
+        app.stp_dismissKeyboard()
+
+        // When the merchant confirms, authentication can still present a sheet
+        app.buttons["Checkout"].waitForExistenceAndTap()
+        let challengeCode = app.textFields["STDSTextField"]
+        XCTAssertTrue(challengeCode.waitForExistenceAndTap(timeout: 15))
+        challengeCode.typeText("424242" + XCUIKeyboardKey.return.rawValue)
+        app.buttons["Submit"].waitForExistenceAndTap()
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 15))
+    }
+
     func testUpdate() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new

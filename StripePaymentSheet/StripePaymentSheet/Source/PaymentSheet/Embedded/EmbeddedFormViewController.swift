@@ -43,9 +43,23 @@ import UIKit
     /// This method is called when a payment option that can be confirmed later has been provided.
     /// - Parameter embeddedFormViewController: The view controller requesting to close.
     func embeddedFormViewControllerDidContinue(_ embeddedFormViewController: EmbeddedFormViewController)
+
+    /// Publishes edits to a form displayed directly in the embedded view.
+    func embeddedFormViewControllerDidUpdate(_ embeddedFormViewController: EmbeddedFormViewController)
+}
+
+extension EmbeddedFormViewControllerDelegate {
+    func embeddedFormViewControllerDidUpdate(_ embeddedFormViewController: EmbeddedFormViewController) {}
 }
 
 class EmbeddedFormViewController: UIViewController {
+
+    enum Presentation {
+        case sheet
+        case inline
+    }
+
+    let presentation: Presentation
 
     /// Returns true if confirmation does not occur while the form is presented and instead is trigged by `EmbeddedPaymentElement.confirm` when the form is dismissed.
     private var shouldDeferConfirmation: Bool {
@@ -66,7 +80,9 @@ class EmbeddedFormViewController: UIViewController {
                 )
             }
             view.isUserInteractionEnabled = isUserInteractionEnabled
-            navigationBar.isUserInteractionEnabled = isUserInteractionEnabled
+            if presentation == .sheet {
+                navigationBar.isUserInteractionEnabled = isUserInteractionEnabled
+            }
         }
     }
 
@@ -125,6 +141,10 @@ class EmbeddedFormViewController: UIViewController {
 
     private lazy var paymentMethodFormViewController: PaymentMethodFormViewController = {
         let previousCustomerInput = paymentOptionToRestoreOnCancellation?.formConfirmParamsForCancellationRestoration
+        let previousLinkInlineSignupAction: LinkInlineSignupViewModel.Action? = {
+            guard case .link(let confirmOption) = paymentOptionToRestoreOnCancellation else { return nil }
+            return confirmOption.signupAction
+        }()
 
         let headerView = FormHeaderView(
             paymentMethodType: paymentMethodType,
@@ -143,11 +163,12 @@ class EmbeddedFormViewController: UIViewController {
             formCache: formCache,
             configuration: configuration,
             paymentMethodOrientation: .vertical,
-            headerView: headerView,
+            headerView: presentation == .inline ? nil : headerView,
             analyticsHelper: analyticsHelper,
             paymentMethodMessagingPromotionsHelper: paymentMethodMessagingPromotionsHelper,
             isLinkUI: false,
-            delegate: self
+            delegate: self,
+            previousLinkInlineSignupAction: previousLinkInlineSignupAction
         )
     }()
 
@@ -167,8 +188,10 @@ class EmbeddedFormViewController: UIViewController {
          paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper? = nil,
          checkoutBillingAddressUpdater: CheckoutSessionBillingAddressUpdater? = nil,
          formCache: PaymentMethodFormCache = .init(),
-         delegate: EmbeddedFormViewControllerDelegate
+         delegate: EmbeddedFormViewControllerDelegate,
+         presentation: Presentation = .sheet
     ) {
+        self.presentation = presentation
         self.intent = intent
         self.elementsSession = elementsSession
         self.shouldUseNewCardNewCardHeader = shouldUseNewCardNewCardHeader
@@ -184,12 +207,18 @@ class EmbeddedFormViewController: UIViewController {
         super.init(nibName: nil, bundle: nil)
 
         add(childViewController: paymentMethodFormViewController, containerView: paymentContainerView)
+        if presentation == .inline {
+            // Inline forms publish each edit, without waiting for a sheet to appear.
+            form.delegate = paymentMethodFormViewController
+        }
         updateUI()
     }
 
     /// Updates all UI elements (pay button, error, mandate)
     private func updateUI() {
-        updatePrimaryButton()
+        if presentation == .sheet {
+            updatePrimaryButton()
+        }
         updateMandate()
         updateError()
     }
@@ -224,6 +253,8 @@ class EmbeddedFormViewController: UIViewController {
         )
     }
 
+    var mandateText: NSAttributedString? { mandateView.attributedText }
+
     func updateMandate() {
         let mandateProvider = VerticalListMandateProvider(configuration: configuration, elementsSession: elementsSession, intent: intent, analyticsHelper: analyticsHelper)
         let newMandateText = mandateProvider.mandate(
@@ -233,7 +264,7 @@ class EmbeddedFormViewController: UIViewController {
         )
         animateHeightChange {
             self.mandateView.attributedText = newMandateText
-            self.mandateView.setHiddenIfNecessary(newMandateText == nil)
+            self.mandateView.setHiddenIfNecessary(newMandateText == nil || (self.presentation == .inline && !self.configuration.embeddedViewDisplaysMandateText))
         }
     }
 
@@ -286,10 +317,15 @@ class EmbeddedFormViewController: UIViewController {
             stackView.addArrangedSubview(view)
         }
         stackView.spacing = 20
-        stackView.directionalLayoutMargins = configuration.appearance.topFormInsets
+        stackView.directionalLayoutMargins = presentation == .inline ? .zero : configuration.appearance.topFormInsets
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.axis = .vertical
         stackView.sendSubviewToBack(mandateView)
+
+        if presentation == .inline {
+            view.addAndPinSubview(stackView)
+            return
+        }
 
         for subview in [stackView, primaryButton] {
             subview.translatesAutoresizingMaskIntoConstraints = false
@@ -467,6 +503,9 @@ extension EmbeddedFormViewController: PaymentMethodFormViewControllerDelegate {
         updateUI()
         if viewController.paymentOption != nil {
             analyticsHelper.logFormCompleted(paymentMethodTypeIdentifier: viewController.paymentMethodType.identifier)
+        }
+        if presentation == .inline {
+            delegate?.embeddedFormViewControllerDidUpdate(self)
         }
     }
 

@@ -17,7 +17,10 @@ class EmbeddedPaymentElementContainerView: UIView {
     }
 
     var needsUpdateSuperviewHeight: () -> Void = {}
-    private var contentView: EmbeddedPaymentMethodsView
+    private var contentView: UIView
+    private var contentViewController: UIViewController?
+    private var previousHeight: CGFloat?
+    var notifiesDelegateOnInitialHeight = false
     private var bottomAnchorConstraint: NSLayoutConstraint!
 
     init(embeddedPaymentMethodsView: EmbeddedPaymentMethodsView) {
@@ -43,24 +46,28 @@ class EmbeddedPaymentElementContainerView: UIView {
         ])
     }
 
-    func updateEmbeddedPaymentMethodsView(_ embeddedPaymentMethodsView: EmbeddedPaymentMethodsView) {
+    func updateContentView(_ newContentView: UIView, viewController: UIViewController? = nil) {
+        contentViewController?.willMove(toParent: nil)
+        contentViewController?.removeFromParent()
+        contentViewController = viewController
+        attachContentViewControllerIfNeeded()
         guard frame.size != .zero else {
             // A zero frame means we haven't been laid out yet. Simply replace the old view to avoid laying out before the view is ready and breaking constraints.
             contentView.removeFromSuperview()
-            contentView = embeddedPaymentMethodsView
-            setContentView(embeddedPaymentMethodsView)
+            contentView = newContentView
+            setContentView(newContentView)
             return
         }
         let oldContentView = contentView
 
         // Add the new view
-        embeddedPaymentMethodsView.translatesAutoresizingMaskIntoConstraints = false
-        addSubview(embeddedPaymentMethodsView)
-        contentView = embeddedPaymentMethodsView
+        newContentView.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(newContentView)
+        contentView = newContentView
         NSLayoutConstraint.activate([
-            embeddedPaymentMethodsView.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor),
-            embeddedPaymentMethodsView.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor),
-            embeddedPaymentMethodsView.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor),
+            newContentView.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor),
+            newContentView.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor),
+            newContentView.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor),
             // Omit the bottom anchor so that the height is still fixed to the old view height
         ])
 
@@ -69,22 +76,22 @@ class EmbeddedPaymentElementContainerView: UIView {
 
         // Calculate heights of old and new content views to determine if height will change
         let oldContentViewHeight = oldContentView.frame.size.height
-        let newContentViewHeight = embeddedPaymentMethodsView.frame.size.height
+        let newContentViewHeight = newContentView.frame.size.height
         let heightWillChange = oldContentViewHeight != newContentViewHeight
 
         // Fade the old view out and the new view in if the height will change
         if heightWillChange {
-            embeddedPaymentMethodsView.alpha = 0
+            newContentView.alpha = 0
         }
         UIView.animate(withDuration: 0.2) {
             // Re-pin bottom anchor to the new view, thus updating our height
             self.bottomAnchorConstraint.isActive = false
-            self.bottomAnchorConstraint = embeddedPaymentMethodsView.bottomAnchor.constraint(equalTo: self.layoutMarginsGuide.bottomAnchor)
+            self.bottomAnchorConstraint = newContentView.bottomAnchor.constraint(equalTo: self.layoutMarginsGuide.bottomAnchor)
             self.bottomAnchorConstraint.isActive = true
             self.layoutIfNeeded()
             if heightWillChange {
                 oldContentView.alpha = 0
-                embeddedPaymentMethodsView.alpha = 1
+                newContentView.alpha = 1
                 // Invoke EmbeddedPaymentElement delegate method so that height of our superview does not jump
                 self.needsUpdateSuperviewHeight()
             }
@@ -92,4 +99,40 @@ class EmbeddedPaymentElementContainerView: UIView {
             oldContentView.removeFromSuperview()
         }
     }
+
+    override func didMoveToWindow() {
+        super.didMoveToWindow()
+        if window != nil {
+            attachContentViewControllerIfNeeded()
+        } else {
+            contentViewController?.willMove(toParent: nil)
+            contentViewController?.removeFromParent()
+        }
+    }
+
+    private func attachContentViewControllerIfNeeded() {
+        guard window != nil, let contentViewController, contentViewController.parent == nil else { return }
+        var responder = next
+        while let current = responder {
+            if let parent = current as? UIViewController {
+                parent.addChild(contentViewController)
+                contentViewController.didMove(toParent: parent)
+                return
+            }
+            responder = current.next
+        }
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        // The list reports its own height. Inline forms need the same notification contract.
+        guard contentViewController != nil else { return }
+        let height = systemLayoutSizeFitting(CGSize(width: frame.width, height: UIView.layoutFittingExpandedSize.height)).height
+        let shouldNotify = previousHeight.map { $0 != height } ?? notifiesDelegateOnInitialHeight
+        previousHeight = height
+        if shouldNotify {
+            needsUpdateSuperviewHeight()
+        }
+    }
+
 }
