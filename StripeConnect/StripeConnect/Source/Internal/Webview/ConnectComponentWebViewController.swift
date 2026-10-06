@@ -28,6 +28,13 @@ class ConnectComponentWebViewController: ConnectWebViewController {
     /// Represents the current locale that should get sent to the webview
     private let webLocale: Locale
 
+    private let componentBaseURL: URL
+
+    private(set) lazy var messageSourcePolicy = STPWebMessageSourcePolicy(
+        expectedSource: webView,
+        allowedOriginURLs: [componentBaseURL]
+    )
+
     /// The current notification center instance
     private let notificationCenter: NotificationCenter
 
@@ -37,7 +44,10 @@ class ConnectComponentWebViewController: ConnectWebViewController {
     /// Presents the FinancialConnectionsSheet
     private let financialConnectionsPresenter: FinancialConnectionsPresenter
 
-    private lazy var setterMessageHandler: OnSetterFunctionCalledMessageHandler = .init(analyticsClient: analyticsClient)
+    private lazy var setterMessageHandler: OnSetterFunctionCalledMessageHandler = .init(
+        sourcePolicy: messageSourcePolicy,
+        analyticsClient: analyticsClient
+    )
 
     private var didFailLoadWithError: (Error) -> Void
 
@@ -78,6 +88,7 @@ class ConnectComponentWebViewController: ConnectWebViewController {
         bundleIdProvider: @escaping () -> String? = Bundle.stp_applicationBundleId
     ) {
         self.componentManager = componentManager
+        self.componentBaseURL = componentManager.baseURL
         self.notificationCenter = notificationCenter
         self.webLocale = webLocale
         self.authenticatedWebViewManager = authenticatedWebViewManager
@@ -356,7 +367,7 @@ private extension ConnectComponentWebViewController {
             })
 
         })
-        addMessageHandler(FetchInitParamsMessageHandler.init(didReceiveMessage: {[weak self] _ in
+        addMessageHandler(FetchInitParamsMessageHandler.init(sourcePolicy: messageSourcePolicy, didReceiveMessage: {[weak self] _ in
             guard let self else {
                 stpAssertionFailure("Message received after web view was deallocated")
                 // If self no longer exists give default values
@@ -366,40 +377,40 @@ private extension ConnectComponentWebViewController {
                          appearance: .init(appearance: componentManager.appearance, traitCollection: self.traitCollection),
                          fonts: componentManager.fonts.map({ .init(customFontSource: $0) }))
         }))
-        addMessageHandler(FetchAppInfoMessageHandler.init(didReceiveMessage: { [weak self] _ in
+        addMessageHandler(FetchAppInfoMessageHandler.init(sourcePolicy: messageSourcePolicy, didReceiveMessage: { [weak self] _ in
             return .init(applicationId: self?.bundleIdProvider() ?? "")
         }))
-        addMessageHandler(FetchInitComponentPropsMessageHandler(fetchInitProps) { [weak self] supplementalFunctions in
+        addMessageHandler(FetchInitComponentPropsMessageHandler(sourcePolicy: messageSourcePolicy, fetchInitProps) { [weak self] supplementalFunctions in
             self?.supplementalFunctions = supplementalFunctions
         })
         addMessageHandler(OnLoadErrorMessageHandler { [weak self, analyticsClient] value in
             self?.didFailLoad(error: value.error.connectEmbedError(analyticsClient: analyticsClient))
         })
-        addMessageHandler(DebugMessageHandler(analyticsClient: analyticsClient))
-        addMessageHandler(FetchClientSecretMessageHandler { [weak self] _ in
+        addMessageHandler(DebugMessageHandler(sourcePolicy: messageSourcePolicy, analyticsClient: analyticsClient))
+        addMessageHandler(FetchClientSecretMessageHandler(sourcePolicy: messageSourcePolicy) { [weak self] _ in
             await self?.componentManager.fetchClientSecret()
         })
-        addMessageHandler(PageDidLoadMessageHandler(analyticsClient: analyticsClient) { [weak self] payload in
+        addMessageHandler(PageDidLoadMessageHandler(sourcePolicy: messageSourcePolicy, analyticsClient: analyticsClient) { [weak self] payload in
             guard let self else { return }
             self.pageLoaded = true
             errorScreen?.removeFromSuperview()
             errorScreen = nil
             self.analyticsClient.pageViewId = payload.pageViewId
         })
-        addMessageHandler(AccountSessionClaimedMessageHandler(analyticsClient: analyticsClient) { [analyticsClient] payload in
+        addMessageHandler(AccountSessionClaimedMessageHandler(sourcePolicy: messageSourcePolicy, analyticsClient: analyticsClient) { [analyticsClient] payload in
             analyticsClient.merchantId = payload.merchantId
             analyticsClient.logAccountSessionClaimed()
         })
-        addMessageHandler(OpenAuthenticatedWebViewMessageHandler(analyticsClient: analyticsClient) { [weak self] payload in
+        addMessageHandler(OpenAuthenticatedWebViewMessageHandler(sourcePolicy: messageSourcePolicy, analyticsClient: analyticsClient) { [weak self] payload in
             self?.openAuthenticatedWebView(payload)
         })
-        addMessageHandler(OpenFinancialConnectionsMessageHandler(analyticsClient: analyticsClient) { [weak self] payload in
+        addMessageHandler(OpenFinancialConnectionsMessageHandler(sourcePolicy: messageSourcePolicy, analyticsClient: analyticsClient) { [weak self] payload in
             self?.openFinancialConnections(payload)
         })
-        addMessageHandler(CloseWebViewMessageHandler(analyticsClient: analyticsClient, didReceiveMessage: { [weak self] _ in
+        addMessageHandler(CloseWebViewMessageHandler(sourcePolicy: messageSourcePolicy, analyticsClient: analyticsClient, didReceiveMessage: { [weak self] _ in
             self?.dismiss(animated: true)
         }))
-        self.addMessageHandler(CallSupplementalFunctionMessageHandler(analyticsClient: self.analyticsClient, didReceiveMessage: { [weak self] payload in
+        self.addMessageHandler(CallSupplementalFunctionMessageHandler(sourcePolicy: messageSourcePolicy, analyticsClient: self.analyticsClient, didReceiveMessage: { [weak self] payload in
             self?.dispatch(payload)
         }))
 
@@ -411,6 +422,7 @@ private extension ConnectComponentWebViewController {
             ))
             addMessageHandler(ScriptMessageHandler<ContentHeightPayload>(
                 name: "connectContentHeight",
+                sourcePolicy: messageSourcePolicy,
                 analyticsClient: analyticsClient
             ) { payload in
                 let height = CGFloat(payload.height)

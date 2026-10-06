@@ -5,6 +5,8 @@
 //  Created by Mel Ludowise on 10/17/24.
 //
 
+@_spi(STP) import StripeCore
+
 /// Indicates to open the FinancialConnections flow
 class OpenFinancialConnectionsMessageHandler: ScriptMessageHandler<OpenFinancialConnectionsMessageHandler.Payload> {
     struct Payload: Codable, Equatable {
@@ -18,9 +20,11 @@ class OpenFinancialConnectionsMessageHandler: ScriptMessageHandler<OpenFinancial
         let connectedAccountId: String
     }
 
-    init(analyticsClient: ComponentAnalyticsClient,
+    init(sourcePolicy: STPWebMessageSourcePolicy,
+         analyticsClient: ComponentAnalyticsClient,
          didReceiveMessage: @escaping (Payload) -> Void) {
         super.init(name: "openFinancialConnections",
+                   sourcePolicy: sourcePolicy,
                    analyticsClient: analyticsClient,
                    didReceiveMessage: didReceiveMessage)
     }

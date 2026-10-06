@@ -6,6 +6,7 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 import WebKit
 
 class OnSetterFunctionCalledMessageHandler: ScriptMessageHandler<OnSetterFunctionCalledMessageHandler.Payload> {
@@ -64,9 +65,11 @@ class OnSetterFunctionCalledMessageHandler: ScriptMessageHandler<OnSetterFunctio
 
     private var handlerMap: [String: Handler] = [:]
 
-    init(analyticsClient: ComponentAnalyticsClient) {
+    init(sourcePolicy: STPWebMessageSourcePolicy,
+         analyticsClient: ComponentAnalyticsClient) {
         weak var weakSelf: OnSetterFunctionCalledMessageHandler?
         super.init(name: "onSetterFunctionCalled",
+                   sourcePolicy: sourcePolicy,
                    analyticsClient: analyticsClient,
                    didReceiveMessage: { payload in
             weakSelf?.didReceivePayload(payload: payload)

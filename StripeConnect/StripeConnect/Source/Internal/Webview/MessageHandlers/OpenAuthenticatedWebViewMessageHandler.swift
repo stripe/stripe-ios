@@ -6,6 +6,7 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 
 /// Indicates to open the provided URL in an `ASWebAuthenticationSession`.
 class OpenAuthenticatedWebViewMessageHandler: ScriptMessageHandler<OpenAuthenticatedWebViewMessageHandler.Payload> {
@@ -15,9 +16,11 @@ class OpenAuthenticatedWebViewMessageHandler: ScriptMessageHandler<OpenAuthentic
         /// Unique identifier logged in analytics when the `ASWebAuthenticationSession` is opened or closed.
         let id: String
     }
-    init(analyticsClient: ComponentAnalyticsClient,
+    init(sourcePolicy: STPWebMessageSourcePolicy,
+         analyticsClient: ComponentAnalyticsClient,
          didReceiveMessage: @escaping (Payload) -> Void) {
         super.init(name: "openAuthenticatedWebView",
+                   sourcePolicy: sourcePolicy,
                    analyticsClient: analyticsClient,
                    didReceiveMessage: didReceiveMessage)
     }

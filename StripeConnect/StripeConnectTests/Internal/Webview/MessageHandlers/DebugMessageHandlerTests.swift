@@ -9,11 +9,13 @@
 import XCTest
 
 class DebugMessageHandlerTests: ScriptWebTestBase {
-    func testMessageSend() {
+    func testMessageSend() async throws {
         let expectation = self.expectation(description: "Message received")
         let debugMessage = "test message"
+        try await loadTrustedDocument()
 
         webView.addMessageHandler(messageHandler: DebugMessageHandler(
+            sourcePolicy: webView.trustedMessageSourcePolicy(),
             analyticsClient: MockComponentAnalyticsClient(commonFields: .mock),
             didReceiveMessage: { payload in
                 expectation.fulfill()
@@ -23,6 +25,6 @@ class DebugMessageHandlerTests: ScriptWebTestBase {
 
         webView.evaluateDebugMessage(message: debugMessage)
 
-        waitForExpectations(timeout: TestHelpers.defaultTimeout, handler: nil)
+        await fulfillment(of: [expectation], timeout: TestHelpers.defaultTimeout)
     }
 }

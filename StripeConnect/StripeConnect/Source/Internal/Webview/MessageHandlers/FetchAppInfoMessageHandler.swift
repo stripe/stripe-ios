@@ -6,13 +6,15 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 
 // This message is emitted when connect embed requests info about the app.
 class FetchAppInfoMessageHandler: ScriptMessageHandlerWithReply<VoidPayload, FetchAppInfoMessageHandler.Reply> {
     struct Reply: Encodable {
         let applicationId: String
     }
-    init(didReceiveMessage: @escaping (VoidPayload) async throws -> Reply) {
-        super.init(name: "fetchAppInfo", didReceiveMessage: didReceiveMessage)
+    init(sourcePolicy: STPWebMessageSourcePolicy,
+         didReceiveMessage: @escaping (VoidPayload) async throws -> Reply) {
+        super.init(name: "fetchAppInfo", sourcePolicy: sourcePolicy, didReceiveMessage: didReceiveMessage)
     }
 }
