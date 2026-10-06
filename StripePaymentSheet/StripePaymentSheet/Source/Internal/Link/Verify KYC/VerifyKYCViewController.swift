@@ -37,7 +37,6 @@ final class VerifyKYCViewController: BottomSheetViewController {
         super.init(
             contentViewController: contentViewController,
             appearance: LinkUI.appearance,
-            isTestMode: false,
             didCancelNative3DS2: {}
         )
 
@@ -48,8 +47,8 @@ final class VerifyKYCViewController: BottomSheetViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    required init(contentViewController: any BottomSheetContentViewController, appearance: PaymentSheet.Appearance, isTestMode: Bool, didCancelNative3DS2: @escaping () -> Void) {
-        fatalError("init(contentViewController:appearance:isTestMode:didCancelNative3DS2:) has not been implemented")
+    required init(contentViewController: any BottomSheetContentViewController, appearance: PaymentSheet.Appearance, didCancelNative3DS2: @escaping () -> Void) {
+        fatalError("init(contentViewController:appearance:didCancelNative3DS2:) has not been implemented")
     }
 
     // MARK: - BottomSheetViewController

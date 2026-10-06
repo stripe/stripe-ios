@@ -2,6 +2,9 @@ The next release's version bump will so far be:
 MINOR
 
 ## X.Y.Z - changes pending release
+### General
+* [Removed] Removed the test mode header badge from PaymentSheet, CustomerSheet, Link, and Financial Connections.
+
 ### PaymentSheet
 * [Added] Added QRIS API bindings and PaymentSheet support for PaymentIntents.
 * [Added] Added GCash API bindings and PaymentSheet support for payments and setup.

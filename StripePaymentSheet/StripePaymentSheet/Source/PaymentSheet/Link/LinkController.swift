@@ -1284,7 +1284,6 @@ import UIKit
         let bottomSheetViewController = BottomSheetViewController(
             contentViewController: fullConsentViewController,
             appearance: paymentElementConfiguration.appearance,
-            isTestMode: false,
             didCancelNative3DS2: {}
         )
 
