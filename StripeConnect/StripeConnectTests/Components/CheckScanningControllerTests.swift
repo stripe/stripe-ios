@@ -36,6 +36,7 @@ class CheckScanningControllerTests: XCTestCase {
     func testDelegate() async throws {
         let delegate = CheckScanningControllerDelegatePassThrough()
         let controller = componentManager.createCheckScanningController()
+        try await controller.webVC.webView.loadTrustedDocumentPreservingDelegate()
         controller.delegate = delegate
 
         let expectationDidFail = XCTestExpectation(description: "didFail called")
@@ -53,6 +54,7 @@ class CheckScanningControllerTests: XCTestCase {
     @MainActor
     func testFetchInitComponentProps() async throws {
         let controller = componentManager.createCheckScanningController()
+        try await controller.webVC.webView.loadTrustedDocumentPreservingDelegate()
 
         try await controller.webVC.webView.evaluateMessageWithReply(name: "fetchInitComponentProps",
                                                                     json: "{}",
@@ -78,6 +80,7 @@ class CheckScanningControllerTests: XCTestCase {
     @MainActor
     func testCallbackSuccess() async throws {
         let controller = componentManager.createCheckScanningController()
+        try await controller.webVC.webView.loadTrustedDocumentPreservingDelegate()
 
         let expectationCallback = XCTestExpectation(description: "handleCheckScanSubmitted called")
         let delegate = CheckScanningControllerDelegateWithCallback(expectation: expectationCallback)
@@ -111,6 +114,7 @@ class CheckScanningControllerTests: XCTestCase {
     @MainActor
     func testCallbackError() async throws {
         let controller = componentManager.createCheckScanningController()
+        try await controller.webVC.webView.loadTrustedDocumentPreservingDelegate()
 
         let delegate = CheckScanningControllerDelegateWithCallbackError()
 

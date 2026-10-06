@@ -154,11 +154,17 @@ final class ConnectBridgeSourceValidationTests: XCTestCase {
         }
 
         XCTAssertNotNil(banner.view.window)
-        _ = try await loadBridgeFixture(in: banner.webVC.webView, baseURL: StripeConnectConstants.connectJSBaseURL, html: Self.notificationBannerTaskFixtureHTML)
-        let taskNavigation = try await waitForPresentation(from: host)
+        _ = try await withFixturePhase("trusted banner document and submission") {
+            try await loadBridgeFixture(in: banner.webVC.webView, baseURL: StripeConnectConstants.connectJSBaseURL, html: Self.notificationBannerTaskFixtureHTML)
+        }
+        let taskNavigation = try await withFixturePhase("trusted banner task presentation") {
+            try await waitForPresentation(from: host)
+        }
         XCTAssertTrue(taskNavigation.topViewController is ConnectComponentWebViewController)
         taskNavigation.dismiss(animated: false)
-        try await waitForNoPresentation(from: host)
+        try await withFixturePhase("trusted banner task dismissal") {
+            try await waitForNoPresentation(from: host)
+        }
     }
 
     func testForeignMainDocumentCannotFetchClientSecret() async throws {
@@ -438,7 +444,9 @@ final class ConnectBridgeSourceValidationTests: XCTestCase {
         defer { window.isHidden = true }
 
         // When the production WKUIDelegate creates an allowed-host popup
-        let popupController = try await openPopup(from: controller)
+        let popupController = try await withFixturePhase("popup creation and presentation") {
+            try await openPopup(from: controller)
+        }
         defer {
             if controller.presentedViewController != nil {
                 popupController.webView.uiDelegate?.webViewDidClose?(popupController.webView)
@@ -447,11 +455,13 @@ final class ConnectBridgeSourceValidationTests: XCTestCase {
         XCTAssertTrue(popupController.webView.configuration.userContentController === controller.webView.configuration.userContentController)
 
         // Then a popup WebView at the trusted origin cannot use the component bridge
-        let event = try await loadDocumentAndFetchClientSecret(
-            in: popupController.webView,
-            baseURL: StripeConnectConstants.connectJSBaseURL,
-            expectedComponentWebView: controller.webView
-        )
+        let event = try await withFixturePhase("popup document and rejected bridge reply") {
+            try await loadDocumentAndFetchClientSecret(
+                in: popupController.webView,
+                baseURL: StripeConnectConstants.connectJSBaseURL,
+                expectedComponentWebView: controller.webView
+            )
+        }
         XCTAssertFalse(event.wasSentByExpectedWebView)
         assertExpectedHTTPSOrigin(event.document, host: "connect-js.stripe.com", isExpectedSource: false)
         XCTAssertEqual(event.result, .rejected("Invalid message origin"))
@@ -460,7 +470,9 @@ final class ConnectBridgeSourceValidationTests: XCTestCase {
 
         // And the production close path dismisses the popup UI
         popupController.webView.uiDelegate?.webViewDidClose?(popupController.webView)
-        try await waitForPopupDismissal(from: controller)
+        try await withFixturePhase("popup dismissal") {
+            try await waitForPopupDismissal(from: controller)
+        }
     }
 
     func testTrustedMainDocumentReceivesCanceledAuthenticationSession() async throws {
@@ -563,6 +575,14 @@ private extension ConnectBridgeSourceValidationTests {
         manager.shouldLoadContent = false
         manager.analyticsClientFactory = { ComponentAnalyticsClient(client: AnalyticsTransport(), commonFields: $0) }
         return manager.createNotificationBannerViewController()
+    }
+
+    func withFixturePhase<Value>(_ phase: String, operation: () async throws -> Value) async throws -> Value {
+        do {
+            return try await operation()
+        } catch {
+            throw BridgeFixturePhaseError(phase: phase, underlyingError: error)
+        }
     }
 
     func waitForPresentation(from controller: UIViewController) async throws -> UINavigationController {
@@ -1207,6 +1227,15 @@ private extension WKWebView {
             }
         }
         return try await gate.wait()
+    }
+}
+
+private struct BridgeFixturePhaseError: LocalizedError {
+    let phase: String
+    let underlyingError: Error
+
+    var errorDescription: String? {
+        "Connect bridge fixture failed during \(phase): \(underlyingError)"
     }
 }
 
