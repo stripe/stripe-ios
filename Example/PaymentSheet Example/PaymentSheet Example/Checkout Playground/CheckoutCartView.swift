@@ -13,6 +13,7 @@ struct CheckoutCartView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var checkout: CheckoutController?
     @StateObject private var diagnostics = CheckoutSessionDiagnostics()
+    @StateObject private var analyticsLogObserver = AnalyticsLogObserver.shared
 
     @State private var isLoading = false
     @State private var errorMessage: String?
@@ -64,6 +65,8 @@ struct CheckoutCartView: View {
                         .ignoresSafeArea()
                     ProgressView()
                 }
+
+                AnalyticsLogForTesting(analyticsLog: $analyticsLogObserver.analyticsLog)
             }
             .navigationTitle("Your Cart")
             .navigationBarTitleDisplayMode(.inline)
