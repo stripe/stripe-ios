@@ -155,6 +155,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case sek
         case chf
         case idr
+        case php
         case vnd
     }
 
