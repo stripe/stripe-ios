@@ -12,6 +12,7 @@ extension String {
     /// - Parameter maximumCount: The maximum number of Unicode scalars to include. A negative value returns an empty prefix.
     func prefix(unicodeScalarsCount maximumCount: Int) -> Substring {
         guard maximumCount >= 0 else { return "" }
+        guard unicodeScalars.count > maximumCount else { return self[...] }
 
         var remainingLength = maximumCount
         return prefix { character in

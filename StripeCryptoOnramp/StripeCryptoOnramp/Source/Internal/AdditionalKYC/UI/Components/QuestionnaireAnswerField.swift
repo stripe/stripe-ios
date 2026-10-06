@@ -50,11 +50,9 @@ struct QuestionnaireAnswerField: View {
                     .tint(Color.textPrimary)
                     .focused($isFocused)
                     .onReceive(Just(answer)) { value in
-                        guard value.unicodeScalars.count > Self.maximumAnswerLength else { return }
-
-                        let prefixedAnswer = String(value.prefix(unicodeScalarsCount: Self.maximumAnswerLength))
-                        if answer != prefixedAnswer {
-                            answer = prefixedAnswer
+                        let prefixedAnswer = value.prefix(unicodeScalarsCount: Self.maximumAnswerLength)
+                        if prefixedAnswer.endIndex != value.endIndex {
+                            answer = String(prefixedAnswer)
                         }
                     }
 
