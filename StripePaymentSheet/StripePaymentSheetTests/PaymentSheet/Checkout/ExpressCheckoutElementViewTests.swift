@@ -7,11 +7,57 @@
 
 import PassKit
 @testable @_spi(STP) import StripeCore
+@testable @_spi(STP) import StripeCoreTestUtils
 @testable @_spi(STP) import StripePaymentSheet
 import XCTest
 
 @MainActor
 final class ExpressCheckoutElementViewTests: XCTestCase {
+
+    func testReportsInitWhenAddedToWindowOnce() throws {
+        // Given
+        var configuration = ExpressCheckoutElement.Configuration(confirmHandler: { _ in })
+        configuration.applePayConfiguration = .init(merchantId: "merchant.com.example")
+        let session = CheckoutTestHelpers.makeSession([
+            "elements_session": [
+                "session_id": "es_test",
+                "merchant_country": "US",
+                "payment_method_preference": ["ordered_payment_method_types": ["card"]],
+                "ordered_payment_method_types_and_wallets": ["link"],
+            ],
+        ]).makePublicSession(
+            expressCheckoutConfiguration: configuration
+        )
+        let analyticsClient = MockAnalyticsClient()
+        let view = ExpressCheckoutElementUIView(
+            session: session,
+            configuration: configuration,
+            delegate: FakeExpressCheckoutElementDelegate(),
+            analyticsClient: analyticsClient
+        )
+        let window = UIWindow()
+
+        // When
+        window.addSubview(view)
+        view.removeFromSuperview()
+        window.addSubview(view)
+
+        // Then
+        let analytic = try XCTUnwrap(analyticsClient.loggedAnalytics.first)
+        XCTAssertEqual(analyticsClient.loggedAnalytics.count, 1)
+        XCTAssertEqual(analytic.event, .expressCheckoutElementInit)
+        XCTAssertEqual(analytic.params["ordered_lpms"] as? String, "link")
+        XCTAssertEqual(analytic.params["apple_pay_enabled"] as? Bool, StripeAPI.deviceSupportsApplePay())
+        XCTAssertEqual(analytic.params["ocr_type"] as? String, PaymentsSDKVariant.ocrTypeString)
+        XCTAssertEqual(analytic.params["pay_var"] as? String, PaymentsSDKVariant.variant)
+        XCTAssertEqual(
+            analytic.params["ece_config"] as? [String: String],
+            [
+                "link_visibility": "automatic",
+                "apple_pay_visibility": "automatic",
+            ]
+        )
+    }
 
     func testButtonRowsPreserveOrderAndApplyLimits() {
         let buttons: [ExpressCheckoutElement.PaymentMethod] = [.link, .applePay, .link, .applePay, .link]
@@ -259,5 +305,15 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
 
         let expectedPaymentMethods: [ExpressCheckoutElement.PaymentMethod] = StripeAPI.deviceSupportsApplePay() ? [.link, .applePay] : [.link]
         XCTAssertEqual(session.availableExpressCheckoutPaymentMethods, expectedPaymentMethods)
+    }
+}
+
+@MainActor
+private final class FakeExpressCheckoutElementDelegate: ExpressCheckoutElementDelegate {
+    func expressCheckoutElementShouldConfirm(
+        _ paymentMethod: ExpressCheckoutElement.PaymentMethod,
+        presentationWindow: UIWindow?
+    ) async -> CheckoutController.ConfirmResult {
+        return .canceled
     }
 }
