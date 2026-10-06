@@ -1,6 +1,26 @@
+"Add %ld documents" = "Lisa %ld dokumenti";
+
+"Add 1 document" = "Lisa 1 dokument";
+
+"Add documents" = "Lisa dokumendid";
+
+"Answer" = "Vastus";
+
+"Choose File…" = "Vali fail...";
+
+"Choose Photo…" = "Vali foto…";
+
 "Debit cards are most likely to be accepted." = "Kõige tõenäolisemalt aktsepteeritakse deebetkaarte.";
 
+"Document type" = "Dokumendi tüüp";
+
 "Document uploaded successfully" = "Dokument on edukalt üles laaditud";
+
+"Funds source" = "Rahaliste vahendite allikas";
+
+"How are you funding your transactions? Please list all of your sources. For example, salary, savings, investment earnings, etc." = "Kuidas te oma tehinguid rahastate? Palun loetlege kõik oma allikad. Näiteks palk, säästud, investeerimistulu jne.";
+
+"Make sure your document meets following requirements." = "Veenduge, et teie dokument vastab järgmistele nõuetele.";
 
 "Please try again later." = "Proovige hiljem uuesti.";
 
@@ -8,9 +28,17 @@
 
 "Tell us about your source of funds" = "Rääkige meile oma rahaliste vahendite allikast";
 
+"There was a problem with your previous document. Please upload a new one." = "Teie eelmise dokumendiga oli probleem. Palun laadige üles uus.";
+
 "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "Seda rakendust ei saanud kinnitada atesteerimisvea tõttu. Palun proovige hiljem uuesti või võtke ühendust arendajaga, kui probleem püsib.";
 
 "This app couldn't be verified. Contact the app developer for help." = "Seda rakendust ei saanud kontrollida. Abi saamiseks võtke ühendust rakenduse arendajaga.";
+
+"This file is larger than %@. Choose a file that is %@ or smaller." = "See fail on suurem kui %1$@. Valige fail, mis on %2$@ või väiksem.";
+
+"This file type isn’t supported." = "Seda failitüüpi ei toetata.";
+
+"This file type isn’t supported. Upload a %@ file." = "Seda failitüüpi ei toetata. Laadige üles %@ fail.";
 
 "This wallet couldn't be found. Please choose or add a wallet and try again." = "Seda rahakotti ei leitud. Palun valige või lisage rahakott ja proovige uuesti.";
 
@@ -20,9 +48,19 @@
 
 "This wallet verification request is invalid. Please try again." = "See rahakoti kinnitamise taotlus on kehtetu. Palun proovige uuesti.";
 
+"Upload document" = "Laadi dokument üles";
+
 "Upload your proof of address" = "Laadige üles oma aadressitõend";
 
+"Uploaded" = "Üles laaditud";
+
+"Uploading…" = "Üleslaadimine…";
+
 "We couldn't verify ownership of this wallet. Please try again." = "Me ei suutnud selle rahakoti omandiõigust kinnitada. Palun proovige uuesti.";
+
+"We couldn’t open this document. Please choose it again." = "Me ei saanud seda dokumenti avada. Palun valige see uuesti.";
+
+"We couldn’t upload this file. Please try again." = "Me ei saanud seda faili üles laadida. Palun proovige uuesti.";
 
 "We may request proof of address for larger transactions." = "Suuremate tehingute puhul võime küsida aadressitõendit.";
 

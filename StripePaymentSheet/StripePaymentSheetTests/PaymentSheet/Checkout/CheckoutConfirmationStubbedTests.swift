@@ -8,7 +8,7 @@ import OHHTTPStubsSwift
 @testable @_spi(STP) import StripeCore
 import StripeCoreTestUtils
 @testable @_spi(STP) import StripePayments
-@testable @_spi(STP) @_spi(CollectMissingLinkBillingDetailsPreview) import StripePaymentSheet
+@testable @_spi(STP) import StripePaymentSheet
 @testable @_spi(STP) import StripePaymentsTestUtils
 import UIKit
 import XCTest
@@ -568,10 +568,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         billingDetails.name = "Jenny Rosen"
         billingDetails.address = .init(country: "US", postalCode: "94107")
         configuration.defaults.billingDetails = billingDetails
-        var expressCheckoutElementConfiguration = ExpressCheckoutElement.Configuration(confirmHandler: { _ in })
-        expressCheckoutElementConfiguration.linkConfiguration.disallowFundingSourceCreation = ["usInstantBankPayment"]
-        expressCheckoutElementConfiguration.linkConfiguration.collectMissingBillingDetailsForExistingPaymentMethods = false
-        configuration.expressCheckoutElement = expressCheckoutElementConfiguration
+        configuration.expressCheckoutElement = ExpressCheckoutElement.Configuration(confirmHandler: { _ in })
         let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration(
             apiResponse: CheckoutTestHelpers.makeSession(["customer_email": "jenny@example.com"]),
             configuration: configuration
@@ -601,8 +598,6 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         XCTAssertEqual(parameters.configuration.defaultBillingDetails.address.country, "US")
         XCTAssertEqual(parameters.configuration.defaultBillingDetails.address.postalCode, "94107")
         XCTAssertNil(parameters.configuration.defaultBillingDetails.email)
-        XCTAssertEqual(parameters.configuration.link.disallowFundingSourceCreation, ["usInstantBankPayment"])
-        XCTAssertFalse(parameters.configuration.link.collectMissingBillingDetailsForExistingPaymentMethods)
     }
 
     func testExpressCheckoutLinkRequiresPresentingViewController() async throws {

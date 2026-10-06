@@ -1,7 +1,9 @@
 The next release's version bump will so far be:
-MINOR
+PATCH
 
 ## X.Y.Z - changes pending release
+
+## 26.13.0 2026-10-05
 ### PaymentSheet
 * [Fixed] Fixed a potential crash when using certain card brands in PaymentSheet.
 * [Fixed] Fixed Apple Pay failing to open for fractional amounts in COP, HUF, IDR, LAK, LBP, PKR, and RSD.
@@ -19,6 +21,8 @@ MINOR
 ### PaymentSheet
 * [Added] Added MoMo API bindings and PaymentSheet support for PaymentIntents.
 * [Added] Added GoPay API bindings and PaymentSheet support for PaymentIntents.
+* [Added] Added ShopeePay API bindings and PaymentSheet support for PaymentIntents.
+* [Added] Added QRIS API bindings and PaymentSheet support for PaymentIntents.
 
 ## 26.12.1 2026-09-28
 ### CryptoOnramp (Alpha)
