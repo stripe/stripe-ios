@@ -11,6 +11,9 @@ import UIKit
 import WebKit
 
 class ConnectComponentWebViewController: ConnectWebViewController {
+    private enum SensitiveDeliveryError: Error {
+        case stringEncoding
+    }
 
     enum LayoutMode {
         case fillsAvailableSpace
@@ -102,6 +105,11 @@ class ConnectComponentWebViewController: ConnectWebViewController {
 
         // Allows for custom JS message handlers for JS -> Swift communication
         config.userContentController = contentController
+        contentController.addUserScript(WKUserScript(
+            source: Self.sensitiveDeliveryDispatcherScript,
+            injectionTime: .atDocumentStart,
+            forMainFrameOnly: true
+        ))
 
         // Allows the identity verification flow to display the camera feed
         // embedded in the web view instead of full screen. Also works for
@@ -295,7 +303,7 @@ extension ConnectComponentWebViewController {
     }
 
     func sendMessageAsync(_ sender: any MessageSender) async throws {
-        return try await withCheckedThrowingContinuation { continuation in
+        return try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
             do {
                 let message = try sender.javascriptMessage()
                 webView.evaluateJavaScript(message, completionHandler: { _, error in
@@ -305,6 +313,33 @@ extension ConnectComponentWebViewController {
                         continuation.resume(returning: ())
                     }
                 })
+            } catch {
+                continuation.resume(throwing: error)
+            }
+        }
+    }
+
+    /// JavaScript evaluation success only confirms the dispatcher was evaluated; source authority can still deny delivery.
+    func sendSensitiveMessageAsync(_ sender: any MessageSender) async throws {
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+            do {
+                let payload = try sender.jsonData()
+                guard let payloadJSON = String(data: payload, encoding: .utf8) else {
+                    continuation.resume(throwing: SensitiveDeliveryError.stringEncoding)
+                    return
+                }
+                let callbackName = try JSONEncoder().encode(sender.name)
+                guard let callbackJSON = String(data: callbackName, encoding: .utf8) else {
+                    continuation.resume(throwing: SensitiveDeliveryError.stringEncoding)
+                    return
+                }
+                webView.evaluateJavaScript("if (typeof this.__stripeConnectDeliverSensitiveMessage === 'function') { this.__stripeConnectDeliverSensitiveMessage(\(callbackJSON), \(payloadJSON)); }") { _, error in
+                    if let error {
+                        continuation.resume(throwing: error)
+                    } else {
+                        continuation.resume(returning: ())
+                    }
+                }
             } catch {
                 continuation.resume(throwing: error)
             }
@@ -354,6 +389,13 @@ private extension ConnectComponentWebViewController {
     func addMessageHandlers<InitProps: Encodable>(
         fetchInitProps: @escaping () -> InitProps
     ) {
+        addMessageHandler(ScriptMessageHandlerWithReply<VoidPayload, Bool>(
+            name: "connectDocumentAuthority",
+            sourcePolicy: messageSourcePolicy,
+            requiresMainFrame: true
+        ) { _ in
+            true
+        })
         addMessageHandler(setterMessageHandler)
         addMessageHandler(OnLoaderStartMessageHandler { [analyticsClient, activityIndicator] _ in
             analyticsClient.logComponentLoaded(loadEnd: .now)
@@ -493,7 +535,11 @@ private extension ConnectComponentWebViewController {
 
                 analyticsClient.logAuthenticatedWebViewEventComplete(id: payload.id, redirected: returnUrl != nil)
 
-                sendMessage(ReturnedFromAuthenticatedWebViewSender(payload: .init(url: returnUrl, id: payload.id)))
+                do {
+                    try await sendSensitiveMessageAsync(ReturnedFromAuthenticatedWebViewSender(payload: .init(url: returnUrl, id: payload.id)))
+                } catch {
+                    analyticsClient.logClientError(error)
+                }
             } catch {
                 analyticsClient.logAuthenticatedWebViewEventComplete(id: payload.id, error: error)
             }
@@ -509,9 +555,13 @@ private extension ConnectComponentWebViewController {
                 from: self
             )
 
-            sendMessage(SetCollectMobileFinancialConnectionsResult.sender(
-                value: result.toSenderValue(id: args.id, analyticsClient: analyticsClient)
-            ))
+            do {
+                try await sendSensitiveMessageAsync(SetCollectMobileFinancialConnectionsResult.sender(
+                    value: result.toSenderValue(id: args.id, analyticsClient: analyticsClient)
+                ))
+            } catch {
+                analyticsClient.logClientError(error)
+            }
         }
     }
 
@@ -528,13 +578,87 @@ private extension ConnectComponentWebViewController {
                 result = .error("Error calling supplemental function")
             }
 
-            sendMessage(SupplementalFunctionCompletedSender(payload: .init(
-                functionName: payload.functionName,
-                invocationId: payload.invocationId,
-                result: result
-            )))
+            do {
+                try await sendSensitiveMessageAsync(SupplementalFunctionCompletedSender(payload: .init(
+                    functionName: payload.functionName,
+                    invocationId: payload.invocationId,
+                    result: result
+                )))
+            } catch {
+                analyticsClient.logClientError(error)
+            }
         }
     }
+
+    // This is the first script in this controller's private content controller. At document start it captures
+    // built-ins before page code runs, and native main-frame source authority decides whether delivery proceeds.
+    // The original Document identity check prevents a pending delivery from following a retargeted WindowProxy.
+    static let sensitiveDeliveryDispatcherScript = """
+    (() => {
+      const global = this;
+      const defineProperty = Object.defineProperty;
+      const objectCreate = Object.create;
+      const reflectApply = Reflect.apply;
+      const promiseThen = Promise.prototype.then;
+      const noArguments = objectCreate(null);
+      const originalDocument = global.document;
+      let authority = null;
+      let authoritySettled = false;
+      let authorized = false;
+      const pendingState = objectCreate(null);
+      pendingState.deliveries = objectCreate(null);
+      pendingState.count = 0;
+      const settle = (value) => {
+        authoritySettled = true;
+        authorized = value === true;
+        const deliveries = pendingState.deliveries;
+        const count = pendingState.count;
+        pendingState.deliveries = objectCreate(null);
+        pendingState.count = 0;
+        if (authorized) {
+          for (let index = 0; index < count; index += 1) {
+            reflectApply(deliveries[index], undefined, noArguments);
+          }
+        }
+      };
+      defineProperty(global, "__stripeConnectDeliverSensitiveMessage", {
+        configurable: false,
+        enumerable: false,
+        writable: false,
+        value: (callbackName, payload) => {
+          const callback = global[callbackName];
+          if (typeof callback !== "function" || authority === null) { return false; }
+          const deliver = () => {
+            if (!authoritySettled || !authorized) { return; }
+            try {
+              if (global.document !== originalDocument) { return; }
+            } catch (_) {
+              return;
+            }
+            reflectApply(callback, global, [payload]);
+          };
+          if (authoritySettled) {
+            if (authorized) { deliver(); }
+            return authorized;
+          }
+          defineProperty(pendingState.deliveries, pendingState.count, {
+            configurable: false,
+            enumerable: false,
+            writable: false,
+            value: deliver
+          });
+          pendingState.count += 1;
+          return true;
+        }
+      });
+      try {
+        authority = global.webkit.messageHandlers.connectDocumentAuthority.postMessage({});
+        reflectApply(promiseThen, authority, [settle, () => { settle(false); }]);
+      } catch (_) {
+        settle(false);
+      }
+    })();
+    """
 
     static let contentHeightObserverScript = """
     (function() {
