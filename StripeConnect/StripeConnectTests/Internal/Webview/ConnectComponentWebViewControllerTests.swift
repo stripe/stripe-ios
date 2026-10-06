@@ -292,8 +292,6 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
                                                          json: "{}",
                                                          expectedResponse: "{\"setHandleCheckScanSubmitted\":true}")
 
-        try await webVC.webView.evaluateCallSupplementalFunction(functionName: .handleCheckScanSubmitted, invocationId: "testInvocation", args: "[{\"checkScanToken\":\"testToken\"}]")
-
         let expectation = try webVC.webView.expectationForMessageReceived(
             sender: SupplementalFunctionCompletedSender(payload: .init(
                 functionName: .handleCheckScanSubmitted,
@@ -301,6 +299,8 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
                 result: .success(.handleCheckScanSubmitted)
             ))
         )
+
+        try await webVC.webView.evaluateCallSupplementalFunction(functionName: .handleCheckScanSubmitted, invocationId: "testInvocation", args: "[{\"checkScanToken\":\"testToken\"}]")
 
         await fulfillment(of: [expectation], timeout: TestHelpers.defaultTimeout)
     }
@@ -330,8 +330,6 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
                                                          json: "{}",
                                                          expectedResponse: "{}")
 
-        try await webVC.webView.evaluateCallSupplementalFunction(functionName: .handleCheckScanSubmitted, invocationId: "testInvocation", args: "[{\"checkScanToken\":\"testToken\"}]")
-
         let expectation = try webVC.webView.expectationForMessageReceived(
             sender: SupplementalFunctionCompletedSender(payload: .init(
                 functionName: .handleCheckScanSubmitted,
@@ -339,6 +337,8 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
                 result: .error("No supplemental function registered for handleCheckScanSubmitted")
             ))
         )
+
+        try await webVC.webView.evaluateCallSupplementalFunction(functionName: .handleCheckScanSubmitted, invocationId: "testInvocation", args: "[{\"checkScanToken\":\"testToken\"}]")
 
         await fulfillment(of: [expectation], timeout: TestHelpers.defaultTimeout)
     }
@@ -375,8 +375,6 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
                                                          json: "{}",
                                                          expectedResponse: "{\"setHandleCheckScanSubmitted\":true}")
 
-        try await webVC.webView.evaluateCallSupplementalFunction(functionName: .handleCheckScanSubmitted, invocationId: "testInvocation", args: "[{\"checkScanToken\":\"testToken\"}]")
-
         let expectation = try webVC.webView.expectationForMessageReceived(
             sender: SupplementalFunctionCompletedSender(payload: .init(
                 functionName: .handleCheckScanSubmitted,
@@ -384,6 +382,8 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
                 result: .error("Error calling supplemental function")
             ))
         )
+
+        try await webVC.webView.evaluateCallSupplementalFunction(functionName: .handleCheckScanSubmitted, invocationId: "testInvocation", args: "[{\"checkScanToken\":\"testToken\"}]")
 
         await fulfillment(of: [expectation], timeout: TestHelpers.defaultTimeout)
     }
