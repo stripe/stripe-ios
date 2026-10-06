@@ -86,23 +86,54 @@ final class CardSectionWithScannerView: UIView {
 
     private func hideCardScanner() {
         self.cardScanningView.prepDismissAnimation()
-        UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.3, options: [.curveEaseInOut]) {
-            self.cardScanButton.alpha = 1
-            self.cardScanningView.alpha = 0
-            self.cardScanningView.setHiddenIfNecessary(true)
-            self.layoutIfNeeded()
-        } completion: { _ in
+        animateScannerVisibility(false) { _ in
             self.cardScanningView.completeDismissAnimation()
         }
     }
 
     private func showCardScanner() {
-        UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.3, options: [.curveEaseInOut]) {
-            self.cardScanButton.alpha = 0
-            self.cardScanningView.alpha = 1
-            self.cardScanningView.setHiddenIfNecessary(false)
-            self.layoutIfNeeded()
+        animateScannerVisibility(true)
+    }
+
+    private func animateScannerVisibility(_ isVisible: Bool, completion: ((Bool) -> Void)? = nil) {
+        var nativeSheet: NativeSheetContainerViewController?
+        var responder: UIResponder? = next
+        while let current = responder {
+            if let viewController = current as? UIViewController {
+                nativeSheet = viewController.bottomSheetController as? NativeSheetContainerViewController
+                break
+            }
+            responder = current.next
         }
+
+        var targetHeight: CGFloat?
+        if let nativeSheet, nativeSheet.viewIfLoaded?.window != nil {
+            // Animated stack visibility keeps its old fitting height until the animation block finishes.
+            // Measure the destination first, then restore the starting layout before animating either view.
+            UIView.performWithoutAnimation {
+                let wasHidden = cardScanningView.isHidden
+                let contentOffset = nativeSheet.scrollView.contentOffset
+                cardScanningView.setHiddenIfNecessary(!isVisible)
+                nativeSheet.view.setNeedsLayout()
+                nativeSheet.view.layoutIfNeeded()
+                targetHeight = nativeSheet.fittedContentHeight
+                cardScanningView.setHiddenIfNecessary(wasHidden)
+                nativeSheet.view.setNeedsLayout()
+                nativeSheet.view.layoutIfNeeded()
+                // Measuring shorter content can clamp the scroll offset; preserve the starting position too.
+                nativeSheet.scrollView.contentOffset = contentOffset
+            }
+        }
+
+        UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.3, options: [.curveEaseInOut]) {
+            self.cardScanButton.alpha = isVisible ? 0 : 1
+            self.cardScanningView.alpha = isVisible ? 1 : 0
+            self.cardScanningView.setHiddenIfNecessary(!isVisible)
+            self.layoutIfNeeded()
+            if let nativeSheet, let targetHeight {
+                nativeSheet.invalidateContentDetent(to: targetHeight)
+            }
+        } completion: { completion?($0) }
     }
 
     override var canBecomeFirstResponder: Bool {

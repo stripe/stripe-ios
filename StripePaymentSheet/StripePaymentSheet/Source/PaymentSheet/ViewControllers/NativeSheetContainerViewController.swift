@@ -352,7 +352,8 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
     private var hasScheduledDetentInvalidation = false
     private var isWaitingForDetentTransition = false
 
-    private var fittedContentHeight: CGFloat {
+    /// Natural form and navigation height, also used to premeasure animated visibility changes.
+    var fittedContentHeight: CGFloat {
         // A vertical system bar narrows the usable content width, which can increase wrapped content height.
         // Use the scroll view hasn't laid out yet, estimate the width by subtracting the insets from the sheet width.
         let width = scrollView.bounds.width > 0
@@ -395,6 +396,11 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
     }
 
     func invalidateContentDetent() {
+        invalidateContentDetent(to: fittedContentHeight)
+    }
+
+    /// Resizes to a destination measured before UIKit defers an animated stack's constraint updates.
+    func invalidateContentDetent(to fittedContentHeight: CGFloat) {
         #if !os(visionOS)
         guard #available(iOS 16.0, *) else {
             return
@@ -425,7 +431,13 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
             return
         }
 
-        let fittedContentHeight = fittedContentHeight
+        if UIView.inheritedAnimationDuration > 0 {
+            // A premeasured form change can resize the sheet using the form's own spring timing.
+            lastFittedContentHeight = fittedContentHeight
+            rootParent.sheetPresentationController?.invalidateDetents()
+            rootParent.presentationController?.containerView?.layoutIfNeeded()
+            return
+        }
         // UISheetPresentationController.animateChanges(_:) can cause an infinite layout loop
         // when resizing scrollable content on an iPhone Duo with its screen open.
         // Use the Stripe version instead

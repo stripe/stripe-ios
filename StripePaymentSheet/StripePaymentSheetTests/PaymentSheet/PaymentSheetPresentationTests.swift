@@ -750,28 +750,55 @@ final class PaymentSheetPresentationTests: XCTestCase {
             delegate: delegate,
             analyticsHelper: nil
         )
-        content.view.addAndPinSubview(scanner)
+        let footer = UIView()
+        footer.heightAnchor.constraint(equalToConstant: 60).isActive = true
+        let stack = UIStackView(arrangedSubviews: [scanner, footer])
+        stack.axis = .vertical
+        content.view.addAndPinSubview(stack)
         let (window, sheet) = try await presentContentSizedSheet(content: content)
         defer { window.rootViewController?.dismiss(animated: false); window.isHidden = true }
         let initialHeight = sheet.view.bounds.height
+        let footerBaseline = footer.convert(footer.bounds, to: window).maxY
 
         // When opening the scanner through its actual entry point
         scanner.didTapCardScanButton()
+        try await assertFooterRemainsAnchored(footer, in: window, baseline: footerBaseline)
         try await waitForSheetLayout {
             sheet.view.bounds.height > initialHeight + 1
         }
 
-        // Then the sheet grows to show the scanner
+        // Then the sheet grows to show the scanner without pushing the footer below the sheet
         XCTAssertGreaterThan(sheet.view.bounds.height, initialHeight + 1)
+        XCTAssertEqual(footer.convert(footer.bounds, to: window).maxY, footerBaseline, accuracy: 1.5)
 
         // When closing the scanner without scanning a card
         scanner.cardScanningViewShouldClose(scanner.cardScanningView, cardParams: nil)
+        try await assertFooterRemainsAnchored(footer, in: window, baseline: footerBaseline)
         try await waitForSheetLayout {
             abs(sheet.view.bounds.height - initialHeight) < 1.5
         }
 
-        // Then the sheet returns to its original height
+        // Then the sheet returns to its original height without leaving a gap below the footer
         XCTAssertEqual(sheet.view.bounds.height, initialHeight, accuracy: 1.5)
+        XCTAssertEqual(footer.convert(footer.bounds, to: window).maxY, footerBaseline, accuracy: 1.5)
+    }
+
+    @MainActor
+    private func assertFooterRemainsAnchored(_ footer: UIView, in window: UIWindow, baseline: CGFloat) async throws {
+        // Sample the presentation layers: model geometry already contains the animation's final frames.
+        let deadline = Date().addingTimeInterval(0.7)
+        var maximumDisplacement: CGFloat = 0
+        var sampleCount = 0
+        while Date() < deadline {
+            if let footerLayer = footer.layer.presentation(), let windowLayer = window.layer.presentation() {
+                let footerBottom = footerLayer.convert(footerLayer.bounds, to: windowLayer).maxY
+                maximumDisplacement = max(maximumDisplacement, abs(footerBottom - baseline))
+                sampleCount += 1
+            }
+            try await Task.sleep(nanoseconds: 10_000_000)
+        }
+        XCTAssertGreaterThan(sampleCount, 0)
+        XCTAssertLessThanOrEqual(maximumDisplacement, 1.5, "Content below the scanner must stay anchored throughout the resize.")
     }
 
     @MainActor
