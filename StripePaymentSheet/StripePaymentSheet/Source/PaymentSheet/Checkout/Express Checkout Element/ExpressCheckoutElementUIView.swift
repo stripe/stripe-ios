@@ -188,11 +188,7 @@ public final class ExpressCheckoutElementUIView: UIView {
 
     private func makeLinkButton() -> UIView {
         let button = PayWithLinkButton(brand: linkBrand)
-        if LiquidGlassDetector.isEnabledInMerchantApp {
-            button.ios26_applyCapsuleCornerConfiguration()
-        } else {
-            button.cornerRadius = Constants.cornerRadius
-        }
+        button.applyDefaultCornerStyle()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.heightAnchor.constraint(equalToConstant: Constants.buttonHeight).isActive = true
         button.addTarget(self, action: #selector(handleLinkTapped), for: .touchUpInside)

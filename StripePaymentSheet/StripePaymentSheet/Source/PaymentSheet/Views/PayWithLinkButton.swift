@@ -63,6 +63,14 @@ final class PayWithLinkButton: UIControl {
         }
     }
 
+    /// A preview of a Link payment method to display instead of the email.
+    /// Only shown when `linkAccount` is registered. Defaults to `nil`, in which case the email is shown.
+    var paymentMethodPreview: LinkPaymentMethodPreview? {
+        didSet {
+            updateUI()
+        }
+    }
+
     var cornerRadius: CGFloat = ElementsUI.defaultCornerRadius {
         didSet {
             setNeedsLayout()
@@ -84,6 +92,16 @@ final class PayWithLinkButton: UIControl {
     override var intrinsicContentSize: CGSize {
         return CGSize(width: UIView.noIntrinsicMetric, height: Constants.defaultSize.height)
     }
+
+    fileprivate struct StateTransition {
+        let oldState: LinkAccountState
+        let newState: LinkAccountState
+        let oldContentView: UIView
+        let newContentView: UIView
+        let movingLogoView: UIImageView
+    }
+
+    private var activeStateTransition: StateTransition?
 
     private let titleBaseFont: UIFont = UIFont.systemFont(ofSize: 16, weight: .medium)
 
@@ -163,7 +181,7 @@ final class PayWithLinkButton: UIControl {
     private lazy var cardBrandView: UIImageView = {
         let brandView = UIImageView(image: STPImageLibrary.unknownCardCardImage())
         brandView.translatesAutoresizingMaskIntoConstraints = false
-        brandView.contentMode = .scaleAspectFill
+        brandView.contentMode = .scaleAspectFit
 
         NSLayoutConstraint.activate([
             brandView.widthAnchor.constraint(equalToConstant: Constants.cardBrandSize.width),
@@ -189,15 +207,26 @@ final class PayWithLinkButton: UIControl {
         return stackView
     }()
 
-    enum LinkAccountState {
+    enum LinkAccountState: Equatable {
         case noValidAccount
-        case hasCard(last4: String, brand: STPCardBrand)
+        case hasPaymentMethod(LinkPaymentMethodPreview)
         case hasEmail(email: String)
     }
 
     var linkAccountState: LinkAccountState {
+        Self.linkAccountState(linkAccount: linkAccount, paymentMethodPreview: paymentMethodPreview)
+    }
+
+    static func linkAccountState(
+        linkAccount: PaymentSheetLinkAccountInfoProtocol?,
+        paymentMethodPreview: LinkPaymentMethodPreview?
+    ) -> LinkAccountState {
         if !(linkAccount?.isRegistered ?? false) {
             return .noValidAccount
+        }
+
+        if let paymentMethodPreview {
+            return .hasPaymentMethod(paymentMethodPreview)
         }
 
         if let email = linkAccount?.email {
@@ -207,16 +236,20 @@ final class PayWithLinkButton: UIControl {
         return .noValidAccount
     }
 
-    init(brand: LinkBrand = .link) {
+    /// - Parameter observesLinkAccountContext: Whether the button keeps `linkAccount` in sync with `LinkAccountContext`.
+    ///   Pass `false` when the owner sets `linkAccount` itself.
+    init(brand: LinkBrand = .link, observesLinkAccountContext: Bool = true) {
         self.brand = brand
         super.init(frame: CGRect(origin: .zero, size: Constants.defaultSize))
         isAccessibilityElement = true
-        self.linkAccount = LinkAccountContext.shared.account
+        self.linkAccount = observesLinkAccountContext ? LinkAccountContext.shared.account : nil
         setupUI()
         applyStyle()
         updateUI()
-        // Listen for account changes
-        LinkAccountContext.shared.addObserver(self, selector: #selector(onAccountChange(_:)))
+        if observesLinkAccountContext {
+            // Listen for account changes
+            LinkAccountContext.shared.addObserver(self, selector: #selector(onAccountChange(_:)))
+        }
     }
     @objc
     func onAccountChange(_ notification: Notification) {
@@ -242,6 +275,16 @@ final class PayWithLinkButton: UIControl {
         bounds.contains(point) ? self : nil
     }
 
+    /// Applies the standard Link button corner style: a capsule when Liquid Glass is enabled
+    /// in the merchant app, otherwise the default corner radius.
+    func applyDefaultCornerStyle() {
+        if LiquidGlassDetector.isEnabledInMerchantApp {
+            ios26_applyCapsuleCornerConfiguration()
+        } else {
+            cornerRadius = ElementsUI.defaultCornerRadius
+        }
+    }
+
 }
 
 // MARK: - UI
@@ -263,16 +306,15 @@ private extension PayWithLinkButton {
         return image.size.width / max(image.size.height, 1)
     }
 
-    func makePayWithLinkAttributedText(for font: UIFont) -> NSAttributedString {
+    /// - Parameter hidesLogo: Whether to leave a blank space in place of the Link logo.
+    func makePayWithLinkAttributedText(for font: UIFont, hidesLogo: Bool = false) -> NSAttributedString {
         let payWithLinkString = NSMutableAttributedString(string: String.Localized.pay_with_link(brand: brand))
 
         let linkImage = primaryLinkLogoImage
-        let linkAttachment = NSTextAttachment(image: linkImage)
-        let linkLogoRatio = Self.logoAspectRatio(for: linkImage)
-        let linkTextSpacing = Self.inlineLogoVerticalSpacing
-        let linkLogoHeight = (font.capHeight + (font.pointSize * Self.inlineLogoFontSizeBoost)) * (1.0 + linkTextSpacing)
-        let linkY = linkTextSpacing * linkLogoHeight
-        linkAttachment.bounds = CGRect(x: 0, y: -linkY, width: linkLogoHeight * linkLogoRatio, height: linkLogoHeight)
+        let linkAttachment = NSTextAttachment(
+            image: hidesLogo ? UIGraphicsImageRenderer(size: linkImage.size).image { _ in } : linkImage
+        )
+        linkAttachment.bounds = payWithLinkLogoBounds(for: font)
 
         let brandTokenToReplace = [brand.displayName, LinkBrand.link.displayName].first { token in
             payWithLinkString.mutableString.range(of: token).location != NSNotFound
@@ -286,6 +328,15 @@ private extension PayWithLinkButton {
         }
 
         return payWithLinkString
+    }
+
+    /// The bounds of the Link logo attachment in the "Pay with Link" text, relative to the baseline.
+    func payWithLinkLogoBounds(for font: UIFont) -> CGRect {
+        let linkLogoRatio = Self.logoAspectRatio(for: primaryLinkLogoImage)
+        let linkTextSpacing = Self.inlineLogoVerticalSpacing
+        let linkLogoHeight = (font.capHeight + (font.pointSize * Self.inlineLogoFontSizeBoost)) * (1.0 + linkTextSpacing)
+        let linkY = linkTextSpacing * linkLogoHeight
+        return CGRect(x: 0, y: -linkY, width: linkLogoHeight * linkLogoRatio, height: linkLogoHeight)
     }
 
     func makeLogoView() -> UIImageView {
@@ -370,41 +421,253 @@ private extension PayWithLinkButton {
     }
 
     func updateUI() {
+        // Only interrupt an in-flight transition if the content changes; redundant updates are common
+        if let activeStateTransition, activeStateTransition.newState != linkAccountState {
+            finishStateTransition()
+        }
         switch linkAccountState {
-        case .hasCard(let last4, let brand):
-            let cardImage = STPImageLibrary.cardBrandImage(for: brand)
+        case .hasPaymentMethod(let paymentMethodPreview):
+            cardBrandView.image = paymentMethodPreview.icon
                 .withAlignmentRectInsets(
                     Constants.cardBrandInsets
                 )
-            cardBrandView.image = cardImage
-            last4Label.text = last4
-
-            cardStackView.isHidden = false
-            payWithLinkView.isHidden = true
-            emailStackView.isHidden = true
-            payWithStackView.isHidden = true
+            last4Label.text = paymentMethodPreview.last4
         case .hasEmail(let email):
             emailLabel.text = email
-
-            payWithLinkView.isHidden = true
-            cardStackView.isHidden = true
-            emailStackView.isHidden = false
-            payWithStackView.isHidden = true
         case .noValidAccount:
-            emailStackView.isHidden = true
-            cardStackView.isHidden = true
-            payWithStackView.isHidden = false
-            payWithLinkView.isHidden = false
+            break
+        }
+        // An in-flight transition shows both the old and new content, and updates the visibility when it finishes
+        if activeStateTransition == nil {
+            updateContentVisibility()
         }
         updateAccessibilityContent()
     }
 
+    func contentView(for state: LinkAccountState) -> UIStackView {
+        switch state {
+        case .hasPaymentMethod:
+            return cardStackView
+        case .hasEmail:
+            return emailStackView
+        case .noValidAccount:
+            return payWithStackView
+        }
+    }
+
+    func updateContentVisibility() {
+        let visibleContentView = contentView(for: linkAccountState)
+        for contentView in [payWithStackView, emailStackView, cardStackView] {
+            contentView.isHidden = contentView !== visibleContentView
+        }
+    }
+
     func updateBrandUI() {
+        finishStateTransition()
         payWithLinkView.attributedText = makePayWithLinkAttributedText(for: payWithLinkView.font)
         updateLogoView(emailLogoView)
         updateLogoView(cardLogoView)
         updateAccessibilityContent()
         setNeedsLayout()
+    }
+
+}
+
+// MARK: - State transitions
+
+extension PayWithLinkButton {
+
+    /// Applies `changes` to the button, animating the change in content if `animated` is `true`.
+    ///
+    /// When switching between content that includes the Link logo (e.g. "Pay with Link" to the customer's email),
+    /// the logo moves to its new position while the rest of the content cross-fades. Other changes cross-fade.
+    func performStateChange(animated: Bool, duration: TimeInterval, changes: () -> Void) {
+        guard animated, activeStateTransition == nil else {
+            // Changes that alter the content finish any in-flight transition; others leave it running
+            let wasTransitioning = activeStateTransition != nil
+            changes()
+            if animated, wasTransitioning, activeStateTransition == nil {
+                UIView.transition(
+                    with: self,
+                    duration: duration,
+                    options: [.transitionCrossDissolve, .allowUserInteraction],
+                    animations: nil
+                )
+            }
+            return
+        }
+
+        layoutIfNeeded()
+        let oldState = linkAccountState
+        let oldBrand = brand
+        let sourceLogoFrame = logoFrame(for: oldState)
+
+        changes()
+
+        let newState = linkAccountState
+        guard newState != oldState || brand != oldBrand else {
+            return
+        }
+
+        let oldContentView = contentView(for: oldState)
+        let newContentView = contentView(for: newState)
+        layoutIfNeeded()
+        guard brand == oldBrand,
+              oldContentView !== newContentView,
+              let sourceLogoFrame,
+              let destinationLogoFrame = logoFrame(for: newState) else {
+            UIView.transition(
+                with: self,
+                duration: duration,
+                options: [.transitionCrossDissolve, .allowUserInteraction],
+                animations: nil
+            )
+            return
+        }
+
+        // Keep the old content on screen to fade it out, and draw a single logo that moves between the two
+        oldContentView.isHidden = false
+        newContentView.alpha = 0
+        setLogoHidden(true, for: oldState)
+        setLogoHidden(true, for: newState)
+
+        let movingLogoView = UIImageView(image: primaryLinkLogoImage)
+        movingLogoView.contentMode = .scaleAspectFit
+        movingLogoView.frame = sourceLogoFrame
+        addSubview(movingLogoView)
+
+        activeStateTransition = StateTransition(
+            oldState: oldState,
+            newState: newState,
+            oldContentView: oldContentView,
+            newContentView: newContentView,
+            movingLogoView: movingLogoView
+        )
+
+        UIView.animate(
+            withDuration: duration * 0.5,
+            delay: 0,
+            options: [.curveEaseOut, .allowUserInteraction]
+        ) {
+            oldContentView.alpha = 0
+        }
+        UIView.animate(
+            withDuration: duration * 0.7,
+            delay: duration * 0.3,
+            options: [.curveEaseInOut, .allowUserInteraction]
+        ) {
+            newContentView.alpha = 1
+        }
+        UIView.animate(
+            withDuration: duration,
+            delay: 0,
+            usingSpringWithDamping: 1,
+            initialSpringVelocity: 0,
+            options: [.allowUserInteraction]
+        ) {
+            movingLogoView.frame = destinationLogoFrame
+        } completion: { [weak self] _ in
+            guard let self, self.activeStateTransition?.movingLogoView === movingLogoView else {
+                return
+            }
+            self.finishStateTransition()
+        }
+    }
+
+    /// The frame of the Link logo in the button's coordinate space when displaying `state`,
+    /// or `nil` if it can't be determined.
+    func logoFrame(for state: LinkAccountState) -> CGRect? {
+        switch state {
+        case .hasPaymentMethod:
+            return cardLogoView.convert(cardLogoView.bounds, to: self)
+        case .hasEmail:
+            return emailLogoView.convert(emailLogoView.bounds, to: self)
+        case .noValidAccount:
+            return payWithLinkLogoFrame()
+        }
+    }
+
+    func setLogoHidden(_ isHidden: Bool, for state: LinkAccountState) {
+        switch state {
+        case .hasPaymentMethod:
+            cardLogoView.alpha = isHidden ? 0 : 1
+        case .hasEmail:
+            emailLogoView.alpha = isHidden ? 0 : 1
+        case .noValidAccount:
+            payWithLinkView.attributedText = makePayWithLinkAttributedText(for: payWithLinkView.font, hidesLogo: isHidden)
+        }
+    }
+
+    /// Immediately completes the in-flight state transition, if any.
+    func finishStateTransition() {
+        guard let transition = activeStateTransition else {
+            return
+        }
+        activeStateTransition = nil
+
+        for view in [transition.movingLogoView, transition.oldContentView, transition.newContentView] {
+            view.layer.removeAllAnimations()
+        }
+        transition.movingLogoView.removeFromSuperview()
+        transition.oldContentView.alpha = 1
+        transition.newContentView.alpha = 1
+        setLogoHidden(false, for: transition.oldState)
+        setLogoHidden(false, for: transition.newState)
+        updateContentVisibility()
+    }
+
+    /// The frame of the Link logo within the "Pay with Link" text, where it's drawn as a text attachment.
+    private func payWithLinkLogoFrame() -> CGRect? {
+        // Rebuild the text rather than reading it back from the label, which doesn't preserve the attachment bounds
+        guard let font = payWithLinkView.font else {
+            return nil
+        }
+        let attributedText = NSMutableAttributedString(attributedString: makePayWithLinkAttributedText(for: font))
+        attributedText.addAttribute(.font, value: font, range: NSRange(location: 0, length: attributedText.length))
+
+        var logoCharacterIndex: Int?
+        attributedText.enumerateAttribute(.attachment, in: NSRange(location: 0, length: attributedText.length)) { value, range, stop in
+            // The logo is the only attachment with an image; the others are spacers
+            guard let attachment = value as? NSTextAttachment, attachment.image != nil else {
+                return
+            }
+            logoCharacterIndex = range.location
+            stop.pointee = true
+        }
+        guard let logoCharacterIndex else {
+            return nil
+        }
+        let logoBounds = payWithLinkLogoBounds(for: font)
+
+        // Lay out the text on a single unbounded line, then center it the way the label does
+        let textStorage = NSTextStorage(attributedString: attributedText)
+        let layoutManager = NSLayoutManager()
+        let textContainer = NSTextContainer(size: CGSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude))
+        textContainer.lineFragmentPadding = 0
+        layoutManager.addTextContainer(textContainer)
+        textStorage.addLayoutManager(layoutManager)
+
+        let textSize = layoutManager.usedRect(for: textContainer).size
+        let labelBounds = payWithLinkView.bounds
+        // The label truncates text that doesn't fit, which moves the logo
+        guard textSize.width <= labelBounds.width + 1 else {
+            return nil
+        }
+
+        let glyphIndex = layoutManager.glyphIndexForCharacter(at: logoCharacterIndex)
+        let lineFragmentRect = layoutManager.lineFragmentRect(forGlyphAt: glyphIndex, effectiveRange: nil)
+        let glyphLocation = layoutManager.location(forGlyphAt: glyphIndex)
+        // UILabel centers its text horizontally, and vertically within its text rect
+        let textRect = payWithLinkView.textRect(forBounds: labelBounds, limitedToNumberOfLines: 1)
+        let textOriginX = (labelBounds.width - textSize.width) / 2
+        let baselineY = textRect.minY + (labelBounds.height - textRect.height) / 2 + font.ascender
+        let logoFrame = CGRect(
+            x: textOriginX + lineFragmentRect.minX + glyphLocation.x + logoBounds.minX,
+            y: baselineY - logoBounds.maxY,
+            width: logoBounds.width,
+            height: logoBounds.height
+        )
+        return payWithLinkView.convert(logoFrame, to: self)
     }
 
 }
@@ -498,8 +761,8 @@ private extension PayWithLinkButton {
         accessibilityLabel = brand.accessibilityText(from: String.Localized.pay_with_link(brand: brand))
 
         switch linkAccountState {
-        case .hasCard(let last4, let brand):
-            accessibilityValue = "\(STPCardBrandUtilities.stringFrom(brand) ?? "Unknown") \(last4)"
+        case .hasPaymentMethod(let paymentMethodPreview):
+            accessibilityValue = paymentMethodPreview.accessibilityValue
         case .hasEmail(let email):
             accessibilityValue = email
         case .noValidAccount:
@@ -531,7 +794,7 @@ struct UIViewPreview<View: UIView>: UIViewRepresentable {
     }
 }
 
-private func makeAccountStub(email: String, isRegistered: Bool, lastPM: LinkPMDisplayDetails?) -> PayWithLinkButton.LinkAccountStub {
+private func makeAccountStub(email: String, isRegistered: Bool) -> PayWithLinkButton.LinkAccountStub {
     return PayWithLinkButton.LinkAccountStub(
         email: email,
         redactedPhoneNumber: nil,
@@ -551,17 +814,18 @@ struct LinkButtonPreviews_Previews: PreviewProvider {
             }.padding()
             UIViewPreview {
                 let lb = PayWithLinkButton()
-                lb.linkAccount = makeAccountStub(email: "theop@example.com", isRegistered: true, lastPM: nil)
+                lb.linkAccount = makeAccountStub(email: "theop@example.com", isRegistered: true)
                 return lb
             }.padding()
             UIViewPreview {
                 let lb = PayWithLinkButton()
-                lb.linkAccount = makeAccountStub(email: "theopetersonmarks@longestemaildomain.com", isRegistered: true, lastPM: nil)
+                lb.linkAccount = makeAccountStub(email: "theopetersonmarks.longname@example.com", isRegistered: true)
                 return lb
             }.padding()
             UIViewPreview {
                 let lb = PayWithLinkButton()
-                lb.linkAccount = makeAccountStub(email: "test@test.com", isRegistered: true, lastPM: .init(last4: "3155", brand: .visa))
+                lb.linkAccount = makeAccountStub(email: "test@test.com", isRegistered: true)
+                lb.paymentMethodPreview = .init(icon: STPImageLibrary.unpaddedCardBrandImage(for: .visa), last4: "3155")
                 return lb
             }.padding()
         }
