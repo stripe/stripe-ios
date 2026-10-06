@@ -26,7 +26,23 @@ final class ConnectOutboundDocumentAuthorityTests: XCTestCase {
         try await run(host: "connect-js.stripe.com", navigate: false, tamper: false, expectCallback: false, installProxy: false)
     }
 
-    private func run(host: String, navigate: Bool, tamper: Bool, expectCallback: Bool, installProxy: Bool = true) async throws {
+    func testMissingCallbackRefusesSensitiveDelivery() async throws {
+        try await run(host: "connect-js.stripe.com", navigate: false, tamper: false, expectCallback: false, hasCallback: false)
+    }
+
+    func testMissingDispatcherRefusesSensitiveDelivery() async throws {
+        try await run(host: "connect-js.stripe.com", navigate: false, tamper: false, expectCallback: false, hasDispatcher: false)
+    }
+
+    private func run(
+        host: String,
+        navigate: Bool,
+        tamper: Bool,
+        expectCallback: Bool,
+        installProxy: Bool = true,
+        hasCallback: Bool = true,
+        hasDispatcher: Bool = true
+    ) async throws {
         // Given a real component dispatcher whose native authorization reply can be held.
         let manager = EmbeddedComponentManager(apiClient: .init(publishableKey: "pk_test"), fetchClientSecret: { "unused" })
         let controller = ConnectComponentWebViewController(
@@ -36,8 +52,11 @@ final class ConnectOutboundDocumentAuthorityTests: XCTestCase {
             analyticsClientFactory: { ComponentAnalyticsClient(client: DocumentAuthorityTransport(), commonFields: $0) },
             didFailLoadWithError: { _ in }
         )
-        let observer = DocumentAuthoritySourceObserver(webView: controller.webView, host: host)
+        let observer = DocumentAuthoritySourceObserver(webView: controller.webView, host: host, expectsDispatcher: hasDispatcher)
         let contentController = controller.webView.configuration.userContentController
+        if !hasDispatcher {
+            contentController.removeAllUserScripts()
+        }
         contentController.add(observer, name: observer.name)
         let proxy = DocumentAuthorityReplyProxy(
             handler: ScriptMessageHandlerWithReply<VoidPayload, Bool>(
@@ -58,10 +77,10 @@ final class ConnectOutboundDocumentAuthorityTests: XCTestCase {
             controller.webView.stopLoading()
         }
         controller.webView.loadHTMLString(
-            DocumentAuthoritySourceObserver.html(tamper: tamper, replaceDispatcher: !installProxy),
+            DocumentAuthoritySourceObserver.html(tamper: tamper, replaceDispatcher: !installProxy, hasCallback: hasCallback, expectsDispatcher: hasDispatcher),
             baseURL: URL(string: "https://\(host)/fixture")!
         )
-        if installProxy {
+        if installProxy && hasDispatcher {
             let captured = try await proxy.firstRequest.wait()
             try captured.assertSource(host: host)
             if host == "connect-js.stripe.com" {
@@ -75,14 +94,16 @@ final class ConnectOutboundDocumentAuthorityTests: XCTestCase {
         try await observer.ready.wait()
 
         // When delivery is requested before the held authorization reply is released.
-        try await controller.sendSensitiveMessageAsync(ReturnedFromAuthenticatedWebViewSender(
-            payload: .init(url: URL(string: "stripe-connect://return")!, id: "timing")
-        ))
+        let delivery = Task {
+            try await controller.sendSensitiveMessageAsync(ReturnedFromAuthenticatedWebViewSender(
+                payload: .init(url: URL(string: "stripe-connect://return")!, id: "timing")
+            ))
+        }
         try await observer.callback.assertEmpty()
         if navigate {
             observer.reset(host: "foreign.test")
             controller.webView.loadHTMLString(
-                DocumentAuthoritySourceObserver.html(tamper: false, replaceDispatcher: false),
+                DocumentAuthoritySourceObserver.html(tamper: false, replaceDispatcher: false, hasCallback: true, expectsDispatcher: true),
                 baseURL: URL(string: "https://foreign.test/fixture")!
             )
             let captured = try await proxy.secondRequest.wait()
@@ -98,8 +119,17 @@ final class ConnectOutboundDocumentAuthorityTests: XCTestCase {
             let payload = try await observer.callback.wait()
             XCTAssertEqual(payload["id"] as? String, "timing")
             XCTAssertEqual(payload["url"] as? String, "stripe-connect://return")
+            try await delivery.value
         } else {
             try await observer.callback.assertEmpty()
+            do {
+                try await delivery.value
+                XCTFail("Sensitive delivery unexpectedly succeeded")
+            } catch {
+                let refusal = error as NSError
+                XCTAssertEqual(refusal.domain, "StripeConnect.SensitiveDeliveryError")
+                XCTAssertEqual(refusal.code, 0)
+            }
         }
     }
 }
@@ -177,17 +207,20 @@ private final class DocumentAuthoritySourceObserver: NSObject, WKScriptMessageHa
     let name = "documentAuthoritySourceObserver"
     private weak var webView: WKWebView?
     private var host: String
+    private var expectsDispatcher: Bool
     private(set) var ready = DocumentAuthorityResultGate<Void>()
     private(set) var callback = DocumentAuthorityResultGate<[String: Any]>()
 
-    init(webView: WKWebView, host: String) {
+    init(webView: WKWebView, host: String, expectsDispatcher: Bool = true) {
         self.webView = webView
         self.host = host
+        self.expectsDispatcher = expectsDispatcher
     }
 
-    func reset(host: String) {
+    func reset(host: String, expectsDispatcher: Bool = true) {
         cancel()
         self.host = host
+        self.expectsDispatcher = expectsDispatcher
         ready = DocumentAuthorityResultGate<Void>()
         callback = DocumentAuthorityResultGate<[String: Any]>()
     }
@@ -206,8 +239,8 @@ private final class DocumentAuthoritySourceObserver: NSObject, WKScriptMessageHa
             return
         }
         if body["ready"] as? Bool == true,
-           body["dispatcher"] as? String == "function",
-           body["protected"] as? Bool == true {
+           body["dispatcher"] as? String == (expectsDispatcher ? "function" : "undefined"),
+           body["protected"] as? Bool == expectsDispatcher {
             ready.finish(())
         } else if let payload = body["callback"] as? [String: Any] {
             callback.finish(payload)
@@ -221,7 +254,7 @@ private final class DocumentAuthoritySourceObserver: NSObject, WKScriptMessageHa
         callback.fail(DocumentAuthorityFixtureError.invalidMessage)
     }
 
-    static func html(tamper: Bool, replaceDispatcher: Bool) -> String {
+    static func html(tamper: Bool, replaceDispatcher: Bool, hasCallback: Bool, expectsDispatcher: Bool) -> String {
         let arraySetter = tamper ? """
         Object.defineProperty(Array.prototype, "0", {
           configurable: true,
@@ -238,12 +271,19 @@ private final class DocumentAuthoritySourceObserver: NSObject, WKScriptMessageHa
           Object.defineProperty(this, "__stripeConnectDeliverSensitiveMessage", { value: function() {} });
         } catch (_) {}
         """ : ""
-        return """
-        <!doctype html>
-        <script>
+        let callback = hasCallback ? """
         window.returnedFromAuthenticatedWebView = function(payload) {
           window.webkit.messageHandlers.documentAuthoritySourceObserver.postMessage({ callback: payload });
         };
+        """ : ""
+        let protected = expectsDispatcher ? """
+        this.__stripeConnectDeliverSensitiveMessage === originalDispatcher &&
+                     descriptor.configurable === false && descriptor.writable === false
+        """ : "false"
+        return """
+        <!doctype html>
+        <script>
+        \(callback)
         const originalDispatcher = this.__stripeConnectDeliverSensitiveMessage;
         \(arraySetter)
         \(replace)
@@ -251,8 +291,7 @@ private final class DocumentAuthoritySourceObserver: NSObject, WKScriptMessageHa
         window.webkit.messageHandlers.documentAuthoritySourceObserver.postMessage({
           ready: true,
           dispatcher: typeof this.__stripeConnectDeliverSensitiveMessage,
-          protected: this.__stripeConnectDeliverSensitiveMessage === originalDispatcher &&
-                     descriptor.configurable === false && descriptor.writable === false
+          protected: \(protected)
         });
         </script>
         """

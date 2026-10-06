@@ -11,8 +11,10 @@ import UIKit
 import WebKit
 
 class ConnectComponentWebViewController: ConnectWebViewController {
-    private enum SensitiveDeliveryError: Error {
-        case stringEncoding
+    private enum SensitiveDeliveryError: Int, CustomNSError {
+        case refused
+
+        static let errorDomain = "StripeConnect.SensitiveDeliveryError"
     }
 
     enum LayoutMode {
@@ -319,30 +321,27 @@ extension ConnectComponentWebViewController {
         }
     }
 
-    /// JavaScript evaluation success only confirms the dispatcher was evaluated; source authority can still deny delivery.
+    /// Resolves only after the dispatcher reaches a delivery or refusal outcome.
     func sendSensitiveMessageAsync(_ sender: any MessageSender) async throws {
-        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
-            do {
-                let payload = try sender.jsonData()
-                guard let payloadJSON = String(data: payload, encoding: .utf8) else {
-                    continuation.resume(throwing: SensitiveDeliveryError.stringEncoding)
-                    return
+        do {
+            let payload = try sender.jsonData()
+            let payloadObject = try JSONSerialization.jsonObject(with: payload)
+            let result = try await webView.callAsyncJavaScript(
+                """
+                if (typeof this.__stripeConnectDeliverSensitiveMessage !== 'function') {
+                  return false;
                 }
-                let callbackName = try JSONEncoder().encode(sender.name)
-                guard let callbackJSON = String(data: callbackName, encoding: .utf8) else {
-                    continuation.resume(throwing: SensitiveDeliveryError.stringEncoding)
-                    return
-                }
-                webView.evaluateJavaScript("if (typeof this.__stripeConnectDeliverSensitiveMessage === 'function') { this.__stripeConnectDeliverSensitiveMessage(\(callbackJSON), \(payloadJSON)); }") { _, error in
-                    if let error {
-                        continuation.resume(throwing: error)
-                    } else {
-                        continuation.resume(returning: ())
-                    }
-                }
-            } catch {
-                continuation.resume(throwing: error)
+                return this.__stripeConnectDeliverSensitiveMessage(callbackName, payload);
+                """,
+                arguments: ["callbackName": sender.name, "payload": payloadObject],
+                in: nil,
+                in: .page
+            )
+            guard result as? Bool == true else {
+                throw SensitiveDeliveryError.refused
             }
+        } catch {
+            throw SensitiveDeliveryError.refused
         }
     }
 
@@ -590,9 +589,10 @@ private extension ConnectComponentWebViewController {
         }
     }
 
-    // This is the first script in this controller's private content controller. At document start it captures
-    // built-ins before page code runs, and native main-frame source authority decides whether delivery proceeds.
-    // The original Document identity check prevents a pending delivery from following a retargeted WindowProxy.
+    // This must remain the first script registered in this controller's private content controller. At document
+    // start it captures built-ins before page code runs, and native main-frame source authority decides whether
+    // delivery proceeds. The original Document identity check prevents a pending delivery from following a
+    // retargeted WindowProxy.
     static let sensitiveDeliveryDispatcherScript = """
     (() => {
       const global = this;
@@ -600,6 +600,7 @@ private extension ConnectComponentWebViewController {
       const objectCreate = Object.create;
       const reflectApply = Reflect.apply;
       const promiseThen = Promise.prototype.then;
+      const PromiseConstructor = Promise;
       const noArguments = objectCreate(null);
       const originalDocument = global.document;
       let authority = null;
@@ -615,10 +616,8 @@ private extension ConnectComponentWebViewController {
         const count = pendingState.count;
         pendingState.deliveries = objectCreate(null);
         pendingState.count = 0;
-        if (authorized) {
-          for (let index = 0; index < count; index += 1) {
-            reflectApply(deliveries[index], undefined, noArguments);
-          }
+        for (let index = 0; index < count; index += 1) {
+          reflectApply(deliveries[index], undefined, noArguments);
         }
       };
       defineProperty(global, "__stripeConnectDeliverSensitiveMessage", {
@@ -626,29 +625,53 @@ private extension ConnectComponentWebViewController {
         enumerable: false,
         writable: false,
         value: (callbackName, payload) => {
-          const callback = global[callbackName];
-          if (typeof callback !== "function" || authority === null) { return false; }
-          const deliver = () => {
-            if (!authoritySettled || !authorized) { return; }
-            try {
-              if (global.document !== originalDocument) { return; }
-            } catch (_) {
+          const deliveryPromise = new PromiseConstructor((resolve) => {
+            const callback = global[callbackName];
+            if (typeof callback !== "function" || authority === null) {
+              resolve(false);
               return;
             }
-            reflectApply(callback, global, [payload]);
-          };
-          if (authoritySettled) {
-            if (authorized) { deliver(); }
-            return authorized;
-          }
-          defineProperty(pendingState.deliveries, pendingState.count, {
+            const deliver = () => {
+              if (!authoritySettled || !authorized) {
+                resolve(false);
+                return;
+              }
+              try {
+                if (global.document !== originalDocument) {
+                  resolve(false);
+                  return;
+                }
+                reflectApply(callback, global, [payload]);
+                resolve(true);
+              } catch (_) {
+                resolve(false);
+              }
+            };
+            if (authoritySettled) {
+              deliver();
+              return;
+            }
+            defineProperty(pendingState.deliveries, pendingState.count, {
+              configurable: false,
+              enumerable: false,
+              writable: false,
+              value: deliver
+            });
+            pendingState.count += 1;
+          });
+          defineProperty(deliveryPromise, "then", {
             configurable: false,
             enumerable: false,
             writable: false,
-            value: deliver
+            value: (onFulfilled, onRejected) => {
+              const handlers = objectCreate(null);
+              handlers[0] = onFulfilled;
+              handlers[1] = onRejected;
+              handlers.length = 2;
+              return reflectApply(promiseThen, deliveryPromise, handlers);
+            }
           });
-          pendingState.count += 1;
-          return true;
+          return deliveryPromise;
         }
       });
       try {

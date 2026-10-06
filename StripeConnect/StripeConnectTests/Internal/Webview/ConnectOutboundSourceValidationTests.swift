@@ -35,7 +35,11 @@ final class ConnectOutboundSourceValidationTests: XCTestCase {
 
     func testAuthenticationResultDoesNotReachForeignDocumentAfterNavigation() async throws {
         let factory = HeldAuthenticationSessionFactory()
-        let controller = makeController(authenticationManager: .init(sessionFactory: factory.makeSession))
+        let analyticsTransport = OutboundAnalyticsTransport()
+        let controller = makeController(
+            authenticationManager: .init(sessionFactory: factory.makeSession),
+            analyticsTransport: analyticsTransport
+        )
         let window = UIWindow()
         window.rootViewController = controller
         window.makeKeyAndVisible()
@@ -54,7 +58,14 @@ final class ConnectOutboundSourceValidationTests: XCTestCase {
         await fulfillment(of: [trustedReady, factory.created], timeout: TestHelpers.defaultTimeout)
         controller.webView.loadHTMLString(Self.foreignCallbackHTML, baseURL: URL(string: "https://foreign.test/navigation.html")!)
         await fulfillment(of: [foreignReady, authorityDenied], timeout: TestHelpers.defaultTimeout)
-        factory.complete(URL(string: "stripe-connect://must-not-deliver")!)
+        factory.complete(URL(string: "stripe-connect://must-not-deliver?secret=outbound-sentinel")!)
+        let clientError = try await analyticsTransport.waitForClientError()
+        XCTAssertEqual(clientError["error"] as? String, "StripeConnect.SensitiveDeliveryError:0")
+        XCTAssertNil(clientError["url"])
+        XCTAssertNil(clientError["payload"])
+        let serializedClientError = String(describing: clientError)
+        XCTAssertFalse(serializedClientError.contains("must-not-deliver"))
+        XCTAssertFalse(serializedClientError.contains("outbound-sentinel"))
         await fulfillment(of: [callback], timeout: 0.2)
     }
 
@@ -142,13 +153,16 @@ final class ConnectOutboundSourceValidationTests: XCTestCase {
 }
 
 private extension ConnectOutboundSourceValidationTests {
-    func makeController(authenticationManager: AuthenticatedWebViewManager = .init()) -> ConnectComponentWebViewController {
+    func makeController(
+        authenticationManager: AuthenticatedWebViewManager = .init(),
+        analyticsTransport: OutboundAnalyticsTransport = .init()
+    ) -> ConnectComponentWebViewController {
         let manager = EmbeddedComponentManager(apiClient: .init(publishableKey: "test"), fetchClientSecret: { "unused" })
         return ConnectComponentWebViewController(
             componentManager: manager,
             componentType: .payouts,
             loadContent: false,
-            analyticsClientFactory: { ComponentAnalyticsClient(client: OutboundAnalyticsTransport(), commonFields: $0) },
+            analyticsClientFactory: { ComponentAnalyticsClient(client: analyticsTransport, commonFields: $0) },
             didFailLoadWithError: { _ in },
             authenticatedWebViewManager: authenticationManager
         )
@@ -378,5 +392,21 @@ private final class HeldAuthenticationSession: ASWebAuthenticationSession {
 
 private final class OutboundAnalyticsTransport: AnalyticsClientV2Protocol {
     let clientId = "outbound-source-validation"
-    func log(eventName: String, parameters: [String: Any]) {}
+    private var events: [(name: String, parameters: [String: Any])] = []
+
+    func log(eventName: String, parameters: [String: Any]) {
+        events.append((name: eventName, parameters: parameters))
+    }
+
+    @MainActor
+    func waitForClientError() async throws -> [String: Any] {
+        try await TestHelpers.withTimeout {
+            while true {
+                if let event = self.events.last(where: { $0.name == "client_error" }) {
+                    return event.parameters
+                }
+                try await Task.sleep(nanoseconds: 10_000_000)
+            }
+        }
+    }
 }
