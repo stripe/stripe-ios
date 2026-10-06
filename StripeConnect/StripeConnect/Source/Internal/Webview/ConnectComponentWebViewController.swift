@@ -326,17 +326,21 @@ extension ConnectComponentWebViewController {
         do {
             let payload = try sender.jsonData()
             let payloadObject = try JSONSerialization.jsonObject(with: payload)
-            let result = try await webView.callAsyncJavaScript(
-                """
-                if (typeof this.__stripeConnectDeliverSensitiveMessage !== 'function') {
-                  return false;
+            let result: Any = try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Any, Error>) in
+                webView.callAsyncJavaScript(
+                    """
+                    if (typeof this.__stripeConnectDeliverSensitiveMessage !== 'function') {
+                      return false;
+                    }
+                    return this.__stripeConnectDeliverSensitiveMessage(callbackName, payload);
+                    """,
+                    arguments: ["callbackName": sender.name, "payload": payloadObject],
+                    in: nil,
+                    in: .page
+                ) { result in
+                    continuation.resume(with: result)
                 }
-                return this.__stripeConnectDeliverSensitiveMessage(callbackName, payload);
-                """,
-                arguments: ["callbackName": sender.name, "payload": payloadObject],
-                in: nil,
-                in: .page
-            )
+            }
             guard result as? Bool == true else {
                 throw SensitiveDeliveryError.refused
             }

@@ -59,7 +59,7 @@ final class ConnectOutboundSourceValidationTests: XCTestCase {
         controller.webView.loadHTMLString(Self.foreignCallbackHTML, baseURL: URL(string: "https://foreign.test/navigation.html")!)
         await fulfillment(of: [foreignReady, authorityDenied], timeout: TestHelpers.defaultTimeout)
         factory.complete(URL(string: "stripe-connect://must-not-deliver?secret=outbound-sentinel")!)
-        let clientError = try await analyticsTransport.waitForClientError()
+        let clientError = try await analyticsTransport.waitForClientError(identifier: "StripeConnect.SensitiveDeliveryError:0")
         XCTAssertEqual(clientError["error"] as? String, "StripeConnect.SensitiveDeliveryError:0")
         XCTAssertNil(clientError["url"])
         XCTAssertNil(clientError["payload"])
@@ -399,10 +399,12 @@ private final class OutboundAnalyticsTransport: AnalyticsClientV2Protocol {
     }
 
     @MainActor
-    func waitForClientError() async throws -> [String: Any] {
+    func waitForClientError(identifier: String) async throws -> [String: Any] {
         try await TestHelpers.withTimeout {
             while true {
-                if let event = self.events.last(where: { $0.name == "client_error" }) {
+                if let event = self.events.last(where: {
+                    $0.name == "client_error" && $0.parameters["error"] as? String == identifier
+                }) {
                     return event.parameters
                 }
                 try await Task.sleep(nanoseconds: 10_000_000)
