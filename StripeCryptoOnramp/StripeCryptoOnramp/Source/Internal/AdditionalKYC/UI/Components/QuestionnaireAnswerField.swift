@@ -22,7 +22,7 @@ struct QuestionnaireAnswerField: View {
     /// The appearance used for the focused border and color scheme.
     let appearance: LinkAppearance
 
-    /// Maximum user-perceived characters allowed in each questionnaire answer.
+    /// Maximum Unicode scalars allowed in each questionnaire answer, matching the backend implementation.
     private static let maximumAnswerLength = 5_000
 
     /// Whether the answer field should take focus when it appears.
@@ -50,7 +50,9 @@ struct QuestionnaireAnswerField: View {
                     .tint(Color.textPrimary)
                     .focused($isFocused)
                     .onReceive(Just(answer)) { value in
-                        let prefixedAnswer = String(value.prefix(Self.maximumAnswerLength))
+                        guard value.unicodeScalars.count > Self.maximumAnswerLength else { return }
+
+                        let prefixedAnswer = String(value.prefix(unicodeScalarsCount: Self.maximumAnswerLength))
                         if answer != prefixedAnswer {
                             answer = prefixedAnswer
                         }
