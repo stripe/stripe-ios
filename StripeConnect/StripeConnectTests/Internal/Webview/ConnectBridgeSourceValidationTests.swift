@@ -588,7 +588,9 @@ private extension ConnectBridgeSourceValidationTests {
     func waitForPresentation(from controller: UIViewController) async throws -> UINavigationController {
         try await TestHelpers.withTimeout {
             while true {
-                if let navigation = controller.presentedViewController as? UINavigationController {
+                if let navigation = controller.presentedViewController as? UINavigationController,
+                   navigation.viewIfLoaded?.window != nil,
+                   !navigation.isBeingPresented {
                     return navigation
                 }
                 try await Task.sleep(nanoseconds: 10_000_000)
@@ -629,6 +631,8 @@ private extension ConnectBridgeSourceValidationTests {
         return try await TestHelpers.withTimeout {
             while true {
                 if let navigationController = controller.presentedViewController as? UINavigationController,
+                   navigationController.viewIfLoaded?.window != nil,
+                   !navigationController.isBeingPresented,
                    let popupController = navigationController.topViewController as? PopupWebViewController {
                     return popupController
                 }
