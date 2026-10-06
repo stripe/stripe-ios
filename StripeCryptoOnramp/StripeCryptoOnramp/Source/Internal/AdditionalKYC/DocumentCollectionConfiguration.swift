@@ -11,6 +11,9 @@ import UniformTypeIdentifiers
 /// Presentation and validation inputs for document collection.
 struct DocumentCollectionConfiguration {
 
+    /// The file allowance used until the backend specifies one.
+    static let defaultMaximumFilesPerDocumentType = 10
+
     /// A selectable document category.
     struct Subtype: Identifiable, Equatable {
 
@@ -47,6 +50,9 @@ struct DocumentCollectionConfiguration {
 
     /// The maximum number of distinct document categories that may be submitted.
     var maximumDocumentTypes = 1
+
+    /// The maximum number of files allowed for each selected document category.
+    var maximumFilesPerDocumentType = Self.defaultMaximumFilesPerDocumentType
 
     /// Maps the file extensions to `UTType`s for use in filtering with Files.
     var documentPickerContentTypes: [UTType] {
@@ -87,6 +93,7 @@ extension DocumentCollectionConfiguration {
         guard requirement.minDocumentTypes >= 0,
               requirement.maxDocumentTypes >= max(1, requirement.minDocumentTypes),
               requirement.minDocumentTypes <= requirement.acceptedSubtypes.count,
+              (requirement.maxFilesPerDocumentType ?? Self.defaultMaximumFilesPerDocumentType) > 0,
               requirement.maxFileSizeBytes > 0,
               !requirement.acceptedSubtypes.isEmpty,
               requirement.acceptedSubtypes.allSatisfy({ !$0.id.isEmpty }),
@@ -113,7 +120,8 @@ extension DocumentCollectionConfiguration {
             maximumFileSize: requirement.maxFileSizeBytes,
             uploadHint: requirement.fileRequirements,
             minimumDocumentTypes: requirement.minDocumentTypes,
-            maximumDocumentTypes: requirement.maxDocumentTypes
+            maximumDocumentTypes: requirement.maxDocumentTypes,
+            maximumFilesPerDocumentType: requirement.maxFilesPerDocumentType ?? Self.defaultMaximumFilesPerDocumentType
         )
     }
 }
