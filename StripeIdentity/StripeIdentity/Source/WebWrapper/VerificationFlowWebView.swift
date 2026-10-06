@@ -68,6 +68,7 @@ final class VerificationFlowWebView: UIView {
         static let errorViewInsets = UIEdgeInsets(top: 32, left: 16, bottom: 0, right: 16)
         static let errorViewSpacing: CGFloat = 16
 
+        // NOTE: Computed so font is updated if UIAppearance changes
         static var errorLabelFont: UIFont {
             IdentityUI.bodyFont(withWeight: .medium)
         }
