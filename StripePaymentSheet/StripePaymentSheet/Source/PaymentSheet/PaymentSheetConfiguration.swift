@@ -72,6 +72,7 @@ extension PaymentSheet {
 
     /// Configuration for PaymentSheet
     public struct Configuration {
+
         // The text that shows in the header of the payment sheet when adding a card.
         // If nil default text will be used.
         @_spi(DashboardOnly) public var addCardHeaderText: String?

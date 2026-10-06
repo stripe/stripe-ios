@@ -195,7 +195,7 @@ extension PaymentSheet {
                         paymentHandler.cancel3DS2ChallengeFlow()
                     }
                 )
-                presentingViewController.presentAsBottomSheet(bottomSheetVC, appearance: configuration.appearance)
+                presentingViewController.presentAsSheet(bottomSheetVC)
             }
         } else {
             // MARK: - No local actions
@@ -747,7 +747,7 @@ extension PaymentSheet {
                     confirmationChallenge: confirmationChallenge,
                     confirmHandler: confirmHandler
                 )
-                linkController.presentAsBottomSheet(from: authenticationContext.authenticationPresentingViewController(), shouldOfferApplePay: false, shouldFinishOnClose: false, completion: { result, confirmationType, _ in
+                linkController.presentAsSheet(from: authenticationContext.authenticationPresentingViewController(), shouldOfferApplePay: false, shouldFinishOnClose: false, completion: { result, confirmationType, _ in
                     completion(result, confirmationType)
                 })
             } else {
