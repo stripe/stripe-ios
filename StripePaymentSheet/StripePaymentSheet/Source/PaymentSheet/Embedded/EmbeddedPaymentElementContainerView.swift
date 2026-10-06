@@ -47,12 +47,12 @@ class EmbeddedPaymentElementContainerView: UIView {
     }
 
     func updateContentView(_ newContentView: UIView, viewController: UIViewController? = nil) {
-        contentViewController?.willMove(toParent: nil)
-        contentViewController?.removeFromParent()
-        contentViewController = viewController
-        attachContentViewControllerIfNeeded()
+        setContentViewController(viewController)
+        guard contentView !== newContentView else { return }
+        endEditing(true)
+        previousHeight = nil
         guard frame.size != .zero else {
-            // A zero frame means we haven't been laid out yet. Simply replace the old view to avoid laying out before the view is ready and breaking constraints.
+            bottomAnchorConstraint.isActive = false
             contentView.removeFromSuperview()
             contentView = newContentView
             setContentView(newContentView)
@@ -68,23 +68,13 @@ class EmbeddedPaymentElementContainerView: UIView {
             newContentView.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor),
             newContentView.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor),
             newContentView.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor),
-            // Omit the bottom anchor so that the height is still fixed to the old view height
         ])
-
-        // Lay the new view out before the animation block so that it doesn't animate from zero size.
         layoutIfNeeded()
-
-        // Calculate heights of old and new content views to determine if height will change
-        let oldContentViewHeight = oldContentView.frame.size.height
-        let newContentViewHeight = newContentView.frame.size.height
-        let heightWillChange = oldContentViewHeight != newContentViewHeight
-
-        // Fade the old view out and the new view in if the height will change
+        let heightWillChange = oldContentView.frame.height != newContentView.frame.height
         if heightWillChange {
             newContentView.alpha = 0
         }
-        UIView.animate(withDuration: 0.2) {
-            // Re-pin bottom anchor to the new view, thus updating our height
+        UIView.animate(withDuration: UIAccessibility.isReduceMotionEnabled ? 0 : 0.2) {
             self.bottomAnchorConstraint.isActive = false
             self.bottomAnchorConstraint = newContentView.bottomAnchor.constraint(equalTo: self.layoutMarginsGuide.bottomAnchor)
             self.bottomAnchorConstraint.isActive = true
@@ -92,12 +82,22 @@ class EmbeddedPaymentElementContainerView: UIView {
             if heightWillChange {
                 oldContentView.alpha = 0
                 newContentView.alpha = 1
-                // Invoke EmbeddedPaymentElement delegate method so that height of our superview does not jump
                 self.needsUpdateSuperviewHeight()
             }
         } completion: { _ in
-            oldContentView.removeFromSuperview()
+            if self.contentView !== oldContentView {
+                oldContentView.removeFromSuperview()
+            }
         }
+    }
+
+    /// Contains the active form controller, including forms nested beneath a payment method row.
+    private func setContentViewController(_ viewController: UIViewController?) {
+        guard contentViewController !== viewController else { return }
+        contentViewController?.willMove(toParent: nil)
+        contentViewController?.removeFromParent()
+        contentViewController = viewController
+        attachContentViewControllerIfNeeded()
     }
 
     override func didMoveToWindow() {
@@ -126,7 +126,7 @@ class EmbeddedPaymentElementContainerView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         // The list reports its own height. Inline forms need the same notification contract.
-        guard contentViewController != nil else { return }
+        guard let contentViewController, contentViewController.view === contentView else { return }
         let height = systemLayoutSizeFitting(CGSize(width: frame.width, height: UIView.layoutFittingExpandedSize.height)).height
         let shouldNotify = previousHeight.map { $0 != height } ?? notifiesDelegateOnInitialHeight
         previousHeight = height

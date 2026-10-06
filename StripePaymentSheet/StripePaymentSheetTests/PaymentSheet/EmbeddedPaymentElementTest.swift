@@ -7,7 +7,7 @@
 
 @testable@_spi(STP) import StripeCore
 @_spi(STP) import StripeCoreTestUtils
-@_spi(EmbeddedCardForm) @_spi(AppearanceAPIAdditionsPreview) @_spi(STP) @testable import StripePaymentSheet
+@_spi(EmbeddedPaymentForms) @_spi(AppearanceAPIAdditionsPreview) @_spi(STP) @testable import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsTestUtils
 @testable@_spi(STP) import StripeUICore
 import XCTest
@@ -56,18 +56,18 @@ class EmbeddedPaymentElementTest: XCTestCase {
         STPAnalyticsClient.sharedClient._testLogHistory = []
     }
 
-    // MARK: - Inline card form
+    // MARK: - Inline payment forms
 
-    private func makeInlineCardElement(
+    private func makeInlineElement(
         configuration: EmbeddedPaymentElement.Configuration? = nil,
         paymentMethodTypes: [PaymentSheet.PaymentMethodType] = [.stripe(.card)],
         savedPaymentMethods: [STPPaymentMethod] = [],
-        allowsInlineCardForm: Bool = true,
+        allowsInlinePaymentForms: Bool = true,
         elementsSession: STPElementsSession = ._testValue(paymentMethodTypes: ["card"])
     ) async -> EmbeddedPaymentElement {
         await PaymentSheetLoader.loadMiscellaneousSingletons()
         var config = configuration ?? EmbeddedPaymentElement.Configuration()
-        config.allowsInlineCardForm = allowsInlineCardForm
+        config.allowsInlinePaymentForms = allowsInlinePaymentForms
         let loadResult = PaymentSheetLoader.LoadResult(
             intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
             elementsSession: elementsSession,
@@ -82,18 +82,18 @@ class EmbeddedPaymentElementTest: XCTestCase {
     }
 
     func testInlineCardFormIsOptIn() async {
-        let sut = await makeInlineCardElement(allowsInlineCardForm: false)
-        XCTAssertNil(sut.inlineCardFormViewController)
+        let sut = await makeInlineElement(allowsInlinePaymentForms: false)
+        XCTAssertNil(sut.inlineFormViewController)
         XCTAssertTrue(sut.embeddedPaymentMethodsView.isDescendant(of: sut.view))
         XCTAssertNil(sut.paymentOption)
     }
 
     func testInlineCardFormPublishesValidAndInvalidInput() async throws {
         // Given an inline card form without a selected payment option
-        let sut = await makeInlineCardElement()
-        XCTAssertNotNil(sut.inlineCardFormViewController)
+        let sut = await makeInlineElement()
+        XCTAssertNotNil(sut.inlineFormViewController)
         XCTAssertNil(sut.paymentOption)
-        let form = try XCTUnwrap(sut.inlineCardFormViewController?.form)
+        let form = try XCTUnwrap(sut.inlineFormViewController?.form)
 
         // When the customer finishes entering a card
         form.getTextFieldElement("Card number").setText("4242424242424242")
@@ -115,38 +115,41 @@ class EmbeddedPaymentElementTest: XCTestCase {
     }
 
     func testInlineCardFormClearResetsPartialInput() async throws {
-        let sut = await makeInlineCardElement()
-        let oldForm = try XCTUnwrap(sut.inlineCardFormViewController)
+        let sut = await makeInlineElement()
+        let oldForm = try XCTUnwrap(sut.inlineFormViewController)
         oldForm.form.getTextFieldElement("Card number").setText("4242")
         XCTAssertNil(sut.paymentOption)
 
         sut.clearPaymentOption()
 
-        let newForm = try XCTUnwrap(sut.inlineCardFormViewController)
+        let newForm = try XCTUnwrap(sut.inlineFormViewController)
         XCTAssertFalse(oldForm === newForm)
         XCTAssertEqual(newForm.form.getTextFieldElement("Card number").text, "")
         XCTAssertTrue(newForm.view.isDescendant(of: sut.view))
     }
 
     func testInlineCardFormKeepsOtherPaymentOptionsAccessible() async {
-        let multipleMethods = await makeInlineCardElement(paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)])
-        XCTAssertNil(multipleMethods.inlineCardFormViewController)
-        let savedCard = await makeInlineCardElement(savedPaymentMethods: [._testCard()])
-        XCTAssertNil(savedCard.inlineCardFormViewController)
+        let multipleMethods = await makeInlineElement(paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)])
+        XCTAssertNotNil(multipleMethods.inlineFormViewController)
+        XCTAssertTrue(multipleMethods.embeddedPaymentMethodsView.isDescendant(of: multipleMethods.view))
+        let savedCard = await makeInlineElement(savedPaymentMethods: [._testCard()])
+        XCTAssertNil(savedCard.inlineFormViewController)
         XCTAssertTrue(savedCard.embeddedPaymentMethodsView.isDescendant(of: savedCard.view))
         XCTAssertNotNil(savedCard.paymentOption)
-        let otherMethod = await makeInlineCardElement(paymentMethodTypes: [.stripe(.cashApp)])
-        XCTAssertNil(otherMethod.inlineCardFormViewController)
-        let linkWallet = await makeInlineCardElement(elementsSession: ._testValue(
+        let otherMethod = await makeInlineElement(paymentMethodTypes: [.stripe(.cashApp)])
+        XCTAssertNotNil(otherMethod.inlineFormViewController)
+        XCTAssertFalse(otherMethod.embeddedPaymentMethodsView.isDescendant(of: otherMethod.view))
+        let linkWallet = await makeInlineElement(elementsSession: ._testValue(
             paymentMethodTypes: ["card", "link"],
             isLinkPassthroughModeEnabled: true,
             linkFundingSources: [ParsedEnum(.card)]
         ))
-        XCTAssertNil(linkWallet.inlineCardFormViewController)
+        XCTAssertNotNil(linkWallet.inlineFormViewController)
+        XCTAssertTrue(linkWallet.embeddedPaymentMethodsView.isDescendant(of: linkWallet.view))
     }
 
     func testInlineCardFormAttachesToMerchantViewControllerAndReportsHeight() async throws {
-        let sut = await makeInlineCardElement()
+        let sut = await makeInlineElement()
         let host = UIViewController()
         let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 375, height: 800))
         window.rootViewController = host
@@ -154,10 +157,10 @@ class EmbeddedPaymentElementTest: XCTestCase {
         window.isHidden = false
         defer { window.isHidden = true }
         sut.view.autosizeHeight(width: 375)
-        XCTAssertTrue(sut.inlineCardFormViewController?.parent === host)
+        XCTAssertTrue(sut.inlineFormViewController?.parent === host)
         XCTAssertFalse(sut.view.hasAmbiguousLayout)
 
-        let form = try XCTUnwrap(sut.inlineCardFormViewController)
+        let form = try XCTUnwrap(sut.inlineFormViewController)
         form.updateErrorLabel(for: NSError(domain: "test", code: 1, userInfo: [NSLocalizedDescriptionKey: "Check your card details."]))
         sut.view.autosizeHeight(width: 375)
         XCTAssertTrue(delegateDidUpdateHeightCalled)
@@ -169,8 +172,8 @@ class EmbeddedPaymentElementTest: XCTestCase {
         // Given a customer with no saved cards, the shared save checkbox remains available
         var config = EmbeddedPaymentElement.Configuration()
         config.customer = .init(id: "cus_test", ephemeralKeySecret: "ek_test")
-        let customerElement = await makeInlineCardElement(configuration: config)
-        let form = try XCTUnwrap(customerElement.inlineCardFormViewController?.form)
+        let customerElement = await makeInlineElement(configuration: config)
+        let form = try XCTUnwrap(customerElement.inlineFormViewController?.form)
         XCTAssertTrue(form.getAllUnwrappedSubElements().compactMap { $0 as? CheckboxElement }.contains { $0.label.hasPrefix("Save") })
 
         // Given Link signup without a wallet row, the shared Link signup control remains available
@@ -181,8 +184,8 @@ class EmbeddedPaymentElementTest: XCTestCase {
             isLinkPassthroughModeEnabled: true,
             linkFundingSources: [ParsedEnum(.card)]
         )
-        let linkElement = await makeInlineCardElement(configuration: config, elementsSession: elementsSession)
-        let linkForm = try XCTUnwrap(linkElement.inlineCardFormViewController?.form)
+        let linkElement = await makeInlineElement(configuration: config, elementsSession: elementsSession)
+        let linkForm = try XCTUnwrap(linkElement.inlineFormViewController?.form)
         XCTAssertTrue(linkForm.getAllUnwrappedSubElements().contains { $0 is LinkInlineSignupElement })
     }
 
@@ -199,8 +202,8 @@ class EmbeddedPaymentElementTest: XCTestCase {
         let elementsSession = STPElementsSession._testValue(
             linkSettings: ._testValue(flags: ["link_sign_up_opt_in_feature_enabled": true])
         )
-        let sut = await makeInlineCardElement(configuration: config, elementsSession: elementsSession)
-        let originalForm = try XCTUnwrap(sut.inlineCardFormViewController?.form)
+        let sut = await makeInlineElement(configuration: config, elementsSession: elementsSession)
+        let originalForm = try XCTUnwrap(sut.inlineFormViewController?.form)
         originalForm.getTextFieldElement("Card number").setText("4242424242424242")
         originalForm.getTextFieldElement("MM / YY").setText("1240")
         originalForm.getTextFieldElement("CVC").setText("123")
@@ -240,12 +243,12 @@ class EmbeddedPaymentElementTest: XCTestCase {
     func testInlineCardFormUpdatePreservesCardAndChangesPresentation() async throws {
         // Given a valid card entered directly in the embedded view
         var config = configuration
-        config.allowsInlineCardForm = true
+        config.allowsInlinePaymentForms = true
         config.link.display = .never
         let cardOnly = EmbeddedPaymentElement.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD"), paymentMethodTypes: ["card"]) { _, _ in return "" }
         let sut = try await EmbeddedPaymentElement.create(intentConfiguration: cardOnly, configuration: config)
         sut.delegate = self
-        let form = try XCTUnwrap(sut.inlineCardFormViewController?.form)
+        let form = try XCTUnwrap(sut.inlineFormViewController?.form)
         form.getTextFieldElement("Card number").setText("4242424242424242")
         form.getTextFieldElement("MM / YY").setText("1240")
         form.getTextFieldElement("CVC").setText("123")
@@ -254,14 +257,14 @@ class EmbeddedPaymentElementTest: XCTestCase {
         // When another payment method becomes available, the picker preserves the card
         let pickerUpdate = await sut.update(intentConfiguration: paymentIntentConfig)
         XCTAssertEqual(pickerUpdate, .succeeded)
-        XCTAssertNil(sut.inlineCardFormViewController)
+        XCTAssertNotNil(sut.inlineFormViewController)
         XCTAssertEqual(sut.paymentOption?.label, "•••• 4242")
         XCTAssertTrue(sut.embeddedPaymentMethodsView.isDescendant(of: sut.view))
 
         // When only card remains, the inline form preserves the card and continues publishing edits
         let inlineUpdate = await sut.update(intentConfiguration: cardOnly)
         XCTAssertEqual(inlineUpdate, .succeeded)
-        let updatedForm = try XCTUnwrap(sut.inlineCardFormViewController)
+        let updatedForm = try XCTUnwrap(sut.inlineFormViewController)
         XCTAssertTrue(updatedForm.view.isDescendant(of: sut.view))
         XCTAssertEqual(sut.paymentOption?.label, "•••• 4242")
         delegateDidUpdatePaymentOptionCalled = false
@@ -272,9 +275,157 @@ class EmbeddedPaymentElementTest: XCTestCase {
 
     func testInlineCardFormRejectsImmediateAction() {
         var config = EmbeddedPaymentElement.Configuration()
-        config.allowsInlineCardForm = true
+        config.allowsInlinePaymentForms = true
         config.rowSelectionBehavior = .immediateAction { XCTFail("Should not select a row") }
         XCTAssertThrowsError(try EmbeddedPaymentElement.validateRowSelectionConfiguration(configuration: config))
+    }
+
+    func testSingleNonCardMethodDisplaysOnlyItsForm() async throws {
+        // Given one method without saved methods or wallets
+        let sut = await makeInlineElement(paymentMethodTypes: [.stripe(.SEPADebit)])
+
+        // Then its native form is embedded without a redundant selection row
+        let form = try XCTUnwrap(sut.inlineFormViewController)
+        XCTAssertTrue(form.view.isDescendant(of: sut.view))
+        XCTAssertFalse(sut.embeddedPaymentMethodsView.isDescendant(of: sut.view))
+        XCTAssertEqual(form.form.getTextFieldElement("IBAN").text, "")
+        XCTAssertNil(sut.paymentOption)
+    }
+
+    func testInlineFormsSwitchMethodsAndPreserveIncompleteInput() async throws {
+        // Given a selected card with partial input
+        let sut = await makeInlineElement(paymentMethodTypes: [.stripe(.card), .stripe(.SEPADebit)])
+        let cardForm = try XCTUnwrap(sut.inlineFormViewController?.form)
+        cardForm.getTextFieldElement("Card number").setText("4242")
+        XCTAssertNil(sut.paymentOption)
+
+        // When another method is selected, its form replaces the card form beneath its row
+        let sepaRow = try XCTUnwrap(sut.embeddedPaymentMethodsView.rowButtons.first { $0.type == .new(paymentMethodType: .stripe(.SEPADebit)) })
+        sut.embeddedPaymentMethodsView.didTap(rowButton: sepaRow)
+        let sepaForm = try XCTUnwrap(sut.inlineFormViewController)
+        XCTAssertTrue(sepaForm.view.isDescendant(of: sut.embeddedPaymentMethodsView))
+        XCTAssertFalse(cardForm.view.isDescendant(of: sut.view))
+        XCTAssertFalse(delegateWillPresentCalled)
+
+        // Tapping the selected row keeps its existing form open
+        sut.embeddedPaymentMethodsView.didTap(rowButton: sepaRow)
+        XCTAssertTrue(sut.inlineFormViewController === sepaForm)
+
+        // Switching back restores partial input, not just completed payment options
+        let cardRow = try XCTUnwrap(sut.embeddedPaymentMethodsView.rowButtons.first { $0.type == .new(paymentMethodType: .stripe(.card)) })
+        sut.embeddedPaymentMethodsView.didTap(rowButton: cardRow)
+        let restoredCard = try XCTUnwrap(sut.inlineFormViewController?.form)
+        XCTAssertTrue(restoredCard === cardForm)
+        XCTAssertEqual(restoredCard.getTextFieldElement("Card number").text, "4242")
+        XCTAssertNil(sut.paymentOption)
+
+        // Completing the restored form still publishes its option to the merchant
+        restoredCard.getTextFieldElement("Card number").setText("4242424242424242")
+        restoredCard.getTextFieldElement("MM / YY").setText("1240")
+        restoredCard.getTextFieldElement("CVC").setText("123")
+        restoredCard.getTextFieldElement("ZIP").setText("12345")
+        XCTAssertEqual(delegatePaymentOption?.label, "•••• 4242")
+    }
+
+    func testSavedMethodSelectionCollapsesInlineNewMethodForm() async throws {
+        // Given the normal picker with a saved card selected
+        let sut = await makeInlineElement(savedPaymentMethods: [._testCard()])
+        let savedOption = try XCTUnwrap(sut.paymentOption)
+        let cardRow = try XCTUnwrap(sut.embeddedPaymentMethodsView.rowButtons.first { $0.type == .new(paymentMethodType: .stripe(.card)) })
+
+        // When New card is selected, its form expands inline
+        sut.embeddedPaymentMethodsView.didTap(rowButton: cardRow)
+        let form = try XCTUnwrap(sut.inlineFormViewController)
+        XCTAssertTrue(form.view.isDescendant(of: sut.view))
+        XCTAssertNil(sut.paymentOption)
+
+        // Selecting the saved card removes the form and restores a confirmable option
+        let savedRow = try XCTUnwrap(sut.embeddedPaymentMethodsView.rowButtons.first { $0.type.isSaved })
+        sut.embeddedPaymentMethodsView.didTap(rowButton: savedRow)
+        XCTAssertNil(sut.inlineFormViewController)
+        XCTAssertFalse(form.view.isDescendant(of: sut.view))
+        XCTAssertEqual(sut.paymentOption, savedOption)
+        XCTAssertEqual(delegatePaymentOption, savedOption)
+    }
+
+    func testInlineAccordionContainsOnlyActiveControllerAndReportsHeight() async throws {
+        let sut = await makeInlineElement(paymentMethodTypes: [.stripe(.card), .stripe(.SEPADebit)])
+        let host = UIViewController()
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 375, height: 800))
+        window.rootViewController = host
+        host.view.addAndPinSubview(sut.view)
+        window.isHidden = false
+        defer { window.isHidden = true }
+        sut.view.autosizeHeight(width: 375)
+        let cardController = try XCTUnwrap(sut.inlineFormViewController)
+        XCTAssertTrue(cardController.parent === host)
+
+        delegateDidUpdateHeightCalled = false
+        let sepaRow = try XCTUnwrap(sut.embeddedPaymentMethodsView.rowButtons.first { $0.type == .new(paymentMethodType: .stripe(.SEPADebit)) })
+        sut.embeddedPaymentMethodsView.didTap(rowButton: sepaRow)
+        sut.view.autosizeHeight(width: 375)
+        XCTAssertNil(cardController.parent)
+        XCTAssertTrue(sut.inlineFormViewController?.parent === host)
+        XCTAssertEqual(host.children.count, 1)
+        XCTAssertTrue(delegateDidUpdateHeightCalled)
+        XCTAssertFalse(sut.view.hasAmbiguousLayout)
+    }
+
+    func testUnavailableRememberedWalletFallsBackToInlineForm() async throws {
+        // Given a remembered wallet that is unavailable in this checkout
+        let customerId = "cus_inline_form_unavailable_wallet"
+        CustomerPaymentOption.setDefaultPaymentMethod(.applePay, forCustomer: customerId)
+        defer { CustomerPaymentOption.setDefaultPaymentMethod(nil, forCustomer: customerId) }
+        var config = EmbeddedPaymentElement.Configuration()
+        config.customer = .init(id: customerId, ephemeralKeySecret: "ek_test")
+        let sut = await makeInlineElement(configuration: config)
+
+        // Then the available card form is selected and visible
+        let form = try XCTUnwrap(sut.inlineFormViewController)
+        XCTAssertEqual(sut.embeddedPaymentMethodsView.selectedRowButton?.type, .new(paymentMethodType: .stripe(.card)))
+        XCTAssertTrue(form.view.isDescendant(of: sut.view))
+        XCTAssertFalse(sut.embeddedPaymentMethodsView.isDescendant(of: sut.view))
+    }
+
+    func testManagingSavedMethodsPreservesExpandedCardSelection() async throws {
+        let savedCard = STPPaymentMethod._testCard()
+        let sut = await makeInlineElement(savedPaymentMethods: [savedCard])
+        let cardRow = try XCTUnwrap(sut.embeddedPaymentMethodsView.rowButtons.first { $0.type == .new(paymentMethodType: .stripe(.card)) })
+        sut.embeddedPaymentMethodsView.didTap(rowButton: cardRow)
+        let form = try XCTUnwrap(sut.inlineFormViewController)
+        form.form.getTextFieldElement("Card number").setText("4242")
+
+        // Refreshing saved methods replaces the New card row without losing its selected state
+        sut.embeddedPaymentMethodsView.updateSavedPaymentMethodRow([savedCard], isSelected: false, accessoryType: nil)
+        let refreshedRow = try XCTUnwrap(sut.embeddedPaymentMethodsView.rowButtons.first { $0.type == .new(paymentMethodType: .stripe(.card)) })
+        XCTAssertTrue(sut.embeddedPaymentMethodsView.selectedRowButton === refreshedRow)
+        XCTAssertTrue(refreshedRow.isSelected)
+        XCTAssertTrue(sut.inlineFormViewController === form)
+        XCTAssertEqual(form.form.getTextFieldElement("Card number").text, "4242")
+    }
+
+    func testRemovingLastSavedMethodDisplaysStandaloneForm() async throws {
+        // Given a selected saved card and one available new payment method
+        let sut = await makeInlineElement(savedPaymentMethods: [._testCard()])
+        let manager = VerticalSavedPaymentMethodsViewController(
+            configuration: sut.configuration,
+            intent: sut.intent,
+            checkout: nil,
+            selectedPaymentMethod: nil,
+            paymentMethods: sut.savedPaymentMethods,
+            elementsSession: sut.elementsSession,
+            analyticsHelper: ._testValue(),
+            defaultPaymentMethod: nil
+        )
+
+        // When saved-method management removes the last card
+        sut.didComplete(viewController: manager, with: nil, latestPaymentMethods: [], didTapToDismiss: true, defaultPaymentMethod: nil)
+
+        // Then the remaining form is displayed directly, with no redundant selector
+        let form = try XCTUnwrap(sut.inlineFormViewController)
+        XCTAssertTrue(form.view.isDescendant(of: sut.view))
+        XCTAssertFalse(sut.embeddedPaymentMethodsView.isDescendant(of: sut.view))
+        XCTAssertNil(sut.paymentOption)
     }
 
     // MARK: - `update` tests

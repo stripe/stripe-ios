@@ -60,7 +60,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         settings.supportedPaymentMethods = "card"
         settings.applePayEnabled = .off
         settings.linkDisplay = .never
-        settings.allowsInlineCardForm = .on
+        settings.allowsInlinePaymentForms = .on
         return settings
     }
 
@@ -95,6 +95,88 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         challengeCode.typeText("424242" + XCUIKeyboardKey.return.rawValue)
         app.buttons["Submit"].waitForExistenceAndTap()
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 15))
+    }
+
+    func testInlineFormsExpandSelectedRowAndPreserveInput() throws {
+        // Given card and SEPA, the selected card expands directly below its row
+        var settings = inlineCardFormSettings()
+        settings.currency = .eur
+        settings.supportedPaymentMethods = "card,sepa_debit"
+        loadPlayground(app, settings)
+        app.buttons["Present embedded payment element"].waitForExistenceAndTap()
+        XCTAssertTrue(app.textFields["Card number"].waitForExistence(timeout: 10))
+        app.switches["Show embedded element bounds"].tap()
+        XCTAssertFalse(app.buttons["Continue"].exists)
+        let initial = XCTAttachment(screenshot: app.screenshot())
+        initial.name = "Inline payment forms - card selected"
+        initial.lifetime = .keepAlways
+        add(initial)
+
+        // When switching methods, only the selected form is displayed
+        app.textFields["Card number"].tap()
+        app.typeText("4242")
+        app.stp_dismissKeyboard()
+        app.buttons["SEPA Debit"].waitForExistenceAndTap()
+        XCTAssertTrue(app.textFields["IBAN"].waitForExistence(timeout: 5))
+        XCTAssertFalse(app.textFields["Card number"].exists)
+        XCTAssertFalse(app.buttons["Continue"].exists)
+        let sepa = XCTAttachment(screenshot: app.screenshot())
+        sepa.name = "Inline payment forms - SEPA selected"
+        sepa.lifetime = .keepAlways
+        add(sepa)
+
+        // Tapping the selected row keeps its form open
+        app.buttons["SEPA Debit"].tap()
+        XCTAssertTrue(app.textFields["IBAN"].exists)
+        app.buttons["Card"].waitForExistenceAndTap()
+        XCTAssertEqual(app.textFields["Card number"].value as? String, "4242")
+        XCTAssertFalse(app.textFields["IBAN"].exists)
+
+        // Complete and confirm the restored form using the merchant button
+        app.buttons["Clear payment option"].waitForExistenceAndTap()
+        try fillCardData(app, postalEnabled: true)
+        app.stp_dismissKeyboard()
+        app.buttons["Checkout"].waitForExistenceAndTap()
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 25))
+    }
+
+    func testSingleSEPAFormConfirmsWithoutSelectionRow() throws {
+        var settings = inlineCardFormSettings()
+        settings.currency = .eur
+        settings.supportedPaymentMethods = "sepa_debit"
+        loadPlayground(app, settings)
+        app.buttons["Present embedded payment element"].waitForExistenceAndTap()
+        XCTAssertTrue(app.textFields["IBAN"].waitForExistence(timeout: 10))
+        XCTAssertFalse(app.buttons["SEPA Debit"].exists)
+        XCTAssertFalse(app.buttons["Continue"].exists)
+        app.switches["Show embedded element bounds"].tap()
+        try fillSepaData(app)
+        app.stp_dismissKeyboard()
+        let form = XCTAttachment(screenshot: app.screenshot())
+        form.name = "Inline payment forms - single SEPA"
+        form.lifetime = .keepAlways
+        add(form)
+        app.buttons["Checkout"].waitForExistenceAndTap()
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 25))
+    }
+
+    func testSingleBankFormCanLinkAccountInline() throws {
+        // Use the existing bank-linking stub to exercise the form action and completion
+        app.launchEnvironment["FinancialConnectionsStubbedResult"] = "true"
+        var settings = inlineCardFormSettings()
+        settings.supportedPaymentMethods = "us_bank_account"
+        loadPlayground(app, settings)
+        app.buttons["Present embedded payment element"].waitForExistenceAndTap()
+        XCTAssertTrue(app.textFields["Full name"].waitForExistence(timeout: 10))
+        XCTAssertFalse(app.buttons["US bank account"].exists)
+        XCTAssertFalse(app.buttons["Checkout"].isEnabled)
+        XCTAssertFalse(app.buttons["Continue"].isEnabled)
+        try fillUSBankData(app)
+        app.stp_dismissKeyboard()
+        app.buttons["Continue"].waitForExistenceAndTap()
+        XCTAssertTrue(app.textViews["By continuing, you agree to authorize payments pursuant to these terms."].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.buttons["Checkout"].isEnabled)
+        XCTAssertFalse(app.buttons["Continue"].exists)
     }
 
     func testUpdate() {

@@ -216,8 +216,13 @@ class EmbeddedFormViewController: UIViewController {
 
     /// Updates all UI elements (pay button, error, mandate)
     private func updateUI() {
-        if presentation == .sheet {
+        if presentation == .sheet || paymentMethodFormViewController.overridePrimaryButtonState != nil {
             updatePrimaryButton()
+        }
+        if presentation == .inline {
+            animateHeightChange {
+                self.primaryButton.isHidden = self.paymentMethodFormViewController.overridePrimaryButtonState == nil
+            }
         }
         updateMandate()
         updateError()
@@ -323,6 +328,9 @@ class EmbeddedFormViewController: UIViewController {
         stackView.sendSubviewToBack(mandateView)
 
         if presentation == .inline {
+            // Bank linking is a form action, separate from the merchant's final buy button.
+            stackView.addArrangedSubview(primaryButton)
+            primaryButton.isHidden = paymentMethodFormViewController.overridePrimaryButtonState == nil
             view.addAndPinSubview(stackView)
             return
         }
@@ -397,6 +405,7 @@ class EmbeddedFormViewController: UIViewController {
     // MARK: - Tap handling
 
     @objc func didTapPrimaryButton() {
+        guard presentation == .sheet || paymentMethodFormViewController.overridePrimaryButtonState != nil else { return }
         // If the form has overridden the primary buy button, hand control over to the form
         guard paymentMethodFormViewController.overridePrimaryButtonState == nil else {
             paymentMethodFormViewController.didTapCallToActionButton(from: self)

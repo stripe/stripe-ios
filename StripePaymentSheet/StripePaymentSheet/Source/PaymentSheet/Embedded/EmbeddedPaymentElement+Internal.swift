@@ -57,7 +57,10 @@ extension EmbeddedPaymentElement {
             case .link:
                 return .link
             case .stripeId, nil:
-                return loadResult.savedPaymentMethods.first.map { .saved(paymentMethod: $0) }
+                if let savedPaymentMethod = loadResult.savedPaymentMethods.first {
+                    return .saved(paymentMethod: savedPaymentMethod)
+                }
+                return nil
             }
         }()
         let mandateProvider = VerticalListMandateProvider(
@@ -66,12 +69,17 @@ extension EmbeddedPaymentElement {
             intent: loadResult.intent,
             analyticsHelper: analyticsHelper
         )
+        var appearance = configuration.appearance
+        if configuration.allowsInlinePaymentForms {
+            appearance.embeddedPaymentElement.row.style = .flatWithRadio
+        }
         return EmbeddedPaymentMethodsView(
             initialSelectedRowType: initialSelection,
             initialSelectedRowChangeButtonState: previousSelectedRowChangeButtonState,
+            selectsFirstPaymentMethodByDefault: configuration.allowsInlinePaymentForms,
             paymentMethodTypes: loadResult.paymentMethodTypes,
             savedPaymentMethod: loadResult.savedPaymentMethods.first,
-            appearance: configuration.appearance,
+            appearance: appearance,
             shouldShowApplePay: shouldShowApplePay,
             shouldShowLink: shouldShowLink,
             linkBrand: configuration.resolvedLinkBrand(elementsSession: loadResult.elementsSession, linkAccount: LinkAccountContext.shared.account),
@@ -135,7 +143,7 @@ extension EmbeddedPaymentElement {
             presentation: presentation
         )
 
-        if Self.shouldShowForm(formViewController.form, configuration: configuration) {
+        if presentation == .inline || Self.shouldShowForm(formViewController.form, configuration: configuration) {
             return formViewController
         } else {
             return nil
@@ -166,6 +174,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
     }
 
     func embeddedPaymentMethodsViewDidUpdateSelection() {
+        containerView.endEditing(true)
         // 1. Update the currently selection's form VC to match the selection.
         // Note `paymentOption` derives from this property
         self.selectedFormViewController = Self.makeFormViewControllerIfNecessary(
@@ -180,8 +189,15 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
             paymentMethodMessagingPromotionsHelper: loadResult.paymentMethodMessagingPromotionsHelper,
             checkoutBillingAddressUpdater: checkout,
             formCache: formCache,
-            delegate: self
+            delegate: self,
+            presentation: configuration.allowsInlinePaymentForms ? .inline : .sheet
         )
+
+        if configuration.allowsInlinePaymentForms {
+            updateInlineFormPresentation()
+            informDelegateIfPaymentOptionUpdated()
+            return
+        }
 
         // 2. Inform the delegate of the updated payment option if there is no form. If there is a form, we don't want to inform the delegate b/c the paymentOption is in an indeterminate state until the customer completes or cancels out of the form.
         if self.selectedFormViewController == nil {
@@ -190,6 +206,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
     }
 
     func embeddedPaymentMethodsViewDidTapPaymentMethodRow() {
+        if inlineFormViewController != nil { return }
         // 😓 Note: This method depends on `embeddedPaymentMethodsViewDidUpdateSelection` being called *before* this method is called when a row is tapped.
         guard let selectedFormViewController else {
             handleSelectionWithoutForm()
@@ -360,7 +377,8 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
             paymentMethodMessagingPromotionsHelper: nil, // This is just to check if there's a form, so this data isn't necessary
             checkoutBillingAddressUpdater: checkout,
             formCache: .init(),  // Use a fresh form cache to ensure forms aren't re-added to a different view controller's hierarchy
-            delegate: self
+            delegate: self,
+            presentation: configuration.allowsInlinePaymentForms ? .inline : .sheet
         ) != nil
     }
 }
@@ -384,6 +402,7 @@ extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {
         embeddedPaymentMethodsView.updateSavedPaymentMethodRow(savedPaymentMethods,
                                                                isSelected: false,
                                                                accessoryType: accessoryType)
+        updateInlineFormAfterSavedMethodsChange()
         presentingViewController?.dismiss(animated: true)
     }
 
@@ -421,6 +440,7 @@ extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {
         embeddedPaymentMethodsView.updateSavedPaymentMethodRow(savedPaymentMethods,
                                                                isSelected: isSelected,
                                                                accessoryType: accessoryType)
+        updateInlineFormAfterSavedMethodsChange()
         presentingViewController?.dismiss(animated: true)
         return .success
     }
@@ -466,6 +486,15 @@ extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {
             omitChevron: configuration.appearance.embeddedPaymentElement.row.style.omitChevronInAccessoryButton
         )
     }
+
+    /// Restores a usable selection and the correct inline layout after managing saved methods.
+    private func updateInlineFormAfterSavedMethodsChange() {
+        guard configuration.allowsInlinePaymentForms else { return }
+        if savedPaymentMethods.isEmpty, embeddedPaymentMethodsView.selectedRowButton == nil {
+            embeddedPaymentMethodsView.selectFirstPaymentMethod()
+        }
+        updateInlineFormPresentation()
+    }
 }
 
 extension EmbeddedPaymentElement: VerticalSavedPaymentMethodsViewControllerDelegate {
@@ -491,6 +520,7 @@ extension EmbeddedPaymentElement: VerticalSavedPaymentMethodsViewControllerDeleg
         embeddedPaymentMethodsView.updateSavedPaymentMethodRow(savedPaymentMethods,
                                                                isSelected: isSelected,
                                                                accessoryType: accessoryType)
+        updateInlineFormAfterSavedMethodsChange()
         presentingViewController?.dismiss(animated: true)
     }
 }
@@ -533,6 +563,7 @@ extension EmbeddedPaymentElement.PaymentOptionDisplayData {
 
 extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
     func embeddedFormViewControllerDidUpdate(_ embeddedFormViewController: EmbeddedFormViewController) {
+        guard selectedFormViewController === embeddedFormViewController else { return }
         informDelegateIfPaymentOptionUpdated()
     }
 
@@ -578,8 +609,10 @@ extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
             paymentMethodMessagingPromotionsHelper: loadResult.paymentMethodMessagingPromotionsHelper,
             checkoutBillingAddressUpdater: checkout,
             formCache: formCache,
-            delegate: self
+            delegate: self,
+            presentation: configuration.allowsInlinePaymentForms ? .inline : .sheet
         )
+        updateInlineFormPresentation()
         return selectedFormViewController != nil
     }
 
@@ -627,6 +660,7 @@ extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
 
     // Updates whether or not the change button shows and what sublabel (if any) the selected row button shows
     func updateChangeButtonAndSublabelState(for type: RowButtonType) {
+        guard !configuration.allowsInlinePaymentForms else { return }
         guard let _paymentOption,
               let displayData = paymentOption,
               case .new = type,
@@ -750,8 +784,8 @@ extension EmbeddedPaymentElement {
     }
 
     static func validateRowSelectionConfiguration(configuration: Configuration) throws {
-        if configuration.allowsInlineCardForm, case .immediateAction = configuration.rowSelectionBehavior {
-            throw PaymentSheetError.integrationError(nonPIIDebugDescription: "Inline card forms require .default row selection behavior. Disable allowsInlineCardForm or use .default.")
+        if configuration.allowsInlinePaymentForms, case .immediateAction = configuration.rowSelectionBehavior {
+            throw PaymentSheetError.integrationError(nonPIIDebugDescription: "Inline payment forms require .default row selection behavior. Disable allowsInlinePaymentForms or use .default.")
         }
         switch configuration.rowSelectionBehavior {
         case .immediateAction:

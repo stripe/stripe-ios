@@ -672,8 +672,8 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case `continue`
     }
 
-    enum AllowsInlineCardForm: String, PickerEnum {
-        static let enumName: String = "allowsInlineCardForm"
+    enum AllowsInlinePaymentForms: String, PickerEnum {
+        static let enumName: String = "allowsInlinePaymentForms"
         case on
         case off
     }
@@ -815,10 +815,10 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var formSheetAction: FormSheetAction
     var embeddedViewDisplaysMandateText: DisplaysMandateTextEnabled
     // Optional storage keeps older playground links compatible, with the feature off.
-    var allowsInlineCardFormValue: AllowsInlineCardForm?
-    var allowsInlineCardForm: AllowsInlineCardForm {
-        get { allowsInlineCardFormValue ?? .off }
-        set { allowsInlineCardFormValue = newValue }
+    var allowsInlinePaymentFormsValue: AllowsInlinePaymentForms?
+    var allowsInlinePaymentForms: AllowsInlinePaymentForms {
+        get { allowsInlinePaymentFormsValue ?? .off }
+        set { allowsInlinePaymentFormsValue = newValue }
     }
     var rowSelectionBehavior: RowSelectionBehavior
     var cardBrandAcceptance: CardBrandAcceptance

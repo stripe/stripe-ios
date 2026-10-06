@@ -170,12 +170,14 @@ extension EmbeddedPaymentElement {
         /// The view can display payment methods like “Card” that, when tapped, open a sheet where customers enter their payment method details. The sheet has a button at the bottom. `formSheetAction` controls the action the button performs.
         public var formSheetAction: FormSheetAction = .continue
 
-        /// Displays the card form directly in `view` when card is the only available payment option.
-        /// Defaults to `false`. Wallets, saved payment methods, and additional payment methods use the payment method list.
+        /// Displays payment method forms directly in `view`. Defaults to `false`.
+        /// A single payment method without saved methods or wallet options displays only its form.
+        /// Otherwise, radio rows select a payment method and expand its form below the selected row.
+        /// Saved payment methods retain their picker. Bank linking and authentication can still present sheets.
         /// Your integration owns the buy button and calls `confirm()` after the form provides a valid `paymentOption`.
         /// This is an experimental feature that may be removed at any time.
-        /// - Note: Requires `.default` row selection behavior. `formSheetAction` does not apply to the inline form.
-        @_spi(EmbeddedCardForm) public var allowsInlineCardForm: Bool = false
+        /// - Note: Requires `.default` row selection behavior. `formSheetAction` does not apply to inline forms.
+        @_spi(EmbeddedPaymentForms) public var allowsInlinePaymentForms: Bool = false
 
         /// Controls whether the view displays mandate text at the bottom for payment methods that require it. If set to `false`, your integration must display `PaymentOptionDisplayData.mandateText` to the customer near your “Buy” button to comply with regulations.
         /// - Note: This doesn't affect mandates displayed in the form sheet.

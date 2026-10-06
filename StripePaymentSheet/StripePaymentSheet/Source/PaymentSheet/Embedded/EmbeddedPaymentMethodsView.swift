@@ -79,6 +79,7 @@ class EmbeddedPaymentMethodsView: UIView {
 
     private let mandateProvider: MandateTextProvider
     private let shouldShowMandate: Bool
+    private var inlineFormContainer: UIView?
     private let analyticsHelper: PaymentSheetAnalyticsHelper
     private let incentive: PaymentMethodIncentive?
     private var linkBrand: LinkBrand
@@ -123,6 +124,7 @@ class EmbeddedPaymentMethodsView: UIView {
     init(
         initialSelectedRowType: RowButtonType?,
         initialSelectedRowChangeButtonState: (shouldShowChangeButton: Bool, sublabel: String?)?,
+        selectsFirstPaymentMethodByDefault: Bool = false,
         paymentMethodTypes: [PaymentSheet.PaymentMethodType],
         savedPaymentMethod: STPPaymentMethod?,
         appearance: PaymentSheet.Appearance,
@@ -210,9 +212,11 @@ class EmbeddedPaymentMethodsView: UIView {
         }
 
         // If we have a row button that matches the initial selection, make it selected
-        if let initialSelectedRowType, let rowButtonMatchingInitialSelection = rowButtons.filter({ $0.type == initialSelectedRowType }).first {
+        let initialRow = rowButtons.first { $0.type == initialSelectedRowType }
+            ?? (selectsFirstPaymentMethodByDefault ? rowButtons.first : nil)
+        if let rowButtonMatchingInitialSelection = initialRow {
             rowButtonMatchingInitialSelection.updateSelectedState(true, willDisplayForm: delegate?.willDisplayForm(for: rowButtonMatchingInitialSelection.type) == true)
-            if let initialSelectedRowChangeButtonState {
+            if rowButtonMatchingInitialSelection.type == initialSelectedRowType, let initialSelectedRowChangeButtonState {
                 selectedRowChangeButtonState = initialSelectedRowChangeButtonState
                 if initialSelectedRowChangeButtonState.shouldShowChangeButton {
                     rowButtonMatchingInitialSelection.addChangeButton(animated: false)
@@ -299,6 +303,63 @@ class EmbeddedPaymentMethodsView: UIView {
     }
 
     // MARK: Internal functions
+
+    /// Selects the first visible payment method after the last saved method is removed.
+    func selectFirstPaymentMethod() {
+        selectedRowButton = rowButtons.first
+    }
+
+    /// Expands the active form immediately below its selected row, replacing the previous form.
+    func setInlineFormView(_ formView: UIView?, animated: Bool = true) {
+        if formView == nil, inlineFormContainer == nil { return }
+        if let inlineFormContainer, let formView, formView.superview === inlineFormContainer { return }
+        let previousContainer = inlineFormContainer
+        previousContainer?.endEditing(true)
+        let newContainer: UIView?
+        if let formView, let selectedRowButton,
+           let rowIndex = stackView.arrangedSubviews.firstIndex(of: selectedRowButton) {
+            let container = UIView()
+            container.clipsToBounds = true
+            formView.translatesAutoresizingMaskIntoConstraints = false
+            container.addSubview(formView)
+            // Allow the stack to collapse this container without compressing the form's fields.
+            let bottomConstraint = formView.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: -20)
+            bottomConstraint.priority = .init(999)
+            NSLayoutConstraint.activate([
+                formView.topAnchor.constraint(equalTo: container.topAnchor, constant: 8),
+                formView.leadingAnchor.constraint(equalTo: container.leadingAnchor),
+                formView.trailingAnchor.constraint(equalTo: container.trailingAnchor),
+                bottomConstraint,
+            ])
+            container.isHidden = true
+            container.alpha = 0
+            stackView.insertArrangedSubview(container, at: rowIndex + 1)
+            newContainer = container
+        } else {
+            newContainer = nil
+        }
+        inlineFormContainer = newContainer
+        // The form owns its mandate; avoid displaying a second copy beneath the rows.
+        updateMandate(animated: false)
+        let updates = {
+            previousContainer?.isHidden = true
+            previousContainer?.alpha = 0
+            newContainer?.isHidden = false
+            newContainer?.alpha = 1
+            self.layoutIfNeeded()
+            self.delegate?.embeddedPaymentMethodsViewDidUpdateHeight()
+        }
+        let completion: (Bool) -> Void = { _ in
+            previousContainer?.removeFromSuperview()
+        }
+        if animated, window != nil, !UIAccessibility.isReduceMotionEnabled {
+            layoutIfNeeded()
+            UIView.animate(withDuration: 0.25, delay: 0, options: [.beginFromCurrentState, .allowUserInteraction], animations: updates, completion: completion)
+        } else {
+            updates()
+            completion(true)
+        }
+    }
 
     /// If the customer cancels out of a form, restore the last selected payment method row
     func resetSelectionToLastSelection() {
@@ -442,12 +503,17 @@ class EmbeddedPaymentMethodsView: UIView {
                 paymentMethodType: .stripe(.card),
                 savedPaymentMethods: savedPaymentMethods
             )
-            // TODO: Pass in the selection state (eg selectedWithChangeButton) so it's retained
-
             // Replace row button
             stackView.removeArrangedSubview(oldCardButton, animated: false)
             stackView.insertArrangedSubview(cardRowButton, at: oldCardButtonIndex)
             rowButtons.replace(oldCardButton, with: cardRowButton)
+            if selectedRowButton === oldCardButton {
+                selectedRowButton = cardRowButton
+                if let state = selectedRowChangeButtonState, state.shouldShowChangeButton {
+                    cardRowButton.addChangeButton(animated: false)
+                    cardRowButton.setSublabel(text: state.sublabel, animated: false)
+                }
+            }
         }
     }
 
@@ -463,7 +529,7 @@ class EmbeddedPaymentMethodsView: UIView {
 
     private func _updateMandate(mandateText: NSAttributedString?, animated: Bool = true) {
         let shouldDisplayMandate: Bool = if let mandateText {
-            shouldShowMandate && !mandateText.string.isEmpty
+            shouldShowMandate && inlineFormContainer == nil && !mandateText.string.isEmpty
         } else {
             false
         }
