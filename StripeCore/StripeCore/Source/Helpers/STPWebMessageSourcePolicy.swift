@@ -17,6 +17,16 @@ import Foundation
         let host: String
         let port: Int
 
+        static func == (lhs: Origin, rhs: Origin) -> Bool {
+            lhs.scheme == rhs.scheme && lhs.host == rhs.host && lhs.port == rhs.port
+        }
+
+        func hash(into hasher: inout Hasher) {
+            hasher.combine(scheme)
+            hasher.combine(host)
+            hasher.combine(port)
+        }
+
         init(scheme: String, host: String, port: Int) {
             self.scheme = scheme
             self.host = host
