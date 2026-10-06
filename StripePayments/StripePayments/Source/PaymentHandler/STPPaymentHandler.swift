@@ -832,6 +832,7 @@ public class STPPaymentHandler: NSObject {
         case .goPay,
             .shopeePay,
             .qris,
+            .gcash,
             .alipay,
             .iDEAL,
             .FPX,

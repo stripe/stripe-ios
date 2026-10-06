@@ -69,6 +69,18 @@ struct DocumentCollectionConfiguration {
         documentPickerContentTypes.contains { $0.conforms(to: .image) }
     }
 
+    /// The accepted format for camera captures, preferring JPEG over PNG, or `nil` when neither is accepted.
+    var cameraImageFormat: UTType? {
+        let formats = acceptedFormats.map(\.normalizedDocumentFileExtension)
+        if formats.contains("jpeg") {
+            return .jpeg
+        } else if formats.contains("png") {
+            return .png
+        } else {
+            return nil
+        }
+    }
+
     /// User-readable file size limit.
     var maximumFileSizeLabel: String {
         ByteCountFormatter.string(fromByteCount: Int64(maximumFileSize), countStyle: .file)
