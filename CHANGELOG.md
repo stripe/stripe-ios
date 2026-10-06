@@ -1,7 +1,10 @@
 The next release's version bump will so far be:
-PATCH
+MINOR
 
 ## X.Y.Z - changes pending release
+### PaymentSheet
+* [Added] Added QRIS API bindings and PaymentSheet support for PaymentIntents.
+* [Added] Added GCash API bindings and PaymentSheet support for payments and setup.
 
 ## 26.13.0 2026-10-05
 ### PaymentSheet
@@ -22,7 +25,6 @@ PATCH
 * [Added] Added MoMo API bindings and PaymentSheet support for PaymentIntents.
 * [Added] Added GoPay API bindings and PaymentSheet support for PaymentIntents.
 * [Added] Added ShopeePay API bindings and PaymentSheet support for PaymentIntents.
-* [Added] Added QRIS API bindings and PaymentSheet support for PaymentIntents.
 
 ## 26.12.1 2026-09-28
 ### CryptoOnramp (Alpha)

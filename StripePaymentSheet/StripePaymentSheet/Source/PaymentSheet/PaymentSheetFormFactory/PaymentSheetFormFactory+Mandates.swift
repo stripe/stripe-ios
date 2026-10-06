@@ -106,6 +106,10 @@ extension PaymentSheetFormFactory {
         return makeMandate(mandateText: mandateText)
     }
 
+    func makeGCashMandate() -> SimpleMandateElement {
+        let mandateText = String(format: String.Localized.gcash_mandate_text, configuration.merchantDisplayName)
+        return makeMandate(mandateText: mandateText)
+    }
     func makeKoreanPaymentMethodMandate() -> SimpleMandateElement {
         let mandateText = String(
             format: String.Localized.korean_payment_method_mandate_text,
