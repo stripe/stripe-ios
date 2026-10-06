@@ -81,7 +81,7 @@ class HeaderView: UIView {
         label.numberOfLines = 0
         label.textAlignment = .center
         label.adjustsFontForContentSizeCategory = true
-        label.font = IdentityUI.preferredFont(forTextStyle: .body)
+        label.font = IdentityUI.bodyFont
         label.textColor = IdentityUI.htmlLineTextColor
         return label
     }()

@@ -62,9 +62,9 @@ final class MultilineIconLabelHTMLView: UIView {
     }
 
     private static func multiLineContentStyle(textColor: UIColor) -> HTMLStyle {
-        let boldFont = IdentityUI.preferredFont(forTextStyle: UIFont.TextStyle.body, weight: .bold)
+        let boldFont = UIFont.systemFont(ofSize: IdentityUI.bodyFont.pointSize, weight: .bold)
         return .init(
-            bodyFont: IdentityUI.preferredFont(forTextStyle: UIFont.TextStyle.body),
+            bodyFont: IdentityUI.bodyFont,
             bodyColor: textColor,
             h1Font: boldFont,
             h2Font: boldFont,

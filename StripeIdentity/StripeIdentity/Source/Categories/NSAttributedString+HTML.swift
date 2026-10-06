@@ -13,7 +13,7 @@ import UIKit
 /// Specifies how to style HTML used to generate an NSAttributedString.
 struct HTMLStyle {
     static let `default` = HTMLStyle(
-        bodyFont: UIFont.preferredFont(forTextStyle: .body, weight: .regular),
+        bodyFont: IdentityUI.bodyFont,
         bodyColor: .label,
         h1Font: UIFont.preferredFont(forTextStyle: .title1),
         h2Font: UIFont.preferredFont(forTextStyle: .title2),

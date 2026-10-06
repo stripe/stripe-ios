@@ -19,8 +19,10 @@ struct IdentityUI {
         preferredFont(forTextStyle: .title1, weight: .bold)
     }
 
+    static let bodyFont = UIFont.systemFont(ofSize: 16)
+
     static var instructionsFont: UIFont {
-        preferredFont(forTextStyle: .subheadline)
+        bodyFont
     }
 
     static func preferredFont(
