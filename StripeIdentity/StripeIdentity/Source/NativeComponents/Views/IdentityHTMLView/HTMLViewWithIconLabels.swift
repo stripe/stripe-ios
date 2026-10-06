@@ -211,7 +211,7 @@ extension HTMLViewWithIconLabels.Styling {
     static func bodyTextHTMLStyle() -> HTMLStyle {
         return htmlStyle(
             font: bodyTextFont,
-            boldFont: UIFont.systemFont(ofSize: IdentityUI.bodyFont.pointSize, weight: .bold)
+            boldFont: IdentityUI.bodyFont(withWeight: .bold)
         )
     }
 

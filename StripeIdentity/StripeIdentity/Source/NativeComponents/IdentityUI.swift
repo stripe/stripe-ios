@@ -19,7 +19,25 @@ struct IdentityUI {
         preferredFont(forTextStyle: .title1, weight: .bold)
     }
 
-    static let bodyFont = UIFont.systemFont(ofSize: 16)
+    private static let bodyFontSize: CGFloat = 16
+
+    static var bodyFont: UIFont {
+        bodyFont(withWeight: .regular)
+    }
+
+    static func bodyFont(withWeight weight: UIFont.Weight) -> UIFont {
+        let font: UIFont
+        if let customFont = UILabel.appearance().font {
+            let descriptor = customFont.fontDescriptor.addingAttributes([
+                .traits: [UIFontDescriptor.TraitKey.weight: weight],
+            ])
+            font = UIFont(descriptor: descriptor, size: bodyFontSize)
+        } else {
+            font = UIFont.systemFont(ofSize: bodyFontSize, weight: weight)
+        }
+
+        return UIFontMetrics(forTextStyle: .body).scaledFont(for: font)
+    }
 
     static var instructionsFont: UIFont {
         bodyFont
