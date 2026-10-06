@@ -485,6 +485,94 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
 
     // MARK: - PAYCO
 
+    func testQRISRequiresReturnURLAndDoesNotSupportSetup() {
+        // Given
+        let paymentIntent = Intent._testPaymentIntent(paymentMethodTypes: [.qris])
+        let setupIntents: [Intent] = [
+            ._testPaymentIntent(paymentMethodTypes: [.qris], setupFutureUsage: .offSession),
+            ._testPaymentIntent(
+                paymentMethodTypes: [.qris],
+                paymentMethodOptionsSetupFutureUsage: [.qris: "off_session"]
+            ),
+            ._testSetupIntent(paymentMethodTypes: [.qris]),
+        ]
+
+        // When
+        let paymentWithoutReturnURL = PaymentSheet.PaymentMethodType.supportsAdding(
+            paymentMethod: .qris,
+            configuration: makeConfiguration(),
+            intent: paymentIntent,
+            elementsSession: ._testValue(intent: paymentIntent),
+            supportedPaymentMethods: [.qris]
+        )
+        let paymentWithReturnURL = PaymentSheet.PaymentMethodType.supportsAdding(
+            paymentMethod: .qris,
+            configuration: makeConfiguration(hasReturnURL: true),
+            intent: paymentIntent,
+            elementsSession: ._testValue(intent: paymentIntent),
+            supportedPaymentMethods: [.qris]
+        )
+
+        // Then
+        XCTAssertEqual(paymentWithoutReturnURL, .missingRequirements([.returnURL]))
+        XCTAssertEqual(paymentWithReturnURL, .supported)
+        for intent in setupIntents {
+            XCTAssertEqual(
+                PaymentSheet.PaymentMethodType.supportsAdding(
+                    paymentMethod: .qris,
+                    configuration: makeConfiguration(hasReturnURL: true),
+                    intent: intent,
+                    elementsSession: ._testValue(intent: intent),
+                    supportedPaymentMethods: [.qris]
+                ),
+                .missingRequirements([.unsupportedForSetup])
+            )
+        }
+    }
+    func testShopeePayRequiresReturnURLAndDoesNotSupportSetup() {
+        // Given
+        let paymentIntent = Intent._testPaymentIntent(paymentMethodTypes: [.shopeePay])
+        let setupIntents: [Intent] = [
+            ._testPaymentIntent(paymentMethodTypes: [.shopeePay], setupFutureUsage: .offSession),
+            ._testPaymentIntent(
+                paymentMethodTypes: [.shopeePay],
+                paymentMethodOptionsSetupFutureUsage: [.shopeePay: "off_session"]
+            ),
+            ._testSetupIntent(paymentMethodTypes: [.shopeePay]),
+        ]
+
+        // When
+        let paymentWithoutReturnURL = PaymentSheet.PaymentMethodType.supportsAdding(
+            paymentMethod: .shopeePay,
+            configuration: makeConfiguration(),
+            intent: paymentIntent,
+            elementsSession: ._testValue(intent: paymentIntent),
+            supportedPaymentMethods: [.shopeePay]
+        )
+        let paymentWithReturnURL = PaymentSheet.PaymentMethodType.supportsAdding(
+            paymentMethod: .shopeePay,
+            configuration: makeConfiguration(hasReturnURL: true),
+            intent: paymentIntent,
+            elementsSession: ._testValue(intent: paymentIntent),
+            supportedPaymentMethods: [.shopeePay]
+        )
+
+        // Then
+        XCTAssertEqual(paymentWithoutReturnURL, .missingRequirements([.returnURL]))
+        XCTAssertEqual(paymentWithReturnURL, .supported)
+        for intent in setupIntents {
+            XCTAssertEqual(
+                PaymentSheet.PaymentMethodType.supportsAdding(
+                    paymentMethod: .shopeePay,
+                    configuration: makeConfiguration(hasReturnURL: true),
+                    intent: intent,
+                    elementsSession: ._testValue(intent: intent),
+                    supportedPaymentMethods: [.shopeePay]
+                ),
+                .missingRequirements([.unsupportedForSetup])
+            )
+        }
+    }
     func testPaycoRequiresReturnURLAndDoesNotSupportSetup() {
         // Given
         let paymentIntent = Intent._testPaymentIntent(paymentMethodTypes: [.payco])

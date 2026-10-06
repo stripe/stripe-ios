@@ -116,6 +116,10 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
     @objc private(set) public var scalapay: STPPaymentMethodScalapay?
     /// If this is a GoPay PaymentMethod, this contains additional details.
     @objc private(set) public var goPay: STPPaymentMethodGoPay?
+    /// If this is a QRIS PaymentMethod, this contains additional details.
+    @objc private(set) public var qris: STPPaymentMethodQRIS?
+    /// If this is a ShopeePay PaymentMethod, this contains additional details.
+    @objc private(set) public var shopeePay: STPPaymentMethodShopeePay?
     /// If this is a MoMo PaymentMethod, this contains additional details.
     @objc private(set) public var momo: STPPaymentMethodMomo?
 
@@ -200,6 +204,8 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
             "sequra = \(String(describing: sequra))",
             "scalapay = \(String(describing: scalapay))",
             "goPay = \(String(describing: goPay))",
+            "qris = \(String(describing: qris))",
+            "shopeePay = \(String(describing: shopeePay))",
             "momo = \(String(describing: momo))",
             "liveMode = \(liveMode ? "YES" : "NO")",
             "allowRedisplay = \(allResponseFields["allow_redisplay"] as? String ?? "")",
@@ -425,6 +431,12 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
         )
         paymentMethod.goPay = STPPaymentMethodGoPay.decodedObject(
             fromAPIResponse: dict.stp_dictionary(forKey: "gopay")
+        )
+        paymentMethod.qris = STPPaymentMethodQRIS.decodedObject(
+            fromAPIResponse: dict.stp_dictionary(forKey: "qris")
+        )
+        paymentMethod.shopeePay = STPPaymentMethodShopeePay.decodedObject(
+            fromAPIResponse: dict.stp_dictionary(forKey: "shopeepay")
         )
         paymentMethod.momo = STPPaymentMethodMomo.decodedObject(
             fromAPIResponse: dict.stp_dictionary(forKey: "momo")
