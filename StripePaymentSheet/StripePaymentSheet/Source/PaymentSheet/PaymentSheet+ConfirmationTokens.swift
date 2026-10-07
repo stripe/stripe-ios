@@ -19,7 +19,6 @@ extension PaymentSheet {
         isFlowController: Bool,
         allowsSetAsDefaultPM: Bool = false,
         elementsSession: STPElementsSession,
-        confirmHandler: @escaping PaymentSheet.IntentConfiguration.ConfirmationTokenConfirmHandler,
         isFromLink: Bool = false
     ) async -> (result: PaymentSheetResult, deferredIntentConfirmationType: STPAnalyticsClient.DeferredIntentConfirmationType?) {
         do {
@@ -45,12 +44,19 @@ extension PaymentSheet {
                                                                                               additionalPaymentUserAgentValues: makeDeferredPaymentUserAgentValue(intentConfiguration: intentConfig))
 
             // 3. Vend the ConfirmationToken and fetch the client secret from the merchant
-            let clientSecret = try await confirmHandler(confirmationToken)
+            let intentResult = try await intentConfig.createIntent(confirmationToken: confirmationToken)
+            let clientSecret = intentResult.clientSecret
 
             guard clientSecret != IntentConfiguration.COMPLETE_WITHOUT_CONFIRMING_INTENT else {
                 // Force close PaymentSheet and early exit
                 return (.completed, STPAnalyticsClient.DeferredIntentConfirmationType.completeWithoutConfirmingIntent)
             }
+
+            let apiClient = try intentConfig.apiClient(for: intentResult, original: configuration.apiClient)
+            let intentPaymentHandler = intentResult.apiConfiguration.map { _ in
+                STPPaymentHandler(apiClient: apiClient, threeDSCustomizationSettings: paymentHandler.threeDSCustomizationSettings)
+            } ?? paymentHandler
+            defer { withExtendedLifetime(intentPaymentHandler) {} }
 
             let savedPaymentMethodRadarOptions: STPRadarOptions? = {
                 switch confirmType {
@@ -68,7 +74,7 @@ extension PaymentSheet {
             let result: (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?)
             switch intentConfig.mode {
             case .payment:
-                let paymentIntent = try await configuration.apiClient.retrievePaymentIntent(clientSecret: clientSecret, expand: ["payment_method"])
+                let paymentIntent = try await apiClient.retrievePaymentIntent(clientSecret: clientSecret, expand: ["payment_method"])
 
                 // Check if it needs confirmation
                 if [STPPaymentIntentStatus.requiresPaymentMethod, STPPaymentIntentStatus.requiresConfirmation].contains(paymentIntent.status) {
@@ -80,7 +86,7 @@ extension PaymentSheet {
                     paymentIntentParams.clientAttributionMetadata = confirmationTokenParams.clientAttributionMetadata
 
                     result = await withCheckedContinuation { continuation in
-                        paymentHandler.confirmPaymentIntent(
+                        intentPaymentHandler.confirmPaymentIntent(
                             params: paymentIntentParams,
                             authenticationContext: authenticationContext
                         ) { status, paymentIntent, error in
@@ -95,7 +101,7 @@ extension PaymentSheet {
                     // 5b. Server-side confirmation
                     // Note: We cannot validate the ConfirmationToken used to confirm server-side, the backend does not return the CT on the intent object
                     result = await withCheckedContinuation { continuation in
-                        paymentHandler.handleNextAction(
+                        intentPaymentHandler.handleNextAction(
                             for: paymentIntent,
                             with: authenticationContext,
                             returnURL: configuration.returnURL
@@ -109,7 +115,7 @@ extension PaymentSheet {
                     }
                 }
             case .setup:
-                let setupIntent = try await configuration.apiClient.retrieveSetupIntent(clientSecret: clientSecret, expand: ["payment_method"])
+                let setupIntent = try await apiClient.retrieveSetupIntent(clientSecret: clientSecret, expand: ["payment_method"])
 
                 if [STPSetupIntentStatus.requiresPaymentMethod, STPSetupIntentStatus.requiresConfirmation].contains(setupIntent.status) {
                     // 6a. Client-side confirmation with confirmation token
@@ -120,7 +126,7 @@ extension PaymentSheet {
                     setupIntentParams.clientAttributionMetadata = confirmationTokenParams.clientAttributionMetadata
 
                     result = await withCheckedContinuation { continuation in
-                        paymentHandler.confirmSetupIntent(
+                        intentPaymentHandler.confirmSetupIntent(
                             params: setupIntentParams,
                             authenticationContext: authenticationContext
                         ) { status, setupIntent, error in
@@ -135,7 +141,7 @@ extension PaymentSheet {
                     // 6b. Server-side confirmation
                     // Note: We cannot validate the ConfirmationToken used to confirm server-side, the backend does not return the CT on the intent object
                     result = await withCheckedContinuation { continuation in
-                        paymentHandler.handleNextAction(
+                        intentPaymentHandler.handleNextAction(
                             for: setupIntent,
                             with: authenticationContext,
                             returnURL: configuration.returnURL

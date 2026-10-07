@@ -5,6 +5,7 @@ MINOR
 ### PaymentSheet
 * [Added] Added QRIS API bindings and PaymentSheet support for PaymentIntents.
 * [Added] Added GCash API bindings and PaymentSheet support for payments and setup.
+* [Added] Deferred intent callbacks can return a publishable key and Stripe account for intent retrieval, confirmation, and authentication.
 
 ## 26.13.0 2026-10-05
 ### PaymentSheet

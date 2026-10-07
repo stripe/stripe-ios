@@ -224,6 +224,185 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
         waitForExpectations(timeout: 10)
     }
 
+    func testDeferredPaymentMethodCallbackUsesReturnedCredentialsForRetrievalAndConfirmation() async {
+        // Given a payment method collected with the original credentials
+        var configuration = MockParams.configuration(pk: "pk_test_original")
+        configuration.apiClient = stubbedAPIClient()
+        configuration.apiClient.publishableKey = "pk_test_original"
+        configuration.apiClient.stripeAccount = "acct_original"
+        let intentConfig = PaymentSheet.IntentConfiguration.withAPIConfiguration(
+            mode: .payment(amount: 2345, currency: "USD"),
+            confirmHandler: { _, _ in
+                .init(clientSecret: MockParams.paymentIntentClientSecret,
+                      apiConfiguration: .init(publishableKey: "pk_test_intent", stripeAccount: "acct_intent"))
+            }
+        )
+        let retrieved = expectation(description: "Intent retrieved with returned credentials")
+        let confirmed = expectation(description: "Intent confirmed with returned credentials")
+
+        stub { request in
+            request.httpMethod == "GET" && request.url?.path.contains("/payment_intents/") == true
+        } response: { request in
+            XCTAssertEqual(request.value(forHTTPHeaderField: "Authorization"), "Bearer pk_test_intent")
+            XCTAssertEqual(request.value(forHTTPHeaderField: "Stripe-Account"), "acct_intent")
+            retrieved.fulfill()
+            var json = MockJson.paymentIntent
+            json["status"] = "requires_confirmation"
+            json["capture_method"] = "automatic"
+            return HTTPStubsResponse(jsonObject: json, statusCode: 200, headers: nil)
+        }
+        stub { request in
+            request.httpMethod == "POST" && request.url?.path.hasSuffix("/confirm") == true
+        } response: { request in
+            XCTAssertEqual(request.value(forHTTPHeaderField: "Authorization"), "Bearer pk_test_intent")
+            XCTAssertEqual(request.value(forHTTPHeaderField: "Stripe-Account"), "acct_intent")
+            confirmed.fulfill()
+            var json = MockJson.paymentIntent
+            json["status"] = "succeeded"
+            return HTTPStubsResponse(jsonObject: json, statusCode: 200, headers: nil)
+        }
+
+        // When the new intent is confirmed
+        let result = await PaymentSheet.routeDeferredIntentConfirmation(
+            confirmType: .saved(MockParams.cardPaymentMethod, paymentOptions: nil, clientAttributionMetadata: nil, radarOptions: nil),
+            configuration: configuration,
+            intentConfig: intentConfig,
+            authenticationContext: self,
+            paymentHandler: STPPaymentHandler(apiClient: configuration.apiClient),
+            isFlowController: false,
+            elementsSession: nil
+        )
+
+        // Then both intent requests use the returned credentials, without changing the original client
+        if case .completed = result.result {} else { XCTFail("Expected completed payment, got \(result.result)") }
+        await fulfillment(of: [retrieved, confirmed], timeout: 5)
+        XCTAssertEqual(configuration.apiClient.publishableKey, "pk_test_original")
+        XCTAssertEqual(configuration.apiClient.stripeAccount, "acct_original")
+    }
+
+    func testDeferredConfirmationTokenCallbackClearsOriginalAccountForSetupIntent() async {
+        // Given a confirmation token created with the original credentials
+        var configuration = MockParams.configuration(pk: "pk_test_original")
+        configuration.apiClient = stubbedAPIClient()
+        configuration.apiClient.publishableKey = "pk_test_original"
+        configuration.apiClient.stripeAccount = "acct_original"
+        let intentConfig = PaymentSheet.IntentConfiguration.withConfirmationTokenAPIConfiguration(
+            mode: .setup(currency: "USD"),
+            confirmHandler: { _ in
+                .init(clientSecret: "seti_123456789_secret_123456789",
+                      apiConfiguration: .init(publishableKey: "pk_test_intent"))
+            }
+        )
+        let tokenCreated = expectation(description: "Token created with original credentials")
+        let retrieved = expectation(description: "SetupIntent retrieved with returned credentials")
+        let confirmed = expectation(description: "SetupIntent confirmed with returned credentials")
+
+        stub { request in
+            request.httpMethod == "POST" && request.url?.path == "/v1/confirmation_tokens"
+        } response: { request in
+            XCTAssertEqual(request.value(forHTTPHeaderField: "Authorization"), "Bearer pk_test_original")
+            XCTAssertEqual(request.value(forHTTPHeaderField: "Stripe-Account"), "acct_original")
+            tokenCreated.fulfill()
+            return HTTPStubsResponse(jsonObject: ["id": "ctoken_test_123", "created": 1_700_000_000], statusCode: 200, headers: nil)
+        }
+        stub { request in
+            request.httpMethod == "GET" && request.url?.path.contains("/setup_intents/") == true
+        } response: { request in
+            XCTAssertEqual(request.value(forHTTPHeaderField: "Authorization"), "Bearer pk_test_intent")
+            XCTAssertNil(request.value(forHTTPHeaderField: "Stripe-Account"))
+            retrieved.fulfill()
+            var json = MockJson.setupIntent
+            json["status"] = "requires_confirmation"
+            json["payment_method"] = NSNull()
+            return HTTPStubsResponse(jsonObject: json, statusCode: 200, headers: nil)
+        }
+        stub { request in
+            request.httpMethod == "POST" && request.url?.path.hasSuffix("/confirm") == true
+        } response: { request in
+            XCTAssertEqual(request.value(forHTTPHeaderField: "Authorization"), "Bearer pk_test_intent")
+            XCTAssertNil(request.value(forHTTPHeaderField: "Stripe-Account"))
+            confirmed.fulfill()
+            var json = MockJson.setupIntent
+            json["status"] = "succeeded"
+            return HTTPStubsResponse(jsonObject: json, statusCode: 200, headers: nil)
+        }
+
+        // When the new intent is confirmed
+        let result = await PaymentSheet.routeDeferredIntentConfirmation(
+            confirmType: .saved(MockParams.cardPaymentMethod, paymentOptions: nil, clientAttributionMetadata: nil, radarOptions: nil),
+            configuration: configuration,
+            intentConfig: intentConfig,
+            authenticationContext: self,
+            paymentHandler: STPPaymentHandler(apiClient: configuration.apiClient),
+            isFlowController: false,
+            elementsSession: .emptyElementsSession
+        )
+
+        // Then intent requests use the returned key with no Stripe account
+        if case .completed = result.result {} else { XCTFail("Expected completed setup, got \(result.result)") }
+        await fulfillment(of: [tokenCreated, retrieved, confirmed], timeout: 5)
+        XCTAssertEqual(configuration.apiClient.stripeAccount, "acct_original")
+    }
+
+    func testDeferredIntentResultWithoutAPIConfigurationKeepsOriginalClient() async throws {
+        // Given a callback result without credentials
+        let original = stubbedAPIClient()
+        original.publishableKey = "pk_test_original"
+        original.stripeAccount = "acct_original"
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "USD")) { _, _ in "pi_secret" }
+        let paymentMethod = MockParams.cardPaymentMethod
+
+        // When the callback result is resolved
+        let result = try await intentConfig.createIntent(paymentMethod: paymentMethod, shouldSavePaymentMethod: false)
+        let resolved = try intentConfig.apiClient(for: result, original: original)
+
+        // Then the original API client and account are retained
+        XCTAssertTrue(resolved === original)
+        XCTAssertEqual(resolved.publishableKey, "pk_test_original")
+        XCTAssertEqual(resolved.stripeAccount, "acct_original")
+    }
+
+    func testDeferredServerConfirmedIntentUsesReturnedCredentials() async {
+        // Given an intent that the server has already confirmed
+        var configuration = MockParams.configuration(pk: "pk_test_original")
+        configuration.apiClient = stubbedAPIClient()
+        configuration.apiClient.publishableKey = "pk_test_original"
+        let intentConfig = PaymentSheet.IntentConfiguration.withAPIConfiguration(
+            mode: .payment(amount: 2345, currency: "USD"),
+            confirmHandler: { _, _ in
+                .init(clientSecret: MockParams.paymentIntentClientSecret,
+                      apiConfiguration: .init(publishableKey: "pk_test_intent"))
+            }
+        )
+        let retrieved = expectation(description: "Server-confirmed intent retrieved with returned credentials")
+
+        stub { request in
+            request.httpMethod == "GET" && request.url?.path.contains("/payment_intents/") == true
+        } response: { request in
+            XCTAssertEqual(request.value(forHTTPHeaderField: "Authorization"), "Bearer pk_test_intent")
+            retrieved.fulfill()
+            var json = MockJson.paymentIntent
+            json["status"] = "succeeded"
+            return HTTPStubsResponse(jsonObject: json, statusCode: 200, headers: nil)
+        }
+
+        // When PaymentSheet handles the server-confirmed intent
+        let result = await PaymentSheet.routeDeferredIntentConfirmation(
+            confirmType: .saved(MockParams.cardPaymentMethod, paymentOptions: nil, clientAttributionMetadata: nil, radarOptions: nil),
+            configuration: configuration,
+            intentConfig: intentConfig,
+            authenticationContext: self,
+            paymentHandler: STPPaymentHandler(apiClient: configuration.apiClient),
+            isFlowController: false,
+            elementsSession: nil
+        )
+
+        // Then the callback result is completed through the server path
+        if case .completed = result.result {} else { XCTFail("Expected completed payment, got \(result.result)") }
+        XCTAssertEqual(result.deferredIntentConfirmationType, .server)
+        await fulfillment(of: [retrieved], timeout: 5)
+    }
+
 }
 
 extension PaymentSheetAPIMockTest: STPAuthenticationContext {
