@@ -130,7 +130,7 @@ final class PaymentSheetLoader {
 
             // Assert if using konbini or blik with confirmation tokens
             if case .deferredIntent(let intentConfiguration) = mode,
-               intentConfiguration.confirmationTokenConfirmHandler != nil {
+               intentConfiguration.usesConfirmationTokens {
                 if paymentMethodTypes.contains(.stripe(.konbini)) || paymentMethodTypes.contains(.stripe(.blik)) {
                     stpAssertionFailure("Konbini and BLIK payment methods are not supported with ConfirmationTokens. Use init(mode:paymentMethodTypes:onBehalfOf:paymentMethodConfigurationId:confirmHandler:requireCVCRecollection:) instead.")
                 }

@@ -36,6 +36,36 @@ public extension PaymentSheet {
             _ shouldSavePaymentMethod: Bool
         ) async throws -> String
 
+        /// Credentials to use for an intent created by a deferred intent callback.
+        /// The account is cleared when `stripeAccount` is nil.
+        public struct APIConfiguration {
+            public let publishableKey: String
+            public let stripeAccount: String?
+
+            public init(publishableKey: String, stripeAccount: String? = nil) {
+                self.publishableKey = publishableKey
+                self.stripeAccount = stripeAccount
+            }
+        }
+
+        /// The intent created by your server, with optional credentials for its subsequent API requests.
+        /// When `apiConfiguration` is nil, PaymentSheet uses the credentials that loaded the payment UI.
+        public struct IntentCreationResult {
+            public let clientSecret: String
+            public let apiConfiguration: APIConfiguration?
+
+            public init(clientSecret: String, apiConfiguration: APIConfiguration? = nil) {
+                self.clientSecret = clientSecret
+                self.apiConfiguration = apiConfiguration
+            }
+        }
+
+        /// A deferred intent callback that can supply credentials for retrieval, confirmation, and authentication.
+        public typealias ConfirmHandlerWithAPIConfiguration = (
+            _ paymentMethod: STPPaymentMethod,
+            _ shouldSavePaymentMethod: Bool
+        ) async throws -> IntentCreationResult
+
         /// Called when the customer confirms payment using confirmation tokens.
         /// Your implementation should follow the [guide](https://stripe.com/docs/payments/finalize-payments-on-the-server) to create (and optionally confirm) a PaymentIntent or SetupIntent on your server and return its client secret.
         /// - Note: You must create the PaymentIntent or SetupIntent with the same values used as the `IntentConfiguration` e.g. the same amount, currency, etc.
@@ -48,6 +78,11 @@ public extension PaymentSheet {
         public typealias ConfirmationTokenConfirmHandler = (
             _ confirmationToken: STPConfirmationToken
         ) async throws -> String
+
+        /// A confirmation token callback that can supply credentials for the created intent.
+        public typealias ConfirmationTokenConfirmHandlerWithAPIConfiguration = (
+            _ confirmationToken: STPConfirmationToken
+        ) async throws -> IntentCreationResult
 
         /// Called when the payment is confirmed in a shared payment token session.
         /// Returns `paymentMethod` and `shippingAddress` info, which can be passed to the backend for confirmation.
@@ -91,6 +126,24 @@ public extension PaymentSheet {
             self.requireCVCRecollection = requireCVCRecollection
             self.sellerDetails = nil
             validate()
+        }
+
+        /// Creates a deferred intent configuration whose callback can return a publishable key and Stripe account for the created intent.
+        /// The callback's credentials apply only after it returns; payment method collection uses the original API client.
+        public static func withAPIConfiguration(mode: Mode,
+                                                paymentMethodTypes: [String]? = nil,
+                                                onBehalfOf: String? = nil,
+                                                paymentMethodConfigurationId: String? = nil,
+                                                confirmHandler: @escaping ConfirmHandlerWithAPIConfiguration,
+                                                requireCVCRecollection: Bool = false) -> IntentConfiguration {
+            IntentConfiguration(
+                mode: mode,
+                paymentMethodTypes: paymentMethodTypes,
+                onBehalfOf: onBehalfOf,
+                paymentMethodConfigurationId: paymentMethodConfigurationId,
+                requireCVCRecollection: requireCVCRecollection,
+                confirmHandlerWithAPIConfiguration: confirmHandler
+            )
         }
 
         /// Creates a `PaymentSheet.IntentConfiguration` for a shared payment token session
@@ -153,6 +206,42 @@ public extension PaymentSheet {
             validate()
         }
 
+        /// Creates a confirmation token configuration whose callback can return credentials for the created intent.
+        /// Confirmation token creation uses the original API client.
+        public static func withConfirmationTokenAPIConfiguration(mode: Mode,
+                                                                 paymentMethodTypes: [String]? = nil,
+                                                                 onBehalfOf: String? = nil,
+                                                                 paymentMethodConfigurationId: String? = nil,
+                                                                 confirmHandler: @escaping ConfirmationTokenConfirmHandlerWithAPIConfiguration,
+                                                                 requireCVCRecollection: Bool = false) -> IntentConfiguration {
+            IntentConfiguration(
+                mode: mode,
+                paymentMethodTypes: paymentMethodTypes,
+                onBehalfOf: onBehalfOf,
+                paymentMethodConfigurationId: paymentMethodConfigurationId,
+                requireCVCRecollection: requireCVCRecollection,
+                confirmationTokenConfirmHandlerWithAPIConfiguration: confirmHandler
+            )
+        }
+
+        private init(mode: Mode,
+                     paymentMethodTypes: [String]?,
+                     onBehalfOf: String?,
+                     paymentMethodConfigurationId: String?,
+                     requireCVCRecollection: Bool,
+                     confirmHandlerWithAPIConfiguration: ConfirmHandlerWithAPIConfiguration? = nil,
+                     confirmationTokenConfirmHandlerWithAPIConfiguration: ConfirmationTokenConfirmHandlerWithAPIConfiguration? = nil) {
+            self.mode = mode
+            self.paymentMethodTypes = paymentMethodTypes
+            self.onBehalfOf = onBehalfOf
+            self.paymentMethodConfigurationId = paymentMethodConfigurationId
+            self.requireCVCRecollection = requireCVCRecollection
+            self.confirmHandlerWithAPIConfiguration = confirmHandlerWithAPIConfiguration
+            self.confirmationTokenConfirmHandlerWithAPIConfiguration = confirmationTokenConfirmHandlerWithAPIConfiguration
+            self.sellerDetails = nil
+            validate()
+        }
+
         /// Information about the payment (PaymentIntent) or setup (SetupIntent).
         public var mode: Mode {
             didSet { validate() }
@@ -165,10 +254,16 @@ public extension PaymentSheet {
         /// See the documentation for `ConfirmHandler` for more details.
         public var confirmHandler: ConfirmHandler?
 
+        /// A callback that returns credentials with the intent client secret. Takes precedence over `confirmHandler`.
+        public var confirmHandlerWithAPIConfiguration: ConfirmHandlerWithAPIConfiguration?
+
         /// Called when the customer confirms payment using confirmation tokens.
         /// See the documentation for `ConfirmationTokenConfirmHandler` for more details.
         /// - Note: Use this instead of `confirmHandler` when you want to use confirmation tokens for a more secure and streamlined payment flow.
         public var confirmationTokenConfirmHandler: ConfirmationTokenConfirmHandler?
+
+        /// A callback that returns credentials with the intent client secret. Takes precedence over `confirmationTokenConfirmHandler`.
+        public var confirmationTokenConfirmHandlerWithAPIConfiguration: ConfirmationTokenConfirmHandlerWithAPIConfiguration?
 
         /// Replacement for confirmHandler in sharedPaymentTokenSession flows. Not publicly available.
         var preparePaymentMethodHandler: PreparePaymentMethodHandler?
@@ -258,6 +353,45 @@ public extension PaymentSheet {
         }
 
         // MARK: - Internal
+
+        var usesConfirmationTokens: Bool {
+            confirmationTokenConfirmHandlerWithAPIConfiguration != nil || confirmationTokenConfirmHandler != nil
+        }
+
+        func createIntent(paymentMethod: STPPaymentMethod, shouldSavePaymentMethod: Bool) async throws -> IntentCreationResult {
+            if let confirmHandlerWithAPIConfiguration {
+                return try await confirmHandlerWithAPIConfiguration(paymentMethod, shouldSavePaymentMethod)
+            }
+            guard let confirmHandler else {
+                throw PaymentSheetError.integrationError(nonPIIDebugDescription: "No payment method confirm handler available")
+            }
+            return IntentCreationResult(clientSecret: try await confirmHandler(paymentMethod, shouldSavePaymentMethod))
+        }
+
+        func createIntent(confirmationToken: STPConfirmationToken) async throws -> IntentCreationResult {
+            if let confirmationTokenConfirmHandlerWithAPIConfiguration {
+                return try await confirmationTokenConfirmHandlerWithAPIConfiguration(confirmationToken)
+            }
+            guard let confirmationTokenConfirmHandler else {
+                throw PaymentSheetError.integrationError(nonPIIDebugDescription: "No confirmation token confirm handler available")
+            }
+            return IntentCreationResult(clientSecret: try await confirmationTokenConfirmHandler(confirmationToken))
+        }
+
+        func apiClient(for result: IntentCreationResult, original: STPAPIClient) throws -> STPAPIClient {
+            guard let apiConfiguration = result.apiConfiguration else {
+                return original
+            }
+            guard !apiConfiguration.publishableKey.isEmpty,
+                  !apiConfiguration.publishableKey.hasPrefix("sk_"),
+                  !apiConfiguration.publishableKey.hasPrefix("rk_") else {
+                throw PaymentSheetError.integrationError(nonPIIDebugDescription: "The deferred intent requires a valid publishable key")
+            }
+            let apiClient = original.makeCopy()
+            apiClient.publishableKey = apiConfiguration.publishableKey
+            apiClient.stripeAccount = apiConfiguration.stripeAccount
+            return apiClient
+        }
 
         @_spi(STP) public var financialConnectionsPermissions: [String]?
 

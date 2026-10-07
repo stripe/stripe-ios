@@ -505,7 +505,7 @@ final class PaymentSheetAnalyticsHelper {
         additionalParams["setup_future_usage"] = intent?.setupFutureUsageString
         additionalParams["payment_method_options_setup_future_usage"] = intent?.isPaymentMethodOptionsSetupFutureUsageSet
         additionalParams["elements_session_config_id"] = elementsSession?.configID
-        additionalParams["is_confirmation_tokens"] = intent?.intentConfig?.confirmationTokenConfirmHandler != nil
+        additionalParams["is_confirmation_tokens"] = intent?.intentConfig?.usesConfirmationTokens == true
         additionalParams["payment_method_orientation"] = paymentMethodOrientation?.rawValue
         if event.shouldLogFcSdkAvailability {
             additionalParams["fc_sdk_availability"] = FinancialConnectionsSDKAvailability.analyticsValue
