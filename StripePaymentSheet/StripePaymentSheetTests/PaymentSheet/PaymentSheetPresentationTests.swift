@@ -52,7 +52,6 @@ final class PaymentSheetPresentationTests: XCTestCase {
         let sheet = NativeSheetContainerViewController(
             contentViewController: paymentSheet.loadingViewController,
             appearance: .default,
-            isTestMode: true,
             didCancelNative3DS2: {}
         )
         let presented = expectation(description: "Regular-width native sheet presented")
@@ -167,7 +166,6 @@ final class PaymentSheetPresentationTests: XCTestCase {
         let sheet = NativeSheetContainerViewController(
             contentViewController: MeasuredSheetContentViewController(),
             appearance: .default,
-            isTestMode: true,
             didCancelNative3DS2: {}
         )
         let navigationController = UINavigationController(rootViewController: sheet)
@@ -188,7 +186,6 @@ final class PaymentSheetPresentationTests: XCTestCase {
         let sheetViewController = NativeSheetContainerViewController(
             contentViewController: contentViewController,
             appearance: .default,
-            isTestMode: true,
             didCancelNative3DS2: {}
         )
         var presentedViewController: UIViewController?
@@ -230,14 +227,13 @@ final class PaymentSheetPresentationTests: XCTestCase {
     }
 
     @MainActor
-    func testNativeSheetPreservesTestBadgeWhenLoadingCompletes() async throws {
-        // Given a native sheet showing its loading spinner and TEST badge
+    func testNativeSheetUpdatesNavigationItemWhenLoadingCompletes() async throws {
+        // Given a native sheet showing its loading spinner
         let paymentSheet = PaymentSheet(paymentIntentClientSecret: "pi_test_secret_test", configuration: .init())
-        let loadingContent = LoadingViewController(delegate: paymentSheet, appearance: .default, isTestMode: true)
+        let loadingContent = LoadingViewController(delegate: paymentSheet, appearance: .default)
         let sheet = NativeSheetContainerViewController(
             contentViewController: loadingContent,
             appearance: .default,
-            isTestMode: true,
             didCancelNative3DS2: {}
         )
         let presenter = UIViewController()
@@ -248,9 +244,6 @@ final class PaymentSheetPresentationTests: XCTestCase {
         let presented = expectation(description: "Loading sheet presented")
         presenter.presentAsSheet(sheet) { presented.fulfill() }
         await fulfillment(of: [presented], timeout: 3)
-        let loadingBadge = try XCTUnwrap(sheet.navigationItem.leftBarButtonItems?.first {
-            $0.customView is TestModeView
-        })
 
         // When the loaded content replaces the spinner and resizes the sheet
         let loadedContent = MeasuredSheetContentViewController(contentHeight: 400)
@@ -259,38 +252,13 @@ final class PaymentSheetPresentationTests: XCTestCase {
         sheet.setViewControllers([loadedContent])
         await fulfillment(of: [loaded], timeout: 3)
 
-        // Then the same badge remains in the header instead of animating a replacement
-        let loadedBadge = try XCTUnwrap(sheet.navigationItem.leftBarButtonItems?.first {
-            $0.customView is TestModeView
-        })
-        XCTAssertIdentical(loadedBadge, loadingBadge)
-        XCTAssertIdentical(loadedBadge.customView, loadingBadge.customView)
+        // Then only the loaded content owns the sheet's navigation item
         XCTAssertNil(loadingContent.navigationBar.systemNavigationItem)
         XCTAssertIdentical(loadedContent.navigationBar.systemNavigationItem, sheet.navigationItem)
 
         let dismissed = expectation(description: "Loaded sheet dismissed")
         presenter.dismiss(animated: false) { dismissed.fulfill() }
         await fulfillment(of: [dismissed], timeout: 3)
-    }
-
-    @MainActor
-    func testSystemNavigationBarRemovesTestBadgeForLiveModeContent() throws {
-        // Given a native header displaying a TEST badge
-        let navigationItem = UINavigationItem()
-        let testModeBar = SheetNavigationBar(isTestMode: true, appearance: .default)
-        testModeBar.systemNavigationItem = navigationItem
-        let badge = try XCTUnwrap(navigationItem.leftBarButtonItems?.first {
-            $0.customView is TestModeView
-        })
-
-        // When content without a TEST badge takes over the header
-        let liveModeBar = SheetNavigationBar(isTestMode: false, appearance: .default)
-        testModeBar.systemNavigationItem = nil
-        liveModeBar.systemNavigationItem = navigationItem
-
-        // Then retaining a badge across test-mode screens does not show it on live-mode screens
-        XCTAssertFalse(navigationItem.leftBarButtonItems?.contains { $0 === badge } ?? false)
-        XCTAssertFalse(navigationItem.leftBarButtonItems?.contains { $0.customView is TestModeView } ?? false)
     }
 
     @MainActor
@@ -308,7 +276,6 @@ final class PaymentSheetPresentationTests: XCTestCase {
             let sheet = NativeSheetContainerViewController(
                 contentViewController: NativeSheetStubContentViewController(),
                 appearance: appearance,
-                isTestMode: true,
                 didCancelNative3DS2: {}
             )
 
@@ -326,7 +293,6 @@ final class PaymentSheetPresentationTests: XCTestCase {
         let sheet = LinkCornerRadiusSheetViewController(
             contentViewController: NativeSheetStubContentViewController(),
             appearance: .default,
-            isTestMode: true,
             didCancelNative3DS2: {}
         )
 
@@ -344,7 +310,6 @@ final class PaymentSheetPresentationTests: XCTestCase {
         let sheet = NativeSheetContainerViewController(
             contentViewController: initialContent,
             appearance: .default,
-            isTestMode: true,
             didCancelNative3DS2: {}
         )
         let navigationController = UINavigationController(rootViewController: sheet)
@@ -374,7 +339,6 @@ final class PaymentSheetPresentationTests: XCTestCase {
         let sheet = NativeSheetContainerViewController(
             contentViewController: initialContent,
             appearance: appearance,
-            isTestMode: true,
             didCancelNative3DS2: {}
         )
         let navigationController = UINavigationController(rootViewController: sheet)
@@ -412,7 +376,6 @@ final class PaymentSheetPresentationTests: XCTestCase {
         let sheet = NativeSheetContainerViewController(
             contentViewController: MeasuredSheetContentViewController(contentHeight: 1000),
             appearance: .default,
-            isTestMode: true,
             didCancelNative3DS2: {}
         )
         var presentedViewController: UIViewController?
@@ -443,7 +406,6 @@ final class PaymentSheetPresentationTests: XCTestCase {
         let sheet = NativeSheetContainerViewController(
             contentViewController: initialContent,
             appearance: .default,
-            isTestMode: true,
             didCancelNative3DS2: {}
         )
         let presenter = UIViewController()
@@ -488,7 +450,6 @@ final class PaymentSheetPresentationTests: XCTestCase {
         let sheet = NativeSheetContainerViewController(
             contentViewController: initialContent,
             appearance: .default,
-            isTestMode: true,
             didCancelNative3DS2: {}
         )
         let presenter = UIViewController()
@@ -521,7 +482,6 @@ final class PaymentSheetPresentationTests: XCTestCase {
         let sheet = NativeSheetContainerViewController(
             contentViewController: previousContent,
             appearance: .default,
-            isTestMode: true,
             didCancelNative3DS2: {}
         )
         sheet.pushContentViewController(initialContent)
@@ -550,7 +510,6 @@ final class PaymentSheetPresentationTests: XCTestCase {
         let sheet = NativeSheetContainerViewController(
             contentViewController: initialContent,
             appearance: .default,
-            isTestMode: true,
             didCancelNative3DS2: {}
         )
         sheet.pushContentViewController(pushedContent)
@@ -582,7 +541,6 @@ final class PaymentSheetPresentationTests: XCTestCase {
         let sheetViewController = NativeSheetContainerViewController(
             contentViewController: contentViewController,
             appearance: .default,
-            isTestMode: true,
             didCancelNative3DS2: {}
         )
         var presentedViewController: UIViewController?
@@ -611,7 +569,6 @@ final class PaymentSheetPresentationTests: XCTestCase {
         let sheetViewController = DetentInvalidationSpyViewController(
             contentViewController: contentViewController,
             appearance: .default,
-            isTestMode: true,
             didCancelNative3DS2: {}
         )
         let containerView = DynamicHeightContainerView()
@@ -638,7 +595,6 @@ final class PaymentSheetPresentationTests: XCTestCase {
         let sheetViewController = DetentInvalidationSpyViewController(
             contentViewController: contentViewController,
             appearance: .default,
-            isTestMode: true,
             didCancelNative3DS2: {}
         )
         let delegate = VerticalPaymentMethodListDelegateStub()
@@ -675,7 +631,6 @@ final class PaymentSheetPresentationTests: XCTestCase {
         let sheet = NativeSheetContainerViewController(
             contentViewController: content,
             appearance: .default,
-            isTestMode: true,
             didCancelNative3DS2: {}
         )
         let presenter = UIViewController()
@@ -706,7 +661,6 @@ final class PaymentSheetPresentationTests: XCTestCase {
         let sheetViewController = NativeSheetContainerViewController(
             contentViewController: NativeSheetStubContentViewController(),
             appearance: .default,
-            isTestMode: true,
             didCancelNative3DS2: {}
         )
 
@@ -750,7 +704,7 @@ private final class PresentationCapturingViewController: UIViewController {
 
 private final class NativeSheetStubContentViewController: UIViewController, BottomSheetContentViewController {
 
-    lazy var navigationBar = SheetNavigationBar(isTestMode: true, appearance: .default)
+    lazy var navigationBar = SheetNavigationBar(appearance: .default)
     let requiresFullScreen = false
     private(set) var dismissalAttemptCount = 0
 
@@ -813,7 +767,7 @@ private final class FixedHeightSheetNavigationBar: SheetNavigationBar {
 
     init(height: CGFloat, appearance: PaymentSheet.Appearance) {
         self.height = height
-        super.init(isTestMode: true, appearance: appearance)
+        super.init(appearance: appearance)
     }
 
     required init?(coder: NSCoder) {

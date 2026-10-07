@@ -277,8 +277,7 @@ public class PaymentSheet {
     /// Loading View Controller
     lazy var loadingViewController = LoadingViewController(
         delegate: self,
-        appearance: configuration.appearance,
-        isTestMode: configuration.apiClient.isTestmode
+        appearance: configuration.appearance
     )
 
     /// The STPPaymentHandler instance
@@ -286,7 +285,6 @@ public class PaymentSheet {
 
     /// The parent view controller to present
     lazy var bottomSheetViewController: any PaymentSheetContainer = {
-        let isTestMode = configuration.apiClient.isTestmode
         // The playground can opt in while complete PaymentSheet remains outside the server-controlled rollout.
         let usesNativeSheet = NativeSheetFeatureFlags.nativeSheetEnabledOverride == true
             && UIDevice.current.userInterfaceIdiom == .phone
@@ -294,7 +292,6 @@ public class PaymentSheet {
         let vc = PaymentSheetContainerFactory.make(
             contentViewController: loadingViewController,
             appearance: configuration.appearance,
-            isTestMode: isTestMode,
             usesNativeSheet: usesNativeSheet,
             didCancelNative3DS2: { [weak self] in
                 self?.paymentHandler.cancel3DS2ChallengeFlow()
