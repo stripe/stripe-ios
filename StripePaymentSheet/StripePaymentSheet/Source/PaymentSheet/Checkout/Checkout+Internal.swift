@@ -73,8 +73,6 @@ extension CheckoutController: ExpressCheckoutElementDelegate {
             if let billingDetails = configuration.defaults.billingDetails {
                 linkConfirmationConfiguration.defaultBillingDetails.set(billingDetails)
             }
-            linkConfirmationConfiguration.link.disallowFundingSourceCreation = expressCheckoutElementConfiguration.linkConfiguration.disallowFundingSourceCreation
-            linkConfirmationConfiguration.link.collectMissingBillingDetailsForExistingPaymentMethods = expressCheckoutElementConfiguration.linkConfiguration.collectMissingBillingDetailsForExistingPaymentMethods
             switch expressCheckoutElementConfiguration.linkConfiguration.display {
             case .automatic:
                 linkConfirmationConfiguration.link.display = .automatic

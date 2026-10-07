@@ -47,11 +47,9 @@ public class CustomerSheet {
 
     /// The parent view controller to present
     lazy var bottomSheetViewController: BottomSheetViewController = {
-        let isTestMode = configuration.apiClient.isTestmode
         let vc = BottomSheetViewController(
             contentViewController: loadingViewController,
             appearance: configuration.appearance,
-            isTestMode: isTestMode,
             didCancelNative3DS2: { [weak self] in
                 self?.paymentHandler.cancel3DS2ChallengeFlow()
             }
@@ -62,11 +60,9 @@ public class CustomerSheet {
     }()
 
     lazy var loadingViewController: LoadingViewController = {
-        let isTestMode = configuration.apiClient.isTestmode
         return LoadingViewController(
             delegate: self,
             appearance: configuration.appearance,
-            isTestMode: isTestMode,
             loadingViewHeight: 180
         )
     }()
@@ -221,8 +217,7 @@ public class CustomerSheet {
                 }
             }
         }
-        presentingViewController.presentAsBottomSheet(bottomSheetViewController,
-                                                      appearance: configuration.appearance)
+        presentingViewController.presentAsSheet(bottomSheetViewController)
     }
 
     func present(from presentingViewController: UIViewController,

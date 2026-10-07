@@ -24,14 +24,12 @@ class LoadingViewController: UIViewController, BottomSheetContentViewController 
     }
 
     lazy var navigationBar: SheetNavigationBar = {
-        let navigationBar = SheetNavigationBar(isTestMode: isTestMode,
-                                               appearance: appearance)
+        let navigationBar = SheetNavigationBar(appearance: appearance)
         navigationBar.delegate = self
         return navigationBar
     }()
 
     let appearance: PaymentSheet.Appearance
-    let isTestMode: Bool
 
     var requiresFullScreen: Bool {
         return false
@@ -44,10 +42,9 @@ class LoadingViewController: UIViewController, BottomSheetContentViewController 
     let activityIndicator = UIActivityIndicatorView(style: .medium)
     weak var delegate: LoadingViewControllerDelegate?
 
-    init(delegate: LoadingViewControllerDelegate, appearance: PaymentSheet.Appearance, isTestMode: Bool, loadingViewHeight: CGFloat = Constants.defaultLoadingViewHeight) {
+    init(delegate: LoadingViewControllerDelegate, appearance: PaymentSheet.Appearance, loadingViewHeight: CGFloat = Constants.defaultLoadingViewHeight) {
         self.delegate = delegate
         self.appearance = appearance
-        self.isTestMode = isTestMode
         self.loadingViewHeight = loadingViewHeight
         super.init(nibName: nil, bundle: nil)
     }

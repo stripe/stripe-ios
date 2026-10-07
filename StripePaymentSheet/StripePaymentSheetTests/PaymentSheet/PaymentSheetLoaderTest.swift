@@ -947,6 +947,10 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
             .vipps,
             .goPay,
             .momo,
+            .shopeePay,
+            .qris,
+            .gcash,
+            .ngCard,
         ]
         // Test successful load with valid payment method options
         let all_payment_methods_pmo_sfu_values: [STPPaymentMethodType: PaymentSheet.IntentConfiguration.SetupFutureUsage] = STPPaymentMethodType.allCases.reduce([:]) { partialResult, type in

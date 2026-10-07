@@ -133,10 +133,39 @@ enum ExpectedFormHierarchy {
     enum GoPay {
         static var paymentIntent: FormHierarchyNode { emptyForm }
     }
+    // MARK: - Naira card
+
+    enum NairaCard {
+        static var paymentIntent: FormHierarchyNode {
+            FormHierarchyNode(type: "FormElement", children: [
+                FormHierarchyNode(type: "SimpleMandateElement", properties: ["text": "By confirming your payment, you agree that your tr..."])
+            ])
+        }
+    }
     // MARK: - MoMo
 
     enum Momo {
         static var paymentIntent: FormHierarchyNode { emptyForm }
+    }
+    // MARK: - ShopeePay
+
+    enum ShopeePay {
+        static var paymentIntent: FormHierarchyNode { emptyForm }
+    }
+    // MARK: - QRIS
+
+    enum QRIS {
+        static var paymentIntent: FormHierarchyNode { emptyForm }
+    }
+    // MARK: - GCash
+
+    enum GCash {
+        static var paymentIntent: FormHierarchyNode { emptyForm }
+        static var settingUp: FormHierarchyNode {
+            FormHierarchyNode(type: "FormElement", children: [
+                FormHierarchyNode(type: "SimpleMandateElement", properties: ["text": "By confirming your payment with GCash, you allow S..."])
+            ])
+        }
     }
     // MARK: - PAYCO
 

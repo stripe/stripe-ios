@@ -400,6 +400,11 @@ extension STPElementsSession {
         flags["elements_mobile_force_vertical_payment_method_layout"] == true
     }
 
+    /// Whether native-sheet presentation is enabled for this session.
+    var isNativeSheetEnabled: Bool {
+        flags["elements_mobile_ios_native_sheet_enabled"] == true
+    }
+
     var shouldUseAutocompleteProxyEndpoints: Bool {
         flags["ocs_mobile_should_use_autocomplete_proxy_endpoints"] == true
     }

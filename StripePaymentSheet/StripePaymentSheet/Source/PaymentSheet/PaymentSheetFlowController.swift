@@ -578,7 +578,7 @@ extension PaymentSheet {
                 )
 
                 self.isPresented = true
-                presentingViewController.presentAsBottomSheet(bottomSheetVC, appearance: self.configuration.appearance)
+                presentingViewController.presentAsSheet(bottomSheetVC)
             }
 
             if canPresentLinkInPlaceOfFlowController {
@@ -603,8 +603,7 @@ extension PaymentSheet {
         ) {
             let loadingVC = LoadingViewController(
                 delegate: self,
-                appearance: configuration.appearance,
-                isTestMode: configuration.apiClient.isTestmode
+                appearance: configuration.appearance
             )
             let bottomSheetVC = Self.makeBottomSheetViewController(
                 loadingVC,
@@ -614,7 +613,7 @@ extension PaymentSheet {
                     self?.paymentHandler.cancel3DS2ChallengeFlow()
                 }
             )
-            presentingViewController.presentAsBottomSheet(bottomSheetVC, appearance: configuration.appearance)
+            presentingViewController.presentAsSheet(bottomSheetVC)
 
             pendingPresentTask = Task { @MainActor [weak self] in
                 guard let self else { return }
@@ -736,7 +735,7 @@ extension PaymentSheet {
                     }
                 }
                 let bottomSheet = Self.makeBottomSheetViewController(sepaMandateVC, configuration: configuration)
-                presentingViewController.presentAsBottomSheet(bottomSheet, appearance: configuration.appearance)
+                presentingViewController.presentAsSheet(bottomSheet)
             }
 
             func confirm() {
@@ -957,7 +956,6 @@ extension PaymentSheet {
             let sheet = BottomSheetViewController(
                 contentViewController: contentViewController,
                 appearance: configuration.appearance,
-                isTestMode: configuration.apiClient.isTestmode,
                 didCancelNative3DS2: didCancelNative3DS2 ?? { } // TODO(MOBILESDK-864): Refactor this out.
             )
 

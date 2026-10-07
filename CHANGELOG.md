@@ -2,6 +2,16 @@ The next release's version bump will so far be:
 MINOR
 
 ## X.Y.Z - changes pending release
+### General
+* [Removed] Removed the "test mode" badge from all UI surfaces.
+
+### PaymentSheet
+* [Fixed] Fixed a potential crash when canceling redirect payment methods such as Afterpay/Clearpay.
+* [Added] Added QRIS API bindings and PaymentSheet support for PaymentIntents.
+* [Added] Added GCash API bindings and PaymentSheet support for payments and setup.
+* [Added] Added Naira card API bindings and PaymentSheet support for PaymentIntents.
+
+## 26.13.0 2026-10-05
 ### PaymentSheet
 * [Fixed] Fixed a potential crash when using certain card brands in PaymentSheet.
 * [Fixed] Fixed Apple Pay failing to open for fractional amounts in COP, HUF, IDR, LAK, LBP, PKR, and RSD.
@@ -19,12 +29,14 @@ MINOR
 ### PaymentSheet
 * [Added] Added MoMo API bindings and PaymentSheet support for PaymentIntents.
 * [Added] Added GoPay API bindings and PaymentSheet support for PaymentIntents.
+* [Added] Added ShopeePay API bindings and PaymentSheet support for PaymentIntents.
 
 ## 26.12.1 2026-09-28
 ### CryptoOnramp (Alpha)
 * [Fixed] Preserved PaymentIntent error codes, decline codes, and types in checkout errors after authentication.
 
 ### Financial Connections
+* [Added] Added `financialConnectionsSessionId` to `FinancialConnectionsEvent`. Events are emitted after the session identifier is available.
 * [Fixed] Preserved `no_eligible_accounts` in `onEvent` error callbacks instead of reporting it as `unexpected_error`.
 * [Fixed] Recorded native `onEvent` emissions with the session context for diagnostics.
 

@@ -345,6 +345,19 @@ extension String.Localized {
         )
     }
 
+    static var nigerian_payment_method_terms: String {
+        STPLocalizedString(
+            "By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their <terms>terms of use</terms>.",
+            "Nigerian payment method disclosure. The terms tags mark the link to the merchant of record's terms of use."
+        )
+    }
+
+    static var gcash_mandate_text: String {
+        STPLocalizedString(
+            "By confirming your payment with GCash, you allow %@ to charge your GCash account for future payments in accordance with their terms.",
+            "GCash mandate text. The placeholder is the merchant's name."
+        )
+    }
     static var korean_payment_method_mandate_text: String {
         STPLocalizedString(
             "By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms.",
