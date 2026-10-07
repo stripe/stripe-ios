@@ -9,6 +9,7 @@
 import Foundation
 import OHHTTPStubs
 import OHHTTPStubsSwift
+import SafariServices
 import StripeCoreTestUtils
 import XCTest
 
@@ -21,6 +22,174 @@ import XCTest
 @testable@_spi(STP) import StripePaymentsUI
 
 class STPPaymentHandlerStubbedTests: STPNetworkStubbingTestCase {
+    @MainActor
+    func testAfterpayRedirectCancellationResumesContinuationOnce() async {
+        // Given an Afterpay redirect with two intent requests that have not completed
+        let apiClient = STPAPIClientPollingMock()
+        var requests: [STPPaymentIntentCompletionBlock] = []
+        apiClient.retrievePaymentIntentHandler = { _, _, completion in
+            requests.append(completion)
+        }
+        let paymentHandler = STPPaymentHandler(apiClient: apiClient)
+        let initialIntent = STPFixtures.paymentIntent(
+            paymentMethodTypes: ["afterpay_clearpay"],
+            status: .requiresAction,
+            paymentMethod: ["id": "pm_test", "type": "afterpay_clearpay", "created": 1_652_736_692]
+        )
+        let paymentIntent = STPPaymentIntent.decodedObject(fromAPIResponse: initialIntent.allResponseFields.merging([
+            "next_action": [
+                "type": "redirect_to_url",
+                "redirect_to_url": ["url": "https://example.com", "return_url": "test://stripe-redirect"],
+            ],
+        ]) { _, new in new })!
+        var completionCount = 0
+        let status: STPPaymentHandlerActionStatus = await withCheckedContinuation { continuation in
+            paymentHandler.currentAction = STPPaymentHandlerPaymentIntentActionParams(
+                apiClient: apiClient,
+                authenticationContext: self,
+                threeDSCustomizationSettings: .init(),
+                paymentIntent: paymentIntent,
+                returnURL: "test://stripe-redirect"
+            ) { status, intent, error in
+                completionCount += 1
+                XCTAssertTrue(intent === paymentIntent)
+                XCTAssertNil(error)
+                paymentHandler.currentAction = nil
+                continuation.resume(returning: status)
+            }
+
+            // When the return URL and Safari dismissal arrive before either request finishes
+            XCTAssertTrue(paymentHandler.handleURLCallback(URL(string: "test://stripe-redirect")!))
+            paymentHandler.safariViewControllerDidFinish(SFSafariViewController(url: URL(string: "https://example.com")!))
+            XCTAssertEqual(requests.count, 2)
+            for request in requests {
+                request(paymentIntent, nil)
+            }
+        }
+
+        // Then cancellation resumes the continuation exactly once without crashing
+        XCTAssertEqual(status, .canceled)
+        XCTAssertEqual(completionCount, 1)
+    }
+
+    @MainActor
+    func testSetupIntentRedirectCancellationResumesContinuationOnce() async {
+        // Given a card redirect with two intent requests that have not completed
+        let apiClient = STPAPIClientPollingMock()
+        var requests: [STPSetupIntentCompletionBlock] = []
+        apiClient.retrieveSetupIntentHandler = { _, _, completion in
+            requests.append(completion)
+        }
+        let paymentHandler = STPPaymentHandler(apiClient: apiClient)
+        let initialIntent = STPFixtures.setupIntent(
+            paymentMethodTypes: ["card"],
+            status: .requiresAction,
+            paymentMethod: ["id": "pm_test", "type": "card", "created": 1_652_736_692]
+        )
+        let setupIntent = STPSetupIntent.decodedObject(fromAPIResponse: initialIntent.allResponseFields.merging([
+            "next_action": [
+                "type": "redirect_to_url",
+                "redirect_to_url": ["url": "https://example.com", "return_url": "test://stripe-redirect"],
+            ],
+        ]) { _, new in new })!
+        var completionCount = 0
+        let status: STPPaymentHandlerActionStatus = await withCheckedContinuation { continuation in
+            paymentHandler.currentAction = STPPaymentHandlerSetupIntentActionParams(
+                apiClient: apiClient,
+                authenticationContext: self,
+                threeDSCustomizationSettings: .init(),
+                setupIntent: setupIntent,
+                returnURL: "test://stripe-redirect"
+            ) { status, intent, error in
+                completionCount += 1
+                XCTAssertTrue(intent === setupIntent)
+                XCTAssertNil(error)
+                paymentHandler.currentAction = nil
+                continuation.resume(returning: status)
+            }
+
+            // When the return URL and Safari dismissal arrive before either request finishes
+            XCTAssertTrue(paymentHandler.handleURLCallback(URL(string: "test://stripe-redirect")!))
+            paymentHandler.safariViewControllerDidFinish(SFSafariViewController(url: URL(string: "https://example.com")!))
+            XCTAssertEqual(requests.count, 2)
+            for request in requests {
+                request(setupIntent, nil)
+            }
+        }
+
+        // Then cancellation resumes the continuation exactly once without crashing
+        XCTAssertEqual(status, .canceled)
+        XCTAssertEqual(completionCount, 1)
+    }
+
+    @MainActor
+    func testPaymentIntentCompletionIgnoresRepeatedAndReentrantCalls() {
+        for expectedStatus: STPPaymentHandlerActionStatus in [.succeeded, .failed, .canceled] {
+            // Given an action whose completion attempts to complete the same action again
+            let intent = STPFixtures.paymentIntent(paymentMethodTypes: ["card"])
+            let expectedError = expectedStatus == .failed ? NSError(domain: "test", code: 1) : nil
+            var action: STPPaymentHandlerPaymentIntentActionParams!
+            var completionCount = 0
+            action = STPPaymentHandlerPaymentIntentActionParams(
+                apiClient: STPAPIClientPollingMock(),
+                authenticationContext: self,
+                threeDSCustomizationSettings: .init(),
+                paymentIntent: intent,
+                returnURL: nil
+            ) { status, completedIntent, error in
+                completionCount += 1
+                XCTAssertEqual(status, expectedStatus)
+                XCTAssertTrue(completedIntent === intent)
+                XCTAssertEqual(error, expectedError)
+                // Bound the reentrant call so a regression fails without overflowing the stack.
+                if completionCount == 1 {
+                    action.complete(with: .failed, error: nil)
+                }
+            }
+
+            // When the action completes and another callback arrives afterward
+            action.complete(with: expectedStatus, error: expectedError)
+            action.complete(with: .canceled, error: nil)
+
+            // Then only the first result is delivered
+            XCTAssertEqual(completionCount, 1)
+        }
+    }
+
+    @MainActor
+    func testSetupIntentCompletionIgnoresRepeatedAndReentrantCalls() {
+        for expectedStatus: STPPaymentHandlerActionStatus in [.succeeded, .failed, .canceled] {
+            // Given an action whose completion attempts to complete the same action again
+            let intent = STPFixtures.setupIntent(paymentMethodTypes: ["card"])
+            let expectedError = expectedStatus == .failed ? NSError(domain: "test", code: 1) : nil
+            var action: STPPaymentHandlerSetupIntentActionParams!
+            var completionCount = 0
+            action = STPPaymentHandlerSetupIntentActionParams(
+                apiClient: STPAPIClientPollingMock(),
+                authenticationContext: self,
+                threeDSCustomizationSettings: .init(),
+                setupIntent: intent,
+                returnURL: nil
+            ) { status, completedIntent, error in
+                completionCount += 1
+                XCTAssertEqual(status, expectedStatus)
+                XCTAssertTrue(completedIntent === intent)
+                XCTAssertEqual(error, expectedError)
+                // Bound the reentrant call so a regression fails without overflowing the stack.
+                if completionCount == 1 {
+                    action.complete(with: .failed, error: nil)
+                }
+            }
+
+            // When the action completes and another callback arrives afterward
+            action.complete(with: expectedStatus, error: expectedError)
+            action.complete(with: .canceled, error: nil)
+
+            // Then only the first result is delivered
+            XCTAssertEqual(completionCount, 1)
+        }
+    }
+
     func testPaymentIntentCardErrorUsesServerMessage() {
         // Given a PaymentIntent that failed after authentication with a specific decline message
         let paymentIntent = STPPaymentIntent.decodedObject(fromAPIResponse: [

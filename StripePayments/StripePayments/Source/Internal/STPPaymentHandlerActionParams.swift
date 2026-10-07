@@ -49,6 +49,7 @@ import UIKit
     func nextAction() -> STPIntentAction?
     /// Retrieves the latest Intent and its polling status without mutating the action.
     func retrievePollingResult(completion: @escaping (STPPaymentHandlerPollingResult?) -> Void)
+    /// Completes the action at most once. Must be called on the main thread.
     func complete(with status: STPPaymentHandlerActionStatus, error: NSError?)
 }
 
@@ -59,8 +60,7 @@ public class STPPaymentHandlerPaymentIntentActionParams: NSObject, STPPaymentHan
     @_spi(STP) public let authenticationContext: STPAuthenticationContext
     @_spi(STP) public let apiClient: STPAPIClient
     @_spi(STP) public let threeDSCustomizationSettings: STPThreeDSCustomizationSettings
-    @_spi(STP) public let paymentIntentCompletion:
-        STPPaymentHandlerActionPaymentIntentCompletionBlock
+    private var paymentIntentCompletion: STPPaymentHandlerActionPaymentIntentCompletionBlock?
     @_spi(STP) public let returnURLString: String?
     @_spi(STP) public var paymentIntent: STPPaymentIntent
     @_spi(STP) public var threeDS2Transaction: STDSTransaction?
@@ -137,7 +137,11 @@ public class STPPaymentHandlerPaymentIntentActionParams: NSObject, STPPaymentHan
     }
 
     @_spi(STP) public func complete(with status: STPPaymentHandlerActionStatus, error: NSError?) {
-        paymentIntentCompletion(status, paymentIntent, error)
+        stpAssert(Thread.isMainThread)
+        // Redirect callbacks can race. Consume the completion before invoking it to also allow reentrancy.
+        let completion = paymentIntentCompletion
+        paymentIntentCompletion = nil
+        completion?(status, paymentIntent, error)
     }
 
     // Translate the STPAuthenticationContext to an ASPresentationAnchor if possible
@@ -152,7 +156,7 @@ internal class STPPaymentHandlerSetupIntentActionParams: NSObject, STPPaymentHan
     let authenticationContext: STPAuthenticationContext
     let apiClient: STPAPIClient
     let threeDSCustomizationSettings: STPThreeDSCustomizationSettings
-    let setupIntentCompletion: STPPaymentHandlerActionSetupIntentCompletionBlock
+    private var setupIntentCompletion: STPPaymentHandlerActionSetupIntentCompletionBlock?
     let returnURLString: String?
     var setupIntent: STPSetupIntent
     var threeDS2Transaction: STDSTransaction?
@@ -229,7 +233,11 @@ internal class STPPaymentHandlerSetupIntentActionParams: NSObject, STPPaymentHan
     }
 
     func complete(with status: STPPaymentHandlerActionStatus, error: NSError?) {
-        setupIntentCompletion(status, setupIntent, error)
+        stpAssert(Thread.isMainThread)
+        // Redirect callbacks can race. Consume the completion before invoking it to also allow reentrancy.
+        let completion = setupIntentCompletion
+        setupIntentCompletion = nil
+        completion?(status, setupIntent, error)
     }
 
     // Translate the STPAuthenticationContext to an ASPresentationAnchor if possible
