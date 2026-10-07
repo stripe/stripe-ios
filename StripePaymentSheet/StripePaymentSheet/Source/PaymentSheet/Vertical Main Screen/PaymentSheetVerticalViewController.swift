@@ -121,7 +121,6 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 
     lazy var navigationBar: SheetNavigationBar = {
         let navBar = SheetNavigationBar(
-            isTestMode: configuration.apiClient.isTestmode,
             appearance: configuration.appearance
         )
         navBar.delegate = self
@@ -863,7 +862,6 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                 paymentMethodRemoveIsPartial: elementsSession.paymentMethodRemoveIsPartialForPaymentSheet(),
                 merchantName: configuration.merchantDisplayName)
             let updateViewController = UpdatePaymentMethodViewController(removeSavedPaymentMethodMessage: removeSavedPaymentMethodMessage,
-                                                                         isTestMode: configuration.apiClient.isTestmode,
                                                                          configuration: updateConfig)
             updateViewController.delegate = self
             bottomSheetController?.pushContentViewController(updateViewController)
