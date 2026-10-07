@@ -122,6 +122,14 @@ extension String.Localized {
         STPLocalizedString("Choose Photo…", "Action to open the system photo picker to select a photo")
     }
 
+    static var takeDocumentPhoto: String {
+        STPLocalizedString("Take Photo…", "Action to open the system camera to take a photo of a document")
+    }
+
+    static var documentCameraAccessRequired: String {
+        STPLocalizedString("Allow camera access in Settings to take a photo.", "Error when camera access is denied or restricted during document collection")
+    }
+
     static func unsupportedDocumentFormat(formats: [String]) -> String {
         guard !formats.isEmpty else {
             return STPLocalizedString("This file type isn’t supported.", "Validation error when no document formats are available")

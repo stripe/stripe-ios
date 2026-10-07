@@ -7,6 +7,9 @@
 /* Action to add documents for another source of funds */
 "Add documents" = "Add documents";
 
+/* Error when camera access is denied or restricted during document collection */
+"Allow camera access in Settings to take a photo." = "Allow camera access in Settings to take a photo.";
+
 /* Label and placeholder for a questionnaire answer field */
 "Answer" = "Answer";
 
@@ -39,6 +42,9 @@
 
 /* Heading confirming documents were submitted for review */
 "Submitted for review" = "Submitted for review";
+
+/* Action to open the system camera to take a photo of a document */
+"Take Photo…" = "Take Photo…";
 
 /* Heading introducing source of funds collection */
 "Tell us about your source of funds" = "Tell us about your source of funds";

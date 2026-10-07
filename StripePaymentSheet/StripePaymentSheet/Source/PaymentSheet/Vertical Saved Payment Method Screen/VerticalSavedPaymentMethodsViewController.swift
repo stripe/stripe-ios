@@ -139,8 +139,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     // MARK: - UI properties
 
     lazy var navigationBar: SheetNavigationBar = {
-        let navBar = SheetNavigationBar(isTestMode: configuration.apiClient.isTestmode,
-                                        appearance: configuration.appearance)
+        let navBar = SheetNavigationBar(appearance: configuration.appearance)
         navBar.setStyle(navigationBarStyle())
         navBar.delegate = self
         navBar.additionalButton.configureCommonEditButton(isEditingPaymentMethods: isEditingPaymentMethods, appearance: configuration.appearance)
@@ -467,7 +466,6 @@ extension VerticalSavedPaymentMethodsViewController: SavedPaymentMethodRowButton
             paymentMethodRemoveIsPartial: elementsSession.paymentMethodRemoveIsPartialForPaymentSheet(),
             merchantName: configuration.merchantDisplayName)
         let updateViewController = UpdatePaymentMethodViewController(removeSavedPaymentMethodMessage: removeSavedPaymentMethodMessage,
-                                                                     isTestMode: configuration.apiClient.isTestmode,
                                                                      configuration: updateConfig)
         updateViewController.delegate = self
         self.updateViewController = updateViewController
