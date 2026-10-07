@@ -5,6 +5,7 @@
 //  Created by Yuki Tokuhiro on 7/10/26.
 //
 
+import PassKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 
@@ -188,7 +189,55 @@ extension PaymentElement {
     }
 }
 
-private extension PaymentElement.ApplePayConfiguration {
+extension PaymentElement.Configuration {
+    /// Configuration related to Apple Pay
+    public struct ApplePayConfiguration: CheckoutApplePayConfiguration {
+        /// The Apple Merchant Identifier to use during Apple Pay transactions.
+        /// To obtain one, see https://stripe.com/docs/apple-pay#native
+        public var merchantId: String
+
+        /// Defines the label that will be displayed in the Apple Pay button.
+        /// See <https://developer.apple.com/design/human-interface-guidelines/technologies/apple-pay/buttons-and-marks/>
+        /// for all available options.
+        public var buttonType: PKPaymentButtonType?
+
+        /// Creates an Apple Pay configuration.
+        /// - Parameters:
+        ///   - merchantId: The Apple Pay merchant identifier.
+        ///   - buttonType: The type of Apple Pay button to display. Defaults to `.plain` when `nil`.
+        public init(
+            merchantId: String,
+            buttonType: PKPaymentButtonType? = nil
+        ) {
+            self.merchantId = merchantId
+            self.buttonType = buttonType
+        }
+    }
+
+    /// Configuration related to Link
+    public struct LinkConfiguration {
+        /// The Link display mode.
+        public var display: Display = .automatic
+
+        /// Creates a Link configuration.
+        public init(display: Display = .automatic) {
+            self.display = display
+        }
+
+        /// Display configuration for Link
+        public enum Display: String {
+            /// Link will be displayed when available.
+            case automatic
+            /// Link will never be displayed.
+            case never
+            /// Link remains enabled (e.g. for automatic Link verification, Instant Bank Payments, Link Card Brand, and inline signup)
+            /// but its button/row will not be shown in the payment element UI.
+            case walletButtonHidden
+        }
+    }
+}
+
+private extension PaymentElement.Configuration.ApplePayConfiguration {
     func paymentSheetConfiguration(merchantCountryCode: String) -> PaymentSheet.ApplePayConfiguration {
         return PaymentSheet.ApplePayConfiguration(
             merchantId: merchantId,
@@ -199,9 +248,7 @@ private extension PaymentElement.ApplePayConfiguration {
 }
 
 private extension PaymentSheet.Configuration {
-    mutating func apply(linkConfiguration: PaymentElement.LinkConfiguration?) {
-        link.disallowFundingSourceCreation = linkConfiguration?.disallowFundingSourceCreation ?? []
-        link.collectMissingBillingDetailsForExistingPaymentMethods = linkConfiguration?.collectMissingBillingDetailsForExistingPaymentMethods ?? true
+    mutating func apply(linkConfiguration: PaymentElement.Configuration.LinkConfiguration?) {
         switch linkConfiguration?.display {
         case .none, .automatic:
             link.display = .automatic
@@ -214,9 +261,7 @@ private extension PaymentSheet.Configuration {
 }
 
 private extension EmbeddedPaymentElement.Configuration {
-    mutating func apply(linkConfiguration: PaymentElement.LinkConfiguration?) {
-        link.disallowFundingSourceCreation = linkConfiguration?.disallowFundingSourceCreation ?? []
-        link.collectMissingBillingDetailsForExistingPaymentMethods = linkConfiguration?.collectMissingBillingDetailsForExistingPaymentMethods ?? true
+    mutating func apply(linkConfiguration: PaymentElement.Configuration.LinkConfiguration?) {
         switch linkConfiguration?.display {
         case .none, .automatic:
             link.display = .automatic

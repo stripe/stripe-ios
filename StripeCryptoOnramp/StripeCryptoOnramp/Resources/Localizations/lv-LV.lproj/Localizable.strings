@@ -1,6 +1,26 @@
+"Add %ld documents" = "Pievienojiet %ld dokumentus";
+
+"Add 1 document" = "Pievienojiet 1 dokumentu";
+
+"Add documents" = "Pievienot dokumentus";
+
+"Answer" = "Atbilde";
+
+"Choose File…" = "Izvēlēties failu...";
+
+"Choose Photo…" = "Izvēlēties fotoattēlu…";
+
 "Debit cards are most likely to be accepted." = "Visticamāk, tiks pieņemtas debetkartes.";
 
+"Document type" = "Dokumenta veids";
+
 "Document uploaded successfully" = "Dokuments veiksmīgi augšupielādēts";
+
+"Funds source" = "Finansējuma avots";
+
+"How are you funding your transactions? Please list all of your sources. For example, salary, savings, investment earnings, etc." = "Kā jūs finansējat savus darījumus? Lūdzu, norādiet visus savus avotus. Piemēram, alga, ietaupījumi, ieguldījumu peļņa utt.";
+
+"Make sure your document meets following requirements." = "Pārliecinieties, ka jūsu dokuments atbilst tālāk norādītajām prasībām.";
 
 "Please try again later." = "Mēģiniet vēlāk vēlreiz.";
 
@@ -8,9 +28,17 @@
 
 "Tell us about your source of funds" = "Pastāstiet mums par jūsu finanšu līdzekļu avotu";
 
+"There was a problem with your previous document. Please upload a new one." = "Radās problēma ar jūsu iepriekšējo dokumentu. Lūdzu, augšupielādējiet jaunu.";
+
 "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "Šo lietotni nevarēja verificēt atestācijas kļūdas dēļ. Lūdzu, mēģiniet vēlreiz vēlāk vai sazinieties ar izstrādātāju, ja problēma joprojām pastāv.";
 
 "This app couldn't be verified. Contact the app developer for help." = "Šo lietotni nevarēja verificēt. Lai saņemtu palīdzību, sazinieties ar lietotnes izstrādātāju.";
+
+"This file is larger than %@. Choose a file that is %@ or smaller." = "Šis fails ir lielāks par %1$@. Izvēlieties failu, kas ir %2$@ vai mazāks.";
+
+"This file type isn’t supported." = "Šis faila tips netiek atbalstīts.";
+
+"This file type isn’t supported. Upload a %@ file." = "Šis faila tips netiek atbalstīts. Augšupielādējiet %@ failu.";
 
 "This wallet couldn't be found. Please choose or add a wallet and try again." = "Šis maks netika atrasts. Lūdzu, izvēlieties vai pievienojiet maku un mēģiniet vēlreiz.";
 
@@ -20,9 +48,19 @@
 
 "This wallet verification request is invalid. Please try again." = "Šis maka verifikācijas pieprasījums ir nederīgs. Lūdzu, mēģiniet vēlreiz.";
 
+"Upload document" = "Augšupielādēt dokumentu";
+
 "Upload your proof of address" = "Augšupielādējiet jūsu adresi apliecinošu dokumentu";
 
+"Uploaded" = "Augšupielādēts";
+
+"Uploading…" = "Notiek augšupielāde…";
+
 "We couldn't verify ownership of this wallet. Please try again." = "Mums neizdevās pārbaudīt šī maka īpašumtiesības. Lūdzu, mēģiniet vēlreiz.";
+
+"We couldn’t open this document. Please choose it again." = "Neizdevās atvērt šo dokumentu. Lūdzu, izvēlieties to vēlreiz.";
+
+"We couldn’t upload this file. Please try again." = "Neizdevās augšupielādēt šo failu. Lūdzu, mēģiniet vēlreiz.";
 
 "We may request proof of address for larger transactions." = "Mēs varam pieprasīt adresi apliecinošu dokumentu lielākiem darījumiem.";
 

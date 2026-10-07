@@ -99,8 +99,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
 
     // MARK: - Views
     internal lazy var navigationBar: SheetNavigationBar = {
-        let navBar = SheetNavigationBar(isTestMode: configuration.apiClient.isTestmode,
-                                        appearance: configuration.appearance)
+        let navBar = SheetNavigationBar(appearance: configuration.appearance)
         navBar.delegate = self
         return navBar
     }()
@@ -118,8 +117,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                 paymentMethodRemove: paymentMethodRemove,
                 paymentMethodRemoveIsPartial: paymentMethodRemoveIsPartial,
                 paymentMethodUpdate: paymentMethodUpdate,
-                paymentMethodSyncDefault: paymentMethodSyncDefault,
-                isTestMode: configuration.apiClient.isTestmode
+                paymentMethodSyncDefault: paymentMethodSyncDefault
             ),
             appearance: configuration.appearance,
             cbcEligible: cbcEligible,
@@ -698,8 +696,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                 paymentMethodRemove: paymentMethodRemove,
                 paymentMethodRemoveIsPartial: paymentMethodRemoveIsPartial,
                 paymentMethodUpdate: paymentMethodUpdate,
-                paymentMethodSyncDefault: paymentMethodSyncDefault,
-                isTestMode: configuration.apiClient.isTestmode
+                paymentMethodSyncDefault: paymentMethodSyncDefault
             ),
             appearance: configuration.appearance,
             cbcEligible: cbcEligible,
