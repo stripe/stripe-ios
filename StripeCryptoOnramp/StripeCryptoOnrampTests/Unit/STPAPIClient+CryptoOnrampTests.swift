@@ -39,7 +39,7 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
 
         // /v1/crypto/internal/fulfill_kyc_requirements
         static let fulfillKYCRequirementsAPIPath = "/v1/crypto/internal/fulfill_kyc_requirements"
-        static let validFulfillKYCRequirementsRequest = FulfillKYCRequirementsRequest(requirements: [
+        static let validFulfillKYCRequirements: [String: FulfillKYCRequirementsRequest.Requirement] = [
             "proof_of_address": .init(
                 requestedBy: "swapped",
                 documents: [
@@ -61,7 +61,7 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
                     ])
                 )
             ),
-        ])
+        ]
 
         // /v1/crypto/internal/kyc_data_collection
         static let collectKycInfoAPIPath = "/v1/crypto/internal/kyc_data_collection"
@@ -365,13 +365,13 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         XCTAssertEqual(question.answerType, .unknown("future_answer_type"))
     }
 
-    func testFulfillKYCRequirementsEncodesPayloadAndUsesLinkSessionKey() async throws {
+    func testFulfillKYCRequirementsEncodesLinkSessionKeyInCredentials() async throws {
         let mockResponseData = try FulfillKYCRequirementsResponseMock.fulfillKYCRequirementsResponse_200.data()
         stub { request in
             request.url?.path == Constant.fulfillKYCRequirementsAPIPath
         } response: { request in
             XCTAssertEqual(request.httpMethod, "POST")
-            XCTAssertEqual(request.value(forHTTPHeaderField: "Authorization"), "Bearer \(Constant.linkSessionKey)")
+            XCTAssertEqual(request.value(forHTTPHeaderField: "Authorization"), "Bearer \(Constant.validPublishableKey)")
             XCTAssertEqual(request.value(forHTTPHeaderField: "Stripe-Version"), Constant.cryptoOnrampAPIVersion)
             XCTAssertNil(request.value(forHTTPHeaderField: Constant.consumerAuthTokenHeader))
             XCTAssertNil(request.url?.query)
@@ -382,6 +382,7 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
                 $0.removingPercentEncoding ?? $0
             }
             XCTAssertEqual(parameters, [
+                "credentials[consumer_session_client_secret]": Constant.linkSessionKey,
                 "requirements[proof_of_address][requested_by]": "swapped",
                 "requirements[proof_of_address][documents][0][document_subtype]": "utility_provider",
                 "requirements[proof_of_address][documents][0][file_ids][0]": "file_poa",
@@ -407,7 +408,7 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         linkAccountInfo.consumerSessionClientSecret = nil
 
         try await apiClient.fulfillKYCRequirements(
-            Constant.validFulfillKYCRequirementsRequest,
+            requirements: Constant.validFulfillKYCRequirements,
             linkAccountInfo: linkAccountInfo
         )
 
@@ -416,19 +417,21 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
 
     func testFulfillKYCRequirementsRejectsMissingLinkSessionKey() async throws {
         let apiClient = stubbedAPIClient()
-        apiClient.publishableKey = Constant.validPublishableKey
 
         for linkSessionKey in [nil, ""] {
+            // Given a verified account with consumer credentials but no usable Link session key
             var linkAccountInfo = Constant.validLinkAccountInfo
             linkAccountInfo.linkSessionKey = linkSessionKey
+
+            // When submitting the requirements
             do {
                 try await apiClient.fulfillKYCRequirements(
-                    Constant.validFulfillKYCRequirementsRequest,
+                    requirements: Constant.validFulfillKYCRequirements,
                     linkAccountInfo: linkAccountInfo
                 )
                 XCTFail("Expected a missing Link session key error")
             } catch STPAPIClient.CryptoOnrampAPIError.missingLinkSessionKey {
-                // Expected.
+                // Then the missing Link session key is reported
             }
         }
     }
@@ -440,7 +443,7 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
 
         do {
             try await apiClient.fulfillKYCRequirements(
-                Constant.validFulfillKYCRequirementsRequest,
+                requirements: Constant.validFulfillKYCRequirements,
                 linkAccountInfo: linkAccountInfo
             )
             XCTFail("Expected an unverified Link account error")

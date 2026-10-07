@@ -74,13 +74,13 @@ extension STPAPIClient {
 
     /// Submits documents and questionnaire answers for the specified KYC requirements.
     /// - Parameters:
-    ///   - request: The fulfillment payloads keyed by requirement name.
+    ///   - requirements: The fulfillment payloads keyed by requirement name.
     ///   - linkAccountInfo: Information associated with the Link account, including its session key and verification state.
     /// - Returns: An empty response after the submission is accepted.
     /// - Throws: An error if the Link account is not verified, its session key is missing or empty, or an API error occurs.
     @discardableResult
     func fulfillKYCRequirements(
-        _ request: FulfillKYCRequirementsRequest,
+        requirements: [String: FulfillKYCRequirementsRequest.Requirement],
         linkAccountInfo: PaymentSheetLinkAccountInfoProtocol
     ) async throws -> EmptyResponse {
         guard let linkSessionKey = linkAccountInfo.linkSessionKey, !linkSessionKey.isEmpty else {
@@ -90,7 +90,12 @@ extension STPAPIClient {
         try validateSessionState(using: linkAccountInfo)
 
         let endpoint = "crypto/internal/fulfill_kyc_requirements"
-        return try await post(resource: endpoint, object: request, ephemeralKeySecret: linkSessionKey)
+        let requestObject = FulfillKYCRequirementsRequest(
+            credentials: Credentials(consumerSessionClientSecret: linkSessionKey),
+            requirements: requirements
+        )
+
+        return try await post(resource: endpoint, object: requestObject)
     }
 
     /// Attaches the specific KYC info to the current Link user on the backend.
@@ -487,14 +492,12 @@ private extension STPAPIClient {
     func post<T: Decodable>(
         resource: String,
         object: Encodable,
-        ephemeralKeySecret: String? = nil,
         additionalHeaders: [String: String] = [:]
     ) async throws -> T {
         return try await withCheckedThrowingContinuation { continuation in
             post(
                 resource: resource,
                 object: object,
-                ephemeralKeySecret: ephemeralKeySecret,
                 apiVersionOverride: CryptoOnrampAPI.stripeAPIVersion,
                 additionalHeaders: additionalHeaders
             ) { (result: Result<T, Error>) in

@@ -55,6 +55,9 @@ struct FulfillKYCRequirementsRequest: Encodable {
         let questionnaire: AdditionalKYCFulfillmentQuestionnaire
     }
 
+    /// Contains credentials required to make the request.
+    let credentials: Credentials
+
     /// Fulfillment payloads keyed by the machine-readable requirement name.
     let requirements: [String: Requirement]
 }

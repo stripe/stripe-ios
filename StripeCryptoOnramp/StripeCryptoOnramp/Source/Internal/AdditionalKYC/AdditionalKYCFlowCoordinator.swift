@@ -294,7 +294,7 @@ final class AdditionalKYCFlowCoordinator: NSObject, UIAdaptivePresentationContro
             navigationController.isModalInPresentation = false
         }
 
-        let request = FulfillKYCRequirementsRequest(requirements: [
+        let requirements: [String: FulfillKYCRequirementsRequest.Requirement] = [
             collection.key.rawValue: .init(
                 requestedBy: collection.requirement.requestedBy,
                 documents: documents,
@@ -302,9 +302,9 @@ final class AdditionalKYCFlowCoordinator: NSObject, UIAdaptivePresentationContro
                     .init(questionnaire: $0.fulfillment)
                 }
             ),
-        ])
+        ]
         let task = Task { [apiClient, linkAccountInfo] in
-            _ = try await apiClient.fulfillKYCRequirements(request, linkAccountInfo: linkAccountInfo)
+            _ = try await apiClient.fulfillKYCRequirements(requirements: requirements, linkAccountInfo: linkAccountInfo)
         }
         fulfillmentTask = task
         defer {
