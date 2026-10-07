@@ -56,6 +56,7 @@ extension PaymentSheet {
         .shopeePay,
         .gcash,
         .momo,
+        .ngCard,
     ]
 
     /// A list of `STPPaymentMethodType` that can be saved in PaymentSheet
