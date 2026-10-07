@@ -73,6 +73,13 @@ extension CheckoutController: ExpressCheckoutElementDelegate {
             if let billingDetails = configuration.defaults.billingDetails {
                 linkConfirmationConfiguration.defaultBillingDetails.set(billingDetails)
             }
+            linkConfirmationConfiguration.defaultBillingDetails.email = session.email
+            if session.email == nil {
+                linkConfirmationConfiguration.billingDetailsCollectionConfiguration.email = .always
+            }
+            if session.billingAddressCollection == .required {
+                linkConfirmationConfiguration.billingDetailsCollectionConfiguration.address = .full
+            }
             switch expressCheckoutElementConfiguration.linkConfiguration.display {
             case .automatic:
                 linkConfirmationConfiguration.link.display = .automatic

@@ -597,7 +597,31 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         XCTAssertEqual(parameters.configuration.defaultBillingDetails.name, "Jenny Rosen")
         XCTAssertEqual(parameters.configuration.defaultBillingDetails.address.country, "US")
         XCTAssertEqual(parameters.configuration.defaultBillingDetails.address.postalCode, "94107")
-        XCTAssertNil(parameters.configuration.defaultBillingDetails.email)
+        XCTAssertEqual(parameters.configuration.defaultBillingDetails.email, "jenny@example.com")
+    }
+
+    func testExpressCheckoutLinkCollectsRequiredCheckoutDetails() async throws {
+        // Given Checkout requires an email and full billing address
+        var configuration = CheckoutController.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://custom-return")
+        configuration.expressCheckoutElement = ExpressCheckoutElement.Configuration(confirmHandler: { _ in })
+        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration(
+            apiResponse: CheckoutTestHelpers.makeSession(["billing_address_collection": "required"]),
+            configuration: configuration
+        ))
+        let presentingViewController = UIViewController()
+        let window = UIWindow()
+        window.rootViewController = presentingViewController
+
+        // When ECE constructs the Link confirmation flow
+        let flow = try checkout.makeExpressCheckoutConfirmationFlow(.link, presentationWindow: window)
+
+        // Then Link collects the Checkout details
+        guard case .link(let parameters) = flow else {
+            XCTFail("Expected a Link confirmation flow")
+            return
+        }
+        XCTAssertEqual(parameters.configuration.billingDetailsCollectionConfiguration.email, .always)
+        XCTAssertEqual(parameters.configuration.billingDetailsCollectionConfiguration.address, .full)
     }
 
     func testExpressCheckoutLinkRequiresPresentingViewController() async throws {
