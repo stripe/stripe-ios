@@ -1009,7 +1009,8 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         stub { request in
             XCTAssertEqual(request.url?.path, Constant.partnerTermsAPIPath)
             XCTAssertEqual(request.httpMethod, "POST")
-            XCTAssertEqual(request.value(forHTTPHeaderField: Constant.consumerAuthTokenHeader), Constant.requestSecret)
+            XCTAssertEqual(request.value(forHTTPHeaderField: "Authorization"), "Bearer \(Constant.validPublishableKey)")
+            XCTAssertNil(request.url?.query)
 
             guard let httpBody = request.ohhttpStubs_httpBody else {
                 XCTFail("Expected an httpBody data but found none.")
@@ -1018,8 +1019,10 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
 
             let parameters = String(data: httpBody, encoding: .utf8)?.parsedHTTPParametersDictionary ?? [:]
 
-            XCTAssertEqual(parameters.count, 1)
-            XCTAssertEqual(parameters["declaration_id"], "copt_decl_123")
+            XCTAssertEqual(parameters, [
+                "credentials[consumer_session_client_secret]": Constant.requestSecret,
+                "declaration_id": "copt_decl_123",
+            ])
 
             return true
         } response: { _ in
@@ -1027,6 +1030,8 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         }
 
         let apiClient = stubbedAPIClient()
+        apiClient.publishableKey = Constant.validPublishableKey
+
         _ = try await apiClient.confirmPartnerTerms(
             declarationId: "copt_decl_123",
             linkAccountInfo: Constant.validLinkAccountInfo

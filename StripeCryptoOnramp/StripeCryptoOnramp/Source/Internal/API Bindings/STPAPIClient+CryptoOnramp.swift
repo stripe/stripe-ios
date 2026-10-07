@@ -281,13 +281,11 @@ extension STPAPIClient {
 
         let endpoint = "crypto/internal/partner_terms"
         let requestObject = ConfirmPartnerTermsRequest(
+            credentials: Credentials(consumerSessionClientSecret: consumerSessionClientSecret),
             declarationId: declarationId
         )
-        return try await post(
-            resource: endpoint,
-            object: requestObject,
-            additionalHeaders: [CryptoOnrampAPI.consumerAuthTokenHeader: consumerSessionClientSecret]
-        )
+
+        return try await post(resource: endpoint, object: requestObject)
     }
 
     /// Begins an identity verification session, providing the necessary data used to initialize the Identity SDK.
