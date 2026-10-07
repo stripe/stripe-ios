@@ -47,7 +47,6 @@ enum PaymentSheetContainerFactory {
     static func make(
         contentViewController: BottomSheetContentViewController,
         appearance: PaymentSheet.Appearance,
-        isTestMode: Bool,
         usesNativeSheet: Bool = false,
         didCancelNative3DS2: @escaping () -> Void
     ) -> any PaymentSheetContainer {
@@ -56,7 +55,6 @@ enum PaymentSheetContainerFactory {
             return NativeSheetContainerViewController(
                 contentViewController: contentViewController,
                 appearance: appearance,
-                isTestMode: isTestMode,
                 didCancelNative3DS2: didCancelNative3DS2
             )
         }
@@ -66,7 +64,6 @@ enum PaymentSheetContainerFactory {
         return BottomSheetViewController(
             contentViewController: contentViewController,
             appearance: appearance,
-            isTestMode: isTestMode,
             didCancelNative3DS2: didCancelNative3DS2
         )
     }

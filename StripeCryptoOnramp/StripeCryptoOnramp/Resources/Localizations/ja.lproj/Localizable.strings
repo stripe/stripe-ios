@@ -1,6 +1,26 @@
+"Add %ld documents" = "%ld 件のドキュメントを追加";
+
+"Add 1 document" = "1 件のドキュメントを追加";
+
+"Add documents" = "ドキュメントを追加";
+
+"Answer" = "回答";
+
+"Choose File…" = "ファイルを選択…";
+
+"Choose Photo…" = "写真を選択…";
+
 "Debit cards are most likely to be accepted." = "受け付けられる可能性が最も高いのはデビットカードです。";
 
+"Document type" = "書類のタイプ";
+
 "Document uploaded successfully" = "ドキュメントが正常にアップロードされました";
+
+"Funds source" = "資金源";
+
+"How are you funding your transactions? Please list all of your sources. For example, salary, savings, investment earnings, etc." = "取引の資金はどのように調達していますか？すべての資金源を記載してください。例: 給与、貯蓄、投資収益など。";
+
+"Make sure your document meets following requirements." = "ドキュメントが以下の要件を満たしていることを確認してください。";
 
 "Please try again later." = "後で再度お試しください。";
 
@@ -8,9 +28,17 @@
 
 "Tell us about your source of funds" = "資金源についてお聞かせください";
 
+"There was a problem with your previous document. Please upload a new one." = "前回のドキュメントに問題がありました。新しいドキュメントをアップロードしてください。";
+
 "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "認証証明エラーのため、このアプリを認証できませんでした。後でもう一度お試しいただくか、問題が解決しない場合は開発者にお問い合わせください。";
 
 "This app couldn't be verified. Contact the app developer for help." = "このアプリを確認できませんでした。サポートが必要な場合は、アプリの開発者にお問い合わせください。";
+
+"This file is larger than %@. Choose a file that is %@ or smaller." = "このファイルは %1$@ を超えています。%2$@ 以下のファイルを選択してください。";
+
+"This file type isn’t supported." = "このファイル形式はサポートされていません。";
+
+"This file type isn’t supported. Upload a %@ file." = "このファイル形式はサポートされていません。%@ ファイルをアップロードしてください。";
 
 "This wallet couldn't be found. Please choose or add a wallet and try again." = "ウォレットが見つかりませんでした。ウォレットを選択するか追加して、もう一度お試しください。";
 
@@ -20,9 +48,19 @@
 
 "This wallet verification request is invalid. Please try again." = "このウォレットの確認リクエストは無効です。もう一度お試しください。";
 
+"Upload document" = "書類をアップロード";
+
 "Upload your proof of address" = "住所確認書類をアップロード";
 
+"Uploaded" = "アップロード済み";
+
+"Uploading…" = "アップロードしています…";
+
 "We couldn't verify ownership of this wallet. Please try again." = "ウォレットの所有権を確認できませんでした。もう一度お試しください。";
+
+"We couldn’t open this document. Please choose it again." = "このドキュメントを開けませんでした。もう一度選択してください。";
+
+"We couldn’t upload this file. Please try again." = "このファイルをアップロードできませんでした。もう一度お試しください。";
 
 "We may request proof of address for larger transactions." = "高額の取引については、住所確認書類の提出をお願いする場合があります。";
 
