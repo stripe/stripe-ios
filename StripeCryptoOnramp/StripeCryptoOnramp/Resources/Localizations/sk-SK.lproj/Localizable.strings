@@ -1,6 +1,26 @@
+"Add %ld documents" = "Pridať dokumenty: %ld";
+
+"Add 1 document" = "Pridať 1 dokument";
+
+"Add documents" = "Pridať dokumenty";
+
+"Answer" = "Odpoveď";
+
+"Choose File…" = "Vyberte súbor…";
+
+"Choose Photo…" = "Vyberte fotku…";
+
 "Debit cards are most likely to be accepted." = "Debetné karty s najväčšou pravdepodobnosťou budú akceptované.";
 
+"Document type" = "Typ dokumentu";
+
 "Document uploaded successfully" = "Dokument bol úspešne nahraný";
+
+"Funds source" = "Zdroj finančných prostriedkov";
+
+"How are you funding your transactions? Please list all of your sources. For example, salary, savings, investment earnings, etc." = "Ako financujete svoje transakcie? Uveďte všetky svoje zdroje. Napríklad plat, úspory, výnosy z investícií atď.";
+
+"Make sure your document meets following requirements." = "Uistite sa, že váš dokument spĺňa nasledujúce požiadavky.";
 
 "Please try again later." = "Skúste to znova neskôr.";
 
@@ -8,9 +28,17 @@
 
 "Tell us about your source of funds" = "Povedzte nám o svojom zdroji finančných prostriedkov";
 
+"There was a problem with your previous document. Please upload a new one." = "Pri vašom predchádzajúcom dokumente sa vyskytol problém. Nahrajte nový.";
+
 "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "Túto aplikáciu nebolo možné overiť z dôvodu chyby pri potvrdzovaní. Ak problém pretrváva, skúste to znova neskôr alebo kontaktujte vývojára.";
 
 "This app couldn't be verified. Contact the app developer for help." = "Túto aplikáciu nebolo možné overiť. Požiadajte o pomoc vývojára aplikácie.";
+
+"This file is larger than %@. Choose a file that is %@ or smaller." = "Tento súbor je väčší ako %1$@. Vyberte súbor, ktorého veľkosť je %2$@ alebo menšia.";
+
+"This file type isn’t supported." = "Tento typ súboru nie je podporovaný.";
+
+"This file type isn’t supported. Upload a %@ file." = "Tento typ súboru nie je podporovaný. Nahrajte súbor typu %@.";
 
 "This wallet couldn't be found. Please choose or add a wallet and try again." = "Túto peňaženku sa nepodarilo nájsť. Vyberte alebo pridajte peňaženku a skúste to znova.";
 
@@ -20,9 +48,19 @@
 
 "This wallet verification request is invalid. Please try again." = "Táto požiadavka na overenie peňaženky je neplatná. Skúste to znova.";
 
+"Upload document" = "Nahrať dokument";
+
 "Upload your proof of address" = "Nahrajte svoj doklad o adrese";
 
+"Uploaded" = "Nahrané";
+
+"Uploading…" = "Nahráva sa…";
+
 "We couldn't verify ownership of this wallet. Please try again." = "Vlastníctvo tejto peňaženky sa nám nepodarilo overiť. Skúste to znova.";
+
+"We couldn’t open this document. Please choose it again." = "Tento dokument sa nám nepodarilo otvoriť. Vyberte ho znova.";
+
+"We couldn’t upload this file. Please try again." = "Tento súbor sa nám nepodarilo nahrať. Skúste to znova.";
 
 "We may request proof of address for larger transactions." = "Pri väčších transakciách si môžeme vyžiadať doklad o adrese.";
 

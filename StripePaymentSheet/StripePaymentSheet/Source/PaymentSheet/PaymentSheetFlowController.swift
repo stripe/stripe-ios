@@ -603,8 +603,7 @@ extension PaymentSheet {
         ) {
             let loadingVC = LoadingViewController(
                 delegate: self,
-                appearance: configuration.appearance,
-                isTestMode: configuration.apiClient.isTestmode
+                appearance: configuration.appearance
             )
             let bottomSheetVC = Self.makePaymentSheetContainerViewController(
                 loadingVC,
@@ -957,7 +956,6 @@ extension PaymentSheet {
             let sheet = PaymentSheetContainerFactory.make(
                 contentViewController: contentViewController,
                 appearance: configuration.appearance,
-                isTestMode: configuration.apiClient.isTestmode,
                 didCancelNative3DS2: didCancelNative3DS2 ?? { } // TODO(MOBILESDK-864): Refactor this out.
             )
 

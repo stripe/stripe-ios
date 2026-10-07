@@ -25,6 +25,7 @@
         "max_file_size_bytes": 5000000,
         "min_document_types": 1,
         "max_document_types": 2,
+        "max_files_per_document_type": 3,
         "file_requirements": "PDF, JPEG/JPG, PNG, DOCX, XLSX, CSV, or TXT, up to 5 MB per file.",
         "instructions": [
           "Documents must include your name and a balance or financial value.",

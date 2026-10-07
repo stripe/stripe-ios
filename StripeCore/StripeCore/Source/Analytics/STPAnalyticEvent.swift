@@ -365,6 +365,9 @@ import Foundation
     case adaptivePricingCurrencyToggledFailed = "elements.adaptive_pricing.currency_toggled.failed"
     case adaptivePricingFlagImageLoadFailed = "elements.adaptive_pricing.flag_image_load.failed"
 
+    // MARK: - Express Checkout Element
+    case expressCheckoutElementInit = "elements.express_checkout_element.init"
+
     // MARK: - Shipping Address Element
     case shippingAddressElementShown = "elements.shipping_address.shown"
     case shippingAddressElementCanceled = "elements.shipping_address.canceled"
