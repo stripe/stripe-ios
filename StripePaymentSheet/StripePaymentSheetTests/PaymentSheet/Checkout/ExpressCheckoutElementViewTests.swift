@@ -235,7 +235,7 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
 
     func testLinkButtonShownWhenAutomaticTaxUsesShippingAddress() {
         // Given automatic tax uses shipping but Checkout does not require a shipping address
-        let configuration = ExpressCheckoutElement.Configuration(confirmHandler: { _ in })
+        let configuration = ExpressCheckoutElement.Configuration(completion: { _ in })
         let apiResponse = CheckoutTestHelpers.makeSessionWithWalletTypes(
             ["link"],
             automaticTaxAddressSource: "session.shipping",
