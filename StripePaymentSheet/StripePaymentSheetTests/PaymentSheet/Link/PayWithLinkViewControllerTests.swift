@@ -167,7 +167,6 @@ class PayWithLinkViewControllerTests: XCTestCase {
         let sheet = LinkNativeSheetContainerViewController(
             contentViewController: wallet,
             appearance: LinkUI.appearance,
-            isTestMode: true,
             didCancelNative3DS2: {}
         )
         let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first)

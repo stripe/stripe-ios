@@ -27,7 +27,7 @@ class SheetNavigationBar: UIView {
     }
     weak var delegate: SheetNavigationBarDelegate?
     fileprivate lazy var leftItemsStackView: UIStackView = {
-        let stack = UIStackView(arrangedSubviews: [dummyView, closeButtonLeft, backButton, testModeView])
+        let stack = UIStackView(arrangedSubviews: [dummyView, closeButtonLeft, backButton])
         stack.spacing = PaymentSheetUI.defaultPadding
         stack.setCustomSpacing(PaymentSheetUI.navBarPadding(appearance: appearance), after: dummyView)
         stack.alignment = .center
@@ -72,7 +72,6 @@ class SheetNavigationBar: UIView {
         return nil
     }
 
-    let testModeView = TestModeView()
     let appearance: PaymentSheet.Appearance
     let shouldLogPaymentSheetAnalyticsOnDismissal: Bool
 
@@ -84,24 +83,6 @@ class SheetNavigationBar: UIView {
             updateSystemNavigationBar()
         }
     }
-    private lazy var systemTestModeItem: UIBarButtonItem = {
-        let item = UIBarButtonItem(customView: TestModeView())
-        #if compiler(>=6.2) && os(iOS)
-        if #available(iOS 26.0, *) {
-            // TEST is a status badge, so it should not receive the glass background used by actions.
-            item.hidesSharedBackground = true
-        }
-        #endif
-        // axisBehavior requires UIKit from the iOS 27.1 SDK (module version 9127.0.85.28).
-        // Xcode 27.0 and 27.1 both use Swift 6.4, so check the UIKit module version instead.
-        #if canImport(UIKit, _version: 9127.0.85) && os(iOS)
-        if #available(iOS 27.1, *) {
-            // Keep the badge with the controls when UIKit adapts the bar to a vertical layout.
-            item.axisBehavior = .verticalPreferred
-        }
-        #endif
-        return item
-    }()
 
     var systemNavigationTitle: String? { nil }
     var systemNavigationTitleView: UIView? { nil }
@@ -163,13 +144,6 @@ class SheetNavigationBar: UIView {
         case .none:
             break
         }
-        if !testModeView.isHidden {
-            // Keep the badge in place when content changes so UIKit does not blur it during replacement.
-            let testModeItem = systemNavigationItem.leftBarButtonItems?.first {
-                $0.customView is TestModeView
-            } ?? systemTestModeItem
-            leadingItems.append(testModeItem)
-        }
         systemNavigationItem.leftBarButtonItems = leadingItems
         systemNavigationItem.rightBarButtonItems = trailingItems
         systemNavigationItem.title = systemNavigationTitle
@@ -187,8 +161,7 @@ class SheetNavigationBar: UIView {
         }
     }
 
-    init(isTestMode: Bool, appearance: PaymentSheet.Appearance, shouldLogPaymentSheetAnalyticsOnDismissal: Bool = true) {
-        testModeView.isHidden = !isTestMode
+    init(appearance: PaymentSheet.Appearance, shouldLogPaymentSheetAnalyticsOnDismissal: Bool = true) {
         self.appearance = appearance
         self.shouldLogPaymentSheetAnalyticsOnDismissal = shouldLogPaymentSheetAnalyticsOnDismissal
         super.init(frame: .zero)

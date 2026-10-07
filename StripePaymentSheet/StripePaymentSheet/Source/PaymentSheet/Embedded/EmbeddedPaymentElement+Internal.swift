@@ -322,7 +322,6 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
                 paymentMethodRemoveIsPartial: elementsSession.paymentMethodRemoveIsPartialForPaymentSheet(),
                 merchantName: configuration.merchantDisplayName)
             let updateViewController = UpdatePaymentMethodViewController(removeSavedPaymentMethodMessage: removeSavedPaymentMethodMessage,
-                                                                         isTestMode: configuration.apiClient.isTestmode,
                                                                          configuration: updateConfig)
             updateViewController.delegate = self
             let bottomSheetVC = bottomSheetController(with: updateViewController)
@@ -729,7 +728,6 @@ extension EmbeddedPaymentElement {
         return PaymentSheetContainerFactory.make(
             contentViewController: viewController,
             appearance: configuration.appearance,
-            isTestMode: configuration.apiClient.isTestmode,
             usesNativeSheet: nativeSheetPresentation.usesNativeSheet,
             didCancelNative3DS2: {
             stpAssertionFailure("3DS2 was triggered unexpectedly")

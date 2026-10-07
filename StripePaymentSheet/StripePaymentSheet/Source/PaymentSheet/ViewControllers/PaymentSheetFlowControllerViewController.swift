@@ -65,8 +65,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
     }
     weak var flowControllerDelegate: FlowControllerViewControllerDelegate?
     lazy var navigationBar: SheetNavigationBar = {
-        let navBar = SheetNavigationBar(isTestMode: configuration.apiClient.isTestmode,
-                                        appearance: configuration.appearance)
+        let navBar = SheetNavigationBar(appearance: configuration.appearance)
         navBar.delegate = self
         return navBar
     }()
@@ -223,7 +222,6 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
                 removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
                 merchantDisplayName: configuration.merchantDisplayName,
                 isCVCRecollectionEnabled: false,
-                isTestMode: configuration.apiClient.isTestmode,
                 allowsRemovalOfLastSavedPaymentMethod: elementsSession.paymentMethodRemoveLast(configuration: configuration),
                 allowsRemovalOfPaymentMethods: intent.allowsPaymentMethodRemoval(elementsSession: elementsSession),
                 allowsSetAsDefaultPM: elementsSession.paymentMethodSetAsDefaultForPaymentSheet,

@@ -45,7 +45,6 @@ final class LinkVerificationViewControllerTests: STPNetworkStubbingTestCase {
         let sheet = LinkNativeSheetContainerViewController(
             contentViewController: content,
             appearance: LinkUI.appearance,
-            isTestMode: false,
             didCancelNative3DS2: {}
         )
         let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first)

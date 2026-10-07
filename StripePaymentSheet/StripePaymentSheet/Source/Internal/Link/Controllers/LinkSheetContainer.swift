@@ -43,14 +43,12 @@ enum LinkSheetContainerFactory {
             return LinkNativeSheetContainerViewController(
                 contentViewController: contentViewController,
                 appearance: LinkUI.appearance,
-                isTestMode: false,
                 didCancelNative3DS2: didCancelNative3DS2
             )
         }
         return LinkBottomSheetViewController(
             contentViewController: contentViewController,
             appearance: LinkUI.appearance,
-            isTestMode: false,
             didCancelNative3DS2: didCancelNative3DS2
         )
     }

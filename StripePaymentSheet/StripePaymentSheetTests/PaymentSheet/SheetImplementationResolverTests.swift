@@ -120,7 +120,6 @@ final class SheetImplementationResolverTests: XCTestCase {
         let sheet = BottomSheetViewController(
             contentViewController: StubBottomSheetContentViewController(),
             appearance: .default,
-            isTestMode: true,
             didCancelNative3DS2: {}
         )
         sheet.loadViewIfNeeded()
