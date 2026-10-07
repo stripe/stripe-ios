@@ -52,7 +52,6 @@ final class PaymentSheetPresentationTests: XCTestCase {
         let sheet = NativeSheetContainerViewController(
             contentViewController: paymentSheet.loadingViewController,
             appearance: .default,
-            isTestMode: true,
             didCancelNative3DS2: {}
         )
         let presented = expectation(description: "Regular-width native sheet presented")
@@ -84,7 +83,6 @@ final class PaymentSheetPresentationTests: XCTestCase {
         let sheetViewController = NativeSheetContainerViewController(
             contentViewController: contentViewController,
             appearance: .default,
-            isTestMode: true,
             didCancelNative3DS2: {}
         )
         var presentedViewController: UIViewController?
@@ -134,7 +132,6 @@ final class PaymentSheetPresentationTests: XCTestCase {
             let sheet = NativeSheetContainerViewController(
                 contentViewController: NativeSheetStubContentViewController(),
                 appearance: appearance,
-                isTestMode: true,
                 didCancelNative3DS2: {}
             )
 
@@ -152,7 +149,6 @@ final class PaymentSheetPresentationTests: XCTestCase {
         let sheet = LinkCornerRadiusSheetViewController(
             contentViewController: NativeSheetStubContentViewController(),
             appearance: .default,
-            isTestMode: true,
             didCancelNative3DS2: {}
         )
 
@@ -168,7 +164,6 @@ final class PaymentSheetPresentationTests: XCTestCase {
         let sheet = NativeSheetContainerViewController(
             contentViewController: initialContent,
             appearance: .default,
-            isTestMode: true,
             didCancelNative3DS2: {}
         )
         sheet.view.frame = CGRect(x: 0, y: 0, width: 375, height: 800)
@@ -200,7 +195,6 @@ final class PaymentSheetPresentationTests: XCTestCase {
             let sheet = NativeSheetContainerViewController(
                 contentViewController: initialContent,
                 appearance: appearance,
-                isTestMode: true,
                 didCancelNative3DS2: {}
             )
             sheet.view.frame = CGRect(x: 0, y: 0, width: 375, height: 800)
@@ -230,7 +224,6 @@ final class PaymentSheetPresentationTests: XCTestCase {
         let sheet = NativeSheetContainerViewController(
             contentViewController: initialContent,
             appearance: .default,
-            isTestMode: true,
             didCancelNative3DS2: {}
         )
         let presenter = UIViewController()
@@ -275,7 +268,6 @@ final class PaymentSheetPresentationTests: XCTestCase {
         let sheet = NativeSheetContainerViewController(
             contentViewController: initialContent,
             appearance: .default,
-            isTestMode: true,
             didCancelNative3DS2: {}
         )
         let presenter = UIViewController()
@@ -308,7 +300,6 @@ final class PaymentSheetPresentationTests: XCTestCase {
         let sheet = NativeSheetContainerViewController(
             contentViewController: previousContent,
             appearance: .default,
-            isTestMode: true,
             didCancelNative3DS2: {}
         )
         sheet.pushContentViewController(initialContent)
@@ -337,7 +328,6 @@ final class PaymentSheetPresentationTests: XCTestCase {
         let sheet = NativeSheetContainerViewController(
             contentViewController: initialContent,
             appearance: .default,
-            isTestMode: true,
             didCancelNative3DS2: {}
         )
         sheet.pushContentViewController(pushedContent)
@@ -369,7 +359,6 @@ final class PaymentSheetPresentationTests: XCTestCase {
         let sheetViewController = NativeSheetContainerViewController(
             contentViewController: contentViewController,
             appearance: .default,
-            isTestMode: true,
             didCancelNative3DS2: {}
         )
         var presentedViewController: UIViewController?
@@ -398,7 +387,6 @@ final class PaymentSheetPresentationTests: XCTestCase {
         let sheetViewController = DetentInvalidationSpyViewController(
             contentViewController: contentViewController,
             appearance: .default,
-            isTestMode: true,
             didCancelNative3DS2: {}
         )
         let containerView = DynamicHeightContainerView()
@@ -425,7 +413,6 @@ final class PaymentSheetPresentationTests: XCTestCase {
         let sheetViewController = DetentInvalidationSpyViewController(
             contentViewController: contentViewController,
             appearance: .default,
-            isTestMode: true,
             didCancelNative3DS2: {}
         )
         let delegate = VerticalPaymentMethodListDelegateStub()
@@ -462,7 +449,6 @@ final class PaymentSheetPresentationTests: XCTestCase {
         let sheet = NativeSheetContainerViewController(
             contentViewController: content,
             appearance: .default,
-            isTestMode: true,
             didCancelNative3DS2: {}
         )
         let presenter = UIViewController()
@@ -493,7 +479,6 @@ final class PaymentSheetPresentationTests: XCTestCase {
         let sheetViewController = NativeSheetContainerViewController(
             contentViewController: NativeSheetStubContentViewController(),
             appearance: .default,
-            isTestMode: true,
             didCancelNative3DS2: {}
         )
 
@@ -537,7 +522,7 @@ private final class PresentationCapturingViewController: UIViewController {
 
 private final class NativeSheetStubContentViewController: UIViewController, BottomSheetContentViewController {
 
-    lazy var navigationBar = SheetNavigationBar(isTestMode: true, appearance: .default)
+    lazy var navigationBar = SheetNavigationBar(appearance: .default)
     let requiresFullScreen = false
     private(set) var dismissalAttemptCount = 0
 
@@ -600,7 +585,7 @@ private final class FixedHeightSheetNavigationBar: SheetNavigationBar {
 
     init(height: CGFloat, appearance: PaymentSheet.Appearance) {
         self.height = height
-        super.init(isTestMode: true, appearance: appearance)
+        super.init(appearance: appearance)
     }
 
     required init?(coder: NSCoder) {
