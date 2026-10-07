@@ -662,27 +662,13 @@ workflows:
         - content: |-
             #!/usr/bin/env bash
             set -euo pipefail
-            # PR preparation already fetched master. A commit-only push checkout
-            # may not have a branch ref yet.
-            if ! git show-ref --verify --quiet refs/remotes/origin/master; then
-              git fetch --no-tags --depth=100 origin +refs/heads/master:refs/remotes/origin/master
+            # Push builds only run on master, which was already linted in its PR.
+            if [ -z "${BITRISE_PULL_REQUEST:-}" ]; then
+              echo "Not a pull request; skipping swiftlint."
+              exit 0
             fi
-            source_commit="${BITRISE_GIT_COMMIT:-$(git rev-parse HEAD)}"
-            for depth in 500 2000 8000; do
-              if git merge-base origin/master HEAD >/dev/null; then
-                break
-              fi
-              git fetch --no-tags --depth="$depth" "${BITRISEIO_PULL_REQUEST_REPOSITORY_URL:-origin}" "$source_commit"
-              git fetch --no-tags --depth="$depth" origin +refs/heads/master:refs/remotes/origin/master
-            done
-            if ! git merge-base origin/master HEAD >/dev/null; then
-              echo "Cannot determine the comparison base for linting." >&2
-              exit 1
-            fi
-        title: Ensure origin/master is available for lint comparison
-    - script@1:
-        inputs:
-        - content: ./ci_scripts/lint_modified_files.sh
+            # prep_source fetched origin/master with enough history to find the merge base.
+            ./ci_scripts/lint_modified_files.sh
         title: Run swiftlint
     - script@1:
         inputs:
