@@ -568,7 +568,7 @@ extension PaymentSheet {
                 guard let self = self else { return }
 
                 // Set the PaymentSheetViewController as the content of our bottom sheet
-                let bottomSheetVC = Self.makeBottomSheetViewController(
+                let bottomSheetVC = Self.makePaymentSheetContainerViewController(
                     self.viewController,
                     configuration: self.configuration,
                     // TODO(MOBILESDK-864): didCancelNative3DS2 is not used in FlowController
@@ -605,7 +605,7 @@ extension PaymentSheet {
                 delegate: self,
                 appearance: configuration.appearance
             )
-            let bottomSheetVC = Self.makeBottomSheetViewController(
+            let bottomSheetVC = Self.makePaymentSheetContainerViewController(
                 loadingVC,
                 configuration: configuration,
                 // TODO(MOBILESDK-864): didCancelNative3DS2 is not used in FlowController
@@ -734,7 +734,7 @@ extension PaymentSheet {
                         }
                     }
                 }
-                let bottomSheet = Self.makeBottomSheetViewController(sepaMandateVC, configuration: configuration)
+                let bottomSheet = Self.makePaymentSheetContainerViewController(sepaMandateVC, configuration: configuration)
                 presentingViewController.presentAsSheet(bottomSheet)
             }
 
@@ -948,12 +948,12 @@ extension PaymentSheet {
         }
 
         // MARK: Internal helper methods
-        static func makeBottomSheetViewController(
+        static func makePaymentSheetContainerViewController(
             _ contentViewController: BottomSheetContentViewController,
             configuration: PaymentElementConfiguration,
             didCancelNative3DS2: (() -> Void)? = nil
-        ) -> BottomSheetViewController {
-            let sheet = BottomSheetViewController(
+        ) -> any PaymentSheetContainer {
+            let sheet = PaymentSheetContainerFactory.make(
                 contentViewController: contentViewController,
                 appearance: configuration.appearance,
                 didCancelNative3DS2: didCancelNative3DS2 ?? { } // TODO(MOBILESDK-864): Refactor this out.
