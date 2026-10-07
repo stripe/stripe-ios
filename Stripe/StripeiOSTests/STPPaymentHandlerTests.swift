@@ -23,14 +23,15 @@ import XCTest
 
 class STPPaymentHandlerStubbedTests: STPNetworkStubbingTestCase {
     @MainActor
-    func testAfterpayRedirectCancellationResumesContinuationOnce() async {
-        // Given an Afterpay redirect with two intent requests that have not completed
-        let apiClient = STPAPIClientPollingMock()
-        var requests: [STPPaymentIntentCompletionBlock] = []
-        apiClient.retrievePaymentIntentHandler = { _, _, completion in
-            requests.append(completion)
+    func testAfterpayConfirmationTokenRedirectCompletesOnce() async {
+        // Given FlowController's server-confirmed Afterpay intent and a confirmation token
+        stub(condition: isPath("/v1/confirmation_tokens")) { _ in
+            HTTPStubsResponse(jsonObject: [
+                "id": "ctoken_test",
+                "created": 1_652_736_692,
+                "livemode": false,
+            ], statusCode: 200, headers: nil)
         }
-        let paymentHandler = STPPaymentHandler(apiClient: apiClient)
         let initialIntent = STPFixtures.paymentIntent(
             paymentMethodTypes: ["afterpay_clearpay"],
             status: .requiresAction,
@@ -42,34 +43,86 @@ class STPPaymentHandlerStubbedTests: STPNetworkStubbingTestCase {
                 "redirect_to_url": ["url": "https://example.com", "return_url": "test://stripe-redirect"],
             ],
         ]) { _, new in new })!
-        var completionCount = 0
-        let status: STPPaymentHandlerActionStatus = await withCheckedContinuation { continuation in
-            paymentHandler.currentAction = STPPaymentHandlerPaymentIntentActionParams(
-                apiClient: apiClient,
-                authenticationContext: self,
-                threeDSCustomizationSettings: .init(),
-                paymentIntent: paymentIntent,
-                returnURL: "test://stripe-redirect"
-            ) { status, intent, error in
-                completionCount += 1
-                XCTAssertTrue(intent === paymentIntent)
-                XCTAssertNil(error)
-                paymentHandler.currentAction = nil
-                continuation.resume(returning: status)
-            }
-
-            // When the return URL and Safari dismissal arrive before either request finishes
-            XCTAssertTrue(paymentHandler.handleURLCallback(URL(string: "test://stripe-redirect")!))
-            paymentHandler.safariViewControllerDidFinish(SFSafariViewController(url: URL(string: "https://example.com")!))
-            XCTAssertEqual(requests.count, 2)
-            for request in requests {
-                request(paymentIntent, nil)
-            }
+        let elementsSession = STPElementsSession.decodedObject(fromAPIResponse: [
+            "payment_method_preference": ["ordered_payment_method_types": ["afterpay_clearpay"], "country_code": "US"],
+            "session_id": "test",
+            "config_id": "test",
+        ])!
+        let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmationTokenConfirmHandler = { token in
+            XCTAssertEqual(token.stripeId, "ctoken_test")
+            return paymentIntent.clientSecret
         }
+        let intentConfig = PaymentSheet.IntentConfiguration(
+            mode: .payment(amount: 2345, currency: "usd"),
+            confirmationTokenConfirmHandler: confirmHandler
+        )
 
-        // Then cancellation resumes the continuation exactly once without crashing
-        XCTAssertEqual(status, .canceled)
-        XCTAssertEqual(completionCount, 1)
+        for responseStatus: STPPaymentIntentStatus in [.requiresAction, .requiresPaymentMethod] {
+            let responseIntent = STPPaymentIntent.decodedObject(fromAPIResponse: paymentIntent.allResponseFields.merging([
+                "status": STPPaymentIntentStatus.string(from: responseStatus),
+            ]) { _, new in new })!
+            let apiClient = STPAPIClientPollingMock(publishableKey: STPTestingDefaultPublishableKey)
+            var requests: [STPPaymentIntentCompletionBlock] = []
+            apiClient.retrievePaymentIntentHandler = { _, _, completion in
+                apiClient.retrievePaymentIntentHandler = { _, _, completion in
+                    requests.append(completion)
+                }
+                completion(paymentIntent, nil)
+            }
+            let paymentHandler = STPPaymentHandler(apiClient: apiClient)
+            var configuration = PaymentSheet.Configuration()
+            configuration.apiClient = apiClient
+            configuration.returnURL = "test://stripe-redirect"
+            var didRedirect = false
+            paymentHandler._redirectShim = { _, _, _ in
+                didRedirect = true
+                DispatchQueue.main.async {
+                    // When return, dismissal, and foreground callbacks overlap before any response arrives
+                    XCTAssertTrue(paymentHandler.handleURLCallback(URL(string: "test://stripe-redirect")!))
+                    paymentHandler.safariViewControllerDidFinish(SFSafariViewController(url: URL(string: "https://example.com")!))
+                    paymentHandler._handleWillForegroundNotification()
+                    XCTAssertEqual(requests.count, 3)
+                    for request in requests {
+                        request(responseIntent, nil)
+                    }
+                }
+            }
+            let (result, confirmationType) = await PaymentSheet.handleDeferredIntentConfirmation_confirmationToken(
+                confirmType: .new(
+                    params: STPPaymentMethodParams(afterpayClearpay: .init(), billingDetails: nil, metadata: nil),
+                    paymentOptions: .init(),
+                    paymentMethod: nil,
+                    saveForFutureUseCheckboxState: .hidden
+                ),
+                configuration: configuration,
+                intentConfig: intentConfig,
+                authenticationContext: self,
+                paymentHandler: paymentHandler,
+                isFlowController: true,
+                elementsSession: elementsSession,
+                confirmHandler: confirmHandler
+            )
+
+            // Then the real confirmation-token continuation resumes once, preserving cancellation or failure
+            XCTAssertTrue(didRedirect)
+            XCTAssertEqual(confirmationType, .server)
+            if responseStatus == .requiresAction {
+                guard case .canceled = result else {
+                    XCTFail("Expected cancellation, got \(result)")
+                    return
+                }
+            } else {
+                guard case .failed(let error) = result else {
+                    XCTFail("Expected failure, got \(result)")
+                    return
+                }
+                XCTAssertEqual((error as NSError).code, STPPaymentHandlerErrorCode.paymentErrorCode.rawValue)
+            }
+            XCTAssertNil(paymentHandler.currentAction)
+            XCTAssertFalse(paymentHandler.isHandlingAction)
+            paymentHandler._redirectShim = nil
+            apiClient.retrievePaymentIntentHandler = nil
+        }
     }
 
     @MainActor
