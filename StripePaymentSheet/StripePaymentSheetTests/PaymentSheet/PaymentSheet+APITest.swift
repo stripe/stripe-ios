@@ -1554,6 +1554,26 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         XCTAssertNotNil(setupIntentParams.mandateData)
     }
 
+    func testMakeIntentParams_ngCard_oneTimePaymentDoesNotSetMandateData() {
+        // Given a one-time Naira card payment
+        let confirmType = PaymentSheet.ConfirmPaymentMethodType.new(
+            params: STPPaymentMethodParams(type: .ngCard),
+            paymentOptions: STPConfirmPaymentMethodOptions(),
+            saveForFutureUseCheckboxState: .hidden
+        )
+
+        // When confirmation parameters are created
+        let params = PaymentSheet.makePaymentIntentParams(
+            confirmPaymentMethodType: confirmType,
+            paymentIntent: STPFixtures.makePaymentIntent(),
+            configuration: PaymentSheet.Configuration._testValue_MostPermissive()
+        )
+
+        // Then the disclosure does not opt the customer into a future-payment mandate
+        XCTAssertEqual(params.paymentMethodParams?.type, .ngCard)
+        XCTAssertNil(params.mandateData)
+    }
+
     func testMakeIntentParams_gcash_setsMandate() {
         // Given
         let paymentMethodParams = STPPaymentMethodParams(type: .gcash)

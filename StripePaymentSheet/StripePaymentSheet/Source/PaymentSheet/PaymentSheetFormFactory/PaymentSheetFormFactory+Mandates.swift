@@ -106,6 +106,15 @@ extension PaymentSheetFormFactory {
         return makeMandate(mandateText: mandateText)
     }
 
+    /// Builds the linked merchant-of-record disclosure for Nigerian payment methods.
+    func makeNigerianPaymentMethodMandate() -> SimpleMandateElement {
+        let mandateText = STPStringUtils.applyLinksToString(
+            template: String.Localized.nigerian_payment_method_terms,
+            links: ["terms": URL(string: "https://d37ugbyn3rpeym.cloudfront.net/docs/GSSL%20-%20Buyer%20T&Cs%20(Final).pdf")!]
+        )
+        return makeMandate(mandateText: mandateText)
+    }
+
     func makeGCashMandate() -> SimpleMandateElement {
         let mandateText = String(format: String.Localized.gcash_mandate_text, configuration.merchantDisplayName)
         return makeMandate(mandateText: mandateText)
