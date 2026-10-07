@@ -852,7 +852,7 @@ import UIKit
                     }
                 }
 
-                viewController.presentAsBottomSheet(verifyKYCViewController, appearance: .init())
+                viewController.presentAsSheet(verifyKYCViewController)
             }
         }
     }
@@ -1003,7 +1003,7 @@ import UIKit
                     }
                 }
 
-                viewController.presentAsBottomSheet(confirmationViewController, appearance: .init())
+                viewController.presentAsSheet(confirmationViewController)
             }
         }
     }
@@ -1284,17 +1284,13 @@ import UIKit
         let bottomSheetViewController = BottomSheetViewController(
             contentViewController: fullConsentViewController,
             appearance: paymentElementConfiguration.appearance,
-            isTestMode: false,
             didCancelNative3DS2: {}
         )
 
         // Store completion handler for use in delegate method
         self.fullConsentCompletion = completion
 
-        viewController.presentAsBottomSheet(
-            bottomSheetViewController,
-            appearance: paymentElementConfiguration.appearance
-        )
+        viewController.presentAsSheet(bottomSheetViewController)
     }
 }
 

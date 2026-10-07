@@ -7,8 +7,12 @@
 import SwiftUI
 
 struct CheckoutPlaygroundView: View {
-    @StateObject private var viewModel = CheckoutPlayground.ViewModel()
+    @StateObject private var viewModel: CheckoutPlayground.ViewModel
     @State private var showCurrencySelectorAppearance = false
+
+    init(settings: CheckoutPlayground.Settings? = nil) {
+        _viewModel = StateObject(wrappedValue: CheckoutPlayground.ViewModel(settings: settings))
+    }
 
     var body: some View {
         Group {

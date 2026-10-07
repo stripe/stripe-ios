@@ -185,25 +185,14 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
 
     func testExpressCheckoutElementApplePayCompletesCheckout() {
         // Given an ECE-only Checkout Session without address-dependent tax in the normal hosted playground
-        app.launchEnvironment["STP_CHECKOUT_ELEMENTS"] = "true"
-        app.launch()
-
-        app.buttons["Reset"].waitForExistenceAndTap()
-        let paymentElementPicker = app.buttons.matching(
-            NSPredicate(format: "label BEGINSWITH %@", "PaymentElement")
-        ).firstMatch
-        XCTAssertTrue(paymentElementPicker.waitForExistenceAndTap())
-        XCTAssertTrue(app.buttons["ece only"].waitForExistenceAndTap())
-
         // ECE Apple Pay does not yet request a shipping postal address. Enabling shipping-sourced
         // automatic tax causes confirmation to fail with `customer_tax_location_invalid` until
         // CheckoutApplePayContext implements shipping contact collection.
-        let collectShippingAddress = app.switches["Collect Shipping Address"]
-        XCTAssertTrue(collectShippingAddress.waitForExistence(timeout: 4))
-        collectShippingAddress.scrollToAndTap(in: app)
-        let automaticTax = app.switches["Automatic Tax"]
-        XCTAssertTrue(automaticTax.waitForExistence(timeout: 4))
-        automaticTax.scrollToAndTap(in: app)
+        var settings = CheckoutPlayground.Settings()
+        settings.integrationType = .eceOnly
+        settings.shippingAddressCollection = false
+        settings.automaticTax = false
+        loadCheckoutPlayground(app, settings)
         app.buttons["Create Checkout Session"].waitForExistenceAndTap()
 
         XCTAssertTrue(app.navigationBars["Your Cart"].waitForExistence(timeout: 15))
@@ -216,12 +205,46 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
             NSPredicate(format: "label BEGINSWITH %@", "Buy ·")
         ).firstMatch
         XCTAssertFalse(buyButton.exists)
+        assertAnalyticsEvents([
+            "elements.express_checkout_element.init",
+        ])
 
         // When the customer confirms with Apple Pay from Express Checkout Element
         applePayButton.tap()
 
         // Then Checkout completes using the wallet confirmation flow
         payWithApplePay(successElement: app.alerts["Success"])
+        assertAnalyticsEvents([
+            "elements.express_checkout_element.init",
+            "stripeios.token_creation",
+            "stripeios.payment_method_creation",
+            "stripeios.paymenthandler.handle_next_action.started",
+            "stripeios.paymenthandler.handle_next_action.finished",
+        ])
+    }
+
+    func testExpressCheckoutElementLinkAnalytics() {
+        // Given an ECE-only Checkout Session
+        var settings = CheckoutPlayground.Settings()
+        settings.integrationType = .eceOnly
+        loadCheckoutPlayground(app, settings)
+        app.buttons["Create Checkout Session"].waitForExistenceAndTap()
+
+        XCTAssertTrue(app.navigationBars["Your Cart"].waitForExistence(timeout: 15))
+        let linkButton = app.buttons["Pay with Link"]
+        XCTAssertTrue(linkButton.waitForExistence(timeout: 10))
+        XCTAssertFalse(app.buttons["Select payment method"].exists)
+        assertAnalyticsEvents(["elements.express_checkout_element.init"])
+
+        // When the customer opens Link from Express Checkout Element
+        linkButton.tap()
+
+        // Then Link opens and its analytics remain part of the ECE sequence
+        XCTAssertTrue(app.textFields["Email"].waitForExistence(timeout: 10))
+        assertAnalyticsEvents([
+            "elements.express_checkout_element.init",
+            "link.signup.flow_presented",
+        ], ignoringEventPrefixes: ["elements.captcha.passive.", "stripeios.attest."])
     }
 
     private func fillShippingAddress() {
@@ -242,5 +265,22 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
 
         app.textFields["ZIP"].tap()
         app.typeText("94102")
+    }
+
+    private func assertAnalyticsEvents(
+        _ expectedEvents: [String],
+        ignoringEventPrefixes: [String] = [],
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        // Keep the sequence exact so new Checkout Session metrics require updated ECE expectations.
+        XCTAssertEqual(
+            analyticsLog.compactMap { $0[string: "event"] }.filter { event in
+                !ignoringEventPrefixes.contains { event.hasPrefix($0) }
+            },
+            expectedEvents,
+            file: file,
+            line: line
+        )
     }
 }

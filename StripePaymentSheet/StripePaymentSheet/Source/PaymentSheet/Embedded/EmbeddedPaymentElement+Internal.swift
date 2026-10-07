@@ -199,7 +199,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         let presentingViewController = resolvedPresentingViewController
         assert(presentingViewController != nil, "Presenting view controller not found, set EmbeddedPaymentElement.presentingViewController.")
         stpAssert(selectedFormViewController.delegate != nil)
-        presentingViewController?.presentAsBottomSheet(bottomSheet, appearance: configuration.appearance)
+        presentingViewController?.presentAsSheet(bottomSheet)
     }
 
     private func handleSelectionWithoutForm() {
@@ -322,11 +322,10 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
                 paymentMethodRemoveIsPartial: elementsSession.paymentMethodRemoveIsPartialForPaymentSheet(),
                 merchantName: configuration.merchantDisplayName)
             let updateViewController = UpdatePaymentMethodViewController(removeSavedPaymentMethodMessage: removeSavedPaymentMethodMessage,
-                                                                         isTestMode: configuration.apiClient.isTestmode,
                                                                          configuration: updateConfig)
             updateViewController.delegate = self
             let bottomSheetVC = bottomSheetController(with: updateViewController)
-            resolvedPresentingViewController?.presentAsBottomSheet(bottomSheetVC, appearance: configuration.appearance)
+            resolvedPresentingViewController?.presentAsSheet(bottomSheetVC)
             return
         }
 
@@ -342,7 +341,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         )
         verticalSavedPaymentMethodsViewController.delegate = self
         let bottomSheetVC = bottomSheetController(with: verticalSavedPaymentMethodsViewController)
-        resolvedPresentingViewController?.presentAsBottomSheet(bottomSheetVC, appearance: configuration.appearance)
+        resolvedPresentingViewController?.presentAsSheet(bottomSheetVC)
     }
 
     func willDisplayForm(for rowButtonType: RowButtonType?) -> Bool {
@@ -727,7 +726,6 @@ extension EmbeddedPaymentElement {
     func bottomSheetController(with viewController: BottomSheetContentViewController) -> BottomSheetViewController {
         return BottomSheetViewController(contentViewController: viewController,
                                          appearance: configuration.appearance,
-                                         isTestMode: configuration.apiClient.isTestmode,
                                          didCancelNative3DS2: {
             stpAssertionFailure("3DS2 was triggered unexpectedly")
         })

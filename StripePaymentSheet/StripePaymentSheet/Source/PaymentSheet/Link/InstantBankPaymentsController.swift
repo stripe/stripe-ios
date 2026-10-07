@@ -30,8 +30,7 @@ import UIKit
     private lazy var loadingViewController: LoadingViewController = {
         let loadingViewController = LoadingViewController(
             delegate: self,
-            appearance: PaymentSheet.Appearance.default,
-            isTestMode: configuration.apiClient.isTestmode
+            appearance: PaymentSheet.Appearance.default
         )
         return loadingViewController
     }()
@@ -63,7 +62,6 @@ import UIKit
         let vc = BottomSheetViewController(
             contentViewController: loadingViewController,
             appearance: PaymentSheet.Appearance.default,
-            isTestMode: configuration.apiClient.isTestmode,
             didCancelNative3DS2: {}
         )
         return vc
@@ -165,7 +163,7 @@ import UIKit
 
     @MainActor
     private func presentWebFlow(from presentingViewController: UIViewController) async throws {
-        presentingViewController.presentAsBottomSheet(bottomSheetViewController, appearance: PaymentSheet.Appearance.default)
+        presentingViewController.presentAsSheet(bottomSheetViewController)
         defer {
             bottomSheetViewController.dismiss(animated: true)
         }
