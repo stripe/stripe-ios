@@ -373,7 +373,6 @@ final class PaymentSheetPresentationTests: XCTestCase {
         let sheet = NativeSheetContainerViewController(
             contentViewController: MeasuredSheetContentViewController(contentHeight: 1000),
             appearance: .default,
-            isTestMode: true,
             didCancelNative3DS2: {}
         )
         var presentedViewController: UIViewController?
