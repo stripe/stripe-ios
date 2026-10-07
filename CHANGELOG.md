@@ -3,7 +3,7 @@ MINOR
 
 ## X.Y.Z - changes pending release
 ### General
-* [Removed] Removed the test mode header badge from PaymentSheet, CustomerSheet, Link, and Financial Connections.
+* [Removed] Removed the "test mode" badge from all UI surfaces.
 
 ### PaymentSheet
 * [Added] Added QRIS API bindings and PaymentSheet support for PaymentIntents.
