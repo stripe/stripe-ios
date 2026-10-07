@@ -10,7 +10,13 @@
 import SwiftUI
 
 struct EmbeddedViewRepresentable: UIViewRepresentable {
+    enum Surface {
+        case paymentMethods
+        case form
+    }
+
     @ObservedObject var viewModel: EmbeddedPaymentElementViewModel
+    var surface: Surface = .paymentMethods
 
     public func makeUIView(context: Context) -> UIView {
         let containerView = EmbeddedViewContainerView()
@@ -27,7 +33,7 @@ struct EmbeddedViewRepresentable: UIViewRepresentable {
             return containerView
         }
 
-        let paymentElementView = embeddedPaymentElement.view
+        let paymentElementView = surface == .form ? embeddedPaymentElement.formContainerView : embeddedPaymentElement.view
         paymentElementView.translatesAutoresizingMaskIntoConstraints = false
         containerView.addSubview(paymentElementView)
 

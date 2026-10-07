@@ -43,6 +43,7 @@ public final class EmbeddedPaymentElementViewModel: ObservableObject {
     private(set) var embeddedPaymentElement: EmbeddedPaymentElement?
 
     @Published var height: CGFloat = 0.0
+    @Published var formHeight: CGFloat = 0.0
 
     // MARK: - Private properties
 
@@ -79,6 +80,7 @@ public final class EmbeddedPaymentElementViewModel: ObservableObject {
             guard let self else { return }
             self.embeddedPaymentElement = embeddedPaymentElement
             self.embeddedPaymentElement?.delegate = self
+            embeddedPaymentElement.formContainerView.notifiesDelegateOnInitialHeight = configuration.displaysPaymentMethodFormSeparately
             self.paymentOption = embeddedPaymentElement.paymentOption
             // TODO: Consider opting Embedded SwiftUI into EmbeddedPaymentElement's initial height notification and removing this load-time height calculation.
             calculateAndPublishHeight(embeddedPaymentElement: embeddedPaymentElement) // compute initial height
@@ -120,6 +122,7 @@ public final class EmbeddedPaymentElementViewModel: ObservableObject {
             guard let self else { return }
             self.embeddedPaymentElement = embeddedPaymentElement
             self.embeddedPaymentElement?.delegate = self
+            embeddedPaymentElement.formContainerView.notifiesDelegateOnInitialHeight = configuration.displaysPaymentMethodFormSeparately
             self.paymentOption = embeddedPaymentElement.paymentOption
             // TODO: Consider opting Embedded SwiftUI into EmbeddedPaymentElement's initial height notification and removing this load-time height calculation.
             calculateAndPublishHeight(embeddedPaymentElement: embeddedPaymentElement) // compute initial height
@@ -216,8 +219,12 @@ public final class EmbeddedPaymentElementViewModel: ObservableObject {
     private func calculateAndPublishHeight(embeddedPaymentElement: EmbeddedPaymentElement) {
         let newHeight = embeddedPaymentElement.view.systemLayoutSizeFitting(CGSize(width: embeddedPaymentElement.view.bounds.width, height: UIView.layoutFittingCompressedSize.height)).height
 
-        withAnimation(.easeInOut(duration: 0.2)) {
+        let newFormHeight = embeddedPaymentElement.formView.map {
+            $0.systemLayoutSizeFitting(CGSize(width: $0.bounds.width, height: UIView.layoutFittingCompressedSize.height)).height
+        } ?? 0
+        withAnimation(UIAccessibility.isReduceMotionEnabled ? nil : .easeInOut(duration: 0.2)) {
             self.height = newHeight
+            self.formHeight = newFormHeight
         }
     }
 }
@@ -231,6 +238,9 @@ extension EmbeddedPaymentElementViewModel: EmbeddedPaymentElementDelegate {
 
     public func embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: EmbeddedPaymentElement) {
         self.paymentOption = embeddedPaymentElement.paymentOption
+        if embeddedPaymentElement.configuration.displaysPaymentMethodFormSeparately {
+            calculateAndPublishHeight(embeddedPaymentElement: embeddedPaymentElement)
+        }
     }
 }
 
@@ -255,5 +265,23 @@ public struct EmbeddedPaymentElementView: View {
         EmbeddedViewRepresentable(viewModel: viewModel)
             .frame(height: viewModel.height)
             .onAppear { viewModel.objectWillChange.send() } // Re-trigger SwiftUI’s update cycle to ensure correct ViewController is set as presentingViewcontroller
+    }
+}
+
+/// A SwiftUI view for the selected payment method's form, placed separately from `EmbeddedPaymentElementView`.
+/// Enable `configuration.displaysPaymentMethodFormSeparately` and use the same view model for both views.
+@_spi(SeparatePaymentMethodForm)
+public struct EmbeddedPaymentElementFormView: View {
+    @ObservedObject private var viewModel: EmbeddedPaymentElementViewModel
+
+    /// Initializes a form view using the view model that manages your payment element.
+    public init(viewModel: EmbeddedPaymentElementViewModel) {
+        self.viewModel = viewModel
+    }
+
+    public var body: some View {
+        EmbeddedViewRepresentable(viewModel: viewModel, surface: .form)
+            .frame(height: viewModel.formHeight)
+            .onAppear { viewModel.objectWillChange.send() }
     }
 }

@@ -678,6 +678,12 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case off
     }
 
+    enum DisplaysPaymentMethodFormSeparately: String, PickerEnum {
+        static let enumName: String = "separatePaymentMethodForm"
+        case on
+        case off
+    }
+
     enum RowSelectionBehavior: String, PickerEnum {
         static let enumName: String = "rowSelectionBehavior"
         case `default`
@@ -819,6 +825,11 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var allowsInlineCardForm: AllowsInlineCardForm {
         get { allowsInlineCardFormValue ?? .off }
         set { allowsInlineCardFormValue = newValue }
+    }
+    var displaysPaymentMethodFormSeparatelyValue: DisplaysPaymentMethodFormSeparately?
+    var displaysPaymentMethodFormSeparately: DisplaysPaymentMethodFormSeparately {
+        get { displaysPaymentMethodFormSeparatelyValue ?? .off }
+        set { displaysPaymentMethodFormSeparatelyValue = newValue }
     }
     var rowSelectionBehavior: RowSelectionBehavior
     var cardBrandAcceptance: CardBrandAcceptance

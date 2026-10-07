@@ -20,6 +20,19 @@ public final class EmbeddedPaymentElement {
         return containerView
     }
 
+    /// The selected payment method's form when
+    /// `configuration.displaysPaymentMethodFormSeparately` is enabled.
+    /// Place this view anywhere in your checkout, independently of `view`.
+    /// Returns `nil` for saved payment methods, Link wallet, Apple Pay, or when separate forms are disabled.
+    /// The same container is reused when switching between new payment method forms.
+    /// Use `embeddedPaymentElementDidUpdatePaymentOption` to add or remove this view when availability changes.
+    /// Height changes use `embeddedPaymentElementDidUpdateHeight` for both views.
+    /// With one new payment method and no other options, `view` has zero height.
+    @_spi(SeparatePaymentMethodForm) public var formView: UIView? {
+        guard configuration.displaysPaymentMethodFormSeparately, inlineFormViewController != nil else { return nil }
+        return formContainerView
+    }
+
     /// A view controller to present on.
     public var presentingViewController: UIViewController?
 
@@ -57,7 +70,7 @@ public final class EmbeddedPaymentElement {
         }
         return .init(
             paymentOption: _paymentOption,
-            mandateText: inlineCardFormViewController?.mandateText ?? embeddedPaymentMethodsView.mandateText,
+            mandateText: inlineFormViewController?.mandateText ?? embeddedPaymentMethodsView.mandateText,
             currency: intent.currency,
             iconStyle: configuration.appearance.iconStyle,
             linkBrand: configuration.resolvedLinkBrand(
@@ -249,12 +262,14 @@ public final class EmbeddedPaymentElement {
                     return loadResult.paymentMethodTypes.contains(.external(paymentMethod))
                 }
             }()
-            let previousSelectedRowType: RowButtonType? = self.inlineCardFormViewController != nil ? .new(paymentMethodType: .stripe(.card)) : self.embeddedPaymentMethodsView.selectedRowButton?.type
+            let previousSelectedRowType: RowButtonType? = self.configuration.displaysPaymentMethodFormSeparately
+                ? self.embeddedPaymentMethodsView.selectedRowButton?.type
+                : (self.inlineFormViewController != nil ? .new(paymentMethodType: .stripe(.card)) : self.embeddedPaymentMethodsView.selectedRowButton?.type)
             let previousSelectedRowChangeButtonState = self.embeddedPaymentMethodsView.selectedRowChangeButtonState
             let displaysInlineCardForm = self.shouldDisplayInlineCardForm
             // Inline card forms are always displayed, even before the customer enters valid input.
             // Sheet forms restore the previous selection only while it remains available.
-            let selectedFormViewController = Self.makeFormViewControllerIfNecessary(
+            let selectedFormViewController = self.configuration.displaysPaymentMethodFormSeparately ? nil : Self.makeFormViewControllerIfNecessary(
                 selection: displaysInlineCardForm ? .new(paymentMethodType: .stripe(.card)) : (isPreviousPaymentOptionStillDisplayed ? previousSelectedRowType : nil),
                 previousPaymentOption: previousPaymentOption,
                 configuration: self.configuration,
@@ -271,6 +286,7 @@ public final class EmbeddedPaymentElement {
             self.selectedFormViewController = selectedFormViewController
             // Make the new list view, selecting the previous row if it's still in the list and it doesn't have a form or it's form is valid
             let shouldSelectPreviousRow: Bool = {
+                if self.configuration.displaysPaymentMethodFormSeparately { return true }
                 guard isPreviousPaymentOptionStillDisplayed else { return false }
                 if let selectedFormViewController {
                     return selectedFormViewController.selectedPaymentOption != nil
@@ -291,10 +307,10 @@ public final class EmbeddedPaymentElement {
                 self.embeddedPaymentMethodsView.isUserInteractionEnabled = false
                 self.embeddedPaymentMethodsView.selectedRowButton?.setLoading(true, animated: false)
             }
-            self.containerView.updateContentView(
-                self.inlineCardFormViewController?.view ?? embeddedPaymentMethodsView,
-                viewController: self.inlineCardFormViewController
-            )
+            if self.configuration.displaysPaymentMethodFormSeparately {
+                self.selectedFormViewController = makeInlineForm(previousPaymentOption: previousPaymentOption)
+            }
+            updateFormPresentation()
             informDelegateIfPaymentOptionUpdated()
             return .succeeded
         }
@@ -349,14 +365,12 @@ public final class EmbeddedPaymentElement {
         guard !hasConfirmedIntent else { return }
 
         // Inline forms also clear partial input, even when no valid payment option exists.
-        guard paymentOption != nil || inlineCardFormViewController != nil else { return }
+        guard paymentOption != nil || inlineFormViewController != nil else { return }
 
-        if inlineCardFormViewController != nil {
+        if inlineFormViewController != nil {
             formCache = .init()
-            selectedFormViewController = makeInlineCardForm(previousPaymentOption: nil)
-            if let inlineCardFormViewController {
-                containerView.updateContentView(inlineCardFormViewController.view, viewController: inlineCardFormViewController)
-            }
+            selectedFormViewController = makeInlineForm(previousPaymentOption: nil)
+            updateFormPresentation()
         } else {
             selectedFormViewController = nil
             embeddedPaymentMethodsView.resetSelection()
@@ -381,8 +395,24 @@ public final class EmbeddedPaymentElement {
 
     internal private(set) lazy var containerView: EmbeddedPaymentElementContainerView = {
         return EmbeddedPaymentElementContainerView(
-            embeddedPaymentMethodsView: embeddedPaymentMethodsView
+            contentView: embeddedPaymentMethodsView
         )
+    }()
+    private lazy var emptyFormView = Self.makeEmptyView()
+    private lazy var emptySelectionView = Self.makeEmptyView()
+
+    private static func makeEmptyView() -> UIView {
+        let view = UIView()
+        view.heightAnchor.constraint(equalToConstant: 0).isActive = true
+        return view
+    }
+    internal private(set) lazy var formContainerView: EmbeddedPaymentElementContainerView = {
+        let container = EmbeddedPaymentElementContainerView(contentView: emptyFormView)
+        container.needsUpdateSuperviewHeight = { [weak self] in
+            guard let self else { return }
+            self.delegate?.embeddedPaymentElementDidUpdateHeight(embeddedPaymentElement: self)
+        }
+        return container
     }()
     internal private(set) lazy var embeddedPaymentMethodsView: EmbeddedPaymentMethodsView = {
        return Self.makeView(
@@ -404,7 +434,7 @@ public final class EmbeddedPaymentElement {
     internal private(set) var formCache: PaymentMethodFormCache = .init()
     /// The form view controller for the currently selected payment method.
     internal var selectedFormViewController: EmbeddedFormViewController?
-    internal var inlineCardFormViewController: EmbeddedFormViewController? {
+    internal var inlineFormViewController: EmbeddedFormViewController? {
         guard let selectedFormViewController, selectedFormViewController.presentation == .inline else { return nil }
         return selectedFormViewController
     }
@@ -421,6 +451,8 @@ public final class EmbeddedPaymentElement {
 
     /// The value of `paymentOption` when we last called `embeddedPaymentElementDidUpdatePaymentOption`
     internal var lastUpdatedPaymentOption: PaymentOptionDisplayData?
+    /// The form view last published to the merchant, including its availability.
+    internal weak var lastUpdatedFormView: UIView?
     internal var _paymentOption: PaymentOption? {
     #if DEBUG
         if let testPaymentOption = _test_paymentOption {
@@ -472,6 +504,7 @@ public final class EmbeddedPaymentElement {
         set {
             embeddedPaymentMethodsView.notifiesDelegateOnInitialHeight = newValue
             containerView.notifiesDelegateOnInitialHeight = newValue
+            formContainerView.notifiesDelegateOnInitialHeight = newValue
         }
     }
 
@@ -504,16 +537,16 @@ public final class EmbeddedPaymentElement {
             }
         }
         _ = self.linkAccountObserver
-        selectedFormViewController = makeInlineCardForm(previousPaymentOption: nil)
-        if let inlineCardFormViewController {
-            containerView.updateContentView(inlineCardFormViewController.view, viewController: inlineCardFormViewController)
-        }
+        selectedFormViewController = makeInlineForm(previousPaymentOption: nil)
+        updateFormPresentation()
         self.lastUpdatedPaymentOption = paymentOption
+        self.lastUpdatedFormView = formView
     }
 
     func setUserInteractionEnabled(_ enabled: Bool) {
         containerView.isUserInteractionEnabled = enabled
-        inlineCardFormViewController?.isUserInteractionEnabled = enabled
+        formContainerView.isUserInteractionEnabled = enabled
+        inlineFormViewController?.isUserInteractionEnabled = enabled
     }
 
     private var shouldDisplayInlineCardForm: Bool {
@@ -524,10 +557,13 @@ public final class EmbeddedPaymentElement {
             && !PaymentSheet.shouldShowLinkButton(elementsSession: elementsSession, configuration: configuration)
     }
 
-    private func makeInlineCardForm(previousPaymentOption: PaymentOption?) -> EmbeddedFormViewController? {
-        guard shouldDisplayInlineCardForm else { return nil }
+    private func makeInlineForm(previousPaymentOption: PaymentOption?) -> EmbeddedFormViewController? {
+        guard configuration.displaysPaymentMethodFormSeparately || shouldDisplayInlineCardForm else { return nil }
+        let selection: RowButtonType? = configuration.displaysPaymentMethodFormSeparately
+            ? embeddedPaymentMethodsView.selectedRowButton?.type
+            : .new(paymentMethodType: .stripe(.card))
         return Self.makeFormViewControllerIfNecessary(
-            selection: .new(paymentMethodType: .stripe(.card)),
+            selection: selection,
             previousPaymentOption: previousPaymentOption,
             configuration: configuration,
             intent: intent,
@@ -540,6 +576,24 @@ public final class EmbeddedPaymentElement {
             delegate: self,
             presentation: .inline
         )
+    }
+
+    /// Updates the selector and form surfaces without replacing the views owned by the merchant.
+    func updateFormPresentation() {
+        if configuration.displaysPaymentMethodFormSeparately {
+            let hasOnlyOneNewPaymentMethod = embeddedPaymentMethodsView.rowButtons.count == 1
+                && inlineFormViewController != nil
+            containerView.updateContentView(hasOnlyOneNewPaymentMethod ? emptySelectionView : embeddedPaymentMethodsView)
+            formContainerView.updateContentView(
+                inlineFormViewController?.view ?? emptyFormView,
+                viewController: inlineFormViewController
+            )
+        } else {
+            containerView.updateContentView(
+                inlineFormViewController?.view ?? embeddedPaymentMethodsView,
+                viewController: inlineFormViewController
+            )
+        }
     }
 
 }

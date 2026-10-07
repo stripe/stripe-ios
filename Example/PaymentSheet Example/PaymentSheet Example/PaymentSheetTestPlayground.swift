@@ -276,6 +276,8 @@ struct PaymentSheetTestPlayground: View {
                                     SearchableSettingView(setting: $playgroundController.settings.formSheetAction, searchText: $searchText)
                                     SearchableSettingView(setting: $playgroundController.settings.embeddedViewDisplaysMandateText, searchText: $searchText)
                                     SearchableSettingView(setting: $playgroundController.settings.allowsInlineCardForm, searchText: $searchText)
+                                        .disabled(playgroundController.settings.displaysPaymentMethodFormSeparately == .on)
+                                    SearchableSettingView(setting: $playgroundController.settings.displaysPaymentMethodFormSeparately, searchText: $searchText)
                                     SearchableSettingView(setting: $playgroundController.settings.rowSelectionBehavior, searchText: $searchText)
                                 }
                             }

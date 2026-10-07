@@ -14,7 +14,7 @@ import Contacts
 import PassKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
-@_spi(STP) @_spi(PaymentSheetSkipConfirmation) @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @_spi(CardFundingFilteringPrivatePreview) @_spi(EmbeddedCardForm) import StripePaymentSheet
+@_spi(STP) @_spi(PaymentSheetSkipConfirmation) @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @_spi(CardFundingFilteringPrivatePreview) @_spi(EmbeddedCardForm) @_spi(SeparatePaymentMethodForm) import StripePaymentSheet
 import SwiftUI
 import UIKit
 
@@ -287,7 +287,8 @@ import UIKit
 
         var configuration = EmbeddedPaymentElement.Configuration()
         configuration.formSheetAction = formSheetAction
-        configuration.allowsInlineCardForm = settings.allowsInlineCardForm == .on
+        configuration.displaysPaymentMethodFormSeparately = settings.displaysPaymentMethodFormSeparately == .on
+        configuration.allowsInlineCardForm = settings.allowsInlineCardForm == .on && !configuration.displaysPaymentMethodFormSeparately
         configuration.embeddedViewDisplaysMandateText = settings.embeddedViewDisplaysMandateText == .on
         configuration.rowSelectionBehavior = settings.rowSelectionBehavior == .default ? .default : .immediateAction { [weak self] in
             print("immediateAction callback triggered")

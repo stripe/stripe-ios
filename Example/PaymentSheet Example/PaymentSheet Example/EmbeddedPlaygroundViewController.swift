@@ -7,7 +7,7 @@
 
 import Combine
 import Foundation
-@_spi(STP) @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) import StripePaymentSheet
+@_spi(STP) @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) @_spi(SeparatePaymentMethodForm) import StripePaymentSheet
 @_spi(STP) import StripeUICore
 import SwiftUI
 import UIKit
@@ -99,6 +99,23 @@ class EmbeddedPlaygroundViewController: UIViewController {
 
     private let paymentOptionView = EmbeddedPaymentOptionView()
 
+    private lazy var separateFormStackView: UIStackView = {
+        let title = UILabel()
+        title.text = "Payment details"
+        title.font = .preferredFont(forTextStyle: .headline)
+        title.textColor = appearance.colors.text
+        title.accessibilityTraits = .header
+        title.numberOfLines = 0
+        let stack = UIStackView(arrangedSubviews: [title])
+        stack.axis = .vertical
+        stack.spacing = 16
+        stack.isHidden = true
+        return stack
+    }()
+
+    private let orderSummaryTitleLabel = UILabel()
+    private let orderSummaryAmountLabel = UILabel()
+
     private weak var highlightedContainerView: UIView?
 
     private lazy var showElementBoundsSwitch: UISwitch = {
@@ -188,7 +205,9 @@ class EmbeddedPlaygroundViewController: UIViewController {
             paymentElementView = paymentMethodButton
             displaysPaymentElementInline = false
         case .default:
-            paymentElementView = makeHighlightedContainer(for: embeddedPaymentElement.view)
+            paymentElementView = configuration.displaysPaymentMethodFormSeparately
+                ? embeddedPaymentElement.view
+                : makeHighlightedContainer(for: embeddedPaymentElement.view)
             displaysPaymentElementInline = true
         @unknown default:
             fatalError("Implement how new row selection behavior should be displayed")
@@ -196,15 +215,18 @@ class EmbeddedPlaygroundViewController: UIViewController {
 
         // All our content is in a stack view
         var arrangedSubviews: [UIView] = [settingsViewContainer]
-        if displaysPaymentElementInline {
+        if displaysPaymentElementInline && !configuration.displaysPaymentMethodFormSeparately {
             arrangedSubviews.append(showElementBoundsControl)
         }
-        arrangedSubviews.append(contentsOf: [
-            paymentElementView,
-            paymentOptionView,
-            checkoutButton,
-            clearPaymentOptionButton,
-        ])
+        arrangedSubviews.append(paymentElementView)
+        if configuration.displaysPaymentMethodFormSeparately {
+            updateSeparateFormView()
+            arrangedSubviews.append(separateFormStackView)
+            arrangedSubviews.append(makeOrderSummary())
+        } else {
+            arrangedSubviews.append(paymentOptionView)
+        }
+        arrangedSubviews.append(contentsOf: [checkoutButton, clearPaymentOptionButton])
         let stackView = UIStackView(arrangedSubviews: arrangedSubviews)
         stackView.axis = .vertical
         stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -214,7 +236,9 @@ class EmbeddedPlaygroundViewController: UIViewController {
         scrollView.addSubview(stackView)
 
 #if DEBUG
-        stackView.addArrangedSubview(testHeightChangeButton)
+        if !configuration.displaysPaymentMethodFormSeparately {
+            stackView.addArrangedSubview(testHeightChangeButton)
+        }
 #endif
 
         NSLayoutConstraint.activate([
@@ -231,7 +255,46 @@ class EmbeddedPlaygroundViewController: UIViewController {
             checkoutButton.heightAnchor.constraint(equalToConstant: 45),
             clearPaymentOptionButton.heightAnchor.constraint(equalToConstant: 45),
         ])
+        checkoutButton.isEnabled = embeddedPaymentElement.paymentOption != nil
+        updateSeparateFormView()
         paymentOptionView.configure(with: embeddedPaymentElement.paymentOption, showMandate: !configuration.embeddedViewDisplaysMandateText)
+    }
+
+    /// The merchant places this form surface separately from EPE's method selector.
+    private func updateSeparateFormView() {
+        guard configuration.displaysPaymentMethodFormSeparately else { return }
+        let formView = embeddedPaymentElement?.formView
+        let currentFormView = separateFormStackView.arrangedSubviews.dropFirst().first
+        guard currentFormView !== formView else { return }
+        currentFormView?.removeFromSuperview()
+        if let formView {
+            separateFormStackView.addArrangedSubview(formView)
+        }
+        separateFormStackView.isHidden = formView == nil
+    }
+
+    private func makeOrderSummary() -> UIView {
+        for label in [orderSummaryTitleLabel, orderSummaryAmountLabel] {
+            label.font = .preferredFont(forTextStyle: .headline)
+            label.textColor = appearance.colors.text
+            label.numberOfLines = 0
+        }
+        orderSummaryAmountLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
+        updateOrderSummary()
+        let stack = UIStackView(arrangedSubviews: [orderSummaryTitleLabel, orderSummaryAmountLabel])
+        stack.axis = .horizontal
+        stack.spacing = 12
+        stack.distribution = .equalSpacing
+        stack.isLayoutMarginsRelativeArrangement = true
+        stack.directionalLayoutMargins = .init(top: 16, leading: 0, bottom: 0, trailing: 0)
+        return stack
+    }
+
+    private func updateOrderSummary() {
+        guard let settings = playgroundController?.settings else { return }
+        orderSummaryTitleLabel.text = settings.mode == .setup ? "Save payment method" : "Total"
+        orderSummaryAmountLabel.text = settings.mode == .setup ? nil
+            : "\(settings.amount.customDisplayName(currency: settings.currency)) \(settings.currency.rawValue.uppercased())"
     }
 
     private func makeHighlightedContainer(for embeddedPaymentElementView: UIView) -> UIView {
@@ -294,6 +357,7 @@ class EmbeddedPlaygroundViewController: UIViewController {
             .sink { [weak self] _ in
                 DispatchQueue.main.async {
                     guard let self, let playgroundController = self.playgroundController else { return }
+                    self.updateOrderSummary()
                     self.hostingController?.rootView = AnyView(
                         EmbeddedSettingsView().environmentObject(playgroundController)
                     )
@@ -356,6 +420,7 @@ extension EmbeddedPlaygroundViewController: EmbeddedPaymentElementDelegate {
 
     func embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: EmbeddedPaymentElement) {
         checkoutButton.isEnabled = embeddedPaymentElement.paymentOption != nil
+        updateSeparateFormView()
         paymentOptionView.configure(with: embeddedPaymentElement.paymentOption, showMandate: !configuration.embeddedViewDisplaysMandateText)
     }
 }

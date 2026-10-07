@@ -79,6 +79,7 @@ class EmbeddedPaymentMethodsView: UIView {
 
     private let mandateProvider: MandateTextProvider
     private let shouldShowMandate: Bool
+    private let shouldShowMandateForNewPaymentMethods: Bool
     private let analyticsHelper: PaymentSheetAnalyticsHelper
     private let incentive: PaymentMethodIncentive?
     private var linkBrand: LinkBrand
@@ -123,6 +124,7 @@ class EmbeddedPaymentMethodsView: UIView {
     init(
         initialSelectedRowType: RowButtonType?,
         initialSelectedRowChangeButtonState: (shouldShowChangeButton: Bool, sublabel: String?)?,
+        selectsFirstPaymentMethodByDefault: Bool = false,
         paymentMethodTypes: [PaymentSheet.PaymentMethodType],
         savedPaymentMethod: STPPaymentMethod?,
         appearance: PaymentSheet.Appearance,
@@ -133,6 +135,7 @@ class EmbeddedPaymentMethodsView: UIView {
         savedPaymentMethodAccessoryType: RowButton.RightAccessoryButton.AccessoryType?,
         mandateProvider: MandateTextProvider,
         shouldShowMandate: Bool = true,
+        shouldShowMandateForNewPaymentMethods: Bool = true,
         savedPaymentMethods: [STPPaymentMethod] = [],
         currency: String? = nil,
         incentive: PaymentMethodIncentive? = nil,
@@ -143,6 +146,7 @@ class EmbeddedPaymentMethodsView: UIView {
         self.appearance = appearance
         self.mandateProvider = mandateProvider
         self.shouldShowMandate = shouldShowMandate
+        self.shouldShowMandateForNewPaymentMethods = shouldShowMandateForNewPaymentMethods
         self.currency = currency
         self.paymentMethodMessagingPromotionsHelper = paymentMethodMessagingPromotionsHelper
         self.analyticsHelper = analyticsHelper
@@ -210,9 +214,11 @@ class EmbeddedPaymentMethodsView: UIView {
         }
 
         // If we have a row button that matches the initial selection, make it selected
-        if let initialSelectedRowType, let rowButtonMatchingInitialSelection = rowButtons.filter({ $0.type == initialSelectedRowType }).first {
+        let initialRow = rowButtons.first { $0.type == initialSelectedRowType }
+            ?? (selectsFirstPaymentMethodByDefault ? rowButtons.first : nil)
+        if let rowButtonMatchingInitialSelection = initialRow {
             rowButtonMatchingInitialSelection.updateSelectedState(true, willDisplayForm: delegate?.willDisplayForm(for: rowButtonMatchingInitialSelection.type) == true)
-            if let initialSelectedRowChangeButtonState {
+            if rowButtonMatchingInitialSelection.type == initialSelectedRowType, let initialSelectedRowChangeButtonState {
                 selectedRowChangeButtonState = initialSelectedRowChangeButtonState
                 if initialSelectedRowChangeButtonState.shouldShowChangeButton {
                     rowButtonMatchingInitialSelection.addChangeButton(animated: false)
@@ -299,6 +305,11 @@ class EmbeddedPaymentMethodsView: UIView {
     }
 
     // MARK: Internal functions
+
+    /// Selects the first visible option when removing the last saved method clears the selection.
+    func selectFirstPaymentMethod() {
+        selectedRowButton = rowButtons.first
+    }
 
     /// If the customer cancels out of a form, restore the last selected payment method row
     func resetSelectionToLastSelection() {
@@ -442,12 +453,17 @@ class EmbeddedPaymentMethodsView: UIView {
                 paymentMethodType: .stripe(.card),
                 savedPaymentMethods: savedPaymentMethods
             )
-            // TODO: Pass in the selection state (eg selectedWithChangeButton) so it's retained
-
             // Replace row button
             stackView.removeArrangedSubview(oldCardButton, animated: false)
             stackView.insertArrangedSubview(cardRowButton, at: oldCardButtonIndex)
             rowButtons.replace(oldCardButton, with: cardRowButton)
+            if selectedRowButton === oldCardButton {
+                selectedRowButton = cardRowButton
+                if let state = selectedRowChangeButtonState, state.shouldShowChangeButton {
+                    cardRowButton.addChangeButton(animated: false)
+                    cardRowButton.setSublabel(text: state.sublabel, animated: false)
+                }
+            }
         }
     }
 
@@ -462,8 +478,13 @@ class EmbeddedPaymentMethodsView: UIView {
     }
 
     private func _updateMandate(mandateText: NSAttributedString?, animated: Bool = true) {
+        let displaysMandateForSelection: Bool = if case .new = selectedRowButton?.type {
+            shouldShowMandateForNewPaymentMethods
+        } else {
+            true
+        }
         let shouldDisplayMandate: Bool = if let mandateText {
-            shouldShowMandate && !mandateText.string.isEmpty
+            shouldShowMandate && displaysMandateForSelection && !mandateText.string.isEmpty
         } else {
             false
         }

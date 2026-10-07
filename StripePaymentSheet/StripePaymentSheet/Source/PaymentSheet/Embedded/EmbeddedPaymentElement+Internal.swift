@@ -66,12 +66,17 @@ extension EmbeddedPaymentElement {
             intent: loadResult.intent,
             analyticsHelper: analyticsHelper
         )
+        var appearance = configuration.appearance
+        if configuration.displaysPaymentMethodFormSeparately {
+            appearance.embeddedPaymentElement.row.style = .flatWithRadio
+        }
         return EmbeddedPaymentMethodsView(
             initialSelectedRowType: initialSelection,
             initialSelectedRowChangeButtonState: previousSelectedRowChangeButtonState,
+            selectsFirstPaymentMethodByDefault: configuration.displaysPaymentMethodFormSeparately,
             paymentMethodTypes: loadResult.paymentMethodTypes,
             savedPaymentMethod: loadResult.savedPaymentMethods.first,
-            appearance: configuration.appearance,
+            appearance: appearance,
             shouldShowApplePay: shouldShowApplePay,
             shouldShowLink: shouldShowLink,
             linkBrand: configuration.resolvedLinkBrand(elementsSession: loadResult.elementsSession, linkAccount: LinkAccountContext.shared.account),
@@ -81,6 +86,7 @@ extension EmbeddedPaymentElement {
             savedPaymentMethodAccessoryType: savedPaymentMethodAccessoryType,
             mandateProvider: mandateProvider,
             shouldShowMandate: configuration.embeddedViewDisplaysMandateText,
+            shouldShowMandateForNewPaymentMethods: !configuration.displaysPaymentMethodFormSeparately,
             savedPaymentMethods: loadResult.savedPaymentMethods,
             currency: loadResult.intent.currency,
             incentive: loadResult.elementsSession.incentive,
@@ -90,14 +96,15 @@ extension EmbeddedPaymentElement {
         )
     }
 
-    /// Helper method to inform delegate only if the payment option changed
+    /// Publishes payment option changes and changes to the separate form's availability.
     func informDelegateIfPaymentOptionUpdated() {
         // Checkout rebuilds EPE while applying the billing update. Don't publish the tapped
         // payment method until that update finishes and the refreshed view restores its selection.
         guard pendingBillingAddressSyncSelection == nil else { return }
-        if lastUpdatedPaymentOption != paymentOption {
-            delegate?.embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: self)
+        if lastUpdatedPaymentOption != paymentOption || lastUpdatedFormView !== formView {
             lastUpdatedPaymentOption = paymentOption
+            lastUpdatedFormView = formView
+            delegate?.embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: self)
         }
     }
 
@@ -135,7 +142,7 @@ extension EmbeddedPaymentElement {
             presentation: presentation
         )
 
-        if Self.shouldShowForm(formViewController.form, configuration: configuration) {
+        if presentation == .inline || Self.shouldShowForm(formViewController.form, configuration: configuration) {
             return formViewController
         } else {
             return nil
@@ -166,6 +173,9 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
     }
 
     func embeddedPaymentMethodsViewDidUpdateSelection() {
+        if configuration.displaysPaymentMethodFormSeparately {
+            formContainerView.endEditing(true)
+        }
         // 1. Update the currently selection's form VC to match the selection.
         // Note `paymentOption` derives from this property
         self.selectedFormViewController = Self.makeFormViewControllerIfNecessary(
@@ -180,8 +190,15 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
             paymentMethodMessagingPromotionsHelper: loadResult.paymentMethodMessagingPromotionsHelper,
             checkoutBillingAddressUpdater: checkout,
             formCache: formCache,
-            delegate: self
+            delegate: self,
+            presentation: configuration.displaysPaymentMethodFormSeparately ? .inline : .sheet
         )
+
+        if configuration.displaysPaymentMethodFormSeparately {
+            updateFormPresentation()
+            informDelegateIfPaymentOptionUpdated()
+            return
+        }
 
         // 2. Inform the delegate of the updated payment option if there is no form. If there is a form, we don't want to inform the delegate b/c the paymentOption is in an indeterminate state until the customer completes or cancels out of the form.
         if self.selectedFormViewController == nil {
@@ -190,6 +207,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
     }
 
     func embeddedPaymentMethodsViewDidTapPaymentMethodRow() {
+        if inlineFormViewController != nil { return }
         // 😓 Note: This method depends on `embeddedPaymentMethodsViewDidUpdateSelection` being called *before* this method is called when a row is tapped.
         guard let selectedFormViewController else {
             handleSelectionWithoutForm()
@@ -384,6 +402,7 @@ extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {
         embeddedPaymentMethodsView.updateSavedPaymentMethodRow(savedPaymentMethods,
                                                                isSelected: false,
                                                                accessoryType: accessoryType)
+        updateSeparateFormAfterSavedMethodsChange()
         presentingViewController?.dismiss(animated: true)
     }
 
@@ -421,6 +440,7 @@ extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {
         embeddedPaymentMethodsView.updateSavedPaymentMethodRow(savedPaymentMethods,
                                                                isSelected: isSelected,
                                                                accessoryType: accessoryType)
+        updateSeparateFormAfterSavedMethodsChange()
         presentingViewController?.dismiss(animated: true)
         return .success
     }
@@ -466,6 +486,15 @@ extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {
             omitChevron: configuration.appearance.embeddedPaymentElement.row.style.omitChevronInAccessoryButton
         )
     }
+
+    /// Restores the selection and both surfaces after managing saved payment methods.
+    private func updateSeparateFormAfterSavedMethodsChange() {
+        guard configuration.displaysPaymentMethodFormSeparately else { return }
+        if savedPaymentMethods.isEmpty, embeddedPaymentMethodsView.selectedRowButton == nil {
+            embeddedPaymentMethodsView.selectFirstPaymentMethod()
+        }
+        updateFormPresentation()
+    }
 }
 
 extension EmbeddedPaymentElement: VerticalSavedPaymentMethodsViewControllerDelegate {
@@ -491,6 +520,7 @@ extension EmbeddedPaymentElement: VerticalSavedPaymentMethodsViewControllerDeleg
         embeddedPaymentMethodsView.updateSavedPaymentMethodRow(savedPaymentMethods,
                                                                isSelected: isSelected,
                                                                accessoryType: accessoryType)
+        updateSeparateFormAfterSavedMethodsChange()
         presentingViewController?.dismiss(animated: true)
     }
 }
@@ -533,6 +563,7 @@ extension EmbeddedPaymentElement.PaymentOptionDisplayData {
 
 extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
     func embeddedFormViewControllerDidUpdate(_ embeddedFormViewController: EmbeddedFormViewController) {
+        guard selectedFormViewController === embeddedFormViewController else { return }
         informDelegateIfPaymentOptionUpdated()
     }
 
@@ -578,8 +609,10 @@ extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
             paymentMethodMessagingPromotionsHelper: loadResult.paymentMethodMessagingPromotionsHelper,
             checkoutBillingAddressUpdater: checkout,
             formCache: formCache,
-            delegate: self
+            delegate: self,
+            presentation: configuration.displaysPaymentMethodFormSeparately ? .inline : .sheet
         )
+        updateFormPresentation()
         return selectedFormViewController != nil
     }
 
@@ -627,6 +660,7 @@ extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
 
     // Updates whether or not the change button shows and what sublabel (if any) the selected row button shows
     func updateChangeButtonAndSublabelState(for type: RowButtonType) {
+        guard !configuration.displaysPaymentMethodFormSeparately else { return }
         guard let _paymentOption,
               let displayData = paymentOption,
               case .new = type,
@@ -701,6 +735,7 @@ extension EmbeddedPaymentElement {
         }
 
         containerView.endEditing(true)
+        formContainerView.endEditing(true)
         setUserInteractionEnabled(false)
 
         let (result, deferredIntentConfirmationType) = await PaymentSheet.confirm(
@@ -750,6 +785,14 @@ extension EmbeddedPaymentElement {
     }
 
     static func validateRowSelectionConfiguration(configuration: Configuration) throws {
+        if configuration.displaysPaymentMethodFormSeparately {
+            if configuration.allowsInlineCardForm {
+                throw PaymentSheetError.integrationError(nonPIIDebugDescription: "Separate payment method forms require allowsInlineCardForm = false.")
+            }
+            if case .immediateAction = configuration.rowSelectionBehavior {
+                throw PaymentSheetError.integrationError(nonPIIDebugDescription: "Separate payment method forms require .default row selection behavior.")
+            }
+        }
         if configuration.allowsInlineCardForm, case .immediateAction = configuration.rowSelectionBehavior {
             throw PaymentSheetError.integrationError(nonPIIDebugDescription: "Inline card forms require .default row selection behavior. Disable allowsInlineCardForm or use .default.")
         }

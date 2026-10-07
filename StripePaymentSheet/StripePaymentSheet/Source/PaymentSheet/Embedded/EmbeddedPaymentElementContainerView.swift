@@ -23,8 +23,8 @@ class EmbeddedPaymentElementContainerView: UIView {
     var notifiesDelegateOnInitialHeight = false
     private var bottomAnchorConstraint: NSLayoutConstraint!
 
-    init(embeddedPaymentMethodsView: EmbeddedPaymentMethodsView) {
-        self.contentView = embeddedPaymentMethodsView
+    init(contentView: UIView) {
+        self.contentView = contentView
         super.init(frame: .zero)
         directionalLayoutMargins = .zero
         setContentView(contentView)
@@ -47,12 +47,18 @@ class EmbeddedPaymentElementContainerView: UIView {
     }
 
     func updateContentView(_ newContentView: UIView, viewController: UIViewController? = nil) {
-        contentViewController?.willMove(toParent: nil)
-        contentViewController?.removeFromParent()
-        contentViewController = viewController
-        attachContentViewControllerIfNeeded()
+        if contentViewController !== viewController {
+            contentViewController?.willMove(toParent: nil)
+            contentViewController?.removeFromParent()
+            contentViewController = viewController
+            attachContentViewControllerIfNeeded()
+        }
+        guard contentView !== newContentView else { return }
+        endEditing(true)
+        previousHeight = nil
         guard frame.size != .zero else {
             // A zero frame means we haven't been laid out yet. Simply replace the old view to avoid laying out before the view is ready and breaking constraints.
+            bottomAnchorConstraint.isActive = false
             contentView.removeFromSuperview()
             contentView = newContentView
             setContentView(newContentView)
@@ -60,6 +66,8 @@ class EmbeddedPaymentElementContainerView: UIView {
         }
         let oldContentView = contentView
 
+        // A cached view may still be fading out from an earlier transition.
+        newContentView.alpha = 1
         // Add the new view
         newContentView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(newContentView)
@@ -83,7 +91,7 @@ class EmbeddedPaymentElementContainerView: UIView {
         if heightWillChange {
             newContentView.alpha = 0
         }
-        UIView.animate(withDuration: 0.2) {
+        UIView.animate(withDuration: UIAccessibility.isReduceMotionEnabled ? 0 : 0.2, delay: 0, options: [.beginFromCurrentState, .allowUserInteraction]) {
             // Re-pin bottom anchor to the new view, thus updating our height
             self.bottomAnchorConstraint.isActive = false
             self.bottomAnchorConstraint = newContentView.bottomAnchor.constraint(equalTo: self.layoutMarginsGuide.bottomAnchor)
@@ -96,7 +104,9 @@ class EmbeddedPaymentElementContainerView: UIView {
                 self.needsUpdateSuperviewHeight()
             }
         } completion: { _ in
-            oldContentView.removeFromSuperview()
+            if self.contentView !== oldContentView {
+                oldContentView.removeFromSuperview()
+            }
         }
     }
 
