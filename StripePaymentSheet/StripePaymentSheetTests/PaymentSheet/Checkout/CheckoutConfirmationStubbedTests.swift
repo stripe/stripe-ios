@@ -603,7 +603,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
     func testExpressCheckoutLinkCollectsRequiredCheckoutDetails() async throws {
         // Given Checkout requires an email and full billing address
         var configuration = CheckoutController.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://custom-return")
-        configuration.expressCheckoutElement = ExpressCheckoutElement.Configuration(confirmHandler: { _ in })
+        configuration.expressCheckoutElement = ExpressCheckoutElement.Configuration(completion: { _ in })
         let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration(
             apiResponse: CheckoutTestHelpers.makeSession(["billing_address_collection": "required"]),
             configuration: configuration
