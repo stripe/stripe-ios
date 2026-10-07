@@ -1273,7 +1273,6 @@ import UIKit
         let bottomSheetViewController = PaymentSheetContainerFactory.make(
             contentViewController: fullConsentViewController,
             appearance: paymentElementConfiguration.appearance,
-            isTestMode: false,
             didCancelNative3DS2: {}
         )
 
