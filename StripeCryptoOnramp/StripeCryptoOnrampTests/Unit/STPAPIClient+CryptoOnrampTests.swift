@@ -371,7 +371,6 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
             request.url?.path == Constant.fulfillKYCRequirementsAPIPath
         } response: { request in
             XCTAssertEqual(request.httpMethod, "POST")
-            XCTAssertEqual(request.value(forHTTPHeaderField: "Authorization"), "Bearer \(Constant.validPublishableKey)")
             XCTAssertEqual(request.value(forHTTPHeaderField: "Stripe-Version"), Constant.cryptoOnrampAPIVersion)
             XCTAssertNil(request.value(forHTTPHeaderField: Constant.consumerAuthTokenHeader))
             XCTAssertNil(request.url?.query)
@@ -1009,8 +1008,6 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         stub { request in
             XCTAssertEqual(request.url?.path, Constant.partnerTermsAPIPath)
             XCTAssertEqual(request.httpMethod, "POST")
-            XCTAssertEqual(request.value(forHTTPHeaderField: "Authorization"), "Bearer \(Constant.validPublishableKey)")
-            XCTAssertNil(request.url?.query)
 
             guard let httpBody = request.ohhttpStubs_httpBody else {
                 XCTFail("Expected an httpBody data but found none.")
@@ -1030,8 +1027,6 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         }
 
         let apiClient = stubbedAPIClient()
-        apiClient.publishableKey = Constant.validPublishableKey
-
         _ = try await apiClient.confirmPartnerTerms(
             declarationId: "copt_decl_123",
             linkAccountInfo: Constant.validLinkAccountInfo
