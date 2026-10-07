@@ -114,7 +114,6 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
         return popped
     }
 
-    let isTestMode: Bool
     let appearance: PaymentSheet.Appearance
 
     private var contentViewController: BottomSheetContentViewController
@@ -132,12 +131,10 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
     required init(
         contentViewController: BottomSheetContentViewController,
         appearance: PaymentSheet.Appearance,
-        isTestMode: Bool,
         didCancelNative3DS2: @escaping () -> Void
     ) {
         self.contentViewController = contentViewController
         self.appearance = appearance
-        self.isTestMode = isTestMode
         self.didCancelNative3DS2 = didCancelNative3DS2
         super.init(nibName: nil, bundle: nil)
 
@@ -494,7 +491,7 @@ extension NativeSheetContainerViewController: PaymentSheetAuthenticationContext 
         _ authenticationViewController: UIViewController, completion: @escaping () -> Void
     ) {
         let threeDS2ViewController = BottomSheet3DS2ViewController(
-            challengeViewController: authenticationViewController, appearance: appearance, isTestMode: isTestMode)
+            challengeViewController: authenticationViewController, appearance: appearance)
         threeDS2ViewController.delegate = self
         pushContentViewController(threeDS2ViewController)
         // Remove a blur effect, if any

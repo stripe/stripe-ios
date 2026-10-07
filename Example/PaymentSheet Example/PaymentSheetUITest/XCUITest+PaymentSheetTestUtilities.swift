@@ -45,6 +45,14 @@ extension XCTestCase {
         app.launch()
         waitForReload(app, settings: settings)
     }
+
+    func loadCheckoutPlayground(_ app: XCUIApplication, _ settings: CheckoutPlayground.Settings) {
+        let data = try! JSONEncoder().encode(settings)
+        app.launchEnvironment["STP_CHECKOUT_PLAYGROUND_SETTINGS"] = data.base64EncodedString()
+        app.launchEnvironment["STP_CHECKOUT_ELEMENTS"] = "true"
+        app.launch()
+    }
+
     func waitForReload(_ app: XCUIApplication, settings: CustomerSheetTestPlaygroundSettings) {
         let paymentMethodButton = app.buttons["Payment method"]
         expectation(
