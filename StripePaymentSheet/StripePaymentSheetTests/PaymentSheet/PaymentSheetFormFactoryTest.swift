@@ -2576,8 +2576,30 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         )
 
         // Then all countries remain available and Nigeria is the web default
-        XCTAssertTrue(address.countryCodes.count > 2)
+        XCTAssertEqual(Set(address.countryCodes), Set(AddressSpecProvider.shared.countries))
         XCTAssertEqual(address.selectedCountryCode, "NG")
+    }
+
+    func testNairaCardPreservesMerchantBillingCountryAndRestrictions() throws {
+        // Given a merchant-provided billing country and a restricted country list
+        let loadExpectation = expectation(description: "Load address specs")
+        AddressSpecProvider.shared.loadAddressSpecs { loadExpectation.fulfill() }
+        waitForExpectations(timeout: 1)
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.address = .full
+        configuration.billingDetailsCollectionConfiguration.allowedCountries = ["US", "CA"]
+        configuration.defaultBillingDetails.address.country = "CA"
+        let form = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.ngCard]),
+            elementsSession: ._testValue(paymentMethodTypes: ["ng_card"]),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.ngCard)
+        ).make()
+
+        // Then the Nigeria default does not override the merchant's billing details
+        let address = try XCTUnwrap(form.getAllUnwrappedSubElements().compactMap { $0 as? AddressSectionElement }.first)
+        XCTAssertEqual(Set(address.countryCodes), Set(["US", "CA"]))
+        XCTAssertEqual(address.selectedCountryCode, "CA")
     }
 
     func testGCashShowsMandateOnlyForFuturePayments() {
