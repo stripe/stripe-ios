@@ -17,7 +17,6 @@ final class HTMLConfirmationContentViewController: UIViewController, BottomSheet
 
     lazy var navigationBar: SheetNavigationBar = {
         let navigationBar = LinkSheetNavigationBar(
-            isTestMode: false,
             appearance: .default,
             brand: brand,
             shouldLogPaymentSheetAnalyticsOnDismissal: false

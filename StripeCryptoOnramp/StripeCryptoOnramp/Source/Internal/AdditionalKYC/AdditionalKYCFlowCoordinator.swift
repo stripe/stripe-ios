@@ -253,7 +253,11 @@ final class AdditionalKYCFlowCoordinator: NSObject, UIAdaptivePresentationContro
 
     private func editSource(_ source: SourceOfFundsModel.Source?, model: SourceOfFundsModel, uploader: DocumentUploading, in navigationController: UINavigationController) {
         guard source != nil || model.canAddSource else { return }
-        let uploads = DocumentCollectionModel(uploader: uploader, uploadedFiles: source?.files ?? [])
+        let uploads = DocumentCollectionModel(
+            uploader: uploader,
+            uploadedFiles: source?.files ?? [],
+            maximumFileCount: model.configuration.maximumFilesPerDocumentType
+        )
         let view = SourceOfFundsDocumentView(
             configuration: model.configuration,
             subtypes: model.availableSubtypes(editing: source?.id),
