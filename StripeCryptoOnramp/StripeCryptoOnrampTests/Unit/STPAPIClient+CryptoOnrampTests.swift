@@ -419,11 +419,8 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         let apiClient = stubbedAPIClient()
 
         for linkSessionKey in [nil, ""] {
-            // Given a verified account with consumer credentials but no usable Link session key
             var linkAccountInfo = Constant.validLinkAccountInfo
             linkAccountInfo.linkSessionKey = linkSessionKey
-
-            // When submitting the requirements
             do {
                 try await apiClient.fulfillKYCRequirements(
                     requirements: Constant.validFulfillKYCRequirements,
@@ -431,7 +428,7 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
                 )
                 XCTFail("Expected a missing Link session key error")
             } catch STPAPIClient.CryptoOnrampAPIError.missingLinkSessionKey {
-                // Then the missing Link session key is reported
+                // Expected.
             }
         }
     }
