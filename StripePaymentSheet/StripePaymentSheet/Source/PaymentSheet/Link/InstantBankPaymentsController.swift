@@ -30,8 +30,7 @@ import UIKit
     private lazy var loadingViewController: LoadingViewController = {
         let loadingViewController = LoadingViewController(
             delegate: self,
-            appearance: PaymentSheet.Appearance.default,
-            isTestMode: configuration.apiClient.isTestmode
+            appearance: PaymentSheet.Appearance.default
         )
         return loadingViewController
     }()
@@ -63,7 +62,6 @@ import UIKit
         let vc = PaymentSheetContainerFactory.make(
             contentViewController: loadingViewController,
             appearance: PaymentSheet.Appearance.default,
-            isTestMode: configuration.apiClient.isTestmode,
             didCancelNative3DS2: {}
         )
         return vc

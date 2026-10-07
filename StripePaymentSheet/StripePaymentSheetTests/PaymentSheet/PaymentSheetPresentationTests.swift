@@ -20,7 +20,6 @@ final class PaymentSheetPresentationTests: XCTestCase {
         let sheetViewController = NativeSheetContainerViewController(
             contentViewController: contentViewController,
             appearance: .default,
-            isTestMode: true,
             didCancelNative3DS2: {}
         )
         var presentedViewController: UIViewController?
@@ -59,7 +58,6 @@ final class PaymentSheetPresentationTests: XCTestCase {
             let sheet = NativeSheetContainerViewController(
                 contentViewController: NativeSheetStubContentViewController(),
                 appearance: appearance,
-                isTestMode: true,
                 didCancelNative3DS2: {}
             )
 
@@ -78,7 +76,6 @@ final class PaymentSheetPresentationTests: XCTestCase {
         let sheet = LinkCornerRadiusSheetViewController(
             contentViewController: NativeSheetStubContentViewController(),
             appearance: .default,
-            isTestMode: true,
             didCancelNative3DS2: {}
         )
 
@@ -99,7 +96,6 @@ final class PaymentSheetPresentationTests: XCTestCase {
         let sheetViewController = NativeSheetContainerViewController(
             contentViewController: contentViewController,
             appearance: .default,
-            isTestMode: true,
             didCancelNative3DS2: {}
         )
         var presentedViewController: UIViewController?
@@ -127,7 +123,6 @@ final class PaymentSheetPresentationTests: XCTestCase {
         let sheetViewController = NativeSheetContainerViewController(
             contentViewController: NativeSheetStubContentViewController(),
             appearance: .default,
-            isTestMode: true,
             didCancelNative3DS2: {}
         )
 
@@ -171,7 +166,7 @@ private final class PresentationCapturingViewController: UIViewController {
 
 private final class NativeSheetStubContentViewController: UIViewController, BottomSheetContentViewController {
 
-    lazy var navigationBar = SheetNavigationBar(isTestMode: true, appearance: .default)
+    lazy var navigationBar = SheetNavigationBar(appearance: .default)
     let requiresFullScreen = false
     private(set) var dismissalAttemptCount = 0
 
