@@ -22,8 +22,7 @@ class BottomSheet3DS2ViewController: UIViewController {
     weak var delegate: BottomSheet3DS2ViewControllerDelegate?
 
     lazy var navigationBar: SheetNavigationBar = {
-        let navBar = SheetNavigationBar(isTestMode: isTestMode,
-                                        appearance: appearance)
+        let navBar = SheetNavigationBar(appearance: appearance)
         navBar.setStyle(.back(showAdditionalButton: false))
         navBar.delegate = self
         return navBar
@@ -31,12 +30,10 @@ class BottomSheet3DS2ViewController: UIViewController {
 
     let challengeViewController: UIViewController
     let appearance: PaymentSheet.Appearance
-    let isTestMode: Bool
 
-    required init(challengeViewController: UIViewController, appearance: PaymentSheet.Appearance, isTestMode: Bool) {
+    required init(challengeViewController: UIViewController, appearance: PaymentSheet.Appearance) {
         self.challengeViewController = challengeViewController
         self.appearance = appearance
-        self.isTestMode = isTestMode
         super.init(nibName: nil, bundle: nil)
     }
 
