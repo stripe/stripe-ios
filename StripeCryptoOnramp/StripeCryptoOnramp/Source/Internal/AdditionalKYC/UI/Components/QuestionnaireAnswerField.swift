@@ -5,6 +5,7 @@
 //  Created by Michael Liberatore on 9/24/26.
 //
 
+import Combine
 @_spi(STP) import StripeCore
 @_spi(CryptoOnrampAlpha) import StripePaymentSheet
 import SwiftUI
@@ -20,6 +21,9 @@ struct QuestionnaireAnswerField: View {
 
     /// The appearance used for the focused border and color scheme.
     let appearance: LinkAppearance
+
+    /// Maximum Unicode scalars allowed in each questionnaire answer, matching the backend implementation.
+    private static let maximumAnswerLength = 5_000
 
     /// Whether the answer field should take focus when it appears.
     var isInitiallyFocused = false
@@ -45,6 +49,12 @@ struct QuestionnaireAnswerField: View {
                     .padding(.top, labelHeight)
                     .tint(Color.textPrimary)
                     .focused($isFocused)
+                    .onReceive(Just(answer)) { value in
+                        let prefixedAnswer = value.prefix(unicodeScalarsCount: Self.maximumAnswerLength)
+                        if prefixedAnswer.endIndex != value.endIndex {
+                            answer = String(prefixedAnswer)
+                        }
+                    }
 
                 Text(String.Localized.questionnaireAnswer)
                     .typography(.bodyLarge)

@@ -25,7 +25,8 @@ protocol BottomSheetContentViewController: UIViewController {
 /// A VC containing a content view controller and manages the layout of its SheetNavigationBar.
 /// For internal SDK use only
 @objc(STP_Internal_BottomSheetViewController)
-class BottomSheetViewController: UIViewController, BottomSheetPresentable {
+class BottomSheetViewController: UIViewController, BottomSheetPresentable, PaymentSheetContainer {
+
     struct Constants {
         static let keyboardAvoidanceEdgePadding: CGFloat = 16
     }
@@ -126,6 +127,10 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
     }
 
     let didCancelNative3DS2: () -> Void
+
+    func setUserInteractionEnabled(_ enabled: Bool) {
+        view.isUserInteractionEnabled = enabled
+    }
 
     required init(
         contentViewController: BottomSheetContentViewController,
@@ -515,6 +520,36 @@ extension BottomSheetViewController: UIAdaptivePresentationControllerDelegate {
         // On iPad, tapping outside the sheet dismisses it without informing us - so we override this method to be informed.
         didTapOrSwipeToDismiss()
         return false
+    }
+}
+
+// MARK: - Presentation
+
+extension BottomSheetViewController {
+
+    func present(from presentingViewController: UIViewController, completion: (() -> Void)?) {
+        var presentsAsFormSheet: Bool {
+            #if os(visionOS)
+            return true
+            #else
+            return UIDevice.current.userInterfaceIdiom == .pad || UIDevice.current.userInterfaceIdiom == .mac
+            #endif
+        }
+
+        if presentsAsFormSheet {
+            modalPresentationStyle = .formSheet
+            // Scrolling can otherwise trigger the system pull-down gesture too easily.
+            isModalInPresentation = true
+            presentationController?.delegate = self
+        } else {
+            modalPresentationStyle = .custom
+            modalPresentationCapturesStatusBarAppearance = true
+            BottomSheetTransitioningDelegate.appearance = appearance
+            transitioningDelegate = BottomSheetTransitioningDelegate.default
+        }
+
+        presentingViewController.viewIfLoaded?.endEditing(true)
+        presentingViewController.present(self, animated: true, completion: completion)
     }
 }
 

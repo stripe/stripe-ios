@@ -219,12 +219,6 @@ extension PaymentElement.Configuration {
         /// The Link display mode.
         public var display: Display = .automatic
 
-        /// The Link funding sources that should be disabled. Defaults to an empty set.
-        @_spi(STP) public var disallowFundingSourceCreation: Set<String> = []
-
-        /// Whether missing billing details should be collected for existing Link payment methods.
-        @_spi(CollectMissingLinkBillingDetailsPreview) public var collectMissingBillingDetailsForExistingPaymentMethods: Bool = true
-
         /// Creates a Link configuration.
         public init(display: Display = .automatic) {
             self.display = display
@@ -255,8 +249,6 @@ private extension PaymentElement.Configuration.ApplePayConfiguration {
 
 private extension PaymentSheet.Configuration {
     mutating func apply(linkConfiguration: PaymentElement.Configuration.LinkConfiguration?) {
-        link.disallowFundingSourceCreation = linkConfiguration?.disallowFundingSourceCreation ?? []
-        link.collectMissingBillingDetailsForExistingPaymentMethods = linkConfiguration?.collectMissingBillingDetailsForExistingPaymentMethods ?? true
         switch linkConfiguration?.display {
         case .none, .automatic:
             link.display = .automatic
@@ -270,8 +262,6 @@ private extension PaymentSheet.Configuration {
 
 private extension EmbeddedPaymentElement.Configuration {
     mutating func apply(linkConfiguration: PaymentElement.Configuration.LinkConfiguration?) {
-        link.disallowFundingSourceCreation = linkConfiguration?.disallowFundingSourceCreation ?? []
-        link.collectMissingBillingDetailsForExistingPaymentMethods = linkConfiguration?.collectMissingBillingDetailsForExistingPaymentMethods ?? true
         switch linkConfiguration?.display {
         case .none, .automatic:
             link.display = .automatic

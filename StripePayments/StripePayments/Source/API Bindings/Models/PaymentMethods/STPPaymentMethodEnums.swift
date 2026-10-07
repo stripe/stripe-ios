@@ -118,6 +118,14 @@ import Foundation
     case pix
     /// A GoPay payment method
     case goPay
+    /// A MoMo payment method
+    case momo
+    /// A ShopeePay payment method
+    case shopeePay
+    /// A QRIS payment method
+    case qris
+    /// A GCash payment method
+    case gcash
     /// An unknown type.
     case unknown
 
@@ -232,6 +240,14 @@ import Foundation
             return "Scalapay"
         case .pix:
             return "Pix"
+        case .momo:
+            return "MoMo"
+        case .shopeePay:
+            return "ShopeePay"
+        case .qris:
+            return "QRIS"
+        case .gcash:
+            return "GCash"
         case .goPay:
             return "GoPay"
         case .cardPresent,
@@ -351,6 +367,14 @@ import Foundation
             return "scalapay"
         case .pix:
             return "pix"
+        case .momo:
+            return "momo"
+        case .shopeePay:
+            return "shopeepay"
+        case .qris:
+            return "qris"
+        case .gcash:
+            return "gcash"
         case .goPay:
             return "gopay"
         }

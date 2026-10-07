@@ -24,7 +24,7 @@ protocol AttachLinkedPaymentAccountViewControllerDelegate: AnyObject {
     )
     func attachLinkedPaymentAccountViewController(
         _ viewController: AttachLinkedPaymentAccountViewController,
-        didReceiveEvent event: FinancialConnectionsEvent
+        didReceiveEvent event: FinancialConnectionsEventPayload
     )
 }
 
