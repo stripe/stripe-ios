@@ -104,14 +104,16 @@ struct SourceOfFundsDocumentView: View {
                         })
                     }
 
-                    UploadDocumentButton(detail: configuration.uploadHint) {
-                        if configuration.allowsPhotoSelection {
-                            documentSelection.showsSourcePicker = true
-                        } else {
-                            documentSelection.beginSelection(.files)
+                    if collection.canAddFile {
+                        UploadDocumentButton(detail: configuration.uploadHint) {
+                            if configuration.allowsPhotoSelection {
+                                documentSelection.showsSourcePicker = true
+                            } else {
+                                documentSelection.beginSelection(.files)
+                            }
                         }
+                        .disabled(selectedSubtype == nil || documentSelection.importingFilename != nil)
                     }
-                    .disabled(selectedSubtype == nil || documentSelection.importingFilename != nil)
 
                     if let errorMessage = documentSelection.errorMessage {
                         InlineErrorMessageView(message: errorMessage)
@@ -190,7 +192,7 @@ struct SourceOfFundsDocumentView: View {
             appearance: .previewLinkAppearance,
             collection: .init(uploader: SourceOfFundsPreviewUploader(), uploadedFiles: [
                 .init(name: "payslip.pdf", fileID: "file_preview"),
-            ]),
+            ], maximumFileCount: DocumentCollectionConfiguration.sourceOfFundsPreview.maximumFilesPerDocumentType),
             onSave: { _, _ in },
             onClose: {}
         )
