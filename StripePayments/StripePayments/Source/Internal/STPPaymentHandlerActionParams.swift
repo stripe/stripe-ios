@@ -137,7 +137,6 @@ public class STPPaymentHandlerPaymentIntentActionParams: NSObject, STPPaymentHan
     }
 
     @_spi(STP) public func complete(with status: STPPaymentHandlerActionStatus, error: NSError?) {
-        stpAssert(Thread.isMainThread)
         // Redirect callbacks can race. Consume the completion before invoking it to also allow reentrancy.
         let completion = paymentIntentCompletion
         paymentIntentCompletion = nil
@@ -233,7 +232,6 @@ internal class STPPaymentHandlerSetupIntentActionParams: NSObject, STPPaymentHan
     }
 
     func complete(with status: STPPaymentHandlerActionStatus, error: NSError?) {
-        stpAssert(Thread.isMainThread)
         // Redirect callbacks can race. Consume the completion before invoking it to also allow reentrancy.
         let completion = setupIntentCompletion
         setupIntentCompletion = nil
