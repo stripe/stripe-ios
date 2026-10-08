@@ -116,8 +116,16 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
     @objc private(set) public var scalapay: STPPaymentMethodScalapay?
     /// If this is a GoPay PaymentMethod, this contains additional details.
     @objc private(set) public var goPay: STPPaymentMethodGoPay?
+    /// If this is a QRIS PaymentMethod, this contains additional details.
+    @objc private(set) public var qris: STPPaymentMethodQRIS?
+    /// If this is a ShopeePay PaymentMethod, this contains additional details.
+    @objc private(set) public var shopeePay: STPPaymentMethodShopeePay?
+    /// If this is a GCash PaymentMethod, this contains additional details.
+    @objc private(set) public var gcash: STPPaymentMethodGCash?
     /// If this is a MoMo PaymentMethod, this contains additional details.
     @objc private(set) public var momo: STPPaymentMethodMomo?
+    /// If this is a Naira card PaymentMethod, this contains additional details.
+    @objc private(set) public var ngCard: STPPaymentMethodNgCard?
 
     /// This field indicates whether this payment method can be shown again to its customer in a checkout flow
     @objc private(set) public var allowRedisplay: STPPaymentMethodAllowRedisplay
@@ -200,7 +208,11 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
             "sequra = \(String(describing: sequra))",
             "scalapay = \(String(describing: scalapay))",
             "goPay = \(String(describing: goPay))",
+            "qris = \(String(describing: qris))",
+            "shopeePay = \(String(describing: shopeePay))",
+            "gcash = \(String(describing: gcash))",
             "momo = \(String(describing: momo))",
+            "ngCard = \(String(describing: ngCard))",
             "liveMode = \(liveMode ? "YES" : "NO")",
             "allowRedisplay = \(allResponseFields["allow_redisplay"] as? String ?? "")",
             "type = \(allResponseFields["type"] as? String ?? "")",
@@ -425,6 +437,18 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
         )
         paymentMethod.goPay = STPPaymentMethodGoPay.decodedObject(
             fromAPIResponse: dict.stp_dictionary(forKey: "gopay")
+        )
+        paymentMethod.ngCard = STPPaymentMethodNgCard.decodedObject(
+            fromAPIResponse: dict.stp_dictionary(forKey: "ng_card")
+        )
+        paymentMethod.qris = STPPaymentMethodQRIS.decodedObject(
+            fromAPIResponse: dict.stp_dictionary(forKey: "qris")
+        )
+        paymentMethod.shopeePay = STPPaymentMethodShopeePay.decodedObject(
+            fromAPIResponse: dict.stp_dictionary(forKey: "shopeepay")
+        )
+        paymentMethod.gcash = STPPaymentMethodGCash.decodedObject(
+            fromAPIResponse: dict.stp_dictionary(forKey: "gcash")
         )
         paymentMethod.momo = STPPaymentMethodMomo.decodedObject(
             fromAPIResponse: dict.stp_dictionary(forKey: "momo")

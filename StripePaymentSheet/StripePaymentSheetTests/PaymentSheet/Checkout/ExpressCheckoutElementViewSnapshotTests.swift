@@ -21,21 +21,21 @@ final class ExpressCheckoutElementViewSnapshotTests: STPSnapshotTestCase {
     }
 
     func testLightButtonTheme() {
-        var appearance = ExpressCheckoutElement.Appearance()
+        var appearance = ExpressCheckoutElement.Configuration.Appearance()
         appearance.buttonTheme = .light
 
         verify(makeView(appearance: appearance))
     }
 
     func testDarkButtonTheme() {
-        var appearance = ExpressCheckoutElement.Appearance()
+        var appearance = ExpressCheckoutElement.Configuration.Appearance()
         appearance.buttonTheme = .dark
 
         verify(makeView(appearance: appearance))
     }
 
     func testTwoColumnLayout() {
-        var appearance = ExpressCheckoutElement.Appearance()
+        var appearance = ExpressCheckoutElement.Configuration.Appearance()
         appearance.buttonLayout.maxColumns = 2
         appearance.buttonLayout.maxRows = 1
 
@@ -43,7 +43,7 @@ final class ExpressCheckoutElementViewSnapshotTests: STPSnapshotTestCase {
     }
 
     func testThreeButtonsInTwoByTwoGrid() {
-        var appearance = ExpressCheckoutElement.Appearance()
+        var appearance = ExpressCheckoutElement.Configuration.Appearance()
         appearance.buttonLayout.maxColumns = 2
         appearance.buttonLayout.maxRows = 2
 
@@ -54,7 +54,7 @@ final class ExpressCheckoutElementViewSnapshotTests: STPSnapshotTestCase {
     }
 
     func testOneColumnOneRowLayout() {
-        var appearance = ExpressCheckoutElement.Appearance()
+        var appearance = ExpressCheckoutElement.Configuration.Appearance()
         appearance.buttonLayout.maxColumns = 1
         appearance.buttonLayout.maxRows = 1
 
@@ -62,7 +62,7 @@ final class ExpressCheckoutElementViewSnapshotTests: STPSnapshotTestCase {
     }
 
     func testOneRowLayout() {
-        var appearance = ExpressCheckoutElement.Appearance()
+        var appearance = ExpressCheckoutElement.Configuration.Appearance()
         appearance.buttonLayout.maxRows = 1
 
         verify(makeView(appearance: appearance))
@@ -71,10 +71,10 @@ final class ExpressCheckoutElementViewSnapshotTests: STPSnapshotTestCase {
     // MARK: - Helpers
 
     private func makeView(
-        appearance: ExpressCheckoutElement.Appearance = .init(),
+        appearance: ExpressCheckoutElement.Configuration.Appearance = .init(),
         buttons: [ExpressCheckoutElement.PaymentMethod]? = nil
     ) -> ExpressCheckoutElementUIView {
-        var configuration = ExpressCheckoutElement.Configuration(confirmHandler: { _ in })
+        var configuration = ExpressCheckoutElement.Configuration(completion: { _ in })
         configuration.applePayConfiguration = .init(merchantId: "merchant.com.example")
         configuration.appearance = appearance
 

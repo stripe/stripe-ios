@@ -4,9 +4,14 @@
 require 'open3'
 
 # The clone Step checks out the requested commit without merging. Find its real
-# merge base by fetching only the two relevant histories, then optionally merge.
+# merge base by fetching only the relevant histories, then merge.
 # This avoids git-clone's fallback to fetching every branch with --unshallow.
 module CIBranch
+  # Git's internal "infinite" depth. Unlike --unshallow, it is valid on complete repos.
+  MAX_DEPTH = 2_147_483_647
+  # Master gets ~130 commits/month, so most PRs resolve in the first one or two fetches.
+  FETCH_DEPTHS = [100, 200, 600, MAX_DEPTH].freeze
+
   def self.git(*args)
     output, error, status = Open3.capture3('git', *args)
     raise "git #{args.first} failed: #{output}\n#{error}" unless status.success?
@@ -23,35 +28,30 @@ module CIBranch
     branch = 'master' if branch.empty?
     git('check-ref-format', "refs/heads/#{branch}")
     target_ref = "refs/remotes/origin/#{branch}"
-    git('fetch', '--no-tags', '--depth=100', 'origin', "+refs/heads/#{branch}:#{target_ref}")
-    target = git('rev-parse', target_ref)
-    source = env['BITRISEIO_PULL_REQUEST_REPOSITORY_URL'].to_s
-    source = 'origin' if source.empty?
+    # Lint compares against origin/master even when the PR targets another branch.
+    refspecs = [branch, 'master'].uniq.map { |b| "+refs/heads/#{b}:refs/remotes/origin/#{b}" }
 
-    # Fetch by immutable SHA so a push during checkout cannot change the build.
-    # GitHub exposes fork PR commits through the source repository as well.
-    [100, 500, 2000, 8000].each do |depth|
-      output, status = Open3.capture2('git', 'merge-base', head, target)
-      if status.success?
-        base = output.strip
-        puts "CI comparison: #{base}...#{head} (destination #{target})"
-        return { head: head, base: base, target: target }
-      end
+    fetched = nil
+    FETCH_DEPTHS.each do |depth|
+      # Re-fetching with a larger --depth does not reliably deepen tips we already have,
+      # so later attempts deepen the existing history by the difference instead.
+      depth_arg = fetched ? "--deepen=#{depth - fetched}" : "--depth=#{depth}"
+      fetched = depth
+      # Fetch the head by immutable SHA so a push during checkout cannot change the build.
+      # GitHub exposes fork PR commits through the destination repository.
+      git('fetch', '--no-tags', depth_arg, 'origin', head, *refspecs)
+      next unless [target_ref, 'refs/remotes/origin/master'].all? { |ref| merge_base?(head, ref) }
 
-      git('fetch', '--no-tags', "--depth=#{depth}", source, head)
-      git('fetch', '--no-tags', "--depth=#{depth}", 'origin', target)
+      target = git('rev-parse', target_ref)
+      puts "CI comparison: #{git('merge-base', head, target)}...#{head} (destination #{target})"
+      return { head: head, target: target }
     end
+    raise "#{head} has no merge base with #{target_ref} and origin/master"
+  end
 
-    # Very old PRs still work, without discovering unrelated remote branches.
-    if git('rev-parse', '--is-shallow-repository') == 'true'
-      git('fetch', '--no-tags', '--unshallow', source, head)
-    end
-    if git('rev-parse', '--is-shallow-repository') == 'true'
-      git('fetch', '--no-tags', '--unshallow', 'origin', target)
-    end
-    base = git('merge-base', head, target)
-    puts "CI comparison: #{base}...#{head} (destination #{target})"
-    { head: head, base: base, target: target }
+  def self.merge_base?(*commits)
+    _, status = Open3.capture2('git', 'merge-base', *commits)
+    status.success?
   end
 
   def self.merge(comparison)
