@@ -495,8 +495,15 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
 
         // The keyboard guide reserves the bottom safe area by default, even with the keyboard hidden.
         // TODO: When we drop iOS 16 support, remove this compensation after setting usesBottomSafeArea = false.
-        let bottomInset = view.keyboardLayoutGuide.layoutFrame.height <= view.safeAreaInsets.bottom
+        let keyboardHeight = view.keyboardLayoutGuide.layoutFrame.height
+        var bottomInset = keyboardHeight <= view.safeAreaInsets.bottom
             ? view.safeAreaInsets.bottom : 0
+        if usesLiquidGlass, keyboardHeight > view.safeAreaInsets.bottom,
+           let toolbar = view.firstResponder()?.inputAccessoryView as? DoneButtonToolbar {
+            // The guide includes the transparent Done toolbar. Keep content behind it instead of
+            // exposing an opaque strip of sheet background, while still avoiding the keyboard keys.
+            bottomInset = min(toolbar.bounds.height, keyboardHeight)
+        }
         if keyboardAvoidanceConstraint?.constant != bottomInset {
             keyboardAvoidanceConstraint?.constant = bottomInset
             view.layoutIfNeeded()
