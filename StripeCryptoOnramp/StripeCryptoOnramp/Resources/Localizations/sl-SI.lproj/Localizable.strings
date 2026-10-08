@@ -1,6 +1,26 @@
+"Add %ld documents" = "Dodajte %ld dokumentov";
+
+"Add 1 document" = "Dodajte 1 dokument";
+
+"Add documents" = "Dodajte dokumente";
+
+"Answer" = "Odgovor";
+
+"Choose File…" = "Izberite datoteko ...";
+
+"Choose Photo…" = "Izberite fotografijo ...";
+
 "Debit cards are most likely to be accepted." = "Najverjetneje bodo sprejete debetne kartice.";
 
+"Document type" = "Vrsta dokumenta";
+
 "Document uploaded successfully" = "Dokument je uspešno naložen";
+
+"Funds source" = "Vir sredstev";
+
+"How are you funding your transactions? Please list all of your sources. For example, salary, savings, investment earnings, etc." = "Kako financirate svoje transakcije? Prosimo, navedite vse svoje vire. Na primer, plača, prihranki, zaslužki od naložb itd.";
+
+"Make sure your document meets following requirements." = "Prepričajte se, da vaš dokument izpolnjuje naslednje zahteve.";
 
 "Please try again later." = "Poskusite znova pozneje.";
 
@@ -8,9 +28,17 @@
 
 "Tell us about your source of funds" = "Povejte nam o svojem viru sredstev";
 
+"There was a problem with your previous document. Please upload a new one." = "Prišlo je do težave z vašim prejšnjim dokumentom. Prosimo, naložite novega.";
+
 "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "Te aplikacije zaradi napake pri potrditvi ni bilo mogoče preveriti. Poskusite znova kasneje ali kontaktirajte razvijalca, če se težava pojavlja še naprej.";
 
 "This app couldn't be verified. Contact the app developer for help." = "Te aplikacije ni bilo mogoče preveriti. Za pomoč se obrnite na razvijalca aplikacije.";
+
+"This file is larger than %@. Choose a file that is %@ or smaller." = "Ta datoteka je večja od %1$@. Izberite datoteko velikosti %2$@ ali manjšo.";
+
+"This file type isn’t supported." = "Ta vrsta datoteke ni podprta.";
+
+"This file type isn’t supported. Upload a %@ file." = "Ta vrsta datoteke ni podprta. Naložite datoteko %@.";
 
 "This wallet couldn't be found. Please choose or add a wallet and try again." = "Te denarnice ni mogoče najti. Izberite ali dodajte denarnico in poskusite znova.";
 
@@ -20,9 +48,19 @@
 
 "This wallet verification request is invalid. Please try again." = "Ta zahteva za preverjanje denarnice je neveljavna. Poskusite znova.";
 
+"Upload document" = "Naložite dokument";
+
 "Upload your proof of address" = "Naložite svoje dokazilo o naslovu";
 
+"Uploaded" = "Naloženo";
+
+"Uploading…" = "Nalaganje …";
+
 "We couldn't verify ownership of this wallet. Please try again." = "Lastništva te denarnice ni bilo mogoče preveriti. Poskusite znova.";
+
+"We couldn’t open this document. Please choose it again." = "Tega dokumenta nismo mogli odpreti. Prosimo, izberite ga znova.";
+
+"We couldn’t upload this file. Please try again." = "Te datoteke nismo mogli naložiti. Prosimo, poskusite znova.";
 
 "We may request proof of address for larger transactions." = "Za večje transakcije lahko zahtevamo dokazilo o naslovu.";
 

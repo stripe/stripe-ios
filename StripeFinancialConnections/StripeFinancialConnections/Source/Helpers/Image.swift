@@ -29,7 +29,6 @@ enum Image: String, ImageMaker {
     case search
     case stripe_logo
     case spinner
-    case testmode
     case warning_triangle
     case bullet
 }

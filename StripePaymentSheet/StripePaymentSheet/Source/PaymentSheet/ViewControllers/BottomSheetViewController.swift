@@ -25,7 +25,8 @@ protocol BottomSheetContentViewController: UIViewController {
 /// A VC containing a content view controller and manages the layout of its SheetNavigationBar.
 /// For internal SDK use only
 @objc(STP_Internal_BottomSheetViewController)
-class BottomSheetViewController: UIViewController, BottomSheetPresentable {
+class BottomSheetViewController: UIViewController, BottomSheetPresentable, PaymentSheetContainer {
+
     struct Constants {
         static let keyboardAvoidanceEdgePadding: CGFloat = 16
     }
@@ -116,7 +117,6 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
         return popped
     }
 
-    let isTestMode: Bool
     let appearance: PaymentSheet.Appearance
 
     private var contentViewController: BottomSheetContentViewController
@@ -127,15 +127,17 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
 
     let didCancelNative3DS2: () -> Void
 
+    func setUserInteractionEnabled(_ enabled: Bool) {
+        view.isUserInteractionEnabled = enabled
+    }
+
     required init(
         contentViewController: BottomSheetContentViewController,
         appearance: PaymentSheet.Appearance,
-        isTestMode: Bool,
         didCancelNative3DS2: @escaping () -> Void
     ) {
         self.contentViewController = contentViewController
         self.appearance = appearance
-        self.isTestMode = isTestMode
         self.didCancelNative3DS2 = didCancelNative3DS2
 
         super.init(nibName: nil, bundle: nil)
@@ -518,6 +520,36 @@ extension BottomSheetViewController: UIAdaptivePresentationControllerDelegate {
     }
 }
 
+// MARK: - Presentation
+
+extension BottomSheetViewController {
+
+    func present(from presentingViewController: UIViewController, completion: (() -> Void)?) {
+        var presentsAsFormSheet: Bool {
+            #if os(visionOS)
+            return true
+            #else
+            return UIDevice.current.userInterfaceIdiom == .pad || UIDevice.current.userInterfaceIdiom == .mac
+            #endif
+        }
+
+        if presentsAsFormSheet {
+            modalPresentationStyle = .formSheet
+            // Scrolling can otherwise trigger the system pull-down gesture too easily.
+            isModalInPresentation = true
+            presentationController?.delegate = self
+        } else {
+            modalPresentationStyle = .custom
+            modalPresentationCapturesStatusBarAppearance = true
+            BottomSheetTransitioningDelegate.appearance = appearance
+            transitioningDelegate = BottomSheetTransitioningDelegate.default
+        }
+
+        presentingViewController.viewIfLoaded?.endEditing(true)
+        presentingViewController.present(self, animated: true, completion: completion)
+    }
+}
+
 // MARK: - UIScrollViewDelegate
 extension BottomSheetViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -550,7 +582,7 @@ extension BottomSheetViewController: PaymentSheetAuthenticationContext {
         _ authenticationViewController: UIViewController, completion: @escaping () -> Void
     ) {
         let threeDS2ViewController = BottomSheet3DS2ViewController(
-            challengeViewController: authenticationViewController, appearance: appearance, isTestMode: isTestMode)
+            challengeViewController: authenticationViewController, appearance: appearance)
         threeDS2ViewController.delegate = self
         pushContentViewController(threeDS2ViewController)
         // Remove a blur effect, if any

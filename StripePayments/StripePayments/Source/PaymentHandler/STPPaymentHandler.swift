@@ -829,12 +829,12 @@ public class STPPaymentHandler: NSObject {
             return true
 
         // Synchronous
-        case .ngCard,
-            .ngBankTransfer,
-            .goPay,
-            .gcash,
+        case .goPay,
             .shopeePay,
             .qris,
+            .gcash,
+            .ngCard,
+            .ngBankTransfer,
             .alipay,
             .iDEAL,
             .FPX,
