@@ -203,13 +203,6 @@ struct DocumentFileRow: View {
 }
 
 @available(iOS 17.0, *)
-#Preview("Waiting for upload confirmation", traits: .sizeThatFitsLayout) {
-    DocumentFileRow(filename: "electricity_bill.pdf", status: .uploading(1), onRemove: {})
-        .padding(20)
-        .background(Color.surfacePrimary)
-}
-
-@available(iOS 17.0, *)
 #Preview("Uploaded", traits: .sizeThatFitsLayout) {
     DocumentFileRow(filename: "electricity_bill.pdf", status: .uploaded, onRemove: {})
         .padding(20)
