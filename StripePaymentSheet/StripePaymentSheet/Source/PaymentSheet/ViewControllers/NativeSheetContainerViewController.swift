@@ -551,6 +551,12 @@ extension NativeSheetContainerViewController {
         #if !os(visionOS)
         // UIKit adapts navigation items into the appropriate horizontal or vertical system bar.
         let navigationController = navigationController ?? UINavigationController(rootViewController: self)
+        // Resolve semantic colors so UIKit doesn't blend the sheet background with its material.
+        // Keep the provider dynamic so the header and form still update together in light and dark mode.
+        let backgroundColor = appearance.colors.background
+        navigationController.view.backgroundColor = UIColor { traits in
+            backgroundColor.resolvedColor(with: traits)
+        }
         navigationController.modalPresentationStyle = .automatic
         // Dismissal is handled by the sheet's explicit controls rather than UIKit's interactive gestures.
         navigationController.isModalInPresentation = true
@@ -590,7 +596,9 @@ extension NativeSheetContainerViewController {
                 sheetPresentationController.detents = [.large()]
                 sheetPresentationController.selectedDetentIdentifier = .large
             }
-            sheetPresentationController.preferredCornerRadius = sheetCornerRadius
+            // Duo's full-height sheets can meet the screen's rounded corners. Let UIKit adapt
+            // their radius to the display instead of forcing the form's smaller corner radius.
+            sheetPresentationController.preferredCornerRadius = SheetImplementationResolver.isRequiredForDevice ? nil : sheetCornerRadius
             sheetPresentationController.prefersGrabberVisible = false
             sheetPresentationController.prefersScrollingExpandsWhenScrolledToEdge = false
         }
