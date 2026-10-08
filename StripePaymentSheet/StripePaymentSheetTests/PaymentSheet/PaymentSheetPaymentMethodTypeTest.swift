@@ -287,6 +287,48 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
             ), .missingRequirements([.unsupportedForSetup]))
         }
     }
+    func testNgCardRequiresReturnURLAndDoesNotSupportSetup() {
+        // Given
+        let paymentIntent = Intent._testPaymentIntent(paymentMethodTypes: [.ngCard])
+        let setupIntents: [Intent] = [
+            ._testPaymentIntent(paymentMethodTypes: [.ngCard], setupFutureUsage: .offSession),
+            ._testPaymentIntent(paymentMethodTypes: [.ngCard], paymentMethodOptionsSetupFutureUsage: [.ngCard: "off_session"]),
+            ._testSetupIntent(paymentMethodTypes: [.ngCard]),
+        ]
+
+        // When
+        let withoutReturnURL = PaymentSheet.PaymentMethodType.supportsAdding(
+            paymentMethod: .ngCard,
+            configuration: makeConfiguration(),
+            intent: paymentIntent,
+            elementsSession: ._testValue(intent: paymentIntent),
+            supportedPaymentMethods: [.ngCard]
+        )
+        let withReturnURL = PaymentSheet.PaymentMethodType.supportsAdding(
+            paymentMethod: .ngCard,
+            configuration: makeConfiguration(hasReturnURL: true),
+            intent: paymentIntent,
+            elementsSession: ._testValue(intent: paymentIntent),
+            supportedPaymentMethods: [.ngCard]
+        )
+
+        // Then
+        XCTAssertEqual(withoutReturnURL, .missingRequirements([.returnURL]))
+        XCTAssertEqual(withReturnURL, .supported)
+        for intent in setupIntents {
+            XCTAssertEqual(
+                PaymentSheet.PaymentMethodType.supportsAdding(
+                    paymentMethod: .ngCard,
+                    configuration: makeConfiguration(hasReturnURL: true),
+                    intent: intent,
+                    elementsSession: ._testValue(intent: intent),
+                    supportedPaymentMethods: [.ngCard]
+                ),
+                .missingRequirements([.unsupportedForSetup])
+            )
+        }
+    }
+
     func testMomoAvailability() {
         // Given a MoMo PaymentIntent
         let paymentIntent = Intent._testPaymentIntent(paymentMethodTypes: [.momo])

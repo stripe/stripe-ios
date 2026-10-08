@@ -723,12 +723,14 @@ extension EmbeddedPaymentElement {
         return (result, deferredIntentConfirmationType)
     }
 
-    func bottomSheetController(with viewController: BottomSheetContentViewController) -> BottomSheetViewController {
-        return BottomSheetViewController(contentViewController: viewController,
-                                         appearance: configuration.appearance,
-                                         didCancelNative3DS2: {
-            stpAssertionFailure("3DS2 was triggered unexpectedly")
-        })
+    func bottomSheetController(with viewController: BottomSheetContentViewController) -> any PaymentSheetContainer {
+        return PaymentSheetContainerFactory.make(
+            contentViewController: viewController,
+            appearance: configuration.appearance,
+            didCancelNative3DS2: {
+                stpAssertionFailure("3DS2 was triggered unexpectedly")
+            }
+        )
     }
 
     func clearPaymentOptionIfNeeded() {

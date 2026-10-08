@@ -284,8 +284,8 @@ public class PaymentSheet {
     lazy var paymentHandler: STPPaymentHandler = { STPPaymentHandler(apiClient: configuration.apiClient) }()
 
     /// The parent view controller to present
-    lazy var bottomSheetViewController: BottomSheetViewController = {
-        let vc = BottomSheetViewController(
+    lazy var bottomSheetViewController: any PaymentSheetContainer = {
+        let vc = PaymentSheetContainerFactory.make(
             contentViewController: loadingViewController,
             appearance: configuration.appearance,
             didCancelNative3DS2: { [weak self] in

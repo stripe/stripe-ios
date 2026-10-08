@@ -188,7 +188,7 @@ extension PaymentSheet {
                 )
 
                 // Present CVC VC
-                let bottomSheetVC = FlowController.makeBottomSheetViewController(
+                let bottomSheetVC = FlowController.makePaymentSheetContainerViewController(
                     preConfirmationViewController,
                     configuration: configuration,
                     didCancelNative3DS2: {

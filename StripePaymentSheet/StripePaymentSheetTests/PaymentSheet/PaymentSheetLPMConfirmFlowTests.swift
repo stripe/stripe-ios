@@ -109,6 +109,7 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
         case TH = "th"
         case DE = "de"
         case IT = "it"
+        case NG = "ng"
 
         var publishableKey: String {
             switch self {
@@ -140,6 +141,8 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                 return STPTestingDEPublishableKey
             case .IT:
                 return STPTestingITPublishableKey
+            case .NG:
+                return STPTestingNGPublishableKey
             }
         }
     }
@@ -746,6 +749,14 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                                paymentMethodType: .goPay,
                                merchantCountry: .US,
                                expectedHierarchy: ExpectedFormHierarchy.GoPay.paymentIntent) { _ in }
+    }
+    func testNairaCardConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "NGN",
+                               amount: 100000,
+                               paymentMethodType: .ngCard,
+                               merchantCountry: .NG,
+                               expectedHierarchy: ExpectedFormHierarchy.NairaCard.paymentIntent) { _ in }
     }
     func testMomoConfirmFlows() async throws {
         try await _testConfirm(intentKinds: [.paymentIntent],
