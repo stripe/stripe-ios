@@ -296,6 +296,8 @@ extension STPPaymentMethodType {
                 return .pm_type_qris
             case .gcash:
                 return .pm_type_gcash
+            case .ngCard:
+                return .pm_type_ng_card
             case .goPay:
                 return .pm_type_gopay
             case .grabPay:

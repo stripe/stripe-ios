@@ -157,6 +157,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case idr
         case php
         case vnd
+        case ngn
     }
 
     enum MerchantCountry: String, PickerEnum {
@@ -177,6 +178,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case TH
         case DE
         case IT
+        case NG = "ng"
         case usTax = "us_tax"
         case stripeShop = "stripe_shop_test"
         case custom

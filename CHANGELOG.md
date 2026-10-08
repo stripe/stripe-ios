@@ -6,8 +6,10 @@ MINOR
 * [Removed] Removed the "test mode" badge from all UI surfaces.
 
 ### PaymentSheet
+* [Fixed] Fixed a potential crash when canceling redirect payment methods such as Afterpay/Clearpay.
 * [Added] Added QRIS API bindings and PaymentSheet support for PaymentIntents.
 * [Added] Added GCash API bindings and PaymentSheet support for payments and setup.
+* [Added] Added Naira card API bindings and PaymentSheet support for PaymentIntents.
 
 ## 26.13.0 2026-10-05
 ### PaymentSheet
