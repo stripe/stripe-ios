@@ -217,6 +217,142 @@ final class PaymentSheetPresentationTests: XCTestCase {
     }
 
     @MainActor
+    func testEarlyContentUpdatesWaitForPresentationAndCoalesce() async throws {
+        let initialContent = MeasuredSheetContentViewController()
+        let skippedContent = MeasuredSheetContentViewController()
+        let finalContent = MeasuredSheetContentViewController()
+        let sheet = NativeSheetContainerViewController(
+            contentViewController: initialContent,
+            appearance: .default,
+            didCancelNative3DS2: {}
+        )
+        let presenter = UIViewController()
+        let window = UIWindow(frame: UIScreen.main.bounds)
+        window.rootViewController = presenter
+        window.makeKeyAndVisible()
+        defer { window.isHidden = true }
+        let presented = expectation(description: "Native sheet presentation completed")
+        let updated = expectation(description: "Final content appeared once")
+        updated.assertForOverFulfill = true
+        var presentationCompleted = false
+        finalContent.onDidAppear = {
+            XCTAssertTrue(presentationCompleted)
+            updated.fulfill()
+        }
+
+        // When loading changes the content twice during a real UIKit presentation
+        presenter.presentAsSheet(sheet) {
+            presentationCompleted = true
+            presented.fulfill()
+        }
+        XCTAssertTrue(sheet.isBeingPresented)
+        sheet.setViewControllers([skippedContent])
+        sheet.setViewControllers([finalContent])
+
+        // Then the appearing child remains attached until UIKit has finished its transition
+        XCTAssertIdentical(initialContent.parent, sheet)
+        XCTAssertNil(skippedContent.parent)
+        XCTAssertNil(finalContent.parent)
+        await fulfillment(of: [presented, updated], timeout: 3)
+        XCTAssertEqual(initialContent.didAppearCount, 1)
+        XCTAssertEqual(skippedContent.didAppearCount, 0)
+        XCTAssertEqual(finalContent.didAppearCount, 1)
+        XCTAssertNil(initialContent.parent)
+        XCTAssertIdentical(finalContent.parent, sheet)
+    }
+
+    @MainActor
+    func testEarlyPushThenPopCompletesWithoutChangingVisibleContent() async {
+        let initialContent = MeasuredSheetContentViewController()
+        let skippedContent = MeasuredSheetContentViewController()
+        let sheet = NativeSheetContainerViewController(
+            contentViewController: initialContent,
+            appearance: .default,
+            didCancelNative3DS2: {}
+        )
+        let presenter = UIViewController()
+        let window = UIWindow(frame: UIScreen.main.bounds)
+        window.rootViewController = presenter
+        window.makeKeyAndVisible()
+        defer { window.isHidden = true }
+        let popped = expectation(description: "Pending pop completed exactly once")
+        popped.assertForOverFulfill = true
+        var presentationCompleted = false
+
+        presenter.presentAsSheet(sheet) { presentationCompleted = true }
+        sheet.pushContentViewController(skippedContent)
+        XCTAssertIdentical(sheet.popContentViewController {
+            XCTAssertTrue(presentationCompleted)
+            popped.fulfill()
+        }, skippedContent)
+
+        await fulfillment(of: [popped], timeout: 3)
+        XCTAssertEqual(initialContent.didAppearCount, 1)
+        XCTAssertEqual(skippedContent.didAppearCount, 0)
+        XCTAssertIdentical(initialContent.parent, sheet)
+        XCTAssertNil(skippedContent.parent)
+    }
+
+    @MainActor
+    func testEarlyPopKeepsAppearingChildAttachedUntilPresentationCompletes() async {
+        let previousContent = MeasuredSheetContentViewController()
+        let initialContent = MeasuredSheetContentViewController()
+        let sheet = NativeSheetContainerViewController(
+            contentViewController: previousContent,
+            appearance: .default,
+            didCancelNative3DS2: {}
+        )
+        sheet.pushContentViewController(initialContent)
+        let presenter = UIViewController()
+        let window = UIWindow(frame: UIScreen.main.bounds)
+        window.rootViewController = presenter
+        window.makeKeyAndVisible()
+        defer { window.isHidden = true }
+        let popped = expectation(description: "Pop after native presentation")
+
+        presenter.presentAsSheet(sheet)
+        XCTAssertTrue(sheet.isBeingPresented)
+        _ = sheet.popContentViewController { popped.fulfill() }
+
+        XCTAssertIdentical(initialContent.parent, sheet)
+        await fulfillment(of: [popped], timeout: 3)
+        XCTAssertNil(initialContent.parent)
+        XCTAssertIdentical(previousContent.parent, sheet)
+    }
+
+    @MainActor
+    func testPopReusesContainedContentViewController() async {
+        // Given
+        let initialContent = NativeSheetStubContentViewController()
+        let pushedContent = NativeSheetStubContentViewController()
+        let sheet = NativeSheetContainerViewController(
+            contentViewController: initialContent,
+            appearance: .default,
+            didCancelNative3DS2: {}
+        )
+        sheet.pushContentViewController(pushedContent)
+        XCTAssertIdentical(initialContent.parent, sheet)
+        XCTAssertIdentical(pushedContent.parent, sheet)
+        var completionCount = 0
+        let popped = expectation(description: "Pop completed")
+
+        // When
+        let poppedContent = sheet.popContentViewController {
+            completionCount += 1
+            popped.fulfill()
+        }
+        // Content replacement completes after its fade animation, including when prepared offscreen.
+        await fulfillment(of: [popped], timeout: 3)
+
+        // Then the retained controller is restored and the popped controller is detached
+        XCTAssertIdentical(poppedContent, pushedContent)
+        XCTAssertNil(pushedContent.parent)
+        XCTAssertIdentical(initialContent.parent, sheet)
+        XCTAssertEqual(sheet.children.count, 1)
+        XCTAssertEqual(completionCount, 1)
+    }
+
+    @MainActor
     func testNativeSheetIgnoresInteractiveDismissalAttempts() throws {
         // Given
         let contentViewController = NativeSheetStubContentViewController()
