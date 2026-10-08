@@ -87,8 +87,13 @@ class SizeReportCache
     warn "Could not cache size measurement for #{sdk}: #{e.message}"
   end
 
+  def self.prepare_comparison
+    comparison = CIBranch.prepare
+    comparison.merge(base: CIBranch.git('merge-base', comparison.fetch(:head), comparison.fetch(:target)))
+  end
+
   def self.prepared_comparison
-    return CIBranch.prepare if ENV['SIZE_REPORT_FINGERPRINT'].to_s.empty?
+    return prepare_comparison if ENV['SIZE_REPORT_FINGERPRINT'].to_s.empty?
 
     context = JSON.parse(File.read(CONTEXT), symbolize_names: true)
     raise 'Size report checkout changed after cache preparation' unless context.fetch(:head) == CIBranch.git('rev-parse', 'HEAD')
@@ -97,7 +102,7 @@ class SizeReportCache
   end
 
   def self.prepare
-    comparison = CIBranch.prepare
+    comparison = prepare_comparison
     cache = new
     total = Integer(ENV.fetch('BITRISE_IO_PARALLEL_TOTAL', '1'))
     index = Integer(ENV.fetch('BITRISE_IO_PARALLEL_INDEX', '0'))
