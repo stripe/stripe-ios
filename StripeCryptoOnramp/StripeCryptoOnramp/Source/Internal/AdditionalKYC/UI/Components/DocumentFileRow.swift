@@ -114,7 +114,7 @@ struct DocumentFileRow: View {
     }
 
     private var progressLabel: String {
-        guard case .uploading(let progress) = status else {
+        guard case .uploading(let progress) = status, progress < 1 else {
             return ""
         }
         return progress.formatted(.percent.precision(.fractionLength(0)))
@@ -135,16 +135,7 @@ struct DocumentFileRow: View {
     private var statusIcon: some View {
         switch status {
         case .uploading(let progress):
-            ZStack {
-                Circle()
-                    .stroke(Color.surfaceSecondary, lineWidth: 3)
-
-                Circle()
-                    .trim(from: 0, to: max(0.05, progress))
-                    .stroke(Color.documentSuccess, style: StrokeStyle(lineWidth: 3, lineCap: .round))
-                    .rotationEffect(.degrees(-90))
-            }
-            .animation(.linear(duration: 0.2), value: progress)
+            UploadProgressIndicator(progress: progress)
         case .uploaded:
             SwiftUI.Image(uiImage: Image.iconCheckCircle.makeImage(template: true))
                 .resizable()
@@ -157,12 +148,63 @@ struct DocumentFileRow: View {
                 .foregroundColor(.surfaceCritical)
         }
     }
+
+    private struct UploadProgressIndicator: View {
+        let progress: Double
+
+        @State private var showsGap = false
+        @State private var isSpinning = false
+
+        var body: some View {
+            ZStack {
+                Circle()
+                    .stroke(Color.surfaceSecondary, lineWidth: 3)
+
+                Circle()
+                    .trim(from: showsGap ? 0.25 : 0, to: min(1, max(0.05, progress)))
+                    .stroke(Color.documentSuccess, style: StrokeStyle(lineWidth: 3, lineCap: .round))
+                    .rotationEffect(.degrees(isSpinning ? 270 : -90))
+            }
+            .animation(.linear(duration: 0.2), value: progress)
+            .task(id: progress >= 1) {
+                guard progress >= 1 else {
+                    showsGap = false
+                    isSpinning = false
+                    return
+                }
+
+                do {
+                    // Finish the fill animation and briefly show the full ring before opening a gap.
+                    try await Task.sleep(nanoseconds: 350_000_000)
+                    try Task.checkCancellation()
+                    withAnimation(.linear(duration: 0.1)) {
+                        showsGap = true
+                    }
+
+                    try await Task.sleep(nanoseconds: 100_000_000)
+                    try Task.checkCancellation()
+                    withAnimation(.linear(duration: 1).repeatForever(autoreverses: false)) {
+                        isSpinning = true
+                    }
+                } catch {
+                    // Leaving the uploading state cancels the transition to spinning.
+                }
+            }
+        }
+    }
 }
 
 #if DEBUG
 @available(iOS 17.0, *)
 #Preview("Uploading", traits: .sizeThatFitsLayout) {
     DocumentFileRow(filename: "electricity_bill.pdf", status: .uploading(0.6), onRemove: {})
+        .padding(20)
+        .background(Color.surfacePrimary)
+}
+
+@available(iOS 17.0, *)
+#Preview("Waiting for upload confirmation", traits: .sizeThatFitsLayout) {
+    DocumentFileRow(filename: "electricity_bill.pdf", status: .uploading(1), onRemove: {})
         .padding(20)
         .background(Color.surfacePrimary)
 }
