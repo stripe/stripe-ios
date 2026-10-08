@@ -45,7 +45,6 @@ extension ExpressCheckoutElementUtilities {
             configuration: configuration,
             usesWebLink: false,
             requiresShippingAddress: false,
-            checkoutEmailRequired: false,
             billingDetailsCollectionRequired: false
         )
     }
@@ -59,7 +58,6 @@ extension ExpressCheckoutElementUtilities {
             configuration: configuration,
             usesWebLink: false,
             requiresShippingAddress: false,
-            checkoutEmailRequired: false,
             billingDetailsCollectionRequired: false
         )
     }

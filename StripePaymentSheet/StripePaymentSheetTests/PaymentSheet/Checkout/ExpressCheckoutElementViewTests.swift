@@ -224,7 +224,6 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
             configuration: configuration,
             usesWebLink: true,
             requiresShippingAddress: session.requiresShippingAddress,
-            checkoutEmailRequired: false,
             billingDetailsCollectionRequired: false
         )
 
@@ -248,23 +247,13 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
         XCTAssertTrue(session.availableExpressCheckoutPaymentMethods.contains("link"))
     }
 
-    func testWebLinkHiddenWhenCheckoutEmailIsMissing() async throws {
+    func testWebLinkShownWhenCheckoutEmailIsMissing() {
         // Given a Checkout Session without an email and a device using web Link
         let response = makeLinkSession()
         let configuration = CheckoutTestHelpers.makeConfiguration(apiResponse: response, paymentElementConfiguration: nil)
 
-        // When Checkout loads ECE, Link is hidden
-        let checkout = try await CheckoutController(configuration: configuration)
-        XCTAssertFalse(checkout.session.availableExpressCheckoutPaymentMethods.contains("link"))
-
-        // Then a default email or native Link makes Link available
-        var configurationWithEmail = configuration
-        configurationWithEmail.defaults.email = "jenny@example.com"
-        XCTAssertTrue(ExpressCheckoutElementUtilities.availablePaymentMethods(for: response, configuration: configurationWithEmail).contains(.link))
-
-        let nativeResponse = makeLinkSession(nativeLink: true)
-        let nativeConfiguration = CheckoutTestHelpers.makeConfiguration(apiResponse: nativeResponse, paymentElementConfiguration: nil)
-        XCTAssertTrue(ExpressCheckoutElementUtilities.availablePaymentMethods(for: nativeResponse, configuration: nativeConfiguration).contains(.link))
+        // Then web Link remains available because its PaymentMethod supplies a billing email
+        XCTAssertTrue(ExpressCheckoutElementUtilities.availablePaymentMethods(for: response, configuration: configuration).contains(.link))
     }
 
     func testWebLinkHiddenWhenBillingAddressCollectionIsRequired() {

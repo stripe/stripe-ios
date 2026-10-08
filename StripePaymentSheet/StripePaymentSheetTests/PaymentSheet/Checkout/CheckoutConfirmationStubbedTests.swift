@@ -640,7 +640,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
     func testLinkPaymentDetailsCreatesPaymentMethodAndConfirmsCheckoutSession() async throws {
         // Given Link payment details in non-passthrough mode
         let checkout = try await makeCheckout(apiResponse: CheckoutTestHelpers.makeSession().withCustomer())
-        let createPaymentMethod = stubCreatePaymentMethod()
+        let createPaymentMethod = stubCreatePaymentMethod(expectedBillingEmail: .value("test@example.com"))
         let confirm = stubConfirmationExpecting(sessionId: checkout.session.id, savePaymentMethod: nil)
         let logout = stubLinkLogout(consumerSessionClientSecret: "cs_xxx")
         let configuration = checkout.getPaymentElement().embeddedPaymentElement.configuration

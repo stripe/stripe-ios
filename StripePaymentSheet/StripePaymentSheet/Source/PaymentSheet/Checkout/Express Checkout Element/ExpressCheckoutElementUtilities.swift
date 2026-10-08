@@ -14,7 +14,6 @@ enum ExpressCheckoutElementUtilities {
         case linkConfiguration = "link_configuration"
         case automaticTaxAddress = "automatic_tax_address"
         case shippingAddressRequired = "shipping_address_required"
-        case checkoutEmailRequired = "checkout_email_required"
         case billingDetailsCollection = "billing_details_collection"
     }
 
@@ -33,9 +32,6 @@ enum ExpressCheckoutElementUtilities {
             configuration: expressCheckoutConfiguration,
             usesWebLink: usesWebLink,
             requiresShippingAddress: apiResponse.shippingAddressCollection != nil,
-            checkoutEmailRequired: apiResponse.customerEmail == nil
-                && apiResponse.customer?.email == nil
-                && configuration.defaults.email == nil,
             billingDetailsCollectionRequired: apiResponse.billingAddressCollection == "required"
         )
     }
@@ -45,7 +41,6 @@ enum ExpressCheckoutElementUtilities {
         configuration: ExpressCheckoutElement.Configuration,
         usesWebLink: Bool,
         requiresShippingAddress: Bool,
-        checkoutEmailRequired: Bool,
         billingDetailsCollectionRequired: Bool
     ) -> [ExpressCheckoutElement.PaymentMethod] {
         var paymentMethods: [ExpressCheckoutElement.PaymentMethod] = []
@@ -63,7 +58,6 @@ enum ExpressCheckoutElementUtilities {
                     configuration: configuration,
                     usesWebLink: usesWebLink,
                     requiresShippingAddress: requiresShippingAddress,
-                    checkoutEmailRequired: checkoutEmailRequired,
                     billingDetailsCollectionRequired: billingDetailsCollectionRequired
                 ).isEmpty {
                     paymentMethods.append(paymentMethod)
@@ -98,7 +92,6 @@ enum ExpressCheckoutElementUtilities {
         configuration: ExpressCheckoutElement.Configuration,
         usesWebLink: Bool,
         requiresShippingAddress: Bool,
-        checkoutEmailRequired: Bool,
         billingDetailsCollectionRequired: Bool
     ) -> [LinkDisabledReason] {
         var reasons: [LinkDisabledReason] = []
@@ -114,9 +107,6 @@ enum ExpressCheckoutElementUtilities {
         }
         if requiresShippingAddress {
             reasons.append(.shippingAddressRequired)
-        }
-        if usesWebLink && checkoutEmailRequired {
-            reasons.append(.checkoutEmailRequired)
         }
         if usesWebLink && billingDetailsCollectionRequired {
             reasons.append(.billingDetailsCollection)

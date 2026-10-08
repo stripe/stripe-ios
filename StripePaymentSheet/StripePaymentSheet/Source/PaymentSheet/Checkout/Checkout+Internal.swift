@@ -75,6 +75,8 @@ extension CheckoutController: ExpressCheckoutElementDelegate {
             }
             linkConfirmationConfiguration.defaultBillingDetails.email = session.email
             if session.email == nil {
+                // Native Link puts the collected email on the PaymentMethod's billing details.
+                // Checkout uses that email when no independent email was collected.
                 linkConfirmationConfiguration.billingDetailsCollectionConfiguration.email = .always
             }
             if session.billingAddressCollection == .required {
