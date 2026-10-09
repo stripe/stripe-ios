@@ -57,7 +57,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
 
     func launchCheckoutElements(windowScene: UIWindowScene) {
-        let hostingController = UIHostingController(rootView: CheckoutPlaygroundView())
+        let settings = ProcessInfo.processInfo.environment["STP_CHECKOUT_PLAYGROUND_SETTINGS"]
+            .flatMap { Data(base64Encoded: $0) }
+            .flatMap { try? JSONDecoder().decode(CheckoutPlayground.Settings.self, from: $0) }
+        let hostingController = UIHostingController(rootView: CheckoutPlaygroundView(settings: settings))
         let navigationController = UINavigationController(rootViewController: hostingController)
         windowScene.windows.first!.rootViewController = navigationController
     }

@@ -190,7 +190,7 @@ public class PaymentSheet {
                 }
             }
             self.bottomSheetViewController.setViewControllers([self.loadingViewController])
-            presentingViewController.presentAsBottomSheet(bottomSheetViewController, appearance: configuration.appearance)
+            presentingViewController.presentAsSheet(bottomSheetViewController)
         }
     }
 
@@ -277,21 +277,17 @@ public class PaymentSheet {
     /// Loading View Controller
     lazy var loadingViewController = LoadingViewController(
         delegate: self,
-        appearance: configuration.appearance,
-        isTestMode: configuration.apiClient.isTestmode
+        appearance: configuration.appearance
     )
 
     /// The STPPaymentHandler instance
     lazy var paymentHandler: STPPaymentHandler = { STPPaymentHandler(apiClient: configuration.apiClient) }()
 
     /// The parent view controller to present
-    lazy var bottomSheetViewController: BottomSheetViewController = {
-        let isTestMode = configuration.apiClient.isTestmode
-
-        let vc = BottomSheetViewController(
+    lazy var bottomSheetViewController: any PaymentSheetContainer = {
+        let vc = PaymentSheetContainerFactory.make(
             contentViewController: loadingViewController,
             appearance: configuration.appearance,
-            isTestMode: isTestMode,
             didCancelNative3DS2: { [weak self] in
                 self?.paymentHandler.cancel3DS2ChallengeFlow()
             }
@@ -397,8 +393,7 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
                     } else {
                         // We dismissed the Payment Sheet to show the Apple Pay sheet
                         // Bring it back if it didn't succeed
-                        presentingViewController?.presentAsBottomSheet(self.bottomSheetViewController,
-                                                                       appearance: self.configuration.appearance)
+                        presentingViewController?.presentAsSheet(self.bottomSheetViewController)
                     }
                     completion(result, deferredIntentConfirmationType)
                 }

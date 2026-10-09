@@ -1,6 +1,26 @@
+"Add %ld documents" = "Añade %ld documentos";
+
+"Add 1 document" = "Añade 1 documento";
+
+"Add documents" = "Añade documentos";
+
+"Answer" = "Responder";
+
+"Choose File…" = "Elegir archivo...";
+
+"Choose Photo…" = "Elegir foto...";
+
 "Debit cards are most likely to be accepted." = "Es más probable que se acepten tarjetas de débito.";
 
+"Document type" = "Tipo de documento";
+
 "Document uploaded successfully" = "Documento subido correctamente";
+
+"Funds source" = "Fuente de los fondos";
+
+"How are you funding your transactions? Please list all of your sources. For example, salary, savings, investment earnings, etc." = "¿Cómo financias tus transacciones? Indica todas tus fuentes. Por ejemplo, salario, ahorros, rendimientos de inversiones, etc.";
+
+"Make sure your document meets following requirements." = "Asegúrate de que tu documento cumple los siguientes requisitos.";
 
 "Please try again later." = "Vuelve a intentarlo más tarde.";
 
@@ -8,9 +28,17 @@
 
 "Tell us about your source of funds" = "Háblanos del origen de tus fondos";
 
+"There was a problem with your previous document. Please upload a new one." = "Ha habido un problema con tu documento anterior. Sube uno nuevo.";
+
 "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "Esta aplicación no ha podido ser verificada debido a un error de certificado. Por favor, inténtalo de nuevo más tarde o contacta con el desarrollador si el problema continúa.";
 
 "This app couldn't be verified. Contact the app developer for help." = "Esta aplicación no se ha podido verificar. Contacta con el desarrollador de la aplicación para recibir ayuda.";
+
+"This file is larger than %@. Choose a file that is %@ or smaller." = "Este archivo supera los %1$@. Elige un archivo de %2$@ o menos.";
+
+"This file type isn’t supported." = "Este tipo de archivo no es compatible.";
+
+"This file type isn’t supported. Upload a %@ file." = "Este tipo de archivo no es compatible. Sube un archivo %@.";
 
 "This wallet couldn't be found. Please choose or add a wallet and try again." = "No se ha podido encontrar este monedero. Elige o añade un monedero e inténtalo de nuevo.";
 
@@ -20,9 +48,19 @@
 
 "This wallet verification request is invalid. Please try again." = "Esta petición de verificación del monedero no es válida. Vuelve a intentarlo.";
 
+"Upload document" = "Carga un documento";
+
 "Upload your proof of address" = "Sube tu comprobante de domicilio";
 
+"Uploaded" = "Cargada";
+
+"Uploading…" = "Cargando...";
+
 "We couldn't verify ownership of this wallet. Please try again." = "No hemos podido verificar la titularidad de este monedero. Inténtalo de nuevo.";
+
+"We couldn’t open this document. Please choose it again." = "No hemos podido abrir este documento. Vuelve a elegirlo.";
+
+"We couldn’t upload this file. Please try again." = "No hemos podido subir este archivo. Vuelve a intentarlo.";
 
 "We may request proof of address for larger transactions." = "Es posible que solicitemos un comprobante de domicilio para transacciones de mayor importe.";
 
