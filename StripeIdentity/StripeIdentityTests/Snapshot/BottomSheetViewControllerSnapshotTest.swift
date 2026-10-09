@@ -22,7 +22,7 @@ final class BottomSheetViewControllerSnapshotTest: STPSnapshotTestCase {
                     .init(
                         icon: .cloud,
                         title: "Stripe technology",
-                        content: "We leverage Stripe's own verification service to verify your identity through your document and selfie."
+                        content: "We leverage Stripe's verification service to verify your identity through your document and selfie."
                     ),
                     .init(
                         icon: .moved,
