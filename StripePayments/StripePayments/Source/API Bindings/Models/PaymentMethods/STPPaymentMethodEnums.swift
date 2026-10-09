@@ -132,6 +132,8 @@ import Foundation
     case ngBankTransfer
     /// A Touch 'n Go payment method
     case touchNGo
+    /// A TrueMoney payment method
+    case trueMoney
     /// A Naira USSD payment method
     case ngUSSD
     /// A Naira Wallet payment method
@@ -266,6 +268,8 @@ import Foundation
             return "Naira bank transfer"
         case .touchNGo:
             return "Touch 'n Go"
+        case .trueMoney:
+            return "TrueMoney"
         case .ngUSSD:
             return "Naira USSD"
         case .ngWallet:
@@ -405,6 +409,8 @@ import Foundation
             return "ng_bank_transfer"
         case .touchNGo:
             return "touch_n_go"
+        case .trueMoney:
+            return "truemoney"
         case .ngUSSD:
             return "ng_ussd"
         case .ngWallet:

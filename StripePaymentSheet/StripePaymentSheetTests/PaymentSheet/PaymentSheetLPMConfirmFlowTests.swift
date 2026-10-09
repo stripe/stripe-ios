@@ -830,6 +830,22 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                                defaultCountry: "MY",
                                expectedHierarchy: ExpectedFormHierarchy.TouchNGo.settingUp) { _ in }
     }
+    func testTrueMoneyConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "THB",
+                               amount: 10000,
+                               paymentMethodType: .trueMoney,
+                               merchantCountry: .US,
+                               defaultCountry: "TH",
+                               expectedHierarchy: ExpectedFormHierarchy.TrueMoney.paymentIntent) { _ in }
+        try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .paymentIntentWithPMOSetupFutureUsage, .setupIntent],
+                               currency: "THB",
+                               amount: 10000,
+                               paymentMethodType: .trueMoney,
+                               merchantCountry: .US,
+                               defaultCountry: "TH",
+                               expectedHierarchy: ExpectedFormHierarchy.TrueMoney.settingUp) { _ in }
+    }
     func testNgUSSDConfirmFlows() async throws {
         try await _testConfirm(intentKinds: [.paymentIntent],
                                currency: "NGN",
@@ -1706,9 +1722,9 @@ extension PaymentSheetLPMConfirmFlowTests {
                     TestIntent("Deferred PaymentIntent w/ PMO setup_future_usage - client side confirmation", makeDeferredIntent(deferredCSC)),
                     TestIntent("Deferred PaymentIntent w/ PMO setup_future_usage - server side confirmation", makeDeferredIntent(deferredSSC)),
                 ]
-                // Confirmation Tokens does not accept client_context[payment_method_options][touch_n_go].
+                // Confirmation Tokens does not accept payment_method_options for Touch n Go or TrueMoney.
                 // Keep testing PMO future usage through the supported PaymentMethod flows.
-                if paymentMethod != .touchNGo {
+                if ![.touchNGo, .trueMoney].contains(paymentMethod) {
                     intents += [
                         TestIntent("Deferred PaymentIntent w/ PMO setup_future_usage - client side confirmation with confirmation token", makeDeferredIntent(deferredCSCWithConfirmationToken)),
                         TestIntent("Deferred PaymentIntent w/ PMO setup_future_usage - server side confirmation with confirmation token", makeDeferredIntent(deferredSSCWithConfirmationToken)),
@@ -1964,7 +1980,7 @@ extension PaymentSheetLPMConfirmFlowTests {
             XCTAssertNotNil(getState(from: form))
         }
         // These payment methods restrict billing addresses to one country, so there is no country selector.
-        if ![.gcash, .touchNGo].contains(paymentMethodType) {
+        if ![.gcash, .touchNGo, .trueMoney].contains(paymentMethodType) {
             XCTAssertNotNil(form.getDropdownFieldElement("Country or region"))
         }
         XCTAssertNotNil(form.getTextFieldElement(addressSpec.zipNameType.localizedLabel))
