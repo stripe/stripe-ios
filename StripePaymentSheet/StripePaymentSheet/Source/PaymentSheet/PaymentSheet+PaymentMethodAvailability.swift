@@ -56,6 +56,7 @@ extension PaymentSheet {
         .shopeePay,
         .gcash,
         .momo,
+        .ngBankTransfer,
         .ngCard,
     ]
 

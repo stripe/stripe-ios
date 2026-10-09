@@ -283,7 +283,7 @@ class PaymentSheetFormFactory {
                 return makeSepaDebit()
             case .shopeePay, .qris:
                 return makeContactInformationAndBillingAddressForm(allowedBillingCountries: ["US", "ID"])
-            case .ngCard:
+            case .ngCard, .ngBankTransfer:
                 return makeContactInformationAndBillingAddressForm(
                     defaultBillingCountry: "NG",
                     additionalElements: [makeNigerianPaymentMethodMandate()]

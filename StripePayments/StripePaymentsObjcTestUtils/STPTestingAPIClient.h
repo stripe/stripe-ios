@@ -47,7 +47,7 @@ static NSString * const STPTestingESPublishableKey =
 static NSString * const STPTestingTHPublishableKey =
     @"pk_test_51NpEAWBgCYKNuUnnoBpaJZQYWOO6UpLtcioKggla08zpvDDy0cjfGKZdl5BsU8Gm5ilJNCqT7laCsqvyc0LndskG00pnPnJSpD";
 
-// Test account for Naira card
+// Test account for Naira card and Naira bank transfer
 static NSString * const STPTestingNGPublishableKey =
     @"pk_test_51PnmqMFoDYfWw3n43Igi4AQCH3GIizmq8WAm2AI5zA7vIlyG4mGqhRxFLmCjg38KOl6sJCr4T33FY2qWBunwXZYX00dOs0ukCL";
 // Test account in Germany
