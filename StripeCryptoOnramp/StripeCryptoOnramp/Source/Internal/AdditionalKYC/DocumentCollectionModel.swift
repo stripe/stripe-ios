@@ -28,6 +28,11 @@ final class DocumentCollectionModel: ObservableObject {
     /// The files in display order, including pending and failed uploads.
     @Published private(set) var files: [File] = []
 
+    /// Whether another file can be added to this document category.
+    var canAddFile: Bool {
+        isActive && files.count < maximumFileCount
+    }
+
     /// Whether every remaining file has finished uploading successfully.
     var isComplete: Bool {
         files.allSatisfy { $0.upload.uploadedFileID != nil }
@@ -39,6 +44,7 @@ final class DocumentCollectionModel: ObservableObject {
     }
 
     private let uploader: DocumentUploading
+    private let maximumFileCount: Int
     private var observations: [UUID: AnyCancellable] = [:]
     private var isActive = true
 
@@ -46,8 +52,10 @@ final class DocumentCollectionModel: ObservableObject {
     /// - Parameters:
     ///   - uploader: The service used for new uploads.
     ///   - uploadedFiles: Existing uploaded documents to edit without uploading them again.
-    init(uploader: DocumentUploading, uploadedFiles: [DocumentUploadModel.UploadedFile] = []) {
+    ///   - maximumFileCount: The maximum number of files for this document category, including restored files.
+    init(uploader: DocumentUploading, uploadedFiles: [DocumentUploadModel.UploadedFile] = [], maximumFileCount: Int) {
         self.uploader = uploader
+        self.maximumFileCount = maximumFileCount
         for file in uploadedFiles {
             append(DocumentUploadModel(uploader: uploader, uploadedFile: file))
         }
@@ -56,7 +64,8 @@ final class DocumentCollectionModel: ObservableObject {
     /// Starts a new upload without disturbing other files in the collection.
     /// - Parameter file: The temporary document whose ownership transfers to its upload model.
     func add(_ file: DocumentFile) {
-        guard isActive else {
+        guard canAddFile else {
+            file.remove()
             return
         }
 

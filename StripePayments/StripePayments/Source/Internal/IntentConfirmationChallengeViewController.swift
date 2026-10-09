@@ -26,8 +26,10 @@ class IntentConfirmationChallengeViewController: UIViewController {
     private let intentType: IntentType
     private let apiClient: STPAPIClient
     private let completion: (Result<Void, Error>) -> Void
+    private let loadContent: Bool
 
     private var webView: WKWebView!
+    private var messageSourcePolicy: STPWebMessageSourcePolicy?
     private var dimmedBackgroundView: UIView!
     private var closeButton: UIButton!
 
@@ -46,6 +48,7 @@ class IntentConfirmationChallengeViewController: UIViewController {
         intentType: IntentType,
         apiClient: STPAPIClient,
         stripeJs: STPIntentActionUseStripeSDK.StripeJS?,
+        loadContent: Bool = true,
         completion: @escaping (Result<Void, Error>) -> Void
     ) {
         self.publishableKey = publishableKey
@@ -53,6 +56,7 @@ class IntentConfirmationChallengeViewController: UIViewController {
         self.intentType = intentType
         self.apiClient = apiClient
         self.stripeJs = stripeJs
+        self.loadContent = loadContent
         self.completion = { result in
             completion(result)
         }
@@ -74,7 +78,9 @@ class IntentConfirmationChallengeViewController: UIViewController {
         setupDimmedBackground()
         setupWebView()
         setupCloseButton()
-        loadChallenge()
+        if loadContent {
+            loadChallenge()
+        }
     }
 
     // MARK: - Setup
@@ -98,17 +104,22 @@ class IntentConfirmationChallengeViewController: UIViewController {
         let configuration = WKWebViewConfiguration()
         configuration.defaultWebpagePreferences.allowsContentJavaScript = true
 
-        // Setup message handlers
         let contentController = WKUserContentController()
+        configuration.userContentController = contentController
+
+        // Create WebView
+        webView = WKWebView(frame: .zero, configuration: configuration)
+        messageSourcePolicy = STPWebMessageSourcePolicy(
+            expectedSource: webView,
+            allowedOriginURLs: [Self.challengeURL]
+        )
+
+        // Setup message handlers only after the source policy is bound to this WebView.
         contentController.addScriptMessageHandler(self, contentWorld: .page, name: "getInitParams")
         contentController.add(self, name: "onReady")
         contentController.add(self, name: "onSuccess")
         contentController.add(self, name: "onError")
 
-        configuration.userContentController = contentController
-
-        // Create WebView
-        webView = WKWebView(frame: .zero, configuration: configuration)
         webView.navigationDelegate = self
         webView.translatesAutoresizingMaskIntoConstraints = false
         webView.customUserAgent = PaymentsSDKVariant.paymentUserAgent
@@ -232,9 +243,14 @@ class IntentConfirmationChallengeViewController: UIViewController {
         completion(.failure(error))
     }
 
-    /// Validates that the message comes from the expected Stripe origin
-    private func isValidMessageOrigin(_ message: WKScriptMessage) -> Bool {
-        return message.frameInfo.securityOrigin.host == Self.challengeHost
+    private func isAuthorizedMessageSource(_ message: WKScriptMessage) -> Bool {
+        let origin = message.frameInfo.securityOrigin
+        return messageSourcePolicy?.isAuthorized(
+            source: message.webView,
+            scheme: origin.protocol,
+            host: origin.host,
+            port: origin.port
+        ) ?? false
     }
 }
 
@@ -245,9 +261,8 @@ extension IntentConfirmationChallengeViewController: WKScriptMessageHandlerWithR
         didReceive message: WKScriptMessage,
         replyHandler: @escaping (Any?, String?) -> Void
     ) {
-        // Validate message origin for security
-        guard isValidMessageOrigin(message) else {
-            replyHandler(nil, "Invalid message origin: \(message.frameInfo.securityOrigin.host)")
+        guard isAuthorizedMessageSource(message) else {
+            replyHandler(nil, "Invalid message origin")
             return
         }
 
@@ -272,9 +287,7 @@ extension IntentConfirmationChallengeViewController: WKScriptMessageHandler {
         _ userContentController: WKUserContentController,
         didReceive message: WKScriptMessage
     ) {
-        // Validate message origin for security
-        guard isValidMessageOrigin(message) else {
-            stpAssertionFailure("Invalid message origin: \(message.frameInfo.securityOrigin.host)")
+        guard isAuthorizedMessageSource(message) else {
             return
         }
 
@@ -325,15 +338,27 @@ extension IntentConfirmationChallengeViewController: WKNavigationDelegate {
 
 // MARK: - Liquid Glass
 extension IntentConfirmationChallengeViewController {
+
     private static var shouldApplyLiquidGlass: Bool {
-        #if compiler(>=6.2)
-        guard #available(iOS 26.0, *) else { return false }
-        if let optedOut = Bundle.main.infoDictionary?["UIDesignRequiresCompatibility"] as? Bool, optedOut {
+        #if compiler(<6.2)
+        // Before Xcode 26 (Swift 6.2), Liquid Glass isn't available.
+        return false
+        #else
+        // Xcode 26+ also requires OS 26+ to use Liquid Glass.
+        guard #available(iOS 26.0, *) else {
             return false
         }
-        return true
-        #else
-        return false
+
+        // Xcode 27+ (Swift 6.4+) on OS 27+: Liquid Glass is required, so ignore the opt-out flag.
+        #if compiler(>=6.4)
+        if #available(iOS 27.0, visionOS 27.0, *) {
+            return true
+        }
+        #endif
+
+        // Older OS or Xcode versions: honor the opt-out flag, defaulting to NO when absent.
+        let hasOptedOut = Bundle.main.infoDictionary?["UIDesignRequiresCompatibility"] as? Bool ?? false
+        return !hasOptedOut
         #endif
     }
 }

@@ -49,7 +49,6 @@ final class HTMLConfirmationViewController: BottomSheetViewController {
         super.init(
             contentViewController: contentViewController,
             appearance: LinkUI.appearance,
-            isTestMode: false,
             didCancelNative3DS2: {}
         )
 
@@ -63,10 +62,9 @@ final class HTMLConfirmationViewController: BottomSheetViewController {
     required init(
         contentViewController: any BottomSheetContentViewController,
         appearance: PaymentSheet.Appearance,
-        isTestMode: Bool,
         didCancelNative3DS2: @escaping () -> Void
     ) {
-        fatalError("init(contentViewController:appearance:isTestMode:didCancelNative3DS2:) has not been implemented")
+        fatalError("init(contentViewController:appearance:didCancelNative3DS2:) has not been implemented")
     }
 
     override func didTapOrSwipeToDismiss() {

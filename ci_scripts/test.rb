@@ -9,6 +9,7 @@ only_snapshot_tests = false
 use_cache = false
 build_scheme = nil
 device = nil
+device_id = nil
 version = nil
 build_only = false
 retry_tests = false
@@ -26,6 +27,10 @@ OptionParser.new do |opts|
   opts.on("--device [DEVICE]",
     "Device to run tests on (iPhone 8, iPhone 11, etc)") do |t|
     device = t
+  end
+
+  opts.on("--device-id UUID", "Use an existing simulator by its identifier") do |t|
+    device_id = t
   end
 
   opts.on("--version [VERSION]",
@@ -123,7 +128,9 @@ else
       build_action = 'test-without-building'
     end
   end
-  if !device.nil? && !version.nil?
+  if device_id
+    destination_string = 'platform=iOS Simulator,id=' + device_id
+  elsif !device.nil? && !version.nil?
     destination_string = 'platform=iOS Simulator'
     destination_string += ',name=' + device
     destination_string += ',OS=' + version
