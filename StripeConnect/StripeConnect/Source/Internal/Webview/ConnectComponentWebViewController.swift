@@ -13,6 +13,7 @@ import WebKit
 class ConnectComponentWebViewController: ConnectWebViewController {
     private enum SensitiveDeliveryError: Int, CustomNSError {
         case refused
+        case deliveryFailed
 
         static let errorDomain = "StripeConnect.SensitiveDeliveryError"
     }
@@ -321,7 +322,8 @@ extension ConnectComponentWebViewController {
         }
     }
 
-    /// Resolves only after the dispatcher reaches a delivery or refusal outcome.
+    /// Resolves only after delivery or refusal. Unexpected failures retain diagnostic identifiers,
+    /// except errors with additional analytics fields, which use a sanitized delivery-failure error.
     func sendSensitiveMessageAsync(_ sender: any MessageSender, documentID: String?) async throws {
         do {
             guard let documentID else { throw SensitiveDeliveryError.refused }
@@ -345,8 +347,9 @@ extension ConnectComponentWebViewController {
             guard result as? Bool == true else {
                 throw SensitiveDeliveryError.refused
             }
-        } catch {
-            throw SensitiveDeliveryError.refused
+        } catch is AnalyticLoggableErrorV2 {
+            // Prevent errors from adding sensitive fields to client_error analytics.
+            throw SensitiveDeliveryError.deliveryFailed
         }
     }
 

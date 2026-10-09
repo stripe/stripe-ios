@@ -127,9 +127,14 @@ final class ConnectOutboundDocumentAuthorityTests: XCTestCase {
                 try await delivery.value
                 XCTFail("Sensitive delivery unexpectedly succeeded")
             } catch {
-                let refusal = error as NSError
-                XCTAssertEqual(refusal.domain, "StripeConnect.SensitiveDeliveryError")
-                XCTAssertEqual(refusal.code, 0)
+                let deliveryFailure = error as NSError
+                if navigate, deliveryFailure.domain == WKError.errorDomain {
+                    // Navigation can invalidate the pending JavaScript result before a refusal is returned.
+                    XCTAssertEqual(deliveryFailure.code, WKError.Code.javaScriptResultTypeIsUnsupported.rawValue)
+                } else {
+                    XCTAssertEqual(deliveryFailure.domain, "StripeConnect.SensitiveDeliveryError")
+                    XCTAssertEqual(deliveryFailure.code, 0)
+                }
             }
         }
     }

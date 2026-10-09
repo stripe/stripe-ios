@@ -13,6 +13,134 @@ import XCTest
 @MainActor
 final class ConnectOutboundSourceValidationTests: XCTestCase {
 
+    func testSerializationFailureRetainsDiagnosticIdentifierWithoutPayload() async throws {
+        // Given a sensitive payload that fails encoding with private error details.
+        let transport = OutboundAnalyticsTransport()
+        let controller = makeController(analyticsTransport: transport)
+        let sender = SupplementalFunctionCompletedSender(payload: .init(
+            functionName: .handleCheckScanSubmitted,
+            invocationId: "private-invocation",
+            result: .error(FailingOutboundPayload())
+        ))
+
+        // When delivery fails and the caller reports the error.
+        do {
+            try await controller.sendSensitiveMessageAsync(sender, documentID: "fixture-document")
+            XCTFail("Expected encoding to fail")
+        } catch {
+            controller.analyticsClient.logClientError(error)
+        }
+
+        // Then analytics retains the diagnostic identifier without private fields.
+        let event = try XCTUnwrap(transport.lastClientError)
+        XCTAssertEqual(event["error"] as? String, "OutboundEncodingFixture:42")
+        XCTAssertFalse(String(describing: event).contains("private-"))
+        XCTAssertNil(event["url"])
+        XCTAssertNil(event["payload"])
+    }
+
+    func testLoggableSerializationFailureUsesSanitizedDeliveryFailure() async throws {
+        // Given an encoding error that would add private fields to analytics.
+        let transport = OutboundAnalyticsTransport()
+        let controller = makeController(analyticsTransport: transport)
+        let sender = SupplementalFunctionCompletedSender(payload: .init(
+            functionName: .handleCheckScanSubmitted,
+            invocationId: "private-invocation",
+            result: .error(FailingOutboundPayload(error: LoggableOutboundEncodingError()))
+        ))
+
+        // When delivery fails and the caller reports the error.
+        do {
+            try await controller.sendSensitiveMessageAsync(sender, documentID: "fixture-document")
+            XCTFail("Expected encoding to fail")
+        } catch {
+            controller.analyticsClient.logClientError(error)
+        }
+
+        // Then analytics distinguishes failure from refusal without the error's fields.
+        let event = try XCTUnwrap(transport.lastClientError)
+        XCTAssertEqual(event["error"] as? String, "StripeConnect.SensitiveDeliveryError:1")
+        XCTAssertFalse(String(describing: event).contains("private-"))
+        XCTAssertNil(event["url"])
+        XCTAssertNil(event["payload"])
+    }
+
+    func testSensitiveDeliveryEvaluationFailureRetainsWebKitIdentifierWithoutPayload() async throws {
+        // Given a controlled dispatcher fixture that causes a WebKit evaluation error.
+        let transport = OutboundAnalyticsTransport()
+        let controller = makeController(analyticsTransport: transport)
+        let window = UIWindow()
+        window.rootViewController = controller
+        window.makeKeyAndVisible()
+        defer { window.isHidden = true }
+        let ready = expectation(description: "Throwing dispatcher fixture is ready")
+        let callback = expectation(description: "Evaluation failure does not deliver the result")
+        callback.isInverted = true
+        let observer = CallbackObserver(name: "connectOutboundCallback", expectedWebView: controller.webView, expectedHost: "connect-js.stripe.com", ready: ready, callback: callback)
+        let contentController = controller.webView.configuration.userContentController
+        // Remove the protected production script rather than trying to overwrite it from page code.
+        contentController.removeAllUserScripts()
+        contentController.add(observer, name: observer.name)
+        defer { contentController.removeScriptMessageHandler(forName: observer.name) }
+        controller.webView.loadHTMLString("""
+        <!doctype html><script>
+        window.__stripeConnectDeliverSensitiveMessage = () => {
+          throw new Error("private-exception https://example.test/private-url");
+        };
+        window.webkit.messageHandlers.connectOutboundCallback.postMessage({kind: "ready", dispatcher: "function"});
+        </script>
+        """, baseURL: StripeConnectConstants.connectJSBaseURL)
+        await fulfillment(of: [ready], timeout: TestHelpers.defaultTimeout)
+
+        // When a sensitive result is evaluated by WebKit.
+        let deliveryError: Error
+        do {
+            try await controller.sendSensitiveMessageAsync(ReturnedFromAuthenticatedWebViewSender(
+                payload: .init(url: URL(string: "stripe-connect://return?secret=private-result")!, id: "outbound-test")
+            ), documentID: "fixture-document")
+            XCTFail("Expected a WebKit evaluation error")
+            return
+        } catch {
+            deliveryError = error
+        }
+
+        // Then the delivery error, rather than any setup error, retains WebKit's identifier.
+        XCTAssertEqual(deliveryError.analyticsIdentifier, "WKErrorDomain:4")
+        controller.analyticsClient.logClientError(deliveryError)
+        let event = try XCTUnwrap(transport.lastClientError)
+        XCTAssertEqual(event["error"] as? String, "WKErrorDomain:4")
+        XCTAssertFalse(String(describing: event).contains("private-"))
+        XCTAssertNil(event["url"])
+        XCTAssertNil(event["payload"])
+        await fulfillment(of: [callback], timeout: 0.2)
+    }
+
+    func testMissingDocumentIdentifierRemainsRefusalBeforeEncoding() async throws {
+        // Given a request without a document identifier and a payload that would fail encoding.
+        let transport = OutboundAnalyticsTransport()
+        let controller = makeController(analyticsTransport: transport)
+        let sender = SupplementalFunctionCompletedSender(payload: .init(
+            functionName: .handleCheckScanSubmitted,
+            invocationId: "private-invocation",
+            result: .error(FailingOutboundPayload(error: LoggableOutboundEncodingError()))
+        ))
+
+        // When delivery is requested without its initiating document.
+        do {
+            try await controller.sendSensitiveMessageAsync(sender, documentID: nil)
+            XCTFail("Expected missing document identifier to refuse delivery")
+        } catch {
+            controller.analyticsClient.logClientError(error)
+        }
+
+        // Then refusal remains distinct from encoding and evaluation failures.
+        let event = try XCTUnwrap(transport.lastClientError)
+        XCTAssertEqual(event["error"] as? String, "StripeConnect.SensitiveDeliveryError:0")
+        XCTAssertFalse(String(describing: event).contains("private-"))
+        XCTAssertNil(event["url"])
+        XCTAssertNil(event["payload"])
+    }
+
     func testAuthenticationResultReachesOriginalTrustedDocument() async throws {
         try await assertAuthenticationResultReachesOriginalDocument(html: Self.trustedAuthenticationHTML)
     }
@@ -473,6 +601,10 @@ private final class OutboundAnalyticsTransport: AnalyticsClientV2Protocol {
     let clientId = "outbound-source-validation"
     private var events: [(name: String, parameters: [String: Any])] = []
 
+    var lastClientError: [String: Any]? {
+        events.last(where: { $0.name == "client_error" })?.parameters
+    }
+
     func log(eventName: String, parameters: [String: Any]) {
         events.append((name: eventName, parameters: parameters))
     }
@@ -489,5 +621,29 @@ private final class OutboundAnalyticsTransport: AnalyticsClientV2Protocol {
                 try await Task.sleep(nanoseconds: 10_000_000)
             }
         }
+    }
+}
+
+private struct FailingOutboundPayload: Encodable {
+    let error: Error
+
+    init(error: Error = NSError(domain: "OutboundEncodingFixture", code: 42, userInfo: [
+        NSLocalizedDescriptionKey: "private-payload",
+        "url": "https://example.test/private-url",
+    ])) {
+        self.error = error
+    }
+
+    func encode(to encoder: Encoder) throws {
+        throw error
+    }
+}
+
+private struct LoggableOutboundEncodingError: CustomNSError, AnalyticLoggableErrorV2 {
+    static let errorDomain = "OutboundEncodingFixture"
+    var errorCode: Int { 43 }
+
+    func analyticLoggableSerializeForLogging() -> [String: Any] {
+        ["payload": "private-payload", "url": "https://example.test/private-url"]
     }
 }
