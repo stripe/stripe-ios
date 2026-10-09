@@ -275,6 +275,9 @@ extension TextFieldElement {
         let disallowedCharacters: CharacterSet = .stp_invertedAsciiDigit
 
         func keyboardProperties(for text: String) -> KeyboardProperties {
+            if #available(iOS 17.0, *) {
+                return .init(type: .asciiCapableNumberPad, textContentType: .creditCardSecurityCode, autocapitalization: .none)
+            }
             return .init(type: .asciiCapableNumberPad, textContentType: nil, autocapitalization: .none)
         }
         func maxLength(for text: String) -> Int {
@@ -337,6 +340,9 @@ extension TextFieldElement {
         let defaultValue: String?
         let editConfiguration: EditConfiguration
         func keyboardProperties(for text: String) -> KeyboardProperties {
+            if #available(iOS 17.0, *) {
+                return .init(type: .asciiCapableNumberPad, textContentType: .creditCardExpiration, autocapitalization: .none)
+            }
             return .init(type: .asciiCapableNumberPad, textContentType: nil, autocapitalization: .none)
         }
         func maxLength(for text: String) -> Int {
