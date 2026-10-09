@@ -20,6 +20,7 @@ protocol SheetNavigationBarDelegate: AnyObject {
 /// For internal SDK use only
 @objc(STP_Internal_SheetNavigationBar)
 class SheetNavigationBar: UIView {
+
     static func height(appearance: PaymentSheet.Appearance) -> CGFloat {
         return appearance.navigationBarStyle.isGlass ? 76 : 52
 
@@ -74,6 +75,81 @@ class SheetNavigationBar: UIView {
     let appearance: PaymentSheet.Appearance
     let shouldLogPaymentSheetAnalyticsOnDismissal: Bool
 
+    var usesSystemNavigationBar: Bool { systemNavigationItem != nil }
+    private var currentStyle: Style = .close(showAdditionalButton: false)
+    // Bind only while this content is visible; legacy bars continue to render their own controls.
+    weak var systemNavigationItem: UINavigationItem? {
+        didSet {
+            updateSystemNavigationBar()
+        }
+    }
+
+    var systemNavigationTitle: String? { nil }
+    var systemNavigationTitleView: UIView? { nil }
+
+    /// Publishes controls to the navigation controller while retaining the existing screen actions.
+    func updateSystemNavigationBar() {
+        guard let systemNavigationItem else { return }
+
+        let closeItem = UIBarButtonItem(barButtonSystemItem: .close, target: self, action: #selector(didTapCloseButton))
+        closeItem.isEnabled = isUserInteractionEnabled
+        closeItem.accessibilityIdentifier = "UIButton.Close"
+        let backItem = UIBarButtonItem(
+            image: UIImage(systemName: "chevron.left")?.imageFlippedForRightToLeftLayoutDirection(),
+            style: .plain,
+            target: self,
+            action: #selector(didTapBackButton)
+        )
+        backItem.isEnabled = isUserInteractionEnabled
+        backItem.accessibilityLabel = String.Localized.back
+        backItem.accessibilityIdentifier = "UIButton.Back"
+
+        let additionalItem: UIBarButtonItem
+        switch additionalButton.title(for: .normal) {
+        case UIButton.editButtonTitle:
+            additionalItem = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(didTapAdditionalButton))
+        case UIButton.doneButtonTitle:
+            additionalItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(didTapAdditionalButton))
+        default:
+            additionalItem = UIBarButtonItem(title: additionalButton.title(for: .normal), style: .plain, target: self, action: #selector(didTapAdditionalButton))
+        }
+        additionalItem.isEnabled = isUserInteractionEnabled && additionalButton.isEnabled
+        additionalItem.accessibilityIdentifier = additionalButton.accessibilityIdentifier
+        // Keep action styling instead of inheriting the navigation bar's icon appearance.
+        additionalItem.tintColor = additionalButton.titleColor(for: .normal)
+        for state in [UIControl.State.normal, .disabled] {
+            var attributes: [NSAttributedString.Key: Any] = [:]
+            if let font = additionalButton.titleLabel?.font {
+                attributes[.font] = font
+            }
+            if let color = additionalButton.titleColor(for: state) {
+                attributes[.foregroundColor] = color
+            }
+            additionalItem.setTitleTextAttributes(attributes, for: state)
+        }
+
+        var leadingItems: [UIBarButtonItem] = []
+        var trailingItems: [UIBarButtonItem] = []
+        switch currentStyle {
+        case .close(let showAdditionalButton):
+            if showAdditionalButton {
+                leadingItems = [closeItem]
+                trailingItems = [additionalItem]
+            } else {
+                trailingItems = [closeItem]
+            }
+        case .back(let showAdditionalButton):
+            leadingItems = [backItem]
+            trailingItems = showAdditionalButton ? [additionalItem] : []
+        case .none:
+            break
+        }
+        systemNavigationItem.leftBarButtonItems = leadingItems
+        systemNavigationItem.rightBarButtonItems = trailingItems
+        systemNavigationItem.title = systemNavigationTitle
+        systemNavigationItem.titleView = systemNavigationTitleView
+    }
+
     override var isUserInteractionEnabled: Bool {
         didSet {
             // Explicitly disable buttons to update their appearance
@@ -81,6 +157,7 @@ class SheetNavigationBar: UIView {
             closeButtonRight.isEnabled = isUserInteractionEnabled
             backButton.isEnabled = isUserInteractionEnabled
             additionalButton.isEnabled = isUserInteractionEnabled
+            updateSystemNavigationBar()
         }
     }
 
@@ -143,6 +220,25 @@ class SheetNavigationBar: UIView {
         delegate?.sheetNavigationBarDidBack(self)
     }
 
+    @objc
+    private func didTapAdditionalButton() {
+        additionalButton.sendActions(for: .touchUpInside)
+    }
+
+    func configureEditButton(isEditingPaymentMethods: Bool) {
+        let title = isEditingPaymentMethods ? UIButton.doneButtonTitle : UIButton.editButtonTitle
+        additionalButton.titleLabel?.adjustsFontForContentSizeCategory = true
+        additionalButton.titleLabel?.textAlignment = .right
+        additionalButton.titleLabel?.font = appearance.scaledFont(for: appearance.font.base.medium, size: 14, maximumPointSize: 22)
+        additionalButton.accessibilityIdentifier = "edit_saved_button"
+        if appearance.navigationBarStyle.isGlass {
+            additionalButton.ios26_applyGlassConfiguration()
+        }
+        additionalButton.setTitle(title, for: .normal)
+        // Refresh the native items after the button's title and styling are fully configured.
+        updateSystemNavigationBar()
+    }
+
     // MARK: -
     enum Style {
         case close(showAdditionalButton: Bool)
@@ -151,6 +247,7 @@ class SheetNavigationBar: UIView {
     }
 
     func setStyle(_ style: Style) {
+        currentStyle = style
         switch style {
         case .back(let showAdditionalButton):
             closeButtonLeft.isHidden = true
@@ -175,9 +272,11 @@ class SheetNavigationBar: UIView {
             additionalButton.isHidden = true
             backButton.isHidden = true
         }
+        updateSystemNavigationBar()
     }
 
     func setShadowHidden(_ isHidden: Bool) {
+        guard !usesSystemNavigationBar else { return }
         if appearance.navigationBarStyle.isPlain {
             layer.shadowPath = CGPath(rect: bounds, transform: nil)
             layer.shadowOpacity = isHidden ? 0 : 0.1
@@ -227,19 +326,5 @@ class SheetNavigationBar: UIView {
         }
         closeButton.tintColor = appearance.colors.icon
         return closeButton
-    }
-}
-
-extension UIButton {
-    func configureCommonEditButton(isEditingPaymentMethods: Bool, appearance: PaymentSheet.Appearance) {
-        let title = isEditingPaymentMethods ? UIButton.doneButtonTitle : UIButton.editButtonTitle
-        setTitle(title, for: .normal)
-        titleLabel?.adjustsFontForContentSizeCategory = true
-        titleLabel?.textAlignment = .right
-        titleLabel?.font = appearance.scaledFont(for: appearance.font.base.medium, size: 14, maximumPointSize: 22)
-        accessibilityIdentifier = "edit_saved_button"
-        if appearance.navigationBarStyle.isGlass {
-            ios26_applyGlassConfiguration()
-        }
     }
 }

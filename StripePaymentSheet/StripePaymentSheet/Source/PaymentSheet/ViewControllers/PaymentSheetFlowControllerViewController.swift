@@ -791,7 +791,7 @@ extension PaymentSheetFlowControllerViewController: SavedPaymentOptionsViewContr
 
     // MARK: Helpers
     func configureEditSavedPaymentMethodsButton() {
-        navigationBar.additionalButton.configureCommonEditButton(isEditingPaymentMethods: savedPaymentOptionsViewController.isRemovingPaymentMethods, appearance: configuration.appearance)
+        navigationBar.configureEditButton(isEditingPaymentMethods: savedPaymentOptionsViewController.isRemovingPaymentMethods)
         navigationBar.additionalButton.addTarget(
             self, action: #selector(didSelectEditSavedPaymentMethodsButton), for: .touchUpInside)
     }
