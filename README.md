@@ -143,7 +143,8 @@ To re-record snapshot tests, use the `bundle exec ruby ci_scripts/snapshots.rb -
 
 ## Migrating from older versions
 
-See [MIGRATING.md](https://github.com/stripe/stripe-ios/blob/master/MIGRATING.md)
+* To migrate from an old SDK version, see [MIGRATING.md](https://github.com/stripe/stripe-ios/blob/master/MIGRATING.md).
+* To migrate from CocoaPods, see [MIGRATING-COCOAPODS.md](https://github.com/stripe/stripe-ios/blob/master/MIGRATING-COCOAPODS.md).
 
 ## Code style
 We use [swiftlint](https://github.com/realm/SwiftLint) to enforce code style.
