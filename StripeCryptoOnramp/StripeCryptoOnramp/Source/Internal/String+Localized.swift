@@ -12,10 +12,10 @@ import Foundation
 @_spi(STP) import StripeUICore
 
 extension String.Localized {
-    static var cryptoOnrampErrorPaymentMethodMerchantChanged: String {
+    static var cryptoOnrampErrorPaymentMethodKYCRegionChanged: String {
         return STPLocalizedString(
             "Please select your Apple Pay payment method again to continue.",
-            "Error message shown when an Apple Pay payment method must be collected again because the platform key changed"
+            "Error message shown when an Apple Pay payment method must be collected again because the customer's KYC region changed"
         )
     }
 

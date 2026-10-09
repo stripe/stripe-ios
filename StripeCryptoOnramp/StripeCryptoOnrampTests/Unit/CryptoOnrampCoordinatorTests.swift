@@ -97,8 +97,8 @@ final class CryptoOnrampCoordinatorTests: APIStubbedTestCase {
         resolvedKey = "pk_test_platform_B"
 
         // When the backend resolves a different key, repeated attempts remain blocked
-        try await assertMerchantChanged(coordinator)
-        try await assertMerchantChanged(coordinator)
+        try await assertKYCRegionChanged(coordinator)
+        try await assertKYCRegionChanged(coordinator)
         XCTAssertEqual(settingsRequests.count, 3)
         XCTAssertTrue(tokenRequests.isEmpty)
         XCTAssertEqual(queryParameters(settingsRequests[2]), settingsParameters(countryHint: "US"))
@@ -119,7 +119,7 @@ final class CryptoOnrampCoordinatorTests: APIStubbedTestCase {
 
         // When KYC changes the merchant without changing the customer ID
         resolvedKey = "pk_test_platform_B"
-        try await assertMerchantChanged(coordinator)
+        try await assertKYCRegionChanged(coordinator)
 
         // Then the previous matching resolution cannot authorize another token
         XCTAssertEqual(requestOrder, ["settings", "settings", "token", "settings"])
@@ -186,12 +186,12 @@ final class CryptoOnrampCoordinatorTests: APIStubbedTestCase {
         try await collectApplePay(coordinator, paymentMethodID: "pm_original")
         await coordinator.setCryptoCustomerId(Self.customerID)
         resolvedKey = "pk_test_platform_B"
-        try await assertMerchantChanged(coordinator)
+        try await assertKYCRegionChanged(coordinator)
 
         let context = try await beginApplePay(coordinator)
         XCTAssertEqual(context.apiClient.publishableKey, resolvedKey)
         try await stagePaymentMethod("pm_recollected", coordinator: coordinator, context: context)
-        try await assertMerchantChanged(coordinator)
+        try await assertKYCRegionChanged(coordinator)
         XCTAssertTrue(tokenRequests.isEmpty)
 
         // When Apple Pay reports final success, the new selection becomes usable
@@ -208,7 +208,7 @@ final class CryptoOnrampCoordinatorTests: APIStubbedTestCase {
         try await collectApplePay(coordinator, paymentMethodID: "pm_original")
         await coordinator.setCryptoCustomerId(Self.customerID)
         resolvedKey = "pk_test_platform_B"
-        try await assertMerchantChanged(coordinator)
+        try await assertKYCRegionChanged(coordinator)
 
         for status in [STPApplePayContext.PaymentStatus.userCancellation, .error] {
             let context = try await beginApplePay(coordinator)
@@ -216,7 +216,7 @@ final class CryptoOnrampCoordinatorTests: APIStubbedTestCase {
             coordinator.applePayContext(context, didCompleteWith: status, error: nil)
             // A late success must not commit a canceled/failed attempt.
             coordinator.applePayContext(context, didCompleteWith: .success, error: nil)
-            try await assertMerchantChanged(coordinator)
+            try await assertKYCRegionChanged(coordinator)
         }
         XCTAssertTrue(tokenRequests.isEmpty)
 
@@ -235,13 +235,13 @@ final class CryptoOnrampCoordinatorTests: APIStubbedTestCase {
         // When authentication clears the cache and token validation replaces it while Apple Pay collects
         await coordinator.setCryptoCustomerId(Self.customerID)
         resolvedKey = "pk_test_platform_B"
-        try await assertMerchantChanged(coordinator)
+        try await assertKYCRegionChanged(coordinator)
         XCTAssertEqual(context.apiClient.publishableKey, "pk_test_platform_A")
         try await stagePaymentMethod("pm_pre_auth", coordinator: coordinator, context: context)
         coordinator.applePayContext(context, didCompleteWith: .success, error: nil)
 
         // Then the callback uses the context's key and retains the attempt's pre-auth requirement
-        try await assertMerchantChanged(coordinator)
+        try await assertKYCRegionChanged(coordinator)
         XCTAssertEqual(settingsRequests.count, 3)
         XCTAssertTrue(tokenRequests.isEmpty)
     }
@@ -317,7 +317,7 @@ final class CryptoOnrampCoordinatorTests: APIStubbedTestCase {
         XCTAssertEqual(settingsRequests.count, 2)
         XCTAssertEqual(queryParameters(settingsRequests[1])["crypto_customer_id"], Self.customerID)
         coordinator.applePayContext(context, didCompleteWith: .userCancellation, error: nil)
-        try await assertMerchantChanged(coordinator)
+        try await assertKYCRegionChanged(coordinator)
         XCTAssertEqual(settingsRequests.count, 3)
         XCTAssertTrue(tokenRequests.isEmpty)
     }
@@ -344,7 +344,7 @@ final class CryptoOnrampCoordinatorTests: APIStubbedTestCase {
         coordinator.applePayContext(context, didCompleteWith: .success, error: nil)
         settingsFailure = nil
         resolvedKey = "pk_test_platform_B"
-        try await assertMerchantChanged(coordinator)
+        try await assertKYCRegionChanged(coordinator)
         XCTAssertTrue(tokenRequests.isEmpty)
     }
 
@@ -360,7 +360,7 @@ final class CryptoOnrampCoordinatorTests: APIStubbedTestCase {
     }
 
     @MainActor
-    func testBackendPaymentMethodFailureIsNotReclassifiedAsMerchantChange() async throws {
+    func testBackendPaymentMethodFailureIsNotReclassifiedAsKYCRegionChange() async throws {
         let coordinator = try await makeCoordinator()
         try await collectApplePay(coordinator)
         await coordinator.setCryptoCustomerId(Self.customerID)
@@ -370,7 +370,7 @@ final class CryptoOnrampCoordinatorTests: APIStubbedTestCase {
             XCTFail("Expected token failure")
         } catch {
             XCTAssertEqual((error as? UncategorizedError)?.code, "resource_missing")
-            XCTAssertFalse(error is PaymentMethodMerchantChangedError)
+            XCTAssertFalse(error is PaymentMethodKYCRegionChangedError)
         }
         XCTAssertEqual(tokenRequests.count, 1)
     }
@@ -494,13 +494,13 @@ final class CryptoOnrampCoordinatorTests: APIStubbedTestCase {
         coordinator.applePayContext(context, didCompleteWith: .success, error: nil)
     }
 
-    private func assertMerchantChanged(_ coordinator: CryptoOnrampCoordinator, file: StaticString = #filePath, line: UInt = #line) async throws {
+    private func assertKYCRegionChanged(_ coordinator: CryptoOnrampCoordinator, file: StaticString = #filePath, line: UInt = #line) async throws {
         let tokenCount = tokenRequests.count
         do {
             _ = try await coordinator.createCryptoPaymentToken()
-            XCTFail("Expected merchant change", file: file, line: line)
+            XCTFail("Expected KYC region change", file: file, line: line)
         } catch {
-            XCTAssertTrue(error is PaymentMethodMerchantChangedError, "Unexpected error: \(error)", file: file, line: line)
+            XCTAssertTrue(error is PaymentMethodKYCRegionChangedError, "Unexpected error: \(error)", file: file, line: line)
         }
         XCTAssertEqual(tokenRequests.count, tokenCount, file: file, line: line)
     }

@@ -12,11 +12,11 @@ import StripePayments
 
 extension CryptoOnrampCoordinator {
 
-    static func paymentMethodMerchantChangedError(
+    static func paymentMethodKYCRegionChangedError(
         apiClient: STPAPIClient,
         additionalSDKVersions: [SDKVersion] = []
-    ) -> PaymentMethodMerchantChangedError {
-        return PaymentMethodMerchantChangedError(
+    ) -> PaymentMethodKYCRegionChangedError {
+        return PaymentMethodKYCRegionChangedError(
             diagnosticContext: makeDiagnosticContext(
                 during: .createCryptoPaymentToken,
                 apiClient: apiClient,

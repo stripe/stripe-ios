@@ -204,8 +204,9 @@ protocol CryptoOnrampCoordinatorProtocol {
 
     /// Creates a crypto payment token for the payment method currently selected on the coordinator.
     /// Call after a successful `collectPaymentMethod(...)`.
-    /// If a pre-authentication Apple Pay selection's platform key changes, throws `PaymentMethodMerchantChangedError`.
+    /// If the customer's KYC region changes after Apple Pay was collected before authentication, throws `PaymentMethodKYCRegionChangedError`.
     /// Call `collectPaymentMethod(type: .applePay(paymentRequest:), from:)` again and retry only after successful collection.
+    /// To avoid this, ensure `countryHint` matches the customer's KYC region, or authenticate the customer before collecting Apple Pay.
     ///
     /// - Returns: The crypto payment token ID.
     /// Throws an error if no payment method has been selected, the Link account is not verified, required session credentials are missing, the payment method creation fails, or a network/API error occurs.
@@ -820,7 +821,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
                     // KYC can change the merchant even when the customer ID stays the same.
                     let freshClient = try await fetchPlatformApiClient(cryptoCustomerId: customerId)
                     guard freshClient.publishableKey == source.platformPublishableKey else {
-                        throw Self.paymentMethodMerchantChangedError(
+                        throw Self.paymentMethodKYCRegionChangedError(
                             apiClient: apiClient,
                             additionalSDKVersions: additionalSDKVersions
                         )

@@ -7,7 +7,7 @@ MINOR
 * [Added] Added GCash API bindings and PaymentSheet support for payments and setup.
 
 ### CryptoOnramp (Alpha)
-* [Fixed] Pre-authentication Apple Pay selections are now checked against freshly resolved platform settings before token creation. If the platform key changes, `PaymentMethodMerchantChangedError` instructs the integrator to collect Apple Pay again.
+* [Fixed] If the customer's KYC region changes after Apple Pay is collected before authentication, token creation now throws `PaymentMethodKYCRegionChangedError` (`payment_method_kyc_region_changed`). Collect Apple Pay again and retry token creation only after successful collection.
 
 ## 26.13.0 2026-10-05
 ### PaymentSheet
