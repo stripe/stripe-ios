@@ -14,6 +14,9 @@
 # update_fastlane
 
 require 'yaml'
+require_relative '../ci_scripts/prepare_ci_branch'
+require_relative '../ci_scripts/size_report_modules'
+require_relative '../ci_scripts/size_report_cache'
 
 default_platform(:ios)
 
@@ -136,11 +139,19 @@ platform :ios do
 
   lane :size_report do
     Dir.chdir('..') do
-      # Get the merge base between the current branch and master
-      merge_base = sh("git merge-base origin/master HEAD").strip
-
-      # Run size_report.rb
-      sh("bundle exec ruby Tests/installation_tests/size_test/size_report.rb #{ENV['BITRISE_GIT_BRANCH']} #{merge_base}")
+      comparison = SizeReportCache.prepared_comparison
+      merge_base = comparison.fetch(:base)
+      modules = YAML.load_file('modules.yaml')['modules'].select { |m| m.key?('size_report') }
+      modules = SizeReportModules.select(modules, comparison)
+      modules = SizeReportModules.shard(modules)
+      if modules.empty?
+        UI.message('No affected SDKs assigned to this shard; skipping size archives.')
+        next
+      end
+      names = modules.map { |m| m.fetch('framework_name') }
+      UI.message("Measuring affected SDKs: #{names.join(', ')}")
+      sh('bundle', 'exec', 'ruby', 'Tests/installation_tests/size_test/size_report.rb',
+         comparison.fetch(:head), merge_base, '--modules', names.join(','))
     end
   end
 
