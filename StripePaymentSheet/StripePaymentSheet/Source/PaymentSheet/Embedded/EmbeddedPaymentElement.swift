@@ -36,6 +36,7 @@ public final class EmbeddedPaymentElement {
         public let image: UIImage
         /// A user facing string representing the payment method; e.g. "Apple Pay" or "····4242" for a card
         public let label: String
+        let labels: PaymentSheet.FlowController.PaymentOptionDisplayData.Labels
         /// The billing details associated with the customer's desired payment method
         public let billingDetails: PaymentSheet.BillingDetails?
         /// A string representation of the customer's desired payment method
@@ -615,6 +616,11 @@ extension EmbeddedPaymentElement {
 extension EmbeddedPaymentElement.PaymentOptionDisplayData {
     public static func == (lhs: Self, rhs: Self) -> Bool {
         // Unfortunately, we need to manually define this because the implementation of Equatable on UIImage does not work
-        return lhs.image.pngData() == rhs.image.pngData() && rhs.label == lhs.label && lhs.billingDetails == rhs.billingDetails && lhs.paymentMethodType == rhs.paymentMethodType && lhs.mandateText == rhs.mandateText
+        return lhs.image.pngData() == rhs.image.pngData()
+            && lhs.label == rhs.label
+            && lhs.labels == rhs.labels
+            && lhs.billingDetails == rhs.billingDetails
+            && lhs.paymentMethodType == rhs.paymentMethodType
+            && lhs.mandateText == rhs.mandateText
     }
 }

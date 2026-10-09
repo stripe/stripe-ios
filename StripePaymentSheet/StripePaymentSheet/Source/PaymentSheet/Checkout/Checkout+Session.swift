@@ -342,8 +342,11 @@ extension CheckoutController.Session {
     public struct PaymentOptionDisplayData: Equatable {
         /// An image representing a payment method; e.g. the Apple Pay logo or a VISA logo
         public let image: UIImage
-        /// A user facing string representing the payment method; e.g. "Apple Pay" or "····4242" for a card
+        /// The primary label describing the payment method, such as "Visa" or "Apple Pay".
         public let label: String
+        /// Additional payment method details, such as the masked last four digits of a card or bank account.
+        /// This is `nil` when there are no additional details to display.
+        public let sublabel: String?
         /// The billing details associated with the customer's desired payment method
         public let billingDetails: BillingDetails?
         /// A string representation of the customer's desired payment method

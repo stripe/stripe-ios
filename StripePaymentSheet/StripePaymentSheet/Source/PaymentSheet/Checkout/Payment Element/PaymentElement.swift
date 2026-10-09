@@ -238,7 +238,8 @@ extension CheckoutController.Session.PaymentOptionDisplayData {
     init(_ paymentOption: PaymentSheet.FlowController.PaymentOptionDisplayData) {
         self.init(
             image: paymentOption.image,
-            label: paymentOption.label,
+            label: paymentOption.labels.label,
+            sublabel: paymentOption.labels.sublabel,
             billingDetails: paymentOption.billingDetails.map(BillingDetails.init),
             paymentMethodType: paymentOption.paymentMethodType,
             mandateText: nil
@@ -248,7 +249,8 @@ extension CheckoutController.Session.PaymentOptionDisplayData {
     init(_ paymentOption: EmbeddedPaymentElement.PaymentOptionDisplayData) {
         self.init(
             image: paymentOption.image,
-            label: paymentOption.label,
+            label: paymentOption.labels.label,
+            sublabel: paymentOption.labels.sublabel,
             billingDetails: paymentOption.billingDetails.map(BillingDetails.init),
             paymentMethodType: paymentOption.paymentMethodType,
             mandateText: paymentOption.mandateText
