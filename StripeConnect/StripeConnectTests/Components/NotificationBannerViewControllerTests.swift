@@ -42,6 +42,7 @@ class NotificationBannerViewControllerTests: XCTestCase {
         }
 
         vc.delegate = delegate
+        try await vc.webVC.webView.loadTrustedDocumentPreservingDelegate()
         try await vc.webVC.webView.evaluateOnLoadError(type: "rate_limit_error", message: "Error message")
         try await vc.webVC.webView.evaluateMessage(
             name: "onSetterFunctionCalled",
@@ -68,6 +69,7 @@ class NotificationBannerViewControllerTests: XCTestCase {
             }()
         )
 
+        try await vc.webVC.webView.loadTrustedDocumentPreservingDelegate()
         try await vc.webVC.webView.evaluateMessageWithReply(name: "fetchInitComponentProps",
                                                             json: "{}",
                                                             expectedResponse: """

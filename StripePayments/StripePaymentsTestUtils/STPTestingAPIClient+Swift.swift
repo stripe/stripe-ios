@@ -236,7 +236,7 @@ extension STPTestingAPIClient {
         var sessionParameters: [String: Any] = [
             "ui_mode": "mobile_elements",
             "currency": currency,
-            "payment_method_types": types,
+            "allowed_payment_method_types": types,
             "items": [
                 [
                     "type": "one_time_price",
@@ -336,7 +336,7 @@ extension STPTestingAPIClient {
 
         let params: [String: Any?] = [
             "account": merchantCountry,
-            "payment_method_types": types,
+            "allowed_payment_method_types": types,
             "currency": currency,
             "amount": amount,
             "customer": customerID,

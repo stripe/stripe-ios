@@ -12,8 +12,9 @@ class OnLoaderStartMessageHandlerTests: ScriptWebTestBase {
     @MainActor
     func testMessageSend() async throws {
         let expectation = self.expectation(description: "Message received")
+        try await loadTrustedDocument()
 
-        let messageHandler = OnSetterFunctionCalledMessageHandler(analyticsClient: MockComponentAnalyticsClient(commonFields: .mock))
+        let messageHandler = OnSetterFunctionCalledMessageHandler(sourcePolicy: webView.trustedMessageSourcePolicy(), analyticsClient: MockComponentAnalyticsClient(commonFields: .mock))
 
         messageHandler.addHandler(handler: OnLoaderStartMessageHandler(didReceiveMessage: { payload in
             expectation.fulfill()

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 
 /// Emitted when the claim response is available
 class AccountSessionClaimedMessageHandler: ScriptMessageHandler<AccountSessionClaimedMessageHandler.Payload> {
@@ -13,9 +14,11 @@ class AccountSessionClaimedMessageHandler: ScriptMessageHandler<AccountSessionCl
         /// The connected account ID
         let merchantId: String
     }
-    init(analyticsClient: ComponentAnalyticsClient,
+    init(sourcePolicy: STPWebMessageSourcePolicy,
+         analyticsClient: ComponentAnalyticsClient,
          didReceiveMessage: @escaping (Payload) -> Void) {
         super.init(name: "accountSessionClaimed",
+                   sourcePolicy: sourcePolicy,
                    analyticsClient: analyticsClient,
                    didReceiveMessage: didReceiveMessage)
     }

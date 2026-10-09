@@ -39,6 +39,7 @@ class PayoutsViewControllerTests: XCTestCase {
     @MainActor
     func testPayoutsViewControllerDelegate() async throws {
         let vc = componentManager.createPayoutsViewController()
+        try await vc.webVC.webView.loadTrustedDocumentPreservingDelegate()
         let payoutsDelegate = PayoutViewControllerDelegatePassThrough()
         vc.delegate = payoutsDelegate
 
