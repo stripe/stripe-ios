@@ -165,6 +165,16 @@ enum ExpectedFormHierarchy {
     enum Momo {
         static var paymentIntent: FormHierarchyNode { emptyForm }
     }
+    // MARK: - Touch 'n Go
+
+    enum TouchNGo {
+        static var paymentIntent: FormHierarchyNode { emptyForm }
+        static var settingUp: FormHierarchyNode {
+            FormHierarchyNode(type: "FormElement", children: [
+                FormHierarchyNode(type: "SimpleMandateElement", properties: ["text": "By confirming your payment with Touch 'n Go, you a..."])
+            ])
+        }
+    }
     // MARK: - ShopeePay
 
     enum ShopeePay {
