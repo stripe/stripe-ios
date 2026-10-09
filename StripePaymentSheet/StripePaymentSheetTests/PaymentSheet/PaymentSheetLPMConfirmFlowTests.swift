@@ -815,25 +815,19 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                                expectedHierarchy: ExpectedFormHierarchy.GCash.settingUp) { _ in }
     }
     func testTouchNGoConfirmFlows() async throws {
-        // The Malaysia live-recording account is not enabled for `touch_n_go`, so there are no
-        // network fixtures for this test yet. Remove this skip after enabling the payment method
-        // and recording the complete flow matrix.
-        let testAccountSupportsTouchNGo = false
-        guard testAccountSupportsTouchNGo else {
-            throw XCTSkip("The Malaysia test account is not enabled for touch_n_go.")
-        }
-
         try await _testConfirm(intentKinds: [.paymentIntent],
                                currency: "MYR",
                                amount: 1000,
                                paymentMethodType: .touchNGo,
-                               merchantCountry: .MY,
+                               merchantCountry: .US,
+                               defaultCountry: "MY",
                                expectedHierarchy: ExpectedFormHierarchy.TouchNGo.paymentIntent) { _ in }
         try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .paymentIntentWithPMOSetupFutureUsage, .setupIntent],
                                currency: "MYR",
                                amount: 1000,
                                paymentMethodType: .touchNGo,
-                               merchantCountry: .MY,
+                               merchantCountry: .US,
+                               defaultCountry: "MY",
                                expectedHierarchy: ExpectedFormHierarchy.TouchNGo.settingUp) { _ in }
     }
     func testNgUSSDConfirmFlows() async throws {
@@ -1711,9 +1705,15 @@ extension PaymentSheetLPMConfirmFlowTests {
                 intents += [
                     TestIntent("Deferred PaymentIntent w/ PMO setup_future_usage - client side confirmation", makeDeferredIntent(deferredCSC)),
                     TestIntent("Deferred PaymentIntent w/ PMO setup_future_usage - server side confirmation", makeDeferredIntent(deferredSSC)),
-                    TestIntent("Deferred PaymentIntent w/ PMO setup_future_usage - client side confirmation with confirmation token", makeDeferredIntent(deferredCSCWithConfirmationToken)),
-                    TestIntent("Deferred PaymentIntent w/ PMO setup_future_usage - server side confirmation with confirmation token", makeDeferredIntent(deferredSSCWithConfirmationToken)),
                 ]
+                // Confirmation Tokens does not accept client_context[payment_method_options][touch_n_go].
+                // Keep testing PMO future usage through the supported PaymentMethod flows.
+                if paymentMethod != .touchNGo {
+                    intents += [
+                        TestIntent("Deferred PaymentIntent w/ PMO setup_future_usage - client side confirmation with confirmation token", makeDeferredIntent(deferredCSCWithConfirmationToken)),
+                        TestIntent("Deferred PaymentIntent w/ PMO setup_future_usage - server side confirmation with confirmation token", makeDeferredIntent(deferredSSCWithConfirmationToken)),
+                    ]
+                }
             }
             // TODO(porter): Checkout rejects `payment_intent_data`/`payment_method_options`
             // setup_future_usage in modeless sessions. Re-enable once unified mode supports
@@ -1963,8 +1963,8 @@ extension PaymentSheetLPMConfirmFlowTests {
         if addressSpec.fieldOrdering.contains(.state) {
             XCTAssertNotNil(getState(from: form))
         }
-        // GCash restricts billing addresses to the Philippines, so there is no country selector.
-        if paymentMethodType != .gcash {
+        // These payment methods restrict billing addresses to one country, so there is no country selector.
+        if ![.gcash, .touchNGo].contains(paymentMethodType) {
             XCTAssertNotNil(form.getDropdownFieldElement("Country or region"))
         }
         XCTAssertNotNil(form.getTextFieldElement(addressSpec.zipNameType.localizedLabel))

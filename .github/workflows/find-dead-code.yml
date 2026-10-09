@@ -1,75 +1,119 @@
 name: Dead code detection
 on:
   pull_request:
-    types: [opened, labeled, unlabeled, synchronize]
-    paths:
-      - '**/*.swift'
+    types: [opened, reopened, labeled, unlabeled, synchronize]
+  push:
+    branches: [master]
+
+concurrency:
+  group: dead-code-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 jobs:
   dead-code-check:
     runs-on: macos-26
     permissions:
+      contents: read
       pull-requests: write
 
     steps:
       - name: Checkout code
         uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
         with:
+          ref: ${{ github.sha }}
           fetch-depth: 1
           persist-credentials: false
 
+      - name: Select revisions and check changed files
+        id: scope
+        run: ruby ci_scripts/dead_code/prepare_scan.rb
+
       - name: Setup Xcode
+        if: steps.scope.outputs.required == 'true'
         run: sudo xcode-select -s /Applications/Xcode_26.4.1.app/Contents/Developer
 
-      - name: Install Periphery
+      - name: Fingerprint scan inputs
+        id: fingerprint
+        if: steps.scope.outputs.required == 'true'
+        run: ruby ci_scripts/dead_code/prepare_scan.rb fingerprint
+
+      # Cache parsed findings only. Exact SHA/toolchain/recipe keys prevent stale
+      # comparisons, and master push results are available to every PR.
+      - name: Restore current scan
+        id: current-cache
+        if: steps.scope.outputs.required == 'true'
+        uses: actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        with:
+          path: ${{ runner.temp }}/dead-code-cache
+          key: dead-code-v1-${{ runner.os }}-${{ runner.arch }}-${{ steps.fingerprint.outputs.toolchain }}-${{ steps.fingerprint.outputs.recipe }}-${{ steps.scope.outputs.source }}
+
+      - name: Scan current revision
+        if: steps.scope.outputs.required == 'true' && steps.current-cache.outputs.cache-hit != 'true'
         env:
-          # Pinned to avoid regressions from new releases. Periphery 3.7.3+ has a bug
-          # with mixed Swift/ObjC indexing that causes duplicate declaration conflicts.
-          PERIPHERY_VERSION: 3.6.0
-        run: |
-          curl -sL "https://github.com/peripheryapp/periphery/releases/download/${PERIPHERY_VERSION}/periphery-${PERIPHERY_VERSION}.zip" -o /tmp/periphery.zip
-          unzip -o /tmp/periphery.zip -d /tmp/periphery
-          install /tmp/periphery/periphery /usr/local/bin/periphery
+          SOURCE_SHA: ${{ steps.scope.outputs.source }}
+        run: ruby ci_scripts/dead_code/run_scan.rb "$SOURCE_SHA" "$RUNNER_TEMP/dead-code-cache/findings.json"
 
-      - name: Build project and run Periphery scan
-        id: periphery-scan
-        run: |
-          periphery scan --config .periphery.yml --clean-build --retain-codable-properties 2>&1 > periphery_report_feature_formatted_sorted.txt
-          ruby ci_scripts/dead_code/process_periphery_output.rb periphery_report_feature_formatted_sorted.txt unused_code_feature.json
-          
-      - name: Copy .periphery.yml to temporary location
-        run: |
-            # Copy necessary files to temporary directory provided by GitHub Actions runner
-            cp .periphery.yml "$RUNNER_TEMP/"
-            cp -r ci_scripts/dead_code/ "$RUNNER_TEMP/"
+      - name: Save current scan
+        if: steps.scope.outputs.required == 'true' && steps.current-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        with:
+          path: ${{ runner.temp }}/dead-code-cache
+          key: ${{ steps.current-cache.outputs.cache-primary-key }}
 
-      - name: Compare Periphery output with master baseline
+      - name: Keep current findings and clear cache directory
+        if: steps.scope.outputs.required == 'true' && github.event_name == 'pull_request'
         run: |
-          git fetch --depth=1 origin ${GITHUB_BASE_REF}
-          git checkout FETCH_HEAD
-          cp "$RUNNER_TEMP/.periphery.yml" .periphery.yml
-          mkdir -p ci_scripts/dead_code/
-          cp -r "$RUNNER_TEMP/" ci_scripts/dead_code/
+          mkdir -p "$RUNNER_TEMP/dead-code-results"
+          cp "$RUNNER_TEMP/dead-code-cache/findings.json" "$RUNNER_TEMP/dead-code-results/current.json"
+          rm -rf "$RUNNER_TEMP/dead-code-cache"
 
-          periphery scan --config .periphery.yml --clean-build --retain-codable-properties 2>&1 > periphery_report_master_formatted_sorted.txt
-          ruby ci_scripts/dead_code/process_periphery_output.rb periphery_report_master_formatted_sorted.txt unused_code_master.json
+      # Use the same path for both restores: GitHub includes paths in cache versions.
+      - name: Restore baseline scan
+        id: baseline-cache
+        if: steps.scope.outputs.required == 'true' && github.event_name == 'pull_request'
+        uses: actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        with:
+          path: ${{ runner.temp }}/dead-code-cache
+          key: dead-code-v1-${{ runner.os }}-${{ runner.arch }}-${{ steps.fingerprint.outputs.toolchain }}-${{ steps.fingerprint.outputs.recipe }}-${{ steps.scope.outputs.baseline }}
 
-      - name: Compare Unused Code JSON Files
-        id: compare-dead-code
+      - name: Scan baseline revision
+        if: steps.scope.outputs.required == 'true' && github.event_name == 'pull_request' && steps.baseline-cache.outputs.cache-hit != 'true'
+        env:
+          BASE_SHA: ${{ steps.scope.outputs.baseline }}
+        run: ruby ci_scripts/dead_code/run_scan.rb "$BASE_SHA" "$RUNNER_TEMP/dead-code-cache/findings.json"
+
+      - name: Save baseline scan
+        if: steps.scope.outputs.required == 'true' && github.event_name == 'pull_request' && steps.baseline-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        with:
+          path: ${{ runner.temp }}/dead-code-cache
+          key: ${{ steps.baseline-cache.outputs.cache-primary-key }}
+
+      - name: Compare unused code
+        if: steps.scope.outputs.required == 'true' && github.event_name == 'pull_request'
         run: |
-          ruby ci_scripts/dead_code/compare_unused_code.rb unused_code_master.json unused_code_feature.json
-          # Check if new_dead_code.txt exists and is not empty
+          ruby ci_scripts/dead_code/compare_unused_code.rb "$RUNNER_TEMP/dead-code-cache/findings.json" "$RUNNER_TEMP/dead-code-results/current.json"
           if [ -s new_dead_code.txt ]; then
-            echo "New dead code detected."
-            echo "diff<<EOF" >> $GITHUB_ENV
-            cat new_dead_code.txt >> $GITHUB_ENV
-            echo "EOF" >> $GITHUB_ENV
-          else
-            echo "No new dead code detected."
+            delimiter="DEAD_CODE_$(uuidgen)"
+            {
+              echo "diff<<$delimiter"
+              cat new_dead_code.txt
+              echo "$delimiter"
+            } >> "$GITHUB_ENV"
           fi
+
+      - name: Upload scan diagnostics
+        if: always() && steps.scope.outputs.required == 'true'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: dead-code-diagnostics-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/dead-code-reports
+          if-no-files-found: ignore
+          retention-days: 7
 
       - uses: davidme-stripe/find-comment@b30e6a3c0ed37e7c023ccd3f1db5c6c0b0c23aad # v4.0.0
         id: find_comment
+        if: github.event_name == 'pull_request'
         with:
           issue-number: ${{ github.event.pull_request.number }}
           body-includes: '[find-dead-code]'

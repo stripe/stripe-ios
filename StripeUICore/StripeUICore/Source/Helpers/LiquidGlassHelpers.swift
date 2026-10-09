@@ -9,6 +9,7 @@ import Foundation
 import UIKit
 
 @_spi(STP) public class LiquidGlassDetector {
+
     /// Whether or not the merchant's app (not MPE) has Liquid Glass enabled
     @_spi(STP) public static var isEnabledInMerchantApp: Bool {
         guard #available(iOS 26.0, visionOS 26.0, *) else {
@@ -26,12 +27,17 @@ import UIKit
         #endif
     }
 
-    /// Whether the app hasn't opted out of the new design
+    /// Whether the app has opted out of the new design
     @_spi(STP) public static var hasOptedOut: Bool {
-        if let optOutFlag = Bundle.main.infoDictionary?["UIDesignRequiresCompatibility"] as? Bool {
-            return optOutFlag
+        // Xcode 27+ (Swift 6.4+) on OS 27+: Liquid Glass is required, so ignore the opt-out flag.
+        #if compiler(>=6.4)
+        if #available(iOS 27.0, visionOS 27.0, *) {
+            return false
         }
-        return false
+        #endif
+
+        // Older OS or Xcode versions: honor the opt-out flag, defaulting to NO when absent.
+        return Bundle.main.infoDictionary?["UIDesignRequiresCompatibility"] as? Bool ?? false
     }
 }
 

@@ -6,13 +6,14 @@
 //
 
 import PhotosUI
+@_spi(STP) import StripeCore
 import SwiftUI
 import UniformTypeIdentifiers
 
-/// Imports existing files or photos without requesting camera access.
+/// Imports existing files or photos, or captures a new photo with the system camera.
 struct DocumentPicker: UIViewControllerRepresentable {
 
-    /// The system picker used to select an existing document.
+    /// The system interface used to select or capture a document.
     enum Source {
 
         /// Select a file from Files or another document provider.
@@ -20,6 +21,9 @@ struct DocumentPicker: UIViewControllerRepresentable {
 
         /// Select an existing image from Photos.
         case photos
+
+        /// Take a new photo with the camera.
+        case camera
     }
 
     /// The location from which to select the document.
@@ -28,7 +32,7 @@ struct DocumentPicker: UIViewControllerRepresentable {
     /// The accepted file formats and per-file size limit used during import.
     let configuration: DocumentCollectionConfiguration
 
-    /// Called with the selected file's available name before the picker-owned file is copied.
+    /// Called with the file's name before it is copied or the captured photo is saved.
     let onBeginImport: (String) -> Void
 
     /// Receives the imported file or an error; a `nil` result indicates the picker was canceled.
@@ -45,6 +49,12 @@ struct DocumentPicker: UIViewControllerRepresentable {
         case .files:
             let picker = UIDocumentPickerViewController(forOpeningContentTypes: configuration.documentPickerContentTypes, asCopy: true)
             picker.allowsMultipleSelection = false
+            picker.delegate = context.coordinator
+            return picker
+        case .camera:
+            let picker = UIImagePickerController()
+            picker.sourceType = .camera
+            picker.mediaTypes = [UTType.image.identifier]
             picker.delegate = context.coordinator
             return picker
         case .photos:
@@ -65,7 +75,7 @@ struct DocumentPicker: UIViewControllerRepresentable {
     // MARK: - Coordinator
 
     /// Routes system picker selections and cancellation back to document collection.
-    final class Coordinator: NSObject, UIDocumentPickerDelegate, PHPickerViewControllerDelegate {
+    final class Coordinator: NSObject, UIDocumentPickerDelegate, PHPickerViewControllerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
         private let parent: DocumentPicker
 
         /// Creates a delegate that delivers picker events to the supplied view.
@@ -132,6 +142,64 @@ struct DocumentPicker: UIViewControllerRepresentable {
                     guard let url else {
                         throw DocumentCollectionError.unreadableFile
                     }
+                    return try DocumentFile.copy(from: url, acceptedFormats: configuration.acceptedFormats, maximumFileSize: configuration.maximumFileSize)
+                }
+
+                DispatchQueue.main.async {
+                    self.parent.onCompletion(result)
+                }
+            }
+        }
+
+        // MARK: - UIImagePickerControllerDelegate
+
+        func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+            parent.onCompletion(nil)
+        }
+
+        func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
+            guard let image = info[.originalImage] as? UIImage else {
+                parent.onCompletion(.failure(DocumentCollectionError.unreadableFile))
+                return
+            }
+
+            let configuration = parent.configuration
+            guard let format = configuration.cameraImageFormat else {
+                parent.onCompletion(.failure(DocumentCollectionError.unsupportedFormat))
+                return
+            }
+
+            let filename = format == .jpeg ? "photo.jpg" : "photo.png"
+            parent.onBeginImport(filename)
+
+            DispatchQueue.global(qos: .userInitiated).async {
+                let result = Result {
+                    var imageToEncode = image
+                    if format == .png && image.imageOrientation != .up {
+                        // PNG encoding does not preserve orientation metadata, so redraw the image rotated if needed.
+                        let rendererFormat = UIGraphicsImageRendererFormat()
+                        rendererFormat.scale = image.scale
+                        imageToEncode = UIGraphicsImageRenderer(size: image.size, format: rendererFormat).image { _ in
+                            image.draw(at: .zero)
+                        }
+                    }
+
+                    let imageData = format == .jpeg ? imageToEncode.jpegDataAndDimensions(maxBytes: configuration.maximumFileSize).imageData : imageToEncode.pngData()
+
+                    guard let data = imageData else {
+                        throw DocumentCollectionError.unreadableFile
+                    }
+
+                    let directory = FileManager.default.temporaryDirectory.appendingPathComponent("stripe-kyc-camera-\(UUID().uuidString)", isDirectory: true)
+
+                    try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+
+                    defer {
+                        try? FileManager.default.removeItem(at: directory)
+                    }
+
+                    let url = directory.appendingPathComponent(filename)
+                    try data.write(to: url, options: .completeFileProtectionUntilFirstUserAuthentication)
                     return try DocumentFile.copy(from: url, acceptedFormats: configuration.acceptedFormats, maximumFileSize: configuration.maximumFileSize)
                 }
 
