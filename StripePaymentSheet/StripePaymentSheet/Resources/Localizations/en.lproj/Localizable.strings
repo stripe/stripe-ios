@@ -56,6 +56,12 @@
 /* Text on a screen that indicates bank account details cannot be changed. */
 "Bank account details cannot be changed." = "Bank account details cannot be changed.";
 
+/* Phone-match instruction before Link email OTP. Placeholder is the last two phone digits. */
+"Before we can send a code to your email, we need to verify additional information about you. Please enter your phone number ending in ••%@." = "Before we can send a code to your email, we need to verify additional information about you. Please enter your phone number ending in ••%@.";
+
+/* Phone-match instruction before Link email OTP. */
+"Before we can send a code to your email, we need to verify additional information about you. Please enter your phone number." = "Before we can send a code to your email, we need to verify additional information about you. Please enter your phone number.";
+
 /* Promotional text for Klarna, displayed in a button that lets the customer pay with Klarna */
 "Buy now or pay later with Klarna" = "Buy now or pay later with Klarna";
 
@@ -170,9 +176,6 @@
 /* Accessibility label for the button to close the card scanner. */
 "Close card scanner" = "Close card scanner";
 
-/* Text of a notification shown to the user when a login code is successfully sent via SMS. */
-"Code sent" = "Code sent";
-
 /* Instructions shown while waiting for a Pix payment authorization */
 "Complete the payment using Pix to finish the purchase." = "Complete the payment using Pix to finish the purchase.";
 
@@ -240,6 +243,9 @@ with the transaction. */
 /* Accessibility label for a button that lets the user update their address */
 "Edit address" = "Edit address";
 
+/* Link authentication action to receive an email verification code. */
+"Email code" = "Email code";
+
 /* Text for a button that allows manual entry of an address */
 "Enter address manually" = "Enter address manually";
 
@@ -302,6 +308,9 @@ with the transaction. */
 
 /* Title shown above a carousel containing the customer's payment methods */
 "Manage your payment methods" = "Manage your payment methods";
+
+/* Button opening Link authentication actions. */
+"More options" = "More options";
 
 /* Label for name on card field */
 "Name on card" = "Name on card";
@@ -419,6 +428,9 @@ e.g, 'Pay faster at Example, Inc. and thousands of businesses.' */
 
 /* Title for confirmation alert to remove a payment method */
 "Remove payment method?" = "Remove payment method?";
+
+/* Link OTP resend cooldown, in seconds. */
+"Resend code in %d seconds" = "Resend code in %d seconds";
 
 /* A button used for saving a new payment method
    Label on a button that when tapped, updates a card brand. */
@@ -560,6 +572,12 @@ the heading the screen itself. */
 
 /* Label for checkbox in address form allowing user to use billing address */
 "Use billing address for shipping" = "Use billing address for shipping";
+
+/* Heading for the Link phone-match screen. */
+"Verify your phone number" = "Verify your phone number";
+
+/* Link authentication in progress. */
+"Verifying your account…" = "Verifying your account…";
 
 /* Text shown on a button that displays a customer's default saved payment method. When tapped, it opens a screen that shows all of the customer's saved payment methods. */
 "View more" = "View more";
