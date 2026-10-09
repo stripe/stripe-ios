@@ -497,6 +497,7 @@ extension EmbeddedPaymentElement: VerticalSavedPaymentMethodsViewControllerDeleg
 extension EmbeddedPaymentElement.PaymentOptionDisplayData {
     init(paymentOption: PaymentOption, mandateText: NSAttributedString?, currency: String?, iconStyle: PaymentSheet.Appearance.IconStyle, linkBrand: LinkBrand = .link) {
         self.mandateText = mandateText
+        self.labels = .init(paymentOption: paymentOption, linkBrand: linkBrand)
         self.image = paymentOption.makeIcon(currency: currency, iconStyle: iconStyle) // TODO: https://jira.corp.stripe.com/browse/MOBILESDK-2604 Refactor this!
         switch paymentOption {
         case .applePay:

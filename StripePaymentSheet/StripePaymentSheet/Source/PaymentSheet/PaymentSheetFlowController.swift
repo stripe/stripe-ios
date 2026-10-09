@@ -179,7 +179,7 @@ extension PaymentSheet {
             @_spi(STP) public let labels: Labels
 
             /// A type that holds additional display data
-            @_spi(STP) public struct Labels {
+            @_spi(STP) public struct Labels: Equatable {
                 /// Primary label for the payment option. This will primarily describe
                 /// the type of the payment option being used. For cards, this could
                 /// be 'Mastercard', 'Visa', or others. For other payment methods, this is typically the
@@ -196,57 +196,66 @@ extension PaymentSheet {
                     // Set sublabel to nil if it matches label to avoid redundancy
                     self.sublabel = sublabel == label ? nil : sublabel
                 }
+
+                init(paymentOption: PaymentOption, linkBrand: LinkBrand) {
+                    switch paymentOption {
+                    case .applePay:
+                        self.init(label: String.Localized.apple_pay, sublabel: nil)
+                    case .saved(let paymentMethod, let confirmParams):
+                        if let linkedBank = confirmParams?.instantDebitsLinkedBank {
+                            self.init(label: linkedBank.bankName ?? .Localized.bank, sublabel: linkedBank.last4.flatMap { "••••\($0)" })
+                        } else {
+                            self.init(
+                                label: paymentMethod.expandedPaymentSheetLabel(brand: linkBrand),
+                                sublabel: paymentMethod.paymentSheetSublabel(brand: linkBrand)
+                            )
+                        }
+                    case .new(let confirmParams):
+                        self.init(
+                            label: confirmParams.expandedPaymentSheetLabel(brand: linkBrand),
+                            sublabel: confirmParams.paymentSheetSublabel
+                        )
+                    case .link(let option):
+                        if case let .signUp(_, _, _, _, _, confirmParams) = option {
+                            self.init(
+                                label: confirmParams.expandedPaymentSheetLabel(brand: linkBrand),
+                                sublabel: confirmParams.paymentSheetSublabel
+                            )
+                        } else {
+                            self.init(label: linkBrand.displayName, sublabel: option.displayPaymentSheetSubLabel(brand: linkBrand))
+                        }
+                    case .external(let paymentMethod, _):
+                        self.init(label: paymentMethod.displayText, sublabel: nil)
+                    }
+                }
             }
 
             init(paymentOption: PaymentOption, currency: String?, iconStyle: PaymentSheet.Appearance.IconStyle, linkBrand: LinkBrand = .link) {
                 image = paymentOption.makeIcon(currency: currency, iconStyle: iconStyle)
+                labels = Labels(paymentOption: paymentOption, linkBrand: linkBrand)
                 switch paymentOption {
                 case .applePay:
                     label = String.Localized.apple_pay
-                    labels = Labels(label: String.Localized.apple_pay, sublabel: nil)
                     paymentMethodType = "apple_pay"
                     billingDetails = nil
                     shippingDetails = nil
                 case .saved(let paymentMethod, let confirmParams):
-                    if let linkedBank = confirmParams?.instantDebitsLinkedBank {
-                        // Special case for Instant Bank Payments
-                        let sublabel = linkedBank.last4.flatMap { "••••\($0)" }
-                        labels = Labels(label: linkedBank.bankName ?? .Localized.bank, sublabel: sublabel)
-                    } else {
-                        labels = Labels(
-                            label: paymentMethod.expandedPaymentSheetLabel(brand: linkBrand),
-                            sublabel: paymentMethod.paymentSheetSublabel(brand: linkBrand)
-                        )
-                    }
                     label = paymentMethod.paymentOptionLabel(confirmParams: confirmParams, brand: linkBrand)
                     paymentMethodType = paymentMethod.type.identifier
                     billingDetails = paymentMethod.billingDetails?.toPaymentSheetBillingDetails()
                     shippingDetails = nil
                 case .new(let confirmParams):
                     label = confirmParams.paymentSheetLabel(brand: linkBrand)
-                    labels = Labels(
-                        label: confirmParams.expandedPaymentSheetLabel(brand: linkBrand),
-                        sublabel: confirmParams.paymentSheetSublabel
-                    )
                     paymentMethodType = confirmParams.paymentMethodType.identifier
                     billingDetails = confirmParams.paymentMethodParams.billingDetails?.toPaymentSheetBillingDetails()
                     shippingDetails = nil
                 case .link(let option):
-                    if case let .signUp(_, _, _, _, _, confirmParams) = option {
-                        labels = Labels(
-                            label: confirmParams.expandedPaymentSheetLabel(brand: linkBrand),
-                            sublabel: confirmParams.paymentSheetSublabel
-                        )
-                    } else {
-                        labels = Labels(label: linkBrand.displayName, sublabel: option.displayPaymentSheetSubLabel(brand: linkBrand))
-                    }
                     label = option.paymentSheetLabel(brand: linkBrand)
                     paymentMethodType = option.paymentMethodType
                     billingDetails = option.billingDetails?.toPaymentSheetBillingDetails()
                     shippingDetails = option.shippingAddress
                 case .external(let paymentMethod, let stpBillingDetails):
                     label = paymentMethod.displayText
-                    labels = Labels(label: paymentMethod.displayText, sublabel: nil)
                     paymentMethodType = paymentMethod.type
                     billingDetails = stpBillingDetails.toPaymentSheetBillingDetails()
                     shippingDetails = nil

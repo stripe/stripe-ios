@@ -92,6 +92,7 @@ extension CheckoutController.Session: CustomDebugStringConvertible {
             "  paymentOption: {",
             "    paymentMethodType: \(String(reflecting: paymentOption.paymentMethodType))",
             "    label: \(String(reflecting: paymentOption.label))",
+            "    sublabel: \(String(reflecting: paymentOption.sublabel))",
         ]
         if let billingDetails = paymentOption.billingDetails {
             lines.append(contentsOf: addressDebugDescriptionLines(

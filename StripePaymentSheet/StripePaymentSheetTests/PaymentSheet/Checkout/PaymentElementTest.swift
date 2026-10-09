@@ -9,7 +9,7 @@ import OHHTTPStubs
 @testable @_spi(STP) import StripeCore
 @testable @_spi(STP) import StripeCoreTestUtils
 @testable @_spi(STP) import StripePayments
-@testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(AppearanceAPIAdditionsPreview) @_spi(STP) import StripePaymentSheet
 @testable @_spi(STP) import StripePaymentsTestUtils
 @testable @_spi(STP) import StripeUICore
 import XCTest
@@ -290,7 +290,8 @@ final class PaymentElementTest: XCTestCase {
         XCTAssertEqual(updateRequest.params["tax_region[postal_code]"], "94080")
 
         // ...and the saved card remains selected after PaymentElement refreshes.
-        XCTAssertEqual(checkout.session.paymentOption?.label, "•••• 4242")
+        XCTAssertEqual(checkout.session.paymentOption?.label, "Visa")
+        XCTAssertEqual(checkout.session.paymentOption?.sublabel, "•••• 4242")
         let billingDetails = try XCTUnwrap(checkout.session.paymentOption?.billingDetails)
         XCTAssertEqual(billingDetails.name, "Jenny Rosen")
         XCTAssertEqual(billingDetails.email, "jenny.rosen@example.com")
@@ -302,11 +303,76 @@ final class PaymentElementTest: XCTestCase {
         XCTAssertEqual(billingDetails.address?.postalCode, "94080")
     }
 
+    func testPaymentOptionLabelsForBothPresentations() {
+        // Given new and saved payment options, including methods with no additional details
+        let cardParams = STPPaymentMethodCardParams()
+        cardParams.number = "4242424242424242"
+        let confirmParams = IntentConfirmParams(type: .stripe(.card))
+        confirmParams.paymentMethodParams.card = cardParams
+        let cases: [(PaymentSheet.PaymentOption, String, String?)] = [
+            (.new(confirmParams: confirmParams), "Visa", "•••• 4242"),
+            (.saved(paymentMethod: STPPaymentMethod._testCard(), confirmParams: nil), "Visa", "•••• 4242"),
+            (.saved(paymentMethod: STPPaymentMethod._testUSBankAccount(), confirmParams: nil), "STRIPE TEST BANK", "••••6789"),
+            (.saved(paymentMethod: STPPaymentMethod._testLink(displayName: "My Personal Card"), confirmParams: nil), "Link", "My Personal Card •••• 4242"),
+            (.applePay, "Apple Pay", nil),
+            (.new(confirmParams: IntentConfirmParams(type: .stripe(.payPal))), "PayPal", nil),
+        ]
+
+        for (paymentOption, label, sublabel) in cases {
+            // When converting sheet and embedded selections to Checkout display data
+            let sheetData = CheckoutController.Session.PaymentOptionDisplayData(
+                PaymentSheet.FlowController.PaymentOptionDisplayData(
+                    paymentOption: paymentOption, currency: "usd", iconStyle: .filled
+                )
+            )
+            let mandateText = NSAttributedString(string: "Mandate")
+            let embeddedData = CheckoutController.Session.PaymentOptionDisplayData(
+                EmbeddedPaymentElement.PaymentOptionDisplayData(
+                    paymentOption: paymentOption, mandateText: mandateText, currency: "usd", iconStyle: .filled
+                )
+            )
+
+            // Then both presentations expose the primary label and optional details
+            for displayData in [sheetData, embeddedData] {
+                XCTAssertEqual(displayData.label, label)
+                XCTAssertEqual(displayData.sublabel, sublabel)
+            }
+            XCTAssertNil(sheetData.mandateText)
+            XCTAssertEqual(embeddedData.mandateText, mandateText)
+        }
+    }
+
+    func testPaymentOptionLabelsUseResolvedLinkBrand() {
+        // Given a saved Link card using Onelink branding
+        let paymentMethod = STPPaymentMethod._testCard()
+        paymentMethod.isLinkOrigin = true
+        let paymentOption = PaymentSheet.PaymentOption.saved(paymentMethod: paymentMethod, confirmParams: nil)
+
+        // When converting either Payment Element presentation to Checkout display data
+        let sheetData = CheckoutController.Session.PaymentOptionDisplayData(
+            PaymentSheet.FlowController.PaymentOptionDisplayData(
+                paymentOption: paymentOption, currency: "usd", iconStyle: .filled, linkBrand: .onelink
+            )
+        )
+        let embeddedData = CheckoutController.Session.PaymentOptionDisplayData(
+            EmbeddedPaymentElement.PaymentOptionDisplayData(
+                paymentOption: paymentOption, mandateText: nil, currency: "usd", iconStyle: .filled, linkBrand: .onelink
+            )
+        )
+
+        // Then both presentations preserve the resolved brand and card details
+        for displayData in [sheetData, embeddedData] {
+            XCTAssertEqual(displayData.label, "Onelink")
+            XCTAssertEqual(displayData.sublabel, "•••• 4242")
+        }
+    }
+
     func testPaymentOptionBillingDetailsOmitsEmptyAddress() {
         // Given a payment option whose PaymentSheet billing details have no address fields
         let paymentOption = EmbeddedPaymentElement.PaymentOptionDisplayData(
             image: UIImage(),
             label: "•••• 4242",
+            labels: .init(label: "Visa", sublabel: "•••• 4242"),
             billingDetails: .init(),
             paymentMethodType: "card",
             mandateText: nil,

@@ -36,6 +36,7 @@ public final class EmbeddedPaymentElement {
         public let image: UIImage
         /// A user facing string representing the payment method; e.g. "Apple Pay" or "····4242" for a card
         public let label: String
+        let labels: PaymentSheet.FlowController.PaymentOptionDisplayData.Labels
         /// The billing details associated with the customer's desired payment method
         public let billingDetails: PaymentSheet.BillingDetails?
         /// A string representation of the customer's desired payment method

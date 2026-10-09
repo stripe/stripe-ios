@@ -148,7 +148,8 @@ final class CheckoutUnitTests: XCTestCase {
 
         // Then the Checkout session mirrors the selected payment option
         XCTAssertEqual(checkout.session.paymentOption?.paymentMethodType, "card")
-        XCTAssertEqual(checkout.session.paymentOption?.label, "•••• 4242")
+        XCTAssertEqual(checkout.session.paymentOption?.label, "Visa")
+        XCTAssertEqual(checkout.session.paymentOption?.sublabel, "•••• 4242")
 
         // When the Checkout payment option is cleared
         try await checkout.clearPaymentOption()
@@ -854,7 +855,8 @@ final class CheckoutUnitTests: XCTestCase {
         )
         session.localState.paymentOption = .init(
             image: UIImage(),
-            label: "Visa ending in 4242",
+            label: "Visa",
+            sublabel: "•••• 4242",
             billingDetails: .init(
                 address: .init(
                     city: "San Francisco",
@@ -901,7 +903,8 @@ final class CheckoutUnitTests: XCTestCase {
               minorUnitsAmountDivisor: 100
               paymentOption: {
                 paymentMethodType: "card"
-                label: "Visa ending in 4242"
+                label: "Visa"
+                sublabel: Optional("•••• 4242")
                 billingDetails: {
                   country: "US"
                 }
@@ -1086,7 +1089,8 @@ final class CheckoutUnitTests: XCTestCase {
 
         try await checkout.commitSession(confirmResponse)
 
-        XCTAssertEqual(checkout.session.paymentOption?.label, "•••• 4242")
+        XCTAssertEqual(checkout.session.paymentOption?.label, "Visa")
+        XCTAssertEqual(checkout.session.paymentOption?.sublabel, "•••• 4242")
         XCTAssertEqual(checkout.session.paymentOption?.paymentMethodType, "card")
 
         try await checkout.clearPaymentOption()

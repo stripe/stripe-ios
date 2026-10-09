@@ -604,7 +604,7 @@ final class CheckoutCartViewController: UIViewController {
             imageView.widthAnchor.constraint(equalToConstant: 24).isActive = true
             imageView.heightAnchor.constraint(equalToConstant: 16).isActive = true
             paymentOptionStackView.addArrangedSubview(imageView)
-            rowView.accessibilityLabel = paymentOption.label
+            rowView.accessibilityLabel = [paymentOption.label, paymentOption.sublabel].compactMap { $0 }.joined(separator: ", ")
         } else {
             let imageView = UIImageView(image: UIImage(systemName: "plus.circle.fill"))
             imageView.tintColor = .systemBlue
@@ -619,7 +619,17 @@ final class CheckoutCartViewController: UIViewController {
         let label = UILabel()
         label.text = session.paymentOption?.label ?? "Select payment method"
         label.font = .preferredFont(forTextStyle: .body)
-        paymentOptionStackView.addArrangedSubview(label)
+        let labelsStackView = UIStackView(arrangedSubviews: [label])
+        labelsStackView.axis = .vertical
+        labelsStackView.spacing = 2
+        if let sublabel = session.paymentOption?.sublabel {
+            let sublabelView = UILabel()
+            sublabelView.text = sublabel
+            sublabelView.font = .preferredFont(forTextStyle: .subheadline)
+            sublabelView.textColor = .secondaryLabel
+            labelsStackView.addArrangedSubview(sublabelView)
+        }
+        paymentOptionStackView.addArrangedSubview(labelsStackView)
 
         let chevronView = UIImageView(image: UIImage(systemName: "chevron.right"))
         chevronView.tintColor = .secondaryLabel
