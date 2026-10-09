@@ -78,6 +78,7 @@ struct LinkPMDisplayDetails {
 
     let useMobileEndpoints: Bool
     let canSyncAttestationState: Bool
+    let supportedVerificationTypes: [SupportedVerificationType]
     let requestSurface: LinkRequestSurface
     let createdFromAuthIntentID: Bool
 
@@ -129,10 +130,6 @@ struct LinkPMDisplayDetails {
         return currentSession?.hasStartedSMSVerification ?? false
     }
 
-    var hasCompletedSMSVerification: Bool {
-        return currentSession?.hasVerifiedSMSSession ?? false
-    }
-
     var meetsMinimumAuthenticationLevel: Bool {
         return currentSession?.meetsMinimumAuthenticationLevel ?? false
     }
@@ -147,6 +144,10 @@ struct LinkPMDisplayDetails {
     var visitedFallbackURLs: [URL] = []
 
     private(set) var currentSession: ConsumerSession?
+    var authLookupSettings: ConsumerSession.LookupSettings?
+    var authLookupEmail: String?
+    var authCountryCode: String?
+    var authSessionLookup: ((@escaping (Result<ConsumerSession.AuthResponse, Error>) -> Void) -> Void)?
     let displayablePaymentDetails: ConsumerSession.DisplayablePaymentDetails?
 
     init(
@@ -157,16 +158,19 @@ struct LinkPMDisplayDetails {
         apiClient: STPAPIClient = .shared,
         useMobileEndpoints: Bool,
         canSyncAttestationState: Bool,
+        supportedVerificationTypes: [SupportedVerificationType] = SupportedVerificationType.nativeCapabilities(mfaAuthFlowEnabled: false),
         requestSurface: LinkRequestSurface = .default,
         createdFromAuthIntentID: Bool = false
     ) {
         self.email = email
+        self.authLookupEmail = email
         self.currentSession = session
         self.publishableKey = publishableKey
         self.displayablePaymentDetails = displayablePaymentDetails
         self.apiClient = apiClient
         self.useMobileEndpoints = useMobileEndpoints
         self.canSyncAttestationState = canSyncAttestationState
+        self.supportedVerificationTypes = supportedVerificationTypes
         self.requestSurface = requestSurface
         self.createdFromAuthIntentID = createdFromAuthIntentID
     }
@@ -554,28 +558,6 @@ struct LinkPMDisplayDetails {
         }
     }
 
-    func refresh(
-        completion: @escaping (Result<ConsumerSession, Error>) -> Void
-    ) {
-        guard let session = currentSession else {
-            stpAssertionFailure()
-            completion(.failure(
-                PaymentSheetError.unknown(debugDescription: "Refreshing session without valid current session")
-            ))
-            return
-        }
-
-        session.refreshSession(
-            with: apiClient,
-            requestSurface: requestSurface
-        ) { [weak self] result in
-            if case .success(let refreshedSession) = result {
-                self?.updateCurrentSession(refreshedSession, retainingLinkSessionKeyFrom: session)
-            }
-            completion(result)
-        }
-    }
-
     func logout() {
         LinkAccountContext.shared.account = nil
         guard let session = currentSession else {
@@ -599,6 +581,84 @@ struct LinkPMDisplayDetails {
 
         currentSession = existingAccount.currentSession
         publishableKey = publishableKey ?? existingAccount.publishableKey
+    }
+}
+
+extension PaymentSheetLinkAccount: LinkAuthAccount {
+    func applyAuthResponse(_ response: ConsumerSession.AuthResponse) {
+        currentSession = response.consumerSession
+        if let settings = response.settings {
+            authLookupSettings = settings
+        }
+        if let brand = response.linkBrand {
+            currentSession?.linkBrand = brand
+        }
+    }
+
+    func startAuthVerification(
+        type: SupportedVerificationType,
+        phoneNumber: String?,
+        isResending: Bool,
+        completion: @escaping (Result<ConsumerSession.AuthResponse, Error>) -> Void
+    ) {
+        guard let currentSession else {
+            completion(.failure(NSError.stp_genericConnectionError()))
+            return
+        }
+        apiClient.startLinkVerification(
+            for: currentSession.clientSecret,
+            type: type,
+            emailAddress: authLookupEmail,
+            accountPhoneNumber: phoneNumber,
+            isResending: isResending,
+            requestSurface: requestSurface,
+            completion: completion
+        )
+    }
+
+    func confirmAuthVerification(
+        type: SupportedVerificationType,
+        code: String,
+        consentGranted: Bool?,
+        completion: @escaping (Result<ConsumerSession.AuthResponse, Error>) -> Void
+    ) {
+        guard let currentSession else {
+            completion(.failure(NSError.stp_genericConnectionError()))
+            return
+        }
+        apiClient.confirmLinkVerification(
+            for: currentSession.clientSecret,
+            type: type,
+            code: code,
+            consentGranted: consentGranted,
+            requestSurface: requestSurface,
+            completion: completion
+        )
+    }
+
+    func refreshAuthSession(
+        recoverCredentials: Bool,
+        completion: @escaping (Result<ConsumerSession.AuthResponse, Error>) -> Void
+    ) {
+        if recoverCredentials {
+            guard let authSessionLookup else {
+                completion(.failure(NSError.stp_genericConnectionError()))
+                return
+            }
+            authSessionLookup(completion)
+            return
+        }
+        guard let currentSession else {
+            completion(.failure(NSError.stp_genericConnectionError()))
+            return
+        }
+        currentSession.refreshSession(
+            with: apiClient,
+            supportedVerificationTypes: supportedVerificationTypes,
+            requestSurface: requestSurface
+        ) { result in
+            completion(result.map { ConsumerSession.AuthResponse(consumerSession: $0) })
+        }
     }
 }
 
