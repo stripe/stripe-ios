@@ -1,72 +1,83 @@
 #!/usr/bin/ruby
-# This script checks the PaymentSheet test plans, ensuring all tests are skipped once across Shard1 and Shard2.
+# Shards 1–3 select individual tests; shard 4 runs everything else, including new tests.
+# After rebalancing shards 1–3, run this script with --update to regenerate shard 4.
 
-require 'find'  
-require 'json'  
-  
+require 'json'
 
-$SCRIPT_DIR = __dir__
-$ROOT_DIR = File.expand_path('..', $SCRIPT_DIR)
+module PaymentSheetTestSharding
+  EXAMPLE = File.expand_path('../Example/PaymentSheet Example', __dir__)
+  UI_TARGET = 'PaymentSheetUITest'
+  LOCALIZATION_TARGET = 'PaymentSheetLocalizationScreenshotGenerator'
 
-def extract_test_classes(file_path)  
-  test_classes = []  
-  
-  File.open(file_path, "r").each_line do |line|  
-    match = line.match(/class\s+(\w+)\s*:\s*(\w+(?:TestCase)?)/)  
-    if match && match[2].end_with?("TestCase")  
-      test_classes << match[1]  
-    end 
-  end  
-  
-  test_classes  
-end  
-  
-def read_skipped_tests(json_file)  
-  json_data = File.read(json_file)  
-  data = JSON.parse(json_data)  
-  
-  skipped_tests = []  
-  data['testTargets'].each do |test_target|  
-    if test_target['skippedTests']  
-      skipped_tests.concat(test_target['skippedTests'])  
-    end  
-  end  
-  
-  skipped_tests  
-end  
-  
-def main  
-  swift_files = []  
-  test_classes = []  
-  
-  Find.find("#{$ROOT_DIR}/Example/PaymentSheet Example/PaymentSheetUITest") do |path|  
-    swift_files << path if path.end_with?('.swift')  
-  end  
-  
-  swift_files.each do |file|  
-    classes = extract_test_classes(file)  
-    test_classes.concat(classes)  
-  end  
-  
-  skipped_tests1 = read_skipped_tests("#{$ROOT_DIR}/Example/PaymentSheet Example/PaymentSheet Example-Shard1.xctestplan")  
-  skipped_tests2 = read_skipped_tests("#{$ROOT_DIR}/Example/PaymentSheet Example/PaymentSheet Example-Shard2.xctestplan")  
-  skipped_tests3 = read_skipped_tests("#{$ROOT_DIR}/Example/PaymentSheet Example/PaymentSheet Example-Shard3.xctestplan")  
-  skipped_tests4 = read_skipped_tests("#{$ROOT_DIR}/Example/PaymentSheet Example/PaymentSheet Example-Shard4.xctestplan")  
-
-  all_skipped_tests = skipped_tests1 + skipped_tests2 + skipped_tests3 + skipped_tests4
-  
-  # Make sure every test in `test_classes` is skipped in one and only one of the test plans
-  test_classes.each do |test_class|
-    # Check against skipped_tests1 through 4 to make sure it appears three times
-    if all_skipped_tests.count(test_class) != 3
-      puts "Test class #{test_class} is skipped in #{all_skipped_tests.count(test_class)} test plans. It should be skipped in 3/4 test plans."
-      puts "Please open \"PaymentSheet Example-Shard1.xctestplan\" through \"PaymentSheet Example-Shard4.xctestplan\" and ensure it is only enabled in one plan."
-      exit(1)
-    end
+  def self.settings(plan)
+    plan.reject { |key, _| key == 'testTargets' }.merge(
+      'configurations' => plan.fetch('configurations').map { |config| config.reject { |key, _| %w[id name].include?(key) } }
+    )
   end
 
-  
+  def self.exclusions(plans)
+    raise 'Expected four PaymentSheet shard plans' unless plans.length == 4
 
-end  
-  
-main  
+    targets = plans.each_with_index.map do |plan, index|
+      raise 'Shard settings must match' unless settings(plan) == settings(plans.first)
+
+      entries = plan.fetch('testTargets')
+      expected = index.zero? ? [UI_TARGET, LOCALIZATION_TARGET] : [UI_TARGET]
+      raise "Unexpected targets in shard #{index + 1}" unless entries.map { |entry| entry.fetch('target').fetch('name') }.sort == expected.sort
+
+      raise 'Shard targets must be enabled' if entries.any? { |entry| entry['enabled'] == false }
+
+      if index.zero?
+        localization = entries.find { |entry| entry.fetch('target').fetch('name') == LOCALIZATION_TARGET }
+        raise 'Shard 1 must run all localization tests' if localization.key?('selectedTests') || localization.key?('skippedTests')
+      end
+      entries.find { |entry| entry.fetch('target').fetch('name') == UI_TARGET }
+    end
+    options = targets.map { |target| target.reject { |key, _| %w[selectedTests skippedTests].include?(key) } }
+    raise 'UI target and options must match across shards' unless options.uniq.length == 1
+    raise 'Shard 4 must run all tests except the generated exclusions' if targets.last.key?('selectedTests')
+
+    selected = targets.first(3).flat_map do |target|
+      raise 'Shards 1–3 cannot skip tests' if target.key?('skippedTests')
+
+      tests = target.fetch('selectedTests')
+      unless tests.is_a?(Array) && !tests.empty? && tests.all? do |test|
+        test.is_a?(String) && test.split('/').length == 2 && test.end_with?('()') && !test.include?('*')
+      end
+        raise 'Shards 1–3 must select individual Class/testMethod() entries'
+      end
+      tests
+    end
+    duplicates = selected.group_by { |test| test }.select { |_, occurrences| occurrences.length > 1 }.keys
+    raise "Tests assigned more than once: #{duplicates.join(', ')}" unless duplicates.empty?
+
+    selected.sort
+  end
+
+  def self.main(arguments = ARGV, example = EXAMPLE)
+    raise 'Usage: check_paymentsheet_test_sharding.rb [--update]' unless arguments.empty? || arguments == ['--update']
+
+    paths = (1..4).map { |index| File.join(example, "PaymentSheet Example-Shard#{index}.xctestplan") }
+    unless Dir.glob(File.join(example, 'PaymentSheet Example-Shard*.xctestplan')).sort == paths
+      raise 'Expected exactly PaymentSheet Example-Shard1 through Shard4.xctestplan'
+    end
+    plans = paths.map { |path| JSON.parse(File.read(path)) }
+    skipped = exclusions(plans)
+    catch_all = plans.last.fetch('testTargets').first
+    if arguments == ['--update']
+      catch_all['skippedTests'] = skipped
+      File.write(paths.last, JSON.pretty_generate(plans.last, space_before: ' ') + "\n")
+    elsif catch_all['skippedTests'] != skipped
+      raise 'Shard 4 exclusions are out of date. Run ci_scripts/check_paymentsheet_test_sharding.rb --update'
+    end
+    puts 'Shards 1–3 have unique assignments; shard 4 selects all remaining UI tests.'
+  end
+end
+
+if $PROGRAM_NAME == __FILE__
+  begin
+    PaymentSheetTestSharding.main
+  rescue StandardError => e
+    abort e.message
+  end
+end

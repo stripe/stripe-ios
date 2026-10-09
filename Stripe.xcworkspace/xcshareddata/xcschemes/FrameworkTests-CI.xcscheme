@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Run the shared framework unit suites in one build graph.
+     StripeiOS retains its separate test plan and diagnostic settings.
+     StripeIssuing and StripeCryptoOnramp retain separate package dependency build graphs.
+     PaymentSheet and 3DS2 run in their dedicated CI steps. -->
+<Scheme
+   LastUpgradeVersion = "2600"
+   version = "1.7">
+   <BuildAction
+      parallelizeBuildables = "YES"
+      buildImplicitDependencies = "YES">
+      <BuildActionEntries>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "0A35A66495209E60ADD254A3"
+               BuildableName = "StripePayments.framework"
+               BlueprintName = "StripePayments"
+               ReferencedContainer = "container:StripePayments/StripePayments.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "C159BFB17E834CD30378F9F3"
+               BuildableName = "StripePaymentsUI.framework"
+               BlueprintName = "StripePaymentsUI"
+               ReferencedContainer = "container:StripePaymentsUI/StripePaymentsUI.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "B50782C89D54809DFFCF80D0"
+               BuildableName = "StripeCameraCore.framework"
+               BlueprintName = "StripeCameraCore"
+               ReferencedContainer = "container:StripeCameraCore/StripeCameraCore.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "7877B31445857B119EA45445"
+               BuildableName = "StripeCore.framework"
+               BlueprintName = "StripeCore"
+               ReferencedContainer = "container:StripeCore/StripeCore.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "41D17A3F2C5A73A6007C6EE6"
+               BuildableName = "StripeConnect.framework"
+               BlueprintName = "StripeConnect"
+               ReferencedContainer = "container:StripeConnect/StripeConnect.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "F251015845B21C036CFBC636"
+               BuildableName = "StripeIdentity.framework"
+               BlueprintName = "StripeIdentity"
+               ReferencedContainer = "container:StripeIdentity/StripeIdentity.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "44C90013B7C82C80A2F69956"
+               BuildableName = "StripeFinancialConnections.framework"
+               BlueprintName = "StripeFinancialConnections"
+               ReferencedContainer = "container:StripeFinancialConnections/StripeFinancialConnections.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "A1B2C3D4E5F60009A1B2C3D4"
+               BuildableName = "StripeFinancialConnectionsLite.framework"
+               BlueprintName = "StripeFinancialConnectionsLite"
+               ReferencedContainer = "container:StripeFinancialConnectionsLite/StripeFinancialConnectionsLite.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "03CF79975A56288F02F20E52"
+               BuildableName = "StripeCardScan.framework"
+               BlueprintName = "StripeCardScan"
+               ReferencedContainer = "container:StripeCardScan/StripeCardScan.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "747C9FE1743C0B4444303569"
+               BuildableName = "StripeApplePay.framework"
+               BlueprintName = "StripeApplePay"
+               ReferencedContainer = "container:StripeApplePay/StripeApplePay.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "DE3C3F3D3BB67DD660A44B1E"
+               BuildableName = "StripeUICore.framework"
+               BlueprintName = "StripeUICore"
+               ReferencedContainer = "container:StripeUICore/StripeUICore.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+      </BuildActionEntries>
+   </BuildAction>
+   <TestAction
+      buildConfiguration = "Debug"
+      selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
+      selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
+      shouldUseLaunchSchemeArgsEnv = "NO">
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "7877B31445857B119EA45445"
+            BuildableName = "StripeCore.framework"
+            BlueprintName = "StripeCore"
+            ReferencedContainer = "container:StripeCore/StripeCore.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
+      <EnvironmentVariables>
+         <EnvironmentVariable
+            key = "FB_REFERENCE_IMAGE_DIR"
+            value = "$(SOURCE_ROOT)/../Tests/ReferenceImages"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+      </EnvironmentVariables>
+      <Testables>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "82D53FD79169DC5CBF54660A"
+               BuildableName = "StripePaymentsTests.xctest"
+               BlueprintName = "StripePaymentsTests"
+               ReferencedContainer = "container:StripePayments/StripePayments.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "CFDEE20ADA9F0099259938AF"
+               BuildableName = "StripePaymentsUITests.xctest"
+               BlueprintName = "StripePaymentsUITests"
+               ReferencedContainer = "container:StripePaymentsUI/StripePaymentsUI.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "F3DED9AB60FDAB786A737384"
+               BuildableName = "StripeCameraCoreTests.xctest"
+               BlueprintName = "StripeCameraCoreTests"
+               ReferencedContainer = "container:StripeCameraCore/StripeCameraCore.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "03B50F59824D1D18AA073D57"
+               BuildableName = "StripeCoreTests.xctest"
+               BlueprintName = "StripeCoreTests"
+               ReferencedContainer = "container:StripeCore/StripeCore.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "41D17A492C5A73A7007C6EE6"
+               BuildableName = "StripeConnectTests.xctest"
+               BlueprintName = "StripeConnectTests"
+               ReferencedContainer = "container:StripeConnect/StripeConnect.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "5883CCEAA4C73E1DB1F0D3A5"
+               BuildableName = "StripeIdentityTests.xctest"
+               BlueprintName = "StripeIdentityTests"
+               ReferencedContainer = "container:StripeIdentity/StripeIdentity.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "DF72D31B68363878FC1604CF"
+               BuildableName = "StripeFinancialConnectionsTests.xctest"
+               BlueprintName = "StripeFinancialConnectionsTests"
+               ReferencedContainer = "container:StripeFinancialConnections/StripeFinancialConnections.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "A1B2C3D4E5F60015A1B2C3D4"
+               BuildableName = "StripeFinancialConnectionsLiteTests.xctest"
+               BlueprintName = "StripeFinancialConnectionsLiteTests"
+               ReferencedContainer = "container:StripeFinancialConnectionsLite/StripeFinancialConnectionsLite.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "DCC6FFCFBE0B51B33F4CBB26"
+               BuildableName = "StripeCardScanTests.xctest"
+               BlueprintName = "StripeCardScanTests"
+               ReferencedContainer = "container:StripeCardScan/StripeCardScan.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "ACAFA21CF224F80EFAEFDC2F"
+               BuildableName = "StripeApplePayTests.xctest"
+               BlueprintName = "StripeApplePayTests"
+               ReferencedContainer = "container:StripeApplePay/StripeApplePay.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "A4B3F8AEF10396425E1A79D0"
+               BuildableName = "StripeUICoreTests.xctest"
+               BlueprintName = "StripeUICoreTests"
+               ReferencedContainer = "container:StripeUICore/StripeUICore.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+      </Testables>
+   </TestAction>
+</Scheme>

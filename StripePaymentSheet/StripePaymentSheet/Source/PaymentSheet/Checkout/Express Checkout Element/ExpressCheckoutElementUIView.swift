@@ -98,7 +98,7 @@ public final class ExpressCheckoutElementUIView: UIView {
             analytic: PaymentSheetAnalytic(
                 event: .expressCheckoutElementInit,
                 additionalParams: [
-                    "ordered_lpms": session.availableExpressCheckoutPaymentMethods.map(\.analyticsValue).joined(separator: ","),
+                    "ordered_lpms": session.availableExpressCheckoutPaymentMethods.joined(separator: ","),
                     "ece_config": [
                         "link_visibility": configuration.linkConfiguration.display.rawValue,
                         "apple_pay_visibility": configuration.applePayConfiguration?.display.rawValue ?? "never",
@@ -260,17 +260,6 @@ public final class ExpressCheckoutElementUIView: UIView {
                 presentationWindow: window
             ) else { return }
             self.configuration.completion(result)
-        }
-    }
-}
-
-private extension ExpressCheckoutElement.PaymentMethod {
-    var analyticsValue: String {
-        switch self {
-        case .applePay:
-            return "apple_pay"
-        case .link:
-            return "link"
         }
     }
 }
