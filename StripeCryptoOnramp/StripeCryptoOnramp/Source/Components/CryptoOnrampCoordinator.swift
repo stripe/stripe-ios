@@ -276,7 +276,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
     private struct ApplePayCollectionAttempt {
         let contextID: ObjectIdentifier
         /// True if Apple Pay collection began before authentication, without a crypto customer ID.
-        let requiresMerchantRevalidation: Bool
+        let requiresPublishableKeyRevalidation: Bool
     }
     private var applePayCollectionAttempt: ApplePayCollectionAttempt?
     private var selectedPaymentSource: SelectedPaymentSource?
@@ -817,8 +817,8 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
                     throw Error.missingCryptoCustomerID
                 }
                 cryptoCustomerId = customerId
-                if source.requiresMerchantRevalidation {
-                    // KYC can change the merchant even when the customer ID stays the same.
+                if source.requiresPublishableKeyRevalidation {
+                    // KYC can change the resolved publishable key even when the customer ID stays the same.
                     let freshClient = try await fetchPlatformApiClient(cryptoCustomerId: customerId)
                     guard freshClient.publishableKey == source.platformPublishableKey else {
                         throw Self.paymentMethodKYCRegionChangedError(
@@ -944,7 +944,7 @@ extension CryptoOnrampCoordinator: ApplePayContextDelegate {
             paymentMethod: paymentMethod,
             kycInfo: KycInfo(payment: paymentInformation),
             platformPublishableKey: publishableKey,
-            requiresMerchantRevalidation: attempt.requiresMerchantRevalidation
+            requiresPublishableKeyRevalidation: attempt.requiresPublishableKeyRevalidation
         )
 
         return STPApplePayContext.COMPLETE_WITHOUT_CONFIRMING_INTENT
@@ -980,11 +980,11 @@ extension CryptoOnrampCoordinator: ApplePayContextDelegate {
     func prepareApplePayContext(_ context: STPApplePayContext) async throws {
         pendingApplePayPaymentSource = nil
         applePayCollectionAttempt = nil
-        let requiresMerchantRevalidation = await cryptoCustomerState.getCustomerId() == nil
+        let requiresPublishableKeyRevalidation = await cryptoCustomerState.getCustomerId() == nil
         context.apiClient = try await getPlatformApiClient()
         applePayCollectionAttempt = ApplePayCollectionAttempt(
             contextID: ObjectIdentifier(context),
-            requiresMerchantRevalidation: requiresMerchantRevalidation
+            requiresPublishableKeyRevalidation: requiresPublishableKeyRevalidation
         )
     }
 }

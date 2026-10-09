@@ -8,13 +8,14 @@
 import Foundation
 @_spi(STP) import StripePayments
 
-/// An Apple Pay selection and the immutable merchant context that created it.
+/// An Apple Pay selection and the immutable publishable key used to create it.
 struct ApplePayPaymentSource {
     let paymentMethod: StripeAPI.PaymentMethod
     let kycInfo: KycInfo?
     let platformPublishableKey: String
-    /// True for the pre-auth Apple Pay flow; requires a fresh merchant check on every token attempt.
-    let requiresMerchantRevalidation: Bool
+    /// True when Apple Pay collection began before authentication.
+    /// Requires a fresh publishable-key comparison before every token attempt.
+    let requiresPublishableKeyRevalidation: Bool
 }
 
 /// Represents the possible selected payment method types.

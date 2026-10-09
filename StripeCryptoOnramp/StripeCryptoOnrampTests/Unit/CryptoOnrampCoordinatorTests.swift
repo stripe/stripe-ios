@@ -349,7 +349,7 @@ final class CryptoOnrampCoordinatorTests: APIStubbedTestCase {
     }
 
     @MainActor
-    func testAuthFirstApplePayDoesNotForceMerchantRevalidation() async throws {
+    func testAuthFirstApplePayDoesNotForcePublishableKeyRevalidation() async throws {
         let coordinator = try await makeCoordinator(cryptoCustomerID: Self.customerID)
         try await collectApplePay(coordinator)
         resolvedKey = "pk_test_platform_B"
