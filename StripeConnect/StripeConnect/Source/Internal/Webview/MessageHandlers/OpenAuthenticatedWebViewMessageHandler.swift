@@ -11,6 +11,8 @@ import Foundation
 /// Indicates to open the provided URL in an `ASWebAuthenticationSession`.
 class OpenAuthenticatedWebViewMessageHandler: ScriptMessageHandler<OpenAuthenticatedWebViewMessageHandler.Payload> {
     struct Payload: Codable, Equatable {
+        /// Added by the document-start bridge before native asynchronous work begins.
+        var documentID: String?
         /// URL that's opened in an `ASWebAuthenticationSession`
         let url: URL
         /// Unique identifier logged in analytics when the `ASWebAuthenticationSession` is opened or closed.

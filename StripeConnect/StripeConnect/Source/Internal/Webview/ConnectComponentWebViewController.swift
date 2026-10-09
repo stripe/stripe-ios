@@ -11,6 +11,12 @@ import UIKit
 import WebKit
 
 class ConnectComponentWebViewController: ConnectWebViewController {
+    private enum SensitiveDeliveryError: Int, CustomNSError {
+        case refused
+        case deliveryFailed
+
+        static let errorDomain = "StripeConnect.SensitiveDeliveryError"
+    }
 
     enum LayoutMode {
         case fillsAvailableSpace
@@ -102,6 +108,11 @@ class ConnectComponentWebViewController: ConnectWebViewController {
 
         // Allows for custom JS message handlers for JS -> Swift communication
         config.userContentController = contentController
+        contentController.addUserScript(WKUserScript(
+            source: Self.sensitiveDeliveryDispatcherScript,
+            injectionTime: .atDocumentStart,
+            forMainFrameOnly: false
+        ))
 
         // Allows the identity verification flow to display the camera feed
         // embedded in the web view instead of full screen. Also works for
@@ -295,7 +306,7 @@ extension ConnectComponentWebViewController {
     }
 
     func sendMessageAsync(_ sender: any MessageSender) async throws {
-        return try await withCheckedThrowingContinuation { continuation in
+        return try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
             do {
                 let message = try sender.javascriptMessage()
                 webView.evaluateJavaScript(message, completionHandler: { _, error in
@@ -308,6 +319,37 @@ extension ConnectComponentWebViewController {
             } catch {
                 continuation.resume(throwing: error)
             }
+        }
+    }
+
+    /// Resolves only after delivery or refusal. Unexpected failures retain diagnostic identifiers,
+    /// except errors with additional analytics fields, which use a sanitized delivery-failure error.
+    func sendSensitiveMessageAsync(_ sender: any MessageSender, documentID: String?) async throws {
+        do {
+            guard let documentID else { throw SensitiveDeliveryError.refused }
+            let payload = try sender.jsonData()
+            let payloadObject = try JSONSerialization.jsonObject(with: payload)
+            let result: Any = try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Any, Error>) in
+                webView.callAsyncJavaScript(
+                    """
+                    if (typeof this.__stripeConnectDeliverSensitiveMessage !== 'function') {
+                      return false;
+                    }
+                    return this.__stripeConnectDeliverSensitiveMessage(callbackName, payload, documentID);
+                    """,
+                    arguments: ["callbackName": sender.name, "payload": payloadObject, "documentID": documentID],
+                    in: nil,
+                    in: .page
+                ) { result in
+                    continuation.resume(with: result)
+                }
+            }
+            guard result as? Bool == true else {
+                throw SensitiveDeliveryError.refused
+            }
+        } catch is AnalyticLoggableErrorV2 {
+            // Prevent errors from adding sensitive fields to client_error analytics.
+            throw SensitiveDeliveryError.deliveryFailed
         }
     }
 
@@ -354,6 +396,13 @@ private extension ConnectComponentWebViewController {
     func addMessageHandlers<InitProps: Encodable>(
         fetchInitProps: @escaping () -> InitProps
     ) {
+        addMessageHandler(ScriptMessageHandlerWithReply<VoidPayload, Bool>(
+            name: "connectDocumentAuthority",
+            sourcePolicy: messageSourcePolicy,
+            requiresMainFrame: true
+        ) { _ in
+            true
+        })
         addMessageHandler(setterMessageHandler)
         addMessageHandler(OnLoaderStartMessageHandler { [analyticsClient, activityIndicator] _ in
             analyticsClient.logComponentLoaded(loadEnd: .now)
@@ -493,7 +542,11 @@ private extension ConnectComponentWebViewController {
 
                 analyticsClient.logAuthenticatedWebViewEventComplete(id: payload.id, redirected: returnUrl != nil)
 
-                sendMessage(ReturnedFromAuthenticatedWebViewSender(payload: .init(url: returnUrl, id: payload.id)))
+                do {
+                    try await sendSensitiveMessageAsync(ReturnedFromAuthenticatedWebViewSender(payload: .init(url: returnUrl, id: payload.id)), documentID: payload.documentID)
+                } catch {
+                    analyticsClient.logClientError(error)
+                }
             } catch {
                 analyticsClient.logAuthenticatedWebViewEventComplete(id: payload.id, error: error)
             }
@@ -509,9 +562,13 @@ private extension ConnectComponentWebViewController {
                 from: self
             )
 
-            sendMessage(SetCollectMobileFinancialConnectionsResult.sender(
-                value: result.toSenderValue(id: args.id, analyticsClient: analyticsClient)
-            ))
+            do {
+                try await sendSensitiveMessageAsync(SetCollectMobileFinancialConnectionsResult.sender(
+                    value: result.toSenderValue(id: args.id, analyticsClient: analyticsClient)
+                ), documentID: args.documentID)
+            } catch {
+                analyticsClient.logClientError(error)
+            }
         }
     }
 
@@ -528,13 +585,145 @@ private extension ConnectComponentWebViewController {
                 result = .error("Error calling supplemental function")
             }
 
-            sendMessage(SupplementalFunctionCompletedSender(payload: .init(
-                functionName: payload.functionName,
-                invocationId: payload.invocationId,
-                result: result
-            )))
+            do {
+                try await sendSensitiveMessageAsync(SupplementalFunctionCompletedSender(payload: .init(
+                    functionName: payload.functionName,
+                    invocationId: payload.invocationId,
+                    result: result
+                )), documentID: payload.documentID)
+            } catch {
+                analyticsClient.logClientError(error)
+            }
         }
     }
+
+    // This must remain the first script registered in this controller's private content controller. At document
+    // start it captures built-ins before page code runs, and native main-frame source authority decides whether
+    // delivery proceeds. Requests carry the initiating document's nonce, so even a replacement document on
+    // the trusted origin cannot receive an earlier result. The Document check also protects queued deliveries
+    // from following a retargeted WindowProxy.
+    static let sensitiveDeliveryDispatcherScript = """
+    (() => {
+      const global = this;
+      const defineProperty = Object.defineProperty;
+      const objectCreate = Object.create;
+      const reflectApply = Reflect.apply;
+      const promiseThen = Promise.prototype.then;
+      const PromiseConstructor = Promise;
+      const noArguments = objectCreate(null);
+      const originalDocument = global.document;
+      const objectKeys = Object.keys;
+      let documentID = null;
+      if (global === global.top) {
+        const random = new Uint32Array(4);
+        global.crypto.getRandomValues(random);
+        documentID = `${random[0]}-${random[1]}-${random[2]}-${random[3]}`;
+        defineProperty(global, "__stripeConnectDocumentID", {
+          configurable: false, enumerable: false, writable: false, value: documentID
+        });
+      } else {
+        // Same-origin child requests belong to the containing component document.
+        try { documentID = global.top.__stripeConnectDocumentID; } catch (_) {}
+      }
+      for (const name of ["openAuthenticatedWebView", "openFinancialConnections", "callSupplementalFunction"]) {
+        const handler = global.webkit.messageHandlers[name];
+        const postMessage = handler.postMessage;
+        defineProperty(handler, "postMessage", {
+          configurable: false, enumerable: false, writable: false,
+          value: (payload) => {
+            const request = objectCreate(null);
+            const keys = objectKeys(payload);
+            for (let index = 0; index < keys.length; index += 1) {
+              const key = keys[index];
+              if (key !== "documentID") {
+                defineProperty(request, key, { enumerable: true, value: payload[key] });
+              }
+            }
+            defineProperty(request, "documentID", { enumerable: true, value: documentID });
+            return reflectApply(postMessage, handler, [request]);
+          }
+        });
+      }
+      if (global !== global.top) { return; }
+      let authority = null;
+      let authoritySettled = false;
+      let authorized = false;
+      const pendingState = objectCreate(null);
+      pendingState.deliveries = objectCreate(null);
+      pendingState.count = 0;
+      const settle = (value) => {
+        authoritySettled = true;
+        authorized = value === true;
+        const deliveries = pendingState.deliveries;
+        const count = pendingState.count;
+        pendingState.deliveries = objectCreate(null);
+        pendingState.count = 0;
+        for (let index = 0; index < count; index += 1) {
+          reflectApply(deliveries[index], undefined, noArguments);
+        }
+      };
+      defineProperty(global, "__stripeConnectDeliverSensitiveMessage", {
+        configurable: false,
+        enumerable: false,
+        writable: false,
+        value: (callbackName, payload, requestDocumentID) => {
+          const deliveryPromise = new PromiseConstructor((resolve) => {
+            const callback = global[callbackName];
+            if (requestDocumentID !== documentID || typeof callback !== "function" || authority === null) {
+              resolve(false);
+              return;
+            }
+            const deliver = () => {
+              if (!authoritySettled || !authorized) {
+                resolve(false);
+                return;
+              }
+              try {
+                if (global.document !== originalDocument) {
+                  resolve(false);
+                  return;
+                }
+                reflectApply(callback, global, [payload]);
+                resolve(true);
+              } catch (_) {
+                resolve(false);
+              }
+            };
+            if (authoritySettled) {
+              deliver();
+              return;
+            }
+            defineProperty(pendingState.deliveries, pendingState.count, {
+              configurable: false,
+              enumerable: false,
+              writable: false,
+              value: deliver
+            });
+            pendingState.count += 1;
+          });
+          defineProperty(deliveryPromise, "then", {
+            configurable: false,
+            enumerable: false,
+            writable: false,
+            value: (onFulfilled, onRejected) => {
+              const handlers = objectCreate(null);
+              handlers[0] = onFulfilled;
+              handlers[1] = onRejected;
+              handlers.length = 2;
+              return reflectApply(promiseThen, deliveryPromise, handlers);
+            }
+          });
+          return deliveryPromise;
+        }
+      });
+      try {
+        authority = global.webkit.messageHandlers.connectDocumentAuthority.postMessage({});
+        reflectApply(promiseThen, authority, [settle, () => { settle(false); }]);
+      } catch (_) {
+        settle(false);
+      }
+    })();
+    """
 
     static let contentHeightObserverScript = """
     (function() {

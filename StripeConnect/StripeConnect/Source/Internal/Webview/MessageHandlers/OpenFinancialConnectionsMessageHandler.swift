@@ -10,6 +10,8 @@
 /// Indicates to open the FinancialConnections flow
 class OpenFinancialConnectionsMessageHandler: ScriptMessageHandler<OpenFinancialConnectionsMessageHandler.Payload> {
     struct Payload: Codable, Equatable {
+        /// Added by the document-start bridge before native asynchronous work begins.
+        var documentID: String?
         /// The Financial Connections Session client secret used to open the FinancialConnectionsSheet
         let clientSecret: String
         /// Unique identifier (UUID) to track the round-trip of the

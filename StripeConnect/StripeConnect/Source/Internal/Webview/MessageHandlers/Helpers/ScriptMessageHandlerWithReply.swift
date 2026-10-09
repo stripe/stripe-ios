@@ -13,12 +13,15 @@ class ScriptMessageHandlerWithReply<Payload: Decodable, Response: Encodable>: NS
     let name: String
     let sourcePolicy: STPWebMessageSourcePolicy
     let didReceiveMessage: (Payload) async throws -> Response
+    private let requiresMainFrame: Bool
 
     init(name: String,
          sourcePolicy: STPWebMessageSourcePolicy,
+         requiresMainFrame: Bool = false,
          didReceiveMessage: @escaping (Payload) async throws -> Response) {
         self.name = name
         self.sourcePolicy = sourcePolicy
+        self.requiresMainFrame = requiresMainFrame
         self.didReceiveMessage = didReceiveMessage
     }
 
@@ -29,7 +32,8 @@ class ScriptMessageHandlerWithReply<Payload: Decodable, Response: Encodable>: NS
             debugPrint("Unexpected message name: \(message.name)")
             return (nil, "Unexpected message")
         }
-        guard sourcePolicy.isAuthorized(source: message.webView,
+        guard !requiresMainFrame || message.frameInfo.isMainFrame,
+              sourcePolicy.isAuthorized(source: message.webView,
                                         scheme: message.frameInfo.securityOrigin.protocol,
                                         host: message.frameInfo.securityOrigin.host,
                                         port: message.frameInfo.securityOrigin.port) else {
