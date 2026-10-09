@@ -204,6 +204,9 @@ protocol CryptoOnrampCoordinatorProtocol {
 
     /// Creates a crypto payment token for the payment method currently selected on the coordinator.
     /// Call after a successful `collectPaymentMethod(...)`.
+    /// If the customer's KYC region changes after Apple Pay was collected before authentication, throws `PaymentMethodKYCRegionChangedError`.
+    /// Call `collectPaymentMethod(type: .applePay(paymentRequest:), from:)` again and retry only after successful collection.
+    /// To avoid this, ensure `countryHint` matches the customer's KYC region, or authenticate the customer before collecting Apple Pay.
     ///
     /// - Returns: The crypto payment token ID.
     /// Throws an error if no payment method has been selected, the Link account is not verified, required session credentials are missing, the payment method creation fails, or a network/API error occurs.
@@ -269,7 +272,13 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
     /// until `didCompleteWith(.success)`, then promote it to `selectedPaymentSource`. Cancellation
     /// or failure leaves the existing selection untouched; this value is cleared when the Apple Pay
     /// attempt starts, completes, or the user logs out.
-    private var pendingApplePayPaymentSource: SelectedPaymentSource?
+    private var pendingApplePayPaymentSource: ApplePayPaymentSource?
+    private struct ApplePayCollectionAttempt {
+        let contextID: ObjectIdentifier
+        /// True if Apple Pay collection began before authentication, without a crypto customer ID.
+        let requiresPublishableKeyRevalidation: Bool
+    }
+    private var applePayCollectionAttempt: ApplePayCollectionAttempt?
     private var selectedPaymentSource: SelectedPaymentSource?
     private let cryptoCustomerState: CryptoCustomerState
 
@@ -738,6 +747,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
         case .applePay(let paymentRequest):
             // This presents Apple Pay and promotes the pending payment source on success.
             pendingApplePayPaymentSource = nil
+            applePayCollectionAttempt = nil
             if #available(iOS 18.0, *) {
                 paymentRequest.merchantCategoryCode = PKPaymentRequest.MerchantCategoryCode(rawValue: 6051)
             }
@@ -745,7 +755,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
                 let status = try await presentApplePay(using: paymentRequest, from: viewController)
                 switch status {
                 case .success:
-                    guard case let .applePay(paymentMethod, kycInfo) = selectedPaymentSource else {
+                    guard case let .applePay(source) = selectedPaymentSource else {
                         analyticsClient.log(.errorOccurred(during: .collectPaymentMethod, errorMessage: "No payment method selected"))
                         throw Error.invalidSelectedPaymentSource
                     }
@@ -754,7 +764,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
                     let icon = STPImageLibrary.applePayCardImage()
                     let label = String.Localized.apple_pay
                     let sublabel: String? = {
-                        if let card = paymentMethod.card {
+                        if let card = source.paymentMethod.card {
                             return String.Localized.redactedCardDetails(using: card)
                         } else {
                             return nil
@@ -770,12 +780,13 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
 
                     analyticsClient.log(.collectPaymentMethodCompleted(paymentMethodType: type.analyticsValue))
 
-                    return .completed(displayData: paymentMethodPreview, kycInfo: kycInfo)
+                    return .completed(displayData: paymentMethodPreview, kycInfo: source.kycInfo)
                 case .canceled:
                     return .canceled
                 }
             } catch {
                 pendingApplePayPaymentSource = nil
+                applePayCollectionAttempt = nil
                 try logAndThrow(error, during: .collectPaymentMethod)
             }
         }
@@ -788,21 +799,35 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
         }
 
         do {
-            let paymentMethodId: String = try await {
-                switch selectedPaymentSource {
-                case .link:
-                    let platformApiClient = try await getPlatformApiClient()
-                    let paymentMethod = try await linkController.createPaymentMethod(
-                        overridePublishableKey: platformApiClient.publishableKey
-                    )
-                    return paymentMethod.stripeId
-                case .applePay(let paymentMethod, _):
-                    return paymentMethod.id
+            let paymentMethodId: String
+            let cryptoCustomerId: String
+            switch selectedPaymentSource {
+            case .link:
+                let platformApiClient = try await getPlatformApiClient()
+                let paymentMethod = try await linkController.createPaymentMethod(
+                    overridePublishableKey: platformApiClient.publishableKey
+                )
+                paymentMethodId = paymentMethod.stripeId
+                guard let customerId = await cryptoCustomerState.getCustomerId() else {
+                    throw Error.missingCryptoCustomerID
                 }
-            }()
-
-            guard let cryptoCustomerId = await cryptoCustomerState.getCustomerId() else {
-                throw Error.missingCryptoCustomerID
+                cryptoCustomerId = customerId
+            case .applePay(let source):
+                guard let customerId = await cryptoCustomerState.getCustomerId() else {
+                    throw Error.missingCryptoCustomerID
+                }
+                cryptoCustomerId = customerId
+                if source.requiresPublishableKeyRevalidation {
+                    // KYC can change the resolved publishable key even when the customer ID stays the same.
+                    let freshClient = try await fetchPlatformApiClient(cryptoCustomerId: customerId)
+                    guard freshClient.publishableKey == source.platformPublishableKey else {
+                        throw Self.paymentMethodKYCRegionChangedError(
+                            apiClient: apiClient,
+                            additionalSDKVersions: additionalSDKVersions
+                        )
+                    }
+                }
+                paymentMethodId = source.paymentMethod.id
             }
             let token = try await apiClient.createPaymentToken(
                 for: paymentMethodId,
@@ -884,8 +909,12 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
     public func logOut() async throws {
         do {
             pendingApplePayPaymentSource = nil
+            applePayCollectionAttempt = nil
             selectedPaymentSource = nil
             platformApiClient = nil
+            // Late callbacks are ignored after the attempt metadata is cleared.
+            applePayCompletionContinuation?.resume(returning: .canceled)
+            applePayCompletionContinuation = nil
             try await linkController.logOut()
             analyticsClient.log(.userLoggedOut)
         } catch {
@@ -903,16 +932,32 @@ extension CryptoOnrampCoordinator: ApplePayContextDelegate {
         didCreatePaymentMethod paymentMethod: StripeAPI.PaymentMethod,
         paymentInformation: PKPayment
     ) async throws -> String {
-        pendingApplePayPaymentSource = .applePay(paymentMethod, KycInfo(payment: paymentInformation))
+        guard let attempt = applePayCollectionAttempt, attempt.contextID == ObjectIdentifier(context) else {
+            throw ApplePayPaymentStatus.Error.applePayFallbackError
+        }
+        // Read the key from this payment method's context, never the coordinator's cached platformApiClient.
+        // Authentication may have cleared or replaced that cache while Apple Pay was collecting.
+        guard let publishableKey = context.apiClient.publishableKey, !publishableKey.isEmpty else {
+            throw ApplePayPaymentStatus.Error.applePayFallbackError
+        }
+        pendingApplePayPaymentSource = ApplePayPaymentSource(
+            paymentMethod: paymentMethod,
+            kycInfo: KycInfo(payment: paymentInformation),
+            platformPublishableKey: publishableKey,
+            requiresPublishableKeyRevalidation: attempt.requiresPublishableKeyRevalidation
+        )
 
         return STPApplePayContext.COMPLETE_WITHOUT_CONFIRMING_INTENT
     }
 
     public func applePayContext(_ context: STPApplePayContext, didCompleteWith status: STPApplePayContext.PaymentStatus, error: Swift.Error?) {
+        guard applePayCollectionAttempt?.contextID == ObjectIdentifier(context) else {
+            return
+        }
         switch status {
         case .success:
             if let pendingApplePayPaymentSource {
-                selectedPaymentSource = pendingApplePayPaymentSource
+                selectedPaymentSource = .applePay(pendingApplePayPaymentSource)
                 applePayCompletionContinuation?.resume(returning: .success)
             } else {
                 applePayCompletionContinuation?.resume(throwing: ApplePayPaymentStatus.Error.applePayFallbackError)
@@ -926,7 +971,33 @@ extension CryptoOnrampCoordinator: ApplePayContextDelegate {
         }
 
         pendingApplePayPaymentSource = nil
+        applePayCollectionAttempt = nil
         applePayCompletionContinuation = nil
+    }
+
+    /// Configures an attempt before presentation, keeping its provenance independent of the cache.
+    @MainActor
+    func prepareApplePayContext(_ context: STPApplePayContext) async throws {
+        pendingApplePayPaymentSource = nil
+        applePayCollectionAttempt = nil
+        let requiresPublishableKeyRevalidation = await cryptoCustomerState.getCustomerId() == nil
+        context.apiClient = try await getPlatformApiClient()
+        applePayCollectionAttempt = ApplePayCollectionAttempt(
+            contextID: ObjectIdentifier(context),
+            requiresPublishableKeyRevalidation: requiresPublishableKeyRevalidation
+        )
+    }
+}
+
+extension CryptoOnrampCoordinator {
+    /// Stores the crypto customer ID and discards any cached platform API client.
+    ///
+    /// A platform API client may have been resolved before authentication, in which case the merchant of record was
+    /// selected without knowledge of the customer's KYC region. Discarding it ensures the merchant of record is
+    /// re-resolved for the authenticated customer.
+    func setCryptoCustomerId(_ customerId: String) async {
+        await cryptoCustomerState.setCustomerId(customerId)
+        platformApiClient = nil
     }
 }
 
@@ -947,9 +1018,7 @@ private extension CryptoOnrampCoordinator {
 
             Task {
                 do {
-                    // Configure Apple Pay context to use platform API client
-                    let platformApiClient = try await getPlatformApiClient()
-                    context.apiClient = platformApiClient
+                    try await prepareApplePayContext(context)
 
                     // Retain the continuation until we receive a completion delegate callback.
                     self.applePayCompletionContinuation = continuation
@@ -1052,16 +1121,6 @@ private extension CryptoOnrampCoordinator {
         }
     }
 
-    /// Stores the crypto customer ID and discards any cached platform API client.
-    ///
-    /// A platform API client may have been resolved before authentication, in which case the merchant of record was
-    /// selected without knowledge of the customer’s KYC region. Discarding it ensures the merchant of record is
-    /// re-resolved for the authenticated customer.
-    private func setCryptoCustomerId(_ customerId: String) async {
-        await cryptoCustomerState.setCustomerId(customerId)
-        platformApiClient = nil
-    }
-
     /// Returns a dedicated API client configured with the platform publishable key.
     /// Caches the API client after first creation to avoid repeated API calls.
     ///
@@ -1072,8 +1131,11 @@ private extension CryptoOnrampCoordinator {
             return platformApiClient
         }
 
-        // Fetch platform settings and create API client
         let cryptoCustomerId = await cryptoCustomerState.getCustomerId()
+        return try await fetchPlatformApiClient(cryptoCustomerId: cryptoCustomerId)
+    }
+
+    private func fetchPlatformApiClient(cryptoCustomerId: String?) async throws -> STPAPIClient {
         let platformSettings = try await apiClient.getPlatformSettings(
             cryptoCustomerId: cryptoCustomerId,
             countryHint: countryHint

@@ -16,6 +16,9 @@ MINOR
 * [Added] Added GCash API bindings and PaymentSheet support for payments and setup.
 * [Added] Added Naira card API bindings and PaymentSheet support for PaymentIntents.
 
+### CryptoOnramp (Alpha)
+* [Fixed] If the customer's KYC region changes after Apple Pay is collected before authentication, token creation now throws `PaymentMethodKYCRegionChangedError` (`payment_method_kyc_region_changed`). Collect Apple Pay again and retry token creation only after successful collection.
+
 ## 26.13.0 2026-10-05
 ### PaymentSheet
 * [Fixed] Fixed a potential crash when using certain card brands in PaymentSheet.
