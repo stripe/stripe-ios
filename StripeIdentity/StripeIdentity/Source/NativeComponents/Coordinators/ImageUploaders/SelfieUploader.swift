@@ -34,13 +34,16 @@ final class SelfieUploader: SelfieUploaderProtocol {
     }
 
     let imageUploader: IdentityImageUploader
+    let isTestMode: Bool
 
     private(set) var uploadFuture: Future<FileData>?
 
     init(
-        imageUploader: IdentityImageUploader
+        imageUploader: IdentityImageUploader,
+        isTestMode: Bool = false
     ) {
         self.imageUploader = imageUploader
+        self.isTestMode = isTestMode
     }
 
     /// Uploads a high and low resolution image for each of the captured images.
@@ -77,20 +80,37 @@ final class SelfieUploader: SelfieUploaderProtocol {
         _ capturedImage: FaceScannerInputOutput,
         ofType type: ImageType
     ) -> Future<IdentityImageUploader.LowHighResFiles> {
+        let lowResFileName = SelfieUploader.fileName(
+            with: imageUploader.apiClient.verificationSessionId,
+            for: type,
+            resolution: .low
+        )
+        let highResFileName = SelfieUploader.fileName(
+            with: imageUploader.apiClient.verificationSessionId,
+            for: type,
+            resolution: .high
+        )
+
+        if isTestMode {
+            do {
+                let image = try TestModeImage.selfie.makeCGImage()
+                return imageUploader.uploadLowAndHighResImagesNoCropping(
+                    highResImage: image,
+                    lowResImage: image,
+                    highResFileName: highResFileName,
+                    lowResFileName: lowResFileName
+                )
+            } catch {
+                return Promise(error: error)
+            }
+        }
+
         return imageUploader.uploadLowAndHighResImages(
             capturedImage.image,
             highResRegionOfInterest: capturedImage.scannerOutput.faceRect,
             cropPaddingComputationMethod: .regionWidth,
-            lowResFileName: SelfieUploader.fileName(
-                with: imageUploader.apiClient.verificationSessionId,
-                for: type,
-                resolution: .low
-            ),
-            highResFileName: SelfieUploader.fileName(
-                with: imageUploader.apiClient.verificationSessionId,
-                for: type,
-                resolution: .high
-            )
+            lowResFileName: lowResFileName,
+            highResFileName: highResFileName
         )
     }
 

@@ -6,6 +6,7 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
+import CoreGraphics
 import Foundation
 @_spi(STP) import StripeUICore
 
@@ -35,4 +36,36 @@ import Foundation
     case iconCameraClassic = "icon_camera_classic"
     case iconDisputeProtection = "icon_dispute_protection"
     case iconPhone = "icon_phone"
+    case testModeDocumentFront = "test_mode_document_front"
+    case testModeDocumentBack = "test_mode_document_back"
+    case testModeSelfie = "test_mode_selfie"
+}
+
+/// Bundled placeholder images uploaded for test-mode verification sessions.
+enum TestModeImage {
+    case documentFront
+    case documentBack
+    case selfie
+
+    private var resource: Image {
+        switch self {
+        case .documentFront:
+            return .testModeDocumentFront
+        case .documentBack:
+            return .testModeDocumentBack
+        case .selfie:
+            return .testModeSelfie
+        }
+    }
+
+    func makeCGImage() throws -> CGImage {
+        guard let cgImage = resource.makeImage().cgImage else {
+            throw TestModeImageError.missingResource(resource.rawValue)
+        }
+        return cgImage
+    }
+}
+
+private enum TestModeImageError: Error {
+    case missingResource(String)
 }
