@@ -1,6 +1,26 @@
+"Add %ld documents" = "Tilføj %ld dokumenter";
+
+"Add 1 document" = "Tilføj et dokument";
+
+"Add documents" = "Tilføj dokumenter";
+
+"Answer" = "Svar";
+
+"Choose File…" = "Vælg fil";
+
+"Choose Photo…" = "Vælg foto …";
+
 "Debit cards are most likely to be accepted." = "Debetkort vil højst sandsynligt blive accepteret.";
 
+"Document type" = "Dokumenttype";
+
 "Document uploaded successfully" = "Dokumentet blev uploadet";
+
+"Funds source" = "Midlernes kilde";
+
+"How are you funding your transactions? Please list all of your sources. For example, salary, savings, investment earnings, etc." = "Hvordan finansierer du dine transaktioner? Angiv alle dine kilder. F.eks. løn, opsparing, investeringsindtjening osv.";
+
+"Make sure your document meets following requirements." = "Sørg for, at dit dokument opfylder følgende krav.";
 
 "Please try again later." = "Prøv igen senere.";
 
@@ -8,9 +28,17 @@
 
 "Tell us about your source of funds" = "Fortæl os om kilden til dine midler";
 
+"There was a problem with your previous document. Please upload a new one." = "Der opstod et problem med dit tidligere dokument. Upload et nyt.";
+
 "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "Denne app kunne ikke verificeres på grund af en attestationsfejl. Prøv igen senere, eller kontakt udvikleren, hvis problemet fortsætter.";
 
 "This app couldn't be verified. Contact the app developer for help." = "Denne app kunne ikke verificeres. Kontakt appudvikleren for at få hjælp.";
+
+"This file is larger than %@. Choose a file that is %@ or smaller." = "Denne fil er større end %1$@. Vælg en fil, der er %2$@ eller mindre.";
+
+"This file type isn’t supported." = "Denne filtype understøttes ikke.";
+
+"This file type isn’t supported. Upload a %@ file." = "Denne filtype understøttes ikke. Upload en %@-fil.";
 
 "This wallet couldn't be found. Please choose or add a wallet and try again." = "Denne wallet kunne ikke findes. Vælg eller tilføj en wallet, og prøv igen.";
 
@@ -20,9 +48,19 @@
 
 "This wallet verification request is invalid. Please try again." = "Denne forespørgsel om verifikation af wallet er ugyldig. Prøv igen.";
 
+"Upload document" = "Upload dokument";
+
 "Upload your proof of address" = "Upload dit dokument til bekræftelse af adresse";
 
+"Uploaded" = "Uploadet";
+
+"Uploading…" = "Uploader …";
+
 "We couldn't verify ownership of this wallet. Please try again." = "Vi kunne ikke verificere ejerskabet af denne wallet. Prøv igen.";
+
+"We couldn’t open this document. Please choose it again." = "Vi kunne ikke åbne dette dokument. Vælg det igen.";
+
+"We couldn’t upload this file. Please try again." = "Vi kunne ikke uploade denne fil. Prøv igen.";
 
 "We may request proof of address for larger transactions." = "Vi anmoder muligvis om adressebevis ved større transaktioner.";
 
