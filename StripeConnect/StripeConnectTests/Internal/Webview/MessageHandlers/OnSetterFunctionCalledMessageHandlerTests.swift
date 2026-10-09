@@ -12,7 +12,7 @@ class OnSetterFunctionCalledMessageHandlerTests: ScriptWebTestBase {
     func testDeallocation() {
         weak var weakInstance: OnSetterFunctionCalledMessageHandler?
         autoreleasepool {
-            let instance = OnSetterFunctionCalledMessageHandler(analyticsClient: MockComponentAnalyticsClient(commonFields: .mock))
+            let instance = OnSetterFunctionCalledMessageHandler(sourcePolicy: webView.trustedMessageSourcePolicy(), analyticsClient: MockComponentAnalyticsClient(commonFields: .mock))
             weakInstance = instance
             XCTAssertNotNil(weakInstance)
         }
@@ -22,7 +22,8 @@ class OnSetterFunctionCalledMessageHandlerTests: ScriptWebTestBase {
     @MainActor
     func testRegisteredSetterCallsDidReceive() async throws {
         let analyticsClient = MockComponentAnalyticsClient(commonFields: .mock)
-        let handler = OnSetterFunctionCalledMessageHandler(analyticsClient: analyticsClient)
+        try await loadTrustedDocument()
+        let handler = OnSetterFunctionCalledMessageHandler(sourcePolicy: webView.trustedMessageSourcePolicy(), analyticsClient: analyticsClient)
         webView.addMessageHandler(messageHandler: handler)
 
         handler.addHandler(handler: .init(setter: "setFoo", didReceiveMessage: { payload in
@@ -46,7 +47,8 @@ class OnSetterFunctionCalledMessageHandlerTests: ScriptWebTestBase {
     @MainActor
     func testUnexpectedSetterLogsAnalytic() async throws {
         let analyticsClient = MockComponentAnalyticsClient(commonFields: .mock)
-        let handler = OnSetterFunctionCalledMessageHandler(analyticsClient: analyticsClient)
+        try await loadTrustedDocument()
+        let handler = OnSetterFunctionCalledMessageHandler(sourcePolicy: webView.trustedMessageSourcePolicy(), analyticsClient: analyticsClient)
         webView.addMessageHandler(messageHandler: handler)
 
         handler.addHandler(handler: .init(setter: "setFoo", didReceiveMessage: { payload in
@@ -73,7 +75,8 @@ class OnSetterFunctionCalledMessageHandlerTests: ScriptWebTestBase {
     @MainActor
     func testDeserializationErrorLogsAnalytic() async throws {
         let analyticsClient = MockComponentAnalyticsClient(commonFields: .mock)
-        let handler = OnSetterFunctionCalledMessageHandler(analyticsClient: analyticsClient)
+        try await loadTrustedDocument()
+        let handler = OnSetterFunctionCalledMessageHandler(sourcePolicy: webView.trustedMessageSourcePolicy(), analyticsClient: analyticsClient)
         webView.addMessageHandler(messageHandler: handler)
 
         handler.addHandler(handler: .init(setter: "setFoo", didReceiveMessage: { (_: Bool) in

@@ -26,6 +26,7 @@ class AccountOnboardingControllerTests: XCTestCase {
     func testDelegate() async throws {
         let delegate = AccountOnboardingControllerDelegatePassThrough()
         let controller = componentManager.createAccountOnboardingController()
+        try await controller.webVC.webView.loadTrustedDocumentPreservingDelegate()
         controller.delegate = delegate
 
         let expectationDidFail = XCTestExpectation(description: "didFail called")
@@ -54,6 +55,7 @@ class AccountOnboardingControllerTests: XCTestCase {
                 return collectionOptions
             }()
         )
+        try await controller.webVC.webView.loadTrustedDocumentPreservingDelegate()
 
         try await controller.webVC.webView.evaluateMessageWithReply(name: "fetchInitComponentProps",
                                                                     json: "{}",
@@ -111,6 +113,7 @@ class AccountOnboardingControllerTests: XCTestCase {
 
         let delegate = AccountOnboardingControllerDelegatePassThrough()
         let controller = componentManager.createAccountOnboardingController()
+        try await controller.webVC.webView.loadTrustedDocumentPreservingDelegate()
         controller.delegate = delegate
         controller.present(from: rootVC, animated: false)
 
@@ -133,6 +136,7 @@ class AccountOnboardingControllerTests: XCTestCase {
         // Given an onboarding controller with a delegate
         let delegate = AccountOnboardingControllerDelegatePassThrough()
         let controller = componentManager.createAccountOnboardingController()
+        try await controller.webVC.webView.loadTrustedDocumentPreservingDelegate()
         controller.delegate = delegate
 
         let didExit = expectation(description: "accountOnboardingDidExit called")
