@@ -105,12 +105,16 @@ extension PaymentSheet {
 
 /// Check if native Link is available on this device
 func deviceCanUseNativeLink(elementsSession: STPElementsSession, configuration: PaymentElementConfiguration) -> Bool {
+    return deviceCanUseNativeLink(elementsSession: elementsSession, apiClient: configuration.apiClient)
+}
+
+func deviceCanUseNativeLink(elementsSession: STPElementsSession, apiClient: STPAPIClient) -> Bool {
     if let nativeLinkEnabledOverride = PaymentSheet.LinkFeatureFlags.nativeLinkEnabledOverride {
         return nativeLinkEnabledOverride
     }
     return deviceCanUseNativeLink(
         useAttestationEndpoints: elementsSession.linkSettings?.useAttestationEndpoints,
-        apiClient: configuration.apiClient
+        apiClient: apiClient
     )
 }
 

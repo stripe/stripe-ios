@@ -114,7 +114,7 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
             NSPredicate(format: "label BEGINSWITH %@", "Buy with Apple")
         ).firstMatch
         XCTAssertTrue(applePayButton.waitForExistence(timeout: 10))
-        XCTAssertTrue(app.buttons["Pay with Link"].exists)
+        XCTAssertFalse(app.buttons["Pay with Link"].exists)
         XCTAssertTrue(app.buttons["Select payment method"].exists)
 
         // When the customer selects the integration currency in Currency Selector Element
@@ -224,9 +224,11 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
     }
 
     func testExpressCheckoutElementLinkAnalytics() {
-        // Given an ECE-only Checkout Session
+        // Given an ECE-only Checkout Session that does not require shipping or automatic tax
         var settings = CheckoutPlayground.Settings()
         settings.integrationType = .eceOnly
+        settings.shippingAddressCollection = false
+        settings.automaticTax = false
         loadCheckoutPlayground(app, settings)
         app.buttons["Create Checkout Session"].waitForExistenceAndTap()
 
