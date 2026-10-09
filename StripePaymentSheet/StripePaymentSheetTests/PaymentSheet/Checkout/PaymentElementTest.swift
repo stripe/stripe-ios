@@ -309,11 +309,23 @@ final class PaymentElementTest: XCTestCase {
         cardParams.number = "4242424242424242"
         let confirmParams = IntentConfirmParams(type: .stripe(.card))
         confirmParams.paymentMethodParams.card = cardParams
+        let bankConfirmParams = IntentConfirmParams(type: .instantDebits)
+        bankConfirmParams.instantDebitsLinkedBank = InstantDebitsLinkedBank(
+            paymentMethod: .init(id: "pm_1234"),
+            bankName: "Stripe Bank",
+            last4: "6789",
+            linkMode: nil,
+            incentiveEligible: false,
+            linkAccountSessionId: "fcsess_"
+        )
         let cases: [(PaymentSheet.PaymentOption, String, String?)] = [
             (.new(confirmParams: confirmParams), "Visa", "•••• 4242"),
             (.saved(paymentMethod: STPPaymentMethod._testCard(), confirmParams: nil), "Visa", "•••• 4242"),
             (.saved(paymentMethod: STPPaymentMethod._testUSBankAccount(), confirmParams: nil), "STRIPE TEST BANK", "••••6789"),
             (.saved(paymentMethod: STPPaymentMethod._testLink(displayName: "My Personal Card"), confirmParams: nil), "Link", "My Personal Card •••• 4242"),
+            (.saved(paymentMethod: STPPaymentMethod._testCard(), confirmParams: bankConfirmParams), "Stripe Bank", "••••6789"),
+            (.new(confirmParams: IntentConfirmParams(type: .stripe(.USBankAccount))), "US bank account", nil),
+            (.link(option: .wallet(brand: .link)), "Link", nil),
             (.applePay, "Apple Pay", nil),
             (.new(confirmParams: IntentConfirmParams(type: .stripe(.payPal))), "PayPal", nil),
         ]
@@ -365,6 +377,51 @@ final class PaymentElementTest: XCTestCase {
             XCTAssertEqual(displayData.label, "Onelink")
             XCTAssertEqual(displayData.sublabel, "•••• 4242")
         }
+    }
+
+    func testFlowControllerPublishesSeparateLabelsToCheckout() async throws {
+        // Given Checkout with a saved card selected
+        let (configuration, _) = try stubAutomaticTaxSavedCardCheckout()
+        let checkout = try await CheckoutController(configuration: configuration)
+        let paymentElement = checkout.getPaymentElement()
+        XCTAssertFalse(paymentElement.paymentOptionSourceOfTruthIsFlowController)
+
+        // When FlowController publishes its selection
+        paymentElement.paymentSheetFlowController.updatePaymentOption()
+
+        // Then Checkout receives the separate labels through the subscription
+        XCTAssertTrue(paymentElement.paymentOptionSourceOfTruthIsFlowController)
+        XCTAssertEqual(checkout.session.paymentOption?.label, "Visa")
+        XCTAssertEqual(checkout.session.paymentOption?.sublabel, "•••• 4242")
+        XCTAssertEqual(paymentElement.paymentSheetFlowController.paymentOption?.label, "•••• 4242")
+    }
+
+    func testEmbeddedPublishesChangesToLinkSublabel() async throws {
+        // Given Checkout with a Link card selected
+        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration())
+        let embedded = checkout.getPaymentElement().embeddedPaymentElement
+        let account = PaymentSheetLinkAccount._testValue(email: "patrick@example.com", isRegistered: true)
+        let paymentDetails = LinkStubs.paymentMethods()
+        embedded._test_paymentOption = .link(option: .withPaymentDetails(
+            brand: .link, account: account, paymentDetails: paymentDetails[LinkStubs.PaymentMethodIndices.card],
+            confirmationExtras: nil, shippingAddress: nil
+        ))
+        embedded.informDelegateIfPaymentOptionUpdated()
+        let previousSublabel = checkout.session.paymentOption?.sublabel
+        XCTAssertEqual(embedded.paymentOption?.label, "Link")
+
+        // When Link selects a bank account, the legacy label stays the same
+        embedded._test_paymentOption = .link(option: .withPaymentDetails(
+            brand: .link, account: account, paymentDetails: paymentDetails[LinkStubs.PaymentMethodIndices.bankAccount],
+            confirmationExtras: nil, shippingAddress: nil
+        ))
+        XCTAssertEqual(embedded.paymentOption?.label, "Link")
+        embedded.informDelegateIfPaymentOptionUpdated()
+
+        // Then the changed sublabel still triggers an update to Checkout
+        XCTAssertEqual(checkout.session.paymentOption?.label, "Link")
+        XCTAssertEqual(checkout.session.paymentOption?.sublabel, "Patrick's bank •••• 1234")
+        XCTAssertNotEqual(checkout.session.paymentOption?.sublabel, previousSublabel)
     }
 
     func testPaymentOptionBillingDetailsOmitsEmptyAddress() {

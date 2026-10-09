@@ -10,7 +10,7 @@ import OHHTTPStubs
 import OHHTTPStubsSwift
 @testable @_spi(STP) import StripeCore
 @testable @_spi(STP) import StripePayments
-@testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(AppearanceAPIAdditionsPreview) @_spi(STP) import StripePaymentSheet
 @testable @_spi(STP) import StripeUICore
 import UIKit
 import XCTest
@@ -904,7 +904,7 @@ final class CheckoutUnitTests: XCTestCase {
               paymentOption: {
                 paymentMethodType: "card"
                 label: "Visa"
-                sublabel: Optional("•••• 4242")
+                sublabel: <redacted>
                 billingDetails: {
                   country: "US"
                 }
@@ -944,6 +944,32 @@ final class CheckoutUnitTests: XCTestCase {
             }
             """
         )
+    }
+
+    func testSessionDebugDescriptionRedactsLinkNickname() {
+        // Given a Link payment option with a customer's bank account nickname
+        let paymentOption = PaymentSheet.PaymentOption.link(option: .withPaymentDetails(
+            brand: .link,
+            account: PaymentSheetLinkAccount._testValue(email: "patrick@example.com", isRegistered: true),
+            paymentDetails: LinkStubs.paymentMethods()[LinkStubs.PaymentMethodIndices.bankAccount],
+            confirmationExtras: nil,
+            shippingAddress: nil
+        ))
+        var session = CheckoutTestHelpers.makeOpenSession().makePublicSession()
+        session.localState.paymentOption = .init(EmbeddedPaymentElement.PaymentOptionDisplayData(
+            paymentOption: paymentOption, mandateText: nil, currency: "usd", iconStyle: .filled
+        ))
+        XCTAssertEqual(session.paymentOption?.sublabel, "Patrick's bank •••• 1234")
+
+        // When describing the session, the nickname is redacted
+        XCTAssertFalse(session.debugDescription.contains("Patrick"))
+        XCTAssertTrue(session.debugDescription.contains("sublabel: <redacted>"))
+
+        // Then payment methods without additional details still show nil
+        session.localState.paymentOption = .init(EmbeddedPaymentElement.PaymentOptionDisplayData(
+            paymentOption: .applePay, mandateText: nil, currency: "usd", iconStyle: .filled
+        ))
+        XCTAssertTrue(session.debugDescription.contains("sublabel: nil"))
     }
 
     func testSessionDebugDescription_preservesAbsentAndEmptyTaxAmounts() {

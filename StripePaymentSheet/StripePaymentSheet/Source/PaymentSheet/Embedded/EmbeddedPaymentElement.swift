@@ -616,6 +616,11 @@ extension EmbeddedPaymentElement {
 extension EmbeddedPaymentElement.PaymentOptionDisplayData {
     public static func == (lhs: Self, rhs: Self) -> Bool {
         // Unfortunately, we need to manually define this because the implementation of Equatable on UIImage does not work
-        return lhs.image.pngData() == rhs.image.pngData() && rhs.label == lhs.label && lhs.billingDetails == rhs.billingDetails && lhs.paymentMethodType == rhs.paymentMethodType && lhs.mandateText == rhs.mandateText
+        return lhs.image.pngData() == rhs.image.pngData()
+            && lhs.label == rhs.label
+            && lhs.labels == rhs.labels
+            && lhs.billingDetails == rhs.billingDetails
+            && lhs.paymentMethodType == rhs.paymentMethodType
+            && lhs.mandateText == rhs.mandateText
     }
 }
