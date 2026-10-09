@@ -352,11 +352,20 @@ extension String.Localized {
         )
     }
 
+    static var nigerian_wallet_terms: String {
+        STPLocalizedString(
+            "By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their <terms>terms</terms>.",
+            "Naira Wallet disclosure. The terms tags mark the link to the merchant of record's terms."
+        )
+    }
     static var gcash_mandate_text: String {
         STPLocalizedString(
             "By confirming your payment with GCash, you allow %@ to charge your GCash account for future payments in accordance with their terms.",
             "GCash mandate text. The placeholder is the merchant's name."
         )
+    }
+    static var mondu_buyer_message: String {
+        STPLocalizedString("Invoice payment for business buyers.", "Message shown when Mondu is selected")
     }
     static var korean_payment_method_mandate_text: String {
         STPLocalizedString(

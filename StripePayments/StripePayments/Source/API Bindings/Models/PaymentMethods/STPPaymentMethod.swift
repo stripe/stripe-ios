@@ -116,10 +116,14 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
     @objc private(set) public var scalapay: STPPaymentMethodScalapay?
     /// If this is a GoPay PaymentMethod, this contains additional details.
     @objc private(set) public var goPay: STPPaymentMethodGoPay?
+    /// If this is a Mondu PaymentMethod, this contains additional details.
+    @objc private(set) public var mondu: STPPaymentMethodMondu?
     /// If this is a Naira USSD PaymentMethod, this contains additional details.
     @objc private(set) public var ngUSSD: STPPaymentMethodNgUSSD?
     /// If this is a QRIS PaymentMethod, this contains additional details.
     @objc private(set) public var qris: STPPaymentMethodQRIS?
+    /// If this is a Naira Wallet PaymentMethod, this contains additional details.
+    @objc private(set) public var ngWallet: STPPaymentMethodNgWallet?
     /// If this is a ShopeePay PaymentMethod, this contains additional details.
     @objc private(set) public var shopeePay: STPPaymentMethodShopeePay?
     /// If this is a GCash PaymentMethod, this contains additional details.
@@ -212,8 +216,10 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
             "sequra = \(String(describing: sequra))",
             "scalapay = \(String(describing: scalapay))",
             "goPay = \(String(describing: goPay))",
+            "mondu = \(String(describing: mondu))",
             "ngUSSD = \(String(describing: ngUSSD))",
             "qris = \(String(describing: qris))",
+            "ngWallet = \(String(describing: ngWallet))",
             "shopeePay = \(String(describing: shopeePay))",
             "gcash = \(String(describing: gcash))",
             "momo = \(String(describing: momo))",
@@ -450,11 +456,17 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
         paymentMethod.ngCard = STPPaymentMethodNgCard.decodedObject(
             fromAPIResponse: dict.stp_dictionary(forKey: "ng_card")
         )
+        paymentMethod.mondu = STPPaymentMethodMondu.decodedObject(
+            fromAPIResponse: dict.stp_dictionary(forKey: "mondu")
+        )
         paymentMethod.ngUSSD = STPPaymentMethodNgUSSD.decodedObject(
             fromAPIResponse: dict.stp_dictionary(forKey: "ng_ussd")
         )
         paymentMethod.qris = STPPaymentMethodQRIS.decodedObject(
             fromAPIResponse: dict.stp_dictionary(forKey: "qris")
+        )
+        paymentMethod.ngWallet = STPPaymentMethodNgWallet.decodedObject(
+            fromAPIResponse: dict.stp_dictionary(forKey: "ng_wallet")
         )
         paymentMethod.shopeePay = STPPaymentMethodShopeePay.decodedObject(
             fromAPIResponse: dict.stp_dictionary(forKey: "shopeepay")

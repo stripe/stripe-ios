@@ -507,8 +507,12 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable, Payme
     }
 
     func didTapOrSwipeToDismiss() {
+        // Capture the dismissed screen's policy before its callback can replace the content.
+        let shouldLogPaymentSheetAnalyticsOnDismissal = contentViewController.navigationBar.shouldLogPaymentSheetAnalyticsOnDismissal
         contentViewController.didTapOrSwipeToDismiss()
-        STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetDismissed)
+        if shouldLogPaymentSheetAnalyticsOnDismissal {
+            STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetDismissed)
+        }
     }
 }
 

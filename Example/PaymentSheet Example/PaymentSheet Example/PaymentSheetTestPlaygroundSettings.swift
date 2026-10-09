@@ -179,6 +179,8 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case DE
         case IT
         case NG = "ng"
+        case ngWallet = "ng_wallet"
+        case mondu
         case usTax = "us_tax"
         case stripeShop = "stripe_shop_test"
         case custom

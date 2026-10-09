@@ -50,6 +50,12 @@ static NSString * const STPTestingTHPublishableKey =
 // Test account for Naira card and Naira bank transfer
 static NSString * const STPTestingNGPublishableKey =
     @"pk_test_51PnmqMFoDYfWw3n43Igi4AQCH3GIizmq8WAm2AI5zA7vIlyG4mGqhRxFLmCjg38KOl6sJCr4T33FY2qWBunwXZYX00dOs0ukCL";
+// Test account for Naira Wallet
+static NSString * const STPTestingNGWalletPublishableKey =
+    @"pk_test_51QSODeDVpqbmmLClhGlSJmLpCSqphqTUx0CAPuiO4R9lbpQ1p4lEVXwGR4I3trSK9nce7F9m98Q4TspvrQ9gKZ0s00Z7wMj6Bf";
+// Test account for Mondu
+static NSString * const STPTestingMonduPublishableKey =
+    @"pk_test_51RQcmLL2ttF1aQ6KGGG8Qea5S4gvjnfOhUijlYg0TXy9LRhFAAMcUcHxyKT9CwbXn7A1uPoU6OJi0icb4SI0kFAQ0010GQbZsl";
 // Test account in Germany
 // Account token: acct_1PSnNaAlz2yHYCNZ
 // Scenario link: https://admin.corp.stripe.com/scenarios?runId=scnrun*AZAoKlcYbwAAAIDN

@@ -170,6 +170,15 @@ enum ExpectedFormHierarchy {
     enum ShopeePay {
         static var paymentIntent: FormHierarchyNode { emptyForm }
     }
+    // MARK: - Naira Wallet
+
+    enum NgWallet {
+        static var paymentIntent: FormHierarchyNode {
+            FormHierarchyNode(type: "FormElement", children: [
+                FormHierarchyNode(type: "SimpleMandateElement", properties: ["text": "By confirming your payment, you agree that your tr..."])
+            ])
+        }
+    }
     // MARK: - QRIS
 
     enum QRIS {
@@ -182,6 +191,15 @@ enum ExpectedFormHierarchy {
         static var settingUp: FormHierarchyNode {
             FormHierarchyNode(type: "FormElement", children: [
                 FormHierarchyNode(type: "SimpleMandateElement", properties: ["text": "By confirming your payment with GCash, you allow S..."])
+            ])
+        }
+    }
+    // MARK: - Mondu
+
+    enum Mondu {
+        static var paymentIntent: FormHierarchyNode {
+            FormHierarchyNode(type: "FormElement", children: [
+                FormHierarchyNode(type: "SubtitleElement")
             ])
         }
     }
