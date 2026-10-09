@@ -5,12 +5,13 @@
 //  Created by Nick Porter on 2/24/26.
 
 import Combine
+@_spi(STP) import StripeCore
 @_spi(STP) import StripePaymentSheet
 import SwiftUI
 
 extension CheckoutPlayground {
     @MainActor
-    final class ViewModel: ObservableObject {
+    final class ViewModel: ObservableObject, STPAnalyticsClientDelegate {
 
         // Unified mode currently supports card and Link.
         static let availablePaymentMethods = [
@@ -66,8 +67,8 @@ extension CheckoutPlayground {
         private var settingsSaveSubscription: AnyCancellable?
         private var isLinkModeOverrideActive = false
 
-        init() {
-            let settings = Self.settingsFromDefaults() ?? Settings()
+        init(settings: Settings? = nil) {
+            let settings = settings ?? Self.settingsFromDefaults() ?? Settings()
             uiFramework = settings.uiFramework
             integrationType = settings.integrationType
             expressCheckoutElement = settings.expressCheckoutElement
@@ -169,6 +170,8 @@ extension CheckoutPlayground {
                 return
             }
             serializeSettingsToNSUserDefaults()
+            AnalyticsLogObserver.shared.analyticsLog.removeAll()
+            STPAnalyticsClient.sharedClient.delegate = self
             isCreating = true
             errorMessage = nil
             defer {
@@ -204,6 +207,12 @@ extension CheckoutPlayground {
                 navigateToCheckout = true
             } catch {
                 errorMessage = error.localizedDescription
+            }
+        }
+
+        func analyticsClientDidLog(analyticsClient: STPAnalyticsClient, payload: [String: Any]) {
+            DispatchQueue.main.async {
+                AnalyticsLogObserver.shared.analyticsLog.append(payload)
             }
         }
 
@@ -285,5 +294,6 @@ extension CheckoutPlayground {
                 return nil
             }
         }
+
     }
 }

@@ -292,6 +292,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         let paymentIntent = Intent._testPaymentIntent(paymentMethodTypes: [.ngCard])
         let setupIntents: [Intent] = [
             ._testPaymentIntent(paymentMethodTypes: [.ngCard], setupFutureUsage: .offSession),
+            ._testPaymentIntent(paymentMethodTypes: [.ngCard], paymentMethodOptionsSetupFutureUsage: [.ngCard: "off_session"]),
             ._testSetupIntent(paymentMethodTypes: [.ngCard]),
         ]
 

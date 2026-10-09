@@ -1,0 +1,70 @@
+//
+//  PaymentSheetContainer.swift
+//  StripePaymentSheet
+//
+//  Created by George Birch on 9/30/26.
+//  Copyright © 2026 Stripe, Inc. All rights reserved.
+//
+
+@_spi(STP) import StripePayments
+import UIKit
+
+/// The presentation-independent interface used by PaymentSheet content.
+/// Concrete containers own either the legacy bottom-sheet lifecycle or the native sheet lifecycle.
+protocol PaymentSheetContainer: UIViewController, PaymentSheetAuthenticationContext {
+
+    var contentStack: [BottomSheetContentViewController] { get }
+    var contentOffsetPercentage: CGFloat { get set }
+
+    func setViewControllers(_ viewControllers: [BottomSheetContentViewController])
+    func pushContentViewController(_ contentViewController: BottomSheetContentViewController)
+    func popContentViewController(completion: (() -> Void)?) -> BottomSheetContentViewController?
+    func setUserInteractionEnabled(_ enabled: Bool)
+
+    func addBlurEffect(animated: Bool, backgroundColor: UIColor, completion: @escaping () -> Void)
+    func removeBlurEffect(animated: Bool, completion: (() -> Void)?)
+    func startSpinner()
+    func transitionSpinnerToComplete(animated: Bool, completion: @escaping () -> Void)
+
+    func invalidateContentDetent()
+    func didTapOrSwipeToDismiss()
+    func present(from presentingViewController: UIViewController, completion: (() -> Void)?)
+}
+
+extension PaymentSheetContainer {
+
+    /// Legacy containers have no system detent to invalidate.
+    func invalidateContentDetent() {}
+
+    func popContentViewController() -> BottomSheetContentViewController? {
+        popContentViewController(completion: nil)
+    }
+}
+
+/// Selects the concrete container before presentation begins.
+enum PaymentSheetContainerFactory {
+
+    static func make(
+        contentViewController: BottomSheetContentViewController,
+        appearance: PaymentSheet.Appearance,
+        usesNativeSheet: Bool = false,
+        didCancelNative3DS2: @escaping () -> Void
+    ) -> any PaymentSheetContainer {
+        #if !os(visionOS)
+        if usesNativeSheet {
+            return NativeSheetContainerViewController(
+                contentViewController: contentViewController,
+                appearance: appearance,
+                didCancelNative3DS2: didCancelNative3DS2
+            )
+        }
+        #endif
+
+        // Existing flows remain on the legacy container until they explicitly opt in.
+        return BottomSheetViewController(
+            contentViewController: contentViewController,
+            appearance: appearance,
+            didCancelNative3DS2: didCancelNative3DS2
+        )
+    }
+}

@@ -49,9 +49,13 @@ public class STPPaymentMethodNgCard: NSObject, STPAPIResponseDecodable {
 @objc public enum STPPaymentMethodNgCardBrand: Int {
     /// An unknown card brand.
     case unknown
+    /// An American Express card.
     case amex
+    /// A Mastercard card.
     case mastercard
+    /// A Verve card.
     case verve
+    /// A Visa card.
     case visa
 
     @_spi(STP) public init(string: String?) {

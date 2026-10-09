@@ -148,30 +148,10 @@ extension FinancialConnectionsNavigationController {
         _ navigationItem: UINavigationItem?,
         closeItem: UIBarButtonItem,
         shouldHideLogo: Bool,
-        appearance: FinancialConnectionsAppearance,
-        isTestMode: Bool
+        appearance: FinancialConnectionsAppearance
     ) {
         let iconHeight: CGFloat = 20
-        var testModeImageViewWidth: CGFloat = 0
-        var logoImageViewWidth: CGFloat = 0
-
-        let testModeBadgeView: UIImageView? = {
-            guard isTestMode else { return nil }
-
-            let testModeImage = UIImageView(image: Image.testmode.makeImage())
-            testModeImage.contentMode = .scaleAspectFit
-            testModeImage.sizeToFit()
-            testModeImageViewWidth = testModeImage.bounds.width * (iconHeight / max(1, testModeImage.bounds.height))
-            testModeImage.frame = CGRect(
-                x: 0,
-                y: 0,
-                width: testModeImageViewWidth,
-                height: iconHeight
-            )
-            return testModeImage
-        }()
-
-        let logoView: UIImageView? = {
+        let logoView: UIView? = {
             guard !shouldHideLogo else { return nil }
 
             let logoImage = UIImageView(image: appearance.logo.makeImage(template: true))
@@ -179,38 +159,19 @@ extension FinancialConnectionsNavigationController {
             logoImage.contentMode = .scaleAspectFit
             logoImage.sizeToFit()
 
-            logoImageViewWidth = logoImage.bounds.width * (iconHeight / max(1, logoImage.bounds.height))
+            let logoImageViewWidth = logoImage.bounds.width * (iconHeight / max(1, logoImage.bounds.height))
             logoImage.frame = CGRect(
                 x: 0,
                 y: 0,
                 width: logoImageViewWidth,
                 height: iconHeight
             )
-            return logoImage
+            // Use a container to preserve the logo's size when used as a title view.
+            let containerView = UIView(frame: logoImage.bounds)
+            containerView.addSubview(logoImage)
+            return containerView
         }()
-
-        let spacing: CGFloat = 6
-        let imageViews = [logoView, testModeBadgeView].compactMap { $0.self }
-        let stackView = UIStackView(arrangedSubviews: imageViews)
-        stackView.axis = .horizontal
-        stackView.alignment = .center
-        stackView.spacing = spacing
-        stackView.frame = CGRect(
-            x: 0,
-            y: 0,
-            width: logoImageViewWidth + testModeImageViewWidth + spacing,
-            height: iconHeight
-        )
-
-        // If `titleView` is directly set to the custom view
-        // we can't control the sizing...so we create a `containerView`
-        // so we can control its sizing.
-        let containerView = UIView()
-        containerView.frame = stackView.bounds
-        containerView.addSubview(stackView)
-        stackView.center = containerView.center
-
-        navigationItem?.titleView = stackView
+        navigationItem?.titleView = logoView
         navigationItem?.backButtonTitle = ""
         navigationItem?.rightBarButtonItem = closeItem
     }
