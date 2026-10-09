@@ -295,6 +295,7 @@ class PaymentSheetFormFactory {
                 )
             case .ngWallet:
                 return makeContactInformationAndBillingAddressForm(
+                    defaultBillingCountry: "NG",
                     additionalElements: [makeNigerianPaymentMethodMandate(terms: String.Localized.nigerian_wallet_terms)]
                 )
             case .momo, .goPay, .grabPay, .paynow, .payPay, .mobilePay, .vipps, .zip, .crypto,
