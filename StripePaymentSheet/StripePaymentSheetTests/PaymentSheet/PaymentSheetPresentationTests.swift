@@ -59,8 +59,8 @@ final class PaymentSheetPresentationTests: XCTestCase {
         // When replacing the loading spinner with content taller than the available sheet
         presenter.presentAsSheet(sheet) { presented.fulfill() }
         await fulfillment(of: [presented], timeout: 3)
-        let presentedSheet = try XCTUnwrap(presenter.presentedViewController as? NativeSheetContainerViewController)
-        let sheetPresentationController = try XCTUnwrap(presentedSheet.sheetPresentationController)
+        let navigationController = try XCTUnwrap(presenter.presentedViewController as? UINavigationController)
+        let sheetPresentationController = try XCTUnwrap(navigationController.sheetPresentationController)
         XCTAssertEqual(sheetPresentationController.selectedDetentIdentifier, NativeSheetContainerViewController.contentDetentIdentifier)
         let contentVisible = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
             content.view.window != nil && content.view.alpha == 1
@@ -74,6 +74,106 @@ final class PaymentSheetPresentationTests: XCTestCase {
         let dismissed = expectation(description: "Regular-width native sheet dismissed")
         presenter.dismiss(animated: false) { dismissed.fulfill() }
         await fulfillment(of: [dismissed], timeout: 3)
+    }
+
+    @MainActor
+    func testNativeGlassPresentationFadesBackground() async throws {
+        guard #available(iOS 26.0, *) else { throw XCTSkip("Liquid Glass requires iOS 26.") }
+        guard !UIAccessibility.isReduceMotionEnabled else { throw XCTSkip("Presentation animations require Reduce Motion to be off.") }
+        // Given real payment content using native sheets and Liquid Glass
+        await AddressSpecProvider.shared.loadAddressSpecs()
+        var appearance = PaymentSheet.Appearance.default
+        appearance.applyLiquidGlass()
+        for variant in ["horizontal", "vertical", "embedded"] {
+            let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first)
+            let presenter = UIViewController()
+            presenter.view.backgroundColor = .white
+            let window = UIWindow(windowScene: scene)
+            window.frame = UIScreen.main.bounds
+            window.rootViewController = presenter
+            window.makeKeyAndVisible()
+            defer { window.isHidden = true }
+            try await Task.sleep(nanoseconds: 200_000_000)
+            var flowController: PaymentSheet.FlowController?
+            var embeddedElement: EmbeddedPaymentElement?
+
+            // When opening the FlowController picker or Embedded's card form
+            let loadResult = PaymentSheetLoader.LoadResult(
+                intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
+                elementsSession: ._testValue(orderedPaymentMethodTypes: [.card], flags: ["elements_mobile_ios_native_sheet_enabled": true]),
+                savedPaymentMethods: [],
+                paymentMethodTypes: [.stripe(.card)],
+                paymentMethodMessagingPromotionsHelper: ._testValue(),
+                paymentMethodOrientation: variant == "horizontal" ? .horizontal : .vertical
+            )
+            var configuration = PaymentSheet.Configuration()
+            configuration.appearance = appearance
+            configuration.applePay = nil
+            configuration.link = .init(display: .never)
+            if variant == "embedded" {
+                var embeddedConfiguration = EmbeddedPaymentElement.Configuration()
+                embeddedConfiguration.appearance = appearance
+                let element = EmbeddedPaymentElement(configuration: embeddedConfiguration, loadResult: loadResult, analyticsHelper: ._testValue())
+                embeddedElement = element
+                element.presentingViewController = presenter
+                presenter.view.addSubview(element.view)
+                element.view.frame = presenter.view.bounds
+                element.embeddedPaymentMethodsView.didTap(rowButton: element.embeddedPaymentMethodsView.getRowButton(accessibilityIdentifier: "Card"))
+            } else {
+                flowController = PaymentSheet.FlowController(configuration: configuration, loadResult: loadResult, analyticsHelper: ._testValue())
+                flowController?.presentPaymentOptions(from: presenter, completion: {})
+            }
+
+            // Then the rendered background starts lighter and darkens during the opening animation.
+            try await Task.sleep(nanoseconds: 25_000_000)
+            let navigationController = try XCTUnwrap(presenter.presentedViewController as? UINavigationController)
+            XCTAssertTrue(navigationController.viewControllers.first is NativeSheetContainerViewController)
+            var pending = [window as UIView]
+            var dimmingLayer: CALayer?
+            while let view = pending.popLast() {
+                // Search UIKit's presentation chrome, not the payment form's own animations.
+                guard view !== navigationController.view, view !== presenter.view else { continue }
+                if let alpha = view.layer.backgroundColor?.alpha, alpha > 0, alpha < 1,
+                   view.layer.animation(forKey: "backgroundColor") != nil {
+                    dimmingLayer = view.layer
+                    break
+                }
+                pending.append(contentsOf: view.subviews)
+            }
+            let layer = try XCTUnwrap(dimmingLayer, "Missing dimming animation for \(variant)")
+            let targetAlpha = try XCTUnwrap(layer.backgroundColor?.alpha)
+            let initialAlpha = try XCTUnwrap(layer.presentation()?.backgroundColor?.alpha)
+            XCTAssertLessThan(initialAlpha, targetAlpha * 0.75, "\(variant) dimmed immediately")
+            try await Task.sleep(nanoseconds: 75_000_000)
+            let laterAlpha = try XCTUnwrap(layer.presentation()?.backgroundColor?.alpha)
+            XCTAssertGreaterThan(laterAlpha, initialAlpha + 0.01, "\(variant) did not fade")
+
+            // Let UIKit finish presenting before dismissing this variant.
+            try await Task.sleep(nanoseconds: 500_000_000)
+            let dismissed = expectation(description: "Dismissed \(variant)")
+            presenter.dismiss(animated: false) { dismissed.fulfill() }
+            await fulfillment(of: [dismissed], timeout: 3)
+            withExtendedLifetime((flowController, embeddedElement)) {}
+        }
+    }
+
+    @MainActor
+    func testPreparingNativeSheetDoesNotResizePresentationHost() {
+        // Given a navigation controller whose bounds differ from the content's available width
+        let sheet = NativeSheetContainerViewController(
+            contentViewController: MeasuredSheetContentViewController(),
+            appearance: .default,
+            didCancelNative3DS2: {}
+        )
+        let navigationController = UINavigationController(rootViewController: sheet)
+        navigationController.view.frame = CGRect(x: 0, y: 0, width: 1024, height: 800)
+
+        // When measuring content before presentation
+        sheet.prepareForPresentation(in: 375)
+
+        // Then only the content is resized; UIKit retains control of the presentation host's layout
+        XCTAssertEqual(sheet.view.bounds.width, 375)
+        XCTAssertEqual(navigationController.view.bounds.width, 1024)
     }
 
     @MainActor
@@ -94,11 +194,16 @@ final class PaymentSheetPresentationTests: XCTestCase {
         presentingViewController.presentAsSheet(sheetViewController)
 
         // Then
-        XCTAssertIdentical(presentedViewController, sheetViewController)
-        XCTAssertEqual(sheetViewController.modalPresentationStyle, .pageSheet)
-        XCTAssertTrue(sheetViewController.isModalInPresentation)
+        let navigationController = try XCTUnwrap(presentedViewController as? UINavigationController)
+        XCTAssertIdentical(navigationController.topViewController, sheetViewController)
+        XCTAssertIdentical(navigationController.bottomSheetController, sheetViewController)
+        XCTAssertIdentical(contentViewController.navigationBar.systemNavigationItem, sheetViewController.navigationItem)
+        // UIKit may return the concrete style that its default automatic presentation resolves to.
+        XCTAssertEqual(navigationController.modalPresentationStyle, UINavigationController().modalPresentationStyle)
+        XCTAssertTrue(navigationController.isModalInPresentation)
 
-        let sheetPresentationController = try XCTUnwrap(sheetViewController.sheetPresentationController)
+        let sheetPresentationController = try XCTUnwrap(navigationController.sheetPresentationController)
+        XCTAssertIdentical(sheetPresentationController.delegate, sheetViewController)
         XCTAssertEqual(sheetPresentationController.detents.count, 1)
         if #available(iOS 16.0, *) {
             XCTAssertEqual(
@@ -119,12 +224,48 @@ final class PaymentSheetPresentationTests: XCTestCase {
     }
 
     @MainActor
+    func testNativeSheetUpdatesNavigationItemWhenLoadingCompletes() async throws {
+        // Given a native sheet showing its loading spinner
+        let paymentSheet = PaymentSheet(paymentIntentClientSecret: "pi_test_secret_test", configuration: .init())
+        let loadingContent = LoadingViewController(delegate: paymentSheet, appearance: .default)
+        let sheet = NativeSheetContainerViewController(
+            contentViewController: loadingContent,
+            appearance: .default,
+            didCancelNative3DS2: {}
+        )
+        let presenter = UIViewController()
+        let window = UIWindow(frame: UIScreen.main.bounds)
+        window.rootViewController = presenter
+        window.makeKeyAndVisible()
+        defer { window.isHidden = true }
+        let presented = expectation(description: "Loading sheet presented")
+        presenter.presentAsSheet(sheet) { presented.fulfill() }
+        await fulfillment(of: [presented], timeout: 3)
+
+        // When the loaded content replaces the spinner and resizes the sheet
+        let loadedContent = MeasuredSheetContentViewController(contentHeight: 400)
+        let loaded = expectation(description: "Loaded content appeared")
+        loadedContent.onDidAppear = { loaded.fulfill() }
+        sheet.setViewControllers([loadedContent])
+        await fulfillment(of: [loaded], timeout: 3)
+
+        // Then only the loaded content owns the sheet's navigation item
+        XCTAssertNil(loadingContent.navigationBar.systemNavigationItem)
+        XCTAssertIdentical(loadedContent.navigationBar.systemNavigationItem, sheet.navigationItem)
+
+        let dismissed = expectation(description: "Loaded sheet dismissed")
+        presenter.dismiss(animated: false) { dismissed.fulfill() }
+        await fulfillment(of: [dismissed], timeout: 3)
+    }
+
+    @MainActor
     func testNativeSheetUsesItsOwnCornerRadius() throws {
         // Given a different legacy sheet's global appearance
         let previousAppearance = BottomSheetTransitioningDelegate.appearance
         defer { BottomSheetTransitioningDelegate.appearance = previousAppearance }
         BottomSheetTransitioningDelegate.appearance.sheetCornerRadius = 48
-        let presenter = PresentationCapturingViewController { _ in }
+        var presentedViewController: UIViewController?
+        let presenter = PresentationCapturingViewController { presentedViewController = $0 }
 
         for radius: CGFloat in [0, 24] {
             var appearance = PaymentSheet.Appearance.default
@@ -139,7 +280,7 @@ final class PaymentSheetPresentationTests: XCTestCase {
             presenter.presentAsSheet(sheet)
 
             // Then its own configured radius is applied, independently of the legacy global
-            let presentationController = try XCTUnwrap(sheet.sheetPresentationController)
+            let presentationController = try XCTUnwrap(presentedViewController?.sheetPresentationController)
             XCTAssertEqual(presentationController.preferredCornerRadius, radius)
         }
     }
@@ -152,68 +293,62 @@ final class PaymentSheetPresentationTests: XCTestCase {
             didCancelNative3DS2: {}
         )
 
-        PresentationCapturingViewController { _ in }.presentAsSheet(sheet)
+        var presentedViewController: UIViewController?
+        PresentationCapturingViewController { presentedViewController = $0 }.presentAsSheet(sheet)
 
-        XCTAssertEqual(try XCTUnwrap(sheet.sheetPresentationController).preferredCornerRadius, LinkUI.largeCornerRadius)
+        XCTAssertEqual(try XCTUnwrap(presentedViewController?.sheetPresentationController).preferredCornerRadius, LinkUI.largeCornerRadius)
     }
 
     @MainActor
-    func testContentDetentMeasuresCurrentNavigationBar() throws {
+    func testContentDetentMeasuresSystemNavigationBar() throws {
         guard #available(iOS 16.0, *) else { throw XCTSkip("Content-sized detents are used on iOS 16 and later.") }
+        // A taller legacy bar must not affect sizing once UIKit owns the navigation bar.
         let initialContent = MeasuredSheetContentViewController(contentHeight: 200, navigationBarHeight: 70)
         let sheet = NativeSheetContainerViewController(
             contentViewController: initialContent,
             appearance: .default,
             didCancelNative3DS2: {}
         )
-        sheet.view.frame = CGRect(x: 0, y: 0, width: 375, height: 800)
+        let navigationController = UINavigationController(rootViewController: sheet)
+        navigationController.view.frame = CGRect(x: 0, y: 0, width: 375, height: 800)
         sheet.prepareForPresentation(in: 375)
         let context = SheetDetentResolutionContext()
+        let navigationBarHeight = navigationController.navigationBar.sizeThatFits(CGSize(width: 375, height: 0)).height
 
-        XCTAssertEqual(try XCTUnwrap(sheet.contentSizedDetent.resolvedValue(in: context)), 270, accuracy: 0.5)
+        XCTAssertEqual(try XCTUnwrap(sheet.contentSizedDetent.resolvedValue(in: context)), 200 + navigationBarHeight, accuracy: 0.5)
 
-        // When moving to content with a different bar, the detent measures the replacement
+        // When moving to content with a different custom bar, only the UIKit bar contributes height
         sheet.pushContentViewController(MeasuredSheetContentViewController(contentHeight: 300, navigationBarHeight: 90))
         sheet.view.layoutIfNeeded()
 
-        XCTAssertEqual(try XCTUnwrap(sheet.contentSizedDetent.resolvedValue(in: context)), 390, accuracy: 0.5)
+        XCTAssertEqual(try XCTUnwrap(sheet.contentSizedDetent.resolvedValue(in: context)), 300 + navigationBarHeight, accuracy: 0.5)
+        XCTAssertNil(initialContent.navigationBar.systemNavigationItem)
     }
 
     @MainActor
-    func testNativeContentFitsBelowCurrentNavigationBar() throws {
-        guard #available(iOS 16.0, *) else { throw XCTSkip("Content-sized detents are used on iOS 16 and later.") }
-        var navigationBarStyles: [PaymentSheet.Appearance.NavigationBarStyle] = [.plain]
-        if #available(iOS 26.0, *) {
-            navigationBarStyles.append(.glass)
-        }
+    func testNativeGlassContentUsesNavigationControllerSafeArea() throws {
+        guard #available(iOS 26.0, *) else { throw XCTSkip("Glass navigation bars require iOS 26.") }
+        var appearance = PaymentSheet.Appearance.default
+        appearance.navigationBarStyle = .glass
+        let initialContent = MeasuredSheetContentViewController(contentHeight: 200, navigationBarHeight: 90, appearance: appearance)
+        let sheet = NativeSheetContainerViewController(
+            contentViewController: initialContent,
+            appearance: appearance,
+            didCancelNative3DS2: {}
+        )
+        let navigationController = UINavigationController(rootViewController: sheet)
+        navigationController.view.frame = CGRect(x: 0, y: 0, width: 375, height: 800)
+        sheet.prepareForPresentation(in: 375)
 
-        for navigationBarStyle in navigationBarStyles {
-            // Given content below a custom navigation bar
-            var appearance = PaymentSheet.Appearance.default
-            appearance.navigationBarStyle = navigationBarStyle
-            let initialContent = MeasuredSheetContentViewController(contentHeight: 200, navigationBarHeight: 90, appearance: appearance)
-            let sheet = NativeSheetContainerViewController(
-                contentViewController: initialContent,
-                appearance: appearance,
-                didCancelNative3DS2: {}
-            )
-            sheet.view.frame = CGRect(x: 0, y: 0, width: 375, height: 800)
-            sheet.prepareForPresentation(in: 375)
+        XCTAssertEqual(initialContent.view.convert(.zero, to: sheet.view).y, sheet.view.safeAreaLayoutGuide.layoutFrame.minY, accuracy: 0.5)
 
-            XCTAssertEqual(sheet.scrollView.frame.minY, 90, accuracy: 0.5)
-            XCTAssertEqual(initialContent.view.convert(.zero, to: sheet.scrollView).y, 0, accuracy: 0.5)
-            XCTAssertEqual(try XCTUnwrap(sheet.contentSizedDetent.resolvedValue(in: SheetDetentResolutionContext())), 290, accuracy: 0.5)
+        let replacement = MeasuredSheetContentViewController(contentHeight: 200, navigationBarHeight: 110, appearance: appearance)
+        sheet.pushContentViewController(replacement)
+        sheet.view.layoutIfNeeded()
 
-            // When replacing the content with a taller navigation bar
-            let replacement = MeasuredSheetContentViewController(contentHeight: 200, navigationBarHeight: 110, appearance: appearance)
-            sheet.pushContentViewController(replacement)
-            sheet.view.layoutIfNeeded()
-
-            // Then the content stays below the bar and its height is counted once
-            XCTAssertEqual(sheet.scrollView.frame.minY, 110, accuracy: 0.5)
-            XCTAssertEqual(replacement.view.convert(.zero, to: sheet.scrollView).y, 0, accuracy: 0.5)
-            XCTAssertEqual(try XCTUnwrap(sheet.contentSizedDetent.resolvedValue(in: SheetDetentResolutionContext())), 310, accuracy: 0.5)
-        }
+        XCTAssertEqual(replacement.view.convert(.zero, to: sheet.view).y, sheet.view.safeAreaLayoutGuide.layoutFrame.minY, accuracy: 0.5)
+        let navigationBarHeight = navigationController.navigationBar.sizeThatFits(CGSize(width: 375, height: 0)).height
+        XCTAssertEqual(try XCTUnwrap(sheet.contentSizedDetent.resolvedValue(in: SheetDetentResolutionContext())), 200 + navigationBarHeight, accuracy: 0.5)
     }
 
     @MainActor
@@ -245,7 +380,7 @@ final class PaymentSheetPresentationTests: XCTestCase {
             presentationCompleted = true
             presented.fulfill()
         }
-        XCTAssertTrue(sheet.isBeingPresented)
+        XCTAssertTrue(sheet.rootParent.isBeingPresented)
         sheet.setViewControllers([skippedContent])
         sheet.setViewControllers([finalContent])
 
@@ -311,7 +446,7 @@ final class PaymentSheetPresentationTests: XCTestCase {
         let popped = expectation(description: "Pop after native presentation")
 
         presenter.presentAsSheet(sheet)
-        XCTAssertTrue(sheet.isBeingPresented)
+        XCTAssertTrue(sheet.rootParent.isBeingPresented)
         _ = sheet.popContentViewController { popped.fulfill() }
 
         XCTAssertIdentical(initialContent.parent, sheet)

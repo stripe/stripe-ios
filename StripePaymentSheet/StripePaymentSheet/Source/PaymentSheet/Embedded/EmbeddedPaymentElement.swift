@@ -500,7 +500,7 @@ public final class EmbeddedPaymentElement {
 extension EmbeddedPaymentElement {
 
     var isPresentingPaymentUI: Bool {
-        return presentingViewController?.presentedViewController is any PaymentSheetContainer
+        return presentingViewController?.presentedViewController?.bottomSheetController != nil
     }
 
     /// Returns the explicitly configured presenting view controller or tries to find one if nil.
