@@ -28,6 +28,7 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
                                                       analyticsClientFactory: MockComponentAnalyticsClient.init,
                                                       didFailLoadWithError: { _ in })
 
+        try await webVC.webView.loadTrustedDocumentPreservingDelegate()
         try await webVC.webView.evaluateMessageWithReply(name: "fetchClientSecret",
                                                          json: "{}",
                                                          expectedResponse: "test")
@@ -44,6 +45,7 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
                                                       didFailLoadWithError: { _ in },
                                                       webLocale: Locale(identifier: "fr_FR"))
 
+        try await webVC.webView.loadTrustedDocumentPreservingDelegate()
         try await webVC.webView.evaluateMessageWithReply(name: "fetchInitParams",
                                                          json: "{}",
                                                          expectedResponse: message)
@@ -61,6 +63,7 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
                                                       webLocale: Locale(identifier: "fr_FR"),
                                                       bundleIdProvider: { "com.test.app" })
 
+        try await webVC.webView.loadTrustedDocumentPreservingDelegate()
         try await webVC.webView.evaluateMessageWithReply(name: "fetchAppInfo",
                                                          json: "{}",
                                                          expectedResponse: message)
@@ -78,6 +81,7 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
                                                       webLocale: Locale(identifier: "fr_FR"),
                                                       bundleIdProvider: { nil })
 
+        try await webVC.webView.loadTrustedDocumentPreservingDelegate()
         try await webVC.webView.evaluateMessageWithReply(name: "fetchAppInfo",
                                                          json: "{}",
                                                          expectedResponse: message)
@@ -94,6 +98,7 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
                                                       webLocale: Locale(identifier: "fr_FR"))
         var appearance = EmbeddedComponentManager.Appearance()
         appearance.spacingUnit = 5
+        try await webVC.webView.loadTrustedDocumentPreservingDelegate()
         let expectation = try webVC.webView.expectationForMessageReceived(sender: UpdateConnectInstanceSender(payload: .init(
                                                                                                                 locale: "fr-FR",
                                                                                                                 appearance: .init(appearance: appearance, traitCollection: UITraitCollection()))
@@ -122,6 +127,7 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
 
         webVC.triggerTraitCollectionChange(style: .dark)
 
+        try await webVC.webView.loadTrustedDocumentPreservingDelegate()
         try await webVC.webView.evaluateMessageWithReply(name: "fetchInitParams",
                                                          json: "{}",
                                                          expectedResponse: """
@@ -140,6 +146,7 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
                                                       didFailLoadWithError: { _ in },
                                                       webLocale: Locale(identifier: "fr_FR"))
 
+        try await webVC.webView.loadTrustedDocumentPreservingDelegate()
         try await webVC.webView.evaluateMessageWithReply(name: "fetchInitComponentProps",
                                                          json: "{}",
                                                          expectedResponse: "{}")
@@ -165,6 +172,7 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
                                                       didFailLoadWithError: { _ in },
                                                       webLocale: Locale(identifier: "fr_FR"))
 
+        try await webVC.webView.loadTrustedDocumentPreservingDelegate()
         try await webVC.webView.evaluateMessageWithReply(name: "fetchInitComponentProps",
                                                          json: "{}",
                                                          expectedResponse: "{\"setHandleCheckScanSubmitted\":true}")
@@ -184,6 +192,7 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
                                                       didFailLoadWithError: { _ in },
                                                       webLocale: Locale(identifier: "fr_FR"))
 
+        try await webVC.webView.loadTrustedDocumentPreservingDelegate()
         let expectation = try webVC.webView.expectationForMessageReceived(sender: UpdateConnectInstanceSender(payload: .init(
             locale: "fr-FR",
             appearance: .init(appearance: appearance, traitCollection: UITraitCollection(userInterfaceStyle: .dark))
@@ -207,6 +216,7 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
             notificationCenter: notificationCenter,
             webLocale: Locale(identifier: "fr_FR"))
 
+        try await webVC.webView.loadTrustedDocumentPreservingDelegate()
         let expectation = try webVC.webView.expectationForMessageReceived(sender: UpdateConnectInstanceSender(payload: .init(locale: "fr-FR", appearance: .default)))
 
         notificationCenter.post(name: NSLocale.currentLocaleDidChangeNotification, object: nil)
@@ -227,6 +237,7 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
                                                       didFailLoadWithError: { _ in },
                                                       webLocale: Locale(identifier: "fr_FR"))
 
+        try await webVC.webView.loadTrustedDocumentPreservingDelegate()
         try await webVC.webView.evaluateMessageWithReply(name: "fetchInitParams",
                                                          json: "{}",
                                                          expectedResponse: """
@@ -245,6 +256,7 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
         // Mock that loading indicator is animating
         webVC.activityIndicator.startAnimating()
 
+        try await webVC.webView.loadTrustedDocumentPreservingDelegate()
         try await webVC.webView.evaluateOnLoaderStart(elementTagName: "payouts")
 
         // Wait for the animation state to settle after the async operation
@@ -275,6 +287,7 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
                                                       webLocale: Locale(identifier: "fr_FR"))
 
         // This step is required to register the supplemental functions within the controller
+        try await webVC.webView.loadTrustedDocumentPreservingDelegate()
         try await webVC.webView.evaluateMessageWithReply(name: "fetchInitComponentProps",
                                                          json: "{}",
                                                          expectedResponse: "{\"setHandleCheckScanSubmitted\":true}")
@@ -312,6 +325,7 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
                                                       didFailLoadWithError: { _ in },
                                                       webLocale: Locale(identifier: "fr_FR"))
 
+        try await webVC.webView.loadTrustedDocumentPreservingDelegate()
         try await webVC.webView.evaluateMessageWithReply(name: "fetchInitComponentProps",
                                                          json: "{}",
                                                          expectedResponse: "{}")
@@ -356,6 +370,7 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
                                                       webLocale: Locale(identifier: "fr_FR"))
 
         // This step is required to register the supplemental functions within the controller
+        try await webVC.webView.loadTrustedDocumentPreservingDelegate()
         try await webVC.webView.evaluateMessageWithReply(name: "fetchInitComponentProps",
                                                          json: "{}",
                                                          expectedResponse: "{\"setHandleCheckScanSubmitted\":true}")
@@ -386,6 +401,7 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
                                                       didFailLoadWithError: { error = $0 })
         // Mock that loading indicator is animating
         webVC.activityIndicator.startAnimating()
+        try await webVC.webView.loadTrustedDocumentPreservingDelegate()
         try await webVC.webView.evaluateOnLoadError(type: "rate_limit_error", message: "Error message")
         XCTAssertEqual((error as? EmbeddedComponentError)?.type, .rateLimitError)
         XCTAssertEqual((error as? EmbeddedComponentError)?.description, "Error message")
@@ -441,6 +457,7 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
                                                       didFailLoadWithError: { _ in },
                                                       authenticatedWebViewManager: authenticatedWebViewManager)
 
+        try await webVC.webView.loadTrustedDocumentPreservingDelegate()
         let expectation = try webVC.webView.expectationForMessageReceived(
             sender: ReturnedFromAuthenticatedWebViewSender(payload: .init(
                 url: URL(string: "stripe-connect://return_url"),
@@ -473,6 +490,7 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
                                                       didFailLoadWithError: { _ in },
                                                       authenticatedWebViewManager: authenticatedWebViewManager)
 
+        try await webVC.webView.loadTrustedDocumentPreservingDelegate()
         let expectation = try webVC.webView.expectationForMessageReceived(
             sender: ReturnedFromAuthenticatedWebViewSender(payload: .init(
                 url: nil,
@@ -502,6 +520,7 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
                                                       didFailLoadWithError: { _ in },
                                                       authenticatedWebViewManager: authenticatedWebViewManager)
 
+        try await webVC.webView.loadTrustedDocumentPreservingDelegate()
         try await webVC.webView.evaluateOpenAuthenticatedWebView(url: "https://stripe.com/start", id: "1234")
 
         let analyticsClient = webVC.analyticsClient as! MockComponentAnalyticsClient
@@ -540,6 +559,7 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
         XCTAssertEqual(pageLoadedEvent.metadata.timeToLoad, 10, accuracy: 1.0)
 
         // Mock pageDidLoad event returns with ID
+        try await webVC.webView.loadTrustedDocumentPreservingDelegate()
         try await webVC.webView.evaluatePageDidLoad(pageViewId: "1234")
         XCTAssertEqual(webVC.analyticsClient.pageViewId, "1234")
 
@@ -563,6 +583,7 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
         let analyticsClient = try XCTUnwrap(webVC.analyticsClient as? MockComponentAnalyticsClient)
         analyticsClient.pageViewId = "123"
 
+        try await webVC.webView.loadTrustedDocumentPreservingDelegate()
         try await webVC.webView.evaluateAccountSessionClaimed(merchantId: "acct_123")
         XCTAssertEqual(webVC.analyticsClient.merchantId, "acct_123")
 
@@ -578,6 +599,7 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
                                                       loadContent: false,
                                                       analyticsClientFactory: MockComponentAnalyticsClient.init,
                                                       didFailLoadWithError: { _ in })
+        try await webVC.webView.loadTrustedDocumentPreservingDelegate()
         try await webVC.webView.evaluateOnLoadError(type: "unexpected_error_type", message: "Error message")
 
         let analyticsClient = webVC.analyticsClient as! MockComponentAnalyticsClient
@@ -593,6 +615,7 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
                                                       loadContent: false,
                                                       analyticsClientFactory: MockComponentAnalyticsClient.init,
                                                       didFailLoadWithError: { _ in })
+        try await webVC.webView.loadTrustedDocumentPreservingDelegate()
         try await webVC.webView.evaluateMessage(name: "onSetterFunctionCalled",
                                                 json: """
                                                 {
@@ -667,7 +690,7 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
 
     // MARK: - openFinancialConnections
 
-    func testOpenFinancialConnections_success() throws {
+    func testOpenFinancialConnections_success() async throws {
         let componentManager = componentManagerAssertingOnFetch()
         let session = try FinancialConnectionsSessionMock.default.make()
 
@@ -687,6 +710,7 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
                                                       didFailLoadWithError: { _ in },
                                                       financialConnectionsPresenter: financialConnectionsPresenter)
 
+        try await webVC.webView.loadTrustedDocumentPreservingDelegate()
         let expectation = try webVC.webView.expectationForMessageReceived(
             sender: SetCollectMobileFinancialConnectionsResult
                 .sender(value: .init(
@@ -706,7 +730,7 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
         wait(for: [expectation], timeout: TestHelpers.defaultTimeout)
     }
 
-    func testOpenFinancialConnections_canceled() throws {
+    func testOpenFinancialConnections_canceled() async throws {
         let componentManager = componentManagerAssertingOnFetch()
         let financialConnectionsPresenter = MockFinancialConnectionsPresenter { _, _, _, _ in
             return .canceled
@@ -717,6 +741,7 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
                                                       analyticsClientFactory: MockComponentAnalyticsClient.init,
                                                       didFailLoadWithError: { _ in },
                                                       financialConnectionsPresenter: financialConnectionsPresenter)
+        try await webVC.webView.loadTrustedDocumentPreservingDelegate()
         let expectation = try webVC.webView.expectationForMessageReceived(
             sender: SetCollectMobileFinancialConnectionsResult
                 .sender(value: .init(
@@ -736,7 +761,7 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
         wait(for: [expectation], timeout: TestHelpers.defaultTimeout)
     }
 
-    func testOpenFinancialConnections_error() throws {
+    func testOpenFinancialConnections_error() async throws {
         let componentManager = componentManagerAssertingOnFetch()
         let financialConnectionsPresenter = MockFinancialConnectionsPresenter { _, _, _, _ in
             return .failed(error: NSError(domain: "mock_error", code: 0))
@@ -747,6 +772,7 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
                                                       analyticsClientFactory: MockComponentAnalyticsClient.init,
                                                       didFailLoadWithError: { _ in },
                                                       financialConnectionsPresenter: financialConnectionsPresenter)
+        try await webVC.webView.loadTrustedDocumentPreservingDelegate()
         let expectation = try webVC.webView.expectationForMessageReceived(
             sender: SetCollectMobileFinancialConnectionsResult
                 .sender(value: .init(

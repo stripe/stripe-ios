@@ -1,3 +1,5 @@
+@_spi(STP) import StripeCore
+
 class CallSupplementalFunctionMessageHandler: ScriptMessageHandler<CallSupplementalFunctionMessageHandler.Payload> {
     struct Payload: Decodable {
         let functionName: SupplementalFunctionName
@@ -17,7 +19,9 @@ class CallSupplementalFunctionMessageHandler: ScriptMessageHandler<CallSupplemen
         }
     }
 
-    init(analyticsClient: ComponentAnalyticsClient, didReceiveMessage: @escaping (Payload) -> Void) {
-        super.init(name: "callSupplementalFunction", analyticsClient: analyticsClient, didReceiveMessage: didReceiveMessage)
+    init(sourcePolicy: STPWebMessageSourcePolicy,
+         analyticsClient: ComponentAnalyticsClient,
+         didReceiveMessage: @escaping (Payload) -> Void) {
+        super.init(name: "callSupplementalFunction", sourcePolicy: sourcePolicy, analyticsClient: analyticsClient, didReceiveMessage: didReceiveMessage)
     }
 }

@@ -20,6 +20,7 @@ class PaymentsViewControllerTests: XCTestCase {
     func testDelegate() async throws {
         let delegate = PaymentsViewControllerDelegatePassThrough()
         let vc = componentManager.createPaymentsViewController()
+        try await vc.webVC.webView.loadTrustedDocumentPreservingDelegate()
         vc.delegate = delegate
 
         let expectationDidFail = XCTestExpectation(description: "didFail called")

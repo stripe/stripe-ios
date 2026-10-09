@@ -18,6 +18,7 @@ class PaymentDetailsViewControllerTests: XCTestCase {
             return nil
         })
         let vc = componentManager.createPaymentDetailsViewController()
+        try await vc.webVC.webView.loadTrustedDocumentPreservingDelegate()
 
         let expectationDidFail = XCTestExpectation(description: "loadDidFail called")
 
