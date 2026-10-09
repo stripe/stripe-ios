@@ -11,6 +11,7 @@ import UIKit
 
 /// The shadowed rounded rectangle that our cells use to display content
 class ShadowedRoundedRectangle: UIView {
+
     private let roundedRectangle: UIView
     private let ios26DefaultCornerStyle: CornerStyle
     var appearance: PaymentSheet.Appearance {
@@ -46,7 +47,6 @@ class ShadowedRoundedRectangle: UIView {
 
         // Shadow
         layer.applyShadow(shadow: appearance.asElementsTheme.shadow)
-        layer.shadowPath = UIBezierPath(rect: bounds).cgPath
 
         // Border
         if isSelected {
@@ -72,6 +72,13 @@ class ShadowedRoundedRectangle: UIView {
         super.init(frame: .zero)
         addAndPinSubview(roundedRectangle)
         update()
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+
+        // Native sheets can change the row's width after presentation without changing its appearance.
+        layer.shadowPath = UIBezierPath(rect: bounds).cgPath
     }
 
     #if !os(visionOS)

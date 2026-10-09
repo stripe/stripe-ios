@@ -11,6 +11,34 @@ import XCTest
 
 @MainActor
 final class RowButtonTests: XCTestCase {
+
+    func testFloatingRowShadowMatchesBoundsAfterResizing() throws {
+        // Given a payment method row laid out at the presenter's wider size
+        let rowButton = RowButton.makeForPaymentMethodType(
+            paymentMethodType: .stripe(.card),
+            hasSavedCard: false,
+            promotionsHelper: nil,
+            appearance: .default,
+            shouldAnimateOnPress: false,
+            didTap: { _ in }
+        )
+        rowButton.frame = CGRect(x: 0, y: 0, width: 700, height: 64)
+        rowButton.layoutIfNeeded()
+        rowButton.updateSelectedState(true, willDisplayForm: false)
+        let background = try XCTUnwrap(rowButton.subviews.first { $0 is ShadowedRoundedRectangle })
+        XCTAssertEqual(try XCTUnwrap(background.layer.shadowPath).boundingBoxOfPath, background.bounds)
+
+        for width: CGFloat in [320, 700] {
+            // When the sheet narrows the row or the device unfolds, without changing its selection
+            rowButton.frame.size.width = width
+            rowButton.layoutIfNeeded()
+
+            // Then the shadow follows the new bounds instead of extending past the row
+            XCTAssertEqual(background.bounds.width, width)
+            XCTAssertEqual(try XCTUnwrap(background.layer.shadowPath).boundingBoxOfPath, background.bounds)
+        }
+    }
+
     func testLoadingStatePreservesKeyContentAlpha() {
         let rowButton = SavedPaymentMethodRowButton(
             paymentMethod: STPPaymentMethod._testCard(),
