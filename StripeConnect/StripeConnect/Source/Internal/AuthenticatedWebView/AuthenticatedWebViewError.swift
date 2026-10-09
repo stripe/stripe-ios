@@ -21,4 +21,7 @@ enum AuthenticatedWebViewError: Int, Error {
 
     /// An ASWebAuthenticationSession is currently already being presented
     case alreadyPresenting = 2
+
+    /// The authentication destination must be an HTTPS URL with a host.
+    case invalidURL = 3
 }

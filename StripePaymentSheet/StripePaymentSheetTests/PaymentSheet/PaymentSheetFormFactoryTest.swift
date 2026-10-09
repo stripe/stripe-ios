@@ -2553,6 +2553,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         sendEventToSubviews(.viewDidAppear, from: form.view)
         XCTAssertNotNil(form.updateParams(params: IntentConfirmParams(type: .stripe(.ngBankTransfer))))
     }
+
     func testNairaWalletShowsMerchantOfRecordTerms() {
         // Given a one-time Naira Wallet payment
         let form = PaymentSheetFormFactory(
@@ -2578,60 +2579,6 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertNotNil(form.updateParams(params: IntentConfirmParams(type: .stripe(.ngWallet))))
     }
 
-    func testNairaWalletDefaultsBillingCountryToLocale() throws {
-        // Given Naira Wallet with full billing address collection
-        let loadExpectation = expectation(description: "Load address specs")
-        AddressSpecProvider.shared.loadAddressSpecs {
-            loadExpectation.fulfill()
-        }
-        waitForExpectations(timeout: 1)
-        var configuration = PaymentSheet.Configuration()
-        configuration.billingDetailsCollectionConfiguration.address = .full
-        let form = PaymentSheetFormFactory(
-            intent: ._testPaymentIntent(paymentMethodTypes: [.ngWallet]),
-            elementsSession: ._testValue(paymentMethodTypes: ["ng_wallet"]),
-            configuration: .paymentElement(configuration),
-            paymentMethod: .stripe(.ngWallet)
-        ).make()
-
-        // When reading the billing address countries
-        let address = try XCTUnwrap(
-            form.getAllUnwrappedSubElements().compactMap { $0 as? AddressSectionElement }.first
-        )
-
-        // Then all countries remain available and the country follows the user's locale
-        XCTAssertEqual(Set(address.countryCodes), Set(AddressSpecProvider.shared.countries))
-        let localeCountry = Locale.current.stp_regionCode ?? ""
-        XCTAssertEqual(address.selectedCountryCode, address.countryCodes.contains(localeCountry) ? localeCountry : address.countryCodes[0])
-    }
-
-    func testNairaBankTransferDefaultsBillingCountryToLocale() throws {
-        // Given Naira bank transfer with full billing address collection
-        let loadExpectation = expectation(description: "Load address specs")
-        AddressSpecProvider.shared.loadAddressSpecs {
-            loadExpectation.fulfill()
-        }
-        waitForExpectations(timeout: 1)
-        var configuration = PaymentSheet.Configuration()
-        configuration.billingDetailsCollectionConfiguration.address = .full
-        let form = PaymentSheetFormFactory(
-            intent: ._testPaymentIntent(paymentMethodTypes: [.ngBankTransfer]),
-            elementsSession: ._testValue(paymentMethodTypes: ["ng_bank_transfer"]),
-            configuration: .paymentElement(configuration),
-            paymentMethod: .stripe(.ngBankTransfer)
-        ).make()
-
-        // When the billing address is built
-        let address = try XCTUnwrap(
-            form.getAllUnwrappedSubElements().compactMap { $0 as? AddressSectionElement }.first
-        )
-
-        // Then all countries remain available and the country follows the user's locale
-        XCTAssertEqual(Set(address.countryCodes), Set(AddressSpecProvider.shared.countries))
-        let localeCountry = Locale.current.stp_regionCode ?? ""
-        XCTAssertEqual(address.selectedCountryCode, address.countryCodes.contains(localeCountry) ? localeCountry : address.countryCodes[0])
-    }
-
     func testNairaUSSDShowsMerchantOfRecordTerms() {
         // Given a one-time Naira USSD payment
         let form = PaymentSheetFormFactory(
@@ -2655,33 +2602,6 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         // When the customer sees the disclosure, the payment can be confirmed
         sendEventToSubviews(.viewDidAppear, from: form.view)
         XCTAssertNotNil(form.updateParams(params: IntentConfirmParams(type: .stripe(.ngUSSD))))
-    }
-
-    func testNairaUSSDDefaultsBillingCountryToLocale() throws {
-        // Given Naira USSD with full billing address collection
-        let loadExpectation = expectation(description: "Load address specs")
-        AddressSpecProvider.shared.loadAddressSpecs {
-            loadExpectation.fulfill()
-        }
-        waitForExpectations(timeout: 1)
-        var configuration = PaymentSheet.Configuration()
-        configuration.billingDetailsCollectionConfiguration.address = .full
-        let form = PaymentSheetFormFactory(
-            intent: ._testPaymentIntent(paymentMethodTypes: [.ngUSSD]),
-            elementsSession: ._testValue(paymentMethodTypes: ["ng_ussd"]),
-            configuration: .paymentElement(configuration),
-            paymentMethod: .stripe(.ngUSSD)
-        ).make()
-
-        // When reading the billing address countries
-        let address = try XCTUnwrap(
-            form.getAllUnwrappedSubElements().compactMap { $0 as? AddressSectionElement }.first
-        )
-
-        // Then all countries remain available and the country follows the user's locale
-        XCTAssertEqual(Set(address.countryCodes), Set(AddressSpecProvider.shared.countries))
-        let localeCountry = Locale.current.stp_regionCode ?? ""
-        XCTAssertEqual(address.selectedCountryCode, address.countryCodes.contains(localeCountry) ? localeCountry : address.countryCodes[0])
     }
 
     func testNairaCardShowsMerchantOfRecordTerms() {

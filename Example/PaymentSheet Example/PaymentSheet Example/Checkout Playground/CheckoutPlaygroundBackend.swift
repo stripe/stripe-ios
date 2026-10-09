@@ -67,7 +67,7 @@ extension CheckoutPlayground {
             ]
 
             if !automaticPaymentMethods {
-                sessionParams["payment_method_types"] = paymentMethodTypes.sorted()
+                sessionParams["allowed_payment_method_types"] = paymentMethodTypes.sorted()
             }
             if automaticTax {
                 sessionParams["automatic_tax"] = ["enabled": true]

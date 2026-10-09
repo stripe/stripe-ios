@@ -93,24 +93,105 @@ final class KycInfoTests: XCTestCase {
     }
 
     func testInitPaymentNormalizesDisplayFormattedPhoneUsingBillingAddressCountry() {
-        // Given a display-formatted phone number alongside a US billing address
+        for rawPhone in ["(212) 555-1234", "1 (212) 555-1234", "+1 (212) 555-1234"] {
+            // Given a display-formatted phone number alongside a US billing address
+            let billingContact = PKContact()
+            var name = PersonNameComponents()
+            name.givenName = "John"
+            billingContact.name = name
+            billingContact.phoneNumber = CNPhoneNumber(stringValue: rawPhone)
+
+            let postalAddress = CNMutablePostalAddress()
+            postalAddress.isoCountryCode = "US"
+            billingContact.postalAddress = postalAddress
+
+            // When creating KYC info from the payment
+            let payment = createMockPayment(billingContact: billingContact)
+            let kycInfo = KycInfo(payment: payment)
+
+            // Then all formats produce the same E.164 number and preserve the raw value
+            XCTAssertEqual(kycInfo?.phone, "+12125551234", rawPhone)
+            XCTAssertEqual(kycInfo?.rawPhone, rawPhone)
+        }
+    }
+
+    func testInitPaymentNormalizesShippingPhoneUsingBillingCountry() {
+        for rawPhone in ["(212) 555-1234", "1 (212) 555-1234", "+1 (212) 555-1234"] {
+            // Given a billing address and a shipping phone with no shipping country
+            let billingContact = PKContact()
+            let billingAddress = CNMutablePostalAddress()
+            billingAddress.isoCountryCode = "US"
+            billingContact.postalAddress = billingAddress
+
+            let shippingContact = PKContact()
+            shippingContact.phoneNumber = CNPhoneNumber(stringValue: rawPhone)
+            shippingContact.postalAddress = CNMutablePostalAddress()
+
+            // When creating KYC info from the payment
+            let payment = createMockPayment(billingContact: billingContact, shippingContact: shippingContact)
+            let kycInfo = KycInfo(payment: payment)
+
+            // Then the billing country supplies the missing region without changing the raw phone
+            XCTAssertEqual(kycInfo?.phone, "+12125551234", rawPhone)
+            XCTAssertEqual(kycInfo?.rawPhone, rawPhone)
+        }
+    }
+
+    func testInitPaymentPrefersPhoneContactCountryOverOtherContactCountry() {
+        // Given a US billing address and a UK phone with its own shipping country
+        let billingContact = PKContact()
+        let billingAddress = CNMutablePostalAddress()
+        billingAddress.isoCountryCode = "US"
+        billingContact.postalAddress = billingAddress
+
+        let shippingContact = PKContact()
+        shippingContact.phoneNumber = CNPhoneNumber(stringValue: "07700 900123")
+        let shippingAddress = CNMutablePostalAddress()
+        shippingAddress.isoCountryCode = "gb"
+        shippingContact.postalAddress = shippingAddress
+
+        // When creating KYC info from the payment
+        let payment = createMockPayment(billingContact: billingContact, shippingContact: shippingContact)
+        let kycInfo = KycInfo(payment: payment)
+
+        // Then the phone's own country is used, including its national trunk-prefix handling
+        XCTAssertEqual(kycInfo?.phone, "+447700900123")
+        XCTAssertEqual(kycInfo?.rawPhone, "07700 900123")
+    }
+
+    func testInitPaymentNormalizesInternationalPhoneWithoutCountry() {
+        // Given an international phone number with punctuation and no postal country
         let billingContact = PKContact()
         var name = PersonNameComponents()
         name.givenName = "John"
         billingContact.name = name
-        billingContact.phoneNumber = CNPhoneNumber(stringValue: "(212) 555-1234")
-
-        let postalAddress = CNMutablePostalAddress()
-        postalAddress.isoCountryCode = "US"
-        billingContact.postalAddress = postalAddress
+        billingContact.phoneNumber = CNPhoneNumber(stringValue: "+1 (212) 555-1234")
 
         // When creating KYC info from the payment
-        let payment = createMockPayment(billingContact: billingContact)
-        let kycInfo = KycInfo(payment: payment)
+        let kycInfo = KycInfo(payment: createMockPayment(billingContact: billingContact))
 
-        // Then the phone number is normalized to E.164 using the billing address's country, and the raw value is preserved
+        // Then the explicit calling code is sufficient for normalization
         XCTAssertEqual(kycInfo?.phone, "+12125551234")
-        XCTAssertEqual(kycInfo?.rawPhone, "(212) 555-1234")
+        XCTAssertEqual(kycInfo?.rawPhone, "+1 (212) 555-1234")
+    }
+
+    func testInitPaymentDoesNotReinterpretInvalidPhonesUsingPostalCountry() {
+        for rawPhone in ["+999 (212) 555-1234", "++12125551234", "call 2125551234", "1234567890123456"] {
+            // Given an invalid phone number alongside a known country
+            let billingContact = PKContact()
+            let postalAddress = CNMutablePostalAddress()
+            postalAddress.isoCountryCode = "US"
+            billingContact.postalAddress = postalAddress
+            billingContact.phoneNumber = CNPhoneNumber(stringValue: rawPhone)
+
+            // When creating KYC info from the payment
+            let kycInfo = KycInfo(payment: createMockPayment(billingContact: billingContact))
+
+            // Then the invalid number is preserved without producing a misleading normalized value
+            XCTAssertNotNil(kycInfo)
+            XCTAssertNil(kycInfo?.phone, rawPhone)
+            XCTAssertEqual(kycInfo?.rawPhone, rawPhone)
+        }
     }
 
     func testInitPaymentLeavesPhoneNilWhenNormalizationFailsButPreservesRawPhone() {

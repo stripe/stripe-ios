@@ -6,12 +6,15 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 
 // Emitted when the SDK should print to the console in debug mode.
 class DebugMessageHandler: ScriptMessageHandler<String> {
-    init(analyticsClient: ComponentAnalyticsClient,
+    init(sourcePolicy: STPWebMessageSourcePolicy,
+         analyticsClient: ComponentAnalyticsClient,
          didReceiveMessage: @escaping (String) -> Void = { Swift.debugPrint($0) }) {
         super.init(name: "debug",
+                   sourcePolicy: sourcePolicy,
                    analyticsClient: analyticsClient,
                    didReceiveMessage: didReceiveMessage)
     }
