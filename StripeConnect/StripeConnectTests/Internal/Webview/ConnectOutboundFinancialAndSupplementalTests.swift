@@ -52,6 +52,44 @@ final class ConnectOutboundFinancialAndSupplementalTests: XCTestCase {
         try await observer.assertNoCallback()
     }
 
+    func testFinancialConnectionsResultDoesNotReachReplacementTrustedDocument() async throws {
+        try await assertFinancialConnectionsResultIsWithheldAfterReplacement(reload: false)
+    }
+
+    func testFinancialConnectionsResultDoesNotReachReloadedTrustedDocument() async throws {
+        try await assertFinancialConnectionsResultIsWithheldAfterReplacement(reload: true)
+    }
+
+    private func assertFinancialConnectionsResultIsWithheldAfterReplacement(reload: Bool) async throws {
+        // Given a pending Financial Connections operation in the original document.
+        let presenter = FinancialSupplementalHeldPresenter()
+        defer { presenter.cancel() }
+        let transport = FinancialSupplementalAnalyticsTransport()
+        let controller = makeController(presenter: presenter, transport: transport)
+        let observer = installObserver(on: controller.webView)
+        defer { remove(observer, from: controller.webView) }
+        load(Self.trustedFinancialConnectionsHTML, in: controller.webView, observer: observer, host: "connect-js.stripe.com")
+        try await observer.waitForReady(host: "connect-js.stripe.com")
+        await fulfillment(of: [presenter.started], timeout: TestHelpers.defaultTimeout)
+
+        // When the same origin hosts a new document, including a real reload.
+        observer.beginDocument(host: "connect-js.stripe.com")
+        let reloadDelegate = OutboundHTMLReloadDelegate(html: Self.trustedFinancialConnectionsHTML, baseURL: URL(string: "https://connect-js.stripe.com/fixture")!)
+        defer { withExtendedLifetime(reloadDelegate) {} }
+        if reload {
+            controller.webView.navigationDelegate = reloadDelegate
+            XCTAssertNotNil(controller.webView.reload())
+        } else {
+            controller.webView.loadHTMLString(Self.trustedReplacementHTML, baseURL: URL(string: "https://connect-js.stripe.com/replacement")!)
+        }
+        try await observer.waitForReady(host: "connect-js.stripe.com")
+        presenter.complete(.canceled)
+
+        // Then native finishes delivery with a refusal, and the new document receives nothing.
+        try await transport.waitForRefusal()
+        try await observer.assertNoCallback()
+    }
+
     func testSupplementalResultReachesTrustedDocument() async throws {
         let callback = FinancialSupplementalHeldCallback()
         defer { callback.cancel() }
@@ -89,6 +127,43 @@ final class ConnectOutboundFinancialAndSupplementalTests: XCTestCase {
         callback.complete()
         try await observer.assertNoCallback()
     }
+    func testSupplementalResultDoesNotReachReplacementTrustedDocument() async throws {
+        try await assertSupplementalResultIsWithheldAfterReplacement(reload: false)
+    }
+
+    func testSupplementalResultDoesNotReachReloadedTrustedDocument() async throws {
+        try await assertSupplementalResultIsWithheldAfterReplacement(reload: true)
+    }
+
+    private func assertSupplementalResultIsWithheldAfterReplacement(reload: Bool) async throws {
+        // Given a merchant callback that has started but has not returned.
+        let callback = FinancialSupplementalHeldCallback()
+        defer { callback.cancel() }
+        let transport = FinancialSupplementalAnalyticsTransport()
+        let controller = makeController(supplementalCallback: callback, transport: transport)
+        let observer = installObserver(on: controller.webView)
+        defer { remove(observer, from: controller.webView) }
+        load(Self.trustedSupplementalHTML, in: controller.webView, observer: observer, host: "connect-js.stripe.com")
+        try await observer.waitForReady(host: "connect-js.stripe.com")
+        await fulfillment(of: [callback.started], timeout: TestHelpers.defaultTimeout)
+
+        // When the original document is replaced or reloaded on its trusted origin.
+        observer.beginDocument(host: "connect-js.stripe.com")
+        let reloadDelegate = OutboundHTMLReloadDelegate(html: Self.trustedSupplementalHTML, baseURL: URL(string: "https://connect-js.stripe.com/fixture")!)
+        defer { withExtendedLifetime(reloadDelegate) {} }
+        if reload {
+            controller.webView.navigationDelegate = reloadDelegate
+            XCTAssertNotNil(controller.webView.reload())
+        } else {
+            controller.webView.loadHTMLString(Self.trustedReplacementHTML, baseURL: URL(string: "https://connect-js.stripe.com/replacement")!)
+        }
+        try await observer.waitForReady(host: "connect-js.stripe.com")
+        callback.complete()
+
+        // Then the stale completion is refused rather than delivered to the new instance.
+        try await transport.waitForRefusal()
+        try await observer.assertNoCallback()
+    }
 }
 
 private extension ConnectOutboundFinancialAndSupplementalTests {
@@ -99,7 +174,8 @@ private extension ConnectOutboundFinancialAndSupplementalTests {
 
     func makeController(
         presenter: FinancialConnectionsPresenter = FinancialConnectionsPresenter(),
-        supplementalCallback: FinancialSupplementalHeldCallback? = nil
+        supplementalCallback: FinancialSupplementalHeldCallback? = nil,
+        transport: FinancialSupplementalAnalyticsTransport = .init()
     ) -> ConnectComponentWebViewController {
         let manager = EmbeddedComponentManager(apiClient: .init(publishableKey: "pk_test_outbound"), fetchClientSecret: { "unused" })
         let functions = SupplementalFunctions(handleCheckScanSubmitted: { details in
@@ -111,7 +187,7 @@ private extension ConnectOutboundFinancialAndSupplementalTests {
             componentManager: manager,
             componentType: .checkScanning,
             loadContent: false,
-            analyticsClientFactory: { ComponentAnalyticsClient(client: FinancialSupplementalAnalyticsTransport(), commonFields: $0) },
+            analyticsClientFactory: { ComponentAnalyticsClient(client: transport, commonFields: $0) },
             fetchInitProps: { Props(supplementalFunctions: functions) },
             didFailLoadWithError: { _ in },
             financialConnectionsPresenter: presenter
@@ -138,7 +214,10 @@ private extension ConnectOutboundFinancialAndSupplementalTests {
     <!doctype html><script>
     window.callSetterWithSerializableValue = (message) => window.webkit.messageHandlers.financialSupplementalObserver.postMessage({kind: 'callback', callback: 'financialConnections', id: message.value.id, payload: message.value});
     window.webkit.messageHandlers.financialSupplementalObserver.postMessage({kind: 'ready', dispatcher: typeof window.__stripeConnectDeliverSensitiveMessage});
-    window.webkit.messageHandlers.openFinancialConnections.postMessage({clientSecret: 'fcs_test', id: 'financial-result', connectedAccountId: 'acct_test'});
+    if (window.name !== 'financial-requested') {
+      window.name = 'financial-requested';
+      window.webkit.messageHandlers.openFinancialConnections.postMessage({clientSecret: 'fcs_test', id: 'financial-result', connectedAccountId: 'acct_test'});
+    }
     </script>
     """
 
@@ -146,7 +225,18 @@ private extension ConnectOutboundFinancialAndSupplementalTests {
     <!doctype html><script>
     window.supplementalFunctionCompleted = (payload) => window.webkit.messageHandlers.financialSupplementalObserver.postMessage({kind: 'callback', callback: 'supplemental', id: payload.invocationId, payload});
     window.webkit.messageHandlers.financialSupplementalObserver.postMessage({kind: 'ready', dispatcher: typeof window.__stripeConnectDeliverSensitiveMessage});
-    window.webkit.messageHandlers.fetchInitComponentProps.postMessage({}).then(() => window.webkit.messageHandlers.callSupplementalFunction.postMessage({functionName: 'handleCheckScanSubmitted', invocationId: 'supplemental-result', args: [{checkScanToken: 'check_token'}]}));
+    if (window.name !== 'supplemental-requested') {
+      window.name = 'supplemental-requested';
+      window.webkit.messageHandlers.fetchInitComponentProps.postMessage({}).then(() => window.webkit.messageHandlers.callSupplementalFunction.postMessage({functionName: 'handleCheckScanSubmitted', invocationId: 'supplemental-result', args: [{checkScanToken: 'check_token'}]}));
+    }
+    </script>
+    """
+
+    static let trustedReplacementHTML = """
+    <!doctype html><script>
+    window.callSetterWithSerializableValue = (message) => window.webkit.messageHandlers.financialSupplementalObserver.postMessage({kind: 'callback', callback: 'financialConnections', id: message.value.id, payload: message.value});
+    window.supplementalFunctionCompleted = (payload) => window.webkit.messageHandlers.financialSupplementalObserver.postMessage({kind: 'callback', callback: 'supplemental', id: payload.invocationId, payload});
+    window.webkit.messageHandlers.financialSupplementalObserver.postMessage({kind: 'ready', dispatcher: typeof window.__stripeConnectDeliverSensitiveMessage});
     </script>
     """
 
@@ -353,5 +443,40 @@ private final class FinancialSupplementalGate<Value> {
 
 private final class FinancialSupplementalAnalyticsTransport: AnalyticsClientV2Protocol {
     let clientId = "financial-supplemental-outbound"
-    func log(eventName: String, parameters: [String: Any]) {}
+    private var refused = false
+
+    func log(eventName: String, parameters: [String: Any]) {
+        if eventName == "client_error", parameters["error"] as? String == "StripeConnect.SensitiveDeliveryError:0" {
+            refused = true
+        }
+    }
+
+    @MainActor
+    func waitForRefusal() async throws {
+        try await TestHelpers.withTimeout {
+            while !self.refused { try await Task.sleep(nanoseconds: 10_000_000) }
+        }
+    }
+}
+
+/// Replays a local HTML response to WebKit's reload request instead of fetching the fixture URL.
+/// This still creates a new document and reruns the production document-start bridge.
+@MainActor
+final class OutboundHTMLReloadDelegate: NSObject, WKNavigationDelegate {
+    private let html: String
+    private let baseURL: URL
+
+    init(html: String, baseURL: URL) {
+        self.html = html
+        self.baseURL = baseURL
+    }
+
+    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+        guard navigationAction.navigationType == .reload else {
+            decisionHandler(.allow)
+            return
+        }
+        decisionHandler(.cancel)
+        webView.loadHTMLString(html, baseURL: baseURL)
+    }
 }

@@ -14,6 +14,19 @@ import XCTest
 final class ConnectOutboundSourceValidationTests: XCTestCase {
 
     func testAuthenticationResultReachesOriginalTrustedDocument() async throws {
+        try await assertAuthenticationResultReachesOriginalDocument(html: Self.trustedAuthenticationHTML)
+    }
+
+    func testTrustedChildAuthenticationResultReachesContainingDocument() async throws {
+        let html = Self.trustedAuthenticationCallbackHTML + """
+        <iframe srcdoc='<!doctype html><script>
+        window.webkit.messageHandlers.openAuthenticatedWebView.postMessage({url: "https://example.test/auth", id: "outbound-test"});
+        </script>'></iframe>
+        """
+        try await assertAuthenticationResultReachesOriginalDocument(html: html)
+    }
+
+    private func assertAuthenticationResultReachesOriginalDocument(html: String) async throws {
         let factory = HeldAuthenticationSessionFactory()
         let controller = makeController(authenticationManager: .init(sessionFactory: factory.makeSession))
         let window = UIWindow()
@@ -27,7 +40,7 @@ final class ConnectOutboundSourceValidationTests: XCTestCase {
         controller.webView.configuration.userContentController.add(observer, name: observer.name)
         defer { controller.webView.configuration.userContentController.removeScriptMessageHandler(forName: observer.name) }
 
-        controller.webView.loadHTMLString(Self.trustedAuthenticationHTML, baseURL: StripeConnectConstants.connectJSBaseURL)
+        controller.webView.loadHTMLString(html, baseURL: StripeConnectConstants.connectJSBaseURL)
         await fulfillment(of: [ready, factory.created], timeout: TestHelpers.defaultTimeout)
         factory.complete(URL(string: "stripe-connect://original-document")!)
         await fulfillment(of: [callback], timeout: TestHelpers.defaultTimeout)
@@ -66,6 +79,61 @@ final class ConnectOutboundSourceValidationTests: XCTestCase {
         let serializedClientError = String(describing: clientError)
         XCTAssertFalse(serializedClientError.contains("must-not-deliver"))
         XCTAssertFalse(serializedClientError.contains("outbound-sentinel"))
+        await fulfillment(of: [callback], timeout: 0.2)
+    }
+
+    func testAuthenticationResultDoesNotReachReplacementTrustedDocument() async throws {
+        try await assertAuthenticationResultIsWithheldAfterReplacement(reload: false)
+    }
+
+    func testAuthenticationResultDoesNotReachReloadedTrustedDocument() async throws {
+        try await assertAuthenticationResultIsWithheldAfterReplacement(reload: true)
+    }
+
+    private func assertAuthenticationResultIsWithheldAfterReplacement(reload: Bool) async throws {
+        // Given an authentication request whose result is still pending.
+        let factory = HeldAuthenticationSessionFactory()
+        let transport = OutboundAnalyticsTransport()
+        let controller = makeController(authenticationManager: .init(sessionFactory: factory.makeSession), analyticsTransport: transport)
+        let window = UIWindow()
+        window.rootViewController = controller
+        window.makeKeyAndVisible()
+        defer { window.isHidden = true }
+        let ready = expectation(description: "Original document is ready")
+        let callback = expectation(description: "Replacement must not receive the original result")
+        callback.isInverted = true
+        let observer = CallbackObserver(name: "connectOutboundCallback", expectedWebView: controller.webView, expectedHost: "connect-js.stripe.com", ready: ready, callback: callback)
+        let contentController = controller.webView.configuration.userContentController
+        contentController.add(observer, name: observer.name)
+        defer { contentController.removeScriptMessageHandler(forName: observer.name) }
+        let requestHTML = Self.trustedAuthenticationCallbackHTML + """
+        <script>
+        if (window.name !== "authentication-requested") {
+          window.name = "authentication-requested";
+          window.webkit.messageHandlers.openAuthenticatedWebView.postMessage({url: "https://example.test/auth", id: "outbound-test"});
+        }
+        </script>
+        """
+        controller.webView.loadHTMLString(requestHTML, baseURL: StripeConnectConstants.connectJSBaseURL)
+        await fulfillment(of: [ready, factory.created], timeout: TestHelpers.defaultTimeout)
+
+        // When a different document on the same trusted origin replaces it.
+        let replacementReady = expectation(description: "Replacement document is ready")
+        contentController.removeScriptMessageHandler(forName: observer.name)
+        contentController.add(CallbackObserver(name: observer.name, expectedWebView: controller.webView, expectedHost: "connect-js.stripe.com", ready: replacementReady, callback: callback), name: observer.name)
+        let reloadDelegate = OutboundHTMLReloadDelegate(html: requestHTML, baseURL: StripeConnectConstants.connectJSBaseURL)
+        defer { withExtendedLifetime(reloadDelegate) {} }
+        if reload {
+            controller.webView.navigationDelegate = reloadDelegate
+            XCTAssertNotNil(controller.webView.reload())
+        } else {
+            controller.webView.loadHTMLString(Self.trustedAuthenticationCallbackHTML, baseURL: URL(string: "https://connect-js.stripe.com/replacement")!)
+        }
+        await fulfillment(of: [replacementReady], timeout: TestHelpers.defaultTimeout)
+        factory.complete(URL(string: "stripe-connect://original-document")!)
+
+        // Then the original result is withheld despite the matching origin.
+        _ = try await transport.waitForClientError(identifier: "StripeConnect.SensitiveDeliveryError:0")
         await fulfillment(of: [callback], timeout: 0.2)
     }
 
@@ -182,6 +250,13 @@ private extension ConnectOutboundSourceValidationTests {
     </script>
     """
 
+    static let trustedAuthenticationCallbackHTML = """
+    <!doctype html><script>
+    window.returnedFromAuthenticatedWebView = (message) => window.webkit.messageHandlers.connectOutboundCallback.postMessage({ kind: "callback", message });
+    window.webkit.messageHandlers.connectOutboundCallback.postMessage({ kind: "ready", dispatcher: typeof this.__stripeConnectDeliverSensitiveMessage });
+    </script>
+    """
+
     static let foreignCallbackHTML = """
     <!doctype html>
     <script>
@@ -203,6 +278,9 @@ private extension ConnectOutboundSourceValidationTests {
       window.webkit.messageHandlers.connectOutboundCallback.postMessage({ kind: "callback", message });
     };
     const dispatcher = this.__stripeConnectDeliverSensitiveMessage;
+    const documentID = this.__stripeConnectDocumentID;
+    this.__stripeConnectDocumentID = "caller-supplied";
+    try { Object.defineProperty(this, "__stripeConnectDocumentID", { value: "caller-supplied" }); } catch (_) {}
     this.__stripeConnectDeliverSensitiveMessage = () => {
       window.webkit.messageHandlers.connectOutboundCallback.postMessage({ kind: "tamperSucceeded" });
     };
@@ -216,11 +294,12 @@ private extension ConnectOutboundSourceValidationTests {
     window.webkit.messageHandlers.connectOutboundCallback.postMessage({
       kind: "ready",
       dispatcher: typeof this.__stripeConnectDeliverSensitiveMessage,
-      protected: dispatcher === this.__stripeConnectDeliverSensitiveMessage && descriptor.configurable === false && descriptor.writable === false
+      protected: documentID === this.__stripeConnectDocumentID && dispatcher === this.__stripeConnectDeliverSensitiveMessage && descriptor.configurable === false && descriptor.writable === false
     });
     window.webkit.messageHandlers.openAuthenticatedWebView.postMessage({
       url: "https://example.test/auth",
-      id: "outbound-test"
+      id: "outbound-test",
+      documentID: "caller-supplied"
     });
     </script>
     """

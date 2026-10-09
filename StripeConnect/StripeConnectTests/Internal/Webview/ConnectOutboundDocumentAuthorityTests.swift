@@ -94,10 +94,11 @@ final class ConnectOutboundDocumentAuthorityTests: XCTestCase {
         try await observer.ready.wait()
 
         // When delivery is requested before the held authorization reply is released.
+        let documentID = try await controller.webView.evaluateJavaScript("this.__stripeConnectDocumentID") as? String
         let delivery = Task {
             try await controller.sendSensitiveMessageAsync(ReturnedFromAuthenticatedWebViewSender(
                 payload: .init(url: URL(string: "stripe-connect://return")!, id: "timing")
-            ))
+            ), documentID: documentID)
         }
         try await observer.callback.assertEmpty()
         if navigate {

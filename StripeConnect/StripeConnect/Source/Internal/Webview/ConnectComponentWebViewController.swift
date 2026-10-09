@@ -110,7 +110,7 @@ class ConnectComponentWebViewController: ConnectWebViewController {
         contentController.addUserScript(WKUserScript(
             source: Self.sensitiveDeliveryDispatcherScript,
             injectionTime: .atDocumentStart,
-            forMainFrameOnly: true
+            forMainFrameOnly: false
         ))
 
         // Allows the identity verification flow to display the camera feed
@@ -322,8 +322,9 @@ extension ConnectComponentWebViewController {
     }
 
     /// Resolves only after the dispatcher reaches a delivery or refusal outcome.
-    func sendSensitiveMessageAsync(_ sender: any MessageSender) async throws {
+    func sendSensitiveMessageAsync(_ sender: any MessageSender, documentID: String?) async throws {
         do {
+            guard let documentID else { throw SensitiveDeliveryError.refused }
             let payload = try sender.jsonData()
             let payloadObject = try JSONSerialization.jsonObject(with: payload)
             let result: Any = try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Any, Error>) in
@@ -332,9 +333,9 @@ extension ConnectComponentWebViewController {
                     if (typeof this.__stripeConnectDeliverSensitiveMessage !== 'function') {
                       return false;
                     }
-                    return this.__stripeConnectDeliverSensitiveMessage(callbackName, payload);
+                    return this.__stripeConnectDeliverSensitiveMessage(callbackName, payload, documentID);
                     """,
-                    arguments: ["callbackName": sender.name, "payload": payloadObject],
+                    arguments: ["callbackName": sender.name, "payload": payloadObject, "documentID": documentID],
                     in: nil,
                     in: .page
                 ) { result in
@@ -539,7 +540,7 @@ private extension ConnectComponentWebViewController {
                 analyticsClient.logAuthenticatedWebViewEventComplete(id: payload.id, redirected: returnUrl != nil)
 
                 do {
-                    try await sendSensitiveMessageAsync(ReturnedFromAuthenticatedWebViewSender(payload: .init(url: returnUrl, id: payload.id)))
+                    try await sendSensitiveMessageAsync(ReturnedFromAuthenticatedWebViewSender(payload: .init(url: returnUrl, id: payload.id)), documentID: payload.documentID)
                 } catch {
                     analyticsClient.logClientError(error)
                 }
@@ -561,7 +562,7 @@ private extension ConnectComponentWebViewController {
             do {
                 try await sendSensitiveMessageAsync(SetCollectMobileFinancialConnectionsResult.sender(
                     value: result.toSenderValue(id: args.id, analyticsClient: analyticsClient)
-                ))
+                ), documentID: args.documentID)
             } catch {
                 analyticsClient.logClientError(error)
             }
@@ -586,7 +587,7 @@ private extension ConnectComponentWebViewController {
                     functionName: payload.functionName,
                     invocationId: payload.invocationId,
                     result: result
-                )))
+                )), documentID: payload.documentID)
             } catch {
                 analyticsClient.logClientError(error)
             }
@@ -595,8 +596,9 @@ private extension ConnectComponentWebViewController {
 
     // This must remain the first script registered in this controller's private content controller. At document
     // start it captures built-ins before page code runs, and native main-frame source authority decides whether
-    // delivery proceeds. The original Document identity check prevents a pending delivery from following a
-    // retargeted WindowProxy.
+    // delivery proceeds. Requests carry the initiating document's nonce, so even a replacement document on
+    // the trusted origin cannot receive an earlier result. The Document check also protects queued deliveries
+    // from following a retargeted WindowProxy.
     static let sensitiveDeliveryDispatcherScript = """
     (() => {
       const global = this;
@@ -607,6 +609,39 @@ private extension ConnectComponentWebViewController {
       const PromiseConstructor = Promise;
       const noArguments = objectCreate(null);
       const originalDocument = global.document;
+      const objectKeys = Object.keys;
+      let documentID = null;
+      if (global === global.top) {
+        const random = new Uint32Array(4);
+        global.crypto.getRandomValues(random);
+        documentID = `${random[0]}-${random[1]}-${random[2]}-${random[3]}`;
+        defineProperty(global, "__stripeConnectDocumentID", {
+          configurable: false, enumerable: false, writable: false, value: documentID
+        });
+      } else {
+        // Same-origin child requests belong to the containing component document.
+        try { documentID = global.top.__stripeConnectDocumentID; } catch (_) {}
+      }
+      for (const name of ["openAuthenticatedWebView", "openFinancialConnections", "callSupplementalFunction"]) {
+        const handler = global.webkit.messageHandlers[name];
+        const postMessage = handler.postMessage;
+        defineProperty(handler, "postMessage", {
+          configurable: false, enumerable: false, writable: false,
+          value: (payload) => {
+            const request = objectCreate(null);
+            const keys = objectKeys(payload);
+            for (let index = 0; index < keys.length; index += 1) {
+              const key = keys[index];
+              if (key !== "documentID") {
+                defineProperty(request, key, { enumerable: true, value: payload[key] });
+              }
+            }
+            defineProperty(request, "documentID", { enumerable: true, value: documentID });
+            return reflectApply(postMessage, handler, [request]);
+          }
+        });
+      }
+      if (global !== global.top) { return; }
       let authority = null;
       let authoritySettled = false;
       let authorized = false;
@@ -628,10 +663,10 @@ private extension ConnectComponentWebViewController {
         configurable: false,
         enumerable: false,
         writable: false,
-        value: (callbackName, payload) => {
+        value: (callbackName, payload, requestDocumentID) => {
           const deliveryPromise = new PromiseConstructor((resolve) => {
             const callback = global[callbackName];
-            if (typeof callback !== "function" || authority === null) {
+            if (requestDocumentID !== documentID || typeof callback !== "function" || authority === null) {
               resolve(false);
               return;
             }
