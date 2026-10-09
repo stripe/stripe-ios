@@ -80,8 +80,17 @@
 /* Paypal mandate text */
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms.";
 
+/* Touch 'n Go mandate text. The placeholder is the merchant's name. */
+"By confirming your payment with Touch 'n Go, you allow %@ to charge your Touch 'n Go account for future payments in accordance with their terms." = "By confirming your payment with Touch 'n Go, you allow %@ to charge your Touch 'n Go account for future payments in accordance with their terms.";
+
+/* TrueMoney mandate text. The placeholder is the merchant's name. */
+"By confirming your payment with TrueMoney, you allow %@ to charge your TrueMoney account for future payments in accordance with their terms." = "By confirming your payment with TrueMoney, you allow %@ to charge your TrueMoney account for future payments in accordance with their terms.";
+
 /* Nigerian payment method disclosure. The terms tags mark the link to the merchant of record's terms of use. */
 "By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their <terms>terms of use</terms>." = "By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their <terms>terms of use</terms>.";
+
+/* Naira Wallet disclosure. The terms tags mark the link to the merchant of record's terms. */
+"By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their <terms>terms</terms>." = "By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their <terms>terms</terms>.";
 
 /* Amazon Pay mandate text */
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms.";
@@ -269,6 +278,9 @@ with the transaction. */
 
 /* Label for an IBAN field */
 "IBAN" = "IBAN";
+
+/* Message shown when Mondu is selected */
+"Invoice payment for business buyers." = "Invoice payment for business buyers.";
 
 /* Button title in a confirmation alert that dismisses the alert and returns the customer to editing their address. */
 "Keep Editing" = "Keep Editing";

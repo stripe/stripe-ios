@@ -13,7 +13,8 @@ class FetchInitParamsMessageHandlerTests: ScriptWebTestBase {
     @MainActor
     func testMessageSend() async throws {
         let message = FetchInitParamsMessageHandler.Reply(locale: "en", appearance: .default)
-        webView.addMessageReplyHandler(messageHandler: FetchInitParamsMessageHandler(didReceiveMessage: { _ in
+        try await loadTrustedDocument()
+        webView.addMessageReplyHandler(messageHandler: FetchInitParamsMessageHandler(sourcePolicy: webView.trustedMessageSourcePolicy(), didReceiveMessage: { _ in
             return message
         }))
 

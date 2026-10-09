@@ -8,6 +8,52 @@
 import XCTest
 
 class PaymentSheetStandardLPMUIOneTests: PaymentSheetStandardLPMUICase {
+    func testTrueMoneyPayment() {
+        testTrueMoney(setupFutureUsage: false)
+    }
+
+    func testTrueMoneyPaymentWithFutureUsage() {
+        testTrueMoney(setupFutureUsage: true)
+    }
+
+    private func testTrueMoney(setupFutureUsage: Bool) {
+        // Given a test account enabled for TrueMoney payments and recurring payments
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
+        settings.mode = setupFutureUsage ? .paymentWithSetup : .payment
+        settings.customerMode = .guest
+        settings.apmsEnabled = .off
+        settings.applePayEnabled = .off
+        settings.currency = .thb
+        settings.amount = ._10000
+        settings.merchantCountryCode = .US
+        settings.supportedPaymentMethods = "truemoney"
+        loadPlayground(app, settings)
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+        let confirmButton = app.buttons.matching(
+            NSPredicate(format: "label BEGINSWITH %@", "Pay ")
+        ).firstMatch
+        XCTAssertTrue(confirmButton.waitForExistence(timeout: 15))
+
+        // Then future payments show the merchant mandate before confirmation
+        let mandate = app.textViews.matching(NSPredicate(
+            format: "label == %@",
+            "By confirming your payment with TrueMoney, you allow Example, Inc. to charge your TrueMoney account for future payments in accordance with their terms."
+        )).firstMatch
+        if !setupFutureUsage {
+            XCTAssertFalse(mandate.exists)
+        } else {
+            XCTAssertTrue(mandate.waitForExistence(timeout: 5))
+        }
+
+        // When the customer confirms and authorizes the payment on the hosted page
+        confirmButton.waitForExistenceAndTap()
+        webviewAuthorizePaymentButton.waitForExistenceAndTap(timeout: 30)
+
+        // Then the redirect returns to PaymentSheet and the operation succeeds
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 30))
+    }
+
     // acct_1ONGjdKULGu5EgSk is enrolled in alipay_cn_to_alipay_plus_migration_gate,
     // so its Alipay redirects use the pm-redirects.stripe.com EVO trampoline.
     func testAlipayEVO() {

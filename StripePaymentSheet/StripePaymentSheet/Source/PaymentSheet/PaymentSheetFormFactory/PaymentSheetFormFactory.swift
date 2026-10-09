@@ -283,7 +283,7 @@ class PaymentSheetFormFactory {
                 return makeSepaDebit()
             case .shopeePay, .qris:
                 return makeContactInformationAndBillingAddressForm(allowedBillingCountries: ["US", "ID"])
-            case .ngCard:
+            case .ngCard, .ngBankTransfer, .ngUSSD:
                 return makeContactInformationAndBillingAddressForm(
                     defaultBillingCountry: "NG",
                     additionalElements: [makeNigerianPaymentMethodMandate()]
@@ -293,6 +293,23 @@ class PaymentSheetFormFactory {
                     allowedBillingCountries: ["PH"],
                     additionalElements: makeSetupMandateElements(for: paymentMethod)
                 )
+            case .touchNGo:
+                return makeContactInformationAndBillingAddressForm(
+                    allowedBillingCountries: ["MY"],
+                    additionalElements: makeSetupMandateElements(for: paymentMethod)
+                )
+            case .trueMoney:
+                return makeContactInformationAndBillingAddressForm(
+                    allowedBillingCountries: ["TH"],
+                    additionalElements: makeSetupMandateElements(for: paymentMethod)
+                )
+            case .ngWallet:
+                return makeContactInformationAndBillingAddressForm(
+                    defaultBillingCountry: "NG",
+                    additionalElements: [makeNigerianPaymentMethodMandate(terms: String.Localized.nigerian_wallet_terms)]
+                )
+            case .mondu:
+                return makeMondu()
             case .momo, .goPay, .grabPay, .paynow, .payPay, .mobilePay, .vipps, .zip, .crypto,
                  .billie, .sunbit, .alma, .payByBank, .payco, .sequra, .scalapay:
                 return makeContactInformationAndBillingAddressForm()
@@ -348,6 +365,10 @@ class PaymentSheetFormFactory {
     private func makeSetupMandateElements(for paymentMethod: STPPaymentMethodType) -> [Element] {
         guard isSettingUp else { return [] }
         switch paymentMethod {
+        case .trueMoney:
+            return [makeTrueMoneyMandate()]
+        case .touchNGo:
+            return [makeTouchNGoMandate()]
         case .gcash:
             return [makeGCashMandate()]
         case .alipay:
@@ -897,6 +918,14 @@ extension PaymentSheetFormFactory {
         )
     }
 
+    func makeMondu() -> PaymentMethodElement {
+        let description = makeSectionTitleLabelWith(
+            text: String.Localized.mondu_buyer_message
+        )
+        return makeContactInformationAndBillingAddressForm(
+            additionalElements: [description]
+        )
+    }
     func makeNaverPay() -> PaymentMethodElement {
         let funding = makeDropdown(
             label: String.Localized.naver_pay_funding_label,

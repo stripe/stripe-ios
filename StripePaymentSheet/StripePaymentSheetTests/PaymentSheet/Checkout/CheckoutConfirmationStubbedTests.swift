@@ -597,7 +597,31 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         XCTAssertEqual(parameters.configuration.defaultBillingDetails.name, "Jenny Rosen")
         XCTAssertEqual(parameters.configuration.defaultBillingDetails.address.country, "US")
         XCTAssertEqual(parameters.configuration.defaultBillingDetails.address.postalCode, "94107")
-        XCTAssertNil(parameters.configuration.defaultBillingDetails.email)
+        XCTAssertEqual(parameters.configuration.defaultBillingDetails.email, "jenny@example.com")
+    }
+
+    func testExpressCheckoutLinkCollectsRequiredBillingAddress() async throws {
+        // Given Checkout requires a full billing address and has no email
+        var configuration = CheckoutController.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://custom-return")
+        configuration.expressCheckoutElement = ExpressCheckoutElement.Configuration(completion: { _ in })
+        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration(
+            apiResponse: CheckoutTestHelpers.makeSession(["billing_address_collection": "required"]),
+            configuration: configuration
+        ))
+        let presentingViewController = UIViewController()
+        let window = UIWindow()
+        window.rootViewController = presentingViewController
+
+        // When ECE constructs the Link confirmation flow
+        let flow = try checkout.makeExpressCheckoutConfirmationFlow(.link, presentationWindow: window)
+
+        // Then Link collects the address without forcing email collection
+        guard case .link(let parameters) = flow else {
+            XCTFail("Expected a Link confirmation flow")
+            return
+        }
+        XCTAssertEqual(parameters.configuration.billingDetailsCollectionConfiguration.email, .automatic)
+        XCTAssertEqual(parameters.configuration.billingDetailsCollectionConfiguration.address, .full)
     }
 
     func testExpressCheckoutLinkRequiresPresentingViewController() async throws {
@@ -616,7 +640,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
     func testLinkPaymentDetailsCreatesPaymentMethodAndConfirmsCheckoutSession() async throws {
         // Given Link payment details in non-passthrough mode
         let checkout = try await makeCheckout(apiResponse: CheckoutTestHelpers.makeSession().withCustomer())
-        let createPaymentMethod = stubCreatePaymentMethod()
+        let createPaymentMethod = stubCreatePaymentMethod(expectedBillingEmail: .value("test@example.com"))
         let confirm = stubConfirmationExpecting(sessionId: checkout.session.id, savePaymentMethod: nil)
         let logout = stubLinkLogout(consumerSessionClientSecret: "cs_xxx")
         let configuration = checkout.getPaymentElement().embeddedPaymentElement.configuration

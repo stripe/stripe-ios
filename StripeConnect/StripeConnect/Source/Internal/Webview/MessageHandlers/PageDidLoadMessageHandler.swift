@@ -6,6 +6,7 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 
 // A message that indicates components have loaded
 class PageDidLoadMessageHandler: ScriptMessageHandler<PageDidLoadMessageHandler.Payload> {
@@ -13,9 +14,11 @@ class PageDidLoadMessageHandler: ScriptMessageHandler<PageDidLoadMessageHandler.
         /// A unique session ID shared with web for analytics logging
         let pageViewId: String
     }
-    init(analyticsClient: ComponentAnalyticsClient,
+    init(sourcePolicy: STPWebMessageSourcePolicy,
+         analyticsClient: ComponentAnalyticsClient,
          didReceiveMessage: @escaping (Payload) -> Void) {
         super.init(name: "pageDidLoad",
+                   sourcePolicy: sourcePolicy,
                    analyticsClient: analyticsClient,
                    didReceiveMessage: didReceiveMessage)
     }

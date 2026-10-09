@@ -110,6 +110,8 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
         case DE = "de"
         case IT = "it"
         case NG = "ng"
+        case NGWallet = "ng_wallet"
+        case Mondu = "mondu"
 
         var publishableKey: String {
             switch self {
@@ -143,6 +145,10 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                 return STPTestingITPublishableKey
             case .NG:
                 return STPTestingNGPublishableKey
+            case .NGWallet:
+                return STPTestingNGWalletPublishableKey
+            case .Mondu:
+                return STPTestingMonduPublishableKey
             }
         }
     }
@@ -758,6 +764,14 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                                merchantCountry: .NG,
                                expectedHierarchy: ExpectedFormHierarchy.NairaCard.paymentIntent) { _ in }
     }
+    func testNairaBankTransferConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "NGN",
+                               amount: 100000,
+                               paymentMethodType: .ngBankTransfer,
+                               merchantCountry: .NG,
+                               expectedHierarchy: ExpectedFormHierarchy.NairaBankTransfer.paymentIntent) { _ in }
+    }
     func testMomoConfirmFlows() async throws {
         try await _testConfirm(intentKinds: [.paymentIntent],
                                currency: "VND",
@@ -799,6 +813,62 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                                merchantCountry: .US,
                                defaultCountry: "PH",
                                expectedHierarchy: ExpectedFormHierarchy.GCash.settingUp) { _ in }
+    }
+    func testTouchNGoConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "MYR",
+                               amount: 1000,
+                               paymentMethodType: .touchNGo,
+                               merchantCountry: .US,
+                               defaultCountry: "MY",
+                               expectedHierarchy: ExpectedFormHierarchy.TouchNGo.paymentIntent) { _ in }
+        try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .paymentIntentWithPMOSetupFutureUsage, .setupIntent],
+                               currency: "MYR",
+                               amount: 1000,
+                               paymentMethodType: .touchNGo,
+                               merchantCountry: .US,
+                               defaultCountry: "MY",
+                               expectedHierarchy: ExpectedFormHierarchy.TouchNGo.settingUp) { _ in }
+    }
+    func testTrueMoneyConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "THB",
+                               amount: 10000,
+                               paymentMethodType: .trueMoney,
+                               merchantCountry: .US,
+                               defaultCountry: "TH",
+                               expectedHierarchy: ExpectedFormHierarchy.TrueMoney.paymentIntent) { _ in }
+        try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .paymentIntentWithPMOSetupFutureUsage, .setupIntent],
+                               currency: "THB",
+                               amount: 10000,
+                               paymentMethodType: .trueMoney,
+                               merchantCountry: .US,
+                               defaultCountry: "TH",
+                               expectedHierarchy: ExpectedFormHierarchy.TrueMoney.settingUp) { _ in }
+    }
+    func testNgUSSDConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "NGN",
+                               amount: 100000,
+                               paymentMethodType: .ngUSSD,
+                               merchantCountry: .NG,
+                               expectedHierarchy: ExpectedFormHierarchy.NgUSSD.paymentIntent) { _ in }
+    }
+    func testNgWalletConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "NGN",
+                               amount: 100000,
+                               paymentMethodType: .ngWallet,
+                               merchantCountry: .NGWallet,
+                               expectedHierarchy: ExpectedFormHierarchy.NgWallet.paymentIntent) { _ in }
+    }
+    func testMonduConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "EUR",
+                               amount: 3500,
+                               paymentMethodType: .mondu,
+                               merchantCountry: .Mondu,
+                               expectedHierarchy: ExpectedFormHierarchy.Mondu.paymentIntent) { _ in }
     }
     func testPaycoConfirmFlows() async throws {
         try await _testConfirm(intentKinds: [.paymentIntent],
@@ -1651,9 +1721,15 @@ extension PaymentSheetLPMConfirmFlowTests {
                 intents += [
                     TestIntent("Deferred PaymentIntent w/ PMO setup_future_usage - client side confirmation", makeDeferredIntent(deferredCSC)),
                     TestIntent("Deferred PaymentIntent w/ PMO setup_future_usage - server side confirmation", makeDeferredIntent(deferredSSC)),
-                    TestIntent("Deferred PaymentIntent w/ PMO setup_future_usage - client side confirmation with confirmation token", makeDeferredIntent(deferredCSCWithConfirmationToken)),
-                    TestIntent("Deferred PaymentIntent w/ PMO setup_future_usage - server side confirmation with confirmation token", makeDeferredIntent(deferredSSCWithConfirmationToken)),
                 ]
+                // Confirmation Tokens does not accept payment_method_options for Touch n Go or TrueMoney.
+                // Keep testing PMO future usage through the supported PaymentMethod flows.
+                if ![.touchNGo, .trueMoney].contains(paymentMethod) {
+                    intents += [
+                        TestIntent("Deferred PaymentIntent w/ PMO setup_future_usage - client side confirmation with confirmation token", makeDeferredIntent(deferredCSCWithConfirmationToken)),
+                        TestIntent("Deferred PaymentIntent w/ PMO setup_future_usage - server side confirmation with confirmation token", makeDeferredIntent(deferredSSCWithConfirmationToken)),
+                    ]
+                }
             }
             // TODO(porter): Checkout rejects `payment_intent_data`/`payment_method_options`
             // setup_future_usage in modeless sessions. Re-enable once unified mode supports
@@ -1903,8 +1979,8 @@ extension PaymentSheetLPMConfirmFlowTests {
         if addressSpec.fieldOrdering.contains(.state) {
             XCTAssertNotNil(getState(from: form))
         }
-        // GCash restricts billing addresses to the Philippines, so there is no country selector.
-        if paymentMethodType != .gcash {
+        // These payment methods restrict billing addresses to one country, so there is no country selector.
+        if ![.gcash, .touchNGo, .trueMoney].contains(paymentMethodType) {
             XCTAssertNotNil(form.getDropdownFieldElement("Country or region"))
         }
         XCTAssertNotNil(form.getTextFieldElement(addressSpec.zipNameType.localizedLabel))
