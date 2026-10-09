@@ -6,6 +6,7 @@ MINOR
 * [Removed] Removed the "test mode" badge from all UI surfaces.
 
 ### PaymentSheet
+* [Added] Added Naira bank transfer API bindings and PaymentSheet support for PaymentIntents.
 * [Fixed] Fixed a potential crash when canceling redirect payment methods such as Afterpay/Clearpay.
 * [Added] Added QRIS API bindings and PaymentSheet support for PaymentIntents.
 * [Added] Added GCash API bindings and PaymentSheet support for payments and setup.
@@ -30,10 +31,6 @@ MINOR
 * [Added] Added MoMo API bindings and PaymentSheet support for PaymentIntents.
 * [Added] Added GoPay API bindings and PaymentSheet support for PaymentIntents.
 * [Added] Added ShopeePay API bindings and PaymentSheet support for PaymentIntents.
-* [Added] Added QRIS API bindings and PaymentSheet support for PaymentIntents.
-* [Added] Added GCash API bindings and PaymentSheet support for payments and setup.
-* [Added] Added Naira card API bindings and PaymentSheet support for PaymentIntents.
-* [Added] Added Naira bank transfer API bindings and PaymentSheet support for PaymentIntents.
 
 ## 26.12.1 2026-09-28
 ### CryptoOnramp (Alpha)
