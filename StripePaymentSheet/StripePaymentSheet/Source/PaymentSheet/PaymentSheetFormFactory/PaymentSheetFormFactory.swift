@@ -283,9 +283,13 @@ class PaymentSheetFormFactory {
                 return makeSepaDebit()
             case .shopeePay, .qris:
                 return makeContactInformationAndBillingAddressForm(allowedBillingCountries: ["US", "ID"])
-            case .ngCard, .ngBankTransfer:
+            case .ngCard:
                 return makeContactInformationAndBillingAddressForm(
                     defaultBillingCountry: "NG",
+                    additionalElements: [makeNigerianPaymentMethodMandate()]
+                )
+            case .ngBankTransfer:
+                return makeContactInformationAndBillingAddressForm(
                     additionalElements: [makeNigerianPaymentMethodMandate()]
                 )
             case .gcash:
@@ -295,7 +299,6 @@ class PaymentSheetFormFactory {
                 )
             case .ngUSSD:
                 return makeContactInformationAndBillingAddressForm(
-                    defaultBillingCountry: "NG",
                     additionalElements: [makeNigerianPaymentMethodMandate()]
                 )
             case .momo, .goPay, .grabPay, .paynow, .payPay, .mobilePay, .vipps, .zip, .crypto,
@@ -1148,11 +1151,28 @@ extension PaymentSheetFormFactory {
         }()
         guard let defaultFieldsToCollect else { return nil }
 
+        let countries = billingCountries(allowedByPaymentMethod: allowedCountries)
         return makeBillingAddressSection(
             defaultFieldsToCollect: defaultFieldsToCollect,
-            countries: allowedCountries ?? configuration.billingDetailsCollectionConfiguration.allowedCountriesArray,
+            countries: countries,
             defaultCountry: defaultCountry
         )
+    }
+
+    /// Prefers countries allowed by both lists, falling back to merchant restrictions when there is no overlap.
+    private func billingCountries(allowedByPaymentMethod paymentMethodCountries: [String]?) -> [String]? {
+        let merchantCountries = configuration.billingDetailsCollectionConfiguration.allowedCountriesArray
+        guard let paymentMethodCountries else {
+            return merchantCountries
+        }
+        guard !paymentMethodCountries.isEmpty else { return merchantCountries }
+        guard let merchantCountries else { return paymentMethodCountries }
+        let countries = paymentMethodCountries.filter { merchantCountries.contains($0.uppercased()) }
+        guard !countries.isEmpty else {
+            stpAssertionFailure("Merchant billing countries do not overlap with the payment method's supported countries.")
+            return merchantCountries
+        }
+        return countries // Both the merchant and the payment method allow these countries.
     }
 
     func makeDefaultsApplierWrapper<T: PaymentMethodElement>(for element: T) -> PaymentMethodElementWrapper<T> {

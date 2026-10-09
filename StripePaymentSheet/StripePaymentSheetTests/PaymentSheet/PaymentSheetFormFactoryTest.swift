@@ -2554,7 +2554,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertNotNil(form.updateParams(params: IntentConfirmParams(type: .stripe(.ngBankTransfer))))
     }
 
-    func testNairaBankTransferDefaultsBillingCountryToNigeria() throws {
+    func testNairaBankTransferDefaultsBillingCountryToLocale() throws {
         // Given Naira bank transfer with full billing address collection
         let loadExpectation = expectation(description: "Load address specs")
         AddressSpecProvider.shared.loadAddressSpecs {
@@ -2575,9 +2575,10 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             form.getAllUnwrappedSubElements().compactMap { $0 as? AddressSectionElement }.first
         )
 
-        // Then all countries remain available and Nigeria is the web default
-        XCTAssertTrue(address.countryCodes.count > 2)
-        XCTAssertEqual(address.selectedCountryCode, "NG")
+        // Then all countries remain available and the country follows the user's locale
+        XCTAssertEqual(Set(address.countryCodes), Set(AddressSpecProvider.shared.countries))
+        let localeCountry = Locale.current.stp_regionCode ?? ""
+        XCTAssertEqual(address.selectedCountryCode, address.countryCodes.contains(localeCountry) ? localeCountry : address.countryCodes[0])
     }
 
     func testNairaUSSDShowsMerchantOfRecordTerms() {
@@ -2605,7 +2606,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertNotNil(form.updateParams(params: IntentConfirmParams(type: .stripe(.ngUSSD))))
     }
 
-    func testNairaUSSDDefaultsBillingCountryToNigeria() throws {
+    func testNairaUSSDDefaultsBillingCountryToLocale() throws {
         // Given Naira USSD with full billing address collection
         let loadExpectation = expectation(description: "Load address specs")
         AddressSpecProvider.shared.loadAddressSpecs {
@@ -2626,9 +2627,10 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             form.getAllUnwrappedSubElements().compactMap { $0 as? AddressSectionElement }.first
         )
 
-        // Then all countries remain available and Nigeria is the Web default
-        XCTAssertTrue(address.countryCodes.count > 2)
-        XCTAssertEqual(address.selectedCountryCode, "NG")
+        // Then all countries remain available and the country follows the user's locale
+        XCTAssertEqual(Set(address.countryCodes), Set(AddressSpecProvider.shared.countries))
+        let localeCountry = Locale.current.stp_regionCode ?? ""
+        XCTAssertEqual(address.selectedCountryCode, address.countryCodes.contains(localeCountry) ? localeCountry : address.countryCodes[0])
     }
 
     func testNairaCardShowsMerchantOfRecordTerms() {
@@ -2678,8 +2680,30 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         )
 
         // Then all countries remain available and Nigeria is the web default
-        XCTAssertTrue(address.countryCodes.count > 2)
+        XCTAssertEqual(Set(address.countryCodes), Set(AddressSpecProvider.shared.countries))
         XCTAssertEqual(address.selectedCountryCode, "NG")
+    }
+
+    func testNairaCardPreservesMerchantBillingCountryAndRestrictions() throws {
+        // Given a merchant-provided billing country and a restricted country list
+        let loadExpectation = expectation(description: "Load address specs")
+        AddressSpecProvider.shared.loadAddressSpecs { loadExpectation.fulfill() }
+        waitForExpectations(timeout: 1)
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.address = .full
+        configuration.billingDetailsCollectionConfiguration.allowedCountries = ["US", "CA"]
+        configuration.defaultBillingDetails.address.country = "CA"
+        let form = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.ngCard]),
+            elementsSession: ._testValue(paymentMethodTypes: ["ng_card"]),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.ngCard)
+        ).make()
+
+        // Then the Nigeria default does not override the merchant's billing details
+        let address = try XCTUnwrap(form.getAllUnwrappedSubElements().compactMap { $0 as? AddressSectionElement }.first)
+        XCTAssertEqual(Set(address.countryCodes), Set(["US", "CA"]))
+        XCTAssertEqual(address.selectedCountryCode, "CA")
     }
 
     func testGCashShowsMandateOnlyForFuturePayments() {
@@ -2796,6 +2820,52 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         // Then the country choices and default match web Payment Element
         XCTAssertEqual(address.countryCodes, ["ID", "US"])
         XCTAssertEqual(address.selectedCountryCode, "US")
+    }
+
+    func testQRISBillingCountriesRespectMerchantRestrictions() throws {
+        // Given QRIS with merchant countries that only overlap in Indonesia
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.address = .full
+        configuration.billingDetailsCollectionConfiguration.allowedCountries = ["ID", "CA"]
+        let form = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.qris]),
+            elementsSession: ._testValue(paymentMethodTypes: ["qris"]),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.qris)
+        ).make()
+
+        // When the billing address is built
+        let address = try XCTUnwrap(
+            form.getAllUnwrappedSubElements().compactMap { $0 as? AddressSectionElement }.first
+        )
+
+        // Then only Indonesia is offered and selected
+        XCTAssertEqual(address.countryCodes, ["ID"])
+        XCTAssertEqual(address.selectedCountryCode, "ID")
+    }
+
+    func testQRISBillingCountriesWithNoOverlapUseMerchantCountries() throws {
+        // Given QRIS with merchant billing countries that exclude both supported countries
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.address = .full
+        configuration.billingDetailsCollectionConfiguration.allowedCountries = ["CA"]
+        STPAssertTestUtil.shouldSuppressNextSTPAlert = true
+        let form = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.qris]),
+            elementsSession: ._testValue(paymentMethodTypes: ["qris"]),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.qris)
+        ).make()
+
+        // When the billing address is built
+        let address = try XCTUnwrap(
+            form.getAllUnwrappedSubElements().compactMap { $0 as? AddressSectionElement }.first
+        )
+
+        // Then the picker falls back to the merchant's allowed countries
+        XCTAssertEqual(STPAssertTestUtil.lastAssertMessage, "Merchant billing countries do not overlap with the payment method's supported countries.")
+        XCTAssertEqual(address.countryCodes, ["CA"])
+        XCTAssertEqual(address.selectedCountryCode, "CA")
     }
 
     func testShopeePayUsesHostedAuthorizationWithoutNativeMandate() {

@@ -25,16 +25,29 @@ public final class ExpressCheckoutElementUIView: UIView {
     // MARK: - Private Properties
 
     private let configuration: ExpressCheckoutElement.Configuration
+    private let apiClient: STPAPIClient
+    private let analyticsClient: STPAnalyticsClientProtocol
     private let stackView = UIStackView()
+    private var hasReportedInit = false
     private var linkBrand: LinkBrand
+    private var session: CheckoutController.Session
     private weak var delegate: ExpressCheckoutElementDelegate?
 
     // MARK: - Init
 
-    init(session: CheckoutController.Session, configuration: ExpressCheckoutElement.Configuration, delegate: ExpressCheckoutElementDelegate) {
+    init(
+        session: CheckoutController.Session,
+        configuration: ExpressCheckoutElement.Configuration,
+        delegate: ExpressCheckoutElementDelegate,
+        apiClient: STPAPIClient = .shared,
+        analyticsClient: STPAnalyticsClientProtocol = STPAnalyticsClient.sharedClient
+    ) {
         self.configuration = configuration
+        self.apiClient = apiClient
+        self.analyticsClient = analyticsClient
         self.delegate = delegate
         self.linkBrand = session.elementsSession.linkBrand ?? .link
+        self.session = session
         super.init(frame: .zero)
 
         stackView.axis = .vertical
@@ -62,6 +75,7 @@ public final class ExpressCheckoutElementUIView: UIView {
         with session: CheckoutController.Session,
         buttons: [ExpressCheckoutElement.PaymentMethod]
     ) {
+        self.session = session
         linkBrand = session.elementsSession.linkBrand ?? .link
         layoutButtons(buttons)
         invalidateIntrinsicContentSize()
@@ -73,6 +87,25 @@ public final class ExpressCheckoutElementUIView: UIView {
         CGSize(
             width: UIView.noIntrinsicMetric,
             height: stackView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height
+        )
+    }
+
+    public override func didMoveToWindow() {
+        super.didMoveToWindow()
+        guard window != nil, !hasReportedInit else { return }
+        hasReportedInit = true
+        analyticsClient.log(
+            analytic: PaymentSheetAnalytic(
+                event: .expressCheckoutElementInit,
+                additionalParams: [
+                    "ordered_lpms": session.availableExpressCheckoutPaymentMethods.map(\.analyticsValue).joined(separator: ","),
+                    "ece_config": [
+                        "link_visibility": configuration.linkConfiguration.display.rawValue,
+                        "apple_pay_visibility": configuration.applePayConfiguration?.display.rawValue ?? "never",
+                    ],
+                ]
+            ),
+            apiClient: apiClient
         )
     }
 
@@ -113,7 +146,7 @@ public final class ExpressCheckoutElementUIView: UIView {
 
     static func buttonRows(
         for buttons: [ExpressCheckoutElement.PaymentMethod],
-        layout: ExpressCheckoutElement.Appearance.ButtonLayout
+        layout: ExpressCheckoutElement.Configuration.Appearance.ButtonLayout
     ) -> [[ExpressCheckoutElement.PaymentMethod]] {
         let visibleButtonCount = calculateVisibleButtonCount(
             buttonCount: buttons.count,
@@ -226,7 +259,18 @@ public final class ExpressCheckoutElementUIView: UIView {
                 paymentMethod,
                 presentationWindow: window
             ) else { return }
-            self.configuration.confirmHandler(result)
+            self.configuration.completion(result)
+        }
+    }
+}
+
+private extension ExpressCheckoutElement.PaymentMethod {
+    var analyticsValue: String {
+        switch self {
+        case .applePay:
+            return "apple_pay"
+        case .link:
+            return "link"
         }
     }
 }

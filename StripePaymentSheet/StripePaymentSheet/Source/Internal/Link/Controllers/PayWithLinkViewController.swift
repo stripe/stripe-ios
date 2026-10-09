@@ -260,7 +260,6 @@ final class PayWithLinkViewController: BottomSheetViewController {
         super.init(
             contentViewController: initialVC,
             appearance: LinkUI.appearance,
-            isTestMode: false,
             didCancelNative3DS2: {
                 cancellationHandler?()
             }
@@ -279,8 +278,8 @@ final class PayWithLinkViewController: BottomSheetViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    required init(contentViewController: BottomSheetContentViewController, appearance: PaymentSheet.Appearance, isTestMode: Bool, didCancelNative3DS2: @escaping () -> Void) {
-        fatalError("init(contentViewController:appearance:isTestMode:didCancelNative3DS2:) has not been implemented")
+    required init(contentViewController: BottomSheetContentViewController, appearance: PaymentSheet.Appearance, didCancelNative3DS2: @escaping () -> Void) {
+        fatalError("init(contentViewController:appearance:didCancelNative3DS2:) has not been implemented")
     }
 
     override func viewDidLoad() {
