@@ -31,6 +31,7 @@ public final class ExpressCheckoutElementUIView: UIView {
     private var hasReportedInit = false
     private var linkBrand: LinkBrand
     private var session: CheckoutController.Session
+    private var buttonsEnabled = true
     private weak var delegate: ExpressCheckoutElementDelegate?
 
     // MARK: - Init
@@ -79,6 +80,15 @@ public final class ExpressCheckoutElementUIView: UIView {
         linkBrand = session.elementsSession.linkBrand ?? .link
         layoutButtons(buttons)
         invalidateIntrinsicContentSize()
+    }
+
+    func setEnabled(_ enabled: Bool) {
+        buttonsEnabled = enabled
+        for row in stackView.arrangedSubviews.compactMap({ $0 as? UIStackView }) {
+            for button in row.arrangedSubviews.compactMap({ $0 as? UIControl }) {
+                button.isEnabled = enabled
+            }
+        }
     }
 
     // MARK: - Public Methods
@@ -209,6 +219,7 @@ public final class ExpressCheckoutElementUIView: UIView {
     private func makeApplePayButton() -> UIView {
         let buttonType = configuration.applePayConfiguration?.buttonType ?? .plain
         let button = PKPaymentButton(paymentButtonType: buttonType, paymentButtonStyle: applePayButtonStyle)
+        button.isEnabled = buttonsEnabled
         // `cornerConfiguration` doesn't work on PKPaymentButton, so set the radius directly.
         button.cornerRadius = LiquidGlassDetector.isEnabledInMerchantApp
             ? Constants.buttonHeight / 2
@@ -221,6 +232,7 @@ public final class ExpressCheckoutElementUIView: UIView {
 
     private func makeLinkButton() -> UIView {
         let button = PayWithLinkButton(brand: linkBrand)
+        button.isEnabled = buttonsEnabled
         if LiquidGlassDetector.isEnabledInMerchantApp {
             button.ios26_applyCapsuleCornerConfiguration()
         } else {

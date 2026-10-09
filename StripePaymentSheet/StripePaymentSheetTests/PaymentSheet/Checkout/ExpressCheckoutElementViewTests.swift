@@ -94,6 +94,35 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
         )
     }
 
+    func testButtonsRemainDisabledAfterSessionUpdate() {
+        // Given an Express Checkout Element with both wallet buttons
+        let configuration = ExpressCheckoutElement.Configuration(completion: { _ in })
+        let session = CheckoutTestHelpers.makeOpenSession().makePublicSession()
+        let view = ExpressCheckoutElementUIView(
+            session: session,
+            configuration: configuration,
+            delegate: FakeExpressCheckoutElementDelegate()
+        )
+        view.update(with: session, buttons: [.applePay, .link])
+
+        // When confirmation starts and the session updates
+        view.setEnabled(false)
+        view.update(with: session, buttons: [.applePay, .link])
+
+        // Then both wallet buttons remain disabled until confirmation ends
+        let buttons = view.subviews
+            .compactMap { $0 as? UIStackView }
+            .flatMap(\.arrangedSubviews)
+            .compactMap { $0 as? UIStackView }
+            .flatMap(\.arrangedSubviews)
+            .compactMap { $0 as? UIControl }
+        XCTAssertEqual(buttons.count, 2)
+        XCTAssertTrue(buttons.allSatisfy { !$0.isEnabled })
+
+        view.setEnabled(true)
+        XCTAssertTrue(buttons.allSatisfy(\.isEnabled))
+    }
+
     // MARK: - Available payment methods tests
 
     func testAvailablePaymentMethodsStoredOnSession() {
