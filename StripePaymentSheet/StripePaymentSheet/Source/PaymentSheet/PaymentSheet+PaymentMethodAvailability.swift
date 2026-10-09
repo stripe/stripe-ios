@@ -52,6 +52,7 @@ extension PaymentSheet {
         .scalapay,
         .pix,
         .goPay,
+        .ngUSSD,
         .qris,
         .shopeePay,
         .gcash,

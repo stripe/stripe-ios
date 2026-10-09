@@ -6,6 +6,7 @@ MINOR
 * [Removed] Removed the "test mode" badge from all UI surfaces.
 
 ### PaymentSheet
+* [Added] Added Naira USSD API bindings and PaymentSheet support for PaymentIntents.
 * [Added] Added Naira bank transfer API bindings and PaymentSheet support for PaymentIntents.
 * [Fixed] Fixed a potential crash when canceling redirect payment methods such as Afterpay/Clearpay.
 * [Added] Added QRIS API bindings and PaymentSheet support for PaymentIntents.
