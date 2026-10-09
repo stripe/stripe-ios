@@ -12,9 +12,9 @@ import StripeCryptoOnramp
 
 import XCTest
 
-final class CryptoOnrampExampleUITests: XCTestCase {
+class CryptoOnrampExampleUITestCase: XCTestCase {
 
-    private static let testAddress = Address(
+    fileprivate static let testAddress = Address(
         city: "Hoboken",
         country: "US",
         line1: "123 Fake St.",
@@ -23,7 +23,7 @@ final class CryptoOnrampExampleUITests: XCTestCase {
         state: "NJ"
     )
 
-    private static let refreshedTestAddress = Address(
+    fileprivate static let refreshedTestAddress = Address(
         city: "Jersey City",
         country: "US",
         line1: "456 Fake St.",
@@ -32,7 +32,7 @@ final class CryptoOnrampExampleUITests: XCTestCase {
         state: "NJ"
     )
 
-    private static let euTestAddress = Address(
+    fileprivate static let euTestAddress = Address(
         city: "Athens",
         country: "GR",
         line1: "1 Fake Street",
@@ -41,7 +41,7 @@ final class CryptoOnrampExampleUITests: XCTestCase {
         state: "Attica"
     )
 
-    private static let solanaWalletAddress = "DBhBRyb9y6xyAbhdgpPKqQG2CfXmwHiaKvmzVjDCguXq"
+    fileprivate static let solanaWalletAddress = "DBhBRyb9y6xyAbhdgpPKqQG2CfXmwHiaKvmzVjDCguXq"
 
     var app: XCUIApplication!
 
@@ -52,6 +52,9 @@ final class CryptoOnrampExampleUITests: XCTestCase {
         app.launchEnvironment = ["UITesting": "true"]
         app.launch()
     }
+}
+
+final class CryptoOnrampExistingUserUITests: CryptoOnrampExampleUITestCase {
 
     /// Tests a happy-path flow from log in (existing account) to successful checkout, followed by re-authentication using seamless sign-in.
     func testExistingUserEndToEnd() throws {
@@ -138,6 +141,9 @@ final class CryptoOnrampExampleUITests: XCTestCase {
         let walletsLabel2 = app.staticTexts["Wallets"].firstMatch
         XCTAssertTrue(walletsLabel2.waitForExistence(timeout: .networkTimeout), "Wallet selection screen should appear")
     }
+}
+
+final class CryptoOnrampNewUserCardUITests: CryptoOnrampExampleUITestCase {
 
     /// Tests the complete new-user flow, including registration, KYC, identity verification, wallet registration, and card checkout.
     @MainActor
@@ -228,6 +234,9 @@ final class CryptoOnrampExampleUITests: XCTestCase {
         let successLabel = app.staticTexts["Purchase successful"].firstMatch
         XCTAssertTrue(successLabel.waitForExistence(timeout: .networkTimeout), "Checkout success screen should appear")
     }
+}
+
+final class CryptoOnrampNewUserACHUITests: CryptoOnrampExampleUITestCase {
 
     /// Tests a complete new-user checkout using a refreshed KYC address and a standard ACH bank payment.
     @MainActor
@@ -381,6 +390,9 @@ final class CryptoOnrampExampleUITests: XCTestCase {
         let purchaseSuccessLabel = app.staticTexts["Purchase successful"].firstMatch
         XCTAssertTrue(purchaseSuccessLabel.waitForExistence(timeout: .networkTimeout), "Checkout success screen should appear")
     }
+}
+
+final class CryptoOnrampNewEUUserUITests: CryptoOnrampExampleUITestCase {
 
     /// Tests EU registration and KYC, compliance identifiers, user attestation, identity verification, and wallet verification.
     @MainActor

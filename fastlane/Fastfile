@@ -138,28 +138,9 @@ platform :ios do
     Dir.chdir('..') do
       # Get the merge base between the current branch and master
       merge_base = sh("git merge-base origin/master HEAD").strip
-  
+
       # Run size_report.rb
       sh("bundle exec ruby Tests/installation_tests/size_test/size_report.rb #{ENV['BITRISE_GIT_BRANCH']} #{merge_base}")
-  
-      # Run `emerge` too if we can for PRs
-      unless ENV['EMERGE_API_TOKEN'].nil?
-        archive_path = Dir.pwd + '/build/size_tests/'
-        arguments = { repo_name: "#{ENV['BITRISEIO_GIT_REPOSITORY_OWNER']}/#{ENV['BITRISEIO_GIT_REPOSITORY_SLUG']}",
-                      sha: ENV['BITRISE_GIT_COMMIT'].to_s,
-                      tag: 'release' }
-        unless ENV['BITRISE_PULL_REQUEST'].nil?
-          arguments[:pr_number] = ENV['BITRISE_PULL_REQUEST']
-          arguments[:base_sha] = merge_base
-        end
-  
-        modules = YAML.load_file('modules.yaml')['modules'].select { |m| m.key?('size_report') }
-  
-        modules.each do |m|
-          sdk = m['framework_name']
-          emerge(file_path: archive_path + sdk + '.xcarchive', **arguments)
-        end
-      end
     end
   end
 

@@ -15,6 +15,8 @@
 
 require 'fileutils'
 require 'optparse'
+require 'open3'
+require_relative 'snapshot_test_selection'
 
 SCRIPT_DIR = __dir__
 ROOT_DIR = File.expand_path('..', SCRIPT_DIR)
@@ -29,11 +31,13 @@ FUZZ = '5%' # per-pixel color tolerance before counting as different
 
 commit = false
 dry_run = false
+all_tests = false
 versions = []
 OptionParser.new do |opts|
   opts.banner = "Usage: record_snapshots.rb [options]"
   opts.on('--commit', 'Commit changes (for CI)') { commit = true }
   opts.on('--dry-run', 'Show what would change without updating') { dry_run = true }
+  opts.on('--all', 'Record all snapshot targets, including on pull requests') { all_tests = true }
   opts.on('--version VERSION', 'iOS version to record (can be specified multiple times)') { |v| versions << v }
 end.parse!
 
@@ -53,7 +57,24 @@ def significant_difference?(file_a, file_b)
   (num_diff.to_f / total_pixels * 100) > DIFF_THRESHOLD
 end
 
-require_imagemagick!
+def snapshot_simulator_id(os_version)
+  # simctl names patch runtimes by major.minor (26.4 for iOS 26.4.1).
+  # Match the runtime identifier and use a UDID to avoid duplicate-name ambiguity.
+  runtime = "com.apple.CoreSimulator.SimRuntime.iOS-#{os_version.split('.')[0..1].join('-')}"
+  output, status = Open3.capture2('xcrun', 'simctl', 'list', 'devices', 'available', '--json')
+  abort 'Error: Could not list available simulators' unless status.success?
+
+  devices = JSON.parse(output).fetch('devices').fetch(runtime, []).select { |device| device.fetch('name') == DEVICE_MODEL }
+  existing = devices.find { |device| device['state'] == 'Booted' } || devices.first
+  return existing.fetch('udid') if existing
+
+  puts "    Creating #{DEVICE_MODEL} simulator for iOS #{os_version} (runtime: #{runtime})..."
+  identifier, status = Open3.capture2('xcrun', 'simctl', 'create', DEVICE_MODEL,
+                                    'com.apple.CoreSimulator.SimDeviceType.iPhone-12-mini', runtime)
+  abort "Error: Could not create simulator for iOS #{os_version}" unless status.success?
+
+  identifier.strip
+end
 
 # Skip if the last commit is already a snapshot update from CI (prevents infinite loops)
 if commit
@@ -65,44 +86,61 @@ if commit
   end
 end
 
+snapshot_tests = SnapshotTestSelection.discover(ROOT_DIR)
+selections = versions.map do |os_version|
+  selected_tests = snapshot_tests
+  plan = nil
+  if os_version.split('.').first.to_i >= 26
+    # Generate the annotations once and keep the checked-in plan untouched.
+    plan_path = File.join(ROOT_DIR, 'Stripe/AllStripeFrameworks-iOS26.xctestplan')
+    original_plan = File.binread(plan_path)
+    begin
+      system('ruby', 'ci_scripts/generate_ios26_testplan.rb', exception: true)
+      plan = JSON.parse(File.read(plan_path))
+    ensure
+      File.binwrite(plan_path, original_plan)
+    end
+    selected_tests = SnapshotTestSelection.classes_in_plan(plan)
+  end
+  selected_tests = SnapshotTestSelection.select(selected_tests, ROOT_DIR) unless all_tests
+  [os_version, selected_tests, plan]
+end
+
+if selections.all? { |_, tests, _| tests.empty? }
+  puts '==> No snapshot or annotated iOS 26 targets are affected by this change.'
+  exit 0
+end
+require_imagemagick!
+
 # Maps rel_path -> recorded absolute path for changed/added files
 changed_files = {}
 added_files = {}
 FileUtils.rm_rf('/tmp/snapshot-all-recorded')
 
-versions.each do |os_version|
+selections.each do |os_version, selected_tests, plan|
+  if selected_tests.empty?
+    puts "==> No affected tests for iOS #{os_version}; skipping this runtime."
+    next
+  end
+
+  puts "==> Selected #{selected_tests.size} test classes for iOS #{os_version} in: #{selected_tests.map { |test| test.split('/').first }.uniq.join(', ')}"
   puts "==> Recording snapshots (iOS #{os_version})..."
 
-  # Ensure the simulator exists for this version
-  existing = `xcrun simctl list devices "#{DEVICE_MODEL}" available`.strip
-  unless existing.include?(os_version)
-    # Runtime IDs use major.minor only (e.g., iOS-26-4 for 26.4.1)
-    major_minor = os_version.split('.')[0..1].join('-')
-    runtime = "com.apple.CoreSimulator.SimRuntime.iOS-#{major_minor}"
-    device_type = 'com.apple.CoreSimulator.SimDeviceType.iPhone-12-mini'
-    puts "    Creating #{DEVICE_MODEL} simulator for iOS #{os_version} (runtime: #{runtime})..."
-    system('xcrun', 'simctl', 'create', DEVICE_MODEL, device_type, runtime, exception: true)
-  end
+  device_id = snapshot_simulator_id(os_version)
+  puts "    Using simulator #{device_id}"
 
   FileUtils.rm_rf(RECORD_DIR)
   FileUtils.rm_rf("#{RECORD_DIR}_64")
 
-  # For iOS 26+, only run tests marked with // @iOS26 (test plan handles filtering)
-  major = os_version.split('.').first.to_i
-  scheme = 'AllStripeFrameworks'
-  extra_args = ['--only-snapshot-tests']
-  if major >= 26
-    system('ruby', 'ci_scripts/generate_ios26_testplan.rb', exception: true)
-    scheme = 'AllStripeFrameworks-iOS26'
-    extra_args = [] # test plan already selects the right tests
+  succeeded = SnapshotTestSelection.with_scheme(ROOT_DIR, selected_tests, plan: plan) do |scheme|
+    extra_args = plan ? [] : ['--only-test', selected_tests.join(',')]
+    system('./ci_scripts/test.rb', *extra_args,
+           '--scheme', scheme,
+           '--device-id', device_id)
   end
-
-  unless system('./ci_scripts/test.rb', *extra_args,
-                '--scheme', scheme,
-                '--device', DEVICE_MODEL,
-                '--version', os_version)
+  unless succeeded
     puts "==> Tests failed for iOS #{os_version}. Inspecting failures..."
-    system('ruby', 'ci_scripts/run_tests.rb', '--failures')
+    system('./ci_scripts/run_tests.rb', '--failures')
 
     # Copy xcresult to deploy dir for upload
     deploy_dir = ENV['BITRISE_DEPLOY_DIR']
@@ -124,9 +162,15 @@ versions.each do |os_version|
                        "#{RECORD_DIR}_64"
                      elsif Dir.exist?(RECORD_DIR)
                        RECORD_DIR
-                     else
-                       abort "Error: No snapshots recorded (expected #{RECORD_DIR} or #{RECORD_DIR}_64)"
                      end
+  unless actual_record_dir
+    # Some modules have only annotated behavioral tests on this runtime.
+    if plan && (selected_tests & snapshot_tests).empty?
+      puts "==> Annotated tests passed on iOS #{os_version}; no snapshot images were produced."
+      next
+    end
+    abort "Error: No snapshots recorded (expected #{RECORD_DIR} or #{RECORD_DIR}_64)"
+  end
 
   puts "==> Comparing against reference images (iOS #{os_version})..."
 
