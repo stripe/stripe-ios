@@ -600,8 +600,8 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         XCTAssertEqual(parameters.configuration.defaultBillingDetails.email, "jenny@example.com")
     }
 
-    func testExpressCheckoutLinkCollectsRequiredCheckoutDetails() async throws {
-        // Given Checkout requires an email and full billing address
+    func testExpressCheckoutLinkCollectsRequiredBillingAddress() async throws {
+        // Given Checkout requires a full billing address and has no email
         var configuration = CheckoutController.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://custom-return")
         configuration.expressCheckoutElement = ExpressCheckoutElement.Configuration(completion: { _ in })
         let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration(
@@ -615,12 +615,12 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         // When ECE constructs the Link confirmation flow
         let flow = try checkout.makeExpressCheckoutConfirmationFlow(.link, presentationWindow: window)
 
-        // Then Link collects the Checkout details
+        // Then Link collects the address without forcing email collection
         guard case .link(let parameters) = flow else {
             XCTFail("Expected a Link confirmation flow")
             return
         }
-        XCTAssertEqual(parameters.configuration.billingDetailsCollectionConfiguration.email, .always)
+        XCTAssertEqual(parameters.configuration.billingDetailsCollectionConfiguration.email, .automatic)
         XCTAssertEqual(parameters.configuration.billingDetailsCollectionConfiguration.address, .full)
     }
 
