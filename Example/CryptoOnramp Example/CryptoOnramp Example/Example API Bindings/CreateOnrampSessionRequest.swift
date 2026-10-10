@@ -24,4 +24,7 @@ struct CreateOnrampSessionRequest: Encodable {
     let walletAddress: String
     let customerIpAddress: String
     let settlementSpeed: SettlementSpeed
+
+    // TODO: Temporary override to force merchant-paid fees for all onramp sessions. Remove before merging.
+    let feeResponsibility = "merchant"
 }

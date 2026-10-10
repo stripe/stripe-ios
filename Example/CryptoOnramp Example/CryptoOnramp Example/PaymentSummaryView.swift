@@ -108,10 +108,22 @@ struct PaymentSummaryView: View {
                         title: "You Receive",
                         value: onrampSessionResponse.amountToReceiveText
                     )
-                    makeSummaryRow(
-                        title: "Fees",
-                        value: onrampSessionResponse.totalFeesText
-                    )
+                    if let subsidy = onrampSessionResponse.transactionDetails.fees.subsidy {
+                        makeSummaryRow(
+                            title: "Original Fee",
+                            value: onrampSessionResponse.totalFeesText,
+                            strikethrough: true
+                        )
+                        makeSummaryRow(
+                            title: "Fee",
+                            value: onrampSessionResponse.subsidizedFeeText(subsidy)
+                        )
+                    } else {
+                        makeSummaryRow(
+                            title: "Fees",
+                            value: onrampSessionResponse.totalFeesText
+                        )
+                    }
                     makeSummaryRow(
                         title: "Pay With",
                         value: selectedPaymentMethodDescription
@@ -190,13 +202,14 @@ struct PaymentSummaryView: View {
     // MARK: - PaymentSummaryView
 
     @ViewBuilder
-    private func makeSummaryRow(title: String, value: String) -> some View {
+    private func makeSummaryRow(title: String, value: String, strikethrough: Bool = false) -> some View {
         VStack(alignment: .leading, spacing: 2) {
             Text(title)
                 .font(.caption)
                 .foregroundStyle(.secondary)
 
             Text(value)
+                .strikethrough(strikethrough)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.vertical, 2)
@@ -303,6 +316,11 @@ private extension CreateOnrampSessionResponse {
         return formattedSourceAmount(total)
     }
 
+    func subsidizedFeeText(_ subsidy: TransactionDetails.Fees.Subsidy) -> String {
+        let total = Double(subsidy.totalFeeAfterSubsidization) ?? 0
+        return formattedSourceAmount(total)
+    }
+
     var depositToText: String {
         let network = transactionDetails.destinationNetwork.localizedCapitalized
         let address = transactionDetails.walletAddress
@@ -349,7 +367,8 @@ private extension CreateOnrampSessionResponse {
                     destinationNetwork: "solana",
                     fees: .init(
                         networkFeeAmount: "0.01",
-                        transactionFeeAmount: "0.60"
+                        transactionFeeAmount: "0.60",
+                        subsidy: .init(originalFee: "0.61", totalFeeAfterSubsidization: "0.00")
                     ),
                     lastError: nil,
                     lockWalletAddress: false,

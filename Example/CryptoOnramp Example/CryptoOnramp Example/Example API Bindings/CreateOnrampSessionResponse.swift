@@ -14,8 +14,19 @@ typealias QuoteResponse = CreateOnrampSessionResponse
 struct CreateOnrampSessionResponse: Decodable, Hashable {
     struct TransactionDetails: Decodable, Hashable {
         struct Fees: Decodable, Hashable {
+            /// Present only when `fee_responsibility` is not `"consumer"`. Contains computed fee amounts only;
+            /// `fee_responsibility` itself lives at the session level.
+            struct Subsidy: Decodable, Hashable {
+                /// What the fee would have been without the subsidy.
+                let originalFee: String
+
+                /// What the consumer pays after the subsidy (`"0.00"` when `fee_responsibility` is `"merchant"`).
+                let totalFeeAfterSubsidization: String
+            }
+
             let networkFeeAmount: String
             let transactionFeeAmount: String
+            let subsidy: Subsidy?
         }
 
         let destinationCurrency: String
