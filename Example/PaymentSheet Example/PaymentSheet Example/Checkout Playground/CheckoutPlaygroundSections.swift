@@ -316,11 +316,11 @@ struct CheckoutPlaygroundFeaturesSection: View {
 
 struct CheckoutPlaygroundExpressCheckoutElementSection: View {
     @Binding var showExpressCheckoutElement: Bool
-    @Binding var applePayDisplay: ExpressCheckoutElement.ApplePayConfiguration.Display
+    @Binding var applePayDisplay: ExpressCheckoutElement.Configuration.ApplePayConfiguration.Display
     @Binding var applePayButtonType: CheckoutPlayground.ApplePayButtonType
-    @Binding var linkDisplay: ExpressCheckoutElement.LinkConfiguration.Display
+    @Binding var linkDisplay: ExpressCheckoutElement.Configuration.LinkConfiguration.Display
     @Binding var paymentMethodOrder: CheckoutPlayground.ExpressCheckoutPaymentMethodOrder
-    @Binding var appearance: ExpressCheckoutElement.Appearance
+    @Binding var appearance: ExpressCheckoutElement.Configuration.Appearance
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {

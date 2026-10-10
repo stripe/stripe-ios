@@ -275,6 +275,7 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         XCTAssertEqual(document.maxFileSizeBytes, 5_000_000)
         XCTAssertEqual(document.minDocumentTypes, 1)
         XCTAssertEqual(document.maxDocumentTypes, 2)
+        XCTAssertEqual(document.maxFilesPerDocumentType, 3)
         XCTAssertEqual(document.fileRequirements, "PDF, JPEG/JPG, PNG, DOCX, XLSX, CSV, or TXT, up to 5 MB per file.")
         XCTAssertEqual(document.instructions, [
             "Documents must include your name and a balance or financial value.",

@@ -64,7 +64,7 @@ index 25e5009784..ca719eb600 100644
  				SWIFT_VERSION = 5.0;
  				TARGETED_DEVICE_FAMILY = "1,2";
  				TEST_TARGET_NAME = SPMTest;
-@@ -432,10 +444,15 @@
+@@ -432,10 +444,14 @@
  				CODE_SIGN_STYLE = Automatic;
  				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
  				INFOPLIST_FILE = SPMTest/Info.plist;
@@ -73,7 +73,6 @@ index 25e5009784..ca719eb600 100644
 -				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 -				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.SPMTest;
 -				PRODUCT_NAME = "$(TARGET_NAME)";
-+				LD_GENERATE_MAP_FILE = YES;
 +				LD_RUNPATH_SEARCH_PATHS = (
 +					"$(inherited)",
 +					"@executable_path/Frameworks",
@@ -83,7 +82,7 @@ index 25e5009784..ca719eb600 100644
  				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
  				SWIFT_VERSION = 5.0;
  				TARGETED_DEVICE_FAMILY = "1,2";
-@@ -451,10 +468,15 @@
+@@ -451,10 +467,14 @@
  				CODE_SIGN_STYLE = Automatic;
  				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
  				INFOPLIST_FILE = SPMTest/Info.plist;
@@ -92,7 +91,6 @@ index 25e5009784..ca719eb600 100644
 -				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 -				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.SPMTest;
 -				PRODUCT_NAME = "$(TARGET_NAME)";
-+				LD_GENERATE_MAP_FILE = YES;
 +				LD_RUNPATH_SEARCH_PATHS = (
 +					"$(inherited)",
 +					"@executable_path/Frameworks",
@@ -102,7 +100,7 @@ index 25e5009784..ca719eb600 100644
  				SWIFT_VERSION = 5.0;
  				TARGETED_DEVICE_FAMILY = "1,2";
  			};
-@@ -491,6 +513,13 @@
+@@ -491,6 +511,13 @@
  			defaultConfigurationName = Release;
  		};
  /* End XCConfigurationList section */

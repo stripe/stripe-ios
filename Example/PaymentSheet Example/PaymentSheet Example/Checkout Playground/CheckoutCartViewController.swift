@@ -204,7 +204,7 @@ final class CheckoutCartViewController: UIViewController {
             )
             if integrationType != .eceOnly {
                 var paymentElementConfiguration = PaymentElement.Configuration()
-                paymentElementConfiguration.applePayConfiguration = PaymentElement.ApplePayConfiguration(
+                paymentElementConfiguration.applePayConfiguration = PaymentElement.Configuration.ApplePayConfiguration(
                     merchantId: "merchant.com.stripe.paymentsheet.example"
                 )
                 configuration.paymentElement = paymentElementConfiguration
@@ -218,12 +218,12 @@ final class CheckoutCartViewController: UIViewController {
                 var expressCheckoutElementConfiguration = ExpressCheckoutElement.Configuration { [weak self] result in
                     self?.handleConfirmResult(result)
                 }
-                expressCheckoutElementConfiguration.applePayConfiguration = ExpressCheckoutElement.ApplePayConfiguration(
+                expressCheckoutElementConfiguration.applePayConfiguration = ExpressCheckoutElement.Configuration.ApplePayConfiguration(
                     merchantId: "merchant.com.stripe.paymentsheet.example",
                     buttonType: expressCheckoutElementSettings.applePayButtonType.pkPaymentButtonType,
                     display: expressCheckoutElementSettings.applePayDisplay
                 )
-                expressCheckoutElementConfiguration.linkConfiguration = ExpressCheckoutElement.LinkConfiguration(
+                expressCheckoutElementConfiguration.linkConfiguration = ExpressCheckoutElement.Configuration.LinkConfiguration(
                     display: expressCheckoutElementSettings.linkDisplay
                 )
                 expressCheckoutElementConfiguration.paymentMethodOrder = expressCheckoutElementSettings.paymentMethodOrder.paymentMethodOrder

@@ -11,7 +11,8 @@ class OnLoadErrorMessageHandlerTests: ScriptWebTestBase {
 
     @MainActor
     func testMessageSend() async throws {
-        let messageHandler = OnSetterFunctionCalledMessageHandler(analyticsClient: MockComponentAnalyticsClient(commonFields: .mock))
+        try await loadTrustedDocument()
+        let messageHandler = OnSetterFunctionCalledMessageHandler(sourcePolicy: webView.trustedMessageSourcePolicy(), analyticsClient: MockComponentAnalyticsClient(commonFields: .mock))
 
         messageHandler.addHandler(handler: OnLoadErrorMessageHandler(didReceiveMessage: { payload in
             XCTAssertEqual(payload, OnLoadErrorMessageHandler.Values(error: .init(type: "failed_to_load", message: "Error message")))

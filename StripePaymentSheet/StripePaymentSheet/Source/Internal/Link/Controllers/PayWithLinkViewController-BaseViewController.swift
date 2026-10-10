@@ -63,7 +63,6 @@ extension PayWithLinkViewController {
 
         lazy var navigationBar: SheetNavigationBar = {
             let navBar = LinkSheetNavigationBar(
-                isTestMode: false,
                 appearance: LinkUI.appearance,
                 brand: context.linkBrand,
                 shouldLogPaymentSheetAnalyticsOnDismissal: false

@@ -359,7 +359,8 @@ extension PaymentSheet {
                 configuration: configuration,
                 loadResult: loadResult,
                 analyticsHelper: analyticsHelper,
-                walletButtonsViewState: self.walletButtonsViewState
+                walletButtonsViewState: self.walletButtonsViewState,
+                checkoutBillingAddressUpdater: nil
             )
             self.viewController.flowControllerDelegate = self
             self.confirmationChallenge = confirmationChallenge
@@ -567,7 +568,7 @@ extension PaymentSheet {
                 guard let self = self else { return }
 
                 // Set the PaymentSheetViewController as the content of our bottom sheet
-                let bottomSheetVC = Self.makeBottomSheetViewController(
+                let bottomSheetVC = Self.makePaymentSheetContainerViewController(
                     self.viewController,
                     configuration: self.configuration,
                     // TODO(MOBILESDK-864): didCancelNative3DS2 is not used in FlowController
@@ -577,7 +578,7 @@ extension PaymentSheet {
                 )
 
                 self.isPresented = true
-                presentingViewController.presentAsBottomSheet(bottomSheetVC, appearance: self.configuration.appearance)
+                presentingViewController.presentAsSheet(bottomSheetVC)
             }
 
             if canPresentLinkInPlaceOfFlowController {
@@ -602,10 +603,9 @@ extension PaymentSheet {
         ) {
             let loadingVC = LoadingViewController(
                 delegate: self,
-                appearance: configuration.appearance,
-                isTestMode: configuration.apiClient.isTestmode
+                appearance: configuration.appearance
             )
-            let bottomSheetVC = Self.makeBottomSheetViewController(
+            let bottomSheetVC = Self.makePaymentSheetContainerViewController(
                 loadingVC,
                 configuration: configuration,
                 // TODO(MOBILESDK-864): didCancelNative3DS2 is not used in FlowController
@@ -613,7 +613,7 @@ extension PaymentSheet {
                     self?.paymentHandler.cancel3DS2ChallengeFlow()
                 }
             )
-            presentingViewController.presentAsBottomSheet(bottomSheetVC, appearance: configuration.appearance)
+            presentingViewController.presentAsSheet(bottomSheetVC)
 
             pendingPresentTask = Task { @MainActor [weak self] in
                 guard let self else { return }
@@ -734,8 +734,8 @@ extension PaymentSheet {
                         }
                     }
                 }
-                let bottomSheet = Self.makeBottomSheetViewController(sepaMandateVC, configuration: configuration)
-                presentingViewController.presentAsBottomSheet(bottomSheet, appearance: configuration.appearance)
+                let bottomSheet = Self.makePaymentSheetContainerViewController(sepaMandateVC, configuration: configuration)
+                presentingViewController.presentAsSheet(bottomSheet)
             }
 
             func confirm() {
@@ -861,11 +861,13 @@ extension PaymentSheet {
 
         func updateForWalletButtonsView() {
             // Rebuild with the current saved methods so deleted methods don't reappear.
+            let checkoutBillingAddressUpdater = viewController.checkoutBillingAddressUpdater
             self.viewController = Self.makeViewController(
                 configuration: self.configuration,
                 loadResult: makeLoadResultWithCurrentSavedPaymentMethods(),
                 analyticsHelper: analyticsHelper,
                 walletButtonsViewState: self.walletButtonsViewState,
+                checkoutBillingAddressUpdater: checkoutBillingAddressUpdater,
                 initialState: .preservingFormInput(from: internalPaymentOption)
             )
             self.viewController.flowControllerDelegate = self
@@ -904,9 +906,11 @@ extension PaymentSheet {
             guard let selection = snapshot.selectionForRebuilding(
                 using: viewController
             ) else {
+                viewController.clearErrorForReuseAfterCancellation()
                 return
             }
 
+            let checkoutBillingAddressUpdater = viewController.checkoutBillingAddressUpdater
             self.viewController = Self.makeViewController(
                 configuration: configuration,
                 loadResult: makeLoadResultWithCurrentSavedPaymentMethods(
@@ -914,6 +918,7 @@ extension PaymentSheet {
                 ),
                 analyticsHelper: analyticsHelper,
                 walletButtonsViewState: walletButtonsViewState,
+                checkoutBillingAddressUpdater: checkoutBillingAddressUpdater,
                 initialState: .restoringAfterCancellation(selection)
             )
             self.viewController.flowControllerDelegate = self
@@ -943,15 +948,14 @@ extension PaymentSheet {
         }
 
         // MARK: Internal helper methods
-        static func makeBottomSheetViewController(
+        static func makePaymentSheetContainerViewController(
             _ contentViewController: BottomSheetContentViewController,
             configuration: PaymentElementConfiguration,
             didCancelNative3DS2: (() -> Void)? = nil
-        ) -> BottomSheetViewController {
-            let sheet = BottomSheetViewController(
+        ) -> any PaymentSheetContainer {
+            let sheet = PaymentSheetContainerFactory.make(
                 contentViewController: contentViewController,
                 appearance: configuration.appearance,
-                isTestMode: configuration.apiClient.isTestmode,
                 didCancelNative3DS2: didCancelNative3DS2 ?? { } // TODO(MOBILESDK-864): Refactor this out.
             )
 
@@ -964,7 +968,7 @@ extension PaymentSheet {
             loadResult: PaymentSheetLoader.LoadResult,
             analyticsHelper: PaymentSheetAnalyticsHelper,
             walletButtonsViewState: PaymentSheet.WalletButtonsViewState,
-            checkoutBillingAddressUpdater: CheckoutSessionBillingAddressUpdater? = nil,
+            checkoutBillingAddressUpdater: CheckoutSessionBillingAddressUpdater?,
             initialState: FlowControllerViewControllerInitialState = .preservingFormInput(from: nil)
         ) -> FlowControllerViewControllerProtocol {
             let controller: FlowControllerViewControllerProtocol
@@ -1127,6 +1131,7 @@ internal protocol FlowControllerViewControllerProtocol: BottomSheetContentViewCo
     var flowControllerDelegate: FlowControllerViewControllerDelegate? { get set }
     var checkoutBillingAddressUpdater: CheckoutSessionBillingAddressUpdater? { get set }
     func clearSelection()
+    func clearErrorForReuseAfterCancellation()
 }
 
 extension PaymentOption {

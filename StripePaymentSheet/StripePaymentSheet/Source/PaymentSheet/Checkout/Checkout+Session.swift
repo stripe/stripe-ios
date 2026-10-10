@@ -78,9 +78,10 @@ extension CheckoutController {
         /// Aggregate subtotal, tax, discount, and total amounts for the Checkout Session.
         public let totals: CheckoutController.Session.Totals
 
-        /// Payment methods currently available after applying configuration and device eligibility, ordered
-        /// as displayed by `ExpressCheckoutElement`. Each updated Session reflects the latest availability.
-        public let availableExpressCheckoutPaymentMethods: [ExpressCheckoutElement.PaymentMethod]
+        /// Payment methods available after applying configuration and device eligibility, ordered as displayed by `ExpressCheckoutElement`.
+        /// Supported values are `"apple_pay"` and `"link"`.
+        /// When empty, Express Checkout Element will render empty content.
+        public let availableExpressCheckoutPaymentMethods: [String]
 
         // MARK: - Internal Properties
 
@@ -124,7 +125,7 @@ extension CheckoutController.Session {
     init(
         apiResponse: PaymentPagesAPIResponse,
         localState: LocalState,
-        expressCheckoutConfiguration: ExpressCheckoutElement.Configuration? = nil
+        configuration: CheckoutController.Configuration? = nil
     ) {
         let elementsSessionValue = apiResponse.elementsSession.value
         let publicDiscountAmounts = PaymentPagesAPIResponse.makeDiscountAmounts(
@@ -168,11 +169,8 @@ extension CheckoutController.Session {
         if automaticTaxEnabled && automaticTaxAddressSource == "billing" {
             elementsSessionValue.disableLinkForAutomaticTaxBilling = true
         }
-        let availableExpressCheckoutPaymentMethods = expressCheckoutConfiguration.map {
-            ExpressCheckoutElementUtilities.availablePaymentMethods(
-                for: elementsSessionValue,
-                configuration: $0
-            )
+        let availableExpressCheckoutPaymentMethods = configuration.map {
+            ExpressCheckoutElementUtilities.availablePaymentMethods(for: apiResponse, configuration: $0).map(\.rawValue)
         } ?? []
         let serverEmail = apiResponse.customerEmail ?? apiResponse.customer?.email
 

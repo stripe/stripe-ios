@@ -1,6 +1,26 @@
+"Add %ld documents" = "Lisää %ld asiakirjaa";
+
+"Add 1 document" = "Lisää yksi asiakirja";
+
+"Add documents" = "Lisää asiakirjoja";
+
+"Answer" = "Vastaus";
+
+"Choose File…" = "Valitse tiedosto";
+
+"Choose Photo…" = "Valitse valokuva…";
+
 "Debit cards are most likely to be accepted." = "Pankkikortit hyväksytään todennäköisesti.";
 
+"Document type" = "Asiakirjan tyyppi";
+
 "Document uploaded successfully" = "Asiakirjan lataus onnistui";
+
+"Funds source" = "Varojen lähde";
+
+"How are you funding your transactions? Please list all of your sources. For example, salary, savings, investment earnings, etc." = "Miten rahoitat tapahtumasi? Luettele kaikki lähteesi. Esimerkiksi palkka, säästöt, sijoitustuotot jne.";
+
+"Make sure your document meets following requirements." = "Varmista, että asiakirjasi täyttää seuraavat vaatimukset.";
 
 "Please try again later." = "Yritä myöhemmin uudelleen.";
 
@@ -8,9 +28,17 @@
 
 "Tell us about your source of funds" = "Kerro meille varojesi lähteestä";
 
+"There was a problem with your previous document. Please upload a new one." = "Edellisessä asiakirjassasi oli ongelma. Lataa uusi.";
+
 "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "Tätä sovellusta ei voitu vahvistaa todistusvirheen vuoksi. Yritä myöhemmin uudelleen tai ota yhteys ohjelmoijaan, jos ongelma jatkuu.";
 
 "This app couldn't be verified. Contact the app developer for help." = "Tätä sovellusta ei voitu todentaa. Saat apua ottamalla yhteyttä sovelluksen kehittäjään.";
+
+"This file is larger than %@. Choose a file that is %@ or smaller." = "Tämä tiedosto on suurempi kuin %1$@. Valitse tiedosto, joka on %2$@ tai pienempi.";
+
+"This file type isn’t supported." = "Tätä tiedostotyyppiä ei tueta.";
+
+"This file type isn’t supported. Upload a %@ file." = "Tätä tiedostotyyppiä ei tueta. Lataa %@-tiedosto.";
 
 "This wallet couldn't be found. Please choose or add a wallet and try again." = "Tätä lompakkoa ei löytynyt. Valitse tai lisää lompakko ja yritä uudelleen.";
 
@@ -20,9 +48,19 @@
 
 "This wallet verification request is invalid. Please try again." = "Tämä lompakon vahvistuspyyntö on virheellinen. Yritä uudelleen.";
 
+"Upload document" = "Lataa asiakirja";
+
 "Upload your proof of address" = "Lataa osoitetodistuksesi";
 
+"Uploaded" = "Ladattu";
+
+"Uploading…" = "Ladataan…";
+
 "We couldn't verify ownership of this wallet. Please try again." = "Emme voineet vahvistaa tämän lompakon omistajuutta. Yritä uudelleen.";
+
+"We couldn’t open this document. Please choose it again." = "Tätä asiakirjaa ei voitu avata. Valitse se uudelleen.";
+
+"We couldn’t upload this file. Please try again." = "Tätä tiedostoa ei voitu ladata. Yritä uudelleen.";
 
 "We may request proof of address for larger transactions." = "Saatamme pyytää osoitetodistuksen suuremmissa tapahtumissa.";
 

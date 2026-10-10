@@ -95,7 +95,6 @@ final class BottomSheetView: UIView {
         closeButtonBackground.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
-            heightAnchor.constraint(equalToConstant: calculateContentHeight()),
             scrollView.leadingAnchor.constraint(equalTo: leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: trailingAnchor),
             scrollView.topAnchor.constraint(equalTo: topAnchor),
@@ -111,27 +110,10 @@ final class BottomSheetView: UIView {
         ])
     }
 
-    /// Calcualte all paddings added to vertical stack, used to determine height of scrollview
-    private func linePaddings() -> CGFloat {
-        // start with top and bottom padding
-        var padding: CGFloat = BottomSheetView.bottomSheetPadding * 2
-        if content.title != nil {
-            padding += BottomSheetView.bottomSheetLinePadding
-
-        }
-
-        content.lines.forEach { _ in
-            padding += BottomSheetView.bottomSheetLineContentPadding
-            padding += BottomSheetView.bottomSheetLinePadding
-        }
-        return padding
-    }
-
-    /// Calculate height of content by adding vertical stack&button and paddings together. If height is over half of screen size, set max height at half of screen size.
-    private func calculateContentHeight() -> CGFloat {
-        let halfScreenHeight = UIScreen.main.bounds.height/2
-        let contentHeight = verticalStack.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height + linePaddings() + closeButtonBackground.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height
-        return min(halfScreenHeight, contentHeight)
+    /// Calculates the height of the content and close button.
+    func calculateContentHeight() -> CGFloat {
+        return verticalStack.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height
+            + closeButtonBackground.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height
     }
 
     private func configureVStack(
