@@ -8,17 +8,17 @@ import Foundation
 import PassKit
 @_spi(STP) import StripePaymentSheet
 
-extension ExpressCheckoutElement.ApplePayConfiguration.Display: CaseIterable, Identifiable {
+extension ExpressCheckoutElement.Configuration.ApplePayConfiguration.Display: CaseIterable, Identifiable {
     public static var allCases: [Self] { [.automatic, .never] }
     public var id: String { rawValue }
 }
 
-extension ExpressCheckoutElement.LinkConfiguration.Display: CaseIterable, Identifiable {
+extension ExpressCheckoutElement.Configuration.LinkConfiguration.Display: CaseIterable, Identifiable {
     public static var allCases: [Self] { [.automatic, .never] }
     public var id: String { rawValue }
 }
 
-extension ExpressCheckoutElement.Appearance.ButtonTheme: CaseIterable, Identifiable {
+extension ExpressCheckoutElement.Configuration.Appearance.ButtonTheme: CaseIterable, Identifiable {
     public static var allCases: [Self] { [.automatic, .light, .dark] }
     public var id: String { rawValue }
 }
@@ -413,19 +413,19 @@ enum CheckoutPlayground {
 
     struct ExpressCheckoutElementSettings: Codable {
         var isEnabled: Bool
-        var applePayDisplay: ExpressCheckoutElement.ApplePayConfiguration.Display
+        var applePayDisplay: ExpressCheckoutElement.Configuration.ApplePayConfiguration.Display
         var applePayButtonType: ApplePayButtonType
-        var linkDisplay: ExpressCheckoutElement.LinkConfiguration.Display
+        var linkDisplay: ExpressCheckoutElement.Configuration.LinkConfiguration.Display
         var paymentMethodOrder: ExpressCheckoutPaymentMethodOrder
-        var appearance: ExpressCheckoutElement.Appearance
+        var appearance: ExpressCheckoutElement.Configuration.Appearance
 
         init(
             isEnabled: Bool = true,
-            applePayDisplay: ExpressCheckoutElement.ApplePayConfiguration.Display = .automatic,
+            applePayDisplay: ExpressCheckoutElement.Configuration.ApplePayConfiguration.Display = .automatic,
             applePayButtonType: ApplePayButtonType = .plain,
-            linkDisplay: ExpressCheckoutElement.LinkConfiguration.Display = .automatic,
+            linkDisplay: ExpressCheckoutElement.Configuration.LinkConfiguration.Display = .automatic,
             paymentMethodOrder: ExpressCheckoutPaymentMethodOrder = .dynamic,
-            appearance: ExpressCheckoutElement.Appearance = .init()
+            appearance: ExpressCheckoutElement.Configuration.Appearance = .init()
         ) {
             self.isEnabled = isEnabled
             self.applePayDisplay = applePayDisplay
@@ -448,19 +448,19 @@ enum CheckoutPlayground {
 
         init(from decoder: Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
-            var appearance = ExpressCheckoutElement.Appearance()
+            var appearance = ExpressCheckoutElement.Configuration.Appearance()
             appearance.buttonTheme = try container.decodeIfPresent(String.self, forKey: .buttonTheme)
-                .flatMap(ExpressCheckoutElement.Appearance.ButtonTheme.init(rawValue:)) ?? .automatic
+                .flatMap(ExpressCheckoutElement.Configuration.Appearance.ButtonTheme.init(rawValue:)) ?? .automatic
             appearance.buttonLayout.maxColumns = try container.decodeIfPresent(Int.self, forKey: .maxColumns)
             appearance.buttonLayout.maxRows = try container.decodeIfPresent(Int.self, forKey: .maxRows)
 
             self.init(
                 isEnabled: try container.decodeIfPresent(Bool.self, forKey: .isEnabled) ?? true,
                 applePayDisplay: try container.decodeIfPresent(String.self, forKey: .applePayDisplay)
-                    .flatMap(ExpressCheckoutElement.ApplePayConfiguration.Display.init(rawValue:)) ?? .automatic,
+                    .flatMap(ExpressCheckoutElement.Configuration.ApplePayConfiguration.Display.init(rawValue:)) ?? .automatic,
                 applePayButtonType: try container.decodeIfPresent(ApplePayButtonType.self, forKey: .applePayButtonType) ?? .plain,
                 linkDisplay: try container.decodeIfPresent(String.self, forKey: .linkDisplay)
-                    .flatMap(ExpressCheckoutElement.LinkConfiguration.Display.init(rawValue:)) ?? .automatic,
+                    .flatMap(ExpressCheckoutElement.Configuration.LinkConfiguration.Display.init(rawValue:)) ?? .automatic,
                 paymentMethodOrder: try container.decodeIfPresent(ExpressCheckoutPaymentMethodOrder.self, forKey: .paymentMethodOrder) ?? .dynamic,
                 appearance: appearance
             )

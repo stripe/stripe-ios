@@ -784,6 +784,15 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
 
     let STPPaymentCardTextFieldMinimumPadding: CGFloat = 10
 
+    var cardElementAnalytics = CardElementAnalytics(widgetType: .paymentCardTextField)
+
+    open override func didMoveToWindow() {
+        super.didMoveToWindow()
+        if window != nil {
+            cardElementAnalytics.reportShown()
+        }
+    }
+
     // MARK: initializers
     /// :nodoc:
     required public init?(
@@ -1755,6 +1764,8 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
             return
         }
 
+        cardElementAnalytics.reportInteraction()
+
         formTextField.validText = true
 
         switch fieldType {
@@ -1917,6 +1928,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
     /// :nodoc:
     @objc
     open func textFieldDidBeginEditing(_ textField: UITextField) {
+        cardElementAnalytics.reportInteraction()
         let isMidSubviewEditingTransition = getAndUpdateSubviewEditingTransitionState(
             fromCall: .didBegin
         )
@@ -2317,6 +2329,9 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
     }
 
     func onChange() {
+        if isValid {
+            cardElementAnalytics.reportFormCompleted()
+        }
         if delegate?.responds(
             to: #selector(STPPaymentCardTextFieldDelegate.paymentCardTextFieldDidChange(_:))
         )

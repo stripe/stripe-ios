@@ -228,11 +228,9 @@ extension IdentityFlowViewController {
     func presentBottomsheet(
         withContent content: BottomSheetViewController.BottomSheetContent
     ) throws {
-        let consentBottomSheetViewController = try BottomSheetViewController(
+        let bottomSheetViewController = try BottomSheetViewController.makeForPresentation(
             content: content
         )
-        consentBottomSheetViewController.modalTransitionStyle = .coverVertical
-        consentBottomSheetViewController.modalPresentationStyle = .pageSheet
-        self.present(consentBottomSheetViewController, animated: true, completion: nil)
+        self.present(bottomSheetViewController, animated: true, completion: nil)
     }
 }

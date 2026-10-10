@@ -26,7 +26,7 @@ class SheetNavigationBar: UIView {
     }
     weak var delegate: SheetNavigationBarDelegate?
     fileprivate lazy var leftItemsStackView: UIStackView = {
-        let stack = UIStackView(arrangedSubviews: [dummyView, closeButtonLeft, backButton, testModeView])
+        let stack = UIStackView(arrangedSubviews: [dummyView, closeButtonLeft, backButton])
         stack.spacing = PaymentSheetUI.defaultPadding
         stack.setCustomSpacing(PaymentSheetUI.navBarPadding(appearance: appearance), after: dummyView)
         stack.alignment = .center
@@ -71,7 +71,6 @@ class SheetNavigationBar: UIView {
         return nil
     }
 
-    let testModeView = TestModeView()
     let appearance: PaymentSheet.Appearance
     let shouldLogPaymentSheetAnalyticsOnDismissal: Bool
 
@@ -85,8 +84,7 @@ class SheetNavigationBar: UIView {
         }
     }
 
-    init(isTestMode: Bool, appearance: PaymentSheet.Appearance, shouldLogPaymentSheetAnalyticsOnDismissal: Bool = true) {
-        testModeView.isHidden = !isTestMode
+    init(appearance: PaymentSheet.Appearance, shouldLogPaymentSheetAnalyticsOnDismissal: Bool = true) {
         self.appearance = appearance
         self.shouldLogPaymentSheetAnalyticsOnDismissal = shouldLogPaymentSheetAnalyticsOnDismissal
         super.init(frame: .zero)

@@ -544,7 +544,8 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         settings.defaultBillingAddress = .customEmail
         settings.customEmail = "foo@bar.com"
         settings.apmsEnabled = .off
-        settings.supportedPaymentMethods = passthroughMode ? "card" : "card,link"
+        // Passthrough shares the saved bank as a US bank-account payment method.
+        settings.supportedPaymentMethods = passthroughMode ? "card,us_bank_account" : "card,link"
         loadPlayground(app, settings)
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
 

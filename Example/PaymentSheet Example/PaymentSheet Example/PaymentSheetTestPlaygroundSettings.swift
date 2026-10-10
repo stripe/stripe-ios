@@ -126,7 +126,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         }
         func customDisplayName(currency: Currency) -> String {
             switch currency {
-            case .jpy, .krw:
+            case .jpy, .krw, .vnd:
                 return displayName.replacingOccurrences(of: ".", with: "")
             default:
                 return displayName
@@ -155,6 +155,9 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case sek
         case chf
         case idr
+        case php
+        case vnd
+        case ngn
     }
 
     enum MerchantCountry: String, PickerEnum {
@@ -175,6 +178,9 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case TH
         case DE
         case IT
+        case NG = "ng"
+        case ngWallet = "ng_wallet"
+        case mondu
         case usTax = "us_tax"
         case stripeShop = "stripe_shop_test"
         case custom

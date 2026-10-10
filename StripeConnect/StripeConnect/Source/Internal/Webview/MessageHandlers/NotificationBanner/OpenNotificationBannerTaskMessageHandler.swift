@@ -4,6 +4,7 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 
 final class OpenNotificationBannerTaskMessageHandler: ScriptMessageHandler<OpenNotificationBannerTaskMessageHandler.Payload> {
     enum JSONValue: Codable, Equatable {
@@ -64,10 +65,12 @@ final class OpenNotificationBannerTaskMessageHandler: ScriptMessageHandler<OpenN
 
     typealias Payload = [String: JSONValue]
 
-    init(analyticsClient: ComponentAnalyticsClient,
+    init(sourcePolicy: STPWebMessageSourcePolicy,
+         analyticsClient: ComponentAnalyticsClient,
          didReceiveMessage: @escaping (Payload) -> Void) {
         super.init(
             name: "openNotificationBannerForm",
+            sourcePolicy: sourcePolicy,
             analyticsClient: analyticsClient,
             didReceiveMessage: didReceiveMessage
         )

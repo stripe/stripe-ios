@@ -13,6 +13,7 @@ struct CheckoutCartView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var checkout: CheckoutController?
     @StateObject private var diagnostics = CheckoutSessionDiagnostics()
+    @StateObject private var analyticsLogObserver = AnalyticsLogObserver.shared
 
     @State private var isLoading = false
     @State private var errorMessage: String?
@@ -64,6 +65,8 @@ struct CheckoutCartView: View {
                         .ignoresSafeArea()
                     ProgressView()
                 }
+
+                AnalyticsLogForTesting(analyticsLog: $analyticsLogObserver.analyticsLog)
             }
             .navigationTitle("Your Cart")
             .navigationBarTitleDisplayMode(.inline)
@@ -147,7 +150,7 @@ struct CheckoutCartView: View {
             )
             if integrationType != .eceOnly {
                 var paymentElementConfiguration = PaymentElement.Configuration()
-                paymentElementConfiguration.applePayConfiguration = PaymentElement.ApplePayConfiguration(
+                paymentElementConfiguration.applePayConfiguration = PaymentElement.Configuration.ApplePayConfiguration(
                     merchantId: "merchant.com.stripe.paymentsheet.example"
                 )
                 config.paymentElement = paymentElementConfiguration
@@ -164,12 +167,12 @@ struct CheckoutCartView: View {
                 var expressCheckoutElementConfiguration = ExpressCheckoutElement.Configuration { result in
                     confirmResult = result
                 }
-                expressCheckoutElementConfiguration.applePayConfiguration = ExpressCheckoutElement.ApplePayConfiguration(
+                expressCheckoutElementConfiguration.applePayConfiguration = ExpressCheckoutElement.Configuration.ApplePayConfiguration(
                     merchantId: "merchant.com.stripe.paymentsheet.example",
                     buttonType: expressCheckoutElementSettings.applePayButtonType.pkPaymentButtonType,
                     display: expressCheckoutElementSettings.applePayDisplay
                 )
-                expressCheckoutElementConfiguration.linkConfiguration = ExpressCheckoutElement.LinkConfiguration(
+                expressCheckoutElementConfiguration.linkConfiguration = ExpressCheckoutElement.Configuration.LinkConfiguration(
                     display: expressCheckoutElementSettings.linkDisplay
                 )
                 expressCheckoutElementConfiguration.paymentMethodOrder = expressCheckoutElementSettings.paymentMethodOrder.paymentMethodOrder

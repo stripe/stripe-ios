@@ -1,6 +1,26 @@
+"Add %ld documents" = "Legg til %ld dokumenter";
+
+"Add 1 document" = "Legg til ett dokument";
+
+"Add documents" = "Legg til dokumenter";
+
+"Answer" = "Svar";
+
+"Choose File…" = "Velg fil …";
+
+"Choose Photo…" = "Velg bilde …";
+
 "Debit cards are most likely to be accepted." = "Debetkort vil mest sannsynlig bli akseptert.";
 
+"Document type" = "Dokumenttype";
+
 "Document uploaded successfully" = "Dokumentet ble lastet opp";
+
+"Funds source" = "Kilde til midler";
+
+"How are you funding your transactions? Please list all of your sources. For example, salary, savings, investment earnings, etc." = "Hvordan finansierer du transaksjonene dine? Oppgi alle kildene dine. Dette kan være lønn, sparing, inntekt fra investeringer osv.";
+
+"Make sure your document meets following requirements." = "Sørg for at dokumentet ditt oppfyller følgende krav.";
 
 "Please try again later." = "Prøv igjen senere.";
 
@@ -8,9 +28,17 @@
 
 "Tell us about your source of funds" = "Fortell oss om midlenes kilde";
 
+"There was a problem with your previous document. Please upload a new one." = "Det oppstod et problem med det forrige dokumentet ditt. Last opp et nytt.";
+
 "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "Denne appen kan ikke bekreftes på grunn av en attesteringsfeil. Prøv på nytt senere eller kontakt utvikleren hvis problemet vedvarer.";
 
 "This app couldn't be verified. Contact the app developer for help." = "Denne appen kan ikke bekreftes. Ta kontakt med apputvikleren for å få hjelp.";
+
+"This file is larger than %@. Choose a file that is %@ or smaller." = "Denne filen er større enn %1$@. Velg en fil som er %2$@ eller mindre.";
+
+"This file type isn’t supported." = "Denne filtypen støttes ikke.";
+
+"This file type isn’t supported. Upload a %@ file." = "Denne filtypen støttes ikke. Last opp en %@-fil.";
 
 "This wallet couldn't be found. Please choose or add a wallet and try again." = "Fant ikke denne lommeboken.Velg en annen eller legg til en lommebok og prøv på nytt.";
 
@@ -20,9 +48,19 @@
 
 "This wallet verification request is invalid. Please try again." = "Denne forespørselen om lommebokbekreftelse er ugyldig. Prøv igjen.";
 
+"Upload document" = "Last opp dokument";
+
 "Upload your proof of address" = "Last opp adressebeviset ditt";
 
+"Uploaded" = "Lastet opp";
+
+"Uploading…" = "Laster opp …";
+
 "We couldn't verify ownership of this wallet. Please try again." = "Vi kan ikke bekrefte eierskapet til denne lommeboken. Prøv igjen.";
+
+"We couldn’t open this document. Please choose it again." = "Vi kan ikke åpne dette dokumentet. Velg det på nytt.";
+
+"We couldn’t upload this file. Please try again." = "Vi kan ikke laste opp denne filen. Prøv på nytt.";
 
 "We may request proof of address for larger transactions." = "Vi kan be deg oppgi adressebevis for større transaksjoner.";
 

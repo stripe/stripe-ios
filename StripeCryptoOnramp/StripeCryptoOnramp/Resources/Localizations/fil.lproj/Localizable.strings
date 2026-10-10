@@ -1,6 +1,26 @@
+"Add %ld documents" = "Magdagdag ng %ld na dokumento";
+
+"Add 1 document" = "Magdagdag ng 1 dokumento";
+
+"Add documents" = "Magdagdag ng mga dokumento";
+
+"Answer" = "Sagot";
+
+"Choose File…" = "Pumili ng File…";
+
+"Choose Photo…" = "Pumili ng Larawan…";
+
 "Debit cards are most likely to be accepted." = "Malamang na tanggapin ang mga debit card.";
 
+"Document type" = "Uri ng dokumento";
+
 "Document uploaded successfully" = "Matagumpay na na-upload ang dokumento";
+
+"Funds source" = "Pinagmumulan ng pondo";
+
+"How are you funding your transactions? Please list all of your sources. For example, salary, savings, investment earnings, etc." = "Paano mo pinopondohan ang iyong mga transaksyon? Mangyaring ilista ang lahat ng iyong mga pinagmumulan. Halimbawa, suweldo, mga ipon, mga kita sa pamumuhunan, atbp.";
+
+"Make sure your document meets following requirements." = "Tiyaking natutugunan ng iyong dokumento ang mga sumusunod na kinakailangan.";
 
 "Please try again later." = "Mangyaring subukang muli mamaya.";
 
@@ -8,9 +28,17 @@
 
 "Tell us about your source of funds" = "Sabihin sa amin ang tungkol sa pinagmulan ng iyong mga pondo";
 
+"There was a problem with your previous document. Please upload a new one." = "May problema sa nauna mong dokumento. Mangyaring mag-upload ng bago.";
+
 "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "Hindi ma-verify ang app na ito dahil sa isang error sa pagpapatunay. Mangyaring subukang muli mamaya o makipag-ugnayan sa developer kung magpapatuloy ang isyu.";
 
 "This app couldn't be verified. Contact the app developer for help." = "Hindi ma-verify ang app na ito. Makipag-ugnayan sa developer ng app para sa tulong.";
+
+"This file is larger than %@. Choose a file that is %@ or smaller." = "Ang file na ito ay mas malaki sa %1$@. Pumili ng file na %2$@ o mas maliit.";
+
+"This file type isn’t supported." = "Hindi sinusuportahan ang uri ng file na ito.";
+
+"This file type isn’t supported. Upload a %@ file." = "Hindi sinusuportahan ang uri ng file na ito. Mag-upload ng %@ na file.";
 
 "This wallet couldn't be found. Please choose or add a wallet and try again." = "Hindi mahanap ang wallet na ito. Mangyaring pumili o magdagdag ng wallet at subukang muli.";
 
@@ -20,9 +48,19 @@
 
 "This wallet verification request is invalid. Please try again." = "Hindi valid ang kahilingan sa pag-verify ng wallet na ito. Mangyaring subukang muli.";
 
+"Upload document" = "Mag-upload ng dokumento";
+
 "Upload your proof of address" = "I-upload ang iyong katibayan ng address";
 
+"Uploaded" = "Na-upload";
+
+"Uploading…" = "Ina-upload…";
+
 "We couldn't verify ownership of this wallet. Please try again." = "Hindi namin ma-verify ang pagmamay-ari ng wallet na ito. Mangyaring subukang muli.";
+
+"We couldn’t open this document. Please choose it again." = "Hindi namin mabuksan ang dokumentong ito. Mangyaring piliin itong muli.";
+
+"We couldn’t upload this file. Please try again." = "Hindi namin ma-upload ang file na ito. Mangyaring subukan muli.";
 
 "We may request proof of address for larger transactions." = "Maaari kaming humiling ng katibayan ng address para sa mas malalaking transaksyon.";
 

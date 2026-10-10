@@ -117,7 +117,6 @@ def build(dir, target_name = 'SPMTest')
       'CODE_SIGN_IDENTITY="-" ' +
       'CODE_SIGNING_REQUIRED="NO" ' +
       'CODE_SIGN_ENTITLEMENTS="" ' +
-      "LD_MAP_FILE_PATH=\"#{dir}/build/#{target_name}-LinkMap.txt\" " +
       'CODE_SIGNING_ALLOWED="NO"').to_s
       puts xcode_command
       command_succeeded = system(xcode_command)
@@ -152,10 +151,6 @@ end
 @project_dir = File.expand_path(File.join_if_safe(@script_dir, '/../../../'), Dir.getwd)
 
 @temp_dir = `mktemp -d`.chomp("\n")
-
-@archive_dir = "#{@project_dir}/build/size_tests"
-FileUtils.rm_rf(@archive_dir)
-`mkdir -p #{@archive_dir}`
 
 def setup_project(branch, directory, sdk)
   Dir.chdir(@project_dir) do
@@ -254,11 +249,6 @@ def check_size(modules, measure_branch, base_branch)
       # Checkout measure branch and build with SDK
       puts "Building with #{sdk} on #{measure_branch}...".green
       measure_compressed_size, measure_uncompressed_size = build_from_branch(measure_branch, @temp_dir, sdk + 'Size')
-
-      # Keep the xcarchive around to send to Emerge
-      `mkdir -p "#{@temp_dir}/build/SPMTest.xcarchive/Linkmaps/"`
-      `cp "#{@temp_dir}/build/#{sdk}Size-LinkMap.txt" "#{@temp_dir}/build/SPMTest.xcarchive/Linkmaps/"`
-      `mv "#{@temp_dir}/build/SPMTest.xcarchive" "#{@archive_dir}/#{sdk}.xcarchive"`
 
       measure_sdk_compressed = measure_compressed_size - unincluded_compressed_size
       measure_sdk_uncompressed = measure_uncompressed_size - unincluded_uncompressed_size

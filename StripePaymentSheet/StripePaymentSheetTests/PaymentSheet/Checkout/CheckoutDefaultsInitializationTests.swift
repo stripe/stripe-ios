@@ -270,6 +270,26 @@ final class CheckoutDefaultsInitializationTests: XCTestCase {
         XCTAssertNil(paymentElement.embeddedPaymentElement.configuration.shippingDetails())
     }
 
+    func testInitLoadsAddressSpecsWithoutPaymentElement() async throws {
+        // Given an ECE-only Checkout integration and address specs that haven't been loaded yet
+        stubCheckoutSessionRequests()
+        let originalAddressSpecProvider = AddressSpecProvider.shared
+        AddressSpecProvider.shared = AddressSpecProvider()
+        defer { AddressSpecProvider.shared = originalAddressSpecProvider }
+        XCTAssertTrue(AddressSpecProvider.shared.countries.isEmpty)
+
+        var configuration = CheckoutController.Configuration(clientSecret: clientSecret, returnURL: "stripe-ios-test://checkout-return")
+        configuration.apiClient = STPAPIClient(publishableKey: "pk_test_123")
+        configuration.expressCheckoutElement = .init { _ in }
+
+        // When Checkout initializes
+        let checkout = try await CheckoutController(configuration: configuration)
+
+        // Then address specs are loaded so address forms (e.g. in the Link wallet) have countries to show
+        XCTAssertNil(checkout.paymentElement)
+        XCTAssertFalse(AddressSpecProvider.shared.countries.isEmpty)
+    }
+
     // MARK: - Stubs
 
     private func stubCheckoutSessionRequests(
