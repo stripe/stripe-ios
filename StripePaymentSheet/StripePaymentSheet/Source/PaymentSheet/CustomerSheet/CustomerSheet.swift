@@ -29,7 +29,7 @@ public class CustomerSheet {
     private let integrationType: IntegrationType
     let configuration: CustomerSheet.Configuration
 
-    internal typealias CustomerSheetCompletion = (CustomerSheetResult) -> Void
+    internal typealias CustomerSheetCompletion = @MainActor (CustomerSheetResult) -> Void
 
     private var initEvent: STPAnalyticEvent {
         switch self.integrationType {
@@ -130,7 +130,7 @@ public class CustomerSheet {
     }
 
     public func present(from presentingViewController: UIViewController,
-                        completion csCompletion: @escaping (CustomerSheetResult) -> Void
+                        completion csCompletion: @escaping @MainActor (CustomerSheetResult) -> Void
     ) {
         present(from: presentingViewController, completion: csCompletion, onDismiss: nil)
     }
@@ -163,14 +163,18 @@ public class CustomerSheet {
             let error = CustomerSheetError.unknown(
                 debugDescription: "presentingViewController is already presenting a view controller"
             )
-            csCompletion(.error(error))
+            Task { @MainActor in
+                csCompletion(.error(error))
+            }
             return
         }
         guard let customerSheetDataSource = createCustomerSheetDataSource() else {
             let error = CustomerSheetError.unknown(
                 debugDescription: "Unable to determine configuration"
             )
-            csCompletion(.error(error))
+            Task { @MainActor in
+                csCompletion(.error(error))
+            }
             return
         }
 
@@ -211,8 +215,8 @@ public class CustomerSheet {
                 STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .customerSheetLoadFailed,
                                                                      duration: Date().timeIntervalSince(loadingStartDate),
                                                                      error: error)
-                csCompletion(.error(CustomerSheetError.errorFetchingSavedPaymentMethods(error)))
-                DispatchQueue.main.async {
+                Task { @MainActor in
+                    csCompletion(.error(CustomerSheetError.errorFetchingSavedPaymentMethods(error)))
                     self.bottomSheetViewController.dismiss(animated: true)
                 }
             }
