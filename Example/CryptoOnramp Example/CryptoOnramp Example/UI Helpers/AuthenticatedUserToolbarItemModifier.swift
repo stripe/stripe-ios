@@ -200,7 +200,7 @@ private struct AuthenticatedUserToolbarItemModifier: ViewModifier {
     }
 
     private func fulfillAdditionalKYCRequirement() {
-        guard !isFulfillingAdditionalKYC else { return }
+        guard let coordinator, !isFulfillingAdditionalKYC else { return }
         isFulfillingAdditionalKYC = true
 
         Task { @MainActor in
