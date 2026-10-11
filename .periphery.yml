@@ -18,3 +18,6 @@ no_retain_spi: ["STP"]
 build_arguments:
   - -destination
   - 'generic/platform=iOS Simulator'
+  - SWIFT_SUPPRESS_WARNINGS=YES
+  - GCC_TREAT_WARNINGS_AS_ERRORS=NO
+  - SWIFT_TREAT_WARNINGS_AS_ERRORS=NO
