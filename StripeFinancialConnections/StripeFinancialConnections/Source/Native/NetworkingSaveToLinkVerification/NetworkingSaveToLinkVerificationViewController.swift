@@ -35,7 +35,6 @@ final class NetworkingSaveToLinkVerificationViewController: UIViewController {
         otpView.delegate = self
         return otpView
     }()
-
     init(dataSource: NetworkingSaveToLinkVerificationDataSource) {
         self.dataSource = dataSource
         super.init(nibName: nil, bundle: nil)
@@ -47,7 +46,7 @@ final class NetworkingSaveToLinkVerificationViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = FinancialConnectionsAppearance.Colors.background
+        view.backgroundColor = FinancialConnectionsAppearance.Colors.surfacePrimary
 
         otpView.startVerification()
     }
@@ -61,7 +60,8 @@ final class NetworkingSaveToLinkVerificationViewController: UIViewController {
                 iconView: nil,
                 title: String.Localized.confirm_its_you,
                 subtitle: String(format: String.Localized.enter_code_sent_to, AuthFlowHelpers.formatRedactedPhoneNumber(redactedPhoneNumber)),
-                contentView: otpView
+                contentView: otpView,
+                appearance: dataSource.manifest.appearance
             ),
             footerView: PaneLayoutView.createFooterView(
                 primaryButtonConfiguration: nil,
@@ -83,6 +83,17 @@ final class NetworkingSaveToLinkVerificationViewController: UIViewController {
             ).footerView
         )
         paneLayoutView.addTo(view: view)
+    }
+
+    private func focusOTPTextFieldAfterTransition() {
+        if let transitionCoordinator {
+            transitionCoordinator.animate(alongsideTransition: nil) { [weak self] context in
+                guard !context.isCancelled else { return }
+                self?.otpView.otpTextField.becomeFirstResponder()
+            }
+        } else {
+            otpView.otpTextField.becomeFirstResponder()
+        }
     }
 
     private func showLoadingView(_ show: Bool) {
@@ -138,6 +149,7 @@ extension NetworkingSaveToLinkVerificationViewController: NetworkingOTPViewDeleg
     func networkingOTPView(_ view: NetworkingOTPView, didStartVerification consumerSession: ConsumerSessionData) {
         showLoadingView(false)
         showContent(redactedPhoneNumber: consumerSession.redactedFormattedPhoneNumber)
+        focusOTPTextFieldAfterTransition()
     }
 
     func networkingOTPView(_ view: NetworkingOTPView, didFailToStartVerification error: Error) {

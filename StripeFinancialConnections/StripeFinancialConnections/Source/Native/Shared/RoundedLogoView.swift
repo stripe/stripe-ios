@@ -8,13 +8,19 @@
 @_spi(STP) import StripeUICore
 import UIKit
 
-func CreateRoundedLogoView(urlString: String) -> UIView {
-    let cornerRadius: CGFloat = 16.0
+func CreateRoundedLogoView(urlString: String, appearance: FinancialConnectionsAppearance) -> UIView {
+    let isLink = appearance.colors == .link
+    let cornerRadius: CGFloat = isLink ? 18.0 : 16.0
     let shadowContainerView = UIView()
-    shadowContainerView.layer.shadowColor = FinancialConnectionsAppearance.Colors.shadow.cgColor
-    shadowContainerView.layer.shadowOpacity = 0.18
-    shadowContainerView.layer.shadowOffset = CGSize(width: 0, height: 3)
-    shadowContainerView.layer.shadowRadius = 5
+    if isLink {
+        shadowContainerView.layer.borderWidth = 0.5
+        shadowContainerView.layer.borderColor = FinancialConnectionsAppearance.Colors.borderOnCard.cgColor
+    } else {
+        shadowContainerView.layer.shadowColor = FinancialConnectionsAppearance.Colors.shadow.cgColor
+        shadowContainerView.layer.shadowOpacity = 0.18
+        shadowContainerView.layer.shadowOffset = CGSize(width: 0, height: 3)
+        shadowContainerView.layer.shadowRadius = 5
+    }
     shadowContainerView.layer.cornerRadius = cornerRadius
     let radius: CGFloat = 72.0
     let imageView = UIImageView()

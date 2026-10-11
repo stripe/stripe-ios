@@ -27,7 +27,7 @@ final class PrepaneImageView: UIView {
         super.init(frame: .zero)
 
         // background color of the whole view
-        centeringView.backgroundColor = FinancialConnectionsAppearance.Colors.backgroundHighlighted
+        centeringView.backgroundColor = FinancialConnectionsAppearance.Colors.surfaceTertiary
 
         addAndPinSubview(
             centeringView,
@@ -73,7 +73,7 @@ final class PrepaneImageView: UIView {
         super.traitCollectionDidChange(previousTraitCollection)
         guard traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) else { return }
 
-        imageLayer?.borderColor = FinancialConnectionsAppearance.Colors.backgroundSecondary.cgColor
+        imageLayer?.borderColor = FinancialConnectionsAppearance.Colors.surfaceSecondary.cgColor
         imageLayer?.shadowColor = FinancialConnectionsAppearance.Colors.borderNeutral.cgColor
     }
 }
@@ -82,7 +82,7 @@ private func CreatePhoneBackgroundView(imageView: UIView) -> (UIView, CALayer) {
     let containerView = UIView()
     let borderWidth: CGFloat = 8
     imageView.layer.borderWidth = borderWidth
-    imageView.layer.borderColor = FinancialConnectionsAppearance.Colors.backgroundSecondary.cgColor
+    imageView.layer.borderColor = FinancialConnectionsAppearance.Colors.surfaceSecondary.cgColor
     imageView.layer.shadowRadius = 10
     imageView.layer.shadowColor = FinancialConnectionsAppearance.Colors.borderNeutral.cgColor
     imageView.layer.shadowOpacity = 1.0
@@ -143,7 +143,7 @@ private final class GIFImageView: UIView, WKNavigationDelegate {
         webView.scrollView.isScrollEnabled = false
         webView.isUserInteractionEnabled = false
         webView.loadHTMLString(htmlString, baseURL: nil)
-        webView.backgroundColor = FinancialConnectionsAppearance.Colors.background
+        webView.backgroundColor = FinancialConnectionsAppearance.Colors.surfacePrimary
         addAndPinSubview(webView)
     }
 

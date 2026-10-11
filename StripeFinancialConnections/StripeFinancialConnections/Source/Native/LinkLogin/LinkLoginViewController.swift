@@ -72,7 +72,7 @@ final class LinkLoginViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = FinancialConnectionsAppearance.Colors.background
+        view.backgroundColor = FinancialConnectionsAppearance.Colors.surfacePrimary
 
         showLoadingView(true)
         dataSource
@@ -100,7 +100,8 @@ final class LinkLoginViewController: UIViewController {
             iconView: nil,
             title: linkLoginPane.title,
             subtitle: linkLoginPane.body,
-            contentView: formView
+            contentView: formView,
+            appearance: dataSource.manifest.appearance
         )
         let footerView = PaneLayoutView.createFooterView(
             primaryButtonConfiguration: PaneLayoutView.ButtonConfiguration(

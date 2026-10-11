@@ -35,7 +35,7 @@ final class TerminalErrorViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = FinancialConnectionsAppearance.Colors.background
+        view.backgroundColor = FinancialConnectionsAppearance.Colors.surfacePrimary
         navigationItem.hidesBackButton = true
 
         let terminalErrorView = TerminalErrorView(
