@@ -53,10 +53,20 @@ extension STPAPIClient {
         case .deferredIntent(let intentConfig):
             parameters["type"] = "deferred_intent"
             if let sellerDetails = intentConfig.sellerDetails {
-                parameters["seller_details"] = [
-                    "network_id": sellerDetails.networkId,
-                    "external_id": sellerDetails.externalId,
-                ]
+                var sellerDetailsParams: [String: String] = [:]
+                if let networkId = sellerDetails.networkId {
+                    sellerDetailsParams["network_id"] = networkId
+                }
+                if let externalId = sellerDetails.externalId {
+                    sellerDetailsParams["external_id"] = externalId
+                }
+                if let businessName = sellerDetails.businessName {
+                    sellerDetailsParams["business_name"] = businessName
+                }
+                if let networkBusinessProfile = sellerDetails.networkBusinessProfile {
+                    sellerDetailsParams["network_business_profile"] = networkBusinessProfile
+                }
+                parameters["seller_details"] = sellerDetailsParams
             }
             parameters["deferred_intent"] = {
                 var deferredIntent = [String: Any]()
@@ -175,6 +185,21 @@ extension STPAPIClient {
         clientDefaultPaymentMethod: String?,
         configuration: PaymentElementConfiguration
     ) async throws -> STPElementsSession {
+        // Add beta header when networkBusinessProfile is provided
+        let addedBeta = intentConfig.sellerDetails?.networkBusinessProfile != nil
+        if addedBeta {
+            var betas = self.betas
+            betas.insert("payment_element_seller_payment_methods_beta_1=v1")
+            self.betas = betas
+        }
+        defer {
+            if addedBeta {
+                var betas = self.betas
+                betas.remove("payment_element_seller_payment_methods_beta_1=v1")
+                self.betas = betas
+            }
+        }
+
         let parameters = makeElementsSessionsParams(
             mode: .deferredIntent(intentConfig),
             epmConfiguration: configuration.externalPaymentMethodConfiguration,
