@@ -170,7 +170,7 @@ final class CheckoutUnitTests: XCTestCase {
             }
             XCTFail("Expected CheckoutError.apiError")
         } catch let error as CheckoutError {
-            guard case .apiError(let message) = error else {
+            guard case .apiError(let message, _) = error else {
                 XCTFail("Expected .apiError, got \(error)")
                 return
             }
@@ -207,7 +207,7 @@ final class CheckoutUnitTests: XCTestCase {
             }
             XCTFail("Expected CheckoutError.apiError")
         } catch let error as CheckoutError {
-            guard case .apiError(let message) = error else {
+            guard case .apiError(let message, _) = error else {
                 XCTFail("Expected .apiError, got \(error)")
                 return
             }

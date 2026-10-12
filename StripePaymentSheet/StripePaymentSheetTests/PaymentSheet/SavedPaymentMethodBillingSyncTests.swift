@@ -4,6 +4,7 @@
 //
 
 import OHHTTPStubs
+@_spi(STP) import StripeCore
 import StripeCoreTestUtils
 @testable @_spi(STP) import StripePaymentSheet
 import UIKit
@@ -57,6 +58,29 @@ final class SavedPaymentMethodBillingSyncTests: XCTestCase {
         XCTAssertTrue(labels(in: sut).contains { $0.text == "Tax update failed" })
     }
 
+    func testLiveFailureRestoresSelectionAndShowsRequestID() async {
+        let underlying = NSError(domain: STPError.stripeDomain, code: 50, userInfo: [
+            NSLocalizedDescriptionKey: "Verbose tax update details",
+            STPError.stripeErrorTypeKey: "invalid_request_error",
+            STPError.stripeRequestIDKey: "req_tax_update",
+        ])
+        let error = CheckoutError.apiError(message: underlying.localizedDescription, underlyingError: underlying)
+        let (sut, updater) = makeController(error: error, isTestmode: false)
+        sut.loadViewIfNeeded()
+        let rows = paymentMethodRows(in: sut)
+
+        rows[1].rowButton.handleTap()
+        let interactionRestored = expectation(for: sut.view, keyPath: \.isUserInteractionEnabled, equalsToValue: true)
+        await fulfillment(of: [updater.updateStarted, interactionRestored])
+
+        XCTAssertTrue(rows[0].isSelected)
+        XCTAssertFalse(rows[1].isSelected)
+        XCTAssertTrue(labels(in: sut).contains {
+            $0.text == NSError.stp_unexpectedErrorMessage() + " (req_tax_update)"
+        })
+        XCTAssertFalse(labels(in: sut).contains { $0.text == underlying.localizedDescription })
+    }
+
     func testHorizontalSelectionWithoutBillingTaxCloses() async throws {
         // Given
         let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration())
@@ -82,7 +106,8 @@ final class SavedPaymentMethodBillingSyncTests: XCTestCase {
 private extension SavedPaymentMethodBillingSyncTests {
     func makeController(
         error: Error? = nil,
-        suspendUpdate: Bool = false
+        suspendUpdate: Bool = false,
+        isTestmode: Bool = true
     ) -> (VerticalSavedPaymentMethodsViewController, MockCheckoutSessionBillingAddressUpdater) {
         let intent = Intent._testCheckoutSession(
             automaticTaxEnabled: true,
@@ -96,8 +121,10 @@ private extension SavedPaymentMethodBillingSyncTests {
             error: error,
             suspendUpdate: suspendUpdate
         )
+        var configuration = EmbeddedPaymentElement.Configuration()
+        configuration.apiClient = STPAPIClient(publishableKey: isTestmode ? "pk_test_example" : "pk_live_example")
         let viewController = VerticalSavedPaymentMethodsViewController(
-            configuration: EmbeddedPaymentElement.Configuration(),
+            configuration: configuration,
             intent: intent,
             checkout: updater,
             selectedPaymentMethod: paymentMethods[0],

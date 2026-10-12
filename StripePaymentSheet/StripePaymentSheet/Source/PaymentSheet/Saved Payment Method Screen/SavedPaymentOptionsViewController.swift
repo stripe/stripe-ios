@@ -706,6 +706,7 @@ extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
             return
         }
         let updateConfig = UpdatePaymentMethodViewController.Configuration(paymentMethod: paymentMethod,
+                                                                           isTestmode: paymentSheetConfiguration.apiClient.isTestmode,
                                                                            appearance: appearance,
                                                                            billingDetailsCollectionConfiguration: paymentSheetConfiguration.billingDetailsCollectionConfiguration,
                                                                            hostedSurface: .paymentSheet,

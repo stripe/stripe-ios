@@ -13,6 +13,7 @@ import UIKit
 extension UpdatePaymentMethodViewController {
     struct Configuration {
         let paymentMethod: STPPaymentMethod
+        let isTestmode: Bool
         let appearance: PaymentSheet.Appearance
         let billingDetailsCollectionConfiguration: PaymentSheet.BillingDetailsCollectionConfiguration
         let hostedSurface: HostedSurface
@@ -91,11 +92,12 @@ extension UpdatePaymentMethodViewController {
             }
         }
 
-        init(paymentMethod: STPPaymentMethod, appearance: PaymentSheet.Appearance, billingDetailsCollectionConfiguration: PaymentSheet.BillingDetailsCollectionConfiguration, hostedSurface: HostedSurface, cardBrandFilter: CardBrandFilter = .default, canRemove: Bool, canUpdate: Bool, isCBCEligible: Bool, allowsSetAsDefaultPM: Bool = false, isDefault: Bool = false) {
+        init(paymentMethod: STPPaymentMethod, isTestmode: Bool, appearance: PaymentSheet.Appearance, billingDetailsCollectionConfiguration: PaymentSheet.BillingDetailsCollectionConfiguration, hostedSurface: HostedSurface, cardBrandFilter: CardBrandFilter = .default, canRemove: Bool, canUpdate: Bool, isCBCEligible: Bool, allowsSetAsDefaultPM: Bool = false, isDefault: Bool = false) {
             if !PaymentSheet.supportedSavedPaymentMethods.contains(paymentMethod.type) {
                 assertionFailure("Unsupported payment type \(paymentMethod.type) in UpdatePaymentMethodViewModel")
             }
             self.paymentMethod = paymentMethod
+            self.isTestmode = isTestmode
             self.appearance = appearance
             self.billingDetailsCollectionConfiguration = billingDetailsCollectionConfiguration
             self.hostedSurface = hostedSurface

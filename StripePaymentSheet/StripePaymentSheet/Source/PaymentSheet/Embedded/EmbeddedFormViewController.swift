@@ -237,7 +237,7 @@ class EmbeddedFormViewController: UIViewController {
     }
 
     private func updateError() {
-        errorLabel.text = error?.nonGenericDescription
+        errorLabel.text = error?.userFacingDescription(isTestmode: configuration.apiClient.isTestmode)
         animateHeightChange({ [self] in
             errorLabel.setHiddenIfNecessary(error == nil)
             if error != nil {

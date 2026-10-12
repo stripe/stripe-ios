@@ -82,6 +82,7 @@ extension LinkSignUpViewControllerSnapshotTests {
 
         return LinkSignUpViewController(
             accountService: LinkAccountService(elementsSession: elementsSession),
+            isTestmode: true,
             linkAccount: linkAccount,
             brand: brand,
             defaultBillingDetails: nil

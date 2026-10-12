@@ -28,6 +28,7 @@ public final class CurrencySelectorElementUIView: UIView {
     private weak var currencySelectionDelegate: CurrencySelectorElementCheckoutDelegate?
     private let appearance: CurrencySelectorElement.Appearance
     private let checkoutSessionId: String
+    private let isTestmode: Bool
     private let flagImageManager = AdaptivePricingFlagImageManager()
     private var selectorView: TwoOptionSelectorView?
     private var sessionCurrency: String
@@ -53,6 +54,7 @@ public final class CurrencySelectorElementUIView: UIView {
         self.currencySelectionDelegate = delegate
         self.appearance = appearance
         self.checkoutSessionId = session.id
+        self.isTestmode = !session.livemode
         self.needsUpdateSuperviewHeight = needsUpdateSuperviewHeight
         let currency = CurrencySelectorUtilities.CurrencyCode(rawCurrency)
         self.sessionCurrency = currency.apiValue
@@ -225,7 +227,7 @@ extension CurrencySelectorElementUIView: TwoOptionSelectorViewDelegate {
                         ) { _, checkoutSessionId in checkoutSessionId }
                     )
                 )
-                showError(error.localizedDescription)
+                showError(isTestmode ? error.localizedDescription : error.userFacingDescription(isTestmode: false))
             }
             selectorView?.setEnabled(isUserInteractionEnabled)
         }

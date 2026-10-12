@@ -39,10 +39,10 @@ final class LinkUtils {
         }
     }
 
-    static func getLocalizedErrorMessage(from error: Error) -> String {
+    static func getLocalizedErrorMessage(from error: Error, isTestmode: Bool) -> String {
         guard let errorCodeString = error._stp_error_code,
               let errorCode = ConsumerErrorCode(rawValue: errorCodeString) else {
-            return error.localizedDescription
+            return isTestmode ? error.localizedDescription : error.userFacingDescription(isTestmode: false)
         }
 
         return errorCode.localizedDescription

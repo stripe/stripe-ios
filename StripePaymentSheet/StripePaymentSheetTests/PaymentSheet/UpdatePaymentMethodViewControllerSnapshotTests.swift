@@ -215,6 +215,7 @@ final class UpdatePaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase 
                                                                                                        email: .never,
                                                                                                        address: addressCollectionMode)
         let updateConfig = UpdatePaymentMethodViewController.Configuration(paymentMethod: paymentMethod,
+                                                                           isTestmode: true,
                                                                            appearance: appearance,
                                                                            billingDetailsCollectionConfiguration: billingDetailsCollectionConfiguration,
                                                                            hostedSurface: .paymentSheet,

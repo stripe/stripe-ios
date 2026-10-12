@@ -423,7 +423,7 @@ extension VerticalSavedPaymentMethodsViewController: SavedPaymentMethodRowButton
 
     private func setError(_ error: Error?) {
         let shouldHideError = error == nil
-        errorLabel.text = error?.nonGenericDescription
+        errorLabel.text = error?.userFacingDescription(isTestmode: configuration.apiClient.isTestmode)
         animateHeightChange { [self] in
             if let lastPaymentMethodRow = paymentMethodRows.last {
                 stackView.setCustomSpacing(shouldHideError ? 0 : 12, after: lastPaymentMethodRow)
@@ -452,6 +452,7 @@ extension VerticalSavedPaymentMethodsViewController: SavedPaymentMethodRowButton
 
     func didSelectUpdateButton(_ button: SavedPaymentMethodRowButton, with paymentMethod: STPPaymentMethod) {
         let updateConfig = UpdatePaymentMethodViewController.Configuration(paymentMethod: paymentMethod,
+                                                                           isTestmode: configuration.apiClient.isTestmode,
                                                                            appearance: configuration.appearance,
                                                                            billingDetailsCollectionConfiguration: configuration.billingDetailsCollectionConfiguration,
                                                                            hostedSurface: .paymentSheet,

@@ -6,6 +6,7 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
+@_spi(STP) import StripeCore
 import UIKit
 
 extension PayWithLinkViewController {
@@ -22,6 +23,7 @@ extension PayWithLinkViewController {
             let accountService = LinkAccountService(apiClient: context.configuration.apiClient, elementsSession: context.elementsSession)
             let viewController = LinkSignUpViewController(
                 accountService: accountService,
+                isTestmode: context.configuration.apiClient.isTestmode,
                 linkAccount: linkAccount,
                 brand: context.linkBrand,
                 country: context.elementsSession.countryCode,

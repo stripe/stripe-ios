@@ -291,7 +291,7 @@ extension PayWithLinkViewController {
         }
 
         func updateErrorLabel(for error: Error?) {
-            errorView.text = error?.nonGenericDescription
+            errorView.text = error?.userFacingDescription(isTestmode: context.configuration.apiClient.isTestmode)
             containerView.toggleArrangedSubview(errorView, shouldShow: error != nil, animated: true)
         }
 

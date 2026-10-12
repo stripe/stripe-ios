@@ -185,6 +185,7 @@ final class LinkSignUpViewController: UIViewController {
 
     init(
         accountService: LinkAccountServiceProtocol,
+        isTestmode: Bool,
         linkAccount: PaymentSheetLinkAccount?,
         brand: LinkBrand = .link,
         country: String? = nil,
@@ -193,6 +194,7 @@ final class LinkSignUpViewController: UIViewController {
     ) {
         self.viewModel = LinkSignUpViewModel(
             accountService: accountService,
+            isTestmode: isTestmode,
             linkAccount: linkAccount,
             legalName: defaultBillingDetails?.name,
             country: country ?? defaultBillingDetails?.address.country

@@ -309,9 +309,8 @@ class EmbeddedPaymentMethodsView: UIView {
         selectedRowButton = nil
     }
 
-    /// Displays an error below the payment method rows, or clears it when `error` is nil.
-    func setError(_ error: Error?, animated: Bool = true) {
-        let message = error?.nonGenericDescription
+    /// Displays an error below the payment method rows, or clears it when `message` is nil.
+    func setError(_ message: String?, animated: Bool = true) {
         guard message != errorLabel.text else { return }
         errorLabel.text = message
         let updates = {
