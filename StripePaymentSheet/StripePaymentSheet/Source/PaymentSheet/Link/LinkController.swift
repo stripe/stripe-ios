@@ -42,6 +42,31 @@ import UIKit
         @_spi(STP) @_spi(LinkControllerPreview) public let sublabel: String?
     }
 
+    /// Copy and consent for `presentForAuthentication`, so another Stripe product can reuse Link's sign-in and
+    /// sign-up screens.
+    @_spi(STP) public struct AuthenticationContent {
+        /// Title of the sign-in or sign-up screen.
+        @_spi(STP) public let title: String
+        /// Subtitle of the sign-in or sign-up screen.
+        @_spi(STP) public let subtitle: String
+        /// The consent recorded when a new account is created.
+        @_spi(STP) public let consentAction: PaymentSheetLinkAccount.ConsentAction
+
+        @_spi(STP) public init(title: String, subtitle: String, consentAction: PaymentSheetLinkAccount.ConsentAction) {
+            self.title = title
+            self.subtitle = subtitle
+            self.consentAction = consentAction
+        }
+    }
+
+    /// The result of `presentForAuthentication`.
+    @frozen @_spi(STP) public enum AuthenticationResult {
+        /// The user signed in or signed up; `linkAccount` holds the verified session.
+        case authenticated
+        /// The user dismissed Link.
+        case canceled
+    }
+
     @frozen @_spi(STP) public enum VerificationResult {
         /// Verification was completed successfully.
         case completed
@@ -382,9 +407,12 @@ import UIKit
             email: email,
             linkAccountService: linkAccountService,
             requestSurface: requestSurface
-        ) { result in
+        ) { [weak self] result in
             switch result {
             case .success(let linkAccount):
+                // Set directly so calls made right after completion (e.g. presentForAuthentication) see the account;
+                // the shared-context observer only updates it asynchronously.
+                self?.linkAccount = linkAccount
                 LinkAccountContext.shared.account = linkAccount
                 completion(.success(linkAccount?.isRegistered ?? false))
             case .failure(let error):
@@ -414,6 +442,37 @@ import UIKit
                 } else {
                     completion(.failure(PaymentSheetError.linkLookupNotFound(serverErrorMessage: "")))
                 }
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+
+    /// Restores a Link consumer session that was started outside of this `LinkController` (e.g. by another Stripe SDK module),
+    /// without presenting any UI. The session is refreshed to get its current verification state.
+    ///
+    /// Check `linkAccount?.sessionState` afterwards: `.verified` needs no further authentication,
+    /// `.requiresVerification` still needs the user to verify, e.g. with `presentForAuthentication`.
+    ///
+    /// - Parameter consumerSessionClientSecret: The client secret of the consumer session to restore.
+    /// - Parameter consumerPublishableKey: The publishable key of the consumer account, if known.
+    /// - Parameter completion: A closure that is called when the session is restored, or with an error (e.g. an expired session).
+    @_spi(STP) public func restoreConsumerSession(
+        consumerSessionClientSecret: String,
+        consumerPublishableKey: String?,
+        completion: @escaping (Result<Void, Error>) -> Void
+    ) {
+        linkAccountService.restoreConsumerSession(
+            consumerSessionClientSecret: consumerSessionClientSecret,
+            consumerPublishableKey: consumerPublishableKey,
+            requestSurface: requestSurface
+        ) { [weak self] result in
+            switch result {
+            case .success(let linkAccount):
+                // Set directly so calls made right after completion see the account, then share it.
+                self?.linkAccount = linkAccount
+                LinkAccountContext.shared.account = linkAccount
+                completion(.success(()))
             case .failure(let error):
                 completion(.failure(error))
             }
@@ -482,6 +541,106 @@ import UIKit
             case .canceled, .switchAccount:
                 completion(.success(.canceled))
             case .failed(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+
+    /// Presents Link's own sign-in and sign-up screens, and one-time code verification when needed, without the
+    /// wallet. Completes once the session is verified, so the caller can continue with its own flow.
+    ///
+    /// - Parameter email: Prefills the email and looks it up first. When nil, Link asks for it.
+    /// - Parameter phoneNumber: Prefills the sign-up phone number, in E.164 format.
+    /// - Parameter content: The screen copy and the consent recorded for a new account.
+    /// - Parameter presentingViewController: The view controller from which to present Link.
+    /// - Parameter completion: `.authenticated` with `linkAccount` verified, `.canceled`, or an error.
+    @_spi(STP) public func presentForAuthentication(
+        email: String?,
+        phoneNumber: String? = nil,
+        content: AuthenticationContent,
+        from presentingViewController: UIViewController,
+        completion: @escaping (Result<AuthenticationResult, Error>) -> Void
+    ) {
+        if let email, let linkAccount, linkAccount.sessionState == .verified,
+           linkAccount.email.lowercased() == email.lowercased() {
+            completion(.success(.authenticated))
+            return
+        }
+
+        let present = { [weak self] (email: String?) in
+            guard let self else { return }
+            var paymentElementConfiguration = self.paymentElementConfiguration
+            if let email {
+                paymentElementConfiguration.defaultBillingDetails.email = email
+            }
+            if let phoneNumber {
+                paymentElementConfiguration.defaultBillingDetails.phone = phoneNumber
+            }
+            let linkController = PayWithNativeLinkController(
+                mode: .authentication,
+                intent: self.intent,
+                elementsSession: self.elementsSession,
+                configuration: paymentElementConfiguration,
+                logPayment: false,
+                analyticsHelper: self.analyticsHelper,
+                linkAppearance: self.appearance,
+                linkConfiguration: self.configuration
+            )
+            linkController.presentForAuthentication(
+                from: presentingViewController,
+                content: content,
+                requestSurface: self.requestSurface
+            ) { [weak self] result in
+                switch result {
+                case .success(let linkAccount?):
+                    self?.linkAccount = linkAccount
+                    LinkAccountContext.shared.account = linkAccount
+                    completion(.success(.authenticated))
+                case .success(nil):
+                    completion(.success(.canceled))
+                case .failure(let error):
+                    completion(.failure(error))
+                }
+            }
+        }
+
+        guard let email else {
+            LinkAccountContext.shared.account = nil
+            present(nil)
+            return
+        }
+        lookupConsumer(with: email) { [weak self] result in
+            switch result {
+            case .success:
+                guard let self, let linkAccount = self.linkAccount,
+                      linkAccount.sessionState == .requiresVerification else {
+                    present(email)
+                    return
+                }
+                // An existing account only needs its code, which Link asks for in its verification dialog.
+                let verificationController = LinkVerificationController(
+                    mode: .inlineLogin,
+                    linkAccount: linkAccount,
+                    brand: self.resolvedLinkBrand,
+                    configuration: self.paymentElementConfiguration,
+                    appearance: self.appearance
+                )
+                verificationController.present(from: presentingViewController) { result in
+                    switch result {
+                    case .completed:
+                        LinkAccountContext.shared.account = linkAccount
+                        completion(.success(.authenticated))
+                    case .canceled:
+                        completion(.success(.canceled))
+                    case .switchAccount:
+                        // "Not you?" continues in Link's sheet, where the user enters another email.
+                        LinkAccountContext.shared.account = nil
+                        present(nil)
+                    case .failed(let error):
+                        completion(.failure(error))
+                    }
+                }
+            case .failure(let error):
                 completion(.failure(error))
             }
         }
@@ -1456,6 +1615,30 @@ extension LinkController: LinkFullConsentViewControllerDelegate {
                 switch result {
                 case .success(let result):
                     continuation.resume(returning: result)
+                case .failure(let error):
+                    continuation.resume(throwing: error)
+                }
+            }
+        }
+    }
+
+    /// Restores a Link consumer session that was started outside of this `LinkController`, without presenting any UI.
+    ///
+    /// - Parameter consumerSessionClientSecret: The client secret of the consumer session to restore.
+    /// - Parameter consumerPublishableKey: The publishable key of the consumer account, if known.
+    /// Throws if the session can't be restored (e.g. it expired), or an API error occurs.
+    func restoreConsumerSession(
+        consumerSessionClientSecret: String,
+        consumerPublishableKey: String?
+    ) async throws {
+        try await withCheckedThrowingContinuation { continuation in
+            restoreConsumerSession(
+                consumerSessionClientSecret: consumerSessionClientSecret,
+                consumerPublishableKey: consumerPublishableKey
+            ) { result in
+                switch result {
+                case .success:
+                    continuation.resume(returning: ())
                 case .failure(let error):
                     continuation.resume(throwing: error)
                 }

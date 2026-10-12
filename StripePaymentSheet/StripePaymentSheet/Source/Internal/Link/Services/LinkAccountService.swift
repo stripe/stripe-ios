@@ -58,6 +58,21 @@ protocol LinkAccountServiceProtocol {
         requestSurface: LinkRequestSurface,
         completion: @escaping (Result<LookupLinkAuthIntentResponse?, Error>) -> Void
     )
+
+    /// Restores a consumer session that was started outside of this Link integration (e.g. by another SDK module),
+    /// refreshing it to get its current verification state.
+    ///
+    /// - Parameters:
+    ///   - consumerSessionClientSecret: The client secret of the consumer session to restore.
+    ///   - consumerPublishableKey: The publishable key of the consumer account, if known.
+    ///   - requestSurface: The request surface to use for the API call.
+    ///   - completion: Completion block with the restored account.
+    func restoreConsumerSession(
+        consumerSessionClientSecret: String,
+        consumerPublishableKey: String?,
+        requestSurface: LinkRequestSurface,
+        completion: @escaping (Result<PaymentSheetLinkAccount, Error>) -> Void
+    )
 }
 
 final class LinkAccountService: LinkAccountServiceProtocol {
@@ -277,6 +292,33 @@ final class LinkAccountService: LinkAccountServiceProtocol {
                 STPAnalyticsClient.sharedClient.logLinkAccountLookupFailure(error: error)
                 completion(.failure(error))
             }
+        }
+    }
+
+    func restoreConsumerSession(
+        consumerSessionClientSecret: String,
+        consumerPublishableKey: String?,
+        requestSurface: LinkRequestSurface,
+        completion: @escaping (Result<PaymentSheetLinkAccount, Error>) -> Void
+    ) {
+        apiClient.refreshSession(
+            consumerSessionClientSecret: consumerSessionClientSecret,
+            requestSurface: requestSurface
+        ) { [apiClient, useMobileEndpoints, canSyncAttestationState] result in
+            completion(
+                result.map { session in
+                    PaymentSheetLinkAccount(
+                        email: session.emailAddress,
+                        session: session,
+                        publishableKey: consumerPublishableKey,
+                        displayablePaymentDetails: nil,
+                        apiClient: apiClient,
+                        useMobileEndpoints: useMobileEndpoints,
+                        canSyncAttestationState: canSyncAttestationState,
+                        requestSurface: requestSurface
+                    )
+                }
+            )
         }
     }
 }
