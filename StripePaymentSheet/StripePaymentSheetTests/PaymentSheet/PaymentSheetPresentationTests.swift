@@ -385,7 +385,8 @@ final class PaymentSheetPresentationTests: XCTestCase {
 
         // Then the solid header has no separator or shadow at rest
         XCTAssertEqual(navigationBar.standardAppearance.backgroundColor, sheet.appearance.colors.background)
-        XCTAssertEqual(navigationBar.standardAppearance.shadowColor, .clear)
+        // UIKit can represent a disabled separator with nil or a transparent color.
+        XCTAssertEqual(navigationBar.standardAppearance.shadowColor?.cgColor.alpha ?? 0, 0)
         XCTAssertEqual(navigationBar.layer.shadowOpacity, 0)
 
         // When scrolling away from the top, a soft shadow appears and disappears when returning
