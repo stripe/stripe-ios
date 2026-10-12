@@ -12,6 +12,39 @@ import XCTest
 @_spi(STP) @testable import StripeIdentity
 
 final class IdentityFlowViewControllerTest: XCTestCase {
+    func testCustomPrimaryButtonStyleInBottomSheet() throws {
+        // Given a flow configured with dynamic primary button colors and a custom height
+        var configuration = IdentityVerificationSheet.Configuration(brandLogo: UIImage())
+        configuration.primaryButtonStyle = .custom(
+            backgroundColor: .dynamic(light: .black, dark: .white),
+            textColor: .dynamic(light: .white, dark: .black),
+            height: 52
+        )
+        let sheetController = VerificationSheetControllerMock(
+            flowController: VerificationSheetFlowController(configuration: configuration)
+        )
+        let controller = PresentationSpy(sheetController: sheetController, analyticsScreenName: .individual)
+
+        // When an informational bottom sheet is opened from the flow
+        try controller.presentBottomsheet(withContent: .init(bottomsheetId: "test", title: "Details", lines: []))
+
+        // Then its Close button uses the configured colors in both appearances
+        let bottomSheet = try XCTUnwrap(controller.presentedController as? BottomSheetViewController)
+        bottomSheet.view.tintColor = .magenta
+        let button = try XCTUnwrap(buttons(in: bottomSheet.view).first)
+        let label = try XCTUnwrap(button.subviews.compactMap { $0 as? UILabel }.first)
+        let sheetView = try XCTUnwrap(button.superview?.superview as? BottomSheetView)
+        let buttonContainerColor = button.superview?.backgroundColor ?? sheetView.backgroundColor
+        XCTAssertEqual(button.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height, 52)
+        XCTAssertEqual(button.didSetCornerConfiguration, LiquidGlassDetector.isEnabledInMerchantApp)
+        for style: UIUserInterfaceStyle in [.light, .dark] {
+            let traits = UITraitCollection(userInterfaceStyle: style)
+            XCTAssertEqual(button.backgroundColor?.resolvedColor(with: traits), style == .dark ? .white : .black)
+            XCTAssertEqual(label.textColor.resolvedColor(with: traits), style == .dark ? .black : .white)
+            XCTAssertEqual(buttonContainerColor?.resolvedColor(with: traits), sheetView.backgroundColor?.resolvedColor(with: traits))
+        }
+    }
+
     func testCustomPrimaryButtonStyleAcrossScreens() throws {
         // Given a flow configured with dynamic primary button colors and a minimum height
         var configuration = IdentityVerificationSheet.Configuration(brandLogo: UIImage())
@@ -201,6 +234,15 @@ final class IdentityFlowViewControllerTest: XCTestCase {
     private func minimumHeightConstraints(in button: Button) -> [NSLayoutConstraint] {
         return button.constraints.filter {
             $0.firstAttribute == .height && $0.relation == .greaterThanOrEqual
+        }
+    }
+
+    private final class PresentationSpy: IdentityFlowViewController {
+        var presentedController: UIViewController?
+
+        override func present(_ viewControllerToPresent: UIViewController, animated flag: Bool, completion: (() -> Void)? = nil) {
+            presentedController = viewControllerToPresent
+            completion?()
         }
     }
 }
