@@ -88,7 +88,9 @@
     }
   ],
   "recurring_details": {
-    "total_discount_amounts": [],
+    "total_summary": {
+      "total_discount_amounts": []
+    },
     "subtotal": 2000,
     "total": 2149,
     "due": 2149,
