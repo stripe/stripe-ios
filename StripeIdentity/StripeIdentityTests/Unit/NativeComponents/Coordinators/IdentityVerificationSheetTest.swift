@@ -66,6 +66,20 @@ final class IdentityVerificationSheetTest: XCTestCase {
         }
     }
 
+    func testSampleDocumentsWrapTheIdentityClientOnlyWhenEnabled() {
+        for enabled in [false, true] {
+            var configuration = IdentityVerificationSheet.Configuration(brandLogo: UIImage())
+            configuration.networkedIdentity = .init(
+                linkSessionHandoff: nil, debugMerchantPublishableKey: nil, debugProvidedEmail: nil,
+                debugRoute: nil, debugSeedSavedDocuments: enabled
+            )
+            let sheet = IdentityVerificationSheet(
+                verificationSessionId: "vs_test", ephemeralKeySecret: "ek_test_mock", configuration: configuration
+            )
+            XCTAssertEqual(sheet.verificationSheetController?.apiClient is SeededDocumentsIdentityAPIClient, enabled)
+        }
+    }
+
     func testAnalyticsWeb() {
         let sheet = sheetWithWebUI()
         sheet.present(from: mockViewController) { _ in }
