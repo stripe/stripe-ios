@@ -210,7 +210,7 @@ class PaymentSheetFormFactoryCardEmailPhoneFieldsTest: XCTestCase {
         billingConfiguration.allowedCountries = ["US", "FR"]
         let configuration = UpdatePaymentMethodViewController.Configuration(
             paymentMethod: STPPaymentMethod._testCard(),
-            isTestmode: true,
+            apiClient: STPAPIClient(publishableKey: "pk_test_example"),
             appearance: .default,
             billingDetailsCollectionConfiguration: billingConfiguration,
             hostedSurface: .paymentSheet,

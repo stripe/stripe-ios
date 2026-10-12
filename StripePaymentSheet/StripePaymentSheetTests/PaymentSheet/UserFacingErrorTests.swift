@@ -11,10 +11,26 @@
 import XCTest
 
 final class UserFacingErrorTests: XCTestCase {
+    private let liveAPIClient = STPAPIClient(publishableKey: "pk_live_example")
+    private let testAPIClient = STPAPIClient(publishableKey: "pk_test_example")
+
+    func testPresentationUsesCurrentAPIClientMode() {
+        let apiClient = STPAPIClient(publishableKey: "pk_live_example")
+        let error = PaymentSheetError.unknown(debugDescription: "Developer details")
+
+        XCTAssertEqual(error.userFacingDescription(using: apiClient), generic("unknown"))
+
+        apiClient.publishableKey = "pk_test_example"
+        XCTAssertEqual(error.userFacingDescription(using: apiClient), error.nonGenericDescription)
+
+        apiClient.publishableKey = "pk_live_example"
+        XCTAssertEqual(error.userFacingDescription(using: apiClient), generic("unknown"))
+    }
+
     func testLiveLegacyAPIErrorWithoutIntentUsesRequestID() {
         let error = apiError(requestID: "req_123")
 
-        XCTAssertEqual(error.userFacingDescription(isTestmode: false), generic("req_123"))
+        XCTAssertEqual(error.userFacingDescription(using: liveAPIClient), generic("req_123"))
         XCTAssertEqual(error.userInfo[STPError.errorMessageKey] as? String, "Verbose server details")
         XCTAssertNil(error.userInfo["payment_intent"])
     }
@@ -36,8 +52,8 @@ final class UserFacingErrorTests: XCTestCase {
             httpResponse: response
         )
 
-        XCTAssertEqual(error.userFacingDescription(isTestmode: false), generic("req_response"))
-        XCTAssertEqual(error.userFacingDescription(isTestmode: true), error.nonGenericDescription)
+        XCTAssertEqual(error.userFacingDescription(using: liveAPIClient), generic("req_response"))
+        XCTAssertEqual(error.userFacingDescription(using: testAPIClient), error.nonGenericDescription)
     }
 
     func testTestModeKeepsExistingDescriptions() {
@@ -50,15 +66,15 @@ final class UserFacingErrorTests: XCTestCase {
         ]
 
         for error in errors {
-            XCTAssertEqual(error.userFacingDescription(isTestmode: true), error.nonGenericDescription)
+            XCTAssertEqual(error.userFacingDescription(using: testAPIClient), error.nonGenericDescription)
         }
     }
 
     func testLiveModernAPIErrorUsesRequestID() throws {
         let error = try modernAPIError(type: "invalid_request_error", requestID: "req_modern")
 
-        XCTAssertEqual(error.userFacingDescription(isTestmode: false), generic("req_modern"))
-        XCTAssertEqual(error.userFacingDescription(isTestmode: true), error.nonGenericDescription)
+        XCTAssertEqual(error.userFacingDescription(using: liveAPIClient), generic("req_modern"))
+        XCTAssertEqual(error.userFacingDescription(using: testAPIClient), error.nonGenericDescription)
     }
 
     func testLiveWrappedAPIErrorUsesUnderlyingRequestID() {
@@ -68,7 +84,7 @@ final class UserFacingErrorTests: XCTestCase {
             NSUnderlyingErrorKey: underlying,
         ])
 
-        XCTAssertEqual(error.userFacingDescription(isTestmode: false), generic("req_underlying"))
+        XCTAssertEqual(error.userFacingDescription(using: liveAPIClient), generic("req_underlying"))
     }
 
     func testLiveWrappedModernAPIErrorUsesRequestID() throws {
@@ -76,29 +92,29 @@ final class UserFacingErrorTests: XCTestCase {
             NSUnderlyingErrorKey: try modernAPIError(type: "api_error", requestID: "req_modern"),
         ])
 
-        XCTAssertEqual(error.userFacingDescription(isTestmode: false), generic("req_modern"))
+        XCTAssertEqual(error.userFacingDescription(using: liveAPIClient), generic("req_modern"))
     }
 
     func testLiveCheckoutWrappedAPIErrorUsesUnderlyingRequestID() {
         let error = CheckoutError.apiError(message: "Verbose server details", underlyingError: apiError(requestID: "req_checkout"))
 
-        XCTAssertEqual(error.userFacingDescription(isTestmode: false), generic("req_checkout"))
-        XCTAssertEqual(error.userFacingDescription(isTestmode: true), "Verbose server details")
+        XCTAssertEqual(error.userFacingDescription(using: liveAPIClient), generic("req_checkout"))
+        XCTAssertEqual(error.userFacingDescription(using: testAPIClient), "Verbose server details")
     }
 
     func testLiveCheckoutWrappedCardErrorKeepsActionableMessage() {
         let error = CheckoutError.apiError(message: "Your card was declined.", underlyingError: apiError(type: "card_error", message: "Your card was declined."))
 
-        XCTAssertEqual(error.userFacingDescription(isTestmode: false), "Your card was declined.")
+        XCTAssertEqual(error.userFacingDescription(using: liveAPIClient), "Your card was declined.")
     }
 
     func testLiveMissingRequestIDUsesErrorCode() {
-        XCTAssertEqual(apiError(code: "account_invalid").userFacingDescription(isTestmode: false), generic("account_invalid"))
-        XCTAssertEqual(apiError(requestID: "", code: "account_invalid").userFacingDescription(isTestmode: false), generic("account_invalid"))
+        XCTAssertEqual(apiError(code: "account_invalid").userFacingDescription(using: liveAPIClient), generic("account_invalid"))
+        XCTAssertEqual(apiError(requestID: "", code: "account_invalid").userFacingDescription(using: liveAPIClient), generic("account_invalid"))
     }
 
     func testLiveMissingRequestIDAndCodeUsesType() {
-        XCTAssertEqual(apiError().userFacingDescription(isTestmode: false), generic("invalid_request_error"))
+        XCTAssertEqual(apiError().userFacingDescription(using: liveAPIClient), generic("invalid_request_error"))
     }
 
     func testLiveMissingMetadataUsesNumericCode() {
@@ -106,7 +122,7 @@ final class UserFacingErrorTests: XCTestCase {
             NSLocalizedDescriptionKey: "Verbose server details",
         ])
 
-        XCTAssertEqual(error.userFacingDescription(isTestmode: false), generic("50"))
+        XCTAssertEqual(error.userFacingDescription(using: liveAPIClient), generic("50"))
     }
 
     func testLiveSDKErrorUsesCaseWithoutAssociatedDebugDetails() {
@@ -119,16 +135,16 @@ final class UserFacingErrorTests: XCTestCase {
         let codes = ["unknown", "deferredIntentValidationFailed", "apiError", "invalidRequest"]
 
         for (error, code) in zip(errors, codes) {
-            XCTAssertEqual(error.userFacingDescription(isTestmode: false), generic(code))
+            XCTAssertEqual(error.userFacingDescription(using: liveAPIClient), generic(code))
         }
     }
 
     func testLiveSDKErrorWithoutAssociatedValuesDoesNotExposeDebugDescription() {
         let error = PaymentSheetError.missingClientSecret
 
-        XCTAssertEqual(error.userFacingDescription(isTestmode: false), generic(String((error as NSError).code)))
-        XCTAssertFalse(error.userFacingDescription(isTestmode: false).contains(error.debugDescription))
-        XCTAssertEqual(error.userFacingDescription(isTestmode: true), error.debugDescription)
+        XCTAssertEqual(error.userFacingDescription(using: liveAPIClient), generic(String((error as NSError).code)))
+        XCTAssertFalse(error.userFacingDescription(using: liveAPIClient).contains(error.debugDescription))
+        XCTAssertEqual(error.userFacingDescription(using: testAPIClient), error.debugDescription)
     }
 
     func testLiveCardErrorKeepsActionableMessage() throws {
@@ -139,7 +155,7 @@ final class UserFacingErrorTests: XCTestCase {
         let modern = try modernAPIError(type: "card_error", requestID: "req_card", message: "Your card was declined.")
 
         for error in [error as Error, wrapped, modern] {
-            XCTAssertEqual(error.userFacingDescription(isTestmode: false), "Your card was declined.")
+            XCTAssertEqual(error.userFacingDescription(using: liveAPIClient), "Your card was declined.")
         }
     }
 
@@ -148,7 +164,7 @@ final class UserFacingErrorTests: XCTestCase {
                             code: STPPaymentHandlerErrorCode.paymentErrorCode.rawValue,
                             userInfo: [NSLocalizedDescriptionKey: "Your card was declined."])
 
-        XCTAssertEqual(error.userFacingDescription(isTestmode: false), "Your card was declined.")
+        XCTAssertEqual(error.userFacingDescription(using: liveAPIClient), "Your card was declined.")
     }
 
     func testLivePaymentHandlerWithoutLocalizedMessageUsesCode() {
@@ -156,7 +172,7 @@ final class UserFacingErrorTests: XCTestCase {
                             code: STPPaymentHandlerErrorCode.paymentErrorCode.rawValue,
                             userInfo: [STPError.errorMessageKey: "Verbose confirmation details"])
 
-        XCTAssertEqual(error.userFacingDescription(isTestmode: false), generic(String(error.code)))
+        XCTAssertEqual(error.userFacingDescription(using: liveAPIClient), generic(String(error.code)))
     }
 
     func testLivePaymentHandlerDebugMessageUsesCode() {
@@ -164,7 +180,7 @@ final class UserFacingErrorTests: XCTestCase {
                             code: STPPaymentHandlerErrorCode.missingReturnURL.rawValue,
                             userInfo: [STPError.errorMessageKey: "Provide a return URL in your integration."])
 
-        XCTAssertEqual(error.userFacingDescription(isTestmode: false), generic(String(error.code)))
+        XCTAssertEqual(error.userFacingDescription(using: liveAPIClient), generic(String(error.code)))
     }
 
     func testMerchantErrorAndSDKValidationRemainActionable() {
@@ -172,8 +188,8 @@ final class UserFacingErrorTests: XCTestCase {
             NSLocalizedDescriptionKey: "This item is out of stock.",
         ])
 
-        XCTAssertEqual(error.userFacingDescription(isTestmode: false), error.localizedDescription)
-        XCTAssertEqual(PaymentSheetError.confirmingWithInvalidPaymentOption.userFacingDescription(isTestmode: false),
+        XCTAssertEqual(error.userFacingDescription(using: liveAPIClient), error.localizedDescription)
+        XCTAssertEqual(PaymentSheetError.confirmingWithInvalidPaymentOption.userFacingDescription(using: liveAPIClient),
                        PaymentSheetError.confirmingWithInvalidPaymentOption.localizedDescription)
     }
 
@@ -181,10 +197,10 @@ final class UserFacingErrorTests: XCTestCase {
         let known = apiError(code: LinkUtils.ConsumerErrorCode.consumerVerificationCodeInvalid.rawValue)
         let unknown = apiError(requestID: "req_link")
 
-        XCTAssertEqual(LinkUtils.getLocalizedErrorMessage(from: known, isTestmode: false),
+        XCTAssertEqual(LinkUtils.getLocalizedErrorMessage(from: known, apiClient: liveAPIClient),
                        LinkUtils.ConsumerErrorCode.consumerVerificationCodeInvalid.localizedDescription)
-        XCTAssertEqual(LinkUtils.getLocalizedErrorMessage(from: unknown, isTestmode: false), generic("req_link"))
-        XCTAssertEqual(LinkUtils.getLocalizedErrorMessage(from: unknown, isTestmode: true), unknown.localizedDescription)
+        XCTAssertEqual(LinkUtils.getLocalizedErrorMessage(from: unknown, apiClient: liveAPIClient), generic("req_link"))
+        XCTAssertEqual(LinkUtils.getLocalizedErrorMessage(from: unknown, apiClient: testAPIClient), unknown.localizedDescription)
     }
 
     private func apiError(

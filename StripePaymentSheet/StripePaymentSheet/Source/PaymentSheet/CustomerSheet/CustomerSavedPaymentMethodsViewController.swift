@@ -284,7 +284,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         switchContentIfNecessary(to: contentViewController, containerView: paymentContainerView)
 
         // Error
-        errorLabel.text = error?.userFacingDescription(isTestmode: configuration.apiClient.isTestmode)
+        errorLabel.text = error?.userFacingDescription(using: configuration.apiClient)
 
         UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
             self.errorLabel.setHiddenIfNecessary(self.error == nil)
@@ -706,7 +706,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
 
     private func set(error: Swift.Error?) {
         self.error = error
-        self.errorLabel.text = error?.userFacingDescription(isTestmode: configuration.apiClient.isTestmode)
+        self.errorLabel.text = error?.userFacingDescription(using: configuration.apiClient)
         UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
             self.errorLabel.setHiddenIfNecessary(self.error == nil)
         }

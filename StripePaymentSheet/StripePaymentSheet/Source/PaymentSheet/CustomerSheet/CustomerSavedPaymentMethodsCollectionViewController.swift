@@ -445,7 +445,7 @@ extension CustomerSavedPaymentMethodsCollectionViewController: PaymentOptionCell
             return
         }
         let updateConfig = UpdatePaymentMethodViewController.Configuration(paymentMethod: paymentMethod,
-                                                                           isTestmode: savedPaymentMethodsConfiguration.apiClient.isTestmode,
+                                                                           apiClient: savedPaymentMethodsConfiguration.apiClient,
                                                                            appearance: appearance,
                                                                            billingDetailsCollectionConfiguration: configuration.billingDetailsCollectionConfiguration,
                                                                            hostedSurface: .customerSheet,

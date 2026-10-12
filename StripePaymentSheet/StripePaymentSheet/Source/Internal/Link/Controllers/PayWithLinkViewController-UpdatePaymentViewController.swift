@@ -188,7 +188,7 @@ extension PayWithLinkViewController {
         }
 
         func updateErrorLabel(for error: Error?) {
-            errorView.text = error?.userFacingDescription(isTestmode: context.configuration.apiClient.isTestmode)
+            errorView.text = error?.userFacingDescription(using: context.configuration.apiClient)
             errorView.setHiddenIfNecessary(error == nil)
         }
 

@@ -143,7 +143,6 @@ final class LinkSignUpViewModel: NSObject {
     // MARK: Private properties
 
     private let accountService: LinkAccountServiceProtocol
-    private let isTestmode: Bool
     private let accountLookupDebouncer = OperationDebouncer(debounceTime: LinkUI.accountLookupDebounceTime)
     private let country: String?
 
@@ -151,13 +150,11 @@ final class LinkSignUpViewModel: NSObject {
 
     init(
         accountService: LinkAccountServiceProtocol,
-        isTestmode: Bool,
         linkAccount: PaymentSheetLinkAccount?,
         legalName: String?,
         country: String?
     ) {
         self.accountService = accountService
-        self.isTestmode = isTestmode
         self.linkAccount = linkAccount
         self.emailAddress = linkAccount?.email
         self.suggestedEmail = linkAccount?.suggestedEmail
@@ -186,7 +183,7 @@ final class LinkSignUpViewModel: NSObject {
                 completion(.success(linkAccount))
             case .failure(let error):
                 if let self {
-                    self.errorMessage = error.userFacingDescription(isTestmode: self.isTestmode)
+                    self.errorMessage = error.userFacingDescription(using: linkAccount.apiClient)
                 }
                 completion(.failure(error))
             }
@@ -238,7 +235,7 @@ private extension LinkSignUpViewModel {
                     if StripeAttest.isLinkAssertionError(error: error) {
                         self.delegate?.viewModelDidEncounterAttestationError(self)
                     } else {
-                        self.errorMessage = error.userFacingDescription(isTestmode: self.isTestmode)
+                        self.errorMessage = error.userFacingDescription(using: self.accountService.apiClient)
                     }
                 }
             }

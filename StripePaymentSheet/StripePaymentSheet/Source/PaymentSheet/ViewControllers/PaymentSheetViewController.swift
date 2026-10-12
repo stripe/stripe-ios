@@ -267,7 +267,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
 
     func set(error: Error?) {
         self.error = error
-        self.errorLabel.text = error?.userFacingDescription(isTestmode: configuration.apiClient.isTestmode)
+        self.errorLabel.text = error?.userFacingDescription(using: configuration.apiClient)
         UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
             self.errorLabel.setHiddenIfNecessary(self.error == nil)
         }
@@ -345,7 +345,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
         )
 
         // Error
-        errorLabel.text = error?.userFacingDescription(isTestmode: configuration.apiClient.isTestmode)
+        errorLabel.text = error?.userFacingDescription(using: configuration.apiClient)
         UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
             self.errorLabel.setHiddenIfNecessary(self.error == nil)
         }

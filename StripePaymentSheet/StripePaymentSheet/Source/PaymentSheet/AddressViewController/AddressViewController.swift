@@ -101,7 +101,7 @@ public class AddressViewController: UIViewController {
         didSet {
             errorLabel.text = configuration.apiClient.isTestmode
                 ? latestError?.localizedDescription
-                : latestError?.userFacingDescription(isTestmode: false)
+                : latestError?.userFacingDescription(using: configuration.apiClient)
             errorLabel.isHidden = latestError == nil
         }
     }

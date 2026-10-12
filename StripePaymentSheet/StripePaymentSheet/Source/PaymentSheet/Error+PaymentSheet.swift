@@ -14,8 +14,8 @@ extension Error {
 
     /// Formats Stripe errors for SDK UI without changing the original error or test-mode diagnostics.
     /// Card errors and merchant-provided errors retain their actionable messages.
-    func userFacingDescription(isTestmode: Bool) -> String {
-        guard !isTestmode else { return nonGenericDescription }
+    func userFacingDescription(using apiClient: STPAPIClient) -> String {
+        guard !apiClient.isTestmode else { return nonGenericDescription }
 
         // Checkout and PaymentHandler can wrap an API error before it reaches the UI.
         // Bound traversal in case an underlying-error chain contains a cycle.

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 import StripeCoreTestUtils
 import StripePaymentsTestUtils
 @_spi(STP) import StripeUICore
@@ -81,8 +82,7 @@ extension LinkSignUpViewControllerSnapshotTests {
         linkAccount.suggestedEmail = suggestedEmail
 
         return LinkSignUpViewController(
-            accountService: LinkAccountService(elementsSession: elementsSession),
-            isTestmode: true,
+            accountService: LinkAccountService(apiClient: STPAPIClient(publishableKey: "pk_test_example"), elementsSession: elementsSession),
             linkAccount: linkAccount,
             brand: brand,
             defaultBillingDetails: nil

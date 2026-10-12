@@ -43,9 +43,9 @@ final class UpdatePaymentMethodViewController: UIViewController {
 
     private var latestError: Error? {
         didSet {
-            errorLabel.text = configuration.isTestmode
+            errorLabel.text = configuration.apiClient.isTestmode
                 ? latestError?.localizedDescription
-                : latestError?.userFacingDescription(isTestmode: false)
+                : latestError?.userFacingDescription(using: configuration.apiClient)
             errorLabel.isHidden = latestError == nil
         }
     }

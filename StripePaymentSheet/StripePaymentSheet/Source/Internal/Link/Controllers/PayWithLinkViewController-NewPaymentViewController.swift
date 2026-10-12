@@ -312,7 +312,7 @@ extension PayWithLinkViewController {
         }
 
         func updateErrorLabel(for error: Error?) {
-            errorView.text = error?.userFacingDescription(isTestmode: context.configuration.apiClient.isTestmode)
+            errorView.text = error?.userFacingDescription(using: context.configuration.apiClient)
             UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
                 self.errorView.setHiddenIfNecessary(error == nil)
             }
