@@ -25,9 +25,10 @@ final class BottomSheetViewController: UIViewController {
     private(set) var preferredDetentHeight: CGFloat = 0
 
     static func makeForPresentation(
-        content: BottomSheetContent
+        content: BottomSheetContent,
+        primaryButtonStyle: IdentityVerificationSheet.Configuration.PrimaryButtonStyle = .default
     ) throws -> BottomSheetViewController {
-        let viewController = try BottomSheetViewController(content: content)
+        let viewController = try BottomSheetViewController(content: content, primaryButtonStyle: primaryButtonStyle)
         viewController.modalTransitionStyle = .coverVertical
         viewController.modalPresentationStyle = .pageSheet
 
@@ -48,7 +49,8 @@ final class BottomSheetViewController: UIViewController {
     }
 
     init(
-        content: BottomSheetContent
+        content: BottomSheetContent,
+        primaryButtonStyle: IdentityVerificationSheet.Configuration.PrimaryButtonStyle = .default
     ) throws {
         super.init(nibName: nil, bundle: nil)
 
@@ -56,7 +58,8 @@ final class BottomSheetViewController: UIViewController {
 
         let bottomSheetView: BottomSheetView
         bottomSheetView = try BottomSheetView(
-            content: content
+            content: content,
+            primaryButtonStyle: primaryButtonStyle
         ) { [weak self] in
             self?.dismiss(animated: true)
         } didOpenURL: { [weak self] url in
