@@ -122,12 +122,12 @@ index dd31eb2d03..4f1b644e15 100644
  //
  
  import UIKit
-+import {{SDK}}
++{{SDK_IMPORT}}
  
 -class ViewController: UIViewController {}
 +class ViewController: UIViewController {
 +    override func viewDidLoad() {
 +        super.viewDidLoad()
-+        StripeAPI.defaultPublishableKey = "foo"
++        {{SDK_INITIALIZATION}}
 +    }
 +}
