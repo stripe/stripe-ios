@@ -316,17 +316,47 @@ final class PaymentPagesAPIResponseDiscountTests: XCTestCase {
         XCTAssertEqual(discount.displayName, "Recurring discount")
     }
 
-    func testRecurringSummaryWithoutDiscountAmounts() throws {
-        // Given a recurring summary without a discount array
+    func testUnusedSummaryAmountsDoNotAffectDecoding() throws {
+        // Given valid discounts and taxes alongside malformed unused summary fields
         let json = CheckoutTestHelpers.makeSessionJSON([
-            "recurring_details": ["total_summary": [:]],
+            "recurring_details": [
+                "total_summary": [
+                    "total_discount_amounts": [
+                        ["amount": 250, "coupon": ["code": "coupon_recurring"]],
+                    ],
+                    "total_tax_amounts": "ignored",
+                ],
+            ],
+            "total_summary": [
+                "total_discount_amounts": "ignored",
+                "total_tax_amounts": [
+                    [
+                        "amount": 100,
+                        "inclusive": false,
+                        "tax_rate": ["display_name": "Sales Tax", "percentage": 10.0],
+                    ],
+                ],
+            ],
         ])
 
         // When decoding the public session
         let session = try PaymentPagesAPIResponse.decode(fromAPIResponse: json).makePublicSession()
 
-        // Then there are no discounts
-        XCTAssertTrue(session.discountAmounts.isEmpty)
+        // Then only the summary fields used by the SDK affect decoding
+        XCTAssertEqual(session.discountAmounts.count, 1)
+        XCTAssertEqual(session.discountAmounts.first?.minorUnitsAmount, 250)
+        XCTAssertEqual(session.taxAmounts?.count, 1)
+        XCTAssertEqual(session.taxAmounts?.first?.minorUnitsAmount, 100)
+    }
+
+    func testRecurringSummaryRejectsMissingRequiredDiscountAmounts() {
+        // Given a recurring summary without a discount array
+        let json = CheckoutTestHelpers.makeSessionJSON([
+            "recurring_details": ["total_summary": [:]],
+        ])
+
+        // Then decoding fails, preserving the required discount array
+        XCTAssertThrowsError(try PaymentPagesAPIResponse.decode(fromAPIResponse: json))
     }
 
     func testRecurringDetailsRejectsMissingRequiredTotalSummary() {
