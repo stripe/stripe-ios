@@ -23,7 +23,8 @@ struct CheckoutCartView: View {
     let clientSecret: String
     let emailSettings: CheckoutPlayground.EmailSettings
     let shippingAddressCollection: Bool
-    let defaultShippingAddress: CheckoutPlayground.DefaultShippingAddress?
+    let defaultShippingAddress: CheckoutPlayground.DefaultAddress?
+    let defaultBillingAddress: CheckoutPlayground.DefaultAddress?
     let adaptivePricing: Bool
     let integrationType: CheckoutPlayground.IntegrationType
     let expressCheckoutElementSettings: CheckoutPlayground.ExpressCheckoutElementSettings
@@ -156,6 +157,7 @@ struct CheckoutCartView: View {
                 config.paymentElement = paymentElementConfiguration
             }
             config.defaults.shippingDetails = defaultShippingAddress?.checkoutShippingDetails
+            config.defaults.billingDetails = defaultBillingAddress?.checkoutBillingDetails
             config.defaults.email = emailSettings.localDefaultEmail
             if shippingAddressCollection {
                 var shippingAddressElementConfiguration = ShippingAddressElement.Configuration()

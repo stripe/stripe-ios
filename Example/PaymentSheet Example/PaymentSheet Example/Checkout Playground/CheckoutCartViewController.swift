@@ -18,7 +18,8 @@ struct CheckoutCartUIKitView: UIViewControllerRepresentable {
     let clientSecret: String
     let emailSettings: CheckoutPlayground.EmailSettings
     let shippingAddressCollection: Bool
-    let defaultShippingAddress: CheckoutPlayground.DefaultShippingAddress?
+    let defaultShippingAddress: CheckoutPlayground.DefaultAddress?
+    let defaultBillingAddress: CheckoutPlayground.DefaultAddress?
     let adaptivePricing: Bool
     let integrationType: CheckoutPlayground.IntegrationType
     let expressCheckoutElementSettings: CheckoutPlayground.ExpressCheckoutElementSettings
@@ -31,6 +32,7 @@ struct CheckoutCartUIKitView: UIViewControllerRepresentable {
             emailSettings: emailSettings,
             shippingAddressCollection: shippingAddressCollection,
             defaultShippingAddress: defaultShippingAddress,
+            defaultBillingAddress: defaultBillingAddress,
             adaptivePricing: adaptivePricing,
             integrationType: integrationType,
             expressCheckoutElementSettings: expressCheckoutElementSettings,
@@ -50,7 +52,8 @@ final class CheckoutCartViewController: UIViewController {
     private let clientSecret: String
     private let emailSettings: CheckoutPlayground.EmailSettings
     private let shippingAddressCollection: Bool
-    private let defaultShippingAddress: CheckoutPlayground.DefaultShippingAddress?
+    private let defaultShippingAddress: CheckoutPlayground.DefaultAddress?
+    private let defaultBillingAddress: CheckoutPlayground.DefaultAddress?
     private let adaptivePricing: Bool
     private let integrationType: CheckoutPlayground.IntegrationType
     private let expressCheckoutElementSettings: CheckoutPlayground.ExpressCheckoutElementSettings
@@ -84,7 +87,8 @@ final class CheckoutCartViewController: UIViewController {
         clientSecret: String,
         emailSettings: CheckoutPlayground.EmailSettings,
         shippingAddressCollection: Bool,
-        defaultShippingAddress: CheckoutPlayground.DefaultShippingAddress?,
+        defaultShippingAddress: CheckoutPlayground.DefaultAddress?,
+        defaultBillingAddress: CheckoutPlayground.DefaultAddress?,
         adaptivePricing: Bool,
         integrationType: CheckoutPlayground.IntegrationType,
         expressCheckoutElementSettings: CheckoutPlayground.ExpressCheckoutElementSettings,
@@ -96,6 +100,7 @@ final class CheckoutCartViewController: UIViewController {
         self.emailSettings = emailSettings
         self.shippingAddressCollection = shippingAddressCollection
         self.defaultShippingAddress = defaultShippingAddress
+        self.defaultBillingAddress = defaultBillingAddress
         self.adaptivePricing = adaptivePricing
         self.integrationType = integrationType
         self.expressCheckoutElementSettings = expressCheckoutElementSettings
@@ -210,6 +215,7 @@ final class CheckoutCartViewController: UIViewController {
                 configuration.paymentElement = paymentElementConfiguration
             }
             configuration.defaults.shippingDetails = defaultShippingAddress?.checkoutShippingDetails
+            configuration.defaults.billingDetails = defaultBillingAddress?.checkoutBillingDetails
             configuration.defaults.email = emailSettings.localDefaultEmail
             if shippingAddressCollection {
                 configuration.shippingAddressElement = .init()
