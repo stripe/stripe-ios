@@ -4,6 +4,8 @@
 
 "Add documents" = "ドキュメントを追加";
 
+"Allow camera access in Settings to take a photo." = "写真を撮影するには、設定でカメラへのアクセスを許可してください。";
+
 "Answer" = "回答";
 
 "Choose File…" = "ファイルを選択…";
@@ -22,9 +24,13 @@
 
 "Make sure your document meets following requirements." = "ドキュメントが以下の要件を満たしていることを確認してください。";
 
+"Please select your Apple Pay payment method again to continue." = "続行するには、Apple Pay の決済手段を再度選択してください。";
+
 "Please try again later." = "後で再度お試しください。";
 
 "Submitted for review" = "審査に提出されました";
+
+"Take Photo…" = "写真を撮る…";
 
 "Tell us about your source of funds" = "資金源についてお聞かせください";
 

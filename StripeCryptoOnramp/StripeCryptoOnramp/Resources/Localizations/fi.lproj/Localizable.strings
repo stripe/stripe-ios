@@ -4,6 +4,8 @@
 
 "Add documents" = "Lisää asiakirjoja";
 
+"Allow camera access in Settings to take a photo." = "Salli kameran käyttö Asetuksissa, jotta voit ottaa kuvan.";
+
 "Answer" = "Vastaus";
 
 "Choose File…" = "Valitse tiedosto";
@@ -22,9 +24,13 @@
 
 "Make sure your document meets following requirements." = "Varmista, että asiakirjasi täyttää seuraavat vaatimukset.";
 
+"Please select your Apple Pay payment method again to continue." = "Valitse Apple Pay -maksutapasi uudelleen jatkaaksesi.";
+
 "Please try again later." = "Yritä myöhemmin uudelleen.";
 
 "Submitted for review" = "Lähetetty tarkasteltavaksi";
+
+"Take Photo…" = "Ota kuva…";
 
 "Tell us about your source of funds" = "Kerro meille varojesi lähteestä";
 

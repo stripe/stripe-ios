@@ -4,6 +4,8 @@
 
 "Add documents" = "Lisa dokumendid";
 
+"Allow camera access in Settings to take a photo." = "Foto tegemiseks lubage Seadetes juurdepääs kaamerale.";
+
 "Answer" = "Vastus";
 
 "Choose File…" = "Vali fail...";
@@ -22,9 +24,13 @@
 
 "Make sure your document meets following requirements." = "Veenduge, et teie dokument vastab järgmistele nõuetele.";
 
+"Please select your Apple Pay payment method again to continue." = "Palun valige jätkamiseks uuesti oma Apple Pay makseviis.";
+
 "Please try again later." = "Proovige hiljem uuesti.";
 
 "Submitted for review" = "Esitatud ülevaatamiseks";
+
+"Take Photo…" = "Tee pilt…";
 
 "Tell us about your source of funds" = "Rääkige meile oma rahaliste vahendite allikast";
 

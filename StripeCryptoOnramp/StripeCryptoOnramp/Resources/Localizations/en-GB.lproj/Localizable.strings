@@ -4,6 +4,8 @@
 
 "Add documents" = "Add documents";
 
+"Allow camera access in Settings to take a photo." = "Allow camera access in Settings to take a photo.";
+
 "Answer" = "Answer";
 
 "Choose File…" = "Choose File…";
@@ -22,9 +24,13 @@
 
 "Make sure your document meets following requirements." = "Make sure your document meets the following requirements.";
 
+"Please select your Apple Pay payment method again to continue." = "Please select your Apple Pay payment method again to continue.";
+
 "Please try again later." = "Please try again later.";
 
 "Submitted for review" = "Submitted for review";
+
+"Take Photo…" = "Take Photo…";
 
 "Tell us about your source of funds" = "Tell us about your source of funds";
 

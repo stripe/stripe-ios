@@ -4,6 +4,8 @@
 
 "Add documents" = "문서 추가";
 
+"Allow camera access in Settings to take a photo." = "사진을 촬영하려면 설정에서 카메라 액세스를 허용하십시오.";
+
 "Answer" = "답변";
 
 "Choose File…" = "파일 선택...";
@@ -22,9 +24,13 @@
 
 "Make sure your document meets following requirements." = "문서가 다음 요구사항을 충족하는지 확인하십시오.";
 
+"Please select your Apple Pay payment method again to continue." = "계속하려면 Apple Pay 결제 방식을 다시 선택하십시오.";
+
 "Please try again later." = "나중에 다시 시도해 주십시오.";
 
 "Submitted for review" = "검토를 위해 제출됨";
+
+"Take Photo…" = "사진 촬영…";
 
 "Tell us about your source of funds" = "자금 출처에 대해 알려주십시오";
 
