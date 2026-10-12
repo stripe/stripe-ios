@@ -229,7 +229,8 @@ extension IdentityFlowViewController {
         withContent content: BottomSheetViewController.BottomSheetContent
     ) throws {
         let bottomSheetViewController = try BottomSheetViewController.makeForPresentation(
-            content: content
+            content: content,
+            primaryButtonStyle: sheetController?.flowController.primaryButtonStyle ?? .default
         )
         self.present(bottomSheetViewController, animated: true, completion: nil)
     }
