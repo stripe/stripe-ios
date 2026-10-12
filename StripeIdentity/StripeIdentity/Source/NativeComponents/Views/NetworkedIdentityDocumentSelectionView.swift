@@ -19,16 +19,10 @@ final class NetworkedIdentityDocumentSelectionView: UIView {
 
     private enum Styling {
         static let spacing: CGFloat = 16
+        static let rowSpacing: CGFloat = 8
     }
 
     weak var delegate: NetworkedIdentityDocumentSelectionViewDelegate?
-
-    private(set) var documents: [NetworkedIdentityDocument] = []
-    private(set) var selectedDocumentID: String?
-    private(set) var isLoading = false
-    var accessibilityFocusView: UIView {
-        isLoading && loadingContainer.isAccessibilityElement ? loadingContainer : bodyLabel
-    }
 
     private let bodyLabel: UILabel = {
         let label = UILabel()
@@ -40,9 +34,12 @@ final class NetworkedIdentityDocumentSelectionView: UIView {
         return label
     }()
 
-    private let listView = ListView()
-    private let loadingContainer = UIView()
-    private let loadingIndicator = ActivityIndicator(size: .medium)
+    private let rowsStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = Styling.rowSpacing
+        return stackView
+    }()
 
     private let stackView: UIStackView = {
         let stackView = UIStackView()
@@ -56,18 +53,8 @@ final class NetworkedIdentityDocumentSelectionView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
 
-        listView.tintColor = .label
-        loadingContainer.addSubview(loadingIndicator)
-        loadingIndicator.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            loadingIndicator.centerXAnchor.constraint(equalTo: loadingContainer.centerXAnchor),
-            loadingIndicator.topAnchor.constraint(equalTo: loadingContainer.topAnchor),
-            loadingIndicator.bottomAnchor.constraint(equalTo: loadingContainer.bottomAnchor),
-        ])
-        loadingContainer.isHidden = true
         stackView.addArrangedSubview(bodyLabel)
-        stackView.addArrangedSubview(loadingContainer)
-        stackView.addArrangedSubview(listView)
+        stackView.addArrangedSubview(rowsStackView)
         addAndPinSubview(stackView)
     }
 
@@ -82,54 +69,96 @@ final class NetworkedIdentityDocumentSelectionView: UIView {
         labelProvider: @escaping LabelProvider,
         accessibilityLabelProvider: @escaping AccessibilityLabelProvider
     ) {
-        self.documents = documents
-        self.selectedDocumentID = selectedDocumentID
-        isLoading = false
         bodyLabel.text = bodyText
-        loadingIndicator.stopAnimating()
-        loadingContainer.isHidden = true
-        loadingContainer.isAccessibilityElement = false
-        loadingContainer.accessibilityLabel = nil
-        listView.isHidden = false
-
-        listView.configure(
-            with: .init(
-                items: documents.map { document in
-                    let isSelected = document.id == selectedDocumentID
-                    let icon = isSelected ? Image.iconCheckmark : Image.iconDocument
-                    return .init(
-                        text: labelProvider(document),
-                        accessibilityLabel: accessibilityLabelProvider(document, isSelected),
-                        accessory: .icon(icon.makeImage(template: true)),
-                        onTap: { [weak self] in
-                            guard let self else {
-                                return
-                            }
-                            self.delegate?.networkedIdentityDocumentSelectionView(
-                                self,
-                                didSelect: document
-                            )
-                        },
-                        additionalAccessibilityTraits: isSelected ? .selected : []
-                    )
+        rowsStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
+        for document in documents {
+            let isSelected = document.id == selectedDocumentID
+            let row = DocumentRow(
+                text: labelProvider(document),
+                accessibilityLabel: accessibilityLabelProvider(document, isSelected),
+                isSelected: isSelected,
+                onTap: { [weak self] in
+                    guard let self else {
+                        return
+                    }
+                    self.delegate?.networkedIdentityDocumentSelectionView(self, didSelect: document)
                 }
             )
-        )
-        if let selectedDocumentID,
-           let selectedIndex = documents.firstIndex(where: { $0.id == selectedDocumentID }) {
-            listView.focusAccessibility(onItemIndex: selectedIndex)
+            rowsStackView.addArrangedSubview(row)
+            if isSelected {
+                UIAccessibility.post(notification: .layoutChanged, argument: row)
+            }
         }
     }
+}
 
-    func configureLoading(bodyText: String, accessibilityLabel: String? = nil) {
-        documents = []
-        selectedDocumentID = nil
-        isLoading = true
-        bodyLabel.text = bodyText
-        listView.isHidden = true
-        loadingContainer.isHidden = false
-        loadingContainer.isAccessibilityElement = accessibilityLabel != nil
-        loadingContainer.accessibilityLabel = accessibilityLabel
-        loadingIndicator.startAnimating()
+/// A saved ID drawn as a bordered card; the border darkens when the ID is selected.
+private final class DocumentRow: UIControl {
+    private enum Styling {
+        static let minHeight: CGFloat = 64
+        static let cornerRadius: CGFloat = 12
+        static let iconSize: CGFloat = 24
+        static let insets = NSDirectionalEdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16)
+        static let unselectedBorderAlpha: CGFloat = 0.15
+    }
+
+    private let onTap: () -> Void
+
+    init(text: String, accessibilityLabel: String, isSelected: Bool, onTap: @escaping () -> Void) {
+        self.onTap = onTap
+        super.init(frame: .zero)
+        self.isSelected = isSelected
+
+        let label = UILabel()
+        label.adjustsFontForContentSizeCategory = true
+        label.font = NetworkedIdentityUI.bodyFont
+        label.textColor = .label
+        label.numberOfLines = 0
+
+        let icon = isSelected ? Image.iconCheckmark : Image.iconDocument
+        let iconView = UIImageView(image: icon.makeImage(template: true))
+        iconView.tintColor = .label
+        iconView.contentMode = .scaleAspectFit
+        label.text = text
+
+        let stackView = UIStackView(arrangedSubviews: [label, iconView])
+        stackView.spacing = 12
+        stackView.alignment = .center
+        stackView.isUserInteractionEnabled = false
+        addAndPinSubview(stackView, insets: Styling.insets)
+        NSLayoutConstraint.activate([
+            iconView.widthAnchor.constraint(equalToConstant: Styling.iconSize),
+            iconView.heightAnchor.constraint(equalToConstant: Styling.iconSize),
+            heightAnchor.constraint(greaterThanOrEqualToConstant: Styling.minHeight),
+        ])
+
+        layer.cornerRadius = Styling.cornerRadius
+        layer.borderWidth = 1
+        updateBorderColor()
+
+        isAccessibilityElement = true
+        self.accessibilityLabel = accessibilityLabel
+        accessibilityTraits = isSelected ? [.button, .selected] : .button
+        addTarget(self, action: #selector(didTap), for: .touchUpInside)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        updateBorderColor()
+    }
+
+    private func updateBorderColor() {
+        layer.borderColor = UIColor.label
+            .withAlphaComponent(isSelected ? 1 : Styling.unselectedBorderAlpha)
+            .resolvedColor(with: traitCollection)
+            .cgColor
+    }
+
+    @objc private func didTap() {
+        onTap()
     }
 }

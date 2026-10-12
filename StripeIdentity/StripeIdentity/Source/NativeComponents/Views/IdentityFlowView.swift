@@ -92,6 +92,8 @@ class IdentityFlowView: UIView {
         var buttonTopContentViewModel: HTMLTextView.ViewModel?
         var scrollViewDelegate: UIScrollViewDelegate?
         var flowViewDelegate: IdentityFlowViewDelegate?
+        /// A view shown directly above the buttons, e.g. the Networked Identity saved ID chip.
+        var buttonTopAccessoryView: UIView?
     }
 
     private let headerView = HeaderView()
@@ -136,6 +138,7 @@ class IdentityFlowView: UIView {
     }()
 
     private let buttonTopContentView = HTMLTextView()
+    private var buttonTopAccessoryView: UIView?
 
     private var flowViewDelegate: IdentityFlowViewDelegate?
 
@@ -181,6 +184,7 @@ class IdentityFlowView: UIView {
             secondaryButtonStyle: secondaryButtonStyle
         )
         try configureButtonTop(with: viewModel.buttonTopContentViewModel)
+        configureButtonTopAccessory(viewModel.buttonTopAccessoryView)
         flowViewDelegate = viewModel.flowViewDelegate
         if let scrollViewDelegate = viewModel.scrollViewDelegate {
             scrollView.delegate = scrollViewDelegate
@@ -196,6 +200,24 @@ class IdentityFlowView: UIView {
         scrollView.contentInset.bottom = bottomInset
         scrollView.verticalScrollIndicatorInsets.bottom = bottomInset
         scrollView.horizontalScrollIndicatorInsets.bottom = bottomInset
+    }
+
+    /// The height that shows the header, content and buttons without scrolling, excluding safe areas.
+    func fittingHeight(forWidth width: CGFloat) -> CGFloat {
+        func height(of view: UIView, width: CGFloat) -> CGFloat {
+            view.systemLayoutSizeFitting(
+                CGSize(width: width, height: UIView.layoutFittingCompressedSize.height),
+                withHorizontalFittingPriority: .required,
+                verticalFittingPriority: .fittingSizeLevel
+            ).height
+        }
+        let buttonWidth = width - Style.buttonInsets.leading - Style.buttonInsets.trailing
+        return height(of: scrollContainerStackView, width: width)
+            + Style.buttonSpacing
+            + height(of: buttonTopBackgroundView, width: width)
+            + Style.buttonInsets.top
+            + height(of: buttonStackView, width: buttonWidth)
+            + Style.buttonInsets.bottom
     }
 
     override func layoutSubviews() {
@@ -342,6 +364,8 @@ extension IdentityFlowView {
                 target: self,
                 action: #selector(didTapButton(button:))
             )
+            // The buttons already sit inside the safe area; a stale inset would push the title off-centre.
+            button.insetsLayoutMarginsFromSafeArea = false
             buttonStackView.addArrangedSubview(button)
             return button
         }
@@ -380,6 +404,17 @@ extension IdentityFlowView {
             } catch {
                 throw error
             }
+        }
+    }
+
+    fileprivate func configureButtonTopAccessory(_ view: UIView?) {
+        guard view !== buttonTopAccessoryView else {
+            return
+        }
+        buttonTopAccessoryView?.removeFromSuperview()
+        buttonTopAccessoryView = view
+        if let view {
+            buttonStackView.insertArrangedSubview(view, at: 0)
         }
     }
 
@@ -482,7 +517,7 @@ extension StripeUICore.Button {
             )
         if viewModel.configuration == nil && LiquidGlassDetector.isEnabledInMerchantApp {
             ios26_applyCapsuleCornerConfiguration()
-        } else {
+        } else if viewModel.configuration != nil {
             // Restore the configured corners when reusing a button with a different style.
             #if compiler(>=6.2)
             if #available(iOS 26.0, visionOS 26.0, *) {

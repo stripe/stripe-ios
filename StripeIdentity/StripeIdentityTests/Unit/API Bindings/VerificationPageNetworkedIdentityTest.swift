@@ -1,5 +1,5 @@
 //
-//  VerificationPageNetworkingDataTest.swift
+//  VerificationPageNetworkedIdentityTest.swift
 //  StripeIdentityTests
 //
 
@@ -9,12 +9,12 @@ import XCTest
 
 @testable import StripeIdentity
 
-final class VerificationPageNetworkingDataTest: XCTestCase {
+final class VerificationPageNetworkedIdentityTest: XCTestCase {
     func testDecodesV8BootstrapAndPreservesItWhenUpdatingRequirements() throws {
         // Given the proposed v8 bootstrap with both Networked Identity paths available
         var configuration = networkedIdentity()
-        configuration["email"] = "consumer@example.com"
-        configuration["phone_number"] = "+12025550100"
+        configuration["lookup_email"] = "consumer@example.com"
+        configuration["phone_number_autofill_hint"] = "+12025550100"
         let verificationPage = try makeVerificationPage(
             networkedIdentity: configuration,
             merchantPublishableKey: "pk_test_merchant"
@@ -25,8 +25,8 @@ final class VerificationPageNetworkingDataTest: XCTestCase {
         XCTAssertEqual(verificationPage.merchantPublishableKey, "pk_test_merchant")
         XCTAssertEqual(configurationModel.saveAvailable, true)
         XCTAssertEqual(configurationModel.reuseAvailable, true)
-        XCTAssertEqual(configurationModel.email, "consumer@example.com")
-        XCTAssertEqual(configurationModel.phoneNumber, "+12025550100")
+        XCTAssertEqual(configurationModel.lookupEmail, "consumer@example.com")
+        XCTAssertEqual(configurationModel.phoneNumberAutofillHint, "+12025550100")
         XCTAssertEqual(configurationModel.state?.consented, false)
         XCTAssertEqual(configurationModel.state?.skipped, false)
         XCTAssertNil(configurationModel.state?.direction)
@@ -65,28 +65,9 @@ final class VerificationPageNetworkingDataTest: XCTestCase {
         XCTAssertEqual(verificationPage.networkedIdentityRoute, .none)
     }
 
-    func testLegacyNetworkingFeaturesDoNotEnableV8Routing() throws {
-        // Given an older response containing all the internal eligibility flags
-        let verificationPage = try makeVerificationPage(networkingData: [
-            "features": [
-                "vi_compatible": true,
-                "vi_merchant_eligible": true,
-                "vi_merchant_enabled": true,
-                "consumer_save_enabled": true,
-                "consumer_reuse_enabled": true,
-                "consumer_reuse_possible": true,
-            ],
-        ])
-
-        // Then these flags remain decodable but do not opt into the new bootstrap contract
-        XCTAssertEqual(verificationPage.networkingData?.features?.consumerReuseEnabled, true)
-        XCTAssertEqual(verificationPage.networkedIdentityRoute, .none)
-    }
-
-    func testAvailabilityDoesNotDependOnLegacyFeaturesOrMerchantKey() throws {
+    func testAvailabilityDoesNotDependOnMerchantKey() throws {
         let verificationPage = try makeVerificationPage(networkedIdentity: networkedIdentity())
 
-        XCTAssertNil(verificationPage.networkingData)
         XCTAssertNil(verificationPage.merchantPublishableKey)
         XCTAssertEqual(verificationPage.networkedIdentityRoute, .reuse)
     }
@@ -201,58 +182,29 @@ final class VerificationPageNetworkingDataTest: XCTestCase {
         XCTAssertEqual(verificationPage.networkedIdentityRoute, .none)
     }
 
-    func testNetworkedIdentityContactDetailsAreOptionalAndDoNotUseProvidedDetails() throws {
+    func testNetworkedIdentityContactDetailsAreOptional() throws {
         for contactValue: Any? in [nil, NSNull()] {
             var configuration = networkedIdentity()
-            configuration["email"] = contactValue
-            configuration["phone_number"] = contactValue
-            let verificationPage = try makeVerificationPage(
-                networkedIdentity: configuration,
-                providedDetails: ["email": "legacy@example.com"]
-            )
+            configuration["lookup_email"] = contactValue
+            configuration["phone_number_autofill_hint"] = contactValue
+            let verificationPage = try makeVerificationPage(networkedIdentity: configuration)
 
-            XCTAssertNil(verificationPage.networkedIdentity?.email)
-            XCTAssertNil(verificationPage.networkedIdentity?.phoneNumber)
-            XCTAssertEqual(verificationPage.providedDetails?.email, "legacy@example.com")
+            XCTAssertNil(verificationPage.networkedIdentity?.lookupEmail)
+            XCTAssertNil(verificationPage.networkedIdentity?.phoneNumberAutofillHint)
             XCTAssertEqual(verificationPage.networkedIdentityRoute, .reuse)
-        }
-    }
-
-    func testDecodesProvidedEmailAndPreservesItWhenUpdatingRequirements() throws {
-        // Given the older merchant-provided details remain present for compatibility
-        let verificationPage = try makeVerificationPage(providedDetails: ["email": "consumer@example.com"])
-        XCTAssertEqual(verificationPage.providedDetails?.email, "consumer@example.com")
-
-        let copy = verificationPage.copyWithNewMissings(newMissings: [.idDocumentFront])
-
-        XCTAssertEqual(copy.providedDetails, verificationPage.providedDetails)
-        XCTAssertNil(copy.networkedIdentity)
-        XCTAssertEqual(copy.networkedIdentityRoute, .none)
-    }
-
-    func testProvidedEmailIsOptional() throws {
-        let providedDetailsValues: [Any?] = [nil, NSNull(), [String: Any](), ["email": NSNull()]]
-        for providedDetails in providedDetailsValues {
-            let verificationPage = try makeVerificationPage(providedDetails: providedDetails)
-            XCTAssertNil(verificationPage.providedDetails?.email)
-            XCTAssertEqual(verificationPage.networkedIdentityRoute, .none)
         }
     }
 }
 
-private extension VerificationPageNetworkingDataTest {
+private extension VerificationPageNetworkedIdentityTest {
     func makeVerificationPage(
         networkedIdentity: Any? = nil,
-        merchantPublishableKey: Any? = nil,
-        providedDetails: Any? = nil,
-        networkingData: Any? = nil
+        merchantPublishableKey: Any? = nil
     ) throws -> StripeAPI.VerificationPage {
         let fixtureData = try VerificationPageMock.response200.data()
         var fixture = try XCTUnwrap(JSONSerialization.jsonObject(with: fixtureData) as? [String: Any])
         fixture["networked_identity"] = networkedIdentity
         fixture["merchant_publishable_key"] = merchantPublishableKey
-        fixture["provided_details"] = providedDetails
-        fixture["networking_data"] = networkingData
         let data = try JSONSerialization.data(withJSONObject: fixture)
         return try StripeJSONDecoder().decode(StripeAPI.VerificationPage.self, from: data)
     }

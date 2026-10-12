@@ -42,7 +42,6 @@ class HeaderView: UIView {
         let titleText: String?
         let titleFont: UIFont?
         let titleTextColor: UIColor?
-        let titleTextAlignment: NSTextAlignment
         let topInset: CGFloat?
 
         init(
@@ -51,7 +50,6 @@ class HeaderView: UIView {
             titleText: String?,
             titleFont: UIFont? = nil,
             titleTextColor: UIColor? = nil,
-            titleTextAlignment: NSTextAlignment = .center,
             topInset: CGFloat? = nil
         ) {
             self.backgroundColor = backgroundColor
@@ -59,7 +57,6 @@ class HeaderView: UIView {
             self.titleText = titleText
             self.titleFont = titleFont
             self.titleTextColor = titleTextColor
-            self.titleTextAlignment = titleTextAlignment
             self.topInset = topInset
         }
     }
@@ -121,7 +118,7 @@ extension HeaderView {
             titleLabel.text = titleText
             titleLabel.font = viewModel.titleFont ?? IdentityUI.titleFont
             titleLabel.textColor = viewModel.titleTextColor ?? IdentityUI.textColor
-            titleLabel.textAlignment = viewModel.titleTextAlignment
+            titleLabel.textAlignment = .center
         } else {
             titleLabel.isHidden = true
         }

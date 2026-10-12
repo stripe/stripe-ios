@@ -1,5 +1,5 @@
 //
-//  VerificationPageNetworkingData.swift
+//  VerificationPageNetworkedIdentity.swift
 //  StripeIdentity
 //
 
@@ -31,8 +31,9 @@ extension StripeAPI {
 
         let saveAvailable: Bool?
         let reuseAvailable: Bool?
-        let email: String?
-        let phoneNumber: String?
+        let lookupEmail: String?
+        /// Prefills Link sign-up only; never used to look up or select a Link account.
+        let phoneNumberAutofillHint: String?
         let state: State?
 
         var route: NetworkedIdentityRoute {
@@ -61,20 +62,6 @@ extension StripeAPI {
             }
             return .none
         }
-    }
-
-    // Kept for decoding older responses only; v8 routing uses networked_identity instead.
-    struct VerificationPageNetworkingData: Decodable, Equatable {
-        let features: VerificationPageNetworkingFeatures?
-    }
-
-    struct VerificationPageNetworkingFeatures: Decodable, Equatable {
-        let viCompatible: Bool?
-        let viMerchantEligible: Bool?
-        let viMerchantEnabled: Bool?
-        let consumerSaveEnabled: Bool?
-        let consumerReuseEnabled: Bool?
-        let consumerReusePossible: Bool?
     }
 }
 
