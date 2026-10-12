@@ -20,18 +20,20 @@ final class PaymentPagesAPIResponseDiscountTests: XCTestCase {
         let dict: [String: Any] = [
             "currency": "usd",
             "recurring_details": [
-                "total_discount_amounts": [
-                    [
-                        "amount": 500,
-                        "coupon": [
-                            "code": "coupon_abc",
-                            "name": "25% Off",
-                            "percent_off": 25.0,
+                "total_summary": [
+                    "total_discount_amounts": [
+                        [
+                            "amount": 500,
+                            "coupon": [
+                                "code": "coupon_abc",
+                                "name": "25% Off",
+                                "percent_off": 25.0,
+                            ] as [String: Any],
+                            "promotion_code": [
+                                "code": "SAVE25",
+                            ],
                         ] as [String: Any],
-                        "promotion_code": [
-                            "code": "SAVE25",
-                        ],
-                    ] as [String: Any],
+                    ],
                 ],
             ],
         ]
@@ -53,15 +55,17 @@ final class PaymentPagesAPIResponseDiscountTests: XCTestCase {
         let dict: [String: Any] = [
             "currency": "usd",
             "recurring_details": [
-                "total_discount_amounts": [
-                    [
-                        "amount": 1000,
-                        "coupon": [
-                            "code": "coupon_def",
-                            "name": "$10 Off",
-                            "amount_off": 1000,
+                "total_summary": [
+                    "total_discount_amounts": [
+                        [
+                            "amount": 1000,
+                            "coupon": [
+                                "code": "coupon_def",
+                                "name": "$10 Off",
+                                "amount_off": 1000,
+                            ] as [String: Any],
                         ] as [String: Any],
-                    ] as [String: Any],
+                    ],
                 ],
             ],
         ]
@@ -82,14 +86,16 @@ final class PaymentPagesAPIResponseDiscountTests: XCTestCase {
     func testZeroAmountDiscountIsFiltered() {
         let dict: [String: Any] = [
             "recurring_details": [
-                "total_discount_amounts": [
-                    [
-                        "amount": 0,
-                        "coupon": [
-                            "code": "coupon_zero",
-                            "name": "No-op",
-                        ],
-                    ] as [String: Any],
+                "total_summary": [
+                    "total_discount_amounts": [
+                        [
+                            "amount": 0,
+                            "coupon": [
+                                "code": "coupon_zero",
+                                "name": "No-op",
+                            ],
+                        ] as [String: Any],
+                    ],
                 ],
             ],
         ]
@@ -103,7 +109,9 @@ final class PaymentPagesAPIResponseDiscountTests: XCTestCase {
     func testEmptyDiscountAmountsArray() {
         let dict: [String: Any] = [
             "recurring_details": [
-                "total_discount_amounts": [] as [[AnyHashable: Any]],
+                "total_summary": [
+                    "total_discount_amounts": [] as [[AnyHashable: Any]],
+                ],
             ],
         ]
 
@@ -128,26 +136,28 @@ final class PaymentPagesAPIResponseDiscountTests: XCTestCase {
         let dict: [String: Any] = [
             "currency": "usd",
             "recurring_details": [
-                "total_discount_amounts": [
-                    [
-                        "amount": 500,
-                        "coupon": [
-                            "code": "coupon_first",
-                            "name": "First",
-                            "percent_off": 10.5,
+                "total_summary": [
+                    "total_discount_amounts": [
+                        [
+                            "amount": 500,
+                            "coupon": [
+                                "code": "coupon_first",
+                                "name": "First",
+                                "percent_off": 10.5,
+                            ] as [String: Any],
+                            "promotion_code": [
+                                "code": "FIRST10",
+                            ],
                         ] as [String: Any],
-                        "promotion_code": [
-                            "code": "FIRST10",
-                        ],
-                    ] as [String: Any],
-                    [
-                        "amount": 200,
-                        "coupon": [
-                            "code": "coupon_second",
-                            "name": "Second",
-                            "amount_off": 200,
+                        [
+                            "amount": 200,
+                            "coupon": [
+                                "code": "coupon_second",
+                                "name": "Second",
+                                "amount_off": 200,
+                            ] as [String: Any],
                         ] as [String: Any],
-                    ] as [String: Any],
+                    ],
                 ],
             ],
         ]
@@ -174,21 +184,23 @@ final class PaymentPagesAPIResponseDiscountTests: XCTestCase {
         let dict: [String: Any] = [
             "currency": "usd",
             "recurring_details": [
-                "total_discount_amounts": [
-                    [
-                        "amount": 0,
-                        "coupon": [
-                            "code": "coupon_zero",
-                            "name": "Zero",
+                "total_summary": [
+                    "total_discount_amounts": [
+                        [
+                            "amount": 0,
+                            "coupon": [
+                                "code": "coupon_zero",
+                                "name": "Zero",
+                            ] as [String: Any],
                         ] as [String: Any],
-                    ] as [String: Any],
-                    [
-                        "amount": 300,
-                        "coupon": [
-                            "code": "coupon_valid",
-                            "name": "Valid",
+                        [
+                            "amount": 300,
+                            "coupon": [
+                                "code": "coupon_valid",
+                                "name": "Valid",
+                            ] as [String: Any],
                         ] as [String: Any],
-                    ] as [String: Any],
+                    ],
                 ],
             ],
         ]
@@ -213,7 +225,9 @@ final class PaymentPagesAPIResponseDiscountTests: XCTestCase {
             let json = CheckoutTestHelpers.makeSessionJSON([
                 "currency": "usd",
                 "recurring_details": [
-                    "total_discount_amounts": [invalidDiscount],
+                    "total_summary": [
+                        "total_discount_amounts": [invalidDiscount],
+                    ],
                 ],
             ])
 
@@ -228,11 +242,13 @@ final class PaymentPagesAPIResponseDiscountTests: XCTestCase {
         let json = CheckoutTestHelpers.makeSessionJSON([
             "currency": "usd",
             "recurring_details": [
-                "total_discount_amounts": [
-                    [
-                        "amount": 100,
-                        "coupon": ["name": "Welcome"],
-                    ] as [String: Any],
+                "total_summary": [
+                    "total_discount_amounts": [
+                        [
+                            "amount": 100,
+                            "coupon": ["name": "Welcome"],
+                        ] as [String: Any],
+                    ],
                 ],
             ],
         ])
@@ -246,14 +262,16 @@ final class PaymentPagesAPIResponseDiscountTests: XCTestCase {
         let dict: [String: Any] = [
             "currency": "usd",
             "recurring_details": [
-                "total_discount_amounts": [
-                    [
-                        "amount": 250,
-                        "coupon": [
-                            "code": "coupon_no_name",
-                            "percent_off": 5.0,
+                "total_summary": [
+                    "total_discount_amounts": [
+                        [
+                            "amount": 250,
+                            "coupon": [
+                                "code": "coupon_no_name",
+                                "percent_off": 5.0,
+                            ] as [String: Any],
                         ] as [String: Any],
-                    ] as [String: Any],
+                    ],
                 ],
             ],
         ]
@@ -264,14 +282,61 @@ final class PaymentPagesAPIResponseDiscountTests: XCTestCase {
         XCTAssertEqual(discounts[0].percentOff, 5)
     }
 
-    func testRecurringDetailsRejectsMissingRequiredDiscountAmounts() {
+    func testDiscountsUseRecurringTotalSummary() throws {
+        // Given different discounts in the recurring summary and deprecated fields
+        let recurringDiscount: [String: Any] = [
+            "amount": 250,
+            "coupon": ["code": "coupon_recurring", "name": "Recurring discount"],
+        ]
+        let otherDiscount: [String: Any] = [
+            "amount": 500,
+            "coupon": ["code": "coupon_other", "name": "Other discount"],
+        ]
+        let json = CheckoutTestHelpers.makeSessionJSON([
+            "currency": "usd",
+            "recurring_details": [
+                "total_discount_amounts": [otherDiscount],
+                "total_tax_amounts": "ignored",
+                "total_summary": [
+                    "total_discount_amounts": [recurringDiscount],
+                ],
+            ],
+            "total_summary": [
+                "total_discount_amounts": [otherDiscount],
+            ],
+        ])
+
+        // When decoding the public session
+        let session = try PaymentPagesAPIResponse.decode(fromAPIResponse: json).makePublicSession()
+
+        // Then discounts come from the recurring summary
+        XCTAssertEqual(session.discountAmounts.count, 1)
+        let discount = try XCTUnwrap(session.discountAmounts.first)
+        XCTAssertEqual(discount.minorUnitsAmount, 250)
+        XCTAssertEqual(discount.displayName, "Recurring discount")
+    }
+
+    func testRecurringSummaryWithoutDiscountAmounts() throws {
+        // Given a recurring summary without a discount array
+        let json = CheckoutTestHelpers.makeSessionJSON([
+            "recurring_details": ["total_summary": [:]],
+        ])
+
+        // When decoding the public session
+        let session = try PaymentPagesAPIResponse.decode(fromAPIResponse: json).makePublicSession()
+
+        // Then there are no discounts
+        XCTAssertTrue(session.discountAmounts.isEmpty)
+    }
+
+    func testRecurringDetailsRejectsMissingRequiredTotalSummary() {
         let json = CheckoutTestHelpers.makeSessionJSON([
             "recurring_details": [:],
         ])
 
         XCTAssertThrowsError(
             try PaymentPagesAPIResponse.decode(fromAPIResponse: json),
-            "Expected missing total_discount_amounts to fail decoding"
+            "Expected missing total_summary to fail decoding"
         )
     }
 }

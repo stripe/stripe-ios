@@ -129,7 +129,7 @@ extension CheckoutController.Session {
     ) {
         let elementsSessionValue = apiResponse.elementsSession.value
         let publicDiscountAmounts = PaymentPagesAPIResponse.makeDiscountAmounts(
-            from: apiResponse.recurringDetails?.totalDiscountAmounts ?? [],
+            from: apiResponse.recurringDetails?.totalSummary.totalDiscountAmounts ?? [],
             currency: apiResponse.currency
         )
         let publicTaxAmounts = apiResponse.totalSummary?.totalTaxAmounts?.map {
