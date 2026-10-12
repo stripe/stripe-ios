@@ -257,7 +257,7 @@ enum CheckoutPlayground {
         }
     }
 
-    enum DefaultShippingAddressOption: String, CaseIterable, Identifiable, Codable {
+    enum DefaultAddressOption: String, CaseIterable, Identifiable, Codable {
 
         case none
         case usTestAddress
@@ -274,7 +274,7 @@ enum CheckoutPlayground {
         }
     }
 
-    struct DefaultShippingAddress: Equatable, Codable {
+    struct DefaultAddress: Equatable, Codable {
 
         var name: String
         var line1: String
@@ -284,7 +284,7 @@ enum CheckoutPlayground {
         var postalCode: String
         var country: String
 
-        static let usTestAddress = DefaultShippingAddress(
+        static let usTestAddress = DefaultAddress(
             name: "Jenny Rosen",
             line1: "510 Townsend St",
             line2: "",
@@ -306,6 +306,27 @@ enum CheckoutPlayground {
                 postalCode: postalCode
             )
             return shippingDetails
+        }
+
+        var checkoutBillingDetails: CheckoutController.Configuration.Defaults.BillingDetails? {
+            let billingName = name.trimmingCharacters(in: .whitespacesAndNewlines)
+            let billingCountry = country.trimmingCharacters(in: .whitespacesAndNewlines)
+            guard !billingName.isEmpty || !billingCountry.isEmpty else {
+                return nil
+            }
+            var billingDetails = CheckoutController.Configuration.Defaults.BillingDetails()
+            billingDetails.name = billingName.isEmpty ? nil : billingName
+            if !billingCountry.isEmpty {
+                billingDetails.address = CheckoutController.Address(
+                    country: billingCountry.uppercased(),
+                    line1: line1.isEmpty ? nil : line1,
+                    line2: line2.isEmpty ? nil : line2,
+                    city: city.isEmpty ? nil : city,
+                    state: state.isEmpty ? nil : state,
+                    postalCode: postalCode.isEmpty ? nil : postalCode
+                )
+            }
+            return billingDetails
         }
     }
 
@@ -490,9 +511,11 @@ enum CheckoutPlayground {
         var email: EmailSettings? = .init()
         var cartScenario: CartScenario = .standard
         var shippingAddressCollection = true
-        var defaultShippingAddressOption: DefaultShippingAddressOption = .none
-        var customDefaultShippingAddress = DefaultShippingAddress.usTestAddress
+        var defaultShippingAddressOption: DefaultAddressOption = .none
+        var customDefaultShippingAddress = DefaultAddress.usTestAddress
         var billingAddressCollection: BillingAddressCollection = .automatic
+        var defaultBillingAddressOption: DefaultAddressOption? = DefaultAddressOption.none
+        var customDefaultBillingAddress: DefaultAddress? = .usTestAddress
         var automaticTax = true
         var checkoutSessionPaymentMethodSave = true
         var checkoutSessionPaymentMethodRemove = true
