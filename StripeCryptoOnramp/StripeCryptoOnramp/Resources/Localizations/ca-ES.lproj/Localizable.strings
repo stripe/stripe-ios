@@ -4,6 +4,8 @@
 
 "Add documents" = "Afegiu documents";
 
+"Allow camera access in Settings to take a photo." = "Permeteu l'accés a la càmera a Configuració per fer una foto.";
+
 "Answer" = "Responeu";
 
 "Choose File…" = "Tria un fitxer…";
@@ -22,9 +24,13 @@
 
 "Make sure your document meets following requirements." = "Assegureu-vos que el vostre document compleix els requisits següents.";
 
+"Please select your Apple Pay payment method again to continue." = "Torneu a seleccionar el vostre mètode de pagament amb Apple Pay per continuar.";
+
 "Please try again later." = "Torneu-ho a provar més tard.";
 
 "Submitted for review" = "Enviat per a revisar";
+
+"Take Photo…" = "Feu una foto…";
 
 "Tell us about your source of funds" = "Parleu-nos sobre l'origen dels vostres fons";
 

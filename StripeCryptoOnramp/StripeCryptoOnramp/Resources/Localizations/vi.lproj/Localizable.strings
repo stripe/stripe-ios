@@ -4,6 +4,8 @@
 
 "Add documents" = "Thêm tài liệu";
 
+"Allow camera access in Settings to take a photo." = "Cho phép truy cập camera trong Cài đặt để chụp ảnh.";
+
 "Answer" = "Trả lời";
 
 "Choose File…" = "Chọn Tệp...";
@@ -22,9 +24,13 @@
 
 "Make sure your document meets following requirements." = "Đảm bảo tài liệu của bạn đáp ứng các yêu cầu dưới đây.";
 
+"Please select your Apple Pay payment method again to continue." = "Vui lòng chọn lại phương thức thanh toán Apple Pay của bạn để tiếp tục.";
+
 "Please try again later." = "Vui lòng thử lại sau.";
 
 "Submitted for review" = "Đã gửi để đánh giá";
+
+"Take Photo…" = "Chụp ảnh…";
 
 "Tell us about your source of funds" = "Hãy cho chúng tôi biết về nguồn vốn của bạn";
 

@@ -4,6 +4,8 @@
 
 "Add documents" = "Voeg documenten toe";
 
+"Allow camera access in Settings to take a photo." = "Sta cameratoegang toe in Instellingen om een foto te maken.";
+
 "Answer" = "Antwoord";
 
 "Choose File…" = "Bestand kiezen...";
@@ -22,9 +24,13 @@
 
 "Make sure your document meets following requirements." = "Zorg dat je document aan de volgende vereisten voldoet.";
 
+"Please select your Apple Pay payment method again to continue." = "Selecteer je Apple Pay-betaalmethode opnieuw om door te gaan.";
+
 "Please try again later." = "Probeer het later nog eens.";
 
 "Submitted for review" = "Ingediend ter controle";
+
+"Take Photo…" = "Maak foto...";
 
 "Tell us about your source of funds" = "Vertel ons over de herkomst van je geld";
 

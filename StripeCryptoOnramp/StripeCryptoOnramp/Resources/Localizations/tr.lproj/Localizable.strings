@@ -4,6 +4,8 @@
 
 "Add documents" = "Belgeleri ekleyin";
 
+"Allow camera access in Settings to take a photo." = "Fotoğraf çekmek için Ayarlar'dan kamera erişimine izin verin.";
+
 "Answer" = "Yanıt";
 
 "Choose File…" = "Dosya Seç…";
@@ -22,9 +24,13 @@
 
 "Make sure your document meets following requirements." = "Belgenizin aşağıdaki gereksinimleri karşıladığından emin olun.";
 
+"Please select your Apple Pay payment method again to continue." = "Devam etmek için lütfen Apple Pay ödeme yönteminizi tekrar seçin.";
+
 "Please try again later." = "Lütfen daha sonra tekrar deneyin.";
 
 "Submitted for review" = "İncelemeye gönderildi";
+
+"Take Photo…" = "Fotoğraf Çek…";
 
 "Tell us about your source of funds" = "Bize fonlarınızın kaynağı hakkında bilgi verin";
 

@@ -46,9 +46,19 @@
 
 "Buy now or pay later with Klarna" = "Klarna で後払い";
 
+"By confirming your payment with GCash, you allow %@ to charge your GCash account for future payments in accordance with their terms." = "GCash による支払いを確定すると、%@ が規約に従って今後の支払いをお客様の GCash アカウントに請求することを許可することになります。";
+
 "By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "NICEPAY による支払いを確定すると、%@ が規約に従って今後の支払いをこの決済手段に請求することを許可することになります。";
 
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "PayPal による支払いを確定すると、%@ が規約に従って今後の支払いをお客様の PayPal アカウントに請求することを許可することになります。";
+
+"By confirming your payment with Touch 'n Go, you allow %@ to charge your Touch 'n Go account for future payments in accordance with their terms." = "Touch 'n Go による支払いを確定すると、%@ が規約に従って今後の支払いをお客様の Touch 'n Go アカウントに請求することを許可することになります。";
+
+"By confirming your payment with TrueMoney, you allow %@ to charge your TrueMoney account for future payments in accordance with their terms." = "TrueMoney による支払いを確定すると、%@ が規約に従って今後の支払いをお客様の TrueMoney アカウントに請求することを許可することになります。";
+
+"By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their <terms>terms of use</terms>." = "取引がマーチャントオブレコードである Global Stack Services Limited によって、その<terms>利用規約</terms>に従って処理されることに同意した上で、支払いを確定します。";
+
+"By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their <terms>terms</terms>." = "取引がマーチャントオブレコードである Global Stack Services Limited によって、その<terms>規約</terms>に従って処理されることに同意した上で、支払いを確定します。";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Amazon Pay への処理を続行すると、%@ が規約に従って今後の支払いをお客様の Amazon Pay アカウントに請求することを許可することになります。";
 
@@ -173,6 +183,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "私は、Stripe が %@ の代理として口座引き落としによる回収を行うことを理解しています。また、私が当該口座を保有しており、この口座からの引き落としを承認すべき唯一の人間であることを認めます。";
 
 "IBAN" = "IBAN";
+
+"Invoice payment for business buyers." = "法人の購入者向けの請求書払い。";
 
 "Keep Editing" = "編集を続ける";
 

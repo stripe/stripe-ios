@@ -46,9 +46,19 @@
 
 "Buy now or pay later with Klarna" = "Ixtri issa jew ħallas iktar tard bi Klarna";
 
+"By confirming your payment with GCash, you allow %@ to charge your GCash account for future payments in accordance with their terms." = "Meta tikkonferma l-ħlas tiegħek permezz ta' GCash, tkun qed tippermetti lil %@ jiġbor il-ħlas mill-kont ta' GCash tiegħek għal ħlasijiet fil-futur skont ir-regoli tagħhom.";
+
 "By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "Billi tikkonferma l-pagament tiegħek ma' NICEPAY, int qed tħalli lil %@ tiġbor il-ħlas minn dan il-metodu ta' pagament għal pagamenti futuri skont ir-regoli tagħhom.";
 
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Meta tikkonferma l-pagament b'PayPal tkun qed tħalli lil %@ tiġbor il-flus mill-kont ta' PayPal tiegħek għall-pagamenti tal-ġejjieni skont ir-regoli tagħha.";
+
+"By confirming your payment with Touch 'n Go, you allow %@ to charge your Touch 'n Go account for future payments in accordance with their terms." = "Meta tikkonferma l-ħlas tiegħek permezz ta' Touch 'n Go, tkun qed tippermetti lil %@ jiġbor il-ħlas mill-kont ta' Touch 'n Go tiegħek għal ħlasijiet fil-futur skont it-termini tagħhom.";
+
+"By confirming your payment with TrueMoney, you allow %@ to charge your TrueMoney account for future payments in accordance with their terms." = "Meta tikkonferma l-ħlas tiegħek permezz ta' TrueMoney, tkun qed tippermetti lil %@ jiġbor il-ħlas mill-kont ta' TrueMoney tiegħek għal ħlasijiet fil-futur skont it-termini tagħhom.";
+
+"By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their <terms>terms of use</terms>." = "Meta tikkonferma l-ħlas tiegħek, taqbel li t-tranżazzjoni tiegħek se tiġi ġestita minn Global Stack Services Limited bħala n-negozjant reġistrat u skont it-<terms>termini tal-użu</terms> tagħhom";
+
+"By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their <terms>terms</terms>." = "Meta tikkonferma l-ħlas tiegħek, taqbel li t-tranżazzjoni tiegħek se tiġi ġestita minn Global Stack Services Limited bħala n-negozjant reġistrat u skont it-<terms>termini</terms> tagħhom.";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Meta tkompli għal fuq Amazon Pay, tkun qed tagħti permess lil %@ biex fil-ġejjieni tiġbor il-pagamenti mill-kont Amazon Pay tiegħek skont ir-regoli tagħha.";
 
@@ -173,6 +183,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Jiena nifhem li Stripe se tkun qed tiġbor id-Debiti Diretti f'isem %@ u nikkonferma li jiena d-detentur tal-kont u l-unika persuna meħtieġa biex tawtorizza d-debiti minn dan il-kont.";
 
 "IBAN" = "IBAN";
+
+"Invoice payment for business buyers." = "Ħlas ta' Fattura għal xerrejja ta' negozji.";
 
 "Keep Editing" = "Kompli Editja";
 

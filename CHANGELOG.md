@@ -1,7 +1,9 @@
 The next release's version bump will so far be:
-MINOR
+PATCH
 
 ## X.Y.Z - changes pending release
+
+## 26.14.0 2026-10-12
 ### General
 * [Removed] Removed the "test mode" badge from all UI surfaces.
 
