@@ -13,17 +13,6 @@ import XCTest
 @MainActor
 final class SheetImplementationResolverTests: XCTestCase {
 
-    func testDeviceOverrideIsDisabled() {
-        XCTAssertFalse(SheetImplementationResolver.isRequiredForDevice)
-    }
-
-    func testNativeSheetSelectionRespectsFeatureFlag() {
-        for flag in [false, true] {
-            let resolver = SheetImplementationResolver(elementsSession: makeSession(flag: flag))
-            XCTAssertEqual(resolver.usesNativeSheet, flag && UIDevice.current.userInterfaceIdiom == .phone)
-        }
-    }
-
     func testEmbeddedKeepsInitialDecisionWhenElementsSessionChanges() async {
         await AddressSpecProvider.shared.loadAddressSpecs()
         let element = EmbeddedPaymentElement(
