@@ -3,7 +3,6 @@ MINOR
 
 ## X.Y.Z - changes pending release
 ### General
-* [Changed] Live-mode API error descriptions now include the request ID when available. Test-mode descriptions are unchanged.
 * [Removed] Removed the "test mode" badge from all UI surfaces.
 
 ### PaymentSheet
