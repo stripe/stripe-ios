@@ -99,7 +99,6 @@ class EmbeddedFormViewController: UIViewController {
 
     lazy var navigationBar: SheetNavigationBar = {
         let navBar = SheetNavigationBar(
-            isTestMode: configuration.apiClient.isTestmode,
             appearance: configuration.appearance
         )
         navBar.delegate = self

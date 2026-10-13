@@ -5,6 +5,7 @@
 //  Created by Michael Liberatore on 10/1/26.
 //
 
+import AVFoundation
 @_spi(STP) import StripeCore
 @_spi(CryptoOnrampAlpha) import StripePaymentSheet
 @_spi(STP) import StripeUICore
@@ -13,7 +14,7 @@ import SwiftUI
 /// The picker presentation, pending import, and error messages owned by a document collection screen.
 struct DocumentSelectionState {
 
-    /// A sheet presented while selecting a document or its category.
+    /// A destination presented while selecting a document or its category.
     enum Sheet: String, Identifiable {
 
         /// Select a document category.
@@ -24,6 +25,9 @@ struct DocumentSelectionState {
 
         /// Select an image from Photos.
         case photos
+
+        /// Take a photo in the full-screen camera.
+        case camera
 
         // MARK: - Identifiable
 
@@ -42,13 +46,13 @@ struct DocumentSelectionState {
         let message: String
     }
 
-    /// The currently presented category or file picker.
+    /// The currently presented category picker, document picker, or camera.
     var sheet: Sheet?
 
-    /// Whether to offer Files and Photos in the source selection alert.
+    /// Whether to present the alert for choosing a document source.
     var showsSourcePicker = false
 
-    /// The selected file's available name while it is being copied from the picker.
+    /// The file's available name while it is being copied or the captured photo is being saved.
     var importingFilename: String?
 
     /// The file to display with a format or size validation error, when present.
@@ -77,6 +81,8 @@ struct DocumentSelectionState {
             sheet = .files
         case .photos:
             sheet = .photos
+        case .camera:
+            sheet = .camera
         }
     }
 
@@ -142,9 +148,17 @@ private struct DocumentSelectionModifier: ViewModifier {
                     onSelectSource(.photos)
                 }
 
+                if configuration.cameraImageFormat != nil,
+                   UIImagePickerController.isSourceTypeAvailable(.camera) {
+                    Button(String.Localized.takeDocumentPhoto, action: takePhoto)
+                }
+
                 Button(String.Localized.cancel, role: .cancel) {}
             }
-            .sheet(item: $state.sheet) { sheet in
+            .sheet(item: Binding(
+                get: { state.sheet == .camera ? nil : state.sheet },
+                set: { state.sheet = $0 }
+            )) { sheet in
                 switch sheet {
                 case .subtype:
                     NavigationView {
@@ -154,42 +168,76 @@ private struct DocumentSelectionModifier: ViewModifier {
                     }
                     .navigationViewStyle(.stack)
                     .preferredColorScheme(appearance.colorScheme)
-                case .files, .photos:
-                    let operation = state.importID
-                    DocumentPicker(source: sheet == .files ? .files : .photos, configuration: configuration, onBeginImport: { filename in
-                        guard operation == state.importID else {
-                            return
-                        }
-
-                        state.importingFilename = filename
-                        state.sheet = nil
-                    }, onCompletion: { result in
-                        guard operation == state.importID else {
-                            return
-                        }
-
-                        let filename = state.importingFilename ?? ""
-                        state.importingFilename = nil
-                        state.sheet = nil
-                        switch result {
-                        case .success(let file):
-                            onSelectFile(file)
-                        case .failure(let error):
-                            if let collectionError = error as? DocumentCollectionError,
-                               collectionError == .unsupportedFormat || collectionError == .fileTooLarge {
-                                state.rejectedFile = .init(
-                                    filename: filename.isEmpty ? "File" : filename,
-                                    message: importErrorMessage(error)
-                                )
-                            } else {
-                                state.errorMessage = importErrorMessage(error)
-                            }
-                        case nil:
-                            break
-                        }
-                    })
+                case .files:
+                    documentPicker(source: .files)
+                case .photos:
+                    documentPicker(source: .photos)
+                case .camera:
+                    EmptyView() // The camera is presented full screen below.
                 }
             }
+            .fullScreenCover(isPresented: Binding(
+                get: { state.sheet == .camera },
+                set: { isPresented in
+                    if !isPresented {
+                        state.sheet = nil
+                    }
+                }
+            )) {
+                documentPicker(source: .camera)
+                    .ignoresSafeArea()
+            }
+    }
+
+    private func takePhoto() {
+        let operation = state.importID
+        Task { @MainActor in
+            let granted = await AVCaptureDevice.requestAccess(for: .video)
+            guard operation == state.importID else {
+                return
+            }
+            guard granted else {
+                state.errorMessage = .Localized.documentCameraAccessRequired
+                return
+            }
+            onSelectSource(.camera)
+        }
+    }
+
+    private func documentPicker(source: DocumentPicker.Source) -> some View {
+        let operation = state.importID
+        return DocumentPicker(source: source, configuration: configuration, onBeginImport: { filename in
+            guard operation == state.importID else {
+                return
+            }
+
+            state.importingFilename = filename
+            state.sheet = nil
+        }, onCompletion: { result in
+            guard operation == state.importID else {
+                return
+            }
+
+            let filename = state.importingFilename ?? ""
+            state.importingFilename = nil
+            state.sheet = nil
+            switch result {
+            case .success(let file):
+                onSelectFile(file)
+            case .failure(let error):
+                if let collectionError = error as? DocumentCollectionError,
+                   collectionError == .unsupportedFormat || collectionError == .fileTooLarge {
+                    state.rejectedFile = .init(
+                        filename: filename.isEmpty ? "File" : filename,
+                        message: importErrorMessage(error)
+                    )
+                } else {
+                    state.errorMessage = importErrorMessage(error)
+                }
+            case nil:
+                break
+            }
+        })
     }
 
     private func importErrorMessage(_ error: Error) -> String {

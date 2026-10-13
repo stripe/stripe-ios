@@ -56,6 +56,22 @@ final class SourceOfFundsModelTests: XCTestCase {
         XCTAssertEqual(model.documents, [.init(documentSubtype: savings.id, fileIds: ["file_savings"])])
     }
 
+    func testFileLimitAppliesPerSource() {
+        var configuration = configuration
+        configuration.maximumFilesPerDocumentType = 2
+        let model = SourceOfFundsModel(configuration: configuration)
+        let salary = configuration.acceptedSubtypes[0]
+        let savings = configuration.acceptedSubtypes[1]
+
+        model.save(subtype: salary, files: [file("salary_1"), file("salary_2")])
+        model.save(subtype: savings, files: [file("savings_1"), file("savings_2")])
+        XCTAssertTrue(model.canSubmit)
+        XCTAssertEqual(model.documents.count, 2)
+
+        model.save(subtype: salary, files: [file("salary_1"), file("salary_2"), file("salary_3")], replacing: salary.id)
+        XCTAssertEqual(model.sources[0].files.count, 2)
+    }
+
     private var configuration: DocumentCollectionConfiguration {
         .init(
             acceptedSubtypes: [

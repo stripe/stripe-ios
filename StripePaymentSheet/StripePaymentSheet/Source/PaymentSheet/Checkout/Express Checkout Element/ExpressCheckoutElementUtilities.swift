@@ -13,11 +13,35 @@ enum ExpressCheckoutElementUtilities {
         case notSupportedInSession = "not_supported_in_session"
         case linkConfiguration = "link_configuration"
         case automaticTaxAddress = "automatic_tax_address"
+        case shippingAddressRequired = "shipping_address_required"
+        case billingDetailsCollection = "billing_details_collection"
+    }
+
+    static func availablePaymentMethods(
+        for apiResponse: PaymentPagesAPIResponse,
+        configuration: CheckoutController.Configuration
+    ) -> [ExpressCheckoutElement.PaymentMethod] {
+        guard let expressCheckoutConfiguration = configuration.expressCheckoutElement else {
+            return []
+        }
+        let elementsSession = apiResponse.elementsSession.value
+        let usesWebLink = !deviceCanUseNativeLink(elementsSession: elementsSession, apiClient: configuration.apiClient)
+
+        return availablePaymentMethods(
+            for: elementsSession,
+            configuration: expressCheckoutConfiguration,
+            usesWebLink: usesWebLink,
+            requiresShippingAddress: apiResponse.shippingAddressCollection != nil,
+            billingDetailsCollectionRequired: apiResponse.billingAddressCollection == "required"
+        )
     }
 
     static func availablePaymentMethods(
         for elementsSession: STPElementsSession,
-        configuration: ExpressCheckoutElement.Configuration
+        configuration: ExpressCheckoutElement.Configuration,
+        usesWebLink: Bool,
+        requiresShippingAddress: Bool,
+        billingDetailsCollectionRequired: Bool
     ) -> [ExpressCheckoutElement.PaymentMethod] {
         var paymentMethods: [ExpressCheckoutElement.PaymentMethod] = []
         for paymentMethod in availablePaymentMethodTypes(for: elementsSession) {
@@ -29,7 +53,13 @@ enum ExpressCheckoutElementUtilities {
                     paymentMethods.append(paymentMethod)
                 }
             case .link:
-                if linkDisabledReasons(for: elementsSession, configuration: configuration).isEmpty {
+                if linkDisabledReasons(
+                    for: elementsSession,
+                    configuration: configuration,
+                    usesWebLink: usesWebLink,
+                    requiresShippingAddress: requiresShippingAddress,
+                    billingDetailsCollectionRequired: billingDetailsCollectionRequired
+                ).isEmpty {
                     paymentMethods.append(paymentMethod)
                 }
             }
@@ -59,7 +89,10 @@ enum ExpressCheckoutElementUtilities {
 
     static func linkDisabledReasons(
         for elementsSession: STPElementsSession,
-        configuration: ExpressCheckoutElement.Configuration
+        configuration: ExpressCheckoutElement.Configuration,
+        usesWebLink: Bool,
+        requiresShippingAddress: Bool,
+        billingDetailsCollectionRequired: Bool
     ) -> [LinkDisabledReason] {
         var reasons: [LinkDisabledReason] = []
 
@@ -71,6 +104,12 @@ enum ExpressCheckoutElementUtilities {
         }
         if elementsSession.disableLinkForAutomaticTaxBilling {
             reasons.append(.automaticTaxAddress)
+        }
+        if requiresShippingAddress {
+            reasons.append(.shippingAddressRequired)
+        }
+        if usesWebLink && billingDetailsCollectionRequired {
+            reasons.append(.billingDetailsCollection)
         }
 
         return reasons

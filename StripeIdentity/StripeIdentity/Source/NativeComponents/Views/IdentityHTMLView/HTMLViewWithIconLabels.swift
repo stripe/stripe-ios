@@ -21,7 +21,6 @@ final class HTMLViewWithIconLabels: UIView {
 
         private static let iconLabelTextStyle = UIFont.TextStyle.caption1
         private static let nonIconLabelTextStyle = UIFont.TextStyle.caption1
-        private static let bodyTextStyle = UIFont.TextStyle.body
     }
 
     struct ViewModel {
@@ -191,28 +190,38 @@ extension HTMLViewWithIconLabels.Styling {
     }
 
     static var bodyTextFont: UIFont {
-        return IdentityUI.preferredFont(forTextStyle: bodyTextStyle)
+        return IdentityUI.bodyFont
     }
 
     static func iconLabelHTMLStyle() -> HTMLStyle {
-        return htmlStyle(for: iconLabelTextStyle)
+        return htmlStyle(
+            font: iconLabelFont,
+            boldFont: IdentityUI.preferredFont(forTextStyle: iconLabelTextStyle, weight: .bold)
+        )
     }
 
     static func nonIconLabelHTMLStyle() -> HTMLStyle {
-        return htmlStyle(for: nonIconLabelTextStyle, shouldCenterText: true)
+        return htmlStyle(
+            font: nonIconLabelFont,
+            boldFont: IdentityUI.preferredFont(forTextStyle: nonIconLabelTextStyle, weight: .bold),
+            shouldCenterText: true
+        )
     }
 
     static func bodyTextHTMLStyle() -> HTMLStyle {
-        return htmlStyle(for: bodyTextStyle)
+        return htmlStyle(
+            font: bodyTextFont,
+            boldFont: IdentityUI.bodyFont(withWeight: .bold)
+        )
     }
 
     private static func htmlStyle(
-        for textStyle: UIFont.TextStyle,
+        font: UIFont,
+        boldFont: UIFont,
         shouldCenterText ceterText: Bool = false
     ) -> HTMLStyle {
-        let boldFont = IdentityUI.preferredFont(forTextStyle: textStyle, weight: .bold)
         return .init(
-            bodyFont: IdentityUI.preferredFont(forTextStyle: textStyle),
+            bodyFont: font,
             bodyColor: IdentityUI.textColor,
             h1Font: boldFont,
             h2Font: boldFont,

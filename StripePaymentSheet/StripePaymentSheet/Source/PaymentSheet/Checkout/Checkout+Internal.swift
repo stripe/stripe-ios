@@ -73,8 +73,10 @@ extension CheckoutController: ExpressCheckoutElementDelegate {
             if let billingDetails = configuration.defaults.billingDetails {
                 linkConfirmationConfiguration.defaultBillingDetails.set(billingDetails)
             }
-            linkConfirmationConfiguration.link.disallowFundingSourceCreation = expressCheckoutElementConfiguration.linkConfiguration.disallowFundingSourceCreation
-            linkConfirmationConfiguration.link.collectMissingBillingDetailsForExistingPaymentMethods = expressCheckoutElementConfiguration.linkConfiguration.collectMissingBillingDetailsForExistingPaymentMethods
+            linkConfirmationConfiguration.defaultBillingDetails.email = session.email
+            if session.billingAddressCollection == .required {
+                linkConfirmationConfiguration.billingDetailsCollectionConfiguration.address = .full
+            }
             switch expressCheckoutElementConfiguration.linkConfiguration.display {
             case .automatic:
                 linkConfirmationConfiguration.link.display = .automatic
@@ -93,6 +95,7 @@ extension CheckoutController: ExpressCheckoutElementDelegate {
             return .link(.init(
                 confirmOption: .wallet(brand: session.elementsSession.linkBrand ?? .link),
                 configuration: linkConfirmationConfiguration,
+                nativeSheetPresentation: nil,
                 confirmationChallenge: ConfirmationChallenge(
                     elementsSession: session.elementsSession,
                     stripeAttest: apiClient.stripeAttest),

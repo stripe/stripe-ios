@@ -2529,6 +2529,380 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertEqual(setupForm.getMandateElement()?.mandateTextView.textView.text, expectedMandate)
     }
 
+    func testNairaBankTransferShowsMerchantOfRecordTerms() {
+        // Given a one-time Naira bank transfer payment
+        let form = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.ngBankTransfer]),
+            elementsSession: ._testValue(paymentMethodTypes: ["ng_bank_transfer"]),
+            configuration: .paymentElement(PaymentSheet.Configuration()),
+            paymentMethod: .stripe(.ngBankTransfer)
+        ).make()
+
+        // Then the form shows the web disclosure without a future-payment mandate
+        let text = form.getMandateElement()?.mandateTextView.textView.attributedText
+        let expected = "By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their terms of use."
+        XCTAssertEqual(text?.string, expected)
+        XCTAssertEqual(
+            text?.attribute(.link, at: (expected as NSString).range(of: "terms of use").location, effectiveRange: nil) as? URL,
+            URL(string: "https://d37ugbyn3rpeym.cloudfront.net/docs/GSSL%20-%20Buyer%20T&Cs%20(Final).pdf")
+        )
+        XCTAssertFalse(form.collectsUserInput)
+        XCTAssertNil(form.updateParams(params: IntentConfirmParams(type: .stripe(.ngBankTransfer))))
+
+        // When the customer sees the disclosure, the payment can be confirmed
+        sendEventToSubviews(.viewDidAppear, from: form.view)
+        XCTAssertNotNil(form.updateParams(params: IntentConfirmParams(type: .stripe(.ngBankTransfer))))
+    }
+
+    func testNairaWalletShowsMerchantOfRecordTerms() {
+        // Given a one-time Naira Wallet payment
+        let form = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.ngWallet]),
+            elementsSession: ._testValue(paymentMethodTypes: ["ng_wallet"]),
+            configuration: .paymentElement(PaymentSheet.Configuration()),
+            paymentMethod: .stripe(.ngWallet)
+        ).make()
+
+        // Then the form shows the exact Web disclosure without a future-payment mandate
+        let text = form.getMandateElement()?.mandateTextView.textView.attributedText
+        let expected = "By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their terms."
+        XCTAssertEqual(text?.string, expected)
+        XCTAssertEqual(
+            text?.attribute(.link, at: (expected as NSString).range(of: "terms").location, effectiveRange: nil) as? URL,
+            URL(string: "https://d37ugbyn3rpeym.cloudfront.net/docs/GSSL%20-%20Buyer%20T&Cs%20(Final).pdf")
+        )
+        XCTAssertFalse(form.collectsUserInput)
+        XCTAssertNil(form.updateParams(params: IntentConfirmParams(type: .stripe(.ngWallet))))
+
+        // When the customer sees the disclosure, the payment can be confirmed
+        sendEventToSubviews(.viewDidAppear, from: form.view)
+        XCTAssertNotNil(form.updateParams(params: IntentConfirmParams(type: .stripe(.ngWallet))))
+    }
+
+    func testNairaUSSDShowsMerchantOfRecordTerms() {
+        // Given a one-time Naira USSD payment
+        let form = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.ngUSSD]),
+            elementsSession: ._testValue(paymentMethodTypes: ["ng_ussd"]),
+            configuration: .paymentElement(PaymentSheet.Configuration()),
+            paymentMethod: .stripe(.ngUSSD)
+        ).make()
+
+        // Then the form shows the web disclosure without a future-payment mandate
+        let text = form.getMandateElement()?.mandateTextView.textView.attributedText
+        let expected = "By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their terms of use."
+        XCTAssertEqual(text?.string, expected)
+        XCTAssertEqual(
+            text?.attribute(.link, at: (expected as NSString).range(of: "terms of use").location, effectiveRange: nil) as? URL,
+            URL(string: "https://d37ugbyn3rpeym.cloudfront.net/docs/GSSL%20-%20Buyer%20T&Cs%20(Final).pdf")
+        )
+        XCTAssertFalse(form.collectsUserInput)
+        XCTAssertNil(form.updateParams(params: IntentConfirmParams(type: .stripe(.ngUSSD))))
+
+        // When the customer sees the disclosure, the payment can be confirmed
+        sendEventToSubviews(.viewDidAppear, from: form.view)
+        XCTAssertNotNil(form.updateParams(params: IntentConfirmParams(type: .stripe(.ngUSSD))))
+    }
+
+    func testNairaCardShowsMerchantOfRecordTerms() {
+        // Given a one-time Naira card payment
+        let form = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.ngCard]),
+            elementsSession: ._testValue(paymentMethodTypes: ["ng_card"]),
+            configuration: .paymentElement(PaymentSheet.Configuration()),
+            paymentMethod: .stripe(.ngCard)
+        ).make()
+
+        // Then the copy and linked terms match Web Payment Element
+        let text = form.getMandateElement()?.mandateTextView.textView.attributedText
+        let expected = "By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their terms of use."
+        XCTAssertEqual(text?.string, expected)
+        XCTAssertEqual(
+            text?.attribute(.link, at: (expected as NSString).range(of: "terms of use").location, effectiveRange: nil) as? URL,
+            URL(string: "https://d37ugbyn3rpeym.cloudfront.net/docs/GSSL%20-%20Buyer%20T&Cs%20(Final).pdf")
+        )
+        XCTAssertFalse(form.collectsUserInput)
+        XCTAssertNil(form.updateParams(params: IntentConfirmParams(type: .stripe(.ngCard))))
+
+        // When the customer sees the disclosure, the payment can be confirmed
+        form.getMandateElement()?.mandateTextView.handleEvent(.viewDidAppear)
+        XCTAssertNotNil(form.updateParams(params: IntentConfirmParams(type: .stripe(.ngCard))))
+    }
+
+    func testNairaCardDefaultsBillingCountryToNigeria() throws {
+        // Given Naira card with full billing address collection
+        let loadExpectation = expectation(description: "Load address specs")
+        AddressSpecProvider.shared.loadAddressSpecs {
+            loadExpectation.fulfill()
+        }
+        waitForExpectations(timeout: 1)
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.address = .full
+        let form = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.ngCard]),
+            elementsSession: ._testValue(paymentMethodTypes: ["ng_card"]),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.ngCard)
+        ).make()
+
+        // When the billing address is built
+        let address = try XCTUnwrap(
+            form.getAllUnwrappedSubElements().compactMap { $0 as? AddressSectionElement }.first
+        )
+
+        // Then all countries remain available and Nigeria is the web default
+        XCTAssertEqual(Set(address.countryCodes), Set(AddressSpecProvider.shared.countries))
+        XCTAssertEqual(address.selectedCountryCode, "NG")
+    }
+
+    func testNairaCardPreservesMerchantBillingCountryAndRestrictions() throws {
+        // Given a merchant-provided billing country and a restricted country list
+        let loadExpectation = expectation(description: "Load address specs")
+        AddressSpecProvider.shared.loadAddressSpecs { loadExpectation.fulfill() }
+        waitForExpectations(timeout: 1)
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.address = .full
+        configuration.billingDetailsCollectionConfiguration.allowedCountries = ["US", "CA"]
+        configuration.defaultBillingDetails.address.country = "CA"
+        let form = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.ngCard]),
+            elementsSession: ._testValue(paymentMethodTypes: ["ng_card"]),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.ngCard)
+        ).make()
+
+        // Then the Nigeria default does not override the merchant's billing details
+        let address = try XCTUnwrap(form.getAllUnwrappedSubElements().compactMap { $0 as? AddressSectionElement }.first)
+        XCTAssertEqual(Set(address.countryCodes), Set(["US", "CA"]))
+        XCTAssertEqual(address.selectedCountryCode, "CA")
+    }
+
+    func testGCashShowsMandateOnlyForFuturePayments() {
+        // Given a payment, two ways to request future usage, and a setup intent
+        let intents: [Intent] = [
+            ._testPaymentIntent(paymentMethodTypes: [.gcash]),
+            ._testPaymentIntent(paymentMethodTypes: [.gcash], setupFutureUsage: .offSession),
+            ._testPaymentIntent(paymentMethodTypes: [.gcash], paymentMethodOptionsSetupFutureUsage: [.gcash: "off_session"]),
+            ._testSetupIntent(paymentMethodTypes: [.gcash]),
+        ]
+        var configuration = PaymentSheet.Configuration()
+        configuration.merchantDisplayName = "Example Merchant"
+        for (index, intent) in intents.enumerated() {
+            // When the form uses automatic billing collection
+            let form = PaymentSheetFormFactory(
+                intent: intent,
+                elementsSession: ._testValue(paymentMethodTypes: ["gcash"]),
+                configuration: .paymentElement(configuration),
+                paymentMethod: .stripe(.gcash)
+            ).make()
+
+            // Then only future payments require the exact web mandate
+            XCTAssertFalse(form.collectsUserInput)
+            if index == 0 {
+                XCTAssertNil(form.getMandateElement())
+                XCTAssertNotNil(form.updateParams(params: IntentConfirmParams(type: .stripe(.gcash))))
+            } else {
+                XCTAssertEqual(
+                    form.getMandateElement()?.mandateTextView.textView.text,
+                    "By confirming your payment with GCash, you allow Example Merchant to charge your GCash account for future payments in accordance with their terms."
+                )
+                XCTAssertNil(form.updateParams(params: IntentConfirmParams(type: .stripe(.gcash))))
+                sendEventToSubviews(.viewDidAppear, from: form.view)
+                XCTAssertNotNil(form.updateParams(params: IntentConfirmParams(type: .stripe(.gcash))))
+            }
+        }
+    }
+    func testMonduMatchesPaymentElementCopyWithoutMandate() {
+        // Given a one-time Mondu payment with automatic billing collection
+        let form = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.mondu]),
+            elementsSession: ._testValue(paymentMethodTypes: ["mondu"]),
+            configuration: .paymentElement(PaymentSheet.Configuration()),
+            paymentMethod: .stripe(.mondu)
+        ).make()
+
+        // Then the form uses the same selection copy as the web Payment Element
+        let labels = form.getAllUnwrappedSubElements()
+            .compactMap { $0 as? SubtitleElement }
+            .flatMap { [$0.view] + $0.view.subviews }
+            .compactMap { ($0 as? UILabel)?.text }
+        XCTAssertEqual(labels, ["Invoice payment for business buyers."])
+        XCTAssertFalse(form.collectsUserInput)
+        XCTAssertNil(form.getMandateElement())
+        XCTAssertNotNil(form.updateParams(params: IntentConfirmParams(type: .stripe(.mondu))))
+    }
+
+    func testMonduDefaultsBillingCountryToLocale() throws {
+        // Given Mondu with full billing address collection
+        let loadExpectation = expectation(description: "Load address specs")
+        AddressSpecProvider.shared.loadAddressSpecs {
+            loadExpectation.fulfill()
+        }
+        waitForExpectations(timeout: 1)
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.address = .full
+        let form = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.mondu]),
+            elementsSession: ._testValue(paymentMethodTypes: ["mondu"]),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.mondu)
+        ).make()
+
+        // When reading the billing address countries
+        let address = try XCTUnwrap(
+            form.getAllUnwrappedSubElements().compactMap { $0 as? AddressSectionElement }.first
+        )
+
+        // Then all countries remain available and the country follows the user's locale
+        XCTAssertEqual(Set(address.countryCodes), Set(AddressSpecProvider.shared.countries))
+        let localeCountry = Locale.current.stp_regionCode ?? ""
+        XCTAssertEqual(address.selectedCountryCode, address.countryCodes.contains(localeCountry) ? localeCountry : address.countryCodes[0])
+    }
+
+    func testTouchNGoShowsMandateOnlyForFuturePayments() {
+        // Given a payment, two ways to request future usage, and a setup intent
+        let intents: [Intent] = [
+            ._testPaymentIntent(paymentMethodTypes: [.touchNGo]),
+            ._testPaymentIntent(paymentMethodTypes: [.touchNGo], setupFutureUsage: .offSession),
+            ._testPaymentIntent(paymentMethodTypes: [.touchNGo], paymentMethodOptionsSetupFutureUsage: [.touchNGo: "off_session"]),
+            ._testSetupIntent(paymentMethodTypes: [.touchNGo]),
+        ]
+        var configuration = PaymentSheet.Configuration()
+        configuration.merchantDisplayName = "Example Merchant"
+        for (index, intent) in intents.enumerated() {
+            // When the form uses automatic billing collection
+            let form = PaymentSheetFormFactory(
+                intent: intent,
+                elementsSession: ._testValue(paymentMethodTypes: ["touch_n_go"]),
+                configuration: .paymentElement(configuration),
+                paymentMethod: .stripe(.touchNGo)
+            ).make()
+
+            // Then only future payments require the exact Web Payment Element mandate
+            XCTAssertFalse(form.collectsUserInput)
+            if index == 0 {
+                XCTAssertNil(form.getMandateElement())
+                XCTAssertNotNil(form.updateParams(params: IntentConfirmParams(type: .stripe(.touchNGo))))
+            } else {
+                XCTAssertEqual(
+                    form.getMandateElement()?.mandateTextView.textView.text,
+                    "By confirming your payment with Touch 'n Go, you allow Example Merchant to charge your Touch 'n Go account for future payments in accordance with their terms."
+                )
+                XCTAssertNil(form.updateParams(params: IntentConfirmParams(type: .stripe(.touchNGo))))
+                sendEventToSubviews(.viewDidAppear, from: form.view)
+                XCTAssertNotNil(form.updateParams(params: IntentConfirmParams(type: .stripe(.touchNGo))))
+            }
+        }
+    }
+    func testTrueMoneyShowsMandateOnlyForFuturePayments() {
+        // Given a payment, two ways to request future usage, and a setup intent
+        let intents: [Intent] = [
+            ._testPaymentIntent(paymentMethodTypes: [.trueMoney]),
+            ._testPaymentIntent(paymentMethodTypes: [.trueMoney], setupFutureUsage: .offSession),
+            ._testPaymentIntent(paymentMethodTypes: [.trueMoney], paymentMethodOptionsSetupFutureUsage: [.trueMoney: "off_session"]),
+            ._testSetupIntent(paymentMethodTypes: [.trueMoney]),
+        ]
+        var configuration = PaymentSheet.Configuration()
+        configuration.merchantDisplayName = "Example Merchant"
+        for (index, intent) in intents.enumerated() {
+            // When the form uses automatic billing collection
+            let form = PaymentSheetFormFactory(
+                intent: intent,
+                elementsSession: ._testValue(paymentMethodTypes: ["truemoney"]),
+                configuration: .paymentElement(configuration),
+                paymentMethod: .stripe(.trueMoney)
+            ).make()
+
+            // Then only future payments require the exact Web Payment Element mandate
+            XCTAssertFalse(form.collectsUserInput)
+            if index == 0 {
+                XCTAssertNil(form.getMandateElement())
+                XCTAssertNotNil(form.updateParams(params: IntentConfirmParams(type: .stripe(.trueMoney))))
+            } else {
+                XCTAssertEqual(
+                    form.getMandateElement()?.mandateTextView.textView.text,
+                    "By confirming your payment with TrueMoney, you allow Example Merchant to charge your TrueMoney account for future payments in accordance with their terms."
+                )
+                XCTAssertNil(form.updateParams(params: IntentConfirmParams(type: .stripe(.trueMoney))))
+                sendEventToSubviews(.viewDidAppear, from: form.view)
+                XCTAssertNotNil(form.updateParams(params: IntentConfirmParams(type: .stripe(.trueMoney))))
+            }
+        }
+    }
+
+    func testTrueMoneyRestrictsBillingCountryToThailand() throws {
+        // Given TrueMoney with full billing address collection
+        let loadExpectation = expectation(description: "Load address specs")
+        AddressSpecProvider.shared.loadAddressSpecs {
+            loadExpectation.fulfill()
+        }
+        waitForExpectations(timeout: 1)
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.address = .full
+        let form = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.trueMoney]),
+            elementsSession: ._testValue(paymentMethodTypes: ["truemoney"]),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.trueMoney)
+        ).make()
+
+        // When reading the billing address countries
+        let address = try XCTUnwrap(
+            form.getAllUnwrappedSubElements().compactMap { $0 as? AddressSectionElement }.first
+        )
+
+        // Then the form matches Web's Thailand-only policy and default
+        XCTAssertEqual(address.countryCodes, ["TH"])
+        XCTAssertEqual(address.selectedCountryCode, "TH")
+    }
+
+    func testTouchNGoRestrictsBillingCountryToMalaysia() throws {
+        // Given Touch 'n Go with full billing address collection
+        let loadExpectation = expectation(description: "Load address specs")
+        AddressSpecProvider.shared.loadAddressSpecs {
+            loadExpectation.fulfill()
+        }
+        waitForExpectations(timeout: 1)
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.address = .full
+        let form = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.touchNGo]),
+            elementsSession: ._testValue(paymentMethodTypes: ["touch_n_go"]),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.touchNGo)
+        ).make()
+
+        // When reading the billing address countries
+        let address = try XCTUnwrap(
+            form.getAllUnwrappedSubElements().compactMap { $0 as? AddressSectionElement }.first
+        )
+
+        // Then the form matches Web's Malaysia-only policy and default
+        XCTAssertEqual(address.countryCodes, ["MY"])
+        XCTAssertEqual(address.selectedCountryCode, "MY")
+    }
+
+    func testGCashRestrictsBillingCountryToPhilippines() throws {
+        // Given GCash with full billing address collection
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.address = .full
+        let form = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.gcash]),
+            elementsSession: ._testValue(paymentMethodTypes: ["gcash"]),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.gcash)
+        ).make()
+
+        // When reading the billing address countries
+        let address = try XCTUnwrap(
+            form.getAllUnwrappedSubElements().compactMap { $0 as? AddressSectionElement }.first
+        )
+
+        // Then the form matches web Payment Element's PH-only policy and default
+        XCTAssertEqual(address.countryCodes, ["PH"])
+        XCTAssertEqual(address.selectedCountryCode, "PH")
+    }
+
     func testGoPayUsesHostedAuthorizationWithoutNativeMandate() {
         // Given a GoPay PaymentIntent
         let intent = Intent._testPaymentIntent(paymentMethodTypes: [.goPay])
@@ -2546,6 +2920,94 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertNil(form.getMandateElement())
         XCTAssertNotNil(form.updateParams(params: IntentConfirmParams(type: .stripe(.goPay))))
     }
+    func testQRISUsesHostedAuthorizationWithoutNativeMandate() {
+        // Given a one-time QRIS payment
+        let intents: [Intent] = [
+            ._testPaymentIntent(paymentMethodTypes: [.qris]),
+        ]
+        for intent in intents {
+            // When the form uses automatic billing collection
+            let form = PaymentSheetFormFactory(
+                intent: intent,
+                elementsSession: ._testValue(paymentMethodTypes: ["qris"]),
+                configuration: .paymentElement(PaymentSheet.Configuration()),
+                paymentMethod: .stripe(.qris)
+            ).make()
+
+            // Then the hosted flow owns authorization and the native form needs no mandate
+            XCTAssertFalse(form.collectsUserInput)
+            XCTAssertNil(form.getMandateElement())
+            XCTAssertNotNil(form.updateParams(params: IntentConfirmParams(type: .stripe(.qris))))
+        }
+    }
+
+    func testQRISRestrictsBillingCountryToWebSupportedCountries() throws {
+        // Given QRIS with full billing address collection
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.address = .full
+        let form = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.qris]),
+            elementsSession: ._testValue(paymentMethodTypes: ["qris"]),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.qris)
+        ).make()
+
+        // When the billing address is built
+        let address = try XCTUnwrap(
+            form.getAllUnwrappedSubElements().compactMap { $0 as? AddressSectionElement }.first
+        )
+
+        // Then the country choices and default match web Payment Element
+        XCTAssertEqual(address.countryCodes, ["ID", "US"])
+        XCTAssertEqual(address.selectedCountryCode, "US")
+    }
+
+    func testQRISBillingCountriesRespectMerchantRestrictions() throws {
+        // Given QRIS with merchant countries that only overlap in Indonesia
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.address = .full
+        configuration.billingDetailsCollectionConfiguration.allowedCountries = ["ID", "CA"]
+        let form = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.qris]),
+            elementsSession: ._testValue(paymentMethodTypes: ["qris"]),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.qris)
+        ).make()
+
+        // When the billing address is built
+        let address = try XCTUnwrap(
+            form.getAllUnwrappedSubElements().compactMap { $0 as? AddressSectionElement }.first
+        )
+
+        // Then only Indonesia is offered and selected
+        XCTAssertEqual(address.countryCodes, ["ID"])
+        XCTAssertEqual(address.selectedCountryCode, "ID")
+    }
+
+    func testQRISBillingCountriesWithNoOverlapUseMerchantCountries() throws {
+        // Given QRIS with merchant billing countries that exclude both supported countries
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.address = .full
+        configuration.billingDetailsCollectionConfiguration.allowedCountries = ["CA"]
+        STPAssertTestUtil.shouldSuppressNextSTPAlert = true
+        let form = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.qris]),
+            elementsSession: ._testValue(paymentMethodTypes: ["qris"]),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.qris)
+        ).make()
+
+        // When the billing address is built
+        let address = try XCTUnwrap(
+            form.getAllUnwrappedSubElements().compactMap { $0 as? AddressSectionElement }.first
+        )
+
+        // Then the picker falls back to the merchant's allowed countries
+        XCTAssertEqual(STPAssertTestUtil.lastAssertMessage, "Merchant billing countries do not overlap with the payment method's supported countries.")
+        XCTAssertEqual(address.countryCodes, ["CA"])
+        XCTAssertEqual(address.selectedCountryCode, "CA")
+    }
+
     func testShopeePayUsesHostedAuthorizationWithoutNativeMandate() {
         // Given a one-time ShopeePay payment
         let intents: [Intent] = [

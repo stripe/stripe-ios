@@ -33,9 +33,10 @@ final class SourceOfFundsModel: ObservableObject {
     /// The sources added by the user, in display order.
     @Published private(set) var sources: [Source] = []
 
-    /// Whether the number of distinct categories satisfies the backend's bounds.
+    /// Whether the number of distinct categories and files per category satisfy the backend's bounds.
     var canSubmit: Bool {
         sources.count >= configuration.minimumDocumentTypes && sources.count <= configuration.maximumDocumentTypes
+            && sources.allSatisfy { $0.files.count <= configuration.maximumFilesPerDocumentType }
     }
 
     /// Whether another unused document category can be added.
@@ -69,7 +70,8 @@ final class SourceOfFundsModel: ObservableObject {
     ///   - files: The uploaded files to retain. An empty list removes the edited source.
     ///   - sourceID: The original source identifier when editing an existing source.
     func save(subtype: DocumentCollectionConfiguration.Subtype, files: [DocumentUploadModel.UploadedFile], replacing sourceID: String? = nil) {
-        guard availableSubtypes(editing: sourceID).contains(subtype) else {
+        guard availableSubtypes(editing: sourceID).contains(subtype),
+              files.count <= configuration.maximumFilesPerDocumentType else {
             return
         }
 

@@ -12,6 +12,13 @@ import Foundation
 @_spi(STP) import StripeUICore
 
 extension String.Localized {
+    static var cryptoOnrampErrorPaymentMethodKYCRegionChanged: String {
+        return STPLocalizedString(
+            "Please select your Apple Pay payment method again to continue.",
+            "Error message shown when an Apple Pay payment method must be collected again because the customer's KYC region changed"
+        )
+    }
+
     static var cryptoOnrampErrorAppAttestationUnavailable: String {
         return STPLocalizedString(
             "This app couldn't be verified. Contact the app developer for help.",
@@ -120,6 +127,14 @@ extension String.Localized {
 
     static var chooseDocumentPhoto: String {
         STPLocalizedString("Choose Photo…", "Action to open the system photo picker to select a photo")
+    }
+
+    static var takeDocumentPhoto: String {
+        STPLocalizedString("Take Photo…", "Action to open the system camera to take a photo of a document")
+    }
+
+    static var documentCameraAccessRequired: String {
+        STPLocalizedString("Allow camera access in Settings to take a photo.", "Error when camera access is denied or restricted during document collection")
     }
 
     static func unsupportedDocumentFormat(formats: [String]) -> String {

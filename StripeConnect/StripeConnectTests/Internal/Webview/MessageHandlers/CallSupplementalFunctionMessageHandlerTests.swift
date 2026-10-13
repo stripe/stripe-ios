@@ -5,8 +5,10 @@ class CallSupplementalFunctionMessageHandlerTests: ScriptWebTestBase {
     @MainActor
     func testMessageSend() async throws {
         let expectation = self.expectation(description: "Message received")
+        try await loadTrustedDocument()
 
         webView.addMessageHandler(messageHandler: CallSupplementalFunctionMessageHandler(
+            sourcePolicy: webView.trustedMessageSourcePolicy(),
             analyticsClient: MockComponentAnalyticsClient(commonFields: .mock),
             didReceiveMessage: { payload in
                 XCTAssertEqual(payload.functionName, .handleCheckScanSubmitted)

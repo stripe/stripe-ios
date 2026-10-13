@@ -22,18 +22,21 @@ extension ExpressCheckoutElement {
         /// - Example: ["link", "apple_pay"]
         /// - Note: If you omit payment methods from this list, they’ll be automatically ordered by Stripe after the ones you provide. Invalid payment methods are ignored.
         public var paymentMethodOrder: [String]?
-        /// Called after a wallet payment confirmation completes.
-        public var confirmHandler: ConfirmHandler
-
         /// Controls appearance of Express Checkout Element.
         public var appearance: Appearance = .init()
+        /// Called after a wallet payment confirmation completes.
+        public var completion: CompletionHandler
 
-        /// Creates a configuration with default values.
-        public init(confirmHandler: @escaping ConfirmHandler) {
-            self.confirmHandler = confirmHandler
+        /// Creates an Express Checkout Element configuration with default values.
+        /// - Parameters:
+        ///   - completion: A handler called after a wallet payment confirmation completes.
+        public init(completion: @escaping CompletionHandler) {
+            self.completion = completion
         }
     }
+}
 
+extension ExpressCheckoutElement.Configuration {
     /// Configuration for Apple Pay.
     public struct ApplePayConfiguration: CheckoutApplePayConfiguration {
         /// The Apple Pay merchant identifier.
@@ -63,7 +66,7 @@ extension ExpressCheckoutElement {
             buttonType: PKPaymentButtonType? = nil,
             display: Display = .automatic
         ) {
-                self.merchantId = merchantId
+            self.merchantId = merchantId
             self.buttonType = buttonType
             self.display = display
         }
@@ -81,12 +84,6 @@ extension ExpressCheckoutElement {
 
         /// Controls whether Link is displayed.
         public var display: Display = .automatic
-
-        /// The Link funding sources that should be disabled. Defaults to an empty set.
-        @_spi(STP) public var disallowFundingSourceCreation: Set<String> = []
-
-        /// Whether missing billing details should be collected for existing Link payment methods.
-        @_spi(CollectMissingLinkBillingDetailsPreview) public var collectMissingBillingDetailsForExistingPaymentMethods: Bool = true
 
         /// Creates a Link configuration.
         public init(display: Display = .automatic) {
@@ -136,5 +133,5 @@ extension ExpressCheckoutElement {
     }
 
     /// A closure called after a wallet payment confirmation completes.
-    public typealias ConfirmHandler = (_ result: CheckoutController.ConfirmResult) -> Void
+    public typealias CompletionHandler = (_ result: CheckoutController.ConfirmResult) -> Void
 }

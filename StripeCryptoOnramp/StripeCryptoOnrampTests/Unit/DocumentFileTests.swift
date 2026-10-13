@@ -84,6 +84,7 @@ final class DocumentFileTests: XCTestCase {
             maxFileSizeBytes: 12_000_000,
             minDocumentTypes: 1,
             maxDocumentTypes: 2,
+            maxFilesPerDocumentType: 3,
             fileRequirements: "PDF, future-format, or JPEG up to 12 MB",
             instructions: ["First instruction", "Second instruction"]
         )
@@ -97,6 +98,7 @@ final class DocumentFileTests: XCTestCase {
         XCTAssertEqual(configuration.acceptedFormats, ["pdf", "future-format", "jpeg"])
         XCTAssertEqual(configuration.instructions, requirement.instructions)
         XCTAssertEqual(configuration.maximumFileSize, 12_000_000)
+        XCTAssertEqual(configuration.maximumFilesPerDocumentType, 3)
         XCTAssertEqual(configuration.uploadHint, requirement.fileRequirements)
     }
 
@@ -108,12 +110,14 @@ final class DocumentFileTests: XCTestCase {
             maxFileSizeBytes: bytes.count,
             minDocumentTypes: 1,
             maxDocumentTypes: 1,
+            maxFilesPerDocumentType: nil,
             fileRequirements: "Guidance for a new document format",
             instructions: []
         )
 
         let configuration = try DocumentCollectionConfiguration(proofOfAddress: requirement)
         XCTAssertEqual(configuration.acceptedFormats, ["future-format"])
+        XCTAssertEqual(configuration.maximumFilesPerDocumentType, 10)
         XCTAssertEqual(configuration.documentPickerContentTypes, [.data])
         XCTAssertFalse(configuration.allowsPhotoSelection)
 
@@ -160,6 +164,7 @@ final class DocumentFileTests: XCTestCase {
                 maxFileSizeBytes: 50_000_000,
                 minDocumentTypes: 1,
                 maxDocumentTypes: 1,
+                maxFilesPerDocumentType: nil,
                 fileRequirements: fileRequirements,
                 instructions: []
             )
@@ -214,6 +219,7 @@ final class DocumentFileTests: XCTestCase {
                 maxFileSizeBytes: maximumFileSize,
                 minDocumentTypes: minimumTypes,
                 maxDocumentTypes: maximumTypes,
+                maxFilesPerDocumentType: nil,
                 fileRequirements: "A localized hint supplied by the backend",
                 instructions: []
             )
@@ -221,6 +227,23 @@ final class DocumentFileTests: XCTestCase {
             XCTAssertThrowsError(try DocumentCollectionConfiguration(proofOfAddress: requirement)) {
                 XCTAssertEqual($0 as? DocumentCollectionError, .unsupportedRequirement)
             }
+        }
+    }
+
+    func testNonpositiveFileCountLimitIsUnsupported() {
+        let requirement = AdditionalKYCDocumentRequirement(
+            acceptedSubtypes: [.init(id: "salary", label: "Salary", description: nil)],
+            acceptedFormats: ["pdf"],
+            maxFileSizeBytes: 5_000_000,
+            minDocumentTypes: 1,
+            maxDocumentTypes: 1,
+            maxFilesPerDocumentType: 0,
+            fileRequirements: "PDF, up to 5 MB per file.",
+            instructions: []
+        )
+
+        XCTAssertThrowsError(try DocumentCollectionConfiguration(document: requirement)) {
+            XCTAssertEqual($0 as? DocumentCollectionError, .unsupportedRequirement)
         }
     }
 }

@@ -20,7 +20,7 @@ final class DocumentCollectionModelTests: XCTestCase {
             .init(name: "second.pdf", fileID: "file_second"),
         ]
 
-        let collection = DocumentCollectionModel(uploader: MockUploader(uploadStartedExpectation: unexpectedUploadExpectation), uploadedFiles: uploadedFiles)
+        let collection = DocumentCollectionModel(uploader: MockUploader(uploadStartedExpectation: unexpectedUploadExpectation), uploadedFiles: uploadedFiles, maximumFileCount: 10)
 
         XCTAssertTrue(collection.isComplete)
         XCTAssertEqual(collection.uploadedFiles, uploadedFiles)
@@ -36,7 +36,7 @@ final class DocumentCollectionModelTests: XCTestCase {
         uploadsStartedExpectation.expectedFulfillmentCount = 2
 
         let uploader = MockUploader(uploadStartedExpectation: uploadsStartedExpectation)
-        let collection = DocumentCollectionModel(uploader: uploader)
+        let collection = DocumentCollectionModel(uploader: uploader, maximumFileCount: 10)
         let firstFile = try makeFile(name: "first.pdf")
         let secondFile = try makeFile(name: "second.pdf")
         collection.add(firstFile)
