@@ -185,6 +185,7 @@ let JSONKeyObject = "object"
             if !isTestmode, let requestID = httpResponse?.value(forHTTPHeaderField: "request-id")?.nonEmpty {
                 var userInfo = error.userInfo
                 userInfo[NSLocalizedDescriptionKey] = error.localizedDescription + " (\(requestID))"
+                userInfo[STPError.requestIDInDescriptionKey] = true
                 safeCompletion(nil, NSError(domain: error.domain, code: error.code, userInfo: userInfo))
             } else {
                 safeCompletion(nil, error)

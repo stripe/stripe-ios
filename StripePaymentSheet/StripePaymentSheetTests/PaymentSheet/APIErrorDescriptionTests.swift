@@ -45,6 +45,49 @@ final class APIErrorDescriptionTests: APIStubbedTestCase {
         }
     }
 
+    func testWrappedCardErrorsPreserveExistingBehaviorWithoutLiveRequestID() async throws {
+        for isTestmode in [false, true] {
+            for requestID: String? in ["req_card", nil, ""] {
+                for error in try await requestErrors(isTestmode: isTestmode, requestID: requestID, type: "card_error") {
+                    // Given a card error wrapped by PaymentHandler
+                    let wrapped = NSError(domain: STPError.STPPaymentHandlerErrorDomain, code: 2,
+                                          userInfo: [NSUnderlyingErrorKey: error])
+
+                    // Then only live errors with a request ID use the new description.
+                    if !isTestmode, requestID == "req_card" {
+                        XCTAssertEqual(wrapped.nonGenericDescription, "Your card was declined. (req_card)")
+                    } else {
+                        let previousMessage = error is StripeError ? NSError.stp_unexpectedErrorMessage() : "Your card was declined."
+                        XCTAssertEqual(wrapped.nonGenericDescription, previousMessage)
+                    }
+                }
+            }
+        }
+    }
+
+    func testLegacyApplePayConversionPreservesDescription() async throws {
+        for isTestmode in [false, true] {
+            for type in ["card_error", "invalid_request_error"] {
+                // Given a modern API error with a request ID
+                let errors = try await requestErrors(isTestmode: isTestmode, requestID: "req_apple_pay", type: type)
+                let modern = try XCTUnwrap(errors.first as? StripeError)
+
+                // When the legacy Apple Pay delegate converts it to NSError
+                let converted = try XCTUnwrap(NSError.stp_error(from: modern))
+
+                // Then the localized description, error type, and raw message survive.
+                XCTAssertEqual(converted.localizedDescription, modern.localizedDescription)
+                XCTAssertEqual(converted.userInfo[STPError.stripeErrorTypeKey] as? String, type)
+                XCTAssertEqual(converted.userInfo[STPError.errorMessageKey] as? String, "Your card was declined.")
+                if !isTestmode {
+                    let wrapped = NSError(domain: STPError.STPPaymentHandlerErrorDomain, code: 2,
+                                          userInfo: [NSUnderlyingErrorKey: converted])
+                    XCTAssertEqual(wrapped.nonGenericDescription, modern.localizedDescription)
+                }
+            }
+        }
+    }
+
     // Exercise the modern Decodable and legacy APIResponseDecodable request paths.
     private func requestErrors(isTestmode: Bool, requestID: String?, type: String = "invalid_request_error") async throws -> [Error] {
         let apiClient = stubbedAPIClient()

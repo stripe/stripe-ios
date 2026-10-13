@@ -90,6 +90,14 @@ extension StripeError: LocalizedError {
 }
 
 extension Error {
+    /// Whether this API error's localized description includes a live-mode request ID.
+    @_spi(STP) public var _stp_hasRequestIDInDescription: Bool {
+        if let stripeError = self as? StripeError, case .apiError(let apiError) = stripeError {
+            return apiError.includeRequestIDInDescription && apiError.requestID?.nonEmpty != nil
+        }
+        return (self as NSError).userInfo[STPError.requestIDInDescriptionKey] as? Bool == true
+    }
+
     /// Returns the Stripe error code, if available. Works with modern and legacy Stripe API errors.
     @_spi(STP) public var _stp_error_code: String? {
         if let stripeError = self as? StripeError,

@@ -73,6 +73,9 @@ import Foundation
     /// The Stripe API request ID, if available. Looks like `req_123`.
     @objc public static let stripeRequestIDKey = "com.stripe.lib:StripeRequestIDKey"
 
+    /// Whether the SDK appended a live-mode request ID to the localized description.
+    @_spi(STP) public static let requestIDInDescriptionKey = "com.stripe.lib:RequestIDInDescriptionKey"
+
     /// The HTTP status code of the failed request as an Int e.g. 400.
     @objc public static let httpStatusCodeKey = "com.stripe.lib:HTTPStatusCodeKey"
 
@@ -142,7 +145,12 @@ extension NSError {
         switch modernStripeError {
         case .apiError(let stripeAPIError):
             // TODO: https://jira.corp.stripe.com/browse/MOBILESDK-3965 We're dropping some info in this conversion w/o http response
-            return stp_error(fromStripeResponse: ["error": stripeAPIError.allResponseFields], httpResponse: nil)
+            let error = stp_error(fromStripeResponse: ["error": stripeAPIError.allResponseFields], httpResponse: nil)
+            guard modernStripeError._stp_hasRequestIDInDescription else { return error }
+            var userInfo = error.userInfo
+            userInfo[NSLocalizedDescriptionKey] = modernStripeError.localizedDescription
+            userInfo[STPError.requestIDInDescriptionKey] = true
+            return NSError(domain: error.domain, code: error.code, userInfo: userInfo)
         case .invalidRequest:
             return NSError(
                 domain: STPError.stripeDomain,
