@@ -4,6 +4,8 @@
 
 "Add documents" = "Pievienot dokumentus";
 
+"Allow camera access in Settings to take a photo." = "Iestatījumos atļaujiet piekļuvi kamerai, lai uzņemtu fotoattēlu.";
+
 "Answer" = "Atbilde";
 
 "Choose File…" = "Izvēlēties failu...";
@@ -22,9 +24,13 @@
 
 "Make sure your document meets following requirements." = "Pārliecinieties, ka jūsu dokuments atbilst tālāk norādītajām prasībām.";
 
+"Please select your Apple Pay payment method again to continue." = "Lūdzu, vēlreiz atlasiet Apple Pay maksājuma veidu, lai turpinātu.";
+
 "Please try again later." = "Mēģiniet vēlāk vēlreiz.";
 
 "Submitted for review" = "Iesniegts pārskatīšanai";
+
+"Take Photo…" = "Uzņemt fotoattēlu…";
 
 "Tell us about your source of funds" = "Pastāstiet mums par jūsu finanšu līdzekļu avotu";
 

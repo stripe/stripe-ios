@@ -29,21 +29,21 @@ final public class IdentityVerificationSheet {
         @_spi(STP) public enum PrimaryButtonStyle {
             /// Uses the app's tint color.
             case `default`
-            /// Uses the supplied background and text colors.
+            /// Uses the supplied background and text colors, and an optional minimum height.
             /// Provide dynamic colors to support different colors in light and dark mode.
-            case custom(backgroundColor: UIColor, textColor: UIColor)
+            case custom(backgroundColor: UIColor, textColor: UIColor, height: CGFloat? = nil)
         }
 
         /// The appearance of secondary action buttons throughout the native verification flow.
         @_spi(STP) public enum SecondaryButtonStyle {
             /// Uses the default secondary button appearance.
             case `default`
-            /// Uses the supplied background and text colors.
+            /// Uses the supplied background and text colors, and an optional minimum height.
             /// Provide dynamic colors to support different colors in light and dark mode.
-            case custom(backgroundColor: UIColor, textColor: UIColor)
+            case custom(backgroundColor: UIColor, textColor: UIColor, height: CGFloat? = nil)
         }
 
-        /// Configuration for the biometric consent screen's header.
+        /// Configuration for the biometric consent screen.
         @_spi(STP) public struct BiometricConsentConfiguration {
             /// Whether to hide the branding header above the consent title.
             public var hideBrandingHeader: Bool
@@ -79,9 +79,9 @@ final public class IdentityVerificationSheet {
         /// Disabled buttons retain the default disabled appearance. Primary buttons are unaffected.
         @_spi(STP) public var secondaryButtonStyle: SecondaryButtonStyle = .default
 
-        /// Configuration for the biometric consent screen's header.
+        /// Configuration for the biometric consent screen.
         ///
-        /// When `nil`, the biometric consent screen uses the default header.
+        /// When `nil`, the biometric consent screen uses its default layout.
         @_spi(STP) public var biometricConsent: BiometricConsentConfiguration?
 
         /// Initializes a Configuration.

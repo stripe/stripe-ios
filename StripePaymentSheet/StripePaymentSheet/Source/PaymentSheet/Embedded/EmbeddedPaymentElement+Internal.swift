@@ -322,7 +322,6 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
                 paymentMethodRemoveIsPartial: elementsSession.paymentMethodRemoveIsPartialForPaymentSheet(),
                 merchantName: configuration.merchantDisplayName)
             let updateViewController = UpdatePaymentMethodViewController(removeSavedPaymentMethodMessage: removeSavedPaymentMethodMessage,
-                                                                         isTestMode: configuration.apiClient.isTestmode,
                                                                          configuration: updateConfig)
             updateViewController.delegate = self
             let bottomSheetVC = bottomSheetController(with: updateViewController)
@@ -498,6 +497,7 @@ extension EmbeddedPaymentElement: VerticalSavedPaymentMethodsViewControllerDeleg
 extension EmbeddedPaymentElement.PaymentOptionDisplayData {
     init(paymentOption: PaymentOption, mandateText: NSAttributedString?, currency: String?, iconStyle: PaymentSheet.Appearance.IconStyle, linkBrand: LinkBrand = .link) {
         self.mandateText = mandateText
+        self.labels = .init(paymentOption: paymentOption, linkBrand: linkBrand)
         self.image = paymentOption.makeIcon(currency: currency, iconStyle: iconStyle) // TODO: https://jira.corp.stripe.com/browse/MOBILESDK-2604 Refactor this!
         switch paymentOption {
         case .applePay:
@@ -698,6 +698,7 @@ extension EmbeddedPaymentElement {
 
         let (result, deferredIntentConfirmationType) = await PaymentSheet.confirm(
             configuration: configuration,
+            nativeSheetPresentation: nativeSheetPresentation,
             authenticationContext: authContext,
             intent: intent,
             elementsSession: elementsSession,
@@ -724,11 +725,12 @@ extension EmbeddedPaymentElement {
         return (result, deferredIntentConfirmationType)
     }
 
-    func bottomSheetController(with viewController: BottomSheetContentViewController) -> BottomSheetViewController {
-        return BottomSheetViewController(contentViewController: viewController,
-                                         appearance: configuration.appearance,
-                                         isTestMode: configuration.apiClient.isTestmode,
-                                         didCancelNative3DS2: {
+    func bottomSheetController(with viewController: BottomSheetContentViewController) -> any PaymentSheetContainer {
+        return PaymentSheetContainerFactory.make(
+            contentViewController: viewController,
+            appearance: configuration.appearance,
+            usesNativeSheet: nativeSheetPresentation.usesNativeSheet,
+            didCancelNative3DS2: {
             stpAssertionFailure("3DS2 was triggered unexpectedly")
         })
     }

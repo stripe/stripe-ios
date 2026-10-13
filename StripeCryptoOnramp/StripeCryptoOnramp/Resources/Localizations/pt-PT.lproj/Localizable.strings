@@ -4,6 +4,8 @@
 
 "Add documents" = "Adicionar documentos";
 
+"Allow camera access in Settings to take a photo." = "Permita o acesso à câmara nas Definições para tirar uma fotografia.";
+
 "Answer" = "Resposta";
 
 "Choose File…" = "Escolher ficheiro...";
@@ -22,9 +24,13 @@
 
 "Make sure your document meets following requirements." = "Certifique-se de que o seu documento cumpre os seguintes requisitos.";
 
+"Please select your Apple Pay payment method again to continue." = "Selecione novamente o seu método de pagamento Apple Pay para continuar.";
+
 "Please try again later." = "Tente novamente mais tarde.";
 
 "Submitted for review" = "Submetido para verificação";
+
+"Take Photo…" = "Tirar fotografia…";
 
 "Tell us about your source of funds" = "Fale-nos sobre a origem dos seus fundos";
 

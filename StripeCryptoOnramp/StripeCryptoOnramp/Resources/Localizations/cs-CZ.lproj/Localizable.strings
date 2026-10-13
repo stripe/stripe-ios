@@ -4,6 +4,8 @@
 
 "Add documents" = "Přidat dokumenty";
 
+"Allow camera access in Settings to take a photo." = "Povolte v Nastavení přístup k fotoaparátu, abyste mohli pořídit fotografii.";
+
 "Answer" = "Odpověď";
 
 "Choose File…" = "Vybrat soubor…";
@@ -22,9 +24,13 @@
 
 "Make sure your document meets following requirements." = "Ujistěte se, že váš dokument splňuje následující požadavky.";
 
+"Please select your Apple Pay payment method again to continue." = "Chcete-li pokračovat, vyberte prosím znovu způsob platby Apple Pay.";
+
 "Please try again later." = "Zkuste to prosím znovu později.";
 
 "Submitted for review" = "Odesláno ke kontrole";
+
+"Take Photo…" = "Pořídit fotografii…";
 
 "Tell us about your source of funds" = "Sdělte nám informace o svém zdroji financí";
 

@@ -277,21 +277,17 @@ public class PaymentSheet {
     /// Loading View Controller
     lazy var loadingViewController = LoadingViewController(
         delegate: self,
-        appearance: configuration.appearance,
-        isTestMode: configuration.apiClient.isTestmode
+        appearance: configuration.appearance
     )
 
     /// The STPPaymentHandler instance
     lazy var paymentHandler: STPPaymentHandler = { STPPaymentHandler(apiClient: configuration.apiClient) }()
 
     /// The parent view controller to present
-    lazy var bottomSheetViewController: BottomSheetViewController = {
-        let isTestMode = configuration.apiClient.isTestmode
-
-        let vc = BottomSheetViewController(
+    lazy var bottomSheetViewController: any PaymentSheetContainer = {
+        let vc = PaymentSheetContainerFactory.make(
             contentViewController: loadingViewController,
             appearance: configuration.appearance,
-            isTestMode: isTestMode,
             didCancelNative3DS2: { [weak self] in
                 self?.paymentHandler.cancel3DS2ChallengeFlow()
             }

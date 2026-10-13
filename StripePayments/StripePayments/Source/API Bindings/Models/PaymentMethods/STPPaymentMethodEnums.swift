@@ -126,6 +126,20 @@ import Foundation
     case qris
     /// A GCash payment method
     case gcash
+    /// A Naira card payment method
+    case ngCard
+    /// A Naira bank transfer payment method
+    case ngBankTransfer
+    /// A Touch 'n Go payment method
+    case touchNGo
+    /// A TrueMoney payment method
+    case trueMoney
+    /// A Naira USSD payment method
+    case ngUSSD
+    /// A Naira Wallet payment method
+    case ngWallet
+    /// A Mondu payment method
+    case mondu
     /// An unknown type.
     case unknown
 
@@ -248,6 +262,20 @@ import Foundation
             return "QRIS"
         case .gcash:
             return "GCash"
+        case .ngCard:
+            return "Naira card"
+        case .ngBankTransfer:
+            return "Naira bank transfer"
+        case .touchNGo:
+            return "Touch 'n Go"
+        case .trueMoney:
+            return "TrueMoney"
+        case .ngUSSD:
+            return "Naira USSD"
+        case .ngWallet:
+            return "Naira Wallet"
+        case .mondu:
+            return "Mondu"
         case .goPay:
             return "GoPay"
         case .cardPresent,
@@ -375,6 +403,20 @@ import Foundation
             return "qris"
         case .gcash:
             return "gcash"
+        case .ngCard:
+            return "ng_card"
+        case .ngBankTransfer:
+            return "ng_bank_transfer"
+        case .touchNGo:
+            return "touch_n_go"
+        case .trueMoney:
+            return "truemoney"
+        case .ngUSSD:
+            return "ng_ussd"
+        case .ngWallet:
+            return "ng_wallet"
+        case .mondu:
+            return "mondu"
         case .goPay:
             return "gopay"
         }

@@ -116,7 +116,7 @@ public final class CheckoutController: ObservableObject {
             let loadedSession = Session(
                 apiResponse: apiResponse,
                 localState: .empty,
-                expressCheckoutConfiguration: configuration.expressCheckoutElement
+                configuration: configuration
             )
             self.session = loadedSession
 
@@ -474,7 +474,7 @@ extension CheckoutController {
             session = Session(
                 apiResponse: apiResponse,
                 localState: localState,
-                expressCheckoutConfiguration: configuration.expressCheckoutElement
+                configuration: configuration
             )
         } else {
             session.localState = localState

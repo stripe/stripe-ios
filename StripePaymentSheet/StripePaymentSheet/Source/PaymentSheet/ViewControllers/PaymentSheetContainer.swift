@@ -40,3 +40,33 @@ extension PaymentSheetContainer {
         popContentViewController(completion: nil)
     }
 }
+
+/// Selects a concrete container once, before any presentation lifecycle begins.
+enum PaymentSheetContainerFactory {
+
+    static func make(
+        contentViewController: BottomSheetContentViewController,
+        appearance: PaymentSheet.Appearance,
+        usesNativeSheet: Bool = false,
+        didCancelNative3DS2: @escaping () -> Void
+    ) -> any PaymentSheetContainer {
+        #if os(visionOS)
+        let shouldUseNativeSheet = false
+        #else
+        let shouldUseNativeSheet = SheetImplementationResolver.isRequiredForDevice || usesNativeSheet
+        #endif
+
+        if shouldUseNativeSheet {
+            return NativeSheetContainerViewController(
+                contentViewController: contentViewController,
+                appearance: appearance,
+                didCancelNative3DS2: didCancelNative3DS2
+            )
+        }
+        return BottomSheetViewController(
+            contentViewController: contentViewController,
+            appearance: appearance,
+            didCancelNative3DS2: didCancelNative3DS2
+        )
+    }
+}

@@ -98,7 +98,7 @@ public final class ExpressCheckoutElementUIView: UIView {
             analytic: PaymentSheetAnalytic(
                 event: .expressCheckoutElementInit,
                 additionalParams: [
-                    "ordered_lpms": session.availableExpressCheckoutPaymentMethods.map(\.analyticsValue).joined(separator: ","),
+                    "ordered_lpms": session.availableExpressCheckoutPaymentMethods.joined(separator: ","),
                     "ece_config": [
                         "link_visibility": configuration.linkConfiguration.display.rawValue,
                         "apple_pay_visibility": configuration.applePayConfiguration?.display.rawValue ?? "never",
@@ -146,7 +146,7 @@ public final class ExpressCheckoutElementUIView: UIView {
 
     static func buttonRows(
         for buttons: [ExpressCheckoutElement.PaymentMethod],
-        layout: ExpressCheckoutElement.Appearance.ButtonLayout
+        layout: ExpressCheckoutElement.Configuration.Appearance.ButtonLayout
     ) -> [[ExpressCheckoutElement.PaymentMethod]] {
         let visibleButtonCount = calculateVisibleButtonCount(
             buttonCount: buttons.count,
@@ -259,18 +259,7 @@ public final class ExpressCheckoutElementUIView: UIView {
                 paymentMethod,
                 presentationWindow: window
             ) else { return }
-            self.configuration.confirmHandler(result)
-        }
-    }
-}
-
-private extension ExpressCheckoutElement.PaymentMethod {
-    var analyticsValue: String {
-        switch self {
-        case .applePay:
-            return "apple_pay"
-        case .link:
-            return "link"
+            self.configuration.completion(result)
         }
     }
 }
