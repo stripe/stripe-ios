@@ -352,7 +352,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     }
 
     func updateError() {
-        errorLabel.text = error?.userFacingDescription(using: configuration.apiClient)
+        errorLabel.text = error?.nonGenericDescription
         animateHeightChange({ [self] in
             errorLabel.setHiddenIfNecessary(error == nil)
             if error != nil {
@@ -848,7 +848,6 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         if savedPaymentMethods.count == 1,
            let paymentMethod = savedPaymentMethods.first {
             let updateConfig = UpdatePaymentMethodViewController.Configuration(paymentMethod: paymentMethod,
-                                                                           apiClient: configuration.apiClient,
                                                                                appearance: configuration.appearance,
                                                                                billingDetailsCollectionConfiguration: configuration.billingDetailsCollectionConfiguration,
                                                                                hostedSurface: .paymentSheet,

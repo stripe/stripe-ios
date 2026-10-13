@@ -141,7 +141,7 @@ final class LinkVerificationViewController: UIViewController {
 
         verificationView.isHidden = true
 
-        linkAccount.startVerification { [weak self, apiClient = linkAccount.apiClient] result in
+        linkAccount.startVerification { [weak self] result in
             switch result {
             case .success(let collectOTP):
                 if collectOTP {
@@ -157,7 +157,7 @@ final class LinkVerificationViewController: UIViewController {
                 STPAnalyticsClient.sharedClient.logLink2FAStartFailure()
                 self?.activityIndicator.stopAnimating()
                 self?.verificationView.isHidden = false
-                self?.verificationView.errorMessage = LinkUtils.getLocalizedErrorMessage(from: error, apiClient: apiClient)
+                self?.verificationView.errorMessage = LinkUtils.getLocalizedErrorMessage(from: error)
             }
         }
     }
@@ -184,7 +184,7 @@ extension LinkVerificationViewController: LinkVerificationViewDelegate {
         view.errorMessage = nil
 
         // To resend the code we just start a new verification session.
-        linkAccount.startVerification(isResendingSmsCode: true) { [weak self, apiClient = linkAccount.apiClient] (result) in
+        linkAccount.startVerification(isResendingSmsCode: true) { [weak self] (result) in
             view.sendingCode = false
 
             switch result {
@@ -200,7 +200,7 @@ extension LinkVerificationViewController: LinkVerificationViewDelegate {
             case .failure(let error):
                 let alertController = UIAlertController(
                     title: nil,
-                    message: LinkUtils.getLocalizedErrorMessage(from: error, apiClient: apiClient),
+                    message: error.localizedDescription,
                     preferredStyle: .alert
                 )
 
@@ -230,14 +230,14 @@ extension LinkVerificationViewController: LinkVerificationViewDelegate {
             consentGranted = nil
         }
 
-        linkAccount.verify(with: code, consentGranted: consentGranted) { [weak self, apiClient = linkAccount.apiClient] result in
+        linkAccount.verify(with: code, consentGranted: consentGranted) { [weak self] result in
             switch result {
             case .success:
                 self?.finish(withResult: .completed)
                 STPAnalyticsClient.sharedClient.logLink2FAComplete()
             case .failure(let error):
                 view.codeField.performInvalidCodeAnimation()
-                view.errorMessage = LinkUtils.getLocalizedErrorMessage(from: error, apiClient: apiClient)
+                view.errorMessage = LinkUtils.getLocalizedErrorMessage(from: error)
                 STPAnalyticsClient.sharedClient.logLink2FAFailure()
             }
         }

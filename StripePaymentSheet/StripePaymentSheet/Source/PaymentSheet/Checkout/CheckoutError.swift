@@ -23,7 +23,7 @@ enum CheckoutError: Error, LocalizedError, Sendable {
     case invalidShippingCountry(countryCode: String)
 
     /// The Stripe API returned an error with the given message.
-    case apiError(message: String, underlyingError: Error? = nil)
+    case apiError(message: String)
 
     /// An unexpected error occurred in the Checkout SDK.
     case unknown(debugDescription: String)
@@ -40,7 +40,7 @@ enum CheckoutError: Error, LocalizedError, Sendable {
             return "Timed out waiting for a Checkout operation to complete."
         case .invalidShippingCountry(let countryCode):
             return "Country code '\(countryCode)' is not in allowedShippingCountries"
-        case .apiError(let message, _):
+        case .apiError(let message):
             return message
         case .unknown(let debugDescription):
             return debugDescription

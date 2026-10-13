@@ -55,7 +55,7 @@ struct LinkInlineVerificationView: View {
     }
 
     private var startVerificationErrorMessage: String? {
-        viewModel.startVerificationError.map { LinkUtils.getLocalizedErrorMessage(from: $0, apiClient: viewModel.account.apiClient) }
+        viewModel.startVerificationError.map { LinkUtils.getLocalizedErrorMessage(from: $0) }
     }
 
     var body: some View {

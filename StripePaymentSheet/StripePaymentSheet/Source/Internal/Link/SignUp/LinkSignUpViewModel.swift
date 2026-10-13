@@ -182,9 +182,7 @@ final class LinkSignUpViewModel: NSObject {
             case .success:
                 completion(.success(linkAccount))
             case .failure(let error):
-                if let self {
-                    self.errorMessage = error.userFacingDescription(using: linkAccount.apiClient)
-                }
+                self?.errorMessage = error.nonGenericDescription
                 completion(.failure(error))
             }
         }
@@ -235,7 +233,7 @@ private extension LinkSignUpViewModel {
                     if StripeAttest.isLinkAssertionError(error: error) {
                         self.delegate?.viewModelDidEncounterAttestationError(self)
                     } else {
-                        self.errorMessage = error.userFacingDescription(using: self.accountService.apiClient)
+                        self.errorMessage = error.nonGenericDescription
                     }
                 }
             }

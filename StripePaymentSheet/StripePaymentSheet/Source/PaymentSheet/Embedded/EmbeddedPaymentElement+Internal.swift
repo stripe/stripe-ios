@@ -273,7 +273,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         pendingBillingAddressSyncSelection = nil
         embeddedPaymentMethodsView.isUserInteractionEnabled = true
         informDelegateIfPaymentOptionUpdated()
-        embeddedPaymentMethodsView.setError(error.userFacingDescription(using: configuration.apiClient))
+        embeddedPaymentMethodsView.setError(error)
 #if !os(visionOS)
         UINotificationFeedbackGenerator().notificationOccurred(.error)
 #endif
@@ -308,7 +308,6 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         if savedPaymentMethods.count == 1,
            let paymentMethod = savedPaymentMethods.first {
             let updateConfig = UpdatePaymentMethodViewController.Configuration(paymentMethod: paymentMethod,
-                                                                           apiClient: configuration.apiClient,
                                                                                appearance: configuration.appearance,
                                                                                billingDetailsCollectionConfiguration: configuration.billingDetailsCollectionConfiguration,
                                                                                hostedSurface: .paymentSheet,

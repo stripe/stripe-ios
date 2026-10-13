@@ -10,7 +10,6 @@
 @_spi(STP) import StripePayments
 @_spi(STP) @testable import StripePaymentSheet
 @_spi(STP) import StripeUICore
-import UIKit
 import XCTest
 
 @MainActor
@@ -22,84 +21,6 @@ final class PaymentSheetVerticalViewControllerTest: XCTestCase {
             expectation.fulfill()
         }
         waitForExpectations(timeout: 1)
-    }
-
-    func testLiveAPIErrorDisplaysRequestIDWithoutServerDetails() {
-        let response = HTTPURLResponse(
-            url: URL(string: "https://api.stripe.com/v1/payment_intents")!,
-            statusCode: 400,
-            httpVersion: nil,
-            headerFields: ["Request-Id": "req_live_error"]
-        )
-        let error = NSError.stp_error(
-            errorType: "invalid_request_error",
-            stripeErrorCode: nil,
-            stripeErrorMessage: "This account cannot make live charges.",
-            errorParam: nil,
-            declineCode: nil,
-            intent: nil,
-            httpResponse: response
-        )
-        let controller = makeErrorController(publishableKey: "pk_live_example")
-
-        controller.updateErrorLabel(for: error)
-
-        XCTAssertTrue(labelTexts(in: controller.view).contains(
-            NSError.stp_unexpectedErrorMessage() + " (req_live_error)"
-        ))
-        XCTAssertFalse(labelTexts(in: controller.view).contains("This account cannot make live charges."))
-        XCTAssertEqual(error.userInfo[STPError.errorMessageKey] as? String, "This account cannot make live charges.")
-    }
-
-    func testTestModeErrorKeepsExistingMessage() {
-        let error = PaymentSheetError.unknown(debugDescription: "Verbose developer details")
-        let controller = makeErrorController(publishableKey: "pk_test_example")
-
-        controller.updateErrorLabel(for: error)
-
-        XCTAssertTrue(labelTexts(in: controller.view).contains(error.nonGenericDescription))
-    }
-
-    func testLiveSDKErrorHidesDebugDetails() {
-        let error = PaymentSheetError.unknown(debugDescription: "Verbose developer details")
-        let controller = makeErrorController(publishableKey: "pk_live_example")
-
-        controller.updateErrorLabel(for: error)
-
-        XCTAssertTrue(labelTexts(in: controller.view).contains(
-            NSError.stp_unexpectedErrorMessage() + " (\((error as NSError).code))"
-        ))
-        XCTAssertFalse(labelTexts(in: controller.view).contains(error.nonGenericDescription))
-    }
-
-    private func makeErrorController(publishableKey: String) -> PaymentSheetVerticalViewController {
-        var configuration = PaymentSheet.Configuration._testValue_MostPermissive()
-        configuration.apiClient = STPAPIClient(publishableKey: publishableKey)
-        let controller = PaymentSheetVerticalViewController(
-            configuration: configuration,
-            loadResult: .init(
-                intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
-                elementsSession: ._testCardValue(),
-                savedPaymentMethods: [],
-                paymentMethodTypes: [.stripe(.card)],
-                paymentMethodMessagingPromotionsHelper: ._testValue(),
-                paymentMethodOrientation: .vertical
-            ),
-            isFlowController: false,
-            analyticsHelper: PaymentSheetAnalyticsHelper(
-                integrationShape: .complete,
-                configuration: configuration,
-                analyticsClient: STPTestingAnalyticsClient()
-            ),
-            previousPaymentOption: nil
-        )
-        controller.loadViewIfNeeded()
-        return controller
-    }
-
-    private func labelTexts(in view: UIView) -> [String] {
-        let text = (view as? UILabel)?.text.map { [$0] } ?? []
-        return text + view.subviews.flatMap { labelTexts(in: $0) }
     }
 
     func testInitialScreen() throws {

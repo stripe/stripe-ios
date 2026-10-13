@@ -34,6 +34,13 @@ import Foundation
     /// The Stripe API request ID, if available. Looks like `req_123`.
     @_spi(STP) public var requestID: String?
 
+    // Set by the API client, never decoded from the response body.
+    var includeRequestIDInDescription = false
+
+    private enum CodingKeys: String, CodingKey {
+        case type, code, docUrl, message, param, httpStatusCode, requestID, _allResponseFieldsStorage
+    }
+
     // More information may be available in `allResponseFields`, including
     // the PaymentIntent or PaymentMethod.
 

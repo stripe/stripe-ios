@@ -168,7 +168,7 @@ public final class CheckoutController: ObservableObject {
                 )
             }
         } catch {
-            throw CheckoutError.apiError(message: error.nonGenericDescription, underlyingError: error)
+            throw CheckoutError.apiError(message: error.nonGenericDescription)
         }
     }
 
@@ -338,7 +338,7 @@ public final class CheckoutController: ObservableObject {
                 if error is TimeoutError {
                     throw CheckoutError.timedOut
                 }
-                throw CheckoutError.apiError(message: error.localizedDescription, underlyingError: error)
+                throw CheckoutError.apiError(message: error.localizedDescription)
             }
             let sessionId = Self.extractSessionId(from: self.clientSecret)
             let refreshedCheckoutSession: PaymentPagesAPIResponse
@@ -348,7 +348,7 @@ public final class CheckoutController: ObservableObject {
                     adaptivePricingAllowed: self.configuration.currencySelectorElement != nil
                 )
             } catch {
-                throw CheckoutError.apiError(message: error.nonGenericDescription, underlyingError: error)
+                throw CheckoutError.apiError(message: error.nonGenericDescription)
             }
             try await self.commitSession(refreshedCheckoutSession)
         }

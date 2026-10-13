@@ -180,7 +180,6 @@ class LinkInlineSignupElementSnapshotTests: STPSnapshotTestCase {
 extension LinkInlineSignupElementSnapshotTests {
 
     struct MockAccountService: LinkAccountServiceProtocol {
-        let apiClient = STPAPIClient(publishableKey: "pk_test_example")
         func lookupAccount(
             withEmail email: String?,
             emailSource: StripePaymentSheet.EmailSource,

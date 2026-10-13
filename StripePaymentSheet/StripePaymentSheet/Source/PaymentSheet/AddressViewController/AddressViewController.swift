@@ -99,9 +99,7 @@ public class AddressViewController: UIViewController {
     let addressSpecProvider: AddressSpecProvider
     private var latestError: Error? {
         didSet {
-            errorLabel.text = configuration.apiClient.isTestmode
-                ? latestError?.localizedDescription
-                : latestError?.userFacingDescription(using: configuration.apiClient)
+            errorLabel.text = latestError?.localizedDescription
             errorLabel.isHidden = latestError == nil
         }
     }

@@ -10,9 +10,6 @@
 /// Handles Checkout mutations requested by a CurrencySelectorElement.
 @MainActor
 protocol CurrencySelectorElementCheckoutDelegate: AnyObject {
-    /// The client used for Checkout requests.
-    var apiClient: STPAPIClient { get }
-
     /// Selects the currency identified by its three-letter ISO currency code.
     func selectCurrency(_ currency: String) async throws
 }

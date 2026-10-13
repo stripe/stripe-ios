@@ -256,7 +256,6 @@ class LinkInlineSignupViewModelTests: STPNetworkStubbingTestCase {
 extension LinkInlineSignupViewModelTests {
 
     struct MockAccountService: LinkAccountServiceProtocol {
-        let apiClient = STPAPIClient(publishableKey: "pk_test_example")
         let shouldFailLookup: Bool
 
         func lookupAccount(

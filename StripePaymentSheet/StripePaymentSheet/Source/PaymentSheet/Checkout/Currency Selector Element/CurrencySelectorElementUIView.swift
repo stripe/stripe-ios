@@ -225,9 +225,7 @@ extension CurrencySelectorElementUIView: TwoOptionSelectorViewDelegate {
                         ) { _, checkoutSessionId in checkoutSessionId }
                     )
                 )
-                showError(currencySelectionDelegate.apiClient.isTestmode
-                    ? error.localizedDescription
-                    : error.userFacingDescription(using: currencySelectionDelegate.apiClient))
+                showError(error.localizedDescription)
             }
             selectorView?.setEnabled(isUserInteractionEnabled)
         }

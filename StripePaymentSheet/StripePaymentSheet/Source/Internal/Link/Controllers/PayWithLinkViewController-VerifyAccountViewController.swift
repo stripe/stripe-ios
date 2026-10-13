@@ -149,7 +149,7 @@ extension PayWithLinkViewController {
             case .failed(let error):
                 let alertController = UIAlertController(
                     title: String.Localized.error,
-                    message: error.userFacingDescription(using: context.configuration.apiClient),
+                    message: error.nonGenericDescription,
                     preferredStyle: .alert
                 )
 

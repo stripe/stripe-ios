@@ -13,9 +13,6 @@ import Foundation
 
 /// Provides a method for looking up Link accounts by email.
 protocol LinkAccountServiceProtocol {
-    /// The client used to make Link requests.
-    var apiClient: STPAPIClient { get }
-
     /// Looks up an account by email.
     ///
     /// The `email` parameter is optional and objects that conform to this protocol

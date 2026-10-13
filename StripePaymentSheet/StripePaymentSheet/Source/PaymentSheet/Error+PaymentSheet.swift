@@ -11,34 +11,6 @@ import Foundation
 
 extension Error {
 
-    /// Adds a diagnostic identifier to the existing localized description in live mode.
-    func userFacingDescription(using apiClient: STPAPIClient) -> String {
-        guard !apiClient.isTestmode else { return nonGenericDescription }
-
-        // Unwrap only to find metadata; keep the original error's localized description.
-        // Limit traversal in case the underlying-error chain contains a cycle.
-        var error: Error = self
-        for _ in 0..<5 {
-            if let checkoutError = error as? CheckoutError,
-               case .apiError(_, let underlying?) = checkoutError {
-                error = underlying
-            } else if let underlying = (error as NSError).userInfo[NSUnderlyingErrorKey] as? Error {
-                error = underlying
-            } else {
-                break
-            }
-        }
-
-        let requestID: String?
-        if case StripeError.apiError(let apiError) = error {
-            requestID = apiError.requestID
-        } else {
-            requestID = (error as NSError).userInfo[STPError.stripeRequestIDKey] as? String
-        }
-        let identifier = requestID?.nonEmpty ?? error._stp_error_code?.nonEmpty ?? String((error as NSError).code)
-        return localizedDescription + " (\(identifier))"
-    }
-
     /// If the `localizedDescription` contains a generic error message this returns the raw error message within `userInfo`
     /// Otherwise returns the `localizedDescription`
     var nonGenericDescription: String {
@@ -50,7 +22,7 @@ extension Error {
         // into the underlying error for the API message.
         if localizedDescription == "The operation couldn’t be completed. (STPPaymentHandlerErrorDomain error 2.)",
            let underlyingError = (self as NSError).userInfo["NSUnderlyingError"] as? NSError {
-            return underlyingError.userSafeErrorMessage
+            return underlyingError.nonGenericDescription
         }
         // If the `localizedDescription` is not generic, return the `localizedDescription`
         if localizedDescription != NSError.stp_unexpectedErrorMessage() { return localizedDescription }

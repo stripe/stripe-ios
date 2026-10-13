@@ -162,7 +162,7 @@ final class EmbeddedPaymentMethodsViewTests: XCTestCase {
         let initialHeight = embeddedView.bounds.height
 
         embeddedView.setError(
-            "Error",
+            NSError(domain: "test", code: 1, userInfo: [NSLocalizedDescriptionKey: "Error"]),
             animated: false
         )
         embeddedView.autosizeHeight(width: 300)

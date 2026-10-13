@@ -97,7 +97,6 @@ final class SavedPaymentMethodFormFactoryCardTests: XCTestCase {
         )
         let configuration = UpdatePaymentMethodViewController.Configuration(
             paymentMethod: paymentMethod,
-            apiClient: STPAPIClient(publishableKey: "pk_test_example"),
             appearance: .default,
             billingDetailsCollectionConfiguration: billingDetailsCollectionConfiguration,
             hostedSurface: hostedSurface,

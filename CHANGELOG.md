@@ -3,10 +3,10 @@ MINOR
 
 ## X.Y.Z - changes pending release
 ### General
+* [Changed] Live-mode API error descriptions now include the request ID when available. Test-mode descriptions are unchanged.
 * [Removed] Removed the "test mode" badge from all UI surfaces.
 
 ### PaymentSheet
-* [Changed] Live-mode checkout UI now shows localized error descriptions with a request ID or error code. Test-mode messages are unchanged.
 * [Added] Added TrueMoney API bindings and PaymentSheet support for payments and setup.
 * [Added] Added Touch 'n Go API bindings and PaymentSheet support for payments and setup.
 * [Added] Added Mondu API bindings and PaymentSheet support for PaymentIntents.

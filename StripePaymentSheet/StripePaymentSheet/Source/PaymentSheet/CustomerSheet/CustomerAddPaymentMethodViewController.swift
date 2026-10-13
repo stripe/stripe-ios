@@ -361,7 +361,7 @@ extension CustomerAddPaymentMethodViewController {
             error in
             if let error = error {
                 let errorToUse = PaymentSheetError.unknown(debugDescription: error.nonGenericDescription)
-                self.delegate?.updateErrorLabel(for: self.configuration.apiClient.isTestmode ? errorToUse : error)
+                self.delegate?.updateErrorLabel(for: errorToUse)
                 return
             }
             guard let financialConnectionsResult = result else {

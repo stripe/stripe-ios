@@ -629,10 +629,10 @@ extension STPAPIClient {
     ) {
         urlSession.stp_performDataTask(
             with: request,
-            completionHandler: { (data, response, error) in
+            completionHandler: { [isTestmode] (data, response, error) in
                 DispatchQueue.main.async {
                     completion(
-                        STPAPIClient.decodeResponse(data: data, error: error, response: response, request: request)
+                        STPAPIClient.decodeResponse(data: data, error: error, response: response, request: request, isTestmode: isTestmode)
                     )
                 }
             },
@@ -644,7 +644,8 @@ extension STPAPIClient {
         data: Data?,
         error: Error?,
         response: URLResponse?,
-        request: URLRequest? = nil
+        request: URLRequest? = nil,
+        isTestmode: Bool = true
     ) -> Result<T, Error> {
         if let error {
             return .failure(error)
@@ -670,8 +671,10 @@ extension STPAPIClient {
             return .success(decodedObject)
         } catch {
             // Try decoding the error from the service if one is available
-            if let data, let decodedStripeError = decodeStripeErrorResponse(data: data, response: response) {
-                return .failure(decodedStripeError)
+            if let data, let decodedStripeError = decodeStripeErrorResponse(data: data, response: response),
+               case .apiError(var apiError) = decodedStripeError {
+                apiError.includeRequestIDInDescription = !isTestmode
+                return .failure(StripeError.apiError(apiError))
             } else {
                 // Return decoding error directly
                 return .failure(error)

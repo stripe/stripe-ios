@@ -438,9 +438,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         )
 
         // Error
-        errorLabel.text = configuration.apiClient.isTestmode
-            ? error?.localizedDescription
-            : error?.userFacingDescription(using: configuration.apiClient)
+        errorLabel.text = error?.localizedDescription
         UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
             self.errorLabel.setHiddenIfNecessary(self.error == nil)
         }
