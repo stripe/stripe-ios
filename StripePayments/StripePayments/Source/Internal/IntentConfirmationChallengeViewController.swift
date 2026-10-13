@@ -325,15 +325,27 @@ extension IntentConfirmationChallengeViewController: WKNavigationDelegate {
 
 // MARK: - Liquid Glass
 extension IntentConfirmationChallengeViewController {
+
     private static var shouldApplyLiquidGlass: Bool {
-        #if compiler(>=6.2)
-        guard #available(iOS 26.0, *) else { return false }
-        if let optedOut = Bundle.main.infoDictionary?["UIDesignRequiresCompatibility"] as? Bool, optedOut {
+        #if compiler(<6.2)
+        // Before Xcode 26 (Swift 6.2), Liquid Glass isn't available.
+        return false
+        #else
+        // Xcode 26+ also requires OS 26+ to use Liquid Glass.
+        guard #available(iOS 26.0, *) else {
             return false
         }
-        return true
-        #else
-        return false
+
+        // Xcode 27+ (Swift 6.4+) on OS 27+: Liquid Glass is required, so ignore the opt-out flag.
+        #if compiler(>=6.4)
+        if #available(iOS 27.0, visionOS 27.0, *) {
+            return true
+        }
+        #endif
+
+        // Older OS or Xcode versions: honor the opt-out flag, defaulting to NO when absent.
+        let hasOptedOut = Bundle.main.infoDictionary?["UIDesignRequiresCompatibility"] as? Bool ?? false
+        return !hasOptedOut
         #endif
     }
 }
