@@ -33,6 +33,42 @@ final class PaymentElementTest: XCTestCase {
         super.tearDown()
     }
 
+    func testDisplaysMandateTextDefaultsToTrue() async throws {
+        // Given the default Payment Element configuration
+        let paymentElementConfiguration = PaymentElement.Configuration()
+
+        // When Checkout creates PaymentElement
+        let checkout = try await CheckoutController(
+            configuration: CheckoutTestHelpers.makeConfiguration(
+                paymentElementConfiguration: paymentElementConfiguration
+            )
+        )
+
+        // Then mandate text remains enabled in the embedded configuration
+        XCTAssertTrue(paymentElementConfiguration.displaysMandateText)
+        XCTAssertTrue(
+            checkout.getPaymentElement().embeddedPaymentElement.configuration.embeddedViewDisplaysMandateText
+        )
+    }
+
+    func testDisplaysMandateTextFalsePropagatesToEmbeddedConfiguration() async throws {
+        // Given mandate text is explicitly disabled
+        var paymentElementConfiguration = PaymentElement.Configuration()
+        paymentElementConfiguration.displaysMandateText = false
+
+        // When Checkout creates PaymentElement
+        let checkout = try await CheckoutController(
+            configuration: CheckoutTestHelpers.makeConfiguration(
+                paymentElementConfiguration: paymentElementConfiguration
+            )
+        )
+
+        // Then the embedded configuration preserves the opt-out
+        XCTAssertFalse(
+            checkout.getPaymentElement().embeddedPaymentElement.configuration.embeddedViewDisplaysMandateText
+        )
+    }
+
     func testConfigurationSetsCheckoutDefaultBillingDetails() async throws {
         // Given Checkout billing defaults
         var checkoutConfiguration = CheckoutController.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")

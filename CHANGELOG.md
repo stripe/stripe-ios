@@ -3,6 +3,9 @@ PATCH
 
 ## X.Y.Z - changes pending release
 
+### PaymentSheet
+* [Changed] Checkout Payment Element now displays mandate text by default. Set `PaymentElement.Configuration.displaysMandateText` to `false` to render `PaymentOptionDisplayData.mandateText` near your Buy button instead.
+
 ## 26.14.0 2026-10-12
 ### General
 * [Removed] Removed the "test mode" badge from all UI surfaces.
