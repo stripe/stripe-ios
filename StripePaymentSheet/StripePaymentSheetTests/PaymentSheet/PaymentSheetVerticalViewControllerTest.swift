@@ -25,12 +25,21 @@ final class PaymentSheetVerticalViewControllerTest: XCTestCase {
     }
 
     func testLiveAPIErrorDisplaysRequestIDWithoutServerDetails() {
-        let error = NSError(domain: STPError.stripeDomain, code: 50, userInfo: [
-            NSLocalizedDescriptionKey: "This account cannot make live charges.",
-            STPError.errorMessageKey: "This account cannot make live charges.",
-            STPError.stripeErrorTypeKey: "invalid_request_error",
-            STPError.stripeRequestIDKey: "req_live_error",
-        ])
+        let response = HTTPURLResponse(
+            url: URL(string: "https://api.stripe.com/v1/payment_intents")!,
+            statusCode: 400,
+            httpVersion: nil,
+            headerFields: ["Request-Id": "req_live_error"]
+        )
+        let error = NSError.stp_error(
+            errorType: "invalid_request_error",
+            stripeErrorCode: nil,
+            stripeErrorMessage: "This account cannot make live charges.",
+            errorParam: nil,
+            declineCode: nil,
+            intent: nil,
+            httpResponse: response
+        )
         let controller = makeErrorController(publishableKey: "pk_live_example")
 
         controller.updateErrorLabel(for: error)
@@ -38,7 +47,7 @@ final class PaymentSheetVerticalViewControllerTest: XCTestCase {
         XCTAssertTrue(labelTexts(in: controller.view).contains(
             NSError.stp_unexpectedErrorMessage() + " (req_live_error)"
         ))
-        XCTAssertFalse(labelTexts(in: controller.view).contains(error.localizedDescription))
+        XCTAssertFalse(labelTexts(in: controller.view).contains("This account cannot make live charges."))
         XCTAssertEqual(error.userInfo[STPError.errorMessageKey] as? String, "This account cannot make live charges.")
     }
 
@@ -58,7 +67,7 @@ final class PaymentSheetVerticalViewControllerTest: XCTestCase {
         controller.updateErrorLabel(for: error)
 
         XCTAssertTrue(labelTexts(in: controller.view).contains(
-            NSError.stp_unexpectedErrorMessage() + " (unknown)"
+            NSError.stp_unexpectedErrorMessage() + " (\((error as NSError).code))"
         ))
         XCTAssertFalse(labelTexts(in: controller.view).contains(error.nonGenericDescription))
     }

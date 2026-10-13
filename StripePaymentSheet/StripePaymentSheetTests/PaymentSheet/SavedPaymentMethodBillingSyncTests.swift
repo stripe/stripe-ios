@@ -64,7 +64,7 @@ final class SavedPaymentMethodBillingSyncTests: XCTestCase {
             STPError.stripeErrorTypeKey: "invalid_request_error",
             STPError.stripeRequestIDKey: "req_tax_update",
         ])
-        let error = CheckoutError.apiError(message: underlying.localizedDescription, underlyingError: underlying)
+        let error = CheckoutError.apiError(message: "Tax update failed", underlyingError: underlying)
         let (sut, updater) = makeController(error: error, isTestmode: false)
         sut.loadViewIfNeeded()
         let rows = paymentMethodRows(in: sut)
@@ -76,7 +76,7 @@ final class SavedPaymentMethodBillingSyncTests: XCTestCase {
         XCTAssertTrue(rows[0].isSelected)
         XCTAssertFalse(rows[1].isSelected)
         XCTAssertTrue(labels(in: sut).contains {
-            $0.text == NSError.stp_unexpectedErrorMessage() + " (req_tax_update)"
+            $0.text == "Tax update failed (req_tax_update)"
         })
         XCTAssertFalse(labels(in: sut).contains { $0.text == underlying.localizedDescription })
     }

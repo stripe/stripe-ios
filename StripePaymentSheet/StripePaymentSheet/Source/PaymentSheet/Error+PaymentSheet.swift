@@ -8,77 +8,35 @@
 
 import Foundation
 @_spi(STP) import StripeCore
-import StripePayments
 
 extension Error {
 
-    /// Formats Stripe errors for SDK UI without changing the original error or test-mode diagnostics.
-    /// Card errors and merchant-provided errors retain their actionable messages.
+    /// Adds a diagnostic identifier to the existing localized description in live mode.
     func userFacingDescription(using apiClient: STPAPIClient) -> String {
         guard !apiClient.isTestmode else { return nonGenericDescription }
 
-        // Checkout and PaymentHandler can wrap an API error before it reaches the UI.
-        // Bound traversal in case an underlying-error chain contains a cycle.
+        // Unwrap only to find metadata; keep the original error's localized description.
+        // Limit traversal in case the underlying-error chain contains a cycle.
         var error: Error = self
         for _ in 0..<5 {
             if let checkoutError = error as? CheckoutError,
                case .apiError(_, let underlying?) = checkoutError {
                 error = underlying
-                continue
-            }
-            let nsError = error as NSError
-            guard nsError.domain == STPError.STPPaymentHandlerErrorDomain,
-                  let underlying = nsError.userInfo[NSUnderlyingErrorKey] as? Error else {
+            } else if let underlying = (error as NSError).userInfo[NSUnderlyingErrorKey] as? Error {
+                error = underlying
+            } else {
                 break
             }
-            error = underlying
         }
 
-        let nsError = error as NSError
         let requestID: String?
-        let errorCode: String?
-        let errorType: String?
-        if let stripeError = error as? StripeError, case .apiError(let apiError) = stripeError {
-            if apiError.type == .cardError { return error.nonGenericDescription }
+        if case StripeError.apiError(let apiError) = error {
             requestID = apiError.requestID
-            errorCode = apiError.code
-            errorType = apiError.type.rawValue
-        } else if nsError.domain == STPError.stripeDomain || nsError.domain == STPError.STPPaymentHandlerErrorDomain {
-            if nsError.userInfo[STPError.stripeErrorTypeKey] as? String == "card_error" {
-                return error.nonGenericDescription
-            }
-            // PaymentHandler maps confirmation errors to localized card messages.
-            if nsError.domain == STPError.STPPaymentHandlerErrorDomain,
-               nsError.code == STPPaymentHandlerErrorCode.paymentErrorCode.rawValue,
-               nsError.userInfo[STPError.stripeErrorTypeKey] == nil,
-               let message = nsError.userInfo[NSLocalizedDescriptionKey] as? String,
-               !message.isEmpty, message != NSError.stp_unexpectedErrorMessage() {
-                return message
-            }
-            requestID = nsError.userInfo[STPError.stripeRequestIDKey] as? String
-            errorCode = nsError.userInfo[STPError.stripeErrorCodeKey] as? String
-            errorType = nsError.userInfo[STPError.stripeErrorTypeKey] as? String
-        } else if error is PaymentSheetError || error is CheckoutError || error is StripeError {
-            requestID = nil
-            // Do not stringify SDK errors: CustomDebugStringConvertible can expose debug details
-            // even for enum cases with no associated values.
-            errorCode = (error as? StripeError)?.analyticsErrorCode
-                ?? Mirror(reflecting: error).children.first?.label
-                ?? String(nsError.code)
-            errorType = nil
-            // Preserve the SDK's explicit localized validation message.
-            if let sheetError = error as? PaymentSheetError,
-               sheetError.localizedDescription != NSError.stp_unexpectedErrorMessage() {
-                return sheetError.localizedDescription
-            }
         } else {
-            // Merchants can supply their own user-facing errors from confirmation callbacks.
-            return error.nonGenericDescription
+            requestID = (error as NSError).userInfo[STPError.stripeRequestIDKey] as? String
         }
-
-        let identifier = [requestID, errorCode, errorType].compactMap { $0 }.first { !$0.isEmpty }
-            ?? String(nsError.code)
-        return NSError.stp_unexpectedErrorMessage() + " (\(identifier))"
+        let identifier = requestID?.nonEmpty ?? error._stp_error_code?.nonEmpty ?? String((error as NSError).code)
+        return localizedDescription + " (\(identifier))"
     }
 
     /// If the `localizedDescription` contains a generic error message this returns the raw error message within `userInfo`
