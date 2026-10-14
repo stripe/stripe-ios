@@ -30,6 +30,8 @@ final class LinkAuthFlowViewController: UIViewController {
     private var lastInputRevision = -1
     private var webController: LinkVerificationWebFallbackController?
     private var lastSettledEmbeddedBounds: CGRect?
+    /// Set while the incoming screen is laid out ahead of the resize animation, so the dialog frame isn't updated early.
+    private var isPreparingTransition = false
 
     init(
         mode: LinkVerificationView.Mode = .modal,
@@ -152,7 +154,9 @@ final class LinkAuthFlowViewController: UIViewController {
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        (presentationController as? PresentationController)?.updatePresentedViewFrame()
+        if !isPreparingTransition {
+            (presentationController as? PresentationController)?.updatePresentedViewFrame()
+        }
         // In embedded mode, contentStack's height is imposed by the host (via view's frame)
         // rather than derived from its own content, unlike the scroll-view-hosted modal path.
         // UIStackView's arranged-subview sizing (childContainer, and in turn the active child
@@ -199,8 +203,20 @@ final class LinkAuthFlowViewController: UIViewController {
             next = statusController
         }
         let changed = activeController !== next
+        // Initial rendering can precede presentation. Let UIKit size the modal before forcing layout.
+        let presentation: PresentationController? = {
+            guard let presentation = presentationController as? PresentationController,
+                  let containerView = presentation.containerView,
+                  containerView.bounds.width > 0 else { return nil }
+            return presentation
+        }()
+        var outgoingSnapshot: UIView?
         if changed {
             view.endEditing(true)
+            if presentation != nil, let outgoingView = activeController?.view {
+                outgoingSnapshot = outgoingView.snapshotView(afterScreenUpdates: false)
+                outgoingSnapshot?.frame = outgoingView.frame
+            }
             activeController?.willMove(toParent: nil)
             activeController?.view.removeFromSuperview()
             activeController?.removeFromParent()
@@ -216,14 +232,28 @@ final class LinkAuthFlowViewController: UIViewController {
             next.didMove(toParent: self)
             activeController = next
         }
-        // Initial rendering can precede presentation. Let UIKit size the modal before forcing layout.
-        if let presentation = presentationController as? PresentationController,
-           let containerView = presentation.containerView,
-           containerView.bounds.width > 0 {
-            UIView.animate(withDuration: UIAccessibility.isReduceMotionEnabled ? 0 : 0.2) {
+        if let presentation {
+            if changed {
+                // Give the incoming screen its real frames before the resize animation below,
+                // so its subviews don't animate in from a zero rect. The dialog frame is left
+                // alone here so the animation can resize it.
+                isPreparingTransition = true
+                UIView.performWithoutAnimation {
+                    view.layoutIfNeeded()
+                }
+                isPreparingTransition = false
+                // Crossfade from the outgoing screen while the dialog resizes.
+                next.view.alpha = 0
+                if let outgoingSnapshot { childContainer.addSubview(outgoingSnapshot) }
+            }
+            UIView.animate(withDuration: UIAccessibility.isReduceMotionEnabled ? 0 : 0.2, animations: {
                 presentation.updatePresentedViewFrame()
                 self.view.layoutIfNeeded()
-            }
+                next.view.alpha = 1
+                outgoingSnapshot?.alpha = 0
+            }, completion: { _ in
+                outgoingSnapshot?.removeFromSuperview()
+            })
         }
         onNavigationUpdate?()
         if changed || lastInputRevision != coordinator.inputRevision {
