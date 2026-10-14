@@ -38,8 +38,8 @@ let JSONKeyObject = "object"
         // Perform request
         apiClient.urlSession.stp_performDataTask(
             with: request as URLRequest,
-            completionHandler: { [isTestmode = apiClient.isTestmode] body, response, error in
-                self.parseResponse(response, method: "POST", body: body, error: error, isTestmode: isTestmode, completion: completion)
+            completionHandler: { [includeRequestIDInDescription = apiClient.shouldIncludeRequestIDInErrorDescription] body, response, error in
+                self.parseResponse(response, method: "POST", body: body, error: error, includeRequestIDInDescription: includeRequestIDInDescription, completion: completion)
             }
         )
     }
@@ -85,8 +85,8 @@ let JSONKeyObject = "object"
         // Perform request
         apiClient.urlSession.stp_performDataTask(
             with: request as URLRequest,
-            completionHandler: { [isTestmode = apiClient.isTestmode] body, response, error in
-                self.parseResponse(response, method: "GET", body: body, error: error, isTestmode: isTestmode, completion: completion)
+            completionHandler: { [includeRequestIDInDescription = apiClient.shouldIncludeRequestIDInErrorDescription] body, response, error in
+                self.parseResponse(response, method: "GET", body: body, error: error, includeRequestIDInDescription: includeRequestIDInDescription, completion: completion)
             }
         )
     }
@@ -128,8 +128,8 @@ let JSONKeyObject = "object"
         // Perform request
         apiClient.urlSession.stp_performDataTask(
             with: request as URLRequest,
-            completionHandler: { [isTestmode = apiClient.isTestmode] body, response, error in
-                self.parseResponse(response, method: "DELETE", body: body, error: error, isTestmode: isTestmode, completion: completion)
+            completionHandler: { [includeRequestIDInDescription = apiClient.shouldIncludeRequestIDInErrorDescription] body, response, error in
+                self.parseResponse(response, method: "DELETE", body: body, error: error, includeRequestIDInDescription: includeRequestIDInDescription, completion: completion)
             }
         )
     }
@@ -139,7 +139,7 @@ let JSONKeyObject = "object"
         method: String,
         body: Data?,
         error: Error?,
-        isTestmode: Bool = true,
+        includeRequestIDInDescription: Bool = false,
         completion: @escaping (ResponseType?, HTTPURLResponse?, Error?) -> Void
     ) {
         // Derive HTTP URL response
@@ -181,15 +181,12 @@ let JSONKeyObject = "object"
         {
             safeCompletion(responseObject, nil)
         } else {
-            let error = NSError.stp_error(fromStripeResponse: jsonDictionary, httpResponse: httpResponse)
-            if !isTestmode, let requestID = httpResponse?.value(forHTTPHeaderField: "request-id")?.nonEmpty {
-                var userInfo = error.userInfo
-                userInfo[NSLocalizedDescriptionKey] = error.localizedDescription + " (\(requestID))"
-                userInfo[STPError.requestIDInDescriptionKey] = true
-                safeCompletion(nil, NSError(domain: error.domain, code: error.code, userInfo: userInfo))
-            } else {
-                safeCompletion(nil, error)
-            }
+            let error = NSError.stp_error(
+                fromStripeResponse: jsonDictionary,
+                httpResponse: httpResponse,
+                includeRequestIDInDescription: includeRequestIDInDescription
+            )
+            safeCompletion(nil, error)
         }
     }
 }

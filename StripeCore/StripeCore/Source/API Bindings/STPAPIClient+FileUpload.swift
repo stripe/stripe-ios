@@ -285,7 +285,7 @@ extension STPAPIClient {
         var request = configuredRequest(for: URL(string: FileUploadURL)!, using: authorizationSecret)
         request.httpMethod = HTTPMethod.post.rawValue
         request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
-        let isTestmode = self.isTestmode
+        let includeRequestIDInDescription = shouldIncludeRequestIDInErrorDescription
         let delegate = STPFileUploadProgressDelegate(progress: progress)
         let data: Data
         let response: URLResponse
@@ -299,7 +299,7 @@ extension STPAPIClient {
         }
         guard !Task.isCancelled else { throw FileUploadError.cancelled }
         do {
-            return try Self.decodeResponse(data: data, error: nil, response: response, request: request, isTestmode: isTestmode).get()
+            return try Self.decodeResponse(data: data, error: nil, response: response, request: request, includeRequestIDInDescription: includeRequestIDInDescription).get()
         } catch StripeError.apiError(let apiError) {
             throw FileUploadError.apiError(apiError)
         } catch {

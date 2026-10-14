@@ -1,6 +1,6 @@
 import OHHTTPStubs
 import OHHTTPStubsSwift
-@_spi(STP) import StripeCore
+@_spi(STP) @_spi(DashboardOnly) import StripeCore
 import StripeCoreTestUtils
 @_spi(STP) import StripePayments
 @testable import StripePaymentSheet
@@ -26,6 +26,40 @@ final class APIErrorDescriptionTests: APIStubbedTestCase {
             XCTAssertEqual(error.localizedDescription, NSError.stp_unexpectedErrorMessage())
             XCTAssertEqual(error.nonGenericDescription, NSError.stp_unexpectedErrorMessage())
             XCTAssertEqual(error.serializeForV1Analytics()["request_id"] as? String, "req_123")
+        }
+    }
+
+    func testUnknownModeKeepsExistingMessage() async throws {
+        for key in ["ek_test_example", "ek_live_example", "ek_example", "unknown", ""] {
+            // Given a client whose key does not tell us whether it is in live mode
+            let apiClient = stubbedAPIClient()
+            apiClient.publishableKey = key
+
+            // When the API returns an error with a request ID
+            for error in try await requestErrors(apiClient: apiClient, requestID: "req_unknown") {
+                // Then the description is unchanged and the request ID remains available to analytics
+                XCTAssertEqual(error.localizedDescription, NSError.stp_unexpectedErrorMessage())
+                XCTAssertFalse(error._stp_hasRequestIDInDescription)
+                XCTAssertEqual(error.serializeForV1Analytics()["request_id"] as? String, "req_unknown")
+            }
+        }
+    }
+
+    func testUserKeyRespectsLiveMode() async throws {
+        for livemode in [false, true] {
+            // Given a user key with an explicit mode
+            let apiClient = stubbedAPIClient()
+            apiClient.publishableKey = "uk_example"
+            apiClient.userKeyLiveMode = livemode
+
+            // When the API returns an error with a request ID
+            for error in try await requestErrors(apiClient: apiClient, requestID: "req_user") {
+                // Then only live mode appends the ID, while both modes preserve the metadata
+                let expected = NSError.stp_unexpectedErrorMessage() + (livemode ? " (req_user)" : "")
+                XCTAssertEqual(error.localizedDescription, expected)
+                XCTAssertEqual(error._stp_hasRequestIDInDescription, livemode)
+                XCTAssertEqual(error.serializeForV1Analytics()["request_id"] as? String, "req_user")
+            }
         }
     }
 
@@ -75,10 +109,14 @@ final class APIErrorDescriptionTests: APIStubbedTestCase {
                 // When the legacy Apple Pay delegate converts it to NSError
                 let converted = try XCTUnwrap(NSError.stp_error(from: modern))
 
-                // Then the localized description, error type, and raw message survive.
+                // Then the description and metadata survive without appending the ID twice.
                 XCTAssertEqual(converted.localizedDescription, modern.localizedDescription)
                 XCTAssertEqual(converted.userInfo[STPError.stripeErrorTypeKey] as? String, type)
                 XCTAssertEqual(converted.userInfo[STPError.errorMessageKey] as? String, "Your card was declined.")
+                XCTAssertEqual(converted.serializeForV1Analytics()["request_id"] as? String, "req_apple_pay")
+                XCTAssertEqual(converted._stp_hasRequestIDInDescription, !isTestmode)
+                XCTAssertEqual(converted.userInfo[STPError.stripeDeclineCodeKey] as? String, type == "card_error" ? "insufficient_funds" : nil)
+                XCTAssertEqual((converted.userInfo["payment_intent"] as? [String: Any])?["id"] as? String, "pi_example")
                 if !isTestmode {
                     let wrapped = NSError(domain: STPError.STPPaymentHandlerErrorDomain, code: 2,
                                           userInfo: [NSUnderlyingErrorKey: converted])
@@ -92,9 +130,22 @@ final class APIErrorDescriptionTests: APIStubbedTestCase {
     private func requestErrors(isTestmode: Bool, requestID: String?, type: String = "invalid_request_error") async throws -> [Error] {
         let apiClient = stubbedAPIClient()
         apiClient.publishableKey = isTestmode ? "pk_test_example" : "pk_live_example"
+        return try await requestErrors(apiClient: apiClient, requestID: requestID, type: type)
+    }
+
+    private func requestErrors(apiClient: STPAPIClient, requestID: String?, type: String = "invalid_request_error") async throws -> [Error] {
+        var errorFields: [String: Any] = [
+            "type": type,
+            "message": "Your card was declined.",
+            "payment_intent": ["object": "payment_intent", "id": "pi_example"],
+        ]
+        if type == "card_error" {
+            errorFields["code"] = "card_declined"
+            errorFields["decline_code"] = "insufficient_funds"
+        }
         stub { $0.url?.path == "/v1/payment_methods" } response: { _ in
             HTTPStubsResponse(
-                jsonObject: ["error": ["type": type, "message": "Your card was declined."]],
+                jsonObject: ["error": errorFields],
                 statusCode: 400,
                 headers: requestID.map { ["Request-Id": $0] }
             )

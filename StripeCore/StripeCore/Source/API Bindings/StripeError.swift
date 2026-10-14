@@ -51,11 +51,7 @@ extension StripeError: LocalizedError {
     @_spi(STP) public var errorDescription: String? {
         switch self {
         case .apiError(let apiError):
-            let message = apiError.errorUserInfoString(key: NSLocalizedDescriptionKey)
-            guard apiError.includeRequestIDInDescription, let requestID = apiError.requestID?.nonEmpty else {
-                return message
-            }
-            return (message ?? NSError.stp_unexpectedErrorMessage()) + " (\(requestID))"
+            return apiError.errorUserInfoString(key: NSLocalizedDescriptionKey)
         case .invalidRequest:
             return nil
         }
