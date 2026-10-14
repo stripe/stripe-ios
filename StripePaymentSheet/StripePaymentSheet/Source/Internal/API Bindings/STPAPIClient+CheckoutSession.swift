@@ -185,7 +185,8 @@ extension STPAPIClient {
                 "elements_session_client": [
                     "is_aggregation_expected": true,
                 ],
-            ]
+            ],
+            useServerErrorMessage: true
         )
     }
 
@@ -349,6 +350,8 @@ extension STPAPIClient {
                     continuation.resume(with: result)
                 }
             }
+        } catch StripeError.apiError(let apiError) {
+            throw checkoutSessionError(from: apiError)
         } catch {
             if error is DecodingError {
                 reportUnexpectedPaymentPagesParsingError(error, apiClient: self)
@@ -361,7 +364,8 @@ extension STPAPIClient {
         endpoint: String,
         parameters: [String: Any],
         timeout: TimeInterval? = nil,
-        retriesEnabled: Bool = true
+        retriesEnabled: Bool = true,
+        useServerErrorMessage: Bool = false
     ) async throws -> T {
         do {
             return try await withCheckedThrowingContinuation { continuation in
@@ -374,12 +378,23 @@ extension STPAPIClient {
                     continuation.resume(with: result)
                 }
             }
+        } catch StripeError.apiError(let apiError) where useServerErrorMessage {
+            throw checkoutSessionError(from: apiError)
         } catch {
             if error is DecodingError {
                 reportUnexpectedPaymentPagesParsingError(error, apiClient: self)
             }
             throw error
         }
+    }
+
+    private func checkoutSessionError(from apiError: StripeAPIError) -> StripeError {
+        // During private preview, Checkout cannot distinguish buyer-actionable API errors.
+        // Expose every server message, using the generic localized fallback when absent.
+        var apiError = apiError
+        apiError.localizedDescriptionOverride = apiError.message ?? NSError.stp_unexpectedErrorMessage()
+        // Keep the original error so analytics and other internal consumers retain all API data.
+        return .apiError(apiError)
     }
 }
 

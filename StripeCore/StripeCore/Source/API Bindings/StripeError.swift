@@ -48,10 +48,11 @@ extension StripeError: AnalyticLoggableError {
 // MARK: - LocalizedError
 
 extension StripeError: LocalizedError {
+
     @_spi(STP) public var errorDescription: String? {
         switch self {
         case .apiError(let apiError):
-            return apiError.errorUserInfoString(key: NSLocalizedDescriptionKey)
+            return apiError.localizedDescriptionOverride ?? apiError.errorUserInfoString(key: NSLocalizedDescriptionKey)
         case .invalidRequest:
             return nil
         }
