@@ -5,7 +5,7 @@
 //  Created by George Birch on 8/6/26.
 
 @_spi(STP) @testable import StripeCore
-@_spi(AppearanceAPIAdditionsPreview) @_spi(STP) @testable import StripePaymentSheet
+@_spi(AppearanceAPIAdditionsPreview) @_spi(STP) @_spi(ReactNativeSDK) @testable import StripePaymentSheet
 import UIKit
 import XCTest
 

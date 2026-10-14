@@ -7,7 +7,7 @@
 //
 
 @testable @_spi(STP) import StripeCore
-@testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(STP) @_spi(ReactNativeSDK) import StripePaymentSheet
 import XCTest
 
 @MainActor
