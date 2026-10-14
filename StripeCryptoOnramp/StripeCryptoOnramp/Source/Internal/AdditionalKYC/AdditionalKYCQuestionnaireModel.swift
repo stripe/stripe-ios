@@ -18,9 +18,12 @@ final class AdditionalKYCQuestionnaireModel: ObservableObject {
     /// Draft answers keyed by question identifier, preserved when navigating back to the questionnaire.
     @Published var answers: [String: String] = [:]
 
-    /// Whether every required question has a nonblank answer.
+    /// Whether every answer fits its limit and every required question has a nonblank answer.
     var canContinue: Bool {
-        questions.allSatisfy { !$0.required || !answer(for: $0).isEmpty }
+        questions.allSatisfy { question in
+            (!question.required || !answer(for: question).isEmpty)
+                && (answers[question.id] ?? "").unicodeScalars.count <= question.maxQuestionnaireAnswerCharacters
+        }
     }
 
     /// Answers to submit alongside the documents, omitting unanswered optional questions.
@@ -33,9 +36,9 @@ final class AdditionalKYCQuestionnaireModel: ObservableObject {
 
     /// Creates answer state for a supported questionnaire.
     /// - Parameter questionnaire: The questions returned for either document collection flow.
-    /// - Throws: `DocumentCollectionError.unsupportedRequirement` for unsupported answer types or invalid identifiers.
+    /// - Throws: `DocumentCollectionError.unsupportedRequirement` for unsupported answer types, invalid identifiers, or invalid answer limits.
     init(questionnaire: AdditionalKYCQuestionnaire) throws {
-        guard questionnaire.questions.allSatisfy({ $0.answerType == .freeText && !$0.id.isEmpty }),
+        guard questionnaire.questions.allSatisfy({ $0.answerType == .freeText && !$0.id.isEmpty && $0.maxQuestionnaireAnswerCharacters > 0 }),
               Set(questionnaire.questions.map(\.id)).count == questionnaire.questions.count else {
             throw DocumentCollectionError.unsupportedRequirement
         }
