@@ -251,6 +251,7 @@ extension PaymentMethodTypeCollectionView {
             paymentMethodLogo.widthAnchor.constraint(equalToConstant: 0)
         }()
         private var imageTask: Task<Void, Never>?
+        private var imageURL: URL?
 
         // MARK: - UICollectionViewCell
 
@@ -339,21 +340,25 @@ extension PaymentMethodTypeCollectionView {
             let forDarkBackground = componentBackgroundContrastingColor == .white
             let currency = self.currency
             let iconStyle = appearance.iconStyle
+            let imageURL = paymentMethodType.imageURL(forDarkBackground: forDarkBackground)
+            // Keep the displayed image even if its cache entry has been evicted.
+            let previousImage = imageURL != nil && imageURL == self.imageURL ? paymentMethodLogo.image : nil
             updateImage(
                 paymentMethodType.makeImage(
                     forDarkBackground: forDarkBackground,
                     currency: currency,
-                    iconStyle: iconStyle
+                    iconStyle: iconStyle,
+                    placeholder: previousImage
                 )
             )
+            self.imageURL = imageURL
             imageTask?.cancel()
             imageTask = Task { @MainActor [weak self] in
-                let image = await paymentMethodType.loadImage(
+                guard let image = try? await paymentMethodType.loadImage(
                     forDarkBackground: forDarkBackground,
                     currency: currency,
                     iconStyle: iconStyle
-                )
-                guard !Task.isCancelled,
+                ), !Task.isCancelled,
                       let self,
                       paymentMethodType == self.paymentMethodType else {
                     return

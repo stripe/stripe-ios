@@ -54,7 +54,7 @@ final class STPPaymentMethodCardArtImageTest: APIStubbedTestCase {
         XCTAssertEqual(result?.size, CGSize(width: 100, height: 26))
     }
 
-    func testPreloadCardArtImage_promotesURLCacheSynchronously() throws {
+    func testPreloadCardArtImage_promotesURLCacheSynchronouslyAndRefreshes() async throws {
         let pm = STPPaymentMethod._testCardWithCardArt()
         let cardArtURL = try XCTUnwrap(pm.cardArtCDNURL())
         let imageData = generateUIImage(size: CGSize(width: 100, height: 26)).pngData()!
@@ -62,7 +62,10 @@ final class STPPaymentMethodCardArtImageTest: APIStubbedTestCase {
             url: cardArtURL,
             statusCode: 200,
             httpVersion: nil,
-            headerFields: nil
+            headerFields: [
+                "Date": "Wed, 01 Jan 2020 00:00:00 GMT",
+                "Cache-Control": "max-age=0, must-revalidate",
+            ]
         )!
         urlSessionConfig.urlCache?.storeCachedResponse(
             CachedURLResponse(response: response, data: imageData),
@@ -71,10 +74,18 @@ final class STPPaymentMethodCardArtImageTest: APIStubbedTestCase {
 
         XCTAssertNil(downloadManager.cachedImage(for: cardArtURL))
 
-        pm.preloadCardArtImage(downloadManager: downloadManager)
+        let refreshedSize = CGSize(width: 120, height: 26)
+        let refreshedData = generateUIImage(size: refreshedSize).pngData()!
+        stub(condition: { $0.url == cardArtURL }) { _ in
+            HTTPStubsResponse(data: refreshedData, statusCode: 200, headers: nil).responseTime(0.1)
+        }
+        let refreshTask = pm.preloadCardArtImage(downloadManager: downloadManager)
 
         XCTAssertNotNil(downloadManager.cachedImage(for: cardArtURL))
         XCTAssertEqual(pm.cachedCardArtImage(downloadManager: downloadManager)?.size, CGSize(width: 100, height: 26))
+
+        await refreshTask?.value
+        XCTAssertEqual(pm.cachedCardArtImage(downloadManager: downloadManager)?.size, refreshedSize)
     }
 
     // MARK: - Helpers

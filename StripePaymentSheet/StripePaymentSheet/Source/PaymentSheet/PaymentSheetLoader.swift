@@ -176,7 +176,7 @@ final class PaymentSheetLoader {
                 defaultPaymentMethod: elementsSession.customer?.getDefaultPaymentMethod()
             )
 
-            // Temporary band-aid for pre-loading card art: synchronously promote a cached response or
+            // Temporary band-aid for pre-loading card art: synchronously promote a cached response and
             // fire-and-forget a fetch to warm the in-memory cache for PS.FC
             // and embedded PaymentOptionDisplayData APIs.
             // TODO: Revisit overall pre-loading approach to make this work for other payment methods

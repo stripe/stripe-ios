@@ -68,10 +68,12 @@ extension PaymentSheet {
         }
 
         /// Returns the best immediately available image without starting a network request.
+        /// Uses `placeholder` for a remote cache miss, or a transparent image if none is supplied.
         func makeImage(
             forDarkBackground: Bool,
             currency: String? = nil,
             iconStyle: PaymentSheet.Appearance.IconStyle = .filled,
+            placeholder: UIImage? = nil,
             using downloadManager: DownloadManager = .shared
         ) -> UIImage {
             let source = imageSource(
@@ -82,17 +84,17 @@ extension PaymentSheet {
             guard let remoteURL = source.remoteURL else {
                 return source.fallback
             }
-            return downloadManager.promoteCachedImage(for: remoteURL) ?? source.fallback
+            return downloadManager.promoteCachedImage(for: remoteURL) ?? placeholder ?? source.fallback
         }
 
         /// Returns the preferred image, downloading and caching it when necessary.
-        /// Falls back to the best locally available image if the download fails.
+        /// Throws on download failure so callers can retain their currently displayed image.
         func loadImage(
             forDarkBackground: Bool,
             currency: String? = nil,
             iconStyle: PaymentSheet.Appearance.IconStyle = .filled,
             using downloadManager: DownloadManager = .shared
-        ) async -> UIImage {
+        ) async throws -> UIImage {
             let source = imageSource(
                 forDarkBackground: forDarkBackground,
                 currency: currency,
@@ -101,7 +103,13 @@ extension PaymentSheet {
             guard let remoteURL = source.remoteURL else {
                 return source.fallback
             }
-            return (try? await downloadManager.image(for: remoteURL)) ?? source.fallback
+            return try await downloadManager.refreshImage(for: remoteURL)
+        }
+
+        /// The remote image URL for the current appearance, or nil for bundled images.
+        func imageURL(forDarkBackground: Bool) -> URL? {
+            guard case .external(let paymentMethod) = self else { return nil }
+            return (forDarkBackground ? paymentMethod.darkImageUrl : nil) ?? paymentMethod.lightImageUrl
         }
 
         private func imageSource(
@@ -110,11 +118,10 @@ extension PaymentSheet {
             iconStyle: PaymentSheet.Appearance.IconStyle
         ) -> ImageSource {
             switch self {
-            case .external(let paymentMethod):
-                let url = forDarkBackground ? paymentMethod.darkImageUrl : paymentMethod.lightImageUrl
+            case .external:
                 return ImageSource(
                     fallback: Self.imagePlaceholder,
-                    remoteURL: url ?? paymentMethod.lightImageUrl
+                    remoteURL: imageURL(forDarkBackground: forDarkBackground)
                 )
             case .stripe(let paymentMethodType):
                 let localImage = paymentMethodType.makeImage(forDarkBackground: forDarkBackground, currency: currency, iconStyle: iconStyle)

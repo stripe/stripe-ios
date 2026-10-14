@@ -57,12 +57,17 @@ import UIKit
         return image
     }
 
-    /// Returns the image at `url`, using cached data whenever possible.
+    /// Returns a decoded image if available, otherwise loads it using HTTP cache policy.
     public func image(for url: URL) async throws -> UIImage {
         if let image = cachedImage(for: url) {
             return image
         }
+        return try await refreshImage(for: url)
+    }
 
+    /// Refreshes the decoded image using HTTP cache policy, revalidating expired responses.
+    /// A failed refresh leaves any previously decoded image available for display.
+    func refreshImage(for url: URL) async throws -> UIImage {
         var errorParams: [String: Any] = ["url": url.absoluteString]
         do {
             let (data, response) = try await session.data(from: url)

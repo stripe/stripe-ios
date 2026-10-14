@@ -44,6 +44,14 @@ final class DownloadManagerTest: APIStubbedTestCase {
         urlCache.removeAllCachedResponses()
         let cachedImage = try XCTUnwrap(downloadManager.cachedImage(for: validURL))
         XCTAssertEqual(cachedImage.pngData(), downloadedImage.pngData())
+
+        // Cached loads remain usable without a network connection.
+        stub(condition: { $0.url == self.validURL }) { _ in
+            XCTFail("A decoded cache hit should not start another request")
+            return HTTPStubsResponse(error: URLError(.notConnectedToInternet))
+        }
+        let loadedImage = try await downloadManager.image(for: validURL)
+        XCTAssertTrue(loadedImage === cachedImage)
     }
 
     func testCachedImageDoesNotReadURLCache() {
@@ -61,6 +69,35 @@ final class DownloadManagerTest: APIStubbedTestCase {
 
         urlCache.removeAllCachedResponses()
         XCTAssertEqual(downloadManager.cachedImage(for: validURL)?.size, validImageSize)
+    }
+
+    func testRefreshRevalidatesPromotedExpiredResponse() async throws {
+        // Given an expired response that has already been promoted for immediate display
+        seedURLCache(url: validURL, data: validImageData())
+        XCTAssertEqual(downloadManager.promoteCachedImage(for: validURL)?.size, validImageSize)
+        stubImage(at: validURL, data: validImageData2())
+
+        // When loading the image asynchronously
+        let refreshedImage = try await downloadManager.refreshImage(for: validURL)
+
+        // Then the response and decoded image are refreshed rather than reusing stale pixels
+        XCTAssertEqual(refreshedImage.size, validImageSize2)
+        XCTAssertEqual(downloadManager.cachedImage(for: validURL)?.size, validImageSize2)
+    }
+
+    func testFailedRefreshPreservesPromotedImage() async throws {
+        // Given an expired image and an unavailable network
+        seedURLCache(url: validURL, data: validImageData())
+        let promotedImage = try XCTUnwrap(downloadManager.promoteCachedImage(for: validURL))
+        stub(condition: { $0.url == self.validURL }) { _ in
+            HTTPStubsResponse(error: URLError(.notConnectedToInternet))
+        }
+
+        // When refreshing fails
+        await XCTAssertThrowsErrorAsync(_ = try await self.downloadManager.refreshImage(for: self.validURL))
+
+        // Then the cached image remains available for display
+        XCTAssertTrue(downloadManager.cachedImage(for: validURL) === promotedImage)
     }
 
     func testConcurrentImageRequestsSucceed() async throws {
@@ -148,8 +185,14 @@ final class DownloadManagerTest: APIStubbedTestCase {
 
         await fulfillment(of: [requestStarted], timeout: 1)
         task.cancel()
-        _ = try? await task.value
+        do {
+            _ = try await task.value
+            XCTFail("A cancelled download must not succeed")
+        } catch {
+            XCTAssertEqual((error as? URLError)?.code, .cancelled)
+        }
 
+        XCTAssertNil(downloadManager.cachedImage(for: validURL))
         XCTAssertTrue(analyticsClient._testLogHistory.isEmpty)
     }
 
@@ -166,7 +209,10 @@ final class DownloadManagerTest: APIStubbedTestCase {
             url: url,
             statusCode: 200,
             httpVersion: nil,
-            headerFields: nil
+            headerFields: [
+                "Date": "Wed, 01 Jan 2020 00:00:00 GMT",
+                "Cache-Control": "max-age=0, must-revalidate",
+            ]
         )!
         urlCache.storeCachedResponse(
             CachedURLResponse(response: response, data: data),

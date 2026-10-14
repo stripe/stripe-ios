@@ -15,6 +15,7 @@ class PaymentMethodTypeImageView: UIImageView {
     let currency: String?
     let iconStyle: PaymentSheet.Appearance.IconStyle
     private var imageTask: Task<Void, Never>?
+    private var imageURL: URL?
 
     /// Initializes a PaymentMethodTypeImageView with the specified payment method type and a color to match contrast.
     ///
@@ -52,20 +53,23 @@ class PaymentMethodTypeImageView: UIImageView {
         let paymentMethodType = self.paymentMethodType
         let currency = self.currency
         let iconStyle = self.iconStyle
+        let imageURL = paymentMethodType.imageURL(forDarkBackground: forDarkBackground)
+        let previousImage = imageURL != nil && imageURL == self.imageURL ? image : nil
         setImage(
             paymentMethodType.makeImage(
                 forDarkBackground: forDarkBackground,
                 currency: currency,
-                iconStyle: iconStyle
+                iconStyle: iconStyle,
+                placeholder: previousImage
             )
         )
+        self.imageURL = imageURL
         imageTask = Task { @MainActor [weak self] in
-            let image = await paymentMethodType.loadImage(
+            guard let image = try? await paymentMethodType.loadImage(
                 forDarkBackground: forDarkBackground,
                 currency: currency,
                 iconStyle: iconStyle
-            )
-            guard !Task.isCancelled else { return }
+            ), !Task.isCancelled else { return }
             self?.setImage(image)
         }
     }
