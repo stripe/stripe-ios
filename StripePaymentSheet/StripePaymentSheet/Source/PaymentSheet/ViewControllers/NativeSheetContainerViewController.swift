@@ -349,7 +349,7 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
     private var isWaitingForDetentTransition = false
 
     /// Natural form and navigation height, also used to premeasure animated visibility changes.
-    var fittedContentHeight: CGFloat {
+    private var fittedContentHeight: CGFloat {
         // A vertical system bar narrows the usable content width, which can increase wrapped content height.
         // Use the scroll view hasn't laid out yet, estimate the width by subtracting the insets from the sheet width.
         let width = scrollView.bounds.width > 0
@@ -389,6 +389,33 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
         view.setNeedsLayout()
         view.layoutIfNeeded()
         lastFittedContentHeight = fittedContentHeight
+    }
+
+    /// Measures a visibility change without leaving the sheet in its destination layout.
+    func fittedContentHeight(with subview: UIView, isHidden: Bool) -> CGFloat? {
+        guard let view = viewIfLoaded, view.window != nil, subview.isDescendant(of: view) else {
+            return nil
+        }
+
+        var targetHeight: CGFloat?
+        // Animated stack visibility keeps its old fitting height until the animation block finishes.
+        // Measure the destination first, then restore the starting layout before animating either view.
+        UIView.performWithoutAnimation {
+            let wasHidden = subview.isHidden
+            let contentOffset = scrollView.contentOffset
+            defer {
+                subview.setHiddenIfNecessary(wasHidden)
+                view.setNeedsLayout()
+                view.layoutIfNeeded()
+                // Measuring shorter content can clamp the scroll offset; preserve the starting position too.
+                scrollView.contentOffset = contentOffset
+            }
+            subview.setHiddenIfNecessary(isHidden)
+            view.setNeedsLayout()
+            view.layoutIfNeeded()
+            targetHeight = fittedContentHeight
+        }
+        return targetHeight
     }
 
     func invalidateContentDetent() {
