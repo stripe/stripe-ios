@@ -10,7 +10,6 @@ import StripeCoreTestUtils
 @testable @_spi(STP) import StripePaymentSheet
 @testable @_spi(STP) import StripeUICore
 import UIKit
-import XCTest
 
 @MainActor
 // @iOS26
@@ -43,12 +42,20 @@ final class ExpressCheckoutElementViewSnapshotTests: STPSnapshotTestCase {
         verify(makeView(appearance: appearance))
     }
 
-    func testTwoColumnLayoutWithoutEmail() throws {
-        try verifyCompactLayout(email: nil)
+    func testTwoColumnLayoutWithoutEmail() {
+        var appearance = ExpressCheckoutElement.Configuration.Appearance()
+        appearance.buttonLayout.maxColumns = 2
+        appearance.buttonLayout.maxRows = 1
+
+        verify(makeView(appearance: appearance))
     }
 
-    func testTwoColumnLayoutWithEmail() throws {
-        try verifyCompactLayout(email: "this.is.a.very.long.email.address@example.com")
+    func testTwoColumnLayoutWithEmail() {
+        var appearance = ExpressCheckoutElement.Configuration.Appearance()
+        appearance.buttonLayout.maxColumns = 2
+        appearance.buttonLayout.maxRows = 1
+
+        verify(makeView(appearance: appearance, linkEmail: "this.is.a.very.long.email.address@example.com"))
     }
 
     func testThreeButtonsInTwoByTwoGrid() {
@@ -79,22 +86,6 @@ final class ExpressCheckoutElementViewSnapshotTests: STPSnapshotTestCase {
 
     // MARK: - Helpers
 
-    private func verifyCompactLayout(email: String?, file: StaticString = #filePath, line: UInt = #line) throws {
-        var appearance = ExpressCheckoutElement.Configuration.Appearance()
-        appearance.buttonLayout.maxColumns = 2
-        appearance.buttonLayout.maxRows = 1
-        let view = makeView(appearance: appearance, buttons: [.applePay, .link])
-        let stackView = view.subviews.first as? UIStackView
-        let row = stackView?.arrangedSubviews.first as? UIStackView
-        let linkButton = try XCTUnwrap(row?.arrangedSubviews.last as? PayWithLinkButton)
-        if let email {
-            linkButton.linkAccount = LinkAccountStub(email: email)
-        } else {
-            linkButton.linkAccount = nil
-        }
-        verify(view, file: file, line: line)
-    }
-
     private struct LinkAccountStub: PaymentSheetLinkAccountInfoProtocol {
         let email: String
         let redactedPhoneNumber: String? = nil
@@ -106,7 +97,8 @@ final class ExpressCheckoutElementViewSnapshotTests: STPSnapshotTestCase {
 
     private func makeView(
         appearance: ExpressCheckoutElement.Configuration.Appearance = .init(),
-        buttons: [ExpressCheckoutElement.PaymentMethod]? = nil
+        buttons: [ExpressCheckoutElement.PaymentMethod]? = nil,
+        linkEmail: String? = nil
     ) -> ExpressCheckoutElementUIView {
         var configuration = ExpressCheckoutElement.Configuration(completion: { _ in })
         configuration.applePayConfiguration = .init(merchantId: "merchant.com.example")
@@ -123,6 +115,12 @@ final class ExpressCheckoutElementViewSnapshotTests: STPSnapshotTestCase {
             with: session,
             buttons: buttons ?? session.availableExpressCheckoutPaymentMethods.compactMap { ExpressCheckoutElement.PaymentMethod(rawValue: $0) }
         )
+        let stackView = view.subviews.first as? UIStackView
+        for row in stackView?.arrangedSubviews ?? [] {
+            for case let linkButton as PayWithLinkButton in (row as? UIStackView)?.arrangedSubviews ?? [] {
+                linkButton.linkAccount = linkEmail.map { LinkAccountStub(email: $0) }
+            }
+        }
         view.setNeedsLayout()
         view.layoutIfNeeded()
         return view
