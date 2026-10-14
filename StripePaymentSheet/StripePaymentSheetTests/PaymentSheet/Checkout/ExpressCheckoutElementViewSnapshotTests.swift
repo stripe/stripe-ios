@@ -10,6 +10,7 @@ import StripeCoreTestUtils
 @testable @_spi(STP) import StripePaymentSheet
 @testable @_spi(STP) import StripeUICore
 import UIKit
+import XCTest
 
 @MainActor
 // @iOS26
@@ -42,6 +43,14 @@ final class ExpressCheckoutElementViewSnapshotTests: STPSnapshotTestCase {
         verify(makeView(appearance: appearance))
     }
 
+    func testTwoColumnLayoutWithoutEmail() throws {
+        try verifyCompactLayout(email: nil)
+    }
+
+    func testTwoColumnLayoutWithEmail() throws {
+        try verifyCompactLayout(email: "this.is.a.very.long.email.address@example.com")
+    }
+
     func testThreeButtonsInTwoByTwoGrid() {
         var appearance = ExpressCheckoutElement.Configuration.Appearance()
         appearance.buttonLayout.maxColumns = 2
@@ -69,6 +78,31 @@ final class ExpressCheckoutElementViewSnapshotTests: STPSnapshotTestCase {
     }
 
     // MARK: - Helpers
+
+    private func verifyCompactLayout(email: String?, file: StaticString = #filePath, line: UInt = #line) throws {
+        var appearance = ExpressCheckoutElement.Configuration.Appearance()
+        appearance.buttonLayout.maxColumns = 2
+        appearance.buttonLayout.maxRows = 1
+        let view = makeView(appearance: appearance, buttons: [.applePay, .link])
+        let stackView = view.subviews.first as? UIStackView
+        let row = stackView?.arrangedSubviews.first as? UIStackView
+        let linkButton = try XCTUnwrap(row?.arrangedSubviews.last as? PayWithLinkButton)
+        if let email {
+            linkButton.linkAccount = LinkAccountStub(email: email)
+        } else {
+            linkButton.linkAccount = nil
+        }
+        verify(view, file: file, line: line)
+    }
+
+    private struct LinkAccountStub: PaymentSheetLinkAccountInfoProtocol {
+        let email: String
+        let redactedPhoneNumber: String? = nil
+        let isRegistered = true
+        let sessionState: PaymentSheetLinkAccount.SessionState = .verified
+        let consumerSessionClientSecret: String? = nil
+        let linkSessionKey: String? = nil
+    }
 
     private func makeView(
         appearance: ExpressCheckoutElement.Configuration.Appearance = .init(),
