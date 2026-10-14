@@ -841,10 +841,16 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var opensCardScannerAutomatically: OpensCardScannerAutomatically
     var termsDisplay: PaymentMethodTermsDisplay
 
+    /// Defaults to native sheets for developers and custom sheets during UI tests.
+    /// Explicit settings from saved configurations and test payloads take precedence.
+    var resolvedNativeSheetOverride: NativeSheetOverride {
+        nativeSheetOverride ?? (ProcessInfo.processInfo.environment["UITesting"] == nil ? .on : .off)
+    }
+
     static func defaultValues() -> PaymentSheetTestPlaygroundSettings {
         return PaymentSheetTestPlaygroundSettings(
             uiStyle: .paymentSheet,
-            nativeSheetOverride: .on,
+            nativeSheetOverride: nil,
             layout: .automatic,
             mode: .payment,
             style: .automatic,
