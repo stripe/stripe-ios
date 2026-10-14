@@ -519,10 +519,7 @@ extension StripeUICore.Button {
         default:
             minimumHeight = nil
         }
-        updateMinimumHeightConstraint(to: minimumHeight)
-        if LiquidGlassDetector.isEnabledInMerchantApp {
-            ios26_applyCapsuleCornerConfiguration()
-        }
+        applyIdentityButtonShape(minimumHeight: minimumHeight)
         self.isEnabled = viewModel.state == .enabled
         self.isLoading = viewModel.state == .loading
     }
@@ -542,6 +539,15 @@ extension StripeUICore.Button {
 }
 
 // MARK: - Button.Configuration
+extension StripeUICore.Button {
+    func applyIdentityButtonShape(minimumHeight: CGFloat?) {
+        updateMinimumHeightConstraint(to: minimumHeight)
+        if LiquidGlassDetector.isEnabledInMerchantApp {
+            ios26_applyCapsuleCornerConfiguration()
+        }
+    }
+}
+
 extension Button.Configuration {
 
     static var buttonFont: UIFont {

@@ -698,6 +698,7 @@ extension EmbeddedPaymentElement {
 
         let (result, deferredIntentConfirmationType) = await PaymentSheet.confirm(
             configuration: configuration,
+            nativeSheetPresentation: nativeSheetPresentation,
             authenticationContext: authContext,
             intent: intent,
             elementsSession: elementsSession,
@@ -728,10 +729,10 @@ extension EmbeddedPaymentElement {
         return PaymentSheetContainerFactory.make(
             contentViewController: viewController,
             appearance: configuration.appearance,
+            usesNativeSheet: nativeSheetPresentation.usesNativeSheet,
             didCancelNative3DS2: {
-                stpAssertionFailure("3DS2 was triggered unexpectedly")
-            }
-        )
+            stpAssertionFailure("3DS2 was triggered unexpectedly")
+        })
     }
 
     func clearPaymentOptionIfNeeded() {

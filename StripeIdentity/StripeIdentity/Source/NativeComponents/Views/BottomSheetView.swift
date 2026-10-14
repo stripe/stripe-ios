@@ -43,15 +43,9 @@ final class BottomSheetView: UIView {
         return verticalStack
     }()
 
-    private let closeButton: Button = Button(
-        configuration: .identityPrimary(), title: String.Localized.close
-    )
+    private let closeButton: Button
 
-    private let closeButtonBackground: UIView = {
-        let buttonBackground = UIView()
-        buttonBackground.backgroundColor = .systemBackground
-        return buttonBackground
-    }()
+    private let closeButtonBackground = UIView()
 
     private let didTapClose: () -> Void
 
@@ -59,14 +53,23 @@ final class BottomSheetView: UIView {
 
     init(
         content: BottomSheetViewController.BottomSheetContent,
+        primaryButtonStyle: IdentityVerificationSheet.Configuration.PrimaryButtonStyle = .default,
         didTapClose: @escaping () -> Void,
         didOpenURL: @escaping (URL) -> Void
     ) throws {
         self.content = content
+        self.closeButton = Button(configuration: .identityPrimary(style: primaryButtonStyle), title: String.Localized.close)
         self.didTapClose = didTapClose
         super.init(frame: .zero)
         backgroundColor = IdentityUI.identityElementsUITheme.colors.componentBackground
 
+        let minimumHeight: CGFloat?
+        if case let .custom(_, _, height) = primaryButtonStyle {
+            minimumHeight = height
+        } else {
+            minimumHeight = nil
+        }
+        closeButton.applyIdentityButtonShape(minimumHeight: minimumHeight)
         closeButton.addTarget(self, action: #selector(tappedClose(button:)), for: .touchUpInside)
         closeButtonBackground.addAndPinSubviewToSafeArea(closeButton, insets: BottomSheetView.bottomSheetCloseButtonInsets)
 

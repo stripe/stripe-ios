@@ -4,6 +4,8 @@
 
 "Add documents" = "Żid dokumenti";
 
+"Allow camera access in Settings to take a photo." = "Ippermetti l-aċċess għall-kamera mis-Settings biex tieħu ritratt.";
+
 "Answer" = "Tweġiba";
 
 "Choose File…" = "Agħżel fajl";
@@ -22,9 +24,13 @@
 
 "Make sure your document meets following requirements." = "Kun żgur li d-dokument jissodisfa r-rekwiżiti li ġejjin.";
 
+"Please select your Apple Pay payment method again to continue." = "Jekk jogħġbok agħżel il-metodu ta' ħlas ta' Apple Pay mill-ġdid biex tkompli.";
+
 "Please try again later." = "Jekk jogħġbok erġa’ pprova aktar tard.";
 
 "Submitted for review" = "Sottomess għar-reviżjoni";
+
+"Take Photo…" = "Ħu Ritratt…";
 
 "Tell us about your source of funds" = "Għidilna dwar is-sors tal-fondi tiegħek";
 

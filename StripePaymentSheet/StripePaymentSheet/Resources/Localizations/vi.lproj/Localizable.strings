@@ -46,9 +46,19 @@
 
 "Buy now or pay later with Klarna" = "Mua ngay hoặc thanh toán sau bằng Klarna";
 
+"By confirming your payment with GCash, you allow %@ to charge your GCash account for future payments in accordance with their terms." = "Bằng cách xác nhận thanh toán của bạn với GCash, bạn cho phép %@ tính phí tài khoản GCash của bạn cho các khoản thanh toán trong tương lai theo các điều khoản của họ.";
+
 "By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "Bằng việc xác nhận thanh toán của bạn với NICEPAY, bạn cho phép %@ tính phí phương thức thanh toán này cho các khoản thanh toán trong tương lai theo các điều khoản của họ.";
 
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Bằng cách xác nhận khoản thanh toán của quý vị với PayPal, quý vị cho phép %@ tính phí tài khoản PayPal của quý vị cho các khoản thanh toán trong tương lai theo các điều khoản của họ.";
+
+"By confirming your payment with Touch 'n Go, you allow %@ to charge your Touch 'n Go account for future payments in accordance with their terms." = "Bằng cách xác nhận thanh toán của bạn với Touch 'n Go, bạn cho phép %@ tính phí tài khoản Touch 'n Go của bạn cho các khoản thanh toán trong tương lai theo các điều khoản của họ.";
+
+"By confirming your payment with TrueMoney, you allow %@ to charge your TrueMoney account for future payments in accordance with their terms." = "Bằng cách xác nhận thanh toán của bạn với TrueMoney, bạn cho phép %@ tính phí tài khoản TrueMoney của bạn cho các khoản thanh toán trong tương lai theo các điều khoản của họ.";
+
+"By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their <terms>terms of use</terms>." = "Bằng cách xác nhận thanh toán, bạn đồng ý rằng giao dịch của bạn sẽ được xử lý bởi Global Stack Services Limited với tư cách là người bán trong hồ sơ và tuân thủ với <terms>điều khoản sử dụng</terms> của họ.";
+
+"By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their <terms>terms</terms>." = "Bằng cách xác nhận thanh toán, bạn đồng ý rằng giao dịch của bạn sẽ được xử lý bởi Global Stack Services Limited với tư cách là người bán trong hồ sơ và tuân thủ với <terms>điều khoản</terms> của họ.";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Bằng cách tiếp tục với Amazon Pay, bạn cho phép %@ tính phí tài khoản Amazon Pay của bạn cho các khoản thanh toán trong tương lai theo các điều khoản của họ.";
 
@@ -173,6 +183,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Tôi hiểu rằng Stripe sẽ thu Ghi nợ Trực tiếp thay mặt %@ và tôi xác nhận rằng tôi là chủ tài khoản và là người duy nhất cần có để ủy quyền ghi nợ từ tài khoản này.";
 
 "IBAN" = "IBAN";
+
+"Invoice payment for business buyers." = "Thanh toán hóa đơn cho người mua là doanh nghiệp.";
 
 "Keep Editing" = "Tiếp tục chỉnh sửa";
 

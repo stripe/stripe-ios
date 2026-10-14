@@ -68,6 +68,50 @@ final class CheckoutUnitTests: XCTestCase {
         XCTAssertNil(configuration.paymentElement)
     }
 
+    func testPaymentElementUpdatePreservesNativeSheetPresentation() async throws {
+        // Given a loaded Checkout with both sheet and embedded integrations
+        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration())
+        let element = checkout.getPaymentElement()
+        let flowControllerPresentation = element.paymentSheetFlowController.nativeSheetPresentation
+        let embeddedPresentation = element.embeddedPaymentElement.nativeSheetPresentation
+
+        // When updating Checkout rebuilds both configurations
+        try await element.update(checkout: checkout)
+
+        // Then each integration retains its original native-sheet feature flag
+        XCTAssertIdentical(element.paymentSheetFlowController.nativeSheetPresentation, flowControllerPresentation)
+        XCTAssertIdentical(element.embeddedPaymentElement.nativeSheetPresentation, embeddedPresentation)
+    }
+
+    func testLinkConfirmationSharesPresentationWithSelectedIntegration() async throws {
+        // Given both integrations have selected Link
+        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration())
+        let element = checkout.getPaymentElement()
+        let confirmOption = PaymentSheet.LinkConfirmOption.wallet(brand: .link)
+        element.paymentSheetFlowController.viewController.linkConfirmOption = confirmOption
+        element.embeddedPaymentElement._test_paymentOption = .link(option: confirmOption)
+        element.embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: element.embeddedPaymentElement)
+
+        for usesFlowController in [false, true] {
+            // When Checkout builds Link confirmation from the selected integration
+            element.paymentOptionSourceOfTruthIsFlowController = usesFlowController
+            let flow = try XCTUnwrap(checkout.makeConfirmationFlow(
+                for: element,
+                presentingViewController: UIViewController()
+            ))
+
+            // Then Link shares that integration's original presentation state
+            guard case .link(let parameters) = flow else {
+                XCTFail("Expected Link confirmation")
+                return
+            }
+            let expectedPresentation = usesFlowController
+                ? element.paymentSheetFlowController.nativeSheetPresentation
+                : element.embeddedPaymentElement.nativeSheetPresentation
+            XCTAssertIdentical(parameters.nativeSheetPresentation, expectedPresentation)
+        }
+    }
+
     func testPaymentElementIsNotCreatedWhenNotConfigured() async throws {
         // Given a Checkout configuration without Payment Element configuration
         let configuration = CheckoutTestHelpers.makeConfiguration(paymentElementConfiguration: nil)
@@ -150,6 +194,17 @@ final class CheckoutUnitTests: XCTestCase {
         XCTAssertEqual(checkout.session.paymentOption?.paymentMethodType, "card")
         XCTAssertEqual(checkout.session.paymentOption?.label, "Visa")
         XCTAssertEqual(checkout.session.paymentOption?.sublabel, "•••• 4242")
+
+        // ...and confirmation carries the embedded flow's presentation state for any required sheet
+        let flow = try XCTUnwrap(checkout.makeConfirmationFlow(
+            for: paymentElement,
+            presentingViewController: UIViewController()
+        ))
+        guard case .paymentMethod(let parameters, _) = flow else {
+            XCTFail("Expected payment method confirmation")
+            return
+        }
+        XCTAssertIdentical(parameters.nativeSheetPresentation, paymentElement.embeddedPaymentElement.nativeSheetPresentation)
 
         // When the Checkout payment option is cleared
         try await checkout.clearPaymentOption()
@@ -836,7 +891,9 @@ final class CheckoutUnitTests: XCTestCase {
             "promotion_code": ["code": "SUMMER"],
         ]
         sessionJSON["recurring_details"] = [
-            "total_discount_amounts": [discountAmount],
+            "total_summary": [
+                "total_discount_amounts": [discountAmount],
+            ],
         ]
         sessionJSON["total_summary"] = [
             "total_tax_amounts": [],
@@ -1347,15 +1404,17 @@ final class CheckoutUnitTests: XCTestCase {
     private func sessionJSONWithPromotionCode(_ promotionCode: String) -> [AnyHashable: Any] {
         var json = CheckoutTestHelpers.openSessionJSON
         json["recurring_details"] = [
-            "total_discount_amounts": [
-                [
-                    "amount": 250,
-                    "coupon": [
-                        "code": "coupon_save25",
-                        "name": "25% off",
-                        "percent_off": 25.0,
+            "total_summary": [
+                "total_discount_amounts": [
+                    [
+                        "amount": 250,
+                        "coupon": [
+                            "code": "coupon_save25",
+                            "name": "25% off",
+                            "percent_off": 25.0,
+                        ],
+                        "promotion_code": ["code": promotionCode],
                     ],
-                    "promotion_code": ["code": promotionCode],
                 ],
             ],
         ]

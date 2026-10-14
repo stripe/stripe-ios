@@ -135,6 +135,7 @@ typealias ExpressType = PaymentSheet.WalletButtonsVisibility.ExpressType
             // Launch directly into Apple Pay and confirm the payment
             PaymentSheet.confirm(
                 configuration: flowController.configuration,
+                nativeSheetPresentation: flowController.nativeSheetPresentation,
                 authenticationContext: WindowAuthenticationContext(),
                 intent: flowController.intent,
                 elementsSession: flowController.elementsSession,
@@ -154,6 +155,7 @@ typealias ExpressType = PaymentSheet.WalletButtonsVisibility.ExpressType
                 intent: flowController.intent,
                 elementsSession: flowController.elementsSession,
                 configuration: flowController.configuration,
+                nativeSheetPresentation: flowController.nativeSheetPresentation,
                 analyticsHelper: flowController.analyticsHelper
             )
             linkController.presentForPaymentMethodSelection(
