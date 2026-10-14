@@ -13,6 +13,44 @@ import XCTest
 @MainActor
 final class CurrencySelectorElementViewTests: XCTestCase {
 
+    func testWaitForPendingSelectionWaitsForTheSelectionTask() async throws {
+        let session = CheckoutTestHelpers.makeAdaptivePricingSession()
+        let checkout = try await CheckoutController(
+            configuration: CheckoutTestHelpers.makeCurrencySelectorConfiguration(apiResponse: session)
+        )
+        let delegate = PendingCurrencySelectionDelegate()
+        let started = expectation(description: "Selection starts")
+        delegate.onStart = { started.fulfill() }
+        let createdView = await CurrencySelectorElementUIView(
+            session: checkout.session,
+            delegate: delegate,
+            appearance: .init(),
+            needsUpdateSuperviewHeight: {}
+        )
+        let view = try XCTUnwrap(createdView)
+        let selector = try XCTUnwrap(currencySelector(in: view))
+        let nextCurrency = selector.leftItem.id == selector.selectedItemId
+            ? selector.rightItem.id
+            : selector.leftItem.id
+        selector.select(nextCurrency, notifyDelegate: true)
+        await fulfillment(of: [started], timeout: 1)
+
+        let waiterStarted = expectation(description: "Wait begins")
+        var waitFinished = false
+        let waiter = Task {
+            waiterStarted.fulfill()
+            await view.waitForPendingSelection()
+            waitFinished = true
+        }
+        await fulfillment(of: [waiterStarted], timeout: 1)
+        await Task.yield()
+        XCTAssertFalse(waitFinished)
+
+        delegate.complete()
+        await waiter.value
+        XCTAssertTrue(waitFinished)
+    }
+
     func testDisplaysAdaptivePricingSelector() async throws {
         // Given a currency selector with Adaptive Pricing data
         let session = CheckoutTestHelpers.makeAdaptivePricingSession()
@@ -93,5 +131,23 @@ final class CurrencySelectorElementViewTests: XCTestCase {
         return view.subviews
             .compactMap { ($0 as? UIStackView)?.arrangedSubviews.compactMap { $0 as? TwoOptionSelectorView }.first }
             .first
+    }
+}
+
+@MainActor
+private final class PendingCurrencySelectionDelegate: CurrencySelectorElementCheckoutDelegate {
+    var onStart: (() -> Void)?
+    private var continuation: CheckedContinuation<Void, Error>?
+
+    func selectCurrency(_ currency: String) async throws {
+        try await withCheckedThrowingContinuation { continuation in
+            self.continuation = continuation
+            onStart?()
+        }
+    }
+
+    func complete() {
+        continuation?.resume()
+        continuation = nil
     }
 }

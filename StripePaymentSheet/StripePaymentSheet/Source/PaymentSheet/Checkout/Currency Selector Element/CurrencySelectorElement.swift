@@ -36,6 +36,12 @@ public final class CurrencySelectorElement {
     /// to coordinate changes to the view's height with its surrounding layout.
     public let uiView: CurrencySelectorElementUIView
 
+    /// Waits for a currency selection started by this element to finish.
+    /// Call this before replacing a CheckoutController for the same session.
+    public func waitForPendingSelection() async {
+        await uiView.waitForPendingSelection()
+    }
+
     // MARK: - Internal Methods
 
     init?(

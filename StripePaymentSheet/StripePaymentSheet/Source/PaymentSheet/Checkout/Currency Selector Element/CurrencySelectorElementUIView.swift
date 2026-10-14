@@ -30,6 +30,7 @@ public final class CurrencySelectorElementUIView: UIView {
     private let checkoutSessionId: String
     private let flagImageManager = AdaptivePricingFlagImageManager()
     private var selectorView: TwoOptionSelectorView?
+    private var selectionTask: Task<Void, Never>?
     private var sessionCurrency: String
     private let containerStackView = UIStackView()
     private lazy var errorLabel: UILabel = {
@@ -189,6 +190,10 @@ public final class CurrencySelectorElementUIView: UIView {
         invalidateContentSize()
     }
 
+    func waitForPendingSelection() async {
+        await selectionTask?.value
+    }
+
     private func contentHeightDidChange() {
         invalidateContentSize()
         needsUpdateSuperviewHeight()
@@ -202,10 +207,16 @@ public final class CurrencySelectorElementUIView: UIView {
 
 extension CurrencySelectorElementUIView: TwoOptionSelectorViewDelegate {
     func twoOptionSelectorView(_: TwoOptionSelectorView, didSelectItemWithId id: String) {
+        guard selectionTask == nil else { return }
         selectorView?.setEnabled(false)
 
-        Task { [weak self] in
-            guard let self, let currencySelectionDelegate else { return }
+        selectionTask = Task { [weak self] in
+            guard let self else { return }
+            defer {
+                selectionTask = nil
+                selectorView?.setEnabled(isUserInteractionEnabled)
+            }
+            guard let currencySelectionDelegate else { return }
             do {
                 try await currencySelectionDelegate.selectCurrency(id)
                 STPAnalyticsClient.sharedClient.log(
@@ -227,7 +238,6 @@ extension CurrencySelectorElementUIView: TwoOptionSelectorViewDelegate {
                 )
                 showError(error.localizedDescription)
             }
-            selectorView?.setEnabled(isUserInteractionEnabled)
         }
     }
 }
