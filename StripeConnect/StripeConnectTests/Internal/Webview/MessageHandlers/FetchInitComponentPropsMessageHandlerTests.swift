@@ -13,8 +13,9 @@ class FetchInitComponentPropsMessageHandlerTests: ScriptWebTestBase {
     @MainActor
     func testMessageSend() async throws {
         var registeredSupplementalFunctions: SupplementalFunctions?
+        try await loadTrustedDocument()
 
-        webView.addMessageReplyHandler(messageHandler: FetchInitComponentPropsMessageHandler {
+        webView.addMessageReplyHandler(messageHandler: FetchInitComponentPropsMessageHandler(sourcePolicy: webView.trustedMessageSourcePolicy(), {
             AccountOnboardingController.Props(
                 fullTermsOfServiceUrl: URL(string: "https://fullTermsOfServiceUrl.com")!,
                 recipientTermsOfServiceUrl: URL(string: "https://recipientTermsOfServiceUrl.com")!,
@@ -27,9 +28,9 @@ class FetchInitComponentPropsMessageHandlerTests: ScriptWebTestBase {
                     return collectionOptions
                 }()
             )
-        } registerSupplementalFunctions: { fns in
+        }, registerSupplementalFunctions: { fns in
             registeredSupplementalFunctions = fns
-        })
+        }))
 
         try await webView.evaluateMessageWithReply(name: "fetchInitComponentProps",
                                                    json: "{}",
@@ -50,12 +51,13 @@ class FetchInitComponentPropsMessageHandlerTests: ScriptWebTestBase {
 
         let supplementalFunctions: SupplementalFunctions = .init(handleCheckScanSubmitted: { _ in })
         var registeredSupplementalFunctions: SupplementalFunctions?
+        try await loadTrustedDocument()
 
-        webView.addMessageReplyHandler(messageHandler: FetchInitComponentPropsMessageHandler {
+        webView.addMessageReplyHandler(messageHandler: FetchInitComponentPropsMessageHandler(sourcePolicy: webView.trustedMessageSourcePolicy(), {
             Props(supplementalFunctions: supplementalFunctions)
-        } registerSupplementalFunctions: { fns in
+        }, registerSupplementalFunctions: { fns in
             registeredSupplementalFunctions = fns
-        })
+        }))
 
         try await webView.evaluateMessageWithReply(name: "fetchInitComponentProps",
                                                    json: "{}",

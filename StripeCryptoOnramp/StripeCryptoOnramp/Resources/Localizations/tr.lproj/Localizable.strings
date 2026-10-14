@@ -1,14 +1,50 @@
+"Add %ld documents" = "%ld belge ekleyin";
+
+"Add 1 document" = "1 belge ekleyin";
+
+"Add documents" = "Belgeleri ekleyin";
+
+"Allow camera access in Settings to take a photo." = "Fotoğraf çekmek için Ayarlar'dan kamera erişimine izin verin.";
+
+"Answer" = "Yanıt";
+
+"Choose File…" = "Dosya Seç…";
+
+"Choose Photo…" = "Fotoğraf Seç…";
+
 "Debit cards are most likely to be accepted." = "Bankamatik kartlarının kabul edilme olasılığı en yüksektir.";
+
+"Document type" = "Belge türü";
+
+"Document uploaded successfully" = "Belge başarıyla yüklendi";
+
+"Funds source" = "Fonların kaynağı";
+
+"How are you funding your transactions? Please list all of your sources. For example, salary, savings, investment earnings, etc." = "İşlemlerinizi nasıl fonluyorsunuz? Lütfen tüm kaynaklarınızı listeleyin. Örneğin, maaş, birikim, yatırım kazançları vb.";
+
+"Make sure your document meets following requirements." = "Belgenizin aşağıdaki gereksinimleri karşıladığından emin olun.";
+
+"Please select your Apple Pay payment method again to continue." = "Devam etmek için lütfen Apple Pay ödeme yönteminizi tekrar seçin.";
 
 "Please try again later." = "Lütfen daha sonra tekrar deneyin.";
 
 "Submitted for review" = "İncelemeye gönderildi";
 
+"Take Photo…" = "Fotoğraf Çek…";
+
 "Tell us about your source of funds" = "Bize fonlarınızın kaynağı hakkında bilgi verin";
+
+"There was a problem with your previous document. Please upload a new one." = "Önceki belgenizle ilgili bir sorun oluştu. Lütfen yeni bir belge yükleyin.";
 
 "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "Bir doğrulama hatası nedeniyle bu uygulama doğrulanamadı. Lütfen daha sonra tekrar deneyin veya sorun devam ederse geliştiriciyle iletişime geçin.";
 
 "This app couldn't be verified. Contact the app developer for help." = "Bu uygulama doğrulanamadı. Yardım için uygulama geliştiricisi ile iletişime geçin.";
+
+"This file is larger than %@. Choose a file that is %@ or smaller." = "Bu dosya %1$@ boyutundan daha büyük. %2$@ veya daha küçük bir dosya seçin.";
+
+"This file type isn’t supported." = "Bu dosya türü desteklenmiyor.";
+
+"This file type isn’t supported. Upload a %@ file." = "Bu dosya türü desteklenmiyor. Bir %@ dosyası yükleyin.";
 
 "This wallet couldn't be found. Please choose or add a wallet and try again." = "Bu cüzdan bulunamadı. Lütfen bir cüzdan seçin veya ekleyin ve tekrar deneyin.";
 
@@ -18,12 +54,24 @@
 
 "This wallet verification request is invalid. Please try again." = "Bu cüzdan doğrulama talebi geçerli değil. Lütfen tekrar deneyin.";
 
+"Upload document" = "Belge yükle";
+
 "Upload your proof of address" = "Adres kanıtınızı yükleyin";
+
+"Uploaded" = "Yüklendi";
+
+"Uploading…" = "Yükleniyor…";
 
 "We couldn't verify ownership of this wallet. Please try again." = "Bu cüzdanın sahipliğini doğrulayamadık. Lütfen tekrar deneyin.";
 
-"We’re required to confirm your address to enable spending over %@." = "%@ üzeri harcamaları etkinleştirmek için adresinizi onaylamamız gerekiyor.";
+"We couldn’t open this document. Please choose it again." = "Bu belgeyi açamadık. Lütfen belgeyi tekrar seçin.";
 
-"We’re required to understand where your funds come from to enable spending over %@." = "%@ üzeri harcamaları etkinleştirmek için fonlarınızın nereden geldiğini anlamamız gerekiyor.";
+"We couldn’t upload this file. Please try again." = "Bu dosyayı yükleyemedik. Lütfen tekrar deneyin.";
+
+"We may request proof of address for larger transactions." = "Daha büyük işlemler için adres kanıtı talep edebiliriz.";
+
+"We may request source of funds for larger transactions." = "Daha büyük işlemler için fonların kaynağını talep edebiliriz.";
 
 "We’re reviewing your documents. We’ll let you know when verification is complete." = "Belgelerinizi inceliyoruz. Doğrulama tamamlandığında sizi bilgilendireceğiz.";
+
+"You can continue while we verify your document in the background." = "Arka planda belgenizi doğrularken devam edebilirsiniz.";

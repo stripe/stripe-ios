@@ -378,12 +378,12 @@ extension Intent {
                 ],
             ],
         ]
-        var recurringDetails: [String: Any] = [
+        var recurringTotalSummary: [String: Any] = [
             "total_discount_amounts": [],
             "total_tax_amounts": [],
         ]
         if taxAmount != 0 {
-            recurringDetails["total_tax_amounts"] = [[
+            recurringTotalSummary["total_tax_amounts"] = [[
                 "amount": taxAmount,
                 "inclusive": false,
                 "tax_rate": [
@@ -395,7 +395,7 @@ extension Intent {
             ], ]
         }
         if discountAmount != 0 {
-            recurringDetails["total_discount_amounts"] = [[
+            recurringTotalSummary["total_discount_amounts"] = [[
                 "amount": discountAmount,
                 "coupon": [
                     "code": "coupon_test",
@@ -403,7 +403,7 @@ extension Intent {
             ], ]
         }
         if taxAmount != 0 || discountAmount != 0 {
-            json["recurring_details"] = recurringDetails
+            json["recurring_details"] = ["total_summary": recurringTotalSummary]
         }
         let checkoutSession = try! PaymentPagesAPIResponse.decode(fromAPIResponse: json)
         return .checkout(checkoutSession.makePublicSession())

@@ -56,7 +56,7 @@ struct CheckoutCartPaymentMethodSection: View {
             .padding(.horizontal)
             .shadow(color: Color.black.opacity(0.05), radius: 8, x: 0, y: 4)
             .accessibilityLabel("Select payment method")
-            .accessibilityValue(session.paymentOption?.label ?? "No payment method selected")
+            .accessibilityValue(session.paymentOption.map { [$0.label, $0.sublabel].compactMap { $0 }.joined(separator: ", ") } ?? "No payment method selected")
             .sheet(isPresented: $showEmbeddedScreen) {
                 CheckoutEmbeddedScreen(paymentElement: checkout.getPaymentElement())
             }
@@ -88,9 +88,16 @@ struct CheckoutCartPaymentMethodSection: View {
                     .resizable()
                     .scaledToFit()
                     .frame(width: 24, height: 16)
-                Text(paymentOption.label)
-                    .font(.body)
-                    .foregroundColor(.primary)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(paymentOption.label)
+                        .font(.body)
+                        .foregroundColor(.primary)
+                    if let sublabel = paymentOption.sublabel {
+                        Text(sublabel)
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                    }
+                }
             }
         } else {
             HStack(spacing: 8) {

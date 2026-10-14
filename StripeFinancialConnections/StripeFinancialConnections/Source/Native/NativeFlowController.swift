@@ -18,7 +18,7 @@ protocol NativeFlowControllerDelegate: AnyObject {
 
     func nativeFlowController(
         _ nativeFlowController: NativeFlowController,
-        didReceiveEvent event: FinancialConnectionsEvent
+        didReceiveEvent event: FinancialConnectionsEventPayload
     )
 
     func nativeFlowController(
@@ -164,8 +164,7 @@ extension NativeFlowController {
                         reducedBranding: self.dataManager.reducedBranding,
                         merchantLogo: self.dataManager.merchantLogo
                     ),
-                    appearance: self.dataManager.manifest.appearance,
-                    isTestMode: self.dataManager.manifest.isTestMode
+                    appearance: self.dataManager.manifest.appearance
                 )
             }
             self.navigationController.setViewControllers(viewControllers, animated: animated)
@@ -219,8 +218,7 @@ extension NativeFlowController {
                         reducedBranding: self.dataManager.reducedBranding,
                         merchantLogo: self.dataManager.merchantLogo
                     ),
-                    appearance: dataManager.manifest.appearance,
-                    isTestMode: self.dataManager.manifest.isTestMode
+                    appearance: dataManager.manifest.appearance
                 )
                 self.navigationController.pushViewController(viewController, animated: animated)
             } else {
@@ -366,7 +364,7 @@ extension NativeFlowController {
             // we still want to log that we initiated manual entry
             delegate?.nativeFlowController(
                 self,
-                didReceiveEvent: FinancialConnectionsEvent(name: .manualEntryInitiated)
+                didReceiveEvent: FinancialConnectionsEventPayload(name: .manualEntryInitiated)
             )
         }
 
@@ -410,7 +408,7 @@ extension NativeFlowController {
 
                         self.delegate?.nativeFlowController(
                             self,
-                            didReceiveEvent: FinancialConnectionsEvent(
+                            didReceiveEvent: FinancialConnectionsEventPayload(
                                 name: .success,
                                 metadata: FinancialConnectionsEvent.Metadata(
                                     manualEntry: session.paymentAccount?.isManualEntry ?? false
@@ -434,7 +432,7 @@ extension NativeFlowController {
                                     case .success(let linkedBank):
                                         self.delegate?.nativeFlowController(
                                             self,
-                                            didReceiveEvent: FinancialConnectionsEvent(
+                                            didReceiveEvent: FinancialConnectionsEventPayload(
                                                 name: .success,
                                                 metadata: FinancialConnectionsEvent.Metadata(
                                                     manualEntry: session.paymentAccount?.isManualEntry ?? false
@@ -460,7 +458,7 @@ extension NativeFlowController {
                                 // Otherwise, complete with the existing session details.
                                 self.delegate?.nativeFlowController(
                                     self,
-                                    didReceiveEvent: FinancialConnectionsEvent(
+                                    didReceiveEvent: FinancialConnectionsEventPayload(
                                         name: .success,
                                         metadata: FinancialConnectionsEvent.Metadata(
                                             manualEntry: session.paymentAccount?.isManualEntry ?? false
@@ -492,7 +490,7 @@ extension NativeFlowController {
                             } else {
                                 self.delegate?.nativeFlowController(
                                     self,
-                                    didReceiveEvent: FinancialConnectionsEvent(name: .cancel)
+                                    didReceiveEvent: FinancialConnectionsEventPayload(name: .cancel)
                                 )
                                 self.logCompleteEvent(
                                     type: eventType,
@@ -755,7 +753,7 @@ extension NativeFlowController: ConsentViewControllerDelegate {
     ) {
         delegate?.nativeFlowController(
             self,
-            didReceiveEvent: FinancialConnectionsEvent(name: .consentAcquired)
+            didReceiveEvent: FinancialConnectionsEventPayload(name: .consentAcquired)
         )
 
         dataManager.manifest = result.manifest
@@ -821,7 +819,7 @@ extension NativeFlowController: IDConsentContentViewControllerDelegate {
     ) {
         delegate?.nativeFlowController(
             self,
-            didReceiveEvent: FinancialConnectionsEvent(name: .consentAcquired)
+            didReceiveEvent: FinancialConnectionsEventPayload(name: .consentAcquired)
         )
 
         dataManager.manifest = manifest
@@ -853,7 +851,7 @@ extension NativeFlowController: InstitutionPickerViewControllerDelegate {
     ) {
         delegate?.nativeFlowController(
             self,
-            didReceiveEvent: FinancialConnectionsEvent(
+            didReceiveEvent: FinancialConnectionsEventPayload(
                 name: .institutionSelected,
                 metadata: FinancialConnectionsEvent.Metadata(
                     institutionName: institution.name
@@ -877,7 +875,7 @@ extension NativeFlowController: InstitutionPickerViewControllerDelegate {
     ) {
         delegate?.nativeFlowController(
             self,
-            didReceiveEvent: FinancialConnectionsEvent(
+            didReceiveEvent: FinancialConnectionsEventPayload(
                 name: .institutionSelected,
                 metadata: FinancialConnectionsEvent.Metadata(
                     institutionName: institution.name
@@ -902,7 +900,7 @@ extension NativeFlowController: InstitutionPickerViewControllerDelegate {
     ) {
         delegate?.nativeFlowController(
             self,
-            didReceiveEvent: FinancialConnectionsEvent(name: .searchInitiated)
+            didReceiveEvent: FinancialConnectionsEventPayload(name: .searchInitiated)
         )
     }
 
@@ -935,7 +933,7 @@ extension NativeFlowController: PartnerAuthViewControllerDelegate {
     ) {
         delegate?.nativeFlowController(
             self,
-            didReceiveEvent: FinancialConnectionsEvent(name: .institutionAuthorized)
+            didReceiveEvent: FinancialConnectionsEventPayload(name: .institutionAuthorized)
         )
 
         dataManager.authSession = authSession
@@ -949,7 +947,7 @@ extension NativeFlowController: PartnerAuthViewControllerDelegate {
 
     func partnerAuthViewController(
         _ viewController: PartnerAuthViewController,
-        didReceiveEvent event: FinancialConnectionsEvent
+        didReceiveEvent event: FinancialConnectionsEventPayload
     ) {
         delegate?.nativeFlowController(self, didReceiveEvent: event)
     }
@@ -1021,7 +1019,7 @@ extension NativeFlowController: AccountPickerViewControllerDelegate {
 
     func accountPickerViewController(
         _ viewController: AccountPickerViewController,
-        didReceiveEvent event: StripeCore.FinancialConnectionsEvent
+        didReceiveEvent event: FinancialConnectionsEventPayload
     ) {
         delegate?.nativeFlowController(self, didReceiveEvent: event)
     }
@@ -1264,7 +1262,7 @@ extension NativeFlowController: AttachLinkedPaymentAccountViewControllerDelegate
 
     func attachLinkedPaymentAccountViewController(
         _ viewController: AttachLinkedPaymentAccountViewController,
-        didReceiveEvent event: FinancialConnectionsEvent
+        didReceiveEvent event: FinancialConnectionsEventPayload
     ) {
         delegate?.nativeFlowController(self, didReceiveEvent: event)
     }
@@ -1348,7 +1346,7 @@ extension NativeFlowController: LinkAccountPickerViewControllerDelegate {
 
     func linkAccountPickerViewController(
         _ viewController: LinkAccountPickerViewController,
-        didReceiveEvent event: StripeCore.FinancialConnectionsEvent
+        didReceiveEvent event: FinancialConnectionsEventPayload
     ) {
         delegate?.nativeFlowController(self, didReceiveEvent: event)
     }
@@ -1632,7 +1630,7 @@ private func CreatePaneViewController(
     case .manualEntry:
         nativeFlowController.delegate?.nativeFlowController(
             nativeFlowController,
-            didReceiveEvent: FinancialConnectionsEvent(name: .manualEntryInitiated)
+            didReceiveEvent: FinancialConnectionsEventPayload(name: .manualEntryInitiated)
         )
 
         let dataSource = ManualEntryDataSourceImplementation(

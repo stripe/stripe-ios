@@ -114,6 +114,32 @@ import Foundation
     case sequra
     /// A Scalapay payment method
     case scalapay
+    /// A Pix payment method
+    case pix
+    /// A GoPay payment method
+    case goPay
+    /// A MoMo payment method
+    case momo
+    /// A ShopeePay payment method
+    case shopeePay
+    /// A QRIS payment method
+    case qris
+    /// A GCash payment method
+    case gcash
+    /// A Naira card payment method
+    case ngCard
+    /// A Naira bank transfer payment method
+    case ngBankTransfer
+    /// A Touch 'n Go payment method
+    case touchNGo
+    /// A TrueMoney payment method
+    case trueMoney
+    /// A Naira USSD payment method
+    case ngUSSD
+    /// A Naira Wallet payment method
+    case ngWallet
+    /// A Mondu payment method
+    case mondu
     /// An unknown type.
     case unknown
 
@@ -226,6 +252,32 @@ import Foundation
             return "SeQura"
         case .scalapay:
             return "Scalapay"
+        case .pix:
+            return "Pix"
+        case .momo:
+            return "MoMo"
+        case .shopeePay:
+            return "ShopeePay"
+        case .qris:
+            return "QRIS"
+        case .gcash:
+            return "GCash"
+        case .ngCard:
+            return "Naira card"
+        case .ngBankTransfer:
+            return "Naira bank transfer"
+        case .touchNGo:
+            return "Touch 'n Go"
+        case .trueMoney:
+            return "TrueMoney"
+        case .ngUSSD:
+            return "Naira USSD"
+        case .ngWallet:
+            return "Naira Wallet"
+        case .mondu:
+            return "Mondu"
+        case .goPay:
+            return "GoPay"
         case .cardPresent,
             .unknown:
             return STPLocalizedString("Unknown", "Default missing source type label")
@@ -341,6 +393,32 @@ import Foundation
             return "sequra"
         case .scalapay:
             return "scalapay"
+        case .pix:
+            return "pix"
+        case .momo:
+            return "momo"
+        case .shopeePay:
+            return "shopeepay"
+        case .qris:
+            return "qris"
+        case .gcash:
+            return "gcash"
+        case .ngCard:
+            return "ng_card"
+        case .ngBankTransfer:
+            return "ng_bank_transfer"
+        case .touchNGo:
+            return "touch_n_go"
+        case .trueMoney:
+            return "truemoney"
+        case .ngUSSD:
+            return "ng_ussd"
+        case .ngWallet:
+            return "ng_wallet"
+        case .mondu:
+            return "mondu"
+        case .goPay:
+            return "gopay"
         }
     }
 

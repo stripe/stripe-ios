@@ -46,9 +46,19 @@
 
 "Buy now or pay later with Klarna" = "Paga a rate con Klarna";
 
+"By confirming your payment with GCash, you allow %@ to charge your GCash account for future payments in accordance with their terms." = "Confermando il pagamento con GCash, autorizzi %@ ad addebitare i pagamenti futuri sul tuo account GCash in conformità ai suoi termini.";
+
 "By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "Confermando il tuo pagamento con NICEPAY, consenti a %@ di addebitare i pagamenti futuri su questo metodo di pagamento in base a quanto previsto dai relativi termini e condizioni.";
 
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Confermando il tuo pagamento con PayPal, consenti a %@ di addebitare i pagamenti futuri sul tuo conto PayPal in base a quanto previsto dai relativi termini e condizioni.";
+
+"By confirming your payment with Touch 'n Go, you allow %@ to charge your Touch 'n Go account for future payments in accordance with their terms." = "Confermando il pagamento con Touch 'n Go, autorizzi %@ ad addebitare i pagamenti futuri sul tuo account Touch 'n Go in conformità ai suoi termini.";
+
+"By confirming your payment with TrueMoney, you allow %@ to charge your TrueMoney account for future payments in accordance with their terms." = "Confermando il pagamento con TrueMoney, autorizzi %@ ad addebitare i pagamenti futuri sul tuo account TrueMoney in conformità ai suoi termini.";
+
+"By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their <terms>terms of use</terms>." = "Confermando il pagamento, accetti che la tua transazione venga gestita da Global Stack Services Limited in qualità di merchant of record e in conformità ai suoi <terms>termini di utilizzo</terms>.";
+
+"By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their <terms>terms</terms>." = "Confermando il pagamento, accetti che la tua transazione venga gestita da Global Stack Services Limited in qualità di merchant of record e in conformità ai suoi <terms>termini</terms>.";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Continuando su Amazon Pay, consenti a %@ di addebitare i pagamenti futuri sul tuo account Amazon Pay in base a quanto previsto dai relativi termini e condizioni.";
 
@@ -112,6 +122,8 @@
 
 "Code sent" = "Codice inviato";
 
+"Complete the payment using Pix to finish the purchase." = "Completa il pagamento con Pix per concludere l'acquisto.";
+
 "Confirm" = "Conferma";
 
 "Confirm payment details" = "Conferma i dati di pagamento";
@@ -171,6 +183,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Sono consapevole che Stripe riscuoterà addebiti diretti per conto di %@ e confermo di essere il titolare del conto e l'unica persona idonea ad autorizzare addebiti su questo conto.";
 
 "IBAN" = "IBAN";
+
+"Invoice payment for business buyers." = "Pagamento della fattura per acquirenti aziendali.";
 
 "Keep Editing" = "Continua a modificare";
 
@@ -341,6 +355,8 @@
 "The provided verification code has expired." = "Il codice di verifica specificato è scaduto.";
 
 "The provided verification code is incorrect." = "Il codice di verifica specificato non è corretto.";
+
+"This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Si tratta di un acquisto internazionale ed esclude una commissione IOF del 3,5%. Procedendo, accetti <terms>Termini e condizioni</terms> di Ebanx.";
 
 "This is your default" = "È la tua impostazione predefinita";
 

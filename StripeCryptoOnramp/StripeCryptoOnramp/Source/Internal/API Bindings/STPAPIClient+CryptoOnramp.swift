@@ -20,6 +20,9 @@ extension STPAPIClient {
         /// No consumer session client secret was found to be associated with the active link account session.
         case missingConsumerSessionClientSecret
 
+        /// No Link session key was found for the active Link account session.
+        case missingLinkSessionKey
+
         /// The request requires a session with a verified link account, but the account was found to not be verified.
         case linkAccountNotVerified
 
@@ -28,6 +31,8 @@ extension STPAPIClient {
             switch self {
             case .missingConsumerSessionClientSecret:
                 return "No consumer session client secret was found to be associated with the active link account session."
+            case .missingLinkSessionKey:
+                return "No Link session key was found for the active Link account session."
             case .linkAccountNotVerified:
                 return "The request requires a session with a verified link account, but the account was found to not be verified."
             }
@@ -67,12 +72,25 @@ extension STPAPIClient {
         )
     }
 
-    /// Submits documents and questionnaire answers for one additional KYC requirement.
-    /// - Parameter request: The requirement fulfillment payload.
-    /// - Returns: The newly created additional KYC submission.
-    func fulfillAdditionalKYCRequirement(_ request: FulfillAdditionalKYCRequirementRequest) async throws -> FulfillAdditionalKYCRequirementResponse {
-        let endpoint = "crypto/internal/fulfill_additional_kyc_requirement"
-        return try await post(resource: endpoint, object: request)
+    /// Submits documents and questionnaire answers for the specified KYC requirements.
+    /// - Parameters:
+    ///   - request: The fulfillment payloads keyed by requirement name.
+    ///   - linkAccountInfo: Information associated with the Link account, including its session key and verification state.
+    /// - Returns: An empty response after the submission is accepted.
+    /// - Throws: An error if the Link account is not verified, its session key is missing or empty, or an API error occurs.
+    @discardableResult
+    func fulfillKYCRequirements(
+        _ request: FulfillKYCRequirementsRequest,
+        linkAccountInfo: PaymentSheetLinkAccountInfoProtocol
+    ) async throws -> EmptyResponse {
+        guard let linkSessionKey = linkAccountInfo.linkSessionKey, !linkSessionKey.isEmpty else {
+            throw CryptoOnrampAPIError.missingLinkSessionKey
+        }
+
+        try validateSessionState(using: linkAccountInfo)
+
+        let endpoint = "crypto/internal/fulfill_kyc_requirements"
+        return try await post(resource: endpoint, object: request, ephemeralKeySecret: linkSessionKey)
     }
 
     /// Attaches the specific KYC info to the current Link user on the backend.
@@ -409,33 +427,50 @@ extension STPAPIClient {
     /// - Parameters:
     ///   - paymentMethodId: The originating payment method ID.
     ///   - cryptoCustomerId: The crypto customer ID.
+    ///   - countryHint: An optional two-letter country code (ISO 3166-1 alpha-2) used to help select a merchant of
+    ///   record when the customer does not yet have an established KYC region.
     /// - Returns: The created crypto payment token.
     /// Throws if an API error occurs.
     func createPaymentToken(
         for paymentMethodId: String,
-        cryptoCustomerId: String
+        cryptoCustomerId: String,
+        countryHint: String? = nil
     ) async throws -> CreatePaymentTokenResponse {
         let endpoint = "crypto/internal/payment_token"
         let requestObject = CreatePaymentTokenRequest(
             paymentMethod: paymentMethodId,
-            cryptoCustomerId: cryptoCustomerId
+            cryptoCustomerId: cryptoCustomerId,
+            countryHint: countryHint
         )
         return try await post(resource: endpoint, object: requestObject)
     }
 
     /// Retrieves platform settings for the crypto onramp service.
-    /// - Parameter cryptoCustomerId: The ID for the crypto customer.
+    /// - Parameters:
+    ///   - cryptoCustomerId: The ID for the crypto customer, if one is available. When `nil`, platform settings are
+    ///   resolved using the publishable key alone, which allows resolving a platform API client before authentication.
+    ///   - countryHint: An optional two-letter country code (ISO 3166-1 alpha-2) used to help select a merchant of
+    ///   record when the customer does not yet have an established KYC region.
     /// - Returns: Platform settings including the publishable key.
     /// Throws if an API error occurs.
     func getPlatformSettings(
-        cryptoCustomerId: String
+        cryptoCustomerId: String?,
+        countryHint: String? = nil
     ) async throws -> PlatformSettingsResponse {
         let endpoint = "crypto/internal/platform_settings"
 
-        let parameters: [String: Any] = [
-            "crypto_customer_id": cryptoCustomerId,
+        var parameters: [String: Any] = [
             "ui_mode": "headless",
         ]
+
+        if let cryptoCustomerId {
+            parameters["crypto_customer_id"] = cryptoCustomerId
+        }
+
+        if let countryHint {
+            parameters["country_hint"] = countryHint
+        }
+
         return try await get(resource: endpoint, parameters: parameters)
     }
 
@@ -452,12 +487,14 @@ private extension STPAPIClient {
     func post<T: Decodable>(
         resource: String,
         object: Encodable,
+        ephemeralKeySecret: String? = nil,
         additionalHeaders: [String: String] = [:]
     ) async throws -> T {
         return try await withCheckedThrowingContinuation { continuation in
             post(
                 resource: resource,
                 object: object,
+                ephemeralKeySecret: ephemeralKeySecret,
                 apiVersionOverride: CryptoOnrampAPI.stripeAPIVersion,
                 additionalHeaders: additionalHeaders
             ) { (result: Result<T, Error>) in

@@ -6,6 +6,78 @@
 import XCTest
 
 final class CheckoutElementsUITests: PaymentSheetUITestCase {
+
+    func testSavedPaymentMethodControls() throws {
+        // Given a Checkout Session for a returning customer with saved payment method controls enabled
+        app.launchEnvironment["STP_CHECKOUT_ELEMENTS"] = "true"
+        app.launch()
+
+        app.buttons["Reset"].waitForExistenceAndTap()
+        XCTAssertTrue(app.buttons["checkout_picker_Customer"].waitForExistenceAndTap())
+        XCTAssertTrue(app.buttons["Returning"].waitForExistenceAndTap())
+        let scrollStart = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
+        let scrollEnd = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.25))
+        scrollStart.press(forDuration: 0.1, thenDragTo: scrollEnd)
+        XCTAssertTrue(app.buttons["checkout_picker_Email source"].waitForExistenceAndTap())
+        XCTAssertTrue(app.buttons["Server — Customer"].waitForExistenceAndTap())
+        scrollStart.press(forDuration: 0.1, thenDragTo: scrollEnd)
+        let shippingToggle = app.switches["Collect Shipping Address"]
+        shippingToggle.scrollToAndTap(in: app)
+        XCTAssertEqual(shippingToggle.value as? String, "0")
+
+        // The billing details row pushes Automatic Tax behind the fixed Create button.
+        scrollStart.press(forDuration: 0.1, thenDragTo: scrollEnd)
+        let automaticTaxToggle = app.switches["Automatic Tax"]
+        automaticTaxToggle.scrollToAndTap(in: app)
+        XCTAssertEqual(automaticTaxToggle.value as? String, "0")
+        XCTAssertTrue(app.buttons["Create Checkout Session"].waitForExistenceAndTap())
+
+        XCTAssertTrue(app.navigationBars["Your Cart"].waitForExistence(timeout: 15))
+
+        // When the customer opens Payment Element
+        let paymentMethodButton = app.buttons["Select payment method"]
+        paymentMethodButton.scrollToAndTap(in: app)
+
+        // Then their saved card is displayed and can be selected
+        let savedCard = app.buttons["•••• 4242"].firstMatch
+        XCTAssertTrue(savedCard.waitForExistence(timeout: 10))
+        savedCard.tap()
+        XCTAssertTrue(paymentMethodButton.staticTexts["•••• 4242"].waitForExistence(timeout: 10))
+
+        // When the customer removes the saved card
+        // The returning-customer fixture creates a fresh Customer for each request, so
+        // removing this payment method does not mutate shared test state.
+        paymentMethodButton.forceTapWhenHittableInTestCase(self)
+        XCTAssertTrue(app.buttons["edit_saved_button"].waitForExistenceAndTap())
+        let editSavedCardButton = app.cells["•••• 4242"].buttons["CircularButton.Edit"]
+        XCTAssertTrue(editSavedCardButton.waitForExistence(timeout: 5))
+        editSavedCardButton.tap()
+        XCTAssertTrue(app.buttons["Remove"].waitForExistenceAndTap())
+        XCTAssertTrue(app.alerts.buttons["Remove"].waitForExistenceAndTap())
+
+        // Then the saved card is removed and the customer can add and save a new card
+        XCTAssertTrue(savedCard.waitForNonExistence(timeout: 10))
+        app.buttons["Add new payment method"].forceTapWhenHittableInTestCase(self)
+        try fillCardData(app, cardNumber: "5555555555554444")
+
+        let savePaymentMethodToggle = app.switches.matching(
+            NSPredicate(format: "label BEGINSWITH %@", "Save payment details")
+        ).firstMatch
+        XCTAssertTrue(savePaymentMethodToggle.waitForExistence(timeout: 5))
+        XCTAssertFalse(savePaymentMethodToggle.isSelected)
+        savePaymentMethodToggle.tap()
+        XCTAssertTrue(savePaymentMethodToggle.isSelected)
+
+        app.buttons["Continue"].forceTapWhenHittableInTestCase(self)
+
+        // When the customer confirms with the new card, Checkout completes successfully
+        XCTAssertTrue(paymentMethodButton.staticTexts["•••• 4444"].waitForExistence(timeout: 10))
+        let buyButton = app.buttons["checkout_buy_button"]
+        buyButton.scrollToAndTap(in: app)
+
+        XCTAssertTrue(app.alerts["Success"].waitForExistence(timeout: 20))
+    }
+
     func testElementsStaySynchronizedWithCheckoutSession() throws {
         // Given a Checkout Session with Customer.email simulating a customer in Germany
         app.launchEnvironment["STP_CHECKOUT_ELEMENTS"] = "true"
@@ -19,8 +91,10 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
         scrollStart.press(forDuration: 0.1, thenDragTo: scrollEnd)
         XCTAssertTrue(app.buttons["checkout_picker_Email source"].waitForExistenceAndTap())
         XCTAssertTrue(app.buttons["Server — Customer"].waitForExistenceAndTap())
-        app.buttons["No Override"].scrollToAndTap(in: app)
-        app.buttons["Germany (DE)"].waitForExistenceAndTap()
+        let adaptivePricingLocationPicker = app.buttons["checkout_picker_Adaptive Pricing Location"]
+        adaptivePricingLocationPicker.scrollToAndTap(in: app)
+        XCTAssertTrue(app.buttons["Germany (DE)"].waitForExistenceAndTap())
+        XCTAssertTrue(adaptivePricingLocationPicker.label.contains("Germany (DE)"))
         app.buttons["Create Checkout Session"].waitForExistenceAndTap()
 
         XCTAssertTrue(app.navigationBars["Your Cart"].waitForExistence(timeout: 15))
@@ -44,7 +118,7 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
             NSPredicate(format: "label BEGINSWITH %@", "Buy with Apple")
         ).firstMatch
         XCTAssertTrue(applePayButton.waitForExistence(timeout: 10))
-        XCTAssertTrue(app.buttons["Pay with Link"].exists)
+        XCTAssertFalse(app.buttons["Pay with Link"].exists)
         XCTAssertTrue(app.buttons["Select payment method"].exists)
 
         // When the customer selects the integration currency in Currency Selector Element
@@ -115,25 +189,14 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
 
     func testExpressCheckoutElementApplePayCompletesCheckout() {
         // Given an ECE-only Checkout Session without address-dependent tax in the normal hosted playground
-        app.launchEnvironment["STP_CHECKOUT_ELEMENTS"] = "true"
-        app.launch()
-
-        app.buttons["Reset"].waitForExistenceAndTap()
-        let paymentElementPicker = app.buttons.matching(
-            NSPredicate(format: "label BEGINSWITH %@", "PaymentElement")
-        ).firstMatch
-        XCTAssertTrue(paymentElementPicker.waitForExistenceAndTap())
-        XCTAssertTrue(app.buttons["ece only"].waitForExistenceAndTap())
-
         // ECE Apple Pay does not yet request a shipping postal address. Enabling shipping-sourced
         // automatic tax causes confirmation to fail with `customer_tax_location_invalid` until
         // CheckoutApplePayContext implements shipping contact collection.
-        let collectShippingAddress = app.switches["Collect Shipping Address"]
-        XCTAssertTrue(collectShippingAddress.waitForExistence(timeout: 4))
-        collectShippingAddress.scrollToAndTap(in: app)
-        let automaticTax = app.switches["Automatic Tax"]
-        XCTAssertTrue(automaticTax.waitForExistence(timeout: 4))
-        automaticTax.scrollToAndTap(in: app)
+        var settings = CheckoutPlayground.Settings()
+        settings.integrationType = .eceOnly
+        settings.shippingAddressCollection = false
+        settings.automaticTax = false
+        loadCheckoutPlayground(app, settings)
         app.buttons["Create Checkout Session"].waitForExistenceAndTap()
 
         XCTAssertTrue(app.navigationBars["Your Cart"].waitForExistence(timeout: 15))
@@ -146,12 +209,48 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
             NSPredicate(format: "label BEGINSWITH %@", "Buy ·")
         ).firstMatch
         XCTAssertFalse(buyButton.exists)
+        assertAnalyticsEvents([
+            "elements.express_checkout_element.init",
+        ])
 
         // When the customer confirms with Apple Pay from Express Checkout Element
         applePayButton.tap()
 
         // Then Checkout completes using the wallet confirmation flow
         payWithApplePay(successElement: app.alerts["Success"])
+        assertAnalyticsEvents([
+            "elements.express_checkout_element.init",
+            "stripeios.token_creation",
+            "stripeios.payment_method_creation",
+            "stripeios.paymenthandler.handle_next_action.started",
+            "stripeios.paymenthandler.handle_next_action.finished",
+        ])
+    }
+
+    func testExpressCheckoutElementLinkAnalytics() {
+        // Given an ECE-only Checkout Session that does not require shipping or automatic tax
+        var settings = CheckoutPlayground.Settings()
+        settings.integrationType = .eceOnly
+        settings.shippingAddressCollection = false
+        settings.automaticTax = false
+        loadCheckoutPlayground(app, settings)
+        app.buttons["Create Checkout Session"].waitForExistenceAndTap()
+
+        XCTAssertTrue(app.navigationBars["Your Cart"].waitForExistence(timeout: 15))
+        let linkButton = app.buttons["Pay with Link"]
+        XCTAssertTrue(linkButton.waitForExistence(timeout: 10))
+        XCTAssertFalse(app.buttons["Select payment method"].exists)
+        assertAnalyticsEvents(["elements.express_checkout_element.init"])
+
+        // When the customer opens Link from Express Checkout Element
+        linkButton.tap()
+
+        // Then Link opens and its analytics remain part of the ECE sequence
+        XCTAssertTrue(app.textFields["Email"].waitForExistence(timeout: 10))
+        assertAnalyticsEvents([
+            "elements.express_checkout_element.init",
+            "link.signup.flow_presented",
+        ], ignoringEventPrefixes: ["elements.captcha.passive.", "stripeios.attest."])
     }
 
     private func fillShippingAddress() {
@@ -172,5 +271,22 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
 
         app.textFields["ZIP"].tap()
         app.typeText("94102")
+    }
+
+    private func assertAnalyticsEvents(
+        _ expectedEvents: [String],
+        ignoringEventPrefixes: [String] = [],
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        // Keep the sequence exact so new Checkout Session metrics require updated ECE expectations.
+        XCTAssertEqual(
+            analyticsLog.compactMap { $0[string: "event"] }.filter { event in
+                !ignoringEventPrefixes.contains { event.hasPrefix($0) }
+            },
+            expectedEvents,
+            file: file,
+            line: line
+        )
     }
 }

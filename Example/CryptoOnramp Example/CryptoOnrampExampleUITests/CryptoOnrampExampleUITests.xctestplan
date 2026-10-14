@@ -13,6 +13,7 @@
   },
   "testTargets" : [
     {
+      "parallelizable" : true,
       "target" : {
         "containerPath" : "container:CryptoOnramp Example.xcodeproj",
         "identifier" : "0BD66FCA2EDE0E800044DB52",

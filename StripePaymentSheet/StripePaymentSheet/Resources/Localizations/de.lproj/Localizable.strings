@@ -46,9 +46,19 @@
 
 "Buy now or pay later with Klarna" = "Jetzt kaufen oder später bezahlen mit Klarna";
 
+"By confirming your payment with GCash, you allow %@ to charge your GCash account for future payments in accordance with their terms." = "Indem Sie Ihre Zahlung mit GCash bestätigen, erlauben Sie %@, zukünftige Zahlungen gemäß deren Konditionen von Ihrem GCash-Konto abzubuchen.";
+
 "By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "Indem Sie Ihre Zahlung mit NICEPAY bestätigen, erlauben Sie %@, künftige Zahlungen gemäß deren Konditionen von dieser Zahlungsmethode abzubuchen.";
 
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Indem Sie Ihre Zahlung bei PayPal bestätigen, erklären Sie sich damit einverstanden, dass %@ Ihr PayPal-Konto zur Durchführung zukünftiger Zahlungen gemäß der Nutzungsbedingungen belastet.";
+
+"By confirming your payment with Touch 'n Go, you allow %@ to charge your Touch 'n Go account for future payments in accordance with their terms." = "Indem Sie Ihre Zahlung mit Touch 'n Go bestätigen, erlauben Sie %@, zukünftige Zahlungen gemäß deren Konditionen von Ihrem Touch 'n Go-Konto abzubuchen.";
+
+"By confirming your payment with TrueMoney, you allow %@ to charge your TrueMoney account for future payments in accordance with their terms." = "Indem Sie Ihre Zahlung mit TrueMoney bestätigen, erlauben Sie %@, zukünftige Zahlungen gemäß deren Konditionen von Ihrem TrueMoney-Konto abzubuchen.";
+
+"By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their <terms>terms of use</terms>." = "Indem Sie Ihre Zahlung bestätigen, erklären Sie sich damit einverstanden, dass Ihre Transaktion von Global Stack Services Limited als Merchant of Record (eingetragenem Händler) und gemäß deren <terms>Nutzungsbedingungen</terms> abgewickelt wird.";
+
+"By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their <terms>terms</terms>." = "Indem Sie Ihre Zahlung bestätigen, erklären Sie sich damit einverstanden, dass Ihre Transaktion von Global Stack Services Limited als Merchant of Record (eingetragenem Händler) und gemäß deren <terms>Konditionen</terms> abgewickelt wird.";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Indem Sie zur Amazon-Pay-Website wechseln, erklären Sie sich damit einverstanden, dass %@ Ihr Amazon-Pay-Konto zur Durchführung zukünftiger Zahlungen gemäß den Nutzungsbedingungen belastet.";
 
@@ -112,6 +122,8 @@
 
 "Code sent" = "Code wurde gesendet";
 
+"Complete the payment using Pix to finish the purchase." = "Führen Sie die Zahlung mit Pix durch, um den Kauf abzuschließen.";
+
 "Confirm" = "Bestätigen";
 
 "Confirm payment details" = "Zahlungsdetails bestätigen";
@@ -171,6 +183,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Ich verstehe, dass Stripe im Namen von %@ Lastschriften einzieht und bestätige, dass ich der Kontoinhaber/die Kontoinhaberin und die einzige Person bin, die zur Autorisierung von Lastschriften von diesem Konto erforderlich ist.";
 
 "IBAN" = "IBAN";
+
+"Invoice payment for business buyers." = "Rechnungszahlung für gewerbliche Käuferinnen und Käufer.";
 
 "Keep Editing" = "Weiter bearbeiten";
 
@@ -341,6 +355,8 @@
 "The provided verification code has expired." = "Der angegebene Verifizierungscode ist abgelaufen.";
 
 "The provided verification code is incorrect." = "Der angegebene Verifizierungscode ist falsch.";
+
+"This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Dies ist ein internationaler Kauf und schließt eine IOF-Gebühr von 3,5 % aus. Mit dem Fortfahren erkennen Sie die <terms>allgemeinen Geschäftsbedingungen von Ebanx<terms> an und akzeptieren diese.";
 
 "This is your default" = "Dies ist Ihre Standard-Methode";
 

@@ -153,6 +153,7 @@ extension CheckoutPlayground {
                     .clipShape(RoundedRectangle(cornerRadius: 8))
                 }
                 .buttonStyle(.plain)
+                .accessibilityIdentifier("checkout_picker_Adaptive Pricing Location")
                 .padding(.leading, 36)
             }
             .padding(.vertical, 12)

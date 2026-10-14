@@ -100,12 +100,24 @@ public final class CheckoutController: ObservableObject {
 
         let sessionId = Self.extractSessionId(from: clientSecret)
         do {
+            // Load address specs etc. in parallel with /init. PaymentElement also loads these via
+            // PaymentSheetLoader, but integrations without it (e.g. ECE-only) still need them for
+            // address forms like the one in the Link wallet's "Add a payment method" screen.
+            // ⚠️ Using a Task instead of `async let`; see PaymentSheetLoader.load.
+            let loadMiscellaneousSingletonsTask = Task {
+                await PaymentSheetLoader.loadMiscellaneousSingletons()
+            }
             // Call /init
             let apiResponse = try await configuration.apiClient.initCheckoutSession(
                 checkoutSessionId: sessionId,
                 adaptivePricingAllowed: configuration.currencySelectorElement != nil
             )
-            let loadedSession = Session(apiResponse: apiResponse, localState: .empty)
+            await loadMiscellaneousSingletonsTask.value
+            let loadedSession = Session(
+                apiResponse: apiResponse,
+                localState: .empty,
+                configuration: configuration
+            )
             self.session = loadedSession
 
             // Element initialization is intentionally sequential:
@@ -142,7 +154,8 @@ public final class CheckoutController: ObservableObject {
                 self.expressCheckoutElement = ExpressCheckoutElement(
                     sessionSource: sessionSource,
                     configuration: expressCheckoutElementConfiguration,
-                    delegate: self
+                    delegate: self,
+                    apiClient: apiClient
                 )
             }
 
@@ -458,7 +471,11 @@ extension CheckoutController {
         mutateLocalState(&localState)
 
         if let apiResponse {
-            session = Session(apiResponse: apiResponse, localState: localState)
+            session = Session(
+                apiResponse: apiResponse,
+                localState: localState,
+                configuration: configuration
+            )
         } else {
             session.localState = localState
         }

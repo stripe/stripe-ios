@@ -6,10 +6,12 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 
 // Called when the client secret is needed for embedded components
 class FetchClientSecretMessageHandler: ScriptMessageHandlerWithReply<VoidPayload, String?> {
-    init(didReceiveMessage: @escaping (VoidPayload) async throws -> String?) {
-        super.init(name: "fetchClientSecret", didReceiveMessage: didReceiveMessage)
+    init(sourcePolicy: STPWebMessageSourcePolicy,
+         didReceiveMessage: @escaping (VoidPayload) async throws -> String?) {
+        super.init(name: "fetchClientSecret", sourcePolicy: sourcePolicy, didReceiveMessage: didReceiveMessage)
     }
 }
