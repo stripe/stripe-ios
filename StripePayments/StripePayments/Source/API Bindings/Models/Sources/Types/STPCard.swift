@@ -95,6 +95,8 @@ public class STPCard: NSObject, STPAPIResponseDecodable, STPSourceProtocol {
             return .unionPay
         } else if (brand == "cartes_bancaires") || (brand == "cartes bancaires") {
             return .cartesBancaires
+        } else if brand == "jaywan" {
+            return .jaywan
         } else {
             return .unknown
         }

@@ -99,6 +99,9 @@ public class STPImageLibrary: NSObject {
             return safeImageNamed("stp_card_unpadded_discover")
         case .JCB:
             return safeImageNamed("stp_card_unpadded_jcb")
+        case .jaywan:
+            // There is no unpadded Jaywan artwork yet, so use the standard padded icon.
+            return self.brandImage(for: brand, template: false)
         case .unknown:
             fallthrough
         @unknown default:
@@ -158,12 +161,20 @@ public class STPImageLibrary: NSObject {
             imageName = shouldUseTemplate ? "stp_card_unionpay_template" : "stp_card_unionpay"
         case .cartesBancaires:
             imageName = shouldUseTemplate ? "stp_card_cartes_bancaires_template" : "stp_card_cartes_bancaires"
+        case .jaywan:
+            // There is no single-color Jaywan artwork yet, so the full-color icon is used
+            // for both variants and is never tinted (see below).
+            imageName = "stp_card_jaywan"
         case .unknown:
             imageName = "stp_card_unknown"
         case .visa:
             imageName = shouldUseTemplate ? "stp_card_visa_template" : "stp_card_visa"
         @unknown default:
             imageName = "stp_card_unknown"
+        }
+        if brand == .jaywan {
+            return self.safeImageNamed(imageName ?? "", templateIfAvailable: false)
+                .withRenderingMode(.alwaysOriginal)
         }
         let image = self.safeImageNamed(
             imageName ?? "",

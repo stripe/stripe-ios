@@ -598,6 +598,17 @@ class TextFieldElementCardTest: STPNetworkStubbingTestCase {
         XCTAssertTrue(rotatingView!.cardBrands.contains(.mastercard))
     }
 
+    func testAccessoryView_excludesJaywan() {
+        // Jaywan is not shown in the supported card brands list, with or without CBC
+        for cardBrandChoiceDataSource in [nil, CardBrandChoiceElement()] {
+            let configuration = TextFieldElement.PANConfiguration(cardBrandChoiceDataSource: cardBrandChoiceDataSource)
+            let rotatingView = configuration.accessoryView(for: "", theme: .default) as? RotatingCardBrandsView
+            XCTAssertNotNil(rotatingView)
+            XCTAssertFalse(rotatingView!.cardBrands.contains(.jaywan))
+            XCTAssertFalse(configuration.accessibilityLabel(for: "").contains("Jaywan"))
+        }
+    }
+
     func testCardBrandChoiceDataSourceIsWeaklyHeld() {
         // Given
         var cardBrandChoiceElement: CardBrandChoiceElement? = CardBrandChoiceElement()

@@ -26,6 +26,12 @@ class RotatingCardBrandsViewTests: XCTestCase {
                        ], RotatingCardBrandsView.orderedCardBrands(from: STPCardBrand.allCases))
     }
 
+    func testOrderingExcludesJaywan() {
+        // Jaywan is not shown in the supported card brands list yet
+        XCTAssertFalse(RotatingCardBrandsView.orderedCardBrands(from: STPCardBrand.allCases).contains(.jaywan))
+        XCTAssertEqual([.visa, .mastercard], RotatingCardBrandsView.orderedCardBrands(from: [.jaywan, .mastercard, .visa]))
+    }
+
     func testRotatesOnMoreThreeOrMoreBrands() {
         let rotatingCardBrandsView = RotatingCardBrandsView()
         rotatingCardBrandsView.cardBrands = [.visa]

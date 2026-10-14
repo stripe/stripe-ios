@@ -240,4 +240,28 @@ class STPBinRangeTest: XCTestCase {
         let missingFundingRange = try decoder.decode(STPBINRange.self, from: missingFundingJSON)
         XCTAssertEqual(missingFundingRange.funding, .other)
     }
+
+    func testJaywanRangesFromCardMetadataAreNotUsedForDetection() throws {
+        // Given a card metadata range reporting the Jaywan brand
+        let json = Data("""
+        {
+            "pan_length": 16,
+            "brand": "JAYWAN",
+            "account_range_low": "1234560000000000",
+            "account_range_high": "1234569999999999",
+            "country": "AE",
+            "funding": "debit"
+        }
+        """.utf8)
+        // When it's decoded
+        let range = try JSONDecoder().decode(STPBINRange.self, from: json)
+        // Then the range keeps the previous unknown brand, since card number based Jaywan detection isn't supported
+        XCTAssertEqual(range.brand, .unknown)
+        XCTAssertEqual(range.panLength, 16)
+    }
+
+    func testNoBundledJaywanRanges() {
+        XCTAssertTrue(STPBINController.shared.binRanges(for: .jaywan).isEmpty)
+        XCTAssertEqual(STPBINController.shared.minCardNumberLength(for: .jaywan), 13)
+    }
 }

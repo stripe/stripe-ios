@@ -80,4 +80,13 @@
     XCTAssertEqual([[[textField preferredNetworks] firstObject] intValue], STPCardBrandVisa);
 }
 
+- (void)testCardBrandObjectiveCBridging {
+    XCTAssertEqual(STPCardBrandCartesBancaires, (STPCardBrand)7);
+    XCTAssertEqual(STPCardBrandUnknown, (STPCardBrand)8);
+    XCTAssertEqual(STPCardBrandJaywan, (STPCardBrand)9);
+    XCTAssertEqualObjects([STPCardBrandUtilities stringFromCardBrand:STPCardBrandJaywan], @"Jaywan");
+    XCTAssertEqualObjects([STPCardBrandUtilities apiValueFromCardBrand:STPCardBrandJaywan], @"jaywan");
+    XCTAssertEqual([STPCard brandFromString:@"JAYWAN"], STPCardBrandJaywan);
+}
+
 @end

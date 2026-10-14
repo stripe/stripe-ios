@@ -52,6 +52,9 @@ class RotatingCardBrandsView: UIView {
                     return 6
                 case .cartesBancaires:
                     return 7
+                case .jaywan:
+                    // Not shown in the supported card brands list yet.
+                    return nil
                 case .unknown:
                     return nil
                 @unknown default:

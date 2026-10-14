@@ -28,6 +28,9 @@ import Foundation
     case cartesBancaires
     /// An unknown card brand type
     case unknown
+    /// Jaywan
+    /// - Note: Declared after `unknown` so that the raw values of all existing cases are unchanged.
+    case jaywan
 }
 
 /// :nodoc:
@@ -68,6 +71,8 @@ public class STPCardBrandUtilities: NSObject {
             return "Visa"
         case .cartesBancaires:
             return "Cartes Bancaires"
+        case .jaywan:
+            return "Jaywan"
         case .unknown:
             return "Unknown"
         }
@@ -95,6 +100,8 @@ public class STPCardBrandUtilities: NSObject {
             return "unionpay"
         case .cartesBancaires:
             return "cartes_bancaires"
+        case .jaywan:
+            return "jaywan"
         default:
             return "unknown"
         }

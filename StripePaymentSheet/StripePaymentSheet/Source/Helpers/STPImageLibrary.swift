@@ -116,6 +116,9 @@ extension STPCardBrand {
             image = .carousel_card_unionpay
         case .cartesBancaires:
             image = .carousel_card_cartes_bancaires
+        case .jaywan:
+            // There is no borderless Jaywan artwork for saved payment method cells yet.
+            image = .carousel_card_unknown
         case .unknown:
             image = .carousel_card_unknown
         @unknown default:

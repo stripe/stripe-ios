@@ -54,7 +54,7 @@ extension STPCardBrand {
             return .mastercard
         case .discover, .JCB, .dinersClub, .unionPay:
             return .discover
-        case .cartesBancaires, .unknown:
+        case .cartesBancaires, .jaywan, .unknown:
             return nil
         @unknown default:
             return nil

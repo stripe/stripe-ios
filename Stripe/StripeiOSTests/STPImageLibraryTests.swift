@@ -6,6 +6,7 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
+import UIKit
 import XCTest
 
 @testable@_spi(STP) import Stripe
@@ -23,6 +24,7 @@ class STPImageLibraryTests: XCTestCase {
         .dinersClub,
         .discover,
         .JCB,
+        .jaywan,
         .mastercard,
         .unionPay,
         .unknown,
@@ -112,6 +114,11 @@ class STPImageLibraryTests: XCTestCase {
                     image,
                     STPImageLibrary.safeImageNamed("stp_card_cartes_bancaires", templateIfAvailable: false)
                 )
+            case .jaywan:
+                STPAssertEqualImages(
+                    image,
+                    STPImageLibrary.safeImageNamed("stp_card_jaywan", templateIfAvailable: false)
+                )
             case .unknown:
                 STPAssertEqualImages(
                     image,
@@ -126,6 +133,43 @@ class STPImageLibraryTests: XCTestCase {
             let image = STPImageLibrary.unpaddedCardBrandImage(for: brand)
             // Assert image exists
             XCTAssert(image.size != .zero)
+        }
+    }
+
+    func testTemplatedImageForCardBrands() {
+        for brand in STPCardBrand.allCases {
+            let image = STPImageLibrary.templatedBrandImage(for: brand)
+            // Assert image exists
+            XCTAssert(image.size != .zero, "Missing templated image for \(brand)")
+        }
+    }
+
+    func testJaywanImages() {
+        // Given the Jaywan card brand icon
+        let jaywanImage = STPImageLibrary.safeImageNamed("stp_card_jaywan", templateIfAvailable: false)
+        // Then it is bundled, and has the same size as the other card brand icons
+        XCTAssertEqual(jaywanImage.size, STPImageLibrary.safeImageNamed("stp_card_visa", templateIfAvailable: false).size)
+
+        // ...and it's used for the Jaywan card brand image
+        STPAssertEqualImages(STPImageLibrary.cardBrandImage(for: .jaywan), jaywanImage)
+
+        // When requesting the templated or unpadded variants, which have no Jaywan-specific artwork yet
+        let templatedImage = STPImageLibrary.templatedBrandImage(for: .jaywan)
+        let unpaddedImage = STPImageLibrary.unpaddedCardBrandImage(for: .jaywan)
+        // Then the full-color icon is used and is never tinted
+        STPAssertEqualImages(templatedImage, jaywanImage)
+        XCTAssertEqual(templatedImage.renderingMode, .alwaysOriginal)
+        STPAssertEqualImages(unpaddedImage, jaywanImage)
+        XCTAssertNotEqual(unpaddedImage.renderingMode, .alwaysTemplate)
+    }
+
+    func testSavedPaymentMethodCellImageForCardBrands() {
+        for brand in STPCardBrand.allCases {
+            for style in [UIUserInterfaceStyle.light, .dark] {
+                let image = brand.makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: style)
+                XCTAssert(image.size != .zero, "Missing saved payment method cell image for \(brand)")
+                XCTAssertEqual(image.renderingMode, .alwaysOriginal)
+            }
         }
     }
 

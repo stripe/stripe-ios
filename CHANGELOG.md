@@ -3,6 +3,9 @@ PATCH
 
 ## X.Y.Z - changes pending release
 
+### Payments
+* [Added] Added `STPCardBrand.jaywan` for cards with the Jaywan brand.
+
 ### Identity
 * [Changed] Test-mode verification sessions now upload placeholder document and selfie images instead of users' images.
 

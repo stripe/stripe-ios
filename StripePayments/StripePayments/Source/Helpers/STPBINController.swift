@@ -32,7 +32,11 @@ import Foundation
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.panLength = try container.decode(UInt.self, forKey: .panLength)
         let brandString = try container.decode(String.self, forKey: .brand)
-        self.brand = STPCard.brand(from: brandString)
+        let brand = STPCard.brand(from: brandString)
+        // Card number based Jaywan detection is not supported yet, so treat Jaywan ranges
+        // from the card metadata service the same way they were treated before Jaywan was
+        // added to `STPCardBrand`.
+        self.brand = brand == .jaywan ? .unknown : brand
         self.accountRangeLow = try container.decode(String.self, forKey: .accountRangeLow)
         self.accountRangeHigh = try container.decode(String.self, forKey: .accountRangeHigh)
         self.country = try? container.decode(String.self, forKey: .country)
@@ -228,7 +232,8 @@ extension STPBINRange {
             }
         case .unionPay:
             return 16
-        case .unknown:
+        case .unknown, .jaywan:
+            // No BIN ranges are bundled for Jaywan, so use the same minimum as an unknown brand.
             return 13
         }
     }

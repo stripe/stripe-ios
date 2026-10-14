@@ -53,6 +53,10 @@ class STPCardTest: XCTestCase {
         XCTAssertEqual(STPCard.brand(from: "CARTES Bancaires"), .cartesBancaires)
         XCTAssertEqual(STPCard.brand(from: "CARTES_Bancaires"), .cartesBancaires)
 
+        XCTAssertEqual(STPCard.brand(from: "jaywan"), .jaywan)
+        XCTAssertEqual(STPCard.brand(from: "JAYWAN"), .jaywan)
+        XCTAssertEqual(STPCard.brand(from: "Jaywan"), .jaywan)
+
         XCTAssertEqual(STPCard.brand(from: "unknown"), .unknown)
         XCTAssertEqual(STPCard.brand(from: "UNKNOWN"), .unknown)
 
@@ -236,6 +240,31 @@ class STPCardTest: XCTestCase {
         XCTAssertEqual(card.name, "Jane Austen")
 
         XCTAssertEqual(card.allResponseFields as NSDictionary, response as NSDictionary)
+    }
+
+    func testDecodedObjectFromAPIResponseJaywanBrand() {
+        // Given a card API response with the Jaywan brand
+        var response = STPTestUtils.jsonNamed("Card")!
+        response["brand"] = "Jaywan"
+        // When
+        let card = STPCard.decodedObject(fromAPIResponse: response)
+        // Then
+        XCTAssertEqual(card?.brand, .jaywan)
+    }
+
+    func testPaymentMethodCardDecodingJaywan() {
+        // Given a payment method card API response with Jaywan as the brand, display brand and a network
+        var response = STPTestUtils.jsonNamed(STPTestJSONPaymentMethodCard)?["card"] as! [AnyHashable: Any]
+        response["brand"] = "jaywan"
+        response["display_brand"] = "jaywan"
+        response["networks"] = ["available": ["jaywan", "visa"], "preferred": "jaywan"]
+        // When
+        let card = STPPaymentMethodCard.decodedObject(fromAPIResponse: response)
+        // Then
+        XCTAssertEqual(card?.brand, .jaywan)
+        XCTAssertEqual(card?.displayBrand, "jaywan")
+        XCTAssertEqual(card?.networks?.available, ["jaywan", "visa"])
+        XCTAssertEqual(card?.networks?.preferred, "jaywan")
     }
 
     // MARK: - STPSourceProtocol Tests
