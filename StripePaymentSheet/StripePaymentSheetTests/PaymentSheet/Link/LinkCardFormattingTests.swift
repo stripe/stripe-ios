@@ -13,18 +13,22 @@ final class LinkCardFormattingTests: XCTestCase {
         let creditDetails = makePaymentDetails(funding: .credit, nickname: nil)
         let creditFormatted = LinkController.formattedCardDetails(brand: .visa, funding: "credit", last4: "4242")
         XCTAssertEqual(creditDetails.linkPaymentDetailsFormattedString, creditFormatted)
+        XCTAssertEqual(creditFormatted, "Visa Credit •••• 4242")
 
         let debitDetails = makePaymentDetails(funding: .debit, nickname: nil)
         let debitFormatted = LinkController.formattedCardDetails(brand: .visa, funding: "debit", last4: "4242")
         XCTAssertEqual(debitDetails.linkPaymentDetailsFormattedString, debitFormatted)
+        XCTAssertEqual(debitFormatted, "Visa Debit •••• 4242")
 
         let prepaidDetails = makePaymentDetails(funding: .prepaid, nickname: nil)
         let prepaidFormatted = LinkController.formattedCardDetails(brand: .visa, funding: "prepaid", last4: "4242")
         XCTAssertEqual(prepaidDetails.linkPaymentDetailsFormattedString, prepaidFormatted)
+        XCTAssertEqual(prepaidFormatted, "Visa Prepaid •••• 4242")
 
         let unknownDetails = makePaymentDetails(funding: .unparsable, nickname: nil)
         let unknownFormatted = LinkController.formattedCardDetails(brand: .visa, funding: "", last4: "4242")
         XCTAssertEqual(unknownDetails.linkPaymentDetailsFormattedString, unknownFormatted)
+        XCTAssertEqual(unknownFormatted, "Visa Card •••• 4242")
     }
 
     func testCardFormattingPreservesNickname() {
