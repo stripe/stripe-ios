@@ -3,6 +3,9 @@ PATCH
 
 ## X.Y.Z - changes pending release
 
+### Identity
+* [Changed] Test-mode verification sessions now upload placeholder document and selfie images instead of users' images.
+
 ## 26.14.0 2026-10-12
 ### General
 * [Removed] Removed the "test mode" badge from all UI surfaces.
