@@ -188,6 +188,16 @@ import UIKit
 
     @_spi(STP) public static var linkIcon: UIImage = Image.link_icon.makeImage()
 
+    /// Formats card details using the same localized funding description and masking as a selected Link card.
+    /// - Parameters:
+    ///   - brand: The card brand.
+    ///   - funding: The card funding value returned by the PaymentMethod API, such as `credit` or `debit`.
+    ///   - last4: The last four digits of the card.
+    @_spi(STP) public nonisolated static func formattedCardDetails(brand: STPCardBrand, funding: String?, last4: String) -> String {
+        let linkFunding = ConsumerPaymentDetails.Details.Card.Funding(rawValue: funding?.uppercased() ?? "") ?? .unparsable
+        return ConsumerPaymentDetails.Details.Card.formattedString(brand: brand, funding: linkFunding, last4: last4)
+    }
+
     private func iconForPaymentDetails(_ paymentDetails: ConsumerPaymentDetails) -> UIImage {
         guard let appearance, appearance.reduceLinkBranding else {
             return Self.linkIcon
