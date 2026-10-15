@@ -67,7 +67,6 @@ struct CheckoutPlaygroundView: View {
                             applePayDisplay: $viewModel.expressCheckoutElement.applePayDisplay,
                             applePayButtonType: $viewModel.expressCheckoutElement.applePayButtonType,
                             linkDisplay: $viewModel.expressCheckoutElement.linkDisplay,
-                            paymentMethodOrder: $viewModel.expressCheckoutElement.paymentMethodOrder,
                             appearance: $viewModel.expressCheckoutElement.appearance
                         )
 
