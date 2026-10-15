@@ -64,7 +64,19 @@ enum ExpressCheckoutElementUtilities {
                 }
             }
         }
-        return paymentMethods
+        return visiblePaymentMethods(for: paymentMethods, layout: configuration.appearance.buttonLayout)
+    }
+
+    static func visiblePaymentMethods(
+        for paymentMethods: [ExpressCheckoutElement.PaymentMethod],
+        layout: ExpressCheckoutElement.Configuration.Appearance.ButtonLayout
+    ) -> [ExpressCheckoutElement.PaymentMethod] {
+        // A single limit affects how the buttons are arranged, but it cannot
+        // limit the grid's total capacity without the other dimension.
+        guard let maxColumns = layout.maxColumns, let maxRows = layout.maxRows else {
+            return paymentMethods
+        }
+        return Array(paymentMethods.prefix(min(maxRows * maxColumns, paymentMethods.count)))
     }
 
     static func linkDisabledReasons(
