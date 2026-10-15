@@ -335,7 +335,6 @@ struct CheckoutPlaygroundExpressCheckoutElementSection: View {
     @Binding var applePayDisplay: ExpressCheckoutElement.Configuration.ApplePayConfiguration.Display
     @Binding var applePayButtonType: CheckoutPlayground.ApplePayButtonType
     @Binding var linkDisplay: ExpressCheckoutElement.Configuration.LinkConfiguration.Display
-    @Binding var paymentMethodOrder: CheckoutPlayground.ExpressCheckoutPaymentMethodOrder
     @Binding var appearance: ExpressCheckoutElement.Configuration.Appearance
 
     var body: some View {
@@ -367,12 +366,6 @@ struct CheckoutPlaygroundExpressCheckoutElementSection: View {
                         selection: $linkDisplay,
                         tooltip: "Sets `ExpressCheckoutElement.Configuration.linkConfiguration.display`.",
                         displayText: { $0.rawValue.capitalized }
-                    )
-                    CheckoutPlayground.PickerRow(
-                        title: "Payment Method Order",
-                        selection: $paymentMethodOrder,
-                        tooltip: "Sets `ExpressCheckoutElement.Configuration.paymentMethodOrder`.",
-                        displayText: { $0.displayName }
                     )
                     CheckoutPlayground.PickerRow(
                         title: "Button Theme",

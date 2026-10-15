@@ -232,7 +232,6 @@ final class CheckoutCartViewController: UIViewController {
                 expressCheckoutElementConfiguration.linkConfiguration = ExpressCheckoutElement.Configuration.LinkConfiguration(
                     display: expressCheckoutElementSettings.linkDisplay
                 )
-                expressCheckoutElementConfiguration.paymentMethodOrder = expressCheckoutElementSettings.paymentMethodOrder.paymentMethodOrder
                 expressCheckoutElementConfiguration.appearance.buttonTheme = expressCheckoutElementSettings.appearance.buttonTheme
                 expressCheckoutElementConfiguration.appearance.buttonLayout.maxColumns = expressCheckoutElementSettings.appearance.buttonLayout.maxColumns
                 expressCheckoutElementConfiguration.appearance.buttonLayout.maxRows = expressCheckoutElementSettings.appearance.buttonLayout.maxRows

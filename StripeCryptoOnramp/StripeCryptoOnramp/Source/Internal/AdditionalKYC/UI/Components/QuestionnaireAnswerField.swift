@@ -22,8 +22,8 @@ struct QuestionnaireAnswerField: View {
     /// The appearance used for the focused border and color scheme.
     let appearance: LinkAppearance
 
-    /// Maximum Unicode scalars allowed in each questionnaire answer, matching the backend implementation.
-    private static let maximumAnswerLength = 5_000
+    /// Maximum Unicode scalars allowed in each questionnaire answer.
+    let maximumAnswerLength: Int
 
     /// Whether the answer field should take focus when it appears.
     var isInitiallyFocused = false
@@ -50,7 +50,7 @@ struct QuestionnaireAnswerField: View {
                     .tint(Color.textPrimary)
                     .focused($isFocused)
                     .onReceive(Just(answer)) { value in
-                        let prefixedAnswer = value.prefix(unicodeScalarsCount: Self.maximumAnswerLength)
+                        let prefixedAnswer = value.prefix(unicodeScalarsCount: maximumAnswerLength)
                         if prefixedAnswer.endIndex != value.endIndex {
                             answer = String(prefixedAnswer)
                         }
@@ -130,6 +130,7 @@ private struct QuestionnaireAnswerFieldPreview: View {
             question: "Why are you purchasing cryptocurrency through swapped.com?",
             answer: $answer,
             appearance: appearance,
+            maximumAnswerLength: 5_000,
             isInitiallyFocused: isInitiallyFocused
         )
         .padding(20)

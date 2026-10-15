@@ -86,7 +86,8 @@ final class DocumentFileTests: XCTestCase {
             maxDocumentTypes: 2,
             maxFilesPerDocumentType: 3,
             fileRequirements: "PDF, future-format, or JPEG up to 12 MB",
-            instructions: ["First instruction", "Second instruction"]
+            instructions: ["First instruction", "Second instruction"],
+            documentCollectionPrompt: "A backend collection prompt"
         )
 
         let configuration = try DocumentCollectionConfiguration(proofOfAddress: requirement)
@@ -99,6 +100,7 @@ final class DocumentFileTests: XCTestCase {
         XCTAssertEqual(configuration.instructions, requirement.instructions)
         XCTAssertEqual(configuration.maximumFileSize, 12_000_000)
         XCTAssertEqual(configuration.maximumFilesPerDocumentType, 3)
+        XCTAssertEqual(configuration.documentCollectionPrompt, "A backend collection prompt")
         XCTAssertEqual(configuration.uploadHint, requirement.fileRequirements)
     }
 
@@ -110,7 +112,7 @@ final class DocumentFileTests: XCTestCase {
             maxFileSizeBytes: bytes.count,
             minDocumentTypes: 1,
             maxDocumentTypes: 1,
-            maxFilesPerDocumentType: nil,
+            maxFilesPerDocumentType: 10,
             fileRequirements: "Guidance for a new document format",
             instructions: []
         )
@@ -118,6 +120,7 @@ final class DocumentFileTests: XCTestCase {
         let configuration = try DocumentCollectionConfiguration(proofOfAddress: requirement)
         XCTAssertEqual(configuration.acceptedFormats, ["future-format"])
         XCTAssertEqual(configuration.maximumFilesPerDocumentType, 10)
+        XCTAssertNil(configuration.documentCollectionPrompt)
         XCTAssertEqual(configuration.documentPickerContentTypes, [.data])
         XCTAssertFalse(configuration.allowsPhotoSelection)
 
@@ -164,7 +167,7 @@ final class DocumentFileTests: XCTestCase {
                 maxFileSizeBytes: 50_000_000,
                 minDocumentTypes: 1,
                 maxDocumentTypes: 1,
-                maxFilesPerDocumentType: nil,
+                maxFilesPerDocumentType: 10,
                 fileRequirements: fileRequirements,
                 instructions: []
             )
@@ -219,7 +222,7 @@ final class DocumentFileTests: XCTestCase {
                 maxFileSizeBytes: maximumFileSize,
                 minDocumentTypes: minimumTypes,
                 maxDocumentTypes: maximumTypes,
-                maxFilesPerDocumentType: nil,
+                maxFilesPerDocumentType: 10,
                 fileRequirements: "A localized hint supplied by the backend",
                 instructions: []
             )
