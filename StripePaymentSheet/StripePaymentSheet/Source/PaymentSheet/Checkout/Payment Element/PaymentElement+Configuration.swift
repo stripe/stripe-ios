@@ -10,8 +10,7 @@ import PassKit
 @_spi(STP) import StripePayments
 
 extension PaymentElement {
-    /// Configuration for PaymentElement.
-    /// Configure billing address collection with the Checkout Session’s `billing_address_collection` parameter.
+    /// Configuration for PaymentElement
     public struct Configuration {
         // MARK: - Public
 

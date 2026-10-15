@@ -12,8 +12,6 @@ import Foundation
 extension CheckoutController.Session {
 
     /// Populates empty fields in the configuration with checkout-collected addresses.
-    /// Default contact details take precedence over checkout-collected values.
-    /// Billing address collection follows the Checkout Session.
     func applyAddressOverrides<C: PaymentElementConfiguration>(to configuration: inout C) {
         if let shipping = shippingAddress, configuration.shippingDetails() == nil {
             let details = shippingAddressDetails(from: shipping)
