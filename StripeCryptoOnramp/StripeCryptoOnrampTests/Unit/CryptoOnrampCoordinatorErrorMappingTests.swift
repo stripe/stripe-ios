@@ -161,7 +161,12 @@ final class CryptoOnrampCoordinatorErrorMappingTests: XCTestCase {
             httpVersion: nil,
             headerFields: ["request-id": "req_attestation_test"]
         )
-        let stripeError = try XCTUnwrap(STPAPIClient.decodeStripeErrorResponse(data: responseData, response: response))
+        let result: Result<EmptyResponse, Error> = STPAPIClient.decodeResponse(
+            data: responseData, error: nil, response: response
+        )
+        guard case .failure(let stripeError) = result else {
+            return XCTFail("Expected an API error")
+        }
         let apiClient = STPAPIClient(publishableKey: "pk_test_123")
 
         let mappedError = CryptoOnrampCoordinator.mappedError(
