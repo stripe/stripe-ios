@@ -30,7 +30,7 @@ public final class CurrencySelectorElementUIView: UIView {
     private let checkoutSessionId: String
     private let flagImageManager = AdaptivePricingFlagImageManager()
     private var selectorView: TwoOptionSelectorView?
-    private var sessionCurrency: String
+    private var sessionCurrency = ""
     private let containerStackView = UIStackView()
     private lazy var errorLabel: UILabel = {
         let label = ElementsUI.makeErrorLabel(
@@ -41,27 +41,21 @@ public final class CurrencySelectorElementUIView: UIView {
         return label
     }()
 
-    init?(
+    init(
         session: CheckoutController.Session,
         delegate: CurrencySelectorElementCheckoutDelegate,
         appearance: CurrencySelectorElement.Appearance,
         needsUpdateSuperviewHeight: @escaping () -> Void
     ) async {
-        guard let (_, exchangeRateMeta, rawCurrency) = CurrencySelectorUtilities.adaptivePricingData(from: session) else {
-            return nil
-        }
         self.currencySelectionDelegate = delegate
         self.appearance = appearance
         self.checkoutSessionId = session.id
         self.needsUpdateSuperviewHeight = needsUpdateSuperviewHeight
-        let currency = CurrencySelectorUtilities.CurrencyCode(rawCurrency)
-        self.sessionCurrency = currency.apiValue
         super.init(frame: .zero)
 
         await flagImageManager.prefetchFlagImages(for: session)
         setupContainerStackView()
-        buildSelectorView(session: session, exchangeRateMeta: exchangeRateMeta, currency: currency)
-        updateCaption(currency: currency, exchangeRateMeta: exchangeRateMeta)
+        update(with: session, notifyingHeightChange: false)
     }
 
     @available(*, unavailable)
@@ -70,6 +64,9 @@ public final class CurrencySelectorElementUIView: UIView {
     }
 
     override public var intrinsicContentSize: CGSize {
+        guard !isHidden else {
+            return CGSize(width: UIView.noIntrinsicMetric, height: 0)
+        }
         return containerStackView.systemLayoutSizeFitting(
             CGSize(width: bounds.width, height: UIView.layoutFittingCompressedSize.height),
             withHorizontalFittingPriority: .required,
@@ -92,19 +89,48 @@ public final class CurrencySelectorElementUIView: UIView {
     }
 
     func update(with session: CheckoutController.Session) {
+        update(with: session, notifyingHeightChange: true)
+    }
+
+    private func update(
+        with session: CheckoutController.Session,
+        notifyingHeightChange: Bool
+    ) {
         guard let (_, exchangeRateMeta, rawCurrency) =
                 CurrencySelectorUtilities.adaptivePricingData(from: session)
         else {
-            assertionFailure("Adaptive Pricing data unexpectedly became unavailable")
+            clearError()
+            setAvailable(false, notifyingHeightChange: notifyingHeightChange)
             return
         }
 
         let currency = CurrencySelectorUtilities.CurrencyCode(rawCurrency)
         clearError()
-        updateSelectorItems(session: session, exchangeRateMeta: exchangeRateMeta)
+        if selectorView == nil {
+            buildSelectorView(session: session, exchangeRateMeta: exchangeRateMeta, currency: currency)
+        } else {
+            updateSelectorItems(session: session, exchangeRateMeta: exchangeRateMeta)
+        }
         sessionCurrency = currency.apiValue
         selectorView?.select(currency.apiValue)
         updateCaption(currency: currency, exchangeRateMeta: exchangeRateMeta)
+        setAvailable(true, notifyingHeightChange: notifyingHeightChange)
+    }
+
+    private func setAvailable(_ available: Bool, notifyingHeightChange: Bool) {
+        guard isHidden == available else { return }
+        let updateVisibility = {
+            self.isHidden = !available
+            self.invalidateContentSize()
+            if notifyingHeightChange {
+                self.needsUpdateSuperviewHeight()
+            }
+        }
+        if notifyingHeightChange {
+            UIView.animate(withDuration: 0.2, animations: updateVisibility)
+        } else {
+            updateVisibility()
+        }
     }
 
     private func resolveLabelContent() -> CurrencySelectorElement.Appearance.LabelContent {

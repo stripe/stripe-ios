@@ -38,14 +38,14 @@ public final class CurrencySelectorElement {
 
     // MARK: - Internal Methods
 
-    init?(
+    init(
         sessionSource: CheckoutSessionSource,
         configuration: Configuration,
         delegate: CurrencySelectorElementCheckoutDelegate
     ) async {
         // Assign the callback's weak reference after the views finish initializing.
         weak var element: CurrencySelectorElement?
-        guard let uiView = await CurrencySelectorElementUIView(
+        let uiView = await CurrencySelectorElementUIView(
             session: sessionSource.initialSession,
             delegate: delegate,
             appearance: configuration.appearance,
@@ -53,9 +53,7 @@ public final class CurrencySelectorElement {
                 guard let element else { return }
                 element.delegate?.currencySelectorElementDidUpdateHeight(currencySelectorElement: element)
             }
-        ) else {
-            return nil
-        }
+        )
         let viewModel = CurrencySelectorElementViewModel(
             sessionSource: sessionSource,
             uiView: uiView,

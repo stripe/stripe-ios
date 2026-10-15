@@ -39,7 +39,7 @@ public final class CheckoutController: ObservableObject {
     /// The ExpressCheckoutElement for this CheckoutController instance.
     private var expressCheckoutElement: ExpressCheckoutElement?
 
-    /// The CurrencySelectorElement for this CheckoutController instance, when Adaptive Pricing is available.
+    /// The CurrencySelectorElement for this CheckoutController instance, when configured.
     private var currencySelectorElement: CurrencySelectorElement?
 
     /// The ShippingAddressElement for this CheckoutController instance.
@@ -371,8 +371,10 @@ public final class CheckoutController: ObservableObject {
         return expressCheckoutElement!
     }
 
-    /// Returns Currency Selector Element when it was configured and Adaptive
-    /// Pricing is available for this Checkout instance.
+    /// Returns the Currency Selector Element when it was configured.
+    ///
+    /// The element automatically shows or hides its content as Adaptive Pricing
+    /// availability changes when the Checkout Session updates.
     public func getCurrencySelectorElement() -> CurrencySelectorElement? {
         assert(
             configuration.currencySelectorElement != nil,

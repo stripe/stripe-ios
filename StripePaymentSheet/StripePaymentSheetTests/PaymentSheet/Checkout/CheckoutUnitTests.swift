@@ -141,14 +141,18 @@ final class CheckoutUnitTests: XCTestCase {
     }
 
     func testGetCurrencySelectorElementReturnsStableInstanceWhenConfigured() async throws {
-        let session = CheckoutTestHelpers.makeAdaptivePricingSession()
+        // Given a configured currency selector without initial Adaptive Pricing data
         let checkout = try await CheckoutController(
-            configuration: CheckoutTestHelpers.makeCurrencySelectorConfiguration(apiResponse: session)
+            configuration: CheckoutTestHelpers.makeCurrencySelectorConfiguration()
         )
-
         let firstElement = try XCTUnwrap(checkout.getCurrencySelectorElement())
+
+        // When Adaptive Pricing data becomes available
+        try await checkout.commitSession(CheckoutTestHelpers.makeAdaptivePricingSession())
+
+        // Then Checkout returns the original element
         let secondElement = try XCTUnwrap(checkout.getCurrencySelectorElement())
-        XCTAssertTrue(firstElement === secondElement)
+        XCTAssertIdentical(firstElement, secondElement)
     }
 
     func testCurrencySelectorElementLogsInitializationOnce() async throws {

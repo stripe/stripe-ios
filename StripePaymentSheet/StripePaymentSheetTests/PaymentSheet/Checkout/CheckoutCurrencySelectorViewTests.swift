@@ -17,12 +17,55 @@ final class CheckoutCurrencySelectorViewTests: XCTestCase {
 
     // MARK: - Availability tests
 
-    func testUnavailableWhenAdaptivePricingDataIsUnavailableAtInitialization() async throws {
+    func testAvailabilityTracksSessionUpdatesWithoutReplacingElement() async throws {
+        // Given a configured currency selector without Adaptive Pricing data
         let checkout = try await CheckoutController(
             configuration: CheckoutTestHelpers.makeCurrencySelectorConfiguration()
         )
+        let element = try XCTUnwrap(checkout.getCurrencySelectorElement())
+        let view = element.uiView
+        let footer = UIView()
+        footer.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        let stackView = UIStackView(arrangedSubviews: [view, footer])
+        stackView.axis = .vertical
+        stackView.frame = CGRect(x: 0, y: 0, width: 320, height: 500)
+        stackView.layoutIfNeeded()
+        let delegate = CurrencySelectorElementDelegateMock {
+            stackView.setNeedsLayout()
+            stackView.layoutIfNeeded()
+        }
+        element.delegate = delegate
 
-        XCTAssertNil(checkout.getCurrencySelectorElement())
+        // Then its UIKit content is hidden and collapsed
+        XCTAssertTrue(view.isHidden)
+        XCTAssertEqual(view.intrinsicContentSize.height, 0)
+        XCTAssertNil(currencySelector(in: view))
+        XCTAssertEqual(footer.frame.minY, 0)
+
+        // When Adaptive Pricing data becomes available
+        try await checkout.commitSession(makeSession())
+        await waitForViewUpdate()
+
+        // Then the same element displays its content and updates its surrounding layout
+        XCTAssertIdentical(try XCTUnwrap(checkout.getCurrencySelectorElement()), element)
+        XCTAssertFalse(view.isHidden)
+        XCTAssertGreaterThan(view.intrinsicContentSize.height, 0)
+        XCTAssertNotNil(currencySelector(in: view))
+        XCTAssertGreaterThan(footer.frame.minY, 0)
+        XCTAssertEqual(delegate.heightUpdateCallCount, 1)
+        XCTAssertGreaterThan(delegate.inheritedAnimationDuration, 0)
+
+        // When Adaptive Pricing data becomes unavailable again
+        try await checkout.commitSession(CheckoutTestHelpers.makeOpenSession())
+        await waitForViewUpdate()
+
+        // Then the same element hides and collapses again
+        XCTAssertIdentical(try XCTUnwrap(checkout.getCurrencySelectorElement()), element)
+        XCTAssertTrue(view.isHidden)
+        XCTAssertEqual(view.intrinsicContentSize.height, 0)
+        XCTAssertEqual(footer.frame.minY, 0)
+        XCTAssertEqual(delegate.heightUpdateCallCount, 2)
+        XCTAssertGreaterThan(delegate.inheritedAnimationDuration, 0)
     }
 
     func testAvailableWhenAdaptivePricingActive() async throws {

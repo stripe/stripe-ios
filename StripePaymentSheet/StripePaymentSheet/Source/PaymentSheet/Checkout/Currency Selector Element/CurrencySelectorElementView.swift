@@ -20,8 +20,10 @@ public struct CurrencySelectorElementView: View {
     }
 
     public var body: some View {
-        CurrencySelectorElementUIViewRepresentable(viewModel: viewModel)
-            .fixedSize(horizontal: false, vertical: true)
+        if viewModel.isAvailable {
+            CurrencySelectorElementUIViewRepresentable(viewModel: viewModel)
+                .fixedSize(horizontal: false, vertical: true)
+        }
     }
 }
 
@@ -29,6 +31,7 @@ public struct CurrencySelectorElementView: View {
 @MainActor
 final class CurrencySelectorElementViewModel: ObservableObject {
     let uiView: CurrencySelectorElementUIView
+    @Published private(set) var isAvailable: Bool
 
     private var sessionCancellable: AnyCancellable?
 
@@ -37,6 +40,9 @@ final class CurrencySelectorElementViewModel: ObservableObject {
         uiView: CurrencySelectorElementUIView
     ) {
         self.uiView = uiView
+        self.isAvailable = CurrencySelectorUtilities.adaptivePricingData(
+            from: sessionSource.initialSession
+        ) != nil
         uiView.didUpdateContentHeight = { [weak self] in
             self?.objectWillChange.send()
         }
@@ -44,7 +50,9 @@ final class CurrencySelectorElementViewModel: ObservableObject {
             .dropFirst()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] session in
-                self?.uiView.update(with: session)
+                guard let self else { return }
+                self.uiView.update(with: session)
+                self.isAvailable = CurrencySelectorUtilities.adaptivePricingData(from: session) != nil
             }
     }
 }

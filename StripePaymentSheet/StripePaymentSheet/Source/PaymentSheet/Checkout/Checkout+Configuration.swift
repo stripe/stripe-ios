@@ -47,8 +47,8 @@ extension CheckoutController {
 
         /// Configuration for Currency Selector Element.
         ///
-        /// Set this property to enable Currency Selector Element when Adaptive
-        /// Pricing is available. The default value is `nil`.
+        /// Set this property to create a Currency Selector Element. Its content
+        /// automatically appears when Adaptive Pricing is available. The default value is `nil`.
         public var currencySelectorElement: CurrencySelectorElement.Configuration?
 
         /// Configuration for Shipping Address Element.

@@ -30,6 +30,38 @@ final class CurrencySelectorElementViewTests: XCTestCase {
         XCTAssertGreaterThan(fittingHeight(of: hostingController), 1)
     }
 
+    func testSwiftUIAvailabilityTracksSessionUpdates() async throws {
+        // Given a configured currency selector without Adaptive Pricing data
+        let checkout = try await CheckoutController(
+            configuration: CheckoutTestHelpers.makeCurrencySelectorConfiguration()
+        )
+        let element = try XCTUnwrap(checkout.getCurrencySelectorElement())
+        let hostingController = UIHostingController(rootView: element.view)
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 320, height: 200))
+        window.rootViewController = hostingController
+        window.makeKeyAndVisible()
+        layout(hostingController, in: window)
+
+        // Then it does not occupy SwiftUI layout space
+        XCTAssertEqual(fittingHeight(of: hostingController), 0)
+
+        // When Adaptive Pricing data becomes available
+        try await checkout.commitSession(CheckoutTestHelpers.makeAdaptivePricingSession())
+        await waitForViewUpdate()
+        layout(hostingController, in: window)
+
+        // Then SwiftUI renders the selector
+        XCTAssertGreaterThan(fittingHeight(of: hostingController), 1)
+
+        // When Adaptive Pricing data becomes unavailable again
+        try await checkout.commitSession(CheckoutTestHelpers.makeOpenSession())
+        await waitForViewUpdate()
+        layout(hostingController, in: window)
+
+        // Then SwiftUI removes the selector from its layout
+        XCTAssertEqual(fittingHeight(of: hostingController), 0)
+    }
+
     func testUpdatesSwiftUILayoutWhenDetailsChangeHeight() async throws {
         guard #available(iOS 16.0, *) else {
             throw XCTSkip("SwiftUI does not reliably invalidate UIViewRepresentable height before iOS 16")
