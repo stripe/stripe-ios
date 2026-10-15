@@ -11,9 +11,6 @@ import UniformTypeIdentifiers
 /// Presentation and validation inputs for document collection.
 struct DocumentCollectionConfiguration {
 
-    /// The file allowance used until the backend specifies one.
-    static let defaultMaximumFilesPerDocumentType = 10
-
     /// A selectable document category.
     struct Subtype: Identifiable, Equatable {
 
@@ -52,7 +49,10 @@ struct DocumentCollectionConfiguration {
     var maximumDocumentTypes = 1
 
     /// The maximum number of files allowed for each selected document category.
-    var maximumFilesPerDocumentType = Self.defaultMaximumFilesPerDocumentType
+    var maximumFilesPerDocumentType = 10
+
+    /// The backend-provided prompt displayed while collecting documents, when present.
+    var documentCollectionPrompt: String?
 
     /// Maps the file extensions to `UTType`s for use in filtering with Files.
     var documentPickerContentTypes: [UTType] {
@@ -105,7 +105,7 @@ extension DocumentCollectionConfiguration {
         guard requirement.minDocumentTypes >= 0,
               requirement.maxDocumentTypes >= max(1, requirement.minDocumentTypes),
               requirement.minDocumentTypes <= requirement.acceptedSubtypes.count,
-              (requirement.maxFilesPerDocumentType ?? Self.defaultMaximumFilesPerDocumentType) > 0,
+              requirement.maxFilesPerDocumentType > 0,
               requirement.maxFileSizeBytes > 0,
               !requirement.acceptedSubtypes.isEmpty,
               requirement.acceptedSubtypes.allSatisfy({ !$0.id.isEmpty }),
@@ -133,7 +133,8 @@ extension DocumentCollectionConfiguration {
             uploadHint: requirement.fileRequirements,
             minimumDocumentTypes: requirement.minDocumentTypes,
             maximumDocumentTypes: requirement.maxDocumentTypes,
-            maximumFilesPerDocumentType: requirement.maxFilesPerDocumentType ?? Self.defaultMaximumFilesPerDocumentType
+            maximumFilesPerDocumentType: requirement.maxFilesPerDocumentType,
+            documentCollectionPrompt: requirement.documentCollectionPrompt
         )
     }
 }
