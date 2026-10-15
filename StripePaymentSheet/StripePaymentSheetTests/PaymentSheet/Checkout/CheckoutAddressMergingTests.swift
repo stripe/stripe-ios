@@ -130,10 +130,14 @@ final class CheckoutAddressMergingTests: XCTestCase {
     }
 
     func testBillingAuto_resetsFullToAutomatic() {
-        let session = CheckoutTestHelpers.makeOpenSession(billingAddressCollection: "auto").makePublicSession()
+        let requiredSession = CheckoutTestHelpers.makeOpenSession(billingAddressCollection: "required").makePublicSession()
+        let automaticSession = CheckoutTestHelpers.makeOpenSession(billingAddressCollection: "auto").makePublicSession()
         var config = PaymentSheet.Configuration()
-        config.billingDetailsCollectionConfiguration.address = .full
-        session.applyAddressOverrides(to: &config)
+
+        requiredSession.applyAddressOverrides(to: &config)
+        XCTAssertEqual(config.billingDetailsCollectionConfiguration.address, .full)
+
+        automaticSession.applyAddressOverrides(to: &config)
         XCTAssertEqual(config.billingDetailsCollectionConfiguration.address, .automatic)
     }
 
@@ -156,10 +160,14 @@ final class CheckoutAddressMergingTests: XCTestCase {
     }
 
     func testEmbedded_billingAuto_resetsFullToAutomatic() {
-        let session = CheckoutTestHelpers.makeOpenSession(billingAddressCollection: "auto").makePublicSession()
+        let requiredSession = CheckoutTestHelpers.makeOpenSession(billingAddressCollection: "required").makePublicSession()
+        let automaticSession = CheckoutTestHelpers.makeOpenSession(billingAddressCollection: "auto").makePublicSession()
         var config = EmbeddedPaymentElement.Configuration()
-        config.billingDetailsCollectionConfiguration.address = .full
-        session.applyAddressOverrides(to: &config)
+
+        requiredSession.applyAddressOverrides(to: &config)
+        XCTAssertEqual(config.billingDetailsCollectionConfiguration.address, .full)
+
+        automaticSession.applyAddressOverrides(to: &config)
         XCTAssertEqual(config.billingDetailsCollectionConfiguration.address, .automatic)
     }
 
