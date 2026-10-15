@@ -15,7 +15,7 @@ enum CryptoOnrampOperation: String {
     case authenticateUserWithAuthToken = "authenticate_user_with_auth_token"
     case authorize = "authorize"
     case attachKycInfo = "attach_kyc_info"
-    case fulfillKYCRequirement = "fulfill_kyc_requirement"
+    case fulfillKYCRequirements = "fulfill_kyc_requirement"
     case retrieveMissingIdentifiers = "retrieve_missing_identifiers"
     case submitIdentifiers = "submit_identifiers"
     case presentUserAttestation = "present_user_attestation"
