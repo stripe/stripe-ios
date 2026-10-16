@@ -89,7 +89,7 @@ GEM
     colorize (1.1.0)
     commander (4.6.0)
       highline (~> 2.0.0)
-    concurrent-ruby (1.3.6)
+    concurrent-ruby (1.3.7)
     connection_pool (2.5.5)
     csv (3.3.5)
     date (3.5.1)
