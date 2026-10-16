@@ -9,6 +9,7 @@ import Foundation
 @_spi(STP) import StripeApplePay
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
+@_spi(STP) import StripePaymentSheet
 @_spi(STP) import StripeUICore
 
 extension String.Localized {
@@ -230,7 +231,7 @@ extension String.Localized {
             return nil
         }
 
-        return String(format: card_details_xxxx, brandString, last4)
+        return LinkController.formattedCardDetails(brand: brand, funding: card.funding, last4: last4)
     }
 
     private static func stpCardBrand(from brand: StripeAPI.PaymentMethod.Card.Brand) -> STPCardBrand {
