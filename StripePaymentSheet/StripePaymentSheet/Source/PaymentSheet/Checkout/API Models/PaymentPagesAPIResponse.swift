@@ -562,7 +562,7 @@ private extension Decoder {
 }
 
 /// Decodes the CheckoutClient response and supplies the fields still consumed by the
-/// Checkout Session model while update and confirm remain on Payment Pages.
+/// Checkout Session model used by the SDK's existing Checkout code.
 struct CheckoutClientAPIResponse: Decodable {
     let fields: [String: Any]
 
@@ -575,7 +575,11 @@ struct CheckoutClientAPIResponse: Decodable {
         self.fields = fields
     }
 
-    func paymentPagesResponse() throws -> PaymentPagesAPIResponse {
+    func paymentPagesResponse(
+        paymentIntent: STPPaymentIntent? = nil,
+        setupIntent: STPSetupIntent? = nil,
+        isConfirmResponse: Bool = false
+    ) throws -> PaymentPagesAPIResponse {
         guard let id = fields["id"] as? String,
               let uiMode = fields["ui_mode"] as? String,
               ["mobile_elements", "custom"].contains(uiMode),
@@ -620,6 +624,26 @@ struct CheckoutClientAPIResponse: Decodable {
         response["checkout_items"] = items
         response["payment_method_types"] = paymentMethodTypes
         response["elements_session"] = elementsSession
+
+        if let paymentResponse = fields["payment_response"] as? [String: Any] {
+            if let reference = paymentResponse["payment_intent"] as? [String: Any] {
+                response["payment_intent"] = paymentIntent?.allResponseFields
+                if paymentIntent == nil { response["payment_intent"] = reference["id"] }
+            }
+            if let reference = paymentResponse["setup_intent"] as? [String: Any] {
+                response["setup_intent"] = setupIntent?.allResponseFields
+                if setupIntent == nil { response["setup_intent"] = reference["id"] }
+            }
+            if isConfirmResponse, let status = paymentResponse["status"] as? String {
+                let state: String
+                switch status {
+                case "requires_payment_method": state = "failed"
+                case "succeeded": state = "complete"
+                default: state = "processing"
+                }
+                response["submission_attempt"] = ["state": state]
+            }
+        }
 
         if var customer = fields["customer"] as? [String: Any] {
             let savedOptions = fields["saved_payment_method_options"] as? [String: Any]

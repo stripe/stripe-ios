@@ -1460,7 +1460,8 @@ extension PaymentSheetLPMConfirmFlowTests {
             if shouldTest(.deferredIntent) {
                 intents.append(TestIntent("Deferred PaymentIntent - client side confirmation", makeDeferredIntent(deferredCSC)))
             }
-            if shouldTest(.checkoutSession) {
+            // TODO: CheckoutClient /confirm rejects BLIK's blik_code. Re-enable this Checkout Session flow when supported.
+            if paymentMethod != .blik && shouldTest(.checkoutSession) {
                 let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession(
                     types: paymentMethodTypes,
                     currency: currency,
