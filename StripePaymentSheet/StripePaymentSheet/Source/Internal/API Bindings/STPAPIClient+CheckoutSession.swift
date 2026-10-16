@@ -147,16 +147,7 @@ extension STPAPIClient {
         checkoutSessionId: String,
         parameters: [String: Any]
     ) async throws -> PaymentPagesAPIResponse {
-        if parameters["promotion_code"] != nil {
-            // TODO: CheckoutClient /update rejects promotion_code. Keep this update on Payment Pages until it is supported.
-            var legacyParameters = parameters
-            legacyParameters["elements_session_client"] = ["is_aggregation_expected": true]
-            return try await post(
-                endpoint: "payment_pages/\(checkoutSessionId)",
-                parameters: legacyParameters
-            )
-        }
-
+        // TODO: CheckoutClient /update currently rejects promotion_code.
         var params = Self.checkoutClientParameters()
         for (key, value) in parameters {
             if key == "updated_currency" {
