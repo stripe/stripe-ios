@@ -180,32 +180,7 @@ import XCTest
             // Note: in order to make this work, the stub files (end in .tail) must be added to the test bundle during Build Phases/Copy Resources Step.
             let bundle = Bundle(for: STPNetworkStubbingTestCase.self)
             let url = bundle.url(forResource: relativePath, withExtension: nil)
-            if let url {
-                // Intent status polling can issue more GETs during playback than it did over the
-                // live network. After the recorded sequence is consumed, keep returning the last
-                // recorded state for that exact request instead of attempting a live request.
-                var lastIntentGetByURL: [String: URL] = [:]
-                if let files = try? FileManager.default.contentsOfDirectory(
-                    at: url,
-                    includingPropertiesForKeys: nil
-                ) {
-                    for file in files where file.lastPathComponent.contains("_get_v1_payment_intents_")
-                        || file.lastPathComponent.contains("_get_v1_setup_intents_") {
-                        guard let contents = try? String(contentsOf: file, encoding: .utf8) else { continue }
-                        let lines = contents.components(separatedBy: .newlines)
-                        guard lines.count > 2, lines[0] == "GET" else { continue }
-                        if let previous = lastIntentGetByURL[lines[1]],
-                           previous.lastPathComponent >= file.lastPathComponent { continue }
-                        lastIntentGetByURL[lines[1]] = file
-                    }
-                }
-                for file in lastIntentGetByURL.values {
-                    var fallbackError: NSError?
-                    HTTPStubs.stubRequests(usingMocktail: file, error: &fallbackError, removeAfterUse: false)
-                    if let fallbackError {
-                        XCTFail("❌ Error stubbing final Intent response: \(fallbackError)")
-                    }
-                }
+            if url != nil {
                 var stubError: NSError?
                 HTTPStubs.stubRequestsUsingMocktails(
                     atPath: relativePath,
