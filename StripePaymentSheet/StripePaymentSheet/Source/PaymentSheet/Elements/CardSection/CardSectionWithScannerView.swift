@@ -94,9 +94,6 @@ final class CardSectionWithScannerView: UIView {
         } completion: { _ in
             self.cardScanningView.completeDismissAnimation()
         }
-        // UIStackView applies its animated visibility constraints after the animation block returns.
-        // Measure that final layout while the scanner and sheet animations can still start together.
-        findViewController(for: self)?.bottomSheetController?.invalidateContentDetent()
     }
 
     private func showCardScanner() {
@@ -106,8 +103,6 @@ final class CardSectionWithScannerView: UIView {
             self.cardScanningView.setHiddenIfNecessary(false)
             self.layoutIfNeeded()
         }
-        // Measuring inside the animation block still returns the collapsed stack's height.
-        findViewController(for: self)?.bottomSheetController?.invalidateContentDetent()
     }
 
     override var canBecomeFirstResponder: Bool {
