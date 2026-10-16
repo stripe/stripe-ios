@@ -5,17 +5,17 @@ application/json
 Server: Google Frontend
 Content-Type: application/json; charset=utf-8
 x-powered-by: Express
-x-cloud-trace-context: ef75d6a51fab9db381966766bbe8efeb;o=1
+x-cloud-trace-context: 258fe2c097ac2142b22c15f0c5319e6e
 Via: 1.1 google
-Date: Fri, 25 Sep 2026 18:15:53 GMT
-Content-Length: 2538
-Alt-Svc: h3=":443"; ma=2592000
-Etag: W/"9ea-o3iotU8GVL7BoP1CWjb/i0Mdvrc"
+Date: Fri, 16 Oct 2026 18:15:22 GMT
+Content-Length: 2568
+Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+Etag: W/"a08-FDN4x0pWUTeXTwSOjFNzKLHY2Ow"
 
 {
   "billing_address_collection" : null,
-  "id" : "cs_test_a1YySmSEzOCJf7yKtPzmmRiSEmXKx1wwGz4xejOVGgJ44VdD9RCou8FiUF",
-  "client_secret" : "cs_test_a1YySmSEzOCJf7yKtPzmmRiSEmXKx1wwGz4xejOVGgJ44VdD9RCou8FiUF_secret_fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdwbEhqYWAnPydoamdsaWBaYGlgaGBrcXYneCUl",
+  "id" : "cs_test_a14v3YeaeUhAleJDDDdVy2aPzcGYCCkvxiwWiKGdTcYDKAViClSEkzw82F",
+  "client_secret" : "cs_test_a14v3YeaeUhAleJDDDdVy2aPzcGYCCkvxiwWiKGdTcYDKAViClSEkzw82F_secret_fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdwbEhqYWAnPydoamdsaWBaYGlgaGBrcXYneCUl",
   "discounts" : [
 
   ],
@@ -32,7 +32,7 @@ Etag: W/"9ea-o3iotU8GVL7BoP1CWjb/i0Mdvrc"
   "payment_method_configuration_details" : null,
   "payment_method_options" : null,
   "ui_mode" : "mobile_elements",
-  "created" : 1790360153,
+  "created" : 1792174522,
   "client_reference_id" : null,
   "allowed_payment_method_types" : [
     "ng_ussd"
@@ -41,13 +41,13 @@ Etag: W/"9ea-o3iotU8GVL7BoP1CWjb/i0Mdvrc"
   "allow_promotion_codes" : null,
   "items" : [
     {
-      "key" : "checkout_item_VKIF1Zzj",
+      "key" : "checkout_item_VS9zjMIL",
       "one_time_price" : {
         "items" : [
           {
             "quantity" : 1,
             "adjustable_quantity" : null,
-            "price" : "price_1UJdf3FoDYfWw3n4zcRAsL1f",
+            "price" : "price_1URFf4FoDYfWw3n4thXfy9lN",
             "tax_rates" : null
           }
         ],
@@ -153,5 +153,6 @@ Etag: W/"9ea-o3iotU8GVL7BoP1CWjb/i0Mdvrc"
   },
   "livemode" : false,
   "customer_email" : null,
-  "expires_at" : 1790446553
+  "expires_at" : 1792260922,
+  "marketing_attributions" : null
 }

@@ -117,6 +117,10 @@ import XCTest
                         "eid=", // Ephemeral ID, random UUID
                         "browser_locale", // Locale varies by machine
                         "browser_timezone", // Timezone varies by machine
+                        "locale=", // CheckoutClient locale varies by machine
+                        "timezone=", // CheckoutClient timezone varies by machine
+                        "mobile_app_id=", // CheckoutClient app bundle ID varies by test target
+                        "mobile_session_id=", // CheckoutClient session ID varies by run
                         "\\[locale]", // Nested locale param varies by machine
                         "\\[mobile_app_id]", // App bundle ID varies by test target
                         "\\[mobile_session_id]", // Session ID varies by run

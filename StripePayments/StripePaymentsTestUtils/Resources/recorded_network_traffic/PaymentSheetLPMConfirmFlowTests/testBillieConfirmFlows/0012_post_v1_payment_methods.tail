@@ -3,37 +3,37 @@ https:\/\/api\.stripe\.com\/v1\/payment_methods$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=PBFUhBcP0NPPEF4FgxRCRz6KLEuLuNLDHd3cXA1pPMBojukzU-ZpzK5anypKTvIU4ZaapoK7hHC5H7pA; report-to csp
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=RGeCHxt7MqH8da339dCX3YuC7M4ODif1p_z4iqBuBM8TWRgeXa3SRpieWL3p7OU7vcahyymqvNGO12IJ; report-to csp
 Server: nginx
 Cache-Control: no-cache, no-store
-reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=PBFUhBcP0NPPEF4FgxRCRz6KLEuLuNLDHd3cXA1pPMBojukzU-ZpzK5anypKTvIU4ZaapoK7hHC5H7pA&t=1"
-stripe-notice: You are using an outdated API version (2020-08-27). We recommend upgrading to the latest API version, 2026-08-26.dahlia. See https://docs.stripe.com/upgrades
+reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=RGeCHxt7MqH8da339dCX3YuC7M4ODif1p_z4iqBuBM8TWRgeXa3SRpieWL3p7OU7vcahyymqvNGO12IJ&t=1"
+stripe-notice: You are using an outdated API version (2020-08-27). We recommend upgrading to the latest API version, 2026-09-30.endive. See https://docs.stripe.com/upgrades
 x-wc: 3c3
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
-report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=PBFUhBcP0NPPEF4FgxRCRz6KLEuLuNLDHd3cXA1pPMBojukzU-ZpzK5anypKTvIU4ZaapoK7hHC5H7pA&t=1"}],"include_subdomains":true}
-request-id: req_DwxtVU2dGyl8DR
+report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=RGeCHxt7MqH8da339dCX3YuC7M4ODif1p_z4iqBuBM8TWRgeXa3SRpieWL3p7OU7vcahyymqvNGO12IJ&t=1"}],"include_subdomains":true}
+request-id: req_Tiu86s7Anm4FEe
 x-stripe-routing-context-priority-tier: api-testmode
 Content-Length: 550
 Vary: Origin
-Date: Fri, 11 Sep 2026 22:00:50 GMT
-original-request: req_DwxtVU2dGyl8DR
+Date: Fri, 16 Oct 2026 18:03:54 GMT
+original-request: req_Tiu86s7Anm4FEe
 stripe-version: 2020-08-27
-idempotency-key: 7f2a0fc8-bd84-49d4-a70b-e25b06cb23c4
+idempotency-key: bdde5765-df4b-4867-8ccc-b6675b054c84
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
-X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[email]=test%40example\.com&client_attribution_metadata\[checkout_session_id]=cs_test_a10ONuxuMkw4A0uKz5sUw6u4furCRLJ5rwUsYdTqRdA8aJkD8d898AKlX3&client_attribution_metadata\[client_session_id]=.*&client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_method_selection_flow]=automatic&guid=.*&muid=.*&payment_user_agent=.*&sid=.*&type=billie
+X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[email]=test%40example\.com&client_attribution_metadata\[checkout_session_id]=cs_test_a1e01XZ3rm6wxiPownDbNr54iLkjzN3FY1GNWrrJ9uJ1H0OBE62M6tnZ33&client_attribution_metadata\[client_session_id]=.*&client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_method_selection_flow]=automatic&guid=.*&muid=.*&payment_user_agent=.*&sid=.*&type=billie
 
 {
   "object" : "payment_method",
   "billie" : {
 
   },
-  "id" : "pm_1UEcV4Alz2yHYCNZGkIDxqC1",
+  "id" : "pm_1URFTyAlz2yHYCNZg6U9ubbj",
   "billing_details" : {
     "email" : "test@example.com",
     "phone" : null,
@@ -49,7 +49,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[email]=test%
     }
   },
   "livemode" : false,
-  "created" : 1789164050,
+  "created" : 1792173834,
   "allow_redisplay" : "unspecified",
   "shared_payment_granted_token" : null,
   "customer" : null,

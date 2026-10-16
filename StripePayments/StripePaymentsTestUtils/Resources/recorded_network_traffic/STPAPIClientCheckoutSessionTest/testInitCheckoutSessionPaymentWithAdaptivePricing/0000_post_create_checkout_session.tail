@@ -5,17 +5,17 @@ application/json
 Server: Google Frontend
 Content-Type: application/json; charset=utf-8
 x-powered-by: Express
-x-cloud-trace-context: 48c3ca77fd51a4896c7f668be37782a2
+x-cloud-trace-context: 34b830bc2dea916642122449de8b605c
 Via: 1.1 google
-Date: Thu, 10 Sep 2026 18:07:47 GMT
-Content-Length: 2622
-Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
-Etag: W/"a3e-LisCTHI5FJ3an7n2RbS4+cyNeKY"
+Date: Fri, 16 Oct 2026 18:30:48 GMT
+Content-Length: 2601
+Alt-Svc: h3=":443"; ma=2592000
+Etag: W/"a29-CUIqbvohNVggHWW85Qu10G5JNYQ"
 
 {
   "billing_address_collection" : null,
-  "id" : "cs_test_a1G9AGQCYV7ZmrRWcK536JHnEm9JMz9F2Q6TazgwsG1XjgVag8Qu0vANqj",
-  "client_secret" : "cs_test_a1G9AGQCYV7ZmrRWcK536JHnEm9JMz9F2Q6TazgwsG1XjgVag8Qu0vANqj_secret_fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdwbEhqYWAnPydoamdsaWBaYGlgaGBrcXYneCUl",
+  "id" : "cs_test_a1Cb6tbcOP7Q9ETuV5zaeuRCnK4eQ7OIvyjjdwVq9GadXcMCkVBoTXYRp3",
+  "client_secret" : "cs_test_a1Cb6tbcOP7Q9ETuV5zaeuRCnK4eQ7OIvyjjdwVq9GadXcMCkVBoTXYRp3_secret_fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdwbEhqYWAnPydoamdsaWBaYGlgaGBrcXYneCUl",
   "discounts" : [
 
   ],
@@ -32,7 +32,7 @@ Etag: W/"a3e-LisCTHI5FJ3an7n2RbS4+cyNeKY"
   "payment_method_configuration_details" : null,
   "payment_method_options" : null,
   "ui_mode" : "mobile_elements",
-  "created" : 1789063667,
+  "created" : 1792175448,
   "client_reference_id" : null,
   "allowed_payment_method_types" : [
     "card"
@@ -41,16 +41,19 @@ Etag: W/"a3e-LisCTHI5FJ3an7n2RbS4+cyNeKY"
   "allow_promotion_codes" : null,
   "items" : [
     {
-      "key" : "checkout_item_VEfjkxLI",
+      "key" : "checkout_item_VSAErr9d",
       "one_time_price" : {
         "items" : [
           {
             "quantity" : 1,
             "adjustable_quantity" : null,
-            "price" : "price_1UECNzK8p6Sx2i8aD3MmIQhp",
+            "price" : "price_1URFu0K8p6Sx2i8aP5zaExf6",
             "tax_rates" : null
           }
-        ]
+        ],
+        "metadata" : {
+
+        }
       },
       "type" : "one_time_price"
     }
@@ -123,11 +126,7 @@ Etag: W/"a3e-LisCTHI5FJ3an7n2RbS4+cyNeKY"
   "custom_fields" : [
 
   ],
-  "collected_information" : {
-    "shipping_details" : null,
-    "individual_name" : null,
-    "business_name" : null
-  },
+  "collected_information" : null,
   "integration_identifier" : null,
   "invoice_creation" : {
     "enabled" : false,
@@ -154,5 +153,6 @@ Etag: W/"a3e-LisCTHI5FJ3an7n2RbS4+cyNeKY"
   },
   "livemode" : false,
   "customer_email" : "test+location_DE@example.com",
-  "expires_at" : 1789150067
+  "expires_at" : 1792261848,
+  "marketing_attributions" : null
 }

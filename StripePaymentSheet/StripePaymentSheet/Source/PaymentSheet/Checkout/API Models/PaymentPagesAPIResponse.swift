@@ -483,6 +483,7 @@ extension PaymentPagesAPIResponse {
         let activePresentmentCurrency: String
         let integrationAmount: Int
         let integrationCurrency: String
+        let integrationCurrencyDisclosureCaption: String?
         let localCurrencyOptions: [LocalCurrencyOption]
     }
 
@@ -490,7 +491,9 @@ extension PaymentPagesAPIResponse {
         let amount: Int
         let conversionMarkupBps: Int?
         let currency: String
-        let presentmentExchangeRate: String
+        let presentmentExchangeRate: String?
+        let disclosureCaption: String?
+        let disclosureDetails: String?
     }
 
     struct TaxContext: Decodable {
@@ -524,7 +527,7 @@ extension PaymentPagesAPIResponse {
         }
 
         let enabled: Bool
-        let status: ParsedEnum<Status>
+        let status: ParsedEnum<Status>?
     }
 
     struct ElementsSession: Decodable {
@@ -555,5 +558,134 @@ private extension Decoder {
         return DecodingError.dataCorrupted(
             .init(codingPath: codingPath, debugDescription: description)
         )
+    }
+}
+
+/// Decodes the CheckoutClient response and supplies the fields still consumed by the
+/// Checkout Session model while update and confirm remain on Payment Pages.
+struct CheckoutClientAPIResponse: Decodable {
+    let fields: [String: Any]
+
+    init(from decoder: Decoder) throws {
+        guard let fields = try decoder.stripeJSONDictionary as? [String: Any] else {
+            throw DecodingError.dataCorrupted(
+                .init(codingPath: decoder.codingPath, debugDescription: "Invalid CheckoutClient response")
+            )
+        }
+        self.fields = fields
+    }
+
+    func paymentPagesResponse() throws -> PaymentPagesAPIResponse {
+        guard let id = fields["id"] as? String,
+              let uiMode = fields["ui_mode"] as? String,
+              ["mobile_elements", "custom"].contains(uiMode),
+              let currency = fields["presentment_currency"] as? String,
+              let items = fields["items"] as? [[String: Any]],
+              let merchant = fields["merchant_info"] as? [String: Any],
+              let merchantCountry = merchant["country"] as? String,
+              let elementsSessionID = fields["elements_session_id"] as? String,
+              let orderedTypes = fields["ordered_payment_method_types_and_wallets"] as? [String]
+        else {
+            throw DecodingError.dataCorrupted(
+                .init(codingPath: [], debugDescription: "CheckoutClient response is missing required session fields")
+            )
+        }
+
+        let paymentMethodTypes = orderedTypes.filter { $0 != "apple_pay" && $0 != "google_pay" }
+        var elementsSession: [String: Any] = [
+            "session_id": elementsSessionID,
+            "merchant_country": merchantCountry,
+            "payment_method_preference": [
+                "ordered_payment_method_types": paymentMethodTypes,
+                "country_code": fields["country_code"] ?? NSNull(),
+            ],
+            "ordered_payment_method_types_and_wallets": orderedTypes,
+        ]
+        let elementsFields = [
+            "apple_pay_preference", "google_pay_preference", "flags", "link_settings",
+            "experiments_data", "card_brand_choice", "unactivated_payment_method_types",
+            "passive_captcha",
+        ]
+        for key in elementsFields {
+            elementsSession[key] = fields[key]
+        }
+        elementsSession["config_id"] = fields["elements_session_config_id"]
+        elementsSession["business_name"] = merchant["display_name"]
+        elementsSession["merchant_logo_url"] = merchant["logo_url"]
+
+        var response = fields
+        response["session_id"] = id
+        response["mode"] = "modeless"
+        response["currency"] = currency
+        response["checkout_items"] = items
+        response["payment_method_types"] = paymentMethodTypes
+        response["elements_session"] = elementsSession
+
+        if var customer = fields["customer"] as? [String: Any] {
+            let savedOptions = fields["saved_payment_method_options"] as? [String: Any]
+            customer["can_detach_payment_method"] = savedOptions?["payment_method_remove"] as? String == "enabled"
+            customer["email"] = fields["customer_email"]
+            response["customer"] = customer
+        }
+
+        if let savedOptions = fields["saved_payment_method_options"] as? [String: Any],
+           let save = savedOptions["payment_method_save"] as? String {
+            response["customer_managed_saved_payment_methods_offer_save"] = ["enabled": save == "enabled"]
+        }
+
+        if var summary = fields["total_summary"] as? [String: Any],
+           let taxAmounts = summary["total_tax_amounts"] as? [[String: Any]] {
+            summary["total_tax_amounts"] = try taxAmounts.map { tax -> [String: Any] in
+                guard let displayName = tax["display_name"] as? String,
+                      let percentage = tax["percentage"] as? NSNumber else {
+                    throw DecodingError.dataCorrupted(
+                        .init(codingPath: [], debugDescription: "CheckoutClient tax amount is missing display information")
+                    )
+                }
+                var mapped = tax
+                mapped["tax_rate"] = [
+                    "display_name": displayName,
+                    "percentage": percentage.doubleValue,
+                ]
+                return mapped
+            }
+            response["total_summary"] = summary
+        }
+
+        if let automaticTax = fields["automatic_tax"] as? [String: Any],
+           let enabled = automaticTax["enabled"] as? Bool {
+            var taxContext: [String: Any] = ["automatic_tax_enabled": enabled]
+            if let source = automaticTax["address_source"] as? String {
+                taxContext["automatic_tax_address_source"] = "session.\(source)"
+            }
+            response["tax_context"] = taxContext
+            response["tax_meta"] = [
+                "computation_type": enabled ? "automatic" : "Off",
+                "status": automaticTax["status"] as? String == "requires_address"
+                    ? "requires_location_inputs" : "complete",
+            ]
+        }
+
+        if let adaptivePricing = fields["adaptive_pricing_info"] as? [String: Any],
+           let integrationOption = adaptivePricing["integration_currency_option"] as? [String: Any],
+           let localOptions = adaptivePricing["local_currency_options"] as? [[String: Any]] {
+            response["adaptive_pricing_info"] = [
+                "active_presentment_currency": currency,
+                "integration_amount": integrationOption["amount"] ?? NSNull(),
+                "integration_currency": integrationOption["currency"] ?? NSNull(),
+                "integration_currency_disclosure_caption":
+                    (integrationOption["disclosure"] as? [String: Any])?["caption"] ?? NSNull(),
+                "local_currency_options": localOptions.map { option -> [String: Any] in
+                    var mapped = option
+                    let disclosure = option["disclosure"] as? [String: Any]
+                    mapped["disclosure_caption"] = disclosure?["caption"]
+                    mapped["disclosure_details"] = disclosure?["details"]
+                    return mapped
+                },
+            ]
+        }
+
+        let data = try JSONSerialization.data(withJSONObject: response)
+        return try StripeJSONDecoder().decode(PaymentPagesAPIResponse.self, from: data)
     }
 }
