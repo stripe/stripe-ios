@@ -84,6 +84,8 @@ final class LinkAuthFlowCoordinator {
     private(set) var isLoading = false
     private(set) var errorMessage: String?
     private(set) var inputRevision = 0
+    /// Incremented when a submitted code is rejected, so the OTP field can play its invalid-code animation.
+    private(set) var invalidCodeRevision = 0
     private(set) var resendCount = 0
 
     var onUpdate: (() -> Void)?
@@ -209,7 +211,7 @@ final class LinkAuthFlowCoordinator {
                 self.advance(previous: challenge.type)
             case .failure(let error):
                 STPAnalyticsClient.sharedClient.logLink2FAFailure(type: challenge.type)
-                self.resetInput()
+                self.invalidCodeRevision += 1
                 self.errorMessage = LinkUtils.getLocalizedErrorMessage(from: error)
                 let errorCode = error._stp_error_code.flatMap(LinkUtils.ConsumerErrorCode.init(rawValue:))
                 switch errorCode {
@@ -227,6 +229,12 @@ final class LinkAuthFlowCoordinator {
                 self.onUpdate?()
             }
         }
+    }
+
+    /// Called when the user edits the code, so a previous error doesn't reappear on the next render.
+    func codeDidChange() {
+        guard screen == .otp else { return }
+        errorMessage = nil
     }
 
     func webHandoffFinished(_ result: LinkVerificationResult) {
