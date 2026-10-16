@@ -218,7 +218,7 @@ extension PaymentPagesAPIResponse {
         guard let value else { return nil }
         return STPCheckoutSessionSavedPaymentMethodsOfferSave(
             enabled: value.enabled,
-            status: value.status == .accepted ? .accepted : .notAccepted
+            status: value.status.map { $0 == .accepted ? .accepted : .notAccepted }
         )
     }
 
@@ -264,7 +264,10 @@ extension PaymentPagesAPIResponse {
             exchangeRate: selectedOption.presentmentExchangeRate,
             integrationCurrency: adaptivePricingInfo.integrationCurrency,
             localizedCurrency: selectedOption.currency,
-            conversionMarkupBps: selectedOption.conversionMarkupBps
+            conversionMarkupBps: selectedOption.conversionMarkupBps,
+            caption: selectedOption.disclosureCaption,
+            details: selectedOption.disclosureDetails,
+            integrationCaption: adaptivePricingInfo.integrationCurrencyDisclosureCaption
         )
     }
 

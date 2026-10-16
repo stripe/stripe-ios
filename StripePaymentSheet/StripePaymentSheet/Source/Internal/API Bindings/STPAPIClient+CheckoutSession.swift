@@ -127,33 +127,24 @@ extension STPAPIClient {
         checkoutSessionId: String,
         adaptivePricingAllowed: Bool
     ) async throws -> PaymentPagesAPIResponse {
-        var elementsSessionParameters: [String: Any] = [
-            "is_aggregation_expected": true,
+        var parameters: [String: Any] = [
             "locale": Locale.current.toLanguageTag(),
+            "timezone": TimeZone.current.identifier,
+            "adaptive_pricing": ["allowed": adaptivePricingAllowed],
         ]
         if let sessionId = AnalyticsHelper.shared.sessionID {
-            elementsSessionParameters["mobile_session_id"] = sessionId
+            parameters["mobile_session_id"] = sessionId
         }
         if let appId = Bundle.main.bundleIdentifier {
-            elementsSessionParameters["mobile_app_id"] = appId
+            parameters["mobile_app_id"] = appId
         }
-        let parameters: [String: Any] = [
-            "browser_locale": Locale.current.toLanguageTag(),
-            "browser_timezone": TimeZone.current.identifier,
-            "eid": UUID().uuidString,
-            "redirect_type": "embedded",
-            "elements_session_client": elementsSessionParameters,
-            "adaptive_pricing": [
-                "allowed": adaptivePricingAllowed,
-            ],
-        ]
 
-        let checkoutSession = try await post(
-            endpoint: "payment_pages/\(checkoutSessionId)/init",
+        let checkoutClient: CheckoutClientAPIResponse = try await post(
+            endpoint: "checkout_client/\(checkoutSessionId)/init",
             parameters: parameters
         )
 
-        return checkoutSession
+        return try checkoutClient.paymentPagesResponse()
     }
 
     /// Updates a CheckoutSession with the provided parameters.
@@ -207,7 +198,7 @@ extension STPAPIClient {
         _ paymentMethodId: String,
         fromCheckoutSession checkoutSessionId: String
     ) async throws {
-        _ = try await post(
+        let _: PaymentPagesAPIResponse = try await post(
             endpoint: "payment_pages/\(checkoutSessionId)",
             parameters: [
                 "payment_method_to_detach": paymentMethodId,
@@ -339,13 +330,13 @@ extension STPAPIClient {
         )
     }
 
-    private func post(
+    private func post<Response: Decodable>(
         endpoint: String,
         parameters: [String: Any]
-    ) async throws -> PaymentPagesAPIResponse {
+    ) async throws -> Response {
         do {
             return try await withCheckedThrowingContinuation { continuation in
-                post(resource: endpoint, parameters: parameters) { result in
+                post(resource: endpoint, parameters: parameters) { (result: Result<Response, Error>) in
                     continuation.resume(with: result)
                 }
             }

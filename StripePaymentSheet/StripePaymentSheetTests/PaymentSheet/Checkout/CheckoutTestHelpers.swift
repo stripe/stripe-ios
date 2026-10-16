@@ -306,12 +306,15 @@ enum CheckoutTestHelpers {
         }
         stub(condition: { request in
             request.httpMethod == "POST"
-                && request.url?.path == "/v1/payment_pages/\(sessionId)/init"
+                && request.url?.path == "/v1/checkout_client/\(sessionId)/init"
         }) { _ in
             // Feed CheckoutController(configuration:) the session fixture this test requested.
             var responseJSON = jsonObject(apiResponse.allResponseFields) as? [String: Any] ?? [:]
             responseJSON["session_id"] = responseJSON["session_id"] ?? sessionId
-            let data = try! JSONSerialization.data(withJSONObject: responseJSON, options: [])
+            let data = try! JSONSerialization.data(
+                withJSONObject: checkoutClientInitJSON(from: responseJSON, sessionId: sessionId),
+                options: []
+            )
             return HTTPStubsResponse(data: data, statusCode: 200, headers: nil)
         }
         // Init can trigger a session update (e.g. billing address tax sync); just echo the session back.
@@ -352,7 +355,7 @@ enum CheckoutTestHelpers {
         updateStatusCode: @escaping (_ requestNumber: Int) -> Int32 = { _ in 200 }
     ) {
         stub { request in
-            request.url?.path == "/v1/payment_pages/\(sessionId)/init"
+            request.url?.path == "/v1/checkout_client/\(sessionId)/init"
         } response: { request in
             requestRecorder.append(
                 .init(
@@ -360,7 +363,14 @@ enum CheckoutTestHelpers {
                     params: RequestBodyTestHelpers.formEncodedBodyParams(from: request)
                 )
             )
-            return HTTPStubsResponse(jsonObject: sessionJSON(), statusCode: initStatusCode, headers: nil)
+            return HTTPStubsResponse(
+                jsonObject: checkoutClientInitJSON(
+                    from: jsonObject(sessionJSON()) as? [String: Any] ?? [:],
+                    sessionId: sessionId
+                ),
+                statusCode: initStatusCode,
+                headers: nil
+            )
         }
 
         stub { request in
@@ -379,6 +389,50 @@ enum CheckoutTestHelpers {
                 headers: nil
             )
         }
+    }
+
+    /// Presents the shared Payment Pages test session using the CheckoutClient init field names.
+    private static func checkoutClientInitJSON(from session: [String: Any], sessionId: String) -> [String: Any] {
+        let elementsSession = session["elements_session"] as? [String: Any] ?? [:]
+        var response = session
+        response["id"] = session["session_id"] ?? sessionId
+        response["ui_mode"] = "mobile_elements"
+        response["presentment_currency"] = session["currency"] ?? "usd"
+        response["items"] = session["checkout_items"] ?? []
+        response["merchant_info"] = [
+            "country": elementsSession["merchant_country"] ?? "US",
+            "display_name": elementsSession["business_name"] ?? NSNull(),
+        ]
+        response["elements_session_id"] = elementsSession["session_id"] ?? "es_test"
+        response["ordered_payment_method_types_and_wallets"] = session["payment_method_types"] ?? ["card"]
+        response["elements_session_config_id"] = elementsSession["config_id"]
+        for key in [
+            "apple_pay_preference", "google_pay_preference", "flags", "link_settings",
+            "experiments_data", "card_brand_choice", "unactivated_payment_method_types", "passive_captcha",
+        ] {
+            response[key] = elementsSession[key]
+        }
+        if response["customer"] == nil,
+           let elementsCustomer = elementsSession["customer"] as? [String: Any],
+           let customerSession = elementsCustomer["customer_session"] as? [String: Any],
+           let customerId = customerSession["customer"] as? String {
+            response["customer"] = [
+                "id": customerId,
+                "payment_methods": elementsCustomer["payment_methods"] ?? [],
+            ]
+        }
+        if var summary = session["total_summary"] as? [String: Any],
+           let taxAmounts = summary["total_tax_amounts"] as? [[String: Any]] {
+            summary["total_tax_amounts"] = taxAmounts.map { tax -> [String: Any] in
+                var mapped = tax
+                let taxRate = tax["tax_rate"] as? [String: Any]
+                mapped["display_name"] = taxRate?["display_name"]
+                mapped["percentage"] = taxRate?["percentage"]
+                return mapped
+            }
+            response["total_summary"] = summary
+        }
+        return response
     }
 
     static let openSessionJSON: [AnyHashable: Any] = [

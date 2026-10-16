@@ -1,0 +1,109 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3URFVTFY0qyl6XeW1R2oNzAF\/refresh$
+200
+application/json
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=80uz4UVB9R13dJKMF_KImGc2A9tBKw3Yj4nacXBWNkwP_xUMTus4kuP5gFlYo_YwhBcOHVf361ldsU6o; report-to csp
+Server: nginx
+Cache-Control: no-cache, no-store
+reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=80uz4UVB9R13dJKMF_KImGc2A9tBKw3Yj4nacXBWNkwP_xUMTus4kuP5gFlYo_YwhBcOHVf361ldsU6o&t=1"
+stripe-notice: You are using an outdated API version (2020-08-27). We recommend upgrading to the latest API version, 2026-09-30.endive. See https://docs.stripe.com/upgrades
+x-wc: 3c3
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=80uz4UVB9R13dJKMF_KImGc2A9tBKw3Yj4nacXBWNkwP_xUMTus4kuP5gFlYo_YwhBcOHVf361ldsU6o&t=1"}],"include_subdomains":true}
+request-id: req_EvKnRnptO8aRv7
+x-stripe-routing-context-priority-tier: api-testmode
+Content-Length: 2414
+Vary: Origin
+Date: Fri, 16 Oct 2026 18:05:29 GMT
+original-request: req_EvKnRnptO8aRv7
+stripe-version: 2020-08-27
+idempotency-key: e0b85649-5eb7-4bde-aeb0-b279b52a2956
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+X-Stripe-Mock-Request: client_secret=pi_3URFVTFY0qyl6XeW1R2oNzAF_secret_ozNAwdW9Z2d1DnkIq362cje8L&expand\[0]=payment_method
+
+{
+  "payment_method_configuration_details" : null,
+  "canceled_at" : null,
+  "source" : null,
+  "amount" : 5050,
+  "capture_method" : "automatic",
+  "livemode" : false,
+  "shipping" : null,
+  "status" : "requires_action",
+  "object" : "payment_intent",
+  "currency" : "usd",
+  "last_payment_error" : null,
+  "amount_subtotal" : 5050,
+  "automatic_payment_methods" : null,
+  "cancellation_reason" : null,
+  "next_action" : {
+    "type" : "cashapp_handle_redirect_or_display_qr_code",
+    "cashapp_handle_redirect_or_display_qr_code" : {
+      "qr_code" : {
+        "image_url_png" : "https:\/\/qr.stripe.com\/test_YWNjdF8xRzZtMXBGWTBxeWw2WGVXLF9WUzlwMkF2cmlwYU44RGVIQlBYcWZBNW9qWnhvR2910100k44magEY.png",
+        "image_url_svg" : "https:\/\/qr.stripe.com\/test_YWNjdF8xRzZtMXBGWTBxeWw2WGVXLF9WUzlwMkF2cmlwYU44RGVIQlBYcWZBNW9qWnhvR2910100k44magEY.svg",
+        "expires_at" : 1792173948
+      },
+      "hosted_instructions_url" : "https:\/\/payments.stripe.com\/qr\/instructions\/CDQaFwoVYWNjdF8xRzZtMXBGWTBxeWw2WGVXKOjOydYGMgaoBgJguBk6MJVjih5HKlg8X1AmQNvoxxJfWKwNL5nIRwmTcyXHi9p0tf-u8wugRq4M59fiVo3Kmg",
+      "mobile_auth_url" : "https:\/\/pm-redirects.stripe.com\/authorize\/acct_1G6m1pFY0qyl6XeW\/pa_nonce_VS9pbaUhyFmKc0mfL95Ex9pKVxYdoKt"
+    }
+  },
+  "total_details" : {
+    "amount_discount" : 0,
+    "amount_tip" : null,
+    "amount_tax" : 0
+  },
+  "payment_method" : {
+    "object" : "payment_method",
+    "id" : "pm_1URFVSFY0qyl6XeWty1CywH0",
+    "billing_details" : {
+      "email" : null,
+      "phone" : null,
+      "tax_id" : null,
+      "name" : null,
+      "address" : {
+        "state" : null,
+        "country" : null,
+        "line2" : null,
+        "city" : null,
+        "line1" : null,
+        "postal_code" : null
+      }
+    },
+    "livemode" : false,
+    "created" : 1792173926,
+    "allow_redisplay" : "unspecified",
+    "type" : "cashapp",
+    "customer" : null,
+    "cashapp" : {
+      "cashtag" : "$test_cashtag",
+      "buyer_id" : "test_buyer_id"
+    },
+    "customer_account" : null
+  },
+  "client_secret" : "pi_3URFVTFY0qyl6XeW1R2oNzAF_secret_ozNAwdW9Z2d1DnkIq362cje8L",
+  "id" : "pi_3URFVTFY0qyl6XeW1R2oNzAF",
+  "allowed_payment_method_types" : null,
+  "confirmation_method" : "automatic",
+  "amount_details" : {
+    "tip" : {
+
+    }
+  },
+  "excluded_payment_method_types" : null,
+  "processing" : null,
+  "receipt_email" : null,
+  "payment_method_types" : [
+    "cashapp"
+  ],
+  "setup_future_usage" : "off_session",
+  "created" : 1792173927,
+  "description" : null
+}
