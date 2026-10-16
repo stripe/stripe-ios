@@ -98,6 +98,41 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
         }
     }
 
+    /// Begins the flow for a user whose KYC info has already been collected and attached (e.g., via Apple Pay prefill),
+    /// skipping registration and the KYC info collection screen entirely.
+    /// - Parameters:
+    ///   - collectedKYCLevel: The KYC level of the info that was attached.
+    ///   - kycResidence: The customer's residence, used to determine downstream flow requirements (e.g., EU compliance).
+    ///   - coordinator: The CryptoOnramp coordinator to use when retrieving compliance identifier requirements.
+    func startAfterPrefillKYC(
+        collectedKYCLevel: KYCLevel,
+        kycResidence: KYCResidence,
+        coordinator: CryptoOnrampCoordinator
+    ) {
+        resetInternalState()
+        kycInfoCollectionMode = .kycLevel0
+        advanceAfterKyc(collectedKYCLevel: collectedKYCLevel, kycResidence: kycResidence, coordinator: coordinator)
+    }
+
+    /// Jumps directly to the payment summary step for a flow where KYC, Link authentication, wallet registration,
+    /// and onramp session creation have all already happened outside the normal step-by-step screens (e.g. the
+    /// single-page Apple Pay prefill + payment experience).
+    /// - Parameters:
+    ///   - createOnrampSessionResponse: The onramp session that was created for checking out.
+    ///   - selectedPaymentMethodDescription: A description of the selected payment used to start the onramp session.
+    ///   - settlementSpeed: The speed at which funds will be delivered.
+    func startAfterPrefillPurchase(
+        createOnrampSessionResponse: CreateOnrampSessionResponse,
+        selectedPaymentMethodDescription: String,
+        settlementSpeed: CreateOnrampSessionRequest.SettlementSpeed
+    ) {
+        resetInternalState()
+        self.createOnrampSessionResponse = createOnrampSessionResponse
+        self.selectedPaymentMethodDescription = selectedPaymentMethodDescription
+        self.settlementSpeed = settlementSpeed
+        path = [.paymentSummary(createOnrampSessionResponse: createOnrampSessionResponse, selectedPaymentMethodDescription: selectedPaymentMethodDescription, settlementSpeed: settlementSpeed)]
+    }
+
     /// Advances to the next step of the flow post-KYC info collection.
     /// - Parameters:
     ///   - collectedKYCLevel: The KYC level collected by the KYC info view.

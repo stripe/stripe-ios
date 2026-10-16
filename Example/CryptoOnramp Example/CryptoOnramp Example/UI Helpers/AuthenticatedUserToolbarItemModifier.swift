@@ -16,17 +16,17 @@ extension View {
     /// Convenience modifier to show a trailing toolbar item for accessing user-related actions, such as "log out".
     /// - Parameters:
     ///   - isShown: Whether the toolbar item is shown.
-    ///   - coordinator: The coordinator used to perform user-related actions.
+    ///   - coordinator: The coordinator used to perform user-related actions. If `nil`, the toolbar item is not shown.
     ///   - flowCoordinator: The flow coordinator used to manipulate the navigation stack.
     /// - Returns: The modified view.
-    func authenticatedUserToolbar(isShown: Bool, coordinator: CryptoOnrampCoordinator, flowCoordinator: CryptoOnrampFlowCoordinator?) -> some View {
+    func authenticatedUserToolbar(isShown: Bool, coordinator: CryptoOnrampCoordinator?, flowCoordinator: CryptoOnrampFlowCoordinator?) -> some View {
         self.modifier(AuthenticatedUserToolbarItemModifier(isShown: isShown, coordinator: coordinator, flowCoordinator: flowCoordinator))
     }
 }
 
 private struct AuthenticatedUserToolbarItemModifier: ViewModifier {
     let isShown: Bool
-    let coordinator: CryptoOnrampCoordinator
+    let coordinator: CryptoOnrampCoordinator?
     let flowCoordinator: CryptoOnrampFlowCoordinator?
 
     @Environment(\.isLoading) private var isLoading
@@ -74,7 +74,7 @@ private struct AuthenticatedUserToolbarItemModifier: ViewModifier {
             }
         )
         .toolbar {
-            if isShown {
+            if isShown, let coordinator {
                 ToolbarItem(placement: .topBarTrailing) {
                     Menu {
                         Button {
@@ -115,6 +115,7 @@ private struct AuthenticatedUserToolbarItemModifier: ViewModifier {
      }
 
     private func checkCustomerInformation() {
+        guard coordinator != nil else { return }
         isLoading.wrappedValue = true
 
         Task {
@@ -144,6 +145,7 @@ private struct AuthenticatedUserToolbarItemModifier: ViewModifier {
     }
 
     private func logOut() {
+        guard let coordinator else { return }
         isLoading.wrappedValue = true
 
         // Note: We deliberately are not calling `APIClient.shared.clearAuthTokens()` here.
@@ -171,7 +173,7 @@ private struct AuthenticatedUserToolbarItemModifier: ViewModifier {
     }
 
     private func verifyKYC(updatedAddress: Address? = nil) {
-        guard let presentingVC = UIApplication.shared.findTopViewController() else { return }
+        guard let coordinator, let presentingVC = UIApplication.shared.findTopViewController() else { return }
         Task {
             do {
                 let result = try await coordinator.verifyKYCInfo(updatedAddress: updatedAddress, from: presentingVC)
@@ -198,7 +200,7 @@ private struct AuthenticatedUserToolbarItemModifier: ViewModifier {
     }
 
     private func fulfillAdditionalKYCRequirement() {
-        guard !isFulfillingAdditionalKYC else { return }
+        guard let coordinator, !isFulfillingAdditionalKYC else { return }
         isFulfillingAdditionalKYC = true
 
         Task { @MainActor in
