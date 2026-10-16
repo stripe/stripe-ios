@@ -119,6 +119,53 @@ class AddressSectionElementTest: XCTestCase {
         XCTAssertEqual(ZZTextFields.map { $0.configuration.isOptional }, expectedZZFields.map { $0.isOptional })
     }
 
+    func testSpacingSeparatorStyleNotifiesObserversWhenFieldsChange() {
+        // Given an address section using the spacing separator style
+        let sut = AddressSectionElement(
+            title: "",
+            countries: ["US"],
+            locale: locale_enUS,
+            addressSpecProvider: dummyAddressSpecProvider,
+            separatorStyle: .spacing(8)
+        )
+        var updateCount = 0
+        sut.didUpdate = { _ in updateCount += 1 }
+
+        // When an address is set, e.g. from autocomplete
+        sut.setAddress(.init(city: "San Francisco", country: "US", line1: "510 Townsend St.", postalCode: "94103", state: "CA"))
+
+        // Then observers are notified of the change
+        XCTAssertGreaterThan(updateCount, 0)
+    }
+
+    func testSpacingSeparatorStyleReusesSectionsOfPersistentFields() {
+        // Given an address section using the spacing separator style whose view is loaded
+        let sut = AddressSectionElement(
+            title: "",
+            locale: locale_enUS,
+            addressSpecProvider: dummyAddressSpecProvider,
+            disableAutocomplete: true,
+            separatorStyle: .spacing(8)
+        )
+        _ = sut.view
+        let countrySection = sut.fieldSections.first { $0.elements.first === sut.country }
+        let line1Section = sut.fieldSections.first { $0.elements.first === sut.line1 }
+        XCTAssertNotNil(countrySection)
+        XCTAssertNotNil(line1Section)
+
+        // When the country changes, which rebuilds the address fields
+        sut.country.pickerView(sut.country.pickerView, didSelectRow: 1, inComponent: 0)
+        sut.country.didFinish(sut.country.pickerFieldView, shouldAutoAdvance: true)
+
+        // Then the country field keeps its section and view...
+        XCTAssertTrue(sut.fieldSections.first { $0.elements.first === sut.country } === countrySection)
+        // ...and the rebuilt address fields get new sections
+        XCTAssertFalse(sut.fieldSections.contains { $0 === line1Section })
+        // ...and the stack view shows exactly the current sections, in order
+        let stackView = countrySection?.view.superview as? UIStackView
+        XCTAssertEqual(stackView?.arrangedSubviews, sut.fieldSections.map(\.view))
+    }
+
     func testMinimumFieldsToCollectResolveInitialAndCountryChanges() throws {
         // Given country-specific minimums that can widen the default fields
         let specProvider = AddressSpecProvider()

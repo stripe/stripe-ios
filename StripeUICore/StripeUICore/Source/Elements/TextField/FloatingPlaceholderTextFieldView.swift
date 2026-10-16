@@ -137,16 +137,7 @@ class FloatingPlaceholderTextFieldView: UIView {
 
     // MARK: - Animate placeholder
 
-    fileprivate lazy var animator: UIViewPropertyAnimator = {
-        let params = UISpringTimingParameters(
-            mass: 1.0,
-            dampingRatio: 0.93,
-            frequencyResponse: 0.22
-        )
-        let animator = UIViewPropertyAnimator(duration: 0, timingParameters: params)
-        animator.isInterruptible = true
-        return animator
-    }()
+    fileprivate lazy var animator: UIViewPropertyAnimator = ElementsUI.makeFocusAnimator()
 
     fileprivate lazy var placeholderCenterYConstraint: NSLayoutConstraint = {
         placeholderLabel.centerYAnchor.constraint(equalTo: centerYAnchor)
