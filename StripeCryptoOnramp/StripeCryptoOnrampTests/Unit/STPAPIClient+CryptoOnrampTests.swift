@@ -276,6 +276,7 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         XCTAssertEqual(document.minDocumentTypes, 1)
         XCTAssertEqual(document.maxDocumentTypes, 2)
         XCTAssertEqual(document.maxFilesPerDocumentType, 3)
+        XCTAssertEqual(document.documentCollectionPrompt, "How are you funding your transactions? Please list all of your sources. For example, salary, savings, investment earnings, etc.")
         XCTAssertEqual(document.fileRequirements, "PDF, JPEG/JPG, PNG, DOCX, XLSX, CSV, or TXT, up to 5 MB per file.")
         XCTAssertEqual(document.instructions, [
             "Documents must include your name and a balance or financial value.",
@@ -286,9 +287,17 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         XCTAssertEqual(questionnaire.questions, [
             .init(
                 id: "purchase_purpose",
-                prompt: "Why are you purchasing cryptocurrency through swapped.com?",
+                prompt: "Why are you purchasing cryptocurrency?",
                 answerType: .freeText,
-                required: true
+                required: true,
+                maxQuestionnaireAnswerCharacters: 5_000
+            ),
+            .init(
+                id: "third_party_advised",
+                prompt: "Has anyone advised, or instructed, you to purchase cryptocurrency? This includes anyone who has messaged you on social media (Telegram, WhatsApp, Twitter, etc.) about investing in or purchasing cryptocurrency.",
+                answerType: .freeText,
+                required: true,
+                maxQuestionnaireAnswerCharacters: 5_000
             ),
         ])
     }

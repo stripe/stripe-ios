@@ -113,12 +113,12 @@ protocol CryptoOnrampCoordinatorProtocol {
     /// Requires an authenticated Link user.
     ///
     /// - Parameter viewController: The view controller from which to present document collection.
-    /// - Returns: A `FulfillKYCRequirementResult` indicating whether a document was submitted,
+    /// - Returns: A `FulfillKYCRequirementsResult` indicating whether a document was submitted,
     ///   verification is pending, the user canceled collection, or no requirement remains.
     /// Throws if an authenticated Link user is not available, the requirement is unsupported,
     /// the view controller cannot present collection, or an API error occurs.
     @MainActor
-    func fulfillKYCRequirement(from viewController: UIViewController) async throws -> FulfillKYCRequirementResult
+    func fulfillKYCRequirements(from viewController: UIViewController) async throws -> FulfillKYCRequirementsResult
 
     /// Presents the current terms and conditions when acceptance is required.
     /// Requires an authenticated Link user.
@@ -531,7 +531,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
     }
 
     @MainActor
-    public func fulfillKYCRequirement(from viewController: UIViewController) async throws -> FulfillKYCRequirementResult {
+    public func fulfillKYCRequirements(from viewController: UIViewController) async throws -> FulfillKYCRequirementsResult {
         analyticsClient.log(.kycRequirementFulfillmentStarted)
         do {
             let account = try await linkAccountInfo
@@ -547,7 +547,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
 
             return result
         } catch {
-            try logAndThrow(error, during: .fulfillKYCRequirement)
+            try logAndThrow(error, during: .fulfillKYCRequirements)
         }
     }
 
