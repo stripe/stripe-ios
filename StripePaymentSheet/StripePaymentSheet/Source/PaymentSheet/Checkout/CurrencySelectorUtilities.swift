@@ -92,10 +92,10 @@ enum CurrencySelectorUtilities {
     ) -> String {
         let isIntegrationCurrencySelected = selectedCurrency == CurrencyCode(meta.integrationCurrency).apiValue
         if isIntegrationCurrencySelected {
-            return String.Localized.bankExchangeRateDisclaimer
+            return meta.integrationCaption ?? String.Localized.bankExchangeRateDisclaimer
         }
 
-        return formatExchangeRate(from: meta)
+        return meta.caption ?? formatExchangeRate(from: meta)
     }
 
     private static let exchangeRateFormatter: NumberFormatter = {
@@ -106,15 +106,16 @@ enum CurrencySelectorUtilities {
     }()
 
     static func formatExchangeRate(from meta: CheckoutController.Session.ExchangeRateMeta) -> String {
+        guard let exchangeRate = meta.exchangeRate else { return meta.caption ?? "" }
         let localCurrency = CurrencyCode(meta.localizedCurrency).displayValue
         let integrationCurrency = CurrencyCode(meta.integrationCurrency).displayValue
 
         let formattedRate: String
-        if let rateDouble = Double(meta.exchangeRate) {
+        if let rateDouble = Double(exchangeRate) {
             let inverse = 1.0 / rateDouble
-            formattedRate = exchangeRateFormatter.string(from: NSNumber(value: inverse)) ?? meta.exchangeRate
+            formattedRate = exchangeRateFormatter.string(from: NSNumber(value: inverse)) ?? exchangeRate
         } else {
-            formattedRate = meta.exchangeRate
+            formattedRate = exchangeRate
         }
 
         if let conversionMarkupBps = meta.conversionMarkupBps, conversionMarkupBps > 0 {
@@ -137,6 +138,7 @@ enum CurrencySelectorUtilities {
     /// Returns the expandable detail text for the exchange rate, or nil if not applicable.
     /// This will be replaced by a server-provided string from the translation layer in the future.
     static func detailText(exchangeRateMeta meta: CheckoutController.Session.ExchangeRateMeta) -> String? {
+        if let details = meta.details { return details }
         guard let conversionMarkupBps = meta.conversionMarkupBps, conversionMarkupBps > 0 else { return nil }
         return "This string will come from the translation layer in the future"
     }

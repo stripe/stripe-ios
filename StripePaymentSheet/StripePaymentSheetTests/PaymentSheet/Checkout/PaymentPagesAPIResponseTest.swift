@@ -16,6 +16,47 @@ import XCTest
 @MainActor
 class PaymentPagesAPIResponseTest: XCTestCase {
 
+    func testCheckoutClientInitResponseBuildsSession() throws {
+        // Given the CheckoutClient init shape for a one-time Price session
+        let oldResponse = CheckoutTestHelpers.makeSessionJSON()
+        let items = try XCTUnwrap(oldResponse["checkout_items"] as? [[String: Any]])
+        let response: [String: Any] = [
+            "id": "cs_test_123",
+            "ui_mode": "mobile_elements",
+            "state": "ready",
+            "livemode": false,
+            "status": "open",
+            "payment_status": "unpaid",
+            "integration_currency": "usd",
+            "presentment_currency": "usd",
+            "items": items,
+            "elements_session_id": "elements_session_test123",
+            "elements_session_config_id": "config_test123",
+            "ordered_payment_method_types_and_wallets": ["card", "apple_pay", "google_pay"],
+            "merchant_info": ["country": "US", "display_name": "Example merchant"],
+            "saved_payment_method_options": ["payment_method_save": "enabled", "payment_method_remove": "enabled"],
+            "total_summary": ["total_tax_amounts": []],
+            "automatic_tax": ["enabled": false, "status": "ready"],
+        ]
+
+        // When the CheckoutClient response is decoded for Checkout
+        let data = try JSONSerialization.data(withJSONObject: response)
+        let checkoutClient = try StripeJSONDecoder().decode(CheckoutClientAPIResponse.self, from: data)
+        let apiResponse = try checkoutClient.paymentPagesResponse()
+        let session = apiResponse.makePublicSession()
+
+        // Then Checkout uses the actual CheckoutClient session and Elements fields
+        XCTAssertEqual(session.id, "cs_test_123")
+        XCTAssertEqual(session.currency, "usd")
+        XCTAssertEqual(session.businessName, "Example merchant")
+        XCTAssertEqual(session.elementsSession.sessionID, "elements_session_test123")
+        XCTAssertEqual(session.elementsSession.orderedPaymentMethodTypes.map(\.identifier), ["card"])
+        XCTAssertEqual(session.merchantCountryCode, "US")
+        XCTAssertEqual(session.savedPaymentMethodsOfferSave?.enabled, true)
+        XCTAssertNil(session.savedPaymentMethodsOfferSave?.status)
+        XCTAssertEqual(session.orderSummaryItems.count, 1)
+    }
+
     // MARK: - STPAPIResponseDecodable Tests
 
     func testDecodedObjectRejectsMissingSDKRequiredFields() throws {
@@ -421,7 +462,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
             "presentment_exchange_rate": "0.9",
         ]
 
-        for field in ["amount", "currency", "presentment_exchange_rate"] {
+        for field in ["amount", "currency"] {
             var invalidLocalCurrencyOption = localCurrencyOption
             invalidLocalCurrencyOption.removeValue(forKey: field)
             var json = CheckoutTestHelpers.baseSessionJSON

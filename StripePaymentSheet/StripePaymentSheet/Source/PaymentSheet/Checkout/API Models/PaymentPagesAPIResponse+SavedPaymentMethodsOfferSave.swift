@@ -17,7 +17,7 @@ struct STPCheckoutSessionSavedPaymentMethodsOfferSave {
     let enabled: Bool
 
     /// The initial state of the checkbox.
-    let status: Status
+    let status: Status?
 
     /// Represents the initial checked state of the save checkbox.
     enum Status {
