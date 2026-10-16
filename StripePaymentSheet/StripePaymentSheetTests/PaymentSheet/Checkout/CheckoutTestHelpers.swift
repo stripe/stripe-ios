@@ -394,23 +394,6 @@ enum CheckoutTestHelpers {
                 headers: nil
             )
         }
-        // Promotion codes still use Payment Pages.
-        stub { request in
-            request.url?.path == "/v1/payment_pages/\(sessionId)"
-        } response: { request in
-            requestRecorder.append(
-                .init(
-                    kind: .updateSession,
-                    params: RequestBodyTestHelpers.formEncodedBodyParams(from: request)
-                )
-            )
-            let updateRequestNumber = requestRecorder.requests.filter { $0.kind == .updateSession }.count
-            return HTTPStubsResponse(
-                jsonObject: sessionJSON(),
-                statusCode: updateStatusCode(updateRequestNumber),
-                headers: nil
-            )
-        }
     }
 
     /// Presents the shared Payment Pages test session using the CheckoutClient init field names.
