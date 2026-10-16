@@ -157,53 +157,53 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     enum Currency: String, PickerEnum {
         static var enumName: String { "Currency" }
 
-        case usd
-        case eur
-        case nok
         case aud
+        case brl
+        case chf
+        case cny
+        case eur
         case gbp
+        case idr
         case inr
-        case pln
-        case sgd
-        case myr
-        case mxn
         case jpy
         case krw
-        case cny
-        case brl
-        case thb
-        case sek
-        case chf
-        case idr
-        case php
-        case vnd
+        case mxn
+        case myr
         case ngn
+        case nok
+        case php
+        case pln
+        case sek
+        case sgd
+        case thb
+        case usd
+        case vnd
     }
 
     enum MerchantCountry: String, PickerEnum {
         static var enumName: String { "Merchant" }
 
-        case US
-        case GB
         case AU
-        case FR
-        case ES
-        case IN
-        case SG
-        case MY
-        case MX
-        case JP
-        case CN
         case BR
-        case TH
+        case CN
+        case custom
         case DE
+        case ES
+        case FR
+        case GB
+        case IN
         case IT
+        case JP
+        case mondu
+        case MX
+        case MY
         case NG = "ng"
         case ngWallet = "ng_wallet"
-        case mondu
-        case usTax = "us_tax"
+        case SG
         case stripeShop = "stripe_shop_test"
-        case custom
+        case TH
+        case US
+        case usTax = "us_tax"
     }
 
     enum APMSEnabled: String, PickerEnum {

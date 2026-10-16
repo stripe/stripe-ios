@@ -24,6 +24,7 @@
         ],
         "accepted_formats": ["pdf", "jpeg", "png", "docx", "xlsx", "csv", "txt"],
         "max_file_size_bytes": 5000000,
+        "max_files_per_document_type": 10,
         "min_document_types": 1,
         "max_document_types": 2,
         "file_requirements": "PDF, JPEG/JPG, PNG, DOCX, XLSX, CSV, or TXT, up to 5 MB per file.",
@@ -39,7 +40,8 @@
               "id": "purchase_purpose",
               "prompt": "Why are you purchasing cryptocurrency through swapped.com?",
               "answer_type": "future_answer_type",
-              "required": true
+              "required": true,
+              "max_questionnaire_answer_characters": 5000
             }
           ]
         }
