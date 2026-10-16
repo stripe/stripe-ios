@@ -293,7 +293,7 @@ extension SavedPaymentMethodManagerTests {
         checkoutSessionId: String,
         paymentMethodId: String
     ) -> (XCTestExpectation, CapturedBody) {
-        let exp = expectation(description: "POST payment_pages/\(checkoutSessionId) updates payment method")
+        let exp = expectation(description: "POST checkout_client/\(checkoutSessionId)/update updates payment method")
         let captured = CapturedBody()
 
         let responseJSON = CheckoutTestHelpers.makeSessionJSON([
@@ -305,7 +305,7 @@ extension SavedPaymentMethodManagerTests {
         ])
 
         stub { urlRequest in
-            guard urlRequest.url?.absoluteString.contains("/payment_pages/\(checkoutSessionId)") == true,
+            guard urlRequest.url?.path == "/v1/checkout_client/\(checkoutSessionId)/update",
                   urlRequest.httpMethod == "POST",
                   let body = urlRequest.httpBodyOrBodyStream,
                   let bodyString = String(data: body, encoding: .utf8),
@@ -319,7 +319,14 @@ extension SavedPaymentMethodManagerTests {
             DispatchQueue.main.async {
                 exp.fulfill()
             }
-            return HTTPStubsResponse(jsonObject: responseJSON, statusCode: 200, headers: nil)
+            return HTTPStubsResponse(
+                jsonObject: CheckoutTestHelpers.checkoutClientInitJSON(
+                    from: responseJSON,
+                    sessionId: checkoutSessionId
+                ),
+                statusCode: 200,
+                headers: nil
+            )
         }
 
         return (exp, captured)
@@ -329,10 +336,10 @@ extension SavedPaymentMethodManagerTests {
         checkoutSessionId: String,
         paymentMethodId: String
     ) -> XCTestExpectation {
-        let exp = expectation(description: "POST payment_pages/\(checkoutSessionId) detaches payment method")
+        let exp = expectation(description: "POST checkout_client/\(checkoutSessionId)/update detaches payment method")
 
         stub { urlRequest in
-            guard urlRequest.url?.absoluteString.contains("/payment_pages/\(checkoutSessionId)") == true,
+            guard urlRequest.url?.path == "/v1/checkout_client/\(checkoutSessionId)/update",
                   urlRequest.httpMethod == "POST",
                   let body = urlRequest.httpBodyOrBodyStream,
                   let bodyString = String(data: body, encoding: .utf8)
@@ -346,9 +353,10 @@ extension SavedPaymentMethodManagerTests {
                 exp.fulfill()
             }
             return HTTPStubsResponse(
-                jsonObject: CheckoutTestHelpers.makeSessionJSON([
-                    "session_id": checkoutSessionId,
-                ]),
+                jsonObject: CheckoutTestHelpers.checkoutClientInitJSON(
+                    from: CheckoutTestHelpers.makeSessionJSON(["session_id": checkoutSessionId]),
+                    sessionId: checkoutSessionId
+                ),
                 statusCode: 200,
                 headers: nil
             )

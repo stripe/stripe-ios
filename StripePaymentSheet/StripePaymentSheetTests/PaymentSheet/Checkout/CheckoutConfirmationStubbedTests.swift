@@ -896,10 +896,17 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         let expectation = expectation(description: "Checkout Session retrieved")
         stub { request in
             request.httpMethod == "GET"
-                && request.url?.path.hasSuffix("/payment_pages/cs_test_123") == true
+                && request.url?.path.hasSuffix("/checkout_client/cs_test_123/retrieve") == true
         } response: { _ in
             expectation.fulfill()
-            return HTTPStubsResponse(jsonObject: responseJSON, statusCode: 200, headers: nil)
+            return HTTPStubsResponse(
+                jsonObject: CheckoutTestHelpers.checkoutClientInitJSON(
+                    from: responseJSON as? [String: Any] ?? [:],
+                    sessionId: "cs_test_123"
+                ),
+                statusCode: 200,
+                headers: nil
+            )
         }
         return expectation
     }

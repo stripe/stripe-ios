@@ -16,11 +16,11 @@ Priority: u=4,i
 Content-Length: 807
 Via: 1.1 cde53a9386dedbc7ff8ff090f5adfe28.cloudfront.net (CloudFront)
 Vary: accept, accept-encoding
-Date: Fri, 16 Oct 2026 18:36:42 GMT
-Age: 362291
+Date: Fri, 16 Oct 2026 19:21:40 GMT
+Age: 364990
 Etag: "cfGKNndTUpM8bz-PcPTZmdgjSgI7V4lueYBcHeb1reDQ:f9ac62458d12cc36d1f72cdabe32d6fe"
 Content-Type: image/png
-cf-ray: a4b92baccdc60a02-SLC
+cf-ray: a4b96d8dcbd73203-SLC
 Last-Modified: Wed, 13 May 2026 23:27:21 GMT
 cf-resized: internal=ok/m q=0 n=33+0 c=0+2 v=2026.10.0 l=807 f=false c2=0 wv=2026.9.1
 

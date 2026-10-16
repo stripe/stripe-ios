@@ -532,7 +532,7 @@ final class CheckoutUnitTests: XCTestCase {
         // ...and the Checkout update API request fails
         stub(condition: { request in
             request.httpMethod == "POST"
-                && request.url?.path == "/v1/payment_pages/cs_test_123"
+                && request.url?.path == "/v1/checkout_client/cs_test_123/update"
         }) { _ in
             HTTPStubsResponse(
                 jsonObject: [
@@ -622,7 +622,7 @@ final class CheckoutUnitTests: XCTestCase {
         // ...and the server tax update fails
         stub(condition: { request in
             request.httpMethod == "POST"
-                && request.url?.path == "/v1/payment_pages/cs_test_123"
+                && request.url?.path == "/v1/checkout_client/cs_test_123/update"
         }) { _ in
             HTTPStubsResponse(
                 jsonObject: [
