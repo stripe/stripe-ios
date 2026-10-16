@@ -158,6 +158,24 @@ final class PaymentSheetLinkAccountTests: APIStubbedTestCase {
         XCTAssertEqual(refreshRequests, 0)
     }
 
+    func testApplyAuthResponseRetainsLinkSessionKeyWhenResponseOmitsIt() {
+        // Given an account whose current session has a Link session key.
+        let sut = makeSUT()
+        sut.currentSession?.linkSessionKey = "lsk_123"
+
+        // When an auth response replaces the session without a Link session key.
+        sut.applyAuthResponse(.init(consumerSession: makeVerifiedSession()))
+
+        // Then the new session keeps the previous key.
+        XCTAssertEqual(sut.linkSessionKey, "lsk_123")
+
+        // ...and a key returned by a later response takes precedence.
+        let sessionWithKey = makeVerifiedSession()
+        sessionWithKey.linkSessionKey = "lsk_456"
+        sut.applyAuthResponse(.init(consumerSession: sessionWithKey))
+        XCTAssertEqual(sut.linkSessionKey, "lsk_456")
+    }
+
     func testStartVerificationResolvesByTypeEvenWhenLookupHasFactorIDs() {
         for (type, factorType) in [(SupportedVerificationType.sms, ConsumerSession.VerificationFactor.FactorType.sms), (.email, .email)] {
             // Given an account whose lookup response includes an opaque factor ID.

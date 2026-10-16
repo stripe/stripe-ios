@@ -586,7 +586,7 @@ struct LinkPMDisplayDetails {
 
 extension PaymentSheetLinkAccount: LinkAuthAccount {
     func applyAuthResponse(_ response: ConsumerSession.AuthResponse) {
-        currentSession = response.consumerSession
+        updateCurrentSession(response.consumerSession, retainingLinkSessionKeyFrom: currentSession)
         if let settings = response.settings {
             authLookupSettings = settings
         }

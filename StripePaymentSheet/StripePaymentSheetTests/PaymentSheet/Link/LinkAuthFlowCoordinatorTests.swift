@@ -271,17 +271,23 @@ final class LinkAuthFlowCoordinatorTests: XCTestCase {
         XCTAssertFalse(flow.isLoading)
     }
 
-    func testWrongCodeClearsInputAndMaxAttemptsDisablesConfirmation() async {
+    func testWrongCodeSignalsInvalidCodeAndMaxAttemptsDisablesConfirmation() async {
         let account = AuthAccountStub()
         let flow = makeFlow(account)
         flow.start()
         await settle()
-        let revision = flow.inputRevision
+        let inputRevision = flow.inputRevision
+        let invalidCodeRevision = flow.invalidCodeRevision
         account.confirmResult = .failure(authError("consumer_verification_code_invalid"))
         flow.confirm(code: "000000")
         await settle()
-        XCTAssertGreaterThan(flow.inputRevision, revision)
+        // The field is cleared by the invalid-code animation rather than an input reset.
+        XCTAssertEqual(flow.inputRevision, inputRevision)
+        XCTAssertGreaterThan(flow.invalidCodeRevision, invalidCodeRevision)
+        XCTAssertNotNil(flow.errorMessage)
         XCTAssertTrue(flow.canSubmitCode)
+        flow.codeDidChange()
+        XCTAssertNil(flow.errorMessage)
         account.confirmResult = .failure(authError("consumer_verification_max_attempts_exceeded"))
         flow.confirm(code: "000000")
         await settle()

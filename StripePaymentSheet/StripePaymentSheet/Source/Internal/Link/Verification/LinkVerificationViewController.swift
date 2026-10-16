@@ -17,6 +17,7 @@ final class LinkVerificationViewController: UIViewController {
     let verificationView: LinkVerificationView
     private let coordinator: LinkAuthFlowCoordinator
     private var inputRevision = -1
+    private var invalidCodeRevision = 0
     private let menuButton = UIButton(type: .system)
 
     init(
@@ -40,6 +41,7 @@ final class LinkVerificationViewController: UIViewController {
         )
         super.init(nibName: nil, bundle: nil)
         verificationView.delegate = self
+        verificationView.codeField.addTarget(self, action: #selector(codeFieldChanged), for: .valueChanged)
     }
 
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
@@ -62,6 +64,15 @@ final class LinkVerificationViewController: UIViewController {
         if inputRevision != coordinator.inputRevision {
             inputRevision = coordinator.inputRevision
             verificationView.codeField.value = ""
+        }
+        if invalidCodeRevision != coordinator.invalidCodeRevision {
+            invalidCodeRevision = coordinator.invalidCodeRevision
+            if coordinator.canSubmitCode {
+                // Clears the field once the animation finishes.
+                verificationView.codeField.performInvalidCodeAnimation()
+            } else {
+                verificationView.codeField.value = ""
+            }
         }
         verificationView.recipient = coordinator.recipient
         verificationView.errorMessage = coordinator.errorMessage
@@ -93,6 +104,10 @@ final class LinkVerificationViewController: UIViewController {
     func focusCode() {
         guard coordinator.canSubmitCode else { return }
         verificationView.codeField.becomeFirstResponder()
+    }
+
+    @objc private func codeFieldChanged() {
+        coordinator.codeDidChange()
     }
 
     private var resendTitle: String {
