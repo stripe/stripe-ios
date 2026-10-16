@@ -11,7 +11,7 @@ import UIKit
 final class LinkVerificationWebFallbackController: NSObject {
     private static let callbackURLSchme = "link-popup"
 
-    typealias CompletionBlock = (LinkVerificationViewController.VerificationResult) -> Void
+    typealias CompletionBlock = (LinkVerificationResult) -> Void
 
     private let authenticationUrl: URL
     private let window: UIWindow?

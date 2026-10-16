@@ -52,8 +52,10 @@ final class LinkVerificationView: UIView {
 
     func configureActions(title: String, enabled: Bool, loading: Bool) {
         resendCodeButton.title = title
-        resendCodeButton.isEnabled = enabled
+        // `Button` only recomputes its colors when `isEnabled` changes, using a state that includes
+        // loading. Set loading first so the colors reflect the final enabled state.
         resendCodeButton.isLoading = loading
+        resendCodeButton.isEnabled = enabled
     }
 
     func setCodeEntryEnabled(_ enabled: Bool) {

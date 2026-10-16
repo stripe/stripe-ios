@@ -585,6 +585,17 @@ struct LinkPMDisplayDetails {
 }
 
 extension PaymentSheetLinkAccount: LinkAuthAccount {
+    /// Returns the current session, or fails `completion` if there isn't one.
+    private func sessionForAuthRequest(
+        _ completion: (Result<ConsumerSession.AuthResponse, Error>) -> Void
+    ) -> ConsumerSession? {
+        guard let currentSession else {
+            completion(.failure(NSError.stp_genericConnectionError()))
+            return nil
+        }
+        return currentSession
+    }
+
     func applyAuthResponse(_ response: ConsumerSession.AuthResponse) {
         updateCurrentSession(response.consumerSession, retainingLinkSessionKeyFrom: currentSession)
         if let settings = response.settings {
@@ -601,10 +612,7 @@ extension PaymentSheetLinkAccount: LinkAuthAccount {
         isResending: Bool,
         completion: @escaping (Result<ConsumerSession.AuthResponse, Error>) -> Void
     ) {
-        guard let currentSession else {
-            completion(.failure(NSError.stp_genericConnectionError()))
-            return
-        }
+        guard let currentSession = sessionForAuthRequest(completion) else { return }
         apiClient.startLinkVerification(
             for: currentSession.clientSecret,
             type: type,
@@ -622,10 +630,7 @@ extension PaymentSheetLinkAccount: LinkAuthAccount {
         consentGranted: Bool?,
         completion: @escaping (Result<ConsumerSession.AuthResponse, Error>) -> Void
     ) {
-        guard let currentSession else {
-            completion(.failure(NSError.stp_genericConnectionError()))
-            return
-        }
+        guard let currentSession = sessionForAuthRequest(completion) else { return }
         apiClient.confirmLinkVerification(
             for: currentSession.clientSecret,
             type: type,
@@ -648,10 +653,7 @@ extension PaymentSheetLinkAccount: LinkAuthAccount {
             authSessionLookup(completion)
             return
         }
-        guard let currentSession else {
-            completion(.failure(NSError.stp_genericConnectionError()))
-            return
-        }
+        guard let currentSession = sessionForAuthRequest(completion) else { return }
         currentSession.refreshSession(
             with: apiClient,
             supportedVerificationTypes: supportedVerificationTypes,
