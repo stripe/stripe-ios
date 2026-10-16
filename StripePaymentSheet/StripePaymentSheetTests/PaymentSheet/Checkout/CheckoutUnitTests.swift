@@ -40,6 +40,30 @@ final class CheckoutUnitTests: XCTestCase {
         XCTAssertEqual(checkout.session.status, .open)
     }
 
+    func testExpressCheckoutButtonsFollowUpdatingState() async throws {
+        // Given a Checkout Session with an available Link button
+        let session = CheckoutTestHelpers.makeSessionWithWalletTypes(["link"], customerEmail: "jenny@example.com")
+        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration(
+            apiResponse: session,
+            paymentElementConfiguration: nil
+        ))
+        let view = checkout.getExpressCheckoutElement().uiView
+        let button = try XCTUnwrap(view.subviews
+            .compactMap { $0 as? UIStackView }
+            .flatMap(\.arrangedSubviews)
+            .compactMap { $0 as? UIStackView }
+            .flatMap(\.arrangedSubviews)
+            .compactMap { $0 as? UIControl }
+            .first)
+        XCTAssertTrue(button.isEnabled)
+
+        // When the controller is updating, the button disables
+        checkout.isUpdating = true
+        XCTAssertFalse(button.isEnabled)
+        checkout.isUpdating = false
+        XCTAssertTrue(button.isEnabled)
+    }
+
     func testPaymentElementConfigurationsUseCheckoutReturnURL() async throws {
         // Given a Checkout configuration with a return URL
         let returnURL = "stripe-ios-test://custom-checkout-return"
