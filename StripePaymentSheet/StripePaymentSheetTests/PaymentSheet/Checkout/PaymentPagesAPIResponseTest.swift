@@ -616,8 +616,10 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         let session = CheckoutTestHelpers.makeSession([
             "mode": "modeless",
             "recurring_details": [
-                "total_discount_amounts": [
-                    ["amount": 332, "coupon": ["code": "co_test", "name": "Welcome"]],
+                "total_summary": [
+                    "total_discount_amounts": [
+                        ["amount": 332, "coupon": ["code": "co_test", "name": "Welcome"]],
+                    ],
                 ],
             ],
             "total_summary": [

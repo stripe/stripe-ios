@@ -95,21 +95,8 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
                 // Extract shipping address from the PKPayment
                 let shippingAddress = paymentInformation.shippingContact != nil ? STPAddress(pkContact: paymentInformation.shippingContact!) : nil
 
-                // Try to create a radar session for the payment method before calling the handler
-                return try await withCheckedThrowingContinuation { continuation in
-                    context.apiClient.createSavedPaymentMethodRadarSession(paymentMethodId: stpPaymentMethod.stripeId) { _, error in
-                        // If radar session creation fails, just continue with the payment method directly
-                        if let error {
-                            // Log the error but don't fail the payment
-                            let errorAnalytic = ErrorAnalytic(event: .savedPaymentMethodRadarSessionFailure, error: error)
-                            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic, apiClient: context.apiClient)
-                        }
-
-                        // Call the handler regardless of radar session success/failure
-                        preparePaymentMethodHandler(stpPaymentMethod, shippingAddress)
-                        continuation.resume(returning: STPApplePayContext.COMPLETE_WITHOUT_CONFIRMING_INTENT)
-                    }
-                }
+                preparePaymentMethodHandler(stpPaymentMethod, shippingAddress)
+                return STPApplePayContext.COMPLETE_WITHOUT_CONFIRMING_INTENT
             }
 
             // Route to confirmation token flow or payment method flow based on available handlers

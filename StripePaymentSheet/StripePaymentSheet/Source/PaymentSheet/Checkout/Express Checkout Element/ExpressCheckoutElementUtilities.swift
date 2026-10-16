@@ -64,27 +64,19 @@ enum ExpressCheckoutElementUtilities {
                 }
             }
         }
-        guard let paymentMethodOrder = configuration.paymentMethodOrder else {
+        return visiblePaymentMethods(for: paymentMethods, layout: configuration.appearance.buttonLayout)
+    }
+
+    static func visiblePaymentMethods(
+        for paymentMethods: [ExpressCheckoutElement.PaymentMethod],
+        layout: ExpressCheckoutElement.Configuration.Appearance.ButtonLayout
+    ) -> [ExpressCheckoutElement.PaymentMethod] {
+        // A single limit affects how the buttons are arranged, but it cannot
+        // limit the grid's total capacity without the other dimension.
+        guard let maxColumns = layout.maxColumns, let maxRows = layout.maxRows else {
             return paymentMethods
         }
-
-        var remainingPaymentMethods = paymentMethods
-        var orderedPaymentMethods: [ExpressCheckoutElement.PaymentMethod] = []
-        for paymentMethod in paymentMethodOrder {
-            guard
-                let index = remainingPaymentMethods.firstIndex(where: {
-                    $0.rawValue.caseInsensitiveCompare(paymentMethod) == .orderedSame
-                }),
-                !orderedPaymentMethods.contains(where: {
-                    $0.rawValue.caseInsensitiveCompare(paymentMethod) == .orderedSame
-                })
-            else {
-                continue
-            }
-            orderedPaymentMethods.append(remainingPaymentMethods.remove(at: index))
-        }
-        orderedPaymentMethods.append(contentsOf: remainingPaymentMethods)
-        return orderedPaymentMethods
+        return Array(paymentMethods.prefix(min(maxRows * maxColumns, paymentMethods.count)))
     }
 
     static func linkDisabledReasons(

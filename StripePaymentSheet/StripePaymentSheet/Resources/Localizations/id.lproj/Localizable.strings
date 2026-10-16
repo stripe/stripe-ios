@@ -46,9 +46,19 @@
 
 "Buy now or pay later with Klarna" = "Beli sekarang atau bayar nanti dengan Klarna";
 
+"By confirming your payment with GCash, you allow %@ to charge your GCash account for future payments in accordance with their terms." = "Dengan mengonfirmasi pembayaran Anda dengan GCash, Anda mengizinkan %@ untuk men-charge akun GCash Anda untuk pembayaran mendatang sesuai dengan ketentuan mereka.";
+
 "By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "Dengan mengonfirmasi pembayaran Anda dengan NICEPAY, Anda mengizinkan %@ untuk men-charge metode pembayaran ini untuk pembayaran di masa mendatang sesuai dengan ketentuan mereka.";
 
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Dengan mengonfirmasi pembayaran menggunakan PayPal, berarti Anda mengizinkan %@ mengenakan charge untuk pembayaran mendatang pada akun PayPal Anda sesuai dengan ketentuan mereka.";
+
+"By confirming your payment with Touch 'n Go, you allow %@ to charge your Touch 'n Go account for future payments in accordance with their terms." = "Dengan mengonfirmasi pembayaran Anda dengan Touch 'n Go, Anda mengizinkan %@ untuk men-charge akun Touch 'n Go Anda untuk pembayaran mendatang sesuai dengan ketentuan mereka.";
+
+"By confirming your payment with TrueMoney, you allow %@ to charge your TrueMoney account for future payments in accordance with their terms." = "Dengan mengonfirmasi pembayaran Anda dengan TrueMoney, Anda mengizinkan %@ untuk men-charge akun TrueMoney Anda untuk pembayaran mendatang sesuai dengan ketentuan mereka.";
+
+"By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their <terms>terms of use</terms>." = "Dengan mengonfirmasi pembayaran Anda, Anda setuju bahwa transaksi Anda akan ditangani oleh Global Stack Services Limited sebagai pedagang tercatat dan sesuai dengan <terms>ketentuan penggunaan</terms> mereka.";
+
+"By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their <terms>terms</terms>." = "Dengan mengonfirmasi pembayaran Anda, Anda setuju bahwa transaksi Anda akan ditangani oleh Global Stack Services Limited sebagai pedagang tercatat dan sesuai dengan <terms>ketentuan</terms> mereka.";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Dengan melanjutkan ke Amazon Pay, berarti Anda mengizinkan %@ mengenakan charge untuk pembayaran mendatang pada akun Amazon Pay Anda sesuai dengan ketentuan mereka.";
 
@@ -173,6 +183,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Saya memahami bahwa Stripe akan menagih Debit Langsung atas nama %@ serta mengonfirmasikan bahwa sayalah pemilik akun dan satu-satunya orang yang diperlukan untuk mengotorisasi debit dari akun ini.";
 
 "IBAN" = "IBAN";
+
+"Invoice payment for business buyers." = "Pembayaran invoice untuk pembeli bisnis.";
 
 "Keep Editing" = "Terus Mengedit";
 

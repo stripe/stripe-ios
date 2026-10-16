@@ -9,9 +9,17 @@ import Foundation
 @_spi(STP) import StripeApplePay
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
+@_spi(STP) import StripePaymentSheet
 @_spi(STP) import StripeUICore
 
 extension String.Localized {
+    static var cryptoOnrampErrorPaymentMethodKYCRegionChanged: String {
+        return STPLocalizedString(
+            "Please select your Apple Pay payment method again to continue.",
+            "Error message shown when an Apple Pay payment method must be collected again because the customer's KYC region changed"
+        )
+    }
+
     static var cryptoOnrampErrorAppAttestationUnavailable: String {
         return STPLocalizedString(
             "This app couldn't be verified. Contact the app developer for help.",
@@ -223,7 +231,7 @@ extension String.Localized {
             return nil
         }
 
-        return String(format: card_details_xxxx, brandString, last4)
+        return LinkController.formattedCardDetails(brand: brand, funding: card.funding, last4: last4)
     }
 
     private static func stpCardBrand(from brand: StripeAPI.PaymentMethod.Card.Brand) -> STPCardBrand {

@@ -10,7 +10,7 @@ import OHHTTPStubs
 import OHHTTPStubsSwift
 @testable @_spi(STP) import StripeCore
 @testable @_spi(STP) import StripePayments
-@testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(AppearanceAPIAdditionsPreview) @_spi(STP) import StripePaymentSheet
 @testable @_spi(STP) import StripeUICore
 import UIKit
 import XCTest
@@ -66,6 +66,50 @@ final class CheckoutUnitTests: XCTestCase {
         )
 
         XCTAssertNil(configuration.paymentElement)
+    }
+
+    func testPaymentElementUpdatePreservesNativeSheetPresentation() async throws {
+        // Given a loaded Checkout with both sheet and embedded integrations
+        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration())
+        let element = checkout.getPaymentElement()
+        let flowControllerPresentation = element.paymentSheetFlowController.nativeSheetPresentation
+        let embeddedPresentation = element.embeddedPaymentElement.nativeSheetPresentation
+
+        // When updating Checkout rebuilds both configurations
+        try await element.update(checkout: checkout)
+
+        // Then each integration retains its original native-sheet feature flag
+        XCTAssertIdentical(element.paymentSheetFlowController.nativeSheetPresentation, flowControllerPresentation)
+        XCTAssertIdentical(element.embeddedPaymentElement.nativeSheetPresentation, embeddedPresentation)
+    }
+
+    func testLinkConfirmationSharesPresentationWithSelectedIntegration() async throws {
+        // Given both integrations have selected Link
+        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration())
+        let element = checkout.getPaymentElement()
+        let confirmOption = PaymentSheet.LinkConfirmOption.wallet(brand: .link)
+        element.paymentSheetFlowController.viewController.linkConfirmOption = confirmOption
+        element.embeddedPaymentElement._test_paymentOption = .link(option: confirmOption)
+        element.embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: element.embeddedPaymentElement)
+
+        for usesFlowController in [false, true] {
+            // When Checkout builds Link confirmation from the selected integration
+            element.paymentOptionSourceOfTruthIsFlowController = usesFlowController
+            let flow = try XCTUnwrap(checkout.makeConfirmationFlow(
+                for: element,
+                presentingViewController: UIViewController()
+            ))
+
+            // Then Link shares that integration's original presentation state
+            guard case .link(let parameters) = flow else {
+                XCTFail("Expected Link confirmation")
+                return
+            }
+            let expectedPresentation = usesFlowController
+                ? element.paymentSheetFlowController.nativeSheetPresentation
+                : element.embeddedPaymentElement.nativeSheetPresentation
+            XCTAssertIdentical(parameters.nativeSheetPresentation, expectedPresentation)
+        }
     }
 
     func testPaymentElementIsNotCreatedWhenNotConfigured() async throws {
@@ -148,7 +192,19 @@ final class CheckoutUnitTests: XCTestCase {
 
         // Then the Checkout session mirrors the selected payment option
         XCTAssertEqual(checkout.session.paymentOption?.paymentMethodType, "card")
-        XCTAssertEqual(checkout.session.paymentOption?.label, "•••• 4242")
+        XCTAssertEqual(checkout.session.paymentOption?.label, "Visa")
+        XCTAssertEqual(checkout.session.paymentOption?.sublabel, "•••• 4242")
+
+        // ...and confirmation carries the embedded flow's presentation state for any required sheet
+        let flow = try XCTUnwrap(checkout.makeConfirmationFlow(
+            for: paymentElement,
+            presentingViewController: UIViewController()
+        ))
+        guard case .paymentMethod(let parameters, _) = flow else {
+            XCTFail("Expected payment method confirmation")
+            return
+        }
+        XCTAssertIdentical(parameters.nativeSheetPresentation, paymentElement.embeddedPaymentElement.nativeSheetPresentation)
 
         // When the Checkout payment option is cleared
         try await checkout.clearPaymentOption()
@@ -835,7 +891,9 @@ final class CheckoutUnitTests: XCTestCase {
             "promotion_code": ["code": "SUMMER"],
         ]
         sessionJSON["recurring_details"] = [
-            "total_discount_amounts": [discountAmount],
+            "total_summary": [
+                "total_discount_amounts": [discountAmount],
+            ],
         ]
         sessionJSON["total_summary"] = [
             "total_tax_amounts": [],
@@ -854,7 +912,8 @@ final class CheckoutUnitTests: XCTestCase {
         )
         session.localState.paymentOption = .init(
             image: UIImage(),
-            label: "Visa ending in 4242",
+            label: "Visa",
+            sublabel: "•••• 4242",
             billingDetails: .init(
                 address: .init(
                     city: "San Francisco",
@@ -901,7 +960,8 @@ final class CheckoutUnitTests: XCTestCase {
               minorUnitsAmountDivisor: 100
               paymentOption: {
                 paymentMethodType: "card"
-                label: "Visa ending in 4242"
+                label: "Visa"
+                sublabel: <redacted>
                 billingDetails: {
                   country: "US"
                 }
@@ -941,6 +1001,32 @@ final class CheckoutUnitTests: XCTestCase {
             }
             """
         )
+    }
+
+    func testSessionDebugDescriptionRedactsLinkNickname() {
+        // Given a Link payment option with a customer's bank account nickname
+        let paymentOption = PaymentSheet.PaymentOption.link(option: .withPaymentDetails(
+            brand: .link,
+            account: PaymentSheetLinkAccount._testValue(email: "patrick@example.com", isRegistered: true),
+            paymentDetails: LinkStubs.paymentMethods()[LinkStubs.PaymentMethodIndices.bankAccount],
+            confirmationExtras: nil,
+            shippingAddress: nil
+        ))
+        var session = CheckoutTestHelpers.makeOpenSession().makePublicSession()
+        session.localState.paymentOption = .init(EmbeddedPaymentElement.PaymentOptionDisplayData(
+            paymentOption: paymentOption, mandateText: nil, currency: "usd", iconStyle: .filled
+        ))
+        XCTAssertEqual(session.paymentOption?.sublabel, "Patrick's bank •••• 1234")
+
+        // When describing the session, the nickname is redacted
+        XCTAssertFalse(session.debugDescription.contains("Patrick"))
+        XCTAssertTrue(session.debugDescription.contains("sublabel: <redacted>"))
+
+        // Then payment methods without additional details still show nil
+        session.localState.paymentOption = .init(EmbeddedPaymentElement.PaymentOptionDisplayData(
+            paymentOption: .applePay, mandateText: nil, currency: "usd", iconStyle: .filled
+        ))
+        XCTAssertTrue(session.debugDescription.contains("sublabel: nil"))
     }
 
     func testSessionDebugDescription_preservesAbsentAndEmptyTaxAmounts() {
@@ -1086,7 +1172,8 @@ final class CheckoutUnitTests: XCTestCase {
 
         try await checkout.commitSession(confirmResponse)
 
-        XCTAssertEqual(checkout.session.paymentOption?.label, "•••• 4242")
+        XCTAssertEqual(checkout.session.paymentOption?.label, "Visa")
+        XCTAssertEqual(checkout.session.paymentOption?.sublabel, "•••• 4242")
         XCTAssertEqual(checkout.session.paymentOption?.paymentMethodType, "card")
 
         try await checkout.clearPaymentOption()
@@ -1317,15 +1404,17 @@ final class CheckoutUnitTests: XCTestCase {
     private func sessionJSONWithPromotionCode(_ promotionCode: String) -> [AnyHashable: Any] {
         var json = CheckoutTestHelpers.openSessionJSON
         json["recurring_details"] = [
-            "total_discount_amounts": [
-                [
-                    "amount": 250,
-                    "coupon": [
-                        "code": "coupon_save25",
-                        "name": "25% off",
-                        "percent_off": 25.0,
+            "total_summary": [
+                "total_discount_amounts": [
+                    [
+                        "amount": 250,
+                        "coupon": [
+                            "code": "coupon_save25",
+                            "name": "25% off",
+                            "percent_off": 25.0,
+                        ],
+                        "promotion_code": ["code": promotionCode],
                     ],
-                    "promotion_code": ["code": promotionCode],
                 ],
             ],
         ]

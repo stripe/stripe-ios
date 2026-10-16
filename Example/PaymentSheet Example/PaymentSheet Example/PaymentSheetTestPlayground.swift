@@ -5,7 +5,7 @@
 //  Created by David Estes on 5/31/23.
 //
 
-import StripePaymentSheet
+@_spi(STP) import StripePaymentSheet
 import SwiftUI
 
 // MARK: - PaymentSheetTestPlayground
@@ -32,6 +32,29 @@ struct PaymentSheetTestPlayground: View {
             disabledSettings: [],
             searchText: searchText
         )
+        let requiresNativeSheet = PaymentSheet.NativeSheetFeatureFlags.isNativeSheetRequiredForDevice
+        // Display the device's required behavior without overwriting the saved playground override.
+        SearchableSettingView(
+            setting: requiresNativeSheet ? .constant(.on) : nativeSheetOverrideBinding,
+            searchText: searchText
+        )
+        .disabled(requiresNativeSheet)
+        .opacity(requiresNativeSheet ? 0.5 : 1)
+        if requiresNativeSheet || playgroundController.settings.uiStyle == .paymentSheet {
+            SearchableView(searchableName: "Native sheets", searchText: searchText) {
+                VStack(alignment: .leading, spacing: 4) {
+                    if requiresNativeSheet {
+                        Text("Native sheets are always enabled on iPhone Duo.")
+                    }
+                    if playgroundController.settings.uiStyle == .paymentSheet {
+                        Text("The native sheets feature flag doesn't apply to PaymentSheet. Select On to enable native sheets for testing.")
+                    }
+                }
+                .font(.caption)
+                .foregroundColor(.secondary)
+                .frame(maxWidth: .infinity, alignment: .leading)
+            }
+        }
         if playgroundController.settings.uiStyle != .embedded {
             SearchableSettingView(setting: $playgroundController.settings.layout, searchText: searchText)
         }
@@ -421,6 +444,14 @@ struct PaymentSheetTestPlayground: View {
             }
 
             playgroundController.settings.uiStyle = newUIStyle
+        }
+    }
+
+    var nativeSheetOverrideBinding: Binding<PaymentSheetTestPlaygroundSettings.NativeSheetOverride> {
+        Binding<PaymentSheetTestPlaygroundSettings.NativeSheetOverride> {
+            return playgroundController.settings.nativeSheetOverride ?? .automatic
+        } set: { newOverride in
+            playgroundController.settings.nativeSheetOverride = newOverride == .automatic ? nil : newOverride
         }
     }
 

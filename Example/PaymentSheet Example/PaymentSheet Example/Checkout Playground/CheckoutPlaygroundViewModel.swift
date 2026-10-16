@@ -45,9 +45,11 @@ extension CheckoutPlayground {
         @Published var email: EmailSettings
         @Published var cartScenario: CartScenario
         @Published var shippingAddressCollection: Bool
-        @Published var defaultShippingAddressOption: DefaultShippingAddressOption
-        @Published var customDefaultShippingAddress: DefaultShippingAddress
+        @Published var defaultShippingAddressOption: DefaultAddressOption
+        @Published var customDefaultShippingAddress: DefaultAddress
         @Published var billingAddressCollection: BillingAddressCollection
+        @Published var defaultBillingAddressOption: DefaultAddressOption
+        @Published var customDefaultBillingAddress: DefaultAddress
         @Published var automaticTax: Bool
         @Published var checkoutSessionPaymentMethodSave: Bool
         @Published var checkoutSessionPaymentMethodRemove: Bool
@@ -81,6 +83,8 @@ extension CheckoutPlayground {
             defaultShippingAddressOption = settings.defaultShippingAddressOption
             customDefaultShippingAddress = settings.customDefaultShippingAddress
             billingAddressCollection = settings.billingAddressCollection
+            defaultBillingAddressOption = settings.defaultBillingAddressOption ?? .none
+            customDefaultBillingAddress = settings.customDefaultBillingAddress ?? .usTestAddress
             automaticTax = settings.automaticTax
             checkoutSessionPaymentMethodSave = settings.checkoutSessionPaymentMethodSave
             checkoutSessionPaymentMethodRemove = settings.checkoutSessionPaymentMethodRemove
@@ -153,7 +157,7 @@ extension CheckoutPlayground {
             cartScenario.lineItems
         }
 
-        var defaultShippingAddress: DefaultShippingAddress? {
+        var defaultShippingAddress: DefaultAddress? {
             switch defaultShippingAddressOption {
             case .none:
                 return nil
@@ -161,6 +165,17 @@ extension CheckoutPlayground {
                 return .usTestAddress
             case .custom:
                 return customDefaultShippingAddress
+            }
+        }
+
+        var defaultBillingAddress: DefaultAddress? {
+            switch defaultBillingAddressOption {
+            case .none:
+                return nil
+            case .usTestAddress:
+                return .usTestAddress
+            case .custom:
+                return customDefaultBillingAddress
             }
         }
 
@@ -234,6 +249,8 @@ extension CheckoutPlayground {
                 defaultShippingAddressOption: defaultShippingAddressOption,
                 customDefaultShippingAddress: customDefaultShippingAddress,
                 billingAddressCollection: billingAddressCollection,
+                defaultBillingAddressOption: defaultBillingAddressOption,
+                customDefaultBillingAddress: customDefaultBillingAddress,
                 automaticTax: automaticTax,
                 checkoutSessionPaymentMethodSave: checkoutSessionPaymentMethodSave,
                 checkoutSessionPaymentMethodRemove: checkoutSessionPaymentMethodRemove,
@@ -260,6 +277,8 @@ extension CheckoutPlayground {
             defaultShippingAddressOption = settings.defaultShippingAddressOption
             customDefaultShippingAddress = settings.customDefaultShippingAddress
             billingAddressCollection = settings.billingAddressCollection
+            defaultBillingAddressOption = settings.defaultBillingAddressOption ?? .none
+            customDefaultBillingAddress = settings.customDefaultBillingAddress ?? .usTestAddress
             automaticTax = settings.automaticTax
             checkoutSessionPaymentMethodSave = settings.checkoutSessionPaymentMethodSave
             checkoutSessionPaymentMethodRemove = settings.checkoutSessionPaymentMethodRemove

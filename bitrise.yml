@@ -20,14 +20,14 @@ app:
     FASTLANE_LANE: ios integration_all
 trigger_map:
 - push_branch: master
-  pipeline: main-trigger-pipeline
+  pipeline: master-trigger-pipeline
 - pull_request_source_branch: releases/*
   pipeline: releases-trigger-pipeline
 - pull_request_source_branch: '*'
   pipeline: main-trigger-pipeline
 pipelines:
   main-trigger-pipeline:
-    workflows:
+    workflows: &main_workflows
       lint-tests:
         abort_on_fail: true
       record-all-snapshots-and-lokalise: {}
@@ -39,15 +39,21 @@ pipelines:
         uses: framework-tests-paymentsheet
         inputs:
         - CI_SNAPSHOTS_IN_DEDICATED_WORKFLOW: "true"
-      financial-connections-stability-tests: {}
       lpm-confirm-flow-tests:
         parallel: 2
       framework-tests-and-builds-xcode-26-1: {}
-      install-and-integration-tests: {}
+      installation-tests: {}
+      integration-tests: {}
       size-report: {}
       ui-tests-paymentsheet:
         parallel: 4
       ui-tests-connect-crypto: {}
+
+  master-trigger-pipeline:
+    workflows:
+      <<: *main_workflows
+      size-report:
+        parallel: 3
 
   releases-trigger-pipeline:
     workflows:
@@ -57,8 +63,11 @@ pipelines:
       framework-tests-no-mocks: {}
       framework-tests-and-builds-xcode-26-1: {}
       deploy-docs: {}
-      install-and-integration-tests: {}
-      size-report: {}
+      installation-tests-cocoapods: {}
+      installation-tests-spm: {}
+      integration-tests: {}
+      size-report:
+        parallel: 3
       ui-tests-paymentsheet:
         parallel: 4
       ui-tests-connect-crypto: {}
@@ -238,17 +247,8 @@ workflows:
     - install-runtime-16
     - prep_all
     steps:
-    - script@1:
-        title: Fetch master for relevance check
-        inputs:
-        - content: git fetch origin master --depth=1
-    - script@1:
-        title: Check whether FC stability tests are relevant
-        inputs:
-        - content: ruby ci_scripts/should_run_fc_stability_tests.rb
     - xcode-test@6:
         is_skippable: true
-        run_if: '{{enveq "RUN_FC_STABILITY_TESTS" "true"}}'
         inputs: &financial_connections_stability_tests_inputs
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
@@ -256,40 +256,37 @@ workflows:
         - scheme: FinancialConnections Example
     - script@1:
         is_always_run: true
-        run_if: '{{enveq "RUN_FC_STABILITY_TESTS" "true"}}'
         title: Retry gate for test-runner hang
         inputs:
         - content: ./ci_scripts/xcode_test_runner_hang_gate.sh
     - xcode-test@6:
-        run_if: '{{and (enveq "RUN_FC_STABILITY_TESTS" "true") (enveq "STRIPE_RETRY_XCODE_TEST" "yes")}}'
+        run_if: '{{enveq "STRIPE_RETRY_XCODE_TEST" "yes"}}'
         inputs: *financial_connections_stability_tests_inputs
     - slack@3:
         is_always_run: true
-        run_if: '{{and (enveq "BITRISE_PULL_REQUEST" "") .IsBuildFailed}}'
+        run_if: .IsBuildFailed
         inputs:
         - webhook_url: $WEBHOOK_SLACK_CUX_BOTS
         - webhook_url_on_error: $WEBHOOK_SLACK_CUX_BOTS
         - text_on_error: "iOS build failed (c.c. @link-mobile-run)"
     - slack@3:
         is_always_run: true
-        run_if: '{{enveq "BITRISE_PULL_REQUEST" ""}}'
         inputs:
         - webhook_url: $WEBHOOK_SLACK_CONNECTIONS_MOBILE
         - webhook_url_on_error: $WEBHOOK_SLACK_CONNECTIONS_MOBILE
     - slack@3:
         is_always_run: true
-        run_if: '{{and (enveq "BITRISE_PULL_REQUEST" "") .IsBuildFailed}}'
+        run_if: .IsBuildFailed
         inputs:
         - webhook_url: $SLACK_KGAIDIS_TESTING_WEBHOOK_URL
         - webhook_url_on_error: $SLACK_KGAIDIS_TESTING_WEBHOOK_URL
     - slack@3:
         is_always_run: true
-        run_if: '{{and (enveq "BITRISE_PULL_REQUEST" "") .IsBuildFailed}}'
+        run_if: .IsBuildFailed
         inputs:
         - webhook_url: $SLACK_CONNECTIONS_IOS_FAILURES_WEBHOOK_URL
         - webhook_url_on_error: $SLACK_CONNECTIONS_IOS_FAILURES_WEBHOOK_URL
-    - deploy-to-bitrise-io@2:
-        run_if: '{{enveq "RUN_FC_STABILITY_TESTS" "true"}}'
+    - deploy-to-bitrise-io@2: {}
     envs:
     - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
   financial-connections-stability-tests-for-edge:
@@ -528,12 +525,38 @@ workflows:
       bitrise.io:
         stack: osx-xcode-26.4.x
         machine_type_id: g2.mac.large
-  install-and-integration-tests:
+  installation-tests:
+    description: Run all five package installation variants with one simulator and dependency setup.
+    before_run:
+    - install-runtime-16
+    - prep_all
+    - installation-cocoapods-steps
+    - installation-spm-steps
     steps:
-    - xcode-start-simulator@0:
-        title: Start iOS 16.4 installation test simulator
-        inputs:
-        - destination: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
+    - deploy-to-bitrise-io@2:
+        is_always_run: true
+    envs:
+    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
+    meta:
+      bitrise.io:
+        stack: osx-xcode-26.4.x
+        machine_type_id: g2.mac.large
+  installation-tests-cocoapods:
+    before_run:
+    - install-runtime-16
+    - prep_all
+    - installation-cocoapods-steps
+    steps:
+    - deploy-to-bitrise-io@2:
+        is_always_run: true
+    envs:
+    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
+    meta:
+      bitrise.io:
+        stack: osx-xcode-26.4.x
+        machine_type_id: g2.mac.large
+  installation-cocoapods-steps:
+    steps:
     - fastlane@3:
         inputs:
         - lane: installation_cocoapods_without_frameworks_objc
@@ -546,6 +569,22 @@ workflows:
         inputs:
         - lane: installation_cocoapods_frameworks_swift
         title: fastlane installation_cocoapods_frameworks_swift
+  installation-tests-spm:
+    before_run:
+    - install-runtime-16
+    - prep_all
+    - installation-spm-steps
+    steps:
+    - deploy-to-bitrise-io@2:
+        is_always_run: true
+    envs:
+    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
+    meta:
+      bitrise.io:
+        stack: osx-xcode-26.4.x
+        machine_type_id: g2.mac.large
+  installation-spm-steps:
+    steps:
     - fastlane@3:
         inputs:
         - lane: installation_spm_objc
@@ -554,6 +593,8 @@ workflows:
         inputs:
         - lane: installation_spm_swift
         title: fastlane installation_spm_swift
+  integration-tests:
+    steps:
     - xcode-test@6:
         is_always_run: true
         is_skippable: true
@@ -575,7 +616,6 @@ workflows:
     - deploy-to-bitrise-io@2:
         is_always_run: true
     before_run:
-    - install-runtime-16
     - prep_all
     envs:
     - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=26.4.1
@@ -788,10 +828,15 @@ workflows:
         - content: bundle config set path 'vendor/bundle'
         is_always_run: true
         title: Set Bundler to use local vendor directory
-    - git-clone@8.2:
+    - git-clone@8.5.1:
         inputs:
         - merge_pr: "no"
-        - clone_depth: -1
+        - clone_depth: "1"
+        - ignore_branch_for_commit_fetch: "yes"
+        # Force commit checkout: PR-head checkout ignores the option above.
+        # GitHub makes fork PR commits fetchable from the destination repository.
+        - pull_request_head_branch: ""
+        - pull_request_repository_url: ""
     - restore-cache@2.4:
         inputs:
         - key: bundle-cache-{{ checksum "Gemfile.lock" }}
@@ -802,13 +847,32 @@ workflows:
         - paths: |
             vendor
     - script@1:
+        title: Prepare exact size baseline cache keys
         inputs:
-        - content: git fetch origin
-        title: Fetch full branch history
+        - content: ruby ci_scripts/size_report_cache.rb
+    - restore-cache@2.4.1:
+        is_skippable: true
+        inputs:
+        - key: $SIZE_REPORT_BASE_KEY-0
+    - restore-cache@2.4.1:
+        is_skippable: true
+        inputs:
+        - key: $SIZE_REPORT_BASE_KEY-1
+    - restore-cache@2.4.1:
+        is_skippable: true
+        inputs:
+        - key: $SIZE_REPORT_BASE_KEY-2
     - script@1:
         inputs:
         - content: bundle exec fastlane size_report
         title: Generate size report
+    - save-cache@1.5.2:
+        run_if: '{{enveq "SIZE_REPORT_PUBLISH" "true"}}'
+        is_skippable: true
+        inputs:
+        - key: $SIZE_REPORT_HEAD_KEY
+        - paths: $SIZE_REPORT_SAVE_PATH
+        - compression_level: "1"
     meta:
       bitrise.io:
         stack: osx-xcode-26.4.x

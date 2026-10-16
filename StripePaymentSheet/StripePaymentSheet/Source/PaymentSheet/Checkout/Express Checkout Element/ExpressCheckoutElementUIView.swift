@@ -148,14 +148,9 @@ public final class ExpressCheckoutElementUIView: UIView {
         for buttons: [ExpressCheckoutElement.PaymentMethod],
         layout: ExpressCheckoutElement.Configuration.Appearance.ButtonLayout
     ) -> [[ExpressCheckoutElement.PaymentMethod]] {
-        let visibleButtonCount = calculateVisibleButtonCount(
-            buttonCount: buttons.count,
-            maxColumns: layout.maxColumns,
-            maxRows: layout.maxRows
-        )
-        let visibleButtons = Array(buttons.prefix(visibleButtonCount))
+        let visibleButtons = ExpressCheckoutElementUtilities.visiblePaymentMethods(for: buttons, layout: layout)
         let columnCount = calculateColumnCount(
-            buttonCount: visibleButtonCount,
+            buttonCount: visibleButtons.count,
             maxRows: layout.maxRows
         )
 
@@ -169,19 +164,6 @@ public final class ExpressCheckoutElementUIView: UIView {
             rowStartIndex = rowEndIndex
         }
         return rows
-    }
-
-    static func calculateVisibleButtonCount(
-        buttonCount: Int,
-        maxColumns: Int?,
-        maxRows: Int?
-    ) -> Int {
-        // A single limit affects how the buttons are arranged, but it cannot
-        // limit the grid's total capacity without the other dimension.
-        guard let maxColumns, let maxRows else {
-            return buttonCount
-        }
-        return min(maxRows * maxColumns, buttonCount)
     }
 
     static func calculateColumnCount(buttonCount: Int, maxRows: Int?) -> Int {

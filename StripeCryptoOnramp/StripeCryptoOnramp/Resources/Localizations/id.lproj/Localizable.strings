@@ -4,6 +4,8 @@
 
 "Add documents" = "Tambahkan dokumen";
 
+"Allow camera access in Settings to take a photo." = "Izinkan akses kamera di Pengaturan untuk mengambil foto.";
+
 "Answer" = "Jawab";
 
 "Choose File…" = "Pilih file…";
@@ -22,9 +24,13 @@
 
 "Make sure your document meets following requirements." = "Pastikan dokumen Anda memenuhi persyaratan berikut.";
 
+"Please select your Apple Pay payment method again to continue." = "Harap pilih kembali metode pembayaran Apple Pay Anda untuk melanjutkan.";
+
 "Please try again later." = "Coba lagi nanti.";
 
 "Submitted for review" = "Dikirim untuk ditinjau";
+
+"Take Photo…" = "Ambil Foto…";
 
 "Tell us about your source of funds" = "Beri tahu kami tentang sumber dana Anda";
 

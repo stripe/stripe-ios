@@ -173,13 +173,15 @@ extension KycInfo {
         let email = Self.trimmedNonEmptyValue(billingContact?.emailAddress)
             ?? Self.trimmedNonEmptyValue(shippingContact?.emailAddress)
 
-        // Resolved once so the raw phone and its region always come from the same contact.
         let phoneContact = Self.trimmedNonEmptyValue(billingContact?.phoneNumber?.stringValue) != nil
             ? billingContact : shippingContact
 
         // Preserved exactly as provided by Apple Pay, which may be display-formatted rather than E.164.
         let rawPhone = Self.trimmedNonEmptyValue(phoneContact?.phoneNumber?.stringValue)
-        let regionCode = phoneContact?.postalAddress?.isoCountryCode
+        // Apple Pay can return the phone on the shipping contact but only provide a billing address.
+        let regionCode = Self.trimmedNonEmptyValue(phoneContact?.postalAddress?.isoCountryCode)
+            ?? Self.trimmedNonEmptyValue(billingContact?.postalAddress?.isoCountryCode)
+            ?? Self.trimmedNonEmptyValue(shippingContact?.postalAddress?.isoCountryCode)
         let phone = Self.normalizedE164Phone(rawPhone, regionCode: regionCode)
 
         guard firstName != nil || lastName != nil || address != nil else {
@@ -200,9 +202,8 @@ extension KycInfo {
 
     /// Normalizes a phone number to E.164, or returns `nil` if it cannot be normalized.
     ///
-    /// Normalizing a national number (e.g. "(212) 555-1234") requires a region to interpret it against; Apple only
-    /// ever surfaces this via the postal address on the same contact that provided the phone number. A number
-    /// already in E.164 form (e.g. "+12125551234") can be parsed without a region hint.
+    /// Normalizing a national number (e.g. "(212) 555-1234") requires a contact's postal country.
+    /// An explicit international number (e.g. "+1 (212) 555-1234") can be parsed without a region hint.
     /// - Parameters:
     ///   - rawPhone: The phone number to normalize, in either national or E.164 form.
     ///   - regionCode: The two-letter country code (ISO 3166-1 alpha-2) to use when interpreting a national number.
@@ -211,8 +212,30 @@ extension KycInfo {
             return nil
         }
 
-        let phoneNumber = PhoneNumber.fromE164(rawPhone)
-            ?? regionCode.flatMap { PhoneNumber(number: rawPhone, countryCode: $0) }
+        let formattingCharacters = CharacterSet.whitespacesAndNewlines.union(CharacterSet(charactersIn: "()-."))
+        var number = rawPhone.components(separatedBy: formattingCharacters).joined()
+        if number.hasPrefix("+") {
+            return PhoneNumber.fromE164(number)?.string(as: .e164)
+        }
+
+        guard !number.isEmpty,
+              number.allSatisfy({ $0 >= "0" && $0 <= "9" }),
+              let regionCode,
+              let metadata = PhoneNumber.Metadata.metadata(for: regionCode.uppercased()) else {
+            return nil
+        }
+
+        // NANP numbers may include the country calling code even without a leading '+'.
+        if metadata.prefix == "+1", number.count == 11, number.hasPrefix("1") {
+            number.removeFirst()
+        }
+
+        // Avoid silently truncating numbers that exceed the E.164 limit in the shared formatter.
+        guard number.count + metadata.prefix.count - 1 <= 15 else {
+            return nil
+        }
+
+        let phoneNumber = PhoneNumber(number: number, countryCode: metadata.regionCode)
 
         return phoneNumber?.string(as: .e164)
     }
