@@ -1,7 +1,7 @@
 
 # Migrating from CocoaPods
 
-On December 2, 2026, [CocoaPods Trunk will become read-only](https://blog.cocoapods.org/CocoaPods-Specs-Repo/). Your app will continue to work, but after October 26 Stripe will ship future features and fixes exclusively through Swift Package Manager and XCFrameworks. To continue to receive the latest updates for the Stripe iOS SDK, switch to Swift Package Manager or manually embed the Stripe XCFrameworks.
+On December 2, 2026, [CocoaPods Trunk will become read-only](https://blog.cocoapods.org/CocoaPods-Specs-Repo/). Your app will continue to work, but after October 19 Stripe will ship future features and fixes exclusively through Swift Package Manager and XCFrameworks. To continue to receive the latest updates for the Stripe iOS SDK, switch to Swift Package Manager or manually embed the Stripe XCFrameworks.
 
 ## Removing CocoaPods
 
@@ -38,7 +38,7 @@ Alternatively, you can add the Stripe iOS SDK to your project by manually adding
 
 ### Q: When will Stripe stop publishing the iOS SDK through CocoaPods?
 
-We plan to ship our final CocoaPods release on October 26. This gives us time before the CocoaPods trunk goes read-only in case fixes for critical issues are necessary.
+We plan to ship our final CocoaPods release on October 19. This gives us time before the CocoaPods trunk goes read-only in case fixes for critical issues are necessary.
 
 ### Q: What about the Flutter SDK?
 
