@@ -111,15 +111,9 @@ public final class ShippingAddressElement {
             return
         }
 
-        let navigationController = UINavigationController(rootViewController: addressViewController)
+        let navigationController = ShippingAddressNavigationController(element: self)
         isPresenting = true
-        // Keep the element alive until dismissal so the sheet's weak delegates remain available,
-        // even if CheckoutController is released while the sheet is open.
-        presentationCompletion = {
-            self.presentationCompletion = nil
-            self.isPresenting = false
-            completion?()
-        }
+        presentationCompletion = completion
         didLogAddressShow = false
         presentingViewController.present(navigationController, animated: true)
     }
@@ -195,6 +189,26 @@ extension ShippingAddressElement: AddressViewControllerDelegate {
         _ addressViewController: AddressViewController,
         with address: AddressViewController.AddressDetails?
     ) {
-        addressViewController.dismiss(animated: true, completion: presentationCompletion)
+        addressViewController.dismiss(animated: true) {
+            let completion = self.presentationCompletion
+            self.presentationCompletion = nil
+            self.isPresenting = false
+            completion?()
+        }
+    }
+}
+
+private final class ShippingAddressNavigationController: UINavigationController {
+
+    // The address view controller holds its delegates weakly. Keep the element alive with its sheet.
+    private let element: ShippingAddressElement
+
+    init(element: ShippingAddressElement) {
+        self.element = element
+        super.init(rootViewController: element.addressViewController)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 }

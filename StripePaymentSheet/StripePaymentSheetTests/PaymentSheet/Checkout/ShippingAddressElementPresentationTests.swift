@@ -38,17 +38,28 @@ final class ShippingAddressElementPresentationTests: XCTestCase {
         super.tearDown()
     }
 
-    func testPresentUsesExplicitPresenterAndExistingAddressViewController() throws {
+    func testPresentUsesExplicitPresenterAndExistingAddressViewController() async throws {
         // Given
-        let shippingAddressElement = makeShippingAddressElement()
+        var shippingAddressElement: ShippingAddressElement? = makeShippingAddressElement()
+        weak var weakElement = shippingAddressElement
 
         // When
-        let navigationController = present(shippingAddressElement)
+        var navigationController = present(try XCTUnwrap(shippingAddressElement))
 
         // Then
-        let unwrappedNavigationController = try XCTUnwrap(navigationController)
-        XCTAssertTrue(presentingViewController.presentedViewController === unwrappedNavigationController)
-        XCTAssertTrue(unwrappedNavigationController.viewControllers.first === shippingAddressElement.addressViewController)
+        XCTAssertNotNil(navigationController)
+        XCTAssertTrue(presentingViewController.presentedViewController === navigationController)
+        XCTAssertTrue(navigationController?.viewControllers.first === shippingAddressElement?.addressViewController)
+
+        // ...and the sheet owns the element until UIKit releases it, even when dismissed directly
+        shippingAddressElement = nil
+        XCTAssertNotNil(weakElement)
+        navigationController = nil
+        presentingViewController.dismiss(animated: false)
+        let released = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            weakElement == nil
+        }, object: nil)
+        await fulfillment(of: [released], timeout: 2)
     }
 
     func testCompletionRunsAfterDelegateDismissesPresentation() async throws {
@@ -217,11 +228,11 @@ final class ShippingAddressElementPresentationTests: XCTestCase {
         weak var weakCheckout = checkout
         weak var weakElement = checkout?.getShippingAddressElement()
         let completed = expectation(description: "Shipping sheet closed")
-        let navigationController = try XCTUnwrap(present(try XCTUnwrap(checkout?.getShippingAddressElement())) {
+        var navigationController = present(try XCTUnwrap(checkout?.getShippingAddressElement())) {
             XCTAssertNil(self.presentingViewController.presentedViewController)
             completed.fulfill()
-        })
-        let addressViewController = try XCTUnwrap(navigationController.viewControllers.first as? AddressViewController)
+        }
+        let addressViewController = try XCTUnwrap(navigationController?.viewControllers.first as? AddressViewController)
         _ = await addressViewController.initialAddressDetails()
         let addressSection = try XCTUnwrap(addressViewController.addressSection)
         addressSection.name?.setText("Jane Doe")
@@ -238,6 +249,7 @@ final class ShippingAddressElementPresentationTests: XCTestCase {
         XCTAssertNil(weakCheckout)
         XCTAssertNotNil(weakElement)
         XCTAssertTrue(presentingViewController.presentedViewController === navigationController)
+        navigationController = nil
 
         // ...and the customer saves, the missing Checkout triggers an internal assertion
         STPAssertTestUtil.shouldSuppressNextSTPAlert = true
