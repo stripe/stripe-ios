@@ -464,34 +464,11 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         await fulfillment(of: [retrieve], timeout: 1)
     }
 
-    func testRequiresApprovalConfirmResponseFailsWithoutPolling() async throws {
-        // Given /confirm routes to unsupported manual approval
+    func testFailedPaymentResponseFailsWithoutPolling() async throws {
+        // Given CheckoutClient reports a payment that requires another payment method
         let checkout = try await makeCheckout()
         let poller = TestCheckoutSessionPoller(outcome: .completed)
-        var responseJSON = makeConfirmedSessionJSON()
-        responseJSON["submission_attempt"] = ["state": "requires_approval"]
-
-        // When the Checkout Session is confirmed
-        let result = await confirmCheckoutSession(
-            checkout,
-            responseJSON: responseJSON,
-            poller: poller
-        )
-
-        // Then it fails before polling
-        guard case .failed(let error, _) = result else {
-            return XCTFail("Expected confirmation to fail, got \(result)")
-        }
-        XCTAssertTrue(error.nonGenericDescription.contains("manual approval"))
-        XCTAssertTrue(poller.checkoutSessionIds.isEmpty)
-    }
-
-    func testFailedSubmissionAttemptFailsWithoutPolling() async throws {
-        // Given /confirm reports a failed submission attempt
-        let checkout = try await makeCheckout()
-        let poller = TestCheckoutSessionPoller(outcome: .completed)
-        var responseJSON = makeConfirmedSessionJSON()
-        responseJSON["submission_attempt"] = ["state": "failed"]
+        let responseJSON = makeConfirmedSessionJSON(paymentIntentStatus: "requires_payment_method")
 
         // When the Checkout Session is confirmed
         let result = await confirmCheckoutSession(

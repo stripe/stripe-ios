@@ -1,0 +1,17 @@
+GET
+https:\/\/stp-mobile-playground-backend-v7\.stripedemos\.com\/publishable_key\?merchant=MY$
+200
+application/json
+Server: Google Frontend
+Content-Type: application/json; charset=utf-8
+x-powered-by: Express
+x-cloud-trace-context: 04b85c957ae627191dc256cf5fea5b7b
+Via: 1.1 google
+Date: Fri, 16 Oct 2026 19:53:32 GMT
+Alt-Svc: h3=":443"; ma=2592000
+Content-Length: 64
+Etag: W/"40-Qomvuuxu8K8IJujfMMCagNohCag"
+
+{
+  "publishable_key" : "pk_test_vGCjSmT6Idy5zwfGBKnlq5rd00JT2vbrHb"
+}

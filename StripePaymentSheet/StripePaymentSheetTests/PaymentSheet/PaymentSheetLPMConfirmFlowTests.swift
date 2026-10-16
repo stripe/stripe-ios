@@ -436,7 +436,8 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
     }
 
     func testPixConfirmFlows() async throws {
-        let configuration = PaymentSheet.Configuration()
+        var configuration = PaymentSheet.Configuration()
+        configuration.returnURL = "https://foo.com"
 
         try await _testConfirm(
             intentKinds: [.paymentIntent, .paymentIntentWithSetupFutureUsage, .setupIntent],
