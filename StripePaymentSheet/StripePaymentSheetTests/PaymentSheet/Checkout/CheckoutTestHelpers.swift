@@ -330,17 +330,6 @@ enum CheckoutTestHelpers {
             )
             return HTTPStubsResponse(data: data, statusCode: 200, headers: nil)
         }
-        // Promotion codes still use Payment Pages.
-        stub(condition: { request in
-            request.httpMethod == "POST"
-                && request.url?.path == "/v1/payment_pages/\(sessionId)"
-        }) { _ in
-            var responseJSON = jsonObject(apiResponse.allResponseFields) as? [String: Any] ?? [:]
-            responseJSON["session_id"] = responseJSON["session_id"] ?? sessionId
-            let data = try! JSONSerialization.data(withJSONObject: responseJSON, options: [])
-            return HTTPStubsResponse(data: data, statusCode: 200, headers: nil)
-        }
-
         return apiClient
     }
 
