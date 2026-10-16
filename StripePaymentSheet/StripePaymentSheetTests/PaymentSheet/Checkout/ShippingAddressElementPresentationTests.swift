@@ -49,6 +49,72 @@ final class ShippingAddressElementPresentationTests: XCTestCase {
         XCTAssertTrue(unwrappedNavigationController.viewControllers.first === shippingAddressElement.addressViewController)
     }
 
+    func testPresentationInheritsCheckoutUserInterfaceStyle() async throws {
+        let styles: [(CheckoutController.UserInterfaceStyle, UIUserInterfaceStyle, UIUserInterfaceStyle)] = [
+            (.alwaysLight, .dark, .light),
+            (.alwaysDark, .light, .dark),
+            (.automatic, .light, .light),
+            (.automatic, .dark, .dark),
+        ]
+        let observingViewController = PresentationObservingViewController()
+        // Attach the window to the host scene so pushed controllers inherit its traits.
+        let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first)
+        window.isHidden = true
+        window.windowScene = scene
+        window.rootViewController = observingViewController
+        presentingViewController = observingViewController
+        window.makeKeyAndVisible()
+        let animationsWereEnabled = UIView.areAnimationsEnabled
+        UIView.setAnimationsEnabled(false)
+        defer {
+            UIView.setAnimationsEnabled(animationsWereEnabled)
+        }
+
+        for (checkoutStyle, hostStyle, expectedStyle) in styles {
+            // Given checkout's style and a host window that may use a different style
+            var configuration = CheckoutTestHelpers.makeConfiguration(
+                paymentElementConfiguration: nil,
+                expressCheckoutElementConfiguration: nil
+            )
+            configuration.shippingAddressElement = .init()
+            configuration.userInterfaceStyle = checkoutStyle
+            let checkout = try await CheckoutController(configuration: configuration)
+            let shippingAddressElement = checkout.getShippingAddressElement()
+            window.overrideUserInterfaceStyle = hostStyle
+
+            // When the shipping address sheet has finished presenting
+            let presentationCompleted = expectation(description: "Shipping address sheet presented")
+            observingViewController.onPresentationCompletion = {
+                presentationCompleted.fulfill()
+            }
+            let navigationController = try XCTUnwrap(present(shippingAddressElement))
+            await fulfillment(of: [presentationCompleted], timeout: 3)
+
+            // Then the form and navigation bar use checkout's style
+            XCTAssertEqual(shippingAddressElement.addressViewController.traitCollection.userInterfaceStyle, expectedStyle)
+            XCTAssertEqual(navigationController.navigationBar.traitCollection.userInterfaceStyle, expectedStyle)
+
+            // ...and address autocomplete inherits the same style
+            shippingAddressElement.addressViewController.presentAutocomplete()
+            // Disabling animations does not make UIKit's navigation transitions synchronous.
+            let autocompleteVisible = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+                navigationController.topViewController is AutoCompleteViewController
+                    && navigationController.topViewController?.viewIfLoaded?.window != nil
+                    && navigationController.transitionCoordinator == nil
+            }, object: nil)
+            await fulfillment(of: [autocompleteVisible], timeout: 3)
+            let autocompleteViewController = try XCTUnwrap(navigationController.topViewController as? AutoCompleteViewController)
+            XCTAssertEqual(autocompleteViewController.traitCollection.userInterfaceStyle, expectedStyle)
+
+            // Finish dismissing before presenting the next style's sheet.
+            let dismissalCompleted = expectation(description: "Shipping address sheet dismissed")
+            presentingViewController.dismiss(animated: false) {
+                dismissalCompleted.fulfill()
+            }
+            await fulfillment(of: [dismissalCompleted], timeout: 3)
+        }
+    }
+
     func testCompletionRunsAfterDelegateDismissesPresentation() async throws {
         // Given
         let shippingAddressElement = makeShippingAddressElement()
@@ -204,6 +270,7 @@ final class ShippingAddressElementPresentationTests: XCTestCase {
     private func makeShippingAddressElement() -> ShippingAddressElement {
         return ShippingAddressElement(
             configuration: .init(),
+            userInterfaceStyle: .automatic,
             initialShippingAddress: .init(
                 name: "Jane Doe",
                 address: .init(
@@ -272,13 +339,17 @@ final class ShippingAddressElementPresentationTests: XCTestCase {
 private final class PresentationObservingViewController: UIViewController {
 
     var onPresent: ((UIViewController) -> Void)?
+    var onPresentationCompletion: (() -> Void)?
 
     override func present(
         _ viewControllerToPresent: UIViewController,
         animated flag: Bool,
         completion: (() -> Void)? = nil
     ) {
-        super.present(viewControllerToPresent, animated: flag, completion: completion)
+        super.present(viewControllerToPresent, animated: flag) {
+            completion?()
+            self.onPresentationCompletion?()
+        }
         onPresent?(viewControllerToPresent)
     }
 }

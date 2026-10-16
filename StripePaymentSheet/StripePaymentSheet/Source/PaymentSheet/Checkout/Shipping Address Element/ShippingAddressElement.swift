@@ -30,6 +30,7 @@ public final class ShippingAddressElement {
 
     init(
         configuration: Configuration,
+        userInterfaceStyle: CheckoutController.UserInterfaceStyle,
         initialShippingAddress: CheckoutController.Session.ShippingAddress?,
         allowedCountries: [String]?,
         checkoutSessionId: String,
@@ -49,6 +50,7 @@ public final class ShippingAddressElement {
             integrationDelegate: self,
             useAutocompleteEndpoints: useAutocompleteEndpoints
         )
+        userInterfaceStyle.configure(addressViewController)
     }
 
     func normalizedInitialShippingAddress() async -> CheckoutController.Session.ShippingAddress? {
@@ -112,6 +114,8 @@ public final class ShippingAddressElement {
         }
 
         let navigationController = UINavigationController(rootViewController: addressViewController)
+        // Apply the style to the whole navigation stack, including address autocomplete.
+        navigationController.overrideUserInterfaceStyle = addressViewController.overrideUserInterfaceStyle
         isPresenting = true
         presentationCompletion = completion
         didLogAddressShow = false
