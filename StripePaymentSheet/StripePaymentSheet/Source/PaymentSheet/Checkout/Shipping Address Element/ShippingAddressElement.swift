@@ -113,7 +113,13 @@ public final class ShippingAddressElement {
 
         let navigationController = UINavigationController(rootViewController: addressViewController)
         isPresenting = true
-        presentationCompletion = completion
+        // Keep the element alive until dismissal so the sheet's weak delegates remain available,
+        // even if CheckoutController is released while the sheet is open.
+        presentationCompletion = {
+            self.presentationCompletion = nil
+            self.isPresenting = false
+            completion?()
+        }
         didLogAddressShow = false
         presentingViewController.present(navigationController, animated: true)
     }
@@ -184,15 +190,11 @@ extension ShippingAddressElement: AddressViewController.IntegrationDelegate {
 }
 
 extension ShippingAddressElement: AddressViewControllerDelegate {
+
     public func addressViewControllerDidFinish(
         _ addressViewController: AddressViewController,
         with address: AddressViewController.AddressDetails?
     ) {
-        addressViewController.dismiss(animated: true) {
-            let completion = self.presentationCompletion
-            self.presentationCompletion = nil
-            self.isPresenting = false
-            completion?()
-        }
+        addressViewController.dismiss(animated: true, completion: presentationCompletion)
     }
 }
