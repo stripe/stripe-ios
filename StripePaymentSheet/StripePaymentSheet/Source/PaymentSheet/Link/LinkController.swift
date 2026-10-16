@@ -120,7 +120,7 @@ import UIKit
         LinkAccountService(apiClient: apiClient, elementsSession: elementsSession)
     }()
 
-    private var selectedPaymentDetails: ConsumerPaymentDetails? {
+    var selectedPaymentDetails: ConsumerPaymentDetails? {
         guard case .link(let confirmOption) = internalPaymentOption else {
             return nil
         }
@@ -144,7 +144,7 @@ import UIKit
     /// A preview of the currently selected Link payment method.
     @Published @_spi(STP) @_spi(LinkControllerPreview) public private(set) var paymentMethodPreview: PaymentMethodPreview?
 
-    private var resolvedLinkBrand: LinkBrand {
+    var resolvedLinkBrand: LinkBrand {
         linkAccount?.linkBrand ?? LinkAccountContext.shared.account?.linkBrand ?? initialLinkBrand
     }
 

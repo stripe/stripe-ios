@@ -58,9 +58,46 @@ final class PayWithLinkButtonSnapshotTests: STPSnapshotTestCase {
         )
     }
 
+    func testLoggedInCardPaymentMethodLink() {
+        verify(
+            brand: .link,
+            email: "user@example.com",
+            paymentMethodType: .card,
+            identifier: "logged_in_card_payment_method_link"
+        )
+    }
+
+    func testLoggedInCardPaymentMethodOnelink() {
+        verify(
+            brand: .onelink,
+            email: "user@example.com",
+            paymentMethodType: .card,
+            identifier: "logged_in_card_payment_method_onelink"
+        )
+    }
+
+    func testLoggedInBankPaymentMethodLink() {
+        verify(
+            brand: .link,
+            email: "user@example.com",
+            paymentMethodType: .bankAccount,
+            identifier: "logged_in_bank_payment_method_link"
+        )
+    }
+
+    func testLoggedInBankPaymentMethodOnelink() {
+        verify(
+            brand: .onelink,
+            email: "user@example.com",
+            paymentMethodType: .bankAccount,
+            identifier: "logged_in_bank_payment_method_onelink"
+        )
+    }
+
     private func verify(
         brand: LinkBrand,
         email: String? = nil,
+        paymentMethodType: ConsumerSession.DisplayablePaymentDetails.PaymentType? = nil,
         identifier: String,
         file: StaticString = #filePath,
         line: UInt = #line
@@ -76,6 +113,12 @@ final class PayWithLinkButtonSnapshotTests: STPSnapshotTestCase {
                 sessionState: .verified,
                 consumerSessionClientSecret: nil,
                 linkSessionKey: nil
+            )
+        }
+
+        if let paymentMethodType {
+            button.paymentMethodPreview = LinkPaymentMethodPreview(
+                from: Stubs.displayablePaymentDetails(paymentMethodType: paymentMethodType)
             )
         }
 
