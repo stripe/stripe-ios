@@ -15,6 +15,110 @@ import XCTest
 final class PaymentSheetPresentationTests: XCTestCase {
 
     @MainActor
+    func testHorizontalNativeSheetSelectionBadgeIsOpaque() async throws {
+        guard #available(iOS 16.0, *) else { throw XCTSkip("Content-sized detents require iOS 16.") }
+        await AddressSpecProvider.shared.loadAddressSpecs()
+
+        // Given a horizontal picker with the default appearance in a native sheet
+        let loadResult = PaymentSheetLoader.LoadResult(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
+            elementsSession: ._testValue(paymentMethodTypes: ["card"]),
+            savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testCardAmex()],
+            paymentMethodTypes: [.stripe(.card)],
+            paymentMethodMessagingPromotionsHelper: ._testValue(),
+            paymentMethodOrientation: .horizontal
+        )
+        var configuration = PaymentSheet.Configuration()
+        configuration.link = .init(display: .never)
+        let content = PaymentSheetFlowControllerViewController(
+            configuration: configuration,
+            loadResult: loadResult,
+            analyticsHelper: ._testValue()
+        )
+        let (window, sheet) = try await presentSelectionBadgeSheet(content: content)
+        defer {
+            window.rootViewController?.dismiss(animated: false)
+            window.isHidden = true
+        }
+        let collectionView = content.savedPaymentOptionsViewController.collectionView
+        let cell = try XCTUnwrap(collectionView.visibleCells.compactMap {
+            $0 as? SavedPaymentMethodCollectionView.PaymentOptionCell
+        }.first { $0.isSelected })
+        XCTAssertFalse(cell.selectedIcon.isHidden)
+
+        for style in [UIUserInterfaceStyle.light, .dark] {
+            // When rendering the settled sheet, including after an appearance change
+            window.overrideUserInterfaceStyle = style
+            window.layoutIfNeeded()
+            try await Task.sleep(nanoseconds: 100_000_000)
+            let format = UIGraphicsImageRendererFormat()
+            format.scale = 1
+            format.preferredRange = .standard
+            let image = UIGraphicsImageRenderer(size: window.bounds.size, format: format).image { _ in
+                window.drawHierarchy(in: window.bounds, afterScreenUpdates: true)
+            }
+            let attachment = XCTAttachment(image: image)
+            attachment.lifetime = .keepAlways
+            add(attachment)
+
+            // Then the badge keeps its configured color where it overlaps the card's border
+            let badgeFrame = cell.selectedIcon.convert(cell.selectedIcon.bounds, to: window)
+            let pixel = try XCTUnwrap(image.cgImage?.cropping(to: CGRect(
+                x: badgeFrame.maxX - 6,
+                y: badgeFrame.midY,
+                width: 1,
+                height: 1
+            )))
+            var components = [UInt8](repeating: 0, count: 4)
+            let colorSpace = try XCTUnwrap(CGColorSpace(name: CGColorSpace.sRGB))
+            try components.withUnsafeMutableBytes { buffer in
+                let context = try XCTUnwrap(CGContext(
+                    data: buffer.baseAddress,
+                    width: 1,
+                    height: 1,
+                    bitsPerComponent: 8,
+                    bytesPerRow: 4,
+                    space: colorSpace,
+                    bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue
+                ))
+                context.draw(pixel, in: CGRect(x: 0, y: 0, width: 1, height: 1))
+            }
+            let expectedColor = configuration.appearance.colors.primary.resolvedColor(with: cell.traitCollection).rgba
+            XCTAssertEqual(CGFloat(components[0]) / 255, expectedColor.red, accuracy: 0.02)
+            XCTAssertEqual(CGFloat(components[1]) / 255, expectedColor.green, accuracy: 0.02)
+            XCTAssertEqual(CGFloat(components[2]) / 255, expectedColor.blue, accuracy: 0.02)
+        }
+        withExtendedLifetime(sheet) {}
+    }
+
+    @MainActor
+    private func presentSelectionBadgeSheet(content: BottomSheetContentViewController) async throws -> (UIWindow, NativeSheetContainerViewController) {
+        guard #available(iOS 16.0, *) else { throw XCTSkip("Content-sized detents require iOS 16.") }
+        let sheet = NativeSheetContainerViewController(
+            contentViewController: content,
+            appearance: .default,
+            didCancelNative3DS2: {}
+        )
+        // A cold test-host launch may still be connecting its window scene.
+        let sceneConnected = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            UIApplication.shared.connectedScenes.contains { $0 is UIWindowScene }
+        }, object: nil)
+        await fulfillment(of: [sceneConnected], timeout: 5)
+        let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first)
+        let presenter = UIViewController()
+        let window = UIWindow(windowScene: scene)
+        window.frame = scene.coordinateSpace.bounds
+        window.rootViewController = presenter
+        window.makeKeyAndVisible()
+        let presented = expectation(description: "Content-sized native sheet presented")
+        presenter.presentAsSheet(sheet) { presented.fulfill() }
+        await fulfillment(of: [presented], timeout: 3)
+        // Settle any layout-driven resize before capturing the initial height.
+        try await Task.sleep(nanoseconds: 700_000_000)
+        return (window, sheet)
+    }
+
+    @MainActor
     func testNativeSheetResizesNestedContentAcrossMaximumHeight() async throws {
         guard #available(iOS 16.0, *) else { throw XCTSkip("Content-sized detents require iOS 16.") }
         // Given short content with a nested section that can grow past the available sheet height
