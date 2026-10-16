@@ -12,8 +12,6 @@ import UIKit
 
 /// The OTP screen shared by SMS, email, and both auth presentations.
 final class LinkVerificationViewController: UIViewController {
-    typealias VerificationResult = LinkVerificationResult
-
     let verificationView: LinkVerificationView
     private let coordinator: LinkAuthFlowCoordinator
     private var inputRevision = -1
@@ -83,7 +81,11 @@ final class LinkVerificationViewController: UIViewController {
             "More options",
             "Button opening Link authentication actions."
         ) : resendTitle
-        verificationView.configureActions(title: title, enabled: hasAlternatives ? !isLoading : coordinator.canResend, loading: isLoading)
+        verificationView.configureActions(
+            title: title,
+            enabled: hasAlternatives ? !isLoading : coordinator.canResend,
+            loading: isLoading
+        )
         menuButton.isHidden = true
         verificationView.actionsButton.isAccessibilityElement = true
         if #available(iOS 14.0, *), hasAlternatives, !isLoading {
@@ -92,10 +94,17 @@ final class LinkVerificationViewController: UIViewController {
             menuButton.accessibilityLabel = title
             verificationView.actionsButton.isAccessibilityElement = false
             menuButton.showsMenuAsPrimaryAction = true
-            let menu = UIMenu(children: [
-                UIAction(title: resendTitle, image: UIImage(systemName: "arrow.clockwise"), attributes: coordinator.canResend ? [] : [.disabled]) { [weak self] _ in self?.coordinator.resend() },
-                UIAction(title: emailActionTitle, image: UIImage(systemName: "envelope")) { [weak self] _ in self?.coordinator.sendToEmail() },
-            ])
+            let menu = UIMenu(
+                children: menuItems.map { item in
+                    UIAction(
+                        title: item.title,
+                        image: UIImage(systemName: item.systemImageName),
+                        attributes: item.isEnabled ? [] : [.disabled]
+                    ) {
+                        _ in item.handler()
+                    }
+                }
+            )
             menuButton.menu = menu
             menuButton.contextMenuInteraction?.updateVisibleMenu { _ in menu }
         }
@@ -122,11 +131,34 @@ final class LinkVerificationViewController: UIViewController {
         )
     }
 
-    private var emailActionTitle: String {
-        STPLocalizedString(
-            "Email code",
-            "Link authentication action to receive an email verification code."
-        )
+    private struct MenuItem {
+        let title: String
+        let systemImageName: String
+        let isEnabled: Bool
+        let handler: () -> Void
+    }
+
+    private var menuItems: [MenuItem] {
+        coordinator.actions.map { action in
+            switch action {
+            case .resend:
+                return MenuItem(
+                    title: resendTitle,
+                    systemImageName: "arrow.clockwise",
+                    isEnabled: coordinator.canResend
+                ) { [weak self] in
+                    self?.coordinator.resend()
+                }
+            case .email:
+                let title = STPLocalizedString(
+                    "Email code",
+                    "Link authentication action to receive an email verification code."
+                )
+                return MenuItem(title: title, systemImageName: "envelope", isEnabled: true) { [weak self] in
+                    self?.coordinator.sendToEmail()
+                }
+            }
+        }
     }
 }
 
@@ -141,24 +173,11 @@ extension LinkVerificationViewController: LinkVerificationViewDelegate {
         }
         // iOS 13 doesn't support opening a UIButton menu on its primary action.
         let menu = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-
-        let resend = UIAlertAction(
-            title: resendTitle,
-            style: .default
-        ) { [weak self] _ in
-            self?.coordinator.resend()
+        for item in menuItems {
+            let action = UIAlertAction(title: item.title, style: .default) { _ in item.handler() }
+            action.isEnabled = item.isEnabled
+            menu.addAction(action)
         }
-        resend.isEnabled = coordinator.canResend
-        menu.addAction(resend)
-
-        menu.addAction(
-            UIAlertAction(
-                title: emailActionTitle,
-                style: .default
-            ) { [weak self] _ in
-                self?.coordinator.sendToEmail()
-            }
-        )
         menu.addAction(UIAlertAction(title: String.Localized.cancel, style: .cancel))
         menu.popoverPresentationController?.sourceView = view.actionsButton
         menu.popoverPresentationController?.sourceRect = view.actionsButton.bounds

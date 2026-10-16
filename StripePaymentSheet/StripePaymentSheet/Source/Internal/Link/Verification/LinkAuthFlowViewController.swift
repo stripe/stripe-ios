@@ -145,11 +145,6 @@ final class LinkAuthFlowViewController: UIViewController {
         super.viewDidAppear(animated)
         coordinator.start()
         focusCurrentScreen()
-        if timer == nil {
-            timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
-                MainActor.assumeIsolated { self?.otpController.render() }
-            }
-        }
     }
 
     override func viewDidLayoutSubviews() {
@@ -184,6 +179,22 @@ final class LinkAuthFlowViewController: UIViewController {
 
     @objc func back() {
         coordinator.goBack()
+    }
+
+    /// Ticks the OTP screen once a second, only while a resend cooldown is counting down.
+    private func updateResendTimer() {
+        guard coordinator.screen == .otp, coordinator.resendSecondsRemaining > 0 else {
+            timer?.invalidate()
+            timer = nil
+            return
+        }
+        guard timer == nil else { return }
+        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
+            MainActor.assumeIsolated {
+                self?.otpController.render()
+                self?.updateResendTimer()
+            }
+        }
     }
 
     private func render() {
@@ -255,6 +266,7 @@ final class LinkAuthFlowViewController: UIViewController {
                 outgoingSnapshot?.removeFromSuperview()
             })
         }
+        updateResendTimer()
         onNavigationUpdate?()
         if changed || lastInputRevision != coordinator.inputRevision {
             lastInputRevision = coordinator.inputRevision

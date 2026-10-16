@@ -86,7 +86,6 @@ final class LinkAuthFlowCoordinator {
     private(set) var inputRevision = 0
     /// Incremented when a submitted code is rejected, so the OTP field can play its invalid-code animation.
     private(set) var invalidCodeRevision = 0
-    private(set) var resendCount = 0
 
     var onUpdate: (() -> Void)?
     var onFinish: ((LinkVerificationResult) -> Void)?
@@ -216,13 +215,11 @@ final class LinkAuthFlowCoordinator {
                 let errorCode = error._stp_error_code.flatMap(LinkUtils.ConsumerErrorCode.init(rawValue:))
                 switch errorCode {
                 case .consumerVerificationExpired, .consumerVerificationNotFound:
-                    self.challenge?.isStarted = false
-                    self.previousChallenges[challenge.type]?.isStarted = false
+                    self.invalidateChallenge(challenge.type)
                     self.sendCode(isResending: false)
                     return
                 case .consumerVerificationMaxAttemptsExceeded:
-                    self.challenge?.isStarted = false
-                    self.previousChallenges[challenge.type]?.isStarted = false
+                    self.invalidateChallenge(challenge.type)
                 default:
                     break
                 }
@@ -242,18 +239,7 @@ final class LinkAuthFlowCoordinator {
         switch result {
         case .completed:
             completedWebHandoff = true
-            request(
-                { completion in
-                    self.account.refreshAuthSession(
-                        recoverCredentials: false,
-                        completion: completion
-                    )
-            }) { result in
-                switch result {
-                case .success: self.advance()
-                case .failure(let error): self.block(error.localizedDescription)
-                }
-            }
+            refreshAndAdvance()
         case .canceled, .switchAccount, .failed:
             finish(result)
         }
@@ -367,14 +353,14 @@ final class LinkAuthFlowCoordinator {
                 self.screen = .otp
                 self.resetInput()
                 if isResending {
-                    self.resendCount += 1
                     self.challenge?.resendDeadline = self.now().addingTimeInterval(10)
                 }
                 self.previousChallenges[challenge.type] = self.challenge
                 self.onUpdate?()
             case .failure(let error):
                 STPAnalyticsClient.sharedClient.logLink2FAStartFailure(type: challenge.type)
-                if challenge.type == .email, ["phone_number_missing", "phone_number_mismatch"].contains(error._stp_error_code ?? "") {
+                let errorCode = error._stp_error_code.flatMap(LinkUtils.ConsumerErrorCode.init(rawValue:))
+                if challenge.type == .email, errorCode == .phoneNumberMissing || errorCode == .phoneNumberMismatch {
                     self.screen = .phoneMatch
                     self.challenge?.isStarted = false
                 }
@@ -397,17 +383,27 @@ final class LinkAuthFlowCoordinator {
             onWebHandoff?(url)
         } else if !refreshedFallbackURL {
             refreshedFallbackURL = true
-            request({ completion in
-                self.account.refreshAuthSession(recoverCredentials: false, completion: completion)
-            }) { result in
-                switch result {
-                case .success: self.advance()
-                case .failure(let error): self.block(error.localizedDescription)
-                }
-            }
+            refreshAndAdvance()
         } else {
             block()
         }
+    }
+
+    private func refreshAndAdvance() {
+        request({ completion in
+            self.account.refreshAuthSession(recoverCredentials: false, completion: completion)
+        }) { result in
+            switch result {
+            case .success: self.advance()
+            case .failure(let error): self.block(error.localizedDescription)
+            }
+        }
+    }
+
+    /// Marks the challenge as needing a new code, including its cached copy used when navigating back.
+    private func invalidateChallenge(_ type: SupportedVerificationType) {
+        challenge?.isStarted = false
+        previousChallenges[type]?.isStarted = false
     }
 
     private func resetInput() {
