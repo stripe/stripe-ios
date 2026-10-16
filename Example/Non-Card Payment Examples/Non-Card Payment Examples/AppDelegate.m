@@ -10,7 +10,6 @@
 @import StripeCore;
 #import "AppDelegate.h"
 #import "Constants.h"
-#import "BrowseExamplesViewController.h"
 
 @implementation AppDelegate
 
@@ -18,29 +17,10 @@
     if (StripePublishableKey) {
         [StripeAPI setDefaultPublishableKey:StripePublishableKey];
     }
-    UIViewController *rootVC = [[BrowseExamplesViewController alloc] init];
-    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:rootVC];
-    UIWindow *window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
-    window.rootViewController = nav;
-    [window makeKeyAndVisible];
-    self.window = window;
+    // The window and returnURL handling live in `SceneDelegate`, since UIKit
+    // routes URLs to the scene rather than the app delegate when using the
+    // scene-based life cycle.
     return YES;
-}
-
-/**
- This method is implemented to route returnURLs back to the Stripe SDK.
- 
- @see https://stripe.com/docs/payments/3d-secure#return-url
- */
-- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options {
-    BOOL stripeHandled = [StripeAPI handleStripeURLCallbackWithURL:url];
-    if (stripeHandled) {
-        return YES;
-    } else {
-        // This was not a stripe url – do whatever url handling your app
-        // normally does, if any.
-    }
-    return NO;
 }
 
 @end
