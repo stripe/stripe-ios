@@ -8,6 +8,7 @@ MINOR
 
 ### CryptoOnramp (Alpha)
 * [Changed] Apple Pay card previews now include the card funding type (Credit, Debit, or Prepaid), falling back to Card when unavailable, matching Link's formatting.
+* [Changed] Renamed `CryptoOnrampCoordinator.fulfillKYCRequirement(from:)` to `fulfillKYCRequirements(from:)` and `FulfillKYCRequirementResult` to `FulfillKYCRequirementsResult`.
 
 ### Identity
 * [Changed] Test-mode verification sessions now upload placeholder document and selfie images instead of users' images.
@@ -139,6 +140,10 @@ MINOR
 * [Added] Added support for Bizum payments.
 
 ## 26.5.0 2026-08-03
+### Identity
+* [Fixed] Fixed camera setup failures on devices whose cameras do not support 4K capture by falling back to a supported capture preset. ([#6695](https://github.com/stripe/stripe-ios/pull/6695))
+* [Changed] Manual document capture is now available when a verification session requires live capture. ([#6815](https://github.com/stripe/stripe-ios/pull/6815))
+
 ### CryptoOnramp (Alpha)
 * [Added] Added support for registering wallet addresses on the Tempo network.
 
@@ -214,6 +219,7 @@ MINOR
 
 ### Identity
 * [Added] Added a manual capture mode for identity document verification, allowing users to tap "Take Photo" instead of relying on automatic capture. ([#6379](https://github.com/stripe/stripe-ios/pull/6379))
+* [Changed] Increased horizontal padding in Identity screen headers. ([#6300](https://github.com/stripe/stripe-ios/pull/6300))
 
 ### PaymentSheet
 * [Fixed] Fixed an NSRangeException crash in address autocomplete search results.
@@ -261,6 +267,7 @@ MINOR
 ## 25.12.0 2026-04-27
 ### Identity
 * [Improved] Improved StripeIdentity analytics with richer error details and screen/camera context to help debug verification flows.
+* [Fixed] The web-based Identity verification flow now offers a retry when its web content process terminates. ([#6243](https://github.com/stripe/stripe-ios/pull/6243))
 
 ### All
 * [Removed] Removed UPI support across the SDK.
