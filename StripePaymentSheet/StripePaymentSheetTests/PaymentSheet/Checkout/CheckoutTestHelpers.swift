@@ -320,14 +320,16 @@ enum CheckoutTestHelpers {
         // Init can trigger a session update (e.g. billing address tax sync); just echo the session back.
         stub(condition: { request in
             request.httpMethod == "POST"
-                && request.url?.path == "/v1/payment_pages/\(sessionId)"
+                && request.url?.path == "/v1/checkout_client/\(sessionId)/update"
         }) { _ in
             var responseJSON = jsonObject(apiResponse.allResponseFields) as? [String: Any] ?? [:]
             responseJSON["session_id"] = responseJSON["session_id"] ?? sessionId
-            let data = try! JSONSerialization.data(withJSONObject: responseJSON, options: [])
+            let data = try! JSONSerialization.data(
+                withJSONObject: checkoutClientInitJSON(from: responseJSON, sessionId: sessionId),
+                options: []
+            )
             return HTTPStubsResponse(data: data, statusCode: 200, headers: nil)
         }
-
         return apiClient
     }
 
@@ -374,7 +376,7 @@ enum CheckoutTestHelpers {
         }
 
         stub { request in
-            request.url?.path == "/v1/payment_pages/\(sessionId)"
+            request.url?.path == "/v1/checkout_client/\(sessionId)/update"
         } response: { request in
             requestRecorder.append(
                 .init(
@@ -384,7 +386,10 @@ enum CheckoutTestHelpers {
             )
             let updateRequestNumber = requestRecorder.requests.filter { $0.kind == .updateSession }.count
             return HTTPStubsResponse(
-                jsonObject: sessionJSON(),
+                jsonObject: checkoutClientInitJSON(
+                    from: jsonObject(sessionJSON()) as? [String: Any] ?? [:],
+                    sessionId: sessionId
+                ),
                 statusCode: updateStatusCode(updateRequestNumber),
                 headers: nil
             )
@@ -392,7 +397,7 @@ enum CheckoutTestHelpers {
     }
 
     /// Presents the shared Payment Pages test session using the CheckoutClient init field names.
-    private static func checkoutClientInitJSON(from session: [String: Any], sessionId: String) -> [String: Any] {
+    static func checkoutClientInitJSON(from session: [String: Any], sessionId: String) -> [String: Any] {
         let elementsSession = session["elements_session"] as? [String: Any] ?? [:]
         var response = session
         response["id"] = session["session_id"] ?? sessionId
