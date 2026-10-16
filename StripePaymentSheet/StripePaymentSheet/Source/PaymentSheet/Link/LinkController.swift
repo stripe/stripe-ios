@@ -73,6 +73,13 @@ import UIKit
         case canceled
     }
 
+    @frozen @_spi(STP) public enum PartnerTermsResult {
+        /// The user accepted the partner terms.
+        case accepted
+        /// The user dismissed the partner terms without accepting.
+        case canceled
+    }
+
     /// Errors specific incorrect integrations with LinkController
     @_spi(STP) public enum IntegrationError: LocalizedError {
         case noPaymentMethodSelected
@@ -180,6 +187,16 @@ import UIKit
     }
 
     @_spi(STP) public static var linkIcon: UIImage = Image.link_icon.makeImage()
+
+    /// Formats card details using the same localized funding description and masking as a selected Link card.
+    /// - Parameters:
+    ///   - brand: The card brand.
+    ///   - funding: The card funding value returned by the PaymentMethod API, such as `credit` or `debit`.
+    ///   - last4: The last four digits of the card.
+    @_spi(STP) public nonisolated static func formattedCardDetails(brand: STPCardBrand, funding: String?, last4: String) -> String {
+        let linkFunding = ConsumerPaymentDetails.Details.Card.Funding(rawValue: funding?.uppercased() ?? "") ?? .unparsable
+        return ConsumerPaymentDetails.Details.Card.formattedString(brand: brand, funding: linkFunding, last4: last4)
+    }
 
     private func iconForPaymentDetails(_ paymentDetails: ConsumerPaymentDetails) -> UIImage {
         guard let appearance, appearance.reduceLinkBranding else {
@@ -814,40 +831,33 @@ import UIKit
         from viewController: UIViewController,
         onConfirm: @escaping (() async throws -> Void)
     ) async throws -> VerifyKYCResult {
-        return try await withCheckedThrowingContinuation { continuation in
-            Task { @MainActor in
-                let verifyKYCViewController = VerifyKYCViewController(info: info, appearance: appearance)
-                verifyKYCViewController.onResult = { [weak verifyKYCViewController] result in
-                    verifyKYCViewController?.onResult = nil
+        let verifyKYCViewController = VerifyKYCViewController(info: info, appearance: appearance)
+        // The coordinator is used again for dismissal, so this operation owns it while awaiting user input.
+        let result: VerifyKYCResult = await withCheckedContinuation { continuation in
+            verifyKYCViewController.onResult = { [weak verifyKYCViewController] result in
+                verifyKYCViewController?.onResult = nil
+                continuation.resume(returning: result)
+            }
+            viewController.presentAsSheet(verifyKYCViewController.sheetContainer)
+        }
 
-                    // We'll report the result back to the caller after dismissal of the sheet.
-                    let dismissAndResumeWithResult: (Result<VerifyKYCResult, Swift.Error>) -> Void = { continuationResult in
-                        verifyKYCViewController?.dismiss(animated: true) {
-                            continuation.resume(with: continuationResult)
-                        }
-                    }
-
-                    switch result {
-                    case .canceled, .updateAddress:
-                        dismissAndResumeWithResult(.success(result))
-                    case .confirmed:
-                        Task {
-                            do {
-                                // Complete any async operation from the caller before dismissing.
-                                try await onConfirm()
-                                dismissAndResumeWithResult(.success(result))
-                            } catch {
-                                dismissAndResumeWithResult(.failure(error))
-                            }
-                        }
-                    @unknown default:
-                        dismissAndResumeWithResult(.success(result))
-                    }
-                }
-
-                viewController.presentAsBottomSheet(verifyKYCViewController, appearance: .init())
+        var completionResult: Result<VerifyKYCResult, Swift.Error> = .success(result)
+        if case .confirmed = result {
+            do {
+                // Complete any async operation from the caller before dismissing.
+                try await onConfirm()
+            } catch {
+                completionResult = .failure(error)
             }
         }
+
+        // We'll report the result back to the caller after dismissal of the sheet.
+        await withCheckedContinuation { continuation in
+            verifyKYCViewController.dismiss(animated: true) {
+                continuation.resume(returning: ())
+            }
+        }
+        return try completionResult.get()
     }
 
     /// Presents the user attestation to the user.
@@ -868,40 +878,133 @@ import UIKit
         from viewController: UIViewController,
         onConfirm: @escaping (() async throws -> Void)
     ) async throws -> UserAttestationResult {
-        return try await withCheckedThrowingContinuation { continuation in
-            Task { @MainActor in
-                let attestationViewController = UserAttestationViewController(
-                    html: html,
-                    appearance: appearance,
-                    brand: resolvedLinkBrand
-                )
-                attestationViewController.onResult = { [weak attestationViewController] result in
-                    attestationViewController?.onResult = nil
+        let result = try await presentHTMLConfirmation(
+            heading: String.Localized.user_attestation,
+            html: html,
+            confirmationButtonTitle: String.Localized.accept,
+            appearance: appearance,
+            from: viewController,
+            onConfirm: onConfirm
+        )
 
-                    let dismissAndResumeWithResult = { continuationResult in
-                        attestationViewController?.dismiss(animated: true) {
-                            continuation.resume(with: continuationResult)
-                        }
-                    }
+        switch result {
+        case .confirmed:
+            return .confirmed
+        case .canceled:
+            return .canceled
+        }
+    }
 
-                    switch result {
-                    case .canceled:
-                        dismissAndResumeWithResult(.success(result))
-                    case .confirmed:
-                        Task {
-                            do {
-                                try await onConfirm()
-                                dismissAndResumeWithResult(.success(result))
-                            } catch {
-                                dismissAndResumeWithResult(.failure(error))
-                            }
-                        }
-                    }
-                }
+    /// Presents terms and conditions to the user.
+    ///
+    /// This method presents a bottom sheet displaying the provided terms and conditions HTML for user review.
+    /// The user can accept the terms and conditions or cancel.
+    ///
+    /// - Parameters:
+    ///   - html: The terms and conditions HTML to display to the user.
+    ///   - appearance: Appearance configuration for the terms and conditions UI.
+    ///   - viewController: The view controller from which to present the terms and conditions.
+    ///   - onAccept: An async closure called when the user accepts. This is called *before* dismissal, allowing the caller to complete any async operations before the sheet is dismissed.
+    /// - Returns: A `PartnerTermsResult` indicating whether the user accepted or canceled.
+    /// Throws any error thrown by the `onAccept` handler.
+    @_spi(STP) public func presentTermsAndConditions(
+        html: String,
+        appearance: LinkAppearance,
+        from viewController: UIViewController,
+        onAccept: @escaping (() async throws -> Void)
+    ) async throws -> PartnerTermsResult {
+        let result = try await presentHTMLConfirmation(
+            heading: String.Localized.terms_and_conditions,
+            html: html,
+            confirmationButtonTitle: String.Localized.accept,
+            appearance: appearance,
+            from: viewController,
+            onConfirm: onAccept
+        )
 
-                viewController.presentAsBottomSheet(attestationViewController, appearance: .init())
+        switch result {
+        case .confirmed:
+            return .accepted
+        case .canceled:
+            return .canceled
+        }
+    }
+
+    /// Presents terms of service to the user.
+    ///
+    /// This method presents a bottom sheet displaying the provided terms of service HTML for user review.
+    /// The user can accept the terms of service or cancel.
+    ///
+    /// - Parameters:
+    ///   - html: The terms of service HTML to display to the user.
+    ///   - appearance: Appearance configuration for the terms of service UI.
+    ///   - viewController: The view controller from which to present the terms of service.
+    ///   - onAccept: An async closure called when the user accepts. This is called *before* dismissal, allowing the caller to complete any async operations before the sheet is dismissed.
+    /// - Returns: A `PartnerTermsResult` indicating whether the user accepted or canceled.
+    /// Throws any error thrown by the `onAccept` handler.
+    @_spi(STP) public func presentTermsOfService(
+        html: String,
+        appearance: LinkAppearance,
+        from viewController: UIViewController,
+        onAccept: @escaping (() async throws -> Void)
+    ) async throws -> PartnerTermsResult {
+        let result = try await presentHTMLConfirmation(
+            heading: String.Localized.terms_of_service,
+            html: html,
+            confirmationButtonTitle: String.Localized.accept,
+            appearance: appearance,
+            from: viewController,
+            onConfirm: onAccept
+        )
+
+        switch result {
+        case .confirmed:
+            return .accepted
+        case .canceled:
+            return .canceled
+        }
+    }
+
+    private func presentHTMLConfirmation(
+        heading: String,
+        html: String,
+        confirmationButtonTitle: String,
+        appearance: LinkAppearance,
+        from viewController: UIViewController,
+        onConfirm: @escaping (() async throws -> Void)
+    ) async throws -> HTMLConfirmationResult {
+        let confirmationViewController = HTMLConfirmationViewController(
+            heading: heading,
+            html: html,
+            confirmationButtonTitle: confirmationButtonTitle,
+            appearance: appearance,
+            brand: resolvedLinkBrand
+        )
+        // The coordinator is used again for dismissal, so this operation owns it while awaiting user input.
+        let result: HTMLConfirmationResult = await withCheckedContinuation { continuation in
+            confirmationViewController.onResult = { [weak confirmationViewController] result in
+                confirmationViewController?.onResult = nil
+                continuation.resume(returning: result)
+            }
+            viewController.presentAsSheet(confirmationViewController.sheetContainer)
+        }
+
+        var completionResult: Result<HTMLConfirmationResult, Swift.Error> = .success(result)
+        if case .confirmed = result {
+            do {
+                try await onConfirm()
+            } catch {
+                completionResult = .failure(error)
             }
         }
+
+        // Dismiss before returning, even when confirmation fails.
+        await withCheckedContinuation { continuation in
+            confirmationViewController.dismiss(animated: true) {
+                continuation.resume(returning: ())
+            }
+        }
+        return try completionResult.get()
     }
 
     /// Logs out the current Link user, if any.
@@ -1177,20 +1280,16 @@ import UIKit
 
         fullConsentViewController.delegate = self
 
-        let bottomSheetViewController = BottomSheetViewController(
+        let bottomSheetViewController = PaymentSheetContainerFactory.make(
             contentViewController: fullConsentViewController,
             appearance: paymentElementConfiguration.appearance,
-            isTestMode: false,
             didCancelNative3DS2: {}
         )
 
         // Store completion handler for use in delegate method
         self.fullConsentCompletion = completion
 
-        viewController.presentAsBottomSheet(
-            bottomSheetViewController,
-            appearance: paymentElementConfiguration.appearance
-        )
+        viewController.presentAsSheet(bottomSheetViewController)
     }
 }
 

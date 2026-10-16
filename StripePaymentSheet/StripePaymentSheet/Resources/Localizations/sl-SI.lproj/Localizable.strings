@@ -46,7 +46,19 @@
 
 "Buy now or pay later with Klarna" = "Kupite zdaj ali pa za plačilo pozneje uporabite Klarna";
 
+"By confirming your payment with GCash, you allow %@ to charge your GCash account for future payments in accordance with their terms." = "S potrditvijo plačila z GCash dovoljujete, da %@ bremeni vaš račun GCash za prihodnja plačila v skladu z njihovimi pogoji.";
+
+"By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "S potrditvijo plačila s storitvijo NICEPAY dovoljujete, da %@ bremeni ta način plačila za prihodnja plačila v skladu z njihovimi pogoji.";
+
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "S potrditvijo plačila s storitvijo PayPal pooblaščate podjetje %@, da bremeni vaš račun za PayPal s prihodnjimi plačili v skladu s pogoji podjetja.";
+
+"By confirming your payment with Touch 'n Go, you allow %@ to charge your Touch 'n Go account for future payments in accordance with their terms." = "S potrditvijo plačila s Touch 'n Go dovoljujete, da %@ bremeni vaš račun Touch 'n Go za prihodnja plačila v skladu z njihovimi pogoji.";
+
+"By confirming your payment with TrueMoney, you allow %@ to charge your TrueMoney account for future payments in accordance with their terms." = "S potrditvijo plačila s TrueMoney dovoljujete, da %@ bremeni vaš račun TrueMoney za prihodnja plačila v skladu z njihovimi pogoji.";
+
+"By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their <terms>terms of use</terms>." = "S potrditvijo plačila se strinjate, da bo vašo transakcijo obdelalo podjetje Global Stack Services Limited kot uradni trgovec in v skladu z njihovimi <terms>pogoji uporabe</terms>.";
+
+"By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their <terms>terms</terms>." = "S potrditvijo plačila se strinjate, da bo vašo transakcijo obdelalo podjetje Global Stack Services Limited kot uradni trgovec in v skladu z njihovimi <terms>pogoji</terms>.";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Če potrdite preusmeritev v storitev Amazon Pay, pooblaščate podjetje %@, da bremeni vaš račun Amazon Pay s prihodnjimi plačili v skladu s pogoji podjetja.";
 
@@ -110,6 +122,8 @@
 
 "Code sent" = "Koda je bila poslana";
 
+"Complete the payment using Pix to finish the purchase." = "Dokončajte plačilo z uporabo Pix za zaključek nakupa.";
+
 "Confirm" = "Potrdi";
 
 "Confirm payment details" = "Potrdite podatke o plačilu";
@@ -170,6 +184,8 @@
 
 "IBAN" = "IBAN";
 
+"Invoice payment for business buyers." = "Plačilo računa za poslovne kupce.";
+
 "Keep Editing" = "Nadaljuj z urejanjem";
 
 "Last 4 digits of SSN" = "Zadnje 4 števke SSN";
@@ -191,6 +207,10 @@
 "Manage your payment methods" = "Upravljajte svoje načine plačila";
 
 "Name on card" = "Ime na kartici";
+
+"Naver Pay Card" = "Naver Pay Card";
+
+"Naver Pay Money/Point" = "Naver Pay Money/Point";
 
 "New card" = "Nova kartica";
 
@@ -248,8 +268,6 @@
 
 "Point the camera at your card." = "Usmerite kamero v kartico.";
 
-"Processing..." = "Obdelovanje ...";
-
 "Przelewy24 Bank" = "Banka Przelewy24";
 
 "Remove %@" = "Odstranite %@";
@@ -288,6 +306,8 @@
 
 "Select card" = "Izberite kartico";
 
+"Select how you want to pay:" = "Izberite, kako želite plačati:";
+
 "Select payment method" = "Izberite način plačila";
 
 "Select your payment method" = "Izberite način plačila";
@@ -324,6 +344,10 @@
 
 "Tax" = "Davek";
 
+"Terms and Conditions" = "Pogoji in določila";
+
+"Terms of Service" = "Pogoji storitve";
+
 "The IBAN you entered is incomplete." = "Vnesena koda IBAN ni popolna.";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Vnesena koda IBAN ni veljavna. »%@« ni podprta koda države.";
@@ -331,6 +355,8 @@
 "The provided verification code has expired." = "Navedena potrditvena koda je potekla.";
 
 "The provided verification code is incorrect." = "Navedena potrditvena koda ni pravilna.";
+
+"This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "To je mednarodni nakup in ne vključuje 3,5-% pristojbine IOF. Z nadaljevanjem potrjujete in sprejemate <terms>Pogoje in določila družbe Ebanx</terms>.";
 
 "This is your default" = "To je vaš privzeti način plačila";
 

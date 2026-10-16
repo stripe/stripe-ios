@@ -71,11 +71,26 @@
 /* Subtitle shown on a button allowing a user to select to pay with Clearpay. */
 "Buy Now, Pay Later with Clearpay" = "Buy Now, Pay Later with Clearpay";
 
+/* GCash mandate text. The placeholder is the merchant's name. */
+"By confirming your payment with GCash, you allow %@ to charge your GCash account for future payments in accordance with their terms." = "By confirming your payment with GCash, you allow %@ to charge your GCash account for future payments in accordance with their terms.";
+
 /* Korean payment method mandate text */
 "By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms.";
 
 /* Paypal mandate text */
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms.";
+
+/* Touch 'n Go mandate text. The placeholder is the merchant's name. */
+"By confirming your payment with Touch 'n Go, you allow %@ to charge your Touch 'n Go account for future payments in accordance with their terms." = "By confirming your payment with Touch 'n Go, you allow %@ to charge your Touch 'n Go account for future payments in accordance with their terms.";
+
+/* TrueMoney mandate text. The placeholder is the merchant's name. */
+"By confirming your payment with TrueMoney, you allow %@ to charge your TrueMoney account for future payments in accordance with their terms." = "By confirming your payment with TrueMoney, you allow %@ to charge your TrueMoney account for future payments in accordance with their terms.";
+
+/* Nigerian payment method disclosure. The terms tags mark the link to the merchant of record's terms of use. */
+"By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their <terms>terms of use</terms>." = "By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their <terms>terms of use</terms>.";
+
+/* Naira Wallet disclosure. The terms tags mark the link to the merchant of record's terms. */
+"By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their <terms>terms</terms>." = "By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their <terms>terms</terms>.";
 
 /* Amazon Pay mandate text */
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms.";
@@ -166,6 +181,9 @@
 
 /* Text of a notification shown to the user when a login code is successfully sent via SMS. */
 "Code sent" = "Code sent";
+
+/* Instructions shown while waiting for a Pix payment authorization */
+"Complete the payment using Pix to finish the purchase." = "Complete the payment using Pix to finish the purchase.";
 
 /* Title used for various UIs, including a button that confirms entered payment details or the selection of a payment method. */
 "Confirm" = "Confirm";
@@ -261,6 +279,9 @@ with the transaction. */
 /* Label for an IBAN field */
 "IBAN" = "IBAN";
 
+/* Message shown when Mondu is selected */
+"Invoice payment for business buyers." = "Invoice payment for business buyers.";
+
 /* Button title in a confirmation alert that dismisses the alert and returns the customer to editing their address. */
 "Keep Editing" = "Keep Editing";
 
@@ -293,6 +314,12 @@ with the transaction. */
 
 /* Label for name on card field */
 "Name on card" = "Name on card";
+
+/* Naver Pay card funding source */
+"Naver Pay Card" = "Naver Pay Card";
+
+/* Naver Pay money or points funding source */
+"Naver Pay Money/Point" = "Naver Pay Money/Point";
 
 /* Label of a button that appears on a checkout screen. When tapped, it displays a credit card form. This button is shown next to another button representing the customer's saved card; the word 'new' is meant to differentiate this button's action with the saved card button. */
 "New card" = "New card";
@@ -380,9 +407,6 @@ e.g, 'Pay faster at Example, Inc. and thousands of businesses.' */
 /* Accessibility instructions for card scanning. */
 "Point the camera at your card." = "Point the camera at your card.";
 
-/* Label of a button that, when tapped, initiates payment, becomes disabled, and displays this text */
-"Processing..." = "Processing...";
-
 /* Label title for Przelewy24 Bank */
 "Przelewy24 Bank" = "Przelewy24 Bank";
 
@@ -438,6 +462,9 @@ e.g, 'Pay faster at Example, Inc. and thousands of businesses.' */
 
 /* Title shown above a view containing the customer's card payment methods */
 "Select card" = "Select card";
+
+/* Label for the Naver Pay funding source selector */
+"Select how you want to pay:" = "Select how you want to pay:";
 
 /* Title shown above a view containing the customer's payment methods */
 "Select payment method" = "Select payment method";
@@ -497,6 +524,12 @@ is not supported by the merchant */
 /* Label for the tax row in an order summary. */
 "Tax" = "Tax";
 
+/* Title label for a screen showing terms and conditions */
+"Terms and Conditions" = "Terms and Conditions";
+
+/* Title label for a screen showing terms of service */
+"Terms of Service" = "Terms of Service";
+
 /* An error message. */
 "The IBAN you entered is incomplete." = "The IBAN you entered is incomplete.";
 
@@ -508,6 +541,9 @@ is not supported by the merchant */
 
 /* Error message shown when the user enters an incorrect verification code. */
 "The provided verification code is incorrect." = "The provided verification code is incorrect.";
+
+/* Disclosure for an international Pix payment. The terms tags enclose a link to Ebanx's terms. */
+"This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>.";
 
 /* Text of a label indicating that a payment method is the default. */
 "This is your default" = "This is your default";

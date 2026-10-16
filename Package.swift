@@ -205,7 +205,8 @@ let package = Package(
             path: "StripeCryptoOnramp/StripeCryptoOnramp",
             exclude: ["StripeCryptoOnramp.h"],
             resources: [
-                .process("Resources/StripeCryptoOnramp.xcassets")
+                .process("Resources/StripeCryptoOnramp.xcassets"),
+                .process("Resources/Localizations")
             ]
         )
     ]

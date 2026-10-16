@@ -43,15 +43,9 @@ final class BottomSheetView: UIView {
         return verticalStack
     }()
 
-    private let closeButton: Button = Button(
-        configuration: .identityPrimary(), title: String.Localized.close
-    )
+    private let closeButton: Button
 
-    private let closeButtonBackground: UIView = {
-        let buttonBackground = UIView()
-        buttonBackground.backgroundColor = .systemBackground
-        return buttonBackground
-    }()
+    private let closeButtonBackground = UIView()
 
     private let didTapClose: () -> Void
 
@@ -59,14 +53,23 @@ final class BottomSheetView: UIView {
 
     init(
         content: BottomSheetViewController.BottomSheetContent,
+        primaryButtonStyle: IdentityVerificationSheet.Configuration.PrimaryButtonStyle = .default,
         didTapClose: @escaping () -> Void,
         didOpenURL: @escaping (URL) -> Void
     ) throws {
         self.content = content
+        self.closeButton = Button(configuration: .identityPrimary(style: primaryButtonStyle), title: String.Localized.close)
         self.didTapClose = didTapClose
         super.init(frame: .zero)
         backgroundColor = IdentityUI.identityElementsUITheme.colors.componentBackground
 
+        let minimumHeight: CGFloat?
+        if case let .custom(_, _, height) = primaryButtonStyle {
+            minimumHeight = height
+        } else {
+            minimumHeight = nil
+        }
+        closeButton.applyIdentityButtonShape(minimumHeight: minimumHeight)
         closeButton.addTarget(self, action: #selector(tappedClose(button:)), for: .touchUpInside)
         closeButtonBackground.addAndPinSubviewToSafeArea(closeButton, insets: BottomSheetView.bottomSheetCloseButtonInsets)
 
@@ -95,7 +98,6 @@ final class BottomSheetView: UIView {
         closeButtonBackground.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
-            heightAnchor.constraint(equalToConstant: calculateContentHeight()),
             scrollView.leadingAnchor.constraint(equalTo: leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: trailingAnchor),
             scrollView.topAnchor.constraint(equalTo: topAnchor),
@@ -111,27 +113,10 @@ final class BottomSheetView: UIView {
         ])
     }
 
-    /// Calcualte all paddings added to vertical stack, used to determine height of scrollview
-    private func linePaddings() -> CGFloat {
-        // start with top and bottom padding
-        var padding: CGFloat = BottomSheetView.bottomSheetPadding * 2
-        if content.title != nil {
-            padding += BottomSheetView.bottomSheetLinePadding
-
-        }
-
-        content.lines.forEach { _ in
-            padding += BottomSheetView.bottomSheetLineContentPadding
-            padding += BottomSheetView.bottomSheetLinePadding
-        }
-        return padding
-    }
-
-    /// Calculate height of content by adding vertical stack&button and paddings together. If height is over half of screen size, set max height at half of screen size.
-    private func calculateContentHeight() -> CGFloat {
-        let halfScreenHeight = UIScreen.main.bounds.height/2
-        let contentHeight = verticalStack.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height + linePaddings() + closeButtonBackground.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height
-        return min(halfScreenHeight, contentHeight)
+    /// Calculates the height of the content and close button.
+    func calculateContentHeight() -> CGFloat {
+        return verticalStack.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height
+            + closeButtonBackground.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height
     }
 
     private func configureVStack(

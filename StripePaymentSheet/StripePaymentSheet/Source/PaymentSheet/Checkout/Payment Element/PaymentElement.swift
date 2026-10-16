@@ -37,7 +37,7 @@ public final class PaymentElement {
 
     /// Presents a sheet that displays payment methods.
     /// - Parameter from: The view controller that presents the sheet. If you're using SwiftUI, you may pass nil and it will use the topmost UIViewController from the key window.
-    /// - Parameter completion: Called when the sheet is dismissed.
+    /// Returns when the sheet is dismissed.
     public func present(from viewController: UIViewController? = nil, completion: (() -> Void)? = nil) {
         guard let presentingViewController = viewController ?? UIWindow.visibleViewController else {
             let errorMessage = "PaymentElement.present(from:) could not find a presenting view controller."
@@ -238,8 +238,9 @@ extension CheckoutController.Session.PaymentOptionDisplayData {
     init(_ paymentOption: PaymentSheet.FlowController.PaymentOptionDisplayData) {
         self.init(
             image: paymentOption.image,
-            label: paymentOption.label,
-            billingDetails: paymentOption.billingDetails,
+            label: paymentOption.labels.label,
+            sublabel: paymentOption.labels.sublabel,
+            billingDetails: paymentOption.billingDetails.map(BillingDetails.init),
             paymentMethodType: paymentOption.paymentMethodType,
             mandateText: nil
         )
@@ -248,10 +249,35 @@ extension CheckoutController.Session.PaymentOptionDisplayData {
     init(_ paymentOption: EmbeddedPaymentElement.PaymentOptionDisplayData) {
         self.init(
             image: paymentOption.image,
-            label: paymentOption.label,
-            billingDetails: paymentOption.billingDetails,
+            label: paymentOption.labels.label,
+            sublabel: paymentOption.labels.sublabel,
+            billingDetails: paymentOption.billingDetails.map(BillingDetails.init),
             paymentMethodType: paymentOption.paymentMethodType,
             mandateText: paymentOption.mandateText
+        )
+    }
+}
+
+private extension CheckoutController.Session.PaymentOptionDisplayData.BillingDetails {
+    init(_ billingDetails: PaymentSheet.BillingDetails) {
+        self.init(
+            address: billingDetails.address == .init() ? nil : Address(billingDetails.address),
+            email: billingDetails.email,
+            name: billingDetails.name,
+            phone: billingDetails.phone
+        )
+    }
+}
+
+private extension CheckoutController.Session.PaymentOptionDisplayData.BillingDetails.Address {
+    init(_ address: PaymentSheet.Address) {
+        self.init(
+            city: address.city,
+            country: address.country,
+            line1: address.line1,
+            line2: address.line2,
+            postalCode: address.postalCode,
+            state: address.state
         )
     }
 }

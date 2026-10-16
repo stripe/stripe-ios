@@ -26,10 +26,11 @@ protocol VerificationSheetFlowControllerProtocol: AnyObject {
     var delegate: VerificationSheetFlowControllerDelegate? { get set }
 
     var navigationController: UINavigationController { get }
-    var brandColor: UIColor? { get }
 
     var documentUploader: DocumentUploaderProtocol? { get }
     var visitedIndividualWelcomePage: Bool { get }
+    var primaryButtonStyle: IdentityVerificationSheet.Configuration.PrimaryButtonStyle { get }
+    var secondaryButtonStyle: IdentityVerificationSheet.Configuration.SecondaryButtonStyle { get }
 
     func transitionToNextScreen(
         skipTestMode: Bool,
@@ -85,7 +86,8 @@ protocol VerificationSheetFlowControllerProtocol: AnyObject {
 final class VerificationSheetFlowController: NSObject {
 
     let brandLogo: UIImage
-    let brandColor: UIColor?
+    let primaryButtonStyle: IdentityVerificationSheet.Configuration.PrimaryButtonStyle
+    let secondaryButtonStyle: IdentityVerificationSheet.Configuration.SecondaryButtonStyle
     let biometricConsentConfiguration: IdentityVerificationSheet.Configuration.BiometricConsentConfiguration?
 
     weak var delegate: VerificationSheetFlowControllerDelegate?
@@ -100,7 +102,8 @@ final class VerificationSheetFlowController: NSObject {
         configuration: IdentityVerificationSheet.Configuration
     ) {
         self.brandLogo = configuration.brandLogo
-        self.brandColor = configuration.brandColor
+        self.primaryButtonStyle = configuration.resolvedPrimaryButtonStyle
+        self.secondaryButtonStyle = configuration.secondaryButtonStyle
         self.biometricConsentConfiguration = configuration.biometricConsent
     }
 
@@ -146,7 +149,8 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
             imageUploader: IdentityImageUploader(
                 configuration: .init(from: staticContent.documentCapture),
                 sheetController: sheetController
-            )
+            ),
+            isTestMode: !staticContent.livemode
         )
         self.documentUploader = documentUploader
         return documentUploader
@@ -762,7 +766,8 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
                     imageUploader: IdentityImageUploader(
                         configuration: .init(from: selfiePageConfig),
                         sheetController: sheetController
-                    )
+                    ),
+                    isTestMode: !staticContent.livemode
                 ),
                 anyFaceScanner: anyFaceScanner,
                 trainingConsent: trainingConsent

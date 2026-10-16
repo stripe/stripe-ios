@@ -5,6 +5,7 @@
 //  Created by Joyce Qin on 7/22/26.
 //
 
+@_spi(STP) import StripeCore
 import UIKit
 
 /// Handles Checkout mutations requested by an ExpressCheckoutElement.
@@ -38,10 +39,16 @@ public final class ExpressCheckoutElement {
     init(
         sessionSource: CheckoutSessionSource,
         configuration: ExpressCheckoutElement.Configuration,
-        delegate: ExpressCheckoutElementDelegate
+        delegate: ExpressCheckoutElementDelegate,
+        apiClient: STPAPIClient
     ) {
-        let uiView = ExpressCheckoutElementUIView(session: sessionSource.initialSession, configuration: configuration, delegate: delegate)
-        let viewModel = ExpressCheckoutElementViewModel(sessionSource: sessionSource, configuration: configuration, uiView: uiView)
+        let uiView = ExpressCheckoutElementUIView(
+            session: sessionSource.initialSession,
+            configuration: configuration,
+            delegate: delegate,
+            apiClient: apiClient
+        )
+        let viewModel = ExpressCheckoutElementViewModel(sessionSource: sessionSource, uiView: uiView)
         self.uiView = uiView
         self.view = ExpressCheckoutElementView(viewModel: viewModel)
     }

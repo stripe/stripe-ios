@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 import XCTest
 
-@testable import StripeIdentity
+@_spi(STP) @testable import StripeIdentity
 
 /// Mock to help us test behavior that relies on  VerificationSheetFlowController
 final class VerificationSheetFlowControllerMock: VerificationSheetFlowControllerProtocol {
@@ -19,9 +19,10 @@ final class VerificationSheetFlowControllerMock: VerificationSheetFlowController
     var uncollectedFields: Set<StripeAPI.VerificationPageFieldType>
     var isFinishedCollecting = false
     var analyticsLastScreen: IdentityFlowViewController?
-    var brandColor: UIColor?
 
     var visitedIndividualWelcomePage = false
+    var primaryButtonStyle: IdentityVerificationSheet.Configuration.PrimaryButtonStyle = .default
+    var secondaryButtonStyle: IdentityVerificationSheet.Configuration.SecondaryButtonStyle = .default
 
     weak var delegate: VerificationSheetFlowControllerDelegate?
 

@@ -1,0 +1,45 @@
+/* The text for warning when a debugger is currently attached to the process. */
+"A debugger is attached to the App." = "هناك مصحح أخطاء متصل بالتطبيق.";
+
+/* The text for warning when an emulator is being used to run the application. */
+"An emulator is being used to run the App." = "يتم استخدام محاكٍ لتشغيل التطبيق.";
+
+/* The text for the button that cancels the current challenge process. */
+"Cancel" = "إلغاء";
+
+/* Accessibility label for expandandable text control to indicate text is hidden. */
+"Collapsed" = "مطوي";
+
+/* Accessibility label for expandandable text control to indicate that the UI has been expanded and additional text is available. */
+"Expanded" = "موسع";
+
+/* Spoken by VoiceOver when the challenge is loading. */
+"Loading" = "جارٍ التحميل";
+
+/* The no answer to a yes or no question. */
+"No" = "لا";
+
+/* The title for the challenge response step of an authenticated checkout. */
+"Secure checkout" = "الدفع الآمن";
+
+/* Indicates that a button is selected. */
+"Selected" = "محدد";
+
+/* The text for warning when a device is jailbroken */
+"The device is jailbroken." = "تم اختراق حماية الجهاز.";
+
+/* The text for warning when the integrity of the SDK has been tampered with */
+"The integrity of the SDK has been tampered." = "تم العبث بسلامة حزمة تطوير البرامج (SDK).";
+
+/* The text for warning when the SDK is running on an unsupported OS or OS version. */
+"The OS or the OS Version is not supported." = "نظام التشغيل أو إصدار نظام التشغيل غير مدعوم.";
+
+/* Error description for when a network request times out. English value is as required by UL certification. */
+"Timeout" = "انتهت المهلة";
+
+/* Indicates that a button is not selected. */
+"Unselected" = "غير محدد";
+
+/* The yes answer to a yes or no question. */
+"Yes" = "نعم";
+

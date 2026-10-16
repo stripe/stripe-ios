@@ -6,6 +6,7 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 
 // This message is emitted when the SDK is requesting initialization info.
 class FetchInitParamsMessageHandler: ScriptMessageHandlerWithReply<VoidPayload, FetchInitParamsMessageHandler.Reply> {
@@ -14,7 +15,8 @@ class FetchInitParamsMessageHandler: ScriptMessageHandlerWithReply<VoidPayload, 
         var appearance: AppearanceWrapper
         var fonts: [CustomFontSourceWrapper] = []
     }
-    init(didReceiveMessage: @escaping (VoidPayload) async throws -> Reply) {
-        super.init(name: "fetchInitParams", didReceiveMessage: didReceiveMessage)
+    init(sourcePolicy: STPWebMessageSourcePolicy,
+         didReceiveMessage: @escaping (VoidPayload) async throws -> Reply) {
+        super.init(name: "fetchInitParams", sourcePolicy: sourcePolicy, didReceiveMessage: didReceiveMessage)
     }
 }

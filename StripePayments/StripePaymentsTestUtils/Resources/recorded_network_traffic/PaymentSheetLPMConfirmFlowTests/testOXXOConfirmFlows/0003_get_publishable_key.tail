@@ -1,0 +1,17 @@
+GET
+https:\/\/stp-mobile-playground-backend-v7\.stripedemos\.com\/publishable_key\?merchant=MX$
+200
+application/json
+Server: Google Frontend
+Content-Type: application/json; charset=utf-8
+x-powered-by: Express
+x-cloud-trace-context: e49c9c76a2a02b1a7cdb1b5bd473a83a
+Via: 1.1 google
+Date: Thu, 24 Sep 2026 15:11:27 GMT
+Content-Length: 129
+Alt-Svc: h3=":443"; ma=2592000
+Etag: W/"81-IYD0Fl1IYRL6fFIsga4wSa3MHnU"
+
+{
+  "publishable_key" : "pk_test_51NnSH9FAuts2AnGl15kIvSBIqIEPtAPAGntLwW7uih6XuEbc2P1bTCSQhkJDgnetaTqbLMU9KYvIMgv2GeNu5Idg00k22SjRUn"
+}

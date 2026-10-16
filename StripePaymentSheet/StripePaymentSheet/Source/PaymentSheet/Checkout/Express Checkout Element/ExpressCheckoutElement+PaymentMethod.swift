@@ -6,8 +6,9 @@
 //
 
 extension ExpressCheckoutElement {
-    enum PaymentMethod: Equatable {
-        case applePay
-        case link
+    /// A payment method supported by Express Checkout Element.
+    enum PaymentMethod: String, Equatable {
+        case applePay = "apple_pay"
+        case link = "link"
     }
 }

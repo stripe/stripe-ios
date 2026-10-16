@@ -10,7 +10,7 @@ import OHHTTPStubs
 import OHHTTPStubsSwift
 @testable @_spi(STP) import StripeCore
 @testable @_spi(STP) import StripePayments
-@testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(AppearanceAPIAdditionsPreview) @_spi(STP) import StripePaymentSheet
 @testable @_spi(STP) import StripeUICore
 import UIKit
 import XCTest
@@ -66,6 +66,50 @@ final class CheckoutUnitTests: XCTestCase {
         )
 
         XCTAssertNil(configuration.paymentElement)
+    }
+
+    func testPaymentElementUpdatePreservesNativeSheetPresentation() async throws {
+        // Given a loaded Checkout with both sheet and embedded integrations
+        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration())
+        let element = checkout.getPaymentElement()
+        let flowControllerPresentation = element.paymentSheetFlowController.nativeSheetPresentation
+        let embeddedPresentation = element.embeddedPaymentElement.nativeSheetPresentation
+
+        // When updating Checkout rebuilds both configurations
+        try await element.update(checkout: checkout)
+
+        // Then each integration retains its original native-sheet feature flag
+        XCTAssertIdentical(element.paymentSheetFlowController.nativeSheetPresentation, flowControllerPresentation)
+        XCTAssertIdentical(element.embeddedPaymentElement.nativeSheetPresentation, embeddedPresentation)
+    }
+
+    func testLinkConfirmationSharesPresentationWithSelectedIntegration() async throws {
+        // Given both integrations have selected Link
+        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration())
+        let element = checkout.getPaymentElement()
+        let confirmOption = PaymentSheet.LinkConfirmOption.wallet(brand: .link)
+        element.paymentSheetFlowController.viewController.linkConfirmOption = confirmOption
+        element.embeddedPaymentElement._test_paymentOption = .link(option: confirmOption)
+        element.embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: element.embeddedPaymentElement)
+
+        for usesFlowController in [false, true] {
+            // When Checkout builds Link confirmation from the selected integration
+            element.paymentOptionSourceOfTruthIsFlowController = usesFlowController
+            let flow = try XCTUnwrap(checkout.makeConfirmationFlow(
+                for: element,
+                presentingViewController: UIViewController()
+            ))
+
+            // Then Link shares that integration's original presentation state
+            guard case .link(let parameters) = flow else {
+                XCTFail("Expected Link confirmation")
+                return
+            }
+            let expectedPresentation = usesFlowController
+                ? element.paymentSheetFlowController.nativeSheetPresentation
+                : element.embeddedPaymentElement.nativeSheetPresentation
+            XCTAssertIdentical(parameters.nativeSheetPresentation, expectedPresentation)
+        }
     }
 
     func testPaymentElementIsNotCreatedWhenNotConfigured() async throws {
@@ -148,7 +192,19 @@ final class CheckoutUnitTests: XCTestCase {
 
         // Then the Checkout session mirrors the selected payment option
         XCTAssertEqual(checkout.session.paymentOption?.paymentMethodType, "card")
-        XCTAssertEqual(checkout.session.paymentOption?.label, "•••• 4242")
+        XCTAssertEqual(checkout.session.paymentOption?.label, "Visa")
+        XCTAssertEqual(checkout.session.paymentOption?.sublabel, "•••• 4242")
+
+        // ...and confirmation carries the embedded flow's presentation state for any required sheet
+        let flow = try XCTUnwrap(checkout.makeConfirmationFlow(
+            for: paymentElement,
+            presentingViewController: UIViewController()
+        ))
+        guard case .paymentMethod(let parameters, _) = flow else {
+            XCTFail("Expected payment method confirmation")
+            return
+        }
+        XCTAssertIdentical(parameters.nativeSheetPresentation, paymentElement.embeddedPaymentElement.nativeSheetPresentation)
 
         // When the Checkout payment option is cleared
         try await checkout.clearPaymentOption()
@@ -216,7 +272,123 @@ final class CheckoutUnitTests: XCTestCase {
         }
     }
 
-// MARK: - Address Override Tests
+    // MARK: - Promotion Code Tests
+
+    func testApplyPromotionCodeSendsCodeAndCommitsReturnedSession() async throws {
+        // Given an open Checkout Session whose update response contains a promotion code
+        let initialSessionJSON = CheckoutTestHelpers.openSessionJSON
+        let updatedSessionJSON = sessionJSONWithPromotionCode("SAVE25")
+        let (checkout, requestRecorder) = try await makeCheckoutForPromotionCodeUpdate(
+            initialSessionJSON: initialSessionJSON,
+            updatedSessionJSON: updatedSessionJSON
+        )
+        let emissionRecorder = CheckoutEmissionRecorder(checkout)
+
+        // When the merchant applies the promotion code
+        try await checkout.applyPromotionCode("SAVE25")
+
+        // Then Checkout sends the code and publishes the server-backed Session while loading
+        XCTAssertEqual(requestRecorder.requests.map(\.kind), [.initSession, .updateSession])
+        XCTAssertEqual(requestRecorder.requests.last?.params["promotion_code"], "SAVE25")
+        XCTAssertEqual(checkout.session.discountAmounts.first?.promotionCode, "SAVE25")
+        XCTAssertEqual(checkout.session.totals.total.minorUnitsAmount, 750)
+        XCTAssertEqual(emissionRecorder.loading, [true, false])
+    }
+
+    func testRemovePromotionCodeSendsEmptyCodeAndCommitsReturnedSession() async throws {
+        // Given a Checkout Session with an applied promotion code
+        let initialSessionJSON = sessionJSONWithPromotionCode("SAVE25")
+        let updatedSessionJSON = CheckoutTestHelpers.openSessionJSON
+        let (checkout, requestRecorder) = try await makeCheckoutForPromotionCodeUpdate(
+            initialSessionJSON: initialSessionJSON,
+            updatedSessionJSON: updatedSessionJSON
+        )
+        XCTAssertEqual(checkout.session.discountAmounts.first?.promotionCode, "SAVE25")
+
+        // When the merchant removes the promotion code
+        try await checkout.removePromotionCode()
+
+        // Then Checkout clears the code on the server and publishes the returned Session
+        XCTAssertEqual(requestRecorder.requests.map(\.kind), [.initSession, .updateSession])
+        XCTAssertEqual(requestRecorder.requests.last?.params["promotion_code"], "")
+        XCTAssertTrue(checkout.session.discountAmounts.isEmpty)
+        XCTAssertEqual(checkout.session.totals.total.minorUnitsAmount, 1000)
+    }
+
+    func testApplyPromotionCodeFailurePreservesSessionAndEndsLoading() async throws {
+        // Given an open Checkout Session whose update request will fail
+        var initialSessionJSON = CheckoutTestHelpers.openSessionJSON
+        initialSessionJSON["customer_email"] = "customer@example.com"
+        let (checkout, requestRecorder) = try await makeCheckoutForPromotionCodeUpdate(
+            initialSessionJSON: initialSessionJSON,
+            updatedSessionJSON: sessionJSONWithPromotionCode("SAVE25"),
+            updateStatusCode: 500
+        )
+        let emissionRecorder = CheckoutEmissionRecorder(checkout)
+
+        // When the merchant applies the promotion code
+        do {
+            try await checkout.applyPromotionCode("SAVE25")
+            XCTFail("Expected CheckoutError.apiError")
+        } catch CheckoutError.apiError {
+            // Expected
+        } catch {
+            XCTFail("Unexpected error: \(error)")
+        }
+
+        // Then Checkout keeps the previous Session and exits its loading state
+        XCTAssertEqual(requestRecorder.requests.last?.params["promotion_code"], "SAVE25")
+        XCTAssertEqual(checkout.session.email, "customer@example.com")
+        XCTAssertTrue(checkout.session.discountAmounts.isEmpty)
+        XCTAssertEqual(checkout.session.totals.total.minorUnitsAmount, 1000)
+        XCTAssertTrue(emissionRecorder.sessions.isEmpty)
+        XCTAssertEqual(emissionRecorder.loading, [true, false])
+    }
+
+    // MARK: - Email Updates
+
+    func testUpdateEmailSetsEmailLocally() async throws {
+        // Given a Checkout Session without a server email
+        let checkout = try await CheckoutController(
+            configuration: CheckoutTestHelpers.makeConfiguration(
+                paymentElementConfiguration: nil,
+                expressCheckoutElementConfiguration: nil
+            )
+        )
+        let recorder = CheckoutEmissionRecorder(checkout)
+
+        // When the merchant updates the email
+        try await checkout.updateEmail("local@example.com")
+
+        // Then Checkout publishes the local email
+        XCTAssertEqual(checkout.session.localState.email, "local@example.com")
+        XCTAssertEqual(checkout.session.email, "local@example.com")
+        XCTAssertEqual(recorder.sessions.count, 1)
+        XCTAssertEqual(recorder.loading, [true, false])
+    }
+
+    func testUpdateEmailClearsEmailLocally() async throws {
+        // Given a Checkout Session with a local email
+        let checkout = try await CheckoutController(
+            configuration: CheckoutTestHelpers.makeConfiguration(
+                paymentElementConfiguration: nil,
+                expressCheckoutElementConfiguration: nil
+            )
+        )
+        try await checkout.updateEmail("local@example.com")
+        let recorder = CheckoutEmissionRecorder(checkout)
+
+        // When the merchant clears the email
+        try await checkout.updateEmail(nil)
+
+        // Then Checkout publishes a Session without an email
+        XCTAssertNil(checkout.session.localState.email)
+        XCTAssertNil(checkout.session.email)
+        XCTAssertEqual(recorder.sessions.count, 1)
+        XCTAssertEqual(recorder.loading, [true, false])
+    }
+
+    // MARK: - Address Override Tests
 
     func testUpdateShippingAddress_noTax_setsLocallyAndEmitsUpdates() async throws {
         let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration())
@@ -293,7 +465,9 @@ final class CheckoutUnitTests: XCTestCase {
 
     func testShippingAddressElementSaveUpdatesCheckoutSession() async throws {
         // Given a ShippingAddressElement connected to its Checkout
-        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration())
+        var configuration = CheckoutTestHelpers.makeConfiguration()
+        configuration.shippingAddressElement = .init()
+        let checkout = try await CheckoutController(configuration: configuration)
         let shippingAddressElement = checkout.getShippingAddressElement()
 
         // When the element saves a collected address
@@ -334,6 +508,7 @@ final class CheckoutUnitTests: XCTestCase {
             clientSecret: "cs_test_123_secret_abc",
             returnURL: "stripe-ios-test://checkout-return"
         )
+        configuration.shippingAddressElement = .init()
         var shippingDetails = CheckoutController.Configuration.Defaults.ShippingDetails()
         shippingDetails.name = "Jane Doe"
         shippingDetails.address = .init(
@@ -440,9 +615,9 @@ final class CheckoutUnitTests: XCTestCase {
                 postalCode: "94105"
             )
         )
-        checkout.dangerouslySetSessionDirectly(
-            checkout.session.makeCopyOverriding(shippingAddress: .newValue(previousAddress))
-        )
+        var sessionWithPreviousAddress = checkout.session
+        sessionWithPreviousAddress.localState.shippingAddress = previousAddress
+        checkout.dangerouslySetSessionDirectly(sessionWithPreviousAddress)
 
         // ...and the server tax update fails
         stub(condition: { request in
@@ -526,8 +701,7 @@ final class CheckoutUnitTests: XCTestCase {
 
     func testTotalTaxExclusive_singleAmount() {
         var json = CheckoutTestHelpers.openSessionJSON
-        json["recurring_details"] = [
-            "total_discount_amounts": [],
+        json["total_summary"] = [
             "total_tax_amounts": [
                 [
                     "amount": 1185,
@@ -554,8 +728,7 @@ final class CheckoutUnitTests: XCTestCase {
 
     func testTotalTaxExclusive_multipleAmounts() {
         var json = CheckoutTestHelpers.openSessionJSON
-        json["recurring_details"] = [
-            "total_discount_amounts": [],
+        json["total_summary"] = [
             "total_tax_amounts": [
                 [
                     "amount": 500,
@@ -591,8 +764,9 @@ final class CheckoutUnitTests: XCTestCase {
     }
 
     func testTotalTaxAmounts_absent_isNil() {
-        // Given a response without total_tax_amounts
-        let json = CheckoutTestHelpers.openSessionJSON
+        // Given a total summary without total_tax_amounts
+        var json = CheckoutTestHelpers.openSessionJSON
+        json["total_summary"] = ["total": 1000]
 
         // When decoding the public Session
         let session = try! PaymentPagesAPIResponse.decode(fromAPIResponse: json).makePublicSession()
@@ -603,10 +777,9 @@ final class CheckoutUnitTests: XCTestCase {
     }
 
     func testTotalTaxAmounts_presentButEmpty_isEmpty() {
-        // Given a response with an explicitly empty total_tax_amounts array
+        // Given a response with an explicitly empty session-level total_tax_amounts array
         var json = CheckoutTestHelpers.openSessionJSON
-        json["recurring_details"] = [
-            "total_discount_amounts": [],
+        json["total_summary"] = [
             "total_tax_amounts": [],
         ]
 
@@ -616,6 +789,34 @@ final class CheckoutUnitTests: XCTestCase {
         // Then taxAmounts remains an empty, non-nil array
         XCTAssertNotNil(session.taxAmounts)
         XCTAssertTrue(session.taxAmounts?.isEmpty == true)
+    }
+
+    func testTotalTaxAmounts_usesTopLevelTotalSummary() throws {
+        // Given a response with session-level tax amounts and no recurring details
+        var json = CheckoutTestHelpers.openSessionJSON
+        let totalTaxAmount: [String: Any] = [
+            "amount": 195,
+            "inclusive": false,
+            "tax_rate": [
+                "display_name": "Sales Tax",
+                "percentage": 9.75,
+                "rate_type": "percentage",
+            ],
+        ]
+        json["total_summary"] = [
+            "total_tax_amounts": [totalTaxAmount],
+        ]
+        json.removeValue(forKey: "recurring_details")
+
+        // When decoding the public Session
+        let session = try PaymentPagesAPIResponse.decode(fromAPIResponse: json).makePublicSession()
+
+        // Then session tax amounts use the session-level aggregate
+        let taxAmount = try XCTUnwrap(session.taxAmounts?.first)
+        XCTAssertEqual(session.taxAmounts?.count, 1)
+        XCTAssertEqual(taxAmount.minorUnitsAmount, 195)
+        XCTAssertEqual(taxAmount.displayName, "Sales Tax")
+        XCTAssertEqual(taxAmount.percentage, 9.75)
     }
 
     func testAutomaticTaxComplete_zeroTaxableAmount_preservesComputedZeroTax() throws {
@@ -642,19 +843,7 @@ final class CheckoutUnitTests: XCTestCase {
             "computation_type": "automatic",
             "status": "complete",
         ]
-        json["recurring_details"] = [
-            "subtotal": 12000,
-            "total": 12000,
-            "total_discount_amounts": [],
-            "total_summary": [
-                "due": 12000,
-                "subtotal": 12000,
-                "total": 12000,
-                "total_discount_amount_aggregate": 0,
-                "total_discount_amounts": [],
-                "total_proration_amount_aggregate": 0,
-                "total_tax_amounts": [zeroTaxAmount],
-            ],
+        json["total_summary"] = [
             "total_tax_amounts": [zeroTaxAmount],
         ]
         setOneTimePriceAmounts(
@@ -702,45 +891,45 @@ final class CheckoutUnitTests: XCTestCase {
             "promotion_code": ["code": "SUMMER"],
         ]
         sessionJSON["recurring_details"] = [
-            "total_discount_amounts": [discountAmount],
+            "total_summary": [
+                "total_discount_amounts": [discountAmount],
+            ],
+        ]
+        sessionJSON["total_summary"] = [
             "total_tax_amounts": [],
         ]
-        let session = try! PaymentPagesAPIResponse.decode(fromAPIResponse: sessionJSON)
+        var session = try! PaymentPagesAPIResponse.decode(fromAPIResponse: sessionJSON)
             .makePublicSession()
-            .makeCopyOverriding(
-                shippingAddress: .newValue(
-                    .init(
-                        name: "Jenny Rosen",
-                        address: .init(
-                            country: "US",
-                            line1: "510 Townsend Street",
-                            city: "San Francisco",
-                            state: "CA",
-                            postalCode: "94103"
-                        )
-                    )
-                ),
-                paymentOption: .newValue(
-                    .init(
-                        image: UIImage(),
-                        label: "Visa ending in 4242",
-                        billingDetails: .init(
-                            address: .init(
-                                city: "San Francisco",
-                                country: "US",
-                                line1: "510 Townsend Street",
-                                postalCode: "94103",
-                                state: "CA"
-                            ),
-                            email: "jenny@example.com",
-                            name: "Jenny Rosen",
-                            phone: "+14155550123"
-                        ),
-                        paymentMethodType: "card",
-                        mandateText: NSAttributedString(string: "Mandate text")
-                    )
-                )
+        session.localState.shippingAddress = .init(
+            name: "Jenny Rosen",
+            address: .init(
+                country: "US",
+                line1: "510 Townsend Street",
+                city: "San Francisco",
+                state: "CA",
+                postalCode: "94103"
             )
+        )
+        session.localState.paymentOption = .init(
+            image: UIImage(),
+            label: "Visa",
+            sublabel: "•••• 4242",
+            billingDetails: .init(
+                address: .init(
+                    city: "San Francisco",
+                    country: "US",
+                    line1: "510 Townsend Street",
+                    line2: nil,
+                    postalCode: "94103",
+                    state: "CA"
+                ),
+                email: "jenny@example.com",
+                name: "Jenny Rosen",
+                phone: "+14155550123"
+            ),
+            paymentMethodType: "card",
+            mandateText: NSAttributedString(string: "Mandate text")
+        )
 
         // When generating its debug description
         let description = session.debugDescription
@@ -771,7 +960,8 @@ final class CheckoutUnitTests: XCTestCase {
               minorUnitsAmountDivisor: 100
               paymentOption: {
                 paymentMethodType: "card"
-                label: "Visa ending in 4242"
+                label: "Visa"
+                sublabel: <redacted>
                 billingDetails: {
                   country: "US"
                 }
@@ -813,12 +1003,37 @@ final class CheckoutUnitTests: XCTestCase {
         )
     }
 
+    func testSessionDebugDescriptionRedactsLinkNickname() {
+        // Given a Link payment option with a customer's bank account nickname
+        let paymentOption = PaymentSheet.PaymentOption.link(option: .withPaymentDetails(
+            brand: .link,
+            account: PaymentSheetLinkAccount._testValue(email: "patrick@example.com", isRegistered: true),
+            paymentDetails: LinkStubs.paymentMethods()[LinkStubs.PaymentMethodIndices.bankAccount],
+            confirmationExtras: nil,
+            shippingAddress: nil
+        ))
+        var session = CheckoutTestHelpers.makeOpenSession().makePublicSession()
+        session.localState.paymentOption = .init(EmbeddedPaymentElement.PaymentOptionDisplayData(
+            paymentOption: paymentOption, mandateText: nil, currency: "usd", iconStyle: .filled
+        ))
+        XCTAssertEqual(session.paymentOption?.sublabel, "Patrick's bank •••• 1234")
+
+        // When describing the session, the nickname is redacted
+        XCTAssertFalse(session.debugDescription.contains("Patrick"))
+        XCTAssertTrue(session.debugDescription.contains("sublabel: <redacted>"))
+
+        // Then payment methods without additional details still show nil
+        session.localState.paymentOption = .init(EmbeddedPaymentElement.PaymentOptionDisplayData(
+            paymentOption: .applePay, mandateText: nil, currency: "usd", iconStyle: .filled
+        ))
+        XCTAssertTrue(session.debugDescription.contains("sublabel: nil"))
+    }
+
     func testSessionDebugDescription_preservesAbsentAndEmptyTaxAmounts() {
         // Given sessions with absent and present-but-empty tax amounts
         let absent = CheckoutTestHelpers.makeOpenSession().makePublicSession()
         var emptyJSON = CheckoutTestHelpers.openSessionJSON
-        emptyJSON["recurring_details"] = [
-            "total_discount_amounts": [],
+        emptyJSON["total_summary"] = [
             "total_tax_amounts": [],
         ]
         let empty = try! PaymentPagesAPIResponse.decode(fromAPIResponse: emptyJSON).makePublicSession()
@@ -849,8 +1064,7 @@ final class CheckoutUnitTests: XCTestCase {
         var json = CheckoutTestHelpers.openSessionJSON
         json["billing_address_collection"] = "required"
         json["shipping_address_collection"] = ["allowed_countries": ["US", "CA", "GB"]]
-        json["recurring_details"] = [
-            "total_discount_amounts": [],
+        json["total_summary"] = [
             "total_tax_amounts": [
                 [
                     "amount": 1000,
@@ -918,9 +1132,9 @@ final class CheckoutUnitTests: XCTestCase {
             name: "Jane Doe",
             address: .init(country: "US")
         )
-        checkout.dangerouslySetSessionDirectly(
-            checkout.session.makeCopyOverriding(shippingAddress: .newValue(shippingUpdate))
-        )
+        var sessionWithShippingAddress = checkout.session
+        sessionWithShippingAddress.localState.shippingAddress = shippingUpdate
+        checkout.dangerouslySetSessionDirectly(sessionWithShippingAddress)
 
         // Simulate a confirm response
         var updatedJSON = CheckoutTestHelpers.openSessionJSON
@@ -958,7 +1172,8 @@ final class CheckoutUnitTests: XCTestCase {
 
         try await checkout.commitSession(confirmResponse)
 
-        XCTAssertEqual(checkout.session.paymentOption?.label, "•••• 4242")
+        XCTAssertEqual(checkout.session.paymentOption?.label, "Visa")
+        XCTAssertEqual(checkout.session.paymentOption?.sublabel, "•••• 4242")
         XCTAssertEqual(checkout.session.paymentOption?.paymentMethodType, "card")
 
         try await checkout.clearPaymentOption()
@@ -1156,10 +1371,60 @@ final class CheckoutUnitTests: XCTestCase {
                 postalCode: "90001"
             )
         )
-        checkout.dangerouslySetSessionDirectly(
-            checkout.session.makeCopyOverriding(shippingAddress: .newValue(shippingAddress))
-        )
+        var sessionWithShippingAddress = checkout.session
+        sessionWithShippingAddress.localState.shippingAddress = shippingAddress
+        checkout.dangerouslySetSessionDirectly(sessionWithShippingAddress)
         return (checkout, shippingAddress, requestRecorder)
+    }
+
+    private func makeCheckoutForPromotionCodeUpdate(
+        initialSessionJSON: [AnyHashable: Any],
+        updatedSessionJSON: [AnyHashable: Any],
+        updateStatusCode: Int32 = 200
+    ) async throws -> (CheckoutController, CheckoutSessionRequestRecorder) {
+        let requestRecorder = CheckoutSessionRequestRecorder()
+        CheckoutTestHelpers.stubCheckoutSessionRequests(
+            sessionId: "cs_test_123",
+            requestRecorder: requestRecorder,
+            sessionJSON: {
+                requestRecorder.requests.last?.kind == .updateSession
+                    ? updatedSessionJSON
+                    : initialSessionJSON
+            },
+            updateStatusCode: { _ in updateStatusCode }
+        )
+        var configuration = CheckoutController.Configuration(
+            clientSecret: "cs_test_123_secret_abc",
+            returnURL: "stripe-ios-test://checkout-return"
+        )
+        configuration.apiClient = STPAPIClient(publishableKey: "pk_test_123")
+        return (try await CheckoutController(configuration: configuration), requestRecorder)
+    }
+
+    private func sessionJSONWithPromotionCode(_ promotionCode: String) -> [AnyHashable: Any] {
+        var json = CheckoutTestHelpers.openSessionJSON
+        json["recurring_details"] = [
+            "total_summary": [
+                "total_discount_amounts": [
+                    [
+                        "amount": 250,
+                        "coupon": [
+                            "code": "coupon_save25",
+                            "name": "25% off",
+                            "percent_off": 25.0,
+                        ],
+                        "promotion_code": ["code": promotionCode],
+                    ],
+                ],
+            ],
+        ]
+        setOneTimePriceAmounts(
+            in: &json,
+            subtotal: 1000,
+            taxExclusive: 0,
+            total: 750
+        )
+        return json
     }
 
     private func setOneTimePriceAmounts(

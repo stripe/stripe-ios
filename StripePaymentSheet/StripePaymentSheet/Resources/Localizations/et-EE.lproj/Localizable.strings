@@ -46,7 +46,19 @@
 
 "Buy now or pay later with Klarna" = "Ostke nüüd või makske hiljem Klarnaga";
 
+"By confirming your payment with GCash, you allow %@ to charge your GCash account for future payments in accordance with their terms." = "Oma makset GCashi kaudu kinnitades lubate ettevõttel %@ debiteerida oma GCashi kontot tulevasteks makseteks vastavalt nende tingimustele.";
+
+"By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "NICEPAY kaudu makse kinnitamisega lubate ettevõttel %@ debiteerida edaspidi makseid sellelt makseviisilt vastavalt nende tingimustele.";
+
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "PayPaliga makset kinnitades lubate %@-l võtta teie PayPali kontolt tulevaste maksete eest tasu vastavalt nende tingimustele.";
+
+"By confirming your payment with Touch 'n Go, you allow %@ to charge your Touch 'n Go account for future payments in accordance with their terms." = "Oma makset Touch 'n Go kaudu kinnitades lubate ettevõttel %@ debiteerida oma Touch 'n Go kontot tulevasteks makseteks vastavalt nende tingimustele.";
+
+"By confirming your payment with TrueMoney, you allow %@ to charge your TrueMoney account for future payments in accordance with their terms." = "Oma makset TrueMoney kaudu kinnitades lubate ettevõttel %@ debiteerida oma TrueMoney kontot tulevasteks makseteks vastavalt nende tingimustele.";
+
+"By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their <terms>terms of use</terms>." = "Oma makset kinnitades nõustute, et teie tehingut töötleb Global Stack Services Limited registreeritud kaupmehena ja vastavalt nende <terms>kasutustingimustele</terms>.";
+
+"By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their <terms>terms</terms>." = "Oma makset kinnitades nõustute, et teie tehingut töötleb Global Stack Services Limited registreeritud kaupmehena ja vastavalt nende <terms>tingimustele</terms>.";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Amazon Payga jätkates lubate %@ teie Amazon Pay kontot tulevaste maksete tegemiseks vastavalt nende tingimustele.";
 
@@ -110,6 +122,8 @@
 
 "Code sent" = "Kood saadetud";
 
+"Complete the payment using Pix to finish the purchase." = "Ostu lõpetamiseks viige makse Pixi abil lõpule.";
+
 "Confirm" = "Kinnita";
 
 "Confirm payment details" = "Kinnitage makseandmed";
@@ -170,6 +184,8 @@
 
 "IBAN" = "IBAN";
 
+"Invoice payment for business buyers." = "Arvega maksmine äriklientidele.";
+
 "Keep Editing" = "Jätka muutmist";
 
 "Last 4 digits of SSN" = "SSN-i 4 viimast numbrit";
@@ -191,6 +207,10 @@
 "Manage your payment methods" = "Makseviiside haldamine";
 
 "Name on card" = "Nimi kaardil";
+
+"Naver Pay Card" = "Naver Pay Card";
+
+"Naver Pay Money/Point" = "Naver Pay Money/Point";
 
 "New card" = "Uus kaart";
 
@@ -248,8 +268,6 @@
 
 "Point the camera at your card." = "Suunake kaamera oma kaardile.";
 
-"Processing..." = "Töötlemine ...";
-
 "Przelewy24 Bank" = "Pank Przelewy24";
 
 "Remove %@" = "Eemalda %@";
@@ -288,6 +306,8 @@
 
 "Select card" = "Vali kaart";
 
+"Select how you want to pay:" = "Valige, kuidas soovite maksta:";
+
 "Select payment method" = "Vali makseviis";
 
 "Select your payment method" = "Valige makseviis";
@@ -324,6 +344,10 @@
 
 "Tax" = "Maks";
 
+"Terms and Conditions" = "Tingimused";
+
+"Terms of Service" = "Teenusetingimused";
+
 "The IBAN you entered is incomplete." = "Sisestatud IBAN on puudulik.";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Sisestatud IBAN on kehtetu, „%@“ ei ole toetatud riigikood.";
@@ -331,6 +355,8 @@
 "The provided verification code has expired." = "Esitatud tuvastuskood on aegunud.";
 
 "The provided verification code is incorrect." = "Esitatud tuvastuskood on vale.";
+
+"This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "See on rahvusvaheline ost ja ei sisalda 3,5% IOF-tasu. Jätkates tunnistate ja nõustute <terms>Ebanxi tingimustega<terms>.";
 
 "This is your default" = "See on teie vaikimisi makseviis";
 

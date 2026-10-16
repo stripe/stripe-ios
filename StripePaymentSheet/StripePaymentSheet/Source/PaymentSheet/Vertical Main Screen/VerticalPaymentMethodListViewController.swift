@@ -118,6 +118,7 @@ class VerticalPaymentMethodListViewController: UIViewController {
             let savedPaymentMethodButton = RowButton.makeForSavedPaymentMethod(
                 paymentMethod: firstSavedPaymentMethod,
                 appearance: appearance,
+                subtext: firstSavedPaymentMethod.cardArtProgramName,
                 accessoryView: accessoryButton,
                 linkBrand: linkBrand
             ) { [weak self] in
@@ -262,6 +263,7 @@ class VerticalPaymentMethodListViewController: UIViewController {
             // Select new row
             rowButton.updateSelectedState(shouldSelect, willDisplayForm: delegate.willDisplayForm(rowButton.type))
             currentSelection = selection
+            bottomSheetController?.invalidateContentDetent()
         }
         delegate.didTapPaymentMethod(selection)
         return

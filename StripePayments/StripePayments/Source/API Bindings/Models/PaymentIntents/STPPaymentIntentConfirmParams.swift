@@ -149,6 +149,9 @@ public class STPPaymentIntentConfirmParams: NSObject {
             guard let paymentMethodType = paymentMethodType else {
                 return nil
             }
+            if paymentMethodType == .pix, setupFutureUsage == .offSession {
+                return .makeWithInferredValues()
+            }
             return Self.mandateDataIfRequired(for: paymentMethodType)
         }
         set {
@@ -313,7 +316,7 @@ extension STPPaymentIntentConfirmParams: NSCopying {
     /// - Returns: STPMandateDataParams with inferred values if mandate is required for the payment method type, nil otherwise
     @_spi(STP) public static func mandateDataIfRequired(for paymentMethodType: STPPaymentMethodType) -> STPMandateDataParams? {
         switch paymentMethodType {
-        case .AUBECSDebit, .bacsDebit, .bancontact, .iDEAL, .SEPADebit, .EPS, .link, .USBankAccount, .kakaoPay, .naverPay:
+        case .gcash, .AUBECSDebit, .bacsDebit, .bancontact, .iDEAL, .SEPADebit, .EPS, .link, .USBankAccount:
             return .makeWithInferredValues()
         default:
             return nil

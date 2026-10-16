@@ -15,7 +15,26 @@ import UIKit
 /// For internal SDK use only
 @objc(STP_Internal_LinkSheetNavigationBar)
 class LinkSheetNavigationBar: SheetNavigationBar {
+
     private let brand: LinkBrand
+
+    // The system title view needs its own fixed-height logo; the legacy bar retains its existing layout.
+    private lazy var systemLogoView: UIImageView = {
+        let image = brand.paymentSheetLogoImage
+        let size = CGSize(width: image.size.width * 24 / max(image.size.height, 1), height: 24)
+        let logoView = UIImageView(image: image.resized(to: size))
+        logoView.tintColor = .linkIconBrand
+        logoView.isAccessibilityElement = true
+        logoView.accessibilityTraits = .header
+        logoView.accessibilityLabel = brand.accessibilityDisplayName
+        return logoView
+    }()
+
+    override var systemNavigationTitle: String? { title }
+
+    override var systemNavigationTitleView: UIView? {
+        title?.isEmpty == false ? nil : systemLogoView
+    }
 
     private lazy var logoView: UIImageView = {
         let imageView = UIImageView(image: brand.paymentSheetLogoImage)
@@ -56,10 +75,9 @@ class LinkSheetNavigationBar: SheetNavigationBar {
         return super.leadingElement
     }
 
-    init(isTestMode: Bool, appearance: PaymentSheet.Appearance, brand: LinkBrand, shouldLogPaymentSheetAnalyticsOnDismissal: Bool = true) {
+    init(appearance: PaymentSheet.Appearance, brand: LinkBrand, shouldLogPaymentSheetAnalyticsOnDismissal: Bool = true) {
         self.brand = brand
         super.init(
-            isTestMode: isTestMode,
             appearance: appearance,
             shouldLogPaymentSheetAnalyticsOnDismissal: shouldLogPaymentSheetAnalyticsOnDismissal
         )
@@ -173,6 +191,10 @@ class LinkSheetNavigationBar: SheetNavigationBar {
     }
 
     private func updateTitleConstraints() {
+        if usesSystemNavigationBar {
+            updateSystemNavigationBar()
+            return
+        }
         guard let titleCenterXConstraint, !titleLabel.isHidden else { return }
 
         // Update boundary constraints to the latest buttons and layout direction.

@@ -46,7 +46,19 @@
 
 "Buy now or pay later with Klarna" = "Pērciet tagad vai maksājiet vēlāk ar Klarna";
 
+"By confirming your payment with GCash, you allow %@ to charge your GCash account for future payments in accordance with their terms." = "Apstiprinot maksājumu ar GCash, jūs atļaujat %@ iekasēt no jūsu GCash konta turpmākos maksājumus saskaņā ar viņu noteikumiem.";
+
+"By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "Apstiprinot jūsu maksājumu ar NICEPAY, jūs atļaujat %@ ar šo maksājuma veidu iekasēt turpmākos maksājumus saskaņā ar viņu noteikumiem.";
+
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Apstiprinot maksājumu PayPal, jūs atļaujat %@ saskaņā ar viņu noteikumiem iekasēt no jūsu PayPal konta summas par turpmākajiem maksājumiem.";
+
+"By confirming your payment with Touch 'n Go, you allow %@ to charge your Touch 'n Go account for future payments in accordance with their terms." = "Apstiprinot maksājumu ar Touch 'n Go, jūs atļaujat %@ iekasēt no jūsu Touch 'n Go konta turpmākos maksājumus saskaņā ar viņu noteikumiem.";
+
+"By confirming your payment with TrueMoney, you allow %@ to charge your TrueMoney account for future payments in accordance with their terms." = "Apstiprinot maksājumu ar TrueMoney, jūs atļaujat %@ iekasēt no jūsu TrueMoney konta turpmākos maksājumus saskaņā ar viņu noteikumiem.";
+
+"By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their <terms>terms of use</terms>." = "Apstiprinot maksājumu, jūs piekrītat, ka jūsu darījumu apstrādās Global Stack Services Limited kā reģistrētais tirgotājs saskaņā ar viņu <terms>lietošanas noteikumi</terms>.";
+
+"By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their <terms>terms</terms>." = "Apstiprinot maksājumu, jūs piekrītat, ka jūsu darījumu apstrādās Global Stack Services Limited kā reģistrētais tirgotājs saskaņā ar viņu<terms>noteikumi</terms>.";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Turpinot doties uz Amazon Pay, jūs atļaujat %@ iekasēt no jūsu Amazon Pay konta turpmākajiem maksājumiem saskaņā ar Klarna noteikumiem.";
 
@@ -110,6 +122,8 @@
 
 "Code sent" = "Kods nosūtīts";
 
+"Complete the payment using Pix to finish the purchase." = "Veiciet maksājumu, izmantojot Pix, lai pabeigtu pirkumu.";
+
 "Confirm" = "Apstiprināt";
 
 "Confirm payment details" = "Apstiprināt maksājuma informāciju";
@@ -170,6 +184,8 @@
 
 "IBAN" = "IBAN";
 
+"Invoice payment for business buyers." = "Rēķina apmaksa uzņēmumu pircējiem.";
+
 "Keep Editing" = "Rediģēšanas turpināšana";
 
 "Last 4 digits of SSN" = "SSN pēdējie 4 cipari";
@@ -191,6 +207,10 @@
 "Manage your payment methods" = "Pārvaldīt savus maksājuma veidus";
 
 "Name on card" = "Uz kartes norādītais vārds";
+
+"Naver Pay Card" = "Naver Pay karte";
+
+"Naver Pay Money/Point" = "Naver Pay Money/Point";
 
 "New card" = "Jauna karte";
 
@@ -248,8 +268,6 @@
 
 "Point the camera at your card." = "Vērsiet kameru uz karti.";
 
-"Processing..." = "Apstrādā…";
-
 "Przelewy24 Bank" = "Przelewy24 Bank";
 
 "Remove %@" = "Noņemt %@";
@@ -288,6 +306,8 @@
 
 "Select card" = "Atlasīt karti";
 
+"Select how you want to pay:" = "Atlasiet, kā vēlaties maksāt:";
+
 "Select payment method" = "Atlasīt maksājuma veidu";
 
 "Select your payment method" = "Izvēlēties savu maksājuma veidu";
@@ -324,6 +344,10 @@
 
 "Tax" = "Nodoklis";
 
+"Terms and Conditions" = "Noteikumi un nosacījumi";
+
+"Terms of Service" = "Pakalpojuma lietošanas noteikumi";
+
 "The IBAN you entered is incomplete." = "Ievadītais IBAN nav pilnīgs.";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Ievadītais IBAN nav derīgs, “%@” nav atbalstīts valsts kods.";
@@ -331,6 +355,8 @@
 "The provided verification code has expired." = "Norādītajam verifikācijas kodam ir beidzies derīguma termiņš.";
 
 "The provided verification code is incorrect." = "Norādītais verifikācijas kods nav pareizs.";
+
+"This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Šis ir starptautisks pirkums, un tajā nav iekļauta 3,5 % IOF maksa. Turpinot jūs apliecināt un piekrītat <terms>Ebanx noteikumi un nosacījumi<terms>.";
 
 "This is your default" = "Tas ir jūsu noklusējums";
 

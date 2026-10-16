@@ -1,0 +1,157 @@
+POST
+https:\/\/stp-mobile-playground-backend-v7\.stripedemos\.com\/create_checkout_session$
+200
+application/json
+Server: Google Frontend
+Content-Type: application/json; charset=utf-8
+x-powered-by: Express
+x-cloud-trace-context: 8c8d12fdd6c397d56278c71a6e922a39
+Via: 1.1 google
+Date: Mon, 21 Sep 2026 23:58:57 GMT
+Content-Length: 2547
+Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+Etag: W/"9f3-VBehx9wtTJbjK81YkLosA47QWUI"
+
+{
+  "billing_address_collection" : null,
+  "id" : "cs_test_a1sdoBsqGSI5DcKcBEu40MoEAA3NN07LnTGx2FthJFgd7wz62K9XJgIi4y",
+  "client_secret" : "cs_test_a1sdoBsqGSI5DcKcBEu40MoEAA3NN07LnTGx2FthJFgd7wz62K9XJgIi4y_secret_fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdwbEhqYWAnPydoamdsaWBaYGlgaGBrcXYneCUl",
+  "discounts" : [
+
+  ],
+  "custom_text" : {
+    "shipping_address" : null,
+    "terms_of_service_acceptance" : null,
+    "submit" : null,
+    "after_submit" : null
+  },
+  "customer" : "cus_VIssDK8W7Lq2EN",
+  "metadata" : {
+
+  },
+  "payment_method_configuration_details" : null,
+  "payment_method_options" : null,
+  "ui_mode" : "mobile_elements",
+  "created" : 1790035137,
+  "client_reference_id" : null,
+  "allowed_payment_method_types" : [
+    "card"
+  ],
+  "mode" : "none",
+  "allow_promotion_codes" : null,
+  "items" : [
+    {
+      "key" : "checkout_item_VIsshDbX",
+      "one_time_price" : {
+        "items" : [
+          {
+            "quantity" : 1,
+            "adjustable_quantity" : null,
+            "price" : "price_1UIH6rGoesj9fw9Q8LNh4qM5",
+            "tax_rates" : null
+          }
+        ],
+        "metadata" : {
+
+        }
+      },
+      "type" : "one_time_price"
+    }
+  ],
+  "after_expiration" : null,
+  "saved_payment_method_options" : {
+    "payment_method_save" : null,
+    "allow_redisplay_filters" : [
+      "always"
+    ],
+    "payment_method_remove" : "disabled"
+  },
+  "payment_link" : null,
+  "currency" : "usd",
+  "status" : "open",
+  "url" : null,
+  "branding_settings" : {
+    "button_color" : "#0074d4",
+    "border_style" : "rounded",
+    "background_color" : "#ffffff",
+    "display_name" : "GB Mobile Account",
+    "font_family" : "default",
+    "icon" : null,
+    "logo" : null
+  },
+  "customer_details" : null,
+  "wallet_options" : null,
+  "adaptive_pricing" : {
+    "enabled" : true
+  },
+  "consent" : null,
+  "shipping_options" : [
+
+  ],
+  "amount_subtotal" : 2000,
+  "submit_type" : null,
+  "locale" : null,
+  "permissions" : null,
+  "subscription" : null,
+  "success_url" : null,
+  "setup_intent" : null,
+  "payment_intent" : null,
+  "phone_number_collection" : {
+    "enabled" : false
+  },
+  "origin_context" : null,
+  "amount_total" : 2000,
+  "consent_collection" : null,
+  "payment_method_types" : [
+    "card"
+  ],
+  "recovered_from" : null,
+  "customer_creation" : null,
+  "object" : "checkout.session",
+  "checkout_items" : [
+
+  ],
+  "invoice" : null,
+  "customer_account" : null,
+  "managed_payments" : null,
+  "shipping_cost" : null,
+  "cancel_url" : null,
+  "automatic_tax" : {
+    "status" : null,
+    "address_collection_precision" : null,
+    "enabled" : false,
+    "liability" : null,
+    "provider" : null
+  },
+  "custom_fields" : [
+
+  ],
+  "collected_information" : null,
+  "integration_identifier" : null,
+  "invoice_creation" : {
+    "enabled" : false,
+    "invoice_data" : {
+      "footer" : null,
+      "issuer" : null,
+      "custom_fields" : null,
+      "rendering_options" : null,
+      "account_tax_ids" : null,
+      "description" : null,
+      "metadata" : {
+
+      }
+    }
+  },
+  "shipping_address_collection" : null,
+  "payment_method_collection" : "auto",
+  "currency_conversion" : null,
+  "payment_status" : "unpaid",
+  "total_details" : {
+    "amount_discount" : 0,
+    "amount_shipping" : 0,
+    "amount_tax" : 0
+  },
+  "livemode" : false,
+  "customer_email" : null,
+  "expires_at" : 1790121537
+}

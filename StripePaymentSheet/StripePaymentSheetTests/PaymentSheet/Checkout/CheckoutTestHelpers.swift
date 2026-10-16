@@ -18,6 +18,52 @@ import UIKit
 import XCTest
 
 extension PaymentPagesAPIResponse {
+    /// Convenience for fixtures that contain no client-local session state.
+    func makePublicSession(
+        expressCheckoutConfiguration: ExpressCheckoutElement.Configuration? = nil
+    ) -> CheckoutController.Session {
+        let configuration = expressCheckoutConfiguration.map { expressConfiguration in
+            var configuration = CheckoutController.Configuration(clientSecret: "\(sessionId)_secret_abc", returnURL: "stripe-ios-test://checkout-return")
+            configuration.expressCheckoutElement = expressConfiguration
+            return configuration
+        }
+        return CheckoutController.Session(
+            apiResponse: self,
+            localState: .empty,
+            configuration: configuration
+        )
+    }
+}
+
+extension ExpressCheckoutElementUtilities {
+    static func availablePaymentMethodsWithoutCheckoutRequirements(
+        for elementsSession: STPElementsSession,
+        configuration: ExpressCheckoutElement.Configuration
+    ) -> [ExpressCheckoutElement.PaymentMethod] {
+        availablePaymentMethods(
+            for: elementsSession,
+            configuration: configuration,
+            usesWebLink: false,
+            requiresShippingAddress: false,
+            billingDetailsCollectionRequired: false
+        )
+    }
+
+    static func linkDisabledReasonsWithoutCheckoutRequirements(
+        for elementsSession: STPElementsSession,
+        configuration: ExpressCheckoutElement.Configuration
+    ) -> [LinkDisabledReason] {
+        linkDisabledReasons(
+            for: elementsSession,
+            configuration: configuration,
+            usesWebLink: false,
+            requiresShippingAddress: false,
+            billingDetailsCollectionRequired: false
+        )
+    }
+}
+
+extension PaymentPagesAPIResponse {
     static func decode(
         fromAPIResponse response: [AnyHashable: Any]
     ) throws -> PaymentPagesAPIResponse {
@@ -148,6 +194,41 @@ enum CheckoutTestHelpers {
         return try! PaymentPagesAPIResponse.decode(fromAPIResponse: json)
     }
 
+    static func makeSessionWithWalletTypes(
+        _ walletTypes: [String],
+        applePayPreference: String? = nil,
+        linkUseAttestation: Bool? = nil,
+        automaticTaxAddressSource: String? = nil,
+        customerEmail: String? = nil
+    ) -> PaymentPagesAPIResponse {
+        var elementsSession: [String: Any] = [
+            "session_id": "es_test",
+            "merchant_country": "US",
+            "payment_method_preference": ["ordered_payment_method_types": ["card"]],
+            "ordered_payment_method_types_and_wallets": walletTypes,
+        ]
+        if let applePayPreference {
+            elementsSession["apple_pay_preference"] = applePayPreference
+        }
+        if let linkUseAttestation {
+            elementsSession["link_settings"] = [
+                "link_funding_sources": ["CARD"],
+                "link_mobile_use_attestation_endpoints": linkUseAttestation,
+            ]
+        }
+        var session: [String: Any] = ["elements_session": elementsSession]
+        if let automaticTaxAddressSource {
+            session["tax_context"] = [
+                "automatic_tax_enabled": true,
+                "automatic_tax_address_source": automaticTaxAddressSource,
+            ]
+        }
+        if let customerEmail {
+            session["customer_email"] = customerEmail
+        }
+        return makeSession(session)
+    }
+
     static func makeSessionJSON(_ overrides: [String: Any] = [:]) -> [String: Any] {
         baseSessionJSON.merging(overrides) { _, new in new }
     }
@@ -166,6 +247,7 @@ enum CheckoutTestHelpers {
         apiResponse: PaymentPagesAPIResponse = makeOpenSession(),
         configuration: CheckoutController.Configuration? = nil,
         paymentElementConfiguration: PaymentElement.Configuration? = .init(),
+        expressCheckoutElementConfiguration: ExpressCheckoutElement.Configuration? = .init { _ in },
         stubAllOutgoingRequests: Bool = true
     ) -> CheckoutController.Configuration {
         // Use the production Checkout initializer with a test-controlled API client.
@@ -173,6 +255,9 @@ enum CheckoutTestHelpers {
         var resolvedConfiguration = configuration ?? CheckoutController.Configuration(clientSecret: clientSecret, returnURL: "stripe-ios-test://checkout-return")
         if resolvedConfiguration.paymentElement == nil {
             resolvedConfiguration.paymentElement = paymentElementConfiguration
+        }
+        if resolvedConfiguration.expressCheckoutElement == nil {
+            resolvedConfiguration.expressCheckoutElement = expressCheckoutElementConfiguration
         }
         resolvedConfiguration.apiClient = makeStubbedAPIClient(
             apiResponse: apiResponse,
@@ -388,13 +473,15 @@ class MockPKPaymentAuthorizationController: PKPaymentAuthorizationController {
 
 @MainActor
 class MockCheckoutSessionWalletUpdater: CheckoutSessionWalletUpdater {
+    private(set) var currentTaxRegion: CheckoutController.Address?
     private(set) var updateCallCount = 0
     private(set) var lastAddress: CheckoutController.Address?
     private(set) var lastCanUpdateWhileSheetPresented: Bool?
     private let sessionToReturn: CheckoutController.Session?
     private let errorToThrow: Error?
-    private let suspendsUpdates: Bool
+    private let suspendsFirstUpdate: Bool
     private var continuation: CheckedContinuation<CheckoutController.Session, Error>?
+    private var didSuspend = false
 
     var isWaiting: Bool {
         continuation != nil
@@ -403,11 +490,13 @@ class MockCheckoutSessionWalletUpdater: CheckoutSessionWalletUpdater {
     init(
         sessionToReturn: CheckoutController.Session? = nil,
         errorToThrow: Error? = nil,
-        suspendsUpdates: Bool = false
+        currentTaxRegion: CheckoutController.Address? = nil,
+        suspendsFirstUpdate: Bool = false
     ) {
         self.sessionToReturn = sessionToReturn
         self.errorToThrow = errorToThrow
-        self.suspendsUpdates = suspendsUpdates
+        self.currentTaxRegion = currentTaxRegion
+        self.suspendsFirstUpdate = suspendsFirstUpdate
     }
 
     func updateTaxRegionWithoutEnqueueing(
@@ -423,12 +512,17 @@ class MockCheckoutSessionWalletUpdater: CheckoutSessionWalletUpdater {
         guard let sessionToReturn else {
             throw CheckoutError.unknown(debugDescription: "MockCheckoutSessionWalletUpdater has no session configured")
         }
-        if suspendsUpdates {
-            return try await withCheckedThrowingContinuation { continuation in
+        let session: CheckoutController.Session
+        if suspendsFirstUpdate && !didSuspend {
+            didSuspend = true
+            session = try await withCheckedThrowingContinuation { continuation in
                 self.continuation = continuation
             }
+        } else {
+            session = sessionToReturn
         }
-        return sessionToReturn
+        currentTaxRegion = address
+        return session
     }
 
     func resume() {
@@ -447,9 +541,8 @@ extension CheckoutController.ApplePayConfirmationParameters {
         apiClient: STPAPIClient,
         returnURL: String = "stripe-ios-test://checkout-return",
         merchantDisplayName: String = "Test Merchant",
-        applePayConfiguration: CheckoutApplePayConfiguration = PaymentElement.ApplePayConfiguration(merchantId: "merchant.com.test"),
+        applePayConfiguration: CheckoutApplePayConfiguration = PaymentElement.Configuration.ApplePayConfiguration(merchantId: "merchant.com.test"),
         shippingAddressRequired: Bool = false,
-        billingDetailsCollectionConfiguration: PaymentSheet.BillingDetailsCollectionConfiguration = .init(),
         defaultBillingDetails: CheckoutController.Configuration.Defaults.BillingDetails? = nil,
         presentationWindow: UIWindow? = nil,
         confirmationHandler: @escaping CheckoutController.ApplePayConfirmationParameters.ConfirmationHandler = { _ in
@@ -462,7 +555,6 @@ extension CheckoutController.ApplePayConfirmationParameters {
             returnURL: returnURL,
             merchantDisplayName: merchantDisplayName,
             shippingAddressRequired: shippingAddressRequired,
-            billingDetailsCollectionConfiguration: billingDetailsCollectionConfiguration,
             defaultBillingDetails: defaultBillingDetails,
             presentationWindow: presentationWindow,
             confirmationHandler: confirmationHandler

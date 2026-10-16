@@ -13,7 +13,9 @@ class OpenAuthenticatedWebViewMessageHandlerTests: ScriptWebTestBase {
     func testMessageSend() async throws {
         let url = "https://dashboard.stripe.com"
         let id = "1234"
+        try await loadTrustedDocument()
         webView.addMessageHandler(messageHandler: OpenAuthenticatedWebViewMessageHandler(
+            sourcePolicy: webView.trustedMessageSourcePolicy(),
             analyticsClient: MockComponentAnalyticsClient(commonFields: .mock),
             didReceiveMessage: { payload in
                 XCTAssertEqual(payload, .init(url: URL(string: "https://dashboard.stripe.com")!, id: id))

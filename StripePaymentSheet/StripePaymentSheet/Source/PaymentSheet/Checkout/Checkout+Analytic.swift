@@ -33,6 +33,24 @@ struct UnexpectedCheckoutElementsErrorAnalytic: Analytic {
     }
 }
 
+func logUnexpectedCheckoutElementsErrorAndAssert(
+    _ message: String,
+    apiClient: STPAPIClient,
+    file: StaticString = #file,
+    line: UInt = #line,
+    analyticsClient: STPAnalyticsClientProtocol = STPAnalyticsClient.sharedClient
+) {
+    analyticsClient.log(
+        analytic: ErrorAnalytic(
+            event: .unexpectedCheckoutElementsError,
+            error: CheckoutError.unknown(debugDescription: message),
+            additionalNonPIIParams: ["error_message": message]
+        ),
+        apiClient: apiClient
+    )
+    stpAssertionFailure(message, file: file, line: line)
+}
+
 func reportUnexpectedPaymentPagesParsingError(
     _ error: Error,
     apiClient: STPAPIClient,

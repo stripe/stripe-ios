@@ -632,14 +632,8 @@ extension RowButton {
         button.accessibilityHelperView.accessibilityLabel = {
             let accessibilityLabel = paymentMethod.paymentSheetAccessibilityLabel
                 .map { linkBrand.accessibilityText(from: $0) }
-            if let badgeText {
-                if let accessibilityLabel {
-                    return "\(accessibilityLabel), \(badgeText)"
-                } else {
-                    return "\(badgeText)"
-                }
-            }
-            return accessibilityLabel
+            let components = [accessibilityLabel, subtext, badgeText].compactMap { $0 }
+            return components.isEmpty ? nil : components.joined(separator: ", ")
         }()
         return button
     }
