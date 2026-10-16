@@ -9,6 +9,8 @@ import Foundation
 import UIKit
 
 @_spi(STP) public class LiquidGlassDetector {
+    /// The corner radius applied by `ios26_applyDefaultCornerConfiguration`
+    static let defaultCornerRadius: CGFloat = 26
 
     /// Whether or not the merchant's app (not MPE) has Liquid Glass enabled
     @_spi(STP) public static var isEnabledInMerchantApp: Bool {
@@ -54,7 +56,7 @@ extension UIView {
     @_spi(STP) public func ios26_applyDefaultCornerConfiguration() {
 #if compiler(>=6.2)
         if #available(iOS 26.0, visionOS 26.0, *) {
-            cornerConfiguration = .uniformCorners(radius: 26)
+            cornerConfiguration = .uniformCorners(radius: .fixed(LiquidGlassDetector.defaultCornerRadius))
         }
 #endif
     }
@@ -91,6 +93,17 @@ extension UIButton {
 #endif
     }
 }
+// MARK: - ElementsAppearance helpers
+extension ElementsAppearance {
+    /// The corner radius that `UIView.applyCornerRadius(appearance:)` applies with the `.uniform` style.
+    var resolvedCornerRadius: CGFloat {
+        if let cornerRadius {
+            return cornerRadius
+        }
+        return LiquidGlassDetector.isEnabledInMerchantApp ? LiquidGlassDetector.defaultCornerRadius : ElementsUI.defaultCornerRadius
+    }
+}
+
 // MARK: - UIView helpers
 extension UIView {
     @_spi(STP) public enum CornerStyle {

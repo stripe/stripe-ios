@@ -170,5 +170,27 @@ public extension AddressViewController {
         /// When provided, shows a checkbox that allows customers to populate shipping fields with billing address data.
         @_spi(STP) public var billingAddress: DefaultAddressDetails?
 
+        /// The style to use for separators between address fields.
+        /// Defaults to `.divider` which shows visible divider lines between fields.
+        @_spi(AddressViewControllerSeparatorStylePreview) public var separatorStyle: SeparatorStyle = .divider
+
+        /// Defines how address fields are separated from each other.
+        @_spi(AddressViewControllerSeparatorStylePreview) public enum SeparatorStyle {
+            /// Show all fields in a single bordered section, separated by divider lines.
+            case divider
+            /// Show each field in its own bordered section, separated by the given spacing.
+            case spacing(CGFloat)
+        }
+    }
+}
+
+extension AddressViewController.Configuration.SeparatorStyle {
+    var asElementsSeparatorStyle: SeparatorDisplayStyle {
+        switch self {
+        case .divider:
+            return .divider
+        case .spacing(let spacing):
+            return .spacing(spacing)
+        }
     }
 }
