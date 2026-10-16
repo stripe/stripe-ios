@@ -407,8 +407,17 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
             return
         }
 
-        // Wait until UIKit finishes presenting or dismissing before starting a height animation.
-        if rootParent.isBeingPresented || rootParent.isBeingDismissed {
+        if rootParent.isBeingPresented {
+            // UIKit establishes the native header's height and safe areas as presentation starts.
+            // Refresh the initial estimate now so the sheet opens at its final height instead of
+            // waiting until presentation completes and starting a second resize animation.
+            lastFittedContentHeight = fittedContentHeight
+            rootParent.sheetPresentationController?.invalidateDetents()
+            return
+        }
+
+        // Wait until UIKit finishes dismissing before starting another height animation.
+        if rootParent.isBeingDismissed {
             guard let transitionCoordinator = rootParent.transitionCoordinator else { return }
             // Set `isWaitingForDetentTransition` to true if animation work successfully starts
             isWaitingForDetentTransition = transitionCoordinator.animate(alongsideTransition: nil) { [weak self] _ in
@@ -518,6 +527,13 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
         guard view.window != nil,
               abs(fittedContentHeight - lastFittedContentHeight) > 0.5,
               !hasScheduledDetentInvalidation else {
+            return
+        }
+
+        if rootParent.isBeingPresented {
+            // Resolve the actual header layout before UIKit captures the opening animation's height.
+            // Queuing this correction would animate from the shorter offscreen estimate.
+            invalidateContentDetent()
             return
         }
 
