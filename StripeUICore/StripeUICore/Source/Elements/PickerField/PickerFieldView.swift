@@ -30,13 +30,15 @@ final class PickerFieldView: UIView {
         let textField = PickerTextField()
         // Input views are not supported on Catalyst (and are non-optimal on visionOS)
 #if !targetEnvironment(macCatalyst) && !canImport(visionOS)
-        textField.inputView = pickerView
+        if !presentsMenu {
+            textField.inputView = pickerView
+            textField.inputAccessoryView = toolbar
+        }
+#elseif !os(visionOS)
+        textField.inputAccessoryView = toolbar
 #endif
         textField.adjustsFontForContentSizeCategory = true
         textField.font = theme.fonts.subheadline
-#if !os(visionOS)
-        textField.inputAccessoryView = toolbar
-#endif
         textField.delegate = self
         return textField
     }()
@@ -73,6 +75,9 @@ final class PickerFieldView: UIView {
         return hStackView
     }()
     private let pickerView: UIView
+    /// When true, `pickerView` is a button that presents a menu and is overlaid on this view, rather than the text field's input view.
+    /// Always true on Catalyst and visionOS.
+    private let presentsMenu: Bool
 
     // MARK: - Other private properties
     private let label: String?
@@ -117,7 +122,8 @@ final class PickerFieldView: UIView {
     /**
      - Parameter label: The label of this picker
      - Parameter shouldShowChevron: Whether a downward chevron should be displayed in this field
-     - Parameter pickerView: A `UIPicker` or `UIDatePicker` view that opens when this field becomes first responder
+     - Parameter pickerView: A `UIPicker` or `UIDatePicker` view that opens when this field becomes first responder, or a `UIButton` that presents a menu if `presentsMenu` is true
+     - Parameter presentsMenu: Whether `pickerView` is a `UIButton` that presents a menu when tapped
      - Parameter delegate: Delegate for this view
      - Parameter theme: Theme for the picker field
      */
@@ -125,6 +131,7 @@ final class PickerFieldView: UIView {
         label: String?,
         shouldShowChevron: Bool,
         pickerView: UIView,
+        presentsMenu: Bool = false,
         delegate: PickerFieldViewDelegate,
         theme: ElementsAppearance,
         hasPadding: Bool = true,
@@ -133,15 +140,24 @@ final class PickerFieldView: UIView {
         self.label = label
         self.shouldShowChevron = shouldShowChevron
         self.pickerView = pickerView
+        #if targetEnvironment(macCatalyst) || canImport(visionOS)
+        self.presentsMenu = true
+        #else
+        self.presentsMenu = presentsMenu
+        #endif
         self.delegate = delegate
         self.theme = theme
         self.isOptional = isOptional
         super.init(frame: .zero)
         addAndPinSubview(hStackView, directionalLayoutMargins: hasPadding ? theme.textFieldInsets : .zero)
-//      On Catalyst/visionOS, add the picker view as a subview instead of an input view.
-        #if targetEnvironment(macCatalyst) || canImport(visionOS)
-        addAndPinSubview(pickerView, directionalLayoutMargins: theme.textFieldInsets)
-        #endif
+        // When presenting a menu, add the picker view as a subview instead of an input view.
+        if self.presentsMenu {
+            addAndPinSubview(pickerView, directionalLayoutMargins: theme.textFieldInsets)
+            // The menu button is the accessibility element, so VoiceOver activation presents the menu
+            #if !targetEnvironment(macCatalyst) && !canImport(visionOS)
+            hStackView.accessibilityElementsHidden = true
+            #endif
+        }
         layer.borderColor = theme.colors.border.cgColor
         isUserInteractionEnabled = true
     }
@@ -184,13 +200,8 @@ final class PickerFieldView: UIView {
         guard isUserInteractionEnabled, !isHidden, self.point(inside: point, with: event) else {
             return nil
         }
-        #if targetEnvironment(macCatalyst) || canImport(visionOS)
-        // Forward all events within our bounds to the button
-        return pickerView
-        #else
-        // Forward all events within our bounds to the textview
-        return textField
-        #endif
+        // Forward all events within our bounds to the menu button or the text field
+        return presentsMenu ? pickerView : textField
     }
 
     override var intrinsicContentSize: CGSize {
@@ -263,6 +274,12 @@ extension PickerFieldView: UITextFieldDelegate {
     }
 
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+        #if !targetEnvironment(macCatalyst) && !canImport(visionOS)
+        // The text field has no input view when presenting a menu, so editing would show the keyboard
+        if presentsMenu {
+            return false
+        }
+        #endif
         return _canBecomeFirstResponder
     }
 }

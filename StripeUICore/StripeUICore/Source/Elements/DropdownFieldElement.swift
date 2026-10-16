@@ -11,7 +11,7 @@ import Foundation
 import UIKit
 
 /**
- A textfield whose input view is a `UIPickerView` (on iOS) or a `UIMenu` (on Catalyst) with a list of the strings.
+ A textfield whose input view is a `UIPickerView` (on iOS) or a `UIMenu` (on Catalyst, or on iOS when `presentsAsMenu` is true) with a list of the strings.
  
  For internal SDK use only
  */
@@ -110,13 +110,38 @@ import UIKit
         picker.dataSource = pickerViewDelegate
         return picker
     }()
+
+    /// Presents `items` in a pop-up menu. Only used when `usesMenu` is true.
+    private(set) lazy var menuButton: UIButton = {
+        var configuration = UIButton.Configuration.plain()
+        // We don't need to show this button's title or indicator, we're just using it to accept hits and present the menu.
+        configuration.baseForegroundColor = .clear
+        if #available(iOS 16.0, *) {
+            configuration.indicator = .none
+        }
+        let button = UIButton(configuration: configuration)
+        button.showsMenuAsPrimaryAction = true
+        button.accessibilityLabel = label
+        return button
+    }()
+
+    /// Whether `items` are presented in a `UIMenu` instead of a `UIPickerView`
+    let usesMenu: Bool
 #endif
 
     private(set) lazy var pickerFieldView: PickerFieldView = {
+        #if targetEnvironment(macCatalyst) || canImport(visionOS)
+        let pickerView: UIView = pickerView
+        let presentsMenu = true
+        #else
+        let pickerView: UIView = usesMenu ? menuButton : pickerView
+        let presentsMenu = usesMenu
+        #endif
         let pickerFieldView = PickerFieldView(
             label: label,
             shouldShowChevron: disableDropdownWithSingleElement ? items.count != 1 : true,
             pickerView: pickerView,
+            presentsMenu: presentsMenu,
             delegate: self,
             theme: theme,
             hasPadding: hasPadding,
@@ -157,6 +182,7 @@ import UIKit
      - items: Items to populate this dropdown with.
      - defaultIndex: Defaults the dropdown to the item with the corresponding index.
      - label: Label for the dropdown
+     - presentsAsMenu: Present `items` in a `UIMenu` instead of a `UIPickerView`. Items are shown using the plain string of their `pickerDisplayName`, and placeholder items are omitted.
      - didUpdate: Called when the user has finished selecting a new item.
      
      - Note:
@@ -173,6 +199,7 @@ import UIKit
         disableDropdownWithSingleElement: Bool = false,
         isOptional: Bool = false,
         startsEmpty: Bool = false,
+        presentsAsMenu: Bool = false,
         didUpdate: DidUpdateSelectedIndex? = nil
     ) {
         stpAssert(!items.filter { !$0.isDisabled }.isEmpty, "`items` must contain at least one non-disabled item; if this is a test, you might need to set AddressSpecProvider.shared.loadAddressSpecs")
@@ -184,6 +211,9 @@ import UIKit
         self.startsEmpty = startsEmpty
         self.didUpdate = didUpdate
         self.hasPadding = hasPadding
+        #if !targetEnvironment(macCatalyst) && !canImport(visionOS)
+        self.usesMenu = presentsAsMenu
+        #endif
 
         let initialItems: [DropdownItem] = {
             guard startsEmpty else { return items }
@@ -246,8 +276,15 @@ private extension DropdownFieldElement {
             (pickerView.menu?.children[selectedIndex] as? UIAction)?.state = .on
         }
         #else
-        // Update picker view selection directly using selectedIndex
-        if pickerView.selectedRow(inComponent: 0) != selectedIndex {
+        if usesMenu {
+            // Shows a checkmark next to the selected item and opens the menu scrolled to it.
+            // Pop-up buttons always select an item, so only enable this once a non-placeholder item is selected.
+            menuButton.changesSelectionAsPrimaryAction = !items[selectedIndex].isPlaceholder
+            // Rebuild the menu so it reflects the current items and selection
+            menuButton.menu = makeMenu()
+            menuButton.accessibilityValue = items[selectedIndex].accessibilityValue
+        } else if pickerView.selectedRow(inComponent: 0) != selectedIndex {
+            // Update picker view selection directly using selectedIndex
             pickerView.reloadComponent(0)
             pickerView.selectRow(selectedIndex, inComponent: 0, animated: false)
         }
@@ -260,6 +297,22 @@ private extension DropdownFieldElement {
         pickerFieldView.setNeedsLayout()
     }
 
+    #if !targetEnvironment(macCatalyst) && !canImport(visionOS)
+    func makeMenu() -> UIMenu {
+        let actions: [UIAction] = items.enumerated().compactMap { index, item in
+            guard !item.isPlaceholder else {
+                return nil
+            }
+            let action = UIAction(title: item.pickerDisplayName.string) { [weak self] _ in
+                self?.select(index: index, shouldAutoAdvance: false)
+            }
+            action.attributes = item.isDisabled ? .disabled : []
+            action.state = index == selectedIndex ? .on : .off
+            return action
+        }
+        return UIMenu(children: actions)
+    }
+    #endif
 }
 
 // MARK: Element

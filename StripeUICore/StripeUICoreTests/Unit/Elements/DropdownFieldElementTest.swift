@@ -150,4 +150,70 @@ final class DropdownFieldElementTest: XCTestCase {
         XCTAssertTrue(element.validationState.isValid)
     }
 
+    // MARK: - Menu
+
+    func testDoesNotUseMenuByDefault() {
+        let element = DropdownFieldElement(items: items, label: "")
+        XCTAssertFalse(element.usesMenu)
+        XCTAssertNil(element.menuButton.superview)
+    }
+
+    func testMenuReflectsItemsAndSelection() {
+        // Given a dropdown presented as a menu with a disabled item
+        var items = self.items
+        items.append(.init(pickerDisplayName: "E", labelDisplayName: "E", accessibilityValue: "E", rawData: "E", isDisabled: true))
+        let element = DropdownFieldElement(items: items, defaultIndex: 2, label: "Letter", presentsAsMenu: true)
+
+        // Then the menu button is overlaid on the field and has a menu item for each item, with the default selected
+        XCTAssertTrue(element.usesMenu)
+        XCTAssertTrue(element.menuButton.isDescendant(of: element.pickerFieldView))
+        let actions = element.menuButton.menu?.children.compactMap { $0 as? UIAction } ?? []
+        XCTAssertEqual(actions.map(\.title), ["A", "B", "C", "D", "E"])
+        XCTAssertEqual(actions.map(\.state), [.off, .off, .on, .off, .off])
+        XCTAssertEqual(actions.map { $0.attributes.contains(.disabled) }, [false, false, false, false, true])
+        // ...and the menu button is the accessibility element
+        XCTAssertEqual(element.menuButton.accessibilityLabel, "Letter")
+        XCTAssertEqual(element.menuButton.accessibilityValue, "C")
+    }
+
+    func testMenuUpdatesWhenSelectionChanges() {
+        // Given a dropdown presented as a menu
+        var index: Int?
+        let element = DropdownFieldElement(items: items, label: "", presentsAsMenu: true, didUpdate: { index = $0 })
+
+        // When a new item is selected
+        element.select(index: 3, shouldAutoAdvance: false)
+
+        // Then the menu marks the new item as selected
+        let actions = element.menuButton.menu?.children.compactMap { $0 as? UIAction } ?? []
+        XCTAssertEqual(actions.map(\.state), [.off, .off, .off, .on])
+        XCTAssertEqual(element.menuButton.accessibilityValue, "D")
+        // ...and didUpdate is called
+        XCTAssertEqual(index, 3)
+    }
+
+    func testMenuUpdatesWhenItemsChange() {
+        // Given a dropdown presented as a menu with "B" selected
+        let element = DropdownFieldElement(items: items, defaultIndex: 1, label: "", presentsAsMenu: true)
+
+        // When the items are updated
+        let newItems = ["B", "X"].map { DropdownFieldElement.DropdownItem(pickerDisplayName: $0, labelDisplayName: $0, accessibilityValue: $0, rawData: $0) }
+        element.update(items: newItems)
+
+        // Then the menu shows the new items with "B" still selected
+        let actions = element.menuButton.menu?.children.compactMap { $0 as? UIAction } ?? []
+        XCTAssertEqual(actions.map(\.title), ["B", "X"])
+        XCTAssertEqual(actions.map(\.state), [.on, .off])
+    }
+
+    func testMenuOmitsPlaceholder() {
+        // Given a dropdown presented as a menu that starts empty
+        let element = DropdownFieldElement(items: items, label: "", startsEmpty: true, presentsAsMenu: true)
+
+        // Then the placeholder isn't shown in the menu
+        let actions = element.menuButton.menu?.children.compactMap { $0 as? UIAction } ?? []
+        XCTAssertEqual(actions.map(\.title), ["A", "B", "C", "D"])
+        XCTAssertTrue(actions.allSatisfy { $0.state == .off })
+    }
+
 }

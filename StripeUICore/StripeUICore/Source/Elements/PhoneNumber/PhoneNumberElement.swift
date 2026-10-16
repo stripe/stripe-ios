@@ -198,7 +198,8 @@ extension DropdownFieldElement {
             items: countryDisplayStrings,
             defaultIndex: defaultCountryIndex,
             label: nil,
-            theme: theme
+            theme: theme,
+            presentsAsMenu: true
         )
     }
 }
