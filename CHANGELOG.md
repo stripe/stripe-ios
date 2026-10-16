@@ -1,5 +1,5 @@
 The next release's version bump will so far be:
-MINOR
+MAJOR
 
 ## X.Y.Z - changes pending release
 
@@ -9,9 +9,11 @@ MINOR
 ### CryptoOnramp (Alpha)
 * [Changed] Apple Pay card previews now include the card funding type (Credit, Debit, or Prepaid), falling back to Card when unavailable, matching Link's formatting.
 * [Changed] Renamed `CryptoOnrampCoordinator.fulfillKYCRequirement(from:)` to `fulfillKYCRequirements(from:)` and `FulfillKYCRequirementResult` to `FulfillKYCRequirementsResult`.
+* [Changed] If you install with Swift Package Manager, [enable the `Identity` package trait](https://github.com/stripe/stripe-ios/blob/master/MIGRATING.md#migrating-from-versions--2700). CryptoOnramp depends on StripeIdentity, which requires it.
 
 ### Identity
 * [Changed] Test-mode verification sessions now upload placeholder document and selfie images instead of users' images.
+* [Changed] StripeIdentity now depends on MediaPipe, distributed through [stripe/identity-ios-mediapipe](https://github.com/stripe/identity-ios-mediapipe). If you install with Swift Package Manager, [enable the `Identity` package trait](https://github.com/stripe/stripe-ios/blob/master/MIGRATING.md#migrating-from-versions--2700). No action is required for CocoaPods users.
 
 ## 26.14.0 2026-10-12
 ### General

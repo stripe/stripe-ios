@@ -26,22 +26,12 @@ Pod::Spec.new do |s|
   s.ios.deployment_target          = '15.0'
   s.swift_version		               = '5.0'
   s.weak_framework = 'SwiftUI'
-  s.source_files                   = [
-    'StripeIdentity/StripeIdentity/**/*.swift',
-    'LocalPackages/MediaPipeSPM/Sources/MediaPipeSPMGraphReferences/**/*.{c,h}',
-  ]
-  s.private_header_files           = [
-    'LocalPackages/MediaPipeSPM/Sources/MediaPipeSPMGraphReferences/**/*.h',
-  ]
+  s.source_files                   = 'StripeIdentity/StripeIdentity/**/*.swift'
   s.pod_target_xcconfig            = { 'OTHER_LDFLAGS' => '$(inherited) -ObjC' }
-  s.vendored_frameworks            = [
-    'LocalPackages/MediaPipeSPM/Artifacts/MediaPipeCommonGraphLibraries.xcframework',
-    'LocalPackages/MediaPipeSPM/Artifacts/MediaPipeTasksCommon.xcframework',
-    'LocalPackages/MediaPipeSPM/Artifacts/MediaPipeTasksVision.xcframework',
-  ]
   s.ios.resource_bundle            = { 'StripeIdentityBundle' => 'StripeIdentity/StripeIdentity/Resources/**/*.{lproj,json,png,wav,xcassets,task}' }
-  s.preserve_paths                 = 'NOTICE', 'LocalPackages/MediaPipeSPM/LICENSE-MediaPipe'
+  s.preserve_paths                 = 'NOTICE'
   s.dependency                       'StripeCore', "#{s.version}"
   s.dependency                       'StripeUICore', "#{s.version}"
   s.dependency                       'StripeCameraCore', "#{s.version}"
+  s.dependency                       'StripeMediaPipe', '1.0.0'
 end
