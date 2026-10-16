@@ -103,21 +103,8 @@ extension PaymentSheet {
                 // For other payment methods, get shipping address from configuration.
                 let shippingAddress = configuration.shippingDetails()?.stpAddress
 
-                // Try to create a radar session for the payment method before calling the handler
-                return await withCheckedContinuation { continuation in
-                    configuration.apiClient.createSavedPaymentMethodRadarSession(paymentMethodId: paymentMethod.stripeId) { _, error in
-                        // If radar session creation fails, just continue with the payment method directly
-                        if let error {
-                            // Log the error but don't fail the payment
-                            let errorAnalytic = ErrorAnalytic(event: .savedPaymentMethodRadarSessionFailure, error: error)
-                            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic, apiClient: configuration.apiClient)
-                        }
-
-                        // Call the handler regardless of radar session success/failure
-                        preparePaymentMethodHandler(paymentMethod, shippingAddress)
-                        continuation.resume(returning: (.completed, STPAnalyticsClient.DeferredIntentConfirmationType.completeWithoutConfirmingIntent))
-                    }
-                }
+                preparePaymentMethodHandler(paymentMethod, shippingAddress)
+                return (.completed, STPAnalyticsClient.DeferredIntentConfirmationType.completeWithoutConfirmingIntent)
             }
 
             // 2b. Otherwise, call the payment method confirmHandler

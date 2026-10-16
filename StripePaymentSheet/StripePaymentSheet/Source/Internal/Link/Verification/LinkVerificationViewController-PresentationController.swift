@@ -85,7 +85,8 @@ extension LinkVerificationViewController {
             )
 
             return CGRect(
-                x: (containerSize.width - actualSize.width) / 2,
+                // A vertical navigation bar can make the safe area narrower on one side.
+                x: safeFrame.midX - actualSize.width / 2,
                 y: max((containerSize.height - actualSize.height - bottomInset) / 2, Constants.padding),
                 width: actualSize.width,
                 height: actualSize.height
