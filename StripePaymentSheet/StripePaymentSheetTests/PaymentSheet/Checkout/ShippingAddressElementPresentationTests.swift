@@ -49,6 +49,46 @@ final class ShippingAddressElementPresentationTests: XCTestCase {
         XCTAssertTrue(unwrappedNavigationController.viewControllers.first === shippingAddressElement.addressViewController)
     }
 
+    func testPresentationInheritsCheckoutUserInterfaceStyle() async throws {
+        let styles: [(CheckoutController.UserInterfaceStyle, UIUserInterfaceStyle, UIUserInterfaceStyle)] = [
+            (.alwaysLight, .dark, .light),
+            (.alwaysDark, .light, .dark),
+            (.automatic, .light, .light),
+            (.automatic, .dark, .dark),
+        ]
+        let animationsWereEnabled = UIView.areAnimationsEnabled
+        UIView.setAnimationsEnabled(false)
+        defer {
+            UIView.setAnimationsEnabled(animationsWereEnabled)
+        }
+
+        for (checkoutStyle, presenterStyle, expectedStyle) in styles {
+            // Given checkout's style and a presenter that may use a different style
+            var configuration = CheckoutTestHelpers.makeConfiguration(
+                paymentElementConfiguration: nil,
+                expressCheckoutElementConfiguration: nil
+            )
+            configuration.shippingAddressElement = .init()
+            configuration.userInterfaceStyle = checkoutStyle
+            let checkout = try await CheckoutController(configuration: configuration)
+            let shippingAddressElement = checkout.getShippingAddressElement()
+            presentingViewController.overrideUserInterfaceStyle = presenterStyle
+
+            // When the shipping address sheet is presented
+            let navigationController = try XCTUnwrap(present(shippingAddressElement))
+
+            // Then the form and navigation bar use checkout's style
+            XCTAssertEqual(shippingAddressElement.addressViewController.traitCollection.userInterfaceStyle, expectedStyle)
+            XCTAssertEqual(navigationController.navigationBar.traitCollection.userInterfaceStyle, expectedStyle)
+
+            // ...and address autocomplete inherits the same style
+            shippingAddressElement.addressViewController.presentAutocomplete()
+            let autocompleteViewController = try XCTUnwrap(navigationController.topViewController as? AutoCompleteViewController)
+            XCTAssertEqual(autocompleteViewController.traitCollection.userInterfaceStyle, expectedStyle)
+            presentingViewController.dismiss(animated: false)
+        }
+    }
+
     func testCompletionRunsAfterDelegateDismissesPresentation() async throws {
         // Given
         let shippingAddressElement = makeShippingAddressElement()
@@ -204,6 +244,7 @@ final class ShippingAddressElementPresentationTests: XCTestCase {
     private func makeShippingAddressElement() -> ShippingAddressElement {
         return ShippingAddressElement(
             configuration: .init(),
+            userInterfaceStyle: .automatic,
             initialShippingAddress: .init(
                 name: "Jane Doe",
                 address: .init(
