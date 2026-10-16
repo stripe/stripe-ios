@@ -73,7 +73,7 @@ struct ProofOfAddressView: View {
                         .foregroundColor(.textPrimary)
                         .accessibilityAddTraits(.isHeader)
 
-                    Text(String.Localized.documentRequirementsExplanation)
+                    Text(configuration.documentCollectionPrompt ?? String.Localized.documentRequirementsExplanation)
                         .typography(.bodyExtraLarge)
                         .foregroundColor(.textTertiary)
                 }
