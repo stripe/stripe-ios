@@ -33,6 +33,40 @@ final class PaymentElementTest: XCTestCase {
         super.tearDown()
     }
 
+    func testConfigurationDisplaysMandateTextByDefault() {
+        let configuration = PaymentElement.Configuration()
+
+        let embeddedConfiguration = configuration.makeEmbeddedConfiguration(
+            apiClient: .shared,
+            returnURL: "stripe-ios-test://checkout-return",
+            defaults: .init(),
+            merchantDisplayName: "",
+            merchantCountryCode: "US",
+            userInterfaceStyle: .automatic
+        )
+
+        XCTAssertTrue(configuration.displaysMandateText)
+        XCTAssertTrue(embeddedConfiguration.embeddedViewDisplaysMandateText)
+    }
+
+    func testConfigurationPropagatesMandateTextDisplayChanges() {
+        var configuration = PaymentElement.Configuration()
+
+        for displaysMandateText in [false, true] {
+            configuration.displaysMandateText = displaysMandateText
+            let embeddedConfiguration = configuration.makeEmbeddedConfiguration(
+                apiClient: .shared,
+                returnURL: "stripe-ios-test://checkout-return",
+                defaults: .init(),
+                merchantDisplayName: "",
+                merchantCountryCode: "US",
+                userInterfaceStyle: .automatic
+            )
+
+            XCTAssertEqual(embeddedConfiguration.embeddedViewDisplaysMandateText, displaysMandateText)
+        }
+    }
+
     func testConfigurationSetsCheckoutDefaultBillingDetails() async throws {
         // Given Checkout billing defaults
         var checkoutConfiguration = CheckoutController.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")

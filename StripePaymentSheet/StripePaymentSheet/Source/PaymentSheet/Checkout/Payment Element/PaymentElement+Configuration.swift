@@ -99,8 +99,9 @@ extension PaymentElement {
         }
 
         /// Controls whether the PaymentElement displays mandate text at the bottom for payment methods that require it. If set to `false`, your integration must display `PaymentOptionDisplayData.mandateText` to the customer near your “Buy” button to comply with regulations.
+        /// Defaults to `true`.
         /// - Note: This doesn't affect mandates displayed in the sheet and is ignored if you call `presentPaymentElement`.
-        public var displaysMandateText: Bool = false {
+        public var displaysMandateText: Bool = true {
             didSet {
                 embeddedConfiguration.embeddedViewDisplaysMandateText = displaysMandateText
             }
@@ -127,11 +128,7 @@ extension PaymentElement {
         // MARK: - Internal
 
         private var paymentSheetConfiguration = PaymentSheet.Configuration()
-        private var embeddedConfiguration: EmbeddedPaymentElement.Configuration = {
-            var configuration = EmbeddedPaymentElement.Configuration()
-            configuration.embeddedViewDisplaysMandateText = false
-            return configuration
-        }()
+        private var embeddedConfiguration = EmbeddedPaymentElement.Configuration()
 
         func makeEmbeddedConfiguration(
             apiClient: STPAPIClient,
