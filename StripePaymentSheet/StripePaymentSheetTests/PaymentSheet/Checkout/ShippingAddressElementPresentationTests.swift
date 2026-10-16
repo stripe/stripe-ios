@@ -7,6 +7,7 @@
 import OHHTTPStubs
 @_spi(STP) @testable import StripeCore
 @_spi(AppearanceAPIAdditionsPreview) @_spi(STP) @testable import StripePaymentSheet
+@_spi(STP) @testable import StripeUICore
 import UIKit
 import XCTest
 
