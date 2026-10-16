@@ -250,6 +250,15 @@ import UIKit
         return publishableKey.lowercased().hasPrefix("pk_test") || (publishableKeyIsUserKey && !userKeyLiveMode)
     }
 
+    /// Includes request IDs in error descriptions only when the client's mode is known to be live.
+    /// Clients using ephemeral keys, such as Identity, keep their existing descriptions.
+    @_spi(STP) public var shouldIncludeRequestIDInErrorDescription: Bool {
+        if publishableKeyIsUserKey {
+            return userKeyLiveMode
+        }
+        return publishableKey?.lowercased().hasPrefix("pk_live") == true
+    }
+
     /**
      Copies the api client.
      - Note: This should be used in cases where you need to make a request
@@ -629,10 +638,10 @@ extension STPAPIClient {
     ) {
         urlSession.stp_performDataTask(
             with: request,
-            completionHandler: { (data, response, error) in
+            completionHandler: { [includeRequestIDInDescription = shouldIncludeRequestIDInErrorDescription] (data, response, error) in
                 DispatchQueue.main.async {
                     completion(
-                        STPAPIClient.decodeResponse(data: data, error: error, response: response, request: request)
+                        STPAPIClient.decodeResponse(data: data, error: error, response: response, request: request, includeRequestIDInDescription: includeRequestIDInDescription)
                     )
                 }
             },
@@ -644,7 +653,8 @@ extension STPAPIClient {
         data: Data?,
         error: Error?,
         response: URLResponse?,
-        request: URLRequest? = nil
+        request: URLRequest? = nil,
+        includeRequestIDInDescription: Bool = false
     ) -> Result<T, Error> {
         if let error {
             return .failure(error)
@@ -670,34 +680,18 @@ extension STPAPIClient {
             return .success(decodedObject)
         } catch {
             // Try decoding the error from the service if one is available
-            if let data, let decodedStripeError = decodeStripeErrorResponse(data: data, response: response) {
-                return .failure(decodedStripeError)
+            if let data,
+               let decodedErrorResponse: StripeAPIErrorResponse = try? StripeJSONDecoder.decode(jsonData: data),
+               var apiError = decodedErrorResponse.error {
+                apiError.httpStatusCode = (response as? HTTPURLResponse)?.statusCode
+                apiError.requestID = (response as? HTTPURLResponse)?.value(forHTTPHeaderField: "request-id")
+                apiError.includeRequestIDInDescription = includeRequestIDInDescription
+                return .failure(StripeError.apiError(apiError))
             } else {
                 // Return decoding error directly
                 return .failure(error)
             }
         }
-    }
-
-    /// Decodes request data to see if it can be parsed as a Stripe error.
-    static func decodeStripeErrorResponse(
-        data: Data,
-        response: URLResponse?
-    ) -> StripeError? {
-        var decodedError: StripeError?
-
-        if let decodedErrorResponse: StripeAPIErrorResponse = try? StripeJSONDecoder.decode(
-            jsonData: data
-        ),
-            var apiError = decodedErrorResponse.error
-        {
-            apiError.httpStatusCode = (response as? HTTPURLResponse)?.statusCode
-            apiError.requestID = (response as? HTTPURLResponse)?.value(forHTTPHeaderField: "request-id")
-
-            decodedError = StripeError.apiError(apiError)
-        }
-
-        return decodedError
     }
 
     enum HTTPMethod: String {

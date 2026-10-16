@@ -38,14 +38,17 @@ struct AdditionalKYCDocumentRequirement: Decodable, Equatable {
     /// The maximum number of distinct document types the customer may provide.
     let maxDocumentTypes: Int
 
-    /// The maximum number of files the customer may provide for each document type, when specified.
-    let maxFilesPerDocumentType: Int?
+    /// The maximum number of files the customer may provide for each document type.
+    let maxFilesPerDocumentType: Int
 
     /// Localized text describing the accepted file formats and per-file size limit.
     let fileRequirements: String
 
     /// Localized instructions to display while collecting documents.
     let instructions: [String]
+
+    /// Localized prompt to display while collecting documents, when specified.
+    var documentCollectionPrompt: String?
 
     // MARK: - Decodable
 
@@ -58,5 +61,6 @@ struct AdditionalKYCDocumentRequirement: Decodable, Equatable {
         case maxFilesPerDocumentType = "max_files_per_document_type"
         case fileRequirements = "file_requirements"
         case instructions
+        case documentCollectionPrompt = "document_collection_prompt"
     }
 }

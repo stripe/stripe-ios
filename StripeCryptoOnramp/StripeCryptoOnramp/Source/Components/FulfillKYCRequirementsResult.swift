@@ -1,5 +1,5 @@
 //
-//  FulfillKYCRequirementResult.swift
+//  FulfillKYCRequirementsResult.swift
 //  StripeCryptoOnramp
 //
 //  Created by Michael Liberatore on 9/28/26.
@@ -7,9 +7,9 @@
 
 import Foundation
 
-/// The outcome of collecting an additional KYC requirement.
+/// The outcome of collecting additional KYC requirements.
 @_spi(CryptoOnrampAlpha)
-public enum FulfillKYCRequirementResult: Equatable, Sendable {
+public enum FulfillKYCRequirementsResult: Equatable, Sendable {
 
     /// Stripe accepted a new document submission for asynchronous verification.
     case submitted

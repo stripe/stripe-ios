@@ -48,7 +48,8 @@ struct AdditionalKYCQuestionnaireView: View {
                             get: { model.answers[question.id] ?? "" },
                             set: { model.answers[question.id] = $0 }
                         ),
-                        appearance: appearance
+                        appearance: appearance,
+                        maximumAnswerLength: question.maxQuestionnaireAnswerCharacters
                     )
                 }
             }
@@ -78,8 +79,8 @@ struct AdditionalKYCQuestionnaireView: View {
             heading: .Localized.tellUsAboutYourSourceOfFunds,
             appearance: .previewLinkAppearance,
             model: try! .init(questionnaire: .init(questions: [
-                .init(id: "purchase_purpose", prompt: "Why are you purchasing cryptocurrency through swapped.com?", answerType: .freeText, required: true),
-                .init(id: "third_party_advised", prompt: "Has anyone advised, or instructed, you to purchase cryptocurrency? This includes anyone who has messaged you on social media (Telegram, WhatsApp, Twitter, etc) about investing in or purchasing cryptocurrency.", answerType: .freeText, required: true),
+                .init(id: "purchase_purpose", prompt: "Why are you purchasing cryptocurrency through swapped.com?", answerType: .freeText, required: true, maxQuestionnaireAnswerCharacters: 5_000),
+                .init(id: "third_party_advised", prompt: "Has anyone advised, or instructed, you to purchase cryptocurrency? This includes anyone who has messaged you on social media (Telegram, WhatsApp, Twitter, etc) about investing in or purchasing cryptocurrency.", answerType: .freeText, required: true, maxQuestionnaireAnswerCharacters: 5_000),
             ])),
             onContinue: {},
             onClose: {}
