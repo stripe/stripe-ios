@@ -100,8 +100,7 @@ public class STPImageLibrary: NSObject {
         case .JCB:
             return safeImageNamed("stp_card_unpadded_jcb")
         case .jaywan:
-            // There is no unpadded Jaywan artwork yet, so use the standard padded icon.
-            return self.brandImage(for: brand, template: false)
+            return safeImageNamed("stp_card_unpadded_jaywan")
         case .unknown:
             fallthrough
         @unknown default:

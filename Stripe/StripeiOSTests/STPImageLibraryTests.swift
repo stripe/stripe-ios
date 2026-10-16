@@ -153,13 +153,17 @@ class STPImageLibraryTests: XCTestCase {
         // ...and it's used for the Jaywan card brand image
         STPAssertEqualImages(STPImageLibrary.cardBrandImage(for: .jaywan), jaywanImage)
 
-        // When requesting the templated or unpadded variants, which have no Jaywan-specific artwork yet
+        // When requesting the templated variant, which has no Jaywan-specific artwork yet
         let templatedImage = STPImageLibrary.templatedBrandImage(for: .jaywan)
-        let unpaddedImage = STPImageLibrary.unpaddedCardBrandImage(for: .jaywan)
         // Then the full-color icon is used and is never tinted
         STPAssertEqualImages(templatedImage, jaywanImage)
         XCTAssertEqual(templatedImage.renderingMode, .alwaysOriginal)
-        STPAssertEqualImages(unpaddedImage, jaywanImage)
+
+        // When requesting the unpadded variant
+        let unpaddedImage = STPImageLibrary.unpaddedCardBrandImage(for: .jaywan)
+        // Then the unpadded Jaywan icon is used, with the same size as the other unpadded card brand icons
+        STPAssertEqualImages(unpaddedImage, STPImageLibrary.safeImageNamed("stp_card_unpadded_jaywan"))
+        XCTAssertEqual(unpaddedImage.size, STPImageLibrary.unpaddedCardBrandImage(for: .visa).size)
         XCTAssertNotEqual(unpaddedImage.renderingMode, .alwaysTemplate)
     }
 

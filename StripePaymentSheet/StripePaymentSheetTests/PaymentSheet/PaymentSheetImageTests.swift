@@ -51,9 +51,13 @@ final class PaymentSheetImageTests: XCTestCase {
         let jaywanImage = STPImageLibrary.cardBrandImage(for: .jaywan)
         XCTAssert(jaywanImage.size != .zero)
 
-        // Then the Jaywan icon is used for the payment option icon and the saved payment method row
+        // Then the Jaywan icon is used for the payment option icon
         XCTAssertEqual(paymentMethod.makeIcon().pngData(), jaywanImage.pngData())
-        XCTAssertEqual(paymentMethod.makeSavedPaymentMethodRowImage(iconStyle: .filled).pngData(), jaywanImage.pngData())
+
+        // ...and the unpadded Jaywan icon is used for the saved payment method row
+        let unpaddedJaywanImage = STPImageLibrary.unpaddedCardBrandImage(for: .jaywan)
+        XCTAssert(unpaddedJaywanImage.size != .zero)
+        XCTAssertEqual(paymentMethod.makeSavedPaymentMethodRowImage(iconStyle: .filled).pngData(), unpaddedJaywanImage.pngData())
 
         // ...and the saved payment method cell image loads in both light and dark mode
         for style in [UIUserInterfaceStyle.light, .dark] {
