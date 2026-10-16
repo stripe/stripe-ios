@@ -37,7 +37,7 @@ class CheckoutApplePayContextFunctionalTest: STPNetworkStubbingTestCase {
         let (context, _) = try await makeContext()
         stub { urlRequest in
             guard let path = urlRequest.url?.path,
-                  path.contains("/payment_pages/"),
+                  path.contains("/checkout_client/"),
                   path.hasSuffix("/confirm") else { return false }
             DispatchQueue.main.async {
                 context.paymentAuthorizationControllerDidFinish(context.authorizationController)

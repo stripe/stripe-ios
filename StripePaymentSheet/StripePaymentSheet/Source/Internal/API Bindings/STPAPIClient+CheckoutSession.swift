@@ -39,7 +39,7 @@ struct CheckoutSessionConfirmationRequestParameters {
     /// attaches the PaymentMethod to the Checkout Session's customer.
     let savePaymentMethod: Bool?
 
-    /// The optional return URL for redirect-based payment methods.
+    /// CheckoutClient requires a return URL for confirmation.
     let returnURL: String?
 
     /// The optional shipping details.
@@ -258,19 +258,15 @@ extension STPAPIClient {
     }
 
     /// Confirms a Checkout Session with the provided request parameters.
-    /// - Returns: Payment Pages API response containing the full confirmed session with expanded intents.
+    /// - Returns: The full confirmed session with expanded intents.
     func confirmCheckoutSession(
         with requestParameters: CheckoutSessionConfirmationRequestParameters
     ) async throws -> PaymentPagesAPIResponse {
-        var parameters: [String: Any] = [
-            "elements_session_client": ["is_aggregation_expected": true],
-            "expand": [
-                "payment_intent",
-                "payment_intent.payment_method",
-                "setup_intent",
-                "setup_intent.payment_method",
-            ],
-        ]
+        guard let returnURL = requestParameters.returnURL else {
+            throw CheckoutError.unknown(debugDescription: "CheckoutClient confirmation requires a return URL.")
+        }
+        var parameters = Self.checkoutClientParameters()
+        parameters.removeValue(forKey: "timezone")
 
         if let paymentMethodId = requestParameters.paymentMethodId {
             parameters["payment_method"] = paymentMethodId
@@ -284,19 +280,13 @@ extension STPAPIClient {
             parameters["expected_amount"] = expectedAmount
         }
 
-        if let savePaymentMethod = requestParameters.savePaymentMethod {
-            parameters["save_payment_method"] = savePaymentMethod
-        }
-
-        if let returnURL = requestParameters.returnURL {
-            parameters["return_url"] = returnURL
-        }
+        parameters["return_url"] = returnURL
 
         if let shipping = requestParameters.shipping {
             parameters["shipping"] = STPFormEncoder.dictionary(forObject: shipping)
         }
 
-        // Checkout session confirm API uses top-level parameters for payment method specific options
+        // TODO: CheckoutClient /confirm does not support BLIK's blik_code yet.
         if let blikCode = requestParameters.paymentMethodOptions?.blikOptions?.code {
             parameters["blik_code"] = blikCode
         }
@@ -314,13 +304,47 @@ extension STPAPIClient {
             parameters["collected_information"] = collectedInformation
         }
 
+        if let savePaymentMethod = requestParameters.savePaymentMethod {
+            var collectedInformation = parameters["collected_information"] as? [String: Any] ?? [:]
+            collectedInformation["save_payment_method"] = savePaymentMethod
+            parameters["collected_information"] = collectedInformation
+        }
+
         if let customerData = requestParameters.customerData {
             parameters["customer_data"] = customerData
         }
 
-        return try await post(
-            endpoint: "payment_pages/\(requestParameters.sessionId)/confirm",
+        let checkoutClient: CheckoutClientAPIResponse = try await post(
+            endpoint: "checkout_client/\(requestParameters.sessionId)/confirm",
             parameters: parameters
+        )
+        let paymentResponse = checkoutClient.fields["payment_response"] as? [String: Any]
+        let paymentIntent: STPPaymentIntent?
+        if let reference = paymentResponse?["payment_intent"] as? [String: Any] {
+            guard let clientSecret = reference["client_secret"] as? String else {
+                throw DecodingError.dataCorrupted(
+                    .init(codingPath: [], debugDescription: "CheckoutClient PaymentIntent is missing its client secret")
+                )
+            }
+            paymentIntent = try await retrievePaymentIntent(clientSecret: clientSecret, expand: ["payment_method"])
+        } else {
+            paymentIntent = nil
+        }
+        let setupIntent: STPSetupIntent?
+        if let reference = paymentResponse?["setup_intent"] as? [String: Any] {
+            guard let clientSecret = reference["client_secret"] as? String else {
+                throw DecodingError.dataCorrupted(
+                    .init(codingPath: [], debugDescription: "CheckoutClient SetupIntent is missing its client secret")
+                )
+            }
+            setupIntent = try await retrieveSetupIntent(clientSecret: clientSecret, expand: ["payment_method"])
+        } else {
+            setupIntent = nil
+        }
+        return try checkoutClient.paymentPagesResponse(
+            paymentIntent: paymentIntent,
+            setupIntent: setupIntent,
+            isConfirmResponse: true
         )
     }
 

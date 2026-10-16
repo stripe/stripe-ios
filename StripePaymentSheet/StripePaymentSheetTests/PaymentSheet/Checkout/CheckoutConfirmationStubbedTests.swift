@@ -959,6 +959,44 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         return responseJSON
     }
 
+    private static func checkoutClientConfirmJSON(from responseJSON: [AnyHashable: Any]) -> [String: Any] {
+        let session = responseJSON as? [String: Any] ?? [:]
+        var response = CheckoutTestHelpers.checkoutClientInitJSON(
+            from: session,
+            sessionId: session["session_id"] as? String ?? "cs_test_123"
+        )
+        response.removeValue(forKey: "payment_intent")
+        response.removeValue(forKey: "setup_intent")
+        var paymentResponse: [String: Any] = [:]
+        for (key, intent) in [
+            ("payment_intent", session["payment_intent"] as? [String: Any]),
+            ("setup_intent", session["setup_intent"] as? [String: Any]),
+        ] {
+            guard let intent,
+                  let id = intent["id"] as? String,
+                  let clientSecret = intent["client_secret"] as? String else { continue }
+            paymentResponse[key] = ["id": id, "client_secret": clientSecret]
+            paymentResponse["status"] = intent["status"]
+        }
+        if !paymentResponse.isEmpty {
+            response["payment_response"] = paymentResponse
+        }
+        return response
+    }
+
+    private func stubConfirmedIntentRetrieval(from responseJSON: [AnyHashable: Any]) {
+        for (key, endpoint) in [("payment_intent", "payment_intents"), ("setup_intent", "setup_intents")] {
+            guard let intent = responseJSON[key] as? [String: Any],
+                  let id = intent["id"] as? String else { continue }
+            stub { request in
+                request.httpMethod == "GET"
+                    && request.url?.path == "/v1/\(endpoint)/\(id)"
+            } response: { _ in
+                HTTPStubsResponse(jsonObject: intent, statusCode: 200, headers: nil)
+            }
+        }
+    }
+
     private func confirmCheckoutSession(
         _ checkout: CheckoutController,
         responseJSON: [AnyHashable: Any],
@@ -988,11 +1026,12 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         responseTime: TimeInterval = 0
     ) {
         let responseJSON = responseJSON ?? Self.confirmedSessionJSON
+        stubConfirmedIntentRetrieval(from: responseJSON)
         stub { request in
             request.url?.path.hasSuffix("/confirm") == true
         } response: { _ in
             HTTPStubsResponse(
-                jsonObject: responseJSON,
+                jsonObject: Self.checkoutClientConfirmJSON(from: responseJSON),
                 statusCode: 200,
                 headers: nil
             ).responseTime(responseTime)
@@ -1039,9 +1078,10 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         line: UInt = #line
     ) -> XCTestExpectation {
         let expectation = expectation(description: "Checkout Session confirm requested")
+        stubConfirmedIntentRetrieval(from: responseJSON ?? Self.confirmedSessionJSON)
         stub { request in
             guard let pathComponents = request.url?.pathComponents else { return false }
-            return pathComponents.contains("payment_pages")
+            return pathComponents.contains("checkout_client")
                 && pathComponents.contains(sessionId)
                 && pathComponents.last == "confirm"
         } response: { request in
@@ -1051,7 +1091,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
                 line: line
             )
             XCTAssertEqual(
-                params["save_payment_method"],
+                params["collected_information[save_payment_method]"],
                 savePaymentMethod.map(String.init),
                 file: file,
                 line: line
@@ -1068,7 +1108,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
             }
             expectation.fulfill()
             return HTTPStubsResponse(
-                jsonObject: responseJSON ?? Self.confirmedSessionJSON,
+                jsonObject: Self.checkoutClientConfirmJSON(from: responseJSON ?? Self.confirmedSessionJSON),
                 statusCode: 200,
                 headers: nil
             )

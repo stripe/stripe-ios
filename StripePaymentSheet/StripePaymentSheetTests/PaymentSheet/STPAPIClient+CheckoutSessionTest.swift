@@ -108,7 +108,8 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
             sessionId: sessionId,
             paymentMethodId: paymentMethod.stripeId,
             expectedAmount: expectedAmount,
-            expectedPaymentMethodType: "card"
+            expectedPaymentMethodType: "card",
+            returnURL: "stripe-ios-test://checkout-return"
         )
         let response = try await apiClient.confirmCheckoutSession(with: requestParameters)
 
@@ -311,7 +312,8 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
             sessionId: sessionId,
             paymentMethodId: paymentMethod.stripeId,
             expectedAmount: nil,
-            expectedPaymentMethodType: "card"
+            expectedPaymentMethodType: "card",
+            returnURL: "stripe-ios-test://checkout-return"
         )
         let response = try await apiClient.confirmCheckoutSession(with: requestParameters)
 
