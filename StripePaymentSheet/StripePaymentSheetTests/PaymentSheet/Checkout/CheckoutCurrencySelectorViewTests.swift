@@ -88,9 +88,16 @@ final class CheckoutCurrencySelectorViewTests: XCTestCase {
         let updatedSessionJSON = makeSessionJSON(currency: "gbp", paymentMethodTypes: [])
         let sessionId = initialSession.sessionId
         stub(condition: { request in
-            request.httpMethod == "POST" && request.url?.path == "/v1/payment_pages/\(sessionId)"
+            request.httpMethod == "POST" && request.url?.path == "/v1/checkout_client/\(sessionId)/update"
         }) { _ in
-            HTTPStubsResponse(jsonObject: updatedSessionJSON, statusCode: 200, headers: nil)
+            HTTPStubsResponse(
+                jsonObject: CheckoutTestHelpers.checkoutClientInitJSON(
+                    from: updatedSessionJSON as? [String: Any] ?? [:],
+                    sessionId: sessionId
+                ),
+                statusCode: 200,
+                headers: nil
+            )
         }
         let checkout = try await CheckoutController(configuration: configuration)
         let view = try XCTUnwrap(checkout.getCurrencySelectorElement()).uiView

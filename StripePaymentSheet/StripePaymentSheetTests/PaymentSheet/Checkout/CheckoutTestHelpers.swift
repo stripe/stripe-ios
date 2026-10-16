@@ -320,6 +320,19 @@ enum CheckoutTestHelpers {
         // Init can trigger a session update (e.g. billing address tax sync); just echo the session back.
         stub(condition: { request in
             request.httpMethod == "POST"
+                && request.url?.path == "/v1/checkout_client/\(sessionId)/update"
+        }) { _ in
+            var responseJSON = jsonObject(apiResponse.allResponseFields) as? [String: Any] ?? [:]
+            responseJSON["session_id"] = responseJSON["session_id"] ?? sessionId
+            let data = try! JSONSerialization.data(
+                withJSONObject: checkoutClientInitJSON(from: responseJSON, sessionId: sessionId),
+                options: []
+            )
+            return HTTPStubsResponse(data: data, statusCode: 200, headers: nil)
+        }
+        // Promotion codes still use Payment Pages.
+        stub(condition: { request in
+            request.httpMethod == "POST"
                 && request.url?.path == "/v1/payment_pages/\(sessionId)"
         }) { _ in
             var responseJSON = jsonObject(apiResponse.allResponseFields) as? [String: Any] ?? [:]
@@ -373,6 +386,26 @@ enum CheckoutTestHelpers {
             )
         }
 
+        stub { request in
+            request.url?.path == "/v1/checkout_client/\(sessionId)/update"
+        } response: { request in
+            requestRecorder.append(
+                .init(
+                    kind: .updateSession,
+                    params: RequestBodyTestHelpers.formEncodedBodyParams(from: request)
+                )
+            )
+            let updateRequestNumber = requestRecorder.requests.filter { $0.kind == .updateSession }.count
+            return HTTPStubsResponse(
+                jsonObject: checkoutClientInitJSON(
+                    from: jsonObject(sessionJSON()) as? [String: Any] ?? [:],
+                    sessionId: sessionId
+                ),
+                statusCode: updateStatusCode(updateRequestNumber),
+                headers: nil
+            )
+        }
+        // Promotion codes still use Payment Pages.
         stub { request in
             request.url?.path == "/v1/payment_pages/\(sessionId)"
         } response: { request in
