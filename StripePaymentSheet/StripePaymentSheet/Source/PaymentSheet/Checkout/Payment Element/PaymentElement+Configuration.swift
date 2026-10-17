@@ -98,8 +98,9 @@ extension PaymentElement {
             }
         }
 
-        /// Controls whether the PaymentElement displays mandate text at the bottom for payment methods that require it. If set to `false`, your integration must display `PaymentOptionDisplayData.mandateText` to the customer near your “Buy” button to comply with regulations.
-        /// - Note: This doesn't affect mandates displayed in the sheet and is ignored if you call `presentPaymentElement`.
+        /// Controls whether PaymentElement displays mandate text below its embedded view and presents a SEPA mandate before confirmation when needed. Defaults to `true`.
+        /// If set to `false`, your integration must display `PaymentOptionDisplayData.mandateText` to the customer near your “Buy” button to comply with regulations.
+        /// - Note: This doesn't affect mandates displayed inside the payment method selection sheet.
         public var displaysMandateText: Bool = true {
             didSet {
                 embeddedConfiguration.embeddedViewDisplaysMandateText = displaysMandateText
