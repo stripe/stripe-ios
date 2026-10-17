@@ -7,12 +7,14 @@
 //
 
 @_spi(STP) import StripeCore
-import StripePaymentSheet
+@_spi(AddressViewControllerSeparatorStylePreview) import StripePaymentSheet
 import SwiftUI
 
 public struct AddressElementExampleView: View {
     @State private var showingAddressSheet = false
     @State private var collectedAddress: AddressElement.AddressDetails?
+    /// `nil` uses divider lines
+    @State private var separatorSpacing: CGFloat?
 
     private func makeConfiguration() -> AddressElement.Configuration {
         STPAPIClient.shared.publishableKey = "pk_test"
@@ -20,6 +22,7 @@ public struct AddressElementExampleView: View {
         var config = AddressElement.Configuration()
         config.allowedCountries = ["US", "CA", "GB", "AU", "JP"]
         config.buttonTitle = "Save Address"
+        config.separatorStyle = separatorSpacing.map { .spacing($0) } ?? .divider
 
         // Pre-populate with existing address if available
         if let address = collectedAddress {
@@ -38,6 +41,24 @@ public struct AddressElementExampleView: View {
     public var body: some View {
         NavigationView {
             VStack(spacing: 20) {
+                // Separator style picker
+                HStack(alignment: .center, spacing: 0) {
+                    Text("Separator Style:")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+
+                    Spacer(minLength: 8)
+
+                    Picker("Separator Style", selection: $separatorSpacing) {
+                        Text("Divider Lines").tag(CGFloat?.none)
+                        ForEach([8, 12, 16, 20] as [CGFloat], id: \.self) { spacing in
+                            Text("Spacing (\(Int(spacing))pt)").tag(CGFloat?.some(spacing))
+                        }
+                    }
+                    .pickerStyle(.menu)
+                }
+                .padding(.horizontal)
+
                 // Example: Using .sheet with isPresented
                 Button("Collect Address") {
                     showingAddressSheet = true

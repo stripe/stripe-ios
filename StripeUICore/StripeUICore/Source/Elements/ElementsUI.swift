@@ -35,6 +35,14 @@ import UIKit
         )
     }()
 
+    /// Makes the spring animator used for focus transitions, e.g. floating placeholders and highlighted borders
+    public static func makeFocusAnimator() -> UIViewPropertyAnimator {
+        let params = UISpringTimingParameters(mass: 1.0, dampingRatio: 0.93, frequencyResponse: 0.22)
+        let animator = UIViewPropertyAnimator(duration: 0, timingParameters: params)
+        animator.isInterruptible = true
+        return animator
+    }
+
     public static func makeErrorLabel(theme: ElementsAppearance) -> UILabel {
         return makeErrorLabel(font: theme.fonts.error, textColor: theme.colors.danger)
     }
@@ -78,6 +86,14 @@ import UIKit
         label.accessibilityTraits = [.header]
         return label
     }
+}
+
+/// Defines how separators between elements are displayed
+@_spi(STP) public enum SeparatorDisplayStyle {
+    /// Use visible divider lines.
+    case divider
+    /// Use spacing without visible divider lines.
+    case spacing(CGFloat)
 }
 
 /// Describes the appearance of an Element
@@ -126,6 +142,7 @@ import UIKit
         public var componentBackground = ElementsUI.backgroundColor
         public var disabledBackground = ElementsUI.disabledBackgroundColor
         public var border = ElementsUI.fieldBorderColor
+        public var selectedBorder: UIColor?
         public var divider = ElementsUI.fieldBorderColor
         public var textFieldText = UIColor.label
         public var bodyText = UIColor.label
