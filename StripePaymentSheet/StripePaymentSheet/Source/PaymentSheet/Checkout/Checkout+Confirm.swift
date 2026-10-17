@@ -349,7 +349,7 @@ extension CheckoutController {
         guard case .saved(let paymentMethod, _) = option, paymentMethod.type == .SEPADebit else {
             return false
         }
-        return paymentElement?.merchantDidAccessView != true
+        return paymentElement?.uiView.hasBeenAttachedToWindow != true
             && paymentElement?.paymentSheetFlowController.didPresentAndContinue != true
             && configuration.paymentElement?.displaysMandateText != false
     }

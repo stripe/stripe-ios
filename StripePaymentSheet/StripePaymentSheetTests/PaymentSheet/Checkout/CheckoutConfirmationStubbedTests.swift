@@ -44,21 +44,39 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         await fulfillment(of: [confirmRequested], timeout: 5)
     }
 
-    func testSavedSEPADoesNotPresentMandateWhenEmbeddedViewIsDisplayed() async throws {
-        // Given the merchant is displaying the embedded PaymentElement
+    func testSavedSEPAMandateTracksEmbeddedWindowAttachment() async throws {
+        // Given the merchant obtains both public views and prepares an offscreen hierarchy
         let checkout = try await makeSavedSEPACheckout(displaysMandateText: true)
+        let element = checkout.getPaymentElement()
+        _ = element.view
+        let embeddedView = element.uiView
         let presenter = UIViewController()
+        guard case .paymentMethod(let parameters, _) = checkout.makeConfirmationFlow(
+            for: element,
+            presentingViewController: presenter
+        ) else {
+            return XCTFail("Expected a payment method confirmation flow")
+        }
+        XCTAssertTrue(checkout.requiresSEPAMandate(for: parameters.option))
+        presenter.view.addSubview(embeddedView)
+        XCTAssertNil(embeddedView.window)
+        XCTAssertTrue(checkout.requiresSEPAMandate(for: parameters.option))
+
+        // When the hierarchy reaches a window
         let window = UIWindow(frame: UIScreen.main.bounds)
         window.rootViewController = presenter
-        presenter.view.addSubview(checkout.getPaymentElement().uiView)
         window.makeKeyAndVisible()
         defer { window.isHidden = true }
-        let confirmRequested = stubConfirmationExpecting(sessionId: checkout.session.id, savePaymentMethod: nil)
+        XCTAssertNotNil(embeddedView.window)
+        XCTAssertFalse(checkout.requiresSEPAMandate(for: parameters.option))
 
-        // When the merchant confirms
+        // ...and the merchant removes the embedded view before confirming
+        embeddedView.removeFromSuperview()
+        XCTAssertNil(embeddedView.window)
+        let confirmRequested = stubConfirmationExpecting(sessionId: checkout.session.id, savePaymentMethod: nil)
         let result = await checkout.confirm(from: presenter)
 
-        // Then the embedded mandate behavior is preserved without an extra sheet
+        // Then the earlier attachment still avoids an extra mandate sheet
         assertSucceeded(result)
         XCTAssertNil(presenter.presentedViewController)
         await fulfillment(of: [confirmRequested], timeout: 5)
