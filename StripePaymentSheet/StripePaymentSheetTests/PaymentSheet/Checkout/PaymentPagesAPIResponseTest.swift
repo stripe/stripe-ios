@@ -184,6 +184,56 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertEqual(savedOptions["payment_method_save"] as? String, "enabled")
     }
 
+    func testCheckoutClientResolvedSetupFutureUsageTakesPrecedenceOverExplicitOptions() throws {
+        // Given the requested resolved map, including a session default and an explicit opt-out
+        var response = CheckoutTestHelpers.checkoutClientInitJSON(from: CheckoutTestHelpers.makeSessionJSON(), sessionId: "cs_test")
+        response["payment_method_options"] = ["card": ["setup_future_usage": "off_session"]]
+        response["setup_future_usage_for_payment_method_type"] = [
+            "card": "none", "link": "off_session", "ideal": "on_session",
+        ]
+
+        // When Checkout decodes the response
+        let data = try JSONSerialization.data(withJSONObject: response)
+        let session = try StripeJSONDecoder().decode(CheckoutClientAPIResponse.self, from: data)
+            .paymentPagesResponse().makePublicSession()
+
+        // Then the resolved map is authoritative, preserves all values, and leaves unset methods absent
+        XCTAssertEqual(session.setupFutureUsage(for: .card), "none")
+        XCTAssertEqual(session.setupFutureUsage(for: .link), "off_session")
+        XCTAssertEqual(session.setupFutureUsage(for: .iDEAL), "on_session")
+        XCTAssertNil(session.setupFutureUsage(for: .SEPADebit))
+    }
+
+    func testCheckoutClientPreservesResolvedMobileLinkSettings() throws {
+        // TODO: CheckoutClient must expose the mobile settings from its resolved Elements Session.
+        // Given the session's resolved settings, with values that differ from client defaults
+        var elements = CheckoutTestHelpers.minimalElementsSessionJSON
+        elements["link_settings"] = [
+            "link_funding_sources": ["CARD"],
+            "link_mobile_use_attestation_endpoints": true,
+            "link_mobile_attestation_state_sync_enabled": true,
+            "link_mobile_disable_signup": true,
+            "link_popup_webview_option": "ephemeral",
+            "link_enable_displayable_default_values_in_ece": true,
+        ]
+        let response = CheckoutTestHelpers.checkoutClientInitJSON(
+            from: CheckoutTestHelpers.makeSessionJSON(["elements_session": elements]), sessionId: "cs_test"
+        )
+
+        // When Checkout decodes the fields currently returned by CheckoutClient
+        let data = try JSONSerialization.data(withJSONObject: response)
+        let session = try StripeJSONDecoder().decode(CheckoutClientAPIResponse.self, from: data)
+            .paymentPagesResponse().makePublicSession()
+        let settings = try XCTUnwrap(session.elementsSession.linkSettings)
+
+        // Then the SDK must receive the session's values for Link configuration
+        XCTAssertEqual(settings.useAttestationEndpoints, true)
+        XCTAssertEqual(settings.attestationStateSyncEnabled, true)
+        XCTAssertEqual(settings.disableSignup, true)
+        XCTAssertEqual(settings.popupWebviewOption, .ephemeral)
+        XCTAssertEqual(settings.linkEnableDisplayableDefaultValuesInECE, true)
+    }
+
     // MARK: - STPAPIResponseDecodable Tests
 
     func testDecodedObjectRejectsMissingSDKRequiredFields() throws {

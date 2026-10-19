@@ -628,13 +628,15 @@ struct CheckoutClientAPIResponse: Decodable {
         response["elements_session"] = elementsSession
         response["checkout_client_settings"] = ["passive_captcha": fields["passive_captcha"] ?? NSNull()]
 
-        if let options = fields["payment_method_options"] as? [String: Any] {
+        if let resolvedSetupFutureUsage = fields["setup_future_usage_for_payment_method_type"] as? [String: String] {
+            response["setup_future_usage_for_payment_method_type"] = resolvedSetupFutureUsage
+        } else if let options = fields["payment_method_options"] as? [String: Any] {
             response["setup_future_usage_for_payment_method_type"] = options.compactMapValues {
                 ($0 as? [String: Any])?["setup_future_usage"] as? String
             }
         }
-        // TODO: CheckoutClient does not expose the session-wide setup_future_usage yet.
-        // Explicit payment-method options cannot recover that value when no override is set.
+        // TODO: CheckoutClient must return the resolved per-method SFU map. Explicit
+        // payment-method options cannot recover inherited SFU needed for saving mandates.
 
         if var customer = fields["customer"] as? [String: Any] {
             let savedOptions = fields["saved_payment_method_options"] as? [String: Any]

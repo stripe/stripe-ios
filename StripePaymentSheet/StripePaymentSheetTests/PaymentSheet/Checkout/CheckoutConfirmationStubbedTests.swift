@@ -561,10 +561,10 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         )
     }
 
-    func testNewPaymentMethodWithSetupFutureUsageDeselectedUsesLimitedAllowRedisplay() async throws {
+    func testNewPaymentMethodWithPerMethodSetupFutureUsageDeselectedUsesLimitedAllowRedisplay() async throws {
         try await assertNewPaymentMethodConfirmation(
             session: CheckoutTestHelpers.makeSession([
-                "setup_future_usage": "off_session",
+                "payment_method_options": ["card": ["setup_future_usage": "off_session"]],
             ]).withCustomer(),
             paymentMethodType: .stripe(.card),
             checkboxState: .deselected,
@@ -573,10 +573,10 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         )
     }
 
-    func testNewPaymentMethodWithOfferSaveDisabledOmitsSaveAndUsesLimitedAllowRedisplay() async throws {
+    func testNewPaymentMethodWithPerMethodSetupFutureUsageAndOfferSaveDisabledOmitsSaveAndUsesLimitedAllowRedisplay() async throws {
         try await assertNewPaymentMethodConfirmation(
             session: CheckoutTestHelpers.makeSession([
-                "setup_future_usage": "off_session",
+                "payment_method_options": ["card": ["setup_future_usage": "off_session"]],
                 "customer_managed_saved_payment_methods_offer_save": [
                     "enabled": false,
                     "status": "not_accepted",
