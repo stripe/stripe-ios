@@ -182,8 +182,8 @@ private let TelemetryURL = URL(string: "https://m.stripe.com/6")!
         ]
         // PassKit can block for minutes waiting for system services. It must not block the caller
         // or delay the initial Mirador request, which acquires IDs for the first tokenization.
-        // Collect this optional signal in the background and omit it while unknown, rather than
-        // reporting false. Subsequent requests include the result once it is available.
+        // Collect this optional signal in the background and omit it while unknown.
+        // Subsequent requests include the result once it is available.
         if let supportsApplePay = applePayCapability.cachedValue(for: StripeAPI.supportedPKPaymentNetworks()) {
             otherData["m"] = NSNumber(value: supportsApplePay)
         }
