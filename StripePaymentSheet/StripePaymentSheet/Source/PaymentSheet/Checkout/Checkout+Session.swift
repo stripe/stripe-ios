@@ -322,7 +322,7 @@ extension CheckoutController.Session {
         /// The customer-facing name of the tax rate.
         public let displayName: String
 
-        /// The tax rate percentage, or `nil` for a flat tax amount.
+        /// The tax rate percentage returned by the server.
         public let percentage: Double?
     }
 

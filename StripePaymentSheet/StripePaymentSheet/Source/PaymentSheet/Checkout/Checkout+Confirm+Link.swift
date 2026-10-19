@@ -23,7 +23,8 @@ extension CheckoutController {
     // directly as `.withPaymentDetails`.
     static func confirmLink(
         checkoutSession: Session,
-        parameters: LinkConfirmationParameters
+        parameters: LinkConfirmationParameters,
+        checkoutCaptchaChallenge: (any PassiveCaptchaTokenProvider)? = nil
     ) async -> InternalConfirmResult {
         let elementsSession = checkoutSession.elementsSession
         let configuration = parameters.configuration
@@ -86,7 +87,8 @@ extension CheckoutController {
                     )
                     let result = await Self.confirmLinkPaymentMethod(
                         checkoutSession: checkoutSession,
-                        parameters: paymentMethodParameters
+                        parameters: paymentMethodParameters,
+                        checkoutCaptchaChallenge: checkoutCaptchaChallenge
                     )
                     if PaymentSheet.shouldLogOutOfLink(result: result.paymentSheetResult, elementsSession: elementsSession) {
                         linkAccount?.logout()
@@ -113,7 +115,8 @@ extension CheckoutController {
                     )
                     let result = await Self.confirmLinkPaymentMethod(
                         checkoutSession: checkoutSession,
-                        parameters: paymentMethodParameters
+                        parameters: paymentMethodParameters,
+                        checkoutCaptchaChallenge: checkoutCaptchaChallenge
                     )
                     if PaymentSheet.shouldLogOutOfLink(result: result.paymentSheetResult, elementsSession: elementsSession) {
                         linkAccount?.logout()
@@ -151,7 +154,8 @@ extension CheckoutController {
                             analyticsHelper: parameters.analyticsHelper,
                             authenticationContext: linkAuthenticationContext,
                             paymentHandler: parameters.paymentHandler
-                        )
+                        ),
+                        checkoutCaptchaChallenge: checkoutCaptchaChallenge
                     )
                     linkCompletionResult = result
                     linkCompletion(result.paymentSheetResult, nil)
@@ -192,7 +196,8 @@ extension CheckoutController {
     @MainActor
     private static func confirmLinkPaymentMethod(
         checkoutSession: Session,
-        parameters: PaymentMethodConfirmationParameters
+        parameters: PaymentMethodConfirmationParameters,
+        checkoutCaptchaChallenge: (any PassiveCaptchaTokenProvider)?
     ) async -> InternalConfirmResult {
         do {
             let requestParameters = try await makeConfirmationRequestParameters(
@@ -204,7 +209,8 @@ extension CheckoutController {
                 with: requestParameters,
                 apiClient: parameters.configuration.apiClient,
                 authenticationContext: parameters.authenticationContext,
-                paymentHandler: parameters.paymentHandler
+                paymentHandler: parameters.paymentHandler,
+                checkoutCaptchaChallenge: checkoutCaptchaChallenge
             )
         } catch {
             return .failed(error)

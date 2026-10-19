@@ -31,7 +31,6 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
     let submissionAttempt: SubmissionAttempt?
     let routeToOrchestrationInterface: Bool?
     let customerEmail: String?
-    let url: String?
     let savedPaymentMethodsOfferSave: SavedPaymentMethodsOfferSave?
     let setupFutureUsage: String?
     let setupFutureUsageForPaymentMethodType: [String: String]?
@@ -45,6 +44,22 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
     let paymentMethodOptions: STPPaymentMethodOptions?
     let customer: Customer?
     let elementsSession: ElementsSession
+    let checkoutClientSettings: CheckoutClientSettings?
+
+    /// Settings that belong to Checkout rather than the aggregated Elements Session.
+    struct CheckoutClientSettings: Decodable {
+        let passiveCaptcha: PassiveCaptcha?
+
+        struct PassiveCaptcha: Decodable {
+            let siteKey: String
+            let rqdata: String?
+            let tokenRefreshAfterSeconds: TimeInterval
+
+            var challengeData: PassiveCaptchaData {
+                PassiveCaptchaData(siteKey: siteKey, rqdata: rqdata, tokenTimeoutSeconds: tokenRefreshAfterSeconds)
+            }
+        }
+    }
 
     /// Extracts the client secret from whichever expanded intent is present in the response.
     func intentClientSecret() throws -> String {
@@ -71,7 +86,6 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
             "livemode = \(livemode)",
             "customerId = \(String(describing: customer?.id))",
             "customerEmail = \(String(describing: customerEmail))",
-            "url = \(String(describing: url))",
             "savedPaymentMethodsOfferSave = \(String(describing: savedPaymentMethodsOfferSave))",
         ]
         return "<\(props.joined(separator: "; "))>"
@@ -90,7 +104,6 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
         case submissionAttempt
         case routeToOrchestrationInterface
         case customerEmail
-        case url
         case savedPaymentMethodsOfferSave = "customer_managed_saved_payment_methods_offer_save"
         case setupFutureUsage
         case setupFutureUsageForPaymentMethodType
@@ -104,10 +117,12 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
         case paymentMethodOptions
         case customer
         case elementsSession
+        case checkoutClientSettings
     }
 
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
+        checkoutClientSettings = try container.decodeIfPresent(CheckoutClientSettings.self, forKey: .checkoutClientSettings)
         sessionId = try container.decode(String.self, forKey: .sessionId)
         let decodedPaymentIntent = try container.decodeIfPresent(
             LegacyExpandable<STPPaymentIntent>.self,
@@ -170,7 +185,6 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
             forKey: .routeToOrchestrationInterface
         )
         customerEmail = try container.decodeIfPresent(String.self, forKey: .customerEmail)
-        url = try container.decodeIfPresent(String.self, forKey: .url)
         savedPaymentMethodsOfferSave = try container.decodeIfPresent(
             SavedPaymentMethodsOfferSave.self,
             forKey: .savedPaymentMethodsOfferSave
@@ -432,23 +446,6 @@ extension PaymentPagesAPIResponse {
     struct TaxRate: Decodable {
         let displayName: String
         let percentage: Double
-        let rateType: String?
-
-        init(from decoder: Decoder) throws {
-            let container = try decoder.container(keyedBy: CodingKeys.self)
-            displayName = try container.decode(String.self, forKey: .displayName)
-            percentage = try container.decode(Double.self, forKey: .percentage)
-            rateType = try container.decodeIfPresent(String.self, forKey: .rateType)
-            guard rateType == nil || rateType == "flat_amount" || rateType == "percentage" else {
-                throw decoder.dataCorrupted("Unsupported tax rate type: \(rateType!)")
-            }
-        }
-
-        private enum CodingKeys: String, CodingKey {
-            case displayName
-            case percentage
-            case rateType
-        }
     }
 
     struct AdjustableQuantity: Decodable {
@@ -521,13 +518,7 @@ extension PaymentPagesAPIResponse {
     }
 
     struct SavedPaymentMethodsOfferSave: Decodable {
-        enum Status: String, SafeParsedEnumCodable {
-            case accepted
-            case notAccepted = "not_accepted"
-        }
-
         let enabled: Bool
-        let status: ParsedEnum<Status>?
     }
 
     struct ElementsSession: Decodable {
@@ -606,11 +597,12 @@ struct CheckoutClientAPIResponse: Decodable {
         let elementsFields = [
             "apple_pay_preference", "google_pay_preference", "flags", "link_settings",
             "experiments_data", "card_brand_choice", "unactivated_payment_method_types",
-            "passive_captcha",
         ]
         for key in elementsFields {
             elementsSession[key] = fields[key]
         }
+        // TODO: CheckoutClient's Link resource omits Elements' mobile flags, including
+        // attestation endpoint selection. Backend parity is required for those settings.
         if var linkSettings = fields["link_settings"] as? [String: Any],
            linkSettings["link_passthrough_mode_enabled"] == nil {
             // Elements derives this legacy flag from link_mode. CheckoutClient returns the mode
@@ -623,13 +615,26 @@ struct CheckoutClientAPIResponse: Decodable {
         elementsSession["business_name"] = merchant["display_name"]
         elementsSession["merchant_logo_url"] = merchant["logo_url"]
 
-        var response = fields
+        let sharedFields = [
+            "livemode", "status", "payment_status", "customer_email", "billing_address_collection",
+            "shipping_address_collection", "payment_method_options", "total_summary",
+        ]
+        var response = fields.filter { sharedFields.contains($0.key) }
         response["session_id"] = id
         response["mode"] = "modeless"
         response["currency"] = currency
         response["checkout_items"] = items
         response["payment_method_types"] = paymentMethodTypes
         response["elements_session"] = elementsSession
+        response["checkout_client_settings"] = ["passive_captcha": fields["passive_captcha"] ?? NSNull()]
+
+        if let options = fields["payment_method_options"] as? [String: Any] {
+            response["setup_future_usage_for_payment_method_type"] = options.compactMapValues {
+                ($0 as? [String: Any])?["setup_future_usage"] as? String
+            }
+        }
+        // TODO: CheckoutClient does not expose the session-wide setup_future_usage yet.
+        // Explicit payment-method options cannot recover that value when no override is set.
 
         if var customer = fields["customer"] as? [String: Any] {
             let savedOptions = fields["saved_payment_method_options"] as? [String: Any]

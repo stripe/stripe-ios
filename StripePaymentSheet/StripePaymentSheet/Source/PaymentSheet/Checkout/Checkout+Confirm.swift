@@ -168,7 +168,8 @@ extension CheckoutController {
                         with: requestParameters,
                         apiClient: apiClient,
                         authenticationContext: authenticationContext,
-                        paymentHandler: paymentHandler
+                        paymentHandler: paymentHandler,
+                        checkoutCaptchaChallenge: self.checkoutCaptchaChallenge
                     )
                 }
             ))
@@ -260,12 +261,16 @@ extension CheckoutController {
                         with: requestParameters,
                         apiClient: self.apiClient,
                         authenticationContext: authenticationContext,
-                        paymentHandler: self.paymentHandler
+                        paymentHandler: self.paymentHandler,
+                        checkoutCaptchaChallenge: self.checkoutCaptchaChallenge
                     )
                 case .applePay(let parameters):
                     result = await self.confirmApplePay(checkoutSession: self.session, parameters: parameters)
                 case .link(let parameters):
-                    result = await Self.confirmLink(checkoutSession: self.session, parameters: parameters)
+                    result = await Self.confirmLink(
+                        checkoutSession: self.session, parameters: parameters,
+                        checkoutCaptchaChallenge: self.checkoutCaptchaChallenge
+                    )
                 case .paymentMethod(let paymentMethodParameters, let integrationShape):
                     // 2. Do pre-confirm actions (CVC recollection, etc)
                     let preconfirmResult = await Self.handlePaymentMethodPreconfirmActions(
@@ -294,7 +299,8 @@ extension CheckoutController {
                         with: confirmRequestParameters,
                         apiClient: paymentMethodParameters.configuration.apiClient,
                         authenticationContext: paymentMethodParameters.authenticationContext,
-                        paymentHandler: paymentMethodParameters.paymentHandler
+                        paymentHandler: paymentMethodParameters.paymentHandler,
+                        checkoutCaptchaChallenge: self.checkoutCaptchaChallenge
                     )
                 }
                 // 3. Update the Session
@@ -443,13 +449,38 @@ extension CheckoutController {
         apiClient: STPAPIClient,
         authenticationContext: STPAuthenticationContext,
         paymentHandler: STPPaymentHandler,
-        poller injectedPoller: (any CheckoutSessionPolling)? = nil
+        poller injectedPoller: (any CheckoutSessionPolling)? = nil,
+        checkoutCaptchaChallenge: (any PassiveCaptchaTokenProvider)? = nil
     ) async -> InternalConfirmResult {
         let poller: any CheckoutSessionPolling
         if let injectedPoller {
             poller = injectedPoller
         } else {
             poller = CheckoutSessionPoller(apiClient: apiClient)
+        }
+
+        // Checkout's token is verified by /confirm, separately from PaymentMethod radar options.
+        var requestParameters = requestParameters
+        if requestParameters.passiveCaptchaToken == nil, let checkoutCaptchaChallenge {
+            let startTime = Date()
+            let token = await withTimeout(6) {
+                try await checkoutCaptchaChallenge.consumeToken()
+            }
+            switch token {
+            case .success(let consumedToken):
+                requestParameters.passiveCaptchaToken = consumedToken.value
+                STPAnalyticsClient.sharedClient.logPassiveCaptchaAttach(
+                    siteKey: checkoutCaptchaChallenge.passiveCaptchaData.siteKey,
+                    isReady: consumedToken.wasReady,
+                    duration: Date().timeIntervalSince(startTime)
+                )
+            case .failure(let error):
+                STPAnalyticsClient.sharedClient.logPassiveCaptchaError(
+                    error: error,
+                    siteKey: checkoutCaptchaChallenge.passiveCaptchaData.siteKey,
+                    duration: Date().timeIntervalSince(startTime)
+                )
+            }
         }
 
         // 1. Call /confirm

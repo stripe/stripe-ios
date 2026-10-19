@@ -9,8 +9,8 @@ import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 
-/// PassiveCaptcha, delivered in the `v1/elements/sessions` response.
-struct PassiveCaptchaData: Equatable, Hashable {
+/// Configuration for an Elements or Checkout passive captcha challenge.
+struct PassiveCaptchaData: Equatable, Hashable, Sendable {
 
     let siteKey: String
     let rqdata: String?
@@ -50,7 +50,12 @@ struct PassiveCaptchaData: Equatable, Hashable {
 
 }
 
-actor PassiveCaptchaChallenge {
+protocol PassiveCaptchaTokenProvider: Sendable {
+    var passiveCaptchaData: PassiveCaptchaData { get }
+    func consumeToken() async throws -> PassiveCaptchaChallenge.ConsumedToken
+}
+
+actor PassiveCaptchaChallenge: PassiveCaptchaTokenProvider {
     struct ConsumedToken {
         let value: String
         let wasReady: Bool

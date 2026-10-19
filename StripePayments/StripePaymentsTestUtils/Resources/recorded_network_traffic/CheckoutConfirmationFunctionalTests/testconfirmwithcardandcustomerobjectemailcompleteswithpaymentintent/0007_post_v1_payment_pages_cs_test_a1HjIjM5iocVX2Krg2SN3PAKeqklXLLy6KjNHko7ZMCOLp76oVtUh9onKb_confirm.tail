@@ -1,32 +1,32 @@
 POST
-https:\/\/api\.stripe\.com\/v1\/payment_pages\/cs_test_a192WOHWQUZCEsHNJV2gEDpnFlSAF8B0sDsG2XAYg8Y3gF24uFe0MosOVz\/confirm$
+https:\/\/api\.stripe\.com\/v1\/payment_pages\/cs_test_a1HjIjM5iocVX2Krg2SN3PAKeqklXLLy6KjNHko7ZMCOLp76oVtUh9onKb\/confirm$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=UTi2Xn21pC7VDxJc1RxYZJknRXA0HP8BAx6cmSldalOS8W0BczGpXGp-w4MLLE5NGJyCi1CW1QzPjFl-; report-to csp
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=N7QenS7XRn3v6eU0zbvUuZTlmk47s_fH_V8gBHasDKQXFHKxVY3DSuMxoPH20LFkN-6Zty82J4nm1cVA; report-to csp
 Server: nginx
 Cache-Control: no-cache, no-store
-reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=UTi2Xn21pC7VDxJc1RxYZJknRXA0HP8BAx6cmSldalOS8W0BczGpXGp-w4MLLE5NGJyCi1CW1QzPjFl-&t=1"
+reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=N7QenS7XRn3v6eU0zbvUuZTlmk47s_fH_V8gBHasDKQXFHKxVY3DSuMxoPH20LFkN-6Zty82J4nm1cVA&t=1"
 stripe-notice: You are using an outdated API version (2020-08-27). We recommend upgrading to the latest API version, 2026-09-30.endive. See https://docs.stripe.com/upgrades
 x-wc: 3c3
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
-report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=UTi2Xn21pC7VDxJc1RxYZJknRXA0HP8BAx6cmSldalOS8W0BczGpXGp-w4MLLE5NGJyCi1CW1QzPjFl-&t=1"}],"include_subdomains":true}
-request-id: req_EDrvaPr2t32o5a
+report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=N7QenS7XRn3v6eU0zbvUuZTlmk47s_fH_V8gBHasDKQXFHKxVY3DSuMxoPH20LFkN-6Zty82J4nm1cVA&t=1"}],"include_subdomains":true}
+request-id: req_qObY0h9pBMAqSi
 x-stripe-routing-context-priority-tier: api-testmode
-Content-Length: 45557
+Content-Length: 47934
 Vary: Origin
-Date: Mon, 19 Oct 2026 15:39:13 GMT
-original-request: req_EDrvaPr2t32o5a
+Date: Mon, 19 Oct 2026 18:26:04 GMT
+original-request: req_qObY0h9pBMAqSi
 stripe-version: 2020-08-27
-idempotency-key: 9bf694bb-b010-4b88-9ea2-6a976df32564
+idempotency-key: 49ca8d07-b277-40e9-91f0-31dc64c5148a
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
-X-Stripe-Mock-Request: client_attribution_metadata\[checkout_session_id]=cs_test_a192WOHWQUZCEsHNJV2gEDpnFlSAF8B0sDsG2XAYg8Y3gF24uFe0MosOVz&client_attribution_metadata\[client_session_id]=.*&client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_method_selection_flow]=automatic&customer_data\[email]=test%40example\.com&elements_session_client\[is_aggregation_expected]=true&expand\[0]=payment_intent&expand\[1]=payment_intent\.payment_method&expand\[2]=setup_intent&expand\[3]=setup_intent\.payment_method&expected_amount=0&return_url=stripe-ios-test%3A\/\/checkout-return
+X-Stripe-Mock-Request: client_attribution_metadata\[checkout_session_id]=cs_test_a1HjIjM5iocVX2Krg2SN3PAKeqklXLLy6KjNHko7ZMCOLp76oVtUh9onKb&client_attribution_metadata\[client_session_id]=.*&client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_method_selection_flow]=automatic&elements_session_client\[is_aggregation_expected]=true&expand\[0]=payment_intent&expand\[1]=payment_intent\.payment_method&expand\[2]=setup_intent&expand\[3]=setup_intent\.payment_method&expected_amount=1000&expected_payment_method_type=card&payment_method=pm_1USLFwLu5o3P18ZpkLHQ46qx&return_url=stripe-ios-test%3A\/\/checkout-return
 
 {
   "lpm_settings" : null,
@@ -61,7 +61,7 @@ X-Stripe-Mock-Request: client_attribution_metadata\[checkout_session_id]=cs_test
   "blocked_billing_address_countries" : [
 
   ],
-  "id" : "ppage_1USIeYLu5o3P18ZpFd8tznUj",
+  "id" : "ppage_1USLFtLu5o3P18ZpIME1j1kM",
   "subscription_settings" : null,
   "consent" : null,
   "does_not_collect_postal_code_for_non_us_card_transactions" : true,
@@ -76,36 +76,36 @@ X-Stripe-Mock-Request: client_attribution_metadata\[checkout_session_id]=cs_test
       "sub_mode_subscription_v1" : null,
       "metronome_commit" : null,
       "subscription" : null,
-      "key" : "checkout_item_VTF8eVA0",
+      "key" : "checkout_item_VTHpY8lm",
       "type" : "one_time_price",
       "metronome_contract" : null,
       "one_time_price" : {
         "items" : [
           {
             "quantity" : 1,
-            "inner_item_key" : "inner_item_VTF8rW7o",
+            "inner_item_key" : "inner_item_VTHpfwQA",
             "tax_exclusive" : 0,
             "amount_details" : {
               "tax_inclusive" : 0,
-              "subtotal" : 0,
+              "subtotal" : 1000,
               "discount" : 0,
               "discount_amounts" : [
 
               ],
-              "total" : 0,
+              "total" : 1000,
               "tax_amounts" : [
 
               ],
               "tax_exclusive" : 0
             },
-            "total" : 0,
+            "total" : 1000,
             "tax_amounts" : [
 
             ],
-            "unit_amount" : 0,
-            "subtotal" : 0,
+            "unit_amount" : 1000,
+            "subtotal" : 1000,
             "price" : {
-              "id" : "price_1USIeYLu5o3P18Zp5Pe9x1RG",
+              "id" : "price_1USLFtLu5o3P18Zph7QjBYzX",
               "livemode" : false,
               "active" : false,
               "product" : {
@@ -129,22 +129,22 @@ X-Stripe-Mock-Request: client_attribution_metadata\[checkout_session_id]=cs_test
               "custom_unit_amount" : null,
               "transform_quantity" : null,
               "type" : "one_time",
-              "unit_amount" : 0,
-              "unit_amount_decimal" : "0",
+              "unit_amount" : 1000,
+              "unit_amount_decimal" : "1000",
               "object" : "price",
               "billing_scheme" : "per_unit",
               "recurring" : null,
               "currency" : "usd",
               "tiers_mode" : null
             },
-            "unit_amount_decimal" : "0.0",
+            "unit_amount_decimal" : "1000.0",
             "adjustable_quantity" : null,
             "tax_inclusive" : 0,
             "unit_label" : null
           }
         ],
-        "subtotal" : 0,
-        "total" : 0
+        "subtotal" : 1000,
+        "total" : 1000
       }
     }
   ],
@@ -156,7 +156,14 @@ X-Stripe-Mock-Request: client_attribution_metadata\[checkout_session_id]=cs_test
   },
   "capture_method" : null,
   "statement_descriptor" : "Mobile Example Account",
-  "session_id" : "cs_test_a192WOHWQUZCEsHNJV2gEDpnFlSAF8B0sDsG2XAYg8Y3gF24uFe0MosOVz",
+  "payment_method_details" : {
+    "type" : "card",
+    "card" : {
+      "brand" : "visa",
+      "last4" : "4242"
+    }
+  },
+  "session_id" : "cs_test_a1HjIjM5iocVX2Krg2SN3PAKeqklXLLy6KjNHko7ZMCOLp76oVtUh9onKb",
   "shipping_address_collection" : null,
   "konbini_confirmation_number" : null,
   "setup_future_usage" : null,
@@ -193,7 +200,7 @@ X-Stripe-Mock-Request: client_attribution_metadata\[checkout_session_id]=cs_test
       ]
     },
     "consumer_found" : true,
-    "hcaptcha_rqdata" : "XxNTwsVlNXJeDRu+uhi45UhN1a+72bhGYNN6MamWevBWFbMZBIfd1Vl3Cqa3ZirOv1cZnmwXG80M2kjI9p4oepG0ADjdURAHHNHceAl+SHFlYsVVUlzjfzlgbI4Elr7wBn+nlV1\/YwyglDJeGkvNFN83Ctg3++vOqmjLhYnG8mkhzHL4hMuDa70Cwz0XmwOxT9k9i+5KlqgOlA3Jrsv5+UMZ5+OsfuD2rH0L86Ma0UZjxEcQ7W2xiu4leh4Kys2XtC1LGB8DMV+3CNXUM1Ose9A4FUIwQPxqD2VXAU\/eOa58Wr\/NmPLsweaCJw==Z4TCyDvPdOay9a\/c",
+    "hcaptcha_rqdata" : "G9EWH9L\/V5GYemO9ITO1w0roMXSYk4mmEn9bDGR39ATVZ4YYrdHeB4wRcVkfOLwqBVGie5gEa+pKsNk578R5m3Rknh8NJ2SiNDSKsrs7IvJlwXGJqP2sP0nNlMFA6tdJioTyw8L6gTd7aNETqkW62whVK848MZ+lrnDvDFDafUQ6isAO\/ymMBHShKJNm4i9GwXGGUVbTWLtEJrxo2n58P\/9fPtKGeoqBPU0bGRz1HfVtn74EqMZgafkXmYem0Y1Ehg6sYxB0D\/Ky1GQeg10tzVtr8NC97BpUGf+63oT+je1vch8LtPO705XHcA==KT0VlNYhT0hQBG55",
     "link_supported_payment_methods_onboarding_enabled" : [
       "CARD",
       "INSTANT_DEBITS"
@@ -214,8 +221,8 @@ X-Stripe-Mock-Request: client_attribution_metadata\[checkout_session_id]=cs_test
   },
   "object" : "checkout.session",
   "customer" : {
-    "id" : "cus_VTF8DhGQwYlyMT",
-    "customer_provided" : false,
+    "id" : "cus_VTHpxqZlfo0F1y",
+    "customer_provided" : true,
     "has_fallback_payment_method" : false,
     "individual_name" : null,
     "phone" : null,
@@ -287,11 +294,11 @@ X-Stripe-Mock-Request: client_attribution_metadata\[checkout_session_id]=cs_test
 
   ],
   "ui_mode" : "mobile_elements",
-  "url" : "https:\/\/checkout.stripe.com\/c\/pay\/cs_test_a192WOHWQUZCEsHNJV2gEDpnFlSAF8B0sDsG2XAYg8Y3gF24uFe0MosOVz#fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdicyc%2FNSknZHVsTmB8Jz8ndW5acWB2cVowNE1zUUwySXAwajZVND1fdTNxMERiR1ZuSHNSalFxRDVrfEQydVNcQXR1Y0luV3FScGsydF9RXEZKTUZXYHV3Y0lIMTMxfGRHYEMyN1BDY0cyZlw8UkIxZDU1X2tBcWxGN0YnKSdjd2poVmB3c2B3Jz9xd3BgKSdnZGZuYndqcGthRmppancnPycmY2NjY2NjJyknaWR8anBxUXx1YCc%2FJ3Zsa2JpYFpscWBoJyknYGtkZ2lgVWlkZmBtamlhYHd2Jz9xd3BgeCUl",
+  "url" : "https:\/\/checkout.stripe.com\/c\/pay\/cs_test_a1HjIjM5iocVX2Krg2SN3PAKeqklXLLy6KjNHko7ZMCOLp76oVtUh9onKb#fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdicyc%2FNSknZHVsTmB8Jz8ndW5acWB2cVowNE1zUUwySXAwajZVND1fdTNxMERiR1ZuSHNSalFxRDVrfEQydVNcQXR1Y0luV3FScGsydF9RXEZKTUZXYHV3Y0lIMTMxfGRHYEMyN1BDY0cyZlw8UkIxZDU1X2tBcWxGN0YnKSdjd2poVmB3c2B3Jz9xd3BgKSdnZGZuYndqcGthRmppancnPycmY2NjY2NjJyknaWR8anBxUXx1YCc%2FJ3Zsa2JpYFpscWBoJyknYGtkZ2lgVWlkZmBtamlhYHd2Jz9xd3BgeCUl",
   "developer_tool_context" : null,
-  "can_skip_payment_method_collection" : true,
+  "can_skip_payment_method_collection" : false,
   "token_notification_url" : "https:\/\/pm-hooks.stripe.com\/apple_pay\/merchant_token\/pDq7tf9uieoQWMVJixFwuOve\/acct_1HvTI7Lu5o3P18Zp\/",
-  "init_checksum" : "DpVbIib2rAPLvCnJhrDJEEfYsqVYWYF8",
+  "init_checksum" : "CKjKB79FI0CzFTG9C8PrXf31PKuDQoub",
   "tax_exclusion_from_total_is_allowed" : false,
   "bnpl_link_experiment_payment_method_type" : null,
   "tax_meta" : {
@@ -300,7 +307,7 @@ X-Stripe-Mock-Request: client_attribution_metadata\[checkout_session_id]=cs_test
     "computation_type" : "manual",
     "customer_tax_exempt" : null
   },
-  "payment_status" : "no_payment_required",
+  "payment_status" : "paid",
   "enabled_third_party_wallets" : [
     {
       "apple_pay" : {
@@ -343,7 +350,11 @@ X-Stripe-Mock-Request: client_attribution_metadata\[checkout_session_id]=cs_test
     "submit_button_before",
     "submit_button_after",
     "contact_before",
-    "contact_after"
+    "contact_after",
+    "express_checkout_before",
+    "express_checkout_after",
+    "payment_details_before",
+    "payment_details_after"
   ],
   "display_consent_collection_promotions" : false,
   "policies" : {
@@ -389,7 +400,7 @@ X-Stripe-Mock-Request: client_attribution_metadata\[checkout_session_id]=cs_test
     "conecs" : true,
     "jcb" : true,
     "visa" : true,
-    "cartes_bancaires" : true,
+    "cartes_bancaires" : false,
     "pulse" : true,
     "discover" : true,
     "star" : true,
@@ -442,16 +453,17 @@ X-Stripe-Mock-Request: client_attribution_metadata\[checkout_session_id]=cs_test
     "expand" : [
 
     ],
-    "checkout_session_id" : "cs_test_a192WOHWQUZCEsHNJV2gEDpnFlSAF8B0sDsG2XAYg8Y3gF24uFe0MosOVz",
+    "checkout_session_id" : "cs_test_a1HjIjM5iocVX2Krg2SN3PAKeqklXLLy6KjNHko7ZMCOLp76oVtUh9onKb",
     "client_betas" : [
 
     ],
     "deferred_intent" : {
-      "mode" : "setup",
+      "amount" : 1000,
+      "currency" : "usd",
       "payment_method_types" : [
         "card"
       ],
-      "setup_future_usage" : "off_session"
+      "mode" : "payment"
     },
     "country_override" : "US",
     "type" : "deferred_intent"
@@ -459,16 +471,18 @@ X-Stripe-Mock-Request: client_attribution_metadata\[checkout_session_id]=cs_test
   "shipping_tax_amounts" : null,
   "billing_address_collection" : null,
   "elements_options" : {
+    "amount" : 1000,
+    "mode" : "payment",
     "__checkout_country_override" : "US",
+    "__checkout_session_id" : "cs_test_a1HjIjM5iocVX2Krg2SN3PAKeqklXLLy6KjNHko7ZMCOLp76oVtUh9onKb",
     "payment_method_types" : [
       "card"
     ],
-    "__checkout_session_id" : "cs_test_a192WOHWQUZCEsHNJV2gEDpnFlSAF8B0sDsG2XAYg8Y3gF24uFe0MosOVz",
-    "setup_future_usage" : "off_session",
-    "mode" : "setup"
+    "setup_future_usage" : null,
+    "currency" : "usd"
   },
   "experiments_data" : {
-    "event_id" : "652edfec-bd7e-4703-9d14-0e1d1a19f28e",
+    "event_id" : "0a1a9bc2-8e21-40ce-ad86-6d78c7d3d17b",
     "experiment_metadata" : {
       "ocs_buyer_xp_cpl_lpm_holdback" : {
         "heldback_special_wallets" : [
@@ -486,7 +500,7 @@ X-Stripe-Mock-Request: client_attribution_metadata\[checkout_session_id]=cs_test
       "ocs_buyer_xp_cpl_progressive_ece" : "control",
       "cpl_unified_order_summary_experiment" : "control",
       "ff_checkout_apple_pay_exclude_india_issued_cards_for_mandate" : "control",
-      "ff_checkout_spm_disable_remove_after_rejection_eff" : "treatment",
+      "ff_checkout_spm_disable_remove_after_rejection_eff" : "control",
       "ocs_buyer_xp_cpl_ap_currency_label_removal" : "control",
       "ocs_buyer_xp_cpl_a2w_holdback" : "control",
       "ocs_buyer_xp_cpl_rtl_auto_locales" : "control",
@@ -516,7 +530,7 @@ X-Stripe-Mock-Request: client_attribution_metadata\[checkout_session_id]=cs_test
       "ff_checkout_ewcs_update_elements_fatal_reclassification_eff" : "control",
       "ff_checkout_ewcs_create_element_fatal_reclassification_eff" : "control",
       "ff_checkout_guacamole_block_confirm_on_pending_updates" : "control",
-      "emea_wallets_ideal_wero_rebranding" : "control",
+      "emea_wallets_ideal_wero_rebranding" : "treatment",
       "cpl_spicy_guacamole" : "control",
       "ff_checkout_ewcs_integration_error_fatal_reclassification_eff" : "control",
       "ocs_buyer_xp_cpl_android_a2w_holdback" : "control",
@@ -666,7 +680,6 @@ X-Stripe-Mock-Request: client_attribution_metadata\[checkout_session_id]=cs_test
       "elements_disable_payment_element_custom_payment_methods_byof" : false,
       "elements_mobile_cardscan_use_mlkit" : true,
       "elements_enable_link_takeover_in_guacamole" : false,
-      "link_disable_auth_partner_ua_check" : false,
       "link_enable_link_session_key_incentives_and_status" : true,
       "elements_easel_disable_optimizations_check" : false,
       "elements_enable_passive_captcha" : true,
@@ -707,7 +720,7 @@ X-Stripe-Mock-Request: client_attribution_metadata\[checkout_session_id]=cs_test
       "ocs_mobile_should_use_autocomplete_proxy_endpoints" : true,
       "elements_enable_payment_element_custom_payment_methods_byof" : false,
       "show_swish_factoring_notice" : true,
-      "elements_enable_nme_for_us_bank_account_skip_verification" : true,
+      "elements_enable_nme_for_us_bank_account_skip_verification" : false,
       "elements_payment_method_preselect" : false,
       "ocs_buyer_xp_elements_remove_wallets_redirect_text" : false,
       "elements_easel_enable_elements_inspector" : true,
@@ -752,17 +765,17 @@ X-Stripe-Mock-Request: client_attribution_metadata\[checkout_session_id]=cs_test
       "checkout_disable_ai_agent_payment_steering" : false,
       "checkout_link_in_habanero_enabled" : true,
       "elements_disable_progressive_cursor" : false,
-      "link_enable_auth_partner_sizing_logging" : true,
+      "link_enable_legacy_cookie_pay_another_way" : false,
       "guacamole_enable_billing_address_rux_ulm" : false,
       "enable_checkout_session_update_customer" : false,
       "elements_human_security_replaces_hcaptcha" : false
     },
     "merchant_logo_url" : null,
     "merchant_of_record_country" : "US",
-    "session_id" : "elements_session_1fGxeL7c997",
+    "session_id" : "elements_session_1jc86pbFWOH",
     "card_installments_enabled" : false,
     "account_id" : "acct_1HvTI7Lu5o3P18Zp",
-    "config_id" : "be5dec00-d744-4e4c-aa22-8e136cba12ad",
+    "config_id" : "484a9734-2d3f-4eda-a41c-13d7f17260c4",
     "merchant_currency" : "usd",
     "merchant_id" : "acct_1HvTI7Lu5o3P18Zp",
     "card_brand_choice" : {
@@ -771,7 +784,7 @@ X-Stripe-Mock-Request: client_attribution_metadata\[checkout_session_id]=cs_test
         "cartes_bancaires"
       ],
       "supported_cobranded_networks" : {
-        "cartes_bancaires" : true
+        "cartes_bancaires" : false
       }
     },
     "shipping_address_settings" : {
@@ -786,7 +799,7 @@ X-Stripe-Mock-Request: client_attribution_metadata\[checkout_session_id]=cs_test
     "google_pay_preference" : "enabled",
     "merchant_country" : "US",
     "experiments_data" : {
-      "arb_id" : "60ba35dc-ad33-494c-8f56-4e5693a821b4",
+      "arb_id" : "746584f9-e776-4ac8-9673-5502b0352f69",
       "experiment_metadata" : {
         "seed" : "1600e4783cf7e869822579873f8d7fab2f024eba7cb69e076020bdfba1051419",
         "semi_dominant_payment_methods" : [
@@ -856,7 +869,7 @@ X-Stripe-Mock-Request: client_attribution_metadata\[checkout_session_id]=cs_test
         "link_dl_pe_email_v2" : "control",
         "link_pe_inline_recollection_aa" : "control",
         "link_pe_row_prominent_signup" : "control",
-        "ff_elements_apple_pay_billing_address_change_eff" : "control",
+        "ff_elements_apple_pay_billing_address_change_eff" : "treatment",
         "ff_elements_currency_card_brand_blocking_fe_eff" : "control",
         "link_pe_hide_signup_email" : "control",
         "connections_elements_variable_incentives_for_ibp_recurring_payments" : "control",
@@ -886,7 +899,6 @@ X-Stripe-Mock-Request: client_attribution_metadata\[checkout_session_id]=cs_test
         "ff_elements_submit_link_payment_method" : "control",
         "link_signup_name_from_billing_ae" : "control",
         "pmme_financing_as_low_as" : "control",
-        "link_spm_show_checkbox_signup" : "control",
         "link_growth_ece_ncdv_aa" : "control",
         "link_sign_up_form_container" : "control",
         "ff_elements_ae_recollect_billing_on_spm_removal_eff" : "treatment",
@@ -901,15 +913,15 @@ X-Stripe-Mock-Request: client_attribution_metadata\[checkout_session_id]=cs_test
         "link_dl_pe_inline_entrypoint_v2" : "control",
         "billing_address_link_opt_in" : "control",
         "ff_elements_break_glass_1_eff" : "control",
-        "ff_elements_filter_unsupported_spms_eff" : "treatment",
+        "ff_elements_ewcs_ece_save_payment_method_eff" : "control",
         "ff_elements_ewcs_require_complete_address_eff" : "treatment",
         "ff_elements_ewcs_tax_display_eff" : "control",
+        "ff_elements_filter_unsupported_spms_eff" : "treatment",
         "ff_elements_payment_element_remount_hydration_eff" : "control",
         "ff_elements_pe_auto_tax_binding_eff" : "treatment",
         "ff_elements_samsung_pay_merchant_id_eff" : "treatment",
         "link_ce_conversion_recognized_loading_animation" : "control",
         "link_ce_conversion_unrecognized_post_entry_aa" : "control",
-        "link_spm_show_checkbox_signup_aa" : "control",
         "ocs_buyer_xp_elements_address_manual_entry" : "control",
         "ff_elements_ewcs_integration_error_fatal_reclassification_eff" : "control",
         "ff_checkout_habanero_remount_crash_fix_eff" : "treatment",
@@ -1105,12 +1117,12 @@ X-Stripe-Mock-Request: client_attribution_metadata\[checkout_session_id]=cs_test
     ],
     "customer_error" : null
   },
-  "stripe_hosted_url" : "https:\/\/checkout.stripe.com\/c\/pay\/cs_test_a192WOHWQUZCEsHNJV2gEDpnFlSAF8B0sDsG2XAYg8Y3gF24uFe0MosOVz#fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdkdWxOYHwnPyd1blpxYHZxWjA0TXNRTDJJcDBqNlU0PV91M3EwRGJHVm5Ic1JqUXFENWt8RDJ1U1xBdHVjSW5XcVJwazJ0X1FcRkpNRldgdXdjSUgxMzF8ZEdgQzI3UENjRzJmXDxSQjFkNTVfa0FxbEY3RicpJ2N3amhWYHdzYHcnP3F3cGApJ2dkZm5id2pwa2FGamlqdyc%2FJyZjY2NjY2MnKSdpZHxqcHFRfHVgJz8ndmxrYmlgWmxxYGgnKSdga2RnaWBVaWRmYG1qaWFgd3YnP3F3cGB4JSUl",
+  "stripe_hosted_url" : "https:\/\/checkout.stripe.com\/c\/pay\/cs_test_a1HjIjM5iocVX2Krg2SN3PAKeqklXLLy6KjNHko7ZMCOLp76oVtUh9onKb#fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdkdWxOYHwnPyd1blpxYHZxWjA0TXNRTDJJcDBqNlU0PV91M3EwRGJHVm5Ic1JqUXFENWt8RDJ1U1xBdHVjSW5XcVJwazJ0X1FcRkpNRldgdXdjSUgxMzF8ZEdgQzI3UENjRzJmXDxSQjFkNTVfa0FxbEY3RicpJ2N3amhWYHdzYHcnP3F3cGApJ2dkZm5id2pwa2FGamlqdyc%2FJyZjY2NjY2MnKSdpZHxqcHFRfHVgJz8ndmxrYmlgWmxxYGgnKSdga2RnaWBVaWRmYG1qaWFgd3YnP3F3cGB4JSUl",
   "prefilled" : null,
   "redirect_on_completion" : null,
   "blob" : null,
   "client_reference_id" : null,
-  "status" : "open",
+  "status" : "complete",
   "submit_type" : null,
   "email_collection" : null,
   "permissions" : null,
@@ -1126,7 +1138,7 @@ X-Stripe-Mock-Request: client_attribution_metadata\[checkout_session_id]=cs_test
     "apple_pay",
     "google_pay"
   ],
-  "state" : "active",
+  "state" : "succeeded",
   "currency" : "usd",
   "subscription_data" : null,
   "customer_managed_saved_payment_methods_offer_save" : null,
@@ -1136,12 +1148,12 @@ X-Stripe-Mock-Request: client_attribution_metadata\[checkout_session_id]=cs_test
       "cartes_bancaires"
     ],
     "supported_cobranded_networks" : {
-      "cartes_bancaires" : true
+      "cartes_bancaires" : false
     }
   },
   "shipping" : null,
   "crypto_in_link_ui_enabled" : false,
-  "rqdata" : "gjXI7FmwhbNi6TMbzxIcNU61x8V3ydsCXnKsz93TqcW+l4DbWuc\/VSytc4fePTE4Y67axv2nDYBGFs+\/VW4Uuhemi2PaOMCWZunXyNIprY7UJNB1fSd0WcZPBSmPv3TM2tlFQid73t4Etjwx9eKViO97q5m2xsOh\/0Qo9O69GUaoRojQmSfs+I7w6ccECcXqFqsmVFlogW5US5OtgiHJt9kEKJhygSv3\/2j07PFQErlBhzWBIp3hVqfK0fpR93fgJd6hXP9gSwoF79OWYG+C\/h9fM3I+BBqImscIRjlolPek0BqpHo1DdqWCSQ==RbmtTR9ohVR6jv9G",
+  "rqdata" : "BnrI8zkqHQ8S0JT6Gx\/PdIeSEfTk12rpnOXOInIM1Kcz9tXHPGjlCEeH0zGrovelULnHH5oTAAjOsf8ATPW9N9iSoJXqpQ2oapJLHdqOFmkwkYtnzFXuqSaEAdL2bhV4YdqW\/98hvoO0JdrGa9cIiwtPXsuI3AWXMNljTFm7RKjPDFTlARKALGBHonbjgVisWXLgYee4HRPvIcg6O316xYnj+s7SHEhxiBuaxXeOhEPdydOU2UvUzp4nDunRW8T34ATm6iAMa6SQPygH2ugCrRFGNODplklZQ8FqTYVcXFiXLAOmnCH5Z4oB5g==trQFv4WTnc0AFESO",
   "total_summary" : {
     "total_discount_amounts" : [
 
@@ -1152,22 +1164,107 @@ X-Stripe-Mock-Request: client_attribution_metadata\[checkout_session_id]=cs_test
     ],
     "applied_balance" : 0,
     "amount_due_applied_to_balance" : false,
-    "subtotal" : 0,
+    "subtotal" : 1000,
     "total_tax_inclusive" : 0,
-    "total" : 0,
+    "total" : 1000,
     "total_discount_amount_aggregate" : 0,
     "total_proration_amount_aggregate" : 0,
-    "due" : 0
+    "due" : 1000
   },
   "on_behalf_of" : null,
   "cross_sell_group" : null,
   "site_key" : "20000000-ffff-ffff-ffff-000000000002",
   "checkout_multistep_ui" : false,
-  "eid" : "a8c5f745-10ac-4ad4-8db1-e6b612fbf724",
+  "eid" : "bf7abb23-8c4d-4d6c-84c6-2f83dc400fc0",
   "line_item_group" : null,
   "managed_payments" : null,
   "name_collection" : null,
-  "payment_intent" : null,
-  "config_id" : "3a5f9129-f809-48cb-9768-6a99fe56083f",
+  "payment_intent" : {
+    "payment_method_configuration_details" : null,
+    "canceled_at" : null,
+    "source" : null,
+    "amount" : 1000,
+    "capture_method" : "automatic_async",
+    "livemode" : false,
+    "shipping" : null,
+    "status" : "succeeded",
+    "object" : "payment_intent",
+    "currency" : "usd",
+    "last_payment_error" : null,
+    "automatic_payment_methods" : null,
+    "cancellation_reason" : null,
+    "next_action" : null,
+    "payment_method" : {
+      "object" : "payment_method",
+      "id" : "pm_1USLFwLu5o3P18ZpkLHQ46qx",
+      "billing_details" : {
+        "email" : null,
+        "phone" : null,
+        "tax_id" : null,
+        "name" : null,
+        "address" : {
+          "state" : null,
+          "country" : null,
+          "line2" : null,
+          "city" : null,
+          "line1" : null,
+          "postal_code" : null
+        }
+      },
+      "card" : {
+        "regulated_status" : "unregulated",
+        "last4" : "4242",
+        "funding" : "credit",
+        "generated_from" : null,
+        "networks" : {
+          "available" : [
+            "visa"
+          ],
+          "preferred" : null
+        },
+        "brand" : "visa",
+        "checks" : {
+          "address_postal_code_check" : null,
+          "cvc_check" : null,
+          "address_line1_check" : null
+        },
+        "three_d_secure_usage" : {
+          "supported" : true
+        },
+        "wallet" : null,
+        "display_brand" : "visa",
+        "exp_month" : 12,
+        "exp_year" : 2040,
+        "country" : "US"
+      },
+      "livemode" : false,
+      "created" : 1792434356,
+      "allow_redisplay" : "limited",
+      "type" : "card",
+      "customer" : null,
+      "customer_account" : null
+    },
+    "client_secret" : "pi_3USLG3Lu5o3P18Zp0p5XNkKj_secret_tDB1lx6wUL8VM3PljjOyCsoLI",
+    "id" : "pi_3USLG3Lu5o3P18Zp0p5XNkKj",
+    "allowed_payment_method_types" : [
+      "card"
+    ],
+    "confirmation_method" : "automatic",
+    "amount_details" : {
+      "tip" : {
+
+      }
+    },
+    "excluded_payment_method_types" : null,
+    "processing" : null,
+    "receipt_email" : null,
+    "payment_method_types" : [
+      "card"
+    ],
+    "setup_future_usage" : null,
+    "created" : 1792434363,
+    "description" : null
+  },
+  "config_id" : "7b148d4c-5f08-445d-8806-1e87e791b14f",
   "is_sandbox_merchant" : false
 }

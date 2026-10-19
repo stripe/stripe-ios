@@ -14,6 +14,39 @@ import XCTest
 
 @MainActor
 final class CheckoutConfirmationFunctionalTests: STPNetworkStubbingTestCase {
+    func test_checkout_captcha_token_is_sent_to_confirm() async throws {
+        // Given a visible application window for hCaptcha's WebView
+        STPAnalyticsClient.sharedClient._testLogHistory = []
+        let window: UIWindow
+        if let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+            window = UIWindow(windowScene: scene)
+        } else {
+            window = UIWindow(frame: UIScreen.main.bounds)
+        }
+        let presentingViewController = UIViewController()
+        window.rootViewController = presentingViewController
+        window.makeKeyAndVisible()
+        defer { window.isHidden = true }
+        let checkout = try await makeCheckout(
+            amount: 1000, serverEmailSource: .checkoutSession("test@example.com"), localDefaultEmail: nil
+        )
+        let captcha = try XCTUnwrap(checkout.checkoutCaptchaChallenge as? PassiveCaptchaChallenge)
+        selectCardWithoutBillingEmail(on: checkout)
+        try await withTimeout(30) {
+            while !(await captcha.isTokenReady) {
+                try await Task.sleep(nanoseconds: 100_000_000)
+            }
+        }.get()
+        // When the customer confirms, only Checkout's verifier receives its token
+        let result = await checkout.confirm(from: presentingViewController)
+        assertCompleted(result, paymentStatus: .paid)
+        let siteKey = await captcha.passiveCaptchaData.siteKey
+        XCTAssertTrue(STPAnalyticsClient.sharedClient._testLogHistory.contains {
+            $0["event"] as? String == "elements.captcha.passive.attach"
+                && $0["site_key"] as? String == siteKey
+        })
+    }
+
     func test_confirm_zero_amount_with_no_payment_method_and_checkout_session_customer_email_completes_without_intent() async throws {
         // Given a $0 Checkout Session with a server email and no selected payment method
         let checkout = try await makeCheckout(

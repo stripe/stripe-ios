@@ -128,9 +128,7 @@ extension PaymentPagesAPIResponse {
             minorUnitsAmount: publicAmount.minorUnitsAmount,
             inclusive: taxAmount.inclusive,
             displayName: taxAmount.taxRate.displayName,
-            percentage: taxAmount.taxRate.rateType == "flat_amount"
-                ? nil
-                : taxAmount.taxRate.percentage
+            percentage: taxAmount.taxRate.percentage
         )
     }
 
@@ -217,8 +215,7 @@ extension PaymentPagesAPIResponse {
     ) -> STPCheckoutSessionSavedPaymentMethodsOfferSave? {
         guard let value else { return nil }
         return STPCheckoutSessionSavedPaymentMethodsOfferSave(
-            enabled: value.enabled,
-            status: value.status.map { $0 == .accepted ? .accepted : .notAccepted }
+            enabled: value.enabled
         )
     }
 

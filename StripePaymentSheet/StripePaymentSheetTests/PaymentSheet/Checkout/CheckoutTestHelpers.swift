@@ -392,11 +392,23 @@ enum CheckoutTestHelpers {
     }
 
     /// Presents the shared Payment Pages test session using the CheckoutClient init field names.
-    private static func checkoutClientInitJSON(from session: [String: Any], sessionId: String) -> [String: Any] {
+    static func checkoutClientInitJSON(from session: [String: Any], sessionId: String) -> [String: Any] {
         let elementsSession = session["elements_session"] as? [String: Any] ?? [:]
-        var response = session
+        // Copy only fields returned by CheckoutClient. Legacy-only fields must not make
+        // endpoint tests pass when the real backend cannot return them.
+        let sharedFields = [
+            "livemode", "status", "payment_status", "customer_email", "billing_address_collection",
+            "shipping_address_collection", "payment_method_options",
+        ]
+        var response = session.filter { sharedFields.contains($0.key) }
+        response["object"] = "checkout.session"
         response["id"] = session["session_id"] ?? sessionId
         response["ui_mode"] = "mobile_elements"
+        response["state"] = "ready"
+        response["email_collection"] = "always"
+        response["payment_method_collection"] = "auto"
+        response["blocked_billing_address_countries"] = []
+        response["integration_currency"] = session["currency"] ?? "usd"
         response["presentment_currency"] = session["currency"] ?? "usd"
         response["items"] = session["checkout_items"] ?? []
         response["merchant_info"] = [
@@ -404,27 +416,98 @@ enum CheckoutTestHelpers {
             "display_name": elementsSession["business_name"] ?? NSNull(),
         ]
         response["elements_session_id"] = elementsSession["session_id"] ?? "es_test"
-        response["ordered_payment_method_types_and_wallets"] = session["payment_method_types"] ?? ["card"]
+        response["ordered_payment_method_types_and_wallets"] =
+            elementsSession["ordered_payment_method_types_and_wallets"] ?? session["payment_method_types"] ?? ["card"]
         response["elements_session_config_id"] = elementsSession["config_id"]
         for key in [
-            "apple_pay_preference", "google_pay_preference", "flags", "link_settings",
-            "experiments_data", "card_brand_choice", "unactivated_payment_method_types", "passive_captcha",
+            "apple_pay_preference", "google_pay_preference", "flags",
+            "experiments_data", "card_brand_choice", "unactivated_payment_method_types",
         ] {
             response[key] = elementsSession[key]
         }
-        if response["customer"] == nil,
-           let elementsCustomer = elementsSession["customer"] as? [String: Any],
-           let customerSession = elementsCustomer["customer_session"] as? [String: Any],
-           let customerId = customerSession["customer"] as? String {
+        // A fixture may provide Checkout's configuration explicitly. Elements captcha keys
+        // have different semantics and must not be copied into Checkout's resource.
+        response["passive_captcha"] = (session["checkout_client_settings"] as? [String: Any])?["passive_captcha"] ?? NSNull()
+        response["apple_pay_preference"] = response["apple_pay_preference"] ?? "enabled"
+        response["google_pay_preference"] = response["google_pay_preference"] ?? "enabled"
+        response["unactivated_payment_method_types"] = response["unactivated_payment_method_types"] ?? []
+        response["card_brand_choice"] = response["card_brand_choice"] ?? ["eligible": false]
+        if let linkSettings = elementsSession["link_settings"] as? [String: Any] {
+            let checkoutClientLinkFields = [
+                "link_mode", "consumer_found", "link_supported_payment_methods",
+                "link_supported_payment_methods_onboarding_enabled", "link_consumer_incentive",
+                "link_us_bank_account_funding_source_enabled", "hcaptcha_site_key", "hcaptcha_rqdata",
+                "link_payment_session_context", "enable_partner_lookup", "link_brand", "link_funding_sources",
+            ]
+            response["link_settings"] = linkSettings.filter { checkoutClientLinkFields.contains($0.key) }
+        }
+        let elementsCustomer = elementsSession["customer"] as? [String: Any]
+        let customerSession = elementsCustomer?["customer_session"] as? [String: Any]
+        if let customer = session["customer"] as? [String: Any] {
+            response["customer"] = [
+                "id": customer["id"] ?? NSNull(),
+                "payment_methods": customer["payment_methods"] ?? [],
+            ]
+        } else if let customerId = customerSession?["customer"] as? String {
             response["customer"] = [
                 "id": customerId,
-                "payment_methods": elementsCustomer["payment_methods"] ?? [],
+                "payment_methods": elementsCustomer?["payment_methods"] ?? [],
             ]
         }
+        let offerSave = session["customer_managed_saved_payment_methods_offer_save"] as? [String: Any]
+        let customer = session["customer"] as? [String: Any]
+        response["saved_payment_method_options"] = [
+            "payment_method_save": offerSave?["enabled"] as? Bool == true ? "enabled" : "disabled",
+            "payment_method_remove": customer?["can_detach_payment_method"] as? Bool == true ? "enabled" : "disabled",
+        ]
+        let taxMeta = session["tax_meta"] as? [String: Any]
+        let taxContext = session["tax_context"] as? [String: Any]
+        if taxMeta?["computation_type"] as? String == "automatic" {
+            if let status = taxMeta?["status"] as? String,
+               ["complete", "requires_location_inputs"].contains(status) {
+                let source = (taxContext?["automatic_tax_address_source"] as? String).map {
+                    $0.hasPrefix("session.") ? String($0.dropFirst("session.".count)) : $0
+                }
+                response["automatic_tax"] = [
+                    "enabled": true,
+                    "status": status == "complete" ? "ready" : "requires_address",
+                    "address_source": source as Any? ?? NSNull(),
+                ]
+            } else {
+                response["automatic_tax"] = NSNull()
+            }
+        } else {
+            response["automatic_tax"] = ["enabled": false, "status": "ready"]
+        }
+        if let adaptivePricing = session["adaptive_pricing_info"] as? [String: Any],
+           let localOptions = adaptivePricing["local_currency_options"] as? [[String: Any]] {
+            response["integration_currency"] = adaptivePricing["integration_currency"]
+            response["adaptive_pricing_info"] = [
+                "integration_currency_option": [
+                    "currency": adaptivePricing["integration_currency"] ?? NSNull(),
+                    "amount": adaptivePricing["integration_amount"] ?? NSNull(),
+                ],
+                "local_currency_options": localOptions.map { option in
+                    [
+                        "currency": option["currency"] ?? NSNull(),
+                        "amount": option["amount"] ?? NSNull(),
+                        "disclosure": option["disclosure"] ?? NSNull(),
+                    ]
+                },
+            ]
+        }
+        let items = session["checkout_items"] as? [[String: Any]] ?? []
+        let oneTimePrices = items.compactMap { $0["one_time_price"] as? [String: Any] }
+        let total = oneTimePrices.reduce(0) { $0 + ($1["total"] as? Int ?? 0) }
+        let subtotal = oneTimePrices.reduce(0) { $0 + ($1["subtotal"] as? Int ?? 0) }
+        response["total_summary"] = session["total_summary"] ?? [
+            "subtotal": subtotal, "total": total, "due": total, "total_tax_amounts": [],
+        ]
         if var summary = session["total_summary"] as? [String: Any],
            let taxAmounts = summary["total_tax_amounts"] as? [[String: Any]] {
             summary["total_tax_amounts"] = taxAmounts.map { tax -> [String: Any] in
                 var mapped = tax
+                mapped.removeValue(forKey: "tax_rate")
                 let taxRate = tax["tax_rate"] as? [String: Any]
                 mapped["display_name"] = taxRate?["display_name"]
                 mapped["percentage"] = taxRate?["percentage"]
@@ -483,6 +566,10 @@ enum CheckoutTestHelpers {
             "currency": "gbp",
             "amount": localAmount,
             "presentment_exchange_rate": "0.776917",
+            "disclosure": [
+                "caption": "1 USD = 0.7769 GBP (includes 4% conversion fee)",
+                "details": "This rate includes a 4% fee to guarantee the exchange rate during checkout.",
+            ],
             "conversion_markup_bps": 400,
         ]
         json["adaptive_pricing_info"] = [

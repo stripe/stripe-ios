@@ -296,6 +296,7 @@ final class CheckoutUnitTests: XCTestCase {
     }
 
     func testRemovePromotionCodeSendsEmptyCodeAndCommitsReturnedSession() async throws {
+        // TODO: CheckoutClient does not expose applied promotion codes or accept promotion_code updates yet.
         // Given a Checkout Session with an applied promotion code
         let initialSessionJSON = sessionJSONWithPromotionCode("SAVE25")
         let updatedSessionJSON = CheckoutTestHelpers.openSessionJSON
@@ -499,6 +500,7 @@ final class CheckoutUnitTests: XCTestCase {
         // Given a Checkout Session that updates tax from the shipping address
         var json = CheckoutTestHelpers.openSessionJSON
         json["shipping_address_collection"] = ["allowed_countries": ["US"]]
+        json["tax_meta"] = ["computation_type": "automatic", "status": "requires_location_inputs"]
         json["tax_context"] = [
             "automatic_tax_enabled": true,
             "automatic_tax_address_source": "session.shipping",
@@ -597,6 +599,7 @@ final class CheckoutUnitTests: XCTestCase {
     func testUpdateShippingAddress_taxUpdateFailurePreservesPreviousAddress() async throws {
         // Given a Checkout Session using shipping address for automatic tax calculation
         var json = CheckoutTestHelpers.openSessionJSON
+        json["tax_meta"] = ["computation_type": "automatic", "status": "requires_location_inputs"]
         json["tax_context"] = [
             "automatic_tax_enabled": true,
             "automatic_tax_address_source": "session.shipping",
@@ -800,7 +803,6 @@ final class CheckoutUnitTests: XCTestCase {
             "tax_rate": [
                 "display_name": "Sales Tax",
                 "percentage": 9.75,
-                "rate_type": "percentage",
             ],
         ]
         json["total_summary"] = [
@@ -831,10 +833,10 @@ final class CheckoutUnitTests: XCTestCase {
                 "display_name": "Sales Tax",
                 "inclusive": false,
                 "percentage": 8.625,
-                "rate_type": "percentage",
             ],
         ]
         var json = CheckoutTestHelpers.openSessionJSON
+        json["tax_meta"] = ["computation_type": "automatic", "status": "requires_location_inputs"]
         json["tax_context"] = [
             "automatic_tax_address_source": "session.shipping",
             "automatic_tax_enabled": true,
@@ -1344,6 +1346,7 @@ final class CheckoutUnitTests: XCTestCase {
         CheckoutSessionRequestRecorder
     ) {
         var json = CheckoutTestHelpers.openSessionJSON
+        json["tax_meta"] = ["computation_type": "automatic", "status": "requires_location_inputs"]
         json["tax_context"] = [
             "automatic_tax_enabled": true,
             "automatic_tax_address_source": "session.shipping",

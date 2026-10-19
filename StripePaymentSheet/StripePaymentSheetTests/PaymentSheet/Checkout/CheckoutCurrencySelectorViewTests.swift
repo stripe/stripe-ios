@@ -299,6 +299,10 @@ final class CheckoutCurrencySelectorViewTests: XCTestCase {
                     "currency": "gbp",
                     "amount": 1000,
                     "presentment_exchange_rate": "0.776917",
+                    "disclosure": [
+                        "caption": "1 USD = 0.7769 GBP (includes 4% conversion fee)",
+                        "details": "This rate includes a 4% fee to guarantee the exchange rate during checkout.",
+                    ],
                     "conversion_markup_bps": 400,
                 ],
             ],

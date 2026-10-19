@@ -114,6 +114,7 @@ import XCTest
                         "merchant_integration_version", // Contains the SDK version number
                         "elements_session_config_id", // Random string
                         "hcaptcha_token", // Random string
+                        "passive_captcha_token", // Checkout captcha token, random string
                         "eid=", // Ephemeral ID, random UUID
                         "browser_locale", // Locale varies by machine
                         "browser_timezone", // Timezone varies by machine

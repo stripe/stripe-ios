@@ -646,7 +646,8 @@ final class PaymentElementTest: XCTestCase {
         configuration: CheckoutController.Configuration,
         requestRecorder: CheckoutSessionRequestRecorder
     ) {
-        let sessionJSON = STPTestUtils.jsonNamed("CheckoutSession")!
+        var sessionJSON = STPTestUtils.jsonNamed("CheckoutSession")!
+        sessionJSON["tax_meta"] = ["computation_type": "automatic", "status": "requires_location_inputs"]
         let session = try PaymentPagesAPIResponse.decode(fromAPIResponse: sessionJSON)
         let requestRecorder = CheckoutSessionRequestRecorder()
         let configuration = CheckoutTestHelpers.makeConfiguration(apiResponse: session)
@@ -707,7 +708,10 @@ final class PaymentElementTest: XCTestCase {
             ]
         )
         var sessionJSON = Self.openSessionJSON(paymentMethodTypes: paymentMethodTypes)
-        sessionJSON["elements_session"] = elementsSession.allResponseFields
+        var elementsSessionJSON = elementsSession.allResponseFields
+        elementsSessionJSON["ordered_payment_method_types_and_wallets"] = paymentMethodTypes
+        sessionJSON["elements_session"] = elementsSessionJSON
+        sessionJSON["tax_meta"] = ["computation_type": "automatic", "status": "requires_location_inputs"]
         sessionJSON["tax_context"] = [
             "automatic_tax_enabled": true,
             "automatic_tax_address_source": "session.billing",

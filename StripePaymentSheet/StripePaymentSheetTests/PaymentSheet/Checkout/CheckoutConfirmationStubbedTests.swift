@@ -18,6 +18,114 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
 
     // MARK: - Coordinator
 
+    func testCheckoutCaptchaIsSentToConfirmInsteadOfPaymentMethodCreation() async throws {
+        // Given a Checkout challenge and a new card
+        let checkout = try await makeCheckout()
+        let captcha = TestCheckoutCaptcha()
+        checkout.checkoutCaptchaChallenge = captcha
+        let paymentMethodRequest = expectation(description: "PaymentMethod has no Checkout token")
+        stub { $0.url?.path.hasSuffix("/payment_methods") == true } response: { request in
+            let params = RequestBodyTestHelpers.formEncodedBodyParams(from: request)
+            XCTAssertNil(params["radar_options[hcaptcha_token]"])
+            XCTAssertNil(params["passive_captcha_token"])
+            paymentMethodRequest.fulfill()
+            return HTTPStubsResponse(jsonObject: STPPaymentMethod._testCard().allResponseFields, statusCode: 200, headers: nil)
+        }
+        let confirmRequest = expectation(description: "Checkout confirms with its token")
+        stub { $0.url?.path.hasSuffix("/confirm") == true } response: { request in
+            let params = RequestBodyTestHelpers.formEncodedBodyParams(from: request)
+            XCTAssertEqual(params["passive_captcha_token"], "checkout_token_1")
+            XCTAssertNil(params["radar_options[hcaptcha_token]"])
+            confirmRequest.fulfill()
+            return HTTPStubsResponse(jsonObject: Self.confirmedSessionJSON, statusCode: 200, headers: nil)
+        }
+
+        // When Checkout creates the PaymentMethod and confirms
+        assertSucceeded(await checkout.confirm(makePaymentMethodFlow(for: checkout, option: .new(makeConfirmParams(type: .stripe(.card))))))
+
+        // Then only /confirm consumes the Checkout token
+        await fulfillment(of: [paymentMethodRequest, confirmRequest], timeout: 1)
+        let count = await captcha.consumptionCount
+        XCTAssertEqual(count, 1)
+    }
+
+    func testCheckoutCaptchaIsConsumedAgainAfterFailedConfirmation() async throws {
+        // Given a saved card and a confirmation request that fails before returning a session
+        let checkout = try await makeCheckout()
+        let captcha = TestCheckoutCaptcha()
+        checkout.checkoutCaptchaChallenge = captcha
+        let requests = expectation(description: "Both confirmation attempts")
+        requests.expectedFulfillmentCount = 2
+        var tokens: [String] = []
+        stub { $0.url?.path.hasSuffix("/confirm") == true } response: { request in
+            let params = RequestBodyTestHelpers.formEncodedBodyParams(from: request)
+            if let token = params["passive_captcha_token"] { tokens.append(token) }
+            requests.fulfill()
+            return HTTPStubsResponse(jsonObject: ["error": ["message": "Declined", "type": "card_error"]], statusCode: 402, headers: nil)
+        }
+
+        // When the customer retries
+        _ = await checkout.confirm(makePaymentMethodFlow(for: checkout))
+        _ = await checkout.confirm(makePaymentMethodFlow(for: checkout))
+
+        // Then each request uses a newly consumed token
+        await fulfillment(of: [requests], timeout: 1)
+        XCTAssertEqual(tokens, ["checkout_token_1", "checkout_token_2"])
+    }
+
+    func testCheckoutCaptchaFailureStillSendsConfirmationWithoutToken() async throws {
+        // Given captcha cannot produce a token
+        let checkout = try await makeCheckout()
+        checkout.checkoutCaptchaChallenge = TestCheckoutCaptcha(shouldFail: true)
+        let confirmRequest = expectation(description: "Confirmation proceeds without a token")
+        stub { $0.url?.path.hasSuffix("/confirm") == true } response: { request in
+            let params = RequestBodyTestHelpers.formEncodedBodyParams(from: request)
+            XCTAssertNil(params["passive_captcha_token"])
+            confirmRequest.fulfill()
+            return HTTPStubsResponse(jsonObject: Self.confirmedSessionJSON, statusCode: 200, headers: nil)
+        }
+
+        // When Checkout confirms
+        assertSucceeded(await checkout.confirm(makePaymentMethodFlow(for: checkout)))
+        await fulfillment(of: [confirmRequest], timeout: 1)
+    }
+
+    func testSessionUpdatesRetainCheckoutChallengeUntilExplicitlyDisabled() async throws {
+        let checkout = try await makeCheckout()
+        let captcha = TestCheckoutCaptcha()
+        checkout.checkoutCaptchaChallenge = captcha
+
+        // Legacy updates and client-local updates do not replace Checkout's configuration.
+        try await checkout.commitSession(CheckoutTestHelpers.makeOpenSession())
+        try await checkout.commitSession()
+        XCTAssertTrue(checkout.checkoutCaptchaChallenge as? TestCheckoutCaptcha === captcha)
+
+        // A CheckoutClient response with null captcha explicitly disables it.
+        try await checkout.commitSession(CheckoutTestHelpers.makeSession([
+            "checkout_client_settings": ["passive_captcha": NSNull()],
+        ]))
+        XCTAssertNil(checkout.checkoutCaptchaChallenge)
+    }
+
+    func testExpressCheckoutApplePayConfirmationSendsCheckoutCaptcha() async throws {
+        var configuration = CheckoutController.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
+        var expressConfiguration = ExpressCheckoutElement.Configuration(completion: { _ in })
+        expressConfiguration.applePayConfiguration = .init(merchantId: "merchant.com.test")
+        configuration.expressCheckoutElement = expressConfiguration
+        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration(configuration: configuration))
+        checkout.checkoutCaptchaChallenge = TestCheckoutCaptcha()
+        let confirmRequest = stubConfirmationExpecting(sessionId: checkout.session.id, savePaymentMethod: nil, expectedCaptchaToken: "checkout_token_1")
+        let flow = try checkout.makeExpressCheckoutConfirmationFlow(.applePay, presentationWindow: nil)
+        guard case .applePay(let parameters) = flow else { return XCTFail("Expected Apple Pay") }
+
+        let result = await parameters.confirmationHandler(.init(
+            sessionId: checkout.session.id, paymentMethodId: "pm_test", expectedAmount: checkout.session.amount,
+            expectedPaymentMethodType: "card", returnURL: configuration.returnURL
+        ))
+        XCTAssertEqual(result.paymentSheetResult, .completed)
+        await fulfillment(of: [confirmRequest], timeout: 1)
+    }
+
     func testConfirmCommitsReturnedSessionAndMapsSuccess() async throws {
         // Given an open Checkout Session whose confirmation succeeds
         let checkout = try await makeCheckout()
@@ -641,8 +749,9 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
     func testLinkPaymentDetailsCreatesPaymentMethodAndConfirmsCheckoutSession() async throws {
         // Given Link payment details in non-passthrough mode
         let checkout = try await makeCheckout(apiResponse: CheckoutTestHelpers.makeSession().withCustomer())
+        checkout.checkoutCaptchaChallenge = TestCheckoutCaptcha()
         let createPaymentMethod = stubCreatePaymentMethod(expectedBillingEmail: .value("test@example.com"))
-        let confirm = stubConfirmationExpecting(sessionId: checkout.session.id, savePaymentMethod: nil)
+        let confirm = stubConfirmationExpecting(sessionId: checkout.session.id, savePaymentMethod: nil, expectedCaptchaToken: "checkout_token_1")
         let logout = stubLinkLogout(consumerSessionClientSecret: "cs_xxx")
         let configuration = checkout.getPaymentElement().embeddedPaymentElement.configuration
         let flow = CheckoutController.CheckoutConfirmationFlow.link(.init(
@@ -908,6 +1017,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         sessionId: String,
         savePaymentMethod: Bool?,
         expectedCollectedInformationEmail: String? = nil,
+        expectedCaptchaToken: String? = nil,
         responseJSON: [AnyHashable: Any]? = nil,
         file: StaticString = #filePath,
         line: UInt = #line
@@ -930,6 +1040,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
                 file: file,
                 line: line
             )
+            XCTAssertEqual(params["passive_captcha_token"], expectedCaptchaToken, file: file, line: line)
             if let expectedCollectedInformationEmail {
                 XCTAssertEqual(
                     params["collected_information[email]"],
@@ -1089,3 +1200,19 @@ private final class TestCheckoutSessionPoller: CheckoutSessionPolling {
 }
 
 private struct CheckoutConfirmationTestTimeoutError: Error {}
+
+private actor TestCheckoutCaptcha: PassiveCaptchaTokenProvider {
+    let passiveCaptchaData = PassiveCaptchaData(siteKey: "checkout_site_key", rqdata: "checkout_rqdata")
+    let shouldFail: Bool
+    private(set) var consumptionCount = 0
+
+    init(shouldFail: Bool = false) {
+        self.shouldFail = shouldFail
+    }
+
+    func consumeToken() async throws -> PassiveCaptchaChallenge.ConsumedToken {
+        consumptionCount += 1
+        if shouldFail { throw CheckoutConfirmationTestTimeoutError() }
+        return .init(value: "checkout_token_\(consumptionCount)", wasReady: true)
+    }
+}
