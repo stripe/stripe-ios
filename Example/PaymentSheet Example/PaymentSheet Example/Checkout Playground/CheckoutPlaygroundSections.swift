@@ -332,7 +332,6 @@ struct CheckoutPlaygroundFeaturesSection: View {
 
 struct CheckoutPlaygroundExpressCheckoutElementSection: View {
     @Binding var showExpressCheckoutElement: Bool
-    @Binding var applePayDisplay: ExpressCheckoutElement.Configuration.ApplePayConfiguration.Display
     @Binding var applePayButtonType: CheckoutPlayground.ApplePayButtonType
     @Binding var linkDisplay: ExpressCheckoutElement.Configuration.LinkConfiguration.Display
     @Binding var appearance: ExpressCheckoutElement.Configuration.Appearance
@@ -346,13 +345,6 @@ struct CheckoutPlaygroundExpressCheckoutElementSection: View {
                     isOn: $showExpressCheckoutElement
                 )
                 if showExpressCheckoutElement {
-                    CheckoutPlayground.PickerRow(
-                        title: "Apple Pay Display",
-                        icon: "apple.logo",
-                        selection: $applePayDisplay,
-                        tooltip: "Sets `ExpressCheckoutElement.Configuration.applePayConfiguration.display`.",
-                        displayText: { $0.rawValue.capitalized }
-                    )
                     CheckoutPlayground.PickerRow(
                         title: "Apple Pay Button Type",
                         icon: "apple.logo",

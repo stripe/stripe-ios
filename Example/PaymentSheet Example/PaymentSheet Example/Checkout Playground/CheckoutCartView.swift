@@ -171,8 +171,7 @@ struct CheckoutCartView: View {
                 }
                 expressCheckoutElementConfiguration.applePayConfiguration = ExpressCheckoutElement.Configuration.ApplePayConfiguration(
                     merchantId: "merchant.com.stripe.paymentsheet.example",
-                    buttonType: expressCheckoutElementSettings.applePayButtonType.pkPaymentButtonType,
-                    display: expressCheckoutElementSettings.applePayDisplay
+                    buttonType: expressCheckoutElementSettings.applePayButtonType.pkPaymentButtonType
                 )
                 expressCheckoutElementConfiguration.linkConfiguration = ExpressCheckoutElement.Configuration.LinkConfiguration(
                     display: expressCheckoutElementSettings.linkDisplay
