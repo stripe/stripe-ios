@@ -80,25 +80,16 @@ private let TelemetryURL = URL(string: "https://m.stripe.com/6")!
     }
 
     private let urlSession: URLSession
-    private let deviceSupportsApplePayCollector: DeviceSupportsApplePayCollector
     static var _forceShouldSendTelemetryInTests: Bool = false
 
     @_spi(STP) public static func shouldSendTelemetry() -> Bool {
         return StripeAPI.advancedFraudSignalsEnabled && (NSClassFromString("XCTest") == nil || _forceShouldSendTelemetryInTests)
     }
 
-    @_spi(STP) public convenience init(
+    @_spi(STP) public init(
         sessionConfiguration config: URLSessionConfiguration
     ) {
-        self.init(sessionConfiguration: config, deviceSupportsApplePayCollector: DeviceSupportsApplePayCollector())
-    }
-
-    init(
-        sessionConfiguration config: URLSessionConfiguration,
-        deviceSupportsApplePayCollector: DeviceSupportsApplePayCollector
-    ) {
         urlSession = URLSession(configuration: config)
-        self.deviceSupportsApplePayCollector = deviceSupportsApplePayCollector
         super.init()
     }
 
@@ -172,7 +163,12 @@ private let TelemetryURL = URL(string: "https://m.stripe.com/6")!
         // Don't pass expired SIDs to m.stripe.com
         fraudDetectionData.resetSIDIfExpired()
 
-        var otherData: [String: Any] = [
+        // Do not collect b.m (iosApplePayEnabled): no downstream consumers have been identified,
+        // and its PassKit check has been observed to block for minutes after a simulator cold boot.
+        // Collecting it here can stall SDK initialization and the initial request for fraud IDs.
+        // See https://github.com/stripe/stripe-ios/issues/1984 and
+        // https://github.com/stripe/stripe-ios/pull/2949.
+        let otherData: [String: Any] = [
             "d": fraudDetectionData.muid ?? "",
             "e": fraudDetectionData.sid ?? "",
             "k": Bundle.stp_applicationName() ?? "",
@@ -180,15 +176,6 @@ private let TelemetryURL = URL(string: "https://m.stripe.com/6")!
             "o": osVersion,
             "s": deviceModel,
         ]
-        // PassKit can block for minutes waiting for system services. It must not block the caller
-        // or delay the initial Mirador request, which acquires IDs for the first tokenization.
-        // Collect this optional signal in the background and omit it while unknown.
-        // Subsequent requests include the result once it is available.
-        // See https://github.com/stripe/stripe-ios/issues/1984 and
-        // https://github.com/stripe/stripe-ios/pull/2949.
-        if let supportsApplePay = deviceSupportsApplePayCollector.value {
-            otherData["m"] = NSNumber(value: supportsApplePay)
-        }
         payload["b"] = otherData
         payload["tag"] = STPAPIClient.STPSDKVersion
         payload["src"] = "ios-sdk"
