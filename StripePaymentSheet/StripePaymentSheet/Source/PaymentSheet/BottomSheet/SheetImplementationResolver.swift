@@ -12,7 +12,8 @@ import UIKit
 final class SheetImplementationResolver {
 
     static let isRequiredForDevice: Bool = {
-        #if os(iOS) && !targetEnvironment(macCatalyst)
+        // TODO: Re-enable the device override after the final CocoaPods release.
+        #if false && os(iOS) && !targetEnvironment(macCatalyst)
         // Use the hardware model rather than size classes, which change when Duo folds or unfolds.
         let modelIdentifier: String
         #if targetEnvironment(simulator)
@@ -44,7 +45,21 @@ final class SheetImplementationResolver {
     }
 
     init(elementsSession: STPElementsSession) {
-        // Capture the initial feature flag so Elements Session updates cannot switch an existing presentation.
-        isEnabled = elementsSession.isNativeSheetEnabled
+        // Capture playground overrides per flow so changing the setting cannot switch an existing presentation.
+        isEnabled = PaymentSheet.NativeSheetFeatureFlags.nativeSheetEnabledOverride ?? elementsSession.isNativeSheetEnabled
+    }
+}
+
+extension PaymentSheet {
+
+    @_spi(STP) public enum NativeSheetFeatureFlags {
+
+        /// Whether the current device requires native sheets, regardless of the feature flag.
+        @_spi(STP) public static var isNativeSheetRequiredForDevice: Bool {
+            SheetImplementationResolver.isRequiredForDevice
+        }
+
+        /// Overrides the native-sheet feature flag. Intended for test playgrounds only.
+        @_spi(STP) public static var nativeSheetEnabledOverride: Bool?
     }
 }

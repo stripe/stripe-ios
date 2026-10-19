@@ -26,6 +26,7 @@
         "min_document_types": 1,
         "max_document_types": 2,
         "max_files_per_document_type": 3,
+        "document_collection_prompt": "How are you funding your transactions? Please list all of your sources. For example, salary, savings, investment earnings, etc.",
         "file_requirements": "PDF, JPEG/JPG, PNG, DOCX, XLSX, CSV, or TXT, up to 5 MB per file.",
         "instructions": [
           "Documents must include your name and a balance or financial value.",
@@ -37,9 +38,17 @@
           "questions": [
             {
               "id": "purchase_purpose",
-              "prompt": "Why are you purchasing cryptocurrency through swapped.com?",
+              "prompt": "Why are you purchasing cryptocurrency?",
               "answer_type": "free_text",
-              "required": true
+              "required": true,
+              "max_questionnaire_answer_characters": 5000
+            },
+            {
+              "id": "third_party_advised",
+              "prompt": "Has anyone advised, or instructed, you to purchase cryptocurrency? This includes anyone who has messaged you on social media (Telegram, WhatsApp, Twitter, etc.) about investing in or purchasing cryptocurrency.",
+              "answer_type": "free_text",
+              "required": true,
+              "max_questionnaire_answer_characters": 5000
             }
           ]
         }

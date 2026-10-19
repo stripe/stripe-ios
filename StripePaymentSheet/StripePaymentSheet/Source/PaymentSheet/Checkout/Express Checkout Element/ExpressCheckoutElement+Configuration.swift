@@ -17,11 +17,6 @@ extension ExpressCheckoutElement {
         public var applePayConfiguration: ApplePayConfiguration?
         /// Sets the configuration for Link.
         public var linkConfiguration: LinkConfiguration = .init()
-        /// Overrides the display order of payment methods. `nil` uses the default dynamic ordering.
-        /// Supported values are `"apple_pay"` and `"link"`.
-        /// - Example: ["link", "apple_pay"]
-        /// - Note: If you omit payment methods from this list, they’ll be automatically ordered by Stripe after the ones you provide. Invalid payment methods are ignored.
-        public var paymentMethodOrder: [String]?
         /// Controls appearance of Express Checkout Element.
         public var appearance: Appearance = .init()
         /// Called after a wallet payment confirmation completes.

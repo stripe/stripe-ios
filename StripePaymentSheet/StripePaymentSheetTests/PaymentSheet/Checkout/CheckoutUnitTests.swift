@@ -891,7 +891,9 @@ final class CheckoutUnitTests: XCTestCase {
             "promotion_code": ["code": "SUMMER"],
         ]
         sessionJSON["recurring_details"] = [
-            "total_discount_amounts": [discountAmount],
+            "total_summary": [
+                "total_discount_amounts": [discountAmount],
+            ],
         ]
         sessionJSON["total_summary"] = [
             "total_tax_amounts": [],
@@ -1402,15 +1404,17 @@ final class CheckoutUnitTests: XCTestCase {
     private func sessionJSONWithPromotionCode(_ promotionCode: String) -> [AnyHashable: Any] {
         var json = CheckoutTestHelpers.openSessionJSON
         json["recurring_details"] = [
-            "total_discount_amounts": [
-                [
-                    "amount": 250,
-                    "coupon": [
-                        "code": "coupon_save25",
-                        "name": "25% off",
-                        "percent_off": 25.0,
+            "total_summary": [
+                "total_discount_amounts": [
+                    [
+                        "amount": 250,
+                        "coupon": [
+                            "code": "coupon_save25",
+                            "name": "25% off",
+                            "percent_off": 25.0,
+                        ],
+                        "promotion_code": ["code": promotionCode],
                     ],
-                    "promotion_code": ["code": promotionCode],
                 ],
             ],
         ]

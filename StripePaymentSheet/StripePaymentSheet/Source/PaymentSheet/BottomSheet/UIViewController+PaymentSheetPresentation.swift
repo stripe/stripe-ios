@@ -24,6 +24,10 @@ extension UIViewController {
             if let container = viewController as? any PaymentSheetContainer {
                 return container
             }
+            if let navigationController = viewController as? UINavigationController,
+               let container = navigationController.viewControllers.first as? any PaymentSheetContainer {
+                return container
+            }
 
             current = viewController.parent
         }
