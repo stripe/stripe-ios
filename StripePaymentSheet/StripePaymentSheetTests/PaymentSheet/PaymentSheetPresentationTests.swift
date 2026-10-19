@@ -119,6 +119,106 @@ final class PaymentSheetPresentationTests: XCTestCase {
     }
 
     @MainActor
+    func testCardScannerAnimationKeepsFooterAnchored() async throws {
+        // Given an embedded card scanner that starts collapsed
+        let content = NativeSheetStubContentViewController()
+        let cardSection = UIView()
+        cardSection.heightAnchor.constraint(equalToConstant: 100).isActive = true
+        let delegate = CardSectionDelegateStub()
+        let scanner = CardSectionWithScannerView(
+            cardSectionView: cardSection,
+            opensCardScannerAutomatically: false,
+            delegate: delegate,
+            analyticsHelper: nil
+        )
+        let footer = UIView()
+        footer.heightAnchor.constraint(equalToConstant: 60).isActive = true
+        let stack = UIStackView(arrangedSubviews: [scanner, footer])
+        stack.axis = .vertical
+        content.view.addAndPinSubview(stack)
+        let (window, sheet) = try await presentScannerAnimationSheet(content: content)
+        defer { window.rootViewController?.dismiss(animated: false); window.isHidden = true }
+        let initialHeight = sheet.view.bounds.height
+        let footerBaseline = footer.convert(footer.bounds, to: window).maxY
+
+        // When opening the scanner through its actual entry point
+        scanner.didTapCardScanButton()
+        try await assertFooterRemainsAnchored(footer, in: window, baseline: footerBaseline)
+        try await waitForSheetLayout {
+            sheet.view.bounds.height > initialHeight + 1
+        }
+
+        // Then the sheet grows to show the scanner without pushing the footer below the sheet
+        XCTAssertGreaterThan(sheet.view.bounds.height, initialHeight + 1)
+        XCTAssertEqual(footer.convert(footer.bounds, to: window).maxY, footerBaseline, accuracy: 1.5)
+
+        // When closing the scanner without scanning a card
+        scanner.cardScanningViewShouldClose(scanner.cardScanningView, cardParams: nil)
+        try await assertFooterRemainsAnchored(footer, in: window, baseline: footerBaseline)
+        try await waitForSheetLayout {
+            abs(sheet.view.bounds.height - initialHeight) < 1.5
+        }
+
+        // Then the sheet returns to its original height without leaving a gap below the footer
+        XCTAssertEqual(sheet.view.bounds.height, initialHeight, accuracy: 1.5)
+        XCTAssertEqual(footer.convert(footer.bounds, to: window).maxY, footerBaseline, accuracy: 1.5)
+    }
+
+    @MainActor
+    private func assertFooterRemainsAnchored(_ footer: UIView, in window: UIWindow, baseline: CGFloat) async throws {
+        // Sample the presentation layers: model geometry already contains the animation's final frames.
+        let deadline = Date().addingTimeInterval(0.7)
+        var maximumDisplacement: CGFloat = 0
+        var sampleCount = 0
+        while Date() < deadline {
+            if let footerLayer = footer.layer.presentation(), let windowLayer = window.layer.presentation() {
+                let footerBottom = footerLayer.convert(footerLayer.bounds, to: windowLayer).maxY
+                maximumDisplacement = max(maximumDisplacement, abs(footerBottom - baseline))
+                sampleCount += 1
+            }
+            try await Task.sleep(nanoseconds: 10_000_000)
+        }
+        XCTAssertGreaterThan(sampleCount, 0)
+        XCTAssertLessThanOrEqual(maximumDisplacement, 1.5, "Content below the scanner must stay anchored throughout the resize.")
+    }
+
+    @MainActor
+    private func waitForSheetLayout(_ condition: () -> Bool) async throws {
+        // Read geometry on the main actor while allowing UIKit's animation and layout work to run.
+        let deadline = Date().addingTimeInterval(3)
+        while !condition(), Date() < deadline {
+            try await Task.sleep(nanoseconds: 20_000_000)
+        }
+    }
+
+    @MainActor
+    private func presentScannerAnimationSheet(content: BottomSheetContentViewController) async throws -> (UIWindow, NativeSheetContainerViewController) {
+        guard #available(iOS 16.0, *) else { throw XCTSkip("Content-sized detents require iOS 16.") }
+        let sheet = NativeSheetContainerViewController(
+            contentViewController: content,
+            appearance: .default,
+            didCancelNative3DS2: {}
+        )
+        // A cold test-host launch may still be connecting its window scene.
+        let sceneConnected = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            UIApplication.shared.connectedScenes.contains { $0 is UIWindowScene }
+        }, object: nil)
+        await fulfillment(of: [sceneConnected], timeout: 5)
+        let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first)
+        let presenter = UIViewController()
+        let window = UIWindow(windowScene: scene)
+        window.frame = scene.coordinateSpace.bounds
+        window.rootViewController = presenter
+        window.makeKeyAndVisible()
+        let presented = expectation(description: "Content-sized native sheet presented")
+        presenter.presentAsSheet(sheet) { presented.fulfill() }
+        await fulfillment(of: [presented], timeout: 3)
+        // Settle any layout-driven resize before capturing the initial height.
+        try await Task.sleep(nanoseconds: 700_000_000)
+        return (window, sheet)
+    }
+
+    @MainActor
     func testNativeSheetResizesNestedContentAcrossMaximumHeight() async throws {
         guard #available(iOS 16.0, *) else { throw XCTSkip("Content-sized detents require iOS 16.") }
         // Given short content with a nested section that can grow past the available sheet height
