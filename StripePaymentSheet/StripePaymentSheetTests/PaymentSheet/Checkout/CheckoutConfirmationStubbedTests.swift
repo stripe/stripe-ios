@@ -1007,6 +1007,15 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
             request.httpMethod == "GET"
                 && request.url?.path.hasSuffix("/checkout_client/cs_test_123/retrieve") == true
         } response: { _ in
+            for (key, endpoint) in [("payment_intent", "payment_intents"), ("setup_intent", "setup_intents")] {
+                guard let intent = responseJSON[key] as? [String: Any],
+                      let id = intent["id"] as? String else { continue }
+                stub { request in
+                    request.httpMethod == "GET" && request.url?.path == "/v1/\(endpoint)/\(id)"
+                } response: { _ in
+                    HTTPStubsResponse(jsonObject: intent, statusCode: 200, headers: nil)
+                }
+            }
             expectation.fulfill()
             return HTTPStubsResponse(
                 jsonObject: CheckoutTestHelpers.checkoutClientInitJSON(

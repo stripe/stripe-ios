@@ -520,6 +520,15 @@ enum CheckoutTestHelpers {
             }
             response["total_summary"] = summary
         }
+        var paymentResponse: [String: Any] = [:]
+        for key in ["payment_intent", "setup_intent"] {
+            guard let intent = session[key] as? [String: Any],
+                  let id = intent["id"] as? String,
+                  let clientSecret = intent["client_secret"] as? String else { continue }
+            paymentResponse[key] = ["id": id, "client_secret": clientSecret]
+            paymentResponse["status"] = intent["status"]
+        }
+        if !paymentResponse.isEmpty { response["payment_response"] = paymentResponse }
         return response
     }
 
