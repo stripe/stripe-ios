@@ -3,6 +3,9 @@ PATCH
 
 ## X.Y.Z - changes pending release
 
+### General
+* [Fixed] Fixed SDK initialization and fraud signal collection waiting for slow Apple Pay capability checks.
+
 ## 26.15.0 2026-10-19
 
 ### CryptoOnramp (Alpha)

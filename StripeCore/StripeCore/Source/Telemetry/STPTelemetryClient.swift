@@ -80,16 +80,25 @@ private let TelemetryURL = URL(string: "https://m.stripe.com/6")!
     }
 
     private let urlSession: URLSession
+    private let applePayCapability: ApplePayCapability
     static var _forceShouldSendTelemetryInTests: Bool = false
 
     @_spi(STP) public static func shouldSendTelemetry() -> Bool {
         return StripeAPI.advancedFraudSignalsEnabled && (NSClassFromString("XCTest") == nil || _forceShouldSendTelemetryInTests)
     }
 
-    @_spi(STP) public init(
+    @_spi(STP) public convenience init(
         sessionConfiguration config: URLSessionConfiguration
     ) {
+        self.init(sessionConfiguration: config, applePayCapability: ApplePayCapability())
+    }
+
+    init(
+        sessionConfiguration config: URLSessionConfiguration,
+        applePayCapability: ApplePayCapability
+    ) {
         urlSession = URLSession(configuration: config)
+        self.applePayCapability = applePayCapability
         super.init()
     }
 
@@ -163,15 +172,21 @@ private let TelemetryURL = URL(string: "https://m.stripe.com/6")!
         // Don't pass expired SIDs to m.stripe.com
         fraudDetectionData.resetSIDIfExpired()
 
-        let otherData: [String: Any] = [
+        var otherData: [String: Any] = [
             "d": fraudDetectionData.muid ?? "",
             "e": fraudDetectionData.sid ?? "",
             "k": Bundle.stp_applicationName() ?? "",
             "l": Bundle.stp_applicationVersion() ?? "",
-            "m": NSNumber(value: StripeAPI.deviceSupportsApplePay()),
             "o": osVersion,
             "s": deviceModel,
         ]
+        // PassKit can block for minutes waiting for system services. It must not block the caller
+        // or delay the initial Mirador request, which acquires IDs for the first tokenization.
+        // Collect this optional signal in the background and omit it while unknown, rather than
+        // reporting false. Subsequent requests include the result once it is available.
+        if let supportsApplePay = applePayCapability.cachedValue(for: StripeAPI.supportedPKPaymentNetworks()) {
+            otherData["m"] = NSNumber(value: supportsApplePay)
+        }
         payload["b"] = otherData
         payload["tag"] = STPAPIClient.STPSDKVersion
         payload["src"] = "ios-sdk"
