@@ -16,10 +16,6 @@ protocol ConsentDataSource: AnyObject {
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
 
     func markConsentAcquired() -> Future<ConsentAcquiredResult>
-    func completeAssertionIfNeeded(
-        possibleError: Error?,
-        api: FinancialConnectionsAPIClientLogger.API
-    ) -> Error?
 }
 
 struct ConsentAcquiredResult {
@@ -115,18 +111,6 @@ final class ConsentDataSourceImplementation: ConsentDataSource {
 
             return promise
         }
-    }
-
-    func completeAssertionIfNeeded(
-        possibleError: Error?,
-        api: FinancialConnectionsAPIClientLogger.API
-    ) -> Error? {
-        guard manifest.verified else { return nil }
-        return apiClient.completeAssertion(
-            possibleError: possibleError,
-            api: api,
-            pane: .linkLogin
-        )
     }
 }
 
