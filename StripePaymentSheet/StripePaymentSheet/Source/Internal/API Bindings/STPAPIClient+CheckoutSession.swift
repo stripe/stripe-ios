@@ -318,39 +318,13 @@ extension STPAPIClient {
             endpoint: "checkout_client/\(requestParameters.sessionId)/confirm",
             parameters: parameters
         )
-        let paymentResponse = checkoutClient.fields["payment_response"] as? [String: Any]
-        let paymentIntent: STPPaymentIntent?
-        if let reference = paymentResponse?["payment_intent"] as? [String: Any] {
-            guard let clientSecret = reference["client_secret"] as? String else {
-                throw DecodingError.dataCorrupted(
-                    .init(codingPath: [], debugDescription: "CheckoutClient PaymentIntent is missing its client secret")
-                )
-            }
-            paymentIntent = try await retrievePaymentIntent(clientSecret: clientSecret, expand: ["payment_method"])
-        } else {
-            paymentIntent = nil
-        }
-        let setupIntent: STPSetupIntent?
-        if let reference = paymentResponse?["setup_intent"] as? [String: Any] {
-            guard let clientSecret = reference["client_secret"] as? String else {
-                throw DecodingError.dataCorrupted(
-                    .init(codingPath: [], debugDescription: "CheckoutClient SetupIntent is missing its client secret")
-                )
-            }
-            setupIntent = try await retrieveSetupIntent(clientSecret: clientSecret, expand: ["payment_method"])
-        } else {
-            setupIntent = nil
-        }
-        return try checkoutClient.paymentPagesResponse(
-            paymentIntent: paymentIntent,
-            setupIntent: setupIntent,
-            isConfirmResponse: true
-        )
+        return try await checkoutClientSessionResponse(checkoutClient, isConfirmResponse: true)
     }
 
     /// CheckoutClient returns Intent references. Retrieve the Intent to preserve the full session used by confirmation.
     private func checkoutClientSessionResponse(
-        _ checkoutClient: CheckoutClientAPIResponse
+        _ checkoutClient: CheckoutClientAPIResponse,
+        isConfirmResponse: Bool = false
     ) async throws -> PaymentPagesAPIResponse {
         let paymentResponse = checkoutClient.fields["payment_response"] as? [String: Any]
         let paymentIntent: STPPaymentIntent?
@@ -377,7 +351,8 @@ extension STPAPIClient {
         }
         return try checkoutClient.paymentPagesResponse(
             paymentIntent: paymentIntent,
-            setupIntent: setupIntent
+            setupIntent: setupIntent,
+            isConfirmResponse: isConfirmResponse
         )
     }
 

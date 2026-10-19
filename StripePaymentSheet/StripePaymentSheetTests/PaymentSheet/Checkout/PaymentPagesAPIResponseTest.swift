@@ -349,17 +349,6 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertThrowsError(try PaymentPagesAPIResponse.decode(fromAPIResponse: json))
     }
 
-    func testDecodesRouteToOrchestrationInterface() throws {
-        var json = CheckoutTestHelpers.makeSessionJSON()
-        json["route_to_orchestration_interface"] = true
-
-        let routedResponse = try PaymentPagesAPIResponse.decode(fromAPIResponse: json)
-        let responseWithoutRouting = CheckoutTestHelpers.makeSession()
-
-        XCTAssertEqual(routedResponse.routeToOrchestrationInterface, true)
-        XCTAssertNil(responseWithoutRouting.routeToOrchestrationInterface)
-    }
-
     func testDecodedObjectFromAPIResponseRejectsUnknownSessionStatus() {
         var json = STPTestUtils.jsonNamed("CheckoutSession")!
         json["status"] = "future_status"

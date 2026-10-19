@@ -29,7 +29,6 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
     let status: CheckoutController.Session.Status
     let paymentStatus: CheckoutController.Session.Status.PaymentStatus
     let submissionAttempt: SubmissionAttempt?
-    let routeToOrchestrationInterface: Bool?
     let customerEmail: String?
     let savedPaymentMethodsOfferSave: SavedPaymentMethodsOfferSave?
     let setupFutureUsage: String?
@@ -45,6 +44,7 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
     let customer: Customer?
     let elementsSession: ElementsSession
     let checkoutClientSettings: CheckoutClientSettings?
+    let checkoutClientPaymentError: StripeAPIError?
 
     /// Settings that belong to Checkout rather than the aggregated Elements Session.
     struct CheckoutClientSettings: Decodable {
@@ -106,7 +106,6 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
         case status
         case paymentStatus
         case submissionAttempt
-        case routeToOrchestrationInterface
         case customerEmail
         case savedPaymentMethodsOfferSave = "customer_managed_saved_payment_methods_offer_save"
         case setupFutureUsage
@@ -122,11 +121,13 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
         case customer
         case elementsSession
         case checkoutClientSettings
+        case checkoutClientPaymentError
     }
 
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         checkoutClientSettings = try container.decodeIfPresent(CheckoutClientSettings.self, forKey: .checkoutClientSettings)
+        checkoutClientPaymentError = try container.decodeIfPresent(StripeAPIError.self, forKey: .checkoutClientPaymentError)
         sessionId = try container.decode(String.self, forKey: .sessionId)
         let decodedPaymentIntent = try container.decodeIfPresent(
             LegacyExpandable<STPPaymentIntent>.self,
@@ -183,10 +184,6 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
         submissionAttempt = try container.decodeIfPresent(
             SubmissionAttempt.self,
             forKey: .submissionAttempt
-        )
-        routeToOrchestrationInterface = try container.decodeIfPresent(
-            Bool.self,
-            forKey: .routeToOrchestrationInterface
         )
         customerEmail = try container.decodeIfPresent(String.self, forKey: .customerEmail)
         savedPaymentMethodsOfferSave = try container.decodeIfPresent(
@@ -647,6 +644,7 @@ struct CheckoutClientAPIResponse: Decodable {
         // payment-method options cannot recover inherited SFU needed for saving mandates.
 
         if let paymentResponse = fields["payment_response"] as? [String: Any] {
+            response["checkout_client_payment_error"] = paymentResponse["last_payment_error"]
             if let reference = paymentResponse["payment_intent"] as? [String: Any] {
                 response["payment_intent"] = paymentIntent?.allResponseFields
                 if paymentIntent == nil { response["payment_intent"] = reference["id"] }

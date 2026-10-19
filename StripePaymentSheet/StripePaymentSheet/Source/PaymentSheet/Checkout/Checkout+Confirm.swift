@@ -501,12 +501,6 @@ extension CheckoutController {
             return .failed(error, sessionResponse: response)
         }
 
-        // Orchestration isn't supported yet
-        if response.routeToOrchestrationInterface == true {
-            let error = CheckoutError.unknown(debugDescription: "Checkout Session confirmation unexpectedly requires orchestration.")
-            return .failed(error, sessionResponse: response)
-        }
-
         // 2. Handle any next action required by the Intent.
         let clientCompletedIntent: PaymentOrSetupIntent?
         if let paymentIntent = response.paymentIntent {
@@ -655,7 +649,8 @@ extension CheckoutController {
     }
 
     private static func paymentError(from session: PaymentPagesAPIResponse) -> Error {
-        let lastErrorFields = session.paymentIntent?.lastPaymentError?.allResponseFields
+        let lastErrorFields = session.checkoutClientPaymentError?.allResponseFields
+            ?? session.paymentIntent?.lastPaymentError?.allResponseFields
             ?? session.setupIntent?.lastSetupError?.allResponseFields
         return NSError.stp_error(fromStripeResponse: lastErrorFields.map { ["error": $0] })
             ?? PaymentSheetError.errorHandlingNextAction

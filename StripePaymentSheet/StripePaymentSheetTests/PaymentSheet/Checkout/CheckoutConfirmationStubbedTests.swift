@@ -486,26 +486,28 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         XCTAssertTrue(poller.checkoutSessionIds.isEmpty)
     }
 
-    func testOrchestrationConfirmResponseFailsWithoutPolling() async throws {
-        // Given /confirm routes to the unsupported orchestration interface
+    func testCheckoutClientPaymentResponseErrorTakesPrecedenceOverReferencedIntent() async throws {
+        // Given Checkout reports a failure independently of its referenced Intent
         let checkout = try await makeCheckout()
-        let poller = TestCheckoutSessionPoller(outcome: .completed)
-        var responseJSON = makeConfirmedSessionJSON()
-        responseJSON["route_to_orchestration_interface"] = true
-
-        // When the Checkout Session is confirmed
-        let result = await confirmCheckoutSession(
-            checkout,
-            responseJSON: responseJSON,
-            poller: poller
-        )
-
-        // Then it fails before polling
-        guard case .failed(let error, _) = result else {
-            return XCTFail("Expected confirmation to fail, got \(result)")
+        let session = makeConfirmedSessionJSON(status: "open", paymentStatus: "unpaid")
+        stubConfirmedIntentRetrieval(from: session)
+        var response = Self.checkoutClientConfirmJSON(from: session)
+        var paymentResponse = try XCTUnwrap(response["payment_response"] as? [String: Any])
+        paymentResponse["status"] = "requires_payment_method"
+        paymentResponse["last_payment_error"] = [
+            "type": "card_error", "code": "card_declined", "message": "Checkout payment was declined.",
+        ]
+        response["payment_response"] = paymentResponse
+        stub { $0.url?.path.hasSuffix("/confirm") == true } response: { _ in
+            HTTPStubsResponse(jsonObject: response, statusCode: 200, headers: nil)
         }
-        XCTAssertTrue(error.nonGenericDescription.contains("orchestration"))
-        XCTAssertTrue(poller.checkoutSessionIds.isEmpty)
+
+        // When the customer confirms
+        let result = await checkout.confirm(makePaymentMethodFlow(for: checkout))
+
+        // Then Checkout returns its canonical payment error before handling the Intent
+        guard case .failed(let error) = result else { return XCTFail("Expected Checkout payment error") }
+        XCTAssertEqual((error as NSError).userInfo[STPError.stripeErrorCodeKey] as? String, "card_declined")
     }
 
     // MARK: - Payment Method
