@@ -224,6 +224,7 @@ extension STPTestingAPIClient {
         amount: Int? = nil,
         merchantCountry: String? = "us",
         customerID: String? = nil,
+        savedPaymentMethodAllowRedisplayFilters: [String]? = nil,
         collectBillingAddress: Bool = false,
         automaticTax: Bool = false,
         customerEmailLocation: String? = nil,
@@ -281,6 +282,11 @@ extension STPTestingAPIClient {
         }
         if let customerID {
             sessionParameters["customer"] = customerID
+        }
+        if let savedPaymentMethodAllowRedisplayFilters {
+            sessionParameters["saved_payment_method_options"] = [
+                "allow_redisplay_filters": savedPaymentMethodAllowRedisplayFilters,
+            ]
         }
 
         let checkoutSession: PlaygroundCheckoutSessionResponse = try await makePlaygroundRequest(

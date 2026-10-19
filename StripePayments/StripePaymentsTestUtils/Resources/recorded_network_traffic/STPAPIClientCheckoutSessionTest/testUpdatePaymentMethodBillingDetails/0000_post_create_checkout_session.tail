@@ -5,17 +5,17 @@ application/json
 Server: Google Frontend
 Content-Type: application/json; charset=utf-8
 x-powered-by: Express
-x-cloud-trace-context: 8db0ab2856c1117895b5985eb2b497cd
+x-cloud-trace-context: ca597ab3c4daddf2de9fd46845617834
 Via: 1.1 google
-Date: Fri, 16 Oct 2026 19:21:44 GMT
-Content-Length: 2627
-Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
-Etag: W/"a43-7V8rxuFwufuujzqUrp4o/e20GfI"
+Date: Mon, 19 Oct 2026 19:11:51 GMT
+Content-Length: 2651
+Alt-Svc: h3=":443"; ma=2592000
+Etag: W/"a5b-GNLM09hzu6Y+Lgib8+ruP3gThW4"
 
 {
   "billing_address_collection" : null,
-  "id" : "cs_test_a1mr0Tcknzn56xrToHSUMNJcDwf1GicW9uYgkQDHFNhDC4ATOxC6p7Xo8l",
-  "client_secret" : "cs_test_a1mr0Tcknzn56xrToHSUMNJcDwf1GicW9uYgkQDHFNhDC4ATOxC6p7Xo8l_secret_fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdwbEhqYWAnPydoamdsaWBaYGlgaGBrcXYneCUl",
+  "id" : "cs_test_a1k3XEfpqIT2ZIhjpfqLubnNdCkW8ZijJooeNLnupifvJt889Wot3JPF7W",
+  "client_secret" : "cs_test_a1k3XEfpqIT2ZIhjpfqLubnNdCkW8ZijJooeNLnupifvJt889Wot3JPF7W_secret_fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdwbEhqYWAnPydoamdsaWBaYGlgaGBrcXYneCUl",
   "discounts" : [
 
   ],
@@ -32,7 +32,7 @@ Etag: W/"a43-7V8rxuFwufuujzqUrp4o/e20GfI"
   "payment_method_configuration_details" : null,
   "payment_method_options" : null,
   "ui_mode" : "mobile_elements",
-  "created" : 1792178504,
+  "created" : 1792437111,
   "client_reference_id" : null,
   "allowed_payment_method_types" : [
     "card"
@@ -41,13 +41,13 @@ Etag: W/"a43-7V8rxuFwufuujzqUrp4o/e20GfI"
   "allow_promotion_codes" : null,
   "items" : [
     {
-      "key" : "checkout_item_VSB3hrhf",
+      "key" : "checkout_item_VTIZqfgZ",
       "one_time_price" : {
         "items" : [
           {
             "quantity" : 1,
             "adjustable_quantity" : null,
-            "price" : "price_1URGhILu5o3P18ZpdsqDaKfE",
+            "price" : "price_1USLyNLu5o3P18ZpWN2XOufp",
             "tax_rates" : null
           }
         ],
@@ -62,7 +62,9 @@ Etag: W/"a43-7V8rxuFwufuujzqUrp4o/e20GfI"
   "saved_payment_method_options" : {
     "payment_method_save" : null,
     "allow_redisplay_filters" : [
-      "always"
+      "always",
+      "limited",
+      "unspecified"
     ],
     "payment_method_remove" : "disabled"
   },
@@ -157,6 +159,6 @@ Etag: W/"a43-7V8rxuFwufuujzqUrp4o/e20GfI"
   },
   "livemode" : false,
   "customer_email" : null,
-  "expires_at" : 1792264904,
+  "expires_at" : 1792523511,
   "marketing_attributions" : null
 }
