@@ -113,7 +113,7 @@ public final class ShippingAddressElement {
             return
         }
 
-        let navigationController = UINavigationController(rootViewController: addressViewController)
+        let navigationController = ShippingAddressNavigationController(element: self)
         // Apply the style to the whole navigation stack, including address autocomplete.
         navigationController.overrideUserInterfaceStyle = addressViewController.overrideUserInterfaceStyle
         isPresenting = true
@@ -188,6 +188,7 @@ extension ShippingAddressElement: AddressViewController.IntegrationDelegate {
 }
 
 extension ShippingAddressElement: AddressViewControllerDelegate {
+
     public func addressViewControllerDidFinish(
         _ addressViewController: AddressViewController,
         with address: AddressViewController.AddressDetails?
@@ -198,5 +199,20 @@ extension ShippingAddressElement: AddressViewControllerDelegate {
             self.isPresenting = false
             completion?()
         }
+    }
+}
+
+private final class ShippingAddressNavigationController: UINavigationController {
+
+    // The address view controller holds its delegates weakly. Keep the element alive with its sheet.
+    private let element: ShippingAddressElement
+
+    init(element: ShippingAddressElement) {
+        self.element = element
+        super.init(rootViewController: element.addressViewController)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 }

@@ -15,6 +15,197 @@ import XCTest
 final class PaymentSheetPresentationTests: XCTestCase {
 
     @MainActor
+    func testCardScannerAnimationKeepsFooterAnchored() async throws {
+        // Given an embedded card scanner that starts collapsed
+        let content = NativeSheetStubContentViewController()
+        let cardSection = UIView()
+        cardSection.heightAnchor.constraint(equalToConstant: 100).isActive = true
+        let delegate = CardSectionDelegateStub()
+        let scanner = CardSectionWithScannerView(
+            cardSectionView: cardSection,
+            opensCardScannerAutomatically: false,
+            delegate: delegate,
+            analyticsHelper: nil
+        )
+        let footer = UIView()
+        footer.heightAnchor.constraint(equalToConstant: 60).isActive = true
+        let stack = UIStackView(arrangedSubviews: [scanner, footer])
+        stack.axis = .vertical
+        content.view.addAndPinSubview(stack)
+        let (window, sheet) = try await presentScannerAnimationSheet(content: content)
+        defer { window.rootViewController?.dismiss(animated: false); window.isHidden = true }
+        let initialHeight = sheet.view.bounds.height
+        let footerBaseline = footer.convert(footer.bounds, to: window).maxY
+
+        // When opening the scanner through its actual entry point
+        scanner.didTapCardScanButton()
+        try await assertFooterRemainsAnchored(footer, in: window, baseline: footerBaseline)
+        try await waitForSheetLayout {
+            sheet.view.bounds.height > initialHeight + 1
+        }
+
+        // Then the sheet grows to show the scanner without pushing the footer below the sheet
+        XCTAssertGreaterThan(sheet.view.bounds.height, initialHeight + 1)
+        XCTAssertEqual(footer.convert(footer.bounds, to: window).maxY, footerBaseline, accuracy: 1.5)
+
+        // When closing the scanner without scanning a card
+        scanner.cardScanningViewShouldClose(scanner.cardScanningView, cardParams: nil)
+        try await assertFooterRemainsAnchored(footer, in: window, baseline: footerBaseline)
+        try await waitForSheetLayout {
+            abs(sheet.view.bounds.height - initialHeight) < 1.5
+        }
+
+        // Then the sheet returns to its original height without leaving a gap below the footer
+        XCTAssertEqual(sheet.view.bounds.height, initialHeight, accuracy: 1.5)
+        XCTAssertEqual(footer.convert(footer.bounds, to: window).maxY, footerBaseline, accuracy: 1.5)
+    }
+
+    @MainActor
+    private func assertFooterRemainsAnchored(_ footer: UIView, in window: UIWindow, baseline: CGFloat) async throws {
+        // Sample the presentation layers: model geometry already contains the animation's final frames.
+        let deadline = Date().addingTimeInterval(0.7)
+        var maximumDisplacement: CGFloat = 0
+        var sampleCount = 0
+        while Date() < deadline {
+            if let footerLayer = footer.layer.presentation(), let windowLayer = window.layer.presentation() {
+                let footerBottom = footerLayer.convert(footerLayer.bounds, to: windowLayer).maxY
+                maximumDisplacement = max(maximumDisplacement, abs(footerBottom - baseline))
+                sampleCount += 1
+            }
+            try await Task.sleep(nanoseconds: 10_000_000)
+        }
+        XCTAssertGreaterThan(sampleCount, 0)
+        XCTAssertLessThanOrEqual(maximumDisplacement, 1.5, "Content below the scanner must stay anchored throughout the resize.")
+    }
+
+    @MainActor
+    private func waitForSheetLayout(_ condition: () -> Bool) async throws {
+        // Read geometry on the main actor while allowing UIKit's animation and layout work to run.
+        let deadline = Date().addingTimeInterval(3)
+        while !condition(), Date() < deadline {
+            try await Task.sleep(nanoseconds: 20_000_000)
+        }
+    }
+
+    @MainActor
+    private func presentScannerAnimationSheet(content: BottomSheetContentViewController) async throws -> (UIWindow, NativeSheetContainerViewController) {
+        guard #available(iOS 16.0, *) else { throw XCTSkip("Content-sized detents require iOS 16.") }
+        let sheet = NativeSheetContainerViewController(
+            contentViewController: content,
+            appearance: .default,
+            didCancelNative3DS2: {}
+        )
+        // A cold test-host launch may still be connecting its window scene.
+        let sceneConnected = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            UIApplication.shared.connectedScenes.contains { $0 is UIWindowScene }
+        }, object: nil)
+        await fulfillment(of: [sceneConnected], timeout: 5)
+        let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first)
+        let presenter = UIViewController()
+        let window = UIWindow(windowScene: scene)
+        window.frame = scene.coordinateSpace.bounds
+        window.rootViewController = presenter
+        window.makeKeyAndVisible()
+        let presented = expectation(description: "Content-sized native sheet presented")
+        presenter.presentAsSheet(sheet) { presented.fulfill() }
+        await fulfillment(of: [presented], timeout: 3)
+        // Settle any layout-driven resize before capturing the initial height.
+        try await Task.sleep(nanoseconds: 700_000_000)
+        return (window, sheet)
+    }
+
+    @MainActor
+    func testNativeSheetResizesNestedContentAcrossMaximumHeight() async throws {
+        guard #available(iOS 16.0, *) else { throw XCTSkip("Content-sized detents require iOS 16.") }
+        // Given short content with a nested section that can grow past the available sheet height
+        let content = NativeSheetStubContentViewController()
+        let initialSection = UIView()
+        initialSection.heightAnchor.constraint(equalToConstant: 200).isActive = true
+        let additionalSection = UIView()
+        // Allow the stack's required hiding constraint to collapse this fixed-height section.
+        let additionalSectionHeight = additionalSection.heightAnchor.constraint(equalToConstant: 100)
+        additionalSectionHeight.priority = .defaultHigh
+        additionalSectionHeight.isActive = true
+        additionalSection.isHidden = true
+        let bottomMarker = UIView()
+        bottomMarker.translatesAutoresizingMaskIntoConstraints = false
+        additionalSection.addSubview(bottomMarker)
+        NSLayoutConstraint.activate([
+            bottomMarker.widthAnchor.constraint(equalToConstant: 8),
+            bottomMarker.heightAnchor.constraint(equalToConstant: 8),
+            bottomMarker.centerXAnchor.constraint(equalTo: additionalSection.centerXAnchor),
+            bottomMarker.bottomAnchor.constraint(equalTo: additionalSection.bottomAnchor),
+        ])
+        let nestedStack = UIStackView(arrangedSubviews: [initialSection, additionalSection])
+        nestedStack.axis = .vertical
+        content.view.addAndPinSubview(nestedStack)
+        let (window, sheet) = try await presentContentSizedSheet(content: content)
+        defer {
+            window.rootViewController?.dismiss(animated: false)
+            window.isHidden = true
+        }
+        let originalHeight = sheet.view.bounds.height
+        let originalViewportHeight = NativeSheetLayoutTestHelper.viewportHeight(in: sheet)
+
+        // Calibrate the height cap with UIKit before exercising automatic content-driven resizing.
+        let presentation = try XCTUnwrap(sheet.rootParent.sheetPresentationController)
+        presentation.animateChanges {
+            presentation.detents = [sheet.contentSizedDetent, .large()]
+            presentation.selectedDetentIdentifier = .large
+        }
+        try await NativeSheetLayoutTestHelper.waitForLayout(of: sheet, expected: "the large detent to finish expanding") {
+            sheet.view.bounds.height > originalHeight + 1
+                && abs(sheet.rootParent.view.bounds.height - presentation.frameOfPresentedViewInContainerView.height) < 1
+        }
+        let maximumHeight = sheet.view.bounds.height
+        let maximumViewportHeight = NativeSheetLayoutTestHelper.viewportHeight(in: sheet)
+        presentation.animateChanges {
+            presentation.detents = [sheet.contentSizedDetent]
+            presentation.selectedDetentIdentifier = NativeSheetContainerViewController.contentDetentIdentifier
+        }
+        try await NativeSheetLayoutTestHelper.waitForContentToFit(in: sheet, content: content.view)
+        XCTAssertEqual(sheet.view.bounds.height, originalHeight, accuracy: 1)
+
+        // When only the nested stack is laid out during expansion
+        nestedStack.toggleArrangedSubview(additionalSection, shouldShow: true, animated: true)
+        try await NativeSheetLayoutTestHelper.waitForContentToFit(in: sheet, content: content.view, expectedContentHeight: 300)
+
+        // Then a known 100-point content increase produces the same viewport and sheet increase
+        XCTAssertEqual(NativeSheetLayoutTestHelper.viewportHeight(in: sheet) - originalViewportHeight, 100, accuracy: 1)
+        XCTAssertEqual(sheet.view.bounds.height - originalHeight, 100, accuracy: 1)
+
+        // When the same nested section is reopened taller than the available sheet
+        nestedStack.toggleArrangedSubview(additionalSection, shouldShow: false, animated: true)
+        try await NativeSheetLayoutTestHelper.waitForContentToFit(in: sheet, content: content.view, expectedContentHeight: 200)
+        additionalSectionHeight.constant = window.bounds.height * 2
+        nestedStack.toggleArrangedSubview(additionalSection, shouldShow: true, animated: true)
+        let expectedContentHeight = 200 + additionalSectionHeight.constant
+        try await NativeSheetLayoutTestHelper.waitForLayout(
+            of: sheet,
+            expected: "content height \(expectedContentHeight), sheet height \(maximumHeight), and viewport height \(maximumViewportHeight)"
+        ) {
+            abs(sheet.scrollView.contentSize.height - expectedContentHeight) < 1
+                && abs(sheet.view.bounds.height - maximumHeight) < 1
+                && abs(NativeSheetLayoutTestHelper.viewportHeight(in: sheet) - maximumViewportHeight) < 1
+        }
+
+        // Then it reaches the same height as the large detent, and the bottom content is reachable
+        XCTAssertGreaterThan(sheet.scrollView.contentSize.height, NativeSheetLayoutTestHelper.viewportHeight(in: sheet))
+        XCTAssertEqual(sheet.scrollView.frame.maxY, sheet.view.bounds.maxY, accuracy: 1)
+        XCTAssertTrue(sheet.scrollView.isScrollEnabled)
+        let markerRect = bottomMarker.convert(bottomMarker.bounds, to: sheet.scrollView)
+        sheet.scrollView.scrollRectToVisible(markerRect, animated: false)
+        let visibleBounds = sheet.scrollView.bounds.inset(by: sheet.scrollView.adjustedContentInset)
+        XCTAssertGreaterThan(sheet.scrollView.contentOffset.y, 0)
+        XCTAssertTrue(visibleBounds.insetBy(dx: -1, dy: -1).contains(bottomMarker.convert(bottomMarker.bounds, to: sheet.scrollView)))
+
+        // ...and collapsing the nested section returns the sheet to its content height
+        nestedStack.toggleArrangedSubview(additionalSection, shouldShow: false, animated: true)
+        try await NativeSheetLayoutTestHelper.waitForContentToFit(in: sheet, content: content.view, expectedContentHeight: 200)
+        XCTAssertEqual(sheet.view.bounds.height, originalHeight, accuracy: 1)
+    }
+
+    @MainActor
     func testNativeSheetResizesToScrollableContentAtRegularWidth() async throws {
         guard #available(iOS 17.0, *) else { throw XCTSkip("Trait overrides require iOS 17.") }
         // Given the regular-width presentation used by an unfolded phone
@@ -590,20 +781,15 @@ final class PaymentSheetPresentationTests: XCTestCase {
     }
 
     @MainActor
-    func testSelectingVerticalPaymentMethodInvalidatesContentDetent() throws {
-        // Given
-        let contentViewController = NativeSheetStubContentViewController()
-        let sheetViewController = DetentInvalidationSpyViewController(
-            contentViewController: contentViewController,
-            appearance: .default,
-            didCancelNative3DS2: {}
-        )
+    func testSelectingPromotionRowResizesNativeSheet() async throws {
+        // Given a list whose promotion wraps even at the Duo sheet's wider content width
+        let content = NativeSheetStubContentViewController()
         let delegate = VerticalPaymentMethodListDelegateStub()
-        let paymentMethodListViewController = VerticalPaymentMethodListViewController(
-            initialSelection: nil,
+        let list = VerticalPaymentMethodListViewController(
+            initialSelection: .applePay,
             savedPaymentMethods: [],
-            paymentMethodTypes: [.stripe(.affirm)],
-            shouldShowApplePay: false,
+            paymentMethodTypes: [.stripe(.card), .stripe(.affirm)],
+            shouldShowApplePay: true,
             shouldShowLink: false,
             savedPaymentMethodAccessoryType: nil,
             overrideHeaderView: nil,
@@ -611,17 +797,109 @@ final class PaymentSheetPresentationTests: XCTestCase {
             currency: "usd",
             amount: 1_000,
             incentive: nil,
+            paymentMethodMessagingPromotionsHelper: ._testValueInTreatment(
+                promotionText: String(repeating: "Pay in 4 interest-free payments of $12.50. ", count: 4)
+            ),
             delegate: delegate
         )
-        contentViewController.addChild(paymentMethodListViewController)
-        paymentMethodListViewController.didMove(toParent: contentViewController)
-        let affirmRow = try XCTUnwrap(paymentMethodListViewController.rowButtons.first)
+        content.addChild(list)
+        content.view.addAndPinSubview(list.view)
+        list.didMove(toParent: content)
+        let (window, sheet) = try await presentContentSizedSheet(content: content)
+        defer { window.rootViewController?.dismiss(animated: false); window.isHidden = true }
+        let initialHeight = sheet.view.bounds.height
+        let initialContentHeight = NativeSheetLayoutTestHelper.fittedHeight(of: content.view, in: sheet)
+        let affirm = try XCTUnwrap(list.rowButtons.first { $0.type == .new(paymentMethodType: .stripe(.affirm)) })
+        let applePay = try XCTUnwrap(list.rowButtons.first { $0.type == .applePay })
 
-        // When
-        paymentMethodListViewController.didTap(rowButton: affirmRow, selection: affirmRow.type)
+        // When selecting the row shows the promotion through the actual selection entry point
+        list.didTap(rowButton: affirm, selection: affirm.type)
+        try await NativeSheetLayoutTestHelper.waitForContentToFit(in: sheet, content: content.view, minimumContentHeight: initialContentHeight + 1)
 
-        // Then
-        XCTAssertEqual(sheetViewController.invalidationCount, 1)
+        // Then the sheet grows by the promotion's measured content-height increase
+        let promotionHeight = NativeSheetLayoutTestHelper.fittedHeight(of: content.view, in: sheet) - initialContentHeight
+        XCTAssertEqual(sheet.view.bounds.height - initialHeight, promotionHeight, accuracy: 1)
+
+        // When selecting Apple Pay hides the promotion
+        list.didTap(rowButton: applePay, selection: applePay.type)
+        try await NativeSheetLayoutTestHelper.waitForContentToFit(in: sheet, content: content.view, expectedContentHeight: initialContentHeight)
+
+        // Then the sheet returns to its original height
+        XCTAssertEqual(sheet.view.bounds.height, initialHeight, accuracy: 1)
+    }
+
+    @MainActor
+    func testCardScannerResizesNativeSheetOnOpenAndClose() async throws {
+        // Given an embedded card scanner that starts collapsed
+        let content = NativeSheetStubContentViewController()
+        let cardSection = UIView()
+        cardSection.heightAnchor.constraint(equalToConstant: 100).isActive = true
+        let delegate = CardSectionDelegateStub()
+        let scanner = CardSectionWithScannerView(
+            cardSectionView: cardSection,
+            opensCardScannerAutomatically: false,
+            delegate: delegate,
+            analyticsHelper: nil
+        )
+        // Keep this content below the height cap even when the sheet has a wide layout.
+        scanner.translatesAutoresizingMaskIntoConstraints = false
+        content.view.addSubview(scanner)
+        let scannerWidth = scanner.widthAnchor.constraint(equalToConstant: 320)
+        scannerWidth.priority = .defaultHigh
+        NSLayoutConstraint.activate([
+            scanner.topAnchor.constraint(equalTo: content.view.topAnchor),
+            scanner.bottomAnchor.constraint(equalTo: content.view.bottomAnchor),
+            scanner.centerXAnchor.constraint(equalTo: content.view.centerXAnchor),
+            scanner.widthAnchor.constraint(lessThanOrEqualTo: content.view.widthAnchor),
+            scannerWidth,
+        ])
+        let (window, sheet) = try await presentContentSizedSheet(content: content)
+        defer { window.rootViewController?.dismiss(animated: false); window.isHidden = true }
+        let initialHeight = sheet.view.bounds.height
+        let initialContentHeight = NativeSheetLayoutTestHelper.fittedHeight(of: content.view, in: sheet)
+
+        // When opening the scanner through its actual entry point
+        scanner.didTapCardScanButton()
+        try await NativeSheetLayoutTestHelper.waitForContentToFit(in: sheet, content: content.view, minimumContentHeight: initialContentHeight + 1)
+
+        // Then the sheet grows by the scanner's measured content-height increase
+        XCTAssertFalse(scanner.cardScanningView.isHidden)
+        let scannerHeight = NativeSheetLayoutTestHelper.fittedHeight(of: content.view, in: sheet) - initialContentHeight
+        XCTAssertEqual(sheet.view.bounds.height - initialHeight, scannerHeight, accuracy: 1)
+
+        // When closing the scanner without scanning a card
+        scanner.cardScanningViewShouldClose(scanner.cardScanningView, cardParams: nil)
+        try await NativeSheetLayoutTestHelper.waitForContentToFit(in: sheet, content: content.view, expectedContentHeight: initialContentHeight)
+
+        // Then the sheet returns to its original height
+        XCTAssertTrue(scanner.cardScanningView.isHidden)
+        XCTAssertEqual(sheet.view.bounds.height, initialHeight, accuracy: 1)
+    }
+
+    @MainActor
+    private func presentContentSizedSheet(content: BottomSheetContentViewController) async throws -> (UIWindow, NativeSheetContainerViewController) {
+        guard #available(iOS 16.0, *) else { throw XCTSkip("Content-sized detents require iOS 16.") }
+        let sheet = NativeSheetContainerViewController(
+            contentViewController: content,
+            appearance: .default,
+            didCancelNative3DS2: {}
+        )
+        // A cold test-host launch may still be connecting its window scene.
+        let sceneConnected = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            UIApplication.shared.connectedScenes.contains { $0 is UIWindowScene }
+        }, object: nil)
+        await fulfillment(of: [sceneConnected], timeout: 5)
+        let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first)
+        let presenter = UIViewController()
+        let window = UIWindow(windowScene: scene)
+        window.frame = scene.coordinateSpace.bounds
+        window.rootViewController = presenter
+        window.makeKeyAndVisible()
+        let presented = expectation(description: "Content-sized native sheet presented")
+        presenter.presentAsSheet(sheet) { presented.fulfill() }
+        await fulfillment(of: [presented], timeout: 3)
+        try await NativeSheetLayoutTestHelper.waitForContentToFit(in: sheet, content: content.view)
+        return (window, sheet)
     }
 
     @MainActor
@@ -796,5 +1074,91 @@ private final class VerticalPaymentMethodListDelegateStub: VerticalPaymentMethod
     func didTapPaymentMethod(_ selection: RowButtonType) {}
 
     func didTapSavedPaymentMethodAccessoryButton() {}
+}
+
+private final class CardSectionDelegateStub: CardSectionWithScannerViewDelegate {
+
+    func didScanCard(cardParams: STPPaymentMethodCardParams) {}
+}
+
+// Shared by the native-sheet and Link-wallet resize tests.
+@MainActor
+enum NativeSheetLayoutTestHelper {
+
+    static func fittedHeight(of content: UIView, in sheet: NativeSheetContainerViewController) -> CGFloat {
+        // Measure the content subtree without requesting layout or detent invalidation on its parent.
+        content.systemLayoutSizeFitting(
+            CGSize(width: sheet.scrollView.bounds.width, height: UIView.layoutFittingCompressedSize.height),
+            withHorizontalFittingPriority: .required,
+            verticalFittingPriority: .fittingSizeLevel
+        ).height
+    }
+
+    static func viewportHeight(in sheet: NativeSheetContainerViewController) -> CGFloat {
+        sheet.scrollView.bounds.height - sheet.scrollView.adjustedContentInset.top - sheet.scrollView.adjustedContentInset.bottom
+    }
+
+    static func waitForContentToFit(
+        in sheet: NativeSheetContainerViewController,
+        content: UIView,
+        expectedContentHeight: CGFloat? = nil,
+        minimumContentHeight: CGFloat? = nil,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) async throws {
+        let expectedHeightDescription = expectedContentHeight.map { "\($0)" }
+            ?? minimumContentHeight.map { "greater than \($0)" }
+            ?? "the fitted content height"
+        try await waitForLayout(of: sheet, expected: "content height \(expectedHeightDescription), with a matching viewport", content: content, file: file, line: line) {
+            let naturalHeight = fittedHeight(of: content, in: sheet)
+            return naturalHeight > 0
+                && (expectedContentHeight.map { abs(naturalHeight - $0) < 1 } ?? true)
+                && (minimumContentHeight.map { naturalHeight > $0 } ?? true)
+                && abs(sheet.scrollView.contentSize.height - naturalHeight) < 1
+                && abs(viewportHeight(in: sheet) - naturalHeight) < 1
+                && abs(sheet.scrollView.frame.maxY - sheet.view.bounds.maxY) < 1
+        }
+    }
+
+    static func waitForLayout(
+        of sheet: NativeSheetContainerViewController,
+        expected: String,
+        content: UIView? = nil,
+        file: StaticString = #filePath,
+        line: UInt = #line,
+        condition: () -> Bool
+    ) async throws {
+        let deadline = Date().addingTimeInterval(3)
+        var settledSince: Date?
+        while Date() < deadline {
+            // Model frames can reach their targets before UIKit finishes displaying the animation.
+            let displayedFramesMatch = [sheet.rootParent.view!, sheet.view!, sheet.scrollView].allSatisfy { view in
+                let displayedFrame = view.layer.presentation()?.frame ?? view.layer.frame
+                let targetFrame = view.layer.frame
+                return abs(displayedFrame.minX - targetFrame.minX) < 0.5
+                    && abs(displayedFrame.minY - targetFrame.minY) < 0.5
+                    && abs(displayedFrame.width - targetFrame.width) < 0.5
+                    && abs(displayedFrame.height - targetFrame.height) < 0.5
+            }
+            if sheet.view.window != nil, !sheet.rootParent.isBeingPresented, displayedFramesMatch, condition() {
+                if let settledSince, Date().timeIntervalSince(settledSince) >= 0.1 {
+                    return
+                }
+                if settledSince == nil {
+                    settledSince = Date()
+                }
+            } else {
+                settledSince = nil
+            }
+            try await Task.sleep(nanoseconds: 20_000_000)
+        }
+
+        let fittedHeightDescription = content.map { String(describing: fittedHeight(of: $0, in: sheet)) } ?? "not measured"
+        XCTFail(
+            "Timed out waiting for \(expected). Sheet height: \(sheet.view.bounds.height); viewport height: \(viewportHeight(in: sheet)); content height: \(sheet.scrollView.contentSize.height); fitted height: \(fittedHeightDescription); displayed sheet frame: \(String(describing: sheet.rootParent.view.layer.presentation()?.frame)).",
+            file: file,
+            line: line
+        )
+    }
 }
 #endif
