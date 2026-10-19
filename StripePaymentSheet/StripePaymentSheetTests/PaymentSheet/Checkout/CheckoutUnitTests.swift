@@ -304,7 +304,8 @@ final class CheckoutUnitTests: XCTestCase {
             initialSessionJSON: initialSessionJSON,
             updatedSessionJSON: updatedSessionJSON
         )
-        XCTAssertEqual(checkout.session.discountAmounts.first?.promotionCode, "SAVE25")
+        // CheckoutClient init omits promotion-code metadata. The discounted total is still returned.
+        XCTAssertEqual(checkout.session.totals.total.minorUnitsAmount, 750)
 
         // When the merchant removes the promotion code
         try await checkout.removePromotionCode()

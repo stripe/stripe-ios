@@ -53,10 +53,14 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
         struct PassiveCaptcha: Decodable {
             let siteKey: String
             let rqdata: String?
-            let tokenRefreshAfterSeconds: TimeInterval
+            let tokenRefreshAfterSeconds: TimeInterval?
 
             var challengeData: PassiveCaptchaData {
-                PassiveCaptchaData(siteKey: siteKey, rqdata: rqdata, tokenTimeoutSeconds: tokenRefreshAfterSeconds)
+                PassiveCaptchaData(
+                    siteKey: siteKey,
+                    rqdata: rqdata,
+                    tokenTimeoutSeconds: tokenRefreshAfterSeconds ?? PassiveCaptchaData.defaultTokenTimeoutSeconds
+                )
             }
         }
     }
