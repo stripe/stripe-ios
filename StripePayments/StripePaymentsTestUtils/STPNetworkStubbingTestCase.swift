@@ -27,6 +27,9 @@ import XCTest
     /// Disable this when testing the STPPaymentHandler "UnredirectableSessionDelegate" behavior.
     open var followRedirects = true
 
+    /// Replays the last recorded nonterminal Intent status during variable-length redirect polling.
+    open var repeatsLastIntentPollingResponse: Bool { false }
+
     /// Tracks the current request number for better error reporting
     private var requestCount = 0
 
@@ -180,7 +183,36 @@ import XCTest
             // Note: in order to make this work, the stub files (end in .tail) must be added to the test bundle during Build Phases/Copy Resources Step.
             let bundle = Bundle(for: STPNetworkStubbingTestCase.self)
             let url = bundle.url(forResource: relativePath, withExtension: nil)
-            if url != nil {
+            if let url {
+                // Redirect tests can make a different number of Intent status requests on replay.
+                // If the final recorded response still requires action or is processing, replay
+                // that observed state for further GETs until the PaymentHandler polling budget ends.
+                if repeatsLastIntentPollingResponse,
+                   let files = try? FileManager.default.contentsOfDirectory(at: url, includingPropertiesForKeys: nil) {
+                    var lastIntentGetByURL: [String: URL] = [:]
+                    for file in files where file.lastPathComponent.contains("_get_v1_payment_intents_")
+                        || file.lastPathComponent.contains("_get_v1_setup_intents_") {
+                        guard let contents = try? String(contentsOf: file, encoding: .utf8) else { continue }
+                        let lines = contents.components(separatedBy: .newlines)
+                        guard lines.count > 2, lines[0] == "GET" else { continue }
+                        if let previous = lastIntentGetByURL[lines[1]],
+                           previous.lastPathComponent >= file.lastPathComponent { continue }
+                        lastIntentGetByURL[lines[1]] = file
+                    }
+                    for file in lastIntentGetByURL.values {
+                        guard let contents = try? String(contentsOf: file, encoding: .utf8),
+                              let bodyRange = contents.range(of: "\n\n"),
+                              let body = String(contents[bodyRange.upperBound...]).data(using: .utf8),
+                              let response = try? JSONSerialization.jsonObject(with: body) as? [String: Any],
+                              let status = response["status"] as? String,
+                              ["requires_action", "processing"].contains(status) else { continue }
+                        var stubError: NSError?
+                        HTTPStubs.stubRequests(usingMocktail: file, error: &stubError, removeAfterUse: false)
+                        if let stubError {
+                            XCTFail("❌ Error stubbing repeated Intent status response: \(stubError)")
+                        }
+                    }
+                }
                 var stubError: NSError?
                 HTTPStubs.stubRequestsUsingMocktails(
                     atPath: relativePath,

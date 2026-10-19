@@ -23,6 +23,8 @@ import XCTest
 /// 👀  See `testiDEALConfirmFlows` for an example with comments.
 @MainActor
 final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
+    override var repeatsLastIntentPollingResponse: Bool { true }
+
     // MARK: Select which confirm flows to record
 
     // All entries should remain enabled in committed code so CI exercises the full matrix.
