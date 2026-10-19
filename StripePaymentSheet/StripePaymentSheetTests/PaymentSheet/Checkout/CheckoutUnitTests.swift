@@ -274,47 +274,45 @@ final class CheckoutUnitTests: XCTestCase {
 
     // MARK: - Promotion Code Tests
 
-    func testApplyPromotionCodeSendsCodeAndCommitsReturnedSession() async throws {
-        // Given an open Checkout Session whose update response contains a promotion code
-        let initialSessionJSON = CheckoutTestHelpers.openSessionJSON
-        let updatedSessionJSON = sessionJSONWithPromotionCode("SAVE25")
-        let (checkout, requestRecorder) = try await makeCheckoutForPromotionCodeUpdate(
-            initialSessionJSON: initialSessionJSON,
-            updatedSessionJSON: updatedSessionJSON
-        )
-        let emissionRecorder = CheckoutEmissionRecorder(checkout)
+    func testUnsupportedPromotionCodeUpdatesPreserveSessionAndEndLoading() async throws {
+        // TODO: Restore successful apply/remove coverage when CheckoutClient supports promotion codes.
+        // Given an open Checkout Session and the endpoint's unsupported-parameter response
+        let configuration = CheckoutTestHelpers.makeConfiguration()
+        let checkout = try await CheckoutController(configuration: configuration)
+        let originalTotal = checkout.session.totals.total
+        let recorder = CheckoutSessionRequestRecorder()
+        stub { request in
+            request.url?.path == "/v1/checkout_client/cs_test_123/update"
+        } response: { request in
+            recorder.append(.init(kind: .updateSession, params: RequestBodyTestHelpers.formEncodedBodyParams(from: request)))
+            let error = [
+                "type": "invalid_request_error", "code": "parameter_unknown",
+                "param": "promotion_code", "message": "Received unknown parameter: promotion_code",
+            ]
+            return HTTPStubsResponse(jsonObject: ["error": error], statusCode: 400, headers: nil)
+        }
+        let emissions = CheckoutEmissionRecorder(checkout)
 
-        // When the merchant applies the promotion code
-        try await checkout.applyPromotionCode("SAVE25")
+        // When the merchant applies or removes a code
+        for code in ["SAVE25", ""] {
+            do {
+                if code.isEmpty {
+                    try await checkout.removePromotionCode()
+                } else {
+                    try await checkout.applyPromotionCode(code)
+                }
+                XCTFail("CheckoutClient does not support promotion codes yet")
+            } catch CheckoutError.apiError {
+                // The current endpoint's parameter_unknown response is surfaced to the merchant.
+            }
 
-        // Then Checkout sends the code and publishes the server-backed Session while loading
-        XCTAssertEqual(requestRecorder.requests.map(\.kind), [.initSession, .updateSession])
-        XCTAssertEqual(requestRecorder.requests.last?.params["promotion_code"], "SAVE25")
-        XCTAssertEqual(checkout.session.discountAmounts.first?.promotionCode, "SAVE25")
-        XCTAssertEqual(checkout.session.totals.total.minorUnitsAmount, 750)
-        XCTAssertEqual(emissionRecorder.loading, [true, false])
-    }
-
-    func testRemovePromotionCodeSendsEmptyCodeAndCommitsReturnedSession() async throws {
-        // TODO: CheckoutClient does not expose applied promotion codes or accept promotion_code updates yet.
-        // Given a Checkout Session with an applied promotion code
-        let initialSessionJSON = sessionJSONWithPromotionCode("SAVE25")
-        let updatedSessionJSON = CheckoutTestHelpers.openSessionJSON
-        let (checkout, requestRecorder) = try await makeCheckoutForPromotionCodeUpdate(
-            initialSessionJSON: initialSessionJSON,
-            updatedSessionJSON: updatedSessionJSON
-        )
-        // CheckoutClient init omits promotion-code metadata. The discounted total is still returned.
-        XCTAssertEqual(checkout.session.totals.total.minorUnitsAmount, 750)
-
-        // When the merchant removes the promotion code
-        try await checkout.removePromotionCode()
-
-        // Then Checkout clears the code on the server and publishes the returned Session
-        XCTAssertEqual(requestRecorder.requests.map(\.kind), [.initSession, .updateSession])
-        XCTAssertEqual(requestRecorder.requests.last?.params["promotion_code"], "")
-        XCTAssertTrue(checkout.session.discountAmounts.isEmpty)
-        XCTAssertEqual(checkout.session.totals.total.minorUnitsAmount, 1000)
+            // Then the error is surfaced and no successful session update is published
+            XCTAssertEqual(checkout.session.totals.total, originalTotal)
+            XCTAssertFalse(checkout.isUpdating)
+        }
+        XCTAssertEqual(recorder.requests.map { $0.params["promotion_code"] }, ["SAVE25", ""])
+        XCTAssertTrue(emissions.sessions.isEmpty)
+        XCTAssertEqual(emissions.loading, [true, false, true, false])
     }
 
     func testApplyPromotionCodeFailurePreservesSessionAndEndsLoading() async throws {
@@ -426,18 +424,19 @@ final class CheckoutUnitTests: XCTestCase {
         XCTAssertEqual(recorder.loading, [true, false])
     }
 
-    func testUpdateShippingAddress_clearReducesTaxRegionToPreviousCountry() async throws {
+    func testUpdateShippingAddress_clearSendsEmptyTaxRegion() async throws {
         // Given a Checkout that computes automatic tax from a stored shipping address
         let (checkout, _, requestRecorder) = try await makeCheckoutWithShippingTax()
 
         // When the shipping address is cleared
         try await checkout.updateShippingAddress(name: nil, address: nil)
 
-        // Then Checkout clears local state and removes all tax region fields except country
+        // Then Checkout clears local state and lets the backend select the default tax country
         XCTAssertNil(checkout.session.shippingAddress)
         XCTAssertEqual(requestRecorder.requests.map(\.kind), [.initSession, .updateSession])
         let updateParameters = try XCTUnwrap(requestRecorder.requests.last?.params)
-        XCTAssertEqual(updateParameters["tax_region[country]"], "US")
+        XCTAssertEqual(updateParameters["tax_region"], "")
+        XCTAssertNil(updateParameters["tax_region[country]"])
         XCTAssertNil(updateParameters["tax_region[line1]"])
         XCTAssertNil(updateParameters["tax_region[line2]"])
         XCTAssertNil(updateParameters["tax_region[city]"])

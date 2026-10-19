@@ -1,35 +1,31 @@
-POST
-https:\/\/api\.stripe\.com\/v1\/checkout_client\/cs_test_a1Gmy1e6BXD8kNHD6dlTWXPneot7UmADJYOZpib8qhKcCoDZlosGNa1lqp\/update$
+GET
+https:\/\/api\.stripe\.com\/v1\/checkout_client\/cs_test_a1RlBqnkg4JsHK755Ub6cYpLOFMeaqbJDpqwsRgPGO4cQe1MFtODRJWY4V\/retrieve\?locale=.*&mobile_app_id=.*&timezone=.*$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=bZfaqZk0hrSlP6MnTuZks7_KfZCILuMt4rFLvIH1y-cflSsj-qHIiRkoyx0WWDlunc72rniJ6eX3PHDS; report-to csp
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=Agh4ifLeQMaOMekn58ptA8MTmeTlg6wGR9ufe3MDfCozXRevZy7Lki6AryGIQ4_6ijJ25IXnfaWqs5cl; report-to csp
 Server: nginx
 Cache-Control: no-cache, no-store
-reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=bZfaqZk0hrSlP6MnTuZks7_KfZCILuMt4rFLvIH1y-cflSsj-qHIiRkoyx0WWDlunc72rniJ6eX3PHDS&t=1"
+reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=Agh4ifLeQMaOMekn58ptA8MTmeTlg6wGR9ufe3MDfCozXRevZy7Lki6AryGIQ4_6ijJ25IXnfaWqs5cl&t=1"
 stripe-notice: You are using an outdated API version (2020-08-27). We recommend upgrading to the latest API version, 2026-09-30.endive. See https://docs.stripe.com/upgrades
 x-wc: 3c3
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Access-Control-Allow-Origin: *
-stripe-should-retry: false
-x-stripe-priority-routing-enabled: true
-report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=bZfaqZk0hrSlP6MnTuZks7_KfZCILuMt4rFLvIH1y-cflSsj-qHIiRkoyx0WWDlunc72rniJ6eX3PHDS&t=1"}],"include_subdomains":true}
-request-id: req_xnU2xyXyTfJbEo
 x-stripe-routing-context-priority-tier: api-testmode
-Content-Length: 26104
+x-stripe-priority-routing-enabled: true
+report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=Agh4ifLeQMaOMekn58ptA8MTmeTlg6wGR9ufe3MDfCozXRevZy7Lki6AryGIQ4_6ijJ25IXnfaWqs5cl&t=1"}],"include_subdomains":true}
+request-id: req_xoLcmIB7V6tFtV
+Content-Length: 24905
 Vary: Origin
-Date: Mon, 19 Oct 2026 19:09:53 GMT
-original-request: req_xnU2xyXyTfJbEo
+Date: Mon, 19 Oct 2026 20:14:08 GMT
 stripe-version: 2020-08-27
-idempotency-key: 15229ffb-76a8-4a2c-b7b7-9042dac44ee7
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
-X-Stripe-Mock-Request: locale=.*&mobile_app_id=.*&tax_region%5Bcity%5D=Los%20Angeles&tax_region%5Bcountry%5D=US&tax_region%5Bline1%5D=456%20Oak%20Ave&tax_region%5Bpostal_code%5D=90001&tax_region%5Bstate%5D=CA&timezone=.*
 
 {
-  "checkout_session_config_id" : "358c0d47-a787-456a-8775-12129f85cc29",
+  "checkout_session_config_id" : "e7ec7fd8-17a3-4018-9150-343e00f35c9c",
   "flags" : {
     "elements_google_pay_block_india_issued_cards" : true,
     "enable_tax_id_suspicious_pattern_check" : false,
@@ -38,7 +34,7 @@ X-Stripe-Mock-Request: locale=.*&mobile_app_id=.*&tax_region%5Bcity%5D=Los%20Ang
     "elements_enable_remove_last_validation" : false,
     "apple_pay_prb_killswitch" : false,
     "link_ece_enable_android_fb" : false,
-    "elements_mobile_card_funding_filtering" : false,
+    "elements_mobile_card_funding_filtering" : true,
     "link_payment_element_minor_signup_ui_updates" : false,
     "guacamole_enable_billing_prefill" : false,
     "link_token_lookup_enabled" : false,
@@ -115,13 +111,13 @@ X-Stripe-Mock-Request: locale=.*&mobile_app_id=.*&tax_region%5Bcity%5D=Los%20Ang
     "link_ulm_screen_height_updates" : true,
     "elements_enable_19_digit_pans" : false,
     "always_show_ece_paypal_recurring_button" : false,
-    "enable_payment_method_api_shop_pay" : false,
+    "enable_payment_method_api_shop_pay" : true,
     "link_payment_element_widget_view_enabled" : true,
     "elements_human_security_enabled" : false,
     "link_enable_white_ece_button_theme" : false,
     "elements_webmcp_tools_enabled" : true,
     "link_in_accordion_layout_available_in_stripejs" : false,
-    "ocs_mobile_enable_analytics_to_r" : false,
+    "ocs_mobile_enable_analytics_to_r" : true,
     "elements_easel_disable_magic_fill" : false,
     "checkout_agent_lpt_steering_optimizations_enabled" : false,
     "avoid_redundant_billing_details_for_klarna" : false,
@@ -133,7 +129,7 @@ X-Stripe-Mock-Request: locale=.*&mobile_app_id=.*&tax_region%5Bcity%5D=Los%20Ang
     "elements_smp_billing_country_by_ip_and_bin" : false,
     "link_disable_cookie_login" : false,
     "elements_disable_express_checkout_button_shop_pay" : false,
-    "payment_element_link_modal_preload_killswitch" : false,
+    "payment_element_link_modal_preload_killswitch" : true,
     "link_enable_pass_checkout_session_id_to_signup" : true,
     "elements_enable_hcaptcha_async_token_logging" : true,
     "checkout_konbini_seven_eleven_enabled" : false,
@@ -142,7 +138,7 @@ X-Stripe-Mock-Request: locale=.*&mobile_app_id=.*&tax_region%5Bcity%5D=Los%20Ang
     "disable_payment_element_if_required_billing_config" : false,
     "elements_enable_link_otp_takeover_in_guacamole" : false,
     "elements_enable_link_spm" : true,
-    "elements_enable_read_allow_redisplay" : true,
+    "elements_enable_read_allow_redisplay" : false,
     "elements_enable_save_for_future_payments_pre_check" : false,
     "checkout_habanero_automatic_tax_legacy_minimal_address_precision" : false,
     "elements_disable_link_instant_debits_in_non_dl_for_non_us_merchants" : false,
@@ -167,7 +163,7 @@ X-Stripe-Mock-Request: locale=.*&mobile_app_id=.*&tax_region%5Bcity%5D=Los%20Ang
     "elements_enable_installments_on_deferred_intents" : true,
     "elements_sepa_debit_instant_microdeposits" : false,
     "elements_ece_send_on_behalf_of" : true,
-    "elements_spm_set_as_default" : false,
+    "elements_spm_set_as_default" : true,
     "elements_does_not_collect_postal_code_for_non_us_card_transactions_killswitch" : false,
     "link_disable_login_if_signed_up_outside_of_elements" : true,
     "elements_enable_link_autofill_prompt_padding_fix" : false,
@@ -178,7 +174,7 @@ X-Stripe-Mock-Request: locale=.*&mobile_app_id=.*&tax_region%5Bcity%5D=Los%20Ang
     "ocs_buyer_xp_enable_payment_element_accordion_box_shadow" : false,
     "elements_enable_customer_address" : true,
     "link_auth_partner_enable_ppac_eligibility_signal" : false,
-    "elements_mobile_allow_stripecardscan" : false,
+    "elements_mobile_allow_stripecardscan" : true,
     "elements_use_checkout_app_id_for_human_security" : false,
     "link_enable_klarna_in_lae" : false,
     "sandboxes_rebrand_testmode" : true,
@@ -224,7 +220,7 @@ X-Stripe-Mock-Request: locale=.*&mobile_app_id=.*&tax_region%5Bcity%5D=Los%20Ang
     "distinctly_link_pe_purchase_protection" : true,
     "link_enable_link_session_key_consumer_person_details" : true,
     "link_auth_partner_delay_android_fb_cookie_login" : false,
-    "elements_ae_hide_name_field" : false,
+    "elements_ae_hide_name_field" : true,
     "legacy_confirmation_tokens" : false,
     "link_auth_partner_enable_ece" : true,
     "elements_easel_disable_elements_inspector_for_pi" : false,
@@ -247,18 +243,13 @@ X-Stripe-Mock-Request: locale=.*&mobile_app_id=.*&tax_region%5Bcity%5D=Los%20Ang
   "total_summary" : {
     "subtotal" : 2000,
     "total_tax_amounts" : [
-      {
-        "amount" : 205,
-        "display_name" : "Sales Tax",
-        "percentage" : 10.25,
-        "inclusive" : false
-      }
+
     ],
-    "due" : 2205,
-    "total" : 2205
+    "due" : 2000,
+    "total" : 2000
   },
   "object" : "checkout.session",
-  "id" : "cs_test_a1Gmy1e6BXD8kNHD6dlTWXPneot7UmADJYOZpib8qhKcCoDZlosGNa1lqp",
+  "id" : "cs_test_a1RlBqnkg4JsHK755Ub6cYpLOFMeaqbJDpqwsRgPGO4cQe1MFtODRJWY4V",
   "integration_currency" : "usd",
   "state" : "ready",
   "saved_payment_method_options" : {
@@ -280,22 +271,18 @@ X-Stripe-Mock-Request: locale=.*&mobile_app_id=.*&tax_region%5Bcity%5D=Los%20Ang
   },
   "merchant_info" : {
     "country" : "US",
-    "display_name" : "Mobile US Tax Test Merchant"
+    "display_name" : "Mobile Example Account"
   },
-  "shipping_address_collection" : {
-    "allowed_countries" : [
-      "US"
-    ]
-  },
+  "shipping_address_collection" : null,
   "apple_pay_preference" : "enabled",
   "billing_address_collection" : "auto",
-  "elements_session_config_id" : "d4cc8187-055a-4b48-9df3-964b579987d1",
+  "elements_session_config_id" : "515bd7dd-51cc-4e95-af4b-5c96e647e0fb",
   "google_pay_preference" : "enabled",
   "payment_method_collection" : "auto",
   "experiments_data" : {
-    "arb_id" : "25eabef1-b5bd-4242-9f76-f9413ddbe612",
+    "arb_id" : "f097cf56-82ba-41fc-a4e7-aa97285ce251",
     "experiment_metadata" : {
-      "seed" : "ade1979326731001a2b46d79e998ce580a7c403003e2da2145ba48d3cb835914",
+      "seed" : "1600e4783cf7e869822579873f8d7fab2f024eba7cb69e076020bdfba1051419",
       "semi_dominant_payment_methods" : [
 
       ],
@@ -396,7 +383,7 @@ X-Stripe-Mock-Request: locale=.*&mobile_app_id=.*&tax_region%5Bcity%5D=Los%20Ang
       "link_growth_ece_ncdv_aa" : "control",
       "link_sign_up_form_container" : "control",
       "ff_elements_ae_recollect_billing_on_spm_removal_eff" : "treatment",
-      "ibp_localized_institutions_with_incentives" : "control_test",
+      "ibp_localized_institutions_with_incentives" : "control",
       "link_pe_signup_ui_variant_comparison_aa" : "control",
       "ff_link_ulm_modal_in_modal" : "control",
       "link_ce_conversion_cookie_aa" : "control",
@@ -454,7 +441,7 @@ X-Stripe-Mock-Request: locale=.*&mobile_app_id=.*&tax_region%5Bcity%5D=Los%20Ang
       ]
     },
     "consumer_found" : null,
-    "hcaptcha_rqdata" : "tiHaNV37SWhJPElEPc7mXYpiaYaAbnExYAK5h8prcXniQBq+p3nRKcaKelkJD4hsPl4luj0BgVzRy1\/G76vL\/M+ehTWMBDsBUaFA\/izFb6ENilD7zQIGijTBc7ZWAnjiDMUD+y+VAh173q9Lsu4JnxdSxNxHaG6hYiepMVm0KPjy7LRWC45v8uWcpeR1azfvz5NuLWaNQ038CeGHTrJPGkqUNAsulsjDcH0Pec+GhdR6Epa97\/9hyA5m2hELCUFjB8X+yy6N0+GuxMKafr06mjj6BanJLuUFd3nKummSUE21oPRzE023\/KHJyQ==d1D8zRsjt\/ro1ALu",
+    "hcaptcha_rqdata" : "kvuqeWZDjubdFRYfI3zGj1AmNOBxBdqwruhh6XyvQirbHf3fSEvPoO7QZE7FXdIQb8E4qmyVmfwCbfBj2Pr1LwEp8UwvfkI5SGl0mpDqWGGErCOqQ3\/qC\/p\/jtH88+7lZTi7btqyxwEyNhtHy45X1KUWy\/SCDYzJV+KpGPMueZ\/sGy3lgBguEN0dSYmmKA4IQ1MaMogxYAsHdtUZwZkFY+VdcOxYjGmiEdH33pSzTvL\/2fpHzTX7YaEoOgPkzCseJgwXOe3IDqNlO1KF4omoDYvbdfo5Q2\/s9YI7v1dRSMvvOePplcuZ\/KxcXA==y8v2Zdfrf1lGL4IE",
     "link_supported_payment_methods_onboarding_enabled" : [
       "CARD",
       "INSTANT_DEBITS"
@@ -476,7 +463,7 @@ X-Stripe-Mock-Request: locale=.*&mobile_app_id=.*&tax_region%5Bcity%5D=Los%20Ang
   "passive_captcha" : {
     "site_key" : "20000000-ffff-ffff-ffff-000000000002",
     "token_refresh_after_seconds" : 21570,
-    "rqdata" : "pQGmrZrSzopT+enHlka\/yCFj2wewgAzMDOLtxkGgYgCYd4l+0M8KfX9O9uji9MTShs6Wb2BduJ143P\/+eEk85jo\/Il8LnOk9V1XQgcrbgCpJX2KrjENIvlWp1+zxp97kEyRp9f3cVI106blyBmU7R95d7JYylm7qlvK9eSYIjTjxXiHxWHpxQR5Llnh04BP\/lilgy4RADbt7B+o9+Tl2vcESVlzjy93pcb5v\/bcbKz8Z7lBRWHuqjGmcGObKWLG2qebdw4FME\/tCoDl1EjkkLrMMwrNegRLOVbHcfSlzU2sL1X9j8f6GHE2UVQ==DB84T7YgU4vf\/TED"
+    "rqdata" : "AoG9bB9bztMaiZv0Q7JbevnJuCghyAjPhpoMYBeXr6artdLtMpz2FhGU4O1JMHc0v5Dq\/gMSDInb8GKdX00enIylw\/NmX8i72v9NiU+FYBNGroEf5vsdslMjUstFjc3HlG8o26jILC3T+h6Ws4M9FGY6fRSzSFLBTa22\/dzpvx57IBywff9iFZ5Ntep29AGlLptPY7tlwjNVvfIQYn\/XjFaU4UZ+gmuhRsti\/sW\/t7BbBPuj+cRyo1h01SLOxbueZ9QnzABpfYG0TL44p\/IK9NMF+XXhgL8W\/WGY+yRjudpO1JmNmX4cNnPeig==6TVH1dHcFMNDiFat"
   },
   "payment_status" : "unpaid",
   "ui_mode" : "mobile_elements",
@@ -490,23 +477,23 @@ X-Stripe-Mock-Request: locale=.*&mobile_app_id=.*&tax_region%5Bcity%5D=Los%20Ang
   ],
   "country_code" : "US",
   "presentment_currency" : "usd",
-  "elements_session_id" : "elements_session_1kRl425OSzU",
+  "elements_session_id" : "elements_session_1O5Dm5Gr0HL",
   "customer" : null,
   "automatic_tax" : {
-    "enabled" : true,
-    "address_source" : "shipping",
+    "enabled" : false,
+    "address_source" : null,
     "status" : "ready"
   },
   "adaptive_pricing_info" : null,
   "items" : [
     {
-      "key" : "checkout_item_VTIXw8BL",
+      "key" : "checkout_item_VTJZW7iF",
       "one_time_price" : {
         "items" : [
           {
             "quantity" : 1,
-            "inner_item_key" : "inner_item_VTIXP0a7",
-            "tax_exclusive" : 205,
+            "inner_item_key" : "inner_item_VTJZXWr5",
+            "tax_exclusive" : 0,
             "amount_details" : {
               "tax_inclusive" : 0,
               "subtotal" : 2000,
@@ -514,53 +501,27 @@ X-Stripe-Mock-Request: locale=.*&mobile_app_id=.*&tax_region%5Bcity%5D=Los%20Ang
               "discount_amounts" : [
 
               ],
-              "total" : 2205,
+              "total" : 2000,
               "tax_amounts" : [
-                {
-                  "amount" : 205,
-                  "tax_rate" : {
-                    "object" : "tax_rate",
-                    "active" : true,
-                    "inclusive" : false,
-                    "rate_type" : "percentage",
-                    "description" : null,
-                    "display_name" : "Sales Tax",
-                    "percentage" : 10.25
-                  },
-                  "taxable_amount" : 2000,
-                  "inclusive" : false
-                }
+
               ],
-              "tax_exclusive" : 205
+              "tax_exclusive" : 0
             },
-            "total" : 2205,
+            "total" : 2000,
             "tax_amounts" : [
-              {
-                "amount" : 205,
-                "tax_rate" : {
-                  "object" : "tax_rate",
-                  "active" : true,
-                  "inclusive" : false,
-                  "rate_type" : "percentage",
-                  "description" : null,
-                  "display_name" : "Sales Tax",
-                  "percentage" : 10.25
-                },
-                "taxable_amount" : 2000,
-                "inclusive" : false
-              }
+
             ],
             "unit_amount" : 2000,
             "subtotal" : 2000,
             "price" : {
-              "id" : "price_1USLwSK8p6Sx2i8aJ1t4xg1x",
+              "id" : "price_1USMwcLu5o3P18ZphCzEPBNN",
               "livemode" : false,
               "active" : false,
               "product" : {
                 "object" : "product",
                 "active" : false,
                 "addons" : null,
-                "id" : "prod_VEfi49EYygiWCU",
+                "id" : "prod_VEMot17s36Wa9v",
                 "images" : [
 
                 ],
@@ -592,7 +553,7 @@ X-Stripe-Mock-Request: locale=.*&mobile_app_id=.*&tax_region%5Bcity%5D=Los%20Ang
           }
         ],
         "subtotal" : 2000,
-        "total" : 2205
+        "total" : 2000
       },
       "type" : "one_time_price"
     }

@@ -440,7 +440,7 @@ final class PaymentElementTest: XCTestCase {
         XCTAssertNil(displayData.billingDetails?.address)
     }
 
-    func testClearPaymentOptionResetsBillingTaxRegionToCountry() async throws {
+    func testClearPaymentOptionSendsEmptyBillingTaxRegion() async throws {
         // Given a selected saved card supplies the billing address for automatic tax
         let (configuration, requestRecorder) = try stubAutomaticTaxSavedCardCheckout()
         let checkout = try await CheckoutController(configuration: configuration)
@@ -451,11 +451,12 @@ final class PaymentElementTest: XCTestCase {
         // When the payment option is cleared
         try await checkout.clearPaymentOption()
 
-        // Then Checkout recalculates tax with only the previous country and clears the selection
+        // Then Checkout lets the backend select the default tax country and clears the selection
         let requests = requestRecorder.requests
         XCTAssertEqual(requests.map(\.kind), [.initSession, .updateSession, .updateSession])
         let updateRequest = try XCTUnwrap(requests.last)
-        XCTAssertEqual(updateRequest.params["tax_region[country]"], "US")
+        XCTAssertEqual(updateRequest.params["tax_region"], "")
+        XCTAssertNil(updateRequest.params["tax_region[country]"])
         XCTAssertNil(updateRequest.params["tax_region[line1]"])
         XCTAssertNil(updateRequest.params["tax_region[line2]"])
         XCTAssertNil(updateRequest.params["tax_region[city]"])

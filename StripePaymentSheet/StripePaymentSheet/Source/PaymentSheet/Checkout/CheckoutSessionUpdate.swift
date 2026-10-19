@@ -12,7 +12,7 @@ import Foundation
 extension CheckoutController {
     enum SessionUpdate {
         case setPromotionCode(String)
-        case setTaxRegion(Address)
+        case setTaxRegion(Address?)
         case setCurrency(String)
 
         var parameters: [String: Any] {
@@ -20,6 +20,9 @@ extension CheckoutController {
             case .setPromotionCode(let code):
                 return ["promotion_code": code]
             case .setTaxRegion(let address):
+                guard let address else {
+                    return ["tax_region": ""]
+                }
                 return ([
                     "tax_region[country]": address.country,
                     "tax_region[line1]": address.line1,

@@ -54,6 +54,33 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         XCTAssertEqual(checkout.session.email, "customer@example.com")
     }
 
+    func testCheckoutClientRejectsPromotionCodeUpdates() async throws {
+        // TODO: Promotion-code support remains outside this migration.
+        // Given an initialized CheckoutClient session
+        let response = try await STPTestingAPIClient.shared.createCheckoutSession()
+        let apiClient = STPAPIClient(publishableKey: response.publishableKey)
+        let initial = try await apiClient.initCheckoutSession(checkoutSessionId: response.id, adaptivePricingAllowed: false)
+
+        // When applying or removing a code, the current endpoint rejects the unsupported parameter
+        for code in ["SAVE25", ""] {
+            do {
+                _ = try await apiClient.updateCheckoutSession(
+                    checkoutSessionId: response.id, parameters: ["promotion_code": code]
+                )
+                XCTFail("Expected CheckoutClient to reject promotion_code")
+            } catch StripeError.apiError(let error) {
+                // Then this is the unsupported-parameter error, rather than a transport or decoding failure
+                XCTAssertEqual(error.code, "parameter_unknown")
+                XCTAssertEqual(error.param, "promotion_code")
+                XCTAssertEqual(error.type, .invalidRequestError)
+                XCTAssertEqual(error.httpStatusCode, 400)
+            }
+        }
+        let latest = try await apiClient.retrieveCheckoutSession(checkoutSessionId: response.id)
+        XCTAssertEqual(latest.status, .open)
+        XCTAssertEqual(latest.makePublicSession().totals.total, initial.makePublicSession().totals.total)
+    }
+
     // TODO(porter): unified mode does not yet support promo codes.
     func disabled_testPromotionCodeApplyEmitsSessionUpdates() async throws {
         let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession(
@@ -170,6 +197,14 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         // Post-tax price, CA sales tax was applied; subtotal unchanged proves the increase is purely tax
         XCTAssertEqual(checkout.session.totals.subtotal.minorUnitsAmount, 5050)
         XCTAssertEqual(checkout.session.totals.total.minorUnitsAmount, 5486)
+
+        // When the billing address is removed, let CheckoutClient resolve the default tax country.
+        try await checkout.updateBillingTaxRegionIfNecessary(address: nil)
+
+        // Then the previous street address no longer supplies the tax calculation.
+        XCTAssertEqual(checkout.session.status, .open)
+        XCTAssertEqual(checkout.session.tax?.status, .requiresBillingAddress)
+        XCTAssertEqual(checkout.session.totals.total.minorUnitsAmount, 5050)
     }
 
     func testLoadUnifiedModeCheckoutSession() async throws {
@@ -256,6 +291,15 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
             checkout.session.totals.total.minorUnitsAmount,
             checkout.session.totals.subtotal.minorUnitsAmount + taxAmount
         )
+
+        // When the shipping address is removed, let CheckoutClient resolve the default tax country.
+        try await checkout.updateShippingAddress(name: nil, address: nil)
+
+        // Then local shipping and the previous address's tax calculation are cleared together.
+        XCTAssertNil(checkout.session.shippingAddress)
+        XCTAssertEqual(checkout.session.status, .open)
+        XCTAssertEqual(checkout.session.tax?.status, .requiresShippingAddress)
+        XCTAssertEqual(checkout.session.totals.total.minorUnitsAmount, 2000)
     }
 
     private func promotionCode(in session: CheckoutController.Session?) -> String? {

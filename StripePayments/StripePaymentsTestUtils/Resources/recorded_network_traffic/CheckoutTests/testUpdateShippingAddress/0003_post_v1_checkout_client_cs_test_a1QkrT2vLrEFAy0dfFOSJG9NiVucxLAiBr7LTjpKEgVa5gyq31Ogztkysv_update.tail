@@ -1,35 +1,35 @@
 POST
-https:\/\/api\.stripe\.com\/v1\/checkout_client\/cs_test_a1z8YrHdebs5uZqCKLixDz9nFwnQUDowp0dXN2tUCKpGuZFku7C3ptlz2X\/update$
+https:\/\/api\.stripe\.com\/v1\/checkout_client\/cs_test_a1QkrT2vLrEFAy0dfFOSJG9NiVucxLAiBr7LTjpKEgVa5gyq31Ogztkysv\/update$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=RE1xKqZbcfDDHKt8ITtJzM_sCJbipwspt8lSfvnkTY09l_0umIdSb_h1Ud3Lohz0RNMmrYY9qrS_Eq3-; report-to csp
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=8w96-naXMGrpH5gULJclhon6XO3NlBCjKS6S8qLJDetRHGgC6OTG2q08daMXFnYQswoFqhdsgxeHSVBX; report-to csp
 Server: nginx
 Cache-Control: no-cache, no-store
-reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=RE1xKqZbcfDDHKt8ITtJzM_sCJbipwspt8lSfvnkTY09l_0umIdSb_h1Ud3Lohz0RNMmrYY9qrS_Eq3-&t=1"
+reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=8w96-naXMGrpH5gULJclhon6XO3NlBCjKS6S8qLJDetRHGgC6OTG2q08daMXFnYQswoFqhdsgxeHSVBX&t=1"
 stripe-notice: You are using an outdated API version (2020-08-27). We recommend upgrading to the latest API version, 2026-09-30.endive. See https://docs.stripe.com/upgrades
 x-wc: 3c3
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
-report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=RE1xKqZbcfDDHKt8ITtJzM_sCJbipwspt8lSfvnkTY09l_0umIdSb_h1Ud3Lohz0RNMmrYY9qrS_Eq3-&t=1"}],"include_subdomains":true}
-request-id: req_smxFmTdqOkkz18
+report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=8w96-naXMGrpH5gULJclhon6XO3NlBCjKS6S8qLJDetRHGgC6OTG2q08daMXFnYQswoFqhdsgxeHSVBX&t=1"}],"include_subdomains":true}
+request-id: req_gFV3D7k3Y9HhWI
 x-stripe-routing-context-priority-tier: api-testmode
-Content-Length: 26061
+Content-Length: 26103
 Vary: Origin
-Date: Mon, 19 Oct 2026 19:09:51 GMT
-original-request: req_smxFmTdqOkkz18
+Date: Mon, 19 Oct 2026 20:09:10 GMT
+original-request: req_gFV3D7k3Y9HhWI
 stripe-version: 2020-08-27
-idempotency-key: 5a4c03b8-8c72-4f24-9104-d74fc57bb1e5
+idempotency-key: c4716409-f282-4632-939a-2e2cb9f66374
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
-X-Stripe-Mock-Request: locale=.*&mobile_app_id=.*&tax_region%5Bcity%5D=San%20Francisco&tax_region%5Bcountry%5D=US&tax_region%5Bline1%5D=123%20Main%20St&tax_region%5Bpostal_code%5D=94105&tax_region%5Bstate%5D=CA&timezone=.*
+X-Stripe-Mock-Request: locale=.*&mobile_app_id=.*&tax_region%5Bcity%5D=Los%20Angeles&tax_region%5Bcountry%5D=US&tax_region%5Bline1%5D=456%20Oak%20Ave&tax_region%5Bpostal_code%5D=90001&tax_region%5Bstate%5D=CA&timezone=.*
 
 {
-  "checkout_session_config_id" : "0418fe32-c400-4edf-b05f-a3ad40bafc65",
+  "checkout_session_config_id" : "dd36c588-969d-4943-8450-7ea7028e427b",
   "flags" : {
     "elements_google_pay_block_india_issued_cards" : true,
     "enable_tax_id_suspicious_pattern_check" : false,
@@ -245,20 +245,20 @@ X-Stripe-Mock-Request: locale=.*&mobile_app_id=.*&tax_region%5Bcity%5D=San%20Fra
     "elements_human_security_replaces_hcaptcha" : false
   },
   "total_summary" : {
-    "subtotal" : 5050,
+    "subtotal" : 2000,
     "total_tax_amounts" : [
       {
-        "amount" : 436,
+        "amount" : 205,
         "display_name" : "Sales Tax",
-        "percentage" : 8.625,
+        "percentage" : 10.25,
         "inclusive" : false
       }
     ],
-    "due" : 5486,
-    "total" : 5486
+    "due" : 2205,
+    "total" : 2205
   },
   "object" : "checkout.session",
-  "id" : "cs_test_a1z8YrHdebs5uZqCKLixDz9nFwnQUDowp0dXN2tUCKpGuZFku7C3ptlz2X",
+  "id" : "cs_test_a1QkrT2vLrEFAy0dfFOSJG9NiVucxLAiBr7LTjpKEgVa5gyq31Ogztkysv",
   "integration_currency" : "usd",
   "state" : "ready",
   "saved_payment_method_options" : {
@@ -282,14 +282,18 @@ X-Stripe-Mock-Request: locale=.*&mobile_app_id=.*&tax_region%5Bcity%5D=San%20Fra
     "country" : "US",
     "display_name" : "Mobile US Tax Test Merchant"
   },
-  "shipping_address_collection" : null,
+  "shipping_address_collection" : {
+    "allowed_countries" : [
+      "US"
+    ]
+  },
   "apple_pay_preference" : "enabled",
-  "billing_address_collection" : "required",
-  "elements_session_config_id" : "99c37a56-a516-4751-9273-e2694f4437fe",
+  "billing_address_collection" : "auto",
+  "elements_session_config_id" : "869d269e-e2e3-4463-967b-90fb7000e8d2",
   "google_pay_preference" : "enabled",
   "payment_method_collection" : "auto",
   "experiments_data" : {
-    "arb_id" : "09ef4697-b995-4546-a080-1e3833c85ae4",
+    "arb_id" : "25c3ffe4-e1db-4baf-880a-2dd8475ea744",
     "experiment_metadata" : {
       "seed" : "ade1979326731001a2b46d79e998ce580a7c403003e2da2145ba48d3cb835914",
       "semi_dominant_payment_methods" : [
@@ -450,7 +454,7 @@ X-Stripe-Mock-Request: locale=.*&mobile_app_id=.*&tax_region%5Bcity%5D=San%20Fra
       ]
     },
     "consumer_found" : null,
-    "hcaptcha_rqdata" : "srTPVRlTepw7nxoN+Rg5k\/THCiREggQ\/JLEHLaa93DFZGp5vogVPrHdrRDClYE5QSN3BN0otRcffQ7g+w5xB1YJlmhgxol6zNlh9j1gzxs7ZRboHClQDyxS8J1RBUz3rsBcOMGCRjdjDypmtjksi6DruvEJ6PRpKUclQmGss+1QW2VUQzu8An\/TAyhBMNsFNnjQUltEzcGjxGrp3cyA85VZHl4N2TyoZpRRuvRo7Z64ClOOOM\/8YE5L8zrcvHaoEp71OEDhS+vUNCxKAOdZ3hDItGunWYeGYRHPrRPxlPteHQLBRCFpY0P4Idg==fGQ\/3E7BoXTLZbdb",
+    "hcaptcha_rqdata" : "ldGAfalP1LbmSWsl8ZmPOtGqKgqwvesRKCxPEqJvYtRbhDfaglrXDqqUn5LkeA5\/uImjk0TCwoWNM4O9Io47q3f4OAgzV5+cQj5FLwcReHVa87rfAy0z77kuMpnSM5OuGQxxGjPWkyKG\/EldVXYxesumzVT3Fr7Ran3WEideFYl3ugbSBw9gPG9nBAZFXmP4AKA2ysROb89nV4uaLUNQRQup44jetlSAsm3L\/vdXksRRT56ULgUmpD+crOIP07sart\/ANIUfCbxJnP3r0tZ6y8fMqrL\/EkZt4CeRqsMtXk030R\/Yz1oIqMryuw==oOyiZ9Hw\/W6J2Vm2",
     "link_supported_payment_methods_onboarding_enabled" : [
       "CARD",
       "INSTANT_DEBITS"
@@ -472,7 +476,7 @@ X-Stripe-Mock-Request: locale=.*&mobile_app_id=.*&tax_region%5Bcity%5D=San%20Fra
   "passive_captcha" : {
     "site_key" : "20000000-ffff-ffff-ffff-000000000002",
     "token_refresh_after_seconds" : 21570,
-    "rqdata" : "LpQKqHCKCyrEb37W9cUvtgwZ8P5h5FNipdEnJ6HaC6AwU8TIR3Ts+WrhKniByI+gnphAECCTa1zhHe+WD0\/D+ZPzAKbcpHqSh9\/fG8MgA+bC1itwlfPaU3Zje5GZ5VWBBZRQWhssmBpVoGkPKKFjpP6afZiBHHkbFQiBS5RzVzdlfJHCb9zzUWOrTWksCix\/3AcwoHSaB7uJUytRl2FczJcqcOPpjo9eU3o2xFeyL67tyz4bphbfjWS\/dwC5c8Q7wXh2fh+vQj9AoCt1vRMAWYTgnuZHU9crXOiJTkN2K\/vYTGFxsEJiW1PRmA==1gFhphy+wLJ5cLQN"
+    "rqdata" : "k+UEkLNgj8vJ+o9gD8zLmLMlgTzl1FTkIiPprHEwQni\/Y9lRf31\/DSD2VTRMiA0oN1k4nEnqfG00AscBUuyzouVOOpAjynPqI7FEd6RWyPJElPVE3\/H6WO7FBBmnDoO7HXX8mwqoAGU7ah9EWXBLy2URUYWF9FcK0hWT2aelKCxOZUJ0dVGcNnSaGpDP2FJujO7066Eei2WgEp8VWHOptMvaF8rP1UeF5JAeTQgBb37XXe3yFXU3te23Kd0BUF7RYttzT0t489WXZJW\/V10mZ8\/ERaWs+u8d2f+XqoDKTo5oJ8a0cvcpVsc2ig==fI\/GhCfgniq8HZtZ"
   },
   "payment_status" : "unpaid",
   "ui_mode" : "mobile_elements",
@@ -486,34 +490,34 @@ X-Stripe-Mock-Request: locale=.*&mobile_app_id=.*&tax_region%5Bcity%5D=San%20Fra
   ],
   "country_code" : "US",
   "presentment_currency" : "usd",
-  "elements_session_id" : "elements_session_12xEe9qmDxF",
+  "elements_session_id" : "elements_session_1WUldh8BxSF",
   "customer" : null,
   "automatic_tax" : {
     "enabled" : true,
-    "address_source" : "billing",
+    "address_source" : "shipping",
     "status" : "ready"
   },
   "adaptive_pricing_info" : null,
   "items" : [
     {
-      "key" : "checkout_item_VTIXn48t",
+      "key" : "checkout_item_VTJU2bXS",
       "one_time_price" : {
         "items" : [
           {
             "quantity" : 1,
-            "inner_item_key" : "inner_item_VTIXTrWP",
-            "tax_exclusive" : 436,
+            "inner_item_key" : "inner_item_VTJUs9E8",
+            "tax_exclusive" : 205,
             "amount_details" : {
               "tax_inclusive" : 0,
-              "subtotal" : 5050,
+              "subtotal" : 2000,
               "discount" : 0,
               "discount_amounts" : [
 
               ],
-              "total" : 5486,
+              "total" : 2205,
               "tax_amounts" : [
                 {
-                  "amount" : 436,
+                  "amount" : 205,
                   "tax_rate" : {
                     "object" : "tax_rate",
                     "active" : true,
@@ -521,18 +525,18 @@ X-Stripe-Mock-Request: locale=.*&mobile_app_id=.*&tax_region%5Bcity%5D=San%20Fra
                     "rate_type" : "percentage",
                     "description" : null,
                     "display_name" : "Sales Tax",
-                    "percentage" : 8.625
+                    "percentage" : 10.25
                   },
-                  "taxable_amount" : 5050,
+                  "taxable_amount" : 2000,
                   "inclusive" : false
                 }
               ],
-              "tax_exclusive" : 436
+              "tax_exclusive" : 205
             },
-            "total" : 5486,
+            "total" : 2205,
             "tax_amounts" : [
               {
-                "amount" : 436,
+                "amount" : 205,
                 "tax_rate" : {
                   "object" : "tax_rate",
                   "active" : true,
@@ -540,16 +544,16 @@ X-Stripe-Mock-Request: locale=.*&mobile_app_id=.*&tax_region%5Bcity%5D=San%20Fra
                   "rate_type" : "percentage",
                   "description" : null,
                   "display_name" : "Sales Tax",
-                  "percentage" : 8.625
+                  "percentage" : 10.25
                 },
-                "taxable_amount" : 5050,
+                "taxable_amount" : 2000,
                 "inclusive" : false
               }
             ],
-            "unit_amount" : 5050,
-            "subtotal" : 5050,
+            "unit_amount" : 2000,
+            "subtotal" : 2000,
             "price" : {
-              "id" : "price_1USLwQK8p6Sx2i8az5JnnDuP",
+              "id" : "price_1USMrpK8p6Sx2i8a9NPZrtch",
               "livemode" : false,
               "active" : false,
               "product" : {
@@ -573,22 +577,22 @@ X-Stripe-Mock-Request: locale=.*&mobile_app_id=.*&tax_region%5Bcity%5D=San%20Fra
               "custom_unit_amount" : null,
               "transform_quantity" : null,
               "type" : "one_time",
-              "unit_amount" : 5050,
-              "unit_amount_decimal" : "5050",
+              "unit_amount" : 2000,
+              "unit_amount_decimal" : "2000",
               "object" : "price",
               "billing_scheme" : "per_unit",
               "recurring" : null,
               "currency" : "usd",
               "tiers_mode" : null
             },
-            "unit_amount_decimal" : "5050.0",
+            "unit_amount_decimal" : "2000.0",
             "adjustable_quantity" : null,
             "tax_inclusive" : 0,
             "unit_label" : null
           }
         ],
-        "subtotal" : 5050,
-        "total" : 5486
+        "subtotal" : 2000,
+        "total" : 2205
       },
       "type" : "one_time_price"
     }
