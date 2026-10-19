@@ -621,7 +621,7 @@ extension PaymentSheetViewController: SavedPaymentOptionsViewControllerDelegate 
         } else {
             buyButton.update(status: buyButtonEnabledForSavedPayments())
         }
-        navigationBar.additionalButton.configureCommonEditButton(isEditingPaymentMethods: savedPaymentOptionsViewController.isRemovingPaymentMethods, appearance: configuration.appearance)
+        navigationBar.configureEditButton(isEditingPaymentMethods: savedPaymentOptionsViewController.isRemovingPaymentMethods)
         navigationBar.additionalButton.addTarget(
             self,
             action: #selector(didSelectEditSavedPaymentMethodsButton),

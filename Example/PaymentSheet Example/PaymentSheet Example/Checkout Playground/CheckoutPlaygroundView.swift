@@ -53,6 +53,8 @@ struct CheckoutPlaygroundView: View {
                             defaultShippingAddressOption: $viewModel.defaultShippingAddressOption,
                             customDefaultShippingAddress: $viewModel.customDefaultShippingAddress,
                             billingAddressCollection: $viewModel.billingAddressCollection,
+                            defaultBillingAddressOption: $viewModel.defaultBillingAddressOption,
+                            customDefaultBillingAddress: $viewModel.customDefaultBillingAddress,
                             automaticTax: $viewModel.automaticTax,
                             checkoutSessionPaymentMethodSave: $viewModel.checkoutSessionPaymentMethodSave,
                             checkoutSessionPaymentMethodRemove: $viewModel.checkoutSessionPaymentMethodRemove,
@@ -65,7 +67,6 @@ struct CheckoutPlaygroundView: View {
                             applePayDisplay: $viewModel.expressCheckoutElement.applePayDisplay,
                             applePayButtonType: $viewModel.expressCheckoutElement.applePayButtonType,
                             linkDisplay: $viewModel.expressCheckoutElement.linkDisplay,
-                            paymentMethodOrder: $viewModel.expressCheckoutElement.paymentMethodOrder,
                             appearance: $viewModel.expressCheckoutElement.appearance
                         )
 
@@ -105,6 +106,7 @@ struct CheckoutPlaygroundView: View {
                             emailSettings: viewModel.resolvedEmail,
                             shippingAddressCollection: viewModel.shippingAddressCollection,
                             defaultShippingAddress: viewModel.defaultShippingAddress,
+                            defaultBillingAddress: viewModel.defaultBillingAddress,
                             adaptivePricing: true,
                             integrationType: viewModel.integrationType,
                             expressCheckoutElementSettings: viewModel.expressCheckoutElement,
@@ -117,6 +119,7 @@ struct CheckoutPlaygroundView: View {
                             emailSettings: viewModel.resolvedEmail,
                             shippingAddressCollection: viewModel.shippingAddressCollection,
                             defaultShippingAddress: viewModel.defaultShippingAddress,
+                            defaultBillingAddress: viewModel.defaultBillingAddress,
                             adaptivePricing: true,
                             integrationType: viewModel.integrationType,
                             expressCheckoutElementSettings: viewModel.expressCheckoutElement,

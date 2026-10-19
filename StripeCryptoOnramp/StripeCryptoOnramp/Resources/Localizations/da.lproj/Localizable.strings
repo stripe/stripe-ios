@@ -4,6 +4,8 @@
 
 "Add documents" = "Tilføj dokumenter";
 
+"Allow camera access in Settings to take a photo." = "Tillad kameraadgang i Indstillinger for at tage et billede.";
+
 "Answer" = "Svar";
 
 "Choose File…" = "Vælg fil";
@@ -22,9 +24,13 @@
 
 "Make sure your document meets following requirements." = "Sørg for, at dit dokument opfylder følgende krav.";
 
+"Please select your Apple Pay payment method again to continue." = "Vælg din Apple Pay-betalingsmetode igen for at fortsætte.";
+
 "Please try again later." = "Prøv igen senere.";
 
 "Submitted for review" = "Indsendt til gennemgang";
+
+"Take Photo…" = "Tag billede …";
 
 "Tell us about your source of funds" = "Fortæl os om kilden til dine midler";
 

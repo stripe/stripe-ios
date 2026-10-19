@@ -42,6 +42,22 @@ final class ExpressCheckoutElementViewSnapshotTests: STPSnapshotTestCase {
         verify(makeView(appearance: appearance))
     }
 
+    func testTwoColumnLayoutWithoutEmail() {
+        var appearance = ExpressCheckoutElement.Configuration.Appearance()
+        appearance.buttonLayout.maxColumns = 2
+        appearance.buttonLayout.maxRows = 1
+
+        verify(makeView(appearance: appearance))
+    }
+
+    func testTwoColumnLayoutWithEmail() {
+        var appearance = ExpressCheckoutElement.Configuration.Appearance()
+        appearance.buttonLayout.maxColumns = 2
+        appearance.buttonLayout.maxRows = 1
+
+        verify(makeView(appearance: appearance, linkEmail: "this.is.a.very.long.email.address@example.com"))
+    }
+
     func testThreeButtonsInTwoByTwoGrid() {
         var appearance = ExpressCheckoutElement.Configuration.Appearance()
         appearance.buttonLayout.maxColumns = 2
@@ -70,15 +86,25 @@ final class ExpressCheckoutElementViewSnapshotTests: STPSnapshotTestCase {
 
     // MARK: - Helpers
 
+    private struct LinkAccountStub: PaymentSheetLinkAccountInfoProtocol {
+        let email: String
+        let redactedPhoneNumber: String? = nil
+        let isRegistered = true
+        let sessionState: PaymentSheetLinkAccount.SessionState = .verified
+        let consumerSessionClientSecret: String? = nil
+        let linkSessionKey: String? = nil
+    }
+
     private func makeView(
         appearance: ExpressCheckoutElement.Configuration.Appearance = .init(),
-        buttons: [ExpressCheckoutElement.PaymentMethod]? = nil
+        buttons: [ExpressCheckoutElement.PaymentMethod]? = nil,
+        linkEmail: String? = nil
     ) -> ExpressCheckoutElementUIView {
         var configuration = ExpressCheckoutElement.Configuration(completion: { _ in })
         configuration.applePayConfiguration = .init(merchantId: "merchant.com.example")
         configuration.appearance = appearance
 
-        let session = CheckoutTestHelpers.makeSessionWithWalletTypes(["link", "apple_pay"])
+        let session = CheckoutTestHelpers.makeSessionWithWalletTypes(["link", "apple_pay"], customerEmail: "jenny@example.com")
             .makePublicSession(expressCheckoutConfiguration: configuration)
         let view = ExpressCheckoutElementUIView(
             session: session,
@@ -87,8 +113,14 @@ final class ExpressCheckoutElementViewSnapshotTests: STPSnapshotTestCase {
         )
         view.update(
             with: session,
-            buttons: buttons ?? session.availableExpressCheckoutPaymentMethods
+            buttons: buttons ?? session.availableExpressCheckoutPaymentMethods.compactMap { ExpressCheckoutElement.PaymentMethod(rawValue: $0) }
         )
+        let stackView = view.subviews.first as? UIStackView
+        for row in stackView?.arrangedSubviews ?? [] {
+            for case let linkButton as PayWithLinkButton in (row as? UIStackView)?.arrangedSubviews ?? [] {
+                linkButton.linkAccount = linkEmail.map { LinkAccountStub(email: $0) }
+            }
+        }
         view.setNeedsLayout()
         view.layoutIfNeeded()
         return view

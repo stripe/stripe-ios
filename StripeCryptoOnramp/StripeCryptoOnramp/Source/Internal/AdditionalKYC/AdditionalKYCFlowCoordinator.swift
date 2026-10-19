@@ -61,7 +61,7 @@ final class AdditionalKYCFlowCoordinator: NSObject, UIAdaptivePresentationContro
     private let linkAccountInfo: PaymentSheetLinkAccountInfoProtocol
     private let appearance: LinkAppearance
     private var navigationController: UINavigationController?
-    private var continuation: CheckedContinuation<FulfillKYCRequirementResult, Error>?
+    private var continuation: CheckedContinuation<FulfillKYCRequirementsResult, Error>?
     private var didSubmit = false
     private var isSubmitting = false
     private var fulfillmentTask: Task<Void, Error>?
@@ -121,7 +121,7 @@ final class AdditionalKYCFlowCoordinator: NSObject, UIAdaptivePresentationContro
     /// - Parameter presentingViewController: The visible view controller that presents the flow.
     /// - Returns: Whether the requirement was submitted, is pending review, was canceled, or is no longer required.
     /// Throws if requirements cannot be loaded, the requirement is unsupported, or collection cannot be presented.
-    func present(from presentingViewController: UIViewController) async throws -> FulfillKYCRequirementResult {
+    func present(from presentingViewController: UIViewController) async throws -> FulfillKYCRequirementsResult {
         let response = try await apiClient.retrieveKYCRequirements(linkAccountInfo: linkAccountInfo)
         try Task.checkCancellation()
 
@@ -347,7 +347,7 @@ final class AdditionalKYCFlowCoordinator: NSObject, UIAdaptivePresentationContro
         return .Localized.previousDocumentIssue
     }
 
-    private func finish(_ result: Result<FulfillKYCRequirementResult, Error>) {
+    private func finish(_ result: Result<FulfillKYCRequirementsResult, Error>) {
         guard let continuation else { return }
         self.continuation = nil
         fulfillmentTask?.cancel()

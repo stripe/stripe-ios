@@ -8,20 +8,18 @@
 import UIKit
 
 /// Container view controller that displays a list of KYC fields with the optional ability to initiate editing of the address.
-final class VerifyKYCViewController: BottomSheetViewController {
+@MainActor
+final class VerifyKYCViewController {
+
     private weak var contentViewController: VerifyKYCContentViewController?
+
+    let sheetContainer: any PaymentSheetContainer
 
     /// Closure called when a user takes action (confirm, cancel, or initiate editing of the address).
     var onResult: ((VerifyKYCResult) -> Void)? {
         didSet {
             contentViewController?.onResult = onResult
         }
-    }
-
-    // MARK: - BottomSheetViewController
-
-    override var sheetCornerRadius: CGFloat? {
-        LinkUI.largeCornerRadius
     }
 
     // MARK: - VerifyKYCViewController
@@ -33,28 +31,12 @@ final class VerifyKYCViewController: BottomSheetViewController {
     init(info: VerifyKYCInfo, appearance: LinkAppearance) {
         let contentViewController = VerifyKYCContentViewController(info: info, appearance: appearance)
         self.contentViewController = contentViewController
-
-        super.init(
-            contentViewController: contentViewController,
-            appearance: LinkUI.appearance,
-            didCancelNative3DS2: {}
-        )
-
-        appearance.style.configure(self)
+        sheetContainer = LinkSheetContainerFactory.make(contentViewController: contentViewController)
+        appearance.style.configure(sheetContainer)
     }
 
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
-    required init(contentViewController: any BottomSheetContentViewController, appearance: PaymentSheet.Appearance, didCancelNative3DS2: @escaping () -> Void) {
-        fatalError("init(contentViewController:appearance:didCancelNative3DS2:) has not been implemented")
-    }
-
-    // MARK: - BottomSheetViewController
-
-    override func didTapOrSwipeToDismiss() {
-        contentViewController?.didTapOrSwipeToDismiss()
+    func dismiss(animated: Bool, completion: (() -> Void)? = nil) {
+        sheetContainer.dismiss(animated: animated, completion: completion)
     }
 }
 

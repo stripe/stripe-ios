@@ -47,7 +47,7 @@ struct SourceOfFundsView: View {
                     .multilineTextAlignment(.center)
                     .accessibilityAddTraits(.isHeader)
 
-                Text(String.Localized.sourceOfFundsDocumentsExplanation)
+                Text(model.configuration.documentCollectionPrompt ?? String.Localized.sourceOfFundsDocumentsExplanation)
                     .typography(.bodyMedium)
                     .foregroundColor(.textPrimary)
                     .frame(maxWidth: .infinity, alignment: .leading)

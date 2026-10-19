@@ -4,6 +4,8 @@
 
 "Add documents" = "Προσθήκη εγγράφων";
 
+"Allow camera access in Settings to take a photo." = "Επιτρέψτε την πρόσβαση στην κάμερα στις Ρυθμίσεις για να τραβήξετε μια φωτογραφία.";
+
 "Answer" = "Απάντηση";
 
 "Choose File…" = "Επιλογή αρχείου...";
@@ -22,9 +24,13 @@
 
 "Make sure your document meets following requirements." = "Βεβαιωθείτε ότι το έγγραφό σας πληροί τις παρακάτω απαιτήσεις.";
 
+"Please select your Apple Pay payment method again to continue." = "Παρακαλούμε επιλέξτε ξανά τη μέθοδο πληρωμής Apple Pay για να συνεχίσετε.";
+
 "Please try again later." = "Δοκιμάστε ξανά αργότερα.";
 
 "Submitted for review" = "Υποβλήθηκε για έλεγχο";
+
+"Take Photo…" = "Λήψη φωτογραφίας…";
 
 "Tell us about your source of funds" = "Πείτε μας για την πηγή των χρημάτων σας";
 

@@ -28,6 +28,7 @@ public final class ExpressCheckoutElementUIView: UIView {
     private let apiClient: STPAPIClient
     private let analyticsClient: STPAnalyticsClientProtocol
     private let stackView = UIStackView()
+    private var displayedPaymentMethods: [ExpressCheckoutElement.PaymentMethod] = []
     private var hasReportedInit = false
     private var linkBrand: LinkBrand
     private var session: CheckoutController.Session
@@ -76,7 +77,11 @@ public final class ExpressCheckoutElementUIView: UIView {
         buttons: [ExpressCheckoutElement.PaymentMethod]
     ) {
         self.session = session
-        linkBrand = session.elementsSession.linkBrand ?? .link
+        let updatedLinkBrand = session.elementsSession.linkBrand ?? .link
+        // Recreating PKPaymentButton on unrelated session updates causes it to flicker.
+        guard buttons != displayedPaymentMethods || updatedLinkBrand != linkBrand else { return }
+        displayedPaymentMethods = buttons
+        linkBrand = updatedLinkBrand
         layoutButtons(buttons)
         invalidateIntrinsicContentSize()
     }
@@ -98,7 +103,7 @@ public final class ExpressCheckoutElementUIView: UIView {
             analytic: PaymentSheetAnalytic(
                 event: .expressCheckoutElementInit,
                 additionalParams: [
-                    "ordered_lpms": session.availableExpressCheckoutPaymentMethods.map(\.analyticsValue).joined(separator: ","),
+                    "ordered_lpms": session.availableExpressCheckoutPaymentMethods.joined(separator: ","),
                     "ece_config": [
                         "link_visibility": configuration.linkConfiguration.display.rawValue,
                         "apple_pay_visibility": configuration.applePayConfiguration?.display.rawValue ?? "never",
@@ -148,14 +153,9 @@ public final class ExpressCheckoutElementUIView: UIView {
         for buttons: [ExpressCheckoutElement.PaymentMethod],
         layout: ExpressCheckoutElement.Configuration.Appearance.ButtonLayout
     ) -> [[ExpressCheckoutElement.PaymentMethod]] {
-        let visibleButtonCount = calculateVisibleButtonCount(
-            buttonCount: buttons.count,
-            maxColumns: layout.maxColumns,
-            maxRows: layout.maxRows
-        )
-        let visibleButtons = Array(buttons.prefix(visibleButtonCount))
+        let visibleButtons = ExpressCheckoutElementUtilities.visiblePaymentMethods(for: buttons, layout: layout)
         let columnCount = calculateColumnCount(
-            buttonCount: visibleButtonCount,
+            buttonCount: visibleButtons.count,
             maxRows: layout.maxRows
         )
 
@@ -169,19 +169,6 @@ public final class ExpressCheckoutElementUIView: UIView {
             rowStartIndex = rowEndIndex
         }
         return rows
-    }
-
-    static func calculateVisibleButtonCount(
-        buttonCount: Int,
-        maxColumns: Int?,
-        maxRows: Int?
-    ) -> Int {
-        // A single limit affects how the buttons are arranged, but it cannot
-        // limit the grid's total capacity without the other dimension.
-        guard let maxColumns, let maxRows else {
-            return buttonCount
-        }
-        return min(maxRows * maxColumns, buttonCount)
     }
 
     static func calculateColumnCount(buttonCount: Int, maxRows: Int?) -> Int {
@@ -260,17 +247,6 @@ public final class ExpressCheckoutElementUIView: UIView {
                 presentationWindow: window
             ) else { return }
             self.configuration.completion(result)
-        }
-    }
-}
-
-private extension ExpressCheckoutElement.PaymentMethod {
-    var analyticsValue: String {
-        switch self {
-        case .applePay:
-            return "apple_pay"
-        case .link:
-            return "link"
         }
     }
 }

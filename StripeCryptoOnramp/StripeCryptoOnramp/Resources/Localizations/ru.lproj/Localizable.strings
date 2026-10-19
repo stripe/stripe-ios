@@ -4,6 +4,8 @@
 
 "Add documents" = "Добавить документы";
 
+"Allow camera access in Settings to take a photo." = "Чтобы сделать фото, предоставьте доступ к камере в настройках.";
+
 "Answer" = "Ответить";
 
 "Choose File…" = "Выбрать файл";
@@ -22,9 +24,13 @@
 
 "Make sure your document meets following requirements." = "Убедитесь, что документ соответствует следующим требованиям.";
 
+"Please select your Apple Pay payment method again to continue." = "Выберите способ оплаты Apple Pay еще раз, чтобы продолжить.";
+
 "Please try again later." = "Повторите попытку позже.";
 
 "Submitted for review" = "Отправлено на рассмотрение";
+
+"Take Photo…" = "Сделать фото…";
 
 "Tell us about your source of funds" = "Укажите источник ваших средств";
 

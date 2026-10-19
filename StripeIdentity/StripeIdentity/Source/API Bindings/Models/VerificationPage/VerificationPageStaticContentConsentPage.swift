@@ -15,6 +15,7 @@ extension StripeAPI {
         let declineButtonText: String
         let privacyPolicy: String
         let title: String?
+        let subtitle: String?
         let scrollToContinueButtonText: String
         let lines: [VerificationPageStaticConsentLineContent]
     }

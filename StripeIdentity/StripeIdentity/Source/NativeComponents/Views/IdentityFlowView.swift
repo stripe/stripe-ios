@@ -39,6 +39,7 @@ class IdentityFlowView: UIView {
             bottom: -8,
             trailing: 0
         )
+        static let buttonBottomSpacing: CGFloat = 16
         static let stackViewSpacing: CGFloat = 8
 
         static func buttonConfiguration(
@@ -87,6 +88,7 @@ class IdentityFlowView: UIView {
         let contentViewModel: Content
         let buttons: [Button]
         var buttonTopContentViewModel: HTMLTextView.ViewModel?
+        var buttonBottomContentView: UIView?
         var scrollViewDelegate: UIScrollViewDelegate?
         var flowViewDelegate: IdentityFlowViewDelegate?
     }
@@ -133,6 +135,7 @@ class IdentityFlowView: UIView {
     }()
 
     private let buttonTopContentView = HTMLTextView()
+    private let buttonBottomContentContainer = UIView()
 
     private var flowViewDelegate: IdentityFlowViewDelegate?
 
@@ -178,6 +181,7 @@ class IdentityFlowView: UIView {
             secondaryButtonStyle: secondaryButtonStyle
         )
         try configureButtonTop(with: viewModel.buttonTopContentViewModel)
+        configureButtonBottom(with: viewModel.buttonBottomContentView)
         flowViewDelegate = viewModel.flowViewDelegate
         if let scrollViewDelegate = viewModel.scrollViewDelegate {
             scrollView.delegate = scrollViewDelegate
@@ -253,6 +257,7 @@ extension IdentityFlowView {
         buttonTopBackgroundView.addSubview(buttonTopContentView)
 
         addSubview(buttonBackgroundView)
+        buttonStackView.addArrangedSubview(buttonBottomContentContainer)
         buttonBackgroundView.addAndPinSubviewToSafeArea(
             buttonStackView,
             insets: Style.buttonInsets
@@ -275,9 +280,9 @@ extension IdentityFlowView {
             buttonTopBackgroundView.trailingAnchor.constraint(equalTo: trailingAnchor),
             buttonTopBackgroundView.bottomAnchor.constraint(equalTo: buttonBackgroundView.topAnchor),
 
-            buttonTopContentView.centerXAnchor.constraint(equalTo: buttonTopBackgroundView.centerXAnchor),
+            buttonTopContentView.centerXAnchor.constraint(equalTo: safeAreaLayoutGuide.centerXAnchor),
             // Limit width without pinning
-            buttonTopContentView.widthAnchor.constraint(lessThanOrEqualTo: buttonTopBackgroundView.widthAnchor, constant: -(Style.buttonInsets.leading + Style.buttonInsets.trailing)),
+            buttonTopContentView.widthAnchor.constraint(lessThanOrEqualTo: safeAreaLayoutGuide.widthAnchor, constant: -(Style.buttonInsets.leading + Style.buttonInsets.trailing)),
             buttonTopContentView.topAnchor.constraint(equalTo: buttonTopBackgroundView.topAnchor, constant: Style.buttontopInsets.top),
             buttonTopContentView.bottomAnchor.constraint(equalTo: buttonTopBackgroundView.bottomAnchor, constant: Style.buttontopInsets.bottom),
 
@@ -345,7 +350,7 @@ extension IdentityFlowView {
                 target: self,
                 action: #selector(didTapButton(button:))
             )
-            buttonStackView.addArrangedSubview(button)
+            buttonStackView.insertArrangedSubview(button, at: index)
             return button
         }
     }
@@ -386,6 +391,29 @@ extension IdentityFlowView {
         }
     }
 
+    fileprivate func configureButtonBottom(with contentView: UIView?) {
+        if buttonBottomContentContainer.subviews.first !== contentView {
+            buttonBottomContentContainer.subviews.forEach { $0.removeFromSuperview() }
+
+            if let contentView = contentView {
+                buttonBottomContentContainer.addSubview(contentView)
+                contentView.translatesAutoresizingMaskIntoConstraints = false
+                NSLayoutConstraint.activate([
+                    contentView.topAnchor.constraint(equalTo: buttonBottomContentContainer.topAnchor),
+                    contentView.leadingAnchor.constraint(greaterThanOrEqualTo: buttonBottomContentContainer.leadingAnchor),
+                    contentView.trailingAnchor.constraint(lessThanOrEqualTo: buttonBottomContentContainer.trailingAnchor),
+                    contentView.centerXAnchor.constraint(equalTo: buttonBottomContentContainer.centerXAnchor),
+                    contentView.bottomAnchor.constraint(equalTo: buttonBottomContentContainer.bottomAnchor),
+                ])
+            }
+        }
+
+        buttonBottomContentContainer.isHidden = contentView == nil
+        if contentView != nil, let lastButton = buttons.last {
+            buttonStackView.setCustomSpacing(Style.buttonBottomSpacing, after: lastButton)
+        }
+    }
+
     static func privacyPolicyLineContentStyle() -> HTMLStyle {
         let boldFont = IdentityUI.preferredFont(forTextStyle: UIFont.TextStyle.caption1, weight: .bold)
         let contentColor = IdentityUI.htmlLineTextColor
@@ -399,7 +427,7 @@ extension IdentityFlowView {
             h5Font: boldFont,
             h6Font: boldFont,
             isLinkUnderlined: true,
-            shouldCenterText: false,
+            shouldCenterText: true,
             linkColor: contentColor
         )
     }
@@ -412,6 +440,7 @@ extension IdentityFlowView.ViewModel {
         buttonText: String,
         state: Button.State = .enabled,
         buttonTopContentViewModel: HTMLTextView.ViewModel? = nil,
+        buttonBottomContentView: UIView? = nil,
         didTapButton: @escaping () -> Void
     ) {
         self.init(
@@ -425,7 +454,8 @@ extension IdentityFlowView.ViewModel {
                     didTap: didTapButton
                 ),
             ],
-            buttonTopContentViewModel: buttonTopContentViewModel
+            buttonTopContentViewModel: buttonTopContentViewModel,
+            buttonBottomContentView: buttonBottomContentView
         )
     }
 
@@ -482,15 +512,42 @@ extension StripeUICore.Button {
             primaryButtonStyle: primaryButtonStyle,
             secondaryButtonStyle: secondaryButtonStyle
         )
-        if LiquidGlassDetector.isEnabledInMerchantApp {
-            ios26_applyCapsuleCornerConfiguration()
+        let minimumHeight: CGFloat?
+        switch (viewModel.isPrimary, primaryButtonStyle, secondaryButtonStyle) {
+        case (true, .custom(_, _, let height), _), (false, _, .custom(_, _, let height)):
+            minimumHeight = height
+        default:
+            minimumHeight = nil
         }
+        applyIdentityButtonShape(minimumHeight: minimumHeight)
         self.isEnabled = viewModel.state == .enabled
         self.isLoading = viewModel.state == .loading
+    }
+
+    private func updateMinimumHeightConstraint(to minimumHeight: CGFloat?) {
+        let identifier = "IdentityFlowView.minimumButtonHeight"
+        constraints.first { $0.identifier == identifier }?.isActive = false
+
+        guard let minimumHeight else {
+            return
+        }
+
+        let constraint = heightAnchor.constraint(greaterThanOrEqualToConstant: minimumHeight)
+        constraint.identifier = identifier
+        constraint.isActive = true
     }
 }
 
 // MARK: - Button.Configuration
+extension StripeUICore.Button {
+    func applyIdentityButtonShape(minimumHeight: CGFloat?) {
+        updateMinimumHeightConstraint(to: minimumHeight)
+        if LiquidGlassDetector.isEnabledInMerchantApp {
+            ios26_applyCapsuleCornerConfiguration()
+        }
+    }
+}
+
 extension Button.Configuration {
 
     static var buttonFont: UIFont {
@@ -502,7 +559,7 @@ extension Button.Configuration {
         var configuration: Button.Configuration = .primary()
         configuration.font = buttonFont
         configuration.disabledForegroundColor = .systemGray
-        if case let .custom(backgroundColor, textColor) = style {
+        if case let .custom(backgroundColor, textColor, _) = style {
             configuration.backgroundColor = backgroundColor
             configuration.foregroundColor = textColor
         }
@@ -513,7 +570,7 @@ extension Button.Configuration {
     static func identitySecondary(style: IdentityVerificationSheet.Configuration.SecondaryButtonStyle = .default) -> Self {
         var configuration: Button.Configuration = .secondary()
         configuration.font = buttonFont
-        if case let .custom(backgroundColor, textColor) = style {
+        if case let .custom(backgroundColor, textColor, _) = style {
             configuration.backgroundColor = backgroundColor
             configuration.foregroundColor = textColor
             configuration.disabledBackgroundColor = .secondarySystemFill
