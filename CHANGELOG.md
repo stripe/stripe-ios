@@ -1,8 +1,9 @@
 The next release's version bump will so far be:
-MINOR
+PATCH
 
 ## X.Y.Z - changes pending release
 
+## 26.15.0 2026-10-19
 ### PaymentSheet
 * [Added] Added `LinkController.formattedCardDetails(brand:funding:last4:)`, exposed through the `STP` SPI, to format card previews consistently with Link.
 
