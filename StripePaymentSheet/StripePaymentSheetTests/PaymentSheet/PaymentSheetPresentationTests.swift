@@ -15,6 +15,7 @@ import XCTest
 final class PaymentSheetPresentationTests: XCTestCase {
 
     @MainActor
+    // @iOS26
     func testNativeSheetScrollsBehindTransparentKeyboardToolbar() async throws {
         guard #available(iOS 16.0, *) else { throw XCTSkip("Content-sized detents require iOS 16.") }
         // Given scrollable content with the same keyboard toolbar used by payment fields
