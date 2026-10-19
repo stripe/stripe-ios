@@ -1,0 +1,16 @@
+POST
+https:\/\/stp-mobile-ci-test-backend-e1b3\.stripedemos\.com\/create_payment_intent$
+200
+text/html
+x-content-type-options: nosniff
+x-cloud-trace-context: d11cb295669368a02f0038b1595a308a
+Content-Type: text/html;charset=utf-8
+Server: Google Frontend
+Via: 1.1 google
+Date: Mon, 19 Oct 2026 03:21:37 GMT
+x-frame-options: SAMEORIGIN
+x-xss-protection: 1; mode=block
+Content-Length: 210
+Alt-Svc: h3=":443"; ma=2592000
+
+{"intent":"pi_3US78nFY0qyl6XeW0RLc3NPo","secret":"pi_3US78nFY0qyl6XeW0RLc3NPo_secret_gElQXjwYByh8mhDbKJwUMY7WO","status":"requires_payment_method","publishable_key":"pk_test_ErsyMEOTudSjQR8hh0VrQr5X008sBXGOu6"}

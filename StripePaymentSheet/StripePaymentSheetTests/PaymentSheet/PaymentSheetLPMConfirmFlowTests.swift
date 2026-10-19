@@ -1143,6 +1143,7 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
 extension PaymentSheetLPMConfirmFlowTests {
     func testCard_OnlyCardInfo_WithDefaults() async throws {
         var configuration = PaymentSheet.Configuration()
+        configuration.returnURL = "https://foo.com"
         configuration.billingDetailsCollectionConfiguration.address = .never
         configuration.billingDetailsCollectionConfiguration.phone = .never
         configuration.billingDetailsCollectionConfiguration.email = .never
@@ -1165,6 +1166,7 @@ extension PaymentSheetLPMConfirmFlowTests {
 
     func testCard_AllFields_WithDefaults() async throws {
         var configuration = PaymentSheet.Configuration()
+        configuration.returnURL = "https://foo.com"
         configuration.billingDetailsCollectionConfiguration.address = .full
         configuration.billingDetailsCollectionConfiguration.phone = .always
         configuration.billingDetailsCollectionConfiguration.email = .always
