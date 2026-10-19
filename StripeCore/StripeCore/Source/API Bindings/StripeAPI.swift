@@ -126,10 +126,12 @@ import PassKit
     /// of the supported networks. NO if the user does not have a saved card of a
     /// supported type, or other restrictions prevent payment (such as parental controls).
     /// - Warning: This method synchronously queries PassKit and has been observed to block while
-    ///   waiting for system services. A [launch hang on a device running iOS 15.3.1](https://github.com/stripe/stripe-ios/issues/1984)
-    ///   and [slow calls on Mac Catalyst](https://github.com/stripe/stripe-ios/pull/2949) have been reported.
-    ///   We have also reproduced stalls lasting minutes when calling shortly after an iOS 26.4
-    ///   simulator cold boot. The full range of affected OS versions is unknown.
+    ///   waiting for system services:
+    ///   - A [launch hang on a device running iOS 15.3.1](https://github.com/stripe/stripe-ios/issues/1984).
+    ///   - [Slow calls on Mac Catalyst](https://github.com/stripe/stripe-ios/pull/2949).
+    ///   - Stalls lasting minutes reproduced shortly after an iOS 26.4 simulator cold boot.
+    ///
+    ///   The full range of affected OS versions is unknown.
     ///   Call it on a background queue without waiting for the result on the main thread or
     ///   another thread that needs to remain responsive.
     @objc public class func deviceSupportsApplePay() -> Bool {
