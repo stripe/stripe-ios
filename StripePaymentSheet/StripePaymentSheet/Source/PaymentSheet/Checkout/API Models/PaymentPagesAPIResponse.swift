@@ -591,7 +591,9 @@ struct CheckoutClientAPIResponse: Decodable {
             )
         }
 
-        let paymentMethodTypes = orderedTypes.filter { $0 != "apple_pay" && $0 != "google_pay" }
+        let paymentMethodTypes = orderedTypes.filter {
+            !["apple_pay", "google_pay", "card_wallet_link"].contains($0)
+        }
         var elementsSession: [String: Any] = [
             "session_id": elementsSessionID,
             "merchant_country": merchantCountry,
@@ -608,6 +610,14 @@ struct CheckoutClientAPIResponse: Decodable {
         ]
         for key in elementsFields {
             elementsSession[key] = fields[key]
+        }
+        if var linkSettings = fields["link_settings"] as? [String: Any],
+           linkSettings["link_passthrough_mode_enabled"] == nil {
+            // Elements derives this legacy flag from link_mode. CheckoutClient returns the mode
+            // without the flag, which the SDK still uses to offer Link in Express Checkout.
+            let linkMode = (linkSettings["link_mode"] as? String).flatMap(LinkMode.init(rawValue:))
+            linkSettings["link_passthrough_mode_enabled"] = linkMode == .passthrough || linkMode == .linkCardBrand
+            elementsSession["link_settings"] = linkSettings
         }
         elementsSession["config_id"] = fields["elements_session_config_id"]
         elementsSession["business_name"] = merchant["display_name"]

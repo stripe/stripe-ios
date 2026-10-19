@@ -32,7 +32,8 @@ class PaymentPagesAPIResponseTest: XCTestCase {
             "items": items,
             "elements_session_id": "elements_session_test123",
             "elements_session_config_id": "config_test123",
-            "ordered_payment_method_types_and_wallets": ["card", "apple_pay", "google_pay"],
+            "ordered_payment_method_types_and_wallets": ["card", "card_wallet_link", "apple_pay", "google_pay"],
+            "link_settings": ["link_mode": "LINK_CARD_BRAND", "link_brand": "link", "link_funding_sources": ["CARD"]],
             "merchant_info": ["country": "US", "display_name": "Example merchant"],
             "saved_payment_method_options": ["payment_method_save": "enabled", "payment_method_remove": "enabled"],
             "total_summary": ["total_tax_amounts": []],
@@ -51,6 +52,11 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertEqual(session.businessName, "Example merchant")
         XCTAssertEqual(session.elementsSession.sessionID, "elements_session_test123")
         XCTAssertEqual(session.elementsSession.orderedPaymentMethodTypes.map(\.identifier), ["card"])
+        XCTAssertEqual(
+            session.elementsSession.orderedPaymentMethodTypesAndWallets,
+            ["card", "card_wallet_link", "apple_pay", "google_pay"]
+        )
+        XCTAssertTrue(session.elementsSession.linkPassthroughModeEnabled)
         XCTAssertEqual(session.merchantCountryCode, "US")
         XCTAssertEqual(session.savedPaymentMethodsOfferSave?.enabled, true)
         XCTAssertNil(session.savedPaymentMethodsOfferSave?.status)
