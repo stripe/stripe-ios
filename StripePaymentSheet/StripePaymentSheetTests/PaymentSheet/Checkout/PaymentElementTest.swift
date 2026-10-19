@@ -254,22 +254,19 @@ final class PaymentElementTest: XCTestCase {
         XCTAssertEqual(paymentElement.embeddedPaymentElement.configuration.billingDetailsCollectionConfiguration.address, .full)
     }
 
-    func testConfigurationPreservesFullBillingAddressCollectionWhenCheckoutBillingAddressCollectionIsAutomatic() async throws {
-        // Given full billing address collection in PaymentElement
-        var checkoutConfiguration = CheckoutController.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
-        var paymentElementConfiguration = PaymentElement.Configuration()
-        paymentElementConfiguration.billingDetailsCollectionConfiguration.address = .full
-        checkoutConfiguration.paymentElement = paymentElementConfiguration
+    func testConfigurationUsesAutomaticBillingAddressCollectionWhenCheckoutBillingAddressCollectionIsAutomatic() async throws {
+        // Given a Checkout Session with automatic billing address collection
+        let session = CheckoutTestHelpers.makeOpenSession(billingAddressCollection: "auto")
 
-        // When Checkout uses automatic billing address collection
+        // When Checkout loads its PaymentElement
         let checkout = try await CheckoutController(
-            configuration: CheckoutTestHelpers.makeConfiguration(configuration: checkoutConfiguration)
+            configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: session)
         )
         let paymentElement = checkout.getPaymentElement()
 
-        // Then both configurations preserve full billing address collection
-        XCTAssertEqual(paymentElement.paymentSheetFlowController.configuration.billingDetailsCollectionConfiguration.address, .full)
-        XCTAssertEqual(paymentElement.embeddedPaymentElement.configuration.billingDetailsCollectionConfiguration.address, .full)
+        // Then both configurations use automatic billing address collection
+        XCTAssertEqual(paymentElement.paymentSheetFlowController.configuration.billingDetailsCollectionConfiguration.address, .automatic)
+        XCTAssertEqual(paymentElement.embeddedPaymentElement.configuration.billingDetailsCollectionConfiguration.address, .automatic)
     }
 
     func testInitialSavedPaymentOptionUpdatesCheckoutBillingTaxRegion() async throws {
