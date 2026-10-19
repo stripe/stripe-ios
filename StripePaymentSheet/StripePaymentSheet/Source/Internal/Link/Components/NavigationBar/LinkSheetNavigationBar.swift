@@ -18,7 +18,7 @@ class LinkSheetNavigationBar: SheetNavigationBar {
 
     private let brand: LinkBrand
 
-    // The system title view needs its own fixed-height logo; the legacy bar retains its existing layout.
+    // The native bar needs its own fixed-height logo; the legacy bar retains its existing layout.
     private lazy var systemLogoView: UIImageView = {
         let image = brand.paymentSheetLogoImage
         let size = CGSize(width: image.size.width * 24 / max(image.size.height, 1), height: 24)
@@ -32,8 +32,19 @@ class LinkSheetNavigationBar: SheetNavigationBar {
 
     override var systemNavigationTitle: String? { title }
 
-    override var systemNavigationTitleView: UIView? {
-        title?.isEmpty == false ? nil : systemLogoView
+    override func updateSystemNavigationBar() {
+        super.updateSystemNavigationBar()
+        guard let systemNavigationItem, !logoView.isHidden else { return }
+
+        // Match the legacy bar's leading logo instead of centering it as a navigation title.
+        let logoItem = UIBarButtonItem(customView: systemLogoView)
+        #if !os(visionOS) && compiler(>=6.2)
+        if #available(iOS 26.0, *) {
+            // Branding should not receive the glass background used by interactive controls.
+            logoItem.hidesSharedBackground = true
+        }
+        #endif
+        systemNavigationItem.leftBarButtonItems = (systemNavigationItem.leftBarButtonItems ?? []) + [logoItem]
     }
 
     private lazy var logoView: UIImageView = {
