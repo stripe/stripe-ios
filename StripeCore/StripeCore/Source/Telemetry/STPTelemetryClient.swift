@@ -80,7 +80,7 @@ private let TelemetryURL = URL(string: "https://m.stripe.com/6")!
     }
 
     private let urlSession: URLSession
-    private let applePayCapability: ApplePayCapability
+    private let deviceSupportsApplePayCollector: DeviceSupportsApplePayCollector
     static var _forceShouldSendTelemetryInTests: Bool = false
 
     @_spi(STP) public static func shouldSendTelemetry() -> Bool {
@@ -90,15 +90,15 @@ private let TelemetryURL = URL(string: "https://m.stripe.com/6")!
     @_spi(STP) public convenience init(
         sessionConfiguration config: URLSessionConfiguration
     ) {
-        self.init(sessionConfiguration: config, applePayCapability: ApplePayCapability())
+        self.init(sessionConfiguration: config, deviceSupportsApplePayCollector: DeviceSupportsApplePayCollector())
     }
 
     init(
         sessionConfiguration config: URLSessionConfiguration,
-        applePayCapability: ApplePayCapability
+        deviceSupportsApplePayCollector: DeviceSupportsApplePayCollector
     ) {
         urlSession = URLSession(configuration: config)
-        self.applePayCapability = applePayCapability
+        self.deviceSupportsApplePayCollector = deviceSupportsApplePayCollector
         super.init()
     }
 
@@ -184,7 +184,7 @@ private let TelemetryURL = URL(string: "https://m.stripe.com/6")!
         // or delay the initial Mirador request, which acquires IDs for the first tokenization.
         // Collect this optional signal in the background and omit it while unknown.
         // Subsequent requests include the result once it is available.
-        if let supportsApplePay = applePayCapability.value {
+        if let supportsApplePay = deviceSupportsApplePayCollector.value {
             otherData["m"] = NSNumber(value: supportsApplePay)
         }
         payload["b"] = otherData

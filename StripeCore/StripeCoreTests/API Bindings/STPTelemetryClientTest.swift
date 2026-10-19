@@ -47,14 +47,14 @@ final class STPTelemetryClientTest: APIStubbedTestCase {
             queue.sync {}
         }
         var checkCount = 0
-        let capability = ApplePayCapability(queue: queue) { _ in
+        let collector = DeviceSupportsApplePayCollector(queue: queue) { _ in
             checkCount += 1
             XCTAssertFalse(Thread.isMainThread)
             started.fulfill()
             XCTAssertEqual(release.wait(timeout: .now() + 10), .success)
             return true
         }
-        let client = STPTelemetryClient(sessionConfiguration: .ephemeral, applePayCapability: capability)
+        let client = STPTelemetryClient(sessionConfiguration: .ephemeral, deviceSupportsApplePayCollector: collector)
 
         // When telemetry is sent while PassKit is still pending
         sendTelemetry(client, expectedApplePayCapability: nil)
@@ -79,8 +79,8 @@ final class STPTelemetryClientTest: APIStubbedTestCase {
         let originalNetworks = StripeAPI.additionalEnabledApplePayNetworks
         defer { StripeAPI.additionalEnabledApplePayNetworks = originalNetworks }
         let queue = DispatchQueue(label: "test.apple-pay-capability")
-        let capability = ApplePayCapability(queue: queue) { networks in networks.contains(.JCB) }
-        let client = STPTelemetryClient(sessionConfiguration: .ephemeral, applePayCapability: capability)
+        let collector = DeviceSupportsApplePayCollector(queue: queue) { networks in networks.contains(.JCB) }
+        let client = STPTelemetryClient(sessionConfiguration: .ephemeral, deviceSupportsApplePayCollector: collector)
         for supported in [false, true] {
             // Given a network configuration whose capability has not been checked yet
             StripeAPI.additionalEnabledApplePayNetworks = supported ? [.JCB] : []
