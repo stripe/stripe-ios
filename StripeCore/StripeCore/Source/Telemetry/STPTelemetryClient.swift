@@ -184,6 +184,8 @@ private let TelemetryURL = URL(string: "https://m.stripe.com/6")!
         // or delay the initial Mirador request, which acquires IDs for the first tokenization.
         // Collect this optional signal in the background and omit it while unknown.
         // Subsequent requests include the result once it is available.
+        // See https://github.com/stripe/stripe-ios/issues/1984 and
+        // https://github.com/stripe/stripe-ios/pull/2949.
         if let supportsApplePay = deviceSupportsApplePayCollector.value {
             otherData["m"] = NSNumber(value: supportsApplePay)
         }

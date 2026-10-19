@@ -128,6 +128,8 @@ import PassKit
     /// - Warning: This method can block for an extended period while PassKit waits for system
     ///   services. Call it on a background queue without waiting for the result on the main thread
     ///   or another thread that needs to remain responsive.
+    ///   See [reported iOS launch hangs](https://github.com/stripe/stripe-ios/issues/1984)
+    ///   and [Mac Catalyst delays](https://github.com/stripe/stripe-ios/pull/2949).
     @objc public class func deviceSupportsApplePay() -> Bool {
         if let deviceSupportsApplePay = _deviceSupportsApplePay {
             return deviceSupportsApplePay
