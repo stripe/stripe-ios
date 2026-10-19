@@ -4,7 +4,7 @@ PATCH
 ## X.Y.Z - changes pending release
 
 ### General
-* [Fixed] Fixed an issue where slow Apple Pay availability checks could cause apps to hang during SDK initialization. See [stripe-react-native#2567](https://github.com/stripe/stripe-react-native/issues/2567).
+* [Fixed] Fixed an issue where slow Apple Pay availability checks could cause React Native apps to hang during SDK initialization. See [stripe-react-native#2567](https://github.com/stripe/stripe-react-native/issues/2567).
 
 ## 26.15.0 2026-10-19
 
