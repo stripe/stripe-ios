@@ -317,34 +317,20 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         }
     }
 
-    func testDecodesSubmissionAttemptStates() throws {
-        let testCases: [(String, PaymentPagesAPIResponse.SubmissionAttempt.State)] = [
-            ("processing", .processing),
-            ("requires_approval", .requiresApproval),
-            ("complete", .complete),
-            ("failed", .failed),
-        ]
-
-        for (rawValue, expectedState) in testCases {
+    func testDecodesCheckoutClientPaymentStatuses() throws {
+        for status in ["requires_payment_method", "requires_action", "processing", "requires_capture", "succeeded", "canceled"] {
             var json = CheckoutTestHelpers.makeSessionJSON()
-            json["submission_attempt"] = [
-                "id": "ca_test_123",
-                "state": rawValue,
-            ]
+            json["payment_response"] = ["status": status]
 
             let response = try PaymentPagesAPIResponse.decode(fromAPIResponse: json)
 
-            let state = try XCTUnwrap(response.submissionAttempt?.state)
-            XCTAssertEqual(state, expectedState)
+            XCTAssertEqual(response.paymentResponse?.status, status)
         }
     }
 
-    func testRejectsUnknownSubmissionAttemptState() {
+    func testRejectsCheckoutClientPaymentResponseWithoutStatus() {
         var json = CheckoutTestHelpers.makeSessionJSON()
-        json["submission_attempt"] = [
-            "id": "ca_test_123",
-            "state": "future_state",
-        ]
+        json["payment_response"] = [:]
 
         XCTAssertThrowsError(try PaymentPagesAPIResponse.decode(fromAPIResponse: json))
     }

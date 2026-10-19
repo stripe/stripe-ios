@@ -491,14 +491,8 @@ extension CheckoutController {
             return .failed(error)
         }
 
-        if response.submissionAttempt?.state == .failed {
+        if response.paymentResponse?.status == "requires_payment_method" {
             return .failed(paymentError(from: response), sessionResponse: response)
-        }
-
-        // Manual approval isn't supported yet
-        if response.submissionAttempt?.state == .requiresApproval {
-            let error = CheckoutError.unknown(debugDescription: "Checkout Session confirmation unexpectedly requires manual approval.")
-            return .failed(error, sessionResponse: response)
         }
 
         // 2. Handle any next action required by the Intent.
@@ -649,7 +643,7 @@ extension CheckoutController {
     }
 
     private static func paymentError(from session: PaymentPagesAPIResponse) -> Error {
-        let lastErrorFields = session.checkoutClientPaymentError?.allResponseFields
+        let lastErrorFields = session.paymentResponse?.lastPaymentError?.allResponseFields
             ?? session.paymentIntent?.lastPaymentError?.allResponseFields
             ?? session.setupIntent?.lastSetupError?.allResponseFields
         return NSError.stp_error(fromStripeResponse: lastErrorFields.map { ["error": $0] })

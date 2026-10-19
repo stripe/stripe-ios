@@ -123,8 +123,6 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
                     return // The user canceled mid-payment - just abort
                 }
                 self.paymentState = .pending  // After this point, we can't cancel
-                let savePaymentMethod: Bool? = checkoutSession.noPaymentRequired ? nil
-                    : checkoutSession.merchantWillSavePaymentMethod(STPPaymentMethodType.card) ? true : nil
 
                 // 2. Confirm
                 let requestParameters = CheckoutSessionConfirmationRequestParameters(
@@ -132,7 +130,8 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
                     paymentMethodId: paymentMethod.id,
                     expectedAmount: checkoutSession.amount,
                     expectedPaymentMethodType: paymentMethod.type?.rawValue ?? STPPaymentMethodType.card.identifier,
-                    savePaymentMethod: savePaymentMethod,
+                    // Apple Pay collects no save-checkbox consent. The server applies merchant-configured saving.
+                    savePaymentMethod: nil,
                     returnURL: self.returnURL,
                     shipping: self.makeShippingDetailsParams(from: payment)
                         ?? checkoutSession.shippingAddress?.shippingDetailsParams,

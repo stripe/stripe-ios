@@ -5,17 +5,17 @@ application/json
 Server: Google Frontend
 Content-Type: application/json; charset=utf-8
 x-powered-by: Express
-x-cloud-trace-context: aacc70b4efc5322b087199e9fecd4a7f
+x-cloud-trace-context: 1604c86e5d023c79358cc2cb2cfeb952
 Via: 1.1 google
-Date: Mon, 19 Oct 2026 18:40:04 GMT
+Date: Mon, 19 Oct 2026 19:28:14 GMT
 Content-Length: 2629
 Alt-Svc: h3=":443"; ma=2592000
-Etag: W/"a45-3SrIoj1F6bl7SIDF5t07MoA51qg"
+Etag: W/"a45-0z8uCxXXito/zWXimxIYX7U0BB8"
 
 {
   "billing_address_collection" : null,
-  "id" : "cs_test_a1VN6mD9d0VH5OyTnohgWRwyrA17coIN3KknZEHNQK18Z3hx8HNE1hWK4X",
-  "client_secret" : "cs_test_a1VN6mD9d0VH5OyTnohgWRwyrA17coIN3KknZEHNQK18Z3hx8HNE1hWK4X_secret_fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdwbEhqYWAnPydoamdsaWBaYGlgaGBrcXYneCUl",
+  "id" : "cs_test_a1aow3K0QzbKOp1sFKGZwlIGKVO3Bb44n58FjwjtkVsFfSlVqP6fsCHho8",
+  "client_secret" : "cs_test_a1aow3K0QzbKOp1sFKGZwlIGKVO3Bb44n58FjwjtkVsFfSlVqP6fsCHho8_secret_fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdwbEhqYWAnPydoamdsaWBaYGlgaGBrcXYneCUl",
   "discounts" : [
 
   ],
@@ -32,7 +32,7 @@ Etag: W/"a45-3SrIoj1F6bl7SIDF5t07MoA51qg"
   "payment_method_configuration_details" : null,
   "payment_method_options" : null,
   "ui_mode" : "mobile_elements",
-  "created" : 1792435204,
+  "created" : 1792438094,
   "client_reference_id" : null,
   "allowed_payment_method_types" : [
     "card"
@@ -41,13 +41,13 @@ Etag: W/"a45-3SrIoj1F6bl7SIDF5t07MoA51qg"
   "allow_promotion_codes" : null,
   "items" : [
     {
-      "key" : "checkout_item_VTI3OeV3",
+      "key" : "checkout_item_VTIpT9Sk",
       "one_time_price" : {
         "items" : [
           {
             "quantity" : 1,
             "adjustable_quantity" : null,
-            "price" : "price_1USLTcLu5o3P18Zpvlp6AeFK",
+            "price" : "price_1USMEELu5o3P18ZpdRDBnjy4",
             "tax_rates" : null
           }
         ],
@@ -157,6 +157,6 @@ Etag: W/"a45-3SrIoj1F6bl7SIDF5t07MoA51qg"
   },
   "livemode" : false,
   "customer_email" : "test@example.com",
-  "expires_at" : 1792521604,
+  "expires_at" : 1792524494,
   "marketing_attributions" : null
 }

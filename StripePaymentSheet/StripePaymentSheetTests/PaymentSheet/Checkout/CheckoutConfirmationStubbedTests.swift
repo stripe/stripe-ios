@@ -354,6 +354,28 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         XCTAssertEqual(response.paymentStatus, .unpaid)
     }
 
+    func testManualCaptureCompletesWithoutPollingOrMarkingPaid() async throws {
+        // Given the backend's authorized manual-capture response
+        let checkout = try await makeCheckout()
+        let poller = TestCheckoutSessionPoller(outcome: .timedOut)
+        let responseJSON = makeConfirmedSessionJSON(
+            paymentIntentStatus: "requires_capture",
+            status: "complete",
+            paymentStatus: "unpaid"
+        )
+
+        // When Checkout handles confirmation
+        let result = await confirmCheckoutSession(checkout, responseJSON: responseJSON, poller: poller)
+
+        // Then authorization completes Checkout without waiting for capture
+        guard case .completed(let response) = result else {
+            return XCTFail("Expected confirmation to complete, got \(result)")
+        }
+        XCTAssertEqual(response.status, .complete(.unpaid))
+        XCTAssertEqual(response.paymentIntent?.status, .requiresCapture)
+        XCTAssertTrue(poller.checkoutSessionIds.isEmpty)
+    }
+
     func testMicrodepositVerificationPaymentIntentPreservesSessionStatuses() async throws {
         // Given a US bank account payment where the customer must verify microdeposits out of band
         let checkout = try await makeCheckout()

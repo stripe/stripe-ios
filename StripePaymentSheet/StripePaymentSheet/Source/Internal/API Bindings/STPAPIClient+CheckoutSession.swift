@@ -35,8 +35,8 @@ struct CheckoutSessionConfirmationRequestParameters {
     /// The expected PaymentMethod type (e.g., `card`).
     let expectedPaymentMethodType: String?
 
-    /// The optional top-level `save_payment_method` value that controls whether confirmation
-    /// attaches the PaymentMethod to the Checkout Session's customer.
+    /// The optional buyer save-checkbox choice, sent as `collected_information[save_payment_method]`.
+    /// Omit it when no checkbox is shown; the server applies merchant-configured saving separately.
     let savePaymentMethod: Bool?
 
     /// CheckoutClient requires a return URL for confirmation.
@@ -318,13 +318,12 @@ extension STPAPIClient {
             endpoint: "checkout_client/\(requestParameters.sessionId)/confirm",
             parameters: parameters
         )
-        return try await checkoutClientSessionResponse(checkoutClient, isConfirmResponse: true)
+        return try await checkoutClientSessionResponse(checkoutClient)
     }
 
     /// CheckoutClient returns Intent references. Retrieve the Intent to preserve the full session used by confirmation.
     private func checkoutClientSessionResponse(
-        _ checkoutClient: CheckoutClientAPIResponse,
-        isConfirmResponse: Bool = false
+        _ checkoutClient: CheckoutClientAPIResponse
     ) async throws -> PaymentPagesAPIResponse {
         let paymentResponse = checkoutClient.fields["payment_response"] as? [String: Any]
         let paymentIntent: STPPaymentIntent?
@@ -351,8 +350,7 @@ extension STPAPIClient {
         }
         return try checkoutClient.paymentPagesResponse(
             paymentIntent: paymentIntent,
-            setupIntent: setupIntent,
-            isConfirmResponse: isConfirmResponse
+            setupIntent: setupIntent
         )
     }
 

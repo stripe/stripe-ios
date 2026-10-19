@@ -640,6 +640,57 @@ final class CheckoutApplePayContextTests: XCTestCase {
         XCTAssertEqual(result.paymentSheetResult, .completed)
     }
 
+    func testApplePayDoesNotSendCheckboxConsentForMerchantRequiredSaving() async throws {
+        // Given a merchant that saves cards without offering a save checkbox
+        let response = CheckoutTestHelpers.makeSession([
+            "setup_future_usage_for_payment_method_type": ["card": "off_session"],
+            "customer_managed_saved_payment_methods_offer_save": ["enabled": false],
+        ]).withCustomer()
+        let session = response.makePublicSession()
+        XCTAssertTrue(session.merchantWillSavePaymentMethod(.card))
+        let apiClient = APIStubbedTestCase.stubbedAPIClient()
+        stub { $0.url?.path == "/v1/tokens" } response: { _ in
+            HTTPStubsResponse(jsonObject: [
+                "id": "tok_apple_pay", "object": "token", "type": "card",
+                "livemode": false, "created": 1_700_000_000,
+            ], statusCode: 200, headers: nil)
+        }
+        stub { $0.url?.path == "/v1/payment_methods" } response: { _ in
+            HTTPStubsResponse(jsonObject: [
+                "id": "pm_apple_pay", "object": "payment_method", "type": "card",
+                "livemode": false, "created": 1_700_000_000,
+            ], statusCode: 200, headers: nil)
+        }
+        let confirmation = expectation(description: "Apple Pay confirms without checkbox consent")
+        let parameters = CheckoutController.ApplePayConfirmationParameters.makeMock(
+            apiClient: apiClient,
+            confirmationHandler: { request in
+                XCTAssertNil(request.savePaymentMethod)
+                confirmation.fulfill()
+                return .completed(response)
+            }
+        )
+        let controller = MockPKPaymentAuthorizationController()
+        let context = CheckoutApplePayContext(
+            checkoutSession: session,
+            applePayConfirmationParameters: parameters,
+            authorizationController: controller,
+            checkoutWalletUpdater: MockCheckoutSessionWalletUpdater(sessionToReturn: session)
+        )
+
+        // When Apple Pay authorizes the card
+        context.paymentAuthorizationController(
+            controller,
+            didAuthorizePayment: STPFixtures.simulatorApplePayPayment(),
+            handler: { result in
+                XCTAssertEqual(result.status, .success, "\(result.errors ?? [])")
+            }
+        )
+
+        // Then merchant-required saving does not become buyer checkbox consent
+        await fulfillment(of: [confirmation], timeout: 5)
+    }
+
     // MARK: - Helpers
 
     private func makeContext(

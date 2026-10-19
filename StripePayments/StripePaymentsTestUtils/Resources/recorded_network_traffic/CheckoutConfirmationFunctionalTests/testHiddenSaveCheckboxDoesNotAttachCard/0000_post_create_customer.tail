@@ -1,0 +1,48 @@
+POST
+https:\/\/stp-mobile-playground-backend-v7\.stripedemos\.com\/create_customer$
+200
+application/json
+Server: Google Frontend
+Content-Type: application/json; charset=utf-8
+x-powered-by: Express
+x-cloud-trace-context: c3cf0c63a3e0bca93d54fa59804826fd;o=1
+Via: 1.1 google
+Date: Mon, 19 Oct 2026 19:29:38 GMT
+Content-Length: 541
+Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+Etag: W/"21d-4hB7RTTV9oMHSh4Zudk1hIA5dSA"
+
+{
+  "description" : null,
+  "test_clock" : null,
+  "metadata" : {
+
+  },
+  "default_source" : null,
+  "livemode" : false,
+  "invoice_settings" : {
+    "custom_fields" : null,
+    "default_payment_method" : null,
+    "rendering_options" : null,
+    "footer" : null
+  },
+  "object" : "customer",
+  "currency" : null,
+  "shipping" : null,
+  "discount" : null,
+  "customer_account" : null,
+  "balance" : 0,
+  "name" : null,
+  "tax_exempt" : "none",
+  "id" : "cus_VTIrS7kfifyM1n",
+  "delinquent" : false,
+  "email" : "save-test@example.com",
+  "preferred_locales" : [
+
+  ],
+  "phone" : null,
+  "next_invoice_sequence" : 1,
+  "invoice_prefix" : "ZHDKXXEO",
+  "address" : null,
+  "created" : 1792438178
+}

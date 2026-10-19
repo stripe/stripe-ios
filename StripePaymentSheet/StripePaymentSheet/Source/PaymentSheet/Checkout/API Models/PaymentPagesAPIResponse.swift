@@ -28,7 +28,6 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
     let livemode: Bool
     let status: CheckoutController.Session.Status
     let paymentStatus: CheckoutController.Session.Status.PaymentStatus
-    let submissionAttempt: SubmissionAttempt?
     let customerEmail: String?
     let savedPaymentMethodsOfferSave: SavedPaymentMethodsOfferSave?
     let setupFutureUsage: String?
@@ -44,7 +43,7 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
     let customer: Customer?
     let elementsSession: ElementsSession
     let checkoutClientSettings: CheckoutClientSettings?
-    let checkoutClientPaymentError: StripeAPIError?
+    let paymentResponse: PaymentResponse?
 
     /// Settings that belong to Checkout rather than the aggregated Elements Session.
     struct CheckoutClientSettings: Decodable {
@@ -105,7 +104,6 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
         case mode
         case status
         case paymentStatus
-        case submissionAttempt
         case customerEmail
         case savedPaymentMethodsOfferSave = "customer_managed_saved_payment_methods_offer_save"
         case setupFutureUsage
@@ -121,13 +119,13 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
         case customer
         case elementsSession
         case checkoutClientSettings
-        case checkoutClientPaymentError
+        case paymentResponse
     }
 
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         checkoutClientSettings = try container.decodeIfPresent(CheckoutClientSettings.self, forKey: .checkoutClientSettings)
-        checkoutClientPaymentError = try container.decodeIfPresent(StripeAPIError.self, forKey: .checkoutClientPaymentError)
+        paymentResponse = try container.decodeIfPresent(PaymentResponse.self, forKey: .paymentResponse)
         sessionId = try container.decode(String.self, forKey: .sessionId)
         let decodedPaymentIntent = try container.decodeIfPresent(
             LegacyExpandable<STPPaymentIntent>.self,
@@ -181,10 +179,6 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
         }
         self.status = status
 
-        submissionAttempt = try container.decodeIfPresent(
-            SubmissionAttempt.self,
-            forKey: .submissionAttempt
-        )
         customerEmail = try container.decodeIfPresent(String.self, forKey: .customerEmail)
         savedPaymentMethodsOfferSave = try container.decodeIfPresent(
             SavedPaymentMethodsOfferSave.self,
@@ -221,15 +215,10 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
 }
 
 extension PaymentPagesAPIResponse {
-    struct SubmissionAttempt: Decodable {
-        enum State: String, Decodable {
-            case processing
-            case requiresApproval = "requires_approval"
-            case complete
-            case failed
-        }
-
-        let state: State
+    /// CheckoutClient's canonical payment details. Intent references are retrieved separately for authentication.
+    struct PaymentResponse: Decodable {
+        let status: String
+        let lastPaymentError: StripeAPIError?
     }
 
     /// Adapts a dictionary-backed API model to `Decodable` while it is migrated.
@@ -569,8 +558,7 @@ struct CheckoutClientAPIResponse: Decodable {
 
     func paymentPagesResponse(
         paymentIntent: STPPaymentIntent? = nil,
-        setupIntent: STPSetupIntent? = nil,
-        isConfirmResponse: Bool = false
+        setupIntent: STPSetupIntent? = nil
     ) throws -> PaymentPagesAPIResponse {
         guard let id = fields["id"] as? String,
               let uiMode = fields["ui_mode"] as? String,
@@ -644,7 +632,7 @@ struct CheckoutClientAPIResponse: Decodable {
         // payment-method options cannot recover inherited SFU needed for saving mandates.
 
         if let paymentResponse = fields["payment_response"] as? [String: Any] {
-            response["checkout_client_payment_error"] = paymentResponse["last_payment_error"]
+            response["payment_response"] = paymentResponse
             if let reference = paymentResponse["payment_intent"] as? [String: Any] {
                 response["payment_intent"] = paymentIntent?.allResponseFields
                 if paymentIntent == nil { response["payment_intent"] = reference["id"] }
@@ -652,15 +640,6 @@ struct CheckoutClientAPIResponse: Decodable {
             if let reference = paymentResponse["setup_intent"] as? [String: Any] {
                 response["setup_intent"] = setupIntent?.allResponseFields
                 if setupIntent == nil { response["setup_intent"] = reference["id"] }
-            }
-            if isConfirmResponse, let status = paymentResponse["status"] as? String {
-                let state: String
-                switch status {
-                case "requires_payment_method": state = "failed"
-                case "succeeded": state = "complete"
-                default: state = "processing"
-                }
-                response["submission_attempt"] = ["state": state]
             }
         }
 
