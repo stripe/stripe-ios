@@ -43,6 +43,9 @@ class AutoCompleteViewController: UIViewController {
     }()
 
     private var fetchTask: Task<Void, Never>?
+    var searchMapKit: (MKLocalSearch.Request) async throws -> [MKMapItem] = { request in
+        try await MKLocalSearch(request: request).start().mapItems
+    }
     private var debounceTask: Task<Void, Never>?
     private var lastFetchedQuery: String = ""
     var currentSource: String?
@@ -297,7 +300,7 @@ class AutoCompleteViewController: UIViewController {
                 sessionToken: sessionToken,
                 source: source,
                 sessionElapsed: elapsedTimeSinceAutocompleteStart,
-                msToFetch: requestLatency,
+                fetchDuration: requestLatency,
                 apiClient: configuration.apiClient
             )
         }
@@ -455,7 +458,7 @@ extension AutoCompleteViewController: UITableViewDelegate, UITableViewDataSource
                     source: source,
                     sessionElapsed: elapsedTimeSinceAutocompleteStart,
                     placeId: suggestion.placeId,
-                    msToFetch: nil,
+                    fetchDuration: nil,
                     apiClient: configuration.apiClient
                 )
                 delegate?.didSelectAddress(address)
@@ -474,6 +477,7 @@ extension AutoCompleteViewController: UITableViewDelegate, UITableViewDataSource
                             displayTitle: suggestion.title,
                             sessionToken: sessionToken
                         )
+                        guard !Task.isCancelled else { return }
                         let latency = Date().timeIntervalSince(requestStart)
                         STPAnalyticsClient.sharedClient.logAddressAutocompleteSelected(
                             addressCountryCode: selectedCountry,
@@ -482,19 +486,30 @@ extension AutoCompleteViewController: UITableViewDelegate, UITableViewDataSource
                             source: source,
                             sessionElapsed: elapsedTimeSinceAutocompleteStart,
                             placeId: placeId,
-                            msToFetch: latency,
+                            fetchDuration: latency,
                             apiClient: configuration.apiClient
                         )
                         delegate?.didSelectAddress(details.address)
                     } catch {
-                      STPAnalyticsClient.sharedClient.logAddressAutocompleteError(
+                        guard !Task.isCancelled else { return }
+                        STPAnalyticsClient.sharedClient.logAddressAutocompleteError(
                             addressCountryCode: selectedCountry,
                             error: error,
                             sessionToken: sessionToken,
                             sessionElapsed: elapsedTimeSinceAutocompleteStart,
                             apiClient: configuration.apiClient
                         )
+                        let request = MKLocalSearch.Request()
+                        request.naturalLanguageQuery = [suggestion.title, suggestion.subtitle]
+                            .filter { !$0.isEmpty }.joined(separator: ", ")
+                        request.resultTypes = .address
+                        let mapItems = try? await searchMapKit(request)
+                        guard !Task.isCancelled else { return }
+                        #if !os(visionOS)
+                        delegate?.didSelectAddress(mapItems?.first?.placemark.asAddress)
+                        #else
                         delegate?.didSelectAddress(nil)
+                        #endif
                     }
                 }
             }
@@ -509,7 +524,7 @@ extension AutoCompleteViewController: UITableViewDelegate, UITableViewDataSource
                         source: source,
                         sessionElapsed: self.elapsedTimeSinceAutocompleteStart,
                         placeId: nil,
-                        msToFetch: nil,
+                        fetchDuration: nil,
                         apiClient: self.configuration.apiClient
                     )
                     self.delegate?.didSelectAddress(address)

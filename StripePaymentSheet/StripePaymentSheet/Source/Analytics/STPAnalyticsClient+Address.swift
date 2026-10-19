@@ -93,33 +93,33 @@ extension STPAnalyticsClient {
                                   apiClient: apiClient)
     }
 
-    func logAddressAutocompleteSuggestions(addressCountryCode: String, resultCount: Int, sessionToken: String, source: String, sessionElapsed: TimeInterval, msToFetch: TimeInterval?, apiClient: STPAPIClient) {
+    func logAddressAutocompleteSuggestions(addressCountryCode: String, resultCount: Int, sessionToken: String, source: String, sessionElapsed: TimeInterval, fetchDuration: TimeInterval?, apiClient: STPAPIClient) {
         assert(apiClient.publishableKey?.nonEmpty != nil) // A publishable key is required to be set at this point so we can send it in our analytics payload
         let analyticData = AddressAnalyticData(addressCountryCode: addressCountryCode, autoCompleteResultedSelected: nil, editDistance: nil)
         var params: [String: Any] = [
             "result_count": resultCount,
             "autocomplete_session_token": sessionToken,
             "source": source,
-            "ms_session_elapsed": sessionElapsed,
+            "ms_session_elapsed": sessionElapsed * 1000,
         ]
-        if let msToFetch { params["ms_to_fetch"] = msToFetch }
+        if let fetchDuration { params["ms_to_fetch"] = fetchDuration * 1000 }
         logAddressControllerEvent(event: .addressAutocompleteSuggestions,
                                   addressAnalyticData: analyticData,
                                   additionalParams: params,
                                   apiClient: apiClient)
     }
 
-    func logAddressAutocompleteSelected(addressCountryCode: String, queryLength: Int, sessionToken: String, source: String, sessionElapsed: TimeInterval, placeId: String?, msToFetch: TimeInterval?, apiClient: STPAPIClient) {
+    func logAddressAutocompleteSelected(addressCountryCode: String, queryLength: Int, sessionToken: String, source: String, sessionElapsed: TimeInterval, placeId: String?, fetchDuration: TimeInterval?, apiClient: STPAPIClient) {
         assert(apiClient.publishableKey?.nonEmpty != nil) // A publishable key is required to be set at this point so we can send it in our analytics payload
         let analyticData = AddressAnalyticData(addressCountryCode: addressCountryCode, autoCompleteResultedSelected: nil, editDistance: nil)
         var params: [String: Any] = [
             "query_length": queryLength,
             "autocomplete_session_token": sessionToken,
             "source": source,
-            "ms_session_elapsed": sessionElapsed,
+            "ms_session_elapsed": sessionElapsed * 1000,
         ]
         if let placeId { params["place_id"] = placeId }
-        if let msToFetch { params["ms_to_fetch"] = msToFetch }
+        if let fetchDuration { params["ms_to_fetch"] = fetchDuration * 1000 }
         logAddressControllerEvent(event: .addressAutocompleteSelected,
                                   addressAnalyticData: analyticData,
                                   additionalParams: params,
@@ -131,7 +131,7 @@ extension STPAnalyticsClient {
         let analyticData = AddressAnalyticData(addressCountryCode: addressCountryCode, autoCompleteResultedSelected: nil, editDistance: nil)
         var params = error.serializeForV1Analytics()
         params["autocomplete_session_token"] = sessionToken
-        params["ms_session_elapsed"] = sessionElapsed
+        params["ms_session_elapsed"] = sessionElapsed * 1000
         logAddressControllerEvent(event: .addressAutocompleteError,
                                   addressAnalyticData: analyticData,
                                   additionalParams: params,
