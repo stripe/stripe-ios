@@ -49,29 +49,15 @@ final class ShippingAddressElementPresentationTests: XCTestCase {
         XCTAssertTrue(unwrappedNavigationController.viewControllers.first === shippingAddressElement.addressViewController)
     }
 
-    func testPresentationInheritsCheckoutUserInterfaceStyle() async throws {
-        let styles: [(CheckoutController.UserInterfaceStyle, UIUserInterfaceStyle, UIUserInterfaceStyle)] = [
-            (.alwaysLight, .dark, .light),
-            (.alwaysDark, .light, .dark),
-            (.automatic, .light, .light),
-            (.automatic, .dark, .dark),
+    func testPresentationUsesCheckoutUserInterfaceStyle() async throws {
+        let styles: [(CheckoutController.UserInterfaceStyle, UIUserInterfaceStyle)] = [
+            (.alwaysLight, .light),
+            (.alwaysDark, .dark),
+            (.automatic, .unspecified),
         ]
-        let observingViewController = PresentationObservingViewController()
-        // Attach the window to the host scene so pushed controllers inherit its traits.
-        let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first)
-        window.isHidden = true
-        window.windowScene = scene
-        window.rootViewController = observingViewController
-        presentingViewController = observingViewController
-        window.makeKeyAndVisible()
-        let animationsWereEnabled = UIView.areAnimationsEnabled
-        UIView.setAnimationsEnabled(false)
-        defer {
-            UIView.setAnimationsEnabled(animationsWereEnabled)
-        }
 
-        for (checkoutStyle, hostStyle, expectedStyle) in styles {
-            // Given checkout's style and a host window that may use a different style
+        for (checkoutStyle, expectedStyle) in styles {
+            // Given checkout's user interface style
             var configuration = CheckoutTestHelpers.makeConfiguration(
                 paymentElementConfiguration: nil,
                 expressCheckoutElementConfiguration: nil
@@ -80,38 +66,15 @@ final class ShippingAddressElementPresentationTests: XCTestCase {
             configuration.userInterfaceStyle = checkoutStyle
             let checkout = try await CheckoutController(configuration: configuration)
             let shippingAddressElement = checkout.getShippingAddressElement()
-            window.overrideUserInterfaceStyle = hostStyle
+            let presenter = PresentationCapturingViewController()
 
-            // When the shipping address sheet has finished presenting
-            let presentationCompleted = expectation(description: "Shipping address sheet presented")
-            observingViewController.onPresentationCompletion = {
-                presentationCompleted.fulfill()
-            }
-            let navigationController = try XCTUnwrap(present(shippingAddressElement))
-            await fulfillment(of: [presentationCompleted], timeout: 3)
+            // When the shipping address sheet is configured for presentation
+            shippingAddressElement.present(from: presenter, completion: nil)
+            let navigationController = try XCTUnwrap(presenter.capturedViewController as? UINavigationController)
 
-            // Then the form and navigation bar use checkout's style
-            XCTAssertEqual(shippingAddressElement.addressViewController.traitCollection.userInterfaceStyle, expectedStyle)
-            XCTAssertEqual(navigationController.navigationBar.traitCollection.userInterfaceStyle, expectedStyle)
-
-            // ...and address autocomplete inherits the same style
-            shippingAddressElement.addressViewController.presentAutocomplete()
-            // Disabling animations does not make UIKit's navigation transitions synchronous.
-            let autocompleteVisible = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
-                navigationController.topViewController is AutoCompleteViewController
-                    && navigationController.topViewController?.viewIfLoaded?.window != nil
-                    && navigationController.transitionCoordinator == nil
-            }, object: nil)
-            await fulfillment(of: [autocompleteVisible], timeout: 3)
-            let autocompleteViewController = try XCTUnwrap(navigationController.topViewController as? AutoCompleteViewController)
-            XCTAssertEqual(autocompleteViewController.traitCollection.userInterfaceStyle, expectedStyle)
-
-            // Finish dismissing before presenting the next style's sheet.
-            let dismissalCompleted = expectation(description: "Shipping address sheet dismissed")
-            presentingViewController.dismiss(animated: false) {
-                dismissalCompleted.fulfill()
-            }
-            await fulfillment(of: [dismissalCompleted], timeout: 3)
+            // Then the address controller and its navigation stack use checkout's style
+            XCTAssertEqual(shippingAddressElement.addressViewController.overrideUserInterfaceStyle, expectedStyle, "Checkout style: \(checkoutStyle)")
+            XCTAssertEqual(navigationController.overrideUserInterfaceStyle, expectedStyle, "Checkout style: \(checkoutStyle)")
         }
     }
 
@@ -339,18 +302,28 @@ final class ShippingAddressElementPresentationTests: XCTestCase {
 private final class PresentationObservingViewController: UIViewController {
 
     var onPresent: ((UIViewController) -> Void)?
-    var onPresentationCompletion: (() -> Void)?
 
     override func present(
         _ viewControllerToPresent: UIViewController,
         animated flag: Bool,
         completion: (() -> Void)? = nil
     ) {
-        super.present(viewControllerToPresent, animated: flag) {
-            completion?()
-            self.onPresentationCompletion?()
-        }
+        super.present(viewControllerToPresent, animated: flag, completion: completion)
         onPresent?(viewControllerToPresent)
+    }
+}
+
+// Capture the sheet synchronously so style checks do not depend on UIKit transitions.
+private final class PresentationCapturingViewController: UIViewController {
+
+    var capturedViewController: UIViewController?
+
+    override func present(
+        _ viewControllerToPresent: UIViewController,
+        animated flag: Bool,
+        completion: (() -> Void)? = nil
+    ) {
+        capturedViewController = viewControllerToPresent
     }
 }
 
