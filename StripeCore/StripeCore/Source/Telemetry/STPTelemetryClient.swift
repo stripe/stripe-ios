@@ -184,7 +184,7 @@ private let TelemetryURL = URL(string: "https://m.stripe.com/6")!
         // or delay the initial Mirador request, which acquires IDs for the first tokenization.
         // Collect this optional signal in the background and omit it while unknown.
         // Subsequent requests include the result once it is available.
-        if let supportsApplePay = applePayCapability.cachedValue(for: StripeAPI.supportedPKPaymentNetworks()) {
+        if let supportsApplePay = applePayCapability.value {
             otherData["m"] = NSNumber(value: supportsApplePay)
         }
         payload["b"] = otherData

@@ -19,7 +19,8 @@ final class ApplePayCapability {
         self.check = check
     }
 
-    func cachedValue(for networks: [PKPaymentNetwork]) -> Bool? {
+    var value: Bool? {
+        let networks = StripeAPI.supportedPKPaymentNetworks()
         lock.lock()
         defer { lock.unlock() }
 
