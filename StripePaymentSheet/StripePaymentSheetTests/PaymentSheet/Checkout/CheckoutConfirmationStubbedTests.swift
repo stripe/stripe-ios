@@ -31,13 +31,14 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
             paymentMethodRequest.fulfill()
             return HTTPStubsResponse(jsonObject: STPPaymentMethod._testCard().allResponseFields, statusCode: 200, headers: nil)
         }
+        stubConfirmedIntentRetrieval(from: Self.confirmedSessionJSON)
         let confirmRequest = expectation(description: "Checkout confirms with its token")
         stub { $0.url?.path.hasSuffix("/confirm") == true } response: { request in
             let params = RequestBodyTestHelpers.formEncodedBodyParams(from: request)
             XCTAssertEqual(params["passive_captcha_token"], "checkout_token_1")
             XCTAssertNil(params["radar_options[hcaptcha_token]"])
             confirmRequest.fulfill()
-            return HTTPStubsResponse(jsonObject: Self.confirmedSessionJSON, statusCode: 200, headers: nil)
+            return HTTPStubsResponse(jsonObject: Self.checkoutClientConfirmJSON(from: Self.confirmedSessionJSON), statusCode: 200, headers: nil)
         }
 
         // When Checkout creates the PaymentMethod and confirms
@@ -77,12 +78,13 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         // Given captcha cannot produce a token
         let checkout = try await makeCheckout()
         checkout.checkoutCaptchaChallenge = TestCheckoutCaptcha(shouldFail: true)
+        stubConfirmedIntentRetrieval(from: Self.confirmedSessionJSON)
         let confirmRequest = expectation(description: "Confirmation proceeds without a token")
         stub { $0.url?.path.hasSuffix("/confirm") == true } response: { request in
             let params = RequestBodyTestHelpers.formEncodedBodyParams(from: request)
             XCTAssertNil(params["passive_captcha_token"])
             confirmRequest.fulfill()
-            return HTTPStubsResponse(jsonObject: Self.confirmedSessionJSON, statusCode: 200, headers: nil)
+            return HTTPStubsResponse(jsonObject: Self.checkoutClientConfirmJSON(from: Self.confirmedSessionJSON), statusCode: 200, headers: nil)
         }
 
         // When Checkout confirms
