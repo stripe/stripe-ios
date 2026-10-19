@@ -125,9 +125,9 @@ import PassKit
     /// - Returns: YES if the device is currently able to make Apple Pay payments via one
     /// of the supported networks. NO if the user does not have a saved card of a
     /// supported type, or other restrictions prevent payment (such as parental controls).
-    /// - Warning: When the result is not cached, this method makes a synchronous PassKit query
-    ///   that can block for an extended period. Call it on a background queue without waiting
-    ///   for the result on the main thread or another thread that needs to remain responsive.
+    /// - Warning: This method can block for an extended period while PassKit waits for system
+    ///   services. Call it on a background queue without waiting for the result on the main thread
+    ///   or another thread that needs to remain responsive.
     @objc public class func deviceSupportsApplePay() -> Bool {
         if let deviceSupportsApplePay = _deviceSupportsApplePay {
             return deviceSupportsApplePay
