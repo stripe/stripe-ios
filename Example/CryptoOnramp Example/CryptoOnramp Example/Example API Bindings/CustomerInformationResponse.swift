@@ -14,11 +14,19 @@ struct CustomerInformationResponse: Decodable {
         let status: String
     }
 
+    /// A KYC tier and its verification status. Supersedes the deprecated `verifications` field.
+    struct KYCTier: Decodable {
+        let tier: String
+        let verificationStatus: String
+        let verificationErrors: [String]
+    }
+
     let id: String
     let object: String
     let providedFields: [String]
     let kycRegion: String?
     let verifications: [Verification]
+    let kycTiers: [KYCTier]
 }
 
 extension CustomerInformationResponse.Verification: CustomStringConvertible {
@@ -35,6 +43,20 @@ extension CustomerInformationResponse.Verification: CustomStringConvertible {
     }
 }
 
+extension CustomerInformationResponse.KYCTier: CustomStringConvertible {
+
+    // MARK: - CustomStringConvertible
+
+    var description: String {
+        let errors = verificationErrors.joined(separator: ", ")
+        if errors.isEmpty {
+            return "- \(tier): \(verificationStatus)"
+        } else {
+            return "- \(tier): \(verificationStatus) [errors: \(errors)]"
+        }
+    }
+}
+
 extension CustomerInformationResponse: CustomStringConvertible {
 
     // MARK: - CustomStringConvertible
@@ -43,7 +65,7 @@ extension CustomerInformationResponse: CustomStringConvertible {
         let providedFields = providedFields
             .map { "- \($0)" }
             .joined(separator: "\n")
-        let verifications = verifications
+        let kycTiers = kycTiers
             .map(\.description)
             .joined(separator: "\n")
 
@@ -53,8 +75,8 @@ extension CustomerInformationResponse: CustomStringConvertible {
         kycRegion: \(kycRegion ?? "none")
         providedFields:
         \(providedFields)
-        verifications:
-        \(verifications)
+        kycTiers:
+        \(kycTiers)
         """
     }
 }
