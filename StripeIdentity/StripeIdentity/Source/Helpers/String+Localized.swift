@@ -578,4 +578,13 @@ extension String.Localized {
         )
     }
 
+    // MARK: - Networked Identity
+
+    static var continue_with_link: String {
+        STPLocalizedString(
+            "Continue with Link",
+            "Button to sign in to Link to share or save an ID"
+        )
+    }
+
 }

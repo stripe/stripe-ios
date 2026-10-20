@@ -140,7 +140,7 @@ final class IdentityAPIClientTest: APIStubbedTestCase {
 
     func testAttachNetworkedIdentityDocument() throws {
         try verifyNetworkedIdentityAction(
-            action: "attach_document",
+            action: "reuse_document",
             parameters: ["identity_document_association_token": "reuse_token"]
         ) {
             apiClient.attachNetworkedIdentityDocument(associationToken: "reuse_token")
@@ -160,43 +160,6 @@ final class IdentityAPIClientTest: APIStubbedTestCase {
         try verifyNetworkedIdentityAction(action: "skip", parameters: [:]) {
             apiClient.skipNetworkedIdentity()
         }
-    }
-
-    func testNetworkedIdentityActionsRequireExplicitV8OptIn() {
-        // Given the unchanged production version
-        XCTAssertEqual(apiClient.apiVersion, 7)
-        XCTAssertFalse(apiClient.supportsNetworkedIdentity)
-        stub { _ in
-            XCTFail("A v7 client must not send draft Networked Identity actions")
-            return true
-        } response: { _ in
-            HTTPStubsResponse(data: Data(), statusCode: 500, headers: nil)
-        }
-        exp.expectedFulfillmentCount = 3
-
-        // When attempting each draft mutation without opting in
-        let promises = [
-            apiClient.attachNetworkedIdentityDocument(associationToken: "reuse_token"),
-            apiClient.prepareNetworkedIdentityDocumentSave(associationToken: "save_token"),
-            apiClient.skipNetworkedIdentity(),
-        ]
-        promises.forEach { promise in
-            promise.observe { result in
-                // Then it fails locally, without transmitting any token
-                guard case .failure(let error) = result else {
-                    XCTFail("Expected an unsupported-version error")
-                    self.exp.fulfill()
-                    return
-                }
-                guard case IdentityAPIClientError.networkedIdentityRequiresV8 = error else {
-                    XCTFail("Unexpected error: \(error)")
-                    self.exp.fulfill()
-                    return
-                }
-                self.exp.fulfill()
-            }
-        }
-        wait(for: [exp], timeout: 1)
     }
 
     func testNetworkedIdentityActionsDoNotRetryRateLimitResponses() {
@@ -300,9 +263,6 @@ final class IdentityAPIClientTest: APIStubbedTestCase {
         parameters: [String: String],
         apiCall: () -> Promise<StripeAPI.VerificationPageData>
     ) throws {
-        // Given a client explicitly opted into the draft API
-        apiClient.apiVersion = 8
-        XCTAssertTrue(apiClient.supportsNetworkedIdentity)
         let mock = VerificationPageDataMock.response200
         let responseData = try mock.data()
         let expectedResponse = try mock.make()
@@ -312,7 +272,7 @@ final class IdentityAPIClientTest: APIStubbedTestCase {
                 "/v1/identity/verification_pages/\(Self.mockId)/networked_identity/\(action)"
             )
             XCTAssertEqual(request.httpMethod, "POST")
-            verifyHeaders(urlRequest: request, apiVersion: 8)
+            verifyHeaders(urlRequest: request)
             XCTAssertNil(request.value(forHTTPHeaderField: "Stripe-Account"))
             XCTAssertNil(request.value(forHTTPHeaderField: "X-Stripe-Mock-Request"))
             XCTAssertEqual(request.value(forHTTPHeaderField: "Content-Type"), "application/x-www-form-urlencoded")
@@ -341,7 +301,6 @@ final class IdentityAPIClientTest: APIStubbedTestCase {
 
     private func verifyNetworkedIdentityActionsDoNotRetry(response: @escaping () -> HTTPStubsResponse) {
         // Given a retryable-looking response to a capability-bearing mutation
-        apiClient.apiVersion = 8
         var requestCount = 0
         stub { _ in true } response: { _ in
             requestCount += 1
@@ -407,7 +366,6 @@ final class IdentityAPIClientTest: APIStubbedTestCase {
 
 private func verifyHeaders(
     urlRequest: URLRequest,
-    apiVersion: Int = 7,
     file: StaticString = #file,
     line: UInt = #line
 ) {
@@ -419,7 +377,7 @@ private func verifyHeaders(
     )
     XCTAssertEqual(
         urlRequest.allHTTPHeaderFields?["Stripe-Version"],
-        "2020-08-27; identity_client_api=v\(apiVersion)",
+        "2020-08-27; identity_client_api=v8",
         file: file,
         line: line
     )

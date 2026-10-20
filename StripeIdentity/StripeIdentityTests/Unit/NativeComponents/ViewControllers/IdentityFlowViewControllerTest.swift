@@ -122,13 +122,10 @@ final class IdentityFlowViewControllerTest: XCTestCase {
             }
             #if compiler(>=6.2)
             if #available(iOS 26.0, visionOS 26.0, *) {
-                if !usesLinkStyle && LiquidGlassDetector.isEnabledInMerchantApp {
+                if usesLinkStyle {
+                    XCTAssertEqual(button.cornerConfiguration, .uniformCorners(radius: .fixed(12)))
+                } else if LiquidGlassDetector.isEnabledInMerchantApp {
                     XCTAssertEqual(button.cornerConfiguration, .capsule())
-                } else {
-                    XCTAssertEqual(
-                        button.cornerConfiguration,
-                        .uniformCorners(radius: .fixed(Double(button.configuration.cornerRadius)))
-                    )
                 }
             }
             #endif

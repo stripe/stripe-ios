@@ -12,7 +12,6 @@ import UIKit
 
 protocol IdentityAPIClient: AnyObject {
     var verificationSessionId: String { get }
-    var supportsNetworkedIdentity: Bool { get }
 
     func getIdentityVerificationPage() -> Promise<StripeAPI.VerificationPage>
 
@@ -52,16 +51,12 @@ protocol IdentityAPIClient: AnyObject {
     func skipNetworkedIdentity() -> Promise<StripeAPI.VerificationPageData>
 }
 
-enum IdentityAPIClientError: Error {
-    case networkedIdentityRequiresV8
-}
-
 final class IdentityAPIClientImpl: IdentityAPIClient {
     /// The latest production-ready version of the VerificationPages API that the
     /// SDK is capable of using.
     ///
     /// - Note: Update this value when a new API version is ready for use in production.
-    static let productionApiVersion: Int = 7
+    static let productionApiVersion: Int = 8
 
     var betas: Set<String> {
         return ["identity_client_api=v\(apiVersion)"]
@@ -69,10 +64,6 @@ final class IdentityAPIClientImpl: IdentityAPIClient {
 
     let apiClient: STPAPIClient
     let verificationSessionId: String
-
-    var supportsNetworkedIdentity: Bool {
-        apiVersion >= 8
-    }
 
     /// The VerificationPages API version used to make all API requests.
     ///
@@ -173,7 +164,7 @@ final class IdentityAPIClientImpl: IdentityAPIClient {
         associationToken: String
     ) -> Promise<StripeAPI.VerificationPageData> {
         postNetworkedIdentityAction(
-            "attach_document",
+            "reuse_document",
             parameters: ["identity_document_association_token": associationToken]
         )
     }
@@ -195,11 +186,6 @@ final class IdentityAPIClientImpl: IdentityAPIClient {
         _ action: String,
         parameters: [String: Any]
     ) -> Promise<StripeAPI.VerificationPageData> {
-        guard supportsNetworkedIdentity else {
-            return Promise(error: IdentityAPIClientError.networkedIdentityRequiresV8)
-        }
-
-        // #TODO - Networked Identity: Confirm the draft v8 action paths and VerificationPageData response before rollout.
         let resource = "identity/verification_pages/\(verificationSessionId)/networked_identity/\(action)"
         let formData = URLEncoder.queryString(from: parameters).data(using: .utf8)
         var request = apiClient.configuredRequest(

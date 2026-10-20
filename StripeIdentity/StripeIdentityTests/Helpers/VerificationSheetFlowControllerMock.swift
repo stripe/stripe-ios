@@ -39,10 +39,18 @@ final class VerificationSheetFlowControllerMock: VerificationSheetFlowController
     private(set) var didPopToScreenWithField: StripeAPI.VerificationPageFieldType?
     private(set) var networkedIdentityPresentationResetCount = 0
 
+    /// Whether `transitionToNetworkedIdentitySave` shows the save offer.
+    var offersNetworkedIdentitySave = false
+    private(set) var networkedIdentitySaveTransitionCount = 0
+
     init(
         uncollectedFields: Set<StripeAPI.VerificationPageFieldType> = []
     ) {
         self.uncollectedFields = uncollectedFields
+    }
+
+    func resetNetworkedIdentityForNewPresentation() {
+        networkedIdentityPresentationResetCount += 1
     }
 
     func transitionToNextScreen(
@@ -57,10 +65,6 @@ final class VerificationSheetFlowControllerMock: VerificationSheetFlowController
         transitionedWithUpdateDataResult = updateDataResult
         didTransitionToNextScreenExp.fulfill()
         completion()
-    }
-
-    func resetNetworkedIdentityForNewPresentation() {
-        networkedIdentityPresentationResetCount += 1
     }
 
     func transitionToCountryNotListedScreen(
@@ -98,6 +102,14 @@ final class VerificationSheetFlowControllerMock: VerificationSheetFlowController
         completion: @escaping () -> Void
     ) {
         // no-op
+    }
+
+    func transitionToNetworkedIdentitySave(
+        sheetController: VerificationSheetControllerProtocol,
+        completion: @escaping () -> Void
+    ) -> Bool {
+        networkedIdentitySaveTransitionCount += 1
+        return offersNetworkedIdentitySave
     }
 
     func replaceCurrentScreen(with viewController: UIViewController) {
