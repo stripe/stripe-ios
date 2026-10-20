@@ -125,7 +125,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
                 let savePaymentMethod: Bool? = checkoutSession.noPaymentRequired ? nil
                     : checkoutSession.merchantWillSavePaymentMethod(STPPaymentMethodType.card) ? true : nil
 
-                // 2. Create the PaymentMethod during confirmation
+                // 2. Confirm
                 let cardParams = STPPaymentMethodCardParams()
                 cardParams.token = token.tokenId
                 let paymentMethodData = STPPaymentMethodParams(
