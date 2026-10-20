@@ -72,6 +72,7 @@ public final class PaymentElement {
         checkout: CheckoutController,
         configuration: Configuration
     ) async throws {
+        STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: PaymentElement.self)
         // Note: PaymentElement is just nice user-facing packaging around the existing Embedded and FC classes
         self.configuration = configuration
 
@@ -280,4 +281,10 @@ private extension CheckoutController.Session.PaymentOptionDisplayData.BillingDet
             state: address.state
         )
     }
+}
+
+// MARK: - STPAnalyticsProtocol
+/// :nodoc:
+@_spi(STP) extension PaymentElement: STPAnalyticsProtocol {
+    @_spi(STP) public nonisolated static let stp_analyticsIdentifier: String = "PaymentElement"
 }
