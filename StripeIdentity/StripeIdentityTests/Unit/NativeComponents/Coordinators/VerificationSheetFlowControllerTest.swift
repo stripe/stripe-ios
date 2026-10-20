@@ -62,7 +62,7 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
         // Then both upstream configuration and Networked Identity injection are supported
         XCTAssertTrue(flow.brandLogo === brandLogo)
         XCTAssertEqual(flow.biometricConsentConfiguration?.hideBrandingHeader, true)
-        guard case .custom(let backgroundColor, let textColor) = flow.primaryButtonStyle else {
+        guard case .custom(let backgroundColor, let textColor, _) = flow.primaryButtonStyle else {
             return XCTFail("Expected the configured primary button style")
         }
         XCTAssertEqual(backgroundColor, .purple)

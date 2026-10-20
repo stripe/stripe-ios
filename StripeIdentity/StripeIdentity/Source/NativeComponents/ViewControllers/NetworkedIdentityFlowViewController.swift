@@ -80,7 +80,7 @@ final class NetworkedIdentityFlowViewController: UIViewController {
 
     private let coordinator: NetworkedIdentityCoordinator
     private let content: Content
-    private let postAccessibilityNotification: (UIAccessibility.Notification, Any?) -> Void
+    private let postAccessibilityNotification: @MainActor (UIAccessibility.Notification, Any?) -> Void
     private let flowView = IdentityFlowView()
     private var displayedPhoneNumber: String?
     private var displayedOTPBody: String?
@@ -103,7 +103,7 @@ final class NetworkedIdentityFlowViewController: UIViewController {
         coordinator: NetworkedIdentityCoordinator,
         content: Content = .networkedIdentity,
         providedEmailAddress: String? = nil,
-        postAccessibilityNotification: @escaping (UIAccessibility.Notification, Any?) -> Void = {
+        postAccessibilityNotification: @escaping @MainActor (UIAccessibility.Notification, Any?) -> Void = {
             UIAccessibility.post(notification: $0, argument: $1)
         }
     ) {
@@ -271,7 +271,7 @@ extension NetworkedIdentityFlowViewController.Content {
                     String(format: String.Localized.enter_code_sent_to, $0)
                 },
                 invalidCodeMessage: STPLocalizedString(
-                    "The provided verification code is incorrect.",
+                    "The verification code you entered is incorrect.",
                     "Error message shown when the user enters an incorrect verification code."
                 )
             ),
@@ -638,7 +638,7 @@ extension NetworkedIdentityFlowViewController: NetworkedIdentityCoordinatorDeleg
 
 // MARK: - Screen delegates
 
-extension NetworkedIdentityFlowViewController: NetworkedIdentityEmailViewDelegate {
+extension NetworkedIdentityFlowViewController: @MainActor NetworkedIdentityEmailViewDelegate {
     func networkedIdentityEmailViewDidUpdate(_ view: NetworkedIdentityEmailView) {
         guard coordinator.state == .collectEmail || coordinator.state == .reauthenticationRequired else {
             return
@@ -651,7 +651,7 @@ extension NetworkedIdentityFlowViewController: NetworkedIdentityEmailViewDelegat
     }
 }
 
-extension NetworkedIdentityFlowViewController: PhoneOtpViewDelegate {
+extension NetworkedIdentityFlowViewController: @MainActor PhoneOtpViewDelegate {
     func didInputFullOtp(newOtp: String) {
         coordinator.submitOTP(newOtp)
     }
@@ -661,7 +661,7 @@ extension NetworkedIdentityFlowViewController: PhoneOtpViewDelegate {
     }
 }
 
-extension NetworkedIdentityFlowViewController: NetworkedIdentityDocumentSelectionViewDelegate {
+extension NetworkedIdentityFlowViewController: @MainActor NetworkedIdentityDocumentSelectionViewDelegate {
     func networkedIdentityDocumentSelectionView(
         _ view: NetworkedIdentityDocumentSelectionView,
         didSelect document: NetworkedIdentityDocument

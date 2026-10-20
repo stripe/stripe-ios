@@ -50,6 +50,9 @@
 /* Back button title for returning to consent screen of Identity verification */
 "Consent" = "Consent";
 
+/* Loading title when skipping Link identity reuse */
+"Continuing without Link" = "Continuing without Link";
+
 /* Error title displayed to the user if we could not scan a high quality image of the user's identity document in a reasonable amount of time */
 "Could not capture image" = "Could not capture image";
 
@@ -215,6 +218,9 @@
 /* Button text displayed to the user to retake photo */
 "Retake Photos" = "Retake Photos";
 
+/* Loading title when attaching a saved identity document */
+"Reusing your identity document" = "Reusing your identity document";
+
 /* Back button title for returning to the document scan screen */
 "Scan" = "Scan";
 
@@ -258,6 +264,9 @@
 
 /* Text for message of warning alert */
 "The images of your identity document have not been saved. Do you want to leave?" = "The images of your identity document have not been saved. Do you want to leave?";
+
+/* Error message shown when the user enters an incorrect verification code. */
+"The verification code you entered is incorrect." = "The verification code you entered is incorrect.";
 
 /* Error text displayed to the user when the device's camera is not available */
 "There was an error accessing the camera." = "There was an error accessing the camera.";
