@@ -26,14 +26,10 @@ import UIKit
         return validator.inputValue
     }
 
-    public convenience init(
-        postalCodeRequirement: STPPostalCodeRequirement
-    ) {
+    public convenience init() {
         self.init(
             formatter: STPPostalCodeInputTextFieldFormatter(),
-            validator: STPPostalCodeInputTextFieldValidator(
-                postalCodeRequirement: postalCodeRequirement
-            )
+            validator: STPPostalCodeInputTextFieldValidator()
         )
     }
 
