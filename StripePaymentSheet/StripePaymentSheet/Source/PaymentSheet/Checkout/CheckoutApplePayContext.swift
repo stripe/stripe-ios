@@ -127,7 +127,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
                     : checkoutSession.merchantWillSavePaymentMethod(STPPaymentMethodType.card) ? true : nil
 
                 // 2. Confirm
-                let requestParameters = CheckoutSessionConfirmationRequestParameters(
+                let requestParameters = CheckoutSessionConfirmationRequestParameters.createWithPaymentMethodID(
                     sessionId: checkoutSession.id,
                     paymentMethodId: paymentMethod.id,
                     expectedAmount: checkoutSession.amount,

@@ -638,11 +638,15 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         }
     }
 
-    func testLinkPaymentDetailsCreatesPaymentMethodAndConfirmsCheckoutSession() async throws {
+    func testLinkPaymentDetailsConfirmsCheckoutSessionWithPaymentMethodData() async throws {
         // Given Link payment details in non-passthrough mode
         let checkout = try await makeCheckout(apiResponse: CheckoutTestHelpers.makeSession().withCustomer())
-        let createPaymentMethod = stubCreatePaymentMethod(expectedBillingEmail: .value("test@example.com"))
-        let confirm = stubConfirmationExpecting(sessionId: checkout.session.id, savePaymentMethod: nil)
+        let confirm = stubConfirmationExpecting(
+            sessionId: checkout.session.id,
+            savePaymentMethod: nil,
+            expectedPaymentMethodType: "link",
+            expectedBillingEmail: .value("test@example.com")
+        )
         let logout = stubLinkLogout(consumerSessionClientSecret: "cs_xxx")
         let configuration = checkout.getPaymentElement().embeddedPaymentElement.configuration
         let flow = CheckoutController.CheckoutConfirmationFlow.link(.init(
@@ -658,9 +662,9 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         // When Checkout confirms with Link
         let result = await checkout.confirm(flow)
 
-        // Then Link creates a PaymentMethod, confirms Checkout, and logs out
+        // Then Link sends payment method data to Checkout confirmation and logs out
         assertSucceeded(result)
-        await fulfillment(of: [createPaymentMethod, confirm, logout], timeout: 10)
+        await fulfillment(of: [confirm, logout], timeout: 10)
     }
 
     func testLinkConfirmationPollsOpenCheckoutSession() async throws {
@@ -668,11 +672,11 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         let checkout = try await makeCheckout(apiResponse: CheckoutTestHelpers.makeSession().withCustomer())
         var confirmResponseJSON = makeConfirmedSessionJSON(status: "open")
         confirmResponseJSON["session_id"] = checkout.session.id
-        let createPaymentMethod = stubCreatePaymentMethod()
         let confirm = stubConfirmationExpecting(
             sessionId: checkout.session.id,
             savePaymentMethod: nil,
-            responseJSON: confirmResponseJSON
+            responseJSON: confirmResponseJSON,
+            expectedPaymentMethodType: "link"
         )
         let poll = stubPollCheckoutSession(sessionId: checkout.session.id)
         let logout = stubLinkLogout(consumerSessionClientSecret: "cs_xxx")
@@ -692,7 +696,101 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
 
         // Then Link polls until the Checkout Session confirmation is complete
         assertSucceeded(result)
-        await fulfillment(of: [createPaymentMethod, confirm, poll, logout], timeout: 10)
+        await fulfillment(of: [confirm, poll, logout], timeout: 10)
+    }
+
+    func testSavedPaymentMethodConfirmsWithIDWithoutCompletingChallenge() async throws {
+        // Given an existing payment method and a prepared confirmation challenge
+        let checkout = try await makeCheckout()
+        let paymentMethod = STPPaymentMethod._testCard()
+        let challenge = TestConfirmationChallenge()
+        let confirm = expectation(description: "Saved payment method confirmed")
+        stub { request in
+            request.url?.path.hasSuffix("/confirm") == true
+        } response: { request in
+            let params = RequestBodyTestHelpers.formEncodedBodyParams(from: request)
+            XCTAssertEqual(params["payment_method"], paymentMethod.stripeId)
+            XCTAssertFalse(params.keys.contains { $0.hasPrefix("payment_method_data[") })
+            confirm.fulfill()
+            return HTTPStubsResponse(jsonObject: Self.confirmedSessionJSON, statusCode: 200, headers: nil)
+        }
+
+        // When confirming the saved payment method
+        let result = await checkout.confirm(makePaymentMethodFlow(
+            for: checkout,
+            option: .saved(paymentMethod, nil),
+            confirmationChallenge: challenge
+        ))
+
+        // Then confirmation uses its ID and does not complete an unused challenge
+        assertSucceeded(result)
+        await fulfillment(of: [confirm], timeout: 10)
+        let completions = await challenge.completions
+        XCTAssertEqual(completions, 0)
+    }
+
+    func testNewPaymentMethodCompletesChallengeAfterConfirmResponse() async throws {
+        try await assertChallengeCompletesAfterConfirm(statusCode: 200)
+    }
+
+    func testNewPaymentMethodCompletesChallengeAfterConfirmFailure() async throws {
+        try await assertChallengeCompletesAfterConfirm(statusCode: 400)
+    }
+
+    private func assertChallengeCompletesAfterConfirm(statusCode: Int) async throws {
+        // Given a new card whose confirmation has a Radar challenge
+        let checkout = try await makeCheckout()
+        let challenge = TestConfirmationChallenge()
+        let requestStarted = expectation(description: "Confirmation request started")
+        stub { request in
+            request.url?.path.hasSuffix("/confirm") == true
+        } response: { request in
+            let params = RequestBodyTestHelpers.formEncodedBodyParams(from: request, omittingEmptyValues: true)
+            XCTAssertEqual(params["payment_method_data[radar_options][hcaptcha_token]"], "captcha_token")
+            XCTAssertEqual(params["payment_method_data[radar_options][ios_verification_object][test_assertion]"], "assertion")
+            requestStarted.fulfill()
+            return HTTPStubsResponse(
+                jsonObject: statusCode == 200 ? Self.confirmedSessionJSON : ["error": ["type": "card_error", "message": "Declined"]],
+                statusCode: Int32(statusCode),
+                headers: nil
+            ).responseTime(0.5)
+        }
+
+        // When confirmation is waiting for the server response
+        let flow = makePaymentMethodFlow(
+            for: checkout,
+            option: .new(makeConfirmParams(type: .stripe(.card))),
+            confirmationChallenge: challenge
+        )
+        let confirmation = Task { await checkout.confirm(flow) }
+        await fulfillment(of: [requestStarted], timeout: 10)
+        let completionsDuringRequest = await challenge.completions
+        XCTAssertEqual(completionsDuringRequest, 0)
+
+        // Then cleanup runs once after success or failure, before confirm returns
+        let result = await confirmation.value
+        if statusCode == 200 {
+            assertSucceeded(result)
+        } else {
+            guard case .failed = result else { return XCTFail("Expected failed confirmation") }
+        }
+        let completionsAfterRequest = await challenge.completions
+        XCTAssertEqual(completionsAfterRequest, 1)
+    }
+
+    private actor TestConfirmationChallenge: CheckoutConfirmationChallenge {
+        private(set) var completions = 0
+
+        func makeRadarOptions(for paymentMethodType: STPPaymentMethodType) async -> STPRadarOptions? {
+            XCTAssertEqual(paymentMethodType, .card)
+            let options = STPRadarOptions(hcaptchaToken: "captcha_token")
+            options.iosVerificationObject = ["test_assertion": "assertion"]
+            return options
+        }
+
+        func complete() async {
+            completions += 1
+        }
     }
 
     // MARK: - Helpers
@@ -721,14 +819,15 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
 
     private func makePaymentMethodFlow(
         for checkout: CheckoutController,
-        option: CheckoutController.PaymentMethodConfirmationParameters.Option
+        option: CheckoutController.PaymentMethodConfirmationParameters.Option,
+        confirmationChallenge: (any CheckoutConfirmationChallenge)? = nil
     ) -> CheckoutController.CheckoutConfirmationFlow {
         let configuration = checkout.getPaymentElement().embeddedPaymentElement.configuration
         let parameters = CheckoutController.PaymentMethodConfirmationParameters(
             option: option,
             configuration: configuration,
             nativeSheetPresentation: checkout.getPaymentElement().embeddedPaymentElement.nativeSheetPresentation,
-            confirmationChallenge: nil,
+            confirmationChallenge: confirmationChallenge,
             authenticationContext: self,
             paymentHandler: STPPaymentHandler(apiClient: configuration.apiClient)
         )
@@ -747,6 +846,15 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         file: StaticString = #filePath,
         line: UInt = #line
     ) async throws {
+        let fraudData = FraudDetectionData.shared
+        let originalFraudData = (fraudData.guid, fraudData.muid, fraudData.sid, fraudData.sidCreationDate)
+        fraudData.guid = "test_guid"
+        fraudData.muid = "test_muid"
+        fraudData.sid = "test_sid"
+        fraudData.sidCreationDate = Date()
+        defer {
+            (fraudData.guid, fraudData.muid, fraudData.sid, fraudData.sidCreationDate) = originalFraudData
+        }
         let checkout = try await makeCheckout(apiResponse: session)
         if let checkoutEmail {
             try await checkout.updateEmail(checkoutEmail)
@@ -754,16 +862,13 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         let confirmParams = makeConfirmParams(type: paymentMethodType)
         confirmParams.paymentMethodParams.nonnil_billingDetails.email = paymentMethodEmail
         confirmParams.saveForFutureUseCheckboxState = checkboxState
-        let createPaymentMethod = stubCreatePaymentMethod(
-            expectedAllowRedisplay: expectedAllowRedisplay,
-            expectedBillingEmail: expectedBillingEmail,
-            file: file,
-            line: line
-        )
         let confirm = stubConfirmationExpecting(
             sessionId: checkout.session.id,
             savePaymentMethod: expectedSavePaymentMethod,
             expectedCollectedInformationEmail: checkoutEmail,
+            expectedPaymentMethodType: try XCTUnwrap(confirmParams.paymentMethodParams.rawTypeString),
+            expectedAllowRedisplay: expectedAllowRedisplay,
+            expectedBillingEmail: expectedBillingEmail,
             file: file,
             line: line
         )
@@ -773,7 +878,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         )
 
         assertSucceeded(result, file: file, line: line)
-        await fulfillment(of: [createPaymentMethod, confirm], timeout: 10)
+        await fulfillment(of: [confirm], timeout: 10)
     }
 
     private func makeConfirmParams(type: PaymentSheet.PaymentMethodType) -> IntentConfirmParams {
@@ -857,13 +962,14 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
     ) async -> CheckoutController.InternalConfirmResult {
         stubConfirmation(responseJSON: responseJSON)
         let configuration = checkout.getPaymentElement().embeddedPaymentElement.configuration
-        let requestParameters = CheckoutSessionConfirmationRequestParameters(
-            checkoutSession: checkout.session,
-            paymentMethod: STPPaymentMethod._testCard(),
-            configuration: configuration,
-            paymentMethodOptions: nil,
-            savePaymentMethod: nil,
-            clientAttributionMetadata: nil
+        let requestParameters = CheckoutSessionConfirmationRequestParameters.createWithPaymentMethodID(
+            sessionId: checkout.session.id,
+            paymentMethodId: STPPaymentMethod._testCard().stripeId,
+            expectedAmount: checkout.session.amount,
+            expectedPaymentMethodType: "card",
+            returnURL: configuration.returnURL,
+            shipping: STPPaymentIntentShippingDetailsParams(paymentSheetConfiguration: configuration),
+            collectedInformation: .init(email: checkout.session.localState.email)
         )
         return await CheckoutController.confirmCheckoutSession(
             with: requestParameters,
@@ -909,6 +1015,9 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         savePaymentMethod: Bool?,
         expectedCollectedInformationEmail: String? = nil,
         responseJSON: [AnyHashable: Any]? = nil,
+        expectedPaymentMethodType: String,
+        expectedAllowRedisplay: String? = nil,
+        expectedBillingEmail: BillingEmailExpectation? = nil,
         file: StaticString = #filePath,
         line: UInt = #line
     ) -> XCTestExpectation {
@@ -924,6 +1033,29 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
                 omittingEmptyValues: true,
                 line: line
             )
+            XCTAssertNil(params["payment_method"], file: file, line: line)
+            XCTAssertEqual(params["payment_method_data[type]"], expectedPaymentMethodType, file: file, line: line)
+            XCTAssertEqual(params["expected_payment_method_type"], expectedPaymentMethodType, file: file, line: line)
+            XCTAssertNotNil(params["payment_method_data[payment_user_agent]"], file: file, line: line)
+            XCTAssertEqual(params["payment_method_data[guid]"], FraudDetectionData.shared.guid, file: file, line: line)
+            XCTAssertEqual(params["payment_method_data[muid]"], FraudDetectionData.shared.muid, file: file, line: line)
+            XCTAssertEqual(params["payment_method_data[sid]"], FraudDetectionData.shared.sid, file: file, line: line)
+            XCTAssertEqual(params["payment_method_data[client_attribution_metadata][checkout_session_id]"], sessionId, file: file, line: line)
+            XCTAssertEqual(params["client_attribution_metadata[checkout_session_id]"], sessionId, file: file, line: line)
+            if expectedPaymentMethodType == "card" {
+                XCTAssertEqual(params["payment_method_data[card][number]"], "4242424242424242", file: file, line: line)
+            }
+            if let expectedAllowRedisplay {
+                XCTAssertEqual(params["payment_method_data[allow_redisplay]"], expectedAllowRedisplay, file: file, line: line)
+            }
+            switch expectedBillingEmail {
+            case .omitted:
+                XCTAssertNil(params["payment_method_data[billing_details][email]"], file: file, line: line)
+            case .value(let email):
+                XCTAssertEqual(params["payment_method_data[billing_details][email]"], email, file: file, line: line)
+            case nil:
+                break
+            }
             XCTAssertEqual(
                 params["save_payment_method"],
                 savePaymentMethod.map(String.init),
@@ -962,44 +1094,6 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
                     "state": "succeeded",
                     "payment_object_status": NSNull(),
                 ],
-                statusCode: 200,
-                headers: nil
-            )
-        }
-        return expectation
-    }
-
-    private func stubCreatePaymentMethod(
-        expectedAllowRedisplay: String? = nil,
-        expectedBillingEmail: BillingEmailExpectation? = nil,
-        file: StaticString = #filePath,
-        line: UInt = #line
-    ) -> XCTestExpectation {
-        let expectation = expectation(description: "PaymentMethod creation requested")
-        stub { request in
-            request.url?.path.hasSuffix("/payment_methods") == true
-        } response: { request in
-            if expectedAllowRedisplay != nil || expectedBillingEmail != nil {
-                let params = RequestBodyTestHelpers.formEncodedBodyParams(
-                    from: request,
-                    omittingEmptyValues: true,
-                    line: line
-                )
-                if let expectedAllowRedisplay {
-                    XCTAssertEqual(params["allow_redisplay"], expectedAllowRedisplay, file: file, line: line)
-                }
-                switch expectedBillingEmail {
-                case .omitted:
-                    XCTAssertNil(params["billing_details[email]"], file: file, line: line)
-                case .value(let email):
-                    XCTAssertEqual(params["billing_details[email]"], email, file: file, line: line)
-                case nil:
-                    break
-                }
-            }
-            expectation.fulfill()
-            return HTTPStubsResponse(
-                jsonObject: STPTestUtils.jsonNamed("CardPaymentMethod")!,
                 statusCode: 200,
                 headers: nil
             )
