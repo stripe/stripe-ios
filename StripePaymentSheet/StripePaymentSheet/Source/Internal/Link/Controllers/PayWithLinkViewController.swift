@@ -42,6 +42,12 @@ protocol PayWithLinkViewControllerDelegate: AnyObject {
     func payWithLinkViewControllerShouldCancel3DS2ChallengeFlow(
         _ payWithLinkViewController: PayWithLinkViewController
     )
+
+    /// Authentication-only presentations finish here once the session is verified.
+    func payWithLinkViewControllerDidAuthenticate(
+        _ payWithLinkViewController: PayWithLinkViewController,
+        linkAccount: PaymentSheetLinkAccount
+    )
 }
 
 @MainActor
@@ -106,6 +112,11 @@ final class PayWithLinkViewController: NSObject {
         let linkAppearance: LinkAppearance?
         let linkConfiguration: LinkConfiguration?
         let confirmationSource: CheckoutController.ConfirmingElement?
+        /// Set for authentication-only presentations: sign-in and sign-up use this copy and consent, and the
+        /// sheet finishes once the session is verified instead of showing the wallet.
+        let authenticationContent: LinkController.AuthenticationContent?
+        /// Used by lookups the sign-up screen makes when the email changes.
+        let requestSurface: LinkRequestSurface
 
         var isDismissible: Bool = true
 
@@ -168,8 +179,12 @@ final class PayWithLinkViewController: NSObject {
             analyticsHelper: PaymentSheetAnalyticsHelper,
             linkAppearance: LinkAppearance? = nil,
             linkConfiguration: LinkConfiguration? = nil,
-            confirmationSource: CheckoutController.ConfirmingElement? = nil
+            confirmationSource: CheckoutController.ConfirmingElement? = nil,
+            authenticationContent: LinkController.AuthenticationContent? = nil,
+            requestSurface: LinkRequestSurface = .default
         ) {
+            self.authenticationContent = authenticationContent
+            self.requestSurface = requestSurface
             self.intent = intent
             self.elementsSession = elementsSession
             self.configuration = configuration
@@ -226,7 +241,9 @@ final class PayWithLinkViewController: NSObject {
         supportedPaymentMethodTypes: [LinkPaymentMethodType]? = nil,
         linkAppearance: LinkAppearance? = nil,
         linkConfiguration: LinkConfiguration? = nil,
-        confirmationSource: CheckoutController.ConfirmingElement? = nil
+        confirmationSource: CheckoutController.ConfirmingElement? = nil,
+        authenticationContent: LinkController.AuthenticationContent? = nil,
+        requestSurface: LinkRequestSurface = .default
     ) {
         LinkUI.applyLiquidGlassIfPossible(configuration: configuration)
 
@@ -246,7 +263,9 @@ final class PayWithLinkViewController: NSObject {
                 analyticsHelper: analyticsHelper,
                 linkAppearance: linkAppearance,
                 linkConfiguration: linkConfiguration,
-                confirmationSource: confirmationSource
+                confirmationSource: confirmationSource,
+                authenticationContent: authenticationContent,
+                requestSurface: requestSurface
             ),
             linkAccount: linkAccount,
             nativeSheetPresentation: nativeSheetPresentation
@@ -403,7 +422,7 @@ final class PayWithLinkViewController: NSObject {
         case .requiresVerification:
             setViewControllers([VerifyAccountViewController(linkAccount: linkAccount, context: context)])
         case .verified:
-            loadAndPresentWallet()
+            loadAndPresentWalletOrFinishAuthentication()
         }
     }
 
@@ -418,6 +437,19 @@ final class PayWithLinkViewController: NSObject {
 // MARK: - Utils
 
 private extension PayWithLinkViewController {
+
+    func loadAndPresentWalletOrFinishAuthentication() {
+        guard context.authenticationContent != nil else {
+            loadAndPresentWallet()
+            return
+        }
+        guard let linkAccount else {
+            stpAssertionFailure(LinkAccountError.noLinkAccount.localizedDescription)
+            return
+        }
+        setUserInteractionEnabled(false)
+        payWithLinkDelegate?.payWithLinkViewControllerDidAuthenticate(self, linkAccount: linkAccount)
+    }
 
     func loadAndPresentWallet() {
         if rootViewController as? LoaderViewController == nil {
@@ -845,6 +877,11 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
     func bailToWebFlow() {
         guard !isBailingToWebFlow else {
             // Multiple things can kick off bailing to web flow, but we only want to do it once
+            return
+        }
+        if context.authenticationContent != nil {
+            isBailingToWebFlow = true
+            finish(withResult: .failed(error: LinkController.IntegrationError.missingAppAttestation), deferredIntentConfirmationType: nil)
             return
         }
         guard !context.launchedFromFlowController else {
