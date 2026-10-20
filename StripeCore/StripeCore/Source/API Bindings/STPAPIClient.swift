@@ -676,7 +676,9 @@ extension STPAPIClient {
                 throw NSError.stp_genericFailedToParseResponseError()
             }
 
-            let decodedObject: T = try StripeJSONDecoder.decode(jsonData: data ?? Data())
+            let decoder = StripeJSONDecoder()
+            decoder.userInfo[StripeJSONDecoder.requestIDKey] = httpResponse.value(forHTTPHeaderField: "request-id")
+            let decodedObject = try decoder.decode(T.self, from: data ?? Data())
             return .success(decodedObject)
         } catch {
             // Try decoding the error from the service if one is available
