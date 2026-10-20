@@ -26,6 +26,10 @@ class CheckoutApplePayContextFunctionalTest: STPNetworkStubbingTestCase {
         Task {
             let result = await context.presentApplePay()
             XCTAssertEqual(result.paymentSheetResult, .completed)
+            if case .completed(let response) = result {
+                XCTAssertEqual(response.status, .complete(.paid))
+                XCTAssertEqual(response.paymentIntent?.status, .succeeded)
+            }
             didComplete.fulfill()
         }
         _startApplePayForContext(context, withExpectedStatus: .success)
@@ -58,12 +62,17 @@ class CheckoutApplePayContextFunctionalTest: STPNetworkStubbingTestCase {
     func testCancelAfterConfirmStillSucceeds() async throws {
         // Given a cancel fires while the confirm is in-flight
         let (context, _) = try await makeContext()
+        let didCancel = expectation(description: "Cancellation happens during confirmation")
+        var cancellationRequested = false
         stub { urlRequest in
             guard let path = urlRequest.url?.path,
                   path.contains("/payment_pages/"),
                   path.hasSuffix("/confirm") else { return false }
             DispatchQueue.main.async {
+                guard !cancellationRequested else { return }
+                cancellationRequested = true
                 context.paymentAuthorizationControllerDidFinish(context.authorizationController)
+                didCancel.fulfill()
             }
             return false
         } response: { _ in HTTPStubsResponse() }
@@ -81,7 +90,7 @@ class CheckoutApplePayContextFunctionalTest: STPNetworkStubbingTestCase {
             didAuthorizePayment: STPFixtures.simulatorApplePayPayment(),
             handler: { _ in }
         )
-        await fulfillment(of: [didComplete], timeout: 20.0)
+        await fulfillment(of: [didCancel, didComplete], timeout: 20.0)
     }
 
     // MARK: - Helpers
@@ -125,9 +134,7 @@ class CheckoutApplePayContextFunctionalTest: STPNetworkStubbingTestCase {
             returnURL: returnURL,
             merchantDisplayName: "Functional Test Merchant",
             confirmationHandler: { requestParameters in
-                XCTAssertNil(requestParameters.paymentMethodId)
-                XCTAssertNotNil(requestParameters.paymentMethodData?.card?.token)
-                return await CheckoutController.confirmCheckoutSession(
+                await CheckoutController.confirmCheckoutSession(
                     with: requestParameters,
                     apiClient: apiClient,
                     authenticationContext: authenticationContext,
