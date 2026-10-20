@@ -216,24 +216,37 @@ class PayWithLinkViewController_WalletViewModelTests: XCTestCase {
         )
     }
 
-    func test_supportedPaymentMethodTypes_whenFilterIsNil_usesAllCasesAtIntersection() throws {
+    func test_supportedPaymentMethodTypes_whenFilterIsNil_includesLPMs() throws {
+        let lpm = ParsedEnum<ConsumerPaymentDetails.DetailsType>(rawValue: "PIX")
         let sut = try makeSUT(
-            supportedPaymentDetailsTypes: [ParsedEnum(.bankAccount)],
+            supportedPaymentDetailsTypes: [ParsedEnum(.bankAccount), lpm],
             supportedPaymentMethodTypes: nil,
-            linkFundingSources: ["BANK_ACCOUNT"]
+            linkFundingSources: ["BANK_ACCOUNT", "PIX"]
         )
 
-        XCTAssertEqual(sut.supportedPaymentMethodTypes, [ParsedEnum(.bankAccount)])
+        XCTAssertEqual(sut.supportedPaymentMethodTypes, [ParsedEnum(.bankAccount), lpm])
     }
 
-    func test_supportedPaymentMethodTypes_whenFilterIsEmpty_usesAllCasesAtIntersection() throws {
+    func test_supportedPaymentMethodTypes_whenFilterIsEmpty_includesLPMs() throws {
+        let lpm = ParsedEnum<ConsumerPaymentDetails.DetailsType>(rawValue: "PIX")
         let sut = try makeSUT(
-            supportedPaymentDetailsTypes: [ParsedEnum(.bankAccount)],
+            supportedPaymentDetailsTypes: [ParsedEnum(.bankAccount), lpm],
             supportedPaymentMethodTypes: [],
-            linkFundingSources: ["BANK_ACCOUNT"]
+            linkFundingSources: ["BANK_ACCOUNT", "PIX"]
         )
 
-        XCTAssertEqual(sut.supportedPaymentMethodTypes, [ParsedEnum(.bankAccount)])
+        XCTAssertEqual(sut.supportedPaymentMethodTypes, [ParsedEnum(.bankAccount), lpm])
+    }
+
+    func test_supportedPaymentMethodTypes_whenFilterIsCardAndBank_excludesLPMs() throws {
+        let lpm = ParsedEnum<ConsumerPaymentDetails.DetailsType>(rawValue: "PIX")
+        let sut = try makeSUT(
+            supportedPaymentDetailsTypes: [ParsedEnum(.card), ParsedEnum(.bankAccount), lpm],
+            supportedPaymentMethodTypes: [.card, .bankAccount],
+            linkFundingSources: ["CARD", "BANK_ACCOUNT", "PIX"]
+        )
+
+        XCTAssertEqual(sut.supportedPaymentMethodTypes, [ParsedEnum(.card), ParsedEnum(.bankAccount)])
     }
 
     func test_supportedPaymentMethodTypes_whenFilterIsCard_returnsCardOnly() throws {
