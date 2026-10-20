@@ -84,6 +84,44 @@ final public class IdentityVerificationSheet {
         /// When `nil`, the biometric consent screen uses its default layout.
         @_spi(STP) public var biometricConsent: BiometricConsentConfiguration?
 
+        /// A Link consumer session started outside Identity, e.g. by crypto onramp. It only lets the user
+        /// skip signing in to Link; Networked Identity still starts from an explicit user action.
+        @_spi(STP) public struct LinkSessionHandoff: Equatable {
+            public let email: String
+            public let linkSessionKey: String
+
+            public init(email: String, linkSessionKey: String) {
+                self.email = email
+                self.linkSessionKey = linkSessionKey
+            }
+        }
+
+        /// Networked Identity options for Stripe SDK modules and internal testing.
+        @_spi(STP) public struct NetworkedIdentityOptions: Equatable {
+            public var linkSessionHandoff: LinkSessionHandoff?
+            /// Debug-only until the VerificationPage returns it.
+            public var debugMerchantPublishableKey: String?
+            /// Debug-only until the VerificationPage returns it.
+            public var debugProvidedEmail: String?
+            /// Debug-only route override: "reuse", "save", "none", or nil to use the VerificationPage.
+            public var debugRoute: String?
+
+            public init(
+                linkSessionHandoff: LinkSessionHandoff?,
+                debugMerchantPublishableKey: String?,
+                debugProvidedEmail: String?,
+                debugRoute: String?
+            ) {
+                self.linkSessionHandoff = linkSessionHandoff
+                self.debugMerchantPublishableKey = debugMerchantPublishableKey
+                self.debugProvidedEmail = debugProvidedEmail
+                self.debugRoute = debugRoute
+            }
+        }
+
+        /// Networked Identity options. When nil, Networked Identity isn't offered.
+        @_spi(STP) public var networkedIdentity: NetworkedIdentityOptions?
+
         /// Initializes a Configuration.
         /// - Parameters:
         ///   - brandLogo: An image of your customer-facing business logo.

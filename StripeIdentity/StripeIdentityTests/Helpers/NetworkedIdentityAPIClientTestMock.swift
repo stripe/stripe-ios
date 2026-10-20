@@ -9,51 +9,21 @@ import Foundation
 @testable import StripeIdentity
 
 final class NetworkedIdentityAPIClientTestMock: NetworkedIdentityAPIClient {
-    struct LookupRequest: Equatable {
-        let emailAddress: String
-        let verificationSessionClientSecrets: [String]?
-    }
-
-    struct ConsumerRequest<Request: Equatable>: Equatable {
-        let request: Request
-        let consumerPublishableKey: String
-    }
-
     struct DocumentListRequest: Equatable {
-        let consumerSessionClientSecret: String
-        let consumerPublishableKey: String
+        let linkSessionKey: String
     }
 
     struct AssociationTokenRequest: Equatable {
         let identityDocumentID: String
-        let consumerSessionClientSecret: String
-        let consumerPublishableKey: String
+        let verificationSessionID: String
+        let linkSessionKey: String
     }
 
     struct SaveAssociationTokenRequest: Equatable {
         let verificationSessionID: String
-        let consumerSessionClientSecret: String
-        let consumerPublishableKey: String
+        let linkSessionKey: String
     }
 
-    struct LogOutRequest: Equatable {
-        let consumerSessionClientSecret: String
-        let verificationSessionClientSecrets: [String]?
-        let consumerPublishableKey: String
-    }
-
-    let lookup = NetworkedIdentityMockAPIRequests<LookupRequest, NetworkedIdentityLookupResponse>()
-    let signUp = NetworkedIdentityMockAPIRequests<
-        NetworkedIdentitySignUpRequest, NetworkedIdentitySignUpResponse
-    >()
-    let startVerification = NetworkedIdentityMockAPIRequests<
-        ConsumerRequest<NetworkedIdentityStartVerificationRequest>,
-        NetworkedIdentityConsumerSessionResponse
-    >()
-    let confirmVerification = NetworkedIdentityMockAPIRequests<
-        ConsumerRequest<NetworkedIdentityConfirmVerificationRequest>,
-        NetworkedIdentityConsumerSessionResponse
-    >()
     let documentList = NetworkedIdentityMockAPIRequests<
         DocumentListRequest, NetworkedIdentityDocumentListResponse
     >()
@@ -63,117 +33,39 @@ final class NetworkedIdentityAPIClientTestMock: NetworkedIdentityAPIClient {
     let saveAssociationToken = NetworkedIdentityMockAPIRequests<
         SaveAssociationTokenRequest, NetworkedIdentityAssociationTokenResponse
     >()
-    let logOut = NetworkedIdentityMockAPIRequests<
-        LogOutRequest, NetworkedIdentityConsumerSessionResponse
-    >()
-    let extendSession = NetworkedIdentityMockAPIRequests<
-        DocumentListRequest, NetworkedIdentityExtendSessionResponse
-    >()
-
-    func lookupConsumer(
-        emailAddress: String,
-        verificationSessionClientSecrets: [String]?
-    ) -> Promise<NetworkedIdentityLookupResponse> {
-        lookup.makeRequest(
-            with: .init(
-                emailAddress: emailAddress,
-                verificationSessionClientSecrets: verificationSessionClientSecrets
-            )
-        )
-    }
-
-    func signUp(
-        request: NetworkedIdentitySignUpRequest
-    ) -> Promise<NetworkedIdentitySignUpResponse> {
-        signUp.makeRequest(with: request)
-    }
-
-    func startVerification(
-        request: NetworkedIdentityStartVerificationRequest,
-        consumerPublishableKey: String
-    ) -> Promise<NetworkedIdentityConsumerSessionResponse> {
-        startVerification.makeRequest(
-            with: .init(
-                request: request,
-                consumerPublishableKey: consumerPublishableKey
-            )
-        )
-    }
-
-    func confirmVerification(
-        request: NetworkedIdentityConfirmVerificationRequest,
-        consumerPublishableKey: String
-    ) -> Promise<NetworkedIdentityConsumerSessionResponse> {
-        confirmVerification.makeRequest(
-            with: .init(
-                request: request,
-                consumerPublishableKey: consumerPublishableKey
-            )
-        )
-    }
 
     func listIdentityDocuments(
-        consumerSessionClientSecret: String,
-        consumerPublishableKey: String
+        linkSessionKey: String
     ) -> Promise<NetworkedIdentityDocumentListResponse> {
         documentList.makeRequest(
             with: .init(
-                consumerSessionClientSecret: consumerSessionClientSecret,
-                consumerPublishableKey: consumerPublishableKey
+                linkSessionKey: linkSessionKey
             )
         )
     }
 
     func createAssociationToken(
         identityDocumentID: String,
-        consumerSessionClientSecret: String,
-        consumerPublishableKey: String
+        verificationSessionID: String,
+        linkSessionKey: String
     ) -> Promise<NetworkedIdentityAssociationTokenResponse> {
         associationToken.makeRequest(
             with: .init(
                 identityDocumentID: identityDocumentID,
-                consumerSessionClientSecret: consumerSessionClientSecret,
-                consumerPublishableKey: consumerPublishableKey
-            )
-        )
-    }
-
-    func logOut(
-        consumerSessionClientSecret: String,
-        verificationSessionClientSecrets: [String]?,
-        consumerPublishableKey: String
-    ) -> Promise<NetworkedIdentityConsumerSessionResponse> {
-        logOut.makeRequest(
-            with: .init(
-                consumerSessionClientSecret: consumerSessionClientSecret,
-                verificationSessionClientSecrets: verificationSessionClientSecrets,
-                consumerPublishableKey: consumerPublishableKey
+                verificationSessionID: verificationSessionID,
+                linkSessionKey: linkSessionKey
             )
         )
     }
 
     func createSaveAssociationToken(
         verificationSessionID: String,
-        consumerSessionClientSecret: String,
-        consumerPublishableKey: String
+        linkSessionKey: String
     ) -> Promise<NetworkedIdentityAssociationTokenResponse> {
         saveAssociationToken.makeRequest(
             with: .init(
                 verificationSessionID: verificationSessionID,
-                consumerSessionClientSecret: consumerSessionClientSecret,
-                consumerPublishableKey: consumerPublishableKey
-            )
-        )
-    }
-
-    func extendSession(
-        consumerSessionClientSecret: String,
-        consumerPublishableKey: String
-    ) -> Promise<NetworkedIdentityExtendSessionResponse> {
-        extendSession.makeRequest(
-            with: .init(
-                consumerSessionClientSecret: consumerSessionClientSecret,
-                consumerPublishableKey: consumerPublishableKey
+                linkSessionKey: linkSessionKey
             )
         )
     }
@@ -182,22 +74,12 @@ final class NetworkedIdentityAPIClientTestMock: NetworkedIdentityAPIClient {
 final class NetworkedIdentityMockAPIRequests<Parameters, Response> {
     private var pendingRequests: [Promise<Response>] = []
     private(set) var requestHistory: [Parameters] = []
-    private var requestCallbacks: [() -> Void] = []
-
-    var pendingRequestCount: Int {
-        pendingRequests.count
-    }
 
     func makeRequest(with parameters: Parameters) -> Promise<Response> {
         requestHistory.append(parameters)
         let promise = Promise<Response>()
         pendingRequests.append(promise)
-        requestCallbacks.forEach { $0() }
         return promise
-    }
-
-    func callBackOnRequest(_ callback: @escaping () -> Void) {
-        requestCallbacks.append(callback)
     }
 
     func respondToNext(with result: Result<Response, Error>) {
@@ -207,6 +89,11 @@ final class NetworkedIdentityMockAPIRequests<Parameters, Response> {
         // Keep immediate mock responses from racing observation and corrupting the test result.
         promise.propertyAccessQueue.async {
             promise.fullfill(with: result)
+        }
+        // Fulfilling, reporting and calling back each take a hop on that queue. Waiting them out queues the main-queue
+        // callbacks now, so a test's settle() sees the response however slow the machine is.
+        for _ in 0..<3 {
+            promise.propertyAccessQueue.sync {}
         }
     }
 }

@@ -51,7 +51,7 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
     private(set) var uploadedSelfieResult: Result<SelfieUploader.FileData, Error>?
 
     private(set) var didCheckSubmitAndTransition = false
-    private(set) var networkedIdentityResult: Result<StripeAPI.VerificationPageData, Error>?
+    private(set) var didSubmitAndTransition = false
     private(set) var didSaveDocumentFrontAndDecideBack = false
     private(set) var didSaveDocumentBackAndTransition = false
 
@@ -106,12 +106,12 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
         didCheckSubmitAndTransition = true
     }
 
-    func continueAfterNetworkedIdentity(
-        with result: Result<StripeAPI.VerificationPageData, Error>,
-        completion: @escaping () -> Void
-    ) {
-        networkedIdentityResult = result
-        completion()
+    func submitAndTransition(completion: @escaping () -> Void) {
+        didSubmitAndTransition = true
+    }
+
+    func recordNetworkedIdentityUpdate(_ data: StripeAPI.VerificationPageData) -> Bool {
+        true
     }
 
     func saveDocumentFrontAndDecideBack(
