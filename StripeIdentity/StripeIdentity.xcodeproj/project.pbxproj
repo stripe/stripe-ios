@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		0758EE8C7A032BF378F6AA59 /* OHHTTPStubsSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 2714B21F1CD18CEED8772AB6 /* OHHTTPStubsSwift */; };
 		10B606812179D64E67BFFFCF /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D0F4646D7565055396DD8F5 /* StripeCore.framework */; };
+		2F4E8B1C6A3D9E7F0B5C1A21 /* StripePaymentSheet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2F4E8B1C6A3D9E7F0B5C1A22 /* StripePaymentSheet.framework */; };
 		45B515AC217F10059EE155E2 /* iOSSnapshotTestCase in Frameworks */ = {isa = PBXBuildFile; productRef = 960247DC321CBDB422FE713D /* iOSSnapshotTestCase */; };
 		4A5FEB151B079C41FD40FED5 /* StripeCameraCoreTestUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 14C231755842F322A25160ED /* StripeCameraCoreTestUtils.framework */; };
 		695E12945F47ED3060B8AE19 /* StripeCameraCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB639F497EF62CAE81822820 /* StripeCameraCore.framework */; };
@@ -54,6 +55,7 @@
 
 /* Begin PBXFileReference section */
 		14C231755842F322A25160ED /* StripeCameraCoreTestUtils.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeCameraCoreTestUtils.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		2F4E8B1C6A3D9E7F0B5C1A22 /* StripePaymentSheet.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripePaymentSheet.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		434BC5FFBC1163872413A40A /* StripeiOS Tests-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeiOS Tests-Release.xcconfig"; sourceTree = "<group>"; };
 		4D0F4646D7565055396DD8F5 /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4F6B26A21285054BEE9CA244 /* Project-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Project-Debug.xcconfig"; sourceTree = "<group>"; };
@@ -101,6 +103,7 @@
 			files = (
 				695E12945F47ED3060B8AE19 /* StripeCameraCore.framework in Frameworks */,
 				10B606812179D64E67BFFFCF /* StripeCore.framework in Frameworks */,
+				2F4E8B1C6A3D9E7F0B5C1A21 /* StripePaymentSheet.framework in Frameworks */,
 				A7AC2D0D9FDCF8AC5298708D /* StripeUICore.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -172,6 +175,7 @@
 				5726517468179B69D50692C0 /* StripeCoreTestUtils.framework */,
 				D604F6AABE4D6D5CCF802685 /* StripeIdentity.framework */,
 				A5D517A4C8669379A029BBAD /* StripeIdentityTests.xctest */,
+				2F4E8B1C6A3D9E7F0B5C1A22 /* StripePaymentSheet.framework */,
 				FD376CBC869531C40036081B /* StripeUICore.framework */,
 			);
 			name = Products;

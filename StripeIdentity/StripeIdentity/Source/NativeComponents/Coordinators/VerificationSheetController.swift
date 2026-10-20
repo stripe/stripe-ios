@@ -41,10 +41,9 @@ protocol VerificationSheetControllerProtocol: AnyObject {
         completion: @escaping () -> Void
     )
 
-    func continueAfterNetworkedIdentity(
-        with result: Result<StripeAPI.VerificationPageData, Error>,
-        completion: @escaping () -> Void
-    )
+    func submitAndTransition(completion: @escaping () -> Void)
+
+    func recordNetworkedIdentityUpdate(_ data: StripeAPI.VerificationPageData) -> Bool
 
     func saveDocumentFrontAndDecideBack(
         from fromScreen: IdentityAnalyticsClient.ScreenName,
@@ -132,7 +131,6 @@ private enum VerificationSheetControllerError: String, AnalyticLoggableStringErr
     case missingVerificationPageResponseForDocumentCaptureTransition
     case missingVerificationPageResponseForPageDataTransition
     case missingVerificationPageResponseForClearDataCalculation
-    case networkedIdentitySessionNotWritable
 }
 
 final class VerificationSheetController: VerificationSheetControllerProtocol {
@@ -265,26 +263,22 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
         }
     }
 
-    func continueAfterNetworkedIdentity(
-        with result: Result<StripeAPI.VerificationPageData, Error>,
-        completion: @escaping () -> Void
-    ) {
-        guard case .success(let data) = result, data.requirements.errors.isEmpty else {
-            transitionWithVerificaionPageDataResult(result, completion: completion)
-            return
-        }
+    /// Submits a verification that has nothing missing, without offering Networked Identity's save again.
+    func submitAndTransition(completion: @escaping () -> Void) {
+        let nothingMissing = StripeAPI.VerificationPageData(
+            id: apiClient.verificationSessionId, requirements: .init(errors: [], missing: []),
+            status: .requiresInput, submitted: false, closed: false
+        )
+        checkSubmitAndTransition(
+            updateDataResult: .success(nothingMissing),
+            offersNetworkedIdentitySave: false,
+            completion: completion
+        )
+    }
 
-        guard data.status != .canceled,
-              data.submittedAndClosed()
-                || (!data.closed && data.status == .requiresInput
-                    && (!data.submitted || !data.requirements.missing.isEmpty)) else {
-            transitionWithVerificaionPageDataResult(
-                .failure(VerificationSheetControllerError.networkedIdentitySessionNotWritable),
-                completion: completion
-            )
-            return
-        }
-
+    /// Returns false, changing nothing, for an update that can't be applied to this session.
+    func recordNetworkedIdentityUpdate(_ data: StripeAPI.VerificationPageData) -> Bool {
+        guard canApplyNetworkedIdentityUpdate(data) else { return false }
         // Attached files exist on the server, not in collectedData. Refresh the baseline so
         // a later address/selfie update cannot clear those files as uncollected fields.
         if case .success(let page) = verificationPageResponse {
@@ -293,19 +287,22 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
         for field in data.requirements.missing {
             collectedData.clearData(field: field)
         }
+        isVerificationPageSubmitted = data.submittedAndClosed()
+        return true
+    }
 
-        if data.submittedAndClosed() {
-            isVerificationPageSubmitted = true
-            transitionWithVerificaionPageDataResult(result, completion: completion)
-        } else {
-            checkSubmitAndTransition(updateDataResult: result, completion: completion)
-        }
+    private func canApplyNetworkedIdentityUpdate(_ data: StripeAPI.VerificationPageData) -> Bool {
+        data.id == apiClient.verificationSessionId && data.requirements.errors.isEmpty && data.status != .canceled
+            && (data.submittedAndClosed()
+                || (!data.closed && data.status == .requiresInput
+                    && (!data.submitted || !data.requirements.missing.isEmpty)))
     }
 
     /// 1. Check If all fields have been collected, submits the verification page
     /// 2. Transition to the next screen
     private func checkSubmitAndTransition(
         updateDataResult: Result<StripeAPI.VerificationPageData, Error>,
+        offersNetworkedIdentitySave: Bool = true,
         completion: @escaping () -> Void
     ) {
         guard case .success(let updateData) = updateDataResult
@@ -320,6 +317,11 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
 
         // If finished collecting, submit and transition
         if updateData.requirements.missing.isEmpty {
+            // Networked Identity can only record a save before the verification is submitted.
+            if offersNetworkedIdentitySave,
+               flowController.transitionToNetworkedIdentitySave(sheetController: self, completion: completion) {
+                return
+            }
             apiClient.submitIdentityVerificationPage().observe(on: .main) { [weak self] submittedData in
                 guard let self = self else { return }
                 self.isVerificationPageSubmitted = (try? submittedData.get())?.submittedAndClosed() == true
