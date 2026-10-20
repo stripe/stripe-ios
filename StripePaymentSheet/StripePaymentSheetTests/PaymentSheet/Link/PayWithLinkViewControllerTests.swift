@@ -8,6 +8,7 @@
 import Foundation
 @testable @_spi(STP) import StripeCore
 @testable @_spi(STP) import StripeCoreTestUtils
+@_spi(STP) import StripePayments
 @testable @_spi(STP) import StripePaymentSheet
 @_spi(STP) import StripeUICore
 import XCTest
@@ -231,6 +232,143 @@ class PayWithLinkViewControllerTests: XCTestCase {
     }
 
     @MainActor
+    func testAuthenticationReturnsVerifiedAccountWithoutPresenting() {
+        let previousAccount = LinkAccountContext.shared.account
+        defer { LinkAccountContext.shared.account = previousAccount }
+        let account = verifiedAccount()
+        LinkAccountContext.shared.account = account
+        let host = TestViewController(onPresentChild: { _ in XCTFail("Verified authentication must not present a sheet") })
+        let controller = PayWithNativeLinkController(
+            mode: .authentication,
+            intent: ._testValue(),
+            elementsSession: ._testValue(intent: ._testValue()),
+            configuration: PaymentSheet.Configuration._testValue_MostPermissive(),
+            analyticsHelper: ._testValue()
+        )
+        var completionCount = 0
+
+        controller.presentForAuthentication(
+            from: host,
+            content: .init(title: "Continue with Link", subtitle: "Sign in", consentAction: .clicked_button_mobile_v1),
+            requestSurface: .cryptoOnramp
+        ) { result in
+            completionCount += 1
+            guard case .success(let authenticated) = result else { return XCTFail("Expected authenticated account") }
+            XCTAssertTrue(authenticated === account)
+        }
+
+        XCTAssertEqual(completionCount, 1)
+    }
+
+    @MainActor
+    func testAuthenticationFailsWithMissingAppAttestationInsteadOfFallingBackToTheWeb() async {
+        let previousAccount = LinkAccountContext.shared.account
+        defer { LinkAccountContext.shared.account = previousAccount }
+        LinkAccountContext.shared.account = nil
+        let configuration = await authenticationConfiguration()
+        let controller = PayWithLinkViewController(
+            intent: ._testValue(),
+            linkAccount: nil,
+            elementsSession: ._testValue(intent: ._testValue()),
+            configuration: configuration,
+            analyticsHelper: ._testValue(),
+            authenticationContent: .init(title: "Continue with Link", subtitle: "Sign in", consentAction: .clicked_button_mobile_v1)
+        )
+        let delegate = AuthenticationDelegate()
+        controller.payWithLinkDelegate = delegate
+
+        controller.bailToWebFlow()
+
+        XCTAssertEqual(delegate.results.count, 1)
+        guard case .failed(let error)? = delegate.results.first else { return XCTFail("Expected authentication failure") }
+        XCTAssertEqual(error as? LinkController.IntegrationError, .missingAppAttestation)
+    }
+
+    @MainActor
+    func testAuthenticationReportsTheMissingAppAttestationOnce() async {
+        let previousAccount = LinkAccountContext.shared.account
+        defer { LinkAccountContext.shared.account = previousAccount }
+        LinkAccountContext.shared.account = nil
+        let configuration = await authenticationConfiguration()
+        let controller = PayWithLinkViewController(
+            intent: ._testValue(),
+            linkAccount: nil,
+            elementsSession: ._testValue(intent: ._testValue()),
+            configuration: configuration,
+            analyticsHelper: ._testValue(),
+            authenticationContent: .init(title: "Continue with Link", subtitle: "Sign in", consentAction: .clicked_button_mobile_v1)
+        )
+        let delegate = AuthenticationDelegate()
+        controller.payWithLinkDelegate = delegate
+        controller.bailToWebFlow()
+        XCTAssertEqual(delegate.results.count, 1)
+
+        controller.bailToWebFlow()
+
+        XCTAssertEqual(delegate.results.count, 1)
+    }
+
+    @MainActor
+    func testAuthenticationFinishesWithTheVerifiedAccountInsteadOfLoadingTheWallet() async {
+        // Given Link's sheet is open for authentication
+        let previousAccount = LinkAccountContext.shared.account
+        defer { LinkAccountContext.shared.account = previousAccount }
+        LinkAccountContext.shared.account = nil
+        let controller = PayWithLinkViewController(
+            intent: ._testValue(),
+            linkAccount: nil,
+            elementsSession: ._testValue(intent: ._testValue()),
+            configuration: await authenticationConfiguration(),
+            analyticsHelper: ._testValue(),
+            authenticationContent: .init(title: "Continue with Link", subtitle: "Sign in", consentAction: .clicked_button_mobile_v1)
+        )
+        let delegate = AuthenticationDelegate()
+        controller.payWithLinkDelegate = delegate
+
+        // When the user's session is verified
+        let account = verifiedAccount()
+        controller.accountUpdated(account)
+
+        // Then it reports the authenticated account and stops taking input
+        XCTAssertEqual(delegate.authenticatedAccounts.count, 1)
+        XCTAssertTrue(delegate.authenticatedAccounts.first === account)
+        XCTAssertTrue(delegate.results.isEmpty)
+        XCTAssertFalse(controller.sheetContainer.view.isUserInteractionEnabled)
+    }
+
+    private func verifiedAccount() -> PaymentSheetLinkAccount {
+        LinkStubs.account(
+            session: .make(
+                clientSecret: "client_secret",
+                emailAddress: "user@example.com",
+                redactedFormattedPhoneNumber: "(***) *** **55",
+                unredactedPhoneNumber: nil,
+                phoneNumberCountry: "US",
+                verificationSessions: [],
+                supportedPaymentDetailsTypes: [],
+                mobileFallbackWebviewParams: nil,
+                currentAuthenticationLevel: .twoFactorAuth,
+                minimumAuthenticationLevel: .oneFactorAuth
+            )
+        )
+    }
+
+    @MainActor
+    private func authenticationConfiguration() async -> PaymentSheet.Configuration {
+        let apiClient = STPAPIClient(publishableKey: "pk_test_authentication")
+        let attestService = MockAppAttestService()
+        await attestService.setShouldFailKeygenWithError(NSError(domain: "test", code: 1))
+        apiClient.stripeAttest = StripeAttest(
+            appAttestService: attestService,
+            appAttestBackend: MockAttestBackend(),
+            apiClient: apiClient
+        )
+        var configuration = PaymentSheet.Configuration._testValue_MostPermissive()
+        configuration.apiClient = apiClient
+        return configuration
+    }
+
+    @MainActor
     func testBailsToWebFlowWhenAttestationFails() async {
         // Set up a mock STPAPIClient with a mocked attestation backend
         let apiClient = STPAPIClient(publishableKey: "pk_live_abc123")
@@ -276,6 +414,36 @@ class PayWithLinkViewControllerTests: XCTestCase {
 
         // Wait a bit: Attestation should be attempted, but immediately fail.
         await fulfillment(of: [exp], timeout: 2.0)
+    }
+}
+
+@MainActor
+private final class AuthenticationDelegate: PayWithLinkViewControllerDelegate {
+    var results: [PaymentSheetResult] = []
+    var authenticatedAccounts: [PaymentSheetLinkAccount] = []
+
+    func payWithLinkViewControllerDidFinish(_ payWithLinkViewController: PayWithLinkViewController, result: PaymentSheetResult, deferredIntentConfirmationType: STPAnalyticsClient.DeferredIntentConfirmationType?) {
+        results.append(result)
+    }
+
+    func payWithLinkViewControllerDidConfirm(_ payWithLinkViewController: PayWithLinkViewController, intent: Intent, elementsSession: STPElementsSession, with paymentOption: PaymentOption, completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void) {
+        XCTFail("Authentication must not confirm a payment")
+    }
+
+    func payWithLinkViewControllerDidCancel(_ payWithLinkViewController: PayWithLinkViewController, shouldReturnToPaymentSheet: Bool) {
+        XCTFail("Authentication must not cancel on its own")
+    }
+
+    func payWithLinkViewControllerDidFinish(_ payWithLinkViewController: PayWithLinkViewController, confirmOption: PaymentSheet.LinkConfirmOption) {
+        XCTFail("Authentication must not select a payment method")
+    }
+
+    func payWithLinkViewControllerShouldCancel3DS2ChallengeFlow(_ payWithLinkViewController: PayWithLinkViewController) {
+        XCTFail("Authentication must not start a payment challenge")
+    }
+
+    func payWithLinkViewControllerDidAuthenticate(_ payWithLinkViewController: PayWithLinkViewController, linkAccount: PaymentSheetLinkAccount) {
+        authenticatedAccounts.append(linkAccount)
     }
 }
 
