@@ -216,7 +216,7 @@ final class NetworkedIdentityIntegrationTest: XCTestCase {
         var configuration = IdentityVerificationSheet.Configuration(brandLogo: UIImage())
         configuration.networkedIdentity = .init(
             linkSessionHandoff: handoff, debugMerchantPublishableKey: nil,
-            debugProvidedEmail: nil, debugRoute: nil
+            debugProvidedEmail: nil, debugRoute: nil, debugSeedSavedDocuments: false
         )
         return configuration
     }
@@ -269,7 +269,7 @@ final class NetworkedIdentityIntegrationTest: XCTestCase {
             config: .init(
                 // The intro shows the "Saved ID" chip for the handed-in account.
                 route: route, saveEnabled: true, savedDocumentAvailable: true, merchantPublishableKey: "pk_test_merchant",
-                merchantEmail: merchantEmail, phoneNumberAutofillHint: nil
+                merchantEmail: merchantEmail, phoneNumberAutofillHint: nil, seedSavedDocuments: false
             ),
             handoff: handoff, currentTime: { 1_800_000_000 }
         )

@@ -16,6 +16,7 @@ struct NetworkedIdentityConfig: Equatable {
     let merchantEmail: String?
     /// Prefills Link sign-up only; never used to look up or select a Link account.
     let phoneNumberAutofillHint: String?
+    let seedSavedDocuments: Bool
 
     static func from(
         page: StripeAPI.VerificationPage,
@@ -38,7 +39,9 @@ struct NetworkedIdentityConfig: Equatable {
             // The debug options win so the PoC can run before the backend returns these fields.
             merchantPublishableKey: options?.debugMerchantPublishableKey ?? page.merchantPublishableKey,
             merchantEmail: options?.debugProvidedEmail ?? page.networkedIdentity?.lookupEmail,
-            phoneNumberAutofillHint: page.networkedIdentity?.phoneNumberAutofillHint
+            phoneNumberAutofillHint: page.networkedIdentity?.phoneNumberAutofillHint,
+            // #TODO - Networked Identity [NI-Contract]: test-mode Link accounts with saved documents.
+            seedSavedDocuments: options?.debugSeedSavedDocuments ?? false
         )
     }
 }

@@ -23,7 +23,8 @@ final class NetworkedIdentitySaveViewControllerSnapshotTest: STPSnapshotTestCase
                     savedDocumentAvailable: false,
                     merchantPublishableKey: "pk_test_merchant",
                     merchantEmail: nil,
-                    phoneNumberAutofillHint: nil
+                    phoneNumberAutofillHint: nil,
+                    seedSavedDocuments: false
                 ),
                 handoff: nil
             ),

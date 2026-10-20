@@ -105,17 +105,21 @@ final public class IdentityVerificationSheet {
             public var debugProvidedEmail: String?
             /// Debug-only route override: "reuse", "save", "none", or nil to use the VerificationPage.
             public var debugRoute: String?
+            /// Debug-only: sample saved documents simulate reuse and completion for test-mode sessions.
+            public var debugSeedSavedDocuments: Bool
 
             public init(
                 linkSessionHandoff: LinkSessionHandoff?,
                 debugMerchantPublishableKey: String?,
                 debugProvidedEmail: String?,
-                debugRoute: String?
+                debugRoute: String?,
+                debugSeedSavedDocuments: Bool
             ) {
                 self.linkSessionHandoff = linkSessionHandoff
                 self.debugMerchantPublishableKey = debugMerchantPublishableKey
                 self.debugProvidedEmail = debugProvidedEmail
                 self.debugRoute = debugRoute
+                self.debugSeedSavedDocuments = debugSeedSavedDocuments
             }
         }
 
@@ -174,13 +178,16 @@ final public class IdentityVerificationSheet {
         ephemeralKeySecret: String,
         configuration: Configuration
     ) {
+        let apiClient = IdentityAPIClientImpl(
+            verificationSessionId: verificationSessionId,
+            ephemeralKeySecret: ephemeralKeySecret
+        )
         self.init(
             verificationSessionClientSecret: "",
             verificationSheetController: VerificationSheetController(
-                apiClient: IdentityAPIClientImpl(
-                    verificationSessionId: verificationSessionId,
-                    ephemeralKeySecret: ephemeralKeySecret
-                ),
+                apiClient: configuration.networkedIdentity?.debugSeedSavedDocuments == true
+                    ? SeededDocumentsIdentityAPIClient(delegate: apiClient)
+                    : apiClient,
                 flowController: VerificationSheetFlowController(
                     configuration: configuration
                 ),

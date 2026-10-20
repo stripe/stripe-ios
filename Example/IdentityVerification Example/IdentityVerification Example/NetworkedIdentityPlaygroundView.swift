@@ -18,6 +18,7 @@ final class NetworkedIdentityPlaygroundView: UIStackView {
 
     private let merchantKeyField = NetworkedIdentityPlaygroundView.makeField("Merchant publishable key")
     private let linkEmailField = NetworkedIdentityPlaygroundView.makeField("User email (lookup_email)")
+    private let seedSwitch = UISwitch()
     private let signInButton = UIButton(type: .system)
     private let clearButton = UIButton(type: .system)
     private let statusLabel = UILabel()
@@ -38,7 +39,8 @@ final class NetworkedIdentityPlaygroundView: UIStackView {
             // Stands in for lookup_email until the playground's sessions return it.
             debugProvidedEmail: trimmed(linkEmailField).nilIfEmpty,
             // The playground supplies eligibility until its test sessions return the v8 fields.
-            debugRoute: "reuse"
+            debugRoute: "reuse",
+            debugSeedSavedDocuments: seedSwitch.isOn
         )
     }
 
@@ -46,6 +48,7 @@ final class NetworkedIdentityPlaygroundView: UIStackView {
         super.init(frame: .zero)
         axis = .vertical
         spacing = 8
+        seedSwitch.isOn = true
         merchantKeyField.text = Self.onrampTestPublishableKey
         linkEmailField.keyboardType = .emailAddress
         clearButton.isHidden = true
@@ -59,6 +62,7 @@ final class NetworkedIdentityPlaygroundView: UIStackView {
 
         addArrangedSubview(makeTitleLabel())
         addArrangedSubview(merchantKeyField)
+        addArrangedSubview(makeSeedRow())
         addArrangedSubview(linkEmailField)
         addArrangedSubview(buttonRow)
         addArrangedSubview(statusLabel)
@@ -189,6 +193,16 @@ extension NetworkedIdentityPlaygroundView {
         label.text = "Networked Identity (Link)"
         label.font = .preferredFont(forTextStyle: .headline)
         return label
+    }
+
+    private func makeSeedRow() -> UIStackView {
+        let label = UILabel()
+        label.text = "Seed saved documents"
+        let row = UIStackView(arrangedSubviews: [seedSwitch, label])
+        row.axis = .horizontal
+        row.spacing = 8
+        row.alignment = .center
+        return row
     }
 
     private func makeButtonRow() -> UIStackView {

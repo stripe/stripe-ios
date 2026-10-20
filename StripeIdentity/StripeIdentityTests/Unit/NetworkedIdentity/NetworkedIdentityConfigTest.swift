@@ -17,6 +17,7 @@ final class NetworkedIdentityConfigTest: XCTestCase {
         XCTAssertEqual(config.merchantPublishableKey, "pk_page")
         XCTAssertEqual(config.merchantEmail, "networked@example.com")
         XCTAssertEqual(config.phoneNumberAutofillHint, "+12025550100")
+        XCTAssertFalse(config.seedSavedDocuments)
         XCTAssertTrue(config.saveEnabled)
         XCTAssertTrue(config.savedDocumentAvailable)
     }
@@ -37,6 +38,7 @@ final class NetworkedIdentityConfigTest: XCTestCase {
         XCTAssertEqual(config.route, .save)
         XCTAssertEqual(config.merchantPublishableKey, "pk_override")
         XCTAssertEqual(config.merchantEmail, "person@example.com")
+        XCTAssertTrue(config.seedSavedDocuments)
         XCTAssertTrue(config.saveEnabled)
         XCTAssertFalse(config.savedDocumentAvailable)
         // The phone hint has no debug override; it always comes from the page.
@@ -95,7 +97,8 @@ final class NetworkedIdentityConfigTest: XCTestCase {
             linkSessionHandoff: nil,
             debugMerchantPublishableKey: "pk_override",
             debugProvidedEmail: "person@example.com",
-            debugRoute: debugRoute
+            debugRoute: debugRoute,
+            debugSeedSavedDocuments: true
         )
     }
 }

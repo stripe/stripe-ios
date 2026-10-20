@@ -737,7 +737,8 @@ private extension NetworkedIdentityCoordinatorTest {
             savedDocumentAvailable: savedDocumentAvailable,
             merchantPublishableKey: merchantPublishableKey,
             merchantEmail: merchantEmail,
-            phoneNumberAutofillHint: phoneNumberAutofillHint
+            phoneNumberAutofillHint: phoneNumberAutofillHint,
+            seedSavedDocuments: false
         )
     }
 

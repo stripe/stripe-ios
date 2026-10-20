@@ -34,11 +34,16 @@ final class NetworkedIdentityPresenter: NetworkedIdentityCoordinatorDelegate {
         let merchantPublishableKey = config.merchantPublishableKey ?? ""
         guard config.route != .none, !merchantPublishableKey.isEmpty else { return nil }
         let actions = IdentityAPIClientNetworkedIdentityActions(apiClient: identityAPIClient)
+        let networkedIdentityAPIClient = NetworkedIdentityAPIClientImpl(
+            apiClient: STPAPIClient(publishableKey: merchantPublishableKey)
+        )
         let handoff = options.linkSessionHandoff
         self.init(
             coordinator: NetworkedIdentityCoordinator(
                 linkSession: LinkControllerNetworkedIdentityLinkSession(),
-                apiClient: NetworkedIdentityAPIClientImpl(apiClient: STPAPIClient(publishableKey: merchantPublishableKey)),
+                apiClient: config.seedSavedDocuments
+                    ? SeededDocumentsNetworkedIdentityAPIClient(delegate: networkedIdentityAPIClient)
+                    : networkedIdentityAPIClient,
                 actions: actions,
                 documentRequirements: NetworkedIdentityDocumentRequirements(verificationPage: verificationPage),
                 config: config,
