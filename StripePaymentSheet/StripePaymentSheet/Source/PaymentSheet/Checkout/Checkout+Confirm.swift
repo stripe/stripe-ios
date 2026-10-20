@@ -382,9 +382,9 @@ extension CheckoutController {
                 merchantWillSavePaymentMethod: checkoutSession.merchantWillSavePaymentMethod(paymentMethodType)
             )
             confirmParams.paymentMethodParams.radarOptions = await confirmationChallenge?.makeRadarOptions(for: confirmParams.paymentMethodParams.type)
-            // Match PaymentIntent/SetupIntent confirmation: CAM is sent at the top level for consistency
-            // and under payment_method_data for "existing dependencies" (per the intent integration's comment).
-            // TODO: Verify whether Checkout also requires both copies of CAM.
+            // Nested CAM attributes the PaymentMethodCreated event; top-level CAM links Checkout
+            // confirmation events to the Elements session configuration. The backend reads each
+            // copy independently, so keep both.
             confirmParams.paymentMethodParams.clientAttributionMetadata = clientAttributionMetadata
             let savePaymentMethod: Bool?
             switch confirmParams.saveForFutureUseCheckboxState {
