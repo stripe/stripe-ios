@@ -58,7 +58,8 @@ extension CheckoutController: ExpressCheckoutElementDelegate {
                         authenticationContext: authenticationContext,
                         paymentHandler: paymentHandler
                     )
-                }
+                },
+                confirmationSource: .expressCheckoutElement
             ))
         case .link:
             guard let presentingViewController = presentationWindow?.findTopMostPresentedViewController() else {
@@ -101,7 +102,8 @@ extension CheckoutController: ExpressCheckoutElementDelegate {
                     stripeAttest: apiClient.stripeAttest),
                 analyticsHelper: analyticsHelper,
                 authenticationContext: authenticationContext,
-                paymentHandler: paymentHandler))
+                paymentHandler: paymentHandler,
+                confirmationSource: .expressCheckoutElement))
         }
     }
 }

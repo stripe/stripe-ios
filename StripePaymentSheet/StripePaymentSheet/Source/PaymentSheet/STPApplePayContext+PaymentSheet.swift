@@ -195,6 +195,10 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
         let requestParameters = CheckoutSessionConfirmationRequestParameters.createWithPaymentMethodID(
             sessionId: checkoutSession.id,
             paymentMethodId: paymentMethod.id,
+            // TODO: This path isn't reachable from any live integration (PaymentSheet.confirm
+            // rejects .checkout intents before reaching here) — placeholder until this dead code
+            // is removed or wired up for real.
+            confirmationSource: .paymentElement,
             expectedAmount: expectedAmount,
             expectedPaymentMethodType: STPPaymentMethodType.card.identifier,
             returnURL: context.returnUrl,

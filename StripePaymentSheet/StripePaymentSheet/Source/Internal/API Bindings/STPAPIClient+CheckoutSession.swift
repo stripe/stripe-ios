@@ -45,6 +45,14 @@ struct CheckoutSessionConfirmationRequestParameters {
         return data
     }
 
+    /// The Checkout Elements component confirming. Used to tag
+    /// `payment_method_data[payment_user_agent]` for payment/attribution purposes. Required on
+    /// every factory for a uniform type; `handleCheckoutSessionApplePay`
+    /// (`STPApplePayContext+PaymentSheet.swift`) isn't actually PaymentElement/ExpressCheckoutElement
+    /// (it's the generic PaymentSheet/FlowController/EmbeddedPaymentElement-on-CheckoutSession path)
+    /// and passes a placeholder — see the TODO at that call site.
+    let confirmationSource: CheckoutController.ConfirmingElement
+
     /// The expected amount for validation. `nil` for setup-style Sessions.
     let expectedAmount: Int?
 
@@ -81,6 +89,7 @@ struct CheckoutSessionConfirmationRequestParameters {
 
     static func createWithoutPaymentMethod(
         sessionId: String,
+        confirmationSource: CheckoutController.ConfirmingElement,
         expectedAmount: Int?,
         returnURL: String? = nil,
         clientAttributionMetadata: STPClientAttributionMetadata? = nil,
@@ -89,6 +98,7 @@ struct CheckoutSessionConfirmationRequestParameters {
         Self(
             sessionId: sessionId,
             paymentMethod: nil,
+            confirmationSource: confirmationSource,
             expectedAmount: expectedAmount,
             expectedPaymentMethodType: nil,
             savePaymentMethod: nil,
@@ -105,6 +115,7 @@ struct CheckoutSessionConfirmationRequestParameters {
     static func createWithPaymentMethodID(
         sessionId: String,
         paymentMethodId: String,
+        confirmationSource: CheckoutController.ConfirmingElement,
         expectedAmount: Int?,
         expectedPaymentMethodType: String,
         savePaymentMethod: Bool? = nil,
@@ -118,6 +129,7 @@ struct CheckoutSessionConfirmationRequestParameters {
         Self(
             sessionId: sessionId,
             paymentMethod: .id(paymentMethodId),
+            confirmationSource: confirmationSource,
             expectedAmount: expectedAmount,
             expectedPaymentMethodType: expectedPaymentMethodType,
             savePaymentMethod: savePaymentMethod,
@@ -134,6 +146,7 @@ struct CheckoutSessionConfirmationRequestParameters {
     static func createWithPaymentMethodData(
         sessionId: String,
         paymentMethodData: STPPaymentMethodParams,
+        confirmationSource: CheckoutController.ConfirmingElement,
         expectedAmount: Int?,
         savePaymentMethod: Bool? = nil,
         returnURL: String? = nil,
@@ -145,6 +158,7 @@ struct CheckoutSessionConfirmationRequestParameters {
         Self(
             sessionId: sessionId,
             paymentMethod: .data(paymentMethodData),
+            confirmationSource: confirmationSource,
             expectedAmount: expectedAmount,
             expectedPaymentMethodType: paymentMethodData.rawTypeString,
             savePaymentMethod: savePaymentMethod,
@@ -336,7 +350,12 @@ extension STPAPIClient {
 
         if let paymentMethodData = requestParameters.paymentMethodData {
             var data = STPFormEncoder.dictionary(forObject: paymentMethodData)
-            data = Self.paramsAddingPaymentUserAgent(data)
+            // Build payment_user_agent fresh for the confirming Checkout Elements component,
+            // rather than appending to it, so it's never contaminated by whatever classes have
+            // registered into the global STPAnalyticsClient.sharedClient.productUsage set (e.g.
+            // PaymentSheet.FlowController/EmbeddedPaymentElement, which PaymentElement wraps
+            // internally) — see CheckoutController.ConfirmingElement.
+            data["payment_user_agent"] = requestParameters.confirmationSource.paymentUserAgent
             STPTelemetryClient.shared.addTelemetryFields(toParams: &data)
             parameters["payment_method_data"] = data
         }
