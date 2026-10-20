@@ -18,11 +18,12 @@ final class InstitutionCellView: UIView {
         horizontalStackView.spacing = 12
         horizontalStackView.alignment = .center
         horizontalStackView.isLayoutMarginsRelativeArrangement = true
+        let horizontalMargin: CGFloat = appearance.colors == .link ? 16 : 24
         horizontalStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
             top: 8,
-            leading: 24,
+            leading: horizontalMargin,
             bottom: 8,
-            trailing: 24
+            trailing: horizontalMargin
         )
         return horizontalStackView
     }()
@@ -51,6 +52,15 @@ final class InstitutionCellView: UIView {
         return subtitleLabel
     }()
     private var iconView: UIView?
+    private lazy var chevronImageView: UIImageView = {
+        let config = UIImage.SymbolConfiguration(pointSize: 14, weight: .regular)
+        let imageView = UIImageView(image: UIImage(systemName: "chevron.right", withConfiguration: config))
+        imageView.tintColor = FinancialConnectionsAppearance.Colors.textSubdued
+        imageView.contentMode = .scaleAspectFit
+        imageView.setContentHuggingPriority(.required, for: .horizontal)
+        imageView.setContentCompressionResistancePriority(.required, for: .horizontal)
+        return imageView
+    }()
     private lazy var loadingView: ActivityIndicator = {
         let activityIndicator = ActivityIndicator(size: .medium)
         activityIndicator.color = appearance.colors.spinner
@@ -90,6 +100,7 @@ final class InstitutionCellView: UIView {
         self.iconView = nil
         labelStackView.removeFromSuperview()
         subtitleLabel.removeFromSuperview()
+        chevronImageView.removeFromSuperview()
 
         // setup labels
         titleLabel.setText(title)
@@ -104,13 +115,22 @@ final class InstitutionCellView: UIView {
             self.iconView = iconView
         }
         horizontalStackView.addArrangedSubview(labelStackView)
+        if appearance.colors == .link {
+            horizontalStackView.addArrangedSubview(chevronImageView)
+        }
     }
 
     func showLoadingView(_ show: Bool) {
         loadingView.removeFromSuperview()
 
         if show {
-            horizontalStackView.addArrangedSubview(loadingView)
+            if let chevronIndex = horizontalStackView.arrangedSubviews.firstIndex(of: chevronImageView) {
+                // Insert before the chevron so it stays in place, instead of
+                // appending after it and shifting it left.
+                horizontalStackView.insertArrangedSubview(loadingView, at: chevronIndex)
+            } else {
+                horizontalStackView.addArrangedSubview(loadingView)
+            }
             loadingView.startAnimating()
         } else {
             loadingView.stopAnimating()

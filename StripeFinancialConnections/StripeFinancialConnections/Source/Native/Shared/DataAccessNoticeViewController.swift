@@ -41,19 +41,21 @@ final class DataAccessNoticeViewController: SheetViewController {
                 connectedAccountBulletItems: connectedAccountNotice.body.bullets,
                 secondSubtitle: dataAccessNotice.subtitle,
                 merchantBulletItems: dataAccessNotice.body.bullets,
+                appearance: appearance,
                 didSelectURL: didSelectUrl
             )
         } else {
             firstSubtitle = dataAccessNotice.subtitle
             contentView = CreateMultiBulletinView(
                 bulletItems: dataAccessNotice.body.bullets,
+                appearance: appearance,
                 didSelectURL: didSelectUrl
             )
         }
 
         setup(
             withContentView: PaneLayoutView.createContentView(
-                iconView: RoundedIconView(
+                iconView: appearance.colors == .link ? nil : RoundedIconView(
                     image: .imageUrl(dataAccessNotice.icon?.default),
                     style: .circle,
                     appearance: appearance
@@ -61,7 +63,8 @@ final class DataAccessNoticeViewController: SheetViewController {
                 title: dataAccessNotice.title,
                 subtitle: firstSubtitle,
                 contentView: contentView,
-                isSheet: true
+                isSheet: true,
+                appearance: appearance
             ),
             footerView: PaneLayoutView.createFooterView(
                 primaryButtonConfiguration: PaneLayoutView.ButtonConfiguration(
@@ -84,6 +87,7 @@ private func CreateConnectedAccountContentView(
     connectedAccountBulletItems: [FinancialConnectionsBulletPoint],
     secondSubtitle: String?,
     merchantBulletItems: [FinancialConnectionsBulletPoint],
+    appearance: FinancialConnectionsAppearance,
     didSelectURL: @escaping (URL) -> Void
 ) -> UIView {
     let verticalStackView = HitTestStackView()
@@ -92,6 +96,7 @@ private func CreateConnectedAccountContentView(
     verticalStackView.addArrangedSubview(
         CreateMultiBulletinView(
             bulletItems: connectedAccountBulletItems,
+            appearance: appearance,
             didSelectURL: didSelectURL
         )
     )
@@ -108,6 +113,7 @@ private func CreateConnectedAccountContentView(
     verticalStackView.addArrangedSubview(
         CreateMultiBulletinView(
             bulletItems: merchantBulletItems,
+            appearance: appearance,
             didSelectURL: didSelectURL
         )
     )
@@ -116,6 +122,7 @@ private func CreateConnectedAccountContentView(
 
 private func CreateMultiBulletinView(
     bulletItems: [FinancialConnectionsBulletPoint],
+    appearance: FinancialConnectionsAppearance,
     didSelectURL: @escaping (URL) -> Void
 ) -> UIView {
     let verticalStackView = HitTestStackView(
@@ -127,6 +134,7 @@ private func CreateMultiBulletinView(
                         title: bulletItem.title,
                         subtitle: bulletItem.content,
                         iconUrl: bulletItem.icon?.default,
+                        appearance: appearance,
                         didSelectURL: didSelectURL
                     )
                 )
@@ -143,11 +151,14 @@ private func CreateSingleBulletinView(
     title: String?,
     subtitle: String?,
     iconUrl: String?,
+    appearance: FinancialConnectionsAppearance,
     didSelectURL: @escaping (URL) -> Void
 ) -> UIView {
     let imageView = UIImageView()
     imageView.contentMode = .scaleAspectFit
-    imageView.tintColor = FinancialConnectionsAppearance.Colors.icon
+    imageView.tintColor = appearance.colors == .link
+        ? appearance.colors.iconSecondary
+        : FinancialConnectionsAppearance.Colors.icon
     if let iconUrl = iconUrl {
         imageView.setImage(with: iconUrl, useAlwaysTemplateRenderingMode: true)
     } else {

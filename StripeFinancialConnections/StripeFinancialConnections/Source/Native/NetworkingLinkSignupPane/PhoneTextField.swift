@@ -261,7 +261,7 @@ struct PhoneTextField_Previews: PreviewProvider {
             Spacer()
         }
         .padding()
-        .background(Color(FinancialConnectionsAppearance.Colors.background))
+        .background(Color(FinancialConnectionsAppearance.Colors.surfacePrimary))
     }
 }
 

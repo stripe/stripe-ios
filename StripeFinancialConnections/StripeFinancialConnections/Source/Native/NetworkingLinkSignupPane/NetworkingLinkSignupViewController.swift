@@ -68,7 +68,7 @@ final class NetworkingLinkSignupViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.hidesBackButton = true
-        view.backgroundColor = FinancialConnectionsAppearance.Colors.background
+        view.backgroundColor = FinancialConnectionsAppearance.Colors.surfacePrimary
 
         showLoadingView(true)
     }
@@ -156,13 +156,15 @@ final class NetworkingLinkSignupViewController: UIViewController {
                 contentView: NetworkingLinkSignupBodyView(
                     bulletPoints: networkingLinkSignup.body.bullets,
                     formView: formView,
+                    appearance: dataSource.manifest.appearance,
                     didSelectURL: { [weak self] url in
                         self?.didSelectURLInTextFromBackend(
                             url,
                             legalDetailsNotice: networkingLinkSignup.legalDetailsNotice
                         )
                     }
-                )
+                ),
+                appearance: dataSource.manifest.appearance
             ),
             footerView: footerView
         )
