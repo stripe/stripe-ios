@@ -18,31 +18,9 @@ final class USBankAccountPaymentMethodElementTest: XCTestCase {
     let window: UIWindow = UIWindow(frame: .init(x: 0, y: 0, width: 428, height: 926))
 
     func testPreservesPreviousCustomerInput() {
-        func makeForm(previousCustomerInput: IntentConfirmParams?) -> USBankAccountPaymentMethodElement {
-            let intent: Intent = ._testPaymentIntent(paymentMethodTypes: [.USBankAccount])
-            let formVC = PaymentMethodFormViewController(
-                type: .stripe(.USBankAccount),
-                intent: intent,
-                elementsSession: ._testValue(intent: intent),
-                previousCustomerInput: previousCustomerInput,
-                formCache: .init(),
-                configuration: configuration,
-                paymentMethodOrientation: .vertical,
-                headerView: nil,
-                analyticsHelper: ._testValue(),
-                delegate: self
-            )
-
-            // Add to window to avoid layout errors due to zero size and presentation errors
-            window.rootViewController = formVC
-
-            // Simulate view appearance. This makes SimpleMandateElement mark its mandate as having been displayed.
-            formVC.viewDidAppear(false)
-            return formVC.form as! USBankAccountPaymentMethodElement
-        }
         var configuration = PaymentSheet.Configuration()
         configuration.customer = .init(id: "id", ephemeralKeySecret: "sec")
-        let form = makeForm(previousCustomerInput: nil)
+        let form = makeForm(configuration: configuration, previousCustomerInput: nil)
         let checkbox = form.getCheckboxElement(startingWith: "Save this account")!
         XCTAssertNotNil(checkbox) // Checkbox should appear since this is a PI w/ customer
         XCTAssertNil(form.mandateString) // Mandate should not appear until linked bank is set
@@ -61,7 +39,10 @@ final class USBankAccountPaymentMethodElementTest: XCTestCase {
         }
 
         // Re-generate the form and validate that it carries over all previous customer input
-        let regeneratedForm = makeForm(previousCustomerInput: intentConfirmParams)
+        let regeneratedForm = makeForm(
+            configuration: configuration,
+            previousCustomerInput: intentConfirmParams
+        )
         guard let regeneratedIntentConfirmParams = regeneratedForm.updateParams(params: IntentConfirmParams(type: .stripe(.USBankAccount))) else {
             XCTFail("Regenerated form failed to create params. Validation state: \(regeneratedForm.validationState) \n Form: \(regeneratedForm)")
             return
@@ -69,6 +50,64 @@ final class USBankAccountPaymentMethodElementTest: XCTestCase {
         // Ensure checkbox remains selected
         XCTAssertTrue(regeneratedForm.getCheckboxElement(startingWith: "Save this account")!.isSelected)
         XCTAssertEqual(regeneratedIntentConfirmParams, intentConfirmParams)
+    }
+
+    func testBillingDetailsIncludesConfiguredDefaults() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.name = .never
+        configuration.billingDetailsCollectionConfiguration.email = .never
+        configuration.billingDetailsCollectionConfiguration.phone = .never
+        configuration.billingDetailsCollectionConfiguration.address = .never
+        configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod = true
+        configuration.defaultBillingDetails.name = "Test Customer"
+        configuration.defaultBillingDetails.email = "customer@example.com"
+        configuration.defaultBillingDetails.phone = "+15555550100"
+        configuration.defaultBillingDetails.address = .init(
+            city: "Springfield",
+            country: "US",
+            line1: "123 Main Street",
+            line2: "Apt 4",
+            postalCode: "12345",
+            state: "CA"
+        )
+
+        let form = makeForm(configuration: configuration, previousCustomerInput: nil)
+
+        XCTAssertEqual(form.name, "Test Customer")
+        XCTAssertEqual(form.email, "customer@example.com")
+        XCTAssertEqual(form.phone, "+15555550100")
+        XCTAssertEqual(form.address?.city, "Springfield")
+        XCTAssertEqual(form.address?.country, "US")
+        XCTAssertEqual(form.address?.line1, "123 Main Street")
+        XCTAssertEqual(form.address?.line2, "Apt 4")
+        XCTAssertEqual(form.address?.postalCode, "12345")
+        XCTAssertEqual(form.address?.state, "CA")
+    }
+
+    private func makeForm(
+        configuration: PaymentSheet.Configuration,
+        previousCustomerInput: IntentConfirmParams?
+    ) -> USBankAccountPaymentMethodElement {
+        let intent: Intent = ._testPaymentIntent(paymentMethodTypes: [.USBankAccount])
+        let formVC = PaymentMethodFormViewController(
+            type: .stripe(.USBankAccount),
+            intent: intent,
+            elementsSession: ._testValue(intent: intent),
+            previousCustomerInput: previousCustomerInput,
+            formCache: .init(),
+            configuration: configuration,
+            paymentMethodOrientation: .vertical,
+            headerView: nil,
+            analyticsHelper: ._testValue(),
+            delegate: self
+        )
+
+        // Add to window to avoid layout errors due to zero size and presentation errors
+        window.rootViewController = formVC
+
+        // Simulate view appearance. This makes SimpleMandateElement mark its mandate as having been displayed.
+        formVC.viewDidAppear(false)
+        return formVC.form as! USBankAccountPaymentMethodElement
     }
 }
 

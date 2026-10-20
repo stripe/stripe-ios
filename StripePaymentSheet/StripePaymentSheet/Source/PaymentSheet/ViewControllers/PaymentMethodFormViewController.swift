@@ -464,11 +464,14 @@ extension PaymentMethodFormViewController {
     }
 
     func handleCollectBankAccount(from viewController: UIViewController) {
-        guard
-            let usBankAccountFormElement,
-            let name = usBankAccountFormElement.name,
-            let email = usBankAccountFormElement.email
-        else {
+        guard let usBankAccountFormElement else {
+            let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetError,
+                                              error: Error.usBankAccountParamsMissing)
+            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+            stpAssertionFailure()
+            return
+        }
+        guard let name = usBankAccountFormElement.name, let email = usBankAccountFormElement.email else {
             let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetError,
                                               error: Error.usBankAccountParamsMissing)
             STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
@@ -478,7 +481,9 @@ extension PaymentMethodFormViewController {
 
         let params = STPCollectBankAccountParams.collectUSBankAccountParams(
             with: name,
-            email: email
+            email: email,
+            address: usBankAccountFormElement.address,
+            phone: usBankAccountFormElement.phone
         )
         let client = STPBankAccountCollector(style: bankAccountCollectorStyle)
         let genericError = PaymentSheetError.accountLinkFailure
