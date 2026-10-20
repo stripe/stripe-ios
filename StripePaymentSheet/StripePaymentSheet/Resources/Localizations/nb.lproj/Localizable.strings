@@ -46,9 +46,19 @@
 
 "Buy now or pay later with Klarna" = "Kjøp nå eller betal senere med Klarna";
 
+"By confirming your payment with GCash, you allow %@ to charge your GCash account for future payments in accordance with their terms." = "Når du bekrefter betalingen med GCash, godtar du at %@ belaster GCash-kontoen din for fremtidige betalinger i henhold til vilkårene deres.";
+
 "By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "Når du bekrefter betalingen din med NICEPAY, tillater du at %@ belaster denne betalingsmetoden for fremtidige betalinger i henhold til deres vilkår.";
 
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Ved å bekrefte betalingen med PayPal, tillater du %@ å belaste PayPal for fremtidige betalinger i samsvar med vilkårene deres.";
+
+"By confirming your payment with Touch 'n Go, you allow %@ to charge your Touch 'n Go account for future payments in accordance with their terms." = "Når du bekrefter betalingen med Touch ’n Go, godtar du at %@ belaster Touch ’n Go-kontoen din for fremtidige betalinger i henhold til vilkårene deres.";
+
+"By confirming your payment with TrueMoney, you allow %@ to charge your TrueMoney account for future payments in accordance with their terms." = "Når du bekrefter betalingen med TrueMoney, godtar du at %@ belaster TrueMoney-kontoen din for fremtidige betalinger i henhold til vilkårene deres.";
+
+"By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their <terms>terms of use</terms>." = "Når du bekrefter betalingen din, godtar du at transaksjonen din vil bli håndtert av Global Stack Services Limited som registrert selger og i samsvar med deres <terms>bruksvilkår</terms>.";
+
+"By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their <terms>terms</terms>." = "Når du bekrefter betalingen din, godtar du at transaksjonen din vil bli håndtert av Global Stack Services Limited som registrert selger og i samsvar med deres <terms>vilkår</terms>.";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Ved å fortsette til Amazon Pay, tillater du %@ å belaste Amazon Pay-kontoen din for fremtidige betalinger i samsvar med vilkårene deres.";
 
@@ -112,6 +122,8 @@
 
 "Code sent" = "Kode sendt";
 
+"Complete the payment using Pix to finish the purchase." = "Fullfør betalingen med Pix for å fullføre kjøpet.";
+
 "Confirm" = "Bekreft";
 
 "Confirm payment details" = "Bekreft betalingsopplysninger";
@@ -171,6 +183,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Jeg forstår at Stripe vil direktedebitere på vegne av %@ og bekrefter at jeg er kontoinnehaver og den eneste personen som må godkjenne debiteringer fra denne kontoen.";
 
 "IBAN" = "IBAN";
+
+"Invoice payment for business buyers." = "Fakturabetaling for bedriftskjøpere";
 
 "Keep Editing" = "Fortsett å redigere";
 
@@ -341,6 +355,8 @@
 "The provided verification code has expired." = "Den oppgitte verifiseringskoden er utløpt.";
 
 "The provided verification code is incorrect." = "Den oppgitte verifiseringskoden er ikke korrekt.";
+
+"This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Dette er et internasjonalt kjøp og ekskludert en IOF-avgift på 3,5 %. Når du fortsetter, bekrefter og godtar du <terms>Ebanx’ vilkår</terms>.";
 
 "This is your default" = "Dette er standarden din";
 

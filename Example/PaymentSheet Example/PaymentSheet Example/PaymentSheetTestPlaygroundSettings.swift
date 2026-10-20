@@ -18,6 +18,26 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case embedded
     }
 
+    enum NativeSheetOverride: String, PickerEnum {
+
+        static var enumName: String { "Native sheets" }
+
+        case automatic
+        case on
+        case off
+
+        var value: Bool? {
+            switch self {
+            case .automatic:
+                return nil
+            case .on:
+                return true
+            case .off:
+                return false
+            }
+        }
+    }
+
     enum Mode: String, PickerEnum {
         static var enumName: String { "Mode" }
 
@@ -110,6 +130,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case _100 = 100
         case _5099 = 5099
         case _10000 = 10000
+        case _1000000 = 1000000
 
         var displayName: String {
             switch self {
@@ -119,11 +140,13 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
                 return "50.99"
             case ._10000:
                 return "100.00"
+            case ._1000000:
+                return "10000.00"
             }
         }
         func customDisplayName(currency: Currency) -> String {
             switch currency {
-            case .jpy, .krw:
+            case .jpy, .krw, .vnd:
                 return displayName.replacingOccurrences(of: ".", with: "")
             default:
                 return displayName
@@ -134,46 +157,53 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     enum Currency: String, PickerEnum {
         static var enumName: String { "Currency" }
 
-        case usd
-        case eur
-        case nok
         case aud
+        case brl
+        case chf
+        case cny
+        case eur
         case gbp
+        case idr
         case inr
-        case pln
-        case sgd
-        case myr
-        case mxn
         case jpy
         case krw
-        case cny
-        case brl
-        case thb
+        case mxn
+        case myr
+        case ngn
+        case nok
+        case php
+        case pln
         case sek
-        case chf
+        case sgd
+        case thb
+        case usd
+        case vnd
     }
 
     enum MerchantCountry: String, PickerEnum {
         static var enumName: String { "Merchant" }
 
-        case US
-        case GB
         case AU
-        case FR
-        case ES
-        case IN
-        case SG
-        case MY
-        case MX
-        case JP
-        case CN
         case BR
-        case TH
-        case DE
-        case IT
-        case usTax = "us_tax"
-        case stripeShop = "stripe_shop_test"
+        case CN
         case custom
+        case DE
+        case ES
+        case FR
+        case GB
+        case IN
+        case IT
+        case JP
+        case mondu
+        case MX
+        case MY
+        case NG = "ng"
+        case ngWallet = "ng_wallet"
+        case SG
+        case stripeShop = "stripe_shop_test"
+        case TH
+        case US
+        case usTax = "us_tax"
     }
 
     enum APMSEnabled: String, PickerEnum {
@@ -733,6 +763,8 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     }
 
     var uiStyle: UIStyle
+    // Keep this optional so saved settings and QR payloads from older builds remain decodable.
+    var nativeSheetOverride: NativeSheetOverride?
     var layout: Layout
     var mode: Mode
     var style: ConfigurationStyle
@@ -809,9 +841,16 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var opensCardScannerAutomatically: OpensCardScannerAutomatically
     var termsDisplay: PaymentMethodTermsDisplay
 
+    /// Defaults to native sheets for developers and custom sheets during UI tests.
+    /// Explicit settings from saved configurations and test payloads take precedence.
+    var resolvedNativeSheetOverride: NativeSheetOverride {
+        nativeSheetOverride ?? (ProcessInfo.processInfo.environment["UITesting"] == nil ? .on : .off)
+    }
+
     static func defaultValues() -> PaymentSheetTestPlaygroundSettings {
         return PaymentSheetTestPlaygroundSettings(
             uiStyle: .paymentSheet,
+            nativeSheetOverride: nil,
             layout: .automatic,
             mode: .payment,
             style: .automatic,

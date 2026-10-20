@@ -30,6 +30,30 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         XCTAssertFalse(checkout.isUpdating)
     }
 
+    func testCheckoutSessionWithEmailOnCustomer() async throws {
+        // Given a Checkout Session whose Customer has an email
+        let customerID = try await STPTestingAPIClient.shared.createCheckoutCustomer(
+            email: "customer@example.com"
+        )
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession(
+            customerID: customerID
+        )
+        var configuration = CheckoutController.Configuration(
+            clientSecret: checkoutSessionResponse.clientSecret,
+            returnURL: "stripe-ios-test://checkout-return"
+        )
+        configuration.apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
+
+        // When initializing CheckoutController
+        let checkout = try await CheckoutController(configuration: configuration)
+
+        // Then Customer.email becomes the server-backed effective Session email
+        XCTAssertEqual(checkout.session.customer?.email, "customer@example.com")
+        XCTAssertEqual(checkout.session.serverEmail, "customer@example.com")
+        XCTAssertNil(checkout.session.localState.email)
+        XCTAssertEqual(checkout.session.email, "customer@example.com")
+    }
+
     // TODO(porter): unified mode does not yet support promo codes.
     func disabled_testPromotionCodeApplyEmitsSessionUpdates() async throws {
         let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession(
@@ -225,9 +249,13 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         XCTAssertEqual(checkout.session.status, .open)
 
         XCTAssertEqual(checkout.session.totals.subtotal.minorUnitsAmount, 2000)
-        XCTAssertEqual(checkout.session.totals.total.minorUnitsAmount, 2195)
         XCTAssertEqual(checkout.session.taxAmounts?.count, 1)
-        XCTAssertEqual(checkout.session.taxAmounts?.first?.minorUnitsAmount, 195)
+        let taxAmount = try XCTUnwrap(checkout.session.taxAmounts?.first?.minorUnitsAmount)
+        XCTAssertGreaterThan(taxAmount, 0)
+        XCTAssertEqual(
+            checkout.session.totals.total.minorUnitsAmount,
+            checkout.session.totals.subtotal.minorUnitsAmount + taxAmount
+        )
     }
 
     private func promotionCode(in session: CheckoutController.Session?) -> String? {

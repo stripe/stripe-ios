@@ -55,6 +55,11 @@ import Foundation
     // MARK: - Card Element Config
     case cardElementConfigLoadFailure = "stripeios.card_element_config_load_failure"
 
+    // MARK: - Card Element
+    case mobileCardElementShown = "stripeios.mobile_card_element_shown"
+    case mobileCardElementInteraction = "stripeios.mobile_card_element_interaction"
+    case mobileCardElementFormCompleted = "stripeios.mobile_card_element_form_completed"
+
     // MARK: - Identity Verification Flow
     case verificationSheetPresented = "stripeios.idprod.verification_sheet.presented"
     case verificationSheetClosed = "stripeios.idprod.verification_sheet.closed"
@@ -306,7 +311,6 @@ import Foundation
 
     // MARK: - Telemetry Client
     case fraudDetectionApiFailure = "fraud_detection_data_repository.api_failure"
-    case savedPaymentMethodRadarSessionFailure = "stripeios.saved_payment_method_radar_session_failure"
 
     // MARK: - Attestation
     case attestationFailed = "stripeios.attest.attestation.failed"
@@ -359,6 +363,9 @@ import Foundation
     case adaptivePricingCurrencyToggled = "elements.adaptive_pricing.currency_toggled"
     case adaptivePricingCurrencyToggledFailed = "elements.adaptive_pricing.currency_toggled.failed"
     case adaptivePricingFlagImageLoadFailed = "elements.adaptive_pricing.flag_image_load.failed"
+
+    // MARK: - Express Checkout Element
+    case expressCheckoutElementInit = "elements.express_checkout_element.init"
 
     // MARK: - Shipping Address Element
     case shippingAddressElementShown = "elements.shipping_address.shown"

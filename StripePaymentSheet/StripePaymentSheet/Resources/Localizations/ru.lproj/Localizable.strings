@@ -46,9 +46,19 @@
 
 "Buy now or pay later with Klarna" = "Купите сейчас или оплатите позже через систему Klarna";
 
+"By confirming your payment with GCash, you allow %@ to charge your GCash account for future payments in accordance with their terms." = "Подтверждая платеж через GCash, вы разрешаете компании %@ списывать с вашего счета GCash суммы будущих платежей согласно ее условиям.";
+
 "By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "Подтверждая платеж через NICEPAY, вы тем самым разрешаете %@ списывать средства с этого способа оплаты для будущих платежей согласно условиям компании.";
 
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Подтверждая платеж через PayPal, вы тем самым разрешаете компании %@ списывать с вашего счета PayPal суммы будущих платежей согласно условиям.";
+
+"By confirming your payment with Touch 'n Go, you allow %@ to charge your Touch 'n Go account for future payments in accordance with their terms." = "Подтверждая платеж через Touch 'n Go, вы разрешаете компании %@ списывать с вашего счета Touch 'n Go суммы будущих платежей согласно ее условиям.";
+
+"By confirming your payment with TrueMoney, you allow %@ to charge your TrueMoney account for future payments in accordance with their terms." = "Подтверждая платеж через TrueMoney, вы разрешаете компании %@ списывать с вашего счета TrueMoney суммы будущих платежей согласно ее условиям.";
+
+"By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their <terms>terms of use</terms>." = "Подтверждая платеж, вы соглашаетесь с тем, что ваша транзакция будет обработана компанией Global Stack Services Limited в роли зарегистрированного продавца согласно ее <terms>условиям использования</terms>.";
+
+"By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their <terms>terms</terms>." = "Подтверждая платеж, вы соглашаетесь с тем, что ваша транзакция будет обработана компанией Global Stack Services Limited в роли зарегистрированного продавца согласно ее <terms>условиям</terms>.";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Перейдя к Amazon Pay, вы тем самым разрешаете компании %@ списывать с вашего счета в Amazon Pay суммы будущих платежей согласно условиям компании.";
 
@@ -112,6 +122,8 @@
 
 "Code sent" = "Код отправлен";
 
+"Complete the payment using Pix to finish the purchase." = "Оплатите покупку с помощью Pix, чтобы завершить оформление.";
+
 "Confirm" = "Подтвердить";
 
 "Confirm payment details" = "Подтвердить реквизиты платежа";
@@ -171,6 +183,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Я понимаю, что Stripe будет принимать прямые дебетования от имени %@, и подтверждаю, что являюсь владельцем счета и единственным лицом, согласие которого требуется для проведения дебетований с этого счета.";
 
 "IBAN" = "IBAN";
+
+"Invoice payment for business buyers." = "Оплата по счету для корпоративных покупателей.";
 
 "Keep Editing" = "Продолжить изменение";
 
@@ -341,6 +355,8 @@
 "The provided verification code has expired." = "Указанный код подтверждения уже недействителен.";
 
 "The provided verification code is incorrect." = "Указанный код подтверждения недействителен.";
+
+"This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Это международная покупка, которая не облагается сбором IOF в размере 3,5 %. Продолжая, вы подтверждаете и принимаете <terms>условия и положения Ebanx</terms>.";
 
 "This is your default" = "Это ваше значение по умолчанию";
 

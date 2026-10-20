@@ -1,12 +1,9 @@
 {
   "requirements": {
-    "entries": [
-      {
-        "description": "proof_of_address",
-        "requested_by": "future_partner",
-        "awaiting_action_from": "future_party",
-        "errors": []
-      }
-    ]
+    "proof_of_address": {
+      "requested_by": "future_partner",
+      "awaiting_action_from": "future_party",
+      "errors": []
+    }
   }
 }

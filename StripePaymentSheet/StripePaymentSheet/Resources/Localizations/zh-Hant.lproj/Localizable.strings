@@ -30,9 +30,19 @@
 
 "Buy now or pay later with Klarna" = "用 Klarna 先買後付";
 
+"By confirming your payment with GCash, you allow %@ to charge your GCash account for future payments in accordance with their terms." = "確認使用 GCash 支付，即表示您允許 %@ 按照其條款從您的 GCash 帳戶對未來支付進行扣款。";
+
 "By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "透過 NICEPAY 確認您的支付，即表示您允許 %@ 根據其條款使用此支付方式為未來支付扣款。";
 
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "確認您的 PayPal 付款，即表示您允許 %@ 按照他們的條款從您的 PayPal 扣取未來款項。";
+
+"By confirming your payment with Touch 'n Go, you allow %@ to charge your Touch 'n Go account for future payments in accordance with their terms." = "確認使用 Touch 'n Go 支付，即表示您允許 %@ 按照其條款從您的 Touch 'n Go 帳戶對未來支付進行扣款。";
+
+"By confirming your payment with TrueMoney, you allow %@ to charge your TrueMoney account for future payments in accordance with their terms." = "確認使用 TrueMoney 支付，即表示您允許 %@ 按照其條款從您的 TrueMoney 帳戶對未來支付進行扣款。";
+
+"By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their <terms>terms of use</terms>." = "確認支付，即表示您同意將由 Global Stack Services Limited 作為記錄商家並根據其<terms>使用條款</terms>處理您的交易。";
+
+"By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their <terms>terms</terms>." = "確認支付，即表示您同意將由 Global Stack Services Limited 作為記錄商家並根據其<terms>條款</terms>處理您的交易。";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "繼續使用 Amazon Pay，即表示您允許 %@ 按照他們的條款從您的 Amazon Pay 帳戶扣取未來款項。";
 
@@ -77,6 +87,8 @@
 "Close card scanner" = "關閉金融卡掃描器";
 
 "Code sent" = "驗證碼已發送";
+
+"Complete the payment using Pix to finish the purchase." = "使用 Pix 完成支付即可完成購買。";
 
 "Confirm" = "確定";
 
@@ -125,6 +137,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "我理解 Stripe 將代表 %@ 收取直接扣款，且確認我是該開戶人，且是唯一一個需要授權該帳戶扣款的人。";
 
 "IBAN" = "IBAN";
+
+"Invoice payment for business buyers." = "商家買家的帳單支付。";
 
 "Keep Editing" = "繼續編輯";
 
@@ -273,6 +287,8 @@
 "The provided verification code has expired." = "提供的驗證碼已過期。";
 
 "The provided verification code is incorrect." = "提供的驗證碼不正確。";
+
+"This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "此為國際購買，且不含 3.5% 的 IOF 費用。繼續購買，即表示您承認並接受 <terms>Ebanx 的條款和條件</terms>。";
 
 "This is your default" = "這是您的預設支付方式";
 

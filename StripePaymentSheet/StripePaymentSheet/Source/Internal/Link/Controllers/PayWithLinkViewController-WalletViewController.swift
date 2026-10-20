@@ -627,7 +627,7 @@ private extension PayWithLinkViewController.WalletViewController {
         )
         updatePaymentMethodVC.delegate = self
 
-        bottomSheetController?.pushContentViewController(updatePaymentMethodVC)
+        coordinator?.pushContentViewController(updatePaymentMethodVC)
     }
 
     func collectRemainingBillingDetailsAndConfirm(for paymentMethod: ConsumerPaymentDetails) {
@@ -640,7 +640,7 @@ private extension PayWithLinkViewController.WalletViewController {
         )
         updatePaymentMethodVC.delegate = self
 
-        bottomSheetController?.pushContentViewController(updatePaymentMethodVC)
+        coordinator?.pushContentViewController(updatePaymentMethodVC)
     }
 }
 
@@ -804,7 +804,7 @@ extension PayWithLinkViewController.WalletViewController: LinkPaymentMethodPicke
             isAddingFirstPaymentMethod: viewModel.paymentMethods.isEmpty
         )
 
-        bottomSheetController?.pushContentViewController(newPaymentVC)
+        coordinator?.pushContentViewController(newPaymentVC)
     }
 
     func paymentMethodPicker(_ picker: LinkPaymentMethodPicker, menuActionsForItemAt index: Int) -> [Action] {

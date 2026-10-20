@@ -173,93 +173,56 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
 
     // MARK: - Update Payment Method
 
-    // TODO(porter): Checkout rejects `payment_method_to_update` on modeless sessions
-    // ("This feature is not currently supported in our Product Catalog v2 private preview.").
-    func disabled_testUpdatePaymentMethodExpiry() async throws {
-        // 1. Create a customer and attach a card PM to them
-        let customerResponse = try await STPTestingAPIClient.shared.fetchCustomerAndEphemeralKey()
-        let apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
+    // Dedicated US Checkout playground customer with a saved 4242 card.
+    private static let checkoutCustomerID = "cus_VMuutnh9o7Jq9z"
+    private static let checkoutCustomerCardID = "pm_1UMB4RLu5o3P18ZpsmyagQld"
 
-        let cardParams = STPPaymentMethodCardParams()
-        cardParams.number = "4242424242424242"
-        cardParams.expMonth = 12
-        cardParams.expYear = 2030
-        cardParams.cvc = "123"
-        let billingDetails = STPPaymentMethodBillingDetails()
-        billingDetails.email = "test@example.com"
-        let paymentMethodParams = STPPaymentMethodParams(card: cardParams, billingDetails: billingDetails, metadata: nil)
-        let paymentMethod = try await apiClient.createPaymentMethod(with: paymentMethodParams)
-
-        try await apiClient.attachPaymentMethod(
-            paymentMethod.stripeId,
-            customerID: customerResponse.customer,
-            ephemeralKeySecret: customerResponse.ephemeralKeySecret
+    private func makeCheckoutSessionWithSavedCard() async throws -> (
+        apiClient: STPAPIClient,
+        checkoutSessionID: String,
+        paymentMethodID: String
+    ) {
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession(
+            customerID: Self.checkoutCustomerID
         )
+        let apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
+        return (apiClient, checkoutSessionResponse.id, Self.checkoutCustomerCardID)
+    }
 
-        // 2. Create a checkout session for this customer
-        let checkoutSessionResponse = try await STPTestingAPIClient.shared.createLegacyCheckoutSession(
-            customerID: customerResponse.customer,
-            additionalParameters: ["payment_intent_data": ["setup_future_usage": "on_session"]]
-        )
-        let sessionApiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
+    func testUpdatePaymentMethodExpiry() async throws {
+        // Given a Checkout Session for a customer with a saved card
+        let setup = try await makeCheckoutSessionWithSavedCard()
 
-        // 3. Init the session
-        _ = try await sessionApiClient.initCheckoutSession(
-            checkoutSessionId: checkoutSessionResponse.id,
+        _ = try await setup.apiClient.initCheckoutSession(
+            checkoutSessionId: setup.checkoutSessionID,
             adaptivePricingAllowed: false
         )
 
-        // 4. Update the attached PM's expiry via the checkout session
-        let updatedSession = try await sessionApiClient.updatePaymentMethod(
-            paymentMethod.stripeId,
-            inCheckoutSession: checkoutSessionResponse.id,
+        // When updating the saved card's expiry
+        let updatedSession = try await setup.apiClient.updatePaymentMethod(
+            setup.paymentMethodID,
+            inCheckoutSession: setup.checkoutSessionID,
             expiryDetails: CheckoutController.PaymentMethodExpiryDetails(expMonth: 6, expYear: 2029)
         ).makePublicSession()
 
-        // 5. Verify the session was returned successfully (proves the API accepted our request)
-        XCTAssertEqual(updatedSession.id, checkoutSessionResponse.id)
+        // Then Payment Pages returns the updated session
+        XCTAssertEqual(updatedSession.id, setup.checkoutSessionID)
         XCTAssertEqual(updatedSession.status, .open)
     }
 
-    // TODO(porter): see disabled_testUpdatePaymentMethodExpiry above.
-    func disabled_testUpdatePaymentMethodBillingDetails() async throws {
-        // 1. Create a customer and attach a card PM to them
-        let customerResponse = try await STPTestingAPIClient.shared.fetchCustomerAndEphemeralKey()
-        let apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
+    func testUpdatePaymentMethodBillingDetails() async throws {
+        // Given a Checkout Session for a customer with a saved card
+        let setup = try await makeCheckoutSessionWithSavedCard()
 
-        let cardParams = STPPaymentMethodCardParams()
-        cardParams.number = "4242424242424242"
-        cardParams.expMonth = 12
-        cardParams.expYear = 2030
-        cardParams.cvc = "123"
-        let billingDetails = STPPaymentMethodBillingDetails()
-        billingDetails.email = "test@example.com"
-        let paymentMethodParams = STPPaymentMethodParams(card: cardParams, billingDetails: billingDetails, metadata: nil)
-        let paymentMethod = try await apiClient.createPaymentMethod(with: paymentMethodParams)
-
-        try await apiClient.attachPaymentMethod(
-            paymentMethod.stripeId,
-            customerID: customerResponse.customer,
-            ephemeralKeySecret: customerResponse.ephemeralKeySecret
-        )
-
-        // 2. Create a checkout session for this customer
-        let checkoutSessionResponse = try await STPTestingAPIClient.shared.createLegacyCheckoutSession(
-            customerID: customerResponse.customer,
-            additionalParameters: ["payment_intent_data": ["setup_future_usage": "on_session"]]
-        )
-        let sessionApiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
-
-        // 3. Init the session
-        _ = try await sessionApiClient.initCheckoutSession(
-            checkoutSessionId: checkoutSessionResponse.id,
+        _ = try await setup.apiClient.initCheckoutSession(
+            checkoutSessionId: setup.checkoutSessionID,
             adaptivePricingAllowed: false
         )
 
-        // 4. Update the attached PM's billing details via the checkout session
-        let updatedSession = try await sessionApiClient.updatePaymentMethod(
-            paymentMethod.stripeId,
-            inCheckoutSession: checkoutSessionResponse.id,
+        // When updating the saved card's billing details
+        let updatedSession = try await setup.apiClient.updatePaymentMethod(
+            setup.paymentMethodID,
+            inCheckoutSession: setup.checkoutSessionID,
             billingDetails: CheckoutController.PaymentMethodBillingDetails(
                 name: "Jane Doe",
                 email: "jane@example.com",
@@ -274,8 +237,8 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
             )
         ).makePublicSession()
 
-        // 5. Verify the session was returned successfully (proves the API accepted our request)
-        XCTAssertEqual(updatedSession.id, checkoutSessionResponse.id)
+        // Then Payment Pages returns the updated session
+        XCTAssertEqual(updatedSession.id, setup.checkoutSessionID)
         XCTAssertEqual(updatedSession.status, .open)
     }
 

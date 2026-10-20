@@ -19,8 +19,47 @@ import XCTest
 
 extension PaymentPagesAPIResponse {
     /// Convenience for fixtures that contain no client-local session state.
-    func makePublicSession() -> CheckoutController.Session {
-        return CheckoutController.Session(apiResponse: self, localState: .empty)
+    func makePublicSession(
+        expressCheckoutConfiguration: ExpressCheckoutElement.Configuration? = nil
+    ) -> CheckoutController.Session {
+        let configuration = expressCheckoutConfiguration.map { expressConfiguration in
+            var configuration = CheckoutController.Configuration(clientSecret: "\(sessionId)_secret_abc", returnURL: "stripe-ios-test://checkout-return")
+            configuration.expressCheckoutElement = expressConfiguration
+            return configuration
+        }
+        return CheckoutController.Session(
+            apiResponse: self,
+            localState: .empty,
+            configuration: configuration
+        )
+    }
+}
+
+extension ExpressCheckoutElementUtilities {
+    static func availablePaymentMethodsWithoutCheckoutRequirements(
+        for elementsSession: STPElementsSession,
+        configuration: ExpressCheckoutElement.Configuration
+    ) -> [ExpressCheckoutElement.PaymentMethod] {
+        availablePaymentMethods(
+            for: elementsSession,
+            configuration: configuration,
+            usesWebLink: false,
+            requiresShippingAddress: false,
+            billingDetailsCollectionRequired: false
+        )
+    }
+
+    static func linkDisabledReasonsWithoutCheckoutRequirements(
+        for elementsSession: STPElementsSession,
+        configuration: ExpressCheckoutElement.Configuration
+    ) -> [LinkDisabledReason] {
+        linkDisabledReasons(
+            for: elementsSession,
+            configuration: configuration,
+            usesWebLink: false,
+            requiresShippingAddress: false,
+            billingDetailsCollectionRequired: false
+        )
     }
 }
 
@@ -153,6 +192,41 @@ enum CheckoutTestHelpers {
     static func makeSession(_ overrides: [String: Any] = [:]) -> PaymentPagesAPIResponse {
         let json = makeSessionJSON(overrides)
         return try! PaymentPagesAPIResponse.decode(fromAPIResponse: json)
+    }
+
+    static func makeSessionWithWalletTypes(
+        _ walletTypes: [String],
+        applePayPreference: String? = nil,
+        linkUseAttestation: Bool? = nil,
+        automaticTaxAddressSource: String? = nil,
+        customerEmail: String? = nil
+    ) -> PaymentPagesAPIResponse {
+        var elementsSession: [String: Any] = [
+            "session_id": "es_test",
+            "merchant_country": "US",
+            "payment_method_preference": ["ordered_payment_method_types": ["card"]],
+            "ordered_payment_method_types_and_wallets": walletTypes,
+        ]
+        if let applePayPreference {
+            elementsSession["apple_pay_preference"] = applePayPreference
+        }
+        if let linkUseAttestation {
+            elementsSession["link_settings"] = [
+                "link_funding_sources": ["CARD"],
+                "link_mobile_use_attestation_endpoints": linkUseAttestation,
+            ]
+        }
+        var session: [String: Any] = ["elements_session": elementsSession]
+        if let automaticTaxAddressSource {
+            session["tax_context"] = [
+                "automatic_tax_enabled": true,
+                "automatic_tax_address_source": automaticTaxAddressSource,
+            ]
+        }
+        if let customerEmail {
+            session["customer_email"] = customerEmail
+        }
+        return makeSession(session)
     }
 
     static func makeSessionJSON(_ overrides: [String: Any] = [:]) -> [String: Any] {
@@ -467,7 +541,7 @@ extension CheckoutController.ApplePayConfirmationParameters {
         apiClient: STPAPIClient,
         returnURL: String = "stripe-ios-test://checkout-return",
         merchantDisplayName: String = "Test Merchant",
-        applePayConfiguration: CheckoutApplePayConfiguration = PaymentElement.ApplePayConfiguration(merchantId: "merchant.com.test"),
+        applePayConfiguration: CheckoutApplePayConfiguration = PaymentElement.Configuration.ApplePayConfiguration(merchantId: "merchant.com.test"),
         shippingAddressRequired: Bool = false,
         defaultBillingDetails: CheckoutController.Configuration.Defaults.BillingDetails? = nil,
         presentationWindow: UIWindow? = nil,

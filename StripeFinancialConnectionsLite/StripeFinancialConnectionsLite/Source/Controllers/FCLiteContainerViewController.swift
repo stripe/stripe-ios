@@ -20,6 +20,7 @@ class FCLiteContainerViewController: UIViewController {
 
     private var manifest: LinkAccountSessionManifest?
     private let elementsSessionContext: ElementsSessionContext?
+    private let preCollectedConsent: FinancialConnectionsPreCollectedConsent?
 
     private var isInstantDebits: Bool {
         manifest?.isInstantDebits == true
@@ -50,6 +51,7 @@ class FCLiteContainerViewController: UIViewController {
         apiClient: FCLiteAPIClient,
         elementsSessionContext: ElementsSessionContext?,
         hasRequestedDataPermissions: Bool,
+        preCollectedConsent: FinancialConnectionsPreCollectedConsent?,
         completion: @escaping ((FinancialConnectionsSDKResult) -> Void)
     ) {
         self.clientSecret = clientSecret
@@ -57,6 +59,7 @@ class FCLiteContainerViewController: UIViewController {
         self.apiClient = apiClient
         self.elementsSessionContext = elementsSessionContext
         self.hasRequestedDataPermissions = hasRequestedDataPermissions
+        self.preCollectedConsent = preCollectedConsent
         self.completion = completion
         super.init(nibName: nil, bundle: nil)
     }
@@ -97,7 +100,8 @@ class FCLiteContainerViewController: UIViewController {
                 clientSecret: clientSecret,
                 returnUrl: returnUrl,
                 canUseNativeLink: canUseNativeLink,
-                secureWebviewFeatureFlagEnabled: secureWebviewFeatureFlagEnabled
+                secureWebviewFeatureFlagEnabled: secureWebviewFeatureFlagEnabled,
+                preCollectedConsent: preCollectedConsent
             )
             self.manifest = synchronize.manifest
             showWebView(for: synchronize.manifest)

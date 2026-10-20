@@ -36,7 +36,9 @@ extension CheckoutController {
         public let discountAmounts: [DiscountAmount]
 
         /// The customer's email address.
-        public let email: String?
+        public var email: String? {
+            return serverEmail ?? localState.email
+        }
 
         /// The items included in the order summary.
         public let orderSummaryItems: [OrderSummaryItem]
@@ -76,10 +78,18 @@ extension CheckoutController {
         /// Aggregate subtotal, tax, discount, and total amounts for the Checkout Session.
         public let totals: CheckoutController.Session.Totals
 
+        /// Payment methods available after applying configuration and device eligibility, ordered as displayed by `ExpressCheckoutElement`.
+        /// Supported values are `"apple_pay"` and `"link"`.
+        /// When empty, Express Checkout Element will render empty content.
+        public let availableExpressCheckoutPaymentMethods: [String]
+
         // MARK: - Internal Properties
 
         let paymentStatus: Status.PaymentStatus
         let paymentMethodOptions: STPPaymentMethodOptions?
+        /// The immutable email provided when creating the Checkout Session, either through
+        /// `customer_email` or the Checkout Session's Customer's email.
+        let serverEmail: String?
         var localState: LocalState
         let customer: PaymentPagesAPIResponse.Customer?
         let savedPaymentMethodsOfferSave: STPCheckoutSessionSavedPaymentMethodsOfferSave?
@@ -101,26 +111,28 @@ extension CheckoutController {
         }
 
         struct LocalState {
+            var email: String?
             var shippingAddress: ShippingAddress?
             var paymentOption: PaymentOptionDisplayData?
 
-            static let empty = Self(shippingAddress: nil, paymentOption: nil)
+            static let empty = Self(email: nil, shippingAddress: nil, paymentOption: nil)
         }
     }
 }
 
 extension CheckoutController.Session {
     /// Builds a read-only session snapshot from server-backed and local state.
-    init(apiResponse: PaymentPagesAPIResponse, localState: LocalState) {
+    init(
+        apiResponse: PaymentPagesAPIResponse,
+        localState: LocalState,
+        configuration: CheckoutController.Configuration? = nil
+    ) {
         let elementsSessionValue = apiResponse.elementsSession.value
         let publicDiscountAmounts = PaymentPagesAPIResponse.makeDiscountAmounts(
-            from: apiResponse.recurringDetails?.totalDiscountAmounts ?? [],
+            from: apiResponse.recurringDetails?.totalSummary.totalDiscountAmounts ?? [],
             currency: apiResponse.currency
         )
-        // TODO: Have Payment Pages return session-level tax amounts directly. `recurring_details`
-        // is an odd source for one-time-price modeless Checkout, and clients shouldn't need to
-        // derive this aggregate from recurring-specific response models.
-        let publicTaxAmounts = apiResponse.recurringDetails?.totalTaxAmounts.map {
+        let publicTaxAmounts = apiResponse.totalSummary?.totalTaxAmounts?.map {
             PaymentPagesAPIResponse.makeSessionTaxAmount(
                 from: $0,
                 currency: apiResponse.currency,
@@ -157,6 +169,10 @@ extension CheckoutController.Session {
         if automaticTaxEnabled && automaticTaxAddressSource == "billing" {
             elementsSessionValue.disableLinkForAutomaticTaxBilling = true
         }
+        let availableExpressCheckoutPaymentMethods = configuration.map {
+            ExpressCheckoutElementUtilities.availablePaymentMethods(for: apiResponse, configuration: $0).map(\.rawValue)
+        } ?? []
+        let serverEmail = apiResponse.customerEmail ?? apiResponse.customer?.email
 
         self.init(
             id: apiResponse.sessionId,
@@ -164,7 +180,6 @@ extension CheckoutController.Session {
             currency: apiResponse.adaptivePricingInfo?.integrationCurrency ?? apiResponse.currency,
             presentmentDetails: presentmentDetails,
             discountAmounts: publicDiscountAmounts,
-            email: apiResponse.customerEmail ?? apiResponse.customer?.email,
             orderSummaryItems: publicOrderSummaryItems,
             livemode: apiResponse.livemode,
             minorUnitsAmountDivisor: PaymentPagesAPIResponse.makeMinorUnitsAmountDivisor(
@@ -174,8 +189,10 @@ extension CheckoutController.Session {
             tax: publicTax,
             taxAmounts: publicTaxAmounts,
             totals: publicTotals,
+            availableExpressCheckoutPaymentMethods: availableExpressCheckoutPaymentMethods,
             paymentStatus: apiResponse.paymentStatus,
             paymentMethodOptions: apiResponse.paymentMethodOptions,
+            serverEmail: serverEmail,
             localState: localState,
             customer: apiResponse.customer,
             savedPaymentMethodsOfferSave: PaymentPagesAPIResponse.makeSavedPaymentMethodsOfferSave(
@@ -325,8 +342,11 @@ extension CheckoutController.Session {
     public struct PaymentOptionDisplayData: Equatable {
         /// An image representing a payment method; e.g. the Apple Pay logo or a VISA logo
         public let image: UIImage
-        /// A user facing string representing the payment method; e.g. "Apple Pay" or "····4242" for a card
+        /// The primary label describing the payment method, such as "Visa" or "Apple Pay".
         public let label: String
+        /// Additional payment method details, such as the masked last four digits of a card or bank account.
+        /// This is `nil` when there are no additional details to display.
+        public let sublabel: String?
         /// The billing details associated with the customer's desired payment method
         public let billingDetails: BillingDetails?
         /// A string representation of the customer's desired payment method

@@ -95,21 +95,8 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
                 // Extract shipping address from the PKPayment
                 let shippingAddress = paymentInformation.shippingContact != nil ? STPAddress(pkContact: paymentInformation.shippingContact!) : nil
 
-                // Try to create a radar session for the payment method before calling the handler
-                return try await withCheckedThrowingContinuation { continuation in
-                    context.apiClient.createSavedPaymentMethodRadarSession(paymentMethodId: stpPaymentMethod.stripeId) { _, error in
-                        // If radar session creation fails, just continue with the payment method directly
-                        if let error {
-                            // Log the error but don't fail the payment
-                            let errorAnalytic = ErrorAnalytic(event: .savedPaymentMethodRadarSessionFailure, error: error)
-                            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic, apiClient: context.apiClient)
-                        }
-
-                        // Call the handler regardless of radar session success/failure
-                        preparePaymentMethodHandler(stpPaymentMethod, shippingAddress)
-                        continuation.resume(returning: STPApplePayContext.COMPLETE_WITHOUT_CONFIRMING_INTENT)
-                    }
-                }
+                preparePaymentMethodHandler(stpPaymentMethod, shippingAddress)
+                return STPApplePayContext.COMPLETE_WITHOUT_CONFIRMING_INTENT
             }
 
             // Route to confirmation token flow or payment method flow based on available handlers
@@ -213,7 +200,8 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
             returnURL: context.returnUrl,
             shipping: shipping,
             paymentMethodOptions: nil,
-            clientAttributionMetadata: clientAttributionMetadata
+            clientAttributionMetadata: clientAttributionMetadata,
+            collectedInformation: .init(email: checkoutSession.localState.email)
         )
         let response = try await context.apiClient.confirmCheckoutSession(with: requestParameters)
 
@@ -408,7 +396,7 @@ extension STPApplePayContext {
             applePayContext.apiClient = configuration.apiClient
             applePayContext.returnUrl = configuration.returnURL
             applePayContext.clientAttributionMetadata = clientAttributionMetadata
-            applePayContext.fallbackBillingDetails = makeFallbackBillingDetails(intent: intent, configuration: configuration)
+            applePayContext.fallbackBillingDetails = makeFallbackBillingDetails(configuration: configuration)
             return applePayContext
         } else {
             // Delegate only deallocs when Apple Pay completes
@@ -416,6 +404,21 @@ extension STPApplePayContext {
             delegate.selfRetainer = nil
             return nil
         }
+    }
+
+    static func roundAmountForApplePay(_ amount: NSDecimalNumber, currency: String?) -> NSDecimalNumber {
+        // Apple Pay rejects fractional amounts for this list of currencies. Match Stripe.js by rounding them up.
+        guard let currency, NSDecimalNumber.decimalCountSpecialCases[currency.uppercased()] != nil else {
+            return amount
+        }
+        return amount.rounding(accordingToBehavior: NSDecimalNumberHandler(
+            roundingMode: .up,
+            scale: 0,
+            raiseOnExactness: false,
+            raiseOnOverflow: false,
+            raiseOnUnderflow: false,
+            raiseOnDivideByZero: false
+        ))
     }
 
     @MainActor
@@ -455,7 +458,7 @@ extension STPApplePayContext {
                     currency: intent.currency
                 )
                 paymentRequest.paymentSummaryItems = [
-                    PKPaymentSummaryItem(label: label, amount: decimalAmount, type: .final),
+                    PKPaymentSummaryItem(label: label, amount: roundAmountForApplePay(decimalAmount, currency: intent.currency), type: .final),
                 ]
             } else {
                 paymentRequest.paymentSummaryItems = [
@@ -514,23 +517,16 @@ private func makeShippingDetails(from configuration: PaymentElementConfiguration
 
 @MainActor
 private func makeFallbackBillingDetails(
-    intent: Intent,
     configuration: PaymentElementConfiguration
 ) -> StripeAPI.BillingDetails? {
+    guard configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod else {
+        return nil
+    }
+
     var fallbackBillingDetails = StripeAPI.BillingDetails()
     var hasFallbackBillingDetails = false
-
-    if case .checkout(let session) = intent, let email = session.email {
-        fallbackBillingDetails.email = email
-        hasFallbackBillingDetails = true
-    }
-
-    guard configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod else {
-        return hasFallbackBillingDetails ? fallbackBillingDetails : nil
-    }
-
     let defaultBillingDetails = configuration.defaultBillingDetails
-    if fallbackBillingDetails.email == nil, let email = defaultBillingDetails.email {
+    if let email = defaultBillingDetails.email {
         fallbackBillingDetails.email = email
         hasFallbackBillingDetails = true
     }

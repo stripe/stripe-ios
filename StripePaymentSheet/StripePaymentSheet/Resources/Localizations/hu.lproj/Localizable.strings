@@ -46,9 +46,19 @@
 
 "Buy now or pay later with Klarna" = "Vegye meg most, vagy fizessen később Klarnával";
 
+"By confirming your payment with GCash, you allow %@ to charge your GCash account for future payments in accordance with their terms." = "A GCash segítségével történő fizetés megerősítésével engedélyezi a(z) %@ számára, hogy a feltételeinek megfelelően megterhelje a GCash-számláját a jövőbeli fizetések céljából.";
+
 "By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "A NICEPAY segítségével történő fizetés megerősítésével Ön engedélyezi %@ számára, hogy a feltételeinek megfelelően a jövőbeli fizetésekhez megterhelje ezt a fizetési módot.";
 
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "A fizetés megerősítésével a PayPalon engedélyezi, hogy a(z) %@ a feltételeinek megfelelően a jövőbeni kifizetésekkel megterhelje a PayPal számláját.";
+
+"By confirming your payment with Touch 'n Go, you allow %@ to charge your Touch 'n Go account for future payments in accordance with their terms." = "A Touch 'n Go segítségével történő fizetés megerősítésével engedélyezi a(z) %@ számára, hogy a feltételeinek megfelelően megterhelje a Touch 'n Go-számláját a jövőbeli fizetések céljából.";
+
+"By confirming your payment with TrueMoney, you allow %@ to charge your TrueMoney account for future payments in accordance with their terms." = "A TrueMoney segítségével történő fizetés megerősítésével engedélyezi a(z) %@ számára, hogy a feltételeinek megfelelően megterhelje a TrueMoney-számláját a jövőbeli fizetések céljából.";
+
+"By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their <terms>terms of use</terms>." = "A fizetés megerősítésével elfogadja, hogy a tranzakciót a Global Stack Services Limited bejegyzett kereskedőként kezeli a <terms>felhasználási feltételeinek</terms> megfelelően.";
+
+"By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their <terms>terms</terms>." = "A fizetés megerősítésével elfogadja, hogy a tranzakciót a Global Stack Services Limited bejegyzett kereskedőként kezeli a <terms>feltételeinek</terms> megfelelően.";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Az Amazon Payre történő továbblépéssel engedélyezi, hogy a(z) %@ a feltételeinek megfelelően a jövőbeni kifizetésekkel megterhelje az Amazon Pay-számláját.";
 
@@ -112,6 +122,8 @@
 
 "Code sent" = "Kód elküldve";
 
+"Complete the payment using Pix to finish the purchase." = "A vásárlás befejezéséhez teljesítse a fizetést a Pix használatával.";
+
 "Confirm" = "Megerősítés";
 
 "Confirm payment details" = "Fizetési adatok megerősítése";
@@ -171,6 +183,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Tudomásul veszem, hogy a Stripe beszedéseket végez a(z) %@ nevében, és megerősítem, hogy én vagyok a számla tulajdonosa és az egyetlen személy, aki a terheléseket engedélyezheti erről a számláról.";
 
 "IBAN" = "IBAN";
+
+"Invoice payment for business buyers." = "Számlafizetés vállalkozói vásárlók számára.";
 
 "Keep Editing" = "Szerkesztés folytatása";
 
@@ -341,6 +355,8 @@
 "The provided verification code has expired." = "A megadott ellenőrző kód lejárt.";
 
 "The provided verification code is incorrect." = "A megadott ellenőrző kód hibás.";
+
+"This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Ez egy nemzetközi vásárlás, amely nem tartalmazza a 3,5%-os IOF díjat. A folytatással Ön tudomásul veszi és elfogadja <terms>az Ebanx feltételeit<terms>.";
 
 "This is your default" = "Ez az alapértelmezett";
 

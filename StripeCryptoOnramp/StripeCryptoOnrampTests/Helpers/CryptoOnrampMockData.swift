@@ -16,12 +16,12 @@ private class ClassForBundle {}
 
 // MARK: Responses
 
-enum FulfillAdditionalKYCRequirementResponseMock: String, MockData {
+enum FulfillKYCRequirementsResponseMock: String, MockData {
     var bundle: Bundle { return Bundle(for: ClassForBundle.self) }
 
-    typealias ResponseType = FulfillAdditionalKYCRequirementResponse
+    typealias ResponseType = EmptyResponse
 
-    case fulfillAdditionalKYCRequirementResponse_200 = "FulfillAdditionalKYCRequirementResponse_200"
+    case fulfillKYCRequirementsResponse_200 = "FulfillKYCRequirementsResponse_200"
 }
 
 enum RetrieveKYCRequirementsResponseMock: String, MockData {
@@ -32,6 +32,8 @@ enum RetrieveKYCRequirementsResponseMock: String, MockData {
     case sourceOfFundsWithQuestionnaire = "RetrieveKYCRequirementsResponse_SourceOfFundsWithQuestionnaire_200"
     case partnerReview = "RetrieveKYCRequirementsResponse_PartnerReview_200"
     case unknownActionParty = "RetrieveKYCRequirementsResponse_UnknownActionParty_200"
+    case unknownAnswerType = "RetrieveKYCRequirementsResponse_UnknownAnswerType_200"
+    case notRequired = "RetrieveKYCRequirementsResponse_NotRequired_200"
 }
 
 enum RetrieveKYCInfoResponseMock: String, MockData {

@@ -1,0 +1,80 @@
+GET
+https:\/\/api\.stripe\.com\/v1\/setup_intents\/seti_1UEcUsFY0qyl6XeWzlTXRqyd\?client_secret=seti_1UEcUsFY0qyl6XeWzlTXRqyd_secret_VF6i1IHfGNSXA5slYPjmsCGJvBMMzM8&expand%5B0%5D=payment_method$
+200
+application/json
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=jD2DYMUdTRd1k5pgZmQbheZ950LXwAO3FwfspCAczyfFYRk20hxKwhPfB40AtSPmcT8l56Pf76nmus6s; report-to csp
+Server: nginx
+Cache-Control: no-cache, no-store
+reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=jD2DYMUdTRd1k5pgZmQbheZ950LXwAO3FwfspCAczyfFYRk20hxKwhPfB40AtSPmcT8l56Pf76nmus6s&t=1"
+stripe-notice: You are using an outdated API version (2020-08-27). We recommend upgrading to the latest API version, 2026-08-26.dahlia. See https://docs.stripe.com/upgrades
+x-wc: 3c3
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+x-stripe-routing-context-priority-tier: api-testmode
+x-stripe-priority-routing-enabled: true
+report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=jD2DYMUdTRd1k5pgZmQbheZ950LXwAO3FwfspCAczyfFYRk20hxKwhPfB40AtSPmcT8l56Pf76nmus6s&t=1"}],"include_subdomains":true}
+request-id: req_LaYWS9nzJs8E7d
+Content-Length: 1428
+Vary: Origin
+Date: Fri, 11 Sep 2026 22:00:39 GMT
+stripe-version: 2020-08-27
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+
+{
+  "id" : "seti_1UEcUsFY0qyl6XeWzlTXRqyd",
+  "description" : null,
+  "excluded_payment_method_types" : null,
+  "next_action" : {
+    "type" : "redirect_to_url",
+    "redirect_to_url" : {
+      "return_url" : "https:\/\/foo.com",
+      "url" : "https:\/\/pm-redirects.stripe.com\/authorize\/acct_1G6m1pFY0qyl6XeW\/sa_nonce_VF6iVJBhYxJCvw12MyN0pYBS4u1l4MV"
+    }
+  },
+  "livemode" : false,
+  "payment_method" : {
+    "object" : "payment_method",
+    "customer_account" : null,
+    "id" : "pm_1UEcUtFY0qyl6XeWhFdOlvtA",
+    "billing_details" : {
+      "email" : "f@z.c",
+      "phone" : null,
+      "tax_id" : null,
+      "name" : "Foo",
+      "address" : {
+        "state" : null,
+        "country" : null,
+        "line2" : null,
+        "city" : null,
+        "line1" : null,
+        "postal_code" : null
+      }
+    },
+    "livemode" : false,
+    "created" : 1789164039,
+    "allow_redisplay" : "unspecified",
+    "shared_payment_granted_token" : null,
+    "customer" : null,
+    "type" : "bancontact",
+    "bancontact" : {
+
+    }
+  },
+  "payment_method_configuration_details" : null,
+  "usage" : "off_session",
+  "allowed_payment_method_types" : null,
+  "payment_method_types" : [
+    "bancontact"
+  ],
+  "object" : "setup_intent",
+  "last_setup_error" : null,
+  "created" : 1789164038,
+  "client_secret" : "seti_1UEcUsFY0qyl6XeWzlTXRqyd_secret_VF6i1IHfGNSXA5slYPjmsCGJvBMMzM8",
+  "automatic_payment_methods" : null,
+  "cancellation_reason" : null,
+  "status" : "requires_action"
+}

@@ -99,6 +99,23 @@ enum ExpectedFormHierarchy {
         static var paymentIntent: FormHierarchyNode { emptyForm }
     }
 
+    // MARK: - Pix
+
+    enum Pix {
+        static var international: FormHierarchyNode {
+            FormHierarchyNode(type: "FormElement", children: [
+                FormHierarchyNode(type: "SectionElement", properties: ["title": "Contact information"], children: [
+                    FormHierarchyNode(type: "TextFieldElement", properties: ["label": "Full name"]),
+                    FormHierarchyNode(type: "TextFieldElement", properties: ["label": "Email"]),
+                ]),
+                FormHierarchyNode(type: "SectionElement", children: [
+                    FormHierarchyNode(type: "TextFieldElement", properties: ["label": "CPF/CPNJ"]),
+                ]),
+                FormHierarchyNode(type: "SimpleMandateElement", properties: ["text": "This is an international purchase and excludes a 3..."]),
+            ])
+        }
+    }
+
     // MARK: - SeQura
 
     enum Sequra {
@@ -111,6 +128,101 @@ enum ExpectedFormHierarchy {
         static var paymentIntent: FormHierarchyNode { emptyForm }
     }
 
+    // MARK: - GoPay
+
+    enum GoPay {
+        static var paymentIntent: FormHierarchyNode { emptyForm }
+    }
+    // MARK: - Naira card
+
+    enum NairaCard {
+        static var paymentIntent: FormHierarchyNode {
+            FormHierarchyNode(type: "FormElement", children: [
+                FormHierarchyNode(type: "SimpleMandateElement", properties: ["text": "By confirming your payment, you agree that your tr..."])
+            ])
+        }
+    }
+    // MARK: - Naira bank transfer
+
+    enum NairaBankTransfer {
+        static var paymentIntent: FormHierarchyNode {
+            FormHierarchyNode(type: "FormElement", children: [
+                FormHierarchyNode(type: "SimpleMandateElement", properties: ["text": "By confirming your payment, you agree that your tr..."])
+            ])
+        }
+    }
+    // MARK: - Naira USSD
+
+    enum NgUSSD {
+        static var paymentIntent: FormHierarchyNode {
+            FormHierarchyNode(type: "FormElement", children: [
+                FormHierarchyNode(type: "SimpleMandateElement", properties: ["text": "By confirming your payment, you agree that your tr..."])
+            ])
+        }
+    }
+    // MARK: - MoMo
+
+    enum Momo {
+        static var paymentIntent: FormHierarchyNode { emptyForm }
+    }
+    // MARK: - Touch 'n Go
+
+    enum TouchNGo {
+        static var paymentIntent: FormHierarchyNode { emptyForm }
+        static var settingUp: FormHierarchyNode {
+            FormHierarchyNode(type: "FormElement", children: [
+                FormHierarchyNode(type: "SimpleMandateElement", properties: ["text": "By confirming your payment with Touch 'n Go, you a..."])
+            ])
+        }
+    }
+    // MARK: - TrueMoney
+
+    enum TrueMoney {
+        static var paymentIntent: FormHierarchyNode { emptyForm }
+        static var settingUp: FormHierarchyNode {
+            FormHierarchyNode(type: "FormElement", children: [
+                FormHierarchyNode(type: "SimpleMandateElement", properties: ["text": "By confirming your payment with TrueMoney, you all..."])
+            ])
+        }
+    }
+    // MARK: - ShopeePay
+
+    enum ShopeePay {
+        static var paymentIntent: FormHierarchyNode { emptyForm }
+    }
+    // MARK: - Naira Wallet
+
+    enum NgWallet {
+        static var paymentIntent: FormHierarchyNode {
+            FormHierarchyNode(type: "FormElement", children: [
+                FormHierarchyNode(type: "SimpleMandateElement", properties: ["text": "By confirming your payment, you agree that your tr..."])
+            ])
+        }
+    }
+    // MARK: - QRIS
+
+    enum QRIS {
+        static var paymentIntent: FormHierarchyNode { emptyForm }
+    }
+    // MARK: - GCash
+
+    enum GCash {
+        static var paymentIntent: FormHierarchyNode { emptyForm }
+        static var settingUp: FormHierarchyNode {
+            FormHierarchyNode(type: "FormElement", children: [
+                FormHierarchyNode(type: "SimpleMandateElement", properties: ["text": "By confirming your payment with GCash, you allow S..."])
+            ])
+        }
+    }
+    // MARK: - Mondu
+
+    enum Mondu {
+        static var paymentIntent: FormHierarchyNode {
+            FormHierarchyNode(type: "FormElement", children: [
+                FormHierarchyNode(type: "SubtitleElement")
+            ])
+        }
+    }
     // MARK: - PAYCO
 
     enum Payco {

@@ -46,9 +46,19 @@
 
 "Buy now or pay later with Klarna" = "Cumpărați acum sau plătiți mai târziu folosind Klarna";
 
+"By confirming your payment with GCash, you allow %@ to charge your GCash account for future payments in accordance with their terms." = "Prin confirmarea plății cu GCash, permiteți %@ să vă debiteze contul GCash pentru plăți viitoare, în conformitate cu termenii și condițiile sale.";
+
 "By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "Prin confirmarea plății cu NICEPAY, permiteți ca %@ să taxeze această metodă de plată pentru plăți viitoare în conformitate cu termenii săi.";
 
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Prin confirmarea plății cu PayPal, permiteți %@ să vă taxeze contul PayPal pentru plățile viitoare în conformitate cu termenii acesteia.";
+
+"By confirming your payment with Touch 'n Go, you allow %@ to charge your Touch 'n Go account for future payments in accordance with their terms." = "Prin confirmarea plății cu Touch 'n Go, permiteți %@ să vă debiteze contul Touch 'n Go pentru plăți viitoare, în conformitate cu termenii companiei.";
+
+"By confirming your payment with TrueMoney, you allow %@ to charge your TrueMoney account for future payments in accordance with their terms." = "Prin confirmarea plății cu TrueMoney, permiteți %@ să vă debiteze contul TrueMoney pentru plăți viitoare, în conformitate cu termenii companiei.";
+
+"By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their <terms>terms of use</terms>." = "Prin confirmarea plății, sunteți de acord ca tranzacția dvs. să fie gestionată de Global Stack Services Limited în calitate de comerciant oficial și în conformitate cu <terms>termenii de utilizare</terms> ai companiei.";
+
+"By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their <terms>terms</terms>." = "Prin confirmarea plății, sunteți de acord ca tranzacția dvs. să fie gestionată de Global Stack Services Limited în calitate de comerciant oficial și în conformitate cu <terms>termenii</terms> companiei.";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Prin continuarea către Amazon Pay, permiteți %@ să vă taxeze contul Amazon Pay pentru plățile viitoare în conformitate cu termenii acesteia.";
 
@@ -112,6 +122,8 @@
 
 "Code sent" = "Codul a fost trimis";
 
+"Complete the payment using Pix to finish the purchase." = "Finalizați plata folosind Pix pentru a încheia achiziția.";
+
 "Confirm" = "Confirmare";
 
 "Confirm payment details" = "Confirmare detalii de plată";
@@ -171,6 +183,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Înțeleg că Stripe va colecta debite directe în numele %@ și confirm că sunt titularul contului și singura persoană necesară pentru a autoriza debite din acest cont.";
 
 "IBAN" = "IBAN";
+
+"Invoice payment for business buyers." = "Plata facturii pentru cumpărătorii care sunt întreprinderi.";
 
 "Keep Editing" = "Continuare editare";
 
@@ -341,6 +355,8 @@
 "The provided verification code has expired." = "Codul de verificare furnizat a expirat.";
 
 "The provided verification code is incorrect." = "Codul de verificare furnizat este incorect.";
+
+"This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Aceasta este o achiziție internațională și exclude o taxă IOF de 3,5 %. Continuând, confirmați că ați luat la cunoștință și acceptați <terms>termenii și condițiile Ebanx</terms>.";
 
 "This is your default" = "Aceasta este setarea dvs. implicită";
 

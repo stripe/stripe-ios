@@ -39,9 +39,11 @@ extension CheckoutController {
 
     /// The parameters needed to confirm a Checkout Session with Link.
     struct LinkConfirmationParameters {
+
         // TODO: Lots of stuff in here because current Link code nominally requires it but it may not all really be necessary.
         let confirmOption: PaymentSheet.LinkConfirmOption
         let configuration: PaymentElementConfiguration
+        let nativeSheetPresentation: SheetImplementationResolver?
         let confirmationChallenge: ConfirmationChallenge?
         let analyticsHelper: PaymentSheetAnalyticsHelper
         let authenticationContext: STPAuthenticationContext
@@ -50,6 +52,7 @@ extension CheckoutController {
 
     /// The parameters needed to confirm a Checkout Session with a new or saved payment method.
     struct PaymentMethodConfirmationParameters {
+
         enum Option {
             case new(IntentConfirmParams)
             case saved(STPPaymentMethod, IntentConfirmParams?)
@@ -57,6 +60,7 @@ extension CheckoutController {
 
         let option: Option
         let configuration: PaymentElementConfiguration
+        let nativeSheetPresentation: SheetImplementationResolver?
         let confirmationChallenge: ConfirmationChallenge?
         let authenticationContext: STPAuthenticationContext
         let paymentHandler: STPPaymentHandler
@@ -112,6 +116,7 @@ extension CheckoutController {
 
         let paymentOption: PaymentOption
         let configuration: PaymentElementConfiguration
+        let nativeSheetPresentation: SheetImplementationResolver
         let integrationShape: PaymentSheet.IntegrationShape
         let confirmationChallenge: ConfirmationChallenge?
 
@@ -125,6 +130,7 @@ extension CheckoutController {
             }
             paymentOption = resolvedPaymentOption
             configuration = paymentElement.paymentSheetFlowController.configuration
+            nativeSheetPresentation = paymentElement.paymentSheetFlowController.nativeSheetPresentation
             integrationShape = .flowController
             confirmationChallenge = paymentElement.paymentSheetFlowController.confirmationChallenge
         } else {
@@ -137,6 +143,7 @@ extension CheckoutController {
             }
             paymentOption = resolvedPaymentOption
             configuration = paymentElement.embeddedPaymentElement.configuration
+            nativeSheetPresentation = paymentElement.embeddedPaymentElement.nativeSheetPresentation
             integrationShape = .embedded
             confirmationChallenge = paymentElement.embeddedPaymentElement.confirmationChallenge
         }
@@ -172,6 +179,7 @@ extension CheckoutController {
             return .link(.init(
                 confirmOption: confirmOption,
                 configuration: configuration,
+                nativeSheetPresentation: nativeSheetPresentation,
                 confirmationChallenge: confirmationChallenge,
                 analyticsHelper: analyticsHelper,
                 authenticationContext: authenticationContext,
@@ -182,6 +190,7 @@ extension CheckoutController {
                 .init(
                     option: .new(confirmParams),
                     configuration: configuration,
+                    nativeSheetPresentation: nativeSheetPresentation,
                     confirmationChallenge: confirmationChallenge,
                     authenticationContext: authenticationContext,
                     paymentHandler: paymentHandler
@@ -193,6 +202,7 @@ extension CheckoutController {
                 .init(
                     option: .saved(paymentMethod, confirmParams),
                     configuration: configuration,
+                    nativeSheetPresentation: nativeSheetPresentation,
                     confirmationChallenge: confirmationChallenge,
                     authenticationContext: authenticationContext,
                     paymentHandler: paymentHandler
@@ -242,7 +252,8 @@ extension CheckoutController {
                             intent: .checkout(self.session),
                             elementsSession: self.session.elementsSession
                         ),
-                        // TODO: Remove this once no-PM confirmation can use the Checkout Session's fixed email without `customer_data`.
+                        // Due to legacy reasons, in the no-PM case /confirm requires customerData be sent with at least email
+                        // TODO: Remove this once no-PM confirmation can use the Checkout Session's server email without `customer_data`.
                         customerData: self.session.email.map { ["email": $0] }
                     )
                     result = await Self.confirmCheckoutSession(
@@ -335,6 +346,7 @@ extension CheckoutController {
 
         return await PaymentSheet.handlePreconfirmActionsIfNecessary(
             configuration: parameters.configuration,
+            nativeSheetPresentation: parameters.nativeSheetPresentation,
             authenticationContext: parameters.authenticationContext,
             intent: .checkout(checkoutSession),
             paymentOption: paymentOption,
@@ -386,11 +398,6 @@ extension CheckoutController {
             confirmParams.paymentMethodParams.radarOptions = await confirmationChallenge?.makeRadarOptions(for: confirmParams.paymentMethodParams.type)
             // TODO: Why set client attribution metadata here and also in /confirm request?
             confirmParams.paymentMethodParams.clientAttributionMetadata = clientAttributionMetadata
-            // Ensure email is set on the payment method — fall back to the Checkout Session's customer email.
-            if confirmParams.paymentMethodParams.billingDetails?.email == nil,
-               let customerEmail = checkoutSession.email {
-                confirmParams.paymentMethodParams.nonnil_billingDetails.email = customerEmail
-            }
             // TODO: Stop creating a PaymentMethod and send payment_method_data directly to /confirm.
             let paymentMethod = try await configuration.apiClient.createPaymentMethod(
                 with: confirmParams.paymentMethodParams

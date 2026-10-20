@@ -16,8 +16,10 @@ struct CheckoutCartUIKitView: UIViewControllerRepresentable {
     @Environment(\.dismiss) private var dismiss
 
     let clientSecret: String
+    let emailSettings: CheckoutPlayground.EmailSettings
     let shippingAddressCollection: Bool
-    let defaultShippingAddress: CheckoutPlayground.DefaultShippingAddress?
+    let defaultShippingAddress: CheckoutPlayground.DefaultAddress?
+    let defaultBillingAddress: CheckoutPlayground.DefaultAddress?
     let adaptivePricing: Bool
     let integrationType: CheckoutPlayground.IntegrationType
     let expressCheckoutElementSettings: CheckoutPlayground.ExpressCheckoutElementSettings
@@ -27,8 +29,10 @@ struct CheckoutCartUIKitView: UIViewControllerRepresentable {
     func makeUIViewController(context: Context) -> UINavigationController {
         let viewController = CheckoutCartViewController(
             clientSecret: clientSecret,
+            emailSettings: emailSettings,
             shippingAddressCollection: shippingAddressCollection,
             defaultShippingAddress: defaultShippingAddress,
+            defaultBillingAddress: defaultBillingAddress,
             adaptivePricing: adaptivePricing,
             integrationType: integrationType,
             expressCheckoutElementSettings: expressCheckoutElementSettings,
@@ -46,8 +50,10 @@ struct CheckoutCartUIKitView: UIViewControllerRepresentable {
 final class CheckoutCartViewController: UIViewController {
 
     private let clientSecret: String
+    private let emailSettings: CheckoutPlayground.EmailSettings
     private let shippingAddressCollection: Bool
-    private let defaultShippingAddress: CheckoutPlayground.DefaultShippingAddress?
+    private let defaultShippingAddress: CheckoutPlayground.DefaultAddress?
+    private let defaultBillingAddress: CheckoutPlayground.DefaultAddress?
     private let adaptivePricing: Bool
     private let integrationType: CheckoutPlayground.IntegrationType
     private let expressCheckoutElementSettings: CheckoutPlayground.ExpressCheckoutElementSettings
@@ -79,8 +85,10 @@ final class CheckoutCartViewController: UIViewController {
 
     init(
         clientSecret: String,
+        emailSettings: CheckoutPlayground.EmailSettings,
         shippingAddressCollection: Bool,
-        defaultShippingAddress: CheckoutPlayground.DefaultShippingAddress?,
+        defaultShippingAddress: CheckoutPlayground.DefaultAddress?,
+        defaultBillingAddress: CheckoutPlayground.DefaultAddress?,
         adaptivePricing: Bool,
         integrationType: CheckoutPlayground.IntegrationType,
         expressCheckoutElementSettings: CheckoutPlayground.ExpressCheckoutElementSettings,
@@ -89,8 +97,10 @@ final class CheckoutCartViewController: UIViewController {
         closeAction: @escaping () -> Void
     ) {
         self.clientSecret = clientSecret
+        self.emailSettings = emailSettings
         self.shippingAddressCollection = shippingAddressCollection
         self.defaultShippingAddress = defaultShippingAddress
+        self.defaultBillingAddress = defaultBillingAddress
         self.adaptivePricing = adaptivePricing
         self.integrationType = integrationType
         self.expressCheckoutElementSettings = expressCheckoutElementSettings
@@ -199,12 +209,14 @@ final class CheckoutCartViewController: UIViewController {
             )
             if integrationType != .eceOnly {
                 var paymentElementConfiguration = PaymentElement.Configuration()
-                paymentElementConfiguration.applePayConfiguration = PaymentElement.ApplePayConfiguration(
+                paymentElementConfiguration.applePayConfiguration = PaymentElement.Configuration.ApplePayConfiguration(
                     merchantId: "merchant.com.stripe.paymentsheet.example"
                 )
                 configuration.paymentElement = paymentElementConfiguration
             }
             configuration.defaults.shippingDetails = defaultShippingAddress?.checkoutShippingDetails
+            configuration.defaults.billingDetails = defaultBillingAddress?.checkoutBillingDetails
+            configuration.defaults.email = emailSettings.localDefaultEmail
             if shippingAddressCollection {
                 configuration.shippingAddressElement = .init()
             }
@@ -212,14 +224,17 @@ final class CheckoutCartViewController: UIViewController {
                 var expressCheckoutElementConfiguration = ExpressCheckoutElement.Configuration { [weak self] result in
                     self?.handleConfirmResult(result)
                 }
-                expressCheckoutElementConfiguration.applePayConfiguration = ExpressCheckoutElement.ApplePayConfiguration(
+                expressCheckoutElementConfiguration.applePayConfiguration = ExpressCheckoutElement.Configuration.ApplePayConfiguration(
                     merchantId: "merchant.com.stripe.paymentsheet.example",
+                    buttonType: expressCheckoutElementSettings.applePayButtonType.pkPaymentButtonType,
                     display: expressCheckoutElementSettings.applePayDisplay
                 )
-                expressCheckoutElementConfiguration.linkConfiguration = ExpressCheckoutElement.LinkConfiguration(
+                expressCheckoutElementConfiguration.linkConfiguration = ExpressCheckoutElement.Configuration.LinkConfiguration(
                     display: expressCheckoutElementSettings.linkDisplay
                 )
-                expressCheckoutElementConfiguration.shippingAddressRequired = expressCheckoutElementSettings.shippingAddressRequired
+                expressCheckoutElementConfiguration.appearance.buttonTheme = expressCheckoutElementSettings.appearance.buttonTheme
+                expressCheckoutElementConfiguration.appearance.buttonLayout.maxColumns = expressCheckoutElementSettings.appearance.buttonLayout.maxColumns
+                expressCheckoutElementConfiguration.appearance.buttonLayout.maxRows = expressCheckoutElementSettings.appearance.buttonLayout.maxRows
                 configuration.expressCheckoutElement = expressCheckoutElementConfiguration
             }
             if adaptivePricing {
@@ -283,8 +298,10 @@ final class CheckoutCartViewController: UIViewController {
         }
 
         contentStackView.addArrangedSubview(makeLineItemsSection(session: session))
+        contentStackView.addArrangedSubview(makeEmailSection(session: session))
 
-        if expressCheckoutElementSettings.isEnabled {
+        if expressCheckoutElementSettings.isEnabled,
+           !session.availableExpressCheckoutPaymentMethods.isEmpty {
             contentStackView.addArrangedSubview(
                 makeSection(title: "Express Checkout", content: checkout.getExpressCheckoutElement().uiView)
             )
@@ -592,7 +609,7 @@ final class CheckoutCartViewController: UIViewController {
             imageView.widthAnchor.constraint(equalToConstant: 24).isActive = true
             imageView.heightAnchor.constraint(equalToConstant: 16).isActive = true
             paymentOptionStackView.addArrangedSubview(imageView)
-            rowView.accessibilityLabel = paymentOption.label
+            rowView.accessibilityLabel = [paymentOption.label, paymentOption.sublabel].compactMap { $0 }.joined(separator: ", ")
         } else {
             let imageView = UIImageView(image: UIImage(systemName: "plus.circle.fill"))
             imageView.tintColor = .systemBlue
@@ -607,7 +624,17 @@ final class CheckoutCartViewController: UIViewController {
         let label = UILabel()
         label.text = session.paymentOption?.label ?? "Select payment method"
         label.font = .preferredFont(forTextStyle: .body)
-        paymentOptionStackView.addArrangedSubview(label)
+        let labelsStackView = UIStackView(arrangedSubviews: [label])
+        labelsStackView.axis = .vertical
+        labelsStackView.spacing = 2
+        if let sublabel = session.paymentOption?.sublabel {
+            let sublabelView = UILabel()
+            sublabelView.text = sublabel
+            sublabelView.font = .preferredFont(forTextStyle: .subheadline)
+            sublabelView.textColor = .secondaryLabel
+            labelsStackView.addArrangedSubview(sublabelView)
+        }
+        paymentOptionStackView.addArrangedSubview(labelsStackView)
 
         let chevronView = UIImageView(image: UIImage(systemName: "chevron.right"))
         chevronView.tintColor = .secondaryLabel
@@ -889,6 +916,60 @@ final class CheckoutCartViewController: UIViewController {
                 errorMessage = error.localizedDescription
                 renderCheckout()
             }
+        }
+    }
+
+    private func makeEmailSection(session: CheckoutController.Session) -> UIView {
+        let emailLabel = UILabel()
+        emailLabel.text = session.email ?? "No email"
+        emailLabel.numberOfLines = 0
+        emailLabel.accessibilityIdentifier = "checkout_session_email"
+        let sourceLabel = UILabel()
+        sourceLabel.text = emailSettings.source.isServer ? "Server email cannot be changed in checkout." : emailSettings.source == .local ? "Local email" : "No email source selected."
+        sourceLabel.font = .preferredFont(forTextStyle: .caption1)
+        sourceLabel.textColor = .secondaryLabel
+        sourceLabel.numberOfLines = 0
+        let details = UIStackView(arrangedSubviews: [emailLabel, sourceLabel])
+        details.axis = .vertical
+        details.spacing = 8
+        let editButton = UIButton(type: .system)
+        editButton.setTitle("Edit email", for: .normal)
+        editButton.isEnabled = emailSettings.source == .local
+        editButton.addTarget(self, action: #selector(editEmailButtonTapped), for: .touchUpInside)
+        return makeSection(title: "Email", content: details, accessory: editButton)
+    }
+
+    @objc private func editEmailButtonTapped() {
+        guard let checkout, emailSettings.source == .local else { return }
+        let alert = UIAlertController(title: "Edit email", message: "Updates the local Checkout email.", preferredStyle: .alert)
+        alert.addTextField { field in
+            field.placeholder = "Email address"
+            field.text = checkout.session.email
+            field.keyboardType = .emailAddress
+            field.autocapitalizationType = .none
+            field.autocorrectionType = .no
+        }
+        alert.addAction(UIAlertAction(title: "Save email", style: .default) { [weak self, weak alert] _ in
+            self?.updateEmail(alert?.textFields?.first?.text)
+        })
+        alert.addAction(UIAlertAction(title: "Clear email", style: .destructive) { [weak self] _ in
+            self?.updateEmail(nil)
+        })
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        present(alert, animated: true)
+    }
+
+    private func updateEmail(_ email: String?) {
+        guard let checkout else { return }
+        Task {
+            errorMessage = nil
+            do {
+                let trimmed = email?.trimmingCharacters(in: .whitespacesAndNewlines)
+                try await checkout.updateEmail(trimmed?.isEmpty == true ? nil : trimmed)
+            } catch {
+                errorMessage = error.localizedDescription
+            }
+            renderCheckout()
         }
     }
 

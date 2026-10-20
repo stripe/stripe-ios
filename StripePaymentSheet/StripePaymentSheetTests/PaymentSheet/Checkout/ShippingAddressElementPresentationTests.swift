@@ -4,8 +4,10 @@
 //
 //  Created by George Birch on 8/6/26.
 
+import OHHTTPStubs
 @_spi(STP) @testable import StripeCore
 @_spi(AppearanceAPIAdditionsPreview) @_spi(STP) @testable import StripePaymentSheet
+@_spi(STP) @testable import StripeUICore
 import UIKit
 import XCTest
 
@@ -33,20 +35,32 @@ final class ShippingAddressElementPresentationTests: XCTestCase {
         window = nil
         STPAnalyticsClient.sharedClient._testLogHistory = previousAnalyticsHistory
         previousAnalyticsHistory = nil
+        HTTPStubs.removeAllStubs()
         super.tearDown()
     }
 
-    func testPresentUsesExplicitPresenterAndExistingAddressViewController() throws {
+    func testPresentUsesExplicitPresenterAndExistingAddressViewController() async throws {
         // Given
-        let shippingAddressElement = makeShippingAddressElement()
+        var shippingAddressElement: ShippingAddressElement? = makeShippingAddressElement()
+        weak var weakElement = shippingAddressElement
 
         // When
-        let navigationController = present(shippingAddressElement)
+        var navigationController = present(try XCTUnwrap(shippingAddressElement))
 
         // Then
-        let unwrappedNavigationController = try XCTUnwrap(navigationController)
-        XCTAssertTrue(presentingViewController.presentedViewController === unwrappedNavigationController)
-        XCTAssertTrue(unwrappedNavigationController.viewControllers.first === shippingAddressElement.addressViewController)
+        XCTAssertNotNil(navigationController)
+        XCTAssertTrue(presentingViewController.presentedViewController === navigationController)
+        XCTAssertTrue(navigationController?.viewControllers.first === shippingAddressElement?.addressViewController)
+
+        // ...and the sheet owns the element until UIKit releases it, even when dismissed directly
+        shippingAddressElement = nil
+        XCTAssertNotNil(weakElement)
+        navigationController = nil
+        presentingViewController.dismiss(animated: false)
+        let released = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            weakElement == nil
+        }, object: nil)
+        await fulfillment(of: [released], timeout: 2)
     }
 
     func testCompletionRunsAfterDelegateDismissesPresentation() async throws {
@@ -199,6 +213,57 @@ final class ShippingAddressElementPresentationTests: XCTestCase {
             presentingViewController.presentedViewController as? UINavigationController
         )
         XCTAssertTrue(navigationController.viewControllers.first === shippingAddressElement.addressViewController)
+    }
+
+    func testCheckoutReleaseLeavesSheetOpenUntilSave() async throws {
+        // Given a presented sheet with no merchant-owned reference to its element
+        var configuration = CheckoutController.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
+        configuration.shippingAddressElement = .init()
+        var checkout: CheckoutController? = try await CheckoutController(
+            configuration: CheckoutTestHelpers.makeConfiguration(
+                configuration: configuration,
+                paymentElementConfiguration: nil,
+                expressCheckoutElementConfiguration: nil
+            )
+        )
+        weak var weakCheckout = checkout
+        weak var weakElement = checkout?.getShippingAddressElement()
+        let completed = expectation(description: "Shipping sheet closed")
+        var navigationController = present(try XCTUnwrap(checkout?.getShippingAddressElement())) {
+            XCTAssertNil(self.presentingViewController.presentedViewController)
+            completed.fulfill()
+        }
+        let addressViewController = try XCTUnwrap(navigationController?.viewControllers.first as? AddressViewController)
+        _ = await addressViewController.initialAddressDetails()
+        let addressSection = try XCTUnwrap(addressViewController.addressSection)
+        addressSection.name?.setText("Jane Doe")
+        addressSection.setAddress(.init(
+            city: "Seattle",
+            country: "US",
+            line1: "123 Main St.",
+            postalCode: "98101",
+            state: "WA"
+        ))
+
+        // When Checkout is released, its element stays alive and the sheet remains open
+        checkout = nil
+        XCTAssertNil(weakCheckout)
+        XCTAssertNotNil(weakElement)
+        XCTAssertTrue(presentingViewController.presentedViewController === navigationController)
+        navigationController = nil
+
+        // ...and the customer saves, the missing Checkout triggers an internal assertion
+        STPAssertTestUtil.shouldSuppressNextSTPAlert = true
+        addressViewController.didContinue()
+        await fulfillment(of: [completed], timeout: 2)
+
+        // Then the sheet closes and releases the element without an error or an attempted save
+        XCTAssertNil(weakElement)
+        XCTAssertEqual(STPAssertTestUtil.lastAssertMessage, "ShippingAddressElement does not have a delegate.")
+        XCTAssertTrue(addressViewController.errorLabel.isHidden)
+        XCTAssertFalse(shippingAddressEvents.contains {
+            ($0["event"] as? String)?.hasPrefix("elements.shipping_address.save_") == true
+        })
     }
 
     private func makeShippingAddressElement() -> ShippingAddressElement {

@@ -46,9 +46,19 @@
 
 "Buy now or pay later with Klarna" = "Kúpte teraz alebo zaplaťte neskôr pomocou služby Klarna";
 
+"By confirming your payment with GCash, you allow %@ to charge your GCash account for future payments in accordance with their terms." = "Potvrdením platby prostredníctvom služby GCash umožňujete spoločnosti %@ spoplatniť váš účet GCash za budúce platby v súlade s jej podmienkami.";
+
 "By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "Potvrdením platby prostredníctvom služby NICEPAY umožňujete spoločnosti %@ spoplatniť tento spôsob platby pri budúcich platbách v súlade s jej podmienkami.";
 
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Potvrdením platby prostredníctvom služby PayPal povolíte spoločnosti %@, aby z vášho účtu PayPal účtovala poplatky za budúce platby v súlade s podmienkami tejto spoločnosti.";
+
+"By confirming your payment with Touch 'n Go, you allow %@ to charge your Touch 'n Go account for future payments in accordance with their terms." = "Potvrdením platby prostredníctvom služby Touch 'n Go umožňujete spoločnosti %@ spoplatniť váš účet Touch 'n Go za budúce platby v súlade s jej podmienkami.";
+
+"By confirming your payment with TrueMoney, you allow %@ to charge your TrueMoney account for future payments in accordance with their terms." = "Potvrdením platby prostredníctvom služby TrueMoney umožňujete spoločnosti %@ spoplatniť váš účet TrueMoney za budúce platby v súlade s jej podmienkami.";
+
+"By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their <terms>terms of use</terms>." = "Potvrdením platby súhlasíte s tým, že vašu transakciu spracuje spoločnosť Global Stack Services Limited ako registrovaný obchodník v súlade s jej <terms>podmienkami používania</terms>.";
+
+"By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their <terms>terms</terms>." = "Potvrdením platby súhlasíte s tým, že vašu transakciu spracuje spoločnosť Global Stack Services Limited ako registrovaný obchodník v súlade s jej <terms>podmienkami</terms>.";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Pokračovaním na službu Amazon Pay povolíte spoločnosti %@, aby z vášho účtu Amazon Pay účtovala poplatky za budúce platby v súlade s podmienkami tejto spoločnosti.";
 
@@ -112,6 +122,8 @@
 
 "Code sent" = "Kód odoslaný";
 
+"Complete the payment using Pix to finish the purchase." = "Na dokončenie nákupu zrealizujte platbu pomocou služby Pix.";
+
 "Confirm" = "Potvrdiť";
 
 "Confirm payment details" = "Potvrdiť informácie o platbe";
@@ -171,6 +183,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Rozumiem, že spoločnosť Stripe bude inkasovať priame inkasá v mene spoločnosti %@ a potvrdzujem, že som majiteľom účtu a som jediná osoba, ktorá musí autorizovať inkasá z tohto účtu.";
 
 "IBAN" = "IBAN";
+
+"Invoice payment for business buyers." = "Platba faktúrou pre firemných kupujúcich.";
 
 "Keep Editing" = "Pokračovať v úpravách";
 
@@ -341,6 +355,8 @@
 "The provided verification code has expired." = "Platnosť zadaného overovacieho kódu skončila.";
 
 "The provided verification code is incorrect." = "Zadaný overovací kód je nesprávny.";
+
+"This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Ide o medzinárodný nákup, ktorý nezahŕňa 3,5 % poplatok IOF. Pokračovaním beriete na vedomie a akceptujete <terms>podmienky spoločnosti Ebanx</terms>.";
 
 "This is your default" = "Toto je váš predvolený spôsob platby";
 

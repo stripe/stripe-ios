@@ -5,19 +5,52 @@
 //  Created by Nick Porter on 2/24/26.
 
 import Foundation
+import PassKit
 @_spi(STP) import StripePaymentSheet
 
-extension ExpressCheckoutElement.ApplePayConfiguration.Display: CaseIterable, Identifiable {
+extension ExpressCheckoutElement.Configuration.ApplePayConfiguration.Display: CaseIterable, Identifiable {
     public static var allCases: [Self] { [.automatic, .never] }
     public var id: String { rawValue }
 }
 
-extension ExpressCheckoutElement.LinkConfiguration.Display: CaseIterable, Identifiable {
+extension ExpressCheckoutElement.Configuration.LinkConfiguration.Display: CaseIterable, Identifiable {
     public static var allCases: [Self] { [.automatic, .never] }
+    public var id: String { rawValue }
+}
+
+extension ExpressCheckoutElement.Configuration.Appearance.ButtonTheme: CaseIterable, Identifiable {
+    public static var allCases: [Self] { [.automatic, .light, .dark] }
     public var id: String { rawValue }
 }
 
 enum CheckoutPlayground {
+    enum ApplePayButtonType: String, CaseIterable, Identifiable, Codable {
+        case plain
+        case buy
+        case setup
+        case checkout
+
+        var id: String { rawValue }
+
+        var displayName: String {
+            switch self {
+            case .plain: return "Plain"
+            case .buy: return "Buy"
+            case .setup: return "Set Up"
+            case .checkout: return "Checkout"
+            }
+        }
+
+        var pkPaymentButtonType: PKPaymentButtonType {
+            switch self {
+            case .plain: return .plain
+            case .buy: return .buy
+            case .setup: return .setUp
+            case .checkout: return .checkout
+            }
+        }
+    }
+
     enum LinkMode: String, CaseIterable, Identifiable, Codable {
         case native
         case web
@@ -122,6 +155,38 @@ enum CheckoutPlayground {
         }
     }
 
+    enum EmailSource: String, CaseIterable, Identifiable, Codable {
+        case none
+        case checkoutSession
+        case customer
+        case local
+
+        var id: String { rawValue }
+
+        var displayName: String {
+            switch self {
+            case .none: return "None"
+            case .checkoutSession: return "Server — Checkout Session"
+            case .customer: return "Server — Customer"
+            case .local: return "Local"
+            }
+        }
+
+        var isServer: Bool { self == .checkoutSession || self == .customer }
+    }
+
+    struct EmailSettings: Codable {
+        var source: EmailSource = .checkoutSession
+        var value = "jenny@example.com"
+
+        var email: String? {
+            let trimmed = value.trimmingCharacters(in: .whitespacesAndNewlines)
+            return source == .none || trimmed.isEmpty ? nil : trimmed
+        }
+
+        var localDefaultEmail: String? { source == .local ? email : nil }
+    }
+
     enum CustomerType: String, CaseIterable, Identifiable, Codable {
         case returning
         case new
@@ -168,7 +233,7 @@ enum CheckoutPlayground {
         }
     }
 
-    enum DefaultShippingAddressOption: String, CaseIterable, Identifiable, Codable {
+    enum DefaultAddressOption: String, CaseIterable, Identifiable, Codable {
 
         case none
         case usTestAddress
@@ -185,7 +250,7 @@ enum CheckoutPlayground {
         }
     }
 
-    struct DefaultShippingAddress: Equatable, Codable {
+    struct DefaultAddress: Equatable, Codable {
 
         var name: String
         var line1: String
@@ -195,7 +260,7 @@ enum CheckoutPlayground {
         var postalCode: String
         var country: String
 
-        static let usTestAddress = DefaultShippingAddress(
+        static let usTestAddress = DefaultAddress(
             name: "Jenny Rosen",
             line1: "510 Townsend St",
             line2: "",
@@ -217,6 +282,27 @@ enum CheckoutPlayground {
                 postalCode: postalCode
             )
             return shippingDetails
+        }
+
+        var checkoutBillingDetails: CheckoutController.Configuration.Defaults.BillingDetails? {
+            let billingName = name.trimmingCharacters(in: .whitespacesAndNewlines)
+            let billingCountry = country.trimmingCharacters(in: .whitespacesAndNewlines)
+            guard !billingName.isEmpty || !billingCountry.isEmpty else {
+                return nil
+            }
+            var billingDetails = CheckoutController.Configuration.Defaults.BillingDetails()
+            billingDetails.name = billingName.isEmpty ? nil : billingName
+            if !billingCountry.isEmpty {
+                billingDetails.address = CheckoutController.Address(
+                    country: billingCountry.uppercased(),
+                    line1: line1.isEmpty ? nil : line1,
+                    line2: line2.isEmpty ? nil : line2,
+                    city: city.isEmpty ? nil : city,
+                    state: state.isEmpty ? nil : state,
+                    postalCode: postalCode.isEmpty ? nil : postalCode
+                )
+            }
+            return billingDetails
         }
     }
 
@@ -290,19 +376,116 @@ enum CheckoutPlayground {
         }
     }
 
+    enum ExpressCheckoutElementButtonLayoutLimit: String, CaseIterable, Identifiable {
+        case automatic
+        case one
+        case two
+
+        var id: String { rawValue }
+
+        var displayName: String {
+            switch self {
+            case .automatic: return "automatic"
+            case .one: return "1"
+            case .two: return "2"
+            }
+        }
+
+        var intValue: Int? {
+            switch self {
+            case .automatic: return nil
+            case .one: return 1
+            case .two: return 2
+            }
+        }
+
+        init(intValue: Int?) {
+            switch intValue {
+            case 1: self = .one
+            case 2: self = .two
+            default: self = .automatic
+            }
+        }
+    }
+
+    struct ExpressCheckoutElementSettings: Codable {
+        var isEnabled: Bool
+        var applePayDisplay: ExpressCheckoutElement.Configuration.ApplePayConfiguration.Display
+        var applePayButtonType: ApplePayButtonType
+        var linkDisplay: ExpressCheckoutElement.Configuration.LinkConfiguration.Display
+        var appearance: ExpressCheckoutElement.Configuration.Appearance
+
+        init(
+            isEnabled: Bool = true,
+            applePayDisplay: ExpressCheckoutElement.Configuration.ApplePayConfiguration.Display = .automatic,
+            applePayButtonType: ApplePayButtonType = .plain,
+            linkDisplay: ExpressCheckoutElement.Configuration.LinkConfiguration.Display = .automatic,
+            appearance: ExpressCheckoutElement.Configuration.Appearance = .init()
+        ) {
+            self.isEnabled = isEnabled
+            self.applePayDisplay = applePayDisplay
+            self.applePayButtonType = applePayButtonType
+            self.linkDisplay = linkDisplay
+            self.appearance = appearance
+        }
+
+        private enum CodingKeys: String, CodingKey {
+            case isEnabled
+            case applePayDisplay
+            case applePayButtonType
+            case linkDisplay
+            case buttonTheme
+            case maxColumns
+            case maxRows
+        }
+
+        init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            var appearance = ExpressCheckoutElement.Configuration.Appearance()
+            appearance.buttonTheme = try container.decodeIfPresent(String.self, forKey: .buttonTheme)
+                .flatMap(ExpressCheckoutElement.Configuration.Appearance.ButtonTheme.init(rawValue:)) ?? .automatic
+            appearance.buttonLayout.maxColumns = try container.decodeIfPresent(Int.self, forKey: .maxColumns)
+            appearance.buttonLayout.maxRows = try container.decodeIfPresent(Int.self, forKey: .maxRows)
+
+            self.init(
+                isEnabled: try container.decodeIfPresent(Bool.self, forKey: .isEnabled) ?? true,
+                applePayDisplay: try container.decodeIfPresent(String.self, forKey: .applePayDisplay)
+                    .flatMap(ExpressCheckoutElement.Configuration.ApplePayConfiguration.Display.init(rawValue:)) ?? .automatic,
+                applePayButtonType: try container.decodeIfPresent(ApplePayButtonType.self, forKey: .applePayButtonType) ?? .plain,
+                linkDisplay: try container.decodeIfPresent(String.self, forKey: .linkDisplay)
+                    .flatMap(ExpressCheckoutElement.Configuration.LinkConfiguration.Display.init(rawValue:)) ?? .automatic,
+                appearance: appearance
+            )
+        }
+
+        func encode(to encoder: Encoder) throws {
+            var container = encoder.container(keyedBy: CodingKeys.self)
+            try container.encode(isEnabled, forKey: .isEnabled)
+            try container.encode(applePayDisplay.rawValue, forKey: .applePayDisplay)
+            try container.encode(applePayButtonType, forKey: .applePayButtonType)
+            try container.encode(linkDisplay.rawValue, forKey: .linkDisplay)
+            try container.encode(appearance.buttonTheme.rawValue, forKey: .buttonTheme)
+            try container.encodeIfPresent(appearance.buttonLayout.maxColumns, forKey: .maxColumns)
+            try container.encodeIfPresent(appearance.buttonLayout.maxRows, forKey: .maxRows)
+        }
+    }
+
     struct Settings: Codable {
 
         var uiFramework: UIFramework = .swiftUI
         var integrationType: IntegrationType = .flowController
-        var showExpressCheckoutElement = true
+        var expressCheckoutElement = ExpressCheckoutElementSettings()
         var linkMode: LinkMode = .native
         var currency: Currency = .usd
         var customerType: CustomerType = .guest
+        var email: EmailSettings? = .init()
         var cartScenario: CartScenario = .standard
         var shippingAddressCollection = true
-        var defaultShippingAddressOption: DefaultShippingAddressOption = .none
-        var customDefaultShippingAddress = DefaultShippingAddress.usTestAddress
+        var defaultShippingAddressOption: DefaultAddressOption = .none
+        var customDefaultShippingAddress = DefaultAddress.usTestAddress
         var billingAddressCollection: BillingAddressCollection = .automatic
+        var defaultBillingAddressOption: DefaultAddressOption? = DefaultAddressOption.none
+        var customDefaultBillingAddress: DefaultAddress? = .usTestAddress
         var automaticTax = true
         var checkoutSessionPaymentMethodSave = true
         var checkoutSessionPaymentMethodRemove = true
