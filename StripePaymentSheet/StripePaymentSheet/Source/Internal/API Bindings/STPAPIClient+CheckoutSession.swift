@@ -390,9 +390,9 @@ extension STPAPIClient {
 
     private func checkoutSessionError(from apiError: StripeAPIError) -> StripeError {
         // During private preview, Checkout cannot distinguish buyer-actionable API errors.
-        // Expose every server message, using the generic localized fallback when absent.
+        // Let the shared formatter expose the server's optional message for every error type.
         var apiError = apiError
-        apiError.localizedDescriptionOverride = apiError.message ?? NSError.stp_unexpectedErrorMessage()
+        apiError.useServerErrorMessage = true
         // Keep the original error so analytics and other internal consumers retain all API data.
         return .apiError(apiError)
     }

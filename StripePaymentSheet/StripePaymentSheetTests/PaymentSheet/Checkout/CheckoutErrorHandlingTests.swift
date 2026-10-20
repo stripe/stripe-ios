@@ -33,39 +33,58 @@ final class CheckoutErrorHandlingTests: APIStubbedTestCase {
             // When the merchant confirms Checkout
             let result = await checkout.confirm(flow)
 
-            // Then the failed result exposes the server message or localized fallback
+            // Then the failed result preserves the server's optional message
             guard case .failed(let error) = result else {
                 XCTFail("Expected confirmation to fail, got \(result)")
                 continue
             }
-            XCTAssertEqual(error.localizedDescription, expectedMessage)
+            let stripeError = try XCTUnwrap(error as? StripeError)
+            XCTAssertEqual(stripeError.errorDescription, expectedMessage)
         }
     }
 
     func testRetrievalErrorMessageAndMetadata() async throws {
-        // Given retrieval returns an API error with response metadata
-        let apiClient = CheckoutTestHelpers.makeStubbedAPIClient()
-        stubError(
-            path: "/v1/payment_pages/cs_test_123",
-            response: ["type": "invalid_request_error", "code": "test_code", "message": "Server message"],
-            statusCode: 429,
-            headers: ["request-id": "req_test_123"]
-        )
+        for isTestmode in [true, false] {
+            for (response, expectedMessage) in Self.errorCases {
+                // Given retrieval returns an API error with response metadata in either mode
+                let apiClient = CheckoutTestHelpers.makeStubbedAPIClient()
+                apiClient.publishableKey = isTestmode ? "pk_test_123" : "pk_live_123"
+                stubError(
+                    path: "/v1/payment_pages/cs_test_123",
+                    response: response,
+                    statusCode: 400,
+                    headers: ["request-id": "req_test_123"]
+                )
 
-        // When Checkout retrieves the session
-        do {
-            _ = try await apiClient.retrieveCheckoutSession(checkoutSessionId: "cs_test_123")
-            XCTFail("Expected retrieval to fail")
-        } catch {
-            // Then the server message is exposed while the original API metadata remains available
-            guard let stripeError = error as? StripeError, case .apiError(let apiError) = stripeError else {
-                XCTFail("Expected StripeError")
-                return
+                // When Checkout retrieves the session
+                do {
+                    _ = try await apiClient.retrieveCheckoutSession(checkoutSessionId: "cs_test_123")
+                    XCTFail("Expected retrieval to fail")
+                } catch {
+                    // Then only existing messages get a live-mode request ID, and metadata is preserved
+                    guard let stripeError = error as? StripeError, case .apiError(let apiError) = stripeError else {
+                        XCTFail("Expected StripeError")
+                        return
+                    }
+                    let expectedDescription = expectedMessage.map { $0 + (isTestmode ? "" : " (req_test_123)") }
+                    XCTAssertEqual(stripeError.errorDescription, expectedDescription)
+                    XCTAssertEqual(error._stp_hasRequestIDInDescription, !isTestmode && expectedMessage != nil)
+                    XCTAssertEqual(apiError.httpStatusCode, 400)
+                    XCTAssertEqual(apiError.requestID, "req_test_123")
+                    XCTAssertEqual(apiError.code, response["code"] as? String)
+                    XCTAssertEqual(apiError.message, expectedMessage)
+
+                    // ...and explicit NSError conversion uses the same formatting and preserves the request ID
+                    let converted = try XCTUnwrap(NSError.stp_error(from: stripeError))
+                    XCTAssertEqual(converted.userInfo[NSLocalizedDescriptionKey] as? String, expectedDescription)
+                    XCTAssertEqual(converted._stp_hasRequestIDInDescription, !isTestmode && expectedMessage != nil)
+                    XCTAssertEqual(converted.userInfo[STPError.stripeRequestIDKey] as? String, "req_test_123")
+                    if let expectedDescription {
+                        XCTAssertEqual(error.localizedDescription, expectedDescription)
+                        XCTAssertEqual(converted.localizedDescription, expectedDescription)
+                    }
+                }
             }
-            XCTAssertEqual(error.localizedDescription, "Server message")
-            XCTAssertEqual(apiError.httpStatusCode, 429)
-            XCTAssertEqual(apiError.requestID, "req_test_123")
-            XCTAssertEqual(apiError.code, "test_code")
         }
     }
 
@@ -84,12 +103,12 @@ final class CheckoutErrorHandlingTests: APIStubbedTestCase {
             _ = try await apiClient.pollCheckoutSession(checkoutSessionId: "cs_test_123", timeout: 10)
             XCTFail("Expected polling to fail")
         } catch {
-            // Then no presentation override is applied and the original metadata remains available
+            // Then standard message formatting applies and the original metadata remains available
             guard let stripeError = error as? StripeError, case .apiError(let apiError) = stripeError else {
                 XCTFail("Expected StripeError")
                 return
             }
-            XCTAssertNil(apiError.localizedDescriptionOverride)
+            XCTAssertFalse(apiError.useServerErrorMessage)
             XCTAssertEqual(error.localizedDescription, NSError.stp_unexpectedErrorMessage())
             XCTAssertEqual(apiError.httpStatusCode, 429)
             XCTAssertEqual(apiError.requestID, "req_test_poll")
@@ -104,8 +123,9 @@ final class CheckoutErrorHandlingTests: APIStubbedTestCase {
             response: [
                 "type": "invalid_request_error",
                 "message": "Developer-facing message",
-                // API payloads cannot opt into the SDK's local description override.
-                "localized_description_override": "Unexpected override",
+                // API payloads cannot opt into the SDK's local presentation settings.
+                "use_server_error_message": true,
+                "include_request_id_in_description": true,
             ]
         )
 
@@ -119,21 +139,24 @@ final class CheckoutErrorHandlingTests: APIStubbedTestCase {
             XCTFail("Expected the request to fail")
         } catch {
             // Then the shared error formatter still uses its existing generic message
-            XCTAssertTrue(error is StripeError)
+            let stripeError = try XCTUnwrap(error as? StripeError)
+            if case .apiError(let apiError) = stripeError {
+                XCTAssertFalse(apiError.useServerErrorMessage)
+            }
             XCTAssertEqual(error.localizedDescription, NSError.stp_unexpectedErrorMessage())
         }
     }
 
-    private static var errorCases: [(response: [String: Any], expectedMessage: String)] {
+    private static var errorCases: [(response: [String: Any], expectedMessage: String?)] {
         let serverMessage = "Ce code promotionnel n’est pas valide."
         let errorTypes = ["invalid_request_error", "api_error", "card_error", "idempotency_error", "future_error_type"]
-        let messageCases: [(response: [String: Any], expectedMessage: String)] = errorTypes.map { type in
+        let messageCases: [(response: [String: Any], expectedMessage: String?)] = errorTypes.map { type in
             (["type": type, "message": serverMessage, "code": "promotion_code_invalid"], serverMessage)
         }
-        // A known card code must also use the generic fallback when the server omits its message.
+        // Missing and null messages stay nil even when a known card code has an SDK-localized message.
         return messageCases + [
-            (["type": "card_error", "code": "incorrect_number", "message": NSNull()], NSError.stp_unexpectedErrorMessage()),
-            (["type": "invalid_request_error", "code": "incorrect_number"], NSError.stp_unexpectedErrorMessage()),
+            (["type": "card_error", "code": "incorrect_number", "message": NSNull()], nil),
+            (["type": "invalid_request_error", "code": "incorrect_number"], nil),
         ]
     }
 

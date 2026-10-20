@@ -35,9 +35,9 @@ import Foundation
     /// The Stripe API request ID, if available. Looks like `req_123`.
     @_spi(STP) public var requestID: String?
 
-    /// Overrides only the localized description, leaving the API error and its metadata intact.
-    /// When nil, the standard Stripe error message formatting applies.
-    @_spi(STP) public var localizedDescriptionOverride: String?
+    /// Uses the server's optional message instead of the SDK's localized error messages.
+    /// Set by Checkout, never encoded or read from an API response.
+    @_spi(STP) public var useServerErrorMessage = false
 
     // Set by the API client, never decoded from the response body.
     var includeRequestIDInDescription = false
@@ -81,7 +81,8 @@ extension NSError {
             intent: nil,
             httpResponse: nil,
             requestID: stripeApiError.requestID,
-            includeRequestIDInDescription: stripeApiError.includeRequestIDInDescription
+            includeRequestIDInDescription: stripeApiError.includeRequestIDInDescription,
+            useServerErrorMessage: stripeApiError.useServerErrorMessage
         )
     }
 }
