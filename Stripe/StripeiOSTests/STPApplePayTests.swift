@@ -70,6 +70,14 @@ class STPApplePayTests: XCTestCase {
         XCTAssertEqual(paymentRequest.requiredBillingContactFields, Set([.postalAddress]))
     }
 
+    func testPaymentRequestWithChinaUnionPayIncludesEMV() {
+        StripeAPI.additionalEnabledApplePayNetworks = [.chinaUnionPay]
+        defer { StripeAPI.additionalEnabledApplePayNetworks = [] }
+        let paymentRequest = StripeAPI.paymentRequest(withMerchantIdentifier: "foo", country: "GB", currency: "GBP")
+        XCTAssertTrue(paymentRequest.supportedNetworks.contains(.chinaUnionPay))
+        XCTAssertEqual(paymentRequest.merchantCapabilities, [.threeDSecure, .emv])
+    }
+
     func testCanSubmitPaymentRequestReturnsYES() {
         let request = PKPaymentRequest()
         request.merchantIdentifier = "foo"

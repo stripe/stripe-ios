@@ -225,6 +225,89 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
         }
     }
 
+    // MARK: - Merchant Capabilities Tests
+
+    func testCreatePaymentRequest_chinaUnionPay_addsEMV() {
+        StripeAPI.additionalEnabledApplePayNetworks = [.chinaUnionPay]
+        defer { StripeAPI.additionalEnabledApplePayNetworks = [] }
+        let sut = STPApplePayContext.createPaymentRequest(intent: Intent._testValue(), configuration: configuration, applePay: applePayConfiguration)
+        XCTAssertTrue(sut.supportedNetworks.contains(.chinaUnionPay))
+        XCTAssertEqual(sut.merchantCapabilities, [.threeDSecure, .emv])
+    }
+
+    func testCreatePaymentRequest_noChinaUnionPay_noEMV() {
+        let sut = STPApplePayContext.createPaymentRequest(intent: Intent._testValue(), configuration: configuration, applePay: applePayConfiguration)
+        XCTAssertFalse(sut.supportedNetworks.contains(.chinaUnionPay))
+        XCTAssertEqual(sut.merchantCapabilities, .threeDSecure)
+    }
+
+    func testCreatePaymentRequest_chinaUnionPayRemovedByBrandAcceptance_removesEMV() {
+        StripeAPI.additionalEnabledApplePayNetworks = [.chinaUnionPay]
+        defer { StripeAPI.additionalEnabledApplePayNetworks = [] }
+        var configuration = configuration
+        configuration.cardBrandAcceptance = .allowed(brands: [.visa])
+        let sut = STPApplePayContext.createPaymentRequest(intent: Intent._testValue(), configuration: configuration, applePay: applePayConfiguration)
+        XCTAssertEqual(sut.supportedNetworks, [.visa])
+        XCTAssertEqual(sut.merchantCapabilities, .threeDSecure)
+    }
+
+    func testCreatePaymentRequest_chinaUnionPayWithFundingFilter_keepsEMV() {
+        StripeAPI.additionalEnabledApplePayNetworks = [.chinaUnionPay]
+        defer { StripeAPI.additionalEnabledApplePayNetworks = [] }
+        let cardFundingFilter = CardFundingFilter(allowedFundingTypes: .debit, filteringEnabled: true)
+        let sut = STPApplePayContext.createPaymentRequest(intent: Intent._testValue(), configuration: configuration, applePay: applePayConfiguration, cardFundingFilter: cardFundingFilter)
+        XCTAssertEqual(sut.merchantCapabilities, [.threeDSecure, .emv, .debit])
+    }
+
+    func testCreate_paymentRequestHandlerHasFinalSayOnMerchantCapabilities() {
+        StripeAPI.additionalEnabledApplePayNetworks = [.chinaUnionPay]
+        defer { StripeAPI.additionalEnabledApplePayNetworks = [] }
+        var capabilitiesPassedToHandler: PKMerchantCapability?
+        let paymentRequest = paymentRequestAfterCustomHandler { paymentRequest in
+            capabilitiesPassedToHandler = paymentRequest.merchantCapabilities
+            // Merchant removes China UnionPay but keeps EMV; Stripe must not override this
+            paymentRequest.supportedNetworks = [.visa]
+            return paymentRequest
+        }
+
+        XCTAssertEqual(capabilitiesPassedToHandler, [.threeDSecure, .emv])
+        XCTAssertEqual(paymentRequest.supportedNetworks, [.visa])
+        XCTAssertEqual(paymentRequest.merchantCapabilities, [.threeDSecure, .emv])
+    }
+
+    private func paymentRequestAfterCustomHandler(
+        _ paymentRequestHandler: @escaping (PKPaymentRequest) -> PKPaymentRequest
+    ) -> PKPaymentRequest {
+        var handledPaymentRequest: PKPaymentRequest?
+        let handlers = PaymentSheet.ApplePayConfiguration.Handlers(paymentRequestHandler: { paymentRequest in
+            let paymentRequest = paymentRequestHandler(paymentRequest)
+            handledPaymentRequest = paymentRequest
+            return paymentRequest
+        })
+        var configuration = configuration
+        configuration.applePay = PaymentSheet.ApplePayConfiguration(
+            merchantId: "merchant_id",
+            merchantCountryCode: "GB",
+            customHandlers: handlers
+        )
+        let intent = Intent._testValue()
+        let elementsSession = STPElementsSession._testValue()
+        let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadata(
+            intent: intent,
+            elementsSession: elementsSession
+        )
+
+        _ = STPApplePayContext.create(
+            intent: intent,
+            elementsSession: elementsSession,
+            configuration: configuration,
+            clientAttributionMetadata: clientAttributionMetadata,
+            completion: { _, _ in }
+        )
+
+        return handledPaymentRequest!
+    }
+
     // MARK: - Card Funding Acceptance Tests
 
     func testCreatePaymentRequest_fundingAcceptance_all() {
