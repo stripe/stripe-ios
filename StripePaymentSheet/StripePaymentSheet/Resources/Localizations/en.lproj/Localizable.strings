@@ -1,3 +1,6 @@
+/* Legal text shown when creating an account with the Link brand and saving a card to it. The first placeholder is a Stripe brand name and should not be translated. The second placeholder is a merchant name. */
+"%1$@ creates a virtual card for each purchase, so %2$@ never sees your card details. By continuing, you agree to create a %1$@ account as described in %1$@'s <terms>Terms</terms> and <privacy>Privacy</privacy> and share it with %2$@." = "%1$@ creates a virtual card for each purchase, so %2$@ never sees your card details. By continuing, you agree to create a %1$@ account as described in %1$@'s <terms>Terms</terms> and <privacy>Privacy</privacy> and share it with %2$@.";
+
 /* Order summary line item showing name and quantity, e.g. 'Shirt ×3'. */
 "%1$@ ×%2$d" = "%1$@ ×%2$d";
 
@@ -566,6 +569,9 @@ the heading the screen itself. */
 
 /* Label for checkbox in address form allowing user to use billing address */
 "Use billing address for shipping" = "Use billing address for shipping";
+
+/* Title for a button that, when tapped, uses a card saved to the customer's Link account. */
+"Use card" = "Use card";
 
 /* Text shown on a button that displays a customer's default saved payment method. When tapped, it opens a screen that shows all of the customer's saved payment methods. */
 "View more" = "View more";

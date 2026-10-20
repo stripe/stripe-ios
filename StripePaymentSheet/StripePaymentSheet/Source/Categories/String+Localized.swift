@@ -631,6 +631,20 @@ extension String.Localized {
         )
     }
 
+    static func brand_creates_a_virtual_card_so_merchant_never_sees_your_card_details(
+        merchantDisplayName: String,
+        brand: LinkBrand
+    ) -> String {
+        String(
+            format: STPLocalizedString(
+                "%1$@ creates a virtual card for each purchase, so %2$@ never sees your card details. By continuing, you agree to create a %1$@ account as described in %1$@'s <terms>Terms</terms> and <privacy>Privacy</privacy> and share it with %2$@.",
+                "Legal text shown when creating an account with the Link brand and saving a card to it. The first placeholder is a Stripe brand name and should not be translated. The second placeholder is a merchant name."
+            ),
+            brand.displayName,
+            merchantDisplayName
+        )
+    }
+
     static func create_an_account_with_brand_for_faster_checkout_across_the_web(brand: LinkBrand) -> String {
         String(
             format: STPLocalizedString(

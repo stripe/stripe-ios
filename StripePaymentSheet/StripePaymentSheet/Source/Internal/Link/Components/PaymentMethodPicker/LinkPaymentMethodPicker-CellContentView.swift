@@ -114,11 +114,7 @@ extension LinkPaymentMethodPicker {
             view.addSubview(genericIconView)
 
             let cardBrandSize = cardBrandView.size(for: Constants.iconSize)
-            let width = max(Constants.iconSize.width, cardBrandSize.width)
-            let height = max(Constants.iconSize.height, cardBrandSize.height)
-
-            // Use the largest value in { width | height } to determine the size of the bounding square.
-            let squareSize = max(width, height)
+            let squareSize = Self.iconContainerSideLength
             NSLayoutConstraint.activate([
                 view.widthAnchor.constraint(equalToConstant: squareSize),
                 view.heightAnchor.constraint(equalToConstant: squareSize),
@@ -174,6 +170,16 @@ extension LinkPaymentMethodPicker {
             stackView.translatesAutoresizingMaskIntoConstraints = false
             return stackView
         }()
+
+        /// The side length of the square that holds the payment method icon, so other rows can line up with the labels.
+        static var iconContainerSideLength: CGFloat {
+            // Measure the same configuration as `cardBrandView`, since horizontal centering adds padding.
+            let cardBrandSize = CardBrandView(centerHorizontally: true).size(for: Constants.iconSize)
+            let width = max(Constants.iconSize.width, cardBrandSize.width)
+            let height = max(Constants.iconSize.height, cardBrandSize.height)
+            // Use the largest value in { width | height } to determine the size of the bounding square.
+            return max(width, height)
+        }
 
         override init(frame: CGRect) {
             super.init(frame: frame)

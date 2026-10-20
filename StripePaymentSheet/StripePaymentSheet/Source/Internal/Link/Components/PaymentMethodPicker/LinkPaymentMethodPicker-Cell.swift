@@ -40,7 +40,29 @@ extension LinkPaymentMethodPicker {
 
         override var isSelected: Bool {
             didSet {
+                updateSelectionIndicator()
                 setNeedsLayout()
+            }
+        }
+
+        enum SelectionIndicator {
+            /// A radio button on the leading edge.
+            case radioButton
+            /// A checkmark on the trailing edge, shown only when the cell is selected.
+            case checkmark
+        }
+
+        /// How the cell shows that it's selected.
+        var selectionIndicator: SelectionIndicator = .radioButton {
+            didSet {
+                updateSelectionIndicator()
+            }
+        }
+
+        /// The color of the checkmark when `selectionIndicator` is `.checkmark`.
+        var checkmarkTintColor: UIColor = .linkIconBrand {
+            didSet {
+                checkmarkView.tintColor = checkmarkTintColor
             }
         }
 
@@ -66,9 +88,29 @@ extension LinkPaymentMethodPicker {
             }
         }
 
+        /// Whether to show the menu button for editing or removing the payment method.
+        var showsMenu: Bool = true {
+            didSet {
+                if showsMenu != oldValue {
+                    update()
+                }
+            }
+        }
+
         weak var delegate: LinkPaymentMethodPickerCellDelegate?
 
         private let radioButton = RadioButton()
+
+        private let checkmarkView: UIImageView = {
+            let configuration = UIImage.SymbolConfiguration(pointSize: 15, weight: .medium)
+            let checkmarkView = UIImageView(image: UIImage(systemName: "checkmark", withConfiguration: configuration))
+            checkmarkView.tintColor = .linkIconBrand
+            checkmarkView.contentMode = .center
+            checkmarkView.isHidden = true
+            return checkmarkView
+        }()
+
+        private var containerLeadingConstraint: NSLayoutConstraint?
 
         private let contentView = CellContentView()
 
@@ -139,7 +181,7 @@ extension LinkPaymentMethodPicker {
         }
 
         private func setupUI() {
-            let rightStackView = UIStackView(arrangedSubviews: [defaultBadge, alertIconView, activityIndicator, menuButton])
+            let rightStackView = UIStackView(arrangedSubviews: [defaultBadge, alertIconView, activityIndicator, menuButton, checkmarkView])
             rightStackView.spacing = LinkUI.smallContentSpacing
             rightStackView.distribution = .equalSpacing
             rightStackView.alignment = .center
@@ -162,6 +204,12 @@ extension LinkPaymentMethodPicker {
 
             addSubview(separator)
 
+            let containerLeadingConstraint = container.leadingAnchor.constraint(
+                equalTo: layoutMarginsGuide.leadingAnchor,
+                constant: Constants.contentIndentation
+            )
+            self.containerLeadingConstraint = containerLeadingConstraint
+
             NSLayoutConstraint.activate([
                 // Radio button
                 radioButton.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor),
@@ -170,6 +218,10 @@ extension LinkPaymentMethodPicker {
                 // Menu button
                 menuButton.widthAnchor.constraint(equalToConstant: Constants.menuButtonSize.width),
                 menuButton.heightAnchor.constraint(equalToConstant: Constants.menuButtonSize.height),
+
+                // Checkmark
+                checkmarkView.widthAnchor.constraint(equalToConstant: Constants.menuButtonSize.width),
+                checkmarkView.heightAnchor.constraint(equalToConstant: Constants.menuButtonSize.height),
 
                 // Loader
                 activityIndicator.widthAnchor.constraint(equalToConstant: Constants.menuButtonSize.width),
@@ -182,7 +234,7 @@ extension LinkPaymentMethodPicker {
                 // Container
                 container.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor),
                 container.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor),
-                container.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor, constant: Constants.contentIndentation),
+                containerLeadingConstraint,
                 container.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor),
                 // Make stackView fill the container
                 stackView.trailingAnchor.constraint(equalTo: container.trailingAnchor),
@@ -220,7 +272,7 @@ extension LinkPaymentMethodPicker {
 
             defaultBadge.isHidden = isLoading || !paymentMethod.isDefault
             alertIconView.isHidden = isLoading || !hasExpired
-            menuButton.isHidden = isLoading
+            menuButton.isHidden = isLoading || !showsMenu
             contentView.alpha = isSupported ? 1 : Constants.disabledContentAlpha
             unavailableBadge.isHidden = isSupported
 
@@ -228,6 +280,19 @@ extension LinkPaymentMethodPicker {
                 activityIndicator.startAnimating()
             } else {
                 activityIndicator.stopAnimating()
+            }
+        }
+
+        private func updateSelectionIndicator() {
+            switch selectionIndicator {
+            case .radioButton:
+                radioButton.isHidden = false
+                checkmarkView.isHidden = true
+                containerLeadingConstraint?.constant = Constants.contentIndentation
+            case .checkmark:
+                radioButton.isHidden = true
+                checkmarkView.isHidden = !isSelected
+                containerLeadingConstraint?.constant = 0
             }
         }
 
@@ -244,13 +309,13 @@ extension LinkPaymentMethodPicker {
 
             accessibilityIdentifier = "Stripe.Link.PaymentMethodPickerCell"
             accessibilityLabel = paymentMethod.accessibilityDescription
-            accessibilityCustomActions = [
+            accessibilityCustomActions = showsMenu ? [
                 UIAccessibilityCustomAction(
                     name: String.Localized.show_menu,
                     target: self,
                     selector: #selector(onShowMenuAction(_:))
                 ),
-            ]
+            ] : nil
         }
 
         @objc func onShowMenuAction(_ sender: UIAccessibilityCustomAction) {
@@ -262,7 +327,7 @@ extension LinkPaymentMethodPicker {
         }
 
         override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
-            if menuButtonFrame.contains(point) {
+            if showsMenu && menuButtonFrame.contains(point) {
                 return menuButton
             }
 

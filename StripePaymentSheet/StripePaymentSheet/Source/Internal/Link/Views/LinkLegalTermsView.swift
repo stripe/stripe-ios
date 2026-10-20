@@ -44,6 +44,8 @@ final class LinkLegalTermsView: UIView {
     private var brand: LinkBrand
     /// If true, we're in a separate Link VC (instead of the inline PS one)
     private let isStandalone: Bool
+    /// If set, the standalone terms explain that the merchant doesn't see the card details and that the account is shared with the merchant.
+    private let merchantDisplayName: String?
     private let emailWasPrefilled: Bool
 
     var textColor: UIColor? {
@@ -86,11 +88,13 @@ final class LinkLegalTermsView: UIView {
          brand: LinkBrand = .link,
          emailWasPrefilled: Bool = false,
          isStandalone: Bool = false,
+         merchantDisplayName: String? = nil,
          delegate: LinkLegalTermsViewDelegate? = nil) {
         self.mode = mode
         self.brand = brand
         self.emailWasPrefilled = emailWasPrefilled
         self.isStandalone = isStandalone
+        self.merchantDisplayName = merchantDisplayName
         super.init(frame: .zero)
         self.textView.textAlignment = textAlignment
         self.delegate = delegate
@@ -112,6 +116,12 @@ final class LinkLegalTermsView: UIView {
 
     private func formattedLegalText() -> NSAttributedString? {
         let string: String? = {
+            if isStandalone, let merchantDisplayName {
+                return String.Localized.brand_creates_a_virtual_card_so_merchant_never_sees_your_card_details(
+                    merchantDisplayName: merchantDisplayName,
+                    brand: brand
+                )
+            }
             if isStandalone {
                 return STPLocalizedString(
                     "By continuing you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.",
