@@ -14,25 +14,24 @@ typealias QuoteResponse = CreateOnrampSessionResponse
 struct CreateOnrampSessionResponse: Decodable, Hashable {
     struct TransactionDetails: Decodable, Hashable {
         struct Fees: Decodable, Hashable {
-            let networkFeeAmount: String
-            let transactionFeeAmount: String
+            let networkFeeAmount: String?
+            let transactionFeeAmount: String?
         }
 
-        let destinationCurrency: String
-        let destinationAmount: String
-        let destinationNetwork: String
-        let fees: Fees
+        let destinationCurrency: String?
+        let destinationAmount: String?
+        let destinationNetwork: String?
+        let fees: Fees?
         let lastError: String?
-        let lockWalletAddress: Bool
+        let lockWalletAddress: Bool?
         let quoteExpiration: Date
-        let sourceCurrency: String
-        let sourceAmount: String
-        let destinationCurrencies: [String]
-        let destinationNetworks: [String]
+        let sourceCurrency: String?
+        let sourceAmount: String?
+        let destinationCurrencies: [String]?
+        let destinationNetworks: [String]?
         let transactionId: String?
         let transactionLimit: Int
-        let walletAddress: String
-        let walletAddresses: [String]?
+        let walletAddress: String?
     }
 
     let id: String
