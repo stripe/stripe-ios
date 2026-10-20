@@ -663,7 +663,8 @@ extension PaymentSheet {
         confirmWithPaymentMethod: @escaping (STPPaymentMethod, PaymentSheetLinkAccount?, IntentConfirmParams.SaveForFutureUseCheckboxState, STPClientAttributionMetadata?) -> Void,
         confirmHandler: @escaping (STPAuthenticationContext, Intent, STPElementsSession, PaymentOption, @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void) -> Void,
         paymentHandlerCompletion: @escaping (STPPaymentHandlerActionStatus, NSError?) -> Void,
-        completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
+        completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void,
+        confirmationSource: CheckoutController.ConfirmingElement? = nil
     ) {
         // This is called when the customer pays in the sheet (as opposed to the Link webview) and agreed to sign up for Link.
         let confirmWithPaymentDetails:
@@ -771,7 +772,8 @@ extension PaymentSheet {
                     nativeSheetPresentation: nativeSheetPresentation,
                     analyticsHelper: analyticsHelper,
                     confirmationChallenge: confirmationChallenge,
-                    confirmHandler: confirmHandler
+                    confirmHandler: confirmHandler,
+                    confirmationSource: confirmationSource
                 )
                 linkController.present(from: authenticationContext.authenticationPresentingViewController(), completion: completion)
             }

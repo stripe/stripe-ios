@@ -186,7 +186,8 @@ extension CheckoutController {
                     } else {
                         completion(resultWithoutSessionResponse(result), confirmationType)
                     }
-                }
+                },
+                confirmationSource: parameters.confirmationSource
             )
         }
     }
