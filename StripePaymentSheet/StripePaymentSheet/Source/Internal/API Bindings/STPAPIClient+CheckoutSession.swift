@@ -316,17 +316,10 @@ extension STPAPIClient {
         }
 
         if let paymentMethodData = requestParameters.paymentMethodData {
-            if paymentMethodData.type == .vipps {
-                // TODO: CheckoutClient rejects inline Vipps data, even with vipps_preview=v1.
-                // Use its supported PaymentMethod ID path until the backend accepts inline data.
-                let paymentMethod = try await createPaymentMethod(with: paymentMethodData)
-                parameters["payment_method"] = paymentMethod.stripeId
-            } else {
-                var data = STPFormEncoder.dictionary(forObject: paymentMethodData)
-                data = Self.paramsAddingPaymentUserAgent(data)
-                STPTelemetryClient.shared.addTelemetryFields(toParams: &data)
-                parameters["payment_method_data"] = data
-            }
+            var data = STPFormEncoder.dictionary(forObject: paymentMethodData)
+            data = Self.paramsAddingPaymentUserAgent(data)
+            STPTelemetryClient.shared.addTelemetryFields(toParams: &data)
+            parameters["payment_method_data"] = data
         }
 
         if let expectedPaymentMethodType = requestParameters.expectedPaymentMethodType {

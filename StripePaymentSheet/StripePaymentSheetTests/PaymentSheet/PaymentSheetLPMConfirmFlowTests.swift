@@ -25,7 +25,7 @@ import XCTest
 final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
     // These redirect cancellations poll against a wall-clock budget.
     override var preserveResponseTiming: Bool {
-        ["testAmazonPayConfirmFlows", "testPayPayConfirmFlows"].contains { name.contains($0) }
+        ["testAmazonPayConfirmFlows", "testPayPayConfirmFlows", "testPrzelewy24ConfirmFlows"].contains { name.contains($0) }
     }
 
     // MARK: Select which confirm flows to record

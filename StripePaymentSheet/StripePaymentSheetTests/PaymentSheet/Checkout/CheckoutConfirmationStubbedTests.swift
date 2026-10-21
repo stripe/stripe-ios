@@ -846,8 +846,8 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         }
     }
 
-    func testVippsCreatesPaymentMethodBeforeCheckoutClientConfirmation() async throws {
-        // Given Vipps data with a Radar token and a separate Checkout token
+    func testVippsConfirmationPreservesInlineDataAndTokens() async throws {
+        // Given inline Vipps data with separate Radar and Checkout tokens
         let apiClient = STPAPIClient(publishableKey: "pk_test_123")
         apiClient.betas = ["vipps_preview=v1"]
         let paymentMethodData = makeConfirmParams(type: .stripe(.vipps)).paymentMethodParams
@@ -859,23 +859,15 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
             returnURL: "stripe-ios-test://checkout-return"
         )
         requestParameters.passiveCaptchaToken = "checkout_token"
-        let creation = expectation(description: "Vipps PaymentMethod created")
-        stub { $0.url?.path == "/v1/payment_methods" } response: { request in
-            let params = RequestBodyTestHelpers.formEncodedBodyParams(from: request)
-            XCTAssertEqual(params["type"], "vipps")
-            XCTAssertEqual(params["radar_options[hcaptcha_token]"], "radar_token")
-            XCTAssertNil(params["passive_captcha_token"])
-            XCTAssertTrue(request.value(forHTTPHeaderField: "Stripe-Version")?.contains("vipps_preview=v1") == true)
-            creation.fulfill()
-            return HTTPStubsResponse(jsonObject: ["id": "pm_vipps", "object": "payment_method", "type": "vipps", "vipps": [:]], statusCode: 200, headers: nil)
-        }
         stubConfirmedIntentRetrieval(from: Self.confirmedSessionJSON)
-        let confirmation = expectation(description: "CheckoutClient confirms with the Vipps ID")
+        let confirmation = expectation(description: "CheckoutClient confirms inline Vipps data")
         stub { $0.url?.path == "/v1/checkout_client/cs_test_123/confirm" } response: { request in
             let params = RequestBodyTestHelpers.formEncodedBodyParams(from: request)
-            XCTAssertEqual(params["payment_method"], "pm_vipps")
+            XCTAssertTrue(request.value(forHTTPHeaderField: "Stripe-Version")?.contains("vipps_preview=v1") == true)
+            XCTAssertNil(params["payment_method"])
+            XCTAssertEqual(params["payment_method_data[type]"], "vipps")
+            XCTAssertEqual(params["payment_method_data[radar_options][hcaptcha_token]"], "radar_token")
             XCTAssertEqual(params["expected_payment_method_type"], "vipps")
-            XCTAssertFalse(params.keys.contains { $0.hasPrefix("payment_method_data[") })
             XCTAssertEqual(params["passive_captcha_token"], "checkout_token")
             confirmation.fulfill()
             return HTTPStubsResponse(jsonObject: Self.checkoutClientConfirmJSON(from: Self.confirmedSessionJSON), statusCode: 200, headers: nil)
@@ -884,9 +876,9 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         // When confirming through CheckoutClient
         let response = try await apiClient.confirmCheckoutSession(with: requestParameters)
 
-        // Then creation and confirmation each receive the correct token
+        // Then Vipps stays inline and each token keeps its verifier
         XCTAssertEqual(response.sessionId, "cs_test_123")
-        await fulfillment(of: [creation, confirmation], timeout: 1, enforceOrder: true)
+        await fulfillment(of: [confirmation], timeout: 1)
     }
 
     func testNewPaymentMethodCompletesChallengeAfterConfirmFailure() async throws {
