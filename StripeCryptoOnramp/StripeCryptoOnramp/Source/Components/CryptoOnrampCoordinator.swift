@@ -212,6 +212,14 @@ protocol CryptoOnrampCoordinatorProtocol {
     /// Throws an error if no payment method has been selected, the Link account is not verified, required session credentials are missing, the payment method creation fails, or a network/API error occurs.
     func createCryptoPaymentToken() async throws -> String
 
+    /// Creates a crypto payment token paired with optional details of the Apple Pay card used to create it.
+    /// Call after a successful `collectPaymentMethod(...)` and before creating an onramp session.
+    /// Has the same authentication, validation, and error behavior as `createCryptoPaymentToken()`.
+    /// In particular, `PaymentMethodKYCRegionChangedError` requires successful Apple Pay recollection before retrying.
+    ///
+    /// - Returns: The token ID and card summary. Card details are `nil` for Link payment methods.
+    func createCryptoPaymentTokenWithDetails() async throws -> CryptoPaymentTokenResult
+
     /// Performs the checkout flow for a crypto onramp session, handling any required authentication steps.
     /// - Parameters:
     ///   - onrampSessionId: The onramp session identifier.
@@ -299,7 +307,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
         allowLogout: false
     )
 
-    private init(
+    init(
         linkController: LinkController,
         cryptoCustomerID: String?,
         apiClient: STPAPIClient = .shared,
@@ -793,6 +801,13 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
     }
 
     public func createCryptoPaymentToken() async throws -> String {
+        return try await createCryptoPaymentTokenWithDetails().cryptoPaymentToken
+    }
+
+    /// Creates a token paired with the card details of the same selected payment source.
+    /// See `createCryptoPaymentToken()` for authentication and KYC-region validation requirements.
+    /// Card details are available only for Apple Pay and may be `nil`.
+    public func createCryptoPaymentTokenWithDetails() async throws -> CryptoPaymentTokenResult {
         guard let selectedPaymentSource else {
             analyticsClient.log(.errorOccurred(during: .createCryptoPaymentToken, errorMessage: "No payment method selected"))
             throw Error.invalidSelectedPaymentSource
@@ -835,7 +850,10 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
                 countryHint: countryHint
             )
             analyticsClient.log(.cryptoPaymentTokenCreated(paymentMethodType: selectedPaymentSource.analyticsValue))
-            return token.id
+            return CryptoPaymentTokenResult(
+                cryptoPaymentToken: token.id,
+                cardDetails: selectedPaymentSource.cardDetails
+            )
         } catch {
             try logAndThrow(error, during: .createCryptoPaymentToken)
         }

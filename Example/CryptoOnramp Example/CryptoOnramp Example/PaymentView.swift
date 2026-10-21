@@ -829,11 +829,18 @@ struct PaymentView: View {
                         isLoading.wrappedValue = false
                     }
                 case .completed:
-                    let token = try await coordinator.createCryptoPaymentToken()
+                    let tokenResult = try await coordinator.createCryptoPaymentTokenWithDetails()
+                    let cardDetails = tokenResult.cardDetails
+                    let isExplicitDebit = cardDetails?.funding == .debit
+                    // Before session creation, a production integration can send the token and paired
+                    // funding, brand, and last4 to its backend to choose voluntary fee responsibility.
+                    // Only explicit debit qualifies for a strict debit-only policy; missing details do not.
+                    // This demo keeps its backend policy unchanged. The session quote remains authoritative.
+                    _ = isExplicitDebit
 
                     await MainActor.run {
                         // intentionally not flipping `isLoading`, since `createOnrampSession` will set it back.
-                        createOnrampSession(withCryptoPaymentTokenId: token)
+                        createOnrampSession(withCryptoPaymentTokenId: tokenResult.cryptoPaymentToken)
                     }
                 @unknown default:
                     await MainActor.run {

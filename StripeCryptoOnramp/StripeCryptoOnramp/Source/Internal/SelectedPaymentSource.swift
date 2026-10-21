@@ -27,6 +27,17 @@ enum SelectedPaymentSource {
     /// Apple Pay was selected as the payment method.
     case applePay(ApplePayPaymentSource)
 
+    var cardDetails: OnrampCardDetails? {
+        guard case .applePay(let source) = self, let card = source.paymentMethod.card else {
+            return nil
+        }
+        return OnrampCardDetails(
+            funding: STPCard.funding(from: card.funding ?? ""),
+            brand: STPCard.brand(from: card.brand.rawValue),
+            last4: card.last4
+        )
+    }
+
     var analyticsValue: String {
         switch self {
         case .link:
