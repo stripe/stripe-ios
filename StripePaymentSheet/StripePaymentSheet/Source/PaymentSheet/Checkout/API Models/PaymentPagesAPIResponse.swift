@@ -605,7 +605,7 @@ struct CheckoutClientAPIResponse: Decodable {
         for key in elementsFields {
             elementsSession[key] = fields[key]
         }
-        // TODO: CheckoutClient's Link resource omits Elements' mobile flags, including
+        // TODO(OCS_API_EXT-266): CheckoutClient's Link resource omits Elements' mobile flags, including
         // attestation endpoint selection. Backend parity is required for those settings.
         if var linkSettings = fields["link_settings"] as? [String: Any],
            linkSettings["link_passthrough_mode_enabled"] == nil {
@@ -639,7 +639,7 @@ struct CheckoutClientAPIResponse: Decodable {
                 ($0 as? [String: Any])?["setup_future_usage"] as? String
             }
         }
-        // TODO: CheckoutClient must return the resolved per-method SFU map. Explicit
+        // TODO(OCS_API_EXT-267): CheckoutClient must return the resolved per-method SFU map. Explicit
         // payment-method options cannot recover inherited SFU needed for saving mandates.
 
         if var customer = fields["customer"] as? [String: Any] {
