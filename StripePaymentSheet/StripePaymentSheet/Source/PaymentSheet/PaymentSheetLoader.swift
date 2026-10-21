@@ -310,6 +310,11 @@ final class PaymentSheetLoader {
             intent = .checkout(checkout.session)
         }
 
+        warnAboutUnactivatedPaymentMethods(elementsSession: elementsSession)
+        return (elementsSession, intent)
+    }
+
+    static func warnAboutUnactivatedPaymentMethods(elementsSession: STPElementsSession) {
         // Warn the merchant if we see unactivated payment method types in the Intent
         if !elementsSession.unactivatedPaymentMethodTypes.isEmpty {
             let message = """
@@ -318,7 +323,6 @@ final class PaymentSheetLoader {
             """
             print(message)
         }
-        return (elementsSession, intent)
     }
 
     static func shouldFallback(for error: Error) -> Bool {
