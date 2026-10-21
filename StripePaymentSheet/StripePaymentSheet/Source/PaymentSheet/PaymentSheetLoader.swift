@@ -354,10 +354,10 @@ final class PaymentSheetLoader {
         elementsSession: STPElementsSession,
         configuration: PaymentElementConfiguration,
         prefetchedSPMs: [STPPaymentMethod]?,
-        loadTimings: LoadTimings
+        loadTimings: LoadTimings? = nil
     ) -> [STPPaymentMethod] {
-        loadTimings.logStart("filterPaymentMethods")
-        defer { loadTimings.logEnd("filterPaymentMethods") }
+        loadTimings?.logStart("filterPaymentMethods")
+        defer { loadTimings?.logEnd("filterPaymentMethods") }
         // Retrieve the payment methods from ElementsSession or by making direct API calls
         var savedPaymentMethods: [STPPaymentMethod]
         if let elementsSessionPaymentMethods = elementsSession.customer?.paymentMethods {
