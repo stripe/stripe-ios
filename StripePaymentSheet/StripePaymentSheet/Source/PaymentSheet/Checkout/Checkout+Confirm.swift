@@ -368,26 +368,6 @@ extension CheckoutController {
             elementsSession: elementsSession
         )
 
-        let shouldCompleteConfirmationChallenge: Bool = {
-            if case .new = paymentMethodParameters.option {
-                return true
-            }
-            return false
-        }()
-        defer {
-            // TODO: When we stop making a PM, make sure to call this after the CS /confirm
-            // But also, this `complete` API is broken; it is async but does not actually await anything :/
-            // But we should really make a helper like:
-            // try await confirmationChallenge.withRadarOptions(for: type) { radarOptions in
-            //     // Make the network request using radarOptions.
-            // }
-            if shouldCompleteConfirmationChallenge {
-                Task {
-                    await confirmationChallenge?.complete()
-                }
-            }
-        }
-
         switch paymentMethodParameters.option {
         case .new(let confirmParams):
             // MARK: - New PM
@@ -395,13 +375,16 @@ extension CheckoutController {
             confirmParams.setAllowRedisplayForCheckoutSession(
                 merchantWillSavePaymentMethod: checkoutSession.merchantWillSavePaymentMethod(paymentMethodType)
             )
-            confirmParams.paymentMethodParams.radarOptions = await confirmationChallenge?.makeRadarOptions(for: confirmParams.paymentMethodParams.type)
             // TODO: Why set client attribution metadata here and also in /confirm request?
             confirmParams.paymentMethodParams.clientAttributionMetadata = clientAttributionMetadata
             // TODO: Stop creating a PaymentMethod and send payment_method_data directly to /confirm.
-            let paymentMethod = try await configuration.apiClient.createPaymentMethod(
-                with: confirmParams.paymentMethodParams
-            )
+            let paymentMethod = try await ConfirmationChallenge.withRadarOptions(
+                for: paymentMethodType,
+                challenge: confirmationChallenge
+            ) { radarOptions in
+                confirmParams.paymentMethodParams.radarOptions = radarOptions
+                return try await configuration.apiClient.createPaymentMethod(with: confirmParams.paymentMethodParams)
+            }
             let savePaymentMethod: Bool?
             switch confirmParams.saveForFutureUseCheckboxState {
             case .hidden:

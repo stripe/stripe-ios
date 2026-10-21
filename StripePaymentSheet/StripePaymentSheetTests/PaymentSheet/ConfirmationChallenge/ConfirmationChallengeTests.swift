@@ -183,6 +183,111 @@ class ConfirmationChallengeTests: XCTestCase {
         XCTAssertNil(assertion)
     }
 
+    // MARK: - Scoped requests
+
+    private func makeAttestationOnlyChallenge() -> ConfirmationChallenge {
+        let session = STPElementsSession.decodedObject(fromAPIResponse: [
+            "session_id": "test_session",
+            "payment_method_preference": ["ordered_payment_method_types": ["card"]],
+            "flags": ["elements_mobile_attest_on_intent_confirmation": true],
+        ])!
+        return ConfirmationChallenge(elementsSession: session, stripeAttest: stripeAttest)
+    }
+
+    func testScopedRequestsUseFreshAssertions() async throws {
+        // Given a challenge reused across confirmation attempts
+        let challenge = makeAttestationOnlyChallenge()
+
+        // When two signed requests finish successfully
+        let first = try await challenge.withRadarOptions(for: .card) { options in
+            try XCTUnwrap(options?.iosVerificationObject)
+        }
+        let second = try await challenge.withRadarOptions(for: .card) { options in
+            try XCTUnwrap(options?.iosVerificationObject)
+        }
+
+        // Then the second request gets a new assertion
+        XCTAssertNotEqual(first, second)
+    }
+
+    func testScopedRequestFailureReleasesAssertion() async throws {
+        // Given a signed request that fails
+        let challenge = makeAttestationOnlyChallenge()
+        let requestError = NSError(domain: "test", code: 1)
+        do {
+            try await challenge.withRadarOptions(for: .card) { options in
+                XCTAssertNotNil(options?.iosVerificationObject)
+                throw requestError
+            }
+            XCTFail("Expected the request error")
+        } catch {
+            XCTAssertEqual(error as NSError, requestError)
+        }
+
+        // When the request is retried
+        let assertion = try await withTimeout(5) {
+            try await challenge.withRadarOptions(for: .card) { options in
+                try XCTUnwrap(options?.iosVerificationObject)
+            }
+        }.get()
+
+        // Then cleanup has unblocked the next assertion
+        XCTAssertNotNil(assertion["ios_assertion_object"])
+    }
+
+    func testScopedRequestCancellationReleasesAssertion() async throws {
+        // Given an in-flight signed request
+        let challenge = makeAttestationOnlyChallenge()
+        let started = expectation(description: "Signed request started")
+        let request = Task {
+            try await challenge.withRadarOptions(for: .card) { options in
+                XCTAssertNotNil(options?.iosVerificationObject)
+                started.fulfill()
+                try await Task.sleep(nanoseconds: 30_000_000_000)
+            }
+        }
+        await fulfillment(of: [started], timeout: 5)
+
+        // When the request is canceled
+        request.cancel()
+        do {
+            try await request.value
+            XCTFail("Expected cancellation")
+        } catch {
+            XCTAssertTrue(error is CancellationError)
+        }
+
+        // Then the next request can acquire an assertion
+        _ = try await withTimeout(5) {
+            try await challenge.withRadarOptions(for: .card) { options in
+                try XCTUnwrap(options?.iosVerificationObject)
+            }
+        }.get()
+    }
+
+    func testConcurrentScopedRequestsUseDistinctAssertions() async throws {
+        // Given multiple requests sharing a challenge
+        let challenge = makeAttestationOnlyChallenge()
+
+        // When their signed requests overlap
+        let assertions = try await withThrowingTaskGroup(of: String.self) { group in
+            for _ in 0..<3 {
+                group.addTask {
+                    try await challenge.withRadarOptions(for: .card) { options in
+                        await Task.yield()
+                        return try XCTUnwrap(options?.iosVerificationObject?["ios_assertion_object"])
+                    }
+                }
+            }
+            var assertions: [String] = []
+            for try await assertion in group { assertions.append(assertion) }
+            return assertions
+        }
+
+        // Then every request has its own assertion
+        XCTAssertEqual(Set(assertions).count, 3)
+    }
+
     // MARK: - makeRadarOptions Payment Method Type Tests
     func testMakeRadarOptionsForCard() async throws {
         let confirmationChallenge = ConfirmationChallenge(elementsSession: elementsSession, stripeAttest: stripeAttest)

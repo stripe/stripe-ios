@@ -145,7 +145,7 @@ class StripeAttestTest: XCTestCase {
                     // Check the assertion against the mock backend (which will enforce that the counter value has incremented since the last assertion)
                     try! await self.mockAttestBackend.assertionTest(assertion: assertionHandle.assertion)
                     // Then complete the assertion
-                    assertionHandle.complete()
+                    await assertionHandle.complete()
                 }
             }
             try await group.waitForAll()
@@ -188,7 +188,7 @@ class StripeAttestTest: XCTestCase {
         do {
             let handle = try await stripeAttest.assert(canSyncState: false)
             keyId = handle.assertion.keyID
-            handle.complete()
+            await handle.complete()
         } catch {
             // Expected to fail since we haven't configured the backend yet
         }
@@ -209,7 +209,7 @@ class StripeAttestTest: XCTestCase {
         XCTAssertFalse(assertionHandle.assertion.assertionData.isEmpty)
         XCTAssertFalse(assertionHandle.assertion.keyID.isEmpty)
 
-        assertionHandle.complete()
+        await assertionHandle.complete()
     }
 
     func testStateAlignmentServerNeedsAttestationClientThinksItsDone() async {
@@ -222,7 +222,7 @@ class StripeAttestTest: XCTestCase {
         // Get the key ID from a successful assertion
         let firstHandle = try! await stripeAttest.assert(canSyncState: false)
         let keyId = firstHandle.assertion.keyID
-        firstHandle.complete()
+        await firstHandle.complete()
 
         // Now simulate server losing the attestation (key mismatch scenario)
         // Remove the key from the mock backend's attested keys
@@ -239,7 +239,7 @@ class StripeAttestTest: XCTestCase {
         // But we can verify that the backend now has the new key as attested
         XCTAssertTrue(mockAttestBackend.keyHasBeenAttested[assertionHandle.assertion.keyID] ?? false)
 
-        assertionHandle.complete()
+        await assertionHandle.complete()
     }
 
     func testStateAlignmentWithoutCanSyncStateThrowsError() async {
@@ -252,7 +252,7 @@ class StripeAttestTest: XCTestCase {
         // Get the key ID from a successful assertion
         let firstHandle = try! await stripeAttest.assert(canSyncState: false)
         let keyId = firstHandle.assertion.keyID
-        firstHandle.complete()
+        await firstHandle.complete()
 
         // Now simulate server losing the attestation (same as previous test)
         mockAttestBackend.keyHasBeenAttested[keyId] = false
