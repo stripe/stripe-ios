@@ -103,20 +103,19 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
             }
 
             do {
-                // 1. Create PaymentMethod
+                // 1. Tokenize the Apple Pay payment
                 let checkoutSession = self.session
                 let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadata(
                     intent: .checkout(checkoutSession),
                     elementsSession: checkoutSession.elementsSession
                 )
-                let paymentMethod = try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<StripeAPI.PaymentMethod, Error>) in
-                    StripeAPI.PaymentMethod.create(
-                        apiClient: self.apiClient,
-                        payment: payment,
-                        fallbackBillingDetails: nil,
-                        clientAttributionMetadata: clientAttributionMetadata
-                    ) { result in
-                        continuation.resume(with: result)
+                let token = try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<STPToken, Error>) in
+                    self.apiClient.createToken(with: payment) { token, error in
+                        if let token {
+                            continuation.resume(returning: token)
+                        } else {
+                            continuation.resume(throwing: error ?? NSError.stp_genericConnectionError())
+                        }
                     }
                 }
                 guard !self.didFinish else {
@@ -127,11 +126,18 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
                     : checkoutSession.merchantWillSavePaymentMethod(STPPaymentMethodType.card) ? true : nil
 
                 // 2. Confirm
-                let requestParameters = CheckoutSessionConfirmationRequestParameters.createWithPaymentMethodID(
+                let cardParams = STPPaymentMethodCardParams()
+                cardParams.token = token.tokenId
+                let paymentMethodData = STPPaymentMethodParams(
+                    card: cardParams,
+                    billingDetails: STPAPIClient.billingDetails(from: payment),
+                    metadata: nil
+                )
+                paymentMethodData.clientAttributionMetadata = clientAttributionMetadata
+                let requestParameters = CheckoutSessionConfirmationRequestParameters.createWithPaymentMethodData(
                     sessionId: checkoutSession.id,
-                    paymentMethodId: paymentMethod.id,
+                    paymentMethodData: paymentMethodData,
                     expectedAmount: checkoutSession.amount,
-                    expectedPaymentMethodType: paymentMethod.type?.rawValue ?? STPPaymentMethodType.card.identifier,
                     savePaymentMethod: savePaymentMethod,
                     returnURL: self.returnURL,
                     shipping: self.makeShippingDetailsParams(from: payment)
