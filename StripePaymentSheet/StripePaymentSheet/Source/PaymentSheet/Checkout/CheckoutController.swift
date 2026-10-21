@@ -74,27 +74,6 @@ public final class CheckoutController: ObservableObject {
     /// Guards confirmation across Payment Element and Express Checkout entry points.
     var confirmationInProgress = false
 
-    private var checkoutCaptchaData: PassiveCaptchaData?
-    var checkoutCaptchaChallenge: (any PassiveCaptchaTokenProvider)?
-
-    private func updateCheckoutCaptcha(_ response: PaymentPagesAPIResponse) {
-        guard response.status == .open else {
-            checkoutCaptchaData = nil
-            checkoutCaptchaChallenge = nil
-            return
-        }
-        // Only CheckoutClient responses update its captcha configuration.
-        guard let settings = response.checkoutClientSettings else { return }
-        guard let data = settings.passiveCaptcha?.challengeData else {
-            checkoutCaptchaData = nil
-            checkoutCaptchaChallenge = nil
-            return
-        }
-        guard data != checkoutCaptchaData else { return }
-        checkoutCaptchaData = data
-        checkoutCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptchaData: data)
-    }
-
     /// The last tax region successfully sent by this CheckoutController.
     var currentTaxRegion: Address?
 
@@ -151,8 +130,6 @@ public final class CheckoutController: ObservableObject {
             )
             self.shippingAddressElement = shippingAddressElement
             self.shippingAddressElement?.delegate = self
-
-            updateCheckoutCaptcha(apiResponse)
 
             try await applyDefaults(shippingAddress: normalizedDefaultShippingAddress)
 
@@ -479,7 +456,6 @@ extension CheckoutController {
         mutateLocalState(&localState)
 
         if let apiResponse {
-            updateCheckoutCaptcha(apiResponse)
             session = Session(
                 apiResponse: apiResponse,
                 localState: localState,

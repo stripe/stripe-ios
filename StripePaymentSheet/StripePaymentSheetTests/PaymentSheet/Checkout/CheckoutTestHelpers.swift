@@ -430,9 +430,6 @@ enum CheckoutTestHelpers {
         ] {
             response[key] = elementsSession[key]
         }
-        // A fixture may provide Checkout's configuration explicitly. Elements captcha keys
-        // have different semantics and must not be copied into Checkout's resource.
-        response["passive_captcha"] = (session["checkout_client_settings"] as? [String: Any])?["passive_captcha"] ?? NSNull()
         response["apple_pay_preference"] = response["apple_pay_preference"] ?? "enabled"
         response["google_pay_preference"] = response["google_pay_preference"] ?? "enabled"
         response["unactivated_payment_method_types"] = response["unactivated_payment_method_types"] ?? []

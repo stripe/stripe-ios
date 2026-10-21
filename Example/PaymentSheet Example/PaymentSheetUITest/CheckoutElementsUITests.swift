@@ -274,12 +274,11 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
 
     private func assertAnalyticsEvents(
         _ expectedEvents: [String],
-        ignoringEventPrefixes: [String] = ["elements.captcha.passive."],
+        ignoringEventPrefixes: [String] = [],
         file: StaticString = #filePath,
         line: UInt = #line
     ) {
-        // Captcha preloads asynchronously, including in ECE-only flows. Its telemetry has a separate lifecycle.
-        // Keep the ECE sequence exact so new Checkout Session metrics require updated expectations.
+        // Keep the sequence exact so new Checkout Session metrics require updated ECE expectations.
         XCTAssertEqual(
             analyticsLog.compactMap { $0[string: "event"] }.filter { event in
                 !ignoringEventPrefixes.contains { event.hasPrefix($0) }

@@ -69,7 +69,7 @@ struct CheckoutSessionConfirmationRequestParameters {
     let clientAttributionMetadata: STPClientAttributionMetadata?
 
     /// The optional hCaptcha challenge response token.
-    var passiveCaptchaToken: String?
+    let passiveCaptchaToken: String?
 
     /// Customer information collected independently of PaymentMethod billing details.
     let collectedInformation: CollectedInformation?

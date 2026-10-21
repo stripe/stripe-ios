@@ -42,27 +42,7 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
     let paymentMethodOptions: STPPaymentMethodOptions?
     let customer: Customer?
     let elementsSession: ElementsSession
-    let checkoutClientSettings: CheckoutClientSettings?
     let paymentResponse: PaymentResponse?
-
-    /// Settings that belong to Checkout rather than the aggregated Elements Session.
-    struct CheckoutClientSettings: Decodable {
-        let passiveCaptcha: PassiveCaptcha?
-
-        struct PassiveCaptcha: Decodable {
-            let siteKey: String
-            let rqdata: String?
-            let tokenRefreshAfterSeconds: TimeInterval?
-
-            var challengeData: PassiveCaptchaData {
-                PassiveCaptchaData(
-                    siteKey: siteKey,
-                    rqdata: rqdata,
-                    tokenTimeoutSeconds: tokenRefreshAfterSeconds ?? PassiveCaptchaData.defaultTokenTimeoutSeconds
-                )
-            }
-        }
-    }
 
     /// Extracts the client secret from whichever expanded intent is present in the response.
     func intentClientSecret() throws -> String {
@@ -118,13 +98,11 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
         case paymentMethodOptions
         case customer
         case elementsSession
-        case checkoutClientSettings
         case paymentResponse
     }
 
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        checkoutClientSettings = try container.decodeIfPresent(CheckoutClientSettings.self, forKey: .checkoutClientSettings)
         paymentResponse = try container.decodeIfPresent(PaymentResponse.self, forKey: .paymentResponse)
         sessionId = try container.decode(String.self, forKey: .sessionId)
         let decodedPaymentIntent = try container.decodeIfPresent(
@@ -604,6 +582,8 @@ struct CheckoutClientAPIResponse: Decodable {
             linkSettings["link_passthrough_mode_enabled"] = linkMode == .passthrough || linkMode == .linkCardBrand
             elementsSession["link_settings"] = linkSettings
         }
+        // TODO(porter): CheckoutClient must expose the aggregated Elements captcha configuration for parity.
+        // Its top-level passive_captcha belongs to Checkout and cannot replace the Elements configuration.
         elementsSession["config_id"] = fields["elements_session_config_id"]
         elementsSession["business_name"] = merchant["display_name"]
         elementsSession["merchant_logo_url"] = merchant["logo_url"]
@@ -619,7 +599,6 @@ struct CheckoutClientAPIResponse: Decodable {
         response["checkout_items"] = items
         response["payment_method_types"] = paymentMethodTypes
         response["elements_session"] = elementsSession
-        response["checkout_client_settings"] = ["passive_captcha": fields["passive_captcha"] ?? NSNull()]
 
         if let resolvedSetupFutureUsage = fields["setup_future_usage_for_payment_method_type"] as? [String: String] {
             response["setup_future_usage_for_payment_method_type"] = resolvedSetupFutureUsage

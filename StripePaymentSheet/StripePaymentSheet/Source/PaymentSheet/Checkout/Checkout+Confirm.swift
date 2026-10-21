@@ -175,8 +175,7 @@ extension CheckoutController {
                         with: requestParameters,
                         apiClient: apiClient,
                         authenticationContext: authenticationContext,
-                        paymentHandler: paymentHandler,
-                        checkoutCaptchaChallenge: self.checkoutCaptchaChallenge
+                        paymentHandler: paymentHandler
                     )
                 }
             ))
@@ -266,16 +265,12 @@ extension CheckoutController {
                         with: requestParameters,
                         apiClient: self.apiClient,
                         authenticationContext: authenticationContext,
-                        paymentHandler: self.paymentHandler,
-                        checkoutCaptchaChallenge: self.checkoutCaptchaChallenge
+                        paymentHandler: self.paymentHandler
                     )
                 case .applePay(let parameters):
                     result = await self.confirmApplePay(checkoutSession: self.session, parameters: parameters)
                 case .link(let parameters):
-                    result = await Self.confirmLink(
-                        checkoutSession: self.session, parameters: parameters,
-                        checkoutCaptchaChallenge: self.checkoutCaptchaChallenge
-                    )
+                    result = await Self.confirmLink(checkoutSession: self.session, parameters: parameters)
                 case .paymentMethod(let paymentMethodParameters, let integrationShape):
                     // 2. Do pre-confirm actions (CVC recollection, etc)
                     let preconfirmResult = await Self.handlePaymentMethodPreconfirmActions(
@@ -305,8 +300,7 @@ extension CheckoutController {
                         apiClient: paymentMethodParameters.configuration.apiClient,
                         authenticationContext: paymentMethodParameters.authenticationContext,
                         paymentHandler: paymentMethodParameters.paymentHandler,
-                        confirmationChallenge: confirmRequestParameters.paymentMethodData == nil ? nil : paymentMethodParameters.confirmationChallenge,
-                        checkoutCaptchaChallenge: self.checkoutCaptchaChallenge
+                        confirmationChallenge: confirmRequestParameters.paymentMethodData == nil ? nil : paymentMethodParameters.confirmationChallenge
                     )
                 }
                 // 3. Update the Session
@@ -440,38 +434,13 @@ extension CheckoutController {
         authenticationContext: STPAuthenticationContext,
         paymentHandler: STPPaymentHandler,
         confirmationChallenge: (any CheckoutConfirmationChallenge)? = nil,
-        poller injectedPoller: (any CheckoutSessionPolling)? = nil,
-        checkoutCaptchaChallenge: (any PassiveCaptchaTokenProvider)? = nil
+        poller injectedPoller: (any CheckoutSessionPolling)? = nil
     ) async -> InternalConfirmResult {
         let poller: any CheckoutSessionPolling
         if let injectedPoller {
             poller = injectedPoller
         } else {
             poller = CheckoutSessionPoller(apiClient: apiClient)
-        }
-
-        // Checkout's token is verified by /confirm, separately from PaymentMethod radar options.
-        var requestParameters = requestParameters
-        if requestParameters.passiveCaptchaToken == nil, let checkoutCaptchaChallenge {
-            let startTime = Date()
-            let token = await withTimeout(6) {
-                try await checkoutCaptchaChallenge.consumeToken()
-            }
-            switch token {
-            case .success(let consumedToken):
-                requestParameters.passiveCaptchaToken = consumedToken.value
-                STPAnalyticsClient.sharedClient.logPassiveCaptchaAttach(
-                    siteKey: checkoutCaptchaChallenge.passiveCaptchaData.siteKey,
-                    isReady: consumedToken.wasReady,
-                    duration: Date().timeIntervalSince(startTime)
-                )
-            case .failure(let error):
-                STPAnalyticsClient.sharedClient.logPassiveCaptchaError(
-                    error: error,
-                    siteKey: checkoutCaptchaChallenge.passiveCaptchaData.siteKey,
-                    duration: Date().timeIntervalSince(startTime)
-                )
-            }
         }
 
         // 1. Call /confirm
