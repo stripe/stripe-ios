@@ -525,6 +525,42 @@ final class CheckoutApplePayContextTests: XCTestCase {
         XCTAssertEqual(paymentRequest.billingContact?.name?.givenName, "Jane")
     }
 
+    // MARK: - presentation
+
+    func testPresentationFailureReturnsCheckoutError() async {
+        // Given PassKit refuses to present the Apple Pay sheet
+        let analyticsClient = STPAnalyticsClient.sharedClient
+        let previousLogHistory = analyticsClient._testLogHistory
+        analyticsClient._testLogHistory = []
+        defer { analyticsClient._testLogHistory = previousLogHistory }
+        let (context, controller) = makeContext()
+        controller.presentationSucceeds = false
+
+        // When the unexpected-error assertion is captured by the test utility
+        STPAssertTestUtil.shouldSuppressNextSTPAlert = true
+        let result = await context.presentApplePay()
+
+        // Then confirmation fails with actionable diagnostics
+        guard case .failed(let error) = result.paymentSheetResult,
+              case .unknown(let message) = error as? CheckoutError else {
+            XCTFail("Expected an Apple Pay Checkout error, got \(result.paymentSheetResult)")
+            return
+        }
+        XCTAssertTrue(message.contains("app is active"))
+        XCTAssertTrue(message.contains("presenting window is visible"))
+        XCTAssertTrue(error.localizedDescription.contains(message))
+
+        // ...and the failure is logged once and triggers the expected SDK assertion
+        let events = analyticsClient._testLogHistory.filter {
+            $0["event"] as? String == "unexpected_error.checkout_elements"
+        }
+        XCTAssertEqual(events.count, 1)
+        XCTAssertEqual(events.first?["error_code"] as? String, "unknown")
+        XCTAssertEqual(events.first?["error_type"] as? String, "StripePaymentSheet.CheckoutError")
+        XCTAssertFalse(STPAssertTestUtil.shouldSuppressNextSTPAlert)
+        XCTAssertTrue(STPAssertTestUtil.lastAssertMessage.contains("unexpected_error.checkout_elements"))
+    }
+
     // MARK: - presentationWindow
 
     func testPresentationWindowReturnsConfiguredWindow() {
