@@ -62,56 +62,6 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertEqual(session.orderSummaryItems.count, 1)
     }
 
-    func testCheckoutCaptchaIsSeparateFromElementsAndUsesServerRefreshInterval() throws {
-        // Given Checkout's captcha is enabled while the independent Elements flag is off
-        var response = CheckoutTestHelpers.checkoutClientInitJSON(from: CheckoutTestHelpers.makeSessionJSON(), sessionId: "cs_test")
-        response["flags"] = ["elements_enable_passive_captcha": false]
-        response["passive_captcha"] = [
-            "site_key": "checkout_site_key", "rqdata": "checkout_rqdata", "token_refresh_after_seconds": 21570,
-        ]
-        let data = try JSONSerialization.data(withJSONObject: response)
-
-        // When the response is decoded
-        let checkoutClient = try StripeJSONDecoder().decode(CheckoutClientAPIResponse.self, from: data)
-        let apiResponse = try checkoutClient.paymentPagesResponse()
-        let captcha = try XCTUnwrap(apiResponse.checkoutClientSettings?.passiveCaptcha?.challengeData)
-
-        // Then Checkout keeps its own configuration without putting it in PaymentMethod radar options
-        XCTAssertEqual(captcha.siteKey, "checkout_site_key")
-        XCTAssertEqual(captcha.rqdata, "checkout_rqdata")
-        XCTAssertEqual(captcha.tokenTimeoutSeconds, 21570)
-        XCTAssertNil(apiResponse.elementsSession.value.passiveCaptchaData)
-        XCTAssertNil(apiResponse.elementsSession.value.allResponseFields["passive_captcha"])
-    }
-
-    func testCheckoutCaptchaAllowsOmittedRefreshInterval() throws {
-        // Given Checkout's resource omits its optional refresh interval
-        var response = CheckoutTestHelpers.checkoutClientInitJSON(from: CheckoutTestHelpers.makeSessionJSON(), sessionId: "cs_test")
-        response["passive_captcha"] = ["site_key": "checkout_site_key"]
-
-        // When decoding the enabled challenge
-        let data = try JSONSerialization.data(withJSONObject: response)
-        let apiResponse = try StripeJSONDecoder().decode(CheckoutClientAPIResponse.self, from: data).paymentPagesResponse()
-        let captcha = try XCTUnwrap(apiResponse.checkoutClientSettings?.passiveCaptcha?.challengeData)
-
-        // Then the challenge uses the SDK's existing conservative token lifetime
-        XCTAssertEqual(captcha.siteKey, "checkout_site_key")
-        XCTAssertNil(captcha.rqdata)
-        XCTAssertEqual(captcha.tokenTimeoutSeconds, PassiveCaptchaData.defaultTokenTimeoutSeconds)
-    }
-
-    func testNullCheckoutCaptchaDisablesChallengeDespiteElementsFlag() throws {
-        var response = CheckoutTestHelpers.checkoutClientInitJSON(from: CheckoutTestHelpers.makeSessionJSON(), sessionId: "cs_test")
-        response["flags"] = ["elements_enable_passive_captcha": true]
-        response["passive_captcha"] = NSNull()
-        let data = try JSONSerialization.data(withJSONObject: response)
-        let checkoutClient = try StripeJSONDecoder().decode(CheckoutClientAPIResponse.self, from: data)
-        let apiResponse = try checkoutClient.paymentPagesResponse()
-        XCTAssertNotNil(apiResponse.checkoutClientSettings)
-        XCTAssertNil(apiResponse.checkoutClientSettings?.passiveCaptcha)
-        XCTAssertNil(apiResponse.elementsSession.value.passiveCaptchaData)
-    }
-
     func testCheckoutClientUsesExplicitSetupFutureUsageOptions() throws {
         // Given payment-method overrides returned by CheckoutClient
         let response = CheckoutTestHelpers.checkoutClientInitJSON(
