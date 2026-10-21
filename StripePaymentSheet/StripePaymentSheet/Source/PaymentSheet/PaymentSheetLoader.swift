@@ -116,15 +116,10 @@ final class PaymentSheetLoader {
             loadTimings.logStart("computePaymentMethodTypes")
             let isApplePayEnabled = PaymentSheet.isApplePayEnabled(elementsSession: elementsSession, configuration: configuration)
 
-            // Disable FC Lite if killswitch is enabled
-            let isFcLiteKillswitchEnabled = elementsSession.flags["elements_disable_fc_lite"] == true
-            FinancialConnectionsSDKAvailability.fcLiteKillswitchEnabled = isFcLiteKillswitchEnabled
+            applyFinancialConnectionsSettings(elementsSession: elementsSession)
 
             // Send legacy analytics to r.stripe.com instead of q.stripe.com if enabled
             STPAnalyticsClient.sendAnalyticsToRStripe = elementsSession.isAnalyticsToRStripeEnabled
-
-            let remoteFcLiteOverrideEnabled = shouldPreferFCLite(elementsSession: elementsSession)
-            FinancialConnectionsSDKAvailability.remoteFcLiteOverride = remoteFcLiteOverrideEnabled
 
             let paymentMethodTypes = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(from: intent, elementsSession: elementsSession, configuration: configuration, logAvailability: true)
 
@@ -499,6 +494,17 @@ final class PaymentSheetLoader {
         }
 
         return allowedCountries.contains(billingCountry)
+    }
+
+    @MainActor
+    static func applyFinancialConnectionsSettings(elementsSession: STPElementsSession) {
+        // TODO: ⚠️ Do not use global singletons or assume only one integration loads at a time.
+        // Disable FC Lite if killswitch is enabled
+        let isFcLiteKillswitchEnabled = elementsSession.flags["elements_disable_fc_lite"] == true
+        FinancialConnectionsSDKAvailability.fcLiteKillswitchEnabled = isFcLiteKillswitchEnabled
+
+        let remoteFcLiteOverrideEnabled = shouldPreferFCLite(elementsSession: elementsSession)
+        FinancialConnectionsSDKAvailability.remoteFcLiteOverride = remoteFcLiteOverrideEnabled
     }
 
     static func shouldPreferFCLite(elementsSession: STPElementsSession) -> Bool {
