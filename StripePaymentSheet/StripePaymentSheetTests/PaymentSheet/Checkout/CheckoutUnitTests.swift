@@ -35,9 +35,25 @@ final class CheckoutUnitTests: XCTestCase {
     }
 
     func testInitSetsLoadedState() async throws {
+        let analyticsClient = STPAnalyticsClient.sharedClient
+        let previousLogHistory = analyticsClient._testLogHistory
+        analyticsClient._testLogHistory = []
+        defer { analyticsClient._testLogHistory = previousLogHistory }
+
         let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration())
         XCTAssertFalse(checkout.isUpdating)
         XCTAssertEqual(checkout.session.status, .open)
+
+        // Both Payment Element integrations receive the Checkout Session ID at initialization.
+        let loadStartedEvents = analyticsClient._testLogHistory.filter { $0["event"] as? String == "mc_load_started" }
+        XCTAssertTrue(loadStartedEvents.isEmpty)
+        let initEvents = analyticsClient._testLogHistory.filter {
+            ["mc_custom_init_default", "mc_embedded_init"].contains($0["event"] as? String ?? "")
+        }
+        XCTAssertEqual(initEvents.count, 2)
+        for payload in initEvents {
+            XCTAssertEqual(payload["checkout_session_id"] as? String, checkout.session.id)
+        }
     }
 
     func testPaymentElementConfigurationsUseCheckoutReturnURL() async throws {
