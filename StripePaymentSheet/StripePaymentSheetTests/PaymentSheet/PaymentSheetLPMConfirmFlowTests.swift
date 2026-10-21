@@ -1066,9 +1066,13 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
             for testIntent in intents {
                 let description = testIntent.description
                 let intent = testIntent.intent
-                let e = expectation(description: "Confirm Apple Pay (\(description))")
                 var configuration = configuration
                 configuration.apiClient = testIntent.checkoutAPIClient ?? apiClient
+                if case .checkout(let session) = intent {
+                    await confirmCheckoutApplePay(session: session, configuration: configuration, description: description)
+                    continue
+                }
+                let e = expectation(description: "Confirm Apple Pay (\(description))")
                 let elementsSession = STPElementsSession._testValue(intent: intent)
                 let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadata(
                     intent: intent,
@@ -1109,6 +1113,54 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                 await fulfillment(of: [e], timeout: 25)
             }
         }
+    }
+
+    private func confirmCheckoutApplePay(
+        session: CheckoutController.Session,
+        configuration: PaymentSheet.Configuration,
+        description: String
+    ) async {
+        let parameters = CheckoutController.ApplePayConfirmationParameters.makeMock(
+            apiClient: configuration.apiClient,
+            returnURL: configuration.returnURL!,
+            confirmationHandler: { requestParameters in
+                await CheckoutController.confirmCheckoutSession(
+                    with: requestParameters,
+                    apiClient: configuration.apiClient,
+                    authenticationContext: self,
+                    paymentHandler: STPPaymentHandler(apiClient: configuration.apiClient),
+                    poller: CompletedCheckoutSessionPoller()
+                )
+            }
+        )
+        let controller = MockPKPaymentAuthorizationController()
+        let updater = MockCheckoutSessionWalletUpdater(sessionToReturn: session)
+        let context = CheckoutApplePayContext(
+            checkoutSession: session,
+            applePayConfirmationParameters: parameters,
+            authorizationController: controller,
+            checkoutWalletUpdater: updater
+        )
+        let completion = expectation(description: "Confirm Apple Pay (\(description))")
+        Task {
+            let result = await context.presentApplePay()
+            switch result {
+            case .failed(let error, _):
+                XCTFail("❌ \(description): Apple Pay confirm failed - \(error.nonGenericDescription)")
+            case .canceled:
+                XCTFail("❌ \(description): Apple Pay confirm canceled")
+            case .completed:
+                print("✅ \(description): Apple Pay confirm completed")
+            }
+            completion.fulfill()
+        }
+        context.paymentAuthorizationController(
+            controller,
+            didAuthorizePayment: STPFixtures.testPKPaymentWithContactDetails()
+        ) { _ in
+            context.paymentAuthorizationControllerDidFinish(controller)
+        }
+        await fulfillment(of: [completion], timeout: 25)
     }
 
     // MARK: Add tests above this line
