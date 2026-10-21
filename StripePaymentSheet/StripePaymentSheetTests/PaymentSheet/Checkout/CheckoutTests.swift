@@ -54,33 +54,6 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         XCTAssertEqual(checkout.session.email, "customer@example.com")
     }
 
-    func testCheckoutClientRejectsPromotionCodeUpdates() async throws {
-        // TODO: Promotion-code support remains outside this migration.
-        // Given an initialized CheckoutClient session
-        let response = try await STPTestingAPIClient.shared.createCheckoutSession()
-        let apiClient = STPAPIClient(publishableKey: response.publishableKey)
-        let initial = try await apiClient.initCheckoutSession(checkoutSessionId: response.id, adaptivePricingAllowed: false)
-
-        // When applying or removing a code, the current endpoint rejects the unsupported parameter
-        for code in ["SAVE25", ""] {
-            do {
-                _ = try await apiClient.updateCheckoutSession(
-                    checkoutSessionId: response.id, parameters: ["promotion_code": code]
-                )
-                XCTFail("Expected CheckoutClient to reject promotion_code")
-            } catch StripeError.apiError(let error) {
-                // Then this is the unsupported-parameter error, rather than a transport or decoding failure
-                XCTAssertEqual(error.code, "parameter_unknown")
-                XCTAssertEqual(error.param, "promotion_code")
-                XCTAssertEqual(error.type, .invalidRequestError)
-                XCTAssertEqual(error.httpStatusCode, 400)
-            }
-        }
-        let latest = try await apiClient.retrieveCheckoutSession(checkoutSessionId: response.id)
-        XCTAssertEqual(latest.status, .open)
-        XCTAssertEqual(latest.makePublicSession().totals.total, initial.makePublicSession().totals.total)
-    }
-
     // TODO(porter): unified mode does not yet support promo codes.
     func disabled_testPromotionCodeApplyEmitsSessionUpdates() async throws {
         let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession(

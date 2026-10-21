@@ -27,9 +27,6 @@ import XCTest
     /// Disable this when testing the STPPaymentHandler "UnredirectableSessionDelegate" behavior.
     open var followRedirects = true
 
-    /// Preserve observed network duration when replaying a test with a wall-clock polling budget.
-    open var preserveResponseTiming: Bool { false }
-
     /// Tracks the current request number for better error reporting
     private var requestCount = 0
 
@@ -88,7 +85,6 @@ import XCTest
             #endif
             let config = StripeAPIConfiguration.sharedUrlSessionConfiguration
             let recorder = SWHttpTrafficRecorder.shared()
-            recorder?.recordResponseTiming = preserveResponseTiming
 
             // Creates filenames like `post_v1_tokens_0.tail`.
             var count = 0
@@ -118,7 +114,6 @@ import XCTest
                         "merchant_integration_version", // Contains the SDK version number
                         "elements_session_config_id", // Random string
                         "hcaptcha_token", // Random string
-                        "passive_captcha_token", // Checkout captcha token, random string
                         "eid=", // Ephemeral ID, random UUID
                         "browser_locale", // Locale varies by machine
                         "browser_timezone", // Timezone varies by machine
@@ -171,12 +166,6 @@ import XCTest
                 return
             }
         } else {
-            HTTPStubs.onStubActivation { _, _, response in
-                if let value = response.httpHeaders?["X-Stripe-Mock-Response-Time"] as? String,
-                   let duration = TimeInterval(value) {
-                    response.responseTime = duration
-                }
-            }
             // Stubs are evaluated in the reverse order that they are added, so if the network is hit and no other stub is matched, raise an exception
             HTTPStubs.stubRequests(
                 passingTest: { _ in
@@ -221,7 +210,6 @@ import XCTest
 
         // Don't accidentally keep any stubs around during the next test run
         HTTPStubs.removeAllStubs()
-        HTTPStubs.onStubActivation(nil)
     }
 }
 

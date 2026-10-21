@@ -11,7 +11,6 @@ Date: Wed, 21 Oct 2026 18:18:32 GMT
 Content-Length: 2578
 Alt-Svc: h3=":443"; ma=2592000
 Etag: W/"a12-Vttcb7I+0iiV1TaWlb9eCrzwBa0"
-X-Stripe-Mock-Response-Time: 0.534316
 
 {
   "billing_address_collection" : null,

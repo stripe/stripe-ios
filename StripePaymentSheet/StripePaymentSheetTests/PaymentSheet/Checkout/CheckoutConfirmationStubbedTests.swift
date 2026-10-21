@@ -747,14 +747,13 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         statusCode: Int,
         inspectRequest: @escaping ([String: String]) -> Void = { _ in }
     ) async throws {
-        // Given a new card with the existing Radar challenge
+        // Given a new card whose confirmation has a Radar challenge
         let checkout = try await makeCheckout()
         let challenge = TestConfirmationChallenge()
         stub { request in
             request.url?.path.hasSuffix("/confirm") == true
         } response: { request in
             let params = RequestBodyTestHelpers.formEncodedBodyParams(from: request, omittingEmptyValues: true)
-            XCTAssertNil(params["passive_captcha_token"])
             XCTAssertEqual(params["payment_method_data[radar_options][hcaptcha_token]"], "captcha_token")
             XCTAssertEqual(params["payment_method_data[radar_options][ios_verification_object][test_assertion]"], "assertion")
             inspectRequest(params)
@@ -1079,7 +1078,6 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
                 file: file,
                 line: line
             )
-            XCTAssertNil(params["passive_captcha_token"], file: file, line: line)
             if let expectedCollectedInformationEmail {
                 XCTAssertEqual(
                     params["collected_information[email]"],

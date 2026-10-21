@@ -128,7 +128,9 @@ extension PaymentPagesAPIResponse {
             minorUnitsAmount: publicAmount.minorUnitsAmount,
             inclusive: taxAmount.inclusive,
             displayName: taxAmount.taxRate.displayName,
-            percentage: taxAmount.taxRate.percentage
+            percentage: taxAmount.taxRate.rateType == "flat_amount"
+                ? nil
+                : taxAmount.taxRate.percentage
         )
     }
 

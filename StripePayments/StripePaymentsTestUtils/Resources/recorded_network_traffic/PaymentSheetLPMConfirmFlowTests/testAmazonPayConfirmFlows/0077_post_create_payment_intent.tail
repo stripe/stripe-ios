@@ -13,6 +13,5 @@ x-frame-options: SAMEORIGIN
 x-xss-protection: 1; mode=block
 Content-Length: 202
 Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
-X-Stripe-Mock-Response-Time: 0.884229
 
 {"intent":"pi_3UT3x3FY0qyl6XeW1oDDlXyt","secret":"pi_3UT3x3FY0qyl6XeW1oDDlXyt_secret_aESlgk41jd1lGiTWdkgZ5EaZW","status":"requires_action","publishable_key":"pk_test_ErsyMEOTudSjQR8hh0VrQr5X008sBXGOu6"}
