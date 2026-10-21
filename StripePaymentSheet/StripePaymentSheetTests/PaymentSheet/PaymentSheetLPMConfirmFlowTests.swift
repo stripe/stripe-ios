@@ -23,8 +23,10 @@ import XCTest
 /// 👀  See `testiDEALConfirmFlows` for an example with comments.
 @MainActor
 final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
-    // Amazon Pay's redirect cancellation polls against a wall-clock budget.
-    override var preserveResponseTiming: Bool { name.contains("testAmazonPayConfirmFlows") }
+    // These redirect cancellations poll against a wall-clock budget.
+    override var preserveResponseTiming: Bool {
+        ["testAmazonPayConfirmFlows", "testPayPayConfirmFlows"].contains { name.contains($0) }
+    }
 
     // MARK: Select which confirm flows to record
 
