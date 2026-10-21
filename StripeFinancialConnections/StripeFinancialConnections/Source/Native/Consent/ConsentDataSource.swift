@@ -16,10 +16,6 @@ protocol ConsentDataSource: AnyObject {
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
 
     func markConsentAcquired() -> Future<ConsentAcquiredResult>
-    func completeAssertionIfNeeded(
-        possibleError: Error?,
-        api: FinancialConnectionsAPIClientLogger.API
-    ) -> Error?
 }
 
 struct ConsentAcquiredResult {
@@ -82,6 +78,17 @@ final class ConsentDataSourceImplementation: ConsentDataSource {
                 useMobileEndpoints: manifest.verified,
                 pane: .consent
             ).observe { lookupResult in
+                // On verified sessions, the lookup above acquires the StripeAttest assertion lock.
+                // It must be released whether the lookup succeeded or failed. Otherwise every later
+                // attested request (LinkLogin lookup, Link sign up, PaymentSheet Link) waits forever.
+                let attestationError: Error? = manifest.verified
+                    ? self.apiClient.completeAssertion(
+                        possibleError: lookupResult.error,
+                        api: .consumerSessionLookup,
+                        pane: .consent
+                    )
+                : nil
+
                 switch lookupResult {
                 case .success(let response):
                     let result = ConsentAcquiredResult(
@@ -91,25 +98,19 @@ final class ConsentDataSourceImplementation: ConsentDataSource {
                     )
                     promise.resolve(with: result)
                 case .failure:
-                    let result = ConsentAcquiredResult(manifest: manifest)
-                    promise.resolve(with: result)
+                    if let attestationError {
+                        // Surface attestation verdict failures so the VC can fall back to web.
+                        promise.reject(with: attestationError)
+                    } else {
+                        // Other lookup failures stay non-fatal, as before.
+                        let result = ConsentAcquiredResult(manifest: manifest)
+                        promise.resolve(with: result)
+                    }
                 }
             }
 
             return promise
         }
-    }
-
-    func completeAssertionIfNeeded(
-        possibleError: Error?,
-        api: FinancialConnectionsAPIClientLogger.API
-    ) -> Error? {
-        guard manifest.verified else { return nil }
-        return apiClient.completeAssertion(
-            possibleError: possibleError,
-            api: api,
-            pane: .linkLogin
-        )
     }
 }
 

@@ -70,7 +70,7 @@ final class VerificationFlowWebView: UIView {
 
         // NOTE: Computed so font is updated if UIAppearance changes
         static var errorLabelFont: UIFont {
-            UIFont.preferredFont(forTextStyle: .body, weight: .medium)
+            IdentityUI.bodyFont(withWeight: .medium)
         }
     }
 

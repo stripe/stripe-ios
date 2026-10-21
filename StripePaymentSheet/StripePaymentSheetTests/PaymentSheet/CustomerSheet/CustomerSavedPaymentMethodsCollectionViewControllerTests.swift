@@ -210,8 +210,7 @@ class CustomerSavedPaymentMethodsCollectionViewControllerTests: XCTestCase {
                                                                                  paymentMethodRemove: paymentMethodRemove,
                                                                                  paymentMethodRemoveIsPartial: false,
                                                                                  paymentMethodUpdate: paymentMethodUpdate,
-                                                                                 paymentMethodSyncDefault: paymentMethodSyncDefault,
-                                                                                 isTestMode: true)
+                                                                                 paymentMethodSyncDefault: paymentMethodSyncDefault)
     }
     func customerSavedPaymentMethods(_ configuration: CustomerSavedPaymentMethodsCollectionViewController.Configuration,
                                      savedPaymentMethods: [STPPaymentMethod],

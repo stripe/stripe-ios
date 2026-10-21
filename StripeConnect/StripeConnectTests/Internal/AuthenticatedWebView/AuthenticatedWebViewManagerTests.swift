@@ -75,6 +75,113 @@ class AuthenticatedWebViewManagerTests: XCTestCase {
         XCTAssertEqual(mockAuthSession?.didStart, false)
     }
 
+    func testPresent_rejectsCustomSchemeBeforeCreatingSession() async throws {
+        try await assertInvalidURL("myapp://authentication")
+    }
+
+    func testPresent_rejectsSDKReturnSchemeBeforeCreatingSession() async throws {
+        try await assertInvalidURL("\(StripeConnectConstants.authenticatedWebViewReturnUrlScheme)://return")
+    }
+
+    func testPresent_rejectsJavaScriptURLBeforeCreatingSession() async throws {
+        try await assertInvalidURL("javascript:alert(1)")
+    }
+
+    func testPresent_rejectsDataURLBeforeCreatingSession() async throws {
+        try await assertInvalidURL("data:text/html,authentication")
+    }
+
+    func testPresent_rejectsFileURLBeforeCreatingSession() async throws {
+        try await assertInvalidURL("file:///authentication")
+    }
+
+    func testPresent_rejectsAboutURLBeforeCreatingSession() async throws {
+        try await assertInvalidURL("about:blank")
+    }
+
+    func testPresent_rejectsHostlessHTTPSURLBeforeCreatingSession() async throws {
+        let url = try XCTUnwrap(URL(string: "https:///authentication"))
+        XCTAssertEqual(url.scheme?.lowercased(), "https")
+        XCTAssertTrue(url.host?.isEmpty ?? true)
+        try await assertInvalidURL(url)
+    }
+
+    func testPresent_rejectsRelativeURLBeforeCreatingSession() async throws {
+        try await assertInvalidURL("/authentication")
+    }
+
+    @MainActor
+    func testPresent_acceptsUppercaseHTTPSScheme() async throws {
+        let manager = AuthenticatedWebViewManager { url, scheme, handler in
+            let session = MockWebAuthenticationSession(url: url, callbackURLScheme: scheme, completionHandler: handler)
+            session.overrideCompletionResult = .success(URL(string: "stripe-connect://success")!)
+            return session
+        }
+
+        let destination = try XCTUnwrap(URL(string: "HTTPS://example.test/authentication"))
+        XCTAssertEqual(destination.scheme, "HTTPS")
+
+        let result = try await manager.present(with: destination, from: mockViewInWindow)
+
+        XCTAssertEqual(result, URL(string: "stripe-connect://success"))
+    }
+
+    @MainActor
+    func testPresent_validatesDestinationBeforeAlreadyPresentingState() async throws {
+        let sessionCreated = expectation(description: "Initial HTTPS session is created")
+        var sessions: [MockWebAuthenticationSession] = []
+        let manager = AuthenticatedWebViewManager { url, scheme, handler in
+            let session = MockWebAuthenticationSession(url: url, callbackURLScheme: scheme, completionHandler: handler)
+            if !sessions.isEmpty {
+                session.overrideCompletionResult = .success(URL(string: "stripe-connect://unexpected-return")!)
+            }
+            sessions.append(session)
+            sessionCreated.fulfill()
+            return session
+        }
+
+        let firstRequest = Task { @MainActor in
+            try await manager.present(with: URL(string: "https://example.test/first")!, from: self.mockViewInWindow)
+        }
+        await fulfillment(of: [sessionCreated], timeout: TestHelpers.defaultTimeout)
+        let firstSession = try XCTUnwrap(sessions.first)
+        XCTAssertTrue(manager.authSession === firstSession)
+
+        do {
+            _ = try await manager.present(with: try XCTUnwrap(URL(string: "file:///authentication")), from: mockViewInWindow)
+            XCTFail("Expected invalid URL error")
+        } catch {
+            XCTAssertEqual(error as? AuthenticatedWebViewError, .invalidURL)
+        }
+
+        XCTAssertTrue(manager.authSession === firstSession)
+        XCTAssertEqual(sessions.count, 1)
+        XCTAssertFalse(firstSession.didCancel)
+        XCTAssertEqual(firstSession.cancelCount, 0)
+        XCTAssertEqual(firstSession.completionCount, 0)
+        firstSession.complete(with: .success(URL(string: "stripe-connect://success")!))
+        let firstResult = try await firstRequest.value
+        XCTAssertEqual(firstResult, URL(string: "stripe-connect://success"))
+        XCTAssertEqual(firstSession.completionCount, 1)
+    }
+
+    @MainActor
+    func testPresent_validatesDestinationBeforeWindowLookup() async {
+        let manager = AuthenticatedWebViewManager { url, scheme, handler in
+            XCTFail("Manager should not create a session for an invalid destination")
+            let session = MockWebAuthenticationSession(url: url, callbackURLScheme: scheme, completionHandler: handler)
+            session.overrideCompletionResult = .success(URL(string: "stripe-connect://unexpected-return")!)
+            return session
+        }
+
+        do {
+            _ = try await manager.present(with: try XCTUnwrap(URL(string: "file:///authentication")), from: UIView())
+            XCTFail("Expected invalid URL error")
+        } catch {
+            XCTAssertEqual(error as? AuthenticatedWebViewError, .invalidURL)
+        }
+    }
+
     @MainActor
     func testPresent_startsSession_success() async throws {
         let manager = AuthenticatedWebViewManager { url, scheme, handler in
@@ -138,6 +245,28 @@ class AuthenticatedWebViewManagerTests: XCTestCase {
             XCTAssertEqual((error as NSError).code, 111)
         }
     }
+
+    @MainActor
+    private func assertInvalidURL(_ string: String) async throws {
+        try await assertInvalidURL(try XCTUnwrap(URL(string: string)))
+    }
+
+    @MainActor
+    private func assertInvalidURL(_ url: URL) async throws {
+        let manager = AuthenticatedWebViewManager { url, scheme, handler in
+            XCTFail("Manager should not create a session for an invalid destination")
+            let session = MockWebAuthenticationSession(url: url, callbackURLScheme: scheme, completionHandler: handler)
+            session.overrideCompletionResult = .success(URL(string: "stripe-connect://unexpected-return")!)
+            return session
+        }
+
+        do {
+            _ = try await manager.present(with: url, from: mockViewInWindow)
+            XCTFail("Expected invalid URL error")
+        } catch {
+            XCTAssertEqual(error as? AuthenticatedWebViewError, .invalidURL)
+        }
+    }
 }
 
 private class MockWebAuthenticationSession: ASWebAuthenticationSession {
@@ -148,6 +277,9 @@ private class MockWebAuthenticationSession: ASWebAuthenticationSession {
     var overrideCompletionResult: Result<URL, Error>?
 
     private let completionHandler: CompletionHandler
+    private(set) var completionCount = 0
+    private(set) var cancelCount = 0
+    var didCancel: Bool { cancelCount > 0 }
 
     override init(url: URL, callbackURLScheme: String?, completionHandler: @escaping CompletionHandler) {
         self.completionHandler = completionHandler
@@ -162,13 +294,22 @@ private class MockWebAuthenticationSession: ASWebAuthenticationSession {
         didStart = true
 
         if let overrideCompletionResult {
-            do {
-                completionHandler(try overrideCompletionResult.get(), nil)
-            } catch {
-                completionHandler(nil, error)
-            }
+            complete(with: overrideCompletionResult)
         }
 
         return overrideCanStart
+    }
+
+    override func cancel() {
+        cancelCount += 1
+    }
+
+    func complete(with result: Result<URL, Error>) {
+        completionCount += 1
+        do {
+            completionHandler(try result.get(), nil)
+        } catch {
+            completionHandler(nil, error)
+        }
     }
 }

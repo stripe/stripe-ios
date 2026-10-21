@@ -5,20 +5,13 @@
 //  Created by Nick Porter on 2/24/26.
 
 import Combine
+@_spi(STP) import StripeCore
 @_spi(STP) import StripePaymentSheet
 import SwiftUI
 
 extension CheckoutPlayground {
-    struct ExpressCheckoutElementSettings {
-        var isEnabled = true
-        var applePayDisplay: ExpressCheckoutElement.ApplePayConfiguration.Display = .automatic
-        var linkDisplay: ExpressCheckoutElement.LinkConfiguration.Display = .automatic
-        var shippingAddressRequired: Bool = false
-        var billingDetailsCollectionConfiguration = ExpressCheckoutElement.BillingDetailsCollectionConfiguration()
-    }
-
     @MainActor
-    final class ViewModel: ObservableObject {
+    final class ViewModel: ObservableObject, STPAnalyticsClientDelegate {
 
         // Unified mode currently supports card and Link.
         static let availablePaymentMethods = [
@@ -49,11 +42,14 @@ extension CheckoutPlayground {
         }
         @Published var currency: Currency
         @Published var customerType: CustomerType
-        @Published var lineItems: [LineItemConfig]
+        @Published var email: EmailSettings
+        @Published var cartScenario: CartScenario
         @Published var shippingAddressCollection: Bool
-        @Published var defaultShippingAddressOption: DefaultShippingAddressOption
-        @Published var customDefaultShippingAddress: DefaultShippingAddress
+        @Published var defaultShippingAddressOption: DefaultAddressOption
+        @Published var customDefaultShippingAddress: DefaultAddress
         @Published var billingAddressCollection: BillingAddressCollection
+        @Published var defaultBillingAddressOption: DefaultAddressOption
+        @Published var customDefaultBillingAddress: DefaultAddress
         @Published var automaticTax: Bool
         @Published var checkoutSessionPaymentMethodSave: Bool
         @Published var checkoutSessionPaymentMethodRemove: Bool
@@ -73,19 +69,22 @@ extension CheckoutPlayground {
         private var settingsSaveSubscription: AnyCancellable?
         private var isLinkModeOverrideActive = false
 
-        init() {
-            let settings = Self.settingsFromDefaults() ?? Settings()
+        init(settings: Settings? = nil) {
+            let settings = settings ?? Self.settingsFromDefaults() ?? Settings()
             uiFramework = settings.uiFramework
             integrationType = settings.integrationType
-            expressCheckoutElement = ExpressCheckoutElementSettings(isEnabled: settings.showExpressCheckoutElement)
+            expressCheckoutElement = settings.expressCheckoutElement
             linkMode = settings.linkMode
             currency = settings.currency
             customerType = settings.customerType
-            lineItems = settings.lineItems
+            email = settings.email ?? Self.legacyEmailSettings(settings)
+            cartScenario = settings.cartScenario
             shippingAddressCollection = settings.shippingAddressCollection
             defaultShippingAddressOption = settings.defaultShippingAddressOption
             customDefaultShippingAddress = settings.customDefaultShippingAddress
             billingAddressCollection = settings.billingAddressCollection
+            defaultBillingAddressOption = settings.defaultBillingAddressOption ?? .none
+            customDefaultBillingAddress = settings.customDefaultBillingAddress ?? .usTestAddress
             automaticTax = settings.automaticTax
             checkoutSessionPaymentMethodSave = settings.checkoutSessionPaymentMethodSave
             checkoutSessionPaymentMethodRemove = settings.checkoutSessionPaymentMethodRemove
@@ -94,7 +93,7 @@ extension CheckoutPlayground {
             paymentMethodTypes = settings.paymentMethodTypes
             currencySelectorAppearance = settings.currencySelectorAppearance
             checkoutEndpointOption = settings.checkoutEndpointOption
-            checkoutEndpoint = settings.checkoutEndpoint
+            checkoutEndpoint = EndpointOption.normalizedBaseURL(from: settings.checkoutEndpoint)
             delayPaymentPagesRequests = settings.delayPaymentPagesRequests
             settingsSaveSubscription = objectWillChange.sink { [weak self] _ in
                 guard let self else {
@@ -119,10 +118,46 @@ extension CheckoutPlayground {
         }
 
         var isButtonDisabled: Bool {
-            isCreating || (!automaticPaymentMethods && paymentMethodTypes.isEmpty) || lineItems.isEmpty
+            isCreating || (!automaticPaymentMethods && paymentMethodTypes.isEmpty) || lineItems.isEmpty || emailConfigurationError != nil
         }
 
-        var defaultShippingAddress: DefaultShippingAddress? {
+        var emailConfigurationError: String? {
+            if email.source == .checkoutSession && customerType != .guest {
+                return "Checkout Session server email requires Guest. Choose Guest or a different email source."
+            }
+            if email.source == .customer && customerType == .guest {
+                return "Customer server email requires a New or Returning Customer."
+            }
+            if adaptivePricingCountry != .none && !email.source.isServer {
+                return "AP location simulation requires server email. Choose No Override under Currency Selector, or select a server email source."
+            }
+            if email.source.isServer && resolvedEmail.email == nil {
+                return "Enter a server email, or choose None for no email."
+            }
+            return nil
+        }
+
+        var resolvedEmail: EmailSettings {
+            var resolved = email
+            if email.source.isServer && adaptivePricingCountry != .none {
+                resolved.value = "test+location_\(adaptivePricingCountry.rawValue.uppercased())@example.com"
+            }
+            return resolved
+        }
+
+        private static func legacyEmailSettings(_ settings: Settings) -> EmailSettings {
+            // Preserve saved playground behavior when loading settings created before the email picker.
+            if settings.customerType == .guest {
+                return .init()
+            }
+            return .init(source: settings.adaptivePricingCountry == .none ? .none : .customer)
+        }
+
+        var lineItems: [LineItemConfig] {
+            cartScenario.lineItems
+        }
+
+        var defaultShippingAddress: DefaultAddress? {
             switch defaultShippingAddressOption {
             case .none:
                 return nil
@@ -133,8 +168,25 @@ extension CheckoutPlayground {
             }
         }
 
+        var defaultBillingAddress: DefaultAddress? {
+            switch defaultBillingAddressOption {
+            case .none:
+                return nil
+            case .usTestAddress:
+                return .usTestAddress
+            case .custom:
+                return customDefaultBillingAddress
+            }
+        }
+
         func createSession() async {
+            if let emailConfigurationError {
+                errorMessage = emailConfigurationError
+                return
+            }
             serializeSettingsToNSUserDefaults()
+            AnalyticsLogObserver.shared.analyticsLog.removeAll()
+            STPAnalyticsClient.sharedClient.delegate = self
             isCreating = true
             errorMessage = nil
             defer {
@@ -142,30 +194,27 @@ extension CheckoutPlayground {
             }
 
             do {
-                guard let backendURL = URL(string: checkoutEndpoint) else {
+                guard let backendURL = URL(string: EndpointOption.normalizedBaseURL(from: checkoutEndpoint)) else {
                     throw NSError(domain: "CheckoutPlayground", code: 0, userInfo: [
-                        NSLocalizedDescriptionKey: "Invalid endpoint URL: \(checkoutEndpoint)",
+                        NSLocalizedDescriptionKey: "Invalid backend URL: \(checkoutEndpoint)",
                     ])
                 }
-                let body = buildRequestBody()
-                var request = URLRequest(url: backendURL)
-                request.httpMethod = "POST"
-                request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-                request.httpBody = try JSONSerialization.data(withJSONObject: body)
-
-                let (data, response) = try await URLSession.shared.data(for: request)
-                let httpResponse = response as? HTTPURLResponse
-                let responseString = String(data: data, encoding: .utf8) ?? "(not utf8)"
-                print("[CheckoutPlayground] HTTP status: \(httpResponse?.statusCode ?? -1)")
-                print("[CheckoutPlayground] Response body: \(responseString)")
-
-                guard let json = try JSONSerialization.jsonObject(with: data) as? [String: Any],
-                      let publishableKey = json["publishableKey"] as? String,
-                      let clientSecret = json["checkoutSessionClientSecret"] as? String else {
-                    throw NSError(domain: "CheckoutPlayground", code: 0, userInfo: [
-                        NSLocalizedDescriptionKey: "Invalid backend response: \(responseString)",
-                    ])
-                }
+                let backend = PlaygroundBackend(baseURL: backendURL)
+                let publishableKey = try await backend.fetchPublishableKey()
+                let apiClient = STPAPIClient(publishableKey: publishableKey)
+                let clientSecret = try await SessionFactory(backend: backend, apiClient: apiClient).create(
+                    currency: currency,
+                    customerType: customerType,
+                    lineItems: lineItems,
+                    shippingAddressCollection: shippingAddressCollection,
+                    billingAddressCollection: billingAddressCollection,
+                    automaticTax: automaticTax,
+                    paymentMethodSave: checkoutSessionPaymentMethodSave,
+                    paymentMethodRemove: checkoutSessionPaymentMethodRemove,
+                    email: resolvedEmail,
+                    automaticPaymentMethods: automaticPaymentMethods,
+                    paymentMethodTypes: paymentMethodTypes
+                )
 
                 // Example app behavior: the local backend response controls the Stripe publishable key.
                 STPAPIClient.shared.publishableKey = publishableKey
@@ -176,49 +225,32 @@ extension CheckoutPlayground {
             }
         }
 
-        func reset() {
-            apply(Settings())
+        func analyticsClientDidLog(analyticsClient: STPAnalyticsClient, payload: [String: Any]) {
+            DispatchQueue.main.async {
+                AnalyticsLogObserver.shared.analyticsLog.append(payload)
+            }
         }
 
-        private func buildRequestBody() -> [String: Any] {
-            var body: [String: Any] = [
-                "merchant_country_code": "us_tax",
-                "mode": "unified",
-                "use_one_time_price": true,
-                "currency": currency.rawValue,
-                "customer": customerType.rawValue,
-                "shipping_address_collection": shippingAddressCollection,
-                "billing_address_collection": billingAddressCollection == .required,
-                "automatic_tax": automaticTax,
-                "checkout_session_payment_method_save": checkoutSessionPaymentMethodSave ? "enabled" : "disabled",
-                "checkout_session_payment_method_remove": checkoutSessionPaymentMethodRemove ? "enabled" : "disabled",
-            ]
-            if automaticPaymentMethods {
-                body["automatic_payment_methods"] = true
-            } else {
-                body["payment_method_types"] = Array(paymentMethodTypes)
-            }
-            if adaptivePricingCountry != .none {
-                let countryCode = adaptivePricingCountry.rawValue.uppercased()
-                body["customer_email"] = "test+location_\(countryCode)@example.com"
-            }
-
-            return body
+        func reset() {
+            apply(Settings())
         }
 
         private var settings: Settings {
             Settings(
                 uiFramework: uiFramework,
                 integrationType: integrationType,
-                showExpressCheckoutElement: expressCheckoutElement.isEnabled,
+                expressCheckoutElement: expressCheckoutElement,
                 linkMode: linkMode,
                 currency: currency,
                 customerType: customerType,
-                lineItems: lineItems,
+                email: email,
+                cartScenario: cartScenario,
                 shippingAddressCollection: shippingAddressCollection,
                 defaultShippingAddressOption: defaultShippingAddressOption,
                 customDefaultShippingAddress: customDefaultShippingAddress,
                 billingAddressCollection: billingAddressCollection,
+                defaultBillingAddressOption: defaultBillingAddressOption,
+                customDefaultBillingAddress: customDefaultBillingAddress,
                 automaticTax: automaticTax,
                 checkoutSessionPaymentMethodSave: checkoutSessionPaymentMethodSave,
                 checkoutSessionPaymentMethodRemove: checkoutSessionPaymentMethodRemove,
@@ -235,15 +267,18 @@ extension CheckoutPlayground {
         private func apply(_ settings: Settings) {
             uiFramework = settings.uiFramework
             integrationType = settings.integrationType
-            expressCheckoutElement.isEnabled = settings.showExpressCheckoutElement
+            expressCheckoutElement = settings.expressCheckoutElement
             linkMode = settings.linkMode
             currency = settings.currency
             customerType = settings.customerType
-            lineItems = settings.lineItems
+            email = settings.email ?? Self.legacyEmailSettings(settings)
+            cartScenario = settings.cartScenario
             shippingAddressCollection = settings.shippingAddressCollection
             defaultShippingAddressOption = settings.defaultShippingAddressOption
             customDefaultShippingAddress = settings.customDefaultShippingAddress
             billingAddressCollection = settings.billingAddressCollection
+            defaultBillingAddressOption = settings.defaultBillingAddressOption ?? .none
+            customDefaultBillingAddress = settings.customDefaultBillingAddress ?? .usTestAddress
             automaticTax = settings.automaticTax
             checkoutSessionPaymentMethodSave = settings.checkoutSessionPaymentMethodSave
             checkoutSessionPaymentMethodRemove = settings.checkoutSessionPaymentMethodRemove
@@ -278,5 +313,6 @@ extension CheckoutPlayground {
                 return nil
             }
         }
+
     }
 }

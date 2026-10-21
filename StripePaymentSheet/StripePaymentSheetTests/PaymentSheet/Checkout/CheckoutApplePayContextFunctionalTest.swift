@@ -81,7 +81,6 @@ class CheckoutApplePayContextFunctionalTest: STPNetworkStubbingTestCase {
             apiClient: apiClient,
             returnURL: returnURL,
             merchantDisplayName: "Functional Test Merchant",
-            billingDetailsCollectionConfiguration: PaymentSheet.BillingDetailsCollectionConfiguration(),
             confirmationHandler: { requestParameters in
                 await CheckoutController.confirmCheckoutSession(
                     with: requestParameters,

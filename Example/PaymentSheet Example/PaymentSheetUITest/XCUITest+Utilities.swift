@@ -31,7 +31,7 @@ extension XCUIElement {
         // the tap point may be clipped or obscured. Bound the loop so a missing element
         // fails fast instead of scrolling forever.
         var scrolls = 0
-        while !self.isHittable && scrolls < maxScrolls {
+        while (!self.isHittable || !app.frame.contains(self.frame)) && scrolls < maxScrolls {
             app.swipeUp()
             scrolls += 1
         }

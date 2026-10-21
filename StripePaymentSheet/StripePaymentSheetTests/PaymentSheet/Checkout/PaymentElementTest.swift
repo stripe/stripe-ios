@@ -9,7 +9,7 @@ import OHHTTPStubs
 @testable @_spi(STP) import StripeCore
 @testable @_spi(STP) import StripeCoreTestUtils
 @testable @_spi(STP) import StripePayments
-@testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(AppearanceAPIAdditionsPreview) @_spi(STP) import StripePaymentSheet
 @testable @_spi(STP) import StripePaymentsTestUtils
 @testable @_spi(STP) import StripeUICore
 import XCTest
@@ -58,7 +58,7 @@ final class PaymentElementTest: XCTestCase {
         let paymentSheetConfiguration = paymentElement.paymentSheetFlowController.configuration
         let embeddedConfiguration = paymentElement.embeddedPaymentElement.configuration
 
-        // Then both configurations receive the same default billing details
+        // Then both configurations receive the Checkout defaults for prefill
         XCTAssertEqual(checkout.configuration.returnURL, "stripe-ios-test://checkout-return")
         XCTAssertEqual(paymentSheetConfiguration.defaultBillingDetails.email, "test@example.com")
         XCTAssertEqual(paymentSheetConfiguration.defaultBillingDetails.phone, "+15555550123")
@@ -69,8 +69,30 @@ final class PaymentElementTest: XCTestCase {
         XCTAssertEqual(paymentSheetConfiguration.defaultBillingDetails.address.city, "San Francisco")
         XCTAssertEqual(paymentSheetConfiguration.defaultBillingDetails.address.state, "CA")
         XCTAssertEqual(paymentSheetConfiguration.defaultBillingDetails.address.postalCode, "94105")
+        XCTAssertEqual(checkout.session.email, "test@example.com")
 
         XCTAssertEqual(embeddedConfiguration.defaultBillingDetails, paymentSheetConfiguration.defaultBillingDetails)
+    }
+
+    func testUpdateEmailUpdatesPaymentElementPrefill() async throws {
+        // Given Checkout with Payment Element
+        let checkout = try await CheckoutController(
+            configuration: CheckoutTestHelpers.makeConfiguration()
+        )
+
+        // When the Checkout email is updated
+        try await checkout.updateEmail("updated@example.com")
+        let paymentElement = checkout.getPaymentElement()
+
+        // Then both Payment Element presentations receive the updated email for prefill
+        XCTAssertEqual(
+            paymentElement.paymentSheetFlowController.configuration.defaultBillingDetails.email,
+            "updated@example.com"
+        )
+        XCTAssertEqual(
+            paymentElement.embeddedPaymentElement.configuration.defaultBillingDetails.email,
+            "updated@example.com"
+        )
     }
 
     func testConfigurationSetsCheckoutMerchantDisplayName() async throws {
@@ -121,7 +143,7 @@ final class PaymentElementTest: XCTestCase {
         // Given Apple Pay configured for a Checkout Session with a non-US merchant country
         var checkoutConfiguration = CheckoutController.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
         var paymentElementConfiguration = PaymentElement.Configuration()
-        paymentElementConfiguration.applePayConfiguration = PaymentElement.ApplePayConfiguration(
+        paymentElementConfiguration.applePayConfiguration = PaymentElement.Configuration.ApplePayConfiguration(
             merchantId: "merchant.com.example",
             buttonType: .donate
         )
@@ -232,22 +254,19 @@ final class PaymentElementTest: XCTestCase {
         XCTAssertEqual(paymentElement.embeddedPaymentElement.configuration.billingDetailsCollectionConfiguration.address, .full)
     }
 
-    func testConfigurationPreservesFullBillingAddressCollectionWhenCheckoutBillingAddressCollectionIsAutomatic() async throws {
-        // Given full billing address collection in PaymentElement
-        var checkoutConfiguration = CheckoutController.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
-        var paymentElementConfiguration = PaymentElement.Configuration()
-        paymentElementConfiguration.billingDetailsCollectionConfiguration.address = .full
-        checkoutConfiguration.paymentElement = paymentElementConfiguration
+    func testConfigurationUsesAutomaticBillingAddressCollectionWhenCheckoutBillingAddressCollectionIsAutomatic() async throws {
+        // Given a Checkout Session with automatic billing address collection
+        let session = CheckoutTestHelpers.makeOpenSession(billingAddressCollection: "auto")
 
-        // When Checkout uses automatic billing address collection
+        // When Checkout loads its PaymentElement
         let checkout = try await CheckoutController(
-            configuration: CheckoutTestHelpers.makeConfiguration(configuration: checkoutConfiguration)
+            configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: session)
         )
         let paymentElement = checkout.getPaymentElement()
 
-        // Then both configurations preserve full billing address collection
-        XCTAssertEqual(paymentElement.paymentSheetFlowController.configuration.billingDetailsCollectionConfiguration.address, .full)
-        XCTAssertEqual(paymentElement.embeddedPaymentElement.configuration.billingDetailsCollectionConfiguration.address, .full)
+        // Then both configurations use automatic billing address collection
+        XCTAssertEqual(paymentElement.paymentSheetFlowController.configuration.billingDetailsCollectionConfiguration.address, .automatic)
+        XCTAssertEqual(paymentElement.embeddedPaymentElement.configuration.billingDetailsCollectionConfiguration.address, .automatic)
     }
 
     func testInitialSavedPaymentOptionUpdatesCheckoutBillingTaxRegion() async throws {
@@ -268,8 +287,157 @@ final class PaymentElementTest: XCTestCase {
         XCTAssertEqual(updateRequest.params["tax_region[postal_code]"], "94080")
 
         // ...and the saved card remains selected after PaymentElement refreshes.
-        XCTAssertEqual(checkout.session.paymentOption?.label, "•••• 4242")
-        XCTAssertEqual(checkout.session.paymentOption?.billingDetails?.address.country, "US")
+        XCTAssertEqual(checkout.session.paymentOption?.label, "Visa")
+        XCTAssertEqual(checkout.session.paymentOption?.sublabel, "•••• 4242")
+        let billingDetails = try XCTUnwrap(checkout.session.paymentOption?.billingDetails)
+        XCTAssertEqual(billingDetails.name, "Jenny Rosen")
+        XCTAssertEqual(billingDetails.email, "jenny.rosen@example.com")
+        XCTAssertEqual(billingDetails.phone, "+15555555555")
+        XCTAssertEqual(billingDetails.address?.country, "US")
+        XCTAssertEqual(billingDetails.address?.line1, "354 Oyster Point Blvd")
+        XCTAssertEqual(billingDetails.address?.city, "South San Francisco")
+        XCTAssertEqual(billingDetails.address?.state, "CA")
+        XCTAssertEqual(billingDetails.address?.postalCode, "94080")
+    }
+
+    func testPaymentOptionLabelsForBothPresentations() {
+        // Given new and saved payment options, including methods with no additional details
+        let cardParams = STPPaymentMethodCardParams()
+        cardParams.number = "4242424242424242"
+        let confirmParams = IntentConfirmParams(type: .stripe(.card))
+        confirmParams.paymentMethodParams.card = cardParams
+        let bankConfirmParams = IntentConfirmParams(type: .instantDebits)
+        bankConfirmParams.instantDebitsLinkedBank = InstantDebitsLinkedBank(
+            paymentMethod: .init(id: "pm_1234"),
+            bankName: "Stripe Bank",
+            last4: "6789",
+            linkMode: nil,
+            incentiveEligible: false,
+            linkAccountSessionId: "fcsess_"
+        )
+        let cases: [(PaymentSheet.PaymentOption, String, String?)] = [
+            (.new(confirmParams: confirmParams), "Visa", "•••• 4242"),
+            (.saved(paymentMethod: STPPaymentMethod._testCard(), confirmParams: nil), "Visa", "•••• 4242"),
+            (.saved(paymentMethod: STPPaymentMethod._testUSBankAccount(), confirmParams: nil), "STRIPE TEST BANK", "••••6789"),
+            (.saved(paymentMethod: STPPaymentMethod._testLink(displayName: "My Personal Card"), confirmParams: nil), "Link", "My Personal Card •••• 4242"),
+            (.saved(paymentMethod: STPPaymentMethod._testCard(), confirmParams: bankConfirmParams), "Stripe Bank", "••••6789"),
+            (.new(confirmParams: IntentConfirmParams(type: .stripe(.USBankAccount))), "US bank account", nil),
+            (.link(option: .wallet(brand: .link)), "Link", nil),
+            (.applePay, "Apple Pay", nil),
+            (.new(confirmParams: IntentConfirmParams(type: .stripe(.payPal))), "PayPal", nil),
+        ]
+
+        for (paymentOption, label, sublabel) in cases {
+            // When converting sheet and embedded selections to Checkout display data
+            let sheetData = CheckoutController.Session.PaymentOptionDisplayData(
+                PaymentSheet.FlowController.PaymentOptionDisplayData(
+                    paymentOption: paymentOption, currency: "usd", iconStyle: .filled
+                )
+            )
+            let mandateText = NSAttributedString(string: "Mandate")
+            let embeddedData = CheckoutController.Session.PaymentOptionDisplayData(
+                EmbeddedPaymentElement.PaymentOptionDisplayData(
+                    paymentOption: paymentOption, mandateText: mandateText, currency: "usd", iconStyle: .filled
+                )
+            )
+
+            // Then both presentations expose the primary label and optional details
+            for displayData in [sheetData, embeddedData] {
+                XCTAssertEqual(displayData.label, label)
+                XCTAssertEqual(displayData.sublabel, sublabel)
+            }
+            XCTAssertNil(sheetData.mandateText)
+            XCTAssertEqual(embeddedData.mandateText, mandateText)
+        }
+    }
+
+    func testPaymentOptionLabelsUseResolvedLinkBrand() {
+        // Given a saved Link card using Onelink branding
+        let paymentMethod = STPPaymentMethod._testCard()
+        paymentMethod.isLinkOrigin = true
+        let paymentOption = PaymentSheet.PaymentOption.saved(paymentMethod: paymentMethod, confirmParams: nil)
+
+        // When converting either Payment Element presentation to Checkout display data
+        let sheetData = CheckoutController.Session.PaymentOptionDisplayData(
+            PaymentSheet.FlowController.PaymentOptionDisplayData(
+                paymentOption: paymentOption, currency: "usd", iconStyle: .filled, linkBrand: .onelink
+            )
+        )
+        let embeddedData = CheckoutController.Session.PaymentOptionDisplayData(
+            EmbeddedPaymentElement.PaymentOptionDisplayData(
+                paymentOption: paymentOption, mandateText: nil, currency: "usd", iconStyle: .filled, linkBrand: .onelink
+            )
+        )
+
+        // Then both presentations preserve the resolved brand and card details
+        for displayData in [sheetData, embeddedData] {
+            XCTAssertEqual(displayData.label, "Onelink")
+            XCTAssertEqual(displayData.sublabel, "•••• 4242")
+        }
+    }
+
+    func testFlowControllerPublishesSeparateLabelsToCheckout() async throws {
+        // Given Checkout with a saved card selected
+        let (configuration, _) = try stubAutomaticTaxSavedCardCheckout()
+        let checkout = try await CheckoutController(configuration: configuration)
+        let paymentElement = checkout.getPaymentElement()
+        XCTAssertFalse(paymentElement.paymentOptionSourceOfTruthIsFlowController)
+
+        // When FlowController publishes its selection
+        paymentElement.paymentSheetFlowController.updatePaymentOption()
+
+        // Then Checkout receives the separate labels through the subscription
+        XCTAssertTrue(paymentElement.paymentOptionSourceOfTruthIsFlowController)
+        XCTAssertEqual(checkout.session.paymentOption?.label, "Visa")
+        XCTAssertEqual(checkout.session.paymentOption?.sublabel, "•••• 4242")
+        XCTAssertEqual(paymentElement.paymentSheetFlowController.paymentOption?.label, "•••• 4242")
+    }
+
+    func testEmbeddedPublishesChangesToLinkSublabel() async throws {
+        // Given Checkout with a Link card selected
+        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration())
+        let embedded = checkout.getPaymentElement().embeddedPaymentElement
+        let account = PaymentSheetLinkAccount._testValue(email: "patrick@example.com", isRegistered: true)
+        let paymentDetails = LinkStubs.paymentMethods()
+        embedded._test_paymentOption = .link(option: .withPaymentDetails(
+            brand: .link, account: account, paymentDetails: paymentDetails[LinkStubs.PaymentMethodIndices.card],
+            confirmationExtras: nil, shippingAddress: nil
+        ))
+        embedded.informDelegateIfPaymentOptionUpdated()
+        let previousSublabel = checkout.session.paymentOption?.sublabel
+        XCTAssertEqual(embedded.paymentOption?.label, "Link")
+
+        // When Link selects a bank account, the legacy label stays the same
+        embedded._test_paymentOption = .link(option: .withPaymentDetails(
+            brand: .link, account: account, paymentDetails: paymentDetails[LinkStubs.PaymentMethodIndices.bankAccount],
+            confirmationExtras: nil, shippingAddress: nil
+        ))
+        XCTAssertEqual(embedded.paymentOption?.label, "Link")
+        embedded.informDelegateIfPaymentOptionUpdated()
+
+        // Then the changed sublabel still triggers an update to Checkout
+        XCTAssertEqual(checkout.session.paymentOption?.label, "Link")
+        XCTAssertEqual(checkout.session.paymentOption?.sublabel, "Patrick's bank •••• 1234")
+        XCTAssertNotEqual(checkout.session.paymentOption?.sublabel, previousSublabel)
+    }
+
+    func testPaymentOptionBillingDetailsOmitsEmptyAddress() {
+        // Given a payment option whose PaymentSheet billing details have no address fields
+        let paymentOption = EmbeddedPaymentElement.PaymentOptionDisplayData(
+            image: UIImage(),
+            label: "•••• 4242",
+            labels: .init(label: "Visa", sublabel: "•••• 4242"),
+            billingDetails: .init(),
+            paymentMethodType: "card",
+            mandateText: nil,
+            shippingDetails: nil
+        )
+
+        // When converting it to Checkout display data
+        let displayData = CheckoutController.Session.PaymentOptionDisplayData(paymentOption)
+
+        // Then Checkout represents the absent address as nil, not an empty Address()
+        XCTAssertNil(displayData.billingDetails?.address)
     }
 
     func testClearPaymentOptionResetsBillingTaxRegionToCountry() async throws {

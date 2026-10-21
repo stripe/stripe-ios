@@ -46,7 +46,19 @@
 
 "Buy now or pay later with Klarna" = "Paiement fractionné avec Klarna";
 
+"By confirming your payment with GCash, you allow %@ to charge your GCash account for future payments in accordance with their terms." = "En confirmant votre paiement avec GCash, vous autorisez %@ à débiter votre compte GCash pour les paiements à venir, conformément à ses conditions.";
+
+"By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "En confirmant votre paiement avec NICEPAY, vous autorisez %@ à débiter ce mode de paiement pour des paiements futurs conformément à ses conditions.";
+
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "En confirmant votre paiement avec PayPal, vous autorisez %@ à débiter votre compte PayPal pour les paiements à venir, conformément à ses conditions.";
+
+"By confirming your payment with Touch 'n Go, you allow %@ to charge your Touch 'n Go account for future payments in accordance with their terms." = "En confirmant votre paiement avec Touch ’n Go, vous autorisez %@ à débiter votre compte Touch ’n Go pour les paiements à venir, conformément à ses conditions.";
+
+"By confirming your payment with TrueMoney, you allow %@ to charge your TrueMoney account for future payments in accordance with their terms." = "En confirmant votre paiement avec TrueMoney, vous autorisez %@ à débiter votre compte TrueMoney pour les paiements à venir, conformément à ses conditions.";
+
+"By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their <terms>terms of use</terms>." = "En confirmant votre paiement, vous acceptez que votre transaction soit traitée par Global Stack Services Limited en tant que marchand officiel et conformément à ses <terms>conditions d’utilisation</terms>.";
+
+"By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their <terms>terms</terms>." = "En confirmant votre paiement, vous acceptez que votre transaction soit traitée par Global Stack Services Limited en tant que marchand officiel et conformément à ses <terms>conditions</terms>.";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "En poursuivant sur Amazon Pay, vous autorisez %@ à débiter votre compte Amazon Pay pour les paiements à venir, conformément à ses conditions.";
 
@@ -110,6 +122,8 @@
 
 "Code sent" = "Code envoyé";
 
+"Complete the payment using Pix to finish the purchase." = "Effectuez le paiement par Pix pour finaliser l’achat.";
+
 "Confirm" = "Confirmer";
 
 "Confirm payment details" = "Confirmer les informations de paiement";
@@ -170,6 +184,8 @@
 
 "IBAN" = "IBAN";
 
+"Invoice payment for business buyers." = "Paiement de facture pour les clients.";
+
 "Keep Editing" = "Continuer la modification";
 
 "Last 4 digits of SSN" = "4 derniers chiffres du numéro de sécurité sociale";
@@ -191,6 +207,10 @@
 "Manage your payment methods" = "Gérer vos moyens de paiement";
 
 "Name on card" = "Nom du titulaire de la carte";
+
+"Naver Pay Card" = "Carte Naver Pay";
+
+"Naver Pay Money/Point" = "Naver Pay Money/Point";
 
 "New card" = "Nouvelle carte";
 
@@ -248,8 +268,6 @@
 
 "Point the camera at your card." = "Pointez le capteur de l'appareil photo sur votre carte.";
 
-"Processing..." = "Traitement en cours...";
-
 "Przelewy24 Bank" = "Banque Przelewy24";
 
 "Remove %@" = "Supprimer %@";
@@ -288,6 +306,8 @@
 
 "Select card" = "Choisir une carte";
 
+"Select how you want to pay:" = "Choisissez la façon dont vous souhaitez payer :";
+
 "Select payment method" = "Choisir un moyen de paiement";
 
 "Select your payment method" = "Sélectionnez votre moyen de paiement";
@@ -324,6 +344,10 @@
 
 "Tax" = "Taxe";
 
+"Terms and Conditions" = "Conditions générales";
+
+"Terms of Service" = "Conditions d’utilisation du service";
+
 "The IBAN you entered is incomplete." = "L'IBAN que vous avez saisi est incomplet.";
 
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "L’IBAN que vous avez saisi n’est pas valide, \"%@\" n’est pas un code pays pris en charge.";
@@ -331,6 +355,8 @@
 "The provided verification code has expired." = "Le code de vérification indiqué a expiré.";
 
 "The provided verification code is incorrect." = "Le code de vérification fourni est incorrect.";
+
+"This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Il s’agit d’un achat international qui exclut des frais IOF de 3,5 %. En continuant, vous reconnaissez et acceptez <terms>les conditions générales d’utilisation d’Ebanx</terms>.";
 
 "This is your default" = "Votre moyen de paiement par défaut";
 

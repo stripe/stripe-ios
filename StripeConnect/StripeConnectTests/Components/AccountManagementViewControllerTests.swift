@@ -25,6 +25,7 @@ class AccountManagementViewControllerTests: XCTestCase {
     @MainActor
     func testDelegate() async throws {
         let vc = componentManager.createAccountManagementViewController()
+        try await vc.webVC.webView.loadTrustedDocumentPreservingDelegate()
 
         let expectationDidFail = XCTestExpectation(description: "didFail called")
         let delegate = AccountManagementViewControllerDelegatePassThrough { onboardingVC, error in
@@ -49,6 +50,7 @@ class AccountManagementViewControllerTests: XCTestCase {
                 return collectionOptions
             }()
         )
+        try await vc.webVC.webView.loadTrustedDocumentPreservingDelegate()
 
         try await vc.webVC.webView.evaluateMessageWithReply(name: "fetchInitComponentProps",
                                                             json: "{}",

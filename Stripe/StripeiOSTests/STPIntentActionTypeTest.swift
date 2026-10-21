@@ -43,6 +43,10 @@ class STPIntentActionTypeTest: XCTestCase {
             STPIntentActionType(string: "await_authorization"),
             STPIntentActionType.awaitAuthorization
         )
+        XCTAssertEqual(
+            STPIntentActionType(string: "pix_display_qr_code"),
+            STPIntentActionType.pixDisplayQrCode
+        )
 
         XCTAssertEqual(
             STPIntentActionType(string: "garbage"),

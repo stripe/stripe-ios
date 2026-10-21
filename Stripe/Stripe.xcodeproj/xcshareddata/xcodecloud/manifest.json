@@ -1,0 +1,9 @@
+{
+  "id" : "4ba6f78e-4f94-4fc4-acba-6d0788141dbe",
+  "targets" : [
+    {
+      "id" : "F5D3978D-8EE7-4D91-B5F5-C73632939061",
+      "name" : "Stripe"
+    }
+  ]
+}

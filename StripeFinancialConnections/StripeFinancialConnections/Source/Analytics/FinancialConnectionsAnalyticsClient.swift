@@ -12,7 +12,7 @@ import UIKit
 protocol FinancialConnectionsAnalyticsClientDelegate: AnyObject {
     func analyticsClient(
         _ analyticsClient: FinancialConnectionsAnalyticsClient,
-        didReceiveEvent event: FinancialConnectionsEvent
+        didReceiveEvent event: FinancialConnectionsEventPayload
     )
 }
 
@@ -82,6 +82,32 @@ final class FinancialConnectionsAnalyticsClient {
 
 extension FinancialConnectionsAnalyticsClient {
 
+    func logExternalEvent(
+        _ event: FinancialConnectionsEvent,
+        pane: FinancialConnectionsSessionManifest.NextPane
+    ) {
+        let payload: [String: Any] = [
+            "name": event.name.rawValue,
+            "financialConnectionsSessionId": event.financialConnectionsSessionId,
+            "metadata": event.metadata.dictionary,
+        ]
+        guard
+            let data = try? JSONSerialization.data(withJSONObject: payload),
+            let serializedPayload = String(data: data, encoding: .utf8)
+        else {
+            return
+        }
+        log(
+            eventName: "external_on_event.emitted",
+            parameters: [
+                "event_payload": serializedPayload,
+                "context_source": "native_sdk",
+                "context_pane": pane.rawValue,
+            ],
+            pane: pane
+        )
+    }
+
     func logPaneLoaded(pane: FinancialConnectionsSessionManifest.NextPane) {
         log(eventName: "pane.loaded", pane: pane)
     }
@@ -119,7 +145,7 @@ extension FinancialConnectionsAnalyticsClient {
         pane: FinancialConnectionsSessionManifest.NextPane
     ) {
         FeedbackGeneratorAdapter.errorOccurred()
-        FinancialConnectionsEvent
+        FinancialConnectionsEventPayload
             .events(fromError: error)
             .forEach { event in
                 delegate?.analyticsClient(self, didReceiveEvent: event)

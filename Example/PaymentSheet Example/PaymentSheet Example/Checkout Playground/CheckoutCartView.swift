@@ -13,6 +13,7 @@ struct CheckoutCartView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var checkout: CheckoutController?
     @StateObject private var diagnostics = CheckoutSessionDiagnostics()
+    @StateObject private var analyticsLogObserver = AnalyticsLogObserver.shared
 
     @State private var isLoading = false
     @State private var errorMessage: String?
@@ -20,8 +21,10 @@ struct CheckoutCartView: View {
     @State private var showsCheckoutDetails = false
 
     let clientSecret: String
+    let emailSettings: CheckoutPlayground.EmailSettings
     let shippingAddressCollection: Bool
-    let defaultShippingAddress: CheckoutPlayground.DefaultShippingAddress?
+    let defaultShippingAddress: CheckoutPlayground.DefaultAddress?
+    let defaultBillingAddress: CheckoutPlayground.DefaultAddress?
     let adaptivePricing: Bool
     let integrationType: CheckoutPlayground.IntegrationType
     let expressCheckoutElementSettings: CheckoutPlayground.ExpressCheckoutElementSettings
@@ -37,8 +40,9 @@ struct CheckoutCartView: View {
                 if let checkout {
                     CheckoutCartContentView(
                         checkout: checkout,
+                        emailSource: emailSettings.source,
                         showsCurrencySelectorElement: adaptivePricing,
-                        showsShippingAddressSection: shippingAddressCollection || checkout.session.shippingAddress != nil,
+                        showsShippingAddressSection: shippingAddressCollection,
                         errorMessage: errorMessage,
                         showExpressCheckoutElement: expressCheckoutElementSettings.isEnabled,
                         integrationType: integrationType
@@ -62,6 +66,8 @@ struct CheckoutCartView: View {
                         .ignoresSafeArea()
                     ProgressView()
                 }
+
+                AnalyticsLogForTesting(analyticsLog: $analyticsLogObserver.analyticsLog)
             }
             .navigationTitle("Your Cart")
             .navigationBarTitleDisplayMode(.inline)
@@ -145,26 +151,35 @@ struct CheckoutCartView: View {
             )
             if integrationType != .eceOnly {
                 var paymentElementConfiguration = PaymentElement.Configuration()
-                paymentElementConfiguration.applePayConfiguration = PaymentElement.ApplePayConfiguration(
-                    merchantId: "merchant.com.stripe.paymentsheet.example"
+                paymentElementConfiguration.applePayConfiguration = PaymentElement.Configuration.ApplePayConfiguration(
+                    merchantId: "merchant.com.stripe.umbrella.test"
                 )
                 config.paymentElement = paymentElementConfiguration
             }
             config.defaults.shippingDetails = defaultShippingAddress?.checkoutShippingDetails
+            config.defaults.billingDetails = defaultBillingAddress?.checkoutBillingDetails
+            config.defaults.email = emailSettings.localDefaultEmail
+            if shippingAddressCollection {
+                var shippingAddressElementConfiguration = ShippingAddressElement.Configuration()
+                shippingAddressElementConfiguration.title = "Shipping Address"
+                shippingAddressElementConfiguration.buttonTitle = "Save Address"
+                config.shippingAddressElement = shippingAddressElementConfiguration
+            }
             if expressCheckoutElementSettings.isEnabled {
-                var expressCheckoutElementConfiguration = ExpressCheckoutElement.Configuration()
-                expressCheckoutElementConfiguration.applePayConfiguration = ExpressCheckoutElement.ApplePayConfiguration(
-                    merchantId: "merchant.com.stripe.paymentsheet.example",
-                    display: expressCheckoutElementSettings.applePayDisplay
-                )
-                expressCheckoutElementConfiguration.linkConfiguration = ExpressCheckoutElement.LinkConfiguration(
-                    display: expressCheckoutElementSettings.linkDisplay
-                )
-                expressCheckoutElementConfiguration.shippingAddressRequired = expressCheckoutElementSettings.shippingAddressRequired
-                expressCheckoutElementConfiguration.billingDetailsCollectionConfiguration = expressCheckoutElementSettings.billingDetailsCollectionConfiguration
-                expressCheckoutElementConfiguration.confirmHandler = { result in
+                var expressCheckoutElementConfiguration = ExpressCheckoutElement.Configuration { result in
                     confirmResult = result
                 }
+                expressCheckoutElementConfiguration.applePayConfiguration = ExpressCheckoutElement.Configuration.ApplePayConfiguration(
+                    merchantId: "merchant.com.stripe.umbrella.test",
+                    buttonType: expressCheckoutElementSettings.applePayButtonType.pkPaymentButtonType,
+                    display: expressCheckoutElementSettings.applePayDisplay
+                )
+                expressCheckoutElementConfiguration.linkConfiguration = ExpressCheckoutElement.Configuration.LinkConfiguration(
+                    display: expressCheckoutElementSettings.linkDisplay
+                )
+                expressCheckoutElementConfiguration.appearance.buttonTheme = expressCheckoutElementSettings.appearance.buttonTheme
+                expressCheckoutElementConfiguration.appearance.buttonLayout.maxColumns = expressCheckoutElementSettings.appearance.buttonLayout.maxColumns
+                expressCheckoutElementConfiguration.appearance.buttonLayout.maxRows = expressCheckoutElementSettings.appearance.buttonLayout.maxRows
                 config.expressCheckoutElement = expressCheckoutElementConfiguration
             }
             if adaptivePricing {
@@ -172,8 +187,6 @@ struct CheckoutCartView: View {
                 currencySelectorConfiguration.appearance = currencySelectorAppearance
                 config.currencySelectorElement = currencySelectorConfiguration
             }
-            config.shippingAddressElement.title = "Shipping Address"
-            config.shippingAddressElement.buttonTitle = "Save Address"
             checkout = try await CheckoutController(configuration: config)
         } catch {
             errorMessage = error.localizedDescription

@@ -14,7 +14,18 @@ final class MultilineIconLabelHTMLView: UIView {
     typealias LineContent = (icon: StripeAPI.VerificationPageIconType, content: String)
     struct ViewModel {
         let lines: [LineContent]
+        let textColor: UIColor
         let didOpenURL: (URL) -> Void
+
+        init(
+            lines: [LineContent],
+            textColor: UIColor = IdentityUI.htmlLineTextColor,
+            didOpenURL: @escaping (URL) -> Void
+        ) {
+            self.lines = lines
+            self.textColor = textColor
+            self.didOpenURL = didOpenURL
+        }
     }
 
     private let vStack: UIStackView = {
@@ -38,7 +49,7 @@ final class MultilineIconLabelHTMLView: UIView {
                 with: .init(
                     image: line.icon.makeImage(),
                     text: line.content,
-                    style: .html(makeStyle: MultilineIconLabelHTMLView.multiLineContentStyle),
+                    style: .html(makeStyle: { Self.multiLineContentStyle(textColor: viewModel.textColor) }),
                     didOpenURL: viewModel.didOpenURL
                 )
             )
@@ -50,12 +61,11 @@ final class MultilineIconLabelHTMLView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    private static func multiLineContentStyle() -> HTMLStyle {
-        let boldFont = IdentityUI.preferredFont(forTextStyle: UIFont.TextStyle.body, weight: .bold)
-        let contentColor = IdentityUI.htmlLineTextColor
+    private static func multiLineContentStyle(textColor: UIColor) -> HTMLStyle {
+        let boldFont = IdentityUI.bodyFont(withWeight: .bold)
         return .init(
-            bodyFont: IdentityUI.preferredFont(forTextStyle: UIFont.TextStyle.body),
-            bodyColor: contentColor,
+            bodyFont: IdentityUI.bodyFont,
+            bodyColor: textColor,
             h1Font: boldFont,
             h2Font: boldFont,
             h3Font: boldFont,
@@ -64,7 +74,7 @@ final class MultilineIconLabelHTMLView: UIView {
             h6Font: boldFont,
             isLinkUnderlined: true,
             shouldCenterText: false,
-            linkColor: contentColor
+            linkColor: textColor
         )
     }
 }

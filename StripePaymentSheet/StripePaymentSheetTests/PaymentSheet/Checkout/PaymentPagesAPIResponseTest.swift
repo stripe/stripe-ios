@@ -256,6 +256,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertEqual(session.businessName, "CI Stuff")
         XCTAssertEqual(session.elementsSession.sessionID, "elements_session_test123")
         XCTAssertEqual(session.email, "test@example.com")
+        XCTAssertEqual(session.serverEmail, "test@example.com")
         XCTAssertEqual(apiResponse.url, "https://checkout.stripe.com/c/pay/cs_test_a1b2c3d4e5f6g7h8i9j0")
 
         // Verify saved payment methods offer save
@@ -526,17 +527,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         ]).makePublicSession()
 
         XCTAssertFalse(session.noPaymentRequired)
-        XCTAssertEqual(session.expectedAmount(), 2345)
-    }
-
-    func testModelessNoPaymentRequiredSessionHasNoExpectedAmount() {
-        let session = CheckoutTestHelpers.makeSession([
-            "mode": "modeless",
-            "payment_status": "no_payment_required",
-        ]).makePublicSession()
-
-        XCTAssertTrue(session.noPaymentRequired)
-        XCTAssertNil(session.expectedAmount())
+        XCTAssertEqual(session.amount, 2345)
     }
 
     func testDecodedObjectParsesTopLevelSetupFutureUsage() {
@@ -603,8 +594,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
     func testAggregateTaxAmountsRemainSeparateFromTotals() {
         let session = CheckoutTestHelpers.makeSession([
             "mode": "modeless",
-            "recurring_details": [
-                "total_discount_amounts": [],
+            "total_summary": [
                 "total_tax_amounts": [
                     ["amount": 186, "inclusive": false, "taxable_amount": 2000,
                      "tax_rate": ["percentage": 7.45, "display_name": "Sales Tax"], ],
@@ -626,6 +616,13 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         let session = CheckoutTestHelpers.makeSession([
             "mode": "modeless",
             "recurring_details": [
+                "total_summary": [
+                    "total_discount_amounts": [
+                        ["amount": 332, "coupon": ["code": "co_test", "name": "Welcome"]],
+                    ],
+                ],
+            ],
+            "total_summary": [
                 "total_tax_amounts": [
                     [
                         "amount": 148,
@@ -633,9 +630,6 @@ class PaymentPagesAPIResponseTest: XCTestCase {
                         "taxable_amount": 2000,
                         "tax_rate": ["percentage": 7.4, "display_name": "Sales Tax"],
                     ],
-                ],
-                "total_discount_amounts": [
-                    ["amount": 332, "coupon": ["code": "co_test", "name": "Welcome"]],
                 ],
             ],
             "checkout_items": [

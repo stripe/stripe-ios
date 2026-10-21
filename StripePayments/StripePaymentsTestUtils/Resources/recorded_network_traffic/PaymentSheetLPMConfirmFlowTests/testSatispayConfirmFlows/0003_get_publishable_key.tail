@@ -1,0 +1,17 @@
+GET
+https:\/\/stp-mobile-playground-backend-v7\.stripedemos\.com\/publishable_key\?merchant=IT$
+200
+application/json
+Server: Google Frontend
+Content-Type: application/json; charset=utf-8
+x-powered-by: Express
+x-cloud-trace-context: afb70ab871745b6b6d8557daebc0db6b
+Via: 1.1 google
+Date: Fri, 11 Sep 2026 22:14:14 GMT
+Content-Length: 129
+Alt-Svc: h3=":443"; ma=2592000
+Etag: W/"81-rG6NjLVBd7xgaXIAP6hWc5HlsxM"
+
+{
+  "publishable_key" : "pk_test_51PSnETIFbdis1OxTALF4Z8ugUQpVS06UQDVahMSmwrbEYphjNYitXtOSqMPVKfzl3jukg6gLLrtZNnPlDrRbDpMd00U0tId6iv"
+}

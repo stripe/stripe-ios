@@ -16,6 +16,24 @@ final class CheckoutDefaultsInitializationTests: XCTestCase {
         super.tearDown()
     }
 
+    func testInitStoresDefaultEmailLocally() async throws {
+        // Given an email in Checkout defaults
+        stubCheckoutSessionRequests()
+        var configuration = CheckoutController.Configuration(
+            clientSecret: clientSecret,
+            returnURL: "stripe-ios-test://checkout-return"
+        )
+        configuration.apiClient = STPAPIClient(publishableKey: "pk_test_123")
+        configuration.defaults.email = "local@example.com"
+
+        // When initializing CheckoutController
+        let checkout = try await CheckoutController(configuration: configuration)
+
+        // Then the default becomes the Session email
+        XCTAssertEqual(checkout.session.localState.email, "local@example.com")
+        XCTAssertEqual(checkout.session.email, "local@example.com")
+    }
+
     func testInitAppliesBillingDefaultThroughBillingTaxUpdateWhenNeeded() async throws {
         stubCheckoutSessionRequests()
 
@@ -50,6 +68,7 @@ final class CheckoutDefaultsInitializationTests: XCTestCase {
         var configuration = CheckoutController.Configuration(clientSecret: clientSecret, returnURL: "stripe-ios-test://checkout-return")
         configuration.apiClient = STPAPIClient(publishableKey: "pk_test_123")
         configuration.paymentElement = .init()
+        configuration.shippingAddressElement = .init()
         var shippingDetails = CheckoutController.Configuration.Defaults.ShippingDetails()
         shippingDetails.name = "Shipping Name"
         shippingDetails.address = .init(
@@ -85,6 +104,35 @@ final class CheckoutDefaultsInitializationTests: XCTestCase {
         )
     }
 
+    func testInitDoesNotNormalizeShippingDefaultWhenShippingAddressElementIsNotConfigured() async throws {
+        // Given a Checkout Session that uses shipping for tax and a shipping default with an
+        // extended postal code
+        stubCheckoutSessionRequests(automaticTaxAddressSource: "shipping")
+
+        var configuration = CheckoutController.Configuration(clientSecret: clientSecret, returnURL: "stripe-ios-test://checkout-return")
+        configuration.apiClient = STPAPIClient(publishableKey: "pk_test_123")
+        configuration.paymentElement = .init()
+        var shippingDetails = CheckoutController.Configuration.Defaults.ShippingDetails()
+        shippingDetails.name = "Shipping Name"
+        shippingDetails.address = .init(
+            country: "US",
+            line1: "123 Shipping St",
+            city: "San Francisco",
+            state: "CA",
+            postalCode: "94105-1234"
+        )
+        configuration.defaults.shippingDetails = shippingDetails
+
+        // When Checkout initializes without Shipping Address Element
+        let checkout = try await CheckoutController(configuration: configuration)
+        let requests = requestRecorder.requests
+
+        // Then the shipping default is applied without adapting it to the SAE form
+        XCTAssertEqual(requests.map(\.kind), [.initSession, .updateSession])
+        XCTAssertEqual(requests[1].params["tax_region[postal_code]"], "94105-1234")
+        XCTAssertEqual(checkout.session.shippingAddress?.address.postalCode, "94105-1234")
+    }
+
     func testInitDoesNotApplyShippingDefaultWhenShippingAddressElementReturnsNil() async throws {
         // Given a Checkout Session that uses shipping for tax
         stubCheckoutSessionRequests(automaticTaxAddressSource: "shipping")
@@ -92,6 +140,7 @@ final class CheckoutDefaultsInitializationTests: XCTestCase {
         var configuration = CheckoutController.Configuration(clientSecret: clientSecret, returnURL: "stripe-ios-test://checkout-return")
         configuration.apiClient = STPAPIClient(publishableKey: "pk_test_123")
         configuration.paymentElement = .init()
+        configuration.shippingAddressElement = .init()
         var shippingDetails = CheckoutController.Configuration.Defaults.ShippingDetails()
         shippingDetails.name = "Shipping Name"
         shippingDetails.address = .init(
@@ -125,6 +174,7 @@ final class CheckoutDefaultsInitializationTests: XCTestCase {
         var configuration = CheckoutController.Configuration(clientSecret: clientSecret, returnURL: "stripe-ios-test://checkout-return")
         configuration.apiClient = STPAPIClient(publishableKey: "pk_test_123")
         configuration.paymentElement = .init()
+        configuration.shippingAddressElement = .init()
         var shippingDetails = CheckoutController.Configuration.Defaults.ShippingDetails()
         shippingDetails.name = "Shipping Name"
         shippingDetails.address = .init(
@@ -154,6 +204,7 @@ final class CheckoutDefaultsInitializationTests: XCTestCase {
         var configuration = CheckoutController.Configuration(clientSecret: clientSecret, returnURL: "stripe-ios-test://checkout-return")
         configuration.apiClient = STPAPIClient(publishableKey: "pk_test_123")
         configuration.paymentElement = .init()
+        configuration.shippingAddressElement = .init()
         var shippingDetails = CheckoutController.Configuration.Defaults.ShippingDetails()
         shippingDetails.name = "Shipping Name"
         shippingDetails.address = .init(
@@ -217,6 +268,26 @@ final class CheckoutDefaultsInitializationTests: XCTestCase {
         XCTAssertNil(checkout.session.shippingAddress)
         XCTAssertNil(paymentElement.paymentSheetFlowController.configuration.shippingDetails())
         XCTAssertNil(paymentElement.embeddedPaymentElement.configuration.shippingDetails())
+    }
+
+    func testInitLoadsAddressSpecsWithoutPaymentElement() async throws {
+        // Given an ECE-only Checkout integration and address specs that haven't been loaded yet
+        stubCheckoutSessionRequests()
+        let originalAddressSpecProvider = AddressSpecProvider.shared
+        AddressSpecProvider.shared = AddressSpecProvider()
+        defer { AddressSpecProvider.shared = originalAddressSpecProvider }
+        XCTAssertTrue(AddressSpecProvider.shared.countries.isEmpty)
+
+        var configuration = CheckoutController.Configuration(clientSecret: clientSecret, returnURL: "stripe-ios-test://checkout-return")
+        configuration.apiClient = STPAPIClient(publishableKey: "pk_test_123")
+        configuration.expressCheckoutElement = .init { _ in }
+
+        // When Checkout initializes
+        let checkout = try await CheckoutController(configuration: configuration)
+
+        // Then address specs are loaded so address forms (e.g. in the Link wallet) have countries to show
+        XCTAssertNil(checkout.paymentElement)
+        XCTAssertFalse(AddressSpecProvider.shared.countries.isEmpty)
     }
 
     // MARK: - Stubs

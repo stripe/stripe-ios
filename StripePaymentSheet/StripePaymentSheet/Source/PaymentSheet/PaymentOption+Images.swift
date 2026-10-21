@@ -288,10 +288,36 @@ extension STPPaymentMethodType {
                 }
             case .FPX:
                 return .pm_type_fpx
+            case .momo:
+                return .pm_type_momo
+            case .shopeePay:
+                return .pm_type_shopeepay
+            case .qris:
+                return .pm_type_qris
+            case .gcash:
+                return .pm_type_gcash
+            case .ngCard:
+                return .pm_type_ng_card
+            case .ngBankTransfer:
+                return .pm_type_ng_bank_transfer
+            case .touchNGo:
+                return .pm_type_touch_n_go
+            case .trueMoney:
+                return .pm_type_truemoney
+            case .ngUSSD:
+                return .pm_type_ng_ussd
+            case .ngWallet:
+                return .pm_type_ng_wallet
+            case .mondu:
+                return .pm_type_mondu
+            case .goPay:
+                return .pm_type_gopay
             case .grabPay:
                 return .pm_type_grabpay
             case .konbini:
                 return .pm_type_konbini
+            case .kakaoPay:
+                return .pm_type_kakaopay
             case .krCard:
                 return .pm_type_kr_card
             case .mobilePay:
@@ -302,6 +328,8 @@ extension STPPaymentMethodType {
                 return .pm_type_mbway
             case .multibanco:
                 return .pm_type_multibanco
+            case .naverPay:
+                return .pm_type_naverpay
             case .OXXO:
                 return .pm_type_oxxo
             case .payByBank:
@@ -314,8 +342,12 @@ extension STPPaymentMethodType {
                 return .pm_type_paypay
             case .promptPay:
                 return .pm_type_promptpay
+            case .pix:
+                return .pm_type_pix
             case .satispay:
                 return .pm_type_satispay
+            case .scalapay:
+                return .pm_type_scalapay
             case .sequra:
                 return .pm_type_sequra
             case .wero:

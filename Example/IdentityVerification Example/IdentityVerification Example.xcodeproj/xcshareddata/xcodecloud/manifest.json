@@ -1,0 +1,9 @@
+{
+  "id" : "09ca5ed8-1793-455a-9cbb-45bc12f8b098",
+  "targets" : [
+    {
+      "id" : "4B31818B-90E3-42E8-B266-6FCE07BFBD54",
+      "name" : "IdentityVerificationExample"
+    }
+  ]
+}

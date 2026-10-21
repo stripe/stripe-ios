@@ -7,11 +7,10 @@ final class CheckoutAddressMergingTests: XCTestCase {
 
     func testApplyAddressOverrides_shippingApplied() {
         let apiResponse = CheckoutTestHelpers.makeOpenSession()
-        let session = apiResponse.makePublicSession().makeCopyOverriding(
-            shippingAddress: .newValue(CheckoutController.Session.ShippingAddress(
-                name: "John Smith",
-                address: .init(country: "US", line1: "456 Oak Ave", city: "LA", state: "CA", postalCode: "90001")
-            ))
+        var session = apiResponse.makePublicSession()
+        session.localState.shippingAddress = CheckoutController.Session.ShippingAddress(
+            name: "John Smith",
+            address: .init(country: "US", line1: "456 Oak Ave", city: "LA", state: "CA", postalCode: "90001")
         )
 
         var config = PaymentSheet.Configuration()
@@ -30,11 +29,10 @@ final class CheckoutAddressMergingTests: XCTestCase {
 
     func testApplyAddressOverrides_configShippingTakesPrecedence() {
         let apiResponse = CheckoutTestHelpers.makeOpenSession()
-        let session = apiResponse.makePublicSession().makeCopyOverriding(
-            shippingAddress: .newValue(CheckoutController.Session.ShippingAddress(
-                name: "John Smith",
-                address: .init(country: "GB")
-            ))
+        var session = apiResponse.makePublicSession()
+        session.localState.shippingAddress = CheckoutController.Session.ShippingAddress(
+            name: "John Smith",
+            address: .init(country: "GB")
         )
 
         var config = PaymentSheet.Configuration()
@@ -89,9 +87,8 @@ final class CheckoutAddressMergingTests: XCTestCase {
             name: "John Smith",
             address: .init(country: "US", line1: "456 Oak Ave", city: "LA", state: "CA", postalCode: "90001")
         )
-        let session = apiResponse.makePublicSession().makeCopyOverriding(
-            shippingAddress: .newValue(shippingAddress)
-        )
+        var session = apiResponse.makePublicSession()
+        session.localState.shippingAddress = shippingAddress
 
         var config = EmbeddedPaymentElement.Configuration()
         session.applyAddressOverrides(to: &config)
@@ -132,12 +129,16 @@ final class CheckoutAddressMergingTests: XCTestCase {
         XCTAssertEqual(config.billingDetailsCollectionConfiguration.address, .full)
     }
 
-    func testBillingRequired_fullStaysFull() {
-        let session = CheckoutTestHelpers.makeOpenSession(billingAddressCollection: "required").makePublicSession()
+    func testBillingAuto_resetsFullToAutomatic() {
+        let requiredSession = CheckoutTestHelpers.makeOpenSession(billingAddressCollection: "required").makePublicSession()
+        let automaticSession = CheckoutTestHelpers.makeOpenSession(billingAddressCollection: "auto").makePublicSession()
         var config = PaymentSheet.Configuration()
-        config.billingDetailsCollectionConfiguration.address = .full
-        session.applyAddressOverrides(to: &config)
+
+        requiredSession.applyAddressOverrides(to: &config)
         XCTAssertEqual(config.billingDetailsCollectionConfiguration.address, .full)
+
+        automaticSession.applyAddressOverrides(to: &config)
+        XCTAssertEqual(config.billingDetailsCollectionConfiguration.address, .automatic)
     }
 
     func testBillingAuto_doesntUpgradeAutomatic() {
@@ -156,6 +157,18 @@ final class CheckoutAddressMergingTests: XCTestCase {
         config.billingDetailsCollectionConfiguration.address = .automatic
         session.applyAddressOverrides(to: &config)
         XCTAssertEqual(config.billingDetailsCollectionConfiguration.address, .full)
+    }
+
+    func testEmbedded_billingAuto_resetsFullToAutomatic() {
+        let requiredSession = CheckoutTestHelpers.makeOpenSession(billingAddressCollection: "required").makePublicSession()
+        let automaticSession = CheckoutTestHelpers.makeOpenSession(billingAddressCollection: "auto").makePublicSession()
+        var config = EmbeddedPaymentElement.Configuration()
+
+        requiredSession.applyAddressOverrides(to: &config)
+        XCTAssertEqual(config.billingDetailsCollectionConfiguration.address, .full)
+
+        automaticSession.applyAddressOverrides(to: &config)
+        XCTAssertEqual(config.billingDetailsCollectionConfiguration.address, .automatic)
     }
 
 }

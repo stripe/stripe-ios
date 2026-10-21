@@ -72,6 +72,7 @@ extension PaymentSheet {
 
     /// Configuration for PaymentSheet
     public struct Configuration {
+
         // The text that shows in the header of the payment sheet when adding a card.
         // If nil default text will be used.
         @_spi(DashboardOnly) public var addCardHeaderText: String?
@@ -514,8 +515,8 @@ extension PaymentSheet {
             case automatic
             /// Link will never be displayed.
             case never
-            /// Link remains enabled (e.g. for automatic Link verification, Instant Bank Payments, Link Card Brand, and inline signup)
-            /// but its button/row will not be shown in the payment element UI.
+            /// Link remains enabled (e.g. for automatic Link verification, Instant Bank Payments, Link Card Brand, and inline signup).
+            /// Its button/row is shown when an existing Link user is detected and hidden otherwise.
             case walletButtonHidden
         }
 
@@ -523,13 +524,6 @@ extension PaymentSheet {
             switch display {
             case .automatic, .walletButtonHidden: true
             case .never: false
-            }
-        }
-
-        var shouldShowButton: Bool {
-            switch display {
-            case .automatic: true
-            case .walletButtonHidden, .never: false
             }
         }
 

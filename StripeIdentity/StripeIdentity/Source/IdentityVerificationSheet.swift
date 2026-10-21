@@ -25,18 +25,42 @@ final public class IdentityVerificationSheet {
 
     /// Configuration for an IdentityVerificationSheet
     public struct Configuration {
-        /// Configuration for the biometric consent screen's header.
+        /// The appearance of primary action buttons throughout the native verification flow.
+        @_spi(STP) public enum PrimaryButtonStyle {
+            /// Uses the app's tint color.
+            case `default`
+            /// Uses the supplied background and text colors, and an optional minimum height.
+            /// Provide dynamic colors to support different colors in light and dark mode.
+            case custom(backgroundColor: UIColor, textColor: UIColor, height: CGFloat? = nil)
+        }
+
+        /// The appearance of secondary action buttons throughout the native verification flow.
+        @_spi(STP) public enum SecondaryButtonStyle {
+            /// Uses the default secondary button appearance.
+            case `default`
+            /// Uses the supplied background and text colors, and an optional minimum height.
+            /// Provide dynamic colors to support different colors in light and dark mode.
+            case custom(backgroundColor: UIColor, textColor: UIColor, height: CGFloat? = nil)
+        }
+
+        /// Configuration for the biometric consent screen.
         @_spi(STP) public struct BiometricConsentConfiguration {
             /// Whether to hide the branding header above the consent title.
             public var hideBrandingHeader: Bool
 
-            /// Initializes a biometric consent header configuration.
+            /// Whether to hide the decline button on the consent welcome screen.
+            public var hideDeclineButton: Bool
+
+            /// Initializes a biometric consent configuration.
             /// - Parameters:
             ///   - hideBrandingHeader: Whether to hide the branding header above the consent title.
+            ///   - hideDeclineButton: Whether to hide the decline button on the consent welcome screen.
             public init(
-                hideBrandingHeader: Bool
+                hideBrandingHeader: Bool,
+                hideDeclineButton: Bool = false
             ) {
                 self.hideBrandingHeader = hideBrandingHeader
+                self.hideDeclineButton = hideDeclineButton
             }
         }
 
@@ -47,9 +71,17 @@ final public class IdentityVerificationSheet {
         /// dynamic UIImage to support different images in light vs dark mode.
         public var brandLogo: UIImage
 
-        /// Configuration for the biometric consent screen's header.
+        /// The style of primary action buttons throughout the native verification flow.
+        /// Disabled buttons retain the default disabled appearance. Secondary buttons are unaffected.
+        @_spi(STP) public var primaryButtonStyle: PrimaryButtonStyle = .default
+
+        /// The style of secondary action buttons throughout the native verification flow.
+        /// Disabled buttons retain the default disabled appearance. Primary buttons are unaffected.
+        @_spi(STP) public var secondaryButtonStyle: SecondaryButtonStyle = .default
+
+        /// Configuration for the biometric consent screen.
         ///
-        /// When `nil`, the biometric consent screen uses the default header.
+        /// When `nil`, the biometric consent screen uses its default layout.
         @_spi(STP) public var biometricConsent: BiometricConsentConfiguration?
 
         /// Initializes a Configuration.

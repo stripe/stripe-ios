@@ -153,7 +153,7 @@ extension PaymentSheetUITestCase {
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
     }
 
-    func payWithApplePay() {
+    func payWithApplePay(successElement: XCUIElement? = nil) {
         let applePay = XCUIApplication(bundleIdentifier: "com.apple.PassbookUIService")
         _ = applePay.wait(for: .runningForeground, timeout: 10)
 
@@ -175,9 +175,9 @@ extension PaymentSheetUITestCase {
         XCTAssertTrue(payButton.waitForExistence(timeout: 10.0))
         payButton.forceTapElement()
 
-        let successText = app.staticTexts["Success!"]
+        let expectedSuccessElement = successElement ?? app.staticTexts["Success!"]
         //      This actually takes upwards of 20 seconds sometimes, especially in the deferred flow :/
-        XCTAssertTrue(successText.waitForExistence(timeout: 30.0))
+        XCTAssertTrue(expectedSuccessElement.waitForExistence(timeout: 30.0))
     }
 
     func addApplePayBillingIfNeeded(_ applePay: XCUIApplication) {
