@@ -1,10 +1,11 @@
 The next release's version bump will so far be:
-MINOR
+PATCH
 
 ## X.Y.Z - changes pending release
+### General
+* [Removed] CocoaPods support. Migrate your integration to Swift Package Manager. For more information and help migrating, see [MIGRATING-COCOAPODS.md](https://github.com/stripe/stripe-ios/blob/master/MIGRATING-COCOAPODS.md). 
 
-### PaymentSheet
-* [Added] Added `LinkController.formattedCardDetails(brand:funding:last4:)`, exposed through the `STP` SPI, to format card previews consistently with Link.
+## 26.15.0 2026-10-19
 
 ### CryptoOnramp (Alpha)
 * [Changed] Apple Pay card previews now include the card funding type (Credit, Debit, or Prepaid), falling back to Card when unavailable, matching Link's formatting.

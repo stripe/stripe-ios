@@ -1,9 +1,5 @@
 # Stripe iOS SDK
 
-[![CocoaPods](https://img.shields.io/cocoapods/v/Stripe.svg?style=flat)](http://cocoapods.org/?q=author%3Astripe%20name%3Astripe)
-[![License](https://img.shields.io/cocoapods/l/Stripe.svg?style=flat)](https://github.com/stripe/stripe-ios/blob/master/LICENSE)
-[![Platform](https://img.shields.io/cocoapods/p/Stripe.svg?style=flat)](https://github.com/stripe/stripe-ios#)
-
 > [!TIP]
 > Want to chat live with Stripe engineers? Join us on our [Discord server](https://stripe.com/go/developer-chat).
 
@@ -77,7 +73,7 @@ For help with Apple's App Privacy Details form in App Store Connect, visit [Stri
 
 ## Releases
 
-We support Cocoapods and Swift Package Manager.
+We recommend Swift Package Manager. In Xcode, select **File > Add Packages…** and enter `https://github.com/stripe/stripe-ios-spm` as the repository URL.
 
 If you link the library manually, use a version from our [releases](https://github.com/stripe/stripe-ios/releases) page and make sure to embed <ins>all</ins> of the required frameworks.
 
@@ -143,7 +139,8 @@ To re-record snapshot tests, use the `bundle exec ruby ci_scripts/snapshots.rb -
 
 ## Migrating from older versions
 
-See [MIGRATING.md](https://github.com/stripe/stripe-ios/blob/master/MIGRATING.md)
+* To migrate from an old SDK version, see [MIGRATING.md](https://github.com/stripe/stripe-ios/blob/master/MIGRATING.md).
+* To migrate from CocoaPods, see [MIGRATING-COCOAPODS.md](https://github.com/stripe/stripe-ios/blob/master/MIGRATING-COCOAPODS.md).
 
 ## Code style
 We use [swiftlint](https://github.com/realm/SwiftLint) to enforce code style.
