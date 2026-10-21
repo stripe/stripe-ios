@@ -23,8 +23,9 @@ final class CryptoOnrampCoordinatorTests: APIStubbedTestCase {
     private var settingsRequests: [URLRequest] = []
     private var tokenRequests: [URLRequest] = []
     private var requestOrder: [String] = []
-    private var settingsFailure: HTTPStubsResponse?
-    private var tokenFailure: HTTPStubsResponse?
+    // Each request needs a fresh response because its body stream is consumed when delivered.
+    private var settingsFailure: (() -> HTTPStubsResponse)?
+    private var tokenFailure: (() -> HTTPStubsResponse)?
     private var onTokenRequest: (@MainActor () -> Void)?
     private static let customerID = "crypto_customer_test"
     private static let settingsPath = "/v1/crypto/internal/platform_settings"
@@ -150,7 +151,7 @@ final class CryptoOnrampCoordinatorTests: APIStubbedTestCase {
         try await collectApplePay(coordinator)
         await coordinator.setCryptoCustomerId(Self.customerID)
         _ = try await coordinator.createCryptoPaymentToken()
-        settingsFailure = HTTPStubsResponse(error: NSError(domain: "SettingsNetworkFailure", code: 42))
+        settingsFailure = { HTTPStubsResponse(error: NSError(domain: "SettingsNetworkFailure", code: 42)) }
 
         do {
             _ = try await coordinator.createCryptoPaymentToken()
@@ -167,7 +168,7 @@ final class CryptoOnrampCoordinatorTests: APIStubbedTestCase {
         let coordinator = try await makeCoordinator()
         try await collectApplePay(coordinator)
         await coordinator.setCryptoCustomerId(Self.customerID)
-        settingsFailure = apiFailure(code: "crypto_onramp_transactions_unavailable_in_country")
+        settingsFailure = { Self.apiFailure(code: "crypto_onramp_transactions_unavailable_in_country") }
 
         do {
             _ = try await coordinator.createCryptoPaymentToken()
@@ -328,7 +329,7 @@ final class CryptoOnrampCoordinatorTests: APIStubbedTestCase {
         let coordinator = try await makeCoordinator()
         try await collectApplePay(coordinator)
         await coordinator.setCryptoCustomerId(Self.customerID)
-        settingsFailure = apiFailure(code: "settings_unavailable")
+        settingsFailure = { Self.apiFailure(code: "settings_unavailable") }
         let context = try makeApplePayContext(coordinator)
         do {
             try await coordinator.prepareApplePayContext(context)
@@ -365,7 +366,7 @@ final class CryptoOnrampCoordinatorTests: APIStubbedTestCase {
         let coordinator = try await makeCoordinator()
         try await collectApplePay(coordinator)
         await coordinator.setCryptoCustomerId(Self.customerID)
-        tokenFailure = apiFailure(code: "resource_missing", param: "payment_method")
+        tokenFailure = { Self.apiFailure(code: "resource_missing", param: "payment_method") }
         do {
             _ = try await coordinator.createCryptoPaymentToken()
             XCTFail("Expected token failure")
@@ -625,12 +626,12 @@ final class CryptoOnrampCoordinatorTests: APIStubbedTestCase {
 
         resolvedKey = "pk_test_platform_A"
         _ = try await coordinator.createCryptoPaymentTokenWithDetails()
-        settingsFailure = HTTPStubsResponse(error: NSError(domain: "SettingsNetworkFailure", code: 42))
+        settingsFailure = { HTTPStubsResponse(error: NSError(domain: "SettingsNetworkFailure", code: 42)) }
         await assertBothTokenMethodsFail(coordinator) { XCTAssertEqual(($0 as NSError).domain, "SettingsNetworkFailure") }
         XCTAssertEqual(tokenRequests.count, 1)
         XCTAssertEqual(requestOrder, ["settings", "settings", "settings", "settings", "token", "settings", "settings"])
 
-        settingsFailure = apiFailure(code: "settings_unavailable")
+        settingsFailure = { Self.apiFailure(code: "settings_unavailable") }
         await assertBothTokenMethodsFail(coordinator) {
             XCTAssertEqual(($0 as? UncategorizedError)?.code, "settings_unavailable")
             XCTAssertEqual(($0 as? UncategorizedError)?.requestID, "req_test")
@@ -638,9 +639,9 @@ final class CryptoOnrampCoordinatorTests: APIStubbedTestCase {
         XCTAssertEqual(tokenRequests.count, 1)
 
         settingsFailure = nil
-        tokenFailure = HTTPStubsResponse(error: NSError(domain: "TokenNetworkFailure", code: 42))
+        tokenFailure = { HTTPStubsResponse(error: NSError(domain: "TokenNetworkFailure", code: 42)) }
         await assertBothTokenMethodsFail(coordinator) { XCTAssertEqual(($0 as NSError).domain, "TokenNetworkFailure") }
-        tokenFailure = apiFailure(code: "resource_missing", param: "payment_method")
+        tokenFailure = { Self.apiFailure(code: "resource_missing", param: "payment_method") }
         await assertBothTokenMethodsFail(coordinator) {
             XCTAssertEqual(($0 as? UncategorizedError)?.code, "resource_missing")
             XCTAssertFalse($0 is PaymentMethodKYCRegionChangedError)
@@ -690,7 +691,7 @@ final class CryptoOnrampCoordinatorTests: APIStubbedTestCase {
             XCTAssertEqual(request.httpMethod, "GET")
             settingsRequests.append(request)
             requestOrder.append("settings")
-            return settingsFailure ?? HTTPStubsResponse(jsonObject: ["publishable_key": resolvedKey], statusCode: 200, headers: nil)
+            return settingsFailure?() ?? HTTPStubsResponse(jsonObject: ["publishable_key": resolvedKey], statusCode: 200, headers: nil)
         }
         stub { $0.url?.path == Self.tokenPath } response: { [self] request in
             XCTAssertEqual(request.httpMethod, "POST")
@@ -703,7 +704,7 @@ final class CryptoOnrampCoordinatorTests: APIStubbedTestCase {
                     DispatchQueue.main.sync { onTokenRequest() }
                 }
             }
-            return tokenFailure ?? HTTPStubsResponse(jsonObject: ["id": "cpt_test"], statusCode: 200, headers: nil)
+            return tokenFailure?() ?? HTTPStubsResponse(jsonObject: ["id": "cpt_test"], statusCode: 200, headers: nil)
         }
         let apiClient = stubbedAPIClient()
         apiClient.publishableKey = "pk_test_partner"
@@ -815,7 +816,7 @@ final class CryptoOnrampCoordinatorTests: APIStubbedTestCase {
         return parameters
     }
 
-    private func apiFailure(code: String, param: String? = nil) -> HTTPStubsResponse {
+    private static func apiFailure(code: String, param: String? = nil) -> HTTPStubsResponse {
         var error = ["type": "invalid_request_error", "code": code, "message": "Request failed."]
         error["param"] = param
         return HTTPStubsResponse(jsonObject: ["error": error], statusCode: 400, headers: ["Request-Id": "req_test"])
