@@ -121,13 +121,21 @@ enum CheckoutControllerLoader {
         )
         // Create/reuse and update FC analytics helper
         let flowControllerAnalyticsHelper = checkout.paymentElement?.paymentSheetFlowController.analyticsHelper
-            ?? PaymentSheetAnalyticsHelper(integrationShape: .flowController, configuration: fcConfiguration)
+            ?? PaymentSheetAnalyticsHelper(
+                integrationShape: .flowController,
+                configuration: fcConfiguration,
+                checkoutSessionID: session.id
+            )
         let orientation = fcConfiguration.resolveLayout(elementsSession: elementsSession, paymentMethodTypes: paymentMethodTypes)
         flowControllerAnalyticsHelper.didLoad(intent: intent, elementsSession: elementsSession)
         flowControllerAnalyticsHelper.paymentMethodOrientation = orientation
         // Create/reuse and update Embedded analytics helper
         let embeddedAnalyticsHelper = checkout.paymentElement?.embeddedPaymentElement.analyticsHelper
-        ?? PaymentSheetAnalyticsHelper(integrationShape: .embedded, configuration: embeddedConfiguration)
+        ?? PaymentSheetAnalyticsHelper(
+            integrationShape: .embedded,
+            configuration: embeddedConfiguration,
+            checkoutSessionID: session.id
+        )
         embeddedAnalyticsHelper.didLoad(intent: intent, elementsSession: elementsSession)
         embeddedAnalyticsHelper.paymentMethodOrientation = .vertical
         // Deal with PMM Promotions Helper
