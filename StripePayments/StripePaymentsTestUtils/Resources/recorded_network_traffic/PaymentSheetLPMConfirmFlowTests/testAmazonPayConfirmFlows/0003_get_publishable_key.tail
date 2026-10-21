@@ -5,12 +5,13 @@ application/json
 Server: Google Frontend
 Content-Type: application/json; charset=utf-8
 x-powered-by: Express
-x-cloud-trace-context: a7e7fa03ce152ba814c409423344ffea
+x-cloud-trace-context: 4f3293215c5b8e2c7d5b42e7490deff0
 Via: 1.1 google
-Date: Wed, 21 Oct 2026 17:40:38 GMT
-Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+Date: Wed, 21 Oct 2026 18:08:25 GMT
+Alt-Svc: h3=":443"; ma=2592000
 Content-Length: 129
 Etag: W/"81-eC9kAZ/uM25FvORWJnqLPpOGzBc"
+X-Stripe-Mock-Response-Time: 0.114959
 
 {
   "publishable_key" : "pk_test_51HvTI7Lu5o3P18Zp6t5AgBSkMvWoTtA0nyA7pVYDqpfLkRtWun7qZTYCOHCReprfLM464yaBeF72UFfB7cY9WG4a00ZnDtiC2C"

@@ -1,0 +1,87 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/setup_intents\/seti_1UT3nDFY0qyl6XeWqig7eUdg\/confirm$
+200
+application/json
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=xV1TcegJrXVuhpEdpCsY1SNsMwng2V01w0FJDyMnl_QzYcI7wb5dnuWBRPsdmDytj2vzzLopiW9XOziQ; report-to csp
+Server: nginx
+Cache-Control: no-cache, no-store
+reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=xV1TcegJrXVuhpEdpCsY1SNsMwng2V01w0FJDyMnl_QzYcI7wb5dnuWBRPsdmDytj2vzzLopiW9XOziQ&t=1"
+stripe-notice: You are using an outdated API version (2020-08-27). We recommend upgrading to the latest API version, 2026-09-30.endive. See https://docs.stripe.com/upgrades
+x-wc: 3c3
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=xV1TcegJrXVuhpEdpCsY1SNsMwng2V01w0FJDyMnl_QzYcI7wb5dnuWBRPsdmDytj2vzzLopiW9XOziQ&t=1"}],"include_subdomains":true}
+request-id: req_TiyrTJ8Frtkhw0
+x-stripe-routing-context-priority-tier: api-testmode
+Content-Length: 1893
+Vary: Origin
+Date: Wed, 21 Oct 2026 17:59:16 GMT
+original-request: req_TiyrTJ8Frtkhw0
+stripe-version: 2020-08-27
+idempotency-key: aee48cbf-0b3b-4b62-bfd6-c3b85f27bca4
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+X-Stripe-Mock-Request: client_attribution_metadata\[client_session_id]=.*&client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_intent_creation_flow]=deferred&client_attribution_metadata\[payment_method_selection_flow]=merchant_specified&client_secret=seti_1UT3nDFY0qyl6XeWqig7eUdg_secret_VU1qRa5xkhrAI7p2O3ic44Ma2GJ0X1m&confirmation_token=ctoken_1UT3nCFY0qyl6XeW6SFCCXp4&expand\[0]=payment_method&use_stripe_sdk=true
+
+{
+  "id" : "seti_1UT3nDFY0qyl6XeWqig7eUdg",
+  "description" : null,
+  "excluded_payment_method_types" : null,
+  "next_action" : {
+    "type" : "pix_display_qr_code",
+    "pix_display_qr_code" : {
+      "expires_at" : 1792638000,
+      "data" : "123456789br.gov.bcb.pixapi.developer.stripe.com\/v1\/p\/v2\/1234567890abcdef\/789",
+      "image_url_svg" : "https:\/\/qr.stripe.com\/test_YWNjdF8xRzZtMXBGWTBxeWw2WGVXLF9WVTFxN0NDQTEzejZOb3VVOTlUaHQ5TXdZSFA0NTRh0100UUXOEfDb.svg",
+      "hosted_instructions_url" : "https:\/\/payments.stripe.com\/qr\/instructions\/CDQaFwoVYWNjdF8xRzZtMXBGWTBxeWw2WGVXKPT649YGMga86tt3xVU6MJWTs5cKmUyWPCCcMcSFahl44ctBeAQgdalJRSfUQozCZeI9WoRFxCAdv-1vuRHgWQ",
+      "image_url_png" : "https:\/\/qr.stripe.com\/test_YWNjdF8xRzZtMXBGWTBxeWw2WGVXLF9WVTFxN0NDQTEzejZOb3VVOTlUaHQ5TXdZSFA0NTRh0100UUXOEfDb.png"
+    }
+  },
+  "livemode" : false,
+  "payment_method" : {
+    "object" : "payment_method",
+    "type" : "pix",
+    "id" : "pm_1UT3nCFY0qyl6XeWMHtkSDXs",
+    "billing_details" : {
+      "email" : "jane@example.com",
+      "phone" : null,
+      "tax_id" : "00000000000",
+      "name" : "Jane Doe",
+      "address" : {
+        "state" : null,
+        "country" : null,
+        "line2" : null,
+        "city" : null,
+        "line1" : null,
+        "postal_code" : null
+      }
+    },
+    "livemode" : false,
+    "created" : 1792605554,
+    "allow_redisplay" : "unspecified",
+    "shared_payment_granted_token" : null,
+    "customer" : null,
+    "pix" : {
+
+    },
+    "customer_account" : null
+  },
+  "payment_method_configuration_details" : null,
+  "usage" : "off_session",
+  "allowed_payment_method_types" : null,
+  "payment_method_types" : [
+    "pix"
+  ],
+  "object" : "setup_intent",
+  "last_setup_error" : null,
+  "created" : 1792605555,
+  "client_secret" : "seti_1UT3nDFY0qyl6XeWqig7eUdg_secret_VU1qRa5xkhrAI7p2O3ic44Ma2GJ0X1m",
+  "automatic_payment_methods" : null,
+  "cancellation_reason" : null,
+  "status" : "requires_action"
+}
