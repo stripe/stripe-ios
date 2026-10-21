@@ -194,21 +194,18 @@ extension CheckoutController {
         checkoutSession: Session,
         parameters: PaymentMethodConfirmationParameters
     ) async -> InternalConfirmResult {
-        do {
-            let requestParameters = try await makeConfirmationRequestParameters(
-                for: parameters,
-                checkoutSession: checkoutSession,
-                preconfirmedIntentParams: nil
-            )
-            return await confirmCheckoutSession(
-                with: requestParameters,
-                apiClient: parameters.configuration.apiClient,
-                authenticationContext: parameters.authenticationContext,
-                paymentHandler: parameters.paymentHandler
-            )
-        } catch {
-            return .failed(error)
-        }
+        let requestParameters = await makeConfirmationRequestParameters(
+            for: parameters,
+            checkoutSession: checkoutSession,
+            preconfirmedIntentParams: nil
+        )
+        return await confirmCheckoutSession(
+            with: requestParameters,
+            apiClient: parameters.configuration.apiClient,
+            authenticationContext: parameters.authenticationContext,
+            paymentHandler: parameters.paymentHandler,
+            confirmationChallenge: requestParameters.paymentMethodData == nil ? nil : parameters.confirmationChallenge
+        )
     }
 
 }

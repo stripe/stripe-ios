@@ -47,8 +47,7 @@ enum ExpressCheckoutElementUtilities {
         for paymentMethod in availablePaymentMethodTypes(for: elementsSession) {
             switch paymentMethod {
             case .applePay:
-                if let applePayConfiguration = configuration.applePayConfiguration,
-                   applePayConfiguration.display != .never,
+                if configuration.applePayConfiguration != nil,
                    StripeAPI.deviceSupportsApplePay() {
                     paymentMethods.append(paymentMethod)
                 }

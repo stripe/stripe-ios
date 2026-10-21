@@ -210,7 +210,7 @@ final class CheckoutCartViewController: UIViewController {
             if integrationType != .eceOnly {
                 var paymentElementConfiguration = PaymentElement.Configuration()
                 paymentElementConfiguration.applePayConfiguration = PaymentElement.Configuration.ApplePayConfiguration(
-                    merchantId: "merchant.com.stripe.paymentsheet.example"
+                    merchantId: "merchant.com.stripe.umbrella.test"
                 )
                 configuration.paymentElement = paymentElementConfiguration
             }
@@ -225,9 +225,8 @@ final class CheckoutCartViewController: UIViewController {
                     self?.handleConfirmResult(result)
                 }
                 expressCheckoutElementConfiguration.applePayConfiguration = ExpressCheckoutElement.Configuration.ApplePayConfiguration(
-                    merchantId: "merchant.com.stripe.paymentsheet.example",
-                    buttonType: expressCheckoutElementSettings.applePayButtonType.pkPaymentButtonType,
-                    display: expressCheckoutElementSettings.applePayDisplay
+                    merchantId: "merchant.com.stripe.umbrella.test",
+                    buttonType: expressCheckoutElementSettings.applePayButtonType.pkPaymentButtonType
                 )
                 expressCheckoutElementConfiguration.linkConfiguration = ExpressCheckoutElement.Configuration.LinkConfiguration(
                     display: expressCheckoutElementSettings.linkDisplay
