@@ -2,9 +2,7 @@
 
 require 'plist'
 require 'fileutils'
-require 'json'
 require 'optparse'
-require 'pathname'
 require 'colorize'
 require 'yaml'
 require 'terminal-table'
@@ -33,11 +31,9 @@ end.parse!
 # 1. Make any necessary edits to the workspace that does not include an SDK
 #    framework
 # 2. Commit the changes
-# 3. Add the repo as a local package, include the Stripe framewwork and make any
-#    necessary edits to the project
+# 3. Include the Stripe framewwork and make any necessary edits to the project
 # 4. Open any files that reference the framework in a text editor and replace
-#    "Stripe" with "{{SDK}}" and the local package path with "{{PACKAGE_PATH}}"
-#    in any relevant files. This includes:
+#    "Stripe" with "{{SDK}}" in any relevant files. This includes:
 #    - SPMTest.xcodeproj/project.pbxproj
 #    - SPMTest/ViewController.swift
 # 5. Create a new patch file and save it outside the repo location:
@@ -173,6 +169,22 @@ def setup_project(branch, directory, sdk)
   end
 
   Dir.chdir(directory) do
+    # We'll want to modify the workspace to point to the checked-out git repo
+    File.open('SPMTest.xcworkspace/contents.xcworkspacedata', 'w') do |f|
+      f.write <<~CONTENTS
+        <?xml version="1.0" encoding="UTF-8"?>
+        <Workspace
+          version = "1.0">
+          <FileRef
+              location = "container:SPMTest.xcodeproj">
+          </FileRef>
+          <FileRef
+              location = "group:#{@project_dir}">
+          </FileRef>
+        </Workspace>
+      CONTENTS
+    end
+
     # Include the SDK in the project
     unless sdk.nil?
       # Apply patch adding module named '{{SDK}}'
@@ -180,14 +192,10 @@ def setup_project(branch, directory, sdk)
         l.partition('patching file').last.strip.tr("'", '') # Recent versions of patch in macOS add a ' to the filename
       end
 
-      # The package reference points at the checked-out git repo. Real paths keep
-      # the relative path valid when the temp directory is behind a symlink.
-      package_path = Pathname.new(File.realpath(@project_dir)).relative_path_from(Pathname.new(File.realpath(directory))).to_s
-
       # Do a find/replace of '{{SDK}}' with SDK name for each patched file
       patched_files.each do |file_name|
         file_contents = File.read(file_name)
-        file_contents = file_contents.gsub(/\{\{SDK\}\}/, sdk).gsub('{{PACKAGE_PATH}}', package_path)
+        file_contents = file_contents.gsub(/\{\{SDK\}\}/, sdk)
         sdk_import = sdk == 'StripeCryptoOnramp' ? '@_spi(CryptoOnrampAlpha) import StripeCryptoOnramp' : "import #{sdk}"
         sdk_initialization = sdk == 'StripeCryptoOnramp' ? 'Task { _ = try await CryptoOnrampCoordinator.create() }' : 'StripeAPI.defaultPublishableKey = "foo"'
         file_contents = file_contents.gsub('{{SDK_IMPORT}}', sdk_import).gsub('{{SDK_INITIALIZATION}}', sdk_initialization)
@@ -200,30 +208,11 @@ def setup_project(branch, directory, sdk)
   end
 end
 
-# StripeIdentity, and every SDK that depends on it, builds only with the Identity
-# package trait. SwiftPM rejects enabling a trait the package doesn't declare, so
-# a revision from before the trait builds them without it.
-def set_identity_trait(dir, sdk)
-  project = File.join_if_safe(dir, 'SPMTest.xcodeproj', 'project.pbxproj')
-  trait = "\t\t\ttraits = (\n\t\t\t\tIdentity,\n\t\t\t);\n"
-  contents = File.read(project).sub(trait, '')
-  package = Dir.chdir(@project_dir) { JSON.parse(`swift package dump-package`) }
-  dependencies = package.fetch('targets').to_h do |target|
-    [target.fetch('name'), target.fetch('dependencies', []).filter_map { |d| (d['byName'] || d['target'])&.first }]
-  end
-  uses_identity = ->(name) { name == 'StripeIdentity' || dependencies.fetch(name, []).any?(&uses_identity) }
-  if package.fetch('traits', []).any? { |t| t['name'] == 'Identity' } && uses_identity.call(sdk)
-    contents = contents.sub("isa = XCLocalSwiftPackageReference;\n", "\\0#{trait}")
-  end
-  File.write(project, contents)
-end
-
-def build_from_branch(branch, dir, sdk)
+def build_from_branch(branch, dir, target_name)
   Dir.chdir(@project_dir) do
     `git checkout #{branch}`
   end
-  set_identity_trait(dir, sdk)
-  build(dir, sdk + 'Size')
+  build(dir, target_name)
 end
 
 def check_size(modules, measure_branch, base_branch)
@@ -274,7 +263,7 @@ def check_size(modules, measure_branch, base_branch)
 
       # Checkout measure branch and build with SDK
       puts "Building with #{sdk} on #{measure_branch}...".green
-      measure_compressed_size, measure_uncompressed_size = build_from_branch(measure_branch, @temp_dir, sdk)
+      measure_compressed_size, measure_uncompressed_size = build_from_branch(measure_branch, @temp_dir, sdk + 'Size')
       cache.write(measure_branch, sdk, [measure_compressed_size, measure_uncompressed_size])
 
       measure_sdk_compressed = measure_compressed_size - unincluded_compressed_size
@@ -293,7 +282,7 @@ def check_size(modules, measure_branch, base_branch)
           base_compressed_size, base_uncompressed_size = cached_sizes
         else
           puts "Baseline cache miss; building with #{sdk} on #{base_branch}...".green
-          base_compressed_size, base_uncompressed_size = build_from_branch(base_branch, @temp_dir, sdk)
+          base_compressed_size, base_uncompressed_size = build_from_branch(base_branch, @temp_dir, sdk + 'Size')
           cache.write(base_branch, sdk, [base_compressed_size, base_uncompressed_size])
         end
 

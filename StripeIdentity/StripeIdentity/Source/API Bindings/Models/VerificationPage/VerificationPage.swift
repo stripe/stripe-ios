@@ -66,8 +66,9 @@ extension StripeAPI.VerificationPage {
         }
     }
 
+    /// Without MediaPipe, sessions in the experiment use the standard selfie flow.
     var enable3DFaceCapture: Bool {
-        return has3DFaceCaptureExperiment
+        return has3DFaceCaptureExperiment && FaceGeometryDetectorFactory.isAvailable
     }
 
     var shouldSubmit3DFaceCaptureData: Bool {
