@@ -28,6 +28,7 @@ public final class ExpressCheckoutElementUIView: UIView {
     private let apiClient: STPAPIClient
     private let analyticsClient: STPAnalyticsClientProtocol
     private let stackView = UIStackView()
+    private var displayedPaymentMethods: [ExpressCheckoutElement.PaymentMethod] = []
     private var hasReportedInit = false
     private var linkBrand: LinkBrand
     private var session: CheckoutController.Session
@@ -76,7 +77,11 @@ public final class ExpressCheckoutElementUIView: UIView {
         buttons: [ExpressCheckoutElement.PaymentMethod]
     ) {
         self.session = session
-        linkBrand = session.elementsSession.linkBrand ?? .link
+        let updatedLinkBrand = session.elementsSession.linkBrand ?? .link
+        // Recreating PKPaymentButton on unrelated session updates causes it to flicker.
+        guard buttons != displayedPaymentMethods || updatedLinkBrand != linkBrand else { return }
+        displayedPaymentMethods = buttons
+        linkBrand = updatedLinkBrand
         layoutButtons(buttons)
         invalidateIntrinsicContentSize()
     }

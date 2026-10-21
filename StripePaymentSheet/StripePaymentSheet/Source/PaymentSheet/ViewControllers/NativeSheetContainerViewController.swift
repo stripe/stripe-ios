@@ -343,11 +343,13 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
     // MARK: -
     private var scrollViewHeightConstraint: NSLayoutConstraint?
     private var keyboardAvoidanceConstraint: NSLayoutConstraint?
+    private var contentSizeObservation: NSKeyValueObservation?
 
     private var lastFittedContentHeight: CGFloat = 0
     private var hasScheduledDetentInvalidation = false
     private var isWaitingForDetentTransition = false
 
+    /// Natural form and navigation height, also used to premeasure animated visibility changes.
     private var fittedContentHeight: CGFloat {
         // A vertical system bar narrows the usable content width, which can increase wrapped content height.
         // Use the scroll view hasn't laid out yet, estimate the width by subtracting the insets from the sheet width.
@@ -390,7 +392,39 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
         lastFittedContentHeight = fittedContentHeight
     }
 
+    /// Measures a visibility change without leaving the sheet in its destination layout.
+    func fittedContentHeight(with subview: UIView, isHidden: Bool) -> CGFloat? {
+        guard let view = viewIfLoaded, view.window != nil, subview.isDescendant(of: view) else {
+            return nil
+        }
+
+        var targetHeight: CGFloat?
+        // Animated stack visibility keeps its old fitting height until the animation block finishes.
+        // Measure the destination first, then restore the starting layout before animating either view.
+        UIView.performWithoutAnimation {
+            let wasHidden = subview.isHidden
+            let contentOffset = scrollView.contentOffset
+            defer {
+                subview.setHiddenIfNecessary(wasHidden)
+                view.setNeedsLayout()
+                view.layoutIfNeeded()
+                // Measuring shorter content can clamp the scroll offset; preserve the starting position too.
+                scrollView.contentOffset = contentOffset
+            }
+            subview.setHiddenIfNecessary(isHidden)
+            view.setNeedsLayout()
+            view.layoutIfNeeded()
+            targetHeight = fittedContentHeight
+        }
+        return targetHeight
+    }
+
     func invalidateContentDetent() {
+        invalidateContentDetent(to: fittedContentHeight)
+    }
+
+    /// Resizes to a destination measured before UIKit defers an animated stack's constraint updates.
+    func invalidateContentDetent(to fittedContentHeight: CGFloat) {
         #if !os(visionOS)
         guard #available(iOS 16.0, *) else {
             return
@@ -421,7 +455,13 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
             return
         }
 
-        let fittedContentHeight = fittedContentHeight
+        if UIView.inheritedAnimationDuration > 0 {
+            // A premeasured form change can resize the sheet using the form's own spring timing.
+            lastFittedContentHeight = fittedContentHeight
+            rootParent.sheetPresentationController?.invalidateDetents()
+            rootParent.presentationController?.containerView?.layoutIfNeeded()
+            return
+        }
         // UISheetPresentationController.animateChanges(_:) can cause an infinite layout loop
         // when resizing scrollable content on an iPhone Duo with its screen open.
         // Use the Stripe version instead
@@ -472,6 +512,13 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
             contentContainerView.widthAnchor.constraint(equalTo: scrollView.frameLayoutGuide.widthAnchor),
             scrollViewHeightConstraint,
         ])
+
+        // Nested stacks can change the scroll content's height without laying out this controller's view.
+        // Request a parent layout so those changes use the same coalesced detent update as other layouts.
+        contentSizeObservation = scrollView.observe(\.contentSize, options: [.old, .new]) { [weak self] _, change in
+            guard change.oldValue?.height != change.newValue?.height else { return }
+            self?.view.setNeedsLayout()
+        }
 
         let hideKeyboardGesture = UITapGestureRecognizer(target: self, action: #selector(didTapAnywhere))
         hideKeyboardGesture.cancelsTouchesInView = false
