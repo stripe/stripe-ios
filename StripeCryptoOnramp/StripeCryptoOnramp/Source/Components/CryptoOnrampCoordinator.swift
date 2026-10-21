@@ -824,7 +824,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
             switch selectedPaymentSource {
             case .link:
                 let platformApiClient = try await getPlatformApiClient()
-                let result = try await linkController.createPaymentMethodWithDetails(
+                let result = try await linkController.createPaymentMethodForOnramp(
                     overridePublishableKey: platformApiClient.publishableKey
                 )
                 paymentMethodId = result.paymentMethod.stripeId

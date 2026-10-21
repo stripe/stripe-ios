@@ -1538,8 +1538,8 @@ extension LinkController: LinkFullConsentViewControllerDelegate {
         }
     }
 
-    /// Creates a payment method and returns metadata from the same captured selection.
-    func createPaymentMethodWithDetails(
+    /// Creates a payment method for onramp and returns metadata from the same captured selection.
+    func createPaymentMethodForOnramp(
         overridePublishableKey: String? = nil
     ) async throws -> (paymentMethod: STPPaymentMethod, details: PaymentMethodDetails?) {
         return try await withCheckedThrowingContinuation { continuation in

@@ -596,6 +596,63 @@ final class CryptoOnrampCoordinatorTests: APIStubbedTestCase {
     }
 
     @MainActor
+    func testLinkDetailsRemainPairedWhenCardAndBankSelectionsSwitchDuringEitherRequest() async throws {
+        let card = linkCardFixture(funding: .debit)
+        let bank = linkDetailsFixture(.bankAccount(bankAccount: .init(
+            iconCode: nil, name: "", last4: "6789", country: "COUNTRY_US"
+        )), id: "payment_details_bank_test")
+        for passthrough in [false, true] {
+            for switchDuringPaymentMethodCreation in [false, true] {
+                for original in [card, bank] {
+                    // Given a card or bank selection, with the other instrument ready to replace it
+                    let replacement = original === card ? bank : card
+                    let coordinator = try await makeCoordinator(
+                        cryptoCustomerID: Self.customerID,
+                        linkDetails: original, linkPassthrough: passthrough
+                    )
+                    let controller = try XCTUnwrap(collectedLinkController)
+                    let account = try XCTUnwrap(LinkAccountContext.shared.account)
+                    let switchSelection: @MainActor () -> Void = {
+                        controller.internalPaymentOption = .link(option: .withPaymentDetails(
+                            brand: .link, account: account, paymentDetails: replacement,
+                            confirmationExtras: nil, shippingAddress: nil
+                        ))
+                    }
+                    onLinkPaymentMethodRequest = switchDuringPaymentMethodCreation ? switchSelection : nil
+                    onTokenRequest = switchDuringPaymentMethodCreation ? nil : switchSelection
+
+                    // When the selection changes before the in-flight request responds
+                    let result = try await coordinator.createCryptoPaymentTokenWithDetails()
+                    onLinkPaymentMethodRequest = nil
+                    onTokenRequest = nil
+
+                    // Then the request and summary still describe the original instrument
+                    let selectionKey = passthrough ? "id" : "link[payment_details_id]"
+                    XCTAssertEqual(bodyParameters(try XCTUnwrap(linkPaymentMethodRequests.last))[selectionKey], original.stripeID)
+                    XCTAssertEqual(bodyParameters(try XCTUnwrap(tokenRequests.last))["payment_method"], "pm_link_test")
+                    if original === card {
+                        XCTAssertEqual(result.cardDetails?.funding, .debit)
+                        XCTAssertEqual(result.cardDetails?.brand, .visa)
+                        XCTAssertEqual(result.cardDetails?.last4, "4242")
+                        XCTAssertNil(result.bankAccountDetails)
+                    } else {
+                        XCTAssertNil(result.cardDetails)
+                        XCTAssertEqual(result.bankAccountDetails?.last4, "6789")
+                    }
+
+                    // ...and the next token uses the replacement rather than a stale summary
+                    let next = try await coordinator.createCryptoPaymentTokenWithDetails()
+                    XCTAssertEqual(bodyParameters(try XCTUnwrap(linkPaymentMethodRequests.last))[selectionKey], replacement.stripeID)
+                    XCTAssertEqual(next.cardDetails?.last4, replacement === card ? "4242" : nil)
+                    XCTAssertEqual(next.bankAccountDetails?.last4, replacement === bank ? "6789" : nil)
+                }
+            }
+        }
+        XCTAssertEqual(linkPaymentMethodRequests.count, 16)
+        XCTAssertEqual(tokenRequests.count, 16)
+    }
+
+    @MainActor
     func testLinkCreationFailurePreservesLegacyErrorsWithoutSubmittingTokens() async throws {
         for passthrough in [false, true] {
             let coordinator = try await makeCoordinator(
@@ -619,9 +676,12 @@ final class CryptoOnrampCoordinatorTests: APIStubbedTestCase {
         )))
     }
 
-    private func linkDetailsFixture(_ details: ConsumerPaymentDetails.Details) -> ConsumerPaymentDetails {
+    private func linkDetailsFixture(
+        _ details: ConsumerPaymentDetails.Details,
+        id: String = "payment_details_test"
+    ) -> ConsumerPaymentDetails {
         return ConsumerPaymentDetails(
-            stripeID: "payment_details_test", details: details,
+            stripeID: id, details: details,
             billingAddress: nil, billingEmailAddress: nil, nickname: nil, isDefault: false
         )
     }

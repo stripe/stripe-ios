@@ -55,7 +55,11 @@ The result describes the same payment source used to create the token, even if t
 
 Missing or unrecognized card funding maps to `.other`; missing last four digits remain `nil`. Only `.debit` qualifies for a strict debit-card-only subsidy policy: `.credit`, `.prepaid`, `.other`, bank accounts, and absent details do not. Funding does not prove card ownership, and last four digits may describe a wallet-tokenized number rather than the physical card.
 
-The merchant chooses its voluntary subsidy policy; the server-calculated session quote remains authoritative. Client-provided metadata is not a substitute for backend validation of Stripe-enforced eligibility. Do not add card details to analytics. This opt-in API does not add network calls or change the demo backend. Existing `createCryptoPaymentToken()` integrations continue returning a string.
+A supported ACH selection can follow a separate merchant bank-payment subsidy rule. Bank last four digits do not establish mandate validity, settlement speed, ownership, or payment success.
+
+The SDK already holds structured metadata at selection time. Returning it with the token is a consistency and compatibility choice, not a requirement to wait for funding information to become available. Token creation pairs the summary with the created or shared PaymentMethod after account-routing validation. The collection result shape remains unchanged.
+
+The merchant chooses its voluntary subsidy policy; the server-calculated session quote remains authoritative. Client-provided metadata is not a substitute for backend validation of Stripe-enforced eligibility. Do not add card or bank-account summaries to analytics. This opt-in API does not add network calls or change the demo backend. Existing `createCryptoPaymentToken()` integrations continue returning a string.
 
 Both token methods apply the same authentication and KYC-region validation described below.
 
