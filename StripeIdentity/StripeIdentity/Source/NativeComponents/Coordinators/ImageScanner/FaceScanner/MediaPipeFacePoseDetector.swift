@@ -12,10 +12,6 @@ import Foundation
 @_spi(STP) import StripeCameraCore
 import UIKit
 
-#if !canImport(MediaPipeSPMRuntime) && !canImport(MediaPipeTasksVision)
-#error("StripeIdentity requires the 'Identity' package trait. In Xcode 26.4 or later: select the project, open Package Dependencies, and check 'Identity' in the Traits menu for stripe-ios-spm. In a Package.swift, add traits: [.defaults, \"Identity\"] to the stripe-ios-spm dependency.")
-#endif
-
 #if canImport(MediaPipeSPMRuntime)
 internal import MediaPipeSPMRuntime
 #elseif canImport(MediaPipeTasksVision)
@@ -232,6 +228,13 @@ enum FaceGeometryDetectorFactoryError: Error, CustomStringConvertible {
 }
 
 enum FaceGeometryDetectorFactory {
+    /// Swift Package Manager apps link MediaPipe only when they enable the `Identity` package trait.
+    #if canImport(MediaPipeSPMRuntime) || canImport(MediaPipeTasksVision)
+    static let isAvailable = true
+    #else
+    static let isAvailable = false
+    #endif
+
     static func makeDefaultDetector() throws -> FaceGeometryDetector {
         guard let modelPath = StripeIdentityBundleLocator.resourcesBundle.path(
             forResource: "face_landmarker",

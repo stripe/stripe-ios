@@ -4,4 +4,7 @@
    <FileRef
       location = "container:SPMTest.xcodeproj">
    </FileRef>
+   <FileRef
+      location = "group:../../../">
+   </FileRef>
 </Workspace>
