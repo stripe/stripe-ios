@@ -2,6 +2,8 @@ The next release's version bump will so far be:
 MAJOR
 
 ## X.Y.Z - changes pending release
+### General
+* [Removed] CocoaPods support. Migrate your integration to Swift Package Manager. For more information and help migrating, see [MIGRATING-COCOAPODS.md](https://github.com/stripe/stripe-ios/blob/master/MIGRATING-COCOAPODS.md). 
 
 ### CryptoOnramp (Alpha)
 * [Changed] If you install with Swift Package Manager, [enable the `Identity` package trait](https://github.com/stripe/stripe-ios/blob/master/MIGRATING.md#migrating-from-versions--2700). CryptoOnramp depends on StripeIdentity, which requires it.

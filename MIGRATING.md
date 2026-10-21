@@ -1,4 +1,7 @@
 ## Migration Guides
+### Migrating from CocoaPods
+Read our migration guide in [MIGRATING-COCOAPODS.md](https://github.com/stripe/stripe-ios/blob/master/MIGRATING-COCOAPODS.md).
+
 ### Migrating from versions < 27.0.0
 * If you install with Swift Package Manager and you use `StripeIdentity` or `StripeCryptoOnramp`, enable the `Identity` package trait.
   * **Xcode 26.4 or later**: select your project, open **Package Dependencies**, and check `Identity` in the **Traits** menu for `stripe-ios-spm`.
