@@ -26,11 +26,9 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
     let shippingContactUpdateHandler:
     ((PKContact, @escaping ((PKPaymentRequestShippingContactUpdate) -> Void)) -> Void)?
     let intent: Intent
-    let elementsSession: STPElementsSession
 
     init(
         intent: Intent,
-        elementsSession: STPElementsSession,
         authorizationResultHandler: PaymentSheet.ApplePayConfiguration.Handlers.AuthorizationResultHandler?,
         shippingMethodUpdateHandler: (
             (PKShippingMethod, @escaping ((PKPaymentRequestShippingMethodUpdate) -> Void)) -> Void
@@ -45,7 +43,6 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
         self.shippingMethodUpdateHandler = shippingMethodUpdateHandler
         self.shippingContactUpdateHandler = shippingContactUpdateHandler
         self.intent = intent
-        self.elementsSession = elementsSession
         super.init()
         self.selfRetainer = self
     }
@@ -273,7 +270,6 @@ extension STPApplePayContext {
 
         let delegate = ApplePayContextClosureDelegate(
             intent: intent,
-            elementsSession: elementsSession,
             authorizationResultHandler: configuration.applePay?.customHandlers?.authorizationResultHandler,
             shippingMethodUpdateHandler: configuration.applePay?.customHandlers?.shippingMethodUpdateHandler,
             shippingContactUpdateHandler: configuration.applePay?.customHandlers?.shippingContactUpdateHandler,

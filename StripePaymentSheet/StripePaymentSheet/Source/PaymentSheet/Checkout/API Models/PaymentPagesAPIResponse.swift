@@ -46,18 +46,6 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
     let customer: Customer?
     let elementsSession: ElementsSession
 
-    /// Extracts the client secret from whichever expanded intent is present in the response.
-    func intentClientSecret() throws -> String {
-        if let setupIntent {
-            return setupIntent.clientSecret
-        } else if let paymentIntent {
-            return paymentIntent.clientSecret
-        }
-        throw PaymentSheetError.unknown(
-            debugDescription: "No intent found in checkout session response"
-        )
-    }
-
     var description: String {
         let props: [String] = [
             "PaymentPagesAPIResponse",

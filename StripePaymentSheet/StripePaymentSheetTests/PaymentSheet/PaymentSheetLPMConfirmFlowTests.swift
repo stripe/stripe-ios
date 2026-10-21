@@ -76,10 +76,6 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
             self.session = session
         }
 
-        func commitSession(_ apiResponse: PaymentPagesAPIResponse) async throws {
-            session = apiResponse.makePublicSession()
-        }
-
         func updateBillingTaxRegionIfNecessaryForPaymentSheet(
             address: CheckoutController.Address,
             canUpdateWhileSheetPresented: Bool
