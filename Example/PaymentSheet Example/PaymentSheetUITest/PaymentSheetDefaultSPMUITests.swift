@@ -264,4 +264,5 @@ class PaymentSheetDefaultSPMUITests: PaymentSheetUITestCase {
         }
         XCTFail("Default payment method was not reflected in analytics after \(maxAttempts) reload attempts")
     }
+
 }
