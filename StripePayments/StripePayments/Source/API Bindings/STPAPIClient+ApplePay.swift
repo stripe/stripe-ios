@@ -89,7 +89,7 @@ extension STPAPIClient {
         }
     }
 
-    class func billingDetails(from payment: PKPayment) -> STPPaymentMethodBillingDetails? {
+    @_spi(STP) public class func billingDetails(from payment: PKPayment) -> STPPaymentMethodBillingDetails? {
         var billingDetails: STPPaymentMethodBillingDetails?
         if payment.billingContact != nil {
             billingDetails = STPPaymentMethodBillingDetails()
