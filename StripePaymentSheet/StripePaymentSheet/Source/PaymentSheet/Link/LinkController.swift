@@ -65,9 +65,8 @@ import UIKit
         }
 
         init(paymentDetails: ConsumerPaymentDetails, icon: UIImage, label: String) {
-            self.icon = icon
-            self.label = label
-            self.sublabel = paymentDetails.linkPaymentDetailsFormattedString
+            let paymentMethodType: PaymentMethodType
+            let instrumentDetails: InstrumentDetails?
             switch paymentDetails.details {
             case .card(let card):
                 paymentMethodType = .card
@@ -79,6 +78,13 @@ import UIKit
                 paymentMethodType = .card
                 instrumentDetails = nil
             }
+            self.init(
+                paymentMethodType: paymentMethodType,
+                icon: icon,
+                label: label,
+                sublabel: paymentDetails.linkPaymentDetailsFormattedString,
+                instrumentDetails: instrumentDetails
+            )
         }
     }
 
