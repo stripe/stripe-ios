@@ -71,6 +71,83 @@ final class PaymentSheetPresentationTests: XCTestCase {
     }
 
     @MainActor
+    // @iOS26
+    func testNativeSheetScrollsBehindTransparentKeyboardToolbar() async throws {
+        guard #available(iOS 16.0, *) else { throw XCTSkip("Content-sized detents require iOS 16.") }
+        // Given scrollable content with the same keyboard toolbar used by payment fields
+        let content = NativeSheetStubContentViewController()
+        content.view.backgroundColor = .systemBlue
+        let textField = UITextField()
+        textField.keyboardType = .numberPad
+        textField.heightAnchor.constraint(equalToConstant: 44).isActive = true
+        let toolbar = DoneButtonToolbar(delegate: nil)
+        textField.inputAccessoryView = toolbar
+        let remainingContent = UIView()
+        remainingContent.heightAnchor.constraint(equalToConstant: 1000).isActive = true
+        let stack = UIStackView(arrangedSubviews: [textField, remainingContent])
+        stack.axis = .vertical
+        content.view.addAndPinSubview(stack)
+        let (window, sheet) = try await presentScrollableContentSizedSheet(content: content)
+        defer {
+            window.endEditing(true)
+            window.rootViewController?.dismiss(animated: false)
+            window.isHidden = true
+        }
+
+        for _ in 0..<2 {
+            // When opening the keyboard and its Done toolbar repeatedly
+            let keyboardShown = expectation(forNotification: UIResponder.keyboardDidShowNotification, object: nil)
+            XCTAssertTrue(textField.becomeFirstResponder())
+            await fulfillment(of: [keyboardShown], timeout: 5)
+            sheet.view.layoutIfNeeded()
+
+            // Then content extends behind transparent controls, but stays above opaque keyboards/toolbars
+            let transparentToolbarHeight = LiquidGlassDetector.isEnabledInMerchantApp
+                ? toolbar.bounds.height : 0
+            XCTAssertGreaterThan(sheet.view.keyboardLayoutGuide.layoutFrame.height, sheet.view.safeAreaInsets.bottom)
+            XCTAssertEqual(
+                sheet.scrollView.frame.maxY,
+                sheet.view.keyboardLayoutGuide.layoutFrame.minY + transparentToolbarHeight,
+                accuracy: 0.5
+            )
+
+            // When the keyboard is dismissed, content still reaches the bottom of the sheet
+            let keyboardHidden = expectation(forNotification: UIResponder.keyboardDidHideNotification, object: nil)
+            XCTAssertTrue(textField.resignFirstResponder())
+            await fulfillment(of: [keyboardHidden], timeout: 5)
+            sheet.view.layoutIfNeeded()
+            XCTAssertEqual(sheet.scrollView.frame.maxY, sheet.view.bounds.maxY, accuracy: 0.5)
+        }
+    }
+
+    @MainActor
+    private func presentScrollableContentSizedSheet(content: BottomSheetContentViewController) async throws -> (UIWindow, NativeSheetContainerViewController) {
+        guard #available(iOS 16.0, *) else { throw XCTSkip("Content-sized detents require iOS 16.") }
+        let sheet = NativeSheetContainerViewController(
+            contentViewController: content,
+            appearance: .default,
+            didCancelNative3DS2: {}
+        )
+        // A cold test-host launch may still be connecting its window scene.
+        let sceneConnected = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            UIApplication.shared.connectedScenes.contains { $0 is UIWindowScene }
+        }, object: nil)
+        await fulfillment(of: [sceneConnected], timeout: 5)
+        let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first)
+        let presenter = UIViewController()
+        let window = UIWindow(windowScene: scene)
+        window.frame = scene.coordinateSpace.bounds
+        window.rootViewController = presenter
+        window.makeKeyAndVisible()
+        let presented = expectation(description: "Content-sized native sheet presented")
+        presenter.presentAsSheet(sheet) { presented.fulfill() }
+        await fulfillment(of: [presented], timeout: 3)
+        // Settle any layout-driven resize before capturing the initial height.
+        try await Task.sleep(nanoseconds: 700_000_000)
+        return (window, sheet)
+    }
+
+    @MainActor
     func testCardScannerAnimationKeepsFooterAnchored() async throws {
         // Given an embedded card scanner that starts collapsed
         let content = NativeSheetStubContentViewController()
