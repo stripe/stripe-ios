@@ -290,21 +290,6 @@ extension STPApplePayContext {
         }
     }
 
-    static func roundAmountForApplePay(_ amount: NSDecimalNumber, currency: String?) -> NSDecimalNumber {
-        // Apple Pay rejects fractional amounts for this list of currencies. Match Stripe.js by rounding them up.
-        guard let currency, NSDecimalNumber.decimalCountSpecialCases[currency.uppercased()] != nil else {
-            return amount
-        }
-        return amount.rounding(accordingToBehavior: NSDecimalNumberHandler(
-            roundingMode: .up,
-            scale: 0,
-            raiseOnExactness: false,
-            raiseOnOverflow: false,
-            raiseOnUnderflow: false,
-            raiseOnDivideByZero: false
-        ))
-    }
-
     @MainActor
     static func createPaymentRequest(
         intent: Intent,
@@ -337,7 +322,7 @@ extension STPApplePayContext {
                     currency: intent.currency
                 )
                 paymentRequest.paymentSummaryItems = [
-                    PKPaymentSummaryItem(label: label, amount: roundAmountForApplePay(decimalAmount, currency: intent.currency), type: .final),
+                    PKPaymentSummaryItem(label: label, amount: decimalAmount.roundedForApplePay(currency: intent.currency), type: .final),
                 ]
             } else {
                 paymentRequest.paymentSummaryItems = [
