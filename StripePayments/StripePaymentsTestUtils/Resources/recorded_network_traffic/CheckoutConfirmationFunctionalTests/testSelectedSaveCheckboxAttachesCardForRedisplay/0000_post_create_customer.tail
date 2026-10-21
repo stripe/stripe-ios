@@ -5,12 +5,12 @@ application/json
 Server: Google Frontend
 Content-Type: application/json; charset=utf-8
 x-powered-by: Express
-x-cloud-trace-context: 1305f5517cc1867158b823cae417d7f9
+x-cloud-trace-context: 1715208c469a875a619405efcdafe0f9
 Via: 1.1 google
-Date: Mon, 19 Oct 2026 19:29:50 GMT
+Date: Wed, 21 Oct 2026 17:48:23 GMT
 Content-Length: 541
-Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
-Etag: W/"21d-O2Qc+lw9Tsj2oU2vExEh7jKU+NQ"
+Alt-Svc: h3=":443"; ma=2592000
+Etag: W/"21d-bfsasAEkVBPdzuev6cHEfbjv/ss"
 
 {
   "description" : null,
@@ -34,7 +34,7 @@ Etag: W/"21d-O2Qc+lw9Tsj2oU2vExEh7jKU+NQ"
   "balance" : 0,
   "name" : null,
   "tax_exempt" : "none",
-  "id" : "cus_VTIrlTkcsg3cAw",
+  "id" : "cus_VU1gP1qWsmu9Fn",
   "delinquent" : false,
   "email" : "save-test@example.com",
   "preferred_locales" : [
@@ -42,7 +42,7 @@ Etag: W/"21d-O2Qc+lw9Tsj2oU2vExEh7jKU+NQ"
   ],
   "phone" : null,
   "next_invoice_sequence" : 1,
-  "invoice_prefix" : "CJO3MZAA",
+  "invoice_prefix" : "4YELSZUI",
   "address" : null,
-  "created" : 1792438190
+  "created" : 1792604902
 }
