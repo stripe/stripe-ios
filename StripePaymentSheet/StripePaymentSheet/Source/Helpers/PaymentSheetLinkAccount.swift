@@ -71,6 +71,9 @@ struct LinkPMDisplayDetails {
 
         // Checkbox checked, signup data inferred from billing details or customer information
         case sign_up_opt_in_mobile_checked = "sign_up_opt_in_mobile_checked"
+
+        // Identity (Networked Identity), email and phone number are entered, save ID with Link is tapped
+        case entered_phone_number_email_clicked_save_with_link_identity = "entered_phone_number_email_clicked_save_with_link_identity"
     }
 
     // Dependencies
