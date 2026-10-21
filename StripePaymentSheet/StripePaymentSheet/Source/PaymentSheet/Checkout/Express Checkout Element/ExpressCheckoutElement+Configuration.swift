@@ -103,7 +103,7 @@ extension ExpressCheckoutElement.Configuration {
             public var maxColumns: Int? {
                 didSet {
                     guard let maxColumns, maxColumns < 1 || maxColumns > 10 else { return }
-                    assertionFailure("maxColumns must be between 1 and 10 or nil.")
+                    assertionFailure("maxColumns must be between 1 and 10.")
                     self.maxColumns = oldValue
                 }
             }
@@ -111,7 +111,7 @@ extension ExpressCheckoutElement.Configuration {
             public var maxRows: Int? {
                 didSet {
                     guard let maxRows, maxRows < 1 || maxRows > 10 else { return }
-                    assertionFailure("maxRows must be between 1 and 10 or nil.")
+                    assertionFailure("maxRows must be between 1 and 10.")
                     self.maxRows = oldValue
                 }
             }
