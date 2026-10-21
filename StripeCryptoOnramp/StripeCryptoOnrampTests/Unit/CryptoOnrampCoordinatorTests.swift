@@ -438,6 +438,107 @@ final class CryptoOnrampCoordinatorTests: APIStubbedTestCase {
     }
 
     @MainActor
+    func testCollectionReturnsCardDetailsOnlyAfterFinalSuccessBeforeTokenCreation() async throws {
+        let coordinator = try await makeCoordinator()
+        let presented = expectation(description: "Apple Pay presented")
+        var context: STPApplePayContext?
+        var completed = false
+        coordinator.applePayPresenter = {
+            context = $0
+            presented.fulfill()
+        }
+        let collection = Task { @MainActor in
+            let result = try await coordinator.collectPaymentMethod(type: .applePay(paymentRequest: makeApplePayRequest()), from: UIViewController())
+            completed = true
+            return result
+        }
+        await fulfillment(of: [presented], timeout: 5)
+        let activeContext = try XCTUnwrap(context)
+
+        // When a card is staged, collection must still wait for final success.
+        try await stagePaymentMethod("pm_test_card", coordinator: coordinator, context: activeContext)
+        XCTAssertFalse(completed)
+        XCTAssertTrue(tokenRequests.isEmpty)
+        coordinator.applePayContext(activeContext, didCompleteWith: .success, error: nil)
+        let result = try await collection.value
+
+        // Then metadata is available on the actual result without a token or extra request.
+        XCTAssertEqual(result.cardDetails?.funding, .debit)
+        XCTAssertEqual(result.cardDetails?.brand, .visa)
+        XCTAssertEqual(result.cardDetails?.last4, "4242")
+        XCTAssertEqual(result.displayData?.cardDetails?.last4, result.cardDetails?.last4)
+        XCTAssertEqual(result.displayData?.paymentMethodType, .applePay)
+        XCTAssertNil(result.bankAccountDetails)
+        XCTAssertEqual(requestOrder, ["settings"])
+        XCTAssertTrue(tokenRequests.isEmpty)
+
+        // A subsequent collection cannot mutate the returned snapshot.
+        let replacementContext = try await beginApplePay(coordinator)
+        try await stagePaymentMethod(
+            "pm_test_replacement", coordinator: coordinator, context: replacementContext,
+            card: ["brand": "mastercard", "funding": "credit", "last4": "4444", "exp_month": 12, "exp_year": 2099]
+        )
+        coordinator.applePayContext(replacementContext, didCompleteWith: .success, error: nil)
+        XCTAssertEqual(result.cardDetails?.funding, .debit)
+        XCTAssertEqual(result.cardDetails?.brand, .visa)
+        XCTAssertEqual(result.cardDetails?.last4, "4242")
+    }
+
+    @MainActor
+    func testSuccessfulCollectionWithoutCardMetadataIsNonfatal() async throws {
+        let coordinator = try await makeCoordinator()
+        let presented = expectation(description: "Apple Pay presented")
+        var context: STPApplePayContext?
+        coordinator.applePayPresenter = {
+            context = $0
+            presented.fulfill()
+        }
+        let collection = Task { @MainActor in
+            try await coordinator.collectPaymentMethod(type: .applePay(paymentRequest: makeApplePayRequest()), from: UIViewController())
+        }
+        await fulfillment(of: [presented], timeout: 5)
+        let activeContext = try XCTUnwrap(context)
+        try await stagePaymentMethod("pm_test_no_card", coordinator: coordinator, context: activeContext, card: nil)
+        coordinator.applePayContext(activeContext, didCompleteWith: .success, error: nil)
+        let result = try await collection.value
+        guard case .completed = result else {
+            return XCTFail("Expected successful collection")
+        }
+        XCTAssertNil(result.cardDetails)
+        XCTAssertNil(result.bankAccountDetails)
+        XCTAssertEqual(result.displayData?.paymentMethodType, .applePay)
+        XCTAssertEqual(requestOrder, ["settings"])
+        XCTAssertTrue(tokenRequests.isEmpty)
+    }
+
+    @MainActor
+    func testCanceledCollectionDoesNotReturnStagedDetails() async throws {
+        let coordinator = try await makeCoordinator()
+        let presented = expectation(description: "Apple Pay presented")
+        var context: STPApplePayContext?
+        coordinator.applePayPresenter = {
+            context = $0
+            presented.fulfill()
+        }
+        let collection = Task { @MainActor in
+            try await coordinator.collectPaymentMethod(type: .applePay(paymentRequest: makeApplePayRequest()), from: UIViewController())
+        }
+        await fulfillment(of: [presented], timeout: 5)
+        let activeContext = try XCTUnwrap(context)
+        try await stagePaymentMethod("pm_test_canceled", coordinator: coordinator, context: activeContext)
+        coordinator.applePayContext(activeContext, didCompleteWith: .userCancellation, error: nil)
+        let result = try await collection.value
+        guard case .canceled = result else {
+            return XCTFail("Expected cancellation")
+        }
+        XCTAssertNil(result.cardDetails)
+        XCTAssertNil(result.bankAccountDetails)
+        coordinator.applePayContext(activeContext, didCompleteWith: .success, error: nil)
+        await assertNoSelection(coordinator)
+        XCTAssertTrue(tokenRequests.isEmpty)
+    }
+
+    @MainActor
     private func makeCoordinator(cryptoCustomerID: String? = nil, countryHint: String? = nil) async throws -> CryptoOnrampCoordinator {
         LinkAccountContext.shared.account = nil
         stub { $0.url?.path == "/v1/elements/sessions" } response: { _ in
@@ -462,6 +563,11 @@ final class CryptoOnrampCoordinatorTests: APIStubbedTestCase {
 
     @MainActor
     private func makeApplePayContext(_ coordinator: CryptoOnrampCoordinator) throws -> STPApplePayContext {
+        return try XCTUnwrap(STPApplePayContext(paymentRequest: makeApplePayRequest(), delegate: coordinator))
+    }
+
+    @MainActor
+    private func makeApplePayRequest() -> PKPaymentRequest {
         let request = PKPaymentRequest()
         request.merchantIdentifier = "merchant.com.stripe.test"
         request.countryCode = "US"
@@ -469,7 +575,7 @@ final class CryptoOnrampCoordinatorTests: APIStubbedTestCase {
         request.supportedNetworks = [.visa]
         request.merchantCapabilities = [.capability3DS]
         request.paymentSummaryItems = [PKPaymentSummaryItem(label: "Crypto", amount: 10)]
-        return try XCTUnwrap(STPApplePayContext(paymentRequest: request, delegate: coordinator))
+        return request
     }
 
     @MainActor
@@ -480,8 +586,15 @@ final class CryptoOnrampCoordinatorTests: APIStubbedTestCase {
     }
 
     @MainActor
-    private func stagePaymentMethod(_ id: String, coordinator: CryptoOnrampCoordinator, context: STPApplePayContext) async throws {
-        let data = try JSONSerialization.data(withJSONObject: ["id": id, "created": 0, "livemode": false, "type": "card"])
+    private func stagePaymentMethod(
+        _ id: String,
+        coordinator: CryptoOnrampCoordinator,
+        context: STPApplePayContext,
+        card: [String: Any]? = ["brand": "visa", "funding": "debit", "last4": "4242", "exp_month": 12, "exp_year": 2099]
+    ) async throws {
+        var fields: [String: Any] = ["id": id, "created": 0, "livemode": false, "type": "card"]
+        fields["card"] = card
+        let data = try JSONSerialization.data(withJSONObject: fields)
         let paymentMethod: StripeAPI.PaymentMethod = try StripeJSONDecoder.decode(jsonData: data)
         let result = try await coordinator.applePayContext(context, didCreatePaymentMethod: paymentMethod, paymentInformation: PKPayment())
         XCTAssertEqual(result, STPApplePayContext.COMPLETE_WITHOUT_CONFIRMING_INTENT)

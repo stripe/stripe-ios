@@ -40,6 +40,46 @@ import UIKit
 
         /// Details about the selected Link payment method. This will typically render the display name of the payment method followed by the last four digits, e.g. `Visa Credit •••• 4242`.
         @_spi(STP) @_spi(LinkControllerPreview) public let sublabel: String?
+
+        /// A copied summary of the selected instrument, independent of subsequent selection changes.
+        @_spi(STP) public let instrumentDetails: InstrumentDetails?
+
+        /// Bounded metadata about the underlying instrument, rather than its presentation fallback.
+        @_spi(STP) public enum InstrumentDetails {
+            case card(funding: STPCardFundingType, brand: STPCardBrand, last4: String?)
+            case bankAccount(last4: String?)
+        }
+
+        init(
+            paymentMethodType: PaymentMethodType,
+            icon: UIImage,
+            label: String,
+            sublabel: String?,
+            instrumentDetails: InstrumentDetails? = nil
+        ) {
+            self.paymentMethodType = paymentMethodType
+            self.icon = icon
+            self.label = label
+            self.sublabel = sublabel
+            self.instrumentDetails = instrumentDetails
+        }
+
+        init(paymentDetails: ConsumerPaymentDetails, icon: UIImage, label: String) {
+            self.icon = icon
+            self.label = label
+            self.sublabel = paymentDetails.linkPaymentDetailsFormattedString
+            switch paymentDetails.details {
+            case .card(let card):
+                paymentMethodType = .card
+                instrumentDetails = .card(funding: card.funding.stpFundingType, brand: card.stpBrand, last4: card.last4)
+            case .bankAccount(let bankAccount):
+                paymentMethodType = .bankAccount
+                instrumentDetails = .bankAccount(last4: bankAccount.last4)
+            case .generic:
+                paymentMethodType = .card
+                instrumentDetails = nil
+            }
+        }
     }
 
     @frozen @_spi(STP) public enum VerificationResult {
@@ -236,18 +276,10 @@ import UIKit
             return
         }
 
-        let type: PaymentMethodPreview.PaymentMethodType = switch selectedPaymentDetails.details {
-        case .card, .generic:
-            .card
-        case .bankAccount:
-            .bankAccount
-        }
-
         paymentMethodPreview = .init(
-            paymentMethodType: type,
+            paymentDetails: selectedPaymentDetails,
             icon: iconForPaymentDetails(selectedPaymentDetails),
-            label: resolvedLinkBrand.displayName,
-            sublabel: selectedPaymentDetails.linkPaymentDetailsFormattedString
+            label: resolvedLinkBrand.displayName
         )
     }
 
