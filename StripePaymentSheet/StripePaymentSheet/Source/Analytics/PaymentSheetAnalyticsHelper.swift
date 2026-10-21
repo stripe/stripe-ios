@@ -20,8 +20,9 @@ final class PaymentSheetAnalyticsHelper {
     // Vars set later as PaymentSheet successfully loads, etc.
     var intent: Intent?
     var elementsSession: STPElementsSession?
-    /// Resolved once `logLoadSucceeded` is called; nil before that.
-    private(set) var paymentMethodOrientation: PaymentSheet.PaymentMethodLayout.ResolvedLayout?
+    /// Resolved after each successful initial load or update; nil before initial loading completes.
+    /// Included in subsequent analytics events.
+    var paymentMethodOrientation: PaymentSheet.PaymentMethodLayout.ResolvedLayout?
     private var startTimes: [TimeMeasurement: Date] = [:]
 
     enum IntegrationShape {
