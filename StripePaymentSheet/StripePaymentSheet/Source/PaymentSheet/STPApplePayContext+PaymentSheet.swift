@@ -192,7 +192,7 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
         let shipping = makeShippingDetailsParams(from: paymentInformation)
 
         // 4. Call confirm API with the Apple Pay payment method
-        let requestParameters = CheckoutSessionConfirmationRequestParameters(
+        let requestParameters = CheckoutSessionConfirmationRequestParameters.createWithPaymentMethodID(
             sessionId: checkoutSession.id,
             paymentMethodId: paymentMethod.id,
             expectedAmount: expectedAmount,

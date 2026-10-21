@@ -603,8 +603,10 @@ enum CheckoutTestHelpers {
 // MARK: - Apple Pay test doubles
 
 class MockPKPaymentAuthorizationController: PKPaymentAuthorizationController {
+    var presentationSucceeds = true
+
     override func present(completion: (@Sendable (Bool) -> Void)? = nil) {
-        completion?(true)
+        completion?(presentationSucceeds)
     }
 
     override func dismiss(completion: (() -> Void)? = nil) {

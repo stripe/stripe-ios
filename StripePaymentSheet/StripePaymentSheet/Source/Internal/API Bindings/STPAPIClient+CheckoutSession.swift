@@ -26,8 +26,24 @@ struct CheckoutSessionConfirmationRequestParameters {
     /// The ID of the Checkout Session (e.g., `cs_test_xxx`).
     let sessionId: String
 
-    /// The ID of the PaymentMethod to use for confirmation. The PaymentMethod must have a billing email.
-    let paymentMethodId: String?
+    private enum PaymentMethod {
+        case id(String)
+        case data(STPPaymentMethodParams)
+    }
+
+    private let paymentMethod: PaymentMethod?
+
+    /// The ID of the PaymentMethod to use for confirmation.
+    var paymentMethodId: String? {
+        guard case .id(let id) = paymentMethod else { return nil }
+        return id
+    }
+
+    /// The data used to create a new PaymentMethod during confirmation, instead of a PaymentMethod ID.
+    var paymentMethodData: STPPaymentMethodParams? {
+        guard case .data(let data) = paymentMethod else { return nil }
+        return data
+    }
 
     /// The expected amount for validation. `nil` for setup-style Sessions.
     let expectedAmount: Int?
@@ -63,55 +79,82 @@ struct CheckoutSessionConfirmationRequestParameters {
     /// from fixed and independently collected information.
     let customerData: [String: Any]?
 
-    init(
+    static func createWithoutPaymentMethod(
         sessionId: String,
-        paymentMethodId: String?,
         expectedAmount: Int?,
-        expectedPaymentMethodType: String?,
+        returnURL: String? = nil,
+        clientAttributionMetadata: STPClientAttributionMetadata? = nil,
+        customerData: [String: Any]? = nil
+    ) -> Self {
+        Self(
+            sessionId: sessionId,
+            paymentMethod: nil,
+            expectedAmount: expectedAmount,
+            expectedPaymentMethodType: nil,
+            savePaymentMethod: nil,
+            returnURL: returnURL,
+            shipping: nil,
+            paymentMethodOptions: nil,
+            clientAttributionMetadata: clientAttributionMetadata,
+            passiveCaptchaToken: nil,
+            collectedInformation: nil,
+            customerData: customerData
+        )
+    }
+
+    static func createWithPaymentMethodID(
+        sessionId: String,
+        paymentMethodId: String,
+        expectedAmount: Int?,
+        expectedPaymentMethodType: String,
         savePaymentMethod: Bool? = nil,
         returnURL: String? = nil,
         shipping: STPPaymentIntentShippingDetailsParams? = nil,
         paymentMethodOptions: STPConfirmPaymentMethodOptions? = nil,
         clientAttributionMetadata: STPClientAttributionMetadata? = nil,
         passiveCaptchaToken: String? = nil,
-        collectedInformation: CollectedInformation? = nil,
-        customerData: [String: Any]? = nil
-    ) {
-        self.sessionId = sessionId
-        self.paymentMethodId = paymentMethodId
-        self.expectedAmount = expectedAmount
-        self.expectedPaymentMethodType = expectedPaymentMethodType
-        self.savePaymentMethod = savePaymentMethod
-        self.returnURL = returnURL
-        self.shipping = shipping
-        self.paymentMethodOptions = paymentMethodOptions
-        self.clientAttributionMetadata = clientAttributionMetadata
-        self.passiveCaptchaToken = passiveCaptchaToken
-        self.collectedInformation = collectedInformation
-        self.customerData = customerData
-    }
-}
-
-extension CheckoutSessionConfirmationRequestParameters {
-    init(
-        checkoutSession: CheckoutController.Session,
-        paymentMethod: STPPaymentMethod,
-        configuration: PaymentElementConfiguration,
-        paymentMethodOptions: STPConfirmPaymentMethodOptions?,
-        savePaymentMethod: Bool?,
-        clientAttributionMetadata: STPClientAttributionMetadata?
-    ) {
-        self.init(
-            sessionId: checkoutSession.id,
-            paymentMethodId: paymentMethod.stripeId,
-            expectedAmount: checkoutSession.amount,
-            expectedPaymentMethodType: paymentMethod.type.identifier,
-            savePaymentMethod: checkoutSession.noPaymentRequired ? nil : savePaymentMethod,
-            returnURL: configuration.returnURL,
-            shipping: STPPaymentIntentShippingDetailsParams(paymentSheetConfiguration: configuration),
+        collectedInformation: CollectedInformation? = nil
+    ) -> Self {
+        Self(
+            sessionId: sessionId,
+            paymentMethod: .id(paymentMethodId),
+            expectedAmount: expectedAmount,
+            expectedPaymentMethodType: expectedPaymentMethodType,
+            savePaymentMethod: savePaymentMethod,
+            returnURL: returnURL,
+            shipping: shipping,
             paymentMethodOptions: paymentMethodOptions,
             clientAttributionMetadata: clientAttributionMetadata,
-            collectedInformation: .init(email: checkoutSession.localState.email)
+            passiveCaptchaToken: passiveCaptchaToken,
+            collectedInformation: collectedInformation,
+            customerData: nil
+        )
+    }
+
+    static func createWithPaymentMethodData(
+        sessionId: String,
+        paymentMethodData: STPPaymentMethodParams,
+        expectedAmount: Int?,
+        savePaymentMethod: Bool? = nil,
+        returnURL: String? = nil,
+        shipping: STPPaymentIntentShippingDetailsParams? = nil,
+        paymentMethodOptions: STPConfirmPaymentMethodOptions? = nil,
+        clientAttributionMetadata: STPClientAttributionMetadata? = nil,
+        collectedInformation: CollectedInformation? = nil
+    ) -> Self {
+        Self(
+            sessionId: sessionId,
+            paymentMethod: .data(paymentMethodData),
+            expectedAmount: expectedAmount,
+            expectedPaymentMethodType: paymentMethodData.rawTypeString,
+            savePaymentMethod: savePaymentMethod,
+            returnURL: returnURL,
+            shipping: shipping,
+            paymentMethodOptions: paymentMethodOptions,
+            clientAttributionMetadata: clientAttributionMetadata,
+            passiveCaptchaToken: nil,
+            collectedInformation: collectedInformation,
+            customerData: nil
         )
     }
 }
@@ -280,6 +323,13 @@ extension STPAPIClient {
 
         if let paymentMethodId = requestParameters.paymentMethodId {
             parameters["payment_method"] = paymentMethodId
+        }
+
+        if let paymentMethodData = requestParameters.paymentMethodData {
+            var data = STPFormEncoder.dictionary(forObject: paymentMethodData)
+            data = Self.paramsAddingPaymentUserAgent(data)
+            STPTelemetryClient.shared.addTelemetryFields(toParams: &data)
+            parameters["payment_method_data"] = data
         }
 
         if let expectedPaymentMethodType = requestParameters.expectedPaymentMethodType {
