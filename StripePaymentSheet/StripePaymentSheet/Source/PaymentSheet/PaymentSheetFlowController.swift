@@ -849,23 +849,7 @@ extension PaymentSheet {
 
                 switch result {
                 case .success(let (loadResult, confirmationChallenge)):
-                    // 2. Re-initialize PaymentSheetFlowControllerViewController to update the UI to match the newly loaded data e.g. payment method types may have changed.
-
-                    self.viewController = Self.makeViewController(
-                        configuration: self.configuration,
-                        nativeSheetPresentation: self.nativeSheetPresentation,
-                        loadResult: loadResult,
-                        analyticsHelper: analyticsHelper,
-                        walletButtonsViewState: walletButtonsViewState,
-                        checkoutBillingAddressUpdater: self.checkout,
-                        initialState: .preservingFormInput(from: self.internalPaymentOption)
-                    )
-                    self.viewController.flowControllerDelegate = self
-                    self.confirmationChallenge = confirmationChallenge
-
-                    // Update the payment option and synchronously pre-load image into cache
-                    self.updatePaymentOption()
-                    self.preloadPaymentOptionImage()
+                    self.applyLoadResult(loadResult, confirmationChallenge: confirmationChallenge)
 
                     self.latestUpdateContext?.status = .completed
                     completion(nil)
@@ -874,6 +858,30 @@ extension PaymentSheet {
                     completion(error)
                 }
             }
+        }
+
+        /// Applies already-loaded data. The caller manages the update lifecycle.
+        func applyLoadResult(
+            _ loadResult: PaymentSheetLoader.LoadResult,
+            confirmationChallenge: ConfirmationChallenge
+        ) {
+            // Re-initialize PaymentSheetFlowControllerViewController to update the UI to match the newly loaded data e.g. payment method types may have changed.
+
+            self.viewController = Self.makeViewController(
+                configuration: self.configuration,
+                nativeSheetPresentation: self.nativeSheetPresentation,
+                loadResult: loadResult,
+                analyticsHelper: analyticsHelper,
+                walletButtonsViewState: walletButtonsViewState,
+                checkoutBillingAddressUpdater: self.checkout,
+                initialState: .preservingFormInput(from: self.internalPaymentOption)
+            )
+            self.viewController.flowControllerDelegate = self
+            self.confirmationChallenge = confirmationChallenge
+
+            // Update the payment option and synchronously pre-load image into cache
+            self.updatePaymentOption()
+            self.preloadPaymentOptionImage()
         }
 
         func updateForWalletButtonsView() {
