@@ -2,6 +2,8 @@ The next release's version bump will so far be:
 MINOR
 
 ## X.Y.Z - changes pending release
+### General
+* [Removed] CocoaPods support. Migrate your integration to Swift Package Manager. For more information and help migrating, see [MIGRATING-COCOAPODS.md](https://github.com/stripe/stripe-ios/blob/master/MIGRATING-COCOAPODS.md). 
 
 ### Identity
 * [Added] Added the `Identity` package trait for Swift Package Manager. It links MediaPipe from [stripe/identity-ios-mediapipe](https://github.com/stripe/identity-ios-mediapipe), which StripeIdentity uses for 3D face capture. To enable it, check `Identity` in the **Traits** menu for `stripe-ios-spm` under your project's **Package Dependencies** (Xcode 26.4 or later), or add `traits: [.defaults, "Identity"]` to the `stripe-ios-spm` dependency in your `Package.swift`. Without the trait, StripeIdentity works as before. CocoaPods installs include MediaPipe through the `StripeMediaPipe` pod.

@@ -103,20 +103,19 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
             }
 
             do {
-                // 1. Create PaymentMethod
+                // 1. Tokenize the Apple Pay payment
                 let checkoutSession = self.session
                 let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadata(
                     intent: .checkout(checkoutSession),
                     elementsSession: checkoutSession.elementsSession
                 )
-                let paymentMethod = try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<StripeAPI.PaymentMethod, Error>) in
-                    StripeAPI.PaymentMethod.create(
-                        apiClient: self.apiClient,
-                        payment: payment,
-                        fallbackBillingDetails: nil,
-                        clientAttributionMetadata: clientAttributionMetadata
-                    ) { result in
-                        continuation.resume(with: result)
+                let token = try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<STPToken, Error>) in
+                    self.apiClient.createToken(with: payment) { token, error in
+                        if let token {
+                            continuation.resume(returning: token)
+                        } else {
+                            continuation.resume(throwing: error ?? NSError.stp_genericConnectionError())
+                        }
                     }
                 }
                 guard !self.didFinish else {
@@ -127,11 +126,18 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
                     : checkoutSession.merchantWillSavePaymentMethod(STPPaymentMethodType.card) ? true : nil
 
                 // 2. Confirm
-                let requestParameters = CheckoutSessionConfirmationRequestParameters(
+                let cardParams = STPPaymentMethodCardParams()
+                cardParams.token = token.tokenId
+                let paymentMethodData = STPPaymentMethodParams(
+                    card: cardParams,
+                    billingDetails: STPAPIClient.billingDetails(from: payment),
+                    metadata: nil
+                )
+                paymentMethodData.clientAttributionMetadata = clientAttributionMetadata
+                let requestParameters = CheckoutSessionConfirmationRequestParameters.createWithPaymentMethodData(
                     sessionId: checkoutSession.id,
-                    paymentMethodId: paymentMethod.id,
+                    paymentMethodData: paymentMethodData,
                     expectedAmount: checkoutSession.amount,
-                    expectedPaymentMethodType: paymentMethod.type?.rawValue ?? STPPaymentMethodType.card.identifier,
                     savePaymentMethod: savePaymentMethod,
                     returnURL: self.returnURL,
                     shipping: self.makeShippingDetailsParams(from: payment)
@@ -274,8 +280,11 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         checkoutWalletUpdater: CheckoutSessionWalletUpdater
     ) throws -> CheckoutApplePayContext {
         guard PKPaymentAuthorizationController.canMakePayments() else {
-            let error = CheckoutError.unknown(debugDescription: "Apple Pay isn't set up on this device (e.g. no cards in wallet).")
-            STPAnalyticsClient.sharedClient.log(analytic: ErrorAnalytic(event: .unexpectedCheckoutElementsError, error: error))
+            let error = CheckoutError.unknown(debugDescription: "Apple Pay is unavailable on this device. Check device support and payment restrictions.")
+            STPAnalyticsClient.sharedClient.log(
+                analytic: ErrorAnalytic(event: .unexpectedCheckoutElementsError, error: error),
+                apiClient: applePayConfirmationParameters.apiClient
+            )
             throw error
         }
 
@@ -290,8 +299,13 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         // Use PKPaymentAuthorizationViewController.init as a proxy — it IS nullable and
         // returns nil when the request can't be presented (e.g. bad merchant ID, unsupported network).
         guard PKPaymentAuthorizationViewController(paymentRequest: paymentRequest) != nil else {
-            let error = CheckoutError.unknown(debugDescription: "Apple Pay couldn't be set up, most likely because the Apple Pay merchant ID isn't valid or isn't provisioned for this app.")
-            STPAnalyticsClient.sharedClient.log(analytic: ErrorAnalytic(event: .unexpectedCheckoutElementsError, error: error))
+            let error = CheckoutError.unknown(debugDescription: """
+                Could not set up Apple Pay. The user cannot make payments on any of the payment request's supported networks.
+                """)
+            STPAnalyticsClient.sharedClient.log(
+                analytic: ErrorAnalytic(event: .unexpectedCheckoutElementsError, error: error),
+                apiClient: applePayConfirmationParameters.apiClient
+            )
             throw error
         }
         let authorizationController = PKPaymentAuthorizationController(paymentRequest: paymentRequest)
@@ -312,9 +326,18 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
             authorizationController.present { [weak self] presented in
                 guard let self, !presented else { return }
                 Task { @MainActor [weak self] in
-                    let error = CheckoutError.unknown(debugDescription: "Could not present Apple Pay.")
-                    STPAnalyticsClient.sharedClient.log(analytic: ErrorAnalytic(event: .unexpectedCheckoutElementsError, error: error))
-                    self?.resume(with: .failed(error))
+                    guard let self else { return }
+                    let error = CheckoutError.unknown(debugDescription: """
+                        Could not present Apple Pay. Check Apple Pay setup in Wallet and that the merchant ID matches an ID \
+                        in the app's Apple Pay entitlements and provisioning profile. Ensure the app is active, \
+                        the presenting window is visible, and no other presentation or dismissal is in progress.
+                        """)
+                    STPAnalyticsClient.sharedClient.log(
+                        analytic: ErrorAnalytic(event: .unexpectedCheckoutElementsError, error: error),
+                        apiClient: self.apiClient
+                    )
+                    self.resume(with: .failed(error))
+                    self._end()
                 }
             }
         }
