@@ -99,19 +99,19 @@ extension ExpressCheckoutElement.Configuration {
 
         /// Controls the layout of express payment buttons.
         public struct ButtonLayout {
-            /// Maximum number of columns. `nil` uses the default. Must be greater than zero when set.
+            /// Sets the maximum number of columns the Express Checkout Element can use to render. Must be between 1 and 10, inclusive.
             public var maxColumns: Int? {
                 didSet {
-                    guard let maxColumns, maxColumns <= 0 else { return }
-                    assertionFailure("maxColumns must be greater than zero")
+                    guard let maxColumns, maxColumns < 1 || maxColumns > 10 else { return }
+                    assertionFailure("maxColumns must be between 1 and 10 or nil.")
                     self.maxColumns = oldValue
                 }
             }
-            /// Maximum number of rows. `nil` uses the default. Must be greater than zero when set.
+            /// Sets the maximum number of rows the Express Checkout Element can use to render. Must be between 1 and 10, inclusive.
             public var maxRows: Int? {
                 didSet {
-                    guard let maxRows, maxRows <= 0 else { return }
-                    assertionFailure("maxRows must be greater than zero")
+                    guard let maxRows, maxRows < 1 || maxRows > 10 else { return }
+                    assertionFailure("maxRows must be between 1 and 10 or nil.")
                     self.maxRows = oldValue
                 }
             }
