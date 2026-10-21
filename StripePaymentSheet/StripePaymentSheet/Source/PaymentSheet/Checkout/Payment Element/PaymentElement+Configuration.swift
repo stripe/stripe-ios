@@ -191,16 +191,30 @@ extension PaymentElement.Configuration {
         /// for all available options.
         public var buttonType: PKPaymentButtonType?
 
+        /// Controls whether Apple Pay is displayed in PaymentElement. Defaults to `.automatic`.
+        public var display: Display = .automatic
+
+        /// Display configuration for Apple Pay.
+        public enum Display: String {
+            /// Apple Pay will be displayed when available.
+            case automatic
+            /// Apple Pay will never be displayed in PaymentElement.
+            case never
+        }
+
         /// Creates an Apple Pay configuration.
         /// - Parameters:
         ///   - merchantId: The Apple Pay merchant identifier.
         ///   - buttonType: The type of Apple Pay button to display. Defaults to `.plain` when `nil`.
+        ///   - display: Controls whether Apple Pay is displayed in PaymentElement. Defaults to `.automatic`.
         public init(
             merchantId: String,
-            buttonType: PKPaymentButtonType? = nil
+            buttonType: PKPaymentButtonType? = nil,
+            display: Display = .automatic
         ) {
             self.merchantId = merchantId
             self.buttonType = buttonType
+            self.display = display
         }
     }
 
@@ -228,7 +242,10 @@ extension PaymentElement.Configuration {
 }
 
 private extension PaymentElement.Configuration.ApplePayConfiguration {
-    func paymentSheetConfiguration(merchantCountryCode: String) -> PaymentSheet.ApplePayConfiguration {
+    func paymentSheetConfiguration(merchantCountryCode: String) -> PaymentSheet.ApplePayConfiguration? {
+        guard display != .never else {
+            return nil
+        }
         return PaymentSheet.ApplePayConfiguration(
             merchantId: merchantId,
             merchantCountryCode: merchantCountryCode,

@@ -140,13 +140,57 @@ final class PaymentElementTest: XCTestCase {
     }
 
     func testConfigurationSetsApplePayFromCheckoutSessionMerchantCountry() async throws {
-        // Given Apple Pay configured for a Checkout Session with a non-US merchant country
-        var checkoutConfiguration = CheckoutController.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
-        var paymentElementConfiguration = PaymentElement.Configuration()
-        paymentElementConfiguration.applePayConfiguration = PaymentElement.Configuration.ApplePayConfiguration(
+        let applePayConfiguration = PaymentElement.Configuration.ApplePayConfiguration(
             merchantId: "merchant.com.example",
             buttonType: .donate
         )
+        XCTAssertEqual(applePayConfiguration.display, .automatic)
+        XCTAssertEqual(
+            PaymentElement.Configuration.ApplePayConfiguration(merchantId: "merchant.com.example").display,
+            .automatic
+        )
+        try await assertApplePayConfiguration(applePayConfiguration)
+    }
+
+    func testConfigurationExplicitAutomaticApplePay() async throws {
+        try await assertApplePayConfiguration(.init(
+            merchantId: "merchant.com.example",
+            buttonType: .donate,
+            display: .automatic
+        ))
+    }
+
+    func testConfigurationNeverDisplaysApplePay() async throws {
+        // Given Apple Pay is disabled in PaymentElement
+        var checkoutConfiguration = CheckoutController.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
+        var paymentElementConfiguration = PaymentElement.Configuration()
+        paymentElementConfiguration.applePayConfiguration = .init(
+            merchantId: "merchant.com.example",
+            buttonType: .donate,
+            display: .never
+        )
+        checkoutConfiguration.paymentElement = paymentElementConfiguration
+
+        // When Checkout creates PaymentElement
+        let checkout = try await CheckoutController(
+            configuration: CheckoutTestHelpers.makeConfiguration(configuration: checkoutConfiguration)
+        )
+        let paymentElement = checkout.getPaymentElement()
+
+        // Then Apple Pay is neither configured nor selected in either presentation
+        XCTAssertNil(paymentElement.paymentSheetFlowController.configuration.applePay)
+        XCTAssertNil(paymentElement.embeddedPaymentElement.configuration.applePay)
+        XCTAssertNotEqual(paymentElement.paymentSheetFlowController.paymentOption?.paymentMethodType, "apple_pay")
+        XCTAssertNotEqual(paymentElement.embeddedPaymentElement.paymentOption?.paymentMethodType, "apple_pay")
+    }
+
+    private func assertApplePayConfiguration(
+        _ applePayConfiguration: PaymentElement.Configuration.ApplePayConfiguration
+    ) async throws {
+        // Given Apple Pay configured for a Checkout Session with a non-US merchant country
+        var checkoutConfiguration = CheckoutController.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
+        var paymentElementConfiguration = PaymentElement.Configuration()
+        paymentElementConfiguration.applePayConfiguration = applePayConfiguration
         checkoutConfiguration.paymentElement = paymentElementConfiguration
         var sessionJSON = Self.openSessionJSON(paymentMethodTypes: ["card"])
         var elementsSessionJSON = sessionJSON["elements_session"] as! [String: Any]
