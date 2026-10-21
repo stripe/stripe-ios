@@ -482,7 +482,20 @@ extension CheckoutController {
         }
 
         // === Update Payment Element and all other asynchronously updated elements ==
-        try await paymentElement?.update(checkout: self)
+        do {
+            try await paymentElement?.update(checkout: self)
+        } catch let error as PaymentSheetError {
+            if case .noPaymentMethodTypesAvailable = error {
+                // TODO: Support transitions from available payment methods to none. The session is already
+                // committed, and merchants have no signal to hide PE and ECE. Design that behavior before
+                // making session application nonthrowing.
+                STPAnalyticsClient.sharedClient.log(
+                    analytic: ErrorAnalytic(event: .unexpectedCheckoutElementsError, error: error),
+                    apiClient: apiClient
+                )
+            }
+            throw error
+        }
     }
 
     /// - Warning: See `commitSession` for what this method *doesn't* do. That includes updating Checkout elements.
