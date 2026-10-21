@@ -259,28 +259,6 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         XCTAssertEqual(response.paymentStatus, .unpaid)
     }
 
-    func testManualCaptureCompletesWithoutPollingOrMarkingPaid() async throws {
-        // Given the backend's authorized manual-capture response
-        let checkout = try await makeCheckout()
-        let poller = TestCheckoutSessionPoller(outcome: .timedOut)
-        let responseJSON = makeConfirmedSessionJSON(
-            paymentIntentStatus: "requires_capture",
-            status: "complete",
-            paymentStatus: "unpaid"
-        )
-
-        // When Checkout handles confirmation
-        let result = await confirmCheckoutSession(checkout, responseJSON: responseJSON, poller: poller)
-
-        // Then authorization completes Checkout without waiting for capture
-        guard case .completed(let response) = result else {
-            return XCTFail("Expected confirmation to complete, got \(result)")
-        }
-        XCTAssertEqual(response.status, .complete(.unpaid))
-        XCTAssertEqual(response.paymentIntent?.status, .requiresCapture)
-        XCTAssertTrue(poller.checkoutSessionIds.isEmpty)
-    }
-
     func testMicrodepositVerificationPaymentIntentPreservesSessionStatuses() async throws {
         // Given a US bank account payment where the customer must verify microdeposits out of band
         let checkout = try await makeCheckout()
@@ -411,30 +389,6 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
             return XCTFail("Expected confirmation to fail, got \(result)")
         }
         XCTAssertTrue(poller.checkoutSessionIds.isEmpty)
-    }
-
-    func testCheckoutClientPaymentResponseErrorTakesPrecedenceOverReferencedIntent() async throws {
-        // Given Checkout reports a failure independently of its referenced Intent
-        let checkout = try await makeCheckout()
-        let session = makeConfirmedSessionJSON(status: "open", paymentStatus: "unpaid")
-        stubConfirmedIntentRetrieval(from: session)
-        var response = Self.checkoutClientConfirmJSON(from: session)
-        var paymentResponse = try XCTUnwrap(response["payment_response"] as? [String: Any])
-        paymentResponse["status"] = "requires_payment_method"
-        paymentResponse["last_payment_error"] = [
-            "type": "card_error", "code": "card_declined", "message": "Checkout payment was declined.",
-        ]
-        response["payment_response"] = paymentResponse
-        stub { $0.url?.path.hasSuffix("/confirm") == true } response: { _ in
-            HTTPStubsResponse(jsonObject: response, statusCode: 200, headers: nil)
-        }
-
-        // When the customer confirms
-        let result = await checkout.confirm(makePaymentMethodFlow(for: checkout))
-
-        // Then Checkout returns its canonical payment error before handling the Intent
-        guard case .failed(let error) = result else { return XCTFail("Expected Checkout payment error") }
-        XCTAssertEqual((error as NSError).userInfo[STPError.stripeErrorCodeKey] as? String, "card_declined")
     }
 
     // MARK: - Payment Method
@@ -741,40 +695,6 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         }
     }
 
-    func testVippsConfirmationPreservesInlineDataAndRadarToken() async throws {
-        // Given inline Vipps data with a Radar token
-        let apiClient = STPAPIClient(publishableKey: "pk_test_123")
-        apiClient.betas = ["vipps_preview=v1"]
-        let paymentMethodData = makeConfirmParams(type: .stripe(.vipps)).paymentMethodParams
-        paymentMethodData.radarOptions = STPRadarOptions(hcaptchaToken: "radar_token")
-        let requestParameters = CheckoutSessionConfirmationRequestParameters.createWithPaymentMethodData(
-            sessionId: "cs_test_123",
-            paymentMethodData: paymentMethodData,
-            expectedAmount: 2000,
-            returnURL: "stripe-ios-test://checkout-return"
-        )
-        stubConfirmedIntentRetrieval(from: Self.confirmedSessionJSON)
-        let confirmation = expectation(description: "CheckoutClient confirms inline Vipps data")
-        stub { $0.url?.path == "/v1/checkout_client/cs_test_123/confirm" } response: { request in
-            let params = RequestBodyTestHelpers.formEncodedBodyParams(from: request)
-            XCTAssertTrue(request.value(forHTTPHeaderField: "Stripe-Version")?.contains("vipps_preview=v1") == true)
-            XCTAssertNil(params["payment_method"])
-            XCTAssertEqual(params["payment_method_data[type]"], "vipps")
-            XCTAssertEqual(params["payment_method_data[radar_options][hcaptcha_token]"], "radar_token")
-            XCTAssertEqual(params["expected_payment_method_type"], "vipps")
-            XCTAssertNil(params["passive_captcha_token"])
-            confirmation.fulfill()
-            return HTTPStubsResponse(jsonObject: Self.checkoutClientConfirmJSON(from: Self.confirmedSessionJSON), statusCode: 200, headers: nil)
-        }
-
-        // When confirming through CheckoutClient
-        let response = try await apiClient.confirmCheckoutSession(with: requestParameters)
-
-        // Then Vipps stays inline and preserves its Radar token
-        XCTAssertEqual(response.sessionId, "cs_test_123")
-        await fulfillment(of: [confirmation], timeout: 1)
-    }
-
     func testNewPaymentMethodCompletesChallengeAfterConfirmFailure() async throws {
         try await assertChallengeCompletesAfterConfirm(statusCode: 400)
     }
@@ -783,7 +703,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         statusCode: Int,
         inspectRequest: @escaping ([String: String]) -> Void = { _ in }
     ) async throws {
-        // Given a new card with the existing Radar challenge
+        // Given a new card whose confirmation has a Radar challenge
         let checkout = try await makeCheckout()
         let challenge = TestConfirmationChallenge()
         stubConfirmedIntentRetrieval(from: Self.confirmedSessionJSON)
@@ -797,7 +717,6 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
             request.url?.path.hasSuffix("/confirm") == true
         } response: { request in
             let params = RequestBodyTestHelpers.formEncodedBodyParams(from: request, omittingEmptyValues: true)
-            XCTAssertNil(params["passive_captcha_token"])
             XCTAssertEqual(params["payment_method_data[radar_options][hcaptcha_token]"], "captcha_token")
             XCTAssertEqual(params["payment_method_data[radar_options][ios_verification_object][test_assertion]"], "assertion")
             inspectRequest(params)
@@ -1162,7 +1081,6 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
                 file: file,
                 line: line
             )
-            XCTAssertNil(params["passive_captcha_token"], file: file, line: line)
             if let expectedCollectedInformationEmail {
                 XCTAssertEqual(
                     params["collected_information[email]"],

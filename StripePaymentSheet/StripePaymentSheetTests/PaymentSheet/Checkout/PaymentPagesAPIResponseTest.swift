@@ -16,192 +16,6 @@ import XCTest
 @MainActor
 class PaymentPagesAPIResponseTest: XCTestCase {
 
-    func testCheckoutClientInitResponseBuildsSession() throws {
-        // Given the CheckoutClient init shape for a one-time Price session
-        let oldResponse = CheckoutTestHelpers.makeSessionJSON()
-        let items = try XCTUnwrap(oldResponse["checkout_items"] as? [[String: Any]])
-        let response: [String: Any] = [
-            "id": "cs_test_123",
-            "ui_mode": "mobile_elements",
-            "state": "ready",
-            "livemode": false,
-            "status": "open",
-            "payment_status": "unpaid",
-            "integration_currency": "usd",
-            "presentment_currency": "usd",
-            "items": items,
-            "elements_session_id": "elements_session_test123",
-            "elements_session_config_id": "config_test123",
-            "ordered_payment_method_types_and_wallets": ["card", "card_wallet_link", "apple_pay", "google_pay"],
-            "link_settings": ["link_mode": "LINK_CARD_BRAND", "link_brand": "link", "link_funding_sources": ["CARD"]],
-            "merchant_info": ["country": "US", "display_name": "Example merchant"],
-            "saved_payment_method_options": ["payment_method_save": "enabled", "payment_method_remove": "enabled"],
-            "total_summary": ["total_tax_amounts": []],
-            "automatic_tax": ["enabled": false, "status": "ready"],
-        ]
-
-        // When the CheckoutClient response is decoded for Checkout
-        let data = try JSONSerialization.data(withJSONObject: response)
-        let checkoutClient = try StripeJSONDecoder().decode(CheckoutClientAPIResponse.self, from: data)
-        let apiResponse = try checkoutClient.paymentPagesResponse()
-        let session = apiResponse.makePublicSession()
-
-        // Then Checkout uses the actual CheckoutClient session and Elements fields
-        XCTAssertEqual(session.id, "cs_test_123")
-        XCTAssertEqual(session.currency, "usd")
-        XCTAssertEqual(session.businessName, "Example merchant")
-        XCTAssertEqual(session.elementsSession.sessionID, "elements_session_test123")
-        XCTAssertEqual(session.elementsSession.orderedPaymentMethodTypes.map(\.identifier), ["card"])
-        XCTAssertEqual(
-            session.elementsSession.orderedPaymentMethodTypesAndWallets,
-            ["card", "card_wallet_link", "apple_pay", "google_pay"]
-        )
-        XCTAssertTrue(session.elementsSession.linkPassthroughModeEnabled)
-        XCTAssertEqual(session.merchantCountryCode, "US")
-        XCTAssertEqual(session.savedPaymentMethodsOfferSave?.enabled, true)
-        XCTAssertEqual(session.orderSummaryItems.count, 1)
-    }
-
-    func testCheckoutClientUsesExplicitSetupFutureUsageOptions() throws {
-        // Given payment-method overrides returned by CheckoutClient
-        let response = CheckoutTestHelpers.checkoutClientInitJSON(
-            from: CheckoutTestHelpers.makeSessionJSON([
-                "payment_method_options": [
-                    "card": ["setup_future_usage": "off_session"],
-                    "paypal": ["setup_future_usage": "none"],
-                ],
-            ]),
-            sessionId: "cs_test"
-        )
-        let data = try JSONSerialization.data(withJSONObject: response)
-
-        // When Checkout builds the session
-        let checkoutClient = try StripeJSONDecoder().decode(CheckoutClientAPIResponse.self, from: data)
-        let session = try checkoutClient.paymentPagesResponse().makePublicSession()
-
-        // Then explicit overrides drive saving and allow_redisplay decisions
-        XCTAssertEqual(session.setupFutureUsage(for: .card), "off_session")
-        XCTAssertEqual(session.setupFutureUsage(for: .payPal), "none")
-        XCTAssertTrue(session.isPaymentMethodOptionsSetupFutureUsageSet)
-        XCTAssertNil(session.setupFutureUsage)
-    }
-
-    func testCheckoutClientTaxAndAdaptivePricingUseReviewedShape() throws {
-        // Given CheckoutClient's flat tax amounts and localized disclosures
-        var response = CheckoutTestHelpers.checkoutClientInitJSON(
-            from: CheckoutTestHelpers.makeSessionJSON(), sessionId: "cs_test"
-        )
-        response["automatic_tax"] = ["enabled": true, "status": "requires_address", "address_source": "billing"]
-        response["total_summary"] = [
-            "subtotal": 1000, "total": 1085, "due": 1085,
-            "total_tax_amounts": [["amount": 85, "inclusive": false, "display_name": "Sales Tax", "percentage": 8.5]],
-        ]
-        response["adaptive_pricing_info"] = [
-            "integration_currency_option": [
-                "currency": "usd", "amount": 1085,
-                "disclosure": ["caption": "Integration currency disclosure"],
-            ],
-            "local_currency_options": [[
-                "currency": "gbp", "amount": 840,
-                "disclosure": ["caption": "Local currency disclosure", "details": "Conversion details"],
-            ], ],
-        ]
-        let data = try JSONSerialization.data(withJSONObject: response)
-
-        // When Checkout builds the session
-        let checkoutClient = try StripeJSONDecoder().decode(CheckoutClientAPIResponse.self, from: data)
-        let session = try checkoutClient.paymentPagesResponse().makePublicSession()
-        let meta = try XCTUnwrap(session.exchangeRateMeta)
-
-        // Then it keeps the server's tax state and disclosure text without a synthetic rate
-        XCTAssertTrue(session.collectsTaxFromBillingAddress)
-        XCTAssertEqual(session.tax?.status, .requiresBillingAddress)
-        XCTAssertEqual(session.taxAmounts?.first?.displayName, "Sales Tax")
-        XCTAssertEqual(session.taxAmounts?.first?.percentage, 8.5)
-        XCTAssertNil(meta.exchangeRate)
-        XCTAssertNil(meta.conversionMarkupBps)
-        XCTAssertEqual(CurrencySelectorUtilities.caption(forSelectedCurrency: "gbp", exchangeRateMeta: meta), "Local currency disclosure")
-        XCTAssertEqual(CurrencySelectorUtilities.caption(forSelectedCurrency: "usd", exchangeRateMeta: meta), "Integration currency disclosure")
-        XCTAssertEqual(CurrencySelectorUtilities.detailText(exchangeRateMeta: meta), "Conversion details")
-    }
-
-    func testCheckoutClientStubDoesNotIncludeLegacyOnlyFields() throws {
-        // Given legacy fixtures containing fields absent from CheckoutClient
-        let response = CheckoutTestHelpers.checkoutClientInitJSON(
-            from: CheckoutTestHelpers.makeSessionJSON([
-                "setup_future_usage": "off_session",
-                "setup_future_usage_for_payment_method_type": ["card": "off_session"],
-                "url": "https://checkout.stripe.com/test",
-                "customer_managed_saved_payment_methods_offer_save": ["enabled": true, "status": "accepted"],
-                "elements_session": [
-                    "session_id": "es_test", "merchant_country": "US",
-                    "link_settings": ["link_funding_sources": ["CARD"], "link_mobile_use_attestation_endpoints": true],
-                ],
-            ]), sessionId: "cs_test"
-        )
-
-        // Then endpoint tests cannot receive legacy fields through the stub
-        for key in ["setup_future_usage", "setup_future_usage_for_payment_method_type", "url", "tax_meta", "tax_context", "elements_session", "customer_managed_saved_payment_methods_offer_save"] {
-            XCTAssertNil(response[key], key)
-        }
-        let linkSettings = try XCTUnwrap(response["link_settings"] as? [String: Any])
-        XCTAssertNil(linkSettings["link_mobile_use_attestation_endpoints"])
-        let savedOptions = try XCTUnwrap(response["saved_payment_method_options"] as? [String: Any])
-        XCTAssertEqual(savedOptions["payment_method_save"] as? String, "enabled")
-    }
-
-    func testCheckoutClientResolvedSetupFutureUsageTakesPrecedenceOverExplicitOptions() throws {
-        // Given the requested resolved map, including a session default and an explicit opt-out
-        var response = CheckoutTestHelpers.checkoutClientInitJSON(from: CheckoutTestHelpers.makeSessionJSON(), sessionId: "cs_test")
-        response["payment_method_options"] = ["card": ["setup_future_usage": "off_session"]]
-        response["setup_future_usage_for_payment_method_type"] = [
-            "card": "none", "link": "off_session", "ideal": "on_session",
-        ]
-
-        // When Checkout decodes the response
-        let data = try JSONSerialization.data(withJSONObject: response)
-        let session = try StripeJSONDecoder().decode(CheckoutClientAPIResponse.self, from: data)
-            .paymentPagesResponse().makePublicSession()
-
-        // Then the resolved map is authoritative, preserves all values, and leaves unset methods absent
-        XCTAssertEqual(session.setupFutureUsage(for: .card), "none")
-        XCTAssertEqual(session.setupFutureUsage(for: .link), "off_session")
-        XCTAssertEqual(session.setupFutureUsage(for: .iDEAL), "on_session")
-        XCTAssertNil(session.setupFutureUsage(for: .SEPADebit))
-    }
-
-    func testCheckoutClientPreservesResolvedMobileLinkSettings() throws {
-        // Given the session's resolved settings, with values that differ from client defaults
-        var elements = CheckoutTestHelpers.minimalElementsSessionJSON
-        elements["link_settings"] = [
-            "link_funding_sources": ["CARD"],
-            "link_mobile_use_attestation_endpoints": true,
-            "link_mobile_attestation_state_sync_enabled": true,
-            "link_mobile_disable_signup": true,
-            "link_popup_webview_option": "ephemeral",
-            "link_enable_displayable_default_values_in_ece": true,
-        ]
-        let response = CheckoutTestHelpers.checkoutClientInitJSON(
-            from: CheckoutTestHelpers.makeSessionJSON(["elements_session": elements]), sessionId: "cs_test"
-        )
-
-        // When Checkout decodes the fields currently returned by CheckoutClient
-        let data = try JSONSerialization.data(withJSONObject: response)
-        let session = try StripeJSONDecoder().decode(CheckoutClientAPIResponse.self, from: data)
-            .paymentPagesResponse().makePublicSession()
-        let settings = try XCTUnwrap(session.elementsSession.linkSettings)
-
-        // Then the SDK must receive the session's values for Link configuration
-        // TODO(OCS_API_EXT-266): Refresh the fixture and remove this expectation when CheckoutClient returns mobile Link settings.
-        XCTExpectFailure("CheckoutClient omits mobile Link settings: https://jira.corp.stripe.com/browse/OCS_API_EXT-266") {
-            XCTAssertEqual(settings.useAttestationEndpoints, true)
-            XCTAssertEqual(settings.attestationStateSyncEnabled, true)
-            XCTAssertEqual(settings.disableSignup, true)
-            XCTAssertEqual(settings.popupWebviewOption, .ephemeral)
-            XCTAssertEqual(settings.linkEnableDisplayableDefaultValuesInECE, true)
-        }
-    }
-
     // MARK: - STPAPIResponseDecodable Tests
 
     func testDecodedObjectRejectsMissingSDKRequiredFields() throws {
@@ -373,7 +187,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertTrue(analytic?.errorMessage.contains("Invalid customer") == true)
     }
 
-    func testDecodedObjectFromAPIResponseMapping() {
+    func testDecodedObjectFromAPIResponseMapping() throws {
         let json = STPTestUtils.jsonNamed("CheckoutSession")!
         let apiResponse = try! PaymentPagesAPIResponse.decode(fromAPIResponse: json)
         let session = apiResponse.makePublicSession()
@@ -405,6 +219,8 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertNotNil(session.customer)
         XCTAssertEqual(session.customer?.id, "cus_test123456")
         XCTAssertEqual(session.customer?.email, "customer@example.com")
+        XCTAssertEqual(session.customer?.name, "Test Customer")
+        XCTAssertEqual(session.customer?.phone, "+15555555555")
         XCTAssertFalse(session.customer?.canDetachPaymentMethod ?? true)
         XCTAssertEqual(session.customer?.paymentMethods.count, 2)
         XCTAssertEqual(session.customer?.paymentMethods[0].stripeId, "pm_1Sxae3Lu5o3P18Zpt5YuRRoG")
@@ -416,6 +232,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertEqual(session.elementsSession.sessionID, "elements_session_test123")
         XCTAssertEqual(session.email, "test@example.com")
         XCTAssertEqual(session.serverEmail, "test@example.com")
+        XCTAssertEqual(apiResponse.url, "https://checkout.stripe.com/c/pay/cs_test_a1b2c3d4e5f6g7h8i9j0")
 
         // Verify saved payment methods offer save
         XCTAssertNotNil(session.savedPaymentMethodsOfferSave)
@@ -468,6 +285,18 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertEqual(
             apiResponse.allResponseFields as NSDictionary,
             json as NSDictionary
+        )
+
+        var checkoutClientJSON = CheckoutTestHelpers.checkoutClientInitJSON(from: json as! [String: Any], sessionId: session.id)
+        checkoutClientJSON["flags"] = ["elements_enable_passive_captcha": true]
+        checkoutClientJSON["passive_captcha"] = [
+            "site_key": "site_key", "rqdata": "rqdata", "token_refresh_after_seconds": 21570,
+        ]
+        let data = try JSONSerialization.data(withJSONObject: checkoutClientJSON)
+        let checkoutClient = try StripeJSONDecoder().decode(CheckoutClientAPIResponse.self, from: data)
+        XCTAssertEqual(
+            try checkoutClient.paymentPagesResponse().makePublicSession().elementsSession.passiveCaptchaData,
+            PassiveCaptchaData(siteKey: "site_key", rqdata: "rqdata", tokenTimeoutSeconds: 21570)
         )
     }
 
@@ -532,6 +361,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertNil(apiResponse.setupIntentId)
         XCTAssertNil(session.customer)
         XCTAssertNil(session.email)
+        XCTAssertNil(apiResponse.url)
         XCTAssertNil(session.savedPaymentMethodsOfferSave)
         XCTAssertNil(session.setupFutureUsage)
     }

@@ -23,7 +23,6 @@ access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
-X-Stripe-Mock-Response-Time: 0.338010
 
 {
   "payment_method_configuration_details" : null,

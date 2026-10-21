@@ -11,7 +11,6 @@ Date: Wed, 21 Oct 2026 18:27:31 GMT
 Content-Length: 129
 Alt-Svc: h3=":443"; ma=2592000
 Etag: W/"81-L6tM5McE3QqvBWtqy9l6f6ujQyE"
-X-Stripe-Mock-Response-Time: 0.141794
 
 {
   "publishable_key" : "pk_test_51NpIYRIq2LmpyICoBLPaTxfWFW4I34pnWuBjKXf8CgOlVih7Ni6oDfPRHGTzBEnpsrHiPvqP2UyydilqY66BWp8N00mQCJ1PU5"

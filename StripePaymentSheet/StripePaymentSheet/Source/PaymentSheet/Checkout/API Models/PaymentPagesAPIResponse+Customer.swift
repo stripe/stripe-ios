@@ -24,11 +24,19 @@ extension PaymentPagesAPIResponse {
         /// Customer email address.
         let email: String?
 
+        /// Customer name.
+        let name: String?
+
+        /// Customer phone number.
+        let phone: String?
+
         private enum CodingKeys: String, CodingKey {
             case id
             case paymentMethods
             case canDetachPaymentMethod
             case email
+            case name
+            case phone
         }
 
         init(from decoder: Decoder) throws {
@@ -43,6 +51,8 @@ extension PaymentPagesAPIResponse {
                 forKey: .canDetachPaymentMethod
             ) ?? false
             email = try container.decodeIfPresent(String.self, forKey: .email)
+            name = try container.decodeIfPresent(String.self, forKey: .name)
+            phone = try container.decodeIfPresent(String.self, forKey: .phone)
         }
     }
 }

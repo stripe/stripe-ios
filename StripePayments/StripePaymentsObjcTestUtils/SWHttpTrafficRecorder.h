@@ -122,9 +122,6 @@ FOUNDATION_EXPORT NSString * const SWHttpTrafficRecorderErrorDomain;
  */
 @interface SWHttpTrafficRecorder : NSObject
 
-/** Include observed request duration in Mocktail recordings for time-budgeted tests. */
-@property(nonatomic, assign) BOOL recordResponseTiming;
-
 /**
  * Returns the shared recorder object.
  */

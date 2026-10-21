@@ -803,6 +803,7 @@ final class CheckoutUnitTests: XCTestCase {
             "tax_rate": [
                 "display_name": "Sales Tax",
                 "percentage": 9.75,
+                "rate_type": "percentage",
             ],
         ]
         json["total_summary"] = [
@@ -833,6 +834,7 @@ final class CheckoutUnitTests: XCTestCase {
                 "display_name": "Sales Tax",
                 "inclusive": false,
                 "percentage": 8.625,
+                "rate_type": "percentage",
             ],
         ]
         var json = CheckoutTestHelpers.openSessionJSON

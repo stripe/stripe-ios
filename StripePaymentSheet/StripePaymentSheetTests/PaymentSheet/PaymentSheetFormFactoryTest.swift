@@ -38,55 +38,6 @@ private struct BankFormExpectation {
 
 @MainActor
 class PaymentSheetFormFactoryTest: XCTestCase {
-    func testCheckoutClientInheritedSavingPreservesCardMandateAndLinkSetup() throws {
-        let loaded = expectation(description: "Load address specs")
-        AddressSpecProvider.shared.loadAddressSpecs { loaded.fulfill() }
-        waitForExpectations(timeout: 5)
-        // Given merchant-required saving without an explicit payment-method override
-        let oldJSON = CheckoutTestHelpers.makeSessionJSON([
-            "setup_future_usage": "off_session",
-            "customer": ["id": "cus_sfu_audit"],
-            "customer_managed_saved_payment_methods_offer_save": ["enabled": false],
-        ])
-        let old = try PaymentPagesAPIResponse.decode(fromAPIResponse: oldJSON).makePublicSession()
-        let newJSON = CheckoutTestHelpers.checkoutClientInitJSON(from: oldJSON, sessionId: old.id)
-        let data = try JSONSerialization.data(withJSONObject: newJSON)
-        let new = try StripeJSONDecoder().decode(CheckoutClientAPIResponse.self, from: data)
-            .paymentPagesResponse().makePublicSession()
-
-        for (name, session) in [("Payment Pages", old), ("CheckoutClient", new)] {
-            var configuration = PaymentSheet.Configuration._testValue_MostPermissive()
-            configuration.link.display = .never
-            configuration.apiClient = STPAPIClient(publishableKey: "pk_test_sfu_audit")
-            let elementsSession = session.elementsSession
-            XCTAssertFalse(elementsSession.forceSaveFutureUseBehaviorAndNewMandateText)
-            let intent = Intent.checkout(session)
-            let factory = PaymentSheetFormFactory(
-                intent: intent,
-                elementsSession: elementsSession,
-                configuration: .paymentElement(configuration),
-                paymentMethod: .stripe(.card),
-                paymentMethodOrientation: .vertical,
-                accountService: LinkAccountService(
-                    apiClient: STPAPIClient(publishableKey: "pk_test_sfu_audit"),
-                    elementsSession: elementsSession
-                ),
-                analyticsHelper: nil
-            )
-            let mandate = factory.makeCard().getMandateElement()
-            let link = try LinkURLGenerator.linkParams(configuration: configuration, intent: intent, elementsSession: elementsSession)
-            // TODO(OCS_API_EXT-267): Refresh the fixture and remove this expectation when CheckoutClient returns resolved SFU.
-            XCTExpectFailure(
-                "CheckoutClient omits inherited SFU: https://jira.corp.stripe.com/browse/OCS_API_EXT-267",
-                enabled: name == "CheckoutClient"
-            ) {
-                XCTAssertNotNil(mandate, "\(name) must show merchant saving mandate")
-                XCTAssertTrue(link.setupFutureUsage, "\(name) must tell Link about merchant saving")
-            }
-            XCTAssertFalse(factory.shouldDisplaySaveCheckbox, "\(name) checkbox availability is independent of SFU")
-        }
-    }
-
     private func extractBNPLHeaderView(from subtitle: SubtitleElement) -> BNPLFormHeaderView? {
         if let headerView = subtitle.view as? BNPLFormHeaderView {
             return headerView

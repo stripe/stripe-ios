@@ -29,6 +29,7 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
     let status: CheckoutController.Session.Status
     let paymentStatus: CheckoutController.Session.Status.PaymentStatus
     let customerEmail: String?
+    let url: String?
     let savedPaymentMethodsOfferSave: SavedPaymentMethodsOfferSave?
     let setupFutureUsage: String?
     let setupFutureUsageForPaymentMethodType: [String: String]?
@@ -69,6 +70,7 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
             "livemode = \(livemode)",
             "customerId = \(String(describing: customer?.id))",
             "customerEmail = \(String(describing: customerEmail))",
+            "url = \(String(describing: url))",
             "savedPaymentMethodsOfferSave = \(String(describing: savedPaymentMethodsOfferSave))",
         ]
         return "<\(props.joined(separator: "; "))>"
@@ -85,6 +87,7 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
         case status
         case paymentStatus
         case customerEmail
+        case url
         case savedPaymentMethodsOfferSave = "customer_managed_saved_payment_methods_offer_save"
         case setupFutureUsage
         case setupFutureUsageForPaymentMethodType
@@ -158,6 +161,7 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
         self.status = status
 
         customerEmail = try container.decodeIfPresent(String.self, forKey: .customerEmail)
+        url = try container.decodeIfPresent(String.self, forKey: .url)
         savedPaymentMethodsOfferSave = try container.decodeIfPresent(
             SavedPaymentMethodsOfferSave.self,
             forKey: .savedPaymentMethodsOfferSave
@@ -414,6 +418,23 @@ extension PaymentPagesAPIResponse {
     struct TaxRate: Decodable {
         let displayName: String
         let percentage: Double
+        let rateType: String?
+
+        init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            displayName = try container.decode(String.self, forKey: .displayName)
+            percentage = try container.decode(Double.self, forKey: .percentage)
+            rateType = try container.decodeIfPresent(String.self, forKey: .rateType)
+            guard rateType == nil || rateType == "flat_amount" || rateType == "percentage" else {
+                throw decoder.dataCorrupted("Unsupported tax rate type: \(rateType!)")
+            }
+        }
+
+        private enum CodingKeys: String, CodingKey {
+            case displayName
+            case percentage
+            case rateType
+        }
     }
 
     struct AdjustableQuantity: Decodable {
@@ -582,8 +603,10 @@ struct CheckoutClientAPIResponse: Decodable {
             linkSettings["link_passthrough_mode_enabled"] = linkMode == .passthrough || linkMode == .linkCardBrand
             elementsSession["link_settings"] = linkSettings
         }
-        // TODO(porter): CheckoutClient must expose the aggregated Elements captcha configuration for parity.
-        // Its top-level passive_captcha belongs to Checkout and cannot replace the Elements configuration.
+        if var passiveCaptcha = fields["passive_captcha"] as? [String: Any] {
+            passiveCaptcha["token_timeout_seconds"] = passiveCaptcha["token_refresh_after_seconds"]
+            elementsSession["passive_captcha"] = passiveCaptcha
+        }
         elementsSession["config_id"] = fields["elements_session_config_id"]
         elementsSession["business_name"] = merchant["display_name"]
         elementsSession["merchant_logo_url"] = merchant["logo_url"]
