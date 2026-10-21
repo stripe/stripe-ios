@@ -161,6 +161,7 @@ static NSString * const SWRecordingLProtocolHandledKey = @"SWRecordingLProtocolH
 @property (nonatomic, strong) NSMutableData *mutableData;
 @property (nonatomic, strong) NSURLResponse *response;
 @property (nonatomic, strong) NSURLSession *session;
+@property (nonatomic, assign) NSTimeInterval requestStartTime;
 
 @end
 
@@ -193,6 +194,7 @@ static NSString * const SWRecordingLProtocolHandledKey = @"SWRecordingLProtocolH
 }
 
 - (void) startLoading {
+    self.requestStartTime = NSProcessInfo.processInfo.systemUptime;
     NSMutableURLRequest *newRequest = [self.request mutableCopy];
     [NSURLProtocol setProperty:@YES forKey:SWRecordingLProtocolHandledKey inRequest:newRequest];
     
@@ -408,6 +410,10 @@ willPerformHTTPRedirection:(NSHTTPURLResponse *)response
     NSEnumerator *headerKeys = [response.allHeaderFields keyEnumerator];
     for (NSString *key in headerKeys) {
         [tail appendFormat:@"%@: %@\n", key, (NSString*)[response.allHeaderFields objectForKey:key]];
+    }
+    if (SWHttpTrafficRecorder.sharedRecorder.recordResponseTiming) {
+        NSTimeInterval duration = NSProcessInfo.processInfo.systemUptime - self.requestStartTime;
+        [tail appendFormat:@"X-Stripe-Mock-Response-Time: %.6f\n", duration];
     }
     
     NSString *postBodyRequest = [self postBodyRequestStringForRequest:request];
