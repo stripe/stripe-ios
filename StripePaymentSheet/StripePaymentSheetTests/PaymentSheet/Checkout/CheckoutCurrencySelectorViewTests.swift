@@ -300,8 +300,8 @@ final class CheckoutCurrencySelectorViewTests: XCTestCase {
                     "amount": 1000,
                     "presentment_exchange_rate": "0.776917",
                     "disclosure": [
-                        "caption": "1 USD = 0.7769 GBP (includes 4% conversion fee)",
-                        "details": "This rate includes a 4% fee to guarantee the exchange rate during checkout.",
+                        "caption": "1 GBP = 1.2871 USD (includes 4% conversion fee).",
+                        "details": "This string will come from the translation layer in the future",
                     ],
                     "conversion_markup_bps": 400,
                 ],

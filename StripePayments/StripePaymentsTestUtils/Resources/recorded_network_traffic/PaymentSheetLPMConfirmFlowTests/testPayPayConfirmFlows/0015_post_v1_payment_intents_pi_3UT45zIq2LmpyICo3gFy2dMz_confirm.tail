@@ -26,7 +26,6 @@ access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
-X-Stripe-Mock-Response-Time: 0.514003
 X-Stripe-Mock-Request: client_attribution_metadata\[client_session_id]=.*&client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_intent_creation_flow]=deferred&client_attribution_metadata\[payment_method_selection_flow]=automatic&client_secret=pi_3UT45zIq2LmpyICo3gFy2dMz_secret_hpwuQFjTnvLnTg2lixWamrU8K&expand\[0]=payment_method&payment_method=pm_1UT45zIq2LmpyIConsjobrZQ&return_url=example-app-scheme%3A\/\/unused&use_stripe_sdk=true
 
 {

@@ -419,6 +419,10 @@ enum CheckoutTestHelpers {
         response["ordered_payment_method_types_and_wallets"] =
             elementsSession["ordered_payment_method_types_and_wallets"] ?? session["payment_method_types"] ?? ["card"]
         response["elements_session_config_id"] = elementsSession["config_id"]
+        if var passiveCaptcha = elementsSession["passive_captcha"] as? [String: Any] {
+            passiveCaptcha["token_refresh_after_seconds"] = passiveCaptcha.removeValue(forKey: "token_timeout_seconds")
+            response["passive_captcha"] = passiveCaptcha
+        }
         for key in [
             "apple_pay_preference", "google_pay_preference", "flags",
             "experiments_data", "card_brand_choice", "unactivated_payment_method_types",
@@ -564,8 +568,8 @@ enum CheckoutTestHelpers {
             "amount": localAmount,
             "presentment_exchange_rate": "0.776917",
             "disclosure": [
-                "caption": "1 USD = 0.7769 GBP (includes 4% conversion fee)",
-                "details": "This rate includes a 4% fee to guarantee the exchange rate during checkout.",
+                "caption": "1 GBP = 1.2871 USD (includes 4% conversion fee).",
+                "details": "This string will come from the translation layer in the future",
             ],
             "conversion_markup_bps": 400,
         ]
