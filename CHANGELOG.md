@@ -4,7 +4,7 @@ PATCH
 ## X.Y.Z - changes pending release
 
 ### CryptoOnramp (Alpha)
-* [Added] Added `createCryptoPaymentTokenWithDetails()` to return a crypto payment token with optional Apple Pay card funding, brand, and last four digits. The existing string-returning `createCryptoPaymentToken()` remains unchanged.
+* [Added] Added `createCryptoPaymentTokenWithDetails()` to return a crypto payment token with optional Apple Pay or Link card funding, brand, and last four digits, or Link bank-account last four digits. The existing string-returning `createCryptoPaymentToken()` remains unchanged.
 
 ## 26.15.0 2026-10-19
 

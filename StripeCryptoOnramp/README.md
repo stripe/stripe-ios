@@ -36,21 +36,24 @@ StripeCryptoOnramp helps you build a headless crypto onramp flow in your iOS app
 **Wallets and payment methods**:
 - Register and delete crypto wallets with `registerWalletAddress(walletAddress:network:)` and `deleteWalletAddress(walletId:)`
 - Collect payment methods via Link (card, bank account) or Apple Pay with `collectPaymentMethod(type:from:)`. To receive partial `KycInfo` from Apple Pay, configure the provided `PKPaymentRequest` to request Apple Pay billing `.name` and/or `.postalAddress`.
-- Create crypto payment tokens with `createCryptoPaymentToken()`, or opt in to paired Apple Pay card details with `createCryptoPaymentTokenWithDetails()`
+- Create crypto payment tokens with `createCryptoPaymentToken()`, or opt in to paired card or bank-account details with `createCryptoPaymentTokenWithDetails()`
 
-After successful Apple Pay collection and authentication, you can read card metadata before creating an onramp session:
+After successful payment-method collection and authentication, you can read metadata before creating an onramp session:
 
 ```swift
 let result = try await coordinator.createCryptoPaymentTokenWithDetails()
 let token = result.cryptoPaymentToken
 let card = result.cardDetails
+let bankAccount = result.bankAccountDetails
 let isExplicitDebit = card?.funding == .debit
-// Send the token and paired funding, brand, and last4 to your backend here.
+// Send the token and paired card or bank-account summary to your backend here.
 // Your backend can choose voluntary fee responsibility before creating the session.
 // Display the server-calculated session quote before checkout.
 ```
 
-The result describes the same payment source used to create the token, even if the selection changes while the request is in flight. Link-backed selections and Apple Pay selections without card data return `nil` card details. Missing or unrecognized funding maps to `.other`; missing last four digits remain `nil`. Only `.debit` qualifies for a strict debit-only subsidy policy: `.credit`, `.prepaid`, `.other`, and absent details do not. Funding does not prove card ownership, and last four digits may describe a wallet-tokenized number rather than the physical card.
+The result describes the same payment source used to create the token, even if the selection changes while either payment-method or token creation is in flight. Apple Pay and Link card selections (including directly entered debit cards) populate `cardDetails` when available. Link bank-account/ACH selections populate `bankAccountDetails` with the account's last four digits and leave `cardDetails` nil. ACH is not a debit card and has no card funding or brand. Unknown payment types and unavailable metadata leave the corresponding details nil.
+
+Missing or unrecognized card funding maps to `.other`; missing last four digits remain `nil`. Only `.debit` qualifies for a strict debit-card-only subsidy policy: `.credit`, `.prepaid`, `.other`, bank accounts, and absent details do not. Funding does not prove card ownership, and last four digits may describe a wallet-tokenized number rather than the physical card.
 
 The merchant chooses its voluntary subsidy policy; the server-calculated session quote remains authoritative. Client-provided metadata is not a substitute for backend validation of Stripe-enforced eligibility. Do not add card details to analytics. This opt-in API does not add network calls or change the demo backend. Existing `createCryptoPaymentToken()` integrations continue returning a string.
 

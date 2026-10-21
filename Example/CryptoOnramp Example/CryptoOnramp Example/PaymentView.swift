@@ -778,11 +778,14 @@ struct PaymentView: View {
                         shouldShowPaymentMethodSheet = false
                     }
 
-                    let token = try await coordinator.createCryptoPaymentToken()
+                    let tokenResult = try await coordinator.createCryptoPaymentTokenWithDetails()
+                    // Card selections expose cardDetails; ACH selections expose bankAccountDetails.
+                    // Send the paired details with the token to your backend before session creation
+                    // if your integration uses them to choose voluntary fee responsibility.
 
                     await MainActor.run {
                         isLoading.wrappedValue = false
-                        selectedPaymentMethod = .newPaymentMethod(tokenId: token, displayData: displayData)
+                        selectedPaymentMethod = .newPaymentMethod(tokenId: tokenResult.cryptoPaymentToken, displayData: displayData)
                     }
                 @unknown default:
                     await MainActor.run {

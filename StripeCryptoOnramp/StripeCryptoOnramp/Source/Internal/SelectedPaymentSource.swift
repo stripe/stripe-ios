@@ -7,6 +7,7 @@
 
 import Foundation
 @_spi(STP) import StripePayments
+@_spi(STP) import StripePaymentSheet
 
 /// An Apple Pay selection and the immutable publishable key used to create it.
 struct ApplePayPaymentSource {
@@ -45,5 +46,17 @@ enum SelectedPaymentSource {
         case .applePay:
             return "apple_pay"
         }
+    }
+}
+
+extension LinkController.PaymentMethodDetails {
+    var onrampCardDetails: OnrampCardDetails? {
+        guard case let .card(funding, brand, last4) = self else { return nil }
+        return OnrampCardDetails(funding: funding, brand: brand, last4: last4)
+    }
+
+    var onrampBankAccountDetails: OnrampBankAccountDetails? {
+        guard case let .bankAccount(last4) = self else { return nil }
+        return OnrampBankAccountDetails(last4: last4)
     }
 }

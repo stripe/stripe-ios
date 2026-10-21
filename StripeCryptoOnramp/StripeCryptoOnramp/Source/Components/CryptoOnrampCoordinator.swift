@@ -212,12 +212,12 @@ protocol CryptoOnrampCoordinatorProtocol {
     /// Throws an error if no payment method has been selected, the Link account is not verified, required session credentials are missing, the payment method creation fails, or a network/API error occurs.
     func createCryptoPaymentToken() async throws -> String
 
-    /// Creates a crypto payment token paired with optional details of the Apple Pay card used to create it.
+    /// Creates a crypto payment token paired with optional details of the card or bank account used to create it.
     /// Call after a successful `collectPaymentMethod(...)` and before creating an onramp session.
     /// Has the same authentication, validation, and error behavior as `createCryptoPaymentToken()`.
     /// In particular, `PaymentMethodKYCRegionChangedError` requires successful Apple Pay recollection before retrying.
     ///
-    /// - Returns: The token ID and card summary. Card details are `nil` for Link payment methods.
+    /// - Returns: The token ID and a card or bank-account summary, when available.
     func createCryptoPaymentTokenWithDetails() async throws -> CryptoPaymentTokenResult
 
     /// Performs the checkout flow for a crypto onramp session, handling any required authentication steps.
@@ -314,7 +314,8 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
         appearance: LinkAppearance,
         analyticsClient: CryptoOnrampAnalyticsClient,
         additionalSDKVersions: [SDKVersion],
-        countryHint: String?
+        countryHint: String?,
+        selectedPaymentSource: SelectedPaymentSource? = nil
     ) {
         self.linkController = linkController
         self.apiClient = apiClient
@@ -323,6 +324,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
         self.additionalSDKVersions = additionalSDKVersions
         self.countryHint = countryHint
         self.cryptoCustomerState = CryptoCustomerState(cryptoCustomerID)
+        self.selectedPaymentSource = selectedPaymentSource
         super.init()
     }
 
@@ -804,9 +806,10 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
         return try await createCryptoPaymentTokenWithDetails().cryptoPaymentToken
     }
 
-    /// Creates a token paired with the card details of the same selected payment source.
+    /// Creates a token paired with details of the same selected payment source.
     /// See `createCryptoPaymentToken()` for authentication and KYC-region validation requirements.
-    /// Card details are available only for Apple Pay and may be `nil`.
+    /// Card details are available for Apple Pay and Link cards; bank-account details are available for Link bank accounts.
+    /// Details may be `nil` when unavailable.
     public func createCryptoPaymentTokenWithDetails() async throws -> CryptoPaymentTokenResult {
         guard let selectedPaymentSource else {
             analyticsClient.log(.errorOccurred(during: .createCryptoPaymentToken, errorMessage: "No payment method selected"))
@@ -816,13 +819,17 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
         do {
             let paymentMethodId: String
             let cryptoCustomerId: String
+            let cardDetails: OnrampCardDetails?
+            let bankAccountDetails: OnrampBankAccountDetails?
             switch selectedPaymentSource {
             case .link:
                 let platformApiClient = try await getPlatformApiClient()
-                let paymentMethod = try await linkController.createPaymentMethod(
+                let result = try await linkController.createPaymentMethodWithDetails(
                     overridePublishableKey: platformApiClient.publishableKey
                 )
-                paymentMethodId = paymentMethod.stripeId
+                paymentMethodId = result.paymentMethod.stripeId
+                cardDetails = result.details?.onrampCardDetails
+                bankAccountDetails = result.details?.onrampBankAccountDetails
                 guard let customerId = await cryptoCustomerState.getCustomerId() else {
                     throw Error.missingCryptoCustomerID
                 }
@@ -843,6 +850,8 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
                     }
                 }
                 paymentMethodId = source.paymentMethod.id
+                cardDetails = selectedPaymentSource.cardDetails
+                bankAccountDetails = nil
             }
             let token = try await apiClient.createPaymentToken(
                 for: paymentMethodId,
@@ -852,7 +861,8 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
             analyticsClient.log(.cryptoPaymentTokenCreated(paymentMethodType: selectedPaymentSource.analyticsValue))
             return CryptoPaymentTokenResult(
                 cryptoPaymentToken: token.id,
-                cardDetails: selectedPaymentSource.cardDetails
+                cardDetails: cardDetails,
+                bankAccountDetails: bankAccountDetails
             )
         } catch {
             try logAndThrow(error, during: .createCryptoPaymentToken)

@@ -27,6 +27,10 @@ final class CryptoOnrampCoordinatorTests: APIStubbedTestCase {
     private var settingsFailure: (() -> HTTPStubsResponse)?
     private var tokenFailure: (() -> HTTPStubsResponse)?
     private var onTokenRequest: (@MainActor () -> Void)?
+    private var onLinkPaymentMethodRequest: (@MainActor () -> Void)?
+    private var collectedLinkController: LinkController?
+    private var linkPaymentMethodRequests: [URLRequest] = []
+    private var linkPaymentMethodFailure: (() -> HTTPStubsResponse)?
     private static let customerID = "crypto_customer_test"
     private static let settingsPath = "/v1/crypto/internal/platform_settings"
     private static let tokenPath = "/v1/crypto/internal/payment_token"
@@ -490,10 +494,136 @@ final class CryptoOnrampCoordinatorTests: APIStubbedTestCase {
         let result = try await coordinator.createCryptoPaymentTokenWithDetails()
         XCTAssertEqual(result.cryptoPaymentToken, "cpt_test")
         XCTAssertNil(result.cardDetails)
+        XCTAssertNil(result.bankAccountDetails)
     }
 
-    func testLinkSelectionHasNoCardDetails() {
-        XCTAssertNil(SelectedPaymentSource.link.cardDetails)
+    @MainActor
+    func testLinkCardsReturnUnderlyingFundingAndBrandInBothCreationModes() async throws {
+        let cases: [(ConsumerPaymentDetails.Details.Card.Funding, STPCardFundingType)] = [
+            (.debit, .debit), (.credit, .credit), (.prepaid, .prepaid), (.unparsable, .other),
+        ]
+        for passthrough in [false, true] {
+            for (funding, expectedFunding) in cases {
+                let analytics = MockAnalyticsClientV2()
+                let coordinator = try await makeCoordinator(
+                    cryptoCustomerID: Self.customerID, analyticsClient: analytics,
+                    linkDetails: linkCardFixture(funding: funding), linkPassthrough: passthrough
+                )
+                let result = try await coordinator.createCryptoPaymentTokenWithDetails()
+
+                XCTAssertEqual(result.cryptoPaymentToken, "cpt_test")
+                XCTAssertEqual(result.cardDetails?.funding, expectedFunding)
+                XCTAssertEqual(result.cardDetails?.brand, .visa)
+                XCTAssertEqual(result.cardDetails?.last4, "4242")
+                XCTAssertNil(result.bankAccountDetails)
+                XCTAssertEqual(Array(requestOrder.suffix(3)), ["settings", "payment_method", "token"])
+                XCTAssertEqual(bodyParameters(try XCTUnwrap(tokenRequests.last))["payment_method"], "pm_link_test")
+                let request = try XCTUnwrap(linkPaymentMethodRequests.last)
+                let selectionKey = passthrough ? "id" : "link[payment_details_id]"
+                XCTAssertEqual(bodyParameters(request)[selectionKey], "payment_details_test")
+                let events = analytics.loggedAnalyticPayloads(withEventName: "onramp.crypto_payment_token_created")
+                XCTAssertEqual(events.count, 1)
+                XCTAssertEqual(events.first?["payment_method_type"] as? String, "link")
+                XCTAssertNil(events.first?["card_details"])
+                XCTAssertNil(events.first?["bank_account_details"])
+            }
+        }
+        XCTAssertEqual(linkPaymentMethodRequests.count, 8)
+        XCTAssertEqual(tokenRequests.count, 8)
+        XCTAssertEqual(settingsRequests.count, 8)
+    }
+
+    @MainActor
+    func testLinkBankAccountsReturnBankDetailsWithoutDebitCardFunding() async throws {
+        for passthrough in [false, true] {
+            let coordinator = try await makeCoordinator(
+                cryptoCustomerID: Self.customerID,
+                linkDetails: linkDetailsFixture(.bankAccount(bankAccount: .init(
+                    iconCode: nil, name: "", last4: "6789", country: "COUNTRY_US"
+                ))),
+                linkPassthrough: passthrough
+            )
+            let result = try await coordinator.createCryptoPaymentTokenWithDetails()
+            XCTAssertEqual(result.cryptoPaymentToken, "cpt_test")
+            XCTAssertNil(result.cardDetails)
+            XCTAssertEqual(result.bankAccountDetails?.last4, "6789")
+            XCTAssertFalse(result.cardDetails?.funding == .debit)
+
+            let legacyToken = try await coordinator.createCryptoPaymentToken()
+            XCTAssertEqual(legacyToken, result.cryptoPaymentToken)
+        }
+        XCTAssertEqual(linkPaymentMethodRequests.count, 4)
+        XCTAssertEqual(tokenRequests.count, 4)
+        XCTAssertEqual(settingsRequests.count, 2)
+    }
+
+    @MainActor
+    func testUnknownLinkPaymentDetailsDoNotInventCardOrBankMetadata() async throws {
+        let coordinator = try await makeCoordinator(
+            cryptoCustomerID: Self.customerID, linkDetails: linkDetailsFixture(.generic(rawValue: "UNKNOWN"))
+        )
+        let result = try await coordinator.createCryptoPaymentTokenWithDetails()
+        XCTAssertEqual(result.cryptoPaymentToken, "cpt_test")
+        XCTAssertNil(result.cardDetails)
+        XCTAssertNil(result.bankAccountDetails)
+    }
+
+    @MainActor
+    func testLinkDetailsRemainPairedWhenSelectionClearsDuringEitherRequest() async throws {
+        for passthrough in [false, true] {
+            for clearDuringPaymentMethodCreation in [false, true] {
+                let coordinator = try await makeCoordinator(
+                    cryptoCustomerID: Self.customerID,
+                    linkDetails: linkCardFixture(funding: .debit), linkPassthrough: passthrough
+                )
+                let controller = try XCTUnwrap(collectedLinkController)
+                let clearSelection: @MainActor () -> Void = { controller.internalPaymentOption = nil }
+                onLinkPaymentMethodRequest = clearDuringPaymentMethodCreation ? clearSelection : nil
+                onTokenRequest = clearDuringPaymentMethodCreation ? nil : clearSelection
+
+                let result = try await coordinator.createCryptoPaymentTokenWithDetails()
+
+                XCTAssertNil(controller.internalPaymentOption)
+                XCTAssertEqual(result.cardDetails?.funding, .debit)
+                XCTAssertEqual(result.cardDetails?.brand, .visa)
+                XCTAssertEqual(result.cardDetails?.last4, "4242")
+                XCTAssertNil(result.bankAccountDetails)
+                XCTAssertEqual(bodyParameters(try XCTUnwrap(tokenRequests.last))["payment_method"], "pm_link_test")
+                onLinkPaymentMethodRequest = nil
+                onTokenRequest = nil
+            }
+        }
+    }
+
+    @MainActor
+    func testLinkCreationFailurePreservesLegacyErrorsWithoutSubmittingTokens() async throws {
+        for passthrough in [false, true] {
+            let coordinator = try await makeCoordinator(
+                cryptoCustomerID: Self.customerID,
+                linkDetails: linkCardFixture(funding: .debit), linkPassthrough: passthrough
+            )
+            linkPaymentMethodFailure = { Self.apiFailure(code: "resource_missing", param: "payment_method") }
+            await assertBothTokenMethodsFail(coordinator) {
+                XCTAssertEqual(($0 as? UncategorizedError)?.code, "resource_missing")
+            }
+            XCTAssertTrue(tokenRequests.isEmpty)
+        }
+        XCTAssertEqual(linkPaymentMethodRequests.count, 4)
+        XCTAssertEqual(settingsRequests.count, 2)
+    }
+
+    private func linkCardFixture(funding: ConsumerPaymentDetails.Details.Card.Funding) -> ConsumerPaymentDetails {
+        return linkDetailsFixture(.card(card: .init(
+            expiryYear: 2030, expiryMonth: 12, brand: "visa", networks: ["visa"],
+            last4: "4242", funding: funding, checks: nil
+        )))
+    }
+
+    private func linkDetailsFixture(_ details: ConsumerPaymentDetails.Details) -> ConsumerPaymentDetails {
+        return ConsumerPaymentDetails(
+            stripeID: "payment_details_test", details: details,
+            billingAddress: nil, billingEmailAddress: nil, nickname: nil, isDefault: false
+        )
     }
 
     @MainActor
@@ -681,11 +811,19 @@ final class CryptoOnrampCoordinatorTests: APIStubbedTestCase {
     private func makeCoordinator(
         cryptoCustomerID: String? = nil,
         countryHint: String? = nil,
-        analyticsClient: MockAnalyticsClientV2? = nil
+        analyticsClient: MockAnalyticsClientV2? = nil,
+        linkDetails: ConsumerPaymentDetails? = nil,
+        linkPassthrough: Bool = false
     ) async throws -> CryptoOnrampCoordinator {
         LinkAccountContext.shared.account = nil
+        var elementsSession = Self.linkElementsSession
+        if linkPassthrough {
+            var settings = elementsSession["link_settings"] as? [String: Any] ?? [:]
+            settings["link_passthrough_mode_enabled"] = true
+            elementsSession["link_settings"] = settings
+        }
         stub { $0.url?.path == "/v1/elements/sessions" } response: { _ in
-            HTTPStubsResponse(jsonObject: Self.linkElementsSession, statusCode: 200, headers: nil)
+            HTTPStubsResponse(jsonObject: elementsSession, statusCode: 200, headers: nil)
         }
         stub { $0.url?.path == Self.settingsPath } response: { [self] request in
             XCTAssertEqual(request.httpMethod, "GET")
@@ -708,16 +846,56 @@ final class CryptoOnrampCoordinatorTests: APIStubbedTestCase {
         }
         let apiClient = stubbedAPIClient()
         apiClient.publishableKey = "pk_test_partner"
-        if let analyticsClient {
+        if analyticsClient != nil || linkDetails != nil {
             let linkController = try await LinkController.create(apiClient: apiClient, mode: .payment, requestSurface: .cryptoOnramp)
+            if let linkDetails {
+                let sessionData = try JSONSerialization.data(withJSONObject: [
+                    "client_secret": "consumer_secret_test",
+                    "email_address": "test@example.com",
+                    "redacted_formatted_phone_number": "***1234",
+                    "verification_sessions": [["type": "LINK_AUTH_TOKEN", "state": "VERIFIED"]],
+                ])
+                let session: ConsumerSession = try StripeJSONDecoder.decode(jsonData: sessionData)
+                let account = PaymentSheetLinkAccount(
+                    email: "test@example.com", session: session, publishableKey: nil,
+                    displayablePaymentDetails: nil, useMobileEndpoints: false, canSyncAttestationState: false
+                )
+                LinkAccountContext.shared.account = account
+                linkController.internalPaymentOption = .link(option: .withPaymentDetails(
+                    brand: .link, account: account, paymentDetails: linkDetails,
+                    confirmationExtras: nil, shippingAddress: nil
+                ))
+                collectedLinkController = linkController
+                let path = linkPassthrough ? "/v1/consumers/payment_details/share" : "/v1/payment_methods"
+                stub { $0.url?.path == path } response: { [self] request in
+                    linkPaymentMethodRequests.append(request)
+                    requestOrder.append("payment_method")
+                    if let onLinkPaymentMethodRequest {
+                        if Thread.isMainThread {
+                            MainActor.assumeIsolated { onLinkPaymentMethodRequest() }
+                        } else {
+                            DispatchQueue.main.sync { onLinkPaymentMethodRequest() }
+                        }
+                    }
+                    if let failure = linkPaymentMethodFailure?() {
+                        return failure
+                    }
+                    let paymentMethod: [String: Any] = ["id": "pm_link_test", "type": "link", "link": [:]]
+                    return HTTPStubsResponse(
+                        jsonObject: linkPassthrough ? ["payment_method": paymentMethod] : paymentMethod,
+                        statusCode: 200, headers: nil
+                    )
+                }
+            }
             return CryptoOnrampCoordinator(
                 linkController: linkController,
                 cryptoCustomerID: cryptoCustomerID,
                 apiClient: apiClient,
                 appearance: .init(),
-                analyticsClient: CryptoOnrampAnalyticsClient(analyticsClient: analyticsClient),
+                analyticsClient: CryptoOnrampAnalyticsClient(analyticsClient: analyticsClient ?? MockAnalyticsClientV2()),
                 additionalSDKVersions: [],
-                countryHint: countryHint
+                countryHint: countryHint,
+                selectedPaymentSource: linkDetails == nil ? nil : .link
             )
         }
         return try await CryptoOnrampCoordinator.create(apiClient: apiClient, cryptoCustomerID: cryptoCustomerID, countryHint: countryHint)

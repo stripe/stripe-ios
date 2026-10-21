@@ -42,6 +42,25 @@ import UIKit
         @_spi(STP) @_spi(LinkControllerPreview) public let sublabel: String?
     }
 
+    /// A bounded snapshot of the funding source used to create a payment method.
+    @_spi(STP) public enum PaymentMethodDetails {
+        /// Details of the underlying card, regardless of the created payment method's wrapper type.
+        case card(funding: STPCardFundingType, brand: STPCardBrand, last4: String)
+        /// Details of the underlying bank account. Bank accounts have no card funding or brand.
+        case bankAccount(last4: String)
+
+        init?(paymentDetails: ConsumerPaymentDetails) {
+            switch paymentDetails.details {
+            case .card(let card):
+                self = .card(funding: card.funding.stpFundingType, brand: card.stpBrand, last4: card.last4)
+            case .bankAccount(let bankAccount):
+                self = .bankAccount(last4: bankAccount.last4)
+            case .generic:
+                return nil
+            }
+        }
+    }
+
     @frozen @_spi(STP) public enum VerificationResult {
         /// Verification was completed successfully.
         case completed
@@ -130,7 +149,7 @@ import UIKit
         return paymentDetails
     }
 
-    private var internalPaymentOption: PaymentOption? {
+    var internalPaymentOption: PaymentOption? {
         didSet {
             updatePaymentMethodPreview()
         }
@@ -669,6 +688,15 @@ import UIKit
         overridePublishableKey: String? = nil,
         completion: @escaping (Result<STPPaymentMethod, Error>) -> Void
     ) {
+        createPaymentMethodWithDetails(overridePublishableKey: overridePublishableKey) { result in
+            completion(result.map { $0.paymentMethod })
+        }
+    }
+
+    private func createPaymentMethodWithDetails(
+        overridePublishableKey: String?,
+        completion: @escaping (Result<(paymentMethod: STPPaymentMethod, details: PaymentMethodDetails?), Error>) -> Void
+    ) {
         guard let selectedPaymentDetails else {
             completion(.failure(IntegrationError.noPaymentMethodSelected))
             return
@@ -679,19 +707,23 @@ import UIKit
             return
         }
 
+        let details = PaymentMethodDetails(paymentDetails: selectedPaymentDetails)
+        let completeWithDetails: (Result<STPPaymentMethod, Error>) -> Void = { result in
+            completion(result.map { (paymentMethod: $0, details: details) })
+        }
         if elementsSession.linkPassthroughModeEnabled {
             createPaymentMethodInPassthroughMode(
                 paymentDetails: selectedPaymentDetails,
                 consumerSessionClientSecret: consumerSessionClientSecret,
                 overridePublishableKey: overridePublishableKey,
-                completion: completion
+                completion: completeWithDetails
             )
         } else {
             createPaymentMethodInPaymentMethodMode(
                 paymentDetails: selectedPaymentDetails,
                 linkAccount: linkAccount,
                 overridePublishableKey: overridePublishableKey,
-                completion: completion
+                completion: completeWithDetails
             )
         }
     }
@@ -1502,6 +1534,17 @@ extension LinkController: LinkFullConsentViewControllerDelegate {
                 case .failure(let error):
                     continuation.resume(throwing: error)
                 }
+            }
+        }
+    }
+
+    /// Creates a payment method and returns metadata from the same captured selection.
+    func createPaymentMethodWithDetails(
+        overridePublishableKey: String? = nil
+    ) async throws -> (paymentMethod: STPPaymentMethod, details: PaymentMethodDetails?) {
+        return try await withCheckedThrowingContinuation { continuation in
+            createPaymentMethodWithDetails(overridePublishableKey: overridePublishableKey) { result in
+                continuation.resume(with: result)
             }
         }
     }
