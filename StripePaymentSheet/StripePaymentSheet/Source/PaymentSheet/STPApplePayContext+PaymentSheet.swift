@@ -382,7 +382,6 @@ private func makeFallbackBillingDetails(
 
     var fallbackBillingDetails = StripeAPI.BillingDetails()
     var hasFallbackBillingDetails = false
-
     let defaultBillingDetails = configuration.defaultBillingDetails
     if let email = defaultBillingDetails.email {
         fallbackBillingDetails.email = email
