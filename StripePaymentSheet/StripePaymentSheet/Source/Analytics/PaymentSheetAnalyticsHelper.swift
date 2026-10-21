@@ -130,6 +130,17 @@ final class PaymentSheetAnalyticsHelper {
         )
     }
 
+    /// Updates the context used by subsequent analytics events without emitting an event.
+    /// Call after each successful initial load or update, before applying the result to the payment UI.
+    @MainActor
+    func didLoad(
+        intent: Intent,
+        elementsSession: STPElementsSession
+    ) {
+        self.intent = intent
+        self.elementsSession = elementsSession
+    }
+
     @MainActor
     func logLoadSucceeded(
         intent: Intent,
@@ -142,8 +153,7 @@ final class PaymentSheetAnalyticsHelper {
         hasCardArt: Bool,
         didLinkLookupTimeOut: Bool?
     ) {
-        self.intent = intent
-        self.elementsSession = elementsSession
+        didLoad(intent: intent, elementsSession: elementsSession)
         self.paymentMethodOrientation = paymentMethodOrientation
         let defaultPaymentMethodAnalyticsValue: String = {
             switch defaultPaymentMethod {
