@@ -40,7 +40,7 @@ Update to the latest version of the Stripe Flutter SDK and enable Swift Package 
 
 ### Q: What about the React Native SDK?
 
-The Stripe React Native SDK has built-in support for Swift Package Manager. To make sure your React Native app is ready, follow the migration guide.
+The Stripe React Native SDK has built-in support for Swift Package Manager. To make sure your React Native app is ready, follow the [migration guide](https://github.com/stripe/stripe-react-native/blob/master/MIGRATING.md#ios-swift-package-manager-dependency-resolution-and-dynamic-linking).
 
 ### Q: Will my app stop working?
 
