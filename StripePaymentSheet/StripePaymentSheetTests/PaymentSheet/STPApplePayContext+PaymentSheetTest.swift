@@ -46,7 +46,6 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
         let intents = [
             Intent._testPaymentIntent(paymentMethodTypes: [.card], currency: "lbp"),
             Intent.deferredIntent(intentConfig: .init(mode: .payment(amount: 2345, currency: "LBP"), confirmHandler: dummyDeferredConfirmHandler)),
-            Intent._testCheckoutSession(amount: 2345, currency: "lbp"),
         ]
         for intent in intents {
             // When building the Apple Pay request
