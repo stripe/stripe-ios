@@ -42,7 +42,6 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         let loaded = expectation(description: "Load address specs")
         AddressSpecProvider.shared.loadAddressSpecs { loaded.fulfill() }
         waitForExpectations(timeout: 5)
-        // TODO: CheckoutClient must expose resolved SFU so inherited saving retains its disclosure.
         // Given merchant-required saving without an explicit payment-method override
         let oldJSON = CheckoutTestHelpers.makeSessionJSON([
             "setup_future_usage": "off_session",
@@ -74,9 +73,16 @@ class PaymentSheetFormFactoryTest: XCTestCase {
                 ),
                 analyticsHelper: nil
             )
-            XCTAssertNotNil(factory.makeCard().getMandateElement(), "\(name) must show merchant saving mandate")
+            let mandate = factory.makeCard().getMandateElement()
             let link = try LinkURLGenerator.linkParams(configuration: configuration, intent: intent, elementsSession: elementsSession)
-            XCTAssertTrue(link.setupFutureUsage, "\(name) must tell Link about merchant saving")
+            // TODO(OCS_API_EXT-267): Refresh the fixture and remove this expectation when CheckoutClient returns resolved SFU.
+            XCTExpectFailure(
+                "CheckoutClient omits inherited SFU: https://jira.corp.stripe.com/browse/OCS_API_EXT-267",
+                enabled: name == "CheckoutClient"
+            ) {
+                XCTAssertNotNil(mandate, "\(name) must show merchant saving mandate")
+                XCTAssertTrue(link.setupFutureUsage, "\(name) must tell Link about merchant saving")
+            }
             XCTAssertFalse(factory.shouldDisplaySaveCheckbox, "\(name) checkbox availability is independent of SFU")
         }
     }
