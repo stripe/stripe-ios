@@ -56,8 +56,7 @@ extension CheckoutController: ExpressCheckoutElementDelegate {
                         with: requestParameters,
                         apiClient: apiClient,
                         authenticationContext: authenticationContext,
-                        paymentHandler: paymentHandler,
-                        checkoutCaptchaChallenge: self.checkoutCaptchaChallenge
+                        paymentHandler: paymentHandler
                     )
                 }
             ))
