@@ -146,7 +146,7 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
         return clientSecret
     }
 
-    /// Extracts shipping details from a PKPayment.
+    /// Extracts shipping details from a PKPayment for CheckoutSession confirmation.
     private func makeShippingDetailsParams(from payment: PKPayment) -> STPPaymentIntentShippingDetailsParams? {
         guard let shippingContact = payment.shippingContact,
               let nameComponents = shippingContact.name else {
