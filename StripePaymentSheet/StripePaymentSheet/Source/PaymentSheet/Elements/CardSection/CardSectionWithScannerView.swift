@@ -79,35 +79,39 @@ final class CardSectionWithScannerView: UIView {
 
     @objc func didTapCardScanButton() {
         analyticsHelper?.logFormInteracted(paymentMethodTypeIdentifier: "card")
-        showCardScanner()
+        animateScannerVisibility(true)
         cardScanningView.startScanner()
         becomeFirstResponder()
     }
 
     private func hideCardScanner() {
         self.cardScanningView.prepDismissAnimation()
-        UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.3, options: [.curveEaseInOut]) {
-            self.cardScanButton.alpha = 1
-            self.cardScanningView.alpha = 0
-            self.cardScanningView.setHiddenIfNecessary(true)
-            self.layoutIfNeeded()
-        } completion: { _ in
+        animateScannerVisibility(false) { _ in
             self.cardScanningView.completeDismissAnimation()
         }
-        // UIStackView applies its animated visibility constraints after the animation block returns.
-        // Measure that final layout while the scanner and sheet animations can still start together.
-        findViewController(for: self)?.bottomSheetController?.invalidateContentDetent()
     }
 
-    private func showCardScanner() {
-        UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.3, options: [.curveEaseInOut]) {
-            self.cardScanButton.alpha = 0
-            self.cardScanningView.alpha = 1
-            self.cardScanningView.setHiddenIfNecessary(false)
-            self.layoutIfNeeded()
-        }
-        // Measuring inside the animation block still returns the collapsed stack's height.
-        findViewController(for: self)?.bottomSheetController?.invalidateContentDetent()
+    private func animateScannerVisibility(_ isVisible: Bool, completion: ((Bool) -> Void)? = nil) {
+        let nativeSheet = findViewController(for: self)?.bottomSheetController as? NativeSheetContainerViewController
+        let targetHeight = nativeSheet?.fittedContentHeight(with: cardScanningView, isHidden: !isVisible)
+
+        UIView.animate(
+            withDuration: 0.3,
+            delay: 0,
+            usingSpringWithDamping: 1.0,
+            initialSpringVelocity: 0.3,
+            options: [.curveEaseInOut],
+            animations: {
+                self.cardScanButton.alpha = isVisible ? 0 : 1
+                self.cardScanningView.alpha = isVisible ? 1 : 0
+                self.cardScanningView.setHiddenIfNecessary(!isVisible)
+                self.layoutIfNeeded()
+                if let nativeSheet, let targetHeight {
+                    nativeSheet.invalidateContentDetent(to: targetHeight)
+                }
+            },
+            completion: completion
+        )
     }
 
     override var canBecomeFirstResponder: Bool {

@@ -199,6 +199,7 @@ public final class CheckoutController: ObservableObject {
         // Initialize the SAE with the raw default so its form can normalize the address.
         let shippingAddressElement = ShippingAddressElement(
             configuration: shippingAddressElementConfiguration,
+            userInterfaceStyle: configuration.userInterfaceStyle,
             initialShippingAddress: defaultShippingAddress ?? session.shippingAddress,
             allowedCountries: session.allowedShippingCountries,
             checkoutSessionId: session.id,

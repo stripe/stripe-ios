@@ -4,6 +4,8 @@
 
 "Add documents" = "Lägg till dokument";
 
+"Allow camera access in Settings to take a photo." = "Tillåt kameraåtkomst i inställningarna för att ta en bild.";
+
 "Answer" = "Svar";
 
 "Choose File…" = "Välj fil ...";
@@ -22,9 +24,13 @@
 
 "Make sure your document meets following requirements." = "Se till att ditt dokument uppfyller följande krav.";
 
+"Please select your Apple Pay payment method again to continue." = "Välj din Apple Pay-betalningsmetod igen för att fortsätta.";
+
 "Please try again later." = "Försök igen senare.";
 
 "Submitted for review" = "Inskickat för granskning";
+
+"Take Photo…" = "Ta bild...";
 
 "Tell us about your source of funds" = "Berätta för oss om din pengakälla";
 

@@ -21,11 +21,15 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
         XCTAssertTrue(app.buttons["checkout_picker_Email source"].waitForExistenceAndTap())
         XCTAssertTrue(app.buttons["Server — Customer"].waitForExistenceAndTap())
         scrollStart.press(forDuration: 0.1, thenDragTo: scrollEnd)
-        for label in ["Collect Shipping Address", "Automatic Tax"] {
-            let toggle = app.switches[label]
-            toggle.scrollToAndTap(in: app)
-            XCTAssertEqual(toggle.value as? String, "0")
-        }
+        let shippingToggle = app.switches["Collect Shipping Address"]
+        shippingToggle.scrollToAndTap(in: app)
+        XCTAssertEqual(shippingToggle.value as? String, "0")
+
+        // The billing details row pushes Automatic Tax behind the fixed Create button.
+        scrollStart.press(forDuration: 0.1, thenDragTo: scrollEnd)
+        let automaticTaxToggle = app.switches["Automatic Tax"]
+        automaticTaxToggle.scrollToAndTap(in: app)
+        XCTAssertEqual(automaticTaxToggle.value as? String, "0")
         XCTAssertTrue(app.buttons["Create Checkout Session"].waitForExistenceAndTap())
 
         XCTAssertTrue(app.navigationBars["Your Cart"].waitForExistence(timeout: 15))
@@ -217,7 +221,6 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
         assertAnalyticsEvents([
             "elements.express_checkout_element.init",
             "stripeios.token_creation",
-            "stripeios.payment_method_creation",
             "stripeios.paymenthandler.handle_next_action.started",
             "stripeios.paymenthandler.handle_next_action.finished",
         ])

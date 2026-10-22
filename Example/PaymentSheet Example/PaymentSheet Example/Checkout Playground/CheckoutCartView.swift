@@ -23,7 +23,8 @@ struct CheckoutCartView: View {
     let clientSecret: String
     let emailSettings: CheckoutPlayground.EmailSettings
     let shippingAddressCollection: Bool
-    let defaultShippingAddress: CheckoutPlayground.DefaultShippingAddress?
+    let defaultShippingAddress: CheckoutPlayground.DefaultAddress?
+    let defaultBillingAddress: CheckoutPlayground.DefaultAddress?
     let adaptivePricing: Bool
     let integrationType: CheckoutPlayground.IntegrationType
     let expressCheckoutElementSettings: CheckoutPlayground.ExpressCheckoutElementSettings
@@ -151,11 +152,12 @@ struct CheckoutCartView: View {
             if integrationType != .eceOnly {
                 var paymentElementConfiguration = PaymentElement.Configuration()
                 paymentElementConfiguration.applePayConfiguration = PaymentElement.Configuration.ApplePayConfiguration(
-                    merchantId: "merchant.com.stripe.paymentsheet.example"
+                    merchantId: "merchant.com.stripe.umbrella.test"
                 )
                 config.paymentElement = paymentElementConfiguration
             }
             config.defaults.shippingDetails = defaultShippingAddress?.checkoutShippingDetails
+            config.defaults.billingDetails = defaultBillingAddress?.checkoutBillingDetails
             config.defaults.email = emailSettings.localDefaultEmail
             if shippingAddressCollection {
                 var shippingAddressElementConfiguration = ShippingAddressElement.Configuration()
@@ -168,15 +170,14 @@ struct CheckoutCartView: View {
                     confirmResult = result
                 }
                 expressCheckoutElementConfiguration.applePayConfiguration = ExpressCheckoutElement.Configuration.ApplePayConfiguration(
-                    merchantId: "merchant.com.stripe.paymentsheet.example",
-                    buttonType: expressCheckoutElementSettings.applePayButtonType.pkPaymentButtonType,
-                    display: expressCheckoutElementSettings.applePayDisplay
+                    merchantId: "merchant.com.stripe.umbrella.test",
+                    buttonType: expressCheckoutElementSettings.applePayButtonType.pkPaymentButtonType
                 )
                 expressCheckoutElementConfiguration.linkConfiguration = ExpressCheckoutElement.Configuration.LinkConfiguration(
                     display: expressCheckoutElementSettings.linkDisplay
                 )
-                expressCheckoutElementConfiguration.paymentMethodOrder = expressCheckoutElementSettings.paymentMethodOrder.paymentMethodOrder
                 expressCheckoutElementConfiguration.appearance.buttonTheme = expressCheckoutElementSettings.appearance.buttonTheme
+                expressCheckoutElementConfiguration.appearance.cornerRadius = expressCheckoutElementSettings.appearance.cornerRadius
                 expressCheckoutElementConfiguration.appearance.buttonLayout.maxColumns = expressCheckoutElementSettings.appearance.buttonLayout.maxColumns
                 expressCheckoutElementConfiguration.appearance.buttonLayout.maxRows = expressCheckoutElementSettings.appearance.buttonLayout.maxRows
                 config.expressCheckoutElement = expressCheckoutElementConfiguration

@@ -58,6 +58,7 @@ final class DocumentUploader: DocumentUploaderProtocol {
     weak var delegate: DocumentUploaderDelegate?
 
     let imageUploader: IdentityImageUploader
+    let isTestMode: Bool
 
     /// Future that is fulfilled when front images are uploaded to the server.
     /// Value is nil if upload has not been requested.
@@ -131,17 +132,18 @@ final class DocumentUploader: DocumentUploaderProtocol {
     }
 
     init(
-        imageUploader: IdentityImageUploader
+        imageUploader: IdentityImageUploader,
+        isTestMode: Bool = false
     ) {
         self.imageUploader = imageUploader
+        self.isTestMode = isTestMode
     }
 
     /// Uploads a high and low resolution image for a specific side of the
     /// document and updates either `frontUploadFuture` or `backUploadFuture`.
-    /// - Note: If `idDetectorOutput` is non-nil, the high-res image will be
-    /// cropped and an un-cropped image will be uploaded as the low-res image.
-    /// If `idDetectorOutput` is nil, then only a high-res image will be
-    /// uploaded and it will not be cropped.
+    /// - Note: If `idDetectorOutput` is non-nil, high- and low-resolution images
+    /// are uploaded. In live mode, the high-resolution image is cropped. If
+    /// `idDetectorOutput` is nil, only an uncropped high-resolution image is uploaded.
     /// - Parameters:
     ///   - side: The side of the image (front or back) to upload.
     ///   - originalImage: The original image captured or uploaded by the user.
@@ -154,13 +156,25 @@ final class DocumentUploader: DocumentUploaderProtocol {
         exifMetadata: CameraExifMetadata?,
         method: StripeAPI.VerificationPageDataDocumentFileData.FileUploadMethod
     ) {
-        let uploadFuture = uploadImages(
-            originalImage,
-            documentScannerOutput: documentScannerOutput,
-            exifMetadata: exifMetadata,
-            method: method,
-            fileNamePrefix: "\(imageUploader.apiClient.verificationSessionId)_\(side.rawValue)"
-        )
+        let uploadFuture: Future<StripeAPI.VerificationPageDataDocumentFileData>
+        do {
+            let imageToUpload: CGImage
+            if isTestMode {
+                imageToUpload = try side.testModeImage.makeCGImage()
+            } else {
+                imageToUpload = originalImage
+            }
+            uploadFuture = uploadImages(
+                imageToUpload,
+                documentScannerOutput: documentScannerOutput,
+                exifMetadata: exifMetadata,
+                method: method,
+                fileNamePrefix: "\(imageUploader.apiClient.verificationSessionId)_\(side.rawValue)",
+                shouldCrop: !isTestMode
+            )
+        } catch {
+            uploadFuture = Promise(error: error)
+        }
 
         switch side {
         case .front:
@@ -176,18 +190,30 @@ final class DocumentUploader: DocumentUploaderProtocol {
         documentScannerOutput: DocumentScannerOutput?,
         exifMetadata: CameraExifMetadata?,
         method: StripeAPI.VerificationPageDataDocumentFileData.FileUploadMethod,
-        fileNamePrefix: String
+        fileNamePrefix: String,
+        shouldCrop: Bool = true
     ) -> Future<StripeAPI.VerificationPageDataDocumentFileData> {
 
-        // Only upload a low res image if the high res image will be cropped
+        // Only upload a low-res image when document bounds are available.
         if let documentBounds = documentScannerOutput?.idDetectorOutput.documentBounds {
-            return imageUploader.uploadLowAndHighResImages(
-                originalImage,
-                highResRegionOfInterest: documentBounds,
-                cropPaddingComputationMethod: .maxImageWidthOrHeight,
-                lowResFileName: "\(fileNamePrefix)_full_frame",
-                highResFileName: fileNamePrefix
-            ).chained { (lowResFile, highResFile) in
+            let uploadFuture: Future<IdentityImageUploader.LowHighResFiles>
+            if shouldCrop {
+                uploadFuture = imageUploader.uploadLowAndHighResImages(
+                    originalImage,
+                    highResRegionOfInterest: documentBounds,
+                    cropPaddingComputationMethod: .maxImageWidthOrHeight,
+                    lowResFileName: "\(fileNamePrefix)_full_frame",
+                    highResFileName: fileNamePrefix
+                )
+            } else {
+                uploadFuture = imageUploader.uploadLowAndHighResImagesNoCropping(
+                    highResImage: originalImage,
+                    lowResImage: originalImage,
+                    highResFileName: fileNamePrefix,
+                    lowResFileName: "\(fileNamePrefix)_full_frame"
+                )
+            }
+            return uploadFuture.chained { (lowResFile, highResFile) in
                 return Promise(
                     value: StripeAPI.VerificationPageDataDocumentFileData(
                         documentScannerOutput: documentScannerOutput,
@@ -222,5 +248,16 @@ final class DocumentUploader: DocumentUploaderProtocol {
     func reset() {
         frontUploadFuture = nil
         backUploadFuture = nil
+    }
+}
+
+private extension DocumentSide {
+    var testModeImage: TestModeImage {
+        switch self {
+        case .front:
+            return .documentFront
+        case .back:
+            return .documentBack
+        }
     }
 }

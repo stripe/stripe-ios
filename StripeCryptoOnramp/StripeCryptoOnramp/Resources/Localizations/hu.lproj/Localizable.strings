@@ -4,6 +4,8 @@
 
 "Add documents" = "Dokumentumok hozzáadása";
 
+"Allow camera access in Settings to take a photo." = "Fénykép készítéséhez engedélyezze a kamera-hozzáférést a Beállításokban.";
+
 "Answer" = "Válasz";
 
 "Choose File…" = "Fájl kiválasztása…";
@@ -22,9 +24,13 @@
 
 "Make sure your document meets following requirements." = "Győződjön meg arról, hogy a dokumentum megfelel a következő követelményeknek.";
 
+"Please select your Apple Pay payment method again to continue." = "Kérjük, a folytatáshoz válassza ki ismét az Apple Pay fizetési módját.";
+
 "Please try again later." = "Kérjük, próbálja újra később.";
 
 "Submitted for review" = "Felülvizsgálatra beküldve";
+
+"Take Photo…" = "Fénykép készítése…";
 
 "Tell us about your source of funds" = "Adjon információt az alapok forrásáról";
 

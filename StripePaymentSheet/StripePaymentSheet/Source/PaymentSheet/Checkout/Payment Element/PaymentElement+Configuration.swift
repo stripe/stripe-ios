@@ -49,14 +49,6 @@ extension PaymentElement {
             }
         }
 
-        /// Describes how billing details should be collected.
-        public var billingDetailsCollectionConfiguration: BillingDetailsCollectionConfiguration = .init() {
-            didSet {
-                paymentSheetConfiguration.billingDetailsCollectionConfiguration = billingDetailsCollectionConfiguration.paymentSheetConfiguration()
-                embeddedConfiguration.billingDetailsCollectionConfiguration = billingDetailsCollectionConfiguration.paymentSheetConfiguration()
-            }
-        }
-
         /// Optional configuration to display a custom message when a saved payment method is removed.
         public var removeSavedPaymentMethodMessage: String? {
             didSet {
@@ -98,9 +90,10 @@ extension PaymentElement {
             }
         }
 
-        /// Controls whether the PaymentElement displays mandate text at the bottom for payment methods that require it. If set to `false`, your integration must display `PaymentOptionDisplayData.mandateText` to the customer near your “Buy” button to comply with regulations.
+        /// Controls whether PaymentElement displays mandate text below its embedded view and presents a SEPA mandate before confirmation when needed. Defaults to `true`.
+        /// If set to `false`, your integration must display `PaymentOptionDisplayData.mandateText` to the customer near your “Buy” button to comply with regulations.
         /// - Note: This doesn't affect mandates displayed in the sheet and is ignored if you call `presentPaymentElement`.
-        public var displaysMandateText: Bool = false {
+        public var displaysMandateText: Bool = true {
             didSet {
                 embeddedConfiguration.embeddedViewDisplaysMandateText = displaysMandateText
             }
@@ -129,7 +122,7 @@ extension PaymentElement {
         private var paymentSheetConfiguration = PaymentSheet.Configuration()
         private var embeddedConfiguration: EmbeddedPaymentElement.Configuration = {
             var configuration = EmbeddedPaymentElement.Configuration()
-            configuration.embeddedViewDisplaysMandateText = false
+            configuration.embeddedViewDisplaysMandateText = true
             return configuration
         }()
 
@@ -152,7 +145,6 @@ extension PaymentElement {
             )
             configuration.merchantDisplayName = merchantDisplayName
             configuration.style = userInterfaceStyle
-            configuration.billingDetailsCollectionConfiguration = billingDetailsCollectionConfiguration.paymentSheetConfiguration()
             if let billingDetails = defaults.billingDetails {
                 configuration.defaultBillingDetails.set(billingDetails)
             }
@@ -179,7 +171,6 @@ extension PaymentElement {
             )
             configuration.merchantDisplayName = merchantDisplayName
             configuration.style = userInterfaceStyle
-            configuration.billingDetailsCollectionConfiguration = billingDetailsCollectionConfiguration.paymentSheetConfiguration()
             if let billingDetails = defaults.billingDetails {
                 configuration.defaultBillingDetails.set(billingDetails)
             }
@@ -280,51 +271,6 @@ extension PaymentElement {
     public typealias Appearance = PaymentSheet.Appearance
     public typealias SavePaymentMethodOptInBehavior = PaymentSheet.SavePaymentMethodOptInBehavior
     public typealias PaymentMethodLayout = PaymentSheet.PaymentMethodLayout
-
-    /// Configuration for how billing details are collected during checkout.
-    public struct BillingDetailsCollectionConfiguration: Equatable {
-        /// Billing address collection options.
-        public enum AddressCollectionMode: String, CaseIterable {
-            /// Only the fields required by the Payment Method will be collected, this may be none.
-            case automatic
-            /// Collect the full billing address, regardless of the Payment Method requirements.
-            case full
-        }
-
-        /// How to collect the billing address.
-        /// Defaults to `automatic`.
-        public var address: AddressCollectionMode = .automatic
-
-        /// A set of two-letter country codes representing countries the customers can select.
-        /// If the set is empty (the default), we display all countries.
-        /// Country codes are automatically normalized to uppercase.
-        /// - Note: Saved payment methods whose billing address country is not in this list are hidden.
-        public var allowedCountries: Set<String> = [] {
-            didSet {
-                allowedCountries = Set(allowedCountries.map { $0.uppercased() })
-            }
-        }
-    }
-}
-
-private extension PaymentElement.BillingDetailsCollectionConfiguration {
-    func paymentSheetConfiguration() -> PaymentSheet.BillingDetailsCollectionConfiguration {
-        var configuration = PaymentSheet.BillingDetailsCollectionConfiguration()
-        configuration.address = address.paymentSheetAddressCollectionMode
-        configuration.allowedCountries = allowedCountries
-        return configuration
-    }
-}
-
-private extension PaymentElement.BillingDetailsCollectionConfiguration.AddressCollectionMode {
-    var paymentSheetAddressCollectionMode: PaymentSheet.BillingDetailsCollectionConfiguration.AddressCollectionMode {
-        switch self {
-        case .automatic:
-            return .automatic
-        case .full:
-            return .full
-        }
-    }
 }
 
 private extension PaymentElement.Configuration {

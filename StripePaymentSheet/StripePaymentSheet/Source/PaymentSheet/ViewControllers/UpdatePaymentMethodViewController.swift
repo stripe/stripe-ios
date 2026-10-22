@@ -198,7 +198,7 @@ final class UpdatePaymentMethodViewController: UIViewController {
 
     // MARK: Private helpers
     private func dismiss() {
-        guard let bottomVc = parent as? BottomSheetViewController else { return }
+        guard let bottomVc = parent as? any PaymentSheetContainer else { return }
         STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: configuration.hostedSurface.analyticEvent(for: .closeEditScreen))
         _ = bottomVc.popContentViewController()
         delegate?.shouldCloseSheet(_: self)
@@ -379,7 +379,7 @@ extension UpdatePaymentMethodViewController: SheetNavigationBarDelegate {
     }
 
     func sheetNavigationBarDidBack(_: SheetNavigationBar) {
-        guard let bottomVc = parent as? BottomSheetViewController else { return }
+        guard let bottomVc = parent as? any PaymentSheetContainer else { return }
         STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: configuration.hostedSurface.analyticEvent(for: .closeEditScreen))
         _ = bottomVc.popContentViewController()
     }

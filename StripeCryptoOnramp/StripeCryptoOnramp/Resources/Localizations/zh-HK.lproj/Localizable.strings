@@ -4,6 +4,8 @@
 
 "Add documents" = "新增文件";
 
+"Allow camera access in Settings to take a photo." = "請在「設定」中允許存取相機，以拍攝相片。";
+
 "Answer" = "答案";
 
 "Choose File…" = "選擇檔案";
@@ -22,9 +24,13 @@
 
 "Make sure your document meets following requirements." = "請確保閣下的文件符合以下要求。";
 
+"Please select your Apple Pay payment method again to continue." = "請再次選擇閣下的 Apple Pay 付款方式以繼續。";
+
 "Please try again later." = "請稍後重試。";
 
 "Submitted for review" = "已提交審查";
+
+"Take Photo…" = "拍照…";
 
 "Tell us about your source of funds" = "請告訴我們閣下的資金來源";
 

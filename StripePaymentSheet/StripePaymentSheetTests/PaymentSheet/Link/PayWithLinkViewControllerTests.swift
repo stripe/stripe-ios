@@ -17,6 +17,124 @@ class PayWithLinkViewControllerTests: XCTestCase {
     var paymentSheet: PayWithNativeLinkController!
 
     @MainActor
+    func testNativeWalletResizesWhenPaymentPickerExpandsAndCollapses() async throws {
+        // Given a presented wallet with two saved cards and a collapsed payment picker
+        let (window, wallet, sheet, picker) = try await presentNativeWallet()
+        defer {
+            window.rootViewController?.dismiss(animated: false)
+            window.isHidden = true
+        }
+        let collapsedHeight = sheet.view.bounds.height
+        let collapsedContentHeight = NativeSheetLayoutTestHelper.fittedHeight(of: wallet.view, in: sheet)
+
+        for animated in [true, false] {
+            // When the payment row expands, including without an animation
+            picker.setExpanded(true, animated: animated)
+            try await NativeSheetLayoutTestHelper.waitForContentToFit(in: sheet, content: wallet.view, minimumContentHeight: collapsedContentHeight + 1)
+
+            // Then the sheet grows by the measured height of the saved cards and Add button
+            let pickerHeight = NativeSheetLayoutTestHelper.fittedHeight(of: wallet.view, in: sheet) - collapsedContentHeight
+            XCTAssertEqual(sheet.view.bounds.height - collapsedHeight, pickerHeight, accuracy: 1)
+
+            // When the row collapses, the sheet returns to its original height
+            picker.setExpanded(false, animated: animated)
+            try await NativeSheetLayoutTestHelper.waitForContentToFit(in: sheet, content: wallet.view, expectedContentHeight: collapsedContentHeight)
+            XCTAssertEqual(sheet.view.bounds.height, collapsedHeight, accuracy: 1)
+        }
+    }
+
+    @MainActor
+    func testNativeWalletResizesWhenErrorTextChanges() async throws {
+        // Given a presented wallet with no error
+        let (window, wallet, sheet, _) = try await presentNativeWallet()
+        defer {
+            window.rootViewController?.dismiss(animated: false)
+            window.isHidden = true
+        }
+        let originalHeight = sheet.view.bounds.height
+        let originalContentHeight = NativeSheetLayoutTestHelper.fittedHeight(of: wallet.view, in: sheet)
+
+        // When an error appears
+        wallet.updateErrorLabel(for: NSError(domain: "test", code: 0, userInfo: [NSLocalizedDescriptionKey: "Try again."]))
+        try await NativeSheetLayoutTestHelper.waitForContentToFit(in: sheet, content: wallet.view, minimumContentHeight: originalContentHeight + 1)
+        let shortErrorHeight = sheet.view.bounds.height
+        let shortErrorContentHeight = NativeSheetLayoutTestHelper.fittedHeight(of: wallet.view, in: sheet)
+        XCTAssertEqual(shortErrorHeight - originalHeight, shortErrorContentHeight - originalContentHeight, accuracy: 1)
+
+        // Then replacing a visible error with wrapping text also grows the sheet
+        let longMessage = String(repeating: "Please check your payment details and try again. ", count: 8)
+        wallet.updateErrorLabel(for: NSError(domain: "test", code: 0, userInfo: [NSLocalizedDescriptionKey: longMessage]))
+        try await NativeSheetLayoutTestHelper.waitForContentToFit(in: sheet, content: wallet.view, minimumContentHeight: shortErrorContentHeight + 1)
+        let longErrorContentHeight = NativeSheetLayoutTestHelper.fittedHeight(of: wallet.view, in: sheet)
+        XCTAssertEqual(sheet.view.bounds.height - shortErrorHeight, longErrorContentHeight - shortErrorContentHeight, accuracy: 1)
+
+        // ...and clearing the error restores the original height
+        wallet.updateErrorLabel(for: nil)
+        try await NativeSheetLayoutTestHelper.waitForContentToFit(in: sheet, content: wallet.view, expectedContentHeight: originalContentHeight)
+        XCTAssertEqual(sheet.view.bounds.height, originalHeight, accuracy: 1)
+    }
+
+    @MainActor
+    private func presentNativeWallet() async throws -> (
+        UIWindow, PayWithLinkViewController.WalletViewController,
+        NativeSheetContainerViewController, LinkPaymentMethodPicker
+    ) {
+        guard #available(iOS 16.0, *) else { throw XCTSkip("Content-sized detents require iOS 16.") }
+        let (intent, elementsSession) = try PayWithLinkTestHelpers.makePaymentIntentAndElementsSession()
+        let wallet = PayWithLinkViewController.WalletViewController(
+            linkAccount: LinkStubs.account(),
+            context: .init(
+                intent: intent,
+                elementsSession: elementsSession,
+                configuration: PaymentSheet.Configuration(),
+                linkBrand: .link,
+                shouldOfferApplePay: false,
+                shouldFinishOnClose: false,
+                canContinueWithoutLink: false,
+                initiallySelectedPaymentDetailsID: nil,
+                callToAction: nil,
+                supportedPaymentMethodTypes: [.card],
+                analyticsHelper: ._testValue()
+            ),
+            paymentMethods: Array(LinkStubs.paymentMethods().prefix(2))
+        )
+        let sheet = LinkNativeSheetContainerViewController(
+            contentViewController: wallet,
+            appearance: LinkUI.appearance,
+            didCancelNative3DS2: {}
+        )
+        // A cold test-host launch may still be connecting its window scene.
+        let sceneConnected = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            UIApplication.shared.connectedScenes.contains { $0 is UIWindowScene }
+        }, object: nil)
+        await fulfillment(of: [sceneConnected], timeout: 5)
+        let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first)
+        let presenter = UIViewController()
+        let window = UIWindow(windowScene: scene)
+        window.frame = scene.coordinateSpace.bounds
+        window.rootViewController = presenter
+        window.makeKeyAndVisible()
+        let presented = expectation(description: "Native Link wallet presented")
+        presenter.presentAsSheet(sheet) { presented.fulfill() }
+        await fulfillment(of: [presented], timeout: 3)
+        try await NativeSheetLayoutTestHelper.waitForContentToFit(in: sheet, content: wallet.view)
+
+        // Find the actual wallet picker without adding a production accessor for the test.
+        var pending = [wallet.view!]
+        var picker: LinkPaymentMethodPicker?
+        while let view = pending.popLast() {
+            if let paymentPicker = view as? LinkPaymentMethodPicker {
+                picker = paymentPicker
+                break
+            }
+            pending.append(contentsOf: view.subviews)
+        }
+        let paymentPicker = try XCTUnwrap(picker)
+        XCTAssertTrue(paymentPicker.collapsable)
+        return (window, wallet, sheet, paymentPicker)
+    }
+
+    @MainActor
     func testWalletPushesConfigureLinkNavigationInBothContainers() async throws {
         guard UIDevice.current.userInterfaceIdiom == .phone, !SheetImplementationResolver.isRequiredForDevice else {
             throw XCTSkip("Both container implementations require a non-Duo phone.")

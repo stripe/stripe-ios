@@ -4,6 +4,8 @@
 
 "Add documents" = "Adăugați documente";
 
+"Allow camera access in Settings to take a photo." = "Permiteți accesul la cameră în Setări pentru a face o fotografie.";
+
 "Answer" = "Răspuns";
 
 "Choose File…" = "Alegeți un fișier…";
@@ -22,9 +24,13 @@
 
 "Make sure your document meets following requirements." = "Asigurați-vă că documentul îndeplinește următoarele cerințe.";
 
+"Please select your Apple Pay payment method again to continue." = "Vă rugăm să selectați din nou metoda de plată Apple Pay pentru a continua.";
+
 "Please try again later." = "Vă rugăm să încercați din nou mai târziu.";
 
 "Submitted for review" = "Trimis pentru revizuire";
+
+"Take Photo…" = "Faceți o fotografie…";
 
 "Tell us about your source of funds" = "Spuneți-ne despre sursa dvs. de fonduri";
 

@@ -280,9 +280,9 @@ extension IdentityFlowView {
             buttonTopBackgroundView.trailingAnchor.constraint(equalTo: trailingAnchor),
             buttonTopBackgroundView.bottomAnchor.constraint(equalTo: buttonBackgroundView.topAnchor),
 
-            buttonTopContentView.centerXAnchor.constraint(equalTo: buttonTopBackgroundView.centerXAnchor),
+            buttonTopContentView.centerXAnchor.constraint(equalTo: safeAreaLayoutGuide.centerXAnchor),
             // Limit width without pinning
-            buttonTopContentView.widthAnchor.constraint(lessThanOrEqualTo: buttonTopBackgroundView.widthAnchor, constant: -(Style.buttonInsets.leading + Style.buttonInsets.trailing)),
+            buttonTopContentView.widthAnchor.constraint(lessThanOrEqualTo: safeAreaLayoutGuide.widthAnchor, constant: -(Style.buttonInsets.leading + Style.buttonInsets.trailing)),
             buttonTopContentView.topAnchor.constraint(equalTo: buttonTopBackgroundView.topAnchor, constant: Style.buttontopInsets.top),
             buttonTopContentView.bottomAnchor.constraint(equalTo: buttonTopBackgroundView.bottomAnchor, constant: Style.buttontopInsets.bottom),
 
@@ -519,10 +519,7 @@ extension StripeUICore.Button {
         default:
             minimumHeight = nil
         }
-        updateMinimumHeightConstraint(to: minimumHeight)
-        if LiquidGlassDetector.isEnabledInMerchantApp {
-            ios26_applyCapsuleCornerConfiguration()
-        }
+        applyIdentityButtonShape(minimumHeight: minimumHeight)
         self.isEnabled = viewModel.state == .enabled
         self.isLoading = viewModel.state == .loading
     }
@@ -542,6 +539,15 @@ extension StripeUICore.Button {
 }
 
 // MARK: - Button.Configuration
+extension StripeUICore.Button {
+    func applyIdentityButtonShape(minimumHeight: CGFloat?) {
+        updateMinimumHeightConstraint(to: minimumHeight)
+        if LiquidGlassDetector.isEnabledInMerchantApp {
+            ios26_applyCapsuleCornerConfiguration()
+        }
+    }
+}
+
 extension Button.Configuration {
 
     static var buttonFont: UIFont {

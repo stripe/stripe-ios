@@ -4,9 +4,105 @@
 //
 
 @testable @_spi(STP) import StripePaymentSheet
+@_spi(STP) import StripeUICore
 import XCTest
 
 final class PayWithLinkButtonTests: XCTestCase {
+    func testCompactLayoutShowsOnlyLogoWithoutEmail() throws {
+        for brand in [LinkBrand.link, .onelink] {
+            // Given a signed-out ECE Link button
+            let button = PayWithLinkButton(brand: brand)
+            button.linkAccount = nil
+
+            // When it shares a 320-point row with another wallet
+            button.frame = CGRect(x: 0, y: 0, width: 156, height: 44)
+            button.layoutIfNeeded()
+
+            // Then only the complete, centered brand logo is visible
+            let logo = try XCTUnwrap(findVisibleLogoImageView(in: button, matching: button.primaryLinkLogoImage))
+            XCTAssertEqual(logo.center.x, button.bounds.midX, accuracy: 0.01)
+            XCTAssertEqual(logo.center.y, button.bounds.midY, accuracy: 0.01)
+            XCTAssertTrue(button.bounds.contains(logo.frame))
+            XCTAssertTrue(visibleLabels(in: button).isEmpty)
+            XCTAssertEqual(button.accessibilityLabel, brand == .link ? "Pay with Link" : "Pay with One-link")
+            XCTAssertNil(button.accessibilityValue)
+        }
+    }
+
+    func testCompactLayoutShowsLinkMarkAndTruncatedEmail() throws {
+        for brand in [LinkBrand.link, .onelink] {
+            // Given a registered account with a long email
+            let email = "this.is.a.very.long.email.address@example.com"
+            let button = PayWithLinkButton(brand: brand)
+            button.linkAccount = makeAccount(email: email)
+
+            // When the ECE button is compact
+            button.frame = CGRect(x: 0, y: 0, width: 156, height: 44)
+            button.layoutIfNeeded()
+
+            // Then the small Link mark leaves room for a tail-truncated email
+            let mark = try XCTUnwrap(findVisibleLogoImageView(in: button, matching: Image.link_mark_bw.makeImage(template: false)))
+            let label = try XCTUnwrap(visibleLabels(in: button).first)
+            XCTAssertEqual(mark.bounds.size, CGSize(width: 16, height: 16))
+            XCTAssertNil(findVisibleLogoImageView(in: button, matching: button.primaryLinkLogoImage))
+            XCTAssertEqual(label.text, email)
+            XCTAssertEqual(label.lineBreakMode, .byTruncatingTail)
+            XCTAssertLessThan(label.bounds.width, label.intrinsicContentSize.width)
+            XCTAssertGreaterThan(label.bounds.width, 0)
+            XCTAssertTrue(button.bounds.contains(button.convert(label.bounds, from: label)))
+            XCTAssertEqual(button.accessibilityValue, email)
+        }
+    }
+
+    func testCompactLayoutRestoresFullContentWhenResized() throws {
+        for email in [nil, "user@example.com"] {
+            // Given a compact button
+            let button = PayWithLinkButton()
+            button.linkAccount = email.map { makeAccount(email: $0) }
+            button.frame = CGRect(x: 0, y: 0, width: 156, height: 44)
+            button.layoutIfNeeded()
+
+            // When its container grows to the full-content width
+            button.frame.size.width = 200
+            button.layoutIfNeeded()
+
+            // Then the email or Pay with Link content is restored
+            let label = try XCTUnwrap(visibleLabels(in: button).first)
+            if let email {
+                XCTAssertEqual(label.text, email)
+            } else {
+                XCTAssertTrue(label.attributedText?.string.contains("Pay with") ?? false)
+            }
+
+            // ...and narrowing the button restores the compact content for that account state
+            button.frame.size.width = 156
+            button.layoutIfNeeded()
+            if let email {
+                XCTAssertEqual(visibleLabels(in: button).first?.text, email)
+                XCTAssertNotNil(findVisibleLogoImageView(in: button, matching: Image.link_mark_bw.makeImage(template: false)))
+            } else {
+                XCTAssertTrue(visibleLabels(in: button).isEmpty)
+            }
+        }
+    }
+
+    private func makeAccount(email: String) -> LinkAccountStub {
+        LinkAccountStub(
+            email: email,
+            redactedPhoneNumber: nil,
+            isRegistered: true,
+            sessionState: .verified,
+            consumerSessionClientSecret: nil,
+            linkSessionKey: nil
+        )
+    }
+
+    private func visibleLabels(in view: UIView) -> [UILabel] {
+        guard !view.isHidden else { return [] }
+        if let label = view as? UILabel { return [label] }
+        return view.subviews.flatMap { visibleLabels(in: $0) }
+    }
+
     private struct LinkAccountStub: PaymentSheetLinkAccountInfoProtocol {
         let email: String
         let redactedPhoneNumber: String?

@@ -17,11 +17,6 @@ extension ExpressCheckoutElement {
         public var applePayConfiguration: ApplePayConfiguration?
         /// Sets the configuration for Link.
         public var linkConfiguration: LinkConfiguration = .init()
-        /// Overrides the display order of payment methods. `nil` uses the default dynamic ordering.
-        /// Supported values are `"apple_pay"` and `"link"`.
-        /// - Example: ["link", "apple_pay"]
-        /// - Note: If you omit payment methods from this list, they’ll be automatically ordered by Stripe after the ones you provide. Invalid payment methods are ignored.
-        public var paymentMethodOrder: [String]?
         /// Controls appearance of Express Checkout Element.
         public var appearance: Appearance = .init()
         /// Called after a wallet payment confirmation completes.
@@ -45,30 +40,16 @@ extension ExpressCheckoutElement.Configuration {
         /// The type of Apple Pay button to display. Defaults to `.plain` when `nil`.
         public var buttonType: PKPaymentButtonType?
 
-        /// Controls whether Apple Pay is displayed.
-        public var display: Display = .automatic
-
-        /// Controls whether Apple Pay is displayed.
-        public enum Display: String {
-            /// Show Apple Pay when it is available.
-            case automatic
-            /// Never show Apple Pay.
-            case never
-        }
-
         /// Creates an Apple Pay configuration.
         /// - Parameters:
         ///   - merchantId: The Apple Pay merchant identifier.
         ///   - buttonType: The type of Apple Pay button to display. Defaults to `.plain` when `nil`.
-        ///   - display: Whether Apple Pay is displayed. Defaults to `.automatic`.
         public init(
             merchantId: String,
-            buttonType: PKPaymentButtonType? = nil,
-            display: Display = .automatic
+            buttonType: PKPaymentButtonType? = nil
         ) {
             self.merchantId = merchantId
             self.buttonType = buttonType
-            self.display = display
         }
     }
 
@@ -128,6 +109,9 @@ extension ExpressCheckoutElement.Configuration {
 
         /// Layout of the express payment buttons.
         public var buttonLayout: ButtonLayout = .init()
+
+        /// Corner radius of the express payment buttons.
+        public var cornerRadius: CGFloat?
 
         public init() {}
     }
