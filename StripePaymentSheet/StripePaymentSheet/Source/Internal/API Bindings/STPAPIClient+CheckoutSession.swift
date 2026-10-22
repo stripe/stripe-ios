@@ -165,7 +165,7 @@ extension STPAPIClient {
     /// - Parameters:
     ///   - checkoutSessionId: The ID of the checkout session (e.g., "cs_test_xxx")
     ///   - adaptivePricingAllowed: Whether the integration allows adaptive pricing for this session.
-    /// - Returns: Internal Payment Pages API response for the checkout session.
+    /// - Returns: Internal Checkout response for the checkout session.
     func initCheckoutSession(
         checkoutSessionId: String,
         adaptivePricingAllowed: Bool
@@ -183,7 +183,7 @@ extension STPAPIClient {
     /// - Parameters:
     ///   - checkoutSessionId: The ID of the checkout session (e.g., "cs_test_xxx")
     ///   - parameters: The update parameters (e.g., promotion_code)
-    /// - Returns: The updated Payment Pages API response.
+    /// - Returns: The updated Checkout response.
     func updateCheckoutSession(
         checkoutSessionId: String,
         parameters: [String: Any]
@@ -246,7 +246,7 @@ extension STPAPIClient {
     ///   - checkoutSessionId: The ID of the checkout session (e.g., "cs_test_xxx").
     ///   - billingDetails: Optional billing details to update (name, email, phone, address).
     ///   - expiryDetails: Optional card expiry to update (month and year).
-    /// - Returns: The updated Payment Pages API response.
+    /// - Returns: The updated Checkout response.
     func updatePaymentMethod(
         _ paymentMethodId: String,
         inCheckoutSession checkoutSessionId: String,
@@ -367,7 +367,7 @@ extension STPAPIClient {
         return try await retrievingCheckoutIntents(for: checkoutClient)
     }
 
-    /// CheckoutClient returns Intent references. Retrieve the Intent to preserve the full session used by confirmation.
+    /// Retrieve the referenced Intent when confirmation needs authentication or next-action handling.
     private func retrievingCheckoutIntents(
         for response: CheckoutClientAPIResponse
     ) async throws -> CheckoutClientAPIResponse {
@@ -393,7 +393,7 @@ extension STPAPIClient {
             }
         } catch {
             if error is DecodingError {
-                reportUnexpectedPaymentPagesParsingError(error, apiClient: self)
+                reportUnexpectedCheckoutClientParsingError(error, apiClient: self)
             }
             throw error
         }
@@ -432,7 +432,7 @@ extension STPAPIClient {
             }
         } catch {
             if error is DecodingError {
-                reportUnexpectedPaymentPagesParsingError(error, apiClient: self)
+                reportUnexpectedCheckoutClientParsingError(error, apiClient: self)
             }
             throw error
         }
