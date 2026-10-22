@@ -101,4 +101,59 @@ final class CustomerProviderTests: XCTestCase {
             customerProvider: CustomerProvider(checkoutSession: session)
         )
     }
+
+    func testSavedPaymentMethodsComeFromTheResolvedCustomerSource() {
+        // Given different saved methods in each loading source
+        let elementsSession = STPElementsSession._testValue(
+            paymentMethodTypes: ["card"],
+            customerSessionData: [:],
+            paymentMethods: [
+                ["id": "pm_1234", "type": "card", "created": 12345],
+                ["id": "pm_4567", "type": "card", "created": 12345],
+            ]
+        )
+        let checkoutSession = CheckoutTestHelpers.makeSession([
+            "customer": [
+                "id": "cus_checkout",
+                "payment_methods": [["id": "pm_checkout", "type": "card", "created": 12345]],
+            ],
+        ]).makePublicSession()
+        let prefetchedPaymentMethod = STPPaymentMethod.decodedObject(
+            fromAPIResponse: ["id": "pm_prefetched", "type": "card", "created": 12345]
+        )!
+        let cases: [(CustomerProvider, [String]?)] = [
+            (.init(customer: nil), nil),
+            (.init(customer: .init(id: "cus_legacy", ephemeralKeySecret: "ek_legacy")), ["pm_prefetched"]),
+            (.init(customer: .init(id: "cus_session", customerSessionClientSecret: "cuss_secret")), ["pm_1234", "pm_4567"]),
+            (.init(checkoutSession: checkoutSession), ["pm_checkout"]),
+        ]
+
+        for (provider, expectedIDs) in cases {
+            // When all sources are available, the resolved customer determines which one is used
+            let paymentMethods = provider.savedPaymentMethods(
+                elementsSession: elementsSession,
+                prefetchedPaymentMethods: [prefetchedPaymentMethod]
+            )
+
+            // Then saved methods from another source cannot replace the resolved customer's methods
+            XCTAssertEqual(paymentMethods?.map(\.stripeId), expectedIDs)
+        }
+    }
+
+    func testLegacyEphemeralKeyCredentialsOnlyApplyToLegacyCustomers() {
+        let legacyProvider = CustomerProvider(
+            customer: .init(id: "cus_legacy", ephemeralKeySecret: "ek_test")
+        )
+        XCTAssertEqual(legacyProvider.legacyEphemeralKeyCredentials?.customerID, "cus_legacy")
+        XCTAssertEqual(legacyProvider.legacyEphemeralKeyCredentials?.ephemeralKeySecret, "ek_test")
+
+        let otherProviders: [CustomerProvider] = [
+            .init(customer: nil),
+            .init(customer: .init(id: "cus_session", customerSessionClientSecret: "cuss_test")),
+            .init(checkoutSession: CheckoutTestHelpers.makeSession().withCustomer().makePublicSession()),
+        ]
+        for provider in otherProviders {
+            XCTAssertNil(provider.legacyEphemeralKeyCredentials)
+        }
+    }
 }
