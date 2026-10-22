@@ -187,7 +187,7 @@ extension STPAPIClient {
             parameters: parameters
         )
 
-        return try checkoutClient.paymentPagesResponse()
+        return try checkoutClientSessionResponse(checkoutClient)
     }
 
     /// Updates a CheckoutSession with the provided parameters.
@@ -378,6 +378,19 @@ extension STPAPIClient {
             endpoint: "payment_pages/\(requestParameters.sessionId)/confirm",
             parameters: parameters
         )
+    }
+
+    private func checkoutClientSessionResponse(
+        _ checkoutClient: CheckoutClientAPIResponse
+    ) throws -> PaymentPagesAPIResponse {
+        do {
+            return try checkoutClient.paymentPagesResponse()
+        } catch {
+            if error is DecodingError {
+                reportUnexpectedPaymentPagesParsingError(error, apiClient: self)
+            }
+            throw error
+        }
     }
 
     private func post<Response: Decodable>(
