@@ -258,8 +258,9 @@ final class CheckoutApplePayContextTests: XCTestCase {
     func testMakePaymentRequestWithLBP() {
         // Given a Checkout Session with an amount of 23.45 LBP
         let session = CheckoutTestHelpers.makeSession([
-            "currency": "lbp",
-            "checkout_items": CheckoutTestHelpers.makeOneTimePriceCheckoutItems(currency: "lbp", unitAmount: 2345),
+            "integration_currency": "lbp",
+            "presentment_currency": "lbp",
+            "items": CheckoutTestHelpers.makeOneTimePriceCheckoutItems(currency: "lbp", unitAmount: 2345),
         ]).makePublicSession()
         let parameters = CheckoutController.ApplePayConfirmationParameters.makeMock(
             apiClient: APIStubbedTestCase.stubbedAPIClient()

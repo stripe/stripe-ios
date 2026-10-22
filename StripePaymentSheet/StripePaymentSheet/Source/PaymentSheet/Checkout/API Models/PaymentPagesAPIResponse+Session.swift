@@ -198,8 +198,7 @@ extension PaymentPagesAPIResponse {
     ) -> STPCheckoutSessionSavedPaymentMethodsOfferSave? {
         guard let value else { return nil }
         return STPCheckoutSessionSavedPaymentMethodsOfferSave(
-            enabled: value.enabled,
-            status: .notAccepted
+            enabled: value.enabled
         )
     }
 

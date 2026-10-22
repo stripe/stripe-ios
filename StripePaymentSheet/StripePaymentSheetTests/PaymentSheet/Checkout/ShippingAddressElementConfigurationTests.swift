@@ -39,6 +39,7 @@ final class ShippingAddressElementConfigurationTests: XCTestCase {
         shippingAddressElementConfiguration.buttonTitle = "Save delivery address"
         shippingAddressElementConfiguration.appearance.colors.primary = .purple
         configuration.shippingAddressElement = shippingAddressElementConfiguration
+        configuration.userInterfaceStyle = .alwaysDark
         var shippingDetails = CheckoutController.Configuration.Defaults.ShippingDetails()
         shippingDetails.name = "Jenny Rosen"
         shippingDetails.address = .init(
@@ -70,6 +71,7 @@ final class ShippingAddressElementConfigurationTests: XCTestCase {
         XCTAssertEqual(addressConfiguration.defaultValues.address.line1, "510 Townsend St.")
         XCTAssertTrue(addressConfiguration.apiClient === configuration.apiClient)
         XCTAssertTrue(shippingAddressElement.addressViewController.useAutocompleteEndpoints)
+        XCTAssertEqual(shippingAddressElement.addressViewController.overrideUserInterfaceStyle, .dark)
     }
 
     func testMakeAddressViewControllerConfiguration() {

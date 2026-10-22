@@ -852,6 +852,8 @@ final class CheckoutUnitTests: XCTestCase {
         // Given a session containing customer information
         var sessionJSON = CheckoutTestHelpers.openSessionJSON
         sessionJSON["customer_email"] = "jenny@example.com"
+        sessionJSON["presentment_currency"] = "gbp"
+        sessionJSON["items"] = CheckoutTestHelpers.makeOneTimePriceCheckoutItems(currency: "gbp")
         let localCurrencyOption: [String: Any] = [
             "currency": "gbp",
             "amount": 800,
@@ -913,7 +915,7 @@ final class CheckoutUnitTests: XCTestCase {
               businessName: nil
               currency: "usd"
               presentmentDetails: {
-                presentmentCurrency: "usd"
+                presentmentCurrency: "gbp"
               }
               discountAmounts: []
               email: "j***y@example.com"
@@ -937,14 +939,14 @@ final class CheckoutUnitTests: XCTestCase {
                     [0] {
                       key: "checkout_item_inner_test"
                       quantity: 1
-                      unitAmount: "$10.00"
-                      unitAmountDecimal: "$10.00"
+                      unitAmount: "£10.00"
+                      unitAmountDecimal: "£10.00"
                       adjustableQuantity: nil
-                      subtotal: "$10.00"
-                      taxExclusive: "$0.00"
-                      taxInclusive: "$0.00"
+                      subtotal: "£10.00"
+                      taxExclusive: "£0.00"
+                      taxInclusive: "£0.00"
                       taxAmountCount: nil
-                      total: "$10.00"
+                      total: "£10.00"
                     }
                   ]
                 }
@@ -952,11 +954,11 @@ final class CheckoutUnitTests: XCTestCase {
               taxStatus: nil
               taxAmountCount: 0
               totals: {
-                subtotal: "$10.00"
-                taxExclusive: "$0.00"
-                taxInclusive: "$0.00"
-                discount: "$0.00"
-                total: "$10.00"
+                subtotal: "£10.00"
+                taxExclusive: "£0.00"
+                taxInclusive: "£0.00"
+                discount: "£0.00"
+                total: "£10.00"
               }
             }
             """

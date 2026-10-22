@@ -229,7 +229,6 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         // Verify saved payment methods offer save
         XCTAssertNotNil(session.savedPaymentMethodsOfferSave)
         XCTAssertTrue(session.savedPaymentMethodsOfferSave!.enabled)
-        XCTAssertEqual(session.savedPaymentMethodsOfferSave!.status, .notAccepted)
 
         XCTAssertNotNil(session.paymentMethodOptions)
 
@@ -1206,8 +1205,8 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertThrowsError(try PaymentPagesAPIResponse.decode(fromAPIResponse: json))
     }
 
-    func testTax_nonAutomaticComputationType_isReady() {
-        // Given a non-automatic tax computation
+    func testDisabledAutomaticTax_isReady() {
+        // Given automatic tax is disabled
         let response = CheckoutTestHelpers.makeSession([
             "automatic_tax": [
                 "enabled": false,
@@ -1222,20 +1221,20 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertEqual(session.tax?.status, .ready)
     }
 
-    func testTaxMetaUnknownComputationType_isReady() {
-        // Given a computation type added after this SDK version shipped
+    func testUnknownAutomaticTaxStatus_isNil() {
+        // Given a tax status added after this SDK version shipped
         let response = CheckoutTestHelpers.makeSession([
             "automatic_tax": [
-                "enabled": false,
-                "status": "ready",
+                "enabled": true,
+                "status": "future_status",
             ],
         ]).withCustomer()
 
         // When creating the public Session
         let session = response.makePublicSession()
 
-        // Then it behaves like the other non-automatic computation types
-        XCTAssertEqual(session.tax?.status, .ready)
+        // Then the SDK does not assume the tax calculation is ready
+        XCTAssertNil(session.tax)
     }
 
     func testAutomaticTaxRejectsMalformedEnabled() {
