@@ -32,7 +32,6 @@ public final class ExpressCheckoutElementUIView: UIView {
     private var hasReportedInit = false
     private var linkBrand: LinkBrand
     private var session: CheckoutController.Session
-    private var buttonsEnabled = true
     private weak var delegate: ExpressCheckoutElementDelegate?
 
     // MARK: - Init
@@ -87,11 +86,12 @@ public final class ExpressCheckoutElementUIView: UIView {
         invalidateIntrinsicContentSize()
     }
 
-    func setEnabled(_ enabled: Bool) {
-        buttonsEnabled = enabled
-        for row in stackView.arrangedSubviews.compactMap({ $0 as? UIStackView }) {
-            for button in row.arrangedSubviews.compactMap({ $0 as? UIControl }) {
-                button.isEnabled = enabled
+    var isEnabled = true {
+        didSet {
+            for row in stackView.arrangedSubviews.compactMap({ $0 as? UIStackView }) {
+                for button in row.arrangedSubviews.compactMap({ $0 as? UIControl }) {
+                    button.isEnabled = isEnabled
+                }
             }
         }
     }
@@ -206,7 +206,7 @@ public final class ExpressCheckoutElementUIView: UIView {
     private func makeApplePayButton() -> UIView {
         let buttonType = configuration.applePayConfiguration?.buttonType ?? .plain
         let button = PKPaymentButton(paymentButtonType: buttonType, paymentButtonStyle: applePayButtonStyle)
-        button.isEnabled = buttonsEnabled
+        button.isEnabled = isEnabled
         // `cornerConfiguration` doesn't work on PKPaymentButton, so set the radius directly.
         button.cornerRadius = configuration.appearance.cornerRadius ?? (LiquidGlassDetector.isEnabledInMerchantApp
             ? Constants.buttonHeight / 2
@@ -219,7 +219,7 @@ public final class ExpressCheckoutElementUIView: UIView {
 
     private func makeLinkButton() -> UIView {
         let button = PayWithLinkButton(brand: linkBrand)
-        button.isEnabled = buttonsEnabled
+        button.isEnabled = isEnabled
         if let cornerRadius = configuration.appearance.cornerRadius {
             button.cornerRadius = cornerRadius
         } else if LiquidGlassDetector.isEnabledInMerchantApp {

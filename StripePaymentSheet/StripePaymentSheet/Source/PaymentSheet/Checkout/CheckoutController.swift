@@ -25,7 +25,7 @@ public final class CheckoutController: ObservableObject {
     /// Use this to disable interactive UI e.g. your buy button.
     @Published public internal(set) var isUpdating: Bool = false {
         didSet {
-            expressCheckoutElement?.uiView.setEnabled(!isUpdating)
+            expressCheckoutElement?.uiView.isEnabled = !isUpdating
         }
     }
 
@@ -161,7 +161,7 @@ public final class CheckoutController: ObservableObject {
                     delegate: self,
                     apiClient: apiClient
                 )
-                self.expressCheckoutElement?.uiView.setEnabled(!isUpdating)
+                self.expressCheckoutElement?.uiView.isEnabled = !isUpdating
             }
 
             // 4. CSE

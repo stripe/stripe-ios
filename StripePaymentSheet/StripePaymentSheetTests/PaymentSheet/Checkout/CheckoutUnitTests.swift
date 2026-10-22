@@ -57,10 +57,16 @@ final class CheckoutUnitTests: XCTestCase {
             .first)
         XCTAssertTrue(button.isEnabled)
 
-        // When the controller is updating, the button disables
-        checkout.isUpdating = true
-        XCTAssertFalse(button.isEnabled)
-        checkout.isUpdating = false
+        // When a session update is running, the button disables
+        try await checkout.enqueueSessionUpdate {
+            XCTAssertTrue(checkout.isUpdating)
+            XCTAssertFalse(view.isEnabled)
+            XCTAssertFalse(button.isEnabled)
+        }
+
+        // Then the button enables again when the queue drains
+        XCTAssertFalse(checkout.isUpdating)
+        XCTAssertTrue(view.isEnabled)
         XCTAssertTrue(button.isEnabled)
     }
 
