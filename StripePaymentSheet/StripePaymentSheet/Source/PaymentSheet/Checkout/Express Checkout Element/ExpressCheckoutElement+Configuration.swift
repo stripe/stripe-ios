@@ -110,6 +110,9 @@ extension ExpressCheckoutElement.Configuration {
         /// Layout of the express payment buttons.
         public var buttonLayout: ButtonLayout = .init()
 
+        /// Corner radius of the express payment buttons.
+        public var cornerRadius: CGFloat?
+
         public init() {}
     }
 

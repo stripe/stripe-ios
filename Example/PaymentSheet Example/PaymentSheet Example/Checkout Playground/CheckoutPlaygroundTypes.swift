@@ -426,6 +426,7 @@ enum CheckoutPlayground {
             case applePayButtonType
             case linkDisplay
             case buttonTheme
+            case cornerRadius
             case maxColumns
             case maxRows
         }
@@ -435,6 +436,7 @@ enum CheckoutPlayground {
             var appearance = ExpressCheckoutElement.Configuration.Appearance()
             appearance.buttonTheme = try container.decodeIfPresent(String.self, forKey: .buttonTheme)
                 .flatMap(ExpressCheckoutElement.Configuration.Appearance.ButtonTheme.init(rawValue:)) ?? .automatic
+            appearance.cornerRadius = try container.decodeIfPresent(CGFloat.self, forKey: .cornerRadius)
             appearance.buttonLayout.maxColumns = try container.decodeIfPresent(Int.self, forKey: .maxColumns)
             appearance.buttonLayout.maxRows = try container.decodeIfPresent(Int.self, forKey: .maxRows)
 
@@ -453,6 +455,7 @@ enum CheckoutPlayground {
             try container.encode(applePayButtonType, forKey: .applePayButtonType)
             try container.encode(linkDisplay.rawValue, forKey: .linkDisplay)
             try container.encode(appearance.buttonTheme.rawValue, forKey: .buttonTheme)
+            try container.encodeIfPresent(appearance.cornerRadius, forKey: .cornerRadius)
             try container.encodeIfPresent(appearance.buttonLayout.maxColumns, forKey: .maxColumns)
             try container.encodeIfPresent(appearance.buttonLayout.maxRows, forKey: .maxRows)
         }
