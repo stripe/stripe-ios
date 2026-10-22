@@ -1050,7 +1050,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertFalse(session.makePublicSession().merchantWillSavePaymentMethod(.card))
     }
 
-    func testCheckoutSessionIntent_setupFutureUsageString() {
+    func testCheckoutSessionIntent_hasNoGlobalSetupFutureUsage() {
         let session = CheckoutTestHelpers.makeSession([
             "setup_future_usage_for_payment_method_type": [
                 "card": "off_session",
@@ -1058,7 +1058,8 @@ class PaymentPagesAPIResponseTest: XCTestCase {
             ],
         ]).withCustomer()
 
-        XCTAssertEqual(Intent.checkout(session.makePublicSession()).setupFutureUsageString, "off_session")
+        XCTAssertNil(Intent.checkout(session.makePublicSession()).setupFutureUsageString)
+        XCTAssertEqual(session.makePublicSession().setupFutureUsage(for: .link), "off_session")
     }
 
     func testCheckoutSessionIntent_isPaymentMethodOptionsSetupFutureUsageSet() {
@@ -1093,7 +1094,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
             ],
         ]).withCustomer()
 
-        XCTAssertEqual(Intent.checkout(session.makePublicSession()).setupFutureUsageString, "none")
+        XCTAssertEqual(session.makePublicSession().setupFutureUsage(for: .link), "none")
         XCTAssertFalse(Intent.checkout(session.makePublicSession()).isSetupFutureUsageSet(for: .payPal))
     }
 
