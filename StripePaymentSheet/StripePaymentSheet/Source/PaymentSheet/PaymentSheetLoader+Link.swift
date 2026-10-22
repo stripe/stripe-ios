@@ -13,6 +13,7 @@ extension PaymentSheetLoader {
     static func loadLink(
         elementsSession: STPElementsSession,
         configuration: PaymentElementConfiguration,
+        email: String?,
         analyticsHelper: ExperimentAnalyticsHelper,
         prefetchedEmailAndSourceTask: Task<(email: String, source: EmailSource)?, Never>,
         loadTimings: LoadTimings,
@@ -27,6 +28,7 @@ extension PaymentSheetLoader {
             let linkAccount = try? await Self.lookupLinkAccount(
                 elementsSession: elementsSession,
                 configuration: configuration,
+                email: email,
                 prefetchedEmailAndSource: prefetchedLinkEmailAndSource,
                 loadTimings: loadTimings,
                 isUpdate: isUpdate
@@ -70,6 +72,7 @@ extension PaymentSheetLoader {
     static func lookupLinkAccount(
         elementsSession: STPElementsSession,
         configuration: PaymentElementConfiguration,
+        email: String?,
         prefetchedEmailAndSource: (email: String, source: EmailSource)?,
         loadTimings: LoadTimings,
         isUpdate: Bool
@@ -101,8 +104,8 @@ extension PaymentSheetLoader {
         // This lookup call will only happen if we have access to a user's email:
         // There are a couple different sources.
         let lookupEmail: (email: String, source: EmailSource)
-        if let email = configuration.defaultBillingDetails.email {
-            // 1. Merchant provided in `defaultBillingDetails`
+        if let email {
+            // 1. Email provided by the caller
             lookupEmail = (email, EmailSource.customerEmail)
         } else if let prefetchedEmailAndSource {
             // 2. We fetched the Customer object before calling this method to get its email when using EKs

@@ -107,6 +107,7 @@ final class PaymentSheetLoader {
             let (_, didLinkLookupTimeOut) = await loadLink(
                 elementsSession: elementsSession,
                 configuration: configuration,
+                email: configuration.defaultBillingDetails.email,
                 analyticsHelper: analyticsHelper.experimentAnalyticsHelper,
                 prefetchedEmailAndSourceTask: prefetchedLinkEmailAndSourceTask,
                 loadTimings: loadTimings,
