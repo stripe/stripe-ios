@@ -237,10 +237,11 @@ extension STPAPIClient {
     ) async throws {
         var params = Self.checkoutClientParameters()
         params["payment_method_to_detach"] = paymentMethodId
-        let _: CheckoutClientAPIResponse = try await post(
+        let checkoutClient: CheckoutClientAPIResponse = try await post(
             endpoint: "checkout_client/\(checkoutSessionId)/update",
             parameters: params
         )
+        _ = try await checkoutClientSessionResponse(checkoutClient, retrieveIntents: false)
     }
 
     /// Updates a saved payment method's billing details and/or card expiry on a Checkout Session.
