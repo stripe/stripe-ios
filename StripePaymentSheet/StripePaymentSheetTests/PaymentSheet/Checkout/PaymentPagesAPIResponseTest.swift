@@ -320,7 +320,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         let data = try JSONSerialization.data(withJSONObject: checkoutClientJSON)
         let checkoutClient = try StripeJSONDecoder().decode(CheckoutClientAPIResponse.self, from: data)
         XCTAssertEqual(
-            try checkoutClient.paymentPagesResponse().makePublicSession().elementsSession.passiveCaptchaData,
+            checkoutClient.makePublicSession().elementsSession.passiveCaptchaData,
             PassiveCaptchaData(siteKey: "site_key", rqdata: "rqdata", tokenTimeoutSeconds: 21570)
         )
     }

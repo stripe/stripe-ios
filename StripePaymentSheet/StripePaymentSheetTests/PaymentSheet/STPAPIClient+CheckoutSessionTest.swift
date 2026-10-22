@@ -30,31 +30,9 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
         )
 
         // Then the latest full Checkout Session is returned
-        XCTAssertEqual(response.sessionId, sessionId)
+        XCTAssertEqual(response.id, sessionId)
         XCTAssertEqual(response.status, .open)
-        XCTAssertEqual(response.currency, "usd")
-    }
-
-    func testPollCheckoutSession() async throws {
-        // Given an initialized Checkout Session
-        let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession()
-        let sessionId = checkoutSessionResponse.id
-        let apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
-        _ = try await apiClient.initCheckoutSession(
-            checkoutSessionId: sessionId,
-            adaptivePricingAllowed: false
-        )
-
-        // When the session is polled
-        let response = try await apiClient.pollCheckoutSession(
-            checkoutSessionId: sessionId,
-            timeout: 30
-        )
-
-        // Then its current poll state is returned
-        XCTAssertEqual(response.sessionId, sessionId)
-        XCTAssertEqual(response.state, .active)
-        XCTAssertNil(response.paymentObjectStatus)
+        XCTAssertEqual(response.presentmentCurrency, "usd")
     }
 
     func testInitCheckoutSessionPayment() async throws {
@@ -71,12 +49,11 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
         XCTAssertEqual(checkoutSession.status, .open)
         XCTAssertEqual(checkoutSession.currency, "usd")
         XCTAssertFalse(checkoutSession.livemode)
-        XCTAssertTrue((apiResponse.allResponseFields["payment_method_types"] as? [String])?.contains("card") ?? false)
+        XCTAssertTrue((apiResponse.allResponseFields["ordered_payment_method_types_and_wallets"] as? [String])?.contains("card") ?? false)
 
         // Verify elements session fields
-        let elementsSessionDict = apiResponse.allResponseFields["elements_session"] as! [String: Any]
-        XCTAssertTrue((elementsSessionDict["session_id"] as! String).hasPrefix("elements_session_"))
-        XCTAssertEqual(elementsSessionDict["merchant_country"] as? String, "US")
+        XCTAssertTrue(apiResponse.elementsSession.sessionID.hasPrefix("elements_session_"))
+        XCTAssertEqual(apiResponse.merchantInfo.country, "US")
     }
 
     func testConfirmCheckoutSessionPayment() async throws {
@@ -207,7 +184,7 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
         )
 
         // Then CheckoutClient returns the updated saved card, decoded from the session response
-        XCTAssertEqual(updatedSession.sessionId, setup.checkoutSessionID)
+        XCTAssertEqual(updatedSession.id, setup.checkoutSessionID)
         XCTAssertEqual(updatedSession.status, .open)
         let card = try XCTUnwrap(updatedSession.customer?.paymentMethods.first { $0.stripeId == setup.paymentMethodID }?.card)
         XCTAssertEqual(card.expMonth, 6)
@@ -242,7 +219,7 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
         )
 
         // Then CheckoutClient returns the updated billing details, decoded from the session response
-        XCTAssertEqual(updatedSession.sessionId, setup.checkoutSessionID)
+        XCTAssertEqual(updatedSession.id, setup.checkoutSessionID)
         XCTAssertEqual(updatedSession.status, .open)
         let billing = try XCTUnwrap(updatedSession.customer?.paymentMethods.first { $0.stripeId == setup.paymentMethodID }?.billingDetails)
         XCTAssertEqual(billing.name, "Jane Doe")
@@ -276,12 +253,11 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
         XCTAssertEqual(checkoutSession.status, .open)
         XCTAssertEqual(checkoutSession.currency, "usd")
         XCTAssertFalse(checkoutSession.livemode)
-        XCTAssertTrue((apiResponse.allResponseFields["payment_method_types"] as? [String])?.contains("card") ?? false)
+        XCTAssertTrue((apiResponse.allResponseFields["ordered_payment_method_types_and_wallets"] as? [String])?.contains("card") ?? false)
 
         // Verify elements session fields
-        let elementsSessionDict = apiResponse.allResponseFields["elements_session"] as! [String: Any]
-        XCTAssertTrue((elementsSessionDict["session_id"] as! String).hasPrefix("elements_session_"))
-        XCTAssertEqual(elementsSessionDict["merchant_country"] as? String, "US")
+        XCTAssertTrue(apiResponse.elementsSession.sessionID.hasPrefix("elements_session_"))
+        XCTAssertEqual(apiResponse.merchantInfo.country, "US")
     }
 
     // TODO(porter): see disabled_testInitCheckoutSessionSetup above.

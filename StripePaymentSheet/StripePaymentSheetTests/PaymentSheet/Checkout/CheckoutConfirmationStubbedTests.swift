@@ -162,42 +162,18 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         await fulfillment(of: [confirmRequest], timeout: 0.1)
     }
 
-    func testOpenConfirmResponsePollsBeforeCompleting() async throws {
-        // Given /confirm returns an open Session and polling observes completion
+    func testOpenConfirmResponseCompletesFromIntent() async throws {
+        // Given /confirm returns an open Session with a succeeded Intent
         let checkout = try await makeCheckout()
-        let poller = TestCheckoutSessionPoller(outcome: .completed)
         let responseJSON = makeConfirmedSessionJSON(status: "open", paymentStatus: "unpaid")
 
         // When the Checkout Session is confirmed
         let result = await confirmCheckoutSession(
             checkout,
-            responseJSON: responseJSON,
-            poller: poller
+            responseJSON: responseJSON
         )
 
-        // Then it polls and returns the Session completed by the client Intent
-        guard case .completed(let response) = result else {
-            return XCTFail("Expected confirmation to complete, got \(result)")
-        }
-        XCTAssertEqual(poller.checkoutSessionIds, [checkout.session.id])
-        XCTAssertEqual(response.status, .complete(.paid))
-        XCTAssertEqual(response.paymentStatus, .paid)
-    }
-
-    func testTimedOutPollingStillCompletes() async throws {
-        // Given /confirm returns an open Session and polling times out
-        let checkout = try await makeCheckout()
-        let poller = TestCheckoutSessionPoller(outcome: .timedOut)
-        let responseJSON = makeConfirmedSessionJSON(status: "open", paymentStatus: "unpaid")
-
-        // When the Checkout Session is confirmed
-        let result = await confirmCheckoutSession(
-            checkout,
-            responseJSON: responseJSON,
-            poller: poller
-        )
-
-        // Then confirmation still finishes from the client-completed Intent
+        // Then the client-completed Intent establishes the Session status
         guard case .completed(let response) = result else {
             return XCTFail("Expected confirmation to complete, got \(result)")
         }
@@ -208,7 +184,6 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
     func testProcessingPaymentIntentCompletesSessionAndPreservesPaymentStatus() async throws {
         // Given a SEPA Debit payment that is client-complete while the bank transfer continues asynchronously
         let checkout = try await makeCheckout()
-        let poller = TestCheckoutSessionPoller(outcome: .completed)
         var responseJSON = makeConfirmedSessionJSON(
             paymentIntentStatus: "processing",
             status: "open",
@@ -221,8 +196,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         // When the Checkout Session is confirmed
         let result = await confirmCheckoutSession(
             checkout,
-            responseJSON: responseJSON,
-            poller: poller
+            responseJSON: responseJSON
         )
 
         // Then the Session is complete, but remains unpaid until the asynchronous payment succeeds
@@ -236,7 +210,6 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
     func testRequiresCapturePaymentIntentPreservesSessionStatuses() async throws {
         // Given a manually captured card payment that has been authorized but not captured
         let checkout = try await makeCheckout()
-        let poller = TestCheckoutSessionPoller(outcome: .completed)
         let responseJSON = makeConfirmedSessionJSON(
             paymentIntentStatus: "requires_capture",
             status: "open",
@@ -246,8 +219,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         // When the Checkout Session is confirmed
         let result = await confirmCheckoutSession(
             checkout,
-            responseJSON: responseJSON,
-            poller: poller
+            responseJSON: responseJSON
         )
 
         // Then confirmation preserves the Session fields returned by /confirm
@@ -261,7 +233,6 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
     func testMicrodepositVerificationPaymentIntentPreservesSessionStatuses() async throws {
         // Given a US bank account payment where the customer must verify microdeposits out of band
         let checkout = try await makeCheckout()
-        let poller = TestCheckoutSessionPoller(outcome: .completed)
         var responseJSON = makeConfirmedSessionJSON(
             paymentIntentStatus: "requires_action",
             status: "open",
@@ -281,8 +252,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         // When the Checkout Session is confirmed
         let result = await confirmCheckoutSession(
             checkout,
-            responseJSON: responseJSON,
-            poller: poller
+            responseJSON: responseJSON
         )
 
         // Then confirmation preserves the open and unpaid Session returned by /confirm
@@ -296,7 +266,6 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
     func testSucceededSetupIntentCompletesSessionAndPreservesPaymentStatus() async throws {
         // Given a card successfully saved for future payments with a SetupIntent
         let checkout = try await makeCheckout()
-        let poller = TestCheckoutSessionPoller(outcome: .completed)
         var responseJSON = makeConfirmedSessionJSON(status: "open", paymentStatus: "no_payment_required")
         var setupIntentJSON = STPTestUtils.jsonNamed("SetupIntent")!
         setupIntentJSON["status"] = "succeeded"
@@ -307,8 +276,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         // When the Checkout Session is confirmed
         let result = await confirmCheckoutSession(
             checkout,
-            responseJSON: responseJSON,
-            poller: poller
+            responseJSON: responseJSON
         )
 
         // Then the Session is complete and still requires no payment
@@ -319,120 +287,60 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         XCTAssertEqual(response.paymentStatus, .noPaymentRequired)
     }
 
-    func testRequiresPaymentMethodPollOutcomeRetrievesLatestSession() async throws {
-        // Given polling observes a payment failure
-        let checkout = try await makeCheckout()
-        let poller = TestCheckoutSessionPoller(outcome: .requiresPaymentMethod)
-        let confirmJSON = makeConfirmedSessionJSON(status: "open", paymentStatus: "unpaid")
-        let latestSessionJSON = makeConfirmedSessionJSON(
-            paymentIntentStatus: "requires_payment_method",
-            status: "open",
-            paymentStatus: "unpaid"
-        )
-        let retrieve = stubRetrieveCheckoutSession(responseJSON: latestSessionJSON)
-
-        // When the Checkout Session is confirmed
-        let result = await confirmCheckoutSession(
-            checkout,
-            responseJSON: confirmJSON,
-            poller: poller
-        )
-
-        // Then the latest Session is returned with the payment failure
-        guard case .failed(_, let response) = result else {
-            return XCTFail("Expected confirmation to fail, got \(result)")
-        }
-        XCTAssertEqual(response?.paymentIntent?.status, .requiresPaymentMethod)
-        await fulfillment(of: [retrieve], timeout: 1)
-    }
-
-    func testInvalidPollOutcomeRetrievesLatestSession() async throws {
-        // Given polling observes an invalid or expired state
-        let checkout = try await makeCheckout()
-        let poller = TestCheckoutSessionPoller(outcome: .invalidOrExpired)
-        let confirmJSON = makeConfirmedSessionJSON(status: "open", paymentStatus: "unpaid")
-        let latestSessionJSON = makeConfirmedSessionJSON(status: "expired", paymentStatus: "unpaid")
-        let retrieve = stubRetrieveCheckoutSession(responseJSON: latestSessionJSON)
-
-        // When the Checkout Session is confirmed
-        let result = await confirmCheckoutSession(
-            checkout,
-            responseJSON: confirmJSON,
-            poller: poller
-        )
-
-        // Then the latest Session is returned with an unexpected confirmation error
-        guard case .failed(let error, let response) = result else {
-            return XCTFail("Expected confirmation to fail, got \(result)")
-        }
-        XCTAssertEqual(response?.status, .expired)
-        XCTAssertTrue(error.nonGenericDescription.contains("invalid or expired"))
-        await fulfillment(of: [retrieve], timeout: 1)
-    }
-
     func testRequiresApprovalConfirmResponseFailsWithoutPolling() async throws {
         // Given /confirm routes to unsupported manual approval
         let checkout = try await makeCheckout()
-        let poller = TestCheckoutSessionPoller(outcome: .completed)
         var responseJSON = makeConfirmedSessionJSON()
         responseJSON["submission_attempt"] = ["state": "requires_approval"]
 
         // When the Checkout Session is confirmed
         let result = await confirmCheckoutSession(
             checkout,
-            responseJSON: responseJSON,
-            poller: poller
+            responseJSON: responseJSON
         )
 
-        // Then it fails before polling
+        // Then confirmation fails
         guard case .failed(let error, _) = result else {
             return XCTFail("Expected confirmation to fail, got \(result)")
         }
         XCTAssertTrue(error.nonGenericDescription.contains("manual approval"))
-        XCTAssertTrue(poller.checkoutSessionIds.isEmpty)
     }
 
     func testFailedSubmissionAttemptFailsWithoutPolling() async throws {
         // Given /confirm reports a failed submission attempt
         let checkout = try await makeCheckout()
-        let poller = TestCheckoutSessionPoller(outcome: .completed)
         var responseJSON = makeConfirmedSessionJSON()
         responseJSON["submission_attempt"] = ["state": "failed"]
 
         // When the Checkout Session is confirmed
         let result = await confirmCheckoutSession(
             checkout,
-            responseJSON: responseJSON,
-            poller: poller
+            responseJSON: responseJSON
         )
 
-        // Then it fails before polling
+        // Then confirmation fails
         guard case .failed = result else {
             return XCTFail("Expected confirmation to fail, got \(result)")
         }
-        XCTAssertTrue(poller.checkoutSessionIds.isEmpty)
     }
 
-    func testOrchestrationConfirmResponseFailsWithoutPolling() async throws {
+    func testOrchestrationConfirmResponseFails() async throws {
         // Given /confirm routes to the unsupported orchestration interface
         let checkout = try await makeCheckout()
-        let poller = TestCheckoutSessionPoller(outcome: .completed)
         var responseJSON = makeConfirmedSessionJSON()
         responseJSON["route_to_orchestration_interface"] = true
 
         // When the Checkout Session is confirmed
         let result = await confirmCheckoutSession(
             checkout,
-            responseJSON: responseJSON,
-            poller: poller
+            responseJSON: responseJSON
         )
 
-        // Then it fails before polling
+        // Then confirmation fails
         guard case .failed(let error, _) = result else {
             return XCTFail("Expected confirmation to fail, got \(result)")
         }
         XCTAssertTrue(error.nonGenericDescription.contains("orchestration"))
-        XCTAssertTrue(poller.checkoutSessionIds.isEmpty)
     }
 
     // MARK: - Payment Method
@@ -681,7 +589,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         await fulfillment(of: [confirm, logout], timeout: 10)
     }
 
-    func testLinkConfirmationPollsOpenCheckoutSession() async throws {
+    func testLinkConfirmationCompletesOpenCheckoutSession() async throws {
         // Given Link confirmation returns an open Checkout Session
         let checkout = try await makeCheckout(apiResponse: CheckoutTestHelpers.makeSession().withCustomer())
         var confirmResponseJSON = makeConfirmedSessionJSON(status: "open")
@@ -692,7 +600,6 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
             responseJSON: confirmResponseJSON,
             expectedPaymentMethodType: "link"
         )
-        let poll = stubPollCheckoutSession(sessionId: checkout.session.id)
         let logout = stubLinkLogout(consumerSessionClientSecret: "cs_xxx")
         let configuration = checkout.getPaymentElement().embeddedPaymentElement.configuration
         let flow = CheckoutController.CheckoutConfirmationFlow.link(.init(
@@ -708,9 +615,9 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         // When Checkout confirms with Link
         let result = await checkout.confirm(flow)
 
-        // Then Link polls until the Checkout Session confirmation is complete
+        // Then Link completes confirmation from the returned Intent
         assertSucceeded(result)
-        await fulfillment(of: [confirm, poll, logout], timeout: 10)
+        await fulfillment(of: [confirm, logout], timeout: 10)
     }
 
     // MARK: - Inline payment method request and challenge lifecycle
@@ -966,8 +873,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
 
     private func confirmCheckoutSession(
         _ checkout: CheckoutController,
-        responseJSON: [AnyHashable: Any],
-        poller: TestCheckoutSessionPoller
+        responseJSON: [AnyHashable: Any]
     ) async -> CheckoutController.InternalConfirmResult {
         stubConfirmation(responseJSON: responseJSON)
         let configuration = checkout.getPaymentElement().embeddedPaymentElement.configuration
@@ -984,8 +890,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
             with: requestParameters,
             apiClient: configuration.apiClient,
             authenticationContext: self,
-            paymentHandler: STPPaymentHandler(apiClient: configuration.apiClient),
-            poller: poller
+            paymentHandler: STPPaymentHandler(apiClient: configuration.apiClient)
         )
     }
 
@@ -1097,26 +1002,6 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         return expectation
     }
 
-    private func stubPollCheckoutSession(sessionId: String) -> XCTestExpectation {
-        let expectation = expectation(description: "Checkout Session polled")
-        stub { request in
-            request.httpMethod == "GET"
-                && request.url?.path.hasSuffix("/payment_pages/\(sessionId)/poll") == true
-        } response: { _ in
-            expectation.fulfill()
-            return HTTPStubsResponse(
-                jsonObject: [
-                    "session_id": sessionId,
-                    "state": "succeeded",
-                    "payment_object_status": NSNull(),
-                ],
-                statusCode: 200,
-                headers: nil
-            )
-        }
-        return expectation
-    }
-
     private enum BillingEmailExpectation {
         case omitted
         case value(String)
@@ -1181,20 +1066,6 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
 extension CheckoutConfirmationStubbedTests: STPAuthenticationContext {
     func authenticationPresentingViewController() -> UIViewController {
         UIViewController()
-    }
-}
-
-private final class TestCheckoutSessionPoller: CheckoutSessionPolling {
-    let outcome: CheckoutSessionPoller.Outcome
-    private(set) var checkoutSessionIds: [String] = []
-
-    init(outcome: CheckoutSessionPoller.Outcome) {
-        self.outcome = outcome
-    }
-
-    func poll(checkoutSessionId: String) async -> CheckoutSessionPoller.Outcome {
-        checkoutSessionIds.append(checkoutSessionId)
-        return outcome
     }
 }
 
