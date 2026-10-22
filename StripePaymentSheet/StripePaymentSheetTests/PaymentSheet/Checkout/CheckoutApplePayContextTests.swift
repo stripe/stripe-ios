@@ -116,6 +116,28 @@ final class CheckoutApplePayContextTests: XCTestCase {
         XCTAssertEqual(items[4].amount, NSDecimalNumber.stp_decimalNumber(withAmount: 3200, currency: "usd"))
     }
 
+    func testMakeSummaryItemsWithLBPTaxAndQuantity() {
+        // Given three items at 23.01 LBP each and 0.49 LBP in tax
+        let intent = Intent._testCheckoutSession(
+            amount: 6952,
+            currency: "lbp",
+            oneTimePriceItems: [.init(key: "li_1", displayName: "Widget", quantity: 3, unitAmount: 2301)],
+            subtotal: 6903,
+            taxAmount: 49
+        )
+        guard case .checkout(let session) = intent else {
+            XCTFail("Expected checkout intent")
+            return
+        }
+
+        // When building the Apple Pay summary
+        let items = CheckoutApplePayContext.makeSummaryItems(for: session, label: "Test Store")
+
+        // Then every row uses whole pounds, rounding after multiplying by quantity
+        XCTAssertEqual(items.map(\.amount), [70, 70, 1, 70])
+        XCTAssertEqual(session.amount, 6952)
+    }
+
     func testMakeSummaryItemsWithNoAmount() {
         // Given a no-payment-required session (e.g. free order)
         let session = CheckoutTestHelpers.makeSession(["payment_status": "no_payment_required"]).makePublicSession()
@@ -188,8 +210,64 @@ final class CheckoutApplePayContextTests: XCTestCase {
         )
 
         // Then it retains the session currency and amount
+        XCTAssertEqual(request.merchantIdentifier, "merchant.com.test")
+        XCTAssertEqual(request.countryCode, "US")
         XCTAssertEqual(request.currencyCode, "USD")
+        XCTAssertEqual(request.paymentSummaryItems.count, 2)
+        XCTAssertEqual(request.paymentSummaryItems.last?.label, "Test Merchant")
+        XCTAssertEqual(request.paymentSummaryItems.last?.type, .final)
         XCTAssertEqual(request.paymentSummaryItems.last?.amount, NSDecimalNumber(string: "120"))
+    }
+
+    func testMakePaymentRequestWithNoPaymentRequired() {
+        for amount: Int? in [nil, 0] {
+            // Given a setup session with an absent or zero amount
+            let intent = Intent._testCheckoutSession(hasPaymentDue: false, amount: amount, currency: "USD")
+            guard case .checkout(let session) = intent else {
+                XCTFail("Expected checkout intent")
+                return
+            }
+            let parameters = CheckoutController.ApplePayConfirmationParameters.makeMock(
+                apiClient: APIStubbedTestCase.stubbedAPIClient()
+            )
+
+            // When building the Apple Pay request
+            let request = CheckoutApplePayContext.makePaymentRequest(
+                checkoutSession: session,
+                applePayConfirmationParameters: parameters
+            )
+
+            // Then the request has a pending zero total and the configured merchant details
+            XCTAssertEqual(request.merchantIdentifier, "merchant.com.test")
+            XCTAssertEqual(request.countryCode, session.merchantCountryCode)
+            XCTAssertEqual(request.currencyCode, "USD")
+            XCTAssertEqual(request.paymentSummaryItems.count, 1)
+            XCTAssertEqual(request.paymentSummaryItems.first?.label, "Test Merchant")
+            XCTAssertEqual(request.paymentSummaryItems.first?.type, .pending)
+            XCTAssertEqual(request.paymentSummaryItems.first?.amount, .zero)
+        }
+    }
+
+    func testMakePaymentRequestWithLBP() {
+        // Given a Checkout Session with an amount of 23.45 LBP
+        let session = CheckoutTestHelpers.makeSession([
+            "currency": "lbp",
+            "checkout_items": CheckoutTestHelpers.makeOneTimePriceCheckoutItems(currency: "lbp", unitAmount: 2345),
+        ]).makePublicSession()
+        let parameters = CheckoutController.ApplePayConfirmationParameters.makeMock(
+            apiClient: APIStubbedTestCase.stubbedAPIClient()
+        )
+
+        // When building the Apple Pay request
+        let request = CheckoutApplePayContext.makePaymentRequest(
+            checkoutSession: session,
+            applePayConfirmationParameters: parameters
+        )
+
+        // Then the displayed total rounds up to whole pounds without changing the amount to charge
+        XCTAssertEqual(request.paymentSummaryItems.last?.amount, NSDecimalNumber(string: "24"))
+        XCTAssertEqual(request.currencyCode, "LBP")
+        XCTAssertEqual(session.amount, 2345)
     }
 
     // MARK: - makePaymentRequest shipping address
@@ -504,6 +582,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
         defaults.address = .init(
             country: "US",
             line1: "510 Townsend St",
+            line2: "Apt 2",
             city: "San Francisco",
             state: "CA",
             postalCode: "94103"
@@ -520,9 +599,71 @@ final class CheckoutApplePayContextTests: XCTestCase {
         )
 
         // Then Apple Pay is prefilled with the default billing contact
-        XCTAssertEqual(paymentRequest.billingContact?.postalAddress?.street, "510 Townsend St")
+        XCTAssertEqual(paymentRequest.billingContact?.postalAddress?.street, "510 Townsend St\nApt 2")
+        XCTAssertEqual(paymentRequest.billingContact?.postalAddress?.isoCountryCode, "US")
+        XCTAssertEqual(paymentRequest.billingContact?.postalAddress?.city, "San Francisco")
+        XCTAssertEqual(paymentRequest.billingContact?.postalAddress?.state, "CA")
         XCTAssertEqual(paymentRequest.billingContact?.postalAddress?.postalCode, "94103")
         XCTAssertEqual(paymentRequest.billingContact?.name?.givenName, "Jane")
+    }
+
+    func testMakePaymentRequest_doesNotPrefillCountryOnlyDefaultBillingAddress() {
+        // Given default billing details without a street address
+        let session = CheckoutTestHelpers.makeSession().makePublicSession()
+        var defaults = CheckoutController.Configuration.Defaults.BillingDetails()
+        defaults.address = .init(country: "GB")
+        let parameters = CheckoutController.ApplePayConfirmationParameters.makeMock(
+            apiClient: APIStubbedTestCase.stubbedAPIClient(),
+            defaultBillingDetails: defaults
+        )
+
+        // When
+        let paymentRequest = CheckoutApplePayContext.makePaymentRequest(
+            checkoutSession: session,
+            applePayConfirmationParameters: parameters
+        )
+
+        // Then Apple Pay does not show an incomplete billing address as invalid
+        XCTAssertNil(paymentRequest.billingContact)
+    }
+
+    func testMakePaymentRequest_prefillsDefaultBillingAddressWithLine1Only() {
+        // Given default billing details with the minimum street address
+        let session = CheckoutTestHelpers.makeSession().makePublicSession()
+        var defaults = CheckoutController.Configuration.Defaults.BillingDetails()
+        defaults.name = "John Smith"
+        defaults.address = .init(country: "US", line1: "123 Main St")
+        let parameters = CheckoutController.ApplePayConfirmationParameters.makeMock(
+            apiClient: APIStubbedTestCase.stubbedAPIClient(),
+            defaultBillingDetails: defaults
+        )
+
+        // When
+        let paymentRequest = CheckoutApplePayContext.makePaymentRequest(
+            checkoutSession: session,
+            applePayConfirmationParameters: parameters
+        )
+
+        // Then
+        XCTAssertEqual(paymentRequest.billingContact?.postalAddress?.street, "123 Main St")
+        XCTAssertEqual(paymentRequest.billingContact?.name?.givenName, "John")
+    }
+
+    func testMakePaymentRequest_doesNotPrefillMissingDefaultBillingAddress() {
+        // Given no default billing address
+        let session = CheckoutTestHelpers.makeSession().makePublicSession()
+        let parameters = CheckoutController.ApplePayConfirmationParameters.makeMock(
+            apiClient: APIStubbedTestCase.stubbedAPIClient()
+        )
+
+        // When
+        let paymentRequest = CheckoutApplePayContext.makePaymentRequest(
+            checkoutSession: session,
+            applePayConfirmationParameters: parameters
+        )
+
+        // Then
+        XCTAssertNil(paymentRequest.billingContact)
     }
 
     // MARK: - presentation
