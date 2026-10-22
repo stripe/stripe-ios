@@ -35,28 +35,6 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
         XCTAssertEqual(response.presentmentCurrency, "usd")
     }
 
-    func testPollCheckoutSession() async throws {
-        // Given an initialized Checkout Session
-        let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession()
-        let sessionId = checkoutSessionResponse.id
-        let apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
-        _ = try await apiClient.initCheckoutSession(
-            checkoutSessionId: sessionId,
-            adaptivePricingAllowed: false
-        )
-
-        // When the session is polled
-        let response = try await apiClient.pollCheckoutSession(
-            checkoutSessionId: sessionId,
-            timeout: 30
-        )
-
-        // Then its current poll state is returned
-        XCTAssertEqual(response.sessionId, sessionId)
-        XCTAssertEqual(response.state, .active)
-        XCTAssertNil(response.paymentObjectStatus)
-    }
-
     func testInitCheckoutSessionPayment() async throws {
         // Create a fresh checkout session with the test backend
         let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession()

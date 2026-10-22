@@ -217,21 +217,6 @@ extension STPAPIClient {
         return try await retrieveCheckoutSessionIntents(checkoutClient)
     }
 
-    /// Retrieves the small state object used to determine whether a Checkout
-    /// Session transition is still in progress.
-    func pollCheckoutSession(
-        checkoutSessionId: String,
-        timeout: TimeInterval
-    ) async throws -> CheckoutSessionPollResponse {
-        // TODO(porter): Use CheckoutClient /poll once confirmation_status is deployed.
-        return try await get(
-            endpoint: "payment_pages/\(checkoutSessionId)/poll",
-            parameters: [:],
-            timeout: timeout,
-            retriesEnabled: false
-        )
-    }
-
     func detachPaymentMethod(
         _ paymentMethodId: String,
         fromCheckoutSession checkoutSessionId: String
@@ -449,5 +434,3 @@ extension STPAPIClient {
         }
     }
 }
-
-extension STPAPIClient: CheckoutSessionPollingAPIClient {}

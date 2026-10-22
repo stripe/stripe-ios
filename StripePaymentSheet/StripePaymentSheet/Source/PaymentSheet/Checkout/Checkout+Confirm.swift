@@ -4,12 +4,6 @@ import UIKit
 
 // MARK: - Types
 
-protocol CheckoutSessionPolling {
-    func poll(checkoutSessionId: String) async -> CheckoutSessionPoller.Outcome
-}
-
-extension CheckoutSessionPoller: CheckoutSessionPolling {}
-
 protocol CheckoutConfirmationChallenge {
     func makeRadarOptions(for paymentMethodType: STPPaymentMethodType) async -> STPRadarOptions?
     func complete() async
@@ -433,16 +427,8 @@ extension CheckoutController {
         apiClient: STPAPIClient,
         authenticationContext: STPAuthenticationContext,
         paymentHandler: STPPaymentHandler,
-        confirmationChallenge: (any CheckoutConfirmationChallenge)? = nil,
-        poller injectedPoller: (any CheckoutSessionPolling)? = nil
+        confirmationChallenge: (any CheckoutConfirmationChallenge)? = nil
     ) async -> InternalConfirmResult {
-        let poller: any CheckoutSessionPolling
-        if let injectedPoller {
-            poller = injectedPoller
-        } else {
-            poller = CheckoutSessionPoller(apiClient: apiClient)
-        }
-
         // 1. Call /confirm
         // TODO: Scope Radar option creation and this request with confirmationChallenge.withRadarOptions(for:).
         // complete() is async, but the underlying AssertionHandle.complete() schedules rather than awaits release.
@@ -524,62 +510,17 @@ extension CheckoutController {
             clientCompletedIntent = nil
         }
 
-        // 3. Poll if the Checkout Session is still in progress.
-        var didPollToCompletion = false
-        switch response.status {
-        case .open:
-            let pollOutcome = await poller.poll(checkoutSessionId: response.id)
-            switch pollOutcome {
-            case .completed:
-                didPollToCompletion = true
-                // Continue to step 4.
-            case .timedOut:
-                // Continue to step 4.
-                break
-            case .requiresPaymentMethod,
-                 .failedAsyncPayment:
-                let latestSession: CheckoutClientAPIResponse
-                do {
-                    latestSession = try await apiClient.retrieveCheckoutSession(
-                        checkoutSessionId: response.id
-                    )
-                } catch {
-                    return .failed(error, sessionResponse: response)
-                }
-
-                // Update the local Session and return its last payment error, if available.
-                let error = paymentError(from: latestSession)
-                return .failed(error, sessionResponse: latestSession)
-            case .invalidOrExpired:
-                let latestSession: CheckoutClientAPIResponse
-                do {
-                    latestSession = try await apiClient.retrieveCheckoutSession(
-                        checkoutSessionId: response.id
-                    )
-                } catch {
-                    return .failed(error, sessionResponse: response)
-                }
-
-                // Update the local Session and return an unexpected confirmation error.
-                let error = CheckoutError.unknown(debugDescription: "Checkout Session unexpectedly became invalid or expired during polling.")
-                return .failed(error, sessionResponse: latestSession)
-            }
-        case .complete:
-            // Continue to step 4 without polling.
-            break
-        case .expired:
-            // The confirm response should only be open or complete.
+        // TODO(porter): Restore polling when CheckoutClient /poll returns confirmation_status.
+        if response.status == .expired {
             return .failed(CheckoutError.unknown(debugDescription: "Checkout Session unexpectedly expired after confirmation."), sessionResponse: response)
         }
 
         // /retrieve can reject completed sessions. Keep the client-completed Intent and
-        // update only the status fields established by authentication or polling.
+        // update only the status fields established by authentication.
         var updatedResponse = response
         switch clientCompletedIntent {
         case nil:
-            if didPollToCompletion {
-                updatedResponse.status = .complete(response.paymentStatus)
-            }
+            break
         case .paymentIntent(let paymentIntent):
             updatedResponse.paymentIntent = paymentIntent
             switch paymentIntent.status {
