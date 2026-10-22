@@ -29,12 +29,16 @@ private struct LoadingOverlayView: View {
             Color.black.opacity(0.3)
                 .ignoresSafeArea()
 
-            ProgressView("Loading…")
-                .padding()
-                .background {
-                    Color(.tertiarySystemBackground)
-                        .cornerRadius(8)
-                }
+            GeometryReader { geometry in
+                ProgressView("Loading…")
+                    .padding()
+                    .background {
+                        Color(.tertiarySystemBackground)
+                            .cornerRadius(8)
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .padding(geometry.activeFoldInsets())
+            }
         }
     }
 }
