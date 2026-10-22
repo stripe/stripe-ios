@@ -5,133 +5,59 @@
 
 import Foundation
 
-/// The user-visible phases of the Networked Identity pre-capture flow.
-///
-/// Sensitive values intentionally live in `NetworkedIdentityCredentialStore`, not in this state.
+/// The user-visible phases of Networked Identity. Credentials never enter this state.
 enum NetworkedIdentityState: Equatable {
-    case collectEmail
-    case lookupPending
-    case otpStartPending
-    case awaitingOTP
-    case otpConfirmPending
-    case reauthenticationRequired
+    /// No attempt in progress; the Link sheet is hidden.
+    case idle
+    /// Configuring Link or restoring a handed-in session; Identity's sheet is hidden meanwhile.
+    case preparing
     case documentsPending
-    case selectDocument
-    case selectedDocument
-    case attachmentPending
+    case selectDocument(documents: [NetworkedIdentityDocument], selectedDocumentID: String?)
+    case sharingDocument(NetworkedIdentityDocument)
+    case documentShared(NetworkedIdentityDocument)
+    case savePending
+    case savePrepared
     case skipPending
-    /// The NI action ended; the host must still process requirements and normal submission.
-    case completed
+    /// Saving failed; the sheet stays open to say so, since there's no capture to fall back to.
+    case saveFailed(details: String?)
     case fullCaptureFallback
     case cancelled
+    /// Link's own screens handle sign-in and sign-up; Identity's sheet is hidden meanwhile.
+    case linkAuthentication
+
+    /// Whether Identity's Link sheet shows this state.
+    var presentsIdentitySheet: Bool {
+        switch self {
+        case .preparing, .linkAuthentication:
+            return false
+        default:
+            return isInProgress
+        }
+    }
+
+    /// Whether an attempt is in progress; it may be on Link's screens rather than Identity's sheet.
+    var isInProgress: Bool {
+        switch self {
+        case .idle, .fullCaptureFallback, .cancelled:
+            return false
+        default:
+            return true
+        }
+    }
 }
 
-enum NetworkedIdentityActionError: String, Error {
-    case tokenUnavailable
-    case attachmentFailed
-    case skipFailed
-    case unexpectedSession
+enum NetworkedIdentityMode: Equatable {
+    /// Returning user: share a saved ID, started from the intro.
+    case reuse
+    /// Save this verification's ID to Link, offered once nothing else is missing, before submitting.
+    case save
 }
 
-enum NetworkedIdentityFallbackReason: Equatable {
-    case noLinkAccount
-    case noReusableDocuments
-    case userSelectedManualCapture
-    case unavailable
-}
-
-enum NetworkedIdentityOTPError: Equatable {
-    case invalidCode
-    case verificationExpired
-    case sessionExpired
-    case maxAttemptsExceeded
-}
-
-/// Holds short-lived credentials in memory for the lifetime of a single flow.
-@MainActor
-final class NetworkedIdentityCredentialStore {
-    struct ConsumerCredentials {
-        let publishableKey: String
-        let sessionClientSecret: String
-    }
-
-    private var consumerCredentials: ConsumerCredentials?
-    private var verificationSessionClientSecrets: [String]?
-
-    // #TODO - Networked Identity: Persist auth-session secrets through shared Link storage once its ownership, replacement, and expiry rules are defined.
-
-    init(verificationSessionClientSecrets: [String]? = nil) {
-        self.verificationSessionClientSecrets = verificationSessionClientSecrets
-    }
-
-    var hasConsumerCredentials: Bool {
-        consumerCredentials != nil
-    }
-
-    var isEmpty: Bool {
-        consumerCredentials == nil && verificationSessionClientSecrets == nil
-    }
-
-    func storeConsumerCredentials(
-        publishableKey: String,
-        sessionClientSecret: String
-    ) {
-        consumerCredentials = ConsumerCredentials(
-            publishableKey: publishableKey,
-            sessionClientSecret: sessionClientSecret
-        )
-    }
-
-    func updateConsumerSessionClientSecret(_ sessionClientSecret: String) {
-        guard let consumerCredentials else {
-            return
-        }
-        self.consumerCredentials = ConsumerCredentials(
-            publishableKey: consumerCredentials.publishableKey,
-            sessionClientSecret: sessionClientSecret
-        )
-    }
-
-    func retainAuthSessionClientSecret(_ authSessionClientSecret: String?) {
-        verificationSessionClientSecrets = Self.appending(
-            authSessionClientSecret,
-            to: verificationSessionClientSecrets
-        )
-    }
-
-    static func appending(
-        _ authSessionClientSecret: String?,
-        to verificationSessionClientSecrets: [String]?
-    ) -> [String]? {
-        guard let authSessionClientSecret, !authSessionClientSecret.isEmpty else {
-            return verificationSessionClientSecrets
-        }
-        var updatedSecrets = verificationSessionClientSecrets ?? []
-        if !updatedSecrets.contains(authSessionClientSecret) {
-            updatedSecrets.append(authSessionClientSecret)
-        }
-        return updatedSecrets
-    }
-
-    func readConsumerCredentials<T>(
-        _ body: (ConsumerCredentials, [String]?) -> T
-    ) -> T? {
-        guard let consumerCredentials else {
-            return nil
-        }
-        return body(consumerCredentials, verificationSessionClientSecrets)
-    }
-
-    func readVerificationSessionClientSecrets<T>(_ body: ([String]?) -> T) -> T {
-        body(verificationSessionClientSecrets)
-    }
-
-    func clearConsumerCredentials() {
-        consumerCredentials = nil
-    }
-
-    func clear() {
-        consumerCredentials = nil
-        verificationSessionClientSecrets = nil
-    }
+/// How an attempt ended, for the Identity flow to act on.
+enum NetworkedIdentityOutcome: Equatable {
+    case documentShared
+    case savePrepared
+    case manualCapture
+    case fallback
+    case cancelled
 }
