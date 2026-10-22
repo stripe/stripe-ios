@@ -34,7 +34,12 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         flowController.updatePaymentOption()
         XCTAssertTrue(flowController.didPresentAndContinue)
         XCTAssertTrue(checkout.getPaymentElement().paymentOptionSourceOfTruthIsFlowController)
-        let confirmRequested = stubConfirmationExpecting(sessionId: checkout.session.id, savePaymentMethod: nil)
+        let confirmRequested = stubConfirmationExpecting(
+            sessionId: checkout.session.id,
+            savePaymentMethod: nil,
+            expectedPaymentMethodType: "sepa_debit",
+            expectedPaymentMethodID: STPPaymentMethod._testSEPA().stripeId
+        )
 
         // When the merchant confirms, no additional mandate UI is needed
         let result = await checkout.confirm(from: UIViewController())
@@ -73,7 +78,12 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         // ...and the merchant removes the embedded view before confirming
         embeddedView.removeFromSuperview()
         XCTAssertNil(embeddedView.window)
-        let confirmRequested = stubConfirmationExpecting(sessionId: checkout.session.id, savePaymentMethod: nil)
+        let confirmRequested = stubConfirmationExpecting(
+            sessionId: checkout.session.id,
+            savePaymentMethod: nil,
+            expectedPaymentMethodType: "sepa_debit",
+            expectedPaymentMethodID: STPPaymentMethod._testSEPA().stripeId
+        )
         let result = await checkout.confirm(from: presenter)
 
         // Then the earlier attachment still avoids an extra mandate sheet
@@ -1197,6 +1207,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         expectedCollectedInformationEmail: String? = nil,
         responseJSON: [AnyHashable: Any]? = nil,
         expectedPaymentMethodType: String,
+        expectedPaymentMethodID: String? = nil,
         expectedAllowRedisplay: String? = nil,
         expectedBillingEmail: BillingEmailExpectation? = nil,
         file: StaticString = #filePath,
@@ -1214,8 +1225,12 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
                 omittingEmptyValues: true,
                 line: line
             )
-            XCTAssertNil(params["payment_method"], file: file, line: line)
-            XCTAssertEqual(params["payment_method_data[type]"], expectedPaymentMethodType, file: file, line: line)
+            XCTAssertEqual(params["payment_method"], expectedPaymentMethodID, file: file, line: line)
+            if expectedPaymentMethodID != nil {
+                XCTAssertFalse(params.keys.contains { $0.hasPrefix("payment_method_data[") }, file: file, line: line)
+            } else {
+                XCTAssertEqual(params["payment_method_data[type]"], expectedPaymentMethodType, file: file, line: line)
+            }
             XCTAssertEqual(params["expected_payment_method_type"], expectedPaymentMethodType, file: file, line: line)
             if let expectedAllowRedisplay {
                 XCTAssertEqual(params["payment_method_data[allow_redisplay]"], expectedAllowRedisplay, file: file, line: line)
