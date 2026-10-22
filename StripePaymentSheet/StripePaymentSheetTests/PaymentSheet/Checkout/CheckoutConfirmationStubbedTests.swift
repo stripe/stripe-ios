@@ -18,6 +18,178 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
 
     // MARK: - Coordinator
 
+    func testSavedSEPARequiresMandateBeforeConfirmingWithoutPresentingPaymentElement() async throws {
+        try await assertSavedSEPAMandate(accept: true)
+    }
+
+    func testDismissingSavedSEPAMandateCancelsWithoutConfirming() async throws {
+        try await assertSavedSEPAMandate(accept: false)
+    }
+
+    func testSavedSEPADoesNotRepeatMandateAfterContinuingFromSheet() async throws {
+        // Given a saved SEPA method whose mandate was accepted in the sheet
+        let checkout = try await makeSavedSEPACheckout()
+        let flowController = checkout.getPaymentElement().paymentSheetFlowController
+        flowController.flowControllerViewControllerShouldClose(flowController.viewController, didCancel: false)
+        flowController.updatePaymentOption()
+        XCTAssertTrue(flowController.didPresentAndContinue)
+        XCTAssertTrue(checkout.getPaymentElement().paymentOptionSourceOfTruthIsFlowController)
+        let confirmRequested = stubConfirmationExpecting(sessionId: checkout.session.id, savePaymentMethod: nil)
+
+        // When the merchant confirms, no additional mandate UI is needed
+        let result = await checkout.confirm(from: UIViewController())
+
+        // Then Checkout confirms directly
+        assertSucceeded(result)
+        await fulfillment(of: [confirmRequested], timeout: 5)
+    }
+
+    func testSavedSEPAMandateTracksEmbeddedWindowAttachment() async throws {
+        // Given the merchant obtains both public views and prepares an offscreen hierarchy
+        let checkout = try await makeSavedSEPACheckout(displaysMandateText: true)
+        let element = checkout.getPaymentElement()
+        _ = element.view
+        let embeddedView = element.uiView
+        let presenter = UIViewController()
+        guard case .paymentMethod(let parameters, _) = checkout.makeConfirmationFlow(
+            for: element,
+            presentingViewController: presenter
+        ) else {
+            return XCTFail("Expected a payment method confirmation flow")
+        }
+        XCTAssertTrue(checkout.requiresSEPAMandate(for: parameters.option))
+        presenter.view.addSubview(embeddedView)
+        XCTAssertNil(embeddedView.window)
+        XCTAssertTrue(checkout.requiresSEPAMandate(for: parameters.option))
+
+        // When the hierarchy reaches a window
+        let window = UIWindow(frame: UIScreen.main.bounds)
+        window.rootViewController = presenter
+        window.makeKeyAndVisible()
+        defer { window.isHidden = true }
+        XCTAssertNotNil(embeddedView.window)
+        XCTAssertFalse(checkout.requiresSEPAMandate(for: parameters.option))
+
+        // ...and the merchant removes the embedded view before confirming
+        embeddedView.removeFromSuperview()
+        XCTAssertNil(embeddedView.window)
+        let confirmRequested = stubConfirmationExpecting(sessionId: checkout.session.id, savePaymentMethod: nil)
+        let result = await checkout.confirm(from: presenter)
+
+        // Then the earlier attachment still avoids an extra mandate sheet
+        assertSucceeded(result)
+        XCTAssertNil(presenter.presentedViewController)
+        await fulfillment(of: [confirmRequested], timeout: 5)
+    }
+
+    func testDisablingMandateTextSkipsConfirmationMandate() async throws {
+        // Given the merchant opts to display mandates themselves
+        let checkout = try await makeSavedSEPACheckout(displaysMandateText: false)
+        let presenter = UIViewController()
+        let window = UIWindow(frame: UIScreen.main.bounds)
+        window.rootViewController = presenter
+        window.makeKeyAndVisible()
+        defer {
+            presenter.dismiss(animated: false)
+            window.isHidden = true
+        }
+        let flow = try XCTUnwrap(checkout.makeConfirmationFlow(
+            for: checkout.getPaymentElement(),
+            presentingViewController: presenter
+        ))
+        stubConfirmation()
+
+        // When confirming without accessing the view, sheet, or mandate text
+        var didComplete = false
+        let confirmation = Task {
+            let result = await checkout.confirm(flow)
+            didComplete = true
+            return result
+        }
+
+        // Then confirmation completes without a mandate sheet
+        try await waitUntil { didComplete || presenter.presentedViewController != nil }
+        if let mandate = presenter.presentedViewController?.children.first as? SepaMandateViewController {
+            // Dismiss an unexpected mandate so a regression fails without leaving confirmation suspended.
+            try await waitUntil { presenter.presentedViewController?.isBeingPresented == false }
+            mandate.didTapOrSwipeToDismiss()
+        }
+        assertSucceeded(await confirmation.value)
+        XCTAssertNil(presenter.presentedViewController)
+    }
+
+    private func makeSavedSEPACheckout(displaysMandateText: Bool? = nil) async throws -> CheckoutController {
+        let elementsSession = STPElementsSession._testValue(
+            paymentMethodTypes: ["sepa_debit"],
+            customerSessionData: [:],
+            paymentMethods: [STPPaymentMethod._testSEPA().allResponseFields]
+        )
+        let session = CheckoutTestHelpers.makeSession([
+            "session_id": "cs_test_123",
+            "currency": "eur",
+            "checkout_items": CheckoutTestHelpers.makeOneTimePriceCheckoutItems(currency: "eur"),
+            "payment_method_types": ["sepa_debit"],
+            "elements_session": elementsSession.allResponseFields,
+        ])
+        var configuration = PaymentElement.Configuration()
+        if let displaysMandateText {
+            configuration.displaysMandateText = displaysMandateText
+        }
+        return try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration(
+            apiResponse: session,
+            paymentElementConfiguration: configuration
+        ))
+    }
+
+    private func assertSavedSEPAMandate(accept: Bool) async throws {
+        // Given a default saved SEPA method and a merchant that hasn't presented PaymentElement
+        let checkout = try await makeSavedSEPACheckout()
+        XCTAssertEqual(checkout.session.paymentOption?.paymentMethodType, "sepa_debit")
+        XCTAssertFalse(checkout.getPaymentElement().paymentSheetFlowController.didPresentAndContinue)
+
+        let presenter = UIViewController()
+        let window = UIWindow(frame: UIScreen.main.bounds)
+        window.rootViewController = presenter
+        window.makeKeyAndVisible()
+        defer {
+            presenter.dismiss(animated: false)
+            window.isHidden = true
+        }
+        let confirmRequested = expectation(description: "Confirm requested only after mandate acceptance")
+        confirmRequested.isInverted = !accept
+        var didAcceptMandate = false
+        stub { $0.url?.path.hasSuffix("/confirm") == true } response: { _ in
+            XCTAssertTrue(didAcceptMandate)
+            confirmRequested.fulfill()
+            return HTTPStubsResponse(jsonObject: Self.confirmedSessionJSON, statusCode: 200, headers: nil)
+        }
+
+        // When the merchant confirms without opening the sheet
+        let confirmation = Task { await checkout.confirm(from: presenter) }
+
+        // Then the mandate is shown before any confirmation request
+        try await waitUntil { presenter.presentedViewController?.children.first is SepaMandateViewController }
+        let mandate = try XCTUnwrap(presenter.presentedViewController?.children.first as? SepaMandateViewController)
+        try await waitUntil { presenter.presentedViewController?.isBeingPresented == false }
+        didAcceptMandate = accept
+        if accept {
+            mandate.completion(true)
+        } else {
+            mandate.didTapOrSwipeToDismiss()
+        }
+        let result = await confirmation.value
+        if accept {
+            assertSucceeded(result)
+        } else {
+            guard case .canceled = result else {
+                return XCTFail("Expected cancellation, got \(result)")
+            }
+            XCTAssertEqual(checkout.session.status, .open)
+        }
+        XCTAssertNil(presenter.presentedViewController)
+        await fulfillment(of: [confirmRequested], timeout: accept ? 5 : 0.1)
+    }
+
     func testConfirmCommitsReturnedSessionAndMapsSuccess() async throws {
         // Given an open Checkout Session and a saved payment method
         let checkout = try await makeCheckout()

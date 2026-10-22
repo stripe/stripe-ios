@@ -485,7 +485,9 @@ extension SavedPaymentMethodCollectionView {
                     paymentMethodLogo.alpha = 1
                     plus.alpha = 1
                     selectedIcon.isHidden = false
-                    selectedIcon.backgroundColor = appearance.colors.primary
+                    // Resolve semantic colors so native sheets don't blend the badge with the
+                    // card's border. The cell updates this color again when its traits change.
+                    selectedIcon.backgroundColor = appearance.colors.primary.resolvedColor(with: traitCollection)
 
                     // Draw a border with primary color
                     selectableRectangle.isSelected = true

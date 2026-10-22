@@ -163,12 +163,16 @@ private let TelemetryURL = URL(string: "https://m.stripe.com/6")!
         // Don't pass expired SIDs to m.stripe.com
         fraudDetectionData.resetSIDIfExpired()
 
+        // Do not collect b.m (iosApplePayEnabled): no downstream consumers have been identified,
+        // and its PassKit check has been observed to block for minutes after a simulator cold boot.
+        // Collecting it here can stall SDK initialization and the initial request for fraud IDs.
+        // See https://github.com/stripe/stripe-ios/issues/1984 and
+        // https://github.com/stripe/stripe-ios/pull/2949.
         let otherData: [String: Any] = [
             "d": fraudDetectionData.muid ?? "",
             "e": fraudDetectionData.sid ?? "",
             "k": Bundle.stp_applicationName() ?? "",
             "l": Bundle.stp_applicationVersion() ?? "",
-            "m": NSNumber(value: StripeAPI.deviceSupportsApplePay()),
             "o": osVersion,
             "s": deviceModel,
         ]

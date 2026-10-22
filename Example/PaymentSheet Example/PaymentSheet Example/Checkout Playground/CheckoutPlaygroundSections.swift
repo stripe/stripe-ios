@@ -366,6 +366,17 @@ struct CheckoutPlaygroundExpressCheckoutElementSection: View {
                         tooltip: "Sets `ExpressCheckoutElement.Configuration.Appearance.buttonTheme`. Only affects the Apple Pay button; the Link button always uses Link's brand color.",
                         displayText: { $0.displayName }
                     )
+                    Stepper(value: cornerRadius, in: -1...30) {
+                        HStack {
+                            Text("Corner Radius")
+                            Spacer()
+                            Text(appearance.cornerRadius.map { String(format: "%.0f pt", $0) } ?? "Automatic")
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                    .accessibilityIdentifier("checkout_ece_corner_radius")
+                    .padding(.vertical, 12)
+                    .padding(.horizontal, 16)
                     CheckoutPlayground.PickerRow(
                         title: "Max Columns",
                         icon: "square.grid.2x2",
@@ -385,6 +396,13 @@ struct CheckoutPlaygroundExpressCheckoutElementSection: View {
             .background(Color(uiColor: .secondarySystemGroupedBackground))
             .clipShape(RoundedRectangle(cornerRadius: 12))
         }
+    }
+
+    private var cornerRadius: Binding<CGFloat> {
+        Binding(
+            get: { appearance.cornerRadius ?? -1 },
+            set: { appearance.cornerRadius = $0 < 0 ? nil : $0 }
+        )
     }
 
     private var maxColumns: Binding<CheckoutPlayground.ExpressCheckoutElementButtonLayoutLimit> {

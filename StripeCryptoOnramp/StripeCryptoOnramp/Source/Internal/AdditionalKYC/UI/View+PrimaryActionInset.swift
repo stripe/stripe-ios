@@ -28,6 +28,7 @@ extension View {
         safeAreaInset(edge: .bottom, spacing: 0) {
             VStack(spacing: 0) {
                 Divider()
+                    .modifier(PrimaryActionDividerInsetModifier())
 
                 PrimaryActionButton(title: title, appearance: appearance, action: action, isEnabled: isEnabled, isProcessing: isProcessing)
                     .padding(.horizontal, 20)
@@ -36,5 +37,24 @@ extension View {
                     .background(Color.surfacePrimary)
             }
         }
+    }
+}
+
+private struct PrimaryActionDividerInsetModifier: ViewModifier {
+    @Environment(\.self) private var environment
+
+    func body(content: Content) -> some View {
+        #if compiler(>=6.4)
+        if #available(iOS 27.1, *) {
+            // For iPhone Duo support, don't use a full-width separator above the CTA in the presence
+            // of a vertical toolbar. Instead, we match the CTA's insets.
+            content
+                .padding(.horizontal, environment.toolbarVerticalEdge == nil ? 0 : 20)
+        } else {
+            content
+        }
+        #else
+        content
+        #endif
     }
 }
