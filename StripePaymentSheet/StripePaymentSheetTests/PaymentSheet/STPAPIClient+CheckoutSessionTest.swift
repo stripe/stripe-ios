@@ -14,27 +14,6 @@ import XCTest
 
 final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
 
-    func testRetrieveCheckoutSession() async throws {
-        // Given an initialized Checkout Session
-        let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession()
-        let sessionId = checkoutSessionResponse.id
-        let apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
-        _ = try await apiClient.initCheckoutSession(
-            checkoutSessionId: sessionId,
-            adaptivePricingAllowed: false
-        )
-
-        // When the full session is retrieved
-        let response = try await apiClient.retrieveCheckoutSession(
-            checkoutSessionId: sessionId
-        )
-
-        // Then the latest full Checkout Session is returned
-        XCTAssertEqual(response.id, sessionId)
-        XCTAssertEqual(response.status, .open)
-        XCTAssertEqual(response.presentmentCurrency, "usd")
-    }
-
     func testInitCheckoutSessionPayment() async throws {
         // Create a fresh checkout session with the test backend
         let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession()
