@@ -51,11 +51,11 @@ struct CheckoutSessionConfirmationRequestParameters {
     /// The expected PaymentMethod type (e.g., `card`).
     let expectedPaymentMethodType: String?
 
-    /// The optional top-level `save_payment_method` value that controls whether confirmation
-    /// attaches the PaymentMethod to the Checkout Session's customer.
+    /// The optional buyer save-checkbox choice, sent as `collected_information[save_payment_method]`.
+    /// Omit it when no checkbox is shown; the server applies merchant-configured saving separately.
     let savePaymentMethod: Bool?
 
-    /// The optional return URL for redirect-based payment methods.
+    /// CheckoutClient requires a return URL for confirmation.
     let returnURL: String?
 
     /// The optional shipping details.
@@ -165,55 +165,34 @@ extension STPAPIClient {
     /// - Parameters:
     ///   - checkoutSessionId: The ID of the checkout session (e.g., "cs_test_xxx")
     ///   - adaptivePricingAllowed: Whether the integration allows adaptive pricing for this session.
-    /// - Returns: Internal Payment Pages API response for the checkout session.
+    /// - Returns: Internal Checkout response for the checkout session.
     func initCheckoutSession(
         checkoutSessionId: String,
         adaptivePricingAllowed: Bool
     ) async throws -> PaymentPagesAPIResponse {
-        var elementsSessionParameters: [String: Any] = [
-            "is_aggregation_expected": true,
-            "locale": Locale.current.toLanguageTag(),
-        ]
-        if let sessionId = AnalyticsHelper.shared.sessionID {
-            elementsSessionParameters["mobile_session_id"] = sessionId
-        }
-        if let appId = Bundle.main.bundleIdentifier {
-            elementsSessionParameters["mobile_app_id"] = appId
-        }
-        let parameters: [String: Any] = [
-            "browser_locale": Locale.current.toLanguageTag(),
-            "browser_timezone": TimeZone.current.identifier,
-            "eid": UUID().uuidString,
-            "redirect_type": "embedded",
-            "elements_session_client": elementsSessionParameters,
-            "adaptive_pricing": [
-                "allowed": adaptivePricingAllowed,
-            ],
-        ]
+        var parameters = Self.checkoutClientParameters()
+        parameters["adaptive_pricing"] = ["allowed": adaptivePricingAllowed]
 
-        let checkoutSession = try await post(
-            endpoint: "payment_pages/\(checkoutSessionId)/init",
+        return try await post(
+            endpoint: "checkout_client/\(checkoutSessionId)/init",
             parameters: parameters
         )
-
-        return checkoutSession
     }
 
     /// Updates a CheckoutSession with the provided parameters.
     /// - Parameters:
     ///   - checkoutSessionId: The ID of the checkout session (e.g., "cs_test_xxx")
     ///   - parameters: The update parameters (e.g., promotion_code)
-    /// - Returns: The updated Payment Pages API response.
+    /// - Returns: The updated Checkout response.
     func updateCheckoutSession(
         checkoutSessionId: String,
         parameters: [String: Any]
     ) async throws -> PaymentPagesAPIResponse {
-        var params = parameters
-        params["elements_session_client"] = [
-            "is_aggregation_expected": true,
-        ]
+        // TODO(porter): CheckoutClient update does not support promotion codes yet.
+        var params = Self.checkoutClientParameters()
+        params.merge(parameters) { _, value in value }
         return try await post(
-            endpoint: "payment_pages/\(checkoutSessionId)",
+            endpoint: "checkout_client/\(checkoutSessionId)/update",
             parameters: params
         )
     }
@@ -222,14 +201,11 @@ extension STPAPIClient {
     func retrieveCheckoutSession(
         checkoutSessionId: String
     ) async throws -> PaymentPagesAPIResponse {
-        return try await get(
-            endpoint: "payment_pages/\(checkoutSessionId)",
-            parameters: [
-                "elements_session_client": [
-                    "is_aggregation_expected": true,
-                ],
-            ]
+        let checkoutClient: PaymentPagesAPIResponse = try await get(
+            endpoint: "checkout_client/\(checkoutSessionId)/retrieve",
+            parameters: Self.checkoutClientParameters()
         )
+        return try await retrievingCheckoutIntents(for: checkoutClient)
     }
 
     /// Retrieves the small state object used to determine whether a Checkout
@@ -250,12 +226,11 @@ extension STPAPIClient {
         _ paymentMethodId: String,
         fromCheckoutSession checkoutSessionId: String
     ) async throws {
-        _ = try await post(
-            endpoint: "payment_pages/\(checkoutSessionId)",
-            parameters: [
-                "payment_method_to_detach": paymentMethodId,
-                "elements_session_client": ["is_aggregation_expected": true],
-            ]
+        var params = Self.checkoutClientParameters()
+        params["payment_method_to_detach"] = paymentMethodId
+        let _: PaymentPagesAPIResponse = try await post(
+            endpoint: "checkout_client/\(checkoutSessionId)/update",
+            parameters: params
         )
     }
 
@@ -265,7 +240,7 @@ extension STPAPIClient {
     ///   - checkoutSessionId: The ID of the checkout session (e.g., "cs_test_xxx").
     ///   - billingDetails: Optional billing details to update (name, email, phone, address).
     ///   - expiryDetails: Optional card expiry to update (month and year).
-    /// - Returns: The updated Payment Pages API response.
+    /// - Returns: The updated Checkout response.
     func updatePaymentMethod(
         _ paymentMethodId: String,
         inCheckoutSession checkoutSessionId: String,
@@ -277,9 +252,9 @@ extension STPAPIClient {
             billingDetails: billingDetails,
             expiryDetails: expiryDetails
         )
-        params["elements_session_client"] = ["is_aggregation_expected": true]
+        params.merge(Self.checkoutClientParameters()) { current, _ in current }
         return try await post(
-            endpoint: "payment_pages/\(checkoutSessionId)",
+            endpoint: "checkout_client/\(checkoutSessionId)/update",
             parameters: params
         )
     }
@@ -316,19 +291,15 @@ extension STPAPIClient {
     }
 
     /// Confirms a Checkout Session with the provided request parameters.
-    /// - Returns: Payment Pages API response containing the full confirmed session with expanded intents.
+    /// - Returns: The full confirmed session with expanded intents.
     func confirmCheckoutSession(
         with requestParameters: CheckoutSessionConfirmationRequestParameters
     ) async throws -> PaymentPagesAPIResponse {
-        var parameters: [String: Any] = [
-            "elements_session_client": ["is_aggregation_expected": true],
-            "expand": [
-                "payment_intent",
-                "payment_intent.payment_method",
-                "setup_intent",
-                "setup_intent.payment_method",
-            ],
-        ]
+        guard let returnURL = requestParameters.returnURL else {
+            throw CheckoutError.unknown(debugDescription: "CheckoutClient confirmation requires a return URL.")
+        }
+        var parameters = Self.checkoutClientParameters()
+        parameters.removeValue(forKey: "timezone")
 
         if let paymentMethodId = requestParameters.paymentMethodId {
             parameters["payment_method"] = paymentMethodId
@@ -349,19 +320,13 @@ extension STPAPIClient {
             parameters["expected_amount"] = expectedAmount
         }
 
-        if let savePaymentMethod = requestParameters.savePaymentMethod {
-            parameters["save_payment_method"] = savePaymentMethod
-        }
-
-        if let returnURL = requestParameters.returnURL {
-            parameters["return_url"] = returnURL
-        }
+        parameters["return_url"] = returnURL
 
         if let shipping = requestParameters.shipping {
             parameters["shipping"] = STPFormEncoder.dictionary(forObject: shipping)
         }
 
-        // Checkout session confirm API uses top-level parameters for payment method specific options
+        // TODO(porter): CheckoutClient /confirm does not support BLIK's blik_code yet.
         if let blikCode = requestParameters.paymentMethodOptions?.blikOptions?.code {
             parameters["blik_code"] = blikCode
         }
@@ -379,14 +344,35 @@ extension STPAPIClient {
             parameters["collected_information"] = collectedInformation
         }
 
+        if let savePaymentMethod = requestParameters.savePaymentMethod {
+            var collectedInformation = parameters["collected_information"] as? [String: Any] ?? [:]
+            collectedInformation["save_payment_method"] = savePaymentMethod
+            parameters["collected_information"] = collectedInformation
+        }
+
         if let customerData = requestParameters.customerData {
             parameters["customer_data"] = customerData
         }
 
-        return try await post(
-            endpoint: "payment_pages/\(requestParameters.sessionId)/confirm",
+        let checkoutClient: PaymentPagesAPIResponse = try await post(
+            endpoint: "checkout_client/\(requestParameters.sessionId)/confirm",
             parameters: parameters
         )
+        return try await retrievingCheckoutIntents(for: checkoutClient)
+    }
+
+    /// Retrieve the referenced Intent when confirmation needs authentication or next-action handling.
+    private func retrievingCheckoutIntents(
+        for response: PaymentPagesAPIResponse
+    ) async throws -> PaymentPagesAPIResponse {
+        var response = response
+        if let reference = response.paymentResponse?.paymentIntent {
+            response.paymentIntent = try await retrievePaymentIntent(clientSecret: reference.clientSecret, expand: ["payment_method"])
+        }
+        if let reference = response.paymentResponse?.setupIntent {
+            response.setupIntent = try await retrieveSetupIntent(clientSecret: reference.clientSecret, expand: ["payment_method"])
+        }
+        return response
     }
 
     private func post(
@@ -405,6 +391,20 @@ extension STPAPIClient {
             }
             throw error
         }
+    }
+
+    private static func checkoutClientParameters() -> [String: Any] {
+        var parameters: [String: Any] = [
+            "locale": Locale.current.toLanguageTag(),
+            "timezone": TimeZone.current.identifier,
+        ]
+        if let sessionId = AnalyticsHelper.shared.sessionID {
+            parameters["mobile_session_id"] = sessionId
+        }
+        if let appId = Bundle.main.bundleIdentifier {
+            parameters["mobile_app_id"] = appId
+        }
+        return parameters
     }
 
     private func get<T: Decodable>(

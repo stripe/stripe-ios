@@ -66,7 +66,7 @@ class CheckoutApplePayContextFunctionalTest: STPNetworkStubbingTestCase {
         var cancellationRequested = false
         stub { urlRequest in
             guard let path = urlRequest.url?.path,
-                  path.contains("/payment_pages/"),
+                  path.contains("/checkout_client/"),
                   path.hasSuffix("/confirm") else { return false }
             DispatchQueue.main.async {
                 guard !cancellationRequested else { return }

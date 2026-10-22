@@ -136,9 +136,7 @@ enum Intent {
                 return setupFutureUsage?.rawValue
             }
             return nil
-        case .checkout(let session):
-            return session.noPaymentRequired ? nil : session.setupFutureUsage
-        case .setupIntent:
+        case .checkout, .setupIntent:
             return nil
         }
     }

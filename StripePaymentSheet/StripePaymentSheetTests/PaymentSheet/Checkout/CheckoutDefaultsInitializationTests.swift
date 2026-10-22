@@ -313,10 +313,11 @@ final class CheckoutDefaultsInitializationTests: XCTestCase {
         allowedShippingCountries: [String] = ["US", "CA"]
     ) -> [AnyHashable: Any] {
         var json = CheckoutTestHelpers.openSessionJSON
-        json["session_id"] = sessionId
-        json["tax_context"] = [
-            "automatic_tax_enabled": true,
-            "automatic_tax_address_source": "session.\(automaticTaxAddressSource)",
+        json["id"] = sessionId
+        json["automatic_tax"] = [
+            "enabled": true,
+            "status": "requires_address",
+            "address_source": automaticTaxAddressSource,
         ]
         json["shipping_address_collection"] = ["allowed_countries": allowedShippingCountries]
         return json

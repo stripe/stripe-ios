@@ -134,25 +134,6 @@ extension PaymentPagesAPIResponse {
         )
     }
 
-    static func makeDiscountAmounts(
-        from discountAmounts: [DiscountAmount],
-        currency: String
-    ) -> [CheckoutController.Session.DiscountAmount] {
-        discountAmounts.compactMap { discount in
-            guard discount.amount > 0 else { return nil }
-            let publicAmount = makeAmount(discount.amount, currency: currency)
-            return CheckoutController.Session.DiscountAmount(
-                amount: publicAmount.amount,
-                minorUnitsAmount: publicAmount.minorUnitsAmount,
-                displayName: discount.displayName
-                    ?? discount.coupon.name
-                    ?? discount.coupon.code,
-                promotionCode: discount.promotionCode?.code,
-                percentOff: discount.coupon.percentOff
-            )
-        }
-    }
-
     static func makeTotals(
         from checkoutItems: [CheckoutItem],
         currency: String
@@ -218,7 +199,7 @@ extension PaymentPagesAPIResponse {
         guard let value else { return nil }
         return STPCheckoutSessionSavedPaymentMethodsOfferSave(
             enabled: value.enabled,
-            status: value.status == .accepted ? .accepted : .notAccepted
+            status: .notAccepted
         )
     }
 
@@ -251,11 +232,12 @@ extension PaymentPagesAPIResponse {
     }
 
     static func makeExchangeRateMeta(
-        from adaptivePricingInfo: AdaptivePricingInfo?
+        from adaptivePricingInfo: AdaptivePricingInfo?,
+        currency: String
     ) -> CheckoutController.Session.ExchangeRateMeta? {
         guard let adaptivePricingInfo,
               let selectedOption = adaptivePricingInfo.localCurrencyOptions.first(where: {
-                  $0.currency.lowercased() == adaptivePricingInfo.activePresentmentCurrency.lowercased()
+                  $0.currency.lowercased() == currency.lowercased()
               }) ?? adaptivePricingInfo.localCurrencyOptions.first else {
             return nil
         }
@@ -264,7 +246,10 @@ extension PaymentPagesAPIResponse {
             exchangeRate: selectedOption.presentmentExchangeRate,
             integrationCurrency: adaptivePricingInfo.integrationCurrency,
             localizedCurrency: selectedOption.currency,
-            conversionMarkupBps: selectedOption.conversionMarkupBps
+            conversionMarkupBps: selectedOption.conversionMarkupBps,
+            caption: selectedOption.disclosureCaption,
+            details: selectedOption.disclosureDetails,
+            integrationCaption: adaptivePricingInfo.integrationCurrencyDisclosureCaption
         )
     }
 

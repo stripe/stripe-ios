@@ -10,15 +10,15 @@ Alt-Svc: h3=":443"; ma=86400
 Via: 1.1 varnish
 Server: cloudflare
 Priority: u=4;i=?0,cf-chb=(37;u=2;i=?0 384;u=4;i=?0)
-cf-cache-status: MISS
+cf-cache-status: HIT
 Cache-Control: public, max-age=31536000
-Date: Thu, 10 Sep 2026 18:07:25 GMT
-cf-resized: internal=ok/h q=0 n=129+0 c=0+4 v=2026.9.1 l=807 f=false c2=0 wv=2026.9.1
+Date: Thu, 22 Oct 2026 17:56:11 GMT
+cf-resized: internal=ok/m q=0 n=105+0 c=0+0 v=2026.10.5 l=807 f=false c2=0 wv=2026.9.1
 Strict-Transport-Security: max-age=31556926; includeSubDomains; preload
 Content-Length: 807
 warning: cf-images 299 "dpr > 2 is not recommended"
 x-content-type-options: nosniff
-cf-ray: a3905f49eb8c3e8e-SJC
+cf-ray: a4ea60936b6c07bf-SLC
 Vary: accept, accept-encoding
 Accept-Ranges: bytes
 

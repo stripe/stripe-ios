@@ -93,7 +93,6 @@ extension CheckoutController {
         var localState: LocalState
         let customer: PaymentPagesAPIResponse.Customer?
         let savedPaymentMethodsOfferSave: STPCheckoutSessionSavedPaymentMethodsOfferSave?
-        let setupFutureUsage: String?
         let setupFutureUsageForPaymentMethodType: [String: String]
         let allowedShippingCountries: [String]?
         let localizedPricesMetas: [STPCheckoutSessionLocalizedPriceMeta]
@@ -128,10 +127,6 @@ extension CheckoutController.Session {
         configuration: CheckoutController.Configuration? = nil
     ) {
         let elementsSessionValue = apiResponse.elementsSession.value
-        let publicDiscountAmounts = PaymentPagesAPIResponse.makeDiscountAmounts(
-            from: apiResponse.recurringDetails?.totalSummary.totalDiscountAmounts ?? [],
-            currency: apiResponse.currency
-        )
         let publicTaxAmounts = apiResponse.totalSummary?.totalTaxAmounts?.map {
             PaymentPagesAPIResponse.makeSessionTaxAmount(
                 from: $0,
@@ -155,12 +150,11 @@ extension CheckoutController.Session {
             from: apiResponse.adaptivePricingInfo
         )
         let exchangeRateMeta = PaymentPagesAPIResponse.makeExchangeRateMeta(
-            from: apiResponse.adaptivePricingInfo
+            from: apiResponse.adaptivePricingInfo,
+            currency: apiResponse.currency
         )
-        // TODO: Read explicit integration and presentment currency fields from the mobile
-        // translation layer once available instead of deriving them from the PP response shape.
-        let presentmentDetails = apiResponse.adaptivePricingInfo.map {
-            CheckoutController.Session.PresentmentDetails(presentmentCurrency: $0.activePresentmentCurrency)
+        let presentmentDetails = apiResponse.adaptivePricingInfo.map { _ in
+            CheckoutController.Session.PresentmentDetails(presentmentCurrency: apiResponse.currency)
         }
         let automaticTaxEnabled = apiResponse.taxContext?.automaticTaxEnabled ?? false
         let automaticTaxAddressSource = PaymentPagesAPIResponse.makeAutomaticTaxAddressSource(
@@ -177,9 +171,10 @@ extension CheckoutController.Session {
         self.init(
             id: apiResponse.sessionId,
             businessName: apiResponse.elementsSession.businessName,
-            currency: apiResponse.adaptivePricingInfo?.integrationCurrency ?? apiResponse.currency,
+            currency: apiResponse.integrationCurrency,
             presentmentDetails: presentmentDetails,
-            discountAmounts: publicDiscountAmounts,
+            // TODO(porter): CheckoutClient does not expose promotion code discounts yet.
+            discountAmounts: [],
             orderSummaryItems: publicOrderSummaryItems,
             livemode: apiResponse.livemode,
             minorUnitsAmountDivisor: PaymentPagesAPIResponse.makeMinorUnitsAmountDivisor(
@@ -198,7 +193,6 @@ extension CheckoutController.Session {
             savedPaymentMethodsOfferSave: PaymentPagesAPIResponse.makeSavedPaymentMethodsOfferSave(
                 from: apiResponse.savedPaymentMethodsOfferSave
             ),
-            setupFutureUsage: apiResponse.setupFutureUsage,
             setupFutureUsageForPaymentMethodType: apiResponse.setupFutureUsageForPaymentMethodType ?? [:],
             allowedShippingCountries: apiResponse.shippingAddressCollection?.allowedCountries.map { $0.uppercased() },
             localizedPricesMetas: localizedPricesMetas,

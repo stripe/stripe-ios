@@ -254,6 +254,11 @@ extension PaymentSheet {
             elementsSession: STPElementsSession,
             supportedPaymentMethods: [STPPaymentMethodType] = PaymentSheet.supportedPaymentMethods
         ) -> PaymentMethodAvailabilityStatus {
+            // TODO(porter): CheckoutClient rejects inline Vipps confirmation and does not support BLIK codes yet.
+            if case .checkout = intent, paymentMethod == .vipps || paymentMethod == .blik {
+                return .notSupported
+            }
+
             let requirements: [PaymentMethodTypeRequirement]
 
             // We have different requirements depending on whether or not the intent is setting up the payment method for future use

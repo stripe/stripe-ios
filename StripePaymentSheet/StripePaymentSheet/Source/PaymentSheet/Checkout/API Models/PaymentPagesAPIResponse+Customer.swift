@@ -19,7 +19,7 @@ extension PaymentPagesAPIResponse {
         let paymentMethods: [STPPaymentMethod]
 
         /// Whether the customer can detach saved payment methods via Payment Pages.
-        let canDetachPaymentMethod: Bool
+        var canDetachPaymentMethod = false
 
         /// Customer email address.
         let email: String?
@@ -33,7 +33,6 @@ extension PaymentPagesAPIResponse {
         private enum CodingKeys: String, CodingKey {
             case id
             case paymentMethods
-            case canDetachPaymentMethod
             case email
             case name
             case phone
@@ -46,10 +45,6 @@ extension PaymentPagesAPIResponse {
                 [LegacyDecoded<STPPaymentMethod>].self,
                 forKey: .paymentMethods
             )?.map(\.value) ?? []
-            canDetachPaymentMethod = try container.decodeIfPresent(
-                Bool.self,
-                forKey: .canDetachPaymentMethod
-            ) ?? false
             email = try container.decodeIfPresent(String.self, forKey: .email)
             name = try container.decodeIfPresent(String.self, forKey: .name)
             phone = try container.decodeIfPresent(String.self, forKey: .phone)
