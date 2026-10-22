@@ -136,7 +136,11 @@ enum Intent {
                 return setupFutureUsage?.rawValue
             }
             return nil
-        case .checkout, .setupIntent:
+        case .checkout:
+            // CheckoutClient only exposes resolved SFU per payment method, so the global analytics value is unavailable.
+            // Saving behavior uses isSetupFutureUsageSet(for:) to read the per-method map.
+            return nil
+        case .setupIntent:
             return nil
         }
     }

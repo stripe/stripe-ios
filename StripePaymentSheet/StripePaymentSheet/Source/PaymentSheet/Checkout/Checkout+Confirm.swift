@@ -18,9 +18,6 @@ protocol CheckoutConfirmationChallenge {
 extension ConfirmationChallenge: CheckoutConfirmationChallenge {}
 
 extension CheckoutController {
-    // TODO(porter): Enable once polling uses CheckoutClient.
-    static let isCheckoutSessionPollingEnabled = false
-
     /// The supported confirmation flows for a Checkout Session.
     enum CheckoutConfirmationFlow {
         case applePay(ApplePayConfirmationParameters)
@@ -462,13 +459,6 @@ extension CheckoutController {
         confirmationChallenge: (any CheckoutConfirmationChallenge)? = nil,
         poller injectedPoller: (any CheckoutSessionPolling)? = nil
     ) async -> InternalConfirmResult {
-        let poller: any CheckoutSessionPolling
-        if let injectedPoller {
-            poller = injectedPoller
-        } else {
-            poller = CheckoutSessionPoller(apiClient: apiClient)
-        }
-
         // 1. Call /confirm
         // TODO: Scope Radar option creation and this request with confirmationChallenge.withRadarOptions(for:).
         // complete() is async, but the underlying AssertionHandle.complete() schedules rather than awaits release.
@@ -551,9 +541,18 @@ extension CheckoutController {
         }
 
         // 3. Poll if the Checkout Session is still in progress.
-        var didPollToCompletion = false
+        // TODO(porter): Re-enable polling once it uses CheckoutClient.
+        // var didPollToCompletion = false
         switch response.status {
-        case .open where isCheckoutSessionPollingEnabled:
+        /*
+        case .open:
+            let poller: any CheckoutSessionPolling
+            if let injectedPoller {
+                poller = injectedPoller
+            } else {
+                poller = CheckoutSessionPoller(apiClient: apiClient)
+            }
+
             let pollOutcome = await poller.poll(checkoutSessionId: response.sessionId)
             switch pollOutcome {
             case .completed:
@@ -590,6 +589,7 @@ extension CheckoutController {
                 let error = CheckoutError.unknown(debugDescription: "Checkout Session unexpectedly became invalid or expired during polling.")
                 return .failed(error, sessionResponse: latestSession)
             }
+        */
         case .open, .complete:
             // Continue to step 4 without polling.
             break
@@ -602,9 +602,11 @@ extension CheckoutController {
         var updatedResponse = response
         switch clientCompletedIntent {
         case nil:
-            if didPollToCompletion {
-                updatedResponse.status = .complete(response.paymentStatus)
-            }
+            // TODO(porter): Restore the polled completion status when polling uses CheckoutClient.
+            // if didPollToCompletion {
+            //     updatedResponse.status = .complete(response.paymentStatus)
+            // }
+            break
         case .paymentIntent(let paymentIntent):
             updatedResponse.paymentIntent = paymentIntent
             switch paymentIntent.status {
