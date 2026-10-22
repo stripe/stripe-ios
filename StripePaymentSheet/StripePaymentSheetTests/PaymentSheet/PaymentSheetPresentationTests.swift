@@ -17,12 +17,15 @@ final class PaymentSheetPresentationTests: XCTestCase {
     @MainActor
     // @iOS26
     func testHorizontalNativeSheetHeaderMatchesOpaqueContentBackground() async throws {
-        guard #available(iOS 26.0, *), LiquidGlassDetector.isEnabledInMerchantApp else {
-            throw XCTSkip("The merchant app must enable Liquid Glass.")
-        }
+        // Both CI runtimes run the color checks below; the iOS 26 host must enable Liquid Glass.
+        XCTAssertEqual(
+            LiquidGlassDetector.isEnabledInMerchantApp,
+            ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 26,
+            "The test host must enable Liquid Glass on iOS 26 and later."
+        )
         await AddressSpecProvider.shared.loadAddressSpecs()
 
-        // Given a horizontal picker with an opaque form in a glass-enabled app
+        // Given a horizontal picker with an opaque form in a native sheet
         let loadResult = PaymentSheetLoader.LoadResult(
             intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
             elementsSession: ._testValue(paymentMethodTypes: ["card"]),
@@ -97,7 +100,6 @@ final class PaymentSheetPresentationTests: XCTestCase {
 
     @MainActor
     private func presentAppearanceTestSheet(content: BottomSheetContentViewController) async throws -> (UIWindow, NativeSheetContainerViewController) {
-        guard #available(iOS 16.0, *) else { throw XCTSkip("Content-sized detents require iOS 16.") }
         let sheet = NativeSheetContainerViewController(
             contentViewController: content,
             appearance: .default,
@@ -117,7 +119,7 @@ final class PaymentSheetPresentationTests: XCTestCase {
         let presented = expectation(description: "Content-sized native sheet presented")
         presenter.presentAsSheet(sheet) { presented.fulfill() }
         await fulfillment(of: [presented], timeout: 3)
-        // Settle any layout-driven resize before capturing the initial height.
+        // Settle any layout-driven resize before rendering the sheet.
         try await Task.sleep(nanoseconds: 700_000_000)
         return (window, sheet)
     }
