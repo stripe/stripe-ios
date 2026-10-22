@@ -106,7 +106,7 @@ public final class ExpressCheckoutElementUIView: UIView {
                     "ordered_lpms": session.availableExpressCheckoutPaymentMethods.joined(separator: ","),
                     "ece_config": [
                         "link_visibility": configuration.linkConfiguration.display.rawValue,
-                        "apple_pay_visibility": configuration.applePayConfiguration?.display.rawValue ?? "never",
+                        "apple_pay_visibility": configuration.applePayConfiguration == nil ? "never" : "automatic",
                     ],
                 ]
             ),
