@@ -9,7 +9,7 @@
 import Foundation
 @_spi(STP) import StripePayments
 
-extension PaymentPagesAPIResponse {
+extension CheckoutClientAPIResponse {
     /// Customer data from a Checkout Session response.
     struct Customer: Decodable {
         /// The customer ID.
@@ -19,10 +19,10 @@ extension PaymentPagesAPIResponse {
         let paymentMethods: [STPPaymentMethod]
 
         /// Whether the customer can detach saved payment methods via Payment Pages.
-        let canDetachPaymentMethod: Bool
+        var canDetachPaymentMethod: Bool
 
         /// Customer email address.
-        let email: String?
+        var email: String?
 
         /// Customer name.
         let name: String?

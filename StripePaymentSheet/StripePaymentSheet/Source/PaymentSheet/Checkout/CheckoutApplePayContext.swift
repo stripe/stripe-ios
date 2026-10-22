@@ -92,7 +92,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
                 }
             }
             // Helper 2: Handle success
-            let handleSuccess = { (response: PaymentPagesAPIResponse) in
+            let handleSuccess = { (response: CheckoutClientAPIResponse) in
                 self.paymentState = .success
                 self.result = .completed(response)
                 if self.didCancelOrTimeoutWhilePending {

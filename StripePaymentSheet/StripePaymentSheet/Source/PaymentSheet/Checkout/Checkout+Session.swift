@@ -91,7 +91,7 @@ extension CheckoutController {
         /// `customer_email` or the Checkout Session's Customer's email.
         let serverEmail: String?
         var localState: LocalState
-        let customer: PaymentPagesAPIResponse.Customer?
+        let customer: CheckoutClientAPIResponse.Customer?
         let savedPaymentMethodsOfferSave: STPCheckoutSessionSavedPaymentMethodsOfferSave?
         let setupFutureUsage: String?
         let setupFutureUsageForPaymentMethodType: [String: String]
@@ -123,38 +123,38 @@ extension CheckoutController {
 extension CheckoutController.Session {
     /// Builds a read-only session snapshot from server-backed and local state.
     init(
-        apiResponse: PaymentPagesAPIResponse,
+        apiResponse: CheckoutClientAPIResponse,
         localState: LocalState,
         configuration: CheckoutController.Configuration? = nil
     ) {
         let elementsSessionValue = apiResponse.elementsSession.value
-        let publicDiscountAmounts = PaymentPagesAPIResponse.makeDiscountAmounts(
+        let publicDiscountAmounts = CheckoutClientAPIResponse.makeDiscountAmounts(
             from: apiResponse.recurringDetails?.totalSummary.totalDiscountAmounts ?? [],
             currency: apiResponse.currency
         )
         let publicTaxAmounts = apiResponse.totalSummary?.totalTaxAmounts?.map {
-            PaymentPagesAPIResponse.makeSessionTaxAmount(
+            CheckoutClientAPIResponse.makeSessionTaxAmount(
                 from: $0,
                 currency: apiResponse.currency,
                 locale: .autoupdatingCurrent
             )
         }
-        let publicOrderSummaryItems = PaymentPagesAPIResponse.makeOrderSummaryItems(
+        let publicOrderSummaryItems = CheckoutClientAPIResponse.makeOrderSummaryItems(
             from: apiResponse.checkoutItems,
             locale: .autoupdatingCurrent
         )
-        let publicTotals = PaymentPagesAPIResponse.makeTotals(
+        let publicTotals = CheckoutClientAPIResponse.makeTotals(
             from: apiResponse.checkoutItems,
             currency: apiResponse.currency
         )
-        let publicTax = PaymentPagesAPIResponse.makeTax(
+        let publicTax = CheckoutClientAPIResponse.makeTax(
             taxMeta: apiResponse.taxMeta,
             taxContext: apiResponse.taxContext
         )
-        let localizedPricesMetas = PaymentPagesAPIResponse.makeLocalizedPricesMetas(
+        let localizedPricesMetas = CheckoutClientAPIResponse.makeLocalizedPricesMetas(
             from: apiResponse.adaptivePricingInfo
         )
-        let exchangeRateMeta = PaymentPagesAPIResponse.makeExchangeRateMeta(
+        let exchangeRateMeta = CheckoutClientAPIResponse.makeExchangeRateMeta(
             from: apiResponse.adaptivePricingInfo
         )
         // TODO: Read explicit integration and presentment currency fields from the mobile
@@ -163,7 +163,7 @@ extension CheckoutController.Session {
             CheckoutController.Session.PresentmentDetails(presentmentCurrency: $0.activePresentmentCurrency)
         }
         let automaticTaxEnabled = apiResponse.taxContext?.automaticTaxEnabled ?? false
-        let automaticTaxAddressSource = PaymentPagesAPIResponse.makeAutomaticTaxAddressSource(
+        let automaticTaxAddressSource = CheckoutClientAPIResponse.makeAutomaticTaxAddressSource(
             from: apiResponse.taxContext?.automaticTaxAddressSource
         )
         if automaticTaxEnabled && automaticTaxAddressSource == "billing" {
@@ -182,7 +182,7 @@ extension CheckoutController.Session {
             discountAmounts: publicDiscountAmounts,
             orderSummaryItems: publicOrderSummaryItems,
             livemode: apiResponse.livemode,
-            minorUnitsAmountDivisor: PaymentPagesAPIResponse.makeMinorUnitsAmountDivisor(
+            minorUnitsAmountDivisor: CheckoutClientAPIResponse.makeMinorUnitsAmountDivisor(
                 currency: apiResponse.currency
             ),
             status: apiResponse.status,
@@ -195,7 +195,7 @@ extension CheckoutController.Session {
             serverEmail: serverEmail,
             localState: localState,
             customer: apiResponse.customer,
-            savedPaymentMethodsOfferSave: PaymentPagesAPIResponse.makeSavedPaymentMethodsOfferSave(
+            savedPaymentMethodsOfferSave: CheckoutClientAPIResponse.makeSavedPaymentMethodsOfferSave(
                 from: apiResponse.savedPaymentMethodsOfferSave
             ),
             setupFutureUsage: apiResponse.setupFutureUsage,

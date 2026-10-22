@@ -48,13 +48,13 @@ class STPCheckoutSessionSavedPaymentMethodsOfferSaveTest: XCTestCase {
         let missingEnabled = CheckoutTestHelpers.makeSessionJSON([
             "customer_managed_saved_payment_methods_offer_save": ["status": "not_accepted"],
         ])
-        XCTAssertThrowsError(try PaymentPagesAPIResponse.decode(fromAPIResponse: missingEnabled))
+        XCTAssertThrowsError(try CheckoutClientAPIResponse.decode(fromAPIResponse: missingEnabled))
 
         // CheckoutClient supplies only whether saving is enabled.
         let missingStatus = CheckoutTestHelpers.makeSessionJSON([
             "customer_managed_saved_payment_methods_offer_save": ["enabled": true],
         ])
-        let session = try PaymentPagesAPIResponse.decode(fromAPIResponse: missingStatus).makePublicSession()
+        let session = try CheckoutClientAPIResponse.decode(fromAPIResponse: missingStatus).makePublicSession()
         XCTAssertTrue(try XCTUnwrap(session.savedPaymentMethodsOfferSave).enabled)
     }
 

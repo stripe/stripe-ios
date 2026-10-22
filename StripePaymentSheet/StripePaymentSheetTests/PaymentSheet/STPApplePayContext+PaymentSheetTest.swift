@@ -903,7 +903,7 @@ private final class TestCheckoutSessionBillingAddressUpdater: CheckoutSessionBil
         self.session = session
     }
 
-    func commitSession(_ apiResponse: PaymentPagesAPIResponse) async throws {
+    func commitSession(_ apiResponse: CheckoutClientAPIResponse) async throws {
         session = apiResponse.makePublicSession()
     }
 
