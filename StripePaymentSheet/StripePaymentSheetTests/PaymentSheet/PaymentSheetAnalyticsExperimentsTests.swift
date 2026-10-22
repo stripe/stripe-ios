@@ -57,9 +57,9 @@ final class PaymentSheetAnalyticsExperimentsTests: XCTestCase {
             ]
         )
 
-        analyticsClient.logExposure(experiment: experiment)
-        guard let payload = analyticsClientV2.loggedAnalyticPayloads(withEventName: PaymentSheetAnalyticsHelper.eventName).first else {
-            return XCTFail("Expected event logged with name \(PaymentSheetAnalyticsHelper.eventName)")
+        analyticsClient.experimentAnalyticsHelper.logExposure(experiment: experiment)
+        guard let payload = analyticsClientV2.loggedAnalyticPayloads(withEventName: ExperimentAnalyticsHelper.eventName).first else {
+            return XCTFail("Expected event logged with name \(ExperimentAnalyticsHelper.eventName)")
         }
 
         XCTAssertEqual(payload["arb_id"] as? String, "arb_id")
@@ -120,12 +120,12 @@ final class PaymentSheetAnalyticsExperimentsTests: XCTestCase {
             session: session,
             configuration: configuration,
             linkAccount: linkAccount,
-            integrationShape: .complete
+            integrationShape: .paymentSheet
         )
-        analyticsClient.logExposure(experiment: experiment)
+        analyticsClient.experimentAnalyticsHelper.logExposure(experiment: experiment)
 
-        guard let payload = analyticsClientV2.loggedAnalyticPayloads(withEventName: PaymentSheetAnalyticsHelper.eventName).first else {
-            return XCTFail("Expected event logged with name \(PaymentSheetAnalyticsHelper.eventName)")
+        guard let payload = analyticsClientV2.loggedAnalyticPayloads(withEventName: ExperimentAnalyticsHelper.eventName).first else {
+            return XCTFail("Expected event logged with name \(ExperimentAnalyticsHelper.eventName)")
         }
 
         XCTAssertEqual(payload["arb_id"] as? String, arbId)
@@ -195,10 +195,10 @@ final class PaymentSheetAnalyticsExperimentsTests: XCTestCase {
             linkAccount: linkAccount,
             integrationShape: .flowController
         )
-        analyticsClient.logExposure(experiment: experiment)
+        analyticsClient.experimentAnalyticsHelper.logExposure(experiment: experiment)
 
-        guard let payload = analyticsClientV2.loggedAnalyticPayloads(withEventName: PaymentSheetAnalyticsHelper.eventName).first else {
-            return XCTFail("Expected event logged with name \(PaymentSheetAnalyticsHelper.eventName)")
+        guard let payload = analyticsClientV2.loggedAnalyticPayloads(withEventName: ExperimentAnalyticsHelper.eventName).first else {
+            return XCTFail("Expected event logged with name \(ExperimentAnalyticsHelper.eventName)")
         }
 
         XCTAssertEqual(payload["arb_id"] as? String, arbId)
@@ -296,10 +296,10 @@ final class PaymentSheetAnalyticsExperimentsTests: XCTestCase {
         )
 
         let experiment = ConnectionsFCLiteVsNative(arbId: arbId, session: session)
-        analyticsClient.logExposure(experiment: experiment)
+        analyticsClient.experimentAnalyticsHelper.logExposure(experiment: experiment)
 
-        guard let payload = analyticsClientV2.loggedAnalyticPayloads(withEventName: PaymentSheetAnalyticsHelper.eventName).first else {
-            return XCTFail("Expected event logged with name \(PaymentSheetAnalyticsHelper.eventName)")
+        guard let payload = analyticsClientV2.loggedAnalyticPayloads(withEventName: ExperimentAnalyticsHelper.eventName).first else {
+            return XCTFail("Expected event logged with name \(ExperimentAnalyticsHelper.eventName)")
         }
 
         XCTAssertEqual(payload["arb_id"] as? String, arbId)

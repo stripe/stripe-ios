@@ -70,7 +70,7 @@ final class PaymentMethodMessagingPromotionsHelperTests: APIStubbedTestCase {
         XCTAssertTrue(helper.isInTreatmentGroup)
 
         // Verify exposure was logged exactly once with correct parameters
-        let payloads = analyticsClientV2.loggedAnalyticPayloads(withEventName: PaymentSheetAnalyticsHelper.eventName)
+        let payloads = analyticsClientV2.loggedAnalyticPayloads(withEventName: ExperimentAnalyticsHelper.eventName)
         XCTAssertEqual(payloads.count, 1)
         guard let payload = payloads.first else {
             return XCTFail("Expected exposure event to be logged")
@@ -81,7 +81,7 @@ final class PaymentMethodMessagingPromotionsHelperTests: APIStubbedTestCase {
 
         // Second access should not log again
         _ = helper.isInTreatmentGroup
-        XCTAssertEqual(analyticsClientV2.loggedAnalyticPayloads(withEventName: PaymentSheetAnalyticsHelper.eventName).count, 1)
+        XCTAssertEqual(analyticsClientV2.loggedAnalyticPayloads(withEventName: ExperimentAnalyticsHelper.eventName).count, 1)
     }
 
     func testInit_noAssignment_returnsNil() {
@@ -131,7 +131,7 @@ final class PaymentMethodMessagingPromotionsHelperTests: APIStubbedTestCase {
         XCTAssertFalse(helper.isInTreatmentGroup)
 
         // Verify exposure was logged exactly once with correct parameters
-        let payloads = analyticsClientV2.loggedAnalyticPayloads(withEventName: PaymentSheetAnalyticsHelper.eventName)
+        let payloads = analyticsClientV2.loggedAnalyticPayloads(withEventName: ExperimentAnalyticsHelper.eventName)
         XCTAssertEqual(payloads.count, 1)
         guard let payload = payloads.first else {
             return XCTFail("Expected exposure event to be logged")
@@ -142,7 +142,7 @@ final class PaymentMethodMessagingPromotionsHelperTests: APIStubbedTestCase {
 
         // Second access should not log again
         _ = helper.isInTreatmentGroup
-        XCTAssertEqual(analyticsClientV2.loggedAnalyticPayloads(withEventName: PaymentSheetAnalyticsHelper.eventName).count, 1)
+        XCTAssertEqual(analyticsClientV2.loggedAnalyticPayloads(withEventName: ExperimentAnalyticsHelper.eventName).count, 1)
     }
 
     func testPromotion_returnsNilForUnsupportedType() async throws {

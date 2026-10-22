@@ -13,7 +13,7 @@ extension PaymentSheetLoader {
     static func loadLink(
         elementsSession: STPElementsSession,
         configuration: PaymentElementConfiguration,
-        analyticsHelper: PaymentSheetAnalyticsHelper,
+        analyticsHelper: ExperimentAnalyticsHelper,
         prefetchedEmailAndSourceTask: Task<(email: String, source: EmailSource)?, Never>,
         loadTimings: LoadTimings,
         isUpdate: Bool
@@ -129,11 +129,11 @@ extension PaymentSheetLoader {
     }
 
     @MainActor
-    private static func logExperimentExposures(
+    static func logExperimentExposures(
         elementsSession: STPElementsSession,
         configuration: PaymentElementConfiguration,
         linkAccount: PaymentSheetLinkAccount?,
-        analyticsHelper: PaymentSheetAnalyticsHelper
+        analyticsHelper: ExperimentAnalyticsHelper
     ) {
         Task {
             guard let arbId = elementsSession.experimentsData?.arbId else {
