@@ -88,6 +88,12 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
         }
     }
 
+    struct CompletedCheckoutSessionPoller: CheckoutSessionPolling {
+        func poll(checkoutSessionId: String) async -> CheckoutSessionPoller.Outcome {
+            return .completed
+        }
+    }
+
     enum MerchantCountry: String {
         case US = "us"
         case SG = "sg"
@@ -2031,7 +2037,8 @@ extension PaymentSheetLPMConfirmFlowTests {
                         with: confirmRequestParameters,
                         apiClient: configuration.apiClient,
                         authenticationContext: self,
-                        paymentHandler: paymentHandler
+                        paymentHandler: paymentHandler,
+                        poller: CompletedCheckoutSessionPoller()
                     )
                 case .canceled:
                     result = .canceled()
@@ -2063,7 +2070,8 @@ extension PaymentSheetLPMConfirmFlowTests {
                         with: confirmRequestParameters,
                         apiClient: configuration.apiClient,
                         authenticationContext: self,
-                        paymentHandler: paymentHandler
+                        paymentHandler: paymentHandler,
+                        poller: CompletedCheckoutSessionPoller()
                     )
                 case .canceled:
                     result = .canceled()

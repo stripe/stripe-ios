@@ -28,10 +28,7 @@ final class CheckoutConfirmationFunctionalTests: STPNetworkStubbingTestCase {
 
         // Then confirmation completes without creating an Intent
         assertCompleted(result)
-        // TODO(porter): Expect complete when CheckoutClient polling is available.
-        // Until then, preserve the open Session returned by confirmation.
-        XCTAssertEqual(checkout.session.status, .open)
-        XCTAssertEqual(checkout.session.paymentStatus, .noPaymentRequired)
+        XCTAssertEqual(checkout.session.status, .complete(.noPaymentRequired))
     }
 
     func test_confirm_zero_amount_with_card_and_local_email_completes_with_setup_intent() async throws {
