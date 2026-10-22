@@ -72,7 +72,7 @@ final class CheckoutErrorHandlingTests: APIStubbedTestCase {
                     XCTAssertEqual(apiError.httpStatusCode, 400)
                     XCTAssertEqual(apiError.requestID, "req_test_123")
                     XCTAssertEqual(apiError.code, response["code"] as? String)
-                    XCTAssertEqual(apiError.message, expectedMessage)
+                    XCTAssertEqual(apiError.message, response["message"] as? String)
 
                     // ...and explicit NSError conversion uses the same formatting and preserves the request ID
                     let converted = try XCTUnwrap(NSError.stp_error(from: stripeError))
@@ -153,10 +153,11 @@ final class CheckoutErrorHandlingTests: APIStubbedTestCase {
         let messageCases: [(response: [String: Any], expectedMessage: String?)] = errorTypes.map { type in
             (["type": type, "message": serverMessage, "code": "promotion_code_invalid"], serverMessage)
         }
-        // Missing and null messages stay nil even when a known card code has an SDK-localized message.
+        // Missing, null, and empty messages produce nil descriptions even for a known card code.
         return messageCases + [
             (["type": "card_error", "code": "incorrect_number", "message": NSNull()], nil),
             (["type": "invalid_request_error", "code": "incorrect_number"], nil),
+            (["type": "invalid_request_error", "code": "incorrect_number", "message": ""], nil),
         ]
     }
 

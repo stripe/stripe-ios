@@ -207,8 +207,8 @@ extension NSError {
 
         // localized description
         let message: String? = if useServerErrorMessage {
-            // Checkout uses the server's message as-is, including when it is absent.
-            stripeErrorMessage
+            // Checkout treats an empty server message as absent.
+            stripeErrorMessage?.nonEmpty
         } else if errorType == "card_error", let stripeErrorMessage {
             // see https://stripe.com/docs/api/errors#errors-message
             stripeErrorMessage
