@@ -7,6 +7,7 @@
 
 import PassKit
 import SwiftUI
+import UIKit
 
 @_spi(CryptoOnrampAlpha)
 import StripeCryptoOnramp
@@ -27,6 +28,46 @@ struct PaymentView: View {
         static let missingMinimumIdentityVerification = "crypto_onramp_missing_minimum_identity_verification"
         static let missingIdentityVerification = "crypto_onramp_missing_identity_verification"
         static let missingDocumentVerification = "crypto_onramp_missing_document_verification"
+    }
+
+    /// Sizes and spacing for the standard and compact payment layouts.
+    private struct LayoutMetrics {
+        static let standard = Self(
+            sectionSpacing: 16,
+            contentVerticalPadding: 8,
+            continueVerticalPadding: 16,
+            amountFontSize: 56,
+            paymentDetailsSpacing: 16,
+            paymentControlBottomPadding: 16,
+            settlementSpeedSpacing: 8,
+            keypadBottomPadding: 16,
+            keypadRowSpacing: 12,
+            keypadKeyHeight: 56
+        )
+
+        static let compact = Self(
+            sectionSpacing: 4,
+            contentVerticalPadding: 4,
+            continueVerticalPadding: 8,
+            amountFontSize: 48,
+            paymentDetailsSpacing: 8,
+            paymentControlBottomPadding: 4,
+            settlementSpeedSpacing: 4,
+            keypadBottomPadding: 0,
+            keypadRowSpacing: 8,
+            keypadKeyHeight: 44
+        )
+
+        let sectionSpacing: CGFloat
+        let contentVerticalPadding: CGFloat
+        let continueVerticalPadding: CGFloat
+        let amountFontSize: CGFloat
+        let paymentDetailsSpacing: CGFloat
+        let paymentControlBottomPadding: CGFloat
+        let settlementSpeedSpacing: CGFloat
+        let keypadBottomPadding: CGFloat
+        let keypadRowSpacing: CGFloat
+        let keypadKeyHeight: CGFloat
     }
 
     private enum NumberPadKey: String, Identifiable {
@@ -154,6 +195,10 @@ struct PaymentView: View {
     @Environment(\.isLoading) private var isLoading
     @Environment(\.locale) private var locale
 
+    // When there's more than enough horizontal space, limit to a reasonable width
+    // so that the contents aren't spread too wide.
+    private let contentMaxWidth: CGFloat = 420
+
     @State private var amountText: String = "0"
     @State private var shouldShowPaymentMethodSheet: Bool = false
     @State private var kycRecoveryLevels: KYCRecoveryFlowView.Levels?
@@ -188,6 +233,7 @@ struct PaymentView: View {
             }
         })
     }
+
     // This example UI respects the current locale’s decimal separator.
     //
     // Additionally, we don’t use a currency number formatter while
@@ -263,112 +309,14 @@ struct PaymentView: View {
     // MARK: - View
 
     var body: some View {
-        VStack(spacing: 0) {
-            Spacer()
-
-            VStack(spacing: 8) {
-                Text(sourceCurrency.amountPrefix + (amountText.isEmpty ? "0" : amountText))
-                    .font(.system(size: 56, weight: .bold))
-                    .monospacedDigit()
-                    .frame(maxWidth: .infinity, alignment: .center)
-
-                HStack(spacing: 0) {
-                    Picker(selection: $sourceCurrency) {
-                        ForEach(SourceCurrency.allCases) { currency in
-                            Text(currency.displayName).tag(currency)
-                        }
-                    } label: {
-                        Text(sourceCurrency.displayName)
-                            .font(.callout)
-                            .foregroundColor(.secondary)
-                    }
-                    .pickerStyle(.menu)
-
-                    Button {
-                        editingCurrencyText = destinationCurrency
-                        editCurrencyAlert = EditCurrencyAlert()
-                    } label: {
-                        HStack(spacing: 4) {
-                            Text("to \(destinationCurrency)")
-                                .font(.callout)
-                                .foregroundColor(.secondary)
-
-                            Image(systemName: "pencil")
-                                .font(.system(size: 12, weight: .bold))
-                                .foregroundColor(.secondary)
-                        }
-                    }
-                    .buttonStyle(.plain)
-                }
-            }
-
-            Spacer()
-
-            makeSelectPaymentMethodButton()
-
-            if let selectedPaymentMethod, selectedPaymentMethod.isBankAccount {
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("ACH Settlement Speed")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-
-                    Picker("ACH Settlement Speed", selection: $achSettlementSpeed) {
-                        Text("Instant").tag(CreateOnrampSessionRequest.SettlementSpeed.instant)
-                        Text("Standard").tag(CreateOnrampSessionRequest.SettlementSpeed.standard)
-                    }
-                    .pickerStyle(.segmented)
-                }
-                .padding(.bottom, 16)
-            }
-
-            HStack(spacing: 12) {
-                makePresetAmountButton(3)
-                makePresetAmountButton(5)
-                makePresetAmountButton(10)
-            }
-            .padding(.bottom, 8)
-
-            makeKeypad()
-                .padding(.bottom, 16)
+        GeometryReader { geometry in
+            makePaymentContent(in: geometry)
         }
-        .padding(.horizontal)
         .navigationTitle("Payment")
         .navigationBarTitleDisplayMode(.inline)
-        .safeAreaInset(edge: .bottom) {
-            ZStack {
-                if case .applePay = selectedPaymentMethod {
-                    PayWithApplePayButton(.plain) {
-                        continueWithApplePay()
-                    }
-                    .frame(height: 52)
-                    .cornerRadius(8)
-                } else {
-                    Button("Continue") {
-                        switch selectedPaymentMethod {
-                        case let .existingPaymentToken(token):
-                            createOnrampSession(withCryptoPaymentTokenId: token.id)
-                        case let .newPaymentMethod(tokenId, _):
-                            createOnrampSession(withCryptoPaymentTokenId: tokenId)
-                        case .applePay: break
-                        case nil: break
-                        }
-
-                    }
-                    .buttonStyle(PrimaryButtonStyle())
-                }
-            }
-            .disabled(shouldDisableContinueButton)
-            .opacity(shouldDisableContinueButton ? 0.5 : 1)
-            .padding()
-        }
         .sheet(isPresented: $shouldShowPaymentMethodSheet) {
-            ScrollView {
+            PaymentMethodChooser {
                 LazyVStack(alignment: .leading, spacing: 16) {
-                    Text("Pay with")
-                        .font(.title2)
-                        .bold()
-                        .padding(.top, 8)
-
                     if !paymentTokens.isEmpty {
                         LazyVStack(spacing: 8) {
                             ForEach(paymentTokens) { token in
@@ -424,9 +372,10 @@ struct PaymentView: View {
                         }
                     }
                 }
+                .frame(maxWidth: contentMaxWidth)
+                .frame(maxWidth: .infinity)
                 .padding()
             }
-            .presentationDetents([.medium])
         }
         .sheet(item: $kycRecoveryLevels) { kycRecoveryLevels in
             KYCRecoveryFlowView(
@@ -517,10 +466,253 @@ struct PaymentView: View {
     }
 
     @ViewBuilder
-    private func makeKeypad() -> some View {
+    private func makePaymentContent(in geometry: GeometryProxy) -> some View {
+        #if compiler(>=6.4)
+        if #available(iOS 27.1, *), !geometry.reservedRegions(kind: .division).isEmpty {
+            ArrangementView {
+                FoldAvoidingScrollView {
+                    makeSplitPaymentDetails(metrics: .standard)
+                        .frame(maxWidth: contentMaxWidth)
+                        .frame(maxWidth: .infinity)
+                        .padding(.horizontal)
+                }
+            } secondary: {
+                FoldAvoidingScrollView(alignment: .bottom) {
+                    makeAmountEntryControls(metrics: .compact)
+                        .frame(maxWidth: contentMaxWidth)
+                        .frame(maxWidth: .infinity)
+                        .padding(.horizontal)
+                }
+            }
+            .arrangementViewStyle(.split)
+            .safeAreaInset(edge: .bottom) {
+                paymentContinueButton
+                    .padding()
+                    .avoidingActiveFold()
+            }
+        } else {
+            makeAdaptivePaymentContent(in: geometry)
+        }
+        #else
+        makeAdaptivePaymentContent(in: geometry)
+        #endif
+    }
+
+    private func makeAdaptivePaymentContent(in geometry: GeometryProxy) -> some View {
+        ViewThatFits(in: .vertical) {
+            makeSingleColumnPaymentContent(metrics: .standard)
+            makeSingleColumnPaymentContent(metrics: .compact)
+
+            // Prefer one column whenever it fits. Use extra width only when there's not enough height.
+            if geometry.size.width > geometry.size.height {
+                sideBySidePaymentContent
+            } else {
+                FoldAvoidingScrollView {
+                    makeSingleColumnPaymentContent(metrics: .compact)
+                }
+            }
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+
+    private func makeSingleColumnPaymentContent(metrics: LayoutMetrics) -> some View {
+        VStack(spacing: 0) {
+            Spacer(minLength: 0)
+
+            VStack(spacing: metrics.sectionSpacing) {
+                makePaymentAmount(metrics: metrics)
+                makePaymentMethodControls(metrics: metrics)
+                makeAmountEntryControls(metrics: metrics)
+            }
+            .padding(.vertical, metrics.contentVerticalPadding)
+
+            Spacer(minLength: 0)
+
+            paymentContinueButton
+                .padding(.vertical, metrics.continueVerticalPadding)
+        }
+        .frame(maxWidth: contentMaxWidth)
+        .frame(maxWidth: .infinity)
+        .padding(.horizontal)
+    }
+
+    private var sideBySidePaymentContent: some View {
+        HStack(spacing: 16) {
+            FoldAvoidingScrollView {
+                makeSplitPaymentDetails(metrics: .compact)
+                    .frame(maxWidth: contentMaxWidth)
+                    .frame(maxWidth: .infinity)
+                    .padding()
+            }
+
+            ViewThatFits(in: .vertical) {
+                makeAmountEntryControls(metrics: .standard)
+                makeAmountEntryControls(metrics: .compact)
+                FoldAvoidingScrollView {
+                    makeAmountEntryControls(metrics: .compact)
+                }
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .safeAreaInset(edge: .bottom, spacing: 0) {
+                paymentContinueButton
+                    .padding(.vertical, 8)
+            }
+            .frame(maxWidth: contentMaxWidth)
+            .frame(maxWidth: .infinity)
+            .padding(.horizontal)
+        }
+        .padding(.vertical, 8)
+    }
+
+    private var paymentContinueButton: some View {
+        ZStack {
+            if case .applePay = selectedPaymentMethod {
+                PayWithApplePayButton(.plain) {
+                    continueWithApplePay()
+                }
+                .frame(maxWidth: .infinity)
+                .frame(height: 52)
+                .cornerRadius(8)
+            } else {
+                Button("Continue") {
+                    switch selectedPaymentMethod {
+                    case let .existingPaymentToken(token):
+                        createOnrampSession(withCryptoPaymentTokenId: token.id)
+                    case let .newPaymentMethod(tokenId, _):
+                        createOnrampSession(withCryptoPaymentTokenId: tokenId)
+                    case .applePay: break
+                    case nil: break
+                    }
+                }
+                .buttonStyle(PrimaryButtonStyle())
+            }
+        }
+        .frame(maxWidth: contentMaxWidth)
+        .frame(maxWidth: .infinity)
+        .disabled(shouldDisableContinueButton)
+        .opacity(shouldDisableContinueButton ? 0.5 : 1)
+    }
+
+    private func makePaymentAmount(metrics: LayoutMetrics) -> some View {
+        VStack(spacing: 8) {
+            GeometryReader { geometry in
+                ScrollViewReader { scrollProxy in
+                    ScrollView(.horizontal) {
+                        Text(sourceCurrency.amountPrefix + (amountText.isEmpty ? "0" : amountText))
+                            .font(.system(size: metrics.amountFontSize, weight: .bold))
+                            .monospacedDigit()
+                            .fixedSize()
+                            .frame(minWidth: geometry.size.width)
+                            .id("amount")
+                    }
+                    .onChange(of: amountText) { _ in
+                        scrollProxy.scrollTo("amount", anchor: .trailing)
+                    }
+                }
+            }
+            .frame(height: UIFont.systemFont(ofSize: metrics.amountFontSize, weight: .bold).lineHeight)
+
+            ViewThatFits(in: .horizontal) {
+                HStack(spacing: 8) {
+                    sourceCurrencyPicker
+                    destinationCurrencyButton
+                }
+                VStack(spacing: 8) {
+                    sourceCurrencyPicker
+                    destinationCurrencyButton
+                }
+            }
+        }
+    }
+
+    private var sourceCurrencyPicker: some View {
+        Picker(selection: $sourceCurrency) {
+            ForEach(SourceCurrency.allCases) { currency in
+                Text(currency.displayName).tag(currency)
+            }
+        } label: {
+            Text(sourceCurrency.displayName)
+                .font(.callout)
+                .foregroundColor(.secondary)
+        }
+        .pickerStyle(.menu)
+    }
+
+    private var destinationCurrencyButton: some View {
+        Button {
+            editingCurrencyText = destinationCurrency
+            editCurrencyAlert = EditCurrencyAlert()
+        } label: {
+            HStack(spacing: 4) {
+                Text("to \(destinationCurrency)")
+                    .font(.callout)
+                    .foregroundColor(.secondary)
+
+                Image(systemName: "pencil")
+                    .font(.system(size: 12, weight: .bold))
+                    .foregroundColor(.secondary)
+            }
+            .fixedSize(horizontal: false, vertical: true)
+            .padding(.vertical, 8)
+            .frame(minHeight: 44)
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+    }
+
+    private var settlementSpeedPicker: some View {
+        Picker("ACH Settlement Speed", selection: $achSettlementSpeed) {
+            Text("Instant").tag(CreateOnrampSessionRequest.SettlementSpeed.instant)
+            Text("Standard").tag(CreateOnrampSessionRequest.SettlementSpeed.standard)
+        }
+        .pickerStyle(.segmented)
+    }
+
+    private func makeSplitPaymentDetails(metrics: LayoutMetrics) -> some View {
+        VStack(spacing: metrics.paymentDetailsSpacing) {
+            makePaymentAmount(metrics: metrics)
+            makePaymentMethodControls(metrics: metrics, alignment: .center)
+                .multilineTextAlignment(.center)
+        }
+    }
+
+    private func makePaymentMethodControls(metrics: LayoutMetrics, alignment: Alignment = .leading) -> some View {
+        VStack(spacing: 0) {
+            makeSelectPaymentMethodButton(alignment: alignment)
+                .padding(.bottom, metrics.paymentControlBottomPadding)
+
+            if let selectedPaymentMethod, selectedPaymentMethod.isBankAccount {
+                VStack(alignment: .leading, spacing: metrics.settlementSpeedSpacing) {
+                    Text("ACH Settlement Speed")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+
+                    settlementSpeedPicker
+                }
+                .padding(.bottom, metrics.paymentControlBottomPadding)
+            }
+        }
+    }
+
+    private func makeAmountEntryControls(metrics: LayoutMetrics) -> some View {
+        VStack(spacing: 0) {
+            HStack(spacing: 12) {
+                makePresetAmountButton(3)
+                makePresetAmountButton(5)
+                makePresetAmountButton(10)
+            }
+            .padding(.bottom, 8)
+
+            makeKeypad(metrics: metrics)
+                .padding(.bottom, metrics.keypadBottomPadding)
+        }
+    }
+
+    @ViewBuilder
+    private func makeKeypad(metrics: LayoutMetrics) -> some View {
         let columns: [GridItem] = Array(repeating: GridItem(.flexible(), spacing: 12), count: 3)
 
-        LazyVGrid(columns: columns, spacing: 12) {
+        LazyVGrid(columns: columns, spacing: metrics.keypadRowSpacing) {
             ForEach(Self.keys, id: \.self) { key in
                 Button {
                     handleKey(key)
@@ -528,7 +720,9 @@ struct PaymentView: View {
                     labelRepresentation(for: key)
                         .font(.system(size: 24, weight: .semibold))
                         .foregroundColor(.primary)
-                        .frame(height: 56)
+                        .frame(maxWidth: .infinity)
+                        .frame(height: metrics.keypadKeyHeight)
+                        .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
             }
@@ -544,7 +738,7 @@ struct PaymentView: View {
         action: @escaping () -> Void
     ) -> some View {
         Button(action: action) {
-            HStack(spacing: 12) {
+            HStack(alignment: .top, spacing: 12) {
                 switch icon {
                 case let .systemName(name):
                     makePaymentMethodIcon(systemImageName: name, useInlineStyle: false)
@@ -567,9 +761,10 @@ struct PaymentView: View {
                     }
                 }
 
-                Spacer()
+                Spacer(minLength: 0)
             }
             .padding(16)
+            .contentShape(Rectangle())
             .background(
                 RoundedRectangle(cornerRadius: 12)
                     .fill(Color(.secondarySystemBackground).opacity(0.7))
@@ -620,22 +815,19 @@ struct PaymentView: View {
         Button {
             amountText = "\(amount)"
         } label: {
-            ZStack {
-                RoundedRectangle(cornerRadius: 10)
-                    .fill(Color(.secondarySystemBackground))
-
-                Text("\(sourceCurrency.amountPrefix)\(amount)")
-                    .font(.system(size: 18, weight: .semibold))
-                    .foregroundColor(.primary)
-            }
-            .frame(height: 44)
-            .frame(maxWidth: .infinity)
+            Text("\(sourceCurrency.amountPrefix)\(amount)")
+                .font(.system(size: 18, weight: .semibold))
+                .foregroundColor(.primary)
+                .padding(.vertical, 12)
+                .frame(maxWidth: .infinity, minHeight: 44)
+                .background(Color(.secondarySystemBackground), in: RoundedRectangle(cornerRadius: 10))
+                .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
     }
 
     @ViewBuilder
-    private func makeSelectPaymentMethodButton() -> some View {
+    private func makeSelectPaymentMethodButton(alignment: Alignment = .leading) -> some View {
         HStack {
             Button {
                 shouldShowPaymentMethodSheet = true
@@ -654,12 +846,11 @@ struct PaymentView: View {
                         .font(.system(size: 14, weight: .semibold))
                         .foregroundStyle(.secondary)
                 }
+                .frame(maxWidth: .infinity, minHeight: 44, alignment: alignment)
+                .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
-
-            Spacer()
         }
-        .padding(.bottom, 16)
     }
 
     @ViewBuilder
@@ -1064,5 +1255,31 @@ private extension PaymentTokensResponse.PaymentToken {
             kycResidence: .unitedStates,
             onContinue: { _, _, _ in }
         )
+    }
+}
+
+private struct PaymentMethodChooser<Content: View>: View {
+    @ViewBuilder var content: Content
+    @Environment(\.dismiss) private var dismiss
+
+    var body: some View {
+        NavigationStack {
+            ScrollView {
+                content
+            }
+            .navigationTitle("Pay with")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button {
+                        dismiss()
+                    } label: {
+                        Label("Close", systemImage: "xmark")
+                    }
+                }
+            }
+        }
+        .presentationDetents([.medium, .large])
+        .presentationDragIndicator(.visible)
     }
 }
