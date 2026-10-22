@@ -1,32 +1,32 @@
 POST
-https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3UTQ0VFY0qyl6XeW0BKc9l6F\/confirm$
+https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3UTQceFY0qyl6XeW15RW8MEw\/confirm$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=X36YTa7WFD-87al6o5J5p67VOIIyVXGtLUWBIekKV_-oWWoEWO1Yj2yyP6zy9WEZB8KgEx4CbfmyjVq2; report-to csp
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=4BzJBA-ibUDsdvF_hB6y_W-XbeCD4O0GwlN-5ZjeASzPXFXb_GAI1qIFASAedfe97v2UOId2xxGwsjr-; report-to csp
 Server: nginx
 Cache-Control: no-cache, no-store
-reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=X36YTa7WFD-87al6o5J5p67VOIIyVXGtLUWBIekKV_-oWWoEWO1Yj2yyP6zy9WEZB8KgEx4CbfmyjVq2&t=1"
+reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=4BzJBA-ibUDsdvF_hB6y_W-XbeCD4O0GwlN-5ZjeASzPXFXb_GAI1qIFASAedfe97v2UOId2xxGwsjr-&t=1"
 stripe-notice: You are using an outdated API version (2020-08-27). We recommend upgrading to the latest API version, 2026-09-30.endive. See https://docs.stripe.com/upgrades
 x-wc: 3c3
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
-report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=X36YTa7WFD-87al6o5J5p67VOIIyVXGtLUWBIekKV_-oWWoEWO1Yj2yyP6zy9WEZB8KgEx4CbfmyjVq2&t=1"}],"include_subdomains":true}
-request-id: req_lhadDf6OAZ01rd
+report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=4BzJBA-ibUDsdvF_hB6y_W-XbeCD4O0GwlN-5ZjeASzPXFXb_GAI1qIFASAedfe97v2UOId2xxGwsjr-&t=1"}],"include_subdomains":true}
+request-id: req_s517Wb8aU4qJYd
 x-stripe-routing-context-priority-tier: api-testmode
 Content-Length: 2231
 Vary: Origin
-Date: Thu, 22 Oct 2026 17:42:28 GMT
-original-request: req_lhadDf6OAZ01rd
+Date: Thu, 22 Oct 2026 18:21:53 GMT
+original-request: req_s517Wb8aU4qJYd
 stripe-version: 2020-08-27
-idempotency-key: 570ba16b-79bf-4f9a-a485-0c36be5a73fb
+idempotency-key: 46fd7ae9-cecc-4c6f-833b-e24c3ad730b7
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
-X-Stripe-Mock-Request: client_attribution_metadata\[client_session_id]=.*&client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_intent_creation_flow]=deferred&client_attribution_metadata\[payment_method_selection_flow]=automatic&client_secret=pi_3UTQ0VFY0qyl6XeW0BKc9l6F_secret_JcRrRv6WEsOtt5kDk0X3FClLu&expand\[0]=payment_method&payment_method=pm_1UTQ0VFY0qyl6XeWb3PFdXEq&return_url=https%3A\/\/foo\.com&use_stripe_sdk=true
+X-Stripe-Mock-Request: client_attribution_metadata\[client_session_id]=.*&client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_intent_creation_flow]=deferred&client_attribution_metadata\[payment_method_selection_flow]=automatic&client_secret=pi_3UTQceFY0qyl6XeW15RW8MEw_secret_B4LGQfh6xy9iG5CfEqjl8jmJx&expand\[0]=payment_method&payment_method=pm_1UTQceFY0qyl6XeW42Onl231&return_url=https%3A\/\/foo\.com&use_stripe_sdk=true
 
 {
   "payment_method_configuration_details" : null,
@@ -46,11 +46,11 @@ X-Stripe-Mock-Request: client_attribution_metadata\[client_session_id]=.*&client
   "next_action" : {
     "type" : "pix_display_qr_code",
     "pix_display_qr_code" : {
-      "expires_at" : 1792705348,
+      "expires_at" : 1792707713,
       "data" : "123456789br.gov.bcb.pixapi.developer.stripe.com\/v1\/p\/v2\/1234567890abcdef\/789",
-      "image_url_svg" : "https:\/\/qr.stripe.com\/test_YWNjdF8xRzZtMXBGWTBxeWw2WGVXLF9WVU9vRVJRd0NYOVl5V3hOY1RFNjBzWkIxbEV4Wllv0100IAlb9fdp.svg",
-      "hosted_instructions_url" : "https:\/\/payments.stripe.com\/qr\/instructions\/CDQaFwoVYWNjdF8xRzZtMXBGWTBxeWw2WGVXKISW6dYGMgYQVHZccGk6MJXcaIx0lzgAbw9RnO7OtUN52bwRWpCfritDQRaI2Lu05_YCoOxJ-8-5SQ0TcCMRoA",
-      "image_url_png" : "https:\/\/qr.stripe.com\/test_YWNjdF8xRzZtMXBGWTBxeWw2WGVXLF9WVU9vRVJRd0NYOVl5V3hOY1RFNjBzWkIxbEV4Wllv0100IAlb9fdp.png"
+      "image_url_svg" : "https:\/\/qr.stripe.com\/test_YWNjdF8xRzZtMXBGWTBxeWw2WGVXLF9WVVBSc3RYU0s1d2pXSjdwa1hwUkwzNWJ5aEhad3Nu0100cnYAhhkC.svg",
+      "hosted_instructions_url" : "https:\/\/payments.stripe.com\/qr\/instructions\/CDQaFwoVYWNjdF8xRzZtMXBGWTBxeWw2WGVXKMGo6dYGMgbUnIPUMIk6MJVNi2Kdrt1UuMrzNmSMnaUSra7GPE1B0ktdT2E6oGbcsPwfccINVjEpEaFmoL5tEg",
+      "image_url_png" : "https:\/\/qr.stripe.com\/test_YWNjdF8xRzZtMXBGWTBxeWw2WGVXLF9WVVBSc3RYU0s1d2pXSjdwa1hwUkwzNWJ5aEhad3Nu0100cnYAhhkC.png"
     }
   },
   "total_details" : {
@@ -60,7 +60,7 @@ X-Stripe-Mock-Request: client_attribution_metadata\[client_session_id]=.*&client
   },
   "payment_method" : {
     "object" : "payment_method",
-    "id" : "pm_1UTQ0VFY0qyl6XeWb3PFdXEq",
+    "id" : "pm_1UTQceFY0qyl6XeW42Onl231",
     "billing_details" : {
       "email" : "jane@example.com",
       "phone" : null,
@@ -76,7 +76,7 @@ X-Stripe-Mock-Request: client_attribution_metadata\[client_session_id]=.*&client
       }
     },
     "livemode" : false,
-    "created" : 1792690947,
+    "created" : 1792693312,
     "allow_redisplay" : "unspecified",
     "type" : "pix",
     "customer" : null,
@@ -85,8 +85,8 @@ X-Stripe-Mock-Request: client_attribution_metadata\[client_session_id]=.*&client
     },
     "customer_account" : null
   },
-  "client_secret" : "pi_3UTQ0VFY0qyl6XeW0BKc9l6F_secret_JcRrRv6WEsOtt5kDk0X3FClLu",
-  "id" : "pi_3UTQ0VFY0qyl6XeW0BKc9l6F",
+  "client_secret" : "pi_3UTQceFY0qyl6XeW15RW8MEw_secret_B4LGQfh6xy9iG5CfEqjl8jmJx",
+  "id" : "pi_3UTQceFY0qyl6XeW15RW8MEw",
   "allowed_payment_method_types" : null,
   "confirmation_method" : "automatic",
   "amount_details" : {
@@ -101,6 +101,6 @@ X-Stripe-Mock-Request: client_attribution_metadata\[client_session_id]=.*&client
     "pix"
   ],
   "setup_future_usage" : null,
-  "created" : 1792690947,
+  "created" : 1792693312,
   "description" : null
 }

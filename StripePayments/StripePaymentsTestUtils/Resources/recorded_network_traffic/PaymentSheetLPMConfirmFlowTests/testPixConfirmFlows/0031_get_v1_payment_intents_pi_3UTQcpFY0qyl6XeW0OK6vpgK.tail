@@ -1,23 +1,23 @@
 GET
-https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3UTQ0YFY0qyl6XeW0eoRQH7j\?client_secret=pi_3UTQ0YFY0qyl6XeW0eoRQH7j_secret_GSWlWZVsVMfglwSgqI7gEsM1Q&expand%5B0%5D=payment_method$
+https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3UTQcpFY0qyl6XeW0OK6vpgK\?client_secret=pi_3UTQcpFY0qyl6XeW0OK6vpgK_secret_ELcnc5QjkZO02Be3pQd8UdJGR&expand%5B0%5D=payment_method$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=GHIANgM4mSMfP_h9H9nWrz7jGiIx-NhShmCNtAfEFfX9P8BSGPXavJeVeong0s7MCsY4qXQa7uRFRxAz; report-to csp
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=a-Idh7g1uvXRRgTRjrLNImRawKV3AVxoTb3yQ5wmYxHPdSCBhSrg87X1KX2NKntd71UClJSGR6h9-bWM; report-to csp
 Server: nginx
 Cache-Control: no-cache, no-store
-reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=GHIANgM4mSMfP_h9H9nWrz7jGiIx-NhShmCNtAfEFfX9P8BSGPXavJeVeong0s7MCsY4qXQa7uRFRxAz&t=1"
+reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=a-Idh7g1uvXRRgTRjrLNImRawKV3AVxoTb3yQ5wmYxHPdSCBhSrg87X1KX2NKntd71UClJSGR6h9-bWM&t=1"
 stripe-notice: You are using an outdated API version (2020-08-27). We recommend upgrading to the latest API version, 2026-09-30.endive. See https://docs.stripe.com/upgrades
 x-wc: 3c3
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Access-Control-Allow-Origin: *
 x-stripe-routing-context-priority-tier: api-testmode
 x-stripe-priority-routing-enabled: true
-report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=GHIANgM4mSMfP_h9H9nWrz7jGiIx-NhShmCNtAfEFfX9P8BSGPXavJeVeong0s7MCsY4qXQa7uRFRxAz&t=1"}],"include_subdomains":true}
-request-id: req_uAcLqIuXVuQQjk
-Content-Length: 2231
+report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=a-Idh7g1uvXRRgTRjrLNImRawKV3AVxoTb3yQ5wmYxHPdSCBhSrg87X1KX2NKntd71UClJSGR6h9-bWM&t=1"}],"include_subdomains":true}
+request-id: req_zcgFWPjht3026T
+Content-Length: 2240
 Vary: Origin
-Date: Thu, 22 Oct 2026 17:42:31 GMT
+Date: Thu, 22 Oct 2026 18:22:04 GMT
 stripe-version: 2020-08-27
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
@@ -42,11 +42,11 @@ Content-Type: application/json
   "next_action" : {
     "type" : "pix_display_qr_code",
     "pix_display_qr_code" : {
-      "expires_at" : 1792705351,
+      "expires_at" : 1792707724,
       "data" : "123456789br.gov.bcb.pixapi.developer.stripe.com\/v1\/p\/v2\/1234567890abcdef\/789",
-      "image_url_svg" : "https:\/\/qr.stripe.com\/test_YWNjdF8xRzZtMXBGWTBxeWw2WGVXLF9WVU9vbklrMklzbHplQ3AxcDNpMUkzektTdGJlNzlG0100scZLJWd0.svg",
-      "hosted_instructions_url" : "https:\/\/payments.stripe.com\/qr\/instructions\/CDQaFwoVYWNjdF8xRzZtMXBGWTBxeWw2WGVXKIeW6dYGMgZCzntZQt06MJW9jeua1GXzpSEjEHq6n0Viagx96TKbksLGbguohfUe3WIW_Stfa0qFjGNOnXG-fw",
-      "image_url_png" : "https:\/\/qr.stripe.com\/test_YWNjdF8xRzZtMXBGWTBxeWw2WGVXLF9WVU9vbklrMklzbHplQ3AxcDNpMUkzektTdGJlNzlG0100scZLJWd0.png"
+      "image_url_svg" : "https:\/\/qr.stripe.com\/test_YWNjdF8xRzZtMXBGWTBxeWw2WGVXLF9WVVBSdmlEWWpKTm93V25JWnVyZGkyWVQxOGh1U1li0100Ra5BSZiD.svg",
+      "hosted_instructions_url" : "https:\/\/payments.stripe.com\/qr\/instructions\/CDQaFwoVYWNjdF8xRzZtMXBGWTBxeWw2WGVXKMyo6dYGMgZn93Y7q3Y6MJWzUoxRQSowFDhi-Qd-BnLrLBvCpVlGbqrpj18WTqZKGZC830aoHOrs_8-a2SBQaQ",
+      "image_url_png" : "https:\/\/qr.stripe.com\/test_YWNjdF8xRzZtMXBGWTBxeWw2WGVXLF9WVVBSdmlEWWpKTm93V25JWnVyZGkyWVQxOGh1U1li0100Ra5BSZiD.png"
     }
   },
   "total_details" : {
@@ -56,7 +56,7 @@ Content-Type: application/json
   },
   "payment_method" : {
     "object" : "payment_method",
-    "id" : "pm_1UTQ0YFY0qyl6XeWCeJJyv8V",
+    "id" : "pm_1UTQcpFY0qyl6XeWl1Utbq9B",
     "billing_details" : {
       "email" : "jane@example.com",
       "phone" : null,
@@ -72,7 +72,7 @@ Content-Type: application/json
       }
     },
     "livemode" : false,
-    "created" : 1792690950,
+    "created" : 1792693323,
     "allow_redisplay" : "unspecified",
     "type" : "pix",
     "customer" : null,
@@ -81,8 +81,8 @@ Content-Type: application/json
     },
     "customer_account" : null
   },
-  "client_secret" : "pi_3UTQ0YFY0qyl6XeW0eoRQH7j_secret_GSWlWZVsVMfglwSgqI7gEsM1Q",
-  "id" : "pi_3UTQ0YFY0qyl6XeW0eoRQH7j",
+  "client_secret" : "pi_3UTQcpFY0qyl6XeW0OK6vpgK_secret_ELcnc5QjkZO02Be3pQd8UdJGR",
+  "id" : "pi_3UTQcpFY0qyl6XeW0OK6vpgK",
   "allowed_payment_method_types" : null,
   "confirmation_method" : "automatic",
   "amount_details" : {
@@ -96,7 +96,7 @@ Content-Type: application/json
   "payment_method_types" : [
     "pix"
   ],
-  "setup_future_usage" : null,
-  "created" : 1792690950,
+  "setup_future_usage" : "off_session",
+  "created" : 1792693323,
   "description" : null
 }
