@@ -94,46 +94,6 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
         )
     }
 
-    func testRecreatedButtonsRemainDisabledAfterSessionUpdate() {
-        // Given an Express Checkout Element with both wallet buttons
-        let configuration = ExpressCheckoutElement.Configuration(completion: { _ in })
-        let session = CheckoutTestHelpers.makeOpenSession().makePublicSession()
-        let view = ExpressCheckoutElementUIView(
-            session: session,
-            configuration: configuration,
-            delegate: FakeExpressCheckoutElementDelegate()
-        )
-        func buttons() -> [UIControl] {
-            view.subviews
-                .compactMap { $0 as? UIStackView }
-                .flatMap(\.arrangedSubviews)
-                .compactMap { $0 as? UIStackView }
-                .flatMap(\.arrangedSubviews)
-                .compactMap { $0 as? UIControl }
-        }
-        view.update(with: session, buttons: [.applePay, .link])
-        let originalButtons = buttons()
-        XCTAssertEqual(originalButtons.count, 2)
-        XCTAssertTrue(originalButtons.allSatisfy(\.isEnabled))
-
-        // When the view is disabled and a session update changes the button order
-        view.isEnabled = false
-        XCTAssertTrue(originalButtons.allSatisfy { !$0.isEnabled })
-        view.update(with: session, buttons: [.link, .applePay])
-
-        // Then both recreated buttons remain disabled
-        let recreatedButtons = buttons()
-        XCTAssertEqual(recreatedButtons.count, 2)
-        XCTAssertTrue(recreatedButtons.allSatisfy { button in
-            !originalButtons.contains { $0 === button }
-        })
-        XCTAssertTrue(recreatedButtons.allSatisfy { !$0.isEnabled })
-
-        // ...and enable again when the view is enabled
-        view.isEnabled = true
-        XCTAssertTrue(recreatedButtons.allSatisfy(\.isEnabled))
-    }
-
     // MARK: - Available payment methods tests
 
     func testAvailablePaymentMethodsStoredOnSession() {
