@@ -1,5 +1,5 @@
 GET
-https:\/\/api\.stripe\.com\/v1\/checkout_client\/cs_test_a10LAvUoe9dfUABM6GRCtd59akmTrpFg7SN9m5FzYipqV7MA9NRGqZLocE\/retrieve\?locale=.*&mobile_app_id=.*&timezone=America\/Denver$
+https:\/\/api\.stripe\.com\/v1\/checkout_client\/cs_test_a10LAvUoe9dfUABM6GRCtd59akmTrpFg7SN9m5FzYipqV7MA9NRGqZLocE\/retrieve\?locale=.*&mobile_app_id=.*&timezone=.*$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE

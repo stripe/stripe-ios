@@ -93,7 +93,7 @@ import XCTest
                     // Need to escape this to fit in a regex (e.g. \? instead of ? before the query)
                     let escapedRequest = NSRegularExpression.escapedPattern(for: request?.url?.absoluteString ?? "")
                     // Then remove any params that may contain UUIDs or other random data
-                    return replaceNondeterministicParams(escapedRequest, componentsToFilter: ["mobile_session_id", "locale", "mobile_app_id"])
+                    return replaceNondeterministicParams(escapedRequest, componentsToFilter: ["mobile_session_id", "locale", "mobile_app_id", "timezone"])
                 }
                 recorder?.postBodyTransformBlock = { _, postBody in
                     // Regex filter these:
