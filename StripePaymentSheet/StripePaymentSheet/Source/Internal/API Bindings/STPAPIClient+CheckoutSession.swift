@@ -178,7 +178,7 @@ extension STPAPIClient {
             parameters: parameters
         )
 
-        return try checkoutClient.paymentPagesResponse()
+        return try await checkoutClientSessionResponse(checkoutClient, retrieveIntents: false)
     }
 
     /// Updates a CheckoutSession with the provided parameters.
@@ -203,7 +203,7 @@ extension STPAPIClient {
             endpoint: "checkout_client/\(checkoutSessionId)/update",
             parameters: params
         )
-        return try checkoutClient.paymentPagesResponse()
+        return try await checkoutClientSessionResponse(checkoutClient, retrieveIntents: false)
     }
 
     /// Retrieves the latest full Checkout Session.
@@ -266,7 +266,7 @@ extension STPAPIClient {
             endpoint: "checkout_client/\(checkoutSessionId)/update",
             parameters: params
         )
-        return try checkoutClient.paymentPagesResponse()
+        return try await checkoutClientSessionResponse(checkoutClient, retrieveIntents: false)
     }
 
     static func updatePaymentMethodParameters(
@@ -376,35 +376,43 @@ extension STPAPIClient {
 
     /// CheckoutClient returns Intent references. Retrieve the Intent to preserve the full session used by confirmation.
     private func checkoutClientSessionResponse(
-        _ checkoutClient: CheckoutClientAPIResponse
+        _ checkoutClient: CheckoutClientAPIResponse,
+        retrieveIntents: Bool = true
     ) async throws -> PaymentPagesAPIResponse {
-        let paymentResponse = checkoutClient.fields["payment_response"] as? [String: Any]
-        let paymentIntent: STPPaymentIntent?
-        if let reference = paymentResponse?["payment_intent"] as? [String: Any] {
-            guard let clientSecret = reference["client_secret"] as? String else {
-                throw DecodingError.dataCorrupted(
-                    .init(codingPath: [], debugDescription: "CheckoutClient PaymentIntent is missing its client secret")
-                )
+        do {
+            let paymentResponse = checkoutClient.fields["payment_response"] as? [String: Any]
+            let paymentIntent: STPPaymentIntent?
+            if retrieveIntents, let reference = paymentResponse?["payment_intent"] as? [String: Any] {
+                guard let clientSecret = reference["client_secret"] as? String else {
+                    throw DecodingError.dataCorrupted(
+                        .init(codingPath: [], debugDescription: "CheckoutClient PaymentIntent is missing its client secret")
+                    )
+                }
+                paymentIntent = try await retrievePaymentIntent(clientSecret: clientSecret, expand: ["payment_method"])
+            } else {
+                paymentIntent = nil
             }
-            paymentIntent = try await retrievePaymentIntent(clientSecret: clientSecret, expand: ["payment_method"])
-        } else {
-            paymentIntent = nil
-        }
-        let setupIntent: STPSetupIntent?
-        if let reference = paymentResponse?["setup_intent"] as? [String: Any] {
-            guard let clientSecret = reference["client_secret"] as? String else {
-                throw DecodingError.dataCorrupted(
-                    .init(codingPath: [], debugDescription: "CheckoutClient SetupIntent is missing its client secret")
-                )
+            let setupIntent: STPSetupIntent?
+            if retrieveIntents, let reference = paymentResponse?["setup_intent"] as? [String: Any] {
+                guard let clientSecret = reference["client_secret"] as? String else {
+                    throw DecodingError.dataCorrupted(
+                        .init(codingPath: [], debugDescription: "CheckoutClient SetupIntent is missing its client secret")
+                    )
+                }
+                setupIntent = try await retrieveSetupIntent(clientSecret: clientSecret, expand: ["payment_method"])
+            } else {
+                setupIntent = nil
             }
-            setupIntent = try await retrieveSetupIntent(clientSecret: clientSecret, expand: ["payment_method"])
-        } else {
-            setupIntent = nil
+            return try checkoutClient.paymentPagesResponse(
+                paymentIntent: paymentIntent,
+                setupIntent: setupIntent
+            )
+        } catch {
+            if error is DecodingError {
+                reportUnexpectedPaymentPagesParsingError(error, apiClient: self)
+            }
+            throw error
         }
-        return try checkoutClient.paymentPagesResponse(
-            paymentIntent: paymentIntent,
-            setupIntent: setupIntent
-        )
     }
 
     private func post<Response: Decodable>(
