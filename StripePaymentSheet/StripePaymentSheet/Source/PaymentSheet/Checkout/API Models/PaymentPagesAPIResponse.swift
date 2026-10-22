@@ -628,6 +628,7 @@ struct CheckoutClientAPIResponse: Decodable {
         let sharedFields = [
             "livemode", "status", "payment_status", "customer_email", "billing_address_collection",
             "shipping_address_collection", "payment_method_options", "total_summary",
+            "setup_future_usage_for_payment_method_type",
         ]
         var response = fields.filter { sharedFields.contains($0.key) }
         response["session_id"] = id
@@ -636,16 +637,6 @@ struct CheckoutClientAPIResponse: Decodable {
         response["checkout_items"] = items
         response["payment_method_types"] = paymentMethodTypes
         response["elements_session"] = elementsSession
-
-        if let resolvedSetupFutureUsage = fields["setup_future_usage_for_payment_method_type"] as? [String: String] {
-            response["setup_future_usage_for_payment_method_type"] = resolvedSetupFutureUsage
-        } else if let options = fields["payment_method_options"] as? [String: Any] {
-            response["setup_future_usage_for_payment_method_type"] = options.compactMapValues {
-                ($0 as? [String: Any])?["setup_future_usage"] as? String
-            }
-        }
-        // TODO(OCS_API_EXT-267): CheckoutClient must return the resolved per-method SFU map. Explicit
-        // payment-method options cannot recover inherited SFU needed for saving mandates.
 
         if let paymentResponse = fields["payment_response"] as? [String: Any] {
             if let reference = paymentResponse["payment_intent"] as? [String: Any] {
