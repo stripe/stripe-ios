@@ -885,7 +885,7 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
         let request = STPApplePayContext.createPaymentRequest(
             intent: ._testCheckoutSession(
                 automaticTaxEnabled: true,
-                automaticTaxAddressSource: "session.billing"
+                automaticTaxAddressSource: "billing"
             ),
             configuration: config,
             applePay: applePayConfiguration

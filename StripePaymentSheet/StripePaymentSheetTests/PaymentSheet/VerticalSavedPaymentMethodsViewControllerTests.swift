@@ -218,10 +218,10 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
 
     private func makeCheckoutSessionIntent(canDetachPaymentMethod: Bool) -> Intent {
         let session = CheckoutTestHelpers.makeSession([
+            "saved_payment_method_options": ["payment_method_remove": canDetachPaymentMethod ? "enabled" : "disabled"],
             "customer": [
                 "id": "cus_test_123",
                 "payment_methods": [],
-                "can_detach_payment_method": canDetachPaymentMethod,
             ],
         ])
         return .checkout(session.makePublicSession())
