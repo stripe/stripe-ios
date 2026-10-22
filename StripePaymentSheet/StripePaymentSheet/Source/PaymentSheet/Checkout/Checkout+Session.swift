@@ -129,60 +129,67 @@ extension CheckoutController {
 extension CheckoutController.Session {
     /// Builds a read-only session snapshot from server-backed and local state.
     init(
-        apiResponse: CheckoutClientAPIResponse,
+        apiResponse: PaymentPagesAPIResponse,
         localState: LocalState,
         configuration: CheckoutController.Configuration? = nil
     ) {
-        let elementsSessionValue = apiResponse.elementsSession
+        let elementsSessionValue = apiResponse.elementsSession.value
+        let publicDiscountAmounts = PaymentPagesAPIResponse.makeDiscountAmounts(
+            from: apiResponse.recurringDetails?.totalSummary.totalDiscountAmounts ?? [],
+            currency: apiResponse.currency
+        )
         let publicTaxAmounts = apiResponse.totalSummary?.totalTaxAmounts?.map {
-            CheckoutClientAPIResponse.makeSessionTaxAmount(
+            PaymentPagesAPIResponse.makeSessionTaxAmount(
                 from: $0,
-                currency: apiResponse.presentmentCurrency,
+                currency: apiResponse.currency,
                 locale: .autoupdatingCurrent
             )
         }
-        let publicOrderSummaryItems = CheckoutClientAPIResponse.makeOrderSummaryItems(
-            from: apiResponse.items,
+        let publicOrderSummaryItems = PaymentPagesAPIResponse.makeOrderSummaryItems(
+            from: apiResponse.checkoutItems,
             locale: .autoupdatingCurrent
         )
-        let publicTotals = CheckoutClientAPIResponse.makeTotals(
-            from: apiResponse.items,
-            currency: apiResponse.presentmentCurrency
+        let publicTotals = PaymentPagesAPIResponse.makeTotals(
+            from: apiResponse.checkoutItems,
+            currency: apiResponse.currency
         )
-        let publicTax = CheckoutClientAPIResponse.makeTax(from: apiResponse.automaticTax)
-        let localizedPricesMetas = CheckoutClientAPIResponse.makeLocalizedPricesMetas(
+        let publicTax = PaymentPagesAPIResponse.makeTax(
+            taxMeta: apiResponse.taxMeta,
+            taxContext: apiResponse.taxContext
+        )
+        let localizedPricesMetas = PaymentPagesAPIResponse.makeLocalizedPricesMetas(
             from: apiResponse.adaptivePricingInfo
         )
-        let exchangeRateMeta = CheckoutClientAPIResponse.makeExchangeRateMeta(
-            from: apiResponse.adaptivePricingInfo,
-            presentmentCurrency: apiResponse.presentmentCurrency
+        let exchangeRateMeta = PaymentPagesAPIResponse.makeExchangeRateMeta(
+            from: apiResponse.adaptivePricingInfo
         )
-        let presentmentDetails = apiResponse.adaptivePricingInfo.map { _ in
-            CheckoutController.Session.PresentmentDetails(presentmentCurrency: apiResponse.presentmentCurrency)
+        // TODO: Read explicit integration and presentment currency fields from the mobile
+        // translation layer once available instead of deriving them from the PP response shape.
+        let presentmentDetails = apiResponse.adaptivePricingInfo.map {
+            CheckoutController.Session.PresentmentDetails(presentmentCurrency: $0.activePresentmentCurrency)
         }
-        let automaticTaxEnabled = apiResponse.automaticTax?.enabled ?? false
-        let automaticTaxAddressSource = apiResponse.automaticTax?.addressSource
+        let automaticTaxEnabled = apiResponse.taxContext?.automaticTaxEnabled ?? false
+        let automaticTaxAddressSource = PaymentPagesAPIResponse.makeAutomaticTaxAddressSource(
+            from: apiResponse.taxContext?.automaticTaxAddressSource
+        )
         if automaticTaxEnabled && automaticTaxAddressSource == "billing" {
             elementsSessionValue.disableLinkForAutomaticTaxBilling = true
         }
-        let availableExpressCheckoutPaymentMethods =
-            configuration.map {
-                ExpressCheckoutElementUtilities.availablePaymentMethods(for: apiResponse, configuration: $0).map(
-                    \.rawValue
-                )
-            } ?? []
-        let serverEmail = apiResponse.customerEmail
+        let availableExpressCheckoutPaymentMethods = configuration.map {
+            ExpressCheckoutElementUtilities.availablePaymentMethods(for: apiResponse, configuration: $0).map(\.rawValue)
+        } ?? []
+        let serverEmail = apiResponse.customerEmail ?? apiResponse.customer?.email
 
         self.init(
-            id: apiResponse.id,
-            businessName: apiResponse.merchantInfo.displayName,
-            currency: apiResponse.integrationCurrency,
+            id: apiResponse.sessionId,
+            businessName: apiResponse.elementsSession.businessName,
+            currency: apiResponse.adaptivePricingInfo?.integrationCurrency ?? apiResponse.currency,
             presentmentDetails: presentmentDetails,
-            discountAmounts: [],
+            discountAmounts: publicDiscountAmounts,
             orderSummaryItems: publicOrderSummaryItems,
             livemode: apiResponse.livemode,
-            minorUnitsAmountDivisor: CheckoutClientAPIResponse.makeMinorUnitsAmountDivisor(
-                currency: apiResponse.presentmentCurrency
+            minorUnitsAmountDivisor: PaymentPagesAPIResponse.makeMinorUnitsAmountDivisor(
+                currency: apiResponse.currency
             ),
             status: apiResponse.status,
             tax: publicTax,
@@ -197,24 +204,22 @@ extension CheckoutController.Session {
                 Customer(
                     id: $0.id,
                     paymentMethods: $0.paymentMethods,
-                    canDetachPaymentMethod: apiResponse.savedPaymentMethodOptions?.paymentMethodRemove == "enabled"
+                    canDetachPaymentMethod: $0.canDetachPaymentMethod
                 )
             },
-            savedPaymentMethodsOfferSave: apiResponse.savedPaymentMethodOptions?.paymentMethodSave.map {
-                STPCheckoutSessionSavedPaymentMethodsOfferSave(enabled: $0 == "enabled")
-            },
-            setupFutureUsage: nil,
+            savedPaymentMethodsOfferSave: PaymentPagesAPIResponse.makeSavedPaymentMethodsOfferSave(
+                from: apiResponse.savedPaymentMethodsOfferSave
+            ),
+            setupFutureUsage: apiResponse.setupFutureUsage,
             setupFutureUsageForPaymentMethodType: apiResponse.setupFutureUsageForPaymentMethodType ?? [:],
             allowedShippingCountries: apiResponse.shippingAddressCollection?.allowedCountries.map { $0.uppercased() },
             localizedPricesMetas: localizedPricesMetas,
             exchangeRateMeta: exchangeRateMeta,
             adaptivePricingActive: apiResponse.adaptivePricingInfo != nil,
-            billingAddressCollection: apiResponse.billingAddressCollection.flatMap(
-                CheckoutController.Session.BillingAddressCollection.init(rawValue:)
-            ) ?? .automatic,
+            billingAddressCollection: apiResponse.billingAddressCollection.flatMap(CheckoutController.Session.BillingAddressCollection.init(rawValue:)) ?? .automatic,
             automaticTaxEnabled: automaticTaxEnabled,
             automaticTaxAddressSource: automaticTaxAddressSource,
-            merchantCountryCode: apiResponse.merchantInfo.country,
+            merchantCountryCode: apiResponse.elementsSession.merchantCountryCode,
             elementsSession: elementsSessionValue
         )
     }
