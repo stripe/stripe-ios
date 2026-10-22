@@ -398,7 +398,7 @@ enum CheckoutTestHelpers {
         // endpoint tests pass when the real backend cannot return them.
         let sharedFields = [
             "livemode", "status", "payment_status", "customer_email", "billing_address_collection",
-            "shipping_address_collection", "payment_method_options",
+            "shipping_address_collection", "payment_method_options", "setup_future_usage_for_payment_method_type",
         ]
         var response = session.filter { sharedFields.contains($0.key) }
         response["object"] = "checkout.session"
