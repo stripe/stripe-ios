@@ -4,9 +4,7 @@
 
 "+ Add" = "+ Lisää";
 
-"1 %1$@ = %2$@ %3$@ (includes %4$@%% conversion fee)." = "1 %1$@ = %2$@ %3$@ (sisältää muuntomaksun %4$@%%).";
 
-"1 %@ = %@ %@" = "1 %1$@ = %2$@ %3$@";
 
 "Accept" = "Hyväksy";
 
