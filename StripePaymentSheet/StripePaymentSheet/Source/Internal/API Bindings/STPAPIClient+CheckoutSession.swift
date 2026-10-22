@@ -169,7 +169,7 @@ extension STPAPIClient {
     func initCheckoutSession(
         checkoutSessionId: String,
         adaptivePricingAllowed: Bool
-    ) async throws -> PaymentPagesAPIResponse {
+    ) async throws -> CheckoutClientAPIResponse {
         var parameters: [String: Any] = [
             "locale": Locale.current.toLanguageTag(),
             "timezone": TimeZone.current.identifier,
@@ -182,12 +182,10 @@ extension STPAPIClient {
             parameters["mobile_app_id"] = appId
         }
 
-        let checkoutClient: CheckoutClientAPIResponse = try await post(
+        return try await post(
             endpoint: "checkout_client/\(checkoutSessionId)/init",
             parameters: parameters
         )
-
-        return try checkoutClientSessionResponse(checkoutClient)
     }
 
     /// Updates a CheckoutSession with the provided parameters.
@@ -198,7 +196,7 @@ extension STPAPIClient {
     func updateCheckoutSession(
         checkoutSessionId: String,
         parameters: [String: Any]
-    ) async throws -> PaymentPagesAPIResponse {
+    ) async throws -> CheckoutClientAPIResponse {
         var params = parameters
         params["elements_session_client"] = [
             "is_aggregation_expected": true,
@@ -212,7 +210,7 @@ extension STPAPIClient {
     /// Retrieves the latest full Checkout Session.
     func retrieveCheckoutSession(
         checkoutSessionId: String
-    ) async throws -> PaymentPagesAPIResponse {
+    ) async throws -> CheckoutClientAPIResponse {
         return try await get(
             endpoint: "payment_pages/\(checkoutSessionId)",
             parameters: [
@@ -241,7 +239,7 @@ extension STPAPIClient {
         _ paymentMethodId: String,
         fromCheckoutSession checkoutSessionId: String
     ) async throws {
-        let _: PaymentPagesAPIResponse = try await post(
+        let _: CheckoutClientAPIResponse = try await post(
             endpoint: "payment_pages/\(checkoutSessionId)",
             parameters: [
                 "payment_method_to_detach": paymentMethodId,
@@ -262,7 +260,7 @@ extension STPAPIClient {
         inCheckoutSession checkoutSessionId: String,
         billingDetails: CheckoutController.PaymentMethodBillingDetails? = nil,
         expiryDetails: CheckoutController.PaymentMethodExpiryDetails? = nil
-    ) async throws -> PaymentPagesAPIResponse {
+    ) async throws -> CheckoutClientAPIResponse {
         var params = Self.updatePaymentMethodParameters(
             paymentMethodId: paymentMethodId,
             billingDetails: billingDetails,
@@ -310,7 +308,7 @@ extension STPAPIClient {
     /// - Returns: Payment Pages API response containing the full confirmed session with expanded intents.
     func confirmCheckoutSession(
         with requestParameters: CheckoutSessionConfirmationRequestParameters
-    ) async throws -> PaymentPagesAPIResponse {
+    ) async throws -> CheckoutClientAPIResponse {
         var parameters: [String: Any] = [
             "elements_session_client": ["is_aggregation_expected": true],
             "expand": [
@@ -378,19 +376,6 @@ extension STPAPIClient {
             endpoint: "payment_pages/\(requestParameters.sessionId)/confirm",
             parameters: parameters
         )
-    }
-
-    private func checkoutClientSessionResponse(
-        _ checkoutClient: CheckoutClientAPIResponse
-    ) throws -> PaymentPagesAPIResponse {
-        do {
-            return try checkoutClient.paymentPagesResponse()
-        } catch {
-            if error is DecodingError {
-                reportUnexpectedPaymentPagesParsingError(error, apiClient: self)
-            }
-            throw error
-        }
     }
 
     private func post<Response: Decodable>(

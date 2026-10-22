@@ -10,24 +10,24 @@ import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 
-/// Internal response model for the Payment Pages API endpoints.
+/// The Checkout response used throughout the SDK.
 ///
 /// Properties in this model mirror the API payload. Construction of the public Checkout
 /// representation belongs to `CheckoutController.Session`.
-struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible {
+struct CheckoutClientAPIResponse: UnknownFieldsDecodable, CustomStringConvertible {
     // TODO: Make this Decodable instead, we don't need _allResponseFieldStorage.
     var _allResponseFieldsStorage: NonEncodableParameters?
 
     let sessionId: String
     let paymentIntentId: String?
-    let paymentIntent: STPPaymentIntent?
+    var paymentIntent: STPPaymentIntent?
     let setupIntentId: String?
-    let setupIntent: STPSetupIntent?
+    var setupIntent: STPSetupIntent?
     let currency: String
     let checkoutItems: [CheckoutItem]
     let livemode: Bool
-    let status: CheckoutController.Session.Status
-    let paymentStatus: CheckoutController.Session.Status.PaymentStatus
+    var status: CheckoutController.Session.Status
+    var paymentStatus: CheckoutController.Session.Status.PaymentStatus
     let submissionAttempt: SubmissionAttempt?
     let routeToOrchestrationInterface: Bool?
     let customerEmail: String?
@@ -45,6 +45,7 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
     let paymentMethodOptions: STPPaymentMethodOptions?
     let customer: Customer?
     let elementsSession: ElementsSession
+    let paymentResponse: PaymentResponse?
 
     /// Extracts the client secret from whichever expanded intent is present in the response.
     func intentClientSecret() throws -> String {
@@ -60,7 +61,7 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
 
     var description: String {
         let props: [String] = [
-            "PaymentPagesAPIResponse",
+            "CheckoutClientAPIResponse",
             "sessionId = \(sessionId)",
             "currency = \(currency)",
             "mode = \(String(describing: allResponseFields["mode"]))",
@@ -78,6 +79,7 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
     }
 
     private enum CodingKeys: String, CodingKey {
+        case id, uiMode, presentmentCurrency, items, savedPaymentMethodOptions, automaticTax
         case sessionId
         case paymentIntent
         case setupIntent
@@ -104,35 +106,46 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
         case paymentMethodOptions
         case customer
         case elementsSession
+        case paymentResponse
     }
 
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        sessionId = try container.decode(String.self, forKey: .sessionId)
+        // Earlier PRs in the endpoint migration still receive Payment Pages responses.
+        let isCheckoutClient = !container.contains(.sessionId)
+        paymentResponse = try container.decodeIfPresent(PaymentResponse.self, forKey: .paymentResponse)
+        sessionId = try container.decode(String.self, forKey: isCheckoutClient ? .id : .sessionId)
         let decodedPaymentIntent = try container.decodeIfPresent(
             LegacyExpandable<STPPaymentIntent>.self,
             forKey: .paymentIntent
         )
-        paymentIntentId = decodedPaymentIntent?.id
+        paymentIntentId = paymentResponse?.paymentIntent?.id ?? decodedPaymentIntent?.id
         paymentIntent = decodedPaymentIntent?.expandedObject
         let decodedSetupIntent = try container.decodeIfPresent(
             LegacyExpandable<STPSetupIntent>.self,
             forKey: .setupIntent
         )
-        setupIntentId = decodedSetupIntent?.id
+        setupIntentId = paymentResponse?.setupIntent?.id ?? decodedSetupIntent?.id
         setupIntent = decodedSetupIntent?.expandedObject
-        let decodedCurrency = try container.decode(String.self, forKey: .currency)
+        let decodedCurrency = try container.decode(String.self, forKey: isCheckoutClient ? .presentmentCurrency : .currency)
         guard !decodedCurrency.isEmpty else {
             throw decoder.dataCorrupted("currency must not be empty")
         }
         currency = decodedCurrency
 
-        let mode = try container.decode(String.self, forKey: .mode)
-        guard mode == "modeless" else {
-            throw decoder.dataCorrupted("Only modeless Checkout Sessions are supported")
+        if isCheckoutClient {
+            let uiMode = try container.decode(String.self, forKey: .uiMode)
+            guard ["mobile_elements", "custom", "elements"].contains(uiMode) else {
+                throw decoder.dataCorrupted("Unsupported CheckoutClient ui_mode: \(uiMode)")
+            }
+        } else {
+            let mode = try container.decode(String.self, forKey: .mode)
+            guard mode == "modeless" else {
+                throw decoder.dataCorrupted("Only modeless Checkout Sessions are supported")
+            }
         }
 
-        let decodedCheckoutItems = try container.decode([CheckoutItem].self, forKey: .checkoutItems)
+        let decodedCheckoutItems = try container.decode([CheckoutItem].self, forKey: isCheckoutClient ? .items : .checkoutItems)
         guard !decodedCheckoutItems.isEmpty else {
             throw decoder.dataCorrupted("checkout_items must not be empty")
         }
@@ -171,10 +184,14 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
         )
         customerEmail = try container.decodeIfPresent(String.self, forKey: .customerEmail)
         url = try container.decodeIfPresent(String.self, forKey: .url)
-        savedPaymentMethodsOfferSave = try container.decodeIfPresent(
-            SavedPaymentMethodsOfferSave.self,
-            forKey: .savedPaymentMethodsOfferSave
-        )
+        let savedOptions = try container.decodeIfPresent(SavedPaymentMethodOptions.self, forKey: .savedPaymentMethodOptions)
+        if isCheckoutClient {
+            savedPaymentMethodsOfferSave = savedOptions?.paymentMethodSave.map {
+                SavedPaymentMethodsOfferSave(enabled: $0 == "enabled")
+            }
+        } else {
+            savedPaymentMethodsOfferSave = try container.decodeIfPresent(SavedPaymentMethodsOfferSave.self, forKey: .savedPaymentMethodsOfferSave)
+        }
         setupFutureUsage = try container.decodeIfPresent(String.self, forKey: .setupFutureUsage)
         setupFutureUsageForPaymentMethodType = try container.decodeIfPresent(
             [String: String].self,
@@ -190,22 +207,60 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
         )
         totalSummary = try container.decodeIfPresent(TotalSummary.self, forKey: .totalSummary)
         recurringDetails = try container.decodeIfPresent(RecurringDetails.self, forKey: .recurringDetails)
-        adaptivePricingInfo = try container.decodeIfPresent(
-            AdaptivePricingInfo.self,
-            forKey: .adaptivePricingInfo
-        )
-        taxContext = try container.decodeIfPresent(TaxContext.self, forKey: .taxContext)
-        taxMeta = try container.decodeIfPresent(TaxMeta.self, forKey: .taxMeta)
+        if isCheckoutClient {
+            adaptivePricingInfo = try container.decodeIfPresent(AdaptivePricingInfo.CheckoutClientFields.self, forKey: .adaptivePricingInfo).map {
+                $0.makeAdaptivePricingInfo(currency: decodedCurrency)
+            }
+            let tax = try container.decodeIfPresent(AutomaticTax.self, forKey: .automaticTax)
+            taxContext = tax.map { TaxContext(automaticTaxEnabled: $0.enabled, automaticTaxAddressSource: $0.addressSource.map { "session.\($0)" }) }
+            taxMeta = tax.map {
+                TaxMeta(computationType: .init($0.enabled ? .automatic : .off), status: .init($0.status == "requires_address" ? .requiresLocationInputs : .complete))
+            }
+        } else {
+            adaptivePricingInfo = try container.decodeIfPresent(AdaptivePricingInfo.self, forKey: .adaptivePricingInfo)
+            taxContext = try container.decodeIfPresent(TaxContext.self, forKey: .taxContext)
+            taxMeta = try container.decodeIfPresent(TaxMeta.self, forKey: .taxMeta)
+        }
         paymentMethodOptions = try container.decodeIfPresent(
             LegacyDecoded<STPPaymentMethodOptions>.self,
             forKey: .paymentMethodOptions
         )?.value
-        customer = try container.decodeIfPresent(Customer.self, forKey: .customer)
-        elementsSession = try container.decode(ElementsSession.self, forKey: .elementsSession)
+        var customer = try container.decodeIfPresent(Customer.self, forKey: .customer)
+        if isCheckoutClient {
+            customer?.canDetachPaymentMethod = savedOptions?.paymentMethodRemove == "enabled"
+            customer?.email = customerEmail
+        }
+        self.customer = customer
+        elementsSession = try isCheckoutClient
+            ? ElementsSession(checkoutClient: decoder)
+            : container.decode(ElementsSession.self, forKey: .elementsSession)
     }
 }
 
-extension PaymentPagesAPIResponse {
+extension CheckoutClientAPIResponse {
+    struct IntentReference: Decodable {
+        let id: String
+        let clientSecret: String
+    }
+
+    private struct SavedPaymentMethodOptions: Decodable {
+        let paymentMethodSave: String?
+        let paymentMethodRemove: String?
+    }
+
+    private struct AutomaticTax: Decodable {
+        let enabled: Bool
+        let status: String?
+        let addressSource: String?
+    }
+
+    struct PaymentResponse: Decodable {
+        let status: String
+        let lastPaymentError: StripeAPIError?
+        let paymentIntent: IntentReference?
+        let setupIntent: IntentReference?
+    }
+
     struct SubmissionAttempt: Decodable {
         enum State: String, Decodable {
             case processing
@@ -269,7 +324,7 @@ extension PaymentPagesAPIResponse {
 
 // MARK: - API-shaped nested models
 
-extension PaymentPagesAPIResponse {
+extension CheckoutClientAPIResponse {
     struct CheckoutItem: Decodable {
         let key: String
         let oneTimePrice: OneTimePrice
@@ -427,6 +482,19 @@ extension PaymentPagesAPIResponse {
         let amount: Int
         let inclusive: Bool
         let taxRate: TaxRate
+
+        private enum CodingKeys: String, CodingKey {
+            case amount, inclusive, taxRate
+        }
+
+        init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            amount = try container.decode(Int.self, forKey: .amount)
+            inclusive = try container.decode(Bool.self, forKey: .inclusive)
+            taxRate = try container.contains(.taxRate)
+                ? container.decode(TaxRate.self, forKey: .taxRate)
+                : TaxRate(from: decoder)
+        }
     }
 
     struct TaxRate: Decodable {
@@ -480,6 +548,36 @@ extension PaymentPagesAPIResponse {
     }
 
     struct AdaptivePricingInfo: Decodable {
+        struct CheckoutClientFields: Decodable {
+            let integrationCurrencyOption: CurrencyOption
+            let localCurrencyOptions: [CurrencyOption]
+
+            struct CurrencyOption: Decodable {
+                let amount: Int
+                let currency: String
+                let conversionMarkupBps: Int?
+                let presentmentExchangeRate: String?
+                let disclosure: Disclosure?
+            }
+
+            struct Disclosure: Decodable {
+                let caption: String?
+                let details: String?
+            }
+
+            func makeAdaptivePricingInfo(currency: String) -> AdaptivePricingInfo {
+                AdaptivePricingInfo(
+                    activePresentmentCurrency: currency,
+                    integrationAmount: integrationCurrencyOption.amount,
+                    integrationCurrency: integrationCurrencyOption.currency,
+                    integrationCurrencyDisclosureCaption: integrationCurrencyOption.disclosure?.caption,
+                    localCurrencyOptions: localCurrencyOptions.map {
+                        LocalCurrencyOption(amount: $0.amount, conversionMarkupBps: $0.conversionMarkupBps, currency: $0.currency, presentmentExchangeRate: $0.presentmentExchangeRate, disclosureCaption: $0.disclosure?.caption, disclosureDetails: $0.disclosure?.details)
+                    }
+                )
+            }
+        }
+
         let activePresentmentCurrency: String
         let integrationAmount: Int
         let integrationCurrency: String
@@ -529,6 +627,59 @@ extension PaymentPagesAPIResponse {
         let merchantCountryCode: String
         let value: STPElementsSession
 
+        init(checkoutClient decoder: Decoder) throws {
+            guard let fields = try decoder.stripeJSONDictionary as? [String: Any],
+                  let merchant = fields["merchant_info"] as? [String: Any],
+                  let merchantCountryCode = merchant["country"] as? String,
+                  let elementsSessionID = fields["elements_session_id"] as? String,
+                  let orderedTypes = fields["ordered_payment_method_types_and_wallets"] as? [String] else {
+                throw decoder.dataCorrupted("CheckoutClient response is missing required Elements configuration")
+            }
+            let paymentMethodTypes = orderedTypes.filter {
+                !["apple_pay", "google_pay", "card_wallet_link"].contains($0)
+            }
+            var elementsSession: [String: Any] = [
+                "session_id": elementsSessionID,
+                "merchant_country": merchantCountryCode,
+                "payment_method_preference": [
+                    "ordered_payment_method_types": paymentMethodTypes,
+                    "country_code": fields["country_code"] ?? NSNull(),
+                ],
+                "ordered_payment_method_types_and_wallets": orderedTypes,
+            ]
+            let elementsFields = [
+                "apple_pay_preference", "google_pay_preference", "flags", "link_settings",
+                "experiments_data", "card_brand_choice", "unactivated_payment_method_types",
+            ]
+            for key in elementsFields {
+                elementsSession[key] = fields[key]
+            }
+            // TODO(OCS_API_EXT-266): CheckoutClient's Link resource omits Elements' mobile flags, including
+            // attestation endpoint selection. Backend parity is required for those settings.
+            if var linkSettings = fields["link_settings"] as? [String: Any],
+               linkSettings["link_passthrough_mode_enabled"] == nil {
+                // Elements derives this legacy flag from link_mode. CheckoutClient returns the mode
+                // without the flag, which the SDK still uses to offer Link in Express Checkout.
+                let linkMode = (linkSettings["link_mode"] as? String).flatMap(LinkMode.init(rawValue:))
+                linkSettings["link_passthrough_mode_enabled"] = linkMode == .passthrough || linkMode == .linkCardBrand
+                elementsSession["link_settings"] = linkSettings
+            }
+            if var passiveCaptcha = fields["passive_captcha"] as? [String: Any] {
+                passiveCaptcha["token_timeout_seconds"] = passiveCaptcha["token_refresh_after_seconds"]
+                elementsSession["passive_captcha"] = passiveCaptcha
+            }
+            elementsSession["config_id"] = fields["elements_session_config_id"]
+            elementsSession["business_name"] = merchant["display_name"]
+            elementsSession["merchant_logo_url"] = merchant["logo_url"]
+
+            guard let value = STPElementsSession.decodedObject(fromAPIResponse: elementsSession) else {
+                throw DecodingError.dataCorrupted(.init(codingPath: [], debugDescription: "Invalid CheckoutClient Elements configuration"))
+            }
+            self.businessName = merchant["display_name"] as? String
+            self.merchantCountryCode = merchantCountryCode
+            self.value = value
+        }
+
         private enum CodingKeys: String, CodingKey {
             case businessName
         }
@@ -552,154 +703,5 @@ private extension Decoder {
         return DecodingError.dataCorrupted(
             .init(codingPath: codingPath, debugDescription: description)
         )
-    }
-}
-
-/// Decodes the CheckoutClient response and supplies the fields still consumed by the
-/// Checkout Session model while update and confirm remain on Payment Pages.
-struct CheckoutClientAPIResponse: Decodable {
-    let fields: [String: Any]
-
-    init(from decoder: Decoder) throws {
-        guard let fields = try decoder.stripeJSONDictionary as? [String: Any] else {
-            throw DecodingError.dataCorrupted(
-                .init(codingPath: decoder.codingPath, debugDescription: "Invalid CheckoutClient response")
-            )
-        }
-        self.fields = fields
-    }
-
-    func paymentPagesResponse() throws -> PaymentPagesAPIResponse {
-        guard let id = fields["id"] as? String,
-              let uiMode = fields["ui_mode"] as? String,
-              ["mobile_elements", "custom"].contains(uiMode),
-              let currency = fields["presentment_currency"] as? String,
-              let items = fields["items"] as? [[String: Any]],
-              let merchant = fields["merchant_info"] as? [String: Any],
-              let merchantCountry = merchant["country"] as? String,
-              let elementsSessionID = fields["elements_session_id"] as? String,
-              let orderedTypes = fields["ordered_payment_method_types_and_wallets"] as? [String]
-        else {
-            throw DecodingError.dataCorrupted(
-                .init(codingPath: [], debugDescription: "CheckoutClient response is missing required session fields")
-            )
-        }
-
-        let paymentMethodTypes = orderedTypes.filter {
-            !["apple_pay", "google_pay", "card_wallet_link"].contains($0)
-        }
-        var elementsSession: [String: Any] = [
-            "session_id": elementsSessionID,
-            "merchant_country": merchantCountry,
-            "payment_method_preference": [
-                "ordered_payment_method_types": paymentMethodTypes,
-                "country_code": fields["country_code"] ?? NSNull(),
-            ],
-            "ordered_payment_method_types_and_wallets": orderedTypes,
-        ]
-        let elementsFields = [
-            "apple_pay_preference", "google_pay_preference", "flags", "link_settings",
-            "experiments_data", "card_brand_choice", "unactivated_payment_method_types",
-        ]
-        for key in elementsFields {
-            elementsSession[key] = fields[key]
-        }
-        // TODO(OCS_API_EXT-266): CheckoutClient's Link resource omits Elements' mobile flags, including
-        // attestation endpoint selection. Backend parity is required for those settings.
-        if var linkSettings = fields["link_settings"] as? [String: Any],
-           linkSettings["link_passthrough_mode_enabled"] == nil {
-            // Elements derives this legacy flag from link_mode. CheckoutClient returns the mode
-            // without the flag, which the SDK still uses to offer Link in Express Checkout.
-            let linkMode = (linkSettings["link_mode"] as? String).flatMap(LinkMode.init(rawValue:))
-            linkSettings["link_passthrough_mode_enabled"] = linkMode == .passthrough || linkMode == .linkCardBrand
-            elementsSession["link_settings"] = linkSettings
-        }
-        if var passiveCaptcha = fields["passive_captcha"] as? [String: Any] {
-            passiveCaptcha["token_timeout_seconds"] = passiveCaptcha["token_refresh_after_seconds"]
-            elementsSession["passive_captcha"] = passiveCaptcha
-        }
-        elementsSession["config_id"] = fields["elements_session_config_id"]
-        elementsSession["business_name"] = merchant["display_name"]
-        elementsSession["merchant_logo_url"] = merchant["logo_url"]
-
-        let sharedFields = [
-            "livemode", "status", "payment_status", "customer_email", "billing_address_collection",
-            "shipping_address_collection", "payment_method_options", "total_summary",
-            "setup_future_usage_for_payment_method_type",
-        ]
-        var response = fields.filter { sharedFields.contains($0.key) }
-        response["session_id"] = id
-        response["mode"] = "modeless"
-        response["currency"] = currency
-        response["checkout_items"] = items
-        response["payment_method_types"] = paymentMethodTypes
-        response["elements_session"] = elementsSession
-
-        if var customer = fields["customer"] as? [String: Any] {
-            let savedOptions = fields["saved_payment_method_options"] as? [String: Any]
-            customer["can_detach_payment_method"] = savedOptions?["payment_method_remove"] as? String == "enabled"
-            customer["email"] = fields["customer_email"]
-            response["customer"] = customer
-        }
-
-        if let savedOptions = fields["saved_payment_method_options"] as? [String: Any],
-           let save = savedOptions["payment_method_save"] as? String {
-            response["customer_managed_saved_payment_methods_offer_save"] = ["enabled": save == "enabled"]
-        }
-
-        if var summary = fields["total_summary"] as? [String: Any],
-           let taxAmounts = summary["total_tax_amounts"] as? [[String: Any]] {
-            summary["total_tax_amounts"] = try taxAmounts.map { tax -> [String: Any] in
-                guard let displayName = tax["display_name"] as? String,
-                      let percentage = tax["percentage"] as? NSNumber else {
-                    throw DecodingError.dataCorrupted(
-                        .init(codingPath: [], debugDescription: "CheckoutClient tax amount is missing display information")
-                    )
-                }
-                var mapped = tax
-                mapped["tax_rate"] = [
-                    "display_name": displayName,
-                    "percentage": percentage.doubleValue,
-                ]
-                return mapped
-            }
-            response["total_summary"] = summary
-        }
-
-        if let automaticTax = fields["automatic_tax"] as? [String: Any],
-           let enabled = automaticTax["enabled"] as? Bool {
-            var taxContext: [String: Any] = ["automatic_tax_enabled": enabled]
-            if let source = automaticTax["address_source"] as? String {
-                taxContext["automatic_tax_address_source"] = "session.\(source)"
-            }
-            response["tax_context"] = taxContext
-            response["tax_meta"] = [
-                "computation_type": enabled ? "automatic" : "Off",
-                "status": automaticTax["status"] as? String == "requires_address"
-                    ? "requires_location_inputs" : "complete",
-            ]
-        }
-
-        if let adaptivePricing = fields["adaptive_pricing_info"] as? [String: Any],
-           let integrationOption = adaptivePricing["integration_currency_option"] as? [String: Any],
-           let localOptions = adaptivePricing["local_currency_options"] as? [[String: Any]] {
-            response["adaptive_pricing_info"] = [
-                "active_presentment_currency": currency,
-                "integration_amount": integrationOption["amount"] ?? NSNull(),
-                "integration_currency": integrationOption["currency"] ?? NSNull(),
-                "integration_currency_disclosure_caption":
-                    (integrationOption["disclosure"] as? [String: Any])?["caption"] ?? NSNull(),
-                "local_currency_options": localOptions.map { option -> [String: Any] in
-                    var mapped = option
-                    let disclosure = option["disclosure"] as? [String: Any]
-                    mapped["disclosure_caption"] = disclosure?["caption"]
-                    mapped["disclosure_details"] = disclosure?["details"]
-                    return mapped
-                },
-            ]
-        }
-
-        let data = try JSONSerialization.data(withJSONObject: response)
-        return try StripeJSONDecoder().decode(PaymentPagesAPIResponse.self, from: data)
     }
 }

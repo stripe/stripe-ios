@@ -471,6 +471,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         try await assertNewPaymentMethodConfirmation(
             session: CheckoutTestHelpers.makeSession([
                 "payment_method_options": ["card": ["setup_future_usage": "off_session"]],
+                "setup_future_usage_for_payment_method_type": ["card": "off_session"],
             ]).withCustomer(),
             paymentMethodType: .stripe(.card),
             checkboxState: .deselected,
@@ -483,6 +484,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         try await assertNewPaymentMethodConfirmation(
             session: CheckoutTestHelpers.makeSession([
                 "payment_method_options": ["card": ["setup_future_usage": "off_session"]],
+                "setup_future_usage_for_payment_method_type": ["card": "off_session"],
                 "customer_managed_saved_payment_methods_offer_save": [
                     "enabled": false,
                     "status": "not_accepted",
@@ -821,7 +823,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
     }
 
     private func makeCheckout(
-        apiResponse: PaymentPagesAPIResponse = CheckoutTestHelpers.makeOpenSession()
+        apiResponse: CheckoutClientAPIResponse = CheckoutTestHelpers.makeOpenSession()
     ) async throws -> CheckoutController {
         try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: apiResponse))
     }
@@ -853,7 +855,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
     }
 
     private func assertNewPaymentMethodConfirmation(
-        session: PaymentPagesAPIResponse,
+        session: CheckoutClientAPIResponse,
         paymentMethodType: PaymentSheet.PaymentMethodType,
         checkboxState: IntentConfirmParams.SaveForFutureUseCheckboxState,
         expectedAllowRedisplay: String,
