@@ -648,6 +648,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         let linkAccount = try await PaymentSheetLoader.lookupLinkAccount(
             elementsSession: STPElementsSession._testValue(paymentMethodTypes: ["card", "link"]),
             configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer),
             prefetchedEmailAndSource: nil,
             loadTimings: .init(),
             isUpdate: false
@@ -683,6 +684,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         let linkAccount = try await PaymentSheetLoader.lookupLinkAccount(
             elementsSession: STPElementsSession._testValue(paymentMethodTypes: ["card", "link"]),
             configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer),
             prefetchedEmailAndSource: nil,
             loadTimings: .init(),
             isUpdate: false
@@ -728,6 +730,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         _ = try await PaymentSheetLoader.lookupLinkAccount(
             elementsSession: elementsSession,
             configuration: config,
+            customerProvider: CustomerProvider(customer: config.customer),
             prefetchedEmailAndSource: nil,
             loadTimings: .init(),
             isUpdate: false

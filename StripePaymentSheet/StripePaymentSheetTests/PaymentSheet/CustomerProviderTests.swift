@@ -156,4 +156,29 @@ final class CustomerProviderTests: XCTestCase {
             XCTAssertNil(provider.legacyEphemeralKeyCredentials)
         }
     }
+
+    func testCheckoutEmailPrefersTheCustomerEmail() {
+        let session = CheckoutTestHelpers.makeSession([
+            "customer": ["id": "cus_checkout", "email": "customer@example.com"],
+            "customer_email": "fallback@example.com",
+        ]).makePublicSession()
+
+        XCTAssertEqual(CustomerProvider(checkoutSession: session).email, "customer@example.com")
+    }
+
+    func testCheckoutSessionFallsBackToTopLevelEmail() {
+        let session = CheckoutTestHelpers.makeOpenSession(
+            customerEmail: "fallback@example.com"
+        ).makePublicSession()
+
+        XCTAssertEqual(CustomerProvider(checkoutSession: session).email, "fallback@example.com")
+    }
+
+    func testMerchantCustomerDoesNotProvideAnEmail() {
+        let provider = CustomerProvider(
+            customer: .init(id: "cus_merchant", customerSessionClientSecret: "cuss_test")
+        )
+
+        XCTAssertNil(provider.email)
+    }
 }
