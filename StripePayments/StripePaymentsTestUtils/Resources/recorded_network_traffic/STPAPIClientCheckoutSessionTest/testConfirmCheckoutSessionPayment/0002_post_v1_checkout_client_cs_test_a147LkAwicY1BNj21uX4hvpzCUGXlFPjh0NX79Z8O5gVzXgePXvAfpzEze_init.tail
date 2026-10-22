@@ -26,7 +26,7 @@ access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
-X-Stripe-Mock-Request: adaptive_pricing\[allowed]=false&locale=en-US&mobile_app_id=com\.stripe\.StripeiOSTestHostApp&timezone=America\/Denver
+X-Stripe-Mock-Request: adaptive_pricing\[allowed]=false&locale=.*&mobile_app_id=.*&timezone=.*
 
 {
   "checkout_session_config_id" : "7d327447-7e4b-4b84-803b-6df864025a2c",

@@ -120,6 +120,8 @@ import XCTest
                         "\\[locale]", // Nested locale param varies by machine
                         "\\[mobile_app_id]", // App bundle ID varies by test target
                         "\\[mobile_session_id]", // Session ID varies by run
+                        // CheckoutClient uses top-level mobile metadata and locale/timezone fields.
+                        "mobile_session_id=", "mobile_app_id=", "locale=", "timezone=",
                         "session_token", // Autocomplete session token, random UUID
                     ]
                     return replaceNondeterministicParams(escapedBody, componentsToFilter: componentsToFilter)

@@ -26,7 +26,7 @@ access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
-X-Stripe-Mock-Request: client_attribution_metadata\[checkout_session_id]=cs_test_a1zsehaHAcPSFR2zwllHtpO3YKy4MUSekFfGk7sQ7EBc1HBf3NJGdIEJUZ&client_attribution_metadata\[client_session_id]=.*&client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_method_selection_flow]=automatic&customer_data\[email]=test%40example\.com&expected_amount=0&locale=en-US&mobile_app_id=com\.stripe\.StripeiOSTestHostApp&mobile_session_id=abffc095-aaea-4ef7-b4dd-23e2a7ae48cd&return_url=stripe-ios-test%3A\/\/checkout-return
+X-Stripe-Mock-Request: client_attribution_metadata\[checkout_session_id]=cs_test_a1zsehaHAcPSFR2zwllHtpO3YKy4MUSekFfGk7sQ7EBc1HBf3NJGdIEJUZ&client_attribution_metadata\[client_session_id]=.*&client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_method_selection_flow]=automatic&customer_data\[email]=test%40example\.com&expected_amount=0&locale=.*&mobile_app_id=.*&mobile_session_id=.*&return_url=stripe-ios-test%3A\/\/checkout-return
 
 {
   "checkout_session_config_id" : "a8a991fc-0c6e-48a9-9627-bc5d04ccb4ec",

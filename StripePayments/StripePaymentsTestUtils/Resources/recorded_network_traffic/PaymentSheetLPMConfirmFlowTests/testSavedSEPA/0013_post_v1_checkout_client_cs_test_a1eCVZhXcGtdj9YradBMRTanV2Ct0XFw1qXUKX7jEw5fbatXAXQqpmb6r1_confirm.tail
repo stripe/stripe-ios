@@ -26,7 +26,7 @@ access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
-X-Stripe-Mock-Request: client_attribution_metadata\[checkout_session_id]=cs_test_a1eCVZhXcGtdj9YradBMRTanV2Ct0XFw1qXUKX7jEw5fbatXAXQqpmb6r1&client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_method_selection_flow]=automatic&expected_amount=2000&expected_payment_method_type=sepa_debit&locale=en-US&mobile_app_id=com\.stripe\.StripeiOSTestHostApp&payment_method=pm_1UTQ4uGoesj9fw9QcAv8MMT6&return_url=https%3A\/\/foo\.com
+X-Stripe-Mock-Request: client_attribution_metadata\[checkout_session_id]=cs_test_a1eCVZhXcGtdj9YradBMRTanV2Ct0XFw1qXUKX7jEw5fbatXAXQqpmb6r1&client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_method_selection_flow]=automatic&expected_amount=2000&expected_payment_method_type=sepa_debit&locale=.*&mobile_app_id=.*&payment_method=pm_1UTQ4uGoesj9fw9QcAv8MMT6&return_url=https%3A\/\/foo\.com
 
 {
   "checkout_session_config_id" : "fa67c327-339c-483e-a226-6fcb11f93da6",

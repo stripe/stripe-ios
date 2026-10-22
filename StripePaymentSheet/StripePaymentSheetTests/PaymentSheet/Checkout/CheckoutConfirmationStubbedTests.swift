@@ -34,7 +34,12 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         flowController.updatePaymentOption()
         XCTAssertTrue(flowController.didPresentAndContinue)
         XCTAssertTrue(checkout.getPaymentElement().paymentOptionSourceOfTruthIsFlowController)
-        let confirmRequested = stubConfirmationExpecting(sessionId: checkout.session.id, savePaymentMethod: nil)
+        let confirmRequested = stubConfirmationExpecting(
+            sessionId: checkout.session.id,
+            savePaymentMethod: nil,
+            expectedPaymentMethodType: "sepa_debit",
+            expectedPaymentMethodID: STPPaymentMethod._testSEPA().stripeId
+        )
 
         // When the merchant confirms, no additional mandate UI is needed
         let result = await checkout.confirm(from: UIViewController())
@@ -73,7 +78,12 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         // ...and the merchant removes the embedded view before confirming
         embeddedView.removeFromSuperview()
         XCTAssertNil(embeddedView.window)
-        let confirmRequested = stubConfirmationExpecting(sessionId: checkout.session.id, savePaymentMethod: nil)
+        let confirmRequested = stubConfirmationExpecting(
+            sessionId: checkout.session.id,
+            savePaymentMethod: nil,
+            expectedPaymentMethodType: "sepa_debit",
+            expectedPaymentMethodID: STPPaymentMethod._testSEPA().stripeId
+        )
         let result = await checkout.confirm(from: presenter)
 
         // Then the earlier attachment still avoids an extra mandate sheet
@@ -119,17 +129,16 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
     }
 
     private func makeSavedSEPACheckout(displaysMandateText: Bool? = nil) async throws -> CheckoutController {
-        let elementsSession = STPElementsSession._testValue(
-            paymentMethodTypes: ["sepa_debit"],
-            customerSessionData: [:],
-            paymentMethods: [STPPaymentMethod._testSEPA().allResponseFields]
-        )
         let session = CheckoutTestHelpers.makeSession([
-            "session_id": "cs_test_123",
-            "currency": "eur",
-            "checkout_items": CheckoutTestHelpers.makeOneTimePriceCheckoutItems(currency: "eur"),
-            "payment_method_types": ["sepa_debit"],
-            "elements_session": elementsSession.allResponseFields,
+            "id": "cs_test_123",
+            "integration_currency": "eur",
+            "presentment_currency": "eur",
+            "items": CheckoutTestHelpers.makeOneTimePriceCheckoutItems(currency: "eur"),
+            "ordered_payment_method_types_and_wallets": ["sepa_debit"],
+            "customer": [
+                "id": "cus_saved_sepa",
+                "payment_methods": [STPPaymentMethod._testSEPA().allResponseFields],
+            ],
         ])
         var configuration = PaymentElement.Configuration()
         if let displaysMandateText {
@@ -158,6 +167,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         let confirmRequested = expectation(description: "Confirm requested only after mandate acceptance")
         confirmRequested.isInverted = !accept
         var didAcceptMandate = false
+        stubConfirmedIntentRetrieval(from: Self.confirmedSessionJSON)
         stub { $0.url?.path.hasSuffix("/confirm") == true } response: { _ in
             XCTAssertTrue(didAcceptMandate)
             confirmRequested.fulfill()
@@ -1275,6 +1285,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         expectedCollectedInformationEmail: String? = nil,
         responseJSON: [AnyHashable: Any]? = nil,
         expectedPaymentMethodType: String,
+        expectedPaymentMethodID: String? = nil,
         expectedAllowRedisplay: String? = nil,
         expectedBillingEmail: BillingEmailExpectation? = nil,
         file: StaticString = #filePath,
@@ -1293,8 +1304,8 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
                 omittingEmptyValues: true,
                 line: line
             )
-            XCTAssertNil(params["payment_method"], file: file, line: line)
-            XCTAssertEqual(params["payment_method_data[type]"], expectedPaymentMethodType, file: file, line: line)
+            XCTAssertEqual(params["payment_method"], expectedPaymentMethodID, file: file, line: line)
+            XCTAssertEqual(params["payment_method_data[type]"], expectedPaymentMethodID == nil ? expectedPaymentMethodType : nil, file: file, line: line)
             XCTAssertEqual(params["expected_payment_method_type"], expectedPaymentMethodType, file: file, line: line)
             if let expectedAllowRedisplay {
                 XCTAssertEqual(

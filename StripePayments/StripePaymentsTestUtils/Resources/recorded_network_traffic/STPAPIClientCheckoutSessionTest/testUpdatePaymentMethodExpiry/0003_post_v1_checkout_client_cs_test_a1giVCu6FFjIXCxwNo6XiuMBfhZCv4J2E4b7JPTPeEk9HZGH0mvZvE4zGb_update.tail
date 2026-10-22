@@ -26,7 +26,7 @@ access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
-X-Stripe-Mock-Request: locale=en-US&mobile_app_id=com\.stripe\.StripeiOSTestHostApp&payment_method_to_update%5Bexpiry_details%5D%5Bexp_month%5D=6&payment_method_to_update%5Bexpiry_details%5D%5Bexp_year%5D=2029&payment_method_to_update%5Bpayment_method_id%5D=pm_1UMB4RLu5o3P18ZpsmyagQld&timezone=America\/Denver
+X-Stripe-Mock-Request: locale=.*&mobile_app_id=.*&payment_method_to_update%5Bexpiry_details%5D%5Bexp_month%5D=6&payment_method_to_update%5Bexpiry_details%5D%5Bexp_year%5D=2029&payment_method_to_update%5Bpayment_method_id%5D=pm_1UMB4RLu5o3P18ZpsmyagQld&timezone=.*
 
 {
   "checkout_session_config_id" : "5ad57732-70cf-4e7a-afa4-0150deaf4630",
