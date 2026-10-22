@@ -215,17 +215,6 @@ extension STPAPIClient {
         return checkoutClient
     }
 
-    /// Retrieves the latest full Checkout Session.
-    func retrieveCheckoutSession(
-        checkoutSessionId: String
-    ) async throws -> CheckoutClientAPIResponse {
-        let checkoutClient: CheckoutClientAPIResponse = try await get(
-            endpoint: "checkout_client/\(checkoutSessionId)/retrieve",
-            parameters: Self.checkoutClientParameters()
-        )
-        return try await retrieveCheckoutSessionIntents(checkoutClient)
-    }
-
     func detachPaymentMethod(
         _ paymentMethodId: String,
         fromCheckoutSession checkoutSessionId: String
@@ -369,25 +358,6 @@ extension STPAPIClient {
         )
     }
 
-    private func retrieveCheckoutSessionIntents(
-        _ response: CheckoutClientAPIResponse
-    ) async throws -> CheckoutClientAPIResponse {
-        var response = response
-        if let reference = response.paymentResponse?.paymentIntent {
-            response.paymentIntent = try await retrievePaymentIntent(
-                clientSecret: reference.clientSecret,
-                expand: ["payment_method"]
-            )
-        }
-        if let reference = response.paymentResponse?.setupIntent {
-            response.setupIntent = try await retrieveSetupIntent(
-                clientSecret: reference.clientSecret,
-                expand: ["payment_method"]
-            )
-        }
-        return response
-    }
-
     private static func checkoutClientParameters() -> [String: Any] {
         var parameters: [String: Any] = [
             "locale": Locale.current.toLanguageTag(),
@@ -420,28 +390,4 @@ extension STPAPIClient {
         }
     }
 
-    private func get<T: Decodable>(
-        endpoint: String,
-        parameters: [String: Any],
-        timeout: TimeInterval? = nil,
-        retriesEnabled: Bool = true
-    ) async throws -> T {
-        do {
-            return try await withCheckedThrowingContinuation { continuation in
-                get(
-                    resource: endpoint,
-                    parameters: parameters,
-                    timeout: timeout,
-                    retriesEnabled: retriesEnabled
-                ) { (result: Result<T, Error>) in
-                    continuation.resume(with: result)
-                }
-            }
-        } catch {
-            if error is DecodingError {
-                reportUnexpectedPaymentPagesParsingError(error, apiClient: self)
-            }
-            throw error
-        }
-    }
 }

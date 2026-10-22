@@ -33,12 +33,7 @@ struct CheckoutClientAPIResponse: UnknownFieldsDecodable, CustomStringConvertibl
     let paymentMethodOptions: STPPaymentMethodOptions?
     let customer: Customer?
     let merchantInfo: MerchantInfo
-    let paymentResponse: PaymentResponse?
     let elementsSession: STPElementsSession
-
-    // Expanded separately when confirmation needs authentication or next-action handling.
-    var paymentIntent: STPPaymentIntent?
-    var setupIntent: STPSetupIntent?
 
     var description: String {
         "<CheckoutClientAPIResponse; id = \(id); status = \(status); currency = \(presentmentCurrency); livemode = \(livemode)>"
@@ -48,7 +43,7 @@ struct CheckoutClientAPIResponse: UnknownFieldsDecodable, CustomStringConvertibl
         case id, uiMode, presentmentCurrency, integrationCurrency, items, livemode, status, paymentStatus
         case customerEmail, billingAddressCollection, shippingAddressCollection, totalSummary, automaticTax
         case adaptivePricingInfo, savedPaymentMethodOptions, setupFutureUsageForPaymentMethodType
-        case paymentMethodOptions, customer, merchantInfo, paymentResponse
+        case paymentMethodOptions, customer, merchantInfo
         case elementsSessionId, elementsSessionConfigId, orderedPaymentMethodTypesAndWallets
         case unactivatedPaymentMethodTypes, countryCode, linkSettings, experimentsData, flags
         case cardBrandChoice, applePayPreference, passiveCaptcha
@@ -110,7 +105,6 @@ struct CheckoutClientAPIResponse: UnknownFieldsDecodable, CustomStringConvertibl
         )?.value
         customer = try container.decodeIfPresent(Customer.self, forKey: .customer)
         merchantInfo = try container.decode(MerchantInfo.self, forKey: .merchantInfo)
-        paymentResponse = try container.decodeIfPresent(PaymentResponse.self, forKey: .paymentResponse)
 
         let orderedTypes = try container.decode([String].self, forKey: .orderedPaymentMethodTypesAndWallets)
         let flags = try container.decodeIfPresent([String: Bool].self, forKey: .flags) ?? [:]
@@ -160,18 +154,6 @@ struct CheckoutClientAPIResponse: UnknownFieldsDecodable, CustomStringConvertibl
 }
 
 extension CheckoutClientAPIResponse {
-    struct PaymentResponse: Decodable {
-        let status: String
-        let lastPaymentError: StripeAPIError?
-        let paymentIntent: IntentReference?
-        let setupIntent: IntentReference?
-    }
-
-    struct IntentReference: Decodable {
-        let id: String
-        let clientSecret: String
-    }
-
     struct MerchantInfo: Decodable {
         let country: String
         let displayName: String?
