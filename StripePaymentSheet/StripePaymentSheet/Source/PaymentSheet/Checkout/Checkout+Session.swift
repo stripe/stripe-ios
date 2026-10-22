@@ -109,9 +109,6 @@ extension CheckoutController {
             let id: String
             let paymentMethods: [STPPaymentMethod]
             let canDetachPaymentMethod: Bool
-            let email: String?
-            let name: String?
-            let phone: String?
         }
 
         enum BillingAddressCollection: String {
@@ -200,10 +197,7 @@ extension CheckoutController.Session {
                 Customer(
                     id: $0.id,
                     paymentMethods: $0.paymentMethods,
-                    canDetachPaymentMethod: apiResponse.savedPaymentMethodOptions?.paymentMethodRemove == "enabled",
-                    email: nil,
-                    name: nil,
-                    phone: nil
+                    canDetachPaymentMethod: apiResponse.savedPaymentMethodOptions?.paymentMethodRemove == "enabled"
                 )
             },
             savedPaymentMethodsOfferSave: apiResponse.savedPaymentMethodOptions?.paymentMethodSave.map {

@@ -375,10 +375,7 @@ extension CheckoutController.Session {
                 Customer(
                     id: $0.id,
                     paymentMethods: $0.paymentMethods,
-                    canDetachPaymentMethod: $0.canDetachPaymentMethod,
-                    email: $0.email,
-                    name: $0.name,
-                    phone: $0.phone
+                    canDetachPaymentMethod: $0.canDetachPaymentMethod
                 )
             },
             savedPaymentMethodsOfferSave: PaymentPagesAPIResponse.makeSavedPaymentMethodsOfferSave(
