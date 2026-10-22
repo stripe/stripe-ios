@@ -65,6 +65,13 @@ ci_scripts/run_tests.rb --scheme StripeCore --result-bundle-path /tmp/my-results
 ci_scripts/run_tests.rb --help
 ```
 
+### iOS 26 Tests
+
+- Place the literal comment `// @iOS26` directly before an XCTest class to select all its test methods, or before an individual `func test…()` to select only that method for the additional iOS 26 run. This supports snapshot and behavioral tests; annotated tests still run in the normal older-iOS suite. Put Swift attributes such as `@MainActor` above the comment so the parser sees the declaration next.
+- `ci_scripts/generate_ios26_testplan.rb` generates `selectedTests` in `Stripe/AllStripeFrameworks-iOS26.xctestplan` from these comments. The `AllStripeFrameworks-iOS26` scheme runs it as a test pre-action, and Bitrise also runs it explicitly. Update annotations rather than hand-editing the generated selections.
+- For a targeted local run, set `DEVICE_ID_FROM_USER_SETTINGS` to an iOS 26 simulator UUID and use `ci_scripts/run_tests.rb --scheme AllStripeFrameworks-iOS26 --test Target/Class/testMethod`. The scheme alone does not override the runner's older default runtime.
+- `STPSnapshotVerifyView` automatically adds an `_iOS26` identifier on iOS 26+ when compiled with Swift 6.2.1+, keeping those reference images separate. CI records them through `ci_scripts/record_snapshots.rb --version 26.4.1`, which also uses the annotations to select tests.
+
 ### Inspecting Test Failures
 
 When tests fail, the runner saves an xcresult bundle and prints an inspection hint. Use `--failures` to get a structured summary:
