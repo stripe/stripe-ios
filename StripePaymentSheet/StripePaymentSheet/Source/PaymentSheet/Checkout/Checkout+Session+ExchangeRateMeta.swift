@@ -24,10 +24,10 @@ extension CheckoutController.Session {
         let integrationCaption: String?
 
         init(
-            exchangeRate: String? = nil,
+            exchangeRate: String?,
             integrationCurrency: String,
             localizedCurrency: String,
-            conversionMarkupBps: Int? = nil,
+            conversionMarkupBps: Int?,
             caption: String? = nil,
             details: String? = nil,
             integrationCaption: String? = nil

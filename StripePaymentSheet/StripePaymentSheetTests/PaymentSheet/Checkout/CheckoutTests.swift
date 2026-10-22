@@ -48,6 +48,7 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         let checkout = try await CheckoutController(configuration: configuration)
 
         // Then Customer.email becomes the server-backed effective Session email
+        XCTAssertEqual(checkout.session.customer?.email, "customer@example.com")
         XCTAssertEqual(checkout.session.serverEmail, "customer@example.com")
         XCTAssertNil(checkout.session.localState.email)
         XCTAssertEqual(checkout.session.email, "customer@example.com")

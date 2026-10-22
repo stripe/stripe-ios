@@ -91,7 +91,7 @@ extension CheckoutController {
         /// `customer_email` or the Checkout Session's Customer's email.
         let serverEmail: String?
         var localState: LocalState
-        let customer: Customer?
+        let customer: PaymentPagesAPIResponse.Customer?
         let savedPaymentMethodsOfferSave: STPCheckoutSessionSavedPaymentMethodsOfferSave?
         let setupFutureUsage: String?
         let setupFutureUsageForPaymentMethodType: [String: String]
@@ -104,12 +104,6 @@ extension CheckoutController {
         let automaticTaxAddressSource: String?
         let merchantCountryCode: String
         let elementsSession: STPElementsSession
-
-        struct Customer {
-            let id: String
-            let paymentMethods: [STPPaymentMethod]
-            let canDetachPaymentMethod: Bool
-        }
 
         enum BillingAddressCollection: String {
             case automatic = "auto"
@@ -200,13 +194,7 @@ extension CheckoutController.Session {
             paymentMethodOptions: apiResponse.paymentMethodOptions,
             serverEmail: serverEmail,
             localState: localState,
-            customer: apiResponse.customer.map {
-                Customer(
-                    id: $0.id,
-                    paymentMethods: $0.paymentMethods,
-                    canDetachPaymentMethod: $0.canDetachPaymentMethod
-                )
-            },
+            customer: apiResponse.customer,
             savedPaymentMethodsOfferSave: PaymentPagesAPIResponse.makeSavedPaymentMethodsOfferSave(
                 from: apiResponse.savedPaymentMethodsOfferSave
             ),
