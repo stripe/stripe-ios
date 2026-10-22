@@ -176,12 +176,12 @@ final class CheckoutPendingOperationsTests: XCTestCase {
         var firstJSON = CheckoutTestHelpers.openSessionJSON
         firstJSON["currency"] = "eur"
         firstJSON["checkout_items"] = CheckoutTestHelpers.makeOneTimePriceCheckoutItems(currency: "eur")
-        let firstSession = try PaymentPagesAPIResponse.decode(fromAPIResponse: firstJSON)
+        let firstSession = try CheckoutClientAPIResponse.decode(fromAPIResponse: firstJSON)
 
         var secondJSON = CheckoutTestHelpers.openSessionJSON
         secondJSON["currency"] = "gbp"
         secondJSON["checkout_items"] = CheckoutTestHelpers.makeOneTimePriceCheckoutItems(currency: "gbp")
-        let secondSession = try PaymentPagesAPIResponse.decode(fromAPIResponse: secondJSON)
+        let secondSession = try CheckoutClientAPIResponse.decode(fromAPIResponse: secondJSON)
 
         // First op blocks on firstGate until we explicitly open it
         let firstTask = Task { @MainActor in

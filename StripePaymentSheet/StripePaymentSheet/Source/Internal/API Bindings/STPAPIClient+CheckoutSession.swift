@@ -169,16 +169,14 @@ extension STPAPIClient {
     func initCheckoutSession(
         checkoutSessionId: String,
         adaptivePricingAllowed: Bool
-    ) async throws -> PaymentPagesAPIResponse {
+    ) async throws -> CheckoutClientAPIResponse {
         var parameters = Self.checkoutClientParameters()
         parameters["adaptive_pricing"] = ["allowed": adaptivePricingAllowed]
 
-        let checkoutClient: CheckoutClientAPIResponse = try await post(
+        return try await post(
             endpoint: "checkout_client/\(checkoutSessionId)/init",
             parameters: parameters
         )
-
-        return try await checkoutClientSessionResponse(checkoutClient, retrieveIntents: false)
     }
 
     /// Updates a CheckoutSession with the provided parameters.
@@ -189,7 +187,7 @@ extension STPAPIClient {
     func updateCheckoutSession(
         checkoutSessionId: String,
         parameters: [String: Any]
-    ) async throws -> PaymentPagesAPIResponse {
+    ) async throws -> CheckoutClientAPIResponse {
         // TODO: CheckoutClient /update currently rejects promotion_code.
         var params = Self.checkoutClientParameters()
         for (key, value) in parameters {
@@ -199,22 +197,21 @@ extension STPAPIClient {
                 params[key] = value
             }
         }
-        let checkoutClient: CheckoutClientAPIResponse = try await post(
+        return try await post(
             endpoint: "checkout_client/\(checkoutSessionId)/update",
             parameters: params
         )
-        return try await checkoutClientSessionResponse(checkoutClient, retrieveIntents: false)
     }
 
     /// Retrieves the latest full Checkout Session.
     func retrieveCheckoutSession(
         checkoutSessionId: String
-    ) async throws -> PaymentPagesAPIResponse {
+    ) async throws -> CheckoutClientAPIResponse {
         let checkoutClient: CheckoutClientAPIResponse = try await get(
             endpoint: "checkout_client/\(checkoutSessionId)/retrieve",
             parameters: Self.checkoutClientParameters()
         )
-        return try await checkoutClientSessionResponse(checkoutClient)
+        return try await retrievingCheckoutIntents(for: checkoutClient)
     }
 
     /// Retrieves the small state object used to determine whether a Checkout
@@ -237,11 +234,10 @@ extension STPAPIClient {
     ) async throws {
         var params = Self.checkoutClientParameters()
         params["payment_method_to_detach"] = paymentMethodId
-        let checkoutClient: CheckoutClientAPIResponse = try await post(
+        let _: CheckoutClientAPIResponse = try await post(
             endpoint: "checkout_client/\(checkoutSessionId)/update",
             parameters: params
         )
-        _ = try await checkoutClientSessionResponse(checkoutClient, retrieveIntents: false)
     }
 
     /// Updates a saved payment method's billing details and/or card expiry on a Checkout Session.
@@ -256,18 +252,17 @@ extension STPAPIClient {
         inCheckoutSession checkoutSessionId: String,
         billingDetails: CheckoutController.PaymentMethodBillingDetails? = nil,
         expiryDetails: CheckoutController.PaymentMethodExpiryDetails? = nil
-    ) async throws -> PaymentPagesAPIResponse {
+    ) async throws -> CheckoutClientAPIResponse {
         var params = Self.updatePaymentMethodParameters(
             paymentMethodId: paymentMethodId,
             billingDetails: billingDetails,
             expiryDetails: expiryDetails
         )
         params.merge(Self.checkoutClientParameters()) { current, _ in current }
-        let checkoutClient: CheckoutClientAPIResponse = try await post(
+        return try await post(
             endpoint: "checkout_client/\(checkoutSessionId)/update",
             parameters: params
         )
-        return try await checkoutClientSessionResponse(checkoutClient, retrieveIntents: false)
     }
 
     static func updatePaymentMethodParameters(
@@ -305,7 +300,7 @@ extension STPAPIClient {
     /// - Returns: The full confirmed session with expanded intents.
     func confirmCheckoutSession(
         with requestParameters: CheckoutSessionConfirmationRequestParameters
-    ) async throws -> PaymentPagesAPIResponse {
+    ) async throws -> CheckoutClientAPIResponse {
         guard let returnURL = requestParameters.returnURL else {
             throw CheckoutError.unknown(debugDescription: "CheckoutClient confirmation requires a return URL.")
         }
@@ -369,48 +364,21 @@ extension STPAPIClient {
             endpoint: "checkout_client/\(requestParameters.sessionId)/confirm",
             parameters: parameters
         )
-        return try await checkoutClientSessionResponse(checkoutClient)
+        return try await retrievingCheckoutIntents(for: checkoutClient)
     }
 
     /// CheckoutClient returns Intent references. Retrieve the Intent to preserve the full session used by confirmation.
-    private func checkoutClientSessionResponse(
-        _ checkoutClient: CheckoutClientAPIResponse,
-        retrieveIntents: Bool = true
-    ) async throws -> PaymentPagesAPIResponse {
-        do {
-            let paymentResponse = checkoutClient.fields["payment_response"] as? [String: Any]
-            let paymentIntent: STPPaymentIntent?
-            if retrieveIntents, let reference = paymentResponse?["payment_intent"] as? [String: Any] {
-                guard let clientSecret = reference["client_secret"] as? String else {
-                    throw DecodingError.dataCorrupted(
-                        .init(codingPath: [], debugDescription: "CheckoutClient PaymentIntent is missing its client secret")
-                    )
-                }
-                paymentIntent = try await retrievePaymentIntent(clientSecret: clientSecret, expand: ["payment_method"])
-            } else {
-                paymentIntent = nil
-            }
-            let setupIntent: STPSetupIntent?
-            if retrieveIntents, let reference = paymentResponse?["setup_intent"] as? [String: Any] {
-                guard let clientSecret = reference["client_secret"] as? String else {
-                    throw DecodingError.dataCorrupted(
-                        .init(codingPath: [], debugDescription: "CheckoutClient SetupIntent is missing its client secret")
-                    )
-                }
-                setupIntent = try await retrieveSetupIntent(clientSecret: clientSecret, expand: ["payment_method"])
-            } else {
-                setupIntent = nil
-            }
-            return try checkoutClient.paymentPagesResponse(
-                paymentIntent: paymentIntent,
-                setupIntent: setupIntent
-            )
-        } catch {
-            if error is DecodingError {
-                reportUnexpectedPaymentPagesParsingError(error, apiClient: self)
-            }
-            throw error
+    private func retrievingCheckoutIntents(
+        for response: CheckoutClientAPIResponse
+    ) async throws -> CheckoutClientAPIResponse {
+        var response = response
+        if let reference = response.paymentResponse?.paymentIntent {
+            response.paymentIntent = try await retrievePaymentIntent(clientSecret: reference.clientSecret, expand: ["payment_method"])
         }
+        if let reference = response.paymentResponse?.setupIntent {
+            response.setupIntent = try await retrieveSetupIntent(clientSecret: reference.clientSecret, expand: ["payment_method"])
+        }
+        return response
     }
 
     private func post<Response: Decodable>(

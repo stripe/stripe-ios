@@ -405,7 +405,7 @@ extension Intent {
         if taxAmount != 0 || discountAmount != 0 {
             json["recurring_details"] = ["total_summary": recurringTotalSummary]
         }
-        let checkoutSession = try! PaymentPagesAPIResponse.decode(fromAPIResponse: json)
+        let checkoutSession = try! CheckoutClientAPIResponse.decode(fromAPIResponse: json)
         return .checkout(checkoutSession.makePublicSession())
     }
 }

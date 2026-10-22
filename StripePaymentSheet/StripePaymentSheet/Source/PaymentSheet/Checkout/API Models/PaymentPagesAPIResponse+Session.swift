@@ -10,7 +10,7 @@ import Foundation
 
 // MARK: - Public model conversion
 
-extension PaymentPagesAPIResponse {
+extension CheckoutClientAPIResponse {
     static func makeAmount(_ minorUnitsAmount: Int, currency: String) -> CheckoutController.Session.Amount {
         return makeAmount(Double(minorUnitsAmount), currency: currency, locale: .autoupdatingCurrent)
     }
