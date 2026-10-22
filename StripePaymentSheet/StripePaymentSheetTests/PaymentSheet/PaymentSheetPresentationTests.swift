@@ -15,6 +15,7 @@ import XCTest
 final class PaymentSheetPresentationTests: XCTestCase {
 
     @MainActor
+    // @iOS26
     func testHorizontalNativeSheetHeaderMatchesOpaqueContentBackground() async throws {
         guard #available(iOS 26.0, *), LiquidGlassDetector.isEnabledInMerchantApp else {
             throw XCTSkip("The merchant app must enable Liquid Glass.")
