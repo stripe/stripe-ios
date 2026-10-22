@@ -106,7 +106,7 @@ public final class ExpressCheckoutElementUIView: UIView {
                     "ordered_lpms": session.availableExpressCheckoutPaymentMethods.joined(separator: ","),
                     "ece_config": [
                         "link_visibility": configuration.linkConfiguration.display.rawValue,
-                        "apple_pay_visibility": configuration.applePayConfiguration?.display.rawValue ?? "never",
+                        "apple_pay_visibility": configuration.applePayConfiguration == nil ? "never" : "automatic",
                     ],
                 ]
             ),
@@ -197,9 +197,9 @@ public final class ExpressCheckoutElementUIView: UIView {
         let buttonType = configuration.applePayConfiguration?.buttonType ?? .plain
         let button = PKPaymentButton(paymentButtonType: buttonType, paymentButtonStyle: applePayButtonStyle)
         // `cornerConfiguration` doesn't work on PKPaymentButton, so set the radius directly.
-        button.cornerRadius = LiquidGlassDetector.isEnabledInMerchantApp
+        button.cornerRadius = configuration.appearance.cornerRadius ?? (LiquidGlassDetector.isEnabledInMerchantApp
             ? Constants.buttonHeight / 2
-            : Constants.cornerRadius
+            : Constants.cornerRadius)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.heightAnchor.constraint(equalToConstant: Constants.buttonHeight).isActive = true
         button.addTarget(self, action: #selector(handleApplePayTapped), for: .touchUpInside)
@@ -208,7 +208,9 @@ public final class ExpressCheckoutElementUIView: UIView {
 
     private func makeLinkButton() -> UIView {
         let button = PayWithLinkButton(brand: linkBrand)
-        if LiquidGlassDetector.isEnabledInMerchantApp {
+        if let cornerRadius = configuration.appearance.cornerRadius {
+            button.cornerRadius = cornerRadius
+        } else if LiquidGlassDetector.isEnabledInMerchantApp {
             button.ios26_applyCapsuleCornerConfiguration()
         } else {
             button.cornerRadius = Constants.cornerRadius

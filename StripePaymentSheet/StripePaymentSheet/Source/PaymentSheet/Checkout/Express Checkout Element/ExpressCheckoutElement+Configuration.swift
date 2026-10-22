@@ -40,30 +40,16 @@ extension ExpressCheckoutElement.Configuration {
         /// The type of Apple Pay button to display. Defaults to `.plain` when `nil`.
         public var buttonType: PKPaymentButtonType?
 
-        /// Controls whether Apple Pay is displayed.
-        public var display: Display = .automatic
-
-        /// Controls whether Apple Pay is displayed.
-        public enum Display: String {
-            /// Show Apple Pay when it is available.
-            case automatic
-            /// Never show Apple Pay.
-            case never
-        }
-
         /// Creates an Apple Pay configuration.
         /// - Parameters:
         ///   - merchantId: The Apple Pay merchant identifier.
         ///   - buttonType: The type of Apple Pay button to display. Defaults to `.plain` when `nil`.
-        ///   - display: Whether Apple Pay is displayed. Defaults to `.automatic`.
         public init(
             merchantId: String,
-            buttonType: PKPaymentButtonType? = nil,
-            display: Display = .automatic
+            buttonType: PKPaymentButtonType? = nil
         ) {
             self.merchantId = merchantId
             self.buttonType = buttonType
-            self.display = display
         }
     }
 
@@ -123,6 +109,9 @@ extension ExpressCheckoutElement.Configuration {
 
         /// Layout of the express payment buttons.
         public var buttonLayout: ButtonLayout = .init()
+
+        /// Corner radius of the express payment buttons.
+        public var cornerRadius: CGFloat?
 
         public init() {}
     }

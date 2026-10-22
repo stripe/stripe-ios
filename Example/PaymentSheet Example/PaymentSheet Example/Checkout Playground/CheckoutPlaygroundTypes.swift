@@ -8,11 +8,6 @@ import Foundation
 import PassKit
 @_spi(STP) import StripePaymentSheet
 
-extension ExpressCheckoutElement.Configuration.ApplePayConfiguration.Display: CaseIterable, Identifiable {
-    public static var allCases: [Self] { [.automatic, .never] }
-    public var id: String { rawValue }
-}
-
 extension ExpressCheckoutElement.Configuration.LinkConfiguration.Display: CaseIterable, Identifiable {
     public static var allCases: [Self] { [.automatic, .never] }
     public var id: String { rawValue }
@@ -410,20 +405,17 @@ enum CheckoutPlayground {
 
     struct ExpressCheckoutElementSettings: Codable {
         var isEnabled: Bool
-        var applePayDisplay: ExpressCheckoutElement.Configuration.ApplePayConfiguration.Display
         var applePayButtonType: ApplePayButtonType
         var linkDisplay: ExpressCheckoutElement.Configuration.LinkConfiguration.Display
         var appearance: ExpressCheckoutElement.Configuration.Appearance
 
         init(
             isEnabled: Bool = true,
-            applePayDisplay: ExpressCheckoutElement.Configuration.ApplePayConfiguration.Display = .automatic,
             applePayButtonType: ApplePayButtonType = .plain,
             linkDisplay: ExpressCheckoutElement.Configuration.LinkConfiguration.Display = .automatic,
             appearance: ExpressCheckoutElement.Configuration.Appearance = .init()
         ) {
             self.isEnabled = isEnabled
-            self.applePayDisplay = applePayDisplay
             self.applePayButtonType = applePayButtonType
             self.linkDisplay = linkDisplay
             self.appearance = appearance
@@ -431,10 +423,10 @@ enum CheckoutPlayground {
 
         private enum CodingKeys: String, CodingKey {
             case isEnabled
-            case applePayDisplay
             case applePayButtonType
             case linkDisplay
             case buttonTheme
+            case cornerRadius
             case maxColumns
             case maxRows
         }
@@ -444,13 +436,12 @@ enum CheckoutPlayground {
             var appearance = ExpressCheckoutElement.Configuration.Appearance()
             appearance.buttonTheme = try container.decodeIfPresent(String.self, forKey: .buttonTheme)
                 .flatMap(ExpressCheckoutElement.Configuration.Appearance.ButtonTheme.init(rawValue:)) ?? .automatic
+            appearance.cornerRadius = try container.decodeIfPresent(CGFloat.self, forKey: .cornerRadius)
             appearance.buttonLayout.maxColumns = try container.decodeIfPresent(Int.self, forKey: .maxColumns)
             appearance.buttonLayout.maxRows = try container.decodeIfPresent(Int.self, forKey: .maxRows)
 
             self.init(
                 isEnabled: try container.decodeIfPresent(Bool.self, forKey: .isEnabled) ?? true,
-                applePayDisplay: try container.decodeIfPresent(String.self, forKey: .applePayDisplay)
-                    .flatMap(ExpressCheckoutElement.Configuration.ApplePayConfiguration.Display.init(rawValue:)) ?? .automatic,
                 applePayButtonType: try container.decodeIfPresent(ApplePayButtonType.self, forKey: .applePayButtonType) ?? .plain,
                 linkDisplay: try container.decodeIfPresent(String.self, forKey: .linkDisplay)
                     .flatMap(ExpressCheckoutElement.Configuration.LinkConfiguration.Display.init(rawValue:)) ?? .automatic,
@@ -461,10 +452,10 @@ enum CheckoutPlayground {
         func encode(to encoder: Encoder) throws {
             var container = encoder.container(keyedBy: CodingKeys.self)
             try container.encode(isEnabled, forKey: .isEnabled)
-            try container.encode(applePayDisplay.rawValue, forKey: .applePayDisplay)
             try container.encode(applePayButtonType, forKey: .applePayButtonType)
             try container.encode(linkDisplay.rawValue, forKey: .linkDisplay)
             try container.encode(appearance.buttonTheme.rawValue, forKey: .buttonTheme)
+            try container.encodeIfPresent(appearance.cornerRadius, forKey: .cornerRadius)
             try container.encodeIfPresent(appearance.buttonLayout.maxColumns, forKey: .maxColumns)
             try container.encodeIfPresent(appearance.buttonLayout.maxRows, forKey: .maxRows)
         }

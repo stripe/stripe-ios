@@ -273,6 +273,20 @@ extension CheckoutController {
                     result = await Self.confirmLink(checkoutSession: self.session, parameters: parameters)
                 case .paymentMethod(let paymentMethodParameters, let integrationShape):
                     // 2. Do pre-confirm actions (CVC recollection, etc)
+                    if self.requiresSEPAMandate(for: paymentMethodParameters.option) {
+                        let didAcceptMandate = await withCheckedContinuation { continuation in
+                            SepaMandateViewController.present(
+                                from: paymentMethodParameters.authenticationContext.authenticationPresentingViewController(),
+                                configuration: paymentMethodParameters.configuration,
+                                nativeSheetPresentation: paymentMethodParameters.nativeSheetPresentation
+                            ) { didAcceptMandate in
+                                continuation.resume(returning: didAcceptMandate)
+                            }
+                        }
+                        guard didAcceptMandate else {
+                            return InternalConfirmResult.canceled()
+                        }
+                    }
                     let preconfirmResult = await Self.handlePaymentMethodPreconfirmActions(
                         checkoutSession: self.session,
                         parameters: paymentMethodParameters,
@@ -336,6 +350,15 @@ extension CheckoutController {
     }
 
     // MARK: - Payment Method Confirmation
+
+    func requiresSEPAMandate(for option: PaymentMethodConfirmationParameters.Option) -> Bool {
+        guard case .saved(let paymentMethod, _) = option, paymentMethod.type == .SEPADebit else {
+            return false
+        }
+        return paymentElement?.uiView.hasBeenAttachedToWindow != true
+            && paymentElement?.paymentSheetFlowController.didPresentAndContinue != true
+            && configuration.paymentElement?.displaysMandateText != false
+    }
 
     static func handlePaymentMethodPreconfirmActions(
         checkoutSession: Session,
