@@ -14,6 +14,85 @@ import XCTest
 @MainActor
 final class ExpressCheckoutElementViewTests: XCTestCase {
 
+    func testAutomaticApplePayButtonUpdatesWithInterfaceStyle() throws {
+        // Given an automatic Apple Pay button in light mode
+        let view = makeApplePayView(theme: .automatic)
+        let window = UIWindow(frame: view.bounds)
+        window.addSubview(view)
+        window.isHidden = false
+        defer { window.isHidden = true }
+        view.overrideUserInterfaceStyle = .light
+        let lightButton = try applePayButton(in: view)
+        let lightImage = render(lightButton)
+        XCTAssertEqual(lightImage.pngData(), render(try applePayButton(in: makeApplePayView(theme: .dark))).pngData())
+
+        // When the interface changes to dark mode
+        view.overrideUserInterfaceStyle = .dark
+        let darkButton = try applePayButton(in: view)
+        let darkImage = render(darkButton)
+
+        // Then the button is recreated in white and changes back to black in light mode
+        XCTAssertFalse(lightButton === darkButton)
+        XCTAssertNotEqual(lightImage.pngData(), darkImage.pngData())
+        XCTAssertEqual(darkImage.pngData(), render(try applePayButton(in: makeApplePayView(theme: .light))).pngData())
+        view.overrideUserInterfaceStyle = .light
+        XCTAssertEqual(render(try applePayButton(in: view)).pngData(), lightImage.pngData())
+    }
+
+    func testExplicitApplePayButtonThemesDoNotChangeWithInterfaceStyle() throws {
+        let themes: [ExpressCheckoutElement.Configuration.Appearance.ButtonTheme] = [.light, .dark]
+        for theme in themes {
+            // Given an explicit theme in light mode
+            let view = makeApplePayView(theme: theme)
+            let window = UIWindow(frame: view.bounds)
+            window.addSubview(view)
+            window.isHidden = false
+            defer { window.isHidden = true }
+            view.overrideUserInterfaceStyle = .light
+            let button = try applePayButton(in: view)
+            let image = render(button)
+
+            // When the interface changes to dark mode
+            view.overrideUserInterfaceStyle = .dark
+
+            // Then the same button keeps its configured color
+            XCTAssertTrue(button === (try applePayButton(in: view)))
+            XCTAssertEqual(render(button).pngData(), image.pngData())
+        }
+    }
+
+    private func makeApplePayView(theme: ExpressCheckoutElement.Configuration.Appearance.ButtonTheme) -> ExpressCheckoutElementUIView {
+        var configuration = ExpressCheckoutElement.Configuration(completion: { _ in })
+        configuration.applePayConfiguration = .init(merchantId: "merchant.com.example")
+        configuration.appearance.buttonTheme = theme
+        configuration.appearance.cornerRadius = 6
+        let session = CheckoutTestHelpers.makeSessionWithWalletTypes(["apple_pay"]).makePublicSession()
+        let view = ExpressCheckoutElementUIView(
+            session: session,
+            configuration: configuration,
+            delegate: FakeExpressCheckoutElementDelegate()
+        )
+        view.frame = CGRect(x: 0, y: 0, width: 320, height: 44)
+        view.update(with: session, buttons: [.applePay])
+        return view
+    }
+
+    private func applePayButton(in view: ExpressCheckoutElementUIView) throws -> PKPaymentButton {
+        if #available(iOS 17.0, *) {
+            view.updateTraitsIfNeeded()
+        }
+        view.layoutIfNeeded()
+        let stack = try XCTUnwrap(view.subviews.first as? UIStackView)
+        let row = try XCTUnwrap(stack.arrangedSubviews.first as? UIStackView)
+        return try XCTUnwrap(row.arrangedSubviews.first as? PKPaymentButton)
+    }
+
+    private func render(_ button: PKPaymentButton) -> UIImage {
+        UIGraphicsImageRenderer(size: button.bounds.size).image { context in
+            button.layer.render(in: context.cgContext)
+        }
+    }
+
     func testReportsInitWhenAddedToWindowOnce() throws {
         // Given
         var configuration = ExpressCheckoutElement.Configuration(completion: { _ in })
