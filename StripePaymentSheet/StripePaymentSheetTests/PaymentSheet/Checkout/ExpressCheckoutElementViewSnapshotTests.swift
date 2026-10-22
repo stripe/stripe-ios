@@ -34,6 +34,20 @@ final class ExpressCheckoutElementViewSnapshotTests: STPSnapshotTestCase {
         verify(makeView(appearance: appearance))
     }
 
+    func testCustomCornerRadius() {
+        var appearance = ExpressCheckoutElement.Configuration.Appearance()
+        appearance.cornerRadius = 12
+
+        verify(makeView(appearance: appearance))
+    }
+
+    func testSquareCorners() {
+        var appearance = ExpressCheckoutElement.Configuration.Appearance()
+        appearance.cornerRadius = 0
+
+        verify(makeView(appearance: appearance))
+    }
+
     func testTwoColumnLayout() {
         var appearance = ExpressCheckoutElement.Configuration.Appearance()
         appearance.buttonLayout.maxColumns = 2
