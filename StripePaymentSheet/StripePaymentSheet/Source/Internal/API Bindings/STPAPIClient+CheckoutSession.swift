@@ -207,6 +207,34 @@ extension STPAPIClient {
         )
     }
 
+    /// Retrieves the latest full Checkout Session.
+    func retrieveCheckoutSession(
+        checkoutSessionId: String
+    ) async throws -> CheckoutClientAPIResponse {
+        return try await get(
+            endpoint: "payment_pages/\(checkoutSessionId)",
+            parameters: [
+                "elements_session_client": [
+                    "is_aggregation_expected": true,
+                ],
+            ]
+        )
+    }
+
+    /// Retrieves the small state object used to determine whether a Checkout
+    /// Session transition is still in progress.
+    func pollCheckoutSession(
+        checkoutSessionId: String,
+        timeout: TimeInterval
+    ) async throws -> PaymentPagePollResponse {
+        return try await get(
+            endpoint: "payment_pages/\(checkoutSessionId)/poll",
+            parameters: [:],
+            timeout: timeout,
+            retriesEnabled: false
+        )
+    }
+
     func detachPaymentMethod(
         _ paymentMethodId: String,
         fromCheckoutSession checkoutSessionId: String
@@ -368,4 +396,30 @@ extension STPAPIClient {
         }
     }
 
+    private func get<T: Decodable>(
+        endpoint: String,
+        parameters: [String: Any],
+        timeout: TimeInterval? = nil,
+        retriesEnabled: Bool = true
+    ) async throws -> T {
+        do {
+            return try await withCheckedThrowingContinuation { continuation in
+                get(
+                    resource: endpoint,
+                    parameters: parameters,
+                    timeout: timeout,
+                    retriesEnabled: retriesEnabled
+                ) { (result: Result<T, Error>) in
+                    continuation.resume(with: result)
+                }
+            }
+        } catch {
+            if error is DecodingError {
+                reportUnexpectedCheckoutClientParsingError(error, apiClient: self)
+            }
+            throw error
+        }
+    }
 }
+
+extension STPAPIClient: CheckoutSessionPollingAPIClient {}
