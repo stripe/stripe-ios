@@ -1,5 +1,5 @@
 //
-//  PaymentPagePollResponseTests.swift
+//  CheckoutSessionPollResponseTests.swift
 //  StripePaymentSheetTests
 //
 //  Created by Yuki Tokuhiro on 8/22/26.
@@ -9,9 +9,9 @@
 @testable @_spi(STP) import StripePaymentSheet
 import XCTest
 
-final class PaymentPagePollResponseTests: XCTestCase {
+final class CheckoutSessionPollResponseTests: XCTestCase {
     func testDecodesEveryState() throws {
-        let cases: [(String, PaymentPagePollResponse.State)] = [
+        let cases: [(String, CheckoutSessionPollResponse.State)] = [
             ("active", .active),
             ("failed_async_payment", .failedAsyncPayment),
             ("pending_async_customer_action", .pendingAsyncCustomerAction),
@@ -74,7 +74,7 @@ final class PaymentPagePollResponseTests: XCTestCase {
     private func decode(
         state: String = "active",
         paymentObjectStatus: String? = nil
-    ) throws -> PaymentPagePollResponse {
+    ) throws -> CheckoutSessionPollResponse {
         var json: [String: Any] = [
             "session_id": "cs_test_123",
             "state": state,
@@ -86,8 +86,8 @@ final class PaymentPagePollResponseTests: XCTestCase {
         return try decode(json)
     }
 
-    private func decode(_ json: [String: Any]) throws -> PaymentPagePollResponse {
+    private func decode(_ json: [String: Any]) throws -> CheckoutSessionPollResponse {
         let data = try JSONSerialization.data(withJSONObject: json)
-        return try StripeJSONDecoder().decode(PaymentPagePollResponse.self, from: data)
+        return try StripeJSONDecoder().decode(CheckoutSessionPollResponse.self, from: data)
     }
 }

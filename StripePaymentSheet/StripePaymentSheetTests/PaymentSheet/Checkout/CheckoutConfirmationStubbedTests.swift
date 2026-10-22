@@ -30,15 +30,17 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
             let params = RequestBodyTestHelpers.formEncodedBodyParams(from: request)
             XCTAssertEqual(params["payment_method"], paymentMethod.stripeId)
             XCTAssertFalse(params.keys.contains { $0.hasPrefix("payment_method_data[") })
-            return HTTPStubsResponse(jsonObject: Self.checkoutClientConfirmJSON(from: Self.confirmedSessionJSON), statusCode: 200, headers: nil)
+            return HTTPStubsResponse(jsonObject: Self.confirmedSessionJSON, statusCode: 200, headers: nil)
         }
 
         // When the coordinator confirms the saved payment method
-        let result = await checkout.confirm(makePaymentMethodFlow(
-            for: checkout,
-            option: .saved(paymentMethod, nil),
-            confirmationChallenge: challenge
-        ))
+        let result = await checkout.confirm(
+            makePaymentMethodFlow(
+                for: checkout,
+                option: .saved(paymentMethod, nil),
+                confirmationChallenge: challenge
+            )
+        )
 
         // Then it maps the result and commits the returned Checkout Session
         guard case .completed(let paymentStatus) = result else {
@@ -148,7 +150,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
             request.url?.path.hasSuffix("/confirm") == true
         } response: { _ in
             confirmRequest.fulfill()
-            return HTTPStubsResponse(jsonObject: Self.checkoutClientConfirmJSON(from: Self.confirmedSessionJSON), statusCode: 200, headers: nil)
+            return HTTPStubsResponse(jsonObject: Self.confirmedSessionJSON, statusCode: 200, headers: nil)
         }
 
         // When confirmation is attempted
@@ -215,15 +217,15 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
             status: "open",
             paymentStatus: "unpaid"
         )
-        var paymentIntentJSON = responseJSON["payment_intent"] as! [String: Any]
+        var paymentIntentJSON = STPTestUtils.jsonNamed("CheckoutPaymentIntent")!
         paymentIntentJSON["payment_method"] = STPTestUtils.jsonNamed("SEPADebitPaymentMethod")!
-        responseJSON["payment_intent"] = paymentIntentJSON
 
         // When the Checkout Session is confirmed
         let result = await confirmCheckoutSession(
             checkout,
             responseJSON: responseJSON,
-            poller: poller
+            poller: poller,
+            intentJSON: paymentIntentJSON
         )
 
         // Then the Session is complete, but remains unpaid until the asynchronous payment succeeds
@@ -268,7 +270,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
             status: "open",
             paymentStatus: "unpaid"
         )
-        var paymentIntentJSON = responseJSON["payment_intent"] as! [String: Any]
+        var paymentIntentJSON = STPTestUtils.jsonNamed("CheckoutPaymentIntent")!
         paymentIntentJSON["next_action"] = [
             "type": "verify_with_microdeposits",
             "verify_with_microdeposits": [
@@ -277,13 +279,13 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
                 "microdeposit_type": "descriptor_code",
             ],
         ]
-        responseJSON["payment_intent"] = paymentIntentJSON
 
         // When the Checkout Session is confirmed
         let result = await confirmCheckoutSession(
             checkout,
             responseJSON: responseJSON,
-            poller: poller
+            poller: poller,
+            intentJSON: paymentIntentJSON
         )
 
         // Then confirmation preserves the open and unpaid Session returned by /confirm
@@ -297,19 +299,24 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
     func testSucceededSetupIntentCompletesSessionAndPreservesPaymentStatus() async throws {
         // Given a card successfully saved for future payments with a SetupIntent
         let checkout = try await makeCheckout()
-        let poller = TestCheckoutSessionPoller(outcome: .completed)
+        let poller = TestCheckoutSessionPoller(
+            outcome: .completed
+        )
         var responseJSON = makeConfirmedSessionJSON(status: "open", paymentStatus: "no_payment_required")
         var setupIntentJSON = STPTestUtils.jsonNamed("SetupIntent")!
         setupIntentJSON["status"] = "succeeded"
         setupIntentJSON["payment_method"] = STPTestUtils.jsonNamed("CardPaymentMethod")!
-        responseJSON["payment_intent"] = nil
-        responseJSON["setup_intent"] = setupIntentJSON
+        responseJSON["payment_response"] = [
+            "status": "succeeded",
+            "setup_intent": ["id": setupIntentJSON["id"]!, "client_secret": setupIntentJSON["client_secret"]!],
+        ]
 
         // When the Checkout Session is confirmed
         let result = await confirmCheckoutSession(
             checkout,
             responseJSON: responseJSON,
-            poller: poller
+            poller: poller,
+            intentJSON: setupIntentJSON
         )
 
         // Then the Session is complete and still requires no payment
@@ -450,7 +457,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
     func testNewPaymentMethodWithPerMethodSetupFutureUsageDeselectedUsesLimitedAllowRedisplay() async throws {
         try await assertNewPaymentMethodConfirmation(
             session: CheckoutTestHelpers.makeSession([
-                "payment_method_options": ["card": ["setup_future_usage": "off_session"]],
+                "payment_method_options": ["card": ["setup_future_usage": "off_session"]]
             ]).withCustomer(),
             paymentMethodType: .stripe(.card),
             checkboxState: .deselected,
@@ -459,13 +466,14 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         )
     }
 
-    func testNewPaymentMethodWithPerMethodSetupFutureUsageAndOfferSaveDisabledOmitsSaveAndUsesLimitedAllowRedisplay() async throws {
+    func testNewPaymentMethodWithPerMethodSetupFutureUsageAndOfferSaveDisabledOmitsSaveAndUsesLimitedAllowRedisplay()
+        async throws
+    {
         try await assertNewPaymentMethodConfirmation(
             session: CheckoutTestHelpers.makeSession([
                 "payment_method_options": ["card": ["setup_future_usage": "off_session"]],
-                "customer_managed_saved_payment_methods_offer_save": [
-                    "enabled": false,
-                    "status": "not_accepted",
+                "saved_payment_method_options": [
+                    "payment_method_save": "disabled"
                 ],
             ]).withCustomer(),
             paymentMethodType: .stripe(.card),
@@ -478,7 +486,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
     func testNewNonCardPaymentMethodSelectedSendsSaveAndAlwaysAllowRedisplay() async throws {
         try await assertNewPaymentMethodConfirmation(
             session: CheckoutTestHelpers.makeSession([
-                "payment_method_types": ["paypal"],
+                "ordered_payment_method_types_and_wallets": ["paypal"]
             ]).withCustomer(),
             paymentMethodType: .stripe(.payPal),
             checkboxState: .selected,
@@ -523,7 +531,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
     func testExpressCheckoutApplePayRequiresShippingAddressWhenSessionCollectsShipping() async throws {
         // Given a Checkout Session that collects shipping addresses
         let apiResponse = CheckoutTestHelpers.makeSession([
-            "shipping_address_collection": ["allowed_countries": ["US"]],
+            "shipping_address_collection": ["allowed_countries": ["US"]]
         ])
         var configuration = CheckoutController.Configuration(
             clientSecret: "cs_test_123_secret_abc",
@@ -532,10 +540,12 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         var eceConfiguration = ExpressCheckoutElement.Configuration(completion: { _ in })
         eceConfiguration.applePayConfiguration = .init(merchantId: "merchant.com.test")
         configuration.expressCheckoutElement = eceConfiguration
-        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration(
-            apiResponse: apiResponse,
-            configuration: configuration
-        ))
+        let checkout = try await CheckoutController(
+            configuration: CheckoutTestHelpers.makeConfiguration(
+                apiResponse: apiResponse,
+                configuration: configuration
+            )
+        )
 
         // When ECE constructs its Apple Pay confirmation flow
         let flow = try checkout.makeExpressCheckoutConfirmationFlow(.applePay, presentationWindow: nil)
@@ -665,7 +675,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         // Given Link confirmation returns an open Checkout Session
         let checkout = try await makeCheckout(apiResponse: CheckoutTestHelpers.makeSession().withCustomer())
         var confirmResponseJSON = makeConfirmedSessionJSON(status: "open")
-        confirmResponseJSON["session_id"] = checkout.session.id
+        confirmResponseJSON["id"] = checkout.session.id
         let confirm = stubConfirmationExpecting(
             sessionId: checkout.session.id,
             savePaymentMethod: nil,
@@ -675,7 +685,8 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         let poll = stubPollCheckoutSession(sessionId: checkout.session.id)
         let logout = stubLinkLogout(consumerSessionClientSecret: "cs_xxx")
         let configuration = checkout.getPaymentElement().embeddedPaymentElement.configuration
-        let flow = CheckoutController.CheckoutConfirmationFlow.link(.init(
+        let flow = CheckoutController.CheckoutConfirmationFlow.link(
+            .init(
             confirmOption: makeLinkConfirmOption(),
             configuration: configuration,
             nativeSheetPresentation: checkout.getPaymentElement().embeddedPaymentElement.nativeSheetPresentation,
@@ -683,7 +694,8 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
             analyticsHelper: ._testValue(),
             authenticationContext: self,
             paymentHandler: STPPaymentHandler(apiClient: configuration.apiClient)
-        ))
+            )
+        )
 
         // When Checkout confirms with Link
         let result = await checkout.confirm(flow)
@@ -733,7 +745,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         stubConfirmedIntentRetrieval(from: Self.confirmedSessionJSON)
         let responseJSON: [AnyHashable: Any]
         if statusCode == 200 {
-            responseJSON = Self.checkoutClientConfirmJSON(from: Self.confirmedSessionJSON)
+            responseJSON = Self.confirmedSessionJSON
         } else {
             responseJSON = ["error": ["type": "card_error", "message": "Declined"]]
         }
@@ -742,7 +754,10 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         } response: { request in
             let params = RequestBodyTestHelpers.formEncodedBodyParams(from: request, omittingEmptyValues: true)
             XCTAssertEqual(params["payment_method_data[radar_options][hcaptcha_token]"], "captcha_token")
-            XCTAssertEqual(params["payment_method_data[radar_options][ios_verification_object][test_assertion]"], "assertion")
+            XCTAssertEqual(
+                params["payment_method_data[radar_options][ios_verification_object][test_assertion]"],
+                "assertion"
+            )
             inspectRequest(params)
             // Check before supplying the response, without relying on a response delay.
             XCTAssertEqual(challenge.completions, 0)
@@ -802,13 +817,13 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
 
     private static var confirmedSessionJSON: [AnyHashable: Any] {
         var json = STPTestUtils.jsonNamed("CheckoutSessionConfirmed")!
-        json["session_id"] = "cs_test_123"
+        json["id"] = "cs_test_123"
         json["client_secret"] = "cs_test_123_secret_abc"
         return json
     }
 
     private func makeCheckout(
-        apiResponse: PaymentPagesAPIResponse = CheckoutTestHelpers.makeOpenSession()
+        apiResponse: CheckoutClientAPIResponse = CheckoutTestHelpers.makeOpenSession()
     ) async throws -> CheckoutController {
         try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: apiResponse))
     }
@@ -840,7 +855,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
     }
 
     private func assertNewPaymentMethodConfirmation(
-        session: PaymentPagesAPIResponse,
+        session: CheckoutClientAPIResponse,
         paymentMethodType: PaymentSheet.PaymentMethodType,
         checkboxState: IntentConfirmParams.SaveForFutureUseCheckboxState,
         expectedAllowRedisplay: String,
@@ -938,9 +953,9 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
     ) -> [AnyHashable: Any] {
         var responseJSON = Self.confirmedSessionJSON
         if let paymentIntentStatus {
-            var paymentIntent = responseJSON["payment_intent"] as! [String: Any]
-            paymentIntent["status"] = paymentIntentStatus
-            responseJSON["payment_intent"] = paymentIntent
+            var paymentResponse = responseJSON["payment_response"] as! [String: Any]
+            paymentResponse["status"] = paymentIntentStatus
+            responseJSON["payment_response"] = paymentResponse
         }
         if let status {
             responseJSON["status"] = status
@@ -951,36 +966,24 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         return responseJSON
     }
 
-    private static func checkoutClientConfirmJSON(from responseJSON: [AnyHashable: Any]) -> [String: Any] {
-        let session = responseJSON as? [String: Any] ?? [:]
-        var response = CheckoutTestHelpers.checkoutClientInitJSON(
-            from: session,
-            sessionId: session["session_id"] as? String ?? "cs_test_123"
-        )
-        response.removeValue(forKey: "payment_intent")
-        response.removeValue(forKey: "setup_intent")
-        var paymentResponse: [String: Any] = [:]
-        for (key, intent) in [
-            ("payment_intent", session["payment_intent"] as? [String: Any]),
-            ("setup_intent", session["setup_intent"] as? [String: Any]),
+    private func stubConfirmedIntentRetrieval(
+        from responseJSON: [AnyHashable: Any],
+        intentJSON: [AnyHashable: Any]? = nil
+    ) {
+        let paymentResponse = responseJSON["payment_response"] as? [String: Any] ?? [:]
+        for (key, endpoint, fixture) in [
+            ("payment_intent", "payment_intents", "CheckoutPaymentIntent"),
+            ("setup_intent", "setup_intents", "SetupIntent"),
         ] {
-            guard let intent,
-                  let id = intent["id"] as? String,
-                  let clientSecret = intent["client_secret"] as? String else { continue }
-            paymentResponse[key] = ["id": id, "client_secret": clientSecret]
-            paymentResponse["status"] = intent["status"]
-        }
-        response["payment_response"] = session["payment_response"] ?? (paymentResponse.isEmpty ? nil : paymentResponse)
-        return response
-    }
-
-    private func stubConfirmedIntentRetrieval(from responseJSON: [AnyHashable: Any]) {
-        for (key, endpoint) in [("payment_intent", "payment_intents"), ("setup_intent", "setup_intents")] {
-            guard let intent = responseJSON[key] as? [String: Any],
-                  let id = intent["id"] as? String else { continue }
+            guard let reference = paymentResponse[key] as? [String: Any],
+                let id = reference["id"] as? String
+            else { continue }
+            var intent = intentJSON ?? STPTestUtils.jsonNamed(fixture)!
+            intent["id"] = id
+            intent["client_secret"] = reference["client_secret"]
+            intent["status"] = paymentResponse["status"]
             stub { request in
-                request.httpMethod == "GET"
-                    && request.url?.path == "/v1/\(endpoint)/\(id)"
+                request.httpMethod == "GET" && request.url?.path == "/v1/\(endpoint)/\(id)"
             } response: { _ in
                 HTTPStubsResponse(jsonObject: intent, statusCode: 200, headers: nil)
             }
@@ -990,9 +993,10 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
     private func confirmCheckoutSession(
         _ checkout: CheckoutController,
         responseJSON: [AnyHashable: Any],
-        poller: TestCheckoutSessionPoller
+        poller: TestCheckoutSessionPoller,
+        intentJSON: [AnyHashable: Any]? = nil
     ) async -> CheckoutController.InternalConfirmResult {
-        stubConfirmation(responseJSON: responseJSON)
+        stubConfirmation(responseJSON: responseJSON, intentJSON: intentJSON)
         let configuration = checkout.getPaymentElement().embeddedPaymentElement.configuration
         let requestParameters = CheckoutSessionConfirmationRequestParameters.createWithPaymentMethodID(
             sessionId: checkout.session.id,
@@ -1014,15 +1018,16 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
 
     private func stubConfirmation(
         responseJSON: [AnyHashable: Any]? = nil,
-        responseTime: TimeInterval = 0
+        responseTime: TimeInterval = 0,
+        intentJSON: [AnyHashable: Any]? = nil
     ) {
         let responseJSON = responseJSON ?? Self.confirmedSessionJSON
-        stubConfirmedIntentRetrieval(from: responseJSON)
+        stubConfirmedIntentRetrieval(from: responseJSON, intentJSON: intentJSON)
         stub { request in
             request.url?.path.hasSuffix("/confirm") == true
         } response: { _ in
             HTTPStubsResponse(
-                jsonObject: Self.checkoutClientConfirmJSON(from: responseJSON),
+                jsonObject: responseJSON,
                 statusCode: 200,
                 headers: nil
             ).responseTime(responseTime)
@@ -1037,21 +1042,10 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
             request.httpMethod == "GET"
                 && request.url?.path.hasSuffix("/checkout_client/cs_test_123/retrieve") == true
         } response: { _ in
-            for (key, endpoint) in [("payment_intent", "payment_intents"), ("setup_intent", "setup_intents")] {
-                guard let intent = responseJSON[key] as? [String: Any],
-                      let id = intent["id"] as? String else { continue }
-                stub { request in
-                    request.httpMethod == "GET" && request.url?.path == "/v1/\(endpoint)/\(id)"
-                } response: { _ in
-                    HTTPStubsResponse(jsonObject: intent, statusCode: 200, headers: nil)
-                }
-            }
+            self.stubConfirmedIntentRetrieval(from: responseJSON)
             expectation.fulfill()
             return HTTPStubsResponse(
-                jsonObject: CheckoutTestHelpers.checkoutClientInitJSON(
-                    from: responseJSON as? [String: Any] ?? [:],
-                    sessionId: "cs_test_123"
-                ),
+                jsonObject: (responseJSON as? [String: Any] ?? [:]),
                 statusCode: 200,
                 headers: nil
             )
@@ -1087,7 +1081,12 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
             XCTAssertEqual(params["payment_method_data[type]"], expectedPaymentMethodType, file: file, line: line)
             XCTAssertEqual(params["expected_payment_method_type"], expectedPaymentMethodType, file: file, line: line)
             if let expectedAllowRedisplay {
-                XCTAssertEqual(params["payment_method_data[allow_redisplay]"], expectedAllowRedisplay, file: file, line: line)
+                XCTAssertEqual(
+                    params["payment_method_data[allow_redisplay]"],
+                    expectedAllowRedisplay,
+                    file: file,
+                    line: line
+                )
             }
             switch expectedBillingEmail {
             case .omitted:
@@ -1114,7 +1113,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
             }
             expectation.fulfill()
             return HTTPStubsResponse(
-                jsonObject: Self.checkoutClientConfirmJSON(from: responseJSON ?? Self.confirmedSessionJSON),
+                jsonObject: responseJSON ?? Self.confirmedSessionJSON,
                 statusCode: 200,
                 headers: nil
             )

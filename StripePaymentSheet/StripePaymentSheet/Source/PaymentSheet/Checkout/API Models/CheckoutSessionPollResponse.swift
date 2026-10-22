@@ -1,5 +1,5 @@
 //
-//  PaymentPagePollResponse.swift
+//  CheckoutSessionPollResponse.swift
 //  StripePaymentSheet
 //
 //  Created by Yuki Tokuhiro on 8/22/26.
@@ -8,8 +8,8 @@
 /// The small response returned by the Checkout Session poll endpoint.
 ///
 /// This response is used to decide when to stop waiting. It does not contain
-/// enough data to replace a `PaymentPagesAPIResponse`.
-struct PaymentPagePollResponse: Decodable, Equatable {
+/// enough data to replace a `CheckoutClientAPIResponse`.
+struct CheckoutSessionPollResponse: Decodable, Equatable {
     let sessionId: String
     let state: State
     let paymentObjectStatus: PaymentObjectStatus?

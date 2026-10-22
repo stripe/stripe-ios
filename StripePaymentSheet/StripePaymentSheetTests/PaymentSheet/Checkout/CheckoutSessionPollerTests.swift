@@ -13,7 +13,7 @@ final class CheckoutSessionPollerTests: XCTestCase {
     private let checkoutSessionId = "cs_test_123"
 
     func testPollStatesControlWhetherPollingContinues() async {
-        let continuingStates: [PaymentPagePollResponse.State] = [
+        let continuingStates: [CheckoutSessionPollResponse.State] = [
             .active,
             .processingSyncPayment,
             .processingSubscription,
@@ -37,7 +37,7 @@ final class CheckoutSessionPollerTests: XCTestCase {
             XCTAssertEqual(outcome, .completed)
         }
 
-        let stoppingStates: [PaymentPagePollResponse.State] = [
+        let stoppingStates: [CheckoutSessionPollResponse.State] = [
             .succeeded,
             .processingAsyncPayment,
             .pendingAsyncCustomerAction,
@@ -60,7 +60,7 @@ final class CheckoutSessionPollerTests: XCTestCase {
     }
 
     func testInvalidAndExpiredReturnDistinctOutcome() async {
-        for state in [PaymentPagePollResponse.State.invalid, .expired] {
+        for state in [CheckoutSessionPollResponse.State.invalid, .expired] {
             // Given an unexpected terminal poll state
             let clock = TestClock()
             let apiClient = MockAPIClient(clock: clock)
@@ -229,10 +229,10 @@ final class CheckoutSessionPollerTests: XCTestCase {
     }
 
     private func pollResponse(
-        state: PaymentPagePollResponse.State,
-        paymentObjectStatus: PaymentPagePollResponse.PaymentObjectStatus? = nil
-    ) -> PaymentPagePollResponse {
-        PaymentPagePollResponse(
+        state: CheckoutSessionPollResponse.State,
+        paymentObjectStatus: CheckoutSessionPollResponse.PaymentObjectStatus? = nil
+    ) -> CheckoutSessionPollResponse {
+        CheckoutSessionPollResponse(
             sessionId: checkoutSessionId,
             state: state,
             paymentObjectStatus: paymentObjectStatus
@@ -285,7 +285,7 @@ private final class MockAPIClient: CheckoutSessionPollingAPIClient {
     }
 
     enum PollResult {
-        case success(PaymentPagePollResponse, duration: TimeInterval = 0)
+        case success(CheckoutSessionPollResponse, duration: TimeInterval = 0)
         case failure(Swift.Error, duration: TimeInterval = 0)
     }
 
@@ -300,7 +300,7 @@ private final class MockAPIClient: CheckoutSessionPollingAPIClient {
     func pollCheckoutSession(
         checkoutSessionId: String,
         timeout: TimeInterval
-    ) async throws -> PaymentPagePollResponse {
+    ) async throws -> CheckoutSessionPollResponse {
         pollRequests.append(PollRequest(
             checkoutSessionId: checkoutSessionId,
             timeout: timeout,

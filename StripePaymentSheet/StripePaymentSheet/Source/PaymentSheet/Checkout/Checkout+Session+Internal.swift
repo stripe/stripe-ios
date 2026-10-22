@@ -73,7 +73,7 @@ extension CheckoutController.Session {
             return perPaymentMethodSetupFutureUsage
         }
 
-        return setupFutureUsage
+        return (paymentMethodOptions?.allResponseFields[paymentMethodType.identifier] as? [String: Any])?["setup_future_usage"] as? String
     }
 }
 

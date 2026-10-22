@@ -31,8 +31,8 @@ final class CheckoutApplePayContextTests: XCTestCase {
     func testMakeSummaryItemsWithAmount() {
         // Given a session with a single item and no tax
         let session = CheckoutTestHelpers.makeSession([
-            "checkout_items": CheckoutTestHelpers.makeOneTimePriceCheckoutItems(unitAmount: 2500),
-            "currency": "usd",
+            "items": CheckoutTestHelpers.makeOneTimePriceCheckoutItems(unitAmount: 2500),
+            "presentment_currency": "usd",
         ]).makePublicSession()
 
         // When
@@ -50,8 +50,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
     func testMakeSummaryItemsWithLineItemsAndBreakdown() {
         // Given a session with two line items and tax on one of them
         let session = CheckoutTestHelpers.makeSession([
-            "currency": "usd",
-            "checkout_items": [
+            "items": [
                 [
                     "key": "checkout_item_widget",
                     "type": "one_time_price",
@@ -67,7 +66,10 @@ final class CheckoutApplePayContextTests: XCTestCase {
                                 "tax_amounts": [],
                                 "tax_inclusive": 0,
                                 "tax_exclusive": 200,
-                                "price": ["id": "price_widget", "currency": "usd", "unit_amount": 2000, "product": ["name": "Widget", "images": []]],
+                                "price": [
+                                    "id": "price_widget", "currency": "usd", "unit_amount": 2000,
+                                    "product": ["name": "Widget", "images": []],
+                                ],
                             ],
                         ],
                         "subtotal": 2000,
@@ -89,7 +91,10 @@ final class CheckoutApplePayContextTests: XCTestCase {
                                 "tax_amounts": [],
                                 "tax_inclusive": 0,
                                 "tax_exclusive": 0,
-                                "price": ["id": "price_gadget", "currency": "usd", "unit_amount": 500, "product": ["name": "Gadget", "images": []]],
+                                "price": [
+                                    "id": "price_gadget", "currency": "usd", "unit_amount": 500,
+                                    "product": ["name": "Gadget", "images": []],
+                                ],
                             ],
                         ],
                         "subtotal": 1000,
@@ -97,6 +102,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
                     ],
                 ],
             ],
+            "presentment_currency": "usd",
         ]).makePublicSession()
 
         // When
@@ -137,12 +143,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
         ] {
             // Given a USD merchant presenting a localized checkout
             let session = CheckoutTestHelpers.makeSession([
-                "currency": currency,
-                "checkout_items": CheckoutTestHelpers.makeOneTimePriceCheckoutItems(currency: currency, unitAmount: amount),
                 "adaptive_pricing_info": [
-                    "integration_currency": "usd",
-                    "integration_amount": 12000,
-                    "active_presentment_currency": currency,
                     "local_currency_options": [
                         [
                             "currency": currency,
@@ -151,7 +152,13 @@ final class CheckoutApplePayContextTests: XCTestCase {
                             "conversion_markup_bps": 400,
                         ],
                     ],
+                    "integration_currency_option": [
+                        "currency": "usd",
+                        "amount": 12000,
+                    ],
                 ],
+                "items": CheckoutTestHelpers.makeOneTimePriceCheckoutItems(currency: currency, unitAmount: amount),
+                "presentment_currency": currency,
             ]).makePublicSession()
             let parameters = CheckoutController.ApplePayConfirmationParameters.makeMock(
                 apiClient: APIStubbedTestCase.stubbedAPIClient()
@@ -174,8 +181,8 @@ final class CheckoutApplePayContextTests: XCTestCase {
     func testMakePaymentRequestWithoutAdaptivePricingUsesSessionCurrency() {
         // Given a checkout without an alternate currency
         let session = CheckoutTestHelpers.makeSession([
-            "currency": "usd",
-            "checkout_items": CheckoutTestHelpers.makeOneTimePriceCheckoutItems(unitAmount: 12000),
+            "items": CheckoutTestHelpers.makeOneTimePriceCheckoutItems(unitAmount: 12000),
+            "presentment_currency": "usd",
         ]).makePublicSession()
         let parameters = CheckoutController.ApplePayConfirmationParameters.makeMock(
             apiClient: APIStubbedTestCase.stubbedAPIClient()
@@ -249,7 +256,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
 
     func testMakePaymentRequestDoesNotRequireEmailWhenSessionHasServerEmail() {
         let session = CheckoutTestHelpers.makeSession([
-            "customer_email": "customer@example.com",
+            "customer_email": "customer@example.com"
         ]).makePublicSession()
         let parameters = CheckoutController.ApplePayConfirmationParameters.makeMock(
             apiClient: APIStubbedTestCase.stubbedAPIClient()
@@ -375,16 +382,17 @@ final class CheckoutApplePayContextTests: XCTestCase {
         // Given a Checkout Session that calculates automatic tax from shipping
         let updatedSession = CheckoutTestHelpers.makeSession([
             "shipping_address_collection": ["allowed_countries": ["US"]],
-            "tax_context": [
-                "automatic_tax_enabled": true,
-                "automatic_tax_address_source": "session.shipping",
+            "items": CheckoutTestHelpers.makeOneTimePriceCheckoutItems(unitAmount: 1200),
+            "automatic_tax": [
+                "enabled": true,
+                "status": "ready",
+                "address_source": "shipping",
             ],
-            "checkout_items": CheckoutTestHelpers.makeOneTimePriceCheckoutItems(unitAmount: 1200),
         ]).makePublicSession()
         let updater = MockCheckoutSessionWalletUpdater(sessionToReturn: updatedSession)
         let (context, controller) = makeShippingContext(
             allowedCountries: ["US"],
-            automaticTaxAddressSource: "session.shipping",
+            automaticTaxAddressSource: "shipping",
             checkoutWalletUpdater: updater
         )
         let contact = makeShippingContact(country: "US", postalCode: "94107")
@@ -408,7 +416,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
         let updater = MockCheckoutSessionWalletUpdater()
         let (context, controller) = makeShippingContext(
             allowedCountries: ["US"],
-            automaticTaxAddressSource: "session.billing",
+            automaticTaxAddressSource: "billing",
             checkoutWalletUpdater: updater
         )
 
@@ -439,7 +447,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
             )
             let (context, controller) = makeShippingContext(
                 allowedCountries: ["US"],
-                automaticTaxAddressSource: "session.shipping",
+                automaticTaxAddressSource: "shipping",
                 checkoutWalletUpdater: updater
             )
             var didReturnResult = false
@@ -477,9 +485,10 @@ final class CheckoutApplePayContextTests: XCTestCase {
     func testMakePaymentRequest_billingTaxRequiresPostalAddress() {
         // Given automatic tax uses the billing address, even though address collection is .never
         let session = CheckoutTestHelpers.makeSession([
-            "tax_context": [
-                "automatic_tax_enabled": true,
-                "automatic_tax_address_source": "session.billing",
+            "automatic_tax": [
+                "enabled": true,
+                "status": "ready",
+                "address_source": "billing",
             ],
         ]).makePublicSession()
         let parameters = CheckoutController.ApplePayConfirmationParameters.makeMock(
@@ -630,7 +639,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
         payment.billingContact?.phoneNumber = nil
         payment.shippingContact?.emailAddress = "wallet@example.com"
         payment.shippingContact?.phoneNumber = CNPhoneNumber(stringValue: "+1 (415) 555-1234")
-        let response = try PaymentPagesAPIResponse.decode(fromAPIResponse: makeConfirmResponseJSON())
+        let response = try CheckoutClientAPIResponse.decode(fromAPIResponse: makeConfirmResponseJSON())
         let confirmed = expectation(description: "Checkout confirmed with inline Apple Pay data")
         let (context, controller) = makeContext { parameters in
             XCTAssertNil(parameters.paymentMethodId)
@@ -671,7 +680,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
             tokenCount += 1
             return HTTPStubsResponse(jsonObject: self.tokenJSON(id: "tok_\(tokenCount)"), statusCode: 200, headers: nil)
         }
-        let response = try PaymentPagesAPIResponse.decode(fromAPIResponse: makeConfirmResponseJSON())
+        let response = try CheckoutClientAPIResponse.decode(fromAPIResponse: makeConfirmResponseJSON())
         var confirmedTokens: [String?] = []
         let (context, controller) = makeContext { parameters in
             confirmedTokens.append(parameters.paymentMethodData?.card?.token)
@@ -772,12 +781,13 @@ final class CheckoutApplePayContextTests: XCTestCase {
     ) -> (CheckoutApplePayContext, MockPKPaymentAuthorizationController) {
         let resolvedAPIClient = apiClient ?? APIStubbedTestCase.stubbedAPIClient()
         let response = CheckoutTestHelpers.makeSession([
-            "session_id": sessionId,
-            "currency": "usd",
             "total_summary": ["subtotal": 1000, "total": 1000, "due": 1000],
-            "tax_context": [
-                "automatic_tax_enabled": collectsTaxFromBillingAddress,
-                "automatic_tax_address_source": "session.billing",
+            "id": sessionId,
+            "presentment_currency": "usd",
+            "automatic_tax": [
+                "enabled": collectsTaxFromBillingAddress,
+                "status": "ready",
+                "address_source": "billing",
             ],
         ])
         let session = response.makePublicSession()
@@ -803,12 +813,13 @@ final class CheckoutApplePayContextTests: XCTestCase {
     ) -> (CheckoutApplePayContext, MockPKPaymentAuthorizationController) {
         let apiClient = APIStubbedTestCase.stubbedAPIClient()
         var overrides: [String: Any] = [
-            "shipping_address_collection": ["allowed_countries": allowedCountries],
+            "shipping_address_collection": ["allowed_countries": allowedCountries]
         ]
         if let automaticTaxAddressSource {
-            overrides["tax_context"] = [
-                "automatic_tax_enabled": true,
-                "automatic_tax_address_source": automaticTaxAddressSource,
+            overrides["automatic_tax"] = [
+                "enabled": true,
+                "status": "ready",
+                "address_source": automaticTaxAddressSource,
             ]
         }
         let session = CheckoutTestHelpers.makeSession(overrides).makePublicSession()
@@ -846,32 +857,15 @@ final class CheckoutApplePayContextTests: XCTestCase {
     }
 
     private func makeConfirmResponseJSON() -> [String: Any] {
-        let paymentIntentJSON: [String: Any] = [
-            "id": "pi_test_123",
-            "object": "payment_intent",
-            "amount": 1000,
-            "currency": "usd",
-            "status": "succeeded",
-            "livemode": false,
-            "created": 1234567890,
-            "payment_method_types": ["card"],
-            "client_secret": "pi_test_123_secret_abc",
-        ]
-        var json: [String: Any] = [
-            "session_id": "cs_test_123",
-            "object": "checkout.session",
-            "livemode": false,
-            "mode": "modeless",
-            "currency": "usd",
-            "checkout_items": CheckoutTestHelpers.makeOneTimePriceCheckoutItems(),
+        CheckoutTestHelpers.makeSessionJSON([
+            "id": "cs_test_123",
             "status": "complete",
             "payment_status": "paid",
-            "payment_method_types": ["card"],
-            "elements_session": CheckoutTestHelpers.minimalElementsSessionJSON,
-            "payment_intent": paymentIntentJSON,
-        ]
-        json["client_secret"] = "cs_test_123_secret_abc"
-        return json
+            "payment_response": [
+                "status": "succeeded",
+                "payment_intent": ["id": "pi_test_123", "client_secret": "pi_test_123_secret_abc"],
+            ],
+        ])
     }
 
 }
