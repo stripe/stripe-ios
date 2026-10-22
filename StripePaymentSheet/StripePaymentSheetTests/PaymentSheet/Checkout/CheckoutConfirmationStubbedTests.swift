@@ -1305,7 +1305,11 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
                 line: line
             )
             XCTAssertEqual(params["payment_method"], expectedPaymentMethodID, file: file, line: line)
-            XCTAssertEqual(params["payment_method_data[type]"], expectedPaymentMethodID == nil ? expectedPaymentMethodType : nil, file: file, line: line)
+            if expectedPaymentMethodID != nil {
+                XCTAssertFalse(params.keys.contains { $0.hasPrefix("payment_method_data[") }, file: file, line: line)
+            } else {
+                XCTAssertEqual(params["payment_method_data[type]"], expectedPaymentMethodType, file: file, line: line)
+            }
             XCTAssertEqual(params["expected_payment_method_type"], expectedPaymentMethodType, file: file, line: line)
             if let expectedAllowRedisplay {
                 XCTAssertEqual(
