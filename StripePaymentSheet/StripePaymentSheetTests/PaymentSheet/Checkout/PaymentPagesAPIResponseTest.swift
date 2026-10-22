@@ -524,22 +524,29 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertEqual(session.setupFutureUsage, "off_session")
     }
 
-    func testDecodedObjectParsesPerPaymentMethodSetupFutureUsage() {
-        let session = CheckoutTestHelpers.makeSession([
+    func testDecodedObjectParsesPerPaymentMethodSetupFutureUsage() throws {
+        let json = CheckoutTestHelpers.makeSessionJSON([
             "payment_method_types": ["card", "us_bank_account"],
             "setup_future_usage_for_payment_method_type": [
                 "card": "off_session",
                 "us_bank_account": "none",
             ],
-        ]).withCustomer()
-
-        XCTAssertEqual(
-            (session.setupFutureUsageForPaymentMethodType ?? [:]) as NSDictionary,
-            [
-                "card": "off_session",
-                "us_bank_account": "none",
-            ] as NSDictionary
+        ])
+        let checkoutClientJSON = CheckoutTestHelpers.checkoutClientInitJSON(from: json, sessionId: "cs_test_123")
+        let checkoutClient = try StripeJSONDecoder().decode(
+            CheckoutClientAPIResponse.self,
+            from: JSONSerialization.data(withJSONObject: checkoutClientJSON)
         )
+
+        for session in [try PaymentPagesAPIResponse.decode(fromAPIResponse: json), try checkoutClient.paymentPagesResponse()] {
+            XCTAssertEqual(
+                (session.setupFutureUsageForPaymentMethodType ?? [:]) as NSDictionary,
+                [
+                    "card": "off_session",
+                    "us_bank_account": "none",
+                ] as NSDictionary
+            )
+        }
     }
 
     func testDecodedObjectParsesCanDetachPaymentMethodTrue() {
