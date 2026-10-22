@@ -51,12 +51,6 @@ public final class ExpressCheckoutElementUIView: UIView {
         self.session = session
         super.init(frame: .zero)
 
-        if #available(iOS 17.0, *) {
-            registerForTraitChanges([UITraitUserInterfaceStyle.self]) { (self: Self, _: UITraitCollection) in
-                self.updateAutomaticApplePayButton()
-            }
-        }
-
         stackView.axis = .vertical
         stackView.alignment = .center
         stackView.spacing = Constants.buttonSpacing
@@ -96,10 +90,9 @@ public final class ExpressCheckoutElementUIView: UIView {
 
     public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
-        if #unavailable(iOS 17.0) {
-            guard previousTraitCollection?.userInterfaceStyle != traitCollection.userInterfaceStyle else { return }
-            updateAutomaticApplePayButton()
-        }
+        guard configuration.appearance.buttonTheme == .automatic,
+              previousTraitCollection?.userInterfaceStyle != traitCollection.userInterfaceStyle else { return }
+        layoutButtons(displayedPaymentMethods)
     }
 
     public override var intrinsicContentSize: CGSize {
@@ -129,11 +122,6 @@ public final class ExpressCheckoutElementUIView: UIView {
     }
 
     // MARK: - Private Methods
-
-    private func updateAutomaticApplePayButton() {
-        guard configuration.appearance.buttonTheme == .automatic else { return }
-        layoutButtons(displayedPaymentMethods)
-    }
 
     /// Arranges `buttons` into no more than `appearance.buttonLayout.maxRows` rows of no more than `appearance.buttonLayout.maxColumns` columns.
     private func layoutButtons(_ buttons: [ExpressCheckoutElement.PaymentMethod]) {
@@ -248,7 +236,7 @@ public final class ExpressCheckoutElementUIView: UIView {
         case .dark:
             return .black
         case .automatic:
-            return traitCollection.userInterfaceStyle == .dark ? .white : .black
+            return .automatic
         }
     }
 
