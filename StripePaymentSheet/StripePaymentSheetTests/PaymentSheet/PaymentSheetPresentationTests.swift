@@ -119,6 +119,62 @@ final class PaymentSheetPresentationTests: XCTestCase {
     }
 
     @MainActor
+    func testShortVerticalFlowControllerUsesFinalHeightDuringPresentation() async throws {
+        guard #available(iOS 16.0, *) else { throw XCTSkip("Content-sized detents require iOS 16.") }
+        guard UIDevice.current.userInterfaceIdiom == .phone else { throw XCTSkip("Native-sheet rollout requires a phone.") }
+        guard !UIAccessibility.isReduceMotionEnabled else { throw XCTSkip("Presentation animations require Reduce Motion to be off.") }
+        // Given a native vertical picker with fewer rows than the screen can accommodate
+        await AddressSpecProvider.shared.loadAddressSpecs()
+        let previousOverride = PaymentSheet.NativeSheetFeatureFlags.nativeSheetEnabledOverride
+        PaymentSheet.NativeSheetFeatureFlags.nativeSheetEnabledOverride = true
+        defer { PaymentSheet.NativeSheetFeatureFlags.nativeSheetEnabledOverride = previousOverride }
+        let paymentMethodTypes: [STPPaymentMethodType] = [.card, .cashApp, .klarna]
+        let loadResult = PaymentSheetLoader.LoadResult(
+            intent: ._testPaymentIntent(paymentMethodTypes: paymentMethodTypes),
+            elementsSession: ._testValue(paymentMethodTypes: paymentMethodTypes.compactMap { STPPaymentMethod.string(from: $0) }),
+            savedPaymentMethods: [],
+            paymentMethodTypes: paymentMethodTypes.map { .stripe($0) },
+            paymentMethodMessagingPromotionsHelper: nil,
+            paymentMethodOrientation: .vertical
+        )
+        var configuration = PaymentSheet.Configuration()
+        configuration.applePay = nil
+        configuration.link = .init(display: .never)
+        let flowController = PaymentSheet.FlowController(configuration: configuration, loadResult: loadResult, analyticsHelper: ._testValue())
+        let presenter = UIViewController()
+        let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first)
+        let window = UIWindow(windowScene: scene)
+        window.frame = scene.coordinateSpace.bounds
+        window.rootViewController = presenter
+        window.makeKeyAndVisible()
+        defer {
+            presenter.dismiss(animated: false)
+            window.isHidden = true
+        }
+        let presented = expectation(description: "Short vertical picker presented")
+
+        // When presenting through FlowController's actual native-sheet entry point
+        flowController.presentPaymentOptions(from: presenter, completion: {})
+        let sheet = try XCTUnwrap(presenter.presentedViewController?.bottomSheetController as? NativeSheetContainerViewController)
+        let transitionCoordinator = try XCTUnwrap(sheet.rootParent.transitionCoordinator)
+        transitionCoordinator.animate(alongsideTransition: nil) { _ in presented.fulfill() }
+        // Sample the target bounds after UIKit establishes the actual header and safe areas.
+        // The presentation layer's bounds can overshoot during UIKit's spring animation.
+        try await Task.sleep(nanoseconds: 100_000_000)
+        XCTAssertTrue(sheet.rootParent.isBeingPresented)
+        let initialTargetHeight = sheet.rootParent.view.bounds.height
+        await fulfillment(of: [presented], timeout: 3)
+        let presentedHeight = sheet.rootParent.view.bounds.height
+        try await Task.sleep(nanoseconds: 700_000_000)
+
+        // Then the sheet opens at its final height, without growing after presentation completes
+        XCTAssertLessThan(sheet.rootParent.view.bounds.height, window.bounds.height - window.safeAreaInsets.top)
+        XCTAssertEqual(initialTargetHeight, sheet.rootParent.view.bounds.height, accuracy: 0.5)
+        XCTAssertEqual(presentedHeight, sheet.rootParent.view.bounds.height, accuracy: 0.5)
+        withExtendedLifetime(flowController) {}
+    }
+
+    @MainActor
     // @iOS26
     func testNativeSheetScrollsBehindTransparentKeyboardToolbar() async throws {
         guard #available(iOS 16.0, *) else { throw XCTSkip("Content-sized detents require iOS 16.") }
