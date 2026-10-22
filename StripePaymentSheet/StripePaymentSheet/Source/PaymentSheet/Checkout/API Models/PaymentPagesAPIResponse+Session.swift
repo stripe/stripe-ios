@@ -230,11 +230,12 @@ extension PaymentPagesAPIResponse {
             return nil
         }
 
+        // CheckoutClient returns localized disclosures instead of raw exchange rates.
         return CheckoutController.Session.ExchangeRateMeta(
-            exchangeRate: selectedOption.presentmentExchangeRate,
+            exchangeRate: nil,
             integrationCurrency: adaptivePricingInfo.integrationCurrency,
             localizedCurrency: selectedOption.currency,
-            conversionMarkupBps: selectedOption.conversionMarkupBps,
+            conversionMarkupBps: nil,
             caption: selectedOption.disclosureCaption,
             details: selectedOption.disclosureDetails,
             integrationCaption: adaptivePricingInfo.integrationCurrencyDisclosureCaption

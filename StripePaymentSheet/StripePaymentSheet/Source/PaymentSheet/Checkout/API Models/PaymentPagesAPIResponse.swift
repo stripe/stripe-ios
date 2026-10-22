@@ -425,15 +425,12 @@ extension PaymentPagesAPIResponse {
         }
 
         let amount: Int
-        let conversionMarkupBps: Int?
         let currency: String
-        let presentmentExchangeRate: String?
         let disclosureCaption: String?
         let disclosureDetails: String?
 
         private enum CodingKeys: String, CodingKey {
             case amount, currency, disclosure
-            case caption, details
         }
 
         init(from decoder: Decoder) throws {
@@ -443,9 +440,6 @@ extension PaymentPagesAPIResponse {
             let disclosure = try container.decodeIfPresent(Disclosure.self, forKey: .disclosure)
             disclosureCaption = disclosure?.caption
             disclosureDetails = disclosure?.details
-            // CheckoutClient returns localized disclosures instead of raw exchange rates.
-            conversionMarkupBps = nil
-            presentmentExchangeRate = nil
         }
     }
 
