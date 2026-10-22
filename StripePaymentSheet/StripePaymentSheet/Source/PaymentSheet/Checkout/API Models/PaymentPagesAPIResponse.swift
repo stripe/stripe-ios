@@ -617,7 +617,6 @@ struct CheckoutClientAPIResponse: Decodable {
             linkSettings["link_passthrough_mode_enabled"] = linkMode == .passthrough || linkMode == .linkCardBrand
             elementsSession["link_settings"] = linkSettings
         }
-        // TODO(porter): Backend must align this config's token lifetime and site key with inline Radar token verification.
         if var passiveCaptcha = fields["passive_captcha"] as? [String: Any] {
             passiveCaptcha["token_timeout_seconds"] = passiveCaptcha["token_refresh_after_seconds"]
             elementsSession["passive_captcha"] = passiveCaptcha
