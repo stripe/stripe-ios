@@ -18,7 +18,7 @@ extension CheckoutClientAPIResponse {
         /// Saved payment methods for this customer.
         let paymentMethods: [STPPaymentMethod]
 
-        /// Whether the customer can detach saved payment methods via Payment Pages.
+        /// Whether the customer can detach saved payment methods from the Checkout Session.
         var canDetachPaymentMethod: Bool
 
         /// Customer email address.

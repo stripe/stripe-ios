@@ -200,7 +200,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         )
         STPAssertTestUtil.shouldSuppressNextSTPAlert = true
 
-        reportUnexpectedPaymentPagesParsingError(
+        reportUnexpectedCheckoutClientParsingError(
             error,
             apiClient: STPAPIClient(publishableKey: "pk_test_123"),
             analyticsClient: analyticsClient
@@ -208,7 +208,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
 
         XCTAssertTrue(STPAssertTestUtil.lastAssertMessage.contains("Invalid customer"))
         let analytic = analyticsClient.loggedAnalytics.last as? UnexpectedCheckoutElementsErrorAnalytic
-        XCTAssertEqual(analytic?.errorCode, .paymentPagesResponseParsingFailed)
+        XCTAssertEqual(analytic?.errorCode, .checkoutClientResponseParsingFailed)
         XCTAssertTrue(analytic?.errorMessage.contains("Invalid customer") == true)
     }
 
