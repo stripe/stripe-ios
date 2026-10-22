@@ -500,10 +500,10 @@ final class CheckoutUnitTests: XCTestCase {
         // Given a Checkout Session that updates tax from the shipping address
         var json = CheckoutTestHelpers.openSessionJSON
         json["shipping_address_collection"] = ["allowed_countries": ["US"]]
-        json["tax_meta"] = ["computation_type": "automatic", "status": "requires_location_inputs"]
-        json["tax_context"] = [
-            "automatic_tax_enabled": true,
-            "automatic_tax_address_source": "session.shipping",
+        json["automatic_tax"] = [
+            "enabled": true,
+            "status": "requires_address",
+            "address_source": "shipping",
         ]
         let session = try CheckoutClientAPIResponse.decode(fromAPIResponse: json)
         var configuration = CheckoutController.Configuration(
@@ -599,13 +599,15 @@ final class CheckoutUnitTests: XCTestCase {
     func testUpdateShippingAddress_taxUpdateFailurePreservesPreviousAddress() async throws {
         // Given a Checkout Session using shipping address for automatic tax calculation
         var json = CheckoutTestHelpers.openSessionJSON
-        json["tax_meta"] = ["computation_type": "automatic", "status": "requires_location_inputs"]
-        json["tax_context"] = [
-            "automatic_tax_enabled": true,
-            "automatic_tax_address_source": "session.shipping",
+        json["automatic_tax"] = [
+            "enabled": true,
+            "status": "requires_address",
+            "address_source": "shipping",
         ]
         let session = try CheckoutClientAPIResponse.decode(fromAPIResponse: json)
-        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: session))
+        let checkout = try await CheckoutController(
+            configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: session)
+        )
 
         // ...and a previously stored local shipping address
         let previousAddress = CheckoutController.Session.ShippingAddress(
@@ -709,12 +711,8 @@ final class CheckoutUnitTests: XCTestCase {
                 [
                     "amount": 1185,
                     "inclusive": false,
-                    "taxable_amount": 12000,
-                    "tax_rate": [
-                        "display_name": "Sales Tax",
-                        "percentage": 9.875,
-                        "jurisdiction": "UT",
-                    ],
+                    "display_name": "Sales Tax",
+                    "percentage": 9.875,
                 ],
             ],
         ]
@@ -736,22 +734,14 @@ final class CheckoutUnitTests: XCTestCase {
                 [
                     "amount": 500,
                     "inclusive": false,
-                    "taxable_amount": 10000,
-                    "tax_rate": [
-                        "display_name": "State Tax",
-                        "percentage": 5.0,
-                        "jurisdiction": "CA",
-                    ],
+                    "display_name": "State Tax",
+                    "percentage": 5.0,
                 ],
                 [
                     "amount": 200,
                     "inclusive": false,
-                    "taxable_amount": 10000,
-                    "tax_rate": [
-                        "display_name": "County Tax",
-                        "percentage": 2.0,
-                        "jurisdiction": "LA County",
-                    ],
+                    "display_name": "County Tax",
+                    "percentage": 2.0,
                 ],
             ],
         ]
@@ -783,7 +773,7 @@ final class CheckoutUnitTests: XCTestCase {
         // Given a response with an explicitly empty session-level total_tax_amounts array
         var json = CheckoutTestHelpers.openSessionJSON
         json["total_summary"] = [
-            "total_tax_amounts": [],
+            "total_tax_amounts": []
         ]
 
         // When decoding the public Session
@@ -795,21 +785,18 @@ final class CheckoutUnitTests: XCTestCase {
     }
 
     func testTotalTaxAmounts_usesTopLevelTotalSummary() throws {
-        // Given a response with session-level tax amounts and no recurring details
+        // Given a response with session-level tax amounts
         var json = CheckoutTestHelpers.openSessionJSON
         let totalTaxAmount: [String: Any] = [
             "amount": 195,
             "inclusive": false,
-            "tax_rate": [
-                "display_name": "Sales Tax",
-                "percentage": 9.75,
-                "rate_type": "percentage",
-            ],
+            "display_name": "Sales Tax",
+            "percentage": 9.75,
+            "rate_type": "percentage",
         ]
         json["total_summary"] = [
-            "total_tax_amounts": [totalTaxAmount],
+            "total_tax_amounts": [totalTaxAmount]
         ]
-        json.removeValue(forKey: "recurring_details")
 
         // When decoding the public Session
         let session = try CheckoutClientAPIResponse.decode(fromAPIResponse: json).makePublicSession()
@@ -827,28 +814,14 @@ final class CheckoutUnitTests: XCTestCase {
         let zeroTaxAmount: [String: Any] = [
             "amount": 0,
             "inclusive": false,
-            "taxable_amount": 0,
-            "tax_rate": [
-                "object": "tax_rate",
-                "active": true,
-                "display_name": "Sales Tax",
-                "inclusive": false,
-                "percentage": 8.625,
-                "rate_type": "percentage",
-            ],
+            "display_name": "Sales Tax",
+            "percentage": 8.625,
+            "rate_type": "percentage",
         ]
         var json = CheckoutTestHelpers.openSessionJSON
-        json["tax_meta"] = ["computation_type": "automatic", "status": "requires_location_inputs"]
-        json["tax_context"] = [
-            "automatic_tax_address_source": "session.shipping",
-            "automatic_tax_enabled": true,
-        ]
-        json["tax_meta"] = [
-            "computation_type": "automatic",
-            "status": "complete",
-        ]
+        json["automatic_tax"] = ["enabled": true, "status": "ready", "address_source": "shipping"]
         json["total_summary"] = [
-            "total_tax_amounts": [zeroTaxAmount],
+            "total_tax_amounts": [zeroTaxAmount]
         ]
         setOneTimePriceAmounts(
             in: &json,
@@ -880,27 +853,16 @@ final class CheckoutUnitTests: XCTestCase {
         let localCurrencyOption: [String: Any] = [
             "currency": "gbp",
             "amount": 800,
-            "presentment_exchange_rate": "0.8",
-            "conversion_markup_bps": 400,
         ]
         sessionJSON["adaptive_pricing_info"] = [
-            "integration_currency": "usd",
-            "integration_amount": 1000,
-            "active_presentment_currency": "gbp",
             "local_currency_options": [localCurrencyOption],
-        ]
-        let discountAmount: [String: Any] = [
-            "amount": 500,
-            "coupon": ["code": "coupon_test", "name": "Summer sale"],
-            "promotion_code": ["code": "SUMMER"],
-        ]
-        sessionJSON["recurring_details"] = [
-            "total_summary": [
-                "total_discount_amounts": [discountAmount],
+            "integration_currency_option": [
+                "amount": 1000,
+                "currency": "usd",
             ],
         ]
         sessionJSON["total_summary"] = [
-            "total_tax_amounts": [],
+            "total_tax_amounts": []
         ]
         var session = try! CheckoutClientAPIResponse.decode(fromAPIResponse: sessionJSON)
             .makePublicSession()
@@ -949,17 +911,9 @@ final class CheckoutUnitTests: XCTestCase {
               businessName: nil
               currency: "usd"
               presentmentDetails: {
-                presentmentCurrency: "gbp"
+                presentmentCurrency: "usd"
               }
-              discountAmounts: [
-                {
-                  amount: "$5.00"
-                  minorUnitsAmount: 500.0
-                  displayName: "Summer sale"
-                  promotionCode: <redacted>
-                  percentOff: nil
-                }
-              ]
+              discountAmounts: []
               email: "j***y@example.com"
               minorUnitsAmountDivisor: 100
               paymentOption: {
@@ -1038,7 +992,7 @@ final class CheckoutUnitTests: XCTestCase {
         let absent = CheckoutTestHelpers.makeOpenSession().makePublicSession()
         var emptyJSON = CheckoutTestHelpers.openSessionJSON
         emptyJSON["total_summary"] = [
-            "total_tax_amounts": [],
+            "total_tax_amounts": []
         ]
         let empty = try! CheckoutClientAPIResponse.decode(fromAPIResponse: emptyJSON).makePublicSession()
 
@@ -1073,12 +1027,8 @@ final class CheckoutUnitTests: XCTestCase {
                 [
                     "amount": 1000,
                     "inclusive": false,
-                    "taxable_amount": 20000,
-                    "tax_rate": [
-                        "display_name": "Sales Tax",
-                        "percentage": 5.0,
-                        "jurisdiction": "NY",
-                    ],
+                    "display_name": "Sales Tax",
+                    "percentage": 5.0,
                 ],
             ],
         ]
@@ -1348,10 +1298,10 @@ final class CheckoutUnitTests: XCTestCase {
         CheckoutSessionRequestRecorder
     ) {
         var json = CheckoutTestHelpers.openSessionJSON
-        json["tax_meta"] = ["computation_type": "automatic", "status": "requires_location_inputs"]
-        json["tax_context"] = [
-            "automatic_tax_enabled": true,
-            "automatic_tax_address_source": "session.shipping",
+        json["automatic_tax"] = [
+            "enabled": true,
+            "status": "requires_address",
+            "address_source": "shipping",
         ]
         let requestRecorder = CheckoutSessionRequestRecorder()
         CheckoutTestHelpers.stubCheckoutSessionRequests(
@@ -1439,7 +1389,7 @@ final class CheckoutUnitTests: XCTestCase {
         taxInclusive: Int = 0,
         total: Int
     ) {
-        var checkoutItems = json["checkout_items"] as! [[String: Any]]
+        var checkoutItems = json["items"] as! [[String: Any]]
         var checkoutItem = checkoutItems[0]
         var oneTimePrice = checkoutItem["one_time_price"] as! [String: Any]
         var items = oneTimePrice["items"] as! [[String: Any]]
@@ -1454,7 +1404,7 @@ final class CheckoutUnitTests: XCTestCase {
         oneTimePrice["total"] = total
         checkoutItem["one_time_price"] = oneTimePrice
         checkoutItems[0] = checkoutItem
-        json["checkout_items"] = checkoutItems
+        json["items"] = checkoutItems
     }
 
 }

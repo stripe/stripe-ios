@@ -20,23 +20,20 @@ struct CheckoutClientAPIResponse: UnknownFieldsDecodable, CustomStringConvertibl
 
     let sessionId: String
     let paymentIntentId: String?
-    var paymentIntent: STPPaymentIntent?
+    let paymentIntent: STPPaymentIntent?
     let setupIntentId: String?
-    var setupIntent: STPSetupIntent?
+    let setupIntent: STPSetupIntent?
     let currency: String
     let checkoutItems: [CheckoutItem]
     let livemode: Bool
-    var status: CheckoutController.Session.Status
-    var paymentStatus: CheckoutController.Session.Status.PaymentStatus
+    let status: CheckoutController.Session.Status
+    let paymentStatus: CheckoutController.Session.Status.PaymentStatus
     let customerEmail: String?
-    let url: String?
     let savedPaymentMethodsOfferSave: SavedPaymentMethodsOfferSave?
-    let setupFutureUsage: String?
     let setupFutureUsageForPaymentMethodType: [String: String]?
     let billingAddressCollection: String?
     let shippingAddressCollection: ShippingAddressCollection?
     let totalSummary: TotalSummary?
-    let recurringDetails: RecurringDetails?
     let adaptivePricingInfo: AdaptivePricingInfo?
     let taxContext: TaxContext?
     let taxMeta: TaxMeta?
@@ -44,6 +41,39 @@ struct CheckoutClientAPIResponse: UnknownFieldsDecodable, CustomStringConvertibl
     let customer: Customer?
     let elementsSession: ElementsSession
     let paymentResponse: PaymentResponse?
+
+    init(
+        copying response: Self,
+        paymentIntent: STPPaymentIntent? = nil,
+        setupIntent: STPSetupIntent? = nil,
+        status: CheckoutController.Session.Status? = nil,
+        paymentStatus: CheckoutController.Session.Status.PaymentStatus? = nil
+    ) {
+        self._allResponseFieldsStorage = response._allResponseFieldsStorage
+        self.sessionId = response.sessionId
+        self.paymentIntentId = paymentIntent?.stripeId ?? response.paymentIntentId
+        self.paymentIntent = paymentIntent ?? response.paymentIntent
+        self.setupIntentId = setupIntent?.stripeID ?? response.setupIntentId
+        self.setupIntent = setupIntent ?? response.setupIntent
+        self.currency = response.currency
+        self.checkoutItems = response.checkoutItems
+        self.livemode = response.livemode
+        self.status = status ?? response.status
+        self.paymentStatus = paymentStatus ?? response.paymentStatus
+        self.customerEmail = response.customerEmail
+        self.savedPaymentMethodsOfferSave = response.savedPaymentMethodsOfferSave
+        self.setupFutureUsageForPaymentMethodType = response.setupFutureUsageForPaymentMethodType
+        self.billingAddressCollection = response.billingAddressCollection
+        self.shippingAddressCollection = response.shippingAddressCollection
+        self.totalSummary = response.totalSummary
+        self.adaptivePricingInfo = response.adaptivePricingInfo
+        self.taxContext = response.taxContext
+        self.taxMeta = response.taxMeta
+        self.paymentMethodOptions = response.paymentMethodOptions
+        self.customer = response.customer
+        self.elementsSession = response.elementsSession
+        self.paymentResponse = response.paymentResponse
+    }
 
     /// Extracts the client secret from whichever expanded intent is present in the response.
     func intentClientSecret() throws -> String {
@@ -62,40 +92,35 @@ struct CheckoutClientAPIResponse: UnknownFieldsDecodable, CustomStringConvertibl
             "CheckoutClientAPIResponse",
             "sessionId = \(sessionId)",
             "currency = \(currency)",
-            "mode = \(String(describing: allResponseFields["mode"]))",
+            "uiMode = \(String(describing: allResponseFields["ui_mode"]))",
             "status = \(status)",
             "paymentIntentId = \(String(describing: paymentIntentId))",
             "setupIntentId = \(String(describing: setupIntentId))",
-            "paymentMethodTypes = \(String(describing: allResponseFields["payment_method_types"]))",
+            "paymentMethodTypes = \(elementsSession.value.orderedPaymentMethodTypes)",
             "livemode = \(livemode)",
             "customerId = \(String(describing: customer?.id))",
             "customerEmail = \(String(describing: customerEmail))",
-            "url = \(String(describing: url))",
             "savedPaymentMethodsOfferSave = \(String(describing: savedPaymentMethodsOfferSave))",
         ]
         return "<\(props.joined(separator: "; "))>"
     }
 
     private enum CodingKeys: String, CodingKey {
-        case id, uiMode, presentmentCurrency, items, savedPaymentMethodOptions, automaticTax
-        case sessionId
+        case uiMode, savedPaymentMethodOptions, automaticTax
+        case sessionId = "id"
         case paymentIntent
         case setupIntent
-        case currency
-        case checkoutItems
+        case currency = "presentment_currency"
+        case checkoutItems = "items"
         case livemode
-        case mode
         case status
         case paymentStatus
         case customerEmail
-        case url
         case savedPaymentMethodsOfferSave = "customer_managed_saved_payment_methods_offer_save"
-        case setupFutureUsage
         case setupFutureUsageForPaymentMethodType
         case billingAddressCollection
         case shippingAddressCollection
         case totalSummary
-        case recurringDetails
         case adaptivePricingInfo
         case taxContext
         case taxMeta
@@ -107,41 +132,24 @@ struct CheckoutClientAPIResponse: UnknownFieldsDecodable, CustomStringConvertibl
 
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        // Earlier PRs in the endpoint migration still receive Payment Pages responses.
-        let isCheckoutClient = !container.contains(.sessionId)
         paymentResponse = try container.decodeIfPresent(PaymentResponse.self, forKey: .paymentResponse)
-        sessionId = try container.decode(String.self, forKey: isCheckoutClient ? .id : .sessionId)
-        let decodedPaymentIntent = try container.decodeIfPresent(
-            LegacyExpandable<STPPaymentIntent>.self,
-            forKey: .paymentIntent
-        )
-        paymentIntentId = paymentResponse?.paymentIntent?.id ?? decodedPaymentIntent?.id
-        paymentIntent = decodedPaymentIntent?.expandedObject
-        let decodedSetupIntent = try container.decodeIfPresent(
-            LegacyExpandable<STPSetupIntent>.self,
-            forKey: .setupIntent
-        )
-        setupIntentId = paymentResponse?.setupIntent?.id ?? decodedSetupIntent?.id
-        setupIntent = decodedSetupIntent?.expandedObject
-        let decodedCurrency = try container.decode(String.self, forKey: isCheckoutClient ? .presentmentCurrency : .currency)
+        sessionId = try container.decode(String.self, forKey: .sessionId)
+        paymentIntentId = paymentResponse?.paymentIntent?.id
+        paymentIntent = nil
+        setupIntentId = paymentResponse?.setupIntent?.id
+        setupIntent = nil
+        let decodedCurrency = try container.decode(String.self, forKey: .currency)
         guard !decodedCurrency.isEmpty else {
             throw decoder.dataCorrupted("currency must not be empty")
         }
         currency = decodedCurrency
 
-        if isCheckoutClient {
-            let uiMode = try container.decode(String.self, forKey: .uiMode)
-            guard ["mobile_elements", "custom", "elements"].contains(uiMode) else {
-                throw decoder.dataCorrupted("Unsupported CheckoutClient ui_mode: \(uiMode)")
-            }
-        } else {
-            let mode = try container.decode(String.self, forKey: .mode)
-            guard mode == "modeless" else {
-                throw decoder.dataCorrupted("Only modeless Checkout Sessions are supported")
-            }
+        let uiMode = try container.decode(String.self, forKey: .uiMode)
+        guard ["mobile_elements", "custom", "elements"].contains(uiMode) else {
+            throw decoder.dataCorrupted("Unsupported CheckoutClient ui_mode: \(uiMode)")
         }
 
-        let decodedCheckoutItems = try container.decode([CheckoutItem].self, forKey: isCheckoutClient ? .items : .checkoutItems)
+        let decodedCheckoutItems = try container.decode([CheckoutItem].self, forKey: .checkoutItems)
         guard !decodedCheckoutItems.isEmpty else {
             throw decoder.dataCorrupted("checkout_items must not be empty")
         }
@@ -171,16 +179,10 @@ struct CheckoutClientAPIResponse: UnknownFieldsDecodable, CustomStringConvertibl
         self.status = status
 
         customerEmail = try container.decodeIfPresent(String.self, forKey: .customerEmail)
-        url = try container.decodeIfPresent(String.self, forKey: .url)
         let savedOptions = try container.decodeIfPresent(SavedPaymentMethodOptions.self, forKey: .savedPaymentMethodOptions)
-        if isCheckoutClient {
-            savedPaymentMethodsOfferSave = savedOptions?.paymentMethodSave.map {
-                SavedPaymentMethodsOfferSave(enabled: $0 == "enabled")
-            }
-        } else {
-            savedPaymentMethodsOfferSave = try container.decodeIfPresent(SavedPaymentMethodsOfferSave.self, forKey: .savedPaymentMethodsOfferSave)
+        savedPaymentMethodsOfferSave = savedOptions?.paymentMethodSave.map {
+            SavedPaymentMethodsOfferSave(enabled: $0 == "enabled")
         }
-        setupFutureUsage = try container.decodeIfPresent(String.self, forKey: .setupFutureUsage)
         setupFutureUsageForPaymentMethodType = try container.decodeIfPresent(
             [String: String].self,
             forKey: .setupFutureUsageForPaymentMethodType
@@ -194,34 +196,25 @@ struct CheckoutClientAPIResponse: UnknownFieldsDecodable, CustomStringConvertibl
             forKey: .shippingAddressCollection
         )
         totalSummary = try container.decodeIfPresent(TotalSummary.self, forKey: .totalSummary)
-        recurringDetails = try container.decodeIfPresent(RecurringDetails.self, forKey: .recurringDetails)
-        if isCheckoutClient {
-            adaptivePricingInfo = try container.decodeIfPresent(AdaptivePricingInfo.CheckoutClientFields.self, forKey: .adaptivePricingInfo).map {
-                $0.makeAdaptivePricingInfo(currency: decodedCurrency)
-            }
-            let tax = try container.decodeIfPresent(AutomaticTax.self, forKey: .automaticTax)
-            taxContext = tax.map { TaxContext(automaticTaxEnabled: $0.enabled, automaticTaxAddressSource: $0.addressSource.map { "session.\($0)" }) }
-            taxMeta = tax.map {
-                TaxMeta(computationType: .init($0.enabled ? .automatic : .off), status: .init($0.status == "requires_address" ? .requiresLocationInputs : .complete))
-            }
-        } else {
-            adaptivePricingInfo = try container.decodeIfPresent(AdaptivePricingInfo.self, forKey: .adaptivePricingInfo)
-            taxContext = try container.decodeIfPresent(TaxContext.self, forKey: .taxContext)
-            taxMeta = try container.decodeIfPresent(TaxMeta.self, forKey: .taxMeta)
+        adaptivePricingInfo = try container.decodeIfPresent(AdaptivePricingInfo.CheckoutClientFields.self, forKey: .adaptivePricingInfo).map {
+            $0.makeAdaptivePricingInfo(currency: decodedCurrency)
+        }
+        let tax = try container.decodeIfPresent(AutomaticTax.self, forKey: .automaticTax)
+        taxContext = tax.map { TaxContext(automaticTaxEnabled: $0.enabled, automaticTaxAddressSource: $0.addressSource.map { "session.\($0)" }) }
+        taxMeta = tax.map {
+            TaxMeta(computationType: .init($0.enabled ? .automatic : .off), status: $0.status == "requires_address" ? .init(.requiresLocationInputs) : ($0.status == "ready" ? .init(.complete) : nil))
         }
         paymentMethodOptions = try container.decodeIfPresent(
             LegacyDecoded<STPPaymentMethodOptions>.self,
             forKey: .paymentMethodOptions
         )?.value
-        var customer = try container.decodeIfPresent(Customer.self, forKey: .customer)
-        if isCheckoutClient {
-            customer?.canDetachPaymentMethod = savedOptions?.paymentMethodRemove == "enabled"
-            customer?.email = customerEmail
+        let decodedCustomer = try container.decodeIfPresent(Customer.self, forKey: .customer)
+        if let decodedCustomer {
+            customer = Customer(copying: decodedCustomer, email: customerEmail, canDetachPaymentMethod: savedOptions?.paymentMethodRemove == "enabled")
+        } else {
+            customer = decodedCustomer
         }
-        self.customer = customer
-        elementsSession = try isCheckoutClient
-            ? ElementsSession(checkoutClient: decoder)
-            : container.decode(ElementsSession.self, forKey: .elementsSession)
+        elementsSession = try ElementsSession(checkoutClient: decoder)
     }
 }
 
@@ -268,36 +261,6 @@ extension CheckoutClientAPIResponse {
         }
     }
 
-    private struct LegacyExpandable<Value: STPAPIResponseDecodable>: Decodable {
-        let id: String
-        let expandedObject: Value?
-
-        private enum CodingKeys: String, CodingKey {
-            case id
-        }
-
-        init(from decoder: Decoder) throws {
-            let container = try decoder.singleValueContainer()
-            if let id = try? container.decode(String.self) {
-                self.id = id
-                self.expandedObject = nil
-                return
-            }
-
-            let expandedObject = try LegacyDecoded<Value>(from: decoder).value
-            guard let id = expandedObject.allResponseFields["id"] as? String else {
-                throw DecodingError.keyNotFound(
-                    CodingKeys.id,
-                    .init(
-                        codingPath: decoder.codingPath,
-                        debugDescription: "Expanded \(Value.self) is missing id"
-                    )
-                )
-            }
-            self.id = id
-            self.expandedObject = expandedObject
-        }
-    }
 }
 
 // MARK: - API-shaped nested models
@@ -427,33 +390,8 @@ extension CheckoutClientAPIResponse {
         let images: [String]
     }
 
-    struct RecurringDetails: Decodable {
-        let totalSummary: TotalSummary
-
-        struct TotalSummary: Decodable {
-            let totalDiscountAmounts: [DiscountAmount]
-        }
-    }
-
     struct TotalSummary: Decodable {
         let totalTaxAmounts: [TaxAmount]?
-    }
-
-    struct DiscountAmount: Decodable {
-        let amount: Int
-        let displayName: String?
-        let coupon: Coupon
-        let promotionCode: PromotionCode?
-    }
-
-    struct Coupon: Decodable {
-        let code: String
-        let name: String?
-        let percentOff: Double?
-    }
-
-    struct PromotionCode: Decodable {
-        let code: String?
     }
 
     struct TaxAmount: Decodable {
@@ -600,7 +538,7 @@ extension CheckoutClientAPIResponse {
         let enabled: Bool
     }
 
-    struct ElementsSession: Decodable {
+    struct ElementsSession {
         let businessName: String?
         let merchantCountryCode: String
         let value: STPElementsSession
@@ -658,21 +596,6 @@ extension CheckoutClientAPIResponse {
             self.value = value
         }
 
-        private enum CodingKeys: String, CodingKey {
-            case businessName
-        }
-
-        init(from decoder: Decoder) throws {
-            let container = try decoder.container(keyedBy: CodingKeys.self)
-            businessName = try container.decodeIfPresent(String.self, forKey: .businessName)
-            let value = try LegacyDecoded<STPElementsSession>(from: decoder).value
-            // TODO: Make merchant_country non-optional in CheckoutClient when Checkout migrates to it.
-            guard let merchantCountryCode = value.merchantCountryCode else {
-                throw decoder.dataCorrupted("Missing required elements_session.merchant_country")
-            }
-            self.merchantCountryCode = merchantCountryCode
-            self.value = value
-        }
     }
 }
 

@@ -134,25 +134,6 @@ extension CheckoutClientAPIResponse {
         )
     }
 
-    static func makeDiscountAmounts(
-        from discountAmounts: [DiscountAmount],
-        currency: String
-    ) -> [CheckoutController.Session.DiscountAmount] {
-        discountAmounts.compactMap { discount in
-            guard discount.amount > 0 else { return nil }
-            let publicAmount = makeAmount(discount.amount, currency: currency)
-            return CheckoutController.Session.DiscountAmount(
-                amount: publicAmount.amount,
-                minorUnitsAmount: publicAmount.minorUnitsAmount,
-                displayName: discount.displayName
-                    ?? discount.coupon.name
-                    ?? discount.coupon.code,
-                promotionCode: discount.promotionCode?.code,
-                percentOff: discount.coupon.percentOff
-            )
-        }
-    }
-
     static func makeTotals(
         from checkoutItems: [CheckoutItem],
         currency: String

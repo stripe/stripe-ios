@@ -320,10 +320,7 @@ extension SavedPaymentMethodManagerTests {
                 exp.fulfill()
             }
             return HTTPStubsResponse(
-                jsonObject: CheckoutTestHelpers.checkoutClientInitJSON(
-                    from: responseJSON,
-                    sessionId: checkoutSessionId
-                ),
+                jsonObject: (responseJSON),
                 statusCode: 200,
                 headers: nil
             )
@@ -353,10 +350,7 @@ extension SavedPaymentMethodManagerTests {
                 exp.fulfill()
             }
             return HTTPStubsResponse(
-                jsonObject: CheckoutTestHelpers.checkoutClientInitJSON(
-                    from: CheckoutTestHelpers.makeSessionJSON(["session_id": checkoutSessionId]),
-                    sessionId: checkoutSessionId
-                ),
+                jsonObject: (CheckoutTestHelpers.makeSessionJSON(["session_id": checkoutSessionId])),
                 statusCode: 200,
                 headers: nil
             )

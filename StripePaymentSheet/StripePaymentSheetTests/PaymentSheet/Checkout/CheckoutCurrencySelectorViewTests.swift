@@ -91,10 +91,7 @@ final class CheckoutCurrencySelectorViewTests: XCTestCase {
             request.httpMethod == "POST" && request.url?.path == "/v1/checkout_client/\(sessionId)/update"
         }) { _ in
             HTTPStubsResponse(
-                jsonObject: CheckoutTestHelpers.checkoutClientInitJSON(
-                    from: updatedSessionJSON as? [String: Any] ?? [:],
-                    sessionId: sessionId
-                ),
+                jsonObject: (updatedSessionJSON as? [String: Any] ?? [:]),
                 statusCode: 200,
                 headers: nil
             )
@@ -289,29 +286,23 @@ final class CheckoutCurrencySelectorViewTests: XCTestCase {
         paymentMethodTypes: [String]
     ) -> [AnyHashable: Any] {
         var json = CheckoutTestHelpers.openSessionJSON
-        json["currency"] = currency
-        json["payment_method_types"] = paymentMethodTypes
-        json["checkout_items"] = CheckoutTestHelpers.makeOneTimePriceCheckoutItems(currency: currency)
-        json["elements_session"] = [
-            "session_id": "es_test",
-            "merchant_country": "US",
-            "payment_method_preference": ["ordered_payment_method_types": paymentMethodTypes],
-        ]
+        json["presentment_currency"] = currency
+        json["items"] = CheckoutTestHelpers.makeOneTimePriceCheckoutItems(currency: currency)
+        json["ordered_payment_method_types_and_wallets"] = paymentMethodTypes
         json["adaptive_pricing_info"] = [
-            "integration_currency": "usd",
-            "integration_amount": 1200,
-            "active_presentment_currency": currency,
             "local_currency_options": [
                 [
                     "currency": "gbp",
                     "amount": 1000,
-                    "presentment_exchange_rate": "0.776917",
                     "disclosure": [
                         "caption": "1 GBP = 1.2871 USD (includes 4% conversion fee).",
                         "details": "This string will come from the translation layer in the future",
                     ],
-                    "conversion_markup_bps": 400,
                 ],
+            ],
+            "integration_currency_option": [
+                "amount": 1200,
+                "currency": "usd",
             ],
         ]
         return json

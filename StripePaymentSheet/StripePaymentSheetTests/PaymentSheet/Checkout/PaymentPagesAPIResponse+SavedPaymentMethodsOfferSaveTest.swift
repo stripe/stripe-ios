@@ -12,8 +12,8 @@ class STPCheckoutSessionSavedPaymentMethodsOfferSaveTest: XCTestCase {
 
     func testDecodedObjectWithSaveOfferEnabled() {
         let session = CheckoutTestHelpers.makeSession([
-            "customer_managed_saved_payment_methods_offer_save": [
-                "enabled": true,
+            "saved_payment_method_options": [
+                "payment_method_save": "enabled"
             ],
         ]).makePublicSession()
 
@@ -23,8 +23,8 @@ class STPCheckoutSessionSavedPaymentMethodsOfferSaveTest: XCTestCase {
 
     func testDecodedObjectWithSaveOfferDisabled() {
         let session = CheckoutTestHelpers.makeSession([
-            "customer_managed_saved_payment_methods_offer_save": [
-                "enabled": false,
+            "saved_payment_method_options": [
+                "payment_method_save": "disabled"
             ],
         ]).makePublicSession()
 
@@ -32,30 +32,12 @@ class STPCheckoutSessionSavedPaymentMethodsOfferSaveTest: XCTestCase {
         XCTAssertFalse(session.savedPaymentMethodsOfferSave!.enabled)
     }
 
-    func testDecodedObjectIgnoresLegacyStatus() {
+    func testDecodedObjectWithoutPaymentMethodSave() {
         let session = CheckoutTestHelpers.makeSession([
-            "customer_managed_saved_payment_methods_offer_save": [
-                "enabled": true,
-                "status": "some_future_status",
-            ],
+            "saved_payment_method_options": ["payment_method_remove": "enabled"]
         ]).makePublicSession()
 
-        XCTAssertNotNil(session.savedPaymentMethodsOfferSave)
-        XCTAssertTrue(session.savedPaymentMethodsOfferSave!.enabled)
-    }
-
-    func testDecodedObjectRequiresEnabled() throws {
-        let missingEnabled = CheckoutTestHelpers.makeSessionJSON([
-            "customer_managed_saved_payment_methods_offer_save": ["status": "not_accepted"],
-        ])
-        XCTAssertThrowsError(try CheckoutClientAPIResponse.decode(fromAPIResponse: missingEnabled))
-
-        // CheckoutClient supplies only whether saving is enabled.
-        let missingStatus = CheckoutTestHelpers.makeSessionJSON([
-            "customer_managed_saved_payment_methods_offer_save": ["enabled": true],
-        ])
-        let session = try CheckoutClientAPIResponse.decode(fromAPIResponse: missingStatus).makePublicSession()
-        XCTAssertTrue(try XCTUnwrap(session.savedPaymentMethodsOfferSave).enabled)
+        XCTAssertNil(session.savedPaymentMethodsOfferSave)
     }
 
     func testDecodedObjectWithoutSaveOffer() {

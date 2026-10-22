@@ -93,7 +93,6 @@ extension CheckoutController {
         var localState: LocalState
         let customer: CheckoutClientAPIResponse.Customer?
         let savedPaymentMethodsOfferSave: STPCheckoutSessionSavedPaymentMethodsOfferSave?
-        let setupFutureUsage: String?
         let setupFutureUsageForPaymentMethodType: [String: String]
         let allowedShippingCountries: [String]?
         let localizedPricesMetas: [STPCheckoutSessionLocalizedPriceMeta]
@@ -128,10 +127,6 @@ extension CheckoutController.Session {
         configuration: CheckoutController.Configuration? = nil
     ) {
         let elementsSessionValue = apiResponse.elementsSession.value
-        let publicDiscountAmounts = CheckoutClientAPIResponse.makeDiscountAmounts(
-            from: apiResponse.recurringDetails?.totalSummary.totalDiscountAmounts ?? [],
-            currency: apiResponse.currency
-        )
         let publicTaxAmounts = apiResponse.totalSummary?.totalTaxAmounts?.map {
             CheckoutClientAPIResponse.makeSessionTaxAmount(
                 from: $0,
@@ -179,7 +174,7 @@ extension CheckoutController.Session {
             businessName: apiResponse.elementsSession.businessName,
             currency: apiResponse.adaptivePricingInfo?.integrationCurrency ?? apiResponse.currency,
             presentmentDetails: presentmentDetails,
-            discountAmounts: publicDiscountAmounts,
+            discountAmounts: [],
             orderSummaryItems: publicOrderSummaryItems,
             livemode: apiResponse.livemode,
             minorUnitsAmountDivisor: CheckoutClientAPIResponse.makeMinorUnitsAmountDivisor(
@@ -198,7 +193,6 @@ extension CheckoutController.Session {
             savedPaymentMethodsOfferSave: CheckoutClientAPIResponse.makeSavedPaymentMethodsOfferSave(
                 from: apiResponse.savedPaymentMethodsOfferSave
             ),
-            setupFutureUsage: apiResponse.setupFutureUsage,
             setupFutureUsageForPaymentMethodType: apiResponse.setupFutureUsageForPaymentMethodType ?? [:],
             allowedShippingCountries: apiResponse.shippingAddressCollection?.allowedCountries.map { $0.uppercased() },
             localizedPricesMetas: localizedPricesMetas,

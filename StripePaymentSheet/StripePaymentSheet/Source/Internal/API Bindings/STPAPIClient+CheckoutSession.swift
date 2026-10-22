@@ -203,31 +203,6 @@ extension STPAPIClient {
         )
     }
 
-    /// Retrieves the latest full Checkout Session.
-    func retrieveCheckoutSession(
-        checkoutSessionId: String
-    ) async throws -> CheckoutClientAPIResponse {
-        let checkoutClient: CheckoutClientAPIResponse = try await get(
-            endpoint: "checkout_client/\(checkoutSessionId)/retrieve",
-            parameters: Self.checkoutClientParameters()
-        )
-        return try await retrievingCheckoutIntents(for: checkoutClient)
-    }
-
-    /// Retrieves the small state object used to determine whether a Checkout
-    /// Session transition is still in progress.
-    func pollCheckoutSession(
-        checkoutSessionId: String,
-        timeout: TimeInterval
-    ) async throws -> PaymentPagePollResponse {
-        return try await get(
-            endpoint: "payment_pages/\(checkoutSessionId)/poll",
-            parameters: [:],
-            timeout: timeout,
-            retriesEnabled: false
-        )
-    }
-
     func detachPaymentMethod(
         _ paymentMethodId: String,
         fromCheckoutSession checkoutSessionId: String
@@ -371,14 +346,19 @@ extension STPAPIClient {
     private func retrievingCheckoutIntents(
         for response: CheckoutClientAPIResponse
     ) async throws -> CheckoutClientAPIResponse {
-        var response = response
+        let paymentIntent: STPPaymentIntent?
         if let reference = response.paymentResponse?.paymentIntent {
-            response.paymentIntent = try await retrievePaymentIntent(clientSecret: reference.clientSecret, expand: ["payment_method"])
+            paymentIntent = try await retrievePaymentIntent(clientSecret: reference.clientSecret, expand: ["payment_method"])
+        } else {
+            paymentIntent = nil
         }
+        let setupIntent: STPSetupIntent?
         if let reference = response.paymentResponse?.setupIntent {
-            response.setupIntent = try await retrieveSetupIntent(clientSecret: reference.clientSecret, expand: ["payment_method"])
+            setupIntent = try await retrieveSetupIntent(clientSecret: reference.clientSecret, expand: ["payment_method"])
+        } else {
+            setupIntent = nil
         }
-        return response
+        return CheckoutClientAPIResponse(copying: response, paymentIntent: paymentIntent, setupIntent: setupIntent)
     }
 
     private func post<Response: Decodable>(
@@ -413,30 +393,4 @@ extension STPAPIClient {
         return parameters
     }
 
-    private func get<T: Decodable>(
-        endpoint: String,
-        parameters: [String: Any],
-        timeout: TimeInterval? = nil,
-        retriesEnabled: Bool = true
-    ) async throws -> T {
-        do {
-            return try await withCheckedThrowingContinuation { continuation in
-                get(
-                    resource: endpoint,
-                    parameters: parameters,
-                    timeout: timeout,
-                    retriesEnabled: retriesEnabled
-                ) { (result: Result<T, Error>) in
-                    continuation.resume(with: result)
-                }
-            }
-        } catch {
-            if error is DecodingError {
-                reportUnexpectedCheckoutClientParsingError(error, apiClient: self)
-            }
-            throw error
-        }
-    }
 }
-
-extension STPAPIClient: CheckoutSessionPollingAPIClient {}
