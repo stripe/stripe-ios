@@ -243,9 +243,9 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertFalse(session.livemode)
         XCTAssertNotNil(session.customer)
         XCTAssertEqual(session.customer?.id, "cus_test123456")
-        XCTAssertEqual(apiResponse.customer?.email, "customer@example.com")
-        XCTAssertEqual(apiResponse.customer?.name, "Test Customer")
-        XCTAssertEqual(apiResponse.customer?.phone, "+15555555555")
+        XCTAssertEqual(session.customer?.email, "customer@example.com")
+        XCTAssertEqual(session.customer?.name, "Test Customer")
+        XCTAssertEqual(session.customer?.phone, "+15555555555")
         XCTAssertFalse(session.customer?.canDetachPaymentMethod ?? true)
         XCTAssertEqual(session.customer?.paymentMethods.count, 2)
         XCTAssertEqual(session.customer?.paymentMethods[0].stripeId, "pm_1Sxae3Lu5o3P18Zpt5YuRRoG")
@@ -320,7 +320,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         let data = try JSONSerialization.data(withJSONObject: checkoutClientJSON)
         let checkoutClient = try StripeJSONDecoder().decode(CheckoutClientAPIResponse.self, from: data)
         XCTAssertEqual(
-            checkoutClient.makePublicSession().elementsSession.passiveCaptchaData,
+            try checkoutClient.paymentPagesResponse().makePublicSession().elementsSession.passiveCaptchaData,
             PassiveCaptchaData(siteKey: "site_key", rqdata: "rqdata", tokenTimeoutSeconds: 21570)
         )
     }
