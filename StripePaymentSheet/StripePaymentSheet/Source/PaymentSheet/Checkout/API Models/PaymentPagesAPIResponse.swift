@@ -20,14 +20,14 @@ struct CheckoutClientAPIResponse: UnknownFieldsDecodable, CustomStringConvertibl
 
     let sessionId: String
     let paymentIntentId: String?
-    var paymentIntent: STPPaymentIntent?
+    let paymentIntent: STPPaymentIntent?
     let setupIntentId: String?
-    var setupIntent: STPSetupIntent?
+    let setupIntent: STPSetupIntent?
     let currency: String
     let checkoutItems: [CheckoutItem]
     let livemode: Bool
-    var status: CheckoutController.Session.Status
-    var paymentStatus: CheckoutController.Session.Status.PaymentStatus
+    let status: CheckoutController.Session.Status
+    let paymentStatus: CheckoutController.Session.Status.PaymentStatus
     let submissionAttempt: SubmissionAttempt?
     let routeToOrchestrationInterface: Bool?
     let customerEmail: String?
@@ -46,6 +46,44 @@ struct CheckoutClientAPIResponse: UnknownFieldsDecodable, CustomStringConvertibl
     let customer: Customer?
     let elementsSession: ElementsSession
     let paymentResponse: PaymentResponse?
+
+    init(
+        copying response: Self,
+        paymentIntent: STPPaymentIntent? = nil,
+        setupIntent: STPSetupIntent? = nil,
+        status: CheckoutController.Session.Status? = nil,
+        paymentStatus: CheckoutController.Session.Status.PaymentStatus? = nil
+    ) {
+        self._allResponseFieldsStorage = response._allResponseFieldsStorage
+        self.sessionId = response.sessionId
+        self.paymentIntentId = paymentIntent?.stripeId ?? response.paymentIntentId
+        self.paymentIntent = paymentIntent ?? response.paymentIntent
+        self.setupIntentId = setupIntent?.stripeID ?? response.setupIntentId
+        self.setupIntent = setupIntent ?? response.setupIntent
+        self.currency = response.currency
+        self.checkoutItems = response.checkoutItems
+        self.livemode = response.livemode
+        self.status = status ?? response.status
+        self.paymentStatus = paymentStatus ?? response.paymentStatus
+        self.submissionAttempt = response.submissionAttempt
+        self.routeToOrchestrationInterface = response.routeToOrchestrationInterface
+        self.customerEmail = response.customerEmail
+        self.url = response.url
+        self.savedPaymentMethodsOfferSave = response.savedPaymentMethodsOfferSave
+        self.setupFutureUsage = response.setupFutureUsage
+        self.setupFutureUsageForPaymentMethodType = response.setupFutureUsageForPaymentMethodType
+        self.billingAddressCollection = response.billingAddressCollection
+        self.shippingAddressCollection = response.shippingAddressCollection
+        self.totalSummary = response.totalSummary
+        self.recurringDetails = response.recurringDetails
+        self.adaptivePricingInfo = response.adaptivePricingInfo
+        self.taxContext = response.taxContext
+        self.taxMeta = response.taxMeta
+        self.paymentMethodOptions = response.paymentMethodOptions
+        self.customer = response.customer
+        self.elementsSession = response.elementsSession
+        self.paymentResponse = response.paymentResponse
+    }
 
     /// Extracts the client secret from whichever expanded intent is present in the response.
     func intentClientSecret() throws -> String {
@@ -214,7 +252,7 @@ struct CheckoutClientAPIResponse: UnknownFieldsDecodable, CustomStringConvertibl
             let tax = try container.decodeIfPresent(AutomaticTax.self, forKey: .automaticTax)
             taxContext = tax.map { TaxContext(automaticTaxEnabled: $0.enabled, automaticTaxAddressSource: $0.addressSource.map { "session.\($0)" }) }
             taxMeta = tax.map {
-                TaxMeta(computationType: .init($0.enabled ? .automatic : .off), status: .init($0.status == "requires_address" ? .requiresLocationInputs : .complete))
+                TaxMeta(computationType: .init($0.enabled ? .automatic : .off), status: $0.status == "requires_address" ? .init(.requiresLocationInputs) : ($0.status == "ready" ? .init(.complete) : nil))
             }
         } else {
             adaptivePricingInfo = try container.decodeIfPresent(AdaptivePricingInfo.self, forKey: .adaptivePricingInfo)
@@ -225,12 +263,12 @@ struct CheckoutClientAPIResponse: UnknownFieldsDecodable, CustomStringConvertibl
             LegacyDecoded<STPPaymentMethodOptions>.self,
             forKey: .paymentMethodOptions
         )?.value
-        var customer = try container.decodeIfPresent(Customer.self, forKey: .customer)
-        if isCheckoutClient {
-            customer?.canDetachPaymentMethod = savedOptions?.paymentMethodRemove == "enabled"
-            customer?.email = customerEmail
+        let decodedCustomer = try container.decodeIfPresent(Customer.self, forKey: .customer)
+        if isCheckoutClient, let decodedCustomer {
+            customer = Customer(copying: decodedCustomer, email: customerEmail, canDetachPaymentMethod: savedOptions?.paymentMethodRemove == "enabled")
+        } else {
+            customer = decodedCustomer
         }
-        self.customer = customer
         elementsSession = try isCheckoutClient
             ? ElementsSession(checkoutClient: decoder)
             : container.decode(ElementsSession.self, forKey: .elementsSession)

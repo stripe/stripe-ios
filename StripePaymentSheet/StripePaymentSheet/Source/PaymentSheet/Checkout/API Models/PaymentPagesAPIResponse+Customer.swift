@@ -19,16 +19,25 @@ extension CheckoutClientAPIResponse {
         let paymentMethods: [STPPaymentMethod]
 
         /// Whether the customer can detach saved payment methods from the Checkout Session.
-        var canDetachPaymentMethod: Bool
+        let canDetachPaymentMethod: Bool
 
         /// Customer email address.
-        var email: String?
+        let email: String?
 
         /// Customer name.
         let name: String?
 
         /// Customer phone number.
         let phone: String?
+
+        init(copying customer: Self, email: String?, canDetachPaymentMethod: Bool) {
+            id = customer.id
+            paymentMethods = customer.paymentMethods
+            self.canDetachPaymentMethod = canDetachPaymentMethod
+            self.email = email
+            name = customer.name
+            phone = customer.phone
+        }
 
         private enum CodingKeys: String, CodingKey {
             case id
