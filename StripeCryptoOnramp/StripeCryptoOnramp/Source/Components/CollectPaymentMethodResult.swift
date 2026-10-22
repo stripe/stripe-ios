@@ -11,7 +11,7 @@ import Foundation
 @_spi(CryptoOnrampAlpha)
 public enum CollectPaymentMethodResult {
 
-    /// Payment method collection completed without any additional KYC information.
+    /// Payment method collection completed with a display snapshot and optional KYC information.
     case completed(displayData: PaymentMethodDisplayData, kycInfo: KycInfo?)
 
     /// Payment method collection was canceled by the user.
@@ -19,6 +19,16 @@ public enum CollectPaymentMethodResult {
 }
 
 public extension CollectPaymentMethodResult {
+
+    /// A snapshot of the collected card, if available. Nil for canceled collection or non-card instruments.
+    var cardDetails: OnrampCardDetails? {
+        displayData?.cardDetails
+    }
+
+    /// A snapshot of the collected bank account, if available. Nil for canceled collection or non-bank instruments.
+    var bankAccountDetails: OnrampBankAccountDetails? {
+        displayData?.bankAccountDetails
+    }
 
     /// The display data returned from `CryptoOnrampCoordinator.collectPaymentMethod(type:from:)`, if payment method collection completed.
     var displayData: PaymentMethodDisplayData? {

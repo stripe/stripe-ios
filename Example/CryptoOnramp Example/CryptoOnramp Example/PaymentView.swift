@@ -23,6 +23,12 @@ import StripePaymentsUI
 
 /// A view that allows input of a specified crypto purchase amount and payment method.
 struct PaymentView: View {
+    /// Optional integration hook for rendering or policy evaluation before token creation.
+    /// Only explicit `.debit` qualifies for a debit-only policy; banks require a separate policy.
+    /// Replace any prior snapshot on success, clear it on logout/selection clearing, and keep it checkout-local.
+    /// The session quote remains authoritative. This example does not change the backend's fee policy.
+    private let onPaymentMethodDetailsCollected: ((OnrampCardDetails?, OnrampBankAccountDetails?) -> Void)?
+
     private enum KYCStepUpErrorCodes {
         static let missingMinimumIdentityVerification = "crypto_onramp_missing_minimum_identity_verification"
         static let missingIdentityVerification = "crypto_onramp_missing_identity_verification"
@@ -134,11 +140,13 @@ struct PaymentView: View {
     ///   - coordinator: The coordinator to use for collecting new payment methods and creating crypto payment tokens.
     ///   - wallet: The wallet being funded.
     ///   - kycResidence: The user's KYC residence, used to select the initial local source currency.
+    ///   - onPaymentMethodDetailsCollected: Optional observer of the latest collection snapshot, before token creation.
     ///   - onContinue: Called with the created onramp session when the user continues.
     init(
         coordinator: CryptoOnrampCoordinator,
         wallet: CustomerWalletsResponse.Wallet,
         kycResidence: KYCResidence,
+        onPaymentMethodDetailsCollected: ((OnrampCardDetails?, OnrampBankAccountDetails?) -> Void)? = nil,
         onContinue: @escaping (
             CreateOnrampSessionResponse,
             _ selectedPaymentMethodDescription: String,
@@ -147,6 +155,7 @@ struct PaymentView: View {
     ) {
         self.coordinator = coordinator
         self.wallet = wallet
+        self.onPaymentMethodDetailsCollected = onPaymentMethodDetailsCollected
         self.onContinue = onContinue
         self._sourceCurrency = State(initialValue: SourceCurrency(rawValue: kycResidence.localCurrencyCode) ?? .usd)
     }
@@ -776,6 +785,7 @@ struct PaymentView: View {
                 case let .completed(displayData, _):
                     await MainActor.run {
                         shouldShowPaymentMethodSheet = false
+                        onPaymentMethodDetailsCollected?(result.cardDetails, result.bankAccountDetails)
                     }
 
                     let token = try await coordinator.createCryptoPaymentToken()
@@ -829,6 +839,9 @@ struct PaymentView: View {
                         isLoading.wrappedValue = false
                     }
                 case .completed:
+                    await MainActor.run {
+                        onPaymentMethodDetailsCollected?(result.cardDetails, result.bankAccountDetails)
+                    }
                     let token = try await coordinator.createCryptoPaymentToken()
 
                     await MainActor.run {

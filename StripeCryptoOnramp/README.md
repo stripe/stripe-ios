@@ -12,6 +12,7 @@ StripeCryptoOnramp helps you build a headless crypto onramp flow in your iOS app
 * [Requirements](#Requirements)
 * [Getting started](#Getting-started)
    * [Integration](#Integration)
+   * [Collection metadata](#Collection-metadata)
    * [Example](#Example)
 * [Manual linking](#Manual-linking)
 
@@ -59,6 +60,33 @@ The StripeCryptoOnramp iOS SDK is compatible with apps targeting iOS 15.0 or abo
 Get started with Embedded components onramp [📚 iOS integration guide](https://docs.stripe.com/crypto/onramp/embedded-components) and [example project](../Example/CryptoOnramp%20Example), or [📘 browse the SDK reference](https://stripe.dev/stripe-ios/stripecryptoonramp/documentation/stripecryptoonramp) for fine-grained documentation of all the classes and methods in the SDK.
 
 This SDK requires access to the device's camera to capture identity documents. To enable your app to request camera permissions, set `NSCameraUsageDescription` in your app's plist and provide a reason for accessing the camera (e.g. "This app uses the camera to take a picture of your identity documents").
+
+### Collection metadata
+
+Successful `collectPaymentMethod(type:from:)` results include optional structured metadata immediately, without creating a token or making an additional request. Apple Pay and Link cards (saved or newly entered) expose `cardDetails`; Link bank accounts expose `bankAccountDetails` instead. Unsupported instruments or unavailable metadata can leave both nil. The same snapshots are available on `result.displayData` and on the `displayData` value in the existing `.completed(displayData:kycInfo:)` case.
+
+```swift
+let result = try await coordinator.collectPaymentMethod(type: .cardAndBankAccount, from: viewController)
+if case .completed = result {
+    if let card = result.cardDetails {
+        // Use card.brand and card.last4 for rendering.
+        // A strict debit-only policy must check card.funding == .debit.
+        // Credit, prepaid, .other, and missing metadata do not qualify as debit.
+    } else if let bank = result.bankAccountDetails {
+        // Use bank.last4 for rendering; bank eligibility is a separate policy.
+    }
+
+    // Apply your opt-in policy before creating the token/session.
+    // The token API still returns only a String.
+    let token = try await coordinator.createCryptoPaymentToken()
+}
+```
+
+These values are **collection-time snapshots, not token-bound guarantees**. Use the latest successful collection for the current checkout attempt. Replace stored metadata and recompute policy when the selection changes. Respect cancellation and selection-clearing behavior; discard cached metadata and policy on logout or when the selection is cleared, and never reuse them for another consumer or checkout attempt.
+
+Card or bank details do not establish ownership, mandate validity, successful payment, or final fees. Token-time routing validation can still reject a selection and require recollection. The actual session quote remains authoritative. Wallet last-four digits can refer to a tokenized number rather than the physical card's printed number.
+
+The summaries contain only card funding, brand, and last four digits, or bank account last four digits. Do not log them to analytics or supplement them with full card/account/routing numbers, CVC, fingerprints, wallet credentials, or billing data.
 
 ### Example
 
