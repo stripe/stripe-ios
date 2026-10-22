@@ -149,6 +149,7 @@ public class PaymentSheet {
             ) { result in
                 switch result {
                 case .success(let (loadResult, confirmationChallenge)):
+                    self.analyticsHelper.didLoad(loadResult)
                     self.confirmationChallenge = confirmationChallenge
                     let presentPaymentSheet: () -> Void = {
                         let paymentSheetVC = self.makePaymentSheetVC(

@@ -141,8 +141,8 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             analyticsClient._testLogHistory.removeAll()
 
             // Load started -> failed
-            sut.logLoadStarted(isUpdate: false)
-            sut.logLoadFailed(error: NSError(domain: "domain", code: 1), loadTimings: .init(), isUpdate: false)
+            sut.logLoadStarted(isUpdate: false, customerProvider: CustomerProvider(customer: sut.configuration.customer))
+            sut.logLoadFailed(error: NSError(domain: "domain", code: 1), loadTimings: .init(), isUpdate: false, customerProvider: CustomerProvider(customer: sut.configuration.customer))
 
             XCTAssertEqual(analyticsClient._testLogHistory[0]["event"] as? String, "mc_load_started")
             XCTAssertEqual(analyticsClient._testLogHistory[0]["integration_shape"] as? String, shapeString)
@@ -160,7 +160,9 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
         ]
 
         for (shape, shapeString) in integrationShapes {
-            let sut = PaymentSheetAnalyticsHelper(integrationShape: shape, configuration: PaymentSheet.Configuration(), analyticsClient: analyticsClient)
+            var configuration = PaymentSheet.Configuration()
+            configuration.customer = .init(id: "cus_test", customerSessionClientSecret: "cuss_test")
+            let sut = PaymentSheetAnalyticsHelper(integrationShape: shape, configuration: configuration, analyticsClient: analyticsClient)
 
             // Reset the analytics client for each iteration
             analyticsClient._testLogHistory.removeAll()
@@ -201,7 +203,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             ] as [AnyHashable: Any]
             let elementsSession: STPElementsSession = ._testDefaultCardValue(defaultPaymentMethod: STPPaymentMethod._testCard().stripeId, paymentMethods: [testCardJSON, testUSBankAccountJSON])
             // Load started -> succeeded
-            sut.logLoadStarted(isUpdate: false)
+            sut.logLoadStarted(isUpdate: false, customerProvider: CustomerProvider(customer: sut.configuration.customer))
             sut.logLoadSucceeded(
                 intent: ._testValue(),
                 elementsSession: elementsSession,
@@ -210,6 +212,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
                 paymentMethodOrientation: .vertical,
                 loadTimings: .init(),
                 isUpdate: false,
+                customerProvider: CustomerProvider(customer: sut.configuration.customer),
                 hasCardArt: false,
                 didLinkLookupTimeOut: nil
             )
@@ -237,7 +240,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
         let sut = PaymentSheetAnalyticsHelper(integrationShape: .complete, configuration: PaymentSheet.Configuration(), analyticsClient: analyticsClient)
         analyticsClient._testLogHistory.removeAll()
 
-        sut.logLoadStarted(isUpdate: false)
+        sut.logLoadStarted(isUpdate: false, customerProvider: CustomerProvider(customer: sut.configuration.customer))
         sut.logLoadSucceeded(
             intent: ._testValue(),
             elementsSession: ._testCardValue(),
@@ -246,6 +249,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             paymentMethodOrientation: .vertical,
             loadTimings: .init(),
             isUpdate: false,
+            customerProvider: CustomerProvider(customer: sut.configuration.customer),
             hasCardArt: true,
             didLinkLookupTimeOut: nil
         )
@@ -296,7 +300,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             ] as [String: Any],
         ] as [AnyHashable: Any]
         // Load started -> succeeded
-        sut.logLoadStarted(isUpdate: false)
+        sut.logLoadStarted(isUpdate: false, customerProvider: CustomerProvider(customer: sut.configuration.customer))
         sut.logLoadSucceeded(
             intent: ._testPaymentIntent(
                 paymentMethodTypes: [.card],
@@ -305,7 +309,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             ),
             elementsSession: ._testDefaultCardValue(defaultPaymentMethod: STPPaymentMethod._testCard().stripeId, paymentMethods: [testCardJSON, testUSBankAccountJSON]),
             defaultPaymentMethod: .saved(paymentMethod: STPPaymentMethod._testCard()),
-            orderedPaymentMethodTypes: [.stripe(.card), .stripe(.USBankAccount)], paymentMethodOrientation: .vertical, loadTimings: .init(), isUpdate: false, hasCardArt: false, didLinkLookupTimeOut: nil
+            orderedPaymentMethodTypes: [.stripe(.card), .stripe(.USBankAccount)], paymentMethodOrientation: .vertical, loadTimings: .init(), isUpdate: false, customerProvider: CustomerProvider(customer: sut.configuration.customer), hasCardArt: false, didLinkLookupTimeOut: nil
         )
         // PI with SFU and PMO SFU
         var loadSucceededPayload = analyticsClient._testLogHistory[1]
@@ -315,7 +319,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
         analyticsClient._testLogHistory.removeAll()
 
         // Load started -> succeeded
-        sut.logLoadStarted(isUpdate: false)
+        sut.logLoadStarted(isUpdate: false, customerProvider: CustomerProvider(customer: sut.configuration.customer))
         sut.logLoadSucceeded(
             intent: ._testPaymentIntent(
                 paymentMethodTypes: [.card],
@@ -323,7 +327,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             ),
             elementsSession: ._testDefaultCardValue(defaultPaymentMethod: STPPaymentMethod._testCard().stripeId, paymentMethods: [testCardJSON, testUSBankAccountJSON]),
             defaultPaymentMethod: .saved(paymentMethod: STPPaymentMethod._testCard()),
-            orderedPaymentMethodTypes: [.stripe(.card), .stripe(.USBankAccount)], paymentMethodOrientation: .vertical, loadTimings: .init(), isUpdate: false, hasCardArt: false, didLinkLookupTimeOut: nil
+            orderedPaymentMethodTypes: [.stripe(.card), .stripe(.USBankAccount)], paymentMethodOrientation: .vertical, loadTimings: .init(), isUpdate: false, customerProvider: CustomerProvider(customer: sut.configuration.customer), hasCardArt: false, didLinkLookupTimeOut: nil
         )
         // PI with SFU and no PMO SFU
         loadSucceededPayload = analyticsClient._testLogHistory[1]
@@ -333,7 +337,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
         analyticsClient._testLogHistory.removeAll()
 
         // Load started -> succeeded
-        sut.logLoadStarted(isUpdate: false)
+        sut.logLoadStarted(isUpdate: false, customerProvider: CustomerProvider(customer: sut.configuration.customer))
         sut.logLoadSucceeded(
             intent: ._testDeferredIntent(
                 paymentMethodTypes: [.card],
@@ -342,7 +346,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             ),
             elementsSession: ._testDefaultCardValue(defaultPaymentMethod: STPPaymentMethod._testCard().stripeId, paymentMethods: [testCardJSON, testUSBankAccountJSON]),
             defaultPaymentMethod: .saved(paymentMethod: STPPaymentMethod._testCard()),
-            orderedPaymentMethodTypes: [.stripe(.card), .stripe(.USBankAccount)], paymentMethodOrientation: .vertical, loadTimings: .init(), isUpdate: false, hasCardArt: false, didLinkLookupTimeOut: nil
+            orderedPaymentMethodTypes: [.stripe(.card), .stripe(.USBankAccount)], paymentMethodOrientation: .vertical, loadTimings: .init(), isUpdate: false, customerProvider: CustomerProvider(customer: sut.configuration.customer), hasCardArt: false, didLinkLookupTimeOut: nil
         )
         // Deferred PI with SFU and PMO SFU
         loadSucceededPayload = analyticsClient._testLogHistory[1]
@@ -352,7 +356,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
         analyticsClient._testLogHistory.removeAll()
 
         // Load started -> succeeded
-        sut.logLoadStarted(isUpdate: false)
+        sut.logLoadStarted(isUpdate: false, customerProvider: CustomerProvider(customer: sut.configuration.customer))
         sut.logLoadSucceeded(
             intent: ._testDeferredIntent(
                 paymentMethodTypes: [.card],
@@ -360,7 +364,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             ),
             elementsSession: ._testDefaultCardValue(defaultPaymentMethod: STPPaymentMethod._testCard().stripeId, paymentMethods: [testCardJSON, testUSBankAccountJSON]),
             defaultPaymentMethod: .saved(paymentMethod: STPPaymentMethod._testCard()),
-            orderedPaymentMethodTypes: [.stripe(.card), .stripe(.USBankAccount)], paymentMethodOrientation: .vertical, loadTimings: .init(), isUpdate: false, hasCardArt: false, didLinkLookupTimeOut: nil
+            orderedPaymentMethodTypes: [.stripe(.card), .stripe(.USBankAccount)], paymentMethodOrientation: .vertical, loadTimings: .init(), isUpdate: false, customerProvider: CustomerProvider(customer: sut.configuration.customer), hasCardArt: false, didLinkLookupTimeOut: nil
         )
         // Deferred PI with SFU and no PMO SFU
         loadSucceededPayload = analyticsClient._testLogHistory[1]
@@ -370,12 +374,12 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
         analyticsClient._testLogHistory.removeAll()
 
         // Load started -> succeeded
-        sut.logLoadStarted(isUpdate: false)
+        sut.logLoadStarted(isUpdate: false, customerProvider: CustomerProvider(customer: sut.configuration.customer))
         sut.logLoadSucceeded(
             intent: ._testSetupIntent(),
             elementsSession: ._testDefaultCardValue(defaultPaymentMethod: STPPaymentMethod._testCard().stripeId, paymentMethods: [testCardJSON, testUSBankAccountJSON]),
             defaultPaymentMethod: .saved(paymentMethod: STPPaymentMethod._testCard()),
-            orderedPaymentMethodTypes: [.stripe(.card), .stripe(.USBankAccount)], paymentMethodOrientation: .vertical, loadTimings: .init(), isUpdate: false, hasCardArt: false, didLinkLookupTimeOut: nil
+            orderedPaymentMethodTypes: [.stripe(.card), .stripe(.USBankAccount)], paymentMethodOrientation: .vertical, loadTimings: .init(), isUpdate: false, customerProvider: CustomerProvider(customer: sut.configuration.customer), hasCardArt: false, didLinkLookupTimeOut: nil
         )
         // SI
         loadSucceededPayload = analyticsClient._testLogHistory[1]
@@ -579,13 +583,22 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             configuration: PaymentSheet.Configuration(),
             analyticsClient: analyticsClient
         )
-        sut.logLoadStarted(isUpdate: false)
+        sut.logLoadStarted(isUpdate: false, customerProvider: CustomerProvider(customer: sut.configuration.customer))
         sut.logLoadSucceeded(
             intent: ._testDeferredIntent(paymentMethodTypes: [.card]),
             elementsSession: ._testCardValue(),
             defaultPaymentMethod: nil,
-            orderedPaymentMethodTypes: [.stripe(.card)], paymentMethodOrientation: .vertical, loadTimings: .init(), isUpdate: false, hasCardArt: false, didLinkLookupTimeOut: nil
+            orderedPaymentMethodTypes: [.stripe(.card)], paymentMethodOrientation: .vertical, loadTimings: .init(), isUpdate: false, customerProvider: CustomerProvider(customer: sut.configuration.customer), hasCardArt: false, didLinkLookupTimeOut: nil
         )
+        sut.didLoad(.init(
+            intent: ._testDeferredIntent(paymentMethodTypes: [.card]),
+            elementsSession: ._testCardValue(),
+            savedPaymentMethods: [],
+            paymentMethodTypes: [.stripe(.card)],
+            paymentMethodMessagingPromotionsHelper: nil,
+            paymentMethodOrientation: .vertical,
+            customerProvider: CustomerProvider(customer: sut.configuration.customer)
+        ))
         sut.logPayment(
             paymentOption: .applePay,
             result: .completed,
@@ -714,7 +727,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             configuration: PaymentSheet.Configuration(),
             analyticsClient: analyticsClient
         )
-        sut.logLoadStarted(isUpdate: false) // To get the load timer working
+        sut.logLoadStarted(isUpdate: false, customerProvider: CustomerProvider(customer: sut.configuration.customer)) // To get the load timer working
 
         // Test case 1: Regular PaymentIntent (no intentConfig)
         // Should set is_decoupled = false, is_spt = false
@@ -724,7 +737,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             intent: regularIntent,
             elementsSession: ._testValue(),
             defaultPaymentMethod: nil,
-            orderedPaymentMethodTypes: [.stripe(.card)], paymentMethodOrientation: .vertical, loadTimings: .init(), isUpdate: false, hasCardArt: false, didLinkLookupTimeOut: nil
+            orderedPaymentMethodTypes: [.stripe(.card)], paymentMethodOrientation: .vertical, loadTimings: .init(), isUpdate: false, customerProvider: CustomerProvider(customer: sut.configuration.customer), hasCardArt: false, didLinkLookupTimeOut: nil
         )
 
         let regularEvent = analyticsClient._testLogHistory.last!
@@ -740,7 +753,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             intent: deferredIntent,
             elementsSession: ._testValue(),
             defaultPaymentMethod: nil,
-            orderedPaymentMethodTypes: [.stripe(.card)], paymentMethodOrientation: .vertical, loadTimings: .init(), isUpdate: false, hasCardArt: false, didLinkLookupTimeOut: nil
+            orderedPaymentMethodTypes: [.stripe(.card)], paymentMethodOrientation: .vertical, loadTimings: .init(), isUpdate: false, customerProvider: CustomerProvider(customer: sut.configuration.customer), hasCardArt: false, didLinkLookupTimeOut: nil
         )
 
         let deferredEvent = analyticsClient._testLogHistory.last!
@@ -763,12 +776,102 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             intent: sptIntent,
             elementsSession: ._testValue(),
             defaultPaymentMethod: nil,
-            orderedPaymentMethodTypes: [.stripe(.card)], paymentMethodOrientation: .vertical, loadTimings: .init(), isUpdate: false, hasCardArt: false, didLinkLookupTimeOut: nil
+            orderedPaymentMethodTypes: [.stripe(.card)], paymentMethodOrientation: .vertical, loadTimings: .init(), isUpdate: false, customerProvider: CustomerProvider(customer: sut.configuration.customer), hasCardArt: false, didLinkLookupTimeOut: nil
         )
 
         let sptEvent = analyticsClient._testLogHistory.last!
         XCTAssertEqual(sptEvent["is_decoupled"] as? Bool, true, "SPT intent should have is_decoupled = true")
         XCTAssertEqual(sptEvent["is_spt"] as? Bool, true, "SPT intent with preparePaymentMethodHandler should have is_spt = true")
+    }
+
+    func testFailedLoadDoesNotReplaceAcceptedCustomer() {
+        // Given an accepted Checkout customer and configuration without a customer
+        let session = CheckoutTestHelpers.makeSession().withCustomer(id: "cus_checkout").makePublicSession()
+        let acceptedLoad = PaymentSheetLoader.LoadResult(
+            intent: .checkout(session),
+            elementsSession: session.elementsSession,
+            savedPaymentMethods: [],
+            paymentMethodTypes: [.stripe(.card)],
+            paymentMethodMessagingPromotionsHelper: nil,
+            paymentMethodOrientation: .horizontal,
+            customerProvider: CustomerProvider(checkoutSession: session)
+        )
+        let sut = PaymentSheetAnalyticsHelper(integrationShape: .complete, configuration: PaymentSheet.Configuration(), analyticsClient: analyticsClient)
+        sut.didLoad(acceptedLoad)
+        let attemptedCustomer = CustomerProvider(customer: .init(id: "cus_attempted", ephemeralKeySecret: "ek_test"))
+
+        // When another load starts and fails
+        sut.logLoadStarted(isUpdate: true, customerProvider: attemptedCustomer)
+        let startedConfiguration = analyticsClient._testLogHistory.last!["mpe_config"] as! [String: Any]
+        XCTAssertEqual(startedConfiguration["customer_access_provider"] as? String, "legacy")
+        sut.logLoadFailed(error: NSError(domain: "test", code: 1), loadTimings: .init(), isUpdate: true, customerProvider: attemptedCustomer)
+        let failedConfiguration = analyticsClient._testLogHistory.last!["mpe_config"] as! [String: Any]
+        XCTAssertEqual(failedConfiguration["customer_access_provider"] as? String, "legacy")
+
+        // Then interaction events still describe the accepted Checkout customer
+        sut.logShow(showingSavedPMList: true)
+        let interaction = analyticsClient._testLogHistory.last!
+        let interactionConfiguration = interaction["mpe_config"] as! [String: Any]
+        XCTAssertEqual(interactionConfiguration["customer_access_provider"] as? String, "checkout_session")
+        XCTAssertEqual(interactionConfiguration["customer"] as? Bool, true)
+        XCTAssertEqual(interaction["payment_method_orientation"] as? String, "horizontal")
+        XCTAssertNil(sut.configuration.customer)
+    }
+
+    func testSuccessfulLoadDoesNotReplaceInteractionContextUntilAccepted() {
+        // Given an accepted load for a customer
+        let sut = PaymentSheetAnalyticsHelper(integrationShape: .complete, configuration: PaymentSheet.Configuration(), analyticsClient: analyticsClient)
+        let acceptedCustomer = CustomerProvider(customer: .init(id: "cus_accepted", ephemeralKeySecret: "ek_test"))
+        sut.didLoad(.init(
+            intent: ._testValue(),
+            elementsSession: ._testCardValue(),
+            savedPaymentMethods: [],
+            paymentMethodTypes: [.stripe(.card)],
+            paymentMethodMessagingPromotionsHelper: nil,
+            paymentMethodOrientation: .horizontal,
+            customerProvider: acceptedCustomer
+        ))
+        let incomingLoad = PaymentSheetLoader.LoadResult(
+            intent: ._testDeferredIntent(paymentMethodTypes: [.card]),
+            elementsSession: ._testCardValue(),
+            savedPaymentMethods: [],
+            paymentMethodTypes: [.stripe(.card)],
+            paymentMethodMessagingPromotionsHelper: nil,
+            paymentMethodOrientation: .vertical,
+            customerProvider: CustomerProvider(customer: nil)
+        )
+
+        // When another load completes before the surface has accepted its result
+        sut.logLoadSucceeded(
+            intent: incomingLoad.intent,
+            elementsSession: incomingLoad.elementsSession,
+            defaultPaymentMethod: nil,
+            orderedPaymentMethodTypes: incomingLoad.paymentMethodTypes,
+            paymentMethodOrientation: incomingLoad.paymentMethodOrientation,
+            loadTimings: .init(),
+            isUpdate: true,
+            customerProvider: incomingLoad.customerProvider,
+            hasCardArt: false,
+            didLinkLookupTimeOut: nil
+        )
+
+        // Then that event uses the incoming data while interaction events retain the accepted data
+        let loadEvent = analyticsClient._testLogHistory.last!
+        XCTAssertEqual((loadEvent["mpe_config"] as! [String: Any])["customer"] as? Bool, false)
+        XCTAssertEqual(loadEvent["payment_method_orientation"] as? String, "vertical")
+        XCTAssertEqual(loadEvent["is_decoupled"] as? Bool, true)
+        sut.logShow(showingSavedPMList: true)
+        XCTAssertEqual(analyticsClient._testLogHistory.last!["payment_method_orientation"] as? String, "horizontal")
+        XCTAssertEqual(analyticsClient._testLogHistory.last!["is_decoupled"] as? Bool, false)
+        XCTAssertEqual((analyticsClient._testLogHistory.last!["mpe_config"] as! [String: Any])["customer_access_provider"] as? String, "legacy")
+
+        // When the surface accepts the incoming result, subsequent events switch to it
+        sut.didLoad(incomingLoad)
+        sut.logShow(showingSavedPMList: false)
+        let acceptedEvent = analyticsClient._testLogHistory.last!
+        XCTAssertEqual((acceptedEvent["mpe_config"] as! [String: Any])["customer"] as? Bool, false)
+        XCTAssertEqual(acceptedEvent["payment_method_orientation"] as? String, "vertical")
+        XCTAssertEqual(acceptedEvent["is_decoupled"] as? Bool, true)
     }
 
     // MARK: - payment_method_orientation analytics
@@ -781,7 +884,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
 
     func testPaymentMethodOrientationPresentAfterLoad() {
         let sut = PaymentSheetAnalyticsHelper(integrationShape: .complete, configuration: PaymentSheet.Configuration(), analyticsClient: analyticsClient)
-        sut.logLoadStarted(isUpdate: false)
+        sut.logLoadStarted(isUpdate: false, customerProvider: CustomerProvider(customer: sut.configuration.customer))
         sut.logLoadSucceeded(
             intent: ._testValue(),
             elementsSession: ._testCardValue(),
@@ -790,9 +893,19 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             paymentMethodOrientation: .horizontal,
             loadTimings: .init(),
             isUpdate: false,
+            customerProvider: CustomerProvider(customer: sut.configuration.customer),
             hasCardArt: false,
             didLinkLookupTimeOut: nil
         )
+        sut.didLoad(.init(
+            intent: ._testValue(),
+            elementsSession: ._testCardValue(),
+            savedPaymentMethods: [],
+            paymentMethodTypes: [.stripe(.card)],
+            paymentMethodMessagingPromotionsHelper: nil,
+            paymentMethodOrientation: .horizontal,
+            customerProvider: CustomerProvider(customer: sut.configuration.customer)
+        ))
 
         analyticsClient._testLogHistory.removeAll()
         sut.logShow(showingSavedPMList: false)
@@ -801,7 +914,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
 
     func testPaymentMethodOrientationVertical() {
         let sut = PaymentSheetAnalyticsHelper(integrationShape: .complete, configuration: PaymentSheet.Configuration(), analyticsClient: analyticsClient)
-        sut.logLoadStarted(isUpdate: false)
+        sut.logLoadStarted(isUpdate: false, customerProvider: CustomerProvider(customer: sut.configuration.customer))
         sut.logLoadSucceeded(
             intent: ._testValue(),
             elementsSession: ._testCardValue(),
@@ -810,9 +923,19 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             paymentMethodOrientation: .vertical,
             loadTimings: .init(),
             isUpdate: false,
+            customerProvider: CustomerProvider(customer: sut.configuration.customer),
             hasCardArt: false,
             didLinkLookupTimeOut: nil
         )
+        sut.didLoad(.init(
+            intent: ._testValue(),
+            elementsSession: ._testCardValue(),
+            savedPaymentMethods: [],
+            paymentMethodTypes: [.stripe(.card), .stripe(.USBankAccount), .stripe(.afterpayClearpay)],
+            paymentMethodMessagingPromotionsHelper: nil,
+            paymentMethodOrientation: .vertical,
+            customerProvider: CustomerProvider(customer: sut.configuration.customer)
+        ))
 
         analyticsClient._testLogHistory.removeAll()
         sut.logShow(showingSavedPMList: false)
@@ -821,7 +944,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
 
     func testPaymentMethodOrientationHorizontal() {
         let sut = PaymentSheetAnalyticsHelper(integrationShape: .complete, configuration: PaymentSheet.Configuration(), analyticsClient: analyticsClient)
-        sut.logLoadStarted(isUpdate: false)
+        sut.logLoadStarted(isUpdate: false, customerProvider: CustomerProvider(customer: sut.configuration.customer))
         sut.logLoadSucceeded(
             intent: ._testValue(),
             elementsSession: ._testCardValue(),
@@ -830,9 +953,19 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             paymentMethodOrientation: .horizontal,
             loadTimings: .init(),
             isUpdate: false,
+            customerProvider: CustomerProvider(customer: sut.configuration.customer),
             hasCardArt: false,
             didLinkLookupTimeOut: nil
         )
+        sut.didLoad(.init(
+            intent: ._testValue(),
+            elementsSession: ._testCardValue(),
+            savedPaymentMethods: [],
+            paymentMethodTypes: [.stripe(.card)],
+            paymentMethodMessagingPromotionsHelper: nil,
+            paymentMethodOrientation: .horizontal,
+            customerProvider: CustomerProvider(customer: sut.configuration.customer)
+        ))
 
         analyticsClient._testLogHistory.removeAll()
         sut.logShow(showingSavedPMList: false)
