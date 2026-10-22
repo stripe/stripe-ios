@@ -59,7 +59,7 @@ final class CheckoutCurrencySelectorViewTests: XCTestCase {
         XCTAssertTrue(selectorView!.rightItem.displayText.string.contains("12"))
 
         let updatedSession = makeSession(integrationAmount: 2400, localAmount: 2000)
-        try await checkout.commitSession(updatedSession)
+        checkout.commitSession(updatedSession)
 
         XCTAssertTrue(selectorView!.leftItem.displayText.string.contains("20"))
         XCTAssertTrue(selectorView!.rightItem.displayText.string.contains("24"))
@@ -74,7 +74,7 @@ final class CheckoutCurrencySelectorViewTests: XCTestCase {
         let selector = try XCTUnwrap(currencySelector(in: view))
 
         // When the Checkout Session changes to GBP
-        try await checkout.commitSession(makeSession(currency: "gbp"))
+        checkout.commitSession(makeSession(currency: "gbp"))
         await waitForViewUpdate()
 
         // Then the selector agrees with the Checkout Session

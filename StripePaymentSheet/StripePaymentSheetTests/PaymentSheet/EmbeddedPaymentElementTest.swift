@@ -984,7 +984,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
             json["payment_status"] = "paid"
             return json
         }())
-        try await checkout.commitSession(completedSession)
+        checkout.commitSession(completedSession)
         XCTAssertFalse(checkout.sessionIsOpen)
 
         // Should no-op
@@ -1013,7 +1013,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
             json["status"] = "expired"
             return json
         }())
-        try await checkout.commitSession(expiredSession)
+        checkout.commitSession(expiredSession)
         XCTAssertFalse(checkout.sessionIsOpen)
 
         let result = await sut.update(checkout: checkout)

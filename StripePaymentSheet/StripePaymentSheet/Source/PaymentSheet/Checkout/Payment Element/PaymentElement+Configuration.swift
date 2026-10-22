@@ -126,6 +126,8 @@ extension PaymentElement {
             return configuration
         }()
 
+        // TODO: Have both configuration conversion methods accept Checkout configuration and session,
+        // apply address overrides here, and remove the CheckoutControllerLoader wrappers.
         func makeEmbeddedConfiguration(
             apiClient: STPAPIClient,
             returnURL: String,
@@ -152,7 +154,7 @@ extension PaymentElement {
             return configuration
         }
 
-        func makePaymentSheetConfiguration(
+        func makeFlowControllerConfiguration(
             apiClient: STPAPIClient,
             returnURL: String,
             defaults: CheckoutController.Configuration.Defaults,

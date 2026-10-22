@@ -444,6 +444,8 @@ extension PaymentSheet {
             )
         }
 
+        // TODO: Remove the legacy create(checkout:) and update(checkout:) methods after migrating
+        // remaining callers and tests to CheckoutControllerLoader results.
         /// An asynchronous failable initializer for PaymentSheet.FlowController
         /// This asynchronously loads the CheckoutSession's payment methods and configuration.
         /// - Parameter checkout: A fully loaded Checkout instance whose ``CheckoutController.session`` is non-nil.
@@ -646,20 +648,8 @@ extension PaymentSheet {
                 }
                 guard !Task.isCancelled else { return }
                 self.isPresented = true
-                checkout.session.applyAddressOverrides(to: &self.configuration)
-                let updateID = UUID()
-                self.performUpdate(mode: .checkout(checkout), updateID: updateID) { [weak self] error in
-                    guard let self else { return }
-                    if error != nil {
-                        self.isPresented = false
-                        bottomSheetVC.dismiss(animated: true) {
-                            completion(true)
-                        }
-                    } else {
-                        self.viewController.flowControllerDelegate = self
-                        bottomSheetVC.setViewControllers([self.viewController])
-                    }
-                }
+                self.viewController.flowControllerDelegate = self
+                bottomSheetVC.setViewControllers([self.viewController])
             }
         }
 
@@ -863,7 +853,7 @@ extension PaymentSheet {
         /// Applies already-loaded data. The caller manages the update lifecycle.
         func applyLoadResult(
             _ loadResult: PaymentSheetLoader.LoadResult,
-            confirmationChallenge: ConfirmationChallenge
+            confirmationChallenge: ConfirmationChallenge?
         ) {
             // Re-initialize PaymentSheetFlowControllerViewController to update the UI to match the newly loaded data e.g. payment method types may have changed.
 

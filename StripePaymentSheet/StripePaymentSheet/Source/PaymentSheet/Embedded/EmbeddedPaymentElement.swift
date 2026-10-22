@@ -100,6 +100,8 @@ public final class EmbeddedPaymentElement {
         return embeddedPaymentElement
     }
 
+    // TODO: Remove the legacy create(checkout:) and update(checkout:) methods after migrating
+    // remaining callers and tests to CheckoutControllerLoader results.
     /// An asynchronous failable initializer for CheckoutSession mode
     /// Loads payment methods and configuration from a fully loaded Checkout instance.
     /// - Parameter checkout: A fully loaded Checkout instance whose ``CheckoutController.session`` is non-nil.
@@ -257,7 +259,7 @@ public final class EmbeddedPaymentElement {
     /// The caller manages cancellation, update status, and post-update selection cleanup.
     func applyLoadResult(
         _ loadResult: PaymentSheetLoader.LoadResult,
-        confirmationChallenge: ConfirmationChallenge,
+        confirmationChallenge: ConfirmationChallenge?,
         configuration: Configuration
     ) {
         let previousPaymentOption = self._paymentOption

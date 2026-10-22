@@ -499,7 +499,7 @@ class PaymentSheetFlowControllerTests: XCTestCase {
             json["payment_status"] = "paid"
             return json
         }())
-        try await checkout.commitSession(completedSession)
+        checkout.commitSession(completedSession)
         XCTAssertFalse(checkout.sessionIsOpen)
 
         // FC update should bail immediately
