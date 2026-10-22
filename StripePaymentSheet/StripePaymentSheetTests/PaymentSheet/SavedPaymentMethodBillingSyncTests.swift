@@ -86,7 +86,7 @@ private extension SavedPaymentMethodBillingSyncTests {
     ) -> (VerticalSavedPaymentMethodsViewController, MockCheckoutSessionBillingAddressUpdater) {
         let intent = Intent._testCheckoutSession(
             automaticTaxEnabled: true,
-            automaticTaxAddressSource: "billing"
+            automaticTaxAddressSource: "session.billing"
         )
         guard case .checkout(let session) = intent else {
             fatalError("Expected a Checkout Session")
@@ -191,7 +191,7 @@ private final class MockCheckoutSessionBillingAddressUpdater: CheckoutSessionBil
         updateContinuation = nil
     }
 
-    func commitSession(_ apiResponse: CheckoutClientAPIResponse) async throws {
+    func commitSession(_ apiResponse: PaymentPagesAPIResponse) async throws {
         XCTFail("Unexpected call to commitSession")
     }
 }

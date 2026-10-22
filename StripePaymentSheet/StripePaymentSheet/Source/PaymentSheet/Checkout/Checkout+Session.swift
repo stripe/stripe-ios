@@ -91,9 +91,9 @@ extension CheckoutController {
         /// `customer_email` or the Checkout Session's Customer's email.
         let serverEmail: String?
         var localState: LocalState
-        let customer: CheckoutClientAPIResponse.Customer?
-        let canDetachPaymentMethod: Bool
+        let customer: PaymentPagesAPIResponse.Customer?
         let savedPaymentMethodsOfferSave: STPCheckoutSessionSavedPaymentMethodsOfferSave?
+        let setupFutureUsage: String?
         let setupFutureUsageForPaymentMethodType: [String: String]
         let allowedShippingCountries: [String]?
         let localizedPricesMetas: [STPCheckoutSessionLocalizedPriceMeta]
@@ -121,13 +121,106 @@ extension CheckoutController {
 }
 
 extension CheckoutController.Session {
+    /// Builds a read-only session snapshot from server-backed and local state.
+    init(
+        apiResponse: PaymentPagesAPIResponse,
+        localState: LocalState,
+        configuration: CheckoutController.Configuration? = nil
+    ) {
+        let elementsSessionValue = apiResponse.elementsSession.value
+        let publicDiscountAmounts = PaymentPagesAPIResponse.makeDiscountAmounts(
+            from: apiResponse.recurringDetails?.totalSummary.totalDiscountAmounts ?? [],
+            currency: apiResponse.currency
+        )
+        let publicTaxAmounts = apiResponse.totalSummary?.totalTaxAmounts?.map {
+            PaymentPagesAPIResponse.makeSessionTaxAmount(
+                from: $0,
+                currency: apiResponse.currency,
+                locale: .autoupdatingCurrent
+            )
+        }
+        let publicOrderSummaryItems = PaymentPagesAPIResponse.makeOrderSummaryItems(
+            from: apiResponse.checkoutItems,
+            locale: .autoupdatingCurrent
+        )
+        let publicTotals = PaymentPagesAPIResponse.makeTotals(
+            from: apiResponse.checkoutItems,
+            currency: apiResponse.currency
+        )
+        let publicTax = PaymentPagesAPIResponse.makeTax(
+            taxMeta: apiResponse.taxMeta,
+            taxContext: apiResponse.taxContext
+        )
+        let localizedPricesMetas = PaymentPagesAPIResponse.makeLocalizedPricesMetas(
+            from: apiResponse.adaptivePricingInfo
+        )
+        let exchangeRateMeta = PaymentPagesAPIResponse.makeExchangeRateMeta(
+            from: apiResponse.adaptivePricingInfo
+        )
+        // TODO: Read explicit integration and presentment currency fields from the mobile
+        // translation layer once available instead of deriving them from the PP response shape.
+        let presentmentDetails = apiResponse.adaptivePricingInfo.map {
+            CheckoutController.Session.PresentmentDetails(presentmentCurrency: $0.activePresentmentCurrency)
+        }
+        let automaticTaxEnabled = apiResponse.taxContext?.automaticTaxEnabled ?? false
+        let automaticTaxAddressSource = PaymentPagesAPIResponse.makeAutomaticTaxAddressSource(
+            from: apiResponse.taxContext?.automaticTaxAddressSource
+        )
+        if automaticTaxEnabled && automaticTaxAddressSource == "billing" {
+            elementsSessionValue.disableLinkForAutomaticTaxBilling = true
+        }
+        let availableExpressCheckoutPaymentMethods = configuration.map {
+            ExpressCheckoutElementUtilities.availablePaymentMethods(for: apiResponse, configuration: $0).map(\.rawValue)
+        } ?? []
+        let serverEmail = apiResponse.customerEmail ?? apiResponse.customer?.email
+
+        self.init(
+            id: apiResponse.sessionId,
+            businessName: apiResponse.elementsSession.businessName,
+            currency: apiResponse.adaptivePricingInfo?.integrationCurrency ?? apiResponse.currency,
+            presentmentDetails: presentmentDetails,
+            discountAmounts: publicDiscountAmounts,
+            orderSummaryItems: publicOrderSummaryItems,
+            livemode: apiResponse.livemode,
+            minorUnitsAmountDivisor: PaymentPagesAPIResponse.makeMinorUnitsAmountDivisor(
+                currency: apiResponse.currency
+            ),
+            status: apiResponse.status,
+            tax: publicTax,
+            taxAmounts: publicTaxAmounts,
+            totals: publicTotals,
+            availableExpressCheckoutPaymentMethods: availableExpressCheckoutPaymentMethods,
+            paymentStatus: apiResponse.paymentStatus,
+            paymentMethodOptions: apiResponse.paymentMethodOptions,
+            serverEmail: serverEmail,
+            localState: localState,
+            customer: apiResponse.customer,
+            savedPaymentMethodsOfferSave: PaymentPagesAPIResponse.makeSavedPaymentMethodsOfferSave(
+                from: apiResponse.savedPaymentMethodsOfferSave
+            ),
+            setupFutureUsage: apiResponse.setupFutureUsage,
+            setupFutureUsageForPaymentMethodType: apiResponse.setupFutureUsageForPaymentMethodType ?? [:],
+            allowedShippingCountries: apiResponse.shippingAddressCollection?.allowedCountries.map { $0.uppercased() },
+            localizedPricesMetas: localizedPricesMetas,
+            exchangeRateMeta: exchangeRateMeta,
+            adaptivePricingActive: apiResponse.adaptivePricingInfo != nil,
+            billingAddressCollection: apiResponse.billingAddressCollection.flatMap(CheckoutController.Session.BillingAddressCollection.init(rawValue:)) ?? .automatic,
+            automaticTaxEnabled: automaticTaxEnabled,
+            automaticTaxAddressSource: automaticTaxAddressSource,
+            merchantCountryCode: apiResponse.elementsSession.merchantCountryCode,
+            elementsSession: elementsSessionValue
+        )
+    }
+}
+
+extension CheckoutController.Session {
     /// An item included in the order summary.
     @frozen
     public enum OrderSummaryItem: Identifiable, Sendable, Hashable {
         /// The stable identity of this order summary item within its Checkout Session.
         public var id: String {
             switch self {
-            case .oneTimePrice(let oneTimePrice):
+            case let .oneTimePrice(oneTimePrice):
                 return oneTimePrice.key
             }
         }

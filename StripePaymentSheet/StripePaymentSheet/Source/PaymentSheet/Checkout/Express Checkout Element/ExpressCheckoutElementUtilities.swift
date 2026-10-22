@@ -18,13 +18,13 @@ enum ExpressCheckoutElementUtilities {
     }
 
     static func availablePaymentMethods(
-        for apiResponse: CheckoutClientAPIResponse,
+        for apiResponse: PaymentPagesAPIResponse,
         configuration: CheckoutController.Configuration
     ) -> [ExpressCheckoutElement.PaymentMethod] {
         guard let expressCheckoutConfiguration = configuration.expressCheckoutElement else {
             return []
         }
-        let elementsSession = apiResponse.elementsSession
+        let elementsSession = apiResponse.elementsSession.value
         let usesWebLink = !deviceCanUseNativeLink(elementsSession: elementsSession, apiClient: configuration.apiClient)
 
         return availablePaymentMethods(

@@ -285,7 +285,7 @@ extension SavedPaymentMethodManagerTests {
                            responseObject: STPPaymentMethod.paymentMethodsJson)
     }
 
-    func makeCheckoutSession(id: String) -> CheckoutClientAPIResponse {
+    func makeCheckoutSession(id: String) -> PaymentPagesAPIResponse {
         CheckoutTestHelpers.makeSession().withSessionId(id)
     }
 
@@ -320,7 +320,10 @@ extension SavedPaymentMethodManagerTests {
                 exp.fulfill()
             }
             return HTTPStubsResponse(
-                jsonObject: (responseJSON),
+                jsonObject: CheckoutTestHelpers.checkoutClientInitJSON(
+                    from: responseJSON,
+                    sessionId: checkoutSessionId
+                ),
                 statusCode: 200,
                 headers: nil
             )
@@ -350,7 +353,10 @@ extension SavedPaymentMethodManagerTests {
                 exp.fulfill()
             }
             return HTTPStubsResponse(
-                jsonObject: (CheckoutTestHelpers.makeSessionJSON(["session_id": checkoutSessionId])),
+                jsonObject: CheckoutTestHelpers.checkoutClientInitJSON(
+                    from: CheckoutTestHelpers.makeSessionJSON(["session_id": checkoutSessionId]),
+                    sessionId: checkoutSessionId
+                ),
                 statusCode: 200,
                 headers: nil
             )

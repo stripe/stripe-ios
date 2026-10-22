@@ -493,7 +493,7 @@ class PaymentSheetFlowControllerTests: XCTestCase {
         let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration())
 
         // Move session to complete
-        let completedSession = try CheckoutClientAPIResponse.decode(fromAPIResponse: {
+        let completedSession = try PaymentPagesAPIResponse.decode(fromAPIResponse: {
             var json = CheckoutTestHelpers.openSessionJSON
             json["status"] = "complete"
             json["payment_status"] = "paid"

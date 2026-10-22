@@ -4,7 +4,9 @@
 
 "+ Add" = "+ Dodaj";
 
+"1 %1$@ = %2$@ %3$@ (includes %4$@%% conversion fee)." = "1 %1$@ = %2$@ %3$@ (uključuje naknadu za konverziju: %4$@%%).";
 
+"1 %@ = %@ %@" = "1 %1$@ = %2$@ %3$@";
 
 "Accept" = "Prihvati";
 

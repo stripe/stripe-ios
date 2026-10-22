@@ -141,10 +141,7 @@ final class PaymentElementTest: XCTestCase {
 
     func testConfigurationSetsApplePayFromCheckoutSessionMerchantCountry() async throws {
         // Given Apple Pay configured for a Checkout Session with a non-US merchant country
-        var checkoutConfiguration = CheckoutController.Configuration(
-            clientSecret: "cs_test_123_secret_abc",
-            returnURL: "stripe-ios-test://checkout-return"
-        )
+        var checkoutConfiguration = CheckoutController.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
         var paymentElementConfiguration = PaymentElement.Configuration()
         paymentElementConfiguration.applePayConfiguration = PaymentElement.Configuration.ApplePayConfiguration(
             merchantId: "merchant.com.example",
@@ -152,12 +149,14 @@ final class PaymentElementTest: XCTestCase {
         )
         checkoutConfiguration.paymentElement = paymentElementConfiguration
         var sessionJSON = Self.openSessionJSON(paymentMethodTypes: ["card"])
-        sessionJSON["merchant_info"] = ["country": "GB"]
+        var elementsSessionJSON = sessionJSON["elements_session"] as! [String: Any]
+        elementsSessionJSON["merchant_country"] = "GB"
+        sessionJSON["elements_session"] = elementsSessionJSON
 
         // When Checkout creates PaymentElement
         let checkout = try await CheckoutController(
             configuration: CheckoutTestHelpers.makeConfiguration(
-                apiResponse: try CheckoutClientAPIResponse.decode(fromAPIResponse: sessionJSON),
+                apiResponse: try PaymentPagesAPIResponse.decode(fromAPIResponse: sessionJSON),
                 configuration: checkoutConfiguration
             )
         )
@@ -524,7 +523,7 @@ final class PaymentElementTest: XCTestCase {
         XCTAssertEqual(checkout.session.paymentOption?.label, "PayNow")
         XCTAssertEqual(checkout.session.paymentOption?.paymentMethodType, "paynow")
 
-        let completedSession = try CheckoutClientAPIResponse.decode(fromAPIResponse: {
+        let completedSession = try PaymentPagesAPIResponse.decode(fromAPIResponse: {
             var json = Self.openSessionJSON(paymentMethodTypes: ["card", "paynow"])
             json["status"] = "complete"
             json["payment_status"] = "paid"
@@ -649,12 +648,12 @@ final class PaymentElementTest: XCTestCase {
         requestRecorder: CheckoutSessionRequestRecorder
     ) {
         var sessionJSON = STPTestUtils.jsonNamed("CheckoutSession")!
-        sessionJSON["automatic_tax"] = ["enabled": true, "status": "requires_address", "address_source": "billing"]
-        let session = try CheckoutClientAPIResponse.decode(fromAPIResponse: sessionJSON)
+        sessionJSON["tax_meta"] = ["computation_type": "automatic", "status": "requires_location_inputs"]
+        let session = try PaymentPagesAPIResponse.decode(fromAPIResponse: sessionJSON)
         let requestRecorder = CheckoutSessionRequestRecorder()
         let configuration = CheckoutTestHelpers.makeConfiguration(apiResponse: session)
         CheckoutTestHelpers.stubCheckoutSessionRequests(
-            sessionId: session.id,
+            sessionId: session.sessionId,
             requestRecorder: requestRecorder,
             sessionJSON: { sessionJSON },
             updateStatusCode: { updateRequestNumber in
@@ -666,17 +665,22 @@ final class PaymentElementTest: XCTestCase {
         return (configuration, requestRecorder)
     }
 
-    private static func makeOpenSession(paymentMethodTypes: [String], businessName: String? = nil) -> CheckoutClientAPIResponse {
-        return try! CheckoutClientAPIResponse.decode(
+    private static func makeOpenSession(paymentMethodTypes: [String], businessName: String? = nil) -> PaymentPagesAPIResponse {
+        return try! PaymentPagesAPIResponse.decode(
             fromAPIResponse: openSessionJSON(paymentMethodTypes: paymentMethodTypes, businessName: businessName)
         )
     }
 
-    private static func openSessionJSON(paymentMethodTypes: [String], businessName: String? = nil) -> [AnyHashable: Any]
-    {
+    private static func openSessionJSON(paymentMethodTypes: [String], businessName: String? = nil) -> [AnyHashable: Any] {
+        var elementsSessionJSON = CheckoutTestHelpers.minimalElementsSessionJSON
+        elementsSessionJSON["payment_method_preference"] = [
+            "ordered_payment_method_types": paymentMethodTypes,
+        ]
+        elementsSessionJSON["business_name"] = businessName
+
         var json = CheckoutTestHelpers.openSessionJSON
-        json["ordered_payment_method_types_and_wallets"] = paymentMethodTypes
-        json["merchant_info"] = ["country": "US", "display_name": businessName as Any? ?? NSNull()]
+        json["payment_method_types"] = paymentMethodTypes
+        json["elements_session"] = elementsSessionJSON
         return json
     }
 
@@ -691,10 +695,10 @@ final class PaymentElementTest: XCTestCase {
         requestRecorder: CheckoutSessionRequestRecorder
     ) {
         let requestRecorder = CheckoutSessionRequestRecorder()
-        var sessionJSON = Self.openSessionJSON(paymentMethodTypes: paymentMethodTypes)
-        sessionJSON["customer"] = [
-            "id": "cus_123",
-            "payment_methods": [
+        let elementsSession = STPElementsSession._testValue(
+            paymentMethodTypes: paymentMethodTypes,
+            customerSessionData: [:],
+            paymentMethods: [
                 STPPaymentMethod._testCard(
                     line1: "123 Main St",
                     city: "San Francisco",
@@ -702,9 +706,17 @@ final class PaymentElementTest: XCTestCase {
                     postalCode: "94105",
                     countryCode: "US"
                 ).allResponseFields,
-            ],
+            ]
+        )
+        var sessionJSON = Self.openSessionJSON(paymentMethodTypes: paymentMethodTypes)
+        var elementsSessionJSON = elementsSession.allResponseFields
+        elementsSessionJSON["ordered_payment_method_types_and_wallets"] = paymentMethodTypes
+        sessionJSON["elements_session"] = elementsSessionJSON
+        sessionJSON["tax_meta"] = ["computation_type": "automatic", "status": "requires_location_inputs"]
+        sessionJSON["tax_context"] = [
+            "automatic_tax_enabled": true,
+            "automatic_tax_address_source": "session.billing",
         ]
-        sessionJSON["automatic_tax"] = ["enabled": true, "status": "requires_address", "address_source": "billing"]
         CheckoutTestHelpers.stubCheckoutSessionRequests(
             sessionId: "cs_test_123",
             requestRecorder: requestRecorder,
@@ -715,10 +727,7 @@ final class PaymentElementTest: XCTestCase {
             }
         )
 
-        var configuration = CheckoutController.Configuration(
-            clientSecret: "cs_test_123_secret_abc",
-            returnURL: "stripe-ios-test://checkout-return"
-        )
+        var configuration = CheckoutController.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
         configuration.apiClient = STPAPIClient(publishableKey: "pk_test_123")
         var paymentElementConfiguration = PaymentElement.Configuration()
         paymentElementConfiguration.rowSelectionBehavior = .immediateAction(

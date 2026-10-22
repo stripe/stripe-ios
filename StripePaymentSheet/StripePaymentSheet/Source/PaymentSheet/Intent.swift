@@ -137,7 +137,7 @@ enum Intent {
             }
             return nil
         case .checkout(let session):
-            return session.noPaymentRequired ? nil : session.setupFutureUsage(for: .link)
+            return session.noPaymentRequired ? nil : session.setupFutureUsage
         case .setupIntent:
             return nil
         }
@@ -192,7 +192,7 @@ enum Intent {
     func allowsPaymentMethodRemoval(elementsSession: STPElementsSession) -> Bool {
         switch self {
         case .checkout(let session):
-            return session.canDetachPaymentMethod
+            return session.customer?.canDetachPaymentMethod ?? false
         case .paymentIntent, .setupIntent, .deferredIntent:
             return elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()
         }

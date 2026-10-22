@@ -313,25 +313,25 @@ extension Intent {
         subtotal: Int? = nil,
         taxAmount: Int = 0,
         automaticTaxEnabled: Bool? = nil,
-        automaticTaxAddressSource: String? = nil
+        automaticTaxAddressSource: String? = nil,
+        discountAmount: Int = 0
     ) -> Intent {
         var json = CheckoutTestHelpers.makeSessionJSON([
             "status": "open",
             "payment_status": hasPaymentDue ? "unpaid" : "no_payment_required",
-            "presentment_currency": currency.lowercased(),
-            "integration_currency": currency.lowercased(),
+            "currency": currency.lowercased(),
         ])
         if let email {
             json["customer_email"] = email
         }
         if automaticTaxEnabled != nil || automaticTaxAddressSource != nil {
-            var automaticTax: [String: Any] = [
-                "enabled": automaticTaxEnabled ?? false,
+            var taxContext: [String: Any] = [
+                "automatic_tax_enabled": automaticTaxEnabled ?? false,
             ]
             if let automaticTaxAddressSource {
-                automaticTax["address_source"] = automaticTaxAddressSource
+                taxContext["automatic_tax_address_source"] = automaticTaxAddressSource
             }
-            json["automatic_tax"] = automaticTax
+            json["tax_context"] = taxContext
         }
 
         let oneTimePriceItems = oneTimePriceItems ?? [
@@ -367,7 +367,7 @@ extension Intent {
             rawOneTimePriceItems[0]["total"] =
                 (rawOneTimePriceItems[0]["total"] as? Int ?? 0) + taxAmount
         }
-        json["items"] = [
+        json["checkout_items"] = [
             [
                 "key": "checkout_item_test",
                 "type": "one_time_price",
@@ -378,19 +378,34 @@ extension Intent {
                 ],
             ],
         ]
+        var recurringTotalSummary: [String: Any] = [
+            "total_discount_amounts": [],
+            "total_tax_amounts": [],
+        ]
         if taxAmount != 0 {
-            json["total_summary"] = [
-                "total_tax_amounts": [
-                    [
-                        "amount": taxAmount,
-                        "inclusive": false,
-                        "display_name": "Tax",
-                        "percentage": 0.0,
-                    ],
+            recurringTotalSummary["total_tax_amounts"] = [[
+                "amount": taxAmount,
+                "inclusive": false,
+                "tax_rate": [
+                    "display_name": "Tax",
+                    "percentage": 0.0,
+                    "rate_type": "percentage",
                 ],
-            ]
+                "taxable_amount": (subtotal ?? amount ?? 0),
+            ], ]
         }
-        let checkoutSession = try! CheckoutClientAPIResponse.decode(fromAPIResponse: json)
+        if discountAmount != 0 {
+            recurringTotalSummary["total_discount_amounts"] = [[
+                "amount": discountAmount,
+                "coupon": [
+                    "code": "coupon_test",
+                ],
+            ], ]
+        }
+        if taxAmount != 0 || discountAmount != 0 {
+            json["recurring_details"] = ["total_summary": recurringTotalSummary]
+        }
+        let checkoutSession = try! PaymentPagesAPIResponse.decode(fromAPIResponse: json)
         return .checkout(checkoutSession.makePublicSession())
     }
 }

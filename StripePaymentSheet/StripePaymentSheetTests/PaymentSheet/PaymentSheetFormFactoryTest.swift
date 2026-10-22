@@ -65,17 +65,18 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertNil(headerView)
     }
     private func makeCheckoutSessionIntent(
-        offerSave: Bool? = nil,
+        offerSave: [String: Any]? = nil,
         hasCustomer: Bool = true
     ) -> Intent {
         var overrides: [String: Any] = [
             "status": "open",
+            "currency": "usd",
         ]
         if hasCustomer {
             overrides["customer"] = ["id": "cus_test_checkout_save"]
         }
         if let offerSave {
-            overrides["saved_payment_method_options"] = ["payment_method_save": offerSave ? "enabled" : "disabled"]
+            overrides["customer_managed_saved_payment_methods_offer_save"] = offerSave
         }
         let session = CheckoutTestHelpers.makeSession(overrides)
         return .checkout(session.makePublicSession())
@@ -1090,10 +1091,13 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertTrue(factory.shouldDisplaySaveCheckbox)
     }
 
-    func testShowsCheckbox_CheckoutSessionOfferSaveEnabled() {
+    func testShowsCheckbox_CheckoutSessionOfferSaveNotAccepted() {
         let configuration = PaymentSheet.Configuration()
         let factory = PaymentSheetFormFactory(
-            intent: makeCheckoutSessionIntent(offerSave: true),
+            intent: makeCheckoutSessionIntent(offerSave: [
+                "enabled": true,
+                "status": "not_accepted",
+            ]),
             elementsSession: ._testValue(paymentMethodTypes: ["card"]),
             configuration: .paymentElement(configuration),
             paymentMethod: .stripe(.card)
@@ -1110,7 +1114,10 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         var configuration = PaymentSheet.Configuration()
         configuration.savePaymentMethodOptInBehavior = .requiresOptOut
         let factory = PaymentSheetFormFactory(
-            intent: makeCheckoutSessionIntent(offerSave: true),
+            intent: makeCheckoutSessionIntent(offerSave: [
+                "enabled": true,
+                "status": "not_accepted",
+            ]),
             elementsSession: ._testValue(paymentMethodTypes: ["card"]),
             configuration: .paymentElement(configuration),
             paymentMethod: .stripe(.card)
@@ -1125,7 +1132,10 @@ class PaymentSheetFormFactoryTest: XCTestCase {
     func testHidesCheckbox_CheckoutSessionOfferSaveDisabled() {
         let configuration = PaymentSheet.Configuration()
         let factory = PaymentSheetFormFactory(
-            intent: makeCheckoutSessionIntent(offerSave: false),
+            intent: makeCheckoutSessionIntent(offerSave: [
+                "enabled": false,
+                "status": "accepted",
+            ]),
             elementsSession: ._testValue(paymentMethodTypes: ["card"]),
             configuration: .paymentElement(configuration),
             paymentMethod: .stripe(.card)
@@ -1137,7 +1147,10 @@ class PaymentSheetFormFactoryTest: XCTestCase {
     func testHidesCheckbox_CheckoutSessionOfferSaveEnabledWithoutCustomer() {
         let configuration = PaymentSheet.Configuration()
         let factory = PaymentSheetFormFactory(
-            intent: makeCheckoutSessionIntent(offerSave: true, hasCustomer: false),
+            intent: makeCheckoutSessionIntent(offerSave: [
+                "enabled": true,
+                "status": "accepted",
+            ], hasCustomer: false),
             elementsSession: ._testValue(paymentMethodTypes: ["card"]),
             configuration: .paymentElement(configuration),
             paymentMethod: .stripe(.card)
@@ -1152,7 +1165,10 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         let configuration = PaymentSheet.Configuration()
 
         let factory = PaymentSheetFormFactory(
-            intent: makeCheckoutSessionIntent(offerSave: true),
+            intent: makeCheckoutSessionIntent(offerSave: [
+                "enabled": true,
+                "status": "not_accepted",
+            ]),
             elementsSession: ._testValue(paymentMethodTypes: ["card"]),
             configuration: .paymentElement(configuration),
             paymentMethod: .stripe(.card),
@@ -3167,17 +3183,22 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             previousCustomerInput: IntentConfirmParams? = nil
         ) -> PaymentMethodElement {
             var json = CheckoutTestHelpers.makeSessionJSON([
-                "id": "cs_test_paypal",
-                "ordered_payment_method_types_and_wallets": ["paypal"],
+                "session_id": "cs_test_paypal",
+                "payment_method_types": ["paypal"],
                 "customer": ["id": "cus_123"],
+                "elements_session": [
+                    "session_id": "es_test",
+                    "merchant_country": "US",
+                    "payment_method_preference": ["ordered_payment_method_types": ["paypal"]],
+                ],
             ])
             if let setupFutureUsage {
-                json["setup_future_usage_for_payment_method_type"] = ["paypal": setupFutureUsage]
+                json["setup_future_usage"] = setupFutureUsage
             }
             if let paymentMethodOptions {
                 json["payment_method_options"] = paymentMethodOptions
             }
-            let checkoutSession = try! CheckoutClientAPIResponse.decode(fromAPIResponse: json)
+            let checkoutSession = try! PaymentPagesAPIResponse.decode(fromAPIResponse: json)
             return PaymentSheetFormFactory(
                 intent: .checkout(checkoutSession.makePublicSession()),
                 elementsSession: ._testValue(paymentMethodTypes: ["paypal"]),

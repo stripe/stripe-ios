@@ -885,7 +885,7 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
         let request = STPApplePayContext.createPaymentRequest(
             intent: ._testCheckoutSession(
                 automaticTaxEnabled: true,
-                automaticTaxAddressSource: "billing"
+                automaticTaxAddressSource: "session.billing"
             ),
             configuration: config,
             applePay: applePayConfiguration
@@ -903,7 +903,7 @@ private final class TestCheckoutSessionBillingAddressUpdater: CheckoutSessionBil
         self.session = session
     }
 
-    func commitSession(_ apiResponse: CheckoutClientAPIResponse) async throws {
+    func commitSession(_ apiResponse: PaymentPagesAPIResponse) async throws {
         session = apiResponse.makePublicSession()
     }
 

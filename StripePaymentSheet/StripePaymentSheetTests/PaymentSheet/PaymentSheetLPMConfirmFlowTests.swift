@@ -76,7 +76,7 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
             self.session = session
         }
 
-        func commitSession(_ apiResponse: CheckoutClientAPIResponse) async throws {
+        func commitSession(_ apiResponse: PaymentPagesAPIResponse) async throws {
             session = apiResponse.makePublicSession()
         }
 

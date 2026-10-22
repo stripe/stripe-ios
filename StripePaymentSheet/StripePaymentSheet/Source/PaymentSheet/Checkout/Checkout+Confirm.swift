@@ -68,9 +68,9 @@ extension CheckoutController {
     }
 
     enum InternalConfirmResult {
-        case completed(CheckoutClientAPIResponse)
-        case canceled(sessionResponse: CheckoutClientAPIResponse? = nil)
-        case failed(Error, sessionResponse: CheckoutClientAPIResponse? = nil)
+        case completed(PaymentPagesAPIResponse)
+        case canceled(sessionResponse: PaymentPagesAPIResponse? = nil)
+        case failed(Error, sessionResponse: PaymentPagesAPIResponse? = nil)
 
         var paymentSheetResult: PaymentSheetResult {
             switch self {
@@ -83,7 +83,7 @@ extension CheckoutController {
             }
         }
 
-        var checkoutSessionResponse: CheckoutClientAPIResponse? {
+        var checkoutSessionResponse: PaymentPagesAPIResponse? {
             switch self {
             case .completed(let response):
                 return response
@@ -432,7 +432,7 @@ extension CheckoutController {
         // 1. Call /confirm
         // TODO: Scope Radar option creation and this request with confirmationChallenge.withRadarOptions(for:).
         // complete() is async, but the underlying AssertionHandle.complete() schedules rather than awaits release.
-        let response: CheckoutClientAPIResponse
+        let response: PaymentPagesAPIResponse
         do {
             response = try await apiClient.confirmCheckoutSession(with: requestParameters)
         } catch {
@@ -515,33 +515,46 @@ extension CheckoutController {
             return .failed(CheckoutError.unknown(debugDescription: "Checkout Session unexpectedly expired after confirmation."), sessionResponse: response)
         }
 
-        // /retrieve can reject completed sessions. Keep the client-completed Intent and
-        // update only the status fields established by authentication.
-        var updatedResponse = response
-        switch clientCompletedIntent {
-        case nil:
-            break
-        case .paymentIntent(let paymentIntent):
-            updatedResponse.paymentIntent = paymentIntent
-            switch paymentIntent.status {
-            case .succeeded:
-                updatedResponse.paymentStatus = .paid
-                updatedResponse.status = .complete(.paid)
-            case .processing:
-                updatedResponse.status = .complete(response.paymentStatus)
-            default:
+        // 4. Hackily update the PaymentPages response `status` and `payment_status` based on the `/confirm` response and client-completed Intent.
+        // Unfortunately, this logic has to live on the client today. The /retrieve endpoint 400s for completed Checkout Sessions.
+        do {
+            var responseFields = response.allResponseFields
+
+            // PaymentHandler already verified that the Intent is client-complete. Only update
+            // Session fields we can derive from the newer Intent; otherwise preserve `/confirm`.
+            switch clientCompletedIntent {
+            case nil:
                 break
+            case .paymentIntent(let paymentIntent):
+                responseFields["payment_intent"] = paymentIntent.allResponseFields
+                switch paymentIntent.status {
+                case .succeeded:
+                    responseFields["status"] = "complete"
+                    responseFields["payment_status"] = "paid"
+                case .processing:
+                    responseFields["status"] = "complete"
+                default:
+                    break
+                }
+            case .setupIntent(let setupIntent):
+                responseFields["setup_intent"] = setupIntent.allResponseFields
+                switch setupIntent.status {
+                case .succeeded:
+                    responseFields["status"] = "complete"
+                default:
+                    break
+                }
             }
-        case .setupIntent(let setupIntent):
-            updatedResponse.setupIntent = setupIntent
-            if setupIntent.status == .succeeded {
-                updatedResponse.status = .complete(response.paymentStatus)
-            }
+
+            let data = try JSONSerialization.data(withJSONObject: responseFields)
+            let updatedResponse = try StripeJSONDecoder().decode(PaymentPagesAPIResponse.self, from: data)
+            return .completed(updatedResponse)
+        } catch {
+            return .failed(error, sessionResponse: response)
         }
-        return .completed(updatedResponse)
     }
 
-    private static func paymentError(from session: CheckoutClientAPIResponse) -> Error {
+    private static func paymentError(from session: PaymentPagesAPIResponse) -> Error {
         let lastErrorFields = session.paymentResponse?.lastPaymentError?.allResponseFields
             ?? session.paymentIntent?.lastPaymentError?.allResponseFields
             ?? session.setupIntent?.lastSetupError?.allResponseFields

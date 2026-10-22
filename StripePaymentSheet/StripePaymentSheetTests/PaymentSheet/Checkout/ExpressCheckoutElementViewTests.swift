@@ -20,10 +20,11 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
         configuration.applePayConfiguration = .init(merchantId: "merchant.com.example")
         let session = CheckoutTestHelpers.makeSession([
             "customer_email": "jenny@example.com",
+            "elements_session": [
+                "session_id": "es_test",
+                "merchant_country": "US",
+                "payment_method_preference": ["ordered_payment_method_types": ["card"]],
                 "ordered_payment_method_types_and_wallets": ["link"],
-            "elements_session_id": "es_test",
-            "merchant_info": [
-                "country": "US"
             ],
         ]).makePublicSession(
             expressCheckoutConfiguration: configuration
@@ -226,13 +227,13 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
         // Given a session that calculates automatic tax from the billing address
         let apiResponse = CheckoutTestHelpers.makeSessionWithWalletTypes(
             ["link"],
-            automaticTaxAddressSource: "billing"
+            automaticTaxAddressSource: "session.billing"
         )
         let configuration = ExpressCheckoutElement.Configuration(completion: { _ in })
         let checkoutConfiguration = CheckoutTestHelpers.makeConfiguration(apiResponse: apiResponse, paymentElementConfiguration: nil)
 
         // When the public session applies the automatic tax restriction before calculating ECE availability
-        XCTAssertFalse(apiResponse.elementsSession.disableLinkForAutomaticTaxBilling)
+        XCTAssertFalse(apiResponse.elementsSession.value.disableLinkForAutomaticTaxBilling)
         let session = CheckoutController.Session(apiResponse: apiResponse, localState: .empty, configuration: checkoutConfiguration)
 
         let reasons = ExpressCheckoutElementUtilities.linkDisabledReasonsWithoutCheckoutRequirements(
@@ -252,13 +253,13 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
     func testLinkButtonHiddenWhenShippingAddressIsRequired() {
         // Given a session that requires shipping
         let configuration = ExpressCheckoutElement.Configuration(completion: { _ in })
-        var elementsSession = CheckoutTestHelpers.minimalCheckoutClientConfigurationJSON
+        var elementsSession = CheckoutTestHelpers.minimalElementsSessionJSON
         elementsSession["ordered_payment_method_types_and_wallets"] = ["link"]
         let apiResponse = CheckoutTestHelpers.makeSession([
             "customer_email": "jenny@example.com",
             "shipping_address_collection": ["allowed_countries": ["US"]],
-            ].merging(elementsSession) { _, new in new }
-        )
+            "elements_session": elementsSession,
+        ])
         let session = apiResponse.makePublicSession(expressCheckoutConfiguration: configuration)
 
         // When
@@ -280,7 +281,7 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
         let configuration = ExpressCheckoutElement.Configuration(completion: { _ in })
         let apiResponse = CheckoutTestHelpers.makeSessionWithWalletTypes(
             ["link"],
-            automaticTaxAddressSource: "shipping",
+            automaticTaxAddressSource: "session.shipping",
             customerEmail: "jenny@example.com"
         )
 
@@ -370,8 +371,8 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
         customerEmail: String? = nil,
         billingAddressCollectionRequired: Bool = false,
         nativeLink: Bool = false
-    ) -> CheckoutClientAPIResponse {
-        var elementsSession = CheckoutTestHelpers.minimalCheckoutClientConfigurationJSON
+    ) -> PaymentPagesAPIResponse {
+        var elementsSession = CheckoutTestHelpers.minimalElementsSessionJSON
         elementsSession["ordered_payment_method_types_and_wallets"] = ["link"]
         if nativeLink {
             elementsSession["link_settings"] = [
@@ -379,7 +380,7 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
                 "link_mobile_use_attestation_endpoints": true,
             ]
         }
-        var overrides: [String: Any] = [:].merging(elementsSession) { _, new in new }
+        var overrides: [String: Any] = ["elements_session": elementsSession]
         if let customerEmail {
             overrides["customer_email"] = customerEmail
         }

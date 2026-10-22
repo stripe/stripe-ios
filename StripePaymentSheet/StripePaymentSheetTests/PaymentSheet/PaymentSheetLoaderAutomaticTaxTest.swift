@@ -76,12 +76,12 @@ final class PaymentSheetLoaderAutomaticTaxTest: XCTestCase {
             makeCheckoutIntent(
                 paymentMethods: [incomplete],
                 automaticTaxEnabled: false,
-                automaticTaxAddressSource: "billing"
+                automaticTaxAddressSource: "session.billing"
             ),
             makeCheckoutIntent(
                 paymentMethods: [incomplete],
                 automaticTaxEnabled: true,
-                automaticTaxAddressSource: "shipping"
+                automaticTaxAddressSource: "session.shipping"
             ),
         ]
 
@@ -136,16 +136,16 @@ final class PaymentSheetLoaderAutomaticTaxTest: XCTestCase {
     private func makeCheckoutIntent(
         paymentMethods: [STPPaymentMethod],
         automaticTaxEnabled: Bool = true,
-        automaticTaxAddressSource: String = "billing"
+        automaticTaxAddressSource: String = "session.billing"
     ) -> Intent {
         let response = CheckoutTestHelpers.makeSession([
             "customer": [
                 "id": "cus_123",
                 "payment_methods": paymentMethods.map(\.allResponseFields),
             ],
-            "automatic_tax": [
-                "enabled": automaticTaxEnabled,
-                "address_source": automaticTaxAddressSource,
+            "tax_context": [
+                "automatic_tax_enabled": automaticTaxEnabled,
+                "automatic_tax_address_source": automaticTaxAddressSource,
             ],
         ])
         return .checkout(response.makePublicSession())
