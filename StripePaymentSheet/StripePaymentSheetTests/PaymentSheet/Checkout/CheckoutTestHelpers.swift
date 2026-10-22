@@ -723,3 +723,24 @@ extension PaymentPagesAPIResponse {
         return try! PaymentPagesAPIResponse.decode(fromAPIResponse: json)
     }
 }
+
+extension CheckoutClientAPIResponse {
+    /// Convenience for fixtures that contain no client-local session state.
+    func makePublicSession(
+        expressCheckoutConfiguration: ExpressCheckoutElement.Configuration? = nil
+    ) -> CheckoutController.Session {
+        let configuration = expressCheckoutConfiguration.map { expressConfiguration in
+            var configuration = CheckoutController.Configuration(
+                clientSecret: "\(id)_secret_abc",
+                returnURL: "stripe-ios-test://checkout-return"
+            )
+            configuration.expressCheckoutElement = expressConfiguration
+            return configuration
+        }
+        return CheckoutController.Session(
+            apiResponse: self,
+            localState: .empty,
+            configuration: configuration
+        )
+    }
+}

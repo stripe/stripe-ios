@@ -165,11 +165,11 @@ extension STPAPIClient {
     /// - Parameters:
     ///   - checkoutSessionId: The ID of the checkout session (e.g., "cs_test_xxx")
     ///   - adaptivePricingAllowed: Whether the integration allows adaptive pricing for this session.
-    /// - Returns: Internal Payment Pages API response for the checkout session.
+    /// - Returns: Internal CheckoutClient response for the checkout session.
     func initCheckoutSession(
         checkoutSessionId: String,
         adaptivePricingAllowed: Bool
-    ) async throws -> PaymentPagesAPIResponse {
+    ) async throws -> CheckoutClientAPIResponse {
         var parameters: [String: Any] = [
             "locale": Locale.current.toLanguageTag(),
             "timezone": TimeZone.current.identifier,
@@ -187,7 +187,7 @@ extension STPAPIClient {
             parameters: parameters
         )
 
-        return try checkoutClientSessionResponse(checkoutClient)
+        return checkoutClient
     }
 
     /// Updates a CheckoutSession with the provided parameters.
@@ -378,19 +378,6 @@ extension STPAPIClient {
             endpoint: "payment_pages/\(requestParameters.sessionId)/confirm",
             parameters: parameters
         )
-    }
-
-    private func checkoutClientSessionResponse(
-        _ checkoutClient: CheckoutClientAPIResponse
-    ) throws -> PaymentPagesAPIResponse {
-        do {
-            return try checkoutClient.paymentPagesResponse()
-        } catch {
-            if error is DecodingError {
-                reportUnexpectedPaymentPagesParsingError(error, apiClient: self)
-            }
-            throw error
-        }
     }
 
     private func post<Response: Decodable>(

@@ -71,12 +71,11 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
         XCTAssertEqual(checkoutSession.status, .open)
         XCTAssertEqual(checkoutSession.currency, "usd")
         XCTAssertFalse(checkoutSession.livemode)
-        XCTAssertTrue((apiResponse.allResponseFields["payment_method_types"] as? [String])?.contains("card") ?? false)
+        XCTAssertTrue((apiResponse.allResponseFields["ordered_payment_method_types_and_wallets"] as? [String])?.contains("card") ?? false)
 
         // Verify elements session fields
-        let elementsSessionDict = apiResponse.allResponseFields["elements_session"] as! [String: Any]
-        XCTAssertTrue((elementsSessionDict["session_id"] as! String).hasPrefix("elements_session_"))
-        XCTAssertEqual(elementsSessionDict["merchant_country"] as? String, "US")
+        XCTAssertTrue(apiResponse.elementsSession.sessionID.hasPrefix("elements_session_"))
+        XCTAssertEqual(apiResponse.merchantInfo.country, "US")
     }
 
     func testConfirmCheckoutSessionPayment() async throws {
@@ -263,12 +262,11 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
         XCTAssertEqual(checkoutSession.status, .open)
         XCTAssertEqual(checkoutSession.currency, "usd")
         XCTAssertFalse(checkoutSession.livemode)
-        XCTAssertTrue((apiResponse.allResponseFields["payment_method_types"] as? [String])?.contains("card") ?? false)
+        XCTAssertTrue((apiResponse.allResponseFields["ordered_payment_method_types_and_wallets"] as? [String])?.contains("card") ?? false)
 
         // Verify elements session fields
-        let elementsSessionDict = apiResponse.allResponseFields["elements_session"] as! [String: Any]
-        XCTAssertTrue((elementsSessionDict["session_id"] as! String).hasPrefix("elements_session_"))
-        XCTAssertEqual(elementsSessionDict["merchant_country"] as? String, "US")
+        XCTAssertTrue(apiResponse.elementsSession.sessionID.hasPrefix("elements_session_"))
+        XCTAssertEqual(apiResponse.merchantInfo.country, "US")
     }
 
     // TODO(porter): see disabled_testInitCheckoutSessionSetup above.

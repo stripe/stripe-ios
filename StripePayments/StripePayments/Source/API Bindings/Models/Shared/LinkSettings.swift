@@ -108,12 +108,13 @@ import Foundation
         let validFundingSources = Set(fundingSourcesStrings.map { ParsedEnum<FundingSource>(rawValue: $0) })
 
         let webviewOption = PopupWebviewOption(rawValue: response["link_popup_webview_option"] as? String ?? "")
-        let passthroughModeEnabled = response["link_passthrough_mode_enabled"] as? Bool ?? false
         let disableSignup = response["link_mobile_disable_signup"] as? Bool ?? false
         let disableFlowControllerRUX = response["link_mobile_disable_rux_in_flow_controller"] as? Bool ?? false
         let useAttestationEndpoints = response["link_mobile_use_attestation_endpoints"] as? Bool ?? false
         let suppress2FAModal = response["link_mobile_suppress_2fa_modal"] as? Bool ?? false
         let linkMode = (response["link_mode"] as? String).flatMap { LinkMode(rawValue: $0) }
+        let passthroughModeEnabled = response["link_passthrough_mode_enabled"] as? Bool
+            ?? (linkMode == .passthrough || linkMode == .linkCardBrand)
         let linkDefaultOptIn = (response["link_default_opt_in"] as? String).flatMap { LinkDefaultOptIn(rawValue: $0) }
         let linkEnableDisplayableDefaultValuesInECE = response["link_enable_displayable_default_values_in_ece"] as? Bool ?? false
         let linkShowPreferDebitCardHint = response["link_show_prefer_debit_card_hint"] as? Bool ?? false

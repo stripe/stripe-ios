@@ -341,7 +341,7 @@ public final class CheckoutController: ObservableObject {
                 throw CheckoutError.apiError(message: error.localizedDescription)
             }
             let sessionId = Self.extractSessionId(from: self.clientSecret)
-            let refreshedCheckoutSession: PaymentPagesAPIResponse
+            let refreshedCheckoutSession: CheckoutClientAPIResponse
             do {
                 refreshedCheckoutSession = try await self.apiClient.initCheckoutSession(
                     checkoutSessionId: sessionId,
@@ -463,6 +463,23 @@ extension CheckoutController {
     /// Replaces the current session from an API response, applies local state, and updates Checkout elements.
     ///
     /// Existing local state is preserved unless explicitly replaced.
+    func commitSession(
+        _ apiResponse: CheckoutClientAPIResponse,
+        mutateLocalState: LocalStateMutation = { _ in }
+    ) async throws {
+        var localState = session.localState
+        mutateLocalState(&localState)
+
+        session = Session(
+            apiResponse: apiResponse,
+            localState: localState,
+            configuration: configuration
+        )
+
+        // === Update Payment Element and all other asynchronously updated elements ==
+        try await paymentElement?.update(checkout: self)
+    }
+
     func commitSession(
         _ apiResponse: PaymentPagesAPIResponse? = nil,
         mutateLocalState: LocalStateMutation = { _ in }
