@@ -370,6 +370,24 @@ extension STPAPIClient {
         )
     }
 
+    private func retrievingCheckoutIntents(
+        for response: CheckoutClientAPIResponse
+    ) async throws -> CheckoutClientAPIResponse {
+        let paymentIntent: STPPaymentIntent?
+        if let reference = response.paymentResponse?.paymentIntent {
+            paymentIntent = try await retrievePaymentIntent(clientSecret: reference.clientSecret, expand: ["payment_method"])
+        } else {
+            paymentIntent = nil
+        }
+        let setupIntent: STPSetupIntent?
+        if let reference = response.paymentResponse?.setupIntent {
+            setupIntent = try await retrieveSetupIntent(clientSecret: reference.clientSecret, expand: ["payment_method"])
+        } else {
+            setupIntent = nil
+        }
+        return CheckoutClientAPIResponse(copying: response, paymentIntent: paymentIntent, setupIntent: setupIntent)
+    }
+
     private func post<Response: Decodable>(
         endpoint: String,
         parameters: [String: Any]
