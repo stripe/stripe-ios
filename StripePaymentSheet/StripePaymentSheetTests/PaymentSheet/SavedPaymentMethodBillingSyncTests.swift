@@ -190,10 +190,6 @@ private final class MockCheckoutSessionBillingAddressUpdater: CheckoutSessionBil
         updateContinuation?.resume()
         updateContinuation = nil
     }
-
-    func commitSession(_ apiResponse: PaymentPagesAPIResponse) async throws {
-        XCTFail("Unexpected call to commitSession")
-    }
 }
 
 @MainActor
