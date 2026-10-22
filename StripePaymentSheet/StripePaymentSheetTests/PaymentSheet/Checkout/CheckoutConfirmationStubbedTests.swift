@@ -391,6 +391,30 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         XCTAssertTrue(poller.checkoutSessionIds.isEmpty)
     }
 
+    func testOrchestrationConfirmResponseFailsWithoutPolling() async throws {
+        // Given /confirm requires an action without an Intent the SDK can handle
+        let checkout = try await makeCheckout()
+        let poller = TestCheckoutSessionPoller(outcome: .completed)
+        var responseJSON = makeConfirmedSessionJSON(status: "open", paymentStatus: "unpaid")
+        responseJSON.removeValue(forKey: "payment_intent")
+        responseJSON.removeValue(forKey: "setup_intent")
+        responseJSON["payment_response"] = ["status": "requires_action"]
+
+        // When the Checkout Session is confirmed
+        let result = await confirmCheckoutSession(
+            checkout,
+            responseJSON: responseJSON,
+            poller: poller
+        )
+
+        // Then it fails before polling
+        guard case .failed(let error, _) = result else {
+            return XCTFail("Expected confirmation to fail, got \(result)")
+        }
+        XCTAssertTrue(error.nonGenericDescription.contains("without a supported Intent"))
+        XCTAssertTrue(poller.checkoutSessionIds.isEmpty)
+    }
+
     // MARK: - Payment Method
 
     func testNewPaymentMethodSelectedSendsSaveAndAlwaysAllowRedisplay() async throws {
@@ -946,9 +970,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
             paymentResponse[key] = ["id": id, "client_secret": clientSecret]
             paymentResponse["status"] = intent["status"]
         }
-        if !paymentResponse.isEmpty {
-            response["payment_response"] = paymentResponse
-        }
+        response["payment_response"] = session["payment_response"] ?? (paymentResponse.isEmpty ? nil : paymentResponse)
         return response
     }
 

@@ -460,6 +460,12 @@ extension CheckoutController {
             return .failed(paymentError(from: response), sessionResponse: response)
         }
 
+        if response.paymentResponse?.status == "requires_action",
+           response.paymentIntent == nil, response.setupIntent == nil {
+            let error = CheckoutError.unknown(debugDescription: "CheckoutClient requires an action without a supported Intent.")
+            return .failed(error, sessionResponse: response)
+        }
+
         // 2. Handle any next action required by the Intent.
         let clientCompletedIntent: PaymentOrSetupIntent?
         if let paymentIntent = response.paymentIntent {
