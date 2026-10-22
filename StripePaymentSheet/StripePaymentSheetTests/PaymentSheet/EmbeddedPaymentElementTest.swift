@@ -719,6 +719,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
             intent: intent,
             configuration: configuration,
             paymentMethodTypes: [.stripe(.card)],
+            experimentAnalyticsHelper: analyticsHelper.experimentAnalyticsHelper,
             analyticsHelper: analyticsHelper
         ))
         promotionsHelper.fetchData()

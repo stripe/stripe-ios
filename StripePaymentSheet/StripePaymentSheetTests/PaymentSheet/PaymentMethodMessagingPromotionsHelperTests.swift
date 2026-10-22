@@ -64,6 +64,7 @@ final class PaymentMethodMessagingPromotionsHelperTests: APIStubbedTestCase {
             intent: intent,
             configuration: configuration,
             paymentMethodTypes: [.stripe(.affirm)],
+            experimentAnalyticsHelper: analyticsHelper.experimentAnalyticsHelper,
             analyticsHelper: analyticsHelper
         ))
 
@@ -94,6 +95,7 @@ final class PaymentMethodMessagingPromotionsHelperTests: APIStubbedTestCase {
             intent: intent,
             configuration: configuration,
             paymentMethodTypes: [.stripe(.affirm)],
+            experimentAnalyticsHelper: ExperimentAnalyticsHelper(integrationShape: .paymentSheet),
             analyticsHelper: PaymentSheetAnalyticsHelper._testValue()
         )
 
@@ -125,6 +127,7 @@ final class PaymentMethodMessagingPromotionsHelperTests: APIStubbedTestCase {
             intent: intent,
             configuration: configuration,
             paymentMethodTypes: [.stripe(.affirm)],
+            experimentAnalyticsHelper: analyticsHelper.experimentAnalyticsHelper,
             analyticsHelper: analyticsHelper
         ))
 
@@ -160,6 +163,7 @@ final class PaymentMethodMessagingPromotionsHelperTests: APIStubbedTestCase {
             intent: intent,
             configuration: configuration,
             paymentMethodTypes: [],
+            experimentAnalyticsHelper: ExperimentAnalyticsHelper(integrationShape: .paymentSheet),
             analyticsHelper: PaymentSheetAnalyticsHelper._testValue()
         ))
 
@@ -202,6 +206,7 @@ final class PaymentMethodMessagingPromotionsHelperTests: APIStubbedTestCase {
             intent: intent,
             configuration: configuration,
             paymentMethodTypes: [.stripe(.affirm)],
+            experimentAnalyticsHelper: ExperimentAnalyticsHelper(integrationShape: .paymentSheet),
             analyticsHelper: PaymentSheetAnalyticsHelper._testValue()
         ))
 
@@ -240,6 +245,7 @@ final class PaymentMethodMessagingPromotionsHelperTests: APIStubbedTestCase {
             intent: intent,
             configuration: configuration,
             paymentMethodTypes: [.stripe(.affirm)],
+            experimentAnalyticsHelper: analyticsHelper.experimentAnalyticsHelper,
             analyticsHelper: analyticsHelper
         ))
 
@@ -271,6 +277,7 @@ final class PaymentMethodMessagingPromotionsHelperTests: APIStubbedTestCase {
             intent: intent,
             configuration: configuration,
             paymentMethodTypes: [.stripe(.affirm)],
+            experimentAnalyticsHelper: analyticsHelper.experimentAnalyticsHelper,
             analyticsHelper: analyticsHelper
         ))
 
@@ -302,6 +309,7 @@ final class PaymentMethodMessagingPromotionsHelperTests: APIStubbedTestCase {
             intent: intent,
             configuration: configuration,
             paymentMethodTypes: [.stripe(.affirm)],
+            experimentAnalyticsHelper: analyticsHelper.experimentAnalyticsHelper,
             analyticsHelper: analyticsHelper
         ))
 
@@ -337,6 +345,7 @@ final class PaymentMethodMessagingPromotionsHelperTests: APIStubbedTestCase {
             intent: intent,
             configuration: configuration,
             paymentMethodTypes: [],
+            experimentAnalyticsHelper: analyticsHelper.experimentAnalyticsHelper,
             analyticsHelper: analyticsHelper
         ))
 
@@ -371,6 +380,7 @@ final class PaymentMethodMessagingPromotionsHelperTests: APIStubbedTestCase {
             intent: intent,
             configuration: configuration,
             paymentMethodTypes: [.stripe(.affirm)],
+            experimentAnalyticsHelper: analyticsHelper.experimentAnalyticsHelper,
             analyticsHelper: analyticsHelper
         ))
 

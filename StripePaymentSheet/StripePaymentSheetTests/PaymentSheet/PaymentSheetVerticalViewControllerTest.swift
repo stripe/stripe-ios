@@ -58,6 +58,7 @@ final class PaymentSheetVerticalViewControllerTest: XCTestCase {
             intent: intent,
             configuration: PaymentSheet.Configuration(),
             paymentMethodTypes: [.stripe(.card)],
+            experimentAnalyticsHelper: analyticsHelper.experimentAnalyticsHelper,
             analyticsHelper: analyticsHelper
         ))
         promotionsHelper.fetchData()

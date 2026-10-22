@@ -147,6 +147,7 @@ final class PaymentSheetLoader {
                 intent: intent,
                 configuration: configuration,
                 paymentMethodTypes: paymentMethodTypes,
+                experimentAnalyticsHelper: analyticsHelper.experimentAnalyticsHelper,
                 analyticsHelper: analyticsHelper
             )
             paymentMethodMessagingPromotionsHelper?.fetchData()
