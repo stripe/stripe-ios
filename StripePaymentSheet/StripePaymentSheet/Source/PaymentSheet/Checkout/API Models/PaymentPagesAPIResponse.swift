@@ -36,10 +36,10 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
     let shippingAddressCollection: ShippingAddressCollection?
     let totalSummary: TotalSummary?
     let adaptivePricingInfo: AdaptivePricingInfo?
-    let taxContext: TaxContext?
-    let taxMeta: TaxMeta?
+    let automaticTax: AutomaticTax?
     let paymentMethodOptions: STPPaymentMethodOptions?
     let customer: Customer?
+    let canDetachPaymentMethod: Bool
     let elementsSession: ElementsSession
     let paymentResponse: PaymentResponse?
 
@@ -130,6 +130,7 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
 
         customerEmail = try container.decodeIfPresent(String.self, forKey: .customerEmail)
         let savedOptions = try container.decodeIfPresent(SavedPaymentMethodOptions.self, forKey: .savedPaymentMethodOptions)
+        canDetachPaymentMethod = savedOptions?.paymentMethodRemove == "enabled"
         savedPaymentMethodsOfferSave = savedOptions?.paymentMethodSave.map {
             SavedPaymentMethodsOfferSave(enabled: $0 == "enabled")
         }
@@ -147,19 +148,12 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
         )
         totalSummary = try container.decodeIfPresent(TotalSummary.self, forKey: .totalSummary)
         adaptivePricingInfo = try container.decodeIfPresent(AdaptivePricingInfo.self, forKey: .adaptivePricingInfo)
-        let tax = try container.decodeIfPresent(AutomaticTax.self, forKey: .automaticTax)
-        taxContext = tax.map { TaxContext(automaticTaxEnabled: $0.enabled, automaticTaxAddressSource: $0.addressSource.map { "session.\($0)" }) }
-        taxMeta = tax.map {
-            TaxMeta(computationType: .init($0.enabled ? .automatic : .off), status: $0.status == "requires_address" ? .init(.requiresLocationInputs) : ($0.status == "ready" ? .init(.complete) : nil))
-        }
+        automaticTax = try container.decodeIfPresent(AutomaticTax.self, forKey: .automaticTax)
         paymentMethodOptions = try container.decodeIfPresent(
             LegacyDecoded<STPPaymentMethodOptions>.self,
             forKey: .paymentMethodOptions
         )?.value
-        var decodedCustomer = try container.decodeIfPresent(Customer.self, forKey: .customer)
-        // CheckoutClient returns removal permission alongside the customer, in saved_payment_method_options.
-        decodedCustomer?.canDetachPaymentMethod = savedOptions?.paymentMethodRemove == "enabled"
-        customer = decodedCustomer
+        customer = try container.decodeIfPresent(Customer.self, forKey: .customer)
         elementsSession = try ElementsSession(checkoutClient: decoder)
     }
 }
@@ -170,7 +164,7 @@ extension PaymentPagesAPIResponse {
         let clientSecret: String
     }
 
-    private struct AutomaticTax: Decodable {
+    struct AutomaticTax: Decodable {
         let enabled: Bool
         let status: String?
         let addressSource: String?
@@ -455,30 +449,6 @@ extension PaymentPagesAPIResponse {
         }
     }
 
-    struct TaxContext: Decodable {
-        let automaticTaxEnabled: Bool
-        let automaticTaxAddressSource: String?
-    }
-
-    struct TaxMeta: Decodable {
-        enum ComputationType: String, SafeParsedEnumCodable {
-            case off = "Off"
-            case automatic
-            case extensionDefined = "extension_defined"
-            case manual
-            case userDefined = "user_defined"
-        }
-
-        enum Status: String, SafeParsedEnumCodable {
-            case complete
-            case failed
-            case requiresLocationInputs = "requires_location_inputs"
-        }
-
-        let computationType: ParsedEnum<ComputationType>
-        let status: ParsedEnum<Status>?
-    }
-
     private struct SavedPaymentMethodOptions: Decodable {
         let paymentMethodSave: String?
         let paymentMethodRemove: String?
@@ -514,9 +484,18 @@ extension PaymentPagesAPIResponse {
                 linkSettings?["link_passthrough_mode_enabled"] = linkMode == .passthrough || linkMode == .linkCardBrand
             }
             let flags = fields["flags"] as? [String: Bool] ?? [:]
-            var passiveCaptcha = fields["passive_captcha"] as? [String: Any]
-            let tokenRefreshAfterSeconds = passiveCaptcha?["token_refresh_after_seconds"]
-            passiveCaptcha?["token_timeout_seconds"] = tokenRefreshAfterSeconds
+            let passiveCaptchaData: PassiveCaptchaData?
+            if flags["elements_enable_passive_captcha"] == true,
+               let captcha = fields["passive_captcha"] as? [String: Any],
+               let siteKey = captcha["site_key"] as? String {
+                passiveCaptchaData = PassiveCaptchaData(
+                    siteKey: siteKey,
+                    rqdata: captcha["rqdata"] as? String,
+                    tokenTimeoutSeconds: captcha["token_refresh_after_seconds"] as? TimeInterval ?? PassiveCaptchaData.defaultTokenTimeoutSeconds
+                )
+            } else {
+                passiveCaptchaData = nil
+            }
             let value = STPElementsSession(
                 allResponseFields: fields,
                 sessionID: elementsSessionID,
@@ -535,7 +514,7 @@ extension PaymentPagesAPIResponse {
                 isApplePayEnabled: fields["apple_pay_preference"] as? String != "disabled",
                 externalPaymentMethods: [],
                 customPaymentMethods: [],
-                passiveCaptchaData: flags["elements_enable_passive_captcha"] == true ? passiveCaptcha.flatMap(PassiveCaptchaData.decoded(fromAPIResponse:)) : nil,
+                passiveCaptchaData: passiveCaptchaData,
                 customer: nil
             )
             self.businessName = merchant["display_name"] as? String

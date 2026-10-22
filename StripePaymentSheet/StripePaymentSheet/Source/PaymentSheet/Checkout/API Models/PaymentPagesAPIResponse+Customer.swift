@@ -18,9 +18,6 @@ extension PaymentPagesAPIResponse {
         /// Saved payment methods for this customer.
         let paymentMethods: [STPPaymentMethod]
 
-        /// Whether the customer can detach saved payment methods via Payment Pages.
-        var canDetachPaymentMethod = false
-
         /// Customer email address.
         let email: String?
 

@@ -160,37 +160,26 @@ extension PaymentPagesAPIResponse {
         )
     }
 
-    static func makeTax(
-        taxMeta: TaxMeta?,
-        taxContext: TaxContext?
-    ) -> CheckoutController.Session.Tax? {
-        // TODO: The backend should return the public tax status directly instead of requiring
-        // each client to derive it. Until then, match EwCS by treating every non-automatic
-        // computation type as ready.
-        guard let taxMeta else { return nil }
-        guard taxMeta.computationType == .automatic else {
+    static func makeTax(from automaticTax: AutomaticTax?) -> CheckoutController.Session.Tax? {
+        guard let automaticTax else { return nil }
+        guard automaticTax.enabled else {
             return CheckoutController.Session.Tax(status: .ready)
         }
-        switch taxMeta.status?.value {
-        case .complete:
+        switch automaticTax.status {
+        case "ready":
             return CheckoutController.Session.Tax(status: .ready)
-        case .requiresLocationInputs:
-            switch taxContext?.automaticTaxAddressSource {
-            case "session.shipping":
+        case "requires_address":
+            switch automaticTax.addressSource {
+            case "shipping":
                 return CheckoutController.Session.Tax(status: .requiresShippingAddress)
-            case "session.billing":
+            case "billing":
                 return CheckoutController.Session.Tax(status: .requiresBillingAddress)
             default:
                 return nil
             }
-        case .failed, nil:
+        default:
             return nil
         }
-    }
-
-    static func makeAutomaticTaxAddressSource(from value: String?) -> String? {
-        guard let value else { return nil }
-        return value.hasPrefix("session.") ? String(value.dropFirst("session.".count)) : value
     }
 
     static func makeSavedPaymentMethodsOfferSave(

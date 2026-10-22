@@ -92,6 +92,7 @@ extension CheckoutController {
         let serverEmail: String?
         var localState: LocalState
         let customer: PaymentPagesAPIResponse.Customer?
+        let canDetachPaymentMethod: Bool
         let savedPaymentMethodsOfferSave: STPCheckoutSessionSavedPaymentMethodsOfferSave?
         let setupFutureUsageForPaymentMethodType: [String: String]
         let allowedShippingCountries: [String]?
@@ -142,10 +143,7 @@ extension CheckoutController.Session {
             from: apiResponse.checkoutItems,
             currency: apiResponse.currency
         )
-        let publicTax = PaymentPagesAPIResponse.makeTax(
-            taxMeta: apiResponse.taxMeta,
-            taxContext: apiResponse.taxContext
-        )
+        let publicTax = PaymentPagesAPIResponse.makeTax(from: apiResponse.automaticTax)
         let localizedPricesMetas = PaymentPagesAPIResponse.makeLocalizedPricesMetas(
             from: apiResponse.adaptivePricingInfo
         )
@@ -156,10 +154,8 @@ extension CheckoutController.Session {
         let presentmentDetails = apiResponse.adaptivePricingInfo.map { _ in
             CheckoutController.Session.PresentmentDetails(presentmentCurrency: apiResponse.currency)
         }
-        let automaticTaxEnabled = apiResponse.taxContext?.automaticTaxEnabled ?? false
-        let automaticTaxAddressSource = PaymentPagesAPIResponse.makeAutomaticTaxAddressSource(
-            from: apiResponse.taxContext?.automaticTaxAddressSource
-        )
+        let automaticTaxEnabled = apiResponse.automaticTax?.enabled ?? false
+        let automaticTaxAddressSource = apiResponse.automaticTax?.addressSource
         if automaticTaxEnabled && automaticTaxAddressSource == "billing" {
             elementsSessionValue.disableLinkForAutomaticTaxBilling = true
         }
@@ -190,6 +186,7 @@ extension CheckoutController.Session {
             serverEmail: serverEmail,
             localState: localState,
             customer: apiResponse.customer,
+            canDetachPaymentMethod: apiResponse.canDetachPaymentMethod,
             savedPaymentMethodsOfferSave: PaymentPagesAPIResponse.makeSavedPaymentMethodsOfferSave(
                 from: apiResponse.savedPaymentMethodsOfferSave
             ),

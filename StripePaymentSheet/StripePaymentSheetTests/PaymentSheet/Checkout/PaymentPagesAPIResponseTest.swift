@@ -214,7 +214,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertFalse(session.livemode)
         XCTAssertNotNil(session.customer)
         XCTAssertEqual(session.customer?.id, "cus_test123456")
-        XCTAssertFalse(session.customer?.canDetachPaymentMethod ?? true)
+        XCTAssertFalse(session.canDetachPaymentMethod)
         XCTAssertEqual(session.customer?.paymentMethods.count, 2)
         XCTAssertEqual(session.customer?.paymentMethods[0].stripeId, "pm_1Sxae3Lu5o3P18Zpt5YuRRoG")
         XCTAssertEqual(session.customer?.paymentMethods[0].type, .card)
@@ -521,7 +521,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
             ],
         ]).makePublicSession()
 
-        XCTAssertTrue(session.customer?.canDetachPaymentMethod ?? false)
+        XCTAssertTrue(session.canDetachPaymentMethod)
     }
 
     func testDecodedObjectParsesCanDetachPaymentMethodFalse() {
@@ -536,7 +536,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
             ],
         ]).makePublicSession()
 
-        XCTAssertFalse(session.customer?.canDetachPaymentMethod ?? true)
+        XCTAssertFalse(session.canDetachPaymentMethod)
     }
 
     func testDecodedObjectDefaultsCanDetachPaymentMethodToFalse() {
@@ -547,7 +547,18 @@ class PaymentPagesAPIResponseTest: XCTestCase {
             ],
         ]).makePublicSession()
 
-        XCTAssertFalse(session.customer?.canDetachPaymentMethod ?? true)
+        XCTAssertFalse(session.canDetachPaymentMethod)
+    }
+
+    func testRemovalPermissionRequiresCustomer() {
+        let session = CheckoutTestHelpers.makeSession([
+            "customer": NSNull(),
+            "saved_payment_method_options": ["payment_method_remove": "enabled"],
+        ]).makePublicSession()
+
+        XCTAssertTrue(session.canDetachPaymentMethod)
+        XCTAssertNil(session.customer)
+        XCTAssertFalse(Intent.checkout(session).allowsPaymentMethodRemoval(elementsSession: session.elementsSession))
     }
 
     func testAggregateTaxAmountsRemainSeparateFromTotals() {
