@@ -27,7 +27,7 @@ struct LinkGlobalHoldbackAA: LoggableExperiment {
         session elementsSession: STPElementsSession,
         configuration: PaymentElementConfiguration,
         linkAccount: PaymentSheetLinkAccount?,
-        integrationShape: PaymentSheetAnalyticsHelper.IntegrationShape
+        integrationShape: ExperimentIntegrationShape
     ) {
         let baseExperiment = BaseLinkHoldbackExperiment(
             experimentName: Self.experimentName,
