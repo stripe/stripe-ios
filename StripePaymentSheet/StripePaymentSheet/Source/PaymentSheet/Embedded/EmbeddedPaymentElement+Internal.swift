@@ -311,6 +311,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
                                                                                appearance: configuration.appearance,
                                                                                billingDetailsCollectionConfiguration: configuration.billingDetailsCollectionConfiguration,
                                                                                hostedSurface: .paymentSheet,
+                                                                               checkoutSessionID: analyticsHelper.checkoutSessionID,
                                                                                cardBrandFilter: configuration.cardBrandFilter,
                                                                                canRemove: elementsSession.paymentMethodRemoveLast(configuration: configuration) && intent.allowsPaymentMethodRemoval(elementsSession: elementsSession),
                                                                                canUpdate: intent.allowsPaymentMethodUpdate(elementsSession: elementsSession),
@@ -730,6 +731,7 @@ extension EmbeddedPaymentElement {
             contentViewController: viewController,
             appearance: configuration.appearance,
             usesNativeSheet: nativeSheetPresentation.usesNativeSheet,
+            checkoutSessionID: analyticsHelper.checkoutSessionID,
             didCancelNative3DS2: {
             stpAssertionFailure("3DS2 was triggered unexpectedly")
         })

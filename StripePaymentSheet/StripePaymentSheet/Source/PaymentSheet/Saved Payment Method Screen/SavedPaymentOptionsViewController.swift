@@ -709,6 +709,7 @@ extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
                                                                            appearance: appearance,
                                                                            billingDetailsCollectionConfiguration: paymentSheetConfiguration.billingDetailsCollectionConfiguration,
                                                                            hostedSurface: .paymentSheet,
+                                                                           checkoutSessionID: analyticsHelper.checkoutSessionID,
                                                                            cardBrandFilter: paymentSheetConfiguration.cardBrandFilter,
                                                                            canRemove: configuration.allowsRemovalOfPaymentMethods && (savedPaymentMethods.count > 1 || configuration.allowsRemovalOfLastSavedPaymentMethod),
                                                                            canUpdate: intent.allowsPaymentMethodUpdate(elementsSession: elementsSession),

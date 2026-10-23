@@ -23,6 +23,7 @@ protocol AutoCompleteViewControllerDelegate: AnyObject {
 @objc(STP_Internal_AutoCompleteViewController)
 class AutoCompleteViewController: UIViewController {
     let configuration: AddressViewController.Configuration
+    private let checkoutSessionID: String?
     let initialLine1Text: String?
     let addressSpecProvider: AddressSpecProvider
     /// Vertical offset for the view controller content. Negative values move content up, positive values move content down.
@@ -156,9 +157,11 @@ class AutoCompleteViewController: UIViewController {
         addressSpecProvider: AddressSpecProvider = .shared,
         verticalOffset: CGFloat = 0,
         keyboardAlreadyShowing: Bool = false,
-        useAutocompleteEndpoints: Bool = true
+        useAutocompleteEndpoints: Bool = true,
+        checkoutSessionID: String? = nil
     ) {
         self.configuration = configuration
+        self.checkoutSessionID = checkoutSessionID
         self.initialLine1Text = initialLine1Text
         self.selectedCountry = selectedCountry
         self.addressSpecProvider = addressSpecProvider
@@ -268,7 +271,7 @@ class AutoCompleteViewController: UIViewController {
         super.viewWillAppear(animated)
         registerForKeyboardNotifications()
         autocompleteStartTime = Date()
-        STPAnalyticsClient.sharedClient.logAddressAutocompleteStart(addressCountryCode: selectedCountry, sessionToken: sessionToken, apiClient: configuration.apiClient)
+        STPAnalyticsClient.sharedClient.logAddressAutocompleteStart(addressCountryCode: selectedCountry, sessionToken: sessionToken, checkoutSessionID: checkoutSessionID, apiClient: configuration.apiClient)
 
         if let transitionCoordinator, !keyboardAlreadyShowing {
             transitionCoordinator.animate(alongsideTransition: nil) { _ in
@@ -298,6 +301,7 @@ class AutoCompleteViewController: UIViewController {
                 source: source,
                 sessionElapsed: elapsedTimeSinceAutocompleteStart,
                 msToFetch: requestLatency,
+                checkoutSessionID: checkoutSessionID,
                 apiClient: configuration.apiClient
             )
         }
@@ -363,6 +367,7 @@ extension AutoCompleteViewController: ElementDelegate {
                     error: error,
                     sessionToken: self.sessionToken,
                     sessionElapsed: self.elapsedTimeSinceAutocompleteStart,
+                    checkoutSessionID: self.checkoutSessionID,
                     apiClient: self.configuration.apiClient
                 )
                 // Fall back to MapKit on API failure
@@ -456,6 +461,7 @@ extension AutoCompleteViewController: UITableViewDelegate, UITableViewDataSource
                     sessionElapsed: elapsedTimeSinceAutocompleteStart,
                     placeId: suggestion.placeId,
                     msToFetch: nil,
+                    checkoutSessionID: checkoutSessionID,
                     apiClient: configuration.apiClient
                 )
                 delegate?.didSelectAddress(address)
@@ -483,6 +489,7 @@ extension AutoCompleteViewController: UITableViewDelegate, UITableViewDataSource
                             sessionElapsed: elapsedTimeSinceAutocompleteStart,
                             placeId: placeId,
                             msToFetch: latency,
+                            checkoutSessionID: checkoutSessionID,
                             apiClient: configuration.apiClient
                         )
                         delegate?.didSelectAddress(details.address)
@@ -492,6 +499,7 @@ extension AutoCompleteViewController: UITableViewDelegate, UITableViewDataSource
                             error: error,
                             sessionToken: sessionToken,
                             sessionElapsed: elapsedTimeSinceAutocompleteStart,
+                            checkoutSessionID: checkoutSessionID,
                             apiClient: configuration.apiClient
                         )
                         delegate?.didSelectAddress(nil)
@@ -510,6 +518,7 @@ extension AutoCompleteViewController: UITableViewDelegate, UITableViewDataSource
                         sessionElapsed: self.elapsedTimeSinceAutocompleteStart,
                         placeId: nil,
                         msToFetch: nil,
+                        checkoutSessionID: self.checkoutSessionID,
                         apiClient: self.configuration.apiClient
                     )
                     self.delegate?.didSelectAddress(address)

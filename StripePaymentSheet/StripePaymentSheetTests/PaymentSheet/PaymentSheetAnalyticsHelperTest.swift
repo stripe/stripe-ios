@@ -149,6 +149,8 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             XCTAssertEqual(analyticsClient._testLogHistory[1]["event"] as? String, "mc_load_failed")
             XCTAssertLessThan(analyticsClient._testLogHistory[1]["duration"] as! Double, 1.0)
             XCTAssertEqual(analyticsClient._testLogHistory[1]["integration_shape"] as? String, shapeString)
+            XCTAssertNil(analyticsClient._testLogHistory[0]["checkout_session_id"])
+            XCTAssertNil(analyticsClient._testLogHistory[1]["checkout_session_id"])
         }
     }
 

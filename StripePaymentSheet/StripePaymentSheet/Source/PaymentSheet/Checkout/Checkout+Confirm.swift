@@ -321,7 +321,8 @@ extension CheckoutController {
                             SepaMandateViewController.present(
                                 from: paymentMethodParameters.authenticationContext.authenticationPresentingViewController(),
                                 configuration: paymentMethodParameters.configuration,
-                                nativeSheetPresentation: paymentMethodParameters.nativeSheetPresentation
+                                nativeSheetPresentation: paymentMethodParameters.nativeSheetPresentation,
+                                checkoutSessionID: self.session.id
                             ) { didAcceptMandate in
                                 continuation.resume(returning: didAcceptMandate)
                             }
@@ -426,7 +427,8 @@ extension CheckoutController {
             intent: .checkout(checkoutSession),
             paymentOption: paymentOption,
             paymentHandler: parameters.paymentHandler,
-            integrationShape: preconfirmIntegrationShape
+            integrationShape: preconfirmIntegrationShape,
+            checkoutSessionID: checkoutSession.id
         )
     }
 

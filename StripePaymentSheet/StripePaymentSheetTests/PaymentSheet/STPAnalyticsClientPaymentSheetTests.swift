@@ -50,6 +50,7 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
             apiClient: .init(publishableKey: "pk_test_123")
         )
         let last = client._testLogHistory.last!
+        XCTAssertNil(last["checkout_session_id"])
         XCTAssertEqual(last["event"] as? String, "mc_billing_address_completed")
         let blob = last["address_data_blob"] as? [String: Any?]
         XCTAssertEqual(blob?["address_country_code"] as? String, "CA")
@@ -61,8 +62,9 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
 
     func testLogAddressAutocompleteStart() {
         let client = STPTestingAnalyticsClient()
-        client.logAddressAutocompleteStart(addressCountryCode: "US", sessionToken: "tok_abc", apiClient: .init(publishableKey: "pk_test_123"))
+        client.logAddressAutocompleteStart(addressCountryCode: "US", sessionToken: "tok_abc", checkoutSessionID: "cs_test_123", apiClient: .init(publishableKey: "pk_test_123"))
         let last = client._testLogHistory.last!
+        XCTAssertEqual(last["checkout_session_id"] as? String, "cs_test_123")
         XCTAssertEqual(last["event"] as? String, "mc_address_autocomplete_start")
         XCTAssertEqual(last["autocomplete_session_token"] as? String, "tok_abc")
         let blob = last["address_data_blob"] as? [String: Any?]
