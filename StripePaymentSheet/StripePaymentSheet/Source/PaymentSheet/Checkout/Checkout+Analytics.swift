@@ -15,8 +15,6 @@
 //  - Appearance/customization: record the value, using the existing appearance serializer where available.
 //  - Nested configuration: apply these rules recursively.
 //
-//  TODO: Align SAE/CSE appearance fields that currently report customization flags with the value rule above.
-//
 
 import Foundation
 @_spi(STP) import StripeCore
