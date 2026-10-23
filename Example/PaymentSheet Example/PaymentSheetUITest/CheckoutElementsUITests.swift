@@ -76,6 +76,14 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
         buyButton.scrollToAndTap(in: app)
 
         XCTAssertTrue(app.alerts["Success"].waitForExistence(timeout: 20))
+
+        // Existing MPE events from saved-card editing and card entry belong to this Checkout Session.
+        let events = analyticsLog
+        let checkoutSessionID = try XCTUnwrap(events.first { $0[string: "event"] == "checkout_elements.init.succeeded" }?[string: "checkout_session_id"])
+        for eventName in ["mc_open_edit_screen", "mc_card_number_completed"] {
+            let event = try XCTUnwrap(events.first { $0[string: "event"] == eventName })
+            XCTAssertEqual(event[string: "checkout_session_id"], checkoutSessionID)
+        }
     }
 
     func testElementsStaySynchronizedWithCheckoutSession() throws {
