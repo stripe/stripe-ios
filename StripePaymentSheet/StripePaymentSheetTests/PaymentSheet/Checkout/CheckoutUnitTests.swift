@@ -76,7 +76,7 @@ final class CheckoutUnitTests: XCTestCase {
         let embeddedPresentation = element.embeddedPaymentElement.nativeSheetPresentation
 
         // When updating Checkout rebuilds both configurations
-        try await element.update(checkout: checkout)
+        checkout.updateForSessionChange()
 
         // Then each integration retains its original native-sheet feature flag
         XCTAssertIdentical(element.paymentSheetFlowController.nativeSheetPresentation, flowControllerPresentation)
@@ -109,6 +109,7 @@ final class CheckoutUnitTests: XCTestCase {
                 ? element.paymentSheetFlowController.nativeSheetPresentation
                 : element.embeddedPaymentElement.nativeSheetPresentation
             XCTAssertIdentical(parameters.nativeSheetPresentation, expectedPresentation)
+            XCTAssertNotNil(parameters.confirmationChallenge)
         }
     }
 
@@ -1074,12 +1075,15 @@ final class CheckoutUnitTests: XCTestCase {
         let confirmResponse = try PaymentPagesAPIResponse.decode(fromAPIResponse: updatedJSON)
 
         // When the confirmed session is committed
-        try await checkout.commitSession(confirmResponse)
+        checkout.commitSession(confirmResponse)
 
-        // Then Checkout updates the session and notifies observers
+        // Then storing the session emits once, without updating elements
         XCTAssertEqual(checkout.session.status, .complete(.paid))
-        // There are two emissions: one for the committed session, one for PaymentElement re-syncing the payment option.
-        XCTAssertEqual(recorder.sessions.count, 2)
+        XCTAssertEqual(recorder.sessions.count, 1)
+
+        // Processing a terminal session does nothing and emits no additional session update
+        checkout.updateForSessionChange()
+        XCTAssertEqual(recorder.sessions.count, 1)
     }
 
     func testUpdateSessionCarriesOverAddressOverrides() async throws {
@@ -1100,7 +1104,7 @@ final class CheckoutUnitTests: XCTestCase {
         updatedJSON["payment_status"] = "paid"
         let confirmResponse = try PaymentPagesAPIResponse.decode(fromAPIResponse: updatedJSON)
 
-        try await checkout.commitSession(confirmResponse)
+        checkout.commitSession(confirmResponse)
 
         // Address overrides should be carried over to the new session
         XCTAssertEqual(checkout.session.shippingAddress?.name, "Jane Doe")
@@ -1128,7 +1132,7 @@ final class CheckoutUnitTests: XCTestCase {
         updatedJSON["status"] = "complete"
         let confirmResponse = try PaymentPagesAPIResponse.decode(fromAPIResponse: updatedJSON)
 
-        try await checkout.commitSession(confirmResponse)
+        checkout.commitSession(confirmResponse)
 
         XCTAssertEqual(checkout.session.paymentOption?.label, "Visa")
         XCTAssertEqual(checkout.session.paymentOption?.sublabel, "•••• 4242")
@@ -1148,16 +1152,16 @@ final class CheckoutUnitTests: XCTestCase {
         firstResponse["payment_status"] = "paid"
         let firstConfirm = try PaymentPagesAPIResponse.decode(fromAPIResponse: firstResponse)
 
-        try await checkout.commitSession(firstConfirm)
+        checkout.commitSession(firstConfirm)
         XCTAssertEqual(checkout.session.status, .complete(.paid))
 
         var secondResponse = CheckoutTestHelpers.openSessionJSON
         secondResponse["status"] = "open"
         let secondSession = try PaymentPagesAPIResponse.decode(fromAPIResponse: secondResponse)
 
-        try await checkout.commitSession(secondSession)
+        checkout.commitSession(secondSession)
         XCTAssertEqual(checkout.session.status, .open)
-        XCTAssertEqual(recorder.sessions.count, 4)
+        XCTAssertEqual(recorder.sessions.count, 2)
     }
 
     // MARK: - State Convenience Tests

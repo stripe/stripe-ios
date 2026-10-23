@@ -771,7 +771,8 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         configuration.expressCheckoutElement = ExpressCheckoutElement.Configuration(completion: { _ in })
         let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration(
             apiResponse: CheckoutTestHelpers.makeSession(["customer_email": "jenny@example.com"]),
-            configuration: configuration
+            configuration: configuration,
+            paymentElementConfiguration: nil
         ))
         let presentingViewController = UIViewController()
         let window = UIWindow()
@@ -799,6 +800,8 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         XCTAssertEqual(parameters.configuration.defaultBillingDetails.address.postalCode, "94107")
         XCTAssertEqual(parameters.configuration.defaultBillingDetails.email, "jenny@example.com")
         XCTAssertNil(parameters.nativeSheetPresentation)
+        XCTAssertNil(checkout.paymentElement)
+        XCTAssertNotNil(parameters.confirmationChallenge)
     }
 
     func testExpressCheckoutLinkCollectsRequiredBillingAddress() async throws {

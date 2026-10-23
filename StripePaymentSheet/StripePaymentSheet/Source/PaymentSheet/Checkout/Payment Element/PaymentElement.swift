@@ -60,7 +60,6 @@ public final class PaymentElement {
 
     let paymentSheetFlowController: PaymentSheet.FlowController
     let embeddedPaymentElement: EmbeddedPaymentElement
-    private let configuration: Configuration
     weak var checkout: CheckoutController?
     private var cancellables = Set<AnyCancellable>()
     var paymentOptionSourceOfTruthIsFlowController = false
@@ -70,46 +69,41 @@ public final class PaymentElement {
 
     init(
         checkout: CheckoutController,
-        configuration: Configuration
-    ) async throws {
-        // Note: PaymentElement is just nice user-facing packaging around the existing Embedded and FC classes
-        self.configuration = configuration
+        flowControllerInitParameters: CheckoutControllerLoader.FlowControllerInitializationParameters,
+        embeddedPaymentElementInitParameters: CheckoutControllerLoader.EmbeddedPaymentElementInitializationParameters
+    ) throws {
+        try EmbeddedPaymentElement.validateRowSelectionConfiguration(
+            configuration: embeddedPaymentElementInitParameters.configuration
+        )
+        STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: PaymentSheet.FlowController.self)
+        STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: EmbeddedPaymentElement.self)
+        // Build FC
+        self.paymentSheetFlowController = .init(
+            configuration: flowControllerInitParameters.configuration,
+            loadResult: flowControllerInitParameters.loadResult,
+            analyticsHelper: flowControllerInitParameters.analyticsHelper
+        )
+        self.paymentSheetFlowController.checkout = checkout
+        self.paymentSheetFlowController.viewController.checkoutBillingAddressUpdater = checkout
+        // Reading paymentOption preloads its image into the cache before initialization completes.
+        _ = self.paymentSheetFlowController.paymentOption
 
-        // Create FlowController
-        let paymentSheetConfiguration = configuration.makePaymentSheetConfiguration(
-            apiClient: checkout.apiClient,
-            returnURL: checkout.configuration.returnURL,
-            defaults: checkout.configuration.defaults,
-            merchantDisplayName: checkout.effectiveMerchantDisplayName,
-            merchantCountryCode: checkout.session.merchantCountryCode,
-            userInterfaceStyle: checkout.configuration.userInterfaceStyle
+        // Build Embedded
+        self.embeddedPaymentElement = .init(
+            configuration: embeddedPaymentElementInitParameters.configuration,
+            loadResult: embeddedPaymentElementInitParameters.loadResult,
+            analyticsHelper: embeddedPaymentElementInitParameters.analyticsHelper,
+            initialSelection: paymentSheetFlowController.internalPaymentOption.map(RowButtonType.init)
         )
-        self.paymentSheetFlowController = try await PaymentSheet.FlowController.create(
-            checkout: checkout,
-            configuration: paymentSheetConfiguration
-        )
-        // Create Embedded
-        let embeddedConfiguration = configuration.makeEmbeddedConfiguration(
-            apiClient: checkout.apiClient,
-            returnURL: checkout.configuration.returnURL,
-            defaults: checkout.configuration.defaults,
-            merchantDisplayName: checkout.effectiveMerchantDisplayName,
-            merchantCountryCode: checkout.session.merchantCountryCode,
-            userInterfaceStyle: checkout.configuration.userInterfaceStyle
-        )
-        self.embeddedPaymentElement = try await EmbeddedPaymentElement.create(
-            checkout: checkout,
-            configuration: embeddedConfiguration,
-            // FlowController and Embedded naturally have different default payment options (e.g. Apple Pay and Link).
-            // Keep them in sync by seeding Embedded's initial payment option with FlowController's.
-            initialPaymentOption: paymentSheetFlowController.internalPaymentOption
-        )
+        self.embeddedPaymentElement.checkout = checkout
         self.embeddedPaymentElement.notifiesDelegateOnInitialHeight = true
         let uiView = PaymentElementUIView(contentView: embeddedPaymentElement.view)
         self.view = PaymentElementView(viewModel: PaymentElementViewModel(uiView: uiView))
         self.uiView = uiView
         self.embeddedPaymentElement.delegate = self
         self.checkout = checkout
+
+        // When FC paymentOption updates, update checkout's payment option too
         self.paymentSheetFlowController.$paymentOption
             // Without dropFirst, @Published immediately emits FlowController's current value before we setPaymentOption from EmbeddedPaymentElement below.
             .dropFirst()
@@ -121,6 +115,8 @@ public final class PaymentElement {
                 self.checkout?.dangerouslySetPaymentOptionDirectly(paymentOption.map(CheckoutController.Session.PaymentOptionDisplayData.init))
             }
             .store(in: &cancellables)
+
+        // Set the default payment option
         // We don't know whether to use FC or Embedded's payment option at this point, so we'll use Embedded since it has more info (includes mandate text).
         // FlowController defaults to Apple Pay when it is available, while Embedded starts unselected.
         let flowControllerDefaultsToApplePay = if case .applePay? = paymentSheetFlowController.internalPaymentOption {
@@ -136,7 +132,6 @@ public final class PaymentElement {
             embeddedPaymentElement.paymentOption.map(CheckoutController.Session.PaymentOptionDisplayData.init)
         )
         paymentOptionSourceOfTruthIsFlowController = false // We used embedded's payment option
-        try await checkout.syncBillingAddress(from: embeddedPaymentElement._paymentOption?.checkoutBillingDetails)
     }
 }
 
@@ -147,41 +142,34 @@ extension PaymentElement {
         return paymentSheetFlowController.isPresentingPaymentUI || embeddedPaymentElement.isPresentingPaymentUI
     }
 
-    func update(checkout: CheckoutController) async throws {
-        // FlowController.update and EmbeddedPaymentElement.update can both publish their current/default payment option while applying the new Checkout session. Suppress those intermediate callbacks - we'll explicitly set the payment option ourselves in this method.
-        stpAssert(!isSuppressingPaymentOptionUpdates, "PaymentElement.update(checkout:) does not support overlapping updates.")
+    func apply(
+        flowControllerInitParameters: CheckoutControllerLoader.FlowControllerInitializationParameters,
+        embeddedPaymentElementInitParameters: CheckoutControllerLoader.EmbeddedPaymentElementInitializationParameters,
+        checkout: CheckoutController
+    ) {
+        // Suppress updating CheckoutController payment option while reloading FC and Embedded - we only want to update once, at the end.
         isSuppressingPaymentOptionUpdates = true
-        defer {
-            isSuppressingPaymentOptionUpdates = false
-        }
+        defer { isSuppressingPaymentOptionUpdates = false }
 
-        // TODO: This should not be async or throws; we should not make any network requests or re-fetch things, just update the v1/e/s response.
-        paymentSheetFlowController.configuration = configuration.makePaymentSheetConfiguration(
-            apiClient: checkout.apiClient,
-            returnURL: checkout.configuration.returnURL,
-            defaults: checkout.configuration.defaults,
-            merchantDisplayName: checkout.effectiveMerchantDisplayName,
-            merchantCountryCode: checkout.session.merchantCountryCode,
-            userInterfaceStyle: checkout.configuration.userInterfaceStyle
-        )
-        embeddedPaymentElement.configuration = configuration.makeEmbeddedConfiguration(
-            apiClient: checkout.apiClient,
-            returnURL: checkout.configuration.returnURL,
-            defaults: checkout.configuration.defaults,
-            merchantDisplayName: checkout.effectiveMerchantDisplayName,
-            merchantCountryCode: checkout.session.merchantCountryCode,
-            userInterfaceStyle: checkout.configuration.userInterfaceStyle
+        // Update FC and Embedded configurations (email/shipping could have changed)
+        paymentSheetFlowController.configuration = flowControllerInitParameters.configuration
+        embeddedPaymentElement.configuration = embeddedPaymentElementInitParameters.configuration
+
+        // Update FC with new session
+        paymentSheetFlowController.applyLoadResult(flowControllerInitParameters.loadResult, confirmationChallenge: nil)
+
+        // Update Embedded with new session
+        embeddedPaymentElement.applyLoadResult(
+            embeddedPaymentElementInitParameters.loadResult,
+            confirmationChallenge: nil,
+            configuration: embeddedPaymentElementInitParameters.configuration
         )
 
-        // Update FlowController
-        try await paymentSheetFlowController.update(checkout: checkout)
+        // Update checkout's payment option after both UIs have been updated
+        updatePaymentOption(checkout: checkout)
+    }
 
-        // Update Embedded
-        let result = await embeddedPaymentElement.update(checkout: checkout)
-        if case .failed(let error) = result {
-            throw error
-        }
-
+    func updatePaymentOption(checkout: CheckoutController) {
         // Update payment option
         // Problem: Since (unfortunately) we have two sources of truth for payment option (FC and Embedded), we need to know which one to pick. We can't just let them both update payment option - then the last one to update will win, even when it wasn't actually used by the customer.
         // Hacky solution: We determine which one to pick based on which one last reported a payment option update.
