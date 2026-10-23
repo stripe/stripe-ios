@@ -72,6 +72,7 @@ public final class PaymentElement {
         flowControllerInitParameters: CheckoutControllerLoader.FlowControllerInitializationParameters,
         embeddedPaymentElementInitParameters: CheckoutControllerLoader.EmbeddedPaymentElementInitializationParameters
     ) throws {
+        STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: PaymentElement.self)
         try EmbeddedPaymentElement.validateRowSelectionConfiguration(
             configuration: embeddedPaymentElementInitParameters.configuration
         )
@@ -268,4 +269,10 @@ private extension CheckoutController.Session.PaymentOptionDisplayData.BillingDet
             state: address.state
         )
     }
+}
+
+// MARK: - STPAnalyticsProtocol
+/// :nodoc:
+@_spi(STP) extension PaymentElement: STPAnalyticsProtocol {
+    @_spi(STP) public nonisolated static let stp_analyticsIdentifier: String = "PaymentElement"
 }
