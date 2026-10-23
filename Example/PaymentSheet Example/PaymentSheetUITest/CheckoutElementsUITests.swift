@@ -302,11 +302,21 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
         file: StaticString = #filePath,
         line: UInt = #line
     ) {
+        let events = analyticsLog
+        let checkoutSessionID = events.first { $0[string: "event"] == "checkout_elements.init.succeeded" }?[string: "checkout_session_id"]
+        XCTAssertNotNil(checkoutSessionID, file: file, line: line)
+        XCTAssertEqual(
+            events.first { $0[string: "event"] == "elements.express_checkout_element.init" }?[string: "checkout_session_id"],
+            checkoutSessionID,
+            file: file,
+            line: line
+        )
+
         // Checkout preloads confirmation challenges at initialization; their events are asynchronous.
         let ignoringEventPrefixes = ["elements.captcha.passive.", "stripeios.attest."]
         // Keep the sequence exact so new Checkout Session metrics require updated ECE expectations.
         XCTAssertEqual(
-            analyticsLog.compactMap { $0[string: "event"] }.filter { event in
+            events.compactMap { $0[string: "event"] }.filter { event in
                 !ignoringEventPrefixes.contains { event.hasPrefix($0) }
             },
             expectedEvents,

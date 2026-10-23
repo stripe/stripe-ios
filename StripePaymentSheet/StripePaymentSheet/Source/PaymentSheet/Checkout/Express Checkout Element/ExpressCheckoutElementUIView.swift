@@ -110,6 +110,7 @@ public final class ExpressCheckoutElementUIView: UIView {
             analytic: PaymentSheetAnalytic(
                 event: .expressCheckoutElementInit,
                 additionalParams: [
+                    "checkout_session_id": session.id,
                     "ordered_lpms": session.availableExpressCheckoutPaymentMethods.joined(separator: ","),
                     "ece_config": [
                         "link_visibility": configuration.linkConfiguration.display.rawValue,
