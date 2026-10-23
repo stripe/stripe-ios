@@ -249,7 +249,7 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
         assertAnalyticsEvents([
             "elements.express_checkout_element.init",
             "link.signup.flow_presented",
-        ], ignoringEventPrefixes: ["elements.captcha.passive.", "stripeios.attest."])
+        ])
     }
 
     private func fillShippingAddress() {
@@ -274,10 +274,11 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
 
     private func assertAnalyticsEvents(
         _ expectedEvents: [String],
-        ignoringEventPrefixes: [String] = [],
         file: StaticString = #filePath,
         line: UInt = #line
     ) {
+        // Checkout preloads confirmation challenges at initialization; their events are asynchronous.
+        let ignoringEventPrefixes = ["elements.captcha.passive.", "stripeios.attest."]
         // Keep the sequence exact so new Checkout Session metrics require updated ECE expectations.
         XCTAssertEqual(
             analyticsLog.compactMap { $0[string: "event"] }.filter { event in
