@@ -226,7 +226,7 @@ final class CheckoutUnitTests: XCTestCase {
             }
             XCTFail("Expected CheckoutError.apiError")
         } catch let error as CheckoutError {
-            guard case .apiError(let message) = error else {
+            guard case .apiError(let message, _) = error else {
                 XCTFail("Expected .apiError, got \(error)")
                 return
             }
@@ -263,7 +263,7 @@ final class CheckoutUnitTests: XCTestCase {
             }
             XCTFail("Expected CheckoutError.apiError")
         } catch let error as CheckoutError {
-            guard case .apiError(let message) = error else {
+            guard case .apiError(let message, _) = error else {
                 XCTFail("Expected .apiError, got \(error)")
                 return
             }
@@ -349,6 +349,11 @@ final class CheckoutUnitTests: XCTestCase {
     // MARK: - Email Updates
 
     func testUpdateEmailSetsEmailLocally() async throws {
+        let analyticsClient = STPAnalyticsClient.sharedClient
+        let previousLogHistory = analyticsClient._testLogHistory
+        analyticsClient._testLogHistory = []
+        defer { analyticsClient._testLogHistory = previousLogHistory }
+
         // Given a Checkout Session without a server email
         let checkout = try await CheckoutController(
             configuration: CheckoutTestHelpers.makeConfiguration(
@@ -366,6 +371,15 @@ final class CheckoutUnitTests: XCTestCase {
         XCTAssertEqual(checkout.session.email, "local@example.com")
         XCTAssertEqual(recorder.sessions.count, 1)
         XCTAssertEqual(recorder.loading, [true, false])
+
+        let events = analyticsClient._testLogHistory.filter {
+            ($0["event"] as? String)?.hasPrefix("checkout_elements.update_email.") == true
+        }
+        XCTAssertEqual(events.compactMap { $0["event"] as? String }, [
+            "checkout_elements.update_email.started",
+            "checkout_elements.update_email.succeeded",
+        ])
+        XCTAssertNil(try XCTUnwrap(events.last)["request_id"])
     }
 
     func testUpdateEmailClearsEmailLocally() async throws {

@@ -25,7 +25,8 @@ extension CheckoutController: CheckoutSessionBillingAddressUpdater {
     ) async throws -> Session {
         try await updateBillingTaxRegionIfNecessary(
             address: address,
-            canUpdateWhileSheetPresented: canUpdateWhileSheetPresented
+            canUpdateWhileSheetPresented: canUpdateWhileSheetPresented,
+            source: .paymentElement
         )
         return session
     }

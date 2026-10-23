@@ -85,6 +85,8 @@ extension CheckoutController {
 
         // MARK: - Internal Properties
 
+        var checkoutConfigID: String?
+        var requestID: String?
         let paymentStatus: Status.PaymentStatus
         let paymentMethodOptions: STPPaymentMethodOptions?
         /// The immutable email provided when creating the Checkout Session, either through
@@ -210,6 +212,8 @@ extension CheckoutController.Session {
             merchantCountryCode: apiResponse.elementsSession.merchantCountryCode,
             elementsSession: elementsSessionValue
         )
+        checkoutConfigID = apiResponse.checkoutConfigID
+        requestID = apiResponse.requestID
     }
 }
 
