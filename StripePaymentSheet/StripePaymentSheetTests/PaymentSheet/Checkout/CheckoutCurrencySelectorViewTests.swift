@@ -60,6 +60,7 @@ final class CheckoutCurrencySelectorViewTests: XCTestCase {
 
         let updatedSession = makeSession(integrationAmount: 2400, localAmount: 2000)
         checkout.commitSession(updatedSession)
+        await waitForViewUpdate()
 
         XCTAssertTrue(selectorView!.leftItem.displayText.string.contains("20"))
         XCTAssertTrue(selectorView!.rightItem.displayText.string.contains("24"))
