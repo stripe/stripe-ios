@@ -88,6 +88,13 @@ public final class ExpressCheckoutElementUIView: UIView {
 
     // MARK: - Public Methods
 
+    public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        guard configuration.appearance.buttonTheme == .automatic,
+              previousTraitCollection?.userInterfaceStyle != traitCollection.userInterfaceStyle else { return }
+        layoutButtons(displayedPaymentMethods)
+    }
+
     public override var intrinsicContentSize: CGSize {
         CGSize(
             width: UIView.noIntrinsicMetric,
