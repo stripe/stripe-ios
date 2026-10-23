@@ -15,6 +15,116 @@ import XCTest
 final class PaymentSheetPresentationTests: XCTestCase {
 
     @MainActor
+    // @iOS26
+    func testHorizontalNativeSheetHeaderMatchesOpaqueContentBackground() async throws {
+        // Both CI runtimes run the color checks below; the iOS 26 host must enable Liquid Glass.
+        XCTAssertEqual(
+            LiquidGlassDetector.isEnabledInMerchantApp,
+            ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 26,
+            "The test host must enable Liquid Glass on iOS 26 and later."
+        )
+        await AddressSpecProvider.shared.loadAddressSpecs()
+
+        // Given a horizontal picker with an opaque form in a native sheet
+        let loadResult = PaymentSheetLoader.LoadResult(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
+            elementsSession: ._testValue(paymentMethodTypes: ["card"]),
+            savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testCardAmex()],
+            paymentMethodTypes: [.stripe(.card)],
+            paymentMethodMessagingPromotionsHelper: ._testValue(),
+            paymentMethodOrientation: .horizontal
+        )
+        var configuration = PaymentSheet.Configuration()
+        configuration.link = .init(display: .never)
+        let content = PaymentSheetFlowControllerViewController(
+            configuration: configuration,
+            loadResult: loadResult,
+            analyticsHelper: ._testValue()
+        )
+        let (window, sheet) = try await presentAppearanceTestSheet(content: content)
+        defer {
+            window.rootViewController?.dismiss(animated: false)
+            window.isHidden = true
+        }
+        window.rootViewController?.view.backgroundColor = .systemPurple
+        let navigationBar = try XCTUnwrap(sheet.navigationController?.navigationBar)
+
+        for style in [UIUserInterfaceStyle.light, .dark] {
+            // When rendering the settled sheet over a contrasting merchant background
+            window.overrideUserInterfaceStyle = style
+            window.layoutIfNeeded()
+            try await Task.sleep(nanoseconds: 100_000_000)
+            let format = UIGraphicsImageRendererFormat()
+            format.scale = 1
+            format.preferredRange = .standard
+            let image = UIGraphicsImageRenderer(size: window.bounds.size, format: format).image { _ in
+                window.drawHierarchy(in: window.bounds, afterScreenUpdates: true)
+            }
+            let attachment = XCTAttachment(image: image)
+            attachment.lifetime = .keepAlways
+            add(attachment)
+
+            // Then empty areas of the header and form have the same rendered background
+            let headerFrame = navigationBar.convert(navigationBar.bounds, to: window)
+            let contentFrame = content.view.convert(content.view.bounds, to: window)
+            let points = [
+                CGPoint(x: headerFrame.midX, y: headerFrame.midY),
+                CGPoint(x: contentFrame.midX, y: contentFrame.maxY - 5),
+            ]
+            let colorSpace = try XCTUnwrap(CGColorSpace(name: CGColorSpace.sRGB))
+            let colors = try points.map { point -> [UInt8] in
+                let pixel = try XCTUnwrap(image.cgImage?.cropping(to: CGRect(origin: point, size: CGSize(width: 1, height: 1))))
+                var components = [UInt8](repeating: 0, count: 4)
+                try components.withUnsafeMutableBytes { buffer in
+                    let context = try XCTUnwrap(CGContext(
+                        data: buffer.baseAddress,
+                        width: 1,
+                        height: 1,
+                        bitsPerComponent: 8,
+                        bytesPerRow: 4,
+                        space: colorSpace,
+                        bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue
+                    ))
+                    context.draw(pixel, in: CGRect(x: 0, y: 0, width: 1, height: 1))
+                }
+                return components
+            }
+            let expectedColor = configuration.appearance.colors.background.resolvedColor(with: navigationBar.traitCollection).rgba
+            let expectedComponents = [expectedColor.red, expectedColor.green, expectedColor.blue]
+            for channel in 0..<3 {
+                XCTAssertEqual(CGFloat(colors[0][channel]), expectedComponents[channel] * 255, accuracy: 5, "\(style): the header must use the configured background")
+                XCTAssertEqual(CGFloat(colors[0][channel]), CGFloat(colors[1][channel]), accuracy: 5, "\(style): the header must not expose the merchant background")
+            }
+        }
+    }
+
+    @MainActor
+    private func presentAppearanceTestSheet(content: BottomSheetContentViewController) async throws -> (UIWindow, NativeSheetContainerViewController) {
+        let sheet = NativeSheetContainerViewController(
+            contentViewController: content,
+            appearance: .default,
+            didCancelNative3DS2: {}
+        )
+        // A cold test-host launch may still be connecting its window scene.
+        let sceneConnected = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            UIApplication.shared.connectedScenes.contains { $0 is UIWindowScene }
+        }, object: nil)
+        await fulfillment(of: [sceneConnected], timeout: 5)
+        let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first)
+        let presenter = UIViewController()
+        let window = UIWindow(windowScene: scene)
+        window.frame = scene.coordinateSpace.bounds
+        window.rootViewController = presenter
+        window.makeKeyAndVisible()
+        let presented = expectation(description: "Content-sized native sheet presented")
+        presenter.presentAsSheet(sheet) { presented.fulfill() }
+        await fulfillment(of: [presented], timeout: 3)
+        // Settle any layout-driven resize before rendering the sheet.
+        try await Task.sleep(nanoseconds: 700_000_000)
+        return (window, sheet)
+    }
+
+    @MainActor
     func testHorizontalNativeSheetSelectionBadgeIsOpaque() async throws {
         guard #available(iOS 16.0, *) else { throw XCTSkip("Content-sized detents require iOS 16.") }
         await AddressSpecProvider.shared.loadAddressSpecs()
@@ -649,7 +759,8 @@ final class PaymentSheetPresentationTests: XCTestCase {
             XCTAssertEqual(sheetPresentationController.selectedDetentIdentifier, .large)
         }
         XCTAssertFalse(sheetPresentationController.prefersGrabberVisible)
-        XCTAssertEqual(sheetPresentationController.preferredCornerRadius, sheetViewController.appearance.sheetCornerRadius)
+        let expectedCornerRadius = SheetImplementationResolver.isRequiredForDevice ? nil : sheetViewController.sheetCornerRadius
+        XCTAssertEqual(sheetPresentationController.preferredCornerRadius, expectedCornerRadius)
         XCTAssertFalse(sheetPresentationController.prefersScrollingExpandsWhenScrolledToEdge)
         XCTAssertFalse(sheetPresentationController.prefersEdgeAttachedInCompactHeight)
     }
@@ -710,9 +821,10 @@ final class PaymentSheetPresentationTests: XCTestCase {
             // When presenting a native sheet
             presenter.presentAsSheet(sheet)
 
-            // Then its own configured radius is applied, independently of the legacy global
+            // Then UIKit controls Duo's corners, while other devices use this sheet's own radius
             let presentationController = try XCTUnwrap(presentedViewController?.sheetPresentationController)
-            XCTAssertEqual(presentationController.preferredCornerRadius, radius)
+            let expectedCornerRadius: CGFloat? = SheetImplementationResolver.isRequiredForDevice ? nil : radius
+            XCTAssertEqual(presentationController.preferredCornerRadius, expectedCornerRadius)
         }
     }
 
@@ -727,7 +839,8 @@ final class PaymentSheetPresentationTests: XCTestCase {
         var presentedViewController: UIViewController?
         PresentationCapturingViewController { presentedViewController = $0 }.presentAsSheet(sheet)
 
-        XCTAssertEqual(try XCTUnwrap(presentedViewController?.sheetPresentationController).preferredCornerRadius, LinkUI.largeCornerRadius)
+        let expectedCornerRadius: CGFloat? = SheetImplementationResolver.isRequiredForDevice ? nil : LinkUI.largeCornerRadius
+        XCTAssertEqual(try XCTUnwrap(presentedViewController?.sheetPresentationController).preferredCornerRadius, expectedCornerRadius)
     }
 
     @MainActor
