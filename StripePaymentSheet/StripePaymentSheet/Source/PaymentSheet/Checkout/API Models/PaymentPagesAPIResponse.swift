@@ -420,7 +420,7 @@ extension PaymentPagesAPIResponse {
 
     struct LocalCurrencyOption: Decodable {
         private struct Disclosure: Decodable {
-            let caption: String?
+            let caption: String
             let details: String?
         }
 

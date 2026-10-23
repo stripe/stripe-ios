@@ -217,7 +217,7 @@
       "currency": "usd",
       "amount": 12000,
       "disclosure": {
-        "caption": null
+        "caption": "Exchange rate and fees of your bank may apply."
       }
     },
     "local_currency_options": [
