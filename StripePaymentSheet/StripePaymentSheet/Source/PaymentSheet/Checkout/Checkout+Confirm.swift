@@ -462,6 +462,14 @@ extension CheckoutController {
         confirmationChallenge: (any CheckoutConfirmationChallenge)? = nil,
         poller injectedPoller: (any CheckoutSessionPolling)? = nil
     ) async -> InternalConfirmResult {
+        // TODO(porter) polling: Restore the poller setup when polling uses CheckoutClient.
+        // let poller: any CheckoutSessionPolling
+        // if let injectedPoller {
+        //     poller = injectedPoller
+        // } else {
+        //     poller = CheckoutSessionPoller(apiClient: apiClient)
+        // }
+
         // 1. Call /confirm
         // TODO: Scope Radar option creation and this request with confirmationChallenge.withRadarOptions(for:).
         // complete() is async, but the underlying AssertionHandle.complete() schedules rather than awaits release.
@@ -549,13 +557,6 @@ extension CheckoutController {
         switch response.status {
         /*
         case .open:
-            let poller: any CheckoutSessionPolling
-            if let injectedPoller {
-                poller = injectedPoller
-            } else {
-                poller = CheckoutSessionPoller(apiClient: apiClient)
-            }
-
             let pollOutcome = await poller.poll(checkoutSessionId: response.sessionId)
             switch pollOutcome {
             case .completed:
