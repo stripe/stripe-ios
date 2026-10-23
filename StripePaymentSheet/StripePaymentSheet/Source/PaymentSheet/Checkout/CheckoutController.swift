@@ -21,9 +21,13 @@ import UIKit
 public final class CheckoutController: ObservableObject {
     // MARK: - Public Properties
 
-    /// True when the session is being updated.
+    /// True while a Checkout Session update or confirmation is in progress or queued.
     /// Use this to disable interactive UI e.g. your buy button.
-    @Published public internal(set) var isUpdating: Bool = false
+    @Published public internal(set) var isUpdating: Bool = false {
+        didSet {
+            expressCheckoutElement?.uiView.setEnabled(!isUpdating)
+        }
+    }
 
     /// The Session object is a view of the Checkout Session API object and represents your customer's session in your checkout flow.
     @Published public private(set) var session: Session
@@ -157,6 +161,7 @@ public final class CheckoutController: ObservableObject {
                     delegate: self,
                     apiClient: apiClient
                 )
+                self.expressCheckoutElement?.uiView.setEnabled(!isUpdating)
             }
 
             // 4. CSE
