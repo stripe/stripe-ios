@@ -100,47 +100,6 @@ public final class EmbeddedPaymentElement {
         return embeddedPaymentElement
     }
 
-    // TODO: Remove the legacy create(checkout:) and update(checkout:) methods after migrating
-    // remaining callers and tests to CheckoutControllerLoader results.
-    /// An asynchronous failable initializer for CheckoutSession mode
-    /// Loads payment methods and configuration from a fully loaded Checkout instance.
-    /// - Parameter checkout: A fully loaded Checkout instance whose ``CheckoutController.session`` is non-nil.
-    /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, customer details, etc.
-    /// - Returns: A valid EmbeddedPaymentElement instance
-    /// - Throws: An error if loading failed.
-    static func create(
-        checkout: CheckoutController,
-        configuration: Configuration,
-        initialPaymentOption: PaymentOption? = nil
-    ) async throws -> EmbeddedPaymentElement {
-        try await checkout.awaitPendingOperations()
-        var config = configuration
-        checkout.session.applyAddressOverrides(to: &config)
-
-        try validateRowSelectionConfiguration(configuration: config)
-
-        AnalyticsHelper.shared.generateSessionID()
-        STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: EmbeddedPaymentElement.self)
-        let analyticsHelper = PaymentSheetAnalyticsHelper(integrationShape: .embedded, configuration: config)
-
-        let (loadResult, confirmationChallenge) = try await PaymentSheetLoader.load(
-            mode: .checkout(checkout),
-            configuration: config,
-            analyticsHelper: analyticsHelper,
-            integrationShape: .embedded
-        )
-        let embeddedPaymentElement: EmbeddedPaymentElement = .init(
-            configuration: config,
-            loadResult: loadResult,
-            confirmationChallenge: confirmationChallenge,
-            analyticsHelper: analyticsHelper,
-            initialSelection: initialPaymentOption.map(RowButtonType.init)
-        )
-        embeddedPaymentElement.clearPaymentOptionIfNeeded()
-        embeddedPaymentElement.checkout = checkout
-        return embeddedPaymentElement
-    }
-
     /// The result of an `update` call
     @frozen public enum UpdateResult {
         /// The update succeeded
@@ -161,23 +120,6 @@ public final class EmbeddedPaymentElement {
         intentConfiguration: IntentConfiguration
     ) async -> UpdateResult {
         return await performUpdate(mode: .deferredIntent(intentConfiguration))
-    }
-
-    /// Call this method when the CheckoutSession you used to initialize `EmbeddedPaymentElement` changes.
-    /// This ensures the appropriate payment methods are displayed, collect the right fields, etc.
-    /// - Parameter checkout: The Checkout instance whose session has been updated.
-    /// - Returns: The result of the update.
-    /// - Note: Upon completion, `paymentOption` may become nil if it's no longer available.
-    /// - Note: If you call `update` while a previous call to `update` is still in progress, the previous call returns `.canceled`.
-    func update(
-        checkout: CheckoutController
-    ) async -> UpdateResult {
-        // Session moved to a terminal state (e.g. during confirm), nothing to do.
-        guard checkout.sessionIsOpen else {
-            return .succeeded
-        }
-        checkout.session.applyAddressOverrides(to: &configuration)
-        return await performUpdate(mode: .checkout(checkout))
     }
 
     private func performUpdate(mode: PaymentSheet.InitializationMode) async -> UpdateResult {

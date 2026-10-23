@@ -468,49 +468,6 @@ class PaymentSheetFlowControllerTests: XCTestCase {
         wait(for: [legacyExpectation], timeout: 2.0)
     }
 
-    // MARK: - Checkout terminal session
-
-    @MainActor
-    func testUpdateCheckoutNoOpsForTerminalSession() async throws {
-        let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card])
-        let elementsSession = STPElementsSession._testCardValue()
-        let loadResult = PaymentSheetLoader.LoadResult(
-            intent: intent,
-            elementsSession: elementsSession,
-            savedPaymentMethods: [],
-            paymentMethodTypes: [.stripe(.card)],
-            paymentMethodMessagingPromotionsHelper: ._testValue(),
-            paymentMethodOrientation: .vertical
-        )
-        var configuration = PaymentSheet.Configuration()
-        configuration.apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
-        let fc = PaymentSheet.FlowController(
-            configuration: configuration,
-            loadResult: loadResult,
-            analyticsHelper: ._testValue()
-        )
-
-        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration())
-
-        // Move session to complete
-        let completedSession = try PaymentPagesAPIResponse.decode(fromAPIResponse: {
-            var json = CheckoutTestHelpers.openSessionJSON
-            json["status"] = "complete"
-            json["payment_status"] = "paid"
-            return json
-        }())
-        checkout.commitSession(completedSession)
-        XCTAssertFalse(checkout.sessionIsOpen)
-
-        // FC update should bail immediately
-        let exp = expectation(description: "update completes")
-        fc.update(checkout: checkout) { error in
-            XCTAssertNil(error)
-            exp.fulfill()
-        }
-        await fulfillment(of: [exp], timeout: 2.0)
-    }
-
     // MARK: - PaymentOption.checkoutBillingDetails
 
     func testSavedPaymentOptionCheckoutBillingDetails_fallsBackToSavedPaymentMethod() {

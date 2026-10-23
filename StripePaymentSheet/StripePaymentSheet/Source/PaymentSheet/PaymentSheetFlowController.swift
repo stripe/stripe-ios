@@ -444,40 +444,6 @@ extension PaymentSheet {
             )
         }
 
-        // TODO: Remove the legacy create(checkout:) and update(checkout:) methods after migrating
-        // remaining callers and tests to CheckoutControllerLoader results.
-        /// An asynchronous failable initializer for PaymentSheet.FlowController
-        /// This asynchronously loads the CheckoutSession's payment methods and configuration.
-        /// - Parameter checkout: A fully loaded Checkout instance whose ``CheckoutController.session`` is non-nil.
-        /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, Customer details, etc.
-        /// - Parameter completion: This is called with either a valid PaymentSheet.FlowController instance or an error if loading failed.
-        @MainActor
-        static func create(
-            checkout: CheckoutController,
-            configuration: PaymentSheet.Configuration,
-            completion: @escaping (Result<PaymentSheet.FlowController, Error>) -> Void
-        ) {
-            Task { @MainActor in
-                do {
-                    try await checkout.awaitPendingOperations()
-                } catch {
-                    completion(.failure(error))
-                    return
-                }
-                var config = configuration
-                checkout.session.applyAddressOverrides(to: &config)
-                create(mode: .checkout(checkout),
-                       configuration: config
-                ) { result in
-                    if case .success(let flowController) = result {
-                        flowController.checkout = checkout
-                        flowController.viewController.checkoutBillingAddressUpdater = checkout
-                    }
-                    completion(result)
-                }
-            }
-        }
-
         /// An asynchronous failable initializer for PaymentSheet.FlowController
         /// This asynchronously loads the Customer's payment methods, their default payment method, and the Intent.
         /// You can use the returned PaymentSheet.FlowController instance to e.g. update your UI with the Customer's default payment method
@@ -780,29 +746,6 @@ extension PaymentSheet {
             assert(Thread.isMainThread, "PaymentSheet.FlowController.update must be called from the main thread.")
             assert(!isPresented, "PaymentSheet.FlowController.update must be when PaymentSheet is not presented.")
             performUpdate(mode: .deferredIntent(intentConfiguration), completion: completion)
-        }
-
-        /// Call this method when the CheckoutSession you used to initialize PaymentSheet.FlowController changes.
-        /// This ensures the appropriate payment methods are displayed, etc.
-        /// - Parameter checkout: The Checkout instance whose session has been updated.
-        /// - Parameter completion: Called when the update completes with an optional error.
-        /// - Note: Don't call `confirm` or `present` until the update succeeds. Don't call this method while PaymentSheet is being presented.
-        @MainActor
-        func update(
-            checkout: CheckoutController,
-            completion: @escaping (Error?) -> Void
-        ) {
-            // No-op if the session already reached a terminal state (complete/expired).
-            guard checkout.sessionIsOpen else {
-                completion(nil)
-                return
-            }
-            assert(Thread.isMainThread, "PaymentSheet.FlowController.update must be called from the main thread.")
-            let updateID = beginUpdate()
-            Task { @MainActor in
-                checkout.session.applyAddressOverrides(to: &configuration)
-                performUpdate(mode: .checkout(checkout), updateID: updateID, completion: completion)
-            }
         }
 
         @discardableResult
