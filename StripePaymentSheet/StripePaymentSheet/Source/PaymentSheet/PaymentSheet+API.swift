@@ -759,7 +759,8 @@ extension PaymentSheet {
                     logPayment: false,
                     analyticsHelper: analyticsHelper,
                     confirmationChallenge: confirmationChallenge,
-                    confirmHandler: confirmHandler
+                    confirmHandler: confirmHandler,
+                    confirmationSource: confirmationSource
                 )
                 linkController.presentAsSheet(from: authenticationContext.authenticationPresentingViewController(), shouldOfferApplePay: false, shouldFinishOnClose: false, completion: { result, confirmationType, _ in
                     completion(result, confirmationType)
