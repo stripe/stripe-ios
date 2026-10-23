@@ -251,6 +251,7 @@ extension CheckoutController {
                 case .withoutPaymentMethod(let authenticationContext):
                     let requestParameters = CheckoutSessionConfirmationRequestParameters.createWithoutPaymentMethod(
                         sessionId: self.session.id,
+                        clientSecret: self.clientSecret,
                         expectedAmount: self.session.amount,
                         returnURL: self.configuration.returnURL,
                         clientAttributionMetadata: STPClientAttributionMetadata.makeClientAttributionMetadata(
@@ -420,6 +421,7 @@ extension CheckoutController {
             }
             return .createWithPaymentMethodData(
                 sessionId: checkoutSession.id,
+                clientSecret: checkoutSession.clientSecret,
                 paymentMethodData: confirmParams.paymentMethodParams,
                 expectedAmount: checkoutSession.amount,
                 savePaymentMethod: checkoutSession.noPaymentRequired ? nil : savePaymentMethod,
@@ -435,6 +437,7 @@ extension CheckoutController {
                 ?? confirmParams?.confirmPaymentMethodOptions
             return .createWithPaymentMethodID(
                 sessionId: checkoutSession.id,
+                clientSecret: checkoutSession.clientSecret,
                 paymentMethodId: savedPaymentMethod.stripeId,
                 expectedAmount: checkoutSession.amount,
                 expectedPaymentMethodType: savedPaymentMethod.type.identifier,
@@ -566,7 +569,8 @@ extension CheckoutController {
                 let latestSession: PaymentPagesAPIResponse
                 do {
                     latestSession = try await apiClient.retrieveCheckoutSession(
-                        checkoutSessionId: response.sessionId
+                        checkoutSessionId: response.sessionId,
+                        clientSecret: requestParameters.clientSecret
                     )
                 } catch {
                     return .failed(error, sessionResponse: response)
@@ -579,7 +583,8 @@ extension CheckoutController {
                 let latestSession: PaymentPagesAPIResponse
                 do {
                     latestSession = try await apiClient.retrieveCheckoutSession(
-                        checkoutSessionId: response.sessionId
+                        checkoutSessionId: response.sessionId,
+                        clientSecret: requestParameters.clientSecret
                     )
                 } catch {
                     return .failed(error, sessionResponse: response)

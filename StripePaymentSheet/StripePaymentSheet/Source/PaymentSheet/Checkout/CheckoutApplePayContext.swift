@@ -136,6 +136,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
                 paymentMethodData.clientAttributionMetadata = clientAttributionMetadata
                 let requestParameters = CheckoutSessionConfirmationRequestParameters.createWithPaymentMethodData(
                     sessionId: checkoutSession.id,
+                    clientSecret: checkoutSession.clientSecret,
                     paymentMethodData: paymentMethodData,
                     expectedAmount: checkoutSession.amount,
                     savePaymentMethod: savePaymentMethod,

@@ -56,6 +56,7 @@ final class CheckoutDefaultsInitializationTests: XCTestCase {
 
         XCTAssertNotNil(checkout.paymentElement)
         XCTAssertEqual(requests.map(\.kind), [.initSession, .updateSession])
+        XCTAssertEqual(requests.map { $0.params["client_secret"] }, [clientSecret, clientSecret])
         XCTAssertEqual(requests[1].params["tax_region[country]"], "US")
         XCTAssertEqual(requests[1].params["tax_region[line1]"], "123 Billing St")
         XCTAssertEqual(requests[1].params["tax_region[city]"], "San Francisco")

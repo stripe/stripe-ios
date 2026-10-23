@@ -1524,9 +1524,10 @@ extension PaymentSheetLPMConfirmFlowTests {
                 csApiClient.betas = apiClient.betas
                 let checkoutSession = try await csApiClient.initCheckoutSession(
                     checkoutSessionId: checkoutSessionResponse.id,
+                    clientSecret: checkoutSessionResponse.clientSecret,
                     adaptivePricingAllowed: true
                 )
-                let checkout = TestCheckoutSessionUpdater(session: checkoutSession.makePublicSession())
+                let checkout = TestCheckoutSessionUpdater(session: checkoutSession.makePublicSession(clientSecret: checkoutSessionResponse.clientSecret))
                 intents.append(TestIntent("CheckoutSession", .checkout(checkout.session), checkout: checkout, checkoutAPIClient: csApiClient))
             }
             guard paymentMethod != .blik else {

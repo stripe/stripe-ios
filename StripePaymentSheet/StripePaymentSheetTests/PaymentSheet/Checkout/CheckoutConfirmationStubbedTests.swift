@@ -36,6 +36,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         XCTAssertTrue(checkout.getPaymentElement().paymentOptionSourceOfTruthIsFlowController)
         let confirmRequested = stubConfirmationExpecting(
             sessionId: checkout.session.id,
+            clientSecret: checkout.clientSecret,
             savePaymentMethod: nil,
             expectedPaymentMethodType: "sepa_debit",
             expectedPaymentMethodID: STPPaymentMethod._testSEPA().stripeId
@@ -80,6 +81,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         XCTAssertNil(embeddedView.window)
         let confirmRequested = stubConfirmationExpecting(
             sessionId: checkout.session.id,
+            clientSecret: checkout.clientSecret,
             savePaymentMethod: nil,
             expectedPaymentMethodType: "sepa_debit",
             expectedPaymentMethodID: STPPaymentMethod._testSEPA().stripeId
@@ -841,6 +843,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         let checkout = try await makeCheckout(apiResponse: CheckoutTestHelpers.makeSession().withCustomer())
         let confirm = stubConfirmationExpecting(
             sessionId: checkout.session.id,
+            clientSecret: checkout.clientSecret,
             savePaymentMethod: nil,
             expectedPaymentMethodType: "link",
             expectedBillingEmail: .value("test@example.com")
@@ -873,6 +876,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         confirmResponseJSON["session_id"] = checkout.session.id
         let confirm = stubConfirmationExpecting(
             sessionId: checkout.session.id,
+            clientSecret: checkout.clientSecret,
             savePaymentMethod: nil,
             responseJSON: confirmResponseJSON,
             expectedPaymentMethodType: "link"
@@ -905,6 +909,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         confirmResponseJSON["id"] = checkout.session.id
         let confirm = stubConfirmationExpecting(
             sessionId: checkout.session.id,
+            clientSecret: checkout.clientSecret,
             savePaymentMethod: nil,
             responseJSON: confirmResponseJSON,
             expectedPaymentMethodType: "link"
@@ -1101,6 +1106,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         confirmParams.saveForFutureUseCheckboxState = checkboxState
         let confirm = stubConfirmationExpecting(
             sessionId: checkout.session.id,
+            clientSecret: checkout.clientSecret,
             savePaymentMethod: expectedSavePaymentMethod,
             expectedCollectedInformationEmail: checkoutEmail,
             expectedPaymentMethodType: try XCTUnwrap(confirmParams.paymentMethodParams.rawTypeString),
@@ -1226,6 +1232,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         let configuration = checkout.getPaymentElement().embeddedPaymentElement.configuration
         let requestParameters = CheckoutSessionConfirmationRequestParameters.createWithPaymentMethodID(
             sessionId: checkout.session.id,
+            clientSecret: checkout.clientSecret,
             paymentMethodId: STPPaymentMethod._testCard().stripeId,
             expectedAmount: checkout.session.amount,
             expectedPaymentMethodType: "card",
@@ -1281,6 +1288,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
 
     private func stubConfirmationExpecting(
         sessionId: String,
+        clientSecret: String,
         savePaymentMethod: Bool?,
         expectedCollectedInformationEmail: String? = nil,
         responseJSON: [AnyHashable: Any]? = nil,
@@ -1304,6 +1312,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
                 omittingEmptyValues: true,
                 line: line
             )
+            XCTAssertEqual(params["client_secret"], clientSecret, file: file, line: line)
             XCTAssertEqual(params["payment_method"], expectedPaymentMethodID, file: file, line: line)
             if expectedPaymentMethodID != nil {
                 XCTAssertFalse(params.keys.contains { $0.hasPrefix("payment_method_data[") }, file: file, line: line)

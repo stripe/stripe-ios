@@ -124,9 +124,10 @@ class CheckoutApplePayContextFunctionalTest: STPNetworkStubbingTestCase {
         let apiClient = STPAPIClient(publishableKey: sessionResponse.publishableKey)
         let initResponse = try await apiClient.initCheckoutSession(
             checkoutSessionId: sessionResponse.id,
+            clientSecret: sessionResponse.clientSecret,
             adaptivePricingAllowed: false
         )
-        let session = initResponse.makePublicSession()
+        let session = initResponse.makePublicSession(clientSecret: sessionResponse.clientSecret)
         let authenticationContext = WindowAuthenticationContext()
         let paymentHandler = STPPaymentHandler(apiClient: apiClient)
         let applePayConfirmationParameters = CheckoutController.ApplePayConfirmationParameters.makeMock(

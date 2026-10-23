@@ -20,6 +20,7 @@ import XCTest
 extension PaymentPagesAPIResponse {
     /// Convenience for fixtures that contain no client-local session state.
     func makePublicSession(
+        clientSecret: String? = nil,
         expressCheckoutConfiguration: ExpressCheckoutElement.Configuration? = nil
     ) -> CheckoutController.Session {
         let configuration = expressCheckoutConfiguration.map { expressConfiguration in
@@ -32,6 +33,7 @@ extension PaymentPagesAPIResponse {
         }
         return CheckoutController.Session(
             apiResponse: self,
+            clientSecret: clientSecret ?? "\(sessionId)_secret_abc",
             localState: .empty,
             configuration: configuration
         )

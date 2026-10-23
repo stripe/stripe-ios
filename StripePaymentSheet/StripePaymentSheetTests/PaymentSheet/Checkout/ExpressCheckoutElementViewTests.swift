@@ -220,7 +220,7 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
 
         // When the public session applies the automatic tax restriction before calculating ECE availability
         XCTAssertFalse(apiResponse.elementsSession.value.disableLinkForAutomaticTaxBilling)
-        let session = CheckoutController.Session(apiResponse: apiResponse, localState: .empty, configuration: checkoutConfiguration)
+        let session = CheckoutController.Session(apiResponse: apiResponse, clientSecret: checkoutConfiguration.clientSecret, localState: .empty, configuration: checkoutConfiguration)
 
         let reasons = ExpressCheckoutElementUtilities.linkDisabledReasonsWithoutCheckoutRequirements(
             for: session.elementsSession,

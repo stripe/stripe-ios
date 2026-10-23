@@ -26,6 +26,9 @@ struct CheckoutSessionConfirmationRequestParameters {
     /// The ID of the Checkout Session (e.g., `cs_test_xxx`).
     let sessionId: String
 
+    /// The full client secret supplied by the merchant for this Checkout Session.
+    let clientSecret: String
+
     private enum PaymentMethod {
         case id(String)
         case data(STPPaymentMethodParams)
@@ -81,6 +84,7 @@ struct CheckoutSessionConfirmationRequestParameters {
 
     static func createWithoutPaymentMethod(
         sessionId: String,
+        clientSecret: String,
         expectedAmount: Int?,
         returnURL: String? = nil,
         clientAttributionMetadata: STPClientAttributionMetadata? = nil,
@@ -88,6 +92,7 @@ struct CheckoutSessionConfirmationRequestParameters {
     ) -> Self {
         Self(
             sessionId: sessionId,
+            clientSecret: clientSecret,
             paymentMethod: nil,
             expectedAmount: expectedAmount,
             expectedPaymentMethodType: nil,
@@ -104,6 +109,7 @@ struct CheckoutSessionConfirmationRequestParameters {
 
     static func createWithPaymentMethodID(
         sessionId: String,
+        clientSecret: String,
         paymentMethodId: String,
         expectedAmount: Int?,
         expectedPaymentMethodType: String,
@@ -117,6 +123,7 @@ struct CheckoutSessionConfirmationRequestParameters {
     ) -> Self {
         Self(
             sessionId: sessionId,
+            clientSecret: clientSecret,
             paymentMethod: .id(paymentMethodId),
             expectedAmount: expectedAmount,
             expectedPaymentMethodType: expectedPaymentMethodType,
@@ -133,6 +140,7 @@ struct CheckoutSessionConfirmationRequestParameters {
 
     static func createWithPaymentMethodData(
         sessionId: String,
+        clientSecret: String,
         paymentMethodData: STPPaymentMethodParams,
         expectedAmount: Int?,
         savePaymentMethod: Bool? = nil,
@@ -144,6 +152,7 @@ struct CheckoutSessionConfirmationRequestParameters {
     ) -> Self {
         Self(
             sessionId: sessionId,
+            clientSecret: clientSecret,
             paymentMethod: .data(paymentMethodData),
             expectedAmount: expectedAmount,
             expectedPaymentMethodType: paymentMethodData.rawTypeString,
@@ -168,9 +177,10 @@ extension STPAPIClient {
     /// - Returns: Internal Checkout response for the checkout session.
     func initCheckoutSession(
         checkoutSessionId: String,
+        clientSecret: String,
         adaptivePricingAllowed: Bool
     ) async throws -> PaymentPagesAPIResponse {
-        var parameters = Self.checkoutClientParameters()
+        var parameters = Self.checkoutClientParameters(clientSecret: clientSecret)
         parameters["adaptive_pricing"] = ["allowed": adaptivePricingAllowed]
 
         return try await post(
@@ -186,10 +196,11 @@ extension STPAPIClient {
     /// - Returns: The updated Checkout response.
     func updateCheckoutSession(
         checkoutSessionId: String,
+        clientSecret: String,
         parameters: [String: Any]
     ) async throws -> PaymentPagesAPIResponse {
         // TODO(porter): CheckoutClient update does not support promotion codes yet.
-        var params = Self.checkoutClientParameters()
+        var params = Self.checkoutClientParameters(clientSecret: clientSecret)
         params.merge(parameters) { _, value in value }
         return try await post(
             endpoint: "checkout_client/\(checkoutSessionId)/update",
@@ -199,11 +210,12 @@ extension STPAPIClient {
 
     /// Retrieves the latest full Checkout Session.
     func retrieveCheckoutSession(
-        checkoutSessionId: String
+        checkoutSessionId: String,
+        clientSecret: String
     ) async throws -> PaymentPagesAPIResponse {
         let checkoutClient: PaymentPagesAPIResponse = try await get(
             endpoint: "checkout_client/\(checkoutSessionId)/retrieve",
-            parameters: Self.checkoutClientParameters()
+            parameters: Self.checkoutClientParameters(clientSecret: clientSecret)
         )
         return try await retrievingCheckoutIntents(for: checkoutClient)
     }
@@ -224,9 +236,10 @@ extension STPAPIClient {
 
     func detachPaymentMethod(
         _ paymentMethodId: String,
-        fromCheckoutSession checkoutSessionId: String
+        fromCheckoutSession checkoutSessionId: String,
+        clientSecret: String
     ) async throws {
-        var params = Self.checkoutClientParameters()
+        var params = Self.checkoutClientParameters(clientSecret: clientSecret)
         params["payment_method_to_detach"] = paymentMethodId
         let _: PaymentPagesAPIResponse = try await post(
             endpoint: "checkout_client/\(checkoutSessionId)/update",
@@ -244,6 +257,7 @@ extension STPAPIClient {
     func updatePaymentMethod(
         _ paymentMethodId: String,
         inCheckoutSession checkoutSessionId: String,
+        clientSecret: String,
         billingDetails: CheckoutController.PaymentMethodBillingDetails? = nil,
         expiryDetails: CheckoutController.PaymentMethodExpiryDetails? = nil
     ) async throws -> PaymentPagesAPIResponse {
@@ -252,7 +266,7 @@ extension STPAPIClient {
             billingDetails: billingDetails,
             expiryDetails: expiryDetails
         )
-        params.merge(Self.checkoutClientParameters()) { current, _ in current }
+        params.merge(Self.checkoutClientParameters(clientSecret: clientSecret)) { current, _ in current }
         return try await post(
             endpoint: "checkout_client/\(checkoutSessionId)/update",
             parameters: params
@@ -298,7 +312,7 @@ extension STPAPIClient {
         guard let returnURL = requestParameters.returnURL else {
             throw CheckoutError.unknown(debugDescription: "CheckoutClient confirmation requires a return URL.")
         }
-        var parameters = Self.checkoutClientParameters()
+        var parameters = Self.checkoutClientParameters(clientSecret: requestParameters.clientSecret)
         parameters.removeValue(forKey: "timezone")
 
         if let paymentMethodId = requestParameters.paymentMethodId {
@@ -393,8 +407,9 @@ extension STPAPIClient {
         }
     }
 
-    private static func checkoutClientParameters() -> [String: Any] {
+    private static func checkoutClientParameters(clientSecret: String) -> [String: Any] {
         var parameters: [String: Any] = [
+            "client_secret": clientSecret,
             "locale": Locale.current.toLanguageTag(),
             "timezone": TimeZone.current.identifier,
         ]

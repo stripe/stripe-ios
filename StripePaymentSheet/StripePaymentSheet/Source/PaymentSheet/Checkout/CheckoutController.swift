@@ -110,11 +110,13 @@ public final class CheckoutController: ObservableObject {
             // Call /init
             let apiResponse = try await configuration.apiClient.initCheckoutSession(
                 checkoutSessionId: sessionId,
+                clientSecret: clientSecret,
                 adaptivePricingAllowed: configuration.currencySelectorElement != nil
             )
             await loadMiscellaneousSingletonsTask.value
             let loadedSession = Session(
                 apiResponse: apiResponse,
+                clientSecret: clientSecret,
                 localState: .empty,
                 configuration: configuration
             )
@@ -330,6 +332,7 @@ public final class CheckoutController: ObservableObject {
             do {
                 refreshedCheckoutSession = try await self.apiClient.initCheckoutSession(
                     checkoutSessionId: sessionId,
+                    clientSecret: self.clientSecret,
                     adaptivePricingAllowed: self.configuration.currencySelectorElement != nil
                 )
             } catch {
@@ -458,6 +461,7 @@ extension CheckoutController {
         if let apiResponse {
             session = Session(
                 apiResponse: apiResponse,
+                clientSecret: clientSecret,
                 localState: localState,
                 configuration: configuration
             )

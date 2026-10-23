@@ -85,6 +85,7 @@ extension CheckoutController {
 
         // MARK: - Internal Properties
 
+        let clientSecret: String
         let paymentStatus: Status.PaymentStatus
         let paymentMethodOptions: STPPaymentMethodOptions?
         /// The immutable email provided when creating the Checkout Session, either through
@@ -124,6 +125,7 @@ extension CheckoutController.Session {
     /// Builds a read-only session snapshot from server-backed and local state.
     init(
         apiResponse: PaymentPagesAPIResponse,
+        clientSecret: String,
         localState: LocalState,
         configuration: CheckoutController.Configuration? = nil
     ) {
@@ -181,6 +183,7 @@ extension CheckoutController.Session {
             taxAmounts: publicTaxAmounts,
             totals: publicTotals,
             availableExpressCheckoutPaymentMethods: availableExpressCheckoutPaymentMethods,
+            clientSecret: clientSecret,
             paymentStatus: apiResponse.paymentStatus,
             paymentMethodOptions: apiResponse.paymentMethodOptions,
             serverEmail: serverEmail,
