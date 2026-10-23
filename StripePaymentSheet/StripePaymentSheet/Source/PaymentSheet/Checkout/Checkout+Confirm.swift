@@ -256,7 +256,37 @@ extension CheckoutController {
 
     // MARK: - Confirmation
 
-    func confirm(_ flow: CheckoutConfirmationFlow) async -> ConfirmResult {
+    func confirm(
+        source: CheckoutControllerAnalyticsHelper.InvocationSource,
+        makeFlow: () throws -> CheckoutConfirmationFlow
+    ) async -> ConfirmResult {
+        let flow = Result(catching: makeFlow)
+        var params = confirmationAnalyticsParams(paymentOption: try? flow.get().analyticsPaymentOption, source: source)
+        let startedAction = analyticsHelper.logStarted(.confirm, session: session, additionalParams: params)
+        let result: ConfirmResult
+        let requestID: String?
+        do {
+            let internalResult = await confirmInternal(try flow.get())
+            result = Self.mapConfirmationResult(internalResult)
+            requestID = internalResult.checkoutSessionResponse?.requestID
+        } catch {
+            result = .failed(error)
+            requestID = nil
+        }
+        params["active_link_session"] = LinkAccountContext.shared.account?.sessionState == .verified
+        params["request_id"] = requestID
+        switch result {
+        case .completed:
+            analyticsHelper.logSucceeded(startedAction, session: session, additionalParams: params)
+        case .canceled:
+            analyticsHelper.logCanceled(startedAction, session: session, additionalParams: params)
+        case .failed(let error):
+            analyticsHelper.logFailed(startedAction, error: error, session: session, additionalParams: params)
+        }
+        return result
+    }
+
+    private func confirmInternal(_ flow: CheckoutConfirmationFlow) async -> InternalConfirmResult {
         // Validations
         guard sessionIsOpen else {
             let error = PaymentSheetError.integrationError(nonPIIDebugDescription: "CheckoutController cannot confirm a Checkout Session that is no longer open.")
@@ -358,7 +388,7 @@ extension CheckoutController {
                 }
                 return result
             }
-            return Self.mapConfirmationResult(result)
+            return result
         } catch {
             return .failed(error)
         }
@@ -663,7 +693,9 @@ extension CheckoutController {
             }
 
             let data = try JSONSerialization.data(withJSONObject: responseFields)
-            let updatedResponse = try StripeJSONDecoder().decode(PaymentPagesAPIResponse.self, from: data)
+            let decoder = StripeJSONDecoder()
+            decoder.userInfo[StripeJSONDecoder.requestIDKey] = response.requestID
+            let updatedResponse = try decoder.decode(PaymentPagesAPIResponse.self, from: data)
             return .completed(updatedResponse)
         } catch {
             return .failed(error, sessionResponse: response)

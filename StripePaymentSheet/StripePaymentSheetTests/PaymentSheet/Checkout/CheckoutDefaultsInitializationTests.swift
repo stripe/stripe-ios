@@ -35,11 +35,19 @@ final class CheckoutDefaultsInitializationTests: XCTestCase {
     }
 
     func testInitAppliesBillingDefaultThroughBillingTaxUpdateWhenNeeded() async throws {
+        let analyticsClient = STPAnalyticsClient.sharedClient
+        let previousLogHistory = analyticsClient._testLogHistory
+        analyticsClient._testLogHistory = []
+        defer { analyticsClient._testLogHistory = previousLogHistory }
         stubCheckoutSessionRequests()
 
         var configuration = CheckoutController.Configuration(clientSecret: clientSecret, returnURL: "stripe-ios-test://checkout-return")
         configuration.apiClient = STPAPIClient(publishableKey: "pk_test_123")
+        configuration.merchantDisplayName = "Test merchant"
         configuration.paymentElement = .init()
+        configuration.paymentElement?.displaysMandateText = false
+        configuration.paymentElement?.paymentMethodOrder = ["card", "ideal"]
+        configuration.paymentElement?.removeSavedPaymentMethodMessage = "Remove this card?"
         var billingDetails = CheckoutController.Configuration.Defaults.BillingDetails()
         billingDetails.name = "Billing Name"
         billingDetails.address = .init(
@@ -59,6 +67,51 @@ final class CheckoutDefaultsInitializationTests: XCTestCase {
         XCTAssertEqual(requests[1].params["tax_region[country]"], "US")
         XCTAssertEqual(requests[1].params["tax_region[line1]"], "123 Billing St")
         XCTAssertEqual(requests[1].params["tax_region[city]"], "San Francisco")
+
+        // Initialization includes the default-address update even before the elements exist.
+        let events = analyticsClient._testLogHistory.filter {
+            ($0["event"] as? String)?.hasPrefix("checkout_elements.") == true
+        }
+        XCTAssertEqual(events.compactMap { $0["event"] as? String }, [
+            "checkout_elements.init.started",
+            "checkout_elements.update_billing_address.started",
+            "checkout_elements.update_billing_address.succeeded",
+            "checkout_elements.init.succeeded",
+        ])
+        let billingUpdate = try XCTUnwrap(events.first { $0["event"] as? String == "checkout_elements.update_billing_address.succeeded" })
+        XCTAssertEqual(billingUpdate["invocation_source"] as? String, "merchant")
+        XCTAssertEqual(billingUpdate["did_request_tax_update"] as? Bool, true)
+
+        // Both init events serialize configuration, including presence flags instead of customer text.
+        let expectedConfiguration: [String: Any] = [
+            "merchant_display_name": true,
+            "defaults": [
+                "billing_details": ["name": true, "address": true],
+                "shipping_details": ["name": false, "address": false],
+                "email": false,
+                "phone": false,
+            ],
+            "payment_element": [
+                "apple_pay_config": false,
+                "link_display": "automatic",
+                "save_payment_method_opt_in_behavior": "automatic",
+                "appearance": try XCTUnwrap(configuration.paymentElement).appearance.analyticPayload,
+                "remove_saved_payment_method_message": true,
+                "opens_card_scanner_automatically": false,
+                "terms_display": [String: String](),
+                "payment_method_layout": "automatic",
+                "displays_mandate_text": false,
+                "payment_method_order": ["card", "ideal"],
+                "row_selection_behavior": "default",
+            ],
+            "express_checkout_element": NSNull(),
+            "currency_selector_element": NSNull(),
+            "shipping_address_element": NSNull(),
+        ]
+        for event in [try XCTUnwrap(events.first), try XCTUnwrap(events.last)] {
+            let configurationPayload = event.filter { expectedConfiguration.keys.contains($0.key) }
+            XCTAssertEqual(configurationPayload as NSDictionary, expectedConfiguration as NSDictionary)
+        }
     }
 
     func testInitAppliesShippingDefaultThroughShippingUpdateWhenNeeded() async throws {

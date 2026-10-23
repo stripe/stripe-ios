@@ -503,7 +503,8 @@ class MockCheckoutSessionWalletUpdater: CheckoutSessionWalletUpdater {
 
     func updateTaxRegionWithoutEnqueueing(
         address: CheckoutController.Address,
-        canUpdateWhileSheetPresented: Bool
+        canUpdateWhileSheetPresented: Bool,
+        confirmationSource: CheckoutController.ConfirmingElement
     ) async throws -> CheckoutController.Session {
         updateCallCount += 1
         lastAddress = address

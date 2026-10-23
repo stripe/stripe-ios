@@ -194,7 +194,7 @@ extension PaymentElement {
             stpAssertionFailure("PaymentElement unexpectedly lost its CheckoutController.")
             return
         }
-        try await checkout.updateBillingTaxRegionIfNecessary(address: nil)
+        try await checkout.updateBillingTaxRegionIfNecessary(address: nil, source: .paymentElement)
         checkout.dangerouslySetPaymentOptionDirectly(nil)
         embeddedPaymentElement.clearPaymentOption()
     }
