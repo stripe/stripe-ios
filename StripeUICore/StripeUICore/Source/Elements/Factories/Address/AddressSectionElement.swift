@@ -103,17 +103,38 @@ import UIKit
     }
 
     // MARK: Element protocol
-    public let elements: [Element]
+    public var elements: [Element] {
+        if case .spacing = separatorStyle {
+            return fieldSections + [sameAsCheckbox]
+        }
+        return [addressSection, sameAsCheckbox]
+    }
     public weak var delegate: ElementDelegate?
     public lazy var view: UIView = {
-        let vStack = UIStackView(arrangedSubviews: [addressSection.view, sameAsCheckbox.view].compactMap { $0 })
+        let addressFieldsView: UIView
+        if case .spacing(let spacing) = separatorStyle {
+            let stackView = UIStackView(arrangedSubviews: fieldSections.map(\.view))
+            stackView.axis = .vertical
+            stackView.spacing = spacing
+            fieldSectionsStackView = stackView
+            addressFieldsView = stackView
+        } else {
+            addressFieldsView = addressSection.view
+        }
+        let vStack = UIStackView(arrangedSubviews: [addressFieldsView, sameAsCheckbox.view])
         vStack.axis = .vertical
         vStack.spacing = 16
         return vStack
     }()
 
     // MARK: Elements
+    /// Contains every address field when `separatorStyle` is `.divider`.
     let addressSection: SectionElement
+    /// Contains one section per address field when `separatorStyle` is `.spacing`.
+    private(set) var fieldSections: [SectionElement] = []
+    /// Arranges `fieldSections`; only created once `view` loads.
+    private var fieldSectionsStackView: UIStackView?
+
     public let name: TextFieldElement?
     public let phone: PhoneNumberElement?
     public let email: TextFieldElement?
@@ -153,12 +174,24 @@ import UIKit
 
     public let countryCodes: [String]
     let addressSpecProvider: AddressSpecProvider
+    let separatorStyle: SeparatorDisplayStyle
     let theme: ElementsAppearance
     private(set) var defaults: AddressDetails
     private let disableAutocomplete: Bool
     private var hasExpandedToManualEntry = false
     @_spi(STP) public var didTapAutocompleteButton: () -> Void
     public var didUpdate: DidUpdateAddress?
+
+    /// Highlights the border of the focused field's section when `separatorStyle` is `.spacing`.
+    private lazy var fieldSelectionBehavior: SelectionBehavior = {
+        let configuration = HighlightBorderConfiguration(
+            width: 2.0,
+            cornerRadius: theme.resolvedCornerRadius,
+            color: theme.colors.selectedBorder ?? theme.colors.primary,
+            animator: ElementsUI.makeFocusAnimator()
+        )
+        return .highlightBorder(configuration: configuration)
+    }()
 
     // MARK: - Implementation
     /**
@@ -186,6 +219,7 @@ import UIKit
         countriesSupportingAutocomplete: [String] = AddressSectionElement.defaultAutocompleteCountries,
         disableAutocomplete: Bool = false,
         additionalFields: AdditionalFields = .init(),
+        separatorStyle: SeparatorDisplayStyle = .divider,
         theme: ElementsAppearance = .default,
         presentAutoComplete: @escaping () -> Void = { }
     ) {
@@ -205,6 +239,7 @@ import UIKit
         )
         self.defaults = defaults
         self.addressSpecProvider = addressSpecProvider
+        self.separatorStyle = separatorStyle
         self.theme = theme
         self.didTapAutocompleteButton = presentAutoComplete
 
@@ -248,7 +283,6 @@ import UIKit
             sameAsCheckbox.view.isHidden = true
         }
         addressSection = SectionElement(title: title, elements: [], theme: theme)
-        elements = ([addressSection, sameAsCheckbox] as [Element?]).compactMap { $0 }
         elements.forEach { $0.delegate = self }
 
         self.updateAddressFields(
@@ -441,7 +475,32 @@ import UIKit
         initialElements.append(autoCompleteLine)
         let emailElement: [Element?] = [email]
         let phoneElement: [Element?] = [phone]
-        addressSection.elements = (emailElement + phoneElement + initialElements + addressFields).compactMap { $0 }
+        let allFields = (emailElement + phoneElement + initialElements + addressFields).compactMap { $0 }
+        switch separatorStyle {
+        case .divider:
+            addressSection.elements = allFields
+        case .spacing:
+            // Give each field its own bordered section, reusing sections of fields that persist (e.g. name, country)
+            // so their views stay in the window and keep first responder status
+            let existingSections = fieldSections
+            fieldSections = allFields.map { field in
+                if let existingSection = existingSections.first(where: { $0.elements.first === field }) {
+                    return existingSection
+                }
+                let section = SectionElement(elements: [field], selectionBehavior: fieldSelectionBehavior, theme: theme)
+                section.delegate = self
+                return section
+            }
+            if let fieldSectionsStackView {
+                // Inserting an already-arranged view moves it in place, which leaves stale views at the end
+                for (index, section) in fieldSections.enumerated() {
+                    fieldSectionsStackView.insertArrangedSubview(section.view, at: index)
+                }
+                fieldSectionsStackView.arrangedSubviews.dropFirst(fieldSections.count).forEach { $0.removeFromSuperview() }
+            }
+            // Mirror `.divider`, where setting `addressSection.elements` notifies us
+            didUpdate(element: self)
+        }
     }
 
     /// Returns `true` iff all **displayed** address fields match the given `address`, treating `nil` and "" as equal.

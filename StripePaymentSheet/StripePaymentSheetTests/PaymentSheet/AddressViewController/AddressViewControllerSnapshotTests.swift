@@ -8,7 +8,7 @@
 
 @_spi(STP)@testable import StripeCore
 import StripeCoreTestUtils
-@_spi(STP)@testable import StripePaymentSheet
+@_spi(STP) @_spi(AddressViewControllerSeparatorStylePreview) @testable import StripePaymentSheet
 @testable import StripePaymentsTestUtils
 @_spi(STP)@testable import StripeUICore
 import XCTest
@@ -270,6 +270,93 @@ class AddressViewControllerSnapshotTests: STPSnapshotTestCase {
         )
         let navVC = UINavigationController(rootViewController: vc)
         testWindow.rootViewController = navVC
+        verify(navVC.view)
+    }
+
+    func testShippingAddressViewController_spacingSeparatorStyle() {
+        let testWindow = UIWindow(frame: CGRect(x: 0, y: 0, width: 428, height: 700))
+        testWindow.isHidden = false
+        var configuration = configuration
+        configuration.separatorStyle = .spacing(12)
+        let vc = AddressViewController(
+            addressSpecProvider: addressSpecProvider,
+            configuration: configuration,
+            delegate: self
+        )
+        let navVC = UINavigationController(rootViewController: vc)
+        testWindow.rootViewController = navVC
+        verify(navVC.view)
+    }
+
+    func testShippingAddressViewController_spacingSeparatorStyle_darkMode() {
+        let testWindow = UIWindow(frame: CGRect(x: 0, y: 0, width: 428, height: 700))
+        testWindow.isHidden = false
+        testWindow.overrideUserInterfaceStyle = .dark
+        var configuration = configuration
+        configuration.separatorStyle = .spacing(12)
+        let vc = AddressViewController(
+            addressSpecProvider: addressSpecProvider,
+            configuration: configuration,
+            delegate: self
+        )
+        let navVC = UINavigationController(rootViewController: vc)
+        testWindow.rootViewController = navVC
+        verify(navVC.view)
+    }
+
+    func testShippingAddressViewController_spacingSeparatorStyle_appearance() {
+        let testWindow = UIWindow(frame: CGRect(x: 0, y: 0, width: 428, height: 700))
+        testWindow.isHidden = false
+        var configuration = configuration
+        configuration.appearance = ._testMSPaintTheme
+        configuration.separatorStyle = .spacing(12)
+        let vc = AddressViewController(
+            addressSpecProvider: addressSpecProvider,
+            configuration: configuration,
+            delegate: self
+        )
+        let navVC = UINavigationController(rootViewController: vc)
+        testWindow.rootViewController = navVC
+        verify(navVC.view)
+    }
+
+    func testShippingAddressViewController_spacingSeparatorStyle_checkbox() {
+        let testWindow = UIWindow(frame: CGRect(x: 0, y: 0, width: 428, height: 700))
+        testWindow.isHidden = false
+        var configuration = configuration
+        configuration.separatorStyle = .spacing(12)
+        configuration.additionalFields.checkboxLabel = "Test checkbox text"
+        let vc = AddressViewController(
+            addressSpecProvider: addressSpecProvider,
+            configuration: configuration,
+            delegate: self
+        )
+        let navVC = UINavigationController(rootViewController: vc)
+        testWindow.rootViewController = navVC
+        verify(navVC.view)
+    }
+
+    func testShippingAddressViewController_spacingSeparatorStyle_focusedField() {
+        // Given an address view controller using the spacing separator style
+        let testWindow = UIWindow(frame: CGRect(x: 0, y: 0, width: 428, height: 700))
+        testWindow.makeKeyAndVisible()
+        var configuration = configuration
+        configuration.appearance = ._testMSPaintTheme
+        configuration.separatorStyle = .spacing(12)
+        let vc = AddressViewController(
+            addressSpecProvider: addressSpecProvider,
+            configuration: configuration,
+            delegate: self
+        )
+        let navVC = UINavigationController(rootViewController: vc)
+        testWindow.rootViewController = navVC
+        testWindow.layoutIfNeeded()
+
+        // When a field is focused
+        XCTAssertTrue(vc.addressSection?.line1?.beginEditing() ?? false)
+        testWindow.layoutIfNeeded()
+
+        // Then only the focused field's section shows the highlighted border
         verify(navVC.view)
     }
 
