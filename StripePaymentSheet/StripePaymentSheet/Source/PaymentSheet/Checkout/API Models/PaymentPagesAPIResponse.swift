@@ -468,8 +468,6 @@ extension PaymentPagesAPIResponse {
             let paymentMethodTypes = orderedTypes.filter {
                 !["apple_pay", "google_pay", "card_wallet_link"].contains($0)
             }
-            // TODO(OCS_API_EXT-266): CheckoutClient's Link resource omits Elements' mobile flags, including
-            // attestation endpoint selection. Backend parity is required for those settings.
             var linkSettings = fields["link_settings"] as? [String: Any]
             if linkSettings?["link_passthrough_mode_enabled"] == nil {
                 // Elements derives this legacy flag from link_mode. CheckoutClient returns the mode

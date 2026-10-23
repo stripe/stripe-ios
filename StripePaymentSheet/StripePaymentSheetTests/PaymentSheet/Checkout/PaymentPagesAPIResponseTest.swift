@@ -1263,6 +1263,33 @@ class PaymentPagesAPIResponseTest: XCTestCase {
 
     // MARK: - Elements Session Tests
 
+    func testElementsSessionDecodesResolvedMobileLinkSettings() throws {
+        for enabled in [true, false] {
+            let popupOption: LinkSettings.PopupWebviewOption = enabled ? .ephemeral : .shared
+            let json = CheckoutTestHelpers.makeSessionJSON([
+                "link_settings": [
+                    "link_funding_sources": ["CARD"],
+                    "link_mode": "LINK_PAYMENT_METHOD",
+                    "link_mobile_use_attestation_endpoints": enabled,
+                    "link_mobile_attestation_state_sync_enabled": enabled,
+                    "link_mobile_disable_signup": enabled,
+                    "link_popup_webview_option": popupOption.rawValue,
+                    "link_enable_displayable_default_values_in_ece": enabled,
+                ],
+            ])
+
+            let response = try PaymentPagesAPIResponse.decode(fromAPIResponse: json)
+            let settings = try XCTUnwrap(response.makePublicSession().elementsSession.linkSettings)
+
+            XCTAssertEqual(settings.useAttestationEndpoints, enabled)
+            XCTAssertEqual(settings.attestationStateSyncEnabled, enabled)
+            XCTAssertEqual(settings.disableSignup, enabled)
+            XCTAssertEqual(settings.popupWebviewOption, popupOption)
+            XCTAssertEqual(settings.linkEnableDisplayableDefaultValuesInECE, enabled)
+            XCTAssertEqual(settings.linkMode, .linkPaymentMethod)
+        }
+    }
+
     func testElementsSessionDecoding() {
         let session = CheckoutTestHelpers.makeSession([
             "ordered_payment_method_types_and_wallets": ["card"],
