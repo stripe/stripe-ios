@@ -63,6 +63,35 @@ final class ShippingAddressElementPresentationTests: XCTestCase {
         await fulfillment(of: [released], timeout: 2)
     }
 
+    func testPresentationUsesCheckoutUserInterfaceStyle() async throws {
+        let styles: [(CheckoutController.UserInterfaceStyle, UIUserInterfaceStyle)] = [
+            (.alwaysLight, .light),
+            (.alwaysDark, .dark),
+            (.automatic, .unspecified),
+        ]
+
+        for (checkoutStyle, expectedStyle) in styles {
+            // Given checkout's user interface style
+            var configuration = CheckoutTestHelpers.makeConfiguration(
+                paymentElementConfiguration: nil,
+                expressCheckoutElementConfiguration: nil
+            )
+            configuration.shippingAddressElement = .init()
+            configuration.userInterfaceStyle = checkoutStyle
+            let checkout = try await CheckoutController(configuration: configuration)
+            let shippingAddressElement = checkout.getShippingAddressElement()
+            let presenter = PresentationCapturingViewController()
+
+            // When the shipping address sheet is configured for presentation
+            shippingAddressElement.present(from: presenter, completion: nil)
+            let navigationController = try XCTUnwrap(presenter.capturedViewController as? UINavigationController)
+
+            // Then the address controller and its navigation stack use checkout's style
+            XCTAssertEqual(shippingAddressElement.addressViewController.overrideUserInterfaceStyle, expectedStyle, "Checkout style: \(checkoutStyle)")
+            XCTAssertEqual(navigationController.overrideUserInterfaceStyle, expectedStyle, "Checkout style: \(checkoutStyle)")
+        }
+    }
+
     func testCompletionRunsAfterDelegateDismissesPresentation() async throws {
         // Given
         let shippingAddressElement = makeShippingAddressElement()
@@ -269,6 +298,7 @@ final class ShippingAddressElementPresentationTests: XCTestCase {
     private func makeShippingAddressElement() -> ShippingAddressElement {
         return ShippingAddressElement(
             configuration: .init(),
+            userInterfaceStyle: .automatic,
             initialShippingAddress: .init(
                 name: "Jane Doe",
                 address: .init(
@@ -345,6 +375,20 @@ private final class PresentationObservingViewController: UIViewController {
     ) {
         super.present(viewControllerToPresent, animated: flag, completion: completion)
         onPresent?(viewControllerToPresent)
+    }
+}
+
+// Capture the sheet synchronously so style checks do not depend on UIKit transitions.
+private final class PresentationCapturingViewController: UIViewController {
+
+    var capturedViewController: UIViewController?
+
+    override func present(
+        _ viewControllerToPresent: UIViewController,
+        animated flag: Bool,
+        completion: (() -> Void)? = nil
+    ) {
+        capturedViewController = viewControllerToPresent
     }
 }
 

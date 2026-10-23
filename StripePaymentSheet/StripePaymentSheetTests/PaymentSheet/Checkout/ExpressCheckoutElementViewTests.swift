@@ -196,19 +196,6 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
         XCTAssertTrue(buttons.contains(.link))
     }
 
-    func testApplePayButtonHiddenWhenDisplayIsNever() {
-        // Given a session with apple_pay and an applePayConfiguration with display set to .never
-        let session = CheckoutTestHelpers.makeSessionWithWalletTypes(["apple_pay"]).makePublicSession()
-        var configuration = ExpressCheckoutElement.Configuration(completion: { _ in })
-        configuration.applePayConfiguration = ExpressCheckoutElement.Configuration.ApplePayConfiguration(
-            merchantId: "merchant.com.example",
-            display: .never
-        )
-
-        let buttons = ExpressCheckoutElementUtilities.availablePaymentMethodsWithoutCheckoutRequirements(for: session.elementsSession, configuration: configuration)
-        XCTAssertFalse(buttons.contains(.applePay))
-    }
-
     func testLinkButtonHiddenWhenDisplayIsNever() {
         // Given a session with link and a linkConfiguration with display set to .never
         let session = CheckoutTestHelpers.makeSessionWithWalletTypes(["link"]).makePublicSession()

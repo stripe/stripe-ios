@@ -73,7 +73,38 @@ private struct RawStripeJSONDictionary: Decodable {
     }
 }
 
+private struct ResponseWithRequestID: Decodable {
+    let requestID: String?
+
+    init(from decoder: Decoder) throws {
+        requestID = decoder.userInfo[StripeJSONDecoder.requestIDKey] as? String
+    }
+}
+
 class StripeCodableTests: APIStubbedTestCase {
+    func testSuccessfulResponseExposesRequestIDToDecoder() throws {
+        for requestID in ["req_123", nil] {
+            // Given a successful response, with or without a request ID header
+            let headers = requestID.map { ["Request-Id": $0] }
+            let response = try XCTUnwrap(HTTPURLResponse(
+                url: URL(string: "https://api.stripe.com/v1/test")!,
+                statusCode: 200,
+                httpVersion: nil,
+                headerFields: headers
+            ))
+
+            // When the API client decodes the response
+            let result: Result<ResponseWithRequestID, Error> = STPAPIClient.decodeResponse(
+                data: Data("{}".utf8),
+                error: nil,
+                response: response
+            )
+
+            // Then the decoder receives the request ID when present
+            XCTAssertEqual(try result.get().requestID, requestID)
+        }
+    }
+
     func testStripeJSONDictionaryReturnsCurrentObject() throws {
         let data = try JSONSerialization.data(withJSONObject: ["id": "pm_123"])
 

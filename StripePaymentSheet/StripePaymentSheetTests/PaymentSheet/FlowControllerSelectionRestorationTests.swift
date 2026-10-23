@@ -395,8 +395,4 @@ private final class FailingCheckoutSessionBillingAddressUpdater: CheckoutSession
             message: NSError.stp_genericErrorOccurredMessage()
         )
     }
-
-    func commitSession(_ apiResponse: PaymentPagesAPIResponse) async throws {
-        XCTFail("Unexpected call to commitSession")
-    }
 }

@@ -47,10 +47,7 @@ struct CheckoutSessionConfirmationRequestParameters {
 
     /// The Checkout Elements component confirming. Used to tag
     /// `payment_method_data[payment_user_agent]` for payment/attribution purposes. Required on
-    /// every factory for a uniform type; `handleCheckoutSessionApplePay`
-    /// (`STPApplePayContext+PaymentSheet.swift`) isn't actually PaymentElement/ExpressCheckoutElement
-    /// (it's the generic PaymentSheet/FlowController/EmbeddedPaymentElement-on-CheckoutSession path)
-    /// and passes a placeholder — see the TODO at that call site.
+    /// every factory so all Checkout confirmation paths identify their confirming element.
     let confirmationSource: CheckoutController.ConfirmingElement
 
     /// The expected amount for validation. `nil` for setup-style Sessions.

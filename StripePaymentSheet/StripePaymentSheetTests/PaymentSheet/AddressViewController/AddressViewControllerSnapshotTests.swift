@@ -164,6 +164,7 @@ class AddressViewControllerSnapshotTests: STPSnapshotTestCase {
         testWindow.isHidden = false
         let shippingAddressElement = ShippingAddressElement(
             configuration: .init(),
+            userInterfaceStyle: .automatic,
             initialShippingAddress: .init(
                 name: "Jane Doe",
                 address: .init(

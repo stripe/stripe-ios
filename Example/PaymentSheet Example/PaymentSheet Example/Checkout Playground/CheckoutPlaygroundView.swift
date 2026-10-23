@@ -64,7 +64,6 @@ struct CheckoutPlaygroundView: View {
 
                         CheckoutPlaygroundExpressCheckoutElementSection(
                             showExpressCheckoutElement: $viewModel.expressCheckoutElement.isEnabled,
-                            applePayDisplay: $viewModel.expressCheckoutElement.applePayDisplay,
                             applePayButtonType: $viewModel.expressCheckoutElement.applePayButtonType,
                             linkDisplay: $viewModel.expressCheckoutElement.linkDisplay,
                             appearance: $viewModel.expressCheckoutElement.appearance
