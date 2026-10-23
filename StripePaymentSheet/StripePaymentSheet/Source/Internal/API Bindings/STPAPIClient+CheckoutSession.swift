@@ -199,7 +199,7 @@ extension STPAPIClient {
         clientSecret: String,
         parameters: [String: Any]
     ) async throws -> PaymentPagesAPIResponse {
-        // TODO(porter): CheckoutClient update does not support promotion codes yet.
+        // TODO(porter) promo codes: CheckoutClient update does not support promotion codes yet.
         var params = Self.checkoutClientParameters(clientSecret: clientSecret)
         params.merge(parameters) { _, value in value }
         return try await post(
@@ -340,7 +340,7 @@ extension STPAPIClient {
             parameters["shipping"] = STPFormEncoder.dictionary(forObject: shipping)
         }
 
-        // TODO(porter): CheckoutClient /confirm does not support BLIK's blik_code yet.
+        // TODO(porter) BLIK: CheckoutClient /confirm does not support BLIK's blik_code yet.
         if let blikCode = requestParameters.paymentMethodOptions?.blikOptions?.code {
             parameters["blik_code"] = blikCode
         }

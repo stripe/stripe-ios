@@ -5,17 +5,17 @@ application/json
 Server: Google Frontend
 Content-Type: application/json; charset=utf-8
 x-powered-by: Express
-x-cloud-trace-context: 5a471cd5b9145d42b64ab6de12f642ad;o=1
+x-cloud-trace-context: a4260865d3c31c0f5e8f9b89df776504
 Via: 1.1 google
-Date: Thu, 22 Oct 2026 17:53:16 GMT
+Date: Fri, 23 Oct 2026 18:51:50 GMT
 Content-Length: 2558
 Alt-Svc: h3=":443"; ma=2592000
-Etag: W/"9fe-roFgQrz4nLqJif0vaL0BeqE8KRQ"
+Etag: W/"9fe-vPcTCAjf5Tr780jUCZv9IcnUVpY"
 
 {
   "billing_address_collection" : null,
-  "id" : "cs_test_a1rtO128YleKqG4h2H9IwXfUe4zfSC8SYpMQpdwM6PehFuf8M39El5xwXU",
-  "client_secret" : "cs_test_a1rtO128YleKqG4h2H9IwXfUe4zfSC8SYpMQpdwM6PehFuf8M39El5xwXU_secret_fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdwbEhqYWAnPydoamdsaWBaYGlgaGBrcXYneCUl",
+  "id" : "cs_test_a1NkAKt5EuV8DFI7uln5OczRrAFYWx2G7R41ptHts7Gr8CN1foqXwyc8lO",
+  "client_secret" : "cs_test_a1NkAKt5EuV8DFI7uln5OczRrAFYWx2G7R41ptHts7Gr8CN1foqXwyc8lO_secret_fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdwbEhqYWAnPydoamdsaWBaYGlgaGBrcXYneCUl",
   "discounts" : [
 
   ],
@@ -32,7 +32,7 @@ Etag: W/"9fe-roFgQrz4nLqJif0vaL0BeqE8KRQ"
   "payment_method_configuration_details" : null,
   "payment_method_options" : null,
   "ui_mode" : "mobile_elements",
-  "created" : 1792691596,
+  "created" : 1792781510,
   "client_reference_id" : null,
   "allowed_payment_method_types" : [
     "wero"
@@ -41,13 +41,13 @@ Etag: W/"9fe-roFgQrz4nLqJif0vaL0BeqE8KRQ"
   "allow_promotion_codes" : null,
   "items" : [
     {
-      "key" : "checkout_item_VUOynEFH",
+      "key" : "checkout_item_VUn9ZmmE",
       "one_time_price" : {
         "items" : [
           {
             "quantity" : 1,
             "adjustable_quantity" : null,
-            "price" : "price_1UTQAyAlz2yHYCNZLMnkbwBD",
+            "price" : "price_1UTnZCAlz2yHYCNZI1wgrKFY",
             "tax_rates" : null
           }
         ],
@@ -153,6 +153,6 @@ Etag: W/"9fe-roFgQrz4nLqJif0vaL0BeqE8KRQ"
   },
   "livemode" : false,
   "customer_email" : null,
-  "expires_at" : 1792777996,
+  "expires_at" : 1792867910,
   "marketing_attributions" : null
 }

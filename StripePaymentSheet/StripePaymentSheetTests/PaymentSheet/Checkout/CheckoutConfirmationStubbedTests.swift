@@ -350,7 +350,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
     }
 
     func testOpenConfirmResponsePollsBeforeCompleting() async throws {
-        throw XCTSkip("TODO(porter): Enable once polling uses CheckoutClient.")
+        throw XCTSkip("TODO(porter) polling: Enable once polling uses CheckoutClient.")
         // Given /confirm returns an open Session and polling observes completion
         let checkout = try await makeCheckout()
         let poller = TestCheckoutSessionPoller(outcome: .completed)
@@ -395,7 +395,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
     }
 
     func testTimedOutPollingStillCompletes() async throws {
-        throw XCTSkip("TODO(porter): Enable once polling uses CheckoutClient.")
+        throw XCTSkip("TODO(porter) polling: Enable once polling uses CheckoutClient.")
         // Given /confirm returns an open Session and polling times out
         let checkout = try await makeCheckout()
         let poller = TestCheckoutSessionPoller(outcome: .timedOut)
@@ -417,7 +417,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
     }
 
     func testRequiresPaymentMethodPollOutcomeRetrievesLatestSession() async throws {
-        throw XCTSkip("TODO(porter): Enable once polling uses CheckoutClient.")
+        throw XCTSkip("TODO(porter) polling: Enable once polling uses CheckoutClient.")
         // Given polling observes a payment failure
         let checkout = try await makeCheckout()
         let poller = TestCheckoutSessionPoller(outcome: .requiresPaymentMethod)
@@ -445,7 +445,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
     }
 
     func testInvalidPollOutcomeRetrievesLatestSession() async throws {
-        throw XCTSkip("TODO(porter): Enable once polling uses CheckoutClient.")
+        throw XCTSkip("TODO(porter) polling: Enable once polling uses CheckoutClient.")
         // Given polling observes an invalid or expired state
         let checkout = try await makeCheckout()
         let poller = TestCheckoutSessionPoller(outcome: .invalidOrExpired)
@@ -869,7 +869,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
     }
 
     func testLinkConfirmationPollsOpenCheckoutSession() async throws {
-        throw XCTSkip("TODO(porter): Enable once polling uses CheckoutClient.")
+        throw XCTSkip("TODO(porter) polling: Enable once polling uses CheckoutClient.")
         // Given Link confirmation returns an open Checkout Session
         let checkout = try await makeCheckout(apiResponse: CheckoutTestHelpers.makeSession().withCustomer())
         var confirmResponseJSON = makeConfirmedSessionJSON(status: "open")

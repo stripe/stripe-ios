@@ -5,8 +5,8 @@ image/png;base64
 cf-cache-status: HIT
 x-content-type-options: nosniff
 warning: cf-images 299 "dpr > 2 is not recommended"
-content-security-policy: default-src 'none'; navigate-to 'none'; form-action 'none'; img-src data:; style-src 'unsafe-inline';
 Server: cloudflare
+content-security-policy: default-src 'none'; navigate-to 'none'; form-action 'none'; img-src data:; style-src 'unsafe-inline';
 Cache-Control: public, max-age=31536000
 Strict-Transport-Security: max-age=31556926; includeSubDomains; preload
 Accept-Ranges: bytes
@@ -16,10 +16,11 @@ Priority: u=4,i
 Content-Length: 1310
 Via: 1.1 varnish
 Vary: accept, accept-encoding
-Date: Thu, 22 Oct 2026 17:56:12 GMT
+Date: Fri, 23 Oct 2026 18:21:14 GMT
+Age: 134583
 Etag: "cfh5kitNRLYWhxiKfwcutxJ2VQI7V4lueYBcHeb1reDQ:72ec7e2607d4d4921f19ddacd8d9057c"
 Content-Type: image/png
-cf-ray: a4ea609c1aa014fe-SLC
+cf-ray: a4f2c2a4ac340d15-SLC
 Last-Modified: Wed, 13 May 2026 23:23:12 GMT
 cf-resized: internal=ok/m q=0 n=374+0 c=0+2 v=2026.10.5 l=1310 f=false c2=0 wv=2026.9.1
 

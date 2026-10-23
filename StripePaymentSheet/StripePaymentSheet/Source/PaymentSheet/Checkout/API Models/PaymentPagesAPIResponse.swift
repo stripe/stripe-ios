@@ -468,7 +468,7 @@ extension PaymentPagesAPIResponse {
             let paymentMethodTypes = orderedTypes.filter {
                 !["apple_pay", "google_pay", "card_wallet_link"].contains($0)
             }
-            // TODO(porter): CheckoutClient still omits Elements' link_mobile_disable_rux_in_flow_controller
+            // TODO(porter) Link settings: CheckoutClient still omits Elements' link_mobile_disable_rux_in_flow_controller
             // merchant kill switch, which the SDK uses to suppress native Link in FlowController.
             var linkSettings = fields["link_settings"] as? [String: Any]
             if linkSettings?["link_passthrough_mode_enabled"] == nil {

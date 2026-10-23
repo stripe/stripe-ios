@@ -5,17 +5,17 @@ application/json
 Server: Google Frontend
 Content-Type: application/json; charset=utf-8
 x-powered-by: Express
-x-cloud-trace-context: a70126d6cbae7ca5aecef49efbf3c40a;o=1
+x-cloud-trace-context: 42b6634e9fb4da649eeb499c330d784d
 Via: 1.1 google
-Date: Thu, 22 Oct 2026 17:55:57 GMT
+Date: Fri, 23 Oct 2026 18:21:13 GMT
 Content-Length: 2601
-Alt-Svc: h3=":443"; ma=2592000
-Etag: W/"a29-vkgVd2zJR7AHFbEX4h+eH75+7jo"
+Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+Etag: W/"a29-1V7H49at0cuDQec1Tre/LeLbhr8"
 
 {
   "billing_address_collection" : null,
-  "id" : "cs_test_a1wEWkPoST1Ti0FuwqUO1YwkRAzxLs6iq6LIcFfmL6hiokpG5NaXeOFOoJ",
-  "client_secret" : "cs_test_a1wEWkPoST1Ti0FuwqUO1YwkRAzxLs6iq6LIcFfmL6hiokpG5NaXeOFOoJ_secret_fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdwbEhqYWAnPydoamdsaWBaYGlgaGBrcXYneCUl",
+  "id" : "cs_test_a18V5nv7emusfQOrBtzWzmuKi6DacGLNrJLZSgLph7ccSn2h4owlBN7xmY",
+  "client_secret" : "cs_test_a18V5nv7emusfQOrBtzWzmuKi6DacGLNrJLZSgLph7ccSn2h4owlBN7xmY_secret_fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdwbEhqYWAnPydoamdsaWBaYGlgaGBrcXYneCUl",
   "discounts" : [
 
   ],
@@ -32,7 +32,7 @@ Etag: W/"a29-vkgVd2zJR7AHFbEX4h+eH75+7jo"
   "payment_method_configuration_details" : null,
   "payment_method_options" : null,
   "ui_mode" : "mobile_elements",
-  "created" : 1792691757,
+  "created" : 1792779673,
   "client_reference_id" : null,
   "allowed_payment_method_types" : [
     "card"
@@ -41,13 +41,13 @@ Etag: W/"a29-vkgVd2zJR7AHFbEX4h+eH75+7jo"
   "allow_promotion_codes" : null,
   "items" : [
     {
-      "key" : "checkout_item_VUP11ChM",
+      "key" : "checkout_item_VUme3cmv",
       "one_time_price" : {
         "items" : [
           {
             "quantity" : 1,
             "adjustable_quantity" : null,
-            "price" : "price_1UTQDZK8p6Sx2i8ao4n5zLa7",
+            "price" : "price_1UTn5YK8p6Sx2i8ahGSFfF2o",
             "tax_rates" : null
           }
         ],
@@ -153,6 +153,6 @@ Etag: W/"a29-vkgVd2zJR7AHFbEX4h+eH75+7jo"
   },
   "livemode" : false,
   "customer_email" : "test+location_DE@example.com",
-  "expires_at" : 1792778157,
+  "expires_at" : 1792866072,
   "marketing_attributions" : null
 }

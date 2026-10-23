@@ -544,7 +544,7 @@ extension CheckoutController {
         }
 
         // 3. Poll if the Checkout Session is still in progress.
-        // TODO(porter): Re-enable polling once it uses CheckoutClient.
+        // TODO(porter) polling: Re-enable polling once it uses CheckoutClient.
         // var didPollToCompletion = false
         switch response.status {
         /*
@@ -607,7 +607,7 @@ extension CheckoutController {
         var updatedResponse = response
         switch clientCompletedIntent {
         case nil:
-            // TODO(porter): Restore the polled completion status when polling uses CheckoutClient.
+            // TODO(porter) polling: Restore the polled completion status when polling uses CheckoutClient.
             // if didPollToCompletion {
             //     updatedResponse.status = .complete(response.paymentStatus)
             // }

@@ -171,7 +171,7 @@ extension CheckoutController.Session {
             businessName: apiResponse.elementsSession.businessName,
             currency: apiResponse.integrationCurrency,
             presentmentDetails: presentmentDetails,
-            // TODO(porter): CheckoutClient does not expose promotion code discounts yet.
+            // TODO(porter) promo codes: CheckoutClient does not expose promotion code discounts yet.
             discountAmounts: [],
             orderSummaryItems: publicOrderSummaryItems,
             livemode: apiResponse.livemode,

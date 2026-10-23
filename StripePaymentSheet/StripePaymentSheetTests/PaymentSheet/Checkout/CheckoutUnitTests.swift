@@ -275,7 +275,7 @@ final class CheckoutUnitTests: XCTestCase {
     // MARK: - Promotion Code Tests
 
     func testApplyPromotionCodeSendsCodeAndCommitsReturnedSession() async throws {
-        throw XCTSkip("TODO(porter): CheckoutClient update does not support promotion codes yet.")
+        throw XCTSkip("TODO(porter) promo codes: CheckoutClient update does not support promotion codes yet.")
         // Given an open Checkout Session whose update response contains a promotion code
         let initialSessionJSON = CheckoutTestHelpers.openSessionJSON
         let updatedSessionJSON = sessionJSONWithPromotionCode("SAVE25")
@@ -297,7 +297,7 @@ final class CheckoutUnitTests: XCTestCase {
     }
 
     func testRemovePromotionCodeSendsEmptyCodeAndCommitsReturnedSession() async throws {
-        throw XCTSkip("TODO(porter): CheckoutClient update does not support promotion codes yet.")
+        throw XCTSkip("TODO(porter) promo codes: CheckoutClient update does not support promotion codes yet.")
         // Given a Checkout Session with an applied promotion code
         let initialSessionJSON = sessionJSONWithPromotionCode("SAVE25")
         let updatedSessionJSON = CheckoutTestHelpers.openSessionJSON
