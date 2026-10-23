@@ -370,21 +370,7 @@ public final class CheckoutController: ObservableObject {
         _ update: @escaping () async throws -> Void
     ) async throws {
         let startedAction = analyticsHelper.logStarted(.runServerUpdate, session: session)
-        var merchantDuration: TimeInterval?
-        var refreshDuration: TimeInterval?
-        var refreshRequestID: String?
-        var failure: Error?
-        defer {
-            var params: [String: Any] = [:]
-            params["merchant_update_duration"] = merchantDuration
-            params["refresh_duration"] = refreshDuration
-            if let failure {
-                analyticsHelper.logFailed(startedAction, error: failure, session: session, additionalParams: params)
-            } else {
-                params["request_id"] = refreshRequestID
-                analyticsHelper.logSucceeded(startedAction, session: self.session, additionalParams: params)
-            }
-        }
+        var analyticsParams: [String: Any] = [:]
         do {
             try await enqueueSessionUpdate {
                 try self.requireSheetNotPresented()
@@ -392,7 +378,7 @@ public final class CheckoutController: ObservableObject {
                 let result = await withTimeout(Self.serverUpdateTimeout) {
                     try await update()
                 }
-                merchantDuration = ProcessInfo.processInfo.systemUptime - merchantStart
+                analyticsParams["merchant_update_duration"] = ProcessInfo.processInfo.systemUptime - merchantStart
                 if case .failure(let error) = result {
                     if error is TimeoutError {
                         throw CheckoutError.timedOut
@@ -403,20 +389,21 @@ public final class CheckoutController: ObservableObject {
                 let refreshedCheckoutSession: PaymentPagesAPIResponse
                 do {
                     let refreshStart = ProcessInfo.processInfo.systemUptime
-                    defer { refreshDuration = ProcessInfo.processInfo.systemUptime - refreshStart }
+                    defer { analyticsParams["refresh_duration"] = ProcessInfo.processInfo.systemUptime - refreshStart }
                     refreshedCheckoutSession = try await self.apiClient.initCheckoutSession(
                         checkoutSessionId: sessionId,
                         adaptivePricingAllowed: self.configuration.currencySelectorElement != nil
                     )
-                    refreshRequestID = refreshedCheckoutSession.requestID
+                    analyticsParams["request_id"] = refreshedCheckoutSession.requestID
                 } catch {
                     throw CheckoutError.apiError(message: error.nonGenericDescription, underlyingError: error)
                 }
                 self.commitSession(refreshedCheckoutSession)
                 self.updateForSessionChange()
             }
+            analyticsHelper.logSucceeded(startedAction, session: session, additionalParams: analyticsParams)
         } catch {
-            failure = error
+            analyticsHelper.logFailed(startedAction, error: error, session: session, additionalParams: analyticsParams)
             throw error
         }
     }
