@@ -556,6 +556,7 @@ extension PaymentSheet {
                     self.viewController,
                     configuration: self.configuration,
                     nativeSheetPresentation: self.nativeSheetPresentation,
+                    checkoutSessionID: self.analyticsHelper.checkoutSessionID,
                     // TODO(MOBILESDK-864): didCancelNative3DS2 is not used in FlowController
                     didCancelNative3DS2: { [weak self] in
                         self?.paymentHandler.cancel3DS2ChallengeFlow()
@@ -594,6 +595,7 @@ extension PaymentSheet {
                 loadingVC,
                 configuration: configuration,
                 nativeSheetPresentation: nativeSheetPresentation,
+                checkoutSessionID: analyticsHelper.checkoutSessionID,
                 // TODO(MOBILESDK-864): didCancelNative3DS2 is not used in FlowController
                 didCancelNative3DS2: { [weak self] in
                     self?.paymentHandler.cancel3DS2ChallengeFlow()
@@ -697,7 +699,8 @@ extension PaymentSheet {
                 SepaMandateViewController.present(
                     from: presentingViewController,
                     configuration: configuration,
-                    nativeSheetPresentation: nativeSheetPresentation
+                    nativeSheetPresentation: nativeSheetPresentation,
+                    checkoutSessionID: analyticsHelper.checkoutSessionID
                 ) { didAcceptMandate in
                     if didAcceptMandate {
                         confirm()
@@ -913,6 +916,7 @@ extension PaymentSheet {
             _ contentViewController: BottomSheetContentViewController,
             configuration: PaymentElementConfiguration,
             nativeSheetPresentation: SheetImplementationResolver?,
+            checkoutSessionID: String? = nil,
             didCancelNative3DS2: (() -> Void)? = nil
         ) -> any PaymentSheetContainer {
             // FlowController's presentation APIs require the main thread but are not yet actor-isolated.
@@ -923,6 +927,7 @@ extension PaymentSheet {
                 contentViewController: contentViewController,
                 appearance: configuration.appearance,
                 usesNativeSheet: usesNativeSheet,
+                checkoutSessionID: checkoutSessionID,
                 didCancelNative3DS2: didCancelNative3DS2 ?? { } // TODO(MOBILESDK-864): Refactor this out.
             )
 

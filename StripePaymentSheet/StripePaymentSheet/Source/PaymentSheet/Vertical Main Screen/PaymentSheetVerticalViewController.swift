@@ -856,6 +856,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                                                                                appearance: configuration.appearance,
                                                                                billingDetailsCollectionConfiguration: configuration.billingDetailsCollectionConfiguration,
                                                                                hostedSurface: .paymentSheet,
+                                                                               checkoutSessionID: analyticsHelper.checkoutSessionID,
                                                                                cardBrandFilter: configuration.cardBrandFilter,
                                                                                canRemove: elementsSession.paymentMethodRemoveLast(configuration: configuration) && intent.allowsPaymentMethodRemoval(elementsSession: elementsSession),
                                                                                canUpdate: intent.allowsPaymentMethodUpdate(elementsSession: elementsSession),

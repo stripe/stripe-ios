@@ -457,6 +457,7 @@ extension VerticalSavedPaymentMethodsViewController: SavedPaymentMethodRowButton
                                                                            appearance: configuration.appearance,
                                                                            billingDetailsCollectionConfiguration: configuration.billingDetailsCollectionConfiguration,
                                                                            hostedSurface: .paymentSheet,
+                                                                           checkoutSessionID: analyticsHelper.checkoutSessionID,
                                                                            cardBrandFilter: configuration.cardBrandFilter,
                                                                            canRemove: canRemovePaymentMethods,
                                                                            canUpdate: paymentMethodUpdate,

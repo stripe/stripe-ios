@@ -59,6 +59,7 @@ class SepaMandateViewController: UIViewController, BottomSheetContentViewControl
         from presentingViewController: UIViewController,
         configuration: PaymentElementConfiguration,
         nativeSheetPresentation: SheetImplementationResolver?,
+        checkoutSessionID: String? = nil,
         completion: @escaping (Bool) -> Void
     ) {
         let mandate = SepaMandateViewController(configuration: configuration) { didAcceptMandate in
@@ -69,7 +70,8 @@ class SepaMandateViewController: UIViewController, BottomSheetContentViewControl
         let bottomSheet = PaymentSheet.FlowController.makePaymentSheetContainerViewController(
             mandate,
             configuration: configuration,
-            nativeSheetPresentation: nativeSheetPresentation
+            nativeSheetPresentation: nativeSheetPresentation,
+            checkoutSessionID: checkoutSessionID
         )
         presentingViewController.presentAsSheet(bottomSheet)
     }
