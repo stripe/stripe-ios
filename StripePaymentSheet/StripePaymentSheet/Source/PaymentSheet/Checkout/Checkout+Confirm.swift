@@ -266,7 +266,7 @@ extension CheckoutController {
         let result: ConfirmResult
         let requestID: String?
         do {
-            let internalResult = await confirmInternal(try flow.get())
+            let internalResult = await _confirm(try flow.get())
             result = Self.mapConfirmationResult(internalResult)
             requestID = internalResult.checkoutSessionResponse?.requestID
         } catch {
@@ -286,7 +286,7 @@ extension CheckoutController {
         return result
     }
 
-    private func confirmInternal(_ flow: CheckoutConfirmationFlow) async -> InternalConfirmResult {
+    private func _confirm(_ flow: CheckoutConfirmationFlow) async -> InternalConfirmResult {
         // Validations
         guard sessionIsOpen else {
             let error = PaymentSheetError.integrationError(nonPIIDebugDescription: "CheckoutController cannot confirm a Checkout Session that is no longer open.")
