@@ -46,6 +46,9 @@ struct AdditionalKYCQuestionnaire: Decodable, Equatable {
         /// Whether the customer must answer the question before submitting.
         let required: Bool
 
+        /// The maximum Unicode scalar count accepted for this answer.
+        let maxQuestionnaireAnswerCharacters: Int
+
         // MARK: - Decodable
 
         private enum CodingKeys: String, CodingKey {
@@ -53,6 +56,7 @@ struct AdditionalKYCQuestionnaire: Decodable, Equatable {
             case prompt
             case answerType = "answer_type"
             case required
+            case maxQuestionnaireAnswerCharacters = "max_questionnaire_answer_characters"
         }
     }
 

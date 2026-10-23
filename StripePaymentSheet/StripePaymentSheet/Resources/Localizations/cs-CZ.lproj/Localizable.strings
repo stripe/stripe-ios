@@ -46,9 +46,19 @@
 
 "Buy now or pay later with Klarna" = "Koupit nyní nebo zaplatit pomocí Klarna";
 
+"By confirming your payment with GCash, you allow %@ to charge your GCash account for future payments in accordance with their terms." = "Potvrzením platby přes GCash povolujete %@ strhávat z vašeho účtu GCash budoucí platby v souladu s jeho podmínkami.";
+
 "By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "Potvrzením platby přes službu NICEPAY povolujete %@ strhávat prostřednictvím tohoto způsobu platby budoucí platby v souladu s jejími podmínkami.";
 
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Potvrzením platby prostřednictvím služby PayPal povolujete, aby společnost %@ účtovala z vašeho účtu PayPal budoucí platby v souladu s jejich podmínkami.";
+
+"By confirming your payment with Touch 'n Go, you allow %@ to charge your Touch 'n Go account for future payments in accordance with their terms." = "Potvrzením platby přes Touch 'n Go povolujete %@ strhávat z vašeho účtu Touch 'n Go budoucí platby v souladu s jeho podmínkami.";
+
+"By confirming your payment with TrueMoney, you allow %@ to charge your TrueMoney account for future payments in accordance with their terms." = "Potvrzením platby přes TrueMoney povolujete %@ strhávat z vašeho účtu TrueMoney budoucí platby v souladu s jeho podmínkami.";
+
+"By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their <terms>terms of use</terms>." = "Potvrzením platby souhlasíte s tím, že vaši transakci zpracuje společnost Global Stack Services Limited jako registrovaný obchodník a v souladu se svými <terms>podmínkami použití</terms>.";
+
+"By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their <terms>terms</terms>." = "Potvrzením platby souhlasíte s tím, že vaši transakci zpracuje společnost Global Stack Services Limited jako registrovaný obchodník a v souladu se svými <terms>podmínkami</terms>.";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Pokračováním v Amazon Pay povolujete společnosti %@, aby v souladu se svými podmínkami účtovala na váš účet Revolut Pay budoucí platby.";
 
@@ -173,6 +183,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Rozumím tomu, že Stripe bude vybírat přímé debety jménem %@, a potvrzuji, že jsem držitelem účtu a jedinou osobou, která je nezbytná k autorizování debetů z tohoto účtu.";
 
 "IBAN" = "IBAN";
+
+"Invoice payment for business buyers." = "Platba faktury pro nakupující firmy.";
 
 "Keep Editing" = "Pokračovat v úpravách";
 

@@ -6,13 +6,15 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 
 // Fetches initial property values specific to this component.
 class FetchInitComponentPropsMessageHandler<Props: Encodable>: ScriptMessageHandlerWithReply<VoidPayload, Props> {
-    init(_ fetchInitProps: @escaping () async throws -> Props,
+    init(sourcePolicy: STPWebMessageSourcePolicy,
+         _ fetchInitProps: @escaping () async throws -> Props,
          registerSupplementalFunctions: @escaping (SupplementalFunctions) -> Void
     ) {
-        super.init(name: "fetchInitComponentProps") { _ in
+        super.init(name: "fetchInitComponentProps", sourcePolicy: sourcePolicy) { _ in
             let props = try await fetchInitProps()
             // We can avoid the type cast in the future by making Props conform to a protocol
             // which allows for optional SupplementalFunctions, once this approach is proved out

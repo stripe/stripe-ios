@@ -5,6 +5,7 @@
 //  Created by Yuki Tokuhiro on 7/10/26.
 //
 
+import PassKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 
@@ -45,14 +46,6 @@ extension PaymentElement {
             didSet {
                 paymentSheetConfiguration.preferredNetworks = preferredNetworks
                 embeddedConfiguration.preferredNetworks = preferredNetworks
-            }
-        }
-
-        /// Describes how billing details should be collected.
-        public var billingDetailsCollectionConfiguration: BillingDetailsCollectionConfiguration = .init() {
-            didSet {
-                paymentSheetConfiguration.billingDetailsCollectionConfiguration = billingDetailsCollectionConfiguration.paymentSheetConfiguration()
-                embeddedConfiguration.billingDetailsCollectionConfiguration = billingDetailsCollectionConfiguration.paymentSheetConfiguration()
             }
         }
 
@@ -97,9 +90,10 @@ extension PaymentElement {
             }
         }
 
-        /// Controls whether the PaymentElement displays mandate text at the bottom for payment methods that require it. If set to `false`, your integration must display `PaymentOptionDisplayData.mandateText` to the customer near your “Buy” button to comply with regulations.
+        /// Controls whether PaymentElement displays mandate text below its embedded view and presents a SEPA mandate before confirmation when needed. Defaults to `true`.
+        /// If set to `false`, your integration must display `PaymentOptionDisplayData.mandateText` to the customer near your “Buy” button to comply with regulations.
         /// - Note: This doesn't affect mandates displayed in the sheet and is ignored if you call `presentPaymentElement`.
-        public var displaysMandateText: Bool = false {
+        public var displaysMandateText: Bool = true {
             didSet {
                 embeddedConfiguration.embeddedViewDisplaysMandateText = displaysMandateText
             }
@@ -128,7 +122,7 @@ extension PaymentElement {
         private var paymentSheetConfiguration = PaymentSheet.Configuration()
         private var embeddedConfiguration: EmbeddedPaymentElement.Configuration = {
             var configuration = EmbeddedPaymentElement.Configuration()
-            configuration.embeddedViewDisplaysMandateText = false
+            configuration.embeddedViewDisplaysMandateText = true
             return configuration
         }()
 
@@ -151,7 +145,6 @@ extension PaymentElement {
             )
             configuration.merchantDisplayName = merchantDisplayName
             configuration.style = userInterfaceStyle
-            configuration.billingDetailsCollectionConfiguration = billingDetailsCollectionConfiguration.paymentSheetConfiguration()
             if let billingDetails = defaults.billingDetails {
                 configuration.defaultBillingDetails.set(billingDetails)
             }
@@ -178,7 +171,6 @@ extension PaymentElement {
             )
             configuration.merchantDisplayName = merchantDisplayName
             configuration.style = userInterfaceStyle
-            configuration.billingDetailsCollectionConfiguration = billingDetailsCollectionConfiguration.paymentSheetConfiguration()
             if let billingDetails = defaults.billingDetails {
                 configuration.defaultBillingDetails.set(billingDetails)
             }
@@ -188,7 +180,55 @@ extension PaymentElement {
     }
 }
 
-private extension PaymentElement.ApplePayConfiguration {
+extension PaymentElement.Configuration {
+    /// Configuration related to Apple Pay
+    public struct ApplePayConfiguration: CheckoutApplePayConfiguration {
+        /// The Apple Merchant Identifier to use during Apple Pay transactions.
+        /// To obtain one, see https://stripe.com/docs/apple-pay#native
+        public var merchantId: String
+
+        /// Defines the label that will be displayed in the Apple Pay button.
+        /// See <https://developer.apple.com/design/human-interface-guidelines/technologies/apple-pay/buttons-and-marks/>
+        /// for all available options.
+        public var buttonType: PKPaymentButtonType?
+
+        /// Creates an Apple Pay configuration.
+        /// - Parameters:
+        ///   - merchantId: The Apple Pay merchant identifier.
+        ///   - buttonType: The type of Apple Pay button to display. Defaults to `.plain` when `nil`.
+        public init(
+            merchantId: String,
+            buttonType: PKPaymentButtonType? = nil
+        ) {
+            self.merchantId = merchantId
+            self.buttonType = buttonType
+        }
+    }
+
+    /// Configuration related to Link
+    public struct LinkConfiguration {
+        /// The Link display mode.
+        public var display: Display = .automatic
+
+        /// Creates a Link configuration.
+        public init(display: Display = .automatic) {
+            self.display = display
+        }
+
+        /// Display configuration for Link
+        public enum Display: String {
+            /// Link will be displayed when available.
+            case automatic
+            /// Link will never be displayed.
+            case never
+            /// Link remains enabled (e.g. for automatic Link verification, Instant Bank Payments, Link Card Brand, and inline signup)
+            /// but its button/row will not be shown in the payment element UI.
+            case walletButtonHidden
+        }
+    }
+}
+
+private extension PaymentElement.Configuration.ApplePayConfiguration {
     func paymentSheetConfiguration(merchantCountryCode: String) -> PaymentSheet.ApplePayConfiguration {
         return PaymentSheet.ApplePayConfiguration(
             merchantId: merchantId,
@@ -199,7 +239,7 @@ private extension PaymentElement.ApplePayConfiguration {
 }
 
 private extension PaymentSheet.Configuration {
-    mutating func apply(linkConfiguration: PaymentElement.LinkConfiguration?) {
+    mutating func apply(linkConfiguration: PaymentElement.Configuration.LinkConfiguration?) {
         switch linkConfiguration?.display {
         case .none, .automatic:
             link.display = .automatic
@@ -212,7 +252,7 @@ private extension PaymentSheet.Configuration {
 }
 
 private extension EmbeddedPaymentElement.Configuration {
-    mutating func apply(linkConfiguration: PaymentElement.LinkConfiguration?) {
+    mutating func apply(linkConfiguration: PaymentElement.Configuration.LinkConfiguration?) {
         switch linkConfiguration?.display {
         case .none, .automatic:
             link.display = .automatic
@@ -231,51 +271,6 @@ extension PaymentElement {
     public typealias Appearance = PaymentSheet.Appearance
     public typealias SavePaymentMethodOptInBehavior = PaymentSheet.SavePaymentMethodOptInBehavior
     public typealias PaymentMethodLayout = PaymentSheet.PaymentMethodLayout
-
-    /// Configuration for how billing details are collected during checkout.
-    public struct BillingDetailsCollectionConfiguration: Equatable {
-        /// Billing address collection options.
-        public enum AddressCollectionMode: String, CaseIterable {
-            /// Only the fields required by the Payment Method will be collected, this may be none.
-            case automatic
-            /// Collect the full billing address, regardless of the Payment Method requirements.
-            case full
-        }
-
-        /// How to collect the billing address.
-        /// Defaults to `automatic`.
-        public var address: AddressCollectionMode = .automatic
-
-        /// A set of two-letter country codes representing countries the customers can select.
-        /// If the set is empty (the default), we display all countries.
-        /// Country codes are automatically normalized to uppercase.
-        /// - Note: Saved payment methods whose billing address country is not in this list are hidden.
-        public var allowedCountries: Set<String> = [] {
-            didSet {
-                allowedCountries = Set(allowedCountries.map { $0.uppercased() })
-            }
-        }
-    }
-}
-
-private extension PaymentElement.BillingDetailsCollectionConfiguration {
-    func paymentSheetConfiguration() -> PaymentSheet.BillingDetailsCollectionConfiguration {
-        var configuration = PaymentSheet.BillingDetailsCollectionConfiguration()
-        configuration.address = address.paymentSheetAddressCollectionMode
-        configuration.allowedCountries = allowedCountries
-        return configuration
-    }
-}
-
-private extension PaymentElement.BillingDetailsCollectionConfiguration.AddressCollectionMode {
-    var paymentSheetAddressCollectionMode: PaymentSheet.BillingDetailsCollectionConfiguration.AddressCollectionMode {
-        switch self {
-        case .automatic:
-            return .automatic
-        case .full:
-            return .full
-        }
-    }
 }
 
 private extension PaymentElement.Configuration {

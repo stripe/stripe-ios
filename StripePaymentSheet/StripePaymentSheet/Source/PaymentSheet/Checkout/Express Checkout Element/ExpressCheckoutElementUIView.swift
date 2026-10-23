@@ -25,16 +25,30 @@ public final class ExpressCheckoutElementUIView: UIView {
     // MARK: - Private Properties
 
     private let configuration: ExpressCheckoutElement.Configuration
+    private let apiClient: STPAPIClient
+    private let analyticsClient: STPAnalyticsClientProtocol
     private let stackView = UIStackView()
+    private var displayedPaymentMethods: [ExpressCheckoutElement.PaymentMethod] = []
+    private var hasReportedInit = false
     private var linkBrand: LinkBrand
+    private var session: CheckoutController.Session
     private weak var delegate: ExpressCheckoutElementDelegate?
 
     // MARK: - Init
 
-    init(session: CheckoutController.Session, configuration: ExpressCheckoutElement.Configuration, delegate: ExpressCheckoutElementDelegate) {
+    init(
+        session: CheckoutController.Session,
+        configuration: ExpressCheckoutElement.Configuration,
+        delegate: ExpressCheckoutElementDelegate,
+        apiClient: STPAPIClient = .shared,
+        analyticsClient: STPAnalyticsClientProtocol = STPAnalyticsClient.sharedClient
+    ) {
         self.configuration = configuration
+        self.apiClient = apiClient
+        self.analyticsClient = analyticsClient
         self.delegate = delegate
         self.linkBrand = session.elementsSession.linkBrand ?? .link
+        self.session = session
         super.init(frame: .zero)
 
         stackView.axis = .vertical
@@ -62,17 +76,48 @@ public final class ExpressCheckoutElementUIView: UIView {
         with session: CheckoutController.Session,
         buttons: [ExpressCheckoutElement.PaymentMethod]
     ) {
-        linkBrand = session.elementsSession.linkBrand ?? .link
+        self.session = session
+        let updatedLinkBrand = session.elementsSession.linkBrand ?? .link
+        // Recreating PKPaymentButton on unrelated session updates causes it to flicker.
+        guard buttons != displayedPaymentMethods || updatedLinkBrand != linkBrand else { return }
+        displayedPaymentMethods = buttons
+        linkBrand = updatedLinkBrand
         layoutButtons(buttons)
         invalidateIntrinsicContentSize()
     }
 
     // MARK: - Public Methods
 
+    public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        guard configuration.appearance.buttonTheme == .automatic,
+              previousTraitCollection?.userInterfaceStyle != traitCollection.userInterfaceStyle else { return }
+        layoutButtons(displayedPaymentMethods)
+    }
+
     public override var intrinsicContentSize: CGSize {
         CGSize(
             width: UIView.noIntrinsicMetric,
             height: stackView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height
+        )
+    }
+
+    public override func didMoveToWindow() {
+        super.didMoveToWindow()
+        guard window != nil, !hasReportedInit else { return }
+        hasReportedInit = true
+        analyticsClient.log(
+            analytic: PaymentSheetAnalytic(
+                event: .expressCheckoutElementInit,
+                additionalParams: [
+                    "ordered_lpms": session.availableExpressCheckoutPaymentMethods.joined(separator: ","),
+                    "ece_config": [
+                        "link_visibility": configuration.linkConfiguration.display.rawValue,
+                        "apple_pay_visibility": configuration.applePayConfiguration == nil ? "never" : "automatic",
+                    ],
+                ]
+            ),
+            apiClient: apiClient
         )
     }
 
@@ -113,16 +158,11 @@ public final class ExpressCheckoutElementUIView: UIView {
 
     static func buttonRows(
         for buttons: [ExpressCheckoutElement.PaymentMethod],
-        layout: ExpressCheckoutElement.Appearance.ButtonLayout
+        layout: ExpressCheckoutElement.Configuration.Appearance.ButtonLayout
     ) -> [[ExpressCheckoutElement.PaymentMethod]] {
-        let visibleButtonCount = calculateVisibleButtonCount(
-            buttonCount: buttons.count,
-            maxColumns: layout.maxColumns,
-            maxRows: layout.maxRows
-        )
-        let visibleButtons = Array(buttons.prefix(visibleButtonCount))
+        let visibleButtons = ExpressCheckoutElementUtilities.visiblePaymentMethods(for: buttons, layout: layout)
         let columnCount = calculateColumnCount(
-            buttonCount: visibleButtonCount,
+            buttonCount: visibleButtons.count,
             maxRows: layout.maxRows
         )
 
@@ -136,19 +176,6 @@ public final class ExpressCheckoutElementUIView: UIView {
             rowStartIndex = rowEndIndex
         }
         return rows
-    }
-
-    static func calculateVisibleButtonCount(
-        buttonCount: Int,
-        maxColumns: Int?,
-        maxRows: Int?
-    ) -> Int {
-        // A single limit affects how the buttons are arranged, but it cannot
-        // limit the grid's total capacity without the other dimension.
-        guard let maxColumns, let maxRows else {
-            return buttonCount
-        }
-        return min(maxRows * maxColumns, buttonCount)
     }
 
     static func calculateColumnCount(buttonCount: Int, maxRows: Int?) -> Int {
@@ -177,9 +204,9 @@ public final class ExpressCheckoutElementUIView: UIView {
         let buttonType = configuration.applePayConfiguration?.buttonType ?? .plain
         let button = PKPaymentButton(paymentButtonType: buttonType, paymentButtonStyle: applePayButtonStyle)
         // `cornerConfiguration` doesn't work on PKPaymentButton, so set the radius directly.
-        button.cornerRadius = LiquidGlassDetector.isEnabledInMerchantApp
+        button.cornerRadius = configuration.appearance.cornerRadius ?? (LiquidGlassDetector.isEnabledInMerchantApp
             ? Constants.buttonHeight / 2
-            : Constants.cornerRadius
+            : Constants.cornerRadius)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.heightAnchor.constraint(equalToConstant: Constants.buttonHeight).isActive = true
         button.addTarget(self, action: #selector(handleApplePayTapped), for: .touchUpInside)
@@ -188,7 +215,9 @@ public final class ExpressCheckoutElementUIView: UIView {
 
     private func makeLinkButton() -> UIView {
         let button = PayWithLinkButton(brand: linkBrand)
-        if LiquidGlassDetector.isEnabledInMerchantApp {
+        if let cornerRadius = configuration.appearance.cornerRadius {
+            button.cornerRadius = cornerRadius
+        } else if LiquidGlassDetector.isEnabledInMerchantApp {
             button.ios26_applyCapsuleCornerConfiguration()
         } else {
             button.cornerRadius = Constants.cornerRadius
@@ -226,7 +255,7 @@ public final class ExpressCheckoutElementUIView: UIView {
                 paymentMethod,
                 presentationWindow: window
             ) else { return }
-            self.configuration.confirmHandler(result)
+            self.configuration.completion(result)
         }
     }
 }

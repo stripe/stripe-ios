@@ -12,7 +12,7 @@ import UIKit
 protocol FinancialConnectionsAnalyticsClientDelegate: AnyObject {
     func analyticsClient(
         _ analyticsClient: FinancialConnectionsAnalyticsClient,
-        didReceiveEvent event: FinancialConnectionsEvent
+        didReceiveEvent event: FinancialConnectionsEventPayload
     )
 }
 
@@ -88,6 +88,7 @@ extension FinancialConnectionsAnalyticsClient {
     ) {
         let payload: [String: Any] = [
             "name": event.name.rawValue,
+            "financialConnectionsSessionId": event.financialConnectionsSessionId,
             "metadata": event.metadata.dictionary,
         ]
         guard
@@ -144,7 +145,7 @@ extension FinancialConnectionsAnalyticsClient {
         pane: FinancialConnectionsSessionManifest.NextPane
     ) {
         FeedbackGeneratorAdapter.errorOccurred()
-        FinancialConnectionsEvent
+        FinancialConnectionsEventPayload
             .events(fromError: error)
             .forEach { event in
                 delegate?.analyticsClient(self, didReceiveEvent: event)

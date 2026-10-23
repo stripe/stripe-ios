@@ -136,6 +136,7 @@ typealias ExpressType = PaymentSheet.WalletButtonsVisibility.ExpressType
             PaymentSheet.confirm(
                 configuration: flowController.configuration,
                 customerProvider: flowController.viewController.loadResult.customerProvider,
+                nativeSheetPresentation: flowController.nativeSheetPresentation,
                 authenticationContext: WindowAuthenticationContext(),
                 intent: flowController.intent,
                 elementsSession: flowController.elementsSession,
@@ -159,6 +160,7 @@ typealias ExpressType = PaymentSheet.WalletButtonsVisibility.ExpressType
                 elementsSession: flowController.elementsSession,
                 configuration: flowController.configuration,
                 customerProvider: flowController.viewController.loadResult.customerProvider,
+                nativeSheetPresentation: flowController.nativeSheetPresentation,
                 analyticsHelper: flowController.analyticsHelper
             )
             linkController.presentForPaymentMethodSelection(

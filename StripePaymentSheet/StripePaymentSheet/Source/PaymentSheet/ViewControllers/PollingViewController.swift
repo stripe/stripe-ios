@@ -154,8 +154,7 @@ class PollingViewController: UIViewController {
     // MARK: Navigation bar
 
     internal lazy var navigationBar: SheetNavigationBar = {
-        let navBar = SheetNavigationBar(isTestMode: false,
-                                        appearance: appearance)
+        let navBar = SheetNavigationBar(appearance: appearance)
         navBar.delegate = self
         navBar.setStyle(.none)
         return navBar

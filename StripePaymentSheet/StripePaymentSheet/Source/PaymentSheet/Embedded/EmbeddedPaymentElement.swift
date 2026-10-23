@@ -36,6 +36,7 @@ public final class EmbeddedPaymentElement {
         public let image: UIImage
         /// A user facing string representing the payment method; e.g. "Apple Pay" or "····4242" for a card
         public let label: String
+        let labels: PaymentSheet.FlowController.PaymentOptionDisplayData.Labels
         /// The billing details associated with the customer's desired payment method
         public let billingDetails: PaymentSheet.BillingDetails?
         /// A string representation of the customer's desired payment method
@@ -195,7 +196,7 @@ public final class EmbeddedPaymentElement {
 
         // If we currently have a sheet presented, fail the update (unless it's a checkout session update, which may occur during billing sync)
         if !mode.isCheckout,
-           presentingViewController?.presentedViewController is BottomSheetViewController {
+           isPresentingPaymentUI {
             let result: EmbeddedPaymentElement.UpdateResult = .failed(error: PaymentSheetError.embeddedPaymentElementUpdateWithFormPresented)
             analyticsHelper.logEmbeddedUpdateFinished(result: result, duration: Date().timeIntervalSince(startTime))
             return result
@@ -391,6 +392,8 @@ public final class EmbeddedPaymentElement {
     internal var defaultPaymentMethod: STPPaymentMethod?
     internal private(set) var latestUpdateTask: Task<UpdateResult, Never>?
     internal private(set) var analyticsHelper: PaymentSheetAnalyticsHelper
+    /// Retains this flow's initial native-sheet feature flag across configuration updates.
+    let nativeSheetPresentation: SheetImplementationResolver
     private let initialSelection: RowButtonType?
     internal private(set) var formCache: PaymentMethodFormCache = .init()
     /// The form view controller for the currently selected payment method.
@@ -472,6 +475,10 @@ public final class EmbeddedPaymentElement {
         analyticsHelper: PaymentSheetAnalyticsHelper,
         initialSelection: RowButtonType? = nil
     ) {
+        // Each new flow captures its own decision, even when a previous flow's configuration is reused.
+        self.nativeSheetPresentation = SheetImplementationResolver(
+            elementsSession: loadResult.elementsSession
+        )
         self.configuration = configuration
         self.loadResult = loadResult
         self.savedPaymentMethods = loadResult.savedPaymentMethods
@@ -502,8 +509,9 @@ public final class EmbeddedPaymentElement {
 // MARK: - Checkout
 
 extension EmbeddedPaymentElement {
+
     var isPresentingPaymentUI: Bool {
-        return presentingViewController?.presentedViewController is BottomSheetViewController
+        return presentingViewController?.presentedViewController?.bottomSheetController != nil
     }
 
     /// Returns the explicitly configured presenting view controller or tries to find one if nil.
@@ -521,8 +529,8 @@ extension EmbeddedPaymentElement {
             return nil
         }
 
-        guard !(visibleViewController is BottomSheetViewController) else {
-            assert(false, "Cannot use a BottomSheetViewController to present EmbeddedPaymentElement.")
+        guard !(visibleViewController is any PaymentSheetContainer) else {
+            assert(false, "Cannot use a PaymentSheetContainer to present EmbeddedPaymentElement.")
             return nil
         }
 
@@ -625,6 +633,11 @@ extension EmbeddedPaymentElement {
 extension EmbeddedPaymentElement.PaymentOptionDisplayData {
     public static func == (lhs: Self, rhs: Self) -> Bool {
         // Unfortunately, we need to manually define this because the implementation of Equatable on UIImage does not work
-        return lhs.image.pngData() == rhs.image.pngData() && rhs.label == lhs.label && lhs.billingDetails == rhs.billingDetails && lhs.paymentMethodType == rhs.paymentMethodType && lhs.mandateText == rhs.mandateText
+        return lhs.image.pngData() == rhs.image.pngData()
+            && lhs.label == rhs.label
+            && lhs.labels == rhs.labels
+            && lhs.billingDetails == rhs.billingDetails
+            && lhs.paymentMethodType == rhs.paymentMethodType
+            && lhs.mandateText == rhs.mandateText
     }
 }

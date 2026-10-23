@@ -8,6 +8,7 @@
 import XCTest
 
 class PaymentSheetStandardUITests: PaymentSheetUITestCase {
+
     func testPaymentSheetStandard() throws {
         app.launch()
         app.staticTexts["PaymentSheet"].tap()
