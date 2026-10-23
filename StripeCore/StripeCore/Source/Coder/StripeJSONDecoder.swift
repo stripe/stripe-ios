@@ -10,6 +10,9 @@
 import Foundation
 
 @_spi(STP) public class StripeJSONDecoder {
+    /// The Stripe request ID associated with the decoded response.
+    @_spi(STP) public static let requestIDKey = CodingUserInfoKey(rawValue: "stripe_request_id")!
+
     @_spi(STP) public init() {}
 
     @_spi(STP) public var userInfo: [CodingUserInfoKey: Any] = [:]
