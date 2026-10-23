@@ -95,52 +95,12 @@ enum CurrencySelectorUtilities {
             return meta.integrationCaption ?? String.Localized.bankExchangeRateDisclaimer
         }
 
-        return meta.caption ?? formatExchangeRate(from: meta)
-    }
-
-    private static let exchangeRateFormatter: NumberFormatter = {
-        let formatter = NumberFormatter()
-        formatter.minimumFractionDigits = 2
-        formatter.maximumFractionDigits = 4
-        return formatter
-    }()
-
-    static func formatExchangeRate(from meta: CheckoutController.Session.ExchangeRateMeta) -> String {
-        guard let exchangeRate = meta.exchangeRate else { return meta.caption ?? "" }
-        let localCurrency = CurrencyCode(meta.localizedCurrency).displayValue
-        let integrationCurrency = CurrencyCode(meta.integrationCurrency).displayValue
-
-        let formattedRate: String
-        if let rateDouble = Double(exchangeRate) {
-            let inverse = 1.0 / rateDouble
-            formattedRate = exchangeRateFormatter.string(from: NSNumber(value: inverse)) ?? exchangeRate
-        } else {
-            formattedRate = exchangeRate
-        }
-
-        if let conversionMarkupBps = meta.conversionMarkupBps, conversionMarkupBps > 0 {
-            let feePercent = String(format: "%g", Double(conversionMarkupBps) / 100.0)
-            return .Localized.exchangeRateWithConversionFee(
-                localCurrency: localCurrency,
-                rate: formattedRate,
-                integrationCurrency: integrationCurrency,
-                feePercent: feePercent
-            )
-        }
-
-        return .Localized.exchangeRate(
-            localCurrency: localCurrency,
-            rate: formattedRate,
-            integrationCurrency: integrationCurrency
-        )
+        return meta.caption ?? ""
     }
 
     /// Returns the expandable detail text for the exchange rate, or nil if not applicable.
-    /// This will be replaced by a server-provided string from the translation layer in the future.
     static func detailText(exchangeRateMeta meta: CheckoutController.Session.ExchangeRateMeta) -> String? {
-        if let details = meta.details { return details }
-        guard let conversionMarkupBps = meta.conversionMarkupBps, conversionMarkupBps > 0 else { return nil }
-        return "This string will come from the translation layer in the future"
+        return meta.details
     }
 
     // MARK: - Availability
