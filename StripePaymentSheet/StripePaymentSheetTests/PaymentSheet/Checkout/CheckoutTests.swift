@@ -48,7 +48,6 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         let checkout = try await CheckoutController(configuration: configuration)
 
         // Then Customer.email becomes the server-backed effective Session email
-        XCTAssertEqual(checkout.session.customer?.email, "customer@example.com")
         XCTAssertEqual(checkout.session.serverEmail, "customer@example.com")
         XCTAssertNil(checkout.session.localState.email)
         XCTAssertEqual(checkout.session.email, "customer@example.com")
@@ -170,6 +169,14 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         // Post-tax price, CA sales tax was applied; subtotal unchanged proves the increase is purely tax
         XCTAssertEqual(checkout.session.totals.subtotal.minorUnitsAmount, 5050)
         XCTAssertEqual(checkout.session.totals.total.minorUnitsAmount, 5486)
+
+        // When the billing address is removed, let CheckoutClient resolve the default tax country.
+        try await checkout.updateBillingTaxRegionIfNecessary(address: nil)
+
+        // Then the previous street address no longer supplies the tax calculation.
+        XCTAssertEqual(checkout.session.status, .open)
+        XCTAssertEqual(checkout.session.tax?.status, .requiresBillingAddress)
+        XCTAssertEqual(checkout.session.totals.total.minorUnitsAmount, 5050)
     }
 
     func testLoadUnifiedModeCheckoutSession() async throws {
@@ -256,6 +263,15 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
             checkout.session.totals.total.minorUnitsAmount,
             checkout.session.totals.subtotal.minorUnitsAmount + taxAmount
         )
+
+        // When the shipping address is removed, let CheckoutClient resolve the default tax country.
+        try await checkout.updateShippingAddress(name: nil, address: nil)
+
+        // Then local shipping and the previous address's tax calculation are cleared together.
+        XCTAssertNil(checkout.session.shippingAddress)
+        XCTAssertEqual(checkout.session.status, .open)
+        XCTAssertEqual(checkout.session.tax?.status, .requiresShippingAddress)
+        XCTAssertEqual(checkout.session.totals.total.minorUnitsAmount, 2000)
     }
 
     private func promotionCode(in session: CheckoutController.Session?) -> String? {

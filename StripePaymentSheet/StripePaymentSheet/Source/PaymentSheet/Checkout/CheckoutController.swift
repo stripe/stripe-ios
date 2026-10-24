@@ -246,20 +246,8 @@ public final class CheckoutController: ObservableObject {
         canUpdateWhileSheetPresented: Bool = false
     ) async throws {
         guard session.shouldSendTaxRegion(for: "billing") else { return }
-        let taxRegion: Address
-        if let address {
-            taxRegion = address
-        } else {
-            guard let country = session.paymentOption?.billingDetails?.address?.country?.nonEmpty else {
-                return
-            }
-            // The Checkout Session update endpoint requires tax_region[country] and does not
-            // support clearing tax_region, so keep the previous country.
-            // TODO(porter) When migrating to the CheckoutClient API, stop sending country only and send nil
-            taxRegion = Address(country: country)
-        }
         try await performQueuedUpdate(
-            .setTaxRegion(taxRegion),
+            .setTaxRegion(address),
             canUpdateWhileSheetPresented: canUpdateWhileSheetPresented
         )
     }
@@ -291,13 +279,9 @@ public final class CheckoutController: ObservableObject {
     }
 
     private func clearShippingAddress() async throws {
-        guard let shippingAddress = session.shippingAddress else { return }
+        guard session.shippingAddress != nil else { return }
         if session.shouldSendTaxRegion(for: "shipping") {
-            // The Checkout Session update endpoint requires tax_region[country] and does not
-            // support clearing tax_region, so keep the previous country.
-            // TODO(porter) When migrating to the CheckoutClient API, stop sending country only and send nil
-            let countryOnlyAddress = Address(country: shippingAddress.address.country)
-            try await performQueuedUpdate(.setTaxRegion(countryOnlyAddress)) {
+            try await performQueuedUpdate(.setTaxRegion(nil)) {
                 $0.shippingAddress = nil
             }
         } else {
@@ -331,6 +315,7 @@ public final class CheckoutController: ObservableObject {
             do {
                 refreshedCheckoutSession = try await self.apiClient.initCheckoutSession(
                     checkoutSessionId: sessionId,
+                    clientSecret: self.clientSecret,
                     adaptivePricingAllowed: self.configuration.currencySelectorElement != nil
                 )
             } catch {
@@ -430,6 +415,7 @@ extension CheckoutController {
            session.shouldSendTaxRegion(for: "billing") {
             let response = try await apiClient.updateCheckoutSession(
                 checkoutSessionId: Self.extractSessionId(from: clientSecret),
+                clientSecret: clientSecret,
                 parameters: SessionUpdate.setTaxRegion(address).parameters
             )
             currentTaxRegion = address
@@ -450,6 +436,7 @@ extension CheckoutController {
             if session.shouldSendTaxRegion(for: "shipping") {
                 let response = try await apiClient.updateCheckoutSession(
                     checkoutSessionId: Self.extractSessionId(from: clientSecret),
+                    clientSecret: clientSecret,
                     parameters: SessionUpdate.setTaxRegion(shippingAddress.address).parameters
                 )
                 currentTaxRegion = shippingAddress.address
@@ -483,6 +470,7 @@ extension CheckoutController {
         if let apiResponse {
             session = Session(
                 apiResponse: apiResponse,
+                clientSecret: clientSecret,
                 localState: localState,
                 configuration: configuration
             )

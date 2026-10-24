@@ -136,8 +136,10 @@ enum Intent {
                 return setupFutureUsage?.rawValue
             }
             return nil
-        case .checkout(let session):
-            return session.noPaymentRequired ? nil : session.setupFutureUsage
+        case .checkout:
+            // CheckoutClient only exposes resolved SFU per payment method, so the global analytics value is unavailable.
+            // Saving behavior uses isSetupFutureUsageSet(for:) to read the per-method map.
+            return nil
         case .setupIntent:
             return nil
         }
@@ -192,7 +194,7 @@ enum Intent {
     func allowsPaymentMethodRemoval(elementsSession: STPElementsSession) -> Bool {
         switch self {
         case .checkout(let session):
-            return session.customer?.canDetachPaymentMethod ?? false
+            return session.canDetachPaymentMethod
         case .paymentIntent, .setupIntent, .deferredIntent:
             return elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()
         }

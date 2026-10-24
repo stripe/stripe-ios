@@ -25,9 +25,9 @@ final class ShippingAddressElementConfigurationTests: XCTestCase {
         // Given
         var sessionJSON = CheckoutTestHelpers.openSessionJSON
         sessionJSON["shipping_address_collection"] = ["allowed_countries": ["US", "CA"]]
-        var elementsSessionJSON = CheckoutTestHelpers.minimalElementsSessionJSON
+        var elementsSessionJSON = CheckoutTestHelpers.minimalCheckoutClientConfigurationJSON
         elementsSessionJSON["flags"] = ["ocs_mobile_should_use_autocomplete_proxy_endpoints": true]
-        sessionJSON["elements_session"] = elementsSessionJSON
+        for (key, value) in elementsSessionJSON { sessionJSON[key] = value }
         let apiResponse = try PaymentPagesAPIResponse.decode(fromAPIResponse: sessionJSON)
 
         var configuration = CheckoutController.Configuration(

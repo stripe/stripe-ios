@@ -432,7 +432,8 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
     }
 
     func testPixConfirmFlows() async throws {
-        let configuration = PaymentSheet.Configuration()
+        var configuration = PaymentSheet.Configuration()
+        configuration.returnURL = "https://foo.com"
 
         try await _testConfirm(
             intentKinds: [.paymentIntent, .paymentIntentWithSetupFutureUsage, .setupIntent],
@@ -1189,6 +1190,7 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
 extension PaymentSheetLPMConfirmFlowTests {
     func testCard_OnlyCardInfo_WithDefaults() async throws {
         var configuration = PaymentSheet.Configuration()
+        configuration.returnURL = "https://foo.com"
         configuration.billingDetailsCollectionConfiguration.address = .never
         configuration.billingDetailsCollectionConfiguration.phone = .never
         configuration.billingDetailsCollectionConfiguration.email = .never
@@ -1211,6 +1213,7 @@ extension PaymentSheetLPMConfirmFlowTests {
 
     func testCard_AllFields_WithDefaults() async throws {
         var configuration = PaymentSheet.Configuration()
+        configuration.returnURL = "https://foo.com"
         configuration.billingDetailsCollectionConfiguration.address = .full
         configuration.billingDetailsCollectionConfiguration.phone = .always
         configuration.billingDetailsCollectionConfiguration.email = .always
@@ -1507,7 +1510,9 @@ extension PaymentSheetLPMConfirmFlowTests {
             if shouldTest(.deferredIntent) {
                 intents.append(TestIntent("Deferred PaymentIntent - client side confirmation", makeDeferredIntent(deferredCSC)))
             }
-            if shouldTest(.checkoutSession) {
+            // TODO(porter) BLIK: CheckoutClient /confirm rejects BLIK's blik_code. Re-enable this Checkout Session flow when supported.
+            // TODO(porter) Vipps: Re-enable Vipps Checkout Session coverage when CheckoutClient accepts inline Vipps data.
+            if paymentMethod != .blik && paymentMethod != .vipps && shouldTest(.checkoutSession) {
                 let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession(
                     types: paymentMethodTypes,
                     currency: currency,
@@ -1519,9 +1524,10 @@ extension PaymentSheetLPMConfirmFlowTests {
                 csApiClient.betas = apiClient.betas
                 let checkoutSession = try await csApiClient.initCheckoutSession(
                     checkoutSessionId: checkoutSessionResponse.id,
+                    clientSecret: checkoutSessionResponse.clientSecret,
                     adaptivePricingAllowed: true
                 )
-                let checkout = TestCheckoutSessionUpdater(session: checkoutSession.makePublicSession())
+                let checkout = TestCheckoutSessionUpdater(session: checkoutSession.makePublicSession(clientSecret: checkoutSessionResponse.clientSecret))
                 intents.append(TestIntent("CheckoutSession", .checkout(checkout.session), checkout: checkout, checkoutAPIClient: csApiClient))
             }
             guard paymentMethod != .blik else {
