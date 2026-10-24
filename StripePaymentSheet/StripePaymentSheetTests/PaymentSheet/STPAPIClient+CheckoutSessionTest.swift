@@ -35,6 +35,9 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
         XCTAssertEqual(response.sessionId, sessionId)
         XCTAssertEqual(response.status, .open)
         XCTAssertEqual(response.currency, "usd")
+        let linkSettings = try XCTUnwrap(response.allResponseFields["link_settings"] as? [String: Any])
+        let disableFlowControllerRUX = try XCTUnwrap(linkSettings["link_mobile_disable_rux_in_flow_controller"] as? Bool)
+        XCTAssertEqual(response.elementsSession.value.linkSettings?.disableFlowControllerRUX, disableFlowControllerRUX)
     }
 
     func testPollCheckoutSession() async throws {
@@ -82,6 +85,9 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
         // Verify elements session fields
         XCTAssertTrue(apiResponse.elementsSession.value.sessionID.hasPrefix("elements_session_"))
         XCTAssertEqual(apiResponse.elementsSession.merchantCountryCode, "US")
+        let linkSettings = try XCTUnwrap(apiResponse.allResponseFields["link_settings"] as? [String: Any])
+        let disableFlowControllerRUX = try XCTUnwrap(linkSettings["link_mobile_disable_rux_in_flow_controller"] as? Bool)
+        XCTAssertEqual(apiResponse.elementsSession.value.linkSettings?.disableFlowControllerRUX, disableFlowControllerRUX)
     }
 
     func testConfirmCheckoutSessionPayment() async throws {

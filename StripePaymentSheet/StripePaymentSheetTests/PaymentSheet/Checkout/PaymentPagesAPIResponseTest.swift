@@ -1273,6 +1273,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
                     "link_mobile_use_attestation_endpoints": enabled,
                     "link_mobile_attestation_state_sync_enabled": enabled,
                     "link_mobile_disable_signup": enabled,
+                    "link_mobile_disable_rux_in_flow_controller": enabled,
                     "link_popup_webview_option": popupOption.rawValue,
                     "link_enable_displayable_default_values_in_ece": enabled,
                 ],
@@ -1284,6 +1285,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
             XCTAssertEqual(settings.useAttestationEndpoints, enabled)
             XCTAssertEqual(settings.attestationStateSyncEnabled, enabled)
             XCTAssertEqual(settings.disableSignup, enabled)
+            XCTAssertEqual(settings.disableFlowControllerRUX, enabled)
             XCTAssertEqual(settings.popupWebviewOption, popupOption)
             XCTAssertEqual(settings.linkEnableDisplayableDefaultValuesInECE, enabled)
             XCTAssertEqual(settings.linkMode, .linkPaymentMethod)
