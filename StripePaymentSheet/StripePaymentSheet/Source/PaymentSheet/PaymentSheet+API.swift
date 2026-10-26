@@ -62,9 +62,11 @@ extension PaymentSheet {
     }
 
     /// Confirms a PaymentIntent with the given PaymentOption and returns a PaymentResult
+    /// Shares the owning flow's presentation state without resolving it until a sheet is needed.
     static func confirm(
         configuration: PaymentElementConfiguration,
         customerProvider: CustomerProvider,
+        nativeSheetPresentation: SheetImplementationResolver? = nil,
         authenticationContext: STPAuthenticationContext,
         intent: Intent,
         elementsSession: STPElementsSession,
@@ -86,6 +88,7 @@ extension PaymentSheet {
         Task { @MainActor in
             let preconfirmActionsResult = await handlePreconfirmActionsIfNecessary(
                 configuration: configuration,
+                nativeSheetPresentation: nativeSheetPresentation,
                 authenticationContext: authenticationContext,
                 intent: intent,
                 paymentOption: paymentOption,
@@ -108,6 +111,7 @@ extension PaymentSheet {
             confirmAfterHandlingLocalActions(
                 configuration: configuration,
                 customerProvider: customerProvider,
+                nativeSheetPresentation: nativeSheetPresentation,
                 authenticationContext: authenticationContext,
                 intent: intent,
                 elementsSession: elementsSession,
@@ -128,6 +132,7 @@ extension PaymentSheet {
     @MainActor
     static func handlePreconfirmActionsIfNecessary(
         configuration: PaymentElementConfiguration,
+        nativeSheetPresentation: SheetImplementationResolver?,
         authenticationContext: STPAuthenticationContext,
         intent: Intent,
         paymentOption: PaymentOption,
@@ -190,14 +195,15 @@ extension PaymentSheet {
                 )
 
                 // Present CVC VC
-                let bottomSheetVC = FlowController.makeBottomSheetViewController(
+                let bottomSheetVC = FlowController.makePaymentSheetContainerViewController(
                     preConfirmationViewController,
                     configuration: configuration,
+                    nativeSheetPresentation: nativeSheetPresentation,
                     didCancelNative3DS2: {
                         paymentHandler.cancel3DS2ChallengeFlow()
                     }
                 )
-                presentingViewController.presentAsBottomSheet(bottomSheetVC, appearance: configuration.appearance)
+                presentingViewController.presentAsSheet(bottomSheetVC)
             }
         } else {
             // MARK: - No local actions
@@ -208,6 +214,7 @@ extension PaymentSheet {
     static func confirm(
         configuration: PaymentElementConfiguration,
         customerProvider: CustomerProvider,
+        nativeSheetPresentation: SheetImplementationResolver? = nil,
         authenticationContext: STPAuthenticationContext,
         intent: Intent,
         elementsSession: STPElementsSession,
@@ -223,6 +230,7 @@ extension PaymentSheet {
                 confirm(
                     configuration: configuration,
                     customerProvider: customerProvider,
+                    nativeSheetPresentation: nativeSheetPresentation,
                     authenticationContext: authenticationContext,
                     intent: intent,
                     elementsSession: elementsSession,
@@ -243,6 +251,7 @@ extension PaymentSheet {
     static fileprivate func confirmAfterHandlingLocalActions(
         configuration: PaymentElementConfiguration,
         customerProvider: CustomerProvider,
+        nativeSheetPresentation: SheetImplementationResolver?,
         authenticationContext: STPAuthenticationContext,
         intent: Intent,
         elementsSession: STPElementsSession,
@@ -608,6 +617,7 @@ extension PaymentSheet {
                 PaymentSheet.confirm(
                     configuration: configuration,
                     customerProvider: customerProvider,
+                    nativeSheetPresentation: nativeSheetPresentation,
                     authenticationContext: linkAuthenticationContext,
                     intent: linkIntent,
                     elementsSession: linkElementsSession,
@@ -624,6 +634,7 @@ extension PaymentSheet {
                 confirmOption: confirmOption,
                 configuration: configuration,
                 customerProvider: customerProvider,
+                nativeSheetPresentation: nativeSheetPresentation,
                 authenticationContext: authenticationContext,
                 intent: intent,
                 elementsSession: elementsSession,
@@ -652,6 +663,7 @@ extension PaymentSheet {
         confirmOption: LinkConfirmOption,
         configuration: PaymentElementConfiguration,
         customerProvider: CustomerProvider,
+        nativeSheetPresentation: SheetImplementationResolver?,
         authenticationContext: STPAuthenticationContext,
         intent: Intent,
         elementsSession: STPElementsSession,
@@ -756,12 +768,13 @@ extension PaymentSheet {
                     elementsSession: elementsSession,
                     configuration: configuration,
                     customerProvider: customerProvider,
+                    nativeSheetPresentation: nativeSheetPresentation,
                     logPayment: false,
                     analyticsHelper: analyticsHelper,
                     confirmationChallenge: confirmationChallenge,
                     confirmHandler: confirmHandler
                 )
-                linkController.presentAsBottomSheet(from: authenticationContext.authenticationPresentingViewController(), shouldOfferApplePay: false, shouldFinishOnClose: false, completion: { result, confirmationType, _ in
+                linkController.presentAsSheet(from: authenticationContext.authenticationPresentingViewController(), shouldOfferApplePay: false, shouldFinishOnClose: false, completion: { result, confirmationType, _ in
                     completion(result, confirmationType)
                 })
             } else {
@@ -770,6 +783,7 @@ extension PaymentSheet {
                     elementsSession: elementsSession,
                     configuration: configuration,
                     customerProvider: customerProvider,
+                    nativeSheetPresentation: nativeSheetPresentation,
                     analyticsHelper: analyticsHelper,
                     confirmationChallenge: confirmationChallenge,
                     confirmHandler: confirmHandler

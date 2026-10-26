@@ -46,9 +46,19 @@
 
 "Buy now or pay later with Klarna" = "ซื้อตอนนี้หรือจ่ายทีหลังด้วย Klarna";
 
+"By confirming your payment with GCash, you allow %@ to charge your GCash account for future payments in accordance with their terms." = "เมื่อยืนยันการชำระเงินด้วย GCash ถือว่าคุณอนุญาตให้ %@ เรียกเก็บเงินจากบัญชี GCash ของคุณสำหรับการชำระเงินในอนาคตตามข้อกำหนด";
+
 "By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "การยืนยันการการชำระเงินด้วย NICEPAY หมายความว่าคุณอนุญาตให้ %@ เรียกเก็บเงินจากวิธีนี้สำหรับการชำระเงินในอนาคตตามเงื่อนไขของผู้ค้ารายดังกล่าว";
 
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "การยืนยันการการชำระเงินด้วย PayPal หมายความว่าคุณอนุญาตให้ %@ เรียกเก็บเงินจากบัญชี PayPal ของคุณสำหรับการชำระเงินในอนาคตตามเงื่อนไขของผู้ค้ารายดังกล่าว";
+
+"By confirming your payment with Touch 'n Go, you allow %@ to charge your Touch 'n Go account for future payments in accordance with their terms." = "เมื่อยืนยันการชำระเงินด้วย Touch 'n Go ถือว่าคุณอนุญาตให้ %@ เรียกเก็บเงินจากบัญชี Touch 'n Go ของคุณสำหรับการชำระเงินในอนาคตตามข้อกำหนด";
+
+"By confirming your payment with TrueMoney, you allow %@ to charge your TrueMoney account for future payments in accordance with their terms." = "เมื่อยืนยันการชำระเงินด้วย TrueMoney ถือว่าคุณอนุญาตให้ %@ เรียกเก็บเงินจากบัญชี TrueMoney ของคุณสำหรับการชำระเงินในอนาคตตามข้อกำหนด";
+
+"By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their <terms>terms of use</terms>." = "เมื่อยืนยันการชำระเงิน ถือว่าคุณยอมรับว่าธุรกรรมของคุณจะดำเนินการโดย Global Stack Services Limited ในฐานะผู้ค้าในระเบียนและเป็นไปตาม<terms>ข้อกำหนดการใช้งาน</terms>";
+
+"By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their <terms>terms</terms>." = "เมื่อยืนยันการชำระเงิน ถือว่าคุณยอมรับว่าธุรกรรมของคุณจะดำเนินการโดย Global Stack Services Limited ในฐานะผู้ค้าในระเบียนและเป็นไปตาม<terms>ข้อกำหนด</terms>";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "การดำเนินการต่อที่ Amazon Pay หมายความว่าคุณอนุญาตให้ %@ เรียกเก็บเงินจากบัญชี Amazon Pay ของคุณสำหรับการชำระเงินในอนาคตตามเงื่อนไขของผู้ค้ารายดังกล่าว";
 
@@ -173,6 +183,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "ฉันเข้าใจว่า Stripe จะดำเนินการหักบัญชีอัตโนมัติในนามของ %@ และยืนยันว่าฉันเป็นเจ้าของบัญชีและเป็นบุคคลเดียวเท่านั้นที่อนุญาตให้หักเงินจากบัญชีนี้ได้";
 
 "IBAN" = "IBAN";
+
+"Invoice payment for business buyers." = "การชำระเงินตามใบแจ้งหนี้สำหรับผู้ซื้อที่เป็นธุรกิจ";
 
 "Keep Editing" = "แก้ไขต่อ";
 

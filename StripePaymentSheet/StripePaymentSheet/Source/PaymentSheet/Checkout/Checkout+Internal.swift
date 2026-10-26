@@ -65,36 +65,39 @@ extension CheckoutController: ExpressCheckoutElementDelegate {
                 throw CheckoutError.unknown(debugDescription: "Could not build a confirmation flow for \(paymentMethod). Could not find a presenting view controller.")
             }
             // TODO: maybe add Link-specific configuration
-            var paymentElementConfiguration = PaymentSheet.Configuration()
-            paymentElementConfiguration.apiClient = apiClient
-            paymentElementConfiguration.returnURL = configuration.returnURL
-            paymentElementConfiguration.merchantDisplayName = effectiveMerchantDisplayName
-            paymentElementConfiguration.style = configuration.userInterfaceStyle
+            var linkConfirmationConfiguration = PaymentSheet.Configuration()
+            linkConfirmationConfiguration.apiClient = apiClient
+            linkConfirmationConfiguration.returnURL = configuration.returnURL
+            linkConfirmationConfiguration.merchantDisplayName = effectiveMerchantDisplayName
+            linkConfirmationConfiguration.style = configuration.userInterfaceStyle
             if let billingDetails = configuration.defaults.billingDetails {
-                paymentElementConfiguration.defaultBillingDetails.set(billingDetails)
+                linkConfirmationConfiguration.defaultBillingDetails.set(billingDetails)
+            }
+            linkConfirmationConfiguration.defaultBillingDetails.email = session.email
+            if session.billingAddressCollection == .required {
+                linkConfirmationConfiguration.billingDetailsCollectionConfiguration.address = .full
             }
             switch expressCheckoutElementConfiguration.linkConfiguration.display {
             case .automatic:
-                paymentElementConfiguration.link.display = .automatic
+                linkConfirmationConfiguration.link.display = .automatic
             case .never:
-                paymentElementConfiguration.link.display = .never
+                linkConfirmationConfiguration.link.display = .never
             }
             // TODO: maybe separate out a LinkAnalyticsHelper
             let analyticsHelper = PaymentSheetAnalyticsHelper(
                 integrationShape: .complete, // Wallet Link analytics don't log integrationShape, so it's not worth adding an .expressCheckout case.
-                configuration: paymentElementConfiguration
+                configuration: linkConfirmationConfiguration
             )
             let authenticationContext = AuthenticationContext(
                 presentingViewController: presentingViewController,
-                appearance: paymentElementConfiguration.appearance
+                appearance: linkConfirmationConfiguration.appearance
             )
             return .link(.init(
                 confirmOption: .wallet(brand: session.elementsSession.linkBrand ?? .link),
-                configuration: paymentElementConfiguration,
+                configuration: linkConfirmationConfiguration,
                 customerProvider: CustomerProvider(checkoutSession: session),
-                confirmationChallenge: ConfirmationChallenge(
-                    elementsSession: session.elementsSession,
-                    stripeAttest: apiClient.stripeAttest),
+                nativeSheetPresentation: nil,
+                confirmationChallenge: confirmationChallenge,
                 analyticsHelper: analyticsHelper,
                 authenticationContext: authenticationContext,
                 paymentHandler: paymentHandler))
@@ -113,7 +116,7 @@ extension CheckoutController {
     /// - Parameter currency: The three-letter ISO currency code to switch to (e.g. "gbp").
     /// - Throws: ``CheckoutError`` if the update fails.
     func selectCurrency(_ currency: String) async throws {
-        try await performUpdate(.setCurrency(currency))
+        try await performQueuedUpdate(.setCurrency(currency))
     }
 
     // MARK: - Payment Option
@@ -200,17 +203,18 @@ extension CheckoutController {
     ///   the response and the local state mutation is applied.
     /// - If `update` is nil, the local state mutation is applied without making a network request.
     ///
+    /// - Warning: Calling this from a context that's already queued will deadlock.
     /// - Parameters:
     ///   - update: The API mutation to perform, or nil for a local-only update.
     ///   - canUpdateWhileSheetPresented: Bypasses the sheet-presented guard (e.g. billing sync on dismiss).
     ///   - mutateLocalState: A local state change to apply after the API call (or on its own).
-    func performUpdate(
+    func performQueuedUpdate(
         _ update: SessionUpdate? = nil,
         canUpdateWhileSheetPresented: Bool = false,
         mutateLocalState: @escaping LocalStateMutation = { _ in }
     ) async throws {
         try await enqueueSessionUpdate {
-            try await self.applySessionUpdate(
+            try await self.performUnqueuedUpdate(
                 update,
                 canUpdateWhileSheetPresented: canUpdateWhileSheetPresented,
                 mutateLocalState: mutateLocalState
@@ -218,14 +222,9 @@ extension CheckoutController {
         }
     }
 
-    /// Performs the API mutation (if any) and commits the resulting session, exactly like
-    /// `performUpdate`, but without enqueuing behind `pendingOperations`.
-    ///
-    /// - Warning: Only call this from a context that's already serialized behind
-    ///   `pendingOperations` (e.g. from within an in-flight `enqueueSessionUpdate` body). Calling
-    ///   `enqueueSessionUpdate`/`performUpdate` again from such a context would deadlock, since the
-    ///   nested operation's predecessor would be the still-running outer operation itself.
-    func applySessionUpdate(
+    /// Same work as `performQueuedUpdate`, without enqueuing.
+    /// - Warning: Only call this within a queued context, to prevent concurrent updates from applying responses out of order.
+    func performUnqueuedUpdate(
         _ update: SessionUpdate? = nil,
         canUpdateWhileSheetPresented: Bool = false,
         mutateLocalState: LocalStateMutation = { _ in }
@@ -248,13 +247,11 @@ extension CheckoutController {
                 updatedSessionAPIResponse = nil
             }
 
-            // Errors from here should still get wrapped in API errors since the only way
-            //  local session application throws is if the API returned a session state that
-            //  the UI can't handle.
-            try await commitSession(updatedSessionAPIResponse, mutateLocalState: mutateLocalState)
+            commitSession(updatedSessionAPIResponse, mutateLocalState: mutateLocalState)
         } catch {
             throw CheckoutError.apiError(message: error.nonGenericDescription)
         }
+        updateForSessionChange()
     }
 
     /// True if the session is still actionable.

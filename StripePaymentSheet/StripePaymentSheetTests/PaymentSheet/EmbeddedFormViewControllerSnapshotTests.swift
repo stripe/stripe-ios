@@ -58,7 +58,6 @@ final class EmbeddedFormViewControllerSnapshotTests: STPSnapshotTestCase {
         let bottomSheet = BottomSheetViewController(
             contentViewController: sut,
             appearance: .default,
-            isTestMode: false,
             didCancelNative3DS2: {}
         )
         if let traits {

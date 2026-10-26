@@ -227,11 +227,10 @@ final class UpdatePaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase 
         )
         let sut = UpdatePaymentMethodViewController(
             removeSavedPaymentMethodMessage: "Test removal string",
-            isTestMode: false,
             configuration: updateConfig
         )
         let stubViewController = StubBottomSheetContentViewController()
-        let bottomSheet = BottomSheetViewController(contentViewController: stubViewController, appearance: appearance, isTestMode: true, didCancelNative3DS2: {})
+        let bottomSheet = BottomSheetViewController(contentViewController: stubViewController, appearance: appearance, didCancelNative3DS2: {})
         bottomSheet.pushContentViewController(sut)
         if rightToLeft {
             bottomSheet.view.forceRightToLeftLayout()

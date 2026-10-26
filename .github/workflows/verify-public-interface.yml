@@ -1,51 +1,112 @@
 name: Verify public interface
 on:
   pull_request:
-    types: [opened, labeled, unlabeled, synchronize]
-    paths:
-      - '**/*.swift'
-      - '!StripeFinancialConnections/**'
-      - '!StripeIdentity/**'
-      - '!StripeConnections/**'
+    types: [opened, reopened, labeled, unlabeled, synchronize]
+  push:
+    branches: [master]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 jobs:
   public-api-check:
     runs-on: macos-26
     permissions:
+      contents: read
       pull-requests: write
 
     steps:
       - name: Checkout code
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
-          fetch-depth: 100
-
-      - name: Fetch master branch
-        run: git fetch origin master
+          ref: ${{ github.sha }}
+          fetch-depth: 2
+          persist-credentials: false
 
       - name: Setup Xcode
         run: sudo xcode-select -s /Applications/Xcode_26.4.1.app/Contents/Developer
 
-      - name: Build frameworks and compare interfaces
-        id: build-frameworks-compare-interface
+      - name: Select immutable revisions and cache keys
+        id: revisions
+        run: ruby ci_scripts/api_diff/prepare.rb
+
+      # Keep one restore/save path so default-branch caches also match PR cache versions.
+      - name: Restore baseline interfaces
+        id: baseline-cache
+        if: github.event_name == 'pull_request' && steps.revisions.outputs.required == 'true'
+        uses: actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        with:
+          path: .build/api-diff/cache
+          key: ${{ steps.revisions.outputs.base_key }}
+
+      - name: Build or validate baseline interfaces
+        if: github.event_name == 'pull_request' && steps.revisions.outputs.required == 'true'
+        env:
+          REVISION: ${{ steps.revisions.outputs.base_sha }}
+          FINGERPRINT: ${{ steps.revisions.outputs.fingerprint }}
+        run: ruby ci_scripts/api_diff/build_xcframeworks.rb "$REVISION" .build/api-diff/cache "$FINGERPRINT"
+
+      - name: Save baseline interfaces
+        if: github.event_name == 'pull_request' && steps.revisions.outputs.required == 'true' && steps.baseline-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        with:
+          path: .build/api-diff/cache
+          key: ${{ steps.revisions.outputs.base_key }}
+
+      - name: Preserve baseline for comparison
+        if: github.event_name == 'pull_request' && steps.revisions.outputs.required == 'true'
+        run: mv .build/api-diff/cache .build/api-diff/baseline
+
+      - name: Restore revision interfaces
+        id: revision-cache
+        if: steps.revisions.outputs.required == 'true'
+        uses: actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        with:
+          path: .build/api-diff/cache
+          key: ${{ steps.revisions.outputs.head_key }}
+
+      - name: Build or validate revision interfaces
+        if: steps.revisions.outputs.required == 'true'
+        env:
+          REVISION: ${{ steps.revisions.outputs.head_sha }}
+          FINGERPRINT: ${{ steps.revisions.outputs.fingerprint }}
+        run: ruby ci_scripts/api_diff/build_xcframeworks.rb "$REVISION" .build/api-diff/cache "$FINGERPRINT"
+
+      # Save before acknowledgement/changelog checks so label changes can reuse interfaces.
+      # Master pushes populate the default-branch cache for subsequent PR baselines.
+      - name: Save revision interfaces
+        if: steps.revisions.outputs.required == 'true' && steps.revision-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        with:
+          path: .build/api-diff/cache
+          key: ${{ steps.revisions.outputs.head_key }}
+
+      - name: Compare interfaces
+        if: github.event_name == 'pull_request'
         run: |
-          ruby ci_scripts/api_diff/build_xcframeworks.rb
-          ruby ci_scripts/api_diff/diff_public_interface.rb
+          if [ "${{ steps.revisions.outputs.required }}" = "true" ]; then
+            ruby ci_scripts/api_diff/diff_public_interface.rb .build/api-diff/baseline .build/api-diff/cache
+          fi
           severity="none"
           if [ -f api_change_severity.txt ]; then
             severity="$(cat api_change_severity.txt)"
           fi
-          echo "api_change_severity=${severity}" >> $GITHUB_ENV
+          echo "api_change_severity=${severity}" >> "$GITHUB_ENV"
           if [ -f diff_result.txt ]; then
-            echo "diff<<EOF" >> $GITHUB_ENV
-            cat diff_result.txt >> $GITHUB_ENV
-            echo "EOF" >> $GITHUB_ENV
+            delimiter="$(uuidgen)"
+            {
+              echo "diff<<${delimiter}"
+              cat diff_result.txt
+              echo "${delimiter}"
+            } >> "$GITHUB_ENV"
           else 
-            echo "diff=" >> $GITHUB_ENV
+            echo "diff=" >> "$GITHUB_ENV"
             echo "diff_result.txt not found, skipping." 
           fi
 
       - uses: davidme-stripe/find-comment@d2dae40ed151c634e4189471272b57e76ec19ba8 # v1.3.0
+        if: github.event_name == 'pull_request'
         id: find_comment
         with:
           issue-number: ${{ github.event.pull_request.number }}
@@ -53,7 +114,7 @@ jobs:
 
       - uses: davidme-stripe/create-or-update-comment@a35cf36e5301d70b76f316e867e7788a55a31dae # v1.4.5
         id: create-update-comment
-        if: env.diff != ''
+        if: github.event_name == 'pull_request' && env.diff != ''
         with:
           body: |
             ⚠️ Public API changes detected:
@@ -78,9 +139,9 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Validate changelog version bump
-        if: env.api_change_severity != 'none'
-        run: ruby ci_scripts/check_public_interface_changelog.rb "${{ env.api_change_severity }}"
+        if: github.event_name == 'pull_request' && env.api_change_severity != 'none'
+        run: ruby ci_scripts/check_public_interface_changelog.rb "$api_change_severity"
 
       - name: Fail if not acknowledged
-        if: "env.diff != '' && !contains(github.event.pull_request.labels.*.name, 'modifies public API')"
+        if: "github.event_name == 'pull_request' && env.diff != '' && !contains(github.event.pull_request.labels.*.name, 'modifies public API')"
         run: exit 1

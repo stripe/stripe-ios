@@ -1160,51 +1160,6 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         waitForExpectations(timeout: 10)
     }
 
-    // MARK: - Checkout Session update tests
-
-    @MainActor
-    func testUpdateCheckoutSession() async throws {
-        let response = try await STPTestingAPIClient.shared.createCheckoutSession()
-        let apiClient = STPAPIClient(publishableKey: response.publishableKey)
-        var checkoutConfiguration = CheckoutController.Configuration(clientSecret: response.clientSecret, returnURL: "stripe-ios-test://checkout-return")
-        checkoutConfiguration.apiClient = apiClient
-        let checkout = try await CheckoutController(configuration: checkoutConfiguration)
-
-        var config = PaymentSheet.Configuration()
-        config.apiClient = apiClient
-        config.defaultBillingDetails.email = "test@example.com"
-
-        let sut = try await PaymentSheet.FlowController.create(checkout: checkout, configuration: config)
-        try await sut.update(checkout: checkout)
-    }
-
-    @MainActor
-    func testUpdateCheckoutSessionFails() async throws {
-        let response = try await STPTestingAPIClient.shared.createCheckoutSession()
-        let apiClient = STPAPIClient(publishableKey: response.publishableKey)
-        var checkoutConfiguration = CheckoutController.Configuration(clientSecret: response.clientSecret, returnURL: "stripe-ios-test://checkout-return")
-        checkoutConfiguration.apiClient = apiClient
-        let checkout = try await CheckoutController(configuration: checkoutConfiguration)
-
-        var config = PaymentSheet.Configuration()
-        config.apiClient = apiClient
-        config.defaultBillingDetails.email = "test@example.com"
-
-        let sut = try await PaymentSheet.FlowController.create(checkout: checkout, configuration: config)
-
-        // Update with an invalid intent config should fail
-        let invalidIntentConfig = PaymentSheet.IntentConfiguration(mode: .setup(currency: "Invalid currency", setupFutureUsage: .offSession)) { _, _ in return "" }
-        do {
-            try await sut.update(intentConfiguration: invalidIntentConfig)
-            XCTFail("Expected update to fail")
-        } catch {
-            // Expected
-        }
-
-        // Update with the valid checkout should succeed after a failure
-        try await sut.update(checkout: checkout)
-    }
-
     // MARK: - other tests
 
     func testMakeShippingParamsReturnsNilIfPaymentIntentHasDifferentShipping() {
@@ -1578,9 +1533,9 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         XCTAssertNotNil(setupIntentParams.mandateData)
     }
 
-    func testMakeIntentParams_goPay_setsMandate() {
+    func testMakeIntentParams_trueMoney_setsMandate() {
         // Given
-        let paymentMethodParams = STPPaymentMethodParams(type: .goPay)
+        let paymentMethodParams = STPPaymentMethodParams(type: .trueMoney)
         let confirmType = PaymentSheet.ConfirmPaymentMethodType.new(
             params: paymentMethodParams,
             paymentOptions: STPConfirmPaymentMethodOptions(),
@@ -1607,16 +1562,138 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
                 paymentMethodOptions: STPPaymentMethodOptions(
                     usBankAccount: nil,
                     card: nil,
-                    allResponseFields: ["gopay": ["setup_future_usage": "off_session"]]
+                    allResponseFields: ["truemoney": ["setup_future_usage": "off_session"]]
                 )
             ),
             configuration: configuration,
             customerProvider: CustomerProvider(customer: configuration.customer)
         )
+        let setupIntentParams = PaymentSheet.makeSetupIntentParams(
+            confirmPaymentMethodType: confirmType,
+            setupIntent: STPFixtures.makeSetupIntent(paymentMethodTypes: [.trueMoney]),
+            configuration: configuration
+        )
+
         // Then
         XCTAssertNil(regularPaymentIntentParams.mandateData)
         XCTAssertNotNil(futureUsagePaymentIntentParams.mandateData)
         XCTAssertNotNil(paymentMethodOptionsFutureUsagePaymentIntentParams.mandateData)
+        XCTAssertNotNil(setupIntentParams.mandateData)
+    }
+    func testMakeIntentParams_touchNGo_setsMandate() {
+        // Given
+        let paymentMethodParams = STPPaymentMethodParams(type: .touchNGo)
+        let confirmType = PaymentSheet.ConfirmPaymentMethodType.new(
+            params: paymentMethodParams,
+            paymentOptions: STPConfirmPaymentMethodOptions(),
+            saveForFutureUseCheckboxState: .hidden
+        )
+        let configuration = PaymentSheet.Configuration._testValue_MostPermissive()
+
+        // When
+        let regularPaymentIntentParams = PaymentSheet.makePaymentIntentParams(
+            confirmPaymentMethodType: confirmType,
+            paymentIntent: STPFixtures.makePaymentIntent(),
+            configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer)
+        )
+        let futureUsagePaymentIntentParams = PaymentSheet.makePaymentIntentParams(
+            confirmPaymentMethodType: confirmType,
+            paymentIntent: STPFixtures.makePaymentIntent(setupFutureUsage: .offSession),
+            configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer)
+        )
+        let paymentMethodOptionsFutureUsagePaymentIntentParams = PaymentSheet.makePaymentIntentParams(
+            confirmPaymentMethodType: confirmType,
+            paymentIntent: STPFixtures.makePaymentIntent(
+                paymentMethodOptions: STPPaymentMethodOptions(
+                    usBankAccount: nil,
+                    card: nil,
+                    allResponseFields: ["touch_n_go": ["setup_future_usage": "off_session"]]
+                )
+            ),
+            configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer)
+        )
+        let setupIntentParams = PaymentSheet.makeSetupIntentParams(
+            confirmPaymentMethodType: confirmType,
+            setupIntent: STPFixtures.makeSetupIntent(paymentMethodTypes: [.touchNGo]),
+            configuration: configuration
+        )
+
+        // Then
+        XCTAssertNil(regularPaymentIntentParams.mandateData)
+        XCTAssertNotNil(futureUsagePaymentIntentParams.mandateData)
+        XCTAssertNotNil(paymentMethodOptionsFutureUsagePaymentIntentParams.mandateData)
+        XCTAssertNotNil(setupIntentParams.mandateData)
+    }
+    func testMakeIntentParams_ngCard_oneTimePaymentDoesNotSetMandateData() {
+        // Given a one-time Naira card payment
+        let confirmType = PaymentSheet.ConfirmPaymentMethodType.new(
+            params: STPPaymentMethodParams(type: .ngCard),
+            paymentOptions: STPConfirmPaymentMethodOptions(),
+            saveForFutureUseCheckboxState: .hidden
+        )
+
+        // When confirmation parameters are created
+        let params = PaymentSheet.makePaymentIntentParams(
+            confirmPaymentMethodType: confirmType,
+            paymentIntent: STPFixtures.makePaymentIntent(),
+            configuration: PaymentSheet.Configuration._testValue_MostPermissive(),
+            customerProvider: CustomerProvider(customer: PaymentSheet.Configuration._testValue_MostPermissive().customer)
+        )
+
+        // Then the disclosure does not opt the customer into a future-payment mandate
+        XCTAssertEqual(params.paymentMethodParams?.type, .ngCard)
+        XCTAssertNil(params.mandateData)
+    }
+
+    func testMakeIntentParams_gcash_setsMandate() {
+        // Given
+        let paymentMethodParams = STPPaymentMethodParams(type: .gcash)
+        let confirmType = PaymentSheet.ConfirmPaymentMethodType.new(
+            params: paymentMethodParams,
+            paymentOptions: STPConfirmPaymentMethodOptions(),
+            saveForFutureUseCheckboxState: .hidden
+        )
+        let configuration = PaymentSheet.Configuration._testValue_MostPermissive()
+
+        // When
+        let regularPaymentIntentParams = PaymentSheet.makePaymentIntentParams(
+            confirmPaymentMethodType: confirmType,
+            paymentIntent: STPFixtures.makePaymentIntent(),
+            configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer)
+        )
+        let futureUsagePaymentIntentParams = PaymentSheet.makePaymentIntentParams(
+            confirmPaymentMethodType: confirmType,
+            paymentIntent: STPFixtures.makePaymentIntent(setupFutureUsage: .offSession),
+            configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer)
+        )
+        let paymentMethodOptionsFutureUsagePaymentIntentParams = PaymentSheet.makePaymentIntentParams(
+            confirmPaymentMethodType: confirmType,
+            paymentIntent: STPFixtures.makePaymentIntent(
+                paymentMethodOptions: STPPaymentMethodOptions(
+                    usBankAccount: nil,
+                    card: nil,
+                    allResponseFields: ["gcash": ["setup_future_usage": "off_session"]]
+                )
+            ),
+            configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer)
+        )
+        let setupIntentParams = PaymentSheet.makeSetupIntentParams(
+            confirmPaymentMethodType: confirmType,
+            setupIntent: STPFixtures.makeSetupIntent(paymentMethodTypes: [.gcash]),
+            configuration: configuration
+        )
+
+        // Then
+        XCTAssertNotNil(regularPaymentIntentParams.mandateData)
+        XCTAssertNotNil(futureUsagePaymentIntentParams.mandateData)
+        XCTAssertNotNil(paymentMethodOptionsFutureUsagePaymentIntentParams.mandateData)
+        XCTAssertNotNil(setupIntentParams.mandateData)
     }
     func testMakeIntentParams_naverPay_setsMandate() {
         // Given

@@ -378,12 +378,12 @@ extension Intent {
                 ],
             ],
         ]
-        var recurringDetails: [String: Any] = [
+        var recurringTotalSummary: [String: Any] = [
             "total_discount_amounts": [],
             "total_tax_amounts": [],
         ]
         if taxAmount != 0 {
-            recurringDetails["total_tax_amounts"] = [[
+            recurringTotalSummary["total_tax_amounts"] = [[
                 "amount": taxAmount,
                 "inclusive": false,
                 "tax_rate": [
@@ -395,7 +395,7 @@ extension Intent {
             ], ]
         }
         if discountAmount != 0 {
-            recurringDetails["total_discount_amounts"] = [[
+            recurringTotalSummary["total_discount_amounts"] = [[
                 "amount": discountAmount,
                 "coupon": [
                     "code": "coupon_test",
@@ -403,7 +403,7 @@ extension Intent {
             ], ]
         }
         if taxAmount != 0 || discountAmount != 0 {
-            json["recurring_details"] = recurringDetails
+            json["recurring_details"] = ["total_summary": recurringTotalSummary]
         }
         let checkoutSession = try! PaymentPagesAPIResponse.decode(fromAPIResponse: json)
         return .checkout(checkoutSession.makePublicSession())
@@ -479,6 +479,7 @@ extension PaymentSheetLoader.LoadResult {
             intent: intent,
             configuration: PaymentSheet.Configuration(),
             paymentMethodTypes: pmTypes,
+            experimentAnalyticsHelper: analyticsHelper.experimentAnalyticsHelper,
             analyticsHelper: analyticsHelper
         )
         return PaymentSheetLoader.LoadResult(
@@ -504,11 +505,12 @@ extension PaymentMethodMessagingPromotionsHelper {
             intent: intent,
             configuration: PaymentSheet.Configuration(),
             paymentMethodTypes: [],
+            experimentAnalyticsHelper: ExperimentAnalyticsHelper(integrationShape: .paymentSheet),
             analyticsHelper: PaymentSheetAnalyticsHelper._testValue()
         )
     }
 
-    static func _testValueInTreatment() -> PaymentMethodMessagingPromotionsHelper {
+    static func _testValueInTreatment(promotionText: String? = nil) -> PaymentMethodMessagingPromotionsHelper {
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD")) { _, _ in return "" }
         let experimentsData = ExperimentsData(
             arbId: "test_arb_id",
@@ -517,19 +519,27 @@ extension PaymentMethodMessagingPromotionsHelper {
         )
         let elementsSession = STPElementsSession._testValue(orderedPaymentMethodTypes: [.card], experimentsData: experimentsData)
         let intent = Intent.deferredIntent(intentConfig: intentConfig)
-        return MockPromotionsHelper(
+        let helper = MockPromotionsHelper(
             elementsSession: elementsSession,
             intent: intent,
             configuration: PaymentSheet.Configuration(),
             paymentMethodTypes: [],
+            experimentAnalyticsHelper: ExperimentAnalyticsHelper(integrationShape: .paymentSheet),
             analyticsHelper: PaymentSheetAnalyticsHelper._testValue()
         )!
+        if let promotionText {
+            helper.promotionText = promotionText
+        }
+        return helper
     }
 
     class MockPromotionsHelper: PaymentMethodMessagingPromotionsHelper {
+
+        var promotionText = "Pay in 4 interest-free payments of $12.50."
+
         override func promotion(for paymentMethodType: PaymentSheet.PaymentMethodType) -> PromotionContent? {
             return PromotionContent(
-                promotion: "Pay in 4 interest-free payments of $12.50.",
+                promotion: promotionText,
                 learnMoreText: "See if you qualify",
                 infoUrl: Self.infoUrl
             )

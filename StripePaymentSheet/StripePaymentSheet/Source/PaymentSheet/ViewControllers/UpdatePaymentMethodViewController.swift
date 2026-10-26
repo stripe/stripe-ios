@@ -34,7 +34,6 @@ enum SetAsDefaultCheckboxState {
 @objc(STP_Internal_UpdatePaymentMethodViewController)
 final class UpdatePaymentMethodViewController: UIViewController {
     private let removeSavedPaymentMethodMessage: String?
-    private let isTestMode: Bool
 
     private var hasChangedDefaultPaymentMethodCheckbox: Bool = false
 
@@ -77,8 +76,7 @@ final class UpdatePaymentMethodViewController: UIViewController {
 
     // MARK: Navigation bar
     internal lazy var navigationBar: SheetNavigationBar = {
-        let navBar = SheetNavigationBar(isTestMode: isTestMode,
-                                        appearance: configuration.appearance)
+        let navBar = SheetNavigationBar(appearance: configuration.appearance)
         navBar.delegate = self
         navBar.setStyle(navigationBarStyle())
         return navBar
@@ -175,10 +173,8 @@ final class UpdatePaymentMethodViewController: UIViewController {
 
     // MARK: Overrides
     init(removeSavedPaymentMethodMessage: String?,
-         isTestMode: Bool,
          configuration: UpdatePaymentMethodViewController.Configuration) {
         self.removeSavedPaymentMethodMessage = removeSavedPaymentMethodMessage
-        self.isTestMode = isTestMode
         self.configuration = configuration
         super.init(nibName: nil, bundle: nil)
     }
@@ -202,7 +198,7 @@ final class UpdatePaymentMethodViewController: UIViewController {
 
     // MARK: Private helpers
     private func dismiss() {
-        guard let bottomVc = parent as? BottomSheetViewController else { return }
+        guard let bottomVc = parent as? any PaymentSheetContainer else { return }
         STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: configuration.hostedSurface.analyticEvent(for: .closeEditScreen))
         _ = bottomVc.popContentViewController()
         delegate?.shouldCloseSheet(_: self)
@@ -383,7 +379,7 @@ extension UpdatePaymentMethodViewController: SheetNavigationBarDelegate {
     }
 
     func sheetNavigationBarDidBack(_: SheetNavigationBar) {
-        guard let bottomVc = parent as? BottomSheetViewController else { return }
+        guard let bottomVc = parent as? any PaymentSheetContainer else { return }
         STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: configuration.hostedSurface.analyticEvent(for: .closeEditScreen))
         _ = bottomVc.popContentViewController()
     }
