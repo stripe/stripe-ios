@@ -2,6 +2,8 @@ The next release's version bump will so far be:
 PATCH
 
 ## X.Y.Z - changes pending release
+
+## 26.15.1 2026-10-26
 ### General
 * [Removed] CocoaPods support. Migrate your integration to Swift Package Manager. For more information and help migrating, see [MIGRATING-COCOAPODS.md](https://github.com/stripe/stripe-ios/blob/master/MIGRATING-COCOAPODS.md). 
 
