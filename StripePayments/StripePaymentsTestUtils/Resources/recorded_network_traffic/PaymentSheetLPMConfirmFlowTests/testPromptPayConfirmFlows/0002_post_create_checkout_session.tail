@@ -5,17 +5,17 @@ application/json
 Server: Google Frontend
 Content-Type: application/json; charset=utf-8
 x-powered-by: Express
-x-cloud-trace-context: 20ab953111ba21e90095b7a73a75fdba;o=1
+x-cloud-trace-context: d35ac8add5867d78a840d16932b37f81;o=1
 Via: 1.1 google
-Date: Tue, 20 Oct 2026 17:57:26 GMT
+Date: Mon, 26 Oct 2026 22:37:53 GMT
 Content-Length: 2587
 Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
-Etag: W/"a1b-KSUL9P8ywx3NmfHho6JcvQ+5o+0"
+Etag: W/"a1b-eI1Ul/IFdEiQpGGicg2XObWiKrg"
 
 {
   "billing_address_collection" : null,
-  "id" : "cs_test_a1fo3HqGT0OVxSb2fTeb3XFMOMNma3uBxaMKEMMQ90SG9aWqgvDf8yCYFr",
-  "client_secret" : "cs_test_a1fo3HqGT0OVxSb2fTeb3XFMOMNma3uBxaMKEMMQ90SG9aWqgvDf8yCYFr_secret_fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdwbEhqYWAnPydoamdsaWBaYGlgaGBrcXYneCUl",
+  "id" : "cs_test_a1yWn7K2i4Iabz89Jz57Y616Sc6GYtq1T32ohLpCrHg5m4qRdlTiJgWIJ3",
+  "client_secret" : "cs_test_a1yWn7K2i4Iabz89Jz57Y616Sc6GYtq1T32ohLpCrHg5m4qRdlTiJgWIJ3_secret_fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdwbEhqYWAnPydoamdsaWBaYGlgaGBrcXYneCUl",
   "discounts" : [
 
   ],
@@ -32,7 +32,7 @@ Etag: W/"a1b-KSUL9P8ywx3NmfHho6JcvQ+5o+0"
   "payment_method_configuration_details" : null,
   "payment_method_options" : null,
   "ui_mode" : "mobile_elements",
-  "created" : 1792519046,
+  "created" : 1793054273,
   "client_reference_id" : null,
   "allowed_payment_method_types" : [
     "promptpay"
@@ -41,13 +41,13 @@ Etag: W/"a1b-KSUL9P8ywx3NmfHho6JcvQ+5o+0"
   "allow_promotion_codes" : null,
   "items" : [
     {
-      "key" : "checkout_item_VTeb7tgM",
+      "key" : "checkout_item_VVyTirML",
       "one_time_price" : {
         "items" : [
           {
             "quantity" : 1,
             "adjustable_quantity" : null,
-            "price" : "price_1UShHuBgCYKNuUnnAKE1xKNc",
+            "price" : "price_1UUwWaBgCYKNuUnnzJcQmlqk",
             "tax_rates" : null
           }
         ],
@@ -153,6 +153,6 @@ Etag: W/"a1b-KSUL9P8ywx3NmfHho6JcvQ+5o+0"
   },
   "livemode" : false,
   "customer_email" : null,
-  "expires_at" : 1792605446,
+  "expires_at" : 1793140672,
   "marketing_attributions" : null
 }
