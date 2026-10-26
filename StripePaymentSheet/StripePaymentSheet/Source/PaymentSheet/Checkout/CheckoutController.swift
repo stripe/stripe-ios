@@ -90,6 +90,9 @@ public final class CheckoutController: ObservableObject {
 
     /// Initializes a CheckoutController instance
     public init(configuration: Configuration) async throws {
+        // TODO(MOBILESDK-5054): Own the analytics session in the surface's analytics helper and pass it to other consumers
+        // instead of using a singleton.
+        AnalyticsHelper.shared.generateSessionID()
         let clientSecret = configuration.clientSecret
         let analyticsHelper = CheckoutControllerAnalyticsHelper(
             apiClient: configuration.apiClient,
