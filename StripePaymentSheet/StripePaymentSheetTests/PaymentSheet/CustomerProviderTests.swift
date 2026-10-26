@@ -52,54 +52,45 @@ final class CustomerProviderTests: XCTestCase {
         XCTAssertNil(guestProvider.customerID)
     }
 
-    func testLoadResultsRetainTheirOwnCustomerSnapshots() {
-        let firstSession = CheckoutTestHelpers.makeSession()
-            .withCustomer(id: "cus_first")
-            .makePublicSession()
-        let secondSession = CheckoutTestHelpers.makeSession()
-            .withCustomer(id: "cus_second")
-            .makePublicSession()
-
-        let firstLoad = makeLoadResult(session: firstSession)
-        let secondLoad = makeLoadResult(session: secondSession)
-
-        XCTAssertEqual(firstLoad.customerProvider.customerID, "cus_first")
-        XCTAssertEqual(secondLoad.customerProvider.customerID, "cus_second")
-    }
-
-    func testCheckoutCustomerIDKeysLocalDefaultPaymentMethodFallback() {
-        let customerID = "cus_checkout_default"
-        let session = CheckoutTestHelpers.makeSession()
-            .withCustomer(id: customerID)
-            .makePublicSession()
-        let loadResult = makeLoadResult(session: session)
+    func testLoaderOrdersSavedMethodsUsingCheckoutCustomerDefault() {
+        // Given different local defaults for the merchant and Checkout customers
+        let merchantCustomerID = "cus_merchant_default"
+        let checkoutCustomerID = "cus_checkout_default"
+        var configuration = PaymentSheet.Configuration()
+        configuration.customer = .init(id: merchantCustomerID, ephemeralKeySecret: "ek_test")
+        let session = CheckoutTestHelpers.makeSession([
+            "customer": [
+                "id": checkoutCustomerID,
+                "payment_methods": [
+                    ["id": "pm_merchant_default", "type": "card", "created": 12345],
+                    ["id": "pm_checkout_default", "type": "card", "created": 12345],
+                ],
+            ],
+        ]).makePublicSession()
         CustomerPaymentOption.setDefaultPaymentMethod(
-            .stripeId("pm_default"),
-            forCustomer: customerID
+            .stripeId("pm_merchant_default"),
+            forCustomer: merchantCustomerID
+        )
+        CustomerPaymentOption.setDefaultPaymentMethod(
+            .stripeId("pm_checkout_default"),
+            forCustomer: checkoutCustomerID
         )
         defer {
-            CustomerPaymentOption.setDefaultPaymentMethod(nil, forCustomer: customerID)
+            CustomerPaymentOption.setDefaultPaymentMethod(nil, forCustomer: merchantCustomerID)
+            CustomerPaymentOption.setDefaultPaymentMethod(nil, forCustomer: checkoutCustomerID)
         }
 
-        let selectedPaymentMethod = CustomerPaymentOption.selectedPaymentMethod(
-            for: loadResult.customerProvider.customerID,
-            elementsSession: session.elementsSession,
-            surface: .paymentSheet
-        )
-
-        XCTAssertEqual(selectedPaymentMethod, .stripeId("pm_default"))
-    }
-
-    private func makeLoadResult(session: CheckoutController.Session) -> PaymentSheetLoader.LoadResult {
-        return .init(
+        // When the loader orders the Checkout session's saved payment methods
+        let paymentMethods = PaymentSheetLoader.filterSavedPaymentMethods(
             intent: .checkout(session),
             elementsSession: session.elementsSession,
-            savedPaymentMethods: session.customer?.paymentMethods ?? [],
-            paymentMethodTypes: [.stripe(.card)],
-            paymentMethodMessagingPromotionsHelper: nil,
-            paymentMethodOrientation: .vertical,
-            customerProvider: CustomerProvider(checkoutSession: session)
+            configuration: configuration,
+            customerProvider: CustomerProvider(checkoutSession: session),
+            prefetchedSPMs: nil
         )
+
+        // Then the Checkout customer's default takes priority over the merchant's default
+        XCTAssertEqual(paymentMethods.map(\.stripeId), ["pm_checkout_default", "pm_merchant_default"])
     }
 
     func testSavedPaymentMethodsComeFromTheResolvedCustomerSource() {
