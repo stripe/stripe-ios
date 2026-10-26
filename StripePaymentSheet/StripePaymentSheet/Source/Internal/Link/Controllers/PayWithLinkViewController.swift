@@ -105,6 +105,7 @@ final class PayWithLinkViewController: NSObject {
         var analyticsHelper: PaymentSheetAnalyticsHelper
         let linkAppearance: LinkAppearance?
         let linkConfiguration: LinkConfiguration?
+        let confirmationSource: CheckoutController.ConfirmingElement?
 
         var isDismissible: Bool = true
 
@@ -151,6 +152,7 @@ final class PayWithLinkViewController: NSObject {
         ///   - analyticsHelper: An instance of `AnalyticsHelper` to use for logging.
         ///   - linkAppearance: Optional appearance overrides for Link UI.
         ///   - linkConfiguration: Configuration for Link behavior and content.
+        ///   - confirmationSource: The confirming Checkout element, preserved if native Link falls back to web.
         init(
             intent: Intent,
             elementsSession: STPElementsSession,
@@ -165,7 +167,8 @@ final class PayWithLinkViewController: NSObject {
             supportedPaymentMethodTypes: [LinkPaymentMethodType]? = nil,
             analyticsHelper: PaymentSheetAnalyticsHelper,
             linkAppearance: LinkAppearance? = nil,
-            linkConfiguration: LinkConfiguration? = nil
+            linkConfiguration: LinkConfiguration? = nil,
+            confirmationSource: CheckoutController.ConfirmingElement? = nil
         ) {
             self.intent = intent
             self.elementsSession = elementsSession
@@ -181,6 +184,7 @@ final class PayWithLinkViewController: NSObject {
             self.analyticsHelper = analyticsHelper
             self.linkAppearance = linkAppearance
             self.linkConfiguration = linkConfiguration
+            self.confirmationSource = confirmationSource
         }
     }
 
@@ -221,7 +225,8 @@ final class PayWithLinkViewController: NSObject {
         analyticsHelper: PaymentSheetAnalyticsHelper,
         supportedPaymentMethodTypes: [LinkPaymentMethodType]? = nil,
         linkAppearance: LinkAppearance? = nil,
-        linkConfiguration: LinkConfiguration? = nil
+        linkConfiguration: LinkConfiguration? = nil,
+        confirmationSource: CheckoutController.ConfirmingElement? = nil
     ) {
         LinkUI.applyLiquidGlassIfPossible(configuration: configuration)
 
@@ -240,7 +245,8 @@ final class PayWithLinkViewController: NSObject {
                 supportedPaymentMethodTypes: supportedPaymentMethodTypes,
                 analyticsHelper: analyticsHelper,
                 linkAppearance: linkAppearance,
-                linkConfiguration: linkConfiguration
+                linkConfiguration: linkConfiguration,
+                confirmationSource: confirmationSource
             ),
             linkAccount: linkAccount,
             nativeSheetPresentation: nativeSheetPresentation
@@ -857,7 +863,8 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
             elementsSession: context.elementsSession,
             configuration: context.configuration,
             linkAccount: linkAccount,
-            alwaysUseEphemeralSession: true
+            alwaysUseEphemeralSession: true,
+            confirmationSource: context.confirmationSource
         )
         payWithLinkVC.payWithLinkDelegate = payWithLinkWebDelegate
         // Dismiss ourselves...

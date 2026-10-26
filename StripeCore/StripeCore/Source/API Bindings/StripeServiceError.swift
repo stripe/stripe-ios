@@ -12,6 +12,7 @@ import Foundation
 ///
 /// https://stripe.com/docs/api/errors
 @_spi(STP) public struct StripeAPIError: UnknownFieldsDecodable, Encodable, Equatable {
+
     /// The type of error returned.
     @_spi(STP) public var type: ErrorType
     /// For some errors that could be handled programmatically,
@@ -34,12 +35,12 @@ import Foundation
     /// The Stripe API request ID, if available. Looks like `req_123`.
     @_spi(STP) public var requestID: String?
 
+    /// Uses the server's optional message instead of the SDK's localized error messages.
+    /// Set by Checkout, never encoded or read from an API response.
+    @_spi(STP) public var useServerErrorMessage = false
+
     // Set by the API client, never decoded from the response body.
     var includeRequestIDInDescription = false
-
-    private enum CodingKeys: String, CodingKey {
-        case type, code, docUrl, message, param, httpStatusCode, requestID, _allResponseFieldsStorage
-    }
 
     // More information may be available in `allResponseFields`, including
     // the PaymentIntent or PaymentMethod.
@@ -54,6 +55,13 @@ import Foundation
     }
 
     public var _allResponseFieldsStorage: NonEncodableParameters?
+
+    // Presentation settings are set by the SDK, never encoded or read from an API response.
+    private enum CodingKeys: String, CodingKey {
+
+        case type, code, docUrl, message, param, httpStatusCode, requestID
+        case _allResponseFieldsStorage
+    }
 }
 
 @_spi(STP) public struct StripeAPIErrorResponse: UnknownFieldsDecodable {
@@ -73,7 +81,8 @@ extension NSError {
             intent: nil,
             httpResponse: nil,
             requestID: stripeApiError.requestID,
-            includeRequestIDInDescription: stripeApiError.includeRequestIDInDescription
+            includeRequestIDInDescription: stripeApiError.includeRequestIDInDescription,
+            useServerErrorMessage: stripeApiError.useServerErrorMessage
         )
     }
 }
