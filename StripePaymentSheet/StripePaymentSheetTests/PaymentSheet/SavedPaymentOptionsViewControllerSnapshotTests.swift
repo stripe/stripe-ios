@@ -52,7 +52,7 @@ final class SavedPaymentOptionsViewControllerSnapshotTests: STPSnapshotTestCase 
             STPPaymentMethod._testUSBankAccount(),
             STPPaymentMethod._testSEPA(),
         ]
-        let config = SavedPaymentOptionsViewController.Configuration(customerID: "cus_123", showApplePay: true, showLink: true, linkBrand: .link, removeSavedPaymentMethodMessage: nil, merchantDisplayName: "Test Merchant", isCVCRecollectionEnabled: false, isTestMode: false, allowsRemovalOfLastSavedPaymentMethod: false, allowsRemovalOfPaymentMethods: true, allowsSetAsDefaultPM: showDefaultPMBadge, allowsUpdatePaymentMethod: false)
+        let config = SavedPaymentOptionsViewController.Configuration(customerID: "cus_123", showApplePay: true, showLink: true, linkBrand: .link, removeSavedPaymentMethodMessage: nil, merchantDisplayName: "Test Merchant", isCVCRecollectionEnabled: false, allowsRemovalOfLastSavedPaymentMethod: false, allowsRemovalOfPaymentMethods: true, allowsSetAsDefaultPM: showDefaultPMBadge, allowsUpdatePaymentMethod: false)
         let sut = SavedPaymentOptionsViewController(
             savedPaymentMethods: paymentMethods,
             configuration: config,
@@ -131,7 +131,6 @@ final class SavedPaymentOptionsViewControllerSnapshotTests: STPSnapshotTestCase 
             removeSavedPaymentMethodMessage: nil,
             merchantDisplayName: "Test Merchant",
             isCVCRecollectionEnabled: true,
-            isTestMode: false,
             allowsRemovalOfLastSavedPaymentMethod: false,
             allowsRemovalOfPaymentMethods: true,
             allowsSetAsDefaultPM: false,

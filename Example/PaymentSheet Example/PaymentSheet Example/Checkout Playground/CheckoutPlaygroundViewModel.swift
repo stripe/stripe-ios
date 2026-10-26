@@ -5,12 +5,13 @@
 //  Created by Nick Porter on 2/24/26.
 
 import Combine
+@_spi(STP) import StripeCore
 @_spi(STP) import StripePaymentSheet
 import SwiftUI
 
 extension CheckoutPlayground {
     @MainActor
-    final class ViewModel: ObservableObject {
+    final class ViewModel: ObservableObject, STPAnalyticsClientDelegate {
 
         // Unified mode currently supports card and Link.
         static let availablePaymentMethods = [
@@ -44,9 +45,11 @@ extension CheckoutPlayground {
         @Published var email: EmailSettings
         @Published var cartScenario: CartScenario
         @Published var shippingAddressCollection: Bool
-        @Published var defaultShippingAddressOption: DefaultShippingAddressOption
-        @Published var customDefaultShippingAddress: DefaultShippingAddress
+        @Published var defaultShippingAddressOption: DefaultAddressOption
+        @Published var customDefaultShippingAddress: DefaultAddress
         @Published var billingAddressCollection: BillingAddressCollection
+        @Published var defaultBillingAddressOption: DefaultAddressOption
+        @Published var customDefaultBillingAddress: DefaultAddress
         @Published var automaticTax: Bool
         @Published var checkoutSessionPaymentMethodSave: Bool
         @Published var checkoutSessionPaymentMethodRemove: Bool
@@ -66,8 +69,8 @@ extension CheckoutPlayground {
         private var settingsSaveSubscription: AnyCancellable?
         private var isLinkModeOverrideActive = false
 
-        init() {
-            let settings = Self.settingsFromDefaults() ?? Settings()
+        init(settings: Settings? = nil) {
+            let settings = settings ?? Self.settingsFromDefaults() ?? Settings()
             uiFramework = settings.uiFramework
             integrationType = settings.integrationType
             expressCheckoutElement = settings.expressCheckoutElement
@@ -80,6 +83,8 @@ extension CheckoutPlayground {
             defaultShippingAddressOption = settings.defaultShippingAddressOption
             customDefaultShippingAddress = settings.customDefaultShippingAddress
             billingAddressCollection = settings.billingAddressCollection
+            defaultBillingAddressOption = settings.defaultBillingAddressOption ?? .none
+            customDefaultBillingAddress = settings.customDefaultBillingAddress ?? .usTestAddress
             automaticTax = settings.automaticTax
             checkoutSessionPaymentMethodSave = settings.checkoutSessionPaymentMethodSave
             checkoutSessionPaymentMethodRemove = settings.checkoutSessionPaymentMethodRemove
@@ -152,7 +157,7 @@ extension CheckoutPlayground {
             cartScenario.lineItems
         }
 
-        var defaultShippingAddress: DefaultShippingAddress? {
+        var defaultShippingAddress: DefaultAddress? {
             switch defaultShippingAddressOption {
             case .none:
                 return nil
@@ -163,12 +168,25 @@ extension CheckoutPlayground {
             }
         }
 
+        var defaultBillingAddress: DefaultAddress? {
+            switch defaultBillingAddressOption {
+            case .none:
+                return nil
+            case .usTestAddress:
+                return .usTestAddress
+            case .custom:
+                return customDefaultBillingAddress
+            }
+        }
+
         func createSession() async {
             if let emailConfigurationError {
                 errorMessage = emailConfigurationError
                 return
             }
             serializeSettingsToNSUserDefaults()
+            AnalyticsLogObserver.shared.analyticsLog.removeAll()
+            STPAnalyticsClient.sharedClient.delegate = self
             isCreating = true
             errorMessage = nil
             defer {
@@ -207,6 +225,12 @@ extension CheckoutPlayground {
             }
         }
 
+        func analyticsClientDidLog(analyticsClient: STPAnalyticsClient, payload: [String: Any]) {
+            DispatchQueue.main.async {
+                AnalyticsLogObserver.shared.analyticsLog.append(payload)
+            }
+        }
+
         func reset() {
             apply(Settings())
         }
@@ -225,6 +249,8 @@ extension CheckoutPlayground {
                 defaultShippingAddressOption: defaultShippingAddressOption,
                 customDefaultShippingAddress: customDefaultShippingAddress,
                 billingAddressCollection: billingAddressCollection,
+                defaultBillingAddressOption: defaultBillingAddressOption,
+                customDefaultBillingAddress: customDefaultBillingAddress,
                 automaticTax: automaticTax,
                 checkoutSessionPaymentMethodSave: checkoutSessionPaymentMethodSave,
                 checkoutSessionPaymentMethodRemove: checkoutSessionPaymentMethodRemove,
@@ -251,6 +277,8 @@ extension CheckoutPlayground {
             defaultShippingAddressOption = settings.defaultShippingAddressOption
             customDefaultShippingAddress = settings.customDefaultShippingAddress
             billingAddressCollection = settings.billingAddressCollection
+            defaultBillingAddressOption = settings.defaultBillingAddressOption ?? .none
+            customDefaultBillingAddress = settings.customDefaultBillingAddress ?? .usTestAddress
             automaticTax = settings.automaticTax
             checkoutSessionPaymentMethodSave = settings.checkoutSessionPaymentMethodSave
             checkoutSessionPaymentMethodRemove = settings.checkoutSessionPaymentMethodRemove
@@ -285,5 +313,6 @@ extension CheckoutPlayground {
                 return nil
             }
         }
+
     }
 }

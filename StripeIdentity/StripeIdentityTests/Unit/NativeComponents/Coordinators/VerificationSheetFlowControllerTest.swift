@@ -226,6 +226,30 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
         wait(for: [exp], timeout: 1)
     }
 
+    func testTestModeConfiguresImageUploaders() throws {
+        // Given test mode static content
+        let staticContent = try VerificationPageMock.response200TestMode.make()
+
+        // When document and selfie uploaders are created
+        let uploaders = try makeImageUploaders(staticContent: staticContent)
+
+        // Then both uploaders replace captured images with test mode placeholders
+        XCTAssertTrue(uploaders.document.isTestMode)
+        XCTAssertTrue(uploaders.selfie.isTestMode)
+    }
+
+    func testLiveModeDisablesTestModeImageUploaders() throws {
+        // Given live mode static content
+        let staticContent = try VerificationPageMock.response200.make()
+
+        // When document and selfie uploaders are created
+        let uploaders = try makeImageUploaders(staticContent: staticContent)
+
+        // Then neither uploader replaces captured images with test mode placeholders
+        XCTAssertFalse(uploaders.document.isTestMode)
+        XCTAssertFalse(uploaders.selfie.isTestMode)
+    }
+
     func testNextViewControllerSuccess() throws {
         let exp = expectation(description: "testNextViewControllerSuccess")
         try nextViewController(
@@ -411,11 +435,28 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
         XCTAssertEqual(viewControllers.map { $0.collectedFields }, mockCollectedFields)
         XCTAssertEqual(viewControllers.last?.didReset, true)
     }
-
 }
 
-extension VerificationSheetFlowControllerTest {
-    fileprivate func nextViewController(
+private extension VerificationSheetFlowControllerTest {
+    func makeImageUploaders(
+        staticContent: StripeAPI.VerificationPage
+    ) throws -> (document: DocumentUploader, selfie: SelfieUploader) {
+        let documentUploader = flowController.makeDocumentUploader(
+            staticContent: staticContent,
+            sheetController: mockSheetController
+        )
+        let selfieViewController = try XCTUnwrap(
+            flowController.makeSelfieCaptureViewController(
+                faceScannerResult: .success(AnyFaceScanner(FaceScannerMock())),
+                staticContent: staticContent,
+                sheetController: mockSheetController
+            ) as? SelfieCaptureViewController
+        )
+        let selfieUploader = try XCTUnwrap(selfieViewController.selfieUploader as? SelfieUploader)
+        return (documentUploader, selfieUploader)
+    }
+
+    func nextViewController(
         missingRequirements: Set<StripeAPI.VerificationPageFieldType>,
         staticContentResult: Result<StripeAPI.VerificationPage, Error> = .success(
             try! VerificationPageMock.response200.make()
@@ -445,7 +486,7 @@ extension VerificationSheetFlowControllerTest {
         )
     }
 
-    fileprivate func popToScreen(
+    func popToScreen(
         mockCollectedFields: [Set<StripeAPI.VerificationPageFieldType>],
         popToField: StripeAPI.VerificationPageFieldType,
         shouldResetViewController: Bool,

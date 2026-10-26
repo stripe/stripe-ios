@@ -16,6 +16,9 @@ public final class PaymentElementUIView: UIView {
 
     private let contentView: UIView
 
+    // Remember attachment so confirming on a later screen does not repeat the mandate.
+    private(set) var hasBeenAttachedToWindow = false
+
     init(contentView: UIView) {
         self.contentView = contentView
         super.init(frame: .zero)
@@ -24,6 +27,13 @@ public final class PaymentElementUIView: UIView {
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    override public func didMoveToWindow() {
+        super.didMoveToWindow()
+        if window != nil {
+            hasBeenAttachedToWindow = true
+        }
     }
 
     override public var intrinsicContentSize: CGSize {
