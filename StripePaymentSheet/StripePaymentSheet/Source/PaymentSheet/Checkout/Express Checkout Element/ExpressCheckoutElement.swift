@@ -42,6 +42,7 @@ public final class ExpressCheckoutElement {
         delegate: ExpressCheckoutElementDelegate,
         apiClient: STPAPIClient
     ) {
+        STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: ExpressCheckoutElement.self)
         let uiView = ExpressCheckoutElementUIView(
             session: sessionSource.initialSession,
             configuration: configuration,
@@ -52,4 +53,10 @@ public final class ExpressCheckoutElement {
         self.uiView = uiView
         self.view = ExpressCheckoutElementView(viewModel: viewModel)
     }
+}
+
+// MARK: - STPAnalyticsProtocol
+/// :nodoc:
+@_spi(STP) extension ExpressCheckoutElement: STPAnalyticsProtocol {
+    @_spi(STP) public nonisolated static let stp_analyticsIdentifier: String = "ExpressCheckoutElement"
 }
