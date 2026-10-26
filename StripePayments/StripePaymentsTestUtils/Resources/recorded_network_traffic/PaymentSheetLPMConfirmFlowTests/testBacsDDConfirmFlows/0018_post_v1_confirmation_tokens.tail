@@ -3,25 +3,25 @@ https:\/\/api\.stripe\.com\/v1\/confirmation_tokens$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=dcj30jd9BpEN3nGDO49AlCz74Nmq533F62efgBVun8BZJLXz2RxF_zKrU3aIpweER5-7thq3kJzqyJF2; report-to csp
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=YFs2ObtSUvbyAbMQFmxRbUhqrNM13IrPgg-508VU_rN9VRFeS6pThzyj1ocWPl8pKlI7otP0FoXJOwb-; report-to csp
 Server: nginx
 Cache-Control: no-cache, no-store
-reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=dcj30jd9BpEN3nGDO49AlCz74Nmq533F62efgBVun8BZJLXz2RxF_zKrU3aIpweER5-7thq3kJzqyJF2&t=1"
+reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=YFs2ObtSUvbyAbMQFmxRbUhqrNM13IrPgg-508VU_rN9VRFeS6pThzyj1ocWPl8pKlI7otP0FoXJOwb-&t=1"
 stripe-notice: You are using an outdated API version (2020-08-27). We recommend upgrading to the latest API version, 2026-09-30.endive. See https://docs.stripe.com/upgrades
 x-wc: 3c3
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
-report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=dcj30jd9BpEN3nGDO49AlCz74Nmq533F62efgBVun8BZJLXz2RxF_zKrU3aIpweER5-7thq3kJzqyJF2&t=1"}],"include_subdomains":true}
-request-id: req_i4z0v9ZlsBVNcj
+report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=YFs2ObtSUvbyAbMQFmxRbUhqrNM13IrPgg-508VU_rN9VRFeS6pThzyj1ocWPl8pKlI7otP0FoXJOwb-&t=1"}],"include_subdomains":true}
+request-id: req_ilIFAnqihliOGC
 x-stripe-routing-context-priority-tier: api-testmode
 Content-Length: 945
 Vary: Origin
-Date: Tue, 20 Oct 2026 17:44:52 GMT
-original-request: req_i4z0v9ZlsBVNcj
+Date: Mon, 26 Oct 2026 22:24:35 GMT
+original-request: req_ilIFAnqihliOGC
 stripe-version: 2020-08-27
-idempotency-key: 7423eca9-7834-46e7-895c-35b31e8d5dfb
+idempotency-key: 7b723597-71c5-4358-b611-91e8d483bfec
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
@@ -29,11 +29,11 @@ Content-Type: application/json
 X-Stripe-Mock-Request: client_attribution_metadata\[client_session_id]=.*&client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_intent_creation_flow]=deferred&client_attribution_metadata\[payment_method_selection_flow]=merchant_specified&client_context\[capture_method]=automatic&client_context\[currency]=GBP&client_context\[mode]=payment&client_context\[payment_method_types]\[0]=bacs_debit&mandate_data\[customer_acceptance]\[online]\[infer_from_client]=true&mandate_data\[customer_acceptance]\[type]=online&payment_method_data\[allow_redisplay]=unspecified&payment_method_data\[bacs_debit]\[account_number]=00012345&payment_method_data\[bacs_debit]\[sort_code]=108800&payment_method_data\[billing_details]\[address]\[city]=South%20San%20Francisco&payment_method_data\[billing_details]\[address]\[country]=US&payment_method_data\[billing_details]\[address]\[line1]=354%20Oyster%20Point%20Blvd&payment_method_data\[billing_details]\[address]\[line2]=&payment_method_data\[billing_details]\[address]\[postal_code]=94080&payment_method_data\[billing_details]\[address]\[state]=CA&payment_method_data\[billing_details]\[email]=f%40z\.c&payment_method_data\[billing_details]\[name]=Foo&payment_method_data\[client_attribution_metadata]\[client_session_id]=.*&payment_method_data\[client_attribution_metadata]\[elements_session_config_id]=.*&payment_method_data\[client_attribution_metadata]\[merchant_integration_source]=elements&payment_method_data\[client_attribution_metadata]\[merchant_integration_subtype]=mobile&payment_method_data\[client_attribution_metadata]\[merchant_integration_version]=.*&payment_method_data\[client_attribution_metadata]\[payment_intent_creation_flow]=deferred&payment_method_data\[client_attribution_metadata]\[payment_method_selection_flow]=merchant_specified&payment_method_data\[guid]=.*&payment_method_data\[muid]=.*&payment_method_data\[payment_user_agent]=.*&payment_method_data\[sid]=.*&payment_method_data\[type]=bacs_debit&return_url=https%3A\/\/foo\.com
 
 {
-  "id" : "ctoken_1USh5kGoesj9fw9QxsjihCi8",
+  "id" : "ctoken_1UUwJjGoesj9fw9QDSHCadN4",
   "setup_intent" : null,
   "livemode" : false,
   "shipping" : null,
-  "expires_at" : 1792561492,
+  "expires_at" : 1793096675,
   "return_url" : "https:\/\/foo.com",
   "setup_future_usage" : null,
   "object" : "confirmation_token",
@@ -62,7 +62,7 @@ X-Stripe-Mock-Request: client_attribution_metadata\[client_session_id]=.*&client
     "type" : "bacs_debit",
     "customer_account" : null
   },
-  "created" : 1792518292,
+  "created" : 1793053475,
   "payment_intent" : null,
   "use_stripe_sdk" : true,
   "payment_method_options" : null

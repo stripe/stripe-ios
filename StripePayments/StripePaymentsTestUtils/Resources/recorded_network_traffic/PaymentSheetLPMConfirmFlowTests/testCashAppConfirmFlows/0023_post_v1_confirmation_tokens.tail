@@ -3,25 +3,25 @@ https:\/\/api\.stripe\.com\/v1\/confirmation_tokens$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=YXM9HXRVMslstzJGn3q9bpK4-sf7fbAQBawmChxO0VnQpQtYpgSPWQyDz45zSFnJ9ca3ZNTjB0XDs3pJ; report-to csp
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=J3E1FagYWQO8dr0Pf730u1H9ggLYE8FFPmRUYtw0gwjaUVZ73bOcsuxrWVHdSSy062gr1icZdD6GbR6h; report-to csp
 Server: nginx
 Cache-Control: no-cache, no-store
-reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=YXM9HXRVMslstzJGn3q9bpK4-sf7fbAQBawmChxO0VnQpQtYpgSPWQyDz45zSFnJ9ca3ZNTjB0XDs3pJ&t=1"
+reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=J3E1FagYWQO8dr0Pf730u1H9ggLYE8FFPmRUYtw0gwjaUVZ73bOcsuxrWVHdSSy062gr1icZdD6GbR6h&t=1"
 stripe-notice: You are using an outdated API version (2020-08-27). We recommend upgrading to the latest API version, 2026-09-30.endive. See https://docs.stripe.com/upgrades
 x-wc: 3c3
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
-report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=YXM9HXRVMslstzJGn3q9bpK4-sf7fbAQBawmChxO0VnQpQtYpgSPWQyDz45zSFnJ9ca3ZNTjB0XDs3pJ&t=1"}],"include_subdomains":true}
-request-id: req_Q0H0NKs1UbDauv
+report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=J3E1FagYWQO8dr0Pf730u1H9ggLYE8FFPmRUYtw0gwjaUVZ73bOcsuxrWVHdSSy062gr1icZdD6GbR6h&t=1"}],"include_subdomains":true}
+request-id: req_opGiPAoQQREH1h
 x-stripe-routing-context-priority-tier: api-testmode
 Content-Length: 852
 Vary: Origin
-Date: Tue, 20 Oct 2026 17:48:04 GMT
-original-request: req_Q0H0NKs1UbDauv
+Date: Mon, 26 Oct 2026 22:27:45 GMT
+original-request: req_opGiPAoQQREH1h
 stripe-version: 2020-08-27
-idempotency-key: 31e9b2fb-9b91-437d-aed1-0a449e660b05
+idempotency-key: c0e77dbe-b227-4c2b-ad2b-4c9fc1909ac9
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
@@ -29,11 +29,11 @@ Content-Type: application/json
 X-Stripe-Mock-Request: client_attribution_metadata\[client_session_id]=.*&client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_intent_creation_flow]=deferred&client_attribution_metadata\[payment_method_selection_flow]=merchant_specified&client_context\[capture_method]=automatic&client_context\[currency]=USD&client_context\[mode]=payment&client_context\[payment_method_types]\[0]=cashapp&payment_method_data\[allow_redisplay]=unspecified&payment_method_data\[client_attribution_metadata]\[client_session_id]=.*&payment_method_data\[client_attribution_metadata]\[elements_session_config_id]=.*&payment_method_data\[client_attribution_metadata]\[merchant_integration_source]=elements&payment_method_data\[client_attribution_metadata]\[merchant_integration_subtype]=mobile&payment_method_data\[client_attribution_metadata]\[merchant_integration_version]=.*&payment_method_data\[client_attribution_metadata]\[payment_intent_creation_flow]=deferred&payment_method_data\[client_attribution_metadata]\[payment_method_selection_flow]=merchant_specified&payment_method_data\[guid]=.*&payment_method_data\[muid]=.*&payment_method_data\[payment_user_agent]=.*&payment_method_data\[sid]=.*&payment_method_data\[type]=cashapp&return_url=https%3A\/\/foo\.com
 
 {
-  "id" : "ctoken_1USh8qFY0qyl6XeWVOjyyJbm",
+  "id" : "ctoken_1UUwMnFY0qyl6XeWmhWpbEdN",
   "setup_intent" : null,
   "livemode" : false,
   "shipping" : null,
-  "expires_at" : 1792561684,
+  "expires_at" : 1793096865,
   "return_url" : "https:\/\/foo.com",
   "setup_future_usage" : null,
   "object" : "confirmation_token",
@@ -61,7 +61,7 @@ X-Stripe-Mock-Request: client_attribution_metadata\[client_session_id]=.*&client
     "type" : "cashapp",
     "customer_account" : null
   },
-  "created" : 1792518484,
+  "created" : 1793053665,
   "payment_intent" : null,
   "use_stripe_sdk" : true,
   "payment_method_options" : null

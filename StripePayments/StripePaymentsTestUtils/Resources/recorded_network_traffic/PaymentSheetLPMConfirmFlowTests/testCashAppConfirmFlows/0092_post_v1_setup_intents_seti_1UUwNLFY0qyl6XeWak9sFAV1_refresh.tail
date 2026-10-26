@@ -1,0 +1,90 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/setup_intents\/seti_1UUwNLFY0qyl6XeWak9sFAV1\/refresh$
+200
+application/json
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=QTwA-QkfxlNEhd63H4AtjYXquk6IIauW1YTcvwyjPQpyCvTXyITxYypRIFI8jMpvtvKDzfi61Syooqaa; report-to csp
+Server: nginx
+Cache-Control: no-cache, no-store
+reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=QTwA-QkfxlNEhd63H4AtjYXquk6IIauW1YTcvwyjPQpyCvTXyITxYypRIFI8jMpvtvKDzfi61Syooqaa&t=1"
+stripe-notice: You are using an outdated API version (2020-08-27). We recommend upgrading to the latest API version, 2026-09-30.endive. See https://docs.stripe.com/upgrades
+x-wc: 3c3
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=QTwA-QkfxlNEhd63H4AtjYXquk6IIauW1YTcvwyjPQpyCvTXyITxYypRIFI8jMpvtvKDzfi61Syooqaa&t=1"}],"include_subdomains":true}
+request-id: req_kHPRvEv8nDaTkS
+x-stripe-routing-context-priority-tier: api-testmode
+Content-Length: 2067
+Vary: Origin
+Date: Mon, 26 Oct 2026 22:28:20 GMT
+original-request: req_kHPRvEv8nDaTkS
+stripe-version: 2020-08-27
+idempotency-key: 4d413c43-92bf-4841-b4c0-8b8a80726730
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+X-Stripe-Mock-Request: client_secret=seti_1UUwNLFY0qyl6XeWak9sFAV1_secret_VVyJMXwEf3LOCZ9lGgPOJsmAymccEaq&expand\[0]=payment_method
+
+{
+  "id" : "seti_1UUwNLFY0qyl6XeWak9sFAV1",
+  "description" : null,
+  "excluded_payment_method_types" : null,
+  "next_action" : {
+    "type" : "cashapp_handle_redirect_or_display_qr_code",
+    "cashapp_handle_redirect_or_display_qr_code" : {
+      "qr_code" : {
+        "image_url_png" : "https:\/\/qr.stripe.com\/test_YWNjdF8xRzZtMXBGWTBxeWw2WGVXLF9WVnlLZG5xMHl5OE9COGJZU01HdXZwYnVEeEgzWjha0100LZbdo9ID.png",
+        "image_url_svg" : "https:\/\/qr.stripe.com\/test_YWNjdF8xRzZtMXBGWTBxeWw2WGVXLF9WVnlLZG5xMHl5OE9COGJZU01HdXZwYnVEeEgzWjha0100LZbdo9ID.svg",
+        "expires_at" : 1793053720
+      },
+      "hosted_instructions_url" : "https:\/\/payments.stripe.com\/qr\/instructions\/CDQaFwoVYWNjdF8xRzZtMXBGWTBxeWw2WGVXKISo_9YGMgYLsD-lxMs6MJVj2sWPLc7Ycb_LGdePsZhJK_VICB7vQzEYeiVGX2prluAvgAC6MbspdLRG8lZxSw",
+      "mobile_auth_url" : "https:\/\/pm-redirects.stripe.com\/authorize\/acct_1G6m1pFY0qyl6XeW\/sa_nonce_VVyJKBmsYy6N2bIq3uo0g7ZsaOMdVeV"
+    }
+  },
+  "livemode" : false,
+  "payment_method" : {
+    "object" : "payment_method",
+    "type" : "cashapp",
+    "id" : "pm_1UUwNLFY0qyl6XeWJuIJ0Hh1",
+    "billing_details" : {
+      "email" : null,
+      "phone" : null,
+      "tax_id" : null,
+      "name" : null,
+      "address" : {
+        "state" : null,
+        "country" : null,
+        "line2" : null,
+        "city" : null,
+        "line1" : null,
+        "postal_code" : null
+      }
+    },
+    "livemode" : false,
+    "created" : 1793053699,
+    "allow_redisplay" : "unspecified",
+    "shared_payment_granted_token" : null,
+    "customer" : null,
+    "cashapp" : {
+      "cashtag" : "$test_cashtag",
+      "buyer_id" : "test_buyer_id"
+    },
+    "customer_account" : null
+  },
+  "payment_method_configuration_details" : null,
+  "usage" : "off_session",
+  "allowed_payment_method_types" : null,
+  "payment_method_types" : [
+    "cashapp"
+  ],
+  "object" : "setup_intent",
+  "last_setup_error" : null,
+  "created" : 1793053699,
+  "client_secret" : "seti_1UUwNLFY0qyl6XeWak9sFAV1_secret_VVyJMXwEf3LOCZ9lGgPOJsmAymccEaq",
+  "automatic_payment_methods" : null,
+  "cancellation_reason" : null,
+  "status" : "requires_action"
+}
