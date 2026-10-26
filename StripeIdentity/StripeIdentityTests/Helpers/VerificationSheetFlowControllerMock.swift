@@ -75,8 +75,7 @@ final class VerificationSheetFlowControllerMock: VerificationSheetFlowController
 
     func transitionToSelfieCaptureScreen(
         staticContentResult: Result<StripeCore.StripeAPI.VerificationPage, Error>,
-        sheetController: StripeIdentity.VerificationSheetControllerProtocol,
-        trainingConsent: Bool?
+        sheetController: StripeIdentity.VerificationSheetControllerProtocol
     ) {
         // no-op
     }
