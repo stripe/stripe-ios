@@ -134,6 +134,13 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
     }
 
     func testPaymentSheetLoadDeferredIntentSucceeds() {
+        // Given a saved guest card, customerless loads must still match requests with no client default.
+        let previousGuestDefault = CustomerPaymentOption.localDefaultPaymentMethod(for: nil)
+        CustomerPaymentOption.setDefaultPaymentMethod(.stripeId("pm_guest_default"), forCustomer: nil)
+        defer {
+            CustomerPaymentOption.setDefaultPaymentMethod(previousGuestDefault, forCustomer: nil)
+        }
+
         // Test PaymentSheetLoader.load can load various IntentConfigurations
         let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = {_, _ in
             XCTFail("Confirm handler shouldn't be called.")
