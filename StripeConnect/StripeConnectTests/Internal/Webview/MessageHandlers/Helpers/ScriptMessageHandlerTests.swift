@@ -12,8 +12,10 @@ class ScriptMessageHandlerTests: ScriptWebTestBase {
     @MainActor
     func testDidReceiveMessage() async throws {
         let analyticsClient = MockComponentAnalyticsClient(commonFields: .mock)
+        try await loadTrustedDocument()
         let handler = ScriptMessageHandler<Bool>(
             name: "message",
+            sourcePolicy: webView.trustedMessageSourcePolicy(),
             analyticsClient: analyticsClient
         ) { payload in
             XCTAssertTrue(payload)
@@ -32,8 +34,10 @@ class ScriptMessageHandlerTests: ScriptWebTestBase {
     @MainActor
     func testDeserializationErrorLogsAnalytic() async throws {
         let analyticsClient = MockComponentAnalyticsClient(commonFields: .mock)
+        try await loadTrustedDocument()
         let handler = ScriptMessageHandler<Bool>(
             name: "message",
+            sourcePolicy: webView.trustedMessageSourcePolicy(),
             analyticsClient: analyticsClient
         ) { (_: Bool) in
             // no-op

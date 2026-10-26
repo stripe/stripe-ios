@@ -76,10 +76,6 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
             self.session = session
         }
 
-        func commitSession(_ apiResponse: PaymentPagesAPIResponse) async throws {
-            session = apiResponse.makePublicSession()
-        }
-
         func updateBillingTaxRegionIfNecessaryForPaymentSheet(
             address: CheckoutController.Address,
             canUpdateWhileSheetPresented: Bool
@@ -109,6 +105,9 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
         case TH = "th"
         case DE = "de"
         case IT = "it"
+        case NG = "ng"
+        case NGWallet = "ng_wallet"
+        case Mondu = "mondu"
 
         var publishableKey: String {
             switch self {
@@ -140,6 +139,12 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                 return STPTestingDEPublishableKey
             case .IT:
                 return STPTestingITPublishableKey
+            case .NG:
+                return STPTestingNGPublishableKey
+            case .NGWallet:
+                return STPTestingNGWalletPublishableKey
+            case .Mondu:
+                return STPTestingMonduPublishableKey
             }
         }
     }
@@ -747,14 +752,120 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                                paymentMethodType: .goPay,
                                merchantCountry: .US,
                                expectedHierarchy: ExpectedFormHierarchy.GoPay.paymentIntent) { _ in }
-        // TODO(porter): Add `.paymentIntentWithPMOSetupFutureUsage` once Confirmation Tokens
-        // accepts `client_context[payment_method_options][gopay]`.
-        try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage],
+    }
+    func testNairaCardConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "NGN",
+                               amount: 100000,
+                               paymentMethodType: .ngCard,
+                               merchantCountry: .NG,
+                               expectedHierarchy: ExpectedFormHierarchy.NairaCard.paymentIntent) { _ in }
+    }
+    func testNairaBankTransferConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "NGN",
+                               amount: 100000,
+                               paymentMethodType: .ngBankTransfer,
+                               merchantCountry: .NG,
+                               expectedHierarchy: ExpectedFormHierarchy.NairaBankTransfer.paymentIntent) { _ in }
+    }
+    func testMomoConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "VND",
+                               amount: 100000,
+                               paymentMethodType: .momo,
+                               merchantCountry: .US,
+                               expectedHierarchy: ExpectedFormHierarchy.Momo.paymentIntent) { _ in }
+    }
+    func testShopeePayConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent],
                                currency: "IDR",
                                amount: 1000000,
-                               paymentMethodType: .goPay,
+                               paymentMethodType: .shopeePay,
                                merchantCountry: .US,
-                               expectedHierarchy: ExpectedFormHierarchy.GoPay.paymentIntent) { _ in }
+                               expectedHierarchy: ExpectedFormHierarchy.ShopeePay.paymentIntent) { _ in }
+    }
+    func testQRISConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "IDR",
+                               amount: 1000000,
+                               paymentMethodType: .qris,
+                               merchantCountry: .US,
+                               expectedHierarchy: ExpectedFormHierarchy.QRIS.paymentIntent) { _ in }
+    }
+    func testGCashConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "PHP",
+                               amount: 10000,
+                               paymentMethodType: .gcash,
+                               merchantCountry: .US,
+                               defaultCountry: "PH",
+                               expectedHierarchy: ExpectedFormHierarchy.GCash.paymentIntent) { _ in }
+        // TODO(porter): Add `.paymentIntentWithPMOSetupFutureUsage` once Confirmation Tokens
+        // accepts `client_context[payment_method_options][gcash]`.
+        try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .setupIntent],
+                               currency: "PHP",
+                               amount: 10000,
+                               paymentMethodType: .gcash,
+                               merchantCountry: .US,
+                               defaultCountry: "PH",
+                               expectedHierarchy: ExpectedFormHierarchy.GCash.settingUp) { _ in }
+    }
+    func testTouchNGoConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "MYR",
+                               amount: 1000,
+                               paymentMethodType: .touchNGo,
+                               merchantCountry: .US,
+                               defaultCountry: "MY",
+                               expectedHierarchy: ExpectedFormHierarchy.TouchNGo.paymentIntent) { _ in }
+        try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .paymentIntentWithPMOSetupFutureUsage, .setupIntent],
+                               currency: "MYR",
+                               amount: 1000,
+                               paymentMethodType: .touchNGo,
+                               merchantCountry: .US,
+                               defaultCountry: "MY",
+                               expectedHierarchy: ExpectedFormHierarchy.TouchNGo.settingUp) { _ in }
+    }
+    func testTrueMoneyConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "THB",
+                               amount: 10000,
+                               paymentMethodType: .trueMoney,
+                               merchantCountry: .US,
+                               defaultCountry: "TH",
+                               expectedHierarchy: ExpectedFormHierarchy.TrueMoney.paymentIntent) { _ in }
+        try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .paymentIntentWithPMOSetupFutureUsage, .setupIntent],
+                               currency: "THB",
+                               amount: 10000,
+                               paymentMethodType: .trueMoney,
+                               merchantCountry: .US,
+                               defaultCountry: "TH",
+                               expectedHierarchy: ExpectedFormHierarchy.TrueMoney.settingUp) { _ in }
+    }
+    func testNgUSSDConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "NGN",
+                               amount: 100000,
+                               paymentMethodType: .ngUSSD,
+                               merchantCountry: .NG,
+                               expectedHierarchy: ExpectedFormHierarchy.NgUSSD.paymentIntent) { _ in }
+    }
+    func testNgWalletConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "NGN",
+                               amount: 100000,
+                               paymentMethodType: .ngWallet,
+                               merchantCountry: .NGWallet,
+                               expectedHierarchy: ExpectedFormHierarchy.NgWallet.paymentIntent) { _ in }
+    }
+    func testMonduConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "EUR",
+                               amount: 3500,
+                               paymentMethodType: .mondu,
+                               merchantCountry: .Mondu,
+                               expectedHierarchy: ExpectedFormHierarchy.Mondu.paymentIntent) { _ in }
     }
     func testPaycoConfirmFlows() async throws {
         try await _testConfirm(intentKinds: [.paymentIntent],
@@ -956,9 +1067,13 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
             for testIntent in intents {
                 let description = testIntent.description
                 let intent = testIntent.intent
-                let e = expectation(description: "Confirm Apple Pay (\(description))")
                 var configuration = configuration
                 configuration.apiClient = testIntent.checkoutAPIClient ?? apiClient
+                if case .checkout(let session) = intent {
+                    await confirmCheckoutApplePay(session: session, configuration: configuration, description: description)
+                    continue
+                }
+                let e = expectation(description: "Confirm Apple Pay (\(description))")
                 let elementsSession = STPElementsSession._testValue(intent: intent)
                 let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadata(
                     intent: intent,
@@ -970,7 +1085,6 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                     elementsSession: elementsSession,
                     configuration: configuration,
                     clientAttributionMetadata: clientAttributionMetadata,
-                    checkout: testIntent.checkout,
                     completion: { result, _ in
                     switch result {
                     case .failed(error: let error):
@@ -1000,6 +1114,54 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                 await fulfillment(of: [e], timeout: 25)
             }
         }
+    }
+
+    private func confirmCheckoutApplePay(
+        session: CheckoutController.Session,
+        configuration: PaymentSheet.Configuration,
+        description: String
+    ) async {
+        let parameters = CheckoutController.ApplePayConfirmationParameters.makeMock(
+            apiClient: configuration.apiClient,
+            returnURL: configuration.returnURL!,
+            confirmationHandler: { requestParameters in
+                await CheckoutController.confirmCheckoutSession(
+                    with: requestParameters,
+                    apiClient: configuration.apiClient,
+                    authenticationContext: self,
+                    paymentHandler: STPPaymentHandler(apiClient: configuration.apiClient),
+                    poller: CompletedCheckoutSessionPoller()
+                )
+            }
+        )
+        let controller = MockPKPaymentAuthorizationController()
+        let updater = MockCheckoutSessionWalletUpdater(sessionToReturn: session)
+        let context = CheckoutApplePayContext(
+            checkoutSession: session,
+            applePayConfirmationParameters: parameters,
+            authorizationController: controller,
+            checkoutWalletUpdater: updater
+        )
+        let completion = expectation(description: "Confirm Apple Pay (\(description))")
+        Task {
+            let result = await context.presentApplePay()
+            switch result {
+            case .failed(let error, _):
+                XCTFail("❌ \(description): Apple Pay confirm failed - \(error.nonGenericDescription)")
+            case .canceled:
+                XCTFail("❌ \(description): Apple Pay confirm canceled")
+            case .completed:
+                print("✅ \(description): Apple Pay confirm completed")
+            }
+            completion.fulfill()
+        }
+        context.paymentAuthorizationController(
+            controller,
+            didAuthorizePayment: STPFixtures.testPKPaymentWithContactDetails()
+        ) { _ in
+            context.paymentAuthorizationControllerDidFinish(controller)
+        }
+        await fulfillment(of: [completion], timeout: 25)
     }
 
     // MARK: Add tests above this line
@@ -1607,9 +1769,15 @@ extension PaymentSheetLPMConfirmFlowTests {
                 intents += [
                     TestIntent("Deferred PaymentIntent w/ PMO setup_future_usage - client side confirmation", makeDeferredIntent(deferredCSC)),
                     TestIntent("Deferred PaymentIntent w/ PMO setup_future_usage - server side confirmation", makeDeferredIntent(deferredSSC)),
-                    TestIntent("Deferred PaymentIntent w/ PMO setup_future_usage - client side confirmation with confirmation token", makeDeferredIntent(deferredCSCWithConfirmationToken)),
-                    TestIntent("Deferred PaymentIntent w/ PMO setup_future_usage - server side confirmation with confirmation token", makeDeferredIntent(deferredSSCWithConfirmationToken)),
                 ]
+                // Confirmation Tokens does not accept payment_method_options for Touch n Go or TrueMoney.
+                // Keep testing PMO future usage through the supported PaymentMethod flows.
+                if ![.touchNGo, .trueMoney].contains(paymentMethod) {
+                    intents += [
+                        TestIntent("Deferred PaymentIntent w/ PMO setup_future_usage - client side confirmation with confirmation token", makeDeferredIntent(deferredCSCWithConfirmationToken)),
+                        TestIntent("Deferred PaymentIntent w/ PMO setup_future_usage - server side confirmation with confirmation token", makeDeferredIntent(deferredSSCWithConfirmationToken)),
+                    ]
+                }
             }
             // TODO(porter): Checkout rejects `payment_intent_data`/`payment_method_options`
             // setup_future_usage in modeless sessions. Re-enable once unified mode supports
@@ -1859,7 +2027,10 @@ extension PaymentSheetLPMConfirmFlowTests {
         if addressSpec.fieldOrdering.contains(.state) {
             XCTAssertNotNil(getState(from: form))
         }
-        XCTAssertNotNil(form.getDropdownFieldElement("Country or region"))
+        // These payment methods restrict billing addresses to one country, so there is no country selector.
+        if ![.gcash, .touchNGo, .trueMoney].contains(paymentMethodType) {
+            XCTAssertNotNil(form.getDropdownFieldElement("Country or region"))
+        }
         XCTAssertNotNil(form.getTextFieldElement(addressSpec.zipNameType.localizedLabel))
     }
 
@@ -1894,6 +2065,7 @@ extension PaymentSheetLPMConfirmFlowTests {
                 let parameters = CheckoutController.PaymentMethodConfirmationParameters(
                     option: .new(confirmParams),
                     configuration: configuration,
+                    nativeSheetPresentation: nil,
                     confirmationChallenge: nil,
                     authenticationContext: self,
                     paymentHandler: paymentHandler
@@ -1905,22 +2077,18 @@ extension PaymentSheetLPMConfirmFlowTests {
                 )
                 switch preconfirmResult {
                 case .succeeded(let intentConfirmParams):
-                    do {
-                        let confirmRequestParameters = try await CheckoutController.makeConfirmationRequestParameters(
-                            for: parameters,
-                            checkoutSession: checkoutSession,
-                            preconfirmedIntentParams: intentConfirmParams
-                        )
-                        result = await CheckoutController.confirmCheckoutSession(
-                            with: confirmRequestParameters,
-                            apiClient: configuration.apiClient,
-                            authenticationContext: self,
-                            paymentHandler: paymentHandler,
-                            poller: CompletedCheckoutSessionPoller()
-                        )
-                    } catch {
-                        result = .failed(error)
-                    }
+                    let confirmRequestParameters = await CheckoutController.makeConfirmationRequestParameters(
+                        for: parameters,
+                        checkoutSession: checkoutSession,
+                        preconfirmedIntentParams: intentConfirmParams
+                    )
+                    result = await CheckoutController.confirmCheckoutSession(
+                        with: confirmRequestParameters,
+                        apiClient: configuration.apiClient,
+                        authenticationContext: self,
+                        paymentHandler: paymentHandler,
+                        poller: CompletedCheckoutSessionPoller()
+                    )
                 case .canceled:
                     result = .canceled()
                 case .failed(let error):
@@ -1930,6 +2098,7 @@ extension PaymentSheetLPMConfirmFlowTests {
                 let parameters = CheckoutController.PaymentMethodConfirmationParameters(
                     option: .saved(paymentMethod, confirmParams),
                     configuration: configuration,
+                    nativeSheetPresentation: nil,
                     confirmationChallenge: nil,
                     authenticationContext: self,
                     paymentHandler: paymentHandler
@@ -1941,22 +2110,18 @@ extension PaymentSheetLPMConfirmFlowTests {
                 )
                 switch preconfirmResult {
                 case .succeeded(let intentConfirmParams):
-                    do {
-                        let confirmRequestParameters = try await CheckoutController.makeConfirmationRequestParameters(
-                            for: parameters,
-                            checkoutSession: checkoutSession,
-                            preconfirmedIntentParams: intentConfirmParams
-                        )
-                        result = await CheckoutController.confirmCheckoutSession(
-                            with: confirmRequestParameters,
-                            apiClient: configuration.apiClient,
-                            authenticationContext: self,
-                            paymentHandler: paymentHandler,
-                            poller: CompletedCheckoutSessionPoller()
-                        )
-                    } catch {
-                        result = .failed(error)
-                    }
+                    let confirmRequestParameters = await CheckoutController.makeConfirmationRequestParameters(
+                        for: parameters,
+                        checkoutSession: checkoutSession,
+                        preconfirmedIntentParams: intentConfirmParams
+                    )
+                    result = await CheckoutController.confirmCheckoutSession(
+                        with: confirmRequestParameters,
+                        apiClient: configuration.apiClient,
+                        authenticationContext: self,
+                        paymentHandler: paymentHandler,
+                        poller: CompletedCheckoutSessionPoller()
+                    )
                 case .canceled:
                     result = .canceled()
                 case .failed(let error):
@@ -1967,6 +2132,7 @@ extension PaymentSheetLPMConfirmFlowTests {
                     confirmOption: confirmOption,
                     configuration: configuration,
                     customerProvider: CustomerProvider(checkoutSession: checkoutSession),
+                    nativeSheetPresentation: nil,
                     confirmationChallenge: nil,
                     analyticsHelper: analyticsHelper,
                     authenticationContext: self,

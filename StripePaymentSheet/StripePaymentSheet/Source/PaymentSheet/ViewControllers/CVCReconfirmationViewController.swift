@@ -17,8 +17,7 @@ class CVCReconfirmationViewController: UIViewController {
 
     // MARK: - Views
     lazy var navigationBar: SheetNavigationBar = {
-        let navBar = SheetNavigationBar(isTestMode: configuration.apiClient.isTestmode,
-                                        appearance: configuration.appearance)
+        let navBar = SheetNavigationBar(appearance: configuration.appearance)
         navBar.delegate = self
         return navBar
     }()

@@ -11,10 +11,12 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
+// TODO: Rework - it's super confusing that PaymentElement.Configuration dooesn't conform to this
 /// Represents shared configuration properties between integration surfaces in mobile payment element.
 /// - Note: See the concrete implementations of `PaymentElementConfiguration` for detailed doc comments.
 /// - Note: Not currently used by CustomerSheet.
 protocol PaymentElementConfiguration: PaymentMethodRequirementProvider {
+
     var allowsDelayedPaymentMethods: Bool { get set }
     var allowsPaymentMethodsRequiringShippingAddress: Bool { get set }
     var apiClient: STPAPIClient { get set }

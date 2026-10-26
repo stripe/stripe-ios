@@ -187,7 +187,8 @@ final class CheckoutPendingOperationsTests: XCTestCase {
         let firstTask = Task { @MainActor in
             try await checkout.enqueueSessionUpdate {
                 await firstGate.wait()
-                try await checkout.commitSession(firstSession)
+                checkout.commitSession(firstSession)
+                checkout.updateForSessionChange()
             }
         }
 
@@ -197,7 +198,8 @@ final class CheckoutPendingOperationsTests: XCTestCase {
         let secondTask = Task { @MainActor in
             try await checkout.enqueueSessionUpdate {
                 await secondGate.wait()
-                try await checkout.commitSession(secondSession)
+                checkout.commitSession(secondSession)
+                checkout.updateForSessionChange()
             }
         }
 
@@ -258,7 +260,8 @@ final class CheckoutPendingOperationsTests: XCTestCase {
         // Enqueue an operation that commits the same session (no actual mutation)
         let existingSession = CheckoutTestHelpers.makeOpenSession()
         try await checkout.enqueueSessionUpdate {
-            try await checkout.commitSession(existingSession)
+            checkout.commitSession(existingSession)
+            checkout.updateForSessionChange()
         }
 
         XCTAssertEqual(recorder.sessions.count, 2)
