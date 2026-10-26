@@ -722,6 +722,33 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
 
     // MARK: - Express Checkout
 
+    func testExpressCheckoutButtonsReenableAfterFailedOrCanceledConfirmation() async throws {
+        for paymentIntentStatus in ["requires_payment_method", "canceled"] {
+            // Given an open Checkout Session with an available Link button
+            let session = CheckoutTestHelpers.makeSessionWithWalletTypes(["link"], customerEmail: "jenny@example.com")
+            let checkout = try await makeCheckout(apiResponse: session)
+            let view = checkout.getExpressCheckoutElement().uiView
+            let button = try XCTUnwrap(CheckoutTestHelpers.expressCheckoutButtons(in: view).first)
+            var response = session.allResponseFields
+            response["payment_intent"] = makeConfirmedSessionJSON(paymentIntentStatus: paymentIntentStatus)["payment_intent"]
+            stubConfirmation(responseJSON: response)
+
+            // When confirmation fails or is canceled
+            let result = await checkout.confirm(makePaymentMethodFlow(for: checkout))
+
+            // Then the open checkout remains interactive
+            XCTAssertEqual(checkout.session.status, .open)
+            XCTAssertTrue(view.isUserInteractionEnabled)
+            XCTAssertTrue(button.isEnabled)
+            switch (paymentIntentStatus, result) {
+            case ("requires_payment_method", .failed), ("canceled", .canceled):
+                break
+            default:
+                XCTFail("Expected \(paymentIntentStatus) confirmation outcome, got \(result)")
+            }
+        }
+    }
+
     func testExpressCheckoutApplePayRequiresShippingAddressWhenSessionCollectsShipping() async throws {
         // Given a Checkout Session that collects shipping addresses
         let apiResponse = CheckoutTestHelpers.makeSession([
@@ -767,7 +794,8 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         configuration.expressCheckoutElement = ExpressCheckoutElement.Configuration(completion: { _ in })
         let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration(
             apiResponse: CheckoutTestHelpers.makeSession(["customer_email": "jenny@example.com"]),
-            configuration: configuration
+            configuration: configuration,
+            paymentElementConfiguration: nil
         ))
         let presentingViewController = UIViewController()
         let window = UIWindow()
@@ -795,6 +823,8 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         XCTAssertEqual(parameters.configuration.defaultBillingDetails.address.postalCode, "94107")
         XCTAssertEqual(parameters.configuration.defaultBillingDetails.email, "jenny@example.com")
         XCTAssertNil(parameters.nativeSheetPresentation)
+        XCTAssertNil(checkout.paymentElement)
+        XCTAssertNotNil(parameters.confirmationChallenge)
     }
 
     func testExpressCheckoutLinkCollectsRequiredBillingAddress() async throws {

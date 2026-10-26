@@ -479,6 +479,7 @@ extension PaymentSheetLoader.LoadResult {
             intent: intent,
             configuration: PaymentSheet.Configuration(),
             paymentMethodTypes: pmTypes,
+            experimentAnalyticsHelper: analyticsHelper.experimentAnalyticsHelper,
             analyticsHelper: analyticsHelper
         )
         return PaymentSheetLoader.LoadResult(
@@ -504,6 +505,7 @@ extension PaymentMethodMessagingPromotionsHelper {
             intent: intent,
             configuration: PaymentSheet.Configuration(),
             paymentMethodTypes: [],
+            experimentAnalyticsHelper: ExperimentAnalyticsHelper(integrationShape: .paymentSheet),
             analyticsHelper: PaymentSheetAnalyticsHelper._testValue()
         )
     }
@@ -522,6 +524,7 @@ extension PaymentMethodMessagingPromotionsHelper {
             intent: intent,
             configuration: PaymentSheet.Configuration(),
             paymentMethodTypes: [],
+            experimentAnalyticsHelper: ExperimentAnalyticsHelper(integrationShape: .paymentSheet),
             analyticsHelper: PaymentSheetAnalyticsHelper._testValue()
         )!
         if let promotionText {

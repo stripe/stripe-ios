@@ -127,7 +127,6 @@ extension CheckoutController {
         let customerProvider: CustomerProvider
         let nativeSheetPresentation: SheetImplementationResolver
         let integrationShape: PaymentSheet.IntegrationShape
-        let confirmationChallenge: ConfirmationChallenge?
 
         if paymentElement.paymentOptionSourceOfTruthIsFlowController {
             guard let resolvedPaymentOption = paymentElement.paymentSheetFlowController.internalPaymentOption else {
@@ -142,7 +141,6 @@ extension CheckoutController {
             customerProvider = paymentElement.paymentSheetFlowController.viewController.loadResult.customerProvider
             nativeSheetPresentation = paymentElement.paymentSheetFlowController.nativeSheetPresentation
             integrationShape = .flowController
-            confirmationChallenge = paymentElement.paymentSheetFlowController.confirmationChallenge
         } else {
             guard let resolvedPaymentOption = paymentElement.embeddedPaymentElement._paymentOption else {
                 logUnexpectedCheckoutElementsErrorAndAssert(
@@ -156,7 +154,6 @@ extension CheckoutController {
             customerProvider = paymentElement.embeddedPaymentElement.loadResult.customerProvider
             nativeSheetPresentation = paymentElement.embeddedPaymentElement.nativeSheetPresentation
             integrationShape = .embedded
-            confirmationChallenge = paymentElement.embeddedPaymentElement.confirmationChallenge
         }
 
         // Normalize Payment Element state here, then build the corresponding confirmation flow.
@@ -324,16 +321,7 @@ extension CheckoutController {
                 }
                 // 3. Update the Session
                 if let response = result.checkoutSessionResponse {
-                    do {
-                        // TODO: This doesn't need to and should never actually throw
-                        try await self.commitSession(response)
-                    } catch {
-                        stpAssertionFailure("commit session should never fail")
-                        STPAnalyticsClient.sharedClient.log(
-                            analytic: ErrorAnalytic(event: .unexpectedCheckoutElementsError, error: error)
-                        )
-                        throw error
-                    }
+                    self.commitSession(response)
                 }
                 return result
             }
