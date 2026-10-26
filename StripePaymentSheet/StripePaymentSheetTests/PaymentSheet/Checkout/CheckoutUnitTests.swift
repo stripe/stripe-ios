@@ -564,7 +564,7 @@ final class CheckoutUnitTests: XCTestCase {
 
         // Then the SAE form displays the user-facing API error
         XCTAssertFalse(addressViewController.errorLabel.isHidden)
-        XCTAssertEqual(addressViewController.errorLabel.text, NSError.stp_unexpectedErrorMessage())
+        XCTAssertEqual(addressViewController.errorLabel.text, "Tax update failed")
     }
 
     func testUpdateShippingAddress_disallowedCountry_throws() async throws {

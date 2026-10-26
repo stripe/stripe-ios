@@ -28,6 +28,7 @@ public final class ExpressCheckoutElementUIView: UIView {
     private let apiClient: STPAPIClient
     private let analyticsClient: STPAnalyticsClientProtocol
     private let stackView = UIStackView()
+    private var buttons: [UIControl] = []
     private var displayedPaymentMethods: [ExpressCheckoutElement.PaymentMethod] = []
     private var hasReportedInit = false
     private var linkBrand: LinkBrand
@@ -86,6 +87,11 @@ public final class ExpressCheckoutElementUIView: UIView {
         invalidateIntrinsicContentSize()
     }
 
+    func setEnabled(_ enabled: Bool) {
+        isUserInteractionEnabled = enabled
+        buttons.forEach { $0.isEnabled = enabled }
+    }
+
     // MARK: - Public Methods
 
     public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -129,6 +135,7 @@ public final class ExpressCheckoutElementUIView: UIView {
 
         let buttonRows = Self.buttonRows(for: buttons, layout: configuration.appearance.buttonLayout)
             .map { row in row.map { makeButton(for: $0) } }
+        self.buttons = buttonRows.flatMap { $0 }
         guard let firstRow = buttonRows.first, let referenceButton = firstRow.first else { return }
         let columnCount = firstRow.count
 
@@ -191,7 +198,7 @@ public final class ExpressCheckoutElementUIView: UIView {
         return (buttonCount + maxRows - 1) / maxRows
     }
 
-    private func makeButton(for paymentMethod: ExpressCheckoutElement.PaymentMethod) -> UIView {
+    private func makeButton(for paymentMethod: ExpressCheckoutElement.PaymentMethod) -> UIControl {
         switch paymentMethod {
         case .applePay:
             return makeApplePayButton()
@@ -200,9 +207,10 @@ public final class ExpressCheckoutElementUIView: UIView {
         }
     }
 
-    private func makeApplePayButton() -> UIView {
+    private func makeApplePayButton() -> PKPaymentButton {
         let buttonType = configuration.applePayConfiguration?.buttonType ?? .plain
         let button = PKPaymentButton(paymentButtonType: buttonType, paymentButtonStyle: applePayButtonStyle)
+        button.isEnabled = isUserInteractionEnabled
         // `cornerConfiguration` doesn't work on PKPaymentButton, so set the radius directly.
         button.cornerRadius = configuration.appearance.cornerRadius ?? (LiquidGlassDetector.isEnabledInMerchantApp
             ? Constants.buttonHeight / 2
@@ -213,8 +221,9 @@ public final class ExpressCheckoutElementUIView: UIView {
         return button
     }
 
-    private func makeLinkButton() -> UIView {
+    private func makeLinkButton() -> PayWithLinkButton {
         let button = PayWithLinkButton(brand: linkBrand)
+        button.isEnabled = isUserInteractionEnabled
         if let cornerRadius = configuration.appearance.cornerRadius {
             button.cornerRadius = cornerRadius
         } else if LiquidGlassDetector.isEnabledInMerchantApp {

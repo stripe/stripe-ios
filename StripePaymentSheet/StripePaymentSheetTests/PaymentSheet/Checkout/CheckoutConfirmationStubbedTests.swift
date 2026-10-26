@@ -648,6 +648,26 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         )
     }
 
+    func testNewPaymentMethodSendsPaymentElementPaymentUserAgentBuiltFreshOfProductUsage() async throws {
+        // Given a global product usage set already polluted with the labels PaymentElement
+        // wraps internally (simulating FlowController/EmbeddedPaymentElement self-registration)
+        STPAnalyticsClient.sharedClient.productUsage.formUnion([
+            "PaymentSheet.FlowController",
+            "EmbeddedPaymentElement",
+        ])
+        // When confirming a new card PaymentMethod through Checkout's PaymentElement
+        // Then payment_method_data[payment_user_agent] is built fresh for PaymentElement,
+        // exactly, with no leftover labels from the polluted global product usage set
+        try await assertNewPaymentMethodConfirmation(
+            session: CheckoutTestHelpers.makeSession().withCustomer(),
+            paymentMethodType: .stripe(.card),
+            checkboxState: .hidden,
+            expectedAllowRedisplay: "unspecified",
+            expectedSavePaymentMethod: nil,
+            expectedPaymentUserAgent: CheckoutController.ConfirmingElement.paymentElement.paymentUserAgent
+        )
+    }
+
     func testNewPaymentMethodWithPerMethodSetupFutureUsageDeselectedUsesLimitedAllowRedisplay() async throws {
         try await assertNewPaymentMethodConfirmation(
             session: CheckoutTestHelpers.makeSession([
@@ -723,6 +743,33 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
     }
 
     // MARK: - Express Checkout
+
+    func testExpressCheckoutButtonsReenableAfterFailedOrCanceledConfirmation() async throws {
+        for paymentIntentStatus in ["requires_payment_method", "canceled"] {
+            // Given an open Checkout Session with an available Link button
+            let session = CheckoutTestHelpers.makeSessionWithWalletTypes(["card", "link"], customerEmail: "jenny@example.com")
+            let checkout = try await makeCheckout(apiResponse: session)
+            let view = checkout.getExpressCheckoutElement().uiView
+            let button = try XCTUnwrap(CheckoutTestHelpers.expressCheckoutButtons(in: view).first)
+            var response = session.allResponseFields
+            response["payment_response"] = makeConfirmedSessionJSON(paymentIntentStatus: paymentIntentStatus)["payment_response"]
+            stubConfirmation(responseJSON: response)
+
+            // When confirmation fails or is canceled
+            let result = await checkout.confirm(makePaymentMethodFlow(for: checkout))
+
+            // Then the open checkout remains interactive
+            XCTAssertEqual(checkout.session.status, .open)
+            XCTAssertTrue(view.isUserInteractionEnabled)
+            XCTAssertTrue(button.isEnabled)
+            switch (paymentIntentStatus, result) {
+            case ("requires_payment_method", .failed), ("canceled", .canceled):
+                break
+            default:
+                XCTFail("Expected \(paymentIntentStatus) confirmation outcome, got \(result)")
+            }
+        }
+    }
 
     func testExpressCheckoutApplePayRequiresShippingAddressWhenSessionCollectsShipping() async throws {
         // Given a Checkout Session that collects shipping addresses
@@ -843,13 +890,43 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
 
     func testLinkPaymentDetailsConfirmsCheckoutSessionWithPaymentMethodData() async throws {
         // Given Link payment details in non-passthrough mode
+        // When Checkout confirms with Link
+        // Then Link sends payment method data to Checkout confirmation and logs out
+        try await assertLinkPaymentDetailsConfirmsCheckoutSession()
+    }
+
+    func testLinkConfirmationSendsPaymentElementPaymentUserAgent() async throws {
+        try await assertLinkPaymentDetailsConfirmsCheckoutSession(confirmationSource: .paymentElement, checksPaymentUserAgent: true)
+    }
+
+    func testLinkConfirmationSendsExpressCheckoutElementPaymentUserAgent() async throws {
+        try await assertLinkPaymentDetailsConfirmsCheckoutSession(confirmationSource: .expressCheckoutElement, checksPaymentUserAgent: true)
+    }
+
+    private func assertLinkPaymentDetailsConfirmsCheckoutSession(
+        confirmationSource: CheckoutController.ConfirmingElement = .paymentElement,
+        checksPaymentUserAgent: Bool = false,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) async throws {
+        if checksPaymentUserAgent {
+            // Given a global product usage set already polluted with the labels PaymentElement
+            // wraps internally (simulating FlowController/EmbeddedPaymentElement self-registration)
+            STPAnalyticsClient.sharedClient.productUsage.formUnion([
+                "PaymentSheet.FlowController",
+                "EmbeddedPaymentElement",
+            ])
+        }
         let checkout = try await makeCheckout(apiResponse: CheckoutTestHelpers.makeSession().withCustomer())
         let confirm = stubConfirmationExpecting(
             sessionId: checkout.session.id,
             clientSecret: checkout.clientSecret,
             savePaymentMethod: nil,
             expectedPaymentMethodType: "link",
-            expectedBillingEmail: .value("test@example.com")
+            expectedBillingEmail: .value("test@example.com"),
+            expectedPaymentUserAgent: checksPaymentUserAgent ? confirmationSource.paymentUserAgent : nil,
+            file: file,
+            line: line
         )
         let logout = stubLinkLogout(consumerSessionClientSecret: "cs_xxx")
         let configuration = checkout.getPaymentElement().embeddedPaymentElement.configuration
@@ -860,14 +937,13 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
             confirmationChallenge: nil,
             analyticsHelper: ._testValue(),
             authenticationContext: self,
-            paymentHandler: STPPaymentHandler(apiClient: configuration.apiClient)
+            paymentHandler: STPPaymentHandler(apiClient: configuration.apiClient),
+            confirmationSource: confirmationSource
         ))
 
-        // When Checkout confirms with Link
         let result = await checkout.confirm(flow)
 
-        // Then Link sends payment method data to Checkout confirmation and logs out
-        assertSucceeded(result)
+        assertSucceeded(result, file: file, line: line)
         await fulfillment(of: [confirm, logout], timeout: 10)
     }
 
@@ -894,7 +970,8 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
             confirmationChallenge: nil,
             analyticsHelper: ._testValue(),
             authenticationContext: self,
-            paymentHandler: STPPaymentHandler(apiClient: configuration.apiClient)
+            paymentHandler: STPPaymentHandler(apiClient: configuration.apiClient),
+            confirmationSource: .paymentElement
         ))
 
         // When Checkout confirms with Link
@@ -927,7 +1004,8 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
             confirmationChallenge: nil,
             analyticsHelper: ._testValue(),
             authenticationContext: self,
-            paymentHandler: STPPaymentHandler(apiClient: configuration.apiClient)
+            paymentHandler: STPPaymentHandler(apiClient: configuration.apiClient),
+            confirmationSource: .paymentElement
             )
         )
 
@@ -1083,7 +1161,8 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
             nativeSheetPresentation: checkout.getPaymentElement().embeddedPaymentElement.nativeSheetPresentation,
             confirmationChallenge: confirmationChallenge,
             authenticationContext: self,
-            paymentHandler: STPPaymentHandler(apiClient: configuration.apiClient)
+            paymentHandler: STPPaymentHandler(apiClient: configuration.apiClient),
+            confirmationSource: .paymentElement
         )
         return .paymentMethod(parameters, preconfirmIntegrationShape: .embedded)
     }
@@ -1097,6 +1176,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         checkoutEmail: String? = nil,
         paymentMethodEmail: String? = nil,
         expectedBillingEmail: BillingEmailExpectation? = nil,
+        expectedPaymentUserAgent: String? = nil,
         file: StaticString = #filePath,
         line: UInt = #line
     ) async throws {
@@ -1115,6 +1195,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
             expectedPaymentMethodType: try XCTUnwrap(confirmParams.paymentMethodParams.rawTypeString),
             expectedAllowRedisplay: expectedAllowRedisplay,
             expectedBillingEmail: expectedBillingEmail,
+            expectedPaymentUserAgent: expectedPaymentUserAgent,
             file: file,
             line: line
         )
@@ -1237,6 +1318,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
             sessionId: checkout.session.id,
             clientSecret: checkout.clientSecret,
             paymentMethodId: STPPaymentMethod._testCard().stripeId,
+            confirmationSource: .paymentElement,
             expectedAmount: checkout.session.amount,
             expectedPaymentMethodType: "card",
             returnURL: configuration.returnURL,
@@ -1299,6 +1381,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         expectedPaymentMethodID: String? = nil,
         expectedAllowRedisplay: String? = nil,
         expectedBillingEmail: BillingEmailExpectation? = nil,
+        expectedPaymentUserAgent: String? = nil,
         file: StaticString = #filePath,
         line: UInt = #line
     ) -> XCTestExpectation {
@@ -1321,8 +1404,20 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
                 XCTAssertFalse(params.keys.contains { $0.hasPrefix("payment_method_data[") }, file: file, line: line)
             } else {
                 XCTAssertEqual(params["payment_method_data[type]"], expectedPaymentMethodType, file: file, line: line)
+                XCTAssertNotNil(params["payment_method_data[payment_user_agent]"], file: file, line: line)
+                if let expectedPaymentUserAgent {
+                    XCTAssertEqual(params["payment_method_data[payment_user_agent]"], expectedPaymentUserAgent, file: file, line: line)
+                }
+                XCTAssertEqual(params["payment_method_data[guid]"], FraudDetectionData.shared.guid, file: file, line: line)
+                XCTAssertEqual(params["payment_method_data[muid]"], FraudDetectionData.shared.muid, file: file, line: line)
+                XCTAssertEqual(params["payment_method_data[sid]"], FraudDetectionData.shared.sid, file: file, line: line)
+                XCTAssertEqual(params["payment_method_data[client_attribution_metadata][checkout_session_id]"], sessionId, file: file, line: line)
+                if expectedPaymentMethodType == "card" {
+                    XCTAssertEqual(params["payment_method_data[card][number]"], "4242424242424242", file: file, line: line)
+                }
             }
             XCTAssertEqual(params["expected_payment_method_type"], expectedPaymentMethodType, file: file, line: line)
+            XCTAssertEqual(params["client_attribution_metadata[checkout_session_id]"], sessionId, file: file, line: line)
             if let expectedAllowRedisplay {
                 XCTAssertEqual(
                     params["payment_method_data[allow_redisplay]"],

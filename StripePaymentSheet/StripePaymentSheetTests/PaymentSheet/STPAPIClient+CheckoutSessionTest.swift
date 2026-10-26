@@ -119,6 +119,7 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
             sessionId: sessionId,
             clientSecret: checkoutSessionResponse.clientSecret,
             paymentMethodId: paymentMethod.stripeId,
+            confirmationSource: .paymentElement,
             expectedAmount: expectedAmount,
             expectedPaymentMethodType: "card",
             returnURL: "stripe-ios-test://checkout-return"
@@ -331,6 +332,7 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
             sessionId: sessionId,
             clientSecret: checkoutSessionResponse.clientSecret,
             paymentMethodId: paymentMethod.stripeId,
+            confirmationSource: .paymentElement,
             expectedAmount: nil,
             expectedPaymentMethodType: "card",
             returnURL: "stripe-ios-test://checkout-return"

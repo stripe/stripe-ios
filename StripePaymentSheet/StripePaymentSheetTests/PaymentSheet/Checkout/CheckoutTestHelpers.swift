@@ -133,6 +133,14 @@ final class CheckoutSessionRequestRecorder: @unchecked Sendable {
 
 enum CheckoutTestHelpers {
 
+    @MainActor
+    static func expressCheckoutButtons(in view: UIView) -> [UIControl] {
+        if let button = view as? UIControl {
+            return [button]
+        }
+        return view.subviews.flatMap { expressCheckoutButtons(in: $0) }
+    }
+
     // MARK: - Base JSON building blocks
 
     static let minimalCheckoutClientConfigurationJSON: [String: Any] = [
@@ -563,7 +571,8 @@ extension CheckoutController.ApplePayConfirmationParameters {
         presentationWindow: UIWindow? = nil,
         confirmationHandler: @escaping CheckoutController.ApplePayConfirmationParameters.ConfirmationHandler = { _ in
             .failed(CheckoutError.unknown(debugDescription: "Unexpected Apple Pay confirmation in test."))
-        }
+        },
+        confirmationSource: CheckoutController.ConfirmingElement = .paymentElement
     ) -> CheckoutController.ApplePayConfirmationParameters {
         CheckoutController.ApplePayConfirmationParameters(
             applePayConfiguration: applePayConfiguration,
@@ -573,7 +582,8 @@ extension CheckoutController.ApplePayConfirmationParameters {
             shippingAddressRequired: shippingAddressRequired,
             defaultBillingDetails: defaultBillingDetails,
             presentationWindow: presentationWindow,
-            confirmationHandler: confirmationHandler
+            confirmationHandler: confirmationHandler,
+            confirmationSource: confirmationSource
         )
     }
 }
