@@ -219,6 +219,7 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
         XCTAssertFalse(buyButton.exists)
         assertAnalyticsEvents([
             "checkout_elements.init.started",
+            "link.account_lookup.complete",
             "checkout_elements.init.succeeded",
             "elements.express_checkout_element.init",
         ])
@@ -230,6 +231,7 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
         payWithApplePay(successElement: app.alerts["Success"])
         assertAnalyticsEvents([
             "checkout_elements.init.started",
+            "link.account_lookup.complete",
             "checkout_elements.init.succeeded",
             "elements.express_checkout_element.init",
             "checkout_elements.confirm.started",
@@ -245,8 +247,9 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
     }
 
     func testExpressCheckoutElementLinkAnalytics() {
-        // Given an ECE-only Checkout Session that does not require shipping or automatic tax
+        // Given an ECE-only Checkout Session for a new Link customer, without shipping or automatic tax
         var settings = CheckoutPlayground.Settings()
+        settings.email?.value = "checkout-elements-\(UUID().uuidString)@example.com"
         settings.integrationType = .eceOnly
         settings.shippingAddressCollection = false
         settings.automaticTax = false
@@ -259,6 +262,7 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
         XCTAssertFalse(app.buttons["Select payment method"].exists)
         assertAnalyticsEvents([
             "checkout_elements.init.started",
+            "link.account_lookup.complete",
             "checkout_elements.init.succeeded",
             "elements.express_checkout_element.init",
         ])
@@ -270,6 +274,7 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
         XCTAssertTrue(app.textFields["Email"].waitForExistence(timeout: 10))
         assertAnalyticsEvents([
             "checkout_elements.init.started",
+            "link.account_lookup.complete",
             "checkout_elements.init.succeeded",
             "elements.express_checkout_element.init",
             "checkout_elements.confirm.started",
@@ -311,6 +316,10 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
             file: file,
             line: line
         )
+
+        for event in events where event[string: "event"]?.hasPrefix("link.") == true {
+            XCTAssertEqual(event[string: "checkout_session_id"], checkoutSessionID, file: file, line: line)
+        }
 
         // Checkout preloads confirmation challenges at initialization; their events are asynchronous.
         let ignoringEventPrefixes = ["elements.captcha.passive.", "stripeios.attest."]
