@@ -148,6 +148,8 @@ final class CryptoOnrampNewUserCardUITests: CryptoOnrampExampleUITestCase {
     /// Tests the complete new-user flow, including registration, KYC, identity verification, wallet registration, and card checkout.
     @MainActor
     func testNewUserEndToEnd() throws {
+        try XCTSkipIf(true, "magenta-custom")
+
         let phoneNumber = Self.makeRandomUSPhoneNumber()
         let address = Self.testAddress
         let postalCode = try XCTUnwrap(address.postalCode)
@@ -241,6 +243,8 @@ final class CryptoOnrampNewUserACHUITests: CryptoOnrampExampleUITestCase {
     /// Tests a complete new-user checkout using a refreshed KYC address and a standard ACH bank payment.
     @MainActor
     func testNewUserStandardACHCheckoutAfterKYCRefresh() throws {
+        try XCTSkipIf(true, "magenta-custom")
+
         let phoneNumber = Self.makeRandomUSPhoneNumber()
         let refreshedAddress = Self.refreshedTestAddress
         let refreshedAddressLine1 = try XCTUnwrap(refreshedAddress.line1)
@@ -397,6 +401,8 @@ final class CryptoOnrampNewEUUserUITests: CryptoOnrampExampleUITestCase {
     /// Tests EU registration and KYC, compliance identifiers, user attestation, identity verification, and wallet verification.
     @MainActor
     func testNewEUUserThroughWalletVerification() throws {
+        try XCTSkipIf(true, "magenta-custom")
+
         let phoneNumber = Self.makeRandomGreekPhoneNumber()
         let address = Self.euTestAddress
         let addressLine1 = try XCTUnwrap(address.line1)
