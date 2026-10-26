@@ -366,7 +366,11 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
 extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {
     func didRemove(viewController: UpdatePaymentMethodViewController, paymentMethod: StripePayments.STPPaymentMethod) {
         // Detach the payment method from the customer
-        savedPaymentMethodManager.detach(paymentMethod: paymentMethod)
+        loadResult.customerProvider.detach(
+            paymentMethod: paymentMethod,
+            elementsSession: elementsSession,
+            apiClient: configuration.apiClient
+        )
         analyticsHelper.logSavedPaymentMethodRemoved(paymentMethod: paymentMethod)
 
         // if it's the default pm, unset it
@@ -426,7 +430,12 @@ extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {
                             updateParams: StripePayments.STPPaymentMethodUpdateParams,
                             hasOnlyChangedCardBrand: Bool) async -> Result<Void, Error> {
         do {
-            let updatedPaymentMethod = try await savedPaymentMethodManager.update(paymentMethod: paymentMethod, with: updateParams)
+            let updatedPaymentMethod = try await loadResult.customerProvider.update(
+                paymentMethod: paymentMethod,
+                with: updateParams,
+                elementsSession: elementsSession,
+                apiClient: configuration.apiClient
+            )
 
             // Update savedPaymentMethods
             if let row = self.savedPaymentMethods.firstIndex(where: { $0.stripeId == updatedPaymentMethod.stripeId }) {
@@ -440,7 +449,11 @@ extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {
 
     private func updateDefault(paymentMethod: StripePayments.STPPaymentMethod) async -> Result<Void, Error> {
         do {
-            _ = try await savedPaymentMethodManager.setAsDefaultPaymentMethod(defaultPaymentMethodId: paymentMethod.stripeId)
+            _ = try await loadResult.customerProvider.setAsDefaultPaymentMethod(
+                paymentMethod.stripeId,
+                elementsSession: elementsSession,
+                apiClient: configuration.apiClient
+            )
             defaultPaymentMethod = paymentMethod
             return .success(())
         } catch {
