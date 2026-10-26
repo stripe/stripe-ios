@@ -14,6 +14,7 @@ import UIKit
 /// - Dismisses from the top to the bottom of the screen
 @objc(STPBottomSheetPresentationAnimator)
 class BottomSheetPresentationAnimator: NSObject {
+
     enum TransitionStyle {
         case presentation
         case dismissal
@@ -38,7 +39,7 @@ class BottomSheetPresentationAnimator: NSObject {
         toVC.view.frame.origin.y = transitionContext.containerView.frame.height
 
         // Set the work to complete the transition on the BottomSheetViewController.
-        // Either we will invoke it in the presentation completion block, 
+        // Either we will invoke it in the presentation completion block,
         // or BottomSheetViewController will invoke it before transitioning to other content
         if let bottomSheetController = toVC as? BottomSheetViewController {
             bottomSheetController.completeBottomSheetPresentationTransition = { [weak bottomSheetController] didComplete in

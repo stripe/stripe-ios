@@ -47,6 +47,19 @@ public protocol STPCardFormViewDelegate: NSObjectProtocol {
 /// is displayed when invalid input is detected.
 public class STPCardFormView: STPFormView {
 
+    var cardElementAnalytics = CardElementAnalytics(widgetType: .cardFormView)
+
+    public override func didMoveToWindow() {
+        super.didMoveToWindow()
+        if window != nil {
+            cardElementAnalytics.reportShown()
+        }
+    }
+
+    @objc private func reportInteraction() {
+        cardElementAnalytics.reportInteraction()
+    }
+
     let numberField: STPCardNumberInputTextField
     let cvcField: STPCardCVCInputTextField
     let expiryField: STPCardExpiryInputTextField
@@ -378,6 +391,9 @@ public class STPCardFormView: STPFormView {
         cvcField.addObserver(self)
         expiryField.addObserver(self)
         billingAddressSubForm.formSection.rows.forEach({ $0.forEach({ $0.addObserver(self) }) })
+        for textField in rows.flatMap({ $0 }).compactMap({ $0 as? STPInputTextField }) {
+            textField.addTarget(self, action: #selector(reportInteraction), for: [.editingDidBegin, .editingChanged])
+        }
         countryCode = countryField.inputValue
         updateCountryCodeValues()
 
@@ -491,6 +507,9 @@ public class STPCardFormView: STPFormView {
             for: unformattedInput,
             in: textField
         )
+        if cardParams != nil {
+            cardElementAnalytics.reportFormCompleted()
+        }
         if case .valid = state, state != previousState {
             if cardParams != nil {
                 // we transitioned to complete

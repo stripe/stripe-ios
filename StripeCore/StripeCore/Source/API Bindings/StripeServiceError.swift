@@ -34,6 +34,13 @@ import Foundation
     /// The Stripe API request ID, if available. Looks like `req_123`.
     @_spi(STP) public var requestID: String?
 
+    // Set by the API client, never decoded from the response body.
+    var includeRequestIDInDescription = false
+
+    private enum CodingKeys: String, CodingKey {
+        case type, code, docUrl, message, param, httpStatusCode, requestID, _allResponseFieldsStorage
+    }
+
     // More information may be available in `allResponseFields`, including
     // the PaymentIntent or PaymentMethod.
 
@@ -56,7 +63,7 @@ import Foundation
 }
 
 extension NSError {
-    static func stp_error(from stripeApiError: StripeAPIError) -> NSError? {
+    static func stp_error(from stripeApiError: StripeAPIError) -> NSError {
         return stp_error(
             errorType: stripeApiError.type.rawValue,
             stripeErrorCode: stripeApiError.code,
@@ -64,13 +71,15 @@ extension NSError {
             errorParam: stripeApiError.param,
             declineCode: nil,
             intent: nil,
-            httpResponse: nil
+            httpResponse: nil,
+            requestID: stripeApiError.requestID,
+            includeRequestIDInDescription: stripeApiError.includeRequestIDInDescription
         )
     }
 }
 
 extension StripeAPIError {
     func errorUserInfoString(key: String) -> String? {
-        return NSError.stp_error(from: self)?.userInfo[key] as? String
+        return NSError.stp_error(from: self).userInfo[key] as? String
     }
 }
