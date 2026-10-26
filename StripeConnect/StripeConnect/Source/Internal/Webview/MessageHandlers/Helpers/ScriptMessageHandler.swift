@@ -23,19 +23,28 @@ class ScriptMessageHandler<Payload: Decodable>: NSObject, WKScriptMessageHandler
     }
 
     let name: String
+    let sourcePolicy: STPWebMessageSourcePolicy
     let didReceiveMessage: (Payload) -> Void
     let analyticsClient: ComponentAnalyticsClient
 
     init(name: String,
+         sourcePolicy: STPWebMessageSourcePolicy,
          analyticsClient: ComponentAnalyticsClient,
          didReceiveMessage: @escaping (Payload) -> Void) {
         self.name = name
+        self.sourcePolicy = sourcePolicy
         self.didReceiveMessage = didReceiveMessage
         self.analyticsClient = analyticsClient
     }
 
     func userContentController(_ userContentController: WKUserContentController,
                                didReceive message: WKScriptMessage) {
+        guard sourcePolicy.isAuthorized(source: message.webView,
+                                        scheme: message.frameInfo.securityOrigin.protocol,
+                                        host: message.frameInfo.securityOrigin.host,
+                                        port: message.frameInfo.securityOrigin.port) else {
+            return
+        }
         guard message.name == name else {
             analyticsClient.logClientError(UnexpectedMessageNameError(
                 actual: message.name,

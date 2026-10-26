@@ -33,7 +33,7 @@ extension CheckoutController: CheckoutSessionWalletUpdater {
         address: Address,
         canUpdateWhileSheetPresented: Bool
     ) async throws -> Session {
-        try await applySessionUpdate(.setTaxRegion(address), canUpdateWhileSheetPresented: canUpdateWhileSheetPresented)
+        try await performUnqueuedUpdate(.setTaxRegion(address), canUpdateWhileSheetPresented: canUpdateWhileSheetPresented)
         return session
     }
 }

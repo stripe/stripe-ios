@@ -25,7 +25,8 @@ protocol BottomSheetContentViewController: UIViewController {
 /// A VC containing a content view controller and manages the layout of its SheetNavigationBar.
 /// For internal SDK use only
 @objc(STP_Internal_BottomSheetViewController)
-class BottomSheetViewController: UIViewController, BottomSheetPresentable {
+class BottomSheetViewController: UIViewController, BottomSheetPresentable, PaymentSheetContainer {
+
     struct Constants {
         static let keyboardAvoidanceEdgePadding: CGFloat = 16
     }
@@ -116,7 +117,6 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
         return popped
     }
 
-    let isTestMode: Bool
     let appearance: PaymentSheet.Appearance
 
     private var contentViewController: BottomSheetContentViewController
@@ -127,15 +127,17 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
 
     let didCancelNative3DS2: () -> Void
 
+    func setUserInteractionEnabled(_ enabled: Bool) {
+        view.isUserInteractionEnabled = enabled
+    }
+
     required init(
         contentViewController: BottomSheetContentViewController,
         appearance: PaymentSheet.Appearance,
-        isTestMode: Bool,
         didCancelNative3DS2: @escaping () -> Void
     ) {
         self.contentViewController = contentViewController
         self.appearance = appearance
-        self.isTestMode = isTestMode
         self.didCancelNative3DS2 = didCancelNative3DS2
 
         super.init(nibName: nil, bundle: nil)
@@ -505,8 +507,12 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
     }
 
     func didTapOrSwipeToDismiss() {
+        // Capture the dismissed screen's policy before its callback can replace the content.
+        let shouldLogPaymentSheetAnalyticsOnDismissal = contentViewController.navigationBar.shouldLogPaymentSheetAnalyticsOnDismissal
         contentViewController.didTapOrSwipeToDismiss()
-        STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetDismissed)
+        if shouldLogPaymentSheetAnalyticsOnDismissal {
+            STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetDismissed)
+        }
     }
 }
 
@@ -515,6 +521,36 @@ extension BottomSheetViewController: UIAdaptivePresentationControllerDelegate {
         // On iPad, tapping outside the sheet dismisses it without informing us - so we override this method to be informed.
         didTapOrSwipeToDismiss()
         return false
+    }
+}
+
+// MARK: - Presentation
+
+extension BottomSheetViewController {
+
+    func present(from presentingViewController: UIViewController, completion: (() -> Void)?) {
+        var presentsAsFormSheet: Bool {
+            #if os(visionOS)
+            return true
+            #else
+            return UIDevice.current.userInterfaceIdiom == .pad || UIDevice.current.userInterfaceIdiom == .mac
+            #endif
+        }
+
+        if presentsAsFormSheet {
+            modalPresentationStyle = .formSheet
+            // Scrolling can otherwise trigger the system pull-down gesture too easily.
+            isModalInPresentation = true
+            presentationController?.delegate = self
+        } else {
+            modalPresentationStyle = .custom
+            modalPresentationCapturesStatusBarAppearance = true
+            BottomSheetTransitioningDelegate.appearance = appearance
+            transitioningDelegate = BottomSheetTransitioningDelegate.default
+        }
+
+        presentingViewController.viewIfLoaded?.endEditing(true)
+        presentingViewController.present(self, animated: true, completion: completion)
     }
 }
 
@@ -550,7 +586,7 @@ extension BottomSheetViewController: PaymentSheetAuthenticationContext {
         _ authenticationViewController: UIViewController, completion: @escaping () -> Void
     ) {
         let threeDS2ViewController = BottomSheet3DS2ViewController(
-            challengeViewController: authenticationViewController, appearance: appearance, isTestMode: isTestMode)
+            challengeViewController: authenticationViewController, appearance: appearance)
         threeDS2ViewController.delegate = self
         pushContentViewController(threeDS2ViewController)
         // Remove a blur effect, if any
