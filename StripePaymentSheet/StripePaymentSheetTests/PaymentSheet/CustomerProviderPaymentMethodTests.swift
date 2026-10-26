@@ -1,5 +1,5 @@
 //
-//  SavedPaymentMethodManagerTests.swift
+//  CustomerProviderPaymentMethodTests.swift
 //  StripePaymentSheet
 //
 //  Created by Nick Porter on 5/3/24.
@@ -8,14 +8,16 @@
 import Foundation
 import OHHTTPStubs
 import OHHTTPStubsSwift
+@_spi(STP) @testable import StripeCore
 import StripeCoreTestUtils
 @_spi(STP) @testable import StripePayments
 @_spi(STP)@testable import StripePaymentSheet
 @_spi(STP) import StripeUICore
+import UIKit
 import XCTest
 
 @MainActor
-final class SavedPaymentMethodManagerTests: XCTestCase {
+final class CustomerProviderPaymentMethodTests: XCTestCase {
 
     let ephemeralKey = "test-eph-key"
     let paymentMethod = STPPaymentMethod.stubbedPaymentMethod()
@@ -35,13 +37,13 @@ final class SavedPaymentMethodManagerTests: XCTestCase {
         var configuration = configuration
         configuration.customer = .init(id: "cus_test123", ephemeralKeySecret: ephemeralKey)
 
-        let sut = SavedPaymentMethodManager(
-            customerProvider: CustomerProvider(customer: configuration.customer),
+        let sut = CustomerProvider(customer: configuration.customer)
+        let updatedPaymentMethod = try await sut.update(
+            paymentMethod: paymentMethod,
+            with: STPPaymentMethodUpdateParams(),
             elementsSession: ._testCardValue(),
             apiClient: configuration.apiClient
         )
-        let updatedPaymentMethod = try await sut.update(paymentMethod: paymentMethod,
-                           with: STPPaymentMethodUpdateParams())
 
         XCTAssertEqual("pm_123card", updatedPaymentMethod.stripeId)
         await fulfillment(of: [expectation], timeout: 5.0)
@@ -66,20 +68,20 @@ final class SavedPaymentMethodManagerTests: XCTestCase {
             ],
         ])
 
-        let sut = SavedPaymentMethodManager(
-            customerProvider: CustomerProvider(customer: configuration.customer),
+        let sut = CustomerProvider(customer: configuration.customer)
+        let updatedPaymentMethod = try await sut.update(
+            paymentMethod: paymentMethod,
+            with: STPPaymentMethodUpdateParams(),
             elementsSession: elementsSession,
             apiClient: configuration.apiClient
         )
-        let updatedPaymentMethod = try await sut.update(paymentMethod: paymentMethod,
-                           with: STPPaymentMethodUpdateParams())
 
         XCTAssertEqual("pm_123card", updatedPaymentMethod.stripeId)
         await fulfillment(of: [expectation], timeout: 5.0)
     }
 
     func testEmbeddedPaymentMethodUpdateUsesCurrentCustomerSessionKey() async throws {
-        // Given an Embedded element whose saved-method manager has already been used
+        // Given an Embedded element loaded with the previous Customer Session key
         await AddressSpecProvider.shared.loadAddressSpecs()
         var embeddedConfiguration = EmbeddedPaymentElement.Configuration._testValue_MostPermissive(isApplePayEnabled: false)
         embeddedConfiguration.apiClient = configuration.apiClient
@@ -100,7 +102,32 @@ final class SavedPaymentMethodManagerTests: XCTestCase {
             loadResult: makeLoadResult(apiKey: "ek_previous"),
             analyticsHelper: ._testValue()
         )
-        _ = sut.savedPaymentMethodManager
+        let updateViewController = UpdatePaymentMethodViewController(
+            removeSavedPaymentMethodMessage: nil,
+            configuration: .init(
+                paymentMethod: paymentMethod,
+                appearance: embeddedConfiguration.appearance,
+                billingDetailsCollectionConfiguration: .init(address: .never),
+                hostedSurface: .paymentSheet,
+                canRemove: true,
+                canUpdate: true,
+                isCBCEligible: false
+            )
+        )
+        // Edit through the existing form so the test exercises Embedded's update delegate.
+        var views = [updateViewController.view!]
+        var expiryField: UITextField?
+        while let view = views.popLast() {
+            if let textField = view as? UITextField, textField.accessibilityIdentifier == "MM / YY" {
+                expiryField = textField
+                break
+            }
+            views.append(contentsOf: view.subviews)
+        }
+        let field = try XCTUnwrap(expiryField)
+        field.text = "1230"
+        field.sendActions(for: .editingChanged)
+        XCTAssertNotNil(updateViewController.updateParams)
 
         // When an accepted load refreshes the Customer Session's key
         sut.loadResult = makeLoadResult(apiKey: "ek_refreshed")
@@ -116,8 +143,11 @@ final class SavedPaymentMethodManagerTests: XCTestCase {
         defer { HTTPStubs.removeStub(requestStub) }
 
         // Then the next saved-method operation uses that key
-        let updatedPaymentMethod = try await sut.savedPaymentMethodManager.update(paymentMethod: paymentMethod, with: STPPaymentMethodUpdateParams())
-        XCTAssertEqual(updatedPaymentMethod.stripeId, paymentMethodID)
+        let result = await sut.didUpdate(viewController: updateViewController, paymentMethod: paymentMethod)
+        guard case .success = result else {
+            return XCTFail("Expected the saved payment method update to succeed")
+        }
+        XCTAssertEqual(sut.savedPaymentMethods.first?.stripeId, paymentMethodID)
         await fulfillment(of: [requestReceived], timeout: 5)
     }
 
@@ -140,13 +170,13 @@ final class SavedPaymentMethodManagerTests: XCTestCase {
         var configuration = configuration
         configuration.customer = .init(id: "cus_test123", ephemeralKeySecret: ephemeralKey)
 
-        let sut = SavedPaymentMethodManager(
-            customerProvider: CustomerProvider(customer: configuration.customer),
+        let sut = CustomerProvider(customer: configuration.customer)
+        let updatedPaymentMethod = try await sut.update(
+            paymentMethod: paymentMethod,
+            with: STPPaymentMethodUpdateParams(),
             elementsSession: ._testCardValue(),
             apiClient: configuration.apiClient
         )
-        let updatedPaymentMethod = try await sut.update(paymentMethod: paymentMethod,
-                                                        with: STPPaymentMethodUpdateParams())
 
         XCTAssertTrue(updatedPaymentMethod.isLinkOrigin)
         XCTAssertEqual(updatedPaymentMethod.linkPaymentDetailsFormattedString, paymentMethod.linkPaymentDetailsFormattedString)
@@ -161,11 +191,7 @@ final class SavedPaymentMethodManagerTests: XCTestCase {
         )
 
         let checkoutSession = makeCheckoutSession(id: checkoutSessionId)
-        let sut = SavedPaymentMethodManager(
-            customerProvider: CustomerProvider(checkoutSession: checkoutSession.makePublicSession()),
-            elementsSession: ._testValue(paymentMethodTypes: ["card"]),
-            apiClient: configuration.apiClient
-        )
+        let sut = CustomerProvider(checkoutSession: checkoutSession.makePublicSession())
 
         let card = STPPaymentMethodCardParams()
         card.expMonth = 12
@@ -175,7 +201,12 @@ final class SavedPaymentMethodManagerTests: XCTestCase {
         billing.email = "jane@example.com"
         let updateParams = STPPaymentMethodUpdateParams(card: card, billingDetails: billing)
 
-        let updatedPaymentMethod = try await sut.update(paymentMethod: paymentMethod, with: updateParams)
+        let updatedPaymentMethod = try await sut.update(
+            paymentMethod: paymentMethod,
+            with: updateParams,
+            elementsSession: ._testValue(paymentMethodTypes: ["card"]),
+            apiClient: configuration.apiClient
+        )
 
         XCTAssertEqual("pm_123card", updatedPaymentMethod.stripeId)
         await fulfillment(of: [expectation], timeout: 5.0)
@@ -196,18 +227,19 @@ final class SavedPaymentMethodManagerTests: XCTestCase {
         )
 
         let checkoutSession = makeCheckoutSession(id: checkoutSessionId)
-        let sut = SavedPaymentMethodManager(
-            customerProvider: CustomerProvider(checkoutSession: checkoutSession.makePublicSession()),
-            elementsSession: ._testValue(paymentMethodTypes: ["card"]),
-            apiClient: configuration.apiClient
-        )
+        let sut = CustomerProvider(checkoutSession: checkoutSession.makePublicSession())
 
         let card = STPPaymentMethodCardParams()
         card.expMonth = 1
         card.expYear = 2040
         let updateParams = STPPaymentMethodUpdateParams(card: card, billingDetails: nil)
 
-        let updatedPaymentMethod = try await sut.update(paymentMethod: paymentMethod, with: updateParams)
+        let updatedPaymentMethod = try await sut.update(
+            paymentMethod: paymentMethod,
+            with: updateParams,
+            elementsSession: ._testValue(paymentMethodTypes: ["card"]),
+            apiClient: configuration.apiClient
+        )
 
         XCTAssertEqual("pm_123card", updatedPaymentMethod.stripeId)
         await fulfillment(of: [expectation], timeout: 5.0)
@@ -220,16 +252,113 @@ final class SavedPaymentMethodManagerTests: XCTestCase {
 
     func testUpdatePaymentMethod_checkoutSession_missingBillingAndExpiry_throws() async {
         let checkoutSession = makeCheckoutSession(id: "cs_test_checkout_session")
-        let sut = SavedPaymentMethodManager(
-            customerProvider: CustomerProvider(checkoutSession: checkoutSession.makePublicSession()),
-            elementsSession: ._testValue(paymentMethodTypes: ["card"]),
-            apiClient: configuration.apiClient
-        )
+        let sut = CustomerProvider(checkoutSession: checkoutSession.makePublicSession())
 
         do {
-            _ = try await sut.update(paymentMethod: paymentMethod, with: STPPaymentMethodUpdateParams())
+            _ = try await sut.update(
+                paymentMethod: paymentMethod,
+                with: STPPaymentMethodUpdateParams(),
+                elementsSession: ._testValue(paymentMethodTypes: ["card"]),
+                apiClient: configuration.apiClient
+            )
             XCTFail("Expected error")
         } catch {}
+    }
+
+    func testMissingCustomerSessionKeyPreservesOperationErrorsAndAnalytics() async {
+        // Given a Customer Session whose loaded response has no ephemeral key
+        let sut = CustomerProvider(customer: .init(id: "cus_test", customerSessionClientSecret: "cuss_test"))
+        let elementsSession = STPElementsSession._testCardValue()
+        let apiClient = configuration.apiClient
+        let analyticsClient = STPAnalyticsClient.sharedClient
+        analyticsClient._testLogHistory = []
+        defer { analyticsClient._testLogHistory = [] }
+
+        // When updating or setting a default, preserve the operation-specific PaymentSheet error.
+        STPAssertTestUtil.shouldSuppressNextSTPAlert = true
+        do {
+            _ = try await sut.update(
+                paymentMethod: paymentMethod,
+                with: STPPaymentMethodUpdateParams(),
+                elementsSession: elementsSession,
+                apiClient: apiClient
+            )
+            XCTFail("Expected the update to fail without credentials")
+        } catch PaymentSheetError.unknown(let description) {
+            XCTAssertEqual(description, "Failed to read ephemeral key while updating a payment method.")
+        } catch {
+            XCTFail("Unexpected error: \(error)")
+        }
+
+        STPAssertTestUtil.shouldSuppressNextSTPAlert = true
+        do {
+            _ = try await sut.setAsDefaultPaymentMethod(
+                paymentMethod.stripeId,
+                elementsSession: elementsSession,
+                apiClient: apiClient
+            )
+            XCTFail("Expected setting a default to fail without credentials")
+        } catch PaymentSheetError.unknown(let description) {
+            XCTAssertEqual(description, "Failed to read ephemeral key while setting a payment method as default.")
+        } catch {
+            XCTFail("Unexpected error: \(error)")
+        }
+
+        // ...and removal still returns immediately, with the same diagnostic as the throwing operations.
+        STPAssertTestUtil.shouldSuppressNextSTPAlert = true
+        sut.detach(paymentMethod: paymentMethod, elementsSession: elementsSession, apiClient: apiClient)
+
+        // Then all three operations retain their existing analytics identity and customer context.
+        let events = analyticsClient._testLogHistory.filter { $0["event"] as? String == "unexpected_error.paymentsheet" }
+        XCTAssertEqual(events.count, 3)
+        for event in events {
+            XCTAssertEqual(event["error_type"] as? String, "StripePaymentSheet.SavedPaymentMethodManager.Error")
+            XCTAssertEqual(event["error_code"] as? String, "missingEphemeralKey")
+            XCTAssertEqual(event["customer_access_provider"] as? String, "customer_session")
+        }
+    }
+
+    func testCheckoutUpdateMissingPaymentMethodPreservesErrorAndAnalytics() async throws {
+        // Given a successful Checkout update response that omits the requested payment method
+        let checkoutSessionID = "cs_test_missing_updated_method"
+        let sut = CustomerProvider(checkoutSession: makeCheckoutSession(id: checkoutSessionID).makePublicSession())
+        let requestStub = stub { request in
+            request.url?.absoluteString.contains("/payment_pages/\(checkoutSessionID)") == true && request.httpMethod == "POST"
+        } response: { _ in
+            HTTPStubsResponse(jsonObject: CheckoutTestHelpers.makeSessionJSON([
+                "session_id": checkoutSessionID,
+                "customer": ["id": "cus_test", "payment_methods": []],
+            ]), statusCode: 200, headers: nil)
+        }
+        defer { HTTPStubs.removeStub(requestStub) }
+        let analyticsClient = STPAnalyticsClient.sharedClient
+        analyticsClient._testLogHistory = []
+        defer { analyticsClient._testLogHistory = [] }
+        let card = STPPaymentMethodCardParams()
+        card.expMonth = 12
+        card.expYear = 2030
+
+        // When the response cannot supply the updated method, preserve the PaymentSheet error.
+        STPAssertTestUtil.shouldSuppressNextSTPAlert = true
+        do {
+            _ = try await sut.update(
+                paymentMethod: paymentMethod,
+                with: STPPaymentMethodUpdateParams(card: card, billingDetails: nil),
+                elementsSession: ._testCardValue(),
+                apiClient: configuration.apiClient
+            )
+            XCTFail("Expected an error when the updated payment method is missing")
+        } catch PaymentSheetError.unknown(let description) {
+            XCTAssertEqual(description, "Checkout session response didn't include the updated payment method.")
+        }
+
+        // Then the diagnostic retains the original analytics identity and the requested method's ID.
+        let events = analyticsClient._testLogHistory.filter { $0["event"] as? String == "unexpected_error.paymentsheet" }
+        XCTAssertEqual(events.count, 1)
+        let event = try XCTUnwrap(events.first)
+        XCTAssertEqual(event["error_type"] as? String, "StripePaymentSheet.SavedPaymentMethodManager.Error")
+        XCTAssertEqual(event["error_code"] as? String, "missingUpdatedPaymentMethod")
+        XCTAssertEqual(event["payment_method_id"] as? String, paymentMethod.stripeId)
     }
 
     // MARK: Detach tests
@@ -240,12 +369,12 @@ final class SavedPaymentMethodManagerTests: XCTestCase {
         let expectation = stubDetachPaymentMethod(paymentMethod: STPPaymentMethod.stubbedPaymentMethod(),
                                                   ephemeralKey: ephemeralKey)
 
-        let sut = SavedPaymentMethodManager(
-            customerProvider: CustomerProvider(customer: configuration.customer),
+        let sut = CustomerProvider(customer: configuration.customer)
+        sut.detach(
+            paymentMethod: paymentMethod,
             elementsSession: ._testValue(paymentMethodTypes: ["card"]),
             apiClient: configuration.apiClient
         )
-        sut.detach(paymentMethod: paymentMethod)
 
         wait(for: [expectation], timeout: 5.0)
     }
@@ -273,12 +402,12 @@ final class SavedPaymentMethodManagerTests: XCTestCase {
                                              ],
                                          ])
 
-        let sut = SavedPaymentMethodManager(
-            customerProvider: CustomerProvider(customer: configuration.customer),
+        let sut = CustomerProvider(customer: configuration.customer)
+        sut.detach(
+            paymentMethod: paymentMethod,
             elementsSession: elementsSession,
             apiClient: configuration.apiClient
         )
-        sut.detach(paymentMethod: paymentMethod)
 
         wait(for: [listPaymentMethodsExpectation, detachExpectation], timeout: 5.0)
     }
@@ -292,18 +421,19 @@ final class SavedPaymentMethodManagerTests: XCTestCase {
 
         let checkoutSession = makeCheckoutSession(id: checkoutSessionId)
 
-        let sut = SavedPaymentMethodManager(
-            customerProvider: CustomerProvider(checkoutSession: checkoutSession.makePublicSession()),
+        let sut = CustomerProvider(checkoutSession: checkoutSession.makePublicSession())
+        sut.detach(
+            paymentMethod: paymentMethod,
             elementsSession: ._testValue(paymentMethodTypes: ["card"]),
             apiClient: configuration.apiClient
         )
-        sut.detach(paymentMethod: paymentMethod)
 
         wait(for: [detachExpectation], timeout: 5.0)
     }
 }
 
-extension SavedPaymentMethodManagerTests {
+extension CustomerProviderPaymentMethodTests {
+
     // MARK: HTTP Stubs
 
     func stubRequest(urlContains: String,
