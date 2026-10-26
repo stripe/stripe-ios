@@ -804,6 +804,45 @@ final class CheckoutApplePayContextTests: XCTestCase {
         XCTAssertEqual(result.paymentSheetResult, .completed)
     }
 
+    func testAuthorizationConfirmsWithPaymentElementSource() async throws {
+        try await assertAuthorizationConfirmsWithSource(.paymentElement)
+    }
+
+    func testAuthorizationConfirmsWithExpressCheckoutElementSource() async throws {
+        try await assertAuthorizationConfirmsWithSource(.expressCheckoutElement)
+    }
+
+    private func assertAuthorizationConfirmsWithSource(
+        _ confirmationSource: CheckoutController.ConfirmingElement,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) async throws {
+        // Given an Apple Pay confirmation flow built for a specific Checkout Elements component
+        APIStubbedTestCase.stubAllOutgoingRequests()
+        stub(condition: isPath("/v1/tokens")) { _ in
+            HTTPStubsResponse(jsonObject: self.tokenJSON(), statusCode: 200, headers: nil)
+        }
+        let response = try PaymentPagesAPIResponse.decode(fromAPIResponse: makeConfirmResponseJSON())
+        let confirmed = expectation(description: "Checkout confirmed with inline Apple Pay data")
+        let (context, controller) = makeContext(confirmationSource: confirmationSource) { parameters in
+            // Then the /confirm request parameters are tagged with that same component, so
+            // payment_method_data[payment_user_agent] can be built for the right one downstream
+            XCTAssertEqual(parameters.confirmationSource, confirmationSource, file: file, line: line)
+            confirmed.fulfill()
+            return .completed(response)
+        }
+
+        // When Apple Pay authorizes the payment
+        let resultTask = Task { await context.presentApplePay() }
+        context.paymentAuthorizationController(controller, didAuthorizePayment: STPFixtures.simulatorApplePayPayment()) { _ in }
+
+        // Then confirmation receives the right confirmationSource, and dismissal completes Checkout
+        await fulfillment(of: [confirmed], timeout: 5)
+        context.paymentAuthorizationControllerDidFinish(controller)
+        let result = await resultTask.value
+        XCTAssertEqual(result.paymentSheetResult, .completed, file: file, line: line)
+    }
+
     func testRetryAfterConfirmationFailureUsesNewToken() async throws {
         // Given a confirmation failure followed by a successful retry
         APIStubbedTestCase.stubAllOutgoingRequests()
@@ -907,6 +946,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
         presentationWindow: UIWindow? = nil,
         collectsTaxFromBillingAddress: Bool = false,
         checkoutWalletUpdater: CheckoutSessionWalletUpdater? = nil,
+        confirmationSource: CheckoutController.ConfirmingElement = .paymentElement,
         confirmationHandler: @escaping CheckoutController.ApplePayConfirmationParameters.ConfirmationHandler = { _ in
             .failed(CheckoutError.unknown(debugDescription: "Unexpected Apple Pay confirmation in test."))
         }
@@ -925,7 +965,8 @@ final class CheckoutApplePayContextTests: XCTestCase {
         let applePayConfirmationParameters = CheckoutController.ApplePayConfirmationParameters.makeMock(
             apiClient: resolvedAPIClient,
             presentationWindow: presentationWindow,
-            confirmationHandler: confirmationHandler
+            confirmationHandler: confirmationHandler,
+            confirmationSource: confirmationSource
         )
         let mockController = MockPKPaymentAuthorizationController()
         let context = CheckoutApplePayContext(
