@@ -5,6 +5,7 @@
 //  Created by Michael Liberatore on 9/24/26.
 //
 
+import Combine
 @_spi(STP) import StripeCore
 @_spi(CryptoOnrampAlpha) import StripePaymentSheet
 import SwiftUI
@@ -20,6 +21,9 @@ struct QuestionnaireAnswerField: View {
 
     /// The appearance used for the focused border and color scheme.
     let appearance: LinkAppearance
+
+    /// Maximum Unicode scalars allowed in each questionnaire answer.
+    let maximumAnswerLength: Int
 
     /// Whether the answer field should take focus when it appears.
     var isInitiallyFocused = false
@@ -45,6 +49,12 @@ struct QuestionnaireAnswerField: View {
                     .padding(.top, labelHeight)
                     .tint(Color.textPrimary)
                     .focused($isFocused)
+                    .onReceive(Just(answer)) { value in
+                        let prefixedAnswer = value.prefix(unicodeScalarsCount: maximumAnswerLength)
+                        if prefixedAnswer.endIndex != value.endIndex {
+                            answer = String(prefixedAnswer)
+                        }
+                    }
 
                 Text(String.Localized.questionnaireAnswer)
                     .typography(.bodyLarge)
@@ -120,6 +130,7 @@ private struct QuestionnaireAnswerFieldPreview: View {
             question: "Why are you purchasing cryptocurrency through swapped.com?",
             answer: $answer,
             appearance: appearance,
+            maximumAnswerLength: 5_000,
             isInitiallyFocused: isInitiallyFocused
         )
         .padding(20)

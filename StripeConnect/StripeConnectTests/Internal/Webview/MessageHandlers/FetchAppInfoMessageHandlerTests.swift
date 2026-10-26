@@ -13,7 +13,8 @@ class FetchAppInfoMessageHandlerTests: ScriptWebTestBase {
     @MainActor
     func testMessageSend() async throws {
         let message = FetchAppInfoMessageHandler.Reply(applicationId: "com.stripe.example")
-        webView.addMessageReplyHandler(messageHandler: FetchAppInfoMessageHandler(didReceiveMessage: { _ in
+        try await loadTrustedDocument()
+        webView.addMessageReplyHandler(messageHandler: FetchAppInfoMessageHandler(sourcePolicy: webView.trustedMessageSourcePolicy(), didReceiveMessage: { _ in
             return message
         }))
 

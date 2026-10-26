@@ -111,7 +111,6 @@ class SavedPaymentOptionsViewController: UIViewController {
         let removeSavedPaymentMethodMessage: String?
         let merchantDisplayName: String
         let isCVCRecollectionEnabled: Bool
-        let isTestMode: Bool
         let allowsRemovalOfLastSavedPaymentMethod: Bool
         let allowsRemovalOfPaymentMethods: Bool
         let allowsSetAsDefaultPM: Bool
@@ -718,7 +717,6 @@ extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
             paymentMethodRemoveIsPartial: elementsSession.paymentMethodRemoveIsPartialForPaymentSheet(),
             merchantName: configuration.merchantDisplayName)
         let editVc = UpdatePaymentMethodViewController(removeSavedPaymentMethodMessage: removeSavedPaymentMethodMessage,
-                                                       isTestMode: configuration.isTestMode,
                                                        configuration: updateConfig)
         editVc.delegate = self
         self.bottomSheetController?.pushContentViewController(editVc)

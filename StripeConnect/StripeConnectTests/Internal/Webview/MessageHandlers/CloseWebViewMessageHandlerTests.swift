@@ -13,8 +13,9 @@ class CloseWebViewMessageHandlerTests: ScriptWebTestBase {
     @MainActor
     func testMessageSend() async throws {
         let expectation = self.expectation(description: "Message received")
+        try await loadTrustedDocument()
 
-        let messageHandler = CloseWebViewMessageHandler(analyticsClient: MockComponentAnalyticsClient(commonFields: .mock), didReceiveMessage: { _ in
+        let messageHandler = CloseWebViewMessageHandler(sourcePolicy: webView.trustedMessageSourcePolicy(), analyticsClient: MockComponentAnalyticsClient(commonFields: .mock), didReceiveMessage: { _ in
             expectation.fulfill()
         })
 

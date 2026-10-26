@@ -153,12 +153,9 @@ class ConsentViewController: UIViewController {
                 case .success(let result):
                     self.delegate?.consentViewController(self, didConsentWithResult: result)
                 case .failure(let error):
-                    let attestationError = self.dataSource.completeAssertionIfNeeded(
-                        possibleError: error,
-                        api: .consumerSessionLookup
-                    )
-
-                    if attestationError != nil {
+                    // The data source has already released the assertion lock. Only attestation
+                    // verdict failures reach here as Link assertion errors.
+                    if StripeAttest.isLinkAssertionError(error: error) {
                         let prefillDetails = WebPrefillDetails(email: dataSource.email)
                         self.delegate?.consentViewControllerDidFailAttestationVerdict(self, prefillDetails: prefillDetails)
                     }
