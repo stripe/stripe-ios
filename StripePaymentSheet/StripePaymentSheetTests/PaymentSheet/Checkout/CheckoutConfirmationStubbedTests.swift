@@ -955,6 +955,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
             expectedPaymentMethodType: "link",
             expectedBillingEmail: .value("test@example.com"),
             expectedPaymentUserAgent: checksPaymentUserAgent ? confirmationSource.paymentUserAgent : nil,
+            expectedIntegrationSubtype: confirmationSource.rawValue,
             file: file,
             line: line
         )
@@ -968,7 +969,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
             analyticsHelper: ._testValue(),
             authenticationContext: self,
             paymentHandler: STPPaymentHandler(apiClient: configuration.apiClient),
-            confirmationSource: confirmationSource
+            attribution: .init(confirmingElement: confirmationSource, configuredElements: checkout.configuration.configuredElements)
         ))
 
         let result = await checkout.confirm(flow)
@@ -999,7 +1000,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
             analyticsHelper: ._testValue(),
             authenticationContext: self,
             paymentHandler: STPPaymentHandler(apiClient: configuration.apiClient),
-            confirmationSource: .paymentElement
+            attribution: .init(confirmingElement: .paymentElement, configuredElements: checkout.configuration.configuredElements)
         ))
 
         // When Checkout confirms with Link
@@ -1160,7 +1161,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
             confirmationChallenge: confirmationChallenge,
             authenticationContext: self,
             paymentHandler: STPPaymentHandler(apiClient: configuration.apiClient),
-            confirmationSource: .paymentElement
+            attribution: .init(confirmingElement: .paymentElement, configuredElements: checkout.configuration.configuredElements)
         )
         return .paymentMethod(parameters, preconfirmIntegrationShape: .embedded)
     }
@@ -1345,6 +1346,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         expectedAllowRedisplay: String? = nil,
         expectedBillingEmail: BillingEmailExpectation? = nil,
         expectedPaymentUserAgent: String? = nil,
+        expectedIntegrationSubtype: String = "payment-element",
         file: StaticString = #filePath,
         line: UInt = #line
     ) -> XCTestExpectation {
@@ -1379,6 +1381,13 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
             }
             XCTAssertEqual(params["expected_payment_method_type"], expectedPaymentMethodType, file: file, line: line)
             XCTAssertEqual(params["client_attribution_metadata[checkout_session_id]"], sessionId, file: file, line: line)
+            let metadataPrefixes = expectedPaymentMethodID == nil
+                ? ["client_attribution_metadata", "payment_method_data[client_attribution_metadata]"]
+                : ["client_attribution_metadata"]
+            for prefix in metadataPrefixes {
+                XCTAssertEqual(params["\(prefix)[merchant_integration_source]"], "checkout", file: file, line: line)
+                XCTAssertEqual(params["\(prefix)[merchant_integration_subtype]"], expectedIntegrationSubtype, file: file, line: line)
+            }
             if let expectedAllowRedisplay {
                 XCTAssertEqual(params["payment_method_data[allow_redisplay]"], expectedAllowRedisplay, file: file, line: line)
             }

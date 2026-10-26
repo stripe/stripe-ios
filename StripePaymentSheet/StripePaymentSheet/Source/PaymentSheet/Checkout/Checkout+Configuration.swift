@@ -68,6 +68,17 @@ extension CheckoutController {
             self.returnURL = returnURL
         }
 
+        /// Elements enabled by configuration, regardless of whether they are displayed or used.
+        var configuredElements: [STPClientAttributionMetadata.AdditionalElement] {
+            let elements: [STPClientAttributionMetadata.AdditionalElement?] = [
+                paymentElement != nil ? .payment : nil,
+                expressCheckoutElement != nil ? .expressCheckout : nil,
+                shippingAddressElement != nil ? .address : nil,
+                currencySelectorElement != nil ? .currencySelector : nil,
+            ]
+            return elements.compactMap { $0 }
+        }
+
         // MARK: - Debug-only return URL validation
 #if DEBUG
         /// Debug-only listener used to verify Checkout return URLs can be routed through

@@ -559,7 +559,7 @@ extension CheckoutController.ApplePayConfirmationParameters {
         confirmationHandler: @escaping CheckoutController.ApplePayConfirmationParameters.ConfirmationHandler = { _ in
             .failed(CheckoutError.unknown(debugDescription: "Unexpected Apple Pay confirmation in test."))
         },
-        confirmationSource: CheckoutController.ConfirmingElement = .paymentElement
+        attribution: CheckoutAttributionContext = .init(confirmingElement: .paymentElement, configuredElements: [.payment])
     ) -> CheckoutController.ApplePayConfirmationParameters {
         CheckoutController.ApplePayConfirmationParameters(
             applePayConfiguration: applePayConfiguration,
@@ -570,7 +570,7 @@ extension CheckoutController.ApplePayConfirmationParameters {
             defaultBillingDetails: defaultBillingDetails,
             presentationWindow: presentationWindow,
             confirmationHandler: confirmationHandler,
-            confirmationSource: confirmationSource
+            attribution: attribution
         )
     }
 }

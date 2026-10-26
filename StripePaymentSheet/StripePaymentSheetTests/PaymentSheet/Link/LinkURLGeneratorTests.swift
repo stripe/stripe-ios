@@ -143,23 +143,28 @@ class LinkURLGeneratorTests: XCTestCase {
             "EmbeddedPaymentElement",
         ])
         let config = PaymentSheet.Configuration()
-        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "USD")) { _, _ in
-            return ""
-        }
         config.apiClient.publishableKey = "pk_123"
-        let intent = Intent.deferredIntent(intentConfig: intentConfig)
+        let session = CheckoutTestHelpers.makeSession([
+            "elements_options": ["__checkout_config_id": "config_checkout"],
+        ]).makePublicSession()
+        let intent = Intent.checkout(session)
 
-        // When building Link web popup params for a Checkout confirmation
+        // When building Link web popup params with Checkout attribution
+        let attribution = CheckoutAttributionContext(confirmingElement: confirmationSource, configuredElements: [.payment, .expressCheckout])
         let params = try LinkURLGenerator.linkParams(
             configuration: config,
             intent: intent,
             elementsSession: .emptyElementsSession,
-            confirmationSource: confirmationSource
+            checkoutAttribution: attribution
         )
 
         // Then paymentUserAgent is built fresh for the confirming element, not the global one
         XCTAssertEqual(params.paymentUserAgent, confirmationSource.paymentUserAgent)
         XCTAssertNotEqual(params.paymentUserAgent, PaymentsSDKVariant.paymentUserAgent)
+        XCTAssertEqual(params.clientAttributionMetadata.merchantIntegrationSource, "checkout")
+        XCTAssertEqual(params.clientAttributionMetadata.merchantIntegrationSubtype, confirmationSource.rawValue)
+        XCTAssertEqual(params.clientAttributionMetadata.checkoutConfigId, "config_checkout")
+        XCTAssertEqual(params.clientAttributionMetadata.merchantIntegrationAdditionalElements, ["payment", "expressCheckout"])
     }
 
     func testURLParamsPaymentMethodOptionsSetupFutureUsage() {
