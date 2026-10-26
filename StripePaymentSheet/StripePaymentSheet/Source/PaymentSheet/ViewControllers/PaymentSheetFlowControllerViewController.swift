@@ -107,14 +107,6 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         return selectedPaymentOption?.formConfirmParamsForCancellationRestoration
     }
 
-    private lazy var savedPaymentMethodManager: SavedPaymentMethodManager = {
-        return SavedPaymentMethodManager(
-            customerProvider: loadResult.customerProvider,
-            elementsSession: elementsSession,
-            apiClient: configuration.apiClient
-        )
-    }()
-
     // MARK: - Views
     private let addPaymentMethodViewController: AddPaymentMethodViewController
     let savedPaymentOptionsViewController: SavedPaymentOptionsViewController
@@ -661,8 +653,12 @@ extension PaymentSheetFlowControllerViewController: SavedPaymentOptionsViewContr
             throw PaymentSheetError.unknown(debugDescription: "Failed to read payment method from payment method selection")
         }
 
-        return try await savedPaymentMethodManager.update(paymentMethod: paymentMethod,
-                                                          with: updateParams)
+        return try await loadResult.customerProvider.update(
+            paymentMethod: paymentMethod,
+            with: updateParams,
+            elementsSession: elementsSession,
+            apiClient: configuration.apiClient
+        )
     }
 
     func didSelectUpdateDefault(viewController: SavedPaymentOptionsViewController,
@@ -671,7 +667,11 @@ extension PaymentSheetFlowControllerViewController: SavedPaymentOptionsViewContr
             throw PaymentSheetError.unknown(debugDescription: "Failed to read payment method from payment method selection")
         }
 
-        return try await savedPaymentMethodManager.setAsDefaultPaymentMethod(defaultPaymentMethodId: paymentMethod.stripeId)
+        return try await loadResult.customerProvider.setAsDefaultPaymentMethod(
+            paymentMethod.stripeId,
+            elementsSession: elementsSession,
+            apiClient: configuration.apiClient
+        )
     }
 
     func didUpdateSelection(
@@ -773,7 +773,11 @@ extension PaymentSheetFlowControllerViewController: SavedPaymentOptionsViewContr
             return
         }
 
-        savedPaymentMethodManager.detach(paymentMethod: paymentMethod)
+        loadResult.customerProvider.detach(
+            paymentMethod: paymentMethod,
+            elementsSession: elementsSession,
+            apiClient: configuration.apiClient
+        )
         analyticsHelper.logSavedPaymentMethodRemoved(paymentMethod: paymentMethod)
 
         if !savedPaymentOptionsViewController.canEditPaymentMethods {

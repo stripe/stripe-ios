@@ -128,14 +128,6 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         return !paymentMethods.filter { $0.isCoBrandedCard }.isEmpty
     }
 
-    private lazy var savedPaymentMethodManager: SavedPaymentMethodManager = {
-        SavedPaymentMethodManager(
-            customerProvider: customerProvider,
-            elementsSession: elementsSession,
-            apiClient: configuration.apiClient
-        )
-    }()
-
     // MARK: Internal properties
     weak var delegate: VerticalSavedPaymentMethodsViewControllerDelegate?
 
@@ -275,7 +267,11 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         guard let button = paymentMethodRows.first(where: { $0.paymentMethod.stripeId == paymentMethod.stripeId }) else { return }
 
         // Detach the payment method from the customer
-        savedPaymentMethodManager.detach(paymentMethod: paymentMethod)
+        customerProvider.detach(
+            paymentMethod: paymentMethod,
+            elementsSession: elementsSession,
+            apiClient: configuration.apiClient
+        )
         analyticsHelper.logSavedPaymentMethodRemoved(paymentMethod: paymentMethod)
 
         // Remove the payment method row button
@@ -531,7 +527,12 @@ extension VerticalSavedPaymentMethodsViewController: UpdatePaymentMethodViewCont
     private func updateCard(paymentMethod: STPPaymentMethod, updateParams: STPPaymentMethodUpdateParams, hasOnlyChangedCardBrand: Bool) async -> Result<Void, Error> {
         do {
             // Update the payment method
-            let updatedPaymentMethod = try await savedPaymentMethodManager.update(paymentMethod: paymentMethod, with: updateParams)
+            let updatedPaymentMethod = try await customerProvider.update(
+                paymentMethod: paymentMethod,
+                with: updateParams,
+                elementsSession: elementsSession,
+                apiClient: configuration.apiClient
+            )
             updatedPaymentMethod.updateLocalFields(from: paymentMethod)
             replace(paymentMethod: paymentMethod, with: updatedPaymentMethod)
             return .success(())
@@ -543,7 +544,11 @@ extension VerticalSavedPaymentMethodsViewController: UpdatePaymentMethodViewCont
     private func updateDefault(paymentMethod: STPPaymentMethod) async -> Result<Void, Error> {
         do {
             let previousDefaultPaymentMethod = defaultPaymentMethod
-            _ = try await savedPaymentMethodManager.setAsDefaultPaymentMethod(defaultPaymentMethodId: paymentMethod.stripeId)
+            _ = try await customerProvider.setAsDefaultPaymentMethod(
+                paymentMethod.stripeId,
+                elementsSession: elementsSession,
+                apiClient: configuration.apiClient
+            )
             defaultPaymentMethod = paymentMethod
             // we just set a new default, so we replace it to add the badge and select it
             replace(paymentMethod: paymentMethod, with: paymentMethod, selectedState: .selected)
