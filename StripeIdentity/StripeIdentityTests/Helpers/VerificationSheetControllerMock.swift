@@ -57,7 +57,6 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
     var missingType: StripeIdentity.IndividualFormElement.MissingType?
     var transitionedToIndividual: Bool = false
     var transitionedToSelfieCapture: Bool = false
-    var transitionedToSelfieCaptureTrainingConsent: Bool?
     var transitionedToDocumentCapture: Bool = false
 
     var completeOption: CompleteOptionView.CompleteOption?
@@ -191,14 +190,12 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
         self.transitionedToIndividual = true
     }
 
-    func transitionToSelfieCapture(
-        trainingConsent: Bool?
-    ) {
+    func transitionToSelfieCapture() {
         self.transitionedToSelfieCapture = true
-        self.transitionedToSelfieCaptureTrainingConsent = trainingConsent
     }
 
     func transitionToDocumentCapture() {
         self.transitionedToDocumentCapture = true
     }
+
 }

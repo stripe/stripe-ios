@@ -1,4 +1,4 @@
-// swift-tools-version:6.1
+// swift-tools-version:5.7
 import PackageDescription
 
 let package = Package(
@@ -57,18 +57,6 @@ let package = Package(
             targets: ["StripeCryptoOnramp"]
         )
     ],
-    traits: [
-        .trait(
-            name: "Identity",
-            description: "Enables 3D face capture in StripeIdentity."
-        )
-    ],
-    dependencies: [
-        .package(
-            url: "https://github.com/stripe/identity-ios-mediapipe",
-            exact: "1.0.0"
-        )
-    ],
     targets: [
         .target(
             name: "Stripe",
@@ -114,22 +102,11 @@ let package = Package(
         ),
         .target(
             name: "StripeIdentity",
-            dependencies: [
-                "StripeCore",
-                "StripeUICore",
-                "StripeCameraCore",
-                .product(
-                    name: "MediaPipeSPM",
-                    package: "identity-ios-mediapipe",
-                    condition: .when(traits: ["Identity"])
-                ),
-            ],
+            dependencies: ["StripeCore", "StripeUICore", "StripeCameraCore"],
             path: "StripeIdentity/StripeIdentity",
             exclude: ["Info.plist"],
             resources: [
-                .process("Resources/Audio"),
-                .process("Resources/Images"),
-                .copy("Resources/face_landmarker.task")
+                .process("Resources/Images")
             ]
         ),
         .target(
@@ -220,6 +197,5 @@ let package = Package(
                 .process("Resources/Localizations")
             ]
         )
-    ],
-    swiftLanguageModes: [.v5]
+    ]
 )

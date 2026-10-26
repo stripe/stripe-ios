@@ -18,4 +18,3 @@ no_retain_spi: ["STP"]
 build_arguments:
   - -destination
   - 'generic/platform=iOS Simulator'
-  - ARCHS=arm64
