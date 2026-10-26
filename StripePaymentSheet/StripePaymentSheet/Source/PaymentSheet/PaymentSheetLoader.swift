@@ -255,9 +255,11 @@ final class PaymentSheetLoader {
         let intent: Intent
         let elementsSession: STPElementsSession
         let clientDefaultPaymentMethod: String? = {
-            return defaultStripePaymentMethodId(
-                forCustomerID: customerProvider.customerID
-            )
+            // Only send a default associated with a resolved customer.
+            guard let customerID = customerProvider.customerID else {
+                return nil
+            }
+            return defaultStripePaymentMethodId(forCustomerID: customerID)
         }()
 
         switch mode {
@@ -352,7 +354,7 @@ final class PaymentSheetLoader {
         return false
     }
 
-    static func defaultStripePaymentMethodId(forCustomerID customerID: String?) -> String? {
+    static func defaultStripePaymentMethodId(forCustomerID customerID: String) -> String? {
         guard let defaultPaymentMethod = CustomerPaymentOption.localDefaultPaymentMethod(for: customerID),
               case .stripeId(let paymentMethodId) = defaultPaymentMethod else {
             return nil
