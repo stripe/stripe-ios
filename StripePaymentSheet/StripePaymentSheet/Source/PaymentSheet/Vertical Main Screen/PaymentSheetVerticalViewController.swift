@@ -115,14 +115,6 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 
     var defaultPaymentMethod: STPPaymentMethod?
 
-    private lazy var savedPaymentMethodManager: SavedPaymentMethodManager = {
-        SavedPaymentMethodManager(
-            customerProvider: loadResult.customerProvider,
-            elementsSession: elementsSession,
-            apiClient: configuration.apiClient
-        )
-    }()
-
     // MARK: - UI properties
 
     lazy var navigationBar: SheetNavigationBar = {
@@ -1114,7 +1106,11 @@ extension PaymentSheetVerticalViewController: SheetNavigationBarDelegate {
 extension PaymentSheetVerticalViewController: UpdatePaymentMethodViewControllerDelegate {
     func didRemove(viewController: UpdatePaymentMethodViewController, paymentMethod: STPPaymentMethod) {
         // Detach the payment method from the customer
-        savedPaymentMethodManager.detach(paymentMethod: paymentMethod)
+        loadResult.customerProvider.detach(
+            paymentMethod: paymentMethod,
+            elementsSession: elementsSession,
+            apiClient: configuration.apiClient
+        )
         analyticsHelper.logSavedPaymentMethodRemoved(paymentMethod: paymentMethod)
 
         // if it's the default pm, unset the default
@@ -1168,7 +1164,12 @@ extension PaymentSheetVerticalViewController: UpdatePaymentMethodViewControllerD
     private func updateCard(paymentMethod: STPPaymentMethod, updateParams: STPPaymentMethodUpdateParams, hasOnlyChangedCardBrand: Bool) async -> Result<Void, Swift.Error> {
         do {
             // Update the payment method
-            let updatedPaymentMethod = try await savedPaymentMethodManager.update(paymentMethod: paymentMethod, with: updateParams)
+            let updatedPaymentMethod = try await loadResult.customerProvider.update(
+                paymentMethod: paymentMethod,
+                with: updateParams,
+                elementsSession: elementsSession,
+                apiClient: configuration.apiClient
+            )
 
             // Update savedPaymentMethods
             if let row = self.savedPaymentMethods.firstIndex(where: { $0.stripeId == updatedPaymentMethod.stripeId }) {
@@ -1183,7 +1184,11 @@ extension PaymentSheetVerticalViewController: UpdatePaymentMethodViewControllerD
     private func updateDefault(paymentMethod: STPPaymentMethod) async -> Result<Void, Swift.Error> {
         do {
             // Update the payment method
-            _ = try await savedPaymentMethodManager.setAsDefaultPaymentMethod(defaultPaymentMethodId: paymentMethod.stripeId)
+            _ = try await loadResult.customerProvider.setAsDefaultPaymentMethod(
+                paymentMethod.stripeId,
+                elementsSession: elementsSession,
+                apiClient: configuration.apiClient
+            )
             defaultPaymentMethod = paymentMethod
             return .success(())
         } catch {
