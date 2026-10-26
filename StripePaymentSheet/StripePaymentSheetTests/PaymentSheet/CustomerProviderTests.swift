@@ -276,7 +276,7 @@ final class CustomerProviderTests: XCTestCase {
         )
 
         // Then consumers can use the loaded customer without mutating merchant input
-        XCTAssertEqual(sut.savedPaymentMethodManager.customerProvider.customerID, "cus_checkout")
+        XCTAssertEqual(sut.loadResult.customerProvider.customerID, "cus_checkout")
         XCTAssertEqual(sut.configuration.customer?.id, "cus_merchant")
     }
 

@@ -9,7 +9,7 @@ import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 
-/// Provides a common view of customer data and capabilities across PaymentSheet integrations.
+/// Provides customer data, capabilities, and saved payment method operations across PaymentSheet integrations.
 struct CustomerProvider {
 
     private enum Backing {
@@ -125,11 +125,23 @@ struct CustomerProvider {
         }
     }
 
-    enum Error: Swift.Error {
+    private enum Error: String, AnalyticLoggableError {
 
-        case missingCustomerID
         case missingEphemeralKey
         case missingUpdatedPaymentMethod
+
+        var analyticsErrorType: String {
+            // Preserve the analytics identity used before these operations moved to the provider.
+            return "StripePaymentSheet.SavedPaymentMethodManager.Error"
+        }
+
+        var analyticsErrorCode: String {
+            return rawValue
+        }
+
+        var additionalNonPIIErrorDetails: [String: Any] {
+            return [:]
+        }
     }
 
     func ephemeralKeySecret(basedOn elementsSession: STPElementsSession?) -> String? {
@@ -165,12 +177,23 @@ struct CustomerProvider {
             guard let paymentMethod = updatedSession.customer?.paymentMethods.first(where: {
                 $0.stripeId == paymentMethod.stripeId
             }) else {
-                throw Error.missingUpdatedPaymentMethod
+                let errorAnalytic = ErrorAnalytic(
+                    event: .unexpectedPaymentSheetError,
+                    error: Error.missingUpdatedPaymentMethod,
+                    additionalNonPIIParams: ["payment_method_id": paymentMethod.stripeId]
+                )
+                STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+                throw PaymentSheetError.unknown(
+                    debugDescription: "Checkout session response didn't include the updated payment method."
+                )
             }
             updatedPaymentMethod = paymentMethod
         case .customer:
             guard let ephemeralKey = ephemeralKeySecret(basedOn: elementsSession) else {
-                throw Error.missingEphemeralKey
+                logMissingEphemeralKey()
+                throw PaymentSheetError.unknown(
+                    debugDescription: "Failed to read ephemeral key while updating a payment method."
+                )
             }
             updatedPaymentMethod = try await apiClient.updatePaymentMethod(
                 with: paymentMethod.stripeId,
@@ -178,17 +201,18 @@ struct CustomerProvider {
                 ephemeralKeySecret: ephemeralKey
             )
         }
+        // API responses don't contain the local Link details attached to the original method.
         updatedPaymentMethod.updateLocalFields(from: paymentMethod)
         return updatedPaymentMethod
     }
 
     @MainActor
-    @discardableResult
     func detach(
         paymentMethod: STPPaymentMethod,
         elementsSession: STPElementsSession,
         apiClient: STPAPIClient
-    ) -> Bool {
+    ) {
+        // Removal is optimistic; callers update their UI without waiting for the network response.
         switch backing {
         case .checkoutSession(let session):
             Task {
@@ -197,11 +221,11 @@ struct CustomerProvider {
                     fromCheckoutSession: session.id
                 )
             }
-            return true
         case .customer(let customer):
             guard let customer,
                   let ephemeralKey = ephemeralKeySecret(basedOn: elementsSession) else {
-                return false
+                logMissingEphemeralKey()
+                return
             }
             switch customer.customerAccessProvider {
             case .customerSession(let clientSecret):
@@ -225,7 +249,6 @@ struct CustomerProvider {
                     fromCustomerUsing: ephemeralKey
                 ) { _ in }
             }
-            return true
         }
     }
 
@@ -236,16 +259,30 @@ struct CustomerProvider {
         apiClient: STPAPIClient
     ) async throws -> STPCustomer {
         guard let ephemeralKey = ephemeralKeySecret(basedOn: elementsSession) else {
-            throw Error.missingEphemeralKey
+            logMissingEphemeralKey()
+            throw PaymentSheetError.unknown(
+                debugDescription: "Failed to read ephemeral key while setting a payment method as default."
+            )
         }
         guard let customerID else {
-            throw Error.missingCustomerID
+            throw PaymentSheetError.unknown(
+                debugDescription: "Failed to read customerId while setting a payment method as default."
+            )
         }
         return try await apiClient.setAsDefaultPaymentMethod(
             paymentMethodID,
             for: customerID,
             using: ephemeralKey
         )
+    }
+
+    private func logMissingEphemeralKey() {
+        let errorAnalytic = ErrorAnalytic(
+            event: .unexpectedPaymentSheetError,
+            error: Error.missingEphemeralKey,
+            additionalNonPIIParams: ["customer_access_provider": analyticValue ?? "unknown"]
+        )
+        STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
     }
 
     var supportsLinkSetupFutureUsage: Bool {
