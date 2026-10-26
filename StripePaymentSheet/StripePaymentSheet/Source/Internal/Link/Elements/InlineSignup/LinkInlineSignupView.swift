@@ -257,6 +257,13 @@ final class LinkInlineSignupView: UIView {
     }
 
     func updateUI(animated: Bool = false) {
+        if viewModel.mode == .signupOptIn {
+            // This mode only displays a checkbox. Updating the unused email field would
+            // force layout on a detached stack view with zero height.
+            checkboxElement.isChecked = viewModel.saveCheckboxChecked
+            return
+        }
+
         if viewModel.isLookingUpLinkAccount {
             emailElement.startAnimating()
         } else {

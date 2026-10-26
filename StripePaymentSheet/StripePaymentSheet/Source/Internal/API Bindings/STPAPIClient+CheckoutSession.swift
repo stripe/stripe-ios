@@ -45,6 +45,11 @@ struct CheckoutSessionConfirmationRequestParameters {
         return data
     }
 
+    /// The Checkout Elements component confirming. Used to tag
+    /// `payment_method_data[payment_user_agent]` for payment/attribution purposes. Required on
+    /// every factory so all Checkout confirmation paths identify their confirming element.
+    let confirmationSource: CheckoutController.ConfirmingElement
+
     /// The expected amount for validation. `nil` for setup-style Sessions.
     let expectedAmount: Int?
 
@@ -81,6 +86,7 @@ struct CheckoutSessionConfirmationRequestParameters {
 
     static func createWithoutPaymentMethod(
         sessionId: String,
+        confirmationSource: CheckoutController.ConfirmingElement,
         expectedAmount: Int?,
         returnURL: String? = nil,
         clientAttributionMetadata: STPClientAttributionMetadata? = nil,
@@ -89,6 +95,7 @@ struct CheckoutSessionConfirmationRequestParameters {
         Self(
             sessionId: sessionId,
             paymentMethod: nil,
+            confirmationSource: confirmationSource,
             expectedAmount: expectedAmount,
             expectedPaymentMethodType: nil,
             savePaymentMethod: nil,
@@ -105,6 +112,7 @@ struct CheckoutSessionConfirmationRequestParameters {
     static func createWithPaymentMethodID(
         sessionId: String,
         paymentMethodId: String,
+        confirmationSource: CheckoutController.ConfirmingElement,
         expectedAmount: Int?,
         expectedPaymentMethodType: String,
         savePaymentMethod: Bool? = nil,
@@ -118,6 +126,7 @@ struct CheckoutSessionConfirmationRequestParameters {
         Self(
             sessionId: sessionId,
             paymentMethod: .id(paymentMethodId),
+            confirmationSource: confirmationSource,
             expectedAmount: expectedAmount,
             expectedPaymentMethodType: expectedPaymentMethodType,
             savePaymentMethod: savePaymentMethod,
@@ -134,6 +143,7 @@ struct CheckoutSessionConfirmationRequestParameters {
     static func createWithPaymentMethodData(
         sessionId: String,
         paymentMethodData: STPPaymentMethodParams,
+        confirmationSource: CheckoutController.ConfirmingElement,
         expectedAmount: Int?,
         savePaymentMethod: Bool? = nil,
         returnURL: String? = nil,
@@ -145,6 +155,7 @@ struct CheckoutSessionConfirmationRequestParameters {
         Self(
             sessionId: sessionId,
             paymentMethod: .data(paymentMethodData),
+            confirmationSource: confirmationSource,
             expectedAmount: expectedAmount,
             expectedPaymentMethodType: paymentMethodData.rawTypeString,
             savePaymentMethod: savePaymentMethod,
@@ -228,7 +239,8 @@ extension STPAPIClient {
                 "elements_session_client": [
                     "is_aggregation_expected": true,
                 ],
-            ]
+            ],
+            useServerErrorMessage: true
         )
     }
 
@@ -336,7 +348,12 @@ extension STPAPIClient {
 
         if let paymentMethodData = requestParameters.paymentMethodData {
             var data = STPFormEncoder.dictionary(forObject: paymentMethodData)
-            data = Self.paramsAddingPaymentUserAgent(data)
+            // Build payment_user_agent fresh for the confirming Checkout Elements component,
+            // rather than appending to it, so it's never contaminated by whatever classes have
+            // registered into the global STPAnalyticsClient.sharedClient.productUsage set (e.g.
+            // PaymentSheet.FlowController/EmbeddedPaymentElement, which PaymentElement wraps
+            // internally) — see CheckoutController.ConfirmingElement.
+            data["payment_user_agent"] = requestParameters.confirmationSource.paymentUserAgent
             STPTelemetryClient.shared.addTelemetryFields(toParams: &data)
             parameters["payment_method_data"] = data
         }
@@ -399,6 +416,8 @@ extension STPAPIClient {
                     continuation.resume(with: result)
                 }
             }
+        } catch StripeError.apiError(let apiError) {
+            throw checkoutSessionError(from: apiError)
         } catch {
             if error is DecodingError {
                 reportUnexpectedPaymentPagesParsingError(error, apiClient: self)
@@ -411,7 +430,8 @@ extension STPAPIClient {
         endpoint: String,
         parameters: [String: Any],
         timeout: TimeInterval? = nil,
-        retriesEnabled: Bool = true
+        retriesEnabled: Bool = true,
+        useServerErrorMessage: Bool = false
     ) async throws -> T {
         do {
             return try await withCheckedThrowingContinuation { continuation in
@@ -424,12 +444,23 @@ extension STPAPIClient {
                     continuation.resume(with: result)
                 }
             }
+        } catch StripeError.apiError(let apiError) where useServerErrorMessage {
+            throw checkoutSessionError(from: apiError)
         } catch {
             if error is DecodingError {
                 reportUnexpectedPaymentPagesParsingError(error, apiClient: self)
             }
             throw error
         }
+    }
+
+    private func checkoutSessionError(from apiError: StripeAPIError) -> StripeError {
+        // During private preview, Checkout cannot distinguish buyer-actionable API errors.
+        // Let the shared formatter expose the server's optional message for every error type.
+        var apiError = apiError
+        apiError.useServerErrorMessage = true
+        // Keep the original error so analytics and other internal consumers retain all API data.
+        return .apiError(apiError)
     }
 }
 
