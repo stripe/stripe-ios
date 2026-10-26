@@ -28,6 +28,11 @@ class AuthenticatedWebViewManager: NSObject {
     /// Returns the redirect URL or nil if the user cancelled the flow
     @MainActor
     func present(with url: URL, from view: UIView) async throws -> URL? {
+        guard url.scheme?.caseInsensitiveCompare("https") == .orderedSame,
+              let host = url.host,
+              !host.isEmpty else {
+            throw AuthenticatedWebViewError.invalidURL
+        }
         guard authSession == nil else {
             throw AuthenticatedWebViewError.alreadyPresenting
         }

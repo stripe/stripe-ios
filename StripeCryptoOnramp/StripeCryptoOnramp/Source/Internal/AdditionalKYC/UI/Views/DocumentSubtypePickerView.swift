@@ -61,7 +61,7 @@ struct DocumentSubtypePickerView: View {
                         HStack(alignment: .top, spacing: 12) {
                             Circle()
                                 .strokeBorder(
-                                    selectedID == subtype.id ? Color(uiColor: appearance.colors?.selectedBorder ?? .textPrimary) : .documentBorder,
+                                    selectedID == subtype.id ? Color(uiColor: appearance.primaryButtonBackground) : .documentBorder,
                                     lineWidth: selectedID == subtype.id ? 5 : 1
                                 )
                                 .frame(width: 20, height: 20)

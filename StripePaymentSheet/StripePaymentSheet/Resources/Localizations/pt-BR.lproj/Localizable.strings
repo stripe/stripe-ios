@@ -46,9 +46,19 @@
 
 "Buy now or pay later with Klarna" = "Compre agora ou pague mais tarde com Klarna";
 
+"By confirming your payment with GCash, you allow %@ to charge your GCash account for future payments in accordance with their terms." = "Ao confirmar seu pagamento com GCash, você permite que %@ cobre sua conta GCash para pagamentos futuros de acordo com os termos.";
+
 "By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "Ao confirmar seu pagamento com NICEPAY, você autoriza %@ a cobrar esta forma de pagamento em pagamentos futuros, de acordo com os termos da empresa.";
 
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Ao confirmar seu pagamento com o PayPal, você permite que %@ cobre sua conta do PayPal por pagamentos futuros em conformidade com os termos definidos pela empresa.";
+
+"By confirming your payment with Touch 'n Go, you allow %@ to charge your Touch 'n Go account for future payments in accordance with their terms." = "Ao confirmar seu pagamento com Touch 'n Go, você permite que %@ cobre sua conta Touch 'n Go para pagamentos futuros de acordo com os termos.";
+
+"By confirming your payment with TrueMoney, you allow %@ to charge your TrueMoney account for future payments in accordance with their terms." = "Ao confirmar seu pagamento com TrueMoney, você permite que %@ cobre sua conta TrueMoney para pagamentos futuros de acordo com os termos.";
+
+"By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their <terms>terms of use</terms>." = "Ao confirmar seu pagamento, você concorda que sua transação será processada pela Global Stack Services Limited como comerciante de registro e de acordo com os <terms>termos de uso</terms>.";
+
+"By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their <terms>terms</terms>." = "Ao confirmar seu pagamento, você concorda que sua transação será processada pela Global Stack Services Limited como comerciante de registro e de acordo com os <terms>termos</terms>.";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Ao continuar para o Amazon Pay, você permite que %@ cobre sua conta do Amazon Pay por pagamentos futuros em conformidade com os termos da empresa.";
 
@@ -173,6 +183,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Entendo que a Stripe fará débitos automáticos em nome de %@ e confirmo que sou titular da conta e a única pessoa necessária para autorizar débitos nesta conta.";
 
 "IBAN" = "IBAN";
+
+"Invoice payment for business buyers." = "Pagamento de fatura para compradores corporativos.";
 
 "Keep Editing" = "Continuar editando";
 
