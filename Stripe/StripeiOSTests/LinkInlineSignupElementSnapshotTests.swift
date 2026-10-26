@@ -154,9 +154,9 @@ class LinkInlineSignupElementSnapshotTests: STPSnapshotTestCase {
             XCTAssertEqual(view.checkboxElement.isChecked, !initiallyChecked)
 
             // ...and tapping the checkbox updates the model without laying out unused fields.
-            let checkbox = try XCTUnwrap(view.checkboxElement.view as? UIControl)
-            checkbox.isSelected.toggle()
-            checkbox.sendActions(for: .touchUpInside)
+            view.checkboxElement.isChecked.toggle()
+            // This test has no app host, so invoke the handler without UIApplication event dispatch.
+            view.checkboxElement.didToggleCheckbox()
             view.layoutIfNeeded()
             XCTAssertEqual(viewModel.saveCheckboxChecked, initiallyChecked)
             XCTAssertEqual(view.checkboxElement.isChecked, initiallyChecked)
