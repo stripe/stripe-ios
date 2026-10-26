@@ -42,6 +42,7 @@ extension CheckoutController {
         // TODO: This should probably live with the other methods that delegate to CheckoutController
         // to update shipping, billing, etc., unless those methods end up living here too.
         let confirmationHandler: ConfirmationHandler
+        let confirmationSource: ConfirmingElement
     }
 
     /// The parameters needed to confirm a Checkout Session with Link.
@@ -56,6 +57,7 @@ extension CheckoutController {
         let analyticsHelper: PaymentSheetAnalyticsHelper
         let authenticationContext: STPAuthenticationContext
         let paymentHandler: STPPaymentHandler
+        let confirmationSource: ConfirmingElement
     }
 
     /// The parameters needed to confirm a Checkout Session with a new or saved payment method.
@@ -72,6 +74,35 @@ extension CheckoutController {
         let confirmationChallenge: (any CheckoutConfirmationChallenge)?
         let authenticationContext: STPAuthenticationContext
         let paymentHandler: STPPaymentHandler
+        let confirmationSource: ConfirmingElement
+    }
+
+    /// Identifies which Checkout Elements component is confirming a Checkout Session, so
+    /// `payment_user_agent` can carry an unambiguous label for payment/attribution purposes.
+    /// Exactly one of these is chosen per confirmation attempt (set once in `makeConfirmationFlow(for:)`
+    /// and `makeExpressCheckoutConfirmationFlow`), so `PaymentElement` and `ExpressCheckoutElement`
+    /// never appear together in a single request's `payment_user_agent`.
+    enum ConfirmingElement {
+        case paymentElement
+        case expressCheckoutElement
+
+        private var identifier: String {
+            switch self {
+            case .paymentElement:
+                return PaymentElement.stp_analyticsIdentifier
+            case .expressCheckoutElement:
+                return ExpressCheckoutElement.stp_analyticsIdentifier
+            }
+        }
+
+        /// A `payment_user_agent` built fresh for this element, independent of whatever classes
+        /// (e.g. `PaymentSheet.FlowController`, `EmbeddedPaymentElement`) have registered into the
+        /// global `STPAnalyticsClient.sharedClient.productUsage` set — so it's never contaminated
+        /// by that set's contents, now or if `PaymentElement`/`ExpressCheckoutElement` themselves
+        /// ever register into it too.
+        var paymentUserAgent: String {
+            PaymentsSDKVariant.paymentUserAgent(replacingProductUsageWith: [identifier])
+        }
     }
 
     enum InternalConfirmResult {
@@ -178,7 +209,8 @@ extension CheckoutController {
                         authenticationContext: authenticationContext,
                         paymentHandler: paymentHandler
                     )
-                }
+                },
+                confirmationSource: .paymentElement
             ))
         case .link(let confirmOption):
             let analyticsHelper = paymentElement.paymentOptionSourceOfTruthIsFlowController
@@ -192,7 +224,8 @@ extension CheckoutController {
                 confirmationChallenge: confirmationChallenge,
                 analyticsHelper: analyticsHelper,
                 authenticationContext: authenticationContext,
-                paymentHandler: paymentHandler
+                paymentHandler: paymentHandler,
+                confirmationSource: .paymentElement
             ))
         case .new(let confirmParams):
             return .paymentMethod(
@@ -202,7 +235,8 @@ extension CheckoutController {
                     nativeSheetPresentation: nativeSheetPresentation,
                     confirmationChallenge: confirmationChallenge,
                     authenticationContext: authenticationContext,
-                    paymentHandler: paymentHandler
+                    paymentHandler: paymentHandler,
+                    confirmationSource: .paymentElement
                 ),
                 preconfirmIntegrationShape: integrationShape
             )
@@ -214,7 +248,8 @@ extension CheckoutController {
                     nativeSheetPresentation: nativeSheetPresentation,
                     confirmationChallenge: confirmationChallenge,
                     authenticationContext: authenticationContext,
-                    paymentHandler: paymentHandler
+                    paymentHandler: paymentHandler,
+                    confirmationSource: .paymentElement
                 ),
                 preconfirmIntegrationShape: integrationShape
             )
@@ -253,6 +288,9 @@ extension CheckoutController {
                 case .withoutPaymentMethod(let authenticationContext):
                     let requestParameters = CheckoutSessionConfirmationRequestParameters.createWithoutPaymentMethod(
                         sessionId: self.session.id,
+                        // .withoutPaymentMethod only ever comes from makeConfirmationFlow(for: paymentElement:)
+                        // — ExpressCheckoutElement's flow builder has no such case — so this is always PaymentElement.
+                        confirmationSource: .paymentElement,
                         expectedAmount: self.session.amount,
                         returnURL: self.configuration.returnURL,
                         clientAttributionMetadata: STPClientAttributionMetadata.makeClientAttributionMetadata(
@@ -414,6 +452,7 @@ extension CheckoutController {
             return .createWithPaymentMethodData(
                 sessionId: checkoutSession.id,
                 paymentMethodData: confirmParams.paymentMethodParams,
+                confirmationSource: paymentMethodParameters.confirmationSource,
                 expectedAmount: checkoutSession.amount,
                 savePaymentMethod: checkoutSession.noPaymentRequired ? nil : savePaymentMethod,
                 returnURL: configuration.returnURL,
@@ -429,6 +468,7 @@ extension CheckoutController {
             return .createWithPaymentMethodID(
                 sessionId: checkoutSession.id,
                 paymentMethodId: savedPaymentMethod.stripeId,
+                confirmationSource: paymentMethodParameters.confirmationSource,
                 expectedAmount: checkoutSession.amount,
                 expectedPaymentMethodType: savedPaymentMethod.type.identifier,
                 returnURL: configuration.returnURL,
