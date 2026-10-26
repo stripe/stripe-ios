@@ -265,6 +265,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
     private let countryHint: String?
 
     private var applePayCompletionContinuation: CheckedContinuation<ApplePayPaymentStatus, Swift.Error>?
+    var applePayPresenter: @MainActor (STPApplePayContext) -> Void = { $0.presentApplePay() }
 
     /// Apple Pay payment source created by `didCreatePaymentMethod` but not yet committed.
     ///
@@ -735,12 +736,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
                 return .canceled
             }
 
-            let preview = PaymentMethodDisplayData(
-                paymentMethodType: .init(paymentMethodType: result.paymentMethodType),
-                icon: result.icon,
-                label: result.label,
-                sublabel: result.sublabel
-            )
+            let preview = PaymentMethodDisplayData(linkPreview: result)
             selectedPaymentSource = .link
             analyticsClient.log(.collectPaymentMethodCompleted(paymentMethodType: type.analyticsValue))
             return .completed(displayData: preview, kycInfo: nil)
@@ -775,7 +771,9 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
                         paymentMethodType: .applePay,
                         icon: icon,
                         label: label,
-                        sublabel: sublabel
+                        sublabel: sublabel,
+                        cardDetails: OnrampCardDetails(card: source.paymentMethod.card),
+                        bankAccountDetails: nil
                     )
 
                     analyticsClient.log(.collectPaymentMethodCompleted(paymentMethodType: type.analyticsValue))
@@ -1022,7 +1020,7 @@ private extension CryptoOnrampCoordinator {
 
                     // Retain the continuation until we receive a completion delegate callback.
                     self.applePayCompletionContinuation = continuation
-                    context.presentApplePay()
+                    applePayPresenter(context)
                 } catch {
                     continuation.resume(throwing: error)
                 }

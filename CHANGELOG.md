@@ -1,7 +1,10 @@
 The next release's version bump will so far be:
-PATCH
+MINOR
 
 ## X.Y.Z - changes pending release
+### CryptoOnramp (Alpha)
+* [Added] Payment method collection results now include optional card funding, brand, and last-four details, or bank account last-four details, before token creation.
+
 ### General
 * [Removed] CocoaPods support. Migrate your integration to Swift Package Manager. For more information and help migrating, see [MIGRATING-COCOAPODS.md](https://github.com/stripe/stripe-ios/blob/master/MIGRATING-COCOAPODS.md). 
 

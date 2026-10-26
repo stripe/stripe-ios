@@ -51,16 +51,69 @@ public struct PaymentMethodDisplayData {
     /// Details about the underlying payment method. This will typically render the display name of the payment method followed by the last four digits, e.g. `Visa Credit •••• 4242`.
     public let sublabel: String?
 
-    /// Creates a new instance of `PaymentMethodDisplayData`.
+    /// A snapshot of the collected card, if available. Mutually exclusive with `bankAccountDetails`.
+    public let cardDetails: OnrampCardDetails?
+
+    /// A snapshot of the collected bank account, if available. Mutually exclusive with `cardDetails`.
+    public let bankAccountDetails: OnrampBankAccountDetails?
+
+    /// Creates a new instance of `PaymentMethodDisplayData` without structured instrument details.
     /// - Parameters:
     ///   - paymentMethodType: The type of the selected payment method.
     ///   - icon: The payment method icon to render in your screen.
     ///   - label: The payment method label to render in your screen. For instance, `Link` or `Apple Pay`.
     ///   - sublabel: Details about the underlying payment method. This will typically render the display name of the payment method followed by the last four digits, e.g. `Visa Credit •••• 4242`.
     public init(paymentMethodType: PaymentMethodType, icon: UIImage, label: String, sublabel: String?) {
+        self.init(
+            paymentMethodType: paymentMethodType,
+            icon: icon,
+            label: label,
+            sublabel: sublabel,
+            cardDetails: nil,
+            bankAccountDetails: nil
+        )
+    }
+
+    init(
+        paymentMethodType: PaymentMethodType,
+        icon: UIImage,
+        label: String,
+        sublabel: String?,
+        cardDetails: OnrampCardDetails?,
+        bankAccountDetails: OnrampBankAccountDetails?
+    ) {
         self.paymentMethodType = paymentMethodType
         self.icon = icon
         self.label = label
         self.sublabel = sublabel
+        self.cardDetails = cardDetails
+        self.bankAccountDetails = bankAccountDetails
+    }
+
+    init(linkPreview: LinkController.PaymentMethodPreview) {
+        let cardDetails: OnrampCardDetails?
+        let bankAccountDetails: OnrampBankAccountDetails?
+        switch linkPreview.instrumentDetails {
+        case .card(let funding, let brand, let last4):
+            cardDetails = OnrampCardDetails(funding: funding, brand: brand, last4: last4)
+            bankAccountDetails = nil
+        case .bankAccount(let last4):
+            cardDetails = nil
+            bankAccountDetails = OnrampBankAccountDetails(last4: last4)
+        case nil:
+            cardDetails = nil
+            bankAccountDetails = nil
+        @unknown default:
+            cardDetails = nil
+            bankAccountDetails = nil
+        }
+        self.init(
+            paymentMethodType: .init(paymentMethodType: linkPreview.paymentMethodType),
+            icon: linkPreview.icon,
+            label: linkPreview.label,
+            sublabel: linkPreview.sublabel,
+            cardDetails: cardDetails,
+            bankAccountDetails: bankAccountDetails
+        )
     }
 }
