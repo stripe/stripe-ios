@@ -46,9 +46,19 @@
 
 "Buy now or pay later with Klarna" = "Köp nu eller betala senare med Klarna";
 
+"By confirming your payment with GCash, you allow %@ to charge your GCash account for future payments in accordance with their terms." = "Genom att bekräfta betalningen med GCash tillåter du att %@ debiterar ditt GCash-konto för framtida betalningar i enlighet med deras villkor.";
+
 "By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "Genom att bekräfta betalningen med NICEPAY tillåter du %@ att debitera den här betalningsmetoden vid framtida betalningar i enlighet med deras villkor.";
 
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Genom att bekräfta betalningen med PayPal tillåter du att %@ debiterar ditt PayPal-konto för framtida betalningar i enlighet med deras villkor.";
+
+"By confirming your payment with Touch 'n Go, you allow %@ to charge your Touch 'n Go account for future payments in accordance with their terms." = "Genom att bekräfta betalningen med Touch 'n Go tillåter du att %@ debiterar ditt Touch 'n Go-konto för framtida betalningar i enlighet med deras villkor.";
+
+"By confirming your payment with TrueMoney, you allow %@ to charge your TrueMoney account for future payments in accordance with their terms." = "Genom att bekräfta betalningen med TrueMoney tillåter du %@ att debitera ditt TrueMoney-konto för framtida betalningar i enlighet med deras villkor.";
+
+"By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their <terms>terms of use</terms>." = "Genom att bekräfta din betalning godkänner du att din transaktion kommer att behandlas av Global Stack Services Limited som ansvarig säljare och i enlighet med deras <terms>villkor</terms>.";
+
+"By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their <terms>terms</terms>." = "Genom att bekräfta din betalning godkänner du att din transaktion kommer att behandlas av Global Stack Services Limited som ansvarig säljare och i enlighet med deras <terms>villkor</terms>.";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Genom att fortsätta till Amazon Pay tillåter du att %@ debiterar ditt Amazon Pay-konto för framtida betalningar i enlighet med deras villkor.";
 
@@ -173,6 +183,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Jag är införstådd med att Stripe samlar in autogireringar på uppdrag av %@ och bekräftar att jag är kontoinnehavaren och den enda person som krävs för att godkänna debiteringar från detta konto.";
 
 "IBAN" = "IBAN";
+
+"Invoice payment for business buyers." = "Fakturabetalning för företagsköpare.";
 
 "Keep Editing" = "Fortsätt redigera";
 

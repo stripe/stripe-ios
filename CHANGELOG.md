@@ -1,25 +1,67 @@
 The next release's version bump will so far be:
-MINOR
+PATCH
 
 ## X.Y.Z - changes pending release
+### General
+* [Removed] CocoaPods support. Migrate your integration to Swift Package Manager. For more information and help migrating, see [MIGRATING-COCOAPODS.md](https://github.com/stripe/stripe-ios/blob/master/MIGRATING-COCOAPODS.md). 
+
+### General
+* [Fixed] Fixed an issue where slow Apple Pay availability checks could cause React Native apps to hang during SDK initialization. See [stripe-react-native#2567](https://github.com/stripe/stripe-react-native/issues/2567).
+
+## 26.15.0 2026-10-19
+
+### CryptoOnramp (Alpha)
+* [Changed] Apple Pay card previews now include the card funding type (Credit, Debit, or Prepaid), falling back to Card when unavailable, matching Link's formatting.
+* [Changed] Renamed `CryptoOnrampCoordinator.fulfillKYCRequirement(from:)` to `fulfillKYCRequirements(from:)` and `FulfillKYCRequirementResult` to `FulfillKYCRequirementsResult`.
+
+### Identity
+* [Changed] Test-mode verification sessions now upload placeholder document and selfie images instead of users' images.
+
+## 26.14.0 2026-10-12
+### General
+* [Removed] Removed the "test mode" badge from all UI surfaces.
+
+### PaymentSheet
+* [Added] Added TrueMoney API bindings and PaymentSheet support for payments and setup.
+* [Added] Added Touch 'n Go API bindings and PaymentSheet support for payments and setup.
+* [Added] Added Mondu API bindings and PaymentSheet support for PaymentIntents.
+* [Added] Added Naira Wallet API bindings and PaymentSheet support for PaymentIntents.
+* [Added] Added Naira USSD API bindings and PaymentSheet support for PaymentIntents.
+* [Added] Added Naira bank transfer API bindings and PaymentSheet support for PaymentIntents.
+* [Fixed] Fixed a potential crash when canceling redirect payment methods such as Afterpay/Clearpay.
+* [Added] Added QRIS API bindings and PaymentSheet support for PaymentIntents.
+* [Added] Added GCash API bindings and PaymentSheet support for payments and setup.
+* [Added] Added Naira card API bindings and PaymentSheet support for PaymentIntents.
+
+### CryptoOnramp (Alpha)
+* [Fixed] If the customer's KYC region changes after Apple Pay is collected before authentication, token creation now throws `PaymentMethodKYCRegionChangedError` (`payment_method_kyc_region_changed`). Collect Apple Pay again and retry token creation only after successful collection.
+
+## 26.13.0 2026-10-05
+### PaymentSheet
+* [Fixed] Fixed a potential crash when using certain card brands in PaymentSheet.
+* [Fixed] Fixed Apple Pay failing to open for fractional amounts in COP, HUF, IDR, LAK, LBP, PKR, and RSD.
+
 ### Payments
 * [Fixed] Amounts in LBP are now displayed correctly.
 
-### PaymentSheet
-* [Fixed] Fixed Apple Pay failing to open for fractional amounts in COP, HUF, IDR, LAK, LBP, PKR, and RSD.
-
 ### CryptoOnramp (Alpha)
+* [Added] Added optional `email`, `phone`, and `rawPhone` fields to `KycInfo`, populated from Apple Pay billing or shipping contact information when requested. All values are for prefill only. `phone` is normalized to E.164 using the billing address's country when possible, and is otherwise `nil`; `rawPhone` always carries the wallet's original, unnormalized value. Names fall back to shipping contact values when billing values are missing or blank. Creating `KycInfo` from an Apple Pay payment still requires a usable name or billing address; email or phone alone is insufficient.
 * [Changed] Apple Pay can now be presented via `CryptoOnrampCoordinator.collectPaymentMethod(type:from:)` before the user authenticates with Link. `createCryptoPaymentToken()` still requires an authenticated user.
+* [Added] Added an optional `countryHint` parameter to `CryptoOnrampCoordinator.create(...)`, used to help select a merchant of record for a customer who does not yet have an established KYC region.
 * [Added] Added `STPAPIClient.CryptoOnrampAPIError.missingLinkSessionKey` to report when a Link session key is unavailable.
+* [Added] Added `CryptoOnrampCoordinator.fulfillKYCRequirement(from:)` to retrieve additional KYC requirements and present document collection when needed.
 
 ### PaymentSheet
-* [Added] Added GoPay API bindings and support for payments, including setup future usage, in PaymentSheet.
+* [Added] Added MoMo API bindings and PaymentSheet support for PaymentIntents.
+* [Added] Added GoPay API bindings and PaymentSheet support for PaymentIntents.
+* [Added] Added ShopeePay API bindings and PaymentSheet support for PaymentIntents.
 
 ## 26.12.1 2026-09-28
 ### CryptoOnramp (Alpha)
 * [Fixed] Preserved PaymentIntent error codes, decline codes, and types in checkout errors after authentication.
 
 ### Financial Connections
+* [Added] Added `financialConnectionsSessionId` to `FinancialConnectionsEvent`. Events are emitted after the session identifier is available.
 * [Fixed] Preserved `no_eligible_accounts` in `onEvent` error callbacks instead of reporting it as `unexpected_error`.
 * [Fixed] Recorded native `onEvent` emissions with the session context for diagnostics.
 
@@ -102,6 +144,10 @@ MINOR
 * [Added] Added support for Bizum payments.
 
 ## 26.5.0 2026-08-03
+### Identity
+* [Fixed] Fixed camera setup failures on devices whose cameras do not support 4K capture by falling back to a supported capture preset. ([#6695](https://github.com/stripe/stripe-ios/pull/6695))
+* [Changed] Manual document capture is now available when a verification session requires live capture. ([#6815](https://github.com/stripe/stripe-ios/pull/6815))
+
 ### CryptoOnramp (Alpha)
 * [Added] Added support for registering wallet addresses on the Tempo network.
 
@@ -177,6 +223,7 @@ MINOR
 
 ### Identity
 * [Added] Added a manual capture mode for identity document verification, allowing users to tap "Take Photo" instead of relying on automatic capture. ([#6379](https://github.com/stripe/stripe-ios/pull/6379))
+* [Changed] Increased horizontal padding in Identity screen headers. ([#6300](https://github.com/stripe/stripe-ios/pull/6300))
 
 ### PaymentSheet
 * [Fixed] Fixed an NSRangeException crash in address autocomplete search results.
@@ -224,6 +271,7 @@ MINOR
 ## 25.12.0 2026-04-27
 ### Identity
 * [Improved] Improved StripeIdentity analytics with richer error details and screen/camera context to help debug verification flows.
+* [Fixed] The web-based Identity verification flow now offers a retry when its web content process terminates. ([#6243](https://github.com/stripe/stripe-ios/pull/6243))
 
 ### All
 * [Removed] Removed UPI support across the SDK.

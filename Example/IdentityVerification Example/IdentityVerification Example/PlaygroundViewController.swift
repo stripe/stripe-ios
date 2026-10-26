@@ -15,11 +15,14 @@ class PlaygroundViewController: UIViewController {
     // View and fork the backend code here: https://codesandbox.io/p/devbox/dsx4vq
     let baseURL = "https://stripe-mobile-identity-verification-playground.stripedemos.com"
     let verifyEndpoint = "/verification-sessions"
+    let testVerifyEndpoint = "/test/verification-sessions"
     let reuseEndpoint = "/reuse-verification-session"
 
     // Outlets
     @IBOutlet private weak var nativeOrWebSelector: UISegmentedControl!
     @IBOutlet private weak var newOrReuseSelector: UISegmentedControl!
+    @IBOutlet private weak var testModeContainerView: UIStackView!
+    @IBOutlet private weak var testModeSwitch: UISwitch!
     @IBOutlet private weak var verificationTypeSelector: UISegmentedControl!
     @IBOutlet private weak var drivingLicenseSwitch: UISwitch!
     @IBOutlet private weak var passportSwitch: UISwitch!
@@ -170,9 +173,9 @@ class PlaygroundViewController: UIViewController {
             ]
         } else {
             // Make request to our verification endpoint
-            endpoint = verifyEndpoint
+            endpoint = testModeSwitch.isOn ? testVerifyEndpoint : verifyEndpoint
 
-            // Forwarding VerificationSession options from the client to server to
+            // Forwarding VerificationSession options from the client to the server
             // for demo purposes. In production, these are typically set by the
             // server depending on the desired behavior.
             requestDict = [
@@ -238,7 +241,8 @@ class PlaygroundViewController: UIViewController {
             }
 
             if self.creationMethod == .new,
-                self.invocationType == .native
+                self.invocationType == .native,
+                responseJson["ephemeral_key_secret"] == nil
             {
                 guard let verificationSessionId = responseJson["id"] else {
                     self.updateButtonState(isLoading: false)
@@ -482,10 +486,12 @@ class PlaygroundViewController: UIViewController {
     @IBAction func didChangeNewOrReuse(_ sender: Any) {
         switch creationMethod {
         case .new:
+            testModeContainerView.isHidden = false
             verificationTypeContainerView.isHidden = false
             reuseVerificationIDContainerView.isHidden = true
             didChangeVerificationType(sender)
         case .reuse:
+            testModeContainerView.isHidden = true
             verificationTypeContainerView.isHidden = true
             documentOptionsContainerView.isHidden = true
             phoneOptionsContainerView.isHidden = true

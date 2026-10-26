@@ -237,9 +237,11 @@ struct CheckoutPlaygroundLineItemCard: View {
 struct CheckoutPlaygroundFeaturesSection: View {
     let customerType: CheckoutPlayground.CustomerType
     @Binding var shippingAddressCollection: Bool
-    @Binding var defaultShippingAddressOption: CheckoutPlayground.DefaultShippingAddressOption
-    @Binding var customDefaultShippingAddress: CheckoutPlayground.DefaultShippingAddress
+    @Binding var defaultShippingAddressOption: CheckoutPlayground.DefaultAddressOption
+    @Binding var customDefaultShippingAddress: CheckoutPlayground.DefaultAddress
     @Binding var billingAddressCollection: CheckoutPlayground.BillingAddressCollection
+    @Binding var defaultBillingAddressOption: CheckoutPlayground.DefaultAddressOption
+    @Binding var customDefaultBillingAddress: CheckoutPlayground.DefaultAddress
     @Binding var automaticTax: Bool
     @Binding var checkoutSessionPaymentMethodSave: Bool
     @Binding var checkoutSessionPaymentMethodRemove: Bool
@@ -269,9 +271,9 @@ struct CheckoutPlaygroundFeaturesSection: View {
                 case .none:
                     EmptyView()
                 case .usTestAddress:
-                    CheckoutPlaygroundShippingAddressPreview(address: .usTestAddress)
+                    CheckoutPlaygroundAddressPreview(address: .usTestAddress)
                 case .custom:
-                    CheckoutPlaygroundShippingAddressEditor(address: $customDefaultShippingAddress)
+                    CheckoutPlaygroundAddressEditor(address: $customDefaultShippingAddress)
                 }
                 CheckoutPlayground.PickerRow(
                     title: "Billing Address",
@@ -279,6 +281,20 @@ struct CheckoutPlaygroundFeaturesSection: View {
                     tooltip: "Sets `billing_address_collection` to `auto` or `required`.",
                     displayText: { $0.displayName }
                 )
+                CheckoutPlayground.PickerRow(
+                    title: "Default Billing Details",
+                    selection: $defaultBillingAddressOption,
+                    tooltip: "Sets `CheckoutController.Configuration.defaults.billingDetails` before loading Checkout. Email is configured separately above.",
+                    displayText: { $0.displayName }
+                )
+                switch defaultBillingAddressOption {
+                case .none:
+                    EmptyView()
+                case .usTestAddress:
+                    CheckoutPlaygroundAddressPreview(address: .usTestAddress)
+                case .custom:
+                    CheckoutPlaygroundAddressEditor(address: $customDefaultBillingAddress)
+                }
                 CheckoutPlayground.ToggleRow(
                     title: "Automatic Payment Methods",
                     isOn: $automaticPaymentMethods,
@@ -316,11 +332,9 @@ struct CheckoutPlaygroundFeaturesSection: View {
 
 struct CheckoutPlaygroundExpressCheckoutElementSection: View {
     @Binding var showExpressCheckoutElement: Bool
-    @Binding var applePayDisplay: ExpressCheckoutElement.ApplePayConfiguration.Display
     @Binding var applePayButtonType: CheckoutPlayground.ApplePayButtonType
-    @Binding var linkDisplay: ExpressCheckoutElement.LinkConfiguration.Display
-    @Binding var paymentMethodOrder: CheckoutPlayground.ExpressCheckoutPaymentMethodOrder
-    @Binding var appearance: ExpressCheckoutElement.Appearance
+    @Binding var linkDisplay: ExpressCheckoutElement.Configuration.LinkConfiguration.Display
+    @Binding var appearance: ExpressCheckoutElement.Configuration.Appearance
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -331,13 +345,6 @@ struct CheckoutPlaygroundExpressCheckoutElementSection: View {
                     isOn: $showExpressCheckoutElement
                 )
                 if showExpressCheckoutElement {
-                    CheckoutPlayground.PickerRow(
-                        title: "Apple Pay Display",
-                        icon: "apple.logo",
-                        selection: $applePayDisplay,
-                        tooltip: "Sets `ExpressCheckoutElement.Configuration.applePayConfiguration.display`.",
-                        displayText: { $0.rawValue.capitalized }
-                    )
                     CheckoutPlayground.PickerRow(
                         title: "Apple Pay Button Type",
                         icon: "apple.logo",
@@ -353,18 +360,23 @@ struct CheckoutPlaygroundExpressCheckoutElementSection: View {
                         displayText: { $0.rawValue.capitalized }
                     )
                     CheckoutPlayground.PickerRow(
-                        title: "Payment Method Order",
-                        selection: $paymentMethodOrder,
-                        tooltip: "Sets `ExpressCheckoutElement.Configuration.paymentMethodOrder`.",
-                        displayText: { $0.displayName }
-                    )
-                    CheckoutPlayground.PickerRow(
                         title: "Button Theme",
                         icon: "paintpalette.fill",
                         selection: $appearance.buttonTheme,
                         tooltip: "Sets `ExpressCheckoutElement.Configuration.Appearance.buttonTheme`. Only affects the Apple Pay button; the Link button always uses Link's brand color.",
                         displayText: { $0.displayName }
                     )
+                    Stepper(value: cornerRadius, in: -1...30) {
+                        HStack {
+                            Text("Corner Radius")
+                            Spacer()
+                            Text(appearance.cornerRadius.map { String(format: "%.0f pt", $0) } ?? "Automatic")
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                    .accessibilityIdentifier("checkout_ece_corner_radius")
+                    .padding(.vertical, 12)
+                    .padding(.horizontal, 16)
                     CheckoutPlayground.PickerRow(
                         title: "Max Columns",
                         icon: "square.grid.2x2",
@@ -386,6 +398,13 @@ struct CheckoutPlaygroundExpressCheckoutElementSection: View {
         }
     }
 
+    private var cornerRadius: Binding<CGFloat> {
+        Binding(
+            get: { appearance.cornerRadius ?? -1 },
+            set: { appearance.cornerRadius = $0 < 0 ? nil : $0 }
+        )
+    }
+
     private var maxColumns: Binding<CheckoutPlayground.ExpressCheckoutElementButtonLayoutLimit> {
         Binding(
             get: { .init(intValue: appearance.buttonLayout.maxColumns) },
@@ -401,9 +420,9 @@ struct CheckoutPlaygroundExpressCheckoutElementSection: View {
     }
 }
 
-private struct CheckoutPlaygroundShippingAddressPreview: View {
+private struct CheckoutPlaygroundAddressPreview: View {
 
-    let address: CheckoutPlayground.DefaultShippingAddress
+    let address: CheckoutPlayground.DefaultAddress
 
     var body: some View {
         HStack(alignment: .top, spacing: 12) {
@@ -429,43 +448,43 @@ private struct CheckoutPlaygroundShippingAddressPreview: View {
     }
 }
 
-private struct CheckoutPlaygroundShippingAddressEditor: View {
+private struct CheckoutPlaygroundAddressEditor: View {
 
-    @Binding var address: CheckoutPlayground.DefaultShippingAddress
+    @Binding var address: CheckoutPlayground.DefaultAddress
 
     var body: some View {
         VStack(spacing: 12) {
-            CheckoutPlaygroundShippingAddressField(
+            CheckoutPlaygroundAddressField(
                 title: "Name",
                 placeholder: "Jenny Rosen",
                 text: $address.name
             )
-            CheckoutPlaygroundShippingAddressField(
+            CheckoutPlaygroundAddressField(
                 title: "Address line 1",
                 placeholder: "510 Townsend St",
                 text: $address.line1
             )
-            CheckoutPlaygroundShippingAddressField(
+            CheckoutPlaygroundAddressField(
                 title: "Address line 2",
                 placeholder: "Apartment, suite, etc.",
                 text: $address.line2
             )
-            CheckoutPlaygroundShippingAddressField(
+            CheckoutPlaygroundAddressField(
                 title: "City",
                 placeholder: "San Francisco",
                 text: $address.city
             )
-            CheckoutPlaygroundShippingAddressField(
+            CheckoutPlaygroundAddressField(
                 title: "State",
                 placeholder: "CA",
                 text: $address.state
             )
-            CheckoutPlaygroundShippingAddressField(
+            CheckoutPlaygroundAddressField(
                 title: "ZIP / postal code",
                 placeholder: "94103",
                 text: $address.postalCode
             )
-            CheckoutPlaygroundShippingAddressField(
+            CheckoutPlaygroundAddressField(
                 title: "Country",
                 placeholder: "US",
                 text: $address.country
@@ -476,7 +495,7 @@ private struct CheckoutPlaygroundShippingAddressEditor: View {
     }
 }
 
-private struct CheckoutPlaygroundShippingAddressField: View {
+private struct CheckoutPlaygroundAddressField: View {
 
     let title: String
     let placeholder: String

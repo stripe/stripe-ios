@@ -48,7 +48,7 @@ struct CreateOnrampSessionResponse: Decodable, Hashable {
     let paymentMethod: String
     let preferredPaymentMethod: String?
     let preferredRegion: String?
-    let redirectUrl: String
+    let redirectUrl: String?
     let skipQuoteScreen: Bool
     let sourceTotalAmount: String
     let status: String

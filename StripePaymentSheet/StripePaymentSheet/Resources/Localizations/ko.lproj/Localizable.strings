@@ -46,9 +46,19 @@
 
 "Buy now or pay later with Klarna" = "지금 구매하거나 Klarna로 나중에 결제";
 
+"By confirming your payment with GCash, you allow %@ to charge your GCash account for future payments in accordance with their terms." = "GCash로 결제를 확인하시면 %@ 이(가) 해당 약관에 따라 향후 결제에 대해 귀하의 GCash 계정에 대금 청구하는 것을 허용하시는 것입니다.";
+
 "By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "NICEPAY로 결제를 확인하면 %@에서 해당 약관에 따라 향후 결제에 대해 이 결제 방식으로 대금 청구하는 것을 허용하시는 것입니다.";
 
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "PayPal 결제를 확인하면 %@에서 해당 회사의 약관에 따라 향후 결제에 대해 PayPal 계정에 대금을 청구할 수 있습니다.";
+
+"By confirming your payment with Touch 'n Go, you allow %@ to charge your Touch 'n Go account for future payments in accordance with their terms." = "Touch 'n Go로 결제를 확인하시면 %@ 이(가) 해당 약관에 따라 향후 결제에 대해 귀하의 Touch 'n Go 계정에 대금 청구하는 것을 허용하시는 것입니다.";
+
+"By confirming your payment with TrueMoney, you allow %@ to charge your TrueMoney account for future payments in accordance with their terms." = "TrueMoney로 결제를 확인하시면 %@ 이(가) 해당 약관에 따라 향후 결제에 대해 귀하의 TrueMoney 계정에 대금 청구하는 것을 허용하시는 것입니다.";
+
+"By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their <terms>terms of use</terms>." = "결제를 확인하시면 Global Stack Services Limited가 기록상 판매자로서 <terms>이용 약관</terms>에 따라 귀하의 거래를 처리하는 데 동의하시는 것입니다.";
+
+"By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their <terms>terms</terms>." = "결제를 확인하시면 Global Stack Services Limited가 기록상 판매자로서 <terms>약관</terms>에 따라 귀하의 거래를 처리하는 데 동의하시는 것입니다.";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Amazon Pay를 계속 사용하면 %@에서 해당 회사의 약관에 따라 향후 Amazon Pay 계정에 결제 대금을 청구할 수 있습니다.";
 
@@ -173,6 +183,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "%@ 님을 대신하여 Stripe에서 자동 이체를 받는 데 동의하며, 본인이 계좌의 소유자이자 이 계좌에서 인출을 승인해야 하는 유일한 사람임을 확인합니다.";
 
 "IBAN" = "IBAN";
+
+"Invoice payment for business buyers." = "비즈니스 구매자를 위한 청구서 결제";
 
 "Keep Editing" = "계속 편집";
 

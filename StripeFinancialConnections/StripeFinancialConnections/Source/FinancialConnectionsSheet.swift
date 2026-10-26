@@ -98,8 +98,9 @@ final public class FinancialConnectionsSheet {
     ///
     /// Refer to `FinancialConnectionsEvent.Name` for a list of possible event types.
     ///
-    /// Every `FinancialConnectionsEvent` can carry additional metadata,
+    /// Every event includes the `financialConnectionsSessionId` and can carry additional metadata,
     /// the content of which can vary based on the specific type of occurring event.
+    /// Events begin after session initialization. Earlier failures are reported through the completion callback.
     public var onEvent: ((FinancialConnectionsEvent) -> Void)?
 
     /// The APIClient instance used to make requests to Stripe
