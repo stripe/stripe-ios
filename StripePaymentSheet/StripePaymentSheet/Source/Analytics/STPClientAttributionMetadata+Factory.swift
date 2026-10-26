@@ -1,5 +1,5 @@
 //
-//  STPClientAttributionMetadata+PaymentSheet.swift
+//  STPClientAttributionMetadata+Factory.swift
 //  StripePaymentSheet
 //
 //  Created by Joyce Qin on 10/14/25.
@@ -10,15 +10,7 @@
 
 extension STPClientAttributionMetadata {
     @MainActor
-    static func makeClientAttributionMetadataIfNecessary(analyticsHelper: PaymentSheetAnalyticsHelper, intent: Intent, elementsSession: STPElementsSession) -> STPClientAttributionMetadata? {
-        if analyticsHelper.integrationShape.shouldMakeClientAttributionMetadata {
-            return makeClientAttributionMetadata(intent: intent, elementsSession: elementsSession)
-        }
-        return nil
-    }
-
-    @MainActor
-    static func makeClientAttributionMetadata(intent: Intent, elementsSession: STPElementsSession) -> STPClientAttributionMetadata {
+    static func makeClientAttributionMetadata(intent: Intent, elementsSession: STPElementsSession, checkoutAttribution: CheckoutAttributionContext? = nil) -> STPClientAttributionMetadata {
         let elementsSessionConfigId = elementsSession.configID
         switch intent {
         case .paymentIntent(let paymentIntent):
@@ -37,13 +29,25 @@ extension STPClientAttributionMetadata {
                          paymentIntentCreationFlow: .deferred,
                          paymentMethodSelectionFlow: isAutomaticPaymentMethodsEnabled ? .automatic : .merchantSpecified)
         case .checkout(let session):
-            // CheckoutSession: Stripe owns the intent lifecycle, so omit `paymentIntentCreationFlow`
-            // to match web's hosted Checkout behavior.
-            return .init(elementsSessionConfigId: elementsSessionConfigId,
-                         checkoutSessionId: session.id,
-                         paymentIntentCreationFlow: nil,
-                         paymentMethodSelectionFlow: .automatic)
+            return makeClientAttributionMetadata(checkoutSession: session, attribution: checkoutAttribution)
         }
+    }
+
+    @MainActor
+    static func makeClientAttributionMetadata(
+        checkoutSession: CheckoutController.Session,
+        attribution: CheckoutAttributionContext?
+    ) -> STPClientAttributionMetadata {
+        stpAssert(attribution != nil, "Checkout CAM requires attribution context.")
+        return .init(
+            elementsSessionConfigId: checkoutSession.elementsSession.configID,
+            checkoutSessionId: checkoutSession.id,
+            checkoutConfigId: checkoutSession.checkoutConfigID,
+            merchantIntegrationSource: "checkout",
+            merchantIntegrationSubtype: attribution?.confirmingElement.rawValue ?? "mobile",
+            merchantIntegrationAdditionalElements: attribution?.configuredElements,
+            paymentMethodSelectionFlow: .automatic
+        )
     }
 
     static func makeClientAttributionMetadataForCustomerSheet(elementsSessionConfigId: String?) -> STPClientAttributionMetadata {

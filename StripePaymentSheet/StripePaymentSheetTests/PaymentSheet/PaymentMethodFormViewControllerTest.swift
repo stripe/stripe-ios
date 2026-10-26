@@ -110,6 +110,40 @@ final class PaymentMethodFormViewControllerTest: XCTestCase {
         XCTAssertEqual(secondSUT.form.getTextFieldElement("ZIP").text, "12345")
     }
 
+    func testCheckoutBankCollectionIncludesClientAttributionMetadata() throws {
+        // Given a bank-account form in Checkout's Payment Element
+        let session = CheckoutTestHelpers.makeSession([
+            "elements_options": ["__checkout_config_id": "config_checkout"],
+        ]).makePublicSession()
+        let configuration = PaymentSheet.Configuration()
+        let sut = PaymentMethodFormViewController(
+            type: .stripe(.USBankAccount),
+            intent: .checkout(session),
+            elementsSession: session.elementsSession,
+            previousCustomerInput: nil,
+            formCache: .init(),
+            configuration: configuration,
+            paymentMethodOrientation: .vertical,
+            headerView: nil,
+            analyticsHelper: PaymentSheetAnalyticsHelper(
+                integrationShape: .embedded,
+                configuration: configuration,
+                checkoutAttribution: .init(confirmingElement: .paymentElement, configuredElements: [.payment, .address])
+            ),
+            delegate: self
+        )
+
+        // When building the context passed to bank collection
+        let metadata = try XCTUnwrap(sut.elementsSessionContext.clientAttributionMetadata)
+
+        // Then collection receives Checkout attribution before confirmation
+        XCTAssertEqual(metadata.merchantIntegrationSource, "checkout")
+        XCTAssertEqual(metadata.merchantIntegrationSubtype, "payment-element")
+        XCTAssertEqual(metadata.checkoutSessionId, session.id)
+        XCTAssertEqual(metadata.checkoutConfigId, "config_checkout")
+        XCTAssertEqual(metadata.merchantIntegrationAdditionalElements, ["payment", "address"])
+    }
+
     // MARK: - logBillingAddressCompletionIfNeeded
 
     func testLogBillingAddressCompletionIfNeeded_withoutAutocomplete() {

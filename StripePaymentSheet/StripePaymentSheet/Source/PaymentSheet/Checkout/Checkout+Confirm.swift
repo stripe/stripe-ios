@@ -4,6 +4,15 @@ import UIKit
 
 // MARK: - Types
 
+/// Integration-side inputs for Checkout client attribution metadata (CAM) and `payment_user_agent`.
+struct CheckoutAttributionContext {
+    /// The element whose collection or confirmation flow is being attributed; determines the CAM subtype and `payment_user_agent`.
+    let confirmingElement: CheckoutController.ConfirmingElement
+    /// All elements enabled in the Checkout configuration, including the confirming element,
+    /// regardless of whether they were displayed or used. Populates CAM's `merchant_integration_additional_elements`.
+    let configuredElements: [STPClientAttributionMetadata.AdditionalElement]
+}
+
 protocol CheckoutSessionPolling {
     func poll(checkoutSessionId: String) async -> CheckoutSessionPoller.Outcome
 }
@@ -42,7 +51,7 @@ extension CheckoutController {
         // TODO: This should probably live with the other methods that delegate to CheckoutController
         // to update shipping, billing, etc., unless those methods end up living here too.
         let confirmationHandler: ConfirmationHandler
-        let confirmationSource: ConfirmingElement
+        let attribution: CheckoutAttributionContext
     }
 
     /// The parameters needed to confirm a Checkout Session with Link.
@@ -56,7 +65,7 @@ extension CheckoutController {
         let analyticsHelper: PaymentSheetAnalyticsHelper
         let authenticationContext: STPAuthenticationContext
         let paymentHandler: STPPaymentHandler
-        let confirmationSource: ConfirmingElement
+        let attribution: CheckoutAttributionContext
     }
 
     /// The parameters needed to confirm a Checkout Session with a new or saved payment method.
@@ -73,17 +82,17 @@ extension CheckoutController {
         let confirmationChallenge: (any CheckoutConfirmationChallenge)?
         let authenticationContext: STPAuthenticationContext
         let paymentHandler: STPPaymentHandler
-        let confirmationSource: ConfirmingElement
+        let attribution: CheckoutAttributionContext
     }
 
     /// Identifies which Checkout Elements component is confirming a Checkout Session, so
-    /// `payment_user_agent` can carry an unambiguous label for payment/attribution purposes.
+    /// `payment_user_agent` and client attribution metadata can identify the confirming element.
     /// Exactly one of these is chosen per confirmation attempt (set once in `makeConfirmationFlow(for:)`
     /// and `makeExpressCheckoutConfirmationFlow`), so `PaymentElement` and `ExpressCheckoutElement`
     /// never appear together in a single request's `payment_user_agent`.
-    enum ConfirmingElement {
-        case paymentElement
-        case expressCheckoutElement
+    enum ConfirmingElement: String {
+        case paymentElement = "payment-element"
+        case expressCheckoutElement = "express-checkout-element"
 
         private var identifier: String {
             switch self {
@@ -183,6 +192,10 @@ extension CheckoutController {
             integrationShape = .embedded
         }
 
+        let attribution = CheckoutAttributionContext(
+            confirmingElement: .paymentElement,
+            configuredElements: self.configuration.configuredElements
+        )
         // Normalize Payment Element state here, then build the corresponding confirmation flow.
         switch paymentOption {
         case .applePay:
@@ -206,7 +219,7 @@ extension CheckoutController {
                         paymentHandler: paymentHandler
                     )
                 },
-                confirmationSource: .paymentElement
+                attribution: attribution
             ))
         case .link(let confirmOption):
             let analyticsHelper = paymentElement.paymentOptionSourceOfTruthIsFlowController
@@ -220,7 +233,7 @@ extension CheckoutController {
                 analyticsHelper: analyticsHelper,
                 authenticationContext: authenticationContext,
                 paymentHandler: paymentHandler,
-                confirmationSource: .paymentElement
+                attribution: attribution
             ))
         case .new(let confirmParams):
             return .paymentMethod(
@@ -231,7 +244,7 @@ extension CheckoutController {
                     confirmationChallenge: confirmationChallenge,
                     authenticationContext: authenticationContext,
                     paymentHandler: paymentHandler,
-                    confirmationSource: .paymentElement
+                    attribution: attribution
                 ),
                 preconfirmIntegrationShape: integrationShape
             )
@@ -244,7 +257,7 @@ extension CheckoutController {
                     confirmationChallenge: confirmationChallenge,
                     authenticationContext: authenticationContext,
                     paymentHandler: paymentHandler,
-                    confirmationSource: .paymentElement
+                    attribution: attribution
                 ),
                 preconfirmIntegrationShape: integrationShape
             )
@@ -298,8 +311,8 @@ extension CheckoutController {
                         expectedAmount: self.session.amount,
                         returnURL: self.configuration.returnURL,
                         clientAttributionMetadata: STPClientAttributionMetadata.makeClientAttributionMetadata(
-                            intent: .checkout(self.session),
-                            elementsSession: self.session.elementsSession
+                            checkoutSession: self.session,
+                            attribution: .init(confirmingElement: .paymentElement, configuredElements: self.configuration.configuredElements)
                         ),
                         // Due to legacy reasons, in the no-PM case /confirm requires customerData be sent with at least email
                         // TODO: Remove this once no-PM confirmation can use the Checkout Session's server email without `customer_data`.
@@ -437,12 +450,11 @@ extension CheckoutController {
         checkoutSession: Session,
         preconfirmedIntentParams: IntentConfirmParams?
     ) async -> CheckoutSessionConfirmationRequestParameters {
-        let elementsSession = checkoutSession.elementsSession
         let configuration = paymentMethodParameters.configuration
         let confirmationChallenge = paymentMethodParameters.confirmationChallenge
         let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadata(
-            intent: .checkout(checkoutSession),
-            elementsSession: elementsSession
+            checkoutSession: checkoutSession,
+            attribution: paymentMethodParameters.attribution
         )
 
         switch paymentMethodParameters.option {
@@ -470,7 +482,7 @@ extension CheckoutController {
                 sessionId: checkoutSession.id,
                 clientSecret: checkoutSession.clientSecret,
                 paymentMethodData: confirmParams.paymentMethodParams,
-                confirmationSource: paymentMethodParameters.confirmationSource,
+                confirmationSource: paymentMethodParameters.attribution.confirmingElement,
                 expectedAmount: checkoutSession.amount,
                 savePaymentMethod: checkoutSession.noPaymentRequired ? nil : savePaymentMethod,
                 returnURL: configuration.returnURL,
@@ -487,7 +499,7 @@ extension CheckoutController {
                 sessionId: checkoutSession.id,
                 clientSecret: checkoutSession.clientSecret,
                 paymentMethodId: savedPaymentMethod.stripeId,
-                confirmationSource: paymentMethodParameters.confirmationSource,
+                confirmationSource: paymentMethodParameters.attribution.confirmingElement,
                 expectedAmount: checkoutSession.amount,
                 expectedPaymentMethodType: savedPaymentMethod.type.identifier,
                 returnURL: configuration.returnURL,
