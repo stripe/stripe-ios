@@ -22,10 +22,43 @@ extension PaymentPagesAPIResponse {
     func makePublicSession(
         expressCheckoutConfiguration: ExpressCheckoutElement.Configuration? = nil
     ) -> CheckoutController.Session {
+        let configuration = expressCheckoutConfiguration.map { expressConfiguration in
+            var configuration = CheckoutController.Configuration(clientSecret: "\(sessionId)_secret_abc", returnURL: "stripe-ios-test://checkout-return")
+            configuration.expressCheckoutElement = expressConfiguration
+            return configuration
+        }
         return CheckoutController.Session(
             apiResponse: self,
             localState: .empty,
-            expressCheckoutConfiguration: expressCheckoutConfiguration
+            configuration: configuration
+        )
+    }
+}
+
+extension ExpressCheckoutElementUtilities {
+    static func availablePaymentMethodsWithoutCheckoutRequirements(
+        for elementsSession: STPElementsSession,
+        configuration: ExpressCheckoutElement.Configuration
+    ) -> [ExpressCheckoutElement.PaymentMethod] {
+        availablePaymentMethods(
+            for: elementsSession,
+            configuration: configuration,
+            usesWebLink: false,
+            requiresShippingAddress: false,
+            billingDetailsCollectionRequired: false
+        )
+    }
+
+    static func linkDisabledReasonsWithoutCheckoutRequirements(
+        for elementsSession: STPElementsSession,
+        configuration: ExpressCheckoutElement.Configuration
+    ) -> [LinkDisabledReason] {
+        linkDisabledReasons(
+            for: elementsSession,
+            configuration: configuration,
+            usesWebLink: false,
+            requiresShippingAddress: false,
+            billingDetailsCollectionRequired: false
         )
     }
 }
@@ -94,6 +127,14 @@ final class CheckoutSessionRequestRecorder: @unchecked Sendable {
 // MARK: - Shared Helpers
 
 enum CheckoutTestHelpers {
+
+    @MainActor
+    static func expressCheckoutButtons(in view: UIView) -> [UIControl] {
+        if let button = view as? UIControl {
+            return [button]
+        }
+        return view.subviews.flatMap { expressCheckoutButtons(in: $0) }
+    }
 
     // MARK: - Base JSON building blocks
 
@@ -165,7 +206,8 @@ enum CheckoutTestHelpers {
         _ walletTypes: [String],
         applePayPreference: String? = nil,
         linkUseAttestation: Bool? = nil,
-        automaticTaxAddressSource: String? = nil
+        automaticTaxAddressSource: String? = nil,
+        customerEmail: String? = nil
     ) -> PaymentPagesAPIResponse {
         var elementsSession: [String: Any] = [
             "session_id": "es_test",
@@ -188,6 +230,9 @@ enum CheckoutTestHelpers {
                 "automatic_tax_enabled": true,
                 "automatic_tax_address_source": automaticTaxAddressSource,
             ]
+        }
+        if let customerEmail {
+            session["customer_email"] = customerEmail
         }
         return makeSession(session)
     }
@@ -425,8 +470,10 @@ enum CheckoutTestHelpers {
 // MARK: - Apple Pay test doubles
 
 class MockPKPaymentAuthorizationController: PKPaymentAuthorizationController {
+    var presentationSucceeds = true
+
     override func present(completion: (@Sendable (Bool) -> Void)? = nil) {
-        completion?(true)
+        completion?(presentationSucceeds)
     }
 
     override func dismiss(completion: (() -> Void)? = nil) {
@@ -504,7 +551,7 @@ extension CheckoutController.ApplePayConfirmationParameters {
         apiClient: STPAPIClient,
         returnURL: String = "stripe-ios-test://checkout-return",
         merchantDisplayName: String = "Test Merchant",
-        applePayConfiguration: CheckoutApplePayConfiguration = PaymentElement.ApplePayConfiguration(merchantId: "merchant.com.test"),
+        applePayConfiguration: CheckoutApplePayConfiguration = PaymentElement.Configuration.ApplePayConfiguration(merchantId: "merchant.com.test"),
         shippingAddressRequired: Bool = false,
         defaultBillingDetails: CheckoutController.Configuration.Defaults.BillingDetails? = nil,
         presentationWindow: UIWindow? = nil,

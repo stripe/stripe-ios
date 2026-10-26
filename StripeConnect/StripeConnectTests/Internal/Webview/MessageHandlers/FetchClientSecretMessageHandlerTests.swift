@@ -13,8 +13,9 @@ class FetchClientSecretMessageHandlerTests: ScriptWebTestBase {
     @MainActor
     func testMessageSend() async throws {
         let key = "key_123"
+        try await loadTrustedDocument()
 
-        let messageHandler = FetchClientSecretMessageHandler(didReceiveMessage: { _ in
+        let messageHandler = FetchClientSecretMessageHandler(sourcePolicy: webView.trustedMessageSourcePolicy(), didReceiveMessage: { _ in
             return key
         })
 

@@ -8,6 +8,16 @@
 import Foundation
 @_spi(STP) import StripePayments
 
+/// An Apple Pay selection and the immutable publishable key used to create it.
+struct ApplePayPaymentSource {
+    let paymentMethod: StripeAPI.PaymentMethod
+    let kycInfo: KycInfo?
+    let platformPublishableKey: String
+    /// True when Apple Pay collection began before authentication.
+    /// Requires a fresh publishable-key comparison before every token attempt.
+    let requiresPublishableKeyRevalidation: Bool
+}
+
 /// Represents the possible selected payment method types.
 enum SelectedPaymentSource {
 
@@ -15,7 +25,7 @@ enum SelectedPaymentSource {
     case link
 
     /// Apple Pay was selected as the payment method.
-    case applePay(StripeAPI.PaymentMethod, KycInfo?)
+    case applePay(ApplePayPaymentSource)
 
     var analyticsValue: String {
         switch self {

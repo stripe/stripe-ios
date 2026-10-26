@@ -12,6 +12,7 @@
 import UIKit
 
 class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewControllerProtocol, PaymentSheetViewControllerProtocol {
+
     enum Error: Swift.Error {
         case missingPaymentMethodListViewController
         case missingContentViewController
@@ -75,6 +76,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     let loadResult: PaymentSheetLoader.LoadResult
     let paymentMethodTypes: [PaymentSheet.PaymentMethodType]
     let configuration: PaymentSheet.Configuration
+    private let nativeSheetPresentation: SheetImplementationResolver?
     let intent: Intent
     let elementsSession: STPElementsSession
     let formCache: PaymentMethodFormCache = .init()
@@ -125,7 +127,6 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 
     lazy var navigationBar: SheetNavigationBar = {
         let navBar = SheetNavigationBar(
-            isTestMode: configuration.apiClient.isTestmode,
             appearance: configuration.appearance
         )
         navBar.delegate = self
@@ -163,6 +164,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 
     init(
         configuration: PaymentSheet.Configuration,
+        nativeSheetPresentation: SheetImplementationResolver? = nil,
         loadResult: PaymentSheetLoader.LoadResult,
         isFlowController: Bool,
         analyticsHelper: PaymentSheetAnalyticsHelper,
@@ -178,6 +180,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         self.elementsSession = loadResult.elementsSession
         self.defaultPaymentMethod = elementsSession.customer?.getDefaultPaymentMethod()
         self.configuration = configuration
+        self.nativeSheetPresentation = nativeSheetPresentation
         self.previousPaymentOption = previousPaymentOption
         self.isFlowController = isFlowController
         self.checkoutBillingAddressUpdater = checkoutBillingAddressUpdater
@@ -585,6 +588,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         presentNativeLink(
             selectedPaymentDetailsID: nil,
             configuration: configuration,
+            nativeSheetPresentation: nativeSheetPresentation,
             intent: intent,
             elementsSession: elementsSession,
             analyticsHelper: analyticsHelper,
@@ -747,6 +751,11 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         updatePrimaryButton()
     }
 
+    func clearErrorForReuseAfterCancellation() {
+        error = nil
+        updateUI()
+    }
+
     @objc func didTapPrimaryButton() {
         // If the form has overridden the primary buy button, hand control over to the form
         guard paymentMethodFormViewController?.overridePrimaryButtonState == nil else {
@@ -862,7 +871,6 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                 paymentMethodRemoveIsPartial: elementsSession.paymentMethodRemoveIsPartialForPaymentSheet(),
                 merchantName: configuration.merchantDisplayName)
             let updateViewController = UpdatePaymentMethodViewController(removeSavedPaymentMethodMessage: removeSavedPaymentMethodMessage,
-                                                                         isTestMode: configuration.apiClient.isTestmode,
                                                                          configuration: updateConfig)
             updateViewController.delegate = self
             bottomSheetController?.pushContentViewController(updateViewController)

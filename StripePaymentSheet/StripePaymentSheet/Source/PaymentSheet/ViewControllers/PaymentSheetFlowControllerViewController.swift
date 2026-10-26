@@ -15,10 +15,12 @@ import UIKit
 
 /// For internal SDK use only
 class PaymentSheetFlowControllerViewController: UIViewController, FlowControllerViewControllerProtocol {
+
     // MARK: - Internal Properties
     let intent: Intent
     let elementsSession: STPElementsSession
     let configuration: PaymentSheet.Configuration
+    private let nativeSheetPresentation: SheetImplementationResolver?
     let formCache: PaymentMethodFormCache = .init()
     let analyticsHelper: PaymentSheetAnalyticsHelper
     let loadResult: PaymentSheetLoader.LoadResult
@@ -63,8 +65,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
     }
     weak var flowControllerDelegate: FlowControllerViewControllerDelegate?
     lazy var navigationBar: SheetNavigationBar = {
-        let navBar = SheetNavigationBar(isTestMode: configuration.apiClient.isTestmode,
-                                        appearance: configuration.appearance)
+        let navBar = SheetNavigationBar(appearance: configuration.appearance)
         navBar.delegate = self
         return navBar
     }()
@@ -185,6 +186,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
 
     required init(
         configuration: PaymentSheet.Configuration,
+        nativeSheetPresentation: SheetImplementationResolver? = nil,
         loadResult: PaymentSheetLoader.LoadResult,
         analyticsHelper: PaymentSheetAnalyticsHelper,
         checkoutBillingAddressUpdater: CheckoutSessionBillingAddressUpdater? = nil,
@@ -200,6 +202,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         self.isLinkEnabled = PaymentSheet.shouldShowLinkButton(elementsSession: elementsSession, configuration: configuration)
         self.couldShowLinkInHeader = isLinkEnabled && !isApplePayEnabled
         self.configuration = configuration
+        self.nativeSheetPresentation = nativeSheetPresentation
         self.analyticsHelper = analyticsHelper
 
         // Restore completed form input from the selected initialization policy.
@@ -223,7 +226,6 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
                 removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
                 merchantDisplayName: configuration.merchantDisplayName,
                 isCVCRecollectionEnabled: false,
-                isTestMode: configuration.apiClient.isTestmode,
                 allowsRemovalOfLastSavedPaymentMethod: elementsSession.paymentMethodRemoveLast(configuration: configuration),
                 allowsRemovalOfPaymentMethods: loadResult.customerProvider.allowsPaymentMethodRemoval(elementsSession: elementsSession),
                 allowsSetAsDefaultPM: elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
@@ -352,6 +354,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         presentNativeLink(
             selectedPaymentDetailsID: selectedPaymentOption?.currentLinkPaymentMethod,
             configuration: configuration,
+            nativeSheetPresentation: nativeSheetPresentation,
             intent: intent,
             elementsSession: elementsSession,
             analyticsHelper: analyticsHelper
@@ -531,6 +534,11 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
     func clearSelection() {
         savedPaymentOptionsViewController.unselectPaymentMethod()
         updateButton()
+    }
+
+    func clearErrorForReuseAfterCancellation() {
+        error = nil
+        updateUI()
     }
 
     @objc
@@ -786,7 +794,7 @@ extension PaymentSheetFlowControllerViewController: SavedPaymentOptionsViewContr
 
     // MARK: Helpers
     func configureEditSavedPaymentMethodsButton() {
-        navigationBar.additionalButton.configureCommonEditButton(isEditingPaymentMethods: savedPaymentOptionsViewController.isRemovingPaymentMethods, appearance: configuration.appearance)
+        navigationBar.configureEditButton(isEditingPaymentMethods: savedPaymentOptionsViewController.isRemovingPaymentMethods)
         navigationBar.additionalButton.addTarget(
             self, action: #selector(didSelectEditSavedPaymentMethodsButton), for: .touchUpInside)
     }

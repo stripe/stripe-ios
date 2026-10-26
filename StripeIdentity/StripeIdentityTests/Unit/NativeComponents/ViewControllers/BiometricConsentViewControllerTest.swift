@@ -162,6 +162,38 @@ final class BiometricConsentViewControllerTest: XCTestCase {
         XCTAssertEqual(continueLabel.textColor, .white)
     }
 
+    func testCustomContinueButtonHeightDoesNotAffectDeclineButton() throws {
+        // Given a custom minimum height for the primary button
+        let controller = try makeViewController(
+            primaryButtonStyle: .custom(backgroundColor: .purple, textColor: .yellow, height: 52)
+        )
+
+        // When the biometric consent buttons are displayed
+        let consentButtons = buttons(in: controller.view)
+        let continueButton = try XCTUnwrap(consentButtons.first)
+        let declineButton = try XCTUnwrap(consentButtons.last)
+
+        // Then only the Continue button uses the custom minimum height
+        XCTAssertEqual(continueButton.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height, 52)
+        XCTAssertEqual(declineButton.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height, 44)
+    }
+
+    func testCustomDeclineButtonHeightDoesNotAffectContinueButton() throws {
+        // Given a custom minimum height for the secondary button
+        let controller = try makeViewController(
+            secondaryButtonStyle: .custom(backgroundColor: .purple, textColor: .yellow, height: 52)
+        )
+
+        // When the biometric consent buttons are displayed
+        let consentButtons = buttons(in: controller.view)
+        let continueButton = try XCTUnwrap(consentButtons.first)
+        let declineButton = try XCTUnwrap(consentButtons.last)
+
+        // Then only the decline button uses the custom minimum height
+        XCTAssertEqual(continueButton.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height, 44)
+        XCTAssertEqual(declineButton.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height, 52)
+    }
+
     func testCustomContinueButtonIsDisabledUntilScrolled() throws {
         // Given unread consent with custom button colors
         let controller = try makeViewController(
@@ -186,6 +218,28 @@ final class BiometricConsentViewControllerTest: XCTestCase {
 
         // Then consent is saved as usual
         XCTAssertEqual(mockSheetController.savedData?.biometricConsent, true)
+    }
+
+    func testSubtitle() throws {
+        // Given the verification page has a biometric consent subtitle
+        let expectedSubtitle = "Complete a one-time identity check to enable withdrawals."
+
+        // When the biometric consent view model is created
+        let subtitle = vc.flowViewModel.headerViewModel?.subtitleText
+
+        // Then it displays the API-provided subtitle
+        XCTAssertEqual(subtitle, expectedSubtitle)
+    }
+
+    func testSubtitleIsOptional() throws {
+        // Given the verification page has no biometric consent subtitle
+        let verificationPage = try VerificationPageMock.response200NoConsentHeader.make()
+
+        // When the response is decoded
+        let subtitle = verificationPage.biometricConsent.subtitle
+
+        // Then decoding succeeds without a subtitle
+        XCTAssertNil(subtitle)
     }
 
     private func makeViewController(
