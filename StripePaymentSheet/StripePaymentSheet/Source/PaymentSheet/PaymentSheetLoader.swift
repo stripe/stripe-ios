@@ -117,7 +117,8 @@ final class PaymentSheetLoader {
                 elementsSession: elementsSession,
                 configuration: configuration,
                 customerProvider: customerProvider,
-                analyticsHelper: analyticsHelper,
+                email: configuration.defaultBillingDetails.email,
+                analyticsHelper: analyticsHelper.experimentAnalyticsHelper,
                 prefetchedEmailAndSourceTask: prefetchedLinkEmailAndSourceTask,
                 loadTimings: loadTimings,
                 isUpdate: isUpdate
@@ -126,15 +127,10 @@ final class PaymentSheetLoader {
             loadTimings.logStart("computePaymentMethodTypes")
             let isApplePayEnabled = PaymentSheet.isApplePayEnabled(elementsSession: elementsSession, configuration: configuration)
 
-            // Disable FC Lite if killswitch is enabled
-            let isFcLiteKillswitchEnabled = elementsSession.flags["elements_disable_fc_lite"] == true
-            FinancialConnectionsSDKAvailability.fcLiteKillswitchEnabled = isFcLiteKillswitchEnabled
+            applyFinancialConnectionsSettings(elementsSession: elementsSession)
 
             // Send legacy analytics to r.stripe.com instead of q.stripe.com if enabled
             STPAnalyticsClient.sendAnalyticsToRStripe = elementsSession.isAnalyticsToRStripeEnabled
-
-            let remoteFcLiteOverrideEnabled = shouldPreferFCLite(elementsSession: elementsSession)
-            FinancialConnectionsSDKAvailability.remoteFcLiteOverride = remoteFcLiteOverrideEnabled
 
             let paymentMethodTypes = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(from: intent, elementsSession: elementsSession, configuration: configuration, logAvailability: true)
 
@@ -162,6 +158,7 @@ final class PaymentSheetLoader {
                 intent: intent,
                 configuration: configuration,
                 paymentMethodTypes: paymentMethodTypes,
+                experimentAnalyticsHelper: analyticsHelper.experimentAnalyticsHelper,
                 analyticsHelper: analyticsHelper
             )
             paymentMethodMessagingPromotionsHelper?.fetchData()
@@ -328,6 +325,11 @@ final class PaymentSheetLoader {
             intent = .checkout(checkout.session)
         }
 
+        warnAboutUnactivatedPaymentMethods(elementsSession: elementsSession)
+        return (elementsSession, intent)
+    }
+
+    static func warnAboutUnactivatedPaymentMethods(elementsSession: STPElementsSession) {
         // Warn the merchant if we see unactivated payment method types in the Intent
         if !elementsSession.unactivatedPaymentMethodTypes.isEmpty {
             let message = """
@@ -336,7 +338,6 @@ final class PaymentSheetLoader {
             """
             print(message)
         }
-        return (elementsSession, intent)
     }
 
     static func shouldFallback(for error: Error) -> Bool {
@@ -369,10 +370,10 @@ final class PaymentSheetLoader {
         configuration: PaymentElementConfiguration,
         customerProvider: CustomerProvider,
         prefetchedSPMs: [STPPaymentMethod]?,
-        loadTimings: LoadTimings
+        loadTimings: LoadTimings? = nil
     ) -> [STPPaymentMethod] {
-        loadTimings.logStart("filterPaymentMethods")
-        defer { loadTimings.logEnd("filterPaymentMethods") }
+        loadTimings?.logStart("filterPaymentMethods")
+        defer { loadTimings?.logEnd("filterPaymentMethods") }
         // Retrieve the payment methods from ElementsSession or by making direct API calls
         guard var savedPaymentMethods = customerProvider.savedPaymentMethods(
             elementsSession: elementsSession,
@@ -502,6 +503,17 @@ final class PaymentSheetLoader {
         }
 
         return allowedCountries.contains(billingCountry)
+    }
+
+    @MainActor
+    static func applyFinancialConnectionsSettings(elementsSession: STPElementsSession) {
+        // TODO: ⚠️ Do not use global singletons or assume only one integration loads at a time.
+        // Disable FC Lite if killswitch is enabled
+        let isFcLiteKillswitchEnabled = elementsSession.flags["elements_disable_fc_lite"] == true
+        FinancialConnectionsSDKAvailability.fcLiteKillswitchEnabled = isFcLiteKillswitchEnabled
+
+        let remoteFcLiteOverrideEnabled = shouldPreferFCLite(elementsSession: elementsSession)
+        FinancialConnectionsSDKAvailability.remoteFcLiteOverride = remoteFcLiteOverrideEnabled
     }
 
     static func shouldPreferFCLite(elementsSession: STPElementsSession) -> Bool {

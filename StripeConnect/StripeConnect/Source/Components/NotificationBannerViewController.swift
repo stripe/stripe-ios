@@ -92,6 +92,7 @@ public class NotificationBannerViewController: UIViewController {
         })
 
         webVC.addMessageHandler(OpenNotificationBannerTaskMessageHandler(
+            sourcePolicy: webVC.messageSourcePolicy,
             analyticsClient: webVC.analyticsClient
         ) { [weak self] task in
             self?.presentNotificationBannerTask(task)
