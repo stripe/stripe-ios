@@ -147,7 +147,12 @@ extension PayWithLinkViewController {
             paymentMethodEditElement.view.isUserInteractionEnabled = false
             updateButton.update(status: .processing)
 
-            let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadataIfNecessary(analyticsHelper: context.analyticsHelper, intent: context.intent, elementsSession: context.elementsSession)
+            let clientAttributionMetadata = context.analyticsHelper.shouldIncludeClientAttributionMetadata
+                ? STPClientAttributionMetadata.makeClientAttributionMetadata(
+                    intent: context.intent,
+                    elementsSession: context.elementsSession,
+                    checkoutAttribution: context.analyticsHelper.checkoutAttribution
+                ) : nil
 
             coordinator?.allowSheetDismissal(false)
 

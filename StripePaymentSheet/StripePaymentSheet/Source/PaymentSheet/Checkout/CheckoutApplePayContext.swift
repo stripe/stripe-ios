@@ -33,7 +33,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
     private let returnURL: String
     private let presentationWindow: UIWindow?
     private let confirmationHandler: CheckoutController.ApplePayConfirmationParameters.ConfirmationHandler
-    private let confirmationSource: CheckoutController.ConfirmingElement
+    private let attribution: CheckoutAttributionContext
     private let initialTaxRegion: CheckoutController.Address?
     let authorizationController: PKPaymentAuthorizationController
 
@@ -62,7 +62,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         self.returnURL = applePayConfirmationParameters.returnURL
         self.presentationWindow = applePayConfirmationParameters.presentationWindow
         self.confirmationHandler = applePayConfirmationParameters.confirmationHandler
-        self.confirmationSource = applePayConfirmationParameters.confirmationSource
+        self.attribution = applePayConfirmationParameters.attribution
         self.initialTaxRegion = checkoutWalletUpdater.currentTaxRegion
         self.authorizationController = authorizationController
         self.checkoutWalletUpdater = checkoutWalletUpdater
@@ -108,8 +108,8 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
                 // 1. Tokenize the Apple Pay payment
                 let checkoutSession = self.session
                 let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadata(
-                    intent: .checkout(checkoutSession),
-                    elementsSession: checkoutSession.elementsSession
+                    checkoutSession: checkoutSession,
+                    attribution: attribution
                 )
                 let token = try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<STPToken, Error>) in
                     self.apiClient.createToken(with: payment) { token, error in
@@ -139,7 +139,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
                 let requestParameters = CheckoutSessionConfirmationRequestParameters.createWithPaymentMethodData(
                     sessionId: checkoutSession.id,
                     paymentMethodData: paymentMethodData,
-                    confirmationSource: confirmationSource,
+                    confirmationSource: attribution.confirmingElement,
                     expectedAmount: checkoutSession.amount,
                     savePaymentMethod: savePaymentMethod,
                     returnURL: self.returnURL,
@@ -215,7 +215,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
             if let updatedSession = try? await checkoutWalletUpdater.updateTaxRegionWithoutEnqueueing(
                 address: address,
                 canUpdateWhileSheetPresented: true,
-                confirmationSource: confirmationSource
+                confirmationSource: attribution.confirmingElement
             ) {
                 self.session = updatedSession
             }
@@ -251,7 +251,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
             if let updatedSession = try? await checkoutWalletUpdater.updateTaxRegionWithoutEnqueueing(
                 address: address,
                 canUpdateWhileSheetPresented: true,
-                confirmationSource: confirmationSource
+                confirmationSource: attribution.confirmingElement
             ) {
                 self.session = updatedSession
             }
@@ -562,7 +562,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         _ = try? await checkoutWalletUpdater.updateTaxRegionWithoutEnqueueing(
             address: taxRegionToRestore,
             canUpdateWhileSheetPresented: true,
-            confirmationSource: confirmationSource
+            confirmationSource: attribution.confirmingElement
         )
     }
 

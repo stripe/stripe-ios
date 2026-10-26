@@ -355,7 +355,7 @@ extension PaymentMethodFormViewController {
         }
     }
 
-    private var elementsSessionContext: ElementsSessionContext {
+    var elementsSessionContext: ElementsSessionContext {
         let intentId: ElementsSessionContext.IntentID? = {
             switch intent {
             case .paymentIntent(let paymentIntent):
@@ -388,7 +388,12 @@ extension PaymentMethodFormViewController {
         let paymentMethodType: STPPaymentMethodType = elementsSession.useCardPaymentMethodTypeForIBP ? .card : .USBankAccount
         let isSettingUp = intent.isSetupFutureUsageSet(for: paymentMethodType) || elementsSession.forceSaveFutureUseBehaviorAndNewMandateText
         let allowRedisplay = elementsSession.computeAllowRedisplay(isSettingUp: isSettingUp)
-        let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadataIfNecessary(analyticsHelper: analyticsHelper, intent: intent, elementsSession: elementsSession)
+        let clientAttributionMetadata = analyticsHelper.shouldIncludeClientAttributionMetadata
+            ? STPClientAttributionMetadata.makeClientAttributionMetadata(
+                intent: intent,
+                elementsSession: elementsSession,
+                checkoutAttribution: analyticsHelper.checkoutAttribution
+            ) : nil
 
         return ElementsSessionContext(
             amount: intent.amount,

@@ -33,6 +33,10 @@ extension CheckoutController: ExpressCheckoutElementDelegate {
         guard let expressCheckoutElementConfiguration = configuration.expressCheckoutElement else {
             throw CheckoutError.unknown(debugDescription: "Express Checkout Element configuration unexpectedly nil.")
         }
+        let attribution = CheckoutAttributionContext(
+            confirmingElement: .expressCheckoutElement,
+            configuredElements: configuration.configuredElements
+        )
         switch paymentMethod {
         case .applePay:
             guard let applePayConfiguration = expressCheckoutElementConfiguration.applePayConfiguration else {
@@ -57,7 +61,7 @@ extension CheckoutController: ExpressCheckoutElementDelegate {
                         paymentHandler: paymentHandler
                     )
                 },
-                confirmationSource: .expressCheckoutElement
+                attribution: attribution
             ))
         case .link:
             guard let presentingViewController = presentationWindow?.findTopMostPresentedViewController() else {
@@ -85,7 +89,8 @@ extension CheckoutController: ExpressCheckoutElementDelegate {
             // TODO: maybe separate out a LinkAnalyticsHelper
             let analyticsHelper = PaymentSheetAnalyticsHelper(
                 integrationShape: .complete, // Wallet Link analytics don't log integrationShape, so it's not worth adding an .expressCheckout case.
-                configuration: linkConfirmationConfiguration
+                configuration: linkConfirmationConfiguration,
+                checkoutAttribution: attribution
             )
             let authenticationContext = AuthenticationContext(
                 presentingViewController: presentingViewController,
@@ -99,7 +104,7 @@ extension CheckoutController: ExpressCheckoutElementDelegate {
                 analyticsHelper: analyticsHelper,
                 authenticationContext: authenticationContext,
                 paymentHandler: paymentHandler,
-                confirmationSource: .expressCheckoutElement))
+                attribution: attribution))
         }
     }
 }
