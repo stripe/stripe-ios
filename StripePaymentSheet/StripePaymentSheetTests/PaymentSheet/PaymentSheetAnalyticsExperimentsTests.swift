@@ -103,9 +103,9 @@ final class PaymentSheetAnalyticsExperimentsTests: XCTestCase {
             experimentsData: experimentsData,
             customer: nil
         )
-        var configuration = PaymentSheet.Configuration()
-        configuration.defaultBillingDetails.name = "Test Name"
-        configuration.defaultBillingDetails.email = "email"
+        var defaultBillingDetails = PaymentSheet.BillingDetails()
+        defaultBillingDetails.name = "Test Name"
+        defaultBillingDetails.email = "email"
         let linkAccount = PaymentSheetLinkAccount(
             email: "email",
             session: nil,
@@ -122,7 +122,8 @@ final class PaymentSheetAnalyticsExperimentsTests: XCTestCase {
             let experiment = LinkGlobalHoldback(
                 arbId: arbId,
                 session: session,
-                configuration: configuration,
+                isLinkEnabled: true,
+                defaultBillingDetails: defaultBillingDetails,
                 linkAccount: linkAccount,
                 integrationShape: integrationShape
             )
@@ -145,7 +146,7 @@ final class PaymentSheetAnalyticsExperimentsTests: XCTestCase {
             XCTAssertEqual(payload["dimensions-integration_type"] as? String, "mpe_ios")
             XCTAssertEqual(payload["dimensions-dvs_provided"] as? String, "email name")
             XCTAssertEqual(payload["dimensions-is_returning_link_user"] as? String, "false")
-            XCTAssertEqual(payload["dimensions-link_displayed"] as? String, PaymentSheet.isLinkEnabled(elementsSession: session, configuration: configuration).description)
+            XCTAssertEqual(payload["dimensions-link_displayed"] as? String, "true")
             XCTAssertEqual(payload["dimensions-integration_shape"] as? String, expectedShape)
             XCTAssertEqual(payload["dimensions-has_spms"] as? String, "false")
         }
@@ -185,8 +186,8 @@ final class PaymentSheetAnalyticsExperimentsTests: XCTestCase {
             experimentsData: experimentsData,
             customer: nil
         )
-        var configuration = PaymentSheet.Configuration()
-        configuration.defaultBillingDetails.phone = "(707) 707-7070"
+        var defaultBillingDetails = PaymentSheet.BillingDetails()
+        defaultBillingDetails.phone = "(707) 707-7070"
         let linkAccount = PaymentSheetLinkAccount(
             email: "email",
             session: LinkStubs.consumerSession(),
@@ -199,7 +200,8 @@ final class PaymentSheetAnalyticsExperimentsTests: XCTestCase {
         let experiment = LinkABTest(
             arbId: arbId,
             session: session,
-            configuration: configuration,
+            isLinkEnabled: false,
+            defaultBillingDetails: defaultBillingDetails,
             linkAccount: linkAccount,
             integrationShape: .flowController
         )
@@ -219,7 +221,7 @@ final class PaymentSheetAnalyticsExperimentsTests: XCTestCase {
         XCTAssertEqual(payload["dimensions-integration_type"] as? String, "mpe_ios")
         XCTAssertEqual(payload["dimensions-dvs_provided"] as? String, "phone")
         XCTAssertEqual(payload["dimensions-is_returning_link_user"] as? String, "true")
-        XCTAssertEqual(payload["dimensions-link_displayed"] as? String, PaymentSheet.isLinkEnabled(elementsSession: session, configuration: configuration).description)
+        XCTAssertEqual(payload["dimensions-link_displayed"] as? String, "false")
         XCTAssertEqual(payload["dimensions-integration_shape"] as? String, "flowcontroller")
         XCTAssertEqual(payload["dimensions-has_spms"] as? String, "false")
     }

@@ -641,12 +641,10 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
             LinkAccountContext.shared.account = nil
         }
 
-        var configuration = PaymentSheet.Configuration._testValue_MostPermissive(isApplePayEnabled: false)
-        configuration.apiClient = stubbedAPIClient()
-
         let linkAccount = try await PaymentSheetLoader.lookupLinkAccount(
             elementsSession: STPElementsSession._testValue(paymentMethodTypes: ["card", "link"]),
-            configuration: configuration,
+            apiClient: stubbedAPIClient(),
+            isLinkEnabled: true,
             email: "foo@bar.com",
             prefetchedEmailAndSource: nil,
             loadTimings: .init(),
@@ -676,12 +674,10 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
             LinkAccountContext.shared.account = nil
         }
 
-        var configuration = PaymentSheet.Configuration._testValue_MostPermissive(isApplePayEnabled: false)
-        configuration.apiClient = stubbedAPIClient()
-
         let linkAccount = try await PaymentSheetLoader.lookupLinkAccount(
             elementsSession: STPElementsSession._testValue(paymentMethodTypes: ["card", "link"]),
-            configuration: configuration,
+            apiClient: stubbedAPIClient(),
+            isLinkEnabled: true,
             email: "foo@bar.com",
             prefetchedEmailAndSource: nil,
             loadTimings: .init(),
@@ -726,7 +722,8 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
 
         _ = try await PaymentSheetLoader.lookupLinkAccount(
             elementsSession: elementsSession,
-            configuration: config,
+            apiClient: config.apiClient,
+            isLinkEnabled: PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: config),
             email: "test@example.com",
             prefetchedEmailAndSource: nil,
             loadTimings: .init(),

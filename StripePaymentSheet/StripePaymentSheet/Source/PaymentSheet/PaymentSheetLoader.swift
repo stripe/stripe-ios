@@ -104,10 +104,12 @@ final class PaymentSheetLoader {
             let elementsSessionAndIntent = try await elementsSessionAndIntentTask.value
             let intent = elementsSessionAndIntent.intent
             let elementsSession = elementsSessionAndIntent.elementsSession
-            let (_, didLinkLookupTimeOut) = await loadLink(
+            let didLinkLookupTimeOut = await loadLink(
                 elementsSession: elementsSession,
-                configuration: configuration,
+                apiClient: configuration.apiClient,
+                isLinkEnabled: PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration),
                 email: configuration.defaultBillingDetails.email,
+                defaultBillingDetails: configuration.defaultBillingDetails,
                 analyticsHelper: analyticsHelper.experimentAnalyticsHelper,
                 prefetchedEmailAndSourceTask: prefetchedLinkEmailAndSourceTask,
                 loadTimings: loadTimings,

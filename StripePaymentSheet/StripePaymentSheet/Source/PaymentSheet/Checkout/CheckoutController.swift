@@ -113,7 +113,7 @@ public final class CheckoutController: ObservableObject {
         var analyticsSession: Session?
         do {
             // 1. Initialize the session
-            let session = try await CheckoutControllerLoader.load(configuration: configuration)
+            let session = try await CheckoutControllerLoader.initCheckoutSession(configuration: configuration)
             self.session = session
             let initRequestID = session.requestID
             analyticsSession = session
@@ -133,7 +133,14 @@ public final class CheckoutController: ObservableObject {
             // 4. The session is now finalized - do post-session-change stuff
             let handleSessionChangeResult = CheckoutControllerLoader.handleSessionChange(checkout: self)
             confirmationChallenge = handleSessionChangeResult.confirmationChallenge
-            // 4a. Initialize PE
+
+            // 5. Resolve Link before constructing payment elements, reusing the prepared PE configuration.
+            await CheckoutControllerLoader.loadLink(
+                session: self.session,
+                configuration: configuration,
+                paymentElementConfiguration: handleSessionChangeResult.paymentElement?.flowController.configuration
+            )
+            // 6. Initialize PE
             if let paymentElementInitParameters = handleSessionChangeResult.paymentElement {
                 self.paymentElement = try PaymentElement(
                     checkout: self,
@@ -144,7 +151,7 @@ public final class CheckoutController: ObservableObject {
                 try await syncBillingAddress(from: paymentElement?.embeddedPaymentElement._paymentOption?.checkoutBillingDetails)
             }
 
-            // 4b. Initialize remaining elements
+            // 7. Initialize remaining elements
             let sessionSource = CheckoutSessionSource(initialSession: self.session, sessionPublisher: $session)
 
             if let expressCheckoutElementConfiguration = configuration.expressCheckoutElement {

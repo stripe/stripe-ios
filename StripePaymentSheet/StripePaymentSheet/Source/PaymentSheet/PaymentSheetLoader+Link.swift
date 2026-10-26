@@ -9,25 +9,25 @@
 @_spi(STP) import StripePayments
 
 extension PaymentSheetLoader {
+    /// Loads Link and records experiment exposure. Returns whether lookup timed out, or nil when Link is disabled.
     @MainActor
     static func loadLink(
         elementsSession: STPElementsSession,
-        configuration: PaymentElementConfiguration,
+        apiClient: STPAPIClient,
+        isLinkEnabled: Bool,
         email: String?,
+        defaultBillingDetails: PaymentSheet.BillingDetails,
         analyticsHelper: ExperimentAnalyticsHelper,
         prefetchedEmailAndSourceTask: Task<(email: String, source: EmailSource)?, Never>,
         loadTimings: LoadTimings,
         isUpdate: Bool
-    ) async -> (isLinkEnabled: Bool, didLinkLookupTimeOut: Bool?) {
-        let isLinkEnabled = PaymentSheet.isLinkEnabled(
-            elementsSession: elementsSession,
-            configuration: configuration
-        )
+    ) async -> Bool? {
         let lookupLinkAccountTask = Task { @MainActor in
             let prefetchedLinkEmailAndSource = await prefetchedEmailAndSourceTask.value
             let linkAccount = try? await Self.lookupLinkAccount(
                 elementsSession: elementsSession,
-                configuration: configuration,
+                apiClient: apiClient,
+                isLinkEnabled: isLinkEnabled,
                 email: email,
                 prefetchedEmailAndSource: prefetchedLinkEmailAndSource,
                 loadTimings: loadTimings,
@@ -41,7 +41,8 @@ extension PaymentSheetLoader {
             }
             Self.logExperimentExposures(
                 elementsSession: elementsSession,
-                configuration: configuration,
+                isLinkEnabled: isLinkEnabled,
+                defaultBillingDetails: defaultBillingDetails,
                 linkAccount: linkAccount,
                 analyticsHelper: analyticsHelper
             )
@@ -65,13 +66,14 @@ extension PaymentSheetLoader {
             }
         }
 
-        return (isLinkEnabled, didLinkLookupTimeOut)
+        return didLinkLookupTimeOut
     }
 
     @MainActor
     static func lookupLinkAccount(
         elementsSession: STPElementsSession,
-        configuration: PaymentElementConfiguration,
+        apiClient: STPAPIClient,
+        isLinkEnabled: Bool,
         email: String?,
         prefetchedEmailAndSource: (email: String, source: EmailSource)?,
         loadTimings: LoadTimings,
@@ -84,7 +86,6 @@ extension PaymentSheetLoader {
         }
 
         // Lookup Link account if Link is enabled, or if Link is disabled due to the holdback experiment (to collect experiment dimensions).
-        let isLinkEnabled = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration)
         let isLinkInHoldbackExperiment = PaymentSheet.isLinkInHoldbackExperiment(elementsSession: elementsSession)
         let isLookupForHoldbackEnabled = elementsSession.flags["elements_disable_link_global_holdback_lookup"] != true
 
@@ -117,7 +118,7 @@ extension PaymentSheetLoader {
             return nil
         }
 
-        let linkAccountService = LinkAccountService(apiClient: configuration.apiClient, elementsSession: elementsSession)
+        let linkAccountService = LinkAccountService(apiClient: apiClient, elementsSession: elementsSession)
         let linkAccount = try await linkAccountService.lookupAccount(
             withEmail: lookupEmail.email,
             emailSource: lookupEmail.source,
@@ -134,7 +135,8 @@ extension PaymentSheetLoader {
     @MainActor
     static func logExperimentExposures(
         elementsSession: STPElementsSession,
-        configuration: PaymentElementConfiguration,
+        isLinkEnabled: Bool,
+        defaultBillingDetails: PaymentSheet.BillingDetails,
         linkAccount: PaymentSheetLinkAccount?,
         analyticsHelper: ExperimentAnalyticsHelper
     ) {
@@ -145,21 +147,24 @@ extension PaymentSheetLoader {
             analyticsHelper.logExposure(experiment: LinkGlobalHoldback(
                 arbId: arbId,
                 session: elementsSession,
-                configuration: configuration,
+                isLinkEnabled: isLinkEnabled,
+                defaultBillingDetails: defaultBillingDetails,
                 linkAccount: linkAccount,
                 integrationShape: analyticsHelper.integrationShape
             ))
             analyticsHelper.logExposure(experiment: LinkGlobalHoldbackAA(
                 arbId: arbId,
                 session: elementsSession,
-                configuration: configuration,
+                isLinkEnabled: isLinkEnabled,
+                defaultBillingDetails: defaultBillingDetails,
                 linkAccount: linkAccount,
                 integrationShape: analyticsHelper.integrationShape
             ))
             analyticsHelper.logExposure(experiment: LinkABTest(
                 arbId: arbId,
                 session: elementsSession,
-                configuration: configuration,
+                isLinkEnabled: isLinkEnabled,
+                defaultBillingDetails: defaultBillingDetails,
                 linkAccount: linkAccount,
                 integrationShape: analyticsHelper.integrationShape
             ))
