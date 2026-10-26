@@ -40,42 +40,6 @@ final class SavedPaymentMethodManager {
         self.elementsSession = elementsSession
     }
 
-    func update(paymentMethod: STPPaymentMethod,
-                with updateParams: STPPaymentMethodUpdateParams) async throws -> STPPaymentMethod {
-        do {
-            return try await customerProvider.update(
-                paymentMethod: paymentMethod,
-                with: updateParams,
-                elementsSession: elementsSession,
-                apiClient: configuration.apiClient
-            )
-        } catch CustomerProvider.Error.missingUpdatedPaymentMethod {
-            let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetError,
-                                              error: Error.missingUpdatedPaymentMethod,
-                                              additionalNonPIIParams: ["payment_method_id": paymentMethod.stripeId])
-            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
-            throw PaymentSheetError.unknown(
-                debugDescription: "Checkout session response didn't include the updated payment method."
-            )
-        } catch CustomerProvider.Error.missingEphemeralKey {
-            logMissingEphemeralKey()
-            throw PaymentSheetError.unknown(
-                debugDescription: "Failed to read ephemeral key while updating a payment method."
-            )
-        }
-    }
-
-    func detach(paymentMethod: STPPaymentMethod) {
-        let didStartDetaching = customerProvider.detach(
-            paymentMethod: paymentMethod,
-            elementsSession: elementsSession,
-            apiClient: configuration.apiClient
-        )
-        if !didStartDetaching {
-            logMissingEphemeralKey()
-        }
-    }
-
     func setAsDefaultPaymentMethod(defaultPaymentMethodId: String) async throws -> STPCustomer {
         guard let ephemeralKey else {
             throw PaymentSheetError.unknown(debugDescription: "Failed to read ephemeral key while setting a payment method as default.")
