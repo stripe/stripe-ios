@@ -27,7 +27,10 @@ Pod::Spec.new do |s|
   s.swift_version		               = '5.0'
   s.weak_framework = 'SwiftUI'
   s.source_files                   = 'StripeIdentity/StripeIdentity/**/*.swift'
-  s.pod_target_xcconfig            = { 'OTHER_LDFLAGS' => '$(inherited) -ObjC' }
+  s.pod_target_xcconfig            = {
+    'OTHER_LDFLAGS' => '$(inherited) -ObjC',
+    'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'x86_64',
+  }
   s.ios.resource_bundle            = { 'StripeIdentityBundle' => 'StripeIdentity/StripeIdentity/Resources/**/*.{lproj,json,png,wav,xcassets,task}' }
   s.preserve_paths                 = 'NOTICE'
   s.dependency                       'StripeCore', "#{s.version}"
