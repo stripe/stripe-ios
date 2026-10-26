@@ -50,4 +50,12 @@ import Foundation
         paymentUserAgent = components.joined(separator: "; ")
         return paymentUserAgent
     }
+
+    /// A `payment_user_agent` built from `components` instead of the global
+    /// `STPAnalyticsClient.sharedClient.productUsage` set. Use this where a request's
+    /// `payment_user_agent` must be deterministic and unaffected by whatever classes happen to
+    /// have registered into that set elsewhere in the process (now or in the future).
+    @_spi(STP) public static func paymentUserAgent(replacingProductUsageWith components: [String]) -> String {
+        (["stripe-ios/\(STPAPIClient.STPSDKVersion)", "variant.\(variant)"] + components).joined(separator: "; ")
+    }
 }
