@@ -54,7 +54,8 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             paymentMethodOrientation: .vertical,
             accountService: LinkAccountService(
                 apiClient: STPAPIClient(publishableKey: "pk_test_factory"),
-                elementsSession: ._testValue()
+                elementsSession: ._testValue(),
+                analyticsHelper: .init()
             ),
             analyticsHelper: nil
         )

@@ -344,11 +344,15 @@ final class CheckoutDefaultsInitializationTests: XCTestCase {
     }
 
     func testInitLooksUpLinkForExpressCheckout() async throws {
+        let analyticsClient = STPAnalyticsClient.sharedClient
+        let previousLogHistory = analyticsClient._testLogHistory
+        defer { analyticsClient._testLogHistory = previousLogHistory }
         let previousAccount = LinkAccountContext.shared.account
         defer { LinkAccountContext.shared.account = previousAccount }
 
         // Given ECE offers Link, with PE either absent or explicitly hiding Link
         for hasPaymentElement in [false, true] {
+            analyticsClient._testLogHistory = []
             LinkAccountContext.shared.account = nil
             let response = CheckoutTestHelpers.makeSessionWithWalletTypes(
                 ["link"],
@@ -377,6 +381,8 @@ final class CheckoutDefaultsInitializationTests: XCTestCase {
             XCTAssertEqual(checkout.paymentElement != nil, hasPaymentElement)
             XCTAssertEqual(LinkAccountContext.shared.account?.email, "foo@bar.com")
             XCTAssertEqual(LinkAccountContext.shared.account?.isRegistered, true)
+            let lookupEvent = try XCTUnwrap(analyticsClient._testLogHistory.first { $0["event"] as? String == "link.account_lookup.complete" })
+            XCTAssertEqual(lookupEvent["checkout_session_id"] as? String, checkout.session.id)
             await fulfillment(of: [lookup], timeout: 1)
         }
     }

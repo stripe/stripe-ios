@@ -625,6 +625,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
 
     @MainActor
     func testLookupLink_preservesVerifiedSessionForMatchingAccountOnReload() async throws {
+        let analyticsClient = STPTestingAnalyticsClient()
         var didCallLookup = false
         stub { urlRequest in
             if urlRequest.url?.absoluteString.contains("consumers/sessions/lookup") == true {
@@ -648,12 +649,15 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
             email: "foo@bar.com",
             prefetchedEmailAndSource: nil,
             loadTimings: .init(),
-            isUpdate: false
+            isUpdate: false,
+            linkAnalytics: .init(analyticsClient: analyticsClient)
         )
 
         XCTAssertTrue(didCallLookup, "Expected Link lookup to still run when reloading PaymentSheet")
         XCTAssertEqual(linkAccount?.consumerSessionClientSecret, "pscs_persisted")
         XCTAssertEqual(linkAccount?.sessionState, .verified)
+        let lookupEvent = try XCTUnwrap(analyticsClient._testLogHistory.first { $0["event"] as? String == "link.account_lookup.complete" })
+        XCTAssertNil(lookupEvent["checkout_session_id"])
     }
 
     @MainActor
@@ -681,7 +685,8 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
             email: "foo@bar.com",
             prefetchedEmailAndSource: nil,
             loadTimings: .init(),
-            isUpdate: false
+            isUpdate: false,
+            linkAnalytics: .init()
         )
 
         XCTAssertTrue(didCallLookup, "Expected Link lookup to run for the new email")
@@ -727,7 +732,8 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
             email: "test@example.com",
             prefetchedEmailAndSource: nil,
             loadTimings: .init(),
-            isUpdate: false
+            isUpdate: false,
+            linkAnalytics: .init()
         )
 
         if shouldCallLookup {

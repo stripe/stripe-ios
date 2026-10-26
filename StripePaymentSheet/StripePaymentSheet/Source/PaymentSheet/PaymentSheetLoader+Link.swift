@@ -20,7 +20,8 @@ extension PaymentSheetLoader {
         analyticsHelper: ExperimentAnalyticsHelper,
         prefetchedEmailAndSourceTask: Task<(email: String, source: EmailSource)?, Never>,
         loadTimings: LoadTimings,
-        isUpdate: Bool
+        isUpdate: Bool,
+        linkAnalytics: LinkAnalyticsHelper
     ) async -> Bool? {
         let lookupLinkAccountTask = Task { @MainActor in
             let prefetchedLinkEmailAndSource = await prefetchedEmailAndSourceTask.value
@@ -31,7 +32,8 @@ extension PaymentSheetLoader {
                 email: email,
                 prefetchedEmailAndSource: prefetchedLinkEmailAndSource,
                 loadTimings: loadTimings,
-                isUpdate: isUpdate
+                isUpdate: isUpdate,
+                linkAnalytics: linkAnalytics
             )
 
             // We don't want to set the global singleton if we timed out, because that means setting it after MPE has finished loading, which the code is not necessarily expecting.
@@ -77,7 +79,8 @@ extension PaymentSheetLoader {
         email: String?,
         prefetchedEmailAndSource: (email: String, source: EmailSource)?,
         loadTimings: LoadTimings,
-        isUpdate: Bool
+        isUpdate: Bool,
+        linkAnalytics: LinkAnalyticsHelper
     ) async throws -> PaymentSheetLinkAccount? {
         // If we already have a verified Link account and the merchant is just calling `update` on FlowController or Embedded,
         // keep the account logged-in. Otherwise, the user has to verify via OTP again.
@@ -118,7 +121,7 @@ extension PaymentSheetLoader {
             return nil
         }
 
-        let linkAccountService = LinkAccountService(apiClient: apiClient, elementsSession: elementsSession)
+        let linkAccountService = LinkAccountService(apiClient: apiClient, elementsSession: elementsSession, analyticsHelper: linkAnalytics)
         let linkAccount = try await linkAccountService.lookupAccount(
             withEmail: lookupEmail.email,
             emailSource: lookupEmail.source,

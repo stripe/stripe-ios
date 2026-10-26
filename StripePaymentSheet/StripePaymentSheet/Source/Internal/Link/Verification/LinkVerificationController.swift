@@ -27,7 +27,8 @@ final class LinkVerificationController {
         configuration: PaymentElementConfiguration,
         appearance: LinkAppearance? = nil,
         allowLogoutInDialog: Bool = false,
-        consentViewModel: LinkConsentViewModel? = nil
+        consentViewModel: LinkConsentViewModel? = nil,
+        analyticsHelper: LinkAnalyticsHelper
     ) {
         LinkUI.applyLiquidGlassIfPossible(configuration: configuration)
 
@@ -38,7 +39,8 @@ final class LinkVerificationController {
             brand: brand,
             appearance: appearance,
             allowLogoutInDialog: allowLogoutInDialog,
-            consentViewModel: consentViewModel
+            consentViewModel: consentViewModel,
+            analyticsHelper: analyticsHelper
         )
         verificationViewController.delegate = self
         configuration.style.configure(verificationViewController)

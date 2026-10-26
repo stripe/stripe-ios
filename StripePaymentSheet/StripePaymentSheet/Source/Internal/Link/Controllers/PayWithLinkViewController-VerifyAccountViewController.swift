@@ -22,7 +22,8 @@ extension PayWithLinkViewController {
                 mode: .embedded,
                 linkAccount: linkAccount,
                 brand: context.linkBrand,
-                appearance: context.linkAppearance
+                appearance: context.linkAppearance,
+                analyticsHelper: context.analyticsHelper.linkAnalytics
             )
             vc.delegate = self
             vc.view.backgroundColor = .clear
@@ -167,7 +168,7 @@ extension PayWithLinkViewController {
 
         override func didTapOrSwipeToDismiss() {
             super.didTapOrSwipeToDismiss()
-            STPAnalyticsClient.sharedClient.logLink2FACancel()
+            context.analyticsHelper.linkAnalytics.log2FACancel()
         }
     }
 }

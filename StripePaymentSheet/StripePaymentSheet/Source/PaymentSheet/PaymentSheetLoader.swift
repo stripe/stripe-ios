@@ -113,7 +113,8 @@ final class PaymentSheetLoader {
                 analyticsHelper: analyticsHelper.experimentAnalyticsHelper,
                 prefetchedEmailAndSourceTask: prefetchedLinkEmailAndSourceTask,
                 loadTimings: loadTimings,
-                isUpdate: isUpdate
+                isUpdate: isUpdate,
+                linkAnalytics: analyticsHelper.linkAnalytics
             )
 
             loadTimings.logStart("computePaymentMethodTypes")

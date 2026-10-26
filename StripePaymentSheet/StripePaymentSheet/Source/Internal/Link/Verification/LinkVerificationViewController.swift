@@ -37,6 +37,7 @@ final class LinkVerificationViewController: UIViewController {
     let mode: LinkVerificationView.Mode
     let linkAccount: PaymentSheetLinkAccount
 
+    private let analyticsHelper: LinkAnalyticsHelper
     private let brand: LinkBrand
     private let appearance: LinkAppearance?
     private let allowLogoutInDialog: Bool
@@ -79,10 +80,12 @@ final class LinkVerificationViewController: UIViewController {
         brand: LinkBrand = .link,
         appearance: LinkAppearance? = nil,
         allowLogoutInDialog: Bool = false,
-        consentViewModel: LinkConsentViewModel? = nil
+        consentViewModel: LinkConsentViewModel? = nil,
+        analyticsHelper: LinkAnalyticsHelper
     ) {
         self.mode = mode
         self.linkAccount = linkAccount
+        self.analyticsHelper = analyticsHelper
         self.brand = brand
         self.appearance = appearance
         self.allowLogoutInDialog = allowLogoutInDialog
@@ -141,7 +144,7 @@ final class LinkVerificationViewController: UIViewController {
 
         verificationView.isHidden = true
 
-        linkAccount.startVerification { [weak self] result in
+        linkAccount.startVerification { [weak self, analyticsHelper] result in
             switch result {
             case .success(let collectOTP):
                 if collectOTP {
@@ -154,7 +157,7 @@ final class LinkVerificationViewController: UIViewController {
                     self?.finish(withResult: .completed)
                 }
             case .failure(let error):
-                STPAnalyticsClient.sharedClient.logLink2FAStartFailure()
+                analyticsHelper.log2FAStartFailure()
                 self?.activityIndicator.stopAnimating()
                 self?.verificationView.isHidden = false
                 self?.verificationView.errorMessage = LinkUtils.getLocalizedErrorMessage(from: error)
@@ -164,7 +167,7 @@ final class LinkVerificationViewController: UIViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        STPAnalyticsClient.sharedClient.logLink2FAStart()
+        analyticsHelper.log2FAStart()
     }
 
 }
@@ -173,12 +176,12 @@ final class LinkVerificationViewController: UIViewController {
 extension LinkVerificationViewController: LinkVerificationViewDelegate {
 
     func verificationViewDidCancel(_ view: LinkVerificationView) {
-        STPAnalyticsClient.sharedClient.logLink2FACancel()
+        analyticsHelper.log2FACancel()
         finish(withResult: .canceled)
     }
 
     func verificationViewResendCode(_ view: LinkVerificationView) {
-        STPAnalyticsClient.sharedClient.logLink2FAResendCode()
+        analyticsHelper.log2FAResendCode()
 
         view.sendingCode = true
         view.errorMessage = nil
@@ -215,7 +218,7 @@ extension LinkVerificationViewController: LinkVerificationViewDelegate {
     }
 
     func verificationViewLogout(_ view: LinkVerificationView) {
-        STPAnalyticsClient.sharedClient.logLink2FACancel()
+        analyticsHelper.log2FACancel()
         finish(withResult: .switchAccount)
     }
 
@@ -230,15 +233,15 @@ extension LinkVerificationViewController: LinkVerificationViewDelegate {
             consentGranted = nil
         }
 
-        linkAccount.verify(with: code, consentGranted: consentGranted) { [weak self] result in
+        linkAccount.verify(with: code, consentGranted: consentGranted) { [weak self, analyticsHelper] result in
             switch result {
             case .success:
                 self?.finish(withResult: .completed)
-                STPAnalyticsClient.sharedClient.logLink2FAComplete()
+                analyticsHelper.log2FAComplete()
             case .failure(let error):
                 view.codeField.performInvalidCodeAnimation()
                 view.errorMessage = LinkUtils.getLocalizedErrorMessage(from: error)
-                STPAnalyticsClient.sharedClient.logLink2FAFailure()
+                analyticsHelper.log2FAFailure()
             }
         }
     }

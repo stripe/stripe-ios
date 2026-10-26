@@ -69,7 +69,8 @@ enum CheckoutControllerLoader {
             analyticsHelper: ExperimentAnalyticsHelper(integrationShape: .checkoutElements),
             prefetchedEmailAndSourceTask: Task { nil },
             loadTimings: .init(loadingStartDate: Date()),
-            isUpdate: false
+            isUpdate: false,
+            linkAnalytics: .init(checkoutSessionID: session.id)
         )
     }
 

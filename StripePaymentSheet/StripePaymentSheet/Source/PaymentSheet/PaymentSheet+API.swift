@@ -701,7 +701,7 @@ extension PaymentSheet {
                 guard linkAccount.sessionState == .verified else {
                     // We don't support 2FA in the native mobile Link flow, so if 2FA is required then this is a no-op.
                     // Just fall through and don't save the card details to Link.
-                    STPAnalyticsClient.sharedClient.logLinkPopupSkipped()
+                    analyticsHelper.linkAnalytics.logPopupSkipped()
 
                     // Attempt to confirm directly with params
                     confirmWithPaymentMethodParams(paymentMethodParams, linkAccount, saveForFutureUseCheckboxState)
@@ -729,7 +729,7 @@ extension PaymentSheet {
                                 case .success(let paymentDetailsShareResponse):
                                     confirmWithPaymentMethod(paymentDetailsShareResponse.paymentMethod, linkAccount, saveForFutureUseCheckboxState, clientAttributionMetadata)
                                 case .failure(let error):
-                                    STPAnalyticsClient.sharedClient.logLinkSharePaymentDetailsFailure(error: error)
+                                    analyticsHelper.linkAnalytics.logSharePaymentDetailsFailure(error: error)
                                     // If this fails, confirm directly
                                     confirmWithPaymentMethodParams(paymentMethodParams, linkAccount, saveForFutureUseCheckboxState)
                                 }
@@ -739,7 +739,7 @@ extension PaymentSheet {
                             confirmWithPaymentDetails(linkAccount, paymentDetails, paymentMethodParams.card?.cvc, billingPhoneNumber, saveForFutureUseCheckboxState, paymentMethodParams.allowRedisplay)
                         }
                     case .failure(let error):
-                        STPAnalyticsClient.sharedClient.logLinkCreatePaymentDetailsFailure(error: error)
+                        analyticsHelper.linkAnalytics.logCreatePaymentDetailsFailure(error: error)
                         // Attempt to confirm directly
                         confirmWithPaymentMethodParams(paymentMethodParams, linkAccount, saveForFutureUseCheckboxState)
                     }
@@ -791,18 +791,19 @@ extension PaymentSheet {
                 with: phoneNumber,
                 legalName: legalName,
                 countryCode: countryCode,
-                consentAction: consentAction
+                consentAction: consentAction,
+                analyticsHelper: analyticsHelper.linkAnalytics
             ) { result in
                 UserDefaults.standard.markLinkAsUsed()
                 switch result {
                 case .success:
-                    STPAnalyticsClient.sharedClient.logLinkSignupComplete()
+                    analyticsHelper.linkAnalytics.logSignupComplete()
                     let linkPaymentMethodType: STPPaymentMethodType = elementsSession.linkPassthroughModeEnabled ? intentConfirmParams.paymentMethodParams.type : .link
                     // Set allow_redisplay on params
                     setAllowRedisplay(intentConfirmParams, linkPaymentMethodType)
                     createPaymentDetailsAndConfirm(linkAccount, intentConfirmParams.paymentMethodParams, intentConfirmParams.saveForFutureUseCheckboxState)
                 case .failure(let error as NSError):
-                    STPAnalyticsClient.sharedClient.logLinkSignupFailure(error: error)
+                    analyticsHelper.linkAnalytics.logSignupFailure(error: error)
                     // Attempt to confirm directly with params as a fallback.
                     setAllowRedisplay(intentConfirmParams, intentConfirmParams.paymentMethodParams.type)
                     confirmWithPaymentMethodParams(intentConfirmParams.paymentMethodParams, linkAccount, intentConfirmParams.saveForFutureUseCheckboxState)
@@ -830,7 +831,7 @@ extension PaymentSheet {
                     case .success(let paymentDetailsShareResponse):
                         confirmWithPaymentMethod(paymentDetailsShareResponse.paymentMethod, linkAccount, saveForFutureUseCheckboxState, clientAttributionMetadata)
                     case .failure(let error):
-                        STPAnalyticsClient.sharedClient.logLinkSharePaymentDetailsFailure(error: error)
+                        analyticsHelper.linkAnalytics.logSharePaymentDetailsFailure(error: error)
                         paymentHandlerCompletion(.failed, error as NSError)
                     }
                 }

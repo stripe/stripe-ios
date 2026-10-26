@@ -6,7 +6,7 @@
 
 import OHHTTPStubs
 import OHHTTPStubsSwift
-import StripeCoreTestUtils
+@_spi(STP) import StripeCoreTestUtils
 import XCTest
 
 @testable @_spi(STP) import StripeCore
@@ -18,6 +18,7 @@ import XCTest
 final class LinkVerificationViewControllerTests: STPNetworkStubbingTestCase {
     @MainActor
     func testStartVerification429StopsAnimatingAndShowsError() throws {
+        let analyticsClient = STPTestingAnalyticsClient()
         let originalMaxRetries = StripeAPI.maxRetries
         StripeAPI.maxRetries = 0
         defer { StripeAPI.maxRetries = originalMaxRetries }
@@ -26,7 +27,7 @@ final class LinkVerificationViewControllerTests: STPNetworkStubbingTestCase {
             LinkVerificationTestHelpers.makeStartVerificationRateLimitResponse()
         }
 
-        let sut = makeSUT()
+        let sut = makeSUT(analyticsHelper: .init(analyticsClient: analyticsClient, checkoutSessionID: "cs_test_123"))
         let delegate = MockLinkVerificationViewControllerDelegate { _ in
             XCTFail("Delegate should not be called — user must close the view manually")
         }
@@ -45,6 +46,8 @@ final class LinkVerificationViewControllerTests: STPNetworkStubbingTestCase {
             sut.view.subviews.compactMap { $0 as? ActivityIndicator }.first
         )
         XCTAssertFalse(activityIndicator.isAnimating)
+        let failureEvent = try XCTUnwrap(analyticsClient._testLogHistory.first { $0["event"] as? String == "link.2fa.start_failure" })
+        XCTAssertEqual(failureEvent["checkout_session_id"] as? String, "cs_test_123")
 
         let verificationView = try XCTUnwrap(
             sut.view.subviews.compactMap { $0 as? LinkVerificationView }.first
@@ -59,7 +62,7 @@ final class LinkVerificationViewControllerTests: STPNetworkStubbingTestCase {
 
 private extension LinkVerificationViewControllerTests {
     @MainActor
-    func makeSUT() -> LinkVerificationViewController {
+    func makeSUT(analyticsHelper: LinkAnalyticsHelper) -> LinkVerificationViewController {
         let session = ConsumerSession.make(
             clientSecret: "client_secret",
             emailAddress: "jane.diaz@example.com",
@@ -82,7 +85,7 @@ private extension LinkVerificationViewControllerTests {
             canSyncAttestationState: false
         )
 
-        return LinkVerificationViewController(linkAccount: linkAccount)
+        return LinkVerificationViewController(linkAccount: linkAccount, analyticsHelper: analyticsHelper)
     }
 }
 

@@ -176,6 +176,7 @@ struct LinkPMDisplayDetails {
         legalName: String?,
         countryCode: String?,
         consentAction: ConsentAction,
+        analyticsHelper: LinkAnalyticsHelper,
         completion: @escaping (Result<Void, Error>) -> Void
     ) {
         signUp(
@@ -183,6 +184,7 @@ struct LinkPMDisplayDetails {
             legalName: legalName,
             countryCode: phoneNumber?.countryCode ?? countryCode,
             consentAction: consentAction,
+            analyticsHelper: analyticsHelper,
             completion: completion
         )
     }
@@ -192,10 +194,11 @@ struct LinkPMDisplayDetails {
         legalName: String?,
         countryCode: String?,
         consentAction: ConsentAction,
+        analyticsHelper: LinkAnalyticsHelper,
         completion: @escaping (Result<Void, Error>) -> Void
     ) {
         guard case .requiresSignUp = sessionState else {
-            STPAnalyticsClient.sharedClient.logLinkInvalidSessionState(sessionState: sessionState)
+            analyticsHelper.logInvalidSessionState(sessionState: sessionState)
             DispatchQueue.main.async {
                 completion(
                     .failure(

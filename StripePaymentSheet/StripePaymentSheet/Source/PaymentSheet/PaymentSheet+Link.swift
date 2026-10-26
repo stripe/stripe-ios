@@ -47,7 +47,8 @@ extension PaymentSheet {
             elementsSession: elementsSession,
             configuration: configuration,
             linkAccount: LinkAccountContext.shared.account,
-            checkoutAttribution: analyticsHelper.checkoutAttribution
+            checkoutAttribution: analyticsHelper.checkoutAttribution,
+            analyticsHelper: analyticsHelper.linkAnalytics
         )
 
         payWithLinkVC.payWithLinkDelegate = self

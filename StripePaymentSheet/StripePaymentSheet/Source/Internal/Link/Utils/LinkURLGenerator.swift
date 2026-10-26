@@ -93,6 +93,8 @@ class LinkURLGenerator {
             loggerMetadata = ["mobile_session_id": sessionID]
         }
 
+        loggerMetadata["checkout_session_id"] = intent.checkoutSessionID
+
         let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadata(intent: intent, elementsSession: elementsSession, checkoutAttribution: checkoutAttribution)
 
         let paymentObjectType: LinkURLParams.PaymentObjectMode = elementsSession.linkPassthroughModeEnabled ? .card_payment_method : .link_payment_method
