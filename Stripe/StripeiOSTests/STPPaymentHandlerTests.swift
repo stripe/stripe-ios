@@ -95,6 +95,7 @@ class STPPaymentHandlerStubbedTests: STPNetworkStubbingTestCase {
                     saveForFutureUseCheckboxState: .hidden
                 ),
                 configuration: configuration,
+                customerProvider: CustomerProvider(customer: configuration.customer),
                 intentConfig: intentConfig,
                 authenticationContext: self,
                 paymentHandler: paymentHandler,
