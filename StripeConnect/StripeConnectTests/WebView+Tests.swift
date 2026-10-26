@@ -6,11 +6,19 @@
 //
 
 @testable import StripeConnect
+@_spi(STP) import StripeCore
 import UIKit
 import WebKit
 import XCTest
 
 extension WKWebView {
+
+    func trustedMessageSourcePolicy() -> STPWebMessageSourcePolicy {
+        STPWebMessageSourcePolicy(
+            expectedSource: self,
+            allowedOriginURLs: [StripeConnectConstants.connectJSBaseURL]
+        )
+    }
 
     func evaluateDebugMessage(message: String) {
         evaluateMessage(name: "debug",
@@ -265,4 +273,90 @@ private class DataScriptMessageHandler: NSObject, WKScriptMessageHandler {
             XCTFail("Failed to decode body for message with name: \(message.name) \(error.localizedDescription)")
         }
     }
+}
+
+extension WKWebView {
+    /// Explicitly loads a trusted Connect document while preserving the production delegates.
+    func loadTrustedDocumentPreservingDelegate() async throws {
+        let observer = TrustedDocumentReadyObserver(expectedWebView: self)
+        configuration.userContentController.add(observer, name: observer.name)
+        defer {
+            observer.cancel()
+            configuration.userContentController.removeScriptMessageHandler(forName: observer.name)
+        }
+
+        loadHTMLString("""
+        <!doctype html>
+        <script>
+        window.webkit.messageHandlers.\(observer.name).postMessage({ ready: true });
+        </script>
+        """, baseURL: StripeConnectConstants.connectJSBaseURL)
+        try await TestHelpers.withTimeout {
+            try await observer.wait()
+        }
+    }
+}
+
+private final class TrustedDocumentReadyObserver: NSObject, WKScriptMessageHandler {
+    let name = "stripeConnectTrustedDocumentReady"
+
+    private weak var expectedWebView: WKWebView?
+    private let lock = NSLock()
+    private var result: Result<Void, Error>?
+    private var continuation: CheckedContinuation<Void, Error>?
+
+    init(expectedWebView: WKWebView) {
+        self.expectedWebView = expectedWebView
+    }
+
+    func wait() async throws {
+        try await withTaskCancellationHandler(operation: {
+            try await withCheckedThrowingContinuation { continuation in
+                lock.lock()
+                defer { lock.unlock() }
+                if let result {
+                    continuation.resume(with: result)
+                } else {
+                    self.continuation = continuation
+                }
+            }
+        }, onCancel: {
+            self.cancel()
+        })
+    }
+
+    func cancel() {
+        finish(.failure(CancellationError()))
+    }
+
+    func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+        let origin = message.frameInfo.securityOrigin
+        let validOrigin = origin.protocol.lowercased() == "https"
+            && origin.host.lowercased() == StripeConnectConstants.connectJSBaseURL.host?.lowercased()
+            && [0, 443].contains(origin.port)
+        guard message.webView === expectedWebView,
+              message.frameInfo.isMainFrame,
+              validOrigin else {
+            finish(.failure(TrustedDocumentReadyError.invalidSource))
+            return
+        }
+        finish(.success(()))
+    }
+
+    private func finish(_ result: Result<Void, Error>) {
+        lock.lock()
+        guard self.result == nil else {
+            lock.unlock()
+            return
+        }
+        self.result = result
+        let continuation = continuation
+        self.continuation = nil
+        lock.unlock()
+        continuation?.resume(with: result)
+    }
+}
+
+private enum TrustedDocumentReadyError: Error {
+    case invalidSource
 }

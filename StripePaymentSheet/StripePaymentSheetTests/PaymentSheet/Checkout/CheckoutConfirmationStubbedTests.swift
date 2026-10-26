@@ -18,13 +18,208 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
 
     // MARK: - Coordinator
 
-    func testConfirmCommitsReturnedSessionAndMapsSuccess() async throws {
-        // Given an open Checkout Session whose confirmation succeeds
-        let checkout = try await makeCheckout()
+    func testSavedSEPARequiresMandateBeforeConfirmingWithoutPresentingPaymentElement() async throws {
+        try await assertSavedSEPAMandate(accept: true)
+    }
+
+    func testDismissingSavedSEPAMandateCancelsWithoutConfirming() async throws {
+        try await assertSavedSEPAMandate(accept: false)
+    }
+
+    func testSavedSEPADoesNotRepeatMandateAfterContinuingFromSheet() async throws {
+        // Given a saved SEPA method whose mandate was accepted in the sheet
+        let checkout = try await makeSavedSEPACheckout()
+        let flowController = checkout.getPaymentElement().paymentSheetFlowController
+        flowController.flowControllerViewControllerShouldClose(flowController.viewController, didCancel: false)
+        flowController.updatePaymentOption()
+        XCTAssertTrue(flowController.didPresentAndContinue)
+        XCTAssertTrue(checkout.getPaymentElement().paymentOptionSourceOfTruthIsFlowController)
+        let confirmRequested = stubConfirmationExpecting(
+            sessionId: checkout.session.id,
+            savePaymentMethod: nil,
+            expectedPaymentMethodType: "sepa_debit",
+            expectedPaymentMethodID: STPPaymentMethod._testSEPA().stripeId
+        )
+
+        // When the merchant confirms, no additional mandate UI is needed
+        let result = await checkout.confirm(from: UIViewController())
+
+        // Then Checkout confirms directly
+        assertSucceeded(result)
+        await fulfillment(of: [confirmRequested], timeout: 5)
+    }
+
+    func testSavedSEPAMandateTracksEmbeddedWindowAttachment() async throws {
+        // Given the merchant obtains both public views and prepares an offscreen hierarchy
+        let checkout = try await makeSavedSEPACheckout(displaysMandateText: true)
+        let element = checkout.getPaymentElement()
+        _ = element.view
+        let embeddedView = element.uiView
+        let presenter = UIViewController()
+        guard case .paymentMethod(let parameters, _) = checkout.makeConfirmationFlow(
+            for: element,
+            presentingViewController: presenter
+        ) else {
+            return XCTFail("Expected a payment method confirmation flow")
+        }
+        XCTAssertTrue(checkout.requiresSEPAMandate(for: parameters.option))
+        presenter.view.addSubview(embeddedView)
+        XCTAssertNil(embeddedView.window)
+        XCTAssertTrue(checkout.requiresSEPAMandate(for: parameters.option))
+
+        // When the hierarchy reaches a window
+        let window = UIWindow(frame: UIScreen.main.bounds)
+        window.rootViewController = presenter
+        window.makeKeyAndVisible()
+        defer { window.isHidden = true }
+        XCTAssertNotNil(embeddedView.window)
+        XCTAssertFalse(checkout.requiresSEPAMandate(for: parameters.option))
+
+        // ...and the merchant removes the embedded view before confirming
+        embeddedView.removeFromSuperview()
+        XCTAssertNil(embeddedView.window)
+        let confirmRequested = stubConfirmationExpecting(
+            sessionId: checkout.session.id,
+            savePaymentMethod: nil,
+            expectedPaymentMethodType: "sepa_debit",
+            expectedPaymentMethodID: STPPaymentMethod._testSEPA().stripeId
+        )
+        let result = await checkout.confirm(from: presenter)
+
+        // Then the earlier attachment still avoids an extra mandate sheet
+        assertSucceeded(result)
+        XCTAssertNil(presenter.presentedViewController)
+        await fulfillment(of: [confirmRequested], timeout: 5)
+    }
+
+    func testDisablingMandateTextSkipsConfirmationMandate() async throws {
+        // Given the merchant opts to display mandates themselves
+        let checkout = try await makeSavedSEPACheckout(displaysMandateText: false)
+        let presenter = UIViewController()
+        let window = UIWindow(frame: UIScreen.main.bounds)
+        window.rootViewController = presenter
+        window.makeKeyAndVisible()
+        defer {
+            presenter.dismiss(animated: false)
+            window.isHidden = true
+        }
+        let flow = try XCTUnwrap(checkout.makeConfirmationFlow(
+            for: checkout.getPaymentElement(),
+            presentingViewController: presenter
+        ))
         stubConfirmation()
 
-        // When the coordinator confirms the selected payment method
-        let result = await checkout.confirm(makePaymentMethodFlow(for: checkout))
+        // When confirming without accessing the view, sheet, or mandate text
+        var didComplete = false
+        let confirmation = Task {
+            let result = await checkout.confirm(flow)
+            didComplete = true
+            return result
+        }
+
+        // Then confirmation completes without a mandate sheet
+        try await waitUntil { didComplete || presenter.presentedViewController != nil }
+        if let mandate = presenter.presentedViewController?.children.first as? SepaMandateViewController {
+            // Dismiss an unexpected mandate so a regression fails without leaving confirmation suspended.
+            try await waitUntil { presenter.presentedViewController?.isBeingPresented == false }
+            mandate.didTapOrSwipeToDismiss()
+        }
+        assertSucceeded(await confirmation.value)
+        XCTAssertNil(presenter.presentedViewController)
+    }
+
+    private func makeSavedSEPACheckout(displaysMandateText: Bool? = nil) async throws -> CheckoutController {
+        let elementsSession = STPElementsSession._testValue(
+            paymentMethodTypes: ["sepa_debit"],
+            customerSessionData: [:],
+            paymentMethods: [STPPaymentMethod._testSEPA().allResponseFields]
+        )
+        let session = CheckoutTestHelpers.makeSession([
+            "session_id": "cs_test_123",
+            "currency": "eur",
+            "checkout_items": CheckoutTestHelpers.makeOneTimePriceCheckoutItems(currency: "eur"),
+            "payment_method_types": ["sepa_debit"],
+            "elements_session": elementsSession.allResponseFields,
+        ])
+        var configuration = PaymentElement.Configuration()
+        if let displaysMandateText {
+            configuration.displaysMandateText = displaysMandateText
+        }
+        return try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration(
+            apiResponse: session,
+            paymentElementConfiguration: configuration
+        ))
+    }
+
+    private func assertSavedSEPAMandate(accept: Bool) async throws {
+        // Given a default saved SEPA method and a merchant that hasn't presented PaymentElement
+        let checkout = try await makeSavedSEPACheckout()
+        XCTAssertEqual(checkout.session.paymentOption?.paymentMethodType, "sepa_debit")
+        XCTAssertFalse(checkout.getPaymentElement().paymentSheetFlowController.didPresentAndContinue)
+
+        let presenter = UIViewController()
+        let window = UIWindow(frame: UIScreen.main.bounds)
+        window.rootViewController = presenter
+        window.makeKeyAndVisible()
+        defer {
+            presenter.dismiss(animated: false)
+            window.isHidden = true
+        }
+        let confirmRequested = expectation(description: "Confirm requested only after mandate acceptance")
+        confirmRequested.isInverted = !accept
+        var didAcceptMandate = false
+        stub { $0.url?.path.hasSuffix("/confirm") == true } response: { _ in
+            XCTAssertTrue(didAcceptMandate)
+            confirmRequested.fulfill()
+            return HTTPStubsResponse(jsonObject: Self.confirmedSessionJSON, statusCode: 200, headers: nil)
+        }
+
+        // When the merchant confirms without opening the sheet
+        let confirmation = Task { await checkout.confirm(from: presenter) }
+
+        // Then the mandate is shown before any confirmation request
+        try await waitUntil { presenter.presentedViewController?.children.first is SepaMandateViewController }
+        let mandate = try XCTUnwrap(presenter.presentedViewController?.children.first as? SepaMandateViewController)
+        try await waitUntil { presenter.presentedViewController?.isBeingPresented == false }
+        didAcceptMandate = accept
+        if accept {
+            mandate.completion(true)
+        } else {
+            mandate.didTapOrSwipeToDismiss()
+        }
+        let result = await confirmation.value
+        if accept {
+            assertSucceeded(result)
+        } else {
+            guard case .canceled = result else {
+                return XCTFail("Expected cancellation, got \(result)")
+            }
+            XCTAssertEqual(checkout.session.status, .open)
+        }
+        XCTAssertNil(presenter.presentedViewController)
+        await fulfillment(of: [confirmRequested], timeout: accept ? 5 : 0.1)
+    }
+
+    func testConfirmCommitsReturnedSessionAndMapsSuccess() async throws {
+        // Given an open Checkout Session and a saved payment method
+        let checkout = try await makeCheckout()
+        let paymentMethod = STPPaymentMethod._testCard()
+        let challenge = TestConfirmationChallenge()
+        stub { request in
+            request.url?.path.hasSuffix("/confirm") == true
+        } response: { request in
+            let params = RequestBodyTestHelpers.formEncodedBodyParams(from: request)
+            XCTAssertEqual(params["payment_method"], paymentMethod.stripeId)
+            XCTAssertFalse(params.keys.contains { $0.hasPrefix("payment_method_data[") })
+            return HTTPStubsResponse(jsonObject: Self.confirmedSessionJSON, statusCode: 200, headers: nil)
+        }
+
+        // When the coordinator confirms the saved payment method
+        let result = await checkout.confirm(makePaymentMethodFlow(
+            for: checkout,
+            option: .saved(paymentMethod, nil),
+            confirmationChallenge: challenge
+        ))
 
         // Then it maps the result and commits the returned Checkout Session
         guard case .completed(let paymentStatus) = result else {
@@ -33,6 +228,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         }
         XCTAssertEqual(paymentStatus, .paid)
         XCTAssertEqual(checkout.session.status, .complete(.paid))
+        XCTAssertEqual(challenge.completions, 0)
     }
 
     func testCanceledConfirmationCommitsReturnedSession() async throws {
@@ -433,7 +629,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         )
     }
 
-    func testNewPaymentMethodDeselectedOmitsSaveAndUsesUnspecifiedAllowRedisplay() async throws {
+    func testNewPaymentMethodDeselectedSendsSaveFalseAndUsesUnspecifiedAllowRedisplay() async throws {
         try await assertNewPaymentMethodConfirmation(
             session: CheckoutTestHelpers.makeSession().withCustomer(),
             paymentMethodType: .stripe(.card),
@@ -496,7 +692,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
     func testNewPaymentMethodDoesNotReceiveCheckoutEmail() async throws {
         // Given a local Checkout email and a new PaymentMethod without a form-collected email
         // When confirming the new PaymentMethod
-        // Then PaymentMethod creation omits billing_details[email]
+        // Then inline payment method data omits billing_details[email]
         try await assertNewPaymentMethodConfirmation(
             session: CheckoutTestHelpers.makeSession().withCustomer(),
             paymentMethodType: .stripe(.card),
@@ -511,7 +707,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
     func testNewPaymentMethodPreservesFormCollectedEmail() async throws {
         // Given different Checkout and form-collected PaymentMethod emails
         // When confirming the new PaymentMethod
-        // Then PaymentMethod creation preserves the form-collected email
+        // Then inline payment method data preserves the form-collected email
         try await assertNewPaymentMethodConfirmation(
             session: CheckoutTestHelpers.makeSession().withCustomer(),
             paymentMethodType: .stripe(.card),
@@ -526,6 +722,33 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
 
     // MARK: - Express Checkout
 
+    func testExpressCheckoutButtonsReenableAfterFailedOrCanceledConfirmation() async throws {
+        for paymentIntentStatus in ["requires_payment_method", "canceled"] {
+            // Given an open Checkout Session with an available Link button
+            let session = CheckoutTestHelpers.makeSessionWithWalletTypes(["link"], customerEmail: "jenny@example.com")
+            let checkout = try await makeCheckout(apiResponse: session)
+            let view = checkout.getExpressCheckoutElement().uiView
+            let button = try XCTUnwrap(CheckoutTestHelpers.expressCheckoutButtons(in: view).first)
+            var response = session.allResponseFields
+            response["payment_intent"] = makeConfirmedSessionJSON(paymentIntentStatus: paymentIntentStatus)["payment_intent"]
+            stubConfirmation(responseJSON: response)
+
+            // When confirmation fails or is canceled
+            let result = await checkout.confirm(makePaymentMethodFlow(for: checkout))
+
+            // Then the open checkout remains interactive
+            XCTAssertEqual(checkout.session.status, .open)
+            XCTAssertTrue(view.isUserInteractionEnabled)
+            XCTAssertTrue(button.isEnabled)
+            switch (paymentIntentStatus, result) {
+            case ("requires_payment_method", .failed), ("canceled", .canceled):
+                break
+            default:
+                XCTFail("Expected \(paymentIntentStatus) confirmation outcome, got \(result)")
+            }
+        }
+    }
+
     func testExpressCheckoutApplePayRequiresShippingAddressWhenSessionCollectsShipping() async throws {
         // Given a Checkout Session that collects shipping addresses
         let apiResponse = CheckoutTestHelpers.makeSession([
@@ -535,7 +758,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
             clientSecret: "cs_test_123_secret_abc",
             returnURL: "stripe-ios-test://checkout-return"
         )
-        var eceConfiguration = ExpressCheckoutElement.Configuration(confirmHandler: { _ in })
+        var eceConfiguration = ExpressCheckoutElement.Configuration(completion: { _ in })
         eceConfiguration.applePayConfiguration = .init(merchantId: "merchant.com.test")
         configuration.expressCheckoutElement = eceConfiguration
         let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration(
@@ -568,10 +791,11 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         billingDetails.name = "Jenny Rosen"
         billingDetails.address = .init(country: "US", postalCode: "94107")
         configuration.defaults.billingDetails = billingDetails
-        configuration.expressCheckoutElement = ExpressCheckoutElement.Configuration(confirmHandler: { _ in })
+        configuration.expressCheckoutElement = ExpressCheckoutElement.Configuration(completion: { _ in })
         let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration(
             apiResponse: CheckoutTestHelpers.makeSession(["customer_email": "jenny@example.com"]),
-            configuration: configuration
+            configuration: configuration,
+            paymentElementConfiguration: nil
         ))
         let presentingViewController = UIViewController()
         let window = UIWindow()
@@ -597,7 +821,34 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         XCTAssertEqual(parameters.configuration.defaultBillingDetails.name, "Jenny Rosen")
         XCTAssertEqual(parameters.configuration.defaultBillingDetails.address.country, "US")
         XCTAssertEqual(parameters.configuration.defaultBillingDetails.address.postalCode, "94107")
-        XCTAssertNil(parameters.configuration.defaultBillingDetails.email)
+        XCTAssertEqual(parameters.configuration.defaultBillingDetails.email, "jenny@example.com")
+        XCTAssertNil(parameters.nativeSheetPresentation)
+        XCTAssertNil(checkout.paymentElement)
+        XCTAssertNotNil(parameters.confirmationChallenge)
+    }
+
+    func testExpressCheckoutLinkCollectsRequiredBillingAddress() async throws {
+        // Given Checkout requires a full billing address and has no email
+        var configuration = CheckoutController.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://custom-return")
+        configuration.expressCheckoutElement = ExpressCheckoutElement.Configuration(completion: { _ in })
+        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration(
+            apiResponse: CheckoutTestHelpers.makeSession(["billing_address_collection": "required"]),
+            configuration: configuration
+        ))
+        let presentingViewController = UIViewController()
+        let window = UIWindow()
+        window.rootViewController = presentingViewController
+
+        // When ECE constructs the Link confirmation flow
+        let flow = try checkout.makeExpressCheckoutConfirmationFlow(.link, presentationWindow: window)
+
+        // Then Link collects the address without forcing email collection
+        guard case .link(let parameters) = flow else {
+            XCTFail("Expected a Link confirmation flow")
+            return
+        }
+        XCTAssertEqual(parameters.configuration.billingDetailsCollectionConfiguration.email, .automatic)
+        XCTAssertEqual(parameters.configuration.billingDetailsCollectionConfiguration.address, .full)
     }
 
     func testExpressCheckoutLinkRequiresPresentingViewController() async throws {
@@ -613,16 +864,21 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         }
     }
 
-    func testLinkPaymentDetailsCreatesPaymentMethodAndConfirmsCheckoutSession() async throws {
+    func testLinkPaymentDetailsConfirmsCheckoutSessionWithPaymentMethodData() async throws {
         // Given Link payment details in non-passthrough mode
         let checkout = try await makeCheckout(apiResponse: CheckoutTestHelpers.makeSession().withCustomer())
-        let createPaymentMethod = stubCreatePaymentMethod()
-        let confirm = stubConfirmationExpecting(sessionId: checkout.session.id, savePaymentMethod: nil)
+        let confirm = stubConfirmationExpecting(
+            sessionId: checkout.session.id,
+            savePaymentMethod: nil,
+            expectedPaymentMethodType: "link",
+            expectedBillingEmail: .value("test@example.com")
+        )
         let logout = stubLinkLogout(consumerSessionClientSecret: "cs_xxx")
         let configuration = checkout.getPaymentElement().embeddedPaymentElement.configuration
         let flow = CheckoutController.CheckoutConfirmationFlow.link(.init(
             confirmOption: makeLinkConfirmOption(),
             configuration: configuration,
+            nativeSheetPresentation: checkout.getPaymentElement().embeddedPaymentElement.nativeSheetPresentation,
             confirmationChallenge: nil,
             analyticsHelper: ._testValue(),
             authenticationContext: self,
@@ -632,9 +888,9 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         // When Checkout confirms with Link
         let result = await checkout.confirm(flow)
 
-        // Then Link creates a PaymentMethod, confirms Checkout, and logs out
+        // Then Link sends payment method data to Checkout confirmation and logs out
         assertSucceeded(result)
-        await fulfillment(of: [createPaymentMethod, confirm, logout], timeout: 10)
+        await fulfillment(of: [confirm, logout], timeout: 10)
     }
 
     func testLinkConfirmationPollsOpenCheckoutSession() async throws {
@@ -642,11 +898,11 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         let checkout = try await makeCheckout(apiResponse: CheckoutTestHelpers.makeSession().withCustomer())
         var confirmResponseJSON = makeConfirmedSessionJSON(status: "open")
         confirmResponseJSON["session_id"] = checkout.session.id
-        let createPaymentMethod = stubCreatePaymentMethod()
         let confirm = stubConfirmationExpecting(
             sessionId: checkout.session.id,
             savePaymentMethod: nil,
-            responseJSON: confirmResponseJSON
+            responseJSON: confirmResponseJSON,
+            expectedPaymentMethodType: "link"
         )
         let poll = stubPollCheckoutSession(sessionId: checkout.session.id)
         let logout = stubLinkLogout(consumerSessionClientSecret: "cs_xxx")
@@ -654,6 +910,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         let flow = CheckoutController.CheckoutConfirmationFlow.link(.init(
             confirmOption: makeLinkConfirmOption(),
             configuration: configuration,
+            nativeSheetPresentation: checkout.getPaymentElement().embeddedPaymentElement.nativeSheetPresentation,
             confirmationChallenge: nil,
             analyticsHelper: ._testValue(),
             authenticationContext: self,
@@ -665,7 +922,105 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
 
         // Then Link polls until the Checkout Session confirmation is complete
         assertSucceeded(result)
-        await fulfillment(of: [createPaymentMethod, confirm, poll, logout], timeout: 10)
+        await fulfillment(of: [confirm, poll, logout], timeout: 10)
+    }
+
+    // MARK: - Inline payment method request and challenge lifecycle
+
+    func testNewPaymentMethodSendsInlineDataAndCompletesChallengeAfterResponse() async throws {
+        let fraudData = FraudDetectionData.shared
+        let originalFraudData = (fraudData.guid, fraudData.muid, fraudData.sid, fraudData.sidCreationDate)
+        fraudData.guid = "test_guid"
+        fraudData.muid = "test_muid"
+        fraudData.sid = "test_sid"
+        fraudData.sidCreationDate = Date()
+        defer {
+            (fraudData.guid, fraudData.muid, fraudData.sid, fraudData.sidCreationDate) = originalFraudData
+        }
+
+        try await assertChallengeCompletesAfterConfirm(statusCode: 200) { params in
+            XCTAssertNil(params["payment_method"])
+            XCTAssertEqual(params["payment_method_data[type]"], "card")
+            XCTAssertEqual(params["payment_method_data[card][number]"], "4242424242424242")
+            XCTAssertNotNil(params["payment_method_data[payment_user_agent]"])
+            XCTAssertEqual(params["payment_method_data[guid]"], "test_guid")
+            XCTAssertEqual(params["payment_method_data[muid]"], "test_muid")
+            XCTAssertEqual(params["payment_method_data[sid]"], "test_sid")
+            XCTAssertEqual(params["payment_method_data[client_attribution_metadata][checkout_session_id]"], "cs_test_123")
+            XCTAssertEqual(params["client_attribution_metadata[checkout_session_id]"], "cs_test_123")
+        }
+    }
+
+    func testNewPaymentMethodCompletesChallengeAfterConfirmFailure() async throws {
+        try await assertChallengeCompletesAfterConfirm(statusCode: 400)
+    }
+
+    private func assertChallengeCompletesAfterConfirm(
+        statusCode: Int,
+        inspectRequest: @escaping ([String: String]) -> Void = { _ in }
+    ) async throws {
+        // Given a new card whose confirmation has a Radar challenge
+        let checkout = try await makeCheckout()
+        let challenge = TestConfirmationChallenge()
+        stub { request in
+            request.url?.path.hasSuffix("/confirm") == true
+        } response: { request in
+            let params = RequestBodyTestHelpers.formEncodedBodyParams(from: request, omittingEmptyValues: true)
+            XCTAssertEqual(params["payment_method_data[radar_options][hcaptcha_token]"], "captcha_token")
+            XCTAssertEqual(params["payment_method_data[radar_options][ios_verification_object][test_assertion]"], "assertion")
+            inspectRequest(params)
+            // Check before supplying the response, without relying on a response delay.
+            XCTAssertEqual(challenge.completions, 0)
+            return HTTPStubsResponse(
+                jsonObject: statusCode == 200 ? Self.confirmedSessionJSON : ["error": ["type": "card_error", "message": "Declined"]],
+                statusCode: Int32(statusCode),
+                headers: nil
+            )
+        }
+
+        // When confirming the new payment method
+        let flow = makePaymentMethodFlow(
+            for: checkout,
+            option: .new(makeConfirmParams(type: .stripe(.card))),
+            confirmationChallenge: challenge
+        )
+        let result = await checkout.confirm(flow)
+
+        // Then cleanup runs once after success or failure, before confirm returns
+        if statusCode == 200 {
+            assertSucceeded(result)
+        } else {
+            guard case .failed = result else { return XCTFail("Expected failed confirmation") }
+        }
+        XCTAssertEqual(challenge.completions, 1)
+    }
+
+    private final class TestConfirmationChallenge: CheckoutConfirmationChallenge {
+        private let lock = NSLock()
+        private var completionCount = 0
+
+        var completions: Int {
+            lock.lock()
+            defer { lock.unlock() }
+            return completionCount
+        }
+
+        func makeRadarOptions(for paymentMethodType: STPPaymentMethodType) async -> STPRadarOptions? {
+            XCTAssertEqual(paymentMethodType, .card)
+            let options = STPRadarOptions(hcaptchaToken: "captcha_token")
+            options.iosVerificationObject = ["test_assertion": "assertion"]
+            return options
+        }
+
+        func complete() async {
+            recordCompletion()
+        }
+
+        private func recordCompletion() {
+            lock.lock()
+            defer { lock.unlock() }
+            completionCount += 1
+        }
     }
 
     // MARK: - Helpers
@@ -694,13 +1049,15 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
 
     private func makePaymentMethodFlow(
         for checkout: CheckoutController,
-        option: CheckoutController.PaymentMethodConfirmationParameters.Option
+        option: CheckoutController.PaymentMethodConfirmationParameters.Option,
+        confirmationChallenge: (any CheckoutConfirmationChallenge)? = nil
     ) -> CheckoutController.CheckoutConfirmationFlow {
         let configuration = checkout.getPaymentElement().embeddedPaymentElement.configuration
         let parameters = CheckoutController.PaymentMethodConfirmationParameters(
             option: option,
             configuration: configuration,
-            confirmationChallenge: nil,
+            nativeSheetPresentation: checkout.getPaymentElement().embeddedPaymentElement.nativeSheetPresentation,
+            confirmationChallenge: confirmationChallenge,
             authenticationContext: self,
             paymentHandler: STPPaymentHandler(apiClient: configuration.apiClient)
         )
@@ -726,16 +1083,13 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         let confirmParams = makeConfirmParams(type: paymentMethodType)
         confirmParams.paymentMethodParams.nonnil_billingDetails.email = paymentMethodEmail
         confirmParams.saveForFutureUseCheckboxState = checkboxState
-        let createPaymentMethod = stubCreatePaymentMethod(
-            expectedAllowRedisplay: expectedAllowRedisplay,
-            expectedBillingEmail: expectedBillingEmail,
-            file: file,
-            line: line
-        )
         let confirm = stubConfirmationExpecting(
             sessionId: checkout.session.id,
             savePaymentMethod: expectedSavePaymentMethod,
             expectedCollectedInformationEmail: checkoutEmail,
+            expectedPaymentMethodType: try XCTUnwrap(confirmParams.paymentMethodParams.rawTypeString),
+            expectedAllowRedisplay: expectedAllowRedisplay,
+            expectedBillingEmail: expectedBillingEmail,
             file: file,
             line: line
         )
@@ -745,7 +1099,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         )
 
         assertSucceeded(result, file: file, line: line)
-        await fulfillment(of: [createPaymentMethod, confirm], timeout: 10)
+        await fulfillment(of: [confirm], timeout: 10)
     }
 
     private func makeConfirmParams(type: PaymentSheet.PaymentMethodType) -> IntentConfirmParams {
@@ -829,13 +1183,14 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
     ) async -> CheckoutController.InternalConfirmResult {
         stubConfirmation(responseJSON: responseJSON)
         let configuration = checkout.getPaymentElement().embeddedPaymentElement.configuration
-        let requestParameters = CheckoutSessionConfirmationRequestParameters(
-            checkoutSession: checkout.session,
-            paymentMethod: STPPaymentMethod._testCard(),
-            configuration: configuration,
-            paymentMethodOptions: nil,
-            savePaymentMethod: nil,
-            clientAttributionMetadata: nil
+        let requestParameters = CheckoutSessionConfirmationRequestParameters.createWithPaymentMethodID(
+            sessionId: checkout.session.id,
+            paymentMethodId: STPPaymentMethod._testCard().stripeId,
+            expectedAmount: checkout.session.amount,
+            expectedPaymentMethodType: "card",
+            returnURL: configuration.returnURL,
+            shipping: STPPaymentIntentShippingDetailsParams(paymentSheetConfiguration: configuration),
+            collectedInformation: .init(email: checkout.session.localState.email)
         )
         return await CheckoutController.confirmCheckoutSession(
             with: requestParameters,
@@ -881,6 +1236,10 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         savePaymentMethod: Bool?,
         expectedCollectedInformationEmail: String? = nil,
         responseJSON: [AnyHashable: Any]? = nil,
+        expectedPaymentMethodType: String,
+        expectedPaymentMethodID: String? = nil,
+        expectedAllowRedisplay: String? = nil,
+        expectedBillingEmail: BillingEmailExpectation? = nil,
         file: StaticString = #filePath,
         line: UInt = #line
     ) -> XCTestExpectation {
@@ -896,6 +1255,24 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
                 omittingEmptyValues: true,
                 line: line
             )
+            XCTAssertEqual(params["payment_method"], expectedPaymentMethodID, file: file, line: line)
+            if expectedPaymentMethodID != nil {
+                XCTAssertFalse(params.keys.contains { $0.hasPrefix("payment_method_data[") }, file: file, line: line)
+            } else {
+                XCTAssertEqual(params["payment_method_data[type]"], expectedPaymentMethodType, file: file, line: line)
+            }
+            XCTAssertEqual(params["expected_payment_method_type"], expectedPaymentMethodType, file: file, line: line)
+            if let expectedAllowRedisplay {
+                XCTAssertEqual(params["payment_method_data[allow_redisplay]"], expectedAllowRedisplay, file: file, line: line)
+            }
+            switch expectedBillingEmail {
+            case .omitted:
+                XCTAssertNil(params["payment_method_data[billing_details][email]"], file: file, line: line)
+            case .value(let email):
+                XCTAssertEqual(params["payment_method_data[billing_details][email]"], email, file: file, line: line)
+            case nil:
+                break
+            }
             XCTAssertEqual(
                 params["save_payment_method"],
                 savePaymentMethod.map(String.init),
@@ -934,44 +1311,6 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
                     "state": "succeeded",
                     "payment_object_status": NSNull(),
                 ],
-                statusCode: 200,
-                headers: nil
-            )
-        }
-        return expectation
-    }
-
-    private func stubCreatePaymentMethod(
-        expectedAllowRedisplay: String? = nil,
-        expectedBillingEmail: BillingEmailExpectation? = nil,
-        file: StaticString = #filePath,
-        line: UInt = #line
-    ) -> XCTestExpectation {
-        let expectation = expectation(description: "PaymentMethod creation requested")
-        stub { request in
-            request.url?.path.hasSuffix("/payment_methods") == true
-        } response: { request in
-            if expectedAllowRedisplay != nil || expectedBillingEmail != nil {
-                let params = RequestBodyTestHelpers.formEncodedBodyParams(
-                    from: request,
-                    omittingEmptyValues: true,
-                    line: line
-                )
-                if let expectedAllowRedisplay {
-                    XCTAssertEqual(params["allow_redisplay"], expectedAllowRedisplay, file: file, line: line)
-                }
-                switch expectedBillingEmail {
-                case .omitted:
-                    XCTAssertNil(params["billing_details[email]"], file: file, line: line)
-                case .value(let email):
-                    XCTAssertEqual(params["billing_details[email]"], email, file: file, line: line)
-                case nil:
-                    break
-                }
-            }
-            expectation.fulfill()
-            return HTTPStubsResponse(
-                jsonObject: STPTestUtils.jsonNamed("CardPaymentMethod")!,
                 statusCode: 200,
                 headers: nil
             )

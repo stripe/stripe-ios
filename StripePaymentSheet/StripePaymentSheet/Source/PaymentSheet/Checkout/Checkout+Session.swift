@@ -78,9 +78,10 @@ extension CheckoutController {
         /// Aggregate subtotal, tax, discount, and total amounts for the Checkout Session.
         public let totals: CheckoutController.Session.Totals
 
-        /// Payment methods currently available after applying configuration and device eligibility, ordered
-        /// as displayed by `ExpressCheckoutElement`. Each updated Session reflects the latest availability.
-        public let availableExpressCheckoutPaymentMethods: [ExpressCheckoutElement.PaymentMethod]
+        /// Payment methods available after applying configuration and device eligibility, ordered as displayed by `ExpressCheckoutElement`.
+        /// Supported values are `"apple_pay"` and `"link"`.
+        /// When empty, Express Checkout Element will render empty content.
+        public let availableExpressCheckoutPaymentMethods: [String]
 
         // MARK: - Internal Properties
 
@@ -124,11 +125,11 @@ extension CheckoutController.Session {
     init(
         apiResponse: PaymentPagesAPIResponse,
         localState: LocalState,
-        expressCheckoutConfiguration: ExpressCheckoutElement.Configuration? = nil
+        configuration: CheckoutController.Configuration? = nil
     ) {
         let elementsSessionValue = apiResponse.elementsSession.value
         let publicDiscountAmounts = PaymentPagesAPIResponse.makeDiscountAmounts(
-            from: apiResponse.recurringDetails?.totalDiscountAmounts ?? [],
+            from: apiResponse.recurringDetails?.totalSummary.totalDiscountAmounts ?? [],
             currency: apiResponse.currency
         )
         let publicTaxAmounts = apiResponse.totalSummary?.totalTaxAmounts?.map {
@@ -168,11 +169,8 @@ extension CheckoutController.Session {
         if automaticTaxEnabled && automaticTaxAddressSource == "billing" {
             elementsSessionValue.disableLinkForAutomaticTaxBilling = true
         }
-        let availableExpressCheckoutPaymentMethods = expressCheckoutConfiguration.map {
-            ExpressCheckoutElementUtilities.availablePaymentMethods(
-                for: elementsSessionValue,
-                configuration: $0
-            )
+        let availableExpressCheckoutPaymentMethods = configuration.map {
+            ExpressCheckoutElementUtilities.availablePaymentMethods(for: apiResponse, configuration: $0).map(\.rawValue)
         } ?? []
         let serverEmail = apiResponse.customerEmail ?? apiResponse.customer?.email
 
@@ -344,8 +342,11 @@ extension CheckoutController.Session {
     public struct PaymentOptionDisplayData: Equatable {
         /// An image representing a payment method; e.g. the Apple Pay logo or a VISA logo
         public let image: UIImage
-        /// A user facing string representing the payment method; e.g. "Apple Pay" or "····4242" for a card
+        /// The primary label describing the payment method, such as "Visa" or "Apple Pay".
         public let label: String
+        /// Additional payment method details, such as the masked last four digits of a card or bank account.
+        /// This is `nil` when there are no additional details to display.
+        public let sublabel: String?
         /// The billing details associated with the customer's desired payment method
         public let billingDetails: BillingDetails?
         /// A string representation of the customer's desired payment method
@@ -353,7 +354,7 @@ extension CheckoutController.Session {
         /// - If this is an external payment method, see https://stripe.com/docs/payments/external-payment-methods?platform=ios#available-external-payment-methods for possible values.
         /// - If this is Apple Pay, the value is "apple_pay"
         public let paymentMethodType: String
-        /// If you set `configuration.embeddedViewDisplaysMandateText = false`, this text must be displayed in a `UITextView` (so that URLs in the text are handled) to the customer near your “Buy” button to comply with regulations.
+        /// If you set `PaymentElement.Configuration.displaysMandateText = false`, display this text in a `UITextView` (so that URLs are handled) near your “Buy” button.
         public let mandateText: NSAttributedString?
 
         /// The billing details collected for a payment method.

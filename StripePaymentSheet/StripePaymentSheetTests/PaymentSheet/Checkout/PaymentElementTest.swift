@@ -9,7 +9,7 @@ import OHHTTPStubs
 @testable @_spi(STP) import StripeCore
 @testable @_spi(STP) import StripeCoreTestUtils
 @testable @_spi(STP) import StripePayments
-@testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(AppearanceAPIAdditionsPreview) @_spi(STP) import StripePaymentSheet
 @testable @_spi(STP) import StripePaymentsTestUtils
 @testable @_spi(STP) import StripeUICore
 import XCTest
@@ -95,6 +95,150 @@ final class PaymentElementTest: XCTestCase {
         )
     }
 
+    func testServerUpdatePreservesEmbeddedSelectionAndRefreshesBothPresentations() async throws {
+        // Given a loaded Checkout with PayNow selected in Embedded
+        let analyticsClient = STPAnalyticsClient.sharedClient
+        analyticsClient._testLogHistory = []
+        defer { analyticsClient._testLogHistory = [] }
+        var configuration = PaymentElement.Configuration()
+        configuration.paymentMethodLayout = .horizontal
+        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration(
+            apiResponse: Self.makeOpenSession(paymentMethodTypes: ["card", "paynow"]),
+            paymentElementConfiguration: configuration
+        ))
+        let element = checkout.getPaymentElement()
+        let embedded = element.embeddedPaymentElement
+        let flowController = element.paymentSheetFlowController
+        let row = try XCTUnwrap(embedded.embeddedPaymentMethodsView.rowButtons.first {
+            $0.type == .new(paymentMethodType: .stripe(.paynow))
+        })
+        embedded.embeddedPaymentMethodsView.didTap(rowButton: row)
+        var json = Self.openSessionJSON(paymentMethodTypes: ["card", "paynow"])
+        json["currency"] = "sgd"
+        json["checkout_items"] = CheckoutTestHelpers.makeOneTimePriceCheckoutItems(currency: "sgd", unitAmount: 2500)
+        CheckoutTestHelpers.stubCheckoutSessionRequests(
+            sessionId: checkout.session.id,
+            requestRecorder: CheckoutSessionRequestRecorder(),
+            sessionJSON: { json }
+        )
+
+        // When the merchant refreshes Checkout after changing amount and currency on the server
+        try await checkout.runServerUpdate { }
+
+        // Then both UIs and their analytics context reflect the response, retaining Embedded's selection
+        XCTAssertEqual(flowController.intent.amount, 2500)
+        XCTAssertEqual(embedded.intent.amount, 2500)
+        XCTAssertEqual(flowController.intent.currency?.lowercased(), "sgd")
+        XCTAssertEqual(embedded.intent.currency?.lowercased(), "sgd")
+        XCTAssertEqual(checkout.session.paymentOption?.paymentMethodType, "paynow")
+        XCTAssertEqual(flowController.analyticsHelper.intent?.amount, 2500)
+        XCTAssertEqual(embedded.analyticsHelper.intent?.amount, 2500)
+        XCTAssertEqual(flowController.viewController.loadResult.paymentMethodOrientation, .horizontal)
+        XCTAssertEqual(embedded.loadResult.paymentMethodOrientation, .vertical)
+        XCTAssertEqual(flowController.analyticsHelper.paymentMethodOrientation, .horizontal)
+        XCTAssertEqual(embedded.analyticsHelper.paymentMethodOrientation, .vertical)
+
+        // Initial loading and updates don't emit standalone PaymentSheet load/update events
+        let excludedEvents: Set<String> = [
+            STPAnalyticEvent.paymentSheetLoadStarted.rawValue,
+            STPAnalyticEvent.paymentSheetLoadSucceeded.rawValue,
+            STPAnalyticEvent.paymentSheetLoadFailed.rawValue,
+            STPAnalyticEvent.mcUpdateStartedEmbedded.rawValue,
+            STPAnalyticEvent.mcUpdateFinishedEmbedded.rawValue,
+        ]
+        let events = analyticsClient._testLogHistory.compactMap { $0["event"] as? String }
+        XCTAssertTrue(excludedEvents.isDisjoint(with: events), "Unexpected load/update events: \(events)")
+    }
+
+    func testPromotionCodeUpdateDoesNotLookUpLink() async throws {
+        // Given Link is enabled and an unverified account is already loaded
+        var json = Self.openSessionJSON(paymentMethodTypes: ["card", "link"])
+        json["customer_email"] = "customer@example.com"
+        let response = try PaymentPagesAPIResponse.decode(fromAPIResponse: json)
+        let previousAccount = LinkAccountContext.shared.account
+        defer { LinkAccountContext.shared.account = previousAccount }
+        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: response))
+        let element = checkout.getPaymentElement()
+        XCTAssertTrue(PaymentSheet.isLinkEnabled(
+            elementsSession: checkout.session.elementsSession,
+            configuration: element.paymentSheetFlowController.configuration
+        ))
+        let account = PaymentSheetLinkAccount(
+            email: "customer@example.com",
+            session: nil,
+            publishableKey: nil,
+            displayablePaymentDetails: nil,
+            apiClient: checkout.apiClient,
+            useMobileEndpoints: false,
+            canSyncAttestationState: false
+        )
+        LinkAccountContext.shared.account = account
+        let lookup = expectation(description: "Session update does not look up Link")
+        lookup.isInverted = true
+        HTTPStubs.stubRequests(passingTest: { $0.url?.path == "/v1/consumers/sessions/lookup" }) { _ in
+            lookup.fulfill()
+            return HTTPStubsResponse(data: Data(), statusCode: 500, headers: nil)
+        }
+
+        // When a normal Checkout mutation updates the session
+        try await checkout.applyPromotionCode("SAVE10")
+
+        // Then the account is retained and no lookup is scheduled in the background either
+        await fulfillment(of: [lookup], timeout: 0.2)
+        XCTAssertEqual(LinkAccountContext.shared.account?.email, account.email)
+    }
+
+    func testSessionUpdateRefreshesPromotionsForBothPresentations() async throws {
+        // Given Checkout initially has no promotions
+        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration())
+        let element = checkout.getPaymentElement()
+        let requests = expectation(description: "Checkout fetches promotions once")
+        requests.assertForOverFulfill = true
+        HTTPStubs.stubRequests(passingTest: { $0.url?.host == "ppm.stripe.com" }) { request in
+            let query = URLComponents(url: request.url!, resolvingAgainstBaseURL: false)?.queryItems ?? []
+            XCTAssertEqual(query.first { $0.name == "amount" }?.value, "2500")
+            XCTAssertEqual(query.first { $0.name == "currency" }?.value?.lowercased(), "gbp")
+            requests.fulfill()
+            return HTTPStubsResponse(
+                jsonObject: [
+                    "content": ["images": []],
+                    "payment_plan_groups": [[
+                        "type": "klarna",
+                        "content": [
+                            "images": [],
+                            "summary": ["message": "Pay over time"],
+                            "learn_more": ["message": "See plans", "url": "https://example.com/klarna"],
+                        ],
+                    ], ],
+                ],
+                statusCode: 200,
+                headers: nil
+            )
+        }
+
+        // When an updated session enables promotions for Klarna at a new amount/currency
+        var json = Self.openSessionJSON(paymentMethodTypes: ["card", "klarna"])
+        json["currency"] = "gbp"
+        json["checkout_items"] = CheckoutTestHelpers.makeOneTimePriceCheckoutItems(currency: "gbp", unitAmount: 2500)
+        var elementsSession = try XCTUnwrap(json["elements_session"] as? [String: Any])
+        elementsSession["experiments_data"] = [
+            "arb_id": "arb_test",
+            "experiment_assignments": [PaymentMethodMessagingPromotionsExperiment.experimentName: "treatment"],
+        ]
+        json["elements_session"] = elementsSession
+        checkout.dangerouslySetSessionDirectly(try PaymentPagesAPIResponse.decode(fromAPIResponse: json).makePublicSession())
+        checkout.updateForSessionChange()
+
+        // Then the update has finished while promotions fetch asynchronously with the new inputs
+        let flowControllerHelper = try XCTUnwrap(element.paymentSheetFlowController.viewController.loadResult.paymentMethodMessagingPromotionsHelper)
+        let embeddedHelper = try XCTUnwrap(element.embeddedPaymentElement.loadResult.paymentMethodMessagingPromotionsHelper)
+        await flowControllerHelper.fetchTask?.value
+        await embeddedHelper.fetchTask?.value
+        await fulfillment(of: [requests], timeout: 1)
+        XCTAssertEqual(flowControllerHelper.promotion(for: .stripe(.klarna))?.promotion, "Pay over time")
+        XCTAssertEqual(embeddedHelper.promotion(for: .stripe(.klarna))?.promotion, "Pay over time")
+    }
+
     func testConfigurationSetsCheckoutMerchantDisplayName() async throws {
         // Given Checkout merchant display name
         var checkoutConfiguration = CheckoutController.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
@@ -143,7 +287,7 @@ final class PaymentElementTest: XCTestCase {
         // Given Apple Pay configured for a Checkout Session with a non-US merchant country
         var checkoutConfiguration = CheckoutController.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
         var paymentElementConfiguration = PaymentElement.Configuration()
-        paymentElementConfiguration.applePayConfiguration = PaymentElement.ApplePayConfiguration(
+        paymentElementConfiguration.applePayConfiguration = PaymentElement.Configuration.ApplePayConfiguration(
             merchantId: "merchant.com.example",
             buttonType: .donate
         )
@@ -254,22 +398,19 @@ final class PaymentElementTest: XCTestCase {
         XCTAssertEqual(paymentElement.embeddedPaymentElement.configuration.billingDetailsCollectionConfiguration.address, .full)
     }
 
-    func testConfigurationPreservesFullBillingAddressCollectionWhenCheckoutBillingAddressCollectionIsAutomatic() async throws {
-        // Given full billing address collection in PaymentElement
-        var checkoutConfiguration = CheckoutController.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
-        var paymentElementConfiguration = PaymentElement.Configuration()
-        paymentElementConfiguration.billingDetailsCollectionConfiguration.address = .full
-        checkoutConfiguration.paymentElement = paymentElementConfiguration
+    func testConfigurationUsesAutomaticBillingAddressCollectionWhenCheckoutBillingAddressCollectionIsAutomatic() async throws {
+        // Given a Checkout Session with automatic billing address collection
+        let session = CheckoutTestHelpers.makeOpenSession(billingAddressCollection: "auto")
 
-        // When Checkout uses automatic billing address collection
+        // When Checkout loads its PaymentElement
         let checkout = try await CheckoutController(
-            configuration: CheckoutTestHelpers.makeConfiguration(configuration: checkoutConfiguration)
+            configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: session)
         )
         let paymentElement = checkout.getPaymentElement()
 
-        // Then both configurations preserve full billing address collection
-        XCTAssertEqual(paymentElement.paymentSheetFlowController.configuration.billingDetailsCollectionConfiguration.address, .full)
-        XCTAssertEqual(paymentElement.embeddedPaymentElement.configuration.billingDetailsCollectionConfiguration.address, .full)
+        // Then both configurations use automatic billing address collection
+        XCTAssertEqual(paymentElement.paymentSheetFlowController.configuration.billingDetailsCollectionConfiguration.address, .automatic)
+        XCTAssertEqual(paymentElement.embeddedPaymentElement.configuration.billingDetailsCollectionConfiguration.address, .automatic)
     }
 
     func testInitialSavedPaymentOptionUpdatesCheckoutBillingTaxRegion() async throws {
@@ -290,7 +431,8 @@ final class PaymentElementTest: XCTestCase {
         XCTAssertEqual(updateRequest.params["tax_region[postal_code]"], "94080")
 
         // ...and the saved card remains selected after PaymentElement refreshes.
-        XCTAssertEqual(checkout.session.paymentOption?.label, "•••• 4242")
+        XCTAssertEqual(checkout.session.paymentOption?.label, "Visa")
+        XCTAssertEqual(checkout.session.paymentOption?.sublabel, "•••• 4242")
         let billingDetails = try XCTUnwrap(checkout.session.paymentOption?.billingDetails)
         XCTAssertEqual(billingDetails.name, "Jenny Rosen")
         XCTAssertEqual(billingDetails.email, "jenny.rosen@example.com")
@@ -302,11 +444,133 @@ final class PaymentElementTest: XCTestCase {
         XCTAssertEqual(billingDetails.address?.postalCode, "94080")
     }
 
+    func testPaymentOptionLabelsForBothPresentations() {
+        // Given new and saved payment options, including methods with no additional details
+        let cardParams = STPPaymentMethodCardParams()
+        cardParams.number = "4242424242424242"
+        let confirmParams = IntentConfirmParams(type: .stripe(.card))
+        confirmParams.paymentMethodParams.card = cardParams
+        let bankConfirmParams = IntentConfirmParams(type: .instantDebits)
+        bankConfirmParams.instantDebitsLinkedBank = InstantDebitsLinkedBank(
+            paymentMethod: .init(id: "pm_1234"),
+            bankName: "Stripe Bank",
+            last4: "6789",
+            linkMode: nil,
+            incentiveEligible: false,
+            linkAccountSessionId: "fcsess_"
+        )
+        let cases: [(PaymentSheet.PaymentOption, String, String?)] = [
+            (.new(confirmParams: confirmParams), "Visa", "•••• 4242"),
+            (.saved(paymentMethod: STPPaymentMethod._testCard(), confirmParams: nil), "Visa", "•••• 4242"),
+            (.saved(paymentMethod: STPPaymentMethod._testUSBankAccount(), confirmParams: nil), "STRIPE TEST BANK", "••••6789"),
+            (.saved(paymentMethod: STPPaymentMethod._testLink(displayName: "My Personal Card"), confirmParams: nil), "Link", "My Personal Card •••• 4242"),
+            (.saved(paymentMethod: STPPaymentMethod._testCard(), confirmParams: bankConfirmParams), "Stripe Bank", "••••6789"),
+            (.new(confirmParams: IntentConfirmParams(type: .stripe(.USBankAccount))), "US bank account", nil),
+            (.link(option: .wallet(brand: .link)), "Link", nil),
+            (.applePay, "Apple Pay", nil),
+            (.new(confirmParams: IntentConfirmParams(type: .stripe(.payPal))), "PayPal", nil),
+        ]
+
+        for (paymentOption, label, sublabel) in cases {
+            // When converting sheet and embedded selections to Checkout display data
+            let sheetData = CheckoutController.Session.PaymentOptionDisplayData(
+                PaymentSheet.FlowController.PaymentOptionDisplayData(
+                    paymentOption: paymentOption, currency: "usd", iconStyle: .filled
+                )
+            )
+            let mandateText = NSAttributedString(string: "Mandate")
+            let embeddedData = CheckoutController.Session.PaymentOptionDisplayData(
+                EmbeddedPaymentElement.PaymentOptionDisplayData(
+                    paymentOption: paymentOption, mandateText: mandateText, currency: "usd", iconStyle: .filled
+                )
+            )
+
+            // Then both presentations expose the primary label and optional details
+            for displayData in [sheetData, embeddedData] {
+                XCTAssertEqual(displayData.label, label)
+                XCTAssertEqual(displayData.sublabel, sublabel)
+            }
+            XCTAssertNil(sheetData.mandateText)
+            XCTAssertEqual(embeddedData.mandateText, mandateText)
+        }
+    }
+
+    func testPaymentOptionLabelsUseResolvedLinkBrand() {
+        // Given a saved Link card using Onelink branding
+        let paymentMethod = STPPaymentMethod._testCard()
+        paymentMethod.isLinkOrigin = true
+        let paymentOption = PaymentSheet.PaymentOption.saved(paymentMethod: paymentMethod, confirmParams: nil)
+
+        // When converting either Payment Element presentation to Checkout display data
+        let sheetData = CheckoutController.Session.PaymentOptionDisplayData(
+            PaymentSheet.FlowController.PaymentOptionDisplayData(
+                paymentOption: paymentOption, currency: "usd", iconStyle: .filled, linkBrand: .onelink
+            )
+        )
+        let embeddedData = CheckoutController.Session.PaymentOptionDisplayData(
+            EmbeddedPaymentElement.PaymentOptionDisplayData(
+                paymentOption: paymentOption, mandateText: nil, currency: "usd", iconStyle: .filled, linkBrand: .onelink
+            )
+        )
+
+        // Then both presentations preserve the resolved brand and card details
+        for displayData in [sheetData, embeddedData] {
+            XCTAssertEqual(displayData.label, "Onelink")
+            XCTAssertEqual(displayData.sublabel, "•••• 4242")
+        }
+    }
+
+    func testFlowControllerPublishesSeparateLabelsToCheckout() async throws {
+        // Given Checkout with a saved card selected
+        let (configuration, _) = try stubAutomaticTaxSavedCardCheckout()
+        let checkout = try await CheckoutController(configuration: configuration)
+        let paymentElement = checkout.getPaymentElement()
+        XCTAssertFalse(paymentElement.paymentOptionSourceOfTruthIsFlowController)
+
+        // When FlowController publishes its selection
+        paymentElement.paymentSheetFlowController.updatePaymentOption()
+
+        // Then Checkout receives the separate labels through the subscription
+        XCTAssertTrue(paymentElement.paymentOptionSourceOfTruthIsFlowController)
+        XCTAssertEqual(checkout.session.paymentOption?.label, "Visa")
+        XCTAssertEqual(checkout.session.paymentOption?.sublabel, "•••• 4242")
+        XCTAssertEqual(paymentElement.paymentSheetFlowController.paymentOption?.label, "•••• 4242")
+    }
+
+    func testEmbeddedPublishesChangesToLinkSublabel() async throws {
+        // Given Checkout with a Link card selected
+        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration())
+        let embedded = checkout.getPaymentElement().embeddedPaymentElement
+        let account = PaymentSheetLinkAccount._testValue(email: "patrick@example.com", isRegistered: true)
+        let paymentDetails = LinkStubs.paymentMethods()
+        embedded._test_paymentOption = .link(option: .withPaymentDetails(
+            brand: .link, account: account, paymentDetails: paymentDetails[LinkStubs.PaymentMethodIndices.card],
+            confirmationExtras: nil, shippingAddress: nil
+        ))
+        embedded.informDelegateIfPaymentOptionUpdated()
+        let previousSublabel = checkout.session.paymentOption?.sublabel
+        XCTAssertEqual(embedded.paymentOption?.label, "Link")
+
+        // When Link selects a bank account, the legacy label stays the same
+        embedded._test_paymentOption = .link(option: .withPaymentDetails(
+            brand: .link, account: account, paymentDetails: paymentDetails[LinkStubs.PaymentMethodIndices.bankAccount],
+            confirmationExtras: nil, shippingAddress: nil
+        ))
+        XCTAssertEqual(embedded.paymentOption?.label, "Link")
+        embedded.informDelegateIfPaymentOptionUpdated()
+
+        // Then the changed sublabel still triggers an update to Checkout
+        XCTAssertEqual(checkout.session.paymentOption?.label, "Link")
+        XCTAssertEqual(checkout.session.paymentOption?.sublabel, "Patrick's bank •••• 1234")
+        XCTAssertNotEqual(checkout.session.paymentOption?.sublabel, previousSublabel)
+    }
+
     func testPaymentOptionBillingDetailsOmitsEmptyAddress() {
         // Given a payment option whose PaymentSheet billing details have no address fields
         let paymentOption = EmbeddedPaymentElement.PaymentOptionDisplayData(
             image: UIImage(),
             label: "•••• 4242",
+            labels: .init(label: "Visa", sublabel: "•••• 4242"),
             billingDetails: .init(),
             paymentMethodType: "card",
             mandateText: nil,
@@ -408,7 +672,7 @@ final class PaymentElementTest: XCTestCase {
             json["payment_status"] = "paid"
             return json
         }())
-        try await checkout.commitSession(completedSession)
+        checkout.commitSession(completedSession)
 
         // Then the Checkout payment option still reflects FlowController's selected payment option.
         XCTAssertEqual(checkout.session.paymentOption?.label, "PayNow")

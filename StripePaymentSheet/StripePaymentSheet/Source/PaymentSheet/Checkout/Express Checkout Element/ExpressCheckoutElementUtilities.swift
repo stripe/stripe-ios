@@ -13,53 +13,77 @@ enum ExpressCheckoutElementUtilities {
         case notSupportedInSession = "not_supported_in_session"
         case linkConfiguration = "link_configuration"
         case automaticTaxAddress = "automatic_tax_address"
+        case shippingAddressRequired = "shipping_address_required"
+        case billingDetailsCollection = "billing_details_collection"
+    }
+
+    static func availablePaymentMethods(
+        for apiResponse: PaymentPagesAPIResponse,
+        configuration: CheckoutController.Configuration
+    ) -> [ExpressCheckoutElement.PaymentMethod] {
+        guard let expressCheckoutConfiguration = configuration.expressCheckoutElement else {
+            return []
+        }
+        let elementsSession = apiResponse.elementsSession.value
+        let usesWebLink = !deviceCanUseNativeLink(elementsSession: elementsSession, apiClient: configuration.apiClient)
+
+        return availablePaymentMethods(
+            for: elementsSession,
+            configuration: expressCheckoutConfiguration,
+            usesWebLink: usesWebLink,
+            requiresShippingAddress: apiResponse.shippingAddressCollection != nil,
+            billingDetailsCollectionRequired: apiResponse.billingAddressCollection == "required"
+        )
     }
 
     static func availablePaymentMethods(
         for elementsSession: STPElementsSession,
-        configuration: ExpressCheckoutElement.Configuration
+        configuration: ExpressCheckoutElement.Configuration,
+        usesWebLink: Bool,
+        requiresShippingAddress: Bool,
+        billingDetailsCollectionRequired: Bool
     ) -> [ExpressCheckoutElement.PaymentMethod] {
         var paymentMethods: [ExpressCheckoutElement.PaymentMethod] = []
         for paymentMethod in availablePaymentMethodTypes(for: elementsSession) {
             switch paymentMethod {
             case .applePay:
-                if let applePayConfiguration = configuration.applePayConfiguration,
-                   applePayConfiguration.display != .never,
+                if configuration.applePayConfiguration != nil,
                    StripeAPI.deviceSupportsApplePay() {
                     paymentMethods.append(paymentMethod)
                 }
             case .link:
-                if linkDisabledReasons(for: elementsSession, configuration: configuration).isEmpty {
+                if linkDisabledReasons(
+                    for: elementsSession,
+                    configuration: configuration,
+                    usesWebLink: usesWebLink,
+                    requiresShippingAddress: requiresShippingAddress,
+                    billingDetailsCollectionRequired: billingDetailsCollectionRequired
+                ).isEmpty {
                     paymentMethods.append(paymentMethod)
                 }
             }
         }
-        guard let paymentMethodOrder = configuration.paymentMethodOrder else {
+        return visiblePaymentMethods(for: paymentMethods, layout: configuration.appearance.buttonLayout)
+    }
+
+    static func visiblePaymentMethods(
+        for paymentMethods: [ExpressCheckoutElement.PaymentMethod],
+        layout: ExpressCheckoutElement.Configuration.Appearance.ButtonLayout
+    ) -> [ExpressCheckoutElement.PaymentMethod] {
+        // A single limit affects how the buttons are arranged, but it cannot
+        // limit the grid's total capacity without the other dimension.
+        guard let maxColumns = layout.maxColumns, let maxRows = layout.maxRows else {
             return paymentMethods
         }
-
-        var remainingPaymentMethods = paymentMethods
-        var orderedPaymentMethods: [ExpressCheckoutElement.PaymentMethod] = []
-        for paymentMethod in paymentMethodOrder {
-            guard
-                let index = remainingPaymentMethods.firstIndex(where: {
-                    $0.rawValue.caseInsensitiveCompare(paymentMethod) == .orderedSame
-                }),
-                !orderedPaymentMethods.contains(where: {
-                    $0.rawValue.caseInsensitiveCompare(paymentMethod) == .orderedSame
-                })
-            else {
-                continue
-            }
-            orderedPaymentMethods.append(remainingPaymentMethods.remove(at: index))
-        }
-        orderedPaymentMethods.append(contentsOf: remainingPaymentMethods)
-        return orderedPaymentMethods
+        return Array(paymentMethods.prefix(min(maxRows * maxColumns, paymentMethods.count)))
     }
 
     static func linkDisabledReasons(
         for elementsSession: STPElementsSession,
-        configuration: ExpressCheckoutElement.Configuration
+        configuration: ExpressCheckoutElement.Configuration,
+        usesWebLink: Bool,
+        requiresShippingAddress: Bool,
+        billingDetailsCollectionRequired: Bool
     ) -> [LinkDisabledReason] {
         var reasons: [LinkDisabledReason] = []
 
@@ -71,6 +95,12 @@ enum ExpressCheckoutElementUtilities {
         }
         if elementsSession.disableLinkForAutomaticTaxBilling {
             reasons.append(.automaticTaxAddress)
+        }
+        if requiresShippingAddress {
+            reasons.append(.shippingAddressRequired)
+        }
+        if usesWebLink && billingDetailsCollectionRequired {
+            reasons.append(.billingDetailsCollection)
         }
 
         return reasons
