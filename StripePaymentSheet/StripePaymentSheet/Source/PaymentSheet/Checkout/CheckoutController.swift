@@ -118,7 +118,6 @@ public final class CheckoutController: ObservableObject {
             // 1. Initialize the session
             let session = try await CheckoutControllerLoader.load(configuration: configuration)
             self.session = session
-            let initRequestID = session.requestID
             analyticsSession = session
 
             // 2. Initialize SAE first so it can normalize the default shipping address before we apply it to the session.
@@ -167,7 +166,6 @@ public final class CheckoutController: ObservableObject {
                 )
             }
             var params = configurationParams
-            params["request_id"] = initRequestID
             params["ordered_lpms"] = paymentElement?.embeddedPaymentElement.loadResult.paymentMethodTypes.map { $0.identifier }.joined(separator: ",")
                 ?? self.session.availableExpressCheckoutPaymentMethods.joined(separator: ",")
             analyticsHelper.logSucceeded(startedAction, session: self.session, additionalParams: params)
@@ -397,7 +395,6 @@ public final class CheckoutController: ObservableObject {
                         checkoutSessionId: sessionId,
                         adaptivePricingAllowed: self.configuration.currencySelectorElement != nil
                     )
-                    analyticsParams["request_id"] = refreshedCheckoutSession.requestID
                 } catch {
                     throw CheckoutError.apiError(message: error.nonGenericDescription, underlyingError: error)
                 }

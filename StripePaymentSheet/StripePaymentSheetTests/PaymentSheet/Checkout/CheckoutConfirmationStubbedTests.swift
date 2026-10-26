@@ -240,7 +240,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         XCTAssertEqual(checkout.session.status, .complete(.paid))
         XCTAssertEqual(challenge.completions, 0)
 
-        // ...and analytics records the result, session, source, and request that completed confirmation
+        // ...and analytics records the result, session, and source without a successful request ID
         let events = confirmationEvents
         XCTAssertEqual(events.compactMap { $0["event"] as? String }, [
             "checkout_elements.confirm.started",
@@ -254,7 +254,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         XCTAssertEqual(succeeded["invocation_source"] as? String, "merchant")
         XCTAssertEqual(succeeded["selected_lpm"] as? String, "card")
         XCTAssertEqual(succeeded["is_saved_payment_method"] as? Bool, true)
-        XCTAssertEqual(succeeded["request_id"] as? String, "req_confirm_success")
+        XCTAssertNil(succeeded["request_id"])
         XCTAssertGreaterThanOrEqual(try XCTUnwrap(succeeded["duration"] as? TimeInterval), 0)
     }
 

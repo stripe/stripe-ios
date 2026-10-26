@@ -141,7 +141,6 @@ final class CheckoutControllerAnalyticsHelper {
     ) {
         var params = additionalParams
         let analyticsError = (error as? CheckoutError)?.analyticsError ?? error
-        // The failing request takes precedence over a successful response from an earlier stage.
         params.merge(analyticsError.serializeForV1Analytics()) { _, errorValue in errorValue }
         log(event: startedAction.action.failedEvent, session: session, startedAction: startedAction, additionalParams: params)
     }
@@ -162,16 +161,13 @@ final class CheckoutControllerAnalyticsHelper {
         didRequestTaxUpdate: Bool,
         error: Error?
     ) {
-        var params: [String: Any] = [
+        let params: [String: Any] = [
             "invocation_source": source.rawValue,
             "did_request_tax_update": didRequestTaxUpdate,
         ]
         if let error {
             logFailed(startedAction, error: error, session: session, additionalParams: params)
         } else {
-            if didRequestTaxUpdate {
-                params["request_id"] = session.requestID
-            }
             logSucceeded(startedAction, session: session, additionalParams: params)
         }
     }
@@ -188,15 +184,9 @@ final class CheckoutControllerAnalyticsHelper {
         body: () async throws -> Void
     ) async rethrows {
         let startedAction = logStarted(action, session: checkout.session, additionalParams: additionalParams)
-        let previousRequestID = checkout.session.requestID
         do {
             try await body()
-            var params = additionalParams
-            // Email updates are local; a preceding queued action may have changed the request ID.
-            if action != .updateEmail, checkout.session.requestID != previousRequestID {
-                params["request_id"] = checkout.session.requestID
-            }
-            logSucceeded(startedAction, session: checkout.session, additionalParams: params)
+            logSucceeded(startedAction, session: checkout.session, additionalParams: additionalParams)
         } catch {
             logFailed(startedAction, error: error, session: checkout.session, additionalParams: additionalParams)
             throw error
