@@ -1,5 +1,15 @@
 {
+  "originHash" : "fcce19e7e309780a0b74c527ee647096679de983f50bf6bbfe7e4c3868ec2163",
   "pins" : [
+    {
+      "identity" : "identity-ios-mediapipe",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/stripe/identity-ios-mediapipe",
+      "state" : {
+        "revision" : "66147f847d308460cb4827fc1f05fa99fc201836",
+        "version" : "1.0.0"
+      }
+    },
     {
       "identity" : "ios-snapshot-test-case",
       "kind" : "remoteSourceControl",
@@ -14,10 +24,10 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/davidme-stripe/OHHTTPStubs",
       "state" : {
-        "branch" : "master",
-        "revision" : "94cf8e1d9e38b0edd580ddc699dda23a7bf66515"
+        "branch" : "stripe-mock",
+        "revision" : "5e90dfd42873ab8de026735d0725ad618b8ca7dd"
       }
     }
   ],
-  "version" : 2
+  "version" : 3
 }
