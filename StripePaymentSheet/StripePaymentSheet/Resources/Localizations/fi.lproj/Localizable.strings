@@ -46,9 +46,19 @@
 
 "Buy now or pay later with Klarna" = "Osta nyt tai maksa myöhemmin Klarnalla";
 
+"By confirming your payment with GCash, you allow %@ to charge your GCash account for future payments in accordance with their terms." = "Kun vahvistat maksusi GCashilla, valtuutat yrityksen %@ veloittamaan tulevia maksuja GCash-tililtäsi ehtojensa mukaisesti.";
+
 "By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "Vahvistamalla maksusi NICEPAYn avulla annat taholle %@ luvan veloittaa tältä maksutavalta tulevia maksuja heidän ehtojensa mukaisesti.";
 
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Vahvistamalla maksusi PayPalin kanssa valtuutat %@ veloittamaan tulevia maksuja PayPal-tililtäsi heidän ehtojensa mukaisesti.";
+
+"By confirming your payment with Touch 'n Go, you allow %@ to charge your Touch 'n Go account for future payments in accordance with their terms." = "Kun vahvistat maksusi Touch 'n Golla, valtuutat yrityksen %@ veloittamaan tulevia maksuja Touch 'n Go -tililtäsi ehtojensa mukaisesti.";
+
+"By confirming your payment with TrueMoney, you allow %@ to charge your TrueMoney account for future payments in accordance with their terms." = "Kun vahvistat maksusi TrueMoneylla, valtuutat yrityksen %@ veloittamaan tulevia maksuja TrueMoney-tililtäsi ehtojensa mukaisesti.";
+
+"By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their <terms>terms of use</terms>." = "Vahvistamalla maksun hyväksyt, että Global Stack Services Limited käsittelee maksutapahtuman rekisteröitynä kauppiaana <terms>käyttöehtojensa</terms> mukaisesti.";
+
+"By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their <terms>terms</terms>." = "Vahvistamalla maksun hyväksyt, että Global Stack Services Limited käsittelee maksutapahtuman rekisteröitynä kauppiaana sen <terms>ehtojen</terms> mukaisesti.";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Jatkamalla Amazon Payhin valtuutat %@ veloittamaan tulevia maksuja Amazon Pay -tililtäsi heidän ehtojensa mukaisesti.";
 
@@ -173,6 +183,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Ymmärrän, että Stripe kerää suoraveloituksia yrityksen %@ puolesta sekä vahvistan, että olen tilinhaltija ja ainoa henkilö, jota tarvitaan tämän tilin veloitusten varmentamiseen.";
 
 "IBAN" = "IBAN";
+
+"Invoice payment for business buyers." = "Laskulla maksaminen yritysasiakkaille.";
 
 "Keep Editing" = "Jatka muokkaamista";
 

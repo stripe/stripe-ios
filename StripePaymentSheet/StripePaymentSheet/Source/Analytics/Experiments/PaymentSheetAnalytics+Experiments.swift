@@ -8,6 +8,14 @@
 import Foundation
 @_spi(STP) import StripeCore
 
+enum ExperimentIntegrationShape: String {
+    case paymentSheet = "paymentsheet"
+    case flowController = "flowcontroller"
+    case embedded
+    case linkController = "linkcontroller"
+    case checkoutElements = "checkoutelements"
+}
+
 protocol LoggableExperiment {
     var name: String { get }
     var arbId: String { get }
@@ -16,7 +24,39 @@ protocol LoggableExperiment {
 }
 
 extension PaymentSheetAnalyticsHelper {
+    var experimentAnalyticsHelper: ExperimentAnalyticsHelper {
+        ExperimentAnalyticsHelper(integrationShape: integrationShapeForExperiments, analyticsClientV2: analyticsClientV2)
+    }
+
+    var integrationShapeForExperiments: ExperimentIntegrationShape {
+        switch integrationShape {
+        case .complete:
+            return .paymentSheet
+        case .flowController:
+            return .flowController
+        case .embedded:
+            return .embedded
+        case .linkController:
+            return .linkController
+        }
+    }
+}
+
+final class ExperimentAnalyticsHelper {
     static let eventName = "elements.experiment_exposure"
+    let integrationShape: ExperimentIntegrationShape
+    private let analyticsClientV2: AnalyticsClientV2Protocol
+
+    init(
+        integrationShape: ExperimentIntegrationShape,
+        analyticsClientV2: AnalyticsClientV2Protocol = AnalyticsClientV2(
+            clientId: "stripe-mobile-sdk",
+            origin: "stripe-mobile-sdk-ios"
+        )
+    ) {
+        self.integrationShape = integrationShape
+        self.analyticsClientV2 = analyticsClientV2
+    }
 
     func logExposure(experiment: LoggableExperiment) {
         var parameters: [String: Any] = [:]

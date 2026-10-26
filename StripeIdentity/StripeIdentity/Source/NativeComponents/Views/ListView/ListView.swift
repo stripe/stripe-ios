@@ -18,7 +18,7 @@ final class ListView: UIView {
 
     struct Styling {
         static var font: UIFont {
-            IdentityUI.preferredFont(forTextStyle: .body)
+            IdentityUI.bodyFont
         }
 
         static let itemInsets = NSDirectionalEdgeInsets(

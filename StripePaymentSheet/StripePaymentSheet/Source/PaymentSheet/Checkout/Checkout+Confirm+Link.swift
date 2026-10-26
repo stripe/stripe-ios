@@ -79,6 +79,7 @@ extension CheckoutController {
                     let paymentMethodParameters = PaymentMethodConfirmationParameters(
                         option: .new(confirmParams),
                         configuration: configuration,
+                        nativeSheetPresentation: parameters.nativeSheetPresentation,
                         confirmationChallenge: confirmationChallenge,
                         authenticationContext: parameters.authenticationContext,
                         paymentHandler: parameters.paymentHandler
@@ -105,6 +106,7 @@ extension CheckoutController {
                     let paymentMethodParameters = PaymentMethodConfirmationParameters(
                         option: .saved(paymentMethod, nil),
                         configuration: configuration,
+                        nativeSheetPresentation: parameters.nativeSheetPresentation,
                         confirmationChallenge: confirmationChallenge,
                         authenticationContext: parameters.authenticationContext,
                         paymentHandler: parameters.paymentHandler
@@ -144,6 +146,7 @@ extension CheckoutController {
                         parameters: LinkConfirmationParameters(
                             confirmOption: confirmOption,
                             configuration: configuration,
+                            nativeSheetPresentation: parameters.nativeSheetPresentation,
                             confirmationChallenge: confirmationChallenge,
                             analyticsHelper: parameters.analyticsHelper,
                             authenticationContext: linkAuthenticationContext,
@@ -158,6 +161,7 @@ extension CheckoutController {
             PaymentSheet.confirmLinkPaymentOption(
                 confirmOption: parameters.confirmOption,
                 configuration: configuration,
+                nativeSheetPresentation: parameters.nativeSheetPresentation,
                 authenticationContext: parameters.authenticationContext,
                 intent: .checkout(checkoutSession),
                 elementsSession: elementsSession,
@@ -190,21 +194,18 @@ extension CheckoutController {
         checkoutSession: Session,
         parameters: PaymentMethodConfirmationParameters
     ) async -> InternalConfirmResult {
-        do {
-            let requestParameters = try await makeConfirmationRequestParameters(
-                for: parameters,
-                checkoutSession: checkoutSession,
-                preconfirmedIntentParams: nil
-            )
-            return await confirmCheckoutSession(
-                with: requestParameters,
-                apiClient: parameters.configuration.apiClient,
-                authenticationContext: parameters.authenticationContext,
-                paymentHandler: parameters.paymentHandler
-            )
-        } catch {
-            return .failed(error)
-        }
+        let requestParameters = await makeConfirmationRequestParameters(
+            for: parameters,
+            checkoutSession: checkoutSession,
+            preconfirmedIntentParams: nil
+        )
+        return await confirmCheckoutSession(
+            with: requestParameters,
+            apiClient: parameters.configuration.apiClient,
+            authenticationContext: parameters.authenticationContext,
+            paymentHandler: parameters.paymentHandler,
+            confirmationChallenge: requestParameters.paymentMethodData == nil ? nil : parameters.confirmationChallenge
+        )
     }
 
 }

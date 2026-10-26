@@ -9,15 +9,16 @@
 import XCTest
 
 class OpenFinancialConnectionsMessageHandlerTests: ScriptWebTestBase {
-    func testMessageSend() {
+    func testMessageSend() async throws {
         let expectation = self.expectation(description: "Message received")
-        webView.addMessageHandler(messageHandler: OpenFinancialConnectionsMessageHandler(analyticsClient: MockComponentAnalyticsClient(commonFields: .mock)) { payload in
+        try await loadTrustedDocument()
+        webView.addMessageHandler(messageHandler: OpenFinancialConnectionsMessageHandler(sourcePolicy: webView.trustedMessageSourcePolicy(), analyticsClient: MockComponentAnalyticsClient(commonFields: .mock)) { payload in
             XCTAssertEqual(payload, .init(clientSecret: "secret_123", id: "1234", connectedAccountId: "acct_1234"))
             expectation.fulfill()
         })
 
         webView.evaluateOpenFinancialConnectionsWebView(clientSecret: "secret_123", id: "1234", connectedAccountId: "acct_1234")
 
-        waitForExpectations(timeout: TestHelpers.defaultTimeout, handler: nil)
+        await fulfillment(of: [expectation], timeout: TestHelpers.defaultTimeout)
     }
 }

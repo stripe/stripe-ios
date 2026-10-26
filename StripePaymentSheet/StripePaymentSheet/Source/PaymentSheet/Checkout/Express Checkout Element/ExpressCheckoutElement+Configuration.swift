@@ -17,23 +17,21 @@ extension ExpressCheckoutElement {
         public var applePayConfiguration: ApplePayConfiguration?
         /// Sets the configuration for Link.
         public var linkConfiguration: LinkConfiguration = .init()
-        /// Overrides the display order of payment methods. `nil` uses the default dynamic ordering.
-        /// Supported values are `"apple_pay"` and `"link"`.
-        /// - Example: ["link", "apple_pay"]
-        /// - Note: If you omit payment methods from this list, they’ll be automatically ordered by Stripe after the ones you provide. Invalid payment methods are ignored.
-        public var paymentMethodOrder: [String]?
-        /// Called after a wallet payment confirmation completes.
-        public var confirmHandler: ConfirmHandler
-
         /// Controls appearance of Express Checkout Element.
         public var appearance: Appearance = .init()
+        /// Called after a wallet payment confirmation completes.
+        public var completion: CompletionHandler
 
-        /// Creates a configuration with default values.
-        public init(confirmHandler: @escaping ConfirmHandler) {
-            self.confirmHandler = confirmHandler
+        /// Creates an Express Checkout Element configuration with default values.
+        /// - Parameters:
+        ///   - completion: A handler called after a wallet payment confirmation completes.
+        public init(completion: @escaping CompletionHandler) {
+            self.completion = completion
         }
     }
+}
 
+extension ExpressCheckoutElement.Configuration {
     /// Configuration for Apple Pay.
     public struct ApplePayConfiguration: CheckoutApplePayConfiguration {
         /// The Apple Pay merchant identifier.
@@ -42,30 +40,16 @@ extension ExpressCheckoutElement {
         /// The type of Apple Pay button to display. Defaults to `.plain` when `nil`.
         public var buttonType: PKPaymentButtonType?
 
-        /// Controls whether Apple Pay is displayed.
-        public var display: Display = .automatic
-
-        /// Controls whether Apple Pay is displayed.
-        public enum Display: String {
-            /// Show Apple Pay when it is available.
-            case automatic
-            /// Never show Apple Pay.
-            case never
-        }
-
         /// Creates an Apple Pay configuration.
         /// - Parameters:
         ///   - merchantId: The Apple Pay merchant identifier.
         ///   - buttonType: The type of Apple Pay button to display. Defaults to `.plain` when `nil`.
-        ///   - display: Whether Apple Pay is displayed. Defaults to `.automatic`.
         public init(
             merchantId: String,
-            buttonType: PKPaymentButtonType? = nil,
-            display: Display = .automatic
+            buttonType: PKPaymentButtonType? = nil
         ) {
-                self.merchantId = merchantId
+            self.merchantId = merchantId
             self.buttonType = buttonType
-            self.display = display
         }
     }
 
@@ -101,19 +85,19 @@ extension ExpressCheckoutElement {
 
         /// Controls the layout of express payment buttons.
         public struct ButtonLayout {
-            /// Maximum number of columns. `nil` uses the default. Must be greater than zero when set.
+            /// Sets the maximum number of columns the Express Checkout Element can use to render. Must be between 1 and 10, inclusive.
             public var maxColumns: Int? {
                 didSet {
-                    guard let maxColumns, maxColumns <= 0 else { return }
-                    assertionFailure("maxColumns must be greater than zero")
+                    guard let maxColumns, maxColumns < 1 || maxColumns > 10 else { return }
+                    assertionFailure("maxColumns must be between 1 and 10.")
                     self.maxColumns = oldValue
                 }
             }
-            /// Maximum number of rows. `nil` uses the default. Must be greater than zero when set.
+            /// Sets the maximum number of rows the Express Checkout Element can use to render. Must be between 1 and 10, inclusive.
             public var maxRows: Int? {
                 didSet {
-                    guard let maxRows, maxRows <= 0 else { return }
-                    assertionFailure("maxRows must be greater than zero")
+                    guard let maxRows, maxRows < 1 || maxRows > 10 else { return }
+                    assertionFailure("maxRows must be between 1 and 10.")
                     self.maxRows = oldValue
                 }
             }
@@ -126,9 +110,12 @@ extension ExpressCheckoutElement {
         /// Layout of the express payment buttons.
         public var buttonLayout: ButtonLayout = .init()
 
+        /// Corner radius of the express payment buttons.
+        public var cornerRadius: CGFloat?
+
         public init() {}
     }
 
     /// A closure called after a wallet payment confirmation completes.
-    public typealias ConfirmHandler = (_ result: CheckoutController.ConfirmResult) -> Void
+    public typealias CompletionHandler = (_ result: CheckoutController.ConfirmResult) -> Void
 }

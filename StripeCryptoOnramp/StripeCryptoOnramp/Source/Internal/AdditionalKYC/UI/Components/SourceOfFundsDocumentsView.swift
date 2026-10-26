@@ -44,6 +44,9 @@ struct SourceOfFundsDocumentsView: View {
     /// Called when the customer opens an existing source or chooses to add documents for a new one.
     let onSelection: (Selection) -> Void
 
+    /// Whether another source may be added under the requirement's category limit.
+    var canAddDocuments = true
+
     @Environment(\.displayScale) private var displayScale
     @ScaledMetric(relativeTo: .subheadline) private var sourceNameHeight = Typography.bodyMedium.lineHeight
     @ScaledMetric(relativeTo: .body) private var filenameHeight = Typography.bodyLarge.lineHeight
@@ -55,14 +58,18 @@ struct SourceOfFundsDocumentsView: View {
             ForEach(sources) { source in
                 sourceButton(for: source)
                     .overlay(alignment: .bottom) {
-                        Color.primary.opacity(0.08)
-                            .frame(height: 1 / displayScale)
-                            .padding(.horizontal, 16)
-                            .allowsHitTesting(false)
+                        if source.id != sources.last?.id || canAddDocuments {
+                            Color.primary.opacity(0.08)
+                                .frame(height: 1 / displayScale)
+                                .padding(.horizontal, 16)
+                                .allowsHitTesting(false)
+                        }
                     }
             }
 
-            addDocumentsButton
+            if canAddDocuments {
+                addDocumentsButton
+            }
         }
         .buttonStyle(.plain)
         .foregroundColor(.textPrimary)
