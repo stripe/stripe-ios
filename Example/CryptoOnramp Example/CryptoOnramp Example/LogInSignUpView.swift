@@ -49,54 +49,71 @@ struct LogInSignUpView: View {
     // MARK: - View
 
     var body: some View {
-        ScrollView {
-            VStack(spacing: 20) {
-                Image(systemName: "person.circle")
-                    .font(.system(size: 60))
-                    .foregroundColor(Color.accentColor)
-                    .padding()
+        FoldAvoidingScrollView(prefersLargerRegion: true) { availableHeight in
+            let isCompact = availableHeight < LayoutConstants.contentMaxWidth
+            let buttonLayout = isCompact
+                ? AnyLayout(HStackLayout(spacing: 8))
+                : AnyLayout(VStackLayout(spacing: 8))
 
-                FormField("Email") {
-                    TextField("Enter email address", text: $email)
-                        .font(.title3)
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
-                        .keyboardType(.emailAddress)
-                        .autocapitalization(.none)
-                        .disableAutocorrection(true)
-                        .focused($isEmailFieldFocused)
-                        .submitLabel(.next)
+            VStack(spacing: 0) {
+                Spacer(minLength: 0)
+
+                VStack(spacing: isCompact ? 12 : 20) {
+                    Image(systemName: "person.circle")
+                        .font(.system(size: 60))
+                        .foregroundColor(Color.accentColor)
+
+                    FormField("Email") {
+                        TextField("Enter email address", text: $email)
+                            .font(.title3)
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                            .keyboardType(.emailAddress)
+                            .autocapitalization(.none)
+                            .disableAutocorrection(true)
+                            .focused($isEmailFieldFocused)
+                            .submitLabel(.next)
+                            .onSubmit {
+                                isPasswordFieldFocused = true
+                            }
+                    }
+
+                    FormField("Password") {
+                        SecureField("Enter password", text: $password)
+                            .font(.title3)
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                            .textContentType(.password)
+                            .focused($isPasswordFieldFocused)
+                            .submitLabel(.done)
+                            .onSubmit {
+                                isPasswordFieldFocused = false
+                            }
+                    }
                 }
 
-                FormField("Password") {
-                    SecureField("Enter password", text: $password)
-                        .font(.title3)
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
-                        .textContentType(.password)
-                        .focused($isPasswordFieldFocused)
-                        .submitLabel(.done)
+                Spacer(minLength: isCompact ? 12 : 24)
+
+                buttonLayout {
+                    Button("Log In") {
+                        isEmailFieldFocused = false
+                        isPasswordFieldFocused = false
+                        logIn()
+                    }
+                    .buttonStyle(PrimaryButtonStyle())
+
+                    Button("Sign Up") {
+                        isEmailFieldFocused = false
+                        isPasswordFieldFocused = false
+                        signUp()
+                    }
+                    .buttonStyle(PrimaryButtonStyle())
                 }
+                .disabled(shouldDisableButtons)
+                .opacity(shouldDisableButtons ? 0.5 : 1)
             }
-            .padding()
-        }
-        .safeAreaInset(edge: .bottom) {
-            VStack(spacing: 8) {
-                Button("Log In") {
-                    isEmailFieldFocused = false
-                    isPasswordFieldFocused = false
-                    logIn()
-                }
-                .buttonStyle(PrimaryButtonStyle())
-
-                Button("Sign Up") {
-                    isEmailFieldFocused = false
-                    isPasswordFieldFocused = false
-                    signUp()
-                }
-                .buttonStyle(PrimaryButtonStyle())
-            }
-            .disabled(shouldDisableButtons)
-            .opacity(shouldDisableButtons ? 0.5 : 1)
-            .padding()
+            .padding(.vertical, isCompact ? 12 : 16)
+            .frame(maxWidth: LayoutConstants.contentMaxWidth)
+            .frame(maxWidth: .infinity)
+            .padding(.horizontal)
         }
     }
 
