@@ -43,6 +43,7 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
     let adaptivePricingInfo: AdaptivePricingInfo?
     let taxContext: TaxContext?
     let taxMeta: TaxMeta?
+    let automaticPaymentMethodTypes: Bool?
     let paymentMethodOptions: STPPaymentMethodOptions?
     let customer: Customer?
     let elementsSession: ElementsSession
@@ -90,6 +91,7 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
         case adaptivePricingInfo
         case taxContext
         case taxMeta
+        case automaticPaymentMethodTypes
         case paymentMethodOptions
         case customer
         case elementsSession
@@ -187,6 +189,7 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
         )
         taxContext = try container.decodeIfPresent(TaxContext.self, forKey: .taxContext)
         taxMeta = try container.decodeIfPresent(TaxMeta.self, forKey: .taxMeta)
+        automaticPaymentMethodTypes = try container.decodeIfPresent(Bool.self, forKey: .automaticPaymentMethodTypes)
         paymentMethodOptions = try container.decodeIfPresent(
             LegacyDecoded<STPPaymentMethodOptions>.self,
             forKey: .paymentMethodOptions
