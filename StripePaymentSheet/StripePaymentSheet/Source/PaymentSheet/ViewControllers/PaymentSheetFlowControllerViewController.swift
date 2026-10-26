@@ -655,8 +655,12 @@ extension PaymentSheetFlowControllerViewController: SavedPaymentOptionsViewContr
             throw PaymentSheetError.unknown(debugDescription: "Failed to read payment method from payment method selection")
         }
 
-        return try await savedPaymentMethodManager.update(paymentMethod: paymentMethod,
-                                                          with: updateParams)
+        return try await loadResult.customerProvider.update(
+            paymentMethod: paymentMethod,
+            with: updateParams,
+            elementsSession: elementsSession,
+            apiClient: configuration.apiClient
+        )
     }
 
     func didSelectUpdateDefault(viewController: SavedPaymentOptionsViewController,

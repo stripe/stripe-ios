@@ -1163,7 +1163,12 @@ extension PaymentSheetVerticalViewController: UpdatePaymentMethodViewControllerD
     private func updateCard(paymentMethod: STPPaymentMethod, updateParams: STPPaymentMethodUpdateParams, hasOnlyChangedCardBrand: Bool) async -> Result<Void, Swift.Error> {
         do {
             // Update the payment method
-            let updatedPaymentMethod = try await savedPaymentMethodManager.update(paymentMethod: paymentMethod, with: updateParams)
+            let updatedPaymentMethod = try await loadResult.customerProvider.update(
+                paymentMethod: paymentMethod,
+                with: updateParams,
+                elementsSession: elementsSession,
+                apiClient: configuration.apiClient
+            )
 
             // Update savedPaymentMethods
             if let row = self.savedPaymentMethods.firstIndex(where: { $0.stripeId == updatedPaymentMethod.stripeId }) {

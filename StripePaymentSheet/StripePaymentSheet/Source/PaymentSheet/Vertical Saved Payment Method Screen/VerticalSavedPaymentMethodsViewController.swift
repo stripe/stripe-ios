@@ -530,7 +530,12 @@ extension VerticalSavedPaymentMethodsViewController: UpdatePaymentMethodViewCont
     private func updateCard(paymentMethod: STPPaymentMethod, updateParams: STPPaymentMethodUpdateParams, hasOnlyChangedCardBrand: Bool) async -> Result<Void, Error> {
         do {
             // Update the payment method
-            let updatedPaymentMethod = try await savedPaymentMethodManager.update(paymentMethod: paymentMethod, with: updateParams)
+            let updatedPaymentMethod = try await customerProvider.update(
+                paymentMethod: paymentMethod,
+                with: updateParams,
+                elementsSession: elementsSession,
+                apiClient: configuration.apiClient
+            )
             updatedPaymentMethod.updateLocalFields(from: paymentMethod)
             replace(paymentMethod: paymentMethod, with: updatedPaymentMethod)
             return .success(())
