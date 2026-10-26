@@ -46,7 +46,9 @@ extension STPClientAttributionMetadata {
             merchantIntegrationSource: "checkout",
             merchantIntegrationSubtype: attribution?.confirmingElement.rawValue ?? "mobile",
             merchantIntegrationAdditionalElements: attribution?.configuredElements,
-            paymentMethodSelectionFlow: .automatic
+            paymentMethodSelectionFlow: checkoutSession.automaticPaymentMethodTypes.map {
+                $0 ? .automatic : .merchantSpecified
+            }
         )
     }
 

@@ -12,17 +12,24 @@ import XCTest
 class STPClientAttributionMetadataTests: XCTestCase {
     func testCheckoutMetadataInBothEncoders() throws {
         AnalyticsHelper.shared.generateSessionID()
-        var configuration = CheckoutController.Configuration(clientSecret: "cs_test_secret_abc", returnURL: "stripe://return")
-        configuration.paymentElement = .init()
-        configuration.expressCheckoutElement = .init { _ in }
-        configuration.shippingAddressElement = .init()
-        configuration.currencySelectorElement = .init()
-        let response = CheckoutTestHelpers.makeSession([
-            "elements_options": ["__checkout_config_id": "config_test"],
-            "elements_session": CheckoutTestHelpers.minimalElementsSessionJSON.merging(["config_id": "es_config_test"]) { _, new in new },
-        ])
+        let cases: [(element: CheckoutController.ConfirmingElement, automaticPaymentMethodTypes: Bool?, selectionFlow: String?)] = [
+            (.paymentElement, true, "automatic"),
+            (.expressCheckoutElement, false, "merchant_specified"),
+            (.paymentElement, nil, nil),
+        ]
+        for (confirmingElement, automaticPaymentMethodTypes, selectionFlow) in cases {
+            var configuration = CheckoutController.Configuration(clientSecret: "cs_test_secret_abc", returnURL: "stripe://return")
+            configuration.paymentElement = .init()
+            configuration.expressCheckoutElement = .init { _ in }
+            configuration.shippingAddressElement = .init()
+            configuration.currencySelectorElement = .init()
+            var responseFields: [String: Any] = [
+                "elements_options": ["__checkout_config_id": "config_test"],
+                "elements_session": CheckoutTestHelpers.minimalElementsSessionJSON.merging(["config_id": "es_config_test"]) { _, new in new },
+            ]
+            responseFields["automatic_payment_method_types"] = automaticPaymentMethodTypes
+            let response = CheckoutTestHelpers.makeSession(responseFields)
 
-        for confirmingElement: CheckoutController.ConfirmingElement in [.paymentElement, .expressCheckoutElement] {
             // Exercise both a full Checkout and an ECE-only integration.
             if confirmingElement == .expressCheckoutElement {
                 configuration.paymentElement = nil
@@ -36,7 +43,7 @@ class STPClientAttributionMetadataTests: XCTestCase {
                 elementsSession: session.elementsSession,
                 checkoutAttribution: attribution
             )
-            let expected: [String: Any] = [
+            var expected: [String: Any] = [
                 "client_session_id": try XCTUnwrap(AnalyticsHelper.shared.sessionID),
                 "elements_session_config_id": "es_config_test",
                 "checkout_session_id": "cs_test",
@@ -46,8 +53,8 @@ class STPClientAttributionMetadataTests: XCTestCase {
                 "merchant_integration_version": "stripe-ios/\(StripeAPIConfiguration.STPSDKVersion)",
                 "merchant_integration_additional_elements": confirmingElement == .paymentElement
                     ? ["payment", "expressCheckout", "address", "currencySelector"] : ["expressCheckout"],
-                "payment_method_selection_flow": "automatic",
             ]
+            expected["payment_method_selection_flow"] = selectionFlow
             XCTAssertEqual(try metadata.encodeJSONDictionary() as NSDictionary, expected as NSDictionary)
             XCTAssertEqual(STPFormEncoder.dictionary(forObject: metadata)["client_attribution_metadata"] as? NSDictionary, expected as NSDictionary)
         }
