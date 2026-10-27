@@ -5,7 +5,7 @@
 //  Created by George Birch on 9/30/26.
 //
 
-@_spi(STP) @testable import StripePaymentSheet
+@_spi(STP) @_spi(CryptoOnrampAlpha) @testable import StripePaymentSheet
 @_spi(STP) import StripeUICore
 import UIKit
 import XCTest
@@ -156,6 +156,58 @@ final class SheetImplementationResolverTests: XCTestCase {
             XCTAssertEqual(linkSheet is LinkBottomSheetViewController, !paymentSheetUsesNativeSheet)
             presenter.dismiss(animated: false)
             window.isHidden = true
+        }
+    }
+
+    func testLinkControllerSheetsFollowLocalOverrideAndElementsSessionFlag() async {
+        await AddressSpecProvider.shared.loadAddressSpecs()
+        let previousOverride = PaymentSheet.NativeSheetFeatureFlags.nativeSheetEnabledOverride
+        defer { PaymentSheet.NativeSheetFeatureFlags.nativeSheetEnabledOverride = previousOverride }
+        let cases: [(override: Bool?, flag: Bool, expectsNativeSheet: Bool)] = [
+            (nil, false, false),
+            (nil, true, true),
+            (true, false, true),
+            (false, true, false),
+        ]
+        for testCase in cases {
+            // Given a LinkController created with the local override and Elements Session flag
+            PaymentSheet.NativeSheetFeatureFlags.nativeSheetEnabledOverride = testCase.override
+            let loadResult = makeLoadResult(flag: testCase.flag)
+            let linkController = LinkController(
+                mode: .payment,
+                elementsSession: loadResult.elementsSession,
+                intent: loadResult.intent,
+                paymentElementConfiguration: PaymentSheet.Configuration(),
+                linkBrand: .link,
+                appearance: nil,
+                configuration: nil,
+                analyticsHelper: ._testValue(),
+                requestSurface: .default
+            )
+            // ...and the override changes after creation
+            PaymentSheet.NativeSheetFeatureFlags.nativeSheetEnabledOverride = !(testCase.override ?? testCase.flag)
+
+            // When the controller's sheets are created
+            let kycSheet = VerifyKYCViewController(
+                info: StubKYCInfo(),
+                appearance: .init(),
+                nativeSheetPresentation: linkController.nativeSheetPresentation
+            ).sheetContainer
+            let htmlSheet = HTMLConfirmationViewController(
+                heading: "Confirm",
+                html: "<p>Confirm your information.</p>",
+                confirmationButtonTitle: "Confirm",
+                appearance: .init(),
+                brand: .link,
+                nativeSheetPresentation: linkController.nativeSheetPresentation
+            ).sheetContainer
+
+            // Then they use the decision captured when the controller was created
+            let expectsNativeSheet = SheetImplementationResolver.isRequiredForDevice
+                || (UIDevice.current.userInterfaceIdiom == .phone && testCase.expectsNativeSheet)
+            XCTAssertEqual(linkController.nativeSheetPresentation.usesNativeSheet, expectsNativeSheet)
+            XCTAssertEqual(kycSheet is LinkNativeSheetContainerViewController, expectsNativeSheet)
+            XCTAssertEqual(htmlSheet is LinkNativeSheetContainerViewController, expectsNativeSheet)
         }
     }
     #endif
