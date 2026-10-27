@@ -8,6 +8,10 @@ PATCH
 ### General
 * [Fixed] Fixed an issue where slow Apple Pay availability checks could cause React Native apps to hang during SDK initialization. See [stripe-react-native#2567](https://github.com/stripe/stripe-react-native/issues/2567).
 
+### PaymentSheet
+* [Fixed] Fixed a horizontal layout bug that caused the sheet to freeze when the bottom form insets were less than the bottom safe area.
+
+
 ## 26.15.0 2026-10-19
 
 ### CryptoOnramp (Alpha)
