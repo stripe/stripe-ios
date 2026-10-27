@@ -16,6 +16,12 @@ import XCTest
 @MainActor
 final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
 
+    private var confirmationEvents: [[String: Any]] {
+        STPAnalyticsClient.sharedClient._testLogHistory.filter {
+            ($0["event"] as? String)?.hasPrefix("checkout_elements.confirm.") == true
+        }
+    }
+
     // MARK: - Coordinator
 
     func testSavedSEPARequiresMandateBeforeConfirmingWithoutPresentingPaymentElement() async throws {
@@ -201,6 +207,10 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
     }
 
     func testConfirmCommitsReturnedSessionAndMapsSuccess() async throws {
+        let previousHistory = STPAnalyticsClient.sharedClient._testLogHistory
+        STPAnalyticsClient.sharedClient._testLogHistory = []
+        defer { STPAnalyticsClient.sharedClient._testLogHistory = previousHistory }
+
         // Given an open Checkout Session and a saved payment method
         let checkout = try await makeCheckout()
         let paymentMethod = STPPaymentMethod._testCard()
@@ -211,7 +221,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
             let params = RequestBodyTestHelpers.formEncodedBodyParams(from: request)
             XCTAssertEqual(params["payment_method"], paymentMethod.stripeId)
             XCTAssertFalse(params.keys.contains { $0.hasPrefix("payment_method_data[") })
-            return HTTPStubsResponse(jsonObject: Self.confirmedSessionJSON, statusCode: 200, headers: nil)
+            return HTTPStubsResponse(jsonObject: Self.confirmedSessionJSON, statusCode: 200, headers: ["Request-Id": "req_confirm_success"])
         }
 
         // When the coordinator confirms the saved payment method
@@ -229,9 +239,30 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         XCTAssertEqual(paymentStatus, .paid)
         XCTAssertEqual(checkout.session.status, .complete(.paid))
         XCTAssertEqual(challenge.completions, 0)
+
+        // ...and analytics records the result, session, and source without a successful request ID
+        let events = confirmationEvents
+        XCTAssertEqual(events.compactMap { $0["event"] as? String }, [
+            "checkout_elements.confirm.started",
+            "checkout_elements.confirm.succeeded",
+        ])
+        let started = try XCTUnwrap(events.first)
+        XCTAssertNil(started["duration"])
+        XCTAssertNil(started["request_id"])
+        let succeeded = try XCTUnwrap(events.last)
+        XCTAssertEqual(succeeded["checkout_session_id"] as? String, checkout.session.id)
+        XCTAssertEqual(succeeded["invocation_source"] as? String, "merchant")
+        XCTAssertEqual(succeeded["selected_lpm"] as? String, "card")
+        XCTAssertEqual(succeeded["is_saved_payment_method"] as? Bool, true)
+        XCTAssertNil(succeeded["request_id"])
+        XCTAssertGreaterThanOrEqual(try XCTUnwrap(succeeded["duration"] as? TimeInterval), 0)
     }
 
     func testCanceledConfirmationCommitsReturnedSession() async throws {
+        let previousHistory = STPAnalyticsClient.sharedClient._testLogHistory
+        STPAnalyticsClient.sharedClient._testLogHistory = []
+        defer { STPAnalyticsClient.sharedClient._testLogHistory = previousHistory }
+
         // Given Stripe returns an updated session whose PaymentIntent was canceled
         let checkout = try await makeCheckout()
         stubConfirmation(responseJSON: makeConfirmedSessionJSON(paymentIntentStatus: "canceled"))
@@ -245,6 +276,10 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
             return
         }
         XCTAssertEqual(checkout.session.status, .complete(.paid))
+        XCTAssertEqual(confirmationEvents.compactMap { $0["event"] as? String }, [
+            "checkout_elements.confirm.started",
+            "checkout_elements.confirm.canceled",
+        ])
     }
 
     func testFailedConfirmationCommitsReturnedSession() async throws {
@@ -1002,7 +1037,22 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
     }
 
     func testNewPaymentMethodCompletesChallengeAfterConfirmFailure() async throws {
+        let previousHistory = STPAnalyticsClient.sharedClient._testLogHistory
+        STPAnalyticsClient.sharedClient._testLogHistory = []
+        defer { STPAnalyticsClient.sharedClient._testLogHistory = previousHistory }
+
         try await assertChallengeCompletesAfterConfirm(statusCode: 400)
+
+        // Confirmation analytics retains the API error fields and failing request ID.
+        let events = confirmationEvents
+        XCTAssertEqual(events.compactMap { $0["event"] as? String }, [
+            "checkout_elements.confirm.started",
+            "checkout_elements.confirm.failed",
+        ])
+        let failed = try XCTUnwrap(events.last)
+        XCTAssertEqual(failed["error_type"] as? String, "card_error")
+        XCTAssertEqual(failed["error_code"] as? String, "card_declined")
+        XCTAssertEqual(failed["request_id"] as? String, "req_confirm_challenge")
     }
 
     private func assertChallengeCompletesAfterConfirm(
@@ -1022,9 +1072,9 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
             // Check before supplying the response, without relying on a response delay.
             XCTAssertEqual(challenge.completions, 0)
             return HTTPStubsResponse(
-                jsonObject: statusCode == 200 ? Self.confirmedSessionJSON : ["error": ["type": "card_error", "message": "Declined"]],
+                jsonObject: statusCode == 200 ? Self.confirmedSessionJSON : ["error": ["type": "card_error", "code": "card_declined", "message": "Declined"]],
                 statusCode: Int32(statusCode),
-                headers: nil
+                headers: ["Request-Id": "req_confirm_challenge"]
             )
         }
 
@@ -1467,3 +1517,9 @@ private final class TestCheckoutSessionPoller: CheckoutSessionPolling {
 }
 
 private struct CheckoutConfirmationTestTimeoutError: Error {}
+
+private extension CheckoutController {
+    func confirm(_ flow: CheckoutConfirmationFlow) async -> ConfirmResult {
+        return await confirm(source: .merchant) { flow }
+    }
+}

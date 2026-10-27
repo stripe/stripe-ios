@@ -12,6 +12,10 @@ MINOR
 * [Removed] CocoaPods support. Migrate your integration to Swift Package Manager. For more information and help migrating, see [MIGRATING-COCOAPODS.md](https://github.com/stripe/stripe-ios/blob/master/MIGRATING-COCOAPODS.md). 
 * [Fixed] Fixed an issue where slow Apple Pay availability checks could cause React Native apps to hang during SDK initialization. See [stripe-react-native#2567](https://github.com/stripe/stripe-react-native/issues/2567).
 
+### Identity
+* [Fixed] Fixed release archives failing to link MediaPipe for x86_64 simulators. Prebuilt `StripeIdentity` and `StripeCryptoOnramp` frameworks support arm64 simulators only; other SDK frameworks retain arm64 and x86_64 simulator support. Swift Package Manager integrations with the `Identity` trait enabled also require arm64 simulators.
+* [Added] Added the `Identity` package trait for Swift Package Manager. It links MediaPipe from [stripe/identity-ios-mediapipe](https://github.com/stripe/identity-ios-mediapipe), which StripeIdentity uses for 3D face capture. To enable it, check `Identity` in the **Traits** menu for `stripe-ios-spm` under your project's **Package Dependencies** (Xcode 26.4 or later), or add `traits: [.defaults, "Identity"]` to the `stripe-ios-spm` dependency in your `Package.swift`. Without the trait, StripeIdentity works as before. CocoaPods installs include MediaPipe through the `StripeMediaPipe` pod.
+
 ## 26.15.0 2026-10-19
 
 ### CryptoOnramp (Alpha)
