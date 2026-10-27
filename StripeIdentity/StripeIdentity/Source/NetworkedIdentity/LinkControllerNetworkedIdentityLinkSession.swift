@@ -24,7 +24,9 @@ final class LinkControllerNetworkedIdentityLinkSession: NetworkedIdentityLinkSes
         linkController = try await LinkController.create(
             apiClient: STPAPIClient(publishableKey: merchantPublishableKey),
             mode: .setup,
-            requestSurface: .identityProduct
+            // #TODO - Networked Identity [NI-Contract]: add an Identity request surface once Link's sign-up and lookup
+            // accept "ios_identity_product"; they reject it today. The crypto onramp surface is allowed to sign up.
+            requestSurface: .cryptoOnramp
         )
     }
 
