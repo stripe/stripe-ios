@@ -14,24 +14,50 @@ struct FaceScannerInputOutput: Equatable {
     let image: CGImage
     let scannerOutput: FaceScannerOutput
     let cameraExifMetadata: CameraExifMetadata?
+    let capturePose: FaceCapturePose
+    let capturedAt: Int
+
+    init(
+        image: CGImage,
+        scannerOutput: FaceScannerOutput,
+        cameraExifMetadata: CameraExifMetadata?,
+        capturePose: FaceCapturePose = .front,
+        capturedAt: Int = Int(Date().timeIntervalSince1970 * 1000)
+    ) {
+        self.image = image
+        self.scannerOutput = scannerOutput
+        self.cameraExifMetadata = cameraExifMetadata
+        self.capturePose = capturePose
+        self.capturedAt = capturedAt
+    }
 }
 
 struct FaceCaptureData: Equatable {
     let first: FaceScannerInputOutput
     let last: FaceScannerInputOutput
     let bestMiddle: FaceScannerInputOutput
+    let leftSide: FaceScannerInputOutput?
+    let rightSide: FaceScannerInputOutput?
 
     let numSamples: Int
     let faceScoreVariance: Float
 
     var toArray: [FaceScannerInputOutput] {
-        return [first, bestMiddle, last]
+        return [
+            first,
+            bestMiddle,
+            last,
+            leftSide,
+            rightSide,
+        ].compactMap { $0 }
     }
 }
 
 extension FaceCaptureData {
     init?(
-        samples: [FaceScannerInputOutput]
+        samples: [FaceScannerInputOutput],
+        leftSide: FaceScannerInputOutput? = nil,
+        rightSide: FaceScannerInputOutput? = nil
     ) {
         guard let first = samples.first,
             let last = samples.last,
@@ -46,6 +72,8 @@ extension FaceCaptureData {
             first: first,
             last: last,
             bestMiddle: bestMiddle,
+            leftSide: leftSide,
+            rightSide: rightSide,
             numSamples: samples.count,
             faceScoreVariance: samples.standardDeviation(with: { $0.scannerOutput.faceScore })
         )
