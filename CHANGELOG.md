@@ -11,7 +11,6 @@ PATCH
 ### PaymentSheet
 * [Fixed] Fixed a horizontal layout bug that caused the sheet to freeze when the bottom form insets were less than the bottom safe area.
 
-
 ## 26.15.0 2026-10-19
 
 ### CryptoOnramp (Alpha)
