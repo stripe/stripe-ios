@@ -87,7 +87,10 @@ final class IdentityAPIClientImpl: IdentityAPIClient {
     func getIdentityVerificationPage() -> Promise<StripeAPI.VerificationPage> {
         return apiClient.get(
             resource: APIEndpointVerificationPage(id: verificationSessionId),
-            parameters: ["app_identifier": Bundle.main.bundleIdentifier ?? ""]
+            parameters: [
+                "app_identifier": Bundle.main.bundleIdentifier ?? "",
+                "mediaPipeAvailable": FaceGeometryDetectorFactory.isAvailable,
+            ]
         )
     }
 
