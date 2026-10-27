@@ -78,7 +78,7 @@ public final class EmbeddedPaymentElement {
         intentConfiguration: IntentConfiguration,
         configuration: Configuration
     ) async throws -> EmbeddedPaymentElement {
-        try validateRowSelectionConfiguration(configuration: configuration)
+        try validateRowSelectionConfiguration(configuration: configuration, customerProvider: CustomerProvider(customer: configuration.customer))
 
         AnalyticsHelper.shared.generateSessionID()
         STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: EmbeddedPaymentElement.self)

@@ -277,6 +277,7 @@ import UIKit
                 if let merchantDisplayName = configuration?.merchantDisplayName {
                     paymentElementConfiguration.merchantDisplayName = merchantDisplayName
                 }
+                paymentElementConfiguration.returnURL = configuration?.returnURL
 
                 let analyticsHelper = PaymentSheetAnalyticsHelper(
                     integrationShape: .linkController,
@@ -341,6 +342,7 @@ import UIKit
                 if let merchantDisplayName = configuration?.merchantDisplayName {
                     paymentElementConfiguration.merchantDisplayName = merchantDisplayName
                 }
+                paymentElementConfiguration.returnURL = configuration?.returnURL
 
                 let analyticsHelper = PaymentSheetAnalyticsHelper(
                     integrationShape: .linkController,

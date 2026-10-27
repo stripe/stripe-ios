@@ -74,7 +74,8 @@ public final class PaymentElement {
     ) throws {
         STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: PaymentElement.self)
         try EmbeddedPaymentElement.validateRowSelectionConfiguration(
-            configuration: embeddedPaymentElementInitParameters.configuration
+            configuration: embeddedPaymentElementInitParameters.configuration,
+            customerProvider: embeddedPaymentElementInitParameters.loadResult.customerProvider
         )
         STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: PaymentSheet.FlowController.self)
         STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: EmbeddedPaymentElement.self)

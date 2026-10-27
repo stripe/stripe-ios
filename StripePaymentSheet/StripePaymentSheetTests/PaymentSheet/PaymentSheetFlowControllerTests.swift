@@ -431,7 +431,7 @@ class PaymentSheetFlowControllerTests: XCTestCase {
         let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card])
         let elementsSession = STPElementsSession._testCardValue()
         let loadResult = PaymentSheetLoader.LoadResult(intent: intent, elementsSession: elementsSession, savedPaymentMethods: [], paymentMethodTypes: [.stripe(.card)], paymentMethodMessagingPromotionsHelper: ._testValue(),
- paymentMethodOrientation: .vertical)
+ paymentMethodOrientation: .vertical, customerProvider: CustomerProvider(customer: configuration.customer))
 
         let flowController = PaymentSheet.FlowController(
             configuration: configuration,
@@ -495,17 +495,18 @@ class PaymentSheetFlowControllerTests: XCTestCase {
 
     @MainActor
     private func makeHorizontalFlowController(customerID: String) -> PaymentSheet.FlowController {
+        var configuration = PaymentSheet.Configuration()
+        configuration.customer = .init(id: customerID, ephemeralKeySecret: "")
+        configuration.applePay = nil
         let loadResult = PaymentSheetLoader.LoadResult(
             intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
             elementsSession: ._testValue(paymentMethodTypes: ["card"], isLinkPassthroughModeEnabled: true),
             savedPaymentMethods: [],
             paymentMethodTypes: [.stripe(.card)],
             paymentMethodMessagingPromotionsHelper: ._testValue(),
-            paymentMethodOrientation: .horizontal
+            paymentMethodOrientation: .horizontal,
+            customerProvider: CustomerProvider(customer: configuration.customer)
         )
-        var configuration = PaymentSheet.Configuration()
-        configuration.customer = .init(id: customerID, ephemeralKeySecret: "")
-        configuration.applePay = nil
         return PaymentSheet.FlowController(
             configuration: configuration,
             loadResult: loadResult,
