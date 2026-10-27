@@ -152,7 +152,7 @@ struct CheckoutCartView: View {
             if integrationType != .eceOnly {
                 var paymentElementConfiguration = PaymentElement.Configuration()
                 paymentElementConfiguration.applePayConfiguration = PaymentElement.Configuration.ApplePayConfiguration(
-                    merchantId: "merchant.com.stripe.paymentsheet.example"
+                    merchantId: "merchant.com.stripe.umbrella.test"
                 )
                 config.paymentElement = paymentElementConfiguration
             }
@@ -170,14 +170,14 @@ struct CheckoutCartView: View {
                     confirmResult = result
                 }
                 expressCheckoutElementConfiguration.applePayConfiguration = ExpressCheckoutElement.Configuration.ApplePayConfiguration(
-                    merchantId: "merchant.com.stripe.paymentsheet.example",
-                    buttonType: expressCheckoutElementSettings.applePayButtonType.pkPaymentButtonType,
-                    display: expressCheckoutElementSettings.applePayDisplay
+                    merchantId: "merchant.com.stripe.umbrella.test",
+                    buttonType: expressCheckoutElementSettings.applePayButtonType.pkPaymentButtonType
                 )
                 expressCheckoutElementConfiguration.linkConfiguration = ExpressCheckoutElement.Configuration.LinkConfiguration(
                     display: expressCheckoutElementSettings.linkDisplay
                 )
                 expressCheckoutElementConfiguration.appearance.buttonTheme = expressCheckoutElementSettings.appearance.buttonTheme
+                expressCheckoutElementConfiguration.appearance.cornerRadius = expressCheckoutElementSettings.appearance.cornerRadius
                 expressCheckoutElementConfiguration.appearance.buttonLayout.maxColumns = expressCheckoutElementSettings.appearance.buttonLayout.maxColumns
                 expressCheckoutElementConfiguration.appearance.buttonLayout.maxRows = expressCheckoutElementSettings.appearance.buttonLayout.maxRows
                 config.expressCheckoutElement = expressCheckoutElementConfiguration

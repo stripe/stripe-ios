@@ -78,6 +78,7 @@ final class PayWithLinkButton: UIControl {
     override var isEnabled: Bool {
         didSet {
             applyStyle()
+            updateAccessibilityContent()
         }
     }
 

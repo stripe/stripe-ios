@@ -104,9 +104,10 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
         let paymentMethod = try await apiClient.createPaymentMethod(with: paymentMethodParams)
 
         // 4. Confirm the checkout session
-        let requestParameters = CheckoutSessionConfirmationRequestParameters(
+        let requestParameters = CheckoutSessionConfirmationRequestParameters.createWithPaymentMethodID(
             sessionId: sessionId,
             paymentMethodId: paymentMethod.stripeId,
+            confirmationSource: .paymentElement,
             expectedAmount: expectedAmount,
             expectedPaymentMethodType: "card"
         )
@@ -294,9 +295,10 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
         let paymentMethod = try await apiClient.createPaymentMethod(with: paymentMethodParams)
 
         // 4. Confirm the checkout session (no expected amount for setup mode)
-        let requestParameters = CheckoutSessionConfirmationRequestParameters(
+        let requestParameters = CheckoutSessionConfirmationRequestParameters.createWithPaymentMethodID(
             sessionId: sessionId,
             paymentMethodId: paymentMethod.stripeId,
+            confirmationSource: .paymentElement,
             expectedAmount: nil,
             expectedPaymentMethodType: "card"
         )

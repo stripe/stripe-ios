@@ -57,9 +57,9 @@ final class PaymentSheetAnalyticsExperimentsTests: XCTestCase {
             ]
         )
 
-        analyticsClient.logExposure(experiment: experiment)
-        guard let payload = analyticsClientV2.loggedAnalyticPayloads(withEventName: PaymentSheetAnalyticsHelper.eventName).first else {
-            return XCTFail("Expected event logged with name \(PaymentSheetAnalyticsHelper.eventName)")
+        analyticsClient.experimentAnalyticsHelper.logExposure(experiment: experiment)
+        guard let payload = analyticsClientV2.loggedAnalyticPayloads(withEventName: ExperimentAnalyticsHelper.eventName).first else {
+            return XCTFail("Expected event logged with name \(ExperimentAnalyticsHelper.eventName)")
         }
 
         XCTAssertEqual(payload["arb_id"] as? String, "arb_id")
@@ -86,6 +86,7 @@ final class PaymentSheetAnalyticsExperimentsTests: XCTestCase {
             linkDefaultOptIn: .full,
             linkEnableDisplayableDefaultValuesInECE: nil,
             linkShowPreferDebitCardHint: nil,
+            mfaAuthFlowEnabled: nil,
             attestationStateSyncEnabled: nil,
             linkSupportedPaymentMethodsOnboardingEnabled: ["CARD"],
             linkPaymentMethodBankAccountDataConsent: nil,
@@ -115,32 +116,40 @@ final class PaymentSheetAnalyticsExperimentsTests: XCTestCase {
             canSyncAttestationState: false
         )
 
-        let experiment = LinkGlobalHoldback(
-            arbId: arbId,
-            session: session,
-            configuration: configuration,
-            linkAccount: linkAccount,
-            integrationShape: .complete
-        )
-        analyticsClient.logExposure(experiment: experiment)
+        for (integrationShape, expectedShape) in [
+            (ExperimentIntegrationShape.paymentSheet, "paymentsheet"),
+            (.checkoutElements, "checkoutelements"),
+        ] {
+            let experiment = LinkGlobalHoldback(
+                arbId: arbId,
+                session: session,
+                configuration: configuration,
+                linkAccount: linkAccount,
+                integrationShape: integrationShape
+            )
+            ExperimentAnalyticsHelper(
+                integrationShape: integrationShape,
+                analyticsClientV2: analyticsClientV2
+            ).logExposure(experiment: experiment)
 
-        guard let payload = analyticsClientV2.loggedAnalyticPayloads(withEventName: PaymentSheetAnalyticsHelper.eventName).first else {
-            return XCTFail("Expected event logged with name \(PaymentSheetAnalyticsHelper.eventName)")
+            guard let payload = analyticsClientV2.loggedAnalyticPayloads(withEventName: ExperimentAnalyticsHelper.eventName).last else {
+                return XCTFail("Expected event logged with name \(ExperimentAnalyticsHelper.eventName)")
+            }
+
+            XCTAssertEqual(payload["arb_id"] as? String, arbId)
+            XCTAssertEqual(payload["experiment_retrieved"] as? String, LinkGlobalHoldback.experimentName)
+            XCTAssertEqual(payload["assignment_group"] as? String, ExperimentGroup.treatment.rawValue)
+
+            XCTAssertEqual(payload["dimensions-recognition_type"] as? String, "email")
+            XCTAssertEqual(payload["dimensions-link_native"] as? String, "true")
+            XCTAssertEqual(payload["dimensions-link_default_opt_in"] as? String, "FULL")
+            XCTAssertEqual(payload["dimensions-integration_type"] as? String, "mpe_ios")
+            XCTAssertEqual(payload["dimensions-dvs_provided"] as? String, "email name")
+            XCTAssertEqual(payload["dimensions-is_returning_link_user"] as? String, "false")
+            XCTAssertEqual(payload["dimensions-link_displayed"] as? String, PaymentSheet.isLinkEnabled(elementsSession: session, configuration: configuration).description)
+            XCTAssertEqual(payload["dimensions-integration_shape"] as? String, expectedShape)
+            XCTAssertEqual(payload["dimensions-has_spms"] as? String, "false")
         }
-
-        XCTAssertEqual(payload["arb_id"] as? String, arbId)
-        XCTAssertEqual(payload["experiment_retrieved"] as? String, LinkGlobalHoldback.experimentName)
-        XCTAssertEqual(payload["assignment_group"] as? String, ExperimentGroup.treatment.rawValue)
-
-        XCTAssertEqual(payload["dimensions-recognition_type"] as? String, "email")
-        XCTAssertEqual(payload["dimensions-link_native"] as? String, "true")
-        XCTAssertEqual(payload["dimensions-link_default_opt_in"] as? String, "FULL")
-        XCTAssertEqual(payload["dimensions-integration_type"] as? String, "mpe_ios")
-        XCTAssertEqual(payload["dimensions-dvs_provided"] as? String, "email name")
-        XCTAssertEqual(payload["dimensions-is_returning_link_user"] as? String, "false")
-        XCTAssertEqual(payload["dimensions-link_displayed"] as? String, PaymentSheet.isLinkEnabled(elementsSession: session, configuration: configuration).description)
-        XCTAssertEqual(payload["dimensions-integration_shape"] as? String, "paymentsheet")
-        XCTAssertEqual(payload["dimensions-has_spms"] as? String, "false")
     }
 
     func testLinkABTest() {
@@ -160,6 +169,7 @@ final class PaymentSheetAnalyticsExperimentsTests: XCTestCase {
             linkDefaultOptIn: .optional,
             linkEnableDisplayableDefaultValuesInECE: nil,
             linkShowPreferDebitCardHint: nil,
+            mfaAuthFlowEnabled: nil,
             attestationStateSyncEnabled: nil,
             linkSupportedPaymentMethodsOnboardingEnabled: ["CARD"],
             linkPaymentMethodBankAccountDataConsent: nil,
@@ -195,10 +205,10 @@ final class PaymentSheetAnalyticsExperimentsTests: XCTestCase {
             linkAccount: linkAccount,
             integrationShape: .flowController
         )
-        analyticsClient.logExposure(experiment: experiment)
+        analyticsClient.experimentAnalyticsHelper.logExposure(experiment: experiment)
 
-        guard let payload = analyticsClientV2.loggedAnalyticPayloads(withEventName: PaymentSheetAnalyticsHelper.eventName).first else {
-            return XCTFail("Expected event logged with name \(PaymentSheetAnalyticsHelper.eventName)")
+        guard let payload = analyticsClientV2.loggedAnalyticPayloads(withEventName: ExperimentAnalyticsHelper.eventName).first else {
+            return XCTFail("Expected event logged with name \(ExperimentAnalyticsHelper.eventName)")
         }
 
         XCTAssertEqual(payload["arb_id"] as? String, arbId)
@@ -296,10 +306,10 @@ final class PaymentSheetAnalyticsExperimentsTests: XCTestCase {
         )
 
         let experiment = ConnectionsFCLiteVsNative(arbId: arbId, session: session)
-        analyticsClient.logExposure(experiment: experiment)
+        analyticsClient.experimentAnalyticsHelper.logExposure(experiment: experiment)
 
-        guard let payload = analyticsClientV2.loggedAnalyticPayloads(withEventName: PaymentSheetAnalyticsHelper.eventName).first else {
-            return XCTFail("Expected event logged with name \(PaymentSheetAnalyticsHelper.eventName)")
+        guard let payload = analyticsClientV2.loggedAnalyticPayloads(withEventName: ExperimentAnalyticsHelper.eventName).first else {
+            return XCTFail("Expected event logged with name \(ExperimentAnalyticsHelper.eventName)")
         }
 
         XCTAssertEqual(payload["arb_id"] as? String, arbId)

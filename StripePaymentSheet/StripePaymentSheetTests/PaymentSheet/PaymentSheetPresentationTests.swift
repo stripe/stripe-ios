@@ -15,6 +15,353 @@ import XCTest
 final class PaymentSheetPresentationTests: XCTestCase {
 
     @MainActor
+    // @iOS26
+    func testHorizontalNativeSheetHeaderMatchesOpaqueContentBackground() async throws {
+        // Both CI runtimes run the color checks below; the iOS 26 host must enable Liquid Glass.
+        XCTAssertEqual(
+            LiquidGlassDetector.isEnabledInMerchantApp,
+            ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 26,
+            "The test host must enable Liquid Glass on iOS 26 and later."
+        )
+        await AddressSpecProvider.shared.loadAddressSpecs()
+
+        // Given a horizontal picker with an opaque form in a native sheet
+        let loadResult = PaymentSheetLoader.LoadResult(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
+            elementsSession: ._testValue(paymentMethodTypes: ["card"]),
+            savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testCardAmex()],
+            paymentMethodTypes: [.stripe(.card)],
+            paymentMethodMessagingPromotionsHelper: ._testValue(),
+            paymentMethodOrientation: .horizontal
+        )
+        var configuration = PaymentSheet.Configuration()
+        configuration.link = .init(display: .never)
+        let content = PaymentSheetFlowControllerViewController(
+            configuration: configuration,
+            loadResult: loadResult,
+            analyticsHelper: ._testValue()
+        )
+        let (window, sheet) = try await presentAppearanceTestSheet(content: content)
+        defer {
+            window.rootViewController?.dismiss(animated: false)
+            window.isHidden = true
+        }
+        window.rootViewController?.view.backgroundColor = .systemPurple
+        let navigationBar = try XCTUnwrap(sheet.navigationController?.navigationBar)
+
+        for style in [UIUserInterfaceStyle.light, .dark] {
+            // When rendering the settled sheet over a contrasting merchant background
+            window.overrideUserInterfaceStyle = style
+            window.layoutIfNeeded()
+            try await Task.sleep(nanoseconds: 100_000_000)
+            let format = UIGraphicsImageRendererFormat()
+            format.scale = 1
+            format.preferredRange = .standard
+            let image = UIGraphicsImageRenderer(size: window.bounds.size, format: format).image { _ in
+                window.drawHierarchy(in: window.bounds, afterScreenUpdates: true)
+            }
+            let attachment = XCTAttachment(image: image)
+            attachment.lifetime = .keepAlways
+            add(attachment)
+
+            // Then empty areas of the header and form have the same rendered background
+            let headerFrame = navigationBar.convert(navigationBar.bounds, to: window)
+            let contentFrame = content.view.convert(content.view.bounds, to: window)
+            let points = [
+                CGPoint(x: headerFrame.midX, y: headerFrame.midY),
+                CGPoint(x: contentFrame.midX, y: contentFrame.maxY - 5),
+            ]
+            let colorSpace = try XCTUnwrap(CGColorSpace(name: CGColorSpace.sRGB))
+            let colors = try points.map { point -> [UInt8] in
+                let pixel = try XCTUnwrap(image.cgImage?.cropping(to: CGRect(origin: point, size: CGSize(width: 1, height: 1))))
+                var components = [UInt8](repeating: 0, count: 4)
+                try components.withUnsafeMutableBytes { buffer in
+                    let context = try XCTUnwrap(CGContext(
+                        data: buffer.baseAddress,
+                        width: 1,
+                        height: 1,
+                        bitsPerComponent: 8,
+                        bytesPerRow: 4,
+                        space: colorSpace,
+                        bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue
+                    ))
+                    context.draw(pixel, in: CGRect(x: 0, y: 0, width: 1, height: 1))
+                }
+                return components
+            }
+            let expectedColor = configuration.appearance.colors.background.resolvedColor(with: navigationBar.traitCollection).rgba
+            let expectedComponents = [expectedColor.red, expectedColor.green, expectedColor.blue]
+            for channel in 0..<3 {
+                XCTAssertEqual(CGFloat(colors[0][channel]), expectedComponents[channel] * 255, accuracy: 5, "\(style): the header must use the configured background")
+                XCTAssertEqual(CGFloat(colors[0][channel]), CGFloat(colors[1][channel]), accuracy: 5, "\(style): the header must not expose the merchant background")
+            }
+        }
+    }
+
+    @MainActor
+    private func presentAppearanceTestSheet(content: BottomSheetContentViewController) async throws -> (UIWindow, NativeSheetContainerViewController) {
+        let sheet = NativeSheetContainerViewController(
+            contentViewController: content,
+            appearance: .default,
+            didCancelNative3DS2: {}
+        )
+        // A cold test-host launch may still be connecting its window scene.
+        let sceneConnected = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            UIApplication.shared.connectedScenes.contains { $0 is UIWindowScene }
+        }, object: nil)
+        await fulfillment(of: [sceneConnected], timeout: 5)
+        let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first)
+        let presenter = UIViewController()
+        let window = UIWindow(windowScene: scene)
+        window.frame = scene.coordinateSpace.bounds
+        window.rootViewController = presenter
+        window.makeKeyAndVisible()
+        let presented = expectation(description: "Content-sized native sheet presented")
+        presenter.presentAsSheet(sheet) { presented.fulfill() }
+        await fulfillment(of: [presented], timeout: 3)
+        // Settle any layout-driven resize before rendering the sheet.
+        try await Task.sleep(nanoseconds: 700_000_000)
+        return (window, sheet)
+    }
+
+    @MainActor
+    func testHorizontalNativeSheetSelectionBadgeIsOpaque() async throws {
+        guard #available(iOS 16.0, *) else { throw XCTSkip("Content-sized detents require iOS 16.") }
+        await AddressSpecProvider.shared.loadAddressSpecs()
+
+        // Given a horizontal picker with the default appearance in a native sheet
+        let loadResult = PaymentSheetLoader.LoadResult(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
+            elementsSession: ._testValue(paymentMethodTypes: ["card"]),
+            savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testCardAmex()],
+            paymentMethodTypes: [.stripe(.card)],
+            paymentMethodMessagingPromotionsHelper: ._testValue(),
+            paymentMethodOrientation: .horizontal
+        )
+        var configuration = PaymentSheet.Configuration()
+        configuration.link = .init(display: .never)
+        let content = PaymentSheetFlowControllerViewController(
+            configuration: configuration,
+            loadResult: loadResult,
+            analyticsHelper: ._testValue()
+        )
+        let (window, sheet) = try await presentSelectionBadgeSheet(content: content)
+        defer {
+            window.rootViewController?.dismiss(animated: false)
+            window.isHidden = true
+        }
+        let collectionView = content.savedPaymentOptionsViewController.collectionView
+        let cell = try XCTUnwrap(collectionView.visibleCells.compactMap {
+            $0 as? SavedPaymentMethodCollectionView.PaymentOptionCell
+        }.first { $0.isSelected })
+        XCTAssertFalse(cell.selectedIcon.isHidden)
+
+        for style in [UIUserInterfaceStyle.light, .dark] {
+            // When rendering the settled sheet, including after an appearance change
+            window.overrideUserInterfaceStyle = style
+            window.layoutIfNeeded()
+            try await Task.sleep(nanoseconds: 100_000_000)
+            let format = UIGraphicsImageRendererFormat()
+            format.scale = 1
+            format.preferredRange = .standard
+            let image = UIGraphicsImageRenderer(size: window.bounds.size, format: format).image { _ in
+                window.drawHierarchy(in: window.bounds, afterScreenUpdates: true)
+            }
+            let attachment = XCTAttachment(image: image)
+            attachment.lifetime = .keepAlways
+            add(attachment)
+
+            // Then the badge keeps its configured color where it overlaps the card's border
+            let badgeFrame = cell.selectedIcon.convert(cell.selectedIcon.bounds, to: window)
+            let pixel = try XCTUnwrap(image.cgImage?.cropping(to: CGRect(
+                x: badgeFrame.maxX - 6,
+                y: badgeFrame.midY,
+                width: 1,
+                height: 1
+            )))
+            var components = [UInt8](repeating: 0, count: 4)
+            let colorSpace = try XCTUnwrap(CGColorSpace(name: CGColorSpace.sRGB))
+            try components.withUnsafeMutableBytes { buffer in
+                let context = try XCTUnwrap(CGContext(
+                    data: buffer.baseAddress,
+                    width: 1,
+                    height: 1,
+                    bitsPerComponent: 8,
+                    bytesPerRow: 4,
+                    space: colorSpace,
+                    bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue
+                ))
+                context.draw(pixel, in: CGRect(x: 0, y: 0, width: 1, height: 1))
+            }
+            let expectedColor = configuration.appearance.colors.primary.resolvedColor(with: cell.traitCollection).rgba
+            XCTAssertEqual(CGFloat(components[0]) / 255, expectedColor.red, accuracy: 0.02)
+            XCTAssertEqual(CGFloat(components[1]) / 255, expectedColor.green, accuracy: 0.02)
+            XCTAssertEqual(CGFloat(components[2]) / 255, expectedColor.blue, accuracy: 0.02)
+        }
+        withExtendedLifetime(sheet) {}
+    }
+
+    @MainActor
+    private func presentSelectionBadgeSheet(content: BottomSheetContentViewController) async throws -> (UIWindow, NativeSheetContainerViewController) {
+        guard #available(iOS 16.0, *) else { throw XCTSkip("Content-sized detents require iOS 16.") }
+        let sheet = NativeSheetContainerViewController(
+            contentViewController: content,
+            appearance: .default,
+            didCancelNative3DS2: {}
+        )
+        // A cold test-host launch may still be connecting its window scene.
+        let sceneConnected = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            UIApplication.shared.connectedScenes.contains { $0 is UIWindowScene }
+        }, object: nil)
+        await fulfillment(of: [sceneConnected], timeout: 5)
+        let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first)
+        let presenter = UIViewController()
+        let window = UIWindow(windowScene: scene)
+        window.frame = scene.coordinateSpace.bounds
+        window.rootViewController = presenter
+        window.makeKeyAndVisible()
+        let presented = expectation(description: "Content-sized native sheet presented")
+        presenter.presentAsSheet(sheet) { presented.fulfill() }
+        await fulfillment(of: [presented], timeout: 3)
+        // Settle any layout-driven resize before capturing the initial height.
+        try await Task.sleep(nanoseconds: 700_000_000)
+        return (window, sheet)
+    }
+
+    @MainActor
+    func testShortVerticalFlowControllerUsesFinalHeightDuringPresentation() async throws {
+        guard #available(iOS 16.0, *) else { throw XCTSkip("Content-sized detents require iOS 16.") }
+        guard UIDevice.current.userInterfaceIdiom == .phone else { throw XCTSkip("Native-sheet rollout requires a phone.") }
+        guard !UIAccessibility.isReduceMotionEnabled else { throw XCTSkip("Presentation animations require Reduce Motion to be off.") }
+        // Given a native vertical picker with fewer rows than the screen can accommodate
+        await AddressSpecProvider.shared.loadAddressSpecs()
+        let previousOverride = PaymentSheet.NativeSheetFeatureFlags.nativeSheetEnabledOverride
+        PaymentSheet.NativeSheetFeatureFlags.nativeSheetEnabledOverride = true
+        defer { PaymentSheet.NativeSheetFeatureFlags.nativeSheetEnabledOverride = previousOverride }
+        let paymentMethodTypes: [STPPaymentMethodType] = [.card, .cashApp, .klarna]
+        let loadResult = PaymentSheetLoader.LoadResult(
+            intent: ._testPaymentIntent(paymentMethodTypes: paymentMethodTypes),
+            elementsSession: ._testValue(paymentMethodTypes: paymentMethodTypes.compactMap { STPPaymentMethod.string(from: $0) }),
+            savedPaymentMethods: [],
+            paymentMethodTypes: paymentMethodTypes.map { .stripe($0) },
+            paymentMethodMessagingPromotionsHelper: nil,
+            paymentMethodOrientation: .vertical
+        )
+        var configuration = PaymentSheet.Configuration()
+        configuration.applePay = nil
+        configuration.link = .init(display: .never)
+        let flowController = PaymentSheet.FlowController(configuration: configuration, loadResult: loadResult, analyticsHelper: ._testValue())
+        let presenter = UIViewController()
+        let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first)
+        let window = UIWindow(windowScene: scene)
+        window.frame = scene.coordinateSpace.bounds
+        window.rootViewController = presenter
+        window.makeKeyAndVisible()
+        defer {
+            presenter.dismiss(animated: false)
+            window.isHidden = true
+        }
+        let presented = expectation(description: "Short vertical picker presented")
+
+        // When presenting through FlowController's actual native-sheet entry point
+        flowController.presentPaymentOptions(from: presenter, completion: {})
+        let sheet = try XCTUnwrap(presenter.presentedViewController?.bottomSheetController as? NativeSheetContainerViewController)
+        let transitionCoordinator = try XCTUnwrap(sheet.rootParent.transitionCoordinator)
+        transitionCoordinator.animate(alongsideTransition: nil) { _ in presented.fulfill() }
+        // Sample the target bounds after UIKit establishes the actual header and safe areas.
+        // The presentation layer's bounds can overshoot during UIKit's spring animation.
+        try await Task.sleep(nanoseconds: 100_000_000)
+        XCTAssertTrue(sheet.rootParent.isBeingPresented)
+        let initialTargetHeight = sheet.rootParent.view.bounds.height
+        await fulfillment(of: [presented], timeout: 3)
+        let presentedHeight = sheet.rootParent.view.bounds.height
+        try await Task.sleep(nanoseconds: 700_000_000)
+
+        // Then the sheet opens at its final height, without growing after presentation completes
+        XCTAssertLessThan(sheet.rootParent.view.bounds.height, window.bounds.height - window.safeAreaInsets.top)
+        XCTAssertEqual(initialTargetHeight, sheet.rootParent.view.bounds.height, accuracy: 0.5)
+        XCTAssertEqual(presentedHeight, sheet.rootParent.view.bounds.height, accuracy: 0.5)
+        withExtendedLifetime(flowController) {}
+    }
+
+    @MainActor
+    // @iOS26
+    func testNativeSheetScrollsBehindTransparentKeyboardToolbar() async throws {
+        guard #available(iOS 16.0, *) else { throw XCTSkip("Content-sized detents require iOS 16.") }
+        // Given scrollable content with the same keyboard toolbar used by payment fields
+        let content = NativeSheetStubContentViewController()
+        content.view.backgroundColor = .systemBlue
+        let textField = UITextField()
+        textField.keyboardType = .numberPad
+        textField.heightAnchor.constraint(equalToConstant: 44).isActive = true
+        let toolbar = DoneButtonToolbar(delegate: nil)
+        textField.inputAccessoryView = toolbar
+        let remainingContent = UIView()
+        remainingContent.heightAnchor.constraint(equalToConstant: 1000).isActive = true
+        let stack = UIStackView(arrangedSubviews: [textField, remainingContent])
+        stack.axis = .vertical
+        content.view.addAndPinSubview(stack)
+        let (window, sheet) = try await presentScrollableContentSizedSheet(content: content)
+        defer {
+            window.endEditing(true)
+            window.rootViewController?.dismiss(animated: false)
+            window.isHidden = true
+        }
+
+        for _ in 0..<2 {
+            // When opening the keyboard and its Done toolbar repeatedly
+            let keyboardShown = expectation(forNotification: UIResponder.keyboardDidShowNotification, object: nil)
+            XCTAssertTrue(textField.becomeFirstResponder())
+            await fulfillment(of: [keyboardShown], timeout: 5)
+            sheet.view.layoutIfNeeded()
+
+            // Then content extends behind transparent controls, but stays above opaque keyboards/toolbars
+            let transparentToolbarHeight = LiquidGlassDetector.isEnabledInMerchantApp
+                ? toolbar.bounds.height : 0
+            XCTAssertGreaterThan(sheet.view.keyboardLayoutGuide.layoutFrame.height, sheet.view.safeAreaInsets.bottom)
+            XCTAssertEqual(
+                sheet.scrollView.frame.maxY,
+                sheet.view.keyboardLayoutGuide.layoutFrame.minY + transparentToolbarHeight,
+                accuracy: 0.5
+            )
+
+            // When the keyboard is dismissed, content still reaches the bottom of the sheet
+            let keyboardHidden = expectation(forNotification: UIResponder.keyboardDidHideNotification, object: nil)
+            XCTAssertTrue(textField.resignFirstResponder())
+            await fulfillment(of: [keyboardHidden], timeout: 5)
+            sheet.view.layoutIfNeeded()
+            XCTAssertEqual(sheet.scrollView.frame.maxY, sheet.view.bounds.maxY, accuracy: 0.5)
+        }
+    }
+
+    @MainActor
+    private func presentScrollableContentSizedSheet(content: BottomSheetContentViewController) async throws -> (UIWindow, NativeSheetContainerViewController) {
+        guard #available(iOS 16.0, *) else { throw XCTSkip("Content-sized detents require iOS 16.") }
+        let sheet = NativeSheetContainerViewController(
+            contentViewController: content,
+            appearance: .default,
+            didCancelNative3DS2: {}
+        )
+        // A cold test-host launch may still be connecting its window scene.
+        let sceneConnected = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            UIApplication.shared.connectedScenes.contains { $0 is UIWindowScene }
+        }, object: nil)
+        await fulfillment(of: [sceneConnected], timeout: 5)
+        let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first)
+        let presenter = UIViewController()
+        let window = UIWindow(windowScene: scene)
+        window.frame = scene.coordinateSpace.bounds
+        window.rootViewController = presenter
+        window.makeKeyAndVisible()
+        let presented = expectation(description: "Content-sized native sheet presented")
+        presenter.presentAsSheet(sheet) { presented.fulfill() }
+        await fulfillment(of: [presented], timeout: 3)
+        // Settle any layout-driven resize before capturing the initial height.
+        try await Task.sleep(nanoseconds: 700_000_000)
+        return (window, sheet)
+    }
+
+    @MainActor
     func testCardScannerAnimationKeepsFooterAnchored() async throws {
         // Given an embedded card scanner that starts collapsed
         let content = NativeSheetStubContentViewController()
@@ -412,7 +759,8 @@ final class PaymentSheetPresentationTests: XCTestCase {
             XCTAssertEqual(sheetPresentationController.selectedDetentIdentifier, .large)
         }
         XCTAssertFalse(sheetPresentationController.prefersGrabberVisible)
-        XCTAssertEqual(sheetPresentationController.preferredCornerRadius, sheetViewController.appearance.sheetCornerRadius)
+        let expectedCornerRadius = SheetImplementationResolver.isRequiredForDevice ? nil : sheetViewController.sheetCornerRadius
+        XCTAssertEqual(sheetPresentationController.preferredCornerRadius, expectedCornerRadius)
         XCTAssertFalse(sheetPresentationController.prefersScrollingExpandsWhenScrolledToEdge)
         XCTAssertFalse(sheetPresentationController.prefersEdgeAttachedInCompactHeight)
     }
@@ -473,9 +821,10 @@ final class PaymentSheetPresentationTests: XCTestCase {
             // When presenting a native sheet
             presenter.presentAsSheet(sheet)
 
-            // Then its own configured radius is applied, independently of the legacy global
+            // Then UIKit controls Duo's corners, while other devices use this sheet's own radius
             let presentationController = try XCTUnwrap(presentedViewController?.sheetPresentationController)
-            XCTAssertEqual(presentationController.preferredCornerRadius, radius)
+            let expectedCornerRadius: CGFloat? = SheetImplementationResolver.isRequiredForDevice ? nil : radius
+            XCTAssertEqual(presentationController.preferredCornerRadius, expectedCornerRadius)
         }
     }
 
@@ -490,7 +839,8 @@ final class PaymentSheetPresentationTests: XCTestCase {
         var presentedViewController: UIViewController?
         PresentationCapturingViewController { presentedViewController = $0 }.presentAsSheet(sheet)
 
-        XCTAssertEqual(try XCTUnwrap(presentedViewController?.sheetPresentationController).preferredCornerRadius, LinkUI.largeCornerRadius)
+        let expectedCornerRadius: CGFloat? = SheetImplementationResolver.isRequiredForDevice ? nil : LinkUI.largeCornerRadius
+        XCTAssertEqual(try XCTUnwrap(presentedViewController?.sheetPresentationController).preferredCornerRadius, expectedCornerRadius)
     }
 
     @MainActor

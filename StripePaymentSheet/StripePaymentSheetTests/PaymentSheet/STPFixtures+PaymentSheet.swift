@@ -138,6 +138,7 @@ extension STPElementsSession {
         paymentMethods: [[AnyHashable: Any]]? = nil,
         linkUseAttestation: Bool? = nil,
         linkSuppress2FA: Bool? = nil,
+        linkEnableMFAAuthFlow: Bool? = nil,
         hasLinkConsumerIncentive: Bool = false,
         linkSupportedPaymentMethodsOnboardingEnabled: [String] = ["CARD"]
     ) -> STPElementsSession {
@@ -188,6 +189,10 @@ extension STPElementsSession {
 
         if let linkSuppress2FA {
             json[jsonDict: "link_settings"]!["link_mobile_suppress_2fa_modal"] = linkSuppress2FA
+        }
+
+        if let linkEnableMFAAuthFlow {
+            json[jsonDict: "link_settings"]!["link_mobile_enable_mfa_auth_flow"] = linkEnableMFAAuthFlow
         }
 
         if hasLinkConsumerIncentive {
@@ -479,6 +484,7 @@ extension PaymentSheetLoader.LoadResult {
             intent: intent,
             configuration: PaymentSheet.Configuration(),
             paymentMethodTypes: pmTypes,
+            experimentAnalyticsHelper: analyticsHelper.experimentAnalyticsHelper,
             analyticsHelper: analyticsHelper
         )
         return PaymentSheetLoader.LoadResult(
@@ -503,6 +509,7 @@ extension PaymentMethodMessagingPromotionsHelper {
             intent: intent,
             configuration: PaymentSheet.Configuration(),
             paymentMethodTypes: [],
+            experimentAnalyticsHelper: ExperimentAnalyticsHelper(integrationShape: .paymentSheet),
             analyticsHelper: PaymentSheetAnalyticsHelper._testValue()
         )
     }
@@ -521,6 +528,7 @@ extension PaymentMethodMessagingPromotionsHelper {
             intent: intent,
             configuration: PaymentSheet.Configuration(),
             paymentMethodTypes: [],
+            experimentAnalyticsHelper: ExperimentAnalyticsHelper(integrationShape: .paymentSheet),
             analyticsHelper: PaymentSheetAnalyticsHelper._testValue()
         )!
         if let promotionText {

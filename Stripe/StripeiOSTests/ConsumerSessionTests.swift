@@ -37,6 +37,7 @@ class ConsumerSessionTests: STPNetworkStubbingTestCase {
             with: apiClient,
             useMobileEndpoints: false,
             canSyncAttestationState: false,
+            supportedVerificationTypes: [.sms],
             doNotLogConsumerFunnelEvent: false
         ) {
             result in
@@ -72,6 +73,7 @@ class ConsumerSessionTests: STPNetworkStubbingTestCase {
             with: apiClient,
             useMobileEndpoints: false,
             canSyncAttestationState: false,
+            supportedVerificationTypes: [.sms],
             doNotLogConsumerFunnelEvent: false
         ) { result in
             switch result {
@@ -106,6 +108,7 @@ class ConsumerSessionTests: STPNetworkStubbingTestCase {
             with: apiClient,
             useMobileEndpoints: false,
             canSyncAttestationState: false,
+            supportedVerificationTypes: [.sms],
             doNotLogConsumerFunnelEvent: false
         ) { result in
             switch result {

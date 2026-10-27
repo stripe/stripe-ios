@@ -94,6 +94,65 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
         )
     }
 
+    // MARK: - Interaction state
+
+    func testDisabledStateSurvivesButtonRecreation() {
+        // Given an element with both wallet buttons
+        let session = CheckoutTestHelpers.makeOpenSession().makePublicSession()
+        let view = ExpressCheckoutElementUIView(
+            session: session,
+            configuration: .init(completion: { _ in }),
+            delegate: FakeExpressCheckoutElementDelegate()
+        )
+        view.update(with: session, buttons: [.applePay, .link])
+        let buttons = CheckoutTestHelpers.expressCheckoutButtons(in: view)
+        XCTAssertEqual(buttons.count, 2)
+
+        // When the element disables interaction
+        view.setEnabled(false)
+
+        // Then the element and both controls are disabled
+        XCTAssertFalse(view.isUserInteractionEnabled)
+        XCTAssertTrue(buttons.allSatisfy { !$0.isEnabled })
+
+        // When the button order changes, forcing the controls to be recreated
+        view.update(with: session, buttons: [.link, .applePay])
+
+        // Then the new controls inherit the disabled state
+        let recreatedButtons = CheckoutTestHelpers.expressCheckoutButtons(in: view)
+        XCTAssertEqual(recreatedButtons.count, 2)
+        XCTAssertTrue(recreatedButtons.allSatisfy { button in !buttons.contains { $0 === button } })
+        XCTAssertTrue(recreatedButtons.allSatisfy { !$0.isEnabled })
+
+        // ...and enabling the element restores interaction and the new controls
+        view.setEnabled(true)
+        XCTAssertTrue(view.isUserInteractionEnabled)
+        XCTAssertTrue(recreatedButtons.allSatisfy(\.isEnabled))
+    }
+
+    func testExpressCheckoutButtonsStayDisabledUntilQueueDrains() async throws {
+        // Given an element with an available Link button
+        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration(
+            apiResponse: makeLinkSession(customerEmail: "jenny@example.com"),
+            paymentElementConfiguration: nil
+        ))
+        let view = checkout.getExpressCheckoutElement().uiView
+        let button = try XCTUnwrap(CheckoutTestHelpers.expressCheckoutButtons(in: view).first)
+
+        // When two operations are pending
+        checkout.pendingOperations = [Task<Void, Error> {}, Task<Void, Error> {}]
+
+        // Then the element stays disabled until both operations leave the queue
+        XCTAssertFalse(view.isUserInteractionEnabled)
+        XCTAssertFalse(button.isEnabled)
+        checkout.pendingOperations.removeFirst()
+        XCTAssertFalse(view.isUserInteractionEnabled)
+        XCTAssertFalse(button.isEnabled)
+        checkout.pendingOperations.removeFirst()
+        XCTAssertTrue(view.isUserInteractionEnabled)
+        XCTAssertTrue(button.isEnabled)
+    }
+
     // MARK: - Available payment methods tests
 
     func testAvailablePaymentMethodsStoredOnSession() {
@@ -194,19 +253,6 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
 
         let buttons = ExpressCheckoutElementUtilities.availablePaymentMethodsWithoutCheckoutRequirements(for: session.elementsSession, configuration: configuration)
         XCTAssertTrue(buttons.contains(.link))
-    }
-
-    func testApplePayButtonHiddenWhenDisplayIsNever() {
-        // Given a session with apple_pay and an applePayConfiguration with display set to .never
-        let session = CheckoutTestHelpers.makeSessionWithWalletTypes(["apple_pay"]).makePublicSession()
-        var configuration = ExpressCheckoutElement.Configuration(completion: { _ in })
-        configuration.applePayConfiguration = ExpressCheckoutElement.Configuration.ApplePayConfiguration(
-            merchantId: "merchant.com.example",
-            display: .never
-        )
-
-        let buttons = ExpressCheckoutElementUtilities.availablePaymentMethodsWithoutCheckoutRequirements(for: session.elementsSession, configuration: configuration)
-        XCTAssertFalse(buttons.contains(.applePay))
     }
 
     func testLinkButtonHiddenWhenDisplayIsNever() {
@@ -366,6 +412,8 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
         let expectedPaymentMethods = StripeAPI.deviceSupportsApplePay() ? ["apple_pay", "link"] : ["link"]
         XCTAssertEqual(session.availableExpressCheckoutPaymentMethods, expectedPaymentMethods)
     }
+
+    // MARK: - Helpers
 
     private func makeLinkSession(
         customerEmail: String? = nil,

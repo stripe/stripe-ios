@@ -10,6 +10,13 @@ protocol CheckoutSessionPolling {
 
 extension CheckoutSessionPoller: CheckoutSessionPolling {}
 
+protocol CheckoutConfirmationChallenge {
+    func makeRadarOptions(for paymentMethodType: STPPaymentMethodType) async -> STPRadarOptions?
+    func complete() async
+}
+
+extension ConfirmationChallenge: CheckoutConfirmationChallenge {}
+
 extension CheckoutController {
     /// The supported confirmation flows for a Checkout Session.
     enum CheckoutConfirmationFlow {
@@ -35,6 +42,7 @@ extension CheckoutController {
         // TODO: This should probably live with the other methods that delegate to CheckoutController
         // to update shipping, billing, etc., unless those methods end up living here too.
         let confirmationHandler: ConfirmationHandler
+        let confirmationSource: ConfirmingElement
     }
 
     /// The parameters needed to confirm a Checkout Session with Link.
@@ -48,6 +56,7 @@ extension CheckoutController {
         let analyticsHelper: PaymentSheetAnalyticsHelper
         let authenticationContext: STPAuthenticationContext
         let paymentHandler: STPPaymentHandler
+        let confirmationSource: ConfirmingElement
     }
 
     /// The parameters needed to confirm a Checkout Session with a new or saved payment method.
@@ -61,9 +70,38 @@ extension CheckoutController {
         let option: Option
         let configuration: PaymentElementConfiguration
         let nativeSheetPresentation: SheetImplementationResolver?
-        let confirmationChallenge: ConfirmationChallenge?
+        let confirmationChallenge: (any CheckoutConfirmationChallenge)?
         let authenticationContext: STPAuthenticationContext
         let paymentHandler: STPPaymentHandler
+        let confirmationSource: ConfirmingElement
+    }
+
+    /// Identifies which Checkout Elements component is confirming a Checkout Session, so
+    /// `payment_user_agent` can carry an unambiguous label for payment/attribution purposes.
+    /// Exactly one of these is chosen per confirmation attempt (set once in `makeConfirmationFlow(for:)`
+    /// and `makeExpressCheckoutConfirmationFlow`), so `PaymentElement` and `ExpressCheckoutElement`
+    /// never appear together in a single request's `payment_user_agent`.
+    enum ConfirmingElement {
+        case paymentElement
+        case expressCheckoutElement
+
+        private var identifier: String {
+            switch self {
+            case .paymentElement:
+                return PaymentElement.stp_analyticsIdentifier
+            case .expressCheckoutElement:
+                return ExpressCheckoutElement.stp_analyticsIdentifier
+            }
+        }
+
+        /// A `payment_user_agent` built fresh for this element, independent of whatever classes
+        /// (e.g. `PaymentSheet.FlowController`, `EmbeddedPaymentElement`) have registered into the
+        /// global `STPAnalyticsClient.sharedClient.productUsage` set — so it's never contaminated
+        /// by that set's contents, now or if `PaymentElement`/`ExpressCheckoutElement` themselves
+        /// ever register into it too.
+        var paymentUserAgent: String {
+            PaymentsSDKVariant.paymentUserAgent(replacingProductUsageWith: [identifier])
+        }
     }
 
     enum InternalConfirmResult {
@@ -118,7 +156,6 @@ extension CheckoutController {
         let configuration: PaymentElementConfiguration
         let nativeSheetPresentation: SheetImplementationResolver
         let integrationShape: PaymentSheet.IntegrationShape
-        let confirmationChallenge: ConfirmationChallenge?
 
         if paymentElement.paymentOptionSourceOfTruthIsFlowController {
             guard let resolvedPaymentOption = paymentElement.paymentSheetFlowController.internalPaymentOption else {
@@ -132,7 +169,6 @@ extension CheckoutController {
             configuration = paymentElement.paymentSheetFlowController.configuration
             nativeSheetPresentation = paymentElement.paymentSheetFlowController.nativeSheetPresentation
             integrationShape = .flowController
-            confirmationChallenge = paymentElement.paymentSheetFlowController.confirmationChallenge
         } else {
             guard let resolvedPaymentOption = paymentElement.embeddedPaymentElement._paymentOption else {
                 logUnexpectedCheckoutElementsErrorAndAssert(
@@ -145,7 +181,6 @@ extension CheckoutController {
             configuration = paymentElement.embeddedPaymentElement.configuration
             nativeSheetPresentation = paymentElement.embeddedPaymentElement.nativeSheetPresentation
             integrationShape = .embedded
-            confirmationChallenge = paymentElement.embeddedPaymentElement.confirmationChallenge
         }
 
         // Normalize Payment Element state here, then build the corresponding confirmation flow.
@@ -170,7 +205,8 @@ extension CheckoutController {
                         authenticationContext: authenticationContext,
                         paymentHandler: paymentHandler
                     )
-                }
+                },
+                confirmationSource: .paymentElement
             ))
         case .link(let confirmOption):
             let analyticsHelper = paymentElement.paymentOptionSourceOfTruthIsFlowController
@@ -183,7 +219,8 @@ extension CheckoutController {
                 confirmationChallenge: confirmationChallenge,
                 analyticsHelper: analyticsHelper,
                 authenticationContext: authenticationContext,
-                paymentHandler: paymentHandler
+                paymentHandler: paymentHandler,
+                confirmationSource: .paymentElement
             ))
         case .new(let confirmParams):
             return .paymentMethod(
@@ -193,7 +230,8 @@ extension CheckoutController {
                     nativeSheetPresentation: nativeSheetPresentation,
                     confirmationChallenge: confirmationChallenge,
                     authenticationContext: authenticationContext,
-                    paymentHandler: paymentHandler
+                    paymentHandler: paymentHandler,
+                    confirmationSource: .paymentElement
                 ),
                 preconfirmIntegrationShape: integrationShape
             )
@@ -205,7 +243,8 @@ extension CheckoutController {
                     nativeSheetPresentation: nativeSheetPresentation,
                     confirmationChallenge: confirmationChallenge,
                     authenticationContext: authenticationContext,
-                    paymentHandler: paymentHandler
+                    paymentHandler: paymentHandler,
+                    confirmationSource: .paymentElement
                 ),
                 preconfirmIntegrationShape: integrationShape
             )
@@ -242,11 +281,12 @@ extension CheckoutController {
                 let result: InternalConfirmResult
                 switch flow {
                 case .withoutPaymentMethod(let authenticationContext):
-                    let requestParameters = CheckoutSessionConfirmationRequestParameters(
+                    let requestParameters = CheckoutSessionConfirmationRequestParameters.createWithoutPaymentMethod(
                         sessionId: self.session.id,
-                        paymentMethodId: nil,
+                        // .withoutPaymentMethod only ever comes from makeConfirmationFlow(for: paymentElement:)
+                        // — ExpressCheckoutElement's flow builder has no such case — so this is always PaymentElement.
+                        confirmationSource: .paymentElement,
                         expectedAmount: self.session.amount,
-                        expectedPaymentMethodType: nil,
                         returnURL: self.configuration.returnURL,
                         clientAttributionMetadata: STPClientAttributionMetadata.makeClientAttributionMetadata(
                             intent: .checkout(self.session),
@@ -268,6 +308,20 @@ extension CheckoutController {
                     result = await Self.confirmLink(checkoutSession: self.session, parameters: parameters)
                 case .paymentMethod(let paymentMethodParameters, let integrationShape):
                     // 2. Do pre-confirm actions (CVC recollection, etc)
+                    if self.requiresSEPAMandate(for: paymentMethodParameters.option) {
+                        let didAcceptMandate = await withCheckedContinuation { continuation in
+                            SepaMandateViewController.present(
+                                from: paymentMethodParameters.authenticationContext.authenticationPresentingViewController(),
+                                configuration: paymentMethodParameters.configuration,
+                                nativeSheetPresentation: paymentMethodParameters.nativeSheetPresentation
+                            ) { didAcceptMandate in
+                                continuation.resume(returning: didAcceptMandate)
+                            }
+                        }
+                        guard didAcceptMandate else {
+                            return InternalConfirmResult.canceled()
+                        }
+                    }
                     let preconfirmResult = await Self.handlePaymentMethodPreconfirmActions(
                         checkoutSession: self.session,
                         parameters: paymentMethodParameters,
@@ -284,7 +338,7 @@ extension CheckoutController {
                     }
 
                     // 3. Make /confirm parameters
-                    let confirmRequestParameters = try await Self.makeConfirmationRequestParameters(
+                    let confirmRequestParameters = await Self.makeConfirmationRequestParameters(
                         for: paymentMethodParameters,
                         checkoutSession: self.session,
                         preconfirmedIntentParams: paymentOptionsOverride
@@ -294,21 +348,13 @@ extension CheckoutController {
                         with: confirmRequestParameters,
                         apiClient: paymentMethodParameters.configuration.apiClient,
                         authenticationContext: paymentMethodParameters.authenticationContext,
-                        paymentHandler: paymentMethodParameters.paymentHandler
+                        paymentHandler: paymentMethodParameters.paymentHandler,
+                        confirmationChallenge: confirmRequestParameters.paymentMethodData == nil ? nil : paymentMethodParameters.confirmationChallenge
                     )
                 }
                 // 3. Update the Session
                 if let response = result.checkoutSessionResponse {
-                    do {
-                        // TODO: This doesn't need to and should never actually throw
-                        try await self.commitSession(response)
-                    } catch {
-                        stpAssertionFailure("commit session should never fail")
-                        STPAnalyticsClient.sharedClient.log(
-                            analytic: ErrorAnalytic(event: .unexpectedCheckoutElementsError, error: error)
-                        )
-                        throw error
-                    }
+                    self.commitSession(response)
                 }
                 return result
             }
@@ -330,6 +376,15 @@ extension CheckoutController {
     }
 
     // MARK: - Payment Method Confirmation
+
+    func requiresSEPAMandate(for option: PaymentMethodConfirmationParameters.Option) -> Bool {
+        guard case .saved(let paymentMethod, _) = option, paymentMethod.type == .SEPADebit else {
+            return false
+        }
+        return paymentElement?.uiView.hasBeenAttachedToWindow != true
+            && paymentElement?.paymentSheetFlowController.didPresentAndContinue != true
+            && configuration.paymentElement?.displaysMandateText != false
+    }
 
     static func handlePaymentMethodPreconfirmActions(
         checkoutSession: Session,
@@ -359,7 +414,7 @@ extension CheckoutController {
         for paymentMethodParameters: PaymentMethodConfirmationParameters,
         checkoutSession: Session,
         preconfirmedIntentParams: IntentConfirmParams?
-    ) async throws -> CheckoutSessionConfirmationRequestParameters {
+    ) async -> CheckoutSessionConfirmationRequestParameters {
         let elementsSession = checkoutSession.elementsSession
         let configuration = paymentMethodParameters.configuration
         let confirmationChallenge = paymentMethodParameters.confirmationChallenge
@@ -367,26 +422,6 @@ extension CheckoutController {
             intent: .checkout(checkoutSession),
             elementsSession: elementsSession
         )
-
-        let shouldCompleteConfirmationChallenge: Bool = {
-            if case .new = paymentMethodParameters.option {
-                return true
-            }
-            return false
-        }()
-        defer {
-            // TODO: When we stop making a PM, make sure to call this after the CS /confirm
-            // But also, this `complete` API is broken; it is async but does not actually await anything :/
-            // But we should really make a helper like:
-            // try await confirmationChallenge.withRadarOptions(for: type) { radarOptions in
-            //     // Make the network request using radarOptions.
-            // }
-            if shouldCompleteConfirmationChallenge {
-                Task {
-                    await confirmationChallenge?.complete()
-                }
-            }
-        }
 
         switch paymentMethodParameters.option {
         case .new(let confirmParams):
@@ -396,12 +431,10 @@ extension CheckoutController {
                 merchantWillSavePaymentMethod: checkoutSession.merchantWillSavePaymentMethod(paymentMethodType)
             )
             confirmParams.paymentMethodParams.radarOptions = await confirmationChallenge?.makeRadarOptions(for: confirmParams.paymentMethodParams.type)
-            // TODO: Why set client attribution metadata here and also in /confirm request?
+            // Nested CAM attributes the PaymentMethodCreated event; top-level CAM links Checkout
+            // confirmation events to the Elements session configuration. The backend reads each
+            // copy independently, so keep both.
             confirmParams.paymentMethodParams.clientAttributionMetadata = clientAttributionMetadata
-            // TODO: Stop creating a PaymentMethod and send payment_method_data directly to /confirm.
-            let paymentMethod = try await configuration.apiClient.createPaymentMethod(
-                with: confirmParams.paymentMethodParams
-            )
             let savePaymentMethod: Bool?
             switch confirmParams.saveForFutureUseCheckboxState {
             case .hidden:
@@ -411,25 +444,33 @@ extension CheckoutController {
             case .selected:
                 savePaymentMethod = true
             }
-            return CheckoutSessionConfirmationRequestParameters(
-                checkoutSession: checkoutSession,
-                paymentMethod: paymentMethod,
-                configuration: configuration,
+            return .createWithPaymentMethodData(
+                sessionId: checkoutSession.id,
+                paymentMethodData: confirmParams.paymentMethodParams,
+                confirmationSource: paymentMethodParameters.confirmationSource,
+                expectedAmount: checkoutSession.amount,
+                savePaymentMethod: checkoutSession.noPaymentRequired ? nil : savePaymentMethod,
+                returnURL: configuration.returnURL,
+                shipping: STPPaymentIntentShippingDetailsParams(paymentSheetConfiguration: configuration),
                 paymentMethodOptions: confirmParams.confirmPaymentMethodOptions,
-                savePaymentMethod: savePaymentMethod,
-                clientAttributionMetadata: clientAttributionMetadata
+                clientAttributionMetadata: clientAttributionMetadata,
+                collectedInformation: .init(email: checkoutSession.localState.email)
             )
         case .saved(let savedPaymentMethod, let confirmParams):
             // MARK: - Saved PM
             let paymentMethodOptions = preconfirmedIntentParams?.confirmPaymentMethodOptions
                 ?? confirmParams?.confirmPaymentMethodOptions
-            return CheckoutSessionConfirmationRequestParameters(
-                checkoutSession: checkoutSession,
-                paymentMethod: savedPaymentMethod,
-                configuration: configuration,
+            return .createWithPaymentMethodID(
+                sessionId: checkoutSession.id,
+                paymentMethodId: savedPaymentMethod.stripeId,
+                confirmationSource: paymentMethodParameters.confirmationSource,
+                expectedAmount: checkoutSession.amount,
+                expectedPaymentMethodType: savedPaymentMethod.type.identifier,
+                returnURL: configuration.returnURL,
+                shipping: STPPaymentIntentShippingDetailsParams(paymentSheetConfiguration: configuration),
                 paymentMethodOptions: paymentMethodOptions,
-                savePaymentMethod: nil,
-                clientAttributionMetadata: clientAttributionMetadata
+                clientAttributionMetadata: clientAttributionMetadata,
+                collectedInformation: .init(email: checkoutSession.localState.email)
             )
         }
     }
@@ -443,6 +484,7 @@ extension CheckoutController {
         apiClient: STPAPIClient,
         authenticationContext: STPAuthenticationContext,
         paymentHandler: STPPaymentHandler,
+        confirmationChallenge: (any CheckoutConfirmationChallenge)? = nil,
         poller injectedPoller: (any CheckoutSessionPolling)? = nil
     ) async -> InternalConfirmResult {
         let poller: any CheckoutSessionPolling
@@ -453,12 +495,17 @@ extension CheckoutController {
         }
 
         // 1. Call /confirm
+        // TODO: Scope Radar option creation and this request with confirmationChallenge.withRadarOptions(for:).
+        // complete() is async, but the underlying AssertionHandle.complete() schedules rather than awaits release.
         let response: PaymentPagesAPIResponse
         do {
             response = try await apiClient.confirmCheckoutSession(with: requestParameters)
         } catch {
+            await confirmationChallenge?.complete()
             return .failed(error)
         }
+        // Release the assertion only after the request using it has finished, before handling next actions.
+        await confirmationChallenge?.complete()
 
         if response.submissionAttempt?.state == .failed {
             return .failed(paymentError(from: response), sessionResponse: response)
