@@ -127,6 +127,62 @@ class LinkPaymentMethodPickerSnapshotTests: STPSnapshotTestCase {
         verify(picker)
     }
 
+    func testRemoteIcons() {
+        // Given a download manager with cached card and bank account icons
+        let cardIconURL = URL(string: "https://b.stripecdn.com/card-icon.png")!
+        let bankIconURL = URL(string: "https://b.stripecdn.com/bank-icon.png")!
+        let uncachedIconURL = URL(string: "https://b.stripecdn.com/uncached-icon.png")!
+        let urlSessionConfig = APIStubbedTestCase.stubbedURLSessionConfig()
+        urlSessionConfig.urlCache = URLCache(memoryCapacity: 5_000_000, diskCapacity: 0)
+        seedURLCache(urlSessionConfig.urlCache, url: cardIconURL, image: makeImage(color: .systemRed, size: CGSize(width: 48, height: 32)))
+        seedURLCache(urlSessionConfig.urlCache, url: bankIconURL, image: makeImage(color: .systemBlue, size: CGSize(width: 96, height: 96)))
+        let downloadManager = DownloadManager(urlSessionConfiguration: urlSessionConfig, isTesting: true)
+
+        // ...and a card and bank account with cached icons, and a card whose icon can't be loaded
+        let paymentMethods = [
+            ConsumerPaymentDetails(
+                stripeID: "1",
+                details: .card(card: .init(expiryYear: 30, expiryMonth: 10, brand: "visa", networks: ["visa"], last4: "4242", funding: .credit, checks: nil)),
+                billingAddress: nil,
+                billingEmailAddress: nil,
+                nickname: nil,
+                display: .init(label: "Visa Credit", sublabel: "•••• 4242", icon: .init(main: cardIconURL)),
+                isDefault: true
+            ),
+            ConsumerPaymentDetails(
+                stripeID: "2",
+                details: .bankAccount(bankAccount: .init(iconCode: nil, name: "Checking", last4: "6789", country: "COUNTRY_US")),
+                billingAddress: nil,
+                billingEmailAddress: nil,
+                nickname: nil,
+                display: .init(label: "Checking", sublabel: "••6789", icon: .init(main: bankIconURL)),
+                isDefault: false
+            ),
+            ConsumerPaymentDetails(
+                stripeID: "3",
+                details: .card(card: .init(expiryYear: 30, expiryMonth: 10, brand: "amex", networks: ["amex"], last4: "0005", funding: .credit, checks: nil)),
+                billingAddress: nil,
+                billingEmailAddress: nil,
+                nickname: nil,
+                display: .init(label: "American Express Credit", sublabel: "•••• 0005", icon: .init(main: uncachedIconURL)),
+                isDefault: false
+            ),
+        ]
+
+        // When each payment method is displayed
+        let stackView = UIStackView(arrangedSubviews: paymentMethods.map { paymentMethod in
+            let contentView = LinkPaymentMethodPicker.CellContentView(downloadManager: downloadManager)
+            contentView.paymentMethod = paymentMethod
+            return contentView
+        })
+        stackView.axis = .vertical
+        stackView.spacing = 16
+
+        // Then the card icon fills the rectangular icon area, the bank account icon fills the square icon area,
+        // and the card without a loadable icon shows its local brand icon
+        verify(stackView)
+    }
+
     func testLongerEmail() {
         let mockDataSource = MockDataSource(
             paymentMethods: [],
@@ -149,6 +205,19 @@ class LinkPaymentMethodPickerSnapshotTests: STPSnapshotTestCase {
         view.autosizeHeight(width: 335)
         view.backgroundColor = .white
         STPSnapshotVerifyView(view, identifier: identifier, file: file, line: line)
+    }
+
+    private func seedURLCache(_ urlCache: URLCache?, url: URL, image: UIImage) {
+        let response = HTTPURLResponse(url: url, statusCode: 200, httpVersion: nil, headerFields: nil)!
+        let cachedResponse = CachedURLResponse(response: response, data: image.pngData()!)
+        urlCache?.storeCachedResponse(cachedResponse, for: URLRequest(url: url))
+    }
+
+    private func makeImage(color: UIColor, size: CGSize) -> UIImage {
+        UIGraphicsImageRenderer(size: size).image { context in
+            color.setFill()
+            context.fill(CGRect(origin: .zero, size: size))
+        }
     }
 
 }
