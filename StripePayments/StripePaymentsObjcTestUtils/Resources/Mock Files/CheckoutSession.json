@@ -30,22 +30,8 @@
           {
             "inner_item_key": "cii_1abc",
             "quantity": 2,
-            "subtotal": 1500,
-            "total": 1612,
             "unit_amount": 750,
             "unit_amount_decimal": "750",
-            "tax_amounts": [
-              {
-                "amount": 112,
-                "inclusive": false,
-                "tax_rate": {
-                  "percentage": 7.45,
-                  "display_name": "Sales Tax"
-                }
-              }
-            ],
-            "tax_inclusive": 0,
-            "tax_exclusive": 112,
             "price": {
               "id": "price_1abc",
               "currency": "eur",
@@ -54,27 +40,29 @@
                 "name": "Widget",
                 "images": []
               }
+            },
+            "amount_details": {
+              "subtotal": 1500,
+              "total": 1612,
+              "tax_amounts": [
+                {
+                  "amount": 112,
+                  "inclusive": false,
+                  "tax_rate": {
+                    "percentage": 7.45,
+                    "display_name": "Sales Tax"
+                  }
+                }
+              ],
+              "tax_inclusive": 0,
+              "tax_exclusive": 112
             }
           },
           {
             "inner_item_key": "cii_2def",
             "quantity": 1,
-            "subtotal": 500,
-            "total": 537,
             "unit_amount": 500,
             "unit_amount_decimal": "500",
-            "tax_amounts": [
-              {
-                "amount": 37,
-                "inclusive": false,
-                "tax_rate": {
-                  "percentage": 7.45,
-                  "display_name": "Sales Tax"
-                }
-              }
-            ],
-            "tax_inclusive": 0,
-            "tax_exclusive": 37,
             "price": {
               "id": "price_2def",
               "currency": "eur",
@@ -83,6 +71,22 @@
                 "name": "Gadget",
                 "images": []
               }
+            },
+            "amount_details": {
+              "subtotal": 500,
+              "total": 537,
+              "tax_amounts": [
+                {
+                  "amount": 37,
+                  "inclusive": false,
+                  "tax_rate": {
+                    "percentage": 7.45,
+                    "display_name": "Sales Tax"
+                  }
+                }
+              ],
+              "tax_inclusive": 0,
+              "tax_exclusive": 37
             }
           }
         ],

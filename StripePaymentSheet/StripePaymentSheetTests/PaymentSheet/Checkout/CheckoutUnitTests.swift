@@ -1416,10 +1416,12 @@ final class CheckoutUnitTests: XCTestCase {
         var oneTimePrice = checkoutItem["one_time_price"] as! [String: Any]
         var items = oneTimePrice["items"] as! [[String: Any]]
         var item = items[0]
-        item["subtotal"] = subtotal
-        item["tax_exclusive"] = taxExclusive
-        item["tax_inclusive"] = taxInclusive
-        item["total"] = total
+        var amountDetails = item["amount_details"] as! [String: Any]
+        amountDetails["subtotal"] = subtotal
+        amountDetails["tax_exclusive"] = taxExclusive
+        amountDetails["tax_inclusive"] = taxInclusive
+        amountDetails["total"] = total
+        item["amount_details"] = amountDetails
         items[0] = item
         oneTimePrice["items"] = items
         oneTimePrice["subtotal"] = subtotal

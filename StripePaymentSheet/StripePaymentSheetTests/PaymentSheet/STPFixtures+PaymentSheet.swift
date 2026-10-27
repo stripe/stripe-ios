@@ -351,11 +351,13 @@ extension Intent {
             return [
                 "inner_item_key": "checkout_item_inner_\(index)",
                 "quantity": item.quantity,
-                "subtotal": item.unitAmount * item.quantity,
-                "total": item.unitAmount * item.quantity,
-                "tax_amounts": [],
-                "tax_inclusive": 0,
-                "tax_exclusive": 0,
+                "amount_details": [
+                    "subtotal": item.unitAmount * item.quantity,
+                    "total": item.unitAmount * item.quantity,
+                    "tax_amounts": [],
+                    "tax_inclusive": 0,
+                    "tax_exclusive": 0,
+                ],
                 "price": [
                     "id": "price_\(item.key)",
                     "currency": currency.lowercased(),
@@ -365,12 +367,13 @@ extension Intent {
             ]
         }
         let oneTimePriceSubtotal = rawOneTimePriceItems.reduce(0) {
-            $0 + ($1["subtotal"] as? Int ?? 0)
+            $0 + (($1["amount_details"] as? [String: Any])?["subtotal"] as? Int ?? 0)
         }
         if taxAmount != 0 {
-            rawOneTimePriceItems[0]["tax_exclusive"] = taxAmount
-            rawOneTimePriceItems[0]["total"] =
-                (rawOneTimePriceItems[0]["total"] as? Int ?? 0) + taxAmount
+            var amountDetails = rawOneTimePriceItems[0]["amount_details"] as! [String: Any]
+            amountDetails["tax_exclusive"] = taxAmount
+            amountDetails["total"] = (amountDetails["total"] as? Int ?? 0) + taxAmount
+            rawOneTimePriceItems[0]["amount_details"] = amountDetails
         }
         json["items"] = [
             [
