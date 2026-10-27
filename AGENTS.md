@@ -133,7 +133,7 @@ In the PR description's `## Testing` section:
 - Don't use test commands or test names as the test description.
 
 ### Changelog Entries
-If adding a new CHANGELOG entry, always put it in the "changes pending release" section.
+Use the CHANGELOG as a standard for what bar of significance a change must clear to go in the CHANGELOG. Do not write CHANGELOG entries yourself -- instead leave a placeholder under the "changes pending release" section, prompt the user to verify that the change deserves a CHANGELOG entry and write the entry themselves, and do not commit until they have done so.
 
 ## Project Architecture
 
