@@ -78,29 +78,33 @@ extension STPAnalyticsClient {
 
     // MARK: - 2FA
 
-    func logLink2FAStart() {
-        self.logPaymentSheetEvent(event: .link2FAStart)
+    private func verificationTypeParams(_ type: SupportedVerificationType?) -> [String: Any] {
+        guard let type else { return [:] }
+        return ["verification_type": type.rawValue]
     }
 
-    func logLink2FAStartFailure() {
-        self.logPaymentSheetEvent(event: .link2FAStartFailure)
+    func logLink2FAStart(type: SupportedVerificationType?) {
+        self.logPaymentSheetEvent(event: .link2FAStart, params: verificationTypeParams(type))
     }
 
-    func logLink2FAComplete() {
-        self.logPaymentSheetEvent(event: .link2FAComplete)
+    func logLink2FAStartFailure(type: SupportedVerificationType?) {
+        self.logPaymentSheetEvent(event: .link2FAStartFailure, params: verificationTypeParams(type))
     }
 
-    func logLink2FAFailure() {
-        self.logPaymentSheetEvent(event: .link2FAFailure)
+    func logLink2FAComplete(type: SupportedVerificationType?) {
+        self.logPaymentSheetEvent(event: .link2FAComplete, params: verificationTypeParams(type))
     }
 
-    func logLink2FACancel() {
-        self.logPaymentSheetEvent(event: .link2FACancel)
+    func logLink2FAFailure(type: SupportedVerificationType?) {
+        self.logPaymentSheetEvent(event: .link2FAFailure, params: verificationTypeParams(type))
     }
 
-    func logLink2FAResendCode(type: ConsumerSession.VerificationSession.SessionType = .sms) {
-        let params = ["verification_type": type.rawValue]
-        self.logPaymentSheetEvent(event: .link2FAResendCode, params: params)
+    func logLink2FACancel(type: SupportedVerificationType?) {
+        self.logPaymentSheetEvent(event: .link2FACancel, params: verificationTypeParams(type))
+    }
+
+    func logLink2FAResendCode(type: SupportedVerificationType?) {
+        self.logPaymentSheetEvent(event: .link2FAResendCode, params: verificationTypeParams(type))
     }
 
     func logLinkBailedToWebFlow() {
