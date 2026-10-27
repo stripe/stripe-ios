@@ -21,6 +21,8 @@ extension LinkPaymentMethodPicker {
             static let maxFontSize: CGFloat = 20
         }
 
+        private let downloadManager: DownloadManager
+
         /// Whether the remote `display.icon.default` image is currently displayed in place of the local icon.
         private var isShowingRemoteIcon = false
 
@@ -84,7 +86,7 @@ extension LinkPaymentMethodPicker {
 
         private lazy var cardBrandView: CardBrandView = CardBrandView(centerHorizontally: true)
 
-        /// Displays the remote `display.icon.default` image for cards, which uses the same rectangular size as `cardBrandView`.
+        /// Displays the remote `display.icon.default` image for cards, which uses the same rectangular size as the card brand image.
         private lazy var remoteCardIconView: UIImageView = {
             let iconView = UIImageView()
             iconView.contentMode = .scaleAspectFit
@@ -153,8 +155,9 @@ extension LinkPaymentMethodPicker {
 
                 remoteCardIconView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
                 remoteCardIconView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-                remoteCardIconView.widthAnchor.constraint(equalToConstant: cardBrandSize.width),
-                remoteCardIconView.heightAnchor.constraint(equalToConstant: cardBrandSize.height),
+                // `cardBrandSize` includes padding around the brand image, so size remote card icons to match the visible brand image instead.
+                remoteCardIconView.widthAnchor.constraint(equalToConstant: Constants.iconSize.width),
+                remoteCardIconView.heightAnchor.constraint(equalToConstant: Constants.iconSize.height),
 
                 genericIconView.leadingAnchor.constraint(greaterThanOrEqualTo: view.leadingAnchor),
                 genericIconView.topAnchor.constraint(greaterThanOrEqualTo: view.topAnchor),
@@ -191,8 +194,9 @@ extension LinkPaymentMethodPicker {
             return stackView
         }()
 
-        override init(frame: CGRect) {
-            super.init(frame: frame)
+        init(downloadManager: DownloadManager = .sharedManager) {
+            self.downloadManager = downloadManager
+            super.init(frame: .zero)
             addAndPinSubview(stackView)
         }
 
@@ -257,7 +261,7 @@ extension LinkPaymentMethodPicker {
             }
 
             let placeholder = UIImage()
-            let image = DownloadManager.sharedManager.downloadImage(
+            let image = downloadManager.downloadImage(
                 url: url,
                 placeholder: placeholder,
                 updateHandler: { [weak self] image in
