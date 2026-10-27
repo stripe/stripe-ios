@@ -17,6 +17,7 @@ final class LinkControllerPreviewAPITests: XCTestCase {
         _ = LinkConfiguration(supportedPaymentMethodTypes: [.card], billingDetailsCollectionConfiguration: .init())
         _ = LinkConfiguration(billingDetailsCollectionConfiguration: .init()).billingDetailsCollectionConfiguration
         _ = LinkConfiguration(financialConnectionsPermissions: ["payment_method", "balances"]).financialConnectionsPermissions
+        _ = LinkConfiguration(returnURL: "example://stripe-redirect").returnURL
 
         let result: LinkController.PaymentMethodResult = .canceled
         _ = result
