@@ -587,8 +587,7 @@ extension PaymentPagesAPIResponse {
     }
 
     private func withOverrides(_ overrides: [String: Any]) -> PaymentPagesAPIResponse {
-        let json = (allResponseFields as? [String: Any] ?? [:])
-            .merging(overrides) { _, new in new }
+        let json = allResponseFields.merging(overrides) { _, new in new }
         return try! PaymentPagesAPIResponse.decode(fromAPIResponse: json)
     }
 }
