@@ -136,9 +136,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
 
     private func makeSavedSEPACheckout(displaysMandateText: Bool? = nil) async throws -> CheckoutController {
         let elementsSession = STPElementsSession._testValue(
-            paymentMethodTypes: ["sepa_debit"],
-            customerSessionData: [:],
-            paymentMethods: [STPPaymentMethod._testSEPA().allResponseFields]
+            paymentMethodTypes: ["sepa_debit"]
         )
         let session = CheckoutTestHelpers.makeSession([
             "session_id": "cs_test_123",
@@ -146,6 +144,11 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
             "checkout_items": CheckoutTestHelpers.makeOneTimePriceCheckoutItems(currency: "eur"),
             "payment_method_types": ["sepa_debit"],
             "elements_session": elementsSession.allResponseFields,
+            // Checkout provides saved methods on its own customer object.
+            "customer": [
+                "id": "cus_test",
+                "payment_methods": [STPPaymentMethod._testSEPA().allResponseFields],
+            ],
         ])
         var configuration = PaymentElement.Configuration()
         if let displaysMandateText {

@@ -838,9 +838,14 @@ final class PaymentElementTest: XCTestCase {
     ) {
         let requestRecorder = CheckoutSessionRequestRecorder()
         let elementsSession = STPElementsSession._testValue(
-            paymentMethodTypes: paymentMethodTypes,
-            customerSessionData: [:],
-            paymentMethods: [
+            paymentMethodTypes: paymentMethodTypes
+        )
+        var sessionJSON = Self.openSessionJSON(paymentMethodTypes: paymentMethodTypes)
+        sessionJSON["elements_session"] = elementsSession.allResponseFields
+        // Keep the saved card and its billing address on the Checkout customer.
+        sessionJSON["customer"] = [
+            "id": "cus_test",
+            "payment_methods": [
                 STPPaymentMethod._testCard(
                     line1: "123 Main St",
                     city: "San Francisco",
@@ -848,10 +853,8 @@ final class PaymentElementTest: XCTestCase {
                     postalCode: "94105",
                     countryCode: "US"
                 ).allResponseFields,
-            ]
-        )
-        var sessionJSON = Self.openSessionJSON(paymentMethodTypes: paymentMethodTypes)
-        sessionJSON["elements_session"] = elementsSession.allResponseFields
+            ],
+        ]
         sessionJSON["tax_context"] = [
             "automatic_tax_enabled": true,
             "automatic_tax_address_source": "session.billing",
