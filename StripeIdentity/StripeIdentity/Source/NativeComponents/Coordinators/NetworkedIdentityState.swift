@@ -17,7 +17,6 @@ enum NetworkedIdentityState: Equatable {
     case documentShared(NetworkedIdentityDocument)
     case savePending
     case savePrepared
-    case skipPending
     /// Saving failed; the sheet stays open to say so, since there's no capture to fall back to.
     case saveFailed(details: String?)
     case fullCaptureFallback

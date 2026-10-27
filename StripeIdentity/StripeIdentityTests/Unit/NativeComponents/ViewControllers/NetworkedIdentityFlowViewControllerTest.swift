@@ -59,18 +59,6 @@ final class NetworkedIdentityFlowViewControllerTest: XCTestCase {
         XCTAssertEqual(visibleButtonTitles, [Strings.share])
     }
 
-    func testManualCaptureIsNotOfferedAgainWhileSkipping() {
-        // Given the user can share a saved ID or verify manually
-        viewController.render(.selectDocument(documents: [niDocument()], selectedDocumentID: niDocument().id))
-        XCTAssertEqual(visibleButtonTitles, [Strings.share, Strings.manualCapture])
-
-        // When they choose to verify manually
-        viewController.render(.skipPending)
-
-        // Then nothing more is offered while the choice is recorded
-        XCTAssertEqual(visibleButtonTitles, [])
-    }
-
     func testSavingIsTitledContinueWithLink() {
         // When the save is being recorded
         viewController.render(.savePending)

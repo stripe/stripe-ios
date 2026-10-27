@@ -358,16 +358,15 @@ final class NetworkedIdentityCoordinatorTest: XCTestCase {
         XCTAssertTrue(apiClient.documentList.requestHistory.isEmpty)
     }
 
-    func testManualCaptureRecordsTheSkip() async {
+    func testManualCaptureKeepsSavingAvailable() async {
         await startAndConfigure()
 
         coordinator.chooseManualCapture()
-        await settle(until: { actions.skips.pendingRequestCount == 1 })
-        actions.skips.respondToNext(with: .success(niActionPageData()))
         await settle()
 
         XCTAssertEqual(delegate.outcomes, [.manualCapture])
-        XCTAssertEqual(actions.skips.requestHistory.count, 1)
+        XCTAssertTrue(actions.skips.requestHistory.isEmpty)
+        XCTAssertTrue(coordinator.entry.offersSave)
     }
 
     func testRejectedAttachIsRetriedOnceWithAFreshToken() async {
@@ -540,30 +539,6 @@ final class NetworkedIdentityCoordinatorTest: XCTestCase {
         XCTAssertTrue(delegate.outcomes.isEmpty)
     }
 
-    func testManualCaptureWaitsForAnIssuedAttachmentBeforeSkipping() async {
-        await reachDocuments([niDocument(id: "doc_1")])
-        coordinator.shareSelectedDocument()
-        await settle()
-        apiClient.associationToken.respondToNext(with: .success(.init(associationToken: "token_1")))
-        await settle()
-        XCTAssertEqual(actions.attachDocument.requestHistory, ["token_1"])
-
-        coordinator.chooseManualCapture()
-        await settle()
-        XCTAssertEqual(coordinator.state, .skipPending)
-        XCTAssertTrue(actions.skips.requestHistory.isEmpty)
-        XCTAssertTrue(delegate.outcomes.isEmpty)
-
-        actions.attachDocument.respondToNext(with: .success(niActionPageData()))
-        await settle(until: { actions.skips.pendingRequestCount == 1 })
-        actions.skips.respondToNext(with: .success(niActionPageData()))
-        await settle()
-        XCTAssertEqual(actions.skips.requestHistory.count, 1)
-        XCTAssertEqual(delegate.outcomes, [.manualCapture])
-        XCTAssertEqual(coordinator.route, .none)
-        XCTAssertFalse(coordinator.entry.offersSave)
-    }
-
     func testClosingDuringAnIssuedAttachmentStillUpdatesTheHostRequirements() async {
         await reachDocuments([niDocument(id: "doc_1")])
         var recorded: StripeAPI.VerificationPageData?
@@ -608,17 +583,6 @@ final class NetworkedIdentityCoordinatorTest: XCTestCase {
         actions.attachDocument.respondToNext(with: .success(niActionPageData()))
         await settle()
         XCTAssertEqual(coordinator.state, .documentShared(niDocument(id: "doc_2")))
-    }
-
-    func testFailedSkipStillContinuesWithOrdinaryVerification() async {
-        coordinator.chooseManualCapture()
-        await settle(until: { actions.skips.pendingRequestCount == 1 })
-        actions.skips.respondToNext(with: .failure(TestError.failed))
-        await settle()
-
-        // The choice isn't recorded, but the user isn't blocked from verifying
-        XCTAssertEqual(delegate.outcomes, [.fallback])
-        XCTAssertEqual(coordinator.route, .reuse)
     }
 
     func testSaveAfterNoReusableDocumentsUsesTheSameAuthenticatedAccount() async {

@@ -69,13 +69,6 @@ extension NetworkedIdentityFlowViewController {
             )
         }
 
-        static var skipping: String {
-            STPLocalizedString(
-                "Continuing with manual verification…",
-                "Status while continuing to verify identity with a new document instead of an ID saved to Link"
-            )
-        }
-
         static var saving: String {
             STPLocalizedString(
                 "Saving your ID…",

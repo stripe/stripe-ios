@@ -158,29 +158,15 @@ final class NetworkedIdentityCoordinator {
     }
 
     func chooseManualCapture() {
-        guard mode == .reuse, state != .skipPending else {
+        guard mode == .reuse else {
             return
         }
         invalidateAttempt()
-        transition(to: .skipPending)
-        perform(
-            { [weak self, actions] in
-                guard let self else { throw CancellationError() }
-                return try await self.mutate(route: .none) { try await actions.skip() }
-            },
-            onSuccess: { [weak self] _ in
-                guard let self else { return }
-                self.transition(to: .idle)
-                self.delegate?.networkedIdentityCoordinatorDidFinish(with: .manualCapture)
-            },
-            // Skip only records the choice. If it can't (e.g. the backend doesn't support Networked Identity for
-            // this session yet), the user still continues with ordinary verification.
-            onFailure: { [weak self] _ in
-                guard let self else { return }
-                self.transition(to: .idle)
-                self.delegate?.networkedIdentityCoordinatorDidFinish(with: .fallback)
-            }
-        )
+        // #TODO - Networked Identity: The design records this choice with `skip`, but the backend then rejects saving
+        // for the session (`networked_identity_restart_required`). Until that's settled, declining reuse keeps saving
+        // available.
+        transition(to: .idle)
+        delegate?.networkedIdentityCoordinatorDidFinish(with: .manualCapture)
     }
 
     func cancel() {

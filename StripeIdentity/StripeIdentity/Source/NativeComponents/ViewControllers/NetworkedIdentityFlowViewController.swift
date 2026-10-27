@@ -102,8 +102,6 @@ final class NetworkedIdentityFlowViewController: UIViewController {
             renderDocuments([document], selectedDocumentID: document.id, isSharing: true)
         case .documentShared(let document):
             renderShared(document)
-        case .skipPending:
-            renderProgress(Strings.skipping, buttons: [])
         case .savePending:
             renderProgress(Strings.saving, title: Strings.continueWithLink, buttons: [])
         case .savePrepared:

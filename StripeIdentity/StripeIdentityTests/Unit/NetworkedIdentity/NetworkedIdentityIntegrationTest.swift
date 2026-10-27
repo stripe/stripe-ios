@@ -79,7 +79,7 @@ final class NetworkedIdentityIntegrationTest: XCTestCase {
         XCTAssertFalse(texts.contains { $0.hasPrefix("Saved ID") })
     }
 
-    func testIntroManualVerificationPersistsSkip() async throws {
+    func testIntroManualVerificationSavesConsentWithoutSkipping() async throws {
         let page = try makePage(networking: [
             "save_enabled": true, "reuse_enabled": true,
             "state": ["consented": false, "skipped": false, "direction": NSNull()],
@@ -96,10 +96,7 @@ final class NetworkedIdentityIntegrationTest: XCTestCase {
         let button = try XCTUnwrap(screen.flowViewModel.buttons.first { $0.text == "Manually verify instead" })
         button.didTap()
         await settle()
-        XCTAssertEqual(api.networkedIdentitySkip.requestHistory.count, 1)
-        XCTAssertNil(sheet.savedData)
-        api.networkedIdentitySkip.respondToNext(with: .success(niActionPageData(id: api.verificationSessionId)))
-        await settle()
+        XCTAssertTrue(api.networkedIdentitySkip.requestHistory.isEmpty)
         XCTAssertEqual(sheet.savedData, .init(biometricConsent: true))
     }
 
@@ -115,10 +112,9 @@ final class NetworkedIdentityIntegrationTest: XCTestCase {
         await settle()
         coordinator.chooseManualCapture()
         await settle()
-        XCTAssertEqual(actions.skips.requestHistory.count, 1)
         api.associationToken.respondToNext(with: .success(.init(associationToken: "late_token")))
         await settle()
-        XCTAssertTrue(actions.attachDocument.requestHistory.isEmpty, "A late token must not start an attachment after skip")
+        XCTAssertTrue(actions.attachDocument.requestHistory.isEmpty, "A late token must not start an attachment after manual capture")
         if actions.attachDocument.pendingRequestCount > 0 {
             actions.attachDocument.respondToNext(with: .success(niActionPageData()))
             await settle()
