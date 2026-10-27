@@ -228,7 +228,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
             headerLabel, walletHeader, paymentContainerView, errorLabel, buyButton, bottomNoticeTextField,
         ]
         let stackView = UIStackView(arrangedSubviews: arrangedSubviews)
-        stackView.directionalLayoutMargins = configuration.appearance.formInsets
+        stackView.directionalLayoutMargins = configuration.appearance.topFormInsets
         // Form padding is explicit; safe-area adjustments can create a layout loop for small bottom insets.
         stackView.insetsLayoutMarginsFromSafeArea = false
         stackView.isLayoutMarginsRelativeArrangement = true
@@ -253,7 +253,10 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
             stackView.topAnchor.constraint(equalTo: view.topAnchor),
             stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            stackView.bottomAnchor.constraint(
+                equalTo: view.bottomAnchor,
+                constant: -configuration.appearance.formInsets.bottom
+            ),
         ])
 
         updateUI(animated: false)
