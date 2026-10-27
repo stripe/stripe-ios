@@ -894,7 +894,10 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         appearance.formInsets = NSDirectionalEdgeInsets(top: 20, leading: 25, bottom: 20, trailing: 25)
 
         preparePaymentSheet(appearance: appearance)
+        // A bottom safe area larger than the form inset must not cause a layout loop when loading finishes.
+        paymentSheet.bottomSheetViewController.additionalSafeAreaInsets.bottom = 34
         presentPaymentSheet(darkMode: false)
+        XCTAssertGreaterThan(paymentSheet.bottomSheetViewController.view.safeAreaInsets.bottom, appearance.formInsets.bottom)
         verify(paymentSheet.bottomSheetViewController.view!)
     }
 
