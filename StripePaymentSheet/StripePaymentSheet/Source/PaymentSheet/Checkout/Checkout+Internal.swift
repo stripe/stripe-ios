@@ -16,15 +16,13 @@ extension CheckoutController: ExpressCheckoutElementDelegate {
         _ paymentMethod: ExpressCheckoutElement.PaymentMethod,
         presentationWindow: UIWindow?
     ) async -> ConfirmResult {
-        do {
-            let flow = try makeExpressCheckoutConfirmationFlow(
-                paymentMethod,
-                presentationWindow: presentationWindow
-            )
-            return await confirm(flow)
-        } catch {
-            STPAnalyticsClient.sharedClient.log(analytic: ErrorAnalytic(event: .unexpectedCheckoutElementsError, error: error))
-            return .failed(error)
+        return await confirm(source: .expressCheckoutElement) {
+            do {
+                return try makeExpressCheckoutConfirmationFlow(paymentMethod, presentationWindow: presentationWindow)
+            } catch {
+                STPAnalyticsClient.sharedClient.log(analytic: ErrorAnalytic(event: .unexpectedCheckoutElementsError, error: error))
+                throw error
+            }
         }
     }
 
@@ -107,7 +105,11 @@ extension CheckoutController: ExpressCheckoutElementDelegate {
 }
 
 extension CheckoutController: CurrencySelectorElementCheckoutDelegate {}
-extension CheckoutController: ShippingAddressElementDelegate {}
+extension CheckoutController: ShippingAddressElementDelegate {
+    func updateShippingAddressFromElement(name: String?, address: Address?) async throws {
+        try await updateShippingAddress(name: name, address: address, source: .shippingAddressElement)
+    }
+}
 
 extension CheckoutController {
 
@@ -117,7 +119,9 @@ extension CheckoutController {
     /// - Parameter currency: The three-letter ISO currency code to switch to (e.g. "gbp").
     /// - Throws: ``CheckoutError`` if the update fails.
     func selectCurrency(_ currency: String) async throws {
-        try await performQueuedUpdate(.setCurrency(currency))
+        try await analyticsHelper.track(.updateCurrency, checkout: self, additionalParams: ["requested_currency": currency]) {
+            try await performQueuedUpdate(.setCurrency(currency))
+        }
     }
 
     // MARK: - Payment Option
@@ -208,16 +212,19 @@ extension CheckoutController {
     /// - Parameters:
     ///   - update: The API mutation to perform, or nil for a local-only update.
     ///   - canUpdateWhileSheetPresented: Bypasses the sheet-presented guard (e.g. billing sync on dismiss).
+    ///   - onRequest: Called after validation, immediately before sending an API mutation.
     ///   - mutateLocalState: A local state change to apply after the API call (or on its own).
     func performQueuedUpdate(
         _ update: SessionUpdate? = nil,
         canUpdateWhileSheetPresented: Bool = false,
+        onRequest: (@MainActor () -> Void)? = nil,
         mutateLocalState: @escaping LocalStateMutation = { _ in }
     ) async throws {
         try await enqueueSessionUpdate {
             try await self.performUnqueuedUpdate(
                 update,
                 canUpdateWhileSheetPresented: canUpdateWhileSheetPresented,
+                onRequest: onRequest,
                 mutateLocalState: mutateLocalState
             )
         }
@@ -228,6 +235,7 @@ extension CheckoutController {
     func performUnqueuedUpdate(
         _ update: SessionUpdate? = nil,
         canUpdateWhileSheetPresented: Bool = false,
+        onRequest: (@MainActor () -> Void)? = nil,
         mutateLocalState: LocalStateMutation = { _ in }
     ) async throws {
         if !canUpdateWhileSheetPresented {
@@ -237,6 +245,7 @@ extension CheckoutController {
             let updatedSessionAPIResponse: PaymentPagesAPIResponse?
             if let update {
                 let sessionId = CheckoutController.extractSessionId(from: clientSecret)
+                onRequest?()
                 updatedSessionAPIResponse = try await apiClient.updateCheckoutSession(
                     checkoutSessionId: sessionId,
                     clientSecret: clientSecret,
@@ -251,7 +260,7 @@ extension CheckoutController {
 
             commitSession(updatedSessionAPIResponse, mutateLocalState: mutateLocalState)
         } catch {
-            throw CheckoutError.apiError(message: error.nonGenericDescription)
+            throw CheckoutError.apiError(message: error.nonGenericDescription, underlyingError: error)
         }
         updateForSessionChange()
     }

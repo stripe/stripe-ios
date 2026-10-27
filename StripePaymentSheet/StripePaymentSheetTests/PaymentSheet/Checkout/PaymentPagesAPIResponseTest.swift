@@ -1294,6 +1294,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
 
     func testElementsSessionDecoding() {
         let session = CheckoutTestHelpers.makeSession([
+            "checkout_session_config_id": "csc_123",
             "ordered_payment_method_types_and_wallets": ["card"],
             "elements_session_id": "es_123",
             "merchant_info": [
@@ -1305,6 +1306,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
                 "address_source": "billing",
             ],
         ]).withCustomer().makePublicSession()
+        XCTAssertEqual(session.checkoutConfigID, "csc_123")
         XCTAssertTrue(session.elementsSession.disableLinkForAutomaticTaxBilling)
 
         let sessionWithoutTax = CheckoutTestHelpers.makeSession([
@@ -1314,6 +1316,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
                 "country": "US"
             ],
         ]).withCustomer().makePublicSession()
+        XCTAssertNil(sessionWithoutTax.checkoutConfigID)
         XCTAssertFalse(sessionWithoutTax.elementsSession.disableLinkForAutomaticTaxBilling)
 
         var jsonWithoutES = CheckoutTestHelpers.baseSessionJSON

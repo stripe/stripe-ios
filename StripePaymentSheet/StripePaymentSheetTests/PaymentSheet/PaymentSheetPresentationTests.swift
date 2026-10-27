@@ -32,7 +32,8 @@ final class PaymentSheetPresentationTests: XCTestCase {
             savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testCardAmex()],
             paymentMethodTypes: [.stripe(.card)],
             paymentMethodMessagingPromotionsHelper: ._testValue(),
-            paymentMethodOrientation: .horizontal
+            paymentMethodOrientation: .horizontal,
+            customerProvider: CustomerProvider(customer: nil)
         )
         var configuration = PaymentSheet.Configuration()
         configuration.link = .init(display: .never)
@@ -136,7 +137,8 @@ final class PaymentSheetPresentationTests: XCTestCase {
             savedPaymentMethods: [STPPaymentMethod._testCard(), STPPaymentMethod._testCardAmex()],
             paymentMethodTypes: [.stripe(.card)],
             paymentMethodMessagingPromotionsHelper: ._testValue(),
-            paymentMethodOrientation: .horizontal
+            paymentMethodOrientation: .horizontal,
+            customerProvider: CustomerProvider(customer: nil)
         )
         var configuration = PaymentSheet.Configuration()
         configuration.link = .init(display: .never)
@@ -245,7 +247,8 @@ final class PaymentSheetPresentationTests: XCTestCase {
             savedPaymentMethods: [],
             paymentMethodTypes: paymentMethodTypes.map { .stripe($0) },
             paymentMethodMessagingPromotionsHelper: nil,
-            paymentMethodOrientation: .vertical
+            paymentMethodOrientation: .vertical,
+            customerProvider: CustomerProvider(customer: nil)
         )
         var configuration = PaymentSheet.Configuration()
         configuration.applePay = nil
@@ -575,7 +578,8 @@ final class PaymentSheetPresentationTests: XCTestCase {
             savedPaymentMethods: [],
             paymentMethodTypes: paymentMethodTypes.map { .stripe($0) },
             paymentMethodMessagingPromotionsHelper: ._testValue(),
-            paymentMethodOrientation: .vertical
+            paymentMethodOrientation: .vertical,
+            customerProvider: CustomerProvider(customer: nil)
         )
         var configuration = PaymentSheet.Configuration()
         configuration.applePay = nil
@@ -645,7 +649,8 @@ final class PaymentSheetPresentationTests: XCTestCase {
                 savedPaymentMethods: [],
                 paymentMethodTypes: [.stripe(.card)],
                 paymentMethodMessagingPromotionsHelper: ._testValue(),
-                paymentMethodOrientation: variant == "horizontal" ? .horizontal : .vertical
+                paymentMethodOrientation: variant == "horizontal" ? .horizontal : .vertical,
+                customerProvider: CustomerProvider(customer: nil)
             )
             var configuration = PaymentSheet.Configuration()
             configuration.appearance = appearance

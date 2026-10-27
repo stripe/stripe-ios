@@ -74,7 +74,8 @@ public final class PaymentElement {
     ) throws {
         STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: PaymentElement.self)
         try EmbeddedPaymentElement.validateRowSelectionConfiguration(
-            configuration: embeddedPaymentElementInitParameters.configuration
+            configuration: embeddedPaymentElementInitParameters.configuration,
+            customerProvider: embeddedPaymentElementInitParameters.loadResult.customerProvider
         )
         STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: PaymentSheet.FlowController.self)
         STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: EmbeddedPaymentElement.self)
@@ -194,7 +195,7 @@ extension PaymentElement {
             stpAssertionFailure("PaymentElement unexpectedly lost its CheckoutController.")
             return
         }
-        try await checkout.updateBillingTaxRegionIfNecessary(address: nil)
+        try await checkout.updateBillingTaxRegionIfNecessary(address: nil, source: .paymentElement)
         checkout.dangerouslySetPaymentOptionDirectly(nil)
         embeddedPaymentElement.clearPaymentOption()
     }

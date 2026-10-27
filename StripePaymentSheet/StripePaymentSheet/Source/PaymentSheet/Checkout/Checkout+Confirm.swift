@@ -256,27 +256,35 @@ extension CheckoutController {
 
     // MARK: - Confirmation
 
-    func confirm(_ flow: CheckoutConfirmationFlow) async -> ConfirmResult {
-        // Validations
-        guard sessionIsOpen else {
-            let error = PaymentSheetError.integrationError(nonPIIDebugDescription: "CheckoutController cannot confirm a Checkout Session that is no longer open.")
-            return .failed(error)
-        }
-        guard !confirmationInProgress else {
-            let error = PaymentSheetError.integrationError(nonPIIDebugDescription: "CheckoutController cannot start a second confirmation while one is in progress.")
-            return .failed(error)
-        }
-        guard pendingOperations.isEmpty else {
-            let error = PaymentSheetError.integrationError(nonPIIDebugDescription: "CheckoutController cannot confirm while the Checkout Session is updating. Wait until isUpdating is false.")
-            return .failed(error)
-        }
-
-        confirmationInProgress = true
-        defer { confirmationInProgress = false }
-
+    func confirm(
+        source: CheckoutControllerAnalyticsHelper.InvocationSource,
+        makeFlow: () throws -> CheckoutConfirmationFlow
+    ) async -> ConfirmResult {
+        let flow = Result(catching: makeFlow)
+        // Send confirm started analytic
+        var analyticParams = confirmationAnalyticsParams(paymentOption: try? flow.get().analyticsPaymentOption, source: source)
+        let startedAction = analyticsHelper.logStarted(.confirm, session: session, additionalParams: analyticParams)
+        let internalResult: InternalConfirmResult
+        // Do the actual confirm
         do {
+            let flow = try flow.get()
+
+            // Validations
+            guard sessionIsOpen else {
+                throw PaymentSheetError.integrationError(nonPIIDebugDescription: "CheckoutController cannot confirm a Checkout Session that is no longer open.")
+            }
+            guard !confirmationInProgress else {
+                throw PaymentSheetError.integrationError(nonPIIDebugDescription: "CheckoutController cannot start a second confirmation while one is in progress.")
+            }
+            guard pendingOperations.isEmpty else {
+                throw PaymentSheetError.integrationError(nonPIIDebugDescription: "CheckoutController cannot confirm while the Checkout Session is updating. Wait until isUpdating is false.")
+            }
+
+            confirmationInProgress = true
+            defer { confirmationInProgress = false }
+
             // 1. Put the confirm on the queue
-            let result = try await enqueueSessionUpdate {
+            internalResult = try await enqueueSessionUpdate {
                 // Switch based on the confirmation flow
                 let result: InternalConfirmResult
                 switch flow {
@@ -359,10 +367,21 @@ extension CheckoutController {
                 }
                 return result
             }
-            return Self.mapConfirmationResult(result)
         } catch {
-            return .failed(error)
+            internalResult = .failed(error)
         }
+        // Send confirm finished analytic
+        let result = Self.mapConfirmationResult(internalResult)
+        analyticParams["active_link_session"] = LinkAccountContext.shared.account?.sessionState == .verified
+        switch result {
+        case .completed:
+            analyticsHelper.logSucceeded(startedAction, session: session, additionalParams: analyticParams)
+        case .canceled:
+            analyticsHelper.logCanceled(startedAction, session: session, additionalParams: analyticParams)
+        case .failed(let error):
+            analyticsHelper.logFailed(startedAction, error: error, session: session, additionalParams: analyticParams)
+        }
+        return result
     }
 
     static func mapConfirmationResult(_ result: InternalConfirmResult) -> ConfirmResult {

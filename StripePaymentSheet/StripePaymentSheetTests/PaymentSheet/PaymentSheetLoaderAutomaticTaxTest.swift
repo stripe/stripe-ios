@@ -91,6 +91,7 @@ final class PaymentSheetLoaderAutomaticTaxTest: XCTestCase {
                     intent: intent,
                     elementsSession: ._testCardValue(),
                     configuration: PaymentSheet.Configuration(),
+                    customerProvider: CustomerProvider(customer: .init(id: "cus_123", ephemeralKeySecret: "ek_test")),
                     prefetchedSPMs: [incomplete],
                     loadTimings: .init()
                 ).count,
@@ -124,10 +125,15 @@ final class PaymentSheetLoaderAutomaticTaxTest: XCTestCase {
         intent: Intent,
         configuration: PaymentSheet.Configuration = .init()
     ) -> [STPPaymentMethod] {
-        PaymentSheetLoader.filterSavedPaymentMethods(
+        guard case .checkout(let session) = intent else {
+            XCTFail("Expected a Checkout Session intent")
+            return []
+        }
+        return PaymentSheetLoader.filterSavedPaymentMethods(
             intent: intent,
             elementsSession: ._testCardValue(),
             configuration: configuration,
+            customerProvider: CustomerProvider(checkoutSession: session),
             prefetchedSPMs: nil,
             loadTimings: .init()
         )

@@ -149,7 +149,8 @@ final class SheetImplementationResolverTests: XCTestCase {
             savedPaymentMethods: [],
             paymentMethodTypes: [.stripe(.card)],
             paymentMethodMessagingPromotionsHelper: nil,
-            paymentMethodOrientation: .vertical
+            paymentMethodOrientation: .vertical,
+            customerProvider: CustomerProvider(customer: nil)
         )
     }
 }

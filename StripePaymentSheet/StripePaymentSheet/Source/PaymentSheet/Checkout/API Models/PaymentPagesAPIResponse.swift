@@ -18,6 +18,7 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
     // TODO: Make this Decodable instead, we don't need _allResponseFieldStorage.
     var _allResponseFieldsStorage: NonEncodableParameters?
 
+    let checkoutConfigID: String?
     let sessionId: String
     var paymentIntentId: String? { paymentResponse?.paymentIntent?.id }
     var paymentIntent: STPPaymentIntent?
@@ -66,6 +67,7 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
         case sessionId = "id"
         case currency = "presentment_currency"
         case integrationCurrency
+        case checkoutConfigID = "checkout_session_config_id"
         case checkoutItems = "items"
         case livemode
         case status
@@ -83,6 +85,7 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
 
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
+        checkoutConfigID = try container.decodeIfPresent(String.self, forKey: .checkoutConfigID)
         paymentResponse = try container.decodeIfPresent(PaymentResponse.self, forKey: .paymentResponse)
         sessionId = try container.decode(String.self, forKey: .sessionId)
         paymentIntent = nil
