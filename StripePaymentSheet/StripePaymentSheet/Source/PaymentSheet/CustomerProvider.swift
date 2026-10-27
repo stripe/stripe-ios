@@ -69,10 +69,35 @@ struct CustomerProvider {
         }
     }
 
-    var email: String? {
-        guard case .checkoutSession(let session) = backing else {
+    /// Resolves customer email for Link lookup. Callers apply their integration's explicit email/defaults first.
+    func linkEmail(
+        elementsSession: STPElementsSession? = nil,
+        prefetchedEmail: String? = nil
+    ) -> String? {
+        if let prefetchedEmail {
+            return prefetchedEmail
+        }
+        if case .checkoutSession(let session) = backing, let email = session.email {
+            return email
+        }
+        // Keep the session fallback even when no customer is configured or the legacy fetch failed.
+        return elementsSession?.customer?.email
+    }
+
+    /// Legacy integrations need a separate Customer request; other integrations include email in their session.
+    @MainActor
+    func prefetchLinkEmail(apiClient: STPAPIClient, loadTimings: PaymentSheetLoader.LoadTimings) async throws -> String? {
+        guard let credentials = legacyEphemeralKeyCredentials else {
             return nil
         }
-        return session.customer?.email ?? session.email
+        loadTimings.logStart("retrieveCustomer")
+        defer {
+            loadTimings.logEnd("retrieveCustomer")
+        }
+        let customer = try await apiClient.retrieveCustomer(
+            credentials.customerID,
+            using: credentials.ephemeralKeySecret
+        )
+        return customer.email
     }
 }
