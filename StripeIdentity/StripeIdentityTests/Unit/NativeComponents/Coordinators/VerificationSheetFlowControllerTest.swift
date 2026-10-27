@@ -8,6 +8,8 @@
 
 @_spi(STP) import StripeCore
 import StripeCoreTestUtils
+@_spi(STP) import StripeUICore
+import UIKit
 import Vision
 import XCTest
 
@@ -22,7 +24,9 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
         [.biometricConsent], [.idDocumentFront, .idDocumentBack],
     ]
 
-let flowController = VerificationSheetFlowController(brandLogo: UIImage())
+    let flowController = VerificationSheetFlowController(
+        configuration: .init(brandLogo: UIImage())
+    )
     var mockMLModelLoader: IdentityMLModelLoaderMock!
     var mockSheetController: VerificationSheetControllerMock!
 
@@ -43,6 +47,73 @@ let flowController = VerificationSheetFlowController(brandLogo: UIImage())
             flowController.navigationController.viewControllers.first as Any,
             LoadingViewController.self
         )
+    }
+
+    func testDarkBrandColorUsesWhitePrimaryButtonText() throws {
+        let brandColor = UIColor(red: 0.05, green: 0.12, blue: 0.20, alpha: 1)
+        let flowController = VerificationSheetFlowController(
+            configuration: .init(brandLogo: UIImage(), brandColor: brandColor)
+        )
+
+        let (backgroundColor, textColor, height) = try customColors(flowController.primaryButtonStyle)
+        XCTAssertEqual(backgroundColor, brandColor)
+        XCTAssertEqual(textColor.resolvedColor(with: UITraitCollection(userInterfaceStyle: .light)), .white)
+        XCTAssertNil(height)
+    }
+
+    func testLightBrandColorUsesBlackPrimaryButtonText() throws {
+        let brandColor = UIColor(red: 1, green: 0.85, blue: 0, alpha: 1)
+        let configuration = IdentityVerificationSheet.Configuration(brandLogo: UIImage(), brandColor: brandColor)
+
+        let (backgroundColor, textColor, _) = try customColors(configuration.resolvedPrimaryButtonStyle)
+        XCTAssertEqual(backgroundColor, brandColor)
+        XCTAssertEqual(textColor.resolvedColor(with: UITraitCollection(userInterfaceStyle: .light)), .black)
+    }
+
+    func testBrandColorTakesPrecedenceOverPrimaryButtonStyle() throws {
+        let brandColor = UIColor(red: 1, green: 0.85, blue: 0, alpha: 1)
+        var configuration = IdentityVerificationSheet.Configuration(brandLogo: UIImage(), brandColor: brandColor)
+        configuration.primaryButtonStyle = .custom(backgroundColor: .red, textColor: .green, height: 52)
+
+        let (backgroundColor, textColor, height) = try customColors(configuration.resolvedPrimaryButtonStyle)
+        XCTAssertEqual(backgroundColor, brandColor)
+        XCTAssertEqual(textColor.resolvedColor(with: UITraitCollection(userInterfaceStyle: .light)), .black)
+        XCTAssertEqual(height, 52)
+    }
+
+    func testNilBrandColorKeepsPrimaryButtonStyle() throws {
+        var configuration = IdentityVerificationSheet.Configuration(brandLogo: UIImage())
+        guard case .default = configuration.resolvedPrimaryButtonStyle else {
+            return XCTFail("Expected the default primary button style")
+        }
+
+        configuration.primaryButtonStyle = .custom(backgroundColor: .red, textColor: .green, height: nil)
+        let (backgroundColor, textColor, _) = try customColors(configuration.resolvedPrimaryButtonStyle)
+        XCTAssertEqual(backgroundColor, .red)
+        XCTAssertEqual(textColor, .green)
+    }
+
+    func testDynamicBrandColorPicksTextColorForEachAppearance() throws {
+        let dynamicBrandColor = UIColor { traitCollection in
+            return traitCollection.userInterfaceStyle == .dark
+                ? UIColor(red: 0.05, green: 0.12, blue: 0.20, alpha: 1)
+                : UIColor(red: 1, green: 0.85, blue: 0, alpha: 1)
+        }
+        let configuration = IdentityVerificationSheet.Configuration(brandLogo: UIImage(), brandColor: dynamicBrandColor)
+
+        let (_, textColor, _) = try customColors(configuration.resolvedPrimaryButtonStyle)
+        XCTAssertEqual(textColor.resolvedColor(with: UITraitCollection(userInterfaceStyle: .light)), .black)
+        XCTAssertEqual(textColor.resolvedColor(with: UITraitCollection(userInterfaceStyle: .dark)), .white)
+    }
+
+    private func customColors(
+        _ style: IdentityVerificationSheet.Configuration.PrimaryButtonStyle
+    ) throws -> (UIColor, UIColor, CGFloat?) {
+        guard case let .custom(backgroundColor, textColor, height) = style else {
+            XCTFail("Expected a custom primary button style")
+            throw mockError
+        }
+        return (backgroundColor, textColor, height)
     }
 
     // Tests the navigation stack between screen transitions
@@ -158,20 +229,19 @@ let flowController = VerificationSheetFlowController(brandLogo: UIImage())
         wait(for: [exp], timeout: 1)
     }
 
-    // Requires document photo without type - should return DocumentTypeSelectViewController
+    // Requires document photo without type - should return DocumentWarmupViewController
     func testMissingDocFrontNoType() throws {
-        // Mock that document ML models successfully loaded
-        mockMLModelLoader.documentModelsPromise.resolve(with: .init(DocumentScannerMock()))
+        // Given the document models have not loaded
+        var nextViewController: UIViewController?
 
-        let exp = expectation(description: "testMissingDocFrontNoType")
-        try nextViewController(
+        // When the document front is required without a selected document type
+        try self.nextViewController(
             missingRequirements: [.idDocumentFront],
-            completion: { nextVC in
-                XCTAssertIs(nextVC, DocumentWarmupViewController.self)
-                exp.fulfill()
-            }
+            completion: { nextViewController = $0 }
         )
-        wait(for: [exp], timeout: 1)
+
+        // Then routing completes synchronously without waiting for the models
+        XCTAssertIs(try XCTUnwrap(nextViewController), DocumentWarmupViewController.self)
     }
 
     func testNoSelfieConfigError() throws {
@@ -223,6 +293,30 @@ let flowController = VerificationSheetFlowController(brandLogo: UIImage())
             }
         )
         wait(for: [exp], timeout: 1)
+    }
+
+    func testTestModeConfiguresImageUploaders() throws {
+        // Given test mode static content
+        let staticContent = try VerificationPageMock.response200TestMode.make()
+
+        // When document and selfie uploaders are created
+        let uploaders = try makeImageUploaders(staticContent: staticContent)
+
+        // Then both uploaders replace captured images with test mode placeholders
+        XCTAssertTrue(uploaders.document.isTestMode)
+        XCTAssertTrue(uploaders.selfie.isTestMode)
+    }
+
+    func testLiveModeDisablesTestModeImageUploaders() throws {
+        // Given live mode static content
+        let staticContent = try VerificationPageMock.response200.make()
+
+        // When document and selfie uploaders are created
+        let uploaders = try makeImageUploaders(staticContent: staticContent)
+
+        // Then neither uploader replaces captured images with test mode placeholders
+        XCTAssertFalse(uploaders.document.isTestMode)
+        XCTAssertFalse(uploaders.selfie.isTestMode)
     }
 
     func testNextViewControllerSuccess() throws {
@@ -318,42 +412,48 @@ let flowController = VerificationSheetFlowController(brandLogo: UIImage())
     }
 
     func testNextViewControllerDocumentWarmup() throws {
-        // Mock that user has selected document type
-        mockSheetController.collectedData = .init()
+        // Given the document models have not loaded
+        var frontViewController: UIViewController?
+        var backViewController: UIViewController?
 
-        // Mock that document ML models successfully loaded
-        mockMLModelLoader.documentModelsPromise.resolve(with: .init(DocumentScannerMock()))
-
-        let frontExp = expectation(description: "front")
+        // When either side of the document is required
         try nextViewController(
             missingRequirements: [.idDocumentFront],
-            completion: { nextVC in
-                XCTAssertIs(nextVC, DocumentWarmupViewController.self.self)
-                frontExp.fulfill()
-            }
+            completion: { frontViewController = $0 }
         )
 
-        let backExp = expectation(description: "back")
         try nextViewController(
             missingRequirements: [.idDocumentBack],
-            completion: { nextVC in
-                XCTAssertIs(nextVC, DocumentWarmupViewController.self)
-                backExp.fulfill()
-            }
+            completion: { backViewController = $0 }
         )
 
-        wait(for: [frontExp, backExp], timeout: 1)
+        // Then both routes complete synchronously without waiting for the models
+        XCTAssertIs(try XCTUnwrap(frontViewController), DocumentWarmupViewController.self)
+        XCTAssertIs(try XCTUnwrap(backViewController), DocumentWarmupViewController.self)
     }
 
     func testNextViewControllerSelfie() throws {
-        // Mock that face ML models successfully loaded
-        mockMLModelLoader.faceModelsPromise.resolve(with: .init(FaceScannerMock()))
+        // Given the face models have not loaded
+        var nextViewController: UIViewController?
 
-        let exp = expectation(description: "testNextViewControllerSelfie")
-        try nextViewController(
+        // When a selfie is required
+        try self.nextViewController(
             missingRequirements: [.face],
+            completion: { nextViewController = $0 }
+        )
+
+        // Then routing completes synchronously without waiting for the models
+        XCTAssertIs(try XCTUnwrap(nextViewController), SelfieWarmupViewController.self)
+    }
+
+    func testNextViewControllerBiometricConsentPrecedesSelfie() throws {
+        let exp = expectation(
+            description: "testNextViewControllerBiometricConsentPrecedesSelfie"
+        )
+        try nextViewController(
+            missingRequirements: [.biometricConsent, .face],
             completion: { nextVC in
-                XCTAssertIs(nextVC, SelfieWarmupViewController.self)
+                XCTAssertIs(nextVC, BiometricConsentViewController.self)
                 exp.fulfill()
             }
         )
@@ -419,11 +519,28 @@ let flowController = VerificationSheetFlowController(brandLogo: UIImage())
         XCTAssertEqual(viewControllers.map { $0.collectedFields }, mockCollectedFields)
         XCTAssertEqual(viewControllers.last?.didReset, true)
     }
-
 }
 
-extension VerificationSheetFlowControllerTest {
-    fileprivate func nextViewController(
+private extension VerificationSheetFlowControllerTest {
+    func makeImageUploaders(
+        staticContent: StripeAPI.VerificationPage
+    ) throws -> (document: DocumentUploader, selfie: SelfieUploader) {
+        let documentUploader = flowController.makeDocumentUploader(
+            staticContent: staticContent,
+            sheetController: mockSheetController
+        )
+        let selfieViewController = try XCTUnwrap(
+            flowController.makeSelfieCaptureViewController(
+                faceScannerResult: .success(AnyFaceScanner(FaceScannerMock())),
+                staticContent: staticContent,
+                sheetController: mockSheetController
+            ) as? SelfieCaptureViewController
+        )
+        let selfieUploader = try XCTUnwrap(selfieViewController.selfieUploader as? SelfieUploader)
+        return (documentUploader, selfieUploader)
+    }
+
+    func nextViewController(
         missingRequirements: Set<StripeAPI.VerificationPageFieldType>,
         staticContentResult: Result<StripeAPI.VerificationPage, Error> = .success(
             try! VerificationPageMock.response200.make()
@@ -453,7 +570,7 @@ extension VerificationSheetFlowControllerTest {
         )
     }
 
-    fileprivate func popToScreen(
+    func popToScreen(
         mockCollectedFields: [Set<StripeAPI.VerificationPageFieldType>],
         popToField: StripeAPI.VerificationPageFieldType,
         shouldResetViewController: Bool,

@@ -12,9 +12,9 @@ import StripeCryptoOnramp
 
 import XCTest
 
-final class CryptoOnrampExampleUITests: XCTestCase {
+class CryptoOnrampExampleUITestCase: XCTestCase {
 
-    private static let testAddress = Address(
+    fileprivate static let testAddress = Address(
         city: "Hoboken",
         country: "US",
         line1: "123 Fake St.",
@@ -23,7 +23,7 @@ final class CryptoOnrampExampleUITests: XCTestCase {
         state: "NJ"
     )
 
-    private static let refreshedTestAddress = Address(
+    fileprivate static let refreshedTestAddress = Address(
         city: "Jersey City",
         country: "US",
         line1: "456 Fake St.",
@@ -32,7 +32,7 @@ final class CryptoOnrampExampleUITests: XCTestCase {
         state: "NJ"
     )
 
-    private static let euTestAddress = Address(
+    fileprivate static let euTestAddress = Address(
         city: "Athens",
         country: "GR",
         line1: "1 Fake Street",
@@ -41,7 +41,7 @@ final class CryptoOnrampExampleUITests: XCTestCase {
         state: "Attica"
     )
 
-    private static let solanaWalletAddress = "DBhBRyb9y6xyAbhdgpPKqQG2CfXmwHiaKvmzVjDCguXq"
+    fileprivate static let solanaWalletAddress = "DBhBRyb9y6xyAbhdgpPKqQG2CfXmwHiaKvmzVjDCguXq"
 
     var app: XCUIApplication!
 
@@ -52,14 +52,16 @@ final class CryptoOnrampExampleUITests: XCTestCase {
         app.launchEnvironment = ["UITesting": "true"]
         app.launch()
     }
+}
+
+final class CryptoOnrampExistingUserUITests: CryptoOnrampExampleUITestCase {
 
     /// Tests a happy-path flow from log in (existing account) to successful checkout, followed by re-authentication using seamless sign-in.
     func testExistingUserEndToEnd() throws {
         // Step 1: Enter email and password
         waitForLoadingToFinish()
 
-        let emailField = app.textFields["Enter email address"].firstMatch
-        enterText("onramptest2@stripe.com", in: emailField)
+        enterText("onramptest2@stripe.com", inTextField: "Enter email address")
 
         let passwordField = app.secureTextFields["Enter password"].firstMatch
         enterText("testing1234", in: passwordField)
@@ -135,10 +137,13 @@ final class CryptoOnrampExampleUITests: XCTestCase {
         XCTAssertTrue(seamlessSignInButton.exists, "Seamless sign-in (Continue) button should exist")
         seamlessSignInButton.tap()
 
-        // Step 9: We should skip right to the wallet selection screen without the need to enter an OTP code.
+        // Step 9: Skip OTP and terms of service and wait for the wallet selection screen.
         let walletsLabel2 = app.staticTexts["Wallets"].firstMatch
         XCTAssertTrue(walletsLabel2.waitForExistence(timeout: .networkTimeout), "Wallet selection screen should appear")
     }
+}
+
+final class CryptoOnrampNewUserCardUITests: CryptoOnrampExampleUITestCase {
 
     /// Tests the complete new-user flow, including registration, KYC, identity verification, wallet registration, and card checkout.
     @MainActor
@@ -193,8 +198,8 @@ final class CryptoOnrampExampleUITests: XCTestCase {
 
         let cardNumberField = app.textFields["Card number"].firstMatch
         enterText("4242424242424242", in: cardNumberField)
-        enterText("1249", in: app.textFields["expiration date"].firstMatch)
-        enterText("123", in: app.textFields["CVC"].firstMatch)
+        enterText("1249", inTextField: "expiration date")
+        enterText("123", inTextField: "CVC")
 
         let zipField = app.textFields["ZIP"].firstMatch
         if zipField.exists {
@@ -229,6 +234,9 @@ final class CryptoOnrampExampleUITests: XCTestCase {
         let successLabel = app.staticTexts["Purchase successful"].firstMatch
         XCTAssertTrue(successLabel.waitForExistence(timeout: .networkTimeout), "Checkout success screen should appear")
     }
+}
+
+final class CryptoOnrampNewUserACHUITests: CryptoOnrampExampleUITestCase {
 
     /// Tests a complete new-user checkout using a refreshed KYC address and a standard ACH bank payment.
     @MainActor
@@ -293,12 +301,11 @@ final class CryptoOnrampExampleUITests: XCTestCase {
         let updateAddressNavigationBar = app.navigationBars["Update Address"].firstMatch
         XCTAssertTrue(updateAddressNavigationBar.waitForExistence(timeout: .animationTimeout), "Update Address screen should appear")
 
-        let addressLine1Field = app.textFields["Enter your street address"].firstMatch
-        enterText(refreshedAddressLine1 + XCUIKeyboardKey.return.rawValue, in: addressLine1Field)
-        app.typeText(refreshedAddressLine2 + XCUIKeyboardKey.return.rawValue)
-        app.typeText(refreshedCity + XCUIKeyboardKey.return.rawValue)
-        app.typeText(refreshedState + XCUIKeyboardKey.return.rawValue)
-        app.typeText(refreshedPostalCode)
+        enterText(refreshedAddressLine1, inTextField: "Enter your street address", advancingToNextField: true)
+        enterText(refreshedAddressLine2, inTextField: "Apartment, suite, etc.", advancingToNextField: true)
+        enterText(refreshedCity, inTextField: "Enter your city", advancingToNextField: true)
+        enterText(refreshedState, inTextField: "Enter your state or province", advancingToNextField: true)
+        enterText(refreshedPostalCode, inTextField: "Enter your postal code")
         dismissKeyboard()
 
         let submitAddressButton = app.buttons["Submit"].firstMatch
@@ -383,6 +390,9 @@ final class CryptoOnrampExampleUITests: XCTestCase {
         let purchaseSuccessLabel = app.staticTexts["Purchase successful"].firstMatch
         XCTAssertTrue(purchaseSuccessLabel.waitForExistence(timeout: .networkTimeout), "Checkout success screen should appear")
     }
+}
+
+final class CryptoOnrampNewEUUserUITests: CryptoOnrampExampleUITestCase {
 
     /// Tests EU registration and KYC, compliance identifiers, user attestation, identity verification, and wallet verification.
     @MainActor
@@ -408,29 +418,28 @@ final class CryptoOnrampExampleUITests: XCTestCase {
         XCTAssertTrue(kycLabel.waitForExistence(timeout: .networkTimeout), "KYC screen should appear")
         waitForLoadingToFinish()
 
-        let euResidenceButton = app.segmentedControls.buttons["EU"].firstMatch
-        XCTAssertTrue(euResidenceButton.waitForExistence(timeout: .animationTimeout), "EU residence option should exist")
-        euResidenceButton.tap()
+        let residencePicker = app.buttons["kyc_residence_picker"].firstMatch
+        XCTAssertTrue(residencePicker.waitForExistence(timeout: .animationTimeout), "Residence picker should exist")
+        residencePicker.tap()
 
-        let firstNameField = app.textFields["Enter your first name"].firstMatch
-        XCTAssertTrue(firstNameField.waitForExistence(timeout: .animationTimeout), "First name field should exist")
-        firstNameField.tap()
-        app.typeText("Crypto" + XCUIKeyboardKey.return.rawValue)
-        app.typeText("Tester" + XCUIKeyboardKey.return.rawValue)
+        let europeanUnionOption = app.buttons["European Union"].firstMatch
+        XCTAssertTrue(europeanUnionOption.waitForExistence(timeout: .animationTimeout), "European Union residence option should exist")
+        europeanUnionOption.tap()
+
+        enterText("Crypto", inTextField: "Enter your first name", advancingToNextField: true)
+        enterText("Tester", inTextField: "Enter your last name", advancingToNextField: true)
 
         setDateOfBirth()
 
-        let birthCountryField = app.textFields["Country code"].firstMatch
-        XCTAssertTrue(birthCountryField.waitForExistence(timeout: .animationTimeout), "Birth country field should exist")
-        birthCountryField.typeText(country + XCUIKeyboardKey.return.rawValue)
-        app.typeText(city + XCUIKeyboardKey.return.rawValue)
-        app.typeText("GR, MT" + XCUIKeyboardKey.return.rawValue)
-        app.typeText(addressLine1 + XCUIKeyboardKey.return.rawValue)
-        app.typeText(addressLine2 + XCUIKeyboardKey.return.rawValue)
-        app.typeText(city + XCUIKeyboardKey.return.rawValue)
-        app.typeText(state + XCUIKeyboardKey.return.rawValue)
-        app.typeText(postalCode + XCUIKeyboardKey.return.rawValue)
-        app.typeText(country + XCUIKeyboardKey.return.rawValue)
+        enterText(country, in: app.textFields.matching(identifier: "Country code").element(boundBy: 0), advancingToNextField: true)
+        enterText(city, inTextField: "Enter your city of birth", advancingToNextField: true)
+        enterText("GR, MT", inTextField: "Country codes separated by commas", advancingToNextField: true)
+        enterText(addressLine1, inTextField: "Enter your street address", advancingToNextField: true)
+        enterText(addressLine2, inTextField: "Apartment, suite, etc.", advancingToNextField: true)
+        enterText(city, inTextField: "Enter your city", advancingToNextField: true)
+        enterText(state, inTextField: "Enter your state or province", advancingToNextField: true)
+        enterText(postalCode, inTextField: "Enter your postal code", advancingToNextField: true)
+        enterText(country, in: app.textFields.matching(identifier: "Country code").element(boundBy: 1))
 
         let submitKYCButton = app.buttons["Submit"].firstMatch
         XCTAssertTrue(submitKYCButton.isEnabled, "KYC Submit button should be enabled")

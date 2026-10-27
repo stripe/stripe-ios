@@ -14,7 +14,13 @@ import OHHTTPStubsSwift
 import StripeCoreTestUtils
 import XCTest
 
+@MainActor
 class LinkURLGeneratorTests: XCTestCase {
+    override func setUp() {
+        super.setUp()
+        LinkAccountContext.shared.account = nil
+    }
+
     let testParams = LinkURLParams(paymentObject: .link_payment_method,
                                    publishableKey: "pk_test_123",
                                    stripeAccount: "acct_1234",
@@ -117,6 +123,43 @@ class LinkURLGeneratorTests: XCTestCase {
                                            clientAttributionMetadata: STPClientAttributionMetadata(elementsSessionConfigId: "123", paymentIntentCreationFlow: .deferred, paymentMethodSelectionFlow: .automatic))
 
         XCTAssertEqual(params, expectedParams)
+    }
+
+    func testURLParamsUsesConfirmationSourcePaymentUserAgent() async throws {
+        try await assertURLParamsPaymentUserAgent(.paymentElement)
+    }
+
+    func testURLParamsUsesConfirmationSourcePaymentUserAgent_expressCheckoutElement() async throws {
+        try await assertURLParamsPaymentUserAgent(.expressCheckoutElement)
+    }
+
+    private func assertURLParamsPaymentUserAgent(
+        _ confirmationSource: CheckoutController.ConfirmingElement
+    ) async throws {
+        // Given a global product usage set already polluted with the labels PaymentElement
+        // wraps internally (simulating FlowController/EmbeddedPaymentElement self-registration)
+        STPAnalyticsClient.sharedClient.productUsage.formUnion([
+            "PaymentSheet.FlowController",
+            "EmbeddedPaymentElement",
+        ])
+        let config = PaymentSheet.Configuration()
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "USD")) { _, _ in
+            return ""
+        }
+        config.apiClient.publishableKey = "pk_123"
+        let intent = Intent.deferredIntent(intentConfig: intentConfig)
+
+        // When building Link web popup params for a Checkout confirmation
+        let params = try LinkURLGenerator.linkParams(
+            configuration: config,
+            intent: intent,
+            elementsSession: .emptyElementsSession,
+            confirmationSource: confirmationSource
+        )
+
+        // Then paymentUserAgent is built fresh for the confirming element, not the global one
+        XCTAssertEqual(params.paymentUserAgent, confirmationSource.paymentUserAgent)
+        XCTAssertNotEqual(params.paymentUserAgent, PaymentsSDKVariant.paymentUserAgent)
     }
 
     func testURLParamsPaymentMethodOptionsSetupFutureUsage() {

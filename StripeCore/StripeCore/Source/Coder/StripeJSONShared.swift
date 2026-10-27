@@ -17,7 +17,7 @@ internal struct STPCodingKey: CodingKey {
         self.stringValue = stringValue
     }
 
-    init?(
+    init(
         intValue: Int
     ) {
         self.intValue = intValue

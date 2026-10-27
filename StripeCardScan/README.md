@@ -21,12 +21,11 @@ See the [CardImageVerification Example](https://github.com/stripe/stripe-ios/tre
 
 ## Installation
 
-- Cocoapod
-    - `pod install StripeCardScan`
-- SPM
-    - In Xcode, select File > Add Packages… and enter https://github.com/stripe/stripe-ios-spm as the repository URL.
-    - Select the latest version number from our releases page.
-    - Add the `StripeCardScan` product to the target of your app.
+Install with Swift Package Manager:
+
+1. In Xcode, select File > Add Packages… and enter https://github.com/stripe/stripe-ios-spm as the repository URL.
+2. Select the latest version number from our releases page.
+3. Add the `StripeCardScan` product to the target of your app.
 
 ## Integration
 ### Credit Card OCR

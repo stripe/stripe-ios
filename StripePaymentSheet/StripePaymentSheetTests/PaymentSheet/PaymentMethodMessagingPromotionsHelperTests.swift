@@ -11,6 +11,7 @@ import OHHTTPStubsSwift
 @_spi(STP) @testable import StripePaymentSheet
 import XCTest
 
+@MainActor
 final class PaymentMethodMessagingPromotionsHelperTests: APIStubbedTestCase {
 
     override func setUp() {
@@ -18,7 +19,7 @@ final class PaymentMethodMessagingPromotionsHelperTests: APIStubbedTestCase {
         stubPMMEEndpoint()
     }
 
-    private func stubPMMEEndpoint() {
+    nonisolated private func stubPMMEEndpoint() {
         stub { urlRequest in
             urlRequest.url?.host == "ppm.stripe.com"
         } response: { _ in
@@ -63,13 +64,14 @@ final class PaymentMethodMessagingPromotionsHelperTests: APIStubbedTestCase {
             intent: intent,
             configuration: configuration,
             paymentMethodTypes: [.stripe(.affirm)],
+            experimentAnalyticsHelper: analyticsHelper.experimentAnalyticsHelper,
             analyticsHelper: analyticsHelper
         ))
 
         XCTAssertTrue(helper.isInTreatmentGroup)
 
         // Verify exposure was logged exactly once with correct parameters
-        let payloads = analyticsClientV2.loggedAnalyticPayloads(withEventName: PaymentSheetAnalyticsHelper.eventName)
+        let payloads = analyticsClientV2.loggedAnalyticPayloads(withEventName: ExperimentAnalyticsHelper.eventName)
         XCTAssertEqual(payloads.count, 1)
         guard let payload = payloads.first else {
             return XCTFail("Expected exposure event to be logged")
@@ -80,7 +82,7 @@ final class PaymentMethodMessagingPromotionsHelperTests: APIStubbedTestCase {
 
         // Second access should not log again
         _ = helper.isInTreatmentGroup
-        XCTAssertEqual(analyticsClientV2.loggedAnalyticPayloads(withEventName: PaymentSheetAnalyticsHelper.eventName).count, 1)
+        XCTAssertEqual(analyticsClientV2.loggedAnalyticPayloads(withEventName: ExperimentAnalyticsHelper.eventName).count, 1)
     }
 
     func testInit_noAssignment_returnsNil() {
@@ -93,6 +95,7 @@ final class PaymentMethodMessagingPromotionsHelperTests: APIStubbedTestCase {
             intent: intent,
             configuration: configuration,
             paymentMethodTypes: [.stripe(.affirm)],
+            experimentAnalyticsHelper: ExperimentAnalyticsHelper(integrationShape: .paymentSheet),
             analyticsHelper: PaymentSheetAnalyticsHelper._testValue()
         )
 
@@ -124,13 +127,14 @@ final class PaymentMethodMessagingPromotionsHelperTests: APIStubbedTestCase {
             intent: intent,
             configuration: configuration,
             paymentMethodTypes: [.stripe(.affirm)],
+            experimentAnalyticsHelper: analyticsHelper.experimentAnalyticsHelper,
             analyticsHelper: analyticsHelper
         ))
 
         XCTAssertFalse(helper.isInTreatmentGroup)
 
         // Verify exposure was logged exactly once with correct parameters
-        let payloads = analyticsClientV2.loggedAnalyticPayloads(withEventName: PaymentSheetAnalyticsHelper.eventName)
+        let payloads = analyticsClientV2.loggedAnalyticPayloads(withEventName: ExperimentAnalyticsHelper.eventName)
         XCTAssertEqual(payloads.count, 1)
         guard let payload = payloads.first else {
             return XCTFail("Expected exposure event to be logged")
@@ -141,7 +145,7 @@ final class PaymentMethodMessagingPromotionsHelperTests: APIStubbedTestCase {
 
         // Second access should not log again
         _ = helper.isInTreatmentGroup
-        XCTAssertEqual(analyticsClientV2.loggedAnalyticPayloads(withEventName: PaymentSheetAnalyticsHelper.eventName).count, 1)
+        XCTAssertEqual(analyticsClientV2.loggedAnalyticPayloads(withEventName: ExperimentAnalyticsHelper.eventName).count, 1)
     }
 
     func testPromotion_returnsNilForUnsupportedType() async throws {
@@ -159,6 +163,7 @@ final class PaymentMethodMessagingPromotionsHelperTests: APIStubbedTestCase {
             intent: intent,
             configuration: configuration,
             paymentMethodTypes: [],
+            experimentAnalyticsHelper: ExperimentAnalyticsHelper(integrationShape: .paymentSheet),
             analyticsHelper: PaymentSheetAnalyticsHelper._testValue()
         ))
 
@@ -166,6 +171,55 @@ final class PaymentMethodMessagingPromotionsHelperTests: APIStubbedTestCase {
         await helper.fetchTask?.value
 
         XCTAssertNil(helper.promotion(for: .stripe(.cashApp)))
+    }
+
+    func testFetchData_unsupportedCountry_doesNotLogUnexpectedError() async throws {
+        // Given an otherwise eligible treatment session whose country is unsupported by PMM
+        stub { urlRequest in
+            urlRequest.url?.host == "ppm.stripe.com"
+        } response: { _ in
+            let json: [String: Any] = [
+                "error": [
+                    "param": "country",
+                    "message": "unsupported_country: PR",
+                    "type": "invalid_request_error",
+                ],
+            ]
+            return HTTPStubsResponse(jsonObject: json, statusCode: 400, headers: nil)
+        }
+        STPAnalyticsClient.sharedClient._testLogHistory = []
+        defer {
+            STPAnalyticsClient.sharedClient._testLogHistory = []
+        }
+
+        let experimentsData = ExperimentsData(
+            arbId: "arb_123",
+            experimentAssignments: [PaymentMethodMessagingPromotionsExperiment.experimentName: .treatment],
+            allResponseFields: [:]
+        )
+        let elementsSession = STPElementsSession._testValue(countryCode: "PR", experimentsData: experimentsData)
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD")) { _, _ in return "" }
+        let intent = Intent.deferredIntent(intentConfig: intentConfig)
+        let configuration = stubbedConfiguration()
+        let helper = try XCTUnwrap(PaymentMethodMessagingPromotionsHelper(
+            elementsSession: elementsSession,
+            intent: intent,
+            configuration: configuration,
+            paymentMethodTypes: [.stripe(.affirm)],
+            experimentAnalyticsHelper: ExperimentAnalyticsHelper(integrationShape: .paymentSheet),
+            analyticsHelper: PaymentSheetAnalyticsHelper._testValue()
+        ))
+
+        // When fetching promotion content
+        helper.fetchData()
+        await helper.fetchTask?.value
+
+        // Then the expected response produces no unexpected-error analytic and no promotion
+        let unexpectedErrorEvents = STPAnalyticsClient.sharedClient._testLogHistory.filter {
+            $0["event"] as? String == "unexpected_error.paymentmethodmessagingelement"
+        }
+        XCTAssertEqual(unexpectedErrorEvents.count, 0)
+        XCTAssertNil(helper.promotion(for: .stripe(.affirm)))
     }
 
     // MARK: - Analytics
@@ -191,6 +245,7 @@ final class PaymentMethodMessagingPromotionsHelperTests: APIStubbedTestCase {
             intent: intent,
             configuration: configuration,
             paymentMethodTypes: [.stripe(.affirm)],
+            experimentAnalyticsHelper: analyticsHelper.experimentAnalyticsHelper,
             analyticsHelper: analyticsHelper
         ))
 
@@ -222,6 +277,7 @@ final class PaymentMethodMessagingPromotionsHelperTests: APIStubbedTestCase {
             intent: intent,
             configuration: configuration,
             paymentMethodTypes: [.stripe(.affirm)],
+            experimentAnalyticsHelper: analyticsHelper.experimentAnalyticsHelper,
             analyticsHelper: analyticsHelper
         ))
 
@@ -253,6 +309,7 @@ final class PaymentMethodMessagingPromotionsHelperTests: APIStubbedTestCase {
             intent: intent,
             configuration: configuration,
             paymentMethodTypes: [.stripe(.affirm)],
+            experimentAnalyticsHelper: analyticsHelper.experimentAnalyticsHelper,
             analyticsHelper: analyticsHelper
         ))
 
@@ -288,6 +345,7 @@ final class PaymentMethodMessagingPromotionsHelperTests: APIStubbedTestCase {
             intent: intent,
             configuration: configuration,
             paymentMethodTypes: [],
+            experimentAnalyticsHelper: analyticsHelper.experimentAnalyticsHelper,
             analyticsHelper: analyticsHelper
         ))
 
@@ -298,5 +356,39 @@ final class PaymentMethodMessagingPromotionsHelperTests: APIStubbedTestCase {
         guard let event = displayedEvents.first else { return }
         XCTAssertEqual(event["displayed_successfully"] as? Bool, false)
         XCTAssertEqual(event["duration"] as? Double, 0)
+    }
+
+    func testLogDisplayedAnalytic_controlGroup_doesNotLog() throws {
+        // Given a helper assigned to the control group
+        let analyticsClient = STPTestingAnalyticsClient()
+        let experimentsData = ExperimentsData(
+            arbId: "arb_123",
+            experimentAssignments: [PaymentMethodMessagingPromotionsExperiment.experimentName: .control],
+            allResponseFields: [:]
+        )
+        let elementsSession = STPElementsSession._testValue(experimentsData: experimentsData)
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD")) { _, _ in return "" }
+        let intent = Intent.deferredIntent(intentConfig: intentConfig)
+        let configuration = stubbedConfiguration()
+        let analyticsHelper = PaymentSheetAnalyticsHelper(
+            integrationShape: .complete,
+            configuration: configuration,
+            analyticsClient: analyticsClient
+        )
+        let helper = try XCTUnwrap(PaymentMethodMessagingPromotionsHelper(
+            elementsSession: elementsSession,
+            intent: intent,
+            configuration: configuration,
+            paymentMethodTypes: [.stripe(.affirm)],
+            experimentAnalyticsHelper: analyticsHelper.experimentAnalyticsHelper,
+            analyticsHelper: analyticsHelper
+        ))
+
+        // When a control UI call site reports that it used fallback content
+        helper.logDisplayedAnalytic(displayedSuccessfully: false)
+
+        // Then no PMM display attempt is logged
+        let displayedEvents = analyticsClient._testLogHistory.filter { $0["event"] as? String == "payment_method_messaging_displayed" }
+        XCTAssertEqual(displayedEvents.count, 0)
     }
 }

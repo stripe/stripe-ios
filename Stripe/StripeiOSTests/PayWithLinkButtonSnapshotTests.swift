@@ -96,6 +96,7 @@ extension PayWithLinkButtonSnapshotTests {
         var redactedPhoneNumber: String?
         let sessionState: PaymentSheetLinkAccount.SessionState
         let consumerSessionClientSecret: String?
+        let linkSessionKey: String?
     }
 
     fileprivate func makeAccountStub(email: String, isRegistered: Bool) -> LinkAccountStub {
@@ -104,7 +105,8 @@ extension PayWithLinkButtonSnapshotTests {
             isRegistered: isRegistered,
             redactedPhoneNumber: "+1********55",
             sessionState: .verified,
-            consumerSessionClientSecret: nil
+            consumerSessionClientSecret: nil,
+            linkSessionKey: nil
         )
     }
 

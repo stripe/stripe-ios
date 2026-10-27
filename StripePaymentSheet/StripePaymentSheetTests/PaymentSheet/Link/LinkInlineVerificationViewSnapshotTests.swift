@@ -48,9 +48,15 @@ class LinkInlineVerificationViewSnapshotTests: STPSnapshotTestCase {
     }
 
     @available(iOS 16.0, *)
+    func testLinkInlineVerificationView_RightToLeftWithError() {
+        verify(startVerificationError: makeStartVerificationRateLimitError(), rightToLeft: true)
+    }
+
+    @available(iOS 16.0, *)
     private func verify(
         displayablePaymentDetails: ConsumerSession.DisplayablePaymentDetails? = nil,
         startVerificationError: Error? = nil,
+        rightToLeft: Bool = false,
         file: StaticString = #filePath,
         line: UInt = #line
     ) {
@@ -66,7 +72,10 @@ class LinkInlineVerificationViewSnapshotTests: STPSnapshotTestCase {
             viewModel: viewModel,
             onComplete: { }
         )
-        let vc = UIHostingController(rootView: verificationView)
+        let rootView = rightToLeft
+            ? AnyView(verificationView.environment(\.layoutDirection, .rightToLeft))
+            : AnyView(verificationView)
+        let vc = UIHostingController(rootView: rootView)
 
         // Need to host the SwiftUI view in a window for iOSSnapshotTestCase to work:
         let window = UIWindow(frame: frame)

@@ -346,13 +346,9 @@ extension SavedPaymentMethodManagerTests {
                 exp.fulfill()
             }
             return HTTPStubsResponse(
-                jsonObject: [
+                jsonObject: CheckoutTestHelpers.makeSessionJSON([
                     "session_id": checkoutSessionId,
-                    "livemode": false,
-                    "mode": "payment",
-                    "payment_status": "unpaid",
-                    "payment_method_types": ["card"],
-                ],
+                ]),
                 statusCode: 200,
                 headers: nil
             )

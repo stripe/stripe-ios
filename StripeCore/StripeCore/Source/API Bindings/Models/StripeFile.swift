@@ -26,6 +26,8 @@ import Foundation
         case identityDocument = "identity_document"
         /// Identity document file used only internally.
         case identityPrivate = "identity_private"
+        /// Additional crypto onramp KYC document, used only internally.
+        case cryptoOnrampKYCDocument = "crypto_onramp_kyc_document"
         /// Not a valid purpose – only used for `SafeEnumCodable` conformance.
         case unparsable = ""
     }

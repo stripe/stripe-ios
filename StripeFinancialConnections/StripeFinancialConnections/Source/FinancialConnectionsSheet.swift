@@ -98,8 +98,9 @@ final public class FinancialConnectionsSheet {
     ///
     /// Refer to `FinancialConnectionsEvent.Name` for a list of possible event types.
     ///
-    /// Every `FinancialConnectionsEvent` can carry additional metadata,
+    /// Every event includes the `financialConnectionsSessionId` and can carry additional metadata,
     /// the content of which can vary based on the specific type of occurring event.
+    /// Events begin after session initialization. Earlier failures are reported through the completion callback.
     public var onEvent: ((FinancialConnectionsEvent) -> Void)?
 
     /// The APIClient instance used to make requests to Stripe
@@ -126,6 +127,13 @@ final public class FinancialConnectionsSheet {
 
     /// An existing consumer, if available.
     @_spi(STP) public var existingConsumer: StripeCore.FinancialConnectionsConsumer?
+
+    /// Whether the Link Account Session requests merchant data permissions.
+    @_spi(STP) public var hasRequestedDataPermissions: Bool = false
+
+    /// Evidence that the customer already accepted Financial Connections consent text
+    /// collected by the merchant's own UI.
+    var preCollectedConsent: FinancialConnectionsPreCollectedConsent?
 
     /// Analytics client to use for logging analytics
     @_spi(STP) public let analyticsClient: STPAnalyticsClientProtocol
@@ -192,6 +200,20 @@ final public class FinancialConnectionsSheet {
     }
 
     /// Presents a sheet for a customer to connect their financial account. This API surfaces details on the connected bank account token.
+    /// - Parameters:
+    ///   - presentingViewController: The view controller to present the financial connections sheet.
+    ///   - preCollectedConsent: Evidence that the customer already accepted Financial Connections consent text collected by your own UI. When provided, Financial Connections may skip its own consent pane.
+    ///   - completion: The result of the financial connections session after the financial connections sheet is dismissed, along with the bank account token.
+    public func presentForToken(
+        from presentingViewController: UIViewController,
+        preCollectedConsent: FinancialConnectionsPreCollectedConsent?,
+        completion: @escaping (TokenResult) -> Void
+    ) {
+        self.preCollectedConsent = preCollectedConsent
+        presentForToken(from: presentingViewController, completion: completion)
+    }
+
+    /// Presents a sheet for a customer to connect their financial account. This API surfaces details on the connected bank account token.
     /// - Parameter presentingViewController: The view controller to present the financial connections sheet.
     /// - Returns: The result of the financial connections session after the financial connections sheet is dismissed, along with the bank account token.
     @MainActor
@@ -201,6 +223,20 @@ final public class FinancialConnectionsSheet {
                 continuation.resume(returning: result)
             }
         }
+    }
+
+    /// Presents a sheet for a customer to connect their financial account. This API surfaces details on the connected bank account token.
+    /// - Parameters:
+    ///   - presentingViewController: The view controller to present the financial connections sheet.
+    ///   - preCollectedConsent: Evidence that the customer already accepted Financial Connections consent text collected by your own UI. When provided, Financial Connections may skip its own consent pane.
+    /// - Returns: The result of the financial connections session after the financial connections sheet is dismissed, along with the bank account token.
+    @MainActor
+    public func presentForToken(
+        from presentingViewController: UIViewController,
+        preCollectedConsent: FinancialConnectionsPreCollectedConsent?
+    ) async -> TokenResult {
+        self.preCollectedConsent = preCollectedConsent
+        return await presentForToken(from: presentingViewController)
     }
 
     /**
@@ -250,6 +286,19 @@ final public class FinancialConnectionsSheet {
                                     .unknown(debugDescription: "\(errorDescription)\n\n\(sessionInfo)")
                             )
                         )
+                    case .paymentDetails(let id):
+                        let errorDescription = "Payment Details flow is not currently supported via this interface."
+                        let sessionInfo =
+                            """
+                            paymentDetailsId=\(id)
+                            """
+
+                        completion(
+                            .failed(
+                                error: FinancialConnectionsSheetError
+                                    .unknown(debugDescription: "\(errorDescription)\n\n\(sessionInfo)")
+                            )
+                        )
                     }
                 case .canceled:
                     completion(.canceled)
@@ -258,6 +307,22 @@ final public class FinancialConnectionsSheet {
                 }
             }
         )
+    }
+
+    /**
+     Presents a sheet for a customer to connect their financial account.
+     - Parameters:
+       - presentingViewController: The view controller to present the financial connections sheet.
+       - preCollectedConsent: Evidence that the customer already accepted Financial Connections consent text collected by your own UI. When provided, Financial Connections may skip its own consent pane.
+       - completion: Called with the result of the financial connections session after the financial connections sheet is dismissed.
+     */
+    public func present(
+        from presentingViewController: UIViewController,
+        preCollectedConsent: FinancialConnectionsPreCollectedConsent?,
+        completion: @escaping (Result) -> Void
+    ) {
+        self.preCollectedConsent = preCollectedConsent
+        present(from: presentingViewController, completion: completion)
     }
 
     /// Presents a sheet for a customer to connect their financial account.
@@ -270,6 +335,20 @@ final public class FinancialConnectionsSheet {
                 continuation.resume(returning: result)
             }
         }
+    }
+
+    /// Presents a sheet for a customer to connect their financial account.
+    /// - Parameters:
+    ///   - presentingViewController: The view controller to present the financial connections sheet.
+    ///   - preCollectedConsent: Evidence that the customer already accepted Financial Connections consent text collected by your own UI. When provided, Financial Connections may skip its own consent pane.
+    /// - Returns: The result of the financial connections session after the financial connections sheet is dismissed.
+    @MainActor
+    public func present(
+        from presentingViewController: UIViewController,
+        preCollectedConsent: FinancialConnectionsPreCollectedConsent?
+    ) async -> Result {
+        self.preCollectedConsent = preCollectedConsent
+        return await present(from: presentingViewController)
     }
 
     @_spi(STP) public func present(
@@ -317,6 +396,7 @@ final public class FinancialConnectionsSheet {
         }
 
         var financialConnectionsApiClient: any FinancialConnectionsAPI = FinancialConnectionsAsyncAPIClient(apiClient: apiClient)
+        financialConnectionsApiClient.hasRequestedDataPermissions = hasRequestedDataPermissions
 
         if let existingConsumer {
             let verificationSessions = existingConsumer.verificationSessions.map { verificationSession in
@@ -344,6 +424,7 @@ final public class FinancialConnectionsSheet {
             returnURL: returnURL,
             configuration: configuration,
             elementsSessionContext: elementsSessionContext,
+            preCollectedConsent: preCollectedConsent,
             publishableKey: apiClient.publishableKey,
             stripeAccount: apiClient.stripeAccount
         )

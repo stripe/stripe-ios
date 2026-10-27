@@ -48,7 +48,7 @@ public class PaymentSheet {
         case paymentIntentClientSecret(String)
         case setupIntentClientSecret(String)
         case deferredIntent(PaymentSheet.IntentConfiguration)
-        case checkout(Checkout)
+        case checkout(CheckoutController)
 
         var intentConfig: PaymentSheet.IntentConfiguration? {
             switch self {
@@ -190,7 +190,7 @@ public class PaymentSheet {
                 }
             }
             self.bottomSheetViewController.setViewControllers([self.loadingViewController])
-            presentingViewController.presentAsBottomSheet(bottomSheetViewController, appearance: configuration.appearance)
+            presentingViewController.presentAsSheet(bottomSheetViewController)
         }
     }
 
@@ -277,21 +277,22 @@ public class PaymentSheet {
     /// Loading View Controller
     lazy var loadingViewController = LoadingViewController(
         delegate: self,
-        appearance: configuration.appearance,
-        isTestMode: configuration.apiClient.isTestmode
+        appearance: configuration.appearance
     )
 
     /// The STPPaymentHandler instance
     lazy var paymentHandler: STPPaymentHandler = { STPPaymentHandler(apiClient: configuration.apiClient) }()
 
     /// The parent view controller to present
-    lazy var bottomSheetViewController: BottomSheetViewController = {
-        let isTestMode = configuration.apiClient.isTestmode
+    lazy var bottomSheetViewController: any PaymentSheetContainer = {
+        // The playground can opt in while complete PaymentSheet remains outside the server-controlled rollout.
+        let usesNativeSheet = NativeSheetFeatureFlags.nativeSheetEnabledOverride == true
+            && UIDevice.current.userInterfaceIdiom == .phone
 
-        let vc = BottomSheetViewController(
+        let vc = PaymentSheetContainerFactory.make(
             contentViewController: loadingViewController,
             appearance: configuration.appearance,
-            isTestMode: isTestMode,
+            usesNativeSheet: usesNativeSheet,
             didCancelNative3DS2: { [weak self] in
                 self?.paymentHandler.cancel3DS2ChallengeFlow()
             }
@@ -311,14 +312,14 @@ public class PaymentSheet {
         loadResult: PaymentSheetLoader.LoadResult,
         previousPaymentOption: PaymentOption?
     ) -> PaymentSheetViewControllerProtocol {
-        let checkout: Checkout? = {
+        let checkoutBillingAddressUpdater: CheckoutSessionBillingAddressUpdater? = {
             guard case .checkout(let checkout) = mode else {
                 return nil
             }
             return checkout
         }()
         persistedSelectionSnapshotBeforePresentation = .init(
-            customerID: configuration.customer?.id,
+            customerID: loadResult.customerProvider.customerID,
             availableSavedPaymentMethods: loadResult.savedPaymentMethods
         )
         switch loadResult.paymentMethodOrientation {
@@ -337,7 +338,7 @@ public class PaymentSheet {
                 loadResult: loadResult,
                 isFlowController: false,
                 analyticsHelper: analyticsHelper,
-                checkout: checkout,
+                checkoutBillingAddressUpdater: checkoutBillingAddressUpdater,
                 previousPaymentOption: previousPaymentOption
             )
             vc.paymentSheetDelegate = self
@@ -397,8 +398,7 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
                     } else {
                         // We dismissed the Payment Sheet to show the Apple Pay sheet
                         // Bring it back if it didn't succeed
-                        presentingViewController?.presentAsBottomSheet(self.bottomSheetViewController,
-                                                                       appearance: self.configuration.appearance)
+                        presentingViewController?.presentAsSheet(self.bottomSheetViewController)
                     }
                     completion(result, deferredIntentConfirmationType)
                 }
@@ -475,6 +475,7 @@ internal protocol PaymentSheetViewControllerProtocol: UIViewController, BottomSh
     func clearTextFields()
 }
 
+@MainActor
 protocol PaymentSheetViewControllerDelegate: AnyObject {
     func paymentSheetViewControllerShouldConfirm(
         _ paymentSheetViewController: PaymentSheetViewControllerProtocol,

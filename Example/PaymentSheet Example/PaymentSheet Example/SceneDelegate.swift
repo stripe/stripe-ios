@@ -56,6 +56,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         windowScene.windows.first!.rootViewController = navController
     }
 
+    func launchCheckoutElements(windowScene: UIWindowScene) {
+        let settings = ProcessInfo.processInfo.environment["STP_CHECKOUT_PLAYGROUND_SETTINGS"]
+            .flatMap { Data(base64Encoded: $0) }
+            .flatMap { try? JSONDecoder().decode(CheckoutPlayground.Settings.self, from: $0) }
+        let hostingController = UIHostingController(rootView: CheckoutPlaygroundView(settings: settings))
+        let navigationController = UINavigationController(rootViewController: hostingController)
+        windowScene.windows.first!.rootViewController = navigationController
+    }
+
     func scene(
         _ scene: UIScene,
         willConnectTo session: UISceneSession,
@@ -83,6 +92,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             launchWith(base64String: playgroundData, windowScene: windowScene)
         } else if let playgroundData = ProcessInfo.processInfo.environment["STP_CUSTOMERSHEET_PLAYGROUND_DATA"] {
             launchCustomerSheetWith(base64String: playgroundData, windowScene: windowScene)
+        } else if ProcessInfo.processInfo.environment["STP_CHECKOUT_ELEMENTS"] == "true" {
+            launchCheckoutElements(windowScene: windowScene)
         }
     }
 

@@ -5,10 +5,16 @@
 //  Created by Joyce Qin on 7/22/26.
 //
 
+@_spi(STP) import StripeCore
+import UIKit
+
 /// Handles Checkout mutations requested by an ExpressCheckoutElement.
 @MainActor
 protocol ExpressCheckoutElementDelegate: AnyObject {
-    // TODO: Add delegate methods for Apple Pay and Link button taps
+    func expressCheckoutElementShouldConfirm(
+        _ paymentMethod: ExpressCheckoutElement.PaymentMethod,
+        presentationWindow: UIWindow?
+    ) async -> CheckoutController.ConfirmResult
 }
 
 /// An express checkout element backed by a Checkout Session.
@@ -32,12 +38,25 @@ public final class ExpressCheckoutElement {
 
     init(
         sessionSource: CheckoutSessionSource,
-        configuration: Checkout.Configuration,
-        delegate: ExpressCheckoutElementDelegate
+        configuration: ExpressCheckoutElement.Configuration,
+        delegate: ExpressCheckoutElementDelegate,
+        apiClient: STPAPIClient
     ) {
-        let uiView = ExpressCheckoutElementUIView(session: sessionSource.initialSession, configuration: configuration, delegate: delegate)
-        let viewModel = ExpressCheckoutElementViewModel(sessionSource: sessionSource, configuration: configuration, uiView: uiView)
+        STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: ExpressCheckoutElement.self)
+        let uiView = ExpressCheckoutElementUIView(
+            session: sessionSource.initialSession,
+            configuration: configuration,
+            delegate: delegate,
+            apiClient: apiClient
+        )
+        let viewModel = ExpressCheckoutElementViewModel(sessionSource: sessionSource, uiView: uiView)
         self.uiView = uiView
         self.view = ExpressCheckoutElementView(viewModel: viewModel)
     }
+}
+
+// MARK: - STPAnalyticsProtocol
+/// :nodoc:
+@_spi(STP) extension ExpressCheckoutElement: STPAnalyticsProtocol {
+    @_spi(STP) public nonisolated static let stp_analyticsIdentifier: String = "ExpressCheckoutElement"
 }

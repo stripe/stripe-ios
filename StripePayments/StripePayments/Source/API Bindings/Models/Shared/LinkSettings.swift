@@ -42,8 +42,10 @@ import Foundation
     @_spi(STP) public let linkDefaultOptIn: LinkDefaultOptIn?
     @_spi(STP) public let linkEnableDisplayableDefaultValuesInECE: Bool?
     @_spi(STP) public let linkShowPreferDebitCardHint: Bool?
+    @_spi(STP) public let mfaAuthFlowEnabled: Bool?
     @_spi(STP) public let attestationStateSyncEnabled: Bool?
     @_spi(STP) public let linkSupportedPaymentMethodsOnboardingEnabled: [String]
+    @_spi(STP) public let linkPaymentMethodBankAccountDataConsent: String?
 
     @_spi(STP) public let allResponseFields: [AnyHashable: Any]
 
@@ -66,8 +68,10 @@ import Foundation
         linkDefaultOptIn: LinkDefaultOptIn?,
         linkEnableDisplayableDefaultValuesInECE: Bool?,
         linkShowPreferDebitCardHint: Bool?,
+        mfaAuthFlowEnabled: Bool?,
         attestationStateSyncEnabled: Bool?,
         linkSupportedPaymentMethodsOnboardingEnabled: [String],
+        linkPaymentMethodBankAccountDataConsent: String?,
         allResponseFields: [AnyHashable: Any]
     ) {
         self.brand = brand
@@ -84,8 +88,10 @@ import Foundation
         self.linkDefaultOptIn = linkDefaultOptIn
         self.linkEnableDisplayableDefaultValuesInECE = linkEnableDisplayableDefaultValuesInECE
         self.linkShowPreferDebitCardHint = linkShowPreferDebitCardHint
+        self.mfaAuthFlowEnabled = mfaAuthFlowEnabled
         self.attestationStateSyncEnabled = attestationStateSyncEnabled
         self.linkSupportedPaymentMethodsOnboardingEnabled = linkSupportedPaymentMethodsOnboardingEnabled
+        self.linkPaymentMethodBankAccountDataConsent = linkPaymentMethodBankAccountDataConsent
         self.allResponseFields = allResponseFields
     }
 
@@ -114,6 +120,7 @@ import Foundation
         let linkDefaultOptIn = (response["link_default_opt_in"] as? String).flatMap { LinkDefaultOptIn(rawValue: $0) }
         let linkEnableDisplayableDefaultValuesInECE = response["link_enable_displayable_default_values_in_ece"] as? Bool ?? false
         let linkShowPreferDebitCardHint = response["link_show_prefer_debit_card_hint"] as? Bool ?? false
+        let mfaAuthFlowEnabled = response["link_mobile_enable_mfa_auth_flow"] as? Bool ?? false
         let attestationStateSyncEnabled = response["link_mobile_attestation_state_sync_enabled"] as? Bool
 
         let linkIncentivesEnabled = UserDefaults.standard.bool(forKey: "FINANCIAL_CONNECTIONS_INSTANT_DEBITS_INCENTIVES")
@@ -126,6 +133,9 @@ import Foundation
         }
 
         let linkSupportedPaymentMethodsOnboardingEnabled = response["link_supported_payment_methods_onboarding_enabled"] as? [String] ?? []
+
+        let linkPaymentSessionContext = response["link_payment_session_context"] as? [AnyHashable: Any]
+        let linkPaymentMethodBankAccountDataConsent = linkPaymentSessionContext?["link_payment_method_bank_account_data_consent"] as? String
 
         // Collect the flags for the URL generator
         let linkFlags = response.reduce(into: [String: Bool]()) { partialResult, element in
@@ -149,8 +159,10 @@ import Foundation
             linkDefaultOptIn: linkDefaultOptIn,
             linkEnableDisplayableDefaultValuesInECE: linkEnableDisplayableDefaultValuesInECE,
             linkShowPreferDebitCardHint: linkShowPreferDebitCardHint,
+            mfaAuthFlowEnabled: mfaAuthFlowEnabled,
             attestationStateSyncEnabled: attestationStateSyncEnabled,
             linkSupportedPaymentMethodsOnboardingEnabled: linkSupportedPaymentMethodsOnboardingEnabled,
+            linkPaymentMethodBankAccountDataConsent: linkPaymentMethodBankAccountDataConsent,
             allResponseFields: response
         ) as? Self
     }

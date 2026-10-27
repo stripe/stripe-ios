@@ -195,7 +195,8 @@ struct LinkControllerDemoView: View {
                 configuration: .init(
                     supportedPaymentMethodTypes: Array(configuration.supportedPaymentMethodTypes),
                     paymentMethodTypes: configuration.paymentMethodTypes,
-                    merchantDisplayName: "Example, Inc."
+                    merchantDisplayName: "Example, Inc.",
+                    financialConnectionsPermissions: configuration.financialConnectionsPermissions
                 )
             )
 

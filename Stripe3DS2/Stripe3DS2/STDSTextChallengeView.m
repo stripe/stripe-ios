@@ -20,11 +20,11 @@ NS_ASSUME_NONNULL_BEGIN
 static const CGFloat kTextFieldMargin = (CGFloat)8.0;
 
 - (CGRect)textRectForBounds:(CGRect)bounds {
-    return CGRectInset(bounds, kTextFieldMargin, 0);
+    return CGRectInset([super textRectForBounds:bounds], kTextFieldMargin, 0);
 }
 
 - (CGRect)editingRectForBounds:(CGRect)bounds {
-    return CGRectInset(bounds, kTextFieldMargin, 0);
+    return CGRectInset([super editingRectForBounds:bounds], kTextFieldMargin, 0);
 }
 
 - (nullable NSString *)accessibilityIdentifier {

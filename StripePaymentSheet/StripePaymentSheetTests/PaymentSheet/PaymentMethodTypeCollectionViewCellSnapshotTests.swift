@@ -9,11 +9,35 @@ import Foundation
 import StripeCoreTestUtils
 @_spi(STP) import StripeUICore
 import UIKit
+import XCTest
 
 @testable@_spi(STP) import StripePaymentSheet
 
 // @iOS26
 class PaymentMethodTypeCollectionViewCellSnapshotTests: STPSnapshotTestCase {
+
+    func test_rightToLeftLayoutStartsWithFirstPaymentMethodAtLeadingEdge() {
+        let delegate = PaymentMethodTypeCollectionViewTestDelegate()
+        let sut = PaymentMethodTypeCollectionView(
+            paymentMethodTypes: [.stripe(.card), .stripe(.cashApp), .stripe(.afterpayClearpay)],
+            appearance: .default,
+            incentive: nil,
+            delegate: delegate
+        )
+        let containerView = UIView()
+        containerView.addAndPinSubview(sut)
+        let window = host(
+            containerView,
+            size: CGSize(width: 320, height: sut.intrinsicContentSize.height),
+            traits: UITraitCollection(layoutDirection: .rightToLeft)
+        )
+        sut.reloadData()
+        sut.layoutIfNeeded()
+
+        XCTAssertEqual(sut.effectiveUserInterfaceLayoutDirection, .rightToLeft)
+        STPSnapshotVerifyView(containerView)
+        withExtendedLifetime(window) {}
+    }
 
     func test_withPromoBadge() {
         let appearance: PaymentSheet.Appearance = .default.applyingLiquidGlassIfPossible()
@@ -54,6 +78,31 @@ class PaymentMethodTypeCollectionViewCellSnapshotTests: STPSnapshotTestCase {
         )
         STPSnapshotVerifyView(view, identifier: identifier, file: file, line: line)
     }
+}
+
+private final class PaymentMethodTypeCollectionViewTestDelegate: PaymentMethodTypeCollectionViewDelegate {
+    func didUpdateSelection(_ paymentMethodTypeCollectionView: PaymentMethodTypeCollectionView) {}
+}
+
+private func host(
+    _ view: UIView,
+    size: CGSize,
+    traits: UITraitCollection
+) -> UIWindow {
+    let rootViewController = UIViewController()
+    let contentViewController = UIViewController()
+    rootViewController.addChild(contentViewController)
+    rootViewController.setOverrideTraitCollection(traits, forChild: contentViewController)
+
+    let window = UIWindow(frame: CGRect(origin: .zero, size: size))
+    window.rootViewController = rootViewController
+    window.isHidden = false
+
+    contentViewController.view = view
+    rootViewController.view.addAndPinSubview(view)
+    contentViewController.didMove(toParent: rootViewController)
+    window.layoutIfNeeded()
+    return window
 }
 
 private class CellWrapperView: UIView {

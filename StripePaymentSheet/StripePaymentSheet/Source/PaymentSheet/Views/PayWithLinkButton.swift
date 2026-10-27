@@ -35,6 +35,7 @@ final class PayWithLinkButton: UIControl {
         let isRegistered: Bool
         let sessionState: PaymentSheetLinkAccount.SessionState
         let consumerSessionClientSecret: String?
+        let linkSessionKey: String?
     }
 
     /// Link account of the current user.
@@ -77,6 +78,7 @@ final class PayWithLinkButton: UIControl {
     override var isEnabled: Bool {
         didSet {
             applyStyle()
+            updateAccessibilityContent()
         }
     }
 
@@ -85,6 +87,8 @@ final class PayWithLinkButton: UIControl {
     }
 
     private let titleBaseFont: UIFont = UIFont.systemFont(ofSize: 16, weight: .medium)
+    private var isCompact = false
+    private lazy var compactLogoView = makeLogoView()
 
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
@@ -142,6 +146,15 @@ final class PayWithLinkButton: UIControl {
     }()
 
     private lazy var emailLogoView = makeLogoView()
+    private lazy var compactEmailLogoView: UIImageView = {
+        let imageView = UIImageView(image: Image.link_mark_bw.makeImage(template: false))
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            imageView.widthAnchor.constraint(equalToConstant: Constants.logoSize.height),
+            imageView.heightAnchor.constraint(equalToConstant: Constants.logoSize.height),
+        ])
+        return imageView
+    }()
     private lazy var emailSeparatorView: UIView = Self.makeSeparatorView()
     private lazy var emailStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [
@@ -233,6 +246,11 @@ final class PayWithLinkButton: UIControl {
     }
 
     override func layoutSubviews() {
+        let updatedIsCompact = bounds.width < Constants.defaultSize.width
+        if updatedIsCompact != isCompact {
+            isCompact = updatedIsCompact
+            updateUI()
+        }
         super.layoutSubviews()
         applyCornerRadius()
     }
@@ -347,8 +365,11 @@ private extension PayWithLinkButton {
         addSubview(payWithStackView)
         addSubview(emailStackView)
         addSubview(cardStackView)
+        addSubview(compactLogoView)
 
         NSLayoutConstraint.activate([
+            compactLogoView.centerXAnchor.constraint(equalTo: centerXAnchor),
+            compactLogoView.centerYAnchor.constraint(equalTo: centerYAnchor),
             payWithStackView.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor),
             payWithStackView.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor),
             payWithStackView.centerXAnchor.constraint(equalTo: layoutMarginsGuide.centerXAnchor),
@@ -369,6 +390,13 @@ private extension PayWithLinkButton {
     }
 
     func updateUI() {
+        compactLogoView.isHidden = true
+        let emailLogo = isCompact ? compactEmailLogoView : emailLogoView
+        if emailStackView.arrangedSubviews.first !== emailLogo {
+            emailStackView.arrangedSubviews.first?.removeFromSuperview()
+            emailStackView.insertArrangedSubview(emailLogo, at: 0)
+            emailStackView.setCustomSpacing(isCompact ? 10 : 12, after: emailLogo)
+        }
         switch linkAccountState {
         case .hasCard(let last4, let brand):
             let cardImage = STPImageLibrary.cardBrandImage(for: brand)
@@ -390,10 +418,11 @@ private extension PayWithLinkButton {
             emailStackView.isHidden = false
             payWithStackView.isHidden = true
         case .noValidAccount:
+            compactLogoView.isHidden = !isCompact
             emailStackView.isHidden = true
             cardStackView.isHidden = true
-            payWithStackView.isHidden = false
-            payWithLinkView.isHidden = false
+            payWithStackView.isHidden = isCompact
+            payWithLinkView.isHidden = isCompact
         }
         updateAccessibilityContent()
     }
@@ -402,6 +431,7 @@ private extension PayWithLinkButton {
         payWithLinkView.attributedText = makePayWithLinkAttributedText(for: payWithLinkView.font)
         updateLogoView(emailLogoView)
         updateLogoView(cardLogoView)
+        updateLogoView(compactLogoView)
         updateAccessibilityContent()
         setNeedsLayout()
     }
@@ -433,6 +463,7 @@ private extension PayWithLinkButton {
         emailStackView.tintColor = foregroundColor
         payWithStackView.tintColor = foregroundColor
         cardStackView.tintColor = foregroundColor
+        compactLogoView.tintColor = foregroundColor
         emailLabel.textColor = foregroundColor
 
         // Background
@@ -536,7 +567,8 @@ private func makeAccountStub(email: String, isRegistered: Bool, lastPM: LinkPMDi
         redactedPhoneNumber: nil,
         isRegistered: isRegistered,
         sessionState: .verified,
-        consumerSessionClientSecret: nil
+        consumerSessionClientSecret: nil,
+        linkSessionKey: nil
     )
 }
 

@@ -70,6 +70,11 @@ extension PaymentSheetFormFactory {
         return makeMandate(mandateText: mandateText)
     }
 
+    func makeAlipayMandate() -> SimpleMandateElement {
+        let mandateText = String(format: String.Localized.alipay_mandate_text, configuration.merchantDisplayName)
+        return makeMandate(mandateText: mandateText)
+    }
+
     func makeRevolutPayMandate() -> SimpleMandateElement {
         let mandateText = String(format: String.Localized.revolut_pay_mandate_text, configuration.merchantDisplayName)
         return makeMandate(mandateText: mandateText)
@@ -98,6 +103,35 @@ extension PaymentSheetFormFactory {
 
     func makeTwintMandate() -> SimpleMandateElement {
         let mandateText: String = String(format: String.Localized.twint_mandate_text, configuration.merchantDisplayName)
+        return makeMandate(mandateText: mandateText)
+    }
+
+    /// Builds the linked merchant-of-record disclosure for Nigerian payment methods.
+    func makeNigerianPaymentMethodMandate(terms: String? = nil) -> SimpleMandateElement {
+        let mandateText = STPStringUtils.applyLinksToString(
+            template: terms ?? String.Localized.nigerian_payment_method_terms,
+            links: ["terms": URL(string: "https://d37ugbyn3rpeym.cloudfront.net/docs/GSSL%20-%20Buyer%20T&Cs%20(Final).pdf")!]
+        )
+        return makeMandate(mandateText: mandateText)
+    }
+
+    func makeGCashMandate() -> SimpleMandateElement {
+        let mandateText = String(format: String.Localized.gcash_mandate_text, configuration.merchantDisplayName)
+        return makeMandate(mandateText: mandateText)
+    }
+    func makeTouchNGoMandate() -> SimpleMandateElement {
+        let mandateText = String(format: String.Localized.touch_n_go_mandate_text, configuration.merchantDisplayName)
+        return makeMandate(mandateText: mandateText)
+    }
+    func makeTrueMoneyMandate() -> SimpleMandateElement {
+        let mandateText = String(format: String.Localized.truemoney_mandate_text, configuration.merchantDisplayName)
+        return makeMandate(mandateText: mandateText)
+    }
+    func makeKoreanPaymentMethodMandate() -> SimpleMandateElement {
+        let mandateText = String(
+            format: String.Localized.korean_payment_method_mandate_text,
+            configuration.merchantDisplayName
+        )
         return makeMandate(mandateText: mandateText)
     }
 }

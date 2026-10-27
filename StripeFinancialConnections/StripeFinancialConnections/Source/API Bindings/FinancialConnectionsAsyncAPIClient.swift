@@ -25,6 +25,7 @@ final class FinancialConnectionsAsyncAPIClient {
     let backingAPIClient: STPAPIClient
 
     var isLinkWithStripe: Bool = false
+    var hasRequestedDataPermissions: Bool = false
 
     // Note: These properties maintain their last non-nil value. Once set to a value,
     // these properties can only be changed to another non-nil value.
@@ -61,9 +62,13 @@ final class FinancialConnectionsAsyncAPIClient {
     /// Returns the `consumerPublishableKey` for scenarios where it is valid to do so. That is;
     /// - `canUseConsumerKey` must be `true`. This is a flag passed in by each API request.
     /// - `isLinkWithStripe` must be `true`. This represents whether we're in the Instant Debits flow.
+    /// - `hasRequestedDataPermissions` must be `false`. Permissioned sessions use the merchant's key.
     /// - `consumerSession` must be verified. This represents whether we have a verified Link user.
     func consumerPublishableKeyProvider(canUseConsumerKey: Bool) -> String? {
-        guard canUseConsumerKey, isLinkWithStripe, consumerSession?.isVerified == true else {
+        guard canUseConsumerKey,
+              isLinkWithStripe,
+              !hasRequestedDataPermissions,
+              consumerSession?.isVerified == true else {
             return nil
         }
         return consumerPublishableKey
@@ -180,6 +185,15 @@ final class FinancialConnectionsAsyncAPIClient {
             do {
                 return try await apiCall()
             } catch {
+                // A client error will never succeed on retry, and its response body may carry
+                // information the caller needs (ex. a server-driven error pane in `extra_fields`),
+                // so surface it right away instead of losing it to `maxRetriesReached`.
+                //
+                // Note that a still-in-progress poll comes back as a decoding error rather than
+                // a client error, so this doesn't cut polling short.
+                if error.isClientError {
+                    throw error
+                }
                 if attempt == maxNumberOfRetries - 1 {
                     throw PollingError.maxRetriesReached
                 }
@@ -220,7 +234,8 @@ extension FinancialConnectionsAsyncAPIClient {
     func synchronize(
         clientSecret: String,
         returnURL: String?,
-        initialSynchronize: Bool = false
+        initialSynchronize: Bool = false,
+        preCollectedConsent: FinancialConnectionsPreCollectedConsent? = nil
     ) async throws -> FinancialConnectionsSynchronize {
         var parameters: [String: Any] = [
             "expand": ["manifest.active_auth_session"],
@@ -245,6 +260,14 @@ extension FinancialConnectionsAsyncAPIClient {
         }
 
         parameters["mobile"] = mobileParameters
+
+        if let preCollectedConsent {
+            parameters["pre_collected_consent"] = [
+                "consent": preCollectedConsent.consent,
+                "collected_at": preCollectedConsent.collectedAt,
+            ]
+        }
+
         return try await post(endpoint: .synchronize, parameters: parameters)
     }
 

@@ -10,13 +10,18 @@
 import SwiftUI
 
 struct CheckoutCartContentView: View {
-    @ObservedObject var checkout: Checkout
+    @ObservedObject var checkout: CheckoutController
+    var emailSource: CheckoutPlayground.EmailSource
+    var showsCurrencySelectorElement: Bool
     var showsShippingAddressSection: Bool
-    @Binding var isLoading: Bool
-    @Binding var errorMessage: String?
-
-    @State private var showShippingAddressSheet = false
-    @State private var shippingAddressDetails: AddressElement.AddressDetails?
+    var errorMessage: String?
+    var showExpressCheckoutElement: Bool
+    var integrationType: CheckoutPlayground.IntegrationType
+    let onConfirm: (CheckoutController.ConfirmResult) -> Void
+    @State private var showsTaxDetails = false
+    @State private var showsEmailEditor = false
+    @State private var emailDraft = ""
+    @State private var emailUpdateError: String?
 
     var body: some View {
         ScrollView {
@@ -31,18 +36,78 @@ struct CheckoutCartContentView: View {
 
                 currencySelectorSection
                 lineItemsSection
+                emailSection
+                expressCheckoutSection
                 if showsShippingAddressSection {
                     shippingAddressSection
                 }
+                if integrationType != .eceOnly {
+                    CheckoutCartPaymentMethodSection(
+                        checkout: checkout,
+                        integrationType: integrationType
+                    )
+                }
                 orderSummarySection
-
-                Spacer().frame(height: 160)
+                if integrationType != .eceOnly {
+                    CheckoutCartBuyButton(checkout: checkout, onConfirm: onConfirm)
+                }
             }
             .padding(.top, 20)
+            .padding(.bottom, 24)
+            .disabled(checkout.isUpdating)
+        }
+        .sheet(isPresented: $showsTaxDetails) {
+            CheckoutTaxDetailsView(taxAmounts: checkout.session.taxAmounts ?? [])
+        }
+        .alert("Edit email", isPresented: $showsEmailEditor) {
+            TextField("Email address", text: $emailDraft)
+                .keyboardType(.emailAddress)
+                .textInputAutocapitalization(.never)
+                .autocorrectionDisabled()
+            Button("Save email") { updateEmail(emailDraft) }
+            Button("Clear email", role: .destructive) { updateEmail(nil) }
+            Button("Cancel", role: .cancel) { }
+        } message: {
+            Text("Updates the local Checkout email.")
         }
     }
 
     // MARK: - Sections
+
+    private var emailSection: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack {
+                Text("Email").font(.title2).bold()
+                Spacer()
+                Button("Edit email") {
+                    emailDraft = checkout.session.email ?? ""
+                    showsEmailEditor = true
+                }
+                .disabled(emailSource != .local)
+            }
+            Text(checkout.session.email ?? "No email")
+                .accessibilityIdentifier("checkout_session_email")
+            Text(emailSource.isServer ? "Server email cannot be changed in checkout." : emailSource == .local ? "Local email" : "No email source selected.")
+                .font(.caption)
+                .foregroundColor(.secondary)
+            if let emailUpdateError {
+                Text(emailUpdateError).foregroundColor(.red)
+            }
+        }
+        .padding(.horizontal)
+    }
+
+    private func updateEmail(_ email: String?) {
+        Task {
+            emailUpdateError = nil
+            do {
+                let trimmed = email?.trimmingCharacters(in: .whitespacesAndNewlines)
+                try await checkout.updateEmail(trimmed?.isEmpty == true ? nil : trimmed)
+            } catch {
+                emailUpdateError = error.localizedDescription
+            }
+        }
+    }
 
     @ViewBuilder
     private var lineItemsSection: some View {
@@ -51,14 +116,19 @@ struct CheckoutCartContentView: View {
                 .font(.title2).bold()
                 .padding(.horizontal)
 
-            let items = checkout.session.lineItems
+            let items = checkout.session.orderSummaryItems.flatMap { orderSummaryItem in
+                switch orderSummaryItem {
+                case .oneTimePrice(let oneTimePrice):
+                    return oneTimePrice.items
+                }
+            }
             if items.isEmpty {
                 Text("No items")
                     .foregroundColor(.secondary)
                     .padding(.horizontal)
             } else {
                 VStack(spacing: 0) {
-                    ForEach(items) { item in
+                    ForEach(items, id: \.key) { item in
                         HStack(alignment: .top, spacing: 16) {
                             RoundedRectangle(cornerRadius: 12)
                                 .fill(Color(UIColor.secondarySystemBackground))
@@ -69,28 +139,19 @@ struct CheckoutCartContentView: View {
                                 )
 
                             VStack(alignment: .leading, spacing: 6) {
-                                Text(item.name)
+                                Text(item.displayName)
                                     .font(.headline)
                                     .foregroundColor(.primary)
-                                Text(item.unitAmount?.amount ?? "")
+                                Text("\((item.unitAmountDecimal ?? item.unitAmount).amount) × \(item.quantity)")
                                     .font(.subheadline)
                                     .foregroundColor(.secondary)
-
-                                Spacer()
-
-                                Text("Qty: \(item.quantity)")
-                                    .font(.body).bold()
+                                    .accessibilityIdentifier("checkout_line_item_amount")
                             }
                             Spacer()
-                            Text(formatCartCurrency(
-                                amount: (item.unitAmount?.minorUnitsAmount ?? 0) * item.quantity,
-                                currency: checkout.session.currency
-                            ))
-                                .font(.headline)
                         }
                         .padding()
 
-                        if item.id != items.last?.id {
+                        if item.key != items.last?.key {
                             Divider().padding(.leading, 112)
                         }
                     }
@@ -114,27 +175,18 @@ struct CheckoutCartContentView: View {
                 addressCard(
                     name: override.name,
                     address: override.address,
-                    onEdit: { showShippingAddressSheet = true }
+                    onEdit: presentShippingAddressElement
                 )
             } else {
-                emptyAddressCard(label: "Add shipping address", onAdd: { showShippingAddressSheet = true })
+                emptyAddressCard(label: "Add shipping address", onAdd: presentShippingAddressElement)
             }
-        }
-        .sheet(isPresented: $showShippingAddressSheet) {
-            AddressElement(
-                address: shippingAddressBinding,
-                configuration: makeAddressConfiguration(
-                    title: "Shipping Address",
-                    override: checkout.session.shippingAddress
-                )
-            )
         }
     }
 
     // MARK: - Address Helpers
 
     @ViewBuilder
-    private func addressCard(name: String?, address: Checkout.Address, onEdit: @escaping () -> Void) -> some View {
+    private func addressCard(name: String?, address: CheckoutController.Address, onEdit: @escaping () -> Void) -> some View {
         HStack(alignment: .top, spacing: 12) {
             Image(systemName: "mappin.circle.fill")
                 .foregroundColor(.blue)
@@ -205,153 +257,186 @@ struct CheckoutCartContentView: View {
         .shadow(color: Color.black.opacity(0.05), radius: 8, x: 0, y: 4)
     }
 
-    // MARK: - Address Configuration
-
-    private func makeAddressConfiguration(
-        title: String,
-        override: Checkout.Session.ShippingAddress?
-    ) -> AddressElement.Configuration {
-        var config = AddressElement.Configuration()
-        config.title = title
-        config.buttonTitle = "Save Address"
-        if let override {
-            config.defaultValues = .init(
-                address: .init(
-                    city: override.address.city,
-                    country: override.address.country,
-                    line1: override.address.line1 ?? "",
-                    line2: override.address.line2,
-                    postalCode: override.address.postalCode,
-                    state: override.address.state
-                ),
-                name: override.name
-            )
-        }
-        return config
-    }
-
     @ViewBuilder
     private var currencySelectorSection: some View {
-        if let currencySelectorElement = checkout.getCurrencySelectorElement() {
+        if showsCurrencySelectorElement,
+           let currencySelectorElement = checkout.getCurrencySelectorElement() {
             currencySelectorElement.view
                 .padding(.horizontal)
         }
     }
 
     @ViewBuilder
-    private var orderSummarySection: some View {
-        if let total = checkout.session.total {
-            let currency = checkout.session.currency
-            let taxAmount = total.taxExclusive.minorUnitsAmount + total.taxInclusive.minorUnitsAmount
+    private var expressCheckoutSection: some View {
+        if showExpressCheckoutElement,
+           !checkout.session.availableExpressCheckoutPaymentMethods.isEmpty {
             VStack(alignment: .leading, spacing: 16) {
-                Text("Order Summary")
+                Text("Express Checkout")
                     .font(.title2).bold()
                     .padding(.horizontal)
 
-                VStack(spacing: 12) {
-                    HStack {
-                        Text("Subtotal")
-                            .foregroundColor(.secondary)
-                        Spacer()
-                        Text(formatCartCurrency(amount: total.subtotal.minorUnitsAmount, currency: currency))
-                            .foregroundColor(.primary)
-                    }
-                    if total.discount.minorUnitsAmount > 0 {
-                        HStack {
-                            Text("Discount")
-                                .foregroundColor(.green)
-                            Spacer()
-                            Text("-" + formatCartCurrency(amount: total.discount.minorUnitsAmount, currency: currency))
-                                .foregroundColor(.green)
-                        }
-                    }
-
-                    if total.shippingRate.minorUnitsAmount > 0 {
-                        HStack {
-                            Text("Shipping")
-                                .foregroundColor(.secondary)
-                            Spacer()
-                            Text(formatCartCurrency(amount: total.shippingRate.minorUnitsAmount, currency: currency))
-                                .foregroundColor(.primary)
-                        }
-                    }
-
-                    if taxAmount > 0 {
-                        HStack {
-                            Text("Tax")
-                                .foregroundColor(.secondary)
-                            Spacer()
-                            Text(formatCartCurrency(amount: taxAmount, currency: currency))
-                                .foregroundColor(.primary)
-                        }
-                    }
-
-                    Divider()
-                        .padding(.vertical, 4)
-
-                    HStack {
-                        Text("Total")
-                            .font(.title3).bold()
-                        Spacer()
-                        Text(formatCartCurrency(amount: total.total.minorUnitsAmount, currency: currency))
-                            .font(.title3).bold()
-                    }
-                }
-                .padding()
-                .background(Color(UIColor.systemBackground))
-                .cornerRadius(16)
-                .padding(.horizontal)
-                .shadow(color: Color.black.opacity(0.05), radius: 8, x: 0, y: 4)
+                checkout.getExpressCheckoutElement().view
+                    .padding(.horizontal)
             }
         }
     }
 
-    private func checkoutAddress(from details: AddressElement.AddressDetails.Address) -> Checkout.Address {
-        let line1 = details.line1.isEmpty ? nil : details.line1
-        return Checkout.Address(
-            country: details.country,
-            line1: line1,
-            line2: details.line2,
-            city: details.city,
-            state: details.state,
-            postalCode: details.postalCode
-        )
-    }
+    @ViewBuilder
+    private var orderSummarySection: some View {
+        let totals = checkout.session.totals
+        let hasTaxDetails = checkout.session.taxAmounts?.isEmpty == false
+        let taxAddressPrompt = taxAddressPrompt(for: checkout.session.tax?.status)
+        VStack(alignment: .leading, spacing: 16) {
+            Text("Order Summary")
+                .font(.title2).bold()
+                .padding(.horizontal)
 
-    private var shippingAddressBinding: Binding<AddressElement.AddressDetails?> {
-        Binding(
-            get: { shippingAddressDetails },
-            set: { newValue in
-                shippingAddressDetails = newValue
-                guard let details = newValue else { return }
-                updateShippingAddress(details)
+            VStack(spacing: 12) {
+                HStack {
+                    Text("Subtotal")
+                        .foregroundColor(.secondary)
+                    Spacer()
+                    Text(totals.subtotal.amount)
+                        .foregroundColor(.primary)
+                        .accessibilityIdentifier("checkout_subtotal_amount")
+                }
+                if totals.discount.minorUnitsAmount > 0 {
+                    HStack {
+                        Text("Discount")
+                            .foregroundColor(.green)
+                        Spacer()
+                        Text("-" + totals.discount.amount)
+                            .foregroundColor(.green)
+                            .accessibilityIdentifier("checkout_discount_amount")
+                    }
+                }
+
+                if let taxAddressPrompt {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("Tax")
+                            .foregroundColor(.secondary)
+                        Text(taxAddressPrompt)
+                            .font(.footnote)
+                            .foregroundColor(.secondary)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .accessibilityElement(children: .combine)
+                    .accessibilityIdentifier("checkout_tax_prompt")
+                } else if totals.taxExclusive.minorUnitsAmount > 0 {
+                    HStack {
+                        HStack(spacing: 4) {
+                            Text("Tax")
+                                .foregroundColor(.secondary)
+                            if hasTaxDetails {
+                                taxDetailsButton
+                            }
+                        }
+                        Spacer()
+                        Text(totals.taxExclusive.amount)
+                            .foregroundColor(.primary)
+                            .accessibilityIdentifier("checkout_tax_amount")
+                    }
+                }
+
+                Divider()
+                    .padding(.vertical, 4)
+
+                HStack {
+                    Text("Total")
+                        .font(.title3).bold()
+                    Spacer()
+                    Text(totals.total.amount)
+                        .font(.title3).bold()
+                        .accessibilityIdentifier("checkout_total_amount")
+                }
+
+                if taxAddressPrompt == nil && totals.taxInclusive.minorUnitsAmount > 0 {
+                    HStack(spacing: 4) {
+                        Text("Includes \(totals.taxInclusive.amount) in tax")
+                            .foregroundColor(.secondary)
+                        if hasTaxDetails && totals.taxExclusive.minorUnitsAmount == 0 {
+                            taxDetailsButton
+                        }
+                        Spacer()
+                    }
+                }
             }
-        )
+            .padding()
+            .background(Color(UIColor.systemBackground))
+            .cornerRadius(16)
+            .padding(.horizontal)
+            .shadow(color: Color.black.opacity(0.05), radius: 8, x: 0, y: 4)
+        }
     }
 
-    private func updateShippingAddress(_ details: AddressElement.AddressDetails) {
+    private var taxDetailsButton: some View {
+        Button {
+            showsTaxDetails = true
+        } label: {
+            Image(systemName: "info.circle")
+        }
+        .accessibilityLabel("Show tax details")
+    }
+
+    private func taxAddressPrompt(for status: CheckoutController.Session.Tax.Status?) -> String? {
+        switch status {
+        case .requiresShippingAddress:
+            return "Enter shipping address to calculate"
+        case .requiresBillingAddress:
+            return "Enter billing address to calculate"
+        case .ready, nil:
+            return nil
+        }
+    }
+
+    private func presentShippingAddressElement() {
         Task {
-            isLoading = true
-            errorMessage = nil
-            do {
-                try await checkout.updateShippingAddress(
-                    name: details.name,
-                    address: checkoutAddress(from: details.address)
-                )
-            } catch {
-                errorMessage = error.localizedDescription
-            }
-            isLoading = false
+            await checkout.getShippingAddressElement().present()
         }
     }
 
 }
 
+private struct CheckoutTaxDetailsView: View {
+    @Environment(\.dismiss) private var dismiss
+    let taxAmounts: [CheckoutController.Session.TaxAmount]
+
+    @ViewBuilder
+    var body: some View {
+        if #available(iOS 16.0, *) {
+            content
+                .presentationDetents([.medium])
+                .presentationDragIndicator(.visible)
+        } else {
+            content
+        }
+    }
+
+    private var content: some View {
+        NavigationView {
+            List(Array(taxAmounts.enumerated()), id: \.offset) { _, taxAmount in
+                HStack {
+                    Text(taxAmount.displayName + (taxAmount.inclusive ? " (included)" : ""))
+                    Spacer()
+                    Text(taxAmount.amount)
+                }
+            }
+            .navigationTitle("Tax details")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Done") {
+                        dismiss()
+                    }
+                }
+            }
+        }
+    }
+}
+
 struct CheckoutCartSheet: View {
     @Environment(\.dismiss) private var dismiss
-    @ObservedObject var checkout: Checkout
-    @State private var isLoading = false
-    @State private var errorMessage: String?
+    @ObservedObject var checkout: CheckoutController
 
     var body: some View {
         NavigationView {
@@ -361,16 +446,14 @@ struct CheckoutCartSheet: View {
 
                 CheckoutCartContentView(
                     checkout: checkout,
+                    emailSource: .none,
+                    showsCurrencySelectorElement: false,
                     showsShippingAddressSection: true,
-                    isLoading: $isLoading,
-                    errorMessage: $errorMessage
+                    errorMessage: nil,
+                    showExpressCheckoutElement: false,
+                    integrationType: .flowController,
+                    onConfirm: { _ in }
                 )
-
-                if isLoading {
-                    Color.black.opacity(0.1)
-                        .ignoresSafeArea()
-                    ProgressView()
-                }
             }
             .navigationTitle("Cart")
             .navigationBarTitleDisplayMode(.inline)

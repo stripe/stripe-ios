@@ -154,7 +154,12 @@ final class PickerFieldView: UIView {
 
     override func layoutSubviews() {
         super.layoutSubviews()
+        updateTextAlignment()
         floatingPlaceholderTextFieldView?.updatePlaceholder(animated: false)
+    }
+
+    private func updateTextAlignment() {
+        textField.textAlignment = effectiveUserInterfaceLayoutDirection == .rightToLeft ? .right : .natural
     }
 
     override var isUserInteractionEnabled: Bool {

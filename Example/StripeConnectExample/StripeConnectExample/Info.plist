@@ -8,6 +8,8 @@
 	<false/>
 	<key>CFBundleLocalizations</key>
 	<array>
+		<string>ar-SA</string>
+		<string>cy-GB</string>
 		<string>bg_BG</string>
 		<string>zh_Hans</string>
 		<string>zh-Hant_HK</string>

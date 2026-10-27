@@ -18,7 +18,7 @@ extension UIViewController {
         }
 
         let safariVC = SFSafariViewController(url: url)
-        safariVC.modalPresentationStyle = .popover
+        safariVC.modalPresentationStyle = .pageSheet
         present(safariVC, animated: true, completion: nil)
     }
 }

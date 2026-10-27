@@ -134,6 +134,13 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
     }
 
     func testPaymentSheetLoadDeferredIntentSucceeds() {
+        // Given a saved guest card, customerless loads must still match requests with no client default.
+        let previousGuestDefault = CustomerPaymentOption.localDefaultPaymentMethod(for: nil)
+        CustomerPaymentOption.setDefaultPaymentMethod(.stripeId("pm_guest_default"), forCustomer: nil)
+        defer {
+            CustomerPaymentOption.setDefaultPaymentMethod(previousGuestDefault, forCustomer: nil)
+        }
+
         // Test PaymentSheetLoader.load can load various IntentConfigurations
         let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = {_, _ in
             XCTFail("Confirm handler shouldn't be called.")
@@ -780,9 +787,9 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         configuration.apiClient = customApiClient
         configuration.defaultBillingDetails.email = "test@example.com"
 
-        var checkoutConfiguration = Checkout.Configuration(clientSecret: checkoutSessionResponse.clientSecret, returnURL: "stripe-ios-test://checkout-return")
+        var checkoutConfiguration = CheckoutController.Configuration(clientSecret: checkoutSessionResponse.clientSecret, returnURL: "stripe-ios-test://checkout-return")
         checkoutConfiguration.apiClient = customApiClient
-        let checkout = try await Checkout(configuration: checkoutConfiguration)
+        let checkout = try await CheckoutController(configuration: checkoutConfiguration)
         PaymentSheetLoader.load(
             mode: .checkout(checkout),
             configuration: configuration,
@@ -821,9 +828,9 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         configuration.apiClient = customApiClient
         configuration.defaultBillingDetails.email = "test@example.com"
 
-        var checkoutConfiguration = Checkout.Configuration(clientSecret: checkoutSessionResponse.clientSecret, returnURL: "stripe-ios-test://checkout-return")
+        var checkoutConfiguration = CheckoutController.Configuration(clientSecret: checkoutSessionResponse.clientSecret, returnURL: "stripe-ios-test://checkout-return")
         checkoutConfiguration.apiClient = customApiClient
-        let checkout = try await Checkout(configuration: checkoutConfiguration)
+        let checkout = try await CheckoutController(configuration: checkoutConfiguration)
 
         PaymentSheetLoader.load(
             mode: .checkout(checkout),
@@ -839,8 +846,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
                     return
                 }
                 XCTAssertEqual(loadedSession.id, checkoutSessionId)
-                XCTAssertEqual(loadedSession.status?.type, .open)
-                XCTAssertEqual(loadedSession.status?.paymentStatus, .noPaymentRequired)
+                XCTAssertEqual(loadedSession.status, .open)
                 XCTAssertTrue(loadResult.elementsSession.sessionID.hasPrefix("elements_session_"))
                 XCTAssertTrue(loadResult.elementsSession.orderedPaymentMethodTypes.contains(.card))
             case .failure(let error):
@@ -940,7 +946,25 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
 
         let privatePreviewPaymentMethodTypes: [STPPaymentMethodType] = [.wero, .payByBank]
         // Payment methods whose payment_method_options aren't recognized by /v1/elements/sessions yet
-        let unsupportedPMOPaymentMethodTypes: [STPPaymentMethodType] = [.bizum]
+        let unsupportedPMOPaymentMethodTypes: [STPPaymentMethodType] = [
+            .bizum,
+            .payco,
+            .sequra,
+            .scalapay,
+            .vipps,
+            .goPay,
+            .momo,
+            .shopeePay,
+            .qris,
+            .gcash,
+            .ngCard,
+            .ngBankTransfer,
+            .touchNGo,
+            .trueMoney,
+            .ngUSSD,
+            .ngWallet,
+            .mondu,
+        ]
         // Test successful load with valid payment method options
         let all_payment_methods_pmo_sfu_values: [STPPaymentMethodType: PaymentSheet.IntentConfiguration.SetupFutureUsage] = STPPaymentMethodType.allCases.reduce([:]) { partialResult, type in
             // Skip unknown, payment methods in private preview, and payment methods with unsupported PMO (not yet recognized by /v1/elements/sessions)
