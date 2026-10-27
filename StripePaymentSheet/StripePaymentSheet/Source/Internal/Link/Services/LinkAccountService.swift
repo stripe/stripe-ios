@@ -68,7 +68,9 @@ final class LinkAccountService: LinkAccountServiceProtocol {
     let customerID: String?
     let useMobileEndpoints: Bool
     let canSyncAttestationState: Bool
+    let supportedVerificationTypes: [SupportedVerificationType]
     let merchantLogoUrl: URL?
+    private var countryCode: String?
 
     convenience init(
         apiClient: STPAPIClient = .shared,
@@ -81,18 +83,21 @@ final class LinkAccountService: LinkAccountServiceProtocol {
             apiClient: apiClient,
             useMobileEndpoints: elementsSession.linkSettings?.useAttestationEndpoints ?? false,
             canSyncAttestationState: elementsSession.linkSettings?.attestationStateSyncEnabled ?? false,
+            supportedVerificationTypes: elementsSession.linkSupportedVerificationTypes,
             sessionID: elementsSession.sessionID,
             customerID: elementsSession.customer?.customerSession.customer,
             shouldPassCustomerIdToLookup: shouldPassCustomerIdToLookup,
             merchantLogoUrl: elementsSession.merchantLogoUrl,
             analyticsHelper: analyticsHelper
         )
+        countryCode = elementsSession.countryCode
     }
 
     init(
         apiClient: STPAPIClient = .shared,
         useMobileEndpoints: Bool,
         canSyncAttestationState: Bool,
+        supportedVerificationTypes: [SupportedVerificationType] = SupportedVerificationType.nativeCapabilities(mfaAuthFlowEnabled: false),
         sessionID: String,
         customerID: String?,
         shouldPassCustomerIdToLookup: Bool,
@@ -103,6 +108,7 @@ final class LinkAccountService: LinkAccountServiceProtocol {
         self.apiClient = apiClient
         self.useMobileEndpoints = useMobileEndpoints
         self.canSyncAttestationState = canSyncAttestationState
+        self.supportedVerificationTypes = supportedVerificationTypes
         self.sessionID = sessionID
         self.customerID = shouldPassCustomerIdToLookup ? customerID : nil
         self.merchantLogoUrl = merchantLogoUrl
@@ -128,6 +134,7 @@ final class LinkAccountService: LinkAccountServiceProtocol {
             with: apiClient,
             useMobileEndpoints: useMobileEndpoints,
             canSyncAttestationState: canSyncAttestationState,
+            supportedVerificationTypes: supportedVerificationTypes,
             doNotLogConsumerFunnelEvent: doNotLogConsumerFunnelEvent,
             requestSurface: requestSurface
         ) { [apiClient] result in
@@ -137,18 +144,26 @@ final class LinkAccountService: LinkAccountServiceProtocol {
                 self.analyticsHelper.logAccountLookupComplete(lookupResult: lookupResponse.responseType)
                 switch lookupResponse.responseType {
                 case .found(let session):
-                    completion(.success(
-                        PaymentSheetLinkAccount(
-                            email: session.consumerSession.emailAddress,
-                            session: session.consumerSession,
-                            publishableKey: session.publishableKey,
-                            displayablePaymentDetails: session.displayablePaymentDetails,
-                            apiClient: apiClient,
-                            useMobileEndpoints: self.useMobileEndpoints,
-                            canSyncAttestationState: self.canSyncAttestationState,
-                            requestSurface: requestSurface
+                    completion(
+                        .success(
+                            self.configureAuth(
+                                PaymentSheetLinkAccount(
+                                    email: session.consumerSession.emailAddress,
+                                    session: session.consumerSession,
+                                    publishableKey: session.publishableKey,
+                                    displayablePaymentDetails: session.displayablePaymentDetails,
+                                    apiClient: apiClient,
+                                    useMobileEndpoints: self.useMobileEndpoints,
+                                    canSyncAttestationState: self.canSyncAttestationState,
+                                    supportedVerificationTypes: self.supportedVerificationTypes,
+                                    requestSurface: requestSurface
+                                ),
+                                settings: session.settings,
+                                lookupEmail: email,
+                                emailSource: emailSource
+                            )
                         )
-                    ))
+                    )
                 case .notFound(_, let suggestedEmail):
                     if let email = email {
                         let linkAccount = PaymentSheetLinkAccount(
@@ -159,6 +174,7 @@ final class LinkAccountService: LinkAccountServiceProtocol {
                             apiClient: self.apiClient,
                             useMobileEndpoints: self.useMobileEndpoints,
                             canSyncAttestationState: self.canSyncAttestationState,
+                            supportedVerificationTypes: self.supportedVerificationTypes,
                             requestSurface: requestSurface
                         )
                         linkAccount.suggestedEmail = suggestedEmail
@@ -200,6 +216,7 @@ final class LinkAccountService: LinkAccountServiceProtocol {
             customerID: customerID,
             useMobileEndpoints: useMobileEndpoints,
             canSyncAttestationState: canSyncAttestationState,
+            supportedVerificationTypes: supportedVerificationTypes,
             requestSurface: requestSurface
         ) { [apiClient] result in
             switch result {
@@ -208,7 +225,7 @@ final class LinkAccountService: LinkAccountServiceProtocol {
                 switch lookupResponse.responseType {
                 case .found(let session):
                     completion(.success(
-                        PaymentSheetLinkAccount(
+                        self.configureAuth(PaymentSheetLinkAccount(
                             email: session.consumerSession.emailAddress,
                             session: session.consumerSession,
                             publishableKey: session.publishableKey,
@@ -216,8 +233,9 @@ final class LinkAccountService: LinkAccountServiceProtocol {
                             apiClient: apiClient,
                             useMobileEndpoints: self.useMobileEndpoints,
                             canSyncAttestationState: self.canSyncAttestationState,
+                            supportedVerificationTypes: self.supportedVerificationTypes,
                             requestSurface: requestSurface
-                        )
+                        ), settings: session.settings, lookupEmail: nil, emailSource: .prefilledEmail)
                     ))
                 case .notFound, .noAvailableLookupParams:
                     completion(.success(nil))
@@ -247,6 +265,7 @@ final class LinkAccountService: LinkAccountServiceProtocol {
             with: apiClient,
             useMobileEndpoints: useMobileEndpoints,
             canSyncAttestationState: canSyncAttestationState,
+            supportedVerificationTypes: supportedVerificationTypes,
             requestSurface: requestSurface
         ) { [weak self, apiClient] result in
             guard let self else { return }
@@ -263,9 +282,13 @@ final class LinkAccountService: LinkAccountServiceProtocol {
                         apiClient: apiClient,
                         useMobileEndpoints: self.useMobileEndpoints,
                         canSyncAttestationState: self.canSyncAttestationState,
+                        supportedVerificationTypes: self.supportedVerificationTypes,
                         requestSurface: requestSurface,
                         createdFromAuthIntentID: true
                     )
+                    linkAccount.authLookupSettings = session.settings
+                    linkAccount.authLookupEmail = nil
+                    linkAccount.authCountryCode = self.countryCode
                     let consentViewModel = LinkConsentViewModel(
                         email: session.consumerSession.emailAddress,
                         merchantLogoURL: self.merchantLogoUrl,
@@ -283,5 +306,45 @@ final class LinkAccountService: LinkAccountServiceProtocol {
                 completion(.failure(error))
             }
         }
+    }
+    private func configureAuth(
+        _ account: PaymentSheetLinkAccount,
+        settings: ConsumerSession.LookupSettings?,
+        lookupEmail: String?,
+        emailSource: EmailSource
+    ) -> PaymentSheetLinkAccount {
+        account.authLookupSettings = settings
+        account.authLookupEmail = lookupEmail
+        account.authCountryCode = countryCode
+        if let lookupEmail {
+            let requestSurface = account.requestSurface
+            account.authSessionLookup = { completion in
+                ConsumerSession.lookupSession(
+                    for: lookupEmail,
+                    emailSource: emailSource,
+                    sessionID: self.sessionID,
+                    customerID: self.customerID,
+                    with: self.apiClient,
+                    useMobileEndpoints: self.useMobileEndpoints,
+                    canSyncAttestationState: self.canSyncAttestationState,
+                    supportedVerificationTypes: self.supportedVerificationTypes,
+                    doNotLogConsumerFunnelEvent: true,
+                    requestSurface: requestSurface
+                ) { result in
+                    completion(
+                        result.flatMap { response in
+                            guard case .found(let session) = response.responseType else {
+                                return .failure(
+                                    PaymentSheetError.unknown(
+                                        debugDescription: "No Link account found during authentication recovery"
+                                    )
+                                )
+                        }
+                        return .success(ConsumerSession.AuthResponse(consumerSession: session.consumerSession, settings: session.settings))
+                    })
+                }
+            }
+        }
+        return account
     }
 }

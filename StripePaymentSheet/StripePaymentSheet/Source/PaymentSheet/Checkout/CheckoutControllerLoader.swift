@@ -28,7 +28,6 @@ enum CheckoutControllerLoader {
 
     /// Loads the initial Checkout Session and shared resources.
     static func initCheckoutSession(configuration: CheckoutController.Configuration) async throws -> CheckoutController.Session {
-        AnalyticsHelper.shared.generateSessionID()
         // 1a. Load misc. singletons
         let resources = Task { // Use a Task instead of async let; see PaymentSheetLoader.load.
             await PaymentSheetLoader.loadMiscellaneousSingletons()
@@ -111,6 +110,7 @@ enum CheckoutControllerLoader {
         )
 
         let intent = Intent.checkout(session)
+        let customerProvider = CustomerProvider(checkoutSession: session)
         let experimentAnalyticsHelper = ExperimentAnalyticsHelper(integrationShape: .checkoutElements)
         PaymentSheetLoader.warnAboutUnactivatedPaymentMethods(elementsSession: elementsSession)
         // Filter PMs
@@ -127,6 +127,7 @@ enum CheckoutControllerLoader {
             intent: intent,
             elementsSession: elementsSession,
             configuration: fcConfiguration, // assume this method returns the same result for Embedded
+            customerProvider: customerProvider,
             prefetchedSPMs: nil
         )
         // Create/reuse and update FC analytics helper
@@ -170,7 +171,8 @@ enum CheckoutControllerLoader {
             savedPaymentMethods: savedPaymentMethods,
             paymentMethodTypes: paymentMethodTypes,
             paymentMethodMessagingPromotionsHelper: promotionsHelper,
-            paymentMethodOrientation: orientation
+            paymentMethodOrientation: orientation,
+            customerProvider: customerProvider
         )
         let embeddedLoadResult = PaymentSheetLoader.LoadResult(
             intent: intent,
@@ -178,7 +180,8 @@ enum CheckoutControllerLoader {
             savedPaymentMethods: savedPaymentMethods,
             paymentMethodTypes: paymentMethodTypes,
             paymentMethodMessagingPromotionsHelper: promotionsHelper,
-            paymentMethodOrientation: .vertical
+            paymentMethodOrientation: .vertical,
+            customerProvider: customerProvider
         )
         return (
             confirmationChallenge: confirmationChallenge,

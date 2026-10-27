@@ -35,6 +35,8 @@ final class CheckoutDefaultsInitializationTests: XCTestCase {
     }
 
     func testInitAppliesBillingDefaultThroughBillingTaxUpdateWhenNeeded() async throws {
+        AnalyticsHelper.shared.generateSessionID()
+        let previousAnalyticsSessionID = AnalyticsHelper.shared.sessionID
         let analyticsClient = STPAnalyticsClient.sharedClient
         let previousLogHistory = analyticsClient._testLogHistory
         analyticsClient._testLogHistory = []
@@ -78,6 +80,12 @@ final class CheckoutDefaultsInitializationTests: XCTestCase {
             "checkout_elements.update_billing_address.succeeded",
             "checkout_elements.init.succeeded",
         ])
+        // Initialization starts a fresh analytics session, shared by its nested address update.
+        let analyticsSessionID = try XCTUnwrap(AnalyticsHelper.shared.sessionID)
+        XCTAssertNotEqual(analyticsSessionID, previousAnalyticsSessionID)
+        for event in events {
+            XCTAssertEqual(event["session_id"] as? String, analyticsSessionID)
+        }
         let billingUpdate = try XCTUnwrap(events.first { $0["event"] as? String == "checkout_elements.update_billing_address.succeeded" })
         XCTAssertEqual(billingUpdate["invocation_source"] as? String, "merchant")
         XCTAssertEqual(billingUpdate["did_request_tax_update"] as? Bool, true)

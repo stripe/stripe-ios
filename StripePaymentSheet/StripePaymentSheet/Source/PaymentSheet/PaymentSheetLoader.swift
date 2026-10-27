@@ -11,8 +11,10 @@ import Foundation
 @_spi(STP) import StripeUICore
 
 final class PaymentSheetLoader {
+
     /// All the data that PaymentSheetLoader loaded.
     struct LoadResult {
+
         let intent: Intent
         let elementsSession: STPElementsSession
         let savedPaymentMethods: [STPPaymentMethod]
@@ -20,6 +22,7 @@ final class PaymentSheetLoader {
         let paymentMethodTypes: [PaymentSheet.PaymentMethodType]
         let paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper?
         let paymentMethodOrientation: PaymentSheet.PaymentMethodLayout.ResolvedLayout
+        let customerProvider: CustomerProvider
     }
 
     enum IntegrationShape {
@@ -65,6 +68,12 @@ final class PaymentSheetLoader {
         integrationShape: IntegrationShape,
         isUpdate: Bool = false
     ) async throws -> (LoadResult, ConfirmationChallenge) {
+        let customerProvider: CustomerProvider
+        if case .checkout(let checkout) = mode {
+            customerProvider = CustomerProvider(checkoutSession: checkout.session)
+        } else {
+            customerProvider = CustomerProvider(customer: configuration.customer)
+        }
         let loadTimings: LoadTimings = .init(loadingStartDate: Date())
         loadTimings.logStart("logLoadStarted")
         analyticsHelper.logLoadStarted(isUpdate: isUpdate)
@@ -84,7 +93,7 @@ final class PaymentSheetLoader {
             // Fetch ElementsSession
             // ⚠️ Note using `async let` instead of Tasks here triggered a crash when compiling with Xcode 26.4 / Swift 6.3
             let elementsSessionAndIntentTask = Task {
-                try await fetchElementsSessionAndIntent(mode: mode, configuration: configuration, analyticsHelper: analyticsHelper, loadTimings: loadTimings)
+                try await fetchElementsSessionAndIntent(mode: mode, configuration: configuration, customerProvider: customerProvider, analyticsHelper: analyticsHelper, loadTimings: loadTimings)
             }
 
             // Fetch Customer email if using EK for Link and it wasn't provided in `configuration`. If using CS, Customer will be in v1/e/s response.
@@ -158,7 +167,7 @@ final class PaymentSheetLoader {
 
             // Filter out saved payment methods that the PI/SI or PaymentSheet doesn't support
             let prefetchedSavedPaymentMethods = try await prefetchedSavedPaymentMethodsTask.value
-            let filteredSavedPaymentMethods = filterSavedPaymentMethods(intent: intent, elementsSession: elementsSession, configuration: configuration, prefetchedSPMs: prefetchedSavedPaymentMethods, loadTimings: loadTimings)
+            let filteredSavedPaymentMethods = filterSavedPaymentMethods(intent: intent, elementsSession: elementsSession, configuration: configuration, customerProvider: customerProvider, prefetchedSPMs: prefetchedSavedPaymentMethods, loadTimings: loadTimings)
 
             let paymentMethodOrientation = configuration.resolveLayout(
                 elementsSession: elementsSession,
@@ -169,7 +178,7 @@ final class PaymentSheetLoader {
             loadTimings.logStart("makeViewModels")
             let (defaultSelectedIndex, paymentOptionsViewModels) = SavedPaymentOptionsViewController.makeViewModels(
                 savedPaymentMethods: filteredSavedPaymentMethods,
-                customerID: configuration.customer?.id,
+                customerID: customerProvider.customerID,
                 showApplePay: integrationShape.canDefaultToLinkOrApplePay ? isApplePayEnabled : false,
                 showLink: integrationShape.canDefaultToLinkOrApplePay ? PaymentSheet.shouldShowLinkButton(elementsSession: elementsSession, configuration: configuration) : false,
                 elementsSession: elementsSession,
@@ -191,7 +200,8 @@ final class PaymentSheetLoader {
                 savedPaymentMethods: filteredSavedPaymentMethods,
                 paymentMethodTypes: paymentMethodTypes,
                 paymentMethodMessagingPromotionsHelper: paymentMethodMessagingPromotionsHelper,
-                paymentMethodOrientation: paymentMethodOrientation
+                paymentMethodOrientation: paymentMethodOrientation,
+                customerProvider: customerProvider
             )
             let confirmationChallenge = ConfirmationChallenge(
                 elementsSession: elementsSession,
@@ -239,7 +249,7 @@ final class PaymentSheetLoader {
 
     typealias ElementSessionAndIntent = (elementsSession: STPElementsSession, intent: Intent)
     @MainActor
-    static func fetchElementsSessionAndIntent(mode: PaymentSheet.InitializationMode, configuration: PaymentElementConfiguration, analyticsHelper: PaymentSheetAnalyticsHelper, loadTimings: LoadTimings) async throws -> ElementSessionAndIntent {
+    static func fetchElementsSessionAndIntent(mode: PaymentSheet.InitializationMode, configuration: PaymentElementConfiguration, customerProvider: CustomerProvider, analyticsHelper: PaymentSheetAnalyticsHelper, loadTimings: LoadTimings) async throws -> ElementSessionAndIntent {
         loadTimings.logStart("fetchElementsSession")
         defer {
             loadTimings.logEnd("fetchElementsSession")
@@ -247,10 +257,11 @@ final class PaymentSheetLoader {
         let intent: Intent
         let elementsSession: STPElementsSession
         let clientDefaultPaymentMethod: String? = {
-            guard let customer = configuration.customer else {
+            // Only send a default associated with a resolved customer.
+            guard let customerID = customerProvider.customerID else {
                 return nil
             }
-            return defaultStripePaymentMethodId(forCustomerID: customer.id)
+            return defaultStripePaymentMethodId(forCustomerID: customerID)
         }()
 
         switch mode {
@@ -345,7 +356,7 @@ final class PaymentSheetLoader {
         return false
     }
 
-    static func defaultStripePaymentMethodId(forCustomerID customerID: String?) -> String? {
+    static func defaultStripePaymentMethodId(forCustomerID customerID: String) -> String? {
         guard let defaultPaymentMethod = CustomerPaymentOption.localDefaultPaymentMethod(for: customerID),
               case .stripeId(let paymentMethodId) = defaultPaymentMethod else {
             return nil
@@ -358,6 +369,7 @@ final class PaymentSheetLoader {
         intent: Intent,
         elementsSession: STPElementsSession,
         configuration: PaymentElementConfiguration,
+        customerProvider: CustomerProvider,
         prefetchedSPMs: [STPPaymentMethod]?,
         loadTimings: LoadTimings? = nil
     ) -> [STPPaymentMethod] {
@@ -381,7 +393,7 @@ final class PaymentSheetLoader {
         }
 
         // Move default PM to front
-        if let customerID = configuration.customer?.id {
+        if let customerID = customerProvider.customerID {
             let defaultPaymentMethodOption = CustomerPaymentOption.selectedPaymentMethod(for: customerID, elementsSession: elementsSession, surface: .paymentSheet)
             if let defaultPMIndex = savedPaymentMethods.firstIndex(where: {
                 $0.stripeId == defaultPaymentMethodOption?.value

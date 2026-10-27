@@ -36,6 +36,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
 
     // MARK: Private properties
     private let configuration: PaymentElementConfiguration
+    private let customerProvider: CustomerProvider
     private let intent: Intent
     private weak var checkout: CheckoutSessionBillingAddressUpdater?
     private let elementsSession: STPElementsSession
@@ -182,6 +183,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
 
     init(
         configuration: PaymentElementConfiguration,
+        customerProvider: CustomerProvider,
         intent: Intent,
         checkout: CheckoutSessionBillingAddressUpdater? = nil,
         selectedPaymentMethod: STPPaymentMethod?,
@@ -191,6 +193,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         defaultPaymentMethod: STPPaymentMethod?
     ) {
         self.configuration = configuration
+        self.customerProvider = customerProvider
         self.intent = intent
         self.checkout = checkout
         self.elementsSession = elementsSession
@@ -445,7 +448,7 @@ extension VerticalSavedPaymentMethodsViewController: SavedPaymentMethodRowButton
         }
         CustomerPaymentOption.setDefaultPaymentMethod(
             .stripeId(paymentMethod.stripeId),
-            forCustomer: configuration.customer?.id
+            forCustomer: customerProvider.customerID
         )
     }
 

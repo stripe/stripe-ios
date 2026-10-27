@@ -51,7 +51,7 @@ final class VerticalSavedPaymentMethodsViewControllerSnapshotTests: STPSnapshotT
             paymentMethods.insert(card, at: 0)
         }
 
-        let sut = VerticalSavedPaymentMethodsViewController(configuration: configuration,
+        let sut = VerticalSavedPaymentMethodsViewController(configuration: configuration, customerProvider: CustomerProvider(customer: configuration.customer),
                                                             intent: ._testValue(),
                                                             selectedPaymentMethod: paymentMethods.first,
                                                             paymentMethods: paymentMethods,

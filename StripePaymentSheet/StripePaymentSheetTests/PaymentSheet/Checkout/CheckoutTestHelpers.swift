@@ -128,6 +128,14 @@ final class CheckoutSessionRequestRecorder: @unchecked Sendable {
 
 enum CheckoutTestHelpers {
 
+    @MainActor
+    static func expressCheckoutButtons(in view: UIView) -> [UIControl] {
+        if let button = view as? UIControl {
+            return [button]
+        }
+        return view.subviews.flatMap { expressCheckoutButtons(in: $0) }
+    }
+
     // MARK: - Base JSON building blocks
 
     static let minimalElementsSessionJSON: [String: Any] = [

@@ -240,7 +240,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         XCTAssertEqual(checkout.session.status, .complete(.paid))
         XCTAssertEqual(challenge.completions, 0)
 
-        // ...and analytics records the result, session, source, and request that completed confirmation
+        // ...and analytics records the result, session, and source without a successful request ID
         let events = confirmationEvents
         XCTAssertEqual(events.compactMap { $0["event"] as? String }, [
             "checkout_elements.confirm.started",
@@ -254,7 +254,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         XCTAssertEqual(succeeded["invocation_source"] as? String, "merchant")
         XCTAssertEqual(succeeded["selected_lpm"] as? String, "card")
         XCTAssertEqual(succeeded["is_saved_payment_method"] as? Bool, true)
-        XCTAssertEqual(succeeded["request_id"] as? String, "req_confirm_success")
+        XCTAssertNil(succeeded["request_id"])
         XCTAssertGreaterThanOrEqual(try XCTUnwrap(succeeded["duration"] as? TimeInterval), 0)
     }
 
@@ -776,6 +776,33 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
     }
 
     // MARK: - Express Checkout
+
+    func testExpressCheckoutButtonsReenableAfterFailedOrCanceledConfirmation() async throws {
+        for paymentIntentStatus in ["requires_payment_method", "canceled"] {
+            // Given an open Checkout Session with an available Link button
+            let session = CheckoutTestHelpers.makeSessionWithWalletTypes(["link"], customerEmail: "jenny@example.com")
+            let checkout = try await makeCheckout(apiResponse: session)
+            let view = checkout.getExpressCheckoutElement().uiView
+            let button = try XCTUnwrap(CheckoutTestHelpers.expressCheckoutButtons(in: view).first)
+            var response = session.allResponseFields
+            response["payment_intent"] = makeConfirmedSessionJSON(paymentIntentStatus: paymentIntentStatus)["payment_intent"]
+            stubConfirmation(responseJSON: response)
+
+            // When confirmation fails or is canceled
+            let result = await checkout.confirm(makePaymentMethodFlow(for: checkout))
+
+            // Then the open checkout remains interactive
+            XCTAssertEqual(checkout.session.status, .open)
+            XCTAssertTrue(view.isUserInteractionEnabled)
+            XCTAssertTrue(button.isEnabled)
+            switch (paymentIntentStatus, result) {
+            case ("requires_payment_method", .failed), ("canceled", .canceled):
+                break
+            default:
+                XCTFail("Expected \(paymentIntentStatus) confirmation outcome, got \(result)")
+            }
+        }
+    }
 
     func testExpressCheckoutApplePayRequiresShippingAddressWhenSessionCollectsShipping() async throws {
         // Given a Checkout Session that collects shipping addresses

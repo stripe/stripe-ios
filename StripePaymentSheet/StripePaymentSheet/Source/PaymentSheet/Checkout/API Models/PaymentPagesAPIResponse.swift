@@ -18,7 +18,6 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
     // TODO: Make this Decodable instead, we don't need _allResponseFieldStorage.
     var _allResponseFieldsStorage: NonEncodableParameters?
 
-    let requestID: String?
     let checkoutConfigID: String?
     let sessionId: String
     let paymentIntentId: String?
@@ -99,7 +98,6 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
     }
 
     init(from decoder: Decoder) throws {
-        requestID = decoder.userInfo[StripeJSONDecoder.requestIDKey] as? String
         let responseFields = try decoder.stripeJSONDictionary
         checkoutConfigID = (responseFields["elements_options"] as? [String: Any])?["__checkout_config_id"] as? String
         let container = try decoder.container(keyedBy: CodingKeys.self)

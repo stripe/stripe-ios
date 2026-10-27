@@ -86,7 +86,6 @@ extension CheckoutController {
         // MARK: - Internal Properties
 
         var checkoutConfigID: String?
-        var requestID: String?
         let paymentStatus: Status.PaymentStatus
         let automaticPaymentMethodTypes: Bool?
         let paymentMethodOptions: STPPaymentMethodOptions?
@@ -215,7 +214,6 @@ extension CheckoutController.Session {
             elementsSession: elementsSessionValue
         )
         checkoutConfigID = apiResponse.checkoutConfigID
-        requestID = apiResponse.requestID
     }
 }
 

@@ -386,7 +386,6 @@ extension CheckoutController {
         // Send confirm finished analytic
         let result = Self.mapConfirmationResult(internalResult)
         analyticParams["active_link_session"] = LinkAccountContext.shared.account?.sessionState == .verified
-        analyticParams["request_id"] = internalResult.checkoutSessionResponse?.requestID
         switch result {
         case .completed:
             analyticsHelper.logSucceeded(startedAction, session: session, additionalParams: analyticParams)
@@ -697,9 +696,7 @@ extension CheckoutController {
             }
 
             let data = try JSONSerialization.data(withJSONObject: responseFields)
-            let decoder = StripeJSONDecoder()
-            decoder.userInfo[StripeJSONDecoder.requestIDKey] = response.requestID
-            let updatedResponse = try decoder.decode(PaymentPagesAPIResponse.self, from: data)
+            let updatedResponse = try StripeJSONDecoder().decode(PaymentPagesAPIResponse.self, from: data)
             return .completed(updatedResponse)
         } catch {
             return .failed(error, sessionResponse: response)

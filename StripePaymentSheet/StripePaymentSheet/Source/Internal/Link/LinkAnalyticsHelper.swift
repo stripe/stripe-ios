@@ -87,29 +87,33 @@ struct LinkAnalyticsHelper {
 
     // MARK: - 2FA
 
-    func log2FAStart() {
-        analyticsClient.logPaymentSheetEvent(event: .link2FAStart, checkoutSessionID: checkoutSessionID)
+    private func verificationTypeParams(_ type: SupportedVerificationType?) -> [String: Any] {
+        guard let type else { return [:] }
+        return ["verification_type": type.rawValue]
     }
 
-    func log2FAStartFailure() {
-        analyticsClient.logPaymentSheetEvent(event: .link2FAStartFailure, checkoutSessionID: checkoutSessionID)
+    func log2FAStart(type: SupportedVerificationType?) {
+        analyticsClient.logPaymentSheetEvent(event: .link2FAStart, checkoutSessionID: checkoutSessionID, params: verificationTypeParams(type))
     }
 
-    func log2FAComplete() {
-        analyticsClient.logPaymentSheetEvent(event: .link2FAComplete, checkoutSessionID: checkoutSessionID)
+    func log2FAStartFailure(type: SupportedVerificationType?) {
+        analyticsClient.logPaymentSheetEvent(event: .link2FAStartFailure, checkoutSessionID: checkoutSessionID, params: verificationTypeParams(type))
     }
 
-    func log2FAFailure() {
-        analyticsClient.logPaymentSheetEvent(event: .link2FAFailure, checkoutSessionID: checkoutSessionID)
+    func log2FAComplete(type: SupportedVerificationType?) {
+        analyticsClient.logPaymentSheetEvent(event: .link2FAComplete, checkoutSessionID: checkoutSessionID, params: verificationTypeParams(type))
     }
 
-    func log2FACancel() {
-        analyticsClient.logPaymentSheetEvent(event: .link2FACancel, checkoutSessionID: checkoutSessionID)
+    func log2FAFailure(type: SupportedVerificationType?) {
+        analyticsClient.logPaymentSheetEvent(event: .link2FAFailure, checkoutSessionID: checkoutSessionID, params: verificationTypeParams(type))
     }
 
-    func log2FAResendCode(type: ConsumerSession.VerificationSession.SessionType = .sms) {
-        let params = ["verification_type": type.rawValue]
-        analyticsClient.logPaymentSheetEvent(event: .link2FAResendCode, checkoutSessionID: checkoutSessionID, params: params)
+    func log2FACancel(type: SupportedVerificationType?) {
+        analyticsClient.logPaymentSheetEvent(event: .link2FACancel, checkoutSessionID: checkoutSessionID, params: verificationTypeParams(type))
+    }
+
+    func log2FAResendCode(type: SupportedVerificationType?) {
+        analyticsClient.logPaymentSheetEvent(event: .link2FAResendCode, checkoutSessionID: checkoutSessionID, params: verificationTypeParams(type))
     }
 
     func logBailedToWebFlow() {
