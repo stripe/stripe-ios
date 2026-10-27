@@ -465,60 +465,84 @@ extension PaymentPagesAPIResponse {
         let merchantCountryCode: String
         let value: STPElementsSession
 
-        init(checkoutClient decoder: Decoder) throws {
-            guard let fields = try decoder.stripeJSONDictionary as? [String: Any],
-                  let merchant = fields["merchant_info"] as? [String: Any],
-                  let merchantCountryCode = merchant["country"] as? String,
-                  let elementsSessionID = fields["elements_session_id"] as? String,
-                  let orderedTypes = fields["ordered_payment_method_types_and_wallets"] as? [String] else {
-                throw decoder.dataCorrupted("CheckoutClient response is missing required Elements configuration")
+        private enum CodingKeys: String, CodingKey {
+            case merchantInfo, elementsSessionId, elementsSessionConfigId
+            case orderedPaymentMethodTypesAndWallets, unactivatedPaymentMethodTypes
+            case countryCode, linkSettings, experimentsData, flags, cardBrandChoice
+            case applePayPreference, passiveCaptcha
+        }
+
+        private struct MerchantInfo: Decodable {
+            let displayName: String?
+            let country: String
+            let logoUrl: String?
+        }
+
+        private struct PassiveCaptcha: Decodable {
+            let siteKey: String
+            let rqdata: String?
+            let tokenRefreshAfterSeconds: TimeInterval?
+        }
+
+        /// Supplies the legacy Link parser's passthrough flag from CheckoutClient's mode.
+        private struct LegacyLinkSettings: Decodable {
+            let value: LinkSettings?
+
+            init(from decoder: Decoder) throws {
+                var fields = try decoder.stripeJSONDictionary
+                if fields["link_passthrough_mode_enabled"] == nil {
+                    // Elements derives this legacy flag from link_mode. CheckoutClient returns the mode
+                    // without the flag, which the SDK still uses to offer Link in Express Checkout.
+                    let linkMode = (fields["link_mode"] as? String).flatMap(LinkMode.init(rawValue:))
+                    fields["link_passthrough_mode_enabled"] = linkMode == .passthrough || linkMode == .linkCardBrand
+                }
+                value = LinkSettings.decodedObject(fromAPIResponse: fields)
             }
+        }
+
+        init(checkoutClient decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            let merchant = try container.decode(MerchantInfo.self, forKey: .merchantInfo)
+            let elementsSessionID = try container.decode(String.self, forKey: .elementsSessionId)
+            let orderedTypes = try container.decode([String].self, forKey: .orderedPaymentMethodTypesAndWallets)
             let paymentMethodTypes = orderedTypes.filter {
                 !["apple_pay", "google_pay", "card_wallet_link"].contains($0)
             }
-            var linkSettings = fields["link_settings"] as? [String: Any]
-            if linkSettings?["link_passthrough_mode_enabled"] == nil {
-                // Elements derives this legacy flag from link_mode. CheckoutClient returns the mode
-                // without the flag, which the SDK still uses to offer Link in Express Checkout.
-                let linkMode = (linkSettings?["link_mode"] as? String).flatMap(LinkMode.init(rawValue:))
-                linkSettings?["link_passthrough_mode_enabled"] = linkMode == .passthrough || linkMode == .linkCardBrand
-            }
-            let flags = fields["flags"] as? [String: Bool] ?? [:]
+            let flags = try container.decodeIfPresent([String: Bool].self, forKey: .flags) ?? [:]
+            let captcha = try container.decodeIfPresent(PassiveCaptcha.self, forKey: .passiveCaptcha)
             let passiveCaptchaData: PassiveCaptchaData?
-            if flags["elements_enable_passive_captcha"] == true,
-               let captcha = fields["passive_captcha"] as? [String: Any],
-               let siteKey = captcha["site_key"] as? String {
+            if flags["elements_enable_passive_captcha"] == true, let captcha {
                 passiveCaptchaData = PassiveCaptchaData(
-                    siteKey: siteKey,
-                    rqdata: captcha["rqdata"] as? String,
-                    tokenTimeoutSeconds: captcha["token_refresh_after_seconds"] as? TimeInterval ?? PassiveCaptchaData.defaultTokenTimeoutSeconds
+                    siteKey: captcha.siteKey,
+                    rqdata: captcha.rqdata,
+                    tokenTimeoutSeconds: captcha.tokenRefreshAfterSeconds ?? PassiveCaptchaData.defaultTokenTimeoutSeconds
                 )
             } else {
                 passiveCaptchaData = nil
             }
             let value = STPElementsSession(
-                allResponseFields: fields,
+                allResponseFields: try decoder.stripeJSONDictionary,
                 sessionID: elementsSessionID,
-                configID: fields["elements_session_config_id"] as? String,
+                configID: try container.decodeIfPresent(String.self, forKey: .elementsSessionConfigId),
                 orderedPaymentMethodTypes: paymentMethodTypes.map { STPPaymentMethod.type(from: $0) },
                 orderedPaymentMethodTypesAndWallets: orderedTypes,
-                unactivatedPaymentMethodTypes: (fields["unactivated_payment_method_types"] as? [String] ?? []).map { STPPaymentMethod.type(from: $0) },
-                countryCode: fields["country_code"] as? String,
-                merchantCountryCode: merchantCountryCode,
-                merchantLogoUrl: (merchant["logo_url"] as? String).flatMap(URL.init(string:)),
+                unactivatedPaymentMethodTypes: (try container.decodeIfPresent([String].self, forKey: .unactivatedPaymentMethodTypes) ?? []).map { STPPaymentMethod.type(from: $0) },
+                countryCode: try container.decodeIfPresent(String.self, forKey: .countryCode),
+                merchantCountryCode: merchant.country,
+                merchantLogoUrl: merchant.logoUrl.flatMap(URL.init(string:)),
                 accountID: nil,
-                linkSettings: LinkSettings.decodedObject(fromAPIResponse: linkSettings),
-                experimentsData: ExperimentsData.decodedObject(fromAPIResponse: fields["experiments_data"] as? [String: Any]),
+                linkSettings: try container.decodeIfPresent(LegacyLinkSettings.self, forKey: .linkSettings)?.value,
+                experimentsData: try container.decodeIfPresent(LegacyDecoded<ExperimentsData>.self, forKey: .experimentsData)?.value,
                 flags: flags,
-                cardBrandChoice: STPCardBrandChoice.decodedObject(fromAPIResponse: fields["card_brand_choice"] as? [String: Any]),
-                isApplePayEnabled: fields["apple_pay_preference"] as? String != "disabled",
+                cardBrandChoice: try container.decodeIfPresent(LegacyDecoded<STPCardBrandChoice>.self, forKey: .cardBrandChoice)?.value,
+                isApplePayEnabled: try container.decodeIfPresent(String.self, forKey: .applePayPreference) != "disabled",
                 externalPaymentMethods: [],
                 customPaymentMethods: [],
                 passiveCaptchaData: passiveCaptchaData,
                 customer: nil
             )
-            self.businessName = merchant["display_name"] as? String
-            self.merchantCountryCode = merchantCountryCode
+            self.businessName = merchant.displayName
+            self.merchantCountryCode = merchant.country
             self.value = value
         }
 

@@ -118,7 +118,12 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         // Invalid ordered payment method types
         json["ordered_payment_method_types_and_wallets"] = ["garbage": true]
 
-        XCTAssertThrowsError(try PaymentPagesAPIResponse.decode(fromAPIResponse: json))
+        XCTAssertThrowsError(try PaymentPagesAPIResponse.decode(fromAPIResponse: json)) { error in
+            guard case .dataCorrupted(let context) = error as? DecodingError else {
+                return XCTFail("Expected dataCorrupted, got \(error)")
+            }
+            XCTAssertEqual(context.codingPath.map(\.stringValue), ["orderedPaymentMethodTypesAndWallets"])
+        }
     }
 
     func testDecodedObjectFromAPIResponseRequiresMerchantCountry() {
@@ -127,7 +132,13 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         merchant.removeValue(forKey: "country")
         json["merchant_info"] = merchant
 
-        XCTAssertThrowsError(try PaymentPagesAPIResponse.decode(fromAPIResponse: json))
+        XCTAssertThrowsError(try PaymentPagesAPIResponse.decode(fromAPIResponse: json)) { error in
+            guard case .keyNotFound(let key, let context) = error as? DecodingError else {
+                return XCTFail("Expected keyNotFound, got \(error)")
+            }
+            XCTAssertEqual(key.stringValue, "country")
+            XCTAssertEqual(context.codingPath.map(\.stringValue), ["merchantInfo"])
+        }
     }
 
     func testDecodingErrorIncludesNestedFieldPath() throws {
