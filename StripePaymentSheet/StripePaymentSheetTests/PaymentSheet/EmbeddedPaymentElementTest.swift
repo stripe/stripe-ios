@@ -664,7 +664,8 @@ class EmbeddedPaymentElementTest: XCTestCase {
             savedPaymentMethods: [],
             paymentMethodTypes: [.stripe(.card)],
             paymentMethodMessagingPromotionsHelper: ._testValue(),
-            paymentMethodOrientation: .vertical
+            paymentMethodOrientation: .vertical,
+            customerProvider: CustomerProvider(customer: nil)
         )
         let sut = EmbeddedPaymentElement(
             configuration: configuration,
@@ -729,7 +730,8 @@ class EmbeddedPaymentElementTest: XCTestCase {
             savedPaymentMethods: [],
             paymentMethodTypes: [.stripe(.card)],
             paymentMethodMessagingPromotionsHelper: promotionsHelper,
-            paymentMethodOrientation: .vertical
+            paymentMethodOrientation: .vertical,
+            customerProvider: CustomerProvider(customer: nil)
         )
         await AddressSpecProvider.shared.loadAddressSpecs()
         let sut = EmbeddedPaymentElement(
