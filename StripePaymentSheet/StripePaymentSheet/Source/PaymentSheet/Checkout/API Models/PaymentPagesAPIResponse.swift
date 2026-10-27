@@ -530,6 +530,7 @@ extension PaymentPagesAPIResponse {
                 countryCode: try container.decodeIfPresent(String.self, forKey: .countryCode),
                 merchantCountryCode: merchant.country,
                 merchantLogoUrl: merchant.logoUrl.flatMap(URL.init(string:)),
+                // TODO(porter) account ID: Decode CheckoutClient's resolved account_id once the backend returns it.
                 accountID: nil,
                 linkSettings: try container.decodeIfPresent(LegacyLinkSettings.self, forKey: .linkSettings)?.value,
                 experimentsData: try container.decodeIfPresent(LegacyDecoded<ExperimentsData>.self, forKey: .experimentsData)?.value,
