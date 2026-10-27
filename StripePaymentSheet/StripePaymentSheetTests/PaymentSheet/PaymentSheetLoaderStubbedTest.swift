@@ -621,6 +621,100 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         wait(for: [loaded], timeout: 2)
     }
 
+    // MARK: - Link Email Sources
+
+    func testLoadLinkEmailForLegacyCustomer() async throws {
+        defer { LinkAccountContext.shared.account = nil }
+        let cases: [(explicitEmail: String?, customerStatus: Int32, expectedEmail: String, expectedSource: String)] = [
+            (nil, 200, "foo@bar.com", "customer_object"),
+            ("explicit@example.com", 200, "explicit@example.com", "customer_email"),
+            (nil, 403, "session@example.com", "customer_object"),
+        ]
+        for testCase in cases {
+            // Given competing Customer and Elements Session emails, and an optional explicit email
+            StubbedBackend.stubPaymentMethods(paymentMethodTypes: [])
+            StubbedBackend.stubSessions(fileMock: .elementsSessions_customerSessionsMobilePaymentElement_200) { data in
+                let resolved = StubbedBackend.updatePaymentMethodDetail(data: data, variables: [
+                    "<paymentMethods>": "\"card\", \"link\"",
+                    "<currency>": "\"usd\"",
+                ])
+                var json = try! JSONSerialization.jsonObject(with: resolved) as! [String: Any]
+                json[jsonDict: "customer"]?["email"] = "session@example.com"
+                return try! JSONSerialization.data(withJSONObject: json)
+            }
+            var customerRequestCount = 0
+            stub { $0.url?.path == "/v1/customers/123" } response: { request in
+                customerRequestCount += 1
+                XCTAssertEqual(request.value(forHTTPHeaderField: "Authorization"), "Bearer ek_456")
+                return HTTPStubsResponse(data: try! FileMock.customers_200.data(), statusCode: testCase.customerStatus, headers: nil)
+            }
+            var lookupRequestCount = 0
+            stub { $0.url?.path == "/v1/consumers/sessions/lookup" } response: { request in
+                lookupRequestCount += 1
+                let params = RequestBodyTestHelpers.formEncodedBodyParams(from: request)
+                XCTAssertEqual(params["email_address"], testCase.expectedEmail)
+                XCTAssertEqual(params["email_source"], testCase.expectedSource)
+                return HTTPStubsResponse(data: try! FileMock.consumers_lookup_200.data(), statusCode: 200, headers: nil)
+            }
+            var configuration = self.configuration(apiClient: stubbedAPIClient())
+            configuration.defaultBillingDetails.email = testCase.explicitEmail
+
+            // When loading with legacy customer credentials
+            _ = try await PaymentSheetLoader.load(
+                mode: .paymentIntentClientSecret("pi_12345_secret_54321"),
+                configuration: configuration,
+                analyticsHelper: ._testValue(configuration: configuration),
+                integrationShape: .paymentSheet
+            )
+
+            // Then explicit email skips retrieval, and a failed retrieval still allows the session fallback
+            XCTAssertEqual(customerRequestCount, testCase.explicitEmail == nil ? 1 : 0)
+            XCTAssertEqual(lookupRequestCount, 1)
+        }
+    }
+
+    func testCheckoutLinkEmailPrecedenceAndSource() async throws {
+        defer { LinkAccountContext.shared.account = nil }
+        let cases: [(sessionEmail: String?, customerEmail: String?, defaultEmail: String?, expected: (email: String, source: String))] = [
+            ("session@example.com", "customer@example.com", "default@example.com", ("session@example.com", "customer_email")),
+            (nil, "customer@example.com", "default@example.com", ("customer@example.com", "customer_email")),
+            (nil, nil, "default@example.com", ("default@example.com", "customer_email")),
+            (nil, nil, nil, ("elements@example.com", "customer_object")),
+        ]
+        for testCase in cases {
+            // Given distinct emails from each Checkout source
+            var elementsJSON = STPElementsSession._testValue(paymentMethodTypes: ["card", "link"], customerSessionData: [:]).allResponseFields
+            elementsJSON[jsonDict: "customer"]?["email"] = "elements@example.com"
+            var sessionJSON = CheckoutTestHelpers.openSessionJSON
+            sessionJSON["elements_session"] = elementsJSON
+            sessionJSON["customer_email"] = testCase.sessionEmail
+            if let customerEmail = testCase.customerEmail {
+                sessionJSON["customer"] = ["id": "cus_checkout", "email": customerEmail]
+            }
+            stub { $0.url?.path == "/v1/payment_pages/cs_test_123/init" } response: { _ in
+                HTTPStubsResponse(jsonObject: sessionJSON, statusCode: 200, headers: nil)
+            }
+            var lookupRequestCount = 0
+            stub { $0.url?.path == "/v1/consumers/sessions/lookup" } response: { request in
+                lookupRequestCount += 1
+                let params = RequestBodyTestHelpers.formEncodedBodyParams(from: request)
+                XCTAssertEqual(params["email_address"], testCase.expected.email)
+                XCTAssertEqual(params["email_source"], testCase.expected.source)
+                return HTTPStubsResponse(data: try! FileMock.consumers_lookup_200.data(), statusCode: 200, headers: nil)
+            }
+            var configuration = CheckoutController.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
+            configuration.apiClient = stubbedAPIClient()
+            configuration.paymentElement = .init()
+            configuration.defaults.email = testCase.defaultEmail
+
+            // When initializing Checkout's Link account
+            _ = try await CheckoutControllerLoader.load(configuration: configuration)
+
+            // Then Checkout session email precedes defaults, followed by Elements Session email
+            XCTAssertEqual(lookupRequestCount, 1)
+        }
+    }
+
     // MARK: - Link Lookup Session Preservation
 
     @MainActor
@@ -649,7 +743,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
             configuration: configuration,
             customerProvider: CustomerProvider(customer: configuration.customer),
             email: "foo@bar.com",
-            prefetchedEmailAndSource: nil,
+            prefetchedLinkEmail: nil,
             loadTimings: .init(),
             isUpdate: false
         )
@@ -685,7 +779,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
             configuration: configuration,
             customerProvider: CustomerProvider(customer: configuration.customer),
             email: "foo@bar.com",
-            prefetchedEmailAndSource: nil,
+            prefetchedLinkEmail: nil,
             loadTimings: .init(),
             isUpdate: false
         )
@@ -731,7 +825,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
             configuration: config,
             customerProvider: CustomerProvider(customer: config.customer),
             email: "test@example.com",
-            prefetchedEmailAndSource: nil,
+            prefetchedLinkEmail: nil,
             loadTimings: .init(),
             isUpdate: false
         )
