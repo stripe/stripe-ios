@@ -331,7 +331,11 @@ struct ExampleLinkControllerView: View {
             do {
                 let controller = try await LinkController.create(
                     mode: .setup,
-                    linkConfiguration: .init(supportedPaymentMethodTypes: supportedPaymentMethodTypes, merchantDisplayName: "Example, Inc.")
+                    linkConfiguration: .init(
+                        supportedPaymentMethodTypes: supportedPaymentMethodTypes,
+                        merchantDisplayName: "Example, Inc.",
+                        returnURL: "payments-example://stripe-redirect"
+                    )
                 )
                 await MainActor.run {
                     self.linkController = controller

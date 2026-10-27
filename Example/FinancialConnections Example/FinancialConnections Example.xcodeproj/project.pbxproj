@@ -88,11 +88,11 @@
 		496515B42D356DFF007B94BB /* FinancialConnections Example.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = "FinancialConnections Example.entitlements"; path = "FinancialConnections Example/FinancialConnections Example.entitlements"; sourceTree = "<group>"; };
 		496BCB442D32D1A300BFC3EE /* StripePaymentSheet.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripePaymentSheet.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5785AD2F7A6D71D9470B0DB6 /* StripeFinancialConnections.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeFinancialConnections.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		8D70180F2224B4577209331B /* StripeFinancialConnectionsLite.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeFinancialConnectionsLite.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5B50C88219DC0F3F0BFC5CE4 /* FinancialConnections-Example-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "FinancialConnections-Example-Release.xcconfig"; sourceTree = "<group>"; };
 		5B675DEF4776CDFF8309DEB8 /* Project-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Project-Debug.xcconfig"; sourceTree = "<group>"; };
 		701003016E153D5DF2B00442 /* FinancialConnections-Example-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "FinancialConnections-Example-Debug.xcconfig"; sourceTree = "<group>"; };
 		76B43732FE4180268DAA8355 /* FinancialConnectionsExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FinancialConnectionsExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		8D70180F2224B4577209331B /* StripeFinancialConnectionsLite.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeFinancialConnectionsLite.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		ADFEE494187576194F8B46BB /* StripeUICore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeUICore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CB4F660DE48B172E1E0FCF5C /* FinancialConnectionsUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FinancialConnectionsUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
