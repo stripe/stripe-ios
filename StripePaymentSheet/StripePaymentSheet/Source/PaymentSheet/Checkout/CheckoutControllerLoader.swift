@@ -48,12 +48,15 @@ enum CheckoutControllerLoader {
                 configuration: configuration,
                 session: session
             )
+            let customerProvider = CustomerProvider(checkoutSession: session)
             _ = await PaymentSheetLoader.loadLink(
                 elementsSession: session.elementsSession,
                 configuration: flowControllerConfiguration,
-                email: session.email ?? configuration.defaults.email,
+                customerProvider: customerProvider,
+                // Checkout session email precedes merchant defaults; Elements Session email remains a fallback.
+                email: customerProvider.linkEmail() ?? configuration.defaults.email,
                 analyticsHelper: ExperimentAnalyticsHelper(integrationShape: .checkoutElements),
-                prefetchedEmailAndSourceTask: Task { nil },
+                prefetchedLinkEmailTask: Task { nil },
                 loadTimings: .init(loadingStartDate: Date()),
                 isUpdate: false
             )
