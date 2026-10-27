@@ -73,15 +73,6 @@ extension UIColor {
      */
     static let linkBadgeNeutralForegroundColor: UIColor = dynamic(light: linkTextTertiary, dark: neutral400)
 
-    /**
-     * Workaround:
-     *
-     * We use a custom background color for toasts, and a white foreground color.
-     *
-     */
-    static let linkToastForeground: UIColor = neutral0
-    static let linkToastBackground: UIColor = brand900
-
     static let linkExpressCheckoutButtonDivider: UIColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.12)
     static let linkExpressCheckoutButtonForeground: UIColor = UIColor(red: 13/255, green: 13/255, blue: 13/255, alpha: 1)
     static let linkExpressCheckoutButtonBackground: UIColor = .white
@@ -107,7 +98,6 @@ private extension UIColor {
     static let neutral200: UIColor = UIColor(hex: 0xE5E5E5)
     static let neutral100: UIColor = UIColor(hex: 0xF5F5F5)
     static let neutral0: UIColor = UIColor(hex: 0xFFFFFF)
-    static let brand900: UIColor = UIColor(hex: 0x30303D)
     static let brand600: UIColor = UIColor(hex: 0x006635)
     static let brand400: UIColor = UIColor(red: 0, green: 0.64, blue: 0.33, alpha: 1.0) // #00A355
     static let brand200: UIColor = UIColor(red: 0, green: 0.84, blue: 0.44, alpha: 1.0) // #00D670
