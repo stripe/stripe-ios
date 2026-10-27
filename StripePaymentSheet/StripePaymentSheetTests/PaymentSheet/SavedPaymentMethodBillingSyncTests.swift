@@ -59,7 +59,7 @@ final class SavedPaymentMethodBillingSyncTests: XCTestCase {
 
     func testHorizontalSelectionWithoutBillingTaxCloses() async throws {
         // Given
-        let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration())
+        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration())
         let sut = makeHorizontalController(checkout: checkout)
         let delegate = MockFlowControllerViewControllerDelegate()
         sut.flowControllerDelegate = delegate
@@ -98,6 +98,7 @@ private extension SavedPaymentMethodBillingSyncTests {
         )
         let viewController = VerticalSavedPaymentMethodsViewController(
             configuration: EmbeddedPaymentElement.Configuration(),
+            customerProvider: CustomerProvider(customer: EmbeddedPaymentElement.Configuration().customer),
             intent: intent,
             checkout: updater,
             selectedPaymentMethod: paymentMethods[0],
@@ -110,7 +111,7 @@ private extension SavedPaymentMethodBillingSyncTests {
     }
 
     func makeHorizontalController(
-        checkout: Checkout
+        checkout: CheckoutController
     ) -> PaymentSheetFlowControllerViewController {
         let loadResult = PaymentSheetLoader.LoadResult(
             intent: .checkout(checkout.session),
@@ -121,13 +122,14 @@ private extension SavedPaymentMethodBillingSyncTests {
             savedPaymentMethods: paymentMethods,
             paymentMethodTypes: [.stripe(.card)],
             paymentMethodMessagingPromotionsHelper: ._testValue(),
-            paymentMethodOrientation: .horizontal
+            paymentMethodOrientation: .horizontal,
+            customerProvider: CustomerProvider(checkoutSession: checkout.session)
         )
         return PaymentSheetFlowControllerViewController(
             configuration: PaymentSheet.Configuration(),
             loadResult: loadResult,
             analyticsHelper: ._testValue(),
-            checkout: checkout
+            checkoutBillingAddressUpdater: checkout
         )
     }
 
@@ -157,21 +159,21 @@ private extension SavedPaymentMethodBillingSyncTests {
 private final class MockCheckoutSessionBillingAddressUpdater: CheckoutSessionBillingAddressUpdater {
     let updateStarted = XCTestExpectation(description: "Billing tax region update started")
 
-    private let session: Checkout.Session
+    private let session: CheckoutController.Session
     private let error: Error?
     private let suspendUpdate: Bool
     private var updateContinuation: CheckedContinuation<Void, Never>?
 
-    init(session: Checkout.Session, error: Error?, suspendUpdate: Bool) {
+    init(session: CheckoutController.Session, error: Error?, suspendUpdate: Bool) {
         self.session = session
         self.error = error
         self.suspendUpdate = suspendUpdate
     }
 
     func updateBillingTaxRegionIfNecessaryForPaymentSheet(
-        address: Checkout.Address,
+        address: CheckoutController.Address,
         canUpdateWhileSheetPresented: Bool
-    ) async throws -> Checkout.Session {
+    ) async throws -> CheckoutController.Session {
         if suspendUpdate {
             await withCheckedContinuation { continuation in
                 updateContinuation = continuation
@@ -189,13 +191,6 @@ private final class MockCheckoutSessionBillingAddressUpdater: CheckoutSessionBil
     func resumeUpdate() {
         updateContinuation?.resume()
         updateContinuation = nil
-    }
-
-    func commitSession(
-        _ apiResponse: PaymentPagesAPIResponse?,
-        applying localMutation: (@MainActor @Sendable (Checkout.Session) -> Checkout.Session)?
-    ) async throws {
-        XCTFail("Unexpected call to commitSession")
     }
 }
 

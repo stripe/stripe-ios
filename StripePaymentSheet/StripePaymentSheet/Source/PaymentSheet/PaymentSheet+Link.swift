@@ -35,6 +35,7 @@ extension PaymentSheet: PayWithLinkWebControllerDelegate {
 }
 
 extension PaymentSheet {
+    @MainActor
     func presentPayWithLinkController(
         from presentingController: UIViewController,
         intent: Intent,
@@ -60,6 +61,7 @@ extension PaymentSheet {
 @available(macCatalystApplicationExtension, unavailable)
 extension PaymentSheet {
 
+    @MainActor
     func presentPayWithNativeLinkController(
         from presentingController: UIViewController,
         intent: Intent,
@@ -70,7 +72,7 @@ extension PaymentSheet {
     ) {
         let payWithNativeLink = PayWithNativeLinkController(mode: .full, intent: intent, elementsSession: elementsSession, configuration: configuration, analyticsHelper: analyticsHelper, confirmationChallenge: confirmationChallenge)
 
-        payWithNativeLink.presentAsBottomSheet(from: presentingController, shouldOfferApplePay: shouldOfferApplePay, shouldFinishOnClose: shouldFinishOnClose, completion: { result, _, didFinish in
+        payWithNativeLink.presentAsSheet(from: presentingController, shouldOfferApplePay: shouldOfferApplePay, shouldFinishOnClose: shouldFinishOnClose, completion: { result, _, didFinish in
             if case let .failed(error) = result {
                 self.mostRecentError = error
             }
@@ -102,28 +104,17 @@ extension PaymentSheet {
 // MARK: - Native Link helpers
 
 /// Check if native Link is available on this device
-func deviceCanUseNativeLink(
-    useAttestationEndpoints: Bool?,
-    apiClient: STPAPIClient
-) -> Bool {
-    let useAttestationEndpoints = useAttestationEndpoints ?? false
-    guard useAttestationEndpoints else {
-        return false
-    }
-
-    // If we're in testmode, we don't need to attest for native Link
-    if apiClient.isTestmode {
-        return true
-    }
-
-    return apiClient.stripeAttest.isSupported
+func deviceCanUseNativeLink(elementsSession: STPElementsSession, configuration: PaymentElementConfiguration) -> Bool {
+    return deviceCanUseNativeLink(elementsSession: elementsSession, apiClient: configuration.apiClient)
 }
 
-/// Check if native Link is available on this device
-func deviceCanUseNativeLink(elementsSession: STPElementsSession, configuration: PaymentElementConfiguration) -> Bool {
+func deviceCanUseNativeLink(elementsSession: STPElementsSession, apiClient: STPAPIClient) -> Bool {
+    if let nativeLinkEnabledOverride = PaymentSheet.LinkFeatureFlags.nativeLinkEnabledOverride {
+        return nativeLinkEnabledOverride
+    }
     return deviceCanUseNativeLink(
         useAttestationEndpoints: elementsSession.linkSettings?.useAttestationEndpoints,
-        apiClient: configuration.apiClient
+        apiClient: apiClient
     )
 }
 
@@ -135,6 +126,9 @@ extension PaymentSheet {
 
         /// Decides whether Link inline verification is shown in the `WalletButtonsView`.
         @_spi(STP) public static var enableLinkInlineVerification: Bool = false
+
+        /// Overrides whether native Link is available. Intended for test playgrounds only.
+        @_spi(STP) public static var nativeLinkEnabledOverride: Bool?
     }
 }
 

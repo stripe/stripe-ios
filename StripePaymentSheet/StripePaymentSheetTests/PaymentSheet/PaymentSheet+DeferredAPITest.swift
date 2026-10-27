@@ -213,6 +213,41 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
         XCTAssertEqual(paymentIntentParams3.setupFutureUsage, STPPaymentIntentSetupFutureUsage.offSession)
     }
 
+    func testSetMandateDataIfNecessaryForAlipay() {
+        // Given
+        let regularParams = STPPaymentIntentParams(clientSecret: "pi_test_regular_secret_abc")
+
+        // When
+        PaymentSheet.setMandateDataIfNecessary(for: .alipay, on: regularParams)
+
+        // Then
+        XCTAssertNil(regularParams.mandateData)
+
+        // Given
+        let topLevelSFUParams = STPPaymentIntentParams(clientSecret: "pi_test_sfu_secret_abc")
+        topLevelSFUParams.setupFutureUsage = .offSession
+
+        // When
+        PaymentSheet.setMandateDataIfNecessary(for: .alipay, on: topLevelSFUParams)
+
+        // Then
+        XCTAssertNotNil(topLevelSFUParams.mandateData)
+
+        // Given
+        let pmoSFUParams = STPPaymentIntentParams(clientSecret: "pi_test_pmo_sfu_secret_abc")
+        let alipayOptions = STPConfirmAlipayOptions()
+        alipayOptions.setupFutureUsage = .offSession
+        let paymentMethodOptions = STPConfirmPaymentMethodOptions()
+        paymentMethodOptions.alipayOptions = alipayOptions
+        pmoSFUParams.paymentMethodOptions = paymentMethodOptions
+
+        // When
+        PaymentSheet.setMandateDataIfNecessary(for: .alipay, on: pmoSFUParams)
+
+        // Then
+        XCTAssertNotNil(pmoSFUParams.mandateData)
+    }
+
     // MARK: - Shared Payment Token Session Tests
 
     func testHandleDeferredIntentConfirmation_withPreparePaymentMethodHandler_callsHandlerWithCorrectParameters() async throws {

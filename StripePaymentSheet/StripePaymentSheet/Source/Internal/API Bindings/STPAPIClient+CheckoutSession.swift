@@ -9,6 +9,167 @@ import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 
+/// The parameters sent to the Checkout Session `/confirm` endpoint.
+struct CheckoutSessionConfirmationRequestParameters {
+    struct CollectedInformation {
+        let email: String?
+
+        var parameters: [String: Any] {
+            var parameters: [String: Any] = [:]
+            if let email {
+                parameters["email"] = email
+            }
+            return parameters
+        }
+    }
+
+    /// The ID of the Checkout Session (e.g., `cs_test_xxx`).
+    let sessionId: String
+
+    private enum PaymentMethod {
+        case id(String)
+        case data(STPPaymentMethodParams)
+    }
+
+    private let paymentMethod: PaymentMethod?
+
+    /// The ID of the PaymentMethod to use for confirmation.
+    var paymentMethodId: String? {
+        guard case .id(let id) = paymentMethod else { return nil }
+        return id
+    }
+
+    /// The data used to create a new PaymentMethod during confirmation, instead of a PaymentMethod ID.
+    var paymentMethodData: STPPaymentMethodParams? {
+        guard case .data(let data) = paymentMethod else { return nil }
+        return data
+    }
+
+    /// The Checkout Elements component confirming. Used to tag
+    /// `payment_method_data[payment_user_agent]` for payment/attribution purposes. Required on
+    /// every factory so all Checkout confirmation paths identify their confirming element.
+    let confirmationSource: CheckoutController.ConfirmingElement
+
+    /// The expected amount for validation. `nil` for setup-style Sessions.
+    let expectedAmount: Int?
+
+    /// The expected PaymentMethod type (e.g., `card`).
+    let expectedPaymentMethodType: String?
+
+    /// The optional top-level `save_payment_method` value that controls whether confirmation
+    /// attaches the PaymentMethod to the Checkout Session's customer.
+    let savePaymentMethod: Bool?
+
+    /// The optional return URL for redirect-based payment methods.
+    let returnURL: String?
+
+    /// The optional shipping details.
+    let shipping: STPPaymentIntentShippingDetailsParams?
+
+    /// The optional PaymentMethod options. The BLIK code is extracted and passed as the
+    /// top-level `blik_code` parameter.
+    let paymentMethodOptions: STPConfirmPaymentMethodOptions?
+
+    /// The optional client attribution metadata for analytics.
+    let clientAttributionMetadata: STPClientAttributionMetadata?
+
+    /// The optional hCaptcha challenge response token.
+    let passiveCaptchaToken: String?
+
+    /// Customer information collected independently of PaymentMethod billing details.
+    let collectedInformation: CollectedInformation?
+
+    /// Legacy customer information required today when confirming without a PaymentMethod.
+    /// TODO: Remove this once the server can construct no-PaymentMethod `CustomerInfo` entirely
+    /// from fixed and independently collected information.
+    let customerData: [String: Any]?
+
+    static func createWithoutPaymentMethod(
+        sessionId: String,
+        confirmationSource: CheckoutController.ConfirmingElement,
+        expectedAmount: Int?,
+        returnURL: String? = nil,
+        clientAttributionMetadata: STPClientAttributionMetadata? = nil,
+        customerData: [String: Any]? = nil
+    ) -> Self {
+        Self(
+            sessionId: sessionId,
+            paymentMethod: nil,
+            confirmationSource: confirmationSource,
+            expectedAmount: expectedAmount,
+            expectedPaymentMethodType: nil,
+            savePaymentMethod: nil,
+            returnURL: returnURL,
+            shipping: nil,
+            paymentMethodOptions: nil,
+            clientAttributionMetadata: clientAttributionMetadata,
+            passiveCaptchaToken: nil,
+            collectedInformation: nil,
+            customerData: customerData
+        )
+    }
+
+    static func createWithPaymentMethodID(
+        sessionId: String,
+        paymentMethodId: String,
+        confirmationSource: CheckoutController.ConfirmingElement,
+        expectedAmount: Int?,
+        expectedPaymentMethodType: String,
+        savePaymentMethod: Bool? = nil,
+        returnURL: String? = nil,
+        shipping: STPPaymentIntentShippingDetailsParams? = nil,
+        paymentMethodOptions: STPConfirmPaymentMethodOptions? = nil,
+        clientAttributionMetadata: STPClientAttributionMetadata? = nil,
+        passiveCaptchaToken: String? = nil,
+        collectedInformation: CollectedInformation? = nil
+    ) -> Self {
+        Self(
+            sessionId: sessionId,
+            paymentMethod: .id(paymentMethodId),
+            confirmationSource: confirmationSource,
+            expectedAmount: expectedAmount,
+            expectedPaymentMethodType: expectedPaymentMethodType,
+            savePaymentMethod: savePaymentMethod,
+            returnURL: returnURL,
+            shipping: shipping,
+            paymentMethodOptions: paymentMethodOptions,
+            clientAttributionMetadata: clientAttributionMetadata,
+            passiveCaptchaToken: passiveCaptchaToken,
+            collectedInformation: collectedInformation,
+            customerData: nil
+        )
+    }
+
+    static func createWithPaymentMethodData(
+        sessionId: String,
+        paymentMethodData: STPPaymentMethodParams,
+        confirmationSource: CheckoutController.ConfirmingElement,
+        expectedAmount: Int?,
+        savePaymentMethod: Bool? = nil,
+        returnURL: String? = nil,
+        shipping: STPPaymentIntentShippingDetailsParams? = nil,
+        paymentMethodOptions: STPConfirmPaymentMethodOptions? = nil,
+        clientAttributionMetadata: STPClientAttributionMetadata? = nil,
+        collectedInformation: CollectedInformation? = nil
+    ) -> Self {
+        Self(
+            sessionId: sessionId,
+            paymentMethod: .data(paymentMethodData),
+            confirmationSource: confirmationSource,
+            expectedAmount: expectedAmount,
+            expectedPaymentMethodType: paymentMethodData.rawTypeString,
+            savePaymentMethod: savePaymentMethod,
+            returnURL: returnURL,
+            shipping: shipping,
+            paymentMethodOptions: paymentMethodOptions,
+            clientAttributionMetadata: clientAttributionMetadata,
+            passiveCaptchaToken: nil,
+            collectedInformation: collectedInformation,
+            customerData: nil
+        )
+    }
+}
+
 extension STPAPIClient {
 
     /// Initializes a CheckoutSession, fetching payment configuration data.
@@ -41,8 +202,7 @@ extension STPAPIClient {
             ],
         ]
 
-        let checkoutSession: PaymentPagesAPIResponse = try await APIRequest<PaymentPagesAPIResponse>.post(
-            with: self,
+        let checkoutSession = try await post(
             endpoint: "payment_pages/\(checkoutSessionId)/init",
             parameters: parameters
         )
@@ -63,10 +223,38 @@ extension STPAPIClient {
         params["elements_session_client"] = [
             "is_aggregation_expected": true,
         ]
-        return try await APIRequest<PaymentPagesAPIResponse>.post(
-            with: self,
+        return try await post(
             endpoint: "payment_pages/\(checkoutSessionId)",
             parameters: params
+        )
+    }
+
+    /// Retrieves the latest full Checkout Session.
+    func retrieveCheckoutSession(
+        checkoutSessionId: String
+    ) async throws -> PaymentPagesAPIResponse {
+        return try await get(
+            endpoint: "payment_pages/\(checkoutSessionId)",
+            parameters: [
+                "elements_session_client": [
+                    "is_aggregation_expected": true,
+                ],
+            ],
+            useServerErrorMessage: true
+        )
+    }
+
+    /// Retrieves the small state object used to determine whether a Checkout
+    /// Session transition is still in progress.
+    func pollCheckoutSession(
+        checkoutSessionId: String,
+        timeout: TimeInterval
+    ) async throws -> PaymentPagePollResponse {
+        return try await get(
+            endpoint: "payment_pages/\(checkoutSessionId)/poll",
+            parameters: [:],
+            timeout: timeout,
+            retriesEnabled: false
         )
     }
 
@@ -74,8 +262,7 @@ extension STPAPIClient {
         _ paymentMethodId: String,
         fromCheckoutSession checkoutSessionId: String
     ) async throws {
-        _ = try await APIRequest<PaymentPagesAPIResponse>.post(
-            with: self,
+        _ = try await post(
             endpoint: "payment_pages/\(checkoutSessionId)",
             parameters: [
                 "payment_method_to_detach": paymentMethodId,
@@ -94,8 +281,8 @@ extension STPAPIClient {
     func updatePaymentMethod(
         _ paymentMethodId: String,
         inCheckoutSession checkoutSessionId: String,
-        billingDetails: Checkout.PaymentMethodBillingDetails? = nil,
-        expiryDetails: Checkout.PaymentMethodExpiryDetails? = nil
+        billingDetails: CheckoutController.PaymentMethodBillingDetails? = nil,
+        expiryDetails: CheckoutController.PaymentMethodExpiryDetails? = nil
     ) async throws -> PaymentPagesAPIResponse {
         var params = Self.updatePaymentMethodParameters(
             paymentMethodId: paymentMethodId,
@@ -103,8 +290,7 @@ extension STPAPIClient {
             expiryDetails: expiryDetails
         )
         params["elements_session_client"] = ["is_aggregation_expected": true]
-        return try await APIRequest<PaymentPagesAPIResponse>.post(
-            with: self,
+        return try await post(
             endpoint: "payment_pages/\(checkoutSessionId)",
             parameters: params
         )
@@ -112,8 +298,8 @@ extension STPAPIClient {
 
     static func updatePaymentMethodParameters(
         paymentMethodId: String,
-        billingDetails: Checkout.PaymentMethodBillingDetails?,
-        expiryDetails: Checkout.PaymentMethodExpiryDetails?
+        billingDetails: CheckoutController.PaymentMethodBillingDetails?,
+        expiryDetails: CheckoutController.PaymentMethodExpiryDetails?
     ) -> [String: Any] {
         var params: [String: Any] = [
             "payment_method_to_update[payment_method_id]": paymentMethodId,
@@ -141,34 +327,12 @@ extension STPAPIClient {
         return params
     }
 
-    /// Confirms a CheckoutSession with the provided payment method and parameters.
-    /// - Parameters:
-    ///   - sessionId: The ID of the checkout session (e.g., "cs_test_xxx")
-    ///   - paymentMethod: The ID of the payment method to use for confirmation (payment method must have billing email)
-    ///   - expectedAmount: The expected amount for validation. `nil` for setup-style sessions.
-    ///   - expectedPaymentMethodType: The expected payment method type (e.g., "card")
-    ///   - savePaymentMethod: Optional top-level save_payment_method value that controls whether confirmation attaches the payment method to the Checkout Session's customer.
-    ///   - returnURL: Optional return URL for redirect-based payment methods
-    ///   - shipping: Optional shipping details
-    ///   - paymentMethodOptions: Optional payment method options. BLIK code is extracted and passed as top-level `blik_code` parameter.
-    ///   - clientAttributionMetadata: Optional client attribution metadata for analytics
-    ///   - passiveCaptchaToken: Optional hCaptcha challenge response token
+    /// Confirms a Checkout Session with the provided request parameters.
     /// - Returns: Payment Pages API response containing the full confirmed session with expanded intents.
     func confirmCheckoutSession(
-        sessionId: String,
-        paymentMethod: String,
-        expectedAmount: Int?,
-        expectedPaymentMethodType: String,
-        savePaymentMethod: Bool? = nil,
-        returnURL: String? = nil,
-        shipping: STPPaymentIntentShippingDetailsParams? = nil,
-        paymentMethodOptions: STPConfirmPaymentMethodOptions? = nil,
-        clientAttributionMetadata: STPClientAttributionMetadata? = nil,
-        passiveCaptchaToken: String? = nil
+        with requestParameters: CheckoutSessionConfirmationRequestParameters
     ) async throws -> PaymentPagesAPIResponse {
         var parameters: [String: Any] = [
-            "payment_method": paymentMethod,
-            "expected_payment_method_type": expectedPaymentMethodType,
             "elements_session_client": ["is_aggregation_expected": true],
             "expand": [
                 "payment_intent",
@@ -178,39 +342,126 @@ extension STPAPIClient {
             ],
         ]
 
-        if let expectedAmount {
+        if let paymentMethodId = requestParameters.paymentMethodId {
+            parameters["payment_method"] = paymentMethodId
+        }
+
+        if let paymentMethodData = requestParameters.paymentMethodData {
+            var data = STPFormEncoder.dictionary(forObject: paymentMethodData)
+            // Build payment_user_agent fresh for the confirming Checkout Elements component,
+            // rather than appending to it, so it's never contaminated by whatever classes have
+            // registered into the global STPAnalyticsClient.sharedClient.productUsage set (e.g.
+            // PaymentSheet.FlowController/EmbeddedPaymentElement, which PaymentElement wraps
+            // internally) — see CheckoutController.ConfirmingElement.
+            data["payment_user_agent"] = requestParameters.confirmationSource.paymentUserAgent
+            STPTelemetryClient.shared.addTelemetryFields(toParams: &data)
+            parameters["payment_method_data"] = data
+        }
+
+        if let expectedPaymentMethodType = requestParameters.expectedPaymentMethodType {
+            parameters["expected_payment_method_type"] = expectedPaymentMethodType
+        }
+
+        if let expectedAmount = requestParameters.expectedAmount {
             parameters["expected_amount"] = expectedAmount
         }
 
-        if let savePaymentMethod {
+        if let savePaymentMethod = requestParameters.savePaymentMethod {
             parameters["save_payment_method"] = savePaymentMethod
         }
 
-        if let returnURL {
+        if let returnURL = requestParameters.returnURL {
             parameters["return_url"] = returnURL
         }
 
-        if let shipping {
+        if let shipping = requestParameters.shipping {
             parameters["shipping"] = STPFormEncoder.dictionary(forObject: shipping)
         }
 
         // Checkout session confirm API uses top-level parameters for payment method specific options
-        if let blikCode = paymentMethodOptions?.blikOptions?.code {
+        if let blikCode = requestParameters.paymentMethodOptions?.blikOptions?.code {
             parameters["blik_code"] = blikCode
         }
 
-        if let clientAttributionMetadata {
+        if let clientAttributionMetadata = requestParameters.clientAttributionMetadata {
             parameters["client_attribution_metadata"] = try clientAttributionMetadata.encodeJSONDictionary()
         }
 
-        if let passiveCaptchaToken {
+        if let passiveCaptchaToken = requestParameters.passiveCaptchaToken {
             parameters["passive_captcha_token"] = passiveCaptchaToken
         }
 
-        return try await APIRequest<PaymentPagesAPIResponse>.post(
-            with: self,
-            endpoint: "payment_pages/\(sessionId)/confirm",
+        if let collectedInformation = requestParameters.collectedInformation?.parameters,
+           !collectedInformation.isEmpty {
+            parameters["collected_information"] = collectedInformation
+        }
+
+        if let customerData = requestParameters.customerData {
+            parameters["customer_data"] = customerData
+        }
+
+        return try await post(
+            endpoint: "payment_pages/\(requestParameters.sessionId)/confirm",
             parameters: parameters
         )
     }
+
+    private func post(
+        endpoint: String,
+        parameters: [String: Any]
+    ) async throws -> PaymentPagesAPIResponse {
+        do {
+            return try await withCheckedThrowingContinuation { continuation in
+                post(resource: endpoint, parameters: parameters) { result in
+                    continuation.resume(with: result)
+                }
+            }
+        } catch StripeError.apiError(let apiError) {
+            throw checkoutSessionError(from: apiError)
+        } catch {
+            if error is DecodingError {
+                reportUnexpectedPaymentPagesParsingError(error, apiClient: self)
+            }
+            throw error
+        }
+    }
+
+    private func get<T: Decodable>(
+        endpoint: String,
+        parameters: [String: Any],
+        timeout: TimeInterval? = nil,
+        retriesEnabled: Bool = true,
+        useServerErrorMessage: Bool = false
+    ) async throws -> T {
+        do {
+            return try await withCheckedThrowingContinuation { continuation in
+                get(
+                    resource: endpoint,
+                    parameters: parameters,
+                    timeout: timeout,
+                    retriesEnabled: retriesEnabled
+                ) { (result: Result<T, Error>) in
+                    continuation.resume(with: result)
+                }
+            }
+        } catch StripeError.apiError(let apiError) where useServerErrorMessage {
+            throw checkoutSessionError(from: apiError)
+        } catch {
+            if error is DecodingError {
+                reportUnexpectedPaymentPagesParsingError(error, apiClient: self)
+            }
+            throw error
+        }
+    }
+
+    private func checkoutSessionError(from apiError: StripeAPIError) -> StripeError {
+        // During private preview, Checkout cannot distinguish buyer-actionable API errors.
+        // Let the shared formatter expose the server's optional message for every error type.
+        var apiError = apiError
+        apiError.useServerErrorMessage = true
+        // Keep the original error so analytics and other internal consumers retain all API data.
+        return .apiError(apiError)
+    }
 }
+
+extension STPAPIClient: CheckoutSessionPollingAPIClient {}

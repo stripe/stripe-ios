@@ -19,7 +19,7 @@ protocol FinancialConnectionsWebFlowViewControllerDelegate: AnyObject {
 
     func webFlowViewController(
         _ webFlowViewController: UIViewController,
-        didReceiveEvent event: FinancialConnectionsEvent
+        didReceiveEvent event: FinancialConnectionsEventPayload
     )
 }
 
@@ -179,7 +179,9 @@ extension FinancialConnectionsWebFlowViewController {
                 self.loadingView.showLoading(false)
                 switch result {
                 case .success(.success(let returnUrl)):
-                    if manifest.isProductInstantDebits {
+                    if apiClient.hasRequestedDataPermissions {
+                        self.fetchSession()
+                    } else if manifest.isProductInstantDebits {
                         do {
                             if let paymentMethod = try returnUrl.extractLinkBankPaymentMethod() {
                                 let instantDebitsLinkedBank = createInstantDebitsLinkedBank(
@@ -294,7 +296,7 @@ extension FinancialConnectionsWebFlowViewController {
         }
         delegate?.webFlowViewController(
             self,
-            didReceiveEvent: FinancialConnectionsEvent(
+            didReceiveEvent: FinancialConnectionsEventPayload(
                 name: .success,
                 metadata: FinancialConnectionsEvent.Metadata(
                     manualEntry: session?.paymentAccount?.isManualEntry ?? false
@@ -307,14 +309,14 @@ extension FinancialConnectionsWebFlowViewController {
     private func notifyDelegateOfCancel() {
         delegate?.webFlowViewController(
             self,
-            didReceiveEvent: FinancialConnectionsEvent(name: .cancel)
+            didReceiveEvent: FinancialConnectionsEventPayload(name: .cancel)
         )
         notifyDelegate(result: .canceled)
     }
 
     // all failures except custom manual entry failure
     private func notifyDelegateOfFailure(error: Error) {
-        FinancialConnectionsEvent
+        FinancialConnectionsEventPayload
             .events(fromError: error)
             .forEach { event in
                 delegate?.webFlowViewController(self, didReceiveEvent: event)

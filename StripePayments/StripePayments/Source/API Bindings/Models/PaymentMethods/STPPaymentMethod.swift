@@ -92,6 +92,8 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
     @objc private(set) public var multibanco: STPPaymentMethodMultibanco?
     /// If this is a MobilePay PaymentMethod (i.e. `self.type == STPPaymentMethodTypeMobilePay`), this contains additional details.
     @objc private(set) public var mobilePay: STPPaymentMethodMobilePay?
+    /// If this is a Vipps PaymentMethod (i.e. `self.type == STPPaymentMethodTypeVipps`), this contains additional details.
+    @objc private(set) public var vipps: STPPaymentMethodVipps?
     /// If this is a PayPay PaymentMethod (i.e. `self.type == STPPaymentMethodTypePayPay`), this contains additional details.
     @objc private(set) public var payPay: STPPaymentMethodPayPay?
     /// If this is a TWINT PaymentMethod (i.e. `self.type == STPPaymentMethodTypeTwint`), this contains additional details.
@@ -100,6 +102,42 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
     @objc private(set) public var wero: STPPaymentMethodWero?
     /// If this is a Pay by Bank PaymentMethod (i.e. `self.type == STPPaymentMethodTypePayByBank`), this contains additional details.
     @objc private(set) public var payByBank: STPPaymentMethodPayByBank?
+    /// If this is a Kakao Pay PaymentMethod (i.e. `self.type == STPPaymentMethodTypeKakaoPay`), this contains additional details.
+    @objc private(set) public var kakaoPay: STPPaymentMethodKakaoPay?
+    /// If this is a Korean cards PaymentMethod (i.e. `self.type == STPPaymentMethodTypeKrCard`), this contains additional details.
+    @objc private(set) public var krCard: STPPaymentMethodKrCard?
+    /// If this is a Naver Pay PaymentMethod (i.e. `self.type == STPPaymentMethodTypeNaverPay`), this contains additional details.
+    @objc private(set) public var naverPay: STPPaymentMethodNaverPay?
+    /// If this is a PAYCO PaymentMethod (i.e. `self.type == STPPaymentMethodTypePayco`), this contains additional details.
+    @objc private(set) public var payco: STPPaymentMethodPayco?
+    /// If this is a SeQura PaymentMethod (i.e. `self.type == STPPaymentMethodTypeSequra`), this contains additional details.
+    @objc private(set) public var sequra: STPPaymentMethodSequra?
+    /// If this is a Scalapay PaymentMethod (i.e. `self.type == STPPaymentMethodTypeScalapay`), this contains additional details.
+    @objc private(set) public var scalapay: STPPaymentMethodScalapay?
+    /// If this is a GoPay PaymentMethod, this contains additional details.
+    @objc private(set) public var goPay: STPPaymentMethodGoPay?
+    /// If this is a Mondu PaymentMethod, this contains additional details.
+    @objc private(set) public var mondu: STPPaymentMethodMondu?
+    /// If this is a Naira USSD PaymentMethod, this contains additional details.
+    @objc private(set) public var ngUSSD: STPPaymentMethodNgUSSD?
+    /// If this is a QRIS PaymentMethod, this contains additional details.
+    @objc private(set) public var qris: STPPaymentMethodQRIS?
+    /// If this is a Naira Wallet PaymentMethod, this contains additional details.
+    @objc private(set) public var ngWallet: STPPaymentMethodNgWallet?
+    /// If this is a ShopeePay PaymentMethod, this contains additional details.
+    @objc private(set) public var shopeePay: STPPaymentMethodShopeePay?
+    /// If this is a TrueMoney PaymentMethod, this contains additional details.
+    @objc private(set) public var trueMoney: STPPaymentMethodTrueMoney?
+    /// If this is a Touch 'n Go PaymentMethod, this contains additional details.
+    @objc private(set) public var touchNGo: STPPaymentMethodTouchNGo?
+    /// If this is a GCash PaymentMethod, this contains additional details.
+    @objc private(set) public var gcash: STPPaymentMethodGCash?
+    /// If this is a MoMo PaymentMethod, this contains additional details.
+    @objc private(set) public var momo: STPPaymentMethodMomo?
+    /// If this is a Naira bank transfer PaymentMethod, this contains additional details.
+    @objc private(set) public var ngBankTransfer: STPPaymentMethodNgBankTransfer?
+    /// If this is a Naira card PaymentMethod, this contains additional details.
+    @objc private(set) public var ngCard: STPPaymentMethodNgCard?
 
     /// This field indicates whether this payment method can be shown again to its customer in a checkout flow
     @objc private(set) public var allowRedisplay: STPPaymentMethodAllowRedisplay
@@ -171,9 +209,28 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
             "crypto = \(String(describing: crypto))",
             "multibanco = \(String(describing: multibanco))",
             "mobilePay = \(String(describing: mobilePay))",
+            "vipps = \(String(describing: vipps))",
             "twint = \(String(describing: twint))",
             "wero = \(String(describing: wero))",
             "payByBank = \(String(describing: payByBank))",
+            "kakaoPay = \(String(describing: kakaoPay))",
+            "krCard = \(String(describing: krCard))",
+            "naverPay = \(String(describing: naverPay))",
+            "payco = \(String(describing: payco))",
+            "sequra = \(String(describing: sequra))",
+            "scalapay = \(String(describing: scalapay))",
+            "goPay = \(String(describing: goPay))",
+            "mondu = \(String(describing: mondu))",
+            "ngUSSD = \(String(describing: ngUSSD))",
+            "qris = \(String(describing: qris))",
+            "ngWallet = \(String(describing: ngWallet))",
+            "shopeePay = \(String(describing: shopeePay))",
+            "trueMoney = \(String(describing: trueMoney))",
+            "touchNGo = \(String(describing: touchNGo))",
+            "gcash = \(String(describing: gcash))",
+            "momo = \(String(describing: momo))",
+            "ngBankTransfer = \(String(describing: ngBankTransfer))",
+            "ngCard = \(String(describing: ngCard))",
             "liveMode = \(liveMode ? "YES" : "NO")",
             "allowRedisplay = \(allResponseFields["allow_redisplay"] as? String ?? "")",
             "type = \(allResponseFields["type"] as? String ?? "")",
@@ -363,6 +420,9 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
         paymentMethod.mobilePay = STPPaymentMethodMobilePay.decodedObject(
             fromAPIResponse: dict.stp_dictionary(forKey: "mobilepay")
         )
+        paymentMethod.vipps = STPPaymentMethodVipps.decodedObject(
+            fromAPIResponse: dict.stp_dictionary(forKey: "vipps")
+        )
         paymentMethod.payPay = STPPaymentMethodPayPay.decodedObject(
             fromAPIResponse: dict.stp_dictionary(forKey: "paypay")
         )
@@ -374,6 +434,60 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
         )
         paymentMethod.payByBank = STPPaymentMethodPayByBank.decodedObject(
             fromAPIResponse: dict.stp_dictionary(forKey: "pay_by_bank")
+        )
+        paymentMethod.kakaoPay = STPPaymentMethodKakaoPay.decodedObject(
+            fromAPIResponse: dict.stp_dictionary(forKey: "kakao_pay")
+        )
+        paymentMethod.krCard = STPPaymentMethodKrCard.decodedObject(
+            fromAPIResponse: dict.stp_dictionary(forKey: "kr_card")
+        )
+        paymentMethod.naverPay = STPPaymentMethodNaverPay.decodedObject(
+            fromAPIResponse: dict.stp_dictionary(forKey: "naver_pay")
+        )
+        paymentMethod.payco = STPPaymentMethodPayco.decodedObject(
+            fromAPIResponse: dict.stp_dictionary(forKey: "payco")
+        )
+        paymentMethod.sequra = STPPaymentMethodSequra.decodedObject(
+            fromAPIResponse: dict.stp_dictionary(forKey: "sequra")
+        )
+        paymentMethod.scalapay = STPPaymentMethodScalapay.decodedObject(
+            fromAPIResponse: dict.stp_dictionary(forKey: "scalapay")
+        )
+        paymentMethod.goPay = STPPaymentMethodGoPay.decodedObject(
+            fromAPIResponse: dict.stp_dictionary(forKey: "gopay")
+        )
+        paymentMethod.ngBankTransfer = STPPaymentMethodNgBankTransfer.decodedObject(
+            fromAPIResponse: dict.stp_dictionary(forKey: "ng_bank_transfer")
+        )
+        paymentMethod.ngCard = STPPaymentMethodNgCard.decodedObject(
+            fromAPIResponse: dict.stp_dictionary(forKey: "ng_card")
+        )
+        paymentMethod.mondu = STPPaymentMethodMondu.decodedObject(
+            fromAPIResponse: dict.stp_dictionary(forKey: "mondu")
+        )
+        paymentMethod.ngUSSD = STPPaymentMethodNgUSSD.decodedObject(
+            fromAPIResponse: dict.stp_dictionary(forKey: "ng_ussd")
+        )
+        paymentMethod.qris = STPPaymentMethodQRIS.decodedObject(
+            fromAPIResponse: dict.stp_dictionary(forKey: "qris")
+        )
+        paymentMethod.ngWallet = STPPaymentMethodNgWallet.decodedObject(
+            fromAPIResponse: dict.stp_dictionary(forKey: "ng_wallet")
+        )
+        paymentMethod.shopeePay = STPPaymentMethodShopeePay.decodedObject(
+            fromAPIResponse: dict.stp_dictionary(forKey: "shopeepay")
+        )
+        paymentMethod.trueMoney = STPPaymentMethodTrueMoney.decodedObject(
+            fromAPIResponse: dict.stp_dictionary(forKey: "truemoney")
+        )
+        paymentMethod.touchNGo = STPPaymentMethodTouchNGo.decodedObject(
+            fromAPIResponse: dict.stp_dictionary(forKey: "touch_n_go")
+        )
+        paymentMethod.gcash = STPPaymentMethodGCash.decodedObject(
+            fromAPIResponse: dict.stp_dictionary(forKey: "gcash")
+        )
+        paymentMethod.momo = STPPaymentMethodMomo.decodedObject(
+            fromAPIResponse: dict.stp_dictionary(forKey: "momo")
         )
         return paymentMethod
     }

@@ -12,6 +12,7 @@
 @testable @_spi(AppearanceAPIAdditionsPreview) @_spi(STP) import StripeUICore
 import XCTest
 
+@MainActor
 class PaymentSheetFlowControllerTests: XCTestCase {
 
     func makePaymentDetailsStub(nickname: String? = nil) -> ConsumerPaymentDetails {
@@ -430,7 +431,7 @@ class PaymentSheetFlowControllerTests: XCTestCase {
         let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card])
         let elementsSession = STPElementsSession._testCardValue()
         let loadResult = PaymentSheetLoader.LoadResult(intent: intent, elementsSession: elementsSession, savedPaymentMethods: [], paymentMethodTypes: [.stripe(.card)], paymentMethodMessagingPromotionsHelper: ._testValue(),
- paymentMethodOrientation: .vertical)
+ paymentMethodOrientation: .vertical, customerProvider: CustomerProvider(customer: configuration.customer))
 
         let flowController = PaymentSheet.FlowController(
             configuration: configuration,
@@ -467,49 +468,6 @@ class PaymentSheetFlowControllerTests: XCTestCase {
         wait(for: [legacyExpectation], timeout: 2.0)
     }
 
-    // MARK: - Checkout terminal session
-
-    @MainActor
-    func testUpdateCheckoutNoOpsForTerminalSession() async throws {
-        let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card])
-        let elementsSession = STPElementsSession._testCardValue()
-        let loadResult = PaymentSheetLoader.LoadResult(
-            intent: intent,
-            elementsSession: elementsSession,
-            savedPaymentMethods: [],
-            paymentMethodTypes: [.stripe(.card)],
-            paymentMethodMessagingPromotionsHelper: ._testValue(),
-            paymentMethodOrientation: .vertical
-        )
-        var configuration = PaymentSheet.Configuration()
-        configuration.apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
-        let fc = PaymentSheet.FlowController(
-            configuration: configuration,
-            loadResult: loadResult,
-            analyticsHelper: ._testValue()
-        )
-
-        let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration())
-
-        // Move session to complete
-        let completedSession = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: {
-            var json = CheckoutTestHelpers.openSessionJSON
-            json["status"] = "complete"
-            json["payment_status"] = "paid"
-            return json
-        }())!
-        try await checkout.commitSession(completedSession)
-        XCTAssertFalse(checkout.sessionIsOpen)
-
-        // FC update should bail immediately
-        let exp = expectation(description: "update completes")
-        fc.update(checkout: checkout) { error in
-            XCTAssertNil(error)
-            exp.fulfill()
-        }
-        await fulfillment(of: [exp], timeout: 2.0)
-    }
-
     // MARK: - PaymentOption.checkoutBillingDetails
 
     func testSavedPaymentOptionCheckoutBillingDetails_fallsBackToSavedPaymentMethod() {
@@ -537,17 +495,18 @@ class PaymentSheetFlowControllerTests: XCTestCase {
 
     @MainActor
     private func makeHorizontalFlowController(customerID: String) -> PaymentSheet.FlowController {
+        var configuration = PaymentSheet.Configuration()
+        configuration.customer = .init(id: customerID, ephemeralKeySecret: "")
+        configuration.applePay = nil
         let loadResult = PaymentSheetLoader.LoadResult(
             intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
             elementsSession: ._testValue(paymentMethodTypes: ["card"], isLinkPassthroughModeEnabled: true),
             savedPaymentMethods: [],
             paymentMethodTypes: [.stripe(.card)],
             paymentMethodMessagingPromotionsHelper: ._testValue(),
-            paymentMethodOrientation: .horizontal
+            paymentMethodOrientation: .horizontal,
+            customerProvider: CustomerProvider(customer: configuration.customer)
         )
-        var configuration = PaymentSheet.Configuration()
-        configuration.customer = .init(id: customerID, ephemeralKeySecret: "")
-        configuration.applePay = nil
         return PaymentSheet.FlowController(
             configuration: configuration,
             loadResult: loadResult,

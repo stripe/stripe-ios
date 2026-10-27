@@ -19,7 +19,7 @@ fileprivate extension ConsumerPaymentDetails {
             return details
         case .bankAccount:
             return nil
-        case .unparsable:
+        case .generic:
             return nil
         }
     }

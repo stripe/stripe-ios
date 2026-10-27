@@ -99,6 +99,70 @@ class LinkInlineSignupElementSnapshotTests: STPSnapshotTestCase {
 
     // MARK: SignupOptIn mode
 
+    func testSignupOptInDoesNotBreakConstraints() throws {
+        // Observe the same UIKit callback used by the example app's broken-constraint alerts.
+        let selector = NSSelectorFromString("engine:willBreakConstraint:dueToMutuallyExclusiveConstraints:")
+        let method = try XCTUnwrap(class_getInstanceMethod(UIView.self, selector))
+        let originalImplementation = method_getImplementation(method)
+        typealias ConstraintCallback = @convention(c) (UIView, Selector, AnyObject, NSLayoutConstraint, NSArray) -> Void
+        let originalCallback = unsafeBitCast(originalImplementation, to: ConstraintCallback.self)
+        let callback: @convention(block) (UIView, AnyObject, NSLayoutConstraint, NSArray) -> Void = { view, engine, constraint, conflicts in
+            XCTFail("Broken constraint: \(constraint)")
+            originalCallback(view, selector, engine, constraint, conflicts)
+        }
+        let implementation = imp_implementationWithBlock(callback)
+        method_setImplementation(method, implementation)
+        defer {
+            method_setImplementation(method, originalImplementation)
+            imp_removeBlock(implementation)
+        }
+
+        for initiallyChecked in [false, true] {
+            // Given a checkbox-only signup with a prefilled email.
+            let linkAccount = PaymentSheetLinkAccount(
+                email: "unknown@stripe.com",
+                session: nil,
+                publishableKey: nil,
+                displayablePaymentDetails: nil,
+                useMobileEndpoints: false,
+                canSyncAttestationState: false
+            )
+            let viewModel = LinkInlineSignupViewModel(
+                configuration: PaymentSheet.Configuration(),
+                brand: .link,
+                showCheckbox: true,
+                accountService: MockAccountService(),
+                resolvedLinkBrand: { $0?.linkBrand ?? .link },
+                allowsDefaultOptIn: false,
+                signupOptInFeatureEnabled: true,
+                signupOptInInitialValue: initiallyChecked,
+                linkAccount: linkAccount,
+                country: "US"
+            )
+
+            // When the view is created and laid out.
+            let view = LinkInlineSignupView(viewModel: viewModel)
+            view.autosizeHeight(width: 340)
+
+            // Then the checkbox reflects the initial value without breaking constraints.
+            XCTAssertEqual(viewModel.mode, .signupOptIn)
+            XCTAssertEqual(view.checkboxElement.isChecked, initiallyChecked)
+
+            // When the model changes, the checkbox stays in sync.
+            viewModel.saveCheckboxChecked = !initiallyChecked
+            view.layoutIfNeeded()
+            XCTAssertEqual(view.checkboxElement.isChecked, !initiallyChecked)
+
+            // ...and tapping the checkbox updates the model without laying out unused fields.
+            view.checkboxElement.isChecked.toggle()
+            // This test has no app host, so invoke the handler without UIApplication event dispatch.
+            view.checkboxElement.didToggleCheckbox()
+            view.layoutIfNeeded()
+            XCTAssertEqual(viewModel.saveCheckboxChecked, initiallyChecked)
+            XCTAssertEqual(view.checkboxElement.isChecked, initiallyChecked)
+        }
+    }
+
     func testSignupOptInFeatureEnabled_unchecked() {
         let sut = makeSUT(
             linkAccountEmailAddress: "unknown@stripe.com",

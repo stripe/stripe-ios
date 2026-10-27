@@ -98,7 +98,7 @@ typealias ExpressType = PaymentSheet.WalletButtonsVisibility.ExpressType
         for type in flowController.elementsSession.orderedPaymentMethodTypesAndWallets {
             switch type {
             case "link":
-                if PaymentSheet.isLinkEnabled(elementsSession: flowController.elementsSession, configuration: flowController.configuration) {
+                if PaymentSheet.shouldShowLinkButton(elementsSession: flowController.elementsSession, configuration: flowController.configuration) {
                     appendIfAllowed(.link)
                 }
             case "apple_pay":
@@ -110,7 +110,7 @@ typealias ExpressType = PaymentSheet.WalletButtonsVisibility.ExpressType
             }
         }
 
-        if flowController.elementsSession.linkPassthroughModeEnabled && PaymentSheet.isLinkEnabled(elementsSession: flowController.elementsSession, configuration: flowController.configuration) {
+        if flowController.elementsSession.linkPassthroughModeEnabled && PaymentSheet.shouldShowLinkButton(elementsSession: flowController.elementsSession, configuration: flowController.configuration) {
             // Link in passthrough mode won't be in `orderedPaymentMethodTypesAndWallets`, so we append it.
             appendIfAllowed(.link)
         }
@@ -135,6 +135,7 @@ typealias ExpressType = PaymentSheet.WalletButtonsVisibility.ExpressType
             // Launch directly into Apple Pay and confirm the payment
             PaymentSheet.confirm(
                 configuration: flowController.configuration,
+                nativeSheetPresentation: flowController.nativeSheetPresentation,
                 authenticationContext: WindowAuthenticationContext(),
                 intent: flowController.intent,
                 elementsSession: flowController.elementsSession,
@@ -144,7 +145,10 @@ typealias ExpressType = PaymentSheet.WalletButtonsVisibility.ExpressType
             ) { result, _ in
                 if case .completed = result {
                     // Remember Apple Pay as default payment method for returning users
-                    CustomerPaymentOption.setDefaultPaymentMethod(.applePay, forCustomer: flowController.configuration.customer?.id)
+                    CustomerPaymentOption.setDefaultPaymentMethod(
+                        .applePay,
+                        forCustomer: flowController.viewController.loadResult.customerProvider.customerID
+                    )
                 }
                 confirmHandler(result)
             }
@@ -154,13 +158,14 @@ typealias ExpressType = PaymentSheet.WalletButtonsVisibility.ExpressType
                 intent: flowController.intent,
                 elementsSession: flowController.elementsSession,
                 configuration: flowController.configuration,
+                nativeSheetPresentation: flowController.nativeSheetPresentation,
                 analyticsHelper: flowController.analyticsHelper
             )
             linkController.presentForPaymentMethodSelection(
                 from: WindowAuthenticationContext().authenticationPresentingViewController(),
                 initiallySelectedPaymentDetailsID: nil,
                 canContinueWithoutLink: false,
-                completion: { confirmOptions, _ in
+                completion: { confirmOptions, _, _ in
                     guard let confirmOptions else {
                         return
                     }
@@ -222,14 +227,14 @@ struct WalletButtonsView_Previews: PreviewProvider {
 }
 
 fileprivate extension PaymentSheet.FlowController {
+    @MainActor
     static func _mockFlowController() -> PaymentSheet.FlowController {
         let psConfig = PaymentSheet.Configuration()
-        let elementsSession = STPElementsSession(allResponseFields: [:], sessionID: "", configID: "", orderedPaymentMethodTypes: [], orderedPaymentMethodTypesAndWallets: ["card", "link", "apple_pay"], unactivatedPaymentMethodTypes: [], countryCode: nil, merchantCountryCode: nil, merchantLogoUrl: nil, linkSettings: nil, experimentsData: nil, flags: [:], cardBrandChoice: nil, isApplePayEnabled: true, externalPaymentMethods: [], customPaymentMethods: [], passiveCaptchaData: nil, customer: nil)
+        let elementsSession = STPElementsSession(allResponseFields: [:], sessionID: "", configID: "", orderedPaymentMethodTypes: [], orderedPaymentMethodTypesAndWallets: ["card", "link", "apple_pay"], unactivatedPaymentMethodTypes: [], countryCode: nil, merchantCountryCode: nil, merchantLogoUrl: nil, accountID: nil, linkSettings: nil, experimentsData: nil, flags: [:], cardBrandChoice: nil, isApplePayEnabled: true, externalPaymentMethods: [], customPaymentMethods: [], passiveCaptchaData: nil, customer: nil)
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 10, currency: "USD", setupFutureUsage: nil, captureMethod: .automatic, paymentMethodOptions: nil)) { _, _ in return "" }
         let intent = Intent.deferredIntent(intentConfig: intentConfig)
         let analyticsHelper = PaymentSheetAnalyticsHelper(integrationShape: .complete, configuration: psConfig)
-        let paymentMethodMessagingPromotionsHelper = PaymentMethodMessagingPromotionsHelper(elementsSession: elementsSession, intent: intent, configuration: psConfig, paymentMethodTypes: [], analyticsHelper: analyticsHelper)
-        let loadResult = PaymentSheetLoader.LoadResult(intent: intent, elementsSession: elementsSession, savedPaymentMethods: [], paymentMethodTypes: [], paymentMethodMessagingPromotionsHelper: paymentMethodMessagingPromotionsHelper, paymentMethodOrientation: .vertical)
+        let loadResult = PaymentSheetLoader.LoadResult(intent: intent, elementsSession: elementsSession, savedPaymentMethods: [], paymentMethodTypes: [], paymentMethodMessagingPromotionsHelper: nil, paymentMethodOrientation: .vertical, customerProvider: CustomerProvider(customer: psConfig.customer))
         return PaymentSheet.FlowController(configuration: psConfig, loadResult: loadResult, analyticsHelper: analyticsHelper)
     }
 }

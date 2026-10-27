@@ -9,20 +9,16 @@
 import Foundation
 @_spi(STP) import StripePayments
 
-extension Checkout.Session {
+extension CheckoutController.Session {
 
     /// Populates empty fields in the configuration with checkout-collected addresses.
-    /// Configuration values always take precedence over checkout-collected values.
     func applyAddressOverrides<C: PaymentElementConfiguration>(to configuration: inout C) {
         if let shipping = shippingAddress, configuration.shippingDetails() == nil {
             let details = shippingAddressDetails(from: shipping)
             configuration.shippingDetails = { details }
         }
         configuration.defaultBillingDetails.email = configuration.defaultBillingDetails.email ?? email
-        configuration.billingDetailsCollectionConfiguration.address = resolvedAddressCollectionMode(
-            serverBillingAddressCollection: billingAddressCollection,
-            clientBillingAddressCollection: configuration.billingDetailsCollectionConfiguration.address
-        )
+        configuration.billingDetailsCollectionConfiguration.address = billingAddressCollection == .required ? .full : .automatic
     }
 
     private func shippingAddressDetails(from shipping: ShippingAddress) -> AddressViewController.AddressDetails {
@@ -38,21 +34,6 @@ extension Checkout.Session {
             name: shipping.name,
             phone: nil
         )
-    }
-
-    private func resolvedAddressCollectionMode(
-        serverBillingAddressCollection: BillingAddressCollection,
-        clientBillingAddressCollection: PaymentSheet.BillingDetailsCollectionConfiguration.AddressCollectionMode
-    ) -> PaymentSheet.BillingDetailsCollectionConfiguration.AddressCollectionMode {
-        switch (serverBillingAddressCollection, clientBillingAddressCollection) {
-        case (.required, .automatic), (.required, .full):
-            return .full
-        case (.required, .never):
-            assertionFailure("billingDetailsCollectionConfiguration.address = .never is not supported with CheckoutSession.")
-            return .never
-        case (.automatic, let clientBillingAddressCollection):
-            return clientBillingAddressCollection
-        }
     }
 
 }

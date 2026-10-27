@@ -664,7 +664,8 @@ class EmbeddedPaymentElementTest: XCTestCase {
             savedPaymentMethods: [],
             paymentMethodTypes: [.stripe(.card)],
             paymentMethodMessagingPromotionsHelper: ._testValue(),
-            paymentMethodOrientation: .vertical
+            paymentMethodOrientation: .vertical,
+            customerProvider: CustomerProvider(customer: nil)
         )
         let sut = EmbeddedPaymentElement(
             configuration: configuration,
@@ -719,6 +720,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
             intent: intent,
             configuration: configuration,
             paymentMethodTypes: [.stripe(.card)],
+            experimentAnalyticsHelper: analyticsHelper.experimentAnalyticsHelper,
             analyticsHelper: analyticsHelper
         ))
         promotionsHelper.fetchData()
@@ -728,7 +730,8 @@ class EmbeddedPaymentElementTest: XCTestCase {
             savedPaymentMethods: [],
             paymentMethodTypes: [.stripe(.card)],
             paymentMethodMessagingPromotionsHelper: promotionsHelper,
-            paymentMethodOrientation: .vertical
+            paymentMethodOrientation: .vertical,
+            customerProvider: CustomerProvider(customer: nil)
         )
         await AddressSpecProvider.shared.loadAddressSpecs()
         let sut = EmbeddedPaymentElement(
@@ -741,7 +744,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
         sut.view.autosizeHeight(width: 320)
 
         // Verify PMM experiment exposure was logged exactly once with correct params
-        let exposurePayloads = analyticsClientV2.loggedAnalyticPayloads(withEventName: PaymentSheetAnalyticsHelper.eventName)
+        let exposurePayloads = analyticsClientV2.loggedAnalyticPayloads(withEventName: ExperimentAnalyticsHelper.eventName)
         XCTAssertEqual(exposurePayloads.count, 1)
         if let payload = exposurePayloads.first {
             XCTAssertEqual(payload["arb_id"] as? String, arbId)
@@ -913,110 +916,6 @@ class EmbeddedPaymentElementTest: XCTestCase {
         cardForm = sut.formCache[.stripe(.card)]!
         XCTAssertEqual(cardForm.getTextFieldElement("Card number").text, "4242424242424242")
         XCTAssertEqual(cardForm.getTextFieldElement("CVC").text, "123")
-    }
-
-    // MARK: - Checkout Session update tests
-
-    func testUpdateCheckoutSession() async throws {
-        let response = try await STPTestingAPIClient.shared.createCheckoutSession()
-        let apiClient = STPAPIClient(publishableKey: response.publishableKey)
-        var checkoutConfiguration = Checkout.Configuration(clientSecret: response.clientSecret, returnURL: "stripe-ios-test://checkout-return")
-        checkoutConfiguration.apiClient = apiClient
-        let checkout = try await Checkout(configuration: checkoutConfiguration)
-
-        var config = EmbeddedPaymentElement.Configuration._testValue_MostPermissive(isApplePayEnabled: false)
-        config.apiClient = apiClient
-        config.defaultBillingDetails.email = "test@example.com"
-
-        let sut = try await EmbeddedPaymentElement.create(checkout: checkout, configuration: config)
-        sut.delegate = self
-        sut.presentingViewController = UIViewController()
-
-        // Update with the same checkout should succeed
-        let updateResult = await sut.update(checkout: checkout)
-        XCTAssertEqual(updateResult, .succeeded)
-    }
-
-    func testUpdateCheckoutSessionCancelsInFlight() async throws {
-        let response = try await STPTestingAPIClient.shared.createCheckoutSession()
-        let apiClient = STPAPIClient(publishableKey: response.publishableKey)
-        var checkoutConfiguration = Checkout.Configuration(clientSecret: response.clientSecret, returnURL: "stripe-ios-test://checkout-return")
-        checkoutConfiguration.apiClient = apiClient
-        let checkout = try await Checkout(configuration: checkoutConfiguration)
-
-        var config = EmbeddedPaymentElement.Configuration._testValue_MostPermissive(isApplePayEnabled: false)
-        config.apiClient = apiClient
-        config.defaultBillingDetails.email = "test@example.com"
-
-        let sut = try await EmbeddedPaymentElement.create(checkout: checkout, configuration: config)
-        sut.delegate = self
-        sut.presentingViewController = UIViewController()
-
-        // Fire two concurrent updates, first should be canceled
-        let task1 = Task { @MainActor in await sut.update(checkout: checkout) }
-        let task2 = Task { @MainActor in await sut.update(checkout: checkout) }
-        let updateResult1 = await task1.value
-        let updateResult2 = await task2.value
-        XCTAssertEqual(updateResult1, .canceled)
-        XCTAssertEqual(updateResult2, .succeeded)
-    }
-
-    func testUpdateCheckoutSessionNoOpsForCompleteSession() async throws {
-        let response = try await STPTestingAPIClient.shared.createCheckoutSession()
-        let apiClient = STPAPIClient(publishableKey: response.publishableKey)
-        var checkoutConfiguration = Checkout.Configuration(clientSecret: response.clientSecret, returnURL: "stripe-ios-test://checkout-return")
-        checkoutConfiguration.apiClient = apiClient
-        let checkout = try await Checkout(configuration: checkoutConfiguration)
-
-        var config = EmbeddedPaymentElement.Configuration._testValue_MostPermissive(isApplePayEnabled: false)
-        config.apiClient = apiClient
-        config.defaultBillingDetails.email = "test@example.com"
-
-        let sut = try await EmbeddedPaymentElement.create(checkout: checkout, configuration: config)
-        sut.delegate = self
-        sut.presentingViewController = UIViewController()
-
-        // Simulate the session completing
-        let completedSession = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: {
-            var json = CheckoutTestHelpers.openSessionJSON
-            json["status"] = "complete"
-            json["payment_status"] = "paid"
-            return json
-        }())!
-        try await checkout.commitSession(completedSession)
-        XCTAssertFalse(checkout.sessionIsOpen)
-
-        // Should no-op
-        let result = await sut.update(checkout: checkout)
-        XCTAssertEqual(result, .succeeded)
-        XCTAssertEqual(checkout.session.status?.type, .complete)
-    }
-
-    func testUpdateCheckoutSessionNoOpsForExpiredSession() async throws {
-        let response = try await STPTestingAPIClient.shared.createCheckoutSession()
-        let apiClient = STPAPIClient(publishableKey: response.publishableKey)
-        var checkoutConfiguration = Checkout.Configuration(clientSecret: response.clientSecret, returnURL: "stripe-ios-test://checkout-return")
-        checkoutConfiguration.apiClient = apiClient
-        let checkout = try await Checkout(configuration: checkoutConfiguration)
-
-        var config = EmbeddedPaymentElement.Configuration._testValue_MostPermissive(isApplePayEnabled: false)
-        config.apiClient = apiClient
-        config.defaultBillingDetails.email = "test@example.com"
-
-        let sut = try await EmbeddedPaymentElement.create(checkout: checkout, configuration: config)
-        sut.delegate = self
-        sut.presentingViewController = UIViewController()
-
-        let expiredSession = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: {
-            var json = CheckoutTestHelpers.openSessionJSON
-            json["status"] = "expired"
-            return json
-        }())!
-        try await checkout.commitSession(expiredSession)
-        XCTAssertFalse(checkout.sessionIsOpen)
-
-        let result = await sut.update(checkout: checkout)
-        XCTAssertEqual(result, .succeeded)
     }
 
     // MARK: Immediate action tests

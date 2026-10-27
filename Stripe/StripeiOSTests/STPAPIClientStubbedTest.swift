@@ -13,7 +13,7 @@ import XCTest
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeApplePay
 @testable@_spi(STP) import StripeCore
-@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) @_spi(KlarnaSDKPrivatePreview) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
 
 class STPAPIClientStubbedTest: APIStubbedTestCase {
@@ -156,6 +156,42 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
         setupIntentParams.paymentMethodParams = paymentMethodParams
         sut.confirmSetupIntent(with: setupIntentParams) { _, _ in
             e.fulfill()
+        }
+        waitForExpectations(timeout: 10)
+    }
+
+    func testConfirmSetupIntentWithKlarnaInteroperabilityToken() {
+        let sut = stubbedAPIClient()
+        stub { urlRequest in
+            guard urlRequest.url?.path.hasSuffix("/v1/setup_intents/seti_123456/confirm") == true,
+                let queryItems = urlRequest.queryItems
+            else {
+                return false
+            }
+            XCTAssertTrue(queryItems.contains { queryItem in
+                queryItem.name == "payment_method_options[klarna][interoperability_token]"
+                    && queryItem.value == "interoperability_token"
+            })
+            XCTAssertFalse(queryItems.contains { queryItem in
+                queryItem.name == "payment_method_options[klarna][partner_confirmation_token]"
+            })
+            return true
+        } response: { _ in
+            return .init()
+        }
+
+        let setupIntentParams = STPSetupIntentConfirmParams(
+            clientSecret: "seti_123456_secret_654321"
+        )
+        setupIntentParams.paymentMethodOptions = STPConfirmPaymentMethodOptions(
+            klarnaOptions: STPConfirmKlarnaOptions(
+                interoperabilityToken: "interoperability_token"
+            )
+        )
+
+        let expectation = expectation(description: "Confirm SetupIntent")
+        sut.confirmSetupIntent(with: setupIntentParams) { _, _ in
+            expectation.fulfill()
         }
         waitForExpectations(timeout: 10)
     }

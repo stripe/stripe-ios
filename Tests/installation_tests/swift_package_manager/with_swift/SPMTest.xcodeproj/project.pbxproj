@@ -380,6 +380,9 @@
 			);
 			mainGroup = C176897A20616C7E003DE895;
 			productRefGroup = C176898420616C7E003DE895 /* Products */;
+			packageReferences = (
+				3AF0CA0F2E1A000000000001 /* XCLocalSwiftPackageReference "../../../.." */,
+			);
 			projectDirPath = "";
 			projectReferences = (
 				{
@@ -771,37 +774,55 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCLocalSwiftPackageReference section */
+		3AF0CA0F2E1A000000000001 /* XCLocalSwiftPackageReference "../../../.." */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../../../..;
+			traits = (
+				Identity,
+			);
+		};
+/* End XCLocalSwiftPackageReference section */
+
 /* Begin XCSwiftPackageProductDependency section */
 		31138ECE28DE66F5008AF554 /* StripePaymentSheet */ = {
 			isa = XCSwiftPackageProductDependency;
+			package = 3AF0CA0F2E1A000000000001 /* XCLocalSwiftPackageReference "../../../.." */;
 			productName = StripePaymentSheet;
 		};
 		3137B6912743799C00CE7F5C /* StripeApplePay */ = {
 			isa = XCSwiftPackageProductDependency;
+			package = 3AF0CA0F2E1A000000000001 /* XCLocalSwiftPackageReference "../../../.." */;
 			productName = StripeApplePay;
 		};
 		31DC3DB02537D02000623028 /* Stripe */ = {
 			isa = XCSwiftPackageProductDependency;
+			package = 3AF0CA0F2E1A000000000001 /* XCLocalSwiftPackageReference "../../../.." */;
 			productName = Stripe;
 		};
 		3BD980882743194F00B09BCD /* StripeCardScan */ = {
 			isa = XCSwiftPackageProductDependency;
+			package = 3AF0CA0F2E1A000000000001 /* XCLocalSwiftPackageReference "../../../.." */;
 			productName = StripeCardScan;
 		};
 		3C4D20A8273C644500BC6444 /* StripeFinancialConnections */ = {
 			isa = XCSwiftPackageProductDependency;
+			package = 3AF0CA0F2E1A000000000001 /* XCLocalSwiftPackageReference "../../../.." */;
 			productName = StripeFinancialConnections;
 		};
 		A2613FD02EF2268700DD8FBD /* StripeIssuing */ = {
 			isa = XCSwiftPackageProductDependency;
+			package = 3AF0CA0F2E1A000000000001 /* XCLocalSwiftPackageReference "../../../.." */;
 			productName = StripeIssuing;
 		};
 		E6A36A5926BA4C34002A4427 /* StripeIdentity */ = {
 			isa = XCSwiftPackageProductDependency;
+			package = 3AF0CA0F2E1A000000000001 /* XCLocalSwiftPackageReference "../../../.." */;
 			productName = StripeIdentity;
 		};
 		E6C5F5F92CA0FAC100861709 /* StripeConnect */ = {
 			isa = XCSwiftPackageProductDependency;
+			package = 3AF0CA0F2E1A000000000001 /* XCLocalSwiftPackageReference "../../../.." */;
 			productName = StripeConnect;
 		};
 /* End XCSwiftPackageProductDependency section */

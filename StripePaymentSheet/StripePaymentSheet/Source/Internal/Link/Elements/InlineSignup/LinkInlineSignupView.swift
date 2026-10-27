@@ -104,7 +104,7 @@ final class LinkInlineSignupView: UIView {
         guard viewModel.mode != .signupOptIn else {
             return nil
         }
-        let legalView = LinkLegalTermsView(textAlignment: .left,
+        let legalView = LinkLegalTermsView(textAlignment: .natural,
                                            mode: viewModel.mode,
                                            brand: viewModel.brand,
                                            delegate: self)
@@ -257,6 +257,13 @@ final class LinkInlineSignupView: UIView {
     }
 
     func updateUI(animated: Bool = false) {
+        if viewModel.mode == .signupOptIn {
+            // This mode only displays a checkbox. Updating the unused email field would
+            // force layout on a detached stack view with zero height.
+            checkboxElement.isChecked = viewModel.saveCheckboxChecked
+            return
+        }
+
         if viewModel.isLookingUpLinkAccount {
             emailElement.startAnimating()
         } else {

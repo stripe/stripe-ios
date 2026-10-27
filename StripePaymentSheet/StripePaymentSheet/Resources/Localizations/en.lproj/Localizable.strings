@@ -56,6 +56,12 @@
 /* Text on a screen that indicates bank account details cannot be changed. */
 "Bank account details cannot be changed." = "Bank account details cannot be changed.";
 
+/* Phone-match instruction before Link email OTP. Placeholder is the last two phone digits. */
+"Before we can send a code to your email, we need to verify additional information about you. Please enter your phone number ending in ••%@." = "Before we can send a code to your email, we need to verify additional information about you. Please enter your phone number ending in ••%@.";
+
+/* Phone-match instruction before Link email OTP. */
+"Before we can send a code to your email, we need to verify additional information about you. Please enter your phone number." = "Before we can send a code to your email, we need to verify additional information about you. Please enter your phone number.";
+
 /* Promotional text for Klarna, displayed in a button that lets the customer pay with Klarna */
 "Buy now or pay later with Klarna" = "Buy now or pay later with Klarna";
 
@@ -71,8 +77,26 @@
 /* Subtitle shown on a button allowing a user to select to pay with Clearpay. */
 "Buy Now, Pay Later with Clearpay" = "Buy Now, Pay Later with Clearpay";
 
+/* GCash mandate text. The placeholder is the merchant's name. */
+"By confirming your payment with GCash, you allow %@ to charge your GCash account for future payments in accordance with their terms." = "By confirming your payment with GCash, you allow %@ to charge your GCash account for future payments in accordance with their terms.";
+
+/* Korean payment method mandate text */
+"By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms.";
+
 /* Paypal mandate text */
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms.";
+
+/* Touch 'n Go mandate text. The placeholder is the merchant's name. */
+"By confirming your payment with Touch 'n Go, you allow %@ to charge your Touch 'n Go account for future payments in accordance with their terms." = "By confirming your payment with Touch 'n Go, you allow %@ to charge your Touch 'n Go account for future payments in accordance with their terms.";
+
+/* TrueMoney mandate text. The placeholder is the merchant's name. */
+"By confirming your payment with TrueMoney, you allow %@ to charge your TrueMoney account for future payments in accordance with their terms." = "By confirming your payment with TrueMoney, you allow %@ to charge your TrueMoney account for future payments in accordance with their terms.";
+
+/* Nigerian payment method disclosure. The terms tags mark the link to the merchant of record's terms of use. */
+"By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their <terms>terms of use</terms>." = "By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their <terms>terms of use</terms>.";
+
+/* Naira Wallet disclosure. The terms tags mark the link to the merchant of record's terms. */
+"By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their <terms>terms</terms>." = "By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their <terms>terms</terms>.";
 
 /* Amazon Pay mandate text */
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms.";
@@ -131,6 +155,9 @@
 /* Mandate text with link to terms when saving a bank account payment method to a merchant (merchant name replaces %@). */
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>.";
 
+/* Alipay mandate text */
+"By saving your payment information, you allow %@ to charge you for future payments in accordance with their terms." = "By saving your payment information, you allow %@ to charge you for future payments in accordance with their terms.";
+
 /* Text providing link to terms for bank payments when seller information is provided */
 "By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "By submitting your order to %1$@ and %2$@, you agree to save your information with %3$@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>.";
 
@@ -158,8 +185,8 @@
 /* Accessibility label for the button to close the card scanner. */
 "Close card scanner" = "Close card scanner";
 
-/* Text of a notification shown to the user when a login code is successfully sent via SMS. */
-"Code sent" = "Code sent";
+/* Instructions shown while waiting for a Pix payment authorization */
+"Complete the payment using Pix to finish the purchase." = "Complete the payment using Pix to finish the purchase.";
 
 /* Title used for various UIs, including a button that confirms entered payment details or the selection of a payment method. */
 "Confirm" = "Confirm";
@@ -213,14 +240,26 @@ with the transaction. */
 /* Text suggesting a corrected email address. First %@ will be replaced with the suggested email address, second %@ will be replaced with a tappable link. */
 "Did you mean %@? %@." = "Did you mean %1$@? %2$@.";
 
+/* Button title in a confirmation alert that discards the customer's unsaved address changes and closes the form. */
+"Discard Changes" = "Discard Changes";
+
+/* Title of a confirmation alert shown when the customer tries to close the address form after making changes. */
+"Discard changes?" = "Discard changes?";
+
 /* Label for the discount row in an order summary, applied as a negative amount. */
 "Discount" = "Discount";
 
 /* Accessibility label for a button that lets the user update their address */
 "Edit address" = "Edit address";
 
+/* Link authentication action to receive an email verification code. */
+"Email code" = "Email code";
+
 /* Text for a button that allows manual entry of an address */
 "Enter address manually" = "Enter address manually";
+
+/* Error when Link email verification requires a phone number. */
+"Enter the phone number on your Link account." = "Enter the phone number on your Link account.";
 
 /* Label title for EPS Bank */
 "EPS Bank" = "EPS Bank";
@@ -249,6 +288,12 @@ with the transaction. */
 /* Label for an IBAN field */
 "IBAN" = "IBAN";
 
+/* Message shown when Mondu is selected */
+"Invoice payment for business buyers." = "Invoice payment for business buyers.";
+
+/* Button title in a confirmation alert that dismisses the alert and returns the customer to editing their address. */
+"Keep Editing" = "Keep Editing";
+
 /* Label for displaying the last 4 digits of the user's social security number */
 "Last 4 digits of SSN" = "Last 4 digits of SSN";
 
@@ -276,8 +321,17 @@ with the transaction. */
 /* Title shown above a carousel containing the customer's payment methods */
 "Manage your payment methods" = "Manage your payment methods";
 
+/* Button opening Link authentication actions. */
+"More options" = "More options";
+
 /* Label for name on card field */
 "Name on card" = "Name on card";
+
+/* Naver Pay card funding source */
+"Naver Pay Card" = "Naver Pay Card";
+
+/* Naver Pay money or points funding source */
+"Naver Pay Money/Point" = "Naver Pay Money/Point";
 
 /* Label of a button that appears on a checkout screen. When tapped, it displays a credit card form. This button is shown next to another button representing the customer's saved card; the word 'new' is meant to differentiate this button's action with the saved card button. */
 "New card" = "New card";
@@ -365,9 +419,6 @@ e.g, 'Pay faster at Example, Inc. and thousands of businesses.' */
 /* Accessibility instructions for card scanning. */
 "Point the camera at your card." = "Point the camera at your card.";
 
-/* Label of a button that, when tapped, initiates payment, becomes disabled, and displays this text */
-"Processing..." = "Processing...";
-
 /* Label title for Przelewy24 Bank */
 "Przelewy24 Bank" = "Przelewy24 Bank";
 
@@ -389,6 +440,9 @@ e.g, 'Pay faster at Example, Inc. and thousands of businesses.' */
 
 /* Title for confirmation alert to remove a payment method */
 "Remove payment method?" = "Remove payment method?";
+
+/* Link OTP resend cooldown, in seconds. */
+"Resend code in %d seconds" = "Resend code in %d seconds";
 
 /* A button used for saving a new payment method
    Label on a button that when tapped, updates a card brand. */
@@ -424,6 +478,9 @@ e.g, 'Pay faster at Example, Inc. and thousands of businesses.' */
 /* Title shown above a view containing the customer's card payment methods */
 "Select card" = "Select card";
 
+/* Label for the Naver Pay funding source selector */
+"Select how you want to pay:" = "Select how you want to pay:";
+
 /* Title shown above a view containing the customer's payment methods */
 "Select payment method" = "Select payment method";
 
@@ -441,9 +498,6 @@ e.g, 'Pay faster at Example, Inc. and thousands of businesses.' */
 
 /* Label of a button displayed below a payment method form. Tapping the button sets the payment method up for future use */
 "Set up" = "Set up";
-
-/* Label for the shipping cost row in an order summary. */
-"Shipping" = "Shipping";
 
 /* Text for an error that is shown when a user selects a shipping address that
 is not supported by the merchant */
@@ -485,6 +539,12 @@ is not supported by the merchant */
 /* Label for the tax row in an order summary. */
 "Tax" = "Tax";
 
+/* Title label for a screen showing terms and conditions */
+"Terms and Conditions" = "Terms and Conditions";
+
+/* Title label for a screen showing terms of service */
+"Terms of Service" = "Terms of Service";
+
 /* An error message. */
 "The IBAN you entered is incomplete." = "The IBAN you entered is incomplete.";
 
@@ -497,11 +557,17 @@ is not supported by the merchant */
 /* Error message shown when the user enters an incorrect verification code. */
 "The provided verification code is incorrect." = "The provided verification code is incorrect.";
 
+/* Disclosure for an international Pix payment. The terms tags enclose a link to Ebanx's terms. */
+"This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>.";
+
 /* Text of a label indicating that a payment method is the default. */
 "This is your default" = "This is your default";
 
 /* Content for alert popup prompting if they want to remove a payment method when using payment_method_remove == .partial. %@ is replaced by the merchant name */
 "This payment method will be removed but will remain available for %@ subscriptions." = "This payment method will be removed but will remain available for %@ subscriptions.";
+
+/* Error when the phone number entered before Link email verification does not match the account. */
+"This phone number doesn't match your Link account. Please try again." = "This phone number doesn't match your Link account. Please try again.";
 
 /* Error message shown when the user enters an incorrect verification code too many times. */
 "Too many attempts. Please try again in a few minutes." = "Too many attempts. Please try again in a few minutes.";
@@ -519,11 +585,23 @@ the heading the screen itself. */
 /* Label for checkbox in address form allowing user to use billing address */
 "Use billing address for shipping" = "Use billing address for shipping";
 
+/* Heading for the Link phone-match screen. */
+"Verify your phone number" = "Verify your phone number";
+
+/* Link authentication in progress. */
+"Verifying your account…" = "Verifying your account…";
+
 /* Text shown on a button that displays a customer's default saved payment method. When tapped, it opens a screen that shows all of the customer's saved payment methods. */
 "View more" = "View more";
 
+/* Link authentication cannot continue with the available verification methods. */
+"We couldn't verify your account. Please close this window and try again." = "We couldn't verify your account. Please close this window and try again.";
+
 /* Text for a tappable link that will update the email field with a suggested email address. */
 "Yes, update" = "Yes, update";
+
+/* Message of a confirmation alert warning the customer that closing the address form will discard their unsaved changes. */
+"Your address changes won't be saved." = "Your address changes won't be saved.";
 
 /* An error message. */
 "Your IBAN should start with a two-letter country code." = "Your IBAN should start with a two-letter country code.";

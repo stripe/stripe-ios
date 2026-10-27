@@ -153,7 +153,7 @@ extension PaymentSheetUITestCase {
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
     }
 
-    func payWithApplePay() {
+    func payWithApplePay(successElement: XCUIElement? = nil) {
         let applePay = XCUIApplication(bundleIdentifier: "com.apple.PassbookUIService")
         _ = applePay.wait(for: .runningForeground, timeout: 10)
 
@@ -167,17 +167,23 @@ extension PaymentSheetUITestCase {
 
         addApplePayBillingIfNeeded(applePay)
 
-        let cardSelectionButton = applePay.buttons["Simulated Card - AmEx, ‪•••• 1234‬"].firstMatch
-        XCTAssertTrue(cardSelectionButton.waitForExistence(timeout: 10.0))
-        cardSelectionButton.forceTapElement()
+        let cardDetailsDoneButton = applePay.navigationBars.buttons["dismiss"]
+        if cardDetailsDoneButton.exists {
+            // Newer Wallet versions show the selected card's details instead of a card-selection list.
+            cardDetailsDoneButton.tap()
+        } else {
+            let cardSelectionButton = applePay.buttons["Simulated Card - AmEx, ‪•••• 1234‬"].firstMatch
+            XCTAssertTrue(cardSelectionButton.waitForExistence(timeout: 10.0))
+            cardSelectionButton.forceTapElement()
+        }
 
         let payButton = applePay.buttons["Pay with Passcode"]
         XCTAssertTrue(payButton.waitForExistence(timeout: 10.0))
         payButton.forceTapElement()
 
-        let successText = app.staticTexts["Success!"]
+        let expectedSuccessElement = successElement ?? app.staticTexts["Success!"]
         //      This actually takes upwards of 20 seconds sometimes, especially in the deferred flow :/
-        XCTAssertTrue(successText.waitForExistence(timeout: 30.0))
+        XCTAssertTrue(expectedSuccessElement.waitForExistence(timeout: 30.0))
     }
 
     func addApplePayBillingIfNeeded(_ applePay: XCUIApplication) {
@@ -210,7 +216,7 @@ extension PaymentSheetUITestCase {
             zipCell.tap()
             zipCell.typeText("95014")
 
-            applePay.buttons["Done"].tap()
+            applePay.navigationBars["Billing Address"].buttons["Done"].tap()
         }
     }
 

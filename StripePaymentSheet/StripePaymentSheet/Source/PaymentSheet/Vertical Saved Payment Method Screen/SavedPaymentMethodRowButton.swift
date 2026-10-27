@@ -79,6 +79,7 @@ final class SavedPaymentMethodRowButton: UIView {
         let button: RowButton = .makeForSavedPaymentMethod(
             paymentMethod: paymentMethod,
             appearance: appearance,
+            subtext: paymentMethod.cardArtProgramName,
             badgeText: badgeText,
             accessoryView: chevronButton,
             linkBrand: linkBrand,

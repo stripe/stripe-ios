@@ -36,8 +36,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
 
         // Close the Link sheet
-        let closeButton = app.buttons["LinkVerificationCloseButton"]
-        closeButton.waitForExistenceAndTap()
+        app.closeLinkVerificationDialog()
 
         // Ensure Link wallet button is shown in SPM view
         XCTAssertTrue(app.buttons["pay_with_link_button"].waitForExistence(timeout: 5.0))
@@ -75,8 +74,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
 
         // Close the Link sheet
-        let closeButton = app.buttons["LinkVerificationCloseButton"]
-        closeButton.waitForExistenceAndTap()
+        app.closeLinkVerificationDialog()
 
         // Ensure Link wallet button is shown in SPM view
         XCTAssertTrue(app.buttons["pay_with_link_button"].waitForExistence(timeout: 5.0))
@@ -122,13 +120,13 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
 
         app.buttons["Payment method"].waitForExistenceAndTap()
         app.buttons["Link"].waitForExistenceAndTap()
-        app.buttons["Confirm"].waitForExistenceAndTap()
         let codeField = app.textViews["Code field"]
         _ = codeField.waitForExistence(timeout: 5.0)
         codeField.typeText("000000")
         let pwlController = app.otherElements["Stripe.Link.PayWithLinkViewController"]
-        let payButton = pwlController.buttons["Pay $50.99"]
-        _ = payButton.waitForExistenceAndTap()
+        let continueButton = pwlController.buttons["Continue"]
+        _ = continueButton.waitForExistenceAndTap()
+        app.buttons["Confirm"].waitForExistenceAndTap()
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
     }
 
@@ -203,8 +201,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
 
         // Close the Link sheet
-        let closeButton = app.buttons["LinkVerificationCloseButton"]
-        closeButton.waitForExistenceAndTap()
+        app.closeLinkVerificationDialog()
 
         // Setup a saved card to simulate having saved payment methods
         try! fillCardData(app, postalEnabled: false) // postal pre-filled by default billing address
@@ -221,8 +218,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         reload(app, settings: settings)
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
 
-        // Close the Link sheet
-        closeButton.waitForExistenceAndTap()
+        // The Link sheet isn't shown again, since verification was already started and dismissed
 
         // Ensure Link wallet button is shown in SPM view
         XCTAssertTrue(app.buttons["pay_with_link_button"].waitForExistence(timeout: 5.0))
@@ -544,7 +540,8 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         settings.defaultBillingAddress = .customEmail
         settings.customEmail = "foo@bar.com"
         settings.apmsEnabled = .off
-        settings.supportedPaymentMethods = passthroughMode ? "card" : "card,link"
+        // Passthrough shares the saved bank as a US bank-account payment method.
+        settings.supportedPaymentMethods = passthroughMode ? "card,us_bank_account" : "card,link"
         loadPlayground(app, settings)
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
 

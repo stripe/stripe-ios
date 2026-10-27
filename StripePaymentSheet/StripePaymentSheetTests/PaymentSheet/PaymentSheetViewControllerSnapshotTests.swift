@@ -11,6 +11,7 @@ import StripeCoreTestUtils
 
 import XCTest
 
+@MainActor
 final class PaymentSheetViewControllerSnapshotTests: STPSnapshotTestCase {
     func makeTestLoadResult(savedPaymentMethods: [STPPaymentMethod]) -> PaymentSheetLoader.LoadResult {
         return .init(
@@ -19,7 +20,8 @@ final class PaymentSheetViewControllerSnapshotTests: STPSnapshotTestCase {
             savedPaymentMethods: savedPaymentMethods,
             paymentMethodTypes: [.stripe(.card)],
             paymentMethodMessagingPromotionsHelper: ._testValue(),
-            paymentMethodOrientation: .horizontal
+            paymentMethodOrientation: .horizontal,
+            customerProvider: CustomerProvider(customer: nil)
         )
     }
 

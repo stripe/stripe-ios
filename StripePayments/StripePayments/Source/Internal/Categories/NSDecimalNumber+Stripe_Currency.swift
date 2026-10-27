@@ -10,9 +10,9 @@ import Foundation
 @_spi(STP) import StripeCore
 
 extension NSDecimalNumber {
-    // The number of decimal places for some currencies varies between Stripe and NumberFormatter,
-    // This maps the currency code to the number of decimal digits.
-    static let decimalCountSpecialCases = [
+    // These currencies use two decimal places in Stripe's API, but Foundation and PassKit may
+    // treat them as zero-decimal. Also used to round Apple Pay summary amounts to whole units.
+    @_spi(STP) public static let decimalCountSpecialCases = [
         "COP": 2,
         "PKR": 2,
         "LAK": 2,
@@ -20,8 +20,18 @@ extension NSDecimalNumber {
         "IDR": 2,
         "ISK": 2,
         "HUF": 2,
+        "LBP": 2,
     ]
 
+    /// Converts an amount from a currency's minor units to its major units.
+    ///
+    /// For example, `92_123` USD minor units becomes `921.23`, while
+    /// `92_123` JPY minor units remains `92_123`.
+    ///
+    /// - Parameters:
+    ///   - amount: The amount in minor units.
+    ///   - currency: The three-letter ISO 4217 currency code.
+    /// - Returns: The amount expressed in major units.
     @objc @_spi(STP) public class func stp_decimalNumber(
         withAmount amount: Int,
         currency: String?

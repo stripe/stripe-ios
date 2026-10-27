@@ -21,4 +21,5 @@ struct FinancialConnectionsPaymentAccountResource: Decodable {
     let nextPane: FinancialConnectionsSessionManifest.NextPane?
     let microdepositVerificationMethod: MicrodepositVerificationMethod?
     let networkingSuccessful: Bool?
+    let generatedPaymentDetailIds: [String]?
 }

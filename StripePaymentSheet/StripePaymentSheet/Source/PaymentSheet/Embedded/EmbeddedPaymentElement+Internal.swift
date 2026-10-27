@@ -33,7 +33,7 @@ extension EmbeddedPaymentElement {
         // - Only restored if the previous input resulted in a completed form i.e. partial or invalid input is still discarded
 
         let shouldShowApplePay = PaymentSheet.isApplePayEnabled(elementsSession: loadResult.elementsSession, configuration: configuration)
-        let shouldShowLink = PaymentSheet.isLinkEnabled(elementsSession: loadResult.elementsSession, configuration: configuration)
+        let shouldShowLink = PaymentSheet.shouldShowLinkButton(elementsSession: loadResult.elementsSession, configuration: configuration)
         let savedPaymentMethodAccessoryType = RowButton.RightAccessoryButton.getAccessoryButtonType(
             savedPaymentMethodsCount: loadResult.savedPaymentMethods.count,
             isFirstCardCoBranded: loadResult.savedPaymentMethods.first?.isCoBrandedCard ?? false,
@@ -50,7 +50,7 @@ extension EmbeddedPaymentElement {
             }
 
             // If there's no previous customer input, default to the customer's default or the first saved payment method, if any
-            let customerDefault = CustomerPaymentOption.selectedPaymentMethod(for: configuration.customer?.id, elementsSession: loadResult.elementsSession, surface: .paymentSheet)
+            let customerDefault = CustomerPaymentOption.selectedPaymentMethod(for: loadResult.customerProvider.customerID, elementsSession: loadResult.elementsSession, surface: .paymentSheet)
             switch customerDefault {
             case .applePay:
                 return .applePay
@@ -111,7 +111,7 @@ extension EmbeddedPaymentElement {
         savedPaymentMethods: [STPPaymentMethod],
         analyticsHelper: PaymentSheetAnalyticsHelper,
         paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper?,
-        checkout: Checkout?,
+        checkoutBillingAddressUpdater: CheckoutSessionBillingAddressUpdater?,
         formCache: PaymentMethodFormCache,
         delegate: EmbeddedFormViewControllerDelegate
     ) -> EmbeddedFormViewController? {
@@ -128,7 +128,7 @@ extension EmbeddedPaymentElement {
             previousPaymentOption: previousPaymentOption,
             analyticsHelper: analyticsHelper,
             paymentMethodMessagingPromotionsHelper: paymentMethodMessagingPromotionsHelper,
-            checkout: checkout,
+            checkoutBillingAddressUpdater: checkoutBillingAddressUpdater,
             formCache: formCache,
             delegate: delegate
         )
@@ -176,7 +176,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
             savedPaymentMethods: savedPaymentMethods,
             analyticsHelper: analyticsHelper,
             paymentMethodMessagingPromotionsHelper: loadResult.paymentMethodMessagingPromotionsHelper,
-            checkout: checkout,
+            checkoutBillingAddressUpdater: checkout,
             formCache: formCache,
             delegate: self
         )
@@ -199,7 +199,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         let presentingViewController = resolvedPresentingViewController
         assert(presentingViewController != nil, "Presenting view controller not found, set EmbeddedPaymentElement.presentingViewController.")
         stpAssert(selectedFormViewController.delegate != nil)
-        presentingViewController?.presentAsBottomSheet(bottomSheet, appearance: configuration.appearance)
+        presentingViewController?.presentAsSheet(bottomSheet)
     }
 
     private func handleSelectionWithoutForm() {
@@ -299,7 +299,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         }
         CustomerPaymentOption.setDefaultPaymentMethod(
             paymentOption,
-            forCustomer: configuration.customer?.id
+            forCustomer: loadResult.customerProvider.customerID
         )
     }
 
@@ -322,16 +322,16 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
                 paymentMethodRemoveIsPartial: elementsSession.paymentMethodRemoveIsPartialForPaymentSheet(),
                 merchantName: configuration.merchantDisplayName)
             let updateViewController = UpdatePaymentMethodViewController(removeSavedPaymentMethodMessage: removeSavedPaymentMethodMessage,
-                                                                         isTestMode: configuration.apiClient.isTestmode,
                                                                          configuration: updateConfig)
             updateViewController.delegate = self
             let bottomSheetVC = bottomSheetController(with: updateViewController)
-            resolvedPresentingViewController?.presentAsBottomSheet(bottomSheetVC, appearance: configuration.appearance)
+            resolvedPresentingViewController?.presentAsSheet(bottomSheetVC)
             return
         }
 
         let verticalSavedPaymentMethodsViewController = VerticalSavedPaymentMethodsViewController(
             configuration: configuration,
+            customerProvider: loadResult.customerProvider,
             intent: intent,
             checkout: checkout,
             selectedPaymentMethod: selectedSavedPaymentMethod,
@@ -342,7 +342,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         )
         verticalSavedPaymentMethodsViewController.delegate = self
         let bottomSheetVC = bottomSheetController(with: verticalSavedPaymentMethodsViewController)
-        resolvedPresentingViewController?.presentAsBottomSheet(bottomSheetVC, appearance: configuration.appearance)
+        resolvedPresentingViewController?.presentAsSheet(bottomSheetVC)
     }
 
     func willDisplayForm(for rowButtonType: RowButtonType?) -> Bool {
@@ -356,7 +356,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
             savedPaymentMethods: savedPaymentMethods,
             analyticsHelper: analyticsHelper,
             paymentMethodMessagingPromotionsHelper: nil, // This is just to check if there's a form, so this data isn't necessary
-            checkout: checkout,
+            checkoutBillingAddressUpdater: checkout,
             formCache: .init(),  // Use a fresh form cache to ensure forms aren't re-added to a different view controller's hierarchy
             delegate: self
         ) != nil
@@ -498,6 +498,7 @@ extension EmbeddedPaymentElement: VerticalSavedPaymentMethodsViewControllerDeleg
 extension EmbeddedPaymentElement.PaymentOptionDisplayData {
     init(paymentOption: PaymentOption, mandateText: NSAttributedString?, currency: String?, iconStyle: PaymentSheet.Appearance.IconStyle, linkBrand: LinkBrand = .link) {
         self.mandateText = mandateText
+        self.labels = .init(paymentOption: paymentOption, linkBrand: linkBrand)
         self.image = paymentOption.makeIcon(currency: currency, iconStyle: iconStyle) // TODO: https://jira.corp.stripe.com/browse/MOBILESDK-2604 Refactor this!
         switch paymentOption {
         case .applePay:
@@ -570,7 +571,7 @@ extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
             savedPaymentMethods: savedPaymentMethods,
             analyticsHelper: analyticsHelper,
             paymentMethodMessagingPromotionsHelper: loadResult.paymentMethodMessagingPromotionsHelper,
-            checkout: checkout,
+            checkoutBillingAddressUpdater: checkout,
             formCache: formCache,
             delegate: self
         )
@@ -696,35 +697,18 @@ extension EmbeddedPaymentElement {
 
         embeddedPaymentMethodsView.isUserInteractionEnabled = false
 
-        let confirmBlock: () async -> (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) = {
-            await PaymentSheet.confirm(
-                configuration: self.configuration,
-                authenticationContext: authContext,
-                intent: self.intent,
-                elementsSession: self.elementsSession,
-                paymentOption: paymentOption,
-                paymentHandler: self.paymentHandler,
-                integrationShape: .embedded,
-                confirmationChallenge: self.confirmationChallenge,
-                analyticsHelper: self.analyticsHelper
-            )
-        }
-
-        let result: PaymentSheetResult
-        let deferredIntentConfirmationType: STPAnalyticsClient.DeferredIntentConfirmationType?
-
-        if let checkout {
-            if !checkout.pendingOperations.isEmpty {
-                let errorMessage = "confirm was called while the Checkout session is still loading. Wait until Checkout.isLoading is false."
-                let error = PaymentSheetError.integrationError(nonPIIDebugDescription: errorMessage)
-                return (.failed(error: error), nil)
-            }
-            (result, deferredIntentConfirmationType) = await checkout.enqueueSessionUpdate {
-                await confirmBlock()
-            }
-        } else {
-            (result, deferredIntentConfirmationType) = await confirmBlock()
-        }
+        let (result, deferredIntentConfirmationType) = await PaymentSheet.confirm(
+            configuration: configuration,
+            nativeSheetPresentation: nativeSheetPresentation,
+            authenticationContext: authContext,
+            intent: intent,
+            elementsSession: elementsSession,
+            paymentOption: paymentOption,
+            paymentHandler: paymentHandler,
+            integrationShape: .embedded,
+            confirmationChallenge: confirmationChallenge,
+            analyticsHelper: analyticsHelper
+        )
 
         analyticsHelper.logPayment(
             paymentOption: paymentOption,
@@ -742,11 +726,12 @@ extension EmbeddedPaymentElement {
         return (result, deferredIntentConfirmationType)
     }
 
-    func bottomSheetController(with viewController: BottomSheetContentViewController) -> BottomSheetViewController {
-        return BottomSheetViewController(contentViewController: viewController,
-                                         appearance: configuration.appearance,
-                                         isTestMode: configuration.apiClient.isTestmode,
-                                         didCancelNative3DS2: {
+    func bottomSheetController(with viewController: BottomSheetContentViewController) -> any PaymentSheetContainer {
+        return PaymentSheetContainerFactory.make(
+            contentViewController: viewController,
+            appearance: configuration.appearance,
+            usesNativeSheet: nativeSheetPresentation.usesNativeSheet,
+            didCancelNative3DS2: {
             stpAssertionFailure("3DS2 was triggered unexpectedly")
         })
     }
@@ -760,10 +745,13 @@ extension EmbeddedPaymentElement {
         clearPaymentOption()
     }
 
-    static func validateRowSelectionConfiguration(configuration: Configuration) throws {
+    static func validateRowSelectionConfiguration(
+        configuration: Configuration,
+        customerProvider: CustomerProvider
+    ) throws {
         switch configuration.rowSelectionBehavior {
         case .immediateAction:
-            if case .confirm = configuration.formSheetAction, configuration.applePay != nil || configuration.customer != nil {
+            if case .confirm = configuration.formSheetAction, configuration.applePay != nil || customerProvider.hasCustomer {
                 // Fail init if the merchant is using immediateAction and confirm form sheet action along w/ either a Customer or Apple Pay configuration
                 throw PaymentSheetError.integrationError(nonPIIDebugDescription: "Using .immediateAction with .confirm form sheet action is not supported when Apple Pay or a customer configuration is provided. Use .default row selection behavior or disable Apple Pay and saved payment methods.")
             }
@@ -836,7 +824,7 @@ extension PaymentSheetAuthenticationContextViewController: PaymentSheetAuthentic
         }
     }
 
-    func presentPollingVCForAction(action: StripePayments.STPPaymentHandlerPaymentIntentActionParams, type: StripePayments.STPPaymentMethodType, safariViewController: SFSafariViewController?) {
+    func presentPollingVCForAction(action: StripePayments.STPPaymentHandlerActionParams, type: StripePayments.STPPaymentMethodType, safariViewController: SFSafariViewController?) {
         // Initialize the polling view controller and flag it for presentation
         self.pollingVC = PollingViewController(currentAction: action, viewModel: PollingViewModel(paymentMethodType: type),
                                                       appearance: self.appearance, safariViewController: safariViewController)

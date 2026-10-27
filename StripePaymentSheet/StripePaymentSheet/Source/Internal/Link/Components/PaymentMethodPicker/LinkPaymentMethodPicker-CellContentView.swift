@@ -41,7 +41,7 @@ extension LinkPaymentMethodPicker {
                     primaryLabel.text = bankAccount.displayName(with: paymentMethod?.nickname)
                     secondaryLabel.text = "•••• \(bankAccount.last4)"
                     secondaryLabel.isHidden = false
-                case .unparsable:
+                case .generic:
                     guard let display = paymentMethod?.display else {
                         cardBrandView.isHidden = true
                         bankIconView.isHidden = true
@@ -238,7 +238,7 @@ extension LinkPaymentMethodPicker {
         }
 
         private func refreshGenericIconIfNeeded() {
-            guard case .unparsable = paymentMethod?.details else {
+            guard case .generic = paymentMethod?.details else {
                 return
             }
             if let iconUrl = paymentMethod?.display?.icon?.main {
