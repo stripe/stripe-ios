@@ -114,6 +114,50 @@ final class SheetImplementationResolverTests: XCTestCase {
             )
         }
     }
+
+    func testNativeLinkFromCompletePaymentSheetMatchesPaymentSheetContainer() async throws {
+        await AddressSpecProvider.shared.loadAddressSpecs()
+        let previousOverride = PaymentSheet.NativeSheetFeatureFlags.nativeSheetEnabledOverride
+        defer { PaymentSheet.NativeSheetFeatureFlags.nativeSheetEnabledOverride = previousOverride }
+        let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first)
+        for override in [false, true] {
+            // Given a complete PaymentSheet whose container was created with the playground override
+            PaymentSheet.NativeSheetFeatureFlags.nativeSheetEnabledOverride = override
+            let paymentSheet = PaymentSheet(
+                intentConfiguration: .init(mode: .payment(amount: 1000, currency: "usd")) { _, _ in "" },
+                configuration: .init()
+            )
+            let paymentSheetUsesNativeSheet = paymentSheet.bottomSheetViewController is NativeSheetContainerViewController
+            XCTAssertEqual(
+                paymentSheetUsesNativeSheet,
+                SheetImplementationResolver.isRequiredForDevice || (UIDevice.current.userInterfaceIdiom == .phone && override)
+            )
+            // ...and the override changes before Link is opened
+            PaymentSheet.NativeSheetFeatureFlags.nativeSheetEnabledOverride = !override
+            let presenter = UIViewController()
+            let window = UIWindow(windowScene: scene)
+            window.frame = scene.coordinateSpace.bounds
+            window.rootViewController = presenter
+            window.makeKeyAndVisible()
+
+            // When PaymentSheet opens native Link
+            let loadResult = makeLoadResult(flag: nil)
+            paymentSheet.presentPayWithNativeLinkController(
+                from: presenter,
+                intent: loadResult.intent,
+                elementsSession: loadResult.elementsSession,
+                shouldOfferApplePay: false,
+                shouldFinishOnClose: false
+            )
+
+            // Then Link uses the same sheet implementation as PaymentSheet
+            let linkSheet = try XCTUnwrap(presenter.presentedViewController?.bottomSheetController)
+            XCTAssertEqual(linkSheet is LinkNativeSheetContainerViewController, paymentSheetUsesNativeSheet)
+            XCTAssertEqual(linkSheet is LinkBottomSheetViewController, !paymentSheetUsesNativeSheet)
+            presenter.dismiss(animated: false)
+            window.isHidden = true
+        }
+    }
     #endif
 
     func testLegacyContainerKeepsKeyboardAndPresentationTransitionHandling() {

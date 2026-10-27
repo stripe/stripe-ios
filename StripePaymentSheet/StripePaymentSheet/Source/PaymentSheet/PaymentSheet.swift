@@ -283,11 +283,18 @@ public class PaymentSheet {
     /// The STPPaymentHandler instance
     lazy var paymentHandler: STPPaymentHandler = { STPPaymentHandler(apiClient: configuration.apiClient) }()
 
+    /// Shared with Link so that its sheets match the PaymentSheet container.
+    lazy var nativeSheetPresentation = SheetImplementationResolver(
+        // The playground can opt in while complete PaymentSheet remains outside the server-controlled rollout.
+        isEnabled: NativeSheetFeatureFlags.nativeSheetEnabledOverride == true
+    )
+
     /// The parent view controller to present
     lazy var bottomSheetViewController: any PaymentSheetContainer = {
-        // The playground can opt in while complete PaymentSheet remains outside the server-controlled rollout.
-        let usesNativeSheet = NativeSheetFeatureFlags.nativeSheetEnabledOverride == true
-            && UIDevice.current.userInterfaceIdiom == .phone
+        // PaymentSheet's presentation APIs require the main thread but are not yet actor-isolated.
+        let usesNativeSheet = MainActor.assumeIsolated {
+            nativeSheetPresentation.usesNativeSheet
+        }
 
         let vc = PaymentSheetContainerFactory.make(
             contentViewController: loadingViewController,
@@ -359,6 +366,7 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
         let confirm: (@escaping (PaymentSheetResult, StripeCore.STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void) -> Void = { completion in
             PaymentSheet.confirm(
                 configuration: self.configuration,
+                nativeSheetPresentation: self.nativeSheetPresentation,
                 authenticationContext: self.bottomSheetViewController,
                 intent: paymentSheetViewController.intent,
                 elementsSession: paymentSheetViewController.elementsSession,
