@@ -98,8 +98,8 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
         integrationCurrency = try container.decode(String.self, forKey: .integrationCurrency)
 
         let uiMode = try container.decode(String.self, forKey: .uiMode)
-        guard ["mobile_elements", "custom", "elements"].contains(uiMode) else {
-            throw decoder.dataCorrupted("Unsupported CheckoutClient ui_mode: \(uiMode)")
+        guard uiMode == "mobile_elements" else {
+            throw decoder.dataCorrupted("Only mobile_elements Checkout Sessions are supported")
         }
 
         let decodedCheckoutItems = try container.decode([CheckoutItem].self, forKey: .checkoutItems)

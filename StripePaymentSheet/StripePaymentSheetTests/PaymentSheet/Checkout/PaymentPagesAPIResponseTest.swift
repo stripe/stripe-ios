@@ -798,12 +798,17 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertThrowsError(try PaymentPagesAPIResponse.decode(fromAPIResponse: json))
     }
 
-    func testUnifiedModeSessionRejectsNonModelessMode() {
-        let json = CheckoutTestHelpers.makeSessionJSON([
-            "ui_mode": "payment"
-        ])
+    func testUnifiedModeSessionRejectsNonMobileElementsMode() {
+        for uiMode in ["hosted", "embedded", "custom", "elements", "form", "payment"] {
+            let json = CheckoutTestHelpers.makeSessionJSON([
+                "ui_mode": uiMode
+            ])
 
-        XCTAssertThrowsError(try PaymentPagesAPIResponse.decode(fromAPIResponse: json))
+            XCTAssertThrowsError(
+                try PaymentPagesAPIResponse.decode(fromAPIResponse: json),
+                "Expected ui_mode \(uiMode) to fail decoding"
+            )
+        }
     }
 
     func testUnifiedModeSessionRejectsMissingRequiredOneTimePriceFields() {

@@ -163,8 +163,7 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
     func testInitCheckoutSessionPaymentWithAdaptivePricingDisabled() async throws {
         // Same session config as above (DE location, adaptive pricing active automatically)
         // but client passes adaptivePricingAllowed: false
-        // TODO: Use Mobile Elements once it honors adaptive_pricing[allowed]=false like Custom Checkout.
-        let checkoutSessionResponse = try await STPTestingAPIClient.shared.createLegacyCheckoutSession(
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession(
             merchantCountry: "us_tax",
             customerEmailLocation: "DE"
         )
