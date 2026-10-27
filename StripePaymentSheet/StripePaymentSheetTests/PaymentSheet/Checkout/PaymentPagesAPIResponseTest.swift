@@ -336,12 +336,14 @@ class PaymentPagesAPIResponseTest: XCTestCase {
                                     ],
                                 ],
                                 "quantity": 1,
-                                "subtotal": 1000,
-                                "total": 1000,
                                 "unit_amount": 1000,
-                                "tax_amounts": [],
-                                "tax_inclusive": 0,
-                                "tax_exclusive": 0,
+                                "amount_details": [
+                                    "subtotal": 1000,
+                                    "total": 1000,
+                                    "tax_amounts": [],
+                                    "tax_inclusive": 0,
+                                    "tax_exclusive": 0,
+                                ],
                             ],
                         ],
                         "subtotal": 1000,
@@ -643,13 +645,15 @@ class PaymentPagesAPIResponseTest: XCTestCase {
                             [
                                 "inner_item_key": "checkout_item_inner_abc123",
                                 "quantity": 2,
-                                "subtotal": 2000,
-                                "total": 2148,
                                 "unit_amount": 1000,
                                 "unit_amount_decimal": "1000",
-                                "tax_amounts": [],
-                                "tax_inclusive": 0,
-                                "tax_exclusive": 148,
+                                "amount_details": [
+                                    "subtotal": 2000,
+                                    "total": 2148,
+                                    "tax_amounts": [],
+                                    "tax_inclusive": 0,
+                                    "tax_exclusive": 148,
+                                ],
                                 "price": [
                                     "id": "price_test123",
                                     "currency": "usd",
@@ -706,28 +710,31 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         let json = modifyingOneTimePrice { oneTimePrice in
             var firstItem = (oneTimePrice["items"] as! [[String: Any]])[0]
             firstItem["inner_item_key"] = "first_item"
-            firstItem["subtotal"] = 1000
-            firstItem["total"] = 1100
-            firstItem["tax_inclusive"] = 0
-            firstItem["tax_exclusive"] = 100
-            firstItem["tax_amounts"] = [[
-                "amount": 100,
-                "inclusive": false,
-                "tax_rate": ["display_name": "Sales Tax", "percentage": 10.0],
-            ], ]
+            firstItem["amount_details"] = [
+                "subtotal": 1000,
+                "total": 1100,
+                "tax_inclusive": 0,
+                "tax_exclusive": 100,
+                "tax_amounts": [[
+                    "amount": 100,
+                    "inclusive": false,
+                    "tax_rate": ["display_name": "Sales Tax", "percentage": 10.0],
+                ], ],
+            ]
 
             var secondItem = firstItem
             secondItem["inner_item_key"] = "second_item"
-            secondItem["subtotal"] = 2000
-            secondItem["total"] = 2000
-            secondItem["tax_inclusive"] = 50
-            secondItem["tax_exclusive"] = 0
-            secondItem["tax_amounts"] = [[
-                "amount": 50,
-                "inclusive": true,
-                "tax_rate": ["display_name": "VAT", "percentage": 2.5],
-            ], ]
-
+            secondItem["amount_details"] = [
+                "subtotal": 2000,
+                "total": 2000,
+                "tax_inclusive": 50,
+                "tax_exclusive": 0,
+                "tax_amounts": [[
+                    "amount": 50,
+                    "inclusive": true,
+                    "tax_rate": ["display_name": "VAT", "percentage": 2.5],
+                ], ],
+            ]
             oneTimePrice["items"] = [firstItem, secondItem]
             oneTimePrice["subtotal"] = 3000
             oneTimePrice["total"] = 3100
@@ -850,11 +857,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
             "inner_item_key",
             "price",
             "quantity",
-            "subtotal",
-            "total",
-            "tax_amounts",
-            "tax_inclusive",
-            "tax_exclusive",
+            "amount_details",
         ]
 
         for field in requiredFields {
@@ -862,6 +865,14 @@ class PaymentPagesAPIResponseTest: XCTestCase {
             XCTAssertThrowsError(
                 try PaymentPagesAPIResponse.decode(fromAPIResponse: json),
                 "Expected missing nested item field \(field) to fail decoding"
+            )
+        }
+
+        for field in ["subtotal", "total", "tax_inclusive", "tax_exclusive"] {
+            let json = modifyingAmountDetails { $0.removeValue(forKey: field) }
+            XCTAssertThrowsError(
+                try PaymentPagesAPIResponse.decode(fromAPIResponse: json),
+                "Expected missing amount_details field \(field) to fail decoding"
             )
         }
     }
@@ -899,10 +910,10 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         ]
 
         for field in ["amount", "inclusive", "tax_rate"] {
-            let json = modifyingOneTimePriceItem { item in
+            let json = modifyingAmountDetails { amountDetails in
                 var taxAmount = validTaxAmount
                 taxAmount.removeValue(forKey: field)
-                item["tax_amounts"] = [taxAmount]
+                amountDetails["tax_amounts"] = [taxAmount]
             }
             XCTAssertThrowsError(
                 try PaymentPagesAPIResponse.decode(fromAPIResponse: json),
@@ -911,12 +922,12 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         }
 
         for field in ["display_name", "percentage"] {
-            let json = modifyingOneTimePriceItem { item in
+            let json = modifyingAmountDetails { amountDetails in
                 var taxRate = validTaxRate
                 taxRate.removeValue(forKey: field)
                 var taxAmount = validTaxAmount
                 taxAmount["tax_rate"] = taxRate
-                item["tax_amounts"] = [taxAmount]
+                amountDetails["tax_amounts"] = [taxAmount]
             }
             XCTAssertThrowsError(
                 try PaymentPagesAPIResponse.decode(fromAPIResponse: json),
@@ -1351,6 +1362,16 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         }
     }
 
+    private func modifyingAmountDetails(
+        _ mutation: (inout [String: Any]) -> Void
+    ) -> [String: Any] {
+        modifyingOneTimePriceItem { item in
+            var amountDetails = item["amount_details"] as! [String: Any]
+            mutation(&amountDetails)
+            item["amount_details"] = amountDetails
+        }
+    }
+
     private func modifyingPrice(
         _ mutation: (inout [String: Any]) -> Void
     ) -> [String: Any] {
@@ -1384,12 +1405,14 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         var item = (oneTimePrice["items"] as! [[String: Any]])[0]
         var price = item["price"] as! [String: Any]
         item["inner_item_key"] = "\(key)_inner"
-        item["subtotal"] = subtotal
-        item["total"] = total
+        var amountDetails = item["amount_details"] as! [String: Any]
+        amountDetails["subtotal"] = subtotal
+        amountDetails["total"] = total
         item["unit_amount"] = subtotal
         item["unit_amount_decimal"] = String(subtotal)
-        item["tax_exclusive"] = taxExclusive
-        item["tax_inclusive"] = taxInclusive
+        amountDetails["tax_exclusive"] = taxExclusive
+        amountDetails["tax_inclusive"] = taxInclusive
+        item["amount_details"] = amountDetails
         price["id"] = "\(key)_price"
         price["unit_amount"] = subtotal
         item["price"] = price
