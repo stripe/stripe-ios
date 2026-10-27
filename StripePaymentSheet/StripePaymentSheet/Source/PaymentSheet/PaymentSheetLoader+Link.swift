@@ -9,13 +9,15 @@
 @_spi(InternalOnlyAPI) import StripePayments
 
 extension PaymentSheetLoader {
+
     @MainActor
     static func loadLink(
         elementsSession: STPElementsSession,
         configuration: PaymentElementConfiguration,
+        customerProvider: CustomerProvider,
         email: String?,
         analyticsHelper: ExperimentAnalyticsHelper,
-        prefetchedEmailAndSourceTask: Task<(email: String, source: EmailSource)?, Never>,
+        prefetchedLinkEmailTask: Task<String?, Never>,
         loadTimings: LoadTimings,
         isUpdate: Bool
     ) async -> (isLinkEnabled: Bool, didLinkLookupTimeOut: Bool?) {
@@ -24,12 +26,13 @@ extension PaymentSheetLoader {
             configuration: configuration
         )
         let lookupLinkAccountTask = Task { @MainActor in
-            let prefetchedLinkEmailAndSource = await prefetchedEmailAndSourceTask.value
+            let prefetchedLinkEmail = await prefetchedLinkEmailTask.value
             let linkAccount = try? await Self.lookupLinkAccount(
                 elementsSession: elementsSession,
                 configuration: configuration,
+                customerProvider: customerProvider,
                 email: email,
-                prefetchedEmailAndSource: prefetchedLinkEmailAndSource,
+                prefetchedLinkEmail: prefetchedLinkEmail,
                 loadTimings: loadTimings,
                 isUpdate: isUpdate
             )
@@ -72,8 +75,9 @@ extension PaymentSheetLoader {
     static func lookupLinkAccount(
         elementsSession: STPElementsSession,
         configuration: PaymentElementConfiguration,
+        customerProvider: CustomerProvider,
         email: String?,
-        prefetchedEmailAndSource: (email: String, source: EmailSource)?,
+        prefetchedLinkEmail: String?,
         loadTimings: LoadTimings,
         isUpdate: Bool
     ) async throws -> PaymentSheetLinkAccount? {
@@ -101,17 +105,14 @@ extension PaymentSheetLoader {
         // Note: When the holdback experiment is over, we can remove this parameter from the lookup call.
         let doNotLogConsumerFunnelEvent = !isLinkEnabled
 
-        // This lookup call will only happen if we have access to a user's email:
-        // There are a couple different sources.
+        // Explicit email takes priority; CustomerProvider resolves the remaining customer sources for Link.
         let lookupEmail: (email: String, source: EmailSource)
         if let email {
-            // 1. Email provided by the caller
             lookupEmail = (email, EmailSource.customerEmail)
-        } else if let prefetchedEmailAndSource {
-            // 2. We fetched the Customer object before calling this method to get its email when using EKs
-            lookupEmail = prefetchedEmailAndSource
-        } else if let email = elementsSession.customer?.email {
-            // 3. The v1/e/s response returns the email when using CustomerSession
+        } else if let email = customerProvider.linkEmail(
+            elementsSession: elementsSession,
+            prefetchedEmail: prefetchedLinkEmail
+        ) {
             lookupEmail = (email, EmailSource.customerObject)
         } else {
             return nil
@@ -174,27 +175,4 @@ extension PaymentSheetLoader {
         }
     }
 
-    /// If configuration uses Ephemeral Key, retrieve Customer object and return email
-    @MainActor
-    static func getCustomerEmailForLinkWithEphemeralKey(
-        configuration: PaymentElementConfiguration,
-        loadTimings: LoadTimings
-    ) async throws -> (email: String, source: EmailSource)? {
-        guard
-            configuration.defaultBillingDetails.email == nil, // If email was already provided, don't make a network request to retrieve it.
-            let customerID = configuration.customer?.id,
-            case .legacyCustomerEphemeralKey(let ephemeralKey) = configuration.customer?.customerAccessProvider
-        else {
-            return nil
-        }
-        loadTimings.logStart("retrieveCustomer")
-        defer {
-            loadTimings.logEnd("retrieveCustomer")
-        }
-        let customer = try await configuration.apiClient.retrieveCustomer(customerID, using: ephemeralKey)
-        if let email = customer.email {
-            return (email, EmailSource.customerObject)
-        }
-        return nil
-    }
 }
