@@ -36,7 +36,7 @@ public struct LinkConfiguration {
     @_spi(LinkControllerPreview) public let financialConnectionsPermissions: [String]?
 
     /// A URL that redirects back to your app for flows that complete authentication in another app (such as a bank app).
-    /// If `nil`, the customer won't be returned to your app after authenticating in another app.
+    /// If `nil`, bank authentication will happen within a secure webview presented in your app, rather than in the customer's own banking app.
     @_spi(LinkControllerPreview) public let returnURL: String?
 
     /// Creates a new instance of `LinkConfiguration`.
