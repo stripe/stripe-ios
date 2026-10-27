@@ -191,7 +191,7 @@ final class IdentityAPIClientTest: APIStubbedTestCase {
         stub { urlRequest in
             XCTAssertEqual(
                 urlRequest.url?.absoluteString.hasSuffix(
-                    "v1/identity/verification_pages/\(IdentityAPIClientTest.mockId)?app_identifier=\(Bundle.main.bundleIdentifier ?? "")&mediaPipeAvailable=\(FaceGeometryDetectorFactory.isAvailable)"
+                    "v1/identity/verification_pages/\(IdentityAPIClientTest.mockId)?app_identifier=\(Bundle.main.bundleIdentifier ?? "")"
                 ),
                 true
             )
