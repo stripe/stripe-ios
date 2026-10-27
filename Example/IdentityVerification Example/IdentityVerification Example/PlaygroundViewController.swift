@@ -6,6 +6,7 @@
 //
 
 @_spi(STP) import StripeIdentity
+@_spi(STP) import StripePaymentSheet
 @_spi(STP) import StripeUICore
 import UIKit
 
@@ -143,6 +144,8 @@ class PlaygroundViewController: UIViewController {
         phoneView.isHidden = true
         phoneOtpContainerView.addArrangedSubview(phoneView)
 
+        // Networked Identity reuses Link, which needs native Link.
+        PaymentSheet.LinkFeatureFlags.nativeLinkEnabledOverride = true
         nativeComponentsOptionsContainerView.addArrangedSubview(networkedIdentityView)
 
         activityIndicator.hidesWhenStopped = true

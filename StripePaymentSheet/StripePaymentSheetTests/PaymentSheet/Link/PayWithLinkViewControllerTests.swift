@@ -10,6 +10,7 @@ import Foundation
 @testable @_spi(STP) import StripeCoreTestUtils
 @_spi(STP) import StripePayments
 @testable @_spi(STP) import StripePaymentSheet
+import StripePaymentsTestUtils
 @_spi(STP) import StripeUICore
 import XCTest
 #if !os(visionOS)
@@ -380,6 +381,10 @@ class PayWithLinkViewControllerTests: XCTestCase {
         config.apiClient = apiClient
 
         // Always fail attestation, forcing us back to the web flow
+        // for a merchant that uses the attestation endpoints
+        var attestingSessionJSON = STPTestUtils.jsonNamed("ElementsSession")!
+        attestingSessionJSON[jsonDict: "link_settings"]?["link_mobile_use_attestation_endpoints"] = true
+        let attestingSession = STPElementsSession.decodedObject(fromAPIResponse: attestingSessionJSON)!
         await mockAttestService.setShouldFailKeygenWithError(NSError(domain: "test", code: 1))
 
         let exp = expectation(description: "SFAuthenticationViewController presented")
@@ -400,7 +405,7 @@ class PayWithLinkViewControllerTests: XCTestCase {
         let payWithNativeLinkController = PayWithNativeLinkController(
             mode: .full,
             intent: ._testValue(),
-            elementsSession: ._testValue(intent: ._testValue()),
+            elementsSession: attestingSession,
             configuration: config,
             analyticsHelper: ._testValue()
         )

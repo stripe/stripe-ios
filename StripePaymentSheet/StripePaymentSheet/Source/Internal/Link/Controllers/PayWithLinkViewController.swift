@@ -318,7 +318,10 @@ final class PayWithLinkViewController: NSObject {
             // Attempt to attest
             let canAttest = await context.configuration.apiClient.stripeAttest.prepareAttestation()
             // If we can't attest and we're in livemode, let's bail and switch to the web controller
-            if !canAttest && !context.configuration.apiClient.isTestmode {
+            // #TODO - Networked Identity: Only the mobile endpoints need attestation, as on Android. This lets the
+            // Identity example, which forces native Link, run in live mode before it's a trusted app. Revisit once it is.
+            let usesAttestation = context.elementsSession.linkSettings?.useAttestationEndpoints == true
+            if !canAttest && !context.configuration.apiClient.isTestmode && usesAttestation {
                 DispatchQueue.main.async {
                     self.bailToWebFlow()
                 }
