@@ -35,6 +35,10 @@ public struct LinkConfiguration {
     /// The Financial Connections permissions to request. If `nil`, no specific permissions are requested.
     @_spi(LinkControllerPreview) public let financialConnectionsPermissions: [String]?
 
+    /// A URL that redirects back to your app for flows that complete authentication in another app (such as a bank app).
+    /// If `nil`, bank authentication will happen within a secure webview presented in your app, rather than in the customer's own banking app.
+    @_spi(LinkControllerPreview) public let returnURL: String?
+
     /// Creates a new instance of `LinkConfiguration`.
     /// - Parameters:
     ///   - hintMessage: Custom hint message to display in the wallet view. If `nil`, no hint will be shown.
@@ -50,6 +54,7 @@ public struct LinkConfiguration {
         self.merchantDisplayName = nil
         self.billingDetailsCollectionConfiguration = nil
         self.financialConnectionsPermissions = nil
+        self.returnURL = nil
     }
 
     /// Creates a new instance of `LinkConfiguration`.
@@ -60,13 +65,15 @@ public struct LinkConfiguration {
     ///   - merchantDisplayName: The merchant name displayed in Link UI. If `nil`, defaults to the app's `CFBundleDisplayName`.
     ///   - billingDetailsCollectionConfiguration: Configures billing details collection in the Link sheet. If `nil`, uses the billing details collection configuration from the `PaymentElementConfiguration` passed at init.
     ///   - financialConnectionsPermissions: The Financial Connections permissions to request. If `nil`, no specific permissions are requested.
+    ///   - returnURL: A URL that redirects back to your app for flows that complete authentication in another app (such as a bank app).
     @_spi(LinkControllerPreview) public init(
         supportedPaymentMethodTypes: [LinkPaymentMethodType]? = nil,
         paymentMethodTypes: [String]? = nil,
         allowLogout: Bool = true,
         merchantDisplayName: String? = nil,
         billingDetailsCollectionConfiguration: PaymentSheet.BillingDetailsCollectionConfiguration? = nil,
-        financialConnectionsPermissions: [String]? = nil
+        financialConnectionsPermissions: [String]? = nil,
+        returnURL: String? = nil
     ) {
         self.hintMessage = nil
         self.allowLogout = allowLogout
@@ -75,5 +82,6 @@ public struct LinkConfiguration {
         self.merchantDisplayName = merchantDisplayName
         self.billingDetailsCollectionConfiguration = billingDetailsCollectionConfiguration
         self.financialConnectionsPermissions = financialConnectionsPermissions
+        self.returnURL = returnURL
     }
 }

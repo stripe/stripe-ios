@@ -34,10 +34,6 @@ extension ConsumerSession {
 }
 
 extension Sequence where Iterator.Element == ConsumerSession.VerificationSession {
-    var containsVerifiedSMSSession: Bool {
-        return contains(where: { $0.type == .sms && $0.state == .verified })
-    }
-
     var containsVerifiedLinkAuthTokenSession: Bool {
         return contains(where: { $0.type == .linkAuthToken && $0.state == .verified })
     }

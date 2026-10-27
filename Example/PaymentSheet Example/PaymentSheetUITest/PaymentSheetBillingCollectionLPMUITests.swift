@@ -5,7 +5,6 @@
 //  Created by David Estes on 2/11/26.
 //
 
-
 import XCTest
 
 class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITestCase {
@@ -102,7 +101,7 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
 
         checkoutButton.tap()
 
-        app.buttons["LinkVerificationCloseButton"].waitForExistenceAndTap()
+        app.closeLinkVerificationDialog()
 
         let cell = try XCTUnwrap(scroll(
             collectionView: app.collectionViews.firstMatch,
@@ -162,8 +161,7 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
         checkoutButton.tap()
 
         // Close the Link sheet
-        let closeButton = app.buttons["LinkVerificationCloseButton"]
-        closeButton.waitForExistenceAndTap()
+        app.closeLinkVerificationDialog()
 
         let cell = try XCTUnwrap(scroll(
             collectionView: app.collectionViews.firstMatch,
