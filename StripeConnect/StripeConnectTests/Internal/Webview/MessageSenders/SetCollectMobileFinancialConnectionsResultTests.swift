@@ -7,7 +7,7 @@
 
 import CustomDump
 @testable import StripeConnect
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 import StripeCoreTestUtils
 @testable import StripeFinancialConnections
 import XCTest

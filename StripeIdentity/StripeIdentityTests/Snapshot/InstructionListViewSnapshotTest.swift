@@ -9,7 +9,7 @@
 import Foundation
 import iOSSnapshotTestCase
 import StripeCoreTestUtils
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeUICore
 
 @testable import StripeIdentity
 

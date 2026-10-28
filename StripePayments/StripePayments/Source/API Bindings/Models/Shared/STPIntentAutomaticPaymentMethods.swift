@@ -8,7 +8,7 @@
 import Foundation
 
 /// Automatic payment methods configuration for `STPPaymentIntent` and `STPSetupIntent`.
-@_spi(STP) public class STPIntentAutomaticPaymentMethods: NSObject {
+@_spi(InternalOnlyAPI) public class STPIntentAutomaticPaymentMethods: NSObject {
 
     public let enabled: Bool
     public let allResponseFields: [AnyHashable: Any]

@@ -6,7 +6,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 typealias ComponentAnalyticsClientFactory = (ComponentAnalyticsClient.CommonFields) -> ComponentAnalyticsClient
 

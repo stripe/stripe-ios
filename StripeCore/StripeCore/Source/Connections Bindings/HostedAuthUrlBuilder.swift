@@ -7,9 +7,9 @@
 
 import Foundation
 
-@_spi(STP) public enum HostedAuthUrlBuilder {
+@_spi(InternalOnlyAPI) public enum HostedAuthUrlBuilder {
     /// Builds the Hosted Auth URL by appending various query parameters.
-    @_spi(STP) public static func build(
+    @_spi(InternalOnlyAPI) public static func build(
         baseHostedAuthUrl: URL,
         isInstantDebits: Bool,
         hasExistingAccountholderToken: Bool,

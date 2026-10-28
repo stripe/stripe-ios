@@ -7,8 +7,8 @@ import Foundation
 
 import OHHTTPStubs
 import OHHTTPStubsSwift
-@_spi(STP) @testable import StripeCoreTestUtils
-@_spi(STP) @testable import StripePaymentsUI
+@_spi(InternalOnlyAPI) @testable import StripeCoreTestUtils
+@_spi(InternalOnlyAPI) @testable import StripePaymentsUI
 import XCTest
 
 class CardElementConfigServiceTests: APIStubbedTestCase {

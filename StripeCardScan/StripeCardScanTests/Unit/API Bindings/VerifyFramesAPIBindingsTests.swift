@@ -8,7 +8,7 @@
 import XCTest
 
 @testable import StripeCardScan
-@testable@_spi(STP) import StripeCore
+@testable@_spi(InternalOnlyAPI) import StripeCore
 
 /// These tests are used to see if the encodable object has been encoded as expected by checking the following:
 /// 1. The keys are properly set (snake case)

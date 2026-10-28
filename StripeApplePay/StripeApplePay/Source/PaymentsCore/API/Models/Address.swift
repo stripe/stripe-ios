@@ -7,7 +7,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 /// An internal struct for handling contacts. This is not encodable/decodable for use with the Stripe API.
 struct StripeContact {

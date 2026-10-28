@@ -6,14 +6,14 @@
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
 //
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
-@_spi(STP) public class STPCardCVCInputTextField: STPInputTextField {
+@_spi(InternalOnlyAPI) public class STPCardCVCInputTextField: STPInputTextField {
 
-    @_spi(STP) public var cardBrand: STPCardBrand = .unknown {
+    @_spi(InternalOnlyAPI) public var cardBrand: STPCardBrand = .unknown {
         didSet {
             cvcFormatter.cardBrand = cardBrand
             cvcValidator.cardBrand = cardBrand

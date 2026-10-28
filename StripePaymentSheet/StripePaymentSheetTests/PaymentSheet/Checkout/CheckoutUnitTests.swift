@@ -8,10 +8,10 @@
 
 import OHHTTPStubs
 import OHHTTPStubsSwift
-@testable @_spi(STP) import StripeCore
-@testable @_spi(STP) import StripePayments
-@testable @_spi(AppearanceAPIAdditionsPreview) @_spi(STP) import StripePaymentSheet
-@testable @_spi(STP) import StripeUICore
+@testable @_spi(InternalOnlyAPI) import StripeCore
+@testable @_spi(InternalOnlyAPI) import StripePayments
+@testable @_spi(AppearanceAPIAdditionsPreview) @_spi(InternalOnlyAPI) import StripePaymentSheet
+@testable @_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 import XCTest
 

@@ -11,8 +11,8 @@
 import Foundation
 import UIKit
 
-@_spi(STP) import StripePayments
-@_spi(STP) import StripePaymentsUI
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) import StripePaymentsUI
 
 // MARK: - Intent
 

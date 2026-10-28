@@ -4,11 +4,11 @@
 //
 
 import StripeCoreTestUtils
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 import XCTest
 
-@_spi(STP) @testable import StripePaymentSheet
+@_spi(InternalOnlyAPI) @testable import StripePaymentSheet
 
 @MainActor
 final class BNPLFormHeaderViewSnapshotTests: STPSnapshotTestCase {

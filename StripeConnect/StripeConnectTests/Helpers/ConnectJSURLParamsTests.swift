@@ -6,7 +6,7 @@
 //
 
 @testable import StripeConnect
-@_spi(STP) @_spi(DashboardOnly) import StripeCore
+@_spi(InternalOnlyAPI) @_spi(DashboardOnly) import StripeCore
 import XCTest
 
 class ConnectJSURLParamsTests: XCTestCase {

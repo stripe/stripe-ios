@@ -6,7 +6,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 public extension StripeAPI {
 
@@ -35,11 +35,11 @@ public extension StripeAPI {
             }
         }
 
-        @_spi(STP) public enum PaymentAccount: Decodable {
+        @_spi(InternalOnlyAPI) public enum PaymentAccount: Decodable {
 
             // MARK: - Types
 
-            @_spi(STP) public struct BankAccount: Decodable {
+            @_spi(InternalOnlyAPI) public struct BankAccount: Decodable {
                 public let bankName: String?
                 public let id: String
                 public let last4: String
@@ -104,8 +104,8 @@ public extension StripeAPI {
         public let id: String
         public let accounts: FinancialConnectionsSession.AccountList
         public let livemode: Bool
-        @_spi(STP) public let paymentAccount: PaymentAccount?
-        @_spi(STP) public let bankAccountToken: BankAccountToken?
+        @_spi(InternalOnlyAPI) public let paymentAccount: PaymentAccount?
+        @_spi(InternalOnlyAPI) public let bankAccountToken: BankAccountToken?
         let status: Status?
         let statusDetails: StatusDetails?
 
@@ -169,5 +169,5 @@ public extension StripeAPI {
 
 // MARK: - Decodable
 
-@_spi(STP) extension StripeAPI.FinancialConnectionsSession: Decodable {}
-@_spi(STP) extension StripeAPI.FinancialConnectionsSession.AccountList: Decodable {}
+@_spi(InternalOnlyAPI) extension StripeAPI.FinancialConnectionsSession: Decodable {}
+@_spi(InternalOnlyAPI) extension StripeAPI.FinancialConnectionsSession.AccountList: Decodable {}

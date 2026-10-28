@@ -10,7 +10,7 @@ import Foundation
 import XCTest
 
 // swift-format-ignore
-@_spi(STP) @testable import StripeCore
+@_spi(InternalOnlyAPI) @testable import StripeCore
 
 @testable import StripeIdentity
 

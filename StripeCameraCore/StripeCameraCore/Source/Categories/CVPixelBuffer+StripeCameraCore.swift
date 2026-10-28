@@ -9,7 +9,7 @@
 import CoreVideo
 import VideoToolbox
 
-@_spi(STP) extension CVPixelBuffer {
+@_spi(InternalOnlyAPI) extension CVPixelBuffer {
     public func cgImage() -> CGImage? {
         var cgImage: CGImage?
         VTCreateCGImageFromCVPixelBuffer(self, options: nil, imageOut: &cgImage)

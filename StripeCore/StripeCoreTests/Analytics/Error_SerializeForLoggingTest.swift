@@ -9,7 +9,7 @@
 import Foundation
 import XCTest
 
-@testable@_spi(STP) import StripeCore
+@testable@_spi(InternalOnlyAPI) import StripeCore
 
 class Error_SerializeForLoggingTest: XCTestCase {
 

@@ -8,7 +8,7 @@
 
 import AuthenticationServices
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 import UIKit
 
 #if canImport(Stripe3DS2)
@@ -16,15 +16,15 @@ import UIKit
 #endif
 
 /// The states relevant while polling an Intent for an out-of-band action.
-@_spi(STP) @frozen public enum STPPaymentHandlerPollingStatus: Equatable {
+@_spi(InternalOnlyAPI) @frozen public enum STPPaymentHandlerPollingStatus: Equatable {
     case pending
     case succeeded
     case failed
 }
 
 /// A retrieved polling status and the mutation that accepts its Intent as the action's latest value.
-@_spi(STP) public struct STPPaymentHandlerPollingResult {
-    @_spi(STP) public let status: STPPaymentHandlerPollingStatus
+@_spi(InternalOnlyAPI) public struct STPPaymentHandlerPollingResult {
+    @_spi(InternalOnlyAPI) public let status: STPPaymentHandlerPollingStatus
     private let updateActionIntentBlock: () -> Void
 
     init(status: STPPaymentHandlerPollingStatus, updateActionIntent: @escaping () -> Void) {
@@ -32,12 +32,12 @@ import UIKit
         self.updateActionIntentBlock = updateActionIntent
     }
 
-    @_spi(STP) public func updateActionIntent() {
+    @_spi(InternalOnlyAPI) public func updateActionIntent() {
         updateActionIntentBlock()
     }
 }
 
-@_spi(STP) public protocol STPPaymentHandlerActionParams: NSObject, ASWebAuthenticationPresentationContextProviding {
+@_spi(InternalOnlyAPI) public protocol STPPaymentHandlerActionParams: NSObject, ASWebAuthenticationPresentationContextProviding {
     var threeDS2Service: STDSThreeDS2Service? { get }
     var threeDS2Transaction: STDSTransaction? { get set }
     var authenticationContext: STPAuthenticationContext { get }
@@ -53,25 +53,25 @@ import UIKit
     func complete(with status: STPPaymentHandlerActionStatus, error: NSError?)
 }
 
-@_spi(STP)
+@_spi(InternalOnlyAPI)
 public class STPPaymentHandlerPaymentIntentActionParams: NSObject, STPPaymentHandlerActionParams {
     private var serviceInitialized = false
 
-    @_spi(STP) public let authenticationContext: STPAuthenticationContext
-    @_spi(STP) public let apiClient: STPAPIClient
-    @_spi(STP) public let threeDSCustomizationSettings: STPThreeDSCustomizationSettings
+    @_spi(InternalOnlyAPI) public let authenticationContext: STPAuthenticationContext
+    @_spi(InternalOnlyAPI) public let apiClient: STPAPIClient
+    @_spi(InternalOnlyAPI) public let threeDSCustomizationSettings: STPThreeDSCustomizationSettings
     private var paymentIntentCompletion: STPPaymentHandlerActionPaymentIntentCompletionBlock?
-    @_spi(STP) public let returnURLString: String?
-    @_spi(STP) public var paymentIntent: STPPaymentIntent
-    @_spi(STP) public var threeDS2Transaction: STDSTransaction?
+    @_spi(InternalOnlyAPI) public let returnURLString: String?
+    @_spi(InternalOnlyAPI) public var paymentIntent: STPPaymentIntent
+    @_spi(InternalOnlyAPI) public var threeDS2Transaction: STDSTransaction?
 
-    @_spi(STP) public var intentStripeID: String {
+    @_spi(InternalOnlyAPI) public var intentStripeID: String {
         return paymentIntent.stripeId
     }
 
     private var _threeDS2Service: STDSThreeDS2Service?
 
-    @_spi(STP) public var threeDS2Service: STDSThreeDS2Service? {
+    @_spi(InternalOnlyAPI) public var threeDS2Service: STDSThreeDS2Service? {
         if !serviceInitialized {
             serviceInitialized = true
             _threeDS2Service = STDSThreeDS2Service()
@@ -120,11 +120,11 @@ public class STPPaymentHandlerPaymentIntentActionParams: NSObject, STPPaymentHan
         super.init()
     }
 
-    @_spi(STP) public func nextAction() -> STPIntentAction? {
+    @_spi(InternalOnlyAPI) public func nextAction() -> STPIntentAction? {
         return paymentIntent.nextAction
     }
 
-    @_spi(STP) public func retrievePollingResult(completion: @escaping (STPPaymentHandlerPollingResult?) -> Void) {
+    @_spi(InternalOnlyAPI) public func retrievePollingResult(completion: @escaping (STPPaymentHandlerPollingResult?) -> Void) {
         apiClient.retrievePaymentIntent(withClientSecret: paymentIntent.clientSecret) { [weak self] paymentIntent, _ in
             guard let self, let paymentIntent else {
                 completion(nil)
@@ -136,7 +136,7 @@ public class STPPaymentHandlerPaymentIntentActionParams: NSObject, STPPaymentHan
         }
     }
 
-    @_spi(STP) public func complete(with status: STPPaymentHandlerActionStatus, error: NSError?) {
+    @_spi(InternalOnlyAPI) public func complete(with status: STPPaymentHandlerActionStatus, error: NSError?) {
         // Redirect callbacks can race. Consume the completion before invoking it to also allow reentrancy.
         let completion = paymentIntentCompletion
         paymentIntentCompletion = nil

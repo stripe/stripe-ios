@@ -4,8 +4,8 @@
 //
 //  Created by George Birch on 8/4/26.
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 /// Handles Checkout mutations requested by a ShippingAddressElement.
@@ -17,7 +17,7 @@ protocol ShippingAddressElementDelegate: AnyObject {
 
 /// A shipping address form backed by a Checkout Session.
 @MainActor
-@_spi(STP)
+@_spi(InternalOnlyAPI)
 @_spi(ReactNativeSDK)
 public final class ShippingAddressElement {
 

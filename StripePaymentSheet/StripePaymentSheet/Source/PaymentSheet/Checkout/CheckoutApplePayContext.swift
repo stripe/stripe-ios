@@ -9,9 +9,9 @@
 import Contacts
 import Foundation
 import PassKit
-@_spi(STP) import StripeApplePay
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
+@_spi(InternalOnlyAPI) import StripeApplePay
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
 import UIKit
 
 /// Responsible for handling the Apple Pay flow end to end: displaying line items,

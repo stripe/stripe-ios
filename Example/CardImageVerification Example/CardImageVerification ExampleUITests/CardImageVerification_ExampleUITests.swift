@@ -5,7 +5,7 @@
 //  Created by Jaime Park on 11/17/21.
 //
 
-@testable @_spi(STP) import StripeCore
+@testable @_spi(InternalOnlyAPI) import StripeCore
 import XCTest
 
 class CardImageVerification_ExampleUITests: XCTestCase {

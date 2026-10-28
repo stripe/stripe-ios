@@ -6,9 +6,9 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
-@_spi(STP) public final class MockAnalyticsClient: STPAnalyticsClientProtocol {
+@_spi(InternalOnlyAPI) public final class MockAnalyticsClient: STPAnalyticsClientProtocol {
 
     public private(set) var productUsage: Set<String> = []
     public private(set) var loggedAnalytics: [Analytic] = []

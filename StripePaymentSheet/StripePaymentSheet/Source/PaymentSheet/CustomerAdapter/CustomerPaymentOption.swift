@@ -16,7 +16,7 @@ public enum CustomerPaymentOption: Equatable {
     /// A Stripe payment method backed by a Stripe PaymentMethod ID.
     case stripeId(String)
 
-    @_spi(STP) public init(value: String) {
+    @_spi(InternalOnlyAPI) public init(value: String) {
         switch value {
         case "apple_pay":
             self = .applePay
@@ -27,7 +27,7 @@ public enum CustomerPaymentOption: Equatable {
         }
     }
 
-    @_spi(STP) public var value: String {
+    @_spi(InternalOnlyAPI) public var value: String {
         switch self {
         case .applePay:
             return "apple_pay"
@@ -42,7 +42,7 @@ public enum CustomerPaymentOption: Equatable {
     /// - Parameters:
     ///   - identifier: Payment method identifier.
     ///   - customerID: ID of the customer. Pass `nil` for anonymous users.
-    @_spi(STP) public static func setDefaultPaymentMethod(_ paymentMethodOption: CustomerPaymentOption?, forCustomer customerID: String?) {
+    @_spi(InternalOnlyAPI) public static func setDefaultPaymentMethod(_ paymentMethodOption: CustomerPaymentOption?, forCustomer customerID: String?) {
         var customerToDefaultPaymentMethodID = UserDefaults.standard.customerToLastSelectedPaymentMethod ?? [:]
 
         let key = customerID ?? ""
@@ -51,7 +51,7 @@ public enum CustomerPaymentOption: Equatable {
         UserDefaults.standard.customerToLastSelectedPaymentMethod = customerToDefaultPaymentMethodID
     }
 
-    @_spi(STP) public static func localDefaultPaymentMethod(for customerID: String?) -> CustomerPaymentOption? {
+    @_spi(InternalOnlyAPI) public static func localDefaultPaymentMethod(for customerID: String?) -> CustomerPaymentOption? {
         let key = customerID ?? ""
 
         guard let value = UserDefaults.standard.customerToLastSelectedPaymentMethod?[key] else {
@@ -66,7 +66,7 @@ public enum CustomerPaymentOption: Equatable {
     /// - Parameter elementsSession: the ElementsSession.
     /// - Parameter surface: `.paymentSheet` or `.customerSheet`
     /// - Returns: Selected payment method.
-    @_spi(STP) public static func selectedPaymentMethod(for customerID: String?, elementsSession: STPElementsSession, surface: HostedSurface) -> CustomerPaymentOption? {
+    @_spi(InternalOnlyAPI) public static func selectedPaymentMethod(for customerID: String?, elementsSession: STPElementsSession, surface: HostedSurface) -> CustomerPaymentOption? {
         switch surface {
         case .paymentSheet:
             // if opted in to the "set as default" feature, read from elementsSession

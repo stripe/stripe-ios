@@ -13,7 +13,7 @@ import UIKit
  A simple container element with an optional title and an error, and draws a border around its elements.
  Chooses which of its sub-elements' errors to display.
  */
-@_spi(STP) public final class SectionElement: ContainerElement {
+@_spi(InternalOnlyAPI) public final class SectionElement: ContainerElement {
     weak public var delegate: ElementDelegate?
     lazy var sectionView: SectionView = {
         isViewInitialized = true
@@ -125,7 +125,7 @@ extension SectionElement {
     /// A container for an Element that should participate in the hierarchy
     /// without rendering its view in the enclosing section.
     /// - Note: `HiddenElement`'s are skipped by the `ContainerElement`'s auto advance logic
-    @_spi(STP) public final class HiddenElement: ContainerElement {
+    @_spi(InternalOnlyAPI) public final class HiddenElement: ContainerElement {
         final class HiddenView: UIView {}
 
         weak public var delegate: ElementDelegate?

@@ -6,16 +6,16 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
-@_spi(STP)
+@_spi(InternalOnlyAPI)
 public typealias STPLinkAccountSessionBlock = (LinkAccountSession?, Error?) -> Void
-@_spi(STP)
+@_spi(InternalOnlyAPI)
 public typealias STPLinkAccountSessionsAttachPaymentIntentBlock = (STPPaymentIntent?, Error?) -> Void
-@_spi(STP)
+@_spi(InternalOnlyAPI)
 public typealias STPLinkAccountSessionsAttachSetupIntentBlock = (STPSetupIntent?, Error?) -> Void
 
-@_spi(STP)
+@_spi(InternalOnlyAPI)
 public extension STPAPIClient {
 
     func createLinkAccountSession(

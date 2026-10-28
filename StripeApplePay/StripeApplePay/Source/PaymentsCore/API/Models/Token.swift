@@ -8,7 +8,7 @@
 
 import Foundation
 import PassKit
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 extension StripeAPI {
     // Internal note: @_spi(StripeApplePayTokenization) is intended for limited public use. See https://docs.google.com/document/d/1Z9bTUBvDDufoqTaQeI3A0Cxdsoj_D0IkxdWX-GB-RTQ

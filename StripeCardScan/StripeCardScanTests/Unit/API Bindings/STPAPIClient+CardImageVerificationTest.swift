@@ -11,7 +11,7 @@ import StripeCoreTestUtils
 import XCTest
 
 @testable import StripeCardScan
-@testable@_spi(STP) import StripeCore
+@testable@_spi(InternalOnlyAPI) import StripeCore
 
 class STPAPIClient_CardImageVerificationTest: APIStubbedTestCase {
     /// The following test is mocking a flow where the merchant has set a card during the CIV intent creation.

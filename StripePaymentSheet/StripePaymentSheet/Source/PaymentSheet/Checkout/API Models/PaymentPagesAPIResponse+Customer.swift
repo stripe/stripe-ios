@@ -7,7 +7,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripePayments
+@_spi(InternalOnlyAPI) import StripePayments
 
 extension PaymentPagesAPIResponse {
     /// Customer data from a Checkout Session response.

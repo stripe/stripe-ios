@@ -6,8 +6,8 @@
 //
 
 @testable import StripeConnect
-@_spi(STP) import StripeCore
-@_spi(STP) import StripeCoreTestUtils
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCoreTestUtils
 import XCTest
 
 class ComponentAnalyticsClientTests: XCTestCase {

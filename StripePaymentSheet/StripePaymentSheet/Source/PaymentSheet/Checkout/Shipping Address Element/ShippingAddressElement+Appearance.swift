@@ -4,10 +4,10 @@
 //
 //  Created by George Birch on 8/4/26.
 
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
-@_spi(STP)
+@_spi(InternalOnlyAPI)
 @_spi(ReactNativeSDK)
 extension ShippingAddressElement {
     /// Appearance configuration for ``ShippingAddressElement``.

@@ -7,7 +7,7 @@
 //
 
 import OHHTTPStubs
-@testable@_spi(STP) import StripeCore
+@testable@_spi(InternalOnlyAPI) import StripeCore
 import XCTest
 
 /// Test cases that subclass `STPNetworkStubbingTestCase` will automatically capture all network traffic when run using the `AllStripeFrameworks-NetworkRecordMode` scheme and save it to disk. Otherwise, they will use the persisted request/response pairs, and raise an exception if an unexpected HTTP request is made.

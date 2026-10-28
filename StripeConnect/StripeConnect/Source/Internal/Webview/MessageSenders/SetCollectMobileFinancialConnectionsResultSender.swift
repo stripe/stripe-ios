@@ -5,8 +5,8 @@
 //  Created by Mel Ludowise on 10/17/24.
 //
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripeFinancialConnections
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripeFinancialConnections
 
 enum SetCollectMobileFinancialConnectionsResult {
     struct PayloadValue: Codable, Equatable {

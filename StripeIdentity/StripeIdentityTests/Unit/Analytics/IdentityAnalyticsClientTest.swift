@@ -5,10 +5,10 @@
 //  Created by Chen Cen on 3/8/24.
 //
 
-@_spi(STP) import StripeCoreTestUtils
+@_spi(InternalOnlyAPI) import StripeCoreTestUtils
 import XCTest
 
-@_spi(STP) @testable import StripeCore
+@_spi(InternalOnlyAPI) @testable import StripeCore
 
 @testable import StripeIdentity
 

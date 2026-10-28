@@ -6,8 +6,8 @@
 //  Copyright © 2026 Stripe, Inc. All rights reserved.
 //
 
-@_spi(STP) @testable import StripeCore
-@_spi(STP) @_spi(CryptoOnrampAlpha) @testable import StripePaymentSheet
+@_spi(InternalOnlyAPI) @testable import StripeCore
+@_spi(InternalOnlyAPI) @_spi(CryptoOnrampAlpha) @testable import StripePaymentSheet
 import UIKit
 import XCTest
 

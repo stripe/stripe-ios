@@ -8,7 +8,7 @@
 
 import Foundation
 
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 final class LinkUtils {
 

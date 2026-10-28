@@ -8,12 +8,12 @@
 import Contacts
 import Foundation
 import PassKit
-@_spi(STP) @testable import StripeCore
-@_spi(STP) import StripeCoreTestUtils
-@_spi(STP) import StripePayments
-@_spi(STP) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @_spi(AppearanceAPIAdditionsPreview) @testable import StripePaymentSheet
+@_spi(InternalOnlyAPI) @testable import StripeCore
+@_spi(InternalOnlyAPI) import StripeCoreTestUtils
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @_spi(AppearanceAPIAdditionsPreview) @testable import StripePaymentSheet
 import StripePaymentsTestUtils
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeUICore
 
 public extension PaymentSheet.Configuration {
     /// Provides a Configuration that allows all pm types available

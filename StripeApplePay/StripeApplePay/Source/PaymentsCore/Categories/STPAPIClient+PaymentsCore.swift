@@ -7,10 +7,10 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 extension STPAPIClient {
-    @_spi(STP) public class func paramsAddingPaymentUserAgent(
+    @_spi(InternalOnlyAPI) public class func paramsAddingPaymentUserAgent(
         _ params: [String: Any]
     ) -> [String: Any] {
         var newParams = params

@@ -9,8 +9,8 @@
 import CoreMedia
 import CoreVideo
 import Foundation
-@_spi(STP) import StripeCameraCore
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCameraCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 /// Scans an image and returns results
 protocol ImageScanner {

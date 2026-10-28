@@ -7,16 +7,16 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 extension StripeAPI {
-    @_spi(STP) public struct SetupIntent: UnknownFieldsDecodable {
-        @_spi(STP) public let id: String
+    @_spi(InternalOnlyAPI) public struct SetupIntent: UnknownFieldsDecodable {
+        @_spi(InternalOnlyAPI) public let id: String
         // TODO: (MOBILESDK-467) Add modern bindings for more SetupIntent fields
-        @_spi(STP) public let status: SetupIntentStatus
+        @_spi(InternalOnlyAPI) public let status: SetupIntentStatus
 
         /// Status types for an STPSetupIntent
-        @frozen @_spi(STP) public enum SetupIntentStatus: String, SafeEnumCodable {
+        @frozen @_spi(InternalOnlyAPI) public enum SetupIntentStatus: String, SafeEnumCodable {
             /// Unknown status
             case unknown
             /// This SetupIntent requires a PaymentMethod
@@ -38,7 +38,7 @@ extension StripeAPI {
             // Remove @frozen after Xcode 12.2 support has been dropped.
         }
 
-        @_spi(STP) public var _allResponseFieldsStorage: NonEncodableParameters?
+        @_spi(InternalOnlyAPI) public var _allResponseFieldsStorage: NonEncodableParameters?
     }
 }
 

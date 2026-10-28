@@ -7,9 +7,9 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCameraCoreTestUtils
-@_spi(STP) import StripeCore
-@_spi(STP) import StripeCoreTestUtils
+@_spi(InternalOnlyAPI) import StripeCameraCoreTestUtils
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCoreTestUtils
 import UIKit
 import XCTest
 

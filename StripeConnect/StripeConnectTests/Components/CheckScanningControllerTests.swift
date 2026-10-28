@@ -1,6 +1,6 @@
 import SafariServices
 @_spi(PrivatePreviewConnect) @testable import StripeConnect
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 import WebKit
 import XCTest
 

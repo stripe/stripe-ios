@@ -6,11 +6,11 @@
 //
 
 import Foundation
-@_spi(STP) import StripeApplePay
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
-@_spi(STP) import StripePaymentSheet
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeApplePay
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) import StripePaymentSheet
+@_spi(InternalOnlyAPI) import StripeUICore
 
 extension String.Localized {
     static var cryptoOnrampErrorPaymentMethodKYCRegionChanged: String {
