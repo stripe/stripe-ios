@@ -164,6 +164,7 @@ extension CheckoutController {
             PaymentSheet.confirmLinkPaymentOption(
                 confirmOption: parameters.confirmOption,
                 configuration: configuration,
+                paymentHandler: parameters.paymentHandler,
                 nativeSheetPresentation: parameters.nativeSheetPresentation,
                 authenticationContext: parameters.authenticationContext,
                 intent: .checkout(checkoutSession),
