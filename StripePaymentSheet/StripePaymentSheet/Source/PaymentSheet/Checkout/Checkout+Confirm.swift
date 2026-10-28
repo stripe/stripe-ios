@@ -535,23 +535,19 @@ extension CheckoutController {
         }
 
         if response.paymentResponse?.status == "requires_action",
-           response.paymentIntent == nil, response.setupIntent == nil {
+           response.paymentResponse?.paymentIntent == nil, response.paymentResponse?.setupIntent == nil {
             let error = CheckoutError.unknown(debugDescription: "CheckoutClient requires an action without a supported Intent.")
             return .failed(error, sessionResponse: response)
         }
 
-        // 2. Handle any next action required by the Intent.
+        // 2. Retrieve the referenced Intent and handle any next action.
         let clientCompletedIntent: PaymentOrSetupIntent?
-        if let paymentIntent = response.paymentIntent {
-            let result: (STPPaymentHandlerActionStatus, STPPaymentIntent?, Error?) = await withCheckedContinuation { continuation in
-                paymentHandler.handleNextAction(
-                    for: paymentIntent,
-                    with: authenticationContext,
-                    returnURL: requestParameters.returnURL
-                ) { status, paymentIntent, error in
-                    continuation.resume(returning: (status, paymentIntent, error))
-                }
-            }
+        if let reference = response.paymentResponse?.paymentIntent {
+            let result = await paymentHandler.handleNextAction(
+                paymentIntentClientSecret: reference.clientSecret,
+                authenticationContext: authenticationContext,
+                returnURL: requestParameters.returnURL
+            )
             switch result.0 {
             case .succeeded:
                 guard let paymentIntent = result.1 else {
@@ -562,22 +558,18 @@ extension CheckoutController {
             case .canceled:
                 return .canceled(sessionResponse: response)
             case .failed:
-                let error = result.2 ?? PaymentSheetError.errorHandlingNextAction
+                let error: Error = result.2 ?? PaymentSheetError.errorHandlingNextAction
                 return .failed(error, sessionResponse: response)
             @unknown default:
                 let error = CheckoutError.unknown(debugDescription: "PaymentHandler returned an unknown action status for a PaymentIntent.")
                 return .failed(error, sessionResponse: response)
             }
-        } else if let setupIntent = response.setupIntent {
-            let result: (STPPaymentHandlerActionStatus, STPSetupIntent?, Error?) = await withCheckedContinuation { continuation in
-                paymentHandler.handleNextAction(
-                    for: setupIntent,
-                    with: authenticationContext,
-                    returnURL: requestParameters.returnURL
-                ) { status, setupIntent, error in
-                    continuation.resume(returning: (status, setupIntent, error))
-                }
-            }
+        } else if let reference = response.paymentResponse?.setupIntent {
+            let result = await paymentHandler.handleNextAction(
+                setupIntentClientSecret: reference.clientSecret,
+                authenticationContext: authenticationContext,
+                returnURL: requestParameters.returnURL
+            )
             switch result.0 {
             case .succeeded:
                 guard let setupIntent = result.1 else {
@@ -661,7 +653,6 @@ extension CheckoutController {
             // }
             break
         case .paymentIntent(let paymentIntent):
-            updatedResponse.paymentIntent = paymentIntent
             switch paymentIntent.status {
             case .succeeded:
                 updatedResponse.status = .complete(.paid)
@@ -672,7 +663,6 @@ extension CheckoutController {
                 break
             }
         case .setupIntent(let setupIntent):
-            updatedResponse.setupIntent = setupIntent
             if setupIntent.status == .succeeded {
                 updatedResponse.status = .complete(response.paymentStatus)
             }
@@ -682,8 +672,6 @@ extension CheckoutController {
 
     private static func paymentError(from session: PaymentPagesAPIResponse) -> Error {
         let lastErrorFields = session.paymentResponse?.lastPaymentError?.allResponseFields
-            ?? session.paymentIntent?.lastPaymentError?.allResponseFields
-            ?? session.setupIntent?.lastSetupError?.allResponseFields
         return NSError.stp_error(fromStripeResponse: lastErrorFields.map { ["error": $0] })
             ?? PaymentSheetError.errorHandlingNextAction
     }

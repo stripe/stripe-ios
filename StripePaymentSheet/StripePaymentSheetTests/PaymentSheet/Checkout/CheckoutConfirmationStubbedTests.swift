@@ -288,18 +288,28 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
     }
 
     func testFailedConfirmationCommitsReturnedSession() async throws {
-        // Given Stripe returns an updated session whose PaymentIntent failed
+        // Given confirmation returns a Session but retrieving its Intent fails
         let checkout = try await makeCheckout()
-        stubConfirmation(responseJSON: makeConfirmedSessionJSON(paymentIntentStatus: "requires_payment_method"))
+        stubConfirmation()
+        stub { request in
+            request.httpMethod == "GET" && request.url?.path.hasPrefix("/v1/payment_intents/") == true
+        } response: { _ in
+            let error = [
+                "type": "invalid_request_error",
+                "message": "Unable to retrieve the confirmed Intent.",
+            ]
+            return HTTPStubsResponse(jsonObject: ["error": error], statusCode: 400, headers: nil)
+        }
 
         // When confirmation fails
         let result = await checkout.confirm(makePaymentMethodFlow(for: checkout))
 
         // Then the coordinator still commits the returned Checkout Session
-        guard case .failed = result else {
+        guard case .failed(let error) = result else {
             XCTFail("Expected confirmation to fail, got \(result)")
             return
         }
+        XCTAssertEqual((error as NSError).userInfo[STPError.errorMessageKey] as? String, "Unable to retrieve the confirmed Intent.")
         XCTAssertEqual(checkout.session.status, .complete(.paid))
     }
 
@@ -475,7 +485,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         guard case .failed(_, let response) = result else {
             return XCTFail("Expected confirmation to fail, got \(result)")
         }
-        XCTAssertEqual(response?.paymentIntent?.status, .requiresPaymentMethod)
+        XCTAssertEqual(response?.paymentResponse?.status, "requires_payment_method")
         await fulfillment(of: [retrieve], timeout: 1)
     }
 
@@ -616,7 +626,15 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
     func testFailedPaymentResponseFails() async throws {
         // Given CheckoutClient reports a payment that requires another payment method
         let checkout = try await makeCheckout()
-        let responseJSON = makeConfirmedSessionJSON(paymentIntentStatus: "requires_payment_method")
+        var responseJSON = makeConfirmedSessionJSON(paymentIntentStatus: "requires_payment_method")
+        var paymentResponse = responseJSON["payment_response"] as! [String: Any]
+        paymentResponse["last_payment_error"] = [
+            "type": "card_error",
+            "code": "card_declined",
+            "decline_code": "insufficient_funds",
+            "message": "Your card has insufficient funds.",
+        ]
+        responseJSON["payment_response"] = paymentResponse
 
         // When the Checkout Session is confirmed
         let result = await confirmCheckoutSession(
@@ -624,10 +642,11 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
             responseJSON: responseJSON
         )
 
-        // Then confirmation fails
-        guard case .failed = result else {
+        // Then confirmation returns the CheckoutClient payment error
+        guard case .failed(let error, _) = result else {
             return XCTFail("Expected confirmation to fail, got \(result)")
         }
+        XCTAssertEqual(error._stp_error_code, "card_declined")
     }
 
     func testOrchestrationConfirmResponseFails() async throws {

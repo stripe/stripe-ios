@@ -20,10 +20,6 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
 
     let checkoutConfigID: String?
     let sessionId: String
-    var paymentIntentId: String? { paymentResponse?.paymentIntent?.id }
-    var paymentIntent: STPPaymentIntent?
-    var setupIntentId: String? { paymentResponse?.setupIntent?.id }
-    var setupIntent: STPSetupIntent?
     let currency: String
     let integrationCurrency: String
     let checkoutItems: [CheckoutItem]
@@ -51,8 +47,7 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
             "currency = \(currency)",
             "uiMode = \(String(describing: allResponseFields["ui_mode"]))",
             "status = \(status)",
-            "paymentIntentId = \(String(describing: paymentIntentId))",
-            "setupIntentId = \(String(describing: setupIntentId))",
+            "paymentResponse = \(String(describing: paymentResponse))",
             "paymentMethodTypes = \(elementsSession.value.orderedPaymentMethodTypes)",
             "livemode = \(livemode)",
             "customerId = \(String(describing: customer?.id))",
@@ -88,8 +83,6 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
         checkoutConfigID = try container.decodeIfPresent(String.self, forKey: .checkoutConfigID)
         paymentResponse = try container.decodeIfPresent(PaymentResponse.self, forKey: .paymentResponse)
         sessionId = try container.decode(String.self, forKey: .sessionId)
-        paymentIntent = nil
-        setupIntent = nil
         let decodedCurrency = try container.decode(String.self, forKey: .currency)
         guard !decodedCurrency.isEmpty else {
             throw decoder.dataCorrupted("currency must not be empty")
@@ -162,9 +155,13 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
 }
 
 extension PaymentPagesAPIResponse {
-    struct IntentReference: Decodable {
+    struct IntentReference: Decodable, CustomStringConvertible {
         let id: String
         let clientSecret: String
+
+        var description: String {
+            "<IntentReference; id = \(id); clientSecret = <redacted>>"
+        }
     }
 
     struct AutomaticTax: Decodable {

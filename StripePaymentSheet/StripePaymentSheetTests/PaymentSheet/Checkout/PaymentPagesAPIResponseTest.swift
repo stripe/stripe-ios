@@ -457,8 +457,6 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         let response = try PaymentPagesAPIResponse.decode(fromAPIResponse: json)
         XCTAssertEqual(response.paymentResponse?.paymentIntent?.id, "pi_123")
         XCTAssertEqual(response.paymentResponse?.setupIntent?.id, "seti_123")
-        XCTAssertNil(response.paymentIntent)
-        XCTAssertNil(response.setupIntent)
     }
 
     func testIntentReferencesRequireClientSecrets() {

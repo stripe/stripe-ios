@@ -224,12 +224,11 @@ extension STPAPIClient {
         checkoutSessionId: String,
         clientSecret: String
     ) async throws -> PaymentPagesAPIResponse {
-        let checkoutClient: PaymentPagesAPIResponse = try await get(
+        return try await get(
             endpoint: "checkout_client/\(checkoutSessionId)/retrieve",
             parameters: Self.checkoutClientParameters(clientSecret: clientSecret),
             useServerErrorMessage: true
         )
-        return try await retrievingCheckoutIntents(for: checkoutClient)
     }
 
     /// Retrieves the small state object used to determine whether a Checkout
@@ -385,25 +384,10 @@ extension STPAPIClient {
             parameters["customer_data"] = customerData
         }
 
-        let checkoutClient: PaymentPagesAPIResponse = try await post(
+        return try await post(
             endpoint: "checkout_client/\(requestParameters.sessionId)/confirm",
             parameters: parameters
         )
-        return try await retrievingCheckoutIntents(for: checkoutClient)
-    }
-
-    /// Retrieve the referenced Intent when confirmation needs authentication or next-action handling.
-    private func retrievingCheckoutIntents(
-        for response: PaymentPagesAPIResponse
-    ) async throws -> PaymentPagesAPIResponse {
-        var response = response
-        if let reference = response.paymentResponse?.paymentIntent {
-            response.paymentIntent = try await retrievePaymentIntent(clientSecret: reference.clientSecret, expand: ["payment_method"])
-        }
-        if let reference = response.paymentResponse?.setupIntent {
-            response.setupIntent = try await retrieveSetupIntent(clientSecret: reference.clientSecret, expand: ["payment_method"])
-        }
-        return response
     }
 
     private func post(
