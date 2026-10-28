@@ -839,7 +839,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
             for metadata in [parameters.clientAttributionMetadata, parameters.paymentMethodData?.clientAttributionMetadata] {
                 XCTAssertEqual(metadata?.merchantIntegrationSource, "mobile-checkout", file: file, line: line)
                 XCTAssertEqual(metadata?.merchantIntegrationSubtype, confirmationSource.rawValue, file: file, line: line)
-                XCTAssertEqual(metadata?.merchantIntegrationAdditionalElements, ["payment", "expressCheckout"], file: file, line: line)
+                XCTAssertEqual(metadata?.merchantIntegrationAdditionalElements, ["mobile-payment-element", "mobile-express-checkout-element"], file: file, line: line)
             }
             confirmed.fulfill()
             return .completed(response)

@@ -11,10 +11,10 @@ import Foundation
 @_spi(InternalOnlyAPI) public class STPClientAttributionMetadata: NSObject {
 
     public enum AdditionalElement: String {
-        case payment
-        case expressCheckout
-        case address
-        case currencySelector
+        case payment = "mobile-payment-element"
+        case expressCheckout = "mobile-express-checkout-element"
+        case address = "mobile-shipping-address-element"
+        case currencySelector = "mobile-currency-selector-element"
     }
 
     public enum IntentCreationFlow: String {

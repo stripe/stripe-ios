@@ -141,7 +141,7 @@ final class PaymentMethodFormViewControllerTest: XCTestCase {
         XCTAssertEqual(metadata.merchantIntegrationSubtype, "mobile-payment-element")
         XCTAssertEqual(metadata.checkoutSessionId, session.id)
         XCTAssertEqual(metadata.checkoutConfigId, "config_checkout")
-        XCTAssertEqual(metadata.merchantIntegrationAdditionalElements, ["payment", "address"])
+        XCTAssertEqual(metadata.merchantIntegrationAdditionalElements, ["mobile-payment-element", "mobile-shipping-address-element"])
     }
 
     // MARK: - logBillingAddressCompletionIfNeeded

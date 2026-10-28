@@ -164,7 +164,7 @@ class LinkURLGeneratorTests: XCTestCase {
         XCTAssertEqual(params.clientAttributionMetadata.merchantIntegrationSource, "mobile-checkout")
         XCTAssertEqual(params.clientAttributionMetadata.merchantIntegrationSubtype, confirmationSource.rawValue)
         XCTAssertEqual(params.clientAttributionMetadata.checkoutConfigId, "config_checkout")
-        XCTAssertEqual(params.clientAttributionMetadata.merchantIntegrationAdditionalElements, ["payment", "expressCheckout"])
+        XCTAssertEqual(params.clientAttributionMetadata.merchantIntegrationAdditionalElements, ["mobile-payment-element", "mobile-express-checkout-element"])
     }
 
     func testURLParamsPaymentMethodOptionsSetupFutureUsage() {
