@@ -155,9 +155,13 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
 }
 
 extension PaymentPagesAPIResponse {
-    struct IntentReference: Decodable {
+    struct IntentReference: Decodable, CustomStringConvertible {
         let id: String
         let clientSecret: String
+
+        var description: String {
+            "<IntentReference; id = \(id); clientSecret = <redacted>>"
+        }
     }
 
     struct AutomaticTax: Decodable {
