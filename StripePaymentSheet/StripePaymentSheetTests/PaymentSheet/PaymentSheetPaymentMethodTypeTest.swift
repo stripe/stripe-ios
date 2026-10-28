@@ -5,6 +5,9 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
+import OHHTTPStubs
+import OHHTTPStubsSwift
+import StripeCoreTestUtils
 import XCTest
 
 @testable@_spi(STP) import StripeCore
@@ -14,7 +17,7 @@ import XCTest
 @testable@_spi(STP) import StripePaymentsUI
 
 @MainActor
-class PaymentSheetPaymentMethodTypeTest: XCTestCase {
+class PaymentSheetPaymentMethodTypeTest: APIStubbedTestCase {
 
     func makeConfiguration(
         hasReturnURL: Bool = false
@@ -25,33 +28,28 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
     }
 
     // MARK: - Images
-    func testMakeImage_with_client_asset() {
+    func testMakeImage_with_client_asset() async throws {
         // A payment method with a client-side asset...
-        let loadExpectation = expectation(description: "No image download")
-        loadExpectation.isInverted = true
-        let clientImage = STPPaymentMethodType.cashApp.makeImage()!
-        let image = PaymentSheet.PaymentMethodType.stripe(.cashApp).makeImage(forDarkBackground: false) { image in
-            XCTFail("Unexpected downloaded image: \(image)")
-            loadExpectation.fulfill()
-        }
-
-        // ...should return that asset without downloading an override.
-        XCTAssertEqual(image, clientImage)
-        waitForExpectations(timeout: 0.1)
-    }
-
-    func testMakeImage_with_another_client_asset() {
-        // Another payment method with a client-side asset...
-        let e = expectation(description: "No image download")
-        e.isInverted = true
-        let usBankAccountImage = PaymentSheet.PaymentMethodType.stripe(.USBankAccount).makeImage(forDarkBackground: false) { _ in
-            // This shouldn't be called
-            XCTFail()
-            e.fulfill()
-        }
+        let paymentMethodType = PaymentSheet.PaymentMethodType.stripe(.USBankAccount)
+        let usBankAccountImage = paymentMethodType.makeImage(forDarkBackground: false)
         // ...should default to the client-side asset
         XCTAssertEqual(usBankAccountImage, STPPaymentMethodType.USBankAccount.makeImage())
-        waitForExpectations(timeout: 0.1)
+        // ...and have no different image to load asynchronously.
+        let loadedImage = try await paymentMethodType.loadImage(forDarkBackground: false)
+        XCTAssertEqual(loadedImage, usBankAccountImage)
+    }
+
+    func testMakeImage_withoutCachedOrLocalImage_returnsNonzeroPlaceholder() {
+        let paymentMethodType = PaymentSheet.PaymentMethodType.external(._testBufoPayValue())
+        let downloadManager = DownloadManager(urlSessionConfiguration: Self.stubbedURLSessionConfig())
+
+        let image = paymentMethodType.makeImage(
+            forDarkBackground: false,
+            using: downloadManager
+        )
+
+        XCTAssertEqual(image.size, CGSize(width: 1, height: 1))
+        XCTAssertNotNil(image.cgImage)
     }
 
     func testAllSupportedPaymentMethodsHaveClientAssets() {
@@ -1827,5 +1825,209 @@ extension STPFixtures {
 
         }
         return STPSetupIntent.decodedObject(fromAPIResponse: json)!
+    }
+}
+
+@MainActor
+final class PaymentMethodImageLoadingTests: APIStubbedTestCase {
+    private let lightURL = URL(string: "https://example.com/light.png")!
+    private let darkURL = URL(string: "https://example.com/dark.png")!
+    private let lightSize = CGSize(width: 40, height: 20)
+    private let darkSize = CGSize(width: 60, height: 20)
+
+    override func setUp() {
+        super.setUp()
+        DownloadManager.shared.clearCache()
+    }
+
+    override func tearDown() {
+        DownloadManager.shared.clearCache()
+        super.tearDown()
+    }
+
+    func testExternalImageRefreshesAfterSynchronousPromotion() async throws {
+        // Given an expired response available before the view renders
+        let manager = managerWithExpiredImage()
+        let method = externalMethod()
+        let initialImage = method.makeImage(forDarkBackground: false, using: manager)
+        XCTAssertEqual(initialImage.size, lightSize)
+        stubImage(url: lightURL, size: darkSize)
+
+        // When refreshing, the promoted image must not bypass HTTP cache policy
+        let refreshedImage = try await method.loadImage(forDarkBackground: false, using: manager)
+
+        // Then the newly downloaded image replaces the stale cache entry
+        XCTAssertEqual(refreshedImage.size, darkSize)
+        XCTAssertEqual(method.makeImage(forDarkBackground: false, using: manager).size, darkSize)
+    }
+
+    func testExternalImageLoadThrowsInsteadOfReturningPlaceholder() async {
+        stubFailure(url: lightURL)
+        await XCTAssertThrowsErrorAsync(
+            _ = try await self.externalMethod().loadImage(forDarkBackground: false)
+        )
+    }
+
+    func testCellRetainsImageAfterCacheEvictionAndFailedReload() async throws {
+        // Given a cell displaying an external payment method image
+        stubImage(url: lightURL, size: lightSize)
+        _ = try await DownloadManager.shared.image(for: lightURL)
+        let cell = PaymentMethodTypeCollectionView.PaymentTypeCell(frame: .zero)
+        cell.paymentMethodType = externalMethod()
+        let originalWidth = cell.paymentMethodLogoWidthConstraint.constant
+        XCTAssertGreaterThan(originalWidth, PaymentMethodTypeCollectionView.paymentMethodLogoSize.height)
+
+        // When both caches are evicted and selecting the cell triggers a failed reload
+        DownloadManager.shared.clearCache()
+        stubFailure(url: lightURL)
+        cell.isSelected = true
+
+        // Then neither the synchronous lookup nor the failed request removes the displayed image
+        XCTAssertEqual(cell.paymentMethodLogoWidthConstraint.constant, originalWidth)
+        try await Task.sleep(nanoseconds: 100_000_000)
+        XCTAssertEqual(cell.paymentMethodLogoWidthConstraint.constant, originalWidth)
+    }
+
+    func testImageViewRetainsImageAfterCacheEvictionAndFailedReload() async throws {
+        stubImage(url: lightURL, size: lightSize)
+        _ = try await DownloadManager.shared.image(for: lightURL)
+        let view = PaymentMethodTypeImageView(
+            paymentMethodType: externalMethod(), contrastMatchingColor: .black, currency: nil, iconStyle: .filled
+        )
+        let originalImage = try XCTUnwrap(view.image)
+        XCTAssertEqual(originalImage.size, lightSize)
+
+        DownloadManager.shared.clearCache()
+        stubFailure(url: lightURL)
+        view.updateImage()
+
+        XCTAssertTrue(view.image === originalImage)
+        try await Task.sleep(nanoseconds: 100_000_000)
+        XCTAssertTrue(view.image === originalImage)
+    }
+
+    func testCellReuseWithSameMethodIdentifierLoadsNewURL() async throws {
+        // Given a slow request for the original image
+        let started = expectation(description: "Original request started")
+        stubImage(url: lightURL, size: lightSize, delay: 0.1, started: started)
+        stubImage(url: darkURL, size: darkSize)
+        let cell = PaymentMethodTypeCollectionView.PaymentTypeCell(frame: .zero)
+        cell.paymentMethodType = externalMethod()
+        await fulfillment(of: [started], timeout: 2)
+
+        // When the cell is reconfigured with the same method type but a different image URL
+        cell.paymentMethodType = externalMethod(lightURL: darkURL)
+        let expectedWidth = PaymentMethodTypeCollectionView.paymentMethodLogoSize.height * darkSize.width / darkSize.height
+        try await waitUntil { cell.paymentMethodLogoWidthConstraint.constant == expectedWidth }
+
+        // Then the older request cannot replace the new image when it finishes
+        try await Task.sleep(nanoseconds: 200_000_000)
+        XCTAssertEqual(cell.paymentMethodLogoWidthConstraint.constant, expectedWidth)
+    }
+
+    func testDarkModeChangeRejectsLateLightImage() async throws {
+        let started = expectation(description: "Light image request started")
+        stubImage(url: lightURL, size: lightSize, delay: 0.1, started: started)
+        stubImage(url: darkURL, size: darkSize)
+        var view: PaymentMethodTypeImageView!
+        UITraitCollection(userInterfaceStyle: .light).performAsCurrent {
+            view = PaymentMethodTypeImageView(
+                paymentMethodType: externalMethod(), contrastMatchingColor: .label, currency: nil, iconStyle: .filled
+            )
+        }
+        view.overrideUserInterfaceStyle = .light
+        view.updateImage()
+        await fulfillment(of: [started], timeout: 2)
+
+        // When appearance changes while the light image is still downloading
+        view.overrideUserInterfaceStyle = .dark
+        view.updateImage()
+        try await waitUntil { view.image?.size == self.darkSize }
+
+        // Then the dark image remains after the light request would have completed
+        try await Task.sleep(nanoseconds: 200_000_000)
+        XCTAssertEqual(view.image?.size, darkSize)
+    }
+
+    func testLinkPromotesResponseCacheAndRetainsImageWhenRefreshFails() async throws {
+        // Given only an expired URL response, with no decoded image in memory
+        let manager = managerWithExpiredImage()
+        XCTAssertNil(manager.cachedImage(for: lightURL))
+        stubFailure(url: lightURL)
+        let view = LinkPaymentMethodPicker.CellContentView(frame: .zero, downloadManager: manager)
+        view.paymentMethod = ConsumerPaymentDetails(
+            stripeID: "generic", details: .generic(rawValue: "CRYPTO"), billingAddress: nil,
+            billingEmailAddress: nil, nickname: nil,
+            display: .init(label: "Wallet", sublabel: nil, icon: .init(main: lightURL)), isDefault: false
+        )
+
+        // Then Link displays the response-cache image immediately and retains it after failure
+        let icon = try XCTUnwrap(imageViews(in: view).first { !$0.isHidden && $0.image?.size == lightSize })
+        let originalImage = icon.image
+        manager.clearCache()
+        let paymentMethod = view.paymentMethod
+        view.paymentMethod = paymentMethod
+        XCTAssertTrue(icon.image === originalImage)
+        try await Task.sleep(nanoseconds: 100_000_000)
+        XCTAssertTrue(icon.image === originalImage)
+    }
+
+    private func externalMethod(lightURL: URL? = nil) -> PaymentSheet.PaymentMethodType {
+        let method = ExternalPaymentMethod(
+            type: "external_test", label: "Test", lightImageUrl: lightURL ?? self.lightURL, darkImageUrl: darkURL
+        )
+        let configuration = PaymentSheet.ExternalPaymentMethodConfiguration(externalPaymentMethods: [method.type]) { _, _ in
+            XCTFail("Image loading must not confirm a payment")
+            return .canceled
+        }
+        return .external(ExternalPaymentOption.from(method, configuration: configuration)!)
+    }
+
+    private func managerWithExpiredImage() -> DownloadManager {
+        let configuration = Self.stubbedURLSessionConfig()
+        let cache = URLCache(memoryCapacity: 5_000_000, diskCapacity: 0)
+        configuration.urlCache = cache
+        let response = HTTPURLResponse(url: lightURL, statusCode: 200, httpVersion: nil, headerFields: [
+            "Date": "Wed, 01 Jan 2020 00:00:00 GMT",
+            "Cache-Control": "max-age=0, must-revalidate",
+        ])!
+        cache.storeCachedResponse(
+            CachedURLResponse(response: response, data: imageData(size: lightSize)), for: URLRequest(url: lightURL)
+        )
+        return DownloadManager(urlSessionConfiguration: configuration)
+    }
+
+    private func stubImage(url: URL, size: CGSize, delay: TimeInterval = 0, started: XCTestExpectation? = nil) {
+        let data = imageData(size: size)
+        stub(condition: { $0.url == url }) { _ in
+            started?.fulfill()
+            return HTTPStubsResponse(data: data, statusCode: 200, headers: ["Cache-Control": "no-store"])
+                .responseTime(delay)
+        }
+    }
+
+    private func stubFailure(url: URL) {
+        stub(condition: { $0.url == url }) { _ in
+            HTTPStubsResponse(error: URLError(.notConnectedToInternet))
+        }
+    }
+
+    private func imageData(size: CGSize) -> Data {
+        UIGraphicsImageRenderer(size: size).image { context in
+            UIColor.red.setFill()
+            context.fill(CGRect(origin: .zero, size: size))
+        }.pngData()!
+    }
+
+    private func imageViews(in view: UIView) -> [UIImageView] {
+        (view as? UIImageView).map { [$0] } ?? view.subviews.flatMap { imageViews(in: $0) }
+    }
+
+    private func waitUntil(_ condition: () -> Bool) async throws {
+        let deadline = Date().addingTimeInterval(2)
+        while !condition(), Date() < deadline {
+            try await Task.sleep(nanoseconds: 10_000_000)
+        }
+        XCTAssertTrue(condition())
     }
 }

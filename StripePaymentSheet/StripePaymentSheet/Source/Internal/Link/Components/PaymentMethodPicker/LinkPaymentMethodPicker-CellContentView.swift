@@ -23,6 +23,7 @@ extension LinkPaymentMethodPicker {
 
         var paymentMethod: ConsumerPaymentDetails? {
             didSet {
+                iconTask?.cancel()
                 switch paymentMethod?.details {
                 case .card(let card):
                     cardBrandView.setCardBrand(STPCard.brand(from: card.brand))
@@ -54,9 +55,11 @@ extension LinkPaymentMethodPicker {
                     cardBrandView.isHidden = true
                     bankIconView.isHidden = true
                     genericIconView.isHidden = false
-                    genericIconView.image = createGenericPaymentMethodIcon()
                     if let iconUrl = display.icon?.main {
                         loadRemoteIcon(from: iconUrl)
+                    } else {
+                        displayedIconURL = nil
+                        genericIconView.image = createGenericPaymentMethodIcon()
                     }
                     primaryLabel.text = display.label
                     secondaryLabel.text = display.sublabel
@@ -87,6 +90,9 @@ extension LinkPaymentMethodPicker {
         }()
 
         private lazy var cardBrandView: CardBrandView = CardBrandView(centerHorizontally: true)
+        private var iconTask: Task<Void, Never>?
+        private var displayedIconURL: URL?
+        private let downloadManager: DownloadManager
 
         private let primaryLabel: UILabel = {
             let label = UILabel()
@@ -175,13 +181,22 @@ extension LinkPaymentMethodPicker {
             return stackView
         }()
 
-        override init(frame: CGRect) {
+        override convenience init(frame: CGRect) {
+            self.init(frame: frame, downloadManager: .shared)
+        }
+
+        init(frame: CGRect, downloadManager: DownloadManager) {
+            self.downloadManager = downloadManager
             super.init(frame: frame)
             addAndPinSubview(stackView)
         }
 
         required init?(coder: NSCoder) {
             fatalError("init(coder:) has not been implemented")
+        }
+
+        deinit {
+            iconTask?.cancel()
         }
 
         private func makeBankIcon(for bankName: String?) -> UIImage {
@@ -218,16 +233,21 @@ extension LinkPaymentMethodPicker {
         }
 
         private func loadRemoteIcon(from url: URL) {
-            let placeholder = createGenericPaymentMethodIcon()
-            genericIconView.image = DownloadManager.sharedManager.downloadImage(
-                url: url,
-                placeholder: placeholder,
-                updateHandler: { [weak self] image in
-                    DispatchQueue.main.async {
-                        self?.genericIconView.image = image
-                    }
+            iconTask?.cancel()
+            let previousImage = displayedIconURL == url ? genericIconView.image : nil
+            let image = downloadManager.promoteCachedImage(for: url) ?? previousImage
+            genericIconView.image = image ?? createGenericPaymentMethodIcon()
+            displayedIconURL = image != nil ? url : nil
+            let downloadManager = self.downloadManager
+            iconTask = Task { @MainActor [weak self] in
+                guard let image = try? await downloadManager.refreshImage(for: url),
+                      !Task.isCancelled,
+                      self?.paymentMethod?.display?.icon?.main == url else {
+                    return
                 }
-            )
+                self?.genericIconView.image = image
+                self?.displayedIconURL = url
+            }
         }
 
         private func refreshBankIconIfNeeded() {

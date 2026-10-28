@@ -398,7 +398,7 @@ extension SavedPaymentMethodCollectionView {
                                 paymentMethodLogo.addShimmer()
                             }
                             Task {
-                                let image = try? await DownloadManager.sharedManager.downloadImage(url: cardArtURL)
+                                let image = try? await DownloadManager.shared.image(for: cardArtURL)
                                 guard paymentMethodLogo.tag == cardArtURL.hashValue else { return }
                                 paymentMethodLogo.removeShimmer()
                                 if let image {
