@@ -239,6 +239,20 @@ func scrollDown(scrollView: XCUIElement, toFindElement element: XCUIElement, max
     return nil
 }
 
+// MARK: - Link Verification Extension
+extension XCUIApplication {
+    /// Closes the Link verification dialog once it has settled.
+    /// The dialog moves up when the keyboard appears for the code field, so tapping
+    /// the close button before then can land where the button is no longer located.
+    func closeLinkVerificationDialog(file: StaticString = #filePath, line: UInt = #line) {
+        let closeButton = buttons["LinkVerificationCloseButton"]
+        XCTAssertTrue(closeButton.waitForExistence(timeout: 10.0), file: file, line: line)
+        XCTAssertTrue(keyboards.firstMatch.waitForExistence(timeout: 10.0), file: file, line: line)
+        closeButton.tap()
+        XCTAssertTrue(closeButton.waitForNonExistence(timeout: 5.0), file: file, line: line)
+    }
+}
+
 // MARK: - Address Autocomplete Extension
 extension XCUIApplication {
     /// Fills an address field using autocomplete flow only

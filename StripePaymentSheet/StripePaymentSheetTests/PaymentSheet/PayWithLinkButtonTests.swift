@@ -3,11 +3,33 @@
 //  StripePaymentSheetTests
 //
 
-@testable @_spi(STP) import StripePaymentSheet
-@_spi(STP) import StripeUICore
+@testable @_spi(InternalOnlyAPI) import StripePaymentSheet
+@_spi(InternalOnlyAPI) import StripeUICore
 import XCTest
 
 final class PayWithLinkButtonTests: XCTestCase {
+    func testEnabledStateUpdatesAccessibilityTraits() {
+        for brand in [LinkBrand.link, .onelink] {
+            // Given an enabled Link button displaying an account
+            let button = PayWithLinkButton(brand: brand)
+            button.linkAccount = makeAccount(email: "jenny@example.com")
+            let label = button.accessibilityLabel
+            XCTAssertEqual(button.accessibilityTraits, [.button])
+
+            // When the button is disabled
+            button.isEnabled = false
+
+            // Then VoiceOver reports it as disabled without losing the account information
+            XCTAssertEqual(button.accessibilityTraits, [.button, .notEnabled])
+            XCTAssertEqual(button.accessibilityLabel, label)
+            XCTAssertEqual(button.accessibilityValue, "jenny@example.com")
+
+            // ...and enabling it removes the disabled trait
+            button.isEnabled = true
+            XCTAssertEqual(button.accessibilityTraits, [.button])
+        }
+    }
+
     func testCompactLayoutShowsOnlyLogoWithoutEmail() throws {
         for brand in [LinkBrand.link, .onelink] {
             // Given a signed-out ECE Link button

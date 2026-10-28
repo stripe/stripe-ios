@@ -7,9 +7,9 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
-@_spi(STP) public final class StripeUICoreBundleLocator: BundleLocatorProtocol {
+@_spi(InternalOnlyAPI) public final class StripeUICoreBundleLocator: BundleLocatorProtocol {
     public static let internalClass: AnyClass = StripeUICoreBundleLocator.self
     public static let bundleName = "StripeUICoreBundle"
     #if SWIFT_PACKAGE

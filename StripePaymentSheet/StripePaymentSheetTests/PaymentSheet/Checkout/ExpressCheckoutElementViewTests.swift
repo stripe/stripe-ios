@@ -6,9 +6,9 @@
 //
 
 import PassKit
-@testable @_spi(STP) import StripeCore
-@testable @_spi(STP) import StripeCoreTestUtils
-@testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(InternalOnlyAPI) import StripeCore
+@testable @_spi(InternalOnlyAPI) import StripeCoreTestUtils
+@testable @_spi(InternalOnlyAPI) import StripePaymentSheet
 import XCTest
 
 @MainActor
@@ -20,11 +20,10 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
         configuration.applePayConfiguration = .init(merchantId: "merchant.com.example")
         let session = CheckoutTestHelpers.makeSession([
             "customer_email": "jenny@example.com",
-            "elements_session": [
-                "session_id": "es_test",
-                "merchant_country": "US",
-                "payment_method_preference": ["ordered_payment_method_types": ["card"]],
                 "ordered_payment_method_types_and_wallets": ["link"],
+            "elements_session_id": "es_test",
+            "merchant_info": [
+                "country": "US"
             ],
         ]).makePublicSession(
             expressCheckoutConfiguration: configuration
@@ -92,6 +91,65 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
             ExpressCheckoutElementUIView.buttonRows(for: buttons, layout: layout),
             [[.link], [.applePay]]
         )
+    }
+
+    // MARK: - Interaction state
+
+    func testDisabledStateSurvivesButtonRecreation() {
+        // Given an element with both wallet buttons
+        let session = CheckoutTestHelpers.makeOpenSession().makePublicSession()
+        let view = ExpressCheckoutElementUIView(
+            session: session,
+            configuration: .init(completion: { _ in }),
+            delegate: FakeExpressCheckoutElementDelegate()
+        )
+        view.update(with: session, buttons: [.applePay, .link])
+        let buttons = CheckoutTestHelpers.expressCheckoutButtons(in: view)
+        XCTAssertEqual(buttons.count, 2)
+
+        // When the element disables interaction
+        view.setEnabled(false)
+
+        // Then the element and both controls are disabled
+        XCTAssertFalse(view.isUserInteractionEnabled)
+        XCTAssertTrue(buttons.allSatisfy { !$0.isEnabled })
+
+        // When the button order changes, forcing the controls to be recreated
+        view.update(with: session, buttons: [.link, .applePay])
+
+        // Then the new controls inherit the disabled state
+        let recreatedButtons = CheckoutTestHelpers.expressCheckoutButtons(in: view)
+        XCTAssertEqual(recreatedButtons.count, 2)
+        XCTAssertTrue(recreatedButtons.allSatisfy { button in !buttons.contains { $0 === button } })
+        XCTAssertTrue(recreatedButtons.allSatisfy { !$0.isEnabled })
+
+        // ...and enabling the element restores interaction and the new controls
+        view.setEnabled(true)
+        XCTAssertTrue(view.isUserInteractionEnabled)
+        XCTAssertTrue(recreatedButtons.allSatisfy(\.isEnabled))
+    }
+
+    func testExpressCheckoutButtonsStayDisabledUntilQueueDrains() async throws {
+        // Given an element with an available Link button
+        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration(
+            apiResponse: makeLinkSession(customerEmail: "jenny@example.com"),
+            paymentElementConfiguration: nil
+        ))
+        let view = checkout.getExpressCheckoutElement().uiView
+        let button = try XCTUnwrap(CheckoutTestHelpers.expressCheckoutButtons(in: view).first)
+
+        // When two operations are pending
+        checkout.pendingOperations = [Task<Void, Error> {}, Task<Void, Error> {}]
+
+        // Then the element stays disabled until both operations leave the queue
+        XCTAssertFalse(view.isUserInteractionEnabled)
+        XCTAssertFalse(button.isEnabled)
+        checkout.pendingOperations.removeFirst()
+        XCTAssertFalse(view.isUserInteractionEnabled)
+        XCTAssertFalse(button.isEnabled)
+        checkout.pendingOperations.removeFirst()
+        XCTAssertTrue(view.isUserInteractionEnabled)
+        XCTAssertTrue(button.isEnabled)
     }
 
     // MARK: - Available payment methods tests
@@ -196,19 +254,6 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
         XCTAssertTrue(buttons.contains(.link))
     }
 
-    func testApplePayButtonHiddenWhenDisplayIsNever() {
-        // Given a session with apple_pay and an applePayConfiguration with display set to .never
-        let session = CheckoutTestHelpers.makeSessionWithWalletTypes(["apple_pay"]).makePublicSession()
-        var configuration = ExpressCheckoutElement.Configuration(completion: { _ in })
-        configuration.applePayConfiguration = ExpressCheckoutElement.Configuration.ApplePayConfiguration(
-            merchantId: "merchant.com.example",
-            display: .never
-        )
-
-        let buttons = ExpressCheckoutElementUtilities.availablePaymentMethodsWithoutCheckoutRequirements(for: session.elementsSession, configuration: configuration)
-        XCTAssertFalse(buttons.contains(.applePay))
-    }
-
     func testLinkButtonHiddenWhenDisplayIsNever() {
         // Given a session with link and a linkConfiguration with display set to .never
         let session = CheckoutTestHelpers.makeSessionWithWalletTypes(["link"]).makePublicSession()
@@ -227,14 +272,14 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
         // Given a session that calculates automatic tax from the billing address
         let apiResponse = CheckoutTestHelpers.makeSessionWithWalletTypes(
             ["link"],
-            automaticTaxAddressSource: "session.billing"
+            automaticTaxAddressSource: "billing"
         )
         let configuration = ExpressCheckoutElement.Configuration(completion: { _ in })
         let checkoutConfiguration = CheckoutTestHelpers.makeConfiguration(apiResponse: apiResponse, paymentElementConfiguration: nil)
 
         // When the public session applies the automatic tax restriction before calculating ECE availability
         XCTAssertFalse(apiResponse.elementsSession.value.disableLinkForAutomaticTaxBilling)
-        let session = CheckoutController.Session(apiResponse: apiResponse, localState: .empty, configuration: checkoutConfiguration)
+        let session = CheckoutController.Session(apiResponse: apiResponse, clientSecret: checkoutConfiguration.clientSecret, localState: .empty, configuration: checkoutConfiguration)
 
         let reasons = ExpressCheckoutElementUtilities.linkDisabledReasonsWithoutCheckoutRequirements(
             for: session.elementsSession,
@@ -253,13 +298,13 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
     func testLinkButtonHiddenWhenShippingAddressIsRequired() {
         // Given a session that requires shipping
         let configuration = ExpressCheckoutElement.Configuration(completion: { _ in })
-        var elementsSession = CheckoutTestHelpers.minimalElementsSessionJSON
+        var elementsSession = CheckoutTestHelpers.minimalCheckoutClientConfigurationJSON
         elementsSession["ordered_payment_method_types_and_wallets"] = ["link"]
         let apiResponse = CheckoutTestHelpers.makeSession([
             "customer_email": "jenny@example.com",
             "shipping_address_collection": ["allowed_countries": ["US"]],
-            "elements_session": elementsSession,
-        ])
+            ].merging(elementsSession) { _, new in new }
+        )
         let session = apiResponse.makePublicSession(expressCheckoutConfiguration: configuration)
 
         // When
@@ -281,7 +326,7 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
         let configuration = ExpressCheckoutElement.Configuration(completion: { _ in })
         let apiResponse = CheckoutTestHelpers.makeSessionWithWalletTypes(
             ["link"],
-            automaticTaxAddressSource: "session.shipping",
+            automaticTaxAddressSource: "shipping",
             customerEmail: "jenny@example.com"
         )
 
@@ -367,12 +412,14 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
         XCTAssertEqual(session.availableExpressCheckoutPaymentMethods, expectedPaymentMethods)
     }
 
+    // MARK: - Helpers
+
     private func makeLinkSession(
         customerEmail: String? = nil,
         billingAddressCollectionRequired: Bool = false,
         nativeLink: Bool = false
     ) -> PaymentPagesAPIResponse {
-        var elementsSession = CheckoutTestHelpers.minimalElementsSessionJSON
+        var elementsSession = CheckoutTestHelpers.minimalCheckoutClientConfigurationJSON
         elementsSession["ordered_payment_method_types_and_wallets"] = ["link"]
         if nativeLink {
             elementsSession["link_settings"] = [
@@ -380,7 +427,7 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
                 "link_mobile_use_attestation_endpoints": true,
             ]
         }
-        var overrides: [String: Any] = ["elements_session": elementsSession]
+        var overrides: [String: Any] = [:].merging(elementsSession) { _, new in new }
         if let customerEmail {
             overrides["customer_email"] = customerEmail
         }

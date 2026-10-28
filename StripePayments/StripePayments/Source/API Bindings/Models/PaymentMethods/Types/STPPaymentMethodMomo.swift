@@ -7,7 +7,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 /// A MoMo Payment Method.
 /// - seealso: https://docs.stripe.com/payments/momo/accept-a-payment?payment-ui=direct-api

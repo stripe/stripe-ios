@@ -4,20 +4,20 @@
 //
 //  Created by George Birch on 8/4/26.
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 /// Handles Checkout mutations requested by a ShippingAddressElement.
 @MainActor
 protocol ShippingAddressElementDelegate: AnyObject {
     /// Sets or clears the customer's shipping address.
-    func updateShippingAddress(name: String?, address: CheckoutController.Address?) async throws
+    func updateShippingAddressFromElement(name: String?, address: CheckoutController.Address?) async throws
 }
 
 /// A shipping address form backed by a Checkout Session.
 @MainActor
-@_spi(STP)
+@_spi(InternalOnlyAPI)
 @_spi(ReactNativeSDK)
 public final class ShippingAddressElement {
 
@@ -30,6 +30,7 @@ public final class ShippingAddressElement {
 
     init(
         configuration: Configuration,
+        userInterfaceStyle: CheckoutController.UserInterfaceStyle,
         initialShippingAddress: CheckoutController.Session.ShippingAddress?,
         allowedCountries: [String]?,
         checkoutSessionId: String,
@@ -49,6 +50,7 @@ public final class ShippingAddressElement {
             integrationDelegate: self,
             useAutocompleteEndpoints: useAutocompleteEndpoints
         )
+        userInterfaceStyle.configure(addressViewController)
     }
 
     func normalizedInitialShippingAddress() async -> CheckoutController.Session.ShippingAddress? {
@@ -111,7 +113,9 @@ public final class ShippingAddressElement {
             return
         }
 
-        let navigationController = UINavigationController(rootViewController: addressViewController)
+        let navigationController = ShippingAddressNavigationController(element: self)
+        // Apply the style to the whole navigation stack, including address autocomplete.
+        navigationController.overrideUserInterfaceStyle = addressViewController.overrideUserInterfaceStyle
         isPresenting = true
         presentationCompletion = completion
         didLogAddressShow = false
@@ -146,7 +150,7 @@ extension ShippingAddressElement: AddressViewController.IntegrationDelegate {
         let addressAnalyticData = addressViewController.addressAnalyticData(for: addressDetails)
         log(event: .shippingAddressElementSaveStarted, addressAnalyticData: addressAnalyticData)
         do {
-            try await delegate.updateShippingAddress(
+            try await delegate.updateShippingAddressFromElement(
                 name: addressDetails.name,
                 address: CheckoutController.Address(
                     country: addressDetails.address.country,
@@ -184,6 +188,7 @@ extension ShippingAddressElement: AddressViewController.IntegrationDelegate {
 }
 
 extension ShippingAddressElement: AddressViewControllerDelegate {
+
     public func addressViewControllerDidFinish(
         _ addressViewController: AddressViewController,
         with address: AddressViewController.AddressDetails?
@@ -194,5 +199,20 @@ extension ShippingAddressElement: AddressViewControllerDelegate {
             self.isPresenting = false
             completion?()
         }
+    }
+}
+
+private final class ShippingAddressNavigationController: UINavigationController {
+
+    // The address view controller holds its delegates weakly. Keep the element alive with its sheet.
+    private let element: ShippingAddressElement
+
+    init(element: ShippingAddressElement) {
+        self.element = element
+        super.init(rootViewController: element.addressViewController)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 }

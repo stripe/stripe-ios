@@ -5,8 +5,8 @@
 //  Created by Michael Liberatore on 9/10/26.
 //
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripeUICore
 import SwiftUI
 
 /// A trailing navigation toolbar item intended to close the current flow.

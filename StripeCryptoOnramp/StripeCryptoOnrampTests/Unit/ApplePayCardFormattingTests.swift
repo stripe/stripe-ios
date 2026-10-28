@@ -6,9 +6,9 @@
 //
 
 import Foundation
-@_spi(STP) import StripeApplePay
-@testable @_spi(STP) import StripeCore
-@testable @_spi(STP) import StripeCryptoOnramp
+@_spi(InternalOnlyAPI) import StripeApplePay
+@testable @_spi(InternalOnlyAPI) import StripeCore
+@testable @_spi(InternalOnlyAPI) import StripeCryptoOnramp
 import XCTest
 
 final class ApplePayCardFormattingTests: XCTestCase {

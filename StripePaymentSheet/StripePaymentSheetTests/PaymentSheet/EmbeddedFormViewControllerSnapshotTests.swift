@@ -5,11 +5,11 @@
 //  Created by Nick Porter on 10/17/24.
 //
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripeCoreTestUtils
-@_spi(STP) import StripePayments
-@_spi(STP) @testable import StripePaymentSheet
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCoreTestUtils
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) @testable import StripePaymentSheet
+@_spi(InternalOnlyAPI) import StripeUICore
 import XCTest
 
 @MainActor
@@ -34,7 +34,8 @@ final class EmbeddedFormViewControllerSnapshotTests: STPSnapshotTestCase {
             savedPaymentMethods: savedPaymentMethods,
             paymentMethodTypes: [.stripe(paymentMethodType)],
             paymentMethodMessagingPromotionsHelper: ._testValue(),
-            paymentMethodOrientation: .vertical
+            paymentMethodOrientation: .vertical,
+            customerProvider: CustomerProvider(customer: nil)
         )
 
         return EmbeddedFormViewController(

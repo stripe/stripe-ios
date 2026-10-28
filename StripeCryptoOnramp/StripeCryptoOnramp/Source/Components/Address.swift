@@ -6,8 +6,8 @@
 //
 
 import Foundation
-@_spi(STP) import StripePayments
-@_spi(STP) import StripePaymentSheet
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) import StripePaymentSheet
 
 /// Represents an address used with `KYCInfo`.
 @_spi(CryptoOnrampAlpha)

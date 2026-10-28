@@ -6,7 +6,7 @@
 //
 
 import StripeIdentity
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 class PlaygroundViewController: UIViewController {
@@ -17,6 +17,9 @@ class PlaygroundViewController: UIViewController {
     let verifyEndpoint = "/verification-sessions"
     let testVerifyEndpoint = "/test/verification-sessions"
     let reuseEndpoint = "/reuse-verification-session"
+    private var is3DFaceCaptureEnabled: Bool {
+        return faceCaptureEnabledSwitch.isOn
+    }
 
     // Outlets
     @IBOutlet private weak var nativeOrWebSelector: UISegmentedControl!
@@ -48,6 +51,9 @@ class PlaygroundViewController: UIViewController {
     @IBOutlet weak var phoneOtpContainerView: UIStackView!
 
     @IBOutlet weak var fallbackToDocumentSwitch: UISwitch!
+    private let faceCaptureEnabledSwitch = UISwitch()
+    private let faceCaptureEnabledContainerView = UIStackView()
+
     private let phoneElement: PhoneNumberElement
 
     private let phoneView: UIView
@@ -105,6 +111,21 @@ class PlaygroundViewController: UIViewController {
         return VerificationType.allCases[verificationTypeSelector.selectedSegmentIndex]
     }
 
+    private var requireMatchingSelfie: Bool {
+        guard requireSelfieSwitch.isOn else {
+            return false
+        }
+
+        switch verificationType {
+        case .document:
+            return true
+        case .phone:
+            return fallbackToDocumentSwitch.isOn
+        case .idNumber, .address:
+            return false
+        }
+    }
+
     /// List of allowed document types based on UI toggles
     var documentAllowedTypes: [DocumentAllowedType] {
         var result: [DocumentAllowedType] = []
@@ -143,7 +164,12 @@ class PlaygroundViewController: UIViewController {
         verifyButton.addTarget(self, action: #selector(didTapVerifyButton), for: .touchUpInside)
         // TODO(ccen) enable phoneOtpContainerView when backend adds support to PII
         phoneOtpContainerView.isHidden = true
-        didChangeNewOrReuse(self)
+        add3DFaceCaptureSwitch()
+        requireSelfieSwitch.isOn = true
+        newOrReuseSelector.isHidden = true
+        reuseVerificationIDContainerView.isHidden = true
+        reuseVerificationSessionIDInput.isHidden = true
+        didChangeVerificationType(self)
     }
 
     @objc
@@ -157,6 +183,35 @@ class PlaygroundViewController: UIViewController {
 
     @IBAction func requireOtpSwitchValueChanged(_ uiSwitch: UISwitch) {
         phoneView.isHidden = !uiSwitch.isOn
+    }
+
+    private func add3DFaceCaptureSwitch() {
+        guard
+            faceCaptureEnabledContainerView.superview == nil,
+            let playgroundStackView = verificationTypeContainerView.superview as? UIStackView
+        else {
+            return
+        }
+
+        let label = UILabel()
+        label.text = "3D face capture enabled"
+        label.font = .systemFont(ofSize: 17)
+        label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+
+        faceCaptureEnabledSwitch.isOn = true
+        faceCaptureEnabledSwitch.setContentHuggingPriority(.required, for: .horizontal)
+
+        faceCaptureEnabledContainerView.axis = .horizontal
+        faceCaptureEnabledContainerView.alignment = .center
+        faceCaptureEnabledContainerView.spacing = 8
+        faceCaptureEnabledContainerView.translatesAutoresizingMaskIntoConstraints = false
+        faceCaptureEnabledContainerView.addArrangedSubview(label)
+        faceCaptureEnabledContainerView.addArrangedSubview(faceCaptureEnabledSwitch)
+
+        let insertionIndex = playgroundStackView.arrangedSubviews.firstIndex(of: verificationTypeContainerView)
+            .map { $0 + 1 }
+            ?? playgroundStackView.arrangedSubviews.count
+        playgroundStackView.insertArrangedSubview(faceCaptureEnabledContainerView, at: insertionIndex)
     }
 
     func requestVerificationSession() {
@@ -181,6 +236,9 @@ class PlaygroundViewController: UIViewController {
             requestDict = [
                 "type": verificationType.rawValue
             ]
+            if requireMatchingSelfie {
+                requestDict["3d_face_capture_enabled"] = is3DFaceCaptureEnabled
+            }
 
             var options: [String: Any] = [:]
 
@@ -191,7 +249,7 @@ class PlaygroundViewController: UIViewController {
                         "allowed_types": documentAllowedTypes.map { $0.rawValue },
                         "require_id_number": requireIDNumberSwitch.isOn,
                         "require_live_capture": requireLiveCaptureSwitch.isOn,
-                        "require_matching_selfie": requireSelfieSwitch.isOn,
+                        "require_matching_selfie": requireMatchingSelfie,
                         "require_address": requireAddressSwitch.isOn,
                     ],
                 ]
@@ -224,7 +282,7 @@ class PlaygroundViewController: UIViewController {
                         "allowed_types": documentAllowedTypes.map { $0.rawValue },
                         "require_id_number": requireIDNumberSwitch.isOn,
                         "require_live_capture": requireLiveCaptureSwitch.isOn,
-                        "require_matching_selfie": requireSelfieSwitch.isOn,
+                        "require_matching_selfie": requireMatchingSelfie,
                         "require_address": requireAddressSwitch.isOn,
                     ]
                     options["phone_records"] = [
@@ -367,7 +425,8 @@ class PlaygroundViewController: UIViewController {
             verificationSessionId: verificationSessionId,
             ephemeralKeySecret: ephemeralKeySecret,
             configuration: IdentityVerificationSheet.Configuration(
-                brandLogo: UIImage(named: "BrandLogo")!
+                brandLogo: UIImage(named: "BrandLogo")!,
+                brandColor: UIColor(named: "BrandColor")
             )
         )
     }

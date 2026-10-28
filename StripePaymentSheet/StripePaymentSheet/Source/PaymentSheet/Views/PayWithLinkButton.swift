@@ -8,10 +8,10 @@
 
 import UIKit
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
-@_spi(STP) import StripePaymentsUI
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) import StripePaymentsUI
+@_spi(InternalOnlyAPI) import StripeUICore
 
 /// A button for paying with Link.
 /// For internal SDK use only
@@ -78,6 +78,7 @@ final class PayWithLinkButton: UIControl {
     override var isEnabled: Bool {
         didSet {
             applyStyle()
+            updateAccessibilityContent()
         }
     }
 

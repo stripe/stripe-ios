@@ -5,7 +5,7 @@
 //  Created by Nick Porter on 9/1/23.
 //
 
-@_spi(STP) @testable import StripeUICore
+@_spi(InternalOnlyAPI) @testable import StripeUICore
 import XCTest
 
 final class NSAttributedStringStripeUICoreTests: XCTestCase {

@@ -8,10 +8,10 @@
 import Foundation
 import UIKit
 
-@_spi(STP) public class LiquidGlassDetector {
+@_spi(InternalOnlyAPI) public class LiquidGlassDetector {
 
     /// Whether or not the merchant's app (not MPE) has Liquid Glass enabled
-    @_spi(STP) public static var isEnabledInMerchantApp: Bool {
+    @_spi(InternalOnlyAPI) public static var isEnabledInMerchantApp: Bool {
         guard #available(iOS 26.0, visionOS 26.0, *) else {
             return false
         }
@@ -19,7 +19,7 @@ import UIKit
     }
 
     /// Whether the app was built with Xcode 26 or later (which includes Swift compiler 6.2)
-    @_spi(STP) public static var meetsCompilerRequirements: Bool {
+    @_spi(InternalOnlyAPI) public static var meetsCompilerRequirements: Bool {
         #if compiler(>=6.2)
         return true
         #else
@@ -28,7 +28,7 @@ import UIKit
     }
 
     /// Whether the app has opted out of the new design
-    @_spi(STP) public static var hasOptedOut: Bool {
+    @_spi(InternalOnlyAPI) public static var hasOptedOut: Bool {
         // Xcode 27+ (Swift 6.4+) on OS 27+: Liquid Glass is required, so ignore the opt-out flag.
         #if compiler(>=6.4)
         if #available(iOS 27.0, visionOS 27.0, *) {
@@ -43,7 +43,7 @@ import UIKit
 
 // MARK: - UIView Liquid Glass helpers
 extension UIView {
-    @_spi(STP) public func ios26_applyCapsuleCornerConfiguration() {
+    @_spi(InternalOnlyAPI) public func ios26_applyCapsuleCornerConfiguration() {
 #if compiler(>=6.2)
         if #available(iOS 26.0, visionOS 26.0, *) {
             cornerConfiguration = .capsule()
@@ -51,7 +51,7 @@ extension UIView {
 #endif
     }
 
-    @_spi(STP) public func ios26_applyDefaultCornerConfiguration() {
+    @_spi(InternalOnlyAPI) public func ios26_applyDefaultCornerConfiguration() {
 #if compiler(>=6.2)
         if #available(iOS 26.0, visionOS 26.0, *) {
             cornerConfiguration = .uniformCorners(radius: 26)
@@ -60,7 +60,7 @@ extension UIView {
     }
 
     /// Convenience method that returns whether or not `cornerConfiguration` was set.
-    @_spi(STP) public var didSetCornerConfiguration: Bool {
+    @_spi(InternalOnlyAPI) public var didSetCornerConfiguration: Bool {
 #if compiler(>=6.2)
         if #available(iOS 26.0, visionOS 26.0, *) {
             return UIView.plainUIView.cornerConfiguration != cornerConfiguration
@@ -78,7 +78,7 @@ extension UIView {
 
 // MARK: - Button Liquid Glass helpers
 extension UIButton {
-    @_spi(STP) public func ios26_applyGlassConfiguration() {
+    @_spi(InternalOnlyAPI) public func ios26_applyGlassConfiguration() {
         assert(LiquidGlassDetector.isEnabledInMerchantApp)
         // These checks are a convenience because .glass is only available on iOS (not visionOS)
         // when compiling with XCode 26
@@ -93,13 +93,13 @@ extension UIButton {
 }
 // MARK: - UIView helpers
 extension UIView {
-    @_spi(STP) public enum CornerStyle {
+    @_spi(InternalOnlyAPI) public enum CornerStyle {
         case capsule
         case uniform
     }
 
     /// A convenience method that looks at `appearance.cornerRadius` and applies it or, if `nil`, handles what the default value should be.
-    @_spi(STP) public func applyCornerRadius(appearance: ElementsAppearance, ios26DefaultCornerStyle: CornerStyle = .uniform) {
+    @_spi(InternalOnlyAPI) public func applyCornerRadius(appearance: ElementsAppearance, ios26DefaultCornerStyle: CornerStyle = .uniform) {
         // If corner radius was set, just use that
         if let cornerRadius = appearance.cornerRadius {
             layer.cornerRadius = cornerRadius

@@ -1,4 +1,4 @@
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 /// Our high-level goal with this class is to implement the logic needed for our card verify check while
 /// adding minimal UI effects, and for any UI effects that we do add make them easily customized
 /// via overriding functions.

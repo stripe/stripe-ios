@@ -5,9 +5,9 @@
 //  Created by Yuki Tokuhiro on 9/6/23.
 //
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 class SepaMandateViewController: UIViewController, BottomSheetContentViewController {
@@ -40,11 +40,11 @@ class SepaMandateViewController: UIViewController, BottomSheetContentViewControl
         return label
     }()
 
-    let configuration: PaymentSheet.Configuration
+    let configuration: PaymentElementConfiguration
     let completion: (Bool) -> Void
 
     /// - Parameter completion: Called with `true` after the customer accepts the mandate by tapping the "continue" button, or called with `false` after the customer dismisses the view (either by tapping out or swiping down). Does not dismiss the view controller.
-    required init(configuration: PaymentSheet.Configuration, completion: @escaping (Bool) -> Void) {
+    required init(configuration: PaymentElementConfiguration, completion: @escaping (Bool) -> Void) {
         self.configuration = configuration
         self.completion = completion
         super.init(nibName: nil, bundle: nil)
@@ -52,6 +52,26 @@ class SepaMandateViewController: UIViewController, BottomSheetContentViewControl
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    /// Presents the mandate and calls completion after the sheet has been dismissed.
+    static func present(
+        from presentingViewController: UIViewController,
+        configuration: PaymentElementConfiguration,
+        nativeSheetPresentation: SheetImplementationResolver?,
+        completion: @escaping (Bool) -> Void
+    ) {
+        let mandate = SepaMandateViewController(configuration: configuration) { didAcceptMandate in
+            presentingViewController.dismiss(animated: true) {
+                completion(didAcceptMandate)
+            }
+        }
+        let bottomSheet = PaymentSheet.FlowController.makePaymentSheetContainerViewController(
+            mandate,
+            configuration: configuration,
+            nativeSheetPresentation: nativeSheetPresentation
+        )
+        presentingViewController.presentAsSheet(bottomSheet)
     }
 
     override func viewDidLoad() {

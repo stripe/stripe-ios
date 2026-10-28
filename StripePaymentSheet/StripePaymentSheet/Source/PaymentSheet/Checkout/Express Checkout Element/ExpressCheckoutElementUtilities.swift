@@ -5,8 +5,8 @@
 //  Created by Joyce Qin on 7/28/26.
 //
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
 
 enum ExpressCheckoutElementUtilities {
     enum LinkDisabledReason: String {
@@ -47,8 +47,7 @@ enum ExpressCheckoutElementUtilities {
         for paymentMethod in availablePaymentMethodTypes(for: elementsSession) {
             switch paymentMethod {
             case .applePay:
-                if let applePayConfiguration = configuration.applePayConfiguration,
-                   applePayConfiguration.display != .never,
+                if configuration.applePayConfiguration != nil,
                    StripeAPI.deviceSupportsApplePay() {
                     paymentMethods.append(paymentMethod)
                 }

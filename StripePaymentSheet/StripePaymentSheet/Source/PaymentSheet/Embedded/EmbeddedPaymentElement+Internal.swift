@@ -5,10 +5,10 @@
 //  Created by Yuki Tokuhiro on 10/10/24.
 //
 import SafariServices
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
-@_spi(STP) import StripePaymentsUI
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) import StripePaymentsUI
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 extension EmbeddedPaymentElement {
@@ -50,7 +50,7 @@ extension EmbeddedPaymentElement {
             }
 
             // If there's no previous customer input, default to the customer's default or the first saved payment method, if any
-            let customerDefault = CustomerPaymentOption.selectedPaymentMethod(for: configuration.customer?.id, elementsSession: loadResult.elementsSession, surface: .paymentSheet)
+            let customerDefault = CustomerPaymentOption.selectedPaymentMethod(for: loadResult.customerProvider.customerID, elementsSession: loadResult.elementsSession, surface: .paymentSheet)
             switch customerDefault {
             case .applePay:
                 return .applePay
@@ -299,7 +299,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         }
         CustomerPaymentOption.setDefaultPaymentMethod(
             paymentOption,
-            forCustomer: configuration.customer?.id
+            forCustomer: loadResult.customerProvider.customerID
         )
     }
 
@@ -331,6 +331,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
 
         let verticalSavedPaymentMethodsViewController = VerticalSavedPaymentMethodsViewController(
             configuration: configuration,
+            customerProvider: loadResult.customerProvider,
             intent: intent,
             checkout: checkout,
             selectedPaymentMethod: selectedSavedPaymentMethod,
@@ -744,10 +745,13 @@ extension EmbeddedPaymentElement {
         clearPaymentOption()
     }
 
-    static func validateRowSelectionConfiguration(configuration: Configuration) throws {
+    static func validateRowSelectionConfiguration(
+        configuration: Configuration,
+        customerProvider: CustomerProvider
+    ) throws {
         switch configuration.rowSelectionBehavior {
         case .immediateAction:
-            if case .confirm = configuration.formSheetAction, configuration.applePay != nil || configuration.customer != nil {
+            if case .confirm = configuration.formSheetAction, configuration.applePay != nil || customerProvider.hasCustomer {
                 // Fail init if the merchant is using immediateAction and confirm form sheet action along w/ either a Customer or Apple Pay configuration
                 throw PaymentSheetError.integrationError(nonPIIDebugDescription: "Using .immediateAction with .confirm form sheet action is not supported when Apple Pay or a customer configuration is provided. Use .default row selection behavior or disable Apple Pay and saved payment methods.")
             }
@@ -843,7 +847,7 @@ extension PaymentSheetAuthenticationContextViewController: PaymentSheetAuthentic
 }
 
 extension EmbeddedPaymentElement.Configuration.RowSelectionBehavior: Equatable {
-   @_spi(STP) public static func == (lhs: EmbeddedPaymentElement.Configuration.RowSelectionBehavior, rhs: EmbeddedPaymentElement.Configuration.RowSelectionBehavior) -> Bool {
+   @_spi(InternalOnlyAPI) public static func == (lhs: EmbeddedPaymentElement.Configuration.RowSelectionBehavior, rhs: EmbeddedPaymentElement.Configuration.RowSelectionBehavior) -> Bool {
         switch (lhs, rhs) {
         case (.default, .default):
             return true

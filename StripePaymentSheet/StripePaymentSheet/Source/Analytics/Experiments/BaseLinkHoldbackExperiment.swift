@@ -6,8 +6,8 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
 
 struct BaseLinkHoldbackExperiment {
     let group: ExperimentGroup
@@ -45,7 +45,7 @@ struct BaseLinkHoldbackExperiment {
         elementsSession: STPElementsSession,
         configuration: PaymentElementConfiguration,
         linkAccount: PaymentSheetLinkAccount?,
-        integrationShape: PaymentSheetAnalyticsHelper.IntegrationShape
+        integrationShape: ExperimentIntegrationShape
     ) {
         let isLinkEnabled = PaymentSheet.isLinkEnabled(
             elementsSession: elementsSession,
@@ -61,7 +61,7 @@ struct BaseLinkHoldbackExperiment {
         self.isReturningLinkUser = linkAccount?.currentSession != nil
         self.linkNative = linkAccount?.useMobileEndpoints == true
         self.linkDefaultOptIn = (elementsSession.linkSettings?.linkDefaultOptIn ?? .none).rawValue
-        self.integrationShape = integrationShape.analyticsValue
+        self.integrationShape = integrationShape.rawValue
         self.linkDisplayed = isLinkEnabled
 
         var defaultValuesProvided: [String] = []

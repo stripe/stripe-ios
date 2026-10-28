@@ -4,7 +4,7 @@
 //
 import UIKit
 
-@_spi(STP) public class UxAnalyzer: CreditCardOcrImplementation {
+@_spi(InternalOnlyAPI) public class UxAnalyzer: CreditCardOcrImplementation {
     @AtomicProperty var uxModel: UxModel?
 
     static let uxResource = "UxModel"
@@ -28,7 +28,7 @@ import UIKit
         loadModel()
     }
 
-    @_spi(STP) public static func loadModelFromBundle() -> UxModel? {
+    @_spi(InternalOnlyAPI) public static func loadModelFromBundle() -> UxModel? {
         let bundle = StripeCardScanBundleLocator.resourcesBundle
         guard let url = bundle.url(forResource: UxAnalyzer.uxResource, withExtension: UxAnalyzer.uxExtension) else {
             return nil

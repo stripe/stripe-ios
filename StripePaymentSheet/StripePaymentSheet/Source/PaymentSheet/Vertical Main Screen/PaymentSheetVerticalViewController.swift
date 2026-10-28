@@ -5,10 +5,10 @@
 //  Created by Yuki Tokuhiro on 5/3/24.
 //
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
-@_spi(STP) import StripePaymentsUI
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) import StripePaymentsUI
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewControllerProtocol, PaymentSheetViewControllerProtocol {
@@ -205,7 +205,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 
     private var customerDefaultIsLink: Bool {
         CustomerPaymentOption.selectedPaymentMethod(
-            for: configuration.customer?.id,
+            for: loadResult.customerProvider.customerID,
             elementsSession: elementsSession,
             surface: .paymentSheet
         ) == .link
@@ -420,7 +420,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             }
         }
 
-        let customerDefault = CustomerPaymentOption.selectedPaymentMethod(for: configuration.customer?.id, elementsSession: elementsSession, surface: .paymentSheet)
+        let customerDefault = CustomerPaymentOption.selectedPaymentMethod(for: loadResult.customerProvider.customerID, elementsSession: elementsSession, surface: .paymentSheet)
 
         if let customerDefault, willDisplay(customerDefault: customerDefault) {
             switch customerDefault {
@@ -438,7 +438,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         // If WalletButtonsView is in use, only default to Apple Pay if it's the saved PM.
         if shouldShowApplePayInList {
             if configuration.willUseWalletButtonsView {
-                if CustomerPaymentOption.localDefaultPaymentMethod(for: configuration.customer?.id) == .applePay {
+                if CustomerPaymentOption.localDefaultPaymentMethod(for: loadResult.customerProvider.customerID) == .applePay {
                     return .applePay
                 }
             } else {
@@ -469,7 +469,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         // If Apple Pay or Link is selected, but wallet buttons should be shown externally, then unselect any default option. The only exception is if Apple Pay was previously saved as the user's default PM -- in that case, it *is* a valid initialSelection.
         if (configuration.willUseWalletButtonsView || walletButtonsShownExternally) && previousPaymentOption == nil &&
             (
-                (initialSelection == .applePay && configuration.walletButtonsVisibility.paymentElement[.applePay] != .always && !(CustomerPaymentOption.localDefaultPaymentMethod(for: configuration.customer?.id) == .applePay)) ||
+                (initialSelection == .applePay && configuration.walletButtonsVisibility.paymentElement[.applePay] != .always && !(CustomerPaymentOption.localDefaultPaymentMethod(for: loadResult.customerProvider.customerID) == .applePay)) ||
                 initialSelection == .link && configuration.walletButtonsVisibility.paymentElement[.link] != .always) {
             initialSelection = nil
         }
@@ -875,6 +875,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 
         let vc = VerticalSavedPaymentMethodsViewController(
             configuration: configuration,
+            customerProvider: loadResult.customerProvider,
             intent: intent,
             selectedPaymentMethod: selectedPaymentOption?.savedPaymentMethod,
             paymentMethods: savedPaymentMethods,
@@ -958,11 +959,11 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
 #endif
         switch selection {
         case .applePay:
-            CustomerPaymentOption.setDefaultPaymentMethod(.applePay, forCustomer: configuration.customer?.id)
+            CustomerPaymentOption.setDefaultPaymentMethod(.applePay, forCustomer: loadResult.customerProvider.customerID)
         case .link:
-            CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: configuration.customer?.id)
+            CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: loadResult.customerProvider.customerID)
         case .saved(let paymentMethod):
-            CustomerPaymentOption.setDefaultPaymentMethod(.stripeId(paymentMethod.stripeId), forCustomer: configuration.customer?.id)
+            CustomerPaymentOption.setDefaultPaymentMethod(.stripeId(paymentMethod.stripeId), forCustomer: loadResult.customerProvider.customerID)
         case let .new(paymentMethodType: paymentMethodType):
             let pmFormVC = makeFormVC(paymentMethodType: paymentMethodType)
             if pmFormVC.form.collectsUserInput || paymentMethodType.isBankPayment {

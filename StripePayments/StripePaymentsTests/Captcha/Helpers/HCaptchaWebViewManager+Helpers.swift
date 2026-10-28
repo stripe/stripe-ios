@@ -7,7 +7,7 @@
 //
 
 import Foundation
-@_spi(STP) @testable import StripePayments
+@_spi(InternalOnlyAPI) @testable import StripePayments
 import WebKit
 
 extension HCaptchaWebViewManager {

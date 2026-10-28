@@ -11,7 +11,7 @@ import Foundation
 /// Configured URLs contribute only their HTTPS scheme, host, and effective port; paths, queries,
 /// and fragments are not part of an origin. WebKit reports port `0` for the default HTTPS port,
 /// while an explicitly configured port `0` is invalid.
-@_spi(STP) public final class STPWebMessageSourcePolicy {
+@_spi(InternalOnlyAPI) public final class STPWebMessageSourcePolicy {
     private struct Origin: Hashable {
         let scheme: String
         let host: String
@@ -65,7 +65,7 @@ import Foundation
     private weak var expectedSource: AnyObject?
     private let allowedOrigins: Set<Origin>
 
-    @_spi(STP) public init(expectedSource: AnyObject, allowedOriginURLs: [URL]) {
+    @_spi(InternalOnlyAPI) public init(expectedSource: AnyObject, allowedOriginURLs: [URL]) {
         self.expectedSource = expectedSource
         let configuredOrigins = allowedOriginURLs.map(Origin.init(configuredURL:))
         self.allowedOrigins = configuredOrigins.allSatisfy { $0 != nil }
@@ -73,7 +73,7 @@ import Foundation
             : []
     }
 
-    @_spi(STP) public func isAuthorized(source: AnyObject?, scheme: String, host: String, port: Int) -> Bool {
+    @_spi(InternalOnlyAPI) public func isAuthorized(source: AnyObject?, scheme: String, host: String, port: Int) -> Bool {
         guard let expectedSource,
               let source,
               source === expectedSource,

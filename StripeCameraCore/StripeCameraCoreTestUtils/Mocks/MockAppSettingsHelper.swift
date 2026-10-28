@@ -6,9 +6,9 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCameraCore
+@_spi(InternalOnlyAPI) import StripeCameraCore
 
-@_spi(STP) public class MockAppSettingsHelper: AppSettingsHelperProtocol {
+@_spi(InternalOnlyAPI) public class MockAppSettingsHelper: AppSettingsHelperProtocol {
 
     public var canOpenAppSettings = false
     public private(set) var didOpenAppSettings = false

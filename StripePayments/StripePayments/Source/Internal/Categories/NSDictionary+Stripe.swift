@@ -9,7 +9,7 @@
 import Foundation
 
 extension Dictionary where Key == AnyHashable, Value: Any {
-    @_spi(STP) public func stp_dictionaryByRemovingNulls() -> [AnyHashable: Any] {
+    @_spi(InternalOnlyAPI) public func stp_dictionaryByRemovingNulls() -> [AnyHashable: Any] {
         var result = [AnyHashable: Any]()
 
         (self as NSDictionary).enumerateKeysAndObjects({ key, obj, _ in
@@ -52,7 +52,7 @@ extension Dictionary where Key == AnyHashable, Value: Any {
     }
 
     // Getters
-    @_spi(STP) public func stp_array(forKey key: String) -> [Any]? {
+    @_spi(InternalOnlyAPI) public func stp_array(forKey key: String) -> [Any]? {
         let value = self[key]
         if value != nil {
             return value as? [Any]
@@ -60,7 +60,7 @@ extension Dictionary where Key == AnyHashable, Value: Any {
         return nil
     }
 
-    @_spi(STP) public func stp_bool(forKey key: String, or defaultValue: Bool) -> Bool {
+    @_spi(InternalOnlyAPI) public func stp_bool(forKey key: String, or defaultValue: Bool) -> Bool {
         let value = self[key]
         if value != nil {
             if let value = value as? NSNumber {
@@ -79,7 +79,7 @@ extension Dictionary where Key == AnyHashable, Value: Any {
         return defaultValue
     }
 
-    @_spi(STP) public func stp_date(forKey key: String) -> Date? {
+    @_spi(InternalOnlyAPI) public func stp_date(forKey key: String) -> Date? {
         let value = self[key]
         if let value = value as? NSNumber {
             let timeInterval = value.doubleValue
@@ -91,7 +91,7 @@ extension Dictionary where Key == AnyHashable, Value: Any {
         return nil
     }
 
-    @_spi(STP) public func stp_dictionary(forKey key: String) -> [AnyHashable: Any]? {
+    @_spi(InternalOnlyAPI) public func stp_dictionary(forKey key: String) -> [AnyHashable: Any]? {
         let value = self[key]
         if value != nil && (value is [AnyHashable: Any]) {
             return value as? [AnyHashable: Any]
@@ -113,7 +113,7 @@ extension Dictionary where Key == AnyHashable, Value: Any {
         return self[key] as? NSNumber
     }
 
-    @_spi(STP) public func stp_string(forKey key: String) -> String? {
+    @_spi(InternalOnlyAPI) public func stp_string(forKey key: String) -> String? {
         let value = self[key]
         if value != nil && (value is NSString) {
             return value as? String

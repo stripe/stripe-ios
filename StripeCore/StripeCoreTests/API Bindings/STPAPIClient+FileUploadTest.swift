@@ -7,7 +7,7 @@
 
 import OHHTTPStubs
 import OHHTTPStubsSwift
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 import StripeCoreTestUtils
 import UIKit
 import XCTest

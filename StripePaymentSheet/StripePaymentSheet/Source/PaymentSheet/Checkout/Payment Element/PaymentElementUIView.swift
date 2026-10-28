@@ -5,16 +5,19 @@
 //  Created by Yuki Tokuhiro on 7/13/26.
 //
 
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 /// A view that displays payment methods.
-@_spi(STP)
+@_spi(InternalOnlyAPI)
 public final class PaymentElementUIView: UIView {
     /// A delegate for the view.
     public weak var delegate: PaymentElementViewDelegate?
 
     private let contentView: UIView
+
+    // Remember attachment so confirming on a later screen does not repeat the mandate.
+    private(set) var hasBeenAttachedToWindow = false
 
     init(contentView: UIView) {
         self.contentView = contentView
@@ -24,6 +27,13 @@ public final class PaymentElementUIView: UIView {
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    override public func didMoveToWindow() {
+        super.didMoveToWindow()
+        if window != nil {
+            hasBeenAttachedToWindow = true
+        }
     }
 
     override public var intrinsicContentSize: CGSize {
@@ -84,7 +94,7 @@ public final class PaymentElementUIView: UIView {
 }
 
 @MainActor
-@_spi(STP)
+@_spi(InternalOnlyAPI)
 public protocol PaymentElementViewDelegate: AnyObject {
     /// Called inside an animation block when the PaymentElement view is updating its height.
     func paymentElementViewDidUpdateHeight(paymentElementView: PaymentElementUIView)

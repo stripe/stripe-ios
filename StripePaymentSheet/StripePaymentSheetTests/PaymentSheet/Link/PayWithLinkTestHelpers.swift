@@ -6,9 +6,9 @@
 //
 
 import Foundation
-@testable @_spi(STP) import StripeCore
+@testable @_spi(InternalOnlyAPI) import StripeCore
 @testable import StripePayments
-@testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(InternalOnlyAPI) import StripePaymentSheet
 import StripePaymentsTestUtils
 
 enum PayWithLinkTestHelpers {

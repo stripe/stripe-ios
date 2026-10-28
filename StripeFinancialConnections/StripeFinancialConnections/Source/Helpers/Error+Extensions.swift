@@ -6,7 +6,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 extension Error {
     /// The `extra_fields` object of a Stripe API error response, if there is one.

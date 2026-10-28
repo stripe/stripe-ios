@@ -8,7 +8,7 @@
 import SwiftUI
 import UIKit
 
-@_spi(STP) @_spi(LinkControllerPreview) import StripePaymentSheet
+@_spi(InternalOnlyAPI) @_spi(LinkControllerPreview) import StripePaymentSheet
 
 @available(iOS 16.0, *)
 struct ExampleLinkControllerView: View {
@@ -331,7 +331,11 @@ struct ExampleLinkControllerView: View {
             do {
                 let controller = try await LinkController.create(
                     mode: .setup,
-                    linkConfiguration: .init(supportedPaymentMethodTypes: supportedPaymentMethodTypes, merchantDisplayName: "Example, Inc.")
+                    linkConfiguration: .init(
+                        supportedPaymentMethodTypes: supportedPaymentMethodTypes,
+                        merchantDisplayName: "Example, Inc.",
+                        returnURL: "payments-example://stripe-redirect"
+                    )
                 )
                 await MainActor.run {
                     self.linkController = controller

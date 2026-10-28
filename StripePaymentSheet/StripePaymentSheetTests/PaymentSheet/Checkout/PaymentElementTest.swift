@@ -6,12 +6,12 @@
 //
 
 import OHHTTPStubs
-@testable @_spi(STP) import StripeCore
-@testable @_spi(STP) import StripeCoreTestUtils
-@testable @_spi(STP) import StripePayments
-@testable @_spi(AppearanceAPIAdditionsPreview) @_spi(STP) import StripePaymentSheet
-@testable @_spi(STP) import StripePaymentsTestUtils
-@testable @_spi(STP) import StripeUICore
+@testable @_spi(InternalOnlyAPI) import StripeCore
+@testable @_spi(InternalOnlyAPI) import StripeCoreTestUtils
+@testable @_spi(InternalOnlyAPI) import StripePayments
+@testable @_spi(AppearanceAPIAdditionsPreview) @_spi(InternalOnlyAPI) import StripePaymentSheet
+@testable @_spi(InternalOnlyAPI) import StripePaymentsTestUtils
+@testable @_spi(InternalOnlyAPI) import StripeUICore
 import XCTest
 
 @MainActor
@@ -95,6 +95,150 @@ final class PaymentElementTest: XCTestCase {
         )
     }
 
+    func testServerUpdatePreservesEmbeddedSelectionAndRefreshesBothPresentations() async throws {
+        // Given a loaded Checkout with PayNow selected in Embedded
+        let analyticsClient = STPAnalyticsClient.sharedClient
+        analyticsClient._testLogHistory = []
+        defer { analyticsClient._testLogHistory = [] }
+        var configuration = PaymentElement.Configuration()
+        configuration.paymentMethodLayout = .horizontal
+        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration(
+            apiResponse: Self.makeOpenSession(paymentMethodTypes: ["card", "paynow"]),
+            paymentElementConfiguration: configuration
+        ))
+        let element = checkout.getPaymentElement()
+        let embedded = element.embeddedPaymentElement
+        let flowController = element.paymentSheetFlowController
+        let row = try XCTUnwrap(embedded.embeddedPaymentMethodsView.rowButtons.first {
+            $0.type == .new(paymentMethodType: .stripe(.paynow))
+        })
+        embedded.embeddedPaymentMethodsView.didTap(rowButton: row)
+        var json = Self.openSessionJSON(paymentMethodTypes: ["card", "paynow"])
+        json["presentment_currency"] = "sgd"
+        json["integration_currency"] = "sgd"
+        json["items"] = CheckoutTestHelpers.makeOneTimePriceCheckoutItems(currency: "sgd", unitAmount: 2500)
+        CheckoutTestHelpers.stubCheckoutSessionRequests(
+            sessionId: checkout.session.id,
+            requestRecorder: CheckoutSessionRequestRecorder(),
+            sessionJSON: { json }
+        )
+
+        // When the merchant refreshes Checkout after changing amount and currency on the server
+        try await checkout.runServerUpdate { }
+
+        // Then both UIs and their analytics context reflect the response, retaining Embedded's selection
+        XCTAssertEqual(flowController.intent.amount, 2500)
+        XCTAssertEqual(embedded.intent.amount, 2500)
+        XCTAssertEqual(flowController.intent.currency?.lowercased(), "sgd")
+        XCTAssertEqual(embedded.intent.currency?.lowercased(), "sgd")
+        XCTAssertEqual(checkout.session.paymentOption?.paymentMethodType, "paynow")
+        XCTAssertEqual(flowController.analyticsHelper.intent?.amount, 2500)
+        XCTAssertEqual(embedded.analyticsHelper.intent?.amount, 2500)
+        XCTAssertEqual(flowController.viewController.loadResult.paymentMethodOrientation, .horizontal)
+        XCTAssertEqual(embedded.loadResult.paymentMethodOrientation, .vertical)
+        XCTAssertEqual(flowController.analyticsHelper.paymentMethodOrientation, .horizontal)
+        XCTAssertEqual(embedded.analyticsHelper.paymentMethodOrientation, .vertical)
+
+        // Initial loading and updates don't emit standalone PaymentSheet load/update events
+        let excludedEvents: Set<String> = [
+            STPAnalyticEvent.paymentSheetLoadStarted.rawValue,
+            STPAnalyticEvent.paymentSheetLoadSucceeded.rawValue,
+            STPAnalyticEvent.paymentSheetLoadFailed.rawValue,
+            STPAnalyticEvent.mcUpdateStartedEmbedded.rawValue,
+            STPAnalyticEvent.mcUpdateFinishedEmbedded.rawValue,
+        ]
+        let events = analyticsClient._testLogHistory.compactMap { $0["event"] as? String }
+        XCTAssertTrue(excludedEvents.isDisjoint(with: events), "Unexpected load/update events: \(events)")
+    }
+
+    func testPromotionCodeUpdateDoesNotLookUpLink() async throws {
+        // Given Link is enabled and an unverified account is already loaded
+        var json = Self.openSessionJSON(paymentMethodTypes: ["card", "link"])
+        json["customer_email"] = "customer@example.com"
+        let response = try PaymentPagesAPIResponse.decode(fromAPIResponse: json)
+        let previousAccount = LinkAccountContext.shared.account
+        defer { LinkAccountContext.shared.account = previousAccount }
+        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: response))
+        let element = checkout.getPaymentElement()
+        XCTAssertTrue(PaymentSheet.isLinkEnabled(
+            elementsSession: checkout.session.elementsSession,
+            configuration: element.paymentSheetFlowController.configuration
+        ))
+        let account = PaymentSheetLinkAccount(
+            email: "customer@example.com",
+            session: nil,
+            publishableKey: nil,
+            displayablePaymentDetails: nil,
+            apiClient: checkout.apiClient,
+            useMobileEndpoints: false,
+            canSyncAttestationState: false
+        )
+        LinkAccountContext.shared.account = account
+        let lookup = expectation(description: "Session update does not look up Link")
+        lookup.isInverted = true
+        HTTPStubs.stubRequests(passingTest: { $0.url?.path == "/v1/consumers/sessions/lookup" }) { _ in
+            lookup.fulfill()
+            return HTTPStubsResponse(data: Data(), statusCode: 500, headers: nil)
+        }
+
+        // When a normal Checkout mutation updates the session
+        try await checkout.applyPromotionCode("SAVE10")
+
+        // Then the account is retained and no lookup is scheduled in the background either
+        await fulfillment(of: [lookup], timeout: 0.2)
+        XCTAssertEqual(LinkAccountContext.shared.account?.email, account.email)
+    }
+
+    func testSessionUpdateRefreshesPromotionsForBothPresentations() async throws {
+        // Given Checkout initially has no promotions
+        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration())
+        let element = checkout.getPaymentElement()
+        let requests = expectation(description: "Checkout fetches promotions once")
+        requests.assertForOverFulfill = true
+        HTTPStubs.stubRequests(passingTest: { $0.url?.host == "ppm.stripe.com" }) { request in
+            let query = URLComponents(url: request.url!, resolvingAgainstBaseURL: false)?.queryItems ?? []
+            XCTAssertEqual(query.first { $0.name == "amount" }?.value, "2500")
+            XCTAssertEqual(query.first { $0.name == "currency" }?.value?.lowercased(), "gbp")
+            requests.fulfill()
+            return HTTPStubsResponse(
+                jsonObject: [
+                    "content": ["images": []],
+                    "payment_plan_groups": [[
+                        "type": "klarna",
+                        "content": [
+                            "images": [],
+                            "summary": ["message": "Pay over time"],
+                            "learn_more": ["message": "See plans", "url": "https://example.com/klarna"],
+                        ],
+                    ], ],
+                ],
+                statusCode: 200,
+                headers: nil
+            )
+        }
+
+        // When an updated session enables promotions for Klarna at a new amount/currency
+        var json = Self.openSessionJSON(paymentMethodTypes: ["card", "klarna"])
+        json["presentment_currency"] = "gbp"
+        json["integration_currency"] = "gbp"
+        json["items"] = CheckoutTestHelpers.makeOneTimePriceCheckoutItems(currency: "gbp", unitAmount: 2500)
+        json["experiments_data"] = [
+            "arb_id": "arb_test",
+            "experiment_assignments": [PaymentMethodMessagingPromotionsExperiment.experimentName: "treatment"],
+        ]
+        checkout.dangerouslySetSessionDirectly(try PaymentPagesAPIResponse.decode(fromAPIResponse: json).makePublicSession())
+        checkout.updateForSessionChange()
+
+        // Then the update has finished while promotions fetch asynchronously with the new inputs
+        let flowControllerHelper = try XCTUnwrap(element.paymentSheetFlowController.viewController.loadResult.paymentMethodMessagingPromotionsHelper)
+        let embeddedHelper = try XCTUnwrap(element.embeddedPaymentElement.loadResult.paymentMethodMessagingPromotionsHelper)
+        await flowControllerHelper.fetchTask?.value
+        await embeddedHelper.fetchTask?.value
+        await fulfillment(of: [requests], timeout: 1)
+        XCTAssertEqual(flowControllerHelper.promotion(for: .stripe(.klarna))?.promotion, "Pay over time")
+        XCTAssertEqual(embeddedHelper.promotion(for: .stripe(.klarna))?.promotion, "Pay over time")
+    }
+
     func testConfigurationSetsCheckoutMerchantDisplayName() async throws {
         // Given Checkout merchant display name
         var checkoutConfiguration = CheckoutController.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
@@ -141,7 +285,10 @@ final class PaymentElementTest: XCTestCase {
 
     func testConfigurationSetsApplePayFromCheckoutSessionMerchantCountry() async throws {
         // Given Apple Pay configured for a Checkout Session with a non-US merchant country
-        var checkoutConfiguration = CheckoutController.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
+        var checkoutConfiguration = CheckoutController.Configuration(
+            clientSecret: "cs_test_123_secret_abc",
+            returnURL: "stripe-ios-test://checkout-return"
+        )
         var paymentElementConfiguration = PaymentElement.Configuration()
         paymentElementConfiguration.applePayConfiguration = PaymentElement.Configuration.ApplePayConfiguration(
             merchantId: "merchant.com.example",
@@ -149,9 +296,7 @@ final class PaymentElementTest: XCTestCase {
         )
         checkoutConfiguration.paymentElement = paymentElementConfiguration
         var sessionJSON = Self.openSessionJSON(paymentMethodTypes: ["card"])
-        var elementsSessionJSON = sessionJSON["elements_session"] as! [String: Any]
-        elementsSessionJSON["merchant_country"] = "GB"
-        sessionJSON["elements_session"] = elementsSessionJSON
+        sessionJSON["merchant_info"] = ["country": "GB"]
 
         // When Checkout creates PaymentElement
         let checkout = try await CheckoutController(
@@ -440,7 +585,7 @@ final class PaymentElementTest: XCTestCase {
         XCTAssertNil(displayData.billingDetails?.address)
     }
 
-    func testClearPaymentOptionResetsBillingTaxRegionToCountry() async throws {
+    func testClearPaymentOptionSendsEmptyBillingTaxRegion() async throws {
         // Given a selected saved card supplies the billing address for automatic tax
         let (configuration, requestRecorder) = try stubAutomaticTaxSavedCardCheckout()
         let checkout = try await CheckoutController(configuration: configuration)
@@ -451,11 +596,12 @@ final class PaymentElementTest: XCTestCase {
         // When the payment option is cleared
         try await checkout.clearPaymentOption()
 
-        // Then Checkout recalculates tax with only the previous country and clears the selection
+        // Then Checkout lets the backend select the default tax country and clears the selection
         let requests = requestRecorder.requests
         XCTAssertEqual(requests.map(\.kind), [.initSession, .updateSession, .updateSession])
         let updateRequest = try XCTUnwrap(requests.last)
-        XCTAssertEqual(updateRequest.params["tax_region[country]"], "US")
+        XCTAssertEqual(updateRequest.params["tax_region"], "")
+        XCTAssertNil(updateRequest.params["tax_region[country]"])
         XCTAssertNil(updateRequest.params["tax_region[line1]"])
         XCTAssertNil(updateRequest.params["tax_region[line2]"])
         XCTAssertNil(updateRequest.params["tax_region[city]"])
@@ -528,7 +674,7 @@ final class PaymentElementTest: XCTestCase {
             json["payment_status"] = "paid"
             return json
         }())
-        try await checkout.commitSession(completedSession)
+        checkout.commitSession(completedSession)
 
         // Then the Checkout payment option still reflects FlowController's selected payment option.
         XCTAssertEqual(checkout.session.paymentOption?.label, "PayNow")
@@ -646,7 +792,8 @@ final class PaymentElementTest: XCTestCase {
         configuration: CheckoutController.Configuration,
         requestRecorder: CheckoutSessionRequestRecorder
     ) {
-        let sessionJSON = STPTestUtils.jsonNamed("CheckoutSession")!
+        var sessionJSON = STPTestUtils.jsonNamed("CheckoutSession")!
+        sessionJSON["automatic_tax"] = ["enabled": true, "status": "requires_address", "address_source": "billing"]
         let session = try PaymentPagesAPIResponse.decode(fromAPIResponse: sessionJSON)
         let requestRecorder = CheckoutSessionRequestRecorder()
         let configuration = CheckoutTestHelpers.makeConfiguration(apiResponse: session)
@@ -669,16 +816,11 @@ final class PaymentElementTest: XCTestCase {
         )
     }
 
-    private static func openSessionJSON(paymentMethodTypes: [String], businessName: String? = nil) -> [AnyHashable: Any] {
-        var elementsSessionJSON = CheckoutTestHelpers.minimalElementsSessionJSON
-        elementsSessionJSON["payment_method_preference"] = [
-            "ordered_payment_method_types": paymentMethodTypes,
-        ]
-        elementsSessionJSON["business_name"] = businessName
-
+    private static func openSessionJSON(paymentMethodTypes: [String], businessName: String? = nil) -> [AnyHashable: Any]
+    {
         var json = CheckoutTestHelpers.openSessionJSON
-        json["payment_method_types"] = paymentMethodTypes
-        json["elements_session"] = elementsSessionJSON
+        json["ordered_payment_method_types_and_wallets"] = paymentMethodTypes
+        json["merchant_info"] = ["country": "US", "display_name": businessName as Any? ?? NSNull()]
         return json
     }
 
@@ -693,10 +835,10 @@ final class PaymentElementTest: XCTestCase {
         requestRecorder: CheckoutSessionRequestRecorder
     ) {
         let requestRecorder = CheckoutSessionRequestRecorder()
-        let elementsSession = STPElementsSession._testValue(
-            paymentMethodTypes: paymentMethodTypes,
-            customerSessionData: [:],
-            paymentMethods: [
+        var sessionJSON = Self.openSessionJSON(paymentMethodTypes: paymentMethodTypes)
+        sessionJSON["customer"] = [
+            "id": "cus_123",
+            "payment_methods": [
                 STPPaymentMethod._testCard(
                     line1: "123 Main St",
                     city: "San Francisco",
@@ -704,14 +846,9 @@ final class PaymentElementTest: XCTestCase {
                     postalCode: "94105",
                     countryCode: "US"
                 ).allResponseFields,
-            ]
-        )
-        var sessionJSON = Self.openSessionJSON(paymentMethodTypes: paymentMethodTypes)
-        sessionJSON["elements_session"] = elementsSession.allResponseFields
-        sessionJSON["tax_context"] = [
-            "automatic_tax_enabled": true,
-            "automatic_tax_address_source": "session.billing",
+            ],
         ]
+        sessionJSON["automatic_tax"] = ["enabled": true, "status": "requires_address", "address_source": "billing"]
         CheckoutTestHelpers.stubCheckoutSessionRequests(
             sessionId: "cs_test_123",
             requestRecorder: requestRecorder,
@@ -722,7 +859,10 @@ final class PaymentElementTest: XCTestCase {
             }
         )
 
-        var configuration = CheckoutController.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
+        var configuration = CheckoutController.Configuration(
+            clientSecret: "cs_test_123_secret_abc",
+            returnURL: "stripe-ios-test://checkout-return"
+        )
         configuration.apiClient = STPAPIClient(publishableKey: "pk_test_123")
         var paymentElementConfiguration = PaymentElement.Configuration()
         paymentElementConfiguration.rowSelectionBehavior = .immediateAction(

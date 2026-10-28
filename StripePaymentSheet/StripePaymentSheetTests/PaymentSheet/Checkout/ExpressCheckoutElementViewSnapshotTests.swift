@@ -6,9 +6,9 @@
 //
 
 import StripeCoreTestUtils
-@testable @_spi(STP) import StripePayments
-@testable @_spi(STP) import StripePaymentSheet
-@testable @_spi(STP) import StripeUICore
+@testable @_spi(InternalOnlyAPI) import StripePayments
+@testable @_spi(InternalOnlyAPI) import StripePaymentSheet
+@testable @_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 @MainActor
@@ -30,6 +30,20 @@ final class ExpressCheckoutElementViewSnapshotTests: STPSnapshotTestCase {
     func testDarkButtonTheme() {
         var appearance = ExpressCheckoutElement.Configuration.Appearance()
         appearance.buttonTheme = .dark
+
+        verify(makeView(appearance: appearance))
+    }
+
+    func testCustomCornerRadius() {
+        var appearance = ExpressCheckoutElement.Configuration.Appearance()
+        appearance.cornerRadius = 12
+
+        verify(makeView(appearance: appearance))
+    }
+
+    func testSquareCorners() {
+        var appearance = ExpressCheckoutElement.Configuration.Appearance()
+        appearance.cornerRadius = 0
 
         verify(makeView(appearance: appearance))
     }

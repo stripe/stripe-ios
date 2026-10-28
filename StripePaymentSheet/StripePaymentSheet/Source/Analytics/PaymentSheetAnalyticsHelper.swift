@@ -6,8 +6,8 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
 
 final class PaymentSheetAnalyticsHelper {
     let analyticsClient: STPAnalyticsClient
@@ -20,8 +20,9 @@ final class PaymentSheetAnalyticsHelper {
     // Vars set later as PaymentSheet successfully loads, etc.
     var intent: Intent?
     var elementsSession: STPElementsSession?
-    /// Resolved once `logLoadSucceeded` is called; nil before that.
-    private(set) var paymentMethodOrientation: PaymentSheet.PaymentMethodLayout.ResolvedLayout?
+    /// Resolved after each successful initial load or update; nil before initial loading completes.
+    /// Included in subsequent analytics events.
+    var paymentMethodOrientation: PaymentSheet.PaymentMethodLayout.ResolvedLayout?
     private var startTimes: [TimeMeasurement: Date] = [:]
 
     enum IntegrationShape {
@@ -130,6 +131,17 @@ final class PaymentSheetAnalyticsHelper {
         )
     }
 
+    /// Updates the context used by subsequent analytics events without emitting an event.
+    /// Call after each successful initial load or update, before applying the result to the payment UI.
+    @MainActor
+    func didLoad(
+        intent: Intent,
+        elementsSession: STPElementsSession
+    ) {
+        self.intent = intent
+        self.elementsSession = elementsSession
+    }
+
     @MainActor
     func logLoadSucceeded(
         intent: Intent,
@@ -142,8 +154,7 @@ final class PaymentSheetAnalyticsHelper {
         hasCardArt: Bool,
         didLinkLookupTimeOut: Bool?
     ) {
-        self.intent = intent
-        self.elementsSession = elementsSession
+        didLoad(intent: intent, elementsSession: elementsSession)
         self.paymentMethodOrientation = paymentMethodOrientation
         let defaultPaymentMethodAnalyticsValue: String = {
             switch defaultPaymentMethod {

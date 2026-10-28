@@ -5,13 +5,13 @@
 //  Created by Nick Porter on 4/6/26.
 //
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 /// A UIKit view that displays an Adaptive Pricing currency selector.
-@_spi(STP)
+@_spi(InternalOnlyAPI)
 @_spi(ReactNativeSDK)
 @MainActor
 public final class CurrencySelectorElementUIView: UIView {

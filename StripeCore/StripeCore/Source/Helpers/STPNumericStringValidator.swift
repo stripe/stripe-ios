@@ -8,16 +8,16 @@
 
 import Foundation
 
-@_spi(STP) public enum STPTextValidationState: Int {
+@_spi(InternalOnlyAPI) public enum STPTextValidationState: Int {
     case empty
     case incomplete
     case complete
     case invalid
 }
 
-@_spi(STP) open class STPNumericStringValidator: NSObject {
+@_spi(InternalOnlyAPI) open class STPNumericStringValidator: NSObject {
     /// Whether or not the target string contains only numeric characters.
-    @_spi(STP) public class func isStringNumeric(_ string: String) -> Bool {
+    @_spi(InternalOnlyAPI) public class func isStringNumeric(_ string: String) -> Bool {
         return
             (string as NSString).rangeOfCharacter(from: CharacterSet.stp_invertedAsciiDigit)
             .location
@@ -25,7 +25,7 @@ import Foundation
     }
 
     /// Returns a copy of the passed string with all non-numeric characters removed.
-    @_spi(STP) public class func sanitizedNumericString(for string: String) -> String {
+    @_spi(InternalOnlyAPI) public class func sanitizedNumericString(for string: String) -> String {
         return string.stp_stringByRemovingCharacters(from: CharacterSet.stp_invertedAsciiDigit)
     }
 }

@@ -7,12 +7,12 @@
 
 import OHHTTPStubs
 import OHHTTPStubsSwift
-@testable@_spi(STP) import StripeCore
-@testable@_spi(STP) import StripeCoreTestUtils
-@testable@_spi(STP) import StripePayments
-@testable @_spi(STP) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @_spi(CardFundingFilteringPrivatePreview) import StripePaymentSheet
-@testable@_spi(STP) import StripePaymentsTestUtils
-@testable@_spi(STP) import StripeUICore
+@testable@_spi(InternalOnlyAPI) import StripeCore
+@testable@_spi(InternalOnlyAPI) import StripeCoreTestUtils
+@testable@_spi(InternalOnlyAPI) import StripePayments
+@testable @_spi(InternalOnlyAPI) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @_spi(CardFundingFilteringPrivatePreview) import StripePaymentSheet
+@testable@_spi(InternalOnlyAPI) import StripePaymentsTestUtils
+@testable@_spi(InternalOnlyAPI) import StripeUICore
 import XCTest
 
 final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
@@ -134,6 +134,13 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
     }
 
     func testPaymentSheetLoadDeferredIntentSucceeds() {
+        // Given a saved guest card, customerless loads must still match requests with no client default.
+        let previousGuestDefault = CustomerPaymentOption.localDefaultPaymentMethod(for: nil)
+        CustomerPaymentOption.setDefaultPaymentMethod(.stripeId("pm_guest_default"), forCustomer: nil)
+        defer {
+            CustomerPaymentOption.setDefaultPaymentMethod(previousGuestDefault, forCustomer: nil)
+        }
+
         // Test PaymentSheetLoader.load can load various IntentConfigurations
         let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = {_, _ in
             XCTFail("Confirm handler shouldn't be called.")

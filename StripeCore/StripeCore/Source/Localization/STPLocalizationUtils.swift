@@ -8,7 +8,7 @@
 
 import Foundation
 
-@_spi(STP) public final class STPLocalizationUtils {
+@_spi(InternalOnlyAPI) public final class STPLocalizationUtils {
     /// Acts like NSLocalizedString but tries to find the string in the Stripe
     /// bundle first if possible.
     ///
@@ -39,7 +39,7 @@ import Foundation
 
     static let UnknownString = "STPSTRINGNOTFOUND"
 
-    public class func localizedStripeString(
+    public static func localizedStripeString(
         forKey key: String,
         bundleLocator: BundleLocatorProtocol.Type
     ) -> String {
@@ -92,6 +92,6 @@ import Foundation
 
 /// Use to explicitly ignore static analyzer warning:
 /// "User-facing text should use localized string macro".
-@inline(__always) @_spi(STP) public func STPNonLocalizedString(_ string: String) -> String {
+@inline(__always) @_spi(InternalOnlyAPI) public func STPNonLocalizedString(_ string: String) -> String {
     return string
 }

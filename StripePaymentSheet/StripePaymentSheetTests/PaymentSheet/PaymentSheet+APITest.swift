@@ -9,11 +9,11 @@
 import StripeCoreTestUtils
 import XCTest
 
-@testable@_spi(STP) import StripeCore
-@testable@_spi(STP) import StripePayments
-@testable@_spi(STP) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) import StripePaymentSheet
-@testable@_spi(STP) import StripePaymentsTestUtils
-@testable@_spi(STP) import StripeUICore
+@testable@_spi(InternalOnlyAPI) import StripeCore
+@testable@_spi(InternalOnlyAPI) import StripePayments
+@testable@_spi(InternalOnlyAPI) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) import StripePaymentSheet
+@testable@_spi(InternalOnlyAPI) import StripePaymentsTestUtils
+@testable@_spi(InternalOnlyAPI) import StripeUICore
 
 class PaymentSheetAPITest: STPNetworkStubbingTestCase {
 
@@ -1148,51 +1148,6 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
             }
         }
         waitForExpectations(timeout: 10)
-    }
-
-    // MARK: - Checkout Session update tests
-
-    @MainActor
-    func testUpdateCheckoutSession() async throws {
-        let response = try await STPTestingAPIClient.shared.createCheckoutSession()
-        let apiClient = STPAPIClient(publishableKey: response.publishableKey)
-        var checkoutConfiguration = CheckoutController.Configuration(clientSecret: response.clientSecret, returnURL: "stripe-ios-test://checkout-return")
-        checkoutConfiguration.apiClient = apiClient
-        let checkout = try await CheckoutController(configuration: checkoutConfiguration)
-
-        var config = PaymentSheet.Configuration()
-        config.apiClient = apiClient
-        config.defaultBillingDetails.email = "test@example.com"
-
-        let sut = try await PaymentSheet.FlowController.create(checkout: checkout, configuration: config)
-        try await sut.update(checkout: checkout)
-    }
-
-    @MainActor
-    func testUpdateCheckoutSessionFails() async throws {
-        let response = try await STPTestingAPIClient.shared.createCheckoutSession()
-        let apiClient = STPAPIClient(publishableKey: response.publishableKey)
-        var checkoutConfiguration = CheckoutController.Configuration(clientSecret: response.clientSecret, returnURL: "stripe-ios-test://checkout-return")
-        checkoutConfiguration.apiClient = apiClient
-        let checkout = try await CheckoutController(configuration: checkoutConfiguration)
-
-        var config = PaymentSheet.Configuration()
-        config.apiClient = apiClient
-        config.defaultBillingDetails.email = "test@example.com"
-
-        let sut = try await PaymentSheet.FlowController.create(checkout: checkout, configuration: config)
-
-        // Update with an invalid intent config should fail
-        let invalidIntentConfig = PaymentSheet.IntentConfiguration(mode: .setup(currency: "Invalid currency", setupFutureUsage: .offSession)) { _, _ in return "" }
-        do {
-            try await sut.update(intentConfiguration: invalidIntentConfig)
-            XCTFail("Expected update to fail")
-        } catch {
-            // Expected
-        }
-
-        // Update with the valid checkout should succeed after a failure
-        try await sut.update(checkout: checkout)
     }
 
     // MARK: - other tests

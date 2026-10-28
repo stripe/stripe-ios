@@ -6,7 +6,7 @@
 //
 
 import Foundation
-@_spi(STP) @testable import StripeCore
+@_spi(InternalOnlyAPI) @testable import StripeCore
 import StripeCoreTestUtils
 @testable import StripeFinancialConnections
 import UIKit

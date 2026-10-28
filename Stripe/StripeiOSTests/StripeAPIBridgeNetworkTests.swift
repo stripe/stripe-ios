@@ -9,9 +9,9 @@
 
 import PassKit
 import Stripe
-@testable@_spi(STP) import StripeCore
+@testable@_spi(InternalOnlyAPI) import StripeCore
 import StripeCoreTestUtils
-@_spi(STP) import StripePayments
+@_spi(InternalOnlyAPI) import StripePayments
 import StripePaymentsTestUtils
 import XCTest
 

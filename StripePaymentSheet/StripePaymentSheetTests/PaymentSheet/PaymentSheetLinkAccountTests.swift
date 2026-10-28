@@ -10,12 +10,12 @@ import XCTest
 
 import OHHTTPStubs
 import OHHTTPStubsSwift
-@testable@_spi(STP) import StripeCore
-@testable@_spi(STP) import StripeCoreTestUtils
-@testable@_spi(STP) import StripePayments
-@testable@_spi(STP) import StripePaymentSheet
-@testable@_spi(STP) import StripePaymentsTestUtils
-@testable@_spi(STP) import StripePaymentsUI
+@testable@_spi(InternalOnlyAPI) import StripeCore
+@testable@_spi(InternalOnlyAPI) import StripeCoreTestUtils
+@testable@_spi(InternalOnlyAPI) import StripePayments
+@testable@_spi(InternalOnlyAPI) import StripePaymentSheet
+@testable@_spi(InternalOnlyAPI) import StripePaymentsTestUtils
+@testable@_spi(InternalOnlyAPI) import StripePaymentsUI
 
 final class PaymentSheetLinkAccountTests: APIStubbedTestCase {
     override func tearDown() {
@@ -103,6 +103,137 @@ final class PaymentSheetLinkAccountTests: APIStubbedTestCase {
             }
         }
         waitForExpectations(timeout: 5)
+    }
+
+    func testAuthCredentialRecoveryWithoutLookupDoesNotRefreshCurrentSession() {
+        // Given an account with a current session but no way to repeat its lookup.
+        let sut = makeSUT()
+        var refreshRequests = 0
+        stub(condition: isPath("/v1/consumers/sessions/refresh")) { _ in
+            refreshRequests += 1
+            return HTTPStubsResponse(jsonObject: [:], statusCode: 200, headers: nil)
+        }
+
+        // When credential recovery is requested.
+        let completed = expectation(description: "Credential recovery completed")
+        sut.refreshAuthSession(recoverCredentials: true) { result in
+            // Then it fails instead of attempting to refresh and reuse the same credential.
+            if case .success = result {
+                XCTFail("Credential recovery should require a new lookup")
+            }
+            completed.fulfill()
+        }
+
+        wait(for: [completed], timeout: 1)
+        XCTAssertEqual(refreshRequests, 0)
+    }
+
+    func testAuthCredentialRecoveryUsesLookupInsteadOfRefresh() {
+        // Given an account that can repeat the lookup to obtain a new session credential.
+        let sut = makeSUT()
+        let replacementSession = makeVerifiedSession()
+        var refreshRequests = 0
+        stub(condition: isPath("/v1/consumers/sessions/refresh")) { _ in
+            refreshRequests += 1
+            return HTTPStubsResponse(jsonObject: [:], statusCode: 200, headers: nil)
+        }
+        sut.authSessionLookup = { completion in
+            completion(.success(.init(consumerSession: replacementSession)))
+        }
+
+        // When credential recovery is requested.
+        let completed = expectation(description: "Credential recovery completed")
+        sut.refreshAuthSession(recoverCredentials: true) { result in
+            // Then the replacement session comes from lookup without calling refresh.
+            switch result {
+            case .success(let response):
+                XCTAssertTrue(response.consumerSession === replacementSession)
+            case .failure(let error):
+                XCTFail("Unexpected error: \(error)")
+            }
+            completed.fulfill()
+        }
+
+        wait(for: [completed], timeout: 1)
+        XCTAssertEqual(refreshRequests, 0)
+    }
+
+    func testApplyAuthResponseRetainsLinkSessionKeyWhenResponseOmitsIt() {
+        // Given an account whose current session has a Link session key.
+        let sut = makeSUT()
+        sut.currentSession?.linkSessionKey = "lsk_123"
+
+        // When an auth response replaces the session without a Link session key.
+        sut.applyAuthResponse(.init(consumerSession: makeVerifiedSession()))
+
+        // Then the new session keeps the previous key.
+        XCTAssertEqual(sut.linkSessionKey, "lsk_123")
+
+        // ...and a key returned by a later response takes precedence.
+        let sessionWithKey = makeVerifiedSession()
+        sessionWithKey.linkSessionKey = "lsk_456"
+        sut.applyAuthResponse(.init(consumerSession: sessionWithKey))
+        XCTAssertEqual(sut.linkSessionKey, "lsk_456")
+    }
+
+    func testStartVerificationResolvesByTypeEvenWhenLookupHasFactorIDs() {
+        for (type, factorType) in [(SupportedVerificationType.sms, ConsumerSession.VerificationFactor.FactorType.sms), (.email, .email)] {
+            // Given an account whose lookup response includes an opaque factor ID.
+            let session = ConsumerSession.make(
+                clientSecret: "client_secret",
+                emailAddress: "user@example.com",
+                redactedFormattedPhoneNumber: "(***) *** **55",
+                unredactedPhoneNumber: "(555) 555-5555",
+                phoneNumberCountry: "US",
+                verificationSessions: [],
+                supportedPaymentDetailsTypes: [],
+                mobileFallbackWebviewParams: nil,
+                availableVerificationFactors: [
+                    .init(type: factorType, providesFurtherVerification: true, temporarilyDisabled: false, id: "lookup_factor_id"),
+                ]
+            )
+            let account = PaymentSheetLinkAccount(
+                email: session.emailAddress,
+                session: session,
+                publishableKey: "pk_test_consumer",
+                displayablePaymentDetails: nil,
+                apiClient: STPAPIClient(publishableKey: STPTestingDefaultPublishableKey),
+                useMobileEndpoints: true,
+                canSyncAttestationState: false
+            )
+            XCTAssertEqual(account.currentSession?.availableVerificationFactors?.first?.id, "lookup_factor_id")
+
+            // When starting the initial OTP challenge through the account transport.
+            let completed = expectation(description: "\(type.rawValue) verification started")
+            stub(condition: isPath("/v1/consumers/sessions/start_verification")) { request in
+                // Then the request selects the factor by type without forwarding the lookup ID.
+                let params = RequestBodyTestHelpers.formEncodedBodyParams(from: request)
+                XCTAssertEqual(params["type"], type.rawValue)
+                XCTAssertNil(params["verification_factor_id"])
+                XCTAssertNil(params["is_resend_sms_code"])
+                return HTTPStubsResponse(
+                    jsonObject: [
+                        "consumer_session": [
+                            "client_secret": "client_secret",
+                            "email_address": "user@example.com",
+                            "redacted_formatted_phone_number": "(***) *** **55",
+                            "current_authentication_level": "1FA",
+                            "minimum_authentication_level": "1FA",
+                            "verification_sessions": [["type": type.rawValue, "state": "STARTED"]],
+                        ],
+                        "verification_session_id": "verification_123",
+                    ],
+                    statusCode: 200,
+                    headers: ["Content-Type": "application/json"]
+                )
+            }
+            account.startAuthVerification(type: type, phoneNumber: nil, isResending: false) { result in
+                if case .failure(let error) = result { XCTFail("Unexpected error: \(error)") }
+                completed.fulfill()
+            }
+            wait(for: [completed], timeout: 5)
+            HTTPStubs.removeAllStubs()
+        }
     }
 
     func testRecordConnectionsConsentAcquired_sendsExpectedConsentJSON() async throws {

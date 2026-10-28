@@ -7,8 +7,8 @@
 //
 
 import SafariServices
-@_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 protocol LinkInlineSignupViewDelegate: AnyObject {
@@ -257,6 +257,13 @@ final class LinkInlineSignupView: UIView {
     }
 
     func updateUI(animated: Bool = false) {
+        if viewModel.mode == .signupOptIn {
+            // This mode only displays a checkbox. Updating the unused email field would
+            // force layout on a detached stack view with zero height.
+            checkboxElement.isChecked = viewModel.saveCheckboxChecked
+            return
+        }
+
         if viewModel.isLookingUpLinkAccount {
             emailElement.startAnimating()
         } else {

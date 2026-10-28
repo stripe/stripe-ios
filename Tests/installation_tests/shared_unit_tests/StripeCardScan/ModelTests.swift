@@ -3,7 +3,7 @@
 //  ModelTests
 //
 
-@_spi(STP) import StripeCardScan
+@_spi(InternalOnlyAPI) import StripeCardScan
 import UIKit
 import XCTest
 

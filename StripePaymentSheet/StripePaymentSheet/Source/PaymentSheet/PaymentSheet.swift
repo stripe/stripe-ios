@@ -8,9 +8,9 @@
 
 import Foundation
 import PassKit
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
-@_spi(STP) import StripePaymentsUI
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) import StripePaymentsUI
 import UIKit
 
 /// The result of an attempt to confirm a PaymentIntent or SetupIntent
@@ -283,11 +283,18 @@ public class PaymentSheet {
     /// The STPPaymentHandler instance
     lazy var paymentHandler: STPPaymentHandler = { STPPaymentHandler(apiClient: configuration.apiClient) }()
 
+    /// Shared with Link so that its sheets match the PaymentSheet container.
+    lazy var nativeSheetPresentation = SheetImplementationResolver(
+        // The playground can opt in while complete PaymentSheet remains outside the server-controlled rollout.
+        isEnabled: NativeSheetFeatureFlags.nativeSheetEnabledOverride == true
+    )
+
     /// The parent view controller to present
     lazy var bottomSheetViewController: any PaymentSheetContainer = {
-        // The playground can opt in while complete PaymentSheet remains outside the server-controlled rollout.
-        let usesNativeSheet = NativeSheetFeatureFlags.nativeSheetEnabledOverride == true
-            && UIDevice.current.userInterfaceIdiom == .phone
+        // PaymentSheet's presentation APIs require the main thread but are not yet actor-isolated.
+        let usesNativeSheet = MainActor.assumeIsolated {
+            nativeSheetPresentation.usesNativeSheet
+        }
 
         let vc = PaymentSheetContainerFactory.make(
             contentViewController: loadingViewController,
@@ -319,7 +326,7 @@ public class PaymentSheet {
             return checkout
         }()
         persistedSelectionSnapshotBeforePresentation = .init(
-            customerID: configuration.customer?.id,
+            customerID: loadResult.customerProvider.customerID,
             availableSavedPaymentMethods: loadResult.savedPaymentMethods
         )
         switch loadResult.paymentMethodOrientation {
@@ -359,6 +366,7 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
         let confirm: (@escaping (PaymentSheetResult, StripeCore.STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void) -> Void = { completion in
             PaymentSheet.confirm(
                 configuration: self.configuration,
+                nativeSheetPresentation: self.nativeSheetPresentation,
                 authenticationContext: self.bottomSheetViewController,
                 intent: paymentSheetViewController.intent,
                 elementsSession: paymentSheetViewController.elementsSession,
@@ -460,8 +468,8 @@ extension PaymentSheet: LoadingViewControllerDelegate {
 }
 
 /// :nodoc:
-@_spi(STP) extension PaymentSheet: STPAnalyticsProtocol {
-    @_spi(STP) public static let stp_analyticsIdentifier: String = "PaymentSheet"
+@_spi(InternalOnlyAPI) extension PaymentSheet: STPAnalyticsProtocol {
+    @_spi(InternalOnlyAPI) public static let stp_analyticsIdentifier: String = "PaymentSheet"
 }
 
 // MARK: - PaymentSheetViewControllerProtocol

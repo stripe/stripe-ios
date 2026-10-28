@@ -6,9 +6,9 @@
 //
 
 import Foundation
-@_spi(STP) @testable import StripeCore
+@_spi(InternalOnlyAPI) @testable import StripeCore
 
-@_spi(STP) public class STPTestingAnalyticsClient: STPAnalyticsClient {
+@_spi(InternalOnlyAPI) public class STPTestingAnalyticsClient: STPAnalyticsClient {
     public var forceAlwaysSendAnalytics: Bool = false
     public var events = [Analytic]()
 

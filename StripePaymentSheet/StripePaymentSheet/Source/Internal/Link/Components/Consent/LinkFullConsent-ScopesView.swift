@@ -5,7 +5,7 @@
 //  Created by Mat Schmid on 8/24/25.
 //
 
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 final class LinkFullConsentScopesView: UIView {

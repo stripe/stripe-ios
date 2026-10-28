@@ -6,18 +6,18 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
-@_spi(STP) public protocol PaymentSheetLinkAccountInfoProtocol {
-    @_spi(STP) var email: String { get }
-    @_spi(STP) var redactedPhoneNumber: String? { get }
-    @_spi(STP) var isRegistered: Bool { get }
-    @_spi(STP) var sessionState: PaymentSheetLinkAccount.SessionState { get }
-    @_spi(STP) var consumerSessionClientSecret: String? { get }
-    @_spi(STP) var linkSessionKey: String? { get }
+@_spi(InternalOnlyAPI) public protocol PaymentSheetLinkAccountInfoProtocol {
+    @_spi(InternalOnlyAPI) var email: String { get }
+    @_spi(InternalOnlyAPI) var redactedPhoneNumber: String? { get }
+    @_spi(InternalOnlyAPI) var isRegistered: Bool { get }
+    @_spi(InternalOnlyAPI) var sessionState: PaymentSheetLinkAccount.SessionState { get }
+    @_spi(InternalOnlyAPI) var consumerSessionClientSecret: String? { get }
+    @_spi(InternalOnlyAPI) var linkSessionKey: String? { get }
 }
 
 struct LinkPMDisplayDetails {
@@ -25,17 +25,17 @@ struct LinkPMDisplayDetails {
     let brand: STPCardBrand
 }
 
-@_spi(STP) public class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
-    @_spi(STP) public static var forcedConsumerLinkBrandForTesting: LinkBrand?
+@_spi(InternalOnlyAPI) public class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
+    @_spi(InternalOnlyAPI) public static var forcedConsumerLinkBrandForTesting: LinkBrand?
 
-    @_spi(STP) public enum SessionState: String {
+    @_spi(InternalOnlyAPI) public enum SessionState: String {
         case requiresSignUp
         case requiresVerification
         case verified
     }
 
     // More information: go/link-signup-consent-action-log
-    @_spi(STP) public enum ConsentAction: String {
+    @_spi(InternalOnlyAPI) public enum ConsentAction: String {
         // Checkbox, no fields prefilled
         case checkbox_v0 = "clicked_checkbox_nospm_mobile_v0"
 
@@ -78,6 +78,7 @@ struct LinkPMDisplayDetails {
 
     let useMobileEndpoints: Bool
     let canSyncAttestationState: Bool
+    let supportedVerificationTypes: [SupportedVerificationType]
     let requestSurface: LinkRequestSurface
     let createdFromAuthIntentID: Bool
 
@@ -97,17 +98,17 @@ struct LinkPMDisplayDetails {
     var nameUsedInSignup: String?
     var suggestedEmail: String?
 
-    @_spi(STP) public let email: String
+    @_spi(InternalOnlyAPI) public let email: String
 
-    @_spi(STP) public var redactedPhoneNumber: String? {
+    @_spi(InternalOnlyAPI) public var redactedPhoneNumber: String? {
         return currentSession?.redactedFormattedPhoneNumber.replacingOccurrences(of: "*", with: "•")
     }
 
-    @_spi(STP) public var isRegistered: Bool {
+    @_spi(InternalOnlyAPI) public var isRegistered: Bool {
         return currentSession != nil
     }
 
-    @_spi(STP) public var sessionState: SessionState {
+    @_spi(InternalOnlyAPI) public var sessionState: SessionState {
         if let currentSession {
             // OTP verification is not required if we are in the signup flow or are using seamless sign-in
             return currentSession.meetsMinimumAuthenticationLevel || currentSession.isVerifiedForSignup || currentSession.isVerifiedWithLinkAuthToken
@@ -117,20 +118,16 @@ struct LinkPMDisplayDetails {
         }
     }
 
-    @_spi(STP) public var consumerSessionClientSecret: String? {
+    @_spi(InternalOnlyAPI) public var consumerSessionClientSecret: String? {
         currentSession?.clientSecret
     }
 
-    @_spi(STP) public var linkSessionKey: String? {
+    @_spi(InternalOnlyAPI) public var linkSessionKey: String? {
         currentSession?.linkSessionKey
     }
 
     var hasStartedSMSVerification: Bool {
         return currentSession?.hasStartedSMSVerification ?? false
-    }
-
-    var hasCompletedSMSVerification: Bool {
-        return currentSession?.hasVerifiedSMSSession ?? false
     }
 
     var meetsMinimumAuthenticationLevel: Bool {
@@ -147,6 +144,10 @@ struct LinkPMDisplayDetails {
     var visitedFallbackURLs: [URL] = []
 
     private(set) var currentSession: ConsumerSession?
+    var authLookupSettings: ConsumerSession.LookupSettings?
+    var authLookupEmail: String?
+    var authCountryCode: String?
+    var authSessionLookup: ((@escaping (Result<ConsumerSession.AuthResponse, Error>) -> Void) -> Void)?
     let displayablePaymentDetails: ConsumerSession.DisplayablePaymentDetails?
 
     init(
@@ -157,16 +158,19 @@ struct LinkPMDisplayDetails {
         apiClient: STPAPIClient = .shared,
         useMobileEndpoints: Bool,
         canSyncAttestationState: Bool,
+        supportedVerificationTypes: [SupportedVerificationType] = SupportedVerificationType.nativeCapabilities(mfaAuthFlowEnabled: false),
         requestSurface: LinkRequestSurface = .default,
         createdFromAuthIntentID: Bool = false
     ) {
         self.email = email
+        self.authLookupEmail = email
         self.currentSession = session
         self.publishableKey = publishableKey
         self.displayablePaymentDetails = displayablePaymentDetails
         self.apiClient = apiClient
         self.useMobileEndpoints = useMobileEndpoints
         self.canSyncAttestationState = canSyncAttestationState
+        self.supportedVerificationTypes = supportedVerificationTypes
         self.requestSurface = requestSurface
         self.createdFromAuthIntentID = createdFromAuthIntentID
     }
@@ -554,28 +558,6 @@ struct LinkPMDisplayDetails {
         }
     }
 
-    func refresh(
-        completion: @escaping (Result<ConsumerSession, Error>) -> Void
-    ) {
-        guard let session = currentSession else {
-            stpAssertionFailure()
-            completion(.failure(
-                PaymentSheetError.unknown(debugDescription: "Refreshing session without valid current session")
-            ))
-            return
-        }
-
-        session.refreshSession(
-            with: apiClient,
-            requestSurface: requestSurface
-        ) { [weak self] result in
-            if case .success(let refreshedSession) = result {
-                self?.updateCurrentSession(refreshedSession, retainingLinkSessionKeyFrom: session)
-            }
-            completion(result)
-        }
-    }
-
     func logout() {
         LinkAccountContext.shared.account = nil
         guard let session = currentSession else {
@@ -602,11 +584,91 @@ struct LinkPMDisplayDetails {
     }
 }
 
+extension PaymentSheetLinkAccount: LinkAuthAccount {
+    /// Returns the current session, or fails `completion` if there isn't one.
+    private func sessionForAuthRequest(
+        _ completion: (Result<ConsumerSession.AuthResponse, Error>) -> Void
+    ) -> ConsumerSession? {
+        guard let currentSession else {
+            completion(.failure(NSError.stp_genericConnectionError()))
+            return nil
+        }
+        return currentSession
+    }
+
+    func applyAuthResponse(_ response: ConsumerSession.AuthResponse) {
+        updateCurrentSession(response.consumerSession, retainingLinkSessionKeyFrom: currentSession)
+        if let settings = response.settings {
+            authLookupSettings = settings
+        }
+        if let brand = response.linkBrand {
+            currentSession?.linkBrand = brand
+        }
+    }
+
+    func startAuthVerification(
+        type: SupportedVerificationType,
+        phoneNumber: String?,
+        isResending: Bool,
+        completion: @escaping (Result<ConsumerSession.AuthResponse, Error>) -> Void
+    ) {
+        guard let currentSession = sessionForAuthRequest(completion) else { return }
+        apiClient.startLinkVerification(
+            for: currentSession.clientSecret,
+            type: type,
+            emailAddress: authLookupEmail,
+            accountPhoneNumber: phoneNumber,
+            isResending: isResending,
+            requestSurface: requestSurface,
+            completion: completion
+        )
+    }
+
+    func confirmAuthVerification(
+        type: SupportedVerificationType,
+        code: String,
+        consentGranted: Bool?,
+        completion: @escaping (Result<ConsumerSession.AuthResponse, Error>) -> Void
+    ) {
+        guard let currentSession = sessionForAuthRequest(completion) else { return }
+        apiClient.confirmLinkVerification(
+            for: currentSession.clientSecret,
+            type: type,
+            code: code,
+            consentGranted: consentGranted,
+            requestSurface: requestSurface,
+            completion: completion
+        )
+    }
+
+    func refreshAuthSession(
+        recoverCredentials: Bool,
+        completion: @escaping (Result<ConsumerSession.AuthResponse, Error>) -> Void
+    ) {
+        if recoverCredentials {
+            guard let authSessionLookup else {
+                completion(.failure(NSError.stp_genericConnectionError()))
+                return
+            }
+            authSessionLookup(completion)
+            return
+        }
+        guard let currentSession = sessionForAuthRequest(completion) else { return }
+        currentSession.refreshSession(
+            with: apiClient,
+            supportedVerificationTypes: supportedVerificationTypes,
+            requestSurface: requestSurface
+        ) { result in
+            completion(result.map { ConsumerSession.AuthResponse(consumerSession: $0) })
+        }
+    }
+}
+
 // MARK: - Equatable
 
 extension PaymentSheetLinkAccount: Equatable {
 
-    @_spi(STP) public static func == (lhs: PaymentSheetLinkAccount, rhs: PaymentSheetLinkAccount) -> Bool {
+    @_spi(InternalOnlyAPI) public static func == (lhs: PaymentSheetLinkAccount, rhs: PaymentSheetLinkAccount) -> Bool {
         return
             (lhs.email == rhs.email && lhs.currentSession == rhs.currentSession
             && lhs.publishableKey == rhs.publishableKey)

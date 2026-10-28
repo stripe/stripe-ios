@@ -3,8 +3,8 @@
 //  StripePaymentSheet
 //
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
 extension STPAnalyticsClient {
     // Screen presentation
     func logCSAddPaymentMethodScreenPresented() {

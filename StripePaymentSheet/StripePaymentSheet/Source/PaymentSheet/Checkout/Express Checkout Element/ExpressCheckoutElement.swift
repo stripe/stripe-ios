@@ -5,7 +5,7 @@
 //  Created by Joyce Qin on 7/22/26.
 //
 
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 import UIKit
 
 /// Handles Checkout mutations requested by an ExpressCheckoutElement.
@@ -21,7 +21,7 @@ protocol ExpressCheckoutElementDelegate: AnyObject {
 ///
 /// Obtain an instance from ``Checkout/getExpressCheckoutElement()`` and use
 /// ``view`` in SwiftUI or ``uiView`` in UIKit.
-@_spi(STP)
+@_spi(InternalOnlyAPI)
 @_spi(ReactNativeSDK)
 @MainActor
 public final class ExpressCheckoutElement {
@@ -42,6 +42,7 @@ public final class ExpressCheckoutElement {
         delegate: ExpressCheckoutElementDelegate,
         apiClient: STPAPIClient
     ) {
+        STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: ExpressCheckoutElement.self)
         let uiView = ExpressCheckoutElementUIView(
             session: sessionSource.initialSession,
             configuration: configuration,
@@ -52,4 +53,10 @@ public final class ExpressCheckoutElement {
         self.uiView = uiView
         self.view = ExpressCheckoutElementView(viewModel: viewModel)
     }
+}
+
+// MARK: - STPAnalyticsProtocol
+/// :nodoc:
+@_spi(InternalOnlyAPI) extension ExpressCheckoutElement: STPAnalyticsProtocol {
+    @_spi(InternalOnlyAPI) public nonisolated static let stp_analyticsIdentifier: String = "ExpressCheckoutElement"
 }
