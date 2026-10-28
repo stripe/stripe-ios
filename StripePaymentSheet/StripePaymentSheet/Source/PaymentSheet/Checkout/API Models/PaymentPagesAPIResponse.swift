@@ -18,6 +18,7 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
     // TODO: Make this Decodable instead, we don't need _allResponseFieldStorage.
     var _allResponseFieldsStorage: NonEncodableParameters?
 
+    let checkoutConfigID: String?
     let sessionId: String
     let paymentIntentId: String?
     let paymentIntent: STPPaymentIntent?
@@ -95,6 +96,8 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
     }
 
     init(from decoder: Decoder) throws {
+        let responseFields = try decoder.stripeJSONDictionary
+        checkoutConfigID = (responseFields["elements_options"] as? [String: Any])?["__checkout_config_id"] as? String
         let container = try decoder.container(keyedBy: CodingKeys.self)
         sessionId = try container.decode(String.self, forKey: .sessionId)
         let decodedPaymentIntent = try container.decodeIfPresent(
@@ -301,15 +304,19 @@ extension PaymentPagesAPIResponse {
             case innerItemKey
             case price
             case quantity
-            case subtotal
-            case total
+            case amountDetails
             case unitAmount
             case unitAmountDecimal
             case unitLabel
-            case taxAmounts
-            case taxInclusive
-            case taxExclusive
             case adjustableQuantity
+        }
+
+        private struct AmountDetails: Decodable {
+            let subtotal: Int
+            let total: Int
+            let taxAmounts: [TaxAmount]?
+            let taxInclusive: Int
+            let taxExclusive: Int
         }
 
         init(from decoder: Decoder) throws {
@@ -320,8 +327,9 @@ extension PaymentPagesAPIResponse {
             guard quantity >= 0 else {
                 throw decoder.dataCorrupted("quantity must not be negative")
             }
-            subtotal = try container.decode(Int.self, forKey: .subtotal)
-            total = try container.decode(Int.self, forKey: .total)
+            let amountDetails = try container.decode(AmountDetails.self, forKey: .amountDetails)
+            subtotal = amountDetails.subtotal
+            total = amountDetails.total
             unitAmount = try container.decodeIfPresent(Int.self, forKey: .unitAmount)
 
             if let rawUnitAmountDecimal = try container.decodeIfPresent(
@@ -342,9 +350,9 @@ extension PaymentPagesAPIResponse {
             }
 
             unitLabel = try container.decodeIfPresent(String.self, forKey: .unitLabel)
-            taxAmounts = try container.decode([TaxAmount].self, forKey: .taxAmounts)
-            taxInclusive = try container.decode(Int.self, forKey: .taxInclusive)
-            taxExclusive = try container.decode(Int.self, forKey: .taxExclusive)
+            taxAmounts = amountDetails.taxAmounts ?? []
+            taxInclusive = amountDetails.taxInclusive
+            taxExclusive = amountDetails.taxExclusive
             adjustableQuantity = try container.decodeIfPresent(
                 AdjustableQuantity.self,
                 forKey: .adjustableQuantity

@@ -226,7 +226,7 @@ final class CheckoutUnitTests: XCTestCase {
             }
             XCTFail("Expected CheckoutError.apiError")
         } catch let error as CheckoutError {
-            guard case .apiError(let message) = error else {
+            guard case .apiError(let message, _) = error else {
                 XCTFail("Expected .apiError, got \(error)")
                 return
             }
@@ -263,7 +263,7 @@ final class CheckoutUnitTests: XCTestCase {
             }
             XCTFail("Expected CheckoutError.apiError")
         } catch let error as CheckoutError {
-            guard case .apiError(let message) = error else {
+            guard case .apiError(let message, _) = error else {
                 XCTFail("Expected .apiError, got \(error)")
                 return
             }
@@ -349,6 +349,11 @@ final class CheckoutUnitTests: XCTestCase {
     // MARK: - Email Updates
 
     func testUpdateEmailSetsEmailLocally() async throws {
+        let analyticsClient = STPAnalyticsClient.sharedClient
+        let previousLogHistory = analyticsClient._testLogHistory
+        analyticsClient._testLogHistory = []
+        defer { analyticsClient._testLogHistory = previousLogHistory }
+
         // Given a Checkout Session without a server email
         let checkout = try await CheckoutController(
             configuration: CheckoutTestHelpers.makeConfiguration(
@@ -366,6 +371,15 @@ final class CheckoutUnitTests: XCTestCase {
         XCTAssertEqual(checkout.session.email, "local@example.com")
         XCTAssertEqual(recorder.sessions.count, 1)
         XCTAssertEqual(recorder.loading, [true, false])
+
+        let events = analyticsClient._testLogHistory.filter {
+            ($0["event"] as? String)?.hasPrefix("checkout_elements.update_email.") == true
+        }
+        XCTAssertEqual(events.compactMap { $0["event"] as? String }, [
+            "checkout_elements.update_email.started",
+            "checkout_elements.update_email.succeeded",
+        ])
+        XCTAssertNil(try XCTUnwrap(events.last)["request_id"])
     }
 
     func testUpdateEmailClearsEmailLocally() async throws {
@@ -1443,10 +1457,12 @@ final class CheckoutUnitTests: XCTestCase {
         var oneTimePrice = checkoutItem["one_time_price"] as! [String: Any]
         var items = oneTimePrice["items"] as! [[String: Any]]
         var item = items[0]
-        item["subtotal"] = subtotal
-        item["tax_exclusive"] = taxExclusive
-        item["tax_inclusive"] = taxInclusive
-        item["total"] = total
+        var amountDetails = item["amount_details"] as! [String: Any]
+        amountDetails["subtotal"] = subtotal
+        amountDetails["tax_exclusive"] = taxExclusive
+        amountDetails["tax_inclusive"] = taxInclusive
+        amountDetails["total"] = total
+        item["amount_details"] = amountDetails
         items[0] = item
         oneTimePrice["items"] = items
         oneTimePrice["subtotal"] = subtotal

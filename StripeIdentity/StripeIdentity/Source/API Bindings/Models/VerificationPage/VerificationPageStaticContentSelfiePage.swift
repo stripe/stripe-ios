@@ -28,7 +28,9 @@ extension StripeAPI {
         let numSamples: Int
         let sampleInterval: Int
         let trainingConsentText: String
+        let declineAndContinueButtonText: String?
         let blurThreshold: Decimal?
+        let poseSequence: [String]?
     }
 
 }
