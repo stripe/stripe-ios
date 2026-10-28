@@ -27,18 +27,5 @@ extension CheckoutController.Session {
         /// The percentage discounted, if this is a percentage-based discount.
         public let percentOff: Double?
 
-        init(
-            amount: String,
-            minorUnitsAmount: Double,
-            displayName: String,
-            promotionCode: String? = nil,
-            percentOff: Double? = nil
-        ) {
-            self.amount = amount
-            self.minorUnitsAmount = minorUnitsAmount
-            self.displayName = displayName
-            self.promotionCode = promotionCode
-            self.percentOff = percentOff
-        }
     }
 }

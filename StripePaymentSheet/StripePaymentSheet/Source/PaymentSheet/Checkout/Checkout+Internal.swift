@@ -248,6 +248,7 @@ extension CheckoutController {
                 onRequest?()
                 updatedSessionAPIResponse = try await apiClient.updateCheckoutSession(
                     checkoutSessionId: sessionId,
+                    clientSecret: clientSecret,
                     parameters: update.parameters
                 )
                 if case .setTaxRegion(let address) = update {

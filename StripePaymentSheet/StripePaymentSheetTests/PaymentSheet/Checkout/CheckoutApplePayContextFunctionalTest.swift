@@ -66,7 +66,7 @@ class CheckoutApplePayContextFunctionalTest: STPNetworkStubbingTestCase {
         var cancellationRequested = false
         stub { urlRequest in
             guard let path = urlRequest.url?.path,
-                  path.contains("/payment_pages/"),
+                  path.contains("/checkout_client/"),
                   path.hasSuffix("/confirm") else { return false }
             DispatchQueue.main.async {
                 guard !cancellationRequested else { return }
@@ -124,9 +124,10 @@ class CheckoutApplePayContextFunctionalTest: STPNetworkStubbingTestCase {
         let apiClient = STPAPIClient(publishableKey: sessionResponse.publishableKey)
         let initResponse = try await apiClient.initCheckoutSession(
             checkoutSessionId: sessionResponse.id,
+            clientSecret: sessionResponse.clientSecret,
             adaptivePricingAllowed: false
         )
-        let session = initResponse.makePublicSession()
+        let session = initResponse.makePublicSession(clientSecret: sessionResponse.clientSecret)
         let authenticationContext = WindowAuthenticationContext()
         let paymentHandler = STPPaymentHandler(apiClient: apiClient)
         let applePayConfirmationParameters = CheckoutController.ApplePayConfirmationParameters.makeMock(

@@ -8,22 +8,8 @@
 
 import Foundation
 
-/// Controls whether the "Save for future use" checkbox is shown and its initial state.
-///
-/// This data comes from the checkout session's `customer_managed_saved_payment_methods_offer_save`
-/// configuration, which is set when creating the checkout session.
+/// Controls whether the "Save for future use" checkbox is shown.
+/// CheckoutClient returns this choice in `saved_payment_method_options.payment_method_save`.
 struct STPCheckoutSessionSavedPaymentMethodsOfferSave {
-    /// Whether the save checkbox should be shown to the user.
     let enabled: Bool
-
-    /// The initial state of the checkbox.
-    let status: Status
-
-    /// Represents the initial checked state of the save checkbox.
-    enum Status {
-        /// Checkbox should be pre-checked (user has previously agreed to save).
-        case accepted
-        /// Checkbox should be unchecked by default.
-        case notAccepted
-    }
 }

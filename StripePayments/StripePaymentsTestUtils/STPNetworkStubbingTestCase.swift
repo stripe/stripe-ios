@@ -93,7 +93,7 @@ import XCTest
                     // Need to escape this to fit in a regex (e.g. \? instead of ? before the query)
                     let escapedRequest = NSRegularExpression.escapedPattern(for: request?.url?.absoluteString ?? "")
                     // Then remove any params that may contain UUIDs or other random data
-                    return replaceNondeterministicParams(escapedRequest, componentsToFilter: ["mobile_session_id", "locale", "mobile_app_id"])
+                    return replaceNondeterministicParams(escapedRequest, componentsToFilter: ["mobile_session_id", "locale", "mobile_app_id", "timezone"])
                 }
                 recorder?.postBodyTransformBlock = { _, postBody in
                     // Regex filter these:
@@ -120,6 +120,8 @@ import XCTest
                         "\\[locale]", // Nested locale param varies by machine
                         "\\[mobile_app_id]", // App bundle ID varies by test target
                         "\\[mobile_session_id]", // Session ID varies by run
+                        // CheckoutClient uses top-level mobile metadata and locale/timezone fields.
+                        "mobile_session_id=", "mobile_app_id=", "locale=", "timezone=",
                         "session_token", // Autocomplete session token, random UUID
                     ]
                     return replaceNondeterministicParams(escapedBody, componentsToFilter: componentsToFilter)

@@ -68,12 +68,7 @@ extension CheckoutController.Session {
     }
 
     func setupFutureUsage(for paymentMethodType: STPPaymentMethodType) -> String? {
-        let perPaymentMethodSetupFutureUsage = setupFutureUsageForPaymentMethodType[paymentMethodType.identifier]
-        if let perPaymentMethodSetupFutureUsage {
-            return perPaymentMethodSetupFutureUsage
-        }
-
-        return setupFutureUsage
+        return setupFutureUsageForPaymentMethodType[paymentMethodType.identifier]
     }
 }
 

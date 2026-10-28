@@ -86,7 +86,7 @@ private extension SavedPaymentMethodBillingSyncTests {
     ) -> (VerticalSavedPaymentMethodsViewController, MockCheckoutSessionBillingAddressUpdater) {
         let intent = Intent._testCheckoutSession(
             automaticTaxEnabled: true,
-            automaticTaxAddressSource: "session.billing"
+            automaticTaxAddressSource: "billing"
         )
         guard case .checkout(let session) = intent else {
             fatalError("Expected a Checkout Session")

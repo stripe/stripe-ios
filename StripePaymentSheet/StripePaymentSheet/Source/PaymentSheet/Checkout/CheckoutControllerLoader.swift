@@ -35,9 +35,10 @@ enum CheckoutControllerLoader {
         // 1b. Call the /init endpoint
         let response = try await configuration.apiClient.initCheckoutSession(
             checkoutSessionId: CheckoutController.extractSessionId(from: configuration.clientSecret),
+            clientSecret: configuration.clientSecret,
             adaptivePricingAllowed: configuration.currencySelectorElement != nil
         )
-        let session = CheckoutController.Session(apiResponse: response, localState: .empty, configuration: configuration)
+        let session = CheckoutController.Session(apiResponse: response, clientSecret: configuration.clientSecret, localState: .empty, configuration: configuration)
         await resources.value
 
         // 2. Load Link

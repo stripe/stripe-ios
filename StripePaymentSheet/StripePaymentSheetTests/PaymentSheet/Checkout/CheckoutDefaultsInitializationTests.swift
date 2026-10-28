@@ -66,6 +66,7 @@ final class CheckoutDefaultsInitializationTests: XCTestCase {
 
         XCTAssertNotNil(checkout.paymentElement)
         XCTAssertEqual(requests.map(\.kind), [.initSession, .updateSession])
+        XCTAssertEqual(requests.map { $0.params["client_secret"] }, [clientSecret, clientSecret])
         XCTAssertEqual(requests[1].params["tax_region[country]"], "US")
         XCTAssertEqual(requests[1].params["tax_region[line1]"], "123 Billing St")
         XCTAssertEqual(requests[1].params["tax_region[city]"], "San Francisco")
@@ -374,10 +375,11 @@ final class CheckoutDefaultsInitializationTests: XCTestCase {
         allowedShippingCountries: [String] = ["US", "CA"]
     ) -> [AnyHashable: Any] {
         var json = CheckoutTestHelpers.openSessionJSON
-        json["session_id"] = sessionId
-        json["tax_context"] = [
-            "automatic_tax_enabled": true,
-            "automatic_tax_address_source": "session.\(automaticTaxAddressSource)",
+        json["id"] = sessionId
+        json["automatic_tax"] = [
+            "enabled": true,
+            "status": "requires_address",
+            "address_source": automaticTaxAddressSource,
         ]
         json["shipping_address_collection"] = ["allowed_countries": allowedShippingCountries]
         return json

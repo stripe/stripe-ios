@@ -24,7 +24,7 @@ final class CheckoutErrorHandlingTests: APIStubbedTestCase {
                 paymentElementConfiguration: nil,
                 expressCheckoutElementConfiguration: nil
             ))
-            stubError(path: "/v1/payment_pages/cs_test_123/confirm", response: response)
+            stubError(path: "/v1/checkout_client/cs_test_123/confirm", response: response)
             let flow = try XCTUnwrap(checkout.makeConfirmationFlow(
                 for: nil,
                 presentingViewController: UIViewController()
@@ -50,7 +50,7 @@ final class CheckoutErrorHandlingTests: APIStubbedTestCase {
                 let apiClient = CheckoutTestHelpers.makeStubbedAPIClient()
                 apiClient.publishableKey = isTestmode ? "pk_test_123" : "pk_live_123"
                 stubError(
-                    path: "/v1/payment_pages/cs_test_123",
+                    path: "/v1/checkout_client/cs_test_123/retrieve",
                     response: response,
                     statusCode: 400,
                     headers: ["request-id": "req_test_123"]
@@ -58,7 +58,7 @@ final class CheckoutErrorHandlingTests: APIStubbedTestCase {
 
                 // When Checkout retrieves the session
                 do {
-                    _ = try await apiClient.retrieveCheckoutSession(checkoutSessionId: "cs_test_123")
+                    _ = try await apiClient.retrieveCheckoutSession(checkoutSessionId: "cs_test_123", clientSecret: "cs_test_123_secret_123")
                     XCTFail("Expected retrieval to fail")
                 } catch {
                     // Then only existing messages get a live-mode request ID, and metadata is preserved

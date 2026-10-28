@@ -82,7 +82,7 @@ final class PaymentSheetFormFactoryTaxTest: XCTestCase {
         let cases: [(intent: Intent, expectsAddress: Bool)] = [
             (._testValue(), false),
             (makeCheckoutIntent(automaticTaxEnabled: false), false),
-            (makeCheckoutIntent(addressSource: "session.shipping"), false),
+            (makeCheckoutIntent(addressSource: "shipping"), false),
             (makeCheckoutIntent(), true),
         ]
 
@@ -144,7 +144,7 @@ final class PaymentSheetFormFactoryTaxTest: XCTestCase {
 
     private func makeCheckoutIntent(
         automaticTaxEnabled: Bool = true,
-        addressSource: String = "session.billing"
+        addressSource: String = "billing"
     ) -> Intent {
         ._testCheckoutSession(
             automaticTaxEnabled: automaticTaxEnabled,
