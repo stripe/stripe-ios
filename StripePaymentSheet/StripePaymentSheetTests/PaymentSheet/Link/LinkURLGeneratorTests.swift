@@ -150,7 +150,7 @@ class LinkURLGeneratorTests: XCTestCase {
         let intent = Intent.checkout(session)
 
         // When building Link web popup params with Checkout attribution
-        let attribution = CheckoutAttributionContext(confirmingElement: confirmationSource, configuredElements: [.payment, .expressCheckout])
+        let attribution = CheckoutAttributionContext(confirmingElement: confirmationSource, configuredElements: [.paymentElement, .expressCheckoutElement])
         let params = try LinkURLGenerator.linkParams(
             configuration: config,
             intent: intent,

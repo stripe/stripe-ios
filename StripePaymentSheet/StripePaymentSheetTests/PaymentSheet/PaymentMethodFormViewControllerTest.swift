@@ -128,7 +128,7 @@ final class PaymentMethodFormViewControllerTest: XCTestCase {
             analyticsHelper: PaymentSheetAnalyticsHelper(
                 integrationShape: .embedded,
                 configuration: configuration,
-                checkoutAttribution: .init(confirmingElement: .paymentElement, configuredElements: [.payment, .address])
+                checkoutAttribution: .init(confirmingElement: .paymentElement, configuredElements: [.paymentElement, .shippingAddressElement])
             ),
             delegate: self
         )

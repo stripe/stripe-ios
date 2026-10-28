@@ -71,10 +71,10 @@ extension CheckoutController {
         /// Elements enabled by configuration, regardless of whether they are displayed or used.
         var configuredElements: [STPClientAttributionMetadata.AdditionalElement] {
             let elements: [STPClientAttributionMetadata.AdditionalElement?] = [
-                paymentElement != nil ? .payment : nil,
-                expressCheckoutElement != nil ? .expressCheckout : nil,
-                shippingAddressElement != nil ? .address : nil,
-                currencySelectorElement != nil ? .currencySelector : nil,
+                paymentElement != nil ? .paymentElement : nil,
+                expressCheckoutElement != nil ? .expressCheckoutElement : nil,
+                shippingAddressElement != nil ? .shippingAddressElement : nil,
+                currencySelectorElement != nil ? .currencySelectorElement : nil,
             ]
             return elements.compactMap { $0 }
         }
