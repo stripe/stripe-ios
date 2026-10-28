@@ -41,7 +41,6 @@ import UIKit
         )
 
         // set card brand in a defer to ensure didSet is called updating the formatter & validator
-        // swiftlint:disable:next inert_defer
         defer {
             self.cardBrand = prefillDetails?.cardBrand ?? .unknown
         }

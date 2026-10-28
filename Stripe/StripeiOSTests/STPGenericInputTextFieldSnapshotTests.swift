@@ -17,10 +17,6 @@ import StripeCoreTestUtils
 
 class STPGenericInputTextFieldSnapshotTests: STPSnapshotTestCase {
 
-    override func setUp() {
-        super.setUp()
-    }
-
     func testEmpty() {
         let field = STPGenericInputTextField(placeholder: "Empty")
         field.sizeToFit()

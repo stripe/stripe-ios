@@ -42,20 +42,20 @@ import Foundation
 
 @_spi(InternalOnlyAPI) public struct BSBNumber: BankRoutingNumber {
     public var number: String
-    
+
     public init(number: String) {
         self.number = number
     }
-    
+
     public let pattern: String = "###-###"
 }
 
 @_spi(InternalOnlyAPI) public struct SortCode: BankRoutingNumber {
     public var number: String
-    
+
     public init(number: String) {
         self.number = number
     }
-    
+
     public let pattern: String = "##-##-##"
 }

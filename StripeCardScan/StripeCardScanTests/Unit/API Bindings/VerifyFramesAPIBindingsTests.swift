@@ -46,7 +46,7 @@ class VerifyFramesAPIBindingsTests: XCTestCase {
     //    }
     // }
     func testVerificationFramesData() throws {
-        let testData = "image_data".data(using: .utf8)!
+        let testData = Data("image_data".utf8)
 
         let verificationFramesData = VerificationFramesData(
             imageData: testData,

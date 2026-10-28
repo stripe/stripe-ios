@@ -7,8 +7,8 @@
 
 @testable import Stripe
 import StripeCoreTestUtils
-import XCTest
 @testable@_spi(InternalOnlyAPI) import StripePaymentsTestUtils
+import XCTest
 
 class STPPaymentMethodSatispayTests: STPNetworkStubbingTestCase {
 

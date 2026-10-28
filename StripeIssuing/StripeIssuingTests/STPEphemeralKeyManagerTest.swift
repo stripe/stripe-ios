@@ -50,10 +50,6 @@ class DelayingEphemeralKeyProvider: NSObject, STPCustomerEphemeralKeyProvider {
 class STPEphemeralKeyManagerTest: XCTestCase {
     let apiVersion = "2015-03-03"
 
-    override func setUp() {
-        super.setUp()
-    }
-
     func mockKeyProvider(withKeyResponse keyResponse: [AnyHashable: Any]?) -> Any? {
         let exp = expectation(description: "createCustomerKey")
         let mockKeyProvider = FakeEphemeralKeyProvider(response: keyResponse, expectation: exp)

@@ -207,11 +207,11 @@ public class STPFakeAddPaymentPassViewController: UIViewController {
     @objc func next(_ sender: Any?) {
         state = .loading
         let certificates = [
-            "cert1".data(using: .utf8),
-            "cert2".data(using: .utf8),
+            Data("cert1".utf8),
+            Data("cert2".utf8),
         ]
-        let nonce = "nonce".data(using: .utf8)
-        let nonceSignature = "nonceSignature".data(using: .utf8)
+        let nonce = Data("nonce".utf8)
+        let nonceSignature = Data("nonceSignature".utf8)
 
         DispatchQueue.main.asyncAfter(
             deadline: DispatchTime.now() + Double(Int64(10 * Double(NSEC_PER_SEC)))
@@ -224,44 +224,42 @@ public class STPFakeAddPaymentPassViewController: UIViewController {
                 }
             }
         )
-        if let nonce = nonce, let nonceSignature = nonceSignature {
-            let castedVC = unsafeBitCast(self, to: PKAddPaymentPassViewController.self)
-            delegate?.addPaymentPassViewController(
-                castedVC,
-                generateRequestWithCertificateChain: certificates.compactMap { $0 },
-                nonce: nonce,
-                nonceSignature: nonceSignature,
-                completionHandler: { request in
-                    if self.state == .loading {
-                        var contents: String?
-                        if request.encryptedPassData != nil {
-                            if let encryptedPassData1 = request.encryptedPassData {
-                                contents = String(data: encryptedPassData1, encoding: .utf8)
-                            }
-                        }
-                        if request.stp_error != nil {
-                            var error =
-                                (request.stp_error as NSError?)?.userInfo[STPError.errorMessageKey]
-                                as? String
-                            if error == nil {
-                                error =
-                                    (request.stp_error as NSError?)?.userInfo[
-                                        NSLocalizedDescriptionKey
-                                    ] as? String
-                            }
-                            self.errorText = error
-                            self.state = .error
-                        } else if contents == "TESTMODE_CONTENTS" {
-                            self.state = .success
-                        } else {
-                            self.errorText =
-                                "Your server response contained the wrong encrypted card details. Please ensure that you are not modifying the response from the Stripe API in any way, and that your request is in testmode."
-                            self.state = .error
+        let castedVC = unsafeBitCast(self, to: PKAddPaymentPassViewController.self)
+        delegate?.addPaymentPassViewController(
+            castedVC,
+            generateRequestWithCertificateChain: certificates,
+            nonce: nonce,
+            nonceSignature: nonceSignature,
+            completionHandler: { request in
+                if self.state == .loading {
+                    var contents: String?
+                    if request.encryptedPassData != nil {
+                        if let encryptedPassData1 = request.encryptedPassData {
+                            contents = String(data: encryptedPassData1, encoding: .utf8)
                         }
                     }
+                    if request.stp_error != nil {
+                        var error =
+                            (request.stp_error as NSError?)?.userInfo[STPError.errorMessageKey]
+                            as? String
+                        if error == nil {
+                            error =
+                                (request.stp_error as NSError?)?.userInfo[
+                                    NSLocalizedDescriptionKey
+                                ] as? String
+                        }
+                        self.errorText = error
+                        self.state = .error
+                    } else if contents == "TESTMODE_CONTENTS" {
+                        self.state = .success
+                    } else {
+                        self.errorText =
+                            "Your server response contained the wrong encrypted card details. Please ensure that you are not modifying the response from the Stripe API in any way, and that your request is in testmode."
+                        self.state = .error
+                    }
                 }
-            )
-        }
+            }
+        )
     }
 
     @objc func done(_ sender: Any?) {

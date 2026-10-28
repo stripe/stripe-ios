@@ -113,9 +113,7 @@ class TestJSONEncoder: XCTestCase {
 
     func test_encodingTopLevelStructuredClass() {
         // Person is a class with multiple fields.
-        let expectedJSON = "{\"name\":\"Johnny Appleseed\",\"email\":\"appleseed@apple.com\"}".data(
-            using: .utf8
-        )!
+        let expectedJSON = Data("{\"name\":\"Johnny Appleseed\",\"email\":\"appleseed@apple.com\"}".utf8)
         let person = Person.testValue
         _testRoundTrip(of: person, expectedJSON: expectedJSON)
     }
@@ -140,18 +138,14 @@ class TestJSONEncoder: XCTestCase {
 
     // MARK: - Output Formatting Tests
     func test_encodingOutputFormattingDefault() {
-        let expectedJSON = "{\"name\":\"Johnny Appleseed\",\"email\":\"appleseed@apple.com\"}".data(
-            using: .utf8
-        )!
+        let expectedJSON = Data("{\"name\":\"Johnny Appleseed\",\"email\":\"appleseed@apple.com\"}".utf8)
         let person = Person.testValue
         _testRoundTrip(of: person, expectedJSON: expectedJSON)
     }
 
     func test_encodingOutputFormattingPrettyPrinted() throws {
         let expectedJSON =
-            "{\n  \"name\" : \"Johnny Appleseed\",\n  \"email\" : \"appleseed@apple.com\"\n}".data(
-                using: .utf8
-            )!
+            Data("{\n  \"name\" : \"Johnny Appleseed\",\n  \"email\" : \"appleseed@apple.com\"\n}".utf8)
         let person = Person.testValue
         _testRoundTrip(of: person, expectedJSON: expectedJSON, outputFormatting: [.prettyPrinted])
 
@@ -260,9 +254,7 @@ class TestJSONEncoder: XCTestCase {
     }
 
     func test_encodingOutputFormattingSortedKeys() {
-        let expectedJSON = "{\"email\":\"appleseed@apple.com\",\"name\":\"Johnny Appleseed\"}".data(
-            using: .utf8
-        )!
+        let expectedJSON = Data("{\"email\":\"appleseed@apple.com\",\"name\":\"Johnny Appleseed\"}".utf8)
         let person = Person.testValue
         #if os(macOS) || DARWIN_COMPATIBILITY_TESTS
             if #available(macOS 10.13, iOS 11.0, watchOS 4.0, tvOS 11.0, *) {
@@ -279,9 +271,7 @@ class TestJSONEncoder: XCTestCase {
 
     func test_encodingOutputFormattingPrettyPrintedSortedKeys() {
         let expectedJSON =
-            "{\n  \"email\" : \"appleseed@apple.com\",\n  \"name\" : \"Johnny Appleseed\"\n}".data(
-                using: .utf8
-            )!
+            Data("{\n  \"email\" : \"appleseed@apple.com\",\n  \"name\" : \"Johnny Appleseed\"\n}".utf8)
         let person = Person.testValue
         #if os(macOS) || DARWIN_COMPATIBILITY_TESTS
             if #available(macOS 10.13, iOS 11.0, watchOS 4.0, tvOS 11.0, *) {
@@ -311,7 +301,7 @@ class TestJSONEncoder: XCTestCase {
     func test_encodingDateSecondsSince1970() {
         // Cannot encode an arbitrary number of seconds since we've lost precision since 1970.
         let seconds = 1000.0
-        let expectedJSON = "[1000]".data(using: .utf8)!
+        let expectedJSON = Data("[1000]".utf8)
 
         // We can't encode a top-level Date, so it'll be wrapped in an array.
         _testRoundTrip(
@@ -327,7 +317,7 @@ class TestJSONEncoder: XCTestCase {
         let data = Data([0xDE, 0xAD, 0xBE, 0xEF])
 
         // We can't encode a top-level Data, so it'll be wrapped in an array.
-        let expectedJSON = "[\"3q2+7w==\"]".data(using: .utf8)!
+        let expectedJSON = Data("[\"3q2+7w==\"]".utf8)
         _testRoundTrip(of: TopLevelArrayWrapper(data), expectedJSON: expectedJSON)
     }
 
@@ -346,13 +336,13 @@ class TestJSONEncoder: XCTestCase {
 
         _testRoundTrip(
             of: TopLevelArrayWrapper(Float.infinity),
-            expectedJSON: "[\"Inf\"]".data(using: .utf8)!,
+            expectedJSON: Data("[\"Inf\"]".utf8),
             nonConformingFloatEncodingStrategy: encodingStrategy,
             nonConformingFloatDecodingStrategy: decodingStrategy
         )
         _testRoundTrip(
             of: TopLevelArrayWrapper(-Float.infinity),
-            expectedJSON: "[\"-Inf\"]".data(using: .utf8)!,
+            expectedJSON: Data("[\"-Inf\"]".utf8),
             nonConformingFloatEncodingStrategy: encodingStrategy,
             nonConformingFloatDecodingStrategy: decodingStrategy
         )
@@ -360,20 +350,20 @@ class TestJSONEncoder: XCTestCase {
         // Since Float.nan != Float.nan, we have to use a placeholder that'll encode NaN but actually round-trip.
         _testRoundTrip(
             of: TopLevelArrayWrapper(FloatNaNPlaceholder()),
-            expectedJSON: "[\"nan\"]".data(using: .utf8)!,
+            expectedJSON: Data("[\"nan\"]".utf8),
             nonConformingFloatEncodingStrategy: encodingStrategy,
             nonConformingFloatDecodingStrategy: decodingStrategy
         )
 
         _testRoundTrip(
             of: TopLevelArrayWrapper(Double.infinity),
-            expectedJSON: "[\"Inf\"]".data(using: .utf8)!,
+            expectedJSON: Data("[\"Inf\"]".utf8),
             nonConformingFloatEncodingStrategy: encodingStrategy,
             nonConformingFloatDecodingStrategy: decodingStrategy
         )
         _testRoundTrip(
             of: TopLevelArrayWrapper(-Double.infinity),
-            expectedJSON: "[\"-Inf\"]".data(using: .utf8)!,
+            expectedJSON: Data("[\"-Inf\"]".utf8),
             nonConformingFloatEncodingStrategy: encodingStrategy,
             nonConformingFloatDecodingStrategy: decodingStrategy
         )
@@ -381,7 +371,7 @@ class TestJSONEncoder: XCTestCase {
         // Since Double.nan != Double.nan, we have to use a placeholder that'll encode NaN but actually round-trip.
         _testRoundTrip(
             of: TopLevelArrayWrapper(DoubleNaNPlaceholder()),
-            expectedJSON: "[\"nan\"]".data(using: .utf8)!,
+            expectedJSON: Data("[\"nan\"]".utf8),
             nonConformingFloatEncodingStrategy: encodingStrategy,
             nonConformingFloatDecodingStrategy: decodingStrategy
         )
@@ -433,12 +423,12 @@ class TestJSONEncoder: XCTestCase {
 
         func testValue(_ valueName: String) {
             do {
-                let jsonData = "{ \"\(valueName)\": false }".data(using: .utf8)!
+                let jsonData = Data("{ \"\(valueName)\": false }".utf8)
                 _ = try StripeJSONDecoder().decode(Foo.self, from: jsonData)
                 XCTFail("Decoded 'false' as non Bool for \(valueName)")
             } catch {}
             do {
-                let jsonData = "{ \"\(valueName)\": true }".data(using: .utf8)!
+                let jsonData = Data("{ \"\(valueName)\": true }".utf8)
                 _ = try StripeJSONDecoder().decode(Foo.self, from: jsonData)
                 XCTFail("Decoded 'true' as non Bool for \(valueName)")
             } catch {}
@@ -457,14 +447,14 @@ class TestJSONEncoder: XCTestCase {
         testValue("floatValue")
         testValue("doubleValue")
         testValue("decimalValue")
-        let falseJsonData = "{ \"bool_value\": false }".data(using: .utf8)!
+        let falseJsonData = Data("{ \"bool_value\": false }".utf8)
         if let falseFoo = try? StripeJSONDecoder().decode(Foo.self, from: falseJsonData) {
             XCTAssertFalse(falseFoo.boolValue)
         } else {
             XCTFail("Could not decode 'false' as a Bool")
         }
 
-        let trueJsonData = "{ \"bool_value\": true }".data(using: .utf8)!
+        let trueJsonData = Data("{ \"bool_value\": true }".utf8)
         if let trueFoo = try? StripeJSONDecoder().decode(Foo.self, from: trueJsonData) {
             XCTAssertTrue(trueFoo.boolValue)
         } else {
@@ -562,7 +552,7 @@ class TestJSONEncoder: XCTestCase {
 
         // Check value too large fails to decode.
         XCTAssertThrowsError(
-            try StripeJSONDecoder().decode(Float.self, from: "1e100".data(using: .utf8)!)
+            try StripeJSONDecoder().decode(Float.self, from: Data("1e100".utf8))
         )
     }
 
@@ -571,7 +561,7 @@ class TestJSONEncoder: XCTestCase {
 
         // Check value too large fails to decode.
         XCTAssertThrowsError(
-            try StripeJSONDecoder().decode(Double.self, from: "100e323".data(using: .utf8)!)
+            try StripeJSONDecoder().decode(Double.self, from: Data("100e323".utf8))
         )
     }
 
@@ -647,7 +637,7 @@ class TestJSONEncoder: XCTestCase {
             key.append("_value")
             _ = try StripeJSONDecoder().decode(
                 DataStruct.self,
-                from: "{ \"\(key)\": \(value) }".data(using: .utf8)!
+                from: Data("{ \"\(key)\": \(value) }".utf8)
             )
         }
 
@@ -830,13 +820,13 @@ class TestJSONEncoder: XCTestCase {
 
     func test_dictionary_snake_case_decoding() throws {
         let decoder = StripeJSONDecoder()
-        let snakeCaseJSONData = """
+        let snakeCaseJSONData = Data("""
             {
                 "snake_case_key": {
                     "nested_dictionary": 1
                 }
             }
-            """.data(using: .utf8)!
+            """.utf8)
         let decodedDictionary = try decoder.decode(
             [String: [String: Int]].self,
             from: snakeCaseJSONData
@@ -917,7 +907,7 @@ class TestJSONEncoder: XCTestCase {
 
     // MARK: - Helper Functions
     private var _jsonEmptyDictionary: Data {
-        return "{}".data(using: .utf8)!
+        return Data("{}".utf8)
     }
 
     private func _testEncodeFailure<T: Encodable>(of value: T) {
@@ -991,12 +981,12 @@ class TestJSONEncoder: XCTestCase {
     func test_codingOf<T: Codable & Equatable>(value: T, toAndFrom stringValue: String) {
         _testRoundTrip(
             of: TopLevelObjectWrapper(value),
-            expectedJSON: "{\"value\":\(stringValue)}".data(using: .utf8)!
+            expectedJSON: Data("{\"value\":\(stringValue)}".utf8)
         )
 
         _testRoundTrip(
             of: TopLevelArrayWrapper(value),
-            expectedJSON: "[\(stringValue)]".data(using: .utf8)!
+            expectedJSON: Data("[\(stringValue)]".utf8)
         )
     }
 
@@ -1034,10 +1024,9 @@ class TestJSONEncoder: XCTestCase {
 
         do {
             let encodedData =
-                "{\"container\":[\"format3\",\"The third format\",\"format2\",\"The second format\",\"format1\",\"The first format\"]}"
-                .data(using: .utf8)
+                Data("{\"container\":[\"format3\",\"The third format\",\"format2\",\"The second format\",\"format1\",\"The first format\"]}".utf8)
             let decodedResult: FormatContainer = try StripeJSONDecoder.decode(
-                jsonData: encodedData!
+                jsonData: encodedData
             )
 
             XCTAssertEqual(

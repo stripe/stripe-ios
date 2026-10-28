@@ -10,7 +10,6 @@
 import XCTest
 
 @testable@_spi(InternalOnlyAPI) import Stripe
-@testable@_spi(InternalOnlyAPI) import StripeCore
 @testable@_spi(InternalOnlyAPI) import StripePayments
 @testable@_spi(InternalOnlyAPI) import StripePaymentSheet
 @testable@_spi(InternalOnlyAPI) import StripePaymentsUI

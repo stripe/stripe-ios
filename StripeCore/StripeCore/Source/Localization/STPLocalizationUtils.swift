@@ -39,7 +39,7 @@ import Foundation
 
     static let UnknownString = "STPSTRINGNOTFOUND"
 
-    public class func localizedStripeString(
+    public static func localizedStripeString(
         forKey key: String,
         bundleLocator: BundleLocatorProtocol.Type
     ) -> String {
