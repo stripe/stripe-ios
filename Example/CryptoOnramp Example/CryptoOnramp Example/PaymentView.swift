@@ -11,14 +11,14 @@ import SwiftUI
 @_spi(CryptoOnrampAlpha)
 import StripeCryptoOnramp
 
-@_spi(STP)
+@_spi(InternalOnlyAPI)
 import StripePayments
 
 @_spi(ReactNativeSDK)
 @_spi(AppearanceAPIAdditionsPreview)
 import StripePaymentSheet
 
-@_spi(STP)
+@_spi(InternalOnlyAPI)
 import StripePaymentsUI
 
 /// A view that allows input of a specified crypto purchase amount and payment method.

@@ -5,10 +5,10 @@
 //  Created by Yuki Tokuhiro on 8/2/23.
 //
 
-@testable @_spi(STP) import StripeApplePay
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
-@testable @_spi(STP) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @_spi(SharedPaymentToken) @_spi(CardFundingFilteringPrivatePreview) import StripePaymentSheet
+@testable @_spi(InternalOnlyAPI) import StripeApplePay
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
+@testable @_spi(InternalOnlyAPI) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @_spi(SharedPaymentToken) @_spi(CardFundingFilteringPrivatePreview) import StripePaymentSheet
 @testable import StripePaymentsTestUtils
 import XCTest
 

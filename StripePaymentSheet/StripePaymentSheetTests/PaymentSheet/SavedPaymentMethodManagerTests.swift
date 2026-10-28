@@ -9,8 +9,8 @@ import Foundation
 import OHHTTPStubs
 import OHHTTPStubsSwift
 import StripeCoreTestUtils
-@_spi(STP) @testable import StripePayments
-@_spi(STP)@testable import StripePaymentSheet
+@_spi(InternalOnlyAPI) @testable import StripePayments
+@_spi(InternalOnlyAPI)@testable import StripePaymentSheet
 import XCTest
 
 @MainActor

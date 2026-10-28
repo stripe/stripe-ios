@@ -7,11 +7,11 @@
 
 import Foundation
 
-@_spi(STP) @testable import StripeCore
-@_spi(STP) @testable import StripeCoreTestUtils
-@_spi(STP) @testable import StripePayments
-@_spi(STP) @testable import StripePaymentSheet
-@_spi(STP) @testable import StripePaymentsObjcTestUtils
+@_spi(InternalOnlyAPI) @testable import StripeCore
+@_spi(InternalOnlyAPI) @testable import StripeCoreTestUtils
+@_spi(InternalOnlyAPI) @testable import StripePayments
+@_spi(InternalOnlyAPI) @testable import StripePaymentSheet
+@_spi(InternalOnlyAPI) @testable import StripePaymentsObjcTestUtils
 import XCTest
 
 class ConfirmationChallengeTests: XCTestCase {

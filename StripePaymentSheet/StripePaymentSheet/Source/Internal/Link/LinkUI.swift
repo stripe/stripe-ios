@@ -5,8 +5,8 @@
 //  Created by Ramon Torres on 11/12/21.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
-@_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 enum LinkUI {
@@ -141,7 +141,7 @@ extension LinkUI {
 
 }
 
-@_spi(STP) public func resetLinkUI() {
+@_spi(InternalOnlyAPI) public func resetLinkUI() {
     // We should refactor LinkUI to not be a singleton anymore, now that it's dependent
     // on the dynamic configuration. That being said, we still want to be able to accurately
     // reset it in the playground. That's what this method is for.

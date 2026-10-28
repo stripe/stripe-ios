@@ -8,14 +8,14 @@
 
 import Combine
 import Foundation
-@_spi(STP) import StripeApplePay
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
+@_spi(InternalOnlyAPI) import StripeApplePay
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
 import UIKit
 
 /// Use this class to build a [Checkout elements](todo) integration.
 /// It manages a CheckoutSession object and UI elements (e.g. PaymentElement, ShippingAddressElement).
-@_spi(STP)
+@_spi(InternalOnlyAPI)
 @_spi(ReactNativeSDK)
 @MainActor
 public final class CheckoutController: ObservableObject {

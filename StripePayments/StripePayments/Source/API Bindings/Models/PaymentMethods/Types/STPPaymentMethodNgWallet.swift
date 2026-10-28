@@ -7,7 +7,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 /// A Naira Wallet Payment Method.
 /// - seealso: https://docs.stripe.com/payments/ng-wallet/accept-a-payment?payment-ui=direct-api

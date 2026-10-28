@@ -7,8 +7,8 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 /// A delegate for `AddressViewController`
@@ -698,8 +698,8 @@ extension AddressViewController.IntegrationDelegate {
 }
 
 // MARK: - ElementDelegate
- @_spi(STP) extension AddressViewController: ElementDelegate {
-     @_spi(STP) public func didUpdate(element: Element) {
+ @_spi(InternalOnlyAPI) extension AddressViewController: ElementDelegate {
+     @_spi(InternalOnlyAPI) public func didUpdate(element: Element) {
          guard let addressSection = addressSection else { assertionFailure(); return }
          self.latestError = nil // clear error on new input
          let enabled = addressSection.validationState.isValid
@@ -709,7 +709,7 @@ extension AddressViewController.IntegrationDelegate {
          updateShippingEqualsBillingCheckboxState()
      }
 
-     @_spi(STP) public func continueToNextField(element: Element) {
+     @_spi(InternalOnlyAPI) public func continueToNextField(element: Element) {
         // no-op
     }
 }
@@ -795,8 +795,8 @@ extension AddressSectionElement.AdditionalFields {
     }
 }
 
-@_spi(STP) extension AddressViewController: STPAnalyticsProtocol {
-    @_spi(STP) public static var stp_analyticsIdentifier = "PaymentSheet.AddressController"
+@_spi(InternalOnlyAPI) extension AddressViewController: STPAnalyticsProtocol {
+    @_spi(InternalOnlyAPI) public static var stp_analyticsIdentifier = "PaymentSheet.AddressController"
 }
 
 extension AddressViewController {

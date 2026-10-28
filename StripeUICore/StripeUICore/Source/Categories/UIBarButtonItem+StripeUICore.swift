@@ -8,7 +8,7 @@
 
 import UIKit
 
-@_spi(STP) public extension UIBarButtonItem {
+@_spi(InternalOnlyAPI) public extension UIBarButtonItem {
 
     /// Creates a new flexible width space item.
     ///

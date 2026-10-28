@@ -7,14 +7,14 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
-@_spi(STP) public class STPPromise<T>: NSObject {
-    @_spi(STP) public typealias STPPromiseErrorBlock = (Error) -> Void
+@_spi(InternalOnlyAPI) public class STPPromise<T>: NSObject {
+    @_spi(InternalOnlyAPI) public typealias STPPromiseErrorBlock = (Error) -> Void
 
-    @_spi(STP) public typealias STPPromiseValueBlock = (T) -> Void
+    @_spi(InternalOnlyAPI) public typealias STPPromiseValueBlock = (T) -> Void
 
-    @_spi(STP) public var completed: Bool {
+    @_spi(InternalOnlyAPI) public var completed: Bool {
         return error != nil || value != nil
     }
     private(set) var value: T?
@@ -36,7 +36,7 @@ import Foundation
         self.init()
         self.succeed(value)
     }
-    @_spi(STP) public func succeed(_ value: T) {
+    @_spi(InternalOnlyAPI) public func succeed(_ value: T) {
         if completed {
             return
         }
@@ -50,7 +50,7 @@ import Foundation
         })
     }
 
-    @_spi(STP) public func fail(_ error: Error) {
+    @_spi(InternalOnlyAPI) public func fail(_ error: Error) {
         if completed {
             return
         }
@@ -64,7 +64,7 @@ import Foundation
         })
     }
 
-    @discardableResult @_spi(STP) public func onSuccess(_ callback: @escaping STPPromiseValueBlock) -> Self {
+    @discardableResult @_spi(InternalOnlyAPI) public func onSuccess(_ callback: @escaping STPPromiseValueBlock) -> Self {
         if let value = value {
             stpDispatchToMainThreadIfNecessary({
                 callback(value)
@@ -75,7 +75,7 @@ import Foundation
         return self
     }
 
-    @discardableResult @_spi(STP) public func onFailure(_ callback: @escaping STPPromiseErrorBlock) -> Self {
+    @discardableResult @_spi(InternalOnlyAPI) public func onFailure(_ callback: @escaping STPPromiseErrorBlock) -> Self {
         if let error = error {
             stpDispatchToMainThreadIfNecessary({
                 callback(error)

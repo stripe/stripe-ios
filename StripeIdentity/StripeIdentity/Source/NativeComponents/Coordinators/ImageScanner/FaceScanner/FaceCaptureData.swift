@@ -8,7 +8,7 @@
 
 import CoreGraphics
 import Foundation
-@_spi(STP) import StripeCameraCore
+@_spi(InternalOnlyAPI) import StripeCameraCore
 
 struct FaceScannerInputOutput: Equatable {
     let image: CGImage

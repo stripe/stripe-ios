@@ -7,7 +7,7 @@
 
 import Foundation
 
-@_spi(STP)
+@_spi(InternalOnlyAPI)
 @_spi(ReactNativeSDK)
 extension CheckoutController.Session {
     /// An aggregate discount amount calculated across all line items in a Checkout Session.

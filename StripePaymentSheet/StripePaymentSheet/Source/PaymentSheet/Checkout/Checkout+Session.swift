@@ -6,13 +6,13 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
 import UIKit
 
 // MARK: - Session
 
-@_spi(STP)
+@_spi(InternalOnlyAPI)
 @_spi(ReactNativeSDK)
 extension CheckoutController {
     /// A read-only representation of a Stripe Checkout Session.

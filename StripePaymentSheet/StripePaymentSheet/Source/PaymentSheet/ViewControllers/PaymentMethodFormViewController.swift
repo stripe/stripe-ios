@@ -5,9 +5,9 @@
 //  Created by Yuki Tokuhiro on 5/16/24.
 //
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 protocol PaymentMethodFormViewControllerDelegate: AnyObject {

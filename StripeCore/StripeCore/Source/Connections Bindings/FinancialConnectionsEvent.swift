@@ -91,7 +91,7 @@ public struct FinancialConnectionsEvent {
             return ErrorCode(rawValue: errorCodeRawValue)
         }
 
-        @_spi(STP) public init(
+        @_spi(InternalOnlyAPI) public init(
             institutionName: String? = nil,
             manualEntry: Bool? = nil,
             errorCode: ErrorCode? = nil
@@ -150,7 +150,7 @@ public struct FinancialConnectionsEvent {
     /// Event-associated metadata. Provides further detail related to the occurred event.
     public let metadata: Metadata
 
-    @_spi(STP) public init(
+    @_spi(InternalOnlyAPI) public init(
         name: Name,
         financialConnectionsSessionId: String,
         metadata: Metadata = Metadata()

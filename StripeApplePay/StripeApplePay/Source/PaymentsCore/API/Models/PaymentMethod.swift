@@ -7,7 +7,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 extension StripeAPI {
     /// PaymentMethod objects represent your customer's payment instruments. They can be used with PaymentIntents to collect payments.

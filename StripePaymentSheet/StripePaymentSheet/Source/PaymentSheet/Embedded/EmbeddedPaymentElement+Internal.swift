@@ -5,10 +5,10 @@
 //  Created by Yuki Tokuhiro on 10/10/24.
 //
 import SafariServices
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
-@_spi(STP) import StripePaymentsUI
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) import StripePaymentsUI
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 extension EmbeddedPaymentElement {
@@ -847,7 +847,7 @@ extension PaymentSheetAuthenticationContextViewController: PaymentSheetAuthentic
 }
 
 extension EmbeddedPaymentElement.Configuration.RowSelectionBehavior: Equatable {
-   @_spi(STP) public static func == (lhs: EmbeddedPaymentElement.Configuration.RowSelectionBehavior, rhs: EmbeddedPaymentElement.Configuration.RowSelectionBehavior) -> Bool {
+   @_spi(InternalOnlyAPI) public static func == (lhs: EmbeddedPaymentElement.Configuration.RowSelectionBehavior, rhs: EmbeddedPaymentElement.Configuration.RowSelectionBehavior) -> Bool {
         switch (lhs, rhs) {
         case (.default, .default):
             return true

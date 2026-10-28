@@ -56,7 +56,7 @@ import Foundation
     case mbsbBank
 }
 
-@_spi(STP) extension STPFPXBankBrand: CaseIterable {}
+@_spi(InternalOnlyAPI) extension STPFPXBankBrand: CaseIterable {}
 
 /// Convenience methods for using FPX bank brands.
 public class STPFPXBank: NSObject {

@@ -56,14 +56,14 @@ final class SheetImplementationResolver {
 
 extension PaymentSheet {
 
-    @_spi(STP) public enum NativeSheetFeatureFlags {
+    @_spi(InternalOnlyAPI) public enum NativeSheetFeatureFlags {
 
         /// Whether the current device requires native sheets, regardless of the feature flag.
-        @_spi(STP) public static var isNativeSheetRequiredForDevice: Bool {
+        @_spi(InternalOnlyAPI) public static var isNativeSheetRequiredForDevice: Bool {
             SheetImplementationResolver.isRequiredForDevice
         }
 
         /// Overrides the native-sheet feature flag. Intended for test playgrounds only.
-        @_spi(STP) public static var nativeSheetEnabledOverride: Bool?
+        @_spi(InternalOnlyAPI) public static var nativeSheetEnabledOverride: Bool?
     }
 }

@@ -5,8 +5,8 @@
 //  Created by George Birch on 9/30/26.
 //
 
-@_spi(STP) @_spi(CryptoOnrampAlpha) @testable import StripePaymentSheet
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) @_spi(CryptoOnrampAlpha) @testable import StripePaymentSheet
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 import XCTest
 

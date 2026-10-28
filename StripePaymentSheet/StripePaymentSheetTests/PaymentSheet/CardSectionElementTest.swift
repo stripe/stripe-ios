@@ -7,9 +7,9 @@
 
 import OHHTTPStubs
 import OHHTTPStubsSwift
-@testable@_spi(STP) import StripePayments
-@testable@_spi(STP) @_spi(CardFundingFilteringPrivatePreview) import StripePaymentSheet
-@testable@_spi(STP) import StripeUICore
+@testable@_spi(InternalOnlyAPI) import StripePayments
+@testable@_spi(InternalOnlyAPI) @_spi(CardFundingFilteringPrivatePreview) import StripePaymentSheet
+@testable@_spi(InternalOnlyAPI) import StripeUICore
 import XCTest
 
 @MainActor

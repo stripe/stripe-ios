@@ -6,7 +6,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripePayments
+@_spi(InternalOnlyAPI) import StripePayments
 @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @_spi(CardFundingFilteringPrivatePreview) import StripePaymentSheet
 
 struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {

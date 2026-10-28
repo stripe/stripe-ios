@@ -6,8 +6,8 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripeUICore
 
 // Localized strings that are used in multiple contexts. Collected here to avoid re-translation
 // We use snake case to make long names easier to read.

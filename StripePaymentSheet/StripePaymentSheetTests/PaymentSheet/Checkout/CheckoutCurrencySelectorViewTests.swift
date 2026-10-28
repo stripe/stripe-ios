@@ -5,8 +5,8 @@
 //  Created by Nick Porter on 4/6/26.
 //
 
-@testable @_spi(STP) import StripePayments
-@testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(InternalOnlyAPI) import StripePayments
+@testable @_spi(InternalOnlyAPI) import StripePaymentSheet
 import XCTest
 
 @MainActor

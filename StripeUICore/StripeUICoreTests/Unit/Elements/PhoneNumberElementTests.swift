@@ -6,7 +6,7 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-@testable @_spi(STP) import StripeUICore
+@testable @_spi(InternalOnlyAPI) import StripeUICore
 import XCTest
 
 class PhoneNumberElementTests: XCTestCase {

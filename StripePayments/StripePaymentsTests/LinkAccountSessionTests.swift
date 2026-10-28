@@ -5,7 +5,7 @@
 
 import XCTest
 
-@_spi(STP) @testable import StripePayments
+@_spi(InternalOnlyAPI) @testable import StripePayments
 
 final class LinkAccountSessionTests: XCTestCase {
 

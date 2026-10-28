@@ -6,7 +6,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 protocol NetworkingLinkVerificationDataSource: AnyObject {
     var manifest: FinancialConnectionsSessionManifest { get }

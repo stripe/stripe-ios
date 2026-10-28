@@ -6,8 +6,8 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
 
 /// The parameters sent to the Checkout Session `/confirm` endpoint.
 struct CheckoutSessionConfirmationRequestParameters {

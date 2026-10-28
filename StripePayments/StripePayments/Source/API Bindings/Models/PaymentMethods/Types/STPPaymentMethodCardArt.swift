@@ -4,7 +4,7 @@
 //
 import Foundation
 
-@_spi(STP) public class STPPaymentMethodCardArt: NSObject, STPAPIResponseDecodable {
+@_spi(InternalOnlyAPI) public class STPPaymentMethodCardArt: NSObject, STPAPIResponseDecodable {
     public private(set) var artImage: STPPaymentMethodCardArtImage?
     public private(set) var programName: String?
     public private(set) var allResponseFields: [AnyHashable: Any] = [:]
@@ -44,7 +44,7 @@ import Foundation
     }
 }
 
-@_spi(STP) public class STPPaymentMethodCardArtImage: NSObject, STPAPIResponseDecodable {
+@_spi(InternalOnlyAPI) public class STPPaymentMethodCardArtImage: NSObject, STPAPIResponseDecodable {
     public private(set) var url: URL?
     public private(set) var allResponseFields: [AnyHashable: Any] = [:]
 

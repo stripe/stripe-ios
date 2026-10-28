@@ -9,7 +9,7 @@ import Foundation
 import Metal
 import MetalKit
 import MetalPerformanceShaders
-@_spi(STP) import StripeCameraCore
+@_spi(InternalOnlyAPI) import StripeCameraCore
 import Vision
 
 /// Detector to determine if an image is blurry based on variance of the laplacian method implemented with Metal.
