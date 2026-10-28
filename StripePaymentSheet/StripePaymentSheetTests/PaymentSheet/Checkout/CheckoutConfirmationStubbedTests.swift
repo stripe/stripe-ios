@@ -486,7 +486,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         guard case .failed(_, let response) = result else {
             return XCTFail("Expected confirmation to fail, got \(result)")
         }
-        XCTAssertEqual(response?.paymentResponse?.status, "requires_payment_method")
+        XCTAssertEqual(response?.paymentResponse?.status, .requiresPaymentMethod)
         await fulfillment(of: [retrieve], timeout: 1)
     }
 

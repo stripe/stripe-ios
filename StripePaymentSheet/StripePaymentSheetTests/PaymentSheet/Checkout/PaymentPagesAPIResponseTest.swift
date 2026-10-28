@@ -80,15 +80,37 @@ class PaymentPagesAPIResponseTest: XCTestCase {
     }
 
     func testDecodesCheckoutClientPaymentStatuses() throws {
-        for status in [
-            "requires_payment_method", "requires_action", "processing", "requires_capture", "succeeded", "canceled",
-        ] {
+        let cases: [(String, PaymentPagesAPIResponse.PaymentResponse.Status)] = [
+            ("succeeded", .succeeded),
+            ("requires_action", .requiresAction),
+            ("processing", .processing),
+            ("requires_capture", .requiresCapture),
+            ("requires_payment_method", .requiresPaymentMethod),
+            ("canceled", .canceled),
+            ("requires_confirmation", .requiresConfirmation),
+            ("processing_sync", .processingSync),
+            ("requires_reauthorization", .requiresReauthorization),
+            ("expired", .expired),
+        ]
+        for (rawValue, expected) in cases {
             var json = CheckoutTestHelpers.makeSessionJSON()
-            json["payment_response"] = ["status": status]
+            json["payment_response"] = ["status": rawValue]
 
             let response = try PaymentPagesAPIResponse.decode(fromAPIResponse: json)
 
-            XCTAssertEqual(response.paymentResponse?.status, status)
+            XCTAssertEqual(response.paymentResponse?.status, expected)
+        }
+    }
+
+    func testRejectsUnknownCheckoutClientPaymentStatus() {
+        var json = CheckoutTestHelpers.makeSessionJSON()
+        json["payment_response"] = ["status": "future_status"]
+
+        XCTAssertThrowsError(try PaymentPagesAPIResponse.decode(fromAPIResponse: json)) { error in
+            guard case DecodingError.dataCorrupted(let context) = error else {
+                return XCTFail("Expected dataCorrupted, got \(error)")
+            }
+            XCTAssertEqual(context.codingPath.last?.stringValue, "status")
         }
     }
 

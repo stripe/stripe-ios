@@ -28,7 +28,7 @@ class CheckoutApplePayContextFunctionalTest: STPNetworkStubbingTestCase {
             XCTAssertEqual(result.paymentSheetResult, .completed)
             if case .completed(let response) = result {
                 XCTAssertEqual(response.status, .complete(.paid))
-                XCTAssertEqual(response.paymentResponse?.status, "succeeded")
+                XCTAssertEqual(response.paymentResponse?.status, .succeeded)
             }
             didComplete.fulfill()
         }
@@ -46,7 +46,7 @@ class CheckoutApplePayContextFunctionalTest: STPNetworkStubbingTestCase {
             XCTAssertEqual(result.paymentSheetResult, .completed)
             if case .completed(let response) = result {
                 XCTAssertEqual(response.status, .complete(.noPaymentRequired))
-                XCTAssertEqual(response.paymentResponse?.status, "succeeded")
+                XCTAssertEqual(response.paymentResponse?.status, .succeeded)
             }
             didComplete.fulfill()
         }

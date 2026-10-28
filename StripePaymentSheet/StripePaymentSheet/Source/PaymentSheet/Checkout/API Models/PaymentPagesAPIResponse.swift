@@ -166,10 +166,23 @@ extension PaymentPagesAPIResponse {
 
     /// CheckoutClient's canonical payment details. Intent references are retrieved separately for authentication.
     struct PaymentResponse: Decodable {
-        let status: String
+        let status: Status
         let lastPaymentError: StripeAPIError?
         let paymentIntent: IntentReference?
         let setupIntent: IntentReference?
+
+        enum Status: String, Decodable {
+            case succeeded
+            case requiresAction = "requires_action"
+            case processing
+            case requiresCapture = "requires_capture"
+            case requiresPaymentMethod = "requires_payment_method"
+            case canceled
+            case requiresConfirmation = "requires_confirmation"
+            case processingSync = "processing_sync"
+            case requiresReauthorization = "requires_reauthorization"
+            case expired
+        }
     }
 
     /// Adapts a dictionary-backed API model to `Decodable` while it is migrated.
