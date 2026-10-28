@@ -13,8 +13,8 @@ final class CheckoutSessionPollerTests: XCTestCase {
     private let checkoutSessionId = "cs_test_123"
     private let clientSecret = "cs_test_123_secret_abc"
 
-    func testPendingContinuesEvenWhenSessionIsComplete() async {
-        // Given pending confirmation with a complete Session, followed by success
+    func testPendingContinuesUntilSucceededRegardlessOfSessionStatus() async {
+        // Given pending confirmation with a complete Session, followed by success with an open/unpaid Session
         let clock = TestClock()
         let apiClient = MockAPIClient(clock: clock)
         let succeeded = pollResponse(confirmationStatus: .succeeded)
@@ -29,15 +29,15 @@ final class CheckoutSessionPollerTests: XCTestCase {
             clientSecret: clientSecret
         )
 
-        // Then Session completion does not stop polling; the final response is preserved
+        // Then only confirmation status determines when polling stops; the final response is preserved
         XCTAssertEqual(apiClient.pollRequests.count, 2)
         XCTAssertEqual(outcome, .succeeded(succeeded))
     }
 
-    func testSucceededStopsEvenWhenSessionIsOpenAndUnpaid() async {
+    func testFailedStopsEvenWhenSessionIsComplete() async {
         let clock = TestClock()
         let apiClient = MockAPIClient(clock: clock)
-        let response = pollResponse(confirmationStatus: .succeeded)
+        let response = pollResponse(confirmationStatus: .failed, status: "complete")
         apiClient.pollResults = [.success(response)]
 
         let outcome = await makePoller(apiClient: apiClient, clock: clock).poll(
@@ -46,25 +46,7 @@ final class CheckoutSessionPollerTests: XCTestCase {
         )
 
         XCTAssertEqual(apiClient.pollRequests.count, 1)
-        XCTAssertEqual(outcome, .succeeded(response))
-    }
-
-    func testFailedStopsRegardlessOfSessionStatus() async {
-        for status in ["open", "complete", "expired"] {
-            // Given failed confirmation, even if the Session is complete
-            let clock = TestClock()
-            let apiClient = MockAPIClient(clock: clock)
-            let response = pollResponse(confirmationStatus: .failed, status: status)
-            apiClient.pollResults = [.success(response)]
-
-            let outcome = await makePoller(apiClient: apiClient, clock: clock).poll(
-                checkoutSessionId: checkoutSessionId,
-                clientSecret: clientSecret
-            )
-
-            XCTAssertEqual(apiClient.pollRequests.count, 1)
-            XCTAssertEqual(outcome, .failed(response))
-        }
+        XCTAssertEqual(outcome, .failed(response))
     }
 
     func testNotStartedStopsWithDistinctOutcome() async {

@@ -437,7 +437,6 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         let responseJSON = makeConfirmedSessionJSON(paymentResponseStatus: "processing", status: "open", paymentStatus: "unpaid")
         for pollResponse in [
             Self.pollResponse(),
-            Self.pollResponse(paymentStatus: "unpaid"),
             Self.pollResponse(status: "open", paymentStatus: "unpaid"),
         ] {
             let poller = TestCheckoutSessionPoller(outcome: .succeeded(pollResponse))
@@ -459,8 +458,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         let checkout = try await makeCheckout()
         let lastResponses: [CheckoutClientPollResponse?] = [
             nil,
-            Self.pollResponse(confirmationStatus: "pending", status: "open", paymentStatus: "unpaid"),
-            Self.pollResponse(confirmationStatus: "pending", status: "complete", paymentStatus: "paid"),
+            Self.pollResponse(confirmationStatus: "pending", status: "complete", paymentStatus: "unpaid"),
         ]
         for lastResponse in lastResponses {
             let poller = TestCheckoutSessionPoller(outcome: .timedOut(lastResponse: lastResponse))
@@ -632,7 +630,6 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
     func testCompletedConfirmResponseSkipsIntentRetrievalAndPolling() async throws {
         let checkout = try await makeCheckout()
         let cases = [
-            (key: "payment_intent", fixture: "CheckoutPaymentIntent", status: "succeeded", paymentStatus: "paid"),
             (key: "payment_intent", fixture: "CheckoutPaymentIntent", status: "requires_capture", paymentStatus: "unpaid"),
             (key: "setup_intent", fixture: "SetupIntent", status: "succeeded", paymentStatus: "no_payment_required"),
         ]

@@ -11,30 +11,18 @@ import XCTest
 
 final class CheckoutClientPollResponseTests: XCTestCase {
     func testRejectsUnknownConfirmationStatus() throws {
-        var json = pollJSON
-        json["confirmation_status"] = "new_status"
+        let data = try JSONSerialization.data(withJSONObject: [
+            "id": "cs_test_123",
+            "confirmation_status": "new_status",
+            "status": "open",
+            "payment_status": "unpaid",
+        ])
 
-        XCTAssertThrowsError(try decode(json)) { error in
+        XCTAssertThrowsError(try StripeJSONDecoder().decode(CheckoutClientPollResponse.self, from: data)) { error in
             guard case DecodingError.dataCorrupted(let context) = error else {
                 return XCTFail("Expected dataCorrupted, got \(error)")
             }
             XCTAssertEqual(context.codingPath.last?.stringValue, "confirmation_status")
         }
-    }
-
-    private var pollJSON: [String: Any] {
-        [
-            "id": "cs_test_123",
-            "livemode": false,
-            "ui_mode": "mobile_elements",
-            "confirmation_status": "succeeded",
-            "status": "complete",
-            "payment_status": "unpaid",
-        ]
-    }
-
-    private func decode(_ json: [String: Any]) throws -> CheckoutClientPollResponse {
-        let data = try JSONSerialization.data(withJSONObject: json)
-        return try StripeJSONDecoder().decode(CheckoutClientPollResponse.self, from: data)
     }
 }
