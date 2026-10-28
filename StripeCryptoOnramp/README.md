@@ -52,6 +52,8 @@ If the customer's KYC region (country of residence) changes after Apple Pay was 
 
 The StripeCryptoOnramp iOS SDK is compatible with apps targeting iOS 15.0 or above.
 
+Simulator builds that include MediaPipe through StripeIdentity, including the prebuilt release frameworks and Swift Package Manager integrations with the `Identity` trait enabled, require an arm64 destination on Apple silicon.
+
 ## Getting started
 
 ### Integration

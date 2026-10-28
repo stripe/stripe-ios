@@ -157,13 +157,15 @@ enum CheckoutTestHelpers {
                         [
                             "inner_item_key": "checkout_item_inner_test",
                             "quantity": 1,
-                            "subtotal": unitAmount,
-                            "total": unitAmount,
                             "unit_amount": unitAmount,
                             "unit_amount_decimal": String(unitAmount),
-                            "tax_amounts": [],
-                            "tax_inclusive": 0,
-                            "tax_exclusive": 0,
+                            "amount_details": [
+                                "subtotal": unitAmount,
+                                "total": unitAmount,
+                                "tax_amounts": [],
+                                "tax_inclusive": 0,
+                                "tax_exclusive": 0,
+                            ],
                             "price": [
                                 "id": "price_test",
                                 "currency": currency,
@@ -511,7 +513,8 @@ class MockCheckoutSessionWalletUpdater: CheckoutSessionWalletUpdater {
 
     func updateTaxRegionWithoutEnqueueing(
         address: CheckoutController.Address,
-        canUpdateWhileSheetPresented: Bool
+        canUpdateWhileSheetPresented: Bool,
+        confirmationSource: CheckoutController.ConfirmingElement
     ) async throws -> CheckoutController.Session {
         updateCallCount += 1
         lastAddress = address
@@ -586,8 +589,7 @@ extension PaymentPagesAPIResponse {
     }
 
     private func withOverrides(_ overrides: [String: Any]) -> PaymentPagesAPIResponse {
-        let json = (allResponseFields as? [String: Any] ?? [:])
-            .merging(overrides) { _, new in new }
+        let json = allResponseFields.merging(overrides) { _, new in new }
         return try! PaymentPagesAPIResponse.decode(fromAPIResponse: json)
     }
 }
