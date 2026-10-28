@@ -6,7 +6,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 import UIKit
 
 enum PaymentMethodMessagingElementError: Error, LocalizedError {
@@ -89,6 +89,6 @@ extension PaymentMethodMessagingElement.Appearance {
     }
 }
 
-@_spi(STP) extension PaymentMethodMessagingElement: STPAnalyticsProtocol {
-    @_spi(STP) public nonisolated static let stp_analyticsIdentifier: String = "PaymentMethodMessagingElement"
+@_spi(InternalOnlyAPI) extension PaymentMethodMessagingElement: STPAnalyticsProtocol {
+    @_spi(InternalOnlyAPI) public nonisolated static let stp_analyticsIdentifier: String = "PaymentMethodMessagingElement"
 }

@@ -8,7 +8,7 @@
 
 import Foundation
 
-@_spi(STP) extension CharacterSet {
+@_spi(InternalOnlyAPI) extension CharacterSet {
     public static let stp_asciiDigit = CharacterSet(charactersIn: "0123456789")
     public static let stp_asciiLetters = CharacterSet(
         charactersIn: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"

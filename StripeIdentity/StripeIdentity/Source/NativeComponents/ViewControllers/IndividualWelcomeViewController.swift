@@ -5,8 +5,8 @@
 //  Created by Chen Cen on 2/14/23.
 //
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 final class IndividualWelcomeViewController: IdentityFlowViewController {

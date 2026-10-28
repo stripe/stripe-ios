@@ -9,9 +9,9 @@
 import Contacts
 import Foundation
 import PassKit
-@_spi(STP) import StripeApplePay
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
+@_spi(InternalOnlyAPI) import StripeApplePay
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
 import UIKit
 
 /// Responsible for handling the Apple Pay flow end to end: displaying line items,
@@ -138,6 +138,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
                 paymentMethodData.clientAttributionMetadata = clientAttributionMetadata
                 let requestParameters = CheckoutSessionConfirmationRequestParameters.createWithPaymentMethodData(
                     sessionId: checkoutSession.id,
+                    clientSecret: checkoutSession.clientSecret,
                     paymentMethodData: paymentMethodData,
                     confirmationSource: confirmationSource,
                     expectedAmount: checkoutSession.amount,
@@ -214,7 +215,8 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         paymentMethodUpdateTask = Task { @MainActor in
             if let updatedSession = try? await checkoutWalletUpdater.updateTaxRegionWithoutEnqueueing(
                 address: address,
-                canUpdateWhileSheetPresented: true
+                canUpdateWhileSheetPresented: true,
+                confirmationSource: confirmationSource
             ) {
                 self.session = updatedSession
             }
@@ -249,7 +251,8 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         shippingContactUpdateTask = Task { @MainActor in
             if let updatedSession = try? await checkoutWalletUpdater.updateTaxRegionWithoutEnqueueing(
                 address: address,
-                canUpdateWhileSheetPresented: true
+                canUpdateWhileSheetPresented: true,
+                confirmationSource: confirmationSource
             ) {
                 self.session = updatedSession
             }
@@ -556,10 +559,10 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
               checkoutWalletUpdater.currentTaxRegion != initialTaxRegion else {
             return
         }
-        let taxRegionToRestore = initialTaxRegion ?? .init(country: session.merchantCountryCode)
         _ = try? await checkoutWalletUpdater.updateTaxRegionWithoutEnqueueing(
-            address: taxRegionToRestore,
-            canUpdateWhileSheetPresented: true
+            address: initialTaxRegion,
+            canUpdateWhileSheetPresented: true,
+            confirmationSource: confirmationSource
         )
     }
 

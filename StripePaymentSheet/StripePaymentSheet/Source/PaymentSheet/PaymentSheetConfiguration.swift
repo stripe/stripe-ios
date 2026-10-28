@@ -8,9 +8,9 @@
 
 import Foundation
 import PassKit
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 // MARK: - Configuration
@@ -176,7 +176,7 @@ extension PaymentSheet {
         }
 
         /// Override country for test purposes
-        @_spi(STP) public var userOverrideCountry: String?
+        @_spi(InternalOnlyAPI) public var userOverrideCountry: String?
 
         /// Describes how billing details should be collected.
         /// All values default to `automatic`.
@@ -253,22 +253,22 @@ extension PaymentSheet {
         public var opensCardScannerAutomatically: Bool = false
 
         /// Set to `true` if using a wallet buttons view. This changes a few behaviors of PaymentSheet (for example, wallet buttons will never be selected by default).
-        @_spi(STP) public var willUseWalletButtonsView = false
+        @_spi(InternalOnlyAPI) public var willUseWalletButtonsView = false
 
         /// When using WalletButtonsView, configures payment method visibility across available surfaces.
-        @_spi(STP) public var walletButtonsVisibility: WalletButtonsVisibility = WalletButtonsVisibility()
+        @_spi(InternalOnlyAPI) public var walletButtonsVisibility: WalletButtonsVisibility = WalletButtonsVisibility()
     }
 
     /// When using WalletButtonsView, configures payment method visibility across available surfaces.
-    @_spi(STP) public struct WalletButtonsVisibility {
+    @_spi(InternalOnlyAPI) public struct WalletButtonsVisibility {
         /// Configure wallet button visibility in PaymentSheet, FlowController, or Embedded Payment Element.
         /// If a field is empty, the default behavior is `.automatic`.
-        @_spi(STP) public var paymentElement: [ExpressType: PaymentElementVisibility] = [:]
+        @_spi(InternalOnlyAPI) public var paymentElement: [ExpressType: PaymentElementVisibility] = [:]
         /// Configure wallet button visibility in Wallet Buttons View.
         /// If a field is empty, the default behavior is `.automatic`.
-        @_spi(STP) public var walletButtonsView: [ExpressType: WalletButtonsViewVisibility] = [:]
+        @_spi(InternalOnlyAPI) public var walletButtonsView: [ExpressType: WalletButtonsViewVisibility] = [:]
 
-        @_spi(STP) public enum PaymentElementVisibility {
+        @_spi(InternalOnlyAPI) public enum PaymentElementVisibility {
             /// (Default) Stripe will manage which surface shows this payment method. For example, if an Apple Pay button is currently visible in WalletButtonsView, it will not appear in the PaymentSheet list.
             case automatic
             /// This payment method, if available for this payment, will always appear in the selected surface.
@@ -277,19 +277,19 @@ extension PaymentSheet {
             case never
         }
 
-        @_spi(STP) public enum WalletButtonsViewVisibility {
+        @_spi(InternalOnlyAPI) public enum WalletButtonsViewVisibility {
             /// (Default) Stripe will manage which surface shows this payment method. For example, if an Apple Pay button is currently visible in WalletButtonsView, it will not appear in the PaymentSheet list.
             case automatic
             /// This payment method will never appear in the selected surface.
             case never
         }
 
-        @_spi(STP) public enum ExpressType: String, Hashable, CaseIterable {
+        @_spi(InternalOnlyAPI) public enum ExpressType: String, Hashable, CaseIterable {
             case applePay = "apple_pay"
             case link = "link"
         }
 
-        @_spi(STP) public init() {}
+        @_spi(InternalOnlyAPI) public init() {}
     }
 
     /// Defines the layout orientations available for displaying payment methods in PaymentSheet.
@@ -431,7 +431,7 @@ extension PaymentSheet {
             /// }
             /// ```
             /// WARNING: If you do not call the completion handler, your app will hang until the Apple Pay sheet times out.
-            @_spi(STP) public let shippingMethodUpdateHandler:
+            @_spi(InternalOnlyAPI) public let shippingMethodUpdateHandler:
             ((PKShippingMethod, @escaping ((PKPaymentRequestShippingMethodUpdate) -> Void)) -> Void)?
 
             /// Optionally get shipping contact updates if you've configured shipping contact options
@@ -447,7 +447,7 @@ extension PaymentSheet {
             /// }
             /// ```
             /// WARNING: If you do not call the completion handler, your app will hang until the Apple Pay sheet times out.
-            @_spi(STP) public let shippingContactUpdateHandler:
+            @_spi(InternalOnlyAPI) public let shippingContactUpdateHandler:
             ((PKContact, @escaping ((PKPaymentRequestShippingContactUpdate) -> Void)) -> Void)?
 
             /// Initializes the ApplePayConfiguration Handlers.
@@ -462,7 +462,7 @@ extension PaymentSheet {
             }
 
             /// Initializes the ApplePayConfiguration w/ ShippingMethod & ShippingContact update handlers
-            @_spi(STP) public init(
+            @_spi(InternalOnlyAPI) public init(
                 paymentRequestHandler: ((PKPaymentRequest) -> PKPaymentRequest)? = nil,
                 authorizationResultHandler: AuthorizationResultHandler? = nil,
                 shippingMethodUpdateHandler: (
@@ -501,10 +501,10 @@ extension PaymentSheet {
         public var display: Display = .automatic
 
         /// The brand to use for Link. Expected values are `.link` or `.onelink`.
-        @_spi(STP) public var brand: LinkBrand?
+        @_spi(InternalOnlyAPI) public var brand: LinkBrand?
 
         /// The Link funding sources that should be disabled. Defaults to an empty set.
-        @_spi(STP) public var disallowFundingSourceCreation: Set<String> = []
+        @_spi(InternalOnlyAPI) public var disallowFundingSourceCreation: Set<String> = []
 
         /// Whether missing billing details should be collected for existing Link payment methods.
         @_spi(CollectMissingLinkBillingDetailsPreview) public var collectMissingBillingDetailsForExistingPaymentMethods: Bool = true
@@ -534,7 +534,7 @@ extension PaymentSheet {
             self.init(display: display, brand: nil)
         }
 
-        @_spi(STP) public init(
+        @_spi(InternalOnlyAPI) public init(
             display: Display = .automatic,
             brand: LinkBrand? = nil
         ) {

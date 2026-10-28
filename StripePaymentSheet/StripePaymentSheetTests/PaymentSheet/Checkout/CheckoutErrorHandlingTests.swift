@@ -7,10 +7,10 @@
 
 import OHHTTPStubs
 import OHHTTPStubsSwift
-@testable @_spi(STP) import StripeCore
+@testable @_spi(InternalOnlyAPI) import StripeCore
 import StripeCoreTestUtils
-@testable @_spi(STP) import StripePayments
-@testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(InternalOnlyAPI) import StripePayments
+@testable @_spi(InternalOnlyAPI) import StripePaymentSheet
 import UIKit
 import XCTest
 
@@ -24,14 +24,14 @@ final class CheckoutErrorHandlingTests: APIStubbedTestCase {
                 paymentElementConfiguration: nil,
                 expressCheckoutElementConfiguration: nil
             ))
-            stubError(path: "/v1/payment_pages/cs_test_123/confirm", response: response)
+            stubError(path: "/v1/checkout_client/cs_test_123/confirm", response: response)
             let flow = try XCTUnwrap(checkout.makeConfirmationFlow(
                 for: nil,
                 presentingViewController: UIViewController()
             ))
 
             // When the merchant confirms Checkout
-            let result = await checkout.confirm(flow)
+            let result = await checkout.confirm(source: .merchant) { flow }
 
             // Then the failed result preserves the server's optional message
             guard case .failed(let error) = result else {
@@ -50,7 +50,7 @@ final class CheckoutErrorHandlingTests: APIStubbedTestCase {
                 let apiClient = CheckoutTestHelpers.makeStubbedAPIClient()
                 apiClient.publishableKey = isTestmode ? "pk_test_123" : "pk_live_123"
                 stubError(
-                    path: "/v1/payment_pages/cs_test_123",
+                    path: "/v1/checkout_client/cs_test_123/retrieve",
                     response: response,
                     statusCode: 400,
                     headers: ["request-id": "req_test_123"]
@@ -58,7 +58,7 @@ final class CheckoutErrorHandlingTests: APIStubbedTestCase {
 
                 // When Checkout retrieves the session
                 do {
-                    _ = try await apiClient.retrieveCheckoutSession(checkoutSessionId: "cs_test_123")
+                    _ = try await apiClient.retrieveCheckoutSession(checkoutSessionId: "cs_test_123", clientSecret: "cs_test_123_secret_123")
                     XCTFail("Expected retrieval to fail")
                 } catch {
                     // Then only existing messages get a live-mode request ID, and metadata is preserved

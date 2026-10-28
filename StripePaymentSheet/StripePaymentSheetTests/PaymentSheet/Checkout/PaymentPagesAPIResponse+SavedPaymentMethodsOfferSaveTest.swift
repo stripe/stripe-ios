@@ -3,68 +3,41 @@
 //  StripePaymentSheetTests
 //
 
-@testable @_spi(STP) import StripeCore
-@testable @_spi(STP) import StripePayments
-@testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(InternalOnlyAPI) import StripeCore
+@testable @_spi(InternalOnlyAPI) import StripePayments
+@testable @_spi(InternalOnlyAPI) import StripePaymentSheet
 import XCTest
 
 class STPCheckoutSessionSavedPaymentMethodsOfferSaveTest: XCTestCase {
 
-    func testDecodedObjectWithSaveOfferAccepted() {
+    func testDecodedObjectWithSaveOfferEnabled() {
         let session = CheckoutTestHelpers.makeSession([
-            "customer_managed_saved_payment_methods_offer_save": [
-                "enabled": true,
-                "status": "accepted",
+            "saved_payment_method_options": [
+                "payment_method_save": "enabled"
             ],
         ]).makePublicSession()
 
         XCTAssertNotNil(session.savedPaymentMethodsOfferSave)
         XCTAssertTrue(session.savedPaymentMethodsOfferSave!.enabled)
-        XCTAssertEqual(session.savedPaymentMethodsOfferSave!.status, .accepted)
     }
 
     func testDecodedObjectWithSaveOfferDisabled() {
         let session = CheckoutTestHelpers.makeSession([
-            "customer_managed_saved_payment_methods_offer_save": [
-                "enabled": false,
-                "status": "not_accepted",
+            "saved_payment_method_options": [
+                "payment_method_save": "disabled"
             ],
         ]).makePublicSession()
 
         XCTAssertNotNil(session.savedPaymentMethodsOfferSave)
         XCTAssertFalse(session.savedPaymentMethodsOfferSave!.enabled)
-        XCTAssertEqual(session.savedPaymentMethodsOfferSave!.status, .notAccepted)
     }
 
-    func testDecodedObjectTreatsUnrecognizedStatusAsNotAccepted() {
+    func testDecodedObjectWithoutPaymentMethodSave() {
         let session = CheckoutTestHelpers.makeSession([
-            "customer_managed_saved_payment_methods_offer_save": [
-                "enabled": true,
-                "status": "some_future_status",
-            ],
+            "saved_payment_method_options": ["payment_method_remove": "enabled"]
         ]).makePublicSession()
 
-        XCTAssertNotNil(session.savedPaymentMethodsOfferSave)
-        XCTAssertTrue(session.savedPaymentMethodsOfferSave!.enabled)
-        XCTAssertEqual(session.savedPaymentMethodsOfferSave!.status, .notAccepted)
-    }
-
-    func testDecodedObjectRejectsMissingRequiredSaveOfferFields() {
-        for field in ["enabled", "status"] {
-            var offerSave: [String: Any] = [
-                "enabled": true,
-                "status": "not_accepted",
-            ]
-            offerSave.removeValue(forKey: field)
-            let json = CheckoutTestHelpers.makeSessionJSON([
-                "customer_managed_saved_payment_methods_offer_save": offerSave,
-            ])
-
-            XCTAssertThrowsError(
-                try PaymentPagesAPIResponse.decode(fromAPIResponse: json),
-                "Expected missing \(field) to fail decoding"
-            )
-        }
+        XCTAssertNil(session.savedPaymentMethodsOfferSave)
     }
 
     func testDecodedObjectWithoutSaveOffer() {

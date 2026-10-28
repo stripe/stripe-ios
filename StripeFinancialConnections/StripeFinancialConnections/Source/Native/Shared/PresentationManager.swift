@@ -5,7 +5,7 @@
 //  Created by Mat Schmid on 2025-01-30.
 //
 
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 import UIKit
 
 /// Handles applying the current style configuration to each view controller presented.

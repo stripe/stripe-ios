@@ -8,7 +8,7 @@
 
 import UIKit
 
-@_spi(STP) public extension NSDirectionalEdgeInsets {
+@_spi(InternalOnlyAPI) public extension NSDirectionalEdgeInsets {
     static func insets(top: CGFloat = 0, leading: CGFloat = 0, bottom: CGFloat = 0, trailing: CGFloat = 0) -> Self {
         return .init(top: top, leading: leading, bottom: bottom, trailing: trailing)
     }

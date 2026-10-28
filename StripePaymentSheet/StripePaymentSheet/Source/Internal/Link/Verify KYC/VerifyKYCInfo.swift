@@ -8,7 +8,7 @@
 import Foundation
 
 /// Describes a type that contains all of the necessary information for verifying KYC information.
-@_spi(STP) public protocol VerifyKYCInfo {
+@_spi(InternalOnlyAPI) public protocol VerifyKYCInfo {
 
     /// The user’s first name.
     var firstName: String { get }

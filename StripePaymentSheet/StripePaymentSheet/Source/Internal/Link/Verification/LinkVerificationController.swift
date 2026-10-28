@@ -6,7 +6,7 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 import UIKit
 
 /// Presents the standalone Link authentication flow.

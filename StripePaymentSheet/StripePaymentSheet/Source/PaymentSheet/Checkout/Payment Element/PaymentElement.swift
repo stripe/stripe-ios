@@ -6,13 +6,13 @@
 //
 
 import Combine
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
 import UIKit
 
 /// PaymentElement collects the customer's payment method, either in an embeddable view or presented in a sheet.
 @MainActor
-@_spi(STP)
+@_spi(InternalOnlyAPI)
 public final class PaymentElement {
     // MARK: - Public Properties
 
@@ -195,7 +195,7 @@ extension PaymentElement {
             stpAssertionFailure("PaymentElement unexpectedly lost its CheckoutController.")
             return
         }
-        try await checkout.updateBillingTaxRegionIfNecessary(address: nil)
+        try await checkout.updateBillingTaxRegionIfNecessary(address: nil, source: .paymentElement)
         checkout.dangerouslySetPaymentOptionDirectly(nil)
         embeddedPaymentElement.clearPaymentOption()
     }
@@ -274,6 +274,6 @@ private extension CheckoutController.Session.PaymentOptionDisplayData.BillingDet
 
 // MARK: - STPAnalyticsProtocol
 /// :nodoc:
-@_spi(STP) extension PaymentElement: STPAnalyticsProtocol {
-    @_spi(STP) public nonisolated static let stp_analyticsIdentifier: String = "PaymentElement"
+@_spi(InternalOnlyAPI) extension PaymentElement: STPAnalyticsProtocol {
+    @_spi(InternalOnlyAPI) public nonisolated static let stp_analyticsIdentifier: String = "PaymentElement"
 }

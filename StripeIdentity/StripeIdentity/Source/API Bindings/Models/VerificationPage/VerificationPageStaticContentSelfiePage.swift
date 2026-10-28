@@ -7,7 +7,7 @@
 
 import CoreGraphics
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 extension StripeAPI {
 
@@ -28,7 +28,9 @@ extension StripeAPI {
         let numSamples: Int
         let sampleInterval: Int
         let trainingConsentText: String
+        let declineAndContinueButtonText: String?
         let blurThreshold: Decimal?
+        let poseSequence: [String]?
     }
 
 }

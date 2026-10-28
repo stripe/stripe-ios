@@ -105,6 +105,13 @@ generic_type_name:
   max_length: 30          # Maybe remove after initial cleanup.
 
 custom_rules:
+  no_stp_spi:
+    name: "Use InternalOnlyAPI SPI"
+    message: "Replace @_spi(STP) with @_spi(InternalOnlyAPI)."
+    regex: '@_spi\s*\(\s*STP\s*\)'
+    match_kinds:
+      - attribute.builtin
+    severity: error
   enum_safe_decodable:
     name: "Use SafeEnumDecodable for enums"
     message: "Enums in API Bindings should conform to SafeEnumDecodable or SafeEnumCodable instead of Decodable or Codable to handle unknown values gracefully."

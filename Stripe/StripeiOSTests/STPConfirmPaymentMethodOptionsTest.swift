@@ -7,7 +7,7 @@
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
 //
 
-@testable@_spi(STP) @_spi(KlarnaSDKPrivatePreview) import StripePayments
+@testable@_spi(InternalOnlyAPI) @_spi(KlarnaSDKPrivatePreview) import StripePayments
 
 class STPConfirmPaymentMethodOptionsTest: XCTestCase {
     func testCardOptions() {

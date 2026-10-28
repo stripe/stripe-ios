@@ -1,5 +1,5 @@
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
 import UIKit
 
 // MARK: - Types
@@ -256,33 +256,42 @@ extension CheckoutController {
 
     // MARK: - Confirmation
 
-    func confirm(_ flow: CheckoutConfirmationFlow) async -> ConfirmResult {
-        // Validations
-        guard sessionIsOpen else {
-            let error = PaymentSheetError.integrationError(nonPIIDebugDescription: "CheckoutController cannot confirm a Checkout Session that is no longer open.")
-            return .failed(error)
-        }
-        guard !confirmationInProgress else {
-            let error = PaymentSheetError.integrationError(nonPIIDebugDescription: "CheckoutController cannot start a second confirmation while one is in progress.")
-            return .failed(error)
-        }
-        guard pendingOperations.isEmpty else {
-            let error = PaymentSheetError.integrationError(nonPIIDebugDescription: "CheckoutController cannot confirm while the Checkout Session is updating. Wait until isUpdating is false.")
-            return .failed(error)
-        }
-
-        confirmationInProgress = true
-        defer { confirmationInProgress = false }
-
+    func confirm(
+        source: CheckoutControllerAnalyticsHelper.InvocationSource,
+        makeFlow: () throws -> CheckoutConfirmationFlow
+    ) async -> ConfirmResult {
+        let flow = Result(catching: makeFlow)
+        // Send confirm started analytic
+        var analyticParams = confirmationAnalyticsParams(paymentOption: try? flow.get().analyticsPaymentOption, source: source)
+        let startedAction = analyticsHelper.logStarted(.confirm, session: session, additionalParams: analyticParams)
+        let internalResult: InternalConfirmResult
+        // Do the actual confirm
         do {
+            let flow = try flow.get()
+
+            // Validations
+            guard sessionIsOpen else {
+                throw PaymentSheetError.integrationError(nonPIIDebugDescription: "CheckoutController cannot confirm a Checkout Session that is no longer open.")
+            }
+            guard !confirmationInProgress else {
+                throw PaymentSheetError.integrationError(nonPIIDebugDescription: "CheckoutController cannot start a second confirmation while one is in progress.")
+            }
+            guard pendingOperations.isEmpty else {
+                throw PaymentSheetError.integrationError(nonPIIDebugDescription: "CheckoutController cannot confirm while the Checkout Session is updating. Wait until isUpdating is false.")
+            }
+
+            confirmationInProgress = true
+            defer { confirmationInProgress = false }
+
             // 1. Put the confirm on the queue
-            let result = try await enqueueSessionUpdate {
+            internalResult = try await enqueueSessionUpdate {
                 // Switch based on the confirmation flow
                 let result: InternalConfirmResult
                 switch flow {
                 case .withoutPaymentMethod(let authenticationContext):
                     let requestParameters = CheckoutSessionConfirmationRequestParameters.createWithoutPaymentMethod(
                         sessionId: self.session.id,
+                        clientSecret: self.clientSecret,
                         // .withoutPaymentMethod only ever comes from makeConfirmationFlow(for: paymentElement:)
                         // — ExpressCheckoutElement's flow builder has no such case — so this is always PaymentElement.
                         confirmationSource: .paymentElement,
@@ -358,10 +367,21 @@ extension CheckoutController {
                 }
                 return result
             }
-            return Self.mapConfirmationResult(result)
         } catch {
-            return .failed(error)
+            internalResult = .failed(error)
         }
+        // Send confirm finished analytic
+        let result = Self.mapConfirmationResult(internalResult)
+        analyticParams["active_link_session"] = LinkAccountContext.shared.account?.sessionState == .verified
+        switch result {
+        case .completed:
+            analyticsHelper.logSucceeded(startedAction, session: session, additionalParams: analyticParams)
+        case .canceled:
+            analyticsHelper.logCanceled(startedAction, session: session, additionalParams: analyticParams)
+        case .failed(let error):
+            analyticsHelper.logFailed(startedAction, error: error, session: session, additionalParams: analyticParams)
+        }
+        return result
     }
 
     static func mapConfirmationResult(_ result: InternalConfirmResult) -> ConfirmResult {
@@ -446,6 +466,7 @@ extension CheckoutController {
             }
             return .createWithPaymentMethodData(
                 sessionId: checkoutSession.id,
+                clientSecret: checkoutSession.clientSecret,
                 paymentMethodData: confirmParams.paymentMethodParams,
                 confirmationSource: paymentMethodParameters.confirmationSource,
                 expectedAmount: checkoutSession.amount,
@@ -462,6 +483,7 @@ extension CheckoutController {
                 ?? confirmParams?.confirmPaymentMethodOptions
             return .createWithPaymentMethodID(
                 sessionId: checkoutSession.id,
+                clientSecret: checkoutSession.clientSecret,
                 paymentMethodId: savedPaymentMethod.stripeId,
                 confirmationSource: paymentMethodParameters.confirmationSource,
                 expectedAmount: checkoutSession.amount,
@@ -487,12 +509,13 @@ extension CheckoutController {
         confirmationChallenge: (any CheckoutConfirmationChallenge)? = nil,
         poller injectedPoller: (any CheckoutSessionPolling)? = nil
     ) async -> InternalConfirmResult {
-        let poller: any CheckoutSessionPolling
-        if let injectedPoller {
-            poller = injectedPoller
-        } else {
-            poller = CheckoutSessionPoller(apiClient: apiClient)
-        }
+        // TODO(porter) polling: Restore the poller setup when polling uses CheckoutClient.
+        // let poller: any CheckoutSessionPolling
+        // if let injectedPoller {
+        //     poller = injectedPoller
+        // } else {
+        //     poller = CheckoutSessionPoller(apiClient: apiClient)
+        // }
 
         // 1. Call /confirm
         // TODO: Scope Radar option creation and this request with confirmationChallenge.withRadarOptions(for:).
@@ -507,34 +530,24 @@ extension CheckoutController {
         // Release the assertion only after the request using it has finished, before handling next actions.
         await confirmationChallenge?.complete()
 
-        if response.submissionAttempt?.state == .failed {
+        if response.paymentResponse?.status == "requires_payment_method" {
             return .failed(paymentError(from: response), sessionResponse: response)
         }
 
-        // Manual approval isn't supported yet
-        if response.submissionAttempt?.state == .requiresApproval {
-            let error = CheckoutError.unknown(debugDescription: "Checkout Session confirmation unexpectedly requires manual approval.")
+        if response.paymentResponse?.status == "requires_action",
+           response.paymentResponse?.paymentIntent == nil, response.paymentResponse?.setupIntent == nil {
+            let error = CheckoutError.unknown(debugDescription: "CheckoutClient requires an action without a supported Intent.")
             return .failed(error, sessionResponse: response)
         }
 
-        // Orchestration isn't supported yet
-        if response.routeToOrchestrationInterface == true {
-            let error = CheckoutError.unknown(debugDescription: "Checkout Session confirmation unexpectedly requires orchestration.")
-            return .failed(error, sessionResponse: response)
-        }
-
-        // 2. Handle any next action required by the Intent.
+        // 2. Retrieve the referenced Intent and handle any next action.
         let clientCompletedIntent: PaymentOrSetupIntent?
-        if let paymentIntent = response.paymentIntent {
-            let result: (STPPaymentHandlerActionStatus, STPPaymentIntent?, Error?) = await withCheckedContinuation { continuation in
-                paymentHandler.handleNextAction(
-                    for: paymentIntent,
-                    with: authenticationContext,
-                    returnURL: requestParameters.returnURL
-                ) { status, paymentIntent, error in
-                    continuation.resume(returning: (status, paymentIntent, error))
-                }
-            }
+        if let reference = response.paymentResponse?.paymentIntent {
+            let result = await paymentHandler.handleNextAction(
+                paymentIntentClientSecret: reference.clientSecret,
+                authenticationContext: authenticationContext,
+                returnURL: requestParameters.returnURL
+            )
             switch result.0 {
             case .succeeded:
                 guard let paymentIntent = result.1 else {
@@ -545,22 +558,18 @@ extension CheckoutController {
             case .canceled:
                 return .canceled(sessionResponse: response)
             case .failed:
-                let error = result.2 ?? PaymentSheetError.errorHandlingNextAction
+                let error: Error = result.2 ?? PaymentSheetError.errorHandlingNextAction
                 return .failed(error, sessionResponse: response)
             @unknown default:
                 let error = CheckoutError.unknown(debugDescription: "PaymentHandler returned an unknown action status for a PaymentIntent.")
                 return .failed(error, sessionResponse: response)
             }
-        } else if let setupIntent = response.setupIntent {
-            let result: (STPPaymentHandlerActionStatus, STPSetupIntent?, Error?) = await withCheckedContinuation { continuation in
-                paymentHandler.handleNextAction(
-                    for: setupIntent,
-                    with: authenticationContext,
-                    returnURL: requestParameters.returnURL
-                ) { status, setupIntent, error in
-                    continuation.resume(returning: (status, setupIntent, error))
-                }
-            }
+        } else if let reference = response.paymentResponse?.setupIntent {
+            let result = await paymentHandler.handleNextAction(
+                setupIntentClientSecret: reference.clientSecret,
+                authenticationContext: authenticationContext,
+                returnURL: requestParameters.returnURL
+            )
             switch result.0 {
             case .succeeded:
                 guard let setupIntent = result.1 else {
@@ -582,8 +591,10 @@ extension CheckoutController {
         }
 
         // 3. Poll if the Checkout Session is still in progress.
-        var didPollToCompletion = false
+        // TODO(porter) polling: Re-enable polling once it uses CheckoutClient.
+        // var didPollToCompletion = false
         switch response.status {
+        /*
         case .open:
             let pollOutcome = await poller.poll(checkoutSessionId: response.sessionId)
             switch pollOutcome {
@@ -598,7 +609,8 @@ extension CheckoutController {
                 let latestSession: PaymentPagesAPIResponse
                 do {
                     latestSession = try await apiClient.retrieveCheckoutSession(
-                        checkoutSessionId: response.sessionId
+                        checkoutSessionId: response.sessionId,
+                        clientSecret: requestParameters.clientSecret
                     )
                 } catch {
                     return .failed(error, sessionResponse: response)
@@ -611,7 +623,8 @@ extension CheckoutController {
                 let latestSession: PaymentPagesAPIResponse
                 do {
                     latestSession = try await apiClient.retrieveCheckoutSession(
-                        checkoutSessionId: response.sessionId
+                        checkoutSessionId: response.sessionId,
+                        clientSecret: requestParameters.clientSecret
                     )
                 } catch {
                     return .failed(error, sessionResponse: response)
@@ -621,7 +634,8 @@ extension CheckoutController {
                 let error = CheckoutError.unknown(debugDescription: "Checkout Session unexpectedly became invalid or expired during polling.")
                 return .failed(error, sessionResponse: latestSession)
             }
-        case .complete:
+        */
+        case .open, .complete:
             // Continue to step 4 without polling.
             break
         case .expired:
@@ -629,50 +643,35 @@ extension CheckoutController {
             return .failed(CheckoutError.unknown(debugDescription: "Checkout Session unexpectedly expired after confirmation."), sessionResponse: response)
         }
 
-        // 4. Hackily update the PaymentPages response `status` and `payment_status` based on the `/confirm` response and client-completed Intent.
-        // Unfortunately, this logic has to live on the client today. The /retrieve endpoint 400s for completed Checkout Sessions.
-        do {
-            var responseFields = response.allResponseFields
-
-            // PaymentHandler already verified that the Intent is client-complete. Only update
-            // Session fields we can derive from the newer Intent; otherwise preserve `/confirm`.
-            switch clientCompletedIntent {
-            case nil:
-                if didPollToCompletion {
-                    responseFields["status"] = "complete"
-                }
-            case .paymentIntent(let paymentIntent):
-                responseFields["payment_intent"] = paymentIntent.allResponseFields
-                switch paymentIntent.status {
-                case .succeeded:
-                    responseFields["status"] = "complete"
-                    responseFields["payment_status"] = "paid"
-                case .processing:
-                    responseFields["status"] = "complete"
-                default:
-                    break
-                }
-            case .setupIntent(let setupIntent):
-                responseFields["setup_intent"] = setupIntent.allResponseFields
-                switch setupIntent.status {
-                case .succeeded:
-                    responseFields["status"] = "complete"
-                default:
-                    break
-                }
+        // Preserve the status derived from client-completed authentication. Completed sessions cannot be retrieved.
+        var updatedResponse = response
+        switch clientCompletedIntent {
+        case nil:
+            // TODO(porter) polling: Restore the polled completion status when polling uses CheckoutClient.
+            // if didPollToCompletion {
+            //     updatedResponse.status = .complete(response.paymentStatus)
+            // }
+            break
+        case .paymentIntent(let paymentIntent):
+            switch paymentIntent.status {
+            case .succeeded:
+                updatedResponse.status = .complete(.paid)
+                updatedResponse.paymentStatus = .paid
+            case .processing:
+                updatedResponse.status = .complete(response.paymentStatus)
+            default:
+                break
             }
-
-            let data = try JSONSerialization.data(withJSONObject: responseFields)
-            let updatedResponse = try StripeJSONDecoder().decode(PaymentPagesAPIResponse.self, from: data)
-            return .completed(updatedResponse)
-        } catch {
-            return .failed(error, sessionResponse: response)
+        case .setupIntent(let setupIntent):
+            if setupIntent.status == .succeeded {
+                updatedResponse.status = .complete(response.paymentStatus)
+            }
         }
+        return .completed(updatedResponse)
     }
 
     private static func paymentError(from session: PaymentPagesAPIResponse) -> Error {
-        let lastErrorFields = session.paymentIntent?.lastPaymentError?.allResponseFields
-            ?? session.setupIntent?.lastSetupError?.allResponseFields
+        let lastErrorFields = session.paymentResponse?.lastPaymentError?.allResponseFields
         return NSError.stp_error(fromStripeResponse: lastErrorFields.map { ["error": $0] })
             ?? PaymentSheetError.errorHandlingNextAction
     }

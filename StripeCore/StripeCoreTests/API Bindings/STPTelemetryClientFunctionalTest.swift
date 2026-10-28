@@ -9,7 +9,7 @@
 import XCTest
 
 // swift-format-ignore
-@testable @_spi(STP) import StripeCore
+@testable @_spi(InternalOnlyAPI) import StripeCore
 
 class STPTelemetryClientFunctionalTest: XCTestCase {
     override func setUp() async throws {

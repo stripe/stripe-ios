@@ -7,6 +7,6 @@
 
 import Foundation
 
-@_spi(STP) public struct AvailableIncentives: Decodable {
-    @_spi(STP) public  let data: [LinkConsumerIncentive]
+@_spi(InternalOnlyAPI) public struct AvailableIncentives: Decodable {
+    @_spi(InternalOnlyAPI) public  let data: [LinkConsumerIncentive]
 }

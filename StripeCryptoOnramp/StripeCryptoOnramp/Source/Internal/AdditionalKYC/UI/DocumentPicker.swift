@@ -6,7 +6,7 @@
 //
 
 import PhotosUI
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 import SwiftUI
 import UniformTypeIdentifiers
 

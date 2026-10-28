@@ -6,13 +6,13 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 import UIKit
 
 /// The custom button used throughout the Stripe SDK.
 /// For internal SDK use only
 @objc(STP_Internal_Button)
-@_spi(STP) public class Button: UIControl {
+@_spi(InternalOnlyAPI) public class Button: UIControl {
     struct Constants {
         // TODO(ramont): move to `Configuration`
         static let minTitleLabelHeight: CGFloat = 24

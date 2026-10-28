@@ -4,7 +4,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 final class OpenNotificationBannerTaskMessageHandler: ScriptMessageHandler<OpenNotificationBannerTaskMessageHandler.Payload> {
     enum JSONValue: Codable, Equatable {

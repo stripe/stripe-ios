@@ -6,8 +6,8 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 final class BiometricConsentViewController: IdentityFlowViewController {
@@ -226,7 +226,7 @@ extension BiometricConsentViewController: UIScrollViewDelegate {
 
 // MARK: - IdentityFlowViewDelegate
 extension BiometricConsentViewController: IdentityFlowViewDelegate {
-    func scrollViewFullyLaiedOut(_ scrollView: UIScrollView) {
+    func scrollViewFullyLaidOut(_ scrollView: UIScrollView) {
         guard scrolledToBottomYOffset == nil else {
             return
         }

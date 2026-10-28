@@ -5,7 +5,7 @@
 //  Copyright © 2026 Stripe, Inc. All rights reserved.
 //
 
-@testable @_spi(STP) import StripeCore
+@testable @_spi(InternalOnlyAPI) import StripeCore
 import XCTest
 
 enum RequestBodyTestHelpers {

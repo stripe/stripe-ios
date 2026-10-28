@@ -9,6 +9,6 @@
 import Foundation
 
 /// Internal protocol to represent an object that provides a region code
-@_spi(STP) public protocol RegionCodeProvider {
+@_spi(InternalOnlyAPI) public protocol RegionCodeProvider {
     var regionCode: String { get }
 }

@@ -9,9 +9,9 @@
 import StripeCoreTestUtils
 import UIKit
 
-@testable@_spi(STP) import StripeCore
-@testable@_spi(STP) import StripePaymentSheet
-@testable@_spi(STP) import StripeUICore
+@testable@_spi(InternalOnlyAPI) import StripeCore
+@testable@_spi(InternalOnlyAPI) import StripePaymentSheet
+@testable@_spi(InternalOnlyAPI) import StripeUICore
 
 class ButtonLinkSnapshotTests: STPSnapshotTestCase {
 

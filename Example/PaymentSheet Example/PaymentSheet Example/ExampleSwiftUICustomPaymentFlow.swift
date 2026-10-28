@@ -6,7 +6,7 @@
 //  Copyright © 2021 stripe-ios. All rights reserved.
 //
 
-@_spi(STP) import StripePaymentSheet
+@_spi(InternalOnlyAPI) import StripePaymentSheet
 import SwiftUI
 
 struct ExampleSwiftUICustomPaymentFlow: View {

@@ -7,7 +7,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 /// An `STPCustomer` represents a deserialized Customer object from the Stripe API.
 /// You shouldn't need to instantiate an `STPCustomer` – you should instead use

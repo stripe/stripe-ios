@@ -6,11 +6,11 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-@_spi(STP)@testable import StripeCore
+@_spi(InternalOnlyAPI)@testable import StripeCore
 import StripeCoreTestUtils
-@_spi(STP)@testable import StripePaymentSheet
+@_spi(InternalOnlyAPI)@testable import StripePaymentSheet
 @testable import StripePaymentsTestUtils
-@_spi(STP)@testable import StripeUICore
+@_spi(InternalOnlyAPI)@testable import StripeUICore
 import XCTest
 
 class AddressViewControllerSnapshotTests: STPSnapshotTestCase {
@@ -298,7 +298,7 @@ private final class ShippingAddressElementSnapshotDelegate: ShippingAddressEleme
     var updateExpectation: XCTestExpectation?
     private var updateContinuation: CheckedContinuation<Void, Never>?
 
-    func updateShippingAddress(name: String?, address: CheckoutController.Address?) async throws {
+    func updateShippingAddressFromElement(name: String?, address: CheckoutController.Address?) async throws {
         updateExpectation?.fulfill()
         await withCheckedContinuation { continuation in
             updateContinuation = continuation

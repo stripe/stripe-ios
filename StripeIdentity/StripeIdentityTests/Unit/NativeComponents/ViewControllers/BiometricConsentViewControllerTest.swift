@@ -7,11 +7,11 @@
 //
 
 import Foundation
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 import XCTest
 
-@_spi(STP) @testable import StripeIdentity
+@_spi(InternalOnlyAPI) @testable import StripeIdentity
 
 final class BiometricConsentViewControllerTest: XCTestCase {
 
@@ -42,7 +42,13 @@ final class BiometricConsentViewControllerTest: XCTestCase {
     }
 
     func testDeny() {
-        // Tap accept button
+        XCTAssertEqual(
+            vc.flowViewModel.buttons.last?.text,
+            BiometricConsentViewControllerTest.mockVerificationPage.biometricConsent
+                .declineButtonText
+        )
+
+        // Tap decline button
         vc.flowViewModel.buttons.last?.didTap()
 
         // Verify biometricConsent is saved

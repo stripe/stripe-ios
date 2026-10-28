@@ -9,10 +9,10 @@
 import Combine
 import Foundation
 import SafariServices
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
-@_spi(STP) import StripePaymentsUI
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) import StripePaymentsUI
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 typealias PaymentOption = PaymentSheet.PaymentOption
@@ -167,7 +167,7 @@ extension PaymentSheet {
             public let billingDetails: PaymentSheet.BillingDetails?
 
             /// The shipping details associated with the current customer.
-            @_spi(STP) public let shippingDetails: AddressViewController.Configuration.DefaultAddressDetails?
+            @_spi(InternalOnlyAPI) public let shippingDetails: AddressViewController.Configuration.DefaultAddressDetails?
 
             /// A string representation of the customer's desired payment method
             /// - If this is a Stripe payment method, see https://stripe.com/docs/api/payment_methods/object#payment_method_object-type for possible values.
@@ -176,10 +176,10 @@ extension PaymentSheet {
             public let paymentMethodType: String
 
             /// An expanded label containing additional information about the payment option.
-            @_spi(STP) public let labels: Labels
+            @_spi(InternalOnlyAPI) public let labels: Labels
 
             /// A type that holds additional display data
-            @_spi(STP) public struct Labels: Equatable {
+            @_spi(InternalOnlyAPI) public struct Labels: Equatable {
                 /// Primary label for the payment option. This will primarily describe
                 /// the type of the payment option being used. For cards, this could
                 /// be 'Mastercard', 'Visa', or others. For other payment methods, this is typically the
@@ -1046,8 +1046,8 @@ extension PaymentSheet.FlowController: FlowControllerViewControllerDelegate {
 
 // MARK: - STPAnalyticsProtocol
 /// :nodoc:
-@_spi(STP) extension PaymentSheet.FlowController: STPAnalyticsProtocol {
-    @_spi(STP) public static let stp_analyticsIdentifier: String = "PaymentSheet.FlowController"
+@_spi(InternalOnlyAPI) extension PaymentSheet.FlowController: STPAnalyticsProtocol {
+    @_spi(InternalOnlyAPI) public static let stp_analyticsIdentifier: String = "PaymentSheet.FlowController"
 }
 
 // MARK: - PaymentSheetAuthenticationContext

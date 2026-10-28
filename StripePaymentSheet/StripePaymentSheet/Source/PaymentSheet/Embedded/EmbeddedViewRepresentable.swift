@@ -5,8 +5,8 @@
 //  Created by Nick Porter on 1/30/25.
 //
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripeUICore
 import SwiftUI
 
 struct EmbeddedViewRepresentable: UIViewRepresentable {

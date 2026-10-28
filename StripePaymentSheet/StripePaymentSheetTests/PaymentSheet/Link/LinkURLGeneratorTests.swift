@@ -5,9 +5,9 @@
 
 import Foundation
 
-@_spi(STP) @testable import StripeCore
-@_spi(STP) @testable import StripePayments
-@_spi(STP) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @testable import StripePaymentSheet
+@_spi(InternalOnlyAPI) @testable import StripeCore
+@_spi(InternalOnlyAPI) @testable import StripePayments
+@_spi(InternalOnlyAPI) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @testable import StripePaymentSheet
 
 import OHHTTPStubs
 import OHHTTPStubsSwift

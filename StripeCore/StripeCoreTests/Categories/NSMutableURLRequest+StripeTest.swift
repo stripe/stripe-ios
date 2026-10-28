@@ -6,7 +6,7 @@
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
 //
 
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 import XCTest
 
 class NSMutableURLRequest_StripeTest: XCTestCase {

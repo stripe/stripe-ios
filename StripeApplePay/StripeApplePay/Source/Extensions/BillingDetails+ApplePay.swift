@@ -8,7 +8,7 @@
 
 import Foundation
 import PassKit
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 extension StripeContact {
     /// Initializes a new Contact with data from an PassKit contact.

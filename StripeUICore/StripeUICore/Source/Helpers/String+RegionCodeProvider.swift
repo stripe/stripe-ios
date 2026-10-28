@@ -9,7 +9,7 @@
 import Foundation
 
 /// Default conformance of String to RegionCodeProvider
-@_spi(STP) extension String: RegionCodeProvider {
+@_spi(InternalOnlyAPI) extension String: RegionCodeProvider {
     public var regionCode: String {
         return self
     }

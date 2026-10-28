@@ -6,10 +6,10 @@
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
 //
 
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 import UIKit
 
-@_spi(STP) public protocol CheckboxButtonDelegate: AnyObject {
+@_spi(InternalOnlyAPI) public protocol CheckboxButtonDelegate: AnyObject {
     /// Return `true` to open the URL in the device's default browser.
     /// Return `false` to custom handle the URL.
     func checkboxButton(_ checkboxButton: CheckboxButton, shouldOpen url: URL) -> Bool
@@ -17,7 +17,7 @@ import UIKit
 
 /// For internal SDK use only
 @objc(STP_Internal_CheckboxButton)
-@_spi(STP) public class CheckboxButton: UIControl {
+@_spi(InternalOnlyAPI) public class CheckboxButton: UIControl {
     // MARK: - Properties
 
     public weak var delegate: CheckboxButtonDelegate?

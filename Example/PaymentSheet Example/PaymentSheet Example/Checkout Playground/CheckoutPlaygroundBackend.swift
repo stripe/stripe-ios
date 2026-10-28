@@ -3,7 +3,7 @@
 //  PaymentSheet Example
 //
 
-@_spi(STP) import StripePaymentSheet
+@_spi(InternalOnlyAPI) import StripePaymentSheet
 
 extension CheckoutPlayground {
     struct SessionFactory {

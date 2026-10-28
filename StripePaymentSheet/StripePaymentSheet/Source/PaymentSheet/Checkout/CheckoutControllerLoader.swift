@@ -4,8 +4,8 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
 
 @MainActor
 enum CheckoutControllerLoader {
@@ -28,7 +28,6 @@ enum CheckoutControllerLoader {
 
     /// Loads everything needed to initialize CheckoutController
     static func load(configuration: CheckoutController.Configuration) async throws -> CheckoutController.Session {
-        AnalyticsHelper.shared.generateSessionID()
         // 1a. Load misc. singletons
         let resources = Task { // Use a Task instead of async let; see PaymentSheetLoader.load.
             await PaymentSheetLoader.loadMiscellaneousSingletons()
@@ -36,9 +35,10 @@ enum CheckoutControllerLoader {
         // 1b. Call the /init endpoint
         let response = try await configuration.apiClient.initCheckoutSession(
             checkoutSessionId: CheckoutController.extractSessionId(from: configuration.clientSecret),
+            clientSecret: configuration.clientSecret,
             adaptivePricingAllowed: configuration.currencySelectorElement != nil
         )
-        let session = CheckoutController.Session(apiResponse: response, localState: .empty, configuration: configuration)
+        let session = CheckoutController.Session(apiResponse: response, clientSecret: configuration.clientSecret, localState: .empty, configuration: configuration)
         await resources.value
 
         // 2. Load Link

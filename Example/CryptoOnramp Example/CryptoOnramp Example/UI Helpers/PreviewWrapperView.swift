@@ -10,7 +10,7 @@ import SwiftUI
 @_spi(CryptoOnrampAlpha)
 import StripeCryptoOnramp
 
-@_spi(STP)
+@_spi(InternalOnlyAPI)
 import StripePaymentSheet
 
 /// A wrapper view used for Swift UI previews to reduce duplication around views that require a publishable key and `CryptoOnrampCoordinator` instance to be set up.
