@@ -5,7 +5,7 @@
 //  Created by Mat Schmid on 2024-09-24.
 //
 
-@_spi(STP) @testable import StripeCore
+@_spi(InternalOnlyAPI) @testable import StripeCore
 import XCTest
 
 class AsyncTests: XCTestCase {

@@ -1,8 +1,8 @@
 import OHHTTPStubs
 import OHHTTPStubsSwift
-@_spi(STP) @_spi(DashboardOnly) import StripeCore
+@_spi(InternalOnlyAPI) @_spi(DashboardOnly) import StripeCore
 import StripeCoreTestUtils
-@_spi(STP) import StripePayments
+@_spi(InternalOnlyAPI) import StripePayments
 @testable import StripePaymentSheet
 import XCTest
 

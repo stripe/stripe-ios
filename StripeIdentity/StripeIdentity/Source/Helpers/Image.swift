@@ -8,12 +8,12 @@
 
 import CoreGraphics
 import Foundation
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeUICore
 
 /// The canonical set of all image files in the `StripeIdentity` module.
 /// This helps us avoid duplicates and automatically test that all images load properly
-@_spi(STP) public enum Image: String, CaseIterable, ImageMaker {
-    @_spi(STP) public typealias BundleLocator = StripeIdentityBundleLocator
+@_spi(InternalOnlyAPI) public enum Image: String, CaseIterable, ImageMaker {
+    @_spi(InternalOnlyAPI) public typealias BundleLocator = StripeIdentityBundleLocator
 
     case iconAdd = "icon_add"
     case iconEllipsis = "icon_ellipsis"

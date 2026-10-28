@@ -6,7 +6,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripePayments
+@_spi(InternalOnlyAPI) import StripePayments
 
 /// An Apple Pay selection and the immutable publishable key used to create it.
 struct ApplePayPaymentSource {

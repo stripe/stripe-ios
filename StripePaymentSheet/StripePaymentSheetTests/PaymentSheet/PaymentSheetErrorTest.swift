@@ -5,7 +5,7 @@
 //  Created by Chris Mays on 11/2/23.
 //
 
-@testable@_spi(STP) import StripeCore
+@testable@_spi(InternalOnlyAPI) import StripeCore
 @testable import StripePaymentSheet
 import XCTest
 

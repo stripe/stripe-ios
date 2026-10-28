@@ -7,7 +7,7 @@
 
 import Foundation
 
-@_spi(STP) public struct InstantDebitsLinkedBank: Equatable {
+@_spi(InternalOnlyAPI) public struct InstantDebitsLinkedBank: Equatable {
     public let paymentMethod: LinkBankPaymentMethod
     public let bankName: String?
     public let last4: String?

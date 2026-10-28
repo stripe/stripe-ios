@@ -7,8 +7,8 @@
 //
 
 import CoreVideo
-@_spi(STP) import StripeCameraCore
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCameraCore
+@_spi(InternalOnlyAPI) import StripeCore
 import Vision
 
 typealias AnyDocumentScanner = AnyImageScanner<DocumentScannerOutput?>

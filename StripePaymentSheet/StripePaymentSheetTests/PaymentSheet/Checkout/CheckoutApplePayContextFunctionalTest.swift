@@ -9,12 +9,12 @@
 import OHHTTPStubs
 import OHHTTPStubsSwift
 import PassKit
-@testable @_spi(STP) import StripeCore
-@testable @_spi(STP) import StripeCoreTestUtils
-@testable @_spi(STP) import StripePayments
-@testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(InternalOnlyAPI) import StripeCore
+@testable @_spi(InternalOnlyAPI) import StripeCoreTestUtils
+@testable @_spi(InternalOnlyAPI) import StripePayments
+@testable @_spi(InternalOnlyAPI) import StripePaymentSheet
 import StripePaymentsObjcTestUtils
-@testable @_spi(STP) import StripePaymentsTestUtils
+@testable @_spi(InternalOnlyAPI) import StripePaymentsTestUtils
 import XCTest
 
 @MainActor
@@ -28,7 +28,7 @@ class CheckoutApplePayContextFunctionalTest: STPNetworkStubbingTestCase {
             XCTAssertEqual(result.paymentSheetResult, .completed)
             if case .completed(let response) = result {
                 XCTAssertEqual(response.status, .complete(.paid))
-                XCTAssertEqual(response.paymentIntent?.status, .succeeded)
+                XCTAssertEqual(response.paymentResponse?.status, "succeeded")
             }
             didComplete.fulfill()
         }
@@ -46,7 +46,7 @@ class CheckoutApplePayContextFunctionalTest: STPNetworkStubbingTestCase {
             XCTAssertEqual(result.paymentSheetResult, .completed)
             if case .completed(let response) = result {
                 XCTAssertEqual(response.status, .complete(.noPaymentRequired))
-                XCTAssertEqual(response.setupIntent?.status, .succeeded)
+                XCTAssertEqual(response.paymentResponse?.status, "succeeded")
             }
             didComplete.fulfill()
         }
@@ -66,7 +66,7 @@ class CheckoutApplePayContextFunctionalTest: STPNetworkStubbingTestCase {
         var cancellationRequested = false
         stub { urlRequest in
             guard let path = urlRequest.url?.path,
-                  path.contains("/payment_pages/"),
+                  path.contains("/checkout_client/"),
                   path.hasSuffix("/confirm") else { return false }
             DispatchQueue.main.async {
                 guard !cancellationRequested else { return }
@@ -100,11 +100,11 @@ class CheckoutApplePayContextFunctionalTest: STPNetworkStubbingTestCase {
             return XCTFail("Expected a completed Checkout Session")
         }
         let paymentMethod: STPPaymentMethod?
-        if let paymentIntent = response.paymentIntent {
+        if let paymentIntent = response.paymentResponse?.paymentIntent {
             let intent = try await apiClient.retrievePaymentIntent(clientSecret: paymentIntent.clientSecret, expand: ["payment_method"])
             paymentMethod = intent.paymentMethod
         } else {
-            let setupIntent = try XCTUnwrap(response.setupIntent)
+            let setupIntent = try XCTUnwrap(response.paymentResponse?.setupIntent)
             let intent = try await apiClient.retrieveSetupIntent(clientSecret: setupIntent.clientSecret, expand: ["payment_method"])
             paymentMethod = intent.paymentMethod
         }
@@ -124,9 +124,10 @@ class CheckoutApplePayContextFunctionalTest: STPNetworkStubbingTestCase {
         let apiClient = STPAPIClient(publishableKey: sessionResponse.publishableKey)
         let initResponse = try await apiClient.initCheckoutSession(
             checkoutSessionId: sessionResponse.id,
+            clientSecret: sessionResponse.clientSecret,
             adaptivePricingAllowed: false
         )
-        let session = initResponse.makePublicSession()
+        let session = initResponse.makePublicSession(clientSecret: sessionResponse.clientSecret)
         let authenticationContext = WindowAuthenticationContext()
         let paymentHandler = STPPaymentHandler(apiClient: apiClient)
         let applePayConfirmationParameters = CheckoutController.ApplePayConfirmationParameters.makeMock(

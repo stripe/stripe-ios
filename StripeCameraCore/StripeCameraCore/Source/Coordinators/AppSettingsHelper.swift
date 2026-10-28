@@ -9,13 +9,13 @@
 import Foundation
 import UIKit
 
-@_spi(STP) public protocol AppSettingsHelperProtocol {
+@_spi(InternalOnlyAPI) public protocol AppSettingsHelperProtocol {
     var canOpenAppSettings: Bool { get }
     func openAppSettings()
 }
 
 /// Helper class that opens the app's settings screen in the Settings app.
-@_spi(STP) public class AppSettingsHelper: AppSettingsHelperProtocol {
+@_spi(InternalOnlyAPI) public class AppSettingsHelper: AppSettingsHelperProtocol {
 
     public static let shared = AppSettingsHelper()
 

@@ -9,10 +9,10 @@
 import XCTest
 
 // swift-format-ignore
-@testable @_spi(STP) import StripeApplePay
+@testable @_spi(InternalOnlyAPI) import StripeApplePay
 
 // swift-format-ignore
-@testable @_spi(STP) import StripeCore
+@testable @_spi(InternalOnlyAPI) import StripeCore
 
 class STPTelemetryClientTest: XCTestCase {
 

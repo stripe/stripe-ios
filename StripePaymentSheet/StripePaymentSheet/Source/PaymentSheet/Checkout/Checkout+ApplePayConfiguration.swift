@@ -12,7 +12,7 @@ import PassKit
 /// Bridges ``PaymentElement/ApplePayConfiguration`` (Payment Element) and
 /// ``ExpressCheckoutElement/ApplePayConfiguration`` (ExpressCheckoutElement) so Apple Pay
 /// confirmation code can accept either without caring which surface it came from.
-@_spi(STP)
+@_spi(InternalOnlyAPI)
 @_spi(ReactNativeSDK)
 public protocol CheckoutApplePayConfiguration {
     /// The Apple Pay merchant identifier.

@@ -6,11 +6,11 @@
 //
 
 import iOSSnapshotTestCase
-@_spi(STP)@testable import StripeCore
+@_spi(InternalOnlyAPI)@testable import StripeCore
 import StripeCoreTestUtils
 import StripePaymentsTestUtils
-@_spi(STP)@testable import StripePaymentsUI
-@_spi(STP)@testable import StripeUICore
+@_spi(InternalOnlyAPI)@testable import StripePaymentsUI
+@_spi(InternalOnlyAPI)@testable import StripeUICore
 
 class STPPaymentCardTextFieldSnapshotTests: STPSnapshotTestCase {
 

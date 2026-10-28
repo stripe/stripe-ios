@@ -6,7 +6,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 private enum APIErrorTestHelpersError: Error {
     case couldNotBuildResponse

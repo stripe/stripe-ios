@@ -7,7 +7,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 /// A Naira card Payment Method.
 /// - seealso: https://docs.stripe.com/payments/ng-card/accept-a-payment?payment-ui=direct-api
@@ -58,7 +58,7 @@ public class STPPaymentMethodNgCard: NSObject, STPAPIResponseDecodable {
     /// A Visa card.
     case visa
 
-    @_spi(STP) public init(string: String?) {
+    @_spi(InternalOnlyAPI) public init(string: String?) {
         switch string?.lowercased() {
         case "amex": self = .amex
         case "mastercard": self = .mastercard
@@ -68,7 +68,7 @@ public class STPPaymentMethodNgCard: NSObject, STPAPIResponseDecodable {
         }
     }
 
-    @_spi(STP) public var stringValue: String? {
+    @_spi(InternalOnlyAPI) public var stringValue: String? {
         switch self {
         case .unknown: return nil
         case .amex: return "amex"

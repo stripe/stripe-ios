@@ -6,7 +6,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 /// Error passed to the when the `ConnectComponentWebViewController.didFailLoadWithError`
 /// when receiving an error status code loading the component web page

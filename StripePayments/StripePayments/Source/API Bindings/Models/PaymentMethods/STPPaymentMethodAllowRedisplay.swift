@@ -16,7 +16,7 @@ import Foundation
     /// Use always to indicate that this payment method can always be shown to a customer in a checkout flow.
     case always
 
-    @_spi(STP) public var stringValue: String? {
+    @_spi(InternalOnlyAPI) public var stringValue: String? {
         switch self {
         case .unspecified:
             return "unspecified"

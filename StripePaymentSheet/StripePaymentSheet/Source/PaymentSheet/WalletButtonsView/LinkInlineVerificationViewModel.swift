@@ -5,7 +5,7 @@
 //  Created by Mat Schmid on 6/4/25.
 //
 
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeUICore
 import SwiftUI
 
 class LinkInlineVerificationViewModel: ObservableObject {

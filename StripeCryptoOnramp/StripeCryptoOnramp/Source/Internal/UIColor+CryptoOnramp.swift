@@ -5,7 +5,7 @@
 //  Created by Michael Liberatore on 9/10/26.
 //
 
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeUICore
 import SwiftUI
 import UIKit
 

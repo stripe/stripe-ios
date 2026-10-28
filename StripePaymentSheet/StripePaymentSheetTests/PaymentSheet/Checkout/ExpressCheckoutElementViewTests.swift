@@ -6,9 +6,9 @@
 //
 
 import PassKit
-@testable @_spi(STP) import StripeCore
-@testable @_spi(STP) import StripeCoreTestUtils
-@testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(InternalOnlyAPI) import StripeCore
+@testable @_spi(InternalOnlyAPI) import StripeCoreTestUtils
+@testable @_spi(InternalOnlyAPI) import StripePaymentSheet
 import XCTest
 
 @MainActor
@@ -20,11 +20,10 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
         configuration.applePayConfiguration = .init(merchantId: "merchant.com.example")
         let session = CheckoutTestHelpers.makeSession([
             "customer_email": "jenny@example.com",
-            "elements_session": [
-                "session_id": "es_test",
-                "merchant_country": "US",
-                "payment_method_preference": ["ordered_payment_method_types": ["card"]],
                 "ordered_payment_method_types_and_wallets": ["link"],
+            "elements_session_id": "es_test",
+            "merchant_info": [
+                "country": "US"
             ],
         ]).makePublicSession(
             expressCheckoutConfiguration: configuration
@@ -47,6 +46,7 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
         let analytic = try XCTUnwrap(analyticsClient.loggedAnalytics.first)
         XCTAssertEqual(analyticsClient.loggedAnalytics.count, 1)
         XCTAssertEqual(analytic.event, .expressCheckoutElementInit)
+        XCTAssertEqual(analytic.params["checkout_session_id"] as? String, session.id)
         XCTAssertEqual(analytic.params["ordered_lpms"] as? String, "link")
         XCTAssertEqual(analytic.params["apple_pay_enabled"] as? Bool, StripeAPI.deviceSupportsApplePay())
         XCTAssertEqual(analytic.params["ocr_type"] as? String, PaymentsSDKVariant.ocrTypeString)
@@ -273,14 +273,14 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
         // Given a session that calculates automatic tax from the billing address
         let apiResponse = CheckoutTestHelpers.makeSessionWithWalletTypes(
             ["link"],
-            automaticTaxAddressSource: "session.billing"
+            automaticTaxAddressSource: "billing"
         )
         let configuration = ExpressCheckoutElement.Configuration(completion: { _ in })
         let checkoutConfiguration = CheckoutTestHelpers.makeConfiguration(apiResponse: apiResponse, paymentElementConfiguration: nil)
 
         // When the public session applies the automatic tax restriction before calculating ECE availability
         XCTAssertFalse(apiResponse.elementsSession.value.disableLinkForAutomaticTaxBilling)
-        let session = CheckoutController.Session(apiResponse: apiResponse, localState: .empty, configuration: checkoutConfiguration)
+        let session = CheckoutController.Session(apiResponse: apiResponse, clientSecret: checkoutConfiguration.clientSecret, localState: .empty, configuration: checkoutConfiguration)
 
         let reasons = ExpressCheckoutElementUtilities.linkDisabledReasonsWithoutCheckoutRequirements(
             for: session.elementsSession,
@@ -299,13 +299,13 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
     func testLinkButtonHiddenWhenShippingAddressIsRequired() {
         // Given a session that requires shipping
         let configuration = ExpressCheckoutElement.Configuration(completion: { _ in })
-        var elementsSession = CheckoutTestHelpers.minimalElementsSessionJSON
+        var elementsSession = CheckoutTestHelpers.minimalCheckoutClientConfigurationJSON
         elementsSession["ordered_payment_method_types_and_wallets"] = ["link"]
         let apiResponse = CheckoutTestHelpers.makeSession([
             "customer_email": "jenny@example.com",
             "shipping_address_collection": ["allowed_countries": ["US"]],
-            "elements_session": elementsSession,
-        ])
+            ].merging(elementsSession) { _, new in new }
+        )
         let session = apiResponse.makePublicSession(expressCheckoutConfiguration: configuration)
 
         // When
@@ -327,7 +327,7 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
         let configuration = ExpressCheckoutElement.Configuration(completion: { _ in })
         let apiResponse = CheckoutTestHelpers.makeSessionWithWalletTypes(
             ["link"],
-            automaticTaxAddressSource: "session.shipping",
+            automaticTaxAddressSource: "shipping",
             customerEmail: "jenny@example.com"
         )
 
@@ -420,7 +420,7 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
         billingAddressCollectionRequired: Bool = false,
         nativeLink: Bool = false
     ) -> PaymentPagesAPIResponse {
-        var elementsSession = CheckoutTestHelpers.minimalElementsSessionJSON
+        var elementsSession = CheckoutTestHelpers.minimalCheckoutClientConfigurationJSON
         elementsSession["ordered_payment_method_types_and_wallets"] = ["link"]
         if nativeLink {
             elementsSession["link_settings"] = [
@@ -428,7 +428,7 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
                 "link_mobile_use_attestation_endpoints": true,
             ]
         }
-        var overrides: [String: Any] = ["elements_session": elementsSession]
+        var overrides: [String: Any] = [:].merging(elementsSession) { _, new in new }
         if let customerEmail {
             overrides["customer_email"] = customerEmail
         }

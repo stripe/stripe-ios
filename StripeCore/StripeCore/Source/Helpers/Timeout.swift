@@ -7,8 +7,8 @@
 
 import Foundation
 
-@_spi(STP) public struct TimeoutError: Error {}
-@_spi(STP) public struct UnexpectedNilError: Error {}
+@_spi(InternalOnlyAPI) public struct TimeoutError: Error {}
+@_spi(InternalOnlyAPI) public struct UnexpectedNilError: Error {}
 
 /// Runs two operations in parallel with individual timeouts.
 /// - Parameters:
@@ -35,7 +35,7 @@ import Foundation
 ///         // You must cancel the task yourself when `withTimeout` throws a `TimeoutError`
 ///     }
 ///     ```
-@_spi(STP) @discardableResult public func withTimeout<T1, T2>(
+@_spi(InternalOnlyAPI) @discardableResult public func withTimeout<T1, T2>(
     _ timeout: TimeInterval,
     _ operation1: @escaping () async throws -> T1,
     _ operation2: @escaping () async throws -> T2
@@ -73,7 +73,7 @@ import Foundation
 ///         // You must cancel the task yourself when `withTimeout` throws a `TimeoutError`
 ///     }
 ///     ```
-@_spi(STP) @discardableResult public func withTimeout<T>(
+@_spi(InternalOnlyAPI) @discardableResult public func withTimeout<T>(
     _ timeout: TimeInterval,
     _ operation: @escaping () async throws -> T
 ) async -> Result<T, Error> {

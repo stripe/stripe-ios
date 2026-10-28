@@ -7,10 +7,10 @@
 
 import OHHTTPStubs
 import OHHTTPStubsSwift
-@_spi(STP)@testable import StripeCore
-@_spi(STP) import StripeCoreTestUtils
-@_spi(STP)@_spi(PaymentMethodMessagingElementPreview)@testable import StripePaymentSheet
-@_spi(STP)@testable import StripePaymentsTestUtils
+@_spi(InternalOnlyAPI)@testable import StripeCore
+@_spi(InternalOnlyAPI) import StripeCoreTestUtils
+@_spi(InternalOnlyAPI)@_spi(PaymentMethodMessagingElementPreview)@testable import StripePaymentSheet
+@_spi(InternalOnlyAPI)@testable import StripePaymentsTestUtils
 import XCTest
 
 class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {

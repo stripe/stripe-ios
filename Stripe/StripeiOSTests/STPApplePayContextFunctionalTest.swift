@@ -10,7 +10,7 @@
 import OHHTTPStubs
 @testable import Stripe
 @testable import StripeApplePay
-@testable@_spi(STP) import StripeCore
+@testable@_spi(InternalOnlyAPI) import StripeCore
 @testable import StripeCoreTestUtils
 @testable import StripePayments
 @testable import StripePaymentsObjcTestUtils

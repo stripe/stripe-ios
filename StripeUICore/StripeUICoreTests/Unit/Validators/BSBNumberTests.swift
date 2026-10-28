@@ -7,7 +7,7 @@
 
 import XCTest
 
-@_spi(STP) @testable import StripeUICore
+@_spi(InternalOnlyAPI) @testable import StripeUICore
 
 class BSBNumberTests: XCTestCase {
     func testBSBNumber_0() {

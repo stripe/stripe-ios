@@ -8,7 +8,7 @@
 
 import UIKit
 
-@_spi(STP) public extension UIFont {
+@_spi(InternalOnlyAPI) public extension UIFont {
 
     func scaled(
         withTextStyle textStyle: UIFont.TextStyle,

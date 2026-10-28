@@ -9,7 +9,7 @@ import CoreGraphics
 import XCTest
 
 // swift-format-ignore
-@testable @_spi(STP) import StripeCameraCore
+@testable @_spi(InternalOnlyAPI) import StripeCameraCore
 
 @testable import StripeIdentity
 

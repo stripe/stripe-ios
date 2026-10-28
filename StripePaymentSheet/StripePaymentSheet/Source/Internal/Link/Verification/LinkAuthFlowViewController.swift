@@ -1,7 +1,7 @@
 // Copyright © 2026 Stripe, Inc. All rights reserved.
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 /// Hosts auth screens within the custom dialog or the existing Link bottom sheet.
