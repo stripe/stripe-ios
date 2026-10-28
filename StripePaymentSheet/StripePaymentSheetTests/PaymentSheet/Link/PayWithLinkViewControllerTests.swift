@@ -14,8 +14,6 @@ import XCTest
 #if !os(visionOS)
 class PayWithLinkViewControllerTests: XCTestCase {
 
-    var paymentSheet: PayWithNativeLinkController!
-
     @MainActor
     func testNativeWalletResizesWhenPaymentPickerExpandsAndCollapses() async throws {
         // Given a presented wallet with two saved cards and a collapsed payment picker
@@ -231,8 +229,8 @@ class PayWithLinkViewControllerTests: XCTestCase {
     }
 
     @MainActor
-    func testBailsToWebFlowWhenAttestationFails() async {
-        // Set up a mock STPAPIClient with a mocked attestation backend
+    func testBailsToWebFlowWhenAttestationFails() async throws {
+        // Given a mocked attestation service that always fails key generation
         let apiClient = STPAPIClient(publishableKey: "pk_live_abc123")
         var config = PaymentSheet.Configuration._testValue_MostPermissive()
         let mockAttestBackend = MockAttestBackend()
@@ -240,24 +238,34 @@ class PayWithLinkViewControllerTests: XCTestCase {
         let mockStripeAttest = StripeAttest(appAttestService: mockAttestService, appAttestBackend: mockAttestBackend, apiClient: apiClient)
         apiClient.stripeAttest = mockStripeAttest
         config.apiClient = apiClient
-
-        // Always fail attestation, forcing us back to the web flow
+        await mockStripeAttest.resetKey()
         await mockAttestService.setShouldFailKeygenWithError(NSError(domain: "test", code: 1))
 
         let exp = expectation(description: "SFAuthenticationViewController presented")
-        // Create a TestViewController, which will call our custom block when a child VC is presented.
         let hostVC = TestViewController(onPresentChild: { vc in
-            // Ensure the SFWebAuthenticationSession view controller is being presented over us.
-            // SFAuthenticationViewController is private, so this is a bit hacky.
-            // Should be okay for a test — if it breaks, we'd just need to replace it with the new name for SFAuthenticationViewController.
+            // ASWebAuthenticationSession presents this private controller on the host.
             if String(describing: type(of: vc)) == "SFAuthenticationViewController" {
                 exp.fulfill()
             }
         })
-        // We need a real window to present the test VC
-        let window = UIWindow(frame: UIScreen.main.bounds)
+        let sceneConnected = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            UIApplication.shared.connectedScenes.contains { $0 is UIWindowScene }
+        }, object: nil)
+        await fulfillment(of: [sceneConnected], timeout: 5)
+        let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first)
+        let previousKeyWindow = scene.windows.first { $0.isKeyWindow }
+        let previousAccount = LinkAccountContext.shared.account
+        let window = UIWindow(windowScene: scene)
+        window.frame = scene.coordinateSpace.bounds
         window.rootViewController = hostVC
         window.makeKeyAndVisible()
+        defer {
+            hostVC.dismiss(animated: false)
+            window.isHidden = true
+            window.rootViewController = nil
+            previousKeyWindow?.makeKeyAndVisible()
+            LinkAccountContext.shared.account = previousAccount
+        }
 
         let payWithNativeLinkController = PayWithNativeLinkController(
             mode: .full,
@@ -267,15 +275,15 @@ class PayWithLinkViewControllerTests: XCTestCase {
             analyticsHelper: ._testValue()
         )
 
-        // Now make the fake PayWithLinkViewController and present it
+        // When the native sheet is presented, finish presentation before attestation can fail.
         let vc = PayWithLinkViewController(intent: ._testValue(), linkAccount: nil, elementsSession: ._testValue(intent: ._testValue()), configuration: config, analyticsHelper: ._testValue())
-        vc.payWithLinkDelegate = paymentSheet
-        hostVC.present(vc.sheetContainer, animated: true, completion: {})
+        vc.payWithLinkDelegate = payWithNativeLinkController
+        hostVC.present(vc.sheetContainer, animated: false)
 
-        payWithNativeLinkController.presentAsSheet(from: vc.sheetContainer, shouldOfferApplePay: false, shouldFinishOnClose: false, completion: { _, _, _ in })
-
-        // Wait a bit: Attestation should be attempted, but immediately fail.
-        await fulfillment(of: [exp], timeout: 2.0)
+        // Then failed attestation dismisses the native sheet and presents web authentication.
+        await fulfillment(of: [exp], timeout: 5)
+        XCTAssertNil(vc.sheetContainer.presentingViewController)
+        withExtendedLifetime(payWithNativeLinkController) {}
     }
 }
 
