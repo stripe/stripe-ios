@@ -17,7 +17,7 @@ extension CardImageVerificationSheet {
         /// The amount of frames that must have a centered, focused card before the
         /// scan is allowed to terminate. This is an `experimental` feature that should
         /// only be used with guidance from Stripe support.
-        @_spi(STP) public var strictModeFrames: StrictModeFrameCount = .none
+        @_spi(InternalOnlyAPI) public var strictModeFrames: StrictModeFrameCount = .none
 
         public init() {}
     }
@@ -25,7 +25,7 @@ extension CardImageVerificationSheet {
     /// Enum describing the amount of frames that must have a centered, focused card before the
     /// scan is allowed to terminate. This is an `experimental` feature that should
     /// only be used with guidance from Stripe support.
-    @_spi(STP) public enum StrictModeFrameCount: Int, Equatable {
+    @_spi(InternalOnlyAPI) public enum StrictModeFrameCount: Int, Equatable {
         case `none`
         case low
         case medium

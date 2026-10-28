@@ -7,10 +7,10 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 import UIKit
 
-@_spi(STP) public struct FinancialConnectionsSDKAvailability {
+@_spi(InternalOnlyAPI) public struct FinancialConnectionsSDKAvailability {
     static let FinancialConnectionsSDKClass: FinancialConnectionsSDKInterface.Type? =
         NSClassFromString("StripeFinancialConnections.FinancialConnectionsSDKImplementation")
         as? FinancialConnectionsSDKInterface.Type
@@ -19,9 +19,9 @@ import UIKit
         NSClassFromString("StripeFinancialConnectionsLite.FCLiteImplementation")
         as? FinancialConnectionsSDKInterface.Type
 
-    @_spi(STP) public static var fcLiteKillswitchEnabled: Bool = false
-    @_spi(STP) public static var localFcLiteOverride: Bool = false
-    @_spi(STP) public static var remoteFcLiteOverride: Bool = false
+    @_spi(InternalOnlyAPI) public static var fcLiteKillswitchEnabled: Bool = false
+    @_spi(InternalOnlyAPI) public static var localFcLiteOverride: Bool = false
+    @_spi(InternalOnlyAPI) public static var remoteFcLiteOverride: Bool = false
 
     private static var FCLiteClassIfEnabled: FinancialConnectionsSDKInterface.Type? {
         guard !fcLiteKillswitchEnabled else {
@@ -30,7 +30,7 @@ import UIKit
         return Self.FinancialConnectionsLiteImplementation
     }
 
-    @_spi(STP) public static let analyticsValue: String = {
+    @_spi(InternalOnlyAPI) public static let analyticsValue: String = {
         if FinancialConnectionsSDKClass != nil {
             return "FULL"
         } else if FCLiteClassIfEnabled != nil {
@@ -59,7 +59,7 @@ import UIKit
     // Return true for unit tests, the value of `FinancialConnectionsSDKAvailable` for UI tests,
     // and whether or not the Financial Connections SDK is available otherwise.
     // Falls back on FC Lite availability.
-    @_spi(STP) public static var isFinancialConnectionsSDKAvailable: Bool {
+    @_spi(InternalOnlyAPI) public static var isFinancialConnectionsSDKAvailable: Bool {
         if isUnitTest {
             return true
         } else if isUITest {
@@ -70,7 +70,7 @@ import UIKit
         }
     }
 
-    @_spi(STP) public static func financialConnections() -> FinancialConnectionsSDKInterface? {
+    @_spi(InternalOnlyAPI) public static func financialConnections() -> FinancialConnectionsSDKInterface? {
         let financialConnectionsStubbedResult = ProcessInfo.processInfo.environment["FinancialConnectionsStubbedResult"] == "true"
         if isUnitTest || (isUITest && financialConnectionsStubbedResult) {
             return StubbedConnectionsSDKInterface()

@@ -12,7 +12,7 @@ import UIKit
 /// • Uses time to match movement between native and web for a seamless transition.
 /// For internal SDK use only
 @objc(STP_Internal_ConnectActivityIndicator)
-@_spi(STP) public final class ConnectActivityIndicator: UIView {
+@_spi(InternalOnlyAPI) public final class ConnectActivityIndicator: UIView {
 
     #if DEBUG
     /// Disables animation. This should be only be modified for snapshot tests.

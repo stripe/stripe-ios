@@ -6,7 +6,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeUICore
 
 /// The canonical set of all image files in the `StripeCryptoOnramp` module.
 enum Image: String, CaseIterable, ImageMaker {

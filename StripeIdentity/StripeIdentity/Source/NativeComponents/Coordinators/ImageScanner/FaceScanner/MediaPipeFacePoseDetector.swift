@@ -9,7 +9,7 @@
 import CoreMedia
 import CoreVideo
 import Foundation
-@_spi(STP) import StripeCameraCore
+@_spi(InternalOnlyAPI) import StripeCameraCore
 import UIKit
 
 #if canImport(MediaPipeSPMRuntime)

@@ -6,10 +6,10 @@
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
 //
 
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 import UIKit
 
-@_spi(STP) public class STPCountryPickerInputField: STPGenericInputPickerField {
+@_spi(InternalOnlyAPI) public class STPCountryPickerInputField: STPGenericInputPickerField {
 
     var countryPickerDataSource: CountryPickerDataSource {
         wrappedDataSource.inputDataSource as! CountryPickerDataSource
@@ -54,10 +54,10 @@ import UIKit
 
 /// :nodoc:
 extension STPCountryPickerInputField {
-    @_spi(STP) public class CountryPickerDataSource: NSObject, STPGenericInputPickerFieldDataSource
+    @_spi(InternalOnlyAPI) public class CountryPickerDataSource: NSObject, STPGenericInputPickerFieldDataSource
     {
 
-        @_spi(STP) public let countries: [(code: String, displayName: String)] = {
+        @_spi(InternalOnlyAPI) public let countries: [(code: String, displayName: String)] = {
 
             let currentCountryCode = Locale.autoupdatingCurrent.stp_regionCode
             let locale = NSLocale.autoupdatingCurrent
@@ -98,7 +98,7 @@ extension STPCountryPickerInputField {
             }
         }
 
-        @_spi(STP) public func inputPickerField(
+        @_spi(InternalOnlyAPI) public func inputPickerField(
             _ pickerField: STPGenericInputPickerField,
             titleForRow row: Int
         )
@@ -113,7 +113,7 @@ extension STPCountryPickerInputField {
             return countries[row].displayName
         }
 
-        @_spi(STP) public func inputPickerField(
+        @_spi(InternalOnlyAPI) public func inputPickerField(
             _ pickerField: STPGenericInputPickerField,
             inputValueForRow row: Int
         )
@@ -128,7 +128,7 @@ extension STPCountryPickerInputField {
             return countries[row].code
         }
 
-        @_spi(STP) public func numberOfRows() -> Int {
+        @_spi(InternalOnlyAPI) public func numberOfRows() -> Int {
             return countries.count
         }
     }

@@ -7,7 +7,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 /// These fields indicate whether a card field represents a valid value, invalid
 /// value, or incomplete value.
@@ -402,7 +402,7 @@ public class STPCardValidator: NSObject {
         return incomplete ? .incomplete : .valid
     }
 
-    @_spi(STP) public class func minCVCLength() -> Int {
+    @_spi(InternalOnlyAPI) public class func minCVCLength() -> Int {
         return 3
     }
 
@@ -483,7 +483,7 @@ extension STPCardValidator {
         }
     }
 
-    @_spi(STP) public class func cardNumberFormat(forCardNumber cardNumber: String) -> [NSNumber] {
+    @_spi(InternalOnlyAPI) public class func cardNumberFormat(forCardNumber cardNumber: String) -> [NSNumber] {
         let binRange = STPBINController.shared.mostSpecificBINRange(forNumber: cardNumber)
         if binRange.brand == .dinersClub && binRange.panLength == 14 {
             return [NSNumber(value: 4), NSNumber(value: 6), NSNumber(value: 4)]
@@ -492,7 +492,7 @@ extension STPCardValidator {
         return self.cardNumberFormat(for: binRange.brand)
     }
 
-    @_spi(STP) public class func stringIsValidLuhn(_ number: String) -> Bool {
+    @_spi(InternalOnlyAPI) public class func stringIsValidLuhn(_ number: String) -> Bool {
         var odd = true
         var sum = 0
         var digits: [String] = []
@@ -517,7 +517,7 @@ extension STPCardValidator {
     }
 
     /// Returns the brand (eg VISA) for a card, respecting card brand choice.
-    @_spi(STP) public class func brand(for card: STPPaymentMethodCardParams?) -> STPCardBrand {
+    @_spi(InternalOnlyAPI) public class func brand(for card: STPPaymentMethodCardParams?) -> STPCardBrand {
         guard let card, let number = card.number else {
             return .unknown
         }

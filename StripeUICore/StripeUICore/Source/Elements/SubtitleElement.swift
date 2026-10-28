@@ -7,7 +7,7 @@
 
 import UIKit
 
-@_spi(STP) public class SubtitleElement: Element {
+@_spi(InternalOnlyAPI) public class SubtitleElement: Element {
     public let view: UIView
     public let collectsUserInput: Bool = false
     weak public var delegate: ElementDelegate?

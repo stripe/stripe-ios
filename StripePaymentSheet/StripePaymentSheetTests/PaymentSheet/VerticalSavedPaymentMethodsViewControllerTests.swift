@@ -7,7 +7,7 @@
 
 import Foundation
 import StripeCoreTestUtils
-@testable @_spi(STP) @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) import StripePaymentSheet
+@testable @_spi(InternalOnlyAPI) @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) import StripePaymentSheet
 import XCTest
 
 @MainActor
@@ -226,10 +226,10 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
 
     private func makeCheckoutSessionIntent(canDetachPaymentMethod: Bool) -> Intent {
         let session = CheckoutTestHelpers.makeSession([
+            "saved_payment_method_options": ["payment_method_remove": canDetachPaymentMethod ? "enabled" : "disabled"],
             "customer": [
                 "id": "cus_test_123",
                 "payment_methods": [],
-                "can_detach_payment_method": canDetachPaymentMethod,
             ],
         ])
         return .checkout(session.makePublicSession())

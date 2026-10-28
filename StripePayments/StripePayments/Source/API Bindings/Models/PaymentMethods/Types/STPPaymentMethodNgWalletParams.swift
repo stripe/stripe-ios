@@ -7,7 +7,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 /// An object representing parameters used to create a Naira Wallet Payment Method.
 public class STPPaymentMethodNgWalletParams: NSObject, STPFormEncodable {

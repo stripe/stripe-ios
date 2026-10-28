@@ -5,7 +5,7 @@
 //  Created by Mel Ludowise on 10/11/24.
 //
 
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 import XCTest
 
 class Locale_StripeTests: XCTestCase {

@@ -6,7 +6,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 import StripePayments
 
 public extension PaymentSheet {
@@ -259,7 +259,7 @@ public extension PaymentSheet {
 
         // MARK: - Internal
 
-        @_spi(STP) public var financialConnectionsPermissions: [String]?
+        @_spi(InternalOnlyAPI) public var financialConnectionsPermissions: [String]?
 
         @discardableResult
         func validate() -> Error? {

@@ -5,9 +5,9 @@
 //  Created by Yuki Tokuhiro on 9/7/23.
 //
 
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 import StripeCoreTestUtils
-@_spi(STP) @testable import StripePaymentSheet
+@_spi(InternalOnlyAPI) @testable import StripePaymentSheet
 
 import XCTest
 

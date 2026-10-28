@@ -10,7 +10,7 @@ import Foundation
 /// Client context for a ConfirmationToken, containing information about the payment flow context.
 /// Only includes properties that can be populated from PaymentSheet.IntentConfiguration.
 /// - seealso: https://stripe.com/docs/api/confirmation_tokens
-@_spi(STP) public class STPConfirmationTokenClientContext: NSObject, STPFormEncodable {
+@_spi(InternalOnlyAPI) public class STPConfirmationTokenClientContext: NSObject, STPFormEncodable {
     @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
     /// The mode of this intent, either "payment" or "setup"

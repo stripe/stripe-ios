@@ -7,7 +7,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 /// An object representing parameters used to create a GCash Payment Method.
 public class STPPaymentMethodGCashParams: NSObject, STPFormEncodable {

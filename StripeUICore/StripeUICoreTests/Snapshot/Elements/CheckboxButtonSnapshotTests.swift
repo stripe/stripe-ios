@@ -10,7 +10,7 @@ import iOSSnapshotTestCase
 import StripeCoreTestUtils
 import UIKit
 
-@testable @_spi(STP) import StripeUICore
+@testable @_spi(InternalOnlyAPI) import StripeUICore
 
 class CheckboxButtonSnapshotTests: STPSnapshotTestCase {
 

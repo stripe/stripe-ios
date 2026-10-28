@@ -5,7 +5,7 @@
 //  Created by Mel Ludowise on 5/1/24.
 //
 
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 import WebKit
 
 /// Convenience class that conforms to WKScriptMessageHandler and can be instantiated with a closure

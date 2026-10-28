@@ -4,10 +4,10 @@
 //
 
 import StripeCoreTestUtils
-@_spi(STP) @testable import StripePayments
-@_spi(STP) @testable import StripePaymentSheet
+@_spi(InternalOnlyAPI) @testable import StripePayments
+@_spi(InternalOnlyAPI) @testable import StripePaymentSheet
 @testable import StripePaymentsTestUtils
-@testable@_spi(STP) import StripeUICore
+@testable@_spi(InternalOnlyAPI) import StripeUICore
 import XCTest
 
 class STPPPaymentMethodPaymentSheetTests: XCTestCase {

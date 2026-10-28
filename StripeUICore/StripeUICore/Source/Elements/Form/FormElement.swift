@@ -14,7 +14,7 @@ import UIKit
  Displays its views in a vertical stack.
  Coordinates focus between its child Elements.
  */
-@_spi(STP) public class FormElement: ContainerElement {
+@_spi(InternalOnlyAPI) public class FormElement: ContainerElement {
     weak public var delegate: ElementDelegate?
     lazy var formView: FormView = {
         return FormView(viewModel: viewModel)

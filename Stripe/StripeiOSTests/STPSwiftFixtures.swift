@@ -8,11 +8,11 @@
 
 import Foundation
 
-@testable@_spi(STP) import Stripe
-@testable@_spi(STP) import StripeIssuing
-@testable@_spi(STP) import StripePayments
-@testable@_spi(STP) import StripePaymentSheet
-@testable@_spi(STP) import StripePaymentsUI
+@testable@_spi(InternalOnlyAPI) import Stripe
+@testable@_spi(InternalOnlyAPI) import StripeIssuing
+@testable@_spi(InternalOnlyAPI) import StripePayments
+@testable@_spi(InternalOnlyAPI) import StripePaymentSheet
+@testable@_spi(InternalOnlyAPI) import StripePaymentsUI
 
 @_exported @testable import StripePaymentsObjcTestUtils
 

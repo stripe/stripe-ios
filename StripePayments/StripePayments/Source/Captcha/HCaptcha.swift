@@ -14,7 +14,7 @@ import WebKit
   hCaptcha SDK facade (entry point)
 */
 @objc
-@_spi(STP) public class HCaptcha: NSObject {
+@_spi(InternalOnlyAPI) public class HCaptcha: NSObject {
     fileprivate struct Constants {
         struct InfoDictKeys {
             static let APIKey = "HCaptchaKey"

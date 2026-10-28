@@ -4,7 +4,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 /// The selected Apple Pay payment method must be collected again because the customer's KYC region changed.
 @_spi(CryptoOnrampAlpha)

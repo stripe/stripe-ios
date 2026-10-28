@@ -7,10 +7,10 @@
 //
 
 import SafariServices
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
-@_spi(STP) import StripePaymentsUI
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) import StripePaymentsUI
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 /// A VC containing a content view controller and manages the layout of its SheetNavigationBar.
@@ -112,6 +112,7 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
     }
 
     let appearance: PaymentSheet.Appearance
+    private let checkoutSessionID: String?
 
     private var contentViewController: BottomSheetContentViewController
 
@@ -130,10 +131,12 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
     required init(
         contentViewController: BottomSheetContentViewController,
         appearance: PaymentSheet.Appearance,
+        checkoutSessionID: String? = nil,
         didCancelNative3DS2: @escaping () -> Void
     ) {
         self.contentViewController = contentViewController
         self.appearance = appearance
+        self.checkoutSessionID = checkoutSessionID
         self.didCancelNative3DS2 = didCancelNative3DS2
         super.init(nibName: nil, bundle: nil)
 
@@ -142,6 +145,7 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
         addChild(contentViewController)
         contentViewController.didMove(toParent: self)
         contentContainerView.addArrangedSubview(contentViewController.view)
+        contentViewController.navigationBar.checkoutSessionID = checkoutSessionID
         contentViewController.navigationBar.systemNavigationItem = navigationItem
         self.view.backgroundColor = appearance.colors.background
     }
@@ -282,6 +286,7 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
         scrollView.updateConstraintsIfNeeded()
         oldContentViewController.navigationBar.removeFromSuperview()
         oldContentViewController.navigationBar.systemNavigationItem = nil
+        newContentViewController.navigationBar.checkoutSessionID = checkoutSessionID
         newContentViewController.navigationBar.systemNavigationItem = navigationItem
         newContentViewController.view.alpha = 0
 
@@ -599,7 +604,7 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
         let shouldLogPaymentSheetAnalyticsOnDismissal = contentViewController.navigationBar.shouldLogPaymentSheetAnalyticsOnDismissal
         contentViewController.didTapOrSwipeToDismiss()
         if shouldLogPaymentSheetAnalyticsOnDismissal {
-            STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetDismissed)
+            STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetDismissed, checkoutSessionID: checkoutSessionID)
         }
     }
 
