@@ -526,7 +526,7 @@ class MockCheckoutSessionWalletUpdater: CheckoutSessionWalletUpdater {
     }
 
     func updateTaxRegionWithoutEnqueueing(
-        address: CheckoutController.Address,
+        address: CheckoutController.Address?,
         canUpdateWhileSheetPresented: Bool,
         confirmationSource: CheckoutController.ConfirmingElement
     ) async throws -> CheckoutController.Session {

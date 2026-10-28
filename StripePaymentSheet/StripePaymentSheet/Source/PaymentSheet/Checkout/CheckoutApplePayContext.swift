@@ -559,9 +559,8 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
               checkoutWalletUpdater.currentTaxRegion != initialTaxRegion else {
             return
         }
-        let taxRegionToRestore = initialTaxRegion ?? .init(country: session.merchantCountryCode)
         _ = try? await checkoutWalletUpdater.updateTaxRegionWithoutEnqueueing(
-            address: taxRegionToRestore,
+            address: initialTaxRegion,
             canUpdateWhileSheetPresented: true,
             confirmationSource: confirmationSource
         )
