@@ -238,7 +238,7 @@ extension STPAPIClient {
     func pollCheckoutSession(
         checkoutSessionId: String,
         timeout: TimeInterval
-    ) async throws -> PaymentPagePollResponse {
+    ) async throws -> CheckoutClientPollResponse {
         return try await get(
             endpoint: "payment_pages/\(checkoutSessionId)/poll",
             parameters: [:],

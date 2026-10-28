@@ -14,7 +14,7 @@ protocol CheckoutSessionPollingAPIClient {
     func pollCheckoutSession(
         checkoutSessionId: String,
         timeout: TimeInterval
-    ) async throws -> PaymentPagePollResponse
+    ) async throws -> CheckoutClientPollResponse
 }
 
 class CheckoutSessionPollingClock {
@@ -112,7 +112,7 @@ struct CheckoutSessionPoller {
             }
 
             // 2. Poll the Checkout Session. Retry request failures until the timeout is reached.
-            let pollResponse: PaymentPagePollResponse
+            let pollResponse: CheckoutClientPollResponse
             do {
                 let remainingTime = Self.timeout - elapsedTime()
                 guard remainingTime > 0 else {
