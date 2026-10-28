@@ -4,662 +4,302 @@
 //
 
 @_spi(STP) import StripeCore
+@_spi(STP) import StripePaymentSheet
 @_spi(STP) import StripeUICore
 import UIKit
 
-@MainActor
-protocol NetworkedIdentityFlowViewControllerDelegate: AnyObject {
-    func networkedIdentityFlowViewControllerDidCancel(
-        _ viewController: NetworkedIdentityFlowViewController
-    )
-
-    func networkedIdentityFlowViewController(
-        _ viewController: NetworkedIdentityFlowViewController,
-        didRequestFullCapture reason: NetworkedIdentityFallbackReason
-    )
-
-    func networkedIdentityFlowViewController(
-        _ viewController: NetworkedIdentityFlowViewController,
-        didCompleteWith result: Result<StripeAPI.VerificationPageData, Error>
-    )
-}
-
-/// Presents the contract-backed portion of Networked Identity without deciding how it enters
-/// or exits the VerificationSheet flow.
+/// The content of Identity's Link sheet: renders `NetworkedIdentityCoordinator` states and forwards user
+/// actions to it. `LinkHostedSheet` supplies the sheet itself, with Link's header and close button.
 @MainActor
 final class NetworkedIdentityFlowViewController: UIViewController {
-    struct Content {
-        struct Email {
-            let title: String
-            let body: String
-            let reauthenticationTitle: String
-            let reauthenticationBody: String
-            let continueButtonText: String
-        }
-
-        struct OTP {
-            let title: String
-            let sendingBody: (String) -> String
-            let body: (String) -> String
-            let invalidCodeMessage: String
-            var resendButtonText: String = String.Localized.resend_code
-        }
-
-        struct Documents {
-            let title: String
-            let body: String
-            let loadingTitle: String
-            let loadingBody: String
-            let label: NetworkedIdentityDocumentSelectionView.LabelProvider
-            let accessibilityLabel: NetworkedIdentityDocumentSelectionView.AccessibilityLabelProvider
-            var continueButtonText: String = String.Localized.continue
-        }
-
-        let email: Email
-        let otp: OTP
-        let documents: Documents
-        let manualCaptureButtonText: String
-        let cancelButtonText: String
-    }
-
     enum VisibleStep: Equatable {
-        case email
-        case otp
+        case progress
         case documents
-    }
-
-    private enum AccessibilityScreen: Equatable {
-        case email
-        case otpSending
-        case otp
-        case documentLoading
-        case documents
-        case attachmentPending
-        case skipPending
+        case documentShared
+        case savePrepared
+        case saveFailed
     }
 
     private let coordinator: NetworkedIdentityCoordinator
-    private let content: Content
-    private let postAccessibilityNotification: @MainActor (UIAccessibility.Notification, Any?) -> Void
+    private let includesSelfie: Bool
     private let flowView = IdentityFlowView()
-    private var displayedPhoneNumber: String?
-    private var displayedOTPBody: String?
-    private var hasFinished = false
-    private var previousInteractivePopGestureEnabled: Bool?
-    private var announcedAccessibilityScreen: AccessibilityScreen?
-    private var pendingAccessibilityScreen: AccessibilityScreen?
-    private weak var pendingAccessibilityFocusView: UIView?
-    private var hasAnnouncedCurrentOTPError = false
-    private var shouldUseProvidedEmailOnAppearance = false
-
-    weak var delegate: NetworkedIdentityFlowViewControllerDelegate?
-
-    let emailView: NetworkedIdentityEmailView
-    let documentSelectionView = NetworkedIdentityDocumentSelectionView()
-    private(set) var phoneOtpView: PhoneOtpView?
+    private let messageLabel = NetworkedIdentityFlowViewController.makeLabel()
+    private let documentSelectionView = NetworkedIdentityDocumentSelectionView()
+    /// "ID and selfie saved", in Link's colors and type. It's shown instead of the flow view, whose buttons can't be
+    /// spaced as the design is.
+    private lazy var savedView = makeSavedView()
     private(set) var visibleStep: VisibleStep?
+    /// The flow view already insets its content; this adds what Link's wider side margins need beyond that.
+    private static var sideInset: CGFloat {
+        max(0, LinkHostedSheet.contentMargins.leading - IdentityFlowView.Style.defaultContentViewInsets.leading)
+    }
+    /// The design's padding around the saved view, with Link's side margins.
+    private static var savedViewInsets: NSDirectionalEdgeInsets {
+        .init(
+            top: 24,
+            leading: LinkHostedSheet.contentMargins.leading,
+            bottom: 20,
+            trailing: LinkHostedSheet.contentMargins.trailing
+        )
+    }
+    /// Link's sheet takes its height from its content, and the flow view has none of its own.
+    private lazy var heightConstraint: NSLayoutConstraint = {
+        let constraint = view.heightAnchor.constraint(equalToConstant: 0)
+        constraint.priority = .required - 1
+        return constraint
+    }()
 
-    init(
-        coordinator: NetworkedIdentityCoordinator,
-        content: Content = .networkedIdentity,
-        providedEmailAddress: String? = nil,
-        postAccessibilityNotification: @escaping @MainActor (UIAccessibility.Notification, Any?) -> Void = {
-            UIAccessibility.post(notification: $0, argument: $1)
-        }
-    ) {
+    init(coordinator: NetworkedIdentityCoordinator, includesSelfie: Bool) {
         self.coordinator = coordinator
-        self.content = content
-        self.postAccessibilityNotification = postAccessibilityNotification
-        emailView = NetworkedIdentityEmailView(bodyText: content.email.body)
+        self.includesSelfie = includesSelfie
         super.init(nibName: nil, bundle: nil)
 
-        if let providedEmailAddress {
-            let trimmedEmailAddress = providedEmailAddress.trimmingCharacters(in: .whitespacesAndNewlines)
-            emailView.emailElement.setText(trimmedEmailAddress)
-            // Input sanitization must not silently change which account we look up.
-            shouldUseProvidedEmailOnAppearance = emailView.emailAddress == trimmedEmailAddress
-                && emailView.hasValidEmailAddress
-        }
-
-        coordinator.delegate = self
-        emailView.delegate = self
         documentSelectionView.delegate = self
-        navigationItem.hidesBackButton = true
-
-        // #TODO - Networked Identity: Replace this local canonical Link asset only if the final
-        // mobile handoff supplies a Networked Identity-specific brand lockup.
-        let logoView = UIImageView(image: Image.linkLogo.makeImage())
-        logoView.contentMode = .scaleAspectFit
-        logoView.isAccessibilityElement = true
-        logoView.accessibilityLabel = "Link"
-        logoView.accessibilityTraits = .header
-        logoView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            logoView.widthAnchor.constraint(equalToConstant: 72),
-            logoView.heightAnchor.constraint(equalToConstant: 24),
-        ])
-        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: logoView)
-        navigationItem.rightBarButtonItem = UIBarButtonItem(
-            barButtonSystemItem: .close,
-            target: self,
-            action: #selector(didTapCancel)
-        )
-        navigationItem.rightBarButtonItem?.accessibilityLabel = content.cancelButtonText
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    deinit {
-        Task { @MainActor [coordinator] in
-            coordinator.abandon()
-        }
-        NotificationCenter.default.removeObserver(self)
-    }
-
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view = flowView
         view.backgroundColor = .systemBackground
+        view.addAndPinSubview(
+            flowView,
+            insets: .init(top: 0, leading: Self.sideInset, bottom: 0, trailing: Self.sideInset)
+        )
         flowView.tintColor = .label
-        observeKeyboardNotifications()
+        // Sized by its content, from which `updateHeight` sizes the sheet.
+        savedView.isHidden = true
+        savedView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(savedView)
+        NSLayoutConstraint.activate([
+            savedView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: Self.savedViewInsets.top),
+            savedView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Self.savedViewInsets.leading),
+            savedView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Self.savedViewInsets.trailing),
+        ])
         render(coordinator.state)
     }
 
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-
-        // #TODO - Networked Identity: Confirm this provisional email-screen behavior with design.
-        // A valid supplied email starts lookup once; reauthentication remains an explicit action.
-        if shouldUseProvidedEmailOnAppearance {
-            shouldUseProvidedEmailOnAppearance = false
-            if coordinator.state == .collectEmail {
-                submitEmail()
-            }
-        }
-
-        postPendingAccessibilityScreenChangeIfNeeded()
-        if coordinator.state == .awaitingOTP,
-           coordinator.lastOTPError == .invalidCode {
-            announceInvalidOTPErrorIfNeeded()
-        }
-        if coordinator.state == .collectEmail || coordinator.state == .reauthenticationRequired {
-            emailView.beginEditing()
-        }
+    override func viewSafeAreaInsetsDidChange() {
+        super.viewSafeAreaInsetsDidChange()
+        updateHeight()
     }
 
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-
-        guard let interactivePopGestureRecognizer = navigationController?.interactivePopGestureRecognizer else {
+    func render(_ state: NetworkedIdentityState) {
+        guard isViewLoaded else {
             return
         }
-        previousInteractivePopGestureEnabled = interactivePopGestureRecognizer.isEnabled
-        interactivePopGestureRecognizer.isEnabled = false
-    }
-
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-
-        if let previousInteractivePopGestureEnabled {
-            navigationController?.interactivePopGestureRecognizer?.isEnabled =
-                previousInteractivePopGestureEnabled
-            self.previousInteractivePopGestureEnabled = nil
+        switch state {
+        case .idle, .preparing, .linkAuthentication, .fullCaptureFallback, .cancelled:
+            break
+        case .documentsPending:
+            renderProgress(Strings.documentsLoading, buttons: [manualCaptureButton()])
+        case .selectDocument(let documents, let selectedDocumentID):
+            renderDocuments(documents, selectedDocumentID: selectedDocumentID, isSharing: false)
+        case .sharingDocument(let document):
+            renderDocuments([document], selectedDocumentID: document.id, isSharing: true)
+        case .documentShared(let document):
+            renderShared(document)
+        case .savePending:
+            renderProgress(Strings.saving, title: Strings.continueWithLink, buttons: [])
+        case .savePrepared:
+            renderSaved()
+        case .saveFailed(let details):
+            renderSaveFailed(details: details)
         }
-    }
-
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-
-        if isBeingDismissed
-            || isMovingFromParent
-            || navigationController?.isBeingDismissed == true {
-            coordinator.abandon()
-        }
-    }
-
-    func chooseManualCapture() {
-        coordinator.chooseManualCapture()
-    }
-
-    func cancel() {
-        coordinator.cancel()
-    }
-}
-
-extension NetworkedIdentityFlowViewController.Content {
-    /// Provisional content from the current standardized Link login reference.
-    ///
-    /// #TODO - Networked Identity: Split the save and reuse copy, localize the Networked
-    /// Identity-specific strings, and replace provisional content when the final mobile copy is approved.
-    static var networkedIdentity: Self {
-        let documentLabel: NetworkedIdentityDocumentSelectionView.LabelProvider = { document in
-            let type: String
-            switch document.documentType {
-            case .drivingLicense:
-                type = "Driver's license"
-            case .passport:
-                type = "Passport"
-            case .idCard:
-                type = "Identity card"
-            case .unparsable:
-                type = "Identity document"
-            }
-            guard let documentNumber = document.redactedDocumentNumber,
-                  !documentNumber.isEmpty else {
-                return type
-            }
-            return "\(type) \(documentNumber)"
-        }
-
-        return .init(
-            email: .init(
-                title: "Continue with Link",
-                body: "Sign in to use a saved ID.",
-                reauthenticationTitle: "Continue with Link",
-                reauthenticationBody: "Sign in again to continue.",
-                continueButtonText: "Continue"
-            ),
-            otp: .init(
-                title: String.Localized.confirm_its_you,
-                sendingBody: {
-                    String(format: String.Localized.enter_code_sent_to, $0)
-                },
-                body: {
-                    String(format: String.Localized.enter_code_sent_to, $0)
-                },
-                invalidCodeMessage: STPLocalizedString(
-                    "The verification code you entered is incorrect.",
-                    "Error message shown when the user enters an incorrect verification code."
-                )
-            ),
-            documents: .init(
-                title: "Choose a saved ID",
-                body: "Select an ID to continue.",
-                loadingTitle: "Finding your saved IDs",
-                loadingBody: "This should only take a moment.",
-                label: documentLabel,
-                accessibilityLabel: { document, isSelected in
-                    let label = documentLabel(document)
-                    return isSelected ? "\(label), selected" : label
-                }
-            ),
-            manualCaptureButtonText: "Manually verify identity",
-            cancelButtonText: String.Localized.close
-        )
     }
 }
 
 // MARK: - Rendering
 
 private extension NetworkedIdentityFlowViewController {
-    func render(_ state: NetworkedIdentityState) {
-        switch state {
-        case .otpStartPending, .awaitingOTP, .otpConfirmPending:
-            break
-        default:
-            clearOTPView()
-        }
-
-        switch state {
-        case .collectEmail, .lookupPending, .reauthenticationRequired:
-            renderEmail(state: state)
-        case .otpStartPending, .awaitingOTP, .otpConfirmPending:
-            renderOTP(state: state)
-        case .documentsPending:
-            renderDocumentLoading()
-        case .selectDocument, .selectedDocument:
-            renderDocuments()
-        case .attachmentPending, .skipPending:
-            renderActionPending()
-        case .completed:
-            // Completion delivers the server requirements to the host, not verification success.
-            // The host may still be submitting; don't leave an enabled close action on this
-            // terminal screen while it waits to be replaced by the ordinary Identity flow.
-            navigationItem.rightBarButtonItem?.isEnabled = false
-        case .fullCaptureFallback:
-            // The coordinator's dedicated fallback callback carries the reason.
-            break
-        case .cancelled:
-            finishCancellationIfNeeded()
-        }
+    static func makeLabel() -> UILabel {
+        let label = UILabel()
+        label.font = NetworkedIdentityUI.bodyFont
+        label.textColor = .label
+        label.textAlignment = .center
+        label.numberOfLines = 0
+        label.adjustsFontForContentSizeCategory = true
+        return label
     }
 
-    func renderEmail(state: NetworkedIdentityState) {
-        visibleStep = .email
-        let isReauthentication = state == .reauthenticationRequired
-        let isLoading = state == .lookupPending
-        let title = isReauthentication
-            ? content.email.reauthenticationTitle
-            : content.email.title
-        let body = isReauthentication
-            ? content.email.reauthenticationBody
-            : content.email.body
-
-        emailView.configure(bodyText: body, isEnabled: !isLoading)
-        configureFlow(
-            with: .init(
-                headerViewModel: plainHeader(title: title),
-                contentView: emailView,
-                buttons: [
-                    .init(
-                        text: content.email.continueButtonText,
-                        state: isLoading
-                            ? .loading
-                            : (emailView.hasValidEmailAddress ? .enabled : .disabled),
-                        configuration: .networkedIdentityPrimary(),
-                        didTap: { [weak self] in
-                            self?.submitEmail()
-                        }
-                    ),
-                    manualCaptureButton(),
-                ]
-            )
-        )
-        announceScreenChangeIfNeeded(.email, focusView: emailView.emailElement.view)
-        if isReauthentication, view.window != nil {
-            emailView.beginEditing()
-        }
+    func renderProgress(_ text: String, title: String? = nil, buttons: [IdentityFlowView.ViewModel.Button]) {
+        let spinner = UIActivityIndicatorView(style: .medium)
+        spinner.startAnimating()
+        let label = Self.makeLabel()
+        label.text = text
+        let stack = UIStackView(arrangedSubviews: [spinner, label])
+        stack.axis = .vertical
+        stack.spacing = 16
+        show(.progress, title: title, content: stack, buttons: buttons)
     }
 
-    func renderOTP(state: NetworkedIdentityState) {
-        visibleStep = .otp
-        let showsInvalidCodeError = state == .awaitingOTP
-            && coordinator.lastOTPError == .invalidCode
-        if !showsInvalidCodeError {
-            hasAnnouncedCurrentOTPError = false
-        }
-        let phoneNumber = coordinator.redactedFormattedPhoneNumber ?? ""
-        let body = state == .otpStartPending
-            ? content.otp.sendingBody(phoneNumber)
-            : content.otp.body(phoneNumber)
-        if state == .otpStartPending
-            || phoneOtpView == nil
-            || phoneNumber != displayedPhoneNumber
-            || body != displayedOTPBody {
-            clearOTPView()
-            displayedPhoneNumber = phoneNumber
-            displayedOTPBody = body
-            let phoneOtpView = PhoneOtpView(
-                otpLength: 6,
-                body: body,
-                errorString: content.otp.invalidCodeMessage,
-                style: .networkedIdentity
-            )
-            phoneOtpView.delegate = self
-            self.phoneOtpView = phoneOtpView
-        }
-
-        guard let phoneOtpView else {
-            return
-        }
-        switch state {
-        case .awaitingOTP where showsInvalidCodeError:
-            phoneOtpView.configure(with: .ErrorOTP)
-        case .awaitingOTP:
-            phoneOtpView.configure(with: .InputtingOTP)
-        case .otpStartPending, .otpConfirmPending:
-            phoneOtpView.configure(with: .SubmittingOTP(""))
-        default:
-            return
-        }
-
-        configureFlow(
-            with: .init(
-                headerViewModel: plainHeader(title: content.otp.title),
-                contentView: phoneOtpView,
-                buttons: [
-                    .init(
-                        text: content.otp.resendButtonText,
-                        state: state == .awaitingOTP ? .enabled : .disabled,
-                        isPrimary: false,
-                        configuration: .networkedIdentitySecondary(),
-                        didTap: { [weak self] in
-                            self?.coordinator.resendOTP()
-                        }
-                    ),
-                    manualCaptureButton(configuration: .networkedIdentityPlain()),
-                ]
-            )
-        )
-        // #TODO - Networked Identity: Add alternate-channel controls when their API contracts
-        // are available. Resend follows the existing Link SMS API.
-        announceScreenChangeIfNeeded(
-            state == .otpStartPending ? .otpSending : .otp,
-            focusView: phoneOtpView
-        )
-        if showsInvalidCodeError {
-            announceInvalidOTPErrorIfNeeded()
-        }
-    }
-
-    func renderDocuments() {
-        visibleStep = .documents
+    func renderDocuments(
+        _ documents: [NetworkedIdentityDocument],
+        selectedDocumentID: String?,
+        isSharing: Bool
+    ) {
         documentSelectionView.configure(
-            bodyText: content.documents.body,
-            documents: coordinator.availableDocuments,
-            selectedDocumentID: coordinator.selectedDocument?.id,
-            labelProvider: content.documents.label,
-            accessibilityLabelProvider: content.documents.accessibilityLabel
+            bodyText: isSharing ? Strings.sharing : Strings.documentsBody,
+            documents: documents,
+            selectedDocumentID: selectedDocumentID
         )
-        var buttons: [IdentityFlowView.ViewModel.Button] = []
-        if coordinator.supportsDocumentAttachment {
-            buttons.append(
+        let shareButton = IdentityFlowView.ViewModel.Button(
+            text: Strings.share,
+            state: isSharing ? .loading : (selectedDocumentID == nil ? .disabled : .enabled),
+            configuration: .networkedIdentityPrimary(),
+            didTap: { [weak self] in self?.coordinator.shareSelectedDocument() }
+        )
+        show(
+            .documents,
+            title: Strings.documentsTitle,
+            content: documentSelectionView,
+            buttons: isSharing ? [shareButton] : [shareButton, manualCaptureButton()]
+        )
+    }
+
+    /// The shared ID stays on screen under the confirmation; the coordinator ignores taps on it in this state.
+    func renderShared(_ document: NetworkedIdentityDocument) {
+        documentSelectionView.configure(bodyText: Strings.sharedBody, documents: [document], selectedDocumentID: document.id)
+        show(
+            .documentShared,
+            title: Strings.sharedTitle,
+            content: documentSelectionView,
+            buttons: [
                 .init(
-                    text: content.documents.continueButtonText,
-                    state: coordinator.selectedDocument == nil ? .disabled : .enabled,
+                    text: Strings.continueButton,
                     configuration: .networkedIdentityPrimary(),
-                    didTap: { [weak self] in
-                        self?.coordinator.continueWithSelectedDocument()
-                    }
+                    didTap: { [weak self] in self?.coordinator.continueAfterSuccess() }
+                ),
+            ]
+        )
+    }
+
+    func renderSaved() {
+        flowView.isHidden = true
+        savedView.isHidden = false
+        didShow(.savePrepared, content: savedView)
+    }
+
+    func makeSavedView() -> UIView {
+        let badge = UIImageView(image: Image.linkSaved.makeImage())
+        badge.contentMode = .center
+
+        let title = UILabel()
+        title.font = NetworkedIdentityUI.titleFont
+        title.textColor = NetworkedIdentityUI.linkPrimaryColor
+        title.textAlignment = .center
+        title.numberOfLines = 0
+        title.accessibilityTraits = .header
+        title.setText(
+            Strings.savePreparedTitle(includesSelfie: includesSelfie),
+            lineHeight: NetworkedIdentityUI.titleLineHeight
+        )
+
+        let body = UILabel()
+        body.font = NetworkedIdentityUI.bodyFont
+        body.textColor = NetworkedIdentityUI.linkTextTertiaryColor
+        body.textAlignment = .center
+        body.numberOfLines = 0
+        body.setText(
+            Strings.savePreparedBody(includesSelfie: includesSelfie),
+            lineHeight: NetworkedIdentityUI.bodyLineHeight
+        )
+
+        let doneButton = Button(configuration: .networkedIdentityDone(), title: Strings.done)
+        doneButton.addAction(UIAction { [weak self] _ in self?.coordinator.continueAfterSuccess() }, for: .touchUpInside)
+
+        let stack = UIStackView(arrangedSubviews: [badge, title, body, doneButton])
+        stack.axis = .vertical
+        stack.setCustomSpacing(24, after: badge)
+        stack.setCustomSpacing(4, after: title)
+        // The content's bottom padding, then the button's top padding.
+        stack.setCustomSpacing(16 + 20, after: body)
+        return stack
+    }
+
+    func renderSaveFailed(details: String?) {
+        messageLabel.text = ([Strings.saveFailedBody] + (details.map { [$0] } ?? [])).joined(separator: "\n\n")
+        let closeButton = IdentityFlowView.ViewModel.Button(
+            text: Strings.close,
+            configuration: .networkedIdentityPrimary(),
+            didTap: { [weak self] in self?.coordinator.cancel() }
+        )
+        show(.saveFailed, title: Strings.saveFailedTitle, content: messageLabel, buttons: [closeButton])
+    }
+
+    /// Offered until the user shares an ID or skips; saving has none, since closing the sheet is enough.
+    func manualCaptureButton() -> IdentityFlowView.ViewModel.Button {
+        .init(
+            text: Strings.manualCapture,
+            configuration: .networkedIdentitySecondary(),
+            didTap: { [weak self] in self?.coordinator.chooseManualCapture() }
+        )
+    }
+
+    func show(
+        _ step: VisibleStep,
+        title: String?,
+        content: UIView,
+        buttons: [IdentityFlowView.ViewModel.Button]
+    ) {
+        do {
+            try flowView.configure(
+                with: .init(
+                    headerViewModel: title.map {
+                        HeaderView.ViewModel(
+                            backgroundColor: .systemBackground,
+                            headerType: .plain,
+                            titleText: $0,
+                            titleFont: NetworkedIdentityUI.titleFont,
+                            titleTextColor: .label,
+                            topInset: NetworkedIdentityUI.compactHeaderTopInset
+                        )
+                    },
+                    contentView: content,
+                    buttons: buttons
                 )
             )
-        }
-        buttons.append(manualCaptureButton())
-        configureFlow(
-            with: .init(
-                headerViewModel: plainHeader(
-                    title: content.documents.title,
-                    topInset: NetworkedIdentityUI.compactHeaderTopInset
-                ),
-                contentView: documentSelectionView,
-                buttons: buttons
-            )
-        )
-        announceScreenChangeIfNeeded(
-            .documents,
-            focusView: documentSelectionView.accessibilityFocusView
-        )
-
-        // The preceding Identity welcome screen discloses sharing document/selfie data.
-        // Explicit Continue mints and redeems the selected document's one-time capability.
-        // #TODO - Networked Identity: Replace the provisional list treatment when a final
-        // multi-document mobile frame is approved.
-    }
-
-    func renderActionPending() {
-        visibleStep = .documents
-        let title = coordinator.state == .skipPending
-            ? STPLocalizedString("Continuing without Link", "Loading title when skipping Link identity reuse")
-            : STPLocalizedString("Reusing your identity document", "Loading title when attaching a saved identity document")
-        documentSelectionView.configureLoading(bodyText: "", accessibilityLabel: title)
-        configureFlow(
-            with: .init(
-                headerViewModel: plainHeader(title: title),
-                contentView: documentSelectionView,
-                buttons: []
-            )
-        )
-        announceScreenChangeIfNeeded(
-            coordinator.state == .skipPending ? .skipPending : .attachmentPending,
-            focusView: documentSelectionView.accessibilityFocusView
-        )
-    }
-
-    func renderDocumentLoading() {
-        visibleStep = .documents
-        documentSelectionView.configureLoading(bodyText: content.documents.loadingBody)
-        configureFlow(
-            with: .init(
-                headerViewModel: plainHeader(title: content.documents.loadingTitle),
-                contentView: documentSelectionView,
-                buttons: [manualCaptureButton()]
-            )
-        )
-        announceScreenChangeIfNeeded(
-            .documentLoading,
-            focusView: documentSelectionView.accessibilityFocusView
-        )
-    }
-
-    func plainHeader(
-        title: String,
-        topInset: CGFloat = NetworkedIdentityUI.centeredHeaderTopInset
-    ) -> HeaderView.ViewModel {
-        .init(
-            backgroundColor: .systemBackground,
-            headerType: .plain,
-            titleText: title,
-            titleFont: NetworkedIdentityUI.titleFont,
-            titleTextColor: .label,
-            titleTextAlignment: .center,
-            topInset: topInset
-        )
-    }
-
-    func manualCaptureButton(
-        configuration: Button.Configuration = .networkedIdentitySecondary()
-    ) -> IdentityFlowView.ViewModel.Button {
-        .init(
-            text: content.manualCaptureButtonText,
-            isPrimary: false,
-            configuration: configuration,
-            didTap: { [weak self] in
-                self?.chooseManualCapture()
-            }
-        )
-    }
-
-    func configureFlow(with viewModel: IdentityFlowView.ViewModel) {
-        do {
-            try flowView.configure(with: viewModel)
         } catch {
             stpAssertionFailure("Networked Identity flow configuration failed: \(error)")
         }
+        flowView.isHidden = false
+        savedView.isHidden = true
+        didShow(step, content: content)
     }
 
-    private func announceScreenChangeIfNeeded(
-        _ screen: AccessibilityScreen,
-        focusView: UIView
-    ) {
-        guard announcedAccessibilityScreen != screen else {
-            pendingAccessibilityScreen = nil
-            pendingAccessibilityFocusView = nil
-            return
+    /// Announces `step` when it's new, and fits the sheet to it.
+    func didShow(_ step: VisibleStep, content: UIView) {
+        let isNewStep = visibleStep != step
+        visibleStep = step
+        if isNewStep, view.window != nil {
+            UIAccessibility.post(notification: .screenChanged, argument: content)
         }
-        pendingAccessibilityScreen = screen
-        pendingAccessibilityFocusView = focusView
-        postPendingAccessibilityScreenChangeIfNeeded()
+        updateHeight()
     }
 
-    private func postPendingAccessibilityScreenChangeIfNeeded() {
-        guard view.window != nil,
-              let pendingAccessibilityScreen,
-              announcedAccessibilityScreen != pendingAccessibilityScreen else {
-            return
-        }
-        let focusView = pendingAccessibilityFocusView
-        announcedAccessibilityScreen = pendingAccessibilityScreen
-        self.pendingAccessibilityScreen = nil
-        pendingAccessibilityFocusView = nil
-        postAccessibilityNotification(.screenChanged, focusView)
-    }
-
-    private func announceInvalidOTPErrorIfNeeded() {
-        guard !hasAnnouncedCurrentOTPError, view.window != nil else {
-            return
-        }
-        hasAnnouncedCurrentOTPError = true
-        postAccessibilityNotification(.announcement, content.otp.invalidCodeMessage)
-    }
-
-    func clearOTPView() {
-        phoneOtpView?.clear()
-        phoneOtpView?.delegate = nil
-        phoneOtpView = nil
-        displayedPhoneNumber = nil
-        displayedOTPBody = nil
-        hasAnnouncedCurrentOTPError = false
-    }
-
-    func submitEmail() {
-        guard emailView.hasValidEmailAddress else {
-            emailView.emailElement.showValidationErrors()
-            return
-        }
-        coordinator.start(emailAddress: emailView.emailAddress)
+    func updateHeight() {
+        let width = view.bounds.width > 0 ? view.bounds.width : UIScreen.main.bounds.width
+        let contentHeight = savedView.isHidden
+            ? flowView.fittingHeight(forWidth: width - 2 * Self.sideInset)
+            : Self.savedViewInsets.top
+                + savedView.systemLayoutSizeFitting(
+                    CGSize(
+                        width: width - Self.savedViewInsets.leading - Self.savedViewInsets.trailing,
+                        height: UIView.layoutFittingCompressedSize.height
+                    ),
+                    withHorizontalFittingPriority: .required,
+                    verticalFittingPriority: .fittingSizeLevel
+                ).height
+                + Self.savedViewInsets.bottom
+        heightConstraint.constant = contentHeight + view.safeAreaInsets.bottom
+        heightConstraint.isActive = true
     }
 }
 
-// MARK: - Coordinator delegate
-
-extension NetworkedIdentityFlowViewController: NetworkedIdentityCoordinatorDelegate {
-    func networkedIdentityCoordinator(
-        _ coordinator: NetworkedIdentityCoordinator,
-        didCompleteWith result: Result<StripeAPI.VerificationPageData, Error>
-    ) {
-        guard !hasFinished else { return }
-        hasFinished = true
-        delegate?.networkedIdentityFlowViewController(self, didCompleteWith: result)
-    }
-
-    func networkedIdentityCoordinator(
-        _ coordinator: NetworkedIdentityCoordinator,
-        didTransitionTo state: NetworkedIdentityState
-    ) {
-        guard isViewLoaded else {
-            return
-        }
-        render(state)
-    }
-
-    func networkedIdentityCoordinatorDidRequestFullCaptureFallback(
-        _ coordinator: NetworkedIdentityCoordinator
-    ) {
-        guard !hasFinished, let reason = coordinator.fallbackReason else {
-            return
-        }
-        hasFinished = true
-        delegate?.networkedIdentityFlowViewController(self, didRequestFullCapture: reason)
-    }
-}
-
-// MARK: - Screen delegates
-
-extension NetworkedIdentityFlowViewController: @MainActor NetworkedIdentityEmailViewDelegate {
-    func networkedIdentityEmailViewDidUpdate(_ view: NetworkedIdentityEmailView) {
-        guard coordinator.state == .collectEmail || coordinator.state == .reauthenticationRequired else {
-            return
-        }
-        renderEmail(state: coordinator.state)
-    }
-
-    func networkedIdentityEmailViewDidSubmit(_ view: NetworkedIdentityEmailView) {
-        submitEmail()
-    }
-}
-
-extension NetworkedIdentityFlowViewController: @MainActor PhoneOtpViewDelegate {
-    func didInputFullOtp(newOtp: String) {
-        coordinator.submitOTP(newOtp)
-    }
-
-    func viewStateDidUpdate() {
-        // PhoneOtpView reports its own rendering changes; no surrounding UI changes are needed.
-    }
-}
+// MARK: - NetworkedIdentityDocumentSelectionViewDelegate
 
 extension NetworkedIdentityFlowViewController: @MainActor NetworkedIdentityDocumentSelectionViewDelegate {
     func networkedIdentityDocumentSelectionView(
@@ -667,47 +307,5 @@ extension NetworkedIdentityFlowViewController: @MainActor NetworkedIdentityDocum
         didSelect document: NetworkedIdentityDocument
     ) {
         coordinator.selectDocument(document)
-    }
-}
-
-// MARK: - Completion and keyboard handling
-
-private extension NetworkedIdentityFlowViewController {
-    @objc func didTapCancel() {
-        cancel()
-    }
-
-    func finishCancellationIfNeeded() {
-        guard !hasFinished else {
-            return
-        }
-        hasFinished = true
-        delegate?.networkedIdentityFlowViewControllerDidCancel(self)
-    }
-
-    func observeKeyboardNotifications() {
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(keyboardWillChange),
-            name: UIResponder.keyboardWillHideNotification,
-            object: nil
-        )
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(keyboardWillChange),
-            name: UIResponder.keyboardWillChangeFrameNotification,
-            object: nil
-        )
-    }
-
-    @objc func keyboardWillChange(notification: Notification) {
-        guard let keyboardValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey]
-            as? NSValue else {
-            return
-        }
-        flowView.adjustScrollViewForKeyboard(
-            keyboardValue.cgRectValue,
-            isKeyboardHidden: notification.name == UIResponder.keyboardWillHideNotification
-        )
     }
 }

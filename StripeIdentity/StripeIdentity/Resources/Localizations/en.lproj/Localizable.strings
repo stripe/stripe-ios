@@ -44,17 +44,23 @@
 /* Instructional text when the document is not centered in the frame */
 "Center ID in view" = "Center ID in view";
 
+/* Title of the list of IDs saved to the user's Link account */
+"Choose a saved ID" = "Choose a saved ID";
+
 /* When selected in an action sheet, opens the device's file system browser */
 "Choose File" = "Choose File";
 
 /* Back button title for returning to consent screen of Identity verification */
 "Consent" = "Consent";
 
-/* Loading title when skipping Link identity reuse */
-"Continuing without Link" = "Continuing without Link";
+/* Button to sign in to Link to share or save an ID */
+"Continue with Link" = "Continue with Link";
 
 /* Error title displayed to the user if we could not scan a high quality image of the user's identity document in a reasonable amount of time */
 "Could not capture image" = "Could not capture image";
+
+/* Title when saving the user's ID to Link failed */
+"Couldn't save your ID" = "Couldn't save your ID";
 
 /* Message for invalid Date of birth field */
 "Date of birth does not look valid" = "Date of birth does not look valid";
@@ -64,8 +70,17 @@
    Instructional text when user needs remove anything blocking the document */
 "Details not visible" = "Details not visible";
 
+/* Accessibility label of the button that hides the notice about an ID saved to Link */
+"Dismiss" = "Dismiss";
+
 /* driver's license */
 "driver's license" = "driver's license";
+
+/* Type of an ID saved to Link */
+"Driver's license" = "Driver's license";
+
+/* Button to finish the verification without saving the user's ID to Link */
+"Finish without saving" = "Finish without saving";
 
 /* Instructional text for scanning back of a driver's license, passport, or government issued photo id */
 "Flip your %@ over to the other side" = "Flip your %@ over to the other side";
@@ -121,8 +136,20 @@
 /* Ready button text on warmup screen */
 "I'm ready" = "I'm ready";
 
+/* Title after the user's ID and selfie were saved to Link */
+"ID and selfie saved" = "ID and selfie saved";
+
 /* Label for ID number section */
 "ID Number" = "ID Number";
+
+/* Title after the user's ID was saved to Link */
+"ID saved" = "ID saved";
+
+/* Type of an ID saved to Link */
+"Identity card" = "Identity card";
+
+/* Type of an ID saved to Link that the app doesn't recognize */
+"Identity document" = "Identity document";
 
 /* Instructional text when the document is too blurry */
 "Image is blurry. Hold your phone steady and try again." = "Image is blurry. Hold your phone steady and try again.";
@@ -136,6 +163,9 @@
 /* Instructional text when the scanned document appears not to be a valid ID document */
 "Invalid document" = "Invalid document";
 
+/* Body text after the user's ID was saved to Link */
+"It's encrypted and ready to reuse with your Link wallet." = "It's encrypted and ready to reuse with your Link wallet.";
+
 /* Instructional text when user align the edge with camera
    Instructional text when user needs to rorate to document to align with camera */
 "Keep ID level" = "Keep ID level";
@@ -143,14 +173,26 @@
 /* Label for the ID field to collect last 4 of social security number for US ID */
 "Last 4 of Social Security number" = "Last 4 of Social Security number";
 
+/* Point in the offer to save the user's ID to Link */
+"Link encrypts your saved information for your protection." = "Link encrypts your saved information for your protection.";
+
 /* Status while screen is loading */
 "Loading" = "Loading";
+
+/* Status while loading the IDs saved to the user's Link account */
+"Loading your saved IDs…" = "Loading your saved IDs…";
 
 /* Body for selfie warmup page */
 "Make sure you're in a well lit space." = "Make sure you're in a well lit space.";
 
 /* Segmented control option for manual identity document upload */
 "Manual" = "Manual";
+
+/* Button to verify identity with a new document instead of an ID saved to Link */
+"Manually verify identity" = "Manually verify identity";
+
+/* Button to verify identity with a new document instead of an ID saved to Link */
+"Manually verify instead" = "Manually verify instead";
 
 /* Instructional text when camera is too far from a document */
 "Move closer" = "Move closer";
@@ -169,6 +211,9 @@
 
 /* Label for the ID field to collect NRIC or FIN for Singaporean ID */
 "NRIC or FIN" = "NRIC or FIN";
+
+/* Type of an ID saved to Link */
+"Passport" = "Passport";
 
 /* passport */
 "passport" = "passport";
@@ -218,8 +263,32 @@
 /* Button text displayed to the user to retake photo */
 "Retake Photos" = "Retake Photos";
 
-/* Loading title when attaching a saved identity document */
-"Reusing your identity document" = "Reusing your identity document";
+/* Button title followed by the Link logo, read as 'Save with Link' */
+"Save with" = "Save with";
+
+/* Accessibility label of the button that saves the user's ID to Link */
+"Save with Link" = "Save with Link";
+
+/* Point in the offer to save the user's ID and selfie to Link */
+"Save your ID and selfie for the next time you need to verify." = "Save your ID and selfie for the next time you need to verify.";
+
+/* Subtitle of the offer to save the user's ID and selfie to Link */
+"Save your ID and selfie with Link." = "Save your ID and selfie with Link.";
+
+/* Point in the offer to save the user's ID to Link */
+"Save your ID for the next time you need to verify." = "Save your ID for the next time you need to verify.";
+
+/* Subtitle of the offer to save the user's ID to Link */
+"Save your ID with Link." = "Save your ID with Link.";
+
+/* Notice that the user has an ID saved to Link */
+"Saved ID" = "Saved ID";
+
+/* Notice that the user has an ID saved to Link, followed by their email address */
+"Saved ID · %@" = "Saved ID · %@";
+
+/* Status while saving the user's ID to Link */
+"Saving your ID…" = "Saving your ID…";
 
 /* Back button title for returning to the document scan screen */
 "Scan" = "Scan";
@@ -235,6 +304,9 @@
 
 /* Help text for action sheet that presents ways to upload the front of an identity document image */
 "Select a location to upload the front of your identity document from" = "Select a location to upload the front of your identity document from";
+
+/* Instructions above the list of IDs saved to the user's Link account */
+"Select an ID to continue." = "Select an ID to continue.";
 
 /* Accessibility label to select a photo of back of driver's license, passport, or government issued photo id */
 "Select back %@ photo" = "Select back %@ photo";
@@ -258,6 +330,21 @@
 /* Status text when selfie images have been captured */
 "Selfie captures are complete" = "Selfie captures are complete";
 
+/* Button to share the selected ID saved to Link with this verification */
+"Share ID" = "Share ID";
+
+/* Status while sharing an ID saved to Link with this verification */
+"Sharing your ID…" = "Sharing your ID…";
+
+/* Subtitle of the Link sign-in screen when saving the user's ID to Link */
+"Sign in or create an account to save ID." = "Sign in or create an account to save ID.";
+
+/* Subtitle of the Link sign-in screen when sharing an ID saved to Link */
+"Sign in to use a saved ID." = "Sign in to use a saved ID.";
+
+/* Body text when saving the user's ID to Link failed */
+"Something went wrong while saving your ID to Link. Your verification isn't affected." = "Something went wrong while saving your ID to Link. Your verification isn't affected.";
+
 /* Button text for taking or retaking a manual identity document capture
    When selected in an action sheet, opens the device's camera interface */
 "Take Photo" = "Take Photo";
@@ -265,11 +352,14 @@
 /* Text for message of warning alert */
 "The images of your identity document have not been saved. Do you want to leave?" = "The images of your identity document have not been saved. Do you want to leave?";
 
-/* Error message shown when the user enters an incorrect verification code. */
-"The verification code you entered is incorrect." = "The verification code you entered is incorrect.";
-
 /* Error text displayed to the user when the device's camera is not available */
 "There was an error accessing the camera." = "There was an error accessing the camera.";
+
+/* Body text after the user's ID and selfie were saved to Link */
+"They are encrypted and ready to reuse with your Link wallet." = "They are encrypted and ready to reuse with your Link wallet.";
+
+/* Body text after the user shared an ID saved to Link with this verification */
+"This ID will be used for your verification." = "This ID will be used for your verification.";
 
 /* Button to attempt to re-scan identity document image */
 "Try Again" = "Try Again";
@@ -308,6 +398,9 @@
 /* Accessibility label while photo of front of identity document is uploading */
 "Uploading front identity document photo" = "Uploading front identity document photo";
 
+/* Title of the offer to save the user's ID to Link */
+"Verify faster next time" = "Verify faster next time";
+
 /* Displays in the navigation bar title of the Identity Verification Sheet */
 "Verify your identity" = "Verify your identity";
 
@@ -323,6 +416,9 @@
 
 /* Line 2 of error text displayed to the user if we could not scan a high quality image of the user's identity document in a reasonable amount of time and manually uploading a file is allowed */
 "You can either try again or upload an image from your device." = "You can either try again or upload an image from your device.";
+
+/* Title after the user shared an ID saved to Link with this verification */
+"You shared your ID" = "You shared your ID";
 
 /* Text for message of warning alert */
 "Your selfie images have not been saved. Do you want to leave?" = "Your selfie images have not been saved. Do you want to leave?";

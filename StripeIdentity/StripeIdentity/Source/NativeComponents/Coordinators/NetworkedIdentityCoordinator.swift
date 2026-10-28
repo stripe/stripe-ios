@@ -5,6 +5,7 @@
 
 import Foundation
 @_spi(STP) import StripeCore
+import UIKit
 
 @MainActor
 protocol NetworkedIdentityCoordinatorDelegate: AnyObject {
@@ -13,651 +14,508 @@ protocol NetworkedIdentityCoordinatorDelegate: AnyObject {
         didTransitionTo state: NetworkedIdentityState
     )
 
-    func networkedIdentityCoordinatorDidRequestFullCaptureFallback(
-        _ coordinator: NetworkedIdentityCoordinator
-    )
+    func networkedIdentityCoordinatorDidFinish(with outcome: NetworkedIdentityOutcome)
 
-    func networkedIdentityCoordinator(
-        _ coordinator: NetworkedIdentityCoordinator,
-        didCompleteWith result: Result<StripeAPI.VerificationPageData, Error>
-    )
+    /// A committed write changed `entry`. It can land after the attempt that issued it was closed.
+    func networkedIdentityCoordinatorDidChangeRoute()
 }
 
-/// Coordinates Link authentication, saved-document selection, and preview Identity actions.
+/// Networked Identity on top of Link's login. Nothing starts or advances without a user action:
+/// `startReuse()` from the intro, `startSave()` from the save offer before submitting, and sharing or continuing
+/// always need a tap. Sign-in always uses Link's own screens: a handed-in Link session key skips them until
+/// a call rejects it, and a known email only prefills them.
 @MainActor
 final class NetworkedIdentityCoordinator {
-    private enum ConsumerErrorCode: String {
-        case invalidCode = "consumer_verification_code_invalid"
-        case verificationExpired = "consumer_verification_expired"
-        case sessionExpired = "consumer_session_expired"
-        case maxAttemptsExceeded = "consumer_verification_max_attempts_exceeded"
+    /// Why an attempt ended without a backend error, for the save failure details.
+    fileprivate enum FlowError: Error {
+        case missingConsumerCredentials
+        case linkNotConfigured
+        case noLinkUIHost
+        case unexpectedVerificationResponse
+        case handedInKeyRejected
     }
 
+    private static let networkedIdentityUnavailableCode = "networked_identity_unavailable"
+
+    private let linkSession: NetworkedIdentityLinkSession
     private let apiClient: NetworkedIdentityAPIClient
-    private let identityAPIClient: IdentityAPIClient?
+    private let actions: NetworkedIdentityActions
     private let documentRequirements: NetworkedIdentityDocumentRequirements
-    private let credentialStore: NetworkedIdentityCredentialStore
+    private let config: NetworkedIdentityConfig
+    private let handoff: IdentityVerificationSheet.Configuration.LinkSessionHandoff?
     private let currentTime: () -> TimeInterval
-    private var activeSMSVerificationSessionID: String?
-    private var knownSMSVerificationSessionIDs: Set<String> = []
+    /// Records a committed verification in the host, which returns false for one that doesn't apply to this session.
+    var onVerificationUpdate: ((StripeAPI.VerificationPageData) -> Bool)?
 
     weak var delegate: NetworkedIdentityCoordinatorDelegate?
+    /// Presents Link's own sign-in and sign-up screens.
+    weak var linkUIHost: UIViewController?
 
-    private(set) var state: NetworkedIdentityState = .collectEmail
-    private(set) var lastOTPError: NetworkedIdentityOTPError?
-    private(set) var fallbackReason: NetworkedIdentityFallbackReason?
-    private(set) var availableDocuments: [NetworkedIdentityDocument] = []
-    private(set) var selectedDocument: NetworkedIdentityDocument?
-    private(set) var emailAddress: String?
-    private(set) var redactedFormattedPhoneNumber: String?
-
-    var supportsDocumentAttachment: Bool {
-        identityAPIClient?.supportsNetworkedIdentity == true
+    private(set) var state: NetworkedIdentityState = .idle
+    private(set) var mode: NetworkedIdentityMode = .reuse
+    private(set) var route: NetworkedIdentityRoute {
+        didSet { delegate?.networkedIdentityCoordinatorDidChangeRoute() }
     }
+
+    var entry: NetworkedIdentityEntry {
+        .init(config: config, handoff: handoff, route: route)
+    }
+
+    /// Identifies the current attempt. Responses from a cancelled or restarted attempt are ignored.
+    private var attempt = 0
+    private var configuration: Task<Bool, Never>?
+    private var account: NetworkedIdentityLinkAccount?
+    /// Set once a consumer call rejects the handed-in key; the user then signs in with Link instead.
+    private var handoffRejected = false
+    private var task: Task<Void, Never>?
+    private var mutation: Task<StripeAPI.VerificationPageData, Error>?
 
     init(
+        linkSession: NetworkedIdentityLinkSession,
         apiClient: NetworkedIdentityAPIClient,
+        actions: NetworkedIdentityActions,
         documentRequirements: NetworkedIdentityDocumentRequirements,
-        identityAPIClient: IdentityAPIClient? = nil,
-        verificationSessionClientSecrets: [String]? = nil,
-        credentialStore: NetworkedIdentityCredentialStore? = nil,
+        config: NetworkedIdentityConfig,
+        handoff: IdentityVerificationSheet.Configuration.LinkSessionHandoff?,
         currentTime: @escaping () -> TimeInterval = { Date().timeIntervalSince1970 }
     ) {
+        self.linkSession = linkSession
         self.apiClient = apiClient
-        self.identityAPIClient = identityAPIClient
+        self.actions = actions
         self.documentRequirements = documentRequirements
+        self.config = config
+        self.route = config.route
+        self.handoff = handoff
         self.currentTime = currentTime
-        self.credentialStore = credentialStore
-            ?? NetworkedIdentityCredentialStore(
-                verificationSessionClientSecrets: verificationSessionClientSecrets
-            )
     }
 
-    func start(emailAddress: String) {
-        guard state == .collectEmail || state == .reauthenticationRequired else {
-            return
-        }
-        self.emailAddress = emailAddress
-        beginLookup()
+    func startReuse() {
+        start(.reuse)
     }
 
-    func submitOTP(_ code: String) {
-        guard state == .awaitingOTP else {
-            return
-        }
-
-        lastOTPError = nil
-        guard let request = credentialStore.readConsumerCredentials({ credentials, verificationSessionClientSecrets in
-            return (
-                NetworkedIdentityConfirmVerificationRequest(
-                    consumerSessionClientSecret: credentials.sessionClientSecret,
-                    code: code,
-                    type: .sms,
-                    verificationSessionClientSecrets: verificationSessionClientSecrets
-                ),
-                credentials.publishableKey
-            )
-        }) else {
-            fallBackToFullCapture(reason: .unavailable)
-            return
-        }
-
-        let confirmation = apiClient.confirmVerification(
-            request: request.0,
-            consumerPublishableKey: request.1
-        )
-        transition(to: .otpConfirmPending)
-        confirmation.observe(on: .main) { [weak self, apiClient] result in
-            guard let self else {
-                Self.logOutSuccessfulResponse(
-                    result,
-                    using: apiClient,
-                    consumerPublishableKey: request.1,
-                    verificationSessionClientSecrets: request.0.verificationSessionClientSecrets
-                )
-                return
-            }
-            guard self.state == .otpConfirmPending else {
-                self.logOutIfFlowEnded(
-                    result,
-                    consumerPublishableKey: request.1,
-                    verificationSessionClientSecrets: request.0.verificationSessionClientSecrets
-                )
-                return
-            }
-
-            switch result {
-            case .success(let response):
-                self.credentialStore.retainAuthSessionClientSecret(
-                    response.authSessionClientSecret
-                )
-                self.redactedFormattedPhoneNumber =
-                    response.consumerSession.redactedFormattedPhoneNumber
-                self.credentialStore.updateConsumerSessionClientSecret(
-                    response.consumerSession.clientSecret
-                )
-                if let activeSMSVerificationSessionID = self.activeSMSVerificationSessionID,
-                   response.consumerSession.verificationSessions.contains(where: {
-                       $0.id == activeSMSVerificationSessionID
-                           && $0.type == .sms
-                           && $0.state == .verified
-                   }) {
-                    self.activeSMSVerificationSessionID = nil
-                    self.loadIdentityDocuments()
-                } else {
-                    self.fallBackToFullCapture(reason: .unavailable)
-                }
-            case .failure(let error):
-                self.handleOTPError(error)
-            }
-        }
+    func startSave() {
+        start(.save)
     }
 
-    func resendOTP() {
-        guard state == .awaitingOTP else {
-            return
-        }
-        beginFreshSMSVerification(isResendingSMSCode: true)
+    /// Records that the user declined saving, which the backend tells apart from closing the offer. The submit that
+    /// follows doesn't depend on it, so a failure is ignored.
+    func declineSave() async {
+        _ = try? await mutate(route: .none) { [actions] in try await actions.skip() }
     }
 
     func selectDocument(_ document: NetworkedIdentityDocument) {
-        guard state == .selectDocument || state == .selectedDocument,
-              let selectedDocument = availableDocuments.first(where: { $0.id == document.id }) else {
+        guard case .selectDocument(let documents, _) = state,
+              documents.contains(where: { $0.id == document.id }) else {
             return
         }
-
-        self.selectedDocument = selectedDocument
-        transition(to: .selectedDocument)
-
-        // Selection is not consent to attach. The user must explicitly continue.
+        transition(to: .selectDocument(documents: documents, selectedDocumentID: document.id))
     }
 
-    func continueWithSelectedDocument() {
-        guard state == .selectedDocument,
-              supportsDocumentAttachment,
-              let identityAPIClient,
-              let selectedDocument else {
+    func shareSelectedDocument() {
+        guard case .selectDocument(let documents, let selectedDocumentID) = state,
+              let document = documents.first(where: { $0.id == selectedDocumentID }) else {
             return
         }
-        guard documentRequirements.allows(selectedDocument, at: currentTime()),
-              let credentials = credentialStore.readConsumerCredentials({ credentials, _ in credentials }) else {
-            fallBackToFullCapture(reason: .unavailable)
+        guard let credentials = account?.credentials else {
+            fallBack()
             return
         }
+        transition(to: .sharingDocument(document))
+        perform(
+            { [weak self, apiClient, actions] in
+                guard let self else { throw CancellationError() }
+                // Minted only after the explicit tap.
+                return try await self.redeem(
+                    route: .resumeReuse,
+                    mint: {
+                        try await apiClient.createAssociationToken(
+                            identityDocumentID: document.id,
+                            verificationSessionID: actions.verificationSessionID,
+                            linkSessionKey: credentials.linkSessionKey
+                        ).value.associationToken
+                    },
+                    using: { token in try await actions.attachDocument(associationToken: token) }
+                )
+            },
+            onSuccess: { [weak self] _ in self?.transition(to: .documentShared(document)) },
+            onFailure: { [weak self] error in self?.fallBack(error: error) }
+        )
+    }
 
-        transition(to: .attachmentPending)
-        guard state == .attachmentPending else { return }
-        // Mint only after the user continues, then redeem immediately. Tokens are short-lived
-        // and single-use, so they must not be cached in screen state or automatically replayed.
-        apiClient.createAssociationToken(
-            identityDocumentID: selectedDocument.id,
-            consumerSessionClientSecret: credentials.sessionClientSecret,
-            consumerPublishableKey: credentials.publishableKey
-        ).observe(on: .main) { [weak self] result in
-            guard let self, self.state == .attachmentPending else {
-                return
-            }
-            guard case .success(let response) = result, !response.associationToken.isEmpty else {
-                self.finishAction(with: .failure(NetworkedIdentityActionError.tokenUnavailable))
-                return
-            }
-            identityAPIClient.attachNetworkedIdentityDocument(
-                associationToken: response.associationToken
-            ).observe(on: .main) { [weak self] result in
-                guard let self, self.state == .attachmentPending else {
-                    return
-                }
-                if case .failure(let error) = result,
-                   error._stp_error_code == "networked_identity_unavailable" {
-                    self.fallBackToFullCapture(reason: .unavailable)
-                    return
-                }
-                // #TODO - Networked Identity: Add bounded fresh-token recovery after final
-                // error codes and ambiguous-redemption recovery are approved. Never replay a token.
-                self.finishAction(with: result.mapError { _ in NetworkedIdentityActionError.attachmentFailed })
-            }
+    func continueAfterSuccess() {
+        let outcome: NetworkedIdentityOutcome
+        switch state {
+        case .documentShared:
+            outcome = .documentShared
+        case .savePrepared:
+            outcome = .savePrepared
+        default:
+            return
         }
+        attempt += 1
+        transition(to: .idle)
+        delegate?.networkedIdentityCoordinatorDidFinish(with: outcome)
     }
 
     func chooseManualCapture() {
-        guard !flowHasEnded, state != .attachmentPending, state != .skipPending else {
+        guard mode == .reuse else {
             return
         }
-        if let identityAPIClient, identityAPIClient.supportsNetworkedIdentity {
-            transition(to: .skipPending)
-            guard state == .skipPending else { return }
-            identityAPIClient.skipNetworkedIdentity().observe(on: .main) { [weak self] result in
-                guard let self, self.state == .skipPending else {
-                    return
-                }
-                self.finishAction(with: result.mapError { _ in NetworkedIdentityActionError.skipFailed })
-            }
-            return
-        }
-        fallBackToFullCapture(reason: .userSelectedManualCapture)
+        invalidateAttempt()
+        // #TODO - Networked Identity: The design records this choice with `skip`, but the backend then rejects saving
+        // for the session (`networked_identity_restart_required`). Until that's settled, declining reuse keeps saving
+        // available.
+        transition(to: .idle)
+        delegate?.networkedIdentityCoordinatorDidFinish(with: .manualCapture)
     }
 
     func cancel() {
-        endAsCancelled(notifyDelegate: true)
-    }
-
-    /// Cleans up an unfinished flow without notifying UI delegates when its owner is released.
-    func abandon() {
-        guard !flowHasEnded else {
+        // A save being written can still commit after a cancel and leave the save offer offering it again.
+        guard state.isInProgress, state != .savePending else {
             return
         }
-        endAsCancelled(notifyDelegate: false)
+        invalidateAttempt()
+        transition(to: .cancelled)
+        delegate?.networkedIdentityCoordinatorDidFinish(with: .cancelled)
+    }
+
+    /// Ends pending UI work without an outcome. A handed-in Link session belongs to its original owner.
+    func abandon() {
+        invalidateAttempt()
+        configuration?.cancel()
+        onVerificationUpdate = nil
+        state = .cancelled
     }
 }
 
 // MARK: - Private
 
 private extension NetworkedIdentityCoordinator {
-    func endAsCancelled(notifyDelegate: Bool) {
-        guard state != .cancelled, state != .completed else {
+    func start(_ newMode: NetworkedIdentityMode) {
+        guard !state.isInProgress else {
             return
         }
-
-        // Cancelling must not submit save consent or attempt to undo a previously saved document.
-        let logout = credentialStore.readConsumerCredentials { credentials, verificationSessionClientSecrets in
-            apiClient.logOut(
-                consumerSessionClientSecret: credentials.sessionClientSecret,
-                verificationSessionClientSecrets: verificationSessionClientSecrets,
-                consumerPublishableKey: credentials.publishableKey
-            )
+        invalidateAttempt()
+        mode = newMode
+        // Already recorded, for example before a submit that failed: confirm it instead of saving again.
+        if newMode == .save, route == .resumeSave {
+            transition(to: .savePrepared)
+            return
         }
+        guard let publishableKey = config.merchantPublishableKey, !publishableKey.isEmpty,
+              newMode == .reuse ? entry.offersReuse : entry.offersSave else {
+            fallBack()
+            return
+        }
+        transition(to: .preparing)
+        perform(
+            { [weak self] in await self?.ensureConfigured(publishableKey: publishableKey) ?? false },
+            onSuccess: { [weak self] ready in
+                if ready {
+                    self?.continueAfterConfiguration()
+                } else {
+                    self?.fallBack(error: FlowError.linkNotConfigured)
+                }
+            },
+            onFailure: { [weak self] error in self?.fallBack(error: error) }
+        )
+    }
 
-        credentialStore.clear()
-        emailAddress = nil
-        redactedFormattedPhoneNumber = nil
-        activeSMSVerificationSessionID = nil
-        knownSMSVerificationSessionIDs = []
-        lastOTPError = nil
-        fallbackReason = nil
-        availableDocuments = []
-        selectedDocument = nil
-        if notifyDelegate {
-            transition(to: .cancelled)
+    /// Configures Link once; concurrent callers share the same attempt, and a failure allows a retry.
+    func ensureConfigured(publishableKey: String) async -> Bool {
+        let pending = configuration ?? Task { [linkSession] in
+            (try? await linkSession.configure(merchantPublishableKey: publishableKey)) != nil
+        }
+        configuration = pending
+        let ready = await pending.value
+        if !ready {
+            configuration = nil
+        }
+        return ready
+    }
+
+    func continueAfterConfiguration() {
+        if let account {
+            onAccount(account)
+            return
+        }
+        guard let handoff else {
+            authenticateWithLinkUI(email: config.merchantEmail)
+            return
+        }
+        guard !handoffRejected else {
+            authenticateWithLinkUI(email: handoff.email)
+            return
+        }
+        // The first consumer call checks the key; see `checkingHandedInKey`.
+        onAccount(.init(email: handoff.email, isVerified: true, credentials: .init(linkSessionKey: handoff.linkSessionKey)))
+    }
+
+    func onAccount(_ found: NetworkedIdentityLinkAccount) {
+        account = found
+        if found.isVerified {
+            proceedAuthenticated()
         } else {
-            state = .cancelled
-        }
-
-        // Logout is best effort. Local credentials have already been cleared.
-        logout?.observe { _ in }
-    }
-
-    func beginLookup() {
-        guard let emailAddress else {
-            fallBackToFullCapture(reason: .unavailable)
-            return
-        }
-
-        lastOTPError = nil
-        let verificationSessionClientSecrets = credentialStore.readVerificationSessionClientSecrets { $0 }
-        let lookup = apiClient.lookupConsumer(
-            emailAddress: emailAddress,
-            verificationSessionClientSecrets: verificationSessionClientSecrets
-        )
-
-        transition(to: .lookupPending)
-        lookup.observe(on: .main) { [weak self, apiClient] result in
-            guard let self else {
-                if case .success(.found(let response)) = result {
-                    Self.bestEffortLogOut(
-                        using: apiClient,
-                        consumerSessionClientSecret: response.consumerSession.clientSecret,
-                        consumerPublishableKey: response.publishableKey,
-                        verificationSessionClientSecrets: NetworkedIdentityCredentialStore.appending(
-                            response.authSessionClientSecret,
-                            to: verificationSessionClientSecrets
-                        )
-                    )
-                }
-                return
-            }
-            guard self.state == .lookupPending else {
-                if self.flowHasEnded || self.state == .skipPending,
-                   case .success(.found(let response)) = result {
-                    self.bestEffortLogOut(
-                        consumerSessionClientSecret: response.consumerSession.clientSecret,
-                        consumerPublishableKey: response.publishableKey,
-                        verificationSessionClientSecrets: NetworkedIdentityCredentialStore.appending(
-                            response.authSessionClientSecret,
-                            to: verificationSessionClientSecrets
-                        )
-                    )
-                }
-                return
-            }
-
-            switch result {
-            case .success(.found(let response)):
-                self.credentialStore.retainAuthSessionClientSecret(
-                    response.authSessionClientSecret
-                )
-                self.redactedFormattedPhoneNumber =
-                    response.consumerSession.redactedFormattedPhoneNumber
-                self.credentialStore.storeConsumerCredentials(
-                    publishableKey: response.publishableKey,
-                    sessionClientSecret: response.consumerSession.clientSecret
-                )
-                self.knownSMSVerificationSessionIDs = self.smsVerificationSessionIDs(
-                    in: response.consumerSession
-                )
-                // Networked Identity always requires a fresh SMS verification, even if the
-                // returned consumer session contains an older VERIFIED entry.
-                self.beginFreshSMSVerification()
-            case .success(.notFound):
-                self.fallBackToFullCapture(reason: .noLinkAccount)
-            case .failure:
-                self.fallBackToFullCapture(reason: .unavailable)
-            }
+            authenticateWithLinkUI(email: found.email)
         }
     }
 
-    func beginFreshSMSVerification(isResendingSMSCode: Bool = false) {
-        let resendVerificationSessionID = isResendingSMSCode ? activeSMSVerificationSessionID : nil
-        activeSMSVerificationSessionID = nil
-        let knownSMSVerificationSessionIDs = knownSMSVerificationSessionIDs
-        guard let request = credentialStore.readConsumerCredentials({ credentials, verificationSessionClientSecrets in
-            return (
-                NetworkedIdentityStartVerificationRequest(
-                    consumerSessionClientSecret: credentials.sessionClientSecret,
-                    type: .sms,
-                    locale: Locale.current.toLanguageTag(),
-                    accountPhoneNumber: nil,
-                    verificationSessionClientSecrets: verificationSessionClientSecrets,
-                    isResendingSMSCode: isResendingSMSCode
-                ),
-                credentials.publishableKey
-            )
-        }) else {
-            fallBackToFullCapture(reason: .unavailable)
+    /// Hands sign-in, sign-up and code verification to Link's own screens, then continues in Identity's sheet.
+    func authenticateWithLinkUI(email: String?) {
+        guard let host = linkUIHost else {
+            fallBack(error: FlowError.noLinkUIHost)
             return
         }
-
-        let startVerification = apiClient.startVerification(
-            request: request.0,
-            consumerPublishableKey: request.1
-        )
-        transition(to: .otpStartPending)
-        startVerification.observe(on: .main) { [weak self, apiClient] result in
-            guard let self else {
-                Self.logOutSuccessfulResponse(
-                    result,
-                    using: apiClient,
-                    consumerPublishableKey: request.1,
-                    verificationSessionClientSecrets: request.0.verificationSessionClientSecrets
+        transition(to: .linkAuthentication)
+        let mode = mode
+        let phoneNumber = config.phoneNumberAutofillHint
+        perform(
+            { [linkSession] in
+                try await linkSession.authenticateWithLinkUI(
+                    email: email,
+                    phoneNumber: phoneNumber,
+                    mode: mode,
+                    from: host
                 )
-                return
-            }
-            guard self.state == .otpStartPending else {
-                self.logOutIfFlowEnded(
-                    result,
-                    consumerPublishableKey: request.1,
-                    verificationSessionClientSecrets: request.0.verificationSessionClientSecrets
-                )
-                return
-            }
-
-            switch result {
-            case .success(let response):
-                self.credentialStore.retainAuthSessionClientSecret(
-                    response.authSessionClientSecret
-                )
-                self.redactedFormattedPhoneNumber =
-                    response.consumerSession.redactedFormattedPhoneNumber
-                self.credentialStore.updateConsumerSessionClientSecret(
-                    response.consumerSession.clientSecret
-                )
-                let startedSMSSessions = response.consumerSession.verificationSessions.filter {
-                    guard $0.type == .sms,
-                          $0.state == .started,
-                          let id = $0.id else {
-                        return false
-                    }
-                    return !knownSMSVerificationSessionIDs.contains(id)
-                }
-                // Explicit resend may keep the active SMS session ID. Prefer a new ID if one
-                // is returned, and never accept any unrelated historical verification session.
-                let retainedSMSSessions = response.consumerSession.verificationSessions.filter {
-                    $0.id == resendVerificationSessionID && $0.type == .sms && $0.state == .started
-                }
-                let eligibleSMSSessions = startedSMSSessions.isEmpty && resendVerificationSessionID != nil
-                    ? retainedSMSSessions
-                    : startedSMSSessions
-                // #TODO - Networked Identity: Verify resend's same-ID/replacement-ID behavior against the web flow and an NI-enabled backend. Initial and expired-code starts still require a new ID.
-                self.knownSMSVerificationSessionIDs.formUnion(
-                    self.smsVerificationSessionIDs(in: response.consumerSession)
-                )
-                guard eligibleSMSSessions.count == 1,
-                      let verificationSessionID = eligibleSMSSessions[0].id,
-                      !verificationSessionID.isEmpty else {
-                    self.fallBackToFullCapture(reason: .unavailable)
+            },
+            onSuccess: { [weak self] account in
+                guard let self else { return }
+                guard let account else {
+                    self.cancel()
                     return
                 }
-                self.activeSMSVerificationSessionID = verificationSessionID
-                self.lastOTPError = nil
-                self.transition(to: .awaitingOTP)
-            case .failure(let error):
-                if ConsumerErrorCode(rawValue: error._stp_error_code ?? "") == .sessionExpired {
-                    self.requireReauthentication()
-                } else {
-                    self.fallBackToFullCapture(reason: .unavailable)
+                self.account = account
+                self.proceedAuthenticated()
+            },
+            onFailure: { [weak self] error in self?.fallBack(error: error) }
+        )
+    }
+
+    func proceedAuthenticated() {
+        guard let credentials = account?.credentials else {
+            fallBack(error: FlowError.missingConsumerCredentials)
+            return
+        }
+        switch mode {
+        case .reuse:
+            loadDocuments(credentials: credentials)
+        case .save:
+            recordSaveConsent(credentials: credentials)
+        }
+    }
+
+    func loadDocuments(credentials: NetworkedIdentityConsumerCredentials) {
+        transition(to: .documentsPending)
+        let handedInKey = handoff?.linkSessionKey
+        perform(
+            { [apiClient] in
+                try await Self.checkingHandedInKey(credentials, handedInKey: handedInKey) {
+                    try await apiClient.listIdentityDocuments(linkSessionKey: credentials.linkSessionKey).value
                 }
+            },
+            onSuccess: { [weak self] response in
+                guard let self else {
+                    return
+                }
+                let now = self.currentTime()
+                let eligible = response.data.filter { self.documentRequirements.allows($0, at: now) }
+                guard !eligible.isEmpty else {
+                    self.fallBack()
+                    return
+                }
+                // Sharing always needs an explicit tap; a single document is only preselected.
+                self.transition(
+                    to: .selectDocument(
+                        documents: eligible,
+                        selectedDocumentID: eligible.count == 1 ? eligible.first?.id : nil
+                    )
+                )
+            },
+            onFailure: { [weak self] error in self?.fallBackOrSignIn(error: error) }
+        )
+    }
+
+    func recordSaveConsent(credentials: NetworkedIdentityConsumerCredentials) {
+        transition(to: .savePending)
+        let handedInKey = handoff?.linkSessionKey
+        perform(
+            { [weak self, apiClient, actions] in
+                guard let self else { throw CancellationError() }
+                return try await self.redeem(
+                    route: .resumeSave,
+                    mint: {
+                        try await Self.checkingHandedInKey(credentials, handedInKey: handedInKey) {
+                            try await apiClient.createSaveAssociationToken(
+                                verificationSessionID: actions.verificationSessionID,
+                                linkSessionKey: credentials.linkSessionKey
+                            ).value.associationToken
+                        }
+                    },
+                    using: { token in try await actions.prepareDocumentSave(associationToken: token) }
+                )
+            },
+            onSuccess: { [weak self] _ in
+                self?.transition(to: .savePrepared)
+            },
+            onFailure: { [weak self] error in self?.fallBackOrSignIn(error: error) }
+        )
+    }
+
+    /// Reports a 401 or 403 for the handed-in key, e.g. expired or not verified yet, as `handedInKeyRejected`. Other
+    /// keys keep their errors, so a rejection after the user's own sign-in falls back instead of asking them again.
+    static func checkingHandedInKey<Value>(
+        _ credentials: NetworkedIdentityConsumerCredentials,
+        handedInKey: String?,
+        _ call: () async throws -> Value
+    ) async throws -> Value {
+        do {
+            return try await call()
+        } catch StripeError.apiError(let apiError)
+            where credentials.linkSessionKey == handedInKey && [401, 403].contains(apiError.httpStatusCode ?? 0) {
+            throw FlowError.handedInKeyRejected
+        }
+    }
+
+    /// A rejected handed-in key only loses the shortcut: the user signs in with Link's screens instead.
+    func fallBackOrSignIn(error: Error) {
+        guard case FlowError.handedInKeyRejected = error, let handoff else {
+            fallBack(error: error)
+            return
+        }
+        handoffRejected = true
+        account = nil
+        authenticateWithLinkUI(email: handoff.email)
+    }
+
+    func fallBack(error: Error? = nil) {
+        switch state {
+        case .cancelled, .fullCaptureFallback, .saveFailed:
+            return
+        default:
+            break
+        }
+        invalidateAttempt()
+        // Saving has no capture to fall back to: keep the sheet open and say what went wrong.
+        if mode == .save {
+            transition(to: .saveFailed(details: error.map(Self.details(of:))))
+            return
+        }
+        transition(to: .fullCaptureFallback)
+        delegate?.networkedIdentityCoordinatorDidFinish(with: .fallback)
+    }
+
+    func transition(to newState: NetworkedIdentityState) {
+        state = newState
+        delegate?.networkedIdentityCoordinator(self, didTransitionTo: newState)
+    }
+
+    func invalidateAttempt() {
+        attempt += 1
+        task?.cancel()
+        task = nil
+    }
+
+    func mutate(
+        route: NetworkedIdentityRoute,
+        _ operation: @escaping () async throws -> StripeAPI.VerificationPageData
+    ) async throws -> StripeAPI.VerificationPageData {
+        // A request already sent can still commit after cancellation. Every later write waits for it.
+        _ = await mutation?.result
+        try Task.checkCancellation()
+        let pending = Task { [weak self] in
+            let updated = try await operation()
+            // Dismissing the Link UI cannot undo a committed write. Keep the host's requirements current.
+            guard self?.onVerificationUpdate?(updated) == true else {
+                throw FlowError.unexpectedVerificationResponse
+            }
+            self?.route = route
+            return updated
+        }
+        mutation = pending
+        return try await pending.value
+    }
+
+    /// Mints a single-use token and redeems it. When the redemption is rejected or its response is lost, the
+    /// session is read back first, because the write may have committed; otherwise one fresh token is minted and
+    /// redeemed. If it can't be read back, the redemption fails rather than risk a second write. A token is never
+    /// replayed.
+    func redeem(
+        route: NetworkedIdentityRoute,
+        mint: @escaping () async throws -> String,
+        using redemption: @escaping (String) async throws -> StripeAPI.VerificationPageData
+    ) async throws -> StripeAPI.VerificationPageData {
+        var retriesLeft = 1
+        while true {
+            try Task.checkCancellation()
+            let token = try await mint()
+            try Task.checkCancellation()
+            do {
+                return try await mutate(route: route) { try await redemption(token) }
+            } catch {
+                guard Self.mayRetryRedemption(after: error) else {
+                    throw error
+                }
+                if let committed = try await actions.verificationIfCommitted(route) {
+                    return try await mutate(route: route) { committed }
+                }
+                guard retriesLeft > 0 else {
+                    throw error
+                }
+                retriesLeft -= 1
             }
         }
     }
 
-    func loadIdentityDocuments() {
-        guard let request = credentialStore.readConsumerCredentials({ credentials, _ in
-            return (credentials.sessionClientSecret, credentials.publishableKey)
-        }) else {
-            fallBackToFullCapture(reason: .unavailable)
-            return
+    /// Whether a failed redemption may be retried with a fresh token: the token was rejected (400) or already
+    /// used (429), or the response was lost and the write may have committed.
+    static func mayRetryRedemption(after error: Error) -> Bool {
+        if error is CancellationError || error is FlowError {
+            return false
         }
+        guard case StripeError.apiError(let apiError) = error else {
+            // No Stripe error came back: the response was lost or unreadable.
+            return true
+        }
+        guard apiError.code != networkedIdentityUnavailableCode else {
+            return false
+        }
+        guard let status = apiError.httpStatusCode else {
+            return true
+        }
+        return status == 400 || status == 429 || status >= 500
+    }
 
-        let documentList = apiClient.listIdentityDocuments(
-            consumerSessionClientSecret: request.0,
-            consumerPublishableKey: request.1
-        )
-        transition(to: .documentsPending)
-        documentList.observe(on: .main) { [weak self] result in
-            guard let self, self.state == .documentsPending else {
+    /// Runs `operation` and delivers its result only if the attempt that started it is still current.
+    func perform<Value>(
+        _ operation: @escaping () async throws -> Value,
+        onSuccess: @escaping (Value) -> Void,
+        onFailure: @escaping (Error) -> Void
+    ) {
+        let startedAttempt = attempt
+        task = Task { @MainActor [weak self] in
+            let result: Result<Value, Error>
+            do {
+                result = .success(try await operation())
+            } catch {
+                result = .failure(error)
+            }
+            guard let self, !Task.isCancelled, startedAttempt == self.attempt else {
                 return
             }
-
+            self.task = nil
             switch result {
-            case .success(let response):
-                let now = self.currentTime()
-                let reusableDocuments = response.data.filter { document in
-                    self.documentRequirements.allows(document, at: now)
-                }
-                if reusableDocuments.isEmpty {
-                    self.fallBackToFullCapture(reason: .noReusableDocuments)
-                } else {
-                    self.availableDocuments = reusableDocuments
-                    self.transition(to: .selectDocument)
-                }
-            case .failure:
-                self.fallBackToFullCapture(reason: .unavailable)
+            case .success(let value):
+                onSuccess(value)
+            case .failure(let error):
+                onFailure(error)
             }
         }
     }
 
-    func handleOTPError(_ error: Error) {
-        switch ConsumerErrorCode(rawValue: error._stp_error_code ?? "") {
-        case .invalidCode:
-            lastOTPError = .invalidCode
-            transition(to: .awaitingOTP)
-        case .verificationExpired:
-            lastOTPError = .verificationExpired
-            beginFreshSMSVerification()
-        case .sessionExpired:
-            requireReauthentication()
-        case .maxAttemptsExceeded:
-            lastOTPError = .maxAttemptsExceeded
-            fallBackToFullCapture(reason: .unavailable)
-        case nil:
-            fallBackToFullCapture(reason: .unavailable)
+    static func details(of error: Error) -> String {
+        guard let code = error._stp_error_code else {
+            return String(describing: error)
         }
-    }
-
-    func fallBackToFullCapture(reason: NetworkedIdentityFallbackReason) {
-        // Automatic unavailability is not an explicit skip. Only chooseManualCapture persists
-        // the user's choice through the v8 skip action; closing the sheet never calls it.
-        let logout = credentialStore.readConsumerCredentials { credentials, verificationSessionClientSecrets in
-            apiClient.logOut(
-                consumerSessionClientSecret: credentials.sessionClientSecret,
-                verificationSessionClientSecrets: verificationSessionClientSecrets,
-                consumerPublishableKey: credentials.publishableKey
-            )
-        }
-
-        credentialStore.clear()
-        emailAddress = nil
-        redactedFormattedPhoneNumber = nil
-        activeSMSVerificationSessionID = nil
-        knownSMSVerificationSessionIDs = []
-        fallbackReason = reason
-        availableDocuments = []
-        selectedDocument = nil
-        transition(to: .fullCaptureFallback)
-        guard state == .fullCaptureFallback else {
-            return
-        }
-        delegate?.networkedIdentityCoordinatorDidRequestFullCaptureFallback(self)
-
-        // Logout is best effort. Local credentials have already been cleared.
-        logout?.observe { _ in }
-
-        // #TODO - Networked Identity: Wire save opt-in through save_association_token and
-        // prepare_document_save after reconciling the new pre-capture proposal with earlier
-        // post-capture design guidance. Saving itself stays asynchronous on the backend.
-    }
-
-    func finishAction(with result: Result<StripeAPI.VerificationPageData, Error>) {
-        let checkedResult: Result<StripeAPI.VerificationPageData, Error>
-        if case .success(let pageData) = result, pageData.id != identityAPIClient?.verificationSessionId {
-            checkedResult = .failure(NetworkedIdentityActionError.unexpectedSession)
-        } else {
-            checkedResult = result
-        }
-        let logout = credentialStore.readConsumerCredentials { credentials, secrets in
-            apiClient.logOut(
-                consumerSessionClientSecret: credentials.sessionClientSecret,
-                verificationSessionClientSecrets: secrets,
-                consumerPublishableKey: credentials.publishableKey
-            )
-        }
-        credentialStore.clear()
-        emailAddress = nil
-        redactedFormattedPhoneNumber = nil
-        activeSMSVerificationSessionID = nil
-        knownSMSVerificationSessionIDs = []
-        lastOTPError = nil
-        availableDocuments = []
-        selectedDocument = nil
-        transition(to: .completed)
-        delegate?.networkedIdentityCoordinator(self, didCompleteWith: checkedResult)
-        logout?.observe { _ in }
-    }
-
-    func requireReauthentication() {
-        lastOTPError = .sessionExpired
-        fallbackReason = nil
-        emailAddress = nil
-        redactedFormattedPhoneNumber = nil
-        activeSMSVerificationSessionID = nil
-        knownSMSVerificationSessionIDs = []
-        credentialStore.clearConsumerCredentials()
-        transition(to: .reauthenticationRequired)
-    }
-
-    func transition(to state: NetworkedIdentityState) {
-        self.state = state
-        delegate?.networkedIdentityCoordinator(self, didTransitionTo: state)
-    }
-
-    func smsVerificationSessionIDs(
-        in consumerSession: NetworkedIdentityConsumerSession
-    ) -> Set<String> {
-        Set(
-            consumerSession.verificationSessions.compactMap { verificationSession in
-                guard verificationSession.type == .sms else {
-                    return nil
-                }
-                return verificationSession.id
-            }
-        )
-    }
-
-    var flowHasEnded: Bool {
-        state == .cancelled || state == .fullCaptureFallback || state == .completed
-    }
-
-    func logOutIfFlowEnded(
-        _ result: Result<NetworkedIdentityConsumerSessionResponse, Error>,
-        consumerPublishableKey: String,
-        verificationSessionClientSecrets: [String]?
-    ) {
-        guard flowHasEnded || state == .skipPending, case .success(let response) = result else {
-            return
-        }
-        Self.bestEffortLogOut(
-            using: apiClient,
-            consumerSessionClientSecret: response.consumerSession.clientSecret,
-            consumerPublishableKey: consumerPublishableKey,
-            verificationSessionClientSecrets: NetworkedIdentityCredentialStore.appending(
-                response.authSessionClientSecret,
-                to: verificationSessionClientSecrets
-            )
-        )
-    }
-
-    func bestEffortLogOut(
-        consumerSessionClientSecret: String,
-        consumerPublishableKey: String,
-        verificationSessionClientSecrets: [String]?
-    ) {
-        Self.bestEffortLogOut(
-            using: apiClient,
-            consumerSessionClientSecret: consumerSessionClientSecret,
-            consumerPublishableKey: consumerPublishableKey,
-            verificationSessionClientSecrets: verificationSessionClientSecrets
-        )
-    }
-
-    static func logOutSuccessfulResponse(
-        _ result: Result<NetworkedIdentityConsumerSessionResponse, Error>,
-        using apiClient: NetworkedIdentityAPIClient,
-        consumerPublishableKey: String,
-        verificationSessionClientSecrets: [String]?
-    ) {
-        guard case .success(let response) = result else {
-            return
-        }
-        bestEffortLogOut(
-            using: apiClient,
-            consumerSessionClientSecret: response.consumerSession.clientSecret,
-            consumerPublishableKey: consumerPublishableKey,
-            verificationSessionClientSecrets: NetworkedIdentityCredentialStore.appending(
-                response.authSessionClientSecret,
-                to: verificationSessionClientSecrets
-            )
-        )
-    }
-
-    static func bestEffortLogOut(
-        using apiClient: NetworkedIdentityAPIClient,
-        consumerSessionClientSecret: String,
-        consumerPublishableKey: String,
-        verificationSessionClientSecrets: [String]?
-    ) {
-        apiClient.logOut(
-            consumerSessionClientSecret: consumerSessionClientSecret,
-            verificationSessionClientSecrets: verificationSessionClientSecrets,
-            consumerPublishableKey: consumerPublishableKey
-        ).observe { _ in }
+        return "\(error.localizedDescription) (\(code))"
     }
 }

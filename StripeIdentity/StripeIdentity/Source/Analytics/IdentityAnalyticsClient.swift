@@ -82,6 +82,7 @@ final class IdentityAnalyticsClient {
         case error = "error"
         case countryNotListed = "country_not_listed"
         case debug = "debug"
+        case networkedIdentitySave = "networked_identity_save"
     }
 
     /// Name of the scanner logged in scanning performance events

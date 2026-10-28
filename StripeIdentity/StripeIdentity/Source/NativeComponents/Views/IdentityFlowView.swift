@@ -94,6 +94,10 @@ class IdentityFlowView: UIView {
         var buttonBottomContentView: UIView?
         var scrollViewDelegate: UIScrollViewDelegate?
         var flowViewDelegate: IdentityFlowViewDelegate?
+        /// A view shown directly above the buttons, e.g. the Networked Identity saved ID chip.
+        var buttonTopAccessoryView: UIView?
+        var buttonInsets = Style.buttonInsets
+        var buttonSpacing = Style.buttonSpacing
     }
 
     private let headerView = HeaderView()
@@ -120,6 +124,9 @@ class IdentityFlowView: UIView {
         stackView.distribution = .fill
         stackView.alignment = .fill
         stackView.spacing = Style.buttonSpacing
+        // The insets are margins so a view model can change them; the stack already sits inside the safe area.
+        stackView.isLayoutMarginsRelativeArrangement = true
+        stackView.insetsLayoutMarginsFromSafeArea = false
         return stackView
     }()
 
@@ -139,6 +146,7 @@ class IdentityFlowView: UIView {
 
     private let buttonTopContentView = HTMLTextView()
     private let buttonBottomContentContainer = UIView()
+    private var buttonTopAccessoryView: UIView?
 
     private var flowViewDelegate: IdentityFlowViewDelegate?
 
@@ -183,8 +191,13 @@ class IdentityFlowView: UIView {
             primaryButtonStyle: primaryButtonStyle,
             secondaryButtonStyle: secondaryButtonStyle
         )
+        buttonStackView.directionalLayoutMargins = viewModel.buttonInsets
+        buttonStackView.spacing = viewModel.buttonSpacing
         try configureButtonTop(with: viewModel.buttonTopContentViewModel)
         configureButtonBottom(with: viewModel.buttonBottomContentView)
+        configureButtonTopAccessory(viewModel.buttonTopAccessoryView)
+        // If there is nothing to display below the content, hide the container view
+        buttonBackgroundView.isHidden = viewModel.buttons.isEmpty && viewModel.buttonTopAccessoryView == nil
         flowViewDelegate = viewModel.flowViewDelegate
         if let scrollViewDelegate = viewModel.scrollViewDelegate {
             scrollView.delegate = scrollViewDelegate
@@ -200,6 +213,21 @@ class IdentityFlowView: UIView {
         scrollView.contentInset.bottom = bottomInset
         scrollView.verticalScrollIndicatorInsets.bottom = bottomInset
         scrollView.horizontalScrollIndicatorInsets.bottom = bottomInset
+    }
+
+    /// The height that shows the header, content and buttons without scrolling, excluding safe areas.
+    func fittingHeight(forWidth width: CGFloat) -> CGFloat {
+        func height(of view: UIView, width: CGFloat) -> CGFloat {
+            view.systemLayoutSizeFitting(
+                CGSize(width: width, height: UIView.layoutFittingCompressedSize.height),
+                withHorizontalFittingPriority: .required,
+                verticalFittingPriority: .fittingSizeLevel
+            ).height
+        }
+        return height(of: scrollContainerStackView, width: width)
+            + Style.buttonSpacing
+            + height(of: buttonTopBackgroundView, width: width)
+            + height(of: buttonStackView, width: width)
     }
 
     override func layoutSubviews() {
@@ -261,10 +289,7 @@ extension IdentityFlowView {
 
         addSubview(buttonBackgroundView)
         buttonStackView.addArrangedSubview(buttonBottomContentContainer)
-        buttonBackgroundView.addAndPinSubviewToSafeArea(
-            buttonStackView,
-            insets: Style.buttonInsets
-        )
+        buttonBackgroundView.addAndPinSubviewToSafeArea(buttonStackView)
     }
 
     fileprivate func installConstraints() {
@@ -317,13 +342,6 @@ extension IdentityFlowView {
         primaryButtonStyle: IdentityVerificationSheet.Configuration.PrimaryButtonStyle,
         secondaryButtonStyle: IdentityVerificationSheet.Configuration.SecondaryButtonStyle
     ) {
-        // If there are no buttons to display, hide the container view
-        guard buttonViewModels.count > 0 else {
-            buttonBackgroundView.isHidden = true
-            return
-        }
-        buttonBackgroundView.isHidden = false
-
         // Configure buttons and tapActions based from models after we ensure
         // there are the right number of buttons
         defer {
@@ -353,7 +371,10 @@ extension IdentityFlowView {
                 target: self,
                 action: #selector(didTapButton(button:))
             )
-            buttonStackView.insertArrangedSubview(button, at: index)
+            // The buttons already sit inside the safe area; a stale inset would push the title off-centre.
+            button.insetsLayoutMarginsFromSafeArea = false
+            // After the accessory, and before the bottom content.
+            buttonStackView.insertArrangedSubview(button, at: index + (buttonTopAccessoryView == nil ? 0 : 1))
             return button
         }
     }
@@ -414,6 +435,17 @@ extension IdentityFlowView {
         buttonBottomContentContainer.isHidden = contentView == nil
         if contentView != nil, let lastButton = buttons.last {
             buttonStackView.setCustomSpacing(Style.buttonBottomSpacing, after: lastButton)
+        }
+    }
+
+    fileprivate func configureButtonTopAccessory(_ view: UIView?) {
+        guard view !== buttonTopAccessoryView else {
+            return
+        }
+        buttonTopAccessoryView?.removeFromSuperview()
+        buttonTopAccessoryView = view
+        if let view {
+            buttonStackView.insertArrangedSubview(view, at: 0)
         }
     }
 

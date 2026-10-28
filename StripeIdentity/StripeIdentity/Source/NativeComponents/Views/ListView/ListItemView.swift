@@ -25,21 +25,6 @@ final class ListItemView: UIView {
         let accessibilityLabel: String?
         let accessory: Accessory?
         let onTap: (() -> Void)?
-        let additionalAccessibilityTraits: UIAccessibilityTraits
-
-        init(
-            text: String,
-            accessibilityLabel: String?,
-            accessory: Accessory?,
-            onTap: (() -> Void)?,
-            additionalAccessibilityTraits: UIAccessibilityTraits = []
-        ) {
-            self.text = text
-            self.accessibilityLabel = accessibilityLabel
-            self.accessory = accessory
-            self.onTap = onTap
-            self.additionalAccessibilityTraits = additionalAccessibilityTraits
-        }
     }
 
     // MARK: - Properties
@@ -141,19 +126,15 @@ final class ListItemView: UIView {
         configureAccessory(with: viewModel.accessory)
 
         // Accessibility
-        let baseAccessibilityTraits: UIAccessibilityTraits
         if itemTapHandler != nil {
-            baseAccessibilityTraits = .button
+            accessibilityTraits = .button
         } else {
             if case .button = viewModel.accessory {
-                baseAccessibilityTraits = .button
+                accessibilityTraits = .button
             } else {
-                baseAccessibilityTraits = .none
+                accessibilityTraits = .none
             }
         }
-        accessibilityTraits = baseAccessibilityTraits.union(
-            viewModel.additionalAccessibilityTraits
-        )
         self.accessibilityLabel = viewModel.accessibilityLabel ?? viewModel.text
     }
 
