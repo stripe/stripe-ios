@@ -781,8 +781,15 @@ final class CheckoutApplePayContextTests: XCTestCase {
         payment.shippingContact?.phoneNumber = CNPhoneNumber(stringValue: "+1 (415) 555-1234")
         let response = try PaymentPagesAPIResponse.decode(fromAPIResponse: makeConfirmResponseJSON())
         let confirmed = expectation(description: "Checkout confirmed with inline Apple Pay data")
-        let (context, controller) = makeContext { parameters in
+        let session = CheckoutTestHelpers.makeSession([
+            "total_summary": ["subtotal": 1000, "total": 1000, "due": 1000],
+            "customer": ["id": "cus_123"],
+            "setup_future_usage_for_payment_method_type": ["card": "off_session"],
+        ]).makePublicSession()
+        XCTAssertTrue(session.merchantWillSavePaymentMethod(.card))
+        let (context, controller) = makeContext(checkoutSession: session) { parameters in
             XCTAssertNil(parameters.paymentMethodId)
+            XCTAssertNil(parameters.savePaymentMethod)
             XCTAssertEqual(parameters.paymentMethodData?.card?.token, "tok_apple_pay")
             XCTAssertEqual(parameters.expectedPaymentMethodType, "card")
             XCTAssertEqual(parameters.expectedAmount, 1000)
@@ -950,6 +957,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
 
     private func makeContext(
         sessionId: String = "cs_test_123",
+        checkoutSession: CheckoutController.Session? = nil,
         apiClient: STPAPIClient? = nil,
         presentationWindow: UIWindow? = nil,
         collectsTaxFromBillingAddress: Bool = false,
@@ -960,7 +968,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
         }
     ) -> (CheckoutApplePayContext, MockPKPaymentAuthorizationController) {
         let resolvedAPIClient = apiClient ?? APIStubbedTestCase.stubbedAPIClient()
-        let response = CheckoutTestHelpers.makeSession([
+        let session = checkoutSession ?? CheckoutTestHelpers.makeSession([
             "total_summary": ["subtotal": 1000, "total": 1000, "due": 1000],
             "id": sessionId,
             "presentment_currency": "usd",
@@ -969,8 +977,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
                 "status": "ready",
                 "address_source": "billing",
             ],
-        ])
-        let session = response.makePublicSession()
+        ]).makePublicSession()
         let applePayConfirmationParameters = CheckoutController.ApplePayConfirmationParameters.makeMock(
             apiClient: resolvedAPIClient,
             presentationWindow: presentationWindow,
